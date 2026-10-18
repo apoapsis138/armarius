@@ -35,11 +35,12 @@ def test_catalog_counts_after_adding_the_supplements():
     # 625 DE entries, the 2 the catalog had lost, 33 Major versions of
     # "Major or Minor" DE entries, and 440 open-content supplement entries
     # (423 definitions, 17 of them at both tiers), plus 13 Virtues from
-    # Faith & Flame (11 definitions, 2 of them at both tiers).
+    # Faith & Flame (11 definitions, 2 of them at both tiers), plus 2 from
+    # The Sundered Eagle.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1113
+    assert len(entries) == 1115
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 610, "Flaw": 416, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 612, "Flaw": 416, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

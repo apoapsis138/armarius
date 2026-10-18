@@ -38,6 +38,8 @@ what the old ones recorded, hidden, and switching back shows it again.
   Archai pays the outgoing magistrates, draws the new archai by
   sortition and elects the archon and polemarch (see [Hold
   Tribunal](help:hold-tribunal)). The sheet gains a Polity tab.
+  The book's Tribunal of 1220 ships as a content pack: see [How to start a
+  saga from a Tribunal book](help:guide-book-packs).
 - **Normandy: Vis tenure** (The Lion and the Lily): every vis source is
   held on a tenure of the Perthean Compact, and the covenants' teams
   contest the Hermetic Tourney after each meeting; the sheet gains Tenure

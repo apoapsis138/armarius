@@ -46,6 +46,26 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.99.0 — 2026-10-18
+
+- **The Theban pack.** New Saga and Import offer *The Sundered Eagle*:
+  the Theban Tribunal of 1220 in the book's own words, with its thirteen
+  covenants, each in its phyle and with its patron, and about sixty
+  magi, polites and metoikos, with their tokens and shards. Its Council
+  of Magistrates sits as the book has it (the archon Aiakia is Praeco).
+  The Greek mainland, the islands and Delos, Constantinople and Anatolia
+  come with their auras, vis, towns, lords and churches. There are the
+  ruined covenants (Wilusa a regio of Ilion), the leagues, cults and
+  hedge traditions, the Bestiary's creatures, the Peripheral Code and
+  the cases for the Tribunal of 1221 on Delos, its history, and An Enemy
+  Within with the other stories. Magi trained in the Tribunal learn
+  their Art in Classical Greek; incomers keep Latin. The text is a
+  paraphrase of the book, credited to it. Elysian Ecstasy and Olympian
+  Pact join the Virtues.
+- **Pack magi know their own Tribunal.** Generated magi in the Normandy
+  and Provence packs had Rhine lore; their lore now names their own
+  Tribunal.
+
 ## 2.98.1 — 2026-10-18
 
 - **A saga opens quickly again on the desktop.** Opening a saga drew a

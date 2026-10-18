@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "2.96.0",
+  "app_version": "2.98.0",
   "kind": "pack",
   "name": "Faith & Flame: the Proven\u00e7al Tribunal",
   "from_saga": "Faith & Flame: the Proven\u00e7al Tribunal",
@@ -844,7 +844,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "20a57dee401f"
+            "id": "c5b95e995950"
           },
           {
             "title": "The deaths of Senex and Tibaut",
@@ -861,7 +861,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "1c4a6174e354"
+            "id": "6fd906a5c2fc"
           },
           {
             "title": "Recognition of the Ostal des Exiles",
@@ -878,7 +878,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "3ca45c44c55e"
+            "id": "c719db7fa42a"
           },
           {
             "title": "The faidits' petition",
@@ -895,7 +895,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "48e65fffe914"
+            "id": "4d749de21109"
           },
           {
             "title": "A Tribunal of the Pyrenees",
@@ -912,7 +912,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "8f03d21b6b08"
+            "id": "2823d3e8e183"
           },
           {
             "title": "Tolosa Paratge's civil war",
@@ -929,7 +929,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "b08e99d2468d"
+            "id": "71abaddb4475"
           },
           {
             "title": "The Procrustean League's followers",
@@ -946,7 +946,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "6c3ebd1b0c35"
+            "id": "56c9850463ee"
           },
           {
             "title": "Marie of Merinita and the northern border",
@@ -963,7 +963,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "3560536a4d08"
+            "id": "32b73a9a1165"
           },
           {
             "title": "An undeclared covenant in the Hy\u00e8res",
@@ -980,7 +980,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "086a7d43f0da"
+            "id": "b2f8c43294dc"
           }
         ],
         "rulings": [
@@ -989,119 +989,119 @@
             "year": null,
             "says": "A covenant comes into being when its magi agree on a common aim, write a charter setting out their oath, and swear it together; the swearing is what counts. The one legal step is to have a Quaesitor notarise the charter, which makes it enforceable under the Code, and some groups put this off. No vote or approval of the Tribunal is needed, though it is polite to tell the nearest Mercer House and to send someone to the next meeting to announce the new covenant. A settlement never notarised (Glanum I and II, Portus Termini) was never a recognised covenant. The Provence package records this as its Open founding custom.",
             "case_id": "",
-            "id": "7d75c6d1d664"
+            "id": "7ad40afe4655"
           },
           {
             "title": "Covenant oaths enforceable",
             "year": null,
             "says": "A covenant's oath is part of the Peripheral Code here, and a Tribunal can rule on it. As a result many small quarrels within a council, settled elsewhere by certamen or among the members, are brought before the whole Tribunal.",
             "case_id": "",
-            "id": "97a622584e72"
+            "id": "6efe07a09853"
           },
           {
             "title": "Covenants on many sites",
             "year": null,
             "says": "A covenant need not live in one place. Its members may keep separate homes and meet in council only when needed: Castra Solis counts the Praeco at Mimizan and Marie of Merinita at Poitiers as members, and the Coenobium is a chain of chapters along the Rh\u00f4ne and the coast.",
             "case_id": "",
-            "id": "9fb502b308ac"
+            "id": "1e5a9441771e"
           },
           {
             "title": "Residency",
             "year": null,
             "says": "A magus is resident who attended one of the last three meetings, or is voted resident at the first he attends. A magus Gauntleted in the Tribunal is resident until he has missed three meetings in a row. Residency lasts until the magus claims it in another Tribunal or attends and votes at another Tribunal's meeting.",
             "case_id": "",
-            "id": "4654f2c269a4"
+            "id": "6c837ed028ab"
           },
           {
             "title": "Registering arrivals and departures",
             "year": null,
             "says": "Magi who settle in the Tribunal between meetings register either with both the Redcaps and the Praeco, or with their nearest neighbouring covenant, a Redcap guiding them there if they do not know the way. A magus who takes residency elsewhere must first register his leaving with the Proven\u00e7al Redcaps or the Praeco, before voting at another Tribunal, or he breaks the Peripheral Code.",
             "case_id": "",
-            "id": "5818f6ce90fe"
+            "id": "135294cb65c4"
           },
           {
             "title": "The border of the Occitan tongue",
             "year": 1129,
             "says": "After quarrels with Normandy over the newly enlarged Tribunal, the Grand Tribunal fixed the border as running wherever the people speak Occitan. Disliked at first, the rule is now embraced as the ground of the Tribunal's claims to vis and other resources, and the Tribunal writes its minutes, proclamations and many other documents in Occitan as well as Latin.",
             "case_id": "",
-            "id": "98a94700f585"
+            "id": "f4dfd5b8a093"
           },
           {
             "title": "The Praeco",
             "year": null,
             "says": "By custom the eldest magus of the Tribunal presides as Praeco.",
             "case_id": "",
-            "id": "99c9e0314da8"
+            "id": "fce85cd438bb"
           },
           {
             "title": "The Presiding Quaesitor",
             "year": null,
             "says": "The Presiding Quaesitor, who runs the meeting, is appointed at the close of each meeting together with two advisers. When the office falls vacant between meetings an acting Presiding Quaesitor serves until the next meeting confirms or replaces him, as Tibaut did for Senex and Beatrice does for Tibaut.",
             "case_id": "",
-            "id": "ba0a15c4ae7c"
+            "id": "61d420398fb1"
           },
           {
             "title": "The flamen of Mercury",
             "year": null,
             "says": "By ancient tradition a priest of the Cult of Mercury, in mask and robes of office, opens every day of a meeting with a rite, speaking for the gods and reading omens in the Tribunal's ceremonies. The rite goes unchallenged for its age, though few take it seriously.",
             "case_id": "",
-            "id": "3e6c2d112409"
+            "id": "8cf458fda1dd"
           },
           {
             "title": "Val-Negra must not rise again",
             "year": 1012,
             "says": "After the fall of Val-Negra in the Schism War, and the panic over what was found sealed there, the Quaesitores decided in secret that the covenant must never be refounded, and House Flambeau made Castra Solis its domus magna instead. Few magi know the reason, and even the site is now lost.",
             "case_id": "",
-            "id": "9de8a55b43f5"
+            "id": "cec10fcd1118"
           },
           {
             "title": "Fraxinetum's destruction",
             "year": 975,
             "says": "The magi of the eastern Tribunal who banded together against Fraxinetum's Moorish raiders worked through William I of Provence's army rather than a declared Wizard's War, and narrowly escaped the Quaesitores' censure for destroying a covenant that way. The league they formed became the Coenobium.",
             "case_id": "",
-            "id": "81c58c3ea5e0"
+            "id": "190773ec1c19"
           },
           {
             "title": "Bellaquin and mundane lordship",
             "year": null,
             "says": "Twice jealous neighbours charged Bellaquin with breaking its oath by its deep entanglement in feudal affairs; twice the Tribunal found it had brought no ruin on its accusers or the Order. The precedent: even heavy mundane involvement is tolerated so long as it causes no ruin to magi.",
             "case_id": "",
-            "id": "148dab116bec"
+            "id": "8a52320b9a27"
           },
           {
             "title": "No ruling on the Cathars",
             "year": 1207,
             "says": "The meeting at Aedes Mercurii debated the Church's campaign against the Cathars for a whole day and made no decision; the Mercurians' counsel of staying out of mundane affairs prevailed by default. No case has yet been brought against an avowedly Cathar magus.",
             "case_id": "",
-            "id": "3e6bf2384f1c"
+            "id": "a7bb5d7fc3d2"
           },
           {
             "title": "Grogs in a Wizard's War",
             "year": 1214,
             "says": "Tres Ex Miscellanea armed a company of mercenaries with magical weapons, called them his grogs, and used them and his magical siege engines to level Mistridge's tower. As his Wizard's War had been properly declared, and nothing in the Code forbids using grogs to wage one, the Tribunal acquitted him by a narrow vote. He then went into hiding from Mistridge's friends.",
             "case_id": "",
-            "id": "3406d8f24928"
+            "id": "be99aec79da0"
           },
           {
             "title": "The March of Tolomae",
             "year": 1218,
             "says": "Tolomae, once of the Coenobium and Bellaquin, led the Procrustean League in calling for open war on the Church. Renounced by the Mercurians and the Coenobium, he was cast out of House Jerbiton as orbus in 1216, fled rather than answer a Quaesitor's questions over the murder of the legate Pierre de Castelnau, and early in 1218 was Marched for repeated interference with mundanes and slain.",
             "case_id": "",
-            "id": "98c95d89f165"
+            "id": "65e2f873dc6a"
           },
           {
             "title": "Glanum held neutral",
             "year": null,
             "says": "The ruins of Glanum, agreed as the compromise site for the meeting of 1221, may not be formally resettled until that question is settled. Only Beatrice of Guernicus lives there, as the Coenobium's guest.",
             "case_id": "",
-            "id": "1d945dfaf18e"
+            "id": "e9f3703f33dc"
           },
           {
             "title": "The Coenobium's toll and code of hospitality",
             "year": null,
             "says": "A local custom of the Coenobium's towns, not a Tribunal ruling, but one every visitor meets. Magi openly visiting Avignon announce themselves and how long they will stay, and are asked to give a silver florin holding a pawn of vis, which pays for the covenant's non-Jerbiton specialists. In return they get food, lodging, laboratory space and a consul as patron, who answers for their conduct and protects them. The guest's part: give notice of the visit by Redcap if possible, bring the florin, state the purpose and length of the stay and say when leaving, behave with restraint and help the patron if asked, and go at once if told to. Magi who refuse are thought crass, watched, and quietly obstructed, even with charges at Tribunal. The Coenobium keeps its members' Latin names, and has let no new covenant thrive in southern Provence for over a century unless it joined as a chapter.",
             "case_id": "",
-            "id": "05f1187f01e2"
+            "id": "aba38dc415ac"
           }
         ],
         "treasury": [],
@@ -1113,7 +1113,7 @@
             "details": "As the Order grows, the Second Grand Tribunal sets up regional Tribunals, made of covenants that lie near one another rather than of lands with fixed borders. The rules for founding and governing them come out of a quarrel over Val-Negra's charter: Flambeau wanted lordship over every covenant his home helped to found.",
             "changes": [],
             "margin": "",
-            "id": "e4131577c583"
+            "id": "81f794e4ade7"
           },
           {
             "year": 774,
@@ -1122,7 +1122,7 @@
             "details": "After years of argument between Flambeau and Guernicus over its charter, the covenant of Val-Negra in the Pyrenees is formally recognized, and a regional Tribunal forms around it. Flambeau is the only Founder to make his home there, though Trianoma and Mercere visit often. Tolosa Paratge, a large Diedne covenant in a lake regio at Toulouse, is one of the four first covenants of the new Tribunal, and most of the region's other covenants belong to House Diedne.",
             "changes": [],
             "margin": "",
-            "id": "159727789943"
+            "id": "25ea4d78aa37"
           },
           {
             "year": 801,
@@ -1131,7 +1131,7 @@
             "details": "Gelon, the first apprentice of Verditius, becomes Primus of his House. He lives for decades at Val-Negra, forging his famous enchanted swords, and his followers go on to found the Confraternity of Roland.",
             "changes": [],
             "margin": "",
-            "id": "58c0e0fd76cf"
+            "id": "55577a8c0849"
           },
           {
             "year": 809,
@@ -1140,7 +1140,7 @@
             "details": "The Christian wizard Kaeso, whose power rests on an old underground temple of Mithras by the Garonne, joins House Flambeau. Training under Apromor and Flambeau in the Pyrenees, he forms the Hoplites, soldier-magi who hurl Pilum of Fire from behind a strong Parma Magica, and leads many of them into the Legion of Mithras. Many count him the first Hoplite.",
             "changes": [],
             "margin": "",
-            "id": "2116f5c3df3e"
+            "id": "6de248031706"
           },
           {
             "year": 820,
@@ -1149,7 +1149,7 @@
             "details": "Apromor, the Founder's first apprentice, who has drifted from his master's ways, becomes the first Primus of House Flambeau, and Kaeso's Hoplites carry on Flambeau's war against the sahirs of Iberia. Apromor welcomes pagan and non-Hermetic wizards into the Order, works with Priamitus of Mercere to revive the Cult of Mercury from the last Roman priests of the region, and spreads Val-Negra's outposts across the Pyrenees.",
             "changes": [],
             "margin": "",
-            "id": "37366c5e3f50"
+            "id": "dcec08115bce"
           },
           {
             "year": 821,
@@ -1158,7 +1158,7 @@
             "details": "Julius Donnus, an outcast Mercurian of House Flambeau from the Greater Alps, founds Portus Cottiae outside Brian\u00e7on as a second home for the revived Cult of Mercury, after Harco. It becomes the first Mercer House of the region and grows into a covenant of several sites, with chapter houses at Gap, Chorges and Embrun and a post at Oulx guarding the passes. In the same year Diedne magi found Yf on an island off the coast of Arelat.",
             "changes": [],
             "margin": "",
-            "id": "37d1b703f5d9"
+            "id": "988807166478"
           },
           {
             "year": 822,
@@ -1167,7 +1167,7 @@
             "details": "Flambeau magi found Lapurdum where the Adour meets the sea in Gascony, around a mithraeum in what was once a Roman army camp.",
             "changes": [],
             "margin": "",
-            "id": "2fd7d0417b6e"
+            "id": "0fc5de772b31"
           },
           {
             "year": 843,
@@ -1176,7 +1176,7 @@
             "details": "A small group of spirit masters, necromancers of Ex Miscellanea, settles in the crypts of the Alyscamps at Arles as the covenant of Campus Elysii.",
             "changes": [],
             "margin": "",
-            "id": "039d124d11ed"
+            "id": "d63da9eb4af3"
           },
           {
             "year": 844,
@@ -1185,7 +1185,7 @@
             "details": "King Pepin II of Aquitaine, seeking freedom from Charles the Bald, is accused of apostasy for letting the Viking Jarl Oscar sail his raiders up the Garonne to Toulouse. Northmen camp all along the western coast, and Marseilles has already been sacked by Arab pirates (838); Byzantine freebooters (849) and Normans based in the Camargue follow. Tales of rune-wizards among the raiders finally draw the magi in, and Flambeau comes to resent how little the Diedne do to help.",
             "changes": [],
             "margin": "",
-            "id": "d606b0f5ce2e"
+            "id": "eb11410b0982"
           },
           {
             "year": 850,
@@ -1194,7 +1194,7 @@
             "details": "Raids on Gascon villages have grown since 840, and the Flambeau wrongly believe an organized Order of Odin is behind them. Kaeso returns to Bordeaux and fortifies his temple as a covenant, Castra Solis, the encampment of the sun, under the sign of a quartered sun.",
             "changes": [],
             "margin": "",
-            "id": "af0425da26ab"
+            "id": "a9b4ead75935"
           },
           {
             "year": 852,
@@ -1203,7 +1203,7 @@
             "details": "Before the Hoplites can do more than raise hasty defences, the northern pagans take Bordeaux. Unwilling to harm the townsfolk, the magi spend five years trying to end the war by force against the rune-wizards alone, and many die in their traps, Kaeso among them.",
             "changes": [],
             "margin": "",
-            "id": "342d8a652b02"
+            "id": "22dff551301d"
           },
           {
             "year": 855,
@@ -1212,7 +1212,7 @@
             "details": "With Bordeaux too near the front, the surviving Flambeau build a fortified covenant, Sinapis, further north in Anjou. Castra Solis becomes a camp of tents for quick strikes, and to outsiders it looks like an offshoot of Sinapis.",
             "changes": [],
             "margin": "",
-            "id": "3ff56eccbf98"
+            "id": "e4586272f247"
           },
           {
             "year": 858,
@@ -1221,7 +1221,7 @@
             "details": "Worn down by Viking raids and quarrels among its magi, Lapurdum is given up. Its ruins lie somewhere under the city of Bayonne.",
             "changes": [],
             "margin": "",
-            "id": "d4ee831423df"
+            "id": "17c3675d5e6a"
           },
           {
             "year": 865,
@@ -1230,7 +1230,7 @@
             "details": "The Grand Tribunal draws up seven regional Tribunals. Val-Negra goes to the Iberian Tribunal, along with the mountains and the Basque lands north of them; the bulk of France goes to the West Franks, and a strip from Friesland through Burgundy to Arelat forms the Lotharingian Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "3e58dce1eb2c"
+            "id": "d2b1d3da3e33"
           },
           {
             "year": 889,
@@ -1239,7 +1239,7 @@
             "details": "Two Tytalan war-magi, Sayyid Shajarat al-Darda (who called himself a Flambeau, though the House denies him) and his lieutenant Nasr ibn Amaf, settle in the Massif des Maures above St Tropez with a band of Andalusian raiders. Their covenant, named for the ash groves Sayyid planted, stays hidden from the Tribunal for its first century while it backs Moorish attacks on Proven\u00e7al towns.",
             "changes": [],
             "margin": "",
-            "id": "b74a35fb931c"
+            "id": "3771bd30f5d0"
           },
           {
             "year": 895,
@@ -1248,7 +1248,7 @@
             "details": "Three Verditius mage-smiths found a covenant in the Roman watermill complex of Barbegal, just north of Arles.",
             "changes": [],
             "margin": "",
-            "id": "07df23a2d5cb"
+            "id": "9bcf5ed71066"
           },
           {
             "year": 898,
@@ -1257,7 +1257,7 @@
             "details": "The Grand Tribunal hands the northern covenants of the Lotharingian Tribunal to Normandy or the Rhine. What is left, the Kingdom of Arles along the Rh\u00f4ne and a few covenants in the Toulousain (a Mercer House at Arles, a strong Diedne covenant at Lyon, and a handful of others), comes to be called the Proven\u00e7al Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "5c090f0c1bcb"
+            "id": "419f20d60118"
           },
           {
             "year": 901,
@@ -1266,7 +1266,7 @@
             "details": "Bjornaer magi found a covenant in the marshes at the mouth of the Rh\u00f4ne.",
             "changes": [],
             "margin": "",
-            "id": "57bc9332aa10"
+            "id": "01e82fcddbb5"
           },
           {
             "year": 906,
@@ -1275,7 +1275,7 @@
             "details": "Berber mountaineers overrun the scattered sites of Portus Cottiae, one of the first Lotharingian covenants to fall to the Saracens. Its magi flee down the Durance; at the motherhouse near Brian\u00e7on the defenders bring the mountain down on the raiders and bury themselves in their own sancta. The one surviving maga, Ana\u00efs of Jerbiton, reaches Avignon and becomes a loud voice for the Hermetic league that becomes the Coenobium.",
             "changes": [],
             "margin": "",
-            "id": "fdb1987cca3a"
+            "id": "733d0117c7cf"
           },
           {
             "year": 911,
@@ -1284,7 +1284,7 @@
             "details": "The Diedne covenant of Yf falls to the raids of Fraxinetum. One of its magae later joins the Coenobium to avenge it, but her line dies out shortly before the Schism War.",
             "changes": [],
             "margin": "",
-            "id": "e83d6ab0a840"
+            "id": "73f74babb272"
           },
           {
             "year": 930,
@@ -1293,7 +1293,7 @@
             "details": "The undefended mills of Barbegal are abandoned under Saracen raiding. The surviving smiths help to found the Rh\u00f4ne covenant of Coenobium Rhodanien.",
             "changes": [],
             "margin": "",
-            "id": "8b31c27bdf2a"
+            "id": "fa8bcdd1d67c"
           },
           {
             "year": 945,
@@ -1302,7 +1302,7 @@
             "details": "A coven of Hermetic sorginak, Basque witches spread across the Basque country, founds the covenant of Askelarre.",
             "changes": [],
             "margin": "",
-            "id": "1773e3e204fa"
+            "id": "2aff1aee7818"
           },
           {
             "year": 955,
@@ -1311,7 +1311,7 @@
             "details": "A few sorginak at last join House Ex Miscellanea, resented by their hedge sisters and anxious to keep their distance from the Diedne, who had long taken sorginak into their own House. In the same year Donjon Leyre, an early vassal of Montverte, is founded at the fork of the Leyre in the Landes as a base for raids into the Basque Pyrenees.",
             "changes": [],
             "margin": "",
-            "id": "3f28c13b9236"
+            "id": "75a17e9f61ab"
           },
           {
             "year": 970,
@@ -1320,7 +1320,7 @@
             "details": "Threatened by Fraxinetum, the Bjornaer of the Birds of Camargue join the wider league of Rh\u00f4ne magi that becomes the Coenobium Rhodanien.",
             "changes": [],
             "margin": "",
-            "id": "2675c0f3afac"
+            "id": "7a69df2b8f3d"
           },
           {
             "year": 973,
@@ -1329,7 +1329,7 @@
             "details": "The Moors of the Massif des Maures capture and ransom Maieul, abbot of Cluny, and push into the foothills of the Alps. The alarm this raises moves the mostly Jerbiton magi of eastern Provence to band together in a pact of mutual defence. Working through their families, churchmen and noble allies, they quietly back the army of William I of Provence, which routs the Moors at Tourtour.",
             "changes": [],
             "margin": "",
-            "id": "e6a7397bea91"
+            "id": "b14cc7e2fef1"
           },
           {
             "year": 975,
@@ -1338,7 +1338,7 @@
             "details": "William's army takes the Moorish base and the Fraxinetum magi vanish into the forest. The history chapter says the new Coenobium Rhodanien destroyed the covenant by Wizard's War; the Arelat chapter says no war was ever openly declared and the league narrowly escaped the Quaesitors' anger for acting through mundane arms. Either way, the victors stay together as a covenant of many sites along the Rh\u00f4ne and the coast. In the same year Ana\u00efs of Toulouse, a renegade Criamon expelled from her House, brings her followers, the Gorgiastic Cathars, into House Ex Miscellanea.\n\nSecrets\nThe Fraxinetum magi did not perish. Their heirs live on in secret as Fraxinetum Redux on the Hy\u00e8res islands, never declared to the Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "34bb81d8267f"
+            "id": "df556e0ef517"
           },
           {
             "year": 997,
@@ -1347,7 +1347,7 @@
             "details": "At the Grand Tribunal the Hoplites declare the rune-wizards rooted out of the region after more than a century of war: all three Danish settlements on the coast have been burned. Many of their fortified outposts, such as the tower at Mimizan, later grow into covenants counted as offshoots of Castra Solis. The Diedne, uneasy with the Mithraic piety of the Hoplites, took no part, which deepens Flambeau's suspicion of them.",
             "changes": [],
             "margin": "",
-            "id": "b9b4c1b63291"
+            "id": "0427453833fe"
           },
           {
             "year": 1008,
@@ -1356,7 +1356,7 @@
             "details": "All the founding magi of Donjon Leyre die fighting in the Schism War, which rages through Gascony as Val-Negra's forces storm the Diedne covenants one after another; many Gascon Diedne burn their own sites and flee.",
             "changes": [],
             "margin": "",
-            "id": "8cb951c793ed"
+            "id": "db22aaba7834"
           },
           {
             "year": 1009,
@@ -1365,7 +1365,7 @@
             "details": "The spirit masters of Campus Elysii, who hid underground through the war, are forced out of the Alyscamps when the Coenobium stirs up the townsfolk with tales of diabolists under the necropolis. They try to begin again in a cave network in the Verdon gorge as Portus Termini, but all contact is lost before the next Tribunal and the new covenant is never registered.\n\nSecrets\nMany suspect that Hoplites in the Coenobium's pay hunted down the survivors.",
             "changes": [],
             "margin": "",
-            "id": "878458b0204b"
+            "id": "46ec0b2ae687"
           },
           {
             "year": 1011,
@@ -1374,7 +1374,7 @@
             "details": "The sorginak covenant of Askelarre is destroyed in the Schism War. Two of Val-Negra's magi, the Flambeau Leo Augustus and the Tremere Vegetius, die in the attack.",
             "changes": [],
             "margin": "",
-            "id": "7b766ee40350"
+            "id": "5d9d89ea7929"
           },
           {
             "year": 1012,
@@ -1383,7 +1383,7 @@
             "details": "As the Schism War draws to its close, while its zealous magi are away striking at the Diedne, five Diedne archmagi storm Val-Negra. Of twenty-five magi at the war's start, only four are left. Shortly before the war many of its Flambeau had left, after a vision, to found Aedes Mercurii in Val-Negra's outlying halls; now the survivors join it, and it declares itself a Proven\u00e7al covenant and the heir of Val-Negra. Many other covenants change to the Proven\u00e7al Tribunal at this time, partly to keep Tytalus from claiming the spoils of the fallen Diedne. The domus magna of Flambeau moves to Castra Solis, and the Quaesitors strike nine or more Diedne sites from the records. Why Val-Negra was never rebuilt, and even where it stood, is soon forgotten.\n\nSecrets\nThe Diedne reached the Iron Door in the depths of Val-Negra, and in the fighting the Adulteration of Flambeau was loosed. It killed three defenders and all the attackers before the last two archmagi forced it back and sealed the door with a Hermetic ward, one that breaks if the door is simply opened. The Quaesitors kept it quiet and ruled that Val-Negra must never rise again.",
             "changes": [],
             "margin": "",
-            "id": "e0e193054f9c"
+            "id": "65bf1c296980"
           },
           {
             "year": 1016,
@@ -1392,7 +1392,7 @@
             "details": "As the Schism War dies down, Flambeau magi restore an abandoned castle, the Ch\u00e2teau de Penne in Tarn above the Aveyron, as a stronghold. The war ends before it is needed, and they hand it to House Jerbiton, who make it one of the most admired covenants in the Order and, in time, the lords of a fief of their own.",
             "changes": [],
             "margin": "",
-            "id": "4d4ca5b66fbd"
+            "id": "f8e4996c09d4"
           },
           {
             "year": 1050,
@@ -1401,7 +1401,7 @@
             "details": "A covenant is founded in the Val du Bosque, in a tower raised by magic at the brink of a sheer drop.",
             "changes": [],
             "margin": "",
-            "id": "0583ec3971a0"
+            "id": "812af04bc231"
           },
           {
             "year": 1060,
@@ -1410,7 +1410,7 @@
             "details": "Necromancers found Windgraven in the squat stone towers of a ruined Visigothic fort on a rocky plateau in the southern part of the County of Toulouse.",
             "changes": [],
             "margin": "",
-            "id": "5a4f2c95a416"
+            "id": "0d1f56c91800"
           },
           {
             "year": 1063,
@@ -1419,7 +1419,7 @@
             "details": "Flambeau magi from the abandoned Normandy covenant of Sinapis found Filii Sinapis.",
             "changes": [],
             "margin": "",
-            "id": "3de8c3b42eff"
+            "id": "07d5790f75bb"
           },
           {
             "year": 1089,
@@ -1428,7 +1428,7 @@
             "details": "Jerbiton magi found Berinor, a small covenant in the County of Toulouse that becomes a patron of troubadours and trobairitz.",
             "changes": [],
             "margin": "",
-            "id": "49f878a3259f"
+            "id": "b74bc2176c4c"
           },
           {
             "year": 1103,
@@ -1437,7 +1437,7 @@
             "details": "When the Normandy Tribunal splits, Castra Solis leads a faction into the enlarged Proven\u00e7al Tribunal. The magi of Sinapis leave their site to join the domus magna, and smaller covenants of the area, Mimizan among them, come too.",
             "changes": [],
             "margin": "",
-            "id": "478b420d9b9c"
+            "id": "db9b3aa68094"
           },
           {
             "year": 1106,
@@ -1446,7 +1446,7 @@
             "details": "A covenant is founded in a castle in the Toulousain; it stays in Summer for a century.",
             "changes": [],
             "margin": "",
-            "id": "ad862591bfa0"
+            "id": "d5dd78088262"
           },
           {
             "year": 1129,
@@ -1455,7 +1455,7 @@
             "details": "To settle quarrels between Normandy and the newly enlarged Proven\u00e7al Tribunal, the Grand Tribunal rules that the border between them runs wherever Occitan stops being spoken. Unpopular at first, the rule is soon embraced by the southern magi to secure their claims to vis, and the Tribunal's minutes and proclamations are written in both Latin and Occitan.",
             "changes": [],
             "margin": "",
-            "id": "1f917346c4b7"
+            "id": "26eac95aa91d"
           },
           {
             "year": 1174,
@@ -1464,7 +1464,7 @@
             "details": "Count Henry II of Provence holds a festival in the meadows north of Beaucaire to mark the reconciliation of the Duke of Narbonne and the King of Aragon. A chronicler praises its hundred thousand knights, its gold sown in the earth and its herds roasted over wax torches.\n\nSecrets\nMost of the knights were faeries revelling in the troubadours' spirit of foolishness, and the gold was glamour; the meadow still holds Faerie vis.",
             "changes": [],
             "margin": "",
-            "id": "67167ccc5533"
+            "id": "f3f6422bcb77"
           },
           {
             "year": 1177,
@@ -1473,7 +1473,7 @@
             "details": "When Richard the Lionheart sacks Saint Jean Pied-de-Port, the large outpost Aedes Mercurii kept there is lost; its covenfolk had already fallen under the townsfolk's suspicion of witchcraft.",
             "changes": [],
             "margin": "",
-            "id": "2d7dc1713dec"
+            "id": "dc111ff70c83"
           },
           {
             "year": 1180,
@@ -1482,7 +1482,7 @@
             "details": "A Criamon eremite founds Miniata Sophia in the cave system of Niaux, about forty years before 1220. For a decade and more it keeps to itself.",
             "changes": [],
             "margin": "",
-            "id": "55751a915423"
+            "id": "2ed38ed271b9"
           },
           {
             "year": 1192,
@@ -1491,7 +1491,7 @@
             "details": "Tremere magi found Lariander, a young covenant in a faerie wood near the village of Montgey in the Toulousain.",
             "changes": [],
             "margin": "",
-            "id": "eb02b25a01e5"
+            "id": "1e33abdae60c"
           },
           {
             "year": 1193,
@@ -1500,7 +1500,7 @@
             "details": "Miniata Sophia makes itself known at the Tribunal and registers its site, the village of Niaux, with the Redcaps. It has attended every meeting since, voting on each question as seems most apt or abstaining, and making no alliances.",
             "changes": [],
             "margin": "",
-            "id": "9db56f31637c"
+            "id": "7b44d9d6a9e1"
           },
           {
             "year": 1195,
@@ -1509,7 +1509,7 @@
             "details": "Merinita magi who have explored the labours of Heracles in the east come west to follow the rest of his journey and found Ara Maxima Nova among the vineyards outside Perpignan, close to the Via Domitia. Their charter binds them to seek the Hesperides every five years.",
             "changes": [],
             "margin": "",
-            "id": "2b6351ff5b9c"
+            "id": "95397b5673f3"
           },
           {
             "year": 1197,
@@ -1518,7 +1518,7 @@
             "details": "Magi of Mistridge destroy Windgraven in a properly declared Wizard's War, battering its towers flat with giant stones conjured by magic. Few mourn its necromancers, who were widely thought diabolists, and the war foreshadows Mistridge's own end.",
             "changes": [],
             "margin": "",
-            "id": "510aba9d4f2d"
+            "id": "5eaa61c70826"
           },
           {
             "year": 1200,
@@ -1527,7 +1527,7 @@
             "details": "Overstretched by its feudal ties, Bellaquin tries to help two warring lords at once and is accused by both of stirring up their war. With churchmen urging them on, and a companion betraying the covenant, they storm the Ch\u00e2teau de Penne by surprise and kill several magi. The survivors, warned to prepare by archmagi, take their hidden reserves, destroy what they cannot carry and leave the site to their mundane proxies. Since the harm fell only on Bellaquin, no charges are brought.\n\nSecrets\nSome suspect other magi had a hand in arranging the mundane attack.",
             "changes": [],
             "margin": "",
-            "id": "7bc583914876"
+            "id": "8c08111880f8"
           },
           {
             "year": 1202,
@@ -1536,7 +1536,7 @@
             "details": "Bellaquin settles in a house in the parish of Ordino in Andorra, keeping its charter but changing its ways: subtler, richer and turned toward banking.",
             "changes": [],
             "margin": "",
-            "id": "e443a4b24290"
+            "id": "a03c98f849c9"
           },
           {
             "year": 1207,
@@ -1545,7 +1545,7 @@
             "details": "The book's list of fallen covenants ends Bentalone in 1207: Simon de Montfort's army takes its castle for a Cathar stronghold and storms it in a surprise attack, though his campaigns in the south only begin in 1209.",
             "changes": [],
             "margin": "",
-            "id": "fe76df03b8e4"
+            "id": "8ab4faf2accf"
           },
           {
             "year": 1207,
@@ -1554,7 +1554,7 @@
             "details": "In May Count Raimond VI of Toulouse is excommunicated for sheltering heretics. He promises the pope to drive them out, and the sentence is lifted in August.",
             "changes": [],
             "margin": "",
-            "id": "f706371d2695"
+            "id": "c7de72daba62"
           },
           {
             "year": 1207,
@@ -1563,7 +1563,7 @@
             "details": "The Tribunal meets at Aedes Mercurii and spends a whole day on the Church's drive against the Cathars, without deciding anything. Oxioun of Tytalus, leader of the host covenant, urges the Order to stay out of mundane affairs, and the Mercurian bloc is content to wait in its mountains, despite the worries of the lowland covenants of the Toulousain, the Narbonnais and the Rh\u00f4ne.",
             "changes": [],
             "margin": "",
-            "id": "50130c8db222"
+            "id": "00dde608fef5"
           },
           {
             "year": 1208,
@@ -1572,7 +1572,7 @@
             "details": "A few months after the 1207 Tribunal, Protantus, the Traditionalist chief Quaesitor, dies and is followed by the more flexible Tibaut, a Transitionalist with no ties to the Mercurians. Few magi remark the coincidence with the legate's death, but it marks a turning point. The history chapter tells it so; the Gascony chapter names Senex as chief Quaesitor until 1210, with Tibaut acting in his place only from 1214.",
             "changes": [],
             "margin": "",
-            "id": "6dbe15a42f02"
+            "id": "15fed39e7bd9"
           },
           {
             "year": 1208,
@@ -1581,7 +1581,7 @@
             "details": "Innocent III lays all of King John's lands under interdict. Many Gascon churches close their doors and say no Mass for six years.\n\nSecrets\nDuring the interdict a band of demons, the Six Deadly Spirits, settles in the wild lands of Gascony away from the pilgrim roads, and some linger there still.",
             "changes": [],
             "margin": "",
-            "id": "13eb5e82b2be"
+            "id": "405d155699ba"
           },
           {
             "year": 1208,
@@ -1590,7 +1590,7 @@
             "details": "In January Raimond meets the papal legates at St Gilles, stalls, and threatens them in anger as they leave. At dawn, waiting for the ferry to Arles, the legate Pierre de Castelnau is run through by a knight, forgiving his killer as he dies. Innocent III blames the count and proclaims a crusade; Arnaud Amaury and Bishop Foulques preach it, promising the crusaders a share of heretic lands and release from their debts to Jewish lenders.",
             "changes": [],
             "margin": "",
-            "id": "ee6a200ded47"
+            "id": "94e1bb1b6ce1"
           },
           {
             "year": 1209,
@@ -1599,7 +1599,7 @@
             "details": "As the crusaders muster at Lyon, Raimond is scourged barefoot before a crowd at St Gilles and accepts hard terms. In June he takes the cross himself, robbing the crusade of its main target, which turns on the Trencavel lands instead. Raimond-Roger Trencavel is refused leave to join.",
             "changes": [],
             "margin": "",
-            "id": "8b15a645eb2c"
+            "id": "9fb88b1f58eb"
           },
           {
             "year": 1209,
@@ -1608,7 +1608,7 @@
             "details": "B\u00e9ziers refuses to hand over two hundred heretics. When its young men sally against the crusade's camp followers, the rabble surges through the open gate and the knights follow. Asked how to tell the faithful from the heretics, Arnaud Amaury is said to have answered that God would know His own. Fifteen to thirty thousand die, many in the churches.",
             "changes": [],
             "margin": "",
-            "id": "df9ddbdb87c1"
+            "id": "493a63d5d177"
           },
           {
             "year": 1209,
@@ -1617,7 +1617,7 @@
             "details": "In August Viscount Raimond-Roger Trencavel leaves Carcassonne to parley and is seized and imprisoned. The city yields; its people are spared but its treasures plundered. Why so strong a city gave in so soon remains a mystery.",
             "changes": [],
             "margin": "",
-            "id": "fa0937e1660d"
+            "id": "16d17bd205c5"
           },
           {
             "year": 1209,
@@ -1626,7 +1626,7 @@
             "details": "When the great lords go home after their forty days, the legate's council chooses Simon de Montfort, a minor knight of the \u00cele de France, to lead. With his wife Alice, thirty knights and five hundred foot he holds Carcassonne and takes the Trencavel titles of B\u00e9ziers and Carcassonne, but Pedro II of Aragon will not take his homage. Revolts follow, the abbot of St Gilles is murdered, and de Montfort answers with the atrocity at Bram. In Toulouse Bishop Foulques forms his White Brotherhood against heretics, Jews and moneylenders, and a Black Brotherhood rises against it.",
             "changes": [],
             "margin": "",
-            "id": "7b876fe65ca5"
+            "id": "8a9751c604c2"
           },
           {
             "year": 1209,
@@ -1635,7 +1635,7 @@
             "details": "The Rusticani magus Tres declares Wizard's War on every magus of Mistridge. With two other magi of his tradition and a company of mercenaries armed with his enchanted weapons, he levels the tower with magical siege engines and kills its defenders. Some say he avenged Windgraven; others that Mistridge had scorned him as a hedge wizard.",
             "changes": [],
             "margin": "",
-            "id": "a242bd2d1484"
+            "id": "676f4842cce5"
           },
           {
             "year": 1210,
@@ -1644,7 +1644,7 @@
             "details": "When the castle of Aguilar holds out, de Montfort turns to besiege Minerve, where a hundred and thirty-seven Cathars are burned and only three women recant. Termes and more castles follow, making him master of the Trencavel lands. So few heretics have died that the war is plainly one of conquest.",
             "changes": [],
             "margin": "",
-            "id": "9a6ec2bd6945"
+            "id": "5da0d8f18309"
           },
           {
             "year": 1210,
@@ -1653,7 +1653,7 @@
             "details": "Berinor falls when de Montfort's men dispossess the lord who held its castle, and its survivors take refuge at Tolosa Paratge. The same year Senex of Guernicus, the chief Quaesitor, goes into a village to look into something and is never seen again.\n\nSecrets\nSenex had begun to look into Dama's cult of the Matres and Matrones. While she was away at an akelarre he slipped into her sanctum at Mimizan; she came back early and caught him there. Her Revoke the Protection of Bonisagus and Maju's venom killed him, Maju devoured the body as a drake, and Dama told no one. In law he had forfeited his immunity by entering her sanctum.",
             "changes": [],
             "margin": "",
-            "id": "4882d687ff46"
+            "id": "9cbee4343c09"
           },
           {
             "year": 1211,
@@ -1662,7 +1662,7 @@
             "details": "Pedro II at last accepts de Montfort's homage and tries to broker peace, but the legates' terms are too harsh and the south rises. Lavaur is sacked, sixty Cathars taken at Les Casses are burned, and de Montfort besieges Toulouse. Bishop Foulques tells the faithful to give up the city and their count or share the heretics' fate; they drive him out instead, and the siege fails.",
             "changes": [],
             "margin": "",
-            "id": "9ae94e8517bc"
+            "id": "4f5f5dfbc18a"
           },
           {
             "year": 1211,
@@ -1671,7 +1671,7 @@
             "details": "Peasants and southern knights massacre some three hundred German crusaders marching through a faerie forest near Montgey to Lavaur. In reprisal the crusaders destroy the village, burn the woods and slaughter the Tremere of Lariander, taking their black robes for those of Cathar perfecti. Garsenda of Lariander believes she is the only survivor.\n\nSecrets\nGarsenda had stirred the villagers to the ambush, and the white ladies and walking trees the survivors spoke of were real.",
             "changes": [],
             "margin": "",
-            "id": "14549b0801d8"
+            "id": "29869ebc1d04"
           },
           {
             "year": 1211,
@@ -1680,7 +1680,7 @@
             "details": "Raimond gathers his army against de Montfort's small force, but the crusaders keep raiding and seizing the initiative, and when the southerners finally attack they are routed in open battle.",
             "changes": [],
             "margin": "",
-            "id": "1930c7b87751"
+            "id": "e39ccc77affe"
           },
           {
             "year": 1212,
@@ -1689,7 +1689,7 @@
             "details": "Thousands of children and peasants follow a young visionary from the Rhineland through France to Marseilles, sure the sea will open for them. It does not; many board ships for Africa and vanish, feared sold as slaves. In Iberia the Christian kings win the great victory of Las Navas de Tolosa.",
             "changes": [],
             "margin": "",
-            "id": "7b7889d4b2f7"
+            "id": "314a8ababa75"
           },
           {
             "year": 1213,
@@ -1698,7 +1698,7 @@
             "details": "Pedro II of Aragon, Raimond and the count of Foix take Muret, ten miles up the Garonne from Toulouse, with a great army. De Montfort crosses the marshes to fall on their flank: Pedro is killed and some ten thousand die in under half an hour, many drowning in the river, where their cries are still heard in flood. Resistance is broken for years, and Raimond seeks redress in Rome.",
             "changes": [],
             "margin": "",
-            "id": "390ac6016223"
+            "id": "445ec3a3787f"
           },
           {
             "year": 1214,
@@ -1707,7 +1707,7 @@
             "details": "The meeting set for Toulouse moves to Castra Solis, with de Montfort's army outside the city, to the Mercurians' annoyance. It is the most bitter gathering since the Schism War, taken up with the crusade and charges of meddling with mundanes: some blame Normandy magi, some Flambeau blame Tytalus for the crusade itself. Tolomae of Jerbiton calls for open Hermetic resistance and is thrown out of the debate, swearing revenge on the Mercurians and on the Coenobium. Aedes Mercurii threatens to walk out and so void the Tribunal, until Tibaut and the chief Redcap Alazais, who threatens to stop all Redcap service, avert anarchy. Senex is absent, and Tibaut acts as chief Quaesitor.",
             "changes": [],
             "margin": "",
-            "id": "58004220ea2d"
+            "id": "cc70105af3db"
           },
           {
             "year": 1214,
@@ -1716,7 +1716,7 @@
             "details": "Charges are brought against Tres for arming mercenaries with enchanted weapons, calling them his grogs, and using them to destroy Mistridge. However deplored, it was a lawfully declared Wizard's War and no ruling forbids grogs in one; the vote goes narrowly his way. Tres flees into hiding from Mistridge's friends, and after the meeting the Hermetic faidits begin to gather at Aguilar as the Ostal des Exiles, Rixenda of Mistridge first and Gilbert of Flambeau their leader.",
             "changes": [],
             "margin": "",
-            "id": "aa9e2b81d616"
+            "id": "858324b8a52a"
           },
           {
             "year": 1215,
@@ -1725,7 +1725,7 @@
             "details": "Simon de Montfort enters Toulouse in triumph and takes up residence in the Ch\u00e2teau Narbonnais. The Waldensians are condemned as heretics, though Innocent III thought them good Christians. Filii Sinapis is abandoned in the wake of the crusade.",
             "changes": [],
             "margin": "",
-            "id": "44e1f64326ac"
+            "id": "bbe3afdbf4b3"
           },
           {
             "year": 1216,
@@ -1734,7 +1734,7 @@
             "details": "House Jerbiton expels Tolomae of Bellaquin, leader of the Procrustean League, which calls for open war on the Church, and declares him orbus. He is suspected of the legate's murder and flees rather than answer the Quaesitor's questions. With Senex absent two years, Tibaut is confirmed as chief Quaesitor. In Toulouse an autumn rising is put down with great effort, and de Montfort names himself count of Toulouse.",
             "changes": [],
             "margin": "",
-            "id": "78bab3a70a99"
+            "id": "ae96bb75c06b"
           },
           {
             "year": 1217,
@@ -1743,7 +1743,7 @@
             "details": "While de Montfort campaigns in the north, Raimond slips back into Toulouse to the citizens' joy. De Montfort finds the gates shut against him and lays siege for months.\n\nSecrets\nTibaut, who found the first threads of Senex's inquiry in his laboratory notes, begins this year to investigate the Tribunal's mystery cults, the Cathars and the sorginak, sharing his suspicions with his filia Beatrice. A letter he sent her lies in the satchel of a Redcap who died of crusaders' wounds along the Via Domitia.",
             "changes": [],
             "margin": "",
-            "id": "24d8e961fa4b"
+            "id": "1873ba871d42"
           },
           {
             "year": 1218,
@@ -1752,7 +1752,7 @@
             "details": "Early in the year Tolomae is Marched for repeatedly meddling with mundanes, and slain. His suspected supporters scatter among other covenants or hide among the faidits.",
             "changes": [],
             "margin": "",
-            "id": "ae5b6bf93f16"
+            "id": "8dd911533aea"
           },
           {
             "year": 1218,
@@ -1761,7 +1761,7 @@
             "details": "A stone from a siege engine on the walls of Toulouse strikes Simon de Montfort on the head and kills him. Amaury de Montfort claims his titles, and Alice remains a leader of the campaign, but Simon's great domain begins to fall apart.\n\nSecrets\nSome suspect the engine was one of those Tres built to destroy Mistridge.",
             "changes": [],
             "margin": "",
-            "id": "7d916cbed326"
+            "id": "d58268544d90"
           },
           {
             "year": 1218,
@@ -1770,7 +1770,7 @@
             "details": "In the weeks before de Montfort's death, Augustus of Tolosa Paratge, a senior Quaesitor, is persuaded by Bishop Foulques that Toulouse will fall and asks the covenant's Gorgiastic Cathars to leave for their safety. They refuse; Marc declares Wizard's War on him and, believing him possessed, kills him in the tower. Within the month St Tropez declares Wizard's War on the unresisting Marc and kills him. Under Mariola, the covenant splits into the Blacks, who hold it, and the Whites, who plot in the city to retake it.",
             "changes": [],
             "margin": "",
-            "id": "afdb17620d6a"
+            "id": "226f08b9c5a1"
           },
           {
             "year": 1218,
@@ -1779,7 +1779,7 @@
             "details": "Soon after Christmas, Prince Louis's crusaders under Centule d'Astarac besiege Marmande.",
             "changes": [],
             "margin": "",
-            "id": "cefddd102b64"
+            "id": "9e1be58edbf1"
           },
           {
             "year": 1219,
@@ -1788,7 +1788,7 @@
             "details": "Tibaut, the Presiding Quaesitor, dies in the care of the monks of Saint Hilaire, taken for a Cathar by crusaders who later raid the abbey. His body is buried there and his belongings sit locked in the abbot's chest. At Dama's suggestion his filia Beatrice of Guernicus fills the office until the 1221 Tribunal. (The Hermetic culture chapter also says once that he died in 1214; the 1221 Tribunal takes 1219.)\n\nSecrets\nWarned by Luc of Ara Maxima Nova of Tibaut's questions, Dama ambushed him with Maju near the road to Foix. Her Revoke the Protection of Bonisagus shattered his Parma, but Maju's venom worked slowly; he staggered into the road and divinely blessed crusader knights carried him to the abbey before she could reach him. Before he died he confided something to the knights.",
             "changes": [],
             "margin": "",
-            "id": "32e2f6f12206"
+            "id": "0465eb89aca7"
           },
           {
             "year": 1219,
@@ -1797,7 +1797,7 @@
             "details": "After nine months Marmande surrenders on terms. Amaury de Montfort, urged by the Bishop of Saintes, then kills all five thousand townsfolk and their beasts and burns the town. Prince Louis's royal crusade besieges Toulouse but withdraws when pestilence breaks out in his army, and Raimond begins to win back his county.",
             "changes": [],
             "margin": "",
-            "id": "713767ae2081"
+            "id": "0fc94efb740c"
           }
         ],
         "package_data": {},
@@ -1855,7 +1855,7 @@
             "kind": "covenants",
             "target_id": "ostal_des_exiles",
             "note": "Garsenda, its survivor, is here",
-            "id": "d243071b1c5d"
+            "id": "ffd528474813"
           }
         ],
         "arms": {}
@@ -1886,7 +1886,7 @@
             "kind": "covenants",
             "target_id": "tolosa_paratge",
             "note": "Took in its survivors",
-            "id": "a7f6a3993c86"
+            "id": "db3bd9cbed72"
           }
         ],
         "arms": {}
@@ -1965,7 +1965,7 @@
             "kind": "covenants",
             "target_id": "bellaquin",
             "note": "Bellaquin's first home",
-            "id": "62c036ac34e4"
+            "id": "e62e5fa8610f"
           }
         ],
         "arms": {}
@@ -2116,7 +2116,7 @@
             "kind": "covenants",
             "target_id": "ostal_des_exiles",
             "note": "Took in its survivors",
-            "id": "1013c34d2f91"
+            "id": "29a902ccbbe6"
           }
         ],
         "arms": {}
@@ -2171,7 +2171,7 @@
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "Its abandoned eastern portal",
-            "id": "a37c55da52ce"
+            "id": "47fb5814ddc0"
           }
         ],
         "arms": {}
@@ -2202,7 +2202,7 @@
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "Its lost outpost",
-            "id": "0bfcb5f6d7df"
+            "id": "3b7086c69282"
           }
         ],
         "arms": {}
@@ -2305,7 +2305,7 @@
             "kind": "covenants",
             "target_id": "castra_solis",
             "note": "Beatrice's sanctum, in effect a chapter",
-            "id": "fc0361aa8b68"
+            "id": "ccb17ee1861a"
           }
         ],
         "arms": {}
@@ -2336,7 +2336,7 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "Its survivor helped found the Coenobium",
-            "id": "60cbf35b9760"
+            "id": "8d2c0f5ecbe1"
           }
         ],
         "arms": {}
@@ -2367,7 +2367,7 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "Merged into the Coenobium",
-            "id": "ff12932ab21d"
+            "id": "aa69ba79db77"
           }
         ],
         "arms": {}
@@ -2398,7 +2398,7 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "Driven out by the Coenobium",
-            "id": "ef576a095bd3"
+            "id": "201689f0f885"
           }
         ],
         "arms": {}
@@ -2453,7 +2453,7 @@
             "kind": "covenants",
             "target_id": "fraxinetum_redux",
             "note": "Its secret heir",
-            "id": "38ef9d9c96e1"
+            "id": "4a48f3085b67"
           }
         ],
         "arms": {}
@@ -2484,7 +2484,7 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "One of its magi joined the founders",
-            "id": "96a1945cff25"
+            "id": "5216b2aaf9b3"
           }
         ],
         "arms": {}
@@ -2515,7 +2515,7 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "Harvests its salt vis",
-            "id": "dbae2a43095d"
+            "id": "4e4ba73a691b"
           }
         ],
         "arms": {}
@@ -2546,7 +2546,7 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "Its Toulon chapter stands here",
-            "id": "9f6166c0d2f4"
+            "id": "337da91daa80"
           }
         ],
         "arms": {}
@@ -2601,7 +2601,7 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "Heirs of Ana\u00efs, its survivor",
-            "id": "5e3c868b1314"
+            "id": "563bc39b8990"
           }
         ],
         "arms": {}
@@ -2870,7 +2870,7 @@
             "kind": "creatures",
             "target_id": "the_spirit_of_tolosa",
             "note": "the genius loci whose work this regio is",
-            "id": "1392783e6c28"
+            "id": "e17a26276b87"
           }
         ],
         "arms": {}
@@ -5439,13 +5439,13 @@
             "kind": "creatures",
             "target_id": "cenodoxus_superbia_lord_of_pride_and_envy",
             "note": "hunts its crowds",
-            "id": "f759a4a9f1c2"
+            "id": "2df247bd98e0"
           },
           {
             "kind": "creatures",
             "target_id": "julian_julia_the_tempter_of_the_way_of_st_james",
             "note": "hunts its crowds",
-            "id": "10d8a214bd35"
+            "id": "e191064e6c2e"
           }
         ],
         "arms": {}
@@ -5473,7 +5473,7 @@
             "kind": "creatures",
             "target_id": "julian_julia_the_tempter_of_the_way_of_st_james",
             "note": "haunts the ferry crossing",
-            "id": "d7e22582618d"
+            "id": "f2eeb8dfa59d"
           }
         ],
         "arms": {}
@@ -5735,13 +5735,13 @@
             "kind": "characters",
             "target_id": "dama_of_merinita",
             "note": "Spent long years at the court; once sworn to Oriande",
-            "id": "b00bb91fa4a5"
+            "id": "5d3c61c0e77a"
           },
           {
             "kind": "creatures",
             "target_id": "oriande_la_f_e",
             "note": "its queen",
-            "id": "1cc244b2df91"
+            "id": "1d246a460718"
           }
         ],
         "arms": {}
@@ -6382,7 +6382,7 @@
             "kind": "places",
             "target_id": "aedes_mercurii_the_templum_cirque_de_gavarnie",
             "note": "Joined by a Mercere Portal",
-            "id": "2cdb7e4a8a97"
+            "id": "4b2a6db4f296"
           }
         ],
         "arms": {}
@@ -6412,7 +6412,7 @@
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "A chapter of Aedes Mercurii",
-            "id": "b8af758ef5dd"
+            "id": "11379aaef3a1"
           }
         ],
         "arms": {}
@@ -6647,7 +6647,7 @@
             "kind": "covenants",
             "target_id": "miniata_sophia",
             "note": "",
-            "id": "fb7e015e98a0"
+            "id": "a56ece9631a4"
           }
         ],
         "arms": {}
@@ -7014,7 +7014,7 @@
             "kind": "covenants",
             "target_id": "bellaquin",
             "note": "",
-            "id": "eea6fa3f830f"
+            "id": "22ce31bc23f8"
           }
         ],
         "arms": {}
@@ -7045,7 +7045,7 @@
             "kind": "covenants",
             "target_id": "bellaquin",
             "note": "",
-            "id": "4b4ca29de267"
+            "id": "e64692a9716d"
           }
         ],
         "arms": {}
@@ -10035,25 +10035,25 @@
             "kind": "books",
             "target_id": "the_libraries_of_val_negra",
             "note": "Kept, lost or hidden in Val-Negra",
-            "id": "13659069d46d"
+            "id": "708693d378a2"
           },
           {
             "kind": "books",
             "target_id": "priamitus_s_scroll_of_set_the_stones_of_the_via",
             "note": "Kept, lost or hidden in Val-Negra",
-            "id": "69b0fe1f5453"
+            "id": "4dd2a0084baa"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "Founded by magi who left it; claims its legacy",
-            "id": "859950b00332"
+            "id": "dedb432550e4"
           },
           {
             "kind": "covenants",
             "target_id": "castra_solis",
             "note": "Took its place as domus magna of House Flambeau",
-            "id": "f3fed608f694"
+            "id": "467d81a8d2b1"
           }
         ],
         "arms": {}
@@ -10143,25 +10143,25 @@
             "kind": "covenants",
             "target_id": "ostal_des_exiles",
             "note": "Hermetic faidits",
-            "id": "6c551ae23d76"
+            "id": "62daa8d7ded4"
           },
           {
             "kind": "covenants",
             "target_id": "tolosa_paratge",
             "note": "In the besieged city",
-            "id": "e3394d0a94de"
+            "id": "bb1669bf5f11"
           },
           {
             "kind": "covenants",
             "target_id": "castra_solis",
             "note": "Backs the crusade",
-            "id": "f183b15eb57a"
+            "id": "ab1403a2f0da"
           },
           {
             "kind": "characters",
             "target_id": "tres",
             "note": "His engines may have killed Simon",
-            "id": "6c5f29ebc51a"
+            "id": "c3ef35eef605"
           }
         ],
         "arms": {}
@@ -10211,55 +10211,55 @@
             "kind": "creatures",
             "target_id": "the_serpent_maju",
             "note": "Dama's familiar, the demon behind her cult",
-            "id": "99540da50d27"
+            "id": "3de559df00cf"
           },
           {
             "kind": "characters",
             "target_id": "dama_of_merinita",
             "note": "The Praeco, Maju's thrall",
-            "id": "01aa8f8dfab0"
+            "id": "77291aa66ef9"
           },
           {
             "kind": "characters",
             "target_id": "beatrice_of_guernicus",
             "note": "Tibaut's filia and heir",
-            "id": "d154ba93442b"
+            "id": "39deba62cce3"
           },
           {
             "kind": "characters",
             "target_id": "protendus",
             "note": "The likely investigator",
-            "id": "bb25f6546960"
+            "id": "7bf6511c2cc7"
           },
           {
             "kind": "characters",
             "target_id": "luc_of_merinita",
             "note": "Told Dama of Tibaut's questions",
-            "id": "3dfed9329905"
+            "id": "3b140583358d"
           },
           {
             "kind": "characters",
             "target_id": "alazais_of_mercere",
             "note": "Bought with a Longevity Ritual",
-            "id": "b76c49c105bc"
+            "id": "67d64bc65bd9"
           },
           {
             "kind": "characters",
             "target_id": "marie_of_merinita",
             "note": "Dama's estranged filia",
-            "id": "3033929cd45d"
+            "id": "dcc61488173c"
           },
           {
             "kind": "characters",
             "target_id": "rebecca",
             "note": "A sorgina of Dama's circle",
-            "id": "0817b4987973"
+            "id": "8f751b251adc"
           },
           {
             "kind": "covenants",
             "target_id": "castra_solis",
             "note": "Dama's covenant",
-            "id": "5e16823dd1fc"
+            "id": "f12773244221"
           }
         ],
         "arms": {}
@@ -10339,25 +10339,25 @@
             "kind": "creatures",
             "target_id": "cenodoxus_superbia_lord_of_pride_and_envy",
             "note": "Pride and Envy, still in Gascony",
-            "id": "b327bae9f038"
+            "id": "27c50b638520"
           },
           {
             "kind": "creatures",
             "target_id": "adrian_the_voice_of_safety",
             "note": "Sloth, still in Gascony",
-            "id": "d7377b485e09"
+            "id": "cf48003c20a9"
           },
           {
             "kind": "creatures",
             "target_id": "julian_julia_the_tempter_of_the_way_of_st_james",
             "note": "Lust, still in Gascony",
-            "id": "8725574b98e4"
+            "id": "58594a2ee629"
           },
           {
             "kind": "creatures",
             "target_id": "old_man_of_the_bridge_the_tempter_of_st_thibery",
             "note": "Greed, gone to the bridge of St. Thibery",
-            "id": "408caa650480"
+            "id": "bbecff675271"
           }
         ],
         "arms": {}
@@ -10417,25 +10417,25 @@
             "kind": "covenants",
             "target_id": "bellaquin",
             "note": "Tolomae's covenant",
-            "id": "8231e20c0e19"
+            "id": "33f93327245b"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "Tolomae swore revenge",
-            "id": "1bbe9d5d3dcc"
+            "id": "99d037979ac8"
           },
           {
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "His old covenant, which renounced him",
-            "id": "0be8a740ac1d"
+            "id": "096e299d8c07"
           },
           {
             "kind": "covenants",
             "target_id": "ostal_des_exiles",
             "note": "Faidits shelter them",
-            "id": "df6089a698c4"
+            "id": "64a05fa81bb6"
           }
         ],
         "arms": {}
@@ -10505,49 +10505,49 @@
             "kind": "covenants",
             "target_id": "tolosa_paratge",
             "note": "The divided covenant",
-            "id": "0c2379ea1414"
+            "id": "02b2b51e8b4d"
           },
           {
             "kind": "characters",
             "target_id": "mariola",
             "note": "Leader, paralysed",
-            "id": "6c01d32bc066"
+            "id": "470014b85013"
           },
           {
             "kind": "characters",
             "target_id": "carolus_st_tropez",
             "note": "Leads the Whites",
-            "id": "4e023d4fca63"
+            "id": "27467351231b"
           },
           {
             "kind": "characters",
             "target_id": "cyprian",
             "note": "Leads the Blacks",
-            "id": "d008dfc34907"
+            "id": "b95e68fd5f58"
           },
           {
             "kind": "characters",
             "target_id": "adam_carpentiere",
             "note": "White; built the boom",
-            "id": "60e21bad41cd"
+            "id": "79be9f564386"
           },
           {
             "kind": "characters",
             "target_id": "raimond",
             "note": "Black; a Gorgiastic Good Man",
-            "id": "cec7c43291fd"
+            "id": "c0960d129351"
           },
           {
             "kind": "characters",
             "target_id": "renaud_of_flambeau",
             "note": "Cyprian's filius",
-            "id": "c35be800e304"
+            "id": "ad012b62c889"
           },
           {
             "kind": "covenants",
             "target_id": "stella_durus",
             "note": "Courted by both sides",
-            "id": "a1c63bac0166"
+            "id": "bdab229ed9a5"
           }
         ],
         "arms": {}
@@ -10607,31 +10607,31 @@
             "kind": "covenants",
             "target_id": "the_coenobium_rhodanien",
             "note": "The hegemon",
-            "id": "bf2306657edd"
+            "id": "9de1ff4ee9eb"
           },
           {
             "kind": "characters",
             "target_id": "alazais_of_mercere",
             "note": "First Consul",
-            "id": "b85972f3915e"
+            "id": "3b0b525fcbda"
           },
           {
             "kind": "covenants",
             "target_id": "castra_solis",
             "note": "Its ally",
-            "id": "ce40b1174bd5"
+            "id": "ebae69fa410e"
           },
           {
             "kind": "covenants",
             "target_id": "stella_durus",
             "note": "Courted as a chapter",
-            "id": "53e0d08bd27d"
+            "id": "3dd2a0496661"
           },
           {
             "kind": "covenants",
             "target_id": "ostal_des_exiles",
             "note": "It would direct them",
-            "id": "2c85518d26dd"
+            "id": "1817cbac9998"
           }
         ],
         "arms": {}
@@ -10701,37 +10701,37 @@
             "kind": "characters",
             "target_id": "beatrice_of_guernicus",
             "note": "To be confirmed",
-            "id": "799217caffd1"
+            "id": "e2e0c4f5aa74"
           },
           {
             "kind": "characters",
             "target_id": "dama_of_merinita",
             "note": "The Praeco presides",
-            "id": "7e099900c137"
+            "id": "076e08022a05"
           },
           {
             "kind": "characters",
             "target_id": "midius",
             "note": "The flamen",
-            "id": "2ccc8feb6e00"
+            "id": "ebb80b6b603b"
           },
           {
             "kind": "characters",
             "target_id": "garus",
             "note": "The faidits want his backing",
-            "id": "6112253b1bb6"
+            "id": "1f26eb42b7fa"
           },
           {
             "kind": "covenants",
             "target_id": "ostal_des_exiles",
             "note": "Seeks recognition",
-            "id": "fee0f2f90744"
+            "id": "b391c50d78d1"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "Leads the conservatives",
-            "id": "37a2a4d2655a"
+            "id": "978505394fef"
           }
         ],
         "arms": {}
@@ -10792,25 +10792,25 @@
             "kind": "creatures",
             "target_id": "abaddon_of_tytalus_the_living_ghost",
             "note": "its guardian at the Iron Door",
-            "id": "032afce1c211"
+            "id": "442eb704170b"
           },
           {
             "kind": "creatures",
             "target_id": "the_adulteration_of_flambeau",
             "note": "the thing behind the Iron Door",
-            "id": "e68464eea935"
+            "id": "76618b0a6174"
           },
           {
             "kind": "covenants",
             "target_id": "castra_solis",
             "note": "The domus magna now",
-            "id": "aef93fa61b1a"
+            "id": "327900588166"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "Claims Val-Negra's legacy",
-            "id": "2b1d941a6fe6"
+            "id": "e1167cf3a801"
           }
         ],
         "arms": {}
@@ -10871,31 +10871,31 @@
             "kind": "covenants",
             "target_id": "aedes_mercurii",
             "note": "Leads the bloc",
-            "id": "a84f576de1e3"
+            "id": "d7dd5d776fe1"
           },
           {
             "kind": "covenants",
             "target_id": "ara_maxima_nova",
             "note": "Of the bloc",
-            "id": "96c3b2be0be2"
+            "id": "efd89336cbef"
           },
           {
             "kind": "covenants",
             "target_id": "stella_durus",
             "note": "Of the bloc",
-            "id": "57e840ff3608"
+            "id": "a23aacd78434"
           },
           {
             "kind": "covenants",
             "target_id": "miniata_sophia",
             "note": "Of the bloc",
-            "id": "0b38bc656e04"
+            "id": "9bf58f5bdf74"
           },
           {
             "kind": "covenants",
             "target_id": "bellaquin",
             "note": "Wants a Catalan Tribunal",
-            "id": "5ef6696923c4"
+            "id": "9c435d2e1b56"
           }
         ],
         "arms": {}
@@ -11065,7 +11065,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 30,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Organization Lore: Tolosa Paratge",
@@ -11613,7 +11613,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -12096,7 +12096,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -12613,7 +12613,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -13088,7 +13088,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -13495,7 +13495,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -14019,7 +14019,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -14435,7 +14435,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -14884,7 +14884,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -15328,7 +15328,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -15929,7 +15929,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -16508,7 +16508,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -16982,7 +16982,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -17547,7 +17547,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 30,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -18626,7 +18626,7 @@
             "kind": "creatures",
             "target_id": "the_serpent_maju",
             "note": "her familiar",
-            "id": "1437c3be9620"
+            "id": "377fe018dec3"
           }
         ]
       },
@@ -19188,7 +19188,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -19635,7 +19635,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -20205,7 +20205,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -20676,7 +20676,7 @@
         },
         "abilities": [
           {
-            "name": "Area Lore: Rhine Tribunal",
+            "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 15,
             "specialty": "covenants"
@@ -20769,7 +20769,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -21361,7 +21361,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -21857,7 +21857,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -22354,7 +22354,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -22832,7 +22832,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 30,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -23306,7 +23306,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -23777,7 +23777,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -24290,7 +24290,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -24688,12 +24688,6 @@
             "specialty": "covenants"
           },
           {
-            "name": "Area Lore: Rhine Tribunal",
-            "category": "General",
-            "xp": 30,
-            "specialty": "covenants"
-          },
-          {
             "name": "Athletics",
             "category": "General",
             "xp": 15,
@@ -24745,7 +24739,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 140,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Ride",
@@ -25056,7 +25050,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -25632,7 +25626,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -26082,7 +26076,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -26548,7 +26542,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -26954,7 +26948,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -27333,7 +27327,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -27817,7 +27811,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -28226,7 +28220,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -28585,7 +28579,7 @@
             "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 50,
-            "specialty": null
+            "specialty": "covenants"
           },
           {
             "name": "Artes Liberales",
@@ -28657,7 +28651,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 30,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -29166,7 +29160,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -29443,7 +29437,7 @@
             "kind": "characters",
             "target_id": "marcella_of_bonisagus",
             "note": "Her mater",
-            "id": "0bcedb51e96d"
+            "id": "eaf053e7e7dd"
           }
         ]
       },
@@ -29592,7 +29586,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -29873,7 +29867,7 @@
             "kind": "characters",
             "target_id": "cyprian",
             "note": "His parens",
-            "id": "1afafb1fbd0d"
+            "id": "fbbd75639f78"
           }
         ]
       },
@@ -29944,7 +29938,7 @@
             "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 30,
-            "specialty": null
+            "specialty": "covenants"
           },
           {
             "name": "Artes Liberales",
@@ -30040,7 +30034,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 30,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -30383,7 +30377,7 @@
             "kind": "characters",
             "target_id": "mariola",
             "note": "His correspondent",
-            "id": "3c9b12e0607d"
+            "id": "f4b2c232864d"
           }
         ]
       },
@@ -30544,7 +30538,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -30847,7 +30841,7 @@
             "kind": "characters",
             "target_id": "etienne_of_merinita",
             "note": "His chess rival in Perpignan",
-            "id": "f5483356dfbb"
+            "id": "e1314a87a7c2"
           }
         ]
       },
@@ -31008,7 +31002,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -31383,7 +31377,7 @@
             "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 5,
-            "specialty": null
+            "specialty": "covenants"
           },
           {
             "name": "Artes Liberales",
@@ -31473,7 +31467,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -31928,7 +31922,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -32227,7 +32221,7 @@
             "kind": "characters",
             "target_id": "luc_of_merinita",
             "note": "Her brother",
-            "id": "5a6161e19227"
+            "id": "ca70e1b3a146"
           }
         ]
       },
@@ -32295,7 +32289,7 @@
         },
         "abilities": [
           {
-            "name": "Area Lore: Rhine Tribunal",
+            "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 5,
             "specialty": "covenants"
@@ -32388,7 +32382,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -32749,7 +32743,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 140,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Ride",
@@ -32913,7 +32907,7 @@
             "kind": "characters",
             "target_id": "dama_of_merinita",
             "note": "Made the Longevity Ritual of Alazais's lover",
-            "id": "999e44d8cb4a"
+            "id": "8e0e69ae0773"
           }
         ]
       },
@@ -33062,7 +33056,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -33492,7 +33486,7 @@
             "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 15,
-            "specialty": null
+            "specialty": "covenants"
           },
           {
             "name": "Artes Liberales",
@@ -33594,7 +33588,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -34020,7 +34014,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -34509,7 +34503,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -35025,7 +35019,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -35346,13 +35340,13 @@
           {
             "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
-            "xp": 75,
-            "specialty": null
+            "xp": 105,
+            "specialty": "covenants"
           },
           {
             "name": "Area Lore: Rhine Tribunal",
             "category": "General",
-            "xp": 105,
+            "xp": 75,
             "specialty": "covenants"
           },
           {
@@ -35707,7 +35701,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -36084,7 +36078,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -36471,7 +36465,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -36744,7 +36738,7 @@
             "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 140,
-            "specialty": null
+            "specialty": "covenants"
           },
           {
             "name": "Athletics",
@@ -36940,7 +36934,7 @@
             "name": "Area Lore: Proven\u00e7al Tribunal",
             "category": "General",
             "xp": 140,
-            "specialty": null
+            "specialty": "covenants"
           },
           {
             "name": "Area Lore: Rhone",
@@ -37266,7 +37260,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -37722,7 +37716,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -38133,7 +38127,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 5,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -38543,7 +38537,7 @@
             "name": "Organization Lore: Order of Hermes",
             "category": "General",
             "xp": 15,
-            "specialty": "the Rhine Tribunal"
+            "specialty": "the Proven\u00e7al Tribunal"
           },
           {
             "name": "Parma Magica",
@@ -39573,7 +39567,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Mends a breach in the city walls with stone that holds only until the next sunrise or sunset, then crumbles away and leaves the gap.",
-            "id": "b93d24e6211b"
+            "id": "ad34a85c22a5"
           },
           {
             "name": "The Silent Counsel",
@@ -39586,7 +39580,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Quietly steers a body of people, such as the bishop or the capitouls in session, toward what is best for the city as a whole.",
-            "id": "d75a174fb7fd"
+            "id": "a539cbdb39c5"
           },
           {
             "name": "Human Shape",
@@ -39599,7 +39593,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes bodily form until the next sunrise or sunset as an unremarkable townsman of the lower orders, still unsettling to be near because of its Gift.",
-            "id": "1c8f6ba2f2f1"
+            "id": "19b31cfe6f5d"
           },
           {
             "name": "Grant Blessing of the City",
@@ -39612,7 +39606,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Makes its chosen one prosper, granting Ways of Toulouse until the spirit takes it back; the Might spent stays spent until then.",
-            "id": "df67fa45eb2a"
+            "id": "8906988663b7"
           },
           {
             "name": "Oath Swearing",
@@ -39625,7 +39619,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Works only on the steps of Saint-Pierre des Cuisines, where counts and capitouls swear to the people (a tiny Magic aura of 1). If it penetrates, the oath binds: breaking it, even in secret, sets mostly false rumours running through the county and gives the oathbreaker the Minor Flaw Infamous.",
-            "id": "b8f0b583352d"
+            "id": "88afa322d8f0"
           }
         ],
         "vis": [],
@@ -39743,7 +39737,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 3,
-            "id": "7e1fc2eadb66"
+            "id": "017d07386861"
           },
           {
             "name": "Dagger",
@@ -39751,7 +39745,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 6,
-            "id": "c70fc3b3aaed"
+            "id": "7510c290f87e"
           }
         ],
         "soak": 4,
@@ -39818,7 +39812,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Its order's version of Coagulation: a material body with no shape or size, sin made visible, which drives envious onlookers to indulge their envy until they drop.",
-            "id": "a74b4d9b5d15"
+            "id": "2b818364ff2e"
           },
           {
             "name": "Form of Man",
@@ -39831,7 +39825,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Once embodied, takes any human shape, and drops it at will.",
-            "id": "0b93ec146d7e"
+            "id": "2cef7c665e62"
           },
           {
             "name": "Obsession",
@@ -39844,7 +39838,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Imposes the Obsession of Pride or Envy, for 1 to 3 points.",
-            "id": "3f38b6225ab9"
+            "id": "389774bed384"
           },
           {
             "name": "Contagious Obsession",
@@ -39857,7 +39851,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "One point per victim. Whoever falls to its Envy carries it on: anyone hurt by the victim's new vice must resist it in turn or become a carrier too, up to the points spent.",
-            "id": "61553fd38302"
+            "id": "c48d1537354b"
           },
           {
             "name": "Grant the Master's Potential",
@@ -39870,7 +39864,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "A Ritual: raises the Characteristic behind the target's craft to +3, or by 1 if that is better (as Great Characteristic). Usually lent and taken back when a condition set at the gift is broken; given for good, it costs the demon Might and leaves the target Tainted with Evil.",
-            "id": "73e92c611afc"
+            "id": "f5982dd6e1c8"
           },
           {
             "name": "Grant the Master's Insight",
@@ -39883,7 +39877,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "A Ritual: +2 to the target's craft Ability, as Puissant Ability and on top of it, lent or given on the same terms as the Master's Potential.",
-            "id": "3383435a954a"
+            "id": "e62ef595b8e1"
           },
           {
             "name": "Shroud the Stench of the Pit",
@@ -39896,7 +39890,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Variable cost. Makes another power or aura seem Magic, Faerie or wholly mundane, hiding it even from Sense Holiness and Unholiness, for the cost (or magnitude) of what it hides and as long as that lasts.",
-            "id": "23f3c6231b26"
+            "id": "9988f9d66541"
           }
         ],
         "vis": [
@@ -39904,7 +39898,7 @@
             "pawns": 8,
             "art": "Vim",
             "where": "in its tongue and eyes",
-            "id": "32c0b2a0243a"
+            "id": "d1ffcf95db5b"
           }
         ],
         "equipment": "",
@@ -40018,7 +40012,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "5c5f1f62c60b"
+            "id": "33d9c0ea8941"
           },
           {
             "name": "Fist",
@@ -40026,7 +40020,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 4,
-            "id": "4250b1c766dc"
+            "id": "73d7b1b66eaf"
           }
         ],
         "soak": 4,
@@ -40105,7 +40099,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes any human shape from Size -2 to +2, most often a troubadour with a guitar.",
-            "id": "7477b3e89726"
+            "id": "7ae28b59b0fb"
           },
           {
             "name": "Trust of the Innocent",
@@ -40118,7 +40112,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "The target sets judgment aside and believes one plausible lie until shown otherwise; an Intelligence roll against 6 resists.",
-            "id": "6c755582c8e6"
+            "id": "d0e48a1682ca"
           },
           {
             "name": "Obsession",
@@ -40131,7 +40125,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Imposes the Obsession of Acedia or Sloth, for 1 to 3 points.",
-            "id": "e740ecedf9ae"
+            "id": "60d832c46ed1"
           },
           {
             "name": "Coagulation",
@@ -40144,7 +40138,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Builds a body over 30 rounds of manifesting; dissolves it with a round's concentration.",
-            "id": "2725b455e5cc"
+            "id": "a6092eb32dbf"
           },
           {
             "name": "Forked Tongue of the Serpent",
@@ -40157,7 +40151,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "The target believes any lie, however absurd, until he repeats it to someone and hears how foolish it sounds; an hourly Intelligence roll against 9, from an hour after, also breaks it.",
-            "id": "b627332c3962"
+            "id": "f5137b081368"
           },
           {
             "name": "The Serpent's Oracle",
@@ -40170,7 +40164,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Duplicates any non-Ritual Intellego spell, or glimpses the immediate consequences of one future act.",
-            "id": "b03c447aca8d"
+            "id": "260f6e8fbbeb"
           },
           {
             "name": "Strangle the Noble Endeavor",
@@ -40183,7 +40177,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Gives a flawless moral and scriptural argument for its point, usually that going on crusade ruins one's loved ones. Intelligence + Theology against 9, first a day later and then monthly, sees through it; someone else may explain the flaw and roll for the victim.",
-            "id": "1d8d836f533d"
+            "id": "5f3ffc50d9d3"
           }
         ],
         "vis": [
@@ -40191,7 +40185,7 @@
             "pawns": 6,
             "art": "Vim",
             "where": "in its hands",
-            "id": "2c8221874597"
+            "id": "715c46ac0af4"
           }
         ],
         "equipment": "",
@@ -40322,7 +40316,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 5,
-            "id": "335ada24af52"
+            "id": "3fdce066f082"
           },
           {
             "name": "Fist",
@@ -40330,7 +40324,7 @@
             "attack": 4,
             "defense": 4,
             "damage": 2,
-            "id": "b92d20babf6b"
+            "id": "87ebda7c4c3e"
           }
         ],
         "soak": 3,
@@ -40403,7 +40397,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes a material body, and drops it at will.",
-            "id": "ff97f91af141"
+            "id": "53463865cfb1"
           },
           {
             "name": "Obsession",
@@ -40416,7 +40410,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Imposes the Obsession of Betraying Lust, for 1 to 3 points.",
-            "id": "7201e16c8c31"
+            "id": "c96584bc2fb9"
           },
           {
             "name": "Harness the Wind",
@@ -40429,7 +40423,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Flies from one place to another, until journey's end or dawn; it keeps what it carries, unlike a demon that simply dissolves and re-forms elsewhere.",
-            "id": "d7202844f449"
+            "id": "55b507bdca4a"
           },
           {
             "name": "Hag Ride",
@@ -40442,7 +40436,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Rides a victim for a night: awake but helpless, he loses a long-term Fatigue level and recovers none that night, and can move again at dawn.",
-            "id": "828c17c975ba"
+            "id": "f6d74d5e7d21"
           },
           {
             "name": "Mutable Gender",
@@ -40455,7 +40449,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Shifts at will to any man's or woman's form; Julian is most often a black-haired, roguish young man in pilgrim's clothes.",
-            "id": "fff7c76f3401"
+            "id": "423d73af1f1c"
           }
         ],
         "vis": [
@@ -40463,7 +40457,7 @@
             "pawns": 3,
             "art": "Vim",
             "where": "in its belt buckle",
-            "id": "835eb4a6cc7f"
+            "id": "49372a61e52b"
           }
         ],
         "equipment": "",
@@ -40780,7 +40774,7 @@
             "attack": 3,
             "defense": 1,
             "damage": 1,
-            "id": "a44de3520bdb"
+            "id": "a474ab978799"
           }
         ],
         "soak": 2,
@@ -40937,7 +40931,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Non-Hermetic: cues one of her faerie allies to appear and act as she bids.",
-            "id": "e1676e867a5c"
+            "id": "051debdbe122"
           },
           {
             "name": "Caress of the Lethe",
@@ -40950,7 +40944,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Whoever she touches forgets his mortal life until he sees some object, or kind of object, tied to his home.",
-            "id": "9eb24495e8b4"
+            "id": "70973c62b1fa"
           },
           {
             "name": "Dream's Undeniable Invitation",
@@ -40963,7 +40957,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Puts a person within earshot to sleep.",
-            "id": "0617a75baf29"
+            "id": "26425703e55d"
           },
           {
             "name": "Enthralling Sound",
@@ -40976,7 +40970,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Her storytelling stirs, or heightens, one emotion in everyone listening; a stress roll on a fitting Personality Trait against 9 shakes it off.",
-            "id": "459b4e6c62fa"
+            "id": "07e0d733519d"
           },
           {
             "name": "Extended Glamour",
@@ -40989,7 +40983,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Constant: takes over a mundane place and makes it part of her faerie kingdom.",
-            "id": "5f15dfbe8d67"
+            "id": "4cd85ee505fa"
           },
           {
             "name": "Focus Power (Plants within her realm)",
@@ -41002,7 +40996,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Up to 10 points: any Herbam effect up to tenth magnitude, with 10 Intricacy points spent on Initiative.",
-            "id": "888394387d4a"
+            "id": "9fa5346c96dd"
           },
           {
             "name": "On the Breath of the Wind",
@@ -41015,7 +41009,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Becomes a whirling breeze of the season's leaves until she chooses to take her own shape again.",
-            "id": "9c1ff51f239d"
+            "id": "47b4b11503bb"
           },
           {
             "name": "The Price of Impertinence",
@@ -41028,7 +41022,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Turns a person within earshot into a small woodland beast (squirrel, hare, fawn, hedgehog, polecat) until a condition she sets is met.",
-            "id": "fa7be35fcbd7"
+            "id": "2ebb145616f8"
           }
         ],
         "vis": [
@@ -41036,7 +41030,7 @@
             "pawns": 10,
             "art": "Herbam",
             "where": "in her antlers",
-            "id": "56240cfdb0c9"
+            "id": "50135524544b"
           }
         ],
         "equipment": "A glass-bladed dagger, which she sometimes gives a knight to use within her lands, where it becomes whatever weapon he wants; faeries know it as her token.",
@@ -41276,7 +41270,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 7,
-            "id": "b1dcdef6192c"
+            "id": "63dab8e61a74"
           },
           {
             "name": "Alicorn",
@@ -41284,7 +41278,7 @@
             "attack": 9,
             "defense": 6,
             "damage": 9,
-            "id": "cd4dd2501ed4"
+            "id": "a6ddee67b80a"
           }
         ],
         "soak": 3,
@@ -41375,7 +41369,7 @@
             "level": 40,
             "penetration_bonus": 0,
             "description": "Wreathed in soft white light, its hooves and horn turn razor-keen with holy power: +5 to all Attack and Damage.",
-            "id": "2217660e1999"
+            "id": "04d87c58ef77"
           },
           {
             "name": "Sense Virginity",
@@ -41388,7 +41382,7 @@
             "level": 15,
             "penetration_bonus": 0,
             "description": "Looking into someone's eyes, it knows whether they are a virgin.",
-            "id": "aecd8132f925"
+            "id": "1cbff4cb0d37"
           }
         ],
         "vis": [
@@ -41396,7 +41390,7 @@
             "pawns": 4,
             "art": "Animal",
             "where": "Divinely aligned, in its horn (the alicorn)",
-            "id": "906811f03d9b"
+            "id": "a29e1d33e6de"
           }
         ],
         "equipment": "",
@@ -41641,7 +41635,7 @@
             "attack": 10,
             "defense": 12,
             "damage": -5,
-            "id": "b2009a69d05a"
+            "id": "facf7f3fb850"
           },
           {
             "name": "Teeth",
@@ -41649,7 +41643,7 @@
             "attack": 10,
             "defense": 9,
             "damage": -6,
-            "id": "d43bcf34fdc2"
+            "id": "3808cb90733f"
           }
         ],
         "soak": 6,
@@ -41740,7 +41734,7 @@
             "level": 35,
             "penetration_bonus": 0,
             "description": "A Ritual Power: makes a hidden hoard of coins worth about 20 Mythic Pounds, under a house or in a foundation, and doles it out when its family behaves as it likes. The coins copy a local coin it knows, or bear a strange design. Using it lowers its Might Score until it spends a season in a Magic aura of 3 or eats 15 pawns of Animal vis.",
-            "id": "9075c75bab58"
+            "id": "51456fa12c94"
           },
           {
             "name": "Wages of Greed",
@@ -41753,7 +41747,7 @@
             "level": 25,
             "penetration_bonus": 0,
             "description": "Racks a person with pain that keeps him from his daily work without wounding him; kept for those who will not let it go.",
-            "id": "ba7f3616e4b5"
+            "id": "5d00d50aca6f"
           }
         ],
         "vis": [
@@ -41761,7 +41755,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its tail",
-            "id": "ee210388254e"
+            "id": "be1a7782bca2"
           }
         ],
         "equipment": "",
@@ -41995,7 +41989,7 @@
             "attack": 12,
             "defense": 6,
             "damage": 15,
-            "id": "6645d33fa271"
+            "id": "2a991de3e1de"
           },
           {
             "name": "Tentacle",
@@ -42003,7 +41997,7 @@
             "attack": 14,
             "defense": 11,
             "damage": 14,
-            "id": "a52426b3252b"
+            "id": "62edbc8bb3ae"
           },
           {
             "name": "Grapple",
@@ -42011,7 +42005,7 @@
             "attack": 8,
             "defense": 4,
             "damage": null,
-            "id": "10b86c599492"
+            "id": "ba0f7e76adf1"
           }
         ],
         "soak": 11,
@@ -42096,7 +42090,7 @@
             "level": 30,
             "penetration_bonus": 0,
             "description": "Slides over any ground, unhindered by brambles, wreckage or rubble smaller than itself.",
-            "id": "93ee61e20e2c"
+            "id": "9fab5b51b30e"
           },
           {
             "name": "Grasping Tentacles",
@@ -42109,7 +42103,7 @@
             "level": 45,
             "penetration_bonus": 0,
             "description": "Shoots out a tentacle to strike up to 100 paces away with no penalty for the distance; each tentacle is a fresh use.",
-            "id": "37e6eb7038b0"
+            "id": "45972369f0d4"
           },
           {
             "name": "Sense the Quivering Prey",
@@ -42122,7 +42116,7 @@
             "level": 10,
             "penetration_bonus": 0,
             "description": "Feels the shapes of creatures through the air with its tentacles: crude, and blind to whether a body lives.",
-            "id": "0ff4a1773186"
+            "id": "4276adfbdd71"
           }
         ],
         "vis": [
@@ -42130,7 +42124,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in its tentacles",
-            "id": "9634845795b9"
+            "id": "bf4c6574515b"
           }
         ],
         "equipment": "",
@@ -42276,7 +42270,7 @@
             "attack": 10,
             "defense": 2,
             "damage": 24,
-            "id": "62b9589cdfe9"
+            "id": "daad17e82889"
           }
         ],
         "soak": 10,
@@ -42445,7 +42439,7 @@
             "attack": 9,
             "defense": 9,
             "damage": 4,
-            "id": "6ad2b7b4d111"
+            "id": "95b6d9a65bdc"
           }
         ],
         "soak": 5,
@@ -42596,7 +42590,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes any humanoid shape from Size -2 to +2, often a troubadour with a guitar or a little winged sprite.",
-            "id": "55f4ffa0d00f"
+            "id": "0180da37f6ea"
           },
           {
             "name": "Shapeshifter",
@@ -42609,7 +42603,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes any beast's shape from Size -2 to +2, fabulous ones included; most often a dove, a hare or a snake.",
-            "id": "9948494f7ea8"
+            "id": "ce4f3ae44eac"
           },
           {
             "name": "A Pretty Cloak to Wrap it Within",
@@ -42622,7 +42616,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Up to 9 points: any Imaginem effect up to ninth magnitude.",
-            "id": "ea086203ad3e"
+            "id": "c863237b11f8"
           },
           {
             "name": "Obsession",
@@ -42635,7 +42629,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Imposes Cruelty, Greed or Pride, for 1 to 3 points.",
-            "id": "b4f3c9a89076"
+            "id": "156fbe856a58"
           },
           {
             "name": "Coagulation",
@@ -42648,7 +42642,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Builds a body over 45 rounds of manifesting; dissolves it with a round's concentration.",
-            "id": "168250addd19"
+            "id": "81647b23628d"
           },
           {
             "name": "Lend Senses",
@@ -42661,7 +42655,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Lends its hearing or sight to someone it touches, indefinitely, until the eavesdropper witnesses an act of religious devotion.",
-            "id": "ac54e7a846e4"
+            "id": "d02bfeeab36e"
           },
           {
             "name": "Shroud the Stench of the Pit",
@@ -42674,7 +42668,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Variable cost. Makes another power or aura seem Magic, Faerie or mundane, even to Sense Holiness and Unholiness, for the cost (or magnitude) of what it hides. It keeps Mimizan's Infernal aura cloaked, so it normally has only 42 Might Points to spend.",
-            "id": "7e8a0ddce425"
+            "id": "9a0c7ffb9aac"
           },
           {
             "name": "Wealth of Nations",
@@ -42687,7 +42681,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Fetches riches worth up to 45 pounds of gold, of any kind valued for itself, not made but taken from wherever corrupts most: a distant treasury or a bystander's purse.",
-            "id": "482785d0a1d6"
+            "id": "2710c6bb7093"
           },
           {
             "name": "His Master's Voice",
@@ -42700,7 +42694,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Variable cost. Summons other demons or corrupt beasts to it, a Might Point for each point of their Infernal Might, without any control over them.",
-            "id": "10a01961cea3"
+            "id": "a14e9a986210"
           },
           {
             "name": "The Serpent's Oracle",
@@ -42713,7 +42707,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Duplicates any non-Ritual Intellego spell, or glimpses the immediate consequences of one future act.",
-            "id": "5d4ec86bf28a"
+            "id": "3d2220950263"
           }
         ],
         "vis": [
@@ -42721,7 +42715,7 @@
             "pawns": 9,
             "art": "Vim",
             "where": "in its eyes",
-            "id": "94fdbbc494d2"
+            "id": "76e7ceb714f1"
           }
         ],
         "equipment": "",
@@ -42941,7 +42935,7 @@
             "attack": 3,
             "defense": 3,
             "damage": -2,
-            "id": "b0316f0998cb"
+            "id": "5e0c563ce99c"
           }
         ],
         "soak": 4,
@@ -43068,7 +43062,7 @@
             "level": 15,
             "penetration_bonus": 0,
             "description": "Turns invisible at will, though Second Sight still sees her.",
-            "id": "4f5c9b61f7ad"
+            "id": "ae8be9dad4a8"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -43081,7 +43075,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes on a solid body.",
-            "id": "b216ed4632d0"
+            "id": "838d252b767e"
           }
         ],
         "vis": [
@@ -43089,7 +43083,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "in her dress",
-            "id": "a152f44f3470"
+            "id": "0fbd89269695"
           }
         ],
         "equipment": "",
@@ -43202,7 +43196,7 @@
             "attack": 3,
             "defense": 5,
             "damage": 3,
-            "id": "c772514cfa84"
+            "id": "158c944e1edd"
           },
           {
             "name": "Walking Stick (club)",
@@ -43210,7 +43204,7 @@
             "attack": 6,
             "defense": 7,
             "damage": 6,
-            "id": "5721bf0453a4"
+            "id": "9c5ef0488f32"
           }
         ],
         "soak": 2,
@@ -43283,7 +43277,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes a material body, and drops it at will.",
-            "id": "5b624a7beb24"
+            "id": "5388e23cc5ab"
           },
           {
             "name": "Obsession",
@@ -43296,7 +43290,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Imposes the Obsession of Greed, for 1 to 3 points.",
-            "id": "474603658342"
+            "id": "f5a877cb9981"
           },
           {
             "name": "Envisioning",
@@ -43309,7 +43303,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "1 point to enter a sleeper's dream, 5 for a waking vision, of life in desperate poverty: a Brave roll against 9 or the victim is terrified and loses a long-term Fatigue level.",
-            "id": "ba934b1aa169"
+            "id": "82683a9ee02c"
           },
           {
             "name": "Change Form",
@@ -43322,7 +43316,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "Takes any human or animal shape at will; it may become a raven, or make its bundle of firewood vanish.",
-            "id": "9f5029bf1709"
+            "id": "1810e93c4b38"
           },
           {
             "name": "Trove Just Beyond Reach",
@@ -43335,7 +43329,7 @@
             "level": 20,
             "penetration_bonus": 0,
             "description": "A phantom strongbox spilling gold and silver into the riverbed in plain view of the bridge, in water that looks calm, clear and deep enough to dive into.",
-            "id": "4ee1f3b33d36"
+            "id": "5a9d836243ba"
           },
           {
             "name": "Rushing Wages of Greed",
@@ -43348,7 +43342,7 @@
             "level": 40,
             "penetration_bonus": 0,
             "description": "Churns the water into a fierce current with an undertow: Swim rolls at -6 to escape, or the swimmer begins to drown.",
-            "id": "559b4f4038d8"
+            "id": "65479b2528d5"
           }
         ],
         "vis": [
@@ -43356,7 +43350,7 @@
             "pawns": 3,
             "art": "Vim",
             "where": "in its money purse",
-            "id": "03af2d72644f"
+            "id": "45250c76891e"
           }
         ],
         "equipment": "",
@@ -43570,7 +43564,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 8,
-            "id": "b8c42e8ed1cc"
+            "id": "12684c8129ee"
           },
           {
             "name": "Fist",
@@ -43578,7 +43572,7 @@
             "attack": 6,
             "defense": 6,
             "damage": 2,
-            "id": "40c94a1afd88"
+            "id": "34bafdd71d47"
           }
         ],
         "soak": 6,
@@ -43687,7 +43681,7 @@
             "level": 50,
             "penetration_bonus": 0,
             "description": "Becomes a whirling cyclone of gritty desert wind, able to carry one person inside it.",
-            "id": "569dad81a014"
+            "id": "85d8c19cf3ef"
           },
           {
             "name": "Sense the Living Treasure",
@@ -43700,7 +43694,7 @@
             "level": 20,
             "penetration_bonus": 0,
             "description": "Senses where the person is whose arcane connection he holds, the distance and direction growing clearer the longer he concentrates.",
-            "id": "7ecba7f7537e"
+            "id": "90a7fbe82b4c"
           },
           {
             "name": "Scimitar of Blazing Fury",
@@ -43713,7 +43707,7 @@
             "level": 20,
             "penetration_bonus": 0,
             "description": "Sheathes his blade in white fire: +10 damage.",
-            "id": "bb74ca381b4e"
+            "id": "4f2e1d8f1404"
           },
           {
             "name": "Conceal the Precious Charge",
@@ -43726,7 +43720,7 @@
             "level": 15,
             "penetration_bonus": 0,
             "description": "Makes someone he touches invisible to ordinary sight whatever they do, though they still cast a shadow.",
-            "id": "08d7c596bb71"
+            "id": "ab408911e288"
           }
         ],
         "vis": [
@@ -43734,25 +43728,25 @@
             "pawns": 1,
             "art": "Auram",
             "where": "in his scimitar",
-            "id": "b9d22f6aff42"
+            "id": "84c423201b7a"
           },
           {
             "pawns": 1,
             "art": "Corpus",
             "where": "in his scimitar",
-            "id": "1c8de2145746"
+            "id": "1e968b0cd609"
           },
           {
             "pawns": 1,
             "art": "Ignem",
             "where": "in his scimitar",
-            "id": "471f1091bde1"
+            "id": "8c45980b9ff2"
           },
           {
             "pawns": 1,
             "art": "Imaginem",
             "where": "in his scimitar",
-            "id": "2b849c4351c6"
+            "id": "0b3581398a0d"
           }
         ],
         "equipment": "His scimitar (his External Vis: weightless, and its bearer gains Puissant Single Weapon), fine clothes and whatever his work needs.",
@@ -43881,7 +43875,7 @@
             "attack": 10,
             "defense": 9,
             "damage": 6,
-            "id": "3e98b5db622b"
+            "id": "e37b8f4163ba"
           },
           {
             "name": "Grapple",
@@ -43889,7 +43883,7 @@
             "attack": 7,
             "defense": 9,
             "damage": null,
-            "id": "61d6a59ee056"
+            "id": "94b6d1637d74"
           }
         ],
         "soak": 2,
@@ -43986,7 +43980,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "0 to 5 points: any Creo or Rego Imaginem effect of fourth magnitude or less, for its magnitude in Might, mostly to lure prey (a Focus Power).",
-            "id": "4e5f5a9ea2d3"
+            "id": "737467486f4b"
           },
           {
             "name": "Transform into Human",
@@ -43999,7 +43993,7 @@
             "level": 30,
             "penetration_bonus": 0,
             "description": "Shrinks from its great natural size to a human's.",
-            "id": "df802ca36f85"
+            "id": "6c52a54cb469"
           },
           {
             "name": "Gift of the Drac",
@@ -44012,7 +44006,7 @@
             "level": 30,
             "penetration_bonus": 0,
             "description": "Someone it has grappled breathes freely underwater until they come up in its air-filled lair or escape to the bank.",
-            "id": "90476850e595"
+            "id": "19fe00b54599"
           }
         ],
         "vis": [
@@ -44020,7 +44014,7 @@
             "pawns": 3,
             "art": "Imaginem",
             "where": "in its eyes",
-            "id": "e9456455ac60"
+            "id": "a2e867ff301d"
           }
         ],
         "equipment": "",
@@ -44279,7 +44273,7 @@
             "attack": 17,
             "defense": 10,
             "damage": 13,
-            "id": "a6002aa79a63"
+            "id": "48fdec77974f"
           },
           {
             "name": "Large Teeth",
@@ -44287,7 +44281,7 @@
             "attack": 15,
             "defense": 7,
             "damage": 12,
-            "id": "03edfea3685b"
+            "id": "c7239489d0b1"
           }
         ],
         "soak": 20,
@@ -44354,7 +44348,7 @@
             "level": 15,
             "penetration_bonus": 0,
             "description": "Flies, tirelessly, on wings that ought not to lift it.",
-            "id": "493566fc0908"
+            "id": "d00f643182ff"
           },
           {
             "name": "Breath of Flame",
@@ -44367,7 +44361,7 @@
             "level": 40,
             "penetration_bonus": 0,
             "description": "A gout of fire 3 paces by 3 by 9 long: stress die +25 damage to all within.",
-            "id": "eef8368269f1"
+            "id": "c0835157cf57"
           }
         ],
         "vis": [
@@ -44375,7 +44369,7 @@
             "pawns": 4,
             "art": "Animal",
             "where": "in its carapace",
-            "id": "9e273385f00d"
+            "id": "9b660a37c786"
           }
         ],
         "equipment": "",
@@ -44594,7 +44588,7 @@
             "attack": 13,
             "defense": 6,
             "damage": 15,
-            "id": "833e41f08517"
+            "id": "d97982cc647d"
           },
           {
             "name": "Thrown Rock",
@@ -44602,7 +44596,7 @@
             "attack": 13,
             "defense": 4,
             "damage": 14,
-            "id": "4698cbdebdb6"
+            "id": "6252ce18ad0b"
           },
           {
             "name": "Large Claws",
@@ -44610,7 +44604,7 @@
             "attack": 11,
             "defense": 5,
             "damage": 10,
-            "id": "2ccac18aa5a5"
+            "id": "19cbb7845b7c"
           },
           {
             "name": "Tusks",
@@ -44618,7 +44612,7 @@
             "attack": 10,
             "defense": 4,
             "damage": 11,
-            "id": "a0a09a170de5"
+            "id": "0af563819350"
           }
         ],
         "soak": 10,
@@ -44709,7 +44703,7 @@
             "level": 10,
             "penetration_bonus": 0,
             "description": "Pulls a throwing stone out of natural earth.",
-            "id": "2e62ad27aa8c"
+            "id": "bc934232f707"
           },
           {
             "name": "Seeming of the Menhir",
@@ -44722,7 +44716,7 @@
             "level": 25,
             "penetration_bonus": 0,
             "description": "Looks like a great boulder or standing stone that fits the land.",
-            "id": "cf75059c4fbf"
+            "id": "d4c768ad824c"
           },
           {
             "name": "Stealth through the Grass",
@@ -44735,7 +44729,7 @@
             "level": 20,
             "penetration_bonus": 0,
             "description": "Moves without a sound, though its voice, thrown rocks and blows are heard as usual.",
-            "id": "6028b8641260"
+            "id": "a463806ebc06"
           }
         ],
         "vis": [
@@ -44743,7 +44737,7 @@
             "pawns": 4,
             "art": "Corpus",
             "where": "in the skull netted at its belt",
-            "id": "e823c5318119"
+            "id": "6481456561ef"
           }
         ],
         "equipment": "A tree-stump club with knotted roots for spikes; a sack of badly cooked mutton, half-empty casks of poor beer or wine and throwing stones; a skull in a net (its External Vis, weightless, granting its bearer Tough).",
@@ -44853,7 +44847,7 @@
             "kind": "creatures",
             "target_id": "aerie_guard",
             "note": "the clan that serves him",
-            "id": "3fd8125a5355"
+            "id": "676986b3bc5b"
           }
         ]
       },
@@ -45314,7 +45308,7 @@
             "level": 25,
             "penetration_bonus": 0,
             "description": "As the spell: a dozen ribbons of fire fanning out over sixty degrees, +10 damage. Mastered (Fast Cast, Multiple Casting, Penetration).",
-            "id": "b1ea015a6823"
+            "id": "b48545cad53d"
           },
           {
             "name": "Aura of the Avenger",
@@ -45327,7 +45321,7 @@
             "level": 20,
             "penetration_bonus": 0,
             "description": "Cloaks it in flame that burns whatever it touches for +10 damage.",
-            "id": "f2d5eef61494"
+            "id": "5a3e2eea95ca"
           },
           {
             "name": "Aura of Enlightenment",
@@ -45340,7 +45334,7 @@
             "level": 10,
             "penetration_bonus": 0,
             "description": "Shines as bright as the noon sun.",
-            "id": "86f30812d7b3"
+            "id": "1fadf2bf8118"
           },
           {
             "name": "Authority of Ignem",
@@ -45353,7 +45347,7 @@
             "level": 50,
             "penetration_bonus": 0,
             "description": "1 to 10 points, Init less the points spent: any non-Ritual Ignem effect up to 50th level, a point per magnitude (a Focus Power).",
-            "id": "5e0a5bacc5c1"
+            "id": "a14ab4b36d6f"
           },
           {
             "name": "Ball of Abysmal Flame",
@@ -45366,7 +45360,7 @@
             "level": 35,
             "penetration_bonus": 0,
             "description": "A ball of fire at one target for +30 damage; mastered (Fast Cast, Multiple Casting, Penetration).",
-            "id": "9b9e14a0ff83"
+            "id": "6eb0efd7a1c0"
           },
           {
             "name": "Eidolon",
@@ -45379,7 +45373,7 @@
             "level": 15,
             "penetration_bonus": 0,
             "description": "A single illusory figure, seen and heard, that moves and speaks at its bidding for as long as it wants.",
-            "id": "7d870bc5cd98"
+            "id": "bee772fbd7f0"
           },
           {
             "name": "Curse of Ash",
@@ -45392,7 +45386,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "A non-Hermetic Ritual Power: inflicts Deficient Form (Ignem). Made permanent, the cost comes off its Might Score; otherwise the points return when it lifts the Flaw.",
-            "id": "d884305a8712"
+            "id": "469dc54b10f3"
           },
           {
             "name": "Curse of Cinders",
@@ -45405,7 +45399,7 @@
             "level": null,
             "penetration_bonus": 0,
             "description": "A non-Hermetic Ritual Power: inflicts Incompatible Arts (CrIg, ReIg), on the same terms as the Curse of Ash.",
-            "id": "73fbd10e4587"
+            "id": "4f7774dbbc44"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -45418,7 +45412,7 @@
             "level": 25,
             "penetration_bonus": 0,
             "description": "Takes bodily form until the next sunrise or sunset as a sun-darkened old man in a rough brown robe, still unsettling because of its Gift.",
-            "id": "64df3c61c0fb"
+            "id": "8a00e675837e"
           },
           {
             "name": "Ghost Touch",
@@ -45431,7 +45425,7 @@
             "level": 25,
             "penetration_bonus": 0,
             "description": "Variable cost, Init less the points spent: moves loose objects, 5 pounds for a point and double for each more; hurled, they do +5 damage a point and must penetrate. It cannot reach past the Iron Door while the door holds (a Focus Power).",
-            "id": "b28270e94efe"
+            "id": "cc6e8570bef9"
           },
           {
             "name": "Pilum of Fire",
@@ -45444,7 +45438,7 @@
             "level": 20,
             "penetration_bonus": 0,
             "description": "The Founder's signature jet of flame, +15 damage; mastered (Fast Cast, Multiple Casting, Penetration).",
-            "id": "208c60d5eb44"
+            "id": "ecb632b430b3"
           },
           {
             "name": "Presence",
@@ -45457,7 +45451,7 @@
             "level": 35,
             "penetration_bonus": 0,
             "description": "Knows everything that happens in Val-Negra's innermost regio, but can touch nothing beyond the Iron Door while the ward holds.",
-            "id": "56e01915cc1b"
+            "id": "3e7f8eda4970"
           },
           {
             "name": "Smoke on the Wind",
@@ -45470,7 +45464,7 @@
             "level": 15,
             "penetration_bonus": 0,
             "description": "Flies any way it wills by concentrating; if distracted it loses control but stays aloft.",
-            "id": "d1be50807e86"
+            "id": "dec2c560a045"
           }
         ],
         "vis": [],
@@ -45668,7 +45662,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 8,
-            "id": "eb6103a025d1"
+            "id": "2dc528e2a563"
           }
         ],
         "soak": 7,
@@ -45813,7 +45807,7 @@
             "level": 20,
             "penetration_bonus": 0,
             "description": "Speaks mind to mind with any other Aerie within the reach of its 'voice', as loud or soft as it chooses. Restricted to the clan; between kin its Penetration is multiplied by 6, so a typical Aerie reaches 40, enough to speak with Romulus and Remus.",
-            "id": "2347183388c8"
+            "id": "a83c22c8678c"
           },
           {
             "name": "Invisibility of Silent Standing",
@@ -45826,7 +45820,7 @@
             "level": 5,
             "penetration_bonus": 0,
             "description": "Standing quietly for a few moments, it fades into its surroundings until it moves or speaks, aloud or in silent speech; takes a round to start, then Init +0. Elders can stay hidden longer, even moving.",
-            "id": "55e3f4e1cbf6"
+            "id": "dcc750256f6d"
           }
         ],
         "vis": [
@@ -45834,7 +45828,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its brain",
-            "id": "4b0c6c247920"
+            "id": "cf4151ef8702"
           }
         ],
         "equipment": "Long sword, round shield, partial chain mail.",
@@ -50454,7 +50448,7 @@
           "kind": "characters",
           "target_id": "marcella_of_bonisagus",
           "note": "Her mater",
-          "id": "0bcedb51e96d"
+          "id": "eaf053e7e7dd"
         }
       ]
     },
@@ -50592,7 +50586,7 @@
           "kind": "characters",
           "target_id": "cyprian",
           "note": "His parens",
-          "id": "1afafb1fbd0d"
+          "id": "fbbd75639f78"
         }
       ]
     },
@@ -50730,7 +50724,7 @@
           "kind": "characters",
           "target_id": "mariola",
           "note": "His correspondent",
-          "id": "3c9b12e0607d"
+          "id": "f4b2c232864d"
         }
       ]
     },
@@ -50868,7 +50862,7 @@
           "kind": "characters",
           "target_id": "etienne_of_merinita",
           "note": "His chess rival in Perpignan",
-          "id": "f5483356dfbb"
+          "id": "e1314a87a7c2"
         }
       ]
     },
@@ -51268,7 +51262,7 @@
           "kind": "characters",
           "target_id": "luc_of_merinita",
           "note": "Her brother",
-          "id": "5a6161e19227"
+          "id": "ca70e1b3a146"
         }
       ]
     },
@@ -51537,7 +51531,7 @@
           "kind": "characters",
           "target_id": "dama_of_merinita",
           "note": "Made the Longevity Ritual of Alazais's lover",
-          "id": "999e44d8cb4a"
+          "id": "8e0e69ae0773"
         }
       ]
     },

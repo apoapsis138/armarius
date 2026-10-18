@@ -120,6 +120,30 @@ def test_a_profile_whose_virtues_outweigh_its_flaws_fails_the_build():
     assert age == 50 and "Wealthy" in block["virtues_flaws"]
 
 
+def _abilities(block) -> dict[str, tuple[int, str]]:
+    return {name: (score, spec) for name, score, spec in block["abilities"]}
+
+
+def test_a_theban_magus_learns_the_art_in_greek_and_knows_their_tribunal():
+    magus = Character(id="y", name="Y", type="magus")
+    magus.hermetic.house = "house_mercere"
+    block, _ = generated.stat_block(
+        magus, generated.Profile(native="Greek"), 1220, "TSE"
+    )
+    found = _abilities(block)
+    score, specialty = found["Dead Language: Classical Greek"]
+    assert score >= 4 and specialty == "Hermetic usage"
+    assert "Dead Language: Latin" not in found
+    assert "Area Lore: Rhine Tribunal" not in found
+    lore = found.get("Organization Lore: Order of Hermes")
+    assert lore is None or lore[1] == "the Theban Tribunal"
+    # An incomer trained in the West keeps Latin.
+    block, _ = generated.stat_block(
+        magus, generated.Profile(hermetic="Latin"), 1220, "TSE"
+    )
+    assert "Dead Language: Latin" in _abilities(block)
+
+
 def test_the_import_form_offers_the_book_s_sketches_instead():
     from ars_magica_manager import packs, transfer
     from ars_magica_manager.models import Saga

@@ -14193,6 +14193,28 @@
       "source": "RoP:M",
       "summary": "Might Pool refills only over a season resting in a Magic aura >= Might/5 or by eating vis; wounds drain Might and shed vis.",
       "description": "The character does not replenish its Might Pool every day, but instead only recovers Might Points when resting in a Magic aura of no less than (its Might Score / 5), and at an extremely slow rate. It takes the character an entire season to recover all of its spent Might in this way, though like other magic characters it can still regain Might Points immediately by consuming vis: 5 Might Points for every pawn of vis associated with same Form as its Might, or 2 Might Points for every pawn of vis associated with any other Art. When the character is injured, it loses Might Points equal to the penalty of the wound -- a Light wound removes 1 Might Point, a Medium wound 3 Might Points, and a Heavy wound 5 Might Points. When incapacitated, it loses 5 Might Points. Each time the character is wounded, part of its body is separated from the rest, and these pieces contain some of the character's vis, a number of pawns equal to ((total Wound penalty / 5) - the number of pawns already lost). For example, a Light wound would separate a pawn of vis from the character, and produce another pawn after five more Light wounds. All Magic Things have this Inferiority inherently, for no benefit."
+    },
+    {
+      "id": "vf_elysian_ecstasy",
+      "name": "Elysian Ecstasy",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "TSE",
+      "summary": "After an hour of frenzy, channel a Greek god: (Characteristic) + Faerie Lore + aura + stress die against EF 9 to 21+ for the god's Personality Trait and Sympathy Traits for hours.",
+      "description": "A Mystery Lucian the Scholar of Merinita devised, initiated by his own script with himself as mystagogue; it needs no Outer Merinita Mysteries or Merinita Cult Lore. To use it the character works themself into the right state for an hour (meditation, song, storytelling, wild dance or drink), and may keep it up for extra hours, up to their Stamina, each adding +1 to the roll. The roll is the Characteristic that suits the god (Presence for Aphrodite, Strength for Herakles) + Faerie Lore + aura + a stress die, with the storyguide adding -3 to +3 for how closely the character's sex, looks and nature match the god, and up to +3 more if last season's deeds suited the god. Against Ease Factor 9 the character gains the god's Personality Trait at +2 and 1 point of Sympathy Traits; at 12, +3 and 3 points; at 15, +4 and 6; at 18, +5 and 10; at 21 or more, +6 and 15. Sympathy Trait points are bought as if they were Arts, and a Sympathy Trait stands in for a matching Ability's specialty but makes that roll a stress roll (Realms of Power: The Faerie). The traits last as many hours as the total rolled. A failed roll costs a Long-Term Fatigue level for each hour of preparation; a botch lets any faerie the storyguide chooses be channeled at any strength. A character who channels too well may be overwhelmed and become the god in the flesh."
+    },
+    {
+      "id": "vf_olympian_pact",
+      "name": "Olympian Pact",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "TSE",
+      "summary": "As Elysian Ecstasy, and a strong channeling also grants the god's minor or major powers, each use a Warping Point; initiation brings a Major Personality Flaw of the god's.",
+      "description": "The stronger and more dangerous form of Lucian the Scholar's Mystery, initiated with a Major Personality Flaw suited to the god whose powers are sought. It is used as Elysian Ecstasy and gives the same Personality and Sympathy Traits, and also some of the god's powers: at Ease Factor 12, one minor power; at 15, two minor powers; at 18, one major power or three minor ones; at 21 or more, two major powers, six minor ones, or one major and three minor. The powers last as long as the traits, and each use of one gives the character a Warping Point."
     }
   ]
 }

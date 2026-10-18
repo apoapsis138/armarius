@@ -345,3 +345,91 @@ def test_the_provence_pack_imports_clean_into_a_new_saga():
     ids = {n.id for n in target.neighbours}
     for record in [*target.covenants, *target.neighbours]:
         assert record.place_id is None or record.place_id in ids
+
+
+# -- The Sundered Eagle --
+
+THEBAN = book_packs.PACKS["theban"]
+
+
+def test_the_theban_pack_holds_the_tribunal_of_1220():
+    from ars_magica_manager.tribunal_packages import theban as theban_package
+
+    saga = THEBAN.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == "theban"
+    assert (tribunal.next_year, tribunal.meets_every) == (1221, 7)
+    assert tribunal.meeting_place == "Delos"
+    assert len(saga.covenants) == 13
+    # Each covenant is in its phyle, four phylai in all.
+    phylai = theban_package.phylai(tribunal)
+    assert {phylai[c.id] for c in saga.covenants} == set(theban_package.PHYLAI)
+    assert phylai[next(c.id for c in saga.covenants if c.name == "Hedyosmos")] == (
+        "Ionian"
+    )
+    # The archon is the Praeco; there is no Presiding Quaesitor.
+    praeco = saga.character(tribunal.praeco_id or "")
+    assert praeco is not None and praeco.name.startswith("Aiakia")
+    assert tribunal.quaesitor_id is None
+    offices = {o["office"] for o in theban_package.archai(tribunal)}
+    assert {"Archon", "Polemarch", "Logothete"} <= offices
+    # Tokens as the book implies them, and the incomers are metoikoi.
+    entries = {
+        saga.character(e["character_id"]).name.split(" ")[0]: e
+        for e in theban_package.magi(tribunal)
+    }
+    assert entries["Caterina"].get("status") == "metoikos"
+    assert entries["Ioannes"]["tokens"] > 0
+    assert len(tribunal.rulings) >= 20 and len(tribunal.cases) >= 9
+    years = [e.year for e in tribunal.diary]
+    assert years == sorted(years) and years[-1] <= 1220 and len(years) >= 60
+    ruins = [n for n in saga.neighbours if n.details.get("ruined")]
+    assert len(ruins) == 12
+    threats = {n.name: n for n in saga.neighbours if n.kind == "threat"}
+    assert "An Enemy Within" in threats
+    assert not threats["An Enemy Within"].details.get("dormant")
+    assert len(saga.creatures) >= 14
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_theban_magi_learn_the_art_in_greek_and_incomers_in_latin():
+    saga = THEBAN.build()
+
+    def languages(name: str) -> set[str]:
+        magus = next(c for c in saga.characters if c.name.startswith(name))
+        return {a.name for a in magus.abilities if a.name.startswith("Dead Language")}
+
+    assert "Dead Language: Classical Greek" in languages("Aiakia")
+    assert "Dead Language: Latin" in languages("Wilrich")
+
+
+def test_the_theban_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(THEBAN)
+    texts = _texts(data["saga"])
+    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert data["book"] == "TSE" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_theban_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(THEBAN).read_text(encoding="utf-8"))
+    built = book_packs.data(THEBAN)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_theban_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(THEBAN)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "The Sundered Eagle: The Theban Tribunal is now in play."
+    ]
+    assert target.books_in_play is not None and "TSE" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids

@@ -91,4 +91,4 @@ def write_all(folder: Path = PACKS_DIR) -> list[Path]:
     return [packs.write(path_of(pack, folder), data(pack)) for pack in PACKS.values()]
 
 
-from . import normandy, provence, rhine  # noqa: F401
+from . import normandy, provence, rhine, theban  # noqa: F401

@@ -171,6 +171,19 @@ MASTERY_ABILITIES = (
     "Still Casting",
     "Multiple Casting",
 )
+#: The Tribunal each book's magi know, for the Area Lore and the
+#: Organization Lore the tables above give as the Rhine's.
+TRIBUNALS = {
+    "GotF": "Rhine Tribunal",
+    "L&L": "Normandy Tribunal",
+    "F&F": "Provençal Tribunal",
+    "TSE": "Theban Tribunal",
+}
+#: The language a book's magi learn their Art in, where it is not Latin.
+HERMETIC_LANGUAGES = {"TSE": "Classical Greek"}
+LATIN = "Dead Language: Latin"
+RHINE_LORE = "Area Lore: Rhine Tribunal"
+
 #: The Ability types later life (before apprenticeship) may buy.
 _LATER_LIFE = ("General", "Academic", "Martial")
 #: The most copies of Affinity with (Art) or Puissant (Art) a magus holds.
@@ -189,7 +202,9 @@ class Profile:
     Builder takes them; The Gift and the magus's rank are added, and any
     Virtue points the Flaws leave unspent go on the top Arts. `age` is
     used only when the book gives none; `native` is the magus's mother
-    tongue; `gifted` is False for an un-Gifted Redcap."""
+    tongue; `hermetic` is the language they learnt the Art in, when it
+    is not their book's (an incomer to the Theban Tribunal keeps Latin);
+    `gifted` is False for an un-Gifted Redcap."""
 
     strong: str = "int sta"
     weak: str = ""
@@ -198,6 +213,7 @@ class Profile:
     virtues: Sequence[str | tuple[str, dict[str, str]]] = ()
     age: int | None = None
     native: str = "High German"
+    hermetic: str = ""
     gifted: bool = True
     reputations: Mapping[str, int] = field(default_factory=dict)
     shares: tuple[float, float, float] = SHARES
@@ -389,8 +405,37 @@ def note(source: str, assumed_age: int | None = None) -> str:
     return words
 
 
+@dataclass(frozen=True)
+class _Local:
+    """The book's own Tribunal and Hermetic language, put in place of the
+    Rhine's and Latin in the tables above."""
+
+    language: str
+    tribunal: str
+
+    def name(self, ability: str) -> str:
+        if ability == LATIN:
+            return f"Dead Language: {self.language}"
+        if ability == RHINE_LORE:
+            return f"Area Lore: {self.tribunal}"
+        return ability
+
+    def specialty(self, ability: str) -> str:
+        if ability == f"Dead Language: {self.language}":
+            return SPECIALTIES[LATIN]
+        if ability == f"Area Lore: {self.tribunal}":
+            return SPECIALTIES[RHINE_LORE]
+        found = SPECIALTIES.get(ability, "")
+        return f"the {self.tribunal}" if found == "the Rhine Tribunal" else found
+
+
+def _local(profile: Profile, source: str) -> _Local:
+    language = profile.hermetic or HERMETIC_LANGUAGES.get(source, "Latin")
+    return _Local(language, TRIBUNALS.get(source, "Rhine Tribunal"))
+
+
 def _ability_weights(
-    character: Character, profile: Profile, ranked: Sequence[str]
+    character: Character, profile: Profile, ranked: Sequence[str], local: _Local
 ) -> tuple[dict[str, float], dict[str, str]]:
     """Every magus's Abilities, the House's and the profile's (which
     replace a weight given before), and the profile's specialties."""
@@ -400,6 +445,7 @@ def _ability_weights(
     given.append(HOUSE_ABILITIES.get(character.hermetic.house or "", {}))
     for source in given:
         for name, weight in source.items():
+            name = local.name(name)
             weights[name] = weights.get(name, 0) + weight
     for name, entry in profile.abilities.items():
         weight, specialty = entry if isinstance(entry, tuple) else (entry, "")
@@ -436,7 +482,8 @@ def stat_block(
     if not profile.gifted:
         arts_share, abilities_share, spells_share = 0.0, 1.0, 0.0
 
-    ability_weights, specialties = _ability_weights(character, profile, ranked)
+    local = _local(profile, source)
+    ability_weights, specialties = _ability_weights(character, profile, ranked, local)
 
     def ability_cost(name: str, score: int) -> float:
         return _ability_step(
@@ -466,7 +513,7 @@ def stat_block(
     arts = _Pool(
         {a: w**ART_SPREAD for a, w in art_weights.items()}, art_cost, cap=ART_CAP
     )
-    spell_levels = _apprenticeship(profile, abilities, arts)
+    spell_levels = _apprenticeship(profile, abilities, arts, local)
     left = arts.spend(points * arts_share)
     left = abilities.spend(points * abilities_share + left)
     spell_levels += points * spells_share + left
@@ -491,7 +538,7 @@ def stat_block(
         "confidence": (1 + min(2, years_past // 40), 3 + 2 * min(2, years_past // 40)),
         "virtues_flaws": entries,
         "abilities": [
-            (name, score, specialties.get(name, SPECIALTIES.get(name, "")))
+            (name, score, specialties.get(name, local.specialty(name)))
             for name, score in sorted(abilities.scores.items())
             if score > 0
         ],
@@ -506,7 +553,9 @@ def stat_block(
     return block, age
 
 
-def _apprenticeship(profile: Profile, abilities: _Pool, arts: _Pool) -> float:
+def _apprenticeship(
+    profile: Profile, abilities: _Pool, arts: _Pool, local: _Local
+) -> float:
     """Spend apprenticeship's 240 xp, the must-have Abilities first, and
     return the spell levels it gives (none to an un-Gifted Redcap, whose
     xp all goes on Abilities)."""
@@ -515,6 +564,7 @@ def _apprenticeship(profile: Profile, abilities: _Pool, arts: _Pool) -> float:
         return 0.0
     xp = float(APPRENTICESHIP_XP)
     for name, score in APPRENTICE_MINIMUMS.items():
+        name = local.name(name)
         while abilities.scores.get(name, 0) < score:
             xp -= abilities.cost(name, abilities.scores.get(name, 0) + 1)
             abilities.scores[name] = abilities.scores.get(name, 0) + 1
