@@ -46,6 +46,17 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.98.1 — 2026-10-18
+
+- **A saga opens quickly again on the desktop.** Opening a saga drew a
+  card for every neighbour in The Region, and a Tribunal pack brings
+  hundreds, so a saga started from a pack took many seconds to open, and
+  as long again to come back to from a covenant. The Region and The
+  Bestiary are now drawn the first time you open them, and each group of
+  neighbours shows its first twelve cards with a **Show more** card that
+  draws the rest. A saga started from the Normandy pack opens about ten
+  times faster.
+
 ## 2.98.0 — 2026-10-18
 
 - **The Theban Tribunal in its own words.** The Theban customs now use

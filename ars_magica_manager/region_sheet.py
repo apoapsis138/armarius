@@ -337,3 +337,23 @@ def card_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     if above:
         facts.append(Fact("Answers to", above))
     return facts
+
+
+#: How many of a group's neighbours the desktop's Region shows as cards
+#: until the rest are asked for: a Tribunal's pack brings hundreds, and
+#: drawing a card for each made the saga's page slow to open.
+CARDS_SHOWN = 12
+
+
+def cards_shown(members: list[Neighbour], every: bool) -> tuple[list[Neighbour], int]:
+    """The group's neighbours to draw as cards (all of them when `every`),
+    and how many more are held back."""
+    if every or len(members) <= CARDS_SHOWN:
+        return members, 0
+    return members[:CARDS_SHOWN], len(members) - CARDS_SHOWN
+
+
+def more_cards(group_key: str, held_back: int) -> tuple[str, str]:
+    """The card that shows the rest of a group: its title and the line
+    under it ("Show 90 more", "The rest of Lords and Towns")."""
+    return f"Show {held_back} more", f"The rest of {neighbours.group(group_key).title}"

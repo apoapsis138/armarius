@@ -436,7 +436,7 @@ def test_the_diary_opens_with_a_calendar_of_the_characters_seasons(app):
 
 
 def _chapter(page, name: str):
-    return page.codex.pages.widget(page.codex.chapters().index(name))
+    return page.codex.chapter(page.codex.chapters().index(name))
 
 
 def _lab_page(window: MainWindow, saga) -> LaboratoryPage:

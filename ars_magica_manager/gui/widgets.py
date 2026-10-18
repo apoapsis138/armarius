@@ -622,7 +622,9 @@ class Codex(QSplitter):
             f" color:{p['heading']}; border-left:3px solid {p['heading']}; }}"
         )
         self.pages = QStackedWidget()
-        self.rail.currentRowChanged.connect(self.pages.setCurrentIndex)
+        #: Chapters not drawn yet, by row: built when first turned to.
+        self._later: dict[int, Callable[[], QWidget]] = {}
+        self.rail.currentRowChanged.connect(self._turn_to)
         self.rail.currentRowChanged.connect(self._turned)
         self.setHandleWidth(1)
         self.addWidget(self.rail)
@@ -631,13 +633,38 @@ class Codex(QSplitter):
         self.setStretchFactor(1, 1)
         self.setSizes([180, 900, 340])
 
-    def add(self, name: str, concept: str, page: QWidget) -> None:
+    def add(
+        self, name: str, concept: str, page: QWidget | Callable[[], QWidget]
+    ) -> None:
         """Add a chapter, with its icon (artwork.ICON_NAMES); the first
-        one added is shown."""
-        QListWidgetItem(pictures.icon(concept, self.p["label"], 20), name, self.rail)
+        one added is shown. A chapter given as a function that builds it
+        is built only when first turned to, for one too big to draw
+        every time its page opens."""
+        if not isinstance(page, QWidget):
+            self._later[self.pages.count()] = page
+            page = QWidget()
         self.pages.addWidget(page)
+        QListWidgetItem(pictures.icon(concept, self.p["label"], 20), name, self.rail)
         if self.rail.count() == 1:
             self.rail.setCurrentRow(0)
+
+    def chapter(self, row: int) -> QWidget:
+        """The chapter at `row`, built if it was not yet."""
+        build = self._later.pop(row, None)
+        page = self.pages.widget(row)
+        assert page is not None
+        if build is None:
+            return page
+        built = build()
+        self.pages.insertWidget(row, built)
+        self.pages.removeWidget(page)
+        page.deleteLater()
+        return built
+
+    def _turn_to(self, row: int) -> None:
+        if row >= 0:
+            self.chapter(row)
+        self.pages.setCurrentIndex(row)
 
     def _turned(self, row: int) -> None:
         """A page turned for the chapter chosen (the chest opened for the

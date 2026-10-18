@@ -22,6 +22,11 @@ choice in Edit Covenant.
 On the saga's page, The Region chapter shows each group's neighbours as
 cards, each opening its own page, and a New card that adds one. The
 Tribunals and the covenants are in The World.
+
+A group with more than a dozen neighbours shows its first twelve and a
+**Show more** card that draws the rest; a Tribunal book brings hundreds,
+and a card for each would make the saga slow to open. The filter below
+narrows them instead.
 <!-- /gui -->
 
 **See also:** [A neighbour](help:neighbour), [Tribunal sheet](help:tribunal),

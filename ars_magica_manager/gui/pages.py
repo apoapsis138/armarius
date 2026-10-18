@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
@@ -302,6 +302,46 @@ def neighbour_card(
     return card
 
 
+def more_card(
+    group_key: str,
+    held_back: int,
+    p: Palette,
+    every: set[str],
+    redraw: Callable[[], None],
+) -> ClickableCard:
+    """The card that draws the rest of a group's neighbours: it adds the
+    group to `every` and redraws the cards."""
+    card = ClickableCard(p, pad=16)
+    title, line = region_sheet.more_cards(group_key, held_back)
+    card_title(card, title, line, p, symbol_label(artwork.icon("region"), p))
+
+    def show_all() -> None:
+        every.add(group_key)
+        # Once the click that asked is over: the redraw removes this card.
+        QTimer.singleShot(0, redraw)
+
+    card.clicked = show_all
+    return card
+
+
+def group_cards(
+    saga: Saga,
+    group_key: str,
+    members: list[Neighbour],
+    every: set[str],
+    p: Palette,
+    open_neighbour: Open,
+    redraw: Callable[[], None],
+) -> QWidget:
+    """A group's neighbours as cards: the first few, and a card that
+    draws the rest, until `every` holds the group."""
+    drawn, held_back = region_sheet.cards_shown(members, group_key in every)
+    cards: list[QWidget] = [neighbour_card(saga, n, p, open_neighbour) for n in drawn]
+    if held_back:
+        cards.append(more_card(group_key, held_back, p, every, redraw))
+    return card_grid(cards)
+
+
 class NeighbourFilterBar(QWidget):
     """What the Region's neighbours are narrowed to, as two quiet
     drop-downs on one line (neighbour_filter.Filter)."""
@@ -390,10 +430,11 @@ def region_chapter(
             members = neighbour_filter.shown(saga, group.key)
             if not members:
                 continue
-            first = holder.count() == 0
-            holder.addWidget(heading(region_sheet.group_title(saga, group.key), first))
             holder.addWidget(
-                card_grid([neighbour_card(saga, n, p, open_neighbour) for n in members])
+                heading(region_sheet.group_title(saga, group.key), holder.count() == 0)
+            )
+            holder.addWidget(
+                group_cards(saga, group.key, members, every, p, open_neighbour, fill)
             )
         if saga.neighbours and holder.count() == 0:
             if bar is not None:
@@ -401,6 +442,9 @@ def region_chapter(
             holder.addWidget(
                 text("None match the filter.", p["dim"], serif(12.5, italic=True))
             )
+
+    #: The groups whose every card was asked for.
+    every: set[str] = set()
 
     def refilter() -> None:
         assert bar is not None
@@ -494,15 +538,20 @@ class SagaPage(QWidget):
             )
         self.codex = Codex(p)
         self.codex.add("The World", "covenant", self._world())
+        # The Region and The Bestiary are built when first opened: a
+        # pack's Tribunal brings hundreds of neighbours and dozens of
+        # creatures, too many cards to draw each time the saga opens.
         self.codex.add(
             "The Region",
             "region",
-            region_chapter(saga, p, self.open_neighbour, self._new("Neighbours")),
+            lambda: region_chapter(
+                saga, p, self.open_neighbour, self._new("Neighbours")
+            ),
         )
         self.codex.add(
             "The Bestiary",
             "familiar",
-            bestiary_chapter(saga, p, open_creature, self._new("Creatures")),
+            lambda: bestiary_chapter(saga, p, open_creature, self._new("Creatures")),
         )
         self.codex.add("Seasons", "season", self._seasons(open_seasons))
         self.codex.add(

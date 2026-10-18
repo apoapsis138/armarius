@@ -275,7 +275,7 @@ def print_page(
                 if name in LEFT_OFF:
                     continue
                 codex.rail.setCurrentRow(index)
-                chapter = codex.pages.widget(index)
+                chapter = codex.chapter(index)
                 body = chapter.widget() if isinstance(chapter, QScrollArea) else chapter
                 if body is None:
                     continue

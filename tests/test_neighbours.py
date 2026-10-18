@@ -172,6 +172,7 @@ def test_the_desktop_lists_neighbours_and_opens_one():
     saga_page = SagaPage(
         saga, PALETTES[0], lambda _id: None, open_neighbour=opened.append
     )
+    saga_page.codex.open_chapter("The Region")
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
     assert any("Lords and Towns (2)" in title for title in titles)
     gottfried = saga.neighbour("gottfried")
@@ -227,6 +228,9 @@ def test_the_desktop_filter_bar_narrows_the_region_s_cards():
     QApplication.instance() or QApplication([])
     saga = everything_saga()
     page = SagaPage(saga, PALETTES[0], lambda _id: None)
+    # The Region is built when first opened.
+    assert page.findChild(NeighbourFilterBar) is None
+    page.codex.open_chapter("The Region")
     bar = page.findChild(NeighbourFilterBar)
     assert bar is not None
     bar.kind.setCurrentIndex(bar.kind.findData("town"))
@@ -253,10 +257,63 @@ def test_the_desktop_opens_the_threat_that_is_due():
     saga = everything_saga()
     opened: list[str] = []
     page = SagaPage(saga, PALETTES[0], lambda _id: None, open_neighbour=opened.append)
+    page.codex.open_chapter("The Region")
     leaf = page.findChild(FleuronButton)
     assert leaf is not None and leaf.toolTip() == "Open The Hollow Crown"
     leaf.click()
     assert opened == ["crown"]
+
+
+def test_a_big_group_shows_a_dozen_cards_then_the_rest_when_asked():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QLabel
+
+    from ars_magica_manager.gui.pages import SagaPage
+    from ars_magica_manager.gui.themes import PALETTES
+    from ars_magica_manager.gui.widgets import ClickableCard
+
+    application = QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    saga.neighbours += [
+        Neighbour(f"town{n}", f"Town {n}", kind="town") for n in range(20)
+    ]
+    page = SagaPage(saga, PALETTES[0], lambda _id: None)
+    page.codex.open_chapter("The Region")
+
+    def towns_shown() -> int:
+        names = {f"Town {n}" for n in range(20)}
+        return sum(label.text() in names for label in page.findChildren(QLabel))
+
+    def more() -> list[ClickableCard]:
+        return [
+            card
+            for card in page.findChildren(ClickableCard)
+            if any(
+                label.text().startswith("Show ") for label in card.findChildren(QLabel)
+            )
+        ]
+
+    in_group = len(neighbours.members(saga, "lords"))
+    assert towns_shown() <= region_sheet.CARDS_SHOWN
+    (card,) = more()
+    titles = [label.text() for label in card.findChildren(QLabel)]
+    assert f"Show {in_group - region_sheet.CARDS_SHOWN} more" in titles
+    card.clicked()
+    application.processEvents()
+    assert towns_shown() == 20
+    assert more() == []
+
+
+def test_cards_shown_holds_back_all_but_a_dozen():
+    many = [Neighbour(str(n), str(n)) for n in range(15)]
+    assert region_sheet.cards_shown(many, every=False) == (many[:12], 3)
+    assert region_sheet.cards_shown(many, every=True) == (many, 0)
+    assert region_sheet.cards_shown(many[:12], every=False) == (many[:12], 0)
+    assert region_sheet.more_cards("lords", 3) == (
+        "Show 3 more",
+        "The rest of Lords and Towns",
+    )
 
 
 def test_a_lord_works_out_his_fief_from_the_lower_figures():
