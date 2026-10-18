@@ -127,10 +127,11 @@ class TribunalSheetView(SheetView):
         return aligned([(f.label, escape(f.value)) for f in shown])
 
     def _summary_text(self) -> str:
-        summary = self.tribunal.summary.strip()
-        if not summary:
+        lede, rest = tribunal_sheet.summary_parts(self.tribunal)
+        if not lede:
             return "[$label]In the Saga: not written yet. Edit the Tribunal to say.[/]"
-        return markdown_inline(summary)
+        more = f"\n[$label]{tribunal_sheet.MORE_UNDER_HISTORY}[/]" if rest else ""
+        return markdown_inline(lede) + more
 
     def _grid_section(
         self,
@@ -326,12 +327,19 @@ class TribunalSheetView(SheetView):
             )
 
     def _history_text(self) -> str:
+        _lede, rest = tribunal_sheet.summary_parts(self.tribunal)
         history = self.tribunal.history.strip()
-        if not history:
-            return (
-                "[$label]History: not written yet. Edit the Tribunal (e) to tell it.[/]"
-            )
-        return markdown_inline(history)
+        told = (
+            markdown_inline(history)
+            if history
+            else "[$label]History: not written yet. Edit the Tribunal (e) to tell it.[/]"
+        )
+        if not rest:
+            return told
+        return (
+            f"[$label]In the Saga, continued[/]\n{markdown_inline(rest)}"
+            f"\n\n[$label]History[/]\n{told}"
+        )
 
     def _diary_tab(self) -> ComposeResult:
         t = self.tribunal

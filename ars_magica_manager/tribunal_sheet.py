@@ -9,6 +9,8 @@ Tribunal's package adds (tribunal_packages) is drawn the same way."""
 
 from __future__ import annotations
 
+import re
+
 from . import threats, tribunal_packages, tribunals, world
 from .character_sheet import Fact, house_name
 from .grids import Grid
@@ -26,6 +28,22 @@ from .models import (
     Tribunal,
     TribunalDiaryEntry,
 )
+
+# -- In the Saga --
+
+#: Where the rest of a long In the Saga is shown.
+MORE_UNDER_HISTORY = "More of In the Saga is on the History tab."
+
+
+def summary_parts(tribunal: Tribunal) -> tuple[str, str]:
+    """In the Saga split for the sheet: its first paragraph, shown under
+    the Tribunal's name, and the rest, shown above its history, so a
+    book-length summary doesn't push the roster off the page."""
+    paragraphs = re.split(r"\n[ \t]*\n", tribunal.summary.strip(), maxsplit=1)
+    lede = paragraphs[0].strip()
+    rest = paragraphs[1].strip() if len(paragraphs) > 1 else ""
+    return lede, rest
+
 
 # -- the facts under its name --
 

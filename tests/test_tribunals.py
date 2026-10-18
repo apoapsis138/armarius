@@ -565,3 +565,18 @@ def test_a_rhine_covenant_s_own_form_ticks_its_gilds():
     added = saga.covenants[-1]
     assert added.tribunal_id == rhine.id
     assert rhine_package.gilds_of(rhine, added) == ["Oak Gild"]
+
+
+def test_the_sheet_shows_in_the_saga_s_first_paragraph_and_the_rest_with_history():
+    tribunal = Tribunal(id="t", name="T", summary="One.\nStill one.\n\n Two.\n\nThree.")
+    assert tribunal_sheet.summary_parts(tribunal) == (
+        "One.\nStill one.",
+        "Two.\n\nThree.",
+    )
+    assert tribunal_sheet.summary_parts(
+        Tribunal(id="t", name="T", summary="Short.")
+    ) == (
+        "Short.",
+        "",
+    )
+    assert tribunal_sheet.summary_parts(Tribunal(id="t", name="T")) == ("", "")

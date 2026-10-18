@@ -134,6 +134,10 @@ How the Tribunal came to be, era by era, kept apart from In the Saga
 (what it is like now) so that stays short. Write it in the History field
 of the Tribunal's own form; a Tribunal book fills it in.
 
+Under the Tribunal's name the sheet shows only the first paragraph of In
+the Saga, so the roster stays in view. When it runs longer, the rest is
+shown here first, as **In the Saga, continued**, above the history.
+
 ## Docket tab
 <!-- help: tab-trib-docket -->
 

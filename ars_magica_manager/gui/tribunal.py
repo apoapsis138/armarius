@@ -231,17 +231,17 @@ class TribunalPage(QWidget):
 
     def _roster(self) -> QWidget:
         p, saga, t = self.p, self.saga, self.tribunal
-        summary = t.summary.strip()
+        lede, rest = tribunal_sheet.summary_parts(t)
+        said = (
+            [prose(lede, p)]
+            if lede
+            else [_none("Not written yet: edit the Tribunal to say.", p)]
+        )
+        if rest:
+            said.append(_none(tribunal_sheet.MORE_UNDER_HISTORY, p))
         return scrolling_page(
             p,
-            section(
-                "In the Saga",
-                p,
-                prose(summary, p)
-                if summary
-                else _none("Not written yet: edit the Tribunal to say.", p),
-                edits={"Edit Tribunal": self._edit},
-            ),
+            section("In the Saga", p, *said, edits={"Edit Tribunal": self._edit}),
             self._grid(
                 tribunal_sheet.roster_title(saga, t),
                 tribunal_sheet.roster_grid(saga, t),
@@ -258,8 +258,15 @@ class TribunalPage(QWidget):
 
     def _history(self) -> QWidget:
         p, history = self.p, self.tribunal.history.strip()
+        _lede, rest = tribunal_sheet.summary_parts(self.tribunal)
+        continued = (
+            [section("In the Saga, continued", p, prose(rest, p, initial=False))]
+            if rest
+            else []
+        )
         return scrolling_page(
             p,
+            *continued,
             section(
                 "History",
                 p,

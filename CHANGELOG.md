@@ -46,6 +46,13 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.97.1 — 2026-10-18
+
+- **A shorter Tribunal page.** A long In the Saga, such as the Normandy
+  and Provence packs write, no longer pushes the covenants off the
+  Roster: only its first paragraph shows under the Tribunal's name, and
+  the rest opens the History tab, above the history.
+
 ## 2.97.0 — 2026-10-18
 
 - **The Bestiary.** The saga now keeps its creatures: beasts, spirits,
