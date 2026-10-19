@@ -10,8 +10,8 @@ import pytest
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import books as bk
-from ars_magica_manager import library_forms
 from ars_magica_manager.commands import Form, Refuse
+from ars_magica_manager.forms import library as library_forms
 
 
 def _empty_library():

@@ -4,10 +4,10 @@ and its Magic Might as a seal, over its Characteristics; then chapters
 for its bond and Cords (each in its metal), Virtues and Flaws, combat and health, Abilities
 and Bond Powers, with the inspector beside them.
 
-What it says comes from the shared core (familiar_sheet.py and
+What it says comes from the shared core (sheets/familiar.py and
 familiars.py), as the terminal's familiar sheet does, and its Edit, Add
-and Delete buttons run the core's forms (familiar_forms.py and
-trait_forms.py).
+and Delete buttons run the core's forms (forms/familiar.py and
+forms/trait.py).
 """
 
 from __future__ import annotations
@@ -17,12 +17,13 @@ from collections.abc import Callable
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork, virtue_forms
-from .. import familiar_forms as ff
-from .. import familiar_sheet as fs
+from .. import artwork
 from .. import familiars as fam
 from .. import sheet_text as st
+from ..forms import familiar as ff
+from ..forms import virtue as virtue_forms
 from ..models import Familiar, Saga
+from ..sheets import familiar as fs
 from .character_sheet import (
     ability_mark,
     ability_view,

@@ -19,7 +19,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from .character_sheet import Fact
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -27,6 +26,7 @@ from .markup import escape
 from .models import Neighbour, Saga
 from .neighbour_lists import KindList, KindTab, details_list, list_ops
 from .sections import FACULTIES_SECTION, MASTERS_SECTION
+from .sheets.character import Fact
 
 #: The kinds of school: the highest an Academic Ability can be taught
 #: there (None for a university's, which has no limit), and its yearly

@@ -20,22 +20,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import (
-    artwork,
-    creatures,
-    menu_forms,
-    neighbour_filter,
-    neighbours,
-    region_sheet,
-    tribunal_sheet,
-    world,
-)
-from .. import character_sheet as cs
-from .. import creature_sheet as crs
-from .. import familiar_sheet as fs
-from .. import saga_content_sheet as scs
+from .. import artwork, creatures, neighbour_filter, neighbours, world
 from .. import saga_overview as ov
+from ..forms import menu as menu_forms
 from ..models import Character, Creature, Neighbour, Saga
+from ..sheets import character as cs
+from ..sheets import creature as crs
+from ..sheets import familiar as fs
+from ..sheets import region as region_sheet
+from ..sheets import saga_content as scs
+from ..sheets import tribunal as tribunal_sheet
 from . import pictures
 from .figures import fact_grid
 from .menus import Placer

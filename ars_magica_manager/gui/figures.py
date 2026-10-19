@@ -29,10 +29,10 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import artwork, world
-from .. import character_sheet as cs
-from .. import covenant_sheet as cs_cov
-from .. import laboratory_sheet as cs_lab
 from ..models import Attitude
+from ..sheets import character as cs
+from ..sheets import covenant as cs_cov
+from ..sheets import laboratory as cs_lab
 from . import pictures
 from .paper import lift, shade
 from .themes import Palette

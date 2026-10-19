@@ -9,46 +9,27 @@ from textual.widgets import (
     Button,
 )
 
-from .... import inhabitants as inh
-from .... import seasons
-from ....models import (
-    INHABITANT_KINDS,
-    POSSESSION_KINDS,
-)
 from ....sections import (
-    CORE_SECTIONS,
     NEIGHBOUR_INFO_SECTION,
     SEASONS_INFO_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
-from ..sheets import (
-    BOOK_SECTIONS,
-    BOOKS_SECTION,
-    CATALOGS_SECTION,
-    DEVICE_SECTIONS,
-    HIDDEN_SECTION,
-    HOUSE_RULES_SECTION,
-    LAB_VF_SECTIONS,
-    PLAYERS_SECTION,
-    SOURCES_SECTION,
-    SPELL_SECTION,
-)
 from .base import (
-    _CHARACTER_REPUTATIONS,
-    _CHARACTER_TRAITS,
-    _COVENANT_REPUTATIONS,
-    _FAMILIAR_REPUTATIONS,
-    _FAMILIAR_TRAITS,
     _SectionOps,
 )
 from .character import CharacterActions
 from .covenant import CovenantActions
 from .creation import CreationActions
 from .devices import DeviceActions
+from .export import ExportActions
 from .familiar import FamiliarActions
 from .giving import GivingActions
 from .laboratory import LaboratoryActions
 from .library import LibraryActions
+from .navigation import NavigationActions
+from .records import RecordActions
+from .season_turn import SeasonActions
+from .virtues import VirtueFlawActions
 
 
 class WorkspaceScreen(
@@ -58,6 +39,11 @@ class WorkspaceScreen(
     LaboratoryActions,
     FamiliarActions,
     DeviceActions,
+    VirtueFlawActions,
+    RecordActions,
+    SeasonActions,
+    ExportActions,
+    NavigationActions,
     GivingActions,
     CreationActions,
 ):
@@ -104,228 +90,15 @@ class WorkspaceScreen(
         """What a / d / e (and More's Restore) do in each sheet section, keyed by the section id
         _active_section() reports. check_action enables a key only where it
         has an entry here, so a binding and its action can't disagree. Built
-        once: check_action runs on every Footer refresh."""
-        ops: dict[str, _SectionOps] = {
-            SPELL_SECTION: _SectionOps(
-                lambda: self._spell_form(None),
-                self._remove_saga_spell,
-                self._edit_saga_spell,
-            ),
-            HOUSE_RULES_SECTION: _SectionOps(
-                lambda: self._house_rule_form(None),
-                self._remove_house_rule,
-                self._edit_house_rule,
-            ),
-            PLAYERS_SECTION: _SectionOps(
-                lambda: self._player_form(None),
-                self._remove_player,
-                self._edit_player,
-            ),
-            BOOKS_SECTION: _SectionOps(edit=self._edit_books_in_play),
-            SOURCES_SECTION: _SectionOps(
-                lambda: self._saga_source_form(None),
-                self._remove_saga_source,
-                self._edit_saga_source,
-            ),
-            CATALOGS_SECTION: _SectionOps(edit=self._edit_catalog),
-            HIDDEN_SECTION: _SectionOps(
-                add=self._hide_catalog_entry, remove=self._show_catalog_entry
-            ),
-            # Character sheet
-            "section-char-info": _SectionOps(edit=self._edit_character_info),
-            "section-char-characteristics": _SectionOps(
-                edit=self._edit_characteristics
-            ),
-            "section-char-biographical": _SectionOps(
-                edit=self._edit_biographical_detail
-            ),
-            "tab-abilities": _SectionOps(
-                self._add_ability, self._remove_ability, self._edit_ability
-            ),
-            "section-aging": _SectionOps(edit=self._edit_aging),
-            # Health has two dialogs behind two Edit buttons (Wounds and
-            # Fatigue); 'e' opens Wounds, Fatigue is button-only.
-            "section-char-health": _SectionOps(edit=self._edit_wounds),
-            "section-arts": _SectionOps(edit=self._edit_arts),
-            "section-hermetic-background": _SectionOps(
-                edit=self._edit_hermetic_background
-            ),
-            "section-known-spells": _SectionOps(
-                self._add_spell, self._remove_spell, self._edit_spell_mastery
-            ),
-            "section-research-goals": _SectionOps(
-                self._add_research_goal,
-                self._remove_research_goal,
-                self._edit_research_goal,
-            ),
-            "section-inventory": _SectionOps(
-                self._add_item, self._remove_item, self._edit_item
-            ),
-            "section-raw-vis-hermetic": _SectionOps(
-                self._add_raw_vis, self._remove_raw_vis, self._edit_raw_vis
-            ),
-            "section-raw-vis-inventory": _SectionOps(
-                self._add_raw_vis, self._remove_raw_vis, self._edit_raw_vis
-            ),
-            "section-char-season": _SectionOps(
-                self._plan_season, self._clear_season_plan, self._plan_season
-            ),
-            "tab-diary": _SectionOps(
-                self._add_character_diary_entry,
-                self._remove_character_diary_entry,
-                self._edit_character_diary_entry,
-            ),
-            # Familiar sheet
-            "section-fam-info": _SectionOps(edit=self._edit_familiar_info),
-            "section-fam-binding": _SectionOps(edit=self._edit_familiar_binding),
-            "section-fam-characteristics": _SectionOps(
-                edit=self._edit_familiar_characteristics
-            ),
-            "section-fam-health": _SectionOps(edit=self._edit_familiar_wounds),
-            "section-fam-natural-weapons": _SectionOps(
-                self._add_familiar_natural_weapon,
-                self._remove_familiar_natural_weapon,
-                self._edit_familiar_natural_weapon,
-            ),
-            "tab-fam-abilities": _SectionOps(
-                self._add_familiar_ability,
-                self._remove_familiar_ability,
-                self._edit_familiar_ability,
-            ),
-            "tab-fam-powers": _SectionOps(
-                self._add_familiar_bond_power,
-                self._remove_familiar_bond_power,
-                self._edit_familiar_bond_power,
-            ),
-            # Laboratory sheet
-            "section-lab-identity": _SectionOps(edit=self._edit_lab_identity),
-            "section-lab-characteristics": _SectionOps(
-                edit=self._edit_lab_characteristics
-            ),
-            "section-lab-specialties": _SectionOps(
-                self._add_specialty_entry,
-                self._remove_specialty_entry,
-                self._edit_specialty_entry,
-            ),
-            "section-lab-features": _SectionOps(
-                self._add_feature, self._remove_feature, self._edit_feature
-            ),
-            "section-lab-raw-vis": _SectionOps(
-                self._add_lab_raw_vis, self._remove_lab_raw_vis, self._edit_lab_raw_vis
-            ),
-            "tab-lab-planning": _SectionOps(
-                self._new_lab_design, self._clear_lab_season, self._plan_lab_season
-            ),
-            "tab-lab-diary": _SectionOps(
-                self._add_diary_entry, self._remove_diary_entry, self._edit_diary_entry
-            ),
-            # Covenant sheet
-            "section-cov-info": _SectionOps(edit=self._edit_covenant),
-            "section-cov-description": _SectionOps(
-                edit=self._edit_covenant_description
-            ),
-            "section-cov-boons": _SectionOps(
-                lambda: self._add_boon_hook("Boon"),
-                lambda: self._remove_boon_hook("Boon"),
-                lambda: self._edit_boon_hook("Boon"),
-            ),
-            "section-cov-hooks": _SectionOps(
-                lambda: self._add_boon_hook("Hook"),
-                lambda: self._remove_boon_hook("Hook"),
-                lambda: self._edit_boon_hook("Hook"),
-            ),
-            "section-eco-wealth": _SectionOps(edit=self._edit_wealth),
-            "section-eco-income": _SectionOps(
-                self._add_income_source,
-                self._remove_income_source,
-                self._edit_income_source,
-            ),
-            "section-eco-expenditure": _SectionOps(
-                edit=lambda: self._edit_economics_row("expenditure")
-            ),
-            "section-eco-savings": _SectionOps(
-                edit=lambda: self._edit_economics_row("savings")
-            ),
-            "section-inh-loyalty": _SectionOps(edit=self._edit_loyalty),
-            "section-inh-population": _SectionOps(edit=self._edit_population),
-            "section-inh-misc": _SectionOps(edit=self._edit_miscellaneous),
-            "tab-cov-diary": _SectionOps(
-                self._add_covenant_diary_entry,
-                self._remove_covenant_diary_entry,
-                self._edit_covenant_diary_entry,
-            ),
+        once: check_action runs on every Footer refresh. Each mixin lists
+        its own sheet's sections."""
+        return {
+            **self._library_section_ops(),
+            **self._character_section_ops(),
+            **self._familiar_section_ops(),
+            **self._laboratory_section_ops(),
+            **self._covenant_section_ops(),
+            **self._shared_section_ops(),
+            **self._virtue_flaw_section_ops(),
+            **self._device_section_ops(),
         }
-        for spec in (
-            _CHARACTER_TRAITS,
-            _CHARACTER_REPUTATIONS,
-            _FAMILIAR_TRAITS,
-            _FAMILIAR_REPUTATIONS,
-            _COVENANT_REPUTATIONS,
-        ):
-            ops[spec.section] = _SectionOps(
-                partial(self._add_trait, spec),
-                partial(self._remove_trait, spec),
-                partial(self._edit_trait, spec),
-            )
-        ops["section-lab-connections"] = _SectionOps(
-            self._add_connection, self._remove_connection, self._edit_connection
-        )
-        for section in ("section-lab-rooms", "section-lab-items"):
-            ops[section] = _SectionOps(
-                partial(self._add_named, section),
-                partial(self._remove_named, section),
-                partial(self._edit_named, section),
-            )
-        # Virtues and Flaws (character, laboratory, familiar): a and d like
-        # any other list. They can't be edited, only added and deleted.
-        for section in (
-            "section-vf-virtues",
-            "section-vf-flaws",
-            "section-fam-vf-virtues",
-            "section-fam-vf-flaws",
-            *LAB_VF_SECTIONS,
-        ):
-            ops[section] = _SectionOps(
-                self.action_add_virtue_flaw, self.action_remove_virtue_flaw
-            )
-        for section in BOOK_SECTIONS:
-            listed = section != "section-lib-summary"  # the summary lists none
-            ops[section] = _SectionOps(
-                lambda: self._book_form(None),
-                self._remove_book if listed else None,
-                self._edit_book if listed else None,
-            )
-        for kind in INHABITANT_KINDS:
-            ops[f"section-inh-{kind}"] = _SectionOps(
-                partial(self._add_inhabitant, kind),
-                partial(self._remove_inhabitant, kind),
-                partial(self._edit_inhabitant, kind),
-                # Only Magi/Companions can go "departed" (Inhabitant.departed).
-                partial(self._restore_inhabitant, kind)
-                if kind in inh.AUTO_KINDS
-                else None,
-            )
-        for kind, _ in seasons.SEASON_KINDS:
-            ops[f"section-cov-seasons-{kind}"] = _SectionOps(
-                partial(self._plan_covenant_season, kind),
-                partial(self._clear_covenant_season, kind),
-                partial(self._plan_covenant_season, kind),
-            )
-        for section, verbs in CORE_SECTIONS.items():
-            ops[section] = _SectionOps(
-                *(
-                    partial(self._core_verb, section, verb) if verb in verbs else None
-                    for verb in ("add", "remove", "edit")
-                )
-            )
-        for section in DEVICE_SECTIONS:
-            ops[section] = _SectionOps(
-                self._add_device, self._remove_device_row, self._edit_device_row
-            )
-        for kind in POSSESSION_KINDS:
-            ops[f"section-pos-{kind}"] = _SectionOps(
-                partial(self._add_possession, kind),
-                partial(self._remove_possession, kind),
-                partial(self._edit_possession, kind),
-            )
-        return ops

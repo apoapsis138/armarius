@@ -5,8 +5,9 @@ from __future__ import annotations
 
 from support import everything_saga
 
-from ars_magica_manager import ahead, ahead_forms
+from ars_magica_manager import ahead
 from ars_magica_manager.commands import Confirm, Form, Refuse
+from ars_magica_manager.forms import ahead as ahead_forms
 from ars_magica_manager.models import CalendarEntry
 
 

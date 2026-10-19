@@ -5,9 +5,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from .... import character_forms, sourcebooks, storage
-from .... import familiar_forms as ff
 from .... import possessions as pos
+from .... import sourcebooks, storage
+from ....forms import character as character_forms
+from ....forms import familiar as ff
 from ....markup import escape
 from ....models import (
     Ability,
@@ -29,6 +30,7 @@ from ..prompts import (
 )
 from .base import (
     WorkspaceBase,
+    _SectionOps,
 )
 
 
@@ -365,3 +367,30 @@ class FamiliarActions(WorkspaceBase):
     def _selected_familiar_reputation(self) -> int | None:
         view = self._familiar_sheet_view
         return view.selected_reputation() if view is not None else None
+
+    def _familiar_section_ops(self) -> dict[str, _SectionOps]:
+        """a / d / e on the familiar sheet (see
+        WorkspaceScreen._section_ops)."""
+        return {
+            "section-fam-info": _SectionOps(edit=self._edit_familiar_info),
+            "section-fam-binding": _SectionOps(edit=self._edit_familiar_binding),
+            "section-fam-characteristics": _SectionOps(
+                edit=self._edit_familiar_characteristics
+            ),
+            "section-fam-health": _SectionOps(edit=self._edit_familiar_wounds),
+            "section-fam-natural-weapons": _SectionOps(
+                self._add_familiar_natural_weapon,
+                self._remove_familiar_natural_weapon,
+                self._edit_familiar_natural_weapon,
+            ),
+            "tab-fam-abilities": _SectionOps(
+                self._add_familiar_ability,
+                self._remove_familiar_ability,
+                self._edit_familiar_ability,
+            ),
+            "tab-fam-powers": _SectionOps(
+                self._add_familiar_bond_power,
+                self._remove_familiar_bond_power,
+                self._edit_familiar_bond_power,
+            ),
+        }

@@ -9,11 +9,11 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import creature_forms, creatures, world_forms
-from .... import creature_sheet as crs
+from .... import creatures
 from .... import sheet_text as st
 from ....boon_hook_text import counted
-from ....character_sheet import Fact
+from ....forms import creature as creature_forms
+from ....forms import world as world_forms
 from ....markup import aligned, escape, markdown_inline
 from ....models import Creature, Saga
 from ....sections import (
@@ -32,6 +32,8 @@ from ....sections import (
     CREATURE_VIS_SECTION,
     LINKS_SECTION,
 )
+from ....sheets import creature as crs
+from ....sheets.character import Fact
 from ..widgets import PinnedCollapsible, SelectableList, SheetSection, TwoColumns
 from .base import SheetView
 

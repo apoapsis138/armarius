@@ -12,7 +12,8 @@ from __future__ import annotations
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import advance_forms, seasons, world_turns
+from .. import seasons, world_turns
+from ..forms import advance as advance_forms
 from ..models import Saga, SeasonRecord
 from .ahead import ahead_section
 from .character_sheet import TextBlock

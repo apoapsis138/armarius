@@ -8,14 +8,17 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from .... import device_forms
 from .... import enchanted_devices as ed
+from ....forms import device as device_forms
 from ....markup import escape
 from ....models import CHARGED, EnchantedDevice, InstilledEffect
 from ..forms import _enchanted_device_dialog, _instilled_effect_dialog
 from ..prompts import ConfirmScreen
 from ..sheets import DEVICE_SECTIONS
-from .base import WorkspaceBase
+from .base import (
+    WorkspaceBase,
+    _SectionOps,
+)
 
 #: Every section a device change can show in: the lists, and the Hermetic
 #: Magic tab's talisman line (refreshed with the character's list).
@@ -189,3 +192,13 @@ class DeviceActions(WorkspaceBase):
         self.notify(
             f"{escape(device.name)}: {left} charge{'' if left == 1 else 's'} left."
         )
+
+    def _device_section_ops(self) -> dict[str, _SectionOps]:
+        """a / d / e on the enchanted-device sections (see
+        WorkspaceScreen._section_ops)."""
+        return {
+            section: _SectionOps(
+                self._add_device, self._remove_device_row, self._edit_device_row
+            )
+            for section in DEVICE_SECTIONS
+        }

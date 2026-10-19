@@ -28,12 +28,13 @@ from textual.widgets import (
 )
 from textual.widgets.option_list import Option
 
-from ... import catalog, sourcebooks, virtue_forms
+from ... import catalog, sourcebooks
 from ... import laboratories as labs
 from ... import saga_content as sc
 from ... import sheet_text as st
 from ... import spells as spl
 from ...boon_hook_text import boon_hook_entry_text, boon_hook_names
+from ...forms import virtue as virtue_forms
 from ...markup import escape
 from ...models import (
     VIRTUE_FLAW_TIER_COST,

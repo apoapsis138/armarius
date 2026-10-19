@@ -11,17 +11,17 @@ from typing import Any
 
 from .... import economics as eco
 from .... import possessions as pos
-from ....covenant_forms import covenant_fields as _covenant_fields
 from ....form_spec import DialogField, pairs
-from ....inhabitant_forms import inhabitant_fields as _inhabitant_fields
+from ....forms.covenant import covenant_fields as _covenant_fields
+from ....forms.inhabitant import inhabitant_fields as _inhabitant_fields
+from ....forms.possession import contested_fields as _contested_fields
+from ....forms.possession import possession_fields as _possession_fields
+from ....forms.possession import possession_live
 from ....markup import escape
 from ....models import (
     INCOME_EFFECTS,
     IncomeSource,
 )
-from ....possession_forms import contested_fields as _contested_fields
-from ....possession_forms import possession_fields as _possession_fields
-from ....possession_forms import possession_live
 from ..fields import FieldsDialog
 from ..prompts import ConfirmScreen
 

@@ -9,8 +9,8 @@ from ars_magica_manager import catalog, sourcebooks
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import players as pl
 from ars_magica_manager import saga_content as sc
-from ars_magica_manager import saga_content_sheet as scs
 from ars_magica_manager.models import Spell
+from ars_magica_manager.sheets import saga_content as scs
 
 
 def _saga():

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ars_magica_manager import commands, form_spec, vis_forms
+from ars_magica_manager import commands, form_spec
+from ars_magica_manager.forms import vis as vis_forms
 
 
 def _values(form: commands.Form, typed: dict[str, Any]) -> dict[str, Any]:

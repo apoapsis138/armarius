@@ -1,9 +1,9 @@
-"""Print to PDF's options (print_forms.py): its fields, what they choose,
+"""Print to PDF's options (forms/printing.py): its fields, what they choose,
 and that the last choices are kept in the settings."""
 
-from ars_magica_manager import print_forms as pf
 from ars_magica_manager import print_layout as pl
 from ars_magica_manager import settings
+from ars_magica_manager.forms import printing as pf
 
 
 def test_the_defaults_are_letter_short_spells_and_parchment():

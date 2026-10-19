@@ -8,12 +8,13 @@ from dataclasses import replace
 from functools import partial
 from typing import Any
 
-from .... import catalog, season_forms, sourcebooks
+from .... import catalog, sourcebooks
 from ....form_spec import DialogField
+from ....forms import season as season_forms
+from ....forms.season import study_fields as _study_fields
 from ....markup import escape
 from ....models import Breakthrough, Character, GrogYear, Saga, SeasonPlan
 from ....rules import creation_characteristics, experiment
-from ....season_forms import study_fields as _study_fields
 from ..fields import FieldsDialog
 from ..pickers import VirtueFlawPickerScreen
 

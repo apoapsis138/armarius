@@ -21,12 +21,13 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
-from . import place_events, threats, tribunal_sheet
-from .character_sheet import Fact
+from . import place_events, threats
 from .grids import Grid
 from .markup import escape
 from .models import FULL, SEASONS, CalendarEntry, Covenant, Saga
 from .rules import aging
+from .sheets import tribunal as tribunal_sheet
+from .sheets.character import Fact
 
 #: How each source is shown in the filter, in order.
 EVERYTHING = "Everything"

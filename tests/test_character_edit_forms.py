@@ -10,9 +10,12 @@ from typing import Any
 
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import ability_forms, form_spec, spell_forms, virtue_forms
-from ars_magica_manager import character_forms as cf
+from ars_magica_manager import form_spec
 from ars_magica_manager.commands import Choose, Confirm, Form
+from ars_magica_manager.forms import ability as ability_forms
+from ars_magica_manager.forms import character as cf
+from ars_magica_manager.forms import spell as spell_forms
+from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.models import (
     Breakthrough,
     Laboratory,

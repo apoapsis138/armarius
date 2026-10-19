@@ -23,9 +23,8 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from typing import Any
 
-from . import acta, tribunal_packages, tribunal_sheet, tribunals, world
+from . import acta, tribunal_packages, tribunals, world
 from .arts import ARTS
-from .character_sheet import Fact
 from .commands import Command, Confirm, Form, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -46,6 +45,8 @@ from .models import (
 )
 from .rules import debate
 from .sections import ATTENDANCE_SECTION, BUSINESS_SECTION, VOTE_SECTION
+from .sheets import tribunal as tribunal_sheet
+from .sheets.character import Fact
 
 #: How many days a meeting lasts unless the storyguide says otherwise.
 DEFAULT_DAYS = 3

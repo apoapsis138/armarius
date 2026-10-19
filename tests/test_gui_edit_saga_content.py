@@ -14,9 +14,9 @@ from PySide6.QtWidgets import QApplication
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import house_rules as hr
-from ars_magica_manager import saga_content_forms as scf
 from ars_magica_manager import spells as spl
 from ars_magica_manager import storage
+from ars_magica_manager.forms import saga_content as scf
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.markup_html import plain
 from ars_magica_manager.gui.saga_content import SagaContentPage

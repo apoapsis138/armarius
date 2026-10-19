@@ -5,9 +5,10 @@ from __future__ import annotations
 
 from support import everything_saga
 
-from ars_magica_manager import meeting, tribunal_sheet
+from ars_magica_manager import meeting
 from ars_magica_manager.commands import Form
 from ars_magica_manager.models import Character, Covenant, Saga, Tribunal
+from ars_magica_manager.sheets import tribunal as tribunal_sheet
 
 
 def _normandy(saga: Saga) -> Tribunal:
@@ -123,7 +124,7 @@ def test_the_lot_is_drawn_once():
 
 
 def test_founding_in_normandy_names_the_vis_it_needs():
-    from ars_magica_manager import creation_forms
+    from ars_magica_manager.forms import creation as creation_forms
     from ars_magica_manager.tribunal_packages import normandy
 
     saga = everything_saga()

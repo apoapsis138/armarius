@@ -4,9 +4,9 @@ covenants and magi of note, worked out from the covenants that belong to
 it, its Docket of cases, the Meeting being held, its Peripheral Code,
 its Treasury, its Diary, and Manage.
 
-What it says comes from the shared core (tribunal_sheet.py), as the
+What it says comes from the shared core (sheets/tribunal.py), as the
 terminal's Tribunal sheet does, and its buttons run the core's forms
-(tribunal_forms.py)."""
+(forms/tribunal.py)."""
 
 from __future__ import annotations
 
@@ -17,19 +17,9 @@ from typing import Any
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import (
-    acta,
-    artwork,
-    hall,
-    meeting,
-    tribunal_forms,
-    tribunal_packages,
-    tribunal_sheet,
-    tribunals,
-    world,
-)
-from .. import character_sheet as cs
+from .. import acta, artwork, hall, meeting, tribunal_packages, tribunals, world
 from ..commands import Command, Form, Refuse, SectionOps
+from ..forms import tribunal as tribunal_forms
 from ..markup import aligned, escape
 from ..models import Case, Saga, Tribunal, TribunalDiaryEntry
 from ..sections import (
@@ -43,8 +33,10 @@ from ..sections import (
     TRIB_DIARY_SECTION,
     VOTE_SECTION,
 )
+from ..sheets import character as cs
+from ..sheets import tribunal as tribunal_sheet
+from ..sheets.tribunal import Grid
 from ..tribunal_packages.rhine import gild_tree
-from ..tribunal_sheet import Grid
 from . import marks, print_sheet
 from .character_sheet import TextBlock, section
 from .editing import Chooser, RowVerb, Run, verb_buttons

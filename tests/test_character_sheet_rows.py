@@ -1,12 +1,12 @@
 """The Character sheet's rows and figures in the shared core, which the
-desktop sheet draws (character_sheet.py)."""
+desktop sheet draws (sheets/character.py)."""
 
 from __future__ import annotations
 
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import character_sheet as cs
 from ars_magica_manager.models import Ability, VirtueFlawInstance
+from ars_magica_manager.sheets import character as cs
 
 
 def test_an_ability_row_knows_its_way_to_the_next_score():

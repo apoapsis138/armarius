@@ -10,12 +10,13 @@ from textual.css.query import NoMatches
 
 from .... import books as bk
 from .... import house_rules as hr
-from .... import import_forms, seasons, storage
 from .... import lab_texts as lt
 from .... import players as pl
 from .... import saga_content as sc
+from .... import seasons, storage
 from .... import spells as spl
 from ....form_spec import DialogField
+from ....forms import importing as import_forms
 from ....markup import escape
 from ....models import (
     TEXT_LONGEVITY,
@@ -52,12 +53,16 @@ from ..prompts import (
     _saga_source_dialog,
 )
 from ..sheets import (
+    BOOK_SECTIONS,
     BOOKS_SECTION,
     CATALOGS_SECTION,
     HIDDEN_SECTION,
+    HOUSE_RULES_SECTION,
     LAB_TEXTS_SECTION,
     LIBRARY_SECTIONS,
+    PLAYERS_SECTION,
     SOURCES_SECTION,
+    SPELL_SECTION,
     BookListView,
     HouseRulesView,
     LabTextListView,
@@ -68,6 +73,7 @@ from ..steps import run_steps
 from .base import (
     NodeKind,
     WorkspaceBase,
+    _SectionOps,
     _tree_node_with_data,
 )
 
@@ -766,3 +772,42 @@ class LibraryActions(WorkspaceBase):
             tree.root.add_leaf(
                 f"Unassigned Books ({count})", data=(NodeKind.BOOK_GROUP,)
             )
+
+    def _library_section_ops(self) -> dict[str, _SectionOps]:
+        """a / d / e on the saga's own sections and the library's (see
+        WorkspaceScreen._section_ops)."""
+        ops: dict[str, _SectionOps] = {
+            SPELL_SECTION: _SectionOps(
+                lambda: self._spell_form(None),
+                self._remove_saga_spell,
+                self._edit_saga_spell,
+            ),
+            HOUSE_RULES_SECTION: _SectionOps(
+                lambda: self._house_rule_form(None),
+                self._remove_house_rule,
+                self._edit_house_rule,
+            ),
+            PLAYERS_SECTION: _SectionOps(
+                lambda: self._player_form(None),
+                self._remove_player,
+                self._edit_player,
+            ),
+            BOOKS_SECTION: _SectionOps(edit=self._edit_books_in_play),
+            SOURCES_SECTION: _SectionOps(
+                lambda: self._saga_source_form(None),
+                self._remove_saga_source,
+                self._edit_saga_source,
+            ),
+            CATALOGS_SECTION: _SectionOps(edit=self._edit_catalog),
+            HIDDEN_SECTION: _SectionOps(
+                add=self._hide_catalog_entry, remove=self._show_catalog_entry
+            ),
+        }
+        for section in BOOK_SECTIONS:
+            listed = section != "section-lib-summary"  # the summary lists none
+            ops[section] = _SectionOps(
+                lambda: self._book_form(None),
+                self._remove_book if listed else None,
+                self._edit_book if listed else None,
+            )
+        return ops

@@ -16,7 +16,8 @@ from gui_steps import answering, section_buttons
 from PySide6.QtWidgets import QApplication
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import covenant_forms, storage
+from ars_magica_manager import storage
+from ars_magica_manager.forms import covenant as covenant_forms
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.figures import BookSpine

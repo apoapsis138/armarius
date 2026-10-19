@@ -17,7 +17,6 @@ from textual.widgets import (
 
 from .... import books as bk
 from .... import casting_text, seasons
-from .... import character_sheet as cs
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
@@ -31,6 +30,7 @@ from ....models import (
     Saga,
 )
 from ....rules import creation_virtues as cv
+from ....sheets import character as cs
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,

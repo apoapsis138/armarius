@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import covenant_sheet as cvs
 from ars_magica_manager.models import (
     Book,
     CovenantDiaryEntry,
@@ -14,6 +13,7 @@ from ars_magica_manager.models import (
     Tribunal,
     VirtueFlawInstance,
 )
+from ars_magica_manager.sheets import covenant as cvs
 
 
 def _covenant():

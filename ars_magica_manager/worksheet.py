@@ -18,26 +18,29 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from . import books as bk
-from . import catalog, creation, device_forms, library_forms
-from . import character_forms as cf
-from . import covenant_forms as covf
+from . import catalog, creation
 from . import covenant_templates as templates
 from . import covenants as cov_rules
-from . import inhabitant_forms as inhf
 from . import inhabitants as inh
 from . import laboratories as lab_rules
-from . import laboratory_forms as labf
-from . import possession_forms as posf
 from . import possessions as pos
 from . import sheet_text as st
 from . import spells as spl
-from . import trait_forms as tf
-from . import virtue_forms as vf
-from . import worksheet_forms as wf
 from .arts import ART_DESCRIPTIONS, ARTS
 from .boon_hook_text import boon_hook_info_text
 from .commands import Act, Choice, Choose, Command, Confirm
 from .covenants import boon_hook_points, covenant_boon_points, covenant_hook_points
+from .forms import character as cf
+from .forms import covenant as covf
+from .forms import device as device_forms
+from .forms import inhabitant as inhf
+from .forms import laboratory as labf
+from .forms import library as library_forms
+from .forms import possession as posf
+from .forms import trait as tf
+from .forms import virtue as vf
+from .forms import worksheet as wf
+from .forms.worksheet import MARKS, Record
 from .markup import aligned, escape
 from .models import (
     INCOME_TYPE_DEFAULTS,
@@ -65,7 +68,6 @@ from .rules import creation_virtues as cv
 from .rules import creation_xp as cx
 from .rules import scores
 from .rules import xp as xp_rules
-from .worksheet_forms import MARKS, Record
 
 Start = Callable[[], Command]
 

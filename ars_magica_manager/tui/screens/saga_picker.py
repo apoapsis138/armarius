@@ -18,7 +18,8 @@ from textual.widgets import (
     Static,
 )
 
-from ... import __version__, paths, saga_forms, storage, title_page
+from ... import __version__, paths, storage, title_page
+from ...forms import saga as saga_forms
 from ...markup import escape, problem
 from ...models import Player
 from .fields import FieldsDialog

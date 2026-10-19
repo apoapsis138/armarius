@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ars_magica_manager import commands, familiar_forms, form_spec
+from ars_magica_manager import commands, form_spec
+from ars_magica_manager.forms import familiar as familiar_forms
 from ars_magica_manager.models import (
     Ability,
     BondPower,

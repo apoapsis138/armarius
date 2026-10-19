@@ -18,7 +18,7 @@ values."""
 from __future__ import annotations
 
 import uuid
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
@@ -28,12 +28,12 @@ from textual.widgets import Button, Checkbox, Input, Label, Select, Static, Text
 
 from ... import enchanted_devices as ed
 from ... import form_spec
-from ... import lab_plan_forms as lpf
 from ... import lab_texts as lt
 from ... import spells as spl
 from ...arts import FORMS, TECHNIQUES
 from ...form_spec import DialogField
-from ...lab_plan_forms import KINDS, OTHER, LabPlanForm, design_from, level_text
+from ...forms import lab_plan as lpf
+from ...forms.lab_plan import KINDS, OTHER, LabPlanForm, design_from, level_text
 from ...markup import escape
 from ...models import (
     Character,
@@ -127,6 +127,46 @@ def _art_select(arts: Sequence[str], value: str | None, widget_id: str) -> Selec
         classes="inv-art",
         compact=True,
     )
+
+
+#: Lab work whose vis is of the work's Technique or Form, as chosen.
+_BY_ART = (es.INSTIL, es.LESSER_WORK, fs.BIND, fs.EMPOWER)
+
+#: Which rows of the form show for the chosen activity ("" when none is
+#: chosen yet), one rule per row (Strategy, as a table).
+_ROWS_SHOWN: dict[str, Callable[[str], bool]] = {
+    "inv-common": bool,
+    "inv-design": lambda a: a == lab_seasons.INVENT,
+    "inv-labtext": lambda a: a == lab_seasons.LAB_TEXT,
+    "inv-decode-row": lambda a: a == bs.DECODE_TEXT,
+    "inv-work": lambda a: (
+        bool(a) and a not in (*lab_seasons.SPELL_ACTIVITIES, bs.DECODE_TEXT)
+    ),
+    "inv-connection-row": lambda a: a == lab_seasons.FIX_AC,
+    "inv-subject-row": lambda a: a == lab_seasons.LONGEVITY,
+    "inv-device-row": lambda a: a in es.ACTIVITIES,
+    "inv-effect-row": lambda a: a in es.EFFECT_ACTIVITIES,
+    "inv-effect-text-row": lambda a: a in es.EFFECT_ACTIVITIES,
+    "inv-effect-vis": lambda a: a in _BY_ART,
+    "inv-effect-vis-label": lambda a: a in _BY_ART,
+    "inv-bind-row": lambda a: a == fs.BIND,
+    "inv-move-row": lambda a: a == ls.MOVE,
+    "inv-taming-row": lambda a: a == lab_seasons.TAMING,
+    "inv-experiment-row": lambda a: a in lab_seasons.EXPERIMENTAL or a == ex.STABILIZE,
+    "inv-experimenting": lambda a: a in lab_seasons.EXPERIMENTAL,
+    "inv-experimenting-label": lambda a: a in lab_seasons.EXPERIMENTAL,
+    "inv-power-row": lambda a: a == fs.EMPOWER,
+    "inv-die-row": lambda a: a in (es.INVESTIGATE, *ls.ROLLED),
+    "inv-vis-from-row": lambda a: (
+        a
+        not in (
+            es.CHARGED_WORK,
+            es.ATTUNE,
+            es.INVESTIGATE,
+            *ls.ACTIVITIES,
+        )
+    ),
+}
 
 
 class InventSpellScreen(ModalDialog[SeasonPlan | None]):
@@ -847,58 +887,15 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         level = "Gen" if source.level is None else source.level
         return f"{source.name}  {spl.shorthand(source)}  (level {level})"
 
-    def _refresh(self) -> None:  # noqa: PLR0915
+    def _refresh(self) -> None:
         if not self._ready:
             return
         values = self.values()
         plan = self.form.plan_of(values)
         inventing = plan.activity == lab_seasons.INVENT
-        chosen = bool(plan.activity)
         self.query_one("#inv-header", Static).update(self._header(plan.activity))
-        self.query_one("#inv-common").display = chosen
-        self.query_one("#inv-design").display = inventing
-        self.query_one("#inv-labtext").display = plan.activity == lab_seasons.LAB_TEXT
-        self.query_one("#inv-decode-row").display = plan.activity == bs.DECODE_TEXT
-        self.query_one("#inv-work").display = chosen and (
-            plan.activity not in (*lab_seasons.SPELL_ACTIVITIES, bs.DECODE_TEXT)
-        )
-        self.query_one("#inv-connection-row").display = (
-            plan.activity == lab_seasons.FIX_AC
-        )
-        self.query_one("#inv-subject-row").display = (
-            plan.activity == lab_seasons.LONGEVITY
-        )
-        enchanting = plan.activity in es.ACTIVITIES
-        self.query_one("#inv-device-row").display = enchanting
-        self.query_one("#inv-effect-row").display = (
-            plan.activity in es.EFFECT_ACTIVITIES
-        )
-        self.query_one("#inv-effect-text-row").display = (
-            plan.activity in es.EFFECT_ACTIVITIES
-        )
-        by_art = plan.activity in (es.INSTIL, es.LESSER_WORK, fs.BIND, fs.EMPOWER)
-        self.query_one("#inv-effect-vis").display = by_art
-        self.query_one("#inv-effect-vis-label").display = by_art
-        self.query_one("#inv-bind-row").display = plan.activity == fs.BIND
-        self.query_one("#inv-move-row").display = plan.activity == ls.MOVE
-        self.query_one("#inv-taming-row").display = plan.activity == lab_seasons.TAMING
-        experimental = plan.activity in lab_seasons.EXPERIMENTAL
-        self.query_one("#inv-experiment-row").display = experimental or (
-            plan.activity == ex.STABILIZE
-        )
-        self.query_one("#inv-experimenting").display = experimental
-        self.query_one("#inv-experimenting-label").display = experimental
-        self.query_one("#inv-power-row").display = plan.activity == fs.EMPOWER
-        self.query_one("#inv-die-row").display = plan.activity in (
-            es.INVESTIGATE,
-            *ls.ROLLED,
-        )
-        self.query_one("#inv-vis-from-row").display = plan.activity not in (
-            es.CHARGED_WORK,
-            es.ATTUNE,
-            es.INVESTIGATE,
-            *ls.ACTIVITIES,
-        )
+        for row, shown in _ROWS_SHOWN.items():
+            self.query_one(f"#{row}").display = shown(plan.activity)
         self.query_one("#inv-vis-from-label", Label).update(
             "Vis goes to" if plan.activity == lab_seasons.EXTRACT else "Vis from"
         )
@@ -908,10 +905,15 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         )
         if plan.design is not None:
             self.query_one("#inv-level", Static).update(level_text(plan.design))
-        if not chosen:
+        if not plan.activity:
             self.query_one("#inv-error", Static).update("")
             return
         problem = self.form.problem(values)
+        self._show_lab_total(plan)
+        self.query_one("#inv-error", Static).update(escape(problem or ""))
+
+    def _show_lab_total(self, plan: SeasonPlan) -> None:
+        """The work's Lab Total, line by line, and when it is done."""
         _, work = lab_seasons.work(self.saga, self.magus, plan)
         total, when = (
             self.query_one("#inv-total", Static),
@@ -933,7 +935,6 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             lines.append(f"[b]{'Lab Total':<30} {int(work.lab_total.total)}[/]")
             total.update("\n".join(lines))
             when.update(self._when_text(plan, work))
-        self.query_one("#inv-error", Static).update(escape(problem or ""))
 
     def _when_text(self, plan: SeasonPlan, work: lab_seasons.LabWork) -> str:
         """The core's When lines, one to a line, the Exposure apart."""

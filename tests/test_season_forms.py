@@ -9,8 +9,8 @@ from typing import Any
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import commands, form_spec, seasons
-from ars_magica_manager import lab_plan_forms as lpf
-from ars_magica_manager import season_forms as sf
+from ars_magica_manager.forms import lab_plan as lpf
+from ars_magica_manager.forms import season as sf
 from ars_magica_manager.models import (
     Ability,
     Character,

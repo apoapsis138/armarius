@@ -19,12 +19,12 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
-from . import character_sheet as cs
 from . import familiars
 from . import spells as spl
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .models import Character, Saga
 from .rules import combat, derived
+from .sheets import character as cs
 
 # ---------------------------------------------------------------- options
 

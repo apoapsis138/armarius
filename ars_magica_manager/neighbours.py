@@ -28,7 +28,6 @@ from . import (
     universities,
     world,
 )
-from .character_sheet import Fact
 from .form_spec import DialogField
 from .models import Covenant, Neighbour, Saga
 from .neighbour_lists import KindTab
@@ -40,6 +39,7 @@ from .sections import (
     REGION_THREATS_SECTION,
     REGION_UNIVERSITIES_SECTION,
 )
+from .sheets.character import Fact
 
 
 @dataclass(frozen=True)

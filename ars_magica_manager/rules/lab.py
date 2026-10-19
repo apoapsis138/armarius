@@ -26,7 +26,15 @@ from ..laboratories import (
     laboratory_source,
     specialization_scores,
 )
-from ..models import Character, Familiar, Laboratory, Saga
+from ..models import (
+    Character,
+    Covenant,
+    CovenantBoonHookDef,
+    Familiar,
+    Laboratory,
+    LabVirtueFlawDef,
+    Saga,
+)
 from . import effects, realms, scores
 from .breakdown import Breakdown, Line
 from .rounding import round_down, round_up
@@ -117,7 +125,7 @@ def _art_line(magus: Character, art: str) -> Line:
     return Line(label, amount=score + bonus, source=SOURCE)
 
 
-def lab_total(  # noqa: PLR0915
+def lab_total(
     saga: Saga,
     magus: Character,
     technique: str,
@@ -145,15 +153,60 @@ def lab_total(  # noqa: PLR0915
     inventing or enchanting adds the magnitude of the highest similar spell
     known (`similar_spell_level`); enchanting adds shape and material
     bonuses, capped at Magic Theory."""
-    lines = [_art_line(magus, technique), _art_line(magus, form)]
-    lines.append(
-        Line("Intelligence", amount=magus.characteristics.intelligence, source=SOURCE)
-    )
-    theory, theory_bonus = ability_score(magus, "Magic Theory")
-    lines.append(Line("Magic Theory", amount=theory + theory_bonus, source=SOURCE))
-
     covenant = saga.covenant(lab.covenant_id)
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
+    lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
+    applies = {technique, form, ACTIVITY_SPECIALIZATIONS.get(activity or "")}
+    if experimenting:
+        applies.add(EXPERIMENTATION)
+    if from_lab_text:
+        applies.add(ACTIVITY_SPECIALIZATIONS[TEXT_ACTIVITY])
+    notes: list[str] = []
+    lines = [
+        *_magus_lines(magus, technique, form),
+        _aura_line(saga, lab, covenant, boons),
+        *_quality_lines(lab, lab_catalog, applies),
+        *_helper_lines(magus, assistants, familiar, notes),
+        *_activity_lines(magus, activity, similar_spell_level, shape_material),
+        *_distraction_lines(days_missed, notes),
+    ]
+    base = sum(line.amount or 0 for line in lines)
+    found = _virtue_effects(
+        saga,
+        magus,
+        lab,
+        lab_catalog,
+        covenant,
+        boons,
+        technique,
+        form,
+        activity,
+        experimenting=experimenting,
+        from_lab_text=from_lab_text,
+        others_text=others_text,
+    )
+    combined = effects.combine(base, found, rounding=round_down)
+    return LabTotal(total=combined.total, lines=lines + combined.lines[1:], notes=notes)
+
+
+def _magus_lines(magus: Character, technique: str, form: str) -> list[Line]:
+    """The Arts, Intelligence and Magic Theory."""
+    theory, theory_bonus = ability_score(magus, "Magic Theory")
+    return [
+        _art_line(magus, technique),
+        _art_line(magus, form),
+        Line("Intelligence", amount=magus.characteristics.intelligence, source=SOURCE),
+        Line("Magic Theory", amount=theory + theory_bonus, source=SOURCE),
+    ]
+
+
+def _aura_line(
+    saga: Saga,
+    lab: Laboratory,
+    covenant: Covenant | None,
+    boons: dict[str, CovenantBoonHookDef],
+) -> Line:
+    """The aura the lab sits in: its own place's, else its covenant's."""
     covenant_aura = covenant_effective_aura(covenant, boons) if covenant else 0
     realm = covenant.aura_realm if covenant else realms.HERMETIC
     from .. import places  # places reads the sheets, which read this
@@ -162,23 +215,23 @@ def lab_total(  # noqa: PLR0915
     if own is not None:
         covenant_aura, realm = own
     aura = lab_aura_total(lab, covenant_aura)
-    lines.append(
-        Line(
-            f"Aura ({realm} {aura})",
-            amount=realms.aura_modifier(realms.HERMETIC, realm, aura),
-            source=realms.SOURCE,
-        )
+    return Line(
+        f"Aura ({realm} {aura})",
+        amount=realms.aura_modifier(realms.HERMETIC, realm, aura),
+        source=realms.SOURCE,
     )
 
-    lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
+
+def _quality_lines(
+    lab: Laboratory,
+    lab_catalog: dict[str, LabVirtueFlawDef],
+    applies: set[str | None],
+) -> list[Line]:
+    """General Quality, and the lab's Specializations that `applies` names."""
+    lines: list[Line] = []
     quality = lab_characteristic_total(lab, lab_catalog, "general_quality")[3]
     if quality:
         lines.append(Line("General Quality", amount=quality, source=QUALITY_SOURCE))
-    applies = {technique, form, ACTIVITY_SPECIALIZATIONS.get(activity or "")}
-    if experimenting:
-        applies.add(EXPERIMENTATION)
-    if from_lab_text:
-        applies.add(ACTIVITY_SPECIALIZATIONS[TEXT_ACTIVITY])
     for spec in specialization_scores(lab):
         if spec.counts and spec.name in applies:
             lines.append(
@@ -188,8 +241,18 @@ def lab_total(  # noqa: PLR0915
                     source=QUALITY_SOURCE,
                 )
             )
+    return lines
 
-    notes: list[str] = []
+
+def _helper_lines(
+    magus: Character,
+    assistants: Sequence[Character],
+    familiar: Familiar | None,
+    notes: list[str],
+) -> list[Line]:
+    """Each assistant's and the familiar's Intelligence + Magic Theory; a
+    note in `notes` when there are more assistants than Leadership allows."""
+    lines: list[Line] = []
     helpers = [*assistants]
     if len(helpers) > max_assistants(magus):
         notes.append(
@@ -214,7 +277,18 @@ def lab_total(  # noqa: PLR0915
                 source=SOURCE,
             )
         )
+    return lines
 
+
+def _activity_lines(
+    magus: Character,
+    activity: str | None,
+    similar_spell_level: int | None,
+    shape_material: int,
+) -> list[Line]:
+    """Inventing's and enchanting's similar spell, and enchanting's shape
+    and material bonus, capped at Magic Theory."""
+    lines: list[Line] = []
     if similar_spell_level and activity in ("invent_spells", "enchant_items"):
         lines.append(
             Line(
@@ -231,16 +305,42 @@ def lab_total(  # noqa: PLR0915
             else ""
         )
         lines.append(Line(label, amount=capped, source=ACTIVITY_SOURCE))
+    return lines
 
+
+def _distraction_lines(days_missed: int, notes: list[str]) -> list[Line]:
+    """The penalty for days away, or a note in `notes` that too many days
+    leave no lab work possible."""
     penalty = distraction_penalty(days_missed)
     if penalty is None:
         notes.append(f"{days_missed} days away: no lab work is possible this season.")
-    elif penalty:
-        lines.append(
+        return []
+    if penalty:
+        return [
             Line(f"Distractions ({days_missed} days)", amount=penalty, source=SOURCE)
-        )
+        ]
+    return []
 
-    base = sum(line.amount or 0 for line in lines)
+
+def _virtue_effects(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    lab_catalog: dict[str, LabVirtueFlawDef],
+    covenant: Covenant | None,
+    boons: dict[str, CovenantBoonHookDef],
+    technique: str,
+    form: str,
+    activity: str | None,
+    *,
+    experimenting: bool,
+    from_lab_text: bool,
+    others_text: bool,
+) -> list[effects.Effect]:
+    """The magus's, lab's, covenant's and place's Virtues and Flaws that
+    change this Lab Total."""
+    from .. import places  # places reads the sheets, which read this
+
     sources = [
         scores.character_source(magus.virtues_flaws),
         laboratory_source(lab, lab_catalog),
@@ -257,8 +357,7 @@ def lab_total(  # noqa: PLR0915
             for e in _pair_effects(sources, technique, form, TEXT_ACTIVITY)
             if e.modifier.activity == TEXT_ACTIVITY
         ]
-    combined = effects.combine(base, found, rounding=round_down)
-    return LabTotal(total=combined.total, lines=lines + combined.lines[1:], notes=notes)
+    return found
 
 
 def _pair_effects(

@@ -3,8 +3,10 @@ liege's vassals, and the oath's Boons and Hooks."""
 
 from __future__ import annotations
 
-from ars_magica_manager import covenant_sheet, packs, transfer, vassals, world_forms
+from ars_magica_manager import packs, transfer, vassals
+from ars_magica_manager.forms import world as world_forms
 from ars_magica_manager.models import BOON_HOOK_DETAIL, Covenant, Saga
+from ars_magica_manager.sheets import covenant as covenant_sheet
 
 
 def _saga() -> tuple[Saga, Covenant, Covenant]:

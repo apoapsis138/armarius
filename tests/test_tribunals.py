@@ -10,17 +10,13 @@ import pytest
 from support import everything_saga, screen_lines, wait_until
 from textual.widgets import Collapsible, TabbedContent, Tree
 
-from ars_magica_manager import (
-    storage,
-    transfer,
-    tribunal_forms,
-    tribunal_packages,
-    tribunal_sheet,
-)
+from ars_magica_manager import storage, transfer, tribunal_packages
 from ars_magica_manager import tribunals as trib
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
+from ars_magica_manager.forms import tribunal as tribunal_forms
 from ars_magica_manager.models import Covenant, Saga, Tribunal, TribunalDiaryEntry
+from ars_magica_manager.sheets import tribunal as tribunal_sheet
 from ars_magica_manager.tribunal_packages.normandy import lapsed, prize
 from ars_magica_manager.tribunal_packages.normandy import tenures as normandy_tenures
 from ars_magica_manager.tribunal_packages.rhine import gilds as rhine_gilds
@@ -586,7 +582,8 @@ def test_choosing_a_ruling_a_gild_or_a_diary_entry_shows_it_in_the_inspector():
 
 
 def test_a_rhine_covenant_s_own_form_ticks_its_gilds():
-    from ars_magica_manager import covenant_forms, creation_forms
+    from ars_magica_manager.forms import covenant as covenant_forms
+    from ars_magica_manager.forms import creation as creation_forms
     from ars_magica_manager.tribunal_packages import rhine as rhine_package
 
     saga = everything_saga()

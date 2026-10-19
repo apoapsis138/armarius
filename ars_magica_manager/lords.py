@@ -16,7 +16,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from .character_sheet import Fact
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -24,6 +23,7 @@ from .markup import escape
 from .models import Neighbour, Saga
 from .neighbour_lists import KindList, KindTab, details_list, list_ops
 from .sections import CASTLES_SECTION, GRATITUDE_SECTION
+from .sheets.character import Fact
 
 #: The titles a lord may hold, from least to greatest.
 TITLES: dict[str, str] = {

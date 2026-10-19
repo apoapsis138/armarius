@@ -23,8 +23,6 @@ from PySide6.QtWidgets import (
 )
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import character_sheet as cs
-from ars_magica_manager import covenant_sheet as cvs
 from ars_magica_manager import familiars as fam
 from ars_magica_manager import storage
 from ars_magica_manager.form_spec import DialogField
@@ -59,6 +57,8 @@ from ars_magica_manager.models import (
     SeasonPlan,
     VirtueFlawInstance,
 )
+from ars_magica_manager.sheets import character as cs
+from ars_magica_manager.sheets import covenant as cvs
 
 
 @pytest.fixture(scope="module")

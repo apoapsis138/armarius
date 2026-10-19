@@ -4,8 +4,8 @@ the shared catalogs and the single entries it hides, its House Rules,
 every spell (sorted and filtered as on the terminal) and its players,
 with the inspector beside them, and each section's Add, Edit and Delete.
 
-What it says comes from the shared core (saga_content_sheet.py and the
-modules behind it), and what its buttons do from saga_content_forms.py,
+What it says comes from the shared core (sheets/saga_content.py and the
+modules behind it), and what its buttons do from forms/saga_content.py,
 as the terminal's Saga Content view does.
 """
 
@@ -29,11 +29,11 @@ from .. import artwork
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc
-from .. import saga_content_forms as scf
-from .. import saga_content_sheet as scs
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
+from ..forms import saga_content as scf
 from ..models import Saga, Spell
+from ..sheets import saga_content as scs
 from . import pictures
 from .character_sheet import section
 from .editing import Chooser, Run, choose_cards, choose_rows, verb_buttons

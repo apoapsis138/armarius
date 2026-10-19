@@ -16,9 +16,7 @@ from ars_magica_manager import (
     factions,
     lords,
     neighbour_filter,
-    neighbour_forms,
     neighbours,
-    region_sheet,
     storage,
     threats,
     towns,
@@ -26,9 +24,11 @@ from ars_magica_manager import (
 )
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
+from ars_magica_manager.forms import neighbour as neighbour_forms
 from ars_magica_manager.models import Attitude, Link, Neighbour, Reason, Saga
 from ars_magica_manager.rules import dice
 from ars_magica_manager.sections import NEIGHBOUR_INFO_SECTION
+from ars_magica_manager.sheets import region as region_sheet
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
 

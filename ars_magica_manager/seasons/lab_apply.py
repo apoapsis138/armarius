@@ -17,6 +17,7 @@ from ..models import (
     Ability,
     ArcaneConnection,
     Book,
+    Breakthrough,
     Character,
     DiaryEntry,
     KnownSpell,
@@ -538,7 +539,7 @@ def _apply_laboratory(
         ls.add_vf(lab, vf_id)
 
 
-def _apply_experiment(  # noqa: PLR0915
+def _apply_experiment(
     saga: Saga,
     magus: Character,
     lab: Laboratory,
@@ -554,20 +555,7 @@ def _apply_experiment(  # noqa: PLR0915
     for subject, xp in chart.xp:
         _add_xp(magus, subject, xp)
     lines = list(chart.results)
-    everyone = [magus, *ls.assistants(saga, magus, plan)]
-    if chart.zeroes:
-        for person in everyone:
-            gain_warping(saga, person, chart.zeroes, random.Random())
-    if chart.lab_flaw:
-        ls.add_vf(lab, chart.lab_flaw)
-    if chart.zeroes >= 4:
-        for person in everyone:
-            person.wounds.heavy += 2
-        lines.append("Two Heavy Wounds for everyone in the lab.")
-    if chart.zeroes >= 5:
-        for person in everyone:
-            person.wounds.incapacitated = True
-        lines.append("An Incapacitating Wound for everyone in the lab.")
+    lines += _disaster(saga, magus, lab, plan, chart)
     creation = plan.activity in _CREATIONS
     if chart.zeroes >= 2 or (chart.failure and chart.failure_die == 0 and creation):
         lines.append(_destroy(saga, magus, plan, work, whole=chart.zeroes < 2))
@@ -583,55 +571,11 @@ def _apply_experiment(  # noqa: PLR0915
     stop = chart.wasted
     if plan.activity == ex.STABILIZE and goal is not None:
         stop = True
-        pool = lab_seasons.vis_pool(saga, magus, plan)
-        for art, pawns in work.vis_cost.items():
-            left = pool.get(art.lower(), 0) - pawns
-            if left > 0:
-                pool[art.lower()] = left
-            else:
-                pool.pop(art.lower(), None)
-        if chart.wasted or chart.no_benefit:
-            goal.stabilizing_seasons = 0
-            lines.append("The Discovery isn't stabilized: try again.")
-        else:
-            goal.stabilizing_seasons += 1
-            if work.finished:
-                goal.points += work.research_magnitude
-                lines.append(
-                    f"Stabilized: +{work.research_magnitude} points toward "
-                    f"{goal.name} ({goal.points}/{goal.target}); a Lab Text of it "
-                    "is written."
-                )
-                goal.pending_magnitude = 0
-                goal.stabilizing_seasons = 0
-                goal.discovery_shift = 0
-                saga.books.append(_discovery_text(saga, magus, lab, goal, work))
-        if work.finished or chart.wasted or chart.no_benefit:
-            warping = work.research_warping
-            if warping:
-                gain_warping(saga, magus, warping, random.Random())
+        lines += _stabilize(saga, magus, lab, plan, work, goal)
     elif goal is not None and goal.insights > 0 and work.finished and not chart.wasted:
-        magnitude = spl.level_magnitude(work.level)
-        goal.points += magnitude
-        goal.insights -= 1
-        lines.append(
-            f"The insight's effect is invented: +{magnitude} points toward "
-            f"{goal.name} ({goal.points}/{goal.target})."
-        )
+        lines.append(_invent_insight(work, goal))
     elif goal is not None and chart.discovery and not chart.wasted:
-        goal.pending_magnitude = spl.level_magnitude(work.level)
-        goal.discovery_seasons = max(1, lab_seasons.seasons_left(work) + 1)
-        goal.discovery_lab_total = int(work.lab_total.total)
-        goal.discovery_risk = plan.risk
-        goal.discovery_vis = sum(work.vis_cost.values())
-        goal.discovery_vis_art = next(iter(work.vis_cost), "")
-        made = work.spell or work.effect
-        goal.discovery_technique = made.technique if made else plan.technique
-        goal.discovery_form = made.form if made else plan.form
-        lines.append(
-            f"A Discovery toward {goal.name}: stabilize it (magnitude "
-            f"{goal.pending_magnitude}) in a later season."
-        )
+        lines.append(_record_discovery(plan, work, goal))
     if goal is not None:
         lines += _goal_reached(magus, goal)
     lab.diary.append(
@@ -644,6 +588,107 @@ def _apply_experiment(  # noqa: PLR0915
         )
     )
     return stop
+
+
+def _disaster(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    plan: SeasonPlan,
+    chart: ex.Extraordinary,
+) -> list[str]:
+    """A botch's Warping for everyone in the lab, the lab Flaw it gives, and
+    the wounds of a bad one; the Diary lines for the wounds."""
+    lines: list[str] = []
+    everyone = [magus, *ls.assistants(saga, magus, plan)]
+    if chart.zeroes:
+        for person in everyone:
+            gain_warping(saga, person, chart.zeroes, random.Random())
+    if chart.lab_flaw:
+        ls.add_vf(lab, chart.lab_flaw)
+    if chart.zeroes >= 4:
+        for person in everyone:
+            person.wounds.heavy += 2
+        lines.append("Two Heavy Wounds for everyone in the lab.")
+    if chart.zeroes >= 5:
+        for person in everyone:
+            person.wounds.incapacitated = True
+        lines.append("An Incapacitating Wound for everyone in the lab.")
+    return lines
+
+
+def _stabilize(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
+    goal: Breakthrough,
+) -> list[str]:
+    """A season stabilizing a Discovery: its vis spent, a season counted (or
+    the count lost), and once finished the points and a Lab Text of it;
+    research Warping when it ends."""
+    chart = work.experiment
+    assert chart is not None
+    lines: list[str] = []
+    pool = lab_seasons.vis_pool(saga, magus, plan)
+    for art, pawns in work.vis_cost.items():
+        left = pool.get(art.lower(), 0) - pawns
+        if left > 0:
+            pool[art.lower()] = left
+        else:
+            pool.pop(art.lower(), None)
+    if chart.wasted or chart.no_benefit:
+        goal.stabilizing_seasons = 0
+        lines.append("The Discovery isn't stabilized: try again.")
+    else:
+        goal.stabilizing_seasons += 1
+        if work.finished:
+            goal.points += work.research_magnitude
+            lines.append(
+                f"Stabilized: +{work.research_magnitude} points toward "
+                f"{goal.name} ({goal.points}/{goal.target}); a Lab Text of it "
+                "is written."
+            )
+            goal.pending_magnitude = 0
+            goal.stabilizing_seasons = 0
+            goal.discovery_shift = 0
+            saga.books.append(_discovery_text(saga, magus, lab, goal, work))
+    if work.finished or chart.wasted or chart.no_benefit:
+        warping = work.research_warping
+        if warping:
+            gain_warping(saga, magus, warping, random.Random())
+    return lines
+
+
+def _invent_insight(work: lab_seasons.LabWork, goal: Breakthrough) -> str:
+    """An insight's effect invented: its magnitude toward the goal."""
+    magnitude = spl.level_magnitude(work.level)
+    goal.points += magnitude
+    goal.insights -= 1
+    return (
+        f"The insight's effect is invented: +{magnitude} points toward "
+        f"{goal.name} ({goal.points}/{goal.target})."
+    )
+
+
+def _record_discovery(
+    plan: SeasonPlan, work: lab_seasons.LabWork, goal: Breakthrough
+) -> str:
+    """A Discovery toward the goal, kept on it to stabilize later."""
+    goal.pending_magnitude = spl.level_magnitude(work.level)
+    goal.discovery_seasons = max(1, lab_seasons.seasons_left(work) + 1)
+    goal.discovery_lab_total = int(work.lab_total.total)
+    goal.discovery_risk = plan.risk
+    goal.discovery_vis = sum(work.vis_cost.values())
+    goal.discovery_vis_art = next(iter(work.vis_cost), "")
+    made = work.spell or work.effect
+    goal.discovery_technique = made.technique if made else plan.technique
+    goal.discovery_form = made.form if made else plan.form
+    return (
+        f"A Discovery toward {goal.name}: stabilize it (magnitude "
+        f"{goal.pending_magnitude}) in a later season."
+    )
 
 
 #: Lab work whose creation a Complete Failure (a simple die of 0) destroys.

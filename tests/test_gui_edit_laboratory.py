@@ -14,8 +14,8 @@ from gui_steps import answering, section_buttons
 from PySide6.QtWidgets import QApplication, QLabel
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import laboratory_forms as lf
 from ars_magica_manager import storage
+from ars_magica_manager.forms import laboratory as lf
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.forms import ConfirmDialog
 from ars_magica_manager.gui.laboratory import LaboratoryPage

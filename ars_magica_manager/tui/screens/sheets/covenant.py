@@ -14,18 +14,7 @@ from textual.widgets import (
     TabbedContent,
 )
 
-from .... import (
-    ahead,
-    ahead_forms,
-    arms,
-    book_value,
-    catalog,
-    seasons,
-    tribunals,
-    vassals,
-    world,
-    world_forms,
-)
+from .... import ahead, arms, book_value, catalog, seasons, tribunals, vassals, world
 from .... import books as bk
 from .... import covenant_build as cov_build
 from .... import covenant_diary as cov_diary
@@ -42,6 +31,8 @@ from ....covenants import (
     boon_hook_problems,
     covenant_effective_aura,
 )
+from ....forms import ahead as ahead_forms
+from ....forms import world as world_forms
 from ....markup import aligned, escape, markdown_inline, problem
 from ....models import (
     FULL,

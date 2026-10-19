@@ -6,8 +6,10 @@ from __future__ import annotations
 
 from support import everything_saga, menu
 
-from ars_magica_manager import creation_forms, packs, saga_forms, storage, transfer
+from ars_magica_manager import packs, storage, transfer
 from ars_magica_manager.commands import Refuse
+from ars_magica_manager.forms import creation as creation_forms
+from ars_magica_manager.forms import saga as saga_forms
 from ars_magica_manager.models import Saga
 
 
@@ -166,7 +168,7 @@ def test_a_new_saga_starts_from_a_pack(tmp_path):
 
 
 def test_a_bad_pack_is_refused_on_import(tmp_path):
-    from ars_magica_manager import import_forms
+    from ars_magica_manager.forms import importing as import_forms
 
     saga = everything_saga()
     path = transfer.export_saga_to(tmp_path / "all.amm.json", saga)
@@ -253,8 +255,8 @@ def test_an_import_without_places_drops_the_covenants_place():
 
 
 def test_importing_a_pack_asks_what_to_bring_then_previews(tmp_path):
-    from ars_magica_manager import import_forms
     from ars_magica_manager.commands import Confirm, Form
+    from ars_magica_manager.forms import importing as import_forms
 
     saga = everything_saga()
     path = packs.write(tmp_path / "rhine.amm.json", _rhine_pack(saga))

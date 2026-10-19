@@ -1,6 +1,6 @@
 """The desktop's Ahead: what is coming, a season to a column and a card
 to an entry (ahead.py works it out), with the storyguide's own calendar
-entries added, edited and deleted here (ahead_forms.py). The saga's
+entries added, edited and deleted here (forms/ahead.py). The saga's
 Seasons page shows the whole saga, with a chip per kind of entry; a
 covenant's Seasons chapter only what concerns it."""
 
@@ -17,8 +17,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import ahead, ahead_forms
+from .. import ahead
 from ..commands import Act
+from ..forms import ahead as ahead_forms
 from ..models import SEASONS, Covenant, Saga
 from .character_sheet import section
 from .editing import Chooser, Run, verb_buttons

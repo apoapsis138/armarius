@@ -5,6 +5,8 @@ companions' working seasons, and the text the sheets show for a plan
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
+from functools import partial
 
 from .. import enchanted_devices as ed
 from .. import spells as spl
@@ -203,81 +205,149 @@ def plan_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     activity = rules.ACTIVITIES.get(plan.activity)
     if activity is None or not activity.gives_xp:
         return plan.details.strip().splitlines()[0] if plan.details.strip() else ""
+    subject = _SUBJECTS.get(plan.activity) or (
+        _spell_subject if activity.lab else _xp_subject
+    )
+    return subject(saga, character, plan)
+
+
+def _xp_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    """The subjects the experience goes into: "Latin, Creo"."""
     names = spell_names(saga, character)
+    return ", ".join(
+        rules.subject_label(a.subject, names) for a in rules.allocations(plan)
+    )
+
+
+def _first_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     shares = rules.allocations(plan)
-    first = rules.subject_label(shares[0].subject, names) if shares else ""
-    if plan.activity in bs.SHEET_ACTIVITIES or plan.activity == bs.DECODE_TEXT:
-        return _book_plan_subject(saga, plan, names)
-    if plan.activity == ls.ASSIST:
-        lead = saga.character(plan.teacher_id)
-        return lead.name if lead else ""
-    if plan.activity in aps.ACTIVITIES:
-        student = saga.character(plan.subject_id)
-        if plan.activity == aps.TEACH_VIRTUE and student is not None:
-            virtue = next(
-                (n for n, i in aps.teachable_virtues(character) if i == plan.effect_id),
-                "",
-            )
-            return f"{virtue} to {student.name}"
-        return student.name if student is not None else ""
-    if activity.lab:
-        if plan.activity == lab_seasons.TAMING:
-            return plan.title.strip()
-        if plan.activity in ls.ACTIVITIES:
-            lab = saga.laboratory(plan.lab_id)
-            return lab.name if lab else ""
-        if plan.activity in fs.ACTIVITIES:
-            familiar = familiar_of(saga, character.id)
-            if familiar is None:
-                return ""
-            power = fs.power_of(familiar, plan)
-            if plan.activity == fs.EMPOWER and power is not None:
-                return f"{power.name} for {familiar.name}"
-            return familiar.name
-        if plan.activity in es.ACTIVITIES:
-            device = es.device_of(saga, plan)
-            if device is None:
-                return ""
-            effect = es.effect_of(device, plan)
-            if plan.activity == es.INSTIL and effect is not None:
-                return f"{ed.effect_name(effect)} in {device.name}"
-            return device.name
-        if plan.activity == lab_seasons.EXTRACT:
-            return "Vim vis"
-        if plan.activity == lab_seasons.FIX_AC:
-            connection = lab_seasons.connection_of(saga, plan)
-            return connection.to if connection is not None else ""
-        if plan.activity == lab_seasons.LONGEVITY:
-            subject = lab_seasons.subject_of(saga, character, plan)
-            if subject is None:
-                return ""
-            return "own" if subject is character else f"for {subject.name}"
-        if plan.activity == lab_seasons.LAB_TEXT:
-            text = lab_seasons.lab_text_of(saga, plan)
-            spell = spl.find_spell(saga, text.spell_id) if text else None
-        else:
-            spell = (
-                lab_seasons.design_spell(plan.design)
-                if plan.design is not None
-                else lab_seasons.the_spell(saga, plan)
-            )
-        return f"{spell.name} ({spl.shorthand(spell)})" if spell else ""
-    if plan.activity == rules.READ:
-        book = next((b for b in saga.books if b.id == plan.book_id), None)
-        return book_label(book) if book else ""
-    if plan.activity in (rules.TAUGHT, rules.TRAINED):
-        teacher = saga.character(plan.teacher_id)
-        joiner = "from" if plan.activity == rules.TAUGHT else "with"
-        return f"{first} {joiner} {teacher.name}" if teacher and first else first
-    if plan.activity == rules.VIS_STUDY and shares:
-        pawns = study.vis_pawns(rules.score(character, shares[0].subject))
-        return f"{first} ({pawns} pawn(s) of vis)"
-    if plan.activity == rules.ADVENTURE:
-        subjects = ", ".join(
-            f"{rules.subject_label(a.subject, names)} {a.points}" for a in shares
+    names = spell_names(saga, character)
+    return rules.subject_label(shares[0].subject, names) if shares else ""
+
+
+def _book_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    return _book_plan_subject(saga, plan, spell_names(saga, character))
+
+
+def _assist_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    lead = saga.character(plan.teacher_id)
+    return lead.name if lead else ""
+
+
+def _apprentice_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    student = saga.character(plan.subject_id)
+    if plan.activity == aps.TEACH_VIRTUE and student is not None:
+        virtue = next(
+            (n for n, i in aps.teachable_virtues(character) if i == plan.effect_id),
+            "",
         )
-        return f"{subjects} (Source Quality {plan.source_quality})"
-    return ", ".join(rules.subject_label(a.subject, names) for a in shares)
+        return f"{virtue} to {student.name}"
+    return student.name if student is not None else ""
+
+
+def _taming_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    return plan.title.strip()
+
+
+def _laboratory_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    lab = saga.laboratory(plan.lab_id)
+    return lab.name if lab else ""
+
+
+def _familiar_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    familiar = familiar_of(saga, character.id)
+    if familiar is None:
+        return ""
+    power = fs.power_of(familiar, plan)
+    if plan.activity == fs.EMPOWER and power is not None:
+        return f"{power.name} for {familiar.name}"
+    return familiar.name
+
+
+def _device_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    device = es.device_of(saga, plan)
+    if device is None:
+        return ""
+    effect = es.effect_of(device, plan)
+    if plan.activity == es.INSTIL and effect is not None:
+        return f"{ed.effect_name(effect)} in {device.name}"
+    return device.name
+
+
+def _connection_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    connection = lab_seasons.connection_of(saga, plan)
+    return connection.to if connection is not None else ""
+
+
+def _longevity_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    subject = lab_seasons.subject_of(saga, character, plan)
+    if subject is None:
+        return ""
+    return "own" if subject is character else f"for {subject.name}"
+
+
+def _spell_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    """The spell invented, or learned from a Lab Text: "Pilum of Fire (CrIg 20)"."""
+    if plan.activity == lab_seasons.LAB_TEXT:
+        text = lab_seasons.lab_text_of(saga, plan)
+        spell = spl.find_spell(saga, text.spell_id) if text else None
+    else:
+        spell = (
+            lab_seasons.design_spell(plan.design)
+            if plan.design is not None
+            else lab_seasons.the_spell(saga, plan)
+        )
+    return f"{spell.name} ({spl.shorthand(spell)})" if spell else ""
+
+
+def _read_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    book = next((b for b in saga.books if b.id == plan.book_id), None)
+    return book_label(book) if book else ""
+
+
+def _taught_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    first = _first_subject(saga, character, plan)
+    teacher = saga.character(plan.teacher_id)
+    joiner = "from" if plan.activity == rules.TAUGHT else "with"
+    return f"{first} {joiner} {teacher.name}" if teacher and first else first
+
+
+def _vis_study_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    shares = rules.allocations(plan)
+    if not shares:
+        return _xp_subject(saga, character, plan)
+    pawns = study.vis_pawns(rules.score(character, shares[0].subject))
+    return f"{_first_subject(saga, character, plan)} ({pawns} pawn(s) of vis)"
+
+
+def _adventure_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    names = spell_names(saga, character)
+    subjects = ", ".join(
+        f"{rules.subject_label(a.subject, names)} {a.points}"
+        for a in rules.allocations(plan)
+    )
+    return f"{subjects} (Source Quality {plan.source_quality})"
+
+
+#: What a season of each activity is on (Strategy, as a table). An activity
+#: not listed names its spell if it is lab work, else its xp's subjects.
+_SUBJECTS: dict[str, Callable[[Saga, Character, SeasonPlan], str]] = {
+    **{key: _book_subject for key in (*bs.SHEET_ACTIVITIES, bs.DECODE_TEXT)},
+    ls.ASSIST: _assist_subject,
+    **{key: _apprentice_subject for key in aps.ACTIVITIES},
+    lab_seasons.TAMING: _taming_subject,
+    **{key: _laboratory_subject for key in ls.ACTIVITIES},
+    **{key: _familiar_subject for key in fs.ACTIVITIES},
+    **{key: _device_subject for key in es.ACTIVITIES},
+    lab_seasons.EXTRACT: lambda saga, character, plan: "Vim vis",
+    lab_seasons.FIX_AC: _connection_subject,
+    lab_seasons.LONGEVITY: _longevity_subject,
+    rules.READ: _read_subject,
+    rules.TAUGHT: _taught_subject,
+    rules.TRAINED: _taught_subject,
+    rules.VIS_STUDY: _vis_study_subject,
+    rules.ADVENTURE: _adventure_subject,
+}
 
 
 def book_label(book: Book) -> str:
@@ -424,104 +494,110 @@ def grog_year_text(character: Character) -> str:
 
 def work_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
     """How a season's lab work stands (plain text)."""
-    total = int(work.lab_total.total)
-    paid = ", ".join(f"{n} pawn(s) of {art}" for art, n in work.vis_cost.items() if n)
-    if plan.activity == bs.DECODE_TEXT:
-        text = (
-            f"Lab Total {total}: +{work.points_gained} points, "
-            f"{work.points_after}/{work.level}"
-        )
-        if work.finished:
-            return text + ", decoded this season"
-        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
-    if plan.activity == lab_seasons.TAMING:
-        text = (
-            f"Lab Total {total}: +{work.points_gained} points, "
-            f"{work.points_after}/{work.level}"
-        )
-        if work.finished:
-            return text + ", tamed this season"
-        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
-    if plan.activity == ls.MOVE:
-        if plan.by_spell:
-            return f"moved by spell to {plan.title.strip()}"
-        if work.finished:
-            return (
-                f"reassembled at {plan.title.strip()}; the journey broke two "
-                "years' maintenance"
-            )
-        return " ".join(work.notes).rstrip(".")
-    if plan.activity == ls.BUILD:
-        return (
-            "the laboratory is finished"
-            if work.second_season
-            else "the laboratory works, with the Basic Flaw until next season"
-        )
-    if plan.activity == ls.REFINE:
-        return f"Refinement {work.refinement}"
-    if plan.activity == ls.TAKE_OVER:
-        return f"taken over; Refinement {work.refinement}"
-    if plan.activity == fs.BIND:
-        cords = "/".join(str(c) for c in fs.cords_of(plan))
-        return (
-            f"Lab Total {total} against level {work.level}: bound, cords "
-            f"{cords} (golden/silver/bronze)" + (f"; {paid} vis" if paid else "")
-        )
-    if plan.activity == fs.EMPOWER:
-        text = (
-            f"Lab Total {total}: +{work.points_gained} points, "
-            f"{work.points_after}/{work.level}"
-        )
-        if paid:
-            text += f"; {paid} vis"
-        if work.finished:
-            return text + ", instilled this season"
-        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
-    if plan.activity == es.OPEN:
-        return f"{paid} vis: opened for enchantment"
-    if plan.activity == es.ATTUNE:
-        return "attuned as a talisman"
-    if plan.activity == es.INVESTIGATE:
-        found = len(work.revealed)
-        return (
-            f"Lab Total {total}: {found} power(s) found"
-            if found
-            else f"Lab Total {total} against level {work.level}"
-        )
-    if plan.activity == es.CHARGED_WORK:
-        return f"Lab Total {total} against level {work.level}: {work.charges} charge(s)"
-    if plan.activity == es.LESSER_WORK:
-        return f"Lab Total {total} against level {work.level}: made; {paid} vis"
-    if plan.activity == es.INSTIL:
-        text = (
-            f"Lab Total {total}: +{work.points_gained} points, "
-            f"{work.points_after}/{work.level}"
-        )
-        if paid:
-            text += f"; {paid} vis"
-        if work.finished:
-            return text + ", instilled this season"
-        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
-    if plan.activity == lab_seasons.EXTRACT:
-        return f"Lab Total {total}: {work.vis_gained} pawn(s) of Vim vis"
-    if plan.activity == lab_seasons.FIX_AC:
-        return "1 pawn of Vim vis: the Arcane Connection is fixed"
-    if plan.activity == lab_seasons.LONGEVITY:
-        name = work.subject.name if work.subject is not None else "?"
-        paid = ", ".join(f"{n} pawn(s) of {art}" for art, n in work.vis_cost.items())
-        return (
-            f"Lab Total {total}: aging rolls -{work.longevity} for {name}; {paid} vis"
-        )
-    if plan.activity == lab_seasons.LAB_TEXT:
-        return f"Lab Total {total} against level {work.level}: learned this season"
+    text = _WORK_TEXT.get(plan.activity, partial(_points_text, done="invented"))
+    return text(work, plan)
+
+
+def _paid(work: lab_seasons.LabWork) -> str:
+    """The vis the work spends: "2 pawn(s) of Vim"."""
+    return ", ".join(f"{n} pawn(s) of {art}" for art, n in work.vis_cost.items() if n)
+
+
+def _points_text(
+    work: lab_seasons.LabWork, plan: SeasonPlan, *, done: str, vis: bool = False
+) -> str:
+    """Work over seasons: the points gained toward its level (and with
+    `vis`, the vis spent), then `done` this season or the seasons left."""
     text = (
-        f"Lab Total {total}: +{work.points_gained} points, "
+        f"Lab Total {int(work.lab_total.total)}: +{work.points_gained} points, "
         f"{work.points_after}/{work.level}"
     )
+    if vis and _paid(work):
+        text += f"; {_paid(work)} vis"
     if work.finished:
-        return text + ", invented this season"
-    left = lab_seasons.seasons_left(work)
-    return text + f", {left} more season(s)"
+        return text + f", {done} this season"
+    return text + f", {lab_seasons.seasons_left(work)} more season(s)"
+
+
+def _against_level(work: lab_seasons.LabWork) -> str:
+    return f"Lab Total {int(work.lab_total.total)} against level {work.level}"
+
+
+def _move_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
+    if plan.by_spell:
+        return f"moved by spell to {plan.title.strip()}"
+    if work.finished:
+        return (
+            f"reassembled at {plan.title.strip()}; the journey broke two "
+            "years' maintenance"
+        )
+    return " ".join(work.notes).rstrip(".")
+
+
+def _build_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
+    return (
+        "the laboratory is finished"
+        if work.second_season
+        else "the laboratory works, with the Basic Flaw until next season"
+    )
+
+
+def _bind_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
+    cords = "/".join(str(c) for c in fs.cords_of(plan))
+    paid = _paid(work)
+    return f"{_against_level(work)}: bound, cords {cords} (golden/silver/bronze)" + (
+        f"; {paid} vis" if paid else ""
+    )
+
+
+def _investigate_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
+    found = len(work.revealed)
+    if found:
+        return f"Lab Total {int(work.lab_total.total)}: {found} power(s) found"
+    return _against_level(work)
+
+
+def _longevity_work_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
+    name = work.subject.name if work.subject is not None else "?"
+    paid = ", ".join(f"{n} pawn(s) of {art}" for art, n in work.vis_cost.items())
+    return (
+        f"Lab Total {int(work.lab_total.total)}: aging rolls -{work.longevity} "
+        f"for {name}; {paid} vis"
+    )
+
+
+#: How a season of each kind of lab work stands (Strategy, as a table). Lab
+#: work not listed invents a spell.
+_WORK_TEXT: dict[str, Callable[[lab_seasons.LabWork, SeasonPlan], str]] = {
+    bs.DECODE_TEXT: partial(_points_text, done="decoded"),
+    lab_seasons.TAMING: partial(_points_text, done="tamed"),
+    ls.MOVE: _move_text,
+    ls.BUILD: _build_text,
+    ls.REFINE: lambda work, plan: f"Refinement {work.refinement}",
+    ls.TAKE_OVER: lambda work, plan: f"taken over; Refinement {work.refinement}",
+    fs.BIND: _bind_text,
+    fs.EMPOWER: partial(_points_text, done="instilled", vis=True),
+    es.OPEN: lambda work, plan: f"{_paid(work)} vis: opened for enchantment",
+    es.ATTUNE: lambda work, plan: "attuned as a talisman",
+    es.INVESTIGATE: _investigate_text,
+    es.CHARGED_WORK: lambda work, plan: (
+        f"{_against_level(work)}: {work.charges} charge(s)"
+    ),
+    es.LESSER_WORK: lambda work, plan: (
+        f"{_against_level(work)}: made; {_paid(work)} vis"
+    ),
+    es.INSTIL: partial(_points_text, done="instilled", vis=True),
+    lab_seasons.EXTRACT: lambda work, plan: (
+        f"Lab Total {int(work.lab_total.total)}: {work.vis_gained} pawn(s) of Vim vis"
+    ),
+    lab_seasons.FIX_AC: lambda work, plan: (
+        "1 pawn of Vim vis: the Arcane Connection is fixed"
+    ),
+    lab_seasons.LONGEVITY: _longevity_work_text,
+    lab_seasons.LAB_TEXT: lambda work, plan: (
+        f"{_against_level(work)}: learned this season"
+    ),
+}
 
 
 def livelihood_text(character: Character) -> str:

@@ -7,15 +7,9 @@ import random
 
 from support import everything_saga
 
-from ars_magica_manager import (
-    advance_forms,
-    place_events,
-    threats,
-    towns,
-    world,
-    world_turns,
-)
+from ars_magica_manager import place_events, threats, towns, world, world_turns
 from ars_magica_manager.commands import Confirm, Form
+from ars_magica_manager.forms import advance as advance_forms
 from ars_magica_manager.models import CovenantDiaryEntry, TreasuryEntry
 
 

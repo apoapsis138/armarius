@@ -8,7 +8,8 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Static, TabbedContent
 
-from .... import ahead, ahead_forms, seasons, world_turns
+from .... import ahead, seasons, world_turns
+from ....forms import ahead as ahead_forms
 from ....markup import aligned, escape
 from ....models import Saga, SeasonRecord
 from ....sections import (

@@ -9,8 +9,8 @@ from ars_magica_manager import commands, form_spec, sourcebooks
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import players as pl
 from ars_magica_manager import saga_content as sc
-from ars_magica_manager import saga_content_forms as scf
 from ars_magica_manager import spells as spl
+from ars_magica_manager.forms import saga_content as scf
 from ars_magica_manager.models import (
     Character,
     Saga,

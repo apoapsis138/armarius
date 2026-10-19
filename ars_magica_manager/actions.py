@@ -12,7 +12,9 @@ only it knows (which device row is chosen, whether files can be sent)."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from enum import StrEnum
+from functools import partial
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from . import arms, giving, places, seasons, sourcebooks, threats, world
@@ -385,137 +387,223 @@ def available(action: str, facts: ActionFacts) -> bool:
     delete and decides what More and New offer."""
     if not facts.player_may(action):
         return False
-    kind = facts.selected_kind
-    if action in CREATE_PLACES and kind not in CREATE_PLACES[action]:
+    if action in CREATE_PLACES and facts.selected_kind not in CREATE_PLACES[action]:
         return False
-    if action == "edit" and kind == NodeKind.SAGA:
+    if action == "edit" and facts.selected_kind == NodeKind.SAGA:
         return True
-    if action == "set_date":
-        return kind == NodeKind.SAGA
-    if action in ("export_saga", "export_pack"):
-        return kind == NodeKind.SAGA and facts.can_send_files()
-    if action in ("toggle_mode", "creation_worksheet"):
-        record = facts.creation_record()
-        return (
-            record is not None
-            and facts.on_record()
-            and getattr(record, "detail", FULL) == FULL
-            and (action == "toggle_mode" or record.in_creation)
-        )
-    if action in ("promote", "demote"):
-        record = facts.creation_record()
-        if not isinstance(record, (Character, Covenant)) or not facts.on_record():
-            return False
-        step = world.promoted if action == "promote" else world.demoted
-        return step(record.detail) is not None
-    if action == "give":
-        found = facts.to_give()
-        return found is not None and giving.blocked(facts.saga, *found) is None
-    if action == "give_silver":
-        purse = silver_purse(facts)
-        return (
-            purse is not None
-            and giving.blocked(facts.saga, giving.SILVER, purse) is None
-        )
-    if action == "export_record":
-        return (
-            facts.can_send_files()
-            and facts.record_to_export() is not None
-            and facts.on_record()
-        )
-    if action == "update_record":
-        return facts.record_to_export() is not None and facts.on_record()
-    if action == "create_familiar":
-        character = facts.selected_character
-        if kind == NodeKind.CHARACTER and (
-            character is None or character.type != "magus"
-        ):
-            return False
-        return bool(fam.unbonded_magi(facts.saga))
-    if action == "delete_record":
-        return facts.record_to_delete() is not None
-    if action == "edit_arms":
-        record = facts.record_to_delete()
-        return facts.on_record() and record is not None and arms.bears_arms(record)
-    if action == "found_covenant":
-        return facts.on_record() and places.is_ruin(facts.record_to_delete())
-    if action == "begin_story":
-        return facts.on_record() and threats.is_dormant(facts.record_to_delete())
-    if action not in _BY_SECTION:
+    rule = _RECORD_RULES.get(action)
+    if rule is not None:
+        return rule(facts)
+    in_section = _SECTION_RULES.get(action)
+    if in_section is None:
         return True
-    return _available_in_section(action, facts, facts.active_section() or "")
+    return in_section(facts, facts.active_section() or "")
 
 
-#: The actions whose availability depends on the section focus is in.
-_BY_SECTION = frozenset(
-    {
-        "add",
-        "remove",
-        "edit",
-        "restore",
-        *MORE_SECTIONS,
-        "improve",
-        "instill_effect",
-        "use_charge",
-        "share_spell",
-        "filter_lab_texts",
-        "perform_ritual",
-        "research_bonuses",
-        "import_data",
-    }
-)
+# -- the actions that depend on the record on show --
 
 
-def _available_in_section(action: str, facts: ActionFacts, section: str) -> bool:
-    """`available` for the actions that depend on the active section."""
-    if action in ("add", "remove", "edit"):
+def _on_saga(facts: ActionFacts) -> bool:
+    return facts.selected_kind == NodeKind.SAGA
+
+
+def _exports_saga(facts: ActionFacts) -> bool:
+    return _on_saga(facts) and facts.can_send_files()
+
+
+def _in_full_creation(facts: ActionFacts, *, worksheet: bool) -> bool:
+    """Toggle Mode, or (`worksheet`) the creation worksheet: on a full
+    record with an In Creation / In Play mode, the worksheet only while it
+    is In Creation."""
+    record = facts.creation_record()
+    return (
+        record is not None
+        and facts.on_record()
+        and getattr(record, "detail", FULL) == FULL
+        and (not worksheet or record.in_creation)
+    )
+
+
+def _changes_detail(facts: ActionFacts, *, up: bool) -> bool:
+    """Promote (`up`) or Demote: a character or covenant whose level of
+    detail has a step that way."""
+    record = facts.creation_record()
+    if not isinstance(record, (Character, Covenant)) or not facts.on_record():
+        return False
+    step = world.promoted if up else world.demoted
+    return step(record.detail) is not None
+
+
+def _gives(facts: ActionFacts) -> bool:
+    found = facts.to_give()
+    return found is not None and giving.blocked(facts.saga, *found) is None
+
+
+def _gives_silver(facts: ActionFacts) -> bool:
+    purse = silver_purse(facts)
+    return (
+        purse is not None and giving.blocked(facts.saga, giving.SILVER, purse) is None
+    )
+
+
+def _exports_record(facts: ActionFacts) -> bool:
+    return (
+        facts.can_send_files()
+        and facts.record_to_export() is not None
+        and facts.on_record()
+    )
+
+
+def _updates_record(facts: ActionFacts) -> bool:
+    return facts.record_to_export() is not None and facts.on_record()
+
+
+def _binds_familiar(facts: ActionFacts) -> bool:
+    """A magus without a familiar exists, and on a character, it is one."""
+    character = facts.selected_character
+    if facts.selected_kind == NodeKind.CHARACTER and (
+        character is None or character.type != "magus"
+    ):
+        return False
+    return bool(fam.unbonded_magi(facts.saga))
+
+
+def _deletes_record(facts: ActionFacts) -> bool:
+    return facts.record_to_delete() is not None
+
+
+def _bears_arms(facts: ActionFacts) -> bool:
+    record = facts.record_to_delete()
+    return facts.on_record() and record is not None and arms.bears_arms(record)
+
+
+def _on_ruin(facts: ActionFacts) -> bool:
+    return facts.on_record() and places.is_ruin(facts.record_to_delete())
+
+
+def _on_dormant_threat(facts: ActionFacts) -> bool:
+    return facts.on_record() and threats.is_dormant(facts.record_to_delete())
+
+
+#: When each action that acts on the record on show (or the saga) is
+#: offered, one rule per action (Strategy, as a table).
+_RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
+    "set_date": _on_saga,
+    "export_saga": _exports_saga,
+    "export_pack": _exports_saga,
+    "toggle_mode": partial(_in_full_creation, worksheet=False),
+    "creation_worksheet": partial(_in_full_creation, worksheet=True),
+    "promote": partial(_changes_detail, up=True),
+    "demote": partial(_changes_detail, up=False),
+    "give": _gives,
+    "give_silver": _gives_silver,
+    "export_record": _exports_record,
+    "update_record": _updates_record,
+    "create_familiar": _binds_familiar,
+    "delete_record": _deletes_record,
+    "edit_arms": _bears_arms,
+    "found_covenant": _on_ruin,
+    "begin_story": _on_dormant_threat,
+}
+
+
+# -- the actions that depend on the section focus is in --
+
+
+def _has_verb(action: str) -> Callable[[ActionFacts, str], bool]:
+    def rule(_facts: ActionFacts, section: str) -> bool:
         return action in SECTION_VERBS.get(section, ())
-    if action == "restore":
-        # Offered only while someone has departed (Magi, Companions).
-        covenant = facts.selected_covenant
-        return (
-            "restore" in SECTION_VERBS.get(section, ())
-            and covenant is not None
-            and bool(
-                inh.departed_entries_for_kind(
-                    facts.saga, covenant, section.removeprefix("section-inh-")
-                )
+
+    return rule
+
+
+def _restores(facts: ActionFacts, section: str) -> bool:
+    """Offered only while someone has departed (Magi, Companions)."""
+    covenant = facts.selected_covenant
+    return (
+        "restore" in SECTION_VERBS.get(section, ())
+        and covenant is not None
+        and bool(
+            inh.departed_entries_for_kind(
+                facts.saga, covenant, section.removeprefix("section-inh-")
             )
         )
-    if action in MORE_SECTIONS:
+    )
+
+
+def _in_more_section(action: str) -> Callable[[ActionFacts, str], bool]:
+    def rule(_facts: ActionFacts, section: str) -> bool:
         return section == MORE_SECTIONS[action]
-    if action == "improve":
-        return section == "section-eco-income"
-    if action in ("instill_effect", "use_charge"):
+
+    return rule
+
+
+def _improves(_facts: ActionFacts, section: str) -> bool:
+    return section == "section-eco-income"
+
+
+def _acts_on_device(action: str) -> Callable[[ActionFacts, str], bool]:
+    def rule(facts: ActionFacts, section: str) -> bool:
         return section in DEVICE_SECTIONS and facts.device_action_enabled(action)
-    if action == "share_spell":
-        character = facts.selected_character
-        return (
-            section == "section-known-spells"
-            and character is not None
-            and bool(spl.shareable_spells(character))
+
+    return rule
+
+
+def _shares_spell(facts: ActionFacts, section: str) -> bool:
+    character = facts.selected_character
+    return (
+        section == "section-known-spells"
+        and character is not None
+        and bool(spl.shareable_spells(character))
+    )
+
+
+def _filters_lab_texts(_facts: ActionFacts, section: str) -> bool:
+    return section == LAB_TEXTS_SECTION
+
+
+def _performs_ritual(facts: ActionFacts, section: str) -> bool:
+    lab = facts.selected_laboratory
+    return (
+        section == LAB_TEXTS_SECTION
+        and lab is not None
+        and any(
+            lt.kind(b) == TEXT_LONGEVITY
+            for b in lt.texts_of(facts.saga, "laboratory", lab.id)
         )
-    if action == "filter_lab_texts":
-        return section == LAB_TEXTS_SECTION
-    if action == "perform_ritual":
-        lab = facts.selected_laboratory
-        return (
-            section == LAB_TEXTS_SECTION
-            and lab is not None
-            and any(
-                lt.kind(b) == TEXT_LONGEVITY
-                for b in lt.texts_of(facts.saga, "laboratory", lab.id)
-            )
-        )
-    if action == "research_bonuses":
-        # Library research values are Covenants'.
-        covenant = facts.selected_covenant
-        return (
-            sourcebooks.in_play(bv.SOURCE_BOOK, sourcebooks.saga_books(facts.saga))
-            and facts.selected_kind == NodeKind.COVENANT
-            and section in LIBRARY_SECTIONS
-            and covenant is not None
-            and bool(bv.library_subjects(facts.saga, covenant))
-        )
-    # import_data
+    )
+
+
+def _research_bonuses(facts: ActionFacts, section: str) -> bool:
+    """Library research values are Covenants'."""
+    covenant = facts.selected_covenant
+    return (
+        sourcebooks.in_play(bv.SOURCE_BOOK, sourcebooks.saga_books(facts.saga))
+        and facts.selected_kind == NodeKind.COVENANT
+        and section in LIBRARY_SECTIONS
+        and covenant is not None
+        and bool(bv.library_subjects(facts.saga, covenant))
+    )
+
+
+def _imports(facts: ActionFacts, section: str) -> bool:
     return facts.selected_kind == NodeKind.SAGA or section in LIBRARY_SECTIONS
+
+
+#: When each action that depends on the active section is offered. An
+#: action in neither table is always offered.
+_SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
+    "add": _has_verb("add"),
+    "remove": _has_verb("remove"),
+    "edit": _has_verb("edit"),
+    "restore": _restores,
+    "improve": _improves,
+    "instill_effect": _acts_on_device("instill_effect"),
+    "use_charge": _acts_on_device("use_charge"),
+    "share_spell": _shares_spell,
+    "filter_lab_texts": _filters_lab_texts,
+    "perform_ritual": _performs_ritual,
+    "research_bonuses": _research_bonuses,
+    "import_data": _imports,
+    **{action: _in_more_section(action) for action in MORE_SECTIONS},
+}

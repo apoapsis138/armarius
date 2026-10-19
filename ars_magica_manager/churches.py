@@ -23,7 +23,6 @@ from __future__ import annotations
 from typing import Any
 
 from . import sourcebooks
-from .character_sheet import Fact
 from .commands import SectionOps
 from .form_spec import DialogField
 from .grids import Grid
@@ -31,6 +30,7 @@ from .models import Neighbour, Saga
 from .neighbour_lists import KindList, KindTab, details_list, list_ops
 from .rules import options
 from .sections import RELICS_SECTION
+from .sheets.character import Fact
 
 #: The kinds of church, and each one's Dominion aura.
 CHURCH_KINDS: dict[str, int] = {

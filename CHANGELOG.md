@@ -46,6 +46,16 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.99.1 — 2026-10-19
+
+- **Tidier code, nothing new to see.** A code health pass: the longest
+  functions and forms are broken into smaller parts, the questions each
+  kind of season work answers are looked up in tables instead of long
+  chains of checks, the workspace screen's actions are grouped by what
+  they act on, the forms and sheets each live in their own folder, and
+  three functions nothing used are gone. The app works exactly as it
+  did.
+
 ## 2.99.0 — 2026-10-18
 
 - **The Theban pack.** New Saga and Import offer *The Sundered Eagle*:

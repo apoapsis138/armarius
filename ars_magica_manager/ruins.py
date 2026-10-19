@@ -23,11 +23,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import catalog, creation, places, tribunal_forms
+from . import catalog, creation, places
 from . import covenants as cov_rules
 from .commands import Form
-from .creation_forms import covenant_create_fields
 from .form_spec import DialogField
+from .forms import tribunal as tribunal_forms
+from .forms.creation import covenant_create_fields
 from .markup import escape
 from .models import Neighbour, Saga, VirtueFlawInstance, new_instance_id
 

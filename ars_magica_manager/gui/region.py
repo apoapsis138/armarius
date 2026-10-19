@@ -1,8 +1,8 @@
 """The desktop's page for a neighbour (the saga page's Region chapter
 lists them as cards: pages.region_chapter): its facts and summary over
 its attitude toward each player covenant, the favours owed and its
-links. What it says comes from region_sheet.py; its buttons run
-neighbour_forms.py."""
+links. What it says comes from sheets/region.py; its buttons run
+forms/neighbour.py."""
 
 from __future__ import annotations
 
@@ -10,11 +10,13 @@ from collections.abc import Sequence
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import arms, neighbour_forms, neighbours, place_events, region_sheet, towns
+from .. import arms, neighbours, place_events, towns
+from ..forms import neighbour as neighbour_forms
 from ..grids import Grid
 from ..models import Neighbour, Saga
 from ..neighbour_lists import KindTab
 from ..sections import FAIRS_SECTION, TABLES_SECTION
+from ..sheets import region as region_sheet
 from .character_sheet import section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose

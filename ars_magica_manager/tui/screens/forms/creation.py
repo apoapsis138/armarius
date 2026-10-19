@@ -6,12 +6,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from .... import creation_forms
-from ....creation_forms import RULE_OPTION_PREFIX, saga_rule_options, template_key
-from ....creation_forms import covenant_create_fields as _covenant_create_fields
-from ....creation_forms import familiar_create_fields as _familiar_create_fields
-from ....creation_forms import laboratory_create_fields as _laboratory_create_fields
-from ....creation_forms import saga_fields as _saga_fields
+from ....forms import creation as creation_forms
+from ....forms.creation import RULE_OPTION_PREFIX, saga_rule_options, template_key
+from ....forms.creation import covenant_create_fields as _covenant_create_fields
+from ....forms.creation import familiar_create_fields as _familiar_create_fields
+from ....forms.creation import laboratory_create_fields as _laboratory_create_fields
+from ....forms.creation import saga_fields as _saga_fields
 from ....models import Saga
 from ..fields import FieldsDialog
 

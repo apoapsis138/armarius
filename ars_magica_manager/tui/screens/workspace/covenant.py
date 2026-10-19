@@ -3,30 +3,27 @@ Reputations, Boons & Hooks and the covenant itself."""
 
 from __future__ import annotations
 
+from functools import partial
 from typing import Any, ClassVar
 
-from .... import (
-    catalog,
-    covenant_diary,
-    covenant_forms,
-    inhabitant_forms,
-    seasons,
-    sourcebooks,
-    vis,
-    world_forms,
-)
+from .... import catalog, covenant_diary, seasons, sourcebooks, vis
 from .... import covenants as cov_rules
 from .... import economics as eco
 from .... import inhabitants as inh
 from .... import possessions as pos
 from ....commands import Form
 from ....covenants import boon_hook_is_unknown
+from ....forms import covenant as covenant_forms
+from ....forms import inhabitant as inhabitant_forms
+from ....forms import world as world_forms
 from ....markup import escape
 from ....models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_RESOURCE,
     FULL,
+    INHABITANT_KINDS,
+    POSSESSION_KINDS,
     Character,
     Covenant,
     CovenantDiaryEntry,
@@ -53,6 +50,7 @@ from ..prompts import (
 from .base import (
     _BOON_HOOK_SECTION,
     WorkspaceBase,
+    _SectionOps,
 )
 
 
@@ -824,3 +822,66 @@ class CovenantActions(WorkspaceBase):
         self._season_person_then(
             kind, lambda c: self._clear_season_plan_for(c, "tab-cov-seasons")
         )
+
+    def _covenant_section_ops(self) -> dict[str, _SectionOps]:
+        """a / d / e (and More's Restore) on the covenant sheet (see
+        WorkspaceScreen._section_ops)."""
+        ops: dict[str, _SectionOps] = {
+            "section-cov-info": _SectionOps(edit=self._edit_covenant),
+            "section-cov-description": _SectionOps(
+                edit=self._edit_covenant_description
+            ),
+            "section-cov-boons": _SectionOps(
+                lambda: self._add_boon_hook("Boon"),
+                lambda: self._remove_boon_hook("Boon"),
+                lambda: self._edit_boon_hook("Boon"),
+            ),
+            "section-cov-hooks": _SectionOps(
+                lambda: self._add_boon_hook("Hook"),
+                lambda: self._remove_boon_hook("Hook"),
+                lambda: self._edit_boon_hook("Hook"),
+            ),
+            "section-eco-wealth": _SectionOps(edit=self._edit_wealth),
+            "section-eco-income": _SectionOps(
+                self._add_income_source,
+                self._remove_income_source,
+                self._edit_income_source,
+            ),
+            "section-eco-expenditure": _SectionOps(
+                edit=lambda: self._edit_economics_row("expenditure")
+            ),
+            "section-eco-savings": _SectionOps(
+                edit=lambda: self._edit_economics_row("savings")
+            ),
+            "section-inh-loyalty": _SectionOps(edit=self._edit_loyalty),
+            "section-inh-population": _SectionOps(edit=self._edit_population),
+            "section-inh-misc": _SectionOps(edit=self._edit_miscellaneous),
+            "tab-cov-diary": _SectionOps(
+                self._add_covenant_diary_entry,
+                self._remove_covenant_diary_entry,
+                self._edit_covenant_diary_entry,
+            ),
+        }
+        for kind in INHABITANT_KINDS:
+            ops[f"section-inh-{kind}"] = _SectionOps(
+                partial(self._add_inhabitant, kind),
+                partial(self._remove_inhabitant, kind),
+                partial(self._edit_inhabitant, kind),
+                # Only Magi/Companions can go "departed" (Inhabitant.departed).
+                partial(self._restore_inhabitant, kind)
+                if kind in inh.AUTO_KINDS
+                else None,
+            )
+        for kind, _ in seasons.SEASON_KINDS:
+            ops[f"section-cov-seasons-{kind}"] = _SectionOps(
+                partial(self._plan_covenant_season, kind),
+                partial(self._clear_covenant_season, kind),
+                partial(self._plan_covenant_season, kind),
+            )
+        for kind in POSSESSION_KINDS:
+            ops[f"section-pos-{kind}"] = _SectionOps(
+                partial(self._add_possession, kind),
+                partial(self._remove_possession, kind),
+                partial(self._edit_possession, kind),
+            )
+        return ops

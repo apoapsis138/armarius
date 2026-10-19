@@ -20,7 +20,6 @@ import random
 from typing import Any
 
 from . import economics
-from .character_sheet import Fact
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -34,6 +33,7 @@ from .models import (
 from .neighbour_lists import KindList, KindTab, details_list, list_ops
 from .rules import dice
 from .sections import FAIRS_SECTION, GUILDS_SECTION
+from .sheets.character import Fact
 
 #: Who holds a town's charter.
 CHARTERS: tuple[str, ...] = ("Noble lord", "Church", "Commune", "Faerie", "Infernal")

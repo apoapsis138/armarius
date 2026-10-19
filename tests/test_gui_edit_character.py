@@ -14,7 +14,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import ability_forms, catalog, storage
+from ars_magica_manager import catalog, storage
+from ars_magica_manager.forms import ability as ability_forms
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog

@@ -9,8 +9,8 @@ from typing import Any
 
 from PySide6.QtWidgets import QWidget
 
-from .. import world_forms
 from ..commands import SectionOps
+from ..forms import world as world_forms
 from ..models import Saga
 from ..tables import Table
 from .character_sheet import section

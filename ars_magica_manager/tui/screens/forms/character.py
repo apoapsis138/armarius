@@ -11,10 +11,11 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Input, Label, Static
 
-from .... import character_forms, form_spec
+from .... import form_spec
 from ....arts import FORMS, TECHNIQUES
 from ....commands import Form
 from ....form_spec import DialogField
+from ....forms import character as character_forms
 from ....markup import escape
 from ....models import (
     Character,

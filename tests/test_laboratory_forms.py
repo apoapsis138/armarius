@@ -9,7 +9,7 @@ from typing import Any
 from screen_helpers import _saga_with_bare_laboratory
 
 from ars_magica_manager import commands, form_spec
-from ars_magica_manager import laboratory_forms as lf
+from ars_magica_manager.forms import laboratory as lf
 from ars_magica_manager.models import (
     Character,
     LabFeature,

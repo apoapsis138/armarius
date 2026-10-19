@@ -10,9 +10,11 @@ import pytest
 from support import screen_lines, wait_until
 from textual.widgets import Collapsible, Tree
 
-from ars_magica_manager import menu_forms, storage, world, world_forms
+from ars_magica_manager import storage, world
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
+from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import world as world_forms
 from ars_magica_manager.models import (
     FULL,
     LINE,

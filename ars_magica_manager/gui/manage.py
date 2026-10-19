@@ -25,9 +25,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import menu_forms, world
+from .. import world
 from ..commands import Command
-from ..menu_forms import DELETE_RECORD, Page
+from ..forms import menu as menu_forms
+from ..forms.menu import DELETE_RECORD, Page
 from ..models import FULL, Character, Covenant, Laboratory
 from . import pictures
 from .markup_html import plain

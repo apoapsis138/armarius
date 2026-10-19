@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 from . import catalog, creation
 from .arts import ARTS
+from .forms.worksheet import Record
 from .markup import escape
 from .models import Character, Covenant, Saga
 from .rules import creation as rules
@@ -26,7 +27,6 @@ from .rules import creation_magus as magus
 from .rules import creation_xp as cx
 from .tables import Table
 from .worksheet import ENTRY_STEPS, target_score
-from .worksheet_forms import Record
 
 
 @dataclass(frozen=True)

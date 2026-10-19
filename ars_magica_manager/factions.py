@@ -10,10 +10,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from .character_sheet import Fact
 from .form_spec import DialogField, pairs
 from .models import Neighbour, Saga
 from .neighbour_lists import KindTab
+from .sheets.character import Fact
 
 FACTION_KINDS: tuple[str, ...] = (
     "Hedge coven",

@@ -5,8 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .... import paths, saga_forms
+from .... import paths
 from ....form_spec import DialogField
+from ....forms import saga as saga_forms
 from ..fields import FieldsDialog
 from ..pickers import FolderPickerScreen
 

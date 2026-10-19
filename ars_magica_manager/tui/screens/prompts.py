@@ -22,27 +22,25 @@ from textual.widgets import (
 from textual.widgets.button import ButtonVariant
 from textual.widgets.option_list import Option
 
-from ... import (
-    ability_forms,
-    covenant_forms,
-    diary_forms,
-    laboratory_forms,
-    trait_forms,
-    transfer,
-    virtue_forms,
-    vis_forms,
-)
 from ... import house_rules as hr
 from ... import lab_texts as lt
 from ... import players as pl
 from ... import saga_content as sc
-from ... import saga_content_forms as scf
-from ...ability_forms import ability_fields as _ability_fields
-from ...ability_forms import ability_problem as _ability_problem
-from ...advance_forms import AdvanceText
+from ... import transfer
 from ...arts import FORMS, TECHNIQUES
 from ...commands import Form, Picked
 from ...form_spec import DialogField, pairs
+from ...forms import ability as ability_forms
+from ...forms import covenant as covenant_forms
+from ...forms import diary as diary_forms
+from ...forms import laboratory as laboratory_forms
+from ...forms import saga_content as scf
+from ...forms import trait as trait_forms
+from ...forms import virtue as virtue_forms
+from ...forms import vis as vis_forms
+from ...forms.ability import ability_fields as _ability_fields
+from ...forms.ability import ability_problem as _ability_problem
+from ...forms.advance import AdvanceText
 from ...markup import escape, todo
 from ...models import (
     LAB_ACTIVITIES,

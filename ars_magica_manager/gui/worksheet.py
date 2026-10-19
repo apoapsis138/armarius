@@ -22,8 +22,8 @@ from PySide6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 from .. import worksheet as ws
 from .. import worksheet_feedback as feedback
-from .. import worksheet_forms as wf
 from ..commands import Command, SectionOps
+from ..forms import worksheet as wf
 from ..markup import escape
 from ..models import Character
 from ..rules import creation as rules

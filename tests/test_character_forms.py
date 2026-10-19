@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import character_forms as cf
 from ars_magica_manager import form_spec
 from ars_magica_manager.commands import Form
+from ars_magica_manager.forms import character as cf
 
 
 def _magus():

@@ -6,8 +6,9 @@ from __future__ import annotations
 
 import json
 
-from ars_magica_manager import book_packs, creation_forms, packs, sourcebooks, transfer
+from ars_magica_manager import book_packs, packs, sourcebooks, transfer
 from ars_magica_manager.book_packs import builder
+from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.models import Saga
 from ars_magica_manager.tribunal_packages import normandy as normandy_package
 from ars_magica_manager.tribunal_packages import rhine as rhine_package

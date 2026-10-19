@@ -12,7 +12,8 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import meeting, tribunal_forms, tribunal_packages, tribunal_sheet
+from .... import meeting, tribunal_packages
+from ....forms import tribunal as tribunal_forms
 from ....markup import aligned, escape, markdown_inline
 from ....models import Case, Saga, Tribunal
 from ....sections import (
@@ -28,6 +29,7 @@ from ....sections import (
     TRIBUNAL_INFO_SECTION,
     VOTE_SECTION,
 )
+from ....sheets import tribunal as tribunal_sheet
 from ..widgets import PinnedCollapsible, SelectableList, SheetSection, TwoColumns
 from .base import SheetView
 

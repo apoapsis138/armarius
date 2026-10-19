@@ -8,8 +8,9 @@ from pathlib import Path
 TESTS_DIR = Path(__file__).resolve().parent.parent / "tests"
 
 # A screen test drives the Textual app with Pilot or builds the desktop's
-# Qt widgets.
-_SCREEN_TEST_SIGNS = ("run_test(", "PySide6", "gui_steps")
+# Qt widgets, itself or through a shared driver (the dialog contracts'
+# run_contract).
+_SCREEN_TEST_SIGNS = ("run_test(", "PySide6", "gui_steps", "run_contract(")
 
 _screen_files: dict[Path, bool] = {}
 

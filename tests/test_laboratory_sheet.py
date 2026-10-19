@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from screen_helpers import _saga_with_bare_laboratory, _sample_saga_with_covenant
 
-from ars_magica_manager import laboratory_sheet as ls
+from ars_magica_manager.sheets import laboratory as ls
 
 
 def _lab():

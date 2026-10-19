@@ -117,8 +117,10 @@ before the rename still import.
   Qt style sheets). Start it with `run-gui.bat` or `uv run --group gui
   python gui.py`; the dev group includes its libraries, so a plain
   `uv sync` installs them for the tests and pyright.
-- `ars_magica_manager/character_sheet.py` — what the Character sheet
-  shows, as text and rows, read by both front-ends.
+- `ars_magica_manager/sheets/` — what each sheet shows, as text and
+  rows, read by both front-ends (`sheets/character.py` for the Character
+  sheet); `ars_magica_manager/forms/` — the forms behind each sheet's
+  buttons and keys, drawn by both front-ends.
 - `ars_magica_manager/tui/screens/` — every screen and widget, one module per
   layer, each importing only from those before it: `widgets` (bottom bar,
   selectable list, sections), `fields` (the modal-dialog base and the

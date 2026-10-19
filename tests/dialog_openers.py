@@ -1,6 +1,6 @@
 """How to reach each form dialog the way the app does: which tree node to
 select and which WorkspaceScreen handler (or picker hook) opens it. Shared
-by the dialog contract tests; see test_dialog_contracts.py."""
+by the dialog contract tests; see dialog_contract_support.py."""
 
 import asyncio
 import inspect
@@ -21,7 +21,7 @@ from ars_magica_manager import (
     vis,
 )
 from ars_magica_manager import economics as eco
-from ars_magica_manager import worksheet_forms as wf
+from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import (
     Ability,
     Book,

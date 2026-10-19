@@ -3,16 +3,9 @@ covenant on one."""
 
 from __future__ import annotations
 
-from ars_magica_manager import (
-    artwork,
-    book_packs,
-    neighbours,
-    packs,
-    places,
-    region_sheet,
-    ruins,
-)
+from ars_magica_manager import artwork, book_packs, neighbours, packs, places, ruins
 from ars_magica_manager.models import Neighbour, Saga
+from ars_magica_manager.sheets import region as region_sheet
 
 
 def _saga() -> tuple[Saga, Neighbour]:

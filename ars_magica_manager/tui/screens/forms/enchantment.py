@@ -4,7 +4,7 @@ terminal's own Shape & Material picker and list screens."""
 
 from __future__ import annotations
 
-from .... import device_forms
+from ....forms import device as device_forms
 from ....models import EnchantedDevice, InstilledEffect, Saga
 from ..fields import FieldsDialog
 from ..pickers import ShapeMaterialPickerScreen

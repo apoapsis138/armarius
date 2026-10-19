@@ -1,8 +1,8 @@
 """The desktop's page for a creature (the saga page's Bestiary chapter
 lists them as cards: pages.bestiary_chapter): its facts and Characteristics
 over chapters for its traits, combat, powers and vis, and description and
-links. What they say comes from creature_sheet.py; their buttons run
-creature_forms.py."""
+links. What they say comes from sheets/creature.py; their buttons run
+forms/creature.py."""
 
 from __future__ import annotations
 
@@ -10,9 +10,11 @@ from collections.abc import Callable
 
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
-from .. import artwork, creature_forms, creatures, virtue_forms, world_forms
-from .. import creature_sheet as crs
+from .. import artwork, creatures
 from .. import sheet_text as st
+from ..forms import creature as creature_forms
+from ..forms import virtue as virtue_forms
+from ..forms import world as world_forms
 from ..grids import Grid
 from ..models import Creature, Saga
 from ..sections import (
@@ -28,6 +30,7 @@ from ..sections import (
     CREATURE_VF_SECTION,
     CREATURE_VIS_SECTION,
 )
+from ..sheets import creature as crs
 from .character_sheet import (
     ability_mark,
     ability_view,

@@ -847,114 +847,155 @@ def _codex_reader_problems(
     return []
 
 
-def _study_problems(  # noqa: PLR0915
+def _study_problems(
     saga: Saga, character: Character, plan: SeasonPlan, chosen: list[XpAllocation]
 ) -> list[str]:
     """The problems of the study activities."""
-    found: list[str] = []
     if plan.activity == READ:
-        book = next((b for b in saga.books if b.id == plan.book_id), None)
-        if book is None:
-            return ["Choose the book to study."]
-        if not books.can_read(saga, character, book):
-            return [
-                f"{character.name} can't get at {book.name}: it isn't in their "
-                "covenant's library or their own keeping."
-            ]
-        subject = book_subject(book)
-        missing = books.numbers_to_set(book)
-        if subject is not None and missing:
-            return [
-                f"{book.name}'s {' and '.join(missing)} {'are' if len(missing) > 1 else 'is'} "
-                "still to be set: edit the book first."
-            ]
-        if subject is None or book.quality is None:
-            return [f"{book.name} isn't a summa or tractatus with a Quality."]
-        if _split(subject)[0] == "art" and character.type != "magus":
-            found.append("Only the Gifted study the Arts.")
-        if book.type == "Tractatus" and book.id in character.tractatus_read:
-            found.append(
-                f"{character.name} has already studied {book.name}: a tractatus "
-                "teaches each reader once (DE Ch. 10, Studying Tractatus)."
-            )
-        if (
-            book.type != "Tractatus"
-            and book.level is not None
-            and score(character, subject) >= book.level
-        ):
-            found.append(
-                f"{book.name} (Level {book.level}) has nothing more to teach "
-                f"{character.name}."
-            )
-        found += _codex_reader_problems(saga, character, plan, book)
-        if plan.gloss:
-            found += _gloss_problems(saga, character, book, subject)
-        return found
+        return _reading_problems(saga, character, plan)
     if not chosen:
         return ["Choose what the experience goes into."]
     subject = chosen[0].subject
     kind = _split(subject)[0]
     if plan.activity == TEACH and kind != "ability":
-        found.append("A teacher gains Exposure in Teaching or the language used.")
+        return ["A teacher gains Exposure in Teaching or the language used."]
     if plan.activity in (TAUGHT, TRAINED):
-        teacher = saga.character(plan.teacher_id)
-        role = "teacher" if plan.activity == TAUGHT else "master"
-        if teacher is None:
-            return [f"Choose the {role}."]
-        if teacher.id == character.id:
-            return [f"Nobody can be their own {role}."]
-        theirs, mine = score(teacher, subject), score(character, subject)
-        if plan.activity == TRAINED:
-            if kind != "ability":
-                found.append("Only Abilities can be trained (DE Ch. 10, Training).")
-            elif theirs < 2 or theirs <= mine:
-                found.append(
-                    f"A master needs a score of 2 or more, higher than the "
-                    f"trainee's: {teacher.name} has {theirs}, {character.name} {mine}."
-                )
-        else:
-            teacher_plan = next(
-                (
-                    p
-                    for p in plans_this_season(saga, plan)
-                    if p.character_id == teacher.id
-                ),
-                None,
-            )
-            if teacher_plan is None or teacher_plan.activity != TEACH:
-                found.append(
-                    f"{teacher.name} hasn't planned to Teach this season "
-                    "(teaching takes the teacher's season too)."
-                )
-            needed = 5 if kind == "art" else 2
-            if theirs < needed or theirs <= mine:
-                found.append(
-                    f"A teacher needs a score of {needed} or more, higher than "
-                    f"the student's: {teacher.name} has {theirs}, "
-                    f"{character.name} {mine}."
-                )
-            students = students_of(saga, plan)
-            if kind == "art" and students > 1:
-                found.append("The Arts are taught one student at a time.")
-            elif students > study.max_students(teacher):
-                found.append(
-                    f"{teacher.name} can teach {study.max_students(teacher)} "
-                    f"student(s) at once; {students} are planned."
-                )
+        return _taught_problems(saga, character, plan, subject)
     if plan.activity == VIS_STUDY:
-        if kind != "art":
-            found.append("Vis is studied for an Art.")
-        else:
-            art = _split(subject)[1]
-            pawns = study.vis_pawns(score(character, subject))
-            held = vis_pool(saga, character, plan).get(art.lower(), 0)
-            if held < pawns:
-                found.append(
-                    f"Studying {art} takes {pawns} pawn(s) of {art} vis; "
-                    f"{whose_vis(character, plan)} raw vis has {held}."
-                )
-        if plan.die is not None and plan.die < 0:
-            found.append("A die roll can't be negative.")
+        return _vis_study_problems(saga, character, plan, subject)
+    return []
+
+
+def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    """Reading a summa or tractatus: the book is at hand, set, and still has
+    something to teach."""
+    book = next((b for b in saga.books if b.id == plan.book_id), None)
+    if book is None:
+        return ["Choose the book to study."]
+    if not books.can_read(saga, character, book):
+        return [
+            f"{character.name} can't get at {book.name}: it isn't in their "
+            "covenant's library or their own keeping."
+        ]
+    subject = book_subject(book)
+    missing = books.numbers_to_set(book)
+    if subject is not None and missing:
+        return [
+            f"{book.name}'s {' and '.join(missing)} {'are' if len(missing) > 1 else 'is'} "
+            "still to be set: edit the book first."
+        ]
+    if subject is None or book.quality is None:
+        return [f"{book.name} isn't a summa or tractatus with a Quality."]
+    found: list[str] = []
+    if _split(subject)[0] == "art" and character.type != "magus":
+        found.append("Only the Gifted study the Arts.")
+    if book.type == "Tractatus" and book.id in character.tractatus_read:
+        found.append(
+            f"{character.name} has already studied {book.name}: a tractatus "
+            "teaches each reader once (DE Ch. 10, Studying Tractatus)."
+        )
+    if (
+        book.type != "Tractatus"
+        and book.level is not None
+        and score(character, subject) >= book.level
+    ):
+        found.append(
+            f"{book.name} (Level {book.level}) has nothing more to teach "
+            f"{character.name}."
+        )
+    found += _codex_reader_problems(saga, character, plan, book)
+    if plan.gloss:
+        found += _gloss_problems(saga, character, book, subject)
+    return found
+
+
+def _taught_problems(
+    saga: Saga, character: Character, plan: SeasonPlan, subject: str
+) -> list[str]:
+    """Being taught or trained: the teacher or master is someone else, and
+    skilled enough."""
+    teacher = saga.character(plan.teacher_id)
+    role = "teacher" if plan.activity == TAUGHT else "master"
+    if teacher is None:
+        return [f"Choose the {role}."]
+    if teacher.id == character.id:
+        return [f"Nobody can be their own {role}."]
+    if plan.activity == TRAINED:
+        return _trained_problems(character, teacher, subject)
+    return _teacher_problems(saga, character, plan, teacher, subject)
+
+
+def _trained_problems(
+    character: Character, master: Character, subject: str
+) -> list[str]:
+    if _split(subject)[0] != "ability":
+        return ["Only Abilities can be trained (DE Ch. 10, Training)."]
+    theirs, mine = score(master, subject), score(character, subject)
+    if theirs < 2 or theirs <= mine:
+        return [
+            f"A master needs a score of 2 or more, higher than the "
+            f"trainee's: {master.name} has {theirs}, {character.name} {mine}."
+        ]
+    return []
+
+
+def _teacher_problems(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    teacher: Character,
+    subject: str,
+) -> list[str]:
+    """A teacher who is teaching this season, skilled enough, and not
+    over their number of students."""
+    found: list[str] = []
+    kind = _split(subject)[0]
+    theirs, mine = score(teacher, subject), score(character, subject)
+    teacher_plan = next(
+        (p for p in plans_this_season(saga, plan) if p.character_id == teacher.id),
+        None,
+    )
+    if teacher_plan is None or teacher_plan.activity != TEACH:
+        found.append(
+            f"{teacher.name} hasn't planned to Teach this season "
+            "(teaching takes the teacher's season too)."
+        )
+    needed = 5 if kind == "art" else 2
+    if theirs < needed or theirs <= mine:
+        found.append(
+            f"A teacher needs a score of {needed} or more, higher than "
+            f"the student's: {teacher.name} has {theirs}, "
+            f"{character.name} {mine}."
+        )
+    students = students_of(saga, plan)
+    if kind == "art" and students > 1:
+        found.append("The Arts are taught one student at a time.")
+    elif students > study.max_students(teacher):
+        found.append(
+            f"{teacher.name} can teach {study.max_students(teacher)} "
+            f"student(s) at once; {students} are planned."
+        )
+    return found
+
+
+def _vis_study_problems(
+    saga: Saga, character: Character, plan: SeasonPlan, subject: str
+) -> list[str]:
+    """Studying vis: for an Art, with enough pawns of it to hand."""
+    found: list[str] = []
+    kind, art = _split(subject)
+    if kind != "art":
+        found.append("Vis is studied for an Art.")
+    else:
+        pawns = study.vis_pawns(score(character, subject))
+        held = vis_pool(saga, character, plan).get(art.lower(), 0)
+        if held < pawns:
+            found.append(
+                f"Studying {art} takes {pawns} pawn(s) of {art} vis; "
+                f"{whose_vis(character, plan)} raw vis has {held}."
+            )
+    if plan.die is not None and plan.die < 0:
+        found.append("A die roll can't be negative.")
     return found
 
 

@@ -1,5 +1,5 @@
 """The More and New menus and Delete on the record, as a one-page-at-a-time
-front-end offers them, without a front-end (menu_forms.py)."""
+front-end offers them, without a front-end (forms/menu.py)."""
 
 from __future__ import annotations
 
@@ -8,14 +8,11 @@ from typing import Any
 
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
-from ars_magica_manager import (
-    commands,
-    creation_forms,
-    form_spec,
-    import_forms,
-    menu_forms,
-)
+from ars_magica_manager import commands, form_spec
 from ars_magica_manager.actions import NodeKind
+from ars_magica_manager.forms import creation as creation_forms
+from ars_magica_manager.forms import importing as import_forms
+from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import (
     IncomeSource,
     Inhabitant,

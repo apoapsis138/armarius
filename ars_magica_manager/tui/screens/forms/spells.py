@@ -6,10 +6,10 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .... import spell_forms
 from .... import spells as spl
 from ....arts import FORMS, TECHNIQUES
 from ....form_spec import DialogField, attr, pairs
+from ....forms import spell as spell_forms
 from ....markup import escape
 from ....models import (
     SPELL_DURATIONS,

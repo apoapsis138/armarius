@@ -6,8 +6,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from .... import laboratory_forms as lf
 from ....form_spec import DialogField
+from ....forms import laboratory as lf
 from ....models import LabCharacteristics, LabFeature, Laboratory, Saga
 from ..fields import FieldsDialog
 

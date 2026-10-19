@@ -7,7 +7,7 @@ from __future__ import annotations
 import pytest
 
 from ars_magica_manager import sheet_text as st
-from ars_magica_manager.character_forms import arts_form
+from ars_magica_manager.forms.character import arts_form
 from ars_magica_manager.models import Character, VirtueFlawInstance
 from ars_magica_manager.rules import creation_access
 from ars_magica_manager.rules import xp as xp_rules

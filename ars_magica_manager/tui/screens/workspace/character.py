@@ -6,11 +6,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from .... import character_forms, creation, menu_forms, sourcebooks, storage, world
+from .... import creation, sourcebooks, storage, world
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
 from ....arts import ARTS
+from ....forms import character as character_forms
+from ....forms import menu as menu_forms
 from ....markup import escape
 from ....models import (
     Ability,
@@ -56,6 +58,7 @@ from ..prompts import (
 from ..steps import run_steps
 from .base import (
     WorkspaceBase,
+    _SectionOps,
 )
 
 
@@ -825,3 +828,52 @@ class CharacterActions(WorkspaceBase):
                 "tab-diary",
             ),
         )
+
+    def _character_section_ops(self) -> dict[str, _SectionOps]:
+        """a / d / e on the character sheet (see
+        WorkspaceScreen._section_ops)."""
+        return {
+            "section-char-info": _SectionOps(edit=self._edit_character_info),
+            "section-char-characteristics": _SectionOps(
+                edit=self._edit_characteristics
+            ),
+            "section-char-biographical": _SectionOps(
+                edit=self._edit_biographical_detail
+            ),
+            "tab-abilities": _SectionOps(
+                self._add_ability, self._remove_ability, self._edit_ability
+            ),
+            "section-aging": _SectionOps(edit=self._edit_aging),
+            # Health has two dialogs behind two Edit buttons (Wounds and
+            # Fatigue); 'e' opens Wounds, Fatigue is button-only.
+            "section-char-health": _SectionOps(edit=self._edit_wounds),
+            "section-arts": _SectionOps(edit=self._edit_arts),
+            "section-hermetic-background": _SectionOps(
+                edit=self._edit_hermetic_background
+            ),
+            "section-known-spells": _SectionOps(
+                self._add_spell, self._remove_spell, self._edit_spell_mastery
+            ),
+            "section-research-goals": _SectionOps(
+                self._add_research_goal,
+                self._remove_research_goal,
+                self._edit_research_goal,
+            ),
+            "section-inventory": _SectionOps(
+                self._add_item, self._remove_item, self._edit_item
+            ),
+            "section-raw-vis-hermetic": _SectionOps(
+                self._add_raw_vis, self._remove_raw_vis, self._edit_raw_vis
+            ),
+            "section-raw-vis-inventory": _SectionOps(
+                self._add_raw_vis, self._remove_raw_vis, self._edit_raw_vis
+            ),
+            "section-char-season": _SectionOps(
+                self._plan_season, self._clear_season_plan, self._plan_season
+            ),
+            "tab-diary": _SectionOps(
+                self._add_character_diary_entry,
+                self._remove_character_diary_entry,
+                self._edit_character_diary_entry,
+            ),
+        }

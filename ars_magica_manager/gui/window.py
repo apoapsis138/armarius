@@ -10,7 +10,7 @@ reader is is a list of places, the trail; the page shown is built from
 the last one, so changing the theme just builds it again.
 
 A sheet's Edit buttons open the same forms the terminal shows
-(character_forms.py); saving one saves the saga, merged with whatever the
+(forms/character.py); saving one saves the saga, merged with whatever the
 terminal app (or the hosted copies players use) saved meanwhile, so the
 two are safe to run side by side.
 """
@@ -43,25 +43,19 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import (
-    advance_forms,
-    creation_forms,
-    help_text,
-    hotkeys,
-    menu_forms,
-    paths,
-    print_forms,
-    saga_forms,
-    storage,
-    title_page,
-)
 from .. import familiars as fam
-from .. import laboratory_sheet as ls
+from .. import help_text, hotkeys, paths, storage, title_page
 from .. import print_layout as pl
 from ..actions import NodeKind
 from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
+from ..forms import advance as advance_forms
+from ..forms import creation as creation_forms
+from ..forms import menu as menu_forms
+from ..forms import printing as print_forms
+from ..forms import saga as saga_forms
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
+from ..sheets import laboratory as ls
 from . import choices, gilding, pictures, print_sheet, printing, snapping, sounds
 from .bestiary import CreaturePage
 from .character_sheet import CharacterSheet

@@ -273,23 +273,32 @@ def _count(count: int, limit: int) -> str:
 
 
 @check("virtues_flaws", CHARACTER_CHECKS)
-def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0915
+def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:
     assert isinstance(record, Character)
-    character = record
-    t = tally(character)
-    grog = character.type == "grog"
-    ids = [vf.vf_id for vf in character.virtues_flaws]
+    t = tally(record)
+    return [
+        *_budget_checks(record, t),
+        *_flaw_limit_checks(record, t),
+        *_social_status_checks(record, t),
+        *_gift_checks(record, t),
+        *_personality_and_taint_checks(record, t),
+        *_advice_checks(record, t),
+    ]
+
+
+def _budget_checks(character: Character, t: VirtueFlawTally) -> list[Check]:
+    """Virtue points against Flaw points, and the House's free Virtue or
+    compulsory Flaw."""
     fewest, most = virtue_allowance(character, t.flaw_points)
-    found: list[Check] = []
     if character.type == "mythic companion":
-        found.append(
+        found = [
             _check(
                 "Virtue points: 2 per Flaw point, plus the free Minor",
                 t.virtue_points <= most,
                 f"{t.virtue_points} of {most}",
                 BUDGET_SOURCE,
             )
-        )
+        ]
         if t.virtue_points < most:
             found.append(
                 _check(
@@ -300,49 +309,52 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0
                     advice=True,
                 )
             )
-    else:
-        house = house_benefit(character)
-        free = f" (free from the House: {', '.join(house.held)})" if house.held else ""
+        return found
+    house = house_benefit(character)
+    free = f" (free from the House: {', '.join(house.held)})" if house.held else ""
+    found = [
+        _check(
+            "Virtue points balance Flaw points",
+            fewest <= t.virtue_points <= most,
+            f"{t.virtue_points} Virtue, {t.flaw_points} Flaw points" + free,
+            BUDGET_SOURCE,
+        )
+    ]
+    for what in house.missing:
+        compulsory = what.startswith("the compulsory")
         found.append(
             _check(
-                "Virtue points balance Flaw points",
-                fewest <= t.virtue_points <= most,
-                f"{t.virtue_points} Virtue, {t.flaw_points} Flaw points" + free,
-                BUDGET_SOURCE,
+                "Ex Miscellanea's compulsory Flaw is taken"
+                if compulsory
+                else "The House's free Virtue is taken",
+                False,
+                what,
+                HOUSE_SOURCE,
+                advice=not compulsory,
             )
         )
-        for what in house.missing:
-            compulsory = what.startswith("the compulsory")
-            found.append(
-                _check(
-                    "Ex Miscellanea's compulsory Flaw is taken"
-                    if compulsory
-                    else "The House's free Virtue is taken",
-                    False,
-                    what,
-                    HOUSE_SOURCE,
-                    advice=not compulsory,
-                )
-            )
+    return found
+
+
+def _flaw_limit_checks(character: Character, t: VirtueFlawTally) -> list[Check]:
+    """How many Flaw points and Minor Flaws; a grog's no Majors."""
     # Ex Miscellanea's compulsory Flaw is on top of the normal allowance.
     counted_flaws = t.flaw_points - house_benefit(character).flaw_points
-    limit = max_flaw_points(character)
-    found.append(
+    most_points = max_flaw_points(character)
+    most_minor = max_minor_flaws(character)
+    found = [
         _check(
-            f"At most {limit} Flaw points",
-            counted_flaws <= limit,
-            _count(counted_flaws, limit),
-        )
-    )
-    limit = max_minor_flaws(character)
-    found.append(
+            f"At most {most_points} Flaw points",
+            counted_flaws <= most_points,
+            _count(counted_flaws, most_points),
+        ),
         _check(
-            f"At most {limit} Minor Flaws",
-            t.minor_flaws <= limit,
-            _count(t.minor_flaws, limit),
-        )
-    )
-    if grog:
+            f"At most {most_minor} Minor Flaws",
+            t.minor_flaws <= most_minor,
+            _count(t.minor_flaws, most_minor),
+        ),
+    ]
+    if character.type == "grog":
         majors = t.major_virtues + t.major_flaws
         found.append(
             _check(
@@ -352,10 +364,12 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0
                 BUDGET_SOURCE,
             )
         )
+    return found
+
+
+def _social_status_checks(character: Character, t: VirtueFlawTally) -> list[Check]:
     statuses = t.social_statuses
-    found.append(
-        _check("A Social Status", bool(statuses), ", ".join(statuses) or "none")
-    )
+    found = [_check("A Social Status", bool(statuses), ", ".join(statuses) or "none")]
     if len(statuses) > 1:
         # More are allowed only where their descriptions say they fit
         # together; a grog has exactly one.
@@ -364,17 +378,23 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0
                 "One Social Status, unless they fit together",
                 False,
                 f"{len(statuses)} taken",
-                advice=not grog,
+                advice=character.type != "grog",
             )
         )
-    found.append(
+    return found
+
+
+def _gift_checks(character: Character, t: VirtueFlawTally) -> list[Check]:
+    """Hermetic Virtues and Flaws, The Gift, and the companions-only ones."""
+    ids = [vf.vf_id for vf in character.virtues_flaws]
+    found = [
         _check(
             "At most 1 Major Hermetic Virtue",
             t.major_hermetic_virtues <= 1,
             _count(t.major_hermetic_virtues, 1),
             BUDGET_SOURCE,
         )
-    )
+    ]
     gifted = THE_GIFT in ids
     if character.type != "magus" and t.hermetic and not gifted:
         found.append(
@@ -385,7 +405,7 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0
                 TAINTED_SOURCE,
             )
         )
-    if grog and gifted:
+    if character.type == "grog" and gifted:
         found.append(
             _check("A grog never has The Gift", False, "The Gift taken", BUDGET_SOURCE)
         )
@@ -400,13 +420,20 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0
                 BUDGET_SOURCE,
             )
         )
-    found.append(
+    return found
+
+
+def _personality_and_taint_checks(
+    character: Character, t: VirtueFlawTally
+) -> list[Check]:
+    """Major Personality Flaws, Tainted Virtues and Flaws, and repeats."""
+    found = [
         _check(
             "At most 1 Major Personality Flaw",
             t.major_personality_flaws <= 1,
             _count(t.major_personality_flaws, 1),
         )
-    )
+    ]
     if t.tainted_virtue_points or t.tainted_flaw_points:
         limit = (
             MYTHIC_MAX_TAINTED_VIRTUES
@@ -433,7 +460,13 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0
         found.append(
             _check("Each taken only as often as allowed", False, ", ".join(t.repeated))
         )
-    # The book's "should"s: advice, never a must.
+    return found
+
+
+def _advice_checks(character: Character, t: VirtueFlawTally) -> list[Check]:
+    """The book's "should"s: advice, never a must."""
+    grog = character.type == "grog"
+    found: list[Check] = []
     if character.type == "magus":
         found.append(
             _check(

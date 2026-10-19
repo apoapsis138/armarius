@@ -87,7 +87,8 @@ async def test_share_spell_on_known_spells_shares_it_after_asking():
 
 
 def test_the_shared_tick_shares_it_and_then_stays():
-    from ars_magica_manager import commands, form_spec, spell_forms
+    from ars_magica_manager import commands, form_spec
+    from ars_magica_manager.forms import spell as spell_forms
 
     saga, magus = _saga()
     ops = spell_forms.known_spell_ops(saga, magus)

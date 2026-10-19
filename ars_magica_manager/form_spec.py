@@ -1,7 +1,7 @@
 """What an add/edit form asks for, independent of how it is drawn.
 
 A form is a list of DialogField specs. The builders in the core
-(character_forms.py) and the `_*_fields` builders still in
+(forms/character.py) and the `_*_fields` builders still in
 tui/screens/forms/ return them; a front-end draws each field and hands back
 what the user typed, and the functions here turn that into the form's
 values: parsing numbers, checking required fields, and deciding which
@@ -10,7 +10,7 @@ the desktop's (gui/forms.py) draw the same specs."""
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Collection, Iterable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from typing import Any
@@ -217,3 +217,23 @@ def attr(record: object | None, attribute: str, default: Any) -> Any:
     """`record.attribute`, or `default` when there's no record yet (a form
     opened to add one)."""
     return getattr(record, attribute) if record is not None else default
+
+
+#: What a form reads only for some choices of one field (the season forms'
+#: activity): pairs of the choices and a reader taking the form's values
+#: to the fields it sets.
+ChoiceReads = Sequence[
+    tuple[Collection[str], Callable[[dict[str, Any]], dict[str, Any]]]
+]
+
+
+def read_for_choice(
+    choice: str, values: dict[str, Any], reads: ChoiceReads
+) -> dict[str, Any]:
+    """The fields `reads` take from `values` for `choice`: each reader's
+    whose choices include it, a later reader's winning a field both set."""
+    fields: dict[str, Any] = {}
+    for choices, read in reads:
+        if choice in choices:
+            fields.update(read(values))
+    return fields

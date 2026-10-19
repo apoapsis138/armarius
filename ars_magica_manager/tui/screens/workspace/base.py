@@ -6,15 +6,12 @@ of record."""
 from __future__ import annotations
 
 import asyncio
-import io
-import json
 import re
 import uuid
-from collections.abc import Awaitable, Callable, Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, replace
 from dataclasses import field as dataclass_field
 from functools import cached_property, partial
-from pathlib import Path
 from typing import Any, ClassVar, NamedTuple
 
 from textual.app import ComposeResult
@@ -39,38 +36,22 @@ from textual.widgets.tree import TreeNode
 
 from .... import (
     actions,
-    advance_forms,
-    arms,
     catalog,
-    character_templates,
     creation,
-    creation_forms,
-    creature_forms,
     creatures,
     deletion,
     giving,
-    import_forms,
-    menu_forms,
-    neighbour_forms,
     neighbours,
-    packs,
-    place_events,
-    places,
     presence,
-    ruins,
     seasons,
     sourcebooks,
     storage,
-    threats,
-    towns,
     transfer,
-    tribunal_forms,
     tribunals,
     world,
 )
 from .... import books as bk
 from .... import familiars as fam
-from .... import laboratories as lab_rules
 from .... import players as pl
 from .... import sheet_text as st
 from ....actions import (
@@ -80,13 +61,12 @@ from ....actions import (
     MenuItem,
     NodeKind,
 )
+from ....forms import neighbour as neighbour_forms
 from ....markup import escape
 from ....models import (
-    FOCUS_FLAWS,
     FULL,
     Ability,
     Character,
-    CharacterTemplateDef,
     Covenant,
     Creature,
     Familiar,
@@ -98,26 +78,18 @@ from ....models import (
     ScoredTrait,
     SeasonPlan,
     Tribunal,
-    VirtueFlawInstance,
-    link_unlinked_features,
-    new_instance_id,
 )
 from ....rules import activities as season_rules
 from ....rules import creation as creation_rules
-from ....rules import creation_characteristics as cch
 from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
 from ....sections import (
     BESTIARY_INFO_SECTION,
-    CASES_SECTION,
+    CORE_SECTIONS,
     CREATURE_INFO_SECTION,
-    DIARY_SECTION,
-    FAIRS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
     SEASONS_INFO_SECTION,
-    STAGES_SECTION,
-    TABLES_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
 from ... import hosting
@@ -126,38 +98,22 @@ from ..fields import (
     FieldsDialog,
 )
 from ..forms import (
-    _character_create_dialog,
-    _covenant_create_fields,
-    _familiar_create_fields,
     _grog_year_dialog,
-    _laboratory_create_fields,
     _saga_fields,
     _season_plan_dialog,
     saga_rule_options,
-    template_key,
 )
 from ..help import HelpContext, HelpScreen, shown_keys
-from ..pickers import (
-    LabVirtueFlawPickerScreen,
-    VirtueFlawPickerScreen,
-)
 from ..prompts import (
-    AdvanceSeasonScreen,
     ConfirmScreen,
     MenuScreen,
-    _date_fields,
-    _export_dialog,
     _scored_trait_dialog,
 )
-from ..season_records import SeasonSummaryScreen
 from ..sheets import (
-    LAB_FEATURE_SECTIONS,
     LAB_TEXTS_SECTION,
-    LAB_VF_SECTIONS,
     SPELL_SECTION,
     TAB_SECTIONS,
     BestiarySheetView,
-    BookListView,
     CharacterSheetView,
     CovenantSheetView,
     CreatureSheetView,
@@ -950,133 +906,6 @@ class WorkspaceBase(Screen[None]):
             f"Familiar: {escape(familiar.name)}", data=(NodeKind.FAMILIAR, familiar.id)
         )
 
-    async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
-        data = event.node.data
-        if data is None:
-            return
-
-        kind: NodeKind = data[0]
-        self.selected_kind = kind
-        self._character_sheet_view = None
-        self._laboratory_sheet_view = None
-        self._covenant_sheet_view = None
-        self._familiar_sheet_view = None
-        self._saga_content_view = None
-        self._tribunal_sheet_view = None
-        self._region_sheet_view = None
-        self._neighbour_sheet_view = None
-        self._bestiary_view = None
-        self._creature_sheet_view = None
-        self._seasons_view = None
-
-        handler = self._NODE_SELECTED.get(kind)
-        if handler is not None:
-            await handler(self, data[1] if len(data) > 1 else None)
-
-        if self._current_sheet_view() is None:
-            # Enter on a node moves into what it shows: a list view's list.
-            for rows in self._detail_pane().query(SelectableList):
-                rows.focus()
-                break
-        self.refresh_bindings()
-
-    # What selecting each kind of tree node does: set the selection and
-    # show its detail. `ident` is the node's record or covenant id, if any.
-
-    async def _select_saga(self, ident: str | None) -> None:
-        self.selected_covenant = None
-        self.selected_character = None
-        self.selected_laboratory = None
-        self.selected_familiar = None
-        await self._show_saga_detail()
-
-    async def _select_covenant(self, ident: str | None) -> None:
-        covenant = next(c for c in self.saga.covenants if c.id == ident)
-        self.selected_covenant = covenant
-        self.selected_character = None
-        self.selected_laboratory = None
-        self.selected_familiar = None
-        await self._show_covenant_detail(covenant)
-
-    async def _select_character_group(self, ident: str | None) -> None:
-        covenant = self.saga.covenant(ident)
-        self.selected_covenant = covenant
-        self.selected_character = None
-        await self._show_placeholder_detail(
-            f"Characters in {covenant.name}" if covenant else "Unassigned Characters",
-            "Select a character from the tree, or press 'n' to add one."
-            if covenant
-            else "These characters aren't assigned to a covenant. Select one "
-            "from the tree, or press 'n' to add one.",
-        )
-
-    async def _select_character(self, ident: str | None) -> None:
-        character = next(c for c in self.saga.characters if c.id == ident)
-        self.selected_character = character
-        self.selected_covenant = self.saga.covenant(character.covenant_id)
-        self.selected_familiar = None
-        await self._show_character_detail(character)
-
-    async def _select_familiar(self, ident: str | None) -> None:
-        familiar = next(f for f in self.saga.familiars if f.id == ident)
-        self.selected_familiar = familiar
-        self.selected_character = self.saga.character(familiar.character_id)
-        self.selected_covenant = (
-            self.saga.covenant(self.selected_character.covenant_id)
-            if self.selected_character is not None
-            else None
-        )
-        await self._show_familiar_detail(familiar)
-
-    async def _select_laboratory_group(self, ident: str | None) -> None:
-        covenant = self.saga.covenant(ident)
-        self.selected_covenant = covenant
-        self.selected_laboratory = None
-        await self._show_placeholder_detail(
-            f"Laboratories in {covenant.name}"
-            if covenant
-            else "Unassigned Laboratories",
-            "Select a laboratory from the tree, or press 'n' to add one."
-            if covenant
-            else "These laboratories aren't assigned to a covenant. Select "
-            "one from the tree, or press 'n' to add one.",
-        )
-
-    async def _select_laboratory(self, ident: str | None) -> None:
-        lab = next(lab for lab in self.saga.laboratories if lab.id == ident)
-        self.selected_laboratory = lab
-        self.selected_covenant = self.saga.covenant(lab.covenant_id)
-        await self._show_laboratory_detail(lab)
-
-    async def _select_saga_content(self, ident: str | None) -> None:
-        self.selected_covenant = None
-        view = SagaContentSheetView(self.saga, players=self._is_storyguide())
-        await self._set_detail(view)
-        self._saga_content_view = view
-        self._focus_first_section(initial=True)
-
-    async def _select_seasons(self, ident: str | None) -> None:
-        self.selected_covenant = None
-        view = SeasonsSheetView(self.saga)
-        await self._set_detail(view)
-        self._seasons_view = view
-        self._focus_first_section(initial=True)
-
-    async def _select_region(self, ident: str | None) -> None:
-        """The Region, or (`ident`) one of its groups of neighbours, whose
-        list takes focus."""
-        self.selected_covenant = None
-        view = RegionSheetView(self.saga, ident)
-        await self._set_detail(view)
-        self._region_sheet_view = view
-        group = next((g for g in neighbours.GROUPS if g.key == ident), None)
-        if group is not None and view.query(f"#{group.section_id}"):
-            self.call_after_refresh(
-                view.query_one(f"#{group.section_id}", SheetSection).focus_section
-            )
-        else:
-            self._focus_first_section(initial=True)
-
     async def _select_neighbour(self, ident: str | None) -> None:
         neighbour = self.saga.neighbour(ident)
         if neighbour is None:
@@ -1088,70 +917,11 @@ class WorkspaceBase(Screen[None]):
         self._neighbour_sheet_view = view
         self._focus_first_section(initial=True)
 
-    async def _select_bestiary(self, _ident: str | None) -> None:
-        self.selected_covenant = None
-        view = BestiarySheetView(self.saga)
-        await self._set_detail(view)
-        self._bestiary_view = view
-        self._focus_first_section(initial=True)
-
-    async def _select_creature(self, ident: str | None) -> None:
-        creature = self.saga.creature(ident)
-        if creature is None:
-            return
-        self.selected_covenant = None
-        self.selected_creature = creature
-        view = CreatureSheetView(self.saga, creature)
-        await self._set_detail(view)
-        self._creature_sheet_view = view
-        self._focus_first_section(initial=True)
-
-    async def _select_tribunal(self, ident: str | None) -> None:
-        tribunal = self.saga.tribunal(ident)
-        if tribunal is None:
-            return
-        self.selected_covenant = None
-        self.selected_tribunal = tribunal
-        await self._show_tribunal_detail(tribunal)
-
     async def _show_tribunal_detail(self, tribunal: Tribunal) -> None:
         view = TribunalSheetView(self.saga, tribunal)
         await self._set_detail(view)
         self._tribunal_sheet_view = view
         self._focus_first_section(initial=True)
-
-    async def _select_book_group(self, ident: str | None) -> None:
-        self.selected_covenant = None
-        await self._set_detail(
-            BookListView(
-                self.saga,
-                lambda: bk.unassigned_books(self.saga),
-                section_id="section-unassigned-books",
-                title="Unassigned Books",
-            )
-        )
-
-    #: The handler for each kind of tree node (Strategy, as a table).
-    _NODE_SELECTED: ClassVar[
-        dict[NodeKind, Callable[[WorkspaceBase, str | None], Awaitable[None]]]
-    ] = {
-        NodeKind.SAGA: _select_saga,
-        NodeKind.COVENANT: _select_covenant,
-        NodeKind.CHARACTER_GROUP: _select_character_group,
-        NodeKind.CHARACTER: _select_character,
-        NodeKind.FAMILIAR: _select_familiar,
-        NodeKind.LABORATORY_GROUP: _select_laboratory_group,
-        NodeKind.LABORATORY: _select_laboratory,
-        NodeKind.SAGA_CONTENT: _select_saga_content,
-        NodeKind.SEASONS: _select_seasons,
-        NodeKind.BOOK_GROUP: _select_book_group,
-        NodeKind.REGION: _select_region,
-        NodeKind.TRIBUNAL: _select_tribunal,
-        NodeKind.NEIGHBOUR_GROUP: _select_region,
-        NodeKind.NEIGHBOUR: _select_neighbour,
-        NodeKind.BESTIARY: _select_bestiary,
-        NodeKind.CREATURE: _select_creature,
-    }
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
         if not self._player_may(action):
@@ -1417,109 +1187,6 @@ class WorkspaceBase(Screen[None]):
         if self.selected_kind == NodeKind.COVENANT:
             return self.selected_covenant
         return None
-
-    def action_export_record(self) -> None:
-        """More's Export on a covenant, laboratory or character: write it to a file
-        that another saga can import."""
-        record = self._record_to_export()
-        if record is None:
-            return
-
-        def handle_result(result: tuple[Path, bool] | None) -> None:
-            if result is None:
-                return
-            path, with_members = result
-            if self.app.is_web:
-                # A browser copy: the file goes to the player's
-                # computer as a download, not to a folder on the host.
-                data = transfer.export_data(
-                    self.saga, record, with_members=with_members
-                )
-                self.app.deliver_binary(
-                    io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
-                    save_filename=path.name,
-                    mime_type="application/json",
-                )
-                self.notify(
-                    f"Exported {escape(record.name)}: your browser downloads it."
-                )
-                return
-            try:
-                transfer.export_to(path, self.saga, record, with_members=with_members)
-            except OSError as problem:
-                self.notify(
-                    f"Couldn't write {escape(path.name)}: {escape(str(problem))}",
-                    severity="error",
-                )
-                return
-            self.notify(f"Exported {escape(record.name)} to {escape(str(path))}.")
-
-        self.app.push_screen(_export_dialog(record, storage.EXPORTS_DIR), handle_result)
-
-    def action_export_saga(self) -> None:
-        """More's Export Saga on the saga: write every record to a file
-        that Import reads back (A Whole Saga)."""
-        if self.app.is_web:
-            # A browser copy: the file goes to the player's computer.
-            data = transfer.export_saga_data(self.saga)
-            self.app.deliver_binary(
-                io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
-                save_filename=transfer.saga_file_name(self.saga),
-                mime_type="application/json",
-            )
-            self.notify(
-                f"Exported {escape(self.saga.name)}: your browser downloads it."
-            )
-            return
-
-        def done(end: object) -> None:
-            if isinstance(end, list) and end:
-                self.notify("\n".join(end))
-
-        run_steps(
-            self.app, menu_forms.export_saga(self.saga, storage.EXPORTS_DIR), done
-        )
-
-    def action_export_pack(self) -> None:
-        """More's Export Pack on the saga: write the chosen Tribunals,
-        covenants, places and neighbours to a content pack."""
-
-        def download(name: str, data: dict[str, Any]) -> list[str]:
-            self.app.deliver_binary(
-                io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
-                save_filename=name,
-                mime_type="application/json",
-            )
-            return [f"Exported {escape(data['name'])}: your browser downloads it."]
-
-        # A browser copy: the file goes to the player's computer.
-        deliver = download if self.app.is_web else None
-
-        def done(end: object) -> None:
-            if isinstance(end, list) and end:
-                self.notify("\n".join(end))
-
-        run_steps(
-            self.app, packs.export_pack(self.saga, storage.EXPORTS_DIR, deliver), done
-        )
-
-    def action_update_record(self) -> None:
-        """More's Update from a File on a covenant, laboratory or
-        character: read an export of it over it, after showing what
-        changes."""
-        record = self._record_to_export()
-        if record is None:
-            return
-
-        def done(end: object) -> None:
-            if not isinstance(end, list):
-                return
-            view = self._current_sheet_view()
-            self._commit(*(view._refreshers if view is not None else ()), tree=True)
-            if end:
-                self.notify("\n".join(end))
-
-        run_steps(self.app, import_forms.update_record(self.saga, record), done)
 
     def _to_give(self) -> giving.Gift | None:
         """What More's Give would give (see GivingActions)."""
@@ -1992,232 +1659,6 @@ class WorkspaceBase(Screen[None]):
         if self._laboratory_sheet_view is not None:
             self._laboratory_sheet_view.refresh_section(section_id)
 
-    # -- creation actions --
-
-    def action_create_covenant(self) -> None:
-        async def handle_result(values: dict[str, Any] | None) -> None:
-            if values is not None:
-                covenant = creation.add_covenant(
-                    self.saga,
-                    values["name"],
-                    values["notes"],
-                    season=values["season"] or "Spring",
-                    aura_realm=values["aura_realm"] or "Magic",
-                )
-                storage.save_saga(self.saga)
-                self._rebuild_tree()
-                self.selected_covenant = covenant
-                self.selected_kind = NodeKind.COVENANT
-                await self._show_covenant_detail(covenant)
-                self._open_creation_worksheet(covenant)
-
-        self.app.push_screen(
-            FieldsDialog(
-                "Create a New Covenant", _covenant_create_fields(), save_label="Create"
-            ),
-            handle_result,
-        )
-
-    def action_create_tribunal(self) -> None:
-        before = {t.id for t in self.saga.tribunals}
-
-        def done(_end: object) -> None:
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            made = [t for t in self.saga.tribunals if t.id not in before]
-            if made:
-                node = _tree_node_with_data(
-                    self._nav_tree(), (NodeKind.TRIBUNAL, made[-1].id)
-                )
-                if node is not None:
-                    self.call_after_refresh(self._nav_tree().select_node, node)
-
-        run_steps(self.app, tribunal_forms.new_tribunal_form(self.saga), done)
-
-    def action_create_neighbour(self) -> None:
-        before = {n.id for n in self.saga.neighbours}
-
-        def done(_end: object) -> None:
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            made = [n for n in self.saga.neighbours if n.id not in before]
-            if made:
-                node = _tree_node_with_data(
-                    self._nav_tree(), (NodeKind.NEIGHBOUR, made[-1].id)
-                )
-                if node is not None:
-                    self.call_after_refresh(self._nav_tree().select_node, node)
-
-        run_steps(self.app, neighbour_forms.new_neighbour(self.saga), done)
-
-    def action_create_creature(self) -> None:
-        before = {c.id for c in self.saga.creatures}
-
-        def done(_end: object) -> None:
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            made = [c for c in self.saga.creatures if c.id not in before]
-            if made:
-                node = _tree_node_with_data(
-                    self._nav_tree(), (NodeKind.CREATURE, made[-1].id)
-                )
-                if node is not None:
-                    self.call_after_refresh(self._nav_tree().select_node, node)
-
-        run_steps(self.app, creature_forms.new_creature_form(self.saga), done)
-
-    def action_withdraw_case(self) -> None:
-        """More's Withdraw on the docket's chosen case."""
-        view = self._tribunal_sheet_view
-        row = view.section_row(CASES_SECTION) if view is not None else None
-        if view is None or row is None:
-            return
-        run_steps(
-            self.app,
-            tribunal_forms.withdraw_case(view.tribunal, row),
-            lambda _end: self._commit(CASES_SECTION),
-        )
-
-    def action_roll_fair(self) -> None:
-        """More's Roll Income on a town's chosen fair."""
-        view = self._neighbour_sheet_view
-        row = view.section_row(FAIRS_SECTION) if view is not None else None
-        if view is None or row is None:
-            return
-        run_steps(
-            self.app,
-            towns.roll_fair(self.saga, view.neighbour, row),
-            lambda _end: self._commit(FAIRS_SECTION),
-        )
-
-    def action_roll_table(self) -> None:
-        """More's Roll on a place's chosen roll table."""
-        view = self._neighbour_sheet_view
-        row = view.section_row(TABLES_SECTION) if view is not None else None
-        if view is None or row is None:
-            return
-        run_steps(
-            self.app,
-            place_events.roll_table(self.saga, view.neighbour, row),
-            lambda _end: self._commit(TABLES_SECTION, DIARY_SECTION),
-        )
-
-    def action_create_character(self) -> None:
-        covenant = self.selected_covenant
-
-        async def create(
-            values: dict[str, Any],
-            template: CharacterTemplateDef | None = None,
-            blanks: dict[str, str] | None = None,
-        ) -> None:
-            character = creation.add_character(
-                self.saga, values["name"], values["type"], values["covenant_id"]
-            )
-            if template is not None:
-                character_templates.apply(self.saga, character, template, blanks)
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            self.selected_character = character
-            self.selected_kind = NodeKind.CHARACTER
-            await self._show_character_detail(character)
-            self._open_creation_worksheet(character)
-
-        async def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            template = character_templates.find(
-                values.get(template_key(values["type"]))
-            )
-            wanted = character_templates.blanks(template) if template else []
-            if template is None or not wanted:
-                await create(values, template)
-                return
-
-            async def handle_blanks(filled: dict[str, Any] | None) -> None:
-                # Cancelling the names cancels the new character.
-                if filled is not None:
-                    await create(values, template, filled)
-
-            self.app.push_screen(
-                FieldsDialog(
-                    f"{escape(template.name)} template",
-                    creation_forms.blanks_fields(wanted),
-                    save_label="Use",
-                ),
-                handle_blanks,
-            )
-
-        self.app.push_screen(
-            _character_create_dialog(self.saga, covenant.id if covenant else None),
-            handle_result,
-        )
-
-    def action_create_laboratory(self) -> None:
-        covenant = self.selected_covenant
-
-        async def handle_result(values: dict[str, Any] | None) -> None:
-            if values is not None:
-                lab = creation.add_laboratory(
-                    self.saga,
-                    values["name"],
-                    values["size"],
-                    values["covenant_id"],
-                    starting=values.get("starting", False),
-                )
-                storage.save_saga(self.saga)
-                self._rebuild_tree()
-                self.selected_laboratory = lab
-                self.selected_kind = NodeKind.LABORATORY
-                await self._show_laboratory_detail(lab)
-                self._open_creation_worksheet(lab)
-
-        self.app.push_screen(
-            FieldsDialog(
-                "Create a New Laboratory",
-                _laboratory_create_fields(self.saga, covenant.id if covenant else None),
-                save_label="Create",
-            ),
-            handle_result,
-        )
-
-    def action_create_familiar(self) -> None:
-        if not fam.unbonded_magi(self.saga):
-            self.notify("Every magus already has a bound Familiar.")
-            return
-        # The magus on show is the default. (selected_character outlives it:
-        # a laboratory or Spells shown afterwards leaves it set.)
-        character = self.selected_character
-        default_magus_id = (
-            character.id
-            if character is not None
-            and self.selected_kind == NodeKind.CHARACTER
-            and character.type == "magus"
-            and fam.familiar_of(self.saga, character.id) is None
-            else None
-        )
-
-        async def handle_result(values: dict[str, Any] | None) -> None:
-            magus = (
-                None if values is None else self.saga.character(values["character_id"])
-            )
-            if values is not None and magus is not None:
-                familiar = fam.bind_familiar(self.saga, magus, values["name"])
-                storage.save_saga(self.saga)
-                self._rebuild_tree()
-                self.selected_familiar = familiar
-                self.selected_character = self.saga.character(familiar.character_id)
-                self.selected_kind = NodeKind.FAMILIAR
-                await self._show_familiar_detail(familiar)
-
-        self.app.push_screen(
-            FieldsDialog(
-                "Bind a New Familiar",
-                _familiar_create_fields(self.saga, default_magus_id),
-                save_label="Create",
-            ),
-            handle_result,
-        )
-
     # -- deleting a covenant, character, laboratory or Familiar --
 
     def _record_to_delete(
@@ -2419,63 +1860,6 @@ class WorkspaceBase(Screen[None]):
             FieldsDialog("Edit Saga", _saga_fields(self.saga)), handle_result
         )
 
-    # -- Saga time --
-
-    async def _apply_saga_date(self, season: str, year: int) -> None:
-        """Single path for every change to the saga's calendar: store it, then
-        refresh everything that inherits it (Header, covenant panel, saga
-        summary)."""
-        saga = self.saga
-        saga.current_season, saga.current_year = season, year
-        storage.save_saga(saga)
-        self._update_saga_clock()
-        self._refresh_covenant_section("section-cov-info")
-        if self.selected_kind == NodeKind.SAGA:
-            await self._show_saga_detail()
-
-    def action_advance_season(self) -> None:
-        """Advance the saga by one season: the core's steps
-        (advance_forms), the first drawn as the Advance Time dialog."""
-        saga = self.saga
-
-        def done(end: object) -> None:
-            if isinstance(end, advance_forms.Played):
-                storage.save_saga(saga)
-                self.run_worker(self._season_played(end))
-
-        def handle_result(confirmed: bool | None) -> None:
-            if confirmed:
-                run_steps(
-                    self.app,
-                    advance_forms.play_season(saga, storage.backup_saga),
-                    done,
-                )
-
-        self.app.push_screen(
-            AdvanceSeasonScreen(advance_forms.advance_text(saga)), handle_result
-        )
-
-    async def _season_played(self, played: advance_forms.Played) -> None:
-        """Save the season played out and redraw what it changed: xp
-        (scores, casting and lab totals), the Diary, This Season and
-        Wealth; then show its results."""
-        saga = self.saga
-        await self._apply_saga_date(saga.current_season, saga.current_year)
-        for section in _SEASON_SECTIONS:
-            self._refresh_character_section(section)
-        self._refresh_laboratory_section("tab-lab-planning")
-        self._refresh_covenant_section("tab-cov-seasons")
-        self._refresh_covenant_section("section-cov-ahead")
-        if self._seasons_view is not None:
-            self._seasons_view.refresh_all()
-        if played.advanced.added:
-            self._refresh_covenant_section("section-eco-wealth")
-        if saga.keep_season_records and played.results:
-            self._rebuild_tree()
-        if played.results:
-            self.app.push_screen(SeasonSummaryScreen(saga, played.advanced.record))
-        self.notify(played.message)
-
     # -- season plans (shared by the character and covenant sheets) --
 
     def _plan_season_for(self, character: Character, section: str) -> None:
@@ -2529,279 +1913,41 @@ class WorkspaceBase(Screen[None]):
             handle_confirmed,
         )
 
-    def action_edit_arms(self) -> None:
-        """More's Arms on a covenant, or a lord, town or faction: its shield
-        and blazon."""
-        record = self._record_to_delete()
-        if record is None or not arms.bears_arms(record):
-            return
-        section = (
-            NEIGHBOUR_INFO_SECTION
-            if isinstance(record, Neighbour)
-            else "section-cov-info"
-        )
-        run_steps(self.app, arms.arms_form(record), lambda _end: self._commit(section))
-
-    def action_found_covenant(self) -> None:
-        """More's Found a Covenant Here on a ruined covenant's site: New
-        Covenant, prefilled, raised on the ruin; then its worksheet."""
-        record = self._record_to_delete()
-        if not isinstance(record, Neighbour) or not places.is_ruin(record):
-            return
-        before = {c.id for c in self.saga.covenants}
-
-        async def show(covenant: Covenant) -> None:
-            self.selected_covenant = covenant
-            self.selected_kind = NodeKind.COVENANT
-            await self._show_covenant_detail(covenant)
-            self._open_creation_worksheet(covenant)
-
-        def finished(_end: object) -> None:
-            fresh = [c for c in self.saga.covenants if c.id not in before]
-            self._commit(NEIGHBOUR_INFO_SECTION, tree=True)
-            if fresh:
-                self.run_worker(show(fresh[-1]))
-
-        run_steps(self.app, ruins.found_form(self.saga, record), finished)
-
-    def action_begin_story(self) -> None:
-        """More's Begin This Story on a dormant threat."""
-        record = self._record_to_delete()
-        if not threats.is_dormant(record):
-            return
-        assert isinstance(record, Neighbour)
-        run_steps(
-            self.app,
-            threats.begin_command(self.saga, record),
-            lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
-        )
-
-    def action_set_date(self) -> None:
-        saga = self.saga
-
-        async def handle_result(result: dict[str, Any] | None) -> None:
-            if result is None:
-                return
-            season, year = result["season"], result["year"]
-            if (season, year) == (saga.current_season, saga.current_year):
-                return
-            await self._apply_saga_date(season, year)
-            self.notify(f"Date set to {season} {year}.")
-
-        self.app.push_screen(
-            FieldsDialog(
-                "Set the Saga's Date",
-                _date_fields(saga.current_season, saga.current_year),
-                save_label="Set",
-            ),
-            handle_result,
-        )
-
     @staticmethod
     def _ability_label(a: Ability) -> str:
         specialty = f" ({escape(a.specialty)})" if a.specialty else ""
         return f"{escape(a.name)}{specialty} {st.score_text(a.progress)}"
 
-    # -- shared Character/Laboratory/Familiar Virtue & Flaw actions --
-
-    def action_add_virtue_flaw(self) -> None:
-        target = self._virtue_flaw_target()
-        if target is None:
-            return
-        # Opened on the side of the section it was launched from.
-        flaws = self._active_section() in ("section-vf-flaws", "section-fam-vf-flaws")
-        self._add_virtue_flaw_to(target, "Flaw" if flaws else "Virtue")
-
-    def _add_virtue_flaw_to(
-        self, target: Character | Laboratory | Familiar, side: str = "Virtue"
-    ) -> None:
-        """Pick a Virtue or Flaw (opened on `side`) and add it to `target`
-        (also the Creation Worksheet's Virtues and Flaws step)."""
-        is_lab = isinstance(target, Laboratory)
-        is_familiar = isinstance(target, Familiar)
-
-        def handle_result(instance: VirtueFlawInstance | None) -> None:
-            if instance is not None:
-                target.virtues_flaws.append(instance)
-                if isinstance(target, Character):
-                    cch.apply_virtue(self.saga, target, instance)
-                if isinstance(target, Laboratory):
-                    # A Feature waiting for a Virtue gets a new Feature Virtue.
-                    instance.id = new_instance_id()
-                    link_unlinked_features(target)
-                storage.save_saga(self.saga)
-                if is_lab:
-                    for section in LAB_FEATURE_SECTIONS:
-                        self._refresh_laboratory_section(section)
-                elif is_familiar:
-                    self._refresh_familiar_section("section-fam-vf-virtues")
-                else:
-                    self._refresh_character_section("section-vf-virtues")
-                    self._refresh_character_section("section-char-characteristics")
-
-        books = sourcebooks.saga_books(self.saga)
-        if isinstance(target, Laboratory):
-            existing_ids = {vf.vf_id for vf in target.virtues_flaws}
-            self.app.push_screen(
-                LabVirtueFlawPickerScreen(
-                    existing_ids, books=books, saga=self.saga, lab=target
-                ),
-                handle_result,
-            )
-            return
-        chooser = (
-            catalog.VirtueFlawChooser.for_familiar(target, books)
-            if isinstance(target, Familiar)
-            else catalog.VirtueFlawChooser.for_character(target, books)
-        )
-        self.app.push_screen(
-            VirtueFlawPickerScreen(
-                target.virtues_flaws,
-                side=side,
-                chooser=chooser,
-                own_abilities=[a.name for a in target.abilities],
-                refusal=(
-                    partial(cch.virtue_refusal, self.saga, target)
-                    if isinstance(target, Character)
-                    else None
-                ),
-            ),
-            handle_result,
-        )
-
-    def action_remove_virtue_flaw(self) -> None:
-        """Delete a Virtue/Flaw of the character, laboratory or familiar on
-        show, after confirming: the row chosen in its Virtues or Flaws
-        list."""
-        target = self._virtue_flaw_target()
-        if target is None:
-            return
-        self._remove_virtue_flaw_from(target, self._selected_virtue_flaw(target))
-
-    def _remove_virtue_flaw_from(
-        self, target: Character | Laboratory | Familiar, selected: int | None = None
-    ) -> None:
-        """Delete `target`'s Virtue/Flaw at `selected` after confirming."""
-        if not target.virtues_flaws:
-            self.notify("No Virtues/Flaws to remove.")
-            return
-        vf_catalog = (
-            catalog.load_lab_virtue_flaw_catalog_by_id()
-            if isinstance(target, Laboratory)
-            else catalog.load_virtue_flaw_catalog_by_id()
-        )
-        if isinstance(target, Laboratory):
-            section = LAB_VF_SECTIONS[0]
-        elif isinstance(target, Familiar):
-            section = "section-fam-vf-virtues"
-        else:
-            section = "section-vf-virtues"
-
-        def confirm(index: int) -> None:
-            name = catalog.describe_virtue_flaw(target.virtues_flaws[index], vf_catalog)
-            if isinstance(target, Laboratory):
-                self._confirm_delete_lab_virtue_flaw(target, index, name)
-                return
-            if isinstance(target, Character):
-                instance = target.virtues_flaws[index]
-                change = cch.removal_change(self.saga, target, instance)
-                if change is not None:
-                    self._confirm_delete_stepped(target, index, name, change)
-                    return
-            self._confirm_delete(target.virtues_flaws, index, name, section)
-
-        self._chosen_or_pick(
-            selected,
-            [vf.vf_id for vf in target.virtues_flaws],
-            empty="No Virtues/Flaws to remove.",
-            then=confirm,
-        )
-
-    def _confirm_delete_stepped(
-        self,
-        character: Character,
-        index: int,
-        name: str,
-        change: tuple[str, int, int],
-    ) -> None:
-        """Delete a Great or Poor (Characteristic) after confirming,
-        moving its Characteristic back the point it added."""
-        characteristic, before, after = change
-        message = (
-            f"Delete {escape(name)}? {characteristic} goes from {before:+d} "
-            f"to {after:+d}."
-        )
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                cch.unapply_virtue(self.saga, character, character.virtues_flaws[index])
-                del character.virtues_flaws[index]
-                self._commit("section-vf-virtues", "section-char-characteristics")
-
-        self.app.push_screen(ConfirmScreen(message), handle_confirmed)
-
-    def _confirm_delete_lab_virtue_flaw(
-        self, lab: Laboratory, index: int, name: str
-    ) -> None:
-        """Delete a lab Virtue/Flaw after confirming, saying what goes with
-        it: the Feature built on a Feature Virtue, or the Focus (and its
-        points) of a Focus Flaw."""
-        instance = lab.virtues_flaws[index]
-        feature = lab_rules.feature_on(lab, instance)
-        focus = lab_rules.focus_feature(lab)
-        message = f"Delete {escape(name)}?"
-        if feature is not None:
-            message += f" Its Feature, {escape(feature.name)}, goes too."
-        elif instance.vf_id in FOCUS_FLAWS and focus is not None:
-            message += (
-                f" {escape(focus.name)} stops being the Focus and loses its "
-                "Focus points."
-            )
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                counted = lab_rules.counted_specializations(lab)
-                del lab.virtues_flaws[index]
-                lab_rules.prune_features(lab)
-                lab_rules.reconcile_dropped(lab, counted)
-                self._commit(*LAB_FEATURE_SECTIONS)
-
-        self.app.push_screen(ConfirmScreen(message), handle_confirmed)
-
-    def _selected_virtue_flaw(
-        self, target: Character | Laboratory | Familiar
-    ) -> int | None:
-        """The row chosen in the target's Virtues or Flaws list, if any."""
-        if isinstance(target, Character) and self._character_sheet_view is not None:
-            return self._character_sheet_view.selected_virtue_flaw()
-        if isinstance(target, Laboratory) and self._laboratory_sheet_view is not None:
-            return self._laboratory_sheet_view.selected_virtue_flaw()
-        if isinstance(target, Familiar) and self._familiar_sheet_view is not None:
-            return self._familiar_sheet_view.selected_virtue_flaw()
-        return None
-
-    def _virtue_flaw_target(self) -> Character | Laboratory | Familiar | None:
-        if (
-            self.selected_kind == NodeKind.LABORATORY
-            and self._active_section() in LAB_VF_SECTIONS
-        ):
-            return self.selected_laboratory
-        if self.selected_kind == NodeKind.CHARACTER and self._active_section() in (
-            "section-vf-virtues",
-            "section-vf-flaws",
-        ):
-            return self.selected_character
-        if self.selected_kind == NodeKind.FAMILIAR and self._active_section() in (
-            "section-fam-vf-virtues",
-            "section-fam-vf-flaws",
-        ):
-            return self.selected_familiar
-        return None
-
     def _device_action_enabled(self, action: str) -> bool:
         """Whether More's Instill / Use a Charge can act on the chosen device row (see
         DeviceActions)."""
         return False
+
+    def _shared_section_ops(self) -> dict[str, _SectionOps]:
+        """a / d / e on the sections several sheets share: scored traits
+        and the core sections (see
+        WorkspaceScreen._section_ops)."""
+        ops: dict[str, _SectionOps] = {}
+        for spec in (
+            _CHARACTER_TRAITS,
+            _CHARACTER_REPUTATIONS,
+            _FAMILIAR_TRAITS,
+            _FAMILIAR_REPUTATIONS,
+            _COVENANT_REPUTATIONS,
+        ):
+            ops[spec.section] = _SectionOps(
+                partial(self._add_trait, spec),
+                partial(self._remove_trait, spec),
+                partial(self._edit_trait, spec),
+            )
+        for section, verbs in CORE_SECTIONS.items():
+            ops[section] = _SectionOps(
+                *(
+                    partial(self._core_verb, section, verb) if verb in verbs else None
+                    for verb in ("add", "remove", "edit")
+                )
+            )
+        return ops
 
     @cached_property
     def _section_ops(self) -> dict[str, _SectionOps]:

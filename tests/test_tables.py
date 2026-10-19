@@ -7,7 +7,6 @@ from __future__ import annotations
 from support import everything_saga
 
 from ars_magica_manager import books as bk
-from ars_magica_manager import character_sheet as cs
 from ars_magica_manager import creation, seasons
 from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager import lab_texts as lt
@@ -25,6 +24,7 @@ from ars_magica_manager.models import (
     SeasonRecordLine,
 )
 from ars_magica_manager.rules import creation as rules
+from ars_magica_manager.sheets import character as cs
 from ars_magica_manager.tables import Table
 
 

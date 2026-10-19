@@ -4,10 +4,10 @@ Characteristics as a compass rose beside their cards; then chapters for the
 Lab Totals, Virtues & Flaws, Specializations and Features, the stores and
 the seasons, with the inspector beside them.
 
-What it says comes from the shared core (laboratory_sheet.py and the
+What it says comes from the shared core (sheets/laboratory.py and the
 modules it reads), as the terminal's laboratory sheet does. Its Edit
 buttons and each list's Add, Edit and Delete run the core's forms
-(laboratory_forms.py, vis_forms.py), the same the terminal draws; Edit and
+(forms/laboratory.py, forms/vis.py), the same the terminal draws; Edit and
 Delete act on the card or row last clicked.
 """
 
@@ -26,30 +26,24 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import (
-    artwork,
-    diary_forms,
-    giving,
-    lab_plan_forms,
-    lab_planning,
-    library_forms,
-    menu_forms,
-    seasons,
-    virtue_forms,
-    vis,
-    vis_forms,
-)
+from .. import artwork, giving, lab_planning, seasons, vis
 from .. import books as bk
 from .. import lab_texts as lt
 from .. import laboratories as labs
-from .. import laboratory_forms as lf
-from .. import laboratory_sheet as ls
 from .. import saga_overview as ov
 from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import SectionOps
+from ..forms import diary as diary_forms
+from ..forms import lab_plan as lab_plan_forms
+from ..forms import laboratory as lf
+from ..forms import library as library_forms
+from ..forms import menu as menu_forms
+from ..forms import virtue as virtue_forms
+from ..forms import vis as vis_forms
 from ..markup import escape
 from ..models import LAB_TEXT_KINDS, Book, Laboratory, Saga
+from ..sheets import laboratory as ls
 from . import pictures
 from .character_sheet import (
     TextBlock,

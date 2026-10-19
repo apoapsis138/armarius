@@ -3,7 +3,8 @@ front-end."""
 
 from __future__ import annotations
 
-from ars_magica_manager import commands, form_spec, trait_forms
+from ars_magica_manager import commands, form_spec
+from ars_magica_manager.forms import trait as trait_forms
 from ars_magica_manager.models import ScoredTrait
 
 

@@ -11,7 +11,6 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from . import catalog, places, tribunals, world
-from . import character_sheet as cs
 from . import laboratories as labs
 from .models import (
     COMPANION_TYPES,
@@ -23,6 +22,7 @@ from .models import (
     character_age,
 )
 from .rules.activities import ACTIVITIES
+from .sheets import character as cs
 
 #: The groups a covenant's people are shown in, in order, by type.
 PEOPLE = (

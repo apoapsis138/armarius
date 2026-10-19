@@ -39,7 +39,6 @@ from collections.abc import Collection, Iterator
 from dataclasses import dataclass, field
 from typing import Any
 
-from .character_sheet import Fact
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -57,6 +56,7 @@ from .models import (
 from .neighbour_lists import KindList, details_list, list_ops
 from .rules import effects as fx
 from .sections import EFFECTS_SECTION, LEVELS_SECTION
+from .sheets.character import Fact
 
 #: The kind of neighbour a place is.
 PLACE = "place"

@@ -7,12 +7,13 @@ from __future__ import annotations
 import pytest
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import catalog, virtue_forms
+from ars_magica_manager import catalog
 from ars_magica_manager import laboratories as labs
-from ars_magica_manager import laboratory_sheet as ls
 from ars_magica_manager.commands import Choose, Form
+from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.models import Character, Characteristics, VirtueFlawInstance
 from ars_magica_manager.models.traits import new_instance_id
+from ars_magica_manager.sheets import laboratory as ls
 
 
 def _lab(*instances: VirtueFlawInstance):

@@ -20,9 +20,10 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 
 from .... import enchanted_devices as ed
-from .... import world, world_forms
+from .... import world
 from ....boon_hook_text import counted
 from ....commands import SectionOps
+from ....forms import world as world_forms
 from ....markup import escape, inherited
 from ....models import (
     FULL,

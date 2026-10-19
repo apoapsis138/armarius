@@ -12,7 +12,7 @@ slice runs only those that match what changed since the last commit
 * a changed test file runs itself;
 * a changed source or help file runs the screen tests whose file names
   share a word with its own name, or the name of the folder it is in
-  (``covenant_forms.py`` and ``gui/covenant.py`` both pick
+  (``forms/covenant.py`` and ``gui/covenant.py`` both pick
   ``test_screens_covenant.py`` and ``test_gui_edit_covenant.py``);
 * `AREA_TESTS` adds the tests a cross-cutting file needs whatever its name
   says (key routing, the form contracts, the golden sheet text);
@@ -72,27 +72,38 @@ EVERYTHING = {
     "uv.lock",
 }
 
+# The form contracts, one file per area of the app; a change to the forms'
+# shared machinery runs them all.
+DIALOG_CONTRACT_TESTS = (
+    "test_dialog_contracts_character.py",
+    "test_dialog_contracts_covenant.py",
+    "test_dialog_contracts_laboratory.py",
+    "test_dialog_contracts_library.py",
+    "test_dialog_contracts_saga.py",
+    "test_dialog_contracts_tribunal.py",
+)
+
 AREA_TESTS: dict[str, tuple[str, ...]] = {
     "ars_magica_manager/gui/choices.py": ("test_gui_sheet.py",),
     "ars_magica_manager/actions.py": ("test_dispatch_matrix.py", "test_keyboard.py"),
     "ars_magica_manager/sections.py": ("test_dispatch_matrix.py", "test_sheet_text.py"),
     "ars_magica_manager/form_spec.py": (
-        "test_dialog_contracts.py",
+        *DIALOG_CONTRACT_TESTS,
         "test_fields_dialog.py",
     ),
     "ars_magica_manager/sheet_text.py": ("test_sheet_text.py",),
-    "ars_magica_manager/creature_forms.py": (
-        "test_dialog_contracts.py",
+    "ars_magica_manager/forms/creature.py": (
+        *DIALOG_CONTRACT_TESTS,
         "test_list_flows.py",
     ),
-    "ars_magica_manager/creature_sheet.py": ("test_sheet_text.py",),
+    "ars_magica_manager/sheets/creature.py": ("test_sheet_text.py",),
     "ars_magica_manager/help/": ("test_help.py", "test_gui_help.py"),
     "ars_magica_manager/help_text.py": ("test_help.py", "test_gui_help.py"),
     "ars_magica_manager/tui/screens/fields.py": (
-        "test_dialog_contracts.py",
+        *DIALOG_CONTRACT_TESTS,
         "test_fields_dialog.py",
     ),
-    "ars_magica_manager/tui/screens/forms/": ("test_dialog_contracts.py",),
+    "ars_magica_manager/tui/screens/forms/": DIALOG_CONTRACT_TESTS,
     "ars_magica_manager/tui/screens/workspace/": (
         "test_dispatch_matrix.py",
         "test_list_flows.py",
@@ -102,7 +113,8 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "ars_magica_manager/gui/editing.py": ("test_gui_edit_shared.py",),
     "tests/golden/dispatch_matrix.json": ("test_dispatch_matrix.py",),
     "tests/golden/sheet_text/": ("test_sheet_text.py",),
-    "tests/dialog_openers.py": ("test_dialog_contracts.py",),
+    "tests/dialog_openers.py": DIALOG_CONTRACT_TESTS,
+    "tests/dialog_contract_support.py": DIALOG_CONTRACT_TESTS,
     "tests/gui_steps.py": ("test_gui_edit_shared.py",),
     "pyproject.toml": ("test_version.py",),
     "CHANGELOG.md": ("test_version.py", "test_help.py"),

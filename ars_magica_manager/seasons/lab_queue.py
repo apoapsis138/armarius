@@ -3,6 +3,7 @@ lab work, and the Lab Texts, effects and spells it produces."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 
 from .. import enchanted_devices as ed
@@ -131,41 +132,44 @@ def _season_label(season: str, year: int) -> str:
 
 def _progress(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
     """A queue row's short progress: "8/15 points", "invented"."""
-    if plan.activity == lab_seasons.EXTRACT:
-        return f"+{work.vis_gained} Vim"
-    if plan.activity == lab_seasons.FIX_AC:
-        return "fixed"
-    if plan.activity == lab_seasons.LONGEVITY:
-        return f"aging -{work.longevity}"
-    if plan.activity == bs.DECODE_TEXT and work.finished:
-        return "decoded"
-    if plan.activity == lab_seasons.TAMING and work.finished:
-        return "tamed"
-    if plan.activity == ls.MOVE:
-        return "moved" if plan.by_spell or work.finished else "moving"
-    if plan.activity == ls.BUILD:
-        return "finished" if work.second_season else "set up (Basic)"
-    if plan.activity in (ls.REFINE, ls.TAKE_OVER):
-        return f"Refinement {work.refinement}"
-    if plan.activity == fs.BIND:
-        return "bound"
-    if plan.activity == fs.EMPOWER and work.finished:
-        return "instilled"
-    if plan.activity == es.OPEN:
-        return "opened"
-    if plan.activity == es.ATTUNE:
-        return "attuned"
-    if plan.activity == es.INVESTIGATE:
-        return f"against level {work.level}"
-    if plan.activity == es.CHARGED_WORK:
-        return f"{work.charges} charge(s)"
-    if plan.activity == es.LESSER_WORK:
-        return "made"
-    if plan.activity == es.INSTIL and work.finished:
-        return "instilled"
+    progress = _PROGRESS.get(plan.activity)
+    if progress is not None:
+        shown = progress(work, plan)
+        if shown is not None:
+            return shown
     if work.finished:
         return "learned" if plan.activity == lab_seasons.LAB_TEXT else "invented"
     return f"{work.points_after}/{work.level} points"
+
+
+def _when_finished(
+    word: str,
+) -> Callable[[lab_seasons.LabWork, SeasonPlan], str | None]:
+    """`word` once the work is finished; until then, its points."""
+    return lambda work, plan: word if work.finished else None
+
+
+#: A queue row's progress for each kind of lab work (Strategy, as a table);
+#: None, or work not listed, shows its points until it is finished.
+_PROGRESS: dict[str, Callable[[lab_seasons.LabWork, SeasonPlan], str | None]] = {
+    lab_seasons.EXTRACT: lambda work, plan: f"+{work.vis_gained} Vim",
+    lab_seasons.FIX_AC: lambda work, plan: "fixed",
+    lab_seasons.LONGEVITY: lambda work, plan: f"aging -{work.longevity}",
+    bs.DECODE_TEXT: _when_finished("decoded"),
+    lab_seasons.TAMING: _when_finished("tamed"),
+    ls.MOVE: lambda work, plan: "moved" if plan.by_spell or work.finished else "moving",
+    ls.BUILD: lambda work, plan: "finished" if work.second_season else "set up (Basic)",
+    ls.REFINE: lambda work, plan: f"Refinement {work.refinement}",
+    ls.TAKE_OVER: lambda work, plan: f"Refinement {work.refinement}",
+    fs.BIND: lambda work, plan: "bound",
+    fs.EMPOWER: _when_finished("instilled"),
+    es.OPEN: lambda work, plan: "opened",
+    es.ATTUNE: lambda work, plan: "attuned",
+    es.INVESTIGATE: lambda work, plan: f"against level {work.level}",
+    es.CHARGED_WORK: lambda work, plan: f"{work.charges} charge(s)",
+    es.LESSER_WORK: lambda work, plan: "made",
+    es.INSTIL: _when_finished("instilled"),
+}
 
 
 def _queue_cells(saga: Saga, lab: Laboratory) -> list[tuple[str, str]]:

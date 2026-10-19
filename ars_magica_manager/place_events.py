@@ -31,7 +31,6 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import places
-from .character_sheet import Fact
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -40,6 +39,7 @@ from .models import SEASONS, Neighbour, Saga
 from .neighbour_lists import KindList, KindTab, details_list, list_ops
 from .rules import dice, options
 from .sections import DIARY_SECTION, TABLES_SECTION, TRIGGERS_SECTION
+from .sheets.character import Fact
 
 #: The aura change option's key (rules.options).
 AURA_CHANGE = "aura_change"

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import familiar_sheet as fs
 from ars_magica_manager import familiars as fam
 from ars_magica_manager.models import BondPower, Possession
+from ars_magica_manager.sheets import familiar as fs
 
 
 def _familiar():

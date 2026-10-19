@@ -14,13 +14,13 @@ from gui_steps import answering
 from PySide6.QtWidgets import QApplication
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import laboratory_sheet as ls
 from ars_magica_manager import storage
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
 from ars_magica_manager.models.saga import assign_laboratory_owner
+from ars_magica_manager.sheets import laboratory as ls
 
 
 @pytest.fixture(scope="module")

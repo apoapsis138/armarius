@@ -7,7 +7,8 @@ from typing import Any
 
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import commands, diary_forms, form_spec
+from ars_magica_manager import commands, form_spec
+from ars_magica_manager.forms import diary as diary_forms
 from ars_magica_manager.models import (
     STORY_EVENT,
     CovenantDiaryEntry,

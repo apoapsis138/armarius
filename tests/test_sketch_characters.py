@@ -9,10 +9,11 @@ import pytest
 from support import screen_lines, wait_until
 from textual.widgets import Collapsible, Tree
 
-from ars_magica_manager import character_forms, menu_forms, storage, world
-from ars_magica_manager import character_sheet as cs
+from ars_magica_manager import storage, world
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Confirm
+from ars_magica_manager.forms import character as character_forms
+from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import (
     FULL,
     LINE,
@@ -24,6 +25,7 @@ from ars_magica_manager.models import (
     Saga,
     ScoredTrait,
 )
+from ars_magica_manager.sheets import character as cs
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
 from ars_magica_manager.tui.screens.prompts import MenuScreen

@@ -482,8 +482,8 @@ def test_a_whole_saga_exports_and_imports_every_record(tmp_path):
 
 
 def test_import_names_the_entry_a_wrong_file_belongs_under(tmp_path):
-    from ars_magica_manager import import_forms
     from ars_magica_manager.commands import Refuse
+    from ars_magica_manager.forms import importing as import_forms
 
     saga = _source()
     path = transfer.export_saga_to(tmp_path / "all.amm.json", saga)

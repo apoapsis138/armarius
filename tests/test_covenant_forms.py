@@ -9,15 +9,12 @@ from typing import Any
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import books as bk
-from ars_magica_manager import (
-    commands,
-    covenant_forms,
-    form_spec,
-    inhabitant_forms,
-    library_forms,
-    possession_forms,
-)
+from ars_magica_manager import commands, form_spec
 from ars_magica_manager import economics as eco
+from ars_magica_manager.forms import covenant as covenant_forms
+from ars_magica_manager.forms import inhabitant as inhabitant_forms
+from ars_magica_manager.forms import library as library_forms
+from ars_magica_manager.forms import possession as possession_forms
 from ars_magica_manager.models import (
     Character,
     IncomeSource,

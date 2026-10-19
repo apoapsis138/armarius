@@ -8,13 +8,15 @@ import random
 
 from support import everything_saga
 
-from ars_magica_manager import laboratory_sheet, neighbour_forms, place_events, places
+from ars_magica_manager import place_events, places
 from ars_magica_manager.commands import Confirm, Form, Refuse
-from ars_magica_manager.covenant_forms import covenant_form
-from ars_magica_manager.laboratory_forms import identity_form
+from ars_magica_manager.forms import neighbour as neighbour_forms
+from ars_magica_manager.forms.covenant import covenant_form
+from ars_magica_manager.forms.laboratory import identity_form
 from ars_magica_manager.models import Ability, Neighbour
 from ars_magica_manager.rules import aging, lab
 from ars_magica_manager.seasons import character_effects
+from ars_magica_manager.sheets import laboratory as laboratory_sheet
 
 
 def _drachenfels(saga):

@@ -9,8 +9,9 @@ import random
 import pytest
 from support import everything_saga
 
-from ars_magica_manager import economics, trait_forms, world
+from ars_magica_manager import economics, world
 from ars_magica_manager import sheet_text as st
+from ars_magica_manager.forms import trait as trait_forms
 from ars_magica_manager.models import (
     FULL,
     LINE,

@@ -16,10 +16,10 @@ from dataclasses import dataclass
 
 from PySide6.QtWidgets import QPushButton
 
-from .. import menu_forms
 from ..actions import MenuItem
 from ..commands import Command
-from ..menu_forms import Page
+from ..forms import menu as menu_forms
+from ..forms.menu import Page
 from ..models import Saga
 from .markup_html import plain
 from .themes import Palette

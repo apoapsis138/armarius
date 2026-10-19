@@ -3,7 +3,7 @@ with the name and the character's state at a glance, the
 Characteristics as cards, a rail of chapters on the left and an
 inspector on the right that shows whatever was last chosen.
 
-What it says comes from the shared core (character_sheet.py and the
+What it says comes from the shared core (sheets/character.py and the
 modules it reads), the same text and figures the terminal sheet shows;
 only how it is drawn is here. The tables are Qt Model/View: a
 QStandardItemModel of the core's rows, shown by a view (a proxy model
@@ -13,7 +13,6 @@ listens to.
 
 from __future__ import annotations
 
-import html
 import re
 from collections.abc import Callable, Sequence
 
@@ -44,40 +43,32 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import (
-    ability_forms,
-    artwork,
-    creation,
-    device_forms,
-    diary_forms,
-    giving,
-    menu_forms,
-    portraits,
-    season_forms,
-    seasons,
-    sourcebooks,
-    spell_forms,
-    trait_forms,
-    virtue_forms,
-    vis,
-    vis_forms,
-)
+from .. import artwork, creation, giving, portraits, seasons, sourcebooks, vis
 from .. import books as bk
-from .. import character_forms as cf
-from .. import character_sheet as cs
 from .. import enchanted_devices as ed
-from .. import familiar_sheet as fs
 from .. import familiars as fam
 from .. import lab_texts as lt
 from .. import laboratories as labs
-from .. import laboratory_sheet as labs_sheet
 from .. import saga_overview as ov
 from .. import sheet_text as st
 from .. import spells as spl
 from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import Command, SectionOps
+from ..forms import ability as ability_forms
+from ..forms import character as cf
+from ..forms import device as device_forms
+from ..forms import diary as diary_forms
+from ..forms import menu as menu_forms
+from ..forms import season as season_forms
+from ..forms import spell as spell_forms
+from ..forms import trait as trait_forms
+from ..forms import virtue as virtue_forms
+from ..forms import vis as vis_forms
 from ..models import CHARGED, LINE, Character, Characteristics, Saga, ScoredTrait
+from ..sheets import character as cs
+from ..sheets import familiar as fs
+from ..sheets import laboratory as labs_sheet
 from . import marks, pictures
 from .editing import (
     Chooser,
@@ -152,10 +143,6 @@ CHAPTERS = (
 
 #: A status tone's colour (character_sheet.condition).
 TONES = {cs.GOOD: "text-success", cs.WARNING: "text-warning", cs.BAD: "text-error"}
-
-
-def _html(words: str) -> str:
-    return html.escape(words)
 
 
 def _fixed_font() -> QFont:

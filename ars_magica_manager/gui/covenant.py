@@ -8,7 +8,7 @@ Points, with the inspector beside them.
 The characters who belong to no covenant get the same page with only
 their people, laboratories and seasons.
 
-What it says comes from the shared core (covenant_sheet.py and
+What it says comes from the shared core (sheets/covenant.py and
 saga_overview.py), as the terminal's covenant sheet does.
 """
 
@@ -19,38 +19,30 @@ from collections.abc import Callable, Sequence
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QTableView, QVBoxLayout, QWidget
 
-from .. import (
-    artwork,
-    boon_hook_text,
-    catalog,
-    covenant_forms,
-    creation_forms,
-    diary_forms,
-    giving,
-    inhabitant_forms,
-    library_forms,
-    menu_forms,
-    possession_forms,
-    season_forms,
-    seasons,
-    vis,
-    world,
-    world_forms,
-)
+from .. import artwork, boon_hook_text, catalog, giving, seasons, vis, world
 from .. import books as bk
-from .. import character_sheet as cs
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
-from .. import covenant_sheet as cvs
-from .. import familiar_sheet as fs
 from .. import inhabitants as inh
 from .. import possessions as pos
 from .. import saga_overview as ov
 from ..actions import NodeKind
-from ..character_sheet import Fact
 from ..commands import SectionOps
 from ..covenants import boon_hook_problems
+from ..forms import covenant as covenant_forms
+from ..forms import creation as creation_forms
+from ..forms import diary as diary_forms
+from ..forms import inhabitant as inhabitant_forms
+from ..forms import library as library_forms
+from ..forms import menu as menu_forms
+from ..forms import possession as possession_forms
+from ..forms import season as season_forms
+from ..forms import world as world_forms
 from ..models import FULL, INHABITANT_KINDS, LINE, POSSESSION_KINDS, Covenant, Saga
+from ..sheets import character as cs
+from ..sheets import covenant as cvs
+from ..sheets import familiar as fs
+from ..sheets.character import Fact
 from .ahead import ahead_section
 from .character_sheet import (
     TextBlock,

@@ -14,8 +14,8 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import arms, neighbour_filter, neighbour_forms, neighbours, region_sheet
-from ....character_sheet import Fact
+from .... import arms, neighbour_filter, neighbours
+from ....forms import neighbour as neighbour_forms
 from ....markup import aligned, escape, markdown_inline
 from ....models import Covenant, Neighbour, Saga
 from ....neighbour_lists import KindTab
@@ -26,6 +26,8 @@ from ....sections import (
     REGION_COVENANTS_SECTION,
     REGION_INFO_SECTION,
 )
+from ....sheets import region as region_sheet
+from ....sheets.character import Fact
 from ..widgets import PinnedCollapsible, SelectableList, SheetSection, TwoColumns
 from .base import SheetView
 

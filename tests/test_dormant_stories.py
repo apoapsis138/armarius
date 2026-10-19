@@ -5,17 +5,11 @@ from __future__ import annotations
 
 from support import everything_saga
 
-from ars_magica_manager import (
-    actions,
-    packs,
-    region_sheet,
-    storage,
-    threats,
-    transfer,
-    tribunal_sheet,
-)
+from ars_magica_manager import actions, packs, storage, threats, transfer
 from ars_magica_manager.commands import Confirm
 from ars_magica_manager.models import Neighbour, Saga
+from ars_magica_manager.sheets import region as region_sheet
+from ars_magica_manager.sheets import tribunal as tribunal_sheet
 
 
 def _threat(saga: Saga) -> Neighbour:

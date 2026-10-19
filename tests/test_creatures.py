@@ -7,17 +7,9 @@ from dataclasses import asdict
 
 from support import aeolus, everything_saga
 
-from ars_magica_manager import (
-    creature_forms,
-    creature_sheet,
-    creatures,
-    packs,
-    places,
-    sections,
-    transfer,
-)
-from ars_magica_manager.character_sheet import Fact
+from ars_magica_manager import creatures, packs, places, sections, transfer
 from ars_magica_manager.commands import Choose, Confirm, Form
+from ars_magica_manager.forms import creature as creature_forms
 from ars_magica_manager.models import (
     Ability,
     Creature,
@@ -25,6 +17,8 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
+from ars_magica_manager.sheets import creature as creature_sheet
+from ars_magica_manager.sheets.character import Fact
 
 
 def _with_creature() -> tuple[Saga, Creature]:

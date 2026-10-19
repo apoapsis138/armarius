@@ -3,12 +3,12 @@ with the searchable spell chooser for its Spell."""
 
 from __future__ import annotations
 
-from .... import library_forms
 from ....form_spec import DialogField
-from ....library_forms import book_from_values as _book_from_values
-from ....library_forms import book_live as _book_live
-from ....library_forms import research_fields as _research_fields
-from ....library_forms import research_from_values as _research_from_values
+from ....forms import library as library_forms
+from ....forms.library import book_from_values as _book_from_values
+from ....forms.library import book_live as _book_live
+from ....forms.library import research_fields as _research_fields
+from ....forms.library import research_from_values as _research_from_values
 from ....models import Book, Saga
 from ..pickers import SpellChooserScreen
 

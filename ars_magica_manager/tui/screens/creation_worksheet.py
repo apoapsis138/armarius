@@ -30,8 +30,8 @@ from textual.widgets import Button, Label, OptionList, Static
 from textual.widgets.option_list import Option
 
 from ... import worksheet as ws
-from ... import worksheet_forms as wf
 from ...commands import Command
+from ...forms import worksheet as wf
 from ...rules import creation as rules
 from .fields import ModalDialog
 from .widgets import DetailsPanel, SelectableList, TableHeader
