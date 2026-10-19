@@ -131,7 +131,12 @@ def covenant_form(saga: Saga, covenant: Covenant) -> Form:
         apply_covenant(covenant, values)
         places.sync(saga)
 
-    return Form("Edit Covenant", lambda: covenant_fields(saga, covenant), apply)
+    return Form(
+        "Edit Covenant",
+        lambda: covenant_fields(saga, covenant),
+        apply,
+        validate=lambda values: vassals.problem(saga, covenant, values),
+    )
 
 
 def description_fields(covenant: Covenant) -> list[DialogField]:

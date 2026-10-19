@@ -64,8 +64,25 @@ what the old ones recorded, hidden, and switching back shows it again.
 - **Provence: Open founding** (Faith & Flame): any magus may found a
   covenant without the Tribunal's leave. A rule, not a list: it shows as
   a note on the Peripheral Code tab.
-- **Hibernia: Notes** (The Contested Isle): the core rules, with its
-  customs noted on the Peripheral Code tab.
+- **Hibernia: Cathaigh and ambassadors** (The Contested Isle): a covenant is represented
+  only while it shows its **cathach**, the trophy it took when it was
+  founded. Each covenant's form (Edit Covenant) says what its cathach is,
+  who holds it if it was taken, and, for a covenant being founded, the
+  year it began holding its land, cattle and cathach: it is recognised a
+  year later. The roster gains a Cathach column, saying what it is, who
+  took it, or when a new covenant is recognised. At a meeting,
+  Attendance asks whether each covenant shows its cathach, ticked unless
+  it was taken or the covenant is still being founded; one that doesn't
+  has no votes, not even the proxies it carries. New Covenant and Found a
+  Covenant Here say what founding asks. It recognises no vassal
+  covenants, so a covenant's Edit refuses a liege in the same Tribunal.
+  The sheet gains an Ambassadors tab: each supernatural faction's
+  ambassador, who votes at the meeting once the Sacred Council confirms
+  them, and the treaties that make much of its law. Its meeting opens
+  with the Sacred Council and ends with the tithe of Gifted children,
+  whom the Coill Trí owe the Order (see [Hold
+  Tribunal](help:hold-tribunal)). Its other customs are noted on the
+  Peripheral Code tab.
 
 Older sagas typed a covenant's Tribunal as a name. Each name became a
 Tribunal of its own when the saga was first opened by this version, and
@@ -292,7 +309,8 @@ from the first covenants called. See [Hold Tribunal](help:hold-tribunal).
 Each covenant's magi, how many are absent, the proxies it carries and
 its votes in the hall: its magi present, and its proxies if the
 Presiding Quaesitor allowed them. Proxies set aside are shown but not
-counted.
+counted. Under Hibernia's customs a covenant that doesn't show its
+cathach has no votes, and says so.
 
 <!-- tui -->
 `e` holds Attendance and proxies again.
@@ -469,6 +487,28 @@ Alms, each a Hermetic Reputation of 2 for seven years) are worked out.
 Teams level on points keep the order they were entered, since the book
 breaks ties by seniority: enter the senior first. The 21st team keeps
 6 pawns and gives 6 to the teams below it.
+
+## Ambassadors tab
+<!-- help: tab-trib-ambassadors -->
+
+A Hibernian Tribunal's ambassadors and treaties. Only a Tribunal
+following Hibernia's customs has this tab.
+
+### Ambassadors
+<!-- help: section-trib-ambassadors -->
+
+Each supernatural faction of Ireland may send an ambassador to the
+Tribunal: the faction, its ambassador (blank while unnamed) and whether
+they are confirmed. A confirmed ambassador has a vote in the hall like a
+magus. The meeting's Sacred Council confirms them again each time, and
+what it decides is kept here. Add one, edit it or delete it.
+
+### Treaties
+<!-- help: section-trib-treaties -->
+
+Much of Hibernia's law is treaties between named parties, each witnessed
+by a Quaesitor: its name, the parties, the year it was made, the
+witness, how it ends and its terms. Add one, edit it or delete it.
 
 ## Diary tab
 <!-- help: tab-trib-diary -->

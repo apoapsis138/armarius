@@ -61,6 +61,17 @@ class PackageTab:
 
 
 @dataclass(frozen=True)
+class Envoy:
+    """One who votes in the hall without a covenant (Hibernia's
+    ambassadors): an id unlike any covenant's, a name, and what they
+    speak for."""
+
+    id: str
+    name: str
+    speaks_for: str = ""
+
+
+@dataclass(frozen=True)
 class TribunalPackage:
     """One Tribunal's customs."""
 
@@ -101,6 +112,18 @@ class TribunalPackage:
     magus_facts: Callable[[Saga, Tribunal, Character], list[tuple[str, str]]] | None = (
         None
     )
+    #: What a covenant must show at a meeting for its votes to count
+    #: (Hibernia's "cathach"); "" when its customs ask nothing.
+    credential: str = ""
+    #: Why a covenant can't show it now ("" when it can), which the
+    #: meeting's Attendance takes as its default.
+    lacks_credential: Callable[[Saga, Tribunal, Covenant], str] | None = None
+    #: Why its customs refuse one of its covenants swearing to another as
+    #: vassal ("" allows it).
+    no_vassals: str = ""
+    #: Those who vote at the meeting beside the covenants, a vote each
+    #: (Hibernia's confirmed ambassadors).
+    envoys: Callable[[Saga, Tribunal, dict[str, Any]], list[Envoy]] | None = None
 
     @property
     def lists(self) -> tuple[PackageList, ...]:
@@ -163,6 +186,22 @@ def magus_facts(saga: Saga, character: Character) -> list[tuple[str, str]]:
     if package.magus_facts is None:
         return []
     return package.magus_facts(saga, tribunal, character)
+
+
+def envoys(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> list[Envoy]:
+    """Who votes at `meeting` beside the covenants, as its customs say."""
+    package = of(tribunal)
+    return package.envoys(saga, tribunal, meeting) if package.envoys else []
+
+
+def lacks_credential(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
+    """Why `covenant` can't show what its Tribunal's customs ask of it
+    ("its cathach is held by Vigil"); "" when it can, or nothing is
+    asked."""
+    package = of(tribunal)
+    if not package.credential or package.lacks_credential is None:
+        return ""
+    return package.lacks_credential(saga, tribunal, covenant)
 
 
 def data(tribunal: Tribunal, key: str) -> dict[str, Any]:

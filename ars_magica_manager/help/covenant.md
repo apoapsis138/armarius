@@ -65,7 +65,9 @@ duties beside it. The sheet then says **Vassal of** its liege, and the
 liege's sheet lists its **Vassals**, while both are in the same Tribunal.
 Ticking **Add the oath's Boons and Hooks** adds Beholden and Powerful Ally
 to the vassal and Favors Owed and Protector to its liege, each naming the
-other covenant; ones already taken aren't added twice.
+other covenant; ones already taken aren't added twice. A Tribunal following
+Hibernia's customs recognises no vassal covenants, so Edit refuses a liege
+in the same Hibernian Tribunal.
 <!-- tui -->
 Both are in More (`m`) on the top panel.
 <!-- /tui -->

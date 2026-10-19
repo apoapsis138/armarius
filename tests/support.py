@@ -164,6 +164,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "theban_tribunal": ("tribunal", "thebes"),
     "normandy_tribunal": ("tribunal", "normandy"),
     "transylvania_tribunal": ("tribunal", "transylvania"),
+    "hibernia_tribunal": ("tribunal", "hibernia"),
     "region": ("region",),
     "neighbour": ("neighbour", "gottfried"),
     "town": ("neighbour", "soest"),
@@ -504,6 +505,35 @@ def everything_saga() -> Saga:
                                 "office": "Curantis",
                             },
                         ]
+                    }
+                },
+            ),
+            Tribunal(
+                id="hibernia",
+                name="Hibernia",
+                next_year=1227,
+                meeting_place="the Hill of Tara",
+                package="hibernia",
+                package_data={
+                    "hibernia": {
+                        "ambassadors": [
+                            {
+                                "id": "amb1",
+                                "faction": "The Tuatha Dé",
+                                "name": "Fothaid",
+                                "confirmed": True,
+                            },
+                        ],
+                        "treaties": [
+                            {
+                                "title": "The Treaty of the Ford",
+                                "parties": "Keep; the river's spirit",
+                                "year": 1210,
+                                "witness": "Quaesitor Brigid",
+                                "ends": "When the ford dries",
+                                "terms": "Safe crossing for a pawn a year.",
+                            },
+                        ],
                     }
                 },
             ),

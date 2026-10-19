@@ -99,7 +99,12 @@ def test_deleting_a_tribunal_names_and_frees_its_covenants():
         "Keep, Fengheld will belong to no Tribunal; nothing else about them changes."
     ]
     trib.delete(saga, rhine)
-    assert [t.id for t in saga.tribunals] == ["thebes", "normandy", "transylvania"]
+    assert [t.id for t in saga.tribunals] == [
+        "thebes",
+        "normandy",
+        "transylvania",
+        "hibernia",
+    ]
     assert {c.tribunal_id for c in saga.covenants} == {None}
 
 
@@ -326,10 +331,11 @@ def test_a_package_without_data_is_a_note_on_the_peripheral_code():
     saga = everything_saga()
     rhine = saga.tribunals[0]
     assert tribunal_sheet.customs_note(Tribunal("x", "X")) == ""
-    for key, words in (("provence", "found a covenant"), ("hibernia", "Hill of Tara")):
-        rhine.package = key
-        assert words in tribunal_sheet.customs_note(rhine)
-        assert tribunal_packages.of(rhine).tabs == ()
+    rhine.package = "provence"
+    assert "found a covenant" in tribunal_sheet.customs_note(rhine)
+    assert tribunal_packages.of(rhine).tabs == ()
+    rhine.package = "hibernia"
+    assert "Hill of Tara" in tribunal_sheet.customs_note(rhine)
     saga.books_in_play = ["F&F"]
     assert [p.key for p in tribunal_packages.offered(saga)] == ["core", "provence"]
 
@@ -391,6 +397,7 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
             (NodeKind.TRIBUNAL, "thebes"),
             (NodeKind.TRIBUNAL, "normandy"),
             (NodeKind.TRIBUNAL, "transylvania"),
+            (NodeKind.TRIBUNAL, "hibernia"),
             (NodeKind.COVENANT, "lone"),
             (NodeKind.NEIGHBOUR_GROUP, "lords"),
             (NodeKind.NEIGHBOUR_GROUP, "church"),
@@ -402,7 +409,7 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
         assert [n.data for n in region.children[0].children] == [
             (NodeKind.COVENANT, "cov_sketch")
         ]
-        assert region.children[4].allow_expand is False  # a line with nothing
+        assert region.children[5].allow_expand is False  # a line with nothing
 
 
 async def test_new_tribunal_opens_it_and_d_deletes_it():
@@ -429,7 +436,7 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
             pilot,
             lambda: (
                 [t.name for t in storage.load_saga("test_saga").tribunals]
-                == ["Rhine", "Theban", "Normandy", "Transylvania"]
+                == ["Rhine", "Theban", "Normandy", "Transylvania", "Hibernia"]
             ),
         )
 
@@ -532,7 +539,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
-    assert any("Tribunals (4)" in title for title in titles)
+    assert any("Tribunals (5)" in title for title in titles)
 
 
 def test_choosing_a_ruling_a_gild_or_a_diary_entry_shows_it_in_the_inspector():

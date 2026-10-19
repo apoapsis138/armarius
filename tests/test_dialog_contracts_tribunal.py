@@ -418,6 +418,26 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Magus": "mag1"}],
         shown={"#trib-privileges-list": "Socii (Domostron)"},
     ),
+    "add ambassador": Contract(
+        prefill={"Faction": "", "Ambassador": ""},
+        edits={"Faction": "The Fir Bolg", "Ambassador": "Ainid"},
+        saved=lambda s: s.tribunal("hibernia").package_data["hibernia"]["ambassadors"][
+            -1
+        ]["name"],
+        expected="Ainid",
+        invalid={"Faction": ""},
+        shown={"#trib-ambassadors-list": "The Fir Bolg"},
+    ),
+    "edit treaty": Contract(
+        prefill={"Treaty": "The Treaty of the Ford", "Year": "1210"},
+        edits={"Witnessed by": "Quaesitor Áed"},
+        saved=lambda s: s.tribunal("hibernia").package_data["hibernia"]["treaties"][0][
+            "witness"
+        ],
+        expected="Quaesitor Áed",
+        invalid={"Treaty": ""},
+        shown={"#trib-treaties-list": "The Treaty of the Ford"},
+    ),
     "add tenure": Contract(
         prefill={"Vis source": "", "Until (year)": "", "Notes": ""},
         edits={

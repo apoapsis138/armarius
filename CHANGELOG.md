@@ -46,6 +46,29 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.103.0 — 2026-10-19
+
+### Concilium
+
+- **Hibernia's cathaigh.** A covenant of a Tribunal that keeps Hibernia's
+  customs has a cathach, the treasure it shows to be heard at the
+  meeting. The covenant's form records which it is and who holds it if
+  it was taken; a covenant that can't show its cathach is marked so at
+  Attendance, and its votes don't count.
+- **No vassals in Hibernia.** A covenant there can't swear itself to
+  another covenant of the same Tribunal: the form says why.
+- **Ambassadors and treaties.** The Tribunal's new Ambassadors tab lists
+  the ambassadors who speak for the túatha and other peoples, and the
+  treaties they have sworn. A confirmed ambassador takes a seat in the
+  hall and casts a vote of their own.
+- **The Sacred Council and the tithe.** Holding a Hibernian meeting opens
+  with the Sacred Council, which confirms the ambassadors and notes any
+  disputes, and closes with the tithe of Gifted children. The children
+  are generated, each with a name, an age, the kind of Gift and signs of
+  what they may become; the storyguide gives them out by hand or lets the
+  covenants bid for them, and each winner pays in vis and gains an
+  apprentice.
+
 ## 2.102.1 — 2026-10-19
 
 - **The Armarius icon on the Windows taskbar.** The desktop version now

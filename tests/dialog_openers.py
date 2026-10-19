@@ -457,6 +457,20 @@ OPENERS: dict[str, Opener] = {
             "trib-privileges-list",
         ),
     ),
+    "add ambassador": Opener(
+        "hibernia_tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-ambassadors", "add"),
+            "trib-ambassadors-list",
+        ),
+    ),
+    "edit treaty": Opener(
+        "hibernia_tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-treaties", "edit"),
+            "trib-treaties-list",
+        ),
+    ),
     "add tenure": Opener(
         "normandy_tribunal",
         _pick(

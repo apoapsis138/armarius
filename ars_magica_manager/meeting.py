@@ -47,6 +47,7 @@ from .rules import debate
 from .sections import ATTENDANCE_SECTION, BUSINESS_SECTION, VOTE_SECTION
 from .sheets import tribunal as tribunal_sheet
 from .sheets.character import Fact
+from .tribunal_packages import Envoy
 
 #: How many days a meeting lasts unless the storyguide says otherwise.
 DEFAULT_DAYS = 3
@@ -143,15 +144,53 @@ def ruling(meeting: dict[str, Any], covenant: Covenant) -> str:
     return _attendance(meeting, covenant).get("ruling") or ALLOWED
 
 
+def shows(
+    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], covenant: Covenant
+) -> bool:
+    """Whether `covenant` shows what its Tribunal's customs ask of it to
+    be represented (Hibernia's cathach): as attendance recorded it, else
+    unless the customs say it can't."""
+    if not tribunal_packages.of(tribunal).credential:
+        return True
+    entry = _attendance(meeting, covenant)
+    if "shows" in entry:
+        return bool(entry["shows"])
+    return not tribunal_packages.lacks_credential(saga, tribunal, covenant)
+
+
 def present(
     saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], covenant: Covenant
 ) -> tuple[int, int]:
     """`covenant`'s votes in the hall: its magi present, and the proxies
-    it carries that the Quaesitor allowed."""
+    it carries that the Quaesitor allowed; none for a covenant that
+    doesn't show what its Tribunal's customs ask (its cathach)."""
+    if not shows(saga, tribunal, meeting, covenant):
+        return 0, 0
     magi = max(0, world.votes(saga, covenant) - absent(meeting, covenant))
     proxies = carried(tribunal, meeting, covenant)
     allowed = proxies if ruling(meeting, covenant) == ALLOWED else 0
     return magi, allowed
+
+
+def voters(
+    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+) -> list[Covenant | Envoy]:
+    """Who the Praeco calls, in order: the covenants of the roll, then
+    those its customs let vote beside them (Hibernia's ambassadors)."""
+    return [
+        *tribunals.covenants_of(saga, tribunal),
+        *tribunal_packages.envoys(saga, tribunal, meeting),
+    ]
+
+
+def votes_of(
+    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], voter: Covenant | Envoy
+) -> int:
+    """A voter's votes in the hall: a covenant's magi present and allowed
+    proxies, an envoy's one."""
+    if isinstance(voter, Envoy):
+        return 1
+    return sum(present(saga, tribunal, meeting, voter))
 
 
 def hall(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> tuple[int, int]:
@@ -161,6 +200,7 @@ def hall(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> tuple[int, 
         m, p = present(saga, tribunal, meeting, covenant)
         magi += m
         proxies += p
+    magi += len(tribunal_packages.envoys(saga, tribunal, meeting))
     return magi + proxies, proxies
 
 
@@ -184,20 +224,23 @@ def rng() -> random.Random:
     return random.Random()
 
 
-def _party(covenant: Covenant, words: str) -> bool:
+def _party(covenant: Covenant | Envoy, words: str) -> bool:
     name = covenant.name.strip().casefold()
     return bool(name) and name in words.casefold()
 
 
-def default_leaning(saga: Saga, case: Case, covenant: Covenant) -> str:
+def default_leaning(saga: Saga, case: Case, covenant: Covenant | Envoy) -> str:
     """How a covenant leans on `case` before the debate: a party votes its
     own side; any other leans by its attitude toward a troupe covenant
     that is a party (Warm or better with it, Wary or worse against it),
-    and is otherwise undecided."""
+    and is otherwise undecided. An envoy has no attitudes: undecided
+    unless a party."""
     if _party(covenant, case.brought_by):
         return FOR
     if _party(covenant, case.against):
         return AGAINST
+    if isinstance(covenant, Envoy):
+        return UNDECIDED
     for player in world.player_covenants(saga):
         if player is covenant:
             continue
@@ -217,12 +260,12 @@ def default_leaning(saga: Saga, case: Case, covenant: Covenant) -> str:
 def leanings(
     saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], case: Case
 ) -> dict[str, str]:
-    """Each covenant's leaning on `case`, by id: as the vote was held, else
+    """Each voter's leaning on `case`, by id: as the vote was held, else
     the defaults."""
     kept = meeting.get("votes", {}).get(case.id, {}).get("leanings", {})
     return {
         c.id: kept.get(c.id) or default_leaning(saga, case, c)
-        for c in tribunals.covenants_of(saga, tribunal)
+        for c in voters(saga, tribunal, meeting)
     }
 
 
@@ -249,11 +292,11 @@ def strength(meeting: dict[str, Any], case: Case) -> tuple[str | None, int]:
 
 @dataclass(frozen=True)
 class Called:
-    """One covenant's votes as the Praeco calls it: how many for, against
-    and abstaining, how many of them the debate swayed, and the tally of
-    the hall so far."""
+    """One covenant's (or envoy's) votes as the Praeco calls it: how many
+    for, against and abstaining, how many of them the debate swayed, and
+    the tally of the hall so far."""
 
-    covenant: Covenant
+    covenant: Covenant | Envoy
     votes: int
     yes: int
     no: int
@@ -274,19 +317,23 @@ def call_the_vote(
     won from the undecided and (from a Triumphant Victory) from its
     opponents taken from the first covenants called."""
     lean = leaning if leaning is not None else leanings(saga, tribunal, meeting, case)
-    members = tribunals.covenants_of(saga, tribunal)
-    hall_votes = {c.id: sum(present(saga, tribunal, meeting, c)) for c in members}
+    members = voters(saga, tribunal, meeting)
+    hall_votes = {c.id: votes_of(saga, tribunal, meeting, c) for c in members}
     side, margin = strength(meeting, case)
     hostile_side = AGAINST if side == FOR else FOR
-    neutral = sum(v for cid, v in hall_votes.items() if lean[cid] == UNDECIDED)
-    hostile = sum(v for cid, v in hall_votes.items() if lean[cid] == hostile_side)
+    neutral = sum(
+        v for cid, v in hall_votes.items() if lean.get(cid, UNDECIDED) == UNDECIDED
+    )
+    hostile = sum(
+        v for cid, v in hall_votes.items() if lean.get(cid, UNDECIDED) == hostile_side
+    )
     from_neutral, from_hostile = (
         debate.swayed(margin, neutral, hostile) if side else (0, 0)
     )
     tally = [0, 0, 0]
     for covenant in members:
         votes = hall_votes[covenant.id]
-        leans = lean[covenant.id]
+        leans = lean.get(covenant.id, UNDECIDED)
         counts = {FOR: 0, AGAINST: 0, UNDECIDED: 0}
         counts[leans] = votes
         moved = 0
@@ -518,10 +565,25 @@ class Attendance(Step):
 
     def fields(self, saga, tribunal, meeting):
         found: list[DialogField] = []
+        credential = tribunal_packages.of(tribunal).credential
         for covenant in tribunals.covenants_of(saga, tribunal):
             cid = covenant.id
             magi = world.votes(saga, covenant)
             name = covenant.name
+            if credential:
+                lacks = tribunal_packages.lacks_credential(saga, tribunal, covenant)
+                found.append(
+                    DialogField(
+                        f"shows_{cid}",
+                        f"{name}: shows its {credential}",
+                        "check",
+                        shows(saga, tribunal, meeting, covenant),
+                        hint=f"{lacks}."
+                        if lacks
+                        else "Without it, its magi and "
+                        "the proxies it carries have no vote.",
+                    )
+                )
             found += [
                 DialogField(
                     f"absent_{cid}",
@@ -577,6 +639,8 @@ class Attendance(Step):
                 "proxies": proxies,
                 "ruling": values.get(f"ruling_{cid}") or ALLOWED,
             }
+            if f"shows_{cid}" in values:
+                attendance[cid]["shows"] = bool(values[f"shows_{cid}"])
             if proxies:
                 tribunal.proxies[cid] = proxies
             else:
@@ -587,7 +651,14 @@ class Attendance(Step):
 
     def minutes(self, saga, tribunal, meeting):
         lines = []
+        credential = tribunal_packages.of(tribunal).credential
         for covenant in tribunals.covenants_of(saga, tribunal):
+            if not shows(saga, tribunal, meeting, covenant):
+                lines.append(
+                    f"{covenant.name} did not show its {credential}, and was "
+                    "not represented."
+                )
+                continue
             gone = absent(meeting, covenant)
             if gone:
                 lines.append(f"{covenant.name}: {gone} absent.")
@@ -815,25 +886,29 @@ class Vote(Step):
                     options=pairs(LEANINGS),
                     required=True,
                 )
-                for c in tribunals.covenants_of(saga, tribunal)
+                for c in voters(saga, tribunal, meeting)
             ),
             _note_field(meeting, self.key),
         ]
 
-    def _leaning(self, saga, tribunal, values) -> dict[str, str]:
+    def _leaning(self, saga, tribunal, meeting, values) -> dict[str, str]:
         return {
             c.id: values.get(f"lean_{c.id}") or UNDECIDED
-            for c in tribunals.covenants_of(saga, tribunal)
+            for c in voters(saga, tribunal, meeting)
         }
 
     def live(self, saga, tribunal, meeting, values) -> str:
         votes = tally(
-            saga, tribunal, meeting, self.case, self._leaning(saga, tribunal, values)
+            saga,
+            tribunal,
+            meeting,
+            self.case,
+            self._leaning(saga, tribunal, meeting, values),
         )
         return escape(tally_text(votes))
 
     def apply(self, saga, tribunal, meeting, values):
-        lean = self._leaning(saga, tribunal, values)
+        lean = self._leaning(saga, tribunal, meeting, values)
         yes, no, abstain = tally(saga, tribunal, meeting, self.case, lean)
         meeting.setdefault("votes", {})[self.case.id] = {
             "leanings": lean,
@@ -1667,18 +1742,22 @@ def attendance_grid(saga: Saga, tribunal: Tribunal) -> Grid:
     """Each covenant's magi, those absent, the proxies it carries and the
     votes it has in the hall."""
     meeting = record(saga, tribunal)
+    credential = tribunal_packages.of(tribunal).credential
     rows = []
     for covenant in tribunals.covenants_of(saga, tribunal):
         proxies = carried(tribunal, meeting, covenant)
         magi, allowed = present(saga, tribunal, meeting, covenant)
         set_aside = proxies and ruling(meeting, covenant) == SET_ASIDE
+        votes = str(magi + allowed)
+        if not shows(saga, tribunal, meeting, covenant):
+            votes = f"0, no {credential}"
         rows.append(
             [
                 covenant.name,
                 str(world.votes(saga, covenant)),
                 str(absent(meeting, covenant) or ""),
                 f"{proxies} (set aside)" if set_aside else str(proxies or ""),
-                str(magi + allowed),
+                votes,
             ]
         )
     return Grid(
@@ -1686,7 +1765,7 @@ def attendance_grid(saga: Saga, tribunal: Tribunal) -> Grid:
         rows,
         list(range(len(rows))),
         "No covenant belongs to this Tribunal yet.",
-        caps=[22, 4, 6, 13, 5],
+        caps=[22, 4, 6, 13, 0],
     )
 
 
@@ -1781,7 +1860,7 @@ def vote_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
 
     return SectionOps(
         edit=edit,
-        rows=lambda: [c.name for c in tribunals.covenants_of(saga, tribunal)],
+        rows=lambda: [c.name for c in voters(saga, tribunal, record(saga, tribunal))],
     )
 
 
@@ -1858,4 +1937,4 @@ def ops(saga: Saga, tribunal: Tribunal) -> dict[str, SectionOps]:
 
 
 # The packages' own steps register themselves with the meeting.
-from . import theban_meeting  # noqa: F401
+from . import hibernia_meeting, theban_meeting  # noqa: F401

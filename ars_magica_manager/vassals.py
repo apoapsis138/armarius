@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from . import tribunal_packages
 from .form_spec import DialogField
 from .markup import escape
 from .models import (
@@ -127,6 +128,19 @@ def swear(vassal: Covenant, liege: Covenant) -> None:
         _take(vassal, vf_id, liege.name)
     for vf_id in LIEGE_BOONS_HOOKS:
         _take(liege, vf_id, vassal.name)
+
+
+def problem(saga: Saga, covenant: Covenant, values: dict[str, Any]) -> str | None:
+    """Why the form's liege can't be sworn to: the Tribunal both would
+    share (the one the form chooses) recognises no vassal covenants."""
+    liege = _covenant(saga, values.get("liege_id"))
+    tribunal_id = values.get("tribunal_id", covenant.tribunal_id)
+    if liege is None or not tribunal_id or liege.tribunal_id != tribunal_id:
+        return None
+    tribunal = saga.tribunal(tribunal_id)
+    if tribunal is None:
+        return None
+    return tribunal_packages.of(tribunal).no_vassals or None
 
 
 def save(saga: Saga, covenant: Covenant, values: dict[str, Any]) -> None:

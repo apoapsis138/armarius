@@ -553,7 +553,9 @@ def sketch_covenant_form(saga: Saga, covenant: Covenant) -> Form:
         "Edit Covenant",
         lambda: sketch_covenant_fields(saga, covenant),
         apply,
-        validate=_unnamed_problem,
+        validate=lambda values: (
+            _unnamed_problem(values) or vassals.problem(saga, covenant, values)
+        ),
     )
 
 

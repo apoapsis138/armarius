@@ -14,6 +14,7 @@ from typing import Any
 from . import arms, meeting, tribunals, world
 from .arms import Arms
 from .models import Case, Covenant, Saga, Tribunal
+from .tribunal_packages import Envoy
 
 
 @dataclass(frozen=True)
@@ -30,10 +31,10 @@ class Seat:
 
 @dataclass(frozen=True)
 class Bench:
-    """A covenant's seats, and its arms for the pennant over them;
-    `called` is False until the Praeco has called it."""
+    """A covenant's seats (or an envoy's one), and its arms for the
+    pennant over them; `called` is False until the Praeco has called it."""
 
-    covenant: Covenant
+    covenant: Covenant | Envoy
     seats: tuple[Seat, ...]
     arms: Arms | None
     called: bool = True
@@ -68,8 +69,15 @@ def benches(
         if case is not None
         else []
     )
-    for index, covenant in enumerate(tribunals.covenants_of(saga, tribunal)):
-        members, magi = _members(saga, tribunal, meeting_, covenant)
+    for index, covenant in enumerate(meeting.voters(saga, tribunal, meeting_)):
+        if isinstance(covenant, Envoy):
+            who = covenant.name
+            if covenant.speaks_for:
+                who += f", for {covenant.speaks_for}"
+            members = [(who, None)]
+            magi = 1
+        else:
+            members, magi = _members(saga, tribunal, meeting_, covenant)
         shown = called is None or index < called
         sides: list[str] = []
         if shown and index < len(calls):
@@ -80,7 +88,8 @@ def benches(
             Seat(who, house, side, i >= magi)
             for i, ((who, house), side) in enumerate(zip(members, sides))
         )
-        found.append(Bench(covenant, seats, arms.arms_of(covenant), shown))
+        shield = None if isinstance(covenant, Envoy) else arms.arms_of(covenant)
+        found.append(Bench(covenant, seats, shield, shown))
     return found
 
 

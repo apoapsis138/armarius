@@ -1,0 +1,17 @@
+{
+  "about": "Irish given names of the twelfth and thirteenth centuries, for children the app generates (Hibernia's tithe of Gifted children). Historical names, in Middle Irish spelling; a child is named for a parent with mac (son of) or ingen (daughter of).",
+  "male": [
+    "Áed", "Ailill", "Art", "Brian", "Cathal", "Cellach", "Cian", "Ciarán",
+    "Colmán", "Conall", "Conchobar", "Cormac", "Diarmait", "Domnall",
+    "Donnchad", "Dub Thach", "Echtigern", "Énna", "Eochaid", "Fáelán",
+    "Fergal", "Fiachra", "Flann", "Gilla Pátraic", "Lorcán", "Máel Ruanaid",
+    "Muiredach", "Murchad", "Niall", "Ruaidrí", "Senán", "Tadc", "Tomaltach",
+    "Toirdelbach", "Ualgarg"
+  ],
+  "female": [
+    "Áine", "Bébinn", "Bláthnat", "Caintigern", "Créd", "Derbforgaill",
+    "Dub Essa", "Eithne", "Étaín", "Finnguala", "Gormlaith", "Lasair",
+    "Mór", "Muirenn", "Níamh", "Órlaith", "Sadb", "Sláine", "Úna",
+    "Fínnat", "Echra", "Cacht", "Duiblemna", "Sorcha", "Taillte"
+  ]
+}

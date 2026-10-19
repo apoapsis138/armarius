@@ -196,8 +196,10 @@ The steps run in a fixed order:
   heard. Saving it opens the meeting; cancelling holds none.
 - **Attendance and proxies**: for each covenant, how many of its magi
   are absent and the proxies it carries, and whether the Presiding
-  Quaesitor allows them or sets them aside. Its votes in the hall are
-  worked out, and the proxies are kept on the roster.
+  Quaesitor allows them or sets them aside. Under Hibernia's customs,
+  also whether it shows its cathach: one that doesn't has no votes. Its
+  votes in the hall are worked out, and the proxies are kept on the
+  roster.
 - **The Hermetic Assembly**, on the first day under the Theban customs,
   in two steps. **The Assembly's decrees**: the principal phyle governing the meeting
   (the next in turn, Ionian, Aegean, Kretan, Propontian, unless you
@@ -229,6 +231,12 @@ The steps run in a fixed order:
   undecided votes, up to a Landslide's 60%, and from a Triumphant
   Victory 10% to 30% of the other side's too. The covenants are called
   one by one and the tally kept; what is left undecided abstains.
+- **The Sacred Council**, on the first day under Hibernia's customs:
+  tick each faction's ambassador confirmed for this meeting (from the
+  Ambassadors tab), and write the disputes heard. Each confirmed
+  ambassador votes as a magus does: they are called after the
+  covenants, undecided unless named as a party, and you can change
+  their leaning like a covenant's.
 - **The Praeco's succession**, on the first day under Normandy's
   customs: with no Praeco, the eldest magus of the Tribunal (by Year
   Born) is offered; set them aside by choosing the next eldest. The one
@@ -258,6 +266,26 @@ The steps run in a fixed order:
   the Tribunal is drawn, and may be drawn again once (the second draw
   stands); it becomes the Tribunal's meeting place, and the minutes say
   where it meets next.
+- **The tithe of Gifted children**, under Hibernia's customs: the Coill
+  Trí bring a Gifted child from each of their seven túatha (as the
+  Tribunal records them, else unnamed). Each túath offers three, made
+  once and kept: the first is brought unless you choose another, which
+  is a reroll. Each child has a name, an age from 5 to 12, a Gift
+  (ordinary, Gentle or Blatant), a sign or two of what they may become,
+  and where they come from. Now and then a child has no true Gift, which
+  only this examination shows: they are turned away. Then give them
+  out **By hand**, choosing a magus of a represented covenant for each
+  (or none), or **By bidding**: each represented covenant with a magus
+  who has no apprentice bids vis, a roll of a ten-sided die, 2 pawns
+  for each such magus and a tenth of its vis, more for a Gentle Gift and
+  less for a Blatant, never more than it holds; the highest bid wins
+  the child for its first such magus, and the price is taken from its
+  Raw Vis Stores, the fullest first, each in its Diary. The outcome
+  shows under the form before you give them. Each child given becomes a
+  Sketch character at their master's covenant, with their master as
+  parens, and the minutes list where every child went. Once given,
+  holding this step again changes only its note. A magus has an
+  apprentice when someone not yet a magus names them as parens.
 - **Closing**: each case with a ruling is decided and what its ruling
   says is written: the fine, owed to the Tribunal's treasury; the
   ruling, into the Peripheral Code; and the attitude's move, as a reason
