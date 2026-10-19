@@ -59,6 +59,8 @@ what the old ones recorded, hidden, and switching back shows it again.
   Covenant), from the magi who live there, and the roster gains an
   Aediles column. Saves that gave a covenant a class give it to each of
   that oppidum's magi.
+  The book's Tribunal of 1220 ships as a content pack: see [How to start a
+  saga from a Tribunal book](help:guide-book-packs).
 - **Provence: Open founding** (Faith & Flame): any magus may found a
   covenant without the Tribunal's leave. A rule, not a list: it shows as
   a note on the Peripheral Code tab.

@@ -52,6 +52,24 @@ def test_supplement_abilities_follow_the_sourcebooks_in_play():
     assert sourcebooks.in_play(by_id["ab_athletics"].source, [])
 
 
+def test_the_storm_wizards_abilities_match_their_virtues():
+    """Against the Dark's storm Abilities load, follow the book, and are
+    granted by the Virtues of the same name."""
+    by_id = catalog.load_ability_catalog_by_id()
+    vfs = catalog.load_virtue_flaw_catalog_by_id()
+    for name in ("Storm Calling", "Storm Riding", "Storm Fighting"):
+        slug = name.lower().replace(" ", "_")
+        ability, virtue = by_id[f"ab_{slug}"], vfs[f"vf_{slug}"]
+        assert (ability.name, ability.category) == (name, "Supernatural")
+        assert ability.source == virtue.source == "AtD"
+        assert sourcebooks.in_play(ability.source, ["AtD"])
+        assert not sourcebooks.in_play(ability.source, ["HMRE"])
+        holder = Character(id="c", name="C", type="companion")
+        assert not creation_access.may_learn(holder, name)
+        holder.virtues_flaws.append(VirtueFlawInstance(vf_id=virtue.id))
+        assert creation_access.may_learn(holder, name)
+
+
 def test_a_supernatural_or_hedge_ability_needs_the_virtue_that_grants_it():
     magus = Character(id="m", name="M", type="magus")
     assert not creation_access.may_learn(magus, "Kabbalah")

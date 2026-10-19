@@ -63,7 +63,8 @@ def data(pack: BookPack) -> dict[str, Any]:
     """The pack as JSON-ready data: everything its saga holds (its
     wandering magi and its whole bestiary too), with the
     book it comes from, its credit line, and the sketch of each magus
-    whose stats were generated (packs.GENERATED)."""
+    whose stats were generated (packs.GENERATED), and the help topic
+    naming its assumptions (packs.ASSUMPTIONS)."""
     b = pack.assemble()
     saga = b.saga
     found = packs.pack_data(
@@ -78,7 +79,19 @@ def data(pack: BookPack) -> dict[str, Any]:
     held = {c["id"] for c in found["saga"]["characters"]}
     sketches = {i: asdict(c) for i, c in b.sketches.items() if i in held}
     extra = {packs.GENERATED: sketches} if sketches else {}
-    return {**found, "book": pack.book, "source": pack.source, **extra}
+    return {
+        **found,
+        "book": pack.book,
+        "source": pack.source,
+        packs.ASSUMPTIONS: assumptions_topic(pack),
+        **extra,
+    }
+
+
+def assumptions_topic(pack: BookPack) -> str:
+    """The help topic listing what the pack inferred from its book or
+    chose where the book is silent."""
+    return f"pack-assumptions-{pack.key}"
 
 
 def path_of(pack: BookPack, folder: Path = PACKS_DIR) -> Path:
@@ -91,4 +104,4 @@ def write_all(folder: Path = PACKS_DIR) -> list[Path]:
     return [packs.write(path_of(pack, folder), data(pack)) for pack in PACKS.values()]
 
 
-from . import normandy, provence, rhine, theban  # noqa: F401
+from . import normandy, provence, rhine, theban, transylvania  # noqa: F401

@@ -987,6 +987,42 @@ def mythic_herbalism() -> QPainterPath:
     return union(leaves, stroke(curve((50, 90), (48, 60), (50, 34)), 4))
 
 
+# -- The storm wizards' Abilities --
+
+
+def _storm_cloud(dy: float = 0) -> QPainterPath:
+    """A heaped thundercloud with a flat underside."""
+    return move(
+        union(
+            circle(34, 40, 13),
+            circle(52, 31, 17),
+            circle(70, 40, 12),
+            rrect(18, 38, 66, 16, 8),
+        ),
+        0,
+        dy,
+    )
+
+
+def storm_calling() -> QPainterPath:
+    """A thundercloud with rain slanting from it."""
+    rain = union_of(bar(x, 62, x - 6, 80, 4) for x in (32, 46, 60, 74))
+    return union(_storm_cloud(), rain)
+
+
+def storm_fighting() -> QPainterPath:
+    """A thundercloud striking down with a bolt of lightning."""
+    bolt = poly((50, 50), (36, 74), (48, 74), (38, 94), (64, 66), (52, 66), (60, 50))
+    return union(_storm_cloud(-4), bolt)
+
+
+def storm_riding() -> QPainterPath:
+    """A thundercloud with a swift arrow sweeping beneath it."""
+    flight = stroke(curve((16, 82), (44, 64), (72, 74)), 5)
+    head = poly((66, 64), (86, 80), (62, 84))
+    return union(_storm_cloud(-6), flight, head)
+
+
 # -- Hedge Arts --
 
 
@@ -1166,6 +1202,9 @@ MARKS: dict[str, Charge] = {
     "Mechanica of Heron": mechanica_of_heron,
     "Merkavah": merkavah,
     "Mythic Herbalism": mythic_herbalism,
+    "Storm Calling": storm_calling,
+    "Storm Fighting": storm_fighting,
+    "Storm Riding": storm_riding,
     "Elementalist Air": elementalist_air,
     "Elementalist Earth": elementalist_earth,
     "Elementalist Fire": elementalist_fire,

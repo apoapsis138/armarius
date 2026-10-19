@@ -46676,6 +46676,7 @@
   },
   "book": "GotF",
   "source": "Guardians of the Forests: The Rhine Tribunal, by Atlas Games, open content under the Creative Commons Attribution-ShareAlike 4.0 licence (redcap.org); summarised, not quoted.",
+  "assumptions": "pack-assumptions-rhine",
   "generated": {
     "murion": {
       "id": "murion",

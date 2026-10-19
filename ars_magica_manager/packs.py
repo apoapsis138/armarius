@@ -657,13 +657,33 @@ def choice_label(data: dict[str, Any], fallback: str) -> str:
     return f"{data.get('name') or fallback}: {summary(data)}"
 
 
+#: The pack key naming the help topic that lists what a book pack
+#: inferred from its book or chose where the book is silent.
+ASSUMPTIONS = "assumptions"
+
+
 def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:
     """What importing a pack does besides its records: a pack built from
-    a sourcebook (its "book") puts that book in play. The notes to show."""
+    a sourcebook (its "book") puts that book in play, and one that names
+    its assumptions page says where to read them. The notes to show."""
     book = data.get("book")
-    if isinstance(book, str) and sourcebooks.put_in_play(saga, book):
-        return notes(escape(f"{sourcebooks.title_of(book)} is now in play."))
-    return []
+    if not isinstance(book, str):
+        return []
+    title = sourcebooks.title_of(book)
+    found = []
+    if sourcebooks.put_in_play(saga, book):
+        found += notes(escape(f"{title} is now in play."))
+    if data.get(ASSUMPTIONS):
+        found += notes(escape(assumptions_note(title)))
+    return found
+
+
+def assumptions_note(title: str) -> str:
+    """What importing a book's pack says of the values it had to supply."""
+    return (
+        "Some values in this pack are inferred from the book or chosen where "
+        f"it is silent: Help's page Assumptions made for {title} lists them."
+    )
 
 
 def start_prefix(index: int) -> str:

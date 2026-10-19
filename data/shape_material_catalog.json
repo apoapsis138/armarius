@@ -555,6 +555,26 @@
       "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
     },
     {
+      "id": "sm_black_hawthorn",
+      "name": "Black Hawthorn",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "protection from vampires"
+        },
+        {
+          "bonus": 4,
+          "effect": "protection from evil"
+        },
+        {
+          "bonus": 4,
+          "effect": "prevent disease"
+        }
+      ],
+      "source": "AtD",
+      "citation": "https://www.redcap.org/page/Against_the_Dark_Open_Content"
+    },
+    {
       "id": "sm_blackthorn_wood",
       "name": "Blackthorn Wood",
       "bonuses": [

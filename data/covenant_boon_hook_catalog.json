@@ -1,5 +1,5 @@
 {
-  "attribution": "Covenant Boons and Hooks from Ars Magica Fifth Edition (core rules) and Covenants; each entry's source names its book. Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "attribution": "Covenant Boons and Hooks from Ars Magica Fifth Edition (core rules), Covenants and Against the Dark: The Transylvanian Tribunal; each entry's source names its book. Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
   "entries": [
   {
     "id": "covbh_hook_minor_contested_resource",
@@ -3812,6 +3812,23 @@
     "unknown": false,
     "source": "Covenants",
     "description": "Within the covenant's vicinity lies a castle belonging to a major noble or the Crown. Like most castles, it is ungarrisoned in times of peace. A constable, perhaps a minor knight, and his household keep it ready for rapid militarization, should trouble brew."
+  },
+  {
+    "id": "covbh_hook_minor_zenodochium",
+    "name": "Zenodochium",
+    "type": "Hook",
+    "tier": "Minor",
+    "cost": -1,
+    "category": "Surroundings",
+    "repeatable": false,
+    "max_count": null,
+    "requires": [],
+    "requires_any": [],
+    "excludes": [],
+    "modifiers": [],
+    "unknown": false,
+    "source": "AtD",
+    "description": "One of the Transylvanian Tribunal's hidden hospitals for magi stands less than a day's journey off. The covenant may use it as it likes, so long as it puts back any vis or goods it takes. The Curantis looks it over every few years and, should it be harmed, asks the covenant first; and wounded magi recovering there may drop in, curious or in need of help against whatever hurt them."
   }
 ]
 }

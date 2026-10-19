@@ -2,7 +2,7 @@ from collections import Counter
 
 import pytest
 
-from ars_magica_manager import catalog
+from ars_magica_manager import catalog, sourcebooks
 from ars_magica_manager.covenants import (
     UNKNOWN_HOOK_POINTS,
     boon_hook_is_unknown,
@@ -24,12 +24,13 @@ CASTLE = "covbh_hook_major_castle"
 def test_catalog_counts_by_tier_after_merging_the_covenants_book():
     # 37 entries from the core chapter + 179 from Covenants Chapter Two
     # (checked entry by entry against
-    # reference/covenants-boons-and-hooks-ref.md).
+    # reference/covenants-boons-and-hooks-ref.md), + 1 Minor Hook from
+    # Against the Dark (Zenodochium).
     entries = catalog.load_covenant_boon_hook_catalog()
-    assert len(entries) == 216
+    assert len(entries) == 217
     counts = Counter((entry.type, entry.tier) for entry in entries)
     assert counts == {
-        ("Hook", "Minor"): 87,
+        ("Hook", "Minor"): 88,
         ("Hook", "Major"): 41,
         ("Boon", "Minor"): 46,
         ("Boon", "Major"): 24,
@@ -61,10 +62,25 @@ def test_the_entries_story_705_found_missing_are_present():
 
 def test_every_entry_names_its_source_book():
     for entry in catalog.load_covenant_boon_hook_catalog():
-        assert entry.source in ("ArM5; Covenants", "Covenants"), entry.id
+        assert entry.source in ("ArM5; Covenants", "Covenants", "AtD"), entry.id
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
     assert by_id["covbh_boon_minor_aura"].source == "ArM5; Covenants"
     assert by_id["covbh_hook_minor_haunted"].source == "Covenants"
+
+
+def test_against_the_dark_adds_the_zenodochium_hook():
+    zenodochium = catalog.load_covenant_boon_hook_catalog_by_id()[
+        "covbh_hook_minor_zenodochium"
+    ]
+    assert (zenodochium.type, zenodochium.tier, zenodochium.cost) == (
+        "Hook",
+        "Minor",
+        -1,
+    )
+    assert zenodochium.category == "Surroundings"
+    assert zenodochium.source == "AtD"
+    assert sourcebooks.in_play(zenodochium.source, ["AtD"])
+    assert not sourcebooks.in_play(zenodochium.source, ["Covenants"])
 
 
 def test_repeat_limits_and_requires_any():

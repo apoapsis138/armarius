@@ -388,8 +388,9 @@ def test_a_deleted_covenants_devices_go_with_it():
 
 def test_catalog_is_the_books_table_row_for_row():
     rows = catalog.load_shape_material_catalog()
-    # The book's table, and the Book shape from Covenants (an epitome).
-    assert len(rows) == 242
+    # The book's table, the Book shape from Covenants (an epitome), and
+    # black hawthorn from Against the Dark.
+    assert len(rows) == 243
     assert rows[0].name == "Adze" and rows[-1].name == "Yoke"
     agate = next(r for r in rows if r.name == "Agate")
     assert agate.bonuses == (
@@ -398,5 +399,14 @@ def test_catalog_is_the_books_table_row_for_row():
         (7, "protection from venom"),
     )
     assert all(r.citation.startswith("https://") for r in rows)
-    assert {r.name for r in rows if r.source != "DE"} == {"Book"}
+    assert {r.name: r.source for r in rows if r.source != "DE"} == {
+        "Book": "Covenants",
+        "Black Hawthorn": "AtD",
+    }
+    hawthorn = next(r for r in rows if r.name == "Black Hawthorn")
+    assert hawthorn.bonuses == (
+        (7, "protection from vampires"),
+        (4, "protection from evil"),
+        (4, "prevent disease"),
+    )
     assert len({r.id for r in rows}) == len(rows)

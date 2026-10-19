@@ -130,7 +130,8 @@ def test_the_rhine_pack_imports_clean_into_a_new_saga():
     plan = transfer.plan_import(target, data)
     transfer.apply(target, plan)
     assert packs.after_import(target, data) == [
-        "Guardians of the Forests: The Rhine Tribunal is now in play."
+        "Guardians of the Forests: The Rhine Tribunal is now in play.",
+        packs.assumptions_note("Guardians of the Forests: The Rhine Tribunal"),
     ]
     assert target.books_in_play is not None and "GotF" in target.books_in_play
     assert len(target.covenants) == len(data["saga"]["covenants"])
@@ -259,7 +260,8 @@ def test_the_normandy_pack_imports_clean_into_a_new_saga():
     target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
     transfer.apply(target, transfer.plan_import(target, data))
     assert packs.after_import(target, data) == [
-        "The Lion and the Lily: The Normandy Tribunal is now in play."
+        "The Lion and the Lily: The Normandy Tribunal is now in play.",
+        packs.assumptions_note("The Lion and the Lily: The Normandy Tribunal"),
     ]
     assert target.books_in_play is not None and "L&L" in target.books_in_play
     assert len(target.characters) == len(data["saga"]["characters"])
@@ -339,7 +341,8 @@ def test_the_provence_pack_imports_clean_into_a_new_saga():
     target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
     transfer.apply(target, transfer.plan_import(target, data))
     assert packs.after_import(target, data) == [
-        "Faith & Flame: The Provençal Tribunal is now in play."
+        "Faith & Flame: The Provençal Tribunal is now in play.",
+        packs.assumptions_note("Faith & Flame: The Provençal Tribunal"),
     ]
     assert target.books_in_play is not None and "F&F" in target.books_in_play
     assert len(target.characters) == len(data["saga"]["characters"])
@@ -427,10 +430,119 @@ def test_the_theban_pack_imports_clean_into_a_new_saga():
     target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
     transfer.apply(target, transfer.plan_import(target, data))
     assert packs.after_import(target, data) == [
-        "The Sundered Eagle: The Theban Tribunal is now in play."
+        "The Sundered Eagle: The Theban Tribunal is now in play.",
+        packs.assumptions_note("The Sundered Eagle: The Theban Tribunal"),
     ]
     assert target.books_in_play is not None and "TSE" in target.books_in_play
     assert len(target.characters) == len(data["saga"]["characters"])
     ids = {n.id for n in target.neighbours}
     for record in [*target.covenants, *target.neighbours]:
         assert record.place_id is None or record.place_id in ids
+
+
+# -- Against the Dark --
+
+TRANSYLVANIA = book_packs.PACKS["transylvania"]
+
+
+def test_the_transylvania_pack_holds_the_tribunal_of_1220():
+    from ars_magica_manager.tribunal_packages import transylvania as package
+
+    saga = TRANSYLVANIA.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == "transylvania"
+    assert (tribunal.next_year, tribunal.meets_every) == (1221, 7)
+    assert tribunal.meeting_place == "the Shipka Pass"
+    # The oppida are the covenants; the five legal covenants are not.
+    names = {c.name for c in saga.covenants}
+    assert len(names) == 12 and {"Coeris", "Tablinum", "Kezdö Válasz"} <= names
+    assert not {"Domostron", "Asclepius", "Diodorus", "Pannonia"} & names
+    praeco = saga.character(tribunal.praeco_id or "")
+    quaesitor = saga.character(tribunal.quaesitor_id or "")
+    assert praeco is not None and praeco.name.startswith("Albertus")
+    assert quaesitor is not None and quaesitor.name.startswith("Benilda")
+    # Every named magus holds a privilege, mostly as the book gives it.
+    members = package.members(saga, tribunal)
+    assert len(members) == 42
+    entries = {saga.character(e["character_id"]).name.split(" ")[0]: e for e in members}
+    assert entries["Neculai"]["privilege"] == "socii"
+    assert entries["Oeagrus"]["privilege"] == "foederati"
+    coeris = next(c for c in saga.covenants if c.name == "Coeris")
+    assert package.aediles_text(saga, tribunal, coeris).startswith("Dominic")
+    assert len(tribunal.rulings) >= 25 and len(tribunal.cases) == 7
+    years = [e.year for e in tribunal.diary]
+    assert years == sorted(years) and years[-1] <= 1220 and len(years) >= 40
+    tablinum = next(c for c in saga.covenants if c.name == "Tablinum")
+    site = saga.neighbour(tablinum.place_id or "")
+    assert site is not None and len(site.details["levels"]) >= 10
+    threats = {n.name: n for n in saga.neighbours if n.kind == "threat"}
+    assert not threats["The Dragon War"].details.get("dormant")
+    assert len(saga.creatures) >= 17
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_monica_ierne_is_entered_as_the_book_prints_her():
+    data = book_packs.data(TRANSYLVANIA)
+    sketches = data[packs.GENERATED]
+    monica = next(
+        c for c in data["saga"]["characters"] if c["name"].startswith("Monica")
+    )
+    assert monica["id"] not in sketches
+    assert len(sketches) >= 40
+
+
+def test_the_transylvania_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(TRANSYLVANIA)
+    texts = _texts(data["saga"])
+    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert data["book"] == "AtD" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_transylvania_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(TRANSYLVANIA).read_text(encoding="utf-8"))
+    built = book_packs.data(TRANSYLVANIA)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_transylvania_pack_imports_clean_into_a_new_saga():
+    from ars_magica_manager.tribunal_packages import transylvania as package
+
+    data = book_packs.data(TRANSYLVANIA)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "Against the Dark: The Transylvanian Tribunal is now in play.",
+        packs.assumptions_note("Against the Dark: The Transylvanian Tribunal"),
+    ]
+    assert target.books_in_play is not None and "AtD" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+    # The privileges and aediles come with the Tribunal, pointing at the
+    # imported magi.
+    (tribunal,) = target.tribunals
+    people = {c.id for c in target.characters}
+    assert all(e["character_id"] in people for e in package.members(target, tribunal))
+    assert all(
+        i in people for found in package.aediles(tribunal).values() for i in found
+    )
+
+
+def test_every_pack_names_a_help_page_of_its_assumptions():
+    from ars_magica_manager import help_text
+
+    for front_end in help_text.FRONT_ENDS:
+        pages = help_text.load(front_end).pages
+        for pack in book_packs.PACKS.values():
+            topic = book_packs.assumptions_topic(pack)
+            assert topic in pages, (front_end, topic)
+            assert pages[topic].title.startswith("Assumptions made for ")
+    for pack in book_packs.PACKS.values():
+        shipped = json.loads(book_packs.path_of(pack).read_text(encoding="utf-8"))
+        assert shipped[packs.ASSUMPTIONS] == book_packs.assumptions_topic(pack)

@@ -40929,6 +40929,7 @@
   },
   "book": "TSE",
   "source": "The Sundered Eagle: The Theban Tribunal, by Atlas Games, content under the Creative Commons Attribution-ShareAlike 4.0 licence; summarised, not quoted.",
+  "assumptions": "pack-assumptions-theban",
   "generated": {
     "lysandros": {
       "id": "lysandros",

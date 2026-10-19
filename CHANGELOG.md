@@ -46,6 +46,31 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.102.0 — 2026-10-19
+
+- **The Transylvania pack.** Against the Dark: the Transylvanian Tribunal
+  ships as a content pack. It holds the ten oppida the book writes up,
+  with the zenodochia and Leviathan as sketches, and the forty-two named
+  magi, each with their privilege in the five legal covenants and each
+  oppidum's aediles. Monica Ierne comes as the book prints her and the
+  rest have generated stats. Albertus is the Praeco and Benilda the
+  Presiding Quaesitor. It also brings Hungary, Bulgaria, the Slav lands
+  and Transylvania's border peoples with their places, regiones, auras
+  and vis, Tablinum's ten regio levels, the Teutonic Knights and the
+  kings and churches around them, and the hedge traditions as factions.
+  The Peripheral Code, the docket for the Tribunal of 1221 at the Shipka
+  Pass and the Tribunal's history are there too, with the book's
+  creatures in the Bestiary and the Dragon War as the main story.
+- **Storm wizards, black hawthorn and the Zenodochium.** The storm
+  wizards' Storm Calling, Storm Fighting and Storm Riding join the
+  Abilities, each with its own mark. Black hawthorn joins the shapes and
+  materials, and the Zenodochium joins the covenant Hooks.
+- **What each pack assumed.** Help has a page for each Tribunal pack,
+  "Assumptions made for" its book. Each page lists the values the pack
+  inferred from the book's words, the ones it chose where the book is
+  silent (an aura it never numbers, a season, a placement), and where it
+  corrects the book. Importing a pack now says so and names the page.
+
 ## 2.101.0 — 2026-10-19
 
 - **Transylvania's oppida and five covenants.** In a Tribunal following

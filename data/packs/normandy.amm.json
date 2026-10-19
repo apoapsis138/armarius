@@ -40958,6 +40958,7 @@
   },
   "book": "L&L",
   "source": "The Lion and the Lily: The Normandy Tribunal, by Atlas Games, open content under the Creative Commons Attribution-ShareAlike 4.0 licence (redcap.org); summarised, not quoted.",
+  "assumptions": "pack-assumptions-normandy",
   "generated": {
     "buliste": {
       "id": "buliste",
