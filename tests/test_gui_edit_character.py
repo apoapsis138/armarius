@@ -107,7 +107,7 @@ def test_adding_and_deleting_a_flaw_from_its_card(app):
     page = _page(window)
     page.open_chapter("Virtues & Flaws")
     flaws = section_buttons(page, "Flaws  ·  0 points")
-    assert "Edit" not in flaws and not flaws["Delete"].isEnabled()
+    assert not flaws["Edit"].isEnabled() and not flaws["Delete"].isEnabled()
     answering(window, "Afflicted Tongue  [Minor Flaw, General]")
     flaws["Add"].click()
     saved = _saved(saga_id).virtues_flaws
@@ -119,6 +119,24 @@ def test_adding_and_deleting_a_flaw_from_its_card(app):
     controls["Delete"].click()
     assert asked[0].question == "Delete Afflicted Tongue?"
     assert _saved(saga_id).virtues_flaws == [VirtueFlawInstance("vf_the_gift")]
+
+
+def test_editing_a_virtue_changes_what_it_names(app):
+    def prepare(saga):
+        saga.characters[0].virtues_flaws = [
+            VirtueFlawInstance("vf_puissant_ability", {"ability": "magic theory"})
+        ]
+
+    window, saga_id = _window(prepare)
+    page = _page(window)
+    page.open_chapter("Virtues & Flaws")
+    virtues = section_buttons(page, "Virtues  ·  1 points")
+    answering(window, {"ability": "finesse"})
+    # The only Virtue: Edit acts on it without choosing.
+    virtues["Edit"].click()
+    assert _saved(saga_id).virtues_flaws == [
+        VirtueFlawInstance("vf_puissant_ability", {"ability": "finesse"})
+    ]
 
 
 def test_editing_the_arts_and_a_known_spells_mastery(app):

@@ -5,7 +5,10 @@ Three kinds, each of the shape its shared catalog uses: character Virtues
 and Flaws (VirtueFlawDef), laboratory Virtues and Flaws (LabVirtueFlawDef)
 and covenant Boons and Hooks (CovenantBoonHookDef). They are text only for
 now: a name, type, tier (which gives the points: Free 0, Minor 1, Major 3)
-and description, with no effects the rules engine applies. They cite no
+and description, with no effects the rules engine applies. A character's
+or covenant's entry may also ask for choices when it is taken (its
+`parameters`: "form", "ability"...), as the books' Puissant (Ability)
+does. They cite no
 book, so they are always in play -- unless they cite one of the saga's own
 sources (Saga.sources), in or out of play like a book -- and pickers offer
 them alongside the catalog's once the saga is the one in use
@@ -19,6 +22,11 @@ from typing import Any
 from . import catalog, sourcebooks, storage
 from .markup import escape, fit, markdown_inline
 from .models import (
+    BOON_HOOK_DESCRIPTION,
+    BOON_HOOK_DETAIL,
+    BOON_HOOK_RESOURCE,
+    BOON_HOOK_SITUATION,
+    BOON_HOOK_UNKNOWN,
     COVENANT_BOON_HOOK_CATEGORIES,
     VIRTUE_FLAW_TIER_COST,
     CovenantBoonHookDef,
@@ -72,6 +80,48 @@ _ID_PREFIX: dict[str, str] = {
 
 Entry = VirtueFlawDef | LabVirtueFlawDef | CovenantBoonHookDef
 
+#: The kinds whose entries may ask for choices (a laboratory Virtue's
+#: parameters are what its effect is read from, not choices).
+ASKING_KINDS: tuple[str, ...] = (CHARACTER, COVENANT)
+#: The choices offered from a list rather than typed.
+LISTED_CHOICES: tuple[str, ...] = (
+    "characteristic",
+    "ability",
+    "art",
+    "technique",
+    "form",
+    "realm",
+    "blood",
+)
+#: Names a Boon's or Hook's own params already use.
+_BOON_HOOK_KEYS = (
+    BOON_HOOK_DETAIL,
+    BOON_HOOK_DESCRIPTION,
+    BOON_HOOK_UNKNOWN,
+    BOON_HOOK_RESOURCE,
+    BOON_HOOK_SITUATION,
+)
+
+
+def parse_choices(text: str) -> list[str]:
+    """The choices an entry asks for, from "Form, Ability": lower case, in
+    the order written, blanks left out."""
+    return [name.strip().lower() for name in text.split(",") if name.strip()]
+
+
+def choices_problem(kind: str, names: list[str]) -> str | None:
+    """What's wrong with the choices an entry asks for, if anything."""
+    if names and kind not in ASKING_KINDS:
+        return "A laboratory Virtue or Flaw can't ask for choices."
+    for name in names:
+        if not all(part.isalpha() for part in name.split()):
+            return f"Choice names are words only: {name!r}."
+        if kind == COVENANT and name in _BOON_HOOK_KEYS:
+            return f"{name.title()} is already a Boon's or Hook's own field."
+    if len(set(names)) != len(names):
+        return "Each choice can be asked for only once."
+    return None
+
 
 def entries_of(saga: Saga, kind: str) -> list[Any]:
     """The saga's own list for `kind` (the one to add to or remove from)."""
@@ -111,6 +161,8 @@ def form_problem(
     name = (values.get("name") or "").strip()
     if not name:
         return "Name is required."
+    if problem := choices_problem(kind, values.get("parameters") or []):
+        return problem
     for other in entries_of(saga, kind):
         if other is existing:
             continue
@@ -125,7 +177,13 @@ def form_problem(
 
 def _fields(kind: str, values: dict[str, Any]) -> dict[str, Any]:
     entry_type, tier = values["type"], values["tier"]
+    asks = (
+        {"parameters": list(values.get("parameters") or [])}
+        if kind in ASKING_KINDS
+        else {}
+    )
     return {
+        **asks,
         "name": values["name"].strip(),
         "type": entry_type,
         "tier": tier,
@@ -139,8 +197,8 @@ def _fields(kind: str, values: dict[str, Any]) -> dict[str, Any]:
 
 def add(saga: Saga, kind: str, values: dict[str, Any]) -> Entry:
     """Add a user-made entry of `kind` from a form's values (name, type,
-    tier, category, repeatable, description, and the saga source it
-    cites, if any)."""
+    tier, category, repeatable, description, the choices it asks for,
+    and the saga source it cites, if any)."""
     fields = _fields(kind, values)
     listed = entries_of(saga, kind)
     taken = [e.id for e in listed] + list(_catalog_by_id(kind))
@@ -254,6 +312,9 @@ def detail_text(saga: Saga, chosen: tuple[str, Entry] | None) -> str:
         + ("   May be taken more than once." if entry.repeatable else ""),
         f"[b]Held by:[/] {escape(', '.join(holders)) if holders else '(no one yet)'}",
     ]
+    asks = getattr(entry, "parameters", []) if kind in ASKING_KINDS else []
+    if asks:
+        lines.insert(3, f"[b]Asks for:[/] {escape(', '.join(a.title() for a in asks))}")
     if entry.source:
         title = sourcebooks.title_of(entry.source, saga) or entry.source
         books = sourcebooks.saga_books(saga)

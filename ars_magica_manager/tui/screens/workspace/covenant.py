@@ -12,15 +12,11 @@ from .... import economics as eco
 from .... import inhabitants as inh
 from .... import possessions as pos
 from ....commands import Form
-from ....covenants import boon_hook_is_unknown
 from ....forms import covenant as covenant_forms
 from ....forms import inhabitant as inhabitant_forms
 from ....forms import world as world_forms
 from ....markup import escape
 from ....models import (
-    BOON_HOOK_DESCRIPTION,
-    BOON_HOOK_DETAIL,
-    BOON_HOOK_RESOURCE,
     FULL,
     INHABITANT_KINDS,
     POSSESSION_KINDS,
@@ -29,7 +25,6 @@ from ....models import (
     CovenantDiaryEntry,
     IncomeSource,
     VirtueFlawInstance,
-    boon_hook_params,
     new_instance_id,
 )
 from ..fields import FieldsDialog
@@ -44,7 +39,6 @@ from ..pickers import (
 )
 from ..prompts import (
     ConfirmScreen,
-    _boon_hook_fields,
     _covenant_diary_entry_dialog,
 )
 from .base import (
@@ -653,11 +647,8 @@ class CovenantActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            instance.params = boon_hook_params(
-                result["detail"],
-                result["description"],
-                instance.params,
-                unknown=result.get("unknown", False),
+            instance.params = covenant_forms.boon_hook_entry_params(
+                definition, result, instance.params
             )
             if "resource" in result:
                 cov_rules.link_resource(covenant, instance, result["resource"] or "")
@@ -668,17 +659,14 @@ class CovenantActions(WorkspaceBase):
         self.app.push_screen(
             FieldsDialog(
                 f"{kind}: {escape(definition.name)}",
-                _boon_hook_fields(
-                    instance.params.get(BOON_HOOK_DETAIL, ""),
-                    instance.params.get(BOON_HOOK_DESCRIPTION, ""),
-                    can_be_unknown=definition.unknown,
-                    unknown=boon_hook_is_unknown(instance, definition),
+                covenant_forms.boon_hook_entry_fields(
+                    definition,
+                    instance,
                     sources=(
                         cov_rules.resource_sources(covenant)
                         if instance.vf_id in cov_rules.RESOURCE_HOOKS
                         else None
                     ),
-                    source=instance.params.get(BOON_HOOK_RESOURCE, ""),
                 ),
             ),
             handle_result,

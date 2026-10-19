@@ -144,6 +144,51 @@ async def _open_param_prompt(ws, vf_id: str | None = None) -> None:
     )
 
 
+async def _open_virtue_change(ws) -> None:
+    """Change what a Virtue names (Edit on the Virtues list): Puissant
+    Magic Theory, taken first, chosen in the list."""
+    magus = ws.selected_character
+    if not any(vf.vf_id == "vf_puissant_ability" for vf in magus.virtues_flaws):
+        magus.virtues_flaws.append(
+            VirtueFlawInstance("vf_puissant_ability", {"ability": "magic theory"})
+        )
+    view = ws._current_sheet_view()
+    view.query_one(TabbedContent).active = "tab-vf"
+    await until(lambda: view.query("#section-vf-virtues CollapsibleTitle"))
+    view.refresh_all()
+    index = len(magus.virtues_flaws) - 1
+    rows = view.query_one("#vf-virtues-list", scr.SelectableList)
+    await until(lambda: rows.select_data_index(index))
+    await until(lambda: rows.selected_data_index == index)
+    rows.focus()
+    await until(lambda: ws._active_section() == "section-vf-virtues")
+    ws.action_edit_virtue_flaw()
+
+
+async def _open_lab_virtue_change(ws) -> None:
+    """Change a laboratory Virtue's Specialization (Edit on the lab's
+    Virtues list): Idyllic Surroundings for Creo, taken first, chosen in
+    the list."""
+    lab = ws.selected_laboratory
+    if not any(vf.vf_id == "labvf_idyllic_surroundings" for vf in lab.virtues_flaws):
+        lab.virtues_flaws.append(
+            VirtueFlawInstance(
+                "labvf_idyllic_surroundings", {"specialization": "Creo"}, id="idyll"
+            )
+        )
+    view = ws._current_sheet_view()
+    view.query_one(TabbedContent).active = "tab-lab-vf"
+    await until(lambda: view.query("#section-lab-vf-virtues CollapsibleTitle"))
+    view.refresh_all()
+    index = len(lab.virtues_flaws) - 1
+    rows = view.query_one("#lab-vf-virtues-list", scr.SelectableList)
+    await until(lambda: rows.select_data_index(index))
+    await until(lambda: rows.selected_data_index == index)
+    rows.focus()
+    await until(lambda: ws._active_section() == "section-lab-vf-virtues")
+    ws.action_edit_virtue_flaw()
+
+
 async def _open_lab_choice_prompt(
     ws, section: str = "section-lab-vf-flaws", vf_id: str = "labvf_disorganized"
 ) -> None:
@@ -504,6 +549,7 @@ OPENERS: dict[str, Opener] = {
     "virtue ability choice": Opener(
         "character", lambda ws: _open_param_prompt(ws, "vf_puissant_ability")
     ),
+    "change virtue choice": Opener("character", _open_virtue_change),
     "add mastery ability": Opener("character", _open_mastery_ability),
     "edit spell mastery": Opener("character", lambda ws: ws._edit_spell_mastery_at(0)),
     "add personal weapon": Opener(
@@ -522,6 +568,7 @@ OPENERS: dict[str, Opener] = {
     # Laboratory
     "edit lab identity": Opener("laboratory", lambda ws: ws._edit_lab_identity()),
     "lab virtue choice": Opener("laboratory", _open_lab_choice_prompt),
+    "change lab virtue choice": Opener("laboratory", _open_lab_virtue_change),
     "lab servant": Opener(
         "laboratory",
         lambda ws: _open_lab_choice_prompt(

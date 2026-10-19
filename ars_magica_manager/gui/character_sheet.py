@@ -801,8 +801,9 @@ class CharacterSheet(QWidget):
         )
 
     def _virtues_flaws(self) -> QWidget:
-        """The Virtues beside the Flaws, as cards, each side with its Add
-        and Delete (no Edit: a Virtue or Flaw is deleted and taken again)."""
+        """The Virtues beside the Flaws, as cards, each side with its Add,
+        Edit and Delete (Edit changes only what it names: its Ability, Art or
+        Characteristic)."""
         p, c = self.p, self.character
         columns = []
         for side, tone in (("Virtue", "text-success"), ("Flaw", "text-error")):

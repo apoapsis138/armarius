@@ -212,8 +212,17 @@ longer in the saga.
 The laboratory's Virtues, with the points they come to in the title. Adding
 one picks it from the catalog, which shows each entry's rules, effects and
 book as you go through it; a Virtue that grants a Specialization of the
-owner's choice asks for it then. Virtues can't be edited, only deleted and
-added again.
+owner's choice asks for it then.
+<!-- tui -->
+`e` changes the chosen Virtue's Specialization, or a Servant's grog or
+Intelligence,
+<!-- /tui -->
+<!-- gui -->
+**Edit** changes the chosen Virtue's Specialization, or a Servant's grog
+or Intelligence,
+<!-- /gui -->
+keeping the Virtue and any Feature built on it. To take a different
+Virtue, delete this one and add the other.
 
 A few Virtues add Safety worked out from an Intelligence (Ars Magica
 Definitive Edition, Chapter 8):

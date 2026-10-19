@@ -37,6 +37,7 @@ from ..models import (
 )
 from .possession import contested_fields
 from .tribunal import package_fields, save_package_fields, tribunal_field
+from .virtue import param_choices, param_fields, params_from
 
 # Edit Covenant and its Description
 
@@ -216,6 +217,50 @@ def boon_hook_fields(
     )
 
 
+def boon_hook_entry_fields(
+    entry: CovenantBoonHookDef,
+    instance: VirtueFlawInstance | None = None,
+    *,
+    sources: list[tuple[str, str]] | None = None,
+) -> list[DialogField]:
+    """Taking or changing a Boon or Hook: what it names (its {parameters},
+    as a Virtue's: a Form or an Ability from a list, the rest typed), then
+    its own Detail, Description, Unknown and source (boon_hook_fields).
+    `instance` is the one being changed, None for a new one; `sources` as
+    boon_hook_fields'. boon_hook_entry_params reads the values."""
+    params = instance.params if instance is not None else {}
+    return param_fields(
+        entry.parameters, param_choices(entry), params
+    ) + boon_hook_fields(
+        params.get(BOON_HOOK_DETAIL, ""),
+        params.get(BOON_HOOK_DESCRIPTION, ""),
+        can_be_unknown=entry.unknown,
+        unknown=(
+            boon_hook_is_unknown(instance, entry) if instance is not None else False
+        ),
+        sources=sources,
+        source=params.get(BOON_HOOK_RESOURCE, ""),
+    )
+
+
+def boon_hook_entry_params(
+    entry: CovenantBoonHookDef,
+    values: dict[str, Any],
+    base: dict[str, str] | None = None,
+) -> dict[str, str]:
+    """The params from boon_hook_entry_fields' values: `base` (an existing
+    instance's) with the detail, description, Unknown mark and what the
+    entry names."""
+    params = boon_hook_params(
+        values["detail"],
+        values["description"],
+        base,
+        unknown=values.get("unknown", False),
+    )
+    params.update(params_from(entry.parameters, values))
+    return params
+
+
 #: Each kind's section id.
 BOON_HOOK_SECTIONS: dict[str, str] = {
     "Boon": "section-cov-boons",
@@ -293,11 +338,7 @@ def add_boon_hook(saga: Saga, covenant: Covenant, kind: str) -> Choose:
 
     def details(entry: CovenantBoonHookDef) -> Form:
         def apply(values: dict[str, Any]) -> list[str]:
-            params = boon_hook_params(
-                values["detail"],
-                values["description"],
-                unknown=values.get("unknown", False),
-            )
+            params = boon_hook_entry_params(entry, values)
             covenant.boons_hooks.append(
                 VirtueFlawInstance(vf_id=entry.id, params=params, id=new_instance_id())
             )
@@ -310,7 +351,7 @@ def add_boon_hook(saga: Saga, covenant: Covenant, kind: str) -> Choose:
 
         return Form(
             f"{kind}: {escape(entry.name)}",
-            lambda: boon_hook_fields(can_be_unknown=entry.unknown),
+            lambda: boon_hook_entry_fields(entry),
             apply,
         )
 
@@ -323,36 +364,28 @@ def add_boon_hook(saga: Saga, covenant: Covenant, kind: str) -> Choose:
 
 
 def edit_boon_hook(covenant: Covenant, index: int) -> Form:
-    """The Boon or Hook at `index` (into covenant.boons_hooks): its detail,
-    description, whether it is Unknown and, for a Resource Hook, which
-    source it is about."""
+    """The Boon or Hook at `index` (into covenant.boons_hooks): what it
+    names, its detail, description, whether it is Unknown and, for a
+    Resource Hook, which source it is about."""
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
     instance = covenant.boons_hooks[index]
     definition = by_id[instance.vf_id]
 
     def apply(values: dict[str, Any]) -> None:
-        instance.params = boon_hook_params(
-            values["detail"],
-            values["description"],
-            instance.params,
-            unknown=values.get("unknown", False),
-        )
+        instance.params = boon_hook_entry_params(definition, values, instance.params)
         if "resource" in values:
             cov_rules.link_resource(covenant, instance, values["resource"] or "")
 
     return Form(
         f"{definition.type}: {escape(definition.name)}",
-        lambda: boon_hook_fields(
-            instance.params.get(BOON_HOOK_DETAIL, ""),
-            instance.params.get(BOON_HOOK_DESCRIPTION, ""),
-            can_be_unknown=definition.unknown,
-            unknown=boon_hook_is_unknown(instance, definition),
+        lambda: boon_hook_entry_fields(
+            definition,
+            instance,
             sources=(
                 cov_rules.resource_sources(covenant)
                 if instance.vf_id in cov_rules.RESOURCE_HOOKS
                 else None
             ),
-            source=instance.params.get(BOON_HOOK_RESOURCE, ""),
         ),
         apply,
     )

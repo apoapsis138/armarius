@@ -223,7 +223,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     CREATURE_INFO_SECTION: frozenset({"edit"}),
     CREATURE_CHARACTERISTICS_SECTION: frozenset({"edit"}),
     CREATURE_DESCRIPTION_SECTION: frozenset({"edit"}),
-    CREATURE_VF_SECTION: frozenset({"add", "remove"}),
+    CREATURE_VF_SECTION: frozenset({"add", "edit", "remove"}),
     CREATURE_TRAITS_SECTION: frozenset({"add", "edit", "remove"}),
     CREATURE_REPUTATIONS_SECTION: frozenset({"add", "edit", "remove"}),
     CREATURE_ATTACKS_SECTION: frozenset({"add", "edit", "remove"}),

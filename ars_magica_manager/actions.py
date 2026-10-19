@@ -160,7 +160,8 @@ def _section_verbs() -> dict[str, frozenset[str]]:
     }
     for section in TRAIT_SECTIONS:
         verbs[section] = _ALL3
-    # Virtues and Flaws can't be edited, only added and deleted.
+    # Editing a Virtue or Flaw changes only what it names (Puissant's
+    # Ability); which Virtue it is stays.
     for section in (
         "section-vf-virtues",
         "section-vf-flaws",
@@ -168,7 +169,7 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         "section-fam-vf-flaws",
         *LAB_VF_SECTIONS,
     ):
-        verbs[section] = _ADD_REMOVE
+        verbs[section] = _ALL3
     for section in BOOK_SECTIONS:
         # The Library summary lists no books of its own: only Add.
         verbs[section] = (

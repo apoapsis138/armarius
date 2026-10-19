@@ -289,6 +289,19 @@ CONTRACTS: dict[str, Contract] = {
         expected={"ability": "magic theory"},
         invalid={"Ability": Select.NULL},
     ),
+    "change virtue choice": Contract(
+        # Edit on a Virtue changes only what it names, in place.
+        prefill={"Ability": "magic theory"},
+        edits={"Ability": "finesse"},
+        saved=lambda s: [
+            vf.params
+            for vf in character(s).virtues_flaws
+            if vf.vf_id == "vf_puissant_ability"
+        ],
+        expected=[{"ability": "finesse"}],
+        invalid={"Ability": Select.NULL},
+        shown={"#vf-virtues-list": "Puissant Finesse"},
+    ),
     "edit familiar info": Contract(
         prefill={"Name": "Corax", "Species": ""},
         edits={"Species": "Raven", "Year Bound": "1210", "Size": "-2"},

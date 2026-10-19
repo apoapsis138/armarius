@@ -310,6 +310,7 @@ def house_rule_values(
         "repeatable": bool(values.get("repeatable")),
         "description": values.get("description") or "",
         "source": values.get("source") or "",
+        "parameters": hr.parse_choices(values.get("asks") or ""),
     }
 
 
@@ -333,8 +334,9 @@ def house_rule_live(existing: HouseRule | None, values: dict[str, Any]) -> str:
 def house_rule_fields(saga: Saga, existing: HouseRule | None) -> list[DialogField]:
     """A user-made catalog entry: what it is for (a character, a laboratory
     or a covenant -- fixed once made), its name, type, tier (which gives
-    its points), category, source and description. Text only: the rules
-    engine applies no effects for it."""
+    its points), category, the choices it asks for when taken (not a
+    laboratory's), source and description. Text only: the rules engine
+    applies no effects for it."""
     kind_now, entry = existing if existing is not None else (None, None)
 
     def kind(values: dict[str, Any]) -> str:
@@ -392,6 +394,19 @@ def house_rule_fields(saga: Saga, existing: HouseRule | None) -> list[DialogFiel
             "Can be taken more than once",
             "check",
             bool(entry.repeatable) if entry else False,
+        ),
+        DialogField(
+            "asks",
+            "Asks for",
+            "text",
+            ", ".join(getattr(entry, "parameters", []) or []).title()
+            if entry is not None and kind_now in hr.ASKING_KINDS
+            else "",
+            placeholder="e.g. Form, or Ability (blank: nothing)",
+            hint="What is chosen as it is taken, comma-separated. "
+            + ", ".join(c.title() for c in hr.LISTED_CHOICES)
+            + " are picked from a list; anything else is typed.",
+            show_if=lambda values: kind(values) in hr.ASKING_KINDS,
         ),
         *house_rule_source_field(saga, entry),
         description_field(entry.description if entry else ""),

@@ -503,14 +503,24 @@ def load_covenant_situation_catalog(
 def describe_boon_hook(
     instance: VirtueFlawInstance, catalog_by_id: dict[str, CovenantBoonHookDef]
 ) -> str:
-    """A human-readable label for a covenant Boon/Hook instance: its name,
-    then " - " and the optional detail if one was given ("Edifice - Tower of
-    the Silver Iris")."""
+    """A human-readable label for a covenant Boon/Hook instance: its name
+    with what it names filled in (as describe_virtue_flaw's), then " - "
+    and the optional detail if one was given ("Edifice - Tower of the
+    Silver Iris")."""
     definition = catalog_by_id.get(instance.vf_id)
     if definition is None:
         return f"{instance.vf_id} (not in catalog)"
+    named = {key: instance.params.get(key, "") for key in definition.parameters}
+    name = _fill_placeholders(definition.name, named)
+    extra = [
+        value.title()
+        for key, value in named.items()
+        if f"{{{key}}}" not in definition.name and value
+    ]
+    if extra:
+        name = f"{name} ({', '.join(extra)})"
     detail = instance.params.get(BOON_HOOK_DETAIL, "").strip()
-    return f"{definition.name} - {detail}" if detail else definition.name
+    return f"{name} - {detail}" if detail else name
 
 
 _TIER_ORDER = {"Free": 0, "Minor": 1, "Major": 2}

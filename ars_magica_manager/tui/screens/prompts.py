@@ -31,7 +31,6 @@ from ...arts import FORMS, TECHNIQUES
 from ...commands import Form, Picked
 from ...form_spec import DialogField, pairs
 from ...forms import ability as ability_forms
-from ...forms import covenant as covenant_forms
 from ...forms import diary as diary_forms
 from ...forms import laboratory as laboratory_forms
 from ...forms import saga_content as scf
@@ -98,26 +97,6 @@ def _ability_dialog(
         validate=_ability_problem,
         live=ability_forms.ability_live(name, virtues_flaws, note),
         save_label=save_label,
-    )
-
-
-def _boon_hook_fields(
-    detail: str = "",
-    description: str = "",
-    *,
-    can_be_unknown: bool = False,
-    unknown: bool = False,
-    sources: Sequence[tuple[str, str]] | None = None,
-    source: str = "",
-) -> list[DialogField]:
-    """covenant_forms.boon_hook_fields, under the name the terminal uses."""
-    return covenant_forms.boon_hook_fields(
-        detail,
-        description,
-        can_be_unknown=can_be_unknown,
-        unknown=unknown,
-        sources=list(sources) if sources is not None else None,
-        source=source,
     )
 
 

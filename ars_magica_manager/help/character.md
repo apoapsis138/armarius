@@ -328,7 +328,9 @@ The character's Virtues and Flaws, side by side, each a card; clicking one
 shows its effects and rules text in the inspector.
 <!-- /gui -->
 
-**You type:** nothing; you pick each Virtue or Flaw from the catalog.
+**You type:** nothing; you pick each Virtue or Flaw from the catalog, and
+choose what it names (Puissant's Ability, Affinity's Art, a Great
+Characteristic's Characteristic) from a list.
 
 **The app works out:** the points each side comes to, in the section
 titles, coloured by whether the two sides balance (Ars Magica Definitive
@@ -341,27 +343,41 @@ rest of the sheet.
 ### Virtues
 <!-- help: section-vf-virtues -->
 
-The character's Virtues, each with its tier (Minor, Major or Free). Virtues
+The character's Virtues, each with its tier (Minor, Major or Free).
 <!-- tui -->
-can only be added and deleted, not edited: `a` opens the catalog on its
-Virtues.
+`a` opens the catalog on its Virtues. `e` changes what the chosen one
+names, such as Puissant Magic Theory to Puissant Finesse; it keeps its
+place in the list.
 <!-- /tui -->
 <!-- gui -->
-can only be added and deleted, not edited: **Add** opens the catalog on
-its Virtues.
+**Add** opens the catalog on its Virtues. **Edit** changes what the chosen
+one names, such as Puissant Magic Theory to Puissant Finesse; it keeps its
+place in the list.
 <!-- /gui -->
+The choices are the ones Add offers, so a second Puissant Magic Theory is
+still refused, and a Great Characteristic can only move to a
+Characteristic at +3. Changing a Great or Poor Characteristic moves both
+scores: Great Intelligence to Great Stamina takes Intelligence down a point
+and Stamina up one, and the form says so before you save. A new choice
+counts from now on; xp already earned stays where it is. To take a
+different Virtue, delete this one and add the other. A Virtue that names
+nothing has nothing to change.
+
 A magus's House Virtue is marked Free and counts no points
 (Ars Magica Definitive Edition, Chapter 3: Characters, Hermetic Houses).
 
 ### Flaws
 <!-- help: section-vf-flaws -->
 
-The character's Flaws, each with its tier. Like Virtues, Flaws can only be
+The character's Flaws, each with its tier. Like Virtues, Flaws can be
 <!-- tui -->
-added and deleted, not edited: `a` opens the catalog on its Flaws.
+added, changed and deleted: `a` opens the catalog on its Flaws, and `e`
+changes what the chosen one names (Poor Perception to Poor Dexterity).
 <!-- /tui -->
 <!-- gui -->
-added and deleted, not edited: **Add** opens the catalog on its Flaws.
+added, changed and deleted: **Add** opens the catalog on its Flaws, and
+**Edit** changes what the chosen one names (Poor Perception to Poor
+Dexterity).
 <!-- /gui -->
 The
 section title shows the points the Flaws come to.

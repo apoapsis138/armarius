@@ -11,6 +11,7 @@ from screen_helpers import _sample_saga_with_covenant
 from ars_magica_manager import books as bk
 from ars_magica_manager import commands, form_spec
 from ars_magica_manager import economics as eco
+from ars_magica_manager import house_rules as hr
 from ars_magica_manager.forms import covenant as covenant_forms
 from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import library as library_forms
@@ -83,6 +84,43 @@ def test_a_boon_is_chosen_from_the_catalog_then_edited_and_deleted():
     assert confirm.question == "Delete Wealth - a gold mine?"
     confirm.apply()
     assert covenant.boons_hooks == []
+
+
+def test_a_sagas_own_boon_names_its_choices_when_taken_and_when_edited():
+    saga = _sample_saga_with_covenant()
+    covenant = saga.covenants[0]
+    entry = hr.add(
+        saga,
+        hr.COVENANT,
+        {
+            "name": "Vis Spring",
+            "type": "Boon",
+            "tier": "Minor",
+            "category": "Resources",
+            "parameters": ["form", "keeper"],
+        },
+    )
+    ops = covenant_forms.boon_hook_ops(saga, covenant, "Boon")
+    assert ops.add and ops.edit
+    choose = ops.add()
+    assert isinstance(choose, commands.Choose)
+    form = choose.apply(entry)
+    keys = [f.key for f in form.fields()]
+    assert keys[:2] == ["form", "keeper"]
+    form_field = form.fields()[0]
+    assert form_field.kind == "select"
+    assert ("Aquam", "aquam") in form_field.options
+    _save(form, {"form": "aquam", "keeper": "Old Hilde", "detail": "the well"})
+    assert covenant.boons_hooks[0].params == {
+        "form": "aquam",
+        "keeper": "old hilde",
+        "detail": "the well",
+    }
+    assert ops.rows() == ["Vis Spring (Aquam, Old Hilde) - the well"]
+    edit = ops.edit(0)
+    assert [f.value for f in edit.fields()[:2]] == ["aquam", "Old Hilde"]
+    _save(edit, {"form": "terram"})
+    assert ops.rows() == ["Vis Spring (Terram, Old Hilde) - the well"]
 
 
 def test_a_hooks_rows_skip_the_boons_and_a_resource_hook_says_to_link_it():

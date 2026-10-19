@@ -10,6 +10,7 @@ from screen_helpers import _saga_with_bare_laboratory
 
 from ars_magica_manager import commands, form_spec
 from ars_magica_manager.forms import laboratory as lf
+from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.models import (
     Character,
     LabFeature,
@@ -190,3 +191,22 @@ def test_arcane_connections_keep_their_id_and_drop_lasts_when_fixed():
     assert confirm.question == "Delete the Arcane Connection to a lock of hair?"
     confirm.apply()
     assert lab.arcane_connections == []
+
+
+def test_a_lab_virtues_specialization_can_be_changed():
+    saga = _saga_with_bare_laboratory()
+    lab = saga.laboratories[0]
+    lab.virtues_flaws.append(
+        VirtueFlawInstance(
+            "labvf_idyllic_surroundings", {"specialization": "Creo"}, id="v1"
+        )
+    )
+    ops = virtue_forms.virtue_flaw_ops(saga, lab, "Virtue")
+    assert ops.edit is not None
+    form = ops.edit(0)
+    assert isinstance(form, commands.Form)
+    assert form.title == "Change Idyllic Surroundings"
+    assert form.fields()[0].value == "Creo"
+    _saved(form, {"specialization": "Herbam"})
+    assert lab.virtues_flaws[0].params == {"specialization": "Herbam"}
+    assert lab.virtues_flaws[0].id == "v1"

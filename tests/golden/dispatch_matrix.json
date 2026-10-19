@@ -478,7 +478,7 @@
       "active": "section-vf-virtues",
       "keys": {
         "a": "VirtueFlawPickerScreen: Add a Virtue",
-        "e": "(disabled)",
+        "e": "notice: Adept Laboratory Student names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -488,7 +488,7 @@
       "active": "section-vf-flaws",
       "keys": {
         "a": "VirtueFlawPickerScreen: Add a Flaw",
-        "e": "(disabled)",
+        "e": "notice: A Deal with the Devil names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -670,7 +670,7 @@
       "active": "section-lab-vf-virtues",
       "keys": {
         "a": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
-        "e": "(disabled)",
+        "e": "notice: Greater Feature names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -680,7 +680,7 @@
       "active": "section-lab-vf-flaws",
       "keys": {
         "a": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
-        "e": "(disabled)",
+        "e": "notice: Greater Focus names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -822,7 +822,7 @@
       "active": "section-fam-vf-virtues",
       "keys": {
         "a": "VirtueFlawPickerScreen: Add a Virtue",
-        "e": "(disabled)",
+        "e": "notice: Adept Laboratory Student names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -832,7 +832,7 @@
       "active": "section-fam-vf-flaws",
       "keys": {
         "a": "VirtueFlawPickerScreen: Add a Flaw",
-        "e": "(disabled)",
+        "e": "notice: Adept Laboratory Student names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -2076,7 +2076,7 @@
       "active": "section-cr-virtues-flaws",
       "keys": {
         "a": "ChooseScreen: Add a Virtue or Flaw",
-        "e": "(disabled)",
+        "e": "notice: Magic Animal names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"

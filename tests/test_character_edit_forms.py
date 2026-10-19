@@ -11,7 +11,7 @@ from typing import Any
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import form_spec
-from ars_magica_manager.commands import Choose, Confirm, Form
+from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.forms import ability as ability_forms
 from ars_magica_manager.forms import character as cf
 from ars_magica_manager.forms import spell as spell_forms
@@ -171,7 +171,7 @@ def test_editing_an_ability_keeps_its_name_and_refuses_negative_xp():
 def test_adding_a_virtue_with_a_parameter_picks_it_from_its_choices():
     saga, magus = _magus()
     ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
-    assert ops.add is not None and ops.edit is None
+    assert ops.add is not None
     step = ops.add()
     assert isinstance(step, Choose) and step.title == "Add a Virtue"
     assert all(choice.value.side == "Virtue" for choice in step.choices())
@@ -226,6 +226,106 @@ def test_great_characteristic_moves_its_characteristic_both_ways():
     run(step, True)
     assert magus.characteristics.intelligence == 3
     assert "Great Intelligence" not in ops.rows()
+
+
+def test_editing_puissant_changes_its_ability_in_place():
+    saga, magus = _magus()
+    magus.virtues_flaws = [
+        VirtueFlawInstance("vf_the_gift"),
+        VirtueFlawInstance("vf_puissant_ability", {"ability": "magic theory"}),
+        VirtueFlawInstance("vf_affinity_with_art", {"art": "creo"}),
+    ]
+    puissant = magus.virtues_flaws[1]
+    ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
+    assert ops.edit is not None
+    row = ops.rows().index("Puissant Magic Theory")
+    form = ops.edit(row)
+    assert isinstance(form, Form) and form.title == "Change Puissant Magic Theory"
+    ability = next(spec for spec in form.fields() if spec.key == "ability")
+    # Opens on what it names now, which is still offered.
+    assert ability.value == "magic theory"
+    assert "magic theory" in [value for _, value in ability.options]
+    assert run(form, {"ability": "finesse"}) == []
+    assert magus.virtues_flaws[1] is puissant
+    assert puissant.params == {"ability": "finesse"}
+    assert ops.rows()[row] == "Puissant Finesse"
+
+
+def test_editing_refuses_a_choice_another_copy_already_holds():
+    saga, magus = _magus()
+    magus.virtues_flaws = [
+        VirtueFlawInstance("vf_affinity_with_art", {"art": "creo"}),
+        VirtueFlawInstance("vf_affinity_with_art", {"art": "rego"}),
+    ]
+    ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
+    assert ops.edit is not None
+    form = ops.edit(1)
+    assert isinstance(form, Form)
+    art = next(spec for spec in form.fields() if spec.key == "art")
+    offered = [value for _, value in art.options]
+    assert "rego" in offered and "creo" not in offered
+    assert run(form, {"art": "creo"})[0] == "refused"
+    assert magus.virtues_flaws[1].params == {"art": "rego"}
+
+
+def test_editing_great_characteristic_moves_both_characteristics():
+    saga, magus = _magus()
+    magus.characteristics.stamina = 3
+    ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
+    assert ops.add is not None and ops.edit is not None
+    run(ops.add(), "vf_great_characteristic", {"characteristic": "intelligence"})
+    assert magus.characteristics.intelligence == 4
+    form = ops.edit(ops.rows().index("Great Intelligence"))
+    assert isinstance(form, Form) and form.live is not None
+    assert form.live({"characteristic": "stamina"}) == (
+        "Moves Intelligence +4 to +3, Stamina +3 to +4."
+    )
+    assert run(form, {"characteristic": "stamina"}) == [
+        "Moved Intelligence +4 to +3, Stamina +3 to +4."
+    ]
+    assert (magus.characteristics.intelligence, magus.characteristics.stamina) == (
+        3,
+        4,
+    )
+    assert "Great Stamina" in ops.rows()
+
+
+def test_editing_great_characteristic_refuses_a_characteristic_below_plus_3():
+    saga, magus = _magus()
+    ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
+    assert ops.add is not None and ops.edit is not None
+    run(ops.add(), "vf_great_characteristic", {"characteristic": "intelligence"})
+    form = ops.edit(ops.rows().index("Great Intelligence"))
+    assert isinstance(form, Form)
+    options = next(s for s in form.fields() if s.key == "characteristic").options
+    assert [value for _, value in options] == ["intelligence"]
+    assert run(form, {"characteristic": "perception"})[0] == "refused"
+    assert magus.characteristics.intelligence == 4
+
+
+def test_a_virtue_naming_nothing_cannot_be_edited():
+    saga, magus = _magus()
+    magus.virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
+    ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
+    assert ops.edit is not None
+    step = ops.edit(0)
+    assert isinstance(step, Refuse)
+    assert "names nothing to change" in step.why
+
+
+def test_a_free_text_value_from_an_old_save_opens_on_the_list():
+    saga, magus = _magus()
+    magus.virtues_flaws = [
+        VirtueFlawInstance("vf_puissant_ability", {"ability": "magic theroy"})
+    ]
+    ops = virtue_forms.virtue_flaw_ops(saga, magus, "Virtue")
+    assert ops.edit is not None
+    form = ops.edit(0)
+    assert isinstance(form, Form)
+    ability = next(spec for spec in form.fields() if spec.key == "ability")
+    assert ability.value == "magic theroy"
+    run(form, {"ability": "magic theory"})
+    assert magus.virtues_flaws[0].params == {"ability": "magic theory"}
 
 
 def test_deleting_a_flaw_counts_rows_on_the_flaws_side_only():

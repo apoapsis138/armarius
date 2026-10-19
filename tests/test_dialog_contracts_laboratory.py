@@ -17,6 +17,17 @@ CONTRACTS: dict[str, Contract] = {
         expected={"specialization": "Muto"},
         invalid={"Specialization": Select.NULL},
     ),
+    "change lab virtue choice": Contract(
+        prefill={"Specialization": "Creo"},
+        edits={"Specialization": "Herbam"},
+        saved=lambda s: [
+            vf.params
+            for vf in laboratory(s).virtues_flaws
+            if vf.vf_id == "labvf_idyllic_surroundings"
+        ],
+        expected=[{"specialization": "Herbam"}],
+        invalid={"Specialization": Select.NULL},
+    ),
     "lab servant": Contract(
         # A grog of the saga, or the servant's Intelligence typed in.
         prefill={"Servant": Select.NULL, "Intelligence": ""},

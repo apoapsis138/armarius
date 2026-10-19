@@ -34,6 +34,7 @@ from ... import saga_content as sc
 from ... import sheet_text as st
 from ... import spells as spl
 from ...boon_hook_text import boon_hook_entry_text, boon_hook_names
+from ...forms import covenant as covenant_forms
 from ...forms import virtue as virtue_forms
 from ...markup import escape
 from ...models import (
@@ -50,13 +51,11 @@ from ...models import (
     Spell,
     VirtueFlawDef,
     VirtueFlawInstance,
-    boon_hook_params,
 )
 from .fields import FieldsDialog, ModalDialog
 from .prompts import (
     _ability_dialog,
     _ability_from,
-    _boon_hook_fields,
     _lab_choice_dialog,
     _param_dialog,
     param_choices,
@@ -881,17 +880,13 @@ class CovenantBoonHookPickerScreen(
         def handle_detail(result: dict[str, Any] | None) -> None:
             if result is None:
                 return  # cancelled: back to the picker
-            params = boon_hook_params(
-                result["detail"],
-                result["description"],
-                unknown=result.get("unknown", False),
-            )
+            params = covenant_forms.boon_hook_entry_params(entry, result)
             self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
 
         self.app.push_screen(
             FieldsDialog(
                 f"{self.kind}: {escape(entry.name)}",
-                _boon_hook_fields(can_be_unknown=entry.unknown),
+                covenant_forms.boon_hook_entry_fields(entry),
             ),
             handle_detail,
         )

@@ -289,6 +289,11 @@ class CovenantBoonHookDef:
     least one (Magical Soldiers: any other kind of soldier), recorded like
     `requires`.
 
+    `parameters` lists what the entry names when it is taken, as a
+    Virtue's do ("{form}" in "Vis Source ({form})"): none of the books'
+    entries has any, but a saga's own may. Each is stored in the instance's
+    params beside its detail and description.
+
     `unknown` marks the Minor Hooks the book says "may be Unknown": an
     attached one can then be marked Unknown (BOON_HOOK_UNKNOWN) and counts
     3 points. `source` names the book(s) the entry comes from ("ArM5",
@@ -315,6 +320,7 @@ class CovenantBoonHookDef:
     #: A "Style of Governance" Boon (Autocracy, Council...), listed on the
     #: Inhabitants tab.
     governance: bool = False
+    parameters: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)

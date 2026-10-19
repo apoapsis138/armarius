@@ -227,12 +227,14 @@ brackets after its score.
 
 <!-- tui -->
 The covenant's Boons, chosen from the catalogue with `a` and edited with `e`
-to give their detail and description. The picker shows the highlighted
-Boon's rules, requirements and book under the list. The title shows the points they cost.
+to give their detail and description, and to change what they name. The
+picker shows the highlighted Boon's rules, requirements and book under the
+list. The title shows the points they cost.
 <!-- /tui -->
 <!-- gui -->
 The covenant's Boons, chosen from the catalogue with **Add** and edited
-with **Edit** to give their detail and description. The points they cost
+with **Edit** to give their detail and description, and to change what
+they name. The points they cost
 are under the title.
 <!-- /gui -->
 That total and the Hooks' total share one colour: plain while there are

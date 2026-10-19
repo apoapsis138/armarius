@@ -104,7 +104,9 @@ with its Burden in brackets.
 
 Its Virtues and Flaws, and the creature Qualities and Inferiorities of
 Realms of Power (Magic Animal, Improved Attack, Lesser Power...). Add
-them from the catalog, which offers what a creature may take.
+them from the catalog, which offers what a creature may take; Edit changes
+what the chosen one names (a Puissant Ability's Ability, say), keeping its
+place in the list.
 
 ### Personality Traits
 <!-- help: section-cr-personality-traits -->

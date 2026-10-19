@@ -46,6 +46,23 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.100.0 — 2026-10-19
+
+- **Change what a Virtue or Flaw names.** Edit on a Virtue or Flaw now
+  changes what it names, such as Puissant Magic Theory to Puissant
+  Finesse, Affinity with Creo to Affinity with Rego, or a laboratory
+  Virtue's Specialization, without deleting it and taking it again. It
+  keeps its place in the list. The choices and refusals are the same as
+  when it was taken, and changing a Great or Poor Characteristic moves
+  both scores, which the form shows before you save. This works for
+  characters, familiars, creatures and laboratories, on the terminal
+  and the desktop.
+- **Boons and Hooks can name choices too.** A Boon or Hook may now ask
+  for something when it is taken, such as a Form picked from a list, and
+  Edit changes it later. The House Rules form has a new *Asks for* field,
+  so your saga's own Virtues, Flaws, Boons and Hooks can ask for their
+  own choices ("Vis Source ({form})" shows as "Vis Source (Aquam)").
+
 ## 2.99.1 — 2026-10-19
 
 - **Tidier code, nothing new to see.** A code health pass: the longest

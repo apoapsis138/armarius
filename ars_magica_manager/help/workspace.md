@@ -501,11 +501,13 @@ Single entries this saga's pickers leave out, as if their book were out of play.
 The Virtues, Flaws, Boons and Hooks made for this saga: house rules, or entries from books the app's catalogs don't carry. They show in the pickers alongside the catalog's entries.
 
 <!-- tui -->
-**You type:** with `a` and `e`: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, a Description and, once the saga has sources of its own, the Source it comes from.
+**You type:** with `a` and `e`: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, what it Asks for, a Description and, once the saga has sources of its own, the Source it comes from.
 <!-- /tui -->
 <!-- gui -->
-**You type:** with **Add** and **Edit**: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, a Description and, once the saga has sources of its own, the Source it comes from.
+**You type:** with **Add** and **Edit**: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, what it Asks for, a Description and, once the saga has sources of its own, the Source it comes from.
 <!-- /gui -->
+
+**Asks for** (a character's or covenant's entry only) lists what is chosen when the entry is taken, comma-separated, as the books' Puissant asks for an Ability: "Form" for a Vis Source Boon, say. Characteristic, Ability, Art, Technique, Form, Realm and Blood are chosen from a list; anything else is typed. Put a choice in the name in braces, "Vis Source ({form})", to have it shown there ("Vis Source (Aquam)"); otherwise it follows the name in brackets. What was chosen can be changed later with Edit on the Virtue, Flaw, Boon or Hook.
 
 **The app works out:** the points from the type and tier (Free 0, Minor 1, Major 3; Flaws and Hooks give points rather than cost them), and, in its details, who holds the entry. An entry citing one of the saga's sources is offered only while that source is in play; one citing none always is.
 

@@ -1,18 +1,20 @@
 """Virtues and Flaws, independent of how they are drawn: adding one from
 the catalog (choose it, then fill in what it names: "Affinity with
-{art}") and deleting one, for a character, a familiar or a laboratory
-(commands.SectionOps). They can't be edited, only added and deleted.
+{art}"), changing what it names, and deleting one, for a character, a
+familiar or a laboratory (commands.SectionOps). Which Virtue it is can't
+be changed: that is a delete and an add.
 
 A character and a familiar choose from the character catalog, each entry
 checked against who is choosing (catalog.VirtueFlawChooser) and what
 they hold already; a character's Great or Poor (Characteristic) moves
-the Characteristic it names as it is added or deleted. A laboratory
+the Characteristic it names as it is added, changed or deleted. A laboratory
 chooses from its own catalog (ArM5 Covenants, Chapter 9); deleting a
 Feature Virtue takes its Feature too.
 """
 
 from __future__ import annotations
 
+import copy
 from collections.abc import Sequence
 from typing import Any
 
@@ -35,6 +37,7 @@ from ..markup import escape
 from ..models import (
     FOCUS_FLAWS,
     Character,
+    CovenantBoonHookDef,
     Creature,
     Familiar,
     Laboratory,
@@ -102,7 +105,7 @@ ADD_TITLES: dict[str | None, str] = {
 
 
 def param_choices(
-    entry: VirtueFlawDef,
+    entry: VirtueFlawDef | CovenantBoonHookDef,
     taken: Sequence[VirtueFlawInstance] = (),
     own_abilities: Sequence[str] = (),
 ) -> dict[str, list[tuple[str, str]]]:
@@ -110,8 +113,8 @@ def param_choices(
     Characteristic, an Ability, an Art, a Technique, a Form, a realm or a
     kind of Faerie Blood,
     as (label, stored value) pairs; other parameters are typed. A value
-    the character already holds this entry for, as often as the book
-    allows, is left out."""
+    the character already holds this Virtue or Flaw for, as often as the
+    book allows, is left out (a Boon or Hook may be taken again freely)."""
     named: dict[str, Sequence[str]] = {
         "characteristic": CHARACTERISTIC_NAMES,
         "art": ARTS,
@@ -131,11 +134,12 @@ def param_choices(
             choices = named[param]
         else:
             continue
-        single = len(entry.parameters) == 1
+        single = len(entry.parameters) == 1 and isinstance(entry, VirtueFlawDef)
         found[param] = [
             (escape(name), name.lower())
             for name in choices
             if not single
+            or not isinstance(entry, VirtueFlawDef)
             or not catalog.virtue_flaw_repeat_refusal(
                 entry, taken, {param: name.lower()}
             )
@@ -146,11 +150,14 @@ def param_choices(
 def param_fields(
     parameters: Sequence[str],
     choices: dict[str, list[tuple[str, str]]] | None = None,
+    current: dict[str, str] | None = None,
 ) -> list[DialogField]:
     """Fill in a catalog entry's {placeholders} ("Affinity with {art}"): a
     parameter with `choices` is picked from them; the rest are typed.
+    `current` holds what an instance names now, for changing it.
     params_from reads the values."""
     choices = choices or {}
+    current = current or {}
 
     def field(param: str) -> DialogField:
         if param in choices:
@@ -158,7 +165,7 @@ def param_fields(
                 param,
                 param.title(),
                 "select",
-                None,
+                current.get(param) or None,
                 options=choices[param],
                 required=True,
                 allow_blank=True,
@@ -166,9 +173,16 @@ def param_fields(
             )
         if param in OPTIONAL_PARAMS:
             label, hint = OPTIONAL_PARAMS[param]
-            return DialogField(param, label, "text", "", placeholder=hint)
+            return DialogField(
+                param, label, "text", current.get(param, ""), placeholder=hint
+            )
         return DialogField(
-            param, param.title(), "text", "", required=True, placeholder="e.g. Creo"
+            param,
+            param.title(),
+            "text",
+            current.get(param, "").title(),
+            required=True,
+            placeholder="e.g. Creo",
         )
 
     return [field(param) for param in parameters]
@@ -186,14 +200,19 @@ def lab_needs_input(entry: LabVirtueFlawDef) -> bool:
 
 
 def lab_param_fields(
-    saga: Saga | None, lab: Laboratory | None, entry: LabVirtueFlawDef
+    saga: Saga | None,
+    lab: Laboratory | None,
+    entry: LabVirtueFlawDef,
+    current: dict[str, str] | None = None,
 ) -> list[DialogField]:
     """What adding a laboratory Virtue or Flaw asks for: its Specialization
     (lab_choice_fields), and for one whose effect is read from an
     Intelligence, the servant (one of the saga's grogs, whose Intelligence
-    is then used) or the Intelligence typed in. lab_params_from reads the
+    is then used) or the Intelligence typed in. `current` holds what an
+    instance names now, for changing it. lab_params_from reads the
     values."""
-    fields = lab_choice_fields(entry)
+    current = current or {}
+    fields = lab_choice_fields(entry, current)
     grogs = servant_options(saga, lab) if "servant" in entry.parameters else []
     if grogs:
         fields.append(
@@ -201,7 +220,7 @@ def lab_param_fields(
                 "servant",
                 "Servant",
                 "select",
-                None,
+                current.get("servant") or None,
                 options=grogs,
                 allow_blank=True,
                 placeholder="(none: type the Intelligence)",
@@ -219,7 +238,7 @@ def lab_param_fields(
                 "intelligence",
                 "Intelligence",
                 "optint",
-                None,
+                _int_or_none(current.get("intelligence")),
                 hint=f"{whose[0].upper()}{whose[1:]} Intelligence; Safety "
                 + ("+half of it, rounded up." if divisor == 2 else "+that much."),
                 show_if=(lambda values: not values.get("servant")) if grogs else None,
@@ -252,15 +271,26 @@ def servant_options(saga: Saga | None, lab: Laboratory | None) -> list[tuple[str
     return [(escape(c.name), c.id) for c in grogs]
 
 
-def lab_choice_fields(entry: LabVirtueFlawDef) -> list[DialogField]:
+def _int_or_none(text: str | None) -> int | None:
+    try:
+        return int(text) if text else None
+    except ValueError:
+        return None
+
+
+def lab_choice_fields(
+    entry: LabVirtueFlawDef, current: dict[str, str] | None = None
+) -> list[DialogField]:
     """Choose the Specialization a laboratory Virtue or Flaw grants points
-    to, from the ones its catalog entry allows."""
+    to, from the ones its catalog entry allows (`current`: the one chosen
+    now)."""
+    current = current or {}
     return [
         DialogField(
             param,
             "Specialization",
             "select",
-            None,
+            current.get(param) or None,
             options=pairs(options),
             required=True,
             allow_blank=True,
@@ -573,13 +603,135 @@ def _remove_lab(lab: Laboratory, index: int, name: str) -> Confirm:
     return Confirm(message, apply)
 
 
+# -- changing what one names --
+
+
+def edit_virtue_flaw(saga: Saga, owner: Owner, index: int) -> Command:
+    """Change what the owner's Virtue/Flaw at `index` names (Puissant's
+    Ability, a Great Characteristic's Characteristic, a laboratory
+    Virtue's Specialization), in place: it keeps its place in the list,
+    and anything built on it (a laboratory Feature) stays. One that names
+    nothing is refused."""
+    name = vf_name(owner, index)
+    if isinstance(owner, Laboratory):
+        return _edit_lab(saga, owner, index, name)
+    instance = owner.virtues_flaws[index]
+    entry = catalog.load_virtue_flaw_catalog_by_id().get(instance.vf_id)
+    if entry is None or not entry.parameters:
+        return Refuse(
+            escape(name),
+            f"{escape(name)} names nothing to change. To take a different "
+            "Virtue or Flaw, delete this one and add the other.",
+        )
+    editor = _Editor(saga, owner, index, entry)
+    return Form(
+        f"Change {escape(name)}",
+        lambda: param_fields(entry.parameters, editor.choices(), instance.params),
+        editor.apply,
+        validate=editor.problem,
+        live=editor.live,
+    )
+
+
+class _Editor:
+    """Changing a character's, familiar's or creature's Virtue/Flaw: its
+    choices and refusals are Add's (_Adder), worked out as if this copy
+    weren't held, so it never stands in its own way."""
+
+    def __init__(
+        self,
+        saga: Saga,
+        owner: Character | Familiar | Creature,
+        index: int,
+        entry: VirtueFlawDef,
+    ):
+        self.saga, self.owner, self.index, self.entry = saga, owner, index, entry
+        self.instance = owner.virtues_flaws[index]
+        # The owner as it would be without this copy: its Characteristic
+        # point (Great, Poor, a heritage) taken back too.
+        without = copy.deepcopy(owner)
+        if isinstance(without, Character):
+            cch.unapply_virtue(saga, without, without.virtues_flaws[index])
+        del without.virtues_flaws[index]
+        self.without = without
+        self.adder = _Adder(saga, without, None)
+
+    def params(self, values: dict[str, Any]) -> dict[str, str]:
+        """The instance's params with the form's choices; one left blank
+        (the form half filled, for the live line) keeps its old value."""
+        chosen = [p for p in self.entry.parameters if values.get(p)]
+        return {**self.instance.params, **params_from(chosen, values)}
+
+    def choices(self) -> dict[str, list[tuple[str, str]]]:
+        return self.adder.choices(self.entry)
+
+    def problem(self, values: dict[str, Any]) -> str | None:
+        params = self.params(values)
+        if params == self.instance.params:
+            return None
+        return self.adder.refusal(self.entry, params) or None
+
+    def moves(self, params: dict[str, str]) -> list[str]:
+        """The Characteristics the change moves, as "Strength +4 to +3"."""
+        if not isinstance(self.owner, Character) or params == self.instance.params:
+            return []
+        after = copy.deepcopy(self.without)
+        assert isinstance(after, Character)
+        cch.apply_virtue(self.saga, after, VirtueFlawInstance(self.entry.id, params))
+        found = []
+        for key, label in cch.CHARACTERISTICS:
+            old = getattr(self.owner.characteristics, key)
+            new = getattr(after.characteristics, key)
+            if old != new:
+                found.append(f"{label} {old:+d} to {new:+d}")
+        return found
+
+    def live(self, values: dict[str, Any]) -> str:
+        moved = self.moves(self.params(values))
+        return f"Moves {escape(', '.join(moved))}." if moved else ""
+
+    def apply(self, values: dict[str, Any]) -> list[str]:
+        params = self.params(values)
+        if params == self.instance.params:
+            return []
+        moved = self.moves(params)
+        if isinstance(self.owner, Character):
+            cch.unapply_virtue(self.saga, self.owner, self.instance)
+        self.instance.params = params
+        if isinstance(self.owner, Character):
+            cch.apply_virtue(self.saga, self.owner, self.instance)
+        return [f"Moved {', '.join(moved)}."] if moved else []
+
+
+def _edit_lab(saga: Saga, lab: Laboratory, index: int, name: str) -> Command:
+    instance = lab.virtues_flaws[index]
+    entry = catalog.load_lab_virtue_flaw_catalog_by_id().get(instance.vf_id)
+    if entry is None or not lab_needs_input(entry):
+        return Refuse(
+            escape(name),
+            f"{escape(name)} names nothing to change. To take a different "
+            "Virtue or Flaw, delete this one and add the other.",
+        )
+
+    def apply(values: dict[str, Any]) -> None:
+        counted = lab_rules.counted_specializations(lab)
+        instance.params = lab_params_from(entry, values)
+        lab_rules.reconcile_dropped(lab, counted)
+
+    return Form(
+        f"Change {escape(name)}",
+        lambda: lab_param_fields(saga, lab, entry, instance.params),
+        apply,
+    )
+
+
 # -- a section's ops --
 
 
 def virtue_flaw_ops(saga: Saga, owner: Owner, side: str | None = None) -> SectionOps:
-    """Add and Delete for the owner's Virtues or Flaws (`side`: "Virtue"
-    or "Flaw"; None: both in one list). Edit and Delete's row is an index
-    into the side's own list (side_indices), in the order taken."""
+    """Add, Edit and Delete for the owner's Virtues or Flaws (`side`:
+    "Virtue" or "Flaw"; None: both in one list). Edit and Delete's row is
+    an index into the side's own list (side_indices), in the order taken."""
 
     def add() -> Choose:
         if isinstance(owner, Laboratory):
@@ -593,11 +745,15 @@ def virtue_flaw_ops(saga: Saga, owner: Owner, side: str | None = None) -> Sectio
             others=adder.others,
         )
 
+    def edit(row: int) -> Command:
+        return edit_virtue_flaw(saga, owner, side_indices(owner, side)[row])
+
     def remove(row: int) -> Confirm:
         return remove_virtue_flaw(saga, owner, side_indices(owner, side)[row])
 
     return SectionOps(
         add=add,
+        edit=edit,
         remove=remove,
         rows=lambda: [vf_name(owner, index) for index in side_indices(owner, side)],
     )

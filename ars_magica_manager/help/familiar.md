@@ -149,15 +149,16 @@ titles.
 <!-- help: section-fam-vf-virtues; gui -->
 
 The familiar's Virtues, each with its tier, and the points they come to in
-the title. As on a character, Virtues can only be added and deleted, not
-edited: **Add** opens the catalog on its Virtues.
+the title. As on a character, **Add** opens the catalog on its Virtues, and
+**Edit** changes what the chosen one names (its Ability or Art), keeping
+its place in the list.
 
 ### Flaws
 <!-- help: section-fam-vf-flaws; gui -->
 
 The familiar's Flaws, each with its tier, and the points they come to in the
-title. Flaws can only be added and deleted, not edited: **Add** opens the
-catalog on its Flaws.
+title. **Add** opens the catalog on its Flaws, and **Edit** changes what
+the chosen one names.
 
 ## Characteristics tab
 <!-- help: tab-fam-characteristics; tui -->

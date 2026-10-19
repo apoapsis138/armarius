@@ -266,3 +266,27 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  
             pilot, lambda: storage.load_saga("test_saga").custom_boons_hooks == []
         )
         assert hook_id not in catalog.load_covenant_boon_hook_catalog_by_id()
+
+
+def test_a_character_or_covenant_entry_may_ask_for_choices():
+    saga = _saga()
+    virtue = hr.add(
+        saga,
+        hr.CHARACTER,
+        _values("Storm-Touched", "Virtue", parameters=["form"]),
+    )
+    assert virtue.parameters == ["form"]
+    assert hr.parse_choices(" Form, Old Ability ,") == ["form", "old ability"]
+    assert hr.form_problem(
+        saga, hr.LABORATORY, _values("Leaky", "Flaw", parameters=["art"])
+    )
+    assert hr.form_problem(
+        saga, hr.COVENANT, _values("Spring", "Boon", parameters=["detail"])
+    )
+    assert hr.form_problem(
+        saga, hr.CHARACTER, _values("Twice", "Virtue", parameters=["art", "art"])
+    )
+    assert hr.form_problem(
+        saga, hr.CHARACTER, _values("Odd", "Virtue", parameters=["art2"])
+    )
+    assert "Asks for:" in hr.detail_text(saga, (hr.CHARACTER, virtue))

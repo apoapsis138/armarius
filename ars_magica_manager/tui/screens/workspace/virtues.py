@@ -1,6 +1,6 @@
 """WorkspaceScreen's Virtues and Flaws actions, shared by the character,
-familiar and laboratory sheets: adding one, and deleting one with what it
-changed undone."""
+familiar and laboratory sheets: adding one, changing what it names, and
+deleting one with what it changed undone."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from .... import laboratories as lab_rules
 from ....actions import (
     NodeKind,
 )
+from ....forms import virtue as virtue_forms
 from ....markup import escape
 from ....models import (
     FOCUS_FLAWS,
@@ -38,12 +39,12 @@ from ..sheets import (
     LAB_VF_SECTIONS,
 )
 from .base import (
-    WorkspaceBase,
     _SectionOps,
 )
+from .creation import CreationActions
 
 
-class VirtueFlawActions(WorkspaceBase):
+class VirtueFlawActions(CreationActions):
     # -- shared Character/Laboratory/Familiar Virtue & Flaw actions --
 
     def action_add_virtue_flaw(self) -> None:
@@ -109,6 +110,23 @@ class VirtueFlawActions(WorkspaceBase):
                 ),
             ),
             handle_result,
+        )
+
+    def action_edit_virtue_flaw(self) -> None:
+        """Change what the chosen Virtue/Flaw names (Puissant's Ability, a
+        laboratory Virtue's Specialization) on the character, laboratory
+        or familiar on show: the core's steps (forms.virtue)."""
+        target = self._virtue_flaw_target()
+        if target is None:
+            return
+        edit = virtue_forms.virtue_flaw_ops(self.saga, target).edit
+        if edit is None:
+            return
+        self._chosen_or_pick(
+            self._selected_virtue_flaw(target),
+            [vf.vf_id for vf in target.virtues_flaws],
+            empty="No Virtues/Flaws to change.",
+            then=lambda index: self._run_steps(edit(index)),
         )
 
     def action_remove_virtue_flaw(self) -> None:
@@ -241,12 +259,13 @@ class VirtueFlawActions(WorkspaceBase):
         return None
 
     def _virtue_flaw_section_ops(self) -> dict[str, _SectionOps]:
-        """a / d on the Virtues and Flaws lists (character, laboratory,
-        familiar), like any other list. They can't be edited, only added and
-        deleted (see WorkspaceScreen._section_ops)."""
+        """a / e / d on the Virtues and Flaws lists (character, laboratory,
+        familiar), like any other list (see WorkspaceScreen._section_ops)."""
         return {
             section: _SectionOps(
-                self.action_add_virtue_flaw, self.action_remove_virtue_flaw
+                self.action_add_virtue_flaw,
+                self.action_remove_virtue_flaw,
+                self.action_edit_virtue_flaw,
             )
             for section in (
                 "section-vf-virtues",

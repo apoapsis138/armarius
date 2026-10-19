@@ -292,7 +292,7 @@ async def test_a_list_tab_moves_into_its_list():
 # -- A / e / d everywhere --------------------------------------
 
 
-async def test_virtues_and_flaws_use_a_and_d_like_any_other_list():
+async def test_virtues_and_flaws_use_a_e_and_d_like_any_other_list():
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
@@ -300,8 +300,8 @@ async def test_virtues_and_flaws_use_a_and_d_like_any_other_list():
         await _show_tab(pilot, workspace, "tab-vf")
         assert workspace._active_section() == "section-vf-virtues"
         footer = _footer(app)
-        assert footer.lstrip().startswith("a Add  d Delete")
-        assert not workspace.check_action("edit", ())  # they can't be edited
+        assert footer.lstrip().startswith("a Add  e Edit  d Delete")
+        assert workspace.check_action("edit", ())  # e changes what one names
 
         await pilot.press("a")
         assert await wait_until(
@@ -557,7 +557,14 @@ async def test_the_footer_keeps_focused_actions_left_and_global_ones_right():
         await _show_tab(pilot, workspace, "tab-vf")
         moved = _footer(app)
         assert moved.split("▏", 1)[1] == footer.split("▏", 1)[1]
-        assert moved.split("▏", 1)[0].split() == ["a", "Add", "d", "Delete"]
+        assert moved.split("▏", 1)[0].split() == [
+            "a",
+            "Add",
+            "e",
+            "Edit",
+            "d",
+            "Delete",
+        ]
         # It fits the smallest size the app is checked at.
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
