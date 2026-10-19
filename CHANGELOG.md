@@ -46,6 +46,13 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.102.1 — 2026-10-19
+
+- **The Armarius icon on the Windows taskbar.** The desktop version now
+  tells Windows it is its own app, so the taskbar shows the Armarius
+  sigil rather than Python's icon on every computer, whatever its
+  taskbar settings.
+
 ## 2.102.0 — 2026-10-19
 
 - **The Transylvania pack.** Against the Dark: the Transylvanian Tribunal

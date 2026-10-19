@@ -5,6 +5,22 @@ from __future__ import annotations
 
 import sys
 
+#: The app's own identity on the Windows taskbar.
+APP_USER_MODEL_ID = "Armarius.Desktop"
+
+
+def claim_taskbar_identity() -> None:
+    """Give the process its own AppUserModelID on Windows, so the taskbar
+    groups its window as Armarius and shows the app's icon rather than
+    Python's. Without one, Windows groups the window with python.exe, and
+    whether its icon or the window's shows depends on that machine's
+    taskbar settings."""
+    if sys.platform != "win32":
+        return
+    import ctypes
+
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_USER_MODEL_ID)
+
 
 def main() -> int:
     from .. import paths
@@ -13,6 +29,9 @@ def main() -> int:
     renamed = paths.move_old_default_folder()
     problem = paths.settle_data_dir()
     from PySide6.QtWidgets import QApplication
+
+    # Before any window exists: the taskbar reads the id when one opens.
+    claim_taskbar_identity()
 
     from . import pictures
     from .window import MainWindow
