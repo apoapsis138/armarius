@@ -163,6 +163,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "tribunal": ("tribunal", "rhine"),
     "theban_tribunal": ("tribunal", "thebes"),
     "normandy_tribunal": ("tribunal", "normandy"),
+    "transylvania_tribunal": ("tribunal", "transylvania"),
     "region": ("region",),
     "neighbour": ("neighbour", "gottfried"),
     "town": ("neighbour", "soest"),
@@ -485,6 +486,24 @@ def everything_saga() -> Saga:
                             {"year": 1220, "team": "Mont Saint Michel", "points": 45},
                             {"year": 1220, "team": "Visitors of Iberia", "points": 30},
                         ],
+                    }
+                },
+            ),
+            Tribunal(
+                id="transylvania",
+                name="Transylvania",
+                next_year=1228,
+                meeting_place="the Shipka Pass",
+                package="transylvania",
+                package_data={
+                    "transylvania": {
+                        "members": [
+                            {
+                                "character_id": "mag1",
+                                "privilege": "coloniae",
+                                "office": "Curantis",
+                            },
+                        ]
                     }
                 },
             ),

@@ -99,6 +99,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "tribunal": 40,
     "theban_tribunal": 40,
     "normandy_tribunal": 42,  # one tab more: History
+    "transylvania_tribunal": 40,
     "region": 50,
     "neighbour": 40,
     "town": 40,

@@ -48,6 +48,7 @@ SHEETS = {
     "tribunal",
     "theban_tribunal",
     "normandy_tribunal",
+    "transylvania_tribunal",
     "region",
     "neighbour",
     "town",

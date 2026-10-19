@@ -22,7 +22,7 @@ from .. import sourcebooks
 from ..commands import SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
-from ..models import CORE_PACKAGE, Covenant, Saga, Tribunal
+from ..models import CORE_PACKAGE, Character, Covenant, Saga, Tribunal
 
 
 @dataclass(frozen=True)
@@ -92,6 +92,15 @@ class TribunalPackage:
         Callable[[Saga, Tribunal, Covenant | None], list[DialogField]] | None
     ) = None
     save_covenant: Callable[[Tribunal, str, dict[str, Any]], None] | None = None
+    #: What its books call a covenant, the place where magi live
+    #: ("oppidum"), and more than one; its screens say so.
+    place: str = "covenant"
+    places: str = "covenants"
+    #: Lines a magus of one of its covenants shows on their sheet, each a
+    #: label and its value (Transylvania's privilege).
+    magus_facts: Callable[[Saga, Tribunal, Character], list[tuple[str, str]]] | None = (
+        None
+    )
 
     @property
     def lists(self) -> tuple[PackageList, ...]:
@@ -134,6 +143,26 @@ def offered(saga: Saga, current: str | None = None) -> list[TribunalPackage]:
         for p in PACKAGES.values()
         if p.key == current or not p.book or sourcebooks.in_play(p.book, books)
     ]
+
+
+def place_word(saga: Saga, covenant: Covenant | None, plural: bool = False) -> str:
+    """What the covenant's Tribunal calls such a place ("covenant", or
+    "oppidum" in Transylvania), in lower case."""
+    tribunal = saga.tribunal(covenant.tribunal_id) if covenant is not None else None
+    package = of(tribunal) if tribunal is not None else CORE
+    return package.places if plural else package.place
+
+
+def magus_facts(saga: Saga, character: Character) -> list[tuple[str, str]]:
+    """What the magus's Tribunal's customs add to their sheet."""
+    covenant = saga.covenant(character.covenant_id)
+    tribunal = saga.tribunal(covenant.tribunal_id) if covenant is not None else None
+    if tribunal is None or character.type != "magus":
+        return []
+    package = of(tribunal)
+    if package.magus_facts is None:
+        return []
+    return package.magus_facts(saga, tribunal, character)
 
 
 def data(tribunal: Tribunal, key: str) -> dict[str, Any]:

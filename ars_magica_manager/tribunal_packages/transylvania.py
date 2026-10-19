@@ -1,62 +1,371 @@
 """The Transylvanian Tribunal's customs (Against the Dark: The
-Transylvanian Tribunal): each covenant holds one of five privilege
-classes, which say what its magi may do: stand for office, take
-apprentices, trade vis.
+Transylvanian Tribunal). Its magi live in oppida, the places other
+Tribunals call covenants, and each magus belongs to one of the five
+legal covenants the Sundering left it, which serve as privileges: what
+the magus may do in the Tribunal (stand for office, take apprentices,
+trade vis). The members of one oppidum hold different privileges by
+rule, so the privilege belongs to the magus, not the oppidum. Each
+oppidum has one or two aediles from among its magi.
 
-Kept in the package's data: "classes", {covenant id: class}. The roster
-gains a Class column, entered through its Edit."""
+Kept in the package's data: "members", each {"character_id",
+"privilege" (a key of PRIVILEGES), "office"}; and "aediles", {covenant
+id: [character id, ...]}. Saves made before privileges belonged to the
+magus kept "classes", {covenant id: class}; members() hands each of that
+oppidum's magi its class the first time it is read."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
+from ..commands import Command, Confirm, Form, SectionOps
 from ..form_spec import DialogField
-from ..models import Covenant, Saga, Tribunal
-from . import RosterColumn, TribunalPackage, data, register
+from ..grids import Grid
+from ..markup import escape
+from ..models import Character, Covenant, Saga, Tribunal
+from ..sections import PRIVILEGES_SECTION
+from . import (
+    PackageList,
+    PackageTab,
+    RosterColumn,
+    TribunalPackage,
+    data,
+    entries,
+    register,
+)
 
 KEY = "transylvania"
 
-#: The privilege classes, each with the covenant whose class it is in
-#: the book, and what it allows.
-CLASSES: dict[str, str] = {
-    "Cives": "any office, Praeco too; apprentices; chooses an aedile",
-    "Socii": "any office but Praeco; must not provoke Wizard War",
-    "Coloniae": "settlers: no office but aedile; apprentices by leave",
-    "Hospites": "hired specialists: office, apprentices and more by leave",
-    "Foederati": "keep their own customs; trade with outsiders by leave",
+
+@dataclass(frozen=True)
+class Privilege:
+    """One of the five legal covenants, as the privilege it grants."""
+
+    name: str
+    covenant: str
+    allows: str
+
+    @property
+    def label(self) -> str:
+        """ "Cives (Coeris)"."""
+        return f"{self.name} ({self.covenant})"
+
+
+#: The privileges, in the book's order of rank, each with the legal
+#: covenant it belongs to and what it allows.
+PRIVILEGES: dict[str, Privilege] = {
+    "cives": Privilege(
+        "Cives", "Coeris", "any office, Praeco too; apprentices; chooses an aedile"
+    ),
+    "socii": Privilege(
+        "Socii", "Domostron", "any office but Praeco; must not provoke Wizard War"
+    ),
+    "coloniae": Privilege(
+        "Coloniae", "Asclepius", "settlers: no office but aedile; apprentices by leave"
+    ),
+    "hospites": Privilege(
+        "Hospites",
+        "Diodorus",
+        "hired specialists: office, apprentices and more by leave",
+    ),
+    "foederati": Privilege(
+        "Foederati",
+        "Pannonia",
+        "keep their own customs; trade with outsiders by leave",
+    ),
 }
 
+#: An oppidum has at most this many aediles.
+AEDILES = 2
 
-def classes(tribunal: Tribunal) -> dict[str, str]:
-    """Each covenant's privilege class, by covenant id."""
-    found = data(tribunal, KEY).setdefault("classes", {})
+
+def _privilege_key(value: str) -> str:
+    """A privilege's key from its key or its name ("Cives"), or ""."""
+    key = value.strip().casefold()
+    return key if key in PRIVILEGES else ""
+
+
+def residents(saga: Saga, covenant: Covenant) -> list[Character]:
+    """The magi who live in the oppidum."""
+    return [
+        c for c in saga.characters if c.type == "magus" and c.covenant_id == covenant.id
+    ]
+
+
+def _carry_over_classes(saga: Saga, tribunal: Tribunal, found: list) -> None:
+    """Give each magus of an oppidum that a save gave a class that class,
+    unless they already have an entry."""
+    classes = data(tribunal, KEY).pop("classes", None)
+    if not isinstance(classes, dict):
+        return
+    entered = {m.get("character_id") for m in found}
+    for covenant_id, name in classes.items():
+        covenant = saga.covenant(covenant_id)
+        key = _privilege_key(str(name))
+        if covenant is None or not key:
+            continue
+        for magus in residents(saga, covenant):
+            if magus.id not in entered:
+                found.append({"character_id": magus.id, "privilege": key})
+                entered.add(magus.id)
+
+
+def members(saga: Saga, tribunal: Tribunal) -> list[dict[str, Any]]:
+    """Each magus's privilege and office, in the order entered."""
+    found = entries(tribunal, KEY, "members")
+    if "classes" in data(tribunal, KEY):
+        _carry_over_classes(saga, tribunal, found)
+    return found
+
+
+def entry_of(saga: Saga, tribunal: Tribunal, character_id: str) -> dict | None:
+    """The magus's entry, or None."""
+    for entry in members(saga, tribunal):
+        if entry.get("character_id") == character_id:
+            return entry
+    return None
+
+
+def privilege_label(entry: dict[str, Any] | None) -> str:
+    """ "Cives (Coeris)", or "" for none entered."""
+    privilege = PRIVILEGES.get((entry or {}).get("privilege", ""))
+    return privilege.label if privilege is not None else ""
+
+
+# -- the aediles --
+
+
+def aediles(tribunal: Tribunal) -> dict[str, list[str]]:
+    """Each oppidum's aediles, by covenant id."""
+    found = data(tribunal, KEY).setdefault("aediles", {})
     assert isinstance(found, dict)
     return found
 
 
-def class_of(_saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
-    """The covenant's privilege class, or "" if none is entered."""
-    return classes(tribunal).get(covenant.id, "")
+def aediles_of(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> list[Character]:
+    """The oppidum's aediles who are still in the saga."""
+    chosen = (saga.character(i) for i in aediles(tribunal).get(covenant.id, []))
+    return [c for c in chosen if c is not None]
 
 
-def class_field(_saga: Saga, tribunal: Tribunal, covenant: Covenant) -> DialogField:
-    return DialogField(
-        "privilege",
-        "Privilege class",
-        "select",
-        classes(tribunal).get(covenant.id),
-        options=[(f"{name}: {allows}", name) for name, allows in CLASSES.items()],
-        allow_blank=True,
-        placeholder="(not entered)",
-        hint="What its magi may do in the Tribunal.",
+def aediles_text(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
+    return ", ".join(c.name for c in aediles_of(saga, tribunal, covenant))
+
+
+def aedile_fields(
+    saga: Saga, _tribunal: Tribunal, covenant: Covenant | None
+) -> list[DialogField]:
+    """An oppidum's own form: its aediles, from the magi who live there."""
+    magi = residents(saga, covenant) if covenant is not None else []
+    chosen = aediles(_tribunal).get(covenant.id, []) if covenant is not None else []
+    options = [(escape(c.name), c.id) for c in magi]
+    hint = (
+        "One of the magi who live here."
+        if magi
+        else "Its magi choose the aediles: give it magi first."
+    )
+    return [
+        DialogField(
+            f"aedile_{n}",
+            "Aedile" if n == 0 else "Second aedile",
+            "select",
+            chosen[n] if n < len(chosen) else None,
+            options=options,
+            allow_blank=True,
+            placeholder="(none chosen)",
+            hint=hint if n == 0 else "Some oppida have two.",
+        )
+        for n in range(AEDILES)
+    ]
+
+
+def save_aediles(tribunal: Tribunal, ident: str, values: dict[str, Any]) -> None:
+    chosen: list[str] = []
+    for n in range(AEDILES):
+        value = values.get(f"aedile_{n}")
+        if value and value not in chosen:
+            chosen.append(value)
+    if chosen:
+        aediles(tribunal)[ident] = chosen
+    else:
+        aediles(tribunal).pop(ident, None)
+
+
+def aedile_of(saga: Saga, tribunal: Tribunal, character_id: str) -> Covenant | None:
+    """The oppidum the magus is an aedile of, or None."""
+    for covenant_id, chosen in aediles(tribunal).items():
+        if character_id in chosen:
+            return saga.covenant(covenant_id)
+    return None
+
+
+# -- the five covenants --
+
+
+def offices(saga: Saga, tribunal: Tribunal, entry: dict[str, Any]) -> str:
+    """The magus's offices: Praeco, Presiding Quaesitor, aedile, and any
+    office entered."""
+    ident = entry.get("character_id", "")
+    found = []
+    if ident and ident == tribunal.praeco_id:
+        found.append("Praeco")
+    if ident and ident == tribunal.quaesitor_id:
+        found.append("Presiding Quaesitor")
+    if aedile_of(saga, tribunal, ident) is not None:
+        found.append("Aedile")
+    if entry.get("office"):
+        found.append(entry["office"])
+    return ", ".join(found)
+
+
+def _name(saga: Saga, character_id: str | None) -> str:
+    character = saga.character(character_id)
+    return character.name if character is not None else "(gone)"
+
+
+def _rank(entry: dict[str, Any]) -> int:
+    keys = list(PRIVILEGES)
+    privilege = entry.get("privilege", "")
+    return keys.index(privilege) if privilege in keys else len(keys)
+
+
+def ordered(saga: Saga, tribunal: Tribunal) -> list[int]:
+    """The members' indices, by legal covenant and then by name."""
+    found = members(saga, tribunal)
+    return sorted(
+        range(len(found)),
+        key=lambda i: (
+            _rank(found[i]),
+            _name(saga, found[i].get("character_id")).casefold(),
+        ),
     )
 
 
-def save_class(tribunal: Tribunal, covenant: Covenant, value: Any) -> None:
-    if value:
-        classes(tribunal)[covenant.id] = value
-    else:
-        classes(tribunal).pop(covenant.id, None)
+def members_title(saga: Saga, tribunal: Tribunal) -> str:
+    return f"The Five Covenants ({len(members(saga, tribunal))})"
+
+
+def members_grid(saga: Saga, tribunal: Tribunal) -> Grid:
+    """Each magus: the oppidum they live in, their privilege and legal
+    covenant, and their offices, grouped by legal covenant."""
+    found = members(saga, tribunal)
+    order = ordered(saga, tribunal)
+    rows = []
+    styles: dict[tuple[int, int], str] = {}
+    for row, index in enumerate(order):
+        entry = found[index]
+        character = saga.character(entry.get("character_id"))
+        oppidum = saga.covenant(character.covenant_id) if character else None
+        label = privilege_label(entry)
+        if not label:
+            styles[(row, 2)] = "$label"
+        rows.append(
+            [
+                _name(saga, entry.get("character_id")),
+                oppidum.name if oppidum is not None else "",
+                label or "not entered",
+                offices(saga, tribunal, entry),
+            ]
+        )
+    return Grid(
+        ["Magus", "Oppidum", "Privilege", "Office"],
+        rows,
+        list[int | None](order),
+        "No magus's privilege recorded: each magus belongs to one of the "
+        "five legal covenants, whose privilege says what they may do.",
+        styles,
+        caps=[20, 16, 22, 0],
+        stretch=3,
+    )
+
+
+def _magus_options(saga: Saga) -> list[tuple[str, str]]:
+    return [(escape(c.name), c.id) for c in saga.characters if c.type == "magus"]
+
+
+def member_fields(saga: Saga, entry: dict[str, Any] | None) -> list[DialogField]:
+    e = entry or {}
+    return [
+        DialogField(
+            "character_id",
+            "Magus",
+            "select",
+            e.get("character_id"),
+            options=_magus_options(saga),
+            required=True,
+            hint="A magus of the saga, at any detail.",
+        ),
+        DialogField(
+            "privilege",
+            "Privilege",
+            "select",
+            e.get("privilege"),
+            options=[(f"{p.label}: {p.allows}", key) for key, p in PRIVILEGES.items()],
+            allow_blank=True,
+            placeholder="(not entered)",
+            hint="The legal covenant the magus belongs to, agreed with the Praeco.",
+        ),
+        DialogField(
+            "office",
+            "Office",
+            "text",
+            e.get("office", ""),
+            placeholder="e.g. Curantis",
+            hint="Praeco, Presiding Quaesitor and aedile show by themselves.",
+        ),
+    ]
+
+
+def member_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
+    def form(entry: dict[str, Any] | None) -> Form:
+        def problem(values: dict[str, Any]) -> str | None:
+            other = entry_of(saga, tribunal, values.get("character_id") or "")
+            if other is not None and other is not entry:
+                name = _name(saga, values.get("character_id"))
+                return f"{name} already has a privilege: edit theirs instead."
+            return None
+
+        def apply(values: dict[str, Any]) -> None:
+            target = entry if entry is not None else {}
+            target.update(values)
+            if not target.get("privilege"):
+                target.pop("privilege", None)
+            if entry is None:
+                members(saga, tribunal).append(target)
+
+        return Form(
+            "Add a Magus's Privilege" if entry is None else "Edit a Privilege",
+            lambda: member_fields(saga, entry),
+            apply,
+            validate=problem,
+            save_label="Add" if entry is None else "Save",
+        )
+
+    def remove(index: int) -> Command:
+        entry = members(saga, tribunal)[index]
+
+        def apply() -> None:
+            members(saga, tribunal).remove(entry)
+
+        name = escape(_name(saga, entry.get("character_id")))
+        return Confirm(f"Delete {name}'s privilege?", apply)
+
+    return SectionOps(
+        add=lambda: form(None),
+        edit=lambda index: form(members(saga, tribunal)[index]),
+        remove=remove,
+        rows=lambda: [
+            _name(saga, m.get("character_id")) for m in members(saga, tribunal)
+        ],
+    )
+
+
+def magus_facts(
+    saga: Saga, tribunal: Tribunal, character: Character
+) -> list[tuple[str, str]]:
+    """A Transylvanian magus's privilege, for their sheet."""
+    label = privilege_label(entry_of(saga, tribunal, character.id))
+    return [("Privilege", label or "(not entered)")]
 
 
 TRANSYLVANIA = TribunalPackage(
@@ -64,9 +373,22 @@ TRANSYLVANIA = TribunalPackage(
     "Transylvania",
     customs="Privileges",
     book="AtD",
-    columns=(RosterColumn("Class", class_of, 9, class_field, save_class),),
-    about="Each covenant holds one of five privilege classes (cives, socii, "
-    "coloniae, hospites, foederati), which say what its magi may do.",
+    place="oppidum",
+    places="oppida",
+    columns=(RosterColumn("Aediles", aediles_text, 18),),
+    tabs=(
+        PackageTab(
+            "The Five Covenants",
+            "tab-trib-privileges",
+            (PackageList(PRIVILEGES_SECTION, members_title, members_grid, member_ops),),
+        ),
+    ),
+    about="Its magi live in oppida, and each belongs to one of five legal "
+    "covenants, whose privilege (cives, socii, coloniae, hospites, "
+    "foederati) says what the magus may do; each oppidum has its aediles.",
+    covenant_fields=aedile_fields,
+    save_covenant=save_aediles,
+    magus_facts=magus_facts,
 )
 
 register(TRANSYLVANIA)

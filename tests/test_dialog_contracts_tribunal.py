@@ -404,6 +404,20 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Shards": "-1"}, {"Status": "metoikos", "Tokens": "1"}],
         shown={"#trib-tokens-list": "3"},
     ),
+    "add privilege": Contract(
+        prefill={"Office": ""},
+        edits={"Magus": "mag_sketch", "Privilege": "socii", "Office": "Polemarch"},
+        saved=lambda s: s.tribunal("transylvania").package_data["transylvania"][
+            "members"
+        ][-1],
+        expected={
+            "character_id": "mag_sketch",
+            "privilege": "socii",
+            "office": "Polemarch",
+        },
+        invalid=[{"Magus": "mag1"}],
+        shown={"#trib-privileges-list": "Socii (Domostron)"},
+    ),
     "add tenure": Contract(
         prefill={"Vis source": "", "Until (year)": "", "Notes": ""},
         edits={

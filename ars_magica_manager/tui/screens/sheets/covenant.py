@@ -14,7 +14,17 @@ from textual.widgets import (
     TabbedContent,
 )
 
-from .... import ahead, arms, book_value, catalog, seasons, tribunals, vassals, world
+from .... import (
+    ahead,
+    arms,
+    book_value,
+    catalog,
+    seasons,
+    tribunal_packages,
+    tribunals,
+    vassals,
+    world,
+)
 from .... import books as bk
 from .... import covenant_build as cov_build
 from .... import covenant_diary as cov_diary
@@ -803,7 +813,10 @@ class CovenantSheetView(SheetView):
                 ("Current Year", self._inherited(str(saga.current_year))),
                 ("Aegis' Penetration", str(cov.aegis_penetration)),
                 ("Living Conditions (Mundane)", str(cov.living_conditions_mundane)),
-                ("Covenant Season", cov.covenant_season),
+                (
+                    f"{tribunal_packages.place_word(saga, cov).title()} Season",
+                    cov.covenant_season,
+                ),
                 ("Aura Realm", self._aura_realm_text()),
                 # While it's being created: what's spent of its Build Points.
                 *(

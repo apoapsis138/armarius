@@ -52,6 +52,7 @@ _SHEET_VIEW_ATTR = {
     "tribunal": "_tribunal_sheet_view",
     "theban_tribunal": "_tribunal_sheet_view",
     "normandy_tribunal": "_tribunal_sheet_view",
+    "transylvania_tribunal": "_tribunal_sheet_view",
     "region": "_region_sheet_view",
     "neighbour": "_neighbour_sheet_view",
     "town": "_neighbour_sheet_view",

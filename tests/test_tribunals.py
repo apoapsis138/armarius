@@ -99,7 +99,7 @@ def test_deleting_a_tribunal_names_and_frees_its_covenants():
         "Keep, Fengheld will belong to no Tribunal; nothing else about them changes."
     ]
     trib.delete(saga, rhine)
-    assert [t.id for t in saga.tribunals] == ["thebes", "normandy"]
+    assert [t.id for t in saga.tribunals] == ["thebes", "normandy", "transylvania"]
     assert {c.tribunal_id for c in saga.covenants} == {None}
 
 
@@ -322,23 +322,6 @@ def test_normandy_ranks_its_tourney_and_marks_lapsed_tenures():
     assert tenure.rows[0][1:4] == ["the Tribunal", "Tropaeum", "1220"]
 
 
-def test_transylvania_enters_a_class_through_the_roster():
-    saga = everything_saga()
-    rhine = saga.tribunals[0]
-    rhine.package = "transylvania"
-    ops = tribunal_forms.tribunal_ops(saga, rhine)
-    form = ops["section-trib-roster"].edit(0)
-    assert isinstance(form, Form)
-    assert form.title == "Keep at the Tribunal"
-    assert [f.label for f in form.fields()] == ["Proxies held", "Privilege class"]
-    form.apply({"proxies": 1, "privilege": "Cives"})
-    roster = tribunal_sheet.roster_grid(saga, rhine)
-    assert roster.columns[5] == "Class"
-    assert [row[5] for row in roster.rows] == ["Cives", "", ""]
-    form.apply({"proxies": 1, "privilege": None})
-    assert rhine.package_data["transylvania"]["classes"] == {}
-
-
 def test_a_package_without_data_is_a_note_on_the_peripheral_code():
     saga = everything_saga()
     rhine = saga.tribunals[0]
@@ -407,6 +390,7 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
             (NodeKind.TRIBUNAL, "rhine"),
             (NodeKind.TRIBUNAL, "thebes"),
             (NodeKind.TRIBUNAL, "normandy"),
+            (NodeKind.TRIBUNAL, "transylvania"),
             (NodeKind.COVENANT, "lone"),
             (NodeKind.NEIGHBOUR_GROUP, "lords"),
             (NodeKind.NEIGHBOUR_GROUP, "church"),
@@ -418,7 +402,7 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
         assert [n.data for n in region.children[0].children] == [
             (NodeKind.COVENANT, "cov_sketch")
         ]
-        assert region.children[3].allow_expand is False  # a line with nothing
+        assert region.children[4].allow_expand is False  # a line with nothing
 
 
 async def test_new_tribunal_opens_it_and_d_deletes_it():
@@ -445,7 +429,7 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
             pilot,
             lambda: (
                 [t.name for t in storage.load_saga("test_saga").tribunals]
-                == ["Rhine", "Theban", "Normandy"]
+                == ["Rhine", "Theban", "Normandy", "Transylvania"]
             ),
         )
 
@@ -548,7 +532,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
-    assert any("Tribunals (3)" in title for title in titles)
+    assert any("Tribunals (4)" in title for title in titles)
 
 
 def test_choosing_a_ruling_a_gild_or_a_diary_entry_shows_it_in_the_inspector():

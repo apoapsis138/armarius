@@ -48,9 +48,17 @@ what the old ones recorded, hidden, and switching back shows it again.
   its first day. Each meeting ends by drawing the next host by
   lot. New Covenant and Found a Covenant Here say what vis a covenant
   founded in it must hold.
-- **Transylvania: Privileges** (Against the Dark): each covenant holds
-  one of five privilege classes; the roster gains a Class column, entered
-  with the roster's Edit beside its proxies.
+- **Transylvania: Privileges** (Against the Dark): its magi live in
+  **oppida**, the places other Tribunals call covenants, so its roster,
+  its oppida's sheets and its magi's sheets say Oppidum. Each magus
+  belongs to one of the five legal covenants the Sundering left it, and
+  that covenant's privilege says what they may do; the members of one
+  oppidum hold different privileges by rule. The sheet gains a Five
+  Covenants tab, and a magus's sheet shows their privilege under their
+  oppidum. Each oppidum's aediles are chosen on its own form (Edit
+  Covenant), from the magi who live there, and the roster gains an
+  Aediles column. Saves that gave a covenant a class give it to each of
+  that oppidum's magi.
 - **Provence: Open founding** (Faith & Flame): any magus may found a
   covenant without the Tribunal's leave. A rule, not a list: it shows as
   a note on the Peripheral Code tab.
@@ -116,6 +124,8 @@ and its attitude toward the troupe's covenant. The troupe's covenants
 come first, marked ✦, above an "Other covenants" line. When the Tribunal's size
 says there are more covenants than are recorded, a last row counts them
 and the magi they hold.
+A Tribunal whose book has its own word for a covenant uses it: a
+Transylvanian Tribunal's list is headed Oppida.
 
 A covenant has one vote for each of its magi, and one for each proxy it
 carries: the sigil of an absent magus, given for one meeting. Proxies
@@ -385,6 +395,35 @@ logothete, the Chief Redcap, keeps the register of tokens and shards;
 and the sixteen archai, four from each phyle, serve seven years on the
 Judicial, Legislative and Conciliatory Boards and the Treasury Council,
 led by its tamias (treasurer). The Council is chosen at each meeting.
+
+## The Five Covenants tab
+<!-- help: tab-trib-privileges -->
+
+A Transylvanian Tribunal's record of which legal covenant each magus
+belongs to. Only a Tribunal following the Transylvanian customs has this
+tab.
+
+### The Five Covenants
+<!-- help: section-trib-privileges -->
+
+Each magus: the oppidum they live in, their privilege with its legal
+covenant, and their offices. Grouped by legal covenant, in order of
+rank:
+
+- **Cives (Coeris)**: full citizens; any office, Praeco too; may take
+  apprentices. Every Tremere belongs to Coeris.
+- **Socii (Domostron)**: allies; any office but Praeco.
+- **Coloniae (Asclepius)**: settlers; no office but aedile; apprentices
+  by leave.
+- **Hospites (Diodorus)**: hired specialists; office and apprentices by
+  leave.
+- **Foederati (Pannonia)**: keep their own customs; trade with outsiders
+  by leave.
+
+The Office column shows Praeco and Presiding Quaesitor from the
+Tribunal, Aedile from the oppidum's own form, and any other office
+entered (the Curantis, say). Add a magus, edit their entry or delete it;
+a magus has one entry, so adding a second for them is refused.
 
 ## Tenure tab
 <!-- help: tab-trib-tenure -->

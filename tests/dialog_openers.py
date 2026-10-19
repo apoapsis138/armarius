@@ -450,6 +450,13 @@ OPENERS: dict[str, Opener] = {
             lambda ws: ws._core_verb("section-trib-tokens", "add"), "trib-tokens-list"
         ),
     ),
+    "add privilege": Opener(
+        "transylvania_tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-privileges", "add"),
+            "trib-privileges-list",
+        ),
+    ),
     "add tenure": Opener(
         "normandy_tribunal",
         _pick(

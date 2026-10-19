@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from . import catalog, places, tribunals, world
+from . import catalog, places, tribunal_packages, tribunals, world
 from . import laboratories as labs
 from .models import (
     COMPANION_TYPES,
@@ -72,7 +72,9 @@ class CovenantCard:
 
 
 def covenant_subtitle(saga: Saga, covenant: Covenant) -> str:
-    parts = [f"{covenant.covenant_season} covenant"]
+    parts = [
+        f"{covenant.covenant_season} {tribunal_packages.place_word(saga, covenant)}"
+    ]
     tribunal = tribunals.title_of(saga, covenant)
     if tribunal:
         parts.insert(0, tribunal)

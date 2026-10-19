@@ -46,6 +46,20 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.101.0 — 2026-10-19
+
+- **Transylvania's oppida and five covenants.** In a Tribunal following
+  Transylvania's customs, the places where magi live are oppida: the
+  roster is headed Oppida, and an oppidum's sheet and its magi's sheets
+  say so. Each magus belongs to one of the five legal covenants
+  (Coeris, Domostron, Asclepius, Diodorus, Pannonia), whose privilege
+  says what they may do. A new Five Covenants tab lists every magus with
+  their oppidum, privilege and offices, grouped by legal covenant, and a
+  magus's sheet shows their privilege. Each oppidum's aediles are chosen
+  from its own magi on its Edit form, and the roster's Aediles column
+  shows them. The old per-covenant Class column is gone: a saga that
+  gave an oppidum a class gives it to each of that oppidum's magi.
+
 ## 2.100.0 — 2026-10-19
 
 - **Change what a Virtue or Flaw names.** Edit on a Virtue or Flaw now

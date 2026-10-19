@@ -215,7 +215,8 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
     magi, votes, the proxies it holds and its attitude toward the
     troupe's covenant; then the covenants not recorded, counted."""
     target = attitude_target(saga)
-    columns = tribunal_packages.of(tribunal).columns
+    package = tribunal_packages.of(tribunal)
+    columns = package.columns
     attitude_column = 5 + len(columns)
     rows: list[list[str]] = []
     keys: list[int | None] = []
@@ -268,7 +269,7 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
         )
     return Grid(
         [
-            "Covenant",
+            package.place.title(),
             "Detail",
             "Magi",
             "Votes",
@@ -278,8 +279,8 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
         ],
         rows,
         keys,
-        "No covenant belongs to it yet: choose it as a covenant's Tribunal "
-        "in Edit Covenant.",
+        f"No {package.place} belongs to it yet: choose it as a covenant's "
+        "Tribunal in Edit Covenant.",
         styles,
         caps=[22, 6, 4, 5, 8, *(c.cap for c in columns), 0],
         spans=frozenset(spans),
@@ -287,7 +288,8 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
 
 
 def roster_title(saga: Saga, tribunal: Tribunal) -> str:
-    return f"Covenants ({len(tribunals.covenants_of(saga, tribunal))})"
+    places = tribunal_packages.of(tribunal).places.title()
+    return f"{places} ({len(tribunals.covenants_of(saga, tribunal))})"
 
 
 def _offices(saga: Saga, tribunal: Tribunal, magus: Character) -> list[str]:
@@ -346,7 +348,13 @@ def magi_grid(saga: Saga, tribunal: Tribunal) -> Grid:
             ]
         )
     return Grid(
-        ["Magus", "House", "Covenant", "Office", "Detail"],
+        [
+            "Magus",
+            "House",
+            tribunal_packages.of(tribunal).place.title(),
+            "Office",
+            "Detail",
+        ],
         rows,
         list(range(len(rows))),
         "No magi of note: its officers and the magi of its other covenants show here.",

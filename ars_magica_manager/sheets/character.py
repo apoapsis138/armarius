@@ -12,7 +12,7 @@ from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 
 from .. import casting_text as ct
-from .. import catalog, faith
+from .. import catalog, faith, tribunal_packages
 from .. import lab_texts as lt
 from .. import players as pl
 from .. import possessions as pos
@@ -59,7 +59,12 @@ def info_right_text(saga: Saga, character: Character) -> str:
     """The top panel's second column: covenant, lab, type, Confidence,
     Faith and Size."""
     covenant = saga.covenant(character.covenant_id)
-    rows = [("Covenant", escape(covenant.name) if covenant else "(unassigned)")]
+    place = tribunal_packages.place_word(saga, covenant).title()
+    rows = [(place, escape(covenant.name) if covenant else "(unassigned)")]
+    rows += [
+        (label, escape(value))
+        for label, value in tribunal_packages.magus_facts(saga, character)
+    ]
     if character.detail != FULL:
         rows.append(("Detail", character.detail))
     if character.type == "magus":
@@ -608,7 +613,14 @@ def glance_facts(saga: Saga, character: Character) -> list[Fact]:
     covenant = saga.covenant(character.covenant_id)
     facts = [
         _fact("Age", character_age(b.year_born, saga.current_year)),
-        _fact("Covenant", covenant.name if covenant else None),
+        _fact(
+            tribunal_packages.place_word(saga, covenant).title(),
+            covenant.name if covenant else None,
+        ),
+        *(
+            _fact(label, value)
+            for label, value in tribunal_packages.magus_facts(saga, character)
+        ),
     ]
     if character.type == "magus":
         lab = saga.laboratory(character.assigned_lab_id)

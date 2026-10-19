@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .. import books as bk
-from .. import catalog, tribunals, vassals, world
+from .. import catalog, tribunal_packages, tribunals, vassals, world
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
@@ -46,7 +46,9 @@ from .laboratory import Aura
 
 def subtitle(saga: Saga, covenant: Covenant) -> str:
     """The line under the name: its Tribunal, season, founding and now."""
-    parts = [f"{covenant.covenant_season} covenant"]
+    parts = [
+        f"{covenant.covenant_season} {tribunal_packages.place_word(saga, covenant)}"
+    ]
     tribunal = tribunals.title_of(saga, covenant)
     if tribunal:
         parts.insert(0, tribunal)
