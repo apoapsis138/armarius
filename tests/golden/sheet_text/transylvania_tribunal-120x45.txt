@@ -146,14 +146,14 @@
 
   The Next Meeting: Summer 1228
   Held at: the Shipka Pass
-  Now:     Not yet opened: hold any step (e) to open it
+  Now:     Not yet opened: Edit (e) calls the roll and opens it
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
-        Step                    Day
-      ○ Opening and the oaths   The First Day
-      ○ Attendance and proxies
-      ○ Rulings and fines       The Third Day
+        Step                       Day
+      ○ The roll call and proxies  The First Day
+      ○ Opening and the oaths
+      ○ Rulings and fines          The Third Day
       ○ Treasury and vis
       ○ Closing
 

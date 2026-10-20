@@ -47,7 +47,17 @@ from .. import familiars as fam
 from .. import help_text, hotkeys, paths, storage, title_page
 from .. import print_layout as pl
 from ..actions import NodeKind
-from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
+from ..commands import (
+    Act,
+    Choose,
+    ChooseFile,
+    Command,
+    Confirm,
+    Form,
+    Picked,
+    Refuse,
+    Then,
+)
 from ..forms import advance as advance_forms
 from ..forms import creation as creation_forms
 from ..forms import menu as menu_forms
@@ -720,6 +730,11 @@ class MainWindow(QMainWindow):
             self.tell(step.title, step.why)
             return
         storage.save_saga(self.saga)
+        if isinstance(step, Then):
+            # Kept and saved; the page is drawn again before the next step.
+            self.redraw()
+            self.run(step.step, then, ended=ended)
+            return
         if ended is not None:
             ended(step)
             return

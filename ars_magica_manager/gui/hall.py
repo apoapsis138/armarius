@@ -8,6 +8,7 @@ meeting opens: a one-shot presentation, keeping nothing."""
 from __future__ import annotations
 
 import math
+from collections.abc import Callable
 
 from PySide6.QtCore import (
     Property,
@@ -20,6 +21,7 @@ from PySide6.QtCore import (
     QTimer,
 )
 from PySide6.QtGui import (
+    QCloseEvent,
     QColor,
     QFont,
     QFontMetricsF,
@@ -418,11 +420,18 @@ def _ribbon(rect: QRectF) -> QPainterPath:
 class OpeningCard(QWidget):
     """Over the whole window as a meeting opens: the year, the Tribunal's
     name, where it is opened, each covenant's arms hung in turn and the
-    hall's numbers. Enter the Hall, a click or any key closes it."""
+    hall's numbers. Enter the Hall, a click or any key closes it, and
+    `then` (the meeting's next step) runs."""
 
-    def __init__(self, window: QWidget, card: hall.OpeningCard, p: Palette) -> None:
+    def __init__(
+        self,
+        window: QWidget,
+        card: hall.OpeningCard,
+        p: Palette,
+        then: Callable[[], None] | None = None,
+    ) -> None:
         super().__init__(window)
-        self.card, self.p = card, p
+        self.card, self.p, self.then = card, p, then
         self._opacity = 0.0
         self.hung = 0
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -520,6 +529,12 @@ class OpeningCard(QWidget):
                     OPENING_CARD["button"],
                 )
         painter.end()
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        then, self.then = self.then, None
+        if then is not None:
+            QTimer.singleShot(0, then)
+        super().closeEvent(event)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         self.close()

@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any
 
-from .. import character_templates, creation, packs, storage
+from .. import character_templates, creation, packs, ruling_templates, storage
 from .. import familiars as fam
 from ..commands import Form
 from ..form_spec import DialogField, attr, covenant_options, pairs
@@ -100,6 +100,7 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
             )
             for option in rule_options.offered(saga)
         ]
+        fields.append(ruling_templates.saga_field(saga))
     return fields
 
 

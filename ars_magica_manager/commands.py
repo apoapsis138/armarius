@@ -6,7 +6,8 @@ to choose from (`Choose`), a question to confirm (`Confirm`) or a file to
 read (`ChooseFile`); an `Act` asks nothing and runs at once. Answering
 it runs its `apply`, which changes the saga and returns the next step: a
 further command (choose an Ability, then fill in its score), the notes to
-show the user, or None when there is nothing more. A form field's chooser
+show the user, None when there is nothing more, or a `Then`: the steps so
+far kept and saved, and another begun. A form field's chooser
 runs the same steps and ends with a `Picked` value instead. A `Refuse`, as the
 first step or the next, says why the button can't act, changing nothing. A front-end runs the
 steps, then saves the saga and redraws the page.
@@ -144,6 +145,16 @@ class Picked:
     with: the field's new value. Nothing in the saga changes."""
 
     value: Any
+
+
+@dataclass(frozen=True)
+class Then:
+    """What a step ends with when another should follow once this one is
+    kept: the front-end saves the saga and redraws the page as if the
+    steps had ended, then shows `step` (holding a Tribunal's step opens
+    the next). Cancelling `step` leaves what was kept."""
+
+    step: Any
 
 
 Command = Form | Choose | Confirm | Act | Refuse | ChooseFile

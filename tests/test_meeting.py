@@ -1,6 +1,7 @@
-"""Holding a Tribunal: opening a meeting, its order of business by day,
-attendance and proxies, leaving and resuming at the step in hand, and
-closing it into the Diary."""
+"""Holding a Tribunal: the roll call that opens a meeting, its order of
+business by day, each step opening the next and saying what it works
+out, leaving and resuming at the step in hand, and closing it into the
+Diary."""
 
 from __future__ import annotations
 
@@ -10,7 +11,7 @@ from support import everything_saga
 
 from ars_magica_manager import acta, meeting, storage
 from ars_magica_manager import print_layout as pl
-from ars_magica_manager.commands import ChooseFile, Confirm, Form, Refuse
+from ars_magica_manager.commands import ChooseFile, Confirm, Form, Refuse, Then
 from ars_magica_manager.models import CASE_DECIDED, Saga
 from ars_magica_manager.rules import debate
 
@@ -31,7 +32,15 @@ def _save(form, **changes):
     assert isinstance(form, Form)
     values = _values(form, **changes)
     assert form.validate is None or form.validate(values) is None
-    form.apply(values)
+    return form.apply(values)
+
+
+def _opening(saga: Saga, tribunal) -> Form:
+    """Call the roll, which opens the meeting; the Opening's form, which
+    follows it."""
+    following = _save(meeting.hold(saga, tribunal))
+    assert isinstance(following, Then) and isinstance(following.step, Form)
+    return following.step
 
 
 def test_before_it_opens_the_hall_shows_the_order_it_would_hold():
@@ -39,7 +48,7 @@ def test_before_it_opens_the_hall_shows_the_order_it_would_hold():
     rhine = _rhine(saga)
     grid = meeting.business_grid(saga, rhine)
     titles = [row[0] for row in grid.rows]
-    assert titles[:2] == ["Opening and the oaths", "Attendance and proxies"]
+    assert titles[:2] == ["The roll call and proxies", "Opening and the oaths"]
     assert "Fengheld v. Keep" in titles and "Motion: Gild dues" in titles
     assert titles[-3:] == ["Rulings and fines", "Treasury and vis", "Closing"]
     assert grid.rows[0][1] == "The First Day"
@@ -47,80 +56,189 @@ def test_before_it_opens_the_hall_shows_the_order_it_would_hold():
     assert meeting.title(saga, rhine) == "The Next Meeting: Summer 1228"
 
 
-def test_hold_opens_the_meeting_and_resumes_at_the_step_in_hand():
+def test_hold_calls_the_roll_and_each_step_opens_the_next():
     saga = everything_saga()
     rhine = _rhine(saga)
-    opening = meeting.hold(saga, rhine)
-    assert isinstance(opening, Form) and opening.save_label == "Open"
+    roll = meeting.hold(saga, rhine)
+    assert isinstance(roll, Form) and roll.save_label == "Call the roll"
+    head = [f.value for f in roll.fields() if f.kind == "info"]
+    assert str(head[0]).startswith("Step 1 of 9. Saving holds it and opens")
+    assert any("Worked out for you" in str(v) for v in head)
+    assert any("What you enter changes" in str(v) for v in head)
+    opening = _opening(saga, rhine)
+    assert rhine.meeting is not None
+    assert opening.save_label == "Open"
+    assert opening.title == "Step 2 of 9: The First Day, Opening and the oaths"
     labels = [f.label for f in opening.fields()]
     assert "Days" in labels and "Fengheld v. Keep" in labels
     case = rhine.cases[0]
-    _save(opening, days=2, **{f"day_{case.id}": 1})
-    assert rhine.meeting is not None and rhine.meeting["days"] == 2
-    assert meeting.days(rhine.meeting) == 2
+    following = _save(opening, days=2, **{f"day_{case.id}": 1})
+    assert isinstance(following, Then)
+    assert following.step.title.endswith("Fengheld v. Keep")
+    assert rhine.meeting["days"] == 2 and meeting.days(rhine.meeting) == 2
     # Saved with the saga, the meeting is still there when it is loaded.
     storage.save_saga(saga)
     again = storage.load_saga(saga.id).tribunal("rhine")
     assert again is not None and again.meeting == rhine.meeting
-    # Holding it again resumes at the step in hand: Attendance.
+    # Holding it again resumes at the step in hand: the first hearing.
     step = meeting.hold(saga, rhine)
-    assert isinstance(step, Form) and step.title.endswith("Attendance and proxies")
-    assert meeting.business_grid(saga, rhine).rows[1][2] == "▶ in hand"
+    assert isinstance(step, Form) and step.title.endswith("Fengheld v. Keep")
+    assert meeting.business_grid(saga, rhine).rows[2][2] == "▶ in hand"
     assert meeting.now_text(rhine, rhine.meeting) == (
-        "The First Day › Attendance and proxies"
+        "The First Day › Fengheld v. Keep"
     )
+    facts = {f.label: f.value for f in meeting.facts(saga, rhine)}
+    assert facts["Now"] == "Step 3 of 9: The First Day › Fengheld v. Keep"
+    assert facts["Then"] == "The vote: Fengheld v. Keep"
+
+
+def test_holding_an_earlier_step_again_goes_on_to_the_step_in_hand():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    _save(_opening(saga, rhine))
+    roll = meeting.step_form(saga, rhine, meeting.steps(rhine, rhine.meeting)[0])
+    following = _save(roll)
+    assert isinstance(following, Then)
+    assert following.step.title.endswith("Fengheld v. Keep")
 
 
 def test_a_day_out_of_range_is_refused():
     saga = everything_saga()
     rhine = _rhine(saga)
-    opening = meeting.hold(saga, rhine)
+    opening = _opening(saga, rhine)
     case = rhine.cases[0]
     values = _values(opening, days=2, **{f"day_{case.id}": 3})
     assert "day from 1 to 2" in (opening.validate(values) or "")
     assert "at least a day" in (opening.validate(_values(opening, days=0)) or "")
 
 
-def test_attendance_and_proxies_set_the_votes_in_the_hall():
+def test_the_roll_call_ticks_who_is_present_and_sets_the_votes():
     saga = everything_saga()
     rhine = _rhine(saga)
-    _save(meeting.hold(saga, rhine))
-    votes, proxies = meeting.hall(saga, rhine, rhine.meeting)
-    attendance = meeting.hold(saga, rhine)
-    keys = {f.key for f in attendance.fields()}
-    assert {"absent_cov1", "proxies_cov_sketch", "ruling_cov_sketch"} <= keys
+    roll = meeting.hold(saga, rhine)
+    keys = {f.key for f in roll.fields()}
+    assert {"all_cov1", "present_cov1_mag1", "unnamed_cov_sketch"} <= keys
+    assert {"proxies_cov_sketch", "ruling_cov_sketch"} <= keys
+    _save(roll)
+    # Everyone present; Severinus is Praeco, so doesn't vote: Leandro's
+    # one, Fengheld's two unnamed magi and its proxy.
+    assert meeting.hall(saga, rhine, rhine.meeting) == (4, 1)
+    roll = meeting.step_form(saga, rhine, meeting.steps(rhine, rhine.meeting)[0])
     _save(
-        attendance,
-        absent_cov1=1,
+        roll,
+        all_cov1=False,
+        present_cov1_mag1=False,
+        all_cov_sketch=False,
+        unnamed_cov_sketch=1,
         proxies_cov_sketch=2,
         ruling_cov_sketch=meeting.SET_ASIDE,
     )
-    after, by_proxy = meeting.hall(saga, rhine, rhine.meeting)
-    assert by_proxy == 0 and after == votes - proxies - 1
+    assert meeting.hall(saga, rhine, rhine.meeting) == (1, 0)
+    keep = saga.covenant("cov1")
+    assert keep is not None
+    assert meeting.named_present(saga, rhine.meeting, keep) == []
     assert rhine.proxies["cov_sketch"] == 2
-    row = next(
-        r for r in meeting.attendance_grid(saga, rhine).rows if r[0] == "Fengheld"
+    rows = {r[0]: r for r in meeting.attendance_grid(saga, rhine).rows}
+    assert rows["Fengheld"][2] == "1" and rows["Fengheld"][3] == "2 (set aside)"
+    assert rows["Keep"][2] == "1"
+    assert "Keep: 1 absent (Leandro)." in rhine.diary[-1].details
+    assert meeting.quorum(saga, rhine, rhine.meeting) == (
+        "2 magi from 1 covenant, and no Quaesitor: not quorate (it needs 12 "
+        "magi and 4 covenants and a Quaesitor)"
     )
-    assert row[3] == "2 (set aside)"
 
 
-def test_a_hearing_takes_its_sides_from_the_case():
+def test_an_older_save_with_only_a_count_absent_still_reads():
     saga = everything_saga()
     rhine = _rhine(saga)
-    _save(meeting.hold(saga, rhine))
+    _save(_opening(saga, rhine))
+    assert rhine.meeting is not None
+    rhine.meeting["attendance"] = {"cov_sketch": {"absent": 1, "proxies": 0}}
+    fengheld = saga.covenant("cov_sketch")
+    assert fengheld is not None
+    assert meeting.in_person(saga, rhine.meeting, fengheld) == 2
+    assert meeting.absent(saga, rhine.meeting, fengheld) == 1
+
+
+def test_a_hearing_chooses_its_speakers_from_the_magi_present():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    _save(_opening(saga, rhine))
     steps = meeting.steps(rhine, rhine.meeting)
     index = next(i for i, s in enumerate(steps) if s.title == "Fengheld v. Keep")
     ops = meeting.business_ops(saga, rhine)
     assert ops.edit is not None
     hearing = ops.edit(index)
     assert isinstance(hearing, Form)
-    values = _values(hearing)
-    assert (values["prosecutor"], values["defender"]) == ("Severinus", "Keep")
-    _save(hearing, defender="Leandro")
-    assert rhine.cases[0].defender == "Leandro"
+    fields = {f.key: f for f in hearing.fields()}
+    # Severinus is the case's prosecutor; Keep is a covenant, so its magus
+    # present defends it.
+    assert (fields["prosecutor"].value, fields["defender"].value) == (
+        "mag_sketch",
+        "mag1",
+    )
+    assert ("Leandro (Keep)", "mag1") in fields["defender"].options
+    assert (meeting._SPEAKERS[meeting.ADVOCATE], meeting.ADVOCATE) in fields[
+        "defender"
+    ].options
+    assert (
+        meeting._SPEAKERS[meeting.QUAESITOR],
+        meeting.QUAESITOR,
+    ) in fields["prosecutor"].options
+    _save(hearing, defender=meeting.ADVOCATE, skill_defender=debate.FORMIDABLE)
+    case = rhine.cases[0]
+    assert case.defender == "A Guernicus advocate"
+    assert rhine.meeting["debates"][case.id]["skills"][1] == debate.FORMIDABLE
     motion = next(s for s in steps if s.title == "Motion: Gild dues")
-    labels = [f.label for f in motion.fields(saga, rhine, rhine.meeting)]
-    assert "Speaks against it" in labels and "Proposal" in labels
+    found = {f.key: f for f in motion.fields(saga, rhine, rhine.meeting)}
+    assert found["defender"].label == "Speaks against it"
+    assert found["defender"].value == meeting.THE_TRIBUNAL
+    assert "settled" not in found and "proposal" in found
+
+
+def test_an_absent_accused_is_defended_by_a_guernicus_advocate():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    roll = meeting.hold(saga, rhine)
+    _save(roll, all_cov1=False, present_cov1_mag1=False)
+    case = rhine.cases[0]
+    case.defender = ""
+    assert rhine.meeting is not None
+    assert (
+        meeting.default_speaker(saga, rhine, rhine.meeting, case, meeting.AGAINST)
+        == meeting.ADVOCATE
+    )
+
+
+def test_a_speaker_with_no_scores_debates_at_a_skill():
+    able = debate.debater("A Guernicus advocate", None, debate.ABLE)
+    assert (able.communication, able.attacks["Intrigue"]) == (1, 4)
+    middling = debate.debater("Nobody", None)
+    assert middling.attacks["Folk Ken"] == debate.AVERAGE_ABILITY
+    saga = everything_saga()
+    leandro = saga.character("mag1")
+    assert leandro is not None and not debate.has_scores(leandro)
+    assert not debate.debater("Leandro", leandro, debate.FORMIDABLE).found
+    leandro.characteristics.communication = 2
+    assert debate.debater("Leandro", leandro, debate.FORMIDABLE).communication == 2
+
+
+def test_a_case_settled_at_the_private_hearing_has_no_debate_or_vote():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    _save(_opening(saga, rhine))
+    case = rhine.cases[0]
+    hearing = meeting.step_form(saga, rhine, _step(rhine, f"case:{case.id}"))
+    following = _save(hearing, settled=True)
+    assert meeting.settled(rhine.meeting, case)
+    keys = [s.key for s in meeting.steps(rhine, rhine.meeting)]
+    assert f"vote:{case.id}" not in keys
+    # The next step is the motion's hearing, not this case's vote.
+    assert isinstance(following, Then)
+    assert following.step.title.endswith("Motion: Gild dues")
+    assert "settled before the Presiding Quaesitor" in rhine.diary[-1].details
+    rulings = meeting.step_form(saga, rhine, _step(rhine, "rulings"))
+    assert _values(rulings)[f"outcome_{case.id}"] == "Settled at the private hearing."
 
 
 def test_closing_writes_the_diary_and_sets_the_next_meeting():
@@ -176,8 +294,7 @@ def test_elections_give_each_office_its_holder_and_term():
 
 def _open(saga: Saga):
     rhine = _rhine(saga)
-    _save(meeting.hold(saga, rhine))
-    _save(meeting.hold(saga, rhine))
+    _save(_opening(saga, rhine))
     return rhine
 
 
@@ -248,17 +365,45 @@ def test_entered_levels_decide_the_debate_and_the_vote_is_called_in_order():
     assert "Upper Hand" in meeting.debate_text(rhine.meeting, case)
     vote = meeting.step_form(saga, rhine, _step(rhine, f"vote:{case.id}"))
     assert vote.live is not None
-    assert vote.live(_values(vote)).startswith("For 4, against 1")
+    # Severinus is Praeco, so Fengheld has three votes: its two unnamed
+    # magi and its proxy.
+    assert vote.live(_values(vote)).startswith("For 3, against 1")
+    hints = {f.key: f.hint for f in vote.fields()}
+    assert hints["lean_cov1"] == "Of itself: the case is against it."
     called = list(meeting.call_the_vote(saga, rhine, rhine.meeting, case))
     assert [c.covenant.name for c in called] == ["Keep", "Fengheld"]
-    assert called[0].tally == (0, 1, 0) and called[-1].tally == (4, 1, 0)
+    assert called[0].tally == (0, 1, 0) and called[-1].tally == (3, 1, 0)
     # Keep undecided: an Upper Hand wins 20% of its one vote, rounded.
     lean = {"cov1": meeting.UNDECIDED, "cov_sketch": meeting.FOR}
-    assert meeting.tally(saga, rhine, rhine.meeting, case, lean) == (4, 0, 1)
+    assert meeting.tally(saga, rhine, rhine.meeting, case, lean) == (3, 0, 1)
     _save(vote)
-    assert rhine.meeting["votes"][case.id]["for"] == 4
+    assert rhine.meeting["votes"][case.id]["for"] == 3
     rulings = meeting.step_form(saga, rhine, _step(rhine, "rulings"))
-    assert _values(rulings)[f"outcome_{case.id}"] == "Carried, 4 to 1"
+    assert _values(rulings)[f"outcome_{case.id}"] == "Carried, 3 to 1"
+
+
+def test_a_tie_is_broken_by_the_praeco():
+    assert meeting.passes((2, 2, 0)) is None
+    assert meeting.passes((2, 2, 0), meeting.FOR) is True
+    assert meeting.tally_text((2, 2, 1), meeting.AGAINST) == (
+        "For 2, against 2, 1 abstaining: a tie: the Praeco casts against it, "
+        "and it fails"
+    )
+    saga = everything_saga()
+    rhine = _open(saga)
+    case = rhine.cases[0]
+    vote = meeting.step_form(saga, rhine, _step(rhine, f"vote:{case.id}"))
+    tie = next(f for f in vote.fields() if f.key == "tie")
+    assert tie.show_if is not None
+    # Keep against (1), Fengheld undecided: no tie; Fengheld against too:
+    # still none; both undecided: 0 to 0, a tie.
+    both = {"lean_cov1": meeting.UNDECIDED, "lean_cov_sketch": meeting.UNDECIDED}
+    assert tie.show_if(both)
+    assert not tie.show_if(_values(vote))
+    _save(vote, **both, tie=meeting.FOR)
+    assert meeting.vote_outcome(rhine.meeting, case) == (
+        "Carried, 0 to 0 on the Praeco's casting vote"
+    )
 
 
 def test_a_rolled_debate_uses_the_dice(monkeypatch):
@@ -280,8 +425,8 @@ def test_an_alteration_costs_a_motion_argument_strength():
     form = meeting.step_form(saga, rhine, _step(rhine, f"case:{motion.id}"))
     _save(
         form,
-        prosecutor="Leandro",
-        defender="Severinus",
+        prosecutor="mag1",
+        defender="mag_sketch",
         proposal="Alteration",
         lost_for=0,
         lost_against=4,
@@ -301,16 +446,18 @@ def test_each_step_held_writes_its_minutes_once():
     saga = everything_saga()
     rhine = _rhine(saga)
     before = len(rhine.diary)
-    _save(meeting.hold(saga, rhine))
+    opening = _opening(saga, rhine)
+    assert rhine.diary[-1].title == "¶ The First Day: The roll call and proxies"
+    _save(opening)
     entry = rhine.diary[-1]
-    assert len(rhine.diary) == before + 1
+    assert len(rhine.diary) == before + 2
     assert entry.title == "¶ The First Day: Opening and the oaths"
     assert "the oaths were sworn" in entry.details
     assert entry.margin == "3 days"
     # Held again, its entry is rewritten, not added to.
-    opening = meeting.step_form(saga, rhine, meeting.steps(rhine, rhine.meeting)[0])
+    opening = meeting.step_form(saga, rhine, meeting.steps(rhine, rhine.meeting)[1])
     _save(opening, days=2)
-    assert len(rhine.diary) == before + 1
+    assert len(rhine.diary) == before + 2
     assert rhine.diary[-1].margin == "2 days"
 
 

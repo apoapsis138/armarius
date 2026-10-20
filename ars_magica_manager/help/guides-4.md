@@ -549,3 +549,87 @@ A new hedge wizard is made on the [Creation Worksheet](help:creation-worksheet):
 Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The tradition's casting totals, Magical Defenses and seasons of its own are not worked out yet: the [chapter](help:tradition-chapter) says what is.
 
 **See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities tab](help:tab-abilities)
+
+
+# How to hold a Tribunal
+<!-- help: guide-tribunal -->
+
+This guide walks one meeting from the roll call to the Closing: a Rhine Tribunal meeting in Summer 1228 with one charge on its docket, Fengheld v. Keep (Fengheld says Keep took the vis of the Rhine ford), and one motion. The rules are Ars Magica Definitive Edition, Chapter 2: The Order of Hermes, Tribunals, with Houses of Hermes: True Lineages (House Guernicus, Tribunal Procedures) for hearing a case and Houses of Hermes: Societates (House Tytalus, The Fine Arts of Debate) for the debate. [Hold Tribunal](help:hold-tribunal) has every step in full.
+
+### Before the meeting
+<!-- help: guide-tribunal-before -->
+
+Put the cases on the Tribunal's [Docket](help:tab-trib-docket): who brings each, who it is against, its Evidence (one testimony a line) and, if you know them, its prosecutor and defender. Notice of a case is due a season before the meeting. Set the Tribunal's Praeco and Presiding Quaesitor on its sheet: neither votes at the meeting.
+
+<!-- tui -->
+Open the Tribunal's sheet and its [Meeting tab](help:tab-trib-meeting) (`4`). Before the meeting opens, the [Order of Business](help:section-meeting-business) lists the steps it would hold, day by day, and the top says "Not yet opened".
+<!-- /tui -->
+<!-- gui -->
+Open the Tribunal's page and its [Meeting](help:tab-trib-meeting) chapter. Before the meeting opens, the [Order of Business](help:section-meeting-business) lists the steps it would hold, day by day, and the top says "Not yet opened".
+<!-- /gui -->
+
+### Moving through the meeting
+<!-- help: guide-tribunal-moving -->
+
+<!-- tui -->
+Press `e` on the Order of Business. Each step is a form that starts by saying where you are ("Step 3 of 9") and what comes next, then **Worked out for you** (what the app does at this step) and **What you enter changes**. Saving a step holds it and opens the next straight away, so you can go from the roll call to the Closing in one sitting. `Escape` (Cancel) stops; the meeting is saved after every step and waits at the step in hand, and `e` later carries on from there. At the top of the tab, **Now** names the step in hand and **Then** the one after it.
+<!-- /tui -->
+<!-- gui -->
+Click **Hold** under the Order of Business. Each step is a form that starts by saying where you are ("Step 3 of 9") and what comes next, then **Worked out for you** (what the app does at this step) and **What you enter changes**. Saving a step holds it and opens the next straight away, so you can go from the roll call to the Closing in one sitting. Cancel stops; the meeting is saved after every step and waits at the step in hand, and **Hold** later carries on from there. At the top of the chapter, **Now** names the step in hand and **Then** the one after it.
+<!-- /gui -->
+
+To change a step already held, choose it in the Order of Business and hold it again: it is held anew, and saving it goes on to the step in hand.
+
+### The roll call
+<!-- help: guide-tribunal-roll -->
+
+The first step calls the roll, and saving it opens the meeting. Each covenant's magi are listed with **all present** ticked. Untick it for Keep and tick only the magi who came: Leandro stayed home. For a sketch covenant, say how many of its unnamed magi came. Then the proxies each covenant carries (Fengheld carries one sigil) and whether the Presiding Quaesitor allows them.
+
+Worked out for you: the votes in the hall (one a magus present and one an allowed proxy, but none for the Praeco or the Presiding Quaesitor), and the quorum: twelve magi in person from four covenants, and a Quaesitor. The top of the tab shows **Present** ("4 votes, 1 by proxy") and **Quorum**. Only magi ticked present can speak at a hearing.
+
+<!-- gui -->
+On the desktop a card announces the meeting as it opens; close it, and the next step opens.
+<!-- /gui -->
+
+### Opening and the days
+<!-- help: guide-tribunal-opening -->
+
+Say where the meeting is held and how many days it lasts (3). Each case and motion is given a day, spread over every day but the last, which is kept for the rulings and the Closing; change a case's day to move its hearing and vote.
+
+### Hearing a case
+<!-- help: guide-tribunal-hearing -->
+
+Fengheld v. Keep comes on its day. Choose the **Prosecutor** and **Defender** from the drop-downs: the magi present, each with their covenant. Leandro is absent, so the defence starts as **A Guernicus advocate**, who defends an accused who didn't come; a charge no one else will prosecute can be brought by **The Presiding Quaesitor**. A speaker with no debate scores written down (the advocate, or a sketch magus) gets **debates as**: Middling, Able or Formidable.
+
+Leave **Levels lost** blank and the debate is rolled, round by round: the speakers' Communication and Intelligence with their best debating Abilities, the case's Evidence backing the prosecution and the **Defence testimony** the defence. Or play the debate out at the table and enter both sides' levels lost. Either way, the side that loses fewer wins, and the difference is its Argument Strength.
+
+If both sides accept the Presiding Quaesitor's view at the private hearing, tick **Settled in private** instead: the case has no debate and no vote, and goes straight on to its ruling.
+
+For the motion, the proposer speaks for it and **The Tribunal** against: a motion is debated against the whole hall.
+
+### Calling the vote
+<!-- help: guide-tribunal-vote -->
+
+The vote follows its hearing. Each covenant is listed with its leaning and why: "the case is against it", "Warm (+1) toward Fengheld, which brings it". Change a leaning if the story says otherwise; the tally under the form follows as you do. The debate's victor wins a share of the undecided votes when the covenants are called. If the votes tie, choose how the Praeco casts.
+
+<!-- gui -->
+**Call the Vote** in The Hall shows the covenants called one by one, their seats filling.
+<!-- /gui -->
+
+### Rulings and their terms
+<!-- help: guide-tribunal-rulings -->
+
+On the last day, each case is ruled on. A ruling can be **Written out** (it starts as "Carried, 3 to 1") or made from a **ruling template**. Choose **Holds for a term** for Fengheld v. Keep, set any fine (3 pawns of Aquam, paid by Keep) and whether it goes into the Peripheral Code, and save: the template's blanks come next. Fill them in, and the sentence under the form shows the ruling as you go:
+
+> Keep holds the Rhine ford's vis for 7 years, until it is debated again.
+
+The {years} blank sets a term. With a written-out ruling, its **term** (in years) sets one the same way. The templates are the saga's own: add or change them on Edit Saga, **Ruling templates**, where any word in braces is a blank to fill.
+
+### Closing, and what comes back
+<!-- help: guide-tribunal-closing -->
+
+The Treasury step shows the balance and the loans due. Closing then decides each case with a ruling (the fine owed to the treasury, the ruling into the Peripheral Code, a party's attitude moved, the term set), writes the Acta into the Tribunal's Diary and sets the next meeting. Each step held has already written its minutes there.
+
+The term comes back on its own. [Ahead](help:section-ahead) lists the season before it ends (Spring 1235) and the season it ends (Summer 1235). Advancing into Spring 1235 says the term ends next season; advancing into Summer 1235 says it has ended and puts "Fengheld v. Keep (debated again)" on the Docket, with the old ruling in its charge, for the next meeting.
+
+**See also:** [Hold Tribunal](help:hold-tribunal), [Meeting tab](help:tab-trib-meeting), [Docket](help:tab-trib-docket)

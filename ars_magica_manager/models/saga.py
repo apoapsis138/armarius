@@ -120,6 +120,10 @@ class Saga:
     calendar: list[CalendarEntry] = field(default_factory=list)
     #: Each yearly step's entry (world_turns.py), oldest first.
     world_turns: list[WorldTurn] = field(default_factory=list)
+    #: The outcomes a Tribunal's rulings are written from, each
+    #: {"name", "text"} with {blanks} (ruling_templates.py); None, what
+    #: older saves load as, means the app's own.
+    ruling_templates: list[dict[str, str]] | None = None
     #: Lab work in progress over several seasons.
     lab_projects: list[LabProject] = field(default_factory=list)
     #: User-made catalog entries: house rules and entries from

@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .. import economics as eco
-from .. import seasons, world_turns
+from .. import seasons, tribunal_terms, world_turns
 from ..commands import Command, Confirm, Form
 from ..form_spec import DialogField
 from ..markup import escape
@@ -232,6 +232,9 @@ def _finish(
             + ", ".join(f"{name} {amount}" for name, amount in done.added)
             + "."
         )
+    due = tribunal_terms.come_due(saga)
+    if due:
+        message += " " + " ".join(due)
     return Played(done, escape(message), bool(worked or done.year_end))
 
 

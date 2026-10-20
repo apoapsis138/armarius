@@ -108,6 +108,7 @@ from ..prompts import (
     ConfirmScreen,
     MenuScreen,
     _scored_trait_dialog,
+    terminal_fields,
 )
 from ..sheets import (
     LAB_TEXTS_SECTION,
@@ -1857,7 +1858,8 @@ class WorkspaceBase(Screen[None]):
             await self._show_saga_detail()
 
         self.app.push_screen(
-            FieldsDialog("Edit Saga", _saga_fields(self.saga)), handle_result
+            FieldsDialog("Edit Saga", terminal_fields(_saga_fields(self.saga))),
+            handle_result,
         )
 
     # -- season plans (shared by the character and covenant sheets) --

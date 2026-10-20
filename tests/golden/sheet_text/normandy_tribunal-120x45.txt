@@ -145,15 +145,15 @@
 
   The Next Meeting: Summer 1227
   Held at: Confluensis
-  Now:     Not yet opened: hold any step (e) to open it
+  Now:     Not yet opened: Edit (e) calls the roll and opens it
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
-        Step                     Day
-      ○ Opening and the oaths    The First Day
-      ○ Attendance and proxies
+        Step                       Day
+      ○ The roll call and proxies  The First Day
+      ○ Opening and the oaths
       ○ The Praeco's succession
-      ○ Tourney                  The Third Day
+      ○ Tourney                    The Third Day
       ○ Rulings and fines
       ○ Treasury and vis
       ○ The next host, by lot

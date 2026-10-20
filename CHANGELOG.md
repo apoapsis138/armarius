@@ -107,6 +107,47 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.110.0 — 2026-10-20
+
+### Concilium
+
+- **Hold Tribunal is clearer.** Each step's form says which step it is
+  (Step 3 of 9), which step comes next, what the app works out for you
+  and what your entries change. Saving a step opens the next one
+  straight away, and Cancel stops with the meeting waiting where you
+  left it. The Meeting tab shows the step in hand, the step after it and
+  the same guidance.
+- **The roll call comes first.** Tick who is present, covenant by
+  covenant (or the whole covenant at once), count a sketch covenant's
+  unnamed magi, and record the proxies. The meeting shows whether it is
+  quorate: twelve magi in person from four covenants, and a Quaesitor.
+  The Praeco and the Presiding Quaesitor no longer vote, as the rules
+  say, though the Praeco breaks a tie.
+- **Speakers come from drop-downs.** The prosecution and defence (or a
+  motion's speakers) are chosen from the magi present, a Guernicus
+  advocate for an accused who stayed away, the Presiding Quaesitor for a
+  high crime, or the Tribunal itself against a motion. A speaker with no
+  scores debates as Middling, Able or Formidable.
+- **A case can be settled in private** at the private hearing, with no
+  debate and no vote.
+- **The vote says why** each covenant leans as it does, and a tie asks
+  how the Praeco casts the deciding vote.
+- **Rulings from templates.** A ruling can be written from a template
+  with blanks to fill ("Keep holds the ford for 7 years, until it is
+  debated again"). Edit Saga keeps the saga's own templates.
+- **Terms come due.** A ruling made for a term warns you the season
+  before it ends and again when it ends, puts the matter back on the
+  Tribunal's docket, and shows in Ahead.
+- A new guide, How to hold a Tribunal, walks through a whole meeting.
+
+### Scriptorum
+
+- Notes at the top of a form now wrap instead of being cut off.
+
+### Illuminatio
+
+- Notes at the top of a form now wrap instead of being cut off.
+
 ## 2.109.1 — 2026-10-20
 
 ### Peregrinatio

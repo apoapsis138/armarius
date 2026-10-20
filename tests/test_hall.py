@@ -111,3 +111,33 @@ def test_the_desktop_draws_the_hall_and_plays_the_opening_card():
     assert card.isVisible() and card.geometry() == window.rect()
     card.close()
     assert not card.isVisible()
+
+
+def test_closing_the_opening_card_opens_the_step_that_follows():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QWidget
+
+    from ars_magica_manager.gui.hall import OpeningCard
+    from ars_magica_manager.gui.themes import PALETTES
+
+    app = QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    rhine = _held(saga)
+    window = QWidget()
+    window.resize(1000, 700)
+    window.show()
+    opened: list[str] = []
+    card = OpeningCard(
+        window,
+        hall.opening_card(saga, rhine),
+        PALETTES[0],
+        lambda: opened.append("next"),
+    )
+    card.play()
+    app.processEvents()
+    assert opened == []
+    card.close()
+    for _ in range(5):
+        app.processEvents()
+    assert opened == ["next"]

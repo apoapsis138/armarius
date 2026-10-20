@@ -277,7 +277,10 @@ class FieldsDialog(_Sheet):
             return _Held(spec.value, plain(_shown_text(shown)), self.p)
         if spec.kind == "info":
             return text(
-                plain(_shown_text(spec.value)), self.p["foreground"], serif(12.5)
+                plain(_shown_text(spec.value)),
+                self.p["foreground"],
+                serif(12.5),
+                wrap=True,
             )
         raise ValueError(f"The desktop can't draw a {spec.kind!r} field yet.")
 

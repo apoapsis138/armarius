@@ -186,21 +186,39 @@ The date moves on. When anything happened, the [Seasons](help:seasons) page open
 
 A Tribunal's meeting, held a step at a time from its **Meeting**
 tab. Each step is a short form: you make the decisions and enter the
-rolls, and the app works out the rest. The meeting is saved after
-every step, so leaving it simply leaves it; holding it again resumes
-at the step in hand.
+rolls, and the app works out the rest. Every form opens by saying which
+step it is ("Step 3 of 12"), what comes next, **what the app works out
+for you** at that step and **what each thing you enter changes**; the
+details panel says the same when you choose a step. Saving a step holds
+it and opens the next straight away, so a meeting can be run from roll
+call to Closing in one go; Cancel stops, and the meeting waits at the
+step in hand. The meeting is saved after every step, so leaving it
+simply leaves it; holding it again resumes at the step in hand. For a
+meeting walked through from start to finish, see [How to hold a
+Tribunal](help:guide-tribunal).
+
+The rules are Ars Magica Definitive Edition's (Chapter 2, Tribunals: a
+quorum of twelve magi in person from four covenants and a Quaesitor;
+the Praeco and the Presiding Quaesitor don't vote, the Praeco breaking
+a tie), with Houses of Hermes: True Lineages (House Guernicus, Tribunal
+Procedures) for how a case is heard and Houses of Hermes: Societates
+(House Tytalus, The Fine Arts of Debate) for the debate.
 
 The steps run in a fixed order:
 
+- **The roll call and proxies**: each covenant's magi, ticked present
+  one by one or all at once with **all present**; how many of a sketch
+  covenant's unnamed magi came; the proxies each carries, and whether
+  the Presiding Quaesitor allows them or sets them aside. Under
+  Hibernia's customs, also whether it shows its cathach: one that
+  doesn't has no votes. Its votes in the hall are worked out (the
+  Praeco and the Presiding Quaesitor are present but don't vote), the
+  quorum is checked, and the proxies are kept on the roster. Only the
+  magi ticked present can speak at a hearing: a proxy carries a vote,
+  never a voice. Saving it opens the meeting; cancelling holds none.
 - **Opening and the oaths**: where it is held, how many days it lasts
   (3 unless you say otherwise) and the day each case and motion is
-  heard. Saving it opens the meeting; cancelling holds none.
-- **Attendance and proxies**: for each covenant, how many of its magi
-  are absent and the proxies it carries, and whether the Presiding
-  Quaesitor allows them or sets them aside. Under Hibernia's customs,
-  also whether it shows its cathach: one that doesn't has no votes. Its
-  votes in the hall are worked out, and the proxies are kept on the
-  roster.
+  heard.
 - **The Hermetic Assembly**, on the first day under the Theban customs,
   in two steps. **The Assembly's decrees**: the principal phyle governing the meeting
   (the next in turn, Ionian, Aegean, Kretan, Propontian, unless you
@@ -215,23 +233,43 @@ The steps run in a fixed order:
   People's Court are the meeting's motions and cases, below.
 - **Each case and motion**, on its day: the debate between the
   prosecutor and defender (for a motion, one who speaks for it and one
-  against), taken from the case. Enter each side's debate Fatigue levels
+  against), each chosen from a drop-down of the magi present (shown with
+  their covenant). The prosecution may instead be the Presiding
+  Quaesitor, who prosecutes a high crime no one else will; the defence
+  a Guernicus advocate, who defends an accused who didn't come; and a
+  motion's opponent the Tribunal itself, since a proposer debates the
+  whole hall. The case's own speakers, or the magus (or a magus of the
+  covenant) it names, are chosen to start with, and an accused who is
+  absent is given the advocate. A charge or appeal can instead be
+  settled at the private hearing (tick **Settled in private**), when
+  both sides accept the
+  Presiding Quaesitor's ruling: it then has no debate and no vote, and
+  its ruling starts as "Settled at the private hearing". Enter each
+  side's debate Fatigue levels
   lost, or leave both blank and the debate is rolled round by round by
   the rules of Houses of Hermes: Societates (The Fine Arts of Debate):
   Communication + Folk Ken, Intrigue or Artes Liberales against
   Intelligence + Charm, Guile or Leadership, each debater using what
-  they are best at; a name that is no character in the saga debates as
-  an ordinary magus. The case's Evidence is the prosecution's testimony
+  they are best at. A speaker with none of those scores written down (an
+  advocate, the Tribunal, a sketch magus) debates at the skill you give:
+  **Middling** (an ordinary magus: Characteristics 0, those Abilities
+  2), **Able** (Characteristics +1, Abilities 4) or **Formidable**
+  (Characteristics +2, Abilities 6, a Reputation of 3); the rules give
+  no figures for them, so these are the app's. The case's Evidence is the prosecution's testimony
   and the Defence testimony the defence's, each used once: a peer's +3,
   an apprentice's or familiar's +2, any other +1, and +3 more if a
   Quaesitor examined it. The side that lost fewer levels wins, and the
   difference is its Argument Strength (less 1 for a motion that adds to
   the Code, 3 for one that alters it).
 - **The vote** on each case: each covenant's leaning, which you can
-  change, and the votes the debate won: an Edge wins 10% of the
+  change, with why it leans that way under it (it brings the case, the
+  case is against it, or its attitude toward a troupe covenant that is
+  a party), and the votes the debate won: an Edge wins 10% of the
   undecided votes, up to a Landslide's 60%, and from a Triumphant
   Victory 10% to 30% of the other side's too. The covenants are called
-  one by one and the tally kept; what is left undecided abstains.
+  one by one and the tally kept; what is left undecided abstains. On a
+  tie the Praeco casts the deciding vote: choose for or against (on a
+  call for a Wizard's March a tie defeats it).
 - **The Sacred Council**, on the first day under Hibernia's customs:
   tick each faction's ambassador confirmed for this meeting (from the
   Ambassadors tab), and write the disputes heard. Each confirmed
@@ -256,11 +294,20 @@ The steps run in a fixed order:
   themselves (the eldest is offered) and the polemarch from every
   polites; the archon becomes the Tribunal's Praeco.
 - **Rulings and fines**: the ruling on each case, starting from how its
-  vote went; any fine, in pawns of an Art or (with no Art) pounds of
-  silver, and who pays it; whether the ruling goes into the Peripheral
-  Code (a motion's does unless you say otherwise); and, for a case
-  between a troupe covenant and another, how the other's attitude
-  toward the troupe's moves (a party that lost takes it ill, -1).
+  vote went, **written out** or from a **ruling template**; any fine,
+  in pawns of an Art or (with no Art) pounds of silver, and who pays it;
+  whether the ruling goes into the Peripheral Code (a motion's does
+  unless you say otherwise); **term**, the years after
+  which the matter comes back; and, for a case between a troupe covenant
+  and another, how the other's attitude toward the troupe's moves (a
+  party that lost takes it ill, -1). A template's blanks are asked
+  next, one form a case, with the finished sentence shown under it as
+  you fill them: "{party} holds {what} for {years} years, until it is
+  debated again" becomes "Keep holds the Rhine ford's vis for 7 years,
+  until it is debated again". A {years} blank sets the term. The
+  templates are the saga's own, kept on Edit Saga ([the
+  saga](help:saga), Ruling templates), where you can add, change and remove them; a blank
+  is any word in braces.
 - **Treasury and vis**: the treasury as it stands and the loans that
   fall due this year.
 - **The next host, by lot**, under Normandy's customs: a covenant of
@@ -289,16 +336,25 @@ The steps run in a fixed order:
   apprentice when someone not yet a magus names them as parens.
 - **Closing**: each case with a ruling is decided and what its ruling
   says is written: the fine, owed to the Tribunal's treasury; the
-  ruling, into the Peripheral Code; and the attitude's move, as a reason
-  on the covenant's attitude. The Acta, the meeting's acts set out as a
+  ruling, into the Peripheral Code; the attitude's move, as a reason
+  on the covenant's attitude; and a term's end, on the case. The Acta, the meeting's acts set out as a
   charter, goes into the Tribunal's Diary, and the next meeting is set
   for when the Tribunal next meets.
 
-Any step can be held again to change it. Every step has a Note for
-anything said or decided in your own words.
+Any step can be held again to change it; saving it then goes on to the
+step in hand. Every step has a Note for anything said or decided in
+your own words.
+
+**Terms that come due.** A ruling made for a term comes back. [Ahead](help:section-ahead)
+lists the season before its term ends and the season it ends;
+advancing into the season before says it ends next season, and
+advancing into the season it ends says so and puts the matter back on
+its Tribunal's docket as a new case ("Fengheld v. Keep (debated
+again)"), with the old ruling in its charge, for the next meeting. The
+case's details on the Docket show when its term ends.
 
 Each step held writes its minutes into the Tribunal's Diary, an entry
-headed with its day ("¶ The First Day: Attendance and proxies"), its
+headed with its day ("¶ The First Day: The roll call and proxies"), its
 numbers in the margin (the votes in the hall, a vote's tally, a fine)
 and its Note after its own words. Holding a step again rewrites its
 entry rather than adding another. The Acta, like any Diary entry, can be
@@ -308,7 +364,7 @@ On the desktop, choose the Acta in the Diary and press Print to print it
 to a PDF.
 <!-- /gui -->
 
-**See also:** [Tribunal sheet](help:tribunal), [Meeting tab](help:tab-trib-meeting)
+**See also:** [How to hold a Tribunal](help:guide-tribunal), [Tribunal sheet](help:tribunal), [Meeting tab](help:tab-trib-meeting)
 
 # The World Turns
 <!-- help: world-turns -->

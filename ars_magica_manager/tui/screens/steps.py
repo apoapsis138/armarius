@@ -14,7 +14,7 @@ from typing import Any, ClassVar
 from textual.app import App
 from textual.widgets import Static
 
-from ...commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Refuse
+from ...commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Refuse, Then
 from ..heraldry import beside
 from .fields import FieldsDialog
 from .pickers import CsvFilePickerScreen, SearchablePickerScreen
@@ -89,7 +89,8 @@ def run_steps(
 ) -> None:
     """Show `step` and each step it leads to; once the last is answered,
     `done(what it ended with)`: a list of notes, a commands.Picked value,
-    or None. Cancelling any step stops there (`done` isn't called); a
+    or None. A commands.Then calls `done(None)` and goes on to its step.
+    Cancelling any step stops there (`done` isn't called); a
     Refuse is told with `notify(title, why)` (a warning by default) and
     stops too, as it changed nothing."""
 
@@ -162,6 +163,11 @@ def run_steps(
             ),
             handle_confirmed,
         )
+        return
+    if isinstance(step, Then):
+        # The steps so far are kept (saved and redrawn), then the next.
+        done(None)
+        run_steps(app, step.step, done, notify)
         return
     done(step)
 

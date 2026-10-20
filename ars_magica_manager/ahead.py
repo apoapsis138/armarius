@@ -3,8 +3,8 @@ the saga rather than kept as a list.
 
 Each source is a function that returns its upcoming entries between two
 seasons; Ahead calls them all and sorts the answers by season. The
-Tribunals give their next meetings and the seasons notice of a case is
-due; the towns their fairs; the places their dated triggers; the threats
+Tribunals give their next meetings, the seasons notice of a case is
+due and the terms of their rulings ending; the towns their fairs; the places their dated triggers; the threats
 their dated stages; the characters the year their aging rolls begin and
 the season they come back from Twilight; each Winter the world turns
 (the yearly step); and the storyguide's own entries (Saga.calendar)
@@ -21,7 +21,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
-from . import place_events, threats
+from . import place_events, threats, tribunal_terms
 from .grids import Grid
 from .markup import escape
 from .models import FULL, SEASONS, CalendarEntry, Covenant, Saga
@@ -192,6 +192,34 @@ def _tribunals(saga: Saga, start: int, stop: int) -> list[Entry]:
                         int(year),
                         season,
                         f"Notice due for the {tribunal.name} Tribunal's cases",
+                        TRIBUNAL,
+                        tribunal.name,
+                        tribunal_id=tribunal.id,
+                    )
+                )
+    return found
+
+
+@register
+def _terms(saga: Saga, start: int, stop: int) -> list[Entry]:
+    """A ruling made for a term: the season before it ends, and the season
+    it ends and goes back on the docket."""
+    found = []
+    for tribunal, case in tribunal_terms.termed(saga):
+        if case.term_docketed:
+            continue
+        end = tribunal_terms.ends(case)
+        for when, words in (
+            (end - 1, "ends next season"),
+            (end, "ends: back on the docket"),
+        ):
+            if start <= when <= stop:
+                year, season = _from_order(when)
+                found.append(
+                    Entry(
+                        year,
+                        season,
+                        f"The term of {case.title} {words}",
                         TRIBUNAL,
                         tribunal.name,
                         tribunal_id=tribunal.id,

@@ -486,6 +486,14 @@ def case_text(saga: Saga, tribunal: Tribunal, case: Case | None) -> str:
             f"{given}; due {due}, {ahead} before the meeting" if due else given,
         )
     line("Sought", case.penalty)
+    if case.term_ends_year is not None:
+        season = case.term_ends_season or "Summer"
+        line(
+            "Term",
+            f"ended {season} {case.term_ends_year}: back on the docket"
+            if case.term_docketed
+            else f"ends {season} {case.term_ends_year}, to be debated again",
+        )
     evidence = [e.strip() for e in case.evidence.splitlines() if e.strip()]
     if evidence:
         lines.append(

@@ -220,13 +220,13 @@
 
   The Next Meeting: Summer 1228
   Held at: Durenmar
-  Now:     Not yet opened: hold any step (e) to open it
+  Now:     Not yet opened: Edit (e) calls the roll and opens it
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
         Step                        Day
-      ○ Opening and the oaths       The First Day
-      ○ Attendance and proxies
+      ○ The roll call and proxies   The First Day
+      ○ Opening and the oaths
       ○ Fengheld v. Keep
       ○ The vote: Fengheld v. Keep
       ○ Motion: Gild dues           The Second Day
@@ -236,19 +236,19 @@
       ○ Closing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ The Vote: Fengheld v. Keep (5)
+    ▼ The Vote: Fengheld v. Keep (4)
 
         Covenant  Votes  For  Against  Undecided  Note
       ○ Keep      1      ·    1        ·          defends
-      ○ Fengheld  4      4    ·        ·          brings it
-        For 4 ██████████████████████████████ Against 1  0 undecided
+      ○ Fengheld  3      3    ·        ·          brings it
+        For 3 ██████████████████████████████ Against 1  0 undecided
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Attendance (5 votes in the hall)
+    ▼ Attendance (4 votes in the hall)
 
         Covenant  Magi  Absent  Proxies  Votes
       ○ Keep      1                      1
-      ○ Fengheld  3             1        4
+      ○ Fengheld  3             1        3
 
 
 

@@ -244,9 +244,14 @@ return it to the docket.
 <!-- help: tab-trib-meeting -->
 
 Holding the Tribunal: the meeting being held, or (before it opens) the
-order of business the next one would hold. Each step is saved as it
-is held, so you can leave the meeting at any point and come back to it
-later at the step in hand. See [Hold Tribunal](help:hold-tribunal).
+order of business the next one would hold. At the top, **Now** names
+the step in hand and its number ("Step 5 of 12"), **Then** the step
+after it, **To go on** how to hold it, and **Present** and **Quorum**
+who is in the hall. Each step is saved as it is held and opens the next
+straight away, so you can run the meeting in one go or leave it at any
+point and come back to it later at the step in hand. See [Hold
+Tribunal](help:hold-tribunal) and [How to hold a
+Tribunal](help:guide-tribunal).
 
 <!-- gui -->
 At the top of the tab is **The Hall**: the meeting drawn as a
@@ -264,20 +269,25 @@ numbers; a key or a click enters the hall.
 ### Order of Business
 <!-- help: section-meeting-business -->
 
-The meeting's steps, day by day: the Opening and Attendance on the
-first day, each case and motion on the day the Opening set for it, and
-the rulings, the treasury and the Closing on the last. A step held is
-marked ✓, and the step in hand ▶.
+The meeting's steps, day by day: the roll call and the Opening on the
+first day, each case and motion (its hearing, then its vote, unless it
+was settled at the private hearing) on the day the Opening set for it,
+and the rulings, the treasury and the Closing on the last. A step held
+is marked ✓, and the step in hand ▶. The step chosen is described under
+the list: what was entered at it, then what the app works out at it and
+what each entry changes.
 
 <!-- tui -->
-`e` holds the chosen step (again, if it was held already); before the
-meeting opens, it opens it. `d` abandons the meeting, keeping whatever
+`e` holds the chosen step (again, if it was held already), and saving
+it opens the next; before the meeting opens, it calls the roll, which
+opens it. `d` abandons the meeting, keeping whatever
 its steps changed. Choose a step to read what was entered at it under
 the lists.
 <!-- /tui -->
 <!-- gui -->
-**Hold** holds the chosen step (again, if it was held already); before
-the meeting opens, it opens it. **Abandon** gives up the meeting,
+**Hold** holds the chosen step (again, if it was held already), and
+saving it opens the next; before the meeting opens, it calls the roll,
+which opens it. **Abandon** gives up the meeting,
 keeping whatever its steps changed. Choose a step to read what was
 entered at it beside the list.
 <!-- /gui -->
@@ -295,29 +305,35 @@ any other leans by its attitude toward a troupe covenant that is a
 party (Warm or better with it, Wary or worse against it), otherwise
 undecided. The winner of the debate then wins a share of the undecided
 votes, and from a Triumphant Victory a share of the other side's, taken
-from the first covenants called. See [Hold Tribunal](help:hold-tribunal).
+from the first covenants called. On a tie the Praeco casts the deciding
+vote. See [Hold Tribunal](help:hold-tribunal).
 
 <!-- tui -->
-`e` holds the vote, where you can change each covenant's leaning.
+`e` holds the vote, where you can change each covenant's leaning (each
+says why it leans as it does) and, on a tie, how the Praeco casts.
 <!-- /tui -->
 <!-- gui -->
-**Edit** holds the vote, where you can change each covenant's leaning.
+**Edit** holds the vote, where you can change each covenant's leaning
+(each says why it leans as it does) and, on a tie, how the Praeco
+casts.
 <!-- /gui -->
 
 ### Attendance
 <!-- help: section-meeting-attendance -->
 
 Each covenant's magi, how many are absent, the proxies it carries and
-its votes in the hall: its magi present, and its proxies if the
-Presiding Quaesitor allowed them. Proxies set aside are shown but not
-counted. Under Hibernia's customs a covenant that doesn't show its
-cathach has no votes, and says so.
+its votes in the hall: its magi present (but the Praeco and the
+Presiding Quaesitor, who don't vote), and its proxies if the Presiding
+Quaesitor allowed them. Proxies set aside are shown but not counted.
+Under Hibernia's customs a covenant that doesn't show its cathach has
+no votes, and says so. The roll call ticks who is present, magus by
+magus or a whole covenant at once; only they can speak at a hearing.
 
 <!-- tui -->
-`e` holds Attendance and proxies again.
+`e` holds the roll call again.
 <!-- /tui -->
 <!-- gui -->
-**Edit** holds Attendance and proxies again.
+**Edit** holds the roll call again.
 <!-- /gui -->
 
 ## Peripheral Code tab

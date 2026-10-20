@@ -275,6 +275,21 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#trib-roster": "3 held", "#trib-info-right": "Your votes"},
     ),
     "hold tribunal": Contract(
+        prefill={"Keep: all present": True, "Fengheld: proxies": "1"},
+        edits={
+            "Keep: all present": False,
+            "Brother Oda": False,
+            "Fengheld: proxies": "2",
+        },
+        saved=lambda s: (
+            s.tribunals[0].meeting["attendance"]["cov1"]["present"],
+            s.tribunals[0].meeting["attendance"]["cov_sketch"]["proxies"],
+        ),
+        expected=(["mag1"], 2),
+        invalid={"Fengheld: proxies": "-1"},
+        shown={"#meeting-business": "✓ held"},
+    ),
+    "open the meeting": Contract(
         prefill={"Held at": "Durenmar", "Days": "3", "Fengheld v. Keep": "1"},
         edits={"Days": "4", "Gild dues": "2"},
         saved=lambda s: (
@@ -286,21 +301,40 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#meeting-business": "The Fourth Day"},
     ),
     "attendance and proxies": Contract(
-        prefill={"Keep: absent": "0", "Fengheld: proxies": "1"},
+        prefill={"Fengheld: all present": True, "Fengheld: proxies": "1"},
         edits={
-            "Keep: absent": "1",
+            "Fengheld: all present": False,
+            "Fengheld: unnamed magi present": "1",
             "Fengheld: proxies": "2",
             "Fengheld: Quaesitor": "Set aside",
         },
-        saved=lambda s: s.tribunals[0].meeting["attendance"]["cov_sketch"],
-        expected={"absent": 0, "proxies": 2, "ruling": "Set aside"},
-        invalid={"Keep: absent": "-1"},
+        saved=lambda s: {
+            k: v
+            for k, v in s.tribunals[0].meeting["attendance"]["cov_sketch"].items()
+            if k in ("present", "unnamed", "proxies", "ruling")
+        },
+        expected={
+            "present": ["mag_sketch"],
+            "unnamed": 1,
+            "proxies": 2,
+            "ruling": "Set aside",
+        },
+        invalid={
+            "Fengheld: all present": False,
+            "Fengheld: unnamed magi present": "-1",
+        },
         shown={"#meeting-attendance": "2 (set aside)"},
     ),
     "hold the debate": Contract(
-        prefill={"Prosecutor": "Severinus", "Defender": "Keep", "Rounds": "5"},
+        prefill={
+            "Settled in private": False,
+            "Prosecutor": "mag_sketch",
+            "Defender": "mag1",
+            "Rounds": "5",
+        },
         edits={
-            "Defender": "Leandro",
+            "Defender": "mag2",
+            "Defender: debates as": "Formidable",
             "Levels lost (for)": "0",
             "Levels lost (against)": "3",
         },
@@ -308,7 +342,7 @@ CONTRACTS: dict[str, Contract] = {
             s.tribunals[0].cases[0].defender,
             s.tribunals[0].meeting["debates"][s.tribunals[0].cases[0].id]["lost"],
         ),
-        expected=("Leandro", [0, 3]),
+        expected=("Brother Oda", [0, 3]),
         invalid=[
             {"Rounds": "11"},
             {"Levels lost (for)": "1", "Levels lost (against)": ""},
@@ -325,9 +359,12 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#meeting-tally": "2 undecided"},
     ),
     "hold the rulings": Contract(
-        prefill={"Fengheld v. Keep": "", "Fengheld v. Keep: into the Code": False},
+        prefill={
+            "Fengheld v. Keep: written from": "",
+            "Fengheld v. Keep: into the Code": False,
+        },
         edits={
-            "Fengheld v. Keep": "Keep pays",
+            "Fengheld v. Keep: the ruling": "Keep pays",
             "Fengheld v. Keep: fine": "3",
             "Fengheld v. Keep: fine in": "Aquam",
             "Fengheld v. Keep: into the Code": True,

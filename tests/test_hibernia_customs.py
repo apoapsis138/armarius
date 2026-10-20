@@ -92,9 +92,9 @@ def test_a_covenant_without_its_cathach_has_no_vote():
     tribunal = _hibernian(saga)
     keep = saga.covenant("cov1")
     assert keep is not None
-    _save(meeting.hold(saga, tribunal))
-    before, _ = meeting.hall(saga, tribunal, tribunal.meeting)
-    keeps = sum(meeting.present(saga, tribunal, tribunal.meeting, keep))
+    unopened = meeting.record(saga, tribunal)
+    before, _ = meeting.hall(saga, tribunal, unopened)
+    keeps = sum(meeting.present(saga, tribunal, unopened, keep))
     assert keeps > 0
     hibernia.save_covenant(tribunal, "cov1", {"taken_by": "Vigil"})
     attendance = meeting.hold(saga, tribunal)
@@ -107,7 +107,7 @@ def test_a_covenant_without_its_cathach_has_no_vote():
         r for r in meeting.attendance_grid(saga, tribunal).rows if r[0] == keep.name
     )
     assert row[4] == "0, no cathach"
-    step = meeting.steps(tribunal, tribunal.meeting)[1]
+    step = meeting.steps(tribunal, tribunal.meeting)[0]
     words, _ = step.minutes(saga, tribunal, tribunal.meeting)
     assert f"{keep.name} did not show its cathach" in words
 
@@ -117,7 +117,6 @@ def test_the_storyguide_decides_at_the_meeting_who_shows_it():
     tribunal = _hibernian(saga)
     keep = saga.covenant("cov1")
     assert keep is not None
-    _save(meeting.hold(saga, tribunal))
     _save(meeting.hold(saga, tribunal), shows_cov1=False)
     assert meeting.present(saga, tribunal, tribunal.meeting, keep) == (0, 0)
     assert tribunal.meeting is not None
@@ -130,7 +129,6 @@ def test_other_customs_ask_for_no_cathach():
     saga = everything_saga()
     rhine = saga.tribunal("rhine")
     assert rhine is not None
-    _save(meeting.hold(saga, rhine))
     keys = {f.key for f in meeting.hold(saga, rhine).fields()}
     assert not any(k.startswith("shows_") for k in keys)
 

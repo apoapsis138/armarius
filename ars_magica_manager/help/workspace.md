@@ -199,10 +199,10 @@ magus or in their laboratory.
 <!-- /gui -->
 
 <!-- tui -->
-**You type:** with `e` (Edit Saga): the Name, Storyguide and Description; whether to Keep season records; and the optional rules of the books in play, each off until you turn it on. The books in play are chosen on [Saga Content](help:section-books-in-play).
+**You type:** with `e` (Edit Saga): the Name, Storyguide and Description; whether to Keep season records; the optional rules of the books in play, each off until you turn it on; and the **Ruling templates** a Tribunal's rulings are written from (see [Hold Tribunal](help:hold-tribunal)): `Enter` opens the list, where each can be added, changed or removed. The books in play are chosen on [Saga Content](help:section-books-in-play).
 <!-- /tui -->
 <!-- gui -->
-**You type:** with **Edit Saga**, in Saga Management: the Name, Storyguide and Description; whether to Keep season records; and the optional rules of the books in play, each off until you turn it on. The books in play are chosen on [Saga Content](help:section-books-in-play).
+**You type:** with **Edit Saga**, in Saga Management: the Name, Storyguide and Description; whether to Keep season records; the optional rules of the books in play, each off until you turn it on; and the **Ruling templates** a Tribunal's rulings are written from (see [Hold Tribunal](help:hold-tribunal)): its button opens the list, where each can be added, changed or removed. The books in play are chosen on [Saga Content](help:section-books-in-play).
 <!-- /gui -->
 
 **The app works out:** the counts of covenants, characters, laboratories, books and spells, and a summary of the books in play and the optional rules turned on ("none (the book's standard rules)" when none is).

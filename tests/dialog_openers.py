@@ -249,7 +249,7 @@ async def _open_bound_being(ws) -> None:
 
 
 def _open_meeting(saga: Saga, tribunal) -> None:
-    """Open the Tribunal's meeting (its Opening as it comes), once: the
+    """Open the Tribunal's meeting (its roll call as it comes), once: the
     dialog is opened again after a cancel."""
     if tribunal.meeting is None:
         opening = meeting.hold(saga, tribunal)
@@ -268,7 +268,8 @@ async def _open_attendance(ws) -> None:
 
 def _open_meeting_step(row: int, list_id: str):
     """The meeting opened, then Edit on `list_id`'s row `row`: the
-    Order of Business's third row is the first case's debate."""
+    Order of Business's second row is the Opening, its third the first
+    case's debate."""
 
     async def opener(ws) -> None:
         tribunal = ws.saga.tribunals[0]
@@ -431,6 +432,7 @@ OPENERS: dict[str, Opener] = {
             "meeting-business",
         ),
     ),
+    "open the meeting": Opener("tribunal", _open_meeting_step(1, "meeting-business")),
     "attendance and proxies": Opener("tribunal", _open_attendance),
     "hold the debate": Opener("tribunal", _open_meeting_step(2, "meeting-business")),
     "hold the vote": Opener("tribunal", _open_meeting_step(0, "meeting-vote")),

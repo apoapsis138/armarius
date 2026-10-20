@@ -103,8 +103,8 @@ def testimony_bonus(words: str) -> int:
 
 @dataclass(frozen=True)
 class Debater:
-    """What a debater brings: the scores the totals use. A name that is no
-    character in the saga debates as an ordinary magus (AVERAGE)."""
+    """What a debater brings: the scores the totals use. A speaker with no
+    scores written down debates at a skill (SKILLS)."""
 
     name: str
     perception: int = 0
@@ -128,15 +128,47 @@ class Debater:
 #: A magus at Tribunal with nothing written down: 2 in each Ability.
 AVERAGE_ABILITY = 2
 
+#: How well a speaker with no scores written down debates (the rules give
+#: no figures, so these are the app's): each Characteristic a debate uses,
+#: each Attack and Defence Ability, and the Reputation that is their
+#: Resistance. Middling is an ordinary magus.
+MIDDLING, ABLE, FORMIDABLE = "Middling", "Able", "Formidable"
+SKILLS: dict[str, tuple[int, int, int]] = {
+    MIDDLING: (0, AVERAGE_ABILITY, 0),
+    ABLE: (1, 4, 0),
+    FORMIDABLE: (2, 6, 3),
+}
 
-def debater(name: str, character: Character | None) -> Debater:
-    """`name` as a debater: `character`'s scores, or an ordinary magus's."""
-    if character is None:
-        return Debater(
-            name,
-            attacks=dict.fromkeys(ATTACKS, AVERAGE_ABILITY),
-            defences=dict.fromkeys(DEFENCES, AVERAGE_ABILITY),
-        )
+
+def skilled(name: str, skill: str = MIDDLING) -> Debater:
+    """`name` debating at `skill` (SKILLS), for a speaker with no scores."""
+    characteristic, ability, reputation = SKILLS.get(skill, SKILLS[MIDDLING])
+    return Debater(
+        name,
+        perception=characteristic,
+        communication=characteristic,
+        intelligence=characteristic,
+        presence=characteristic,
+        attacks=dict.fromkeys(ATTACKS, ability),
+        defences=dict.fromkeys(DEFENCES, ability),
+        resistance=reputation,
+    )
+
+
+def has_scores(character: Character) -> bool:
+    """Whether `character` has any score a debate uses written down: a
+    Characteristic or one of the Attack and Defence Abilities."""
+    c = character.characteristics
+    if any((c.perception, c.communication, c.intelligence, c.presence)):
+        return True
+    return any(sum(ability_score(character, a)) for a in (*ATTACKS, *DEFENCES))
+
+
+def debater(name: str, character: Character | None, skill: str = MIDDLING) -> Debater:
+    """`name` as a debater: `character`'s scores, or (with none written
+    down) a speaker's of `skill`."""
+    if character is None or not has_scores(character):
+        return skilled(name, skill)
     c = character.characteristics
     reputation = max([0, *(r.score for r in character.reputations if r.score > 0)])
     names = {vf.vf_id for vf in character.virtues_flaws}

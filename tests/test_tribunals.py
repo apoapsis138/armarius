@@ -23,7 +23,11 @@ from ars_magica_manager.tribunal_packages.rhine import gilds as rhine_gilds
 from ars_magica_manager.tribunal_packages.theban import magi as theban_magi
 from ars_magica_manager.tribunal_packages.theban import standing as tokens_standing
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
-from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
+from ars_magica_manager.tui.screens import (
+    ConfirmScreen,
+    SelectableList,
+    WorkspaceScreen,
+)
 
 
 def _old_save() -> dict:
@@ -620,3 +624,44 @@ def test_the_sheet_shows_in_the_saga_s_first_paragraph_and_the_rest_with_history
         "",
     )
     assert tribunal_sheet.summary_parts(Tribunal(id="t", name="T")) == ("", "")
+
+
+async def test_hold_tribunal_opens_each_step_after_the_one_saved():
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        workspace = await _workspace(pilot, app)
+        tree = workspace.query_one("#nav-tree", Tree)
+        node = next(
+            n for n in _walk(tree.root) if n.data == (NodeKind.TRIBUNAL, "rhine")
+        )
+        tree.select_node(node)
+        assert await wait_until(
+            pilot, lambda: workspace._tribunal_sheet_view is not None
+        )
+        view = workspace._tribunal_sheet_view
+        await view.build_all_tabs()
+        rows = view.query_one("#meeting-business", SelectableList)
+        rows.select_data_index(0)
+        assert await wait_until(pilot, lambda: rows.selected_data_index == 0)
+        workspace._core_verb("section-meeting-business", "edit")
+        assert await wait_until(
+            pilot, lambda: "Hold Tribunal" in str(getattr(app.screen, "title_text", ""))
+        )
+        roll = app.screen
+        assert await wait_until(pilot, lambda: bool(roll.query("#btn-save")))
+        roll.query_one("#btn-save").press()
+        # Saved, the roll call opens the meeting and the Opening follows.
+        assert await wait_until(
+            pilot,
+            lambda: (
+                app.screen is not roll
+                and "Opening and the oaths"
+                in str(getattr(app.screen, "title_text", ""))
+            ),
+        )
+        assert storage.load_saga("test_saga").tribunals[0].meeting is not None
+        opening = app.screen
+        assert await wait_until(pilot, lambda: bool(opening.query("#btn-cancel")))
+        opening.query_one("#btn-cancel").press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)

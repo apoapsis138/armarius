@@ -378,6 +378,7 @@ GUIDES = [
     "guide-book-packs",
     "guide-bestiary",
     "guide-hedge-magic",
+    "guide-tribunal",
 ]
 
 

@@ -18,7 +18,7 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import acta, artwork, hall, meeting, tribunal_packages, tribunals, world
-from ..commands import Command, Form, Refuse, SectionOps
+from ..commands import Command, Form, Refuse, SectionOps, Then
 from ..forms import tribunal as tribunal_forms
 from ..markup import aligned, escape
 from ..models import Case, Saga, Tribunal, TribunalDiaryEntry
@@ -351,14 +351,16 @@ class TribunalPage(QWidget):
 
     def _with_opening_card(self, ops: SectionOps) -> SectionOps:
         """Hold, when it opens the meeting, plays the opening card over the
-        window once the Opening is saved."""
-        hold, saga, t, p = ops.edit, self.saga, self.tribunal, self.p
+        window once the roll call is saved; the next step opens when the
+        card is closed."""
+        hold, saga, t, p, run = ops.edit, self.saga, self.tribunal, self.p, self.run
         if hold is None:
             return ops
 
-        def play(window: QWidget) -> None:
+        def play(window: QWidget, following: Command | None) -> None:
             if t.meeting is not None:
-                OpeningCard(window, hall.opening_card(saga, t), p).play()
+                then = (lambda: run(following)) if following is not None else None
+                OpeningCard(window, hall.opening_card(saga, t), p, then).play()
 
         def edit(row: int) -> Command:
             step = hold(row)
@@ -368,8 +370,11 @@ class TribunalPage(QWidget):
 
             def apply(values: dict[str, Any]) -> Any:
                 ended = step.apply(values)
-                QTimer.singleShot(0, lambda: play(window))
-                return ended
+                # The step that follows the roll call opens once the card
+                # is closed, not under it.
+                following = ended.step if isinstance(ended, Then) else None
+                QTimer.singleShot(0, lambda: play(window, following))
+                return None if following is not None else ended
 
             return replace(step, apply=apply)
 

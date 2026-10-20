@@ -53,6 +53,12 @@ class Case:
     defender: str = ""
     status: str = CASE_OPEN
     outcome: str = ""
+    #: When what the ruling settled for a term ends, to be debated again
+    #: (None: no term); `term_docketed` once that new case is on the
+    #: docket.
+    term_ends_year: int | None = None
+    term_ends_season: str = ""
+    term_docketed: bool = False
     id: str = field(default_factory=new_instance_id, compare=False)
 
 

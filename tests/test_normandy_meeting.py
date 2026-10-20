@@ -53,7 +53,7 @@ def test_the_steps_come_in_their_places():
     saga = everything_saga()
     tribunal = _opened(saga)
     keys = [s.key for s in meeting.steps(tribunal, tribunal.meeting)]
-    assert keys[:3] == ["opening", "attendance", "succession"]
+    assert keys[:3] == ["attendance", "opening", "succession"]
     assert keys[-2:] == ["host_by_lot", "closing"]
     assert keys.index("tourney") < keys.index("rulings")
 

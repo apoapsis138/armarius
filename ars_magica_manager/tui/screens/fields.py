@@ -145,6 +145,10 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         color: $text-muted;
     }
 
+    .fd-note {
+        height: auto;
+    }
+
     .fd-area-label {
         margin-top: 1;
     }
@@ -255,6 +259,12 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         if spec.kind == "area":
             yield Label(spec.label, classes="fd-area-label")
             yield TextArea(str(spec.value or ""), id=widget_id, classes="fd-area")
+            if spec.hint:
+                yield Static(spec.hint, classes="fd-hint")
+            return
+        if spec.kind == "info" and not spec.label:
+            # A note of its own spans the form and wraps.
+            yield Static(escape(str(spec.value)), classes="fd-value fd-note")
             if spec.hint:
                 yield Static(spec.hint, classes="fd-hint")
             return
