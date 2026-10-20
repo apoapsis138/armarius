@@ -413,8 +413,8 @@ HIBERNIA = TribunalPackage(
     "supernatural factions' ambassadors, confirmed at the Sacred Council, "
     "vote as magi do; its law is largely treaties; and the Coill Trí give "
     "the Order seven Gifted children at each meeting. It meets at the Hill "
-    "of Tara, and in certamen the aggressor picks the Technique and the "
-    "defender the Form.",
+    "of Tara, and certamen there allows no veto and no limit on who, when "
+    "or how often.",
 )
 
 register(HIBERNIA)

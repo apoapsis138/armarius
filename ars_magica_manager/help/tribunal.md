@@ -82,7 +82,8 @@ what the old ones recorded, hidden, and switching back shows it again.
   with the Sacred Council and ends with the tithe of Gifted children,
   whom the Coill Trí owe the Order (see [Hold
   Tribunal](help:hold-tribunal)). Its other customs are noted on the
-  Peripheral Code tab.
+  Peripheral Code tab. The book's Tribunal of 1220 ships as a content
+  pack: see [How to start a saga from a Tribunal book](help:guide-book-packs).
 
 Older sagas typed a covenant's Tribunal as a name. Each name became a
 Tribunal of its own when the saga was first opened by this version, and

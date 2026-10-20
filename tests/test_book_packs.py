@@ -534,6 +534,100 @@ def test_the_transylvania_pack_imports_clean_into_a_new_saga():
     )
 
 
+# -- The Contested Isle --
+
+HIBERNIA = book_packs.PACKS["hibernia"]
+
+
+def test_the_hibernia_pack_holds_the_tribunal_of_1220():
+    from ars_magica_manager.tribunal_packages import hibernia as package
+
+    saga = HIBERNIA.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == "hibernia"
+    assert (tribunal.next_year, tribunal.meets_every) == (1221, 7)
+    assert tribunal.meeting_place == "the Hill of Tara"
+    # Nine covenants at law, and the two Mercer Houses beside them.
+    names = {c.name for c in saga.covenants}
+    assert len(names) == 11 and {"Circulus Ruber", "Praesis", "Vigil"} <= names
+    assert {"Leth Moga", "Leth Cuinn"} <= names
+    assert tribunal.covenants_total == 9
+    praeco = saga.character(tribunal.praeco_id or "")
+    quaesitor = saga.character(tribunal.quaesitor_id or "")
+    assert praeco is not None and praeco.name.startswith("Milvia")
+    assert quaesitor is not None and quaesitor.name.startswith("Visioturpis")
+    # Every covenant at law has its cathach; the Mercer Houses keep none.
+    cathaigh = package.cathaigh(tribunal)
+    houses = {c.id for c in saga.covenants if c.name.startswith("Leth ")}
+    assert set(cathaigh) == {c.id for c in saga.covenants} - houses
+    praesis = next(c for c in saga.covenants if c.name == "Praesis")
+    assert "Gáe Bulg" in cathaigh[praesis.id]["cathach"]
+    ambassadors = {a["name"] for a in package.ambassadors(tribunal)}
+    assert len(ambassadors) == 5 and {"Fothaid", "Ainid", "Mug Ruith"} <= ambassadors
+    assert all(a["confirmed"] for a in package.ambassadors(tribunal))
+    treaties = {t["title"] for t in package.treaties(tribunal)}
+    assert "The Treaty of Cnoc Maol Réidh" in treaties
+    assert len(package.tuatha(tribunal)) == 4
+    assert len(tribunal.rulings) >= 25 and len(tribunal.cases) >= 12
+    years = [e.year for e in tribunal.diary]
+    assert years == sorted(years) and years[-1] <= 1220 and len(years) >= 80
+    threats = {n.name: n for n in saga.neighbours if n.kind == "threat"}
+    active = [n for n in threats.values() if not n.details.get("dormant")]
+    assert len(threats) >= 9 and len(active) == 3
+    assert len(saga.creatures) >= 22
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_indrechtach_is_entered_as_the_book_prints_him():
+    data = book_packs.data(HIBERNIA)
+    sketches = data[packs.GENERATED]
+    indrechtach = next(
+        c for c in data["saga"]["characters"] if c["name"].startswith("Indrechtach")
+    )
+    assert indrechtach["id"] not in sketches
+    assert len(sketches) >= 45
+
+
+def test_the_hibernia_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(HIBERNIA)
+    texts = _texts(data["saga"])
+    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert data["book"] == "TCI" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_hibernia_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(HIBERNIA).read_text(encoding="utf-8"))
+    built = book_packs.data(HIBERNIA)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_hibernia_pack_imports_clean_into_a_new_saga():
+    from ars_magica_manager.tribunal_packages import hibernia as package
+
+    data = book_packs.data(HIBERNIA)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "The Contested Isle: The Hibernian Tribunal is now in play.",
+        packs.assumptions_note("The Contested Isle: The Hibernian Tribunal"),
+    ]
+    assert target.books_in_play is not None and "TCI" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+    # The cathaigh come with the Tribunal, keyed by the imported covenants.
+    (tribunal,) = target.tribunals
+    covenants = {c.id for c in target.covenants}
+    assert set(package.cathaigh(tribunal)) <= covenants
+    assert len(package.cathaigh(tribunal)) == 9
+
+
 def test_every_pack_names_a_help_page_of_its_assumptions():
     from ars_magica_manager import help_text
 

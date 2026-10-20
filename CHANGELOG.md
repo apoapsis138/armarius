@@ -106,6 +106,23 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.105.0 — 2026-10-20
+
+### Peregrinatio
+
+- **The Hibernian Tribunal pack.** The Contested Isle ships as a content
+  pack: the Tribunal of 1220 with its Code, docket, ambassadors,
+  treaties and the Coill Trí's túatha; its eleven covenants with their
+  cathaigh, magi and Redcaps; the five provinces' lords, churches, towns
+  and faerie places; the High Roads; its stories, history and Bestiary.
+  Its assumptions page in Help lists what the pack inferred and the
+  judgement calls it made where the book is silent.
+
+### Florilegium
+
+- **A spell's name corrected.** "It Will Be Health To Your Flesh, And
+  Strength To Your Bones" now has its full name in the spell catalog.
+
 ## 2.104.0 — 2026-10-19
 
 ### Glossa

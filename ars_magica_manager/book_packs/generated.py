@@ -179,6 +179,7 @@ TRIBUNALS = {
     "F&F": "Provençal Tribunal",
     "TSE": "Theban Tribunal",
     "AtD": "Transylvanian Tribunal",
+    "TCI": "Hibernian Tribunal",
 }
 #: The language a book's magi learn their Art in, where it is not Latin.
 HERMETIC_LANGUAGES = {"TSE": "Classical Greek"}
