@@ -82,7 +82,9 @@ the Code of Hermes Ability's mark.
 
 **The Ability marks** are drawn by the app's own code
 (`ars_magica_manager/gui/mark_charges.py`) in the style of the Art
-symbols; they are part of the app and under its licence.
+symbols; they are part of the app and under its licence. So are **the
+hedge traditions' symbols** in `ars_magica_manager/assets/symbols/traditions/`,
+drawn by `tools/draw_traditions.py` in the manner of the House symbols.
 
 **The lion** in `ars_magica_manager/assets/charges/` is adapted from
 [Lion rampant element](https://commons.wikimedia.org/wiki/File:Lion_rampant_element.svg)

@@ -1266,9 +1266,9 @@ def folk_witch_magic_theory() -> QPainterPath:
     pestle = union(bar(46, 44, 76, 10, 7), circle(77, 9, 6))
     sprig = union(
         stroke(curve((40, 44), (30, 26), (26, 12)), 2.6),
-        rotate(vesica(24, 24, 6, 14), -50, 24, 24),
-        rotate(vesica(36, 22, 6, 14), 30, 36, 22),
-        rotate(vesica(26, 14, 5, 12), -20, 26, 14),
+        rotate(vesica(24, 24, 14, 6), 40, 24, 24),
+        rotate(vesica(36, 22, 14, 6), 120, 36, 22),
+        rotate(vesica(26, 14, 12, 5), 70, 26, 14),
     )
     return union(over(pestle, mortar), sprig)
 
@@ -1555,7 +1555,7 @@ def salutem() -> QPainterPath:
     the learned magicians' Form of health."""
     fruit = circle(50, 56, 30)
     crown = poly((40, 30), (38, 18), (45, 24), (50, 14), (55, 24), (62, 18), (60, 30))
-    opening = vesica(50, 58, 26, 34)
+    opening = rotate(vesica(50, 58, 34, 26), 90, 50, 58)
     seeds = union_of(
         circle(50 + dx, 58 + dy, 2.4)
         for dx, dy in (
@@ -1571,8 +1571,8 @@ def salutem() -> QPainterPath:
         )
     )
     leaves = union(
-        rotate(vesica(24, 22, 10, 26), -50, 24, 22),
-        rotate(vesica(76, 22, 10, 26), 50, 76, 22),
+        rotate(vesica(32, 26, 20, 8), 40, 32, 26),
+        rotate(vesica(68, 26, 20, 8), 140, 68, 26),
     )
     return union(
         fruit.subtracted(opening).united(seeds.intersected(opening)), crown, leaves

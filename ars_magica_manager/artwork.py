@@ -13,7 +13,9 @@ it to its theme. Two sets:
   traced from their TIFFs by tools/trace_symbols.py (CC BY-SA 4.0, see
   NOTICE.md). They are woodcut tiles: the ink is the tile and its frame,
   and the symbol shows through as the background. House Guernicus has no
-  released symbol and uses the Quaesitor's.
+  released symbol and uses the Quaesitor's. symbols/traditions/ holds the
+  hedge traditions' symbols, drawn in the same manner by
+  tools/draw_traditions.py.
 - charges/: heraldic charges from Wikimedia Commons (see NOTICE.md),
   cleaned by tools/clean_charge.py into layers (silhouette, line work,
   claws), each tinted by arms.py's tincture rules.
@@ -28,9 +30,15 @@ caps) and rules prose, Uncial Antiqua for one decorative flourish. Labels,
 numbers and tables use the system's own UI font (Segoe UI on Windows).
 """
 
+from __future__ import annotations
+
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .arts import ARTS
+
+if TYPE_CHECKING:
+    from .models import Character
 
 ASSETS = Path(__file__).resolve().parent / "assets"
 SYMBOLS = ASSETS / "symbols"
@@ -98,6 +106,21 @@ HOUSE_SYMBOLS: dict[str, Path] = {
         "verditius",
     )
 } | {"house_guernicus": SYMBOLS / "houses" / "quaesitor.svg"}
+
+#: Each hedge tradition's symbol, by its tradition_catalog.json id, for a
+#: character of a tradition as a House's is for a magus: drawn by
+#: tools/draw_traditions.py in the House symbols' manner.
+TRADITION_SYMBOLS: dict[str, Path] = {
+    f"trad_{name}": SYMBOLS / "traditions" / f"{name}.svg"
+    for name in (
+        "elementalists",
+        "folk_witches",
+        "gruagachan",
+        "learned_magicians",
+        "nightwalkers",
+        "vitkir",
+    )
+}
 
 #: An app concept to its Phosphor icon's name (the file is
 #: icons/<name>.svg).
@@ -183,3 +206,22 @@ def house_symbol(house_id: str | None) -> Path | None:
     """A House's symbol by its catalog id, or None (no House, or one with
     no symbol)."""
     return HOUSE_SYMBOLS.get(house_id or "")
+
+
+def tradition_symbol(tradition_id: str | None) -> Path | None:
+    """A hedge tradition's symbol, or None for an id without one."""
+    return TRADITION_SYMBOLS.get(tradition_id or "")
+
+
+def person_symbol(character: Character) -> Path | None:
+    """The symbol a person is shown by: a magus's House's, else the first
+    of their traditions that has one, else None."""
+    if character.type == "magus":
+        house = house_symbol(character.hermetic.house)
+        if house is not None:
+            return house
+    for tradition_id in character.traditions:
+        symbol = tradition_symbol(tradition_id)
+        if symbol is not None:
+            return symbol
+    return None

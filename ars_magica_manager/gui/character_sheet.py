@@ -1438,10 +1438,8 @@ class Portrait(QWidget):
         self.clicked = lambda: run(portraits.portrait(saga, character))
         found = portraits.path(character)
         self.picture = QPixmap(str(found)) if found is not None else QPixmap()
-        house = artwork.house_symbol(character.hermetic.house)
-        if character.type != "magus" or house is None:
-            house = artwork.icon("character")
-        self.symbol = pictures.pixmap(house, p["heading"], HOUSE_SYMBOL - 12, 2.0)
+        symbol = artwork.person_symbol(character) or artwork.icon("character")
+        self.symbol = pictures.pixmap(symbol, p["heading"], HOUSE_SYMBOL - 12, 2.0)
         self.setToolTip(
             "Change the portrait" if not self.picture.isNull() else "Choose a portrait"
         )

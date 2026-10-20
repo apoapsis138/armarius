@@ -212,7 +212,7 @@ class LaboratoryPage(QWidget):
         row.setContentsMargins(0, 0, 0, 0)
         row.setSpacing(14)
         magus = ls.owner(saga, lab)
-        house = artwork.house_symbol(magus.hermetic.house) if magus else None
+        house = artwork.person_symbol(magus) if magus else None
         symbol = QLabel()
         symbol.setPixmap(
             pictures.pixmap(house or artwork.icon("laboratory"), p["heading"], 56, 2.0)

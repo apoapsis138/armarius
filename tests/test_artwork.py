@@ -10,6 +10,7 @@ import pytest
 
 from ars_magica_manager import ROOT, artwork, catalog
 from ars_magica_manager.arts import ARTS
+from ars_magica_manager.models import Character
 
 SVG = "{http://www.w3.org/2000/svg}"
 SVGS = sorted(artwork.ASSETS.rglob("*.svg"))
@@ -28,10 +29,22 @@ def test_every_house_has_a_symbol_guernicus_the_quaesitors():
     assert artwork.house_symbol("house_diedne") is None
 
 
+def test_every_tradition_has_a_symbol_and_a_person_shows_theirs():
+    traditions = {t.id for t in catalog.load_tradition_catalog()}
+    assert set(artwork.TRADITION_SYMBOLS) <= traditions
+    witch = Character("c1", "Agnes", "companion", traditions=["trad_folk_witches"])
+    assert artwork.person_symbol(witch) == artwork.tradition_symbol("trad_folk_witches")
+    magus = Character("c2", "Hrafn", "magus", traditions=["trad_vitkir"])
+    magus.hermetic.house = "house_bjornaer"
+    assert artwork.person_symbol(magus) == artwork.house_symbol("house_bjornaer")
+    assert artwork.person_symbol(Character("c3", "Odo", "grog")) is None
+
+
 def _registered() -> set[Path]:
     return (
         set(artwork.ART_SYMBOLS.values())
         | set(artwork.HOUSE_SYMBOLS.values())
+        | set(artwork.TRADITION_SYMBOLS.values())
         | {artwork.icon(concept) for concept in artwork.ICON_NAMES}
         | {artwork.APP_ICON, artwork.SIGIL}
         | {path for paths in artwork.FONTS.values() for path in paths}

@@ -221,10 +221,10 @@ class SagaShelf(QWidget):
 
 
 def person_card(saga: Saga, character: Character, p: Palette, open_: Open) -> QWidget:
-    """A person as a card, with their House's symbol, that opens their
-    sheet."""
+    """A person as a card, with their House's or tradition's symbol, that
+    opens their sheet."""
     figures = ov.person_card(saga, character)
-    house = artwork.house_symbol(figures.house)
+    house = artwork.person_symbol(character)
     card = ClickableCard(p, pad=12)
     card_title(
         card,

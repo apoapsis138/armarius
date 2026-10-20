@@ -107,6 +107,18 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.108.0 — 2026-10-20
+
+### Insignia
+
+- **Tradition symbols.** The six Hedge Magic traditions (Elementalists,
+  Folk Witches, Gruagachan, Learned Magicians, Nightwalkers and Vitkir)
+  each have a symbol cut like the House symbols. A hedge wizard shows
+  their tradition's symbol wherever a magus shows their House: on their
+  person card, beside their portrait and over their laboratory.
+- **Clearer leaves.** The leaves on the Folk Witch Magic Theory and
+  Salutem marks are drawn at their proper size.
+
 ## 2.107.0 — 2026-10-20
 
 ### Hedge Magic

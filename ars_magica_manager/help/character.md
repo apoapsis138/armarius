@@ -41,7 +41,9 @@ The frame beside the name holds the character's portrait:
 click it to choose a picture from anywhere on the computer. The app copies
 the picture into the save folder's `portraits` folder, so moving or deleting
 the original does not lose it, and clicking again changes or removes it.
-While there is no portrait the frame shows the House symbol. A magus's
+While there is no portrait the frame shows the House symbol, or for a
+hedge wizard their tradition's symbol (the first of their traditions, if
+they belong to several); anyone else has a figure of a person. A magus's
 **Sanctum** button opens their laboratory below their sheet, so the trail
 leads back to them; while they have no laboratory it reads **New Sanctum**
 and creates one that is theirs.
