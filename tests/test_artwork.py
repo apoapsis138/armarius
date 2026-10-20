@@ -31,7 +31,7 @@ def test_every_house_has_a_symbol_guernicus_the_quaesitors():
 
 def test_every_tradition_has_a_symbol_and_a_person_shows_theirs():
     traditions = {t.id for t in catalog.load_tradition_catalog()}
-    assert set(artwork.TRADITION_SYMBOLS) <= traditions
+    assert set(artwork.TRADITION_SYMBOLS) == traditions
     witch = Character("c1", "Agnes", "companion", traditions=["trad_folk_witches"])
     assert artwork.person_symbol(witch) == artwork.tradition_symbol("trad_folk_witches")
     magus = Character("c2", "Hrafn", "magus", traditions=["trad_vitkir"])

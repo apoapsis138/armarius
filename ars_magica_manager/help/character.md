@@ -316,7 +316,9 @@ Dead Language or a shield for Parma Magica. The chosen Ability's mark is
 shown larger, with its engraved lines, in the panel beside the list. The
 hedge traditions' Arts and Abilities have marks of their own: each rune
 of the Vitkir is its Elder Futhark letter, all cut at one size, and the
-gruagachan's are taken from the Pictish symbol stones. An Ability the
+gruagachan's are taken from the Pictish symbol stones. So do the
+powers, Methods and Arts of the other hedge books, from the faerie rites
+and Goetic Arts to the Amazons' Vowels and the Hunters' Arts. An Ability the
 app has no mark for shows its category's. The way to the next
 score is drawn as a gold line along a dotted rule, ending in a red
 lozenge as far as the XP reaches, with the XP over the next total after

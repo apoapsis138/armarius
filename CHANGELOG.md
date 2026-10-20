@@ -107,6 +107,22 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.109.0 — 2026-10-20
+
+### Insignia
+
+- **A symbol for every tradition.** The other 75 traditions in the
+  catalogue (faerie, holy, infernal, Ex Miscellanea and the regional
+  traditions) each have their own symbol, so every hedge wizard shows
+  their tradition's symbol in place of the figure of a person.
+- **A mark for every Ability.** The 114 Abilities from the other hedge
+  books that borrowed a related Ability's mark now have their own: the
+  faerie rites and Ars Fabulosa, the Holy Methods and Powers, the
+  maleficia and Goetic Arts, the settut powers, the Solomonic arts, the
+  Amazons' Vowels and Consonants, the Augustan Schools, the Muspelli
+  powers, the Soqotran tribes, the Hyperborean hymns and the Hunters'
+  Arts.
+
 ## 2.108.0 — 2026-10-20
 
 ### Insignia
