@@ -18,6 +18,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from ..models import Book, Character
+from . import creation_access as access
 from . import effects, scores, xp
 from .breakdown import Line
 from .lab import ability_score
@@ -135,7 +136,7 @@ def season_of_study(
             )
     gained_xp = round_up(gained)
     if gain_limit is not None:
-        factor = xp.ART_FACTOR if is_art else xp.ABILITY_FACTOR
+        factor = xp.ART_FACTOR if is_art else access.ability_factor(subject)
         current = _current_xp(student, subject, is_art)
         ceiling = xp.xp_for_score(gain_limit, factor)
         room = max(0, ceiling - current)

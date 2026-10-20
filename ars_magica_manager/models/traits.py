@@ -56,15 +56,25 @@ class Ability:
     category: str = "General"
     xp: int = 0
     specialty: str | None = None
+    #: The xp table it advances on (common.XP_TABLES), copied from its
+    #: catalog entry when it's taken: "art" for an Accelerated Ability.
+    xp_table: str = "ability"
+
+    @property
+    def factor(self) -> int:
+        """xp per score step: the Art table's or the Ability table's."""
+        return (
+            xp_rules.ART_FACTOR if self.xp_table == "art" else xp_rules.ABILITY_FACTOR
+        )
 
     @property
     def level(self) -> int:
         """The score the xp buys."""
-        return xp_rules.score_from_xp(self.xp, xp_rules.ABILITY_FACTOR)
+        return xp_rules.score_from_xp(self.xp, self.factor)
 
     @property
     def progress(self) -> xp_rules.Progress:
-        return xp_rules.progress(self.xp, xp_rules.ABILITY_FACTOR)
+        return xp_rules.progress(self.xp, self.factor)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Ability:
@@ -78,6 +88,12 @@ class Ability:
             d["xp"], _ = xp_rules.migrate_level_xp(
                 d.pop("level"), d.get("xp", 0), xp_rules.ABILITY_FACTOR
             )
+        if d.get("name") == "Medicinal Divining":
+            # The medicinal kind is a type of the one Divining Art, which
+            # advances as an Art: keep the score the old entry had.
+            score = xp_rules.score_from_xp(d.get("xp", 0), xp_rules.ABILITY_FACTOR)
+            d["name"], d["xp_table"] = "Elementalist Divining", "art"
+            d["xp"] = xp_rules.xp_for_score(score, xp_rules.ART_FACTOR)
         return cls(**known_fields(cls, d))
 
 

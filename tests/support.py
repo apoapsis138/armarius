@@ -225,7 +225,12 @@ def everything_saga() -> Saga:
     covenant.economics.income_sources = [IncomeSource(id="inc1", name="Mill")]
 
     magus = Character(id="mag1", name="Leandro", type="magus", covenant_id="cov1")
-    magus.abilities = [Ability("Latin", xp=ability_xp(4))]
+    magus.abilities = [
+        Ability("Latin", xp=ability_xp(4)),
+        Ability("Fehu", "Hedge Art", xp=6, xp_table="art"),
+    ]
+    # An Ex Miscellanea magus who is also a vitki: a tradition's chapter.
+    magus.traditions = ["trad_vitkir"]
     magus.virtues_flaws = [
         VirtueFlawInstance(first_vf("Virtue")),
         VirtueFlawInstance(first_vf("Flaw")),
@@ -357,6 +362,7 @@ def everything_saga() -> Saga:
     return Saga(
         id="test_saga",
         name="Matrix",
+        traditions=["trad_vitkir"],
         covenants=[covenant, sketch],
         calendar=[
             CalendarEntry(

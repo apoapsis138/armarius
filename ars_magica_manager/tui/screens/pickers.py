@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import asyncio
 from collections import Counter
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -52,6 +52,7 @@ from ...models import (
     VirtueFlawDef,
     VirtueFlawInstance,
 )
+from ...rules import creation_access as access
 from .fields import FieldsDialog, ModalDialog
 from .prompts import (
     _ability_dialog,
@@ -914,17 +915,24 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
         books: frozenset[str] | None = None,
         virtues_flaws: Sequence[VirtueFlawInstance] = (),
         ask_details: bool = True,
+        only: Collection[str] | None = None,
     ) -> None:
         """`ask_details`: False dismisses with the chosen Ability at once,
-        with no xp or Specialty asked (a form that only needs which one)."""
+        with no xp or Specialty asked (a form that only needs which one).
+        `only`: offer just the Abilities of these catalog names (a
+        tradition's own)."""
         super().__init__(books=books)
         self._exclude_names = exclude_names or set()
+        self._only = None if only is None else set(only)
         # the owner's, for Puissant and Affinity in the xp's live score
         self._virtues_flaws = virtues_flaws
         self._ask_details = ask_details
 
     def _load_entries(self) -> list[AbilityDef]:
-        return catalog.abilities_to_offer(self._exclude_names)
+        entries = catalog.abilities_to_offer(self._exclude_names)
+        if self._only is None:
+            return entries
+        return [e for e in entries if e.name in self._only]
 
     def _search_text(self, entry: AbilityDef) -> str:
         return f"{entry.name} {entry.category}"
@@ -959,7 +967,13 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
 
     def _prompt_details(self, name: str, category: str) -> None:
         if not self._ask_details:
-            self.dismiss(Ability(name=name, category=category))
+            self.dismiss(
+                Ability(
+                    name=name,
+                    category=category,
+                    xp_table=access.ability_xp_table(name),
+                )
+            )
             return
 
         def handle_ability(result: dict[str, Any] | None) -> None:

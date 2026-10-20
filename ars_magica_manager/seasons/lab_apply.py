@@ -34,6 +34,7 @@ from ..models import (
 )
 from ..rules import activities as rules
 from ..rules import book_seasons as bs
+from ..rules import creation_access as access
 from ..rules import creation_characteristics as cch
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
@@ -788,7 +789,11 @@ def _goal_reached(magus: Character, goal) -> list[str]:
     if goal.grant_kind == "Ability" and goal.grant:
         found = next((a for a in magus.abilities if a.name == goal.grant), None)
         if found is None:
-            found = Ability(goal.grant, category="Arcane")
+            found = Ability(
+                goal.grant,
+                category="Arcane",
+                xp_table=access.ability_xp_table(goal.grant),
+            )
             magus.abilities.append(found)
         found.xp += goal.points
         lines.append(f"{goal.grant}: +{goal.points} xp.")

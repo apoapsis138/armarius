@@ -64,6 +64,9 @@ from . import (
     supplement_work,
     xp,
 )
+from . import (
+    creation_access as access,
+)
 from .rounding import round_down
 from .study import StudyResult, season_of_study
 
@@ -692,8 +695,14 @@ def subject_xp(character: Character, subject: str) -> int:
 
 
 def subject_factor(subject: str) -> int:
-    """xp per score step: Arts 1, Abilities and Mastery 5."""
-    return xp.ART_FACTOR if _split(subject)[0] == "art" else xp.ABILITY_FACTOR
+    """xp per score step: Arts 1, Mastery 5, an Ability its table's (5,
+    or 1 for an Accelerated Ability or a hedge Art on the Art table)."""
+    kind, name = _split(subject)
+    if kind == "art":
+        return xp.ART_FACTOR
+    if kind == "ability":
+        return access.ability_factor(name)
+    return xp.ABILITY_FACTOR
 
 
 # -- checking and working out a plan -----------------------------------------

@@ -12,7 +12,7 @@ from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 
 from .. import casting_text as ct
-from .. import catalog, faith, tribunal_packages
+from .. import catalog, faith, traditions, tribunal_packages
 from .. import lab_texts as lt
 from .. import players as pl
 from .. import possessions as pos
@@ -29,6 +29,7 @@ from ..models import (
     ArtScore,
     Character,
     Saga,
+    TraditionDef,
     VirtueFlawInstance,
     Wounds,
     character_age,
@@ -267,6 +268,44 @@ def ability_table(character: Character) -> list[AbilityRow]:
     return abilities_table(character.abilities, character.virtues_flaws)
 
 
+def abilities_chapter_table(character: Character) -> list[AbilityRow]:
+    """The Abilities chapter: ability_table without the Abilities a
+    tradition's own chapter shows."""
+    claimed = traditions.claimed(character)
+    return [row for row in ability_table(character) if row.name not in claimed]
+
+
+def tradition_table(character: Character, tradition: TraditionDef) -> list[AbilityRow]:
+    """A tradition's chapter: the character's Arts and Abilities of that
+    tradition, as ability_table rows whose category is the heading they
+    sit under (Techniques, Forms, Runes, Abilities...)."""
+    return [
+        _ability_row(character.virtues_flaws, index, heading, ability)
+        for heading, group in traditions.chapter_groups(character, tradition)
+        for index, ability in group
+    ]
+
+
+def _ability_row(
+    virtues_flaws: Sequence[VirtueFlawInstance],
+    index: int,
+    category: str,
+    ability: Ability,
+) -> AbilityRow:
+    bonus, _ = scores.ability_bonus(virtues_flaws, ability.name)
+    progress = ability.progress
+    return AbilityRow(
+        index,
+        category,
+        ability.name,
+        ability.specialty or "",
+        st.adjusted_score(progress.score, bonus),
+        progress.total,
+        xp_rules.xp_for_score(progress.score, ability.factor),
+        progress.next_total,
+    )
+
+
 def abilities_table(
     abilities: Sequence[Ability], virtues_flaws: Sequence[VirtueFlawInstance]
 ) -> list[AbilityRow]:
@@ -275,22 +314,8 @@ def abilities_table(
     rows = []
     for category in ABILITY_CATEGORIES:
         for index, ability in enumerate(abilities):
-            if ability.category != category:
-                continue
-            bonus, _ = scores.ability_bonus(virtues_flaws, ability.name)
-            progress = ability.progress
-            rows.append(
-                AbilityRow(
-                    index,
-                    category,
-                    ability.name,
-                    ability.specialty or "",
-                    st.adjusted_score(progress.score, bonus),
-                    progress.total,
-                    xp_rules.xp_for_score(progress.score, xp_rules.ABILITY_FACTOR),
-                    progress.next_total,
-                )
-            )
+            if ability.category == category:
+                rows.append(_ability_row(virtues_flaws, index, category, ability))
     return rows
 
 

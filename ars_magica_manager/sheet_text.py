@@ -118,21 +118,48 @@ def live_score(xp: int | None, factor: int, bonus: int = 0) -> str:
 
 
 def ability_rows(
-    abilities: Sequence[Ability], virtues_flaws: Sequence[VirtueFlawInstance] = ()
+    abilities: Sequence[Ability],
+    virtues_flaws: Sequence[VirtueFlawInstance] = (),
+    leave_out: Collection[str] = (),
 ) -> list[tuple[int | None, str]]:
     """One selectable list for every Ability, with a header (non-selectable)
     row before each non-empty category -- unlike Virtues/Flaws, Abilities
     has too many categories for side-by-side lists. `virtues_flaws` are the
-    owner's, for fixed bonuses such as Puissant.
+    owner's, for fixed bonuses such as Puissant; the Abilities named in
+    `leave_out` (those a tradition's own chapter shows) are left out.
 
     Scores and xp line up in columns, named once on the first header row,
     with the xp quieter than the score; an adjusted score sits in its own
     slot after the base, so the base scores still line up."""
-    names = [a.name + (f" ({a.specialty})" if a.specialty else "") for a in abilities]
-    width = max([len(name) for name in names] + [_ABILITY_NAME_MIN]) + 2
+    groups = [
+        (
+            category,
+            [
+                (i, a)
+                for i, a in enumerate(abilities)
+                if a.category == category and a.name not in leave_out
+            ],
+        )
+        for category in ABILITY_CATEGORIES
+    ]
+    return grouped_ability_rows(abilities, groups, virtues_flaws)
+
+
+def grouped_ability_rows(
+    abilities: Sequence[Ability],
+    groups: Sequence[tuple[str, Sequence[tuple[int, Ability]]]],
+    virtues_flaws: Sequence[VirtueFlawInstance] = (),
+) -> list[tuple[int | None, str]]:
+    """ability_rows' list for Abilities already put in headed groups (a
+    heading, then (index in `abilities`, Ability) pairs); an empty group
+    is skipped. A tradition's chapter groups its Arts this way."""
+    shown = [a for _, group in groups for _, a in group]
+    names = {
+        id(a): a.name + (f" ({a.specialty})" if a.specialty else "") for a in shown
+    }
+    width = max([len(name) for name in names.values()] + [_ABILITY_NAME_MIN]) + 2
     rows: list[tuple[int | None, str]] = []
-    for category in ABILITY_CATEGORIES:
-        indexed = [(i, a) for i, a in enumerate(abilities) if a.category == category]
+    for heading, indexed in groups:
         if not indexed:
             continue
         columns = (
@@ -142,7 +169,7 @@ def ability_rows(
             else ""
         )
         # a header has no row marker, so it's padded past one
-        rows.append((None, _pad(category, width + _ROW_MARKER) + columns))
+        rows.append((None, _pad(heading, width + _ROW_MARKER) + columns))
         for index, ability in indexed:
             bonus, _ = scores.ability_bonus(virtues_flaws, ability.name)
             progress = ability.progress
@@ -151,7 +178,7 @@ def ability_rows(
             rows.append(
                 (
                     index,
-                    f"{_pad(names[index], width)}"
+                    f"{_pad(names[id(ability)], width)}"
                     f"{progress.score:>{_SCORE_WIDTH}}"
                     f"{adjusted:<{_ADJUSTED_WIDTH}}"
                     f"[$label]{xp:>{_XP_WIDTH}}[/]",

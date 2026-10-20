@@ -28,16 +28,16 @@
         Source     Title                                            Entries
       (none recorded)
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Traditions Offered (1 of 6)
 
-
-
-
-
-
-
-
-
-
+        On       Book       Tradition
+      ○ no       HMRE       Elementalists
+      ○ no       HMRE       Folk Witches
+      ○ no       HMRE       Gruagachan
+      ○ no       HMRE       Learned Magicians
+      ○ no       HMRE       Nightwalkers
+      ○ yes      HMRE       Vitkir
 
 
 
@@ -75,10 +75,10 @@
     ▼ Catalogs (6)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1115        0
+      ○ Virtues & Flaws              yes          1226        0
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           217        0
-      ○ Abilities                    yes            95        0
+      ○ Abilities                    yes           144        0
       ○ Spells                       yes          1315        0
       ○ Shapes & Materials           yes           243        0
 

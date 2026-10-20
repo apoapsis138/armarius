@@ -449,7 +449,7 @@ def target_score(character: Character, target: str) -> tuple[xp_rules.Progress, 
         return score.progress, ""
     ability = next((a for a in character.abilities if a.name == target), None)
     if ability is None:
-        return xp_rules.progress(0, xp_rules.ABILITY_FACTOR), ""
+        return xp_rules.progress(0, access.ability_factor(target)), ""
     return ability.progress, ability.specialty or ""
 
 

@@ -12,6 +12,7 @@ from textual.widget import Widget
 from textual.widgets import Static, TabbedContent, TabPane
 
 from .... import saga_content as sc
+from .... import traditions
 from ....boon_hook_text import counted
 from ....models import Saga, SagaSource
 from ....sections import (
@@ -22,6 +23,7 @@ from ....sections import (
     PLAYERS_SECTION,
     SOURCES_SECTION,
     SPELL_SECTION,
+    TRADITIONS_SECTION,
 )
 from ..widgets import SelectableList, SheetSection, TableHeader
 from .base import SheetView
@@ -117,11 +119,31 @@ class SagaContentSheetView(SheetView):
                         id="content-sources-list",
                         group="content-books",
                     )
+                with SheetSection(
+                    title=self._titled(
+                        (BOOKS_SECTION, TRADITIONS_SECTION),
+                        TRADITIONS_SECTION,
+                        self._traditions_title,
+                    ),
+                    id=TRADITIONS_SECTION,
+                ):
+                    yield TableHeader(sc.traditions_header())
+                    yield self._list(
+                        (BOOKS_SECTION, TRADITIONS_SECTION),
+                        lambda: list(enumerate(sc.tradition_rows(saga))),
+                        id="content-traditions-list",
+                        group="content-books",
+                    )
             yield self._panel(
                 (BOOKS_SECTION, SOURCES_SECTION),
                 lambda: sc.book_detail(saga, None),
                 id="content-books-info",
             )
+
+    def _traditions_title(self) -> str:
+        shown = traditions.in_play(self.saga)
+        on = sum(1 for t in shown if traditions.is_on(self.saga, t.id))
+        return f"Traditions Offered ({on} of {len(shown)})"
 
     def _book_row(self, book: str) -> str:
         return sc.book_row(self.saga, book)
@@ -217,6 +239,12 @@ class SagaContentSheetView(SheetView):
             "content-sources-list": (
                 "#content-books-info",
                 lambda: sc.source_detail(self.saga, self.selected_source()),
+            ),
+            "content-traditions-list": (
+                "#content-books-info",
+                lambda: sc.tradition_detail(
+                    self.saga, self._chosen("content-traditions-list")
+                ),
             ),
             "content-catalogs-list": (
                 "#content-catalogs-info",

@@ -12,6 +12,7 @@ from .common import (
     LAB_VF_PARAMETERS,
     VIRTUE_FLAW_AUDIENCES,
     VIRTUE_FLAW_SIDE,
+    XP_TABLES,
     BoonHookType,
     CharacterType,
     CharacterVirtueFlawType,
@@ -393,12 +394,23 @@ class AbilityDef:
     #: The book(s) it's from (sourcebooks); every entry so far is the core
     #: book's.
     source: str = "ArM5"
+    #: A hedge Art's part in its tradition's magic ("Technique", "Form",
+    #: "Method", "Power", "Rune", "Practice", "Foe"); "" for any other
+    #: Ability.
+    role: str = ""
+    #: The xp table it advances on (XP_TABLES): "ability", or "art" for an
+    #: Accelerated Ability or a hedge Art that isn't Difficult.
+    xp_table: str = "ability"
 
     def __post_init__(self) -> None:
         if self.category not in ABILITY_CATEGORIES:
             raise ValueError(
                 f"Unknown ability category {self.category!r}; "
                 f"must be one of {ABILITY_CATEGORIES}"
+            )
+        if self.xp_table not in XP_TABLES:
+            raise ValueError(
+                f"Unknown xp table {self.xp_table!r}; must be one of {XP_TABLES}"
             )
 
     @classmethod
@@ -434,6 +446,59 @@ class HouseDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HouseDef:
+        return cls(**known_fields(cls, data))
+
+
+#: The realms a non-Hermetic tradition's magic can belong to.
+TRADITION_REALMS: tuple[str, ...] = ("Magic", "Faerie", "Divine", "Infernal")
+
+
+@dataclass
+class TraditionDef:
+    """A catalog entry for a non-Hermetic magical tradition (shared
+    reference data, not per-saga): what its members learn, how they
+    advance, and the chapter of the sheet that shows them. A character
+    names the traditions they belong to; the tradition's Abilities are
+    ordinary Ability catalog entries, which several traditions may share.
+    """
+
+    id: str
+    name: str
+    #: The book(s) it's from (sourcebooks), as on the other catalogs.
+    source: str = "HMRE"
+    realm: str = "Magic"
+    description: str = ""
+    #: The sheet chapter's title; the tradition's name when blank.
+    chapter: str = ""
+    #: Its Arts and Abilities (Ability catalog names), in the order the
+    #: chapter lists them.
+    abilities: list[str] = field(default_factory=list)
+    #: The Abilities its members learn as favored ones.
+    favored: list[str] = field(default_factory=list)
+    #: The Virtues (catalog ids) membership requires or gives free.
+    virtues: list[str] = field(default_factory=list)
+    #: Seasons a year its members spend on their own work, and the xp
+    #: they get from that work; 0 when the book sets none.
+    working_seasons: int = 0
+    working_xp: int = 0
+    #: The free Social Status Virtue, if the tradition gives one.
+    social_status: str = ""
+    #: Rules the sheet can't yet apply, as the book words them.
+    notes: str = ""
+
+    def __post_init__(self) -> None:
+        if self.realm not in TRADITION_REALMS:
+            raise ValueError(
+                f"Unknown realm {self.realm!r}; must be one of {TRADITION_REALMS}"
+            )
+
+    @property
+    def title(self) -> str:
+        """The chapter's title."""
+        return self.chapter or self.name
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> TraditionDef:
         return cls(**known_fields(cls, data))
 
 

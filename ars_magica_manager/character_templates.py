@@ -118,6 +118,7 @@ def _ability(entry: dict, values: dict[str, str]) -> Ability:
         category=access.ability_category(name),
         xp=ability_xp(entry["score"]) + entry.get("xp", 0),
         specialty=entry.get("specialty"),
+        xp_table=access.ability_xp_table(name),
     )
 
 

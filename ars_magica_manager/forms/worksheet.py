@@ -109,7 +109,7 @@ def spend_live(
         affinity = " (Affinity x1.5)" if multiplier > 1 else ""
         lines.append(f"{escape(name)}: gains {gained} xp{affinity}")
         is_art = name in ARTS
-        factor = xp_rules.ART_FACTOR if is_art else xp_rules.ABILITY_FACTOR
+        factor = xp_rules.ART_FACTOR if is_art else access.ability_factor(name)
         progress = xp_rules.progress(total, factor)
         more = access.xp_giving(progress.next_total - total, multiplier)
         lines.append(f"{st.live_score(total, factor)} ({more} more pool xp)")
@@ -929,7 +929,11 @@ def choose_ability(saga: Saga, title: str = "Choose an Ability") -> Choose:
 
     def chosen(entry: AbilityDef) -> Command | Picked:
         if not entry.parameters:
-            return Picked(Ability(name=entry.name, category=entry.category))
+            return Picked(
+                Ability(
+                    name=entry.name, category=entry.category, xp_table=entry.xp_table
+                )
+            )
         return Form(
             escape(entry.name),
             lambda: parameter_fields(entry.parameters),
@@ -939,6 +943,7 @@ def choose_ability(saga: Saga, title: str = "Choose an Ability") -> Choose:
                         entry, {p: values[p].lower() for p in entry.parameters}
                     ),
                     category=entry.category,
+                    xp_table=entry.xp_table,
                 )
             ),
             save_label="Confirm",

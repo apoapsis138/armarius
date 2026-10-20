@@ -3,7 +3,7 @@
    1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books in Play (38 of 38)
 
         In play  Book       Title
@@ -12,7 +12,7 @@
       ○ yes      AM         Ancient Magic
       ○ yes      App        Apprentices
       ○ yes      AtD        Against the Dark: The Transylvanian Tribunal
-      ○ yes      C&G        City & Guild                                          ▆▆
+      ○ yes      C&G        City & Guild                                        ▆▆
       ○ yes      Cal        Calebais: The Broken Covenant
       ○ yes      Covenants  Covenants
       ○ yes      DI         Dies Irae
@@ -22,19 +22,19 @@
       ○ yes      Grogs      Grogs
       ○ yes      HMRE       Hedge Magic, Revised Edition
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Saga Sources (0)
 
         Source     Title                                            Entries
       (none recorded)
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Traditions Offered (1 of 6)
 
-
-
-
-
-
-
+        On       Book       Tradition                                             ▄▄
+      ○ no       HMRE       Elementalists
+      ○ no       HMRE       Folk Witches
+      ○ no       HMRE       Gruagachan
 
   ▌
   ▌  Choose a book or source for its details; e picks the books.
@@ -50,10 +50,10 @@
     ▼ Catalogs (6)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1115        0
+      ○ Virtues & Flaws              yes          1226        0
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           217        0
-      ○ Abilities                    yes            95        0
+      ○ Abilities                    yes           144        0
       ○ Spells                       yes          1315        0
       ○ Shapes & Materials           yes           243        0
 

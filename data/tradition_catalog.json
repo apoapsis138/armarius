@@ -1,0 +1,221 @@
+{
+  "attribution": "Hedge traditions, summarised from Hedge Magic Revised Edition via Project: Redcap (redcap.org). Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "entries": [
+    {
+      "id": "trad_elementalists",
+      "name": "Elementalists",
+      "source": "HMRE",
+      "realm": "Magic",
+      "description": "Learned natural philosophers, physicians and theurgists who work the four elements through Techniques of Summoning, Controlling, Divining and Refining, each of a medicinal, philosophical or theurgical type. They gather in societies such as the Apostles of Apollonius, the Ikhwan as-Safa' and the Tulab Ibn Sina, each of which favors two Techniques and all four Forms.",
+      "chapter": "Elementalist Magic",
+      "abilities": [
+        "Elementalist Summoning",
+        "Elementalist Controlling",
+        "Elementalist Divining",
+        "Elementalist Refining",
+        "Elementalist Air",
+        "Elementalist Earth",
+        "Elementalist Fire",
+        "Elementalist Water"
+      ],
+      "favored": [
+        "Elementalist Air",
+        "Elementalist Earth",
+        "Elementalist Fire",
+        "Elementalist Water"
+      ],
+      "virtues": [],
+      "working_seasons": 0,
+      "working_xp": 0,
+      "social_status": "vf_hedge_wizard_social_status",
+      "notes": "The Forms are Difficult Arts; the Techniques are normal Arts, and the three types of a Technique (Medicinal, Philosophical, Theurgical) share the one Technique Art, and the Virtues say which types the elementalist may use. Each society opens and favors its own two Techniques besides the four Forms (Apostles: Theurgical Summoning and Controlling; Ikhwan: Philosophical Summoning and Refining; Tulab: Medicinal Summoning and Divining). Refining uses Medicine, Philosophiae or the (Realm) Lore of its target's realm. Elemental Warping gives a Personality Trait per Form (Warping Score + Form / 5). Only matching elemental vis may be used, +2 per pawn; Ikhwan training gives 30 xp a year and Tulab 150 xp over 5 years on Academic and Arcane Abilities."
+    },
+    {
+      "id": "trad_folk_witches",
+      "name": "Folk Witches",
+      "source": "HMRE",
+      "realm": "Magic",
+      "description": "Village wise-women and their covens, who curse, heal, fly, scry and change shape through incantations, fetishes and potions brewed in a kitchen laboratory. They may be Gifted or unGifted, and gather at the eight sabbats of the year.",
+      "chapter": "Folk Witch Magic",
+      "abilities": [
+        "Animal Ken",
+        "Cursing",
+        "Dowsing",
+        "Flight",
+        "Healing",
+        "Second Sight",
+        "Shapeshifter",
+        "Folk Witch Magic Theory"
+      ],
+      "favored": [
+        "Animal Ken",
+        "Cursing",
+        "Dowsing",
+        "Flight",
+        "Healing",
+        "Second Sight",
+        "Shapeshifter"
+      ],
+      "virtues": [
+        "vf_folk_witch"
+      ],
+      "working_seasons": 2,
+      "working_xp": 15,
+      "social_status": "vf_folk_witch",
+      "notes": "Must take at least one Flaw affecting their magic. Apprenticeship gives 200 xp (Well-Trained +50, Poorly Trained -50 each); afterwards 15 xp a year, modified by Wealthy or Poor. A witch spends two seasons a year supporting themselves; at creation each lab season costs 10 of that year's xp, at most 2 a year (Wealthy 3, Poor 1). A Gifted apprentice leaves with at least 1 in each of the seven Abilities and in Folk Witch Magic Theory. The troupe may swap in Animal Healing, Entrancement, Enchanting Music, Nightwalking, Premonitions or Wilderness Sense. Organization Lore: Folk Witches recognises a witch's mark."
+    },
+    {
+      "id": "trad_gruagachan",
+      "name": "Gruagachan",
+      "source": "HMRE",
+      "realm": "Magic",
+      "description": "Pictish wizards of the Scottish Highlands, whose Techniques Give and Take and Forms Blessing, Curse, Shape and Vision work spells of blessing, cursing, transformation and illusion, and who enchant tattoos. Their branches include the Norse trollsynir and the Slavic kolduni.",
+      "chapter": "Gruagach Magic",
+      "abilities": [
+        "Gruagach Give",
+        "Gruagach Take",
+        "Gruagach Blessing",
+        "Gruagach Curse",
+        "Gruagach Shape",
+        "Gruagach Vision",
+        "Pictish"
+      ],
+      "favored": [
+        "Gruagach Give",
+        "Gruagach Take",
+        "Gruagach Blessing",
+        "Gruagach Curse",
+        "Gruagach Shape",
+        "Gruagach Vision"
+      ],
+      "virtues": [
+        "vf_gruagach"
+      ],
+      "working_seasons": 0,
+      "working_xp": 0,
+      "social_status": "vf_gruagach",
+      "notes": "Give and Take are Difficult Arts. Pictish caps every gruagach Art (5 at Pictish 1, 15 at 2, 30 at 3, no limit from 4), and Arts cannot be practised. A Gifted apprenticeship gives 160 xp and 80 spell levels and leaves at least Pictish 2, Gruagach Lore 2 and 1 in every Art; an unGifted one 16 xp and 8 spell levels a year, and needs Giant Blood, Large or Shapeshifter. Gruagach Lore is their Organization Lore. Trollsynir use Jotnar (the Jotun language) in place of Pictish and must take Giant Blood and No Tattoo Magic; kolduni use Koldovali Theory, must take No Tattoo Magic, and also favor Animal Ken and Mythic Herbalism. Gruagachan support themselves for an unstated part of the year."
+    },
+    {
+      "id": "trad_learned_magicians",
+      "name": "Learned Magicians",
+      "source": "HMRE",
+      "realm": "Magic",
+      "description": "Scholarly mathematici trained at Bologna and elsewhere, who cast charms and make amulets and chartae with the Techniques Tueor, Succurro and Vulnero and the Forms Fortunam, Magicam and Salutem, aided by astrology. Mythic alchemists and cunning-folk are variant branches.",
+      "chapter": "Learned Magic",
+      "abilities": [
+        "Tueor",
+        "Succurro",
+        "Vulnero",
+        "Fortunam",
+        "Magicam",
+        "Salutem"
+      ],
+      "favored": [
+        "Tueor",
+        "Succurro",
+        "Vulnero",
+        "Fortunam",
+        "Magicam",
+        "Salutem"
+      ],
+      "virtues": [
+        "vf_mathematicus_of_bologna",
+        "vf_entreat_the_powers"
+      ],
+      "working_seasons": 0,
+      "working_xp": 0,
+      "social_status": "vf_mathematicus_of_bologna",
+      "notes": "The three Techniques are Difficult Arts. Opening gives all six Arts at 0 and Entreat the Powers. Each year under a master gives 30 xp on Arcane and Academic Abilities and the Arts, with charms bought at 5 levels per xp (Skilled Master +50, Poorly Trained Magician -50). Latin 1 is needed to learn charms and Artes Liberales 1 to make devices; they cannot study from vis. Lore of the Mathematici is their Organization Lore. Mythic alchemists require Mythic Alchemy, Laboratory Magician and No Text Casting and use Philosophiae in their Lab Total, and also favor Natural Magician and Mythic Herbalism; cunning-folk require Mythic Herbalism and Entreat the Faerie Powers, use Craft: Charm, and also favor Purifying Touch and Premonitions."
+    },
+    {
+      "id": "trad_nightwalkers",
+      "name": "Nightwalkers",
+      "source": "HMRE",
+      "realm": "Magic",
+      "description": "UnGifted folk such as the benandanti, the Hounds of God, kresniki, kudlaki and taltós, whose spirits leave their sleeping bodies to fight the fertility battles that decide the harvest. Their powers come from Virtues, not Arts.",
+      "chapter": "Nightwalking",
+      "abilities": [
+        "Second Sight"
+      ],
+      "favored": [],
+      "virtues": [
+        "vf_nightwalker",
+        "vf_nightwalker_tradition"
+      ],
+      "working_seasons": 0,
+      "working_xp": 0,
+      "social_status": "",
+      "notes": "Nightwalkers are ordinary unGifted companions; membership of a regional tradition is a Free Virtue, and they take an ordinary mundane Social Status. Losing the caul may be taken as a Major Story Flaw: the nightwalker's powers are gone until it is regained. Straying has no Ability score and does not improve. Their Second Sight works only in phantastic form. Usually four fertility battles a year, whose outcome can set the covenant's income roll. Hamr and Sleepwalker are lesser alternatives to the Nightwalker Virtue."
+    },
+    {
+      "id": "trad_vitkir",
+      "name": "Vitkir",
+      "source": "HMRE",
+      "realm": "Magic",
+      "description": "Norse rune wizards who carve the 24 runes of the Elder Futhark into scripts whose effects are true, natural changes that last as long as the inscription. Every vitki has The Gift, and their runes advance as Accelerated Abilities.",
+      "chapter": "Rune Magic",
+      "abilities": [
+        "Fehu",
+        "Uruz",
+        "Thurisaz",
+        "Ansuz",
+        "Raido",
+        "Kauno",
+        "Gebo",
+        "Wunjo",
+        "Hagalaz",
+        "Naudiz",
+        "Isa",
+        "Jera",
+        "Ihwaz",
+        "Perth",
+        "Algiz",
+        "Sowilo",
+        "Tiwaz",
+        "Berkanan",
+        "Ehwaz",
+        "Mannaz",
+        "Laguz",
+        "Ingwaz",
+        "Dagaz",
+        "Othila",
+        "Rune Magic",
+        "Craft: Runes"
+      ],
+      "favored": [
+        "Fehu",
+        "Uruz",
+        "Thurisaz",
+        "Ansuz",
+        "Raido",
+        "Kauno",
+        "Gebo",
+        "Wunjo",
+        "Hagalaz",
+        "Naudiz",
+        "Isa",
+        "Jera",
+        "Ihwaz",
+        "Perth",
+        "Algiz",
+        "Sowilo",
+        "Tiwaz",
+        "Berkanan",
+        "Ehwaz",
+        "Mannaz",
+        "Laguz",
+        "Ingwaz",
+        "Dagaz",
+        "Othila"
+      ],
+      "virtues": [
+        "vf_vitki"
+      ],
+      "working_seasons": 0,
+      "working_xp": 0,
+      "social_status": "vf_vitki",
+      "notes": "About 15 years' apprenticeship gives 240 xp (at least half on runes) and 120 levels of rune scripts, plus 50 xp for the minimums Craft: Runes 2, Old Norse 3 and Rune Magic 1; no rune above 10 on leaving. A vitki taught by a master gets one free Minor Vitkar Virtue of the master's specialty. Runes may be studied from vis of any Art. Craft: Runes is an instance of the Craft Ability. Odin's Sacrifice, once a lifetime, can grant The Gift or open the runes."
+    }
+  ]
+}

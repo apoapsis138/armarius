@@ -17,6 +17,7 @@ from .... import seasons, storage
 from .... import spells as spl
 from ....form_spec import DialogField
 from ....forms import importing as import_forms
+from ....forms import saga_content as content_forms
 from ....markup import escape
 from ....models import (
     TEXT_LONGEVITY,
@@ -63,6 +64,7 @@ from ..sheets import (
     PLAYERS_SECTION,
     SOURCES_SECTION,
     SPELL_SECTION,
+    TRADITIONS_SECTION,
     BookListView,
     HouseRulesView,
     LabTextListView,
@@ -324,6 +326,20 @@ class LibraryActions(WorkspaceBase):
 
         self.app.push_screen(
             SourcebookPickerScreen(saga.books_in_play, saga.sources), handle_result
+        )
+
+    def _edit_traditions(self) -> None:
+        """Choose the non-Hermetic traditions the saga offers."""
+        saga = self.saga
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                content_forms.apply_traditions(saga, values)
+                self._saga_content_changed(TRADITIONS_SECTION)
+
+        self.app.push_screen(
+            FieldsDialog("Traditions offered", content_forms.traditions_fields(saga)),
+            handle_result,
         )
 
     def _pick_saga_source(self, then: Callable[[SagaSource], None]) -> None:
@@ -793,6 +809,7 @@ class LibraryActions(WorkspaceBase):
                 self._edit_player,
             ),
             BOOKS_SECTION: _SectionOps(edit=self._edit_books_in_play),
+            TRADITIONS_SECTION: _SectionOps(edit=self._edit_traditions),
             SOURCES_SECTION: _SectionOps(
                 lambda: self._saga_source_form(None),
                 self._remove_saga_source,

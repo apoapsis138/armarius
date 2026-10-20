@@ -484,6 +484,12 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Level": "lots"},
         shown={"#fam-bond-powers-list": "Speech"},
     ),
+    "edit character traditions": Contract(
+        prefill={"Vitkir (HMRE)": True},
+        edits={"Vitkir (HMRE)": False},
+        saved=lambda s: s.character("mag1").traditions,
+        expected=[],
+    ),
 }
 
 

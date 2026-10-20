@@ -4,9 +4,11 @@ Diary."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from functools import partial
 from typing import Any
 
-from .... import creation, sourcebooks, storage, world
+from .... import creation, sourcebooks, storage, traditions, world
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
@@ -96,6 +98,21 @@ class CharacterActions(WorkspaceBase):
                 self.call_later(self._show_covenant_detail, record)
 
         run_steps(self.app, menu_forms.change_detail(self.saga, record, detail), done)
+
+    # -- Traditions --
+
+    def action_edit_traditions(self) -> None:
+        """More's Traditions: join or leave non-Hermetic traditions. The
+        sheet is built again, since each tradition has a tab."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(_end: object) -> None:
+            self._commit("section-char-info", "tab-abilities")
+            self.call_later(self._show_character, character)
+
+        run_steps(self.app, menu_forms.character_traditions(self.saga, character), done)
 
     # -- Character Info / Characteristics --
 
@@ -235,6 +252,94 @@ class CharacterActions(WorkspaceBase):
             then=lambda index: self._edit_ability_at(index),
         )
 
+    def _ability_sections(self) -> tuple[str, ...]:
+        """The sections an Ability of the character on show can sit in: the
+        Abilities chapter and each of their traditions' chapters."""
+        character = self.selected_character
+        chapters = traditions.of(character) if character is not None else []
+        return (
+            "tab-abilities",
+            *(traditions.tradition_section(t.id) for t in chapters),
+        )
+
+    # -- a tradition's chapter --
+
+    def _add_tradition_ability(self, tradition_id: str) -> None:
+        """Add one of the tradition's Arts or Abilities."""
+        character = self.selected_character
+        tradition = traditions.find(tradition_id)
+        if character is None or tradition is None:
+            return
+
+        def handle_result(ability: Ability | None) -> None:
+            if ability is not None:
+                character.abilities.append(ability)
+                self._commit(
+                    traditions.tradition_section(tradition_id), "tab-abilities"
+                )
+
+        self.app.push_screen(
+            AbilityPickerScreen(
+                {a.name for a in character.abilities},
+                books=sourcebooks.saga_books(self.saga),
+                virtues_flaws=character.virtues_flaws,
+                only=tradition.abilities,
+            ),
+            handle_result,
+        )
+
+    def _tradition_rows(self, tradition_id: str) -> tuple[list[int], int | None]:
+        """The indexes of the chapter's Abilities, and the chosen one's."""
+        character = self.selected_character
+        tradition = traditions.find(tradition_id)
+        if character is None or tradition is None:
+            return [], None
+        indexes = [i for i, _ in traditions.chapter_rows(character, tradition)]
+        view = self._character_sheet_view
+        chosen = (
+            view.selected_tradition_ability(tradition_id) if view is not None else None
+        )
+        return indexes, chosen
+
+    def _edit_tradition_ability(self, tradition_id: str) -> None:
+        indexes, chosen = self._tradition_rows(tradition_id)
+        self._on_tradition_row(
+            indexes, chosen, "edit", lambda index: self._edit_ability_at(index)
+        )
+
+    def _remove_tradition_ability(self, tradition_id: str) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        indexes, chosen = self._tradition_rows(tradition_id)
+        self._on_tradition_row(
+            indexes,
+            chosen,
+            "remove",
+            lambda index: self._confirm_delete(
+                character.abilities,
+                index,
+                character.abilities[index].name,
+                traditions.tradition_section(tradition_id),
+            ),
+        )
+
+    def _on_tradition_row(
+        self,
+        indexes: list[int],
+        chosen: int | None,
+        verb: str,
+        then: Callable[[int], object],
+    ) -> None:
+        """Act on the chapter's chosen row, as _chosen_or_pick does."""
+        position = indexes.index(chosen) if chosen in indexes else None
+        self._chosen_or_pick(
+            position,
+            [str(i) for i in indexes],
+            empty=f"No Arts or Abilities to {verb}.",
+            then=lambda n: then(indexes[n]),
+        )
+
     def _edit_ability_at(self, index: int) -> None:
         character = self.selected_character
         if character is None:
@@ -246,7 +351,7 @@ class CharacterActions(WorkspaceBase):
                 character.abilities[index] = _ability_from(
                     existing.name, existing.category, result
                 )
-                self._commit("tab-abilities")
+                self._commit(*self._ability_sections())
 
         self.app.push_screen(
             _ability_dialog(
@@ -843,6 +948,14 @@ class CharacterActions(WorkspaceBase):
             "tab-abilities": _SectionOps(
                 self._add_ability, self._remove_ability, self._edit_ability
             ),
+            **{
+                traditions.tradition_section(t.id): _SectionOps(
+                    partial(self._add_tradition_ability, t.id),
+                    partial(self._remove_tradition_ability, t.id),
+                    partial(self._edit_tradition_ability, t.id),
+                )
+                for t in traditions.all_traditions()
+            },
             "section-aging": _SectionOps(edit=self._edit_aging),
             # Health has two dialogs behind two Edit buttons (Wounds and
             # Fatigue); 'e' opens Wounds, Fatigue is button-only.

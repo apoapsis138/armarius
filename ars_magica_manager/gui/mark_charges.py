@@ -10,7 +10,8 @@ from __future__ import annotations
 import math
 from collections.abc import Callable
 
-from PySide6.QtGui import QPainterPath, QTransform
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPainterPath, QPainterPathStroker, QTransform
 
 from .. import artwork
 from .mark_shapes import (
@@ -26,6 +27,7 @@ from .mark_shapes import (
     mirror,
     move,
     outline_triangle,
+    over,
     poly,
     rect,
     ring,
@@ -37,6 +39,7 @@ from .mark_shapes import (
     union,
     union_of,
     vesica,
+    weave,
 )
 
 # -- General --
@@ -1042,10 +1045,644 @@ def elementalist_water() -> QPainterPath:
     return outline_triangle(False)
 
 
-def medicinal_divining() -> QPainterPath:
-    """The physician's urine flask, held up to the light."""
-    flask = union(circle(50, 60, 26), rect(43, 18, 14, 24), rrect(38, 14, 24, 7, 3))
-    return flask.subtracted(circle(50, 60, 20).intersected(rect(0, 40, 100, 14)))
+def _closed(points: list[tuple[float, float]]) -> QPainterPath:
+    path = QPainterPath()
+    path.moveTo(*points[0])
+    for point in points[1:]:
+        path.lineTo(*point)
+    path.closeSubpath()
+    return path
+
+
+def _open(*points: tuple[float, float]) -> QPainterPath:
+    path = QPainterPath()
+    path.moveTo(*points[0])
+    for point in points[1:]:
+        path.lineTo(*point)
+    return path
+
+
+def _braid(r: float, depth: float, twists: int, cx: float = 50, cy: float = 50):
+    """The two strands of a braided ring, crossing `twists` * 2 times."""
+    for sign in (1, -1):
+        yield _closed(
+            [
+                (
+                    cx + (r + sign * depth * math.sin(twists * t)) * math.cos(t),
+                    cy + (r + sign * depth * math.sin(twists * t)) * math.sin(t),
+                )
+                for t in (2 * math.pi * i / 240 for i in range(240))
+            ]
+        )
+
+
+def _alembic() -> QPainterPath:
+    body = union(circle(40, 62, 22), rect(33, 30, 14, 14))
+    head = union(
+        circle(40, 30, 13).intersected(rect(26, 16, 28, 14)), rect(27, 28, 26, 5)
+    )
+    beak = poly((50, 22), (84, 52), (80, 56), (48, 32))
+    drip = union(circle(82, 66, 3), poly((79.5, 65), (82, 59), (84.5, 65)))
+    window = circle(40, 62, 15).intersected(rect(0, 64, 100, 20))
+    return union(body.subtracted(window), head, beak, drip)
+
+
+def elementalist_refining() -> QPainterPath:
+    """An alembic in a braided ring, the still in which the elementalist
+    works an element down to its essence."""
+    still = scaled(move(_alembic(), -1, -4), 0.6)
+    return union(weave(_braid(38, 4, 7), 4.4), still)
+
+
+def cursing() -> QPainterPath:
+    """A witch's poppet bound about with a cord and pierced by a pin."""
+    doll = union(
+        circle(50, 24, 11),
+        rrect(38, 32, 24, 36, 6),
+        bar(40, 40, 22, 58, 8),
+        bar(60, 40, 78, 58, 8),
+        bar(44, 64, 38, 90, 9),
+        bar(56, 64, 62, 90, 9),
+    )
+    pin = union(bar(16, 32, 84, 66, 4), circle(15, 31.5, 5.5))
+    bands = union_of(bar(30, y, 70, y + 4, 4) for y in (42, 52))
+    face = union(
+        line((45, 20), (49, 24), w=1.8),
+        line((49, 20), (45, 24), w=1.8),
+        line((51, 20), (55, 24), w=1.8),
+        line((55, 20), (51, 24), w=1.8),
+        line((45, 29), (55, 29), w=1.6),
+    )
+    return over(pin, over(bands, doll.subtracted(face)))
+
+
+def _trefoil(cx: float, cy: float, k: float) -> QPainterPath:
+    return _closed(
+        [
+            (
+                cx + k * (math.sin(t) + 2 * math.sin(2 * t)),
+                cy + k * (math.cos(t) - 2 * math.cos(2 * t)),
+            )
+            for t in (2 * math.pi * i / 180 for i in range(180))
+        ]
+    )
+
+
+def gruagach_vision() -> QPainterPath:
+    """The mirror of the Pictish symbol stones, a knot worked in its glass,
+    for sight and seeming."""
+    glass = union(ring(50, 38, 30, 6), weave([_trefoil(50, 39, 6.4)], 4.2))
+    handle = union(
+        rect(46, 68, 8, 16), rrect(38, 66, 24, 5, 2), rrect(40, 84, 20, 7, 3)
+    )
+    return union(glass, handle)
+
+
+def tueor() -> QPainterPath:
+    """A gatehouse with its portcullis lowered under a braided arch, the
+    learned magicians' Technique of warding."""
+
+    def tower(x: float) -> QPainterPath:
+        merlons = union_of(rect(x + d, 22, 4, 6) for d in (0, 7.25, 14.5))
+        return union(rect(x, 27, 18.5, 66), merlons).subtracted(
+            rrect(x + 7, 38, 4.5, 12, 2.2)
+        )
+
+    wall = rect(30, 44, 40, 49)
+    door = rrect(35, 48, 30, 52, 15).intersected(rect(0, 0, 100, 90))
+    lattice = weave(
+        [
+            *(_open((x, 40), (x + 50, 90)) for x in range(-8, 70, 13)),
+            *(_open((x, 40), (x - 50, 90)) for x in range(30, 108, 13)),
+        ],
+        3.8,
+        2,
+    ).intersected(door)
+    spikes = union_of(poly((x - 3, 89), (x + 3, 89), (x, 95)) for x in (40, 50, 60))
+    gate = union(tower(12), tower(69.5), wall).subtracted(door)
+    return union(gate, lattice, spikes)
+
+
+def pictish() -> QPainterPath:
+    """The double disc and Z-rod of the Pictish symbol stones."""
+    discs = [circle_path(28, 50, 18), circle_path(72, 50, 18)]
+    joint = [_open((45, 43), (55, 43)), _open((45, 57), (55, 57))]
+    rod = _open((18, 22), (36, 22), (64, 78), (82, 78))
+    knots = weave([*discs, *joint, rod], 5.5, 2.6)
+
+    def fleur(x: float, y: float, d: float) -> QPainterPath:
+        return union(
+            circle(x + d * 4, y, 4),
+            circle(x + d * 8, y - 5, 3.2),
+            circle(x + d * 8, y + 5, 3.2),
+        )
+
+    return union(
+        knots,
+        ring(28, 50, 9, 3.5),
+        ring(72, 50, 9, 3.5),
+        circle(28, 50, 3),
+        circle(72, 50, 3),
+        fleur(18, 22, -1),
+        fleur(82, 78, 1),
+    )
+
+
+def circle_path(cx: float, cy: float, r: float) -> QPainterPath:
+    """A circle as a line to stroke, not a disc to fill."""
+    return _closed(
+        [
+            (cx + r * math.cos(t), cy + r * math.sin(t))
+            for t in (2 * math.pi * i / 120 for i in range(120))
+        ]
+    )
+
+
+def _woven_hexagram(cx: float, cy: float, r: float, w: float) -> QPainterPath:
+    """The two element triangles, fire's and water's, interlaced."""
+
+    def triangle(turn: float) -> QPainterPath:
+        return _closed(
+            [
+                (
+                    cx + r * math.cos(math.radians(turn + 120 * i)),
+                    cy + r * math.sin(math.radians(turn + 120 * i)),
+                )
+                for i in range(3)
+            ]
+        )
+
+    return weave([triangle(-90), triangle(90)], w)
+
+
+def elementalist_summoning() -> QPainterPath:
+    """The four element triangles drawn in from the braided ring to a
+    point at its heart."""
+    signs = [
+        scaled(outline_triangle(True, True), 0.3),
+        scaled(outline_triangle(False, True), 0.3),
+        scaled(outline_triangle(True), 0.3),
+        scaled(outline_triangle(False), 0.3),
+    ]
+    placed = union_of(
+        move(sign, dx, dy)
+        for sign, (dx, dy) in zip(
+            signs, ((0, -19), (19, 0), (0, 19), (-19, 0)), strict=True
+        )
+    )
+    return union(weave(_braid(38, 4, 7), 4.4), placed, circle(50, 50, 4))
+
+
+def elementalist_controlling() -> QPainterPath:
+    """A sceptre crowned with the interlaced triangles of the elements."""
+    rod = union(rect(47, 50, 6, 36), rrect(42, 82, 16, 6, 3), rrect(43, 52, 14, 5, 2))
+    crown = _woven_hexagram(50, 30, 22, 4.6)
+    return union(over(crown, rod), circle(50, 30, 4))
+
+
+def elementalist_divining() -> QPainterPath:
+    """An eye within the interlaced triangles of the elements."""
+    look = scaled(eye(), 0.36)
+    return union(_woven_hexagram(50, 50, 40, 5.4), look)
+
+
+def folk_witch_magic_theory() -> QPainterPath:
+    """A kitchen mortar with its pestle and a sprig of herbs, the folk
+    witch's laboratory."""
+    mortar = union(
+        circle(50, 46, 32).intersected(rect(18, 46, 64, 30)),
+        rrect(14, 42, 72, 8, 3),
+        poly((36, 74), (64, 74), (68, 88), (32, 88)),
+    )
+    band = weave(
+        [
+            _open(*((22 + 2 * i, 58 + 3 * math.sin(i * 0.9)) for i in range(29))),
+            _open(*((22 + 2 * i, 58 - 3 * math.sin(i * 0.9)) for i in range(29))),
+        ],
+        2,
+        1.6,
+    )
+    mortar = mortar.subtracted(stroke(band, 3)).united(band.intersected(mortar))
+    pestle = union(bar(46, 44, 76, 10, 7), circle(77, 9, 6))
+    sprig = union(
+        stroke(curve((40, 44), (30, 26), (26, 12)), 2.6),
+        rotate(vesica(24, 24, 6, 14), -50, 24, 24),
+        rotate(vesica(36, 22, 6, 14), 30, 36, 22),
+        rotate(vesica(26, 14, 5, 12), -20, 26, 14),
+    )
+    return union(over(pestle, mortar), sprig)
+
+
+def flight() -> QPainterPath:
+    """A witch's besom flying before the crescent moon."""
+    moon = circle(56, 46, 34).subtracted(circle(70, 36, 30))
+    handle = bar(10, 86, 62, 34, 5)
+    bristles = union_of(
+        bar(
+            60,
+            36,
+            60 + 30 * math.cos(math.radians(a)),
+            36 - 30 * math.sin(math.radians(a)),
+            3,
+        )
+        for a in (5, 18, 31, 44, 57, 70)
+    )
+    brush = union(bristles, rotate(rrect(54, 30, 16, 12, 4), -45, 62, 36))
+    binding = rotate(rect(56, 31, 4, 10), -45, 62, 36)
+    broom = union(handle, brush).subtracted(binding)
+    return over(broom, moon)
+
+
+def healing() -> QPainterPath:
+    """A heart with the cross of healing cut through it."""
+    cross = union(rect(45, 34, 10, 36), rect(34, 44, 32, 10))
+    return heart().subtracted(cross)
+
+
+def animal_healing() -> QPainterPath:
+    """A horseshoe with its nail holes, the cross of healing between its
+    heels."""
+    shoe = ring(50, 44, 34, 12).subtracted(rect(10, 52, 80, 40))
+    heels = union(rect(16, 46, 12, 32), rect(72, 46, 12, 32))
+    shoe = union(shoe, heels)
+    holes = union_of(
+        rrect(
+            50 + 28 * math.cos(math.radians(a)) - 2,
+            44 + 28 * math.sin(math.radians(a)) - 3,
+            4,
+            6,
+            1.5,
+        )
+        for a in (-170, -140, -110, -70, -40, -10)
+    ).united(union_of(rrect(x, y, 4, 6, 1.5) for x in (20, 76) for y in (56, 68)))
+    cross = union(rect(46, 50, 8, 32), rect(38, 58, 24, 8))
+    return union(shoe.subtracted(holes), cross)
+
+
+def _crescent() -> QPainterPath:
+    """The Pictish crescent, horns up, with its pattern of circles."""
+    moon = circle(50, 50, 38).subtracted(circle(50, 30, 32))
+    return moon.subtracted(
+        union(ring(28, 66, 6, 2.4), ring(72, 66, 6, 2.4), ring(50, 78, 5, 2.2))
+    )
+
+
+def _v_rod(outward: bool) -> QPainterPath:
+    """The V-rod across the crescent, its heads pointing away from the
+    point of the V or back toward it."""
+    left, right = (16, 14), (84, 14)
+    bottom = (50, 82)
+    rod = weave([_open(left, bottom, right)], 4.5)
+
+    def head(tip: tuple[float, float], toward: tuple[float, float]) -> QPainterPath:
+        dx, dy = toward[0] - tip[0], toward[1] - tip[1]
+        n = math.hypot(dx, dy)
+        ux, uy = dx / n, dy / n
+        if outward:
+            x, y = tip
+            return poly(
+                (x - ux * 4, y - uy * 4),
+                (x + ux * 10 - uy * 7, y + uy * 10 + ux * 7),
+                (x + ux * 10 + uy * 7, y + uy * 10 - ux * 7),
+            )
+        x, y = tip[0] + ux * 6, tip[1] + uy * 6
+        return poly(
+            (x + ux * 10, y + uy * 10),
+            (x - uy * 7, y + ux * 7),
+            (x + uy * 7, y - ux * 7),
+        )
+
+    return union(rod, head(left, bottom), head(right, bottom))
+
+
+def gruagach_give() -> QPainterPath:
+    """The Pictish crescent and V-rod, its heads flying outward: the
+    gruagach Technique that bestows."""
+    return over(_v_rod(True), _crescent())
+
+
+def gruagach_take() -> QPainterPath:
+    """The Pictish crescent and V-rod, its heads turned back inward: the
+    gruagach Technique that removes."""
+    return over(_v_rod(False), _crescent())
+
+
+def gruagach_blessing() -> QPainterPath:
+    """The Pictish triple disc: three rings on one bar, interlaced."""
+    discs = weave(
+        [circle_path(25, 50, 16), circle_path(50, 50, 16), circle_path(75, 50, 16)],
+        5,
+        2.4,
+    )
+    beam = union(rect(4, 45, 92, 10), circle(4, 50, 6), circle(96, 50, 6))
+    return union(
+        over(discs, beam), circle(25, 50, 5), circle(50, 50, 5), circle(75, 50, 5)
+    )
+
+
+def gruagach_curse() -> QPainterPath:
+    """The serpent and Z-rod of the Pictish stones."""
+    body = stroke(curve((12, 58), (24, 30), (44, 46), (62, 62), (76, 40)), 9)
+    rod = union(
+        stroke(_open((20, 14), (40, 14), (60, 86), (80, 86)), 5),
+        circle(17, 14, 4), circle(13, 10, 3), circle(13, 18, 3),
+        circle(83, 86, 4), circle(87, 82, 3), circle(87, 90, 3),
+    )  # fmt: skip
+    head = union(ellipse(70, 28, 20, 15), poly((88, 36), (97, 32), (95, 41)))
+    eye_ = circle(80, 33, 2.2)
+    tail = poly((14, 54), (4, 66), (16, 62))
+    snake = union(body, head.subtracted(eye_), tail)
+    return over(rod, snake)
+
+
+def gruagach_shape() -> QPainterPath:
+    """The Pictish salmon, the spiral of its changing on its shoulder."""
+    body = QPainterPath()
+    body.moveTo(8, 50)
+    body.cubicTo(24, 30, 54, 28, 74, 44)
+    body.lineTo(92, 32)
+    body.lineTo(86, 50)
+    body.lineTo(92, 68)
+    body.lineTo(74, 56)
+    body.cubicTo(54, 72, 24, 70, 8, 50)
+    body.closeSubpath()
+    fins = union(
+        poly((38, 34), (50, 24), (56, 34)),
+        poly((42, 64), (52, 74), (56, 64)),
+        poly((62, 62), (66, 70), (70, 58)),
+    )
+    spiral = QPainterPath()
+    for i in range(60):
+        t = i / 8
+        r = 1 + 1.25 * t
+        x, y = 34 + r * math.cos(t), 50 + r * math.sin(t)
+        if i == 0:
+            spiral.moveTo(x, y)
+        else:
+            spiral.lineTo(x, y)
+    cuts = union(
+        stroke(spiral, 2),
+        stroke(curve((50, 38), (56, 50), (50, 62)), 2),
+        circle(16, 47, 2.4),
+    )
+    return union(body, fins).subtracted(cuts)
+
+
+def jotnar() -> QPainterPath:
+    """The giants' mountains, cut over a braid, for the trollsynir."""
+    peaks = poly(
+        (8, 74), (24, 40), (32, 50), (50, 14), (62, 38), (70, 30), (92, 74),
+    )  # fmt: skip
+    snow = poly((50, 14), (58, 30), (52, 26), (46, 32), (42, 28))
+    strands = []
+    for sign in (1, -1):
+        strands.append(
+            _open(*((8 + 2 * i, 82 + sign * 4 * math.sin(i * 0.52)) for i in range(43)))
+        )
+    return union(peaks.subtracted(snow), weave(strands, 3.4, 1.8))
+
+
+def koldovali_theory() -> QPainterPath:
+    """The six-petalled thunder mark carved on Slavic houses, its arcs
+    interlaced in a ring."""
+    r = 30
+    petals = [
+        circle_path(
+            50 + r * math.cos(math.radians(a)), 50 + r * math.sin(math.radians(a)), r
+        )
+        for a in range(-90, 270, 60)
+    ]
+    rosette = weave([*petals, circle_path(50, 50, r)], 3.6, 2).intersected(
+        circle(50, 50, r + 2)
+    )
+    return union(rosette, ring(50, 50, 40, 5), circle(50, 50, 4))
+
+
+def succurro() -> QPainterPath:
+    """The sun rising over a braided horizon, the learned magicians'
+    Technique of aid."""
+    sun = circle(50, 60, 20).intersected(rect(0, 30, 100, 30))
+    rays = union_of(
+        rotate(poly((48, 34), (52, 34), (50, 12)), a, 50, 60)
+        for a in range(-75, 90, 25)
+    )
+    horizon = weave(
+        [
+            _open(
+                *((10 + 2 * i, 66 + sign * 4 * math.sin(i * 0.52)) for i in range(41))
+            )
+            for sign in (1, -1)
+        ],
+        3.4,
+        1.8,
+    )
+    lift = union(
+        poly((50, 72), (60, 82), (54, 82), (54, 92), (46, 92), (46, 82), (40, 82))
+    )
+    return union(sun, rays, horizon, lift)
+
+
+def vulnero() -> QPainterPath:
+    """A dagger striking down, a cord wound on its grip and blood falling
+    from its point: the learned magicians' Technique of harm."""
+    blade = poly((44, 40), (56, 40), (54, 78), (50, 90), (46, 78))
+    fuller = rect(49, 44, 2, 30)
+    guard = rrect(28, 34, 44, 7, 3)
+    grip = rect(45, 12, 10, 22)
+    wrap = weave(
+        [
+            _open(*((50 + k * 5 * math.sin(i * 0.6), 12 + 1.1 * i) for i in range(21)))
+            for k in (1, -1)
+        ],
+        2.2,
+        1.4,
+    )
+    pommel = circle(50, 9, 6)
+    drops = union(
+        circle(34, 82, 3.5), poly((31, 81), (34, 74), (37, 81)),
+        circle(66, 70, 3), poly((63.5, 69), (66, 63), (68.5, 69)),
+    )  # fmt: skip
+    return union(blade.subtracted(fuller), guard, over(wrap, grip), pommel, drops)
+
+
+def fortunam() -> QPainterPath:
+    """Fortune's wheel, its spokes woven through an inner ring and pegs
+    standing from its rim."""
+    spokes = [
+        _open(
+            (50 + 34 * math.cos(math.radians(a)), 50 + 34 * math.sin(math.radians(a))),
+            (
+                50 + 34 * math.cos(math.radians(a + 180)),
+                50 + 34 * math.sin(math.radians(a + 180)),
+            ),
+        )
+        for a in range(0, 180, 45)
+    ]
+    inner = circle_path(50, 50, 20)
+    pegs = union_of(rotate(rrect(47, 4, 6, 10, 2), a) for a in range(22, 382, 45))
+    return union(
+        ring(50, 50, 38, 6),
+        weave([*spokes, inner], 3.6, 2).intersected(circle(50, 50, 33)),
+        pegs,
+        ring(50, 50, 8, 4),
+    )
+
+
+def magicam() -> QPainterPath:
+    """An amulet on its cord, two squares interlaced in its face: the
+    learned magicians' Form of magic itself."""
+    face = ring(50, 56, 32, 5)
+
+    def square(turn: float) -> QPainterPath:
+        return _closed(
+            [
+                (
+                    50 + 22 * math.cos(math.radians(turn + 90 * i)),
+                    56 + 22 * math.sin(math.radians(turn + 90 * i)),
+                )
+                for i in range(4)
+            ]
+        )
+
+    star_ = weave([square(0), square(45)], 3.6, 2)
+    cord = stroke(curve((30, 32), (50, -10), (70, 32)), 3)
+    loop = ring(50, 22, 5, 2.4)
+    return union(face, star_, circle(50, 56, 4), over(loop, cord))
+
+
+def salutem() -> QPainterPath:
+    """A pomegranate, crowned and open to show its seeds, with its leaves:
+    the learned magicians' Form of health."""
+    fruit = circle(50, 56, 30)
+    crown = poly((40, 30), (38, 18), (45, 24), (50, 14), (55, 24), (62, 18), (60, 30))
+    opening = vesica(50, 58, 26, 34)
+    seeds = union_of(
+        circle(50 + dx, 58 + dy, 2.4)
+        for dx, dy in (
+            (0, -10),
+            (-5, -3),
+            (5, -3),
+            (0, 4),
+            (-5, 11),
+            (5, 11),
+            (0, 18),
+            (-8, 4),
+            (8, 4),
+        )
+    )
+    leaves = union(
+        rotate(vesica(24, 22, 10, 26), -50, 24, 22),
+        rotate(vesica(76, 22, 10, 26), 50, 76, 22),
+    )
+    return union(
+        fruit.subtracted(opening).united(seeds.intersected(opening)), crown, leaves
+    )
+
+
+def mythic_alchemy() -> QPainterPath:
+    """Mercury's sign, the quick spirit of alchemy, between the sun and
+    the moon."""
+    horns = ring(50, 16, 13, 4.5).intersected(rect(30, 16, 40, 20))
+    body = ring(50, 44, 16, 5)
+    cross = union(rect(47, 60, 6, 30), rect(38, 72, 24, 6))
+    sun = union(ring(16, 44, 9, 3), circle(16, 44, 2.6))
+    moon = circle(84, 44, 9).subtracted(circle(88, 41, 8))
+    return union(horns, body, circle(50, 44, 4), cross, sun, moon)
+
+
+def rune_magic() -> QPainterPath:
+    """A rune stone, a serpent band running round its face and a bind
+    rune at its heart."""
+    stone = QPainterPath()
+    stone.moveTo(22, 92)
+    stone.lineTo(20, 40)
+    stone.cubicTo(20, 10, 80, 10, 80, 40)
+    stone.lineTo(78, 92)
+    stone.closeSubpath()
+    band_line = QPainterPath()
+    band_line.moveTo(30, 92)
+    band_line.lineTo(28, 42)
+    band_line.cubicTo(28, 20, 72, 20, 72, 42)
+    band_line.lineTo(70, 88)
+    band_line.quadTo(60, 80, 50, 88)
+    cut = stroke(band_line, 7).subtracted(stroke(band_line, 2.4))
+    bind = scaled(
+        _rune(
+            ((50, 12), (50, 88)),
+            ((50, 12), (72, 30)),
+            ((50, 34), (72, 52)),
+            ((50, 12), (28, 30)),
+        ),
+        0.42,
+        50,
+        50,
+    )
+    return stone.subtracted(cut).subtracted(move(bind, 0, 4))
+
+
+def _rune(*staves: tuple[tuple[float, float], ...]) -> QPainterPath:
+    """A rune cut as strokes of even width, each stave a run of points."""
+    path = QPainterPath()
+    for points in staves:
+        path.moveTo(*points[0])
+        for point in points[1:]:
+            path.lineTo(*point)
+    stroker = QPainterPathStroker()
+    stroker.setWidth(9)
+    stroker.setCapStyle(Qt.PenCapStyle.FlatCap)
+    stroker.setJoinStyle(Qt.PenJoinStyle.MiterJoin)
+    return stroker.createStroke(path).simplified()
+
+
+#: The strokes of the Elder Futhark, in a box from 12 to 88 high: each
+#: rune is a run of staves, each stave a run of points.
+RUNES: dict[str, tuple[tuple[tuple[float, float], ...], ...]] = {
+    "Fehu": (((36, 12), (36, 88)), ((36, 34), (64, 14)), ((36, 56), (64, 36))),
+    "Uruz": (((34, 88), (34, 12), (66, 34), (66, 88)),),
+    "Thurisaz": (((38, 12), (38, 88)), ((38, 30), (62, 50), (38, 70))),
+    "Ansuz": (((36, 12), (36, 88)), ((36, 12), (64, 32)), ((36, 34), (64, 54))),
+    "Raido": (((36, 88), (36, 12), (62, 31), (36, 50), (64, 88)),),
+    "Kauno": (((60, 36), (40, 50), (60, 64)),),
+    "Gebo": (((28, 18), (72, 82)), ((72, 18), (28, 82))),
+    "Wunjo": (((38, 88), (38, 12), (62, 31), (38, 50)),),
+    "Hagalaz": (((32, 12), (32, 88)), ((68, 12), (68, 88)), ((32, 36), (68, 62))),
+    "Naudiz": (((50, 12), (50, 88)), ((36, 38), (64, 60))),
+    "Isa": (((50, 12), (50, 88)),),
+    "Jera": (((48, 16), (28, 34), (48, 52)), ((52, 48), (72, 66), (52, 84))),
+    "Ihwaz": (((50, 12), (50, 88)), ((50, 12), (66, 28)), ((50, 88), (34, 72))),
+    "Perth": (
+        ((34, 12), (34, 88)),
+        ((34, 12), (50, 30), (66, 12)),
+        ((34, 88), (50, 70), (66, 88)),
+    ),
+    "Algiz": (((50, 12), (50, 88)), ((50, 42), (30, 16)), ((50, 42), (70, 16))),
+    "Sowilo": (((62, 12), (38, 40), (62, 60), (38, 88)),),
+    "Tiwaz": (((50, 12), (50, 88)), ((28, 36), (50, 12), (72, 36))),
+    "Berkanan": (
+        ((36, 12), (36, 88)),
+        ((36, 12), (62, 31), (36, 50), (62, 69), (36, 88)),
+    ),
+    "Ehwaz": (((30, 88), (30, 12), (50, 36), (70, 12), (70, 88)),),
+    "Mannaz": (
+        ((30, 12), (30, 88)),
+        ((70, 12), (70, 88)),
+        ((30, 12), (70, 46)),
+        ((70, 12), (30, 46)),
+    ),
+    "Laguz": (((40, 12), (40, 88)), ((40, 12), (64, 34))),
+    "Ingwaz": (((50, 34), (66, 50), (50, 66), (34, 50), (50, 34)),),
+    "Dagaz": (
+        ((28, 16), (28, 84)),
+        ((72, 16), (72, 84)),
+        ((28, 16), (72, 84)),
+        ((72, 16), (28, 84)),
+    ),
+    "Othila": (((50, 12), (28, 38), (66, 88)), ((50, 12), (72, 38), (34, 88))),
+}
+
+
+def rune(name: str) -> QPainterPath:
+    return _rune(*RUNES[name])
 
 
 # -- Categories, for an ability without its own mark --
@@ -1209,7 +1846,33 @@ MARKS: dict[str, Charge] = {
     "Elementalist Earth": elementalist_earth,
     "Elementalist Fire": elementalist_fire,
     "Elementalist Water": elementalist_water,
-    "Medicinal Divining": medicinal_divining,
+    "Elementalist Refining": elementalist_refining,
+    "Cursing": cursing,
+    "Gruagach Vision": gruagach_vision,
+    "Tueor": tueor,
+    "Pictish": pictish,
+    "Elementalist Summoning": elementalist_summoning,
+    "Elementalist Controlling": elementalist_controlling,
+    "Elementalist Divining": elementalist_divining,
+    "Folk Witch Magic Theory": folk_witch_magic_theory,
+    "Flight": flight,
+    "Healing": healing,
+    "Animal Healing": animal_healing,
+    "Gruagach Give": gruagach_give,
+    "Gruagach Take": gruagach_take,
+    "Gruagach Blessing": gruagach_blessing,
+    "Gruagach Curse": gruagach_curse,
+    "Gruagach Shape": gruagach_shape,
+    "Jotnar": jotnar,
+    "Koldovali Theory": koldovali_theory,
+    "Succurro": succurro,
+    "Vulnero": vulnero,
+    "Fortunam": fortunam,
+    "Magicam": magicam,
+    "Salutem": salutem,
+    "Mythic Alchemy": mythic_alchemy,
+    "Rune Magic": rune_magic,
+    **{name: (lambda name=name: rune(name)) for name in RUNES},
 }
 
 #: The mark of each category, for an ability without its own.
@@ -1231,12 +1894,17 @@ IMAGES = {"Code of Hermes": artwork.SIGIL}
 PLAIN = {
     "Animal Handling", "Animal Ken", "Arcane", "Bargain", "Brawl", "Chirurgy", "Code of Hermes",
     "Dowsing", "Elementalist Air", "Elementalist Earth", "Elementalist Fire",
-    "Elementalist Water", "Enigmatic Wisdom", "Entrancement", "Faerie Magic", "Finesse",
-    "Font of Knowledge", "Great Weapon", "Heartbeast", "Hex", "Hunt", "Induction", "Intrigue",
+    "Elementalist Water", "Elementalist Refining", "Enigmatic Wisdom", "Entrancement", "Faerie Magic", "Finesse",
+    "Font of Knowledge", "Great Weapon", "Gruagach Vision", "Heartbeast", "Hex", "Hunt", "Induction", "Intrigue",
     "Judaic Lore", "Kabbalah", "Legerdemain", "Magic Lore", "Magic Sensitivity", "Merkavah",
-    "Music", "Mythic Herbalism", "Persona", "Premonitions", "Sense Holiness and Unholiness",
+    "Music", "Mythic Herbalism", "Persona", "Pictish", "Premonitions", "Sense Holiness and Unholiness",
     "Shapeshifter", "Summon Animals", "Swim", "Thrown Weapon", "Whistle Up The Wind",
-}  # fmt: skip
+} | set(RUNES)  # fmt: skip
+
+#: Charges drawn at one shared scale instead of each filling the block,
+#: so a set of them keeps its proportions: the runes are all one height
+#: and stroke, and the short ones (Kauno, Ingwaz) stay short.
+SHARED_SCALE = set(RUNES)
 
 
 def _brawl_detail() -> QPainterPath:

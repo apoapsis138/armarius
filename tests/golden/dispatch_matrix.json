@@ -390,7 +390,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Demote",
+        "m": "MenuScreen: Traditions, Export, Update from a File, In Creation / In Play, Demote",
         "slash": "(disabled)"
       }
     },
@@ -540,6 +540,16 @@
         "a": "FieldsDialog: Add Research Goal",
         "e": "notice: No research goals to edit.",
         "d": "notice: No research goals to remove.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trad-trad_vitkir": {
+      "active": "section-trad-trad_vitkir",
+      "keys": {
+        "a": "AbilityPickerScreen: Add an Ability",
+        "e": "FieldsDialog: Fehu",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -938,6 +948,16 @@
         "a": "FieldsDialog: Add a Saga Source",
         "e": "notice: No saga sources yet: 'a' adds one.",
         "d": "notice: No saga sources yet: 'a' adds one.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-traditions": {
+      "active": "section-traditions",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Traditions offered",
+        "d": "(disabled)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

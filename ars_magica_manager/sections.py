@@ -21,6 +21,8 @@ BOOKS_SECTION = "section-books-in-play"
 SOURCES_SECTION = "section-saga-sources"
 CATALOGS_SECTION = "section-catalogs"
 HIDDEN_SECTION = "section-hidden-entries"
+#: The non-Hermetic traditions the saga offers (Books tab).
+TRADITIONS_SECTION = "section-traditions"
 
 #: The covenant Library tab's sections, where More's Import puts books into the
 #: covenant's library.

@@ -220,14 +220,20 @@ def _emptied(value):
     return value
 
 
+#: Fields that shape a sheet rather than fill it, as a character's type
+#: does: a change to one builds the sheet again (a tradition has a tab).
+_STRUCTURE = {"traditions"}
+
+
 def _sparse_saga() -> Saga:
     """everything_saga() with the same records (same ids) but every list on
-    them empty and every name changed."""
+    them empty (but _STRUCTURE's) and every name changed."""
     saga = everything_saga()
     for attr in _RECORD_LISTS:
         for record in getattr(saga, attr):
             for f in fields(record):
-                setattr(record, f.name, _emptied(getattr(record, f.name)))
+                if f.name not in _STRUCTURE:
+                    setattr(record, f.name, _emptied(getattr(record, f.name)))
             record.name = "Someone"
     return saga
 

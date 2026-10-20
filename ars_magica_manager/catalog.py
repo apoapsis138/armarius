@@ -30,6 +30,7 @@ from .models import (
     Saga,
     ShapeMaterialDef,
     Spell,
+    TraditionDef,
     VirtueFlawDef,
     VirtueFlawInstance,
     WeaponDef,
@@ -38,6 +39,7 @@ from .models import (
 CATALOG_PATH = DATA_DIR / "virtue_flaw_catalog.json"
 ABILITY_CATALOG_PATH = DATA_DIR / "ability_catalog.json"
 HOUSE_CATALOG_PATH = DATA_DIR / "house_catalog.json"
+TRADITION_CATALOG_PATH = DATA_DIR / "tradition_catalog.json"
 COVENANT_BOON_HOOK_CATALOG_PATH = DATA_DIR / "covenant_boon_hook_catalog.json"
 COVENANT_SITUATION_CATALOG_PATH = DATA_DIR / "covenant_situation_catalog.json"
 LAB_VF_CATALOG_PATH = DATA_DIR / "lab_virtue_flaw_catalog.json"
@@ -433,6 +435,16 @@ def load_house_catalog(path: Path = HOUSE_CATALOG_PATH) -> list[HouseDef]:
 
 def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> dict[str, HouseDef]:
     return _cached_by_id(path, HouseDef.from_dict)
+
+
+def load_tradition_catalog(path: Path = TRADITION_CATALOG_PATH) -> list[TraditionDef]:
+    return list(_cached_entries(path, TraditionDef.from_dict))
+
+
+def load_tradition_catalog_by_id(
+    path: Path = TRADITION_CATALOG_PATH,
+) -> dict[str, TraditionDef]:
+    return _cached_by_id(path, TraditionDef.from_dict)
 
 
 def load_character_template_catalog(

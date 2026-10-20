@@ -15,7 +15,7 @@ from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPixmap, QTransform
 
 from .gild_charges import GILD_DETAILS, GILD_PLAIN, GILDS
-from .mark_charges import CATEGORIES, DETAILS, IMAGES, MARKS, PLAIN
+from .mark_charges import CATEGORIES, DETAILS, IMAGES, MARKS, PLAIN, SHARED_SCALE
 from .mark_shapes import rough, stroke, tile
 
 #: The charge stays inside this square, clear of the block's edge.
@@ -65,6 +65,15 @@ def _fit(charge: QPainterPath) -> QTransform:
         * QTransform().scale(scale, scale)
         * QTransform().translate(50, 50)
     )
+
+
+#: How a charge drawn at the shared scale is placed: the runes' 12 to 88
+#: box made SPAN high and centred.
+_SHARED = (
+    QTransform().translate(-50, -50)
+    * QTransform().scale(SPAN / 76, SPAN / 76)
+    * QTransform().translate(50, 50)
+)
 
 
 #: An emblem's picture is read at this size before its light parts are
@@ -120,7 +129,7 @@ def pixmap(
         )
         painter.drawImage(QRectF(13, 13, 74, 74), _light_parts(IMAGES[mark]))
     else:
-        fit = _fit(_charge(mark))
+        fit = _SHARED if mark in SHARED_SCALE else _fit(_charge(mark))
         smooth = fit.map(_charge(mark))
         painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
         painter.fillPath(rough(smooth, seed + 1, 0.45) if detailed else smooth, ink)

@@ -16,6 +16,7 @@ from dataclasses import dataclass
 
 from .. import catalog
 from ..models import SUPERNATURAL_CATEGORIES, AbilityDef, Character, VirtueFlawInstance
+from . import xp
 from .creation_character import THE_GIFT
 from .rounding import round_up
 
@@ -297,6 +298,19 @@ def ability_def(name: str) -> AbilityDef | None:
 def ability_category(name: str) -> str:
     entry = ability_def(name)
     return entry.category if entry is not None else "General"
+
+
+def ability_xp_table(name: str) -> str:
+    """The xp table an Ability advances on (models.XP_TABLES): its catalog
+    entry's, so an Accelerated Ability or a hedge Art on the Art table
+    says "art"; the Ability table for one the catalog doesn't have."""
+    entry = ability_def(name)
+    return entry.xp_table if entry is not None else "ability"
+
+
+def ability_factor(name: str) -> int:
+    """xp per score step for an Ability of this name (see ability_xp_table)."""
+    return xp.ART_FACTOR if ability_xp_table(name) == "art" else xp.ABILITY_FACTOR
 
 
 def _ids(character: Character) -> list[str]:

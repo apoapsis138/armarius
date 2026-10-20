@@ -242,7 +242,7 @@ async def test_every_tab_and_section_has_help():
             view = getattr(workspace, attr)
             await build_all_tabs(pilot, view)
             on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
-    missing = on_sheets - BOOK.topics.keys()
+    missing = {i for i in on_sheets if ht.shared_topic(i) not in BOOK.topics}
     assert not missing, f"no help for {sorted(missing)}"
     stale = {
         t
@@ -377,6 +377,7 @@ GUIDES = [
     "guide-hosting",
     "guide-book-packs",
     "guide-bestiary",
+    "guide-hedge-magic",
 ]
 
 

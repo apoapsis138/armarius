@@ -213,6 +213,17 @@
       "description": "This Mystery allows the maga to bring out faerie properties of everyday things, transforming inanimate objects into living beings and producing faerie creatures at will. These temporary faeries are called animae, \"artificial souls.\" This includes a number of new spell guidelines that only magi with this Virtue can use, described below. Animae are essentially alive, and like most faeries they are intelligent and can interact with their environment. They often have powers appropriate to their Might, and while they are not necessarily friendly, they are usually willing to bargain with the maga for their aid. In exchange for such mortal pleasures as a full wineskin, roasted meat, or a kiss, they might fight for the maga, scout out the area, carry her over obstacles, or ensure a good harvest. While they usually resemble humans and can often be affected by Corpus and Mentem spells, animae are also part of the Form appropriate to their nature, and magi may use that Form to target them in the same way that they would use Animal to affect beasts. Thus, animae can be warded away by Rego effects of this Form, but note that they can appear inside an Aegis of the Hearth if summoned from within its boundaries. Merinitae often argue about the origins of animae. Some say they are simply a sleeping aspect of nature brought forth by Faerie Magic. Others say that a faerie spirit is summoned from Arcadia to animate the target. Some think that the magic actually creates a new faerie from the caster's belief. No one knows for sure if any of these theories are correct, though. Animae Guidelines Animae spells are Creo or Muto. A Muto spell transforms a mundane thing into a faerie, usually something appropriate to its nature, while Creo simply summons a faerie associated with the Form, and the maga has very little control over what. Since all faeries have Might, and since their Might is added to the level of the spell, Animae spells must always be designed at a level greater than that given in the guidelines. For example, to summon a faerie insect with a Might Score of 1 is a base level 11 Creo Animal effect, and to change a pool of water into a water faerie with Might 10 requires an effect of base level 20. Animal Faerie animals are just like mundane animals, except that they can usually talk, walk like people, and often have other human qualities. Animals or animal products changed into animae usually retain beastlike properties, though they are still intelligent. For example, a goat changed into a faerie would be hairy, with horns and goat's feet, and appropriately goatlike Personality traits; a fish might become a mermaid or some other sort of part-human, part-sea creature. Creo Animal: Level 10: Create a faerie insect. Level 15: Create a faerie bird, reptile, fish, or amphibian. Level 20: Create a faerie mammal. Level 25: Create a faerie with animal parts, like wings or gills. Create a faerie that is a combination of multiple animals. Muto Animal: Level 10: Change an animal into a faerie. Level 15: Change something made of animal products into a faerie. Level 20: Change something made of multiple animals or animal products into a faerie. Aquam Water faeries can be capricious, but are often deep and unfathomable. They have powerful desires, and can be incredibly destructive when unleashed. Creo Aquam Level 10: Create a water faerie. Muto Aquam Level 5: Change liquid into a faerie. Auram Faeries of the air are typically sanguine and flighty, though note that they are also associated with thunderstorms, wind, and lightning. Creo Auram Level 10: Create a faerie of the air. Muto Auram Level 5: Change a weather phenomenon into a faerie. Corpus Faeries of the body may appear human, but are definitely not. They are usually deformed in some way. It is impossible to change a living person into a faerie with Animae Magic. Creo Corpus Level 10: Create an obviously nonhuman faerie (a walking skeleton, a head without a body). Level 15: Create a faerie that appears basically human (a corpse, a hunchback). Muto Corpus Level 15: Change a skeleton, corpse, or other human remains into a faerie. Level 20: Animate human remains in an unusual shape, or a combination of multiple bodies. Level 25: Combine human and animal remains into a faerie (Animal requisite). Herbam Faeries of the wood are probably the most well-known faeries in Mythic Europe. They generally behave very similarly to trees whose consciousness has been awakened. Creo Herbam Level 5: Create a faerie of the wood. Muto Herbam Level 4: Change a plant or item made from plant products into a faerie. Ignem Light, flame, and heat are properties all fire faeries share. While Ignem also covers darkness and the absence of heat, faeries of coldness or ice are typically produced with Aquam or Terram spells, and faeries of shadow are considered part of Imaginem. Creo Ignem Level 15: Create a faerie of fire, heat, or light. Muto Ignem Level 10: Change fire, heat, or light into a faerie. Imaginem Animate images do not usually gain additional properties outside their idiom; for example, a faerie echo can only repeat what she hears, and an animate portrait cannot leave her frame. An illusory copy of a person may look and sound like the original but does not necessarily inherit her memories or knowledge. Two notable exceptions are reflections and shadows: when changed into faeries, since they remain tied to their originator and only appear under certain conditions (in mirrors or light), they often retain a part of their source's identity, and know things that only the original would know otherwise. Creo Imaginem Level 3: Create an illusory faerie that can affect one sense. Additional senses add one magnitude each. Muto Imaginem Level 3: Change an image that affects one sense into a faerie. Each additional sense the original image affects, or each additional sense that the faerie image can affect (giving a portrait a voice, for example), adds one magnitude to this effect. Mentem Mentem faeries are dangerous to experiment with as they live in the mind and can sometimes take it over. They are typically associated with stories and the imagination, and their host might find herself thinking about friends no one else sees, or interacting with these creatures in dreams. Creo Mentem Level 10: Create a faerie in a person's mind. Level 15: Create a faerie ghost. Muto Mentem Level 5: Change an emotion, memory, or thought into a faerie. Level 15: Release a faerie from a person's mind (with requisites appropriate to its new form). Terram Faeries of the mountains tend to be gruff and slow, though like avalanches they can sometimes move with surprising speed. Those associated with earth are often warm and soft-hearted, while faeries of stone can be cold and passionless. Iron faeries are usually wicked and demonic. Creo Terram Level 3: Create a faerie associated with sand, dirt, mud, or clay. Level 5: Create a faerie associated with stone or glass. Level 15: Create a faerie associated with base metal. Level 25: Create a faerie associated with precious metal. Level 35: Create a faerie associated with gemstone. Muto Terram Level 4: Change dirt, sand, mud, or clay into a faerie. Level 5: Change stone or glass into a faerie. Level 10: Change metal or gemstone into a faerie. Vim Vim faeries are the most unpredictable of all, essentially raw magic given life. They are associated with supernatural effects and especially Warping, and are drawn to auras, spells, and enchanted devices. They have powers similar to daimons (see The Mysteries Revised Edition, Theurgy). Muto Vim animae spells turn existing spells into faeries. Unlike standard Hermetic MuVi spells, they do not modify a spell as it is being cast. Note that spells changed into faeries only last as long as the original spell, even if the transformation spell has a longer duration. Creo Vim Level 4: Create a faerie daimon. Muto Vim Gen: Change a spell or effect of level less than or equal to (this spell's level + 5) into a faerie. Level 2: Change vis into a faerie, with (number of pawns x 5) Might Points, using up the vis in the process."
     },
     {
+      "id": "vf_animal_healer",
+      "name": "Animal Healer",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Grants Animal Healing 1: heals animals as Healing heals people, using Animal vis.",
+      "description": "The witch can heal animals, with the Supernatural Ability Animal Healing 1. It works as Healing does, but on animals and with Animal vis, and can be brewed into potions. It is not normally a favored folk witch Ability."
+    },
+    {
       "id": "vf_animal_ken",
       "name": "Animal Ken",
       "type": "Virtue",
@@ -773,6 +784,17 @@
       "description": "You are a member of the civil administration, probably a katib (KEH-tib, scribe or secretary) or watha'iqi (wa- THEH-i-qee, writer of legal documents). You may take Academic Abilities during character creation. This Virtue is only available to male characters."
     },
     {
+      "id": "vf_cailleach_magic",
+      "name": "Cailleach Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Spontaneous casting: the lowest Art is doubled before the total is halved.",
+      "description": "When the gruagach casts spontaneously, the lower of the two Arts he uses counts double before the total is divided by two."
+    },
+    {
       "id": "vf_capo",
       "name": "Capo",
       "type": "Virtue",
@@ -885,6 +907,17 @@
       "source": "HoH:MC",
       "summary": "Spells built with charms gain +1 Casting Total per charm and +1 per category (up to Faerie Magic charms); extra sympathetic Penetration multiplier.",
       "description": "This Inner Mystery allows a Merinita to incorporate charms into her spells, making them more potent through sympathetic magic. This requires that she first invent a spell that incorporates a specific charm; this can be done with spontaneous, formulaic, or ritual spells. She must decide how the charm applies to the target and include this in the spell description. For example, if the name \"Darius\" were integrated into a spell, she could use a \"Darius\" charm when casting it on a target named Darius. Likewise, a spell might involve \"winter,\" \"an axe,\" or something \"red.\" A single charm imparts a +2 bonus to the Casting Total of the spell. The maga may incorporate the charm specified by the spell into her actions whenever she casts it; she must either create the temporary charm at the time of casting or have the object associated with a permanent charm at hand. When casting spells with the charms described above, she might tell a story about a person called Darius, or draw a picture that depicts winter, or whittle a stick into the shape of an axe, or play a song that suggests the color red. Example: Mari Amwithig of Merinita has Initiated Charm Magic, and modified her spell Slay the Innocent (PeCo[An]30) to include an \"enemy\" charm. She spends three hours composing a poem about an enemy, inscribing it on a fine piece of tanned vellum, and succeeds at her Communication + Language roll against Ease Factor 9. Whenever she reads this poem from the scroll while casting her spell on one of her enemies, she receives a +2 bonus to her Casting Total. A spell can also incorporate several charms at once: when she invents the spell, the maga specifies all the charms it involves, up to as many as her score in Faerie Magic. There are also several categories that can be used to describe charms. These help to explain in what way a charm applies to the target, and are noted next to the charm like so: \"Darius\" (character), \"winter\" (event), \"axe\" (item), \"red\" (aspect). The maga receives a +1 bonus to her Casting Total for each charm incorporated into the casting, and an additional +1 bonus for each category represented by these charms. For example, a spell designed to affect a \"magus\" (character) named \"Darius\" (character) in \"winter\" (event) would give the maga a +5 Casting Total bonus; +3 for three charms, and +2 for two different categories. Casting Total Bonus: +1 for each charm, +1 for each category represented The maga can also use charms to improve the effectiveness of her Penetration using an Arcane Connection to the target. This increases her Penetration Multiplier by one for each category beyond the first represented by the spell, in addition to the normal +2 for a symbolic representation. A spell designed to affect \"Darius\" (character) in \"winter\" (event) would give the maga +3 to her Penetration Multiplier when cast with an Arcane Connection. Sympathetic Connection Bonus: +2, +1 for each category beyond the first When casting a spell associated with several charms, the maga can design a single charm that incorporates all of the different concepts at once. For example, instead of writing three different songs, one about a \"magus,\" another about \"Darius,\" and a third about \"winter,\" she can write a single song about \"Darius the magus in winter.\" However, each additional concept adds 3 to the Ease Factor for making a charm, so that the song \"Darius the magus in winter\" would require a Communication + Music roll against an Ease Factor of 12 to compose. Spells may be designed so that the target is itself the charm, if the effect produces an artistic or poetically satisfying result. This requires about ten minutes of preparation and an Intelligence + Finesse roll against an Ease Factor of 6 to succeed. For example, a spell intended to turn a person into a lion could play upon the fact that both the warrior and a lion are brave, and so the spell could be designed to incorporate a \"brave\" (aspect) charm. However, the charm would have no effect if the target were not particularly Brave. At the storyguide's discretion, charms that are absurdly broad -- such as \"a person\" (character) or \"Mythic Europe\" (place) -- give no bonus. Charms that the storyguide thinks inappropriate to the situation at hand may also fail. Anyone might be an \"enemy,\" for example, and so it may be necessary for the player to adequately explain how the charm distinguishes the spell's target from other possible targets in order to receive the bonus. A spell incorporating charms may be cast without the charms being at hand, or on a target that does not correspond to the charms. However, the bonuses only apply if the maga has the charms and the target is appropriate. Instead of increasing her spell mastery abilities, a maga may devote mastery experience to associate additional charms with her formulaic spells. For each charm, this costs her 1 experience point per magnitude of the spell being modified. Any of the charms associated with a spell may be used when casting that spell, though the total number of charms incorporated into a spell's casting can never exceed her score in Faerie Magic. Charm Categories Adage: \"There is truth in wine,\" \"Power corrupts,\" or \"Out of sight, out of mind.\" Aspect: A particular quality of the target, such as small, drunk, lazy, or rough. Character: The target's name, occupation, title, bloodline, nickname, age, or birthmark. Event: What the target is doing: a chase, seeking justice, in love, a rescue, or a quest. Item: The target's shape or material, or an object strongly associated with the target. Place: The location of the target: a forest, mountain, covenant, village, or ship."
+    },
+    {
+      "id": "vf_charm_magician",
+      "name": "Charm Magician",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Cannot make amulets (chartae are possible); with No Chartae Making, no devices at all.",
+      "description": "The magician cannot make amulets, though he can still make chartae. With No Chartae Making as well, he can make no devices at all."
     },
     {
       "id": "vf_charmed_life",
@@ -1026,6 +1059,17 @@
       "source": "RoP:M",
       "summary": "Teaches songs replicating one of its Powers (singer spends 1 + Might cost in vis); teaches Leadership-score students a season; songs last a year.",
       "description": "The character is a recognized composer of magical music. This means that he can teach songs of power to other characters. Such a song allows the character that learns it to replicate the effect of a single Power that the composer character knows, by expending vis of the appropriate Form equal to (1 + the Might Point cost of the Power). For example, a bird that is taught to sing Call the Flock must expend 3 Animal vis each time that it sings the song. In a season, the character can teach a single song to a number of characers equal to his Leadership Ability score, and the students only retain the ability to sing the song for a year."
+    },
+    {
+      "id": "vf_concentrated_potions",
+      "name": "Concentrated Potions",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "May use up to four times Folk Witch Magic Theory in vis in a season of potion brewing.",
+      "description": "When brewing potions the witch may use up to four times her Folk Witch Magic Theory in pawns of vis in a season, double the normal limit."
     },
     {
       "id": "vf_conjure",
@@ -1184,8 +1228,8 @@
       "tier": "Major",
       "cost": 3,
       "source": "RoP:D; HMRE",
-      "summary": "Grants Holy Power Cursing 1: bring God's wrath down on those who oppose the Divine Will, activated through a Holy Method.",
-      "description": "With this Virtue, you can curse those who oppose the Divine Will, giving you the Supernatural Ability Cursing 1."
+      "summary": "Grants Cursing 1: in Realms of Power: The Divine a Holy Power, through a Holy Method; for a folk witch (Hedge Magic) a Supernatural Ability, worked through a fetish or potion.",
+      "description": "With this Virtue, you can curse those who oppose you, giving you the Ability Cursing 1. A holy character's Cursing calls God's wrath down on those who oppose the Divine Will; a folk witch's is a Supernatural Ability using Dexterity, worked through a fetish or a potion."
     },
     {
       "id": "vf_custos",
@@ -1269,6 +1313,21 @@
       "source": "RoP:I",
       "summary": "Supernatural Ability Debauchery at 1: Unholy Method casting maleficia through sinful acts costing a long-term Fatigue level or Light Wound; uses Stamina.",
       "description": "This Virtue gives the character the Supernatural Ability of Debauchery at 1. This Unholy Method is described in more detail under New Abilities, and in Chapter 10: The Maleficia."
+    },
+    {
+      "id": "vf_deft_rune",
+      "name": "Deft Rune",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "rune"
+      ],
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "No penalty for omitting the name or description on a script with one rune.",
+      "description": "The vitki suffers no penalty for omitting his name or the description from a script using the chosen rune. May be taken once for each rune."
     },
     {
       "id": "vf_deft_characteristic",
@@ -1531,6 +1590,17 @@
       "description": "The Hermetic mystery of dream magic originates from a Baltic folk tradition that was brilliantly synthesized into Hermetic theory by Raisa of Novgorod in the early tenth century. Spiritual Dream Travel Mystery spells can change a dream to include an aware spirit, as though one's spirit travels into the dream leaving the body and possessions behind. Within the dream, all seems real, but all is in fact illusion: dream logic and dream time apply. A magus can use spiritual travel to enter his own dreams. While traveling in a dream, the traveler's bodies lie in a trance, as if sleeping dreamlessly (and recovers as if sleeping). Physical disturbances to a traveler's body, such as being shaken or yelled at, require Concentration rolls (as to maintain a spell; see ArM5, page 82), and if failed, the traveler wakes from the trance, pulled out of the dream. Otherwise, the dream ends when the dreamer wakes, and any traveler in that dream is forced out. (It is possible to leave dream through portals, to places such as the imagination.) While traveling in dream, a magus has an Arcane Connection to his body -- he may leave the dream by \"waking\" and therefore returning to his body. The Arcane Connection also lets him use real-world vis in spells, consuming the vis permanently just as if a spell were cast in the waking world. A dream traveler can also find and use dream vis, but this lacks substance beyond dream. It is also possible to enter bodily into a dream, but that is a Mystery of the greater dream grimoire. Those intending to travel into dream also make use of standard Mentem spells affecting dreams or dreams. The Spiritual Traveler The traveling spirit has the full spellcasting abilities and magic resistance of the traveler's mind -- in the case of a spiritual magus, his five Techniques, Imaginem Form (other Forms are ignored for a spiritual traveler, as detailed in the insert), and his Parma Magica. His Virtues and Flaws apply as normal (subject to interpretation if necessary). Some otherwise irremediable Flaws, such as missing limbs, are easily remedied with a quick Imaginem illusion. Magical equipment other than a talisman is not available to the spirit traveler, but a dream copy of his talisman accompanies a traveler. The real talisman remains with the body. The body left behind is without spellcasting abilities or conscious resistance. This means that the body is protected by its Form scores, but the Parma Magica protection \"travels\" with the spirit. A magus preparing for dream travel may choose to extend his Parma Magica to cover his body and spirit as separate entities (using the rules in ArM5, page 66), reducing his effective Parma score by 3. Dream Magic Spells This Mystery deals with the substance of dream, giving the magus the power to enter into dreams, becoming part of the stuff of dreams. Once in a dream, the traveler may move and interact with the dream world around her. If the dream comes to an end, any spiritual traveler in the dream is evicted and wakes up in the real world. Dream Magic allows the following new duration and target to be employed in spells. New Duration: Dream The spell functions for the length of an actual dream of a sleeping individual. The spell ends if the dream ends, or the sleeper wakens. The dream can be natural or sustained magically. It is possible to bypass the waking end of a dream in various ways, such as passing through a portal into the imagination. Dream Duration is equivalent to Concentration. New Target: Dream This new Target, Dream, allows travel into the dream of a sleeping individual. The sleep may be magically induced, as long as dreaming is possible. Dream only applies to Mentem spells. Dream Target is equivalent to Individual. Size does not matter (as is normal for Mentem spells), but also Dream is fixed as an actual dream of one sleeper -- it is not possible to work dream magic on several dreams or dreamers together. (Dream spells exist to merge several travelers into one dream.) The Stuff of Dreams Dreams are qualitatively different from other mental states; while desire, sadness, or madness are clearly related to the humors as direct expressions of Mentem, the content of dreams is always the stuff of sensation, and therefore Imaginem. Hence to create, enter, or change a dream from outside one uses Mentem, but to enact changes within the dream one uses Imaginem. Magic in Dreams Spirit travelers find magic in dreams both strange and powerful, and governed by the Hermetic Form of Imaginem. Form: A spirit traveler in a dream casts a spell of any Form as an Imaginem spell. Spontaneous Imaginem magic can produce any effect: Use the guidelines for the Form that would apply in the real world, but use the magus's score in Imaginem ignoring other Forms. If a spirit-form magus knows a Formulaic spell of another Form, he casts it using his Imaginem score while within dreams. For example, Creo Ignem 10 \"creates a fire doing +15 damage,\" so Creo Imaginem 10 can create dream fire causing +15 dream damage; Rego Corpus 25 \"transports the target instantly up to one league,\" so Rego Imaginem 25 can transport a dream inhabitant or a dream traveler up to one league. A Muto Corpus (Animal) spell becomes Muto Imaginem -- the Animal requisite also becomes Imaginem and is ignored. Duration: The Duration of spells cast in dreams is based on dream time, not the passage of time in the waking world. Magic Resistance: Form-based Magic Resistance uses the Imaginem Form exclusively (and the magus's Parma Magica). Dream Rituals: Ritual Magic affecting the dream world can be cast spontaneously, without the magus knowing a formal Ritual spell, using the rules for Ceremonial Magic. Momentary Ritual effects within dreams create objects that are real within the dream, but lost when the dreamer wakes, or (if affecting the dream traveler) on returning to the waking world. Dream Rituals require dream vis. Dream vis can be found and collected in the dream world, and used freely -- it all appears to have the Form of Imaginem. Real-World Vis: Real-world vis can only be used for known (nonSpontaneous) Rituals, and in this case the duration is determined by real-world time, not dream time. Real-world duration can make dream effects persist across and between dreams, lapsing while the dreamer wakes, then resuming when she starts to dream again. Momentary Rituals cast using real-world vis become real, and last indefinitely across dreams (subject to change, like any other thing). Rituals using real-world vis can use the real-world spell's Technique and Form vis, or substitute Imaginem vis. Aura: The aura for magic worked inside a dream is all illusory, and is whatever the current setting demands, so a dream cathedral has a Divine aura, a dream world hell-pit is Infernal, and a dream world covenant is Magical. The aura around the traveler's body is not relevant once inside dream. New Spell Guidelines Muto Mentem (Dream, Mystery) The Range of these spells is the greater of the range to the dreamer or the bodies of those whose spirits are to enter dream. Level 15: Change the dream of the caster to include the caster's own spirit (Intellego requisite). Level 20: Change the dream of another to include the caster's spirit (Intellego requisite). Level 25: Change a person's dream to include another's spirit (Intellego requisite). Level 30: Change a person's dream to include a group (up to ten) of spirits (Intellego requisite). The number of spirits included is multiplied by 10 for each magnitude added to the guideline. The Lucid Dreamer Mu(In)Me 20 R: Per, D: Dream, T: Dream, Mystery The magus lies down to sleep and casts this spell, slipping easily into dreaming sleep -- except that his conscious spirit appears in the dream and may move and interact freely. He may wake any time he wishes (and may settle again for normal sleep, if he so desires). The spiritual traveler appears in the dream with his clothes, a dream copy of his talisman (if any), and dream vis equivalent to any vis left on his body. Using this dream vis has no effect on the real-world vis left behind; however, the traveler may use that real-world vis via the Arcane Connection to his body. (Base: 15, +1 Dream duration) The Path To Lemnos Mu(In)Me 30 R: Touch, D: Dream, T: Dream, Mystery The magus touches a dreaming sleeper, and the target dream changes to include the caster's spirit; the caster slips into a trance while in the dream. The spiritual traveler appears in the dream with his clothes, a dream copy of his talisman (if any), and dream vis equivalent to any vis left on his body. The magus has an Arcane Connection to his own body, and may use this to leave dream before the spell ends. (Base: 20, +1 Touch, +1 Dream duration) The Road To Lemnos Mu(In)Me 40 R: Touch, D: Dream, T: Dream, Mystery The magus touches a dreaming sleeper (or the magus, as in The Lucid Dreamer), and the target dream changes to include the spirits of a touched group of travelers (possibly including the caster). The travelers' bodies lie in a trance while in the dream. The spiritual travelers appear in the dream with their clothes, a dream copy of their talisman (if any) and dream vis equivalent to any vis left on their bodies. The travelers have Arcane Connections to their own bodies, and may use these to leave the dream before the spell ends. (Base: 30, +1 Touch, +1 Dream duration) Example: Metrodorus, an elderly dream magus, seeks answers to recent puzzles. He wishes to search within his dreams, and to bring his raven familiar with him, so casts The Road To Lemnos, so that both may enter the dream. He appears at the beginning of his dream, with his staff and raven, on an empty plain. Dream Vis Dreams of all things can be found, including dreams of raw vis (even if the dreamer has no idea what the substance is). A traveler in a dream can use dream vis like normal vis, except that it can have no effect whatsoever outside dreams. It is quite easy for magi to find dream vis in dreams. Dream vis is nearly always Imaginem vis (the general Form of all within dream). To have any effect beyond a dream, including persistence between dreams and moving dream objects into the real world, real-world vis is needed. To use real-world vis within a dream, it must either be on the body of a traveler (linked by Arcane Connection), or brought in by a physical traveler (see The Greater Dream Grimoire). Time and Travel Navigation in a dream is associative rather than geographical. Dreamers find places by entering similar places: an entire peasant village, for example, can be found by walking through a single hut. A similar process can lead to objects: a key may lead to a door, through which in turn the dreamer may enter a completely different region (and the door may disappear behind him as it closes). Magically created items (even illusions) are quite real within dream, and can be used to aid navigation by association. Example: Metrodorus seeks to brew a better longevity potion. Deciding that his youth before apprenticeship, over a century before, holds the key to his new design, he decides to seek his long-forgotten childhood innocence in a dream. Unfortunately, the dream devolves into a twisted series of visions of past Tribunals and past sodales. Suddenly he remembers the sound of a stream outside his parents' hut where he used to fish, and he resolves to cast a spell to create a stream, then follow it back until he arrives at the hut in the dream. Time, too, is no longer linear and fixed -- a dreamer may skip time, rolling up long periods to pass in an instant, or make a brief moment seem like days (or longer). Travelers who part and reunite in a dream may find that each group has taken a different time to reach the juncture. Almost any change is possible in dreams, and most physical laws can be broken. Also, time in dreams bears little relation to time in the waking world -- years may seem to pass in a dream, while only a few moments pass in the real world. Spiritual travelers in dreams do not actually sleep, either: if they lie down as if to sleep, time passes around them in an instant, and they wake at some new time. If they forget to sleep, they suffer no ill effects. This is akin to the '...and some years pass...' effects of dream time. They cannot have a dream within a dream. Permanent change may appear possible within the dream (indeed it is within the bounds of dream logic, which permits any change, including undoing permanence), but all is lost when the travelers leave the dream and return to the waking world (or when the dreamer wakes). If the storyguide portrays the chaotic shuffling they have experienced in their own dreams, and allows players to invoke the same for their own deliberate movements, then dream adventures can be greatly enhanced. Travel by dream logic is also similar to travel in Arcadia, and ideas may be taken from tales of Faerie. Encounters in Dream Almost anything can be found in dreams; and the ability to create things with Imaginem magics and make them solid (see below for Magic in Dream) makes finding things especially easy. It is possible to encounter dreams of animals, fantastical beasts, or even of real people. Dream-people are people as perceived by the dreamer (not the traveler). They know only what the dreamer dreams them as knowing, which may differ from what the dreamer would think about them if he was awake. (In either case, it is in truth limited above all to what the dreamer knows.) Dream-people created by spells cast by travelers know what the spellcaster intends them to know (again limited by what the caster knows). Dream logic also means that a magus may check in his pockets and may \"find something there.\" A \"found something\" may be almost any common object. The magus can look for other things and find them in pouches, packs, or even just lying around. The storyguide rules on this, but modest quantities of common things may be found, although frequent checking is likely to turn up something dreadful instead. Things found like this are particularly impermanent, and disappear if the magus ceases to pay attention to them. After all, it is all a dream. Conveniently for magi, most magi consider vis to be a common object such as might be in a magus's pouches. A magus may hope to find a modest amount of dream vis if he checks for it. Large quantities of dream vis or uncommon objects require actual quests to find them. The Dreamer in Control (Lucid Dreaming) When someone dreams, she may dream of herself, or of others. The dreamer may feel she is participating in the dream, or witnessing it from a distance -- even watching herself \"from the outside.\" Dream travelers choose their own path and may move through the dream to places the dreamer is scarcely aware of, and may avoid the areas the dreamer is creating. (Whether the dream travelers create or explore these far corners is moot.) As perceived and explored by dream travelers, the dreamer may be present as an inhabitant of the dream (or not), and this dreamer-figure has a variable link to the dreamer in life. In some dreams, the dreamer-figure may be flat and unresponsive, as the dreamer watches from outside; in others the dreamer may believe she is \"there\" and the figure is alert and lifelike. In game terms, if the dreamer is focused on herself, treat her as an alert traveler; if she is watching herself remotely, treat her as a dream inhabitant -- part of the landscape of figures. The dreamer may be able to switch her attention and participate fully, even if she had been viewing remotely. If the dreamer realizes what is happening, she may be able to take control and reshape the dream -- this is difficult to control and largely random, but may have major effects on the dream. To notice dream travelers as figures in a dream, and be aware of oddities in their actions, the dreamer must succeed on a roll of Perception + Awareness against an Ease Factor of 9. To try to reshape the dream, the dreamer must succeed on a roll of Intelligence against an Ease Factor of 9. The dreamer gains bonuses to this roll if she can work magic relating to dreams: +3 if the dreamer is a magus (or of similar power) +3 if the dreamer has Dream Magic +3 if the dreamer has Hermetic Dream Interpreter (see Chapter 7: Divination and Augury) +1 per other supernatural ability relating to illusions or dreams in general (maximum +3) If she succeeds, she may arbitrarily reshape the dream. If it is necessary to judge the actual extent of the change, treat the rolled total as the magnitude of a dream spell as if cast by a spiritual dream traveler, although much of the magnitude is used to make the change affect an area of the dream landscape. (This can produce enormous changes to the dream landscape, but this is normal in dreams.) Travelers with Magic Resistance typically resist, but find the landscape around them to have changed. A dreamer with Dream Magic may use real dream spells if she is aware of the situation. To Become Aware of Travelers / Stress Die + Perception + Awareness Vs. an Ease Factor of 9: To Reshape a Dream: Stress Die + Intelligence + Bonuses Vs. an Ease Factor of 9: {{{2}}}; Dream Shaping Magnitude: Rolled Total. If the dreamer does not become intelligently aware of travelers, but the travelers remain in the vicinity of the dreamer-figure, the storyguide may feel it appropriate for the dreamer to change the dream unconsciously. The storyguide may make an arbitrary change, or roll to reshape the dream as above. Time and Experience in Dream Travelers may learn information in dream travel, by interpreting what they see, by prying into hidden corners of the dream where shadows of the mind appear, or by encountering other beings in the dream. However, the passage of time is illusory and they do not gain real experience (that is, they do not gain game points for Arts and Abilities). Laboratory work is also impossible in the shifting conditions of dreams, so magi may not invent spells (from texts or from a teacher), nor perform enchantments. Spells are a matter of illusion in this dreaming world, and are governed by Imaginem. Spell Botches in Dream Travelers may cast spells in dream, and if stressed may botch their spells. Spell botches typically produce effects in that area of dream similar to a nightmare, which may make the area quite unpleasant for both travelers and inhabitants, and for the dreamer whose dream is affected. A sufficiently bad nightmare may shock the dreamer into wakefulness. A magus botching a spell accumulates real Warping points and must check for Twilight as normal. If he is thrown into Twilight, his spirit is thrown into real Twilight, and the duration is measured in real-world time, not dream time. While in Twilight, the magus is effectively not in the dream (his realworld body remains entranced). When the Twilight ends, he returns to the dream if possible. If the dream has ended, he returns to his body and wakes. Fatigue and Wounds Spirits in dreams do not experience Fatigue, and ignore all Fatigue loss (and penalties). They may eat and drink dream food, but they do not need to, and suffer no ill-effects if they do not. Likewise, they believe they need to breathe, but if they find themselves immersed in dream water, they find that it is all an illusion again. Wounds may be taken, but are not real, although the shock and pain is real. If a traveler is wounded, he must succeed in a roll of : Stress Die + Stamina + Modifiers Vs. an Ease Factor of Total Wound Penalty If he fails the roll, he wakes from the shock, and is thrown out of the dream into the normal physical world. An Incapacitating wound has an Ease Factor of 9, and leaves the traveler Incapacitated even if he is not thrown out of dream. If he overcomes the shock, the Wound and its Wound Penalty accumulate during the combat, making subsequent Wound shocks harder to overcome. Apply penalties from previous wounds to the Stamina roll, as well as the benefits and penalties of Virtues and Flaws relating to pain and wounds, and also strong and weak will. If the traveler survives the encounter, it is easy to recover from the wounds once sufficient dream time has passed. If the traveler wakes, it was only a dream. Example: The dream maga Morphea is exploring the dreams of a local worthy, seeking out a demon. On entering dream she uses Phantasm of the Human Form to create some shield grogs and sets off. She soon finds the demon, which appears and attacks her. Her phantom grogs (quite solid in the dream) take the brunt of the attack, while she casts spells past them. However, the demon hurls several of its spines past the grogs to strike Morphea. She suffers two Medium wounds, and must make two Stamina rolls against an Ease Factor of 3 for the first wound, and 6 for the second. Fortunately she has Stamina +2 and Strong Will (+3 to Will rolls), and adds this as a bonus to her rolls to stay in dream. She rolls 7+5 = 12 for the first wound, and 5+5 = 10 for the second, so she remains in the dream. Her attacks are quite effective and the demon is slain. Morphea takes stock of her situation, and decides not to continue immediately, but to recuperate. \"Some time later\" she has fully recovered from her wounds, and sets off again. (Nothing significant happens in this time -- it is just an exercise in dream time and logic. The dreamer whose dream she is in may vaguely recall this period, but lack any details. No time passes in the real world.) As a spirit in a dream, the spiritual traveler is also vulnerable to magics that attack spirits from the Mentem and Vim guidelines. (Spiritual travelers perceive these as Imaginem spells). If the attacker uses Might reduction spells, similar to Demon's Eternal Oblivion, the spiritual traveler should use his Imaginem score instead of Might. His Imaginem score is not actually lost beyond the duration of the spells, but if his Imaginem \"Might\" is reduced to zero, he is forced into the waking world. If he is beyond connection to the waking world, he may be destroyed like any other spirit. Example: Morphea has now realized that she faces a diabolist dream traveler, and has tracked him down in the dreamer's memory palace. She chases him from room to room, until they come face to face. Morphea has Stamina +2, Perdo +20, Imaginem +20, Parma Magica 3, Penetration 3; she knows a level 10 Demon's Eternal Oblivion that she hopes will work in this situation. The diabolist magus has the same abilities and a similar level 10 Dreamer's Eternal Oblivion spell. The dreamer has a memory palace with a level 2 Magical aura. The diabolist wins the initiative contest, and casts his spell: roll 9 + (Stamina 2 + Perdo 20 + Imaginem 20) + aura 2 = 53, and Penetration is 53 -10 + Penetration 3 = 46. This easily beats Morphea's Magic Resistance (Imaginem 20 + (5 x Parma 3) + aura 2) = 37. Morphea cries out as the spell drains her Imaginem score by 10. Morphea now casts her spell, matching her reduced Imaginem score of 10 to cast the Perdo Vim spell. Since this is dream, the storyguide agrees with Morphea's player that the Demon's Eternal Oblivion spell working through Imaginem can affect a diabolist magus. She casts her spell, and her player rolls 7 + (2+20+10) +2 = 41, Penetration = 41 -10 +3 = 34, which does not quite match the diabolist's Magic Resistance. Cackling with glee he casts another Oblivion spell, for which the roll is 1+1+10, casting total 40+42+2=84. Now cackling manically, he watches as Morphea is struck down. Losing another 10 Imaginem points reduces her to 0, and she is forced out of the dream. She wakes with a start, covered in a cold sweat, crying out loud. (Her real-world Imaginem score is unaffected, as a quick Spontaneous spell verifies.) Aging in Dream A spiritual traveler in dream ages, or not, depending on the time she perceives as passing, and whether she chooses to obey that time. Spiritual dream travelers may remain unaging if they wish. They may use spells to make themselves younger or older -- it is all a matter of appearance in dream. While the spirit is in a dream, the body is subject to all normal effects, including aging. It is possible for the body to be wounded, age, or even die while in the spirit is in a dream, and for the spirit to remain in the dream. If a spiritual traveler returns from a dream and find his body has died, then his spirit passes into death when he leaves the dream. It is possible for a traveler to achieve a form of evanescent immortality in a dream, if she never returns to the waking world. (Normally she would wake when her dreamer wakes, but if she has left an individual dream through some portal, she may remain.)"
     },
     {
+      "id": "vf_durable_external_soul",
+      "name": "Durable External Soul",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Kolduni: the external soul can be destroyed only in one specific way; otherwise it returns to the body.",
+      "description": "Needed by a koldun before he can be initiated into External Soul. His soul object can be destroyed only in one particular way; destroyed any other way, the soul returns to his body, where he can be killed normally, and he must repeat the External Soul initiation."
+    },
+    {
       "id": "vf_dust_devil",
       "name": "Dust Devil",
       "type": "Virtue",
@@ -1630,6 +1700,21 @@
       "description": "This Virtue gives the character the Supernatural Ability of Effusion at 1. See Chapter 10: The Maleficia for more information on this Unholy Power."
     },
     {
+      "id": "vf_elemental_affinity",
+      "name": "Elemental Affinity",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "ability"
+      ],
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "Xp gained in Medicine, Philosophiae or one (Realm) Lore also gives half as much xp to divide among the Elementalist Forms.",
+      "description": "Choose Medicine, Philosophiae or one (Realm) Lore. Whenever the character gains experience in it, he gains half as many experience points to divide among his Elementalist Forms. May be taken again for a different Ability."
+    },
+    {
       "id": "vf_elemental_magic",
       "name": "Elemental Magic",
       "type": "Virtue",
@@ -1639,6 +1724,94 @@
       "source": "DE",
       "summary": "Studying any elemental Form (Aq, Au, Ig, Te) gives half the Source Quality in each of the other three; elemental requisites use the primary Form.",
       "description": "You have been trained in the ability to manipulate raw elemental Forms (Aquam, Auram, Ignem, and Terram), and view them as a connected whole rather than four separate Arts. Whenever you gain experience from a source dedicated to one of these Arts, you gain half the Source Quality (rounded up) in experience points in each of the other three Arts. For example, if you studied Ignem from a book with a Source Quality of 13, you would gain 7 experience points in each of Aquam, Auram, and Terram. During character creation, assign all your experience points in Arts. Then assign half the experience points assigned to each of the elemental Forms to each of the other elemental Forms. Do not actually add these experience points to the Form in question until you have finished calculating all the bonus experience points. For example, if you assign 10 experience points to each of Aquam, Auram, and Terram, and 21 experience points to Ignem, then you should assign 15 bonus experience points to Ignem (5 from each of Aquam, Auram, and Terram), and 21 bonus experience points to each of Aquam, Auram, and Terram (11 from Ignem, and 5 each from the other two Forms). In addition, if a spell with one of these Forms as its primary Form has another element as a requisite, you use the primary Form to calculate totals, even if the requisite is lower."
+    },
+    {
+      "id": "vf_elemental_magic_elementalist",
+      "name": "Elemental Magic (Elementalist)",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Studying one Elementalist Form gives 1 xp in each of the other three; multi-element effects use the highest Form.",
+      "description": "The elementalist's supernatural affinity with how the four elements interact. A season studying one of the Elementalist Forms (Air, Earth, Fire or Water) gives one extra experience point in each of the other three, but never more than one free point to any one Form in a season. When affecting several elements, use the highest of their Form scores rather than the lowest."
+    },
+    {
+      "id": "vf_elemental_medicine",
+      "name": "Elemental Medicine",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Each season spent studying Medicine also gives +1 xp in each of the four Elementalist Forms.",
+      "description": "Each season the character studies Medicine he also gains one experience point in each of his four Elementalist Forms. An effect using several elements uses his highest Form, capped by his score in Medicine."
+    },
+    {
+      "id": "vf_elemental_philosophiae",
+      "name": "Elemental Philosophiae",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Each season spent studying Philosophiae also gives +1 xp in each of the four Elementalist Forms.",
+      "description": "Each season the character studies Philosophiae he also gains one experience point in each of his four Elementalist Forms. An effect using several elements uses his highest Form, capped by his score in Philosophiae."
+    },
+    {
+      "id": "vf_elemental_theurgy",
+      "name": "Elemental Theurgy",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Each season spent studying the chosen (Realm) Lore also gives +1 xp in each of the four Elementalist Forms.",
+      "description": "Each season the character studies the chosen (Realm) Lore he also gains one experience point in each of his four Elementalist Forms. An effect using several elements uses his highest Form, capped by his score in the chosen (Realm) Lore."
+    },
+    {
+      "id": "vf_elementalist_air",
+      "name": "Elementalist Air",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the Elementalist Form Air at 0, with the Sanguine Personality Trait.",
+      "description": "Gives the elementalist Form Air at 0. The character also has the Sanguine Personality Trait, equal to his Warping Score plus a fifth of the Form (rounded up)."
+    },
+    {
+      "id": "vf_elementalist_earth",
+      "name": "Elementalist Earth",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the Elementalist Form Earth at 0, with the Melancholic Personality Trait.",
+      "description": "Gives the elementalist Form Earth at 0. The character also has the Melancholic Personality Trait, equal to his Warping Score plus a fifth of the Form (rounded up)."
+    },
+    {
+      "id": "vf_elementalist_fire",
+      "name": "Elementalist Fire",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the Elementalist Form Fire at 0, with the Choleric Personality Trait.",
+      "description": "Gives the elementalist Form Fire at 0. The character also has the Choleric Personality Trait, equal to his Warping Score plus a fifth of the Form (rounded up)."
+    },
+    {
+      "id": "vf_elementalist_water",
+      "name": "Elementalist Water",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the Elementalist Form Water at 0, with the Phlegmatic Personality Trait.",
+      "description": "Gives the elementalist Form Water at 0. The character also has the Phlegmatic Personality Trait, equal to his Warping Score plus a fifth of the Form (rounded up)."
     },
     {
       "id": "vf_embitterment",
@@ -1751,6 +1924,849 @@
       "source": "DE",
       "summary": "Non-Ritual spell durations multiplied by a secret simple die (Concentration, Momentary and Ring unaffected).",
       "description": "The effects of your spells tend to last longer than usual (though Concentration, Momentary, and Ring spells remain just that). The storyguide secretly rolls a simple die; multiply the spell's normal duration by the number rolled. This is usually, but not always, a good thing. This Virtue does not affect the duration of Ritual spells."
+    },
+    {
+      "id": "vf_energy_magic",
+      "name": "Energy Magic",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Knows extra Creo and Perdo Corpus guidelines that restore or drain Fatigue.",
+      "description": "The magus can use additional Creo Corpus and Perdo Corpus guidelines (an Integration breakthrough from the folk witches). Ritual spells of Momentary Duration truly restore Fatigue levels; with other Durations the restored levels return as Long-Term Fatigue when the spell ends."
+    },
+    {
+      "id": "vf_fast_caster_runes",
+      "name": "Fast Caster (Runes)",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Carves rune scripts in half the time, and can fast-cast a rune spell without name or description.",
+      "description": "The vitki inscribes rune scripts accurately in half the normal time. The vitki can also fast-cast a rune spell, much as magi fast-cast spontaneous spells, but must leave off their name and the description of the effect."
+    },
+    {
+      "id": "vf_hedge_wizard_social_status",
+      "name": "Hedge Wizard (Social Status)",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "parameters": [
+        "tradition"
+      ],
+      "source": "HMRE",
+      "summary": "Member of a hedge tradition: Opens a Gifted member's Gift to its magic; access to Finesse, Magic Lore and Penetration.",
+      "description": "The free Social Status every hedge tradition grants its members. For a Gifted character it Opens The Gift to the tradition's Arts and Abilities, which become favored; for an unGifted one it brings only the social side, and each power still needs its own Virtue. It gives access to the Arcane Abilities Finesse, Magic Lore and Penetration. Whether it combines with other statuses, Wealthy or Poor depends on the tradition. Several traditions have their own named version (Folk Witch, Gruagach, Mathematicus of Bologna, Vitki)."
+    },
+    {
+      "id": "vf_greater_magical_defenses",
+      "name": "Greater Magical Defenses",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Doubles every Magical Defense bonus from the tradition's Arts and Abilities.",
+      "description": "Every Magical Defense bonus the character's hedge Arts or Supernatural Abilities give him is doubled. It does not affect true Magic Resistance such as the Parma Magica."
+    },
+    {
+      "id": "vf_known_hedge_wizard",
+      "name": "Known Hedge Wizard",
+      "type": "Flaw",
+      "category": "Story",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Known as a hedge wizard, drawing the attention of the Order and others.",
+      "description": "The character is known to be a practitioner of hedge magic, which brings the attention of magi, the Church and the local people, and stories with it."
+    },
+    {
+      "id": "vf_nightwalker_tradition",
+      "name": "Nightwalker Tradition ({tradition})",
+      "type": "Virtue",
+      "category": "General",
+      "tier": "Free",
+      "cost": 0,
+      "parameters": [
+        "tradition"
+      ],
+      "source": "HMRE",
+      "summary": "Member of a regional nightwalker tradition (benandanti, Hounds of God, kresniki, kudlaki, taltós).",
+      "description": "Membership of a regional nightwalker tradition, such as the benandanti, the Hounds of God, the kresniki, the kudlaki or the taltós, is a Free Virtue."
+    },
+    {
+      "id": "vf_no_magical_defenses",
+      "name": "No Magical Defenses",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Gets no Magical Defense bonus from any hedge Art or Ability.",
+      "description": "The character's Arts and Abilities give him none of the Magical Defenses his tradition normally grants. Only for members of traditions that have such defenses."
+    },
+    {
+      "id": "vf_expert_potion_brewer",
+      "name": "Expert Potion Brewer",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "The potion's Supernatural Ability counts double in its Lab Total.",
+      "description": "When the witch brews a potion, the Supernatural Ability it draws on counts twice in her Lab Total, raising the potion's Brew Potency."
+    },
+    {
+      "id": "vf_flawed_folk_witch_gift_opening",
+      "name": "Flawed Folk Witch Gift Opening",
+      "type": "Flaw",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": -1,
+      "parameters": [
+        "ability"
+      ],
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "One of the seven folk witch Abilities is not favored; learned later, it is at -1 to all totals.",
+      "description": "For a Gifted folk witch: one of the seven Abilities of the tradition was not opened. It is not favored and cannot be learned at character creation; if she learns it later, with the usual penalties for a new Supernatural Ability, all totals with it are at -1. May be taken once for each Ability."
+    },
+    {
+      "id": "vf_flight",
+      "name": "Flight",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Grants Flight 1: fly through a fetish or a potion.",
+      "description": "The witch can fly, with the Supernatural Ability Flight 1."
+    },
+    {
+      "id": "vf_folk_witch",
+      "name": "Folk Witch",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "HMRE",
+      "summary": "Member of the folk witches: kitchen laboratory, folk witch magic and defenses, a coven; two seasons a year spent supporting herself.",
+      "description": "The folk witch's Social Status. She may do kitchen laboratory work, cast as a folk witch, has the tradition's Magical Defenses and belongs to a coven. She must spend two seasons a year supporting herself. Compatible with many other statuses, and with Wealthy and Poor."
+    },
+    {
+      "id": "vf_harsh_moon",
+      "name": "Harsh Moon",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Suffers a Heavy Wound instead of a Medium one each month of a Witch Moon.",
+      "description": "When the witch undergoes a Witch Moon she suffers a Heavy Wound each month, rather than the usual Medium Wound."
+    },
+    {
+      "id": "vf_healing",
+      "name": "Healing",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Grants Healing 1: true healing of wounds and Fatigue by incantation or potion.",
+      "description": "The witch can heal, with the Supernatural Ability Healing 1."
+    },
+    {
+      "id": "vf_life_linked_folk_witch_magic",
+      "name": "Life-Linked Folk Witch Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "+5 to a Casting Total for each Fatigue level spent.",
+      "description": "The witch may draw on her own vitality: each Fatigue level she spends when casting adds 5 to her Casting Total."
+    },
+    {
+      "id": "vf_painless_moon",
+      "name": "Painless Moon",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Suffers no Medium Wound during the months of a Witch Moon.",
+      "description": "The witch does not suffer the Medium Wound each month of a Witch Moon. Also called Painless Witch Moon."
+    },
+    {
+      "id": "vf_poorly_trained_folk_witch",
+      "name": "Poorly Trained Folk Witch",
+      "type": "Flaw",
+      "category": "General",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "-50 xp from the folk witch apprenticeship.",
+      "description": "The witch's apprenticeship was poor: she has 50 fewer experience points from it."
+    },
+    {
+      "id": "vf_primitive_tradition",
+      "name": "Primitive Tradition",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Cannot brew potions.",
+      "description": "The witch's tradition does not know how to brew potions."
+    },
+    {
+      "id": "vf_quick_charged_items",
+      "name": "Quick Charged Items",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Makes a single-charge item in an hour per magnitude, up to their Lab Total.",
+      "description": "The magus can make single-use charged items: an effect of level up to their Lab Total takes one hour per magnitude and yields an item with one charge. All other rules for charged items apply (an Integration breakthrough from the cunning-folk)."
+    },
+    {
+      "id": "vf_rarefied_tradition",
+      "name": "Rarefied Tradition",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Uses her Abilities only through potions.",
+      "description": "The witch can use her Supernatural Abilities only by brewing them into potions."
+    },
+    {
+      "id": "vf_ritual_items",
+      "name": "Ritual Items",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Can make charged items with Ritual effects, each charge costing the Ritual's vis.",
+      "description": "The magus can make charged items with Ritual effects (an Integration breakthrough). Each charge needs as many pawns of vis as casting the effect would; the vis usable in a season and the number of charges are limited as usual."
+    },
+    {
+      "id": "vf_secondary_insight_runes",
+      "name": "Secondary Insight (Runes)",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Studying a rune gives 1 xp in every other rune of the same aett.",
+      "description": "When the vitki studies a rune, they also gain one experience point in each of the other runes of that aett. No rune gains more than one bonus point a season, and if they study runes from several aettir they choose which one gets the bonus."
+    },
+    {
+      "id": "vf_sense_of_the_mystic",
+      "name": "Sense of the Mystic",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Their Intellego magical senses need not penetrate the sensed creature's Magic Resistance.",
+      "description": "Intellego effects with a Sense Target that this magus casts or invents need not penetrate the Magic Resistance of the creatures sensed, only that of the person granted the sense (an Integration breakthrough from Second Sight)."
+    },
+    {
+      "id": "vf_short_ranged_curses",
+      "name": "Short-Ranged Curses",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "A curse fetish works only within 100 yards of its target; no effect on curse potions.",
+      "description": "The witch's curse fetishes work only while the target is within 100 yards: the curse takes effect when he comes in range, and an ongoing curse pauses when he leaves and must penetrate again when he returns. Curse potions are unaffected. Needs a Gifted folk witch or the Cursing Virtue."
+    },
+    {
+      "id": "vf_silent_tradition",
+      "name": "Silent Tradition",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Has no incantation method.",
+      "description": "The witch's tradition has no incantations: she works only through fetishes and potions. Cannot be taken with Rarefied Tradition."
+    },
+    {
+      "id": "vf_gruagach_blessing",
+      "name": "Gruagach Blessing",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the gruagach Form Blessing (granting and removing good fortune) at 0.",
+      "description": "Gives the gruagach Form Blessing, the Art of granting and removing good fortune, at 0. It advances as a normal Art."
+    },
+    {
+      "id": "vf_gruagach_curse",
+      "name": "Gruagach Curse",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the gruagach Form Curse (curses and geasa) at 0.",
+      "description": "Gives the gruagach Form Curse, the Art of curses and geasa, at 0. It advances as a normal Art."
+    },
+    {
+      "id": "vf_gruagach_shape",
+      "name": "Gruagach Shape",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the gruagach Form Shape (transformation) at 0.",
+      "description": "Gives the gruagach Form Shape, the Art of transformation, at 0. It advances as a normal Art."
+    },
+    {
+      "id": "vf_gruagach_vision",
+      "name": "Gruagach Vision",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the gruagach Form Vision (illusions and visions) at 0.",
+      "description": "Gives the gruagach Form Vision, the Art of illusions and visions, at 0. It advances as a normal Art."
+    },
+    {
+      "id": "vf_gruagach_give",
+      "name": "Gruagach Give",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Opens the gruagach Technique Give (bestowing) at 0; a Difficult Art.",
+      "description": "Gives the gruagach Technique Give, the Art of bestowing, at 0. It is a Difficult Art, advancing on the Ability table, and is useless without a Form."
+    },
+    {
+      "id": "vf_gruagach_take",
+      "name": "Gruagach Take",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Opens the gruagach Technique Take (removing) at 0; a Difficult Art.",
+      "description": "Gives the gruagach Technique Take, the Art of removing, at 0. It is a Difficult Art, advancing on the Ability table, and is useless without a Form."
+    },
+    {
+      "id": "vf_external_soul",
+      "name": "External Soul",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Soul hidden in an object: physical injury cannot kill him and he does not age, but harm to the soul object kills him.",
+      "description": "Gained only by initiation. The gruagach's soul lives in an object outside his body. A wound that would kill or incapacitate him is split into lesser wounds instead, each time risking a Warping Point, and he no longer ages, gaining a Warping Point each year instead. Any damage to the soul object kills him. Irreversible."
+    },
+    {
+      "id": "vf_fetch",
+      "name": "Fetch",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "An invisible animal companion with Second Sight 9 that warns of danger.",
+      "description": "The character has a fetch, an invisible animal companion with Second Sight 9 that warns him of danger, so that he is almost impossible to ambush. Also available to characters who are not gruagachan."
+    },
+    {
+      "id": "vf_flexible_gruagach_magic",
+      "name": "Flexible Gruagach Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Varies Formulaic spells by up to 3 magnitudes instead of 2.",
+      "description": "When varying a Formulaic spell as he casts it, the gruagach may move its level by up to three magnitudes instead of two."
+    },
+    {
+      "id": "vf_gruagach",
+      "name": "Gruagach",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "HMRE",
+      "summary": "Member of the gruagachan: gruagach laboratory work; must spend time supporting himself.",
+      "description": "The gruagach's Social Status. He may carry out the tradition's laboratory activities, and must spend time supporting himself as the core Social Status rules describe."
+    },
+    {
+      "id": "vf_gruagach_master",
+      "name": "Gruagach Master",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Leads a collective of gruagachan and teaches students one season a year.",
+      "description": "The gruagach leads a collective and spends a season each year teaching students. If Poor he must also spend the normal time supporting himself; if Wealthy he has more or better students."
+    },
+    {
+      "id": "vf_incompatible_hedge_arts",
+      "name": "Incompatible Hedge Arts",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "parameters": [
+        "arts"
+      ],
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "One Technique and Form pair he has cannot be used together.",
+      "description": "One combination of a Technique and a Form that the character has cannot be used. Taken by gruagachan and by learned magicians."
+    },
+    {
+      "id": "vf_inflexible_magic",
+      "name": "Inflexible Magic",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Varies Formulaic spells by only 1 magnitude.",
+      "description": "When varying a Formulaic spell as he casts it, the gruagach may move its level by only one magnitude."
+    },
+    {
+      "id": "vf_no_tattoo_magic",
+      "name": "No Tattoo Magic",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Cannot create or investigate tattoos.",
+      "description": "The gruagach cannot make magical tattoos or investigate them. Required of trollsynir and kolduni."
+    },
+    {
+      "id": "vf_poorly_trained_gruagach",
+      "name": "Poorly Trained Gruagach",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "-50 xp on Arts and -25 spell levels from the apprenticeship.",
+      "description": "The gruagach's training was poor: 50 fewer experience points for Arts and 25 fewer levels of spells from his apprenticeship, though not below 0."
+    },
+    {
+      "id": "vf_slow_caster_runes",
+      "name": "Slow Caster (Runes)",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Rune scripts take twice as long to carve; no single-round effects.",
+      "description": "The vitki's rune scripts take twice as long to carve. The vitki can never produce an effect in a single round, though they can manage a hasty spell in two rounds by taking the -15 penalty and leaving off their name and the description of the effect."
+    },
+    {
+      "id": "vf_subtle_opening",
+      "name": "Subtle Opening",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Arts were Opened by a subtler method: no Arts penalty when learning Supernatural Abilities.",
+      "description": "The magus's Arts were Opened with a subtler technique learned by integrating the folk witches' Opening (an Integration breakthrough). The magus suffers no penalty to study Source Quality from their Arts when learning Supernatural Abilities, though other Supernatural Abilities still penalize them."
+    },
+    {
+      "id": "vf_tattoo_mastery",
+      "name": "Tattoo Mastery",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Tattoos cost his Pictish score less in vis, but never below half the normal cost.",
+      "description": "The vis cost of the gruagach's tattoos is reduced by his Pictish score, but never below half the normal cost."
+    },
+    {
+      "id": "vf_entreat_the_powers",
+      "name": "Entreat the Powers",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "May call on any realm's powers to offset a negative realm-interaction modifier.",
+      "description": "The magician may call on the powers of any realm to offset a negative realm interaction: an Entreat Total (stress die + Presence + that realm's Lore) is added to a Casting Score or Lab Total, but never by more than the negative aura modifier, and it never helps reach the base total or Penetration. Granted by Opening to the learned magicians' tradition."
+    },
+    {
+      "id": "vf_entreat_the_realm_powers",
+      "name": "Entreat the {realm} Powers",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "realm"
+      ],
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "As Entreat the Powers, for one chosen realm.",
+      "description": "As Entreat the Powers, but the magician can call only on the powers of one chosen realm."
+    },
+    {
+      "id": "vf_fortunam",
+      "name": "Fortunam",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the learned magicians' Form Fortunam (luck) at 0.",
+      "description": "Gives the learned magicians' Form Fortunam, the Art of luck, at 0. It advances as a normal Art."
+    },
+    {
+      "id": "vf_magicam",
+      "name": "Magicam",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the learned magicians' Form Magicam (magic) at 0.",
+      "description": "Gives the learned magicians' Form Magicam, the Art of magic, at 0. It advances as a normal Art."
+    },
+    {
+      "id": "vf_salutem",
+      "name": "Salutem",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Opens the learned magicians' Form Salutem (health) at 0.",
+      "description": "Gives the learned magicians' Form Salutem, the Art of health, at 0. It advances as a normal Art."
+    },
+    {
+      "id": "vf_succurro",
+      "name": "Succurro",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Opens the learned magicians' Technique Succurro (aid) at 0; a Difficult Art.",
+      "description": "Gives the learned magicians' Technique Succurro, the Art of aid, at 0. It is a Difficult Art, advancing on the Ability table."
+    },
+    {
+      "id": "vf_intervention_prone",
+      "name": "Intervention Prone",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Rolls for Intervention on any botch.",
+      "description": "The magician must check for Intervention whenever he botches, not only when one botch brings two or more Warping Points."
+    },
+    {
+      "id": "vf_laboratory_magician",
+      "name": "Laboratory Magician",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Cannot memorise charms and casts only from texts; with No Text Casting, no charms at all.",
+      "description": "The magician cannot learn charms by heart and can cast only from a written text. With No Text Casting as well, he cannot cast charms at all. Required of mythic alchemists."
+    },
+    {
+      "id": "vf_mathematicus_of_bologna",
+      "name": "Mathematicus of Bologna",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "HMRE",
+      "summary": "Member of the learned magicians; needs a Technique and a Form, and a mundane Social Status as well.",
+      "description": "The learned magician's Social Status. He needs at least one Technique and one Form, and must also have a mundane Social Status such as Clerk, Magister in Artibus or Priest."
+    },
+    {
+      "id": "vf_mythic_alchemy",
+      "name": "Mythic Alchemy",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Grants Mythic Alchemy 1: alchemy that truly transmutes matter.",
+      "description": "The character is a true alchemist, with the Supernatural Ability Mythic Alchemy 1. His reagents make permanent, non-magical changes to matter. Required of mythic alchemists."
+    },
+    {
+      "id": "vf_mythic_herbalism",
+      "name": "Mythic Herbalism",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HoH:S; HMRE",
+      "summary": "Grants Mythic Herbalism 1: brew concoctions that heal, poison or grant physical benefits.",
+      "description": "The character can brew concoctions from plants and other ingredients, with the Supernatural Ability Mythic Herbalism 1. Taught by the Pharmacopoeians; required of cunning-folk."
+    },
+    {
+      "id": "vf_natural_magician",
+      "name": "Natural Magician",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "In a Divine or Infernal aura, adds Philosophiae to season-long magic work, capped by the negative aura modifier.",
+      "description": "For activities of a season or longer with a Magic Supernatural Ability in a Divine or Infernal aura, the character adds his Philosophiae to the Casting Total, Lab Total or roll, but never by more than the negative realm modifier. It never helps reach the base total or Penetration, and stacks with Entreat the Powers."
+    },
+    {
+      "id": "vf_no_chartae_making",
+      "name": "No Chartae Making",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Cannot make chartae.",
+      "description": "The magician cannot make chartae, the single-use charm devices."
+    },
+    {
+      "id": "vf_no_text_casting",
+      "name": "No Text Casting",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Cannot cast charms from a text.",
+      "description": "The magician cannot cast a charm by reading it from a text, only from memory."
+    },
+    {
+      "id": "vf_strong_amulet_magic",
+      "name": "Strong Amulet Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "+10 to Lab Totals for amulets and chartae.",
+      "description": "The magician adds 10 to his Lab Total when making amulets and chartae."
+    },
+    {
+      "id": "vf_strong_verbal_charms",
+      "name": "Strong Verbal Charms",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Known charms are not halved; charms from a text are halved instead of divided by 5.",
+      "description": "A charm the magician knows by heart uses his full Casting Score plus the die, rather than half of it; a charm cast from a text is halved rather than divided by five."
+    },
+    {
+      "id": "vf_skilled_master",
+      "name": "Skilled Master",
+      "type": "Virtue",
+      "category": "General",
+      "tier": "Minor",
+      "cost": 1,
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "+50 xp on Arts, Abilities and charms from the learned magician's training.",
+      "description": "The learned magician's master was skilled: 50 more experience points for Arts, Abilities and charms from his training."
+    },
+    {
+      "id": "vf_poorly_trained_magician",
+      "name": "Poorly Trained Magician",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "-50 xp on Arts and charms from the learned magician's training.",
+      "description": "The learned magician's training was poor: 50 fewer experience points for Arts and charms, though not below 0."
+    },
+    {
+      "id": "vf_half_taltos",
+      "name": "Half Taltós",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "A one-minute ritual gives Second Sight for a minute or a battle; his own weapons harm spirits.",
+      "description": "A one-minute ritual gives the character Second Sight for a minute or for one battle; each use costs a Fatigue level unless he makes an Athletics + Stamina roll against 6. His own weapons can harm spirits, and a new one takes a month to attune. Grogs may take it."
+    },
+    {
+      "id": "vf_hamr",
+      "name": "Hamr",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "A trance near a battlefield sends out an animal-shaped phantasticum; needs a prop.",
+      "description": "In a trance near a battlefield the character sends out a corporeal, animal-shaped phantasticum. He needs a prop such as a hide or a drug, and has none of the other nightwalker powers."
+    },
+    {
+      "id": "vf_nightwalker",
+      "name": "Nightwalker",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Strays from the body while insensible as a phantasticum, and can lead others astray.",
+      "description": "While his body lies insensible, the nightwalker's spirit strays as a phantasticum, tangible or not, in human, animal or elemental form, and can lead others' spirits with it. He has Second Sight 1, usable only in phantastic form, and can harm spirits while intangible. His body appears dead and is vulnerable, and injuries to the phantasticum reflect on it."
+    },
+    {
+      "id": "vf_sleepwalker",
+      "name": "Sleepwalker",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Fights cloaked in a larger hybrid phantasticum; cannot stray.",
+      "description": "The character fights cloaked in a larger, hybrid phantasticum, but cannot stray and lacks nearly all other nightwalker powers. He needs props."
+    },
+    {
+      "id": "vf_major_magical_deficiency",
+      "name": "Major Magical Deficiency",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "parameters": [
+        "runes"
+      ],
+      "source": "HMRE",
+      "summary": "Casting Total halved for scripts with any rune of one aett, or three chosen runes unusable.",
+      "description": "Either the vitki's Casting Total is halved for any script containing a rune of one aett, or he cannot use three chosen runes at all."
+    },
+    {
+      "id": "vf_minor_magical_deficiency",
+      "name": "Minor Magical Deficiency",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "parameters": [
+        "runes"
+      ],
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "Casting Total halved for scripts with any of three runes, or one rune unusable.",
+      "description": "Either the vitki's Casting Total is halved for any script containing one of three chosen runes, or he cannot use one chosen rune at all. A student whose master is below 2 in a rune gains this Flaw for it."
+    },
+    {
+      "id": "vf_major_rune_focus",
+      "name": "Major Rune Focus",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "parameters": [
+        "focus"
+      ],
+      "source": "HMRE",
+      "summary": "Double the rune score for effects of one focus inscribed in its material.",
+      "description": "For effects of the chosen kind inscribed in its material, the vitki doubles the rune score he uses: Victory on metal weapons and armour, Ale on horn, leather or his own fingernails, Fertility on coins and jewellery, Sea on ships, carts and sails, Healing on bone, Speech on wood, Wisdom on stone, Strength on flesh. Only one focus at character creation."
+    },
+    {
+      "id": "vf_minor_rune_focus",
+      "name": "Minor Rune Focus",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "rune"
+      ],
+      "source": "HMRE",
+      "summary": "As Major Rune Focus, for one chosen rune.",
+      "description": "As Major Rune Focus, but for one chosen rune, used as the target rune or the effect rune."
+    },
+    {
+      "id": "vf_mastered_rune",
+      "name": "Mastered Rune",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "rune"
+      ],
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "Scripts with one rune: 3 fewer botch dice and casting penalties halved.",
+      "description": "For scripts using the chosen rune the vitki rolls three fewer botch dice (at least one) and all casting penalties are halved. May be taken once for each rune."
+    },
+    {
+      "id": "vf_nameless_runes",
+      "name": "Nameless Runes",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "No penalty for omitting his name from a script.",
+      "description": "The vitki suffers no penalty for leaving his name off a script, though he gains no bonus for including it. The runes still link to him magically."
+    },
+    {
+      "id": "vf_natt_thel_prone",
+      "name": "Nátt-thel Prone",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Checks for Nátt-thel on any single botch.",
+      "description": "The vitki must check for Nátt-thel whenever he botches, not only when one botch brings two or more Warping Points. A student Opened by a master in or lost to Nátt-thel gains this Flaw."
+    },
+    {
+      "id": "vf_secret_runes",
+      "name": "Secret Runes",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "repeatable": true,
+      "max_count": 2,
+      "source": "HMRE",
+      "summary": "Hidden description costs no penalty and no description only -5; taken twice, no penalty at all.",
+      "description": "Hiding a script's description costs the vitki no penalty, and omitting it only -5, but he gains no bonus for a normal inscription (the emphasis bonus still applies). Taken twice, there is no penalty at all."
+    },
+    {
+      "id": "vf_short_lived_runes",
+      "name": "Short-Lived Runes",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Rune effects are not permanent: each lasts a secretly rolled time.",
+      "description": "The vitki's effects are not permanent: for each one the storyguide secretly rolls on the Nátt-thel Duration chart, adding one for each pawn of vis or Confidence Point spent in casting. The Flaw's own entry (p. 123) calls it Major; the Vitkar Flaws list on the same page shows it as Minor."
     },
     {
       "id": "vf_the_enigma",
@@ -2497,6 +3513,184 @@
       "source": "DE",
       "summary": "25-point pool buys max effect level (2 points per level) and Penetration (1 per point) for a narrow power; 1-3 Fatigue per use.",
       "description": "The character has a supernatural power with a narrow range of effects, like the ability to cast spontaneous spells that are associated with a single type of magic. This power is like a magical focus, in that all of the possible effects have to be related to a specialty that is smaller than a single Hermetic Form. The examples for Major Magical Focus show the scope of this power. This Virtue grants a pool of 25 points. The maximum level of effect and Penetration both start at zero. It costs 2 points to raise the maximum level of effect by 1, and 1 point to raise the Penetration by 1. Thus, 25 points can allow a maximum level of 10 with a Penetration of 5, or a maximum level of 5 with a Penetration of 15, or combinations in between. The power has an Initiative score equal to the character's Quickness - the maximum magnitude of the effect. The character may create any effect within the scope of the power, up to the level of the effect. It costs one Fatigue level to activate this power for an effect of level 25 or lower, two Fatigue levels to activate it if the effect has a level of 26 to 50, and three for 51 to 75. This Virtue may be taken more than once, and the points gained may be combined. This Virtue may be associated with any supernatural realm. If you have access to other books, such as Realms of Power: The Divine, Realms of Power: The Infernal, Realms of Power: Faerie, or Hedge Magic Revised Edition, you may want to base the power on a different system of supernatural powers, to get something more appropriate to the character. If you do, remember that the levels of effects may work on different scales for different systems, and you may want to change the cost of a level of effect. The power must be associated with the same supernatural realm as the system on which it is based. (If you have access to other books, you may want to restrict powers based on Hermetic magic to the Magic realm.)"
+    },
+    {
+      "id": "vf_vulnerable_to_form",
+      "name": "Vulnerable to {form}",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "parameters": [
+        "form"
+      ],
+      "repeatable": true,
+      "max_count": 4,
+      "source": "HMRE",
+      "summary": "Damage from one element ignores the protection of the opposing element; Hermetic version weakens Magic Resistance and Soak against it.",
+      "description": "The character subtracts the opposing element's Trait from Soak against damage from the chosen element, and does not add the chosen Form's Trait to recovery. The Hermetic version subtracts the opposing Form's bonus from Magic Resistance and Soak against that element. Needs a score in the opposing Form; may be taken for up to four different Forms.",
+      "extra_categories": [
+        "Hermetic"
+      ]
+    },
+    {
+      "id": "vf_weak_elemental_resistance",
+      "name": "Weak Elemental Resistance",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Elemental Traits do not add to Soak against elemental damage.",
+      "description": "The character's elemental Personality Traits do not protect him against damage from the elements. The Hermetic version gives no Form bonus to Magic Resistance against elemental damage or against Aquam, Auram, Ignem and Terram spells, and no Soak bonus from those Forms.",
+      "extra_categories": [
+        "Hermetic"
+      ]
+    },
+    {
+      "id": "vf_unstable_magic",
+      "name": "Unstable Magic",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Potions and fetishes stop working after a year and a day.",
+      "description": "Everything the witch makes in her kitchen, potions and fetishes alike, stops working a year and a day after it is made."
+    },
+    {
+      "id": "vf_well_trained_folk_witch",
+      "name": "Well-Trained Folk Witch",
+      "type": "Virtue",
+      "category": "General",
+      "tier": "Minor",
+      "cost": 1,
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "+50 xp from the folk witch apprenticeship.",
+      "description": "The witch had a good apprenticeship: she has 50 more experience points from it. May be taken more than once."
+    },
+    {
+      "id": "vf_well_trained_gruagach",
+      "name": "Well-Trained Gruagach",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "repeatable": true,
+      "source": "HMRE",
+      "summary": "+50 xp on Arts and +25 spell levels from the apprenticeship.",
+      "description": "The gruagach was well trained: 50 more experience points for Arts and 25 more levels of spells from his apprenticeship."
+    },
+    {
+      "id": "vf_transformation_prone",
+      "name": "Transformation Prone",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Rolls for Transformation on any single botch.",
+      "description": "The gruagach must check for Transformation whenever he botches, not only when one botch brings two or more Warping Points."
+    },
+    {
+      "id": "vf_weak_tattoo_magic",
+      "name": "Weak Tattoo Magic",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "Lab Total halved when creating or investigating tattoos.",
+      "description": "The gruagach's Lab Total is halved when he makes or investigates tattoos."
+    },
+    {
+      "id": "vf_tueor",
+      "name": "Tueor",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Opens the learned magicians' Technique Tueor (protection) at 0; a Difficult Art.",
+      "description": "Gives the learned magicians' Technique Tueor, the Art of protection, at 0. It is a Difficult Art, advancing on the Ability table."
+    },
+    {
+      "id": "vf_vulnero",
+      "name": "Vulnero",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "HMRE",
+      "summary": "Opens the learned magicians' Technique Vulnero (harm) at 0; a Difficult Art.",
+      "description": "Gives the learned magicians' Technique Vulnero, the Art of harm, at 0. It is a Difficult Art, advancing on the Ability table."
+    },
+    {
+      "id": "vf_weak_amulets",
+      "name": "Weak Amulets",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "-5 to Lab Totals for amulets.",
+      "description": "The magician subtracts 5 from his Lab Total when making amulets."
+    },
+    {
+      "id": "vf_weak_chartae",
+      "name": "Weak Chartae",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HMRE",
+      "summary": "-5 to Lab Totals for chartae.",
+      "description": "The magician subtracts 5 from his Lab Total when making chartae."
+    },
+    {
+      "id": "vf_weak_verbal_charms",
+      "name": "Weak Verbal Charms",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "HMRE",
+      "summary": "Charm totals are always divided by 5, known or read from a text.",
+      "description": "Every charm the magician casts, whether known or read from a text, has its total divided by five."
+    },
+    {
+      "id": "vf_weather_sense",
+      "name": "Weather Sense",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "Foretells the weather, like the sailor's Foretaste of the Morrow, with no roll.",
+      "description": "Often held by those born with a caul: the character can foretell the coming weather as a sailor's Foretaste of the Morrow does, without needing a roll."
+    },
+    {
+      "id": "vf_versatile_phantasticum",
+      "name": "Versatile Phantasticum",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "HMRE",
+      "summary": "May fight in animal or elemental form outside the fertility battles.",
+      "description": "The nightwalker may take and fight in his animal or elemental form outside the fertility battles. Required of kresniki and kudlaki."
+    },
+    {
+      "id": "vf_vitki",
+      "name": "Vitki",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "HMRE",
+      "summary": "A rune wizard; may learn Arcane, Martial and Academic Abilities fitting his master's background.",
+      "description": "The vitki's Social Status. He may learn Arcane, Martial and Academic Abilities that fit his master's background."
     },
     {
       "id": "vf_foe_art",
@@ -14215,6 +15409,126 @@
       "source": "TSE",
       "summary": "As Elysian Ecstasy, and a strong channeling also grants the god's minor or major powers, each use a Warping Point; initiation brings a Major Personality Flaw of the god's.",
       "description": "The stronger and more dangerous form of Lucian the Scholar's Mystery, initiated with a Major Personality Flaw suited to the god whose powers are sought. It is used as Elysian Ecstasy and gives the same Personality and Sympathy Traits, and also some of the god's powers: at Ease Factor 12, one minor power; at 15, two minor powers; at 18, one major power or three minor ones; at 21 or more, two major powers, six minor ones, or one major and three minor. The powers last as long as the traits, and each use of one gives the character a Warping Point."
+    },
+    {
+      "id": "vf_type_controlling_major",
+      "name": "{type} Controlling",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "parameters": [
+        "type"
+      ],
+      "source": "HMRE",
+      "summary": "Opens the elementalist Technique Controlling at 0 (Medicinal, Philosophical or Theurgical); Major for an elementalist's first Technique.",
+      "description": "Gives the elementalist Art Controlling, commanding and moving its targets, of one type: Medicinal, Philosophical or Theurgical. The first Technique an elementalist takes is a Major Virtue; further ones are Minor. The three types share one Art score."
+    },
+    {
+      "id": "vf_type_controlling",
+      "name": "{type} Controlling",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "type"
+      ],
+      "repeatable": true,
+      "max_count": 2,
+      "source": "HMRE",
+      "summary": "Opens another type of the elementalist Technique Controlling; Minor when it is not the elementalist's first Technique.",
+      "description": "As the Major version, for an elementalist who already has a Technique. Each Technique may be taken in up to three types (Medicinal, Philosophical, Theurgical), which share one Art score."
+    },
+    {
+      "id": "vf_type_divining_major",
+      "name": "{type} Divining",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "parameters": [
+        "type"
+      ],
+      "source": "HMRE",
+      "summary": "Opens the elementalist Technique Divining at 0 (Medicinal, Philosophical or Theurgical); Major for an elementalist's first Technique.",
+      "description": "Gives the elementalist Art Divining, sensing and communing with its targets, of one type: Medicinal, Philosophical or Theurgical. The first Technique an elementalist takes is a Major Virtue; further ones are Minor. The three types share one Art score."
+    },
+    {
+      "id": "vf_type_divining",
+      "name": "{type} Divining",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "type"
+      ],
+      "repeatable": true,
+      "max_count": 2,
+      "source": "HMRE",
+      "summary": "Opens another type of the elementalist Technique Divining; Minor when it is not the elementalist's first Technique.",
+      "description": "As the Major version, for an elementalist who already has a Technique. Each Technique may be taken in up to three types (Medicinal, Philosophical, Theurgical), which share one Art score."
+    },
+    {
+      "id": "vf_type_refining_major",
+      "name": "{type} Refining",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "parameters": [
+        "type"
+      ],
+      "source": "HMRE",
+      "summary": "Opens the elementalist Technique Refining at 0 (Medicinal, Philosophical or Theurgical); Major for an elementalist's first Technique.",
+      "description": "Gives the elementalist Art Refining, seasonal refining of potions, Might and vis from its targets, of one type: Medicinal, Philosophical or Theurgical. The first Technique an elementalist takes is a Major Virtue; further ones are Minor. The three types share one Art score."
+    },
+    {
+      "id": "vf_type_refining",
+      "name": "{type} Refining",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "type"
+      ],
+      "repeatable": true,
+      "max_count": 2,
+      "source": "HMRE",
+      "summary": "Opens another type of the elementalist Technique Refining; Minor when it is not the elementalist's first Technique.",
+      "description": "As the Major version, for an elementalist who already has a Technique. Each Technique may be taken in up to three types (Medicinal, Philosophical, Theurgical), which share one Art score."
+    },
+    {
+      "id": "vf_type_summoning_major",
+      "name": "{type} Summoning",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "parameters": [
+        "type"
+      ],
+      "source": "HMRE",
+      "summary": "Opens the elementalist Technique Summoning at 0 (Medicinal, Philosophical or Theurgical); Major for an elementalist's first Technique.",
+      "description": "Gives the elementalist Art Summoning, calling up and binding its targets, of one type: Medicinal, Philosophical or Theurgical. The first Technique an elementalist takes is a Major Virtue; further ones are Minor. The three types share one Art score. Elemental Summoning is a different Art from the Goetic (spirit) Summoning."
+    },
+    {
+      "id": "vf_type_summoning",
+      "name": "{type} Summoning",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "parameters": [
+        "type"
+      ],
+      "repeatable": true,
+      "max_count": 2,
+      "source": "HMRE",
+      "summary": "Opens another type of the elementalist Technique Summoning; Minor when it is not the elementalist's first Technique.",
+      "description": "As the Major version, for an elementalist who already has a Technique. Each Technique may be taken in up to three types (Medicinal, Philosophical, Theurgical), which share one Art score."
     }
   ]
 }

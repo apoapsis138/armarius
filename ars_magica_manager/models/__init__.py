@@ -72,6 +72,7 @@ from .creature import Creature as Creature
 from .creature import CreatureAttack as CreatureAttack
 from .creature import CreaturePower as CreaturePower
 from .definitions import COVENANT_BOON_HOOK_CATEGORIES as COVENANT_BOON_HOOK_CATEGORIES
+from .definitions import TRADITION_REALMS as TRADITION_REALMS
 from .definitions import WEAPON_TABLES as WEAPON_TABLES
 from .definitions import AbilityDef as AbilityDef
 from .definitions import ArmorDef as ArmorDef
@@ -80,6 +81,7 @@ from .definitions import CovenantBoonHookDef as CovenantBoonHookDef
 from .definitions import CovenantSituationDef as CovenantSituationDef
 from .definitions import HouseDef as HouseDef
 from .definitions import LabVirtueFlawDef as LabVirtueFlawDef
+from .definitions import TraditionDef as TraditionDef
 from .definitions import VirtueFlawDef as VirtueFlawDef
 from .definitions import WeaponDef as WeaponDef
 from .devices import CHARGED as CHARGED

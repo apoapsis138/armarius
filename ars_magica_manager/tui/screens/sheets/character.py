@@ -16,7 +16,7 @@ from textual.widgets import (
 )
 
 from .... import books as bk
-from .... import casting_text, seasons
+from .... import casting_text, seasons, traditions
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
@@ -28,9 +28,11 @@ from ....models import (
     LINE,
     Character,
     Saga,
+    TraditionDef,
 )
 from ....rules import creation_virtues as cv
 from ....sheets import character as cs
+from ....traditions import tradition_list, tradition_section, tradition_tab
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -129,6 +131,13 @@ class CharacterSheetView(SheetView):
                 yield self._tab("Virtues & Flaws", "tab-vf", self._virtues_flaws_tab)
             if scores and character.type == "magus":
                 yield self._tab("Hermetic Magic", "tab-hermetic", self._hermetic_tab)
+            if scores:
+                for tradition in traditions.of(character):
+                    yield self._tab(
+                        tradition.title,
+                        tradition_tab(tradition.id),
+                        lambda t=tradition: self._tradition_tab(t),
+                    )
             if not sketch:
                 yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
                 yield self._tab(
@@ -170,6 +179,39 @@ class CharacterSheetView(SheetView):
                 lambda: self._ability_info_text(None),
                 id="ability-info",
             )
+
+    def _tradition_tab(self, tradition: TraditionDef) -> ComposeResult:
+        """A tradition's chapter: its Arts and Abilities the character has,
+        grouped by the part they play, and the chosen one's details."""
+        section = tradition_section(tradition.id)
+        with Vertical(classes="panel-body"):
+            with (
+                VerticalScroll(),
+                SheetSection(title="Arts and Abilities", id=section),
+            ):
+                yield self._list(
+                    section,
+                    lambda: st.grouped_ability_rows(
+                        self.character.abilities,
+                        traditions.chapter_groups(self.character, tradition),
+                        self.character.virtues_flaws,
+                    ),
+                    id=tradition_list(tradition.id),
+                )
+            yield self._panel(
+                section,
+                lambda: self._ability_info_text(None),
+                id=f"trad-{tradition.id}-info",
+            )
+
+    def selected_tradition_ability(self, tradition_id: str) -> int | None:
+        """Index into character.abilities of the row chosen in a
+        tradition's chapter, or None."""
+        try:
+            chosen = self.query_one(f"#{tradition_list(tradition_id)}", SelectableList)
+        except NoMatches:
+            return None
+        return chosen.selected_data_index
 
     def _diary_tab(self) -> ComposeResult:
         with Vertical(classes="panel-body"):
@@ -574,6 +616,12 @@ class CharacterSheetView(SheetView):
                 lab_text.diary_info_text(self.character.diary, event.data_index)
             )
             return
+        if list_id.startswith("trad-") and list_id.endswith("-list"):
+            event.stop()
+            self.query_one(f"#{list_id.removesuffix('-list')}-info", Static).update(
+                self._ability_info_text(event.data_index)
+            )
+            return
         if list_id == "abilities-list":
             event.stop()
             self.query_one("#ability-info", Static).update(
@@ -622,7 +670,11 @@ class CharacterSheetView(SheetView):
         return st.characteristics_text(self.character.characteristics)
 
     def _ability_rows(self) -> list[tuple[int | None, str]]:
-        return st.ability_rows(self.character.abilities, self.character.virtues_flaws)
+        return st.ability_rows(
+            self.character.abilities,
+            self.character.virtues_flaws,
+            traditions.claimed(self.character),
+        )
 
     def _ability_info_text(self, index: int | None) -> str:
         return st.ability_info_text(

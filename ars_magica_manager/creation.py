@@ -121,7 +121,11 @@ def _add_xp(character: Character, target: str, xp: int) -> None:
     if ability is None:
         if xp <= 0:
             return
-        ability = Ability(target, creation_access.ability_category(target))
+        ability = Ability(
+            target,
+            creation_access.ability_category(target),
+            xp_table=creation_access.ability_xp_table(target),
+        )
         character.abilities.append(ability)
     ability.xp = max(0, ability.xp + xp)
     if ability.xp == 0 and not ability.specialty:

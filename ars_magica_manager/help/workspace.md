@@ -466,6 +466,20 @@ Sources of the saga's own, such as a house-rules list or a fan supplement, that 
 **Edit** edits the source last clicked; a new abbreviation is carried to the House Rules that cite it. **Delete** won't delete a source a House Rule still cites: the message names them.
 <!-- /gui -->
 
+### Traditions Offered
+<!-- help: section-traditions -->
+
+The non-Hermetic magical traditions whose book is in play (the six of Hedge Magic Revised Edition so far), and whether the saga offers each. Every tradition starts off, so the lists stay short: turn on only the ones your saga uses. A character can join a tradition the saga offers, which gives them [a chapter](help:tradition-chapter) for its Arts and Abilities.
+
+<!-- tui -->
+`e` opens a tick for each tradition: tick the ones the saga offers.
+<!-- /tui -->
+<!-- gui -->
+**Edit** opens a tick for each tradition: tick the ones the saga offers.
+<!-- /gui -->
+
+Turning a tradition off, or taking its book out of play, stops it being offered; characters who already belong to it keep their chapter, and the choice is kept for when the book comes back.
+
 ## Catalogs tab
 <!-- help: tab-content-catalogs -->
 

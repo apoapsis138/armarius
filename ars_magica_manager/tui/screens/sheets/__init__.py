@@ -16,6 +16,7 @@ from ....sections import LIBRARY_SECTIONS as LIBRARY_SECTIONS
 from ....sections import PLAYERS_SECTION as PLAYERS_SECTION
 from ....sections import SOURCES_SECTION as SOURCES_SECTION
 from ....sections import SPELL_SECTION as SPELL_SECTION
+from ....sections import TRADITIONS_SECTION as TRADITIONS_SECTION
 from .base import LazyTabPane as LazyTabPane
 from .base import SheetView as SheetView
 from .bestiary import BestiarySheetView as BestiarySheetView

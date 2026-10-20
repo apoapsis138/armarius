@@ -459,7 +459,7 @@ def test_the_stale_key_fixture_holds_every_saved_record():
     stale-key test below covers it (a new saved record must be added)."""
     not_saved = {
         "AbilityDef", "ArmorDef", "CharacterTemplateDef", "CovenantSituationDef",
-        "HouseDef", "LabFeatureDef", "ShapeMaterialDef", "WeaponDef",
+        "HouseDef", "LabFeatureDef", "ShapeMaterialDef", "TraditionDef", "WeaponDef",
     }  # fmt: skip
     every = {
         cls.__name__

@@ -47,6 +47,7 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Concilium | Tribunals, their customs and their meetings |
 | Insignia | Heraldry and the app's artwork |
 | Peregrinatio | The Tribunal packs: each Tribunal book, ready to import |
+| Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
 
 ## Editions
 
@@ -105,6 +106,44 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 2.106.0 — 2026-10-20
+
+### Hedge Magic
+
+- **Hedge traditions.** The six traditions of Hedge Magic, Revised
+  Edition (elementalists, folk witches, gruagachan, learned magicians,
+  nightwalkers and vitkir) are in the app. Each has its own switch under
+  Traditions Offered on the Books tab, off until you turn it on, and is
+  offered only while its book is in play.
+- **A chapter per tradition.** A character joins a tradition from More,
+  Traditions (on the desktop, the Traditions button in the Abilities
+  chapter). It then gets a tab or chapter named after the tradition's
+  magic, such as Rune Magic, listing its Arts and Abilities grouped as
+  Techniques, Forms, Runes and so on. Those leave the Abilities chapter.
+- **Hedge Arts score as the book says.** Most hedge Arts and the vitkir's
+  runes advance on the Art table, as Hermetic Arts do; Difficult Arts
+  (the elementalist Forms, the gruagach's Give and Take, the learned
+  magicians' Techniques) advance as Abilities. Study, teaching and the
+  seasons use the same table.
+- **A guide.** Help has a new how-to, How to play a hedge wizard.
+
+### Florilegium
+
+- **Hedge Magic's Arts, Virtues and Flaws.** 54 hedge Arts and Abilities
+  and 110 Virtues and Flaws, checked against the printed book and Atlas
+  Games' errata. Short-Lived Runes is a Major Flaw, as its own entry
+  says; the book's sidebar lists it as Minor.
+- **One Divining Art for the elementalists.** The book gives each
+  elementalist Technique one score shared by its medicinal,
+  philosophical and theurgical kinds, so Medicinal Divining is now
+  Elementalist Divining. A saved Medicinal Divining loads as Elementalist
+  Divining, at the same score.
+
+### Insignia
+
+- **Marks for the hedge Arts.** Every new hedge Art and Ability has its
+  own mark on the desktop sheet, drawn in code like the rest.
 
 ## 2.105.0 — 2026-10-20
 

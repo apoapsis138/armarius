@@ -18,7 +18,7 @@ from typing import Any
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc
-from .. import sourcebooks
+from .. import sourcebooks, traditions
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..commands import Choice, Choose, Confirm, Form, Refuse, SectionOps
@@ -682,6 +682,53 @@ def books_form(saga: Saga) -> Form:
         )
 
     return Form("Books in play", lambda: books_fields(saga), apply)
+
+
+# ------------------------------------------------------------- traditions
+
+#: A traditions form's check for a tradition is keyed by this and its id.
+TRADITION_KEY = "tradition-"
+
+
+def traditions_fields(saga: Saga) -> list[DialogField]:
+    """A tick for each non-Hermetic tradition whose book is in play, ticked
+    while the saga offers it."""
+    shown = traditions.in_play(saga)
+    if not shown:
+        return [
+            DialogField(
+                "_none",
+                "Traditions",
+                "info",
+                "No book with a tradition is in play.",
+            )
+        ]
+    return [
+        DialogField(
+            TRADITION_KEY + t.id,
+            f"{t.name} ({t.source})",
+            "check",
+            traditions.is_on(saga, t.id),
+        )
+        for t in shown
+    ]
+
+
+def apply_traditions(saga: Saga, values: dict[str, Any]) -> None:
+    """Turn each listed tradition on or off; one whose book is out of play
+    keeps its switch."""
+    for key, ticked in values.items():
+        if key.startswith(TRADITION_KEY):
+            traditions.set_on(saga, key.removeprefix(TRADITION_KEY), bool(ticked))
+
+
+def traditions_form(saga: Saga) -> Form:
+    """Choose the traditions the saga offers."""
+    return Form(
+        "Traditions offered",
+        lambda: traditions_fields(saga),
+        lambda values: apply_traditions(saga, values),
+    )
 
 
 # ---------------------------------------------------------------- catalogs

@@ -331,6 +331,9 @@ class Character:
     arts: dict[str, ArtScore] = field(default_factory=dict)
     abilities: list[Ability] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
+    #: The non-Hermetic traditions the character belongs to
+    #: (tradition_catalog.json ids); each has its own chapter of the sheet.
+    traditions: list[str] = field(default_factory=list)
     #: Spells known, each with its own Spell Mastery.
     spells_known: list[KnownSpell] = field(default_factory=list)
     #: Spells this magus invented: they live with the magus, not the catalog

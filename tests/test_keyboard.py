@@ -238,7 +238,7 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         tabbed = view.query_one(TabbedContent)
         strip = next(line for line in screen_lines(app) if "1 Description" in line)
         assert "2 Abilities  3 Virtues & Flaws  4 Hermetic Magic" in strip
-        assert "5 Inventory  6 Planning  7 Diary" in strip
+        assert "5 Rune Magic  6 Inventory  7 Plannin" in strip
 
         await pilot.press("3")
         assert await wait_until(pilot, lambda: tabbed.active == "tab-vf")
@@ -256,8 +256,8 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         await pilot.press("3")
         assert await wait_until(pilot, lambda: app.focused is virtues)
         # A number past the last tab does nothing.
-        assert not workspace.check_action("show_tab", (8,))
-        await pilot.press("8")
+        assert not workspace.check_action("show_tab", (9,))
+        await pilot.press("9")
         await pilot.pause()
         assert tabbed.active == "tab-vf"
 
@@ -466,6 +466,7 @@ async def test_more_on_a_record_offers_export_and_its_mode():
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open(pilot, app, "character")
         assert [item.label for item in workspace._more_items()] == [
+            "Traditions",
             "Export",
             "Update from a File",
             "In Creation / In Play",

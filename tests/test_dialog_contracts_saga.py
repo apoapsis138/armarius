@@ -257,6 +257,13 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: s.hidden_entries,
         expected={},
     ),
+    "edit traditions offered": Contract(
+        prefill={"Vitkir (HMRE)": True, "Folk Witches (HMRE)": False},
+        edits={"Folk Witches (HMRE)": True},
+        saved=lambda s: s.traditions,
+        expected=["trad_folk_witches", "trad_vitkir"],
+        shown={"#section-traditions": "Traditions Offered (2 of 6)"},
+    ),
 }
 
 

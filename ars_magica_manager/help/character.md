@@ -292,8 +292,13 @@ Abilities from supplements (the Divine's Holy
 Powers and Methods, Mythic Herbalism, Mechanica of Heron...) are listed only
 while their book is in play. **Hedge Art** is the category for a hedge
 tradition's Arts, such as the learned elementalists' Elementalist Fire: like
-a Supernatural Ability, one is learned through the Virtue that grants it,
-and it advances on the Ability XP table.
+a Supernatural Ability, one is learned through the Virtue that grants it.
+Most hedge Arts, and Accelerated Abilities such as the vitkir's runes,
+advance on the Art XP table (1 XP for a score of 1); a Difficult Art, such
+as Elementalist Fire or the gruagach's Give, advances on the Ability XP
+table (Hedge Magic Revised Edition, Chapter 1: Difficult Arts, Accelerated
+Abilities). A character who belongs to a tradition sees its Arts and
+Abilities in the tradition's own chapter, not here.
 
 **The app works out:** the score from the XP, and the XP the next score
 needs, shown as score and then XP over the next total (Ars Magica Definitive
@@ -306,8 +311,11 @@ total XP the next score needs ("Latin: Score 2 · Score 3 at 30 xp").
 Each Ability has a mark beside its name, cut like the
 Art symbols: a dark block with a light figure, such as a quill for every
 Dead Language or a shield for Parma Magica. The chosen Ability's mark is
-shown larger, with its engraved lines, in the panel beside the list. An
-Ability the app has no mark for shows its category's. The way to the next
+shown larger, with its engraved lines, in the panel beside the list. The
+hedge traditions' Arts and Abilities have marks of their own: each rune
+of the Vitkir is its Elder Futhark letter, all cut at one size, and the
+gruagachan's are taken from the Pictish symbol stones. An Ability the
+app has no mark for shows its category's. The way to the next
 score is drawn as a gold line along a dotted rule, ending in a red
 lozenge as far as the XP reaches, with the XP over the next total after
 it.
@@ -315,6 +323,37 @@ it.
 
 **See also:** [Virtues & Flaws tab](help:tab-vf),
 [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
+
+## A tradition's chapter
+<!-- help: tradition-chapter -->
+
+A character who belongs to a non-Hermetic tradition, such as the folk
+witches or the vitkir, has a chapter named after the tradition's magic
+(Folk Witch Magic, Rune Magic...), as a magus has Hermetic Magic. It lists
+the tradition's Arts and Abilities the character has, grouped by the part
+they play: Techniques, Forms, Runes, then the tradition's other Abilities.
+These leave the Abilities chapter while the character belongs to the
+tradition.
+
+<!-- tui -->
+**You type:** `a` adds one of the tradition's Arts or Abilities, `e` sets
+its XP and Specialty, and `d` deletes it. More's **Traditions** (`m`, `t`)
+on the character chooses the traditions they belong to: only those the
+saga offers are listed (see [Traditions Offered](help:section-traditions)).
+<!-- /tui -->
+<!-- gui -->
+**You type:** **Add** adds one of the tradition's Arts or Abilities,
+**Edit** sets its XP and Specialty, and **Delete** deletes it. The
+**Traditions** button in the Abilities chapter chooses the traditions the
+character belongs to: only those the saga offers are listed (see
+[Traditions Offered](help:section-traditions)).
+<!-- /gui -->
+
+Leaving a tradition keeps its Arts and Abilities: they move back to the
+Abilities chapter. **The app works out:** each score from its XP, on the
+Art table or the Ability table as the tradition's book says (see the
+[Abilities tab](help:tab-abilities)). Casting totals, Magical Defenses and
+a tradition's own seasons come in later stories.
 
 ## Virtues & Flaws tab
 <!-- help: tab-vf -->

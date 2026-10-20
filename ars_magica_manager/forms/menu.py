@@ -35,6 +35,7 @@ from .. import (
     seasons,
     storage,
     threats,
+    traditions,
     transfer,
     tribunals,
     world,
@@ -415,6 +416,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
         (NodeKind.CHARACTER, "Hermetic Background"),
         (NodeKind.LABORATORY, "Lab Texts"),
     ),
+    # Beside the Abilities chapter's own buttons.
+    "edit_traditions": ((NodeKind.CHARACTER, "Abilities"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
@@ -928,6 +931,54 @@ def share_spell(saga: Saga, character: Character) -> Command:
     )
 
 
+#: A traditions form's check for a tradition is keyed by this and its id.
+TRADITION_KEY = "tradition-"
+
+
+def character_traditions_fields(saga: Saga, character: Character) -> list[DialogField]:
+    """A tick for each tradition the character could belong to: those the
+    saga offers, and any they already belong to."""
+    choices = traditions.offered(saga) + [
+        t for t in traditions.of(character) if not traditions.is_on(saga, t.id)
+    ]
+    return [
+        DialogField(
+            TRADITION_KEY + t.id,
+            f"{t.name} ({t.source})",
+            "check",
+            t.id in character.traditions,
+        )
+        for t in choices
+    ]
+
+
+def apply_character_traditions(character: Character, values: dict[str, Any]) -> None:
+    """Join or leave each tradition listed; an Ability of a tradition left
+    stays, in the Abilities chapter."""
+    chosen = [
+        key.removeprefix(TRADITION_KEY)
+        for key, ticked in values.items()
+        if key.startswith(TRADITION_KEY) and ticked
+    ]
+    listed = {
+        key.removeprefix(TRADITION_KEY)
+        for key in values
+        if key.startswith(TRADITION_KEY)
+    }
+    kept = [i for i in character.traditions if i not in listed]
+    character.traditions = kept + [i for i in chosen if i not in kept]
+
+
+def character_traditions(saga: Saga, character: Character) -> Form:
+    """Choose the non-Hermetic traditions the character belongs to: each
+    one's Arts and Abilities get a chapter of their own."""
+    return Form(
+        "Traditions",
+        lambda: character_traditions_fields(saga, character),
+        lambda values: apply_character_traditions(character, values),
+    )
+
+
 def lab_text_access_fields(saga: Saga, character: Character) -> list[DialogField]:
     """Whose raw Lab Texts a magus reads: an author -- a magus of the saga,
     or a name typed for one outside it --, the level he reads them to (0
@@ -1274,6 +1325,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "share_spell": _needs(_character, share_spell),
     "give_silver": _silver_command,
     "lab_text_access": _needs(_character, lab_text_access),
+    "edit_traditions": _needs(_character, character_traditions),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,

@@ -18,6 +18,7 @@ from ..models import (
 )
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
+from ..rules import creation_access as access
 from ..rules import effects
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
@@ -31,7 +32,7 @@ def _add_xp(character: Character, subject: str, amount: int) -> None:
         ability = next((a for a in character.abilities if a.name == name), None)
         if ability is None:
             # Taught, trained or read in an Ability they didn't have yet.
-            ability = Ability(name)
+            ability = Ability(name, xp_table=access.ability_xp_table(name))
             character.abilities.append(ability)
         ability.xp += amount
     elif kind == "art":

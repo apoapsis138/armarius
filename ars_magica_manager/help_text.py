@@ -55,6 +55,8 @@ TUI = "tui"
 GUI = "gui"
 FRONT_ENDS = (TUI, GUI)
 _LINK = re.compile(r"\]\(help:([\w-]+)\)")
+#: The topic every tradition chapter shares (see shared_topic).
+TRADITION_CHAPTER = "tradition-chapter"
 
 
 @dataclass(frozen=True)
@@ -93,6 +95,23 @@ class HelpError(ValueError):
     twice."""
 
 
+#: Sheet ids made per catalog entry, which share one topic: each
+#: tradition's chapter (traditions.TAB_PREFIX, SECTION_PREFIX).
+SHARED_TOPICS: dict[str, str] = {
+    "tab-trad-": TRADITION_CHAPTER,
+    "section-trad-": TRADITION_CHAPTER,
+}
+
+
+def shared_topic(topic_id: str) -> str:
+    """The topic a sheet id is explained under: its own, or the one it
+    shares with others of its kind."""
+    for prefix, shared in SHARED_TOPICS.items():
+        if topic_id.startswith(prefix):
+            return shared
+    return topic_id
+
+
 @dataclass
 class HelpBook:
     """Every topic and page, in file order."""
@@ -101,7 +120,7 @@ class HelpBook:
     pages: dict[str, Page]
 
     def topic(self, topic_id: str) -> Topic | None:
-        return self.topics.get(topic_id)
+        return self.topics.get(shared_topic(topic_id))
 
     def page_for(self, topic_id: str) -> Page | None:
         """The page a topic is shown on."""
@@ -110,7 +129,7 @@ class HelpBook:
 
     def first(self, topic_ids: list[str]) -> Topic | None:
         """The first of `topic_ids` the help has (most specific first)."""
-        for topic_id in topic_ids:
+        for topic_id in map(shared_topic, topic_ids):
             if topic_id in self.topics:
                 return self.topics[topic_id]
         return None

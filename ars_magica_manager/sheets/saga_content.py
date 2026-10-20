@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc
-from .. import sourcebooks
+from .. import sourcebooks, traditions
 from .. import spells as spl
 from ..models import Saga, Spell
 from .character import Fact
@@ -67,6 +67,18 @@ def sources_table(saga: Saga) -> Table:
         [
             [s.abbreviation, s.title, str(len(hr.citing(saga, s.abbreviation)))]
             for s in saga.sources
+        ],
+    )
+
+
+def traditions_table(saga: Saga) -> Table:
+    """The non-Hermetic traditions whose book is in play, and whether the
+    saga offers each."""
+    return Table(
+        ["Tradition", "Book", "Offered"],
+        [
+            [t.name, t.source, "Yes" if traditions.is_on(saga, t.id) else "No"]
+            for t in traditions.in_play(saga)
         ],
     )
 

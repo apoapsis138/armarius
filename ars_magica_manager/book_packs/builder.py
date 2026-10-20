@@ -664,6 +664,7 @@ class Builder:
                 name=ability,
                 category=access.ability_category(ability),
                 xp=ability_xp(score),
+                xp_table=access.ability_xp_table(ability),
                 specialty=specialty or None,
             )
             for ability, score, specialty in block.get("abilities", [])
@@ -755,6 +756,7 @@ class Builder:
                 name=name,
                 category=access.ability_category(name),
                 xp=ability_xp(score),
+                xp_table=access.ability_xp_table(name),
                 specialty=specialty or None,
             )
             for name, score, specialty in block.get("abilities", [])

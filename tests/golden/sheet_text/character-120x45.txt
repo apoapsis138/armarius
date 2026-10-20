@@ -18,7 +18,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 P
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -61,7 +61,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 P
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   General                 Score           XP
@@ -104,7 +104,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 P
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -147,7 +147,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diar
+   2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Pl
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Talisman: Ring  Opened 0/0  0 attunements
@@ -167,6 +167,49 @@
 
   ▌
   ▌  Select an Art, a Known Spell or a Research Goal to see its details.
+  ▌
+
+
+===== tab-trad-trad_vitkir
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:        (not set)                Covenant:            Keep
+      Age:            (unknown -- set Year     Assigned Laboratory: Tower
+      Born)                                    Type:                magus
+      Current Year:   1220                     Confidence Score:    0
+      Current Season: Spring                   Confidence Points:   0
+                                               Size:                0
+          Edit (e)          In Play
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+      Int:  0   Per:  0   Str:  0   Sta:  0
+      Pre:  0   Com:  0   Dex:  0   Qik:  0
+          Edit (e)
+
+  Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Arts and Abilities
+
+      Runes                   Score           XP
+      ○ Fehu                      3         6/10
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Select an Ability to see its details.
   ▌
 
 
@@ -190,7 +233,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diary
+  Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -233,7 +276,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diary
+  Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -276,7 +319,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diary
+  Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)

@@ -43,7 +43,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, creation, giving, portraits, seasons, sourcebooks, vis
+from .. import (
+    artwork,
+    creation,
+    giving,
+    portraits,
+    seasons,
+    sourcebooks,
+    traditions,
+    vis,
+)
 from .. import books as bk
 from .. import enchanted_devices as ed
 from .. import familiars as fam
@@ -65,7 +74,15 @@ from ..forms import spell as spell_forms
 from ..forms import trait as trait_forms
 from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
-from ..models import CHARGED, LINE, Character, Characteristics, Saga, ScoredTrait
+from ..models import (
+    CHARGED,
+    LINE,
+    Character,
+    Characteristics,
+    Saga,
+    ScoredTrait,
+    TraditionDef,
+)
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
@@ -534,6 +551,11 @@ class CharacterSheet(QWidget):
             if name in _left_out(character):
                 continue
             self.codex.add(name, concept, builders[name]())
+            if name == "Hermetic Magic" or (
+                name == "Virtues & Flaws" and character.type != "magus"
+            ):
+                for tradition in traditions.of(character):
+                    self.codex.add(tradition.title, "magic", self._tradition(tradition))
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(palette))
         outer.addWidget(self.codex, 1)
@@ -789,13 +811,61 @@ class CharacterSheet(QWidget):
                 ability_mark(ability.name, ability.category, p),
             )
 
-        self.ability_table = ability_view(cs.ability_table(c), p, show)
+        rows = cs.abilities_chapter_table(c)
+        self.ability_table = ability_view(rows, p, show)
         return scrolling_page(
             p,
             section(
-                f"Abilities ({len(c.abilities)})",
+                f"Abilities ({len(rows)})",
                 p,
                 self.ability_table,
+                buttons=[
+                    *verb_buttons(ops, chooser, self.run, p),
+                    *(self.placer.buttons("Abilities") if self.placer else []),
+                ],
+            ),
+        )
+
+    def _show_ability(self, chooser: Chooser, index: object) -> None:
+        assert isinstance(index, int)
+        p, c = self.p, self.character
+        chooser.choose(index)
+        ability = c.abilities[index]
+        specialty = f"  ·  {ability.specialty}" if ability.specialty else ""
+        self.inspect(
+            ability.name,
+            f"{ability.category} Ability{specialty}",
+            st.ability_info_text(c.abilities, index, c.virtues_flaws),
+            ability_mark(ability.name, ability.category, p),
+        )
+
+    def _tradition(self, tradition: TraditionDef) -> QWidget:
+        """A tradition's chapter: what the tradition is, and the
+        character's Arts and Abilities of it, grouped by the part they
+        play, with Add limited to the tradition's own."""
+        p, c = self.p, self.character
+        chooser = Chooser()
+        ops = ability_forms.ability_ops(
+            c.abilities,
+            c.virtues_flaws,
+            books=sourcebooks.saga_books(self.saga),
+            note=lambda name: creation.worksheet_note(c, [name]),
+            only=tradition.abilities,
+        )
+        rows = cs.tradition_table(c, tradition)
+        table = ability_view(
+            rows,
+            p,
+            lambda index: self._show_ability(chooser, index),
+            category=lambda row: c.abilities[row.index].category,
+        )
+        return scrolling_page(
+            p,
+            prose(tradition.description, p),
+            section(
+                f"Arts and Abilities ({len(rows)})",
+                p,
+                table,
                 buttons=verb_buttons(ops, chooser, self.run, p),
             ),
         )
@@ -1223,11 +1293,16 @@ def characteristic_cards(
 
 
 def ability_view(
-    rows: Sequence[cs.AbilityRow], p: Palette, show: Callable[[object], None]
+    rows: Sequence[cs.AbilityRow],
+    p: Palette,
+    show: Callable[[object], None],
+    *,
+    category: Callable[[cs.AbilityRow], str] | None = None,
 ) -> XpTable:
     """Abilities as a table grouped by category, each with its mark,
     specialty, score and experience; choosing one calls `show` with its
-    index."""
+    index. `category` gives the Ability category a row's mark falls back
+    to, when rows are grouped under other headings (a tradition's Arts)."""
     table = XpTable(
         ["Ability", "Specialty", "Score", "Experience"],
         p,
@@ -1242,7 +1317,8 @@ def ability_view(
         specialty = _item(row.specialty, font=serif(11.5, italic=True))
         specialty.setForeground(QBrush(QColor(p["label"])))
         name = _item(row.name)
-        name.setIcon(ability_icon(row.name, row.category, p))
+        kind = category(row) if category is not None else row.category
+        name.setIcon(ability_icon(row.name, kind, p))
         table.add(
             groups[row.category],
             row.index,

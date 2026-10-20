@@ -15,7 +15,7 @@ from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from . import catalog, sourcebooks
+from . import catalog, sourcebooks, traditions
 from . import house_rules as hr
 from .markup import escape, fit, markdown_inline
 from .models import Saga, SagaSource
@@ -236,6 +236,46 @@ def book_detail(saga: Saga, book: str | None) -> str:
             f"Rule{'s' if len(cited) != 1 else ''}."
         )
     return "\n".join(lines)
+
+
+def traditions_header() -> str:
+    return f"  {'On':<8} {'Book':<{_ABBR_WIDTH}} Tradition"
+
+
+def tradition_rows(saga: Saga) -> list[str]:
+    """One row per non-Hermetic tradition whose book is in play (markup):
+    whether the troupe has turned it on (traditions.in_play's order)."""
+    rows = []
+    for tradition in traditions.in_play(saga):
+        on = traditions.is_on(saga, tradition.id)
+        mark = _column("yes", 8) if on else _dim("no", 8)
+        rows.append(
+            f"{mark} {escape(fit(tradition.source, _ABBR_WIDTH))} "
+            f"{escape(tradition.name)}"
+        )
+    return rows
+
+
+def tradition_detail(saga: Saga, index: int | None) -> str:
+    """The chosen tradition: what it is, and whether it is offered."""
+    shown = traditions.in_play(saga)
+    if index is None or index >= len(shown):
+        return (
+            "[dim]Choose a tradition for its details; e picks the traditions "
+            "this saga offers.[/]"
+        )
+    tradition = shown[index]
+    on = traditions.is_on(saga, tradition.id)
+    return "\n".join(
+        [
+            f"[b]{escape(tradition.name)}[/] "
+            f"({escape(sourcebooks.titles(tradition.source))}, {tradition.realm})",
+            escape(tradition.description),
+            "Offered: characters can join it."
+            if on
+            else "Not offered: turn it on to let characters join it.",
+        ]
+    )
 
 
 def sources_header() -> str:

@@ -542,6 +542,9 @@ OPENERS: dict[str, Opener] = {
     ),
     # Character
     "edit character info": Opener("character", lambda ws: ws._edit_character_info()),
+    "edit character traditions": Opener(
+        "character", lambda ws: ws.action_edit_traditions()
+    ),
     "edit characteristics": Opener("character", lambda ws: ws._edit_characteristics()),
     "edit biographical detail": Opener(
         "character", lambda ws: ws._edit_biographical_detail()
@@ -712,6 +715,7 @@ OPENERS: dict[str, Opener] = {
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
     "add house rule": Opener("saga", lambda ws: ws._house_rule_form(None)),
     "add player": Opener("saga_content", lambda ws: ws._player_form(None)),
+    "edit traditions offered": Opener("saga_content", lambda ws: ws._edit_traditions()),
     "add spell": Opener("saga_content", lambda ws: ws._spell_form(None)),
     "edit spell": Opener("saga_content", lambda ws: ws._spell_form(ws.saga.spells[0])),
     "add saga source": Opener("saga_content", lambda ws: ws._saga_source_form(None)),

@@ -25,7 +25,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork
+from .. import artwork, traditions
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc
@@ -182,6 +182,31 @@ class SagaContentPage(QWidget):
                     scf.source_ops(saga), sources_chooser, self.run, p
                 ),
             ),
+            self._traditions(),
+        )
+
+    def _traditions(self) -> QWidget:
+        """The traditions whose book is in play, and whether the saga
+        offers each: Edit chooses them."""
+        p, saga = self.p, self.saga
+        shown = traditions.in_play(saga)
+        table = scs.traditions_table(saga)
+        self.traditions = cells_table(
+            table.columns,
+            table.rows,
+            p,
+            lambda row: self.inspect(
+                shown[row].name, "Tradition", sc.tradition_detail(saga, row)
+            ),
+        )
+        on = sum(1 for t in shown if traditions.is_on(saga, t.id))
+        return section(
+            f"Traditions Offered ({on} of {len(shown)})",
+            p,
+            self.traditions
+            if shown
+            else _none("No book with a tradition is in play.", p),
+            edits={"Edit": lambda: self.run(scf.traditions_form(saga))},
         )
 
     def _catalogs(self) -> QWidget:

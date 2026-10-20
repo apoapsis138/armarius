@@ -38,8 +38,8 @@ from ..models import (
     VirtueFlawInstance,
     Wounds,
 )
+from ..rules import creation_access as access
 from ..rules import scores
-from ..rules import xp as xp_rules
 from .character import (
     characteristics_fields,
     characteristics_from,
@@ -330,6 +330,7 @@ def ability_from(name: str, category: str, values: dict[str, Any]) -> Ability:
         category=category,
         xp=values["xp"],
         specialty=values["specialty"] or None,
+        xp_table=access.ability_xp_table(name),
     )
 
 
@@ -344,12 +345,11 @@ def ability_form(
     """An Ability's xp, with the score it buys shown live (with the
     owner's Puissant), and its Specialty; `apply` gets the values."""
     bonus, _ = scores.ability_bonus(virtues_flaws, name)
+    factor = access.ability_factor(name)
 
     def live(values: dict[str, Any]) -> str:
         xp = values.get("xp")
-        score = st.live_score(
-            xp if isinstance(xp, int) else None, xp_rules.ABILITY_FACTOR, bonus
-        )
+        score = st.live_score(xp if isinstance(xp, int) else None, factor, bonus)
         return f"{escape(name)}: {score}"
 
     return Form(

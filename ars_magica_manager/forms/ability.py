@@ -9,7 +9,7 @@ A character and a familiar share them.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from typing import Any
 
 from .. import catalog, sourcebooks
@@ -18,8 +18,8 @@ from ..commands import Choice, Choose, Command, Form, SectionOps, delete
 from ..form_spec import DialogField, attr
 from ..markup import escape
 from ..models import Ability, AbilityDef, VirtueFlawInstance
+from ..rules import creation_access as access
 from ..rules import scores
-from ..rules import xp as xp_rules
 from .virtue import param_fields, params_from
 
 
@@ -49,6 +49,7 @@ def ability_from(name: str, category: str, values: dict[str, Any]) -> Ability:
         category=category,
         xp=values["xp"],
         specialty=values["specialty"] or None,
+        xp_table=access.ability_xp_table(name),
     )
 
 
@@ -59,9 +60,10 @@ def ability_live(
     Puissant (from `virtues_flaws`); `note` follows it (e.g. how much xp
     the Creation Worksheet gave it)."""
     bonus, _ = scores.ability_bonus(virtues_flaws, name)
+    factor = access.ability_factor(name)
 
     def live(values: dict[str, Any]) -> str:
-        score = st.live_score(values["xp"], xp_rules.ABILITY_FACTOR, bonus)
+        score = st.live_score(values["xp"], factor, bonus)
         line = f"{escape(name)}: {score}"
         return f"{line}\n[$text-warning]{escape(note)}[/]" if note else line
 
@@ -126,10 +128,12 @@ def ability_ops(
     *,
     books: frozenset[str] | None = None,
     note: Callable[[str], str] | None = None,
+    only: Collection[str] | None = None,
 ) -> SectionOps:
     """Add, Edit and Delete for the list `abilities`; `virtues_flaws` are
     its owner's (for Puissant in the live score), `books` the books in
-    play and `note` an Ability's note in its Edit form (by its name)."""
+    play and `note` an Ability's note in its Edit form (by its name).
+    `only` limits Add to Abilities of those names (a tradition's chapter)."""
 
     def details(entry: AbilityDef, name: str) -> Form:
         def apply(values: dict[str, Any]) -> None:
@@ -169,7 +173,11 @@ def ability_ops(
     return SectionOps(
         add=lambda: Choose(
             "Add an Ability",
-            lambda: [ability_choice(e) for e in abilities_offered(abilities, books)],
+            lambda: [
+                ability_choice(e)
+                for e in abilities_offered(abilities, books)
+                if only is None or e.name in only
+            ],
             chosen,
             empty="(no more Abilities available)",
         ),

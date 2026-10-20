@@ -110,6 +110,10 @@ ABILITY_CATEGORIES: tuple[str, ...] = (
 #: The Ability categories that are supernatural powers: a Virtue grants
 #: them, and they mark their holder as more than mundane.
 SUPERNATURAL_CATEGORIES: tuple[str, ...] = ("Supernatural", "Hedge Art")
+#: The xp tables an Ability can advance on: the Ability table (5 xp a
+#: step), or the Art table (1 xp a step) that Accelerated Abilities and
+#: most hedge Arts use (Hedge Magic RE, Ch. 1).
+XP_TABLES: tuple[str, ...] = ("ability", "art")
 
 
 @dataclass

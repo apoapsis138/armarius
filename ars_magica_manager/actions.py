@@ -17,7 +17,7 @@ from enum import StrEnum
 from functools import partial
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
-from . import arms, giving, places, seasons, sourcebooks, threats, world
+from . import arms, giving, places, seasons, sourcebooks, threats, traditions, world
 from . import book_value as bv
 from . import familiars as fam
 from . import inhabitants as inh
@@ -26,6 +26,7 @@ from . import spells as spl
 from .models import (
     FULL,
     INHABITANT_KINDS,
+    LINE,
     POSSESSION_KINDS,
     TEXT_LONGEVITY,
     Character,
@@ -57,6 +58,7 @@ from .sections import (
     SOURCES_SECTION,
     SPELL_SECTION,
     TABLES_SECTION,
+    TRADITIONS_SECTION,
     TRAIT_SECTIONS,
     TRIBUNAL_INFO_SECTION,
 )
@@ -103,6 +105,7 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         HOUSE_RULES_SECTION: _ALL3,
         PLAYERS_SECTION: _ALL3,
         BOOKS_SECTION: _EDIT,
+        TRADITIONS_SECTION: _EDIT,
         SOURCES_SECTION: _ALL3,
         CATALOGS_SECTION: _EDIT,
         HIDDEN_SECTION: _ADD_REMOVE,
@@ -186,6 +189,8 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         verbs[section] = _ALL3
     for kind in POSSESSION_KINDS:
         verbs[f"section-pos-{kind}"] = _ALL3
+    for tradition in traditions.all_traditions():
+        verbs[traditions.tradition_section(tradition.id)] = _ALL3
     return verbs
 
 
@@ -231,6 +236,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("g", "give", "Give"),
     MenuItem("s", "give_silver", "Give Silver"),
     MenuItem("l", "lab_text_access", "Lab Texts Read"),
+    MenuItem("t", "edit_traditions", "Traditions"),
     MenuItem("f", "edit_fatigue", "Edit Fatigue"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue"),
     MenuItem("i", "import_data", "Import"),
@@ -469,6 +475,19 @@ def _binds_familiar(facts: ActionFacts) -> bool:
     return bool(fam.unbonded_magi(facts.saga))
 
 
+def _joins_traditions(facts: ActionFacts) -> bool:
+    """A full or sketched character, with a tradition the saga offers or
+    one they belong to."""
+    character = facts.selected_character
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and facts.on_record()
+        and character is not None
+        and character.detail != LINE
+        and bool(traditions.offered(facts.saga) or character.traditions)
+    )
+
+
 def _deletes_record(facts: ActionFacts) -> bool:
     return facts.record_to_delete() is not None
 
@@ -497,6 +516,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "promote": partial(_changes_detail, up=True),
     "demote": partial(_changes_detail, up=False),
     "give": _gives,
+    "edit_traditions": _joins_traditions,
     "give_silver": _gives_silver,
     "export_record": _exports_record,
     "update_record": _updates_record,

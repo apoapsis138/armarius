@@ -240,3 +240,95 @@ def book_closed(emblem: QPainterPath | None = None) -> QPainterPath:
     if emblem is not None:
         shape = shape.subtracted(emblem)
     return shape
+
+
+def _crossings(
+    lines: list[list[Point]],
+) -> list[tuple[int, float, int, float, Point]]:
+    """Where the polylines cross: (line, place along it, other line, place
+    along that, point), a place being a segment index plus its fraction."""
+    found = []
+    segments = [
+        (i, k, line[k], line[k + 1])
+        for i, line in enumerate(lines)
+        for k in range(len(line) - 1)
+    ]
+    for n, (i, k, a, b) in enumerate(segments):
+        for j, m, c, d in segments[n + 1 :]:
+            if i == j and abs(k - m) <= 1:
+                continue
+            closed = lines[i][0] == lines[i][-1]
+            if i == j and closed and {k, m} == {0, len(lines[i]) - 2}:
+                continue
+            rx, ry = b[0] - a[0], b[1] - a[1]
+            sx, sy = d[0] - c[0], d[1] - c[1]
+            den = rx * sy - ry * sx
+            if abs(den) < 1e-9:
+                continue
+            t = ((c[0] - a[0]) * sy - (c[1] - a[1]) * sx) / den
+            u = ((c[0] - a[0]) * ry - (c[1] - a[1]) * rx) / den
+            if 0 <= t < 1 and 0 <= u < 1:
+                point = (a[0] + rx * t, a[1] + ry * t)
+                found.append((i, k + t, j, m + u, point))
+    return found
+
+
+def _alternate(found: list[tuple[int, float, int, float, Point]]) -> list[bool]:
+    """For each crossing, whether its first line goes over: along every
+    line the crossings go over, under, over, under, as interlace does."""
+    passes: dict[int, list[tuple[float, int, bool]]] = {}
+    for c, (i, ti, j, tj, _) in enumerate(found):
+        passes.setdefault(i, []).append((ti, c, True))
+        passes.setdefault(j, []).append((tj, c, False))
+    links: dict[int, list[tuple[int, bool]]] = {c: [] for c in range(len(found))}
+    for seq in passes.values():
+        seq.sort()
+        for (_, c1, first1), (_, c2, first2) in pairwise(seq):
+            # over-ness alternates: s1 ^ !first1 != s2 ^ !first2
+            links[c1].append((c2, first1 == first2))
+            links[c2].append((c1, first1 == first2))
+    over: list[bool | None] = [None] * len(found)
+    for start in range(len(found)):
+        if over[start] is not None:
+            continue
+        over[start] = True
+        queue = [start]
+        while queue:
+            c = queue.pop()
+            for other, differ in links[c]:
+                if over[other] is None:
+                    over[other] = (not over[c]) if differ else bool(over[c])
+                    queue.append(other)
+    return [bool(o) for o in over]
+
+
+def weave(strands: Iterable[QPainterPath], w: float, gap: float = 2.2) -> QPainterPath:
+    """The strands drawn as bands of width w that interlace: wherever two
+    cross, one passes over and the band beneath breaks off either side of
+    it, alternating along each strand."""
+    strands = list(strands)
+    lines = [
+        [(polygon.at(n).x(), polygon.at(n).y()) for n in range(polygon.count())]
+        for strand in strands
+        for polygon in strand.toSubpathPolygons()
+    ]
+    shape = union_of(stroke(s, w) for s in strands)
+    found = _crossings(lines)
+    for (i, ti, j, tj, point), first_over in zip(found, _alternate(found), strict=True):
+        line, t = (lines[i], ti) if first_over else (lines[j], tj)
+        k = int(t)
+        a, b = line[k], line[min(k + 1, len(line) - 1)]
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        length = math.hypot(dx, dy) or 1
+        reach = w * 1.5 + gap
+        ux, uy = dx / length * reach, dy / length * reach
+        x, y = point
+        local = bar(x - ux, y - uy, x + ux, y + uy, w + 2 * gap)
+        halo = local.subtracted(bar(x - ux, y - uy, x + ux, y + uy, w))
+        shape = shape.subtracted(halo.intersected(circle(x, y, reach)))
+    return shape
+
+
+def over(top: QPainterPath, beneath: QPainterPath, gap: float = 2.2) -> QPainterPath:
+    """`top` laid over `beneath`, with a gap cut round it where they meet."""
+    return beneath.subtracted(stroke(top, 2 * gap).united(top)).united(top)
