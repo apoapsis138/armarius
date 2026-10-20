@@ -15,15 +15,47 @@ from ars_magica_manager.tui.screens.title import TitleScreen, banner
 
 CHANGELOG = """# Changelog
 
+## Features
+
+| Feature | What it is |
+| --- | --- |
+| Illuminatio | The desktop version |
+
+## Editions
+
+| Edition | Title | Finished in | What it brought |
+| --- | --- | --- | --- |
+| Illuminatio I | The desktop | 2.52.0 | The desktop |
+| Illuminatio II | Prima Littera | 2.53.0 | The title page |
+
+## Major versions
+
+| Major | Name | What it marked |
+| --- | --- | --- |
+| 2 | Rego | creation by the book |
+
+## Milestones
+
+| Milestone | Version | What it marked |
+| --- | --- | --- |
+
 ## 2.53.1 — 2026-10-20
+
+### Illuminatio
 
 - A fix.
 
-## 2.53.0 — 2026-10-19 — Prima Littera
+## 2.53.0 — 2026-10-19
+
+### Illuminatio
 
 - The title page.
 
-## 2.52.0 — 2026-10-13 — Nomen Novum
+## 2.52.0 — 2026-10-13
+
+### Illuminatio
+
+- The desktop.
 """
 
 
@@ -31,8 +63,8 @@ def _keys(page: tp.TitlePage) -> list[str]:
     return [choice.key for choice in page.choices]
 
 
-def test_the_release_name_is_the_latest_named_release():
-    assert tp.release_name(CHANGELOG) == "Prima Littera"
+def test_the_release_name_is_the_major_versions_name():
+    assert tp.release_name(CHANGELOG) == "Rego"
     assert tp.release_name("# Changelog\n\n## 1.0.0 — 2026-09-29\n") == ""
 
 

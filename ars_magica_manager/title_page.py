@@ -1,5 +1,5 @@
 """The title page the app opens on: its name and tagline, the version and
-its release name, and the three ways on (the saga opened last, every
+the name of its major version, and the three ways on (the saga opened last, every
 saga, and Help). Both front-ends lay out the same TitlePage.
 
 The saga opened last is remembered in the settings, so Open Saga (and
@@ -8,19 +8,15 @@ Enter) can go straight back to it.
 
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
 
-from . import ROOT, __version__, settings, storage
+from . import ROOT, __version__, changelog, settings, storage
 
 NAME = "Armarius"
 TAGLINE = "A saga manager for Ars Magica"
 
 #: The settings key holding the id of the saga opened last.
 LAST_SAGA = "last_saga"
-
-#: A named release's heading in CHANGELOG.md: "## 2.52.0 — 2026-10-13 — Name".
-_NAMED = re.compile(r"^## \d+\.\d+\.\d+ — [\d-]+ — (.+?)\s*$", re.MULTILINE)
 
 #: The ways on, by key.
 OPEN, SAGAS, HELP = "open", "sagas", "help"
@@ -37,23 +33,22 @@ class TitleChoice:
 class TitlePage:
     name: str
     tagline: str
-    #: "Version 2.52.0 · Nomen Novum · for Ars Magica Fifth Edition".
+    #: "Version 2.104.0 · Codex · for Ars Magica Fifth Edition".
     edition: str
     choices: tuple[TitleChoice, ...]
     #: The saga Open Saga opens; None when there is none to open.
     saga_id: str | None
 
 
-def release_name(changelog: str | None = None) -> str:
-    """The name of the latest named release in CHANGELOG.md ("" if none
-    is named, or the file can't be read)."""
-    if changelog is None:
+def release_name(text: str | None = None) -> str:
+    """This version's major version's name, from CHANGELOG.md ("" if it
+    has none, or the file can't be read)."""
+    if text is None:
         try:
-            changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+            text = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
         except OSError:
             return ""
-    found = _NAMED.search(changelog)
-    return found.group(1) if found else ""
+    return changelog.release_name(text, __version__)
 
 
 def remember_saga(saga_id: str) -> None:

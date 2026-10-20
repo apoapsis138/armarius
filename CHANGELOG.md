@@ -1,50 +1,124 @@
 # Changelog
 
-What changed in each version of Armarius (called Ars Magica Manager
-before 2.52.0), newest first.
+What changed in Armarius (called Ars Magica Manager before 2.52.0), by
+feature. Each feature has a name that stays; each finished round of work
+on it is an edition of that feature, numbered as a book's editions are
+(Peregrinatio I, II, III...), and work not yet finished is its next
+edition, in progress. The Chronicle lists every version, newest first,
+under the name of its major version, and the end of the page says where
+the names and numbers come from.
+
+The names come from the books and crafts of a medieval scriptorium and a
+Hermetic covenant: a *pagina* is a page; the *computus* was the
+reckoning of dates; a Book of Hours follows the labours of the seasons;
+a *florilegium* gathers extracts from many books; the Gauntlet makes an
+apprentice a magus; a *scriptorium* is where books are written; a
+*glossa* is a note in the margin; *fundamenta* are foundations;
+*sodales* are fellow magi of the Order, as the troupe's players are to
+the storyguide; an *illuminatio* is the painted and gilded copy of a
+manuscript; the *orbis* is the world; a *concilium* is a council;
+*insignia* are marks of honour; and a *peregrinatio* is a journey into
+other lands. Each major version has a name of its own: an *incipit* is
+the opening words of a manuscript, a *folio* a sheet folded into leaves,
+and a *codex* the bound book.
 
 Versions are `MAJOR.MINOR.PATCH`: MAJOR marks a finished phase of the
 plan (1.0.0: Phase 1, the core tracker; 2.0.0: Phase 4, creation by the
-book), a new or changed feature bumps
-MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is set in
-`pyproject.toml`, shown in the app's title bar and on the saga picker, and
-recorded in every saga file that version saves. Each version is tagged in
-git (`v0.2.0`, ...).
+book), a new or changed feature bumps MINOR, and a bug fix or
+behind-the-scenes improvement bumps PATCH. The version is shown in the
+app's title bar and on the saga picker, recorded in every saga file that
+version saves, and tagged in git (`v0.2.0`, ...).
 
-## Release names
+## Features
 
-The big releases have names, after the books and crafts of a medieval
-scriptorium and a Hermetic covenant. Bug fixes and small polish releases
-are not named; each named version's heading carries its name.
+| Feature | What it is |
+| --- | --- |
+| Pagina | The sheets for characters, covenants, laboratories and familiars |
+| Computus | The rules engine: scores, totals and the book's arithmetic |
+| Book of Hours | Seasons planned and played out: study, lab work, books and gifts |
+| Florilegium | The catalogs and what a saga offers from them |
+| Gauntlet | Creating covenants, laboratories and characters by the book |
+| Scriptorum | The terminal version: its keys, colours and readability |
+| Glossa | Help, its guides and this page |
+| Fundamenta | Your data, packaging, and the app's upkeep and checks |
+| Sodales | Sharing a saga with the troupe |
+| Illuminatio | The desktop version, drawn rather than printed |
+| Orbis | The saga's world: its region, people, places, threats and what lies ahead |
+| Concilium | Tribunals, their customs and their meetings |
+| Insignia | Heraldry and the app's artwork |
+| Peregrinatio | The Tribunal packs: each Tribunal book, ready to import |
 
-| Name | Versions | What it brought |
+## Editions
+
+| Edition | Title | Finished in | What it brought |
+| --- | --- | --- | --- |
+| Pagina I | The core tracker | 1.0.0 | Characters, covenants, laboratories and familiars kept in full, with enchanted devices |
+| Computus I | The rules engine | 1.2.0 | Scores from experience, casting and lab totals, and the Virtues and Flaws that change them |
+| Book of Hours I | The seasons | 1.8.0 | Seasons planned and played out: study, teaching, lab work, books, aging and apprentices |
+| Book of Hours II | The library | 2.39.0 | Codices, palimpsests, commentaries, correspondence, casting tablets and library research |
+| Book of Hours III | Gifts | 2.60.0 | Give vis, books, devices, gear and silver from one record to another |
+| Florilegium I | Checked against the books | 0.10.0 | The reference catalogs, checked entry by entry against the books |
+| Florilegium II | The Definitive Edition | 2.30.0 | The spell catalog rebuilt from the Definitive Edition, and every picker showing its entry's rules |
+| Florilegium III | Saga Content | 2.41.0 | What a saga offers, gathered in one place, with sources and catalogs it can switch off |
+| Florilegium IV | Renamed choices | 2.100.0 | Edit changes what a Virtue, Flaw, Boon or Hook names, without taking it again |
+| Gauntlet I | Creation by the book | 2.4.0 | Phase 4: creating covenants, laboratories and characters by the book, step by step |
+| Gauntlet II | Exemplar | 2.6.0 | Character templates that fill in a whole sheet |
+| Gauntlet III | The covenant worksheet | 2.34.0 | A covenant built from its Baseline, Resources and Build Points, with its checks |
+| Scriptorum I | Highlights | 0.4.0 | Highlights in the theme's own colours |
+| Scriptorum II | Verbum | 2.5.0 | The keyboard rework: one key per verb |
+| Scriptorum III | Readability | 2.9.0 | The readability pass: fields, headings, warnings and columns |
+| Glossa I | Help for what has focus | 2.8.0 | Help for whatever has focus |
+| Glossa II | Summa | 2.13.0 | How-to guides in Help, and this page |
+| Glossa III | Help for each version | 2.62.0 | Help written for the terminal or the desktop, whichever you use |
+| Glossa IV | Each pack's assumptions | 2.102.0 | A page for each Tribunal pack saying what it assumed where its book is silent |
+| Fundamenta I | Foundations | 2.11.0 | Your data in its own folder, safe saves, packaging and automatic checks |
+| Fundamenta II | Your own folder | 2.43.0 | Choose where your sagas, backups, exports and settings are kept |
+| Sodales I | The troupe | 2.18.0 | The saga hosted for players' browsers and SSH, with sign-in and safe saves |
+| Illuminatio I | The desktop | 2.51.0 | The desktop version, with a page for every record and everything editable |
+| Illuminatio II | The title page | 2.61.0 | The title page, the window's own title bar, chapters, gifts and printing to PDF |
+| Illuminatio III | Gilt | 2.92.0 | Gilt initials, ruled ledgers, manuscript drop-downs and sounds |
+| Illuminatio IV | Keys | 2.96.0 | The terminal's keys on the desktop |
+| Orbis I | Lines and sketches | 2.65.0 | Characters and covenants kept as a line or a sketch, with attitudes and favours |
+| Orbis II | The Region | 2.73.0 | The Region and its neighbours: lords, towns, churches, universities and factions |
+| Orbis III | The world turns | 2.78.0 | Threats, places and regiones, triggers, Ahead, and the world turning each winter |
+| Orbis IV | Ruins | 2.93.0 | Ruined covenants, and new covenants founded on them |
+| Concilium I | Tribunals | 2.70.0 | Tribunals as records of their own, with each region's customs |
+| Concilium II | Hold Tribunal | 2.83.0 | Tribunal meetings held step by step: debate, the vote, rulings and the Acta |
+| Insignia I | Arms | 2.86.0 | Coats of arms for covenants, lords, towns and factions, and proxy sigils |
+| Insignia II | New heraldry | 2.95.0 | New charges, furs and divisions, a proper lion, and clean artwork |
+| Peregrinatio I | Guardians of the Forests | 2.88.0 | Content packs, and the Rhine Tribunal as the first, every magus statted |
+| Peregrinatio II | The Lion and the Lily | 2.94.0 | The Normandy Tribunal pack |
+| Peregrinatio III | Faith & Flame | 2.95.0 | The Provence Tribunal pack |
+| Peregrinatio IV | The Sundered Eagle | 2.99.0 | The Bestiary in the packs, and the Theban Tribunal pack |
+| Peregrinatio V | Against the Dark | 2.102.0 | The Transylvanian Tribunal pack, with its oppida and five legal covenants |
+
+## Major versions
+
+| Major | Name | What it marked |
 | --- | --- | --- |
-| Nomen Novum | 2.52.0 | The app's new name: Armarius, a saga manager for Ars Magica |
-| Illuminatio | 2.45.0 to ... | The desktop version, drawn rather than printed |
-| Sodales | 2.12.0 to 2.18.0 | The troupe shares a saga: hosted for players' browsers and SSH, with sign-in and safe saves |
-| Foundations | 2.11.0 | Your data in its own folder, packaging, automatic checks |
-| Summa | 2.10.0 | How-to guides in Help |
-| Scriptorum II | 2.9.0 | The readability pass |
-| Glossa | 2.8.0 | Help for whatever has focus |
-| Exemplar | 2.6.0 | Character templates |
-| Verbum | 2.5.0 | The keyboard rework: one key per verb |
-| Gauntlet | 2.0.0 to 2.4.0 | Phase 4: creating covenants, laboratories and characters by the book |
-| Book of Hours | 1.3.0 to 1.8.0 | Seasons planned and played out, study and lab work |
-| Computus | 1.1.0 to 1.2.0 | Phase 2: the Rules Engine |
-| Codex | 1.0.0 | Phase 1: the core tracker |
-| Florilegium | 0.6.0 to 0.10.0 | The reference catalogs, checked against the books |
-| Scriptorum | 0.4.0 | Highlights in the theme's own colours |
-| Incipit | 0.2.0 | The first tracked version |
+| 0 | Incipit | the first sheets, catalogs and checks |
+| 1 | Folio | Phase 1 finished: the core tracker, the rules and the seasons |
+| 2 | Codex | Phase 4, creation by the book, and the app that became Armarius |
 
-An *incipit* opens a manuscript; a *florilegium* gathers extracts from
-many books; the *computus* was the reckoning of dates; a Book of Hours
-follows the labours of the seasons; the Gauntlet makes an apprentice a
-magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
-copy scribes worked from; a *glossa* is a note in the margin; a *summa*
-teaches a whole subject; *sodales* are fellow magi of the Order, as
-the troupe's players are to the storyguide; an *illuminatio* is the
-painted and gilded copy of a manuscript; *nomen novum* is a new name,
-and an *armarius* kept a monastery's books and records.
+## Milestones
+
+| Milestone | Version | What it marked |
+| --- | --- | --- |
+| Armarius | 2.52.0 | the app's new name |
+
+## 2.104.0 — 2026-10-19
+
+### Glossa
+
+- **What's New by feature and edition.** What's New now shows what changed
+  feature by feature: Latest at the top, then each feature with its
+  numbered editions (the newest in full, earlier ones a line per change),
+  then the Chronicle, every version newest first under its major version
+  and its day. The page is about half as long as before, so the desktop
+  lays it out fully at any window size.
+- **Names for the major versions.** The title page shows the major
+  version's name rather than a feature's: Incipit for 0.x, Folio for 1.x
+  and Codex for 2.x. The sheets feature is now called Pagina.
 
 ## 2.103.0 — 2026-10-19
 
@@ -71,12 +145,16 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.102.1 — 2026-10-19
 
+### Illuminatio
+
 - **The Armarius icon on the Windows taskbar.** The desktop version now
   tells Windows it is its own app, so the taskbar shows the Armarius
   sigil rather than Python's icon on every computer, whatever its
   taskbar settings.
 
 ## 2.102.0 — 2026-10-19
+
+### Peregrinatio
 
 - **The Transylvania pack.** Against the Dark: the Transylvanian Tribunal
   ships as a content pack. It holds the ten oppida the book writes up,
@@ -91,10 +169,16 @@ and an *armarius* kept a monastery's books and records.
   The Peripheral Code, the docket for the Tribunal of 1221 at the Shipka
   Pass and the Tribunal's history are there too, with the book's
   creatures in the Bestiary and the Dragon War as the main story.
+
+### Florilegium
+
 - **Storm wizards, black hawthorn and the Zenodochium.** The storm
   wizards' Storm Calling, Storm Fighting and Storm Riding join the
   Abilities, each with its own mark. Black hawthorn joins the shapes and
   materials, and the Zenodochium joins the covenant Hooks.
+
+### Glossa
+
 - **What each pack assumed.** Help has a page for each Tribunal pack,
   "Assumptions made for" its book. Each page lists the values the pack
   inferred from the book's words, the ones it chose where the book is
@@ -102,6 +186,8 @@ and an *armarius* kept a monastery's books and records.
   corrects the book. Importing a pack now says so and names the page.
 
 ## 2.101.0 — 2026-10-19
+
+### Peregrinatio
 
 - **Transylvania's oppida and five covenants.** In a Tribunal following
   Transylvania's customs, the places where magi live are oppida: the
@@ -116,6 +202,8 @@ and an *armarius* kept a monastery's books and records.
   gave an oppidum a class gives it to each of that oppidum's magi.
 
 ## 2.100.0 — 2026-10-19
+
+### Florilegium
 
 - **Change what a Virtue or Flaw names.** Edit on a Virtue or Flaw now
   changes what it names, such as Puissant Magic Theory to Puissant
@@ -134,6 +222,8 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.99.1 — 2026-10-19
 
+### Fundamenta
+
 - **Tidier code, nothing new to see.** A code health pass: the longest
   functions and forms are broken into smaller parts, the questions each
   kind of season work answers are looked up in tables instead of long
@@ -143,6 +233,8 @@ and an *armarius* kept a monastery's books and records.
   did.
 
 ## 2.99.0 — 2026-10-18
+
+### Peregrinatio
 
 - **The Theban pack.** New Saga and Import offer *The Sundered Eagle*:
   the Theban Tribunal of 1220 in the book's own words, with its thirteen
@@ -164,6 +256,8 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.98.1 — 2026-10-18
 
+### Illuminatio
+
 - **A saga opens quickly again on the desktop.** Opening a saga drew a
   card for every neighbour in The Region, and a Tribunal pack brings
   hundreds, so a saga started from a pack took many seconds to open, and
@@ -175,6 +269,8 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.98.0 — 2026-10-18
 
+### Peregrinatio
+
 - **The Theban Tribunal in its own words.** The Theban customs now use
   The Sundered Eagle's terms. Each magus is a polites (citizen) or a
   metoikos (resident foreigner), and every magus present votes once, by
@@ -185,6 +281,9 @@ and an *armarius* kept a monastery's books and records.
   on the covenant's form or the roster, and shown in the roster's Phyle
   column. The tab is The Polity and its office list The Council of
   Magistrates.
+
+### Concilium
+
 - **The Theban meeting.** Holding a Theban Tribunal follows the book's
   phases. On the first day the Hermetic Assembly sets the principal
   phyle in turn and hears decrees of citizenship, contrition and
@@ -199,12 +298,16 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.97.1 — 2026-10-18
 
+### Concilium
+
 - **A shorter Tribunal page.** A long In the Saga, such as the Normandy
   and Provence packs write, no longer pushes the covenants off the
   Roster: only its first paragraph shows under the Tribunal's name, and
   the rest opens the History tab, above the history.
 
 ## 2.97.0 — 2026-10-18
+
+### Orbis
 
 - **The Bestiary.** The saga now keeps its creatures: beasts, spirits,
   faeries, demons and angels, each with its stat block as the books
@@ -221,13 +324,21 @@ and an *armarius* kept a monastery's books and records.
   appearance and notes. A demon also has its Order, Hierarchy and
   Weakness. A creature can be found at a place in the Region, and any
   neighbour can link to it. New Creature is in the New menu.
+
+### Peregrinatio
+
 - **Creatures in the packs.** The Rhine, Normandy and Provence packs
   bring every creature their books give a stat block, each at the place
   it haunts and linked to the threat or court it belongs to.
+
+### Glossa
+
 - **Help** has pages for the Bestiary and a creature's sheet, and a new
   how-to: How to add a creature from a book.
 
 ## 2.96.0 — 2026-10-17
+
+### Illuminatio
 
 - **Keys on the desktop.** The desktop version now answers the same
   page-wide keys as the terminal: `?` (or F1) opens Help on the page
@@ -239,6 +350,8 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.95.0 — 2026-10-16
 
+### Peregrinatio
+
 - **The Provence pack.** New Saga and Import offer *Faith & Flame*: the
   Provençal Tribunal of 1220, with its eleven covenants and their votes,
   about sixty magi (the Praeco Dama and Rebecca as the book prints
@@ -249,11 +362,16 @@ and an *armarius* kept a monastery's books and records.
   history, and the Praeco's secret as a story. The text is a paraphrase
   of the book, credited to it. The Virtues, Flaws and spells it names
   that the catalogs lacked are added.
+
+### Insignia
+
 - **Clean artwork.** Two of the app's drawings carried a hidden
   content-credential tag that a file sync had added; it is removed, and
   a check keeps any shipped file from carrying one.
 
 ## 2.94.1 — 2026-10-16
+
+### Computus
 
 - **A lab Servant adds its Safety.** The Servant Virtue now gives the
   laboratory Safety equal to half the servant's Intelligence, rounded up,
@@ -269,6 +387,8 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.94.0 — 2026-10-16
 
+### Peregrinatio
+
 - **The Normandy pack.** New Saga and Import offer *The Lion and the
   Lily*: the Normandy Tribunal of 1220, with its fifteen covenants and
   their magi, the places, towns, lords and churches of each region, the
@@ -276,6 +396,9 @@ and an *armarius* kept a monastery's books and records.
   history, the vis held under the Perthean Compact, and the lines of
   fealty between covenants. The text is a paraphrase of the book,
   credited to it. The Rhine pack now also brings its wandering magi.
+
+### Orbis
+
 - **Vassals and oaths.** A covenant can be sworn as the vassal of
   another in its Tribunal, with the oath's duties written down and, if
   you like, the Boons and Hooks the oath brings to each side. The
@@ -284,16 +407,24 @@ and an *armarius* kept a monastery's books and records.
   per story on import or New Saga says which begin at once. A dormant
   story stays out of What's Ahead and the season's turn until you choose
   Begin This Story on its page, which sets its stages from next season.
+
+### Concilium
+
 - **Normandy's meetings.** A Normandy Tribunal meeting now settles the
   Praeco's succession (the eldest magus, unless set aside) and draws
   the next host by lot. Founding a covenant there reminds you of the
   vis its Code asks for.
+
+### Insignia
+
 - **New heraldry.** The eagle, fleur-de-lis, tower, cross, crescent,
   star and tree are now proper heraldic drawings from Wikimedia Commons,
   in any tincture, and there is a new charge: a lion with its tail
   knotted (queue-nowed).
 
 ## 2.93.0 — 2026-10-16
+
+### Orbis
 
 - **Ruined covenants.** A place can be marked a ruined covenant: it
   shows a broken tower instead of its usual picture, and "Ruin" in the
@@ -308,12 +439,16 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.92.0 — 2026-10-16
 
+### Illuminatio
+
 - **Spin boxes to match the drop-downs.** On the desktop the level
   filters are the same inked blank: their number in italic on a dotted
   line, solid purple while in use, with two small purple steps for the
   arrows, faint at the end of the range.
 
 ## 2.91.0 — 2026-10-16
+
+### Insignia
 
 - **New arms: ermine, a bend, bendy and checky.** Ermine joins the
   tinctures as a fur (argent with black tails), free of the rule of
@@ -327,6 +462,8 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.90.0 — 2026-10-16
 
+### Illuminatio
+
 - **A gilt title page.** The name Armarius on the title page is drawn
   letter by letter with a gilt edge, as a record's initial is, and the
   page's frame is burnished gold; its buttons take the gold wash under
@@ -338,6 +475,8 @@ and an *armarius* kept a monastery's books and records.
   its side, the chosen line washed in purple.
 
 ## 2.89.0 — 2026-10-16
+
+### Illuminatio
 
 - **Tables as a ruled ledger.** On the desktop, tables lose their boxes,
   fills and stripes: a small-caps serif heading over a gilt double rule,
@@ -358,11 +497,16 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.88.1 — 2026-10-16
 
+### Peregrinatio
+
 - **Create a New Saga fits its window.** Start from a pack now names the
   Tribunal and what it brings ("Rhine Tribunal: 10 covenants, 74
   characters, 319 places and neighbours") instead of the pack's long
   title. On the desktop a long choice no longer stretches a form past its
   window, so forms never scroll sideways, and forms open a little wider.
+
+### Insignia
+
 - **The motto leads a coat of arms.** On the desktop the motto is set
   large above the blazon, which sits smaller beneath it, on a covenant's
   and a neighbour's Arms. The terminal's covenant and neighbour sheets and
@@ -370,6 +514,8 @@ and an *armarius* kept a monastery's books and records.
   arms form's preview puts it first.
 
 ## 2.88.0 — 2026-10-16
+
+### Peregrinatio
 
 - **Every Rhine magus statted.** The 61 magi Guardians of the Forests
   describes but prints no stat block for now have full sheets:
@@ -381,6 +527,9 @@ and an *armarius* kept a monastery's books and records.
   "Generated stats for magi": untick it to bring those magi in as the
   book's sketches. The magi the book does print stat blocks for come in
   full either way.
+
+### Orbis
+
 - **The Region's filter on its heading's line.** On the desktop, the
   Show drop-downs sit at the right of the first list's heading instead of
   on a line of their own.
@@ -389,10 +538,19 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.87.0 — 2026-10-15
 
+### Concilium
+
 - **A covenant's gilds on its own form.** In a Tribunal that follows the
   Rhine's customs, Edit Covenant, New Covenant and a sketch covenant's
   form each have a tick for every gild; ticking one makes the covenant a
   member, just as the Gilds tab does.
+- **A Tribunal's history.** A Tribunal has a History of its own, written
+  on its form and shown in a History chapter (a tab in the terminal), so
+  In the Saga stays a short summary. The Rhine pack's eras of history
+  have moved there.
+
+### Orbis
+
 - **The troupe's covenants stand out.** Every list of covenants puts the
   ones the troupe plays first, marked with ✦. The Tribunal's roster and
   the desktop's World page set the rest under an "Other covenants"
@@ -402,16 +560,17 @@ and an *armarius* kept a monastery's books and records.
   each list's title says how many it shows of how many. On the desktop
   it is two quiet drop-downs under the facts; in the terminal, press `/`
   on any of the lists.
-- **A Tribunal's history.** A Tribunal has a History of its own, written
-  on its form and shown in a History chapter (a tab in the terminal), so
-  In the Saga stays a short summary. The Rhine pack's eras of history
-  have moved there.
+
+### Insignia
+
 - **The Rhine's gild symbols.** Each of the six gilds bears its tree (an
   oak leaf, a thorn, an ash spearhead, an elder sprig, a linden leaf, an
   apple), cut like the Arts' woodblocks: small beside its name on the
   Gilds tab, large in the inspector.
 
 ## 2.86.3 — 2026-10-15
+
+### Concilium
 
 - **The Rhine's notice of cases.** Notice of a case is now due a season
   before a Rhine meeting, as under the core rules: Guardians of the
@@ -420,6 +579,9 @@ and an *armarius* kept a monastery's books and records.
 - **The Rhine's gild dues.** The book sets no dues, so each gild in the
   Rhine pack now says: "None: a member owes the gild their vote and
   reasonable aid."
+
+### Glossa
+
 - **The docket explained.** The Cases help now says what each field of a
   case records, among them Sought: what the case asks the Tribunal to do
   if it succeeds. The case form gives Sought a hint too. The help also
@@ -428,9 +590,13 @@ and an *armarius* kept a monastery's books and records.
 
 ## 2.86.2 — 2026-10-15
 
+### Fundamenta
+
 Steadier tests. Screen tests that sometimes failed when the computer was busy now wait for a section to keep its focus, and for a form or confirmation to actually open, before they go on.
 
 ## 2.86.1 — 2026-10-15
+
+### Fundamenta
 
 Faster tests. The desktop tests now close the windows they open, so later
 tests no longer slow down, and the full suite takes about half as long
@@ -439,6 +605,8 @@ runs a quick tier of tests after each step, and the full suite runs once
 per story.
 
 ## 2.86.0 — 2026-10-15
+
+### Peregrinatio
 
 The first book pack: the Rhine Tribunal.
 
@@ -452,18 +620,29 @@ The first book pack: the Rhine Tribunal.
   with its stages; and the Tribunal's history in its Diary. Secrets sit
   under a Secrets heading. Importing a pack puts its book in play.
   Help: a new guide, How to start a saga from a Tribunal book.
-- **Proxy sigils.** The pack's covenants carry the Rhine's proxies to
-  the meeting of 1221: one for each master, two for each archmage, and
-  the Tremere sigils their exarchs hold.
 - **Full characters from the book.** Philippus Niger, Imanitos Mendax,
   Falke and Ioannes Acer, and six people of the Rhine Gorge story, come
   with their full stats.
+
+### Insignia
+
+- **Proxy sigils.** The pack's covenants carry the Rhine's proxies to
+  the meeting of 1221: one for each master, two for each archmage, and
+  the Tremere sigils their exarchs hold.
+
+### Florilegium
+
 - **Forest Lore.** A new Arcane Ability from Guardians of the Forests.
+
+### Concilium
+
 - **Fixed: the Tribunal's inspector.** On the desktop, choosing a ruling
   of the Peripheral Code, a Diary entry or a gild now shows it in the
   inspector, instead of leaving the last thing chosen there.
 
 ## 2.85.0 — 2026-10-15
+
+### Peregrinatio
 
 Groundwork for the book packs, one content pack per Tribunal book.
 
@@ -477,6 +656,9 @@ Groundwork for the book packs, one content pack per Tribunal book.
   saga's own or its links are dropped, and the preview lists which.
   Starting a new saga from a pack still brings everything. Help: a new
   Import a Content Pack page.
+
+### Insignia
+
 - **More arms.** Four new charges: an eagle, a lion, a wheel and a
   fleur-de-lis. The Arms form asks How many of the charge (one, two side
   by side, or three as two and one, as heralds place them) and the
@@ -485,6 +667,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   charge now cuts only the shapes drawn before it.
 
 ## 2.84.0 — 2026-10-15
+
+### Peregrinatio
 
 - Content packs: **Export Pack** in Saga Management writes chosen
   Tribunals, covenants, places and neighbours to one file, with their
@@ -502,6 +686,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.83.0 — 2026-10-15
 
+### Concilium
+
 - The desktop's Meeting tab opens on the Grand Hall: the Tribunal drawn
   as a hemicycle with a seat for every vote, each covenant's seats
   together under its pennant, every seat marked with its magus's House
@@ -514,6 +700,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   covenants hung one by one, and the meeting's numbers.
 
 ## 2.82.0 — 2026-10-15
+
+### Insignia
 
 - **Arms.** A covenant, and a lord, town or faction, can bear arms: choose
   the field's tincture, how it is divided (plain, per pale, per fess, per
@@ -531,6 +719,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   record's panel and in the Region.
 
 ## 2.81.0 — 2026-10-15
+
+### Concilium
 
 - **The minutes.** Each step of a meeting, once held, writes its
   minutes into the Tribunal's Diary: an entry headed with its day, what
@@ -553,6 +743,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.80.0 — 2026-10-15
 
+### Concilium
+
 - **The debate.** Each case and motion at a meeting is now debated by
   the rules of Houses of Hermes: Societates (The Fine Arts of Debate).
   Enter each side's debate Fatigue levels lost, or leave them blank and
@@ -573,6 +765,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.79.0 — 2026-10-15
 
+### Concilium
+
 - **Hold Tribunal.** Each Tribunal has a new Meeting tab (a chapter on
   the desktop): the order of business day by day, who is in the hall,
   and the step in hand. Hold any step to open the meeting: the Opening
@@ -590,6 +784,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.78.0 — 2026-10-15
 
+### Orbis
+
 - **The world turns.** When Winter is played, Advance Season now asks
   one more question before the season is played out: what the year
   brought beyond the covenants. A place's triggers that came this year
@@ -606,6 +802,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   you are told.
 
 ## 2.77.0 — 2026-10-15
+
+### Orbis
 
 - **Ahead: what's coming.** Seasons (the tree's Seasons in the terminal,
   the Seasons page on the desktop) now opens on Looking Ahead:
@@ -626,6 +824,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.76.0 — 2026-10-15
 
+### Orbis
+
 - **Triggers.** A place's Regio tab lists its triggers: what comes once,
   each year, every few years, or whenever something happens. The dated
   ones show their next date, and the soonest is shown as the place's
@@ -642,6 +842,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   leaves room for the level list at narrower windows.
 
 ## 2.75.0 — 2026-10-15
+
+### Orbis
 
 - **Places and regiones.** The Region has a list of Places: forests,
   ruins, crags and regiones. A place has an aura, its tethers, how far
@@ -663,6 +865,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.74.0 — 2026-10-15
 
+### Orbis
+
 - Threats and their stages. A threat has an antagonist, a way of moving
   (by fixed dates, along a track, or by an omen count) and an ordered
   list of stages, each with when it comes, its clues, and what happens
@@ -672,6 +876,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   or turned. The Region's top panel names the threat due soonest.
 
 ## 2.73.0 — 2026-10-15
+
+### Orbis
 
 - Churches in detail (The Church). A church has a kind (a chapel up to
   an archbishop's cathedral) and an order, and a Church tab showing its
@@ -692,6 +898,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.72.0 — 2026-10-15
 
+### Orbis
+
 - Lords in detail (Lords of Men). A lord has a title, a wealth, his
   manors and his seat, and a Fief tab that works out his income, what he
   has to spend, the knights, serjeants, infantry and levies his title
@@ -709,6 +917,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.71.0 — 2026-10-15
 
+### Orbis
+
 - The Region and its neighbours. A saga keeps the lords, towns, churches,
   universities, factions and threats of its region, each with its
   summary, its detail, its ruler, who it answers to and its realm, and
@@ -723,6 +933,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.70.0 — 2026-10-15
 
+### Concilium
+
 - Four more Tribunals' customs. Normandy (The Lion and the Lily): a
   Tenure tab recording who holds each vis source under the Perthean
   Compact (seisin, legacy, tropaeum, luctatio or interim lease) and until
@@ -735,6 +947,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.69.0 — 2026-10-15
 
+### Concilium
+
 - The Theban Tribunal's customs (The Sundered Eagle): a Tokens and Archai
   tab with each magus's tokens, shards and liturgies served and their
   standing (an office, or ostracised and until when), and the archai who
@@ -742,6 +956,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   troupe's tokens. Holding a Theban meeting will add its elections.
 
 ## 2.68.0 — 2026-10-15
+
+### Concilium
 
 - A Tribunal follows the core rules or one region's customs, chosen as
   Customs in Edit Tribunal; a region's customs are offered while its
@@ -753,6 +969,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   hidden; switching back shows it again.
 
 ## 2.67.0 — 2026-10-15
+
+### Concilium
 
 - A Tribunal's sheet has its lists. The Roster shows each covenant's
   detail, magi, votes, the proxies it holds for the next meeting and its
@@ -770,6 +988,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   troupe's votes, proxies included.
 
 ## 2.66.0 — 2026-10-15
+
+### Concilium
 
 - Tribunals are records of their own. A covenant chooses its Tribunal
   from the saga's in Edit Covenant, and New Tribunal adds one: its name,
@@ -789,6 +1009,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.65.0 — 2026-10-15
 
+### Orbis
+
 - Covenants can be kept as a line or a sketch too, for the other
   covenants of the Tribunal. A sketch opens on its Overview: its magi
   (named ones, at any detail, plus how many more go unnamed) and the
@@ -807,6 +1029,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.64.0 — 2026-10-15
 
+### Orbis
+
 - Characters can be kept as a line or a sketch instead of in full, the
   way the books print their NPCs. A sketch opens on its Statblock: who
   they are in the saga, then their Characteristics, Arts, the Abilities
@@ -821,6 +1045,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.63.0 — 2026-10-15
 
+### Orbis
+
 - The groundwork for the Saga World. Characters and covenants can now be
   written down at three levels of detail: a line, a sketch or in full.
   Only full records are played: sketches are left out of season plans,
@@ -831,11 +1057,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
   since, along with the favours owed and links to other records. The
   forms for these arrive with the sketch covenants and neighbours that
   use them.
+
+### Pagina
+
 - A Reputation can now say its type (Hermetic, Local, Noble, Academic,
   Ecclesiastical or Infernal) and how far it reaches. Both show in
   brackets on its row.
 
 ## 2.62.1 — 2026-10-14
+
+### Fundamenta
 
 - Opening a saga that a newer version of Armarius saved no longer loses
   what this version doesn't know about. Whatever the newer version added
@@ -845,6 +1076,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   are using, so you know to update the app.
 
 ## 2.62.0 — 2026-10-14
+
+### Glossa
 
 - Help now fits the version you are using. The desktop version's Help
   describes the desktop: its window, trail, chapters, Inspector and
@@ -860,6 +1093,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   Stores, Seasons) opens on that chapter's help.
 
 ## 2.61.0 — 2026-10-14
+
+### Illuminatio
 
 - Print to PDF lays a character out as a sheet made for paper, not a
   picture of the screen. The name is set in the title lettering, with a
@@ -883,31 +1118,26 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.60.0 — 2026-10-14
 
+### Book of Hours
+
 - Give: vis, books and lab texts, enchanted devices (with their
   epitome), personal gear and silver can be handed from one character,
   covenant or laboratory to another, and both sides' Diaries record it.
   Gear can be split by how many, and gear and silver never go to a
   laboratory. Characters now carry pounds of silver, and Give Silver
   gives from a character's purse or a covenant's Wealth.
-- On the desktop, a magus's Sanctum button opens their laboratory (or
-  makes one), and the laboratory's owner is a button back to them.
-- A character can have a portrait in a gilt frame beside their name.
-  The picture you choose is copied into the saves folder, and the House
-  symbol shows while there is none.
-- The creation worksheet shows each stage's budgets as bars (gold, red
-  when over), every stage's experience in each Ability and Art with its
-  total and score, and a red line naming any broken creation rule.
 - Set Up Research Library walks the covenant's research subjects one at
   a time, showing which books back each bonus and the bonuses so far.
+
+### Illuminatio
+
+- On the desktop, a magus's Sanctum button opens their laboratory (or
+  makes one), and the laboratory's owner is a button back to them.
 - Print to PDF, in every record's Manage chapter on the desktop, lays
   the sheet out on parchment-coloured A4.
-- Export Saga writes the whole saga in one file, and Import reads it
-  back as A Whole Saga.
 - Every ability on the desktop has a drawn woodcut-style mark in its
   row, larger in the details panel. An ability with no mark of its own
   shows its category's.
-- The Treasury reads Annual Income and Annual Expense, and every Raw Vis
-  and vis store shows its Art's symbol.
 - The desktop has no New or More buttons. Every action they held now
   sits on the section or page it acts on.
 - Section buttons are quieter, sitting on the section title's line at
@@ -918,7 +1148,28 @@ Groundwork for the book packs, one content pack per Tribunal book.
 - Windows Snap, Win+arrow keys and maximising work again with the
   desktop's own title bar.
 
+### Pagina
+
+- A character can have a portrait in a gilt frame beside their name.
+  The picture you choose is copied into the saves folder, and the House
+  symbol shows while there is none.
+- The Treasury reads Annual Income and Annual Expense, and every Raw Vis
+  and vis store shows its Art's symbol.
+
+### Gauntlet
+
+- The creation worksheet shows each stage's budgets as bars (gold, red
+  when over), every stage's experience in each Ability and Art with its
+  total and score, and a red line naming any broken creation rule.
+
+### Fundamenta
+
+- Export Saga writes the whole saga in one file, and Import reads it
+  back as A Whole Saga.
+
 ## 2.59.0 — 2026-10-14
+
+### Illuminatio
 
 - On the desktop, the saga's page is in chapters. The World shows its
   covenants, unassigned characters and unassigned laboratories, each list
@@ -932,6 +1183,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   familiar would be; in the laboratory it is a button beside Planning.
 
 ## 2.58.0 — 2026-10-14
+
+### Illuminatio
 
 - On the desktop, the actions that were in More now sit on what they act
   on: Improve beside a covenant's Sources of Income, Texts Read beside a
@@ -948,6 +1201,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.57.0 — 2026-10-14
 
+### Illuminatio
+
 - The desktop's saga page sets out what it does as a row of buttons under
   its name: Edit Saga, Import, Set Date, New Covenant, New Character and
   New Laboratory. Each button is gilt-edged, and its first letter is an
@@ -960,6 +1215,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   longer offer New.
 
 ## 2.56.0 — 2026-10-14
+
+### Illuminatio
 
 - Every character, covenant, laboratory and familiar on the desktop ends
   with a Manage chapter: Export, Update from a File and Delete, each with
@@ -977,6 +1234,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.55.0 — 2026-10-13
 
+### Illuminatio
+
 - The desktop window draws its own title bar on the paper, in place of
   the system's: minimise, maximise and close as small glyphs at the right
   of the top bar, and the app's name in the middle. Drag the bar to move
@@ -984,6 +1243,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   resize it. The title page has the same buttons.
 
 ## 2.54.0 — 2026-10-13
+
+### Illuminatio
 
 - On the desktop, the lists that were lines of fixed-width text are now
   real tables in the app's own fonts: Enchanted Devices, Research Goals,
@@ -995,6 +1256,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.53.0 — 2026-10-13
 
+### Illuminatio
+
 - The app now opens on a title page: an illuminated initial A in gold
   and knotwork, the name Armarius and its tagline, and the version.
   From it you can open the saga you had open last, choose or begin
@@ -1003,7 +1266,9 @@ Groundwork for the book packs, one content pack per Tribunal book.
   saga picker. Players joining a hosted saga skip it.
 - The app remembers the saga you opened last.
 
-## 2.52.0 — 2026-10-13 — Nomen Novum
+## 2.52.0 — 2026-10-13
+
+### Fundamenta
 
 - The app is now called **Armarius**, a saga manager for Ars Magica.
   The title bar, the saga picker, Help's About page, the desktop
@@ -1020,6 +1285,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   the rename, which still import.
 
 ## 2.51.0 — 2026-10-13
+
+### Illuminatio
 
 - Advance Season is on the desktop, as a button in the top bar. After a
   season with plans, a Seasons page shows what it did; the saga page
@@ -1042,6 +1309,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.50.0 — 2026-10-13
 
+### Illuminatio
+
 - The Creation Worksheet is on the desktop: a new character, covenant or
   laboratory opens on it, each step listed down the side with its
   budget, what's been spent, its checks and its buttons, ending with
@@ -1061,6 +1330,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   separate buttons.
 
 ## 2.49.0 — 2026-10-13
+
+### Illuminatio
 
 - The desktop version can now edit everything it shows. Every section of
   a character, familiar, laboratory, covenant and the Saga Content page
@@ -1082,6 +1353,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.48.0 — 2026-10-13
 
+### Illuminatio
+
 - The desktop version has a Saga Content page, opened from the saga's
   page under "The Saga's Books and Rules". It shows which books are in
   play, the saga's own sources, the catalogs and what is hidden from
@@ -1094,6 +1367,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   and the inspector.
 
 ## 2.47.0 — 2026-10-13
+
+### Illuminatio
 
 - The desktop version has a page for each covenant, with every chapter of
   the terminal's covenant sheet. The header shows the Tribunal, season and
@@ -1116,6 +1391,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.46.0 — 2026-10-13
 
+### Illuminatio
+
 - The desktop version has a page for each laboratory, opened from its
   card on the covenant's page. The header shows whose sanctum it is, the
   Size its Virtues and Flaws take up, the free Virtues left, the Base
@@ -1130,7 +1407,9 @@ Groundwork for the book packs, one content pack per Tribunal book.
   Arcane Connections, books); and the lab's seasons as a calendar beside
   its diary.
 
-## 2.45.0 — 2026-10-13 — Illuminatio
+## 2.45.0 — 2026-10-13
+
+### Illuminatio
 
 - The desktop Character sheet is laid out as a codex: a chapter list on the
   left, the chapter in the middle, and a panel on the right that shows
@@ -1154,6 +1433,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.44.0 — 2026-10-12
 
+### Illuminatio
+
 - A first look at the desktop version: `run-gui.bat` (or `uv run --group gui
   python gui.py`) opens a window with your saga's covenants and characters
   and a read-only Character sheet, with the same tabs and text as the
@@ -1166,6 +1447,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.43.5 — 2026-10-12
 
+### Illuminatio
+
 - Behind the scenes, preparing for the desktop version: the fifteen Arts
   and the Houses now have their symbols, traced from the artwork Atlas
   Games has released under its open licence (Guernicus shows the
@@ -1176,6 +1459,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.43.4 — 2026-10-12
 
+### Illuminatio
+
 - Behind the scenes, preparing for the desktop version: the terminal
   screens now sit in a package of their own beside an empty one for the
   desktop window, and the desktop's libraries are an optional install
@@ -1184,12 +1469,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.43.3 — 2026-10-12
 
+### Illuminatio
+
 - Behind the scenes, preparing for the desktop version: an automatic check
   now makes sure the shared rules, saga and form code never depends on the
   terminal screens, so a second front-end can use it unchanged. Nothing in
   the app itself changed.
 
 ## 2.43.2 — 2026-10-12
+
+### Fundamenta
 
 - The automatic checks run about a quarter faster (from about 32 to about
   24 minutes when run one at a time), with the same coverage: screen tests
@@ -1200,6 +1489,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.43.1 — 2026-10-12
 
+### Illuminatio
+
 - Behind the scenes, first step toward a desktop version: what each form
   asks for and how its entries are checked, and what can be done in each
   part of a sheet (add, edit, delete, and the More and New menus), now
@@ -1208,12 +1499,17 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.43.0 — 2026-10-12
 
+### Fundamenta
+
 - You can choose where your sagas, backups, exports and settings are
   kept: More (`m`) on the saga picker has Change save folder. It checks
   the folder can be written to (some system settings, or a synced or
   read-only folder, may not allow it), offers to move your files there
   without overwriting anything, and remembers the choice. The saga
   picker always shows which folder it is reading and why.
+
+### Computus
+
 - Many more Virtues and Flaws now change the numbers they should:
   Student of (Realm) and the Faerie Blood heritages' Ability bonuses,
   Characteristic bonuses taken at creation, Soak and Protection, Wound
@@ -1221,11 +1517,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
   casting totals, and creation experience. The blood kinds from Realms
   of Power: Faerie are in the catalog, and spontaneous casting text names
   its Fatigue cost.
+
+### Gauntlet
+
 - On the covenant creation worksheet, each Lab Text and Casting Tablet
   has its own row under the Lab Texts pool, so you can edit (`e`) or
   delete (`d`) one there; the pool's levels and Build Points update.
 
 ## 2.42.0 — 2026-10-09
+
+### Book of Hours
 
 - Planning an Initiation now says what its Ordeal costs: the Initiate
   gains a Flaw, loses one of their Minor or Major Virtues, or has one of
@@ -1238,12 +1539,17 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.41.0 — 2026-10-09
 
+### Florilegium
+
 - The Spells tab lists only the spells whose book is in play, plus the
   saga's own. The Source filter's new "Not in play" choice shows the
   rest, and choosing a book shows its spells whether it is in play or
   not. A spell out of play, or hidden in this saga, is marked "(not in
   play)" there and in a character's Known Spells, and its details say
   why; a magus who knows it keeps it.
+
+### Book of Hours
+
 - Planning an Initiation: Virtue initiated and Ordeal Flaw open the
   Virtues & Flaws picker, which asks for anything the entry names (an
   Affinity's Art), and the Virtue is added with it. Picking the Flaw sets
@@ -1253,13 +1559,21 @@ Groundwork for the book packs, one content pack per Tribunal book.
   needs it at 1 unless it is their own House's.
 - Undergo an Initiation is offered without The Mysteries in play: its
   rules are in the Definitive Edition.
-- In any form, Delete clears a chosen value that may be left empty.
-- A new how-to guide, How to initiate a character into a Mystery.
 - Fixed: only the latest Ordeal was remembered, so a smaller Ordeal after
   a bigger one lost the bigger one's help. Every Ordeal now counts down
   on its own, and an Initiation's Target takes the largest reduction.
 
+### Scriptorum
+
+- In any form, Delete clears a chosen value that may be left empty.
+
+### Glossa
+
+- A new how-to guide, How to initiate a character into a Mystery.
+
 ## 2.40.0 — 2026-10-09
+
+### Florilegium
 
 - A new Saga Content node in the tree gathers what the saga's pickers
   offer, in tabs: Books, Catalogs, House Rules, Spells and (for the
@@ -1283,6 +1597,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.39.0 — 2026-10-09
 
+### Book of Hours
+
 - Correspondence: a tractatus can be a bound correspondence, read at the
   two writers' Communication added, or an expert correspondence (120 or
   more letters each), which also raises its library's research on the
@@ -1303,6 +1619,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.38.0 — 2026-10-09
 
+### Book of Hours
+
 - A Casting Tablet's details show each magus of its covenant casting
   from it: Stamina + Technique + Form + Aura before the stress die, and
   what each die gives by the Definitive Edition's table, from one Fatigue
@@ -1314,6 +1632,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.37.0 — 2026-10-09
 
+### Book of Hours
+
 - Library research shows its roll: Intelligence + the Ability + the
   better of the covenant library's research bonus for it and its best
   encyclopedia's, against the storyguide's Ease Factor.
@@ -1322,6 +1642,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   plan Read a book instead.
 
 ## 2.36.0 — 2026-10-08
+
+### Book of Hours
 
 - A new optional rule, Extended book Quality (Edit Saga), uses Covenants'
   extended rules: a book's Quality is built from parts. An author gives
@@ -1335,6 +1657,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   ArM5 book package.
 
 ## 2.35.0 — 2026-10-08
+
+### Book of Hours
 
 - A tractatus can be a commentary on a summa (the book form's Opus and
   Commentary on): read at +1 Quality, which its Build Point cost leaves
@@ -1352,6 +1676,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.34.3 — 2026-10-08
 
+### Book of Hours
+
 - Fixed: on a shorter screen (120x45) a covenant's Library tab had room
   for one book row, or none once a book was chosen. Book rows no longer
   wrap onto a second line (a long one is cut short), the Library Summary
@@ -1359,6 +1685,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   its text scrolling, so the book list always keeps five.
 
 ## 2.34.2 — 2026-10-08
+
+### Fundamenta
 
 - Behind the scenes: the data model is split into one module per kind of
   record (characters, covenants, laboratories, books and so on) instead of
@@ -1368,6 +1696,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   before.
 
 ## 2.34.1 — 2026-10-08
+
+### Fundamenta
 
 - Behind the scenes: three hand-built dialogs (a Familiar's Binding &
   Cords, Improve Income and Spell Mastery) are now ordinary forms like the
@@ -1381,6 +1711,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.34.0 — 2026-10-08
 
+### Gauntlet
+
 - On a new covenant's Resources step, a can buy one of the saga's own
   books (Unassigned Books, such as an imported book list): the picker
   lists only those a new covenant may buy, with their Build Points, and
@@ -1388,6 +1720,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   saga's book stays where it is.
 
 ## 2.33.0 — 2026-10-08
+
+### Gauntlet
 
 - An Illusory Resources Hook's 250 Build Points can be tracked in play,
   the same way as Hidden Resources: a Diary Story Event linked to one has
@@ -1398,6 +1732,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   illusory and what's still believed real, apart from its totals.
 
 ## 2.32.0 — 2026-10-08
+
+### Gauntlet
 
 - A Hidden Resources Boon's 250 Build Points can be tracked in play. A
   Diary Story Event linked to one has a Build Points unlocked field; once
@@ -1411,6 +1747,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   found (vis, books, items) is added on its own tab as usual.
 
 ## 2.31.0 — 2026-10-08
+
+### Book of Hours
 
 - A summa's or tractatus's details show its value -- Excellent, Sound,
   Vain or Discarded, from its Quality against its Level -- with a guide to
@@ -1427,11 +1765,15 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.30.1 — 2026-10-08
 
+### Book of Hours
+
 - Fixed: the delete confirmation and the duplicate-book question during an
   import are drawn in a framed box again, like every other dialog, instead
   of as bare text over the dimmed screen.
 
 ## 2.30.0 — 2026-10-07
+
+### Florilegium
 
 - The ability catalog gains the supplement abilities the ArM5 books index
   uses: the Divine's Adjuration, Blessing, Holy Music, Kabbalah and
@@ -1442,6 +1784,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   Ability, one is bought at creation through the Virtue that grants it.
 
 ## 2.29.0 — 2026-10-07
+
+### Book of Hours
 
 - A book can come in with its Level or Quality still to be set: "var"
   (or "variable") in a book import's level or quality column. The book is
@@ -1454,6 +1798,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   line of the book list.
 
 ## 2.28.0 — 2026-10-07
+
+### Book of Hours
 
 - Books can be bound together in a codex: one tome holding several
   books, such as a tractatus and two summae on related subjects. Choose
@@ -1469,12 +1815,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.27.0 — 2026-10-07
 
+### Gauntlet
+
 - The covenant worksheet's Review step says how many grogs and other
   covenfolk the creation baseline gives for free (about one grog and two
   others per magus), to add on the Inhabitants tab once the covenant is
   In Play.
 
 ## 2.26.0 — 2026-10-07
+
+### Gauntlet
 
 - Use a base covenant, on the covenant worksheet's Baseline step, starts
   from one of the book's Weak (200 Build Points), Medium (800) or Powerful
@@ -1492,6 +1842,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   source.
 
 ## 2.25.0 — 2026-10-07
+
+### Gauntlet
 
 - New Covenant also asks for the covenant's Season and Aura realm (Magic
   unless you say otherwise), and a new covenant starts at the creation
@@ -1521,6 +1873,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.24.0 — 2026-10-07
 
+### Gauntlet
+
 - The covenant's Creation Worksheet shows what was added. Build Points
   lists every book in the Library with its points (one with no level or
   Quality yet shows 0, marked not priced), then vis, enchanted items,
@@ -1532,6 +1886,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   rules: a adds one, d removes one.
 
 ## 2.23.0 — 2026-10-07
+
+### Gauntlet
 
 - The Creation Worksheet opens by itself when you make a new covenant,
   laboratory or character, and fills the screen.
@@ -1555,6 +1911,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.22.1 — 2026-10-07
 
+### Pagina
+
 - The live score while editing XP now shows the total the next score
   needs, like the XP field beside it, rather than the xp still to gain:
   "Latin: Score 2 · Score 3 at 30 xp", with the Ability's name first.
@@ -1562,6 +1920,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   is gone from these forms, which hold totals.
 
 ## 2.22.0 — 2026-10-07
+
+### Pagina
 
 - Editing an Ability's or Art's XP shows, as you type, the score it buys
   and the xp still needed for the next, e.g. "Score 3 (5) · 13 xp to
@@ -1574,6 +1934,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.21.0 — 2026-10-07
 
+### Pagina
+
 - A familiar can be removed on its own: press `d` on it in the tree or
   on its Familiar Info panel. The confirmation says what goes with it:
   the bond is broken, the magus loses the True Friend Virtue and Loyal
@@ -1581,6 +1943,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   or empowering it are deleted. The magus's sheet is shown afterwards.
 
 ## 2.20.0 — 2026-10-07
+
+### Florilegium
 
 - The Boons and Hooks, Laboratory Virtues and Flaws, and Abilities
   pickers now show the highlighted entry's details under the list, as
@@ -1591,6 +1955,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.19.3 — 2026-10-07
 
+### Fundamenta
+
 - Behind the scenes: the Plan Season form and the Invent Spell screen are
   now built from short named parts instead of two very long functions,
   and a code check now stops new over-long functions from creeping in.
@@ -1598,11 +1964,15 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.19.2 — 2026-10-07
 
+### Fundamenta
+
 - Behind the scenes: the app's screen tests, which were all in one very
   long file, are now in one file per area, with the helpers they share
   in a file of their own. Nothing you see changes.
 
 ## 2.19.1 — 2026-10-07
+
+### Fundamenta
 
 - Behind the scenes: the code that plans and advances the seasons, which
   was all in one very long file, is now organised into one file per part
@@ -1610,6 +1980,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   advancing). Nothing you see changes.
 
 ## 2.19.0 — 2026-10-07
+
+### Florilegium
 
 - The spell catalog is rebuilt from the Definitive Edition's spell chapter
   and the Grand Grimoire of Hermetic Spells: 1,313 spells from the
@@ -1627,12 +1999,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.18.3 — 2026-10-07
 
+### Fundamenta
+
 - Behind the scenes: the app's forms, which were all in one very long
   file, are now organised into one file per area (characters, covenants,
   laboratories, books, spells, seasons, enchanted devices and so on).
   Nothing you see changes.
 
 ## 2.18.2 — 2026-10-06
+
+### Computus
 
 - Great (Characteristic) now raises the Characteristic it names by 1, and
   can only be taken when that Characteristic is at +3 (or +4, for the
@@ -1642,12 +2018,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.18.1 — 2026-10-06
 
+### Fundamenta
+
 - Tidier code notes: the program's comments now state each rule plainly,
   without internal ticket numbers, and the rules note on covenant
   finances no longer shows one either. The README now describes what
   the app does today: the rules, seasons, creation and hosting a saga.
 
-## 2.18.0 — 2026-10-06 — Sodales
+## 2.18.0 — 2026-10-06
+
+### Sodales
 
 - Players can also reach a hosted saga over SSH: start hosting with
   `--ssh-port 2222` and they connect with `ssh -p 2222 player@ADDRESS`
@@ -1655,13 +2035,18 @@ Groundwork for the book packs, one content pack per Tribunal book.
   sign-in as in a browser. No accounts on your computer are involved.
   Export isn't offered over SSH, since the file could only land on the
   host. Help's hosting guide says how.
-- Every form now opens with its first field ready to type into. Before,
-  the first letters typed went nowhere until you pressed Tab or clicked
-  a field.
 - Sodales (2.12.0 to 2.18.0) is the troupe release: the storyguide hosts
   the saga and players sign in from their own computers.
 
+### Scriptorum
+
+- Every form now opens with its first field ready to type into. Before,
+  the first letters typed went nowhere until you pressed Tab or clicked
+  a field.
+
 ## 2.17.1 — 2026-10-06
+
+### Glossa
 
 - Help gains "How to host a saga for your troupe": what to set up, how
   to start and stop hosting, Tailscale and ZeroTier recipes, and what
@@ -1670,6 +2055,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.17.0 — 2026-10-06
 
+### Sodales
+
 - When several people have a hosted saga open, each one sees the others'
   changes within a couple of seconds: the sheet on show updates where it
   is, with a note such as "Ana changed Corvinus; reloaded". If two people
@@ -1677,6 +2064,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   exactly as before.
 
 ## 2.16.0 — 2026-10-06
+
+### Sodales
 
 - Players signed in to a hosted saga now change only what is theirs: the
   characters they play, with those characters' familiars, laboratories
@@ -1689,12 +2078,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.15.0 — 2026-10-06
 
+### Sodales
+
 - When the saga is hosted and several people have it open, saving no
   longer wipes out what the others saved meanwhile: each save keeps
   everyone else's changes and writes only its own, down to the single
   field. If two people change the same thing, the later save wins.
 
 ## 2.14.0 — 2026-10-06
+
+### Sodales
 
 - Players who open a hosted saga in a browser now sign in first, with
   their name and a passcode. You add them on the saga's new **Players**
@@ -1704,6 +2097,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
   For now everyone signed in can still change everything.
 
 ## 2.13.0 — 2026-10-06
+
+### Glossa
 
 - Help has a What's New page, under REFERENCE after About this App: every
   version's changes, newest first. It shows its start at once and fills
@@ -1716,12 +2111,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.12.1 — 2026-10-06
 
+### Computus
+
 - Fixes an experiment's Extraordinary Result of 11 (a modified effect):
   one die is now rolled for the whole Modified Effect table, as the book
   says, instead of a new die for each row checked, which skewed the odds
   of each kind of change.
 
 ## 2.12.0 — 2026-10-06
+
+### Sodales
 
 - First step towards players and the storyguide sharing a saga: the app
   can now be opened in a web browser from another computer, with
@@ -1733,6 +2132,8 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.11.3 — 2026-10-05
 
+### Gauntlet
+
 - Fixes a covenant's starting laboratories taking 50 Build Points off for
   every magus whose laboratory wasn't entered (Dammerstein's Build tab
   showed -200 for Laboratories). Every magus has a free standard
@@ -1743,12 +2144,16 @@ Groundwork for the book packs, one content pack per Tribunal book.
 
 ## 2.11.2 — 2026-10-05
 
+### Fundamenta
+
 Behind the scenes: the rules for each kind of seasonal activity are now
 grouped into one place per family, the order in which a season's end is
 played out is tested on its own, and more of the season rules are covered
 by tests. Nothing changes in what the app shows or does.
 
 ## 2.11.1 — 2026-10-05
+
+### Fundamenta
 
 - Fixes 2.11.0 failing to start when Windows' Controlled folder access
   (ransomware protection) blocks writing to Documents. Your data now lives
@@ -1758,7 +2163,9 @@ by tests. Nothing changes in what the app shows or does.
 - Behind the scenes: the covenant sheet now updates its tabs the same way
   the other sheets do, and the automatic GitHub checks run only on request.
 
-## 2.11.0 — 2026-10-05 — Foundations
+## 2.11.0 — 2026-10-05
+
+### Fundamenta
 
 Your data now has a home of its own: sagas, their backups, exports and the
 app's settings are kept in **Ars Magica Manager** in your Documents folder
@@ -1770,6 +2177,8 @@ also gained its package details and automatic checks on GitHub for every
 change pushed.
 
 ## 2.10.2 — 2026-10-05
+
+### Computus
 
 Rules corrections.
 
@@ -1788,6 +2197,8 @@ Rules corrections.
 
 ## 2.10.1 — 2026-10-05
 
+### Fundamenta
+
 Safer saving. A saga, the settings and an export are now written in full
 before they replace the old file, so a crash or a full disk mid-save can no
 longer leave a half-written saga. The app now keeps the last five backups
@@ -1796,7 +2207,9 @@ one. A damaged settings file no longer stops the app starting, and a saga
 saved by an older version with a since-removed field in any record now
 opens instead of failing.
 
-## 2.10.0 — 2026-10-05 — Summa
+## 2.10.0 — 2026-10-05
+
+### Glossa
 
 How-to guides in Help: eight step-by-step walk-throughs, listed under
 HOW-TO GUIDES when you press ?: planning and running a season, managing
@@ -1808,7 +2221,9 @@ Two out-of-date hints are fixed: the Advance Time dialog now says Set
 Date is in More on the saga, and the Export dialog says to import with
 More's Import.
 
-## 2.9.0 — 2026-10-05 — Scriptorum II
+## 2.9.0 — 2026-10-05
+
+### Scriptorum
 
 Easier to read, with a clearer order of importance on every screen.
 
@@ -1827,7 +2242,9 @@ Easier to read, with a clearer order of importance on every screen.
 - Problems start with ✘ and things still to do with ☞ (the pointing hand
   scribes drew in margins), so they stand out by shape as well as colour.
 
-## 2.8.0 — 2026-10-04 — Glossa
+## 2.8.0 — 2026-10-04
+
+### Glossa
 
 Help: press ? anywhere (F1 while typing in a dialog) for help on the part of
 the screen you're in: the section, its tab and the sheet, with the keys that
@@ -1837,6 +2254,8 @@ advancing a season, inventing a spell, the Creation Worksheet, importing) have
 their own. Topics can be filtered with /. About this App now lives in Help.
 
 ## 2.7.1 — 2026-10-04
+
+### Pagina
 
 A magus's free House Virtue no longer counts toward Virtue points.
 
@@ -1853,6 +2272,8 @@ A magus's free House Virtue no longer counts toward Virtue points.
 
 ## 2.7.0 — 2026-10-03
 
+### Scriptorum
+
 The details panel at the bottom of a sheet's tab fits what it shows.
 
 - It is as tall as its text, from 3 rows up to 12; longer text still
@@ -1861,7 +2282,9 @@ The details panel at the bottom of a sheet's tab fits what it shows.
 - Three laboratory hints are shorter so they fit on one line: Attributes,
   Inventory and Planning.
 
-## 2.6.0 — 2026-10-03 — Exemplar
+## 2.6.0 — 2026-10-03
+
+### Gauntlet
 
 Character templates: start a new character from one of the book's
 ready-to-play characters.
@@ -1882,7 +2305,9 @@ ready-to-play characters.
   Magical Veil, Unravelling the Fabric of Imaginem) are added to the
   saga's own spells the first time they are needed.
 
-## 2.5.0 — 2026-10-01 — Verbum
+## 2.5.0 — 2026-10-01
+
+### Scriptorum
 
 The keyboard rework: one key per verb, everywhere.
 
@@ -1911,7 +2336,9 @@ The keyboard rework: one key per verb, everywhere.
   and `c` / `l` / `f` as create keys.
 - Fixed: editing an existing Vis Source crashed.
 
-## 2.4.0 — 2026-10-01 — Gauntlet
+## 2.4.0 — 2026-10-01
+
+### Gauntlet
 
 Lab Texts, House Rules, and moving records between sagas.
 
@@ -1920,6 +2347,9 @@ Lab Texts, House Rules, and moving records between sagas.
   or Other), Arts, level, author and Sigil, whether the laboratory's owner
   can read it, and what a copy costs a scribe. `F` filters it by kind,
   Art, level and readable only.
+
+### Book of Hours
+
 - Instilling an effect in a device and performing a Longevity Ritual each
   leave a raw Lab Text in the laboratory. Taming and Discovery texts
   record their Arts, so another magus can decode them.
@@ -1932,10 +2362,16 @@ Lab Texts, House Rules, and moving records between sagas.
   a "Lab Texts Read" button to set it. Renaming an author no longer loses
   what was decoded. The Invent and Copy pickers show texts that still need
   decoding instead of hiding them.
+
+### Florilegium
+
 - House Rules: a new node under the saga keeps the saga's own Virtues,
   Flaws, Boons and Hooks (name, type, tier, category, description). Every
   picker offers them alongside the catalog's. They are text only: no
   effects are applied.
+
+### Fundamenta
+
 - `x` on a covenant, laboratory or character exports it to a file with
   what travels with it (a character's familiar, devices, books and Diary;
   a laboratory's books; optionally a covenant's laboratories and
@@ -1943,7 +2379,9 @@ Lab Texts, House Rules, and moving records between sagas.
   Laboratories now work in the Import list. A preview shows what is added
   and which links are kept or dropped before anything changes.
 
-## 2.3.0 — 2026-10-01 — Gauntlet
+## 2.3.0 — 2026-10-01
+
+### Book of Hours
 
 Moving raw vis, paying from the covenant's vis, and live Characteristic
 points.
@@ -1953,21 +2391,29 @@ points.
   them: any other covenant, laboratory or magus in the saga. A covenant
   takes it into its store of that Art (a new one if it has none), and both
   sides' Diaries record the move.
-- A covenant's Raw Vis Store says where it is kept: the covenant, one of
-  its laboratories or one of its characters. Location text in older saves
-  that names a laboratory or character becomes that link; anything else is
-  kept at the covenant, with the text left in Location as a note on where
-  exactly.
 - Season work can pay from the covenant's vis: "Vis from" on vis study and
   on every lab activity has a third choice, the covenant's vis stores.
   Spending takes from the stores of that Art in list order, vis extracted
   that way goes into the covenant's store, and the covenant's Diary
   records each change.
+
+### Pagina
+
+- A covenant's Raw Vis Store says where it is kept: the covenant, one of
+  its laboratories or one of its characters. Location text in older saves
+  that names a laboratory or character becomes that link; anything else is
+  kept at the covenant, with the text left in Location as a note on where
+  exactly.
+
+### Gauntlet
+
 - While a character is In Creation, the Edit Characteristics form shows the
   points spent and left, and each score's cost, as each number is typed:
   red when over the budget, green when it is spent exactly.
 
-## 2.2.0 — 2026-10-01 — Gauntlet
+## 2.2.0 — 2026-10-01
+
+### Gauntlet
 
 Covenant Situations, Poverty warnings, and sharing an invented spell.
 
@@ -1982,11 +2428,16 @@ Covenant Situations, Poverty warnings, and sharing an invented spell.
   source for Minor Poverty, none for Major). Nothing is blocked.
 - On the worksheet, Boons may cost less than the Hooks give (advice); only
   costing more breaks the rule.
+
+### Pagina
+
 - A magus can make an invented spell available to the whole saga: `s`
   (Share Spell) on Known Spells moves it to the saga's Spells, after
   asking. The magus still knows it and its Lab Texts still link to it.
 
-## 2.1.0 — 2026-10-01 — Gauntlet
+## 2.1.0 — 2026-10-01
+
+### Gauntlet
 
 Build Points have one home: a Build tab on the covenant sheet.
 
@@ -2005,7 +2456,9 @@ Build Points have one home: a Build tab on the covenant sheet.
 - While a covenant is In Creation its top panel shows the Build Points
   spent against the storyguide's figure.
 
-## 2.0.0 — 2026-10-01 — Gauntlet
+## 2.0.0 — 2026-10-01
+
+### Gauntlet
 
 Phase 4: creating covenants, laboratories and characters by the book.
 
@@ -2035,9 +2488,14 @@ Phase 4: creating covenants, laboratories and characters by the book.
 - Rules the book says a record must follow are warnings; its "should"s are
   advice. A new saga option, "Enforce creation rules strictly", stops a
   record with a broken rule moving to In Play.
+
+### Florilegium
+
 - The Grogs book is now in the list of sourcebooks.
 
 ## 1.9.2 — 2026-09-30
+
+### Pagina
 
 A fix to the covenant's Economics tab.
 
@@ -2048,6 +2506,8 @@ A fix to the covenant's Economics tab.
 
 ## 1.9.1 — 2026-09-30
 
+### Fundamenta
+
 The performance plan is saved with the project. Nothing in the app changes.
 
 - PERFORMANCE_PLAN.md records where the app spends its time (the screen,
@@ -2055,6 +2515,8 @@ The performance plan is saved with the project. Nothing in the app changes.
   fixes planned from it.
 
 ## 1.9.0 — 2026-09-30
+
+### Pagina
 
 Polish across the sheets.
 
@@ -2067,12 +2529,20 @@ Polish across the sheets.
 - The laboratory's Lab Totals tab is easier to read: the grid, the Base Lab
   Total and what each activity adds are now separate sections, one term per
   line, with bonuses in green and penalties in red.
+
+### Computus
+
 - Botch dice count the Virtues and Flaws that change them for spellcasting
   and experimenting: Cautious Sorcerer, Careless Sorcerer, Weird Magic,
   Afflicted Tongue, Deaf and Palsied Hands.
+
+### Fundamenta
+
 - A test that failed now and then under load is steady.
 
-## 1.8.0 — 2026-09-30 — Book of Hours
+## 1.8.0 — 2026-09-30
+
+### Book of Hours
 
 The rest of the seasonal activities: almost everything a character can do
 with a season now plays out when you advance it.
@@ -2106,6 +2576,8 @@ with a season now plays out when you advance it.
 
 ## 1.7.2 — 2026-09-30
 
+### Fundamenta
+
 A leaner test suite, finished. Nothing in the app changes.
 
 - Every form's checks (it fits the screen, starts with the current values,
@@ -2120,6 +2592,8 @@ A leaner test suite, finished. Nothing in the app changes.
 
 ## 1.7.1 — 2026-09-30
 
+### Fundamenta
+
 A leaner test suite, first part. Nothing in the app changes.
 
 - Removed UI tests that only repeated what the shared form, list, sheet and
@@ -2129,7 +2603,9 @@ A leaner test suite, first part. Nothing in the app changes.
   titles and details panel, which Abilities the picker offers, the Known
   Spells rows) are now plain functions with fast tests of their own.
 
-## 1.7.0 — 2026-09-30 — Book of Hours
+## 1.7.0 — 2026-09-30
+
+### Book of Hours
 
 Lab work, planned from the laboratory.
 
@@ -2156,7 +2632,9 @@ Lab work, planned from the laboratory.
   connects to, and whether it is fixed or how long it lasts.
 - The lab work screen opens with no activity chosen until you pick one.
 
-## 1.6.0 — 2026-09-29 — Book of Hours
+## 1.6.0 — 2026-09-29
+
+### Book of Hours
 
 Study seasons.
 
@@ -2171,10 +2649,14 @@ Study seasons.
 
 ## 1.5.1 — 2026-09-29
 
+### Fundamenta
+
 - Behind the scenes: the code now passes its type check with no errors,
   and that is the standard from here on. Nothing changes in the app.
 
-## 1.5.0 — 2026-09-29 — Book of Hours
+## 1.5.0 — 2026-09-29
+
+### Book of Hours
 
 - After a season with plans is played out (t), a summary shows what each
   person did and what it gave, by covenant, and who had nothing planned.
@@ -2184,7 +2666,9 @@ Study seasons.
   still shows after each season, but it isn't saved; the characters'
   Diaries keep their entries either way.
 
-## 1.4.0 — 2026-09-29 — Book of Hours
+## 1.4.0 — 2026-09-29
+
+### Book of Hours
 
 - Each covenant has a new Seasons tab, after Inhabitants: its magi,
   companions and grogs, each with what they have planned for the season
@@ -2192,7 +2676,9 @@ Study seasons.
   Choose someone to see their plan and what it will give; e plans their
   season and A clears it.
 
-## 1.3.0 — 2026-09-29 — Book of Hours
+## 1.3.0 — 2026-09-29
+
+### Book of Hours
 
 Seasons can be planned and played out (the start of Phase 3).
 
@@ -2213,6 +2699,8 @@ Seasons can be planned and played out (the start of Phase 3).
 
 ## 1.2.2 — 2026-09-29
 
+### Fundamenta
+
 The app is quicker to use.
 
 - Switching tabs, moving between sections and arrowing through lists take
@@ -2229,6 +2717,8 @@ The app is quicker to use.
 
 ## 1.2.1 — 2026-09-29
 
+### Fundamenta
+
 Behind the scenes: a way to measure how fast the app is.
 
 - A timing script (`tools/perf_probe.py`) that works on a copy of a saga
@@ -2241,7 +2731,9 @@ Behind the scenes: a way to measure how fast the app is.
   are rebuilt several times for every keypress, and a sheet builds all of
   its tabs when it opens. Fixing those is planned next.
 
-## 1.2.0 — 2026-09-29 — Computus
+## 1.2.0 — 2026-09-29
+
+### Computus
 
 The Rules Engine (Phase 2) works out the book's totals from what's on the
 sheets. Every figure shows where it comes from.
@@ -2275,7 +2767,9 @@ sheets. Every figure shows where it comes from.
   Puissant, Book Learner, Inventive Genius, Tough, Large, Deficient Arts and
   more).
 
-## 1.1.0 — 2026-09-29 — Computus
+## 1.1.0 — 2026-09-29
+
+### Computus
 
 The first piece of Phase 2, the Rules Engine.
 
@@ -2292,7 +2786,9 @@ The first piece of Phase 2, the Rules Engine.
   as XP toward the next score and added on; a pair that fits neither keeps
   the typed score.
 
-## 1.0.0 — 2026-09-29 — Codex
+## 1.0.0 — 2026-09-29
+
+### Pagina
 
 Phase 1, the core tracker, is complete.
 
@@ -2323,6 +2819,8 @@ Phase 1, the core tracker, is complete.
 
 ## 0.12.0 — 2026-09-28
 
+### Pagina
+
 - Covenants, characters and laboratories can be deleted: select one in the
   tree and press Ctrl+D. The confirmation says what else happens. Books,
   and a covenant's characters and laboratories, become unassigned rather
@@ -2335,27 +2833,34 @@ Phase 1, the core tracker, is complete.
   points. Its Loyalty points add into the Loyalty block's Actions and
   Events. A Story Event can be Open or Resolved and linked to one of the
   covenant's Boons or Hooks, counting the stories played against a Hook.
-- Choose which sourcebooks are in play for each saga, from Edit Saga. The
-  core book is always in play and every book is by default. Catalog pickers
-  hide entries from books not in play; F3 shows them anyway.
-- The laboratory Virtue/Flaw catalog now has all 128 entries from
-  Covenants (it had 53).
 - True Faith: the character sheet shows a True Faith Score and Faith
   Points for a character with the True Faith Virtue (or any points), and
   the Edit form warns if a Score doesn't fit the rules.
 - New Covenant, New Character, New Laboratory and Bind Familiar are offered
   only on the saga and next to their own kind of record, so a sheet's key
   bar shows what belongs there.
+
+### Florilegium
+
+- Choose which sourcebooks are in play for each saga, from Edit Saga. The
+  core book is always in play and every book is by default. Catalog pickers
+  hide entries from books not in play; F3 shows them anyway.
+- The laboratory Virtue/Flaw catalog now has all 128 entries from
+  Covenants (it had 53).
 - Corrected two House descriptions (Bonisagus, Tytalus) and the chapter
   the laboratory Virtues and Flaws are cited from.
 
 ## 0.11.1 — 2026-09-28
+
+### Scriptorum
 
 - Add and edit dialogs are now checked to fit a 120x45 terminal (the
   smallest size the app is checked at) rather than 80x24, which is no
   longer a target. Nothing you see in the app changes.
 
 ## 0.11.0 — 2026-09-28
+
+### Florilegium
 
 - Adding a Virtue or Flaw now opens on the side you added it from: the
   Virtues section lists Virtues, the Flaws section lists Flaws. F2 switches
@@ -2377,7 +2882,9 @@ Phase 1, the core tracker, is complete.
 - A familiar's picker offers the animal and magic-being Qualities and
   Inferiorities as well as the ordinary Virtues and Flaws.
 
-## 0.10.0 — 2026-09-28 — Florilegium
+## 0.10.0 — 2026-09-28
+
+### Florilegium
 
 - The character Virtues & Flaws catalog has been checked entry by entry
   against the Definitive Edition and the open supplements: missing entries
@@ -2409,7 +2916,9 @@ Phase 1, the core tracker, is complete.
 - A character's Personal Gear shows column titles on its Weapons, Armor and
   Other Items rows, and a familiar's Natural Weapons list has them too.
 
-## 0.9.0 — 2026-09-28 — Florilegium
+## 0.9.0 — 2026-09-28
+
+### Scriptorum
 
 - Every details panel now works the same way on every sheet and list: one
   per tab, at the bottom of the tab below the part that scrolls, always 12
@@ -2427,21 +2936,31 @@ Phase 1, the core tracker, is complete.
   side-by-side blocks of text.
 - Every details panel's prompt now reads "Select a ... to see its details."
 
-## 0.8.0 — 2026-09-27 — Florilegium
+## 0.8.0 — 2026-09-27
+
+### Florilegium
 
 - Unknown Hooks: a Minor Hook the book says "may be Unknown" (35 of them)
   can be marked Unknown in its add or Edit form. It then counts 3 points in
   the Hooks total, as a Major Hook, and says so in its row ("Favors
   (Unknown, 3 pts)") and details panel. The picker notes which Hooks may be
   Unknown.
+
+### Fundamenta
+
 - Ars Magica Manager is now licensed under the GNU GPL v3 (LICENSE). The
   Ars Magica rules text in its catalogs is credited to Atlas Games under
   CC BY-SA 4.0: every catalog carries the attribution line, and NOTICE.md
   lists the sources, changes made and trademark notices.
+
+### Glossa
+
 - The saga picker has an About dialog (`?`) showing the version and the
   licences and credits.
 
-## 0.7.0 — 2026-09-27 — Florilegium
+## 0.7.0 — 2026-09-27
+
+### Florilegium
 
 - The covenant Boons & Hooks catalog has been checked against Covenants
   and ArM5 and now has 216 entries: Writ of Crenellation, Haunted,
@@ -2457,7 +2976,9 @@ Phase 1, the core tracker, is complete.
   several others, how many times it can be taken, and which book it comes
   from.
 
-## 0.6.0 — 2026-09-27 — Florilegium
+## 0.6.0 — 2026-09-27
+
+### Florilegium
 
 - Laboratory Features: each Feature (Altar, Cauldron, Window... all 36, or a
   custom one) is built on one of the lab's Lesser or Greater Feature
@@ -2481,6 +3002,8 @@ Phase 1, the core tracker, is complete.
 
 ## 0.5.0 — 2026-09-27
 
+### Pagina
+
 - The laboratory's Virtues and Flaws are two lists side by side, with a
   panel showing the chosen one's category, tier, points, effect on the
   Characteristics and rules. A warning appears above them when the lab is
@@ -2503,7 +3026,9 @@ Phase 1, the core tracker, is complete.
   Sources. Old free-text Specialties are converted, e.g. "Terram +1".
 - The Attributes tab records whether the sanctum is marked.
 
-## 0.4.0 — 2026-09-27 — Scriptorum
+## 0.4.0 — 2026-09-27
+
+### Scriptorum
 
 - Every highlight in the app now uses the current theme's own colours
   instead of fixed red, green and cyan, so it stays legible whichever theme
@@ -2517,6 +3042,8 @@ Phase 1, the core tracker, is complete.
 
 ## 0.3.0 — 2026-09-27
 
+### Scriptorum
+
 - The laboratory sheet's top panel is more compact: Identity is titled with
   the lab's name, with Covenant/Owner and Location/Points side by side and
   the Aura below; the Characteristics sit in three columns (the derived
@@ -2529,16 +3056,23 @@ Phase 1, the core tracker, is complete.
 
 ## 0.2.1 — 2026-09-27
 
+### Scriptorum
+
 - A saved choice that a list no longer offers is kept when you save a form
   without touching it, instead of being cleared: a House missing from the
   House list shows as "… (not in the list)", and a laboratory owner who is no
   longer a magus shows by name.
 - Multi-line fields (Biography, descriptions) keep an indented first line,
   such as a Markdown list; only trailing spaces and blank lines are dropped.
+
+### Fundamenta
+
 - Behind the scenes: the standard form's code is simpler and better checked,
   and the tests are sturdier.
 
-## 0.2.0 — 2026-09-27 — Incipit
+## 0.2.0 — 2026-09-27
+
+### Fundamenta
 
 The first tracked version. Includes everything since 0.1.0:
 
@@ -2565,6 +3099,8 @@ The first tracked version. Includes everything since 0.1.0:
     every other sheet's, the Hermetic Magic details panel keeps its hint,
     placeholder tabs read properly, and a few rare display races are gone.
 
-## 0.1.0
+## 0.1.0 — 2026-09-17
 
-Everything before versioning began.
+### Pagina
+
+Everything before versioning began, from the first sheets on 17 September 2026.

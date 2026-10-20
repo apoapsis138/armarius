@@ -1,7 +1,7 @@
 # Title page
 <!-- help: title-page -->
 
-The page the app opens on: the illuminated A and the name Armarius, the tagline, the version and its release name, and the ways on.
+The page the app opens on: the illuminated A and the name Armarius, the tagline, the version and the name of its major version (see What's New), and the ways on.
 
 - **Open Saga** opens the saga you had open last (or the only saga, if there is one). It isn't offered when there is no saga to open.
 - **All Sagas** goes to the [saga picker](help:saga-picker), to choose a saga, start a new one or delete one.

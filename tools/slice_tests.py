@@ -117,7 +117,8 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "tests/dialog_contract_support.py": DIALOG_CONTRACT_TESTS,
     "tests/gui_steps.py": ("test_gui_edit_shared.py",),
     "pyproject.toml": ("test_version.py",),
-    "CHANGELOG.md": ("test_version.py", "test_help.py"),
+    "CHANGELOG.md": ("test_version.py", "test_help.py", "test_title_page.py"),
+    "ars_magica_manager/changelog.py": ("test_help.py", "test_title_page.py"),
 }
 
 

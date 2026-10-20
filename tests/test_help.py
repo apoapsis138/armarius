@@ -1,13 +1,11 @@
 """Help: the help files are well formed, every tab and section
 of every sheet has help, and ? / F1 open Help on what has focus."""
 
-import re
-
 import pytest
 from support import NODES, build_all_tabs, everything_saga, screen_lines, wait_until
 from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
-from ars_magica_manager import ROOT, __version__, storage
+from ars_magica_manager import __version__, storage
 from ars_magica_manager import help_text as ht
 from ars_magica_manager.models import SKETCH, Covenant
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -402,29 +400,18 @@ async def test_help_lists_the_guides_on_their_own():
         assert await wait_until(pilot, lambda: app.screen.topic_id == "guide-seasons")
 
 
-# -- What's New and the release names -----------------------------
-
-#: A named release's heading: "## 2.10.0 — 2026-10-05 — Summa".
-NAMED_HEADING = re.compile(
-    r"^## (\d+\.\d+\.\d+) — \d{4}-\d{2}-\d{2} — (.+)$", re.MULTILINE
-)
+# -- What's New -------------------------------------------------
 
 
-def test_whats_new_is_the_changelog_under_its_own_title():
+def test_whats_new_is_the_changelog_by_feature():
     text = whats_new_text()
     assert text.startswith("# What's New\n")
     assert "# Changelog" not in text
-    assert f"## {__version__} " in text
-    assert "## Release names" in text
-
-
-def test_every_release_name_is_in_the_table_and_on_a_heading():
-    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    table = changelog.split("## Release names", 1)[1].split("\n## ", 1)[0]
-    named = {name for _, name in NAMED_HEADING.findall(changelog)}
-    in_table = set(re.findall(r"^\| ([^|]+?) \| \d", table, re.MULTILINE))
-    assert "Summa" in named
-    assert named == in_table
+    headings = [line for line in text.splitlines() if line.startswith("## ")]
+    assert headings[0] == "## Latest"
+    assert headings[-2:] == ["## Chronicle", "## The names and numbers"]
+    assert "## Peregrinatio" in headings
+    assert f"- **{__version__}** · " in text
 
 
 async def test_whats_new_is_listed_after_about_and_shows_the_changelog():
@@ -439,7 +426,7 @@ async def test_whats_new_is_listed_after_about_and_shows_the_changelog():
         topics.highlighted = topics.get_option_index("ref:whats-new")
         assert await wait_until(pilot, lambda: app.screen.topic_id == "whats-new")
         assert await wait_until(
-            pilot, lambda: "Release names" in "\n".join(screen_lines(app))
+            pilot, lambda: "Chronicle" in "\n".join(screen_lines(app))
         )
 
 

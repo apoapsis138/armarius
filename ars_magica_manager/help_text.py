@@ -39,7 +39,7 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-from . import ROOT, __version__
+from . import ROOT, __version__, changelog
 
 #: Where the help files live.
 HELP_DIR = Path(__file__).parent / "help"
@@ -276,7 +276,7 @@ def book(front_end: str) -> HelpBook:
 
 #: The About page: the version and NOTICE.md (licences, credits).
 ABOUT = "about"
-#: What's New: CHANGELOG.md, every version with its release name.
+#: What's New: CHANGELOG.md by feature and edition, then every version.
 WHATS_NEW = "whats-new"
 #: The pages under REFERENCE, after the generated About and What's New.
 REFERENCE = ("keys",)
@@ -289,13 +289,13 @@ def is_guide(topic_id: str) -> bool:
 
 
 def whats_new_text() -> str:
-    """The What's New page: CHANGELOG.md under a title of its own."""
+    """The What's New page: CHANGELOG.md's latest editions, each feature
+    with its editions, and the Chronicle of every version."""
     try:
-        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        text = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     except OSError:
         return "# What's New\n\nCHANGELOG.md is missing: see the repository."
-    _, _, body = changelog.partition("\n")  # its own "# Changelog" title
-    return f"# What's New\n{body}"
+    return changelog.whats_new(text)
 
 
 def about_text() -> str:
