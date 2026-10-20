@@ -374,7 +374,7 @@ async def test_the_lab_work_screen_plans_a_longevity_ritual():
         )
         screen = app.screen
         await wait_until(pilot, lambda: bool(screen.query("#inv-activity")))
-        screen.query_one("#inv-activity", Select).value = lab_seasons.LONGEVITY
+        screen.set_activity(lab_seasons.LONGEVITY)
         screen.query_one("#inv-vis-from", Select).value = "character"
         await pilot.pause()
         header = strip_markup(str(screen.query_one("#inv-header", Static).content))

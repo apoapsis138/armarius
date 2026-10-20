@@ -278,6 +278,21 @@ def design_spell(design: SpellDesign) -> Spell:
     )
 
 
+def same_spell(a: Spell, b: Spell) -> bool:
+    """Whether two spells are the same spell: name, Arts, level and
+    parameters (one left blank is a design's first step)."""
+    fields_ = ("name", "technique", "form", "level")
+    steps = {"range": "Personal", "duration": "Momentary", "target": "Individual"}
+    return (
+        all(getattr(a, f) == getattr(b, f) for f in fields_)
+        and all(
+            (getattr(a, f) or first) == (getattr(b, f) or first)
+            for f, first in steps.items()
+        )
+        and sorted(a.requisites) == sorted(b.requisites)
+    )
+
+
 def requisite_arts(magus: Character, spell: Spell) -> tuple[str, str]:
     """The Technique and Form a spell's Lab Total uses: each the lowest of
     the Art and its requisites of the same kind."""
@@ -379,6 +394,16 @@ def work(
         return found, None
     if any(k.spell_id == spell.id for k in magus.spells_known):
         return [f"{magus.name} already knows {spell.name}."], None
+    source = spl.find_spell(saga, plan.design.source_spell_id if plan.design else None)
+    if (
+        source is not None
+        and any(k.spell_id == source.id for k in magus.spells_known)
+        and same_spell(source, spell)
+    ):
+        return [
+            f"{magus.name} already knows {source.name}: change the design "
+            "to invent a variant of it."
+        ], None
     similar = spl.find_spell(saga, plan.similar_spell_id)
     if similar is not None and not any(
         k.spell_id == similar.id for k in magus.spells_known

@@ -41,6 +41,7 @@ from ..rules import (
 )
 from ..rules import supplement_work as sw
 from ..seasons import plans as season_plans_text
+from . import activity as activity_forms
 from . import virtue as virtue_forms
 
 #: A front-end's Virtue/Flaw chooser for the form: (saga, character, side)
@@ -113,6 +114,7 @@ _SEASON_READS: ChoiceReads = (
         ),
         lambda v: {"title": v.get("title") or ""},
     ),
+    ((laboratory_seasons.NEW,), lambda v: {"title": v.get("lab_name") or ""}),
     ((book_seasons.WRITE_SUMMA,), lambda v: {"book_level": v.get("book_level")}),
     (
         (
@@ -754,9 +756,6 @@ def study_fields(
 ) -> list[DialogField]:
     """The Activity, and the Source Quality, book or teacher it studies from."""
     books = sourcebooks.saga_books(saga)
-    activities = season_rules.activities_for(
-        character, books=books, keep=attr(existing, "activity", "")
-    )
     gloss = attr(existing, "gloss", False)
     # Glossing is Covenants': off the form with the book out of play, unless
     # the plan already glosses.
@@ -769,11 +768,16 @@ def study_fields(
         DialogField(
             "activity",
             "Activity",
-            "select",
+            "picker",
             attr(existing, "activity", None),
-            options=[(a.label, a.key) for a in activities],
             required=True,
-            hint="The line above Save shows what the season will give.",
+            placeholder="(choose the activity...)",
+            choose=lambda current: activity_forms.choose_activity(
+                saga, character, current
+            ),
+            display=activity_forms.activity_label,
+            hint="Filter by Type or Book, or type to search. The line above "
+            "Save shows what the season will give.",
         ),
         DialogField(
             "source_quality",
@@ -991,6 +995,24 @@ def _book_work_fields(
     ]
 
 
+def _new_lab_fields(
+    character: Character, existing: SeasonPlan | None
+) -> list[DialogField]:
+    """Setting up a new laboratory: its name."""
+    named = existing is not None and existing.activity == laboratory_seasons.NEW
+    return [
+        DialogField(
+            "lab_name",
+            "Laboratory's name",
+            "text",
+            existing.title if named and existing else "",
+            placeholder=f"blank: {character.name}'s laboratory",
+            show_if=_activity_is(laboratory_seasons.NEW),
+            hint="Made in the magus's covenant when the season is applied.",
+        )
+    ]
+
+
 def _florilegium_subjects(saga: Saga, character: Character) -> list[tuple[str, str]]:
     """The subjects the character can get at unbound tractatus on."""
     names = season_plans_text.spell_names(saga, character)
@@ -1160,6 +1182,7 @@ def season_plan_fields(
         *study_fields(saga, character, existing),
         *_subject_fields(saga, character, existing),
         *_book_work_fields(saga, character, existing),
+        *_new_lab_fields(character, existing),
         *_student_and_research_fields(saga, character, existing),
         *_supplement_fields(saga, character, existing, _activity_is, vf_picker),
         *_correspondence_fields(saga, character, existing),

@@ -13,6 +13,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from . import activity_groups as groups
+
 _CH = "(https://www.redcap.org/page/{})"
 SOURCE = "Ars Magica Definitive Edition, Chapter 10: Long-Term Events " + _CH.format(
     "Ars_Magica_Definitive_Edition,_Chapter_Ten:_Long-Term_Events"
@@ -80,6 +82,8 @@ class SimpleActivity:
     #: No longer offered (another activity does it now); kept so an older
     #: plan still loads and says what to plan instead.
     retired: bool = False
+    #: What the season is for (activity_groups), as the picker groups it.
+    group: str = ""
 
     @property
     def book(self) -> str:
@@ -103,6 +107,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         None,
         "a stress die + the aura, as for vis",
         _M,
+        group=groups.STUDY,
     ),
     SimpleActivity(
         "study_realia",
@@ -112,6 +117,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "913",
         None,
         "the collection's Quality",
+        group=groups.STUDY,
     ),
     SimpleActivity(
         "read_commentary",
@@ -123,6 +129,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         None,
         "the book's Quality + the opus bonus",
         retired=True,
+        group=groups.STUDY,
     ),
     SimpleActivity(
         "record_lectures",
@@ -131,6 +138,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "Communication + Scribe / 2. Exposure 2 in Profession: Scribe.",
         ACADEME,
         "913",
+        group=groups.WRITING,
     ),
     SimpleActivity(
         "inspeximus",
@@ -139,6 +147,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "your score when you wrote it) / 3, up to half your score.",
         COVENANTS,
         "913",
+        group=groups.WRITING,
     ),
     SimpleActivity(
         "bind_catalog",
@@ -148,6 +157,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         COVENANTS,
         "913",
         who=_M,
+        group=groups.WRITING,
     ),
     SimpleActivity(
         "library_research",
@@ -157,6 +167,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "Factor (Exposure 2 in the Ability used).",
         COVENANTS,
         "913",
+        group=groups.STUDY,
     ),
     # Mysteries and House activities.
     SimpleActivity(
@@ -167,6 +178,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         DE_INITIATION,
         "918",
         no_xp=True,
+        group=groups.MYSTERIES,
     ),
     SimpleActivity(
         "mystagogue",
@@ -175,6 +187,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "2 in the Mystery's Lore.",
         MYSTERIES,
         "918",
+        group=groups.MYSTERIES,
     ),
     SimpleActivity(
         "quest_season",
@@ -182,6 +195,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "A season toward an Initiation Script's bonus: Exposure 2.",
         MYSTERIES,
         "918",
+        group=groups.MYSTERIES,
     ),
     SimpleActivity(
         "house_work",
@@ -193,6 +207,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         None,
         "as the House's rule gives (Exposure 2 if nothing else)",
         _M,
+        group=groups.ORDER,
     ),
     SimpleActivity(
         "tribunal_duties",
@@ -200,6 +215,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "A season of Order business or Redcap rounds: Exposure 2.",
         SOCIETATES,
         "918",
+        group=groups.ORDER,
     ),
     # Crafts and livelihood.
     SimpleActivity(
@@ -210,6 +226,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CITY_GUILD,
         "919",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "workshop_production",
@@ -218,6 +235,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CITY_GUILD,
         "919",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "improve_workshop",
@@ -228,6 +246,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "919",
         4,
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "make_excellent_item",
@@ -236,6 +255,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CITY_GUILD,
         "919",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "repair_item",
@@ -244,6 +264,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CITY_GUILD,
         "919",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "merchant_venture",
@@ -252,6 +273,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CITY_GUILD,
         "919",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "tournament",
@@ -260,6 +282,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         LORDS,
         "919",
         who=_C,
+        group=groups.ADVENTURE,
     ),
     SimpleActivity(
         "train_group",
@@ -268,6 +291,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "in Leadership or the weapon.",
         SOURCE,
         "919",
+        group=groups.TEACHING,
     ),
     SimpleActivity(
         "use_agents",
@@ -276,6 +300,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         LORDS,
         "919",
         who=_C,
+        group=groups.ORDER,
     ),
     # Scholars, physicians and artists.
     SimpleActivity(
@@ -287,6 +312,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         None,
         "the lecture's Source Quality",
         _C,
+        group=groups.STUDY,
     ),
     SimpleActivity(
         "vernacular_literature",
@@ -295,6 +321,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         ACADEME,
         "920",
         who=_C,
+        group=groups.STUDY,
     ),
     SimpleActivity(
         "research_formula",
@@ -304,6 +331,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "920",
         5,
         who=_C,
+        group=groups.STUDY,
     ),
     SimpleActivity(
         "medical_season",
@@ -313,6 +341,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         ACADEME,
         "920",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "produce_remedies",
@@ -321,6 +350,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         ACADEME,
         "920",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "apothecary",
@@ -329,6 +359,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         ACADEME,
         "920",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "create_art",
@@ -337,6 +368,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         ACADEME,
         "920",
         who=_C,
+        group=groups.WORK,
     ),
     SimpleActivity(
         "study_artwork",
@@ -347,6 +379,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         None,
         "half the work's Aesthetic Quality",
         _C,
+        group=groups.STUDY,
     ),
     # Religious seasons.
     SimpleActivity(
@@ -359,6 +392,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         None,
         "the church's Divine aura",
         _C,
+        group=groups.FAITH,
     ),
     SimpleActivity(
         "good_works",
@@ -368,6 +402,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "921",
         who=_C,
         faith=1,
+        group=groups.FAITH,
     ),
     SimpleActivity(
         "care_of_souls",
@@ -376,6 +411,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CHURCH,
         "921",
         who=_C,
+        group=groups.FAITH,
     ),
     SimpleActivity(
         "follow_preacher",
@@ -386,6 +422,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         None,
         "the sermons' Aesthetic Quality",
         _C,
+        group=groups.FAITH,
     ),
     SimpleActivity(
         "pilgrimage",
@@ -395,6 +432,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CHURCH,
         "921",
         who=_C,
+        group=groups.ADVENTURE,
     ),
     SimpleActivity(
         "penance",
@@ -403,6 +441,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         CHURCH,
         "921",
         who=_C,
+        group=groups.FAITH,
     ),
     # Animals.
     SimpleActivity(
@@ -413,6 +452,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "Handling.",
         DE_TAMING,
         "922",
+        group=groups.WORK,
     ),
     # Travel and other.
     SimpleActivity(
@@ -422,6 +462,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "an Area Lore or a language.",
         SOURCE,
         "923",
+        group=groups.ADVENTURE,
     ),
     SimpleActivity(
         "search_lacuna",
@@ -430,6 +471,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         SOCIETATES,
         "923",
         4,
+        group=groups.STUDY,
     ),
     SimpleActivity(
         "convalesce",
@@ -439,6 +481,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         SOURCE,
         "923",
         no_xp=True,
+        group=groups.REST,
     ),
 )
 BY_KEY: dict[str, SimpleActivity] = {a.key: a for a in ACTIVITIES}

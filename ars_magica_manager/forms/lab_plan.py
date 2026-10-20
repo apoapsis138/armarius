@@ -5,8 +5,8 @@ the laboratory's Planning list's New Spell, Plan and Clear
 (commands.SectionOps).
 
 One form plans every kind of lab work, each field shown only for the
-work that uses it: inventing a spell (from a spell chosen first, or a
-blank design), learning one from a Lab Text, decoding a text, extracting
+work that uses it: inventing a spell (from any spell as its template,
+the magus's own known spells first, or a blank design), learning one from a Lab Text, decoding a text, extracting
 vis, fixing an Arcane Connection, a Longevity Ritual, enchanting, binding
 and empowering a familiar, taming, moving the lab and the rest. The
 terminal draws this same form on its own full screen (InventSpellScreen),
@@ -24,7 +24,17 @@ from .. import enchanted_devices as ed
 from .. import lab_texts as lt
 from .. import spells as spl
 from ..arts import ARTS, FORMS, TECHNIQUES
-from ..commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps, notes
+from ..commands import (
+    Choice,
+    Choose,
+    Command,
+    Confirm,
+    Form,
+    Picked,
+    Refuse,
+    SectionOps,
+    notes,
+)
 from ..familiars import familiar_of
 from ..form_spec import ChoiceReads, DialogField, pairs, read_for_choice
 from ..markup import escape, todo
@@ -45,6 +55,7 @@ from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons, spell_levels
 from ..rules import laboratory_seasons as ls
+from . import activity as activity_forms
 from . import spell as spell_forms
 
 #: The Range/Duration/Target choice for one the app doesn't list.
@@ -120,6 +131,65 @@ def design_from(spell: Spell) -> SpellDesign:
     )
 
 
+#: The template list's filter, and its value for each kind of spell.
+FROM = "From"
+OTHER_SPELLS = "Every other spell"
+#: The template list's entry for a blank design.
+BLANK = Choice("A new spell (a blank design)", None, search="new blank")
+
+
+def known_heading(magus: Character) -> str:
+    return f"Known to {magus.name}"
+
+
+def _with_from(choice: Choice, kind: str) -> Choice:
+    return Choice(
+        choice.label, choice.value, choice.detail, choice.search, ((FROM, kind),)
+    )
+
+
+def choose_template(
+    saga: Saga,
+    magus: Character,
+    current: str | None = None,
+    apply: Callable[[Any], Any] = Picked,
+) -> Choose:
+    """The spell a new design starts from: a blank design, then every spell
+    there is, the magus's own known spells first (a variant of one they
+    know), each copied into the design to change as they like."""
+    known_ids = {k.spell_id for k in magus.spells_known}
+
+    def choices() -> list[Choice]:
+        every = spell_forms.spell_choices(saga, set())
+        known = [
+            _with_from(c, known_heading(magus)) for c in every if c.value in known_ids
+        ]
+        rest = [_with_from(c, OTHER_SPELLS) for c in every if c.value not in known_ids]
+        return [BLANK, *known, *rest]
+
+    return Choose(
+        f"Start {escape(magus.name)}'s spell from...",
+        choices,
+        apply,
+        empty="No spells to start from.",
+        others=lambda: [
+            _with_from(c, OTHER_SPELLS)
+            for c in spell_forms.spell_choices(saga, set(), in_play=False)
+        ],
+        help_id="invent-spell-start",
+        filters=(FROM,),
+    )
+
+
+def template_label(saga: Saga, spell_id: str | None) -> str:
+    """How the Start from field shows the spell a design started from."""
+    source = spl.find_spell(saga, spell_id)
+    if source is None:
+        return "(a new spell)"
+    level = "Gen" if source.level is None else source.level
+    return f"{source.name}  {spl.shorthand(source)}  (level {level})"
+
+
 class LabPlanForm:
     """The lab work form for `magus` in `lab`, `season` `year`: `existing`
     the season's lab plan being changed (None: a new one), `design` the
@@ -173,14 +243,14 @@ class LabPlanForm:
             DialogField(
                 "activity",
                 "Lab work",
-                "select",
+                "picker",
                 self.activity,
-                options=[
-                    (season_rules.ACTIVITIES[key].label, key)
-                    for key in lab_seasons.LAB_ACTIVITIES
-                ],
                 allow_blank=True,
-                placeholder="(choose the lab work)",
+                placeholder="(choose the lab work...)",
+                choose=lambda current: activity_forms.choose_activity(
+                    self.saga, self.magus, current, lab=True
+                ),
+                display=activity_forms.activity_label,
                 hint="The line above Schedule shows the Lab Total and when "
                 "it will be done.",
             ),
@@ -196,6 +266,20 @@ class LabPlanForm:
         Duration / Target and its level."""
         design, inventing = self.design, _doing(lab_seasons.INVENT)
         found = [
+            DialogField(
+                "start_from",
+                "Start from",
+                "picker",
+                design.source_spell_id if design else None,
+                allow_blank=True,
+                placeholder="(a new spell)",
+                choose=lambda current: choose_template(self.saga, self.magus, current),
+                display=lambda spell_id: template_label(self.saga, spell_id),
+                show_if=inventing,
+                fills=self.design_values,
+                hint="Any spell, the magus's own known spells first: its "
+                "figures fill the design in, to change as you like.",
+            ),
             DialogField(
                 "name",
                 "Spell name",
@@ -303,6 +387,30 @@ class LabPlanForm:
                 show_if=inventing,
             ),
         ]
+        return found
+
+    def design_values(self, values: dict[str, Any]) -> dict[str, Any]:
+        """The design fields' values from the spell Start from names (all
+        blank for a new spell)."""
+        spell = spl.find_spell(self.saga, values.get("start_from"))
+        design = design_from(spell) if spell is not None else None
+        found: dict[str, Any] = {
+            "name": design.name if design else "",
+            "description": design.description if design else "",
+            "technique": (design.technique if design else "") or None,
+            "form": (design.form if design else "") or None,
+            "requisites": ", ".join(design.requisites) if design else "",
+            "base_level": design.base_level if design else None,
+            "ritual": bool(design and design.ritual),
+            "extra_magnitudes": design.extra_magnitudes if design else 0,
+            "base_effect": "",
+        }
+        for kind in KINDS:
+            current = getattr(design, kind) if design else FIRST_STEPS[kind]
+            listed = [v for _, v in self.parameter_options[kind]]
+            found[kind] = current if current in listed else OTHER
+            found[f"{kind}_name"] = current if current not in listed else ""
+            found[f"{kind}_steps"] = None
         return found
 
     def _start_hint(self) -> str:
@@ -827,6 +935,11 @@ class LabPlanForm:
             else:
                 chosen[kind] = value
         design = self.design
+        if "start_from" in values:
+            # The spell Start from names now, and its level as printed when
+            # it records no base level.
+            source = spl.find_spell(self.saga, values.get("start_from"))
+            design = design_from(source) if source is not None else None
         return SpellDesign(
             key=self.key,
             name=values.get("name") or "",
@@ -1159,7 +1272,6 @@ def new_spell(saga: Saga, lab: Laboratory, index: int | None) -> Command:
     if owner is None:
         return Refuse("Invent a Spell", NO_OWNER)
     season, year = queue_season(saga, lab, index)
-    blank = Choice("A new spell (a blank design)", None, search="new blank")
 
     def start(spell_id: str | None) -> Form:
         spell = spl.find_spell(saga, spell_id) if spell_id else None
@@ -1174,14 +1286,7 @@ def new_spell(saga: Saga, lab: Laboratory, index: int | None) -> Command:
             activity=lab_seasons.INVENT,
         ).form()
 
-    return Choose(
-        f"Start {escape(owner.name)}'s spell from...",
-        lambda: [
-            blank,
-            *spell_forms.spell_choices(saga, {k.spell_id for k in owner.spells_known}),
-        ],
-        start,
-    )
+    return choose_template(saga, owner, apply=start)
 
 
 def clear_lab_season(saga: Saga, lab: Laboratory, index: int | None) -> Command:

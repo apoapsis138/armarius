@@ -21,7 +21,9 @@ from .models import (
     Saga,
     character_age,
 )
+from .rules import activity_groups as groups
 from .rules.activities import ACTIVITIES
+from .rules.activities import OTHER as OTHER_KEY
 from .sheets import character as cs
 
 #: The groups a covenant's people are shown in, in order, by type.
@@ -212,67 +214,28 @@ LAB, STUDY, WRITING, WORK, ADVENTURE, REST, OTHER = (
 )
 KINDS = (LAB, STUDY, WRITING, WORK, ADVENTURE, REST, OTHER)
 
-_KIND_OF: dict[str, str] = {
-    **dict.fromkeys(
-        (
-            "practice",
-            "read",
-            "taught",
-            "trained",
-            "vis_study",
-            "study_significato",
-            "study_realia",
-            "read_commentary",
-            "library_research",
-            "attend_university",
-            "vernacular_literature",
-            "research_formula",
-            "study_artwork",
-            "integrate_insight",
-            "undergo_initiation",
-            "search_lacuna",
-        ),
-        STUDY,
-    ),
-    **dict.fromkeys(
-        (
-            "teach",
-            "write_summa",
-            "write_tractatus",
-            "copy_book",
-            "translate_book",
-            "rewrite_lab_texts",
-            "copy_lab_texts",
-            "edit_florilegium",
-            "write_casting_tablet",
-            "teach_abbreviations",
-            "teach_hermetic_virtue",
-            "open_arts",
-            "search_apprentice",
-            "record_lectures",
-            "inspeximus",
-            "bind_catalog",
-            "mystagogue",
-            "train_group",
-        ),
-        WRITING,
-    ),
-    **dict.fromkeys(("adventure", "travel", "pilgrimage", "tournament"), ADVENTURE),
-    **dict.fromkeys(("aging", "convalesce", "longevity_subject"), REST),
-    "other": OTHER,
+#: The timeline's kind for each group of activities (activity_groups); a
+#: tradition's seasons and the rest of a season's work are Work.
+_KIND_OF_GROUP: dict[str, str] = {
+    groups.STUDY: STUDY,
+    groups.MYSTERIES: STUDY,
+    groups.WRITING: WRITING,
+    groups.TEACHING: WRITING,
+    groups.ADVENTURE: ADVENTURE,
+    groups.REST: REST,
 }
 
 
 def activity_kind(key: str) -> str:
     """The kind of season an activity is (LAB, STUDY...): laboratory work
-    by the registry's own flag, the rest by the table above, anything
-    else (a working season, a sourcebook's trade) Work."""
+    by the registry's own flag, Other by its key, the rest by the group
+    the activity belongs to (Work for a group not listed above)."""
     activity = ACTIVITIES.get(key)
-    if activity is None:
+    if activity is None or key == OTHER_KEY:
         return OTHER
     if activity.lab:
         return LAB
-    return _KIND_OF.get(key, WORK)
+    return _KIND_OF_GROUP.get(activity.group, WORK)
 
 
 _KEY_BY_LABEL = {a.label: key for key, a in ACTIVITIES.items()}

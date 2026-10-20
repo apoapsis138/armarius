@@ -426,7 +426,7 @@ async def test_the_lab_work_screen_offers_an_effects_lab_texts():
         )
         screen = app.screen
         await wait_until(pilot, lambda: bool(screen.query("#inv-activity")))
-        screen.query_one("#inv-activity", Select).value = es.CHARGED_WORK
+        screen.set_activity(es.CHARGED_WORK)
         await pilot.pause()
         row = screen.query_one("#inv-effect-text-row")
         assert await wait_until(pilot, lambda: row.display)

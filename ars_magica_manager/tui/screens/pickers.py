@@ -289,6 +289,11 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     def _filled(self, shown: list[EntryT]) -> None:
         """Called with the entries listed after each refill."""
 
+    def _heading(self, entry: EntryT) -> str:
+        """The heading `entry` is listed under ("": none); a heading is
+        shown above the first entry of each run that shares it."""
+        return ""
+
     def _show_details(self, entry: EntryT | None) -> None:
         """Show `entry`'s details under the list (None: a message row, or
         nothing listed)."""
@@ -352,7 +357,11 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
             return
 
         options = []
+        heading = ""
         for entry in matches:
+            if (under := self._heading(entry)) and under != heading:
+                options.append(Option(f"[b]{escape(under)}[/]", disabled=True))
+            heading = under
             item_id = self._item_id(entry)
             self._by_item_id[item_id] = entry
             label = self._label_for(entry)
@@ -360,7 +369,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
                 label += f"  [dim]({self._out_of_play_note(entry)})[/]"
             options.append(Option(label, id=item_id))
         option_list.add_options(options)
-        option_list.highlighted = 0
+        option_list.highlighted = next(
+            index for index, option in enumerate(options) if not option.disabled
+        )
 
     async def on_input_changed(self, event: Input.Changed) -> None:
         if event.input.id == "picker-search":

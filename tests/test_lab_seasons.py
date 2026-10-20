@@ -333,7 +333,7 @@ async def test_e_on_the_lab_planning_tab_invents_a_spell_started_from_one():
         await pilot.pause()
         ws, screen = await _open_invent(pilot, app)
         # A free season opens with no lab work chosen.
-        assert screen.query_one("#inv-activity", Select).value == Select.NULL
+        assert screen.activity is None
         assert (
             _text(screen, "#inv-header") == "Lab work -- Tiberius in Tower, Spring 1220"
         )
@@ -341,7 +341,7 @@ async def test_e_on_the_lab_planning_tab_invents_a_spell_started_from_one():
         screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert _text(screen, "#inv-error") == "Choose the lab work."
-        screen.query_one("#inv-activity", Select).value = lab_seasons.INVENT
+        screen.set_activity(lab_seasons.INVENT)
         await pilot.pause()
         header = _text(screen, "#inv-header")
         assert header == "Invent a spell -- Tiberius in Tower, Spring 1220"
@@ -402,7 +402,7 @@ async def test_a_number_that_isnt_one_refuses_the_plan():
         await pilot.press("enter")
         await pilot.pause()
         _ws, screen = await _open_invent(pilot, app)
-        screen.query_one("#inv-activity", Select).value = lab_seasons.EXTRACT
+        screen.set_activity(lab_seasons.EXTRACT)
         screen.query_one("#inv-days", Input).value = "a week"
         await pilot.pause()
         screen.query_one("#btn-save", Button).press()

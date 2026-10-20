@@ -4,8 +4,9 @@ terminal and the desktop play a season out the same way.
 The question first (what the season's plans will do, and the new year's
 note), then, at the year's end with a covenant in deficit, whether to
 advance anyway; then whether each contested resource whose security
-lapsed was secured, and whether to take each Discovery an experiment's
-risk can reach. Only then is the season played out (seasons.finish_season)
+lapsed was secured, whether to take each Discovery an experiment's
+risk can reach, and whether each magus setting up a new laboratory
+spends the next season finishing it. Only then is the season played out (seasons.finish_season)
 and the date moved on. The last step ends with `Played`: what the season
 did and the line saying so, for the front-end to show the season's
 results.
@@ -24,6 +25,8 @@ from ..commands import Command, Confirm, Form
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import SEASONS, Saga, next_season
+from ..rules import laboratory_seasons as ls
+from ..rules.activities import Outcome
 from ..seasons.advance import Advanced
 
 #: Backs the saga up before a season with plans is applied
@@ -173,14 +176,14 @@ def _discoveries(
     worked = seasons.resolve(saga, rng())
     moves = seasons.discovery_moves(saga, worked)
     if not moves:
-        return _world_turns(saga, worked, secured, backup, rng)
+        return _new_labs(saga, worked, secured, backup, rng)
 
-    def apply(values: dict[str, Any]) -> Played | Form:
+    def apply(values: dict[str, Any]):
         for index, (outcome, _text) in enumerate(moves):
             seasons.take_discovery_move(
                 saga, outcome, bool(values.get(f"move_{index}"))
             )
-        return _world_turns(saga, worked, secured, backup, rng)
+        return _new_labs(saga, worked, secured, backup, rng)
 
     fields: list[DialogField] = []
     for index, (_outcome, text) in enumerate(moves):
@@ -191,10 +194,75 @@ def _discoveries(
     return Form("Discoveries", lambda: fields, apply, save_label="Continue")
 
 
+def new_lab_seasons(saga: Saga, worked: list[Any]) -> list[Outcome]:
+    """The season's first seasons of a new laboratory that will be applied."""
+    return [
+        o
+        for o in worked
+        if isinstance(o, Outcome)
+        and o.ok
+        and o.plan.activity == ls.NEW
+        and saga.character(o.character_id) is not None
+    ]
+
+
+def _new_labs(
+    saga: Saga,
+    worked: list[Any],
+    secured: dict[str, bool],
+    backup: Backup,
+    rng: Callable[[], random.Random],
+):
+    """Whether each magus setting up a new laboratory would like to spend
+    the next season finishing it (a tick each, ticked; untick to decline),
+    then the season played out."""
+    found = new_lab_seasons(saga, worked)
+    if not found:
+        return _world_turns(saga, worked, secured, (), backup, rng)
+
+    def apply(values: dict[str, Any]):
+        finish = tuple(
+            o for index, o in enumerate(found) if values.get(f"finish_{index}")
+        )
+        return _world_turns(saga, worked, secured, finish, backup, rng)
+
+    fields: list[DialogField] = []
+    for index, outcome in enumerate(found):
+        magus = saga.character(outcome.character_id)
+        assert magus is not None
+        name = ls.new_lab_name(magus, outcome.plan)
+        fields += [
+            DialogField(
+                f"_finish_{index}",
+                "",
+                "info",
+                f"{escape(magus.name)} sets up {escape(name)} this season: it "
+                "works with the Basic Flaw (-3 General Quality) until a second "
+                "season's work in it removes the Flaw.",
+            ),
+            DialogField(
+                f"finish_{index}",
+                f"Would you like {escape(magus.name)} to finish it next season?",
+                "check",
+                True,
+                hint="Plans the next season as lab work setting it up; untick "
+                "to plan that season yourself.",
+            ),
+        ]
+    return Form(
+        "A New Laboratory",
+        lambda: fields,
+        apply,
+        save_label="Continue",
+        help_id="advance-new-lab",
+    )
+
+
 def _world_turns(
     saga: Saga,
     worked: list[Any],
     secured: dict[str, bool],
+    finish: tuple[Outcome, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
 ):
@@ -204,9 +272,9 @@ def _world_turns(
         world_turns.proposals(saga, rng()) if saga.current_season == SEASONS[-1] else []
     )
     if not found:
-        return _finish(saga, worked, secured, backup, rng)
+        return _finish(saga, worked, secured, finish, backup, rng)
     return world_turns.review(
-        saga, found, lambda: _finish(saga, worked, secured, backup, rng)
+        saga, found, lambda: _finish(saga, worked, secured, finish, backup, rng)
     )
 
 
@@ -214,11 +282,13 @@ def _finish(
     saga: Saga,
     worked: list[Any],
     secured: dict[str, bool],
+    finish: tuple[Outcome, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
 ) -> Played:
     """Play the season out in the rules' order and move the date on (the
-    caller saves)."""
+    caller saves); then plan the second season of each new laboratory
+    `finish` names."""
     done = seasons.finish_season(saga, worked, secured, rng(), backup=backup)
     message = f"It is now {saga.current_season} {saga.current_year}."
     if done.applied:
@@ -226,6 +296,12 @@ def _finish(
             f" Seasons applied for {', '.join(c.name for c in done.applied)}"
             " (see each one's Diary)."
         )
+    for outcome in finish:
+        planned = seasons.plan_lab_finish(saga, outcome)
+        magus = saga.character(outcome.character_id)
+        lab = saga.laboratory(planned.lab_id) if planned else None
+        if magus is not None and lab is not None:
+            message += f" {magus.name} finishes {lab.name} this season (planned)."
     if done.added:
         message += (
             " Added to Wealth: "

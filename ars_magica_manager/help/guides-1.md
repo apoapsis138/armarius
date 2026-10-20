@@ -40,7 +40,7 @@ Each magus, companion and Mythic Companion has one plan per season, wherever it 
 2. Choose **Planning** in the rail on the left. The **This Season** section names the season, or says "Nothing planned".
 3. Click **Plan** (or **Edit**, once a plan is made). The Plan Season form opens in place of the section, titled with the character's name and the season.
 <!-- /gui -->
-4. Choose the **Activity**. The form then shows only the fields that activity needs, such as **Experience in**, a **Book**, a **Teacher / master** or a **Source Quality**. Leave **Stress die (blank: rolled)** empty to let the app roll when the season is applied.
+4. Choose the **Activity**: it opens a list grouped by Type (Study, Writing & books, Work & trade and so on). Narrow it with **Type** or **Book**, or type part of the name, then choose one; the character's recent activities are at the top. See [Finding an activity](help:guide-seasons-find). The form then shows only the fields that activity needs, such as **Experience in**, a **Book**, a **Teacher / master** or a **Source Quality**. Leave **Stress die (blank: rolled)** empty to let the app roll when the season is applied.
 5. Watch the line above Save: it shows what the season will give, or what is wrong with the plan. Save refuses a plan that breaks a rule until it is fixed.
 6. Choose **Save**. This Season now shows the plan and its expected gains.
 
@@ -52,6 +52,26 @@ To change a plan, click **Edit**; to clear it, click **Clear** and confirm.
 <!-- /gui -->
 Teaching takes two plans: the teacher plans Teach and the student plans Be taught, for the same season. A helper in a laboratory plans **Assist in a laboratory** on their own sheet.
 
+### Finding an activity
+<!-- help: guide-seasons-find -->
+
+There are many activities, more with each sourcebook in play, so the Activity list can be narrowed:
+
+<!-- tui -->
+1. In the Plan Season form, press Enter on **Activity**. The list opens with the character's **Recent** activities first, then every activity under its Type.
+2. Press F2 until the Type you want is shown above the list, for example **Study** or **Work & trade**; F2 past the last Type shows them all again. Or Tab to **Type** or **Book** and choose one.
+3. Type part of the name, for example `read`, to narrow it further.
+4. Use the arrow keys to highlight an activity: its summary and rule are shown under the list. Press Enter to choose it.
+<!-- /tui -->
+<!-- gui -->
+1. In the Plan Season form, click **Activity**. The list opens with the character's **Recent** activities first, then every activity under its Type.
+2. Choose a Type above the list, for example **Study** or **Work & trade**, or a **Book**.
+3. Type part of the name, for example `read`, to narrow it further.
+4. Click an activity: its summary and rule are shown beside the list. Double-click it, or click **Choose**.
+<!-- /gui -->
+
+The laboratory's **Lab work** list works the same way, with its own Types: Inventing, Enchanting, Familiar, Texts and vis, and The laboratory.
+
 ### Planning lab work
 <!-- help: guide-seasons-lab -->
 
@@ -59,7 +79,7 @@ Teaching takes two plans: the teacher plans Teach and the student plans Be taugh
 1. In the tree, open the covenant's **Laboratories** group and choose the magus's laboratory. Its **Planning** tab (`1`) opens first.
 2. The list shows the owner's seasons from the current one on, with "nothing planned" against a free season. Choose the season.
 3. Press `e` to plan lab work for that season, or `a` to start inventing a new spell from a blank design. Either opens the [Invent Spell screen](help:invent-spell).
-4. Choose the **Lab work** first; the screen then asks only for what that work needs. The Lab Total and the When panel update as you type.
+4. Choose the **Lab work** first, from its list grouped by Type (see [Finding an activity](help:guide-seasons-find)); the screen then asks only for what that work needs. The Lab Total and the When panel update as you type.
 5. Press **Schedule**. For work that takes several seasons, the app also plans the following seasons it is projected to need.
 
 `d` clears the chosen season's plan, and any later seasons scheduled to continue it, after asking. The laboratory needs a magus as its owner before anything can be planned.
@@ -67,8 +87,8 @@ Teaching takes two plans: the teacher plans Teach and the student plans Be taugh
 <!-- gui -->
 1. On the covenant's page, choose **Laboratories** in the rail and click the magus's laboratory.
 2. Choose **Seasons** in the rail. Its **Planning** list shows the owner's seasons from the current one on, with "nothing planned" against a free season. Click the season.
-3. Click **Plan** to plan lab work for that season, or **New Spell** to invent a spell: it first asks for a spell to start from, or "A new spell (a blank design)". Either opens the lab work form (see [Invent Spell screen](help:invent-spell)) in place of the list.
-4. Choose the **Lab work** first; the form then asks only for what that work needs. The line under the fields shows the Lab Total and when the work is done, updated as you type.
+3. Click **Plan** to plan lab work for that season, or **New Spell** to invent a spell: it first asks for a spell to start from (any spell, the magus's own known spells first), or "A new spell (a blank design)"; the form's **Start from** changes it later. Either opens the lab work form (see [Invent Spell screen](help:invent-spell)) in place of the list.
+4. Choose the **Lab work** first, from its list grouped by Type (see [Finding an activity](help:guide-seasons-find)); the form then asks only for what that work needs. The line under the fields shows the Lab Total and when the work is done, updated as you type.
 5. Click **Schedule**. For work that takes several seasons, the app also plans the following seasons it is projected to need.
 
 **Clear** clears the clicked season's plan, and any later seasons scheduled to continue it, after asking. The laboratory needs a magus as its owner before anything can be planned.

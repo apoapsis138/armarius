@@ -334,6 +334,7 @@ def _adventure_subject(saga: Saga, character: Character, plan: SeasonPlan) -> st
 _SUBJECTS: dict[str, Callable[[Saga, Character, SeasonPlan], str]] = {
     **{key: _book_subject for key in (*bs.SHEET_ACTIVITIES, bs.DECODE_TEXT)},
     ls.ASSIST: _assist_subject,
+    ls.NEW: lambda saga, character, plan: ls.new_lab_name(character, plan),
     **{key: _apprentice_subject for key in aps.ACTIVITIES},
     lab_seasons.TAMING: _taming_subject,
     **{key: _laboratory_subject for key in ls.ACTIVITIES},

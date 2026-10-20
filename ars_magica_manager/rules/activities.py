@@ -54,6 +54,7 @@ from ..models import (
     TraditionDef,
     XpAllocation,
 )
+from . import activity_groups as groups
 from . import (
     aging,
     apprentice_seasons,
@@ -185,6 +186,8 @@ class Activity:
     #: A tradition's own work: offered only to its members (a catalog
     #: id), or "*" to a member of any tradition.
     tradition: str = ""
+    #: What the season is for (activity_groups): the picker's Type.
+    group: str = ""
 
 
 ACTIVITIES: dict[str, Activity] = {
@@ -198,6 +201,7 @@ ACTIVITIES: dict[str, Activity] = {
             EXPOSURE_SOURCE,
             working=True,
             distractable=True,
+            group=groups.WORK,
         ),
         Activity(
             PRACTICE,
@@ -207,6 +211,7 @@ ACTIVITIES: dict[str, Activity] = {
             "spell's Mastery (5). Arts can't be practised.",
             PRACTICE_SOURCE,
             distractable=True,
+            group=groups.STUDY,
         ),
         Activity(
             READ,
@@ -216,6 +221,7 @@ ACTIVITIES: dict[str, Activity] = {
             "the reader's own books.",
             BOOKS_SOURCE,
             distractable=True,
+            group=groups.STUDY,
         ),
         Activity(
             TAUGHT,
@@ -224,6 +230,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Teaching + 3, +6 for one student, +3 for two; up to their score.",
             TEACHING_SOURCE,
             distractable=True,
+            group=groups.STUDY,
         ),
         Activity(
             TEACH,
@@ -231,6 +238,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Teaching someone who plans Be taught: Exposure (2 xp) in Teaching "
             "or the language used.",
             TEACHING_SOURCE,
+            group=groups.TEACHING,
         ),
         Activity(
             TRAINED,
@@ -239,6 +247,7 @@ ACTIVITIES: dict[str, Activity] = {
             "score. The master can earn a living meanwhile.",
             TRAINING_SOURCE,
             distractable=True,
+            group=groups.STUDY,
         ),
         Activity(
             VIS_STUDY,
@@ -248,6 +257,7 @@ ACTIVITIES: dict[str, Activity] = {
             VIS_SOURCE,
             who=("magus",),
             distractable=True,
+            group=groups.STUDY,
         ),
         Activity(
             lab_seasons.INVENT,
@@ -258,6 +268,7 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.INVENTING,
         ),
         Activity(
             lab_seasons.LAB_TEXT,
@@ -267,6 +278,7 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.LAB_TEXT_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.INVENTING,
         ),
         Activity(
             lab_seasons.EXTRACT,
@@ -276,6 +288,7 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.EXTRACT_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.TEXTS_AND_VIS,
         ),
         Activity(
             lab_seasons.FIX_AC,
@@ -285,6 +298,7 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.FIX_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.TEXTS_AND_VIS,
         ),
         Activity(
             lab_seasons.LONGEVITY,
@@ -294,6 +308,7 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.LONGEVITY_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.INVENTING,
         ),
         Activity(
             enchant_seasons.OPEN,
@@ -303,6 +318,7 @@ ACTIVITIES: dict[str, Activity] = {
             enchant_seasons.OPEN_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.ENCHANTING,
         ),
         Activity(
             enchant_seasons.INSTIL,
@@ -312,6 +328,7 @@ ACTIVITIES: dict[str, Activity] = {
             enchant_seasons.INSTIL_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.ENCHANTING,
         ),
         Activity(
             enchant_seasons.LESSER_WORK,
@@ -321,6 +338,7 @@ ACTIVITIES: dict[str, Activity] = {
             enchant_seasons.LESSER_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.ENCHANTING,
         ),
         Activity(
             enchant_seasons.CHARGED_WORK,
@@ -330,6 +348,7 @@ ACTIVITIES: dict[str, Activity] = {
             enchant_seasons.CHARGED_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.ENCHANTING,
         ),
         Activity(
             enchant_seasons.ATTUNE,
@@ -339,6 +358,7 @@ ACTIVITIES: dict[str, Activity] = {
             enchant_seasons.ATTUNE_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.ENCHANTING,
         ),
         Activity(
             enchant_seasons.INVESTIGATE,
@@ -348,6 +368,7 @@ ACTIVITIES: dict[str, Activity] = {
             enchant_seasons.INVESTIGATE_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.ENCHANTING,
         ),
         Activity(
             book_seasons.DECODE_TEXT,
@@ -358,6 +379,7 @@ ACTIVITIES: dict[str, Activity] = {
             book_seasons.DECODE_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.TEXTS_AND_VIS,
         ),
         Activity(
             lab_seasons.TAMING,
@@ -369,6 +391,7 @@ ACTIVITIES: dict[str, Activity] = {
             who=("magus",),
             lab=True,
             book="RoP:M",
+            group=groups.FAMILIAR,
         ),
         Activity(
             experiment.STABILIZE,
@@ -380,6 +403,7 @@ ACTIVITIES: dict[str, Activity] = {
             who=("magus",),
             lab=True,
             book="HoH:TL",
+            group=groups.INVENTING,
         ),
         Activity(
             laboratory_seasons.BUILD,
@@ -389,6 +413,7 @@ ACTIVITIES: dict[str, Activity] = {
             laboratory_seasons.SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.LABORATORY,
         ),
         Activity(
             laboratory_seasons.REFINE,
@@ -399,6 +424,7 @@ ACTIVITIES: dict[str, Activity] = {
             laboratory_seasons.REFINE_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.LABORATORY,
         ),
         Activity(
             laboratory_seasons.TAKE_OVER,
@@ -409,6 +435,7 @@ ACTIVITIES: dict[str, Activity] = {
             who=("magus",),
             lab=True,
             book="Covenants",
+            group=groups.LABORATORY,
         ),
         Activity(
             laboratory_seasons.MOVE,
@@ -420,6 +447,7 @@ ACTIVITIES: dict[str, Activity] = {
             who=("magus",),
             lab=True,
             book="Covenants",
+            group=groups.LABORATORY,
         ),
         Activity(
             familiar_seasons.BIND,
@@ -429,6 +457,7 @@ ACTIVITIES: dict[str, Activity] = {
             familiar_seasons.BIND_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.FAMILIAR,
         ),
         Activity(
             familiar_seasons.EMPOWER,
@@ -438,6 +467,7 @@ ACTIVITIES: dict[str, Activity] = {
             familiar_seasons.EMPOWER_SOURCE,
             who=("magus",),
             lab=True,
+            group=groups.FAMILIAR,
         ),
         Activity(
             "aging",
@@ -447,6 +477,7 @@ ACTIVITIES: dict[str, Activity] = {
             who=(*PLANNED_TYPES, "grog"),
             gives_xp=False,
             hidden=True,
+            group=groups.REST,
         ),
         Activity(
             lab_seasons.LONGEVITY_SUBJECT,
@@ -455,6 +486,7 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.LONGEVITY_SOURCE,
             gives_xp=False,
             hidden=True,
+            group=groups.REST,
         ),
         Activity(
             book_seasons.WRITE_SUMMA,
@@ -462,12 +494,14 @@ ACTIVITIES: dict[str, Activity] = {
             "Writing a summa: Communication + language points a season until "
             "its Level (5 x Level for an Ability); Quality Communication + 6.",
             book_seasons.SOURCE,
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.WRITE_TRACTATUS,
             "Write a tractatus",
             "Writing a tractatus: one season, Quality Communication + 6.",
             book_seasons.SOURCE,
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.COPY_BOOK,
@@ -475,6 +509,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Copying: carefully a tractatus, or 6 + Scribe summa points, a "
             "season; quickly three times as much at 1 Quality lower.",
             book_seasons.COPY_SOURCE,
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.TRANSLATE_BOOK,
@@ -483,6 +518,7 @@ ACTIVITIES: dict[str, Activity] = {
             "the source language points a season; 2 Quality lower (1 on an Art).",
             book_seasons.TRANSLATE_SOURCE,
             book="A&A",
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.REWRITE_TEXTS,
@@ -491,6 +527,7 @@ ACTIVITIES: dict[str, Activity] = {
             "20 levels a season.",
             book_seasons.LAB_TEXT_SOURCE,
             who=("magus",),
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.COPY_TEXTS,
@@ -498,6 +535,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Copying a readable Lab Text or a Casting Tablet: Profession: "
             "Scribe x 60 levels a season.",
             book_seasons.LAB_TEXT_SOURCE,
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.EDIT_FLORILEGIUM,
@@ -507,6 +545,7 @@ ACTIVITIES: dict[str, Activity] = {
             "(+2 for an authority's, from a peerless collection).",
             book_kinds.SOURCE,
             book="Covenants",
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.WRITE_TABLET,
@@ -515,6 +554,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Latin x 20 levels: as many as it holds.",
             casting.TABLET_SOURCE,
             who=("magus",),
+            group=groups.WRITING,
         ),
         Activity(
             book_seasons.TEACH_ABBREVIATIONS,
@@ -523,6 +563,7 @@ ACTIVITIES: dict[str, Activity] = {
             "to Latin x 20 levels.",
             book_seasons.DECODE_SOURCE,
             who=("magus",),
+            group=groups.TEACHING,
         ),
         Activity(
             apprentice_seasons.SEARCH,
@@ -531,6 +572,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Gifted child.",
             apprentice_seasons.SEARCH_SOURCE,
             who=("magus",),
+            group=groups.TEACHING,
         ),
         Activity(
             apprentice_seasons.OPEN_ARTS,
@@ -539,6 +581,7 @@ ACTIVITIES: dict[str, Activity] = {
             "and a Deficiency in each Art where yours is below 5.",
             apprentice_seasons.SOURCE,
             who=("magus",),
+            group=groups.TEACHING,
         ),
         Activity(
             apprentice_seasons.TEACH_VIRTUE,
@@ -548,6 +591,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Hermetic Virtue the student has.",
             apprentice_seasons.VIRTUE_SOURCE,
             who=("magus",),
+            group=groups.TEACHING,
         ),
         Activity(
             experiment.INTEGRATE,
@@ -557,6 +601,18 @@ ACTIVITIES: dict[str, Activity] = {
             experiment.RESEARCH_SOURCE,
             who=("magus",),
             book="HoH:TL",
+            group=groups.STUDY,
+        ),
+        Activity(
+            laboratory_seasons.NEW,
+            "Set up a new laboratory",
+            "A laboratory where you have none: it is made in your covenant and "
+            "works, with the Basic Flaw, after this season (Magic Theory 3); a "
+            "second season in it, as its lab work, removes the Flaw. Exposure "
+            "in Magic Theory.",
+            laboratory_seasons.SOURCE,
+            who=("magus",),
+            group=groups.ORDER,
         ),
         Activity(
             laboratory_seasons.ASSIST,
@@ -564,6 +620,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Helping a magus with his lab work: + Intelligence + Magic Theory "
             "to his Lab Total; Exposure in Magic Theory.",
             laboratory_seasons.ASSIST_SOURCE,
+            group=groups.ORDER,
         ),
         Activity(
             ADVENTURE,
@@ -571,6 +628,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Adventure experience: the storyguide's Source Quality (5-10), "
             "split among the Abilities and Arts used, at most 5 to each.",
             ADVENTURE_SOURCE,
+            group=groups.ADVENTURE,
         ),
         Activity(
             OTHER,
@@ -579,6 +637,7 @@ ACTIVITIES: dict[str, Activity] = {
             "your notes. No experience is worked out for it.",
             ASSIGNING_SOURCE,
             gives_xp=False,
+            group=groups.REST,
         ),
     )
 }
@@ -597,6 +656,7 @@ ACTIVITIES.update(
             gives_xp=not a.no_xp,
             book=a.book,
             hidden=a.retired,
+            group=a.group,
         )
         for a in supplement_seasons.ACTIVITIES
     }
@@ -614,6 +674,7 @@ ACTIVITIES[tradition_seasons.OPEN] = Activity(
     tradition_seasons.SOURCE,
     book="HMRE",
     tradition="*",
+    group=groups.TRADITION,
 )
 
 
@@ -642,6 +703,7 @@ ACTIVITIES.update(
             distractable=True,
             book=_tradition_book(t)[0],
             tradition=t.id,
+            group=groups.TRADITION,
         )
         for t in catalog.load_tradition_catalog()
         for a in t.activities
@@ -1165,6 +1227,8 @@ class Outcome:
     faith: int = 0
     #: What a supplement season does besides experience (decision 38).
     supplement: supplement_work.SupplementWork | None = None
+    #: Setting up a new laboratory: its id, once the season is applied.
+    new_lab_id: str | None = None
 
     @property
     def ok(self) -> bool:
@@ -1675,6 +1739,27 @@ def _assist_outcome(
     result.gains.append(_exposure(character, "Magic Theory"))
 
 
+# Setting up a new laboratory: Exposure in Magic Theory.
+
+
+def _new_lab_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    return laboratory_seasons.new_lab_problems(saga, character, plan)
+
+
+def _new_lab_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    result.notes.append(
+        f"{laboratory_seasons.new_lab_name(character, plan)} is made, with the "
+        "Basic Flaw until a second season's work in it."
+    )
+    result.gains.append(_exposure(character, "Magic Theory"))
+
+
 # Study from books, teachers, training and vis (DE Ch. 10).
 
 
@@ -1940,6 +2025,10 @@ def _handlers() -> dict[str, Handler]:
         (
             _with_saga(_assist_problems, _assist_outcome),
             (laboratory_seasons.ASSIST,),
+        ),
+        (
+            _with_saga(_new_lab_problems, _new_lab_outcome),
+            (laboratory_seasons.NEW,),
         ),
         (_with_saga(_study_family_problems, _study_outcome), STUDY_ACTIVITIES),
         (Handler(_plain_problems, _plain_outcome), (EXPOSURE, PRACTICE, ADVENTURE)),

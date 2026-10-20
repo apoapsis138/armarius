@@ -414,7 +414,7 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Vocational xp": "x"},
     ),
     "plan a season": Contract(
-        prefill={"Activity": "exposure", "Months lost": "0", "Notes": ""},
+        prefill={"Activity": None, "Months lost": "0", "Notes": ""},
         edits={
             "Activity": "practice",
             "Experience in": "ability:Latin",
@@ -428,7 +428,7 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Months lost": "-"},
     ),
     "plan an initiation": Contract(
-        prefill={"Activity": "exposure", "Months lost": "0", "Notes": ""},
+        prefill={"Activity": None, "Months lost": "0", "Notes": ""},
         edits=INITIATION,
         saved=lambda s: [
             (

@@ -171,6 +171,8 @@ This guide walks through a magus's work in their laboratory: planning it season 
 <!-- tui -->
 Lab work is planned on the [laboratory sheet](help:laboratory), not the magus's own sheet. The laboratory needs a magus as its owner first: set the owner with `e` on the top panel.
 
+A magus with no laboratory yet starts one from their own sheet: on their Planning tab, plan **Set up a new laboratory** (under Order & covenant). When the season is advanced the laboratory is made in their covenant with them as its owner, and Advance Season offers to plan the second season, which removes the Basic Flaw (see [A new laboratory](help:advance-new-lab)).
+
 1. In the tree, open the covenant's Laboratories group and choose the laboratory. Press `1` for the [Planning tab](help:tab-lab-planning).
 2. The list shows the owner's seasons from the current one on: each planned activity with the seasons it spans and its progress, the free seasons in between, and the first free season after the last plan. A season planned on the owner's own sheet is marked "on (name)'s sheet"; planning lab work there replaces it.
 3. Highlight a season. The details panel shows its plan and its Lab Total line by line, or, in red, why it can't be done.
@@ -178,6 +180,8 @@ Lab work is planned on the [laboratory sheet](help:laboratory), not the magus's 
 <!-- /tui -->
 <!-- gui -->
 Lab work is planned on the [laboratory sheet](help:laboratory), not the magus's own sheet. The laboratory needs a magus as its owner first: set the **Owner** with **Edit** in the laboratory's header.
+
+A magus with no laboratory yet starts one from their own page: in their Planning chapter, plan **Set up a new laboratory** (under Order & covenant). When the season is advanced the laboratory is made in their covenant with them as its owner, and Advance Season offers to plan the second season, which removes the Basic Flaw (see [A new laboratory](help:advance-new-lab)).
 
 1. On the covenant's page, choose **Laboratories** in the rail and click the laboratory. Choose **Seasons** in its rail: the [Planning](help:tab-lab-planning) list is at the top.
 2. The list shows the owner's seasons from the current one on: each planned activity with the seasons it spans and its progress, the free seasons in between, and the first free season after the last plan. A season planned on the owner's own sheet is marked "on (name)'s sheet"; planning lab work there replaces it.
@@ -192,13 +196,13 @@ Lab work is planned on the [laboratory sheet](help:laboratory), not the magus's 
 `e` and `a` open the [Invent Spell screen](help:invent-spell), titled with the work, the magus, the laboratory and the season. Despite its name it plans every kind of lab work.
 
 1. Choose the **Lab work** (see [Lab work](help:invent-spell-activity)). The screen shows only the fields that work needs.
-2. To invent a spell, fill in the [design](help:invent-spell-design). **Start from** picks a spell the magus doesn't know as the starting point; **New spell** clears the design. Type the Name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out below them.
+2. To invent a spell, fill in the [design](help:invent-spell-design). **Start from** picks any spell as the template, the magus's own known spells first for a variant of one of theirs (see [Starting from a spell](help:invent-spell-start)); **New spell** clears the design. Type the Name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out below them.
 <!-- /tui -->
 <!-- gui -->
 **Plan** and **New Spell** open the lab work form in place of the list (see [Invent Spell screen](help:invent-spell)), titled with the work, the magus, the laboratory and the season. It plans every kind of lab work.
 
 1. Choose the **Lab work** (see [Lab work](help:invent-spell-activity)). The form shows only the fields that work needs.
-2. To invent a spell, fill in the [design](help:invent-spell-design). **New Spell** first asks for a spell the magus doesn't know as the starting point, or "A new spell (a blank design)". Type the Spell name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out in the line under the fields.
+2. To invent a spell, fill in the [design](help:invent-spell-design). **Start from** picks any spell as the template, the magus's own known spells first for a variant of one of theirs (see [Starting from a spell](help:invent-spell-start)); **New Spell** asks for it first, or "A new spell (a blank design)". Type the Spell name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out in the line under the fields.
 <!-- /gui -->
 3. To invent from a Lab Text, choose **Invent from a Lab Text** and the **Lab Text**. Texts the magus can't read yet are marked, for example "(can't read: decode first)".
 4. For work that pays with vis, choose whose in **Vis**: the laboratory's raw vis, the magus's own or the covenant's vis stores.
@@ -312,13 +316,13 @@ Nothing happens to the magus or the laboratory until the season is advanced with
 <!-- help: guide-lab-planning-improve -->
 
 <!-- tui -->
-- **Seasons of work**: on the Planning tab, `e` offers **Set up the laboratory** (two seasons), **Refine the laboratory** (+1 Refinement a season, if Magic Theory is at least the new Refinement + 3), **Take over the laboratory** and **Move the laboratory**. Refining may also gain Highly Organized, or a Hidden Defect on a botch.
+- **Seasons of work**: on the Planning tab, `e` offers **Set up the laboratory** (two seasons; a magus with no laboratory plans **Set up a new laboratory** on their own sheet), **Refine the laboratory** (+1 Refinement a season, if Magic Theory is at least the new Refinement + 3), **Take over the laboratory** and **Move the laboratory**. Refining may also gain Highly Organized, or a Hidden Defect on a botch.
 - **Virtues and Flaws**: press `3` for the [Virtues & Flaws tab](help:tab-lab-vf) and `a` to pick one from the catalog. What they add shows in the Characteristics and on the Lab Totals tab, and a warning appears when there are more than Size and Refinement allow.
 - **Features and Specializations**: press `4` for the [Attributes tab](help:tab-lab-attributes). `a` in [Features](help:section-lab-features) builds a Feature on a Feature Virtue. [Specializations](help:section-lab-specializations) are worked out from them; `Space` turns one off or on within the caps.
 - **Characteristics**: `e` in the top panel's Characteristics edits the typed values.
 <!-- /tui -->
 <!-- gui -->
-- **Seasons of work**: in the Planning list, **Plan** offers **Set up the laboratory** (two seasons), **Refine the laboratory** (+1 Refinement a season, if Magic Theory is at least the new Refinement + 3), **Take over the laboratory** and **Move the laboratory**. Refining may also gain Highly Organized, or a Hidden Defect on a botch.
+- **Seasons of work**: in the Planning list, **Plan** offers **Set up the laboratory** (two seasons; a magus with no laboratory plans **Set up a new laboratory** on their own sheet), **Refine the laboratory** (+1 Refinement a season, if Magic Theory is at least the new Refinement + 3), **Take over the laboratory** and **Move the laboratory**. Refining may also gain Highly Organized, or a Hidden Defect on a botch.
 - **Virtues and Flaws**: choose [Virtues & Flaws](help:tab-lab-vf) in the rail and click **Add** to pick one from the catalog. What they add shows in the Characteristics and in the Lab Totals chapter, and a warning appears when there are more than Size and Refinement allow.
 - **Features and Specializations**: choose [Specializations](help:tab-lab-attributes) in the rail. **Add** in [Features](help:section-lab-features) builds a Feature on a Feature Virtue. [Specializations](help:section-lab-specializations) are worked out from them; **Turn Off/On** turns the one clicked off or on within the caps.
 - **Characteristics**: **Edit** beside Characteristics, under the header, edits the typed values.

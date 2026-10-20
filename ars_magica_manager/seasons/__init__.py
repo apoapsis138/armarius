@@ -34,6 +34,7 @@ from .covenant import season_table as season_table
 from .covenant import season_title as season_title
 from .lab_apply import discovery_moves as discovery_moves
 from .lab_apply import perform_ritual_again as perform_ritual_again
+from .lab_apply import plan_lab_finish as plan_lab_finish
 from .lab_apply import take_discovery_move as take_discovery_move
 from .lab_apply import year_end_business as year_end_business
 from .lab_queue import lab_queue as lab_queue

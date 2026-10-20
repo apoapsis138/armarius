@@ -117,7 +117,8 @@ On the desktop this list is **Planning**, at the top of the laboratory's
 **You type:** nothing here directly. **Plan** plans lab work for the season
 last clicked on the [lab work form](help:invent-spell), or reopens the plan
 already there; **New Spell** starts inventing a spell in that season (or the
-current one), first asking for a spell to start from or a blank design;
+current one), first asking for a spell to start from (any spell, the
+magus's own known spells first) or a blank design;
 **Clear** clears the season's plan, with any later seasons scheduled to
 continue it, after asking. Beside them, **Bind Familiar** is there while the
 owner has no familiar, and **Perform Ritual** while the laboratory has a
@@ -470,7 +471,21 @@ Ars Magica Definitive Edition, Chapter 8: Laboratory.
 ### Lab work
 <!-- help: invent-spell-activity -->
 
-The first field chooses the lab work. Then only the fields that work needs
+The first field chooses the lab work.
+<!-- tui -->
+Press Enter on **Lab work** to open the list of lab work, grouped by Type:
+Inventing, Enchanting, Familiar, Texts and vis, and The laboratory. Type to
+search, choose a **Type** or **Book** above the list to narrow it (F2 steps
+through the Types), and press Enter on the work wanted.
+<!-- /tui -->
+<!-- gui -->
+Click **Lab work** to open the list of lab work, grouped by Type:
+Inventing, Enchanting, Familiar, Texts and vis, and The laboratory. Type to
+search, or choose a **Type** or **Book** above the list to narrow it, then
+choose the work wanted.
+<!-- /gui -->
+The magus's most recent seasons are listed first, under Recent, until the
+list is narrowed. Then only the fields that work needs
 are shown: a spell design for inventing a spell, a Lab Text to work
 from, a connection to fix, a device and effect to enchant, a subject and vis
 for a Longevity Ritual, and so on. Where the work pays or gains vis, you
@@ -481,12 +496,14 @@ vis stores.
 <!-- help: invent-spell-design -->
 
 <!-- tui -->
-For inventing a spell, Start from picks an existing spell the magus doesn't
-know as the starting point, and New spell clears the design.
+For inventing a spell, Start from picks any spell as a template (see
+[Starting from a spell](help:invent-spell-start)), and New spell clears the
+design.
 <!-- /tui -->
 <!-- gui -->
-For inventing a spell, **New Spell** first asks for an existing spell the
-magus doesn't know as the starting point, or a blank design.
+For inventing a spell, **Start from** picks any spell as a template (see
+[Starting from a spell](help:invent-spell-start)); **New Spell** asks for it
+first, and **Clear** beside it starts a blank design.
 <!-- /gui -->
 You type the
 name, the effect, the Technique and Form, any requisites, the base level,
@@ -494,6 +511,29 @@ whether it is a Ritual, the Range, Duration and Target, any size or extra
 magnitudes and the guideline used. The app works out the spell's level from
 the base level and the parameters; a Range, Duration or Target the app
 doesn't list can be chosen as Other, with the magnitudes it adds typed in.
+
+### Starting from a spell
+<!-- help: invent-spell-start -->
+
+A new spell can start from any spell there is, as a template: the catalog's,
+the saga's own, any magus's invented spells. Its name, effect, Arts,
+requisites, base level, Range, Duration, Target and extra magnitudes are
+copied into the design, and you change whatever you like.
+
+The list opens with "A new spell (a blank design)", then the spells the
+magus already knows, under **Known to (name)**, for inventing a variant of
+one of their own, then **Every other spell**. **From** above the list shows
+one group only, and typing searches the names and Arts (e.g. CrIg).
+<!-- tui -->
+F3 also lists the spells of sourcebooks not in play.
+<!-- /tui -->
+<!-- gui -->
+**Show everything** also lists the spells of sourcebooks not in play.
+<!-- /gui -->
+
+A spell the magus knows has to be changed before it can be invented (a
+different level, Range or name, say): planning it unchanged is refused,
+since they know it already.
 
 ### Lab Total
 <!-- help: invent-spell-total -->

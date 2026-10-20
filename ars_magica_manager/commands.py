@@ -59,6 +59,9 @@ class Choice:
     value: Any
     detail: str = ""
     search: str = ""
+    #: The entry's value for each of its Choose's `filters`, as (filter,
+    #: value) pairs: ("Type", "Study").
+    facets: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -76,6 +79,44 @@ class Choose:
     others: Callable[[], list[Choice]] | None = None
     #: The list's own help page (help/*.md), if it has one.
     help_id: str = ""
+    #: The filters offered above the list, in order, each narrowing it to
+    #: the entries with the value chosen (Choice.facets); with any, the
+    #: list is headed by each entry's value of the first.
+    filters: tuple[str, ...] = ()
+    #: Entries listed first, under RECENT, while no filter is chosen and
+    #: nothing is typed (repeats of entries further down).
+    recent: Callable[[], list[Choice]] | None = None
+
+
+#: The heading a Choose's recent entries are listed under.
+RECENT = "Recent"
+
+
+def facet(choice: Choice, name: str) -> str:
+    """`choice`'s value for the filter `name` ("" for none)."""
+    return next((value for key, value in choice.facets if key == name), "")
+
+
+def filter_values(choices: Sequence[Choice], name: str) -> list[str]:
+    """The values the filter `name` offers: each one some entry has, in
+    the order the entries first have them."""
+    return list(dict.fromkeys(v for c in choices if (v := facet(c, name))))
+
+
+def passes(choice: Choice, chosen: dict[str, str | None]) -> bool:
+    """Whether `choice` has every filter value `chosen` (filter -> value;
+    None: any). Each filter is a test an entry passes or not, and the list
+    shows those passing them all (Specification, reduced to a dict of
+    wanted values)."""
+    return all(
+        value is None or facet(choice, name) == value for name, value in chosen.items()
+    )
+
+
+def heading(step: Choose, choice: Choice) -> str:
+    """The heading `choice` is listed under: its value of the first
+    filter ("" for a list without filters)."""
+    return facet(choice, step.filters[0]) if step.filters else ""
 
 
 def not_offered(choice: Choice, why: str) -> Choice:
@@ -86,6 +127,7 @@ def not_offered(choice: Choice, why: str) -> Choice:
         choice.value,
         f"[$text-warning]Not offered: {escape(why)}[/]\n{choice.detail}",
         f"{choice.search} {why}",
+        choice.facets,
     )
 
 

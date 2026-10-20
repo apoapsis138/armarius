@@ -452,13 +452,6 @@ def project_key(plan: SeasonPlan) -> str | None:
     return plan.spell_id
 
 
-def _same_spell(a: Spell, b: Spell) -> bool:
-    fields_ = ("name", "technique", "form", "level", "range", "duration", "target")
-    return all(getattr(a, f) == getattr(b, f) for f in fields_) and sorted(
-        a.requisites
-    ) == sorted(b.requisites)
-
-
 def _with_effects(
     saga: Saga, magus: Character, spell: Spell, effects: list[str]
 ) -> Spell:
@@ -491,7 +484,7 @@ def _invented_spell(saga: Saga, magus: Character, design: SpellDesign) -> Spell:
     wasn't changed, otherwise a new spell of the magus's own."""
     designed = lab_seasons.design_spell(design)
     source = spl.find_spell(saga, design.source_spell_id)
-    if source is not None and _same_spell(source, designed):
+    if source is not None and lab_seasons.same_spell(source, designed):
         return source
     spell = spl.add_invented_spell(
         saga, magus, designed.name, designed.technique, designed.form

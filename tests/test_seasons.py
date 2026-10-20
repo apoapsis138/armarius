@@ -121,6 +121,7 @@ def test_magi_and_companions_plan_every_activity_built_so_far():
                 aps.OPEN_ARTS,
                 aps.TEACH_VIRTUE,
                 experiment.INTEGRATE,
+                ls.NEW,
                 ls.ASSIST,
             ],
         ),
@@ -445,7 +446,8 @@ async def test_plan_a_season_then_advance_applies_it():
         await pilot.press("e")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         dialog = app.screen
-        dialog.query_one("#fld-activity", Select).value = rules.PRACTICE
+        dialog._picked["activity"] = rules.PRACTICE
+        dialog._react()
         await pilot.pause()
         dialog.query_one("#fld-subject_1", Select).value = "ability:Latin"
         await pilot.pause()
@@ -617,7 +619,8 @@ async def test_plan_a_season_from_the_covenant_seasons_tab():
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         dialog = app.screen
         assert dialog.title_text == "Plan Alys's Season (Spring 1220)"
-        dialog.query_one("#fld-activity", Select).value = rules.OTHER
+        dialog._picked["activity"] = rules.OTHER
+        dialog._react()
         await pilot.pause()
         from textual.widgets import TextArea
 

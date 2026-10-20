@@ -45,14 +45,27 @@ from PySide6.QtWidgets import (
 )
 
 from .. import form_spec
-from ..commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Picked, Refuse
+from ..commands import (
+    RECENT,
+    Act,
+    Choice,
+    Choose,
+    ChooseFile,
+    Confirm,
+    Form,
+    Picked,
+    Refuse,
+    filter_values,
+    heading,
+    passes,
+)
 from ..form_spec import DialogField, FieldError, ListEditor
 from . import heraldry, sounds
 from .markup_html import plain, to_html
 from .ornaments import FleuronRule, corner_flourishes
 from .paper import Paper
 from .themes import Palette
-from .widgets import serif, text
+from .widgets import filter_choice, serif, text
 
 #: Shows a step's dialog and waits: Accepted or Rejected. The window's
 #: `ask`, which tests replace to answer without showing anything.
@@ -577,15 +590,23 @@ class ChooseDialog(_Sheet):
         empty: str = "Nothing to choose from.",
         inline: bool = False,
         others: Callable[[], list[Choice]] | None = None,
+        step: Choose | None = None,
     ) -> None:
         super().__init__(title, p, "Choose", parent, inline=inline)
         self.offered = choices
         self.choices = choices
         self.chosen: Any = None
+        #: The Choose drawn, for its filters and recent entries.
+        self.step = step
+        self.recent = step.recent() if step is not None and step.recent else []
         self.search = QLineEdit()
         self.search.setPlaceholderText("Search…")
         self.search.textChanged.connect(self.refilter)
         self.column.addWidget(self.search)
+        #: A drop-down per filter the Choose has, by its name.
+        self.filters: dict[str, QComboBox] = {}
+        if step is not None and step.filters:
+            self._add_filters(step, choices)
         #: Lists the entries not offered too, each marked with why (the
         #: terminal's F3); only for a list that has any.
         self.everything = QCheckBox("Show everything")
@@ -624,49 +645,107 @@ class ChooseDialog(_Sheet):
         else:
             self.resize(760 if not details.isHidden() else 520, 620)
 
+    def _add_filters(self, step: Choose, choices: list[Choice]) -> None:
+        """A row of drop-downs over the list, one per filter, each "any"
+        until a value is chosen."""
+        row = QHBoxLayout()
+        for name in step.filters:
+            combo = filter_choice(
+                f"{name}: any",
+                [(f"{name}: {v}", v) for v in filter_values(choices, name)],
+            )
+            combo.currentIndexChanged.connect(
+                lambda _index: self.refilter(self.search.text())
+            )
+            self.filters[name] = combo
+            row.addWidget(combo)
+        row.addStretch(1)
+        self.column.addLayout(row)
+
     def _list_everything(
         self, on: bool, others: Callable[[], list[Choice]] | None
     ) -> None:
         self.choices = [*self.offered, *(others() if on and others else [])]
         self.refilter(self.search.text())
 
+    def wanted(self) -> dict[str, str | None]:
+        """Each filter's chosen value (None: any)."""
+        return {name: combo.currentData() for name, combo in self.filters.items()}
+
     def refilter(self, words: str) -> None:
         """List the choices whose label or search words have every word
-        typed."""
+        typed and that every filter lets through, under their headings;
+        with nothing typed or chosen, the recent ones first."""
         wanted = words.lower().split()
+        chosen = self.wanted()
         self.list.clear()
+        listed: list[tuple[str, Choice, int]] = []
+        if not wanted and not any(v is not None for v in chosen.values()):
+            listed += [(RECENT, choice, -1 - i) for i, choice in enumerate(self.recent)]
         for index, choice in enumerate(self.choices):
             haystack = f"{plain(choice.label)} {choice.search}".lower()
-            if all(word in haystack for word in wanted):
-                item = QListWidgetItem(plain(choice.label))
-                item.setData(Qt.ItemDataRole.UserRole, index)
-                self.list.addItem(item)
-        self.empty.setVisible(self.list.count() == 0)
-        if self.list.count():
-            self.list.setCurrentRow(0)
+            if all(word in haystack for word in wanted) and passes(choice, chosen):
+                under = heading(self.step, choice) if self.step is not None else ""
+                listed.append((under, choice, index))
+        heading_now = ""
+        for under, choice, index in listed:
+            if under and under != heading_now:
+                head = QListWidgetItem(under)
+                head.setFlags(Qt.ItemFlag.NoItemFlags)
+                head.setFont(serif(12.5, bold=True, caps=True))
+                head.setForeground(QColor(self.p["heading"]))
+                self.list.addItem(head)
+            heading_now = under
+            item = QListWidgetItem(plain(choice.label))
+            item.setData(Qt.ItemDataRole.UserRole, index)
+            self.list.addItem(item)
+        self.empty.setVisible(not listed)
+        if listed:
+            self.list.setCurrentRow(self._first_entry())
+
+    def _first_entry(self) -> int:
+        """The row of the first entry listed (not a heading)."""
+        return next(
+            row
+            for row in range(self.list.count())
+            if self.list.item(row).data(Qt.ItemDataRole.UserRole) is not None
+        )
+
+    def _choice_at(self, item: QListWidgetItem) -> Choice | None:
+        index = item.data(Qt.ItemDataRole.UserRole)
+        if index is None:
+            return None
+        return self.recent[-1 - index] if index < 0 else self.choices[index]
 
     def shown(self) -> list[str]:
-        """The labels listed now."""
-        return [self.list.item(i).text() for i in range(self.list.count())]
+        """The labels listed now (headings left out)."""
+        return [
+            self.list.item(i).text()
+            for i in range(self.list.count())
+            if self.list.item(i).data(Qt.ItemDataRole.UserRole) is not None
+        ]
 
     def _show(self, row: int) -> None:
         item = self.list.item(row)
-        if item is None:
-            self.details.setText("")
-            return
-        choice = self.choices[item.data(Qt.ItemDataRole.UserRole)]
-        self.details.setText(to_html(choice.detail, self.p))
+        choice = self._choice_at(item) if item is not None else None
+        self.details.setText(to_html(choice.detail, self.p) if choice else "")
 
     def choose(self, label: str) -> None:
-        """Highlight the listed entry called `label`."""
-        self.list.setCurrentRow(self.shown().index(label))
+        """Highlight the (first) listed entry called `label`."""
+        rows = [
+            row
+            for row in range(self.list.count())
+            if self.list.item(row).data(Qt.ItemDataRole.UserRole) is not None
+        ]
+        self.list.setCurrentRow(rows[self.shown().index(label)])
 
     def try_save(self) -> None:
         item = self.list.currentItem()
-        if item is None:
+        choice = self._choice_at(item) if item is not None else None
+        if choice is None:
             self.refuse("Choose one first.")
             return
-        self.chosen = self.choices[item.data(Qt.ItemDataRole.UserRole)].value
+        self.chosen = choice.value
         self.accept()
 
 
@@ -771,6 +850,7 @@ def step_dialog(
             empty=step.empty,
             inline=inline,
             others=step.others,
+            step=step,
         )
     return ConfirmDialog(
         step.question,

@@ -7,7 +7,7 @@ import random
 from collections.abc import Sequence
 from dataclasses import replace
 
-from .. import book_kinds
+from .. import book_kinds, storage
 from .. import books as bk
 from .. import enchanted_devices as ed
 from .. import spells as spl
@@ -821,6 +821,50 @@ def _discovery_text(saga, magus, lab, goal, work) -> Book:
         technique=goal.discovery_technique,
         form=goal.discovery_form,
     )
+
+
+def set_up_new_lab(saga: Saga, magus: Character, outcome: rules.Outcome) -> Laboratory:
+    """The first season of setting up a laboratory where there was none: it
+    is made in the magus's covenant, theirs, with the Basic Flaw, and the
+    season is written in its Diary."""
+    plan = outcome.plan
+    name = ls.new_lab_name(magus, plan)
+    lab = Laboratory(
+        id=storage.generate_unique_id(name, [lab.id for lab in saga.laboratories]),
+        covenant_id=magus.covenant_id,
+        name=name,
+        owner_id=magus.id,
+    )
+    ls.add_vf(lab, ls.BASIC)
+    lab.diary.append(
+        DiaryEntry(
+            year=plan.year,
+            season=plan.season,
+            name=rules.ACTIVITIES[ls.NEW].label,
+            details=f"{magus.name}: the laboratory works, with the Basic Flaw "
+            "until a second season's work in it.",
+            activity=_LAB_DIARY_ACTIVITY[ls.BUILD],
+        )
+    )
+    saga.laboratories.append(lab)
+    outcome.new_lab_id = lab.id
+    return lab
+
+
+def plan_lab_finish(saga: Saga, outcome: rules.Outcome) -> SeasonPlan | None:
+    """After a new laboratory's first season: its second, planned as lab
+    work in it for the magus's next season (the saga's season once the
+    date has moved on), unless they already have a plan for it."""
+    magus = saga.character(outcome.character_id)
+    lab = saga.laboratory(outcome.new_lab_id) if outcome.new_lab_id else None
+    if magus is None or lab is None:
+        return None
+    season, year = next_season(outcome.plan.season, outcome.plan.year)
+    if plan_for(saga, magus, season, year) is not None:
+        return None
+    plan = SeasonPlan(magus.id, year, season, ls.BUILD, lab_id=lab.id)
+    set_plan(saga, plan)
+    return plan
 
 
 def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None:

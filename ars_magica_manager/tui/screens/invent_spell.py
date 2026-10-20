@@ -31,9 +31,18 @@ from ... import form_spec
 from ... import lab_texts as lt
 from ... import spells as spl
 from ...arts import FORMS, TECHNIQUES
+from ...commands import Picked
 from ...form_spec import DialogField
+from ...forms import activity as activity_forms
 from ...forms import lab_plan as lpf
-from ...forms.lab_plan import KINDS, OTHER, LabPlanForm, design_from, level_text
+from ...forms.lab_plan import (
+    KINDS,
+    OTHER,
+    LabPlanForm,
+    choose_template,
+    design_from,
+    level_text,
+)
 from ...markup import escape
 from ...models import (
     Character,
@@ -50,7 +59,7 @@ from ...rules import familiar_seasons as fs
 from ...rules import lab_seasons
 from ...rules import laboratory_seasons as ls
 from .fields import ModalDialog
-from .pickers import SpellChooserScreen
+from .steps import run_steps
 
 #: The Exposure line, as the When column wraps it.
 _EXPOSURE_LINES = ("Every lab season also gives 2 xp", "Exposure in Magic Theory.")
@@ -364,6 +373,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         )
         self.initial = self.form.existing
         self.initial_activity = self.form.activity
+        #: The lab work chosen (the Lab work button's value).
+        self.activity = self.initial_activity
         self._design = self.form.design
         self.parameter_options = self.form.parameter_options
         #: The core form's fields, each drawn by its widget (_WIDGET_OF).
@@ -379,13 +390,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             with VerticalScroll(id="inv-scroll"):
                 with Horizontal(classes="inv-row"):
                     yield Label("Lab work")
-                    yield Select(
-                        [
-                            (season_rules.ACTIVITIES[key].label, key)
-                            for key in lab_seasons.LAB_ACTIVITIES
-                        ],
-                        value=self.initial_activity or Select.NULL,
-                        prompt="(none)",
+                    yield Button(
+                        self._activity_label(self.initial_activity),
                         id="inv-activity",
                         compact=True,
                     )
@@ -773,6 +779,11 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
 
     def _read(self, spec: DialogField) -> Any:
         """What the widget for one of the core form's fields holds."""
+        if spec.key == "activity":
+            return self.activity
+        if spec.key == "start_from":
+            design = self.form.design
+            return design.source_spell_id if design else None
         found = self.query(f"#{_WIDGET_OF[spec.key]}")
         if not found:
             return None
@@ -955,26 +966,51 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             "inv-power",
             "inv-bind-t",
             "inv-bind-f",
-            "inv-activity",
         ):
-            # A different device offers its own effects, and an effect its
-            # own Technique and Form to pay vis with.
-            self._ready = False
-            if event.select.id == "inv-device":
-                effects = self._effects(self._select("#inv-device"))
-                self.query_one("#inv-effect", Select).set_options(effects)
-            plan = self.current_plan()
-            # ...and its own Lab Texts to work from.
-            self.query_one("#inv-effect-text", Select).set_options(
-                self._effect_texts(plan)
-            )
-            arts = self._effect_arts(plan)
-            vis = self.query_one("#inv-effect-vis", Select)
-            vis.set_options(arts)
-            if arts:
-                vis.value = arts[0][1]
-            self._ready = True
+            self._work_changed(event.select.id)
         self._refresh()
+
+    @staticmethod
+    def _activity_label(activity: str | None) -> str:
+        return escape(activity_forms.activity_label(activity) or "(none)")
+
+    def set_activity(self, activity: str | None) -> None:
+        """Choose the lab work, as the Lab work picker does."""
+        self.activity = activity
+        self.query_one("#inv-activity", Button).label = self._activity_label(activity)
+        if self._ready:
+            self._work_changed("inv-activity")
+        self._refresh()
+
+    def _choose_activity(self) -> None:
+        def chosen(end: object) -> None:
+            if isinstance(end, Picked):
+                self.set_activity(end.value)
+
+        run_steps(
+            self.app,
+            activity_forms.choose_activity(
+                self.saga, self.magus, self.activity, lab=True
+            ),
+            chosen,
+        )
+
+    def _work_changed(self, widget_id: str | None) -> None:
+        """A different device offers its own effects, and an effect (or
+        lab work) its own Lab Texts and Technique and Form to pay vis
+        with."""
+        self._ready = False
+        if widget_id == "inv-device":
+            effects = self._effects(self._select("#inv-device"))
+            self.query_one("#inv-effect", Select).set_options(effects)
+        plan = self.current_plan()
+        self.query_one("#inv-effect-text", Select).set_options(self._effect_texts(plan))
+        arts = self._effect_arts(plan)
+        vis = self.query_one("#inv-effect-vis", Select)
+        vis.set_options(arts)
+        if arts:
+            vis.value = arts[0][1]
+        self._ready = True
 
     def on_checkbox_changed(self, _event: Checkbox.Changed) -> None:
         self._refresh()
@@ -990,17 +1026,12 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         elif button == "btn-reset":
             self._fill(self._initial_design(), self.initial)
             self._reset_work(self.initial)
+        elif button == "inv-activity":
+            self._choose_activity()
         elif button == "inv-new":
             self._fill(None, None)
         elif button == "inv-start":
-            self.app.push_screen(
-                SpellChooserScreen(
-                    self.saga,
-                    exclude={k.spell_id for k in self.magus.spells_known},
-                    title=f"Start {escape(self.magus.name)}'s spell from...",
-                ),
-                self._start_from,
-            )
+            self._choose_start()
         elif button == "btn-save":
             try:
                 values = form_spec.result(self._fields, self._read)
@@ -1013,10 +1044,30 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 return
             self.dismiss(self.form.plan_of(values))
 
+    def _choose_start(self) -> None:
+        """Choose the spell the design starts from (any spell, the magus's
+        known ones first) or a blank design."""
+
+        def chosen(end: object) -> None:
+            if isinstance(end, Picked):
+                self._start_from(end.value)
+
+        design = self.form.design
+        run_steps(
+            self.app,
+            choose_template(
+                self.saga, self.magus, design.source_spell_id if design else None
+            ),
+            chosen,
+        )
+
     def _start_from(self, spell_id: str | None) -> None:
         spell = spl.find_spell(self.saga, spell_id)
-        if spell is not None:
-            self._fill(design_from(spell), None, keep_lab_options=True)
+        self._fill(
+            design_from(spell) if spell is not None else None,
+            None,
+            keep_lab_options=True,
+        )
 
     def _initial_design(self) -> SpellDesign | None:
         return self._design
@@ -1086,8 +1137,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
     def _reset_work(self, plan: SeasonPlan | None) -> None:
         """Put `plan`'s activity and its non-spell fields back."""
         self._ready = False
-        self.query_one("#inv-activity", Select).value = (
-            self.initial_activity or Select.NULL
+        self.activity = self.initial_activity
+        self.query_one("#inv-activity", Button).label = self._activity_label(
+            self.activity
         )
         self.query_one("#inv-connection", Select).value = self._connection_value(plan)
         self.query_one("#inv-subject", Select).value = (

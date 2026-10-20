@@ -10,7 +10,7 @@ with **Advance Season** in the top bar.
 <!-- /gui -->
 Grogs aren't planned season by season; they have a [yearly update](help:grog-year) instead.
 
-**You type:** the Activity, then the fields that activity needs (what the experience goes into, a book, a teacher, a Source Quality, a die roll), months lost to distractions, and Notes.
+**You type:** the Activity, chosen from a list you can filter by Type and Book (see [Choosing the activity](help:plan-season-activity)), then the fields that activity needs (what the experience goes into, a book, a teacher, a Source Quality, a die roll), months lost to distractions, and Notes.
 
 **The app works out:** what the season will give, from the character and the saga as they stand now, shown on the line above Save as you fill the form in.
 
@@ -28,6 +28,33 @@ Grogs aren't planned season by season; they have a [yearly update](help:grog-yea
 
 A magus's laboratory work (inventing spells, enchanting, extracting vis, a Longevity Ritual, binding a familiar, setting up or refining a laboratory) is planned on the laboratory's [Planning list](help:tab-lab-planning), not here. See also [inventing a spell](help:invent-spell). A character's This Season names the laboratory when their season is lab work.
 
+### Choosing the activity
+<!-- help: plan-season-activity -->
+
+<!-- tui -->
+Press Enter on **Activity** to open the list of activities this character may plan. It is grouped by Type, what the season is for:
+<!-- /tui -->
+<!-- gui -->
+Click **Activity** to open the list of activities this character may plan. It is grouped by Type, what the season is for:
+<!-- /gui -->
+Study; Writing & books; Work & trade; Teaching & apprentices; Faith; Order & covenant; Mysteries; Adventure & travel; Rest & other; and Tradition, a hedge tradition's own seasons, shown to its members only.
+
+- **Type** above the list shows one group only.
+<!-- tui -->
+  F2 steps through the Types, and back to all of them.
+<!-- /tui -->
+- **Book** shows the activities of one sourcebook, or of the core rules.
+- **Search**: type any part of an activity's name or summary.
+- **Recent**: the character's last three activities, from their plans and Diary, head the list until a Type or Book is chosen or a search typed.
+<!-- tui -->
+- F3 also lists the activities of sourcebooks not in play in this saga, marked; they can't be planned until the book is in play (Edit Saga).
+<!-- /tui -->
+<!-- gui -->
+- **Show everything** also lists the activities of sourcebooks not in play in this saga, marked; they can't be planned until the book is in play (Edit Saga).
+<!-- /gui -->
+
+The highlighted activity's summary, Type, sourcebook and rule are shown beside the list; the list itself shows only names. Choosing one closes the list and the form shows the fields it needs.
+
 ### Activities offered
 <!-- help: plan-season-activities -->
 
@@ -37,6 +64,7 @@ The Activity list offers what this character may do. Activities marked "magi" ar
 - **Books:** Write a summa, Write a tractatus, Copy a book, Translate a book, Copy Lab Texts (or Casting Tablets), Edit a florilegium (binds the tractatus on one subject you can get at, as many as you could write on it, from a collection twice that size: +1 Quality each, +2 for an authority -- Ability 10 or Art 35 -- from one five times the size; Ability 6 or Art 20 to edit at all), Write Casting Tablets (magi: of a spell they have mastered, Latin x 20 levels a season, as many tablets as that holds), Rewrite Lab Texts for general use (magi) and Teach Lab Text abbreviations (magi).
 - **Apprentices and research (magi):** Search for an apprentice, Open an apprentice's Arts, Teach a Hermetic Virtue and Seek an insight.
 - **Assist in a laboratory:** helping a magus with the lab work they have planned.
+- **Set up a new laboratory (magi):** for a magus with no laboratory yet, under Order & covenant. **Laboratory's name** names it (blank: "(name)'s laboratory"). It needs Magic Theory 3 and a covenant: when the season is applied the laboratory is made in the magus's covenant, theirs, with the Basic Flaw (-3 General Quality), and Advance Season asks whether they would like to spend the next season finishing it (see [A new laboratory](help:advance-new-lab)). Exposure in Magic Theory.
 - **A hedge tradition's seasons (its members only):** Open a student's Gift to a tradition, and the tradition's own work (Refining, brewing a potion or making a fetish, binding a familiar, inventing a gruagach spell or enchanting a tattoo, inventing a charm or making an amulet, inventing rune scripts). Opening needs a Gifted master Opened to the tradition and a Gifted **Student**: the master's Opening Total is set against twice the student's Supernatural Abilities and Arts (+12 if his Gift was Opened before); with none it always works, up to twice that the student is Opened but loses his old powers (noted in the Diary, for you to remove), and beyond it he keeps them. When the season is applied the student joins the tradition with its Arts at 0, the Virtues the Opening gives, and, where the master is below 2 in one of its Arts, the tradition's Flaw for it (the vitkir's Minor Magical Deficiency; for the others the Diary names the Arts and the troupe picks the Flaws). A tradition's own work gives Exposure in the Art or Ability chosen in **Experience in**, and the Diary notes its Lab Total; it counts as a companion's working season. The tradition's Arts can't be practised where its book says so (the gruagachan, learned magicians, elementalists and vitkir). See [A tradition's Seasons](help:tradition-seasons).
 - **Undergo an Initiation:** the Initiate's season of a Mystery Initiation. **Teacher / master** is the Mystagogue (none for a self-initiation); give the Mystagogue's Lore and the Script bonus (every component, the Ordeal's +3, +6 or +9 included). **Virtue initiated** opens
 <!-- tui -->
@@ -137,8 +165,17 @@ After you choose Advance, the app may ask:
 - In Winter, if a covenant is in deficit, whether to advance anyway. Advance anyway rolls the year over; No (or Escape) leaves the date alone so the books can be balanced first.
 - Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years; one left unticked gives nothing until it is.
 - For an experiment seeking a Discovery, whether to take the Discovery by using the risk to move the roll, when it could (a tick each).
+- For a magus setting up a new laboratory, whether they would like to finish it next season (see [A new laboratory](help:advance-new-lab)).
 
 Cancelling any of these leaves the date and the saga as they were.
+
+### A new laboratory
+<!-- help: advance-new-lab -->
+
+When a magus has planned **Set up a new laboratory**, Advance Season asks, for each one, "Would you like (name) to finish it next season?". The laboratory works after this first season, but with the Basic Flaw (-3 General Quality) until a second season's work in it removes the Flaw (Ars Magica Definitive Edition, Chapter 8: Laboratory, Setting Up a Laboratory).
+
+- Leave it ticked and **Continue**: the magus's next season is planned as **Set up the laboratory**, lab work in the new laboratory, unless something is already planned for it. It shows on the laboratory's Planning tab, where it can be changed or cleared like any lab work.
+- Untick it to decline: the laboratory keeps the Basic Flaw until you plan **Set up the laboratory** on its Planning tab yourself.
 
 ### How the season is applied
 <!-- help: advance-season-apply -->

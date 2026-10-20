@@ -23,6 +23,7 @@ from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
+from ..rules import laboratory_seasons as ls
 from ..rules import tradition_seasons
 from ..rules import warping as warping_rules
 from ..tables import Table
@@ -33,6 +34,7 @@ from .lab_apply import (
     apply_book_work,
     apply_lab_work,
     apply_supplement,
+    set_up_new_lab,
     year_end_business,
 )
 from .plans import (
@@ -68,6 +70,8 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
                 _add_xp(character, gain.subject, gain.result.xp)
         if outcome.lab_work is not None:
             apply_lab_work(saga, character, outcome)
+        if outcome.plan.activity == ls.NEW:
+            set_up_new_lab(saga, character, outcome)
         if outcome.book_work is not None:
             apply_book_work(saga, character, outcome.plan, outcome.book_work)
         if outcome.faith:

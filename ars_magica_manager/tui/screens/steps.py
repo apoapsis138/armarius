@@ -11,10 +11,26 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any, ClassVar
 
-from textual.app import App
-from textual.widgets import Static
+from textual.app import App, ComposeResult
+from textual.binding import Binding, BindingType
+from textual.containers import Horizontal
+from textual.widgets import Input, Select, Static
 
-from ...commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Refuse, Then
+from ...commands import (
+    RECENT,
+    Act,
+    Choice,
+    Choose,
+    ChooseFile,
+    Confirm,
+    Form,
+    Refuse,
+    Then,
+    filter_values,
+    heading,
+    passes,
+)
+from ...markup import escape
 from ..heraldry import beside
 from .fields import FieldsDialog
 from .pickers import CsvFilePickerScreen, SearchablePickerScreen
@@ -24,20 +40,47 @@ from .prompts import ConfirmScreen, terminal_fields
 class ChooseScreen(SearchablePickerScreen[int, int | None]):
     """A core Choose: its choices, searchable, with the highlighted one's
     details under the list; F3 lists the ones not offered too (each marked
-    with why). Dismisses with the chosen entry's index into `choices`
-    followed by `others`, or None."""
+    with why). A Choose with filters gets a drop-down for each above the
+    list (F2 steps through the first), the list headed by each entry's
+    value of the first, and its recent entries first while nothing narrows
+    it. Dismisses with the chosen entry's index into its entries, or None
+    (`value_of` gives the value)."""
 
     LIST_VIEW_ID: ClassVar[str] = "choose-list"
     DETAILS_HEIGHT: ClassVar[int] = 10
 
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("f2", "next_filter_value", "Next type", show=False),
+    ]
+
+    DEFAULT_CSS = """
+    ChooseScreen #choose-filters {
+        width: 1fr;
+        height: 1;
+        margin: 0 0 1 0;
+    }
+
+    ChooseScreen #choose-filters Select {
+        width: 36;
+        margin-right: 2;
+    }
+    """
+
     def __init__(self, step: Choose, choices: list[Choice]) -> None:
         super().__init__(step.title, empty_message=step.empty)
+        self.step = step
         self.choices = choices
         self.others = step.others() if step.others is not None else []
+        self.recent = step.recent() if step.recent is not None else []
         self._narrowed = bool(self.others)
+        #: Each filter's chosen value (None: any).
+        self.chosen: dict[str, str | None] = dict.fromkeys(step.filters)
 
     def _all(self) -> list[Choice]:
-        return [*self.choices, *self.others]
+        return [*self.choices, *self.others, *self.recent]
+
+    def _is_recent(self, entry: int) -> bool:
+        return entry >= len(self.choices) + len(self.others)
 
     def _load_entries(self) -> list[int]:
         return list(range(len(self._all())))
@@ -48,9 +91,58 @@ class ChooseScreen(SearchablePickerScreen[int, int | None]):
 
     def _candidates(self) -> list[int]:
         self._other_books = len(self.others)
-        if self._show_other_books:
-            return self._entries
-        return [entry for entry in self._entries if entry < len(self.choices)]
+        listed = len(self.choices) + (len(self.others) if self._show_other_books else 0)
+        found = [
+            entry for entry in range(listed) if passes(self._all()[entry], self.chosen)
+        ]
+        if any(value is not None for value in self.chosen.values()):
+            return found
+        return [entry for entry in self._entries if self._is_recent(entry)] + found
+
+    def _match(self, entries: list[int], needle: str) -> list[int]:
+        return super()._match(
+            [entry for entry in entries if not self._is_recent(entry)], needle
+        )
+
+    def _heading(self, entry: int) -> str:
+        return (
+            RECENT if self._is_recent(entry) else heading(self.step, self._all()[entry])
+        )
+
+    def _compose_filters(self) -> ComposeResult:
+        if not self.step.filters:
+            return
+        with Horizontal(id="choose-filters"):
+            for index, name in enumerate(self.step.filters):
+                yield Select(
+                    [
+                        (escape(f"{name}: {v}"), v)
+                        for v in filter_values(self.choices, name)
+                    ],
+                    prompt=f"{name}: any",
+                    id=f"choose-filter-{index}",
+                    compact=True,
+                )
+
+    def action_next_filter_value(self) -> None:
+        """The first filter's next value, after the last back to any."""
+        if not self.step.filters:
+            return
+        name = self.step.filters[0]
+        values: list[str | None] = [None, *filter_values(self.choices, name)]
+        following = values[(values.index(self.chosen[name]) + 1) % len(values)]
+        select = self.query_one("#choose-filter-0", Select)
+        if following is None:
+            select.clear()
+        else:
+            select.value = following
+
+    async def on_select_changed(self, event: Select.Changed) -> None:
+        event.stop()
+        index = int((event.select.id or "").removeprefix("choose-filter-"))
+        value = event.value if isinstance(event.value, str) else None
+        self.chosen[self.step.filters[index]] = value
+        await self._render_list(self.query_one("#picker-search", Input).value)
 
     def _update_books_note(self) -> None:
         if not self._narrowed:

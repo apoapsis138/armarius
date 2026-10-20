@@ -107,6 +107,26 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.111.0 — 2026-10-20
+
+### Book of Hours
+
+- **Find an activity fast.** Choosing a season's activity, or a lab's
+  work, opens a list grouped by Type (Study, Writing & books, Order &
+  covenant and so on) that you can narrow by Type, by Book or by typing
+  part of a name, with the character's recent activities at the top.
+  The list shows just each activity's name; its sourcebook, Type and rule
+  are shown beside it.
+- **Set up a new laboratory from the character sheet.** "Set up a new
+  laboratory", under Order & covenant, needs no lab yet: applying it
+  makes the lab in the magus's covenant with the Basic Flaw, and Advance
+  Season then offers to have the magus finish it next season, which you
+  can decline.
+- **Invent from any spell.** A new spell can start from any spell as a
+  template, the magus's own known spells listed first, from New Spell
+  or the form's Start from. A spell the magus already knows has to be
+  changed before it can be invented.
+
 ## 2.110.0 — 2026-10-20
 
 ### Concilium

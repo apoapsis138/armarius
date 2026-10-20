@@ -3,6 +3,8 @@ assisting in someone else's (planned on the assistant's sheet).
 
 - Setting up a laboratory: two seasons, Magic Theory 3; after the first it
   works with the Basic Flaw (-3 General Quality), which the second removes.
+  A magus with no laboratory yet plans the first season on the character
+  sheet (a new laboratory in their covenant); the second is lab work in it.
 - Refining it: +1 Refinement a season, if Magic Theory is at least the new
   Refinement + 3. Every such season rolls a stress die + Intelligence +
   Magic Theory: 12+ gains Highly Organized, 15+ also removes a Hidden
@@ -57,6 +59,9 @@ ASSIST_SOURCE = (
 )
 
 BUILD = "set_up_lab"
+#: Setting up a laboratory where there is none yet: planned on the
+#: character sheet, it makes the laboratory (its first season).
+NEW = "new_lab"
 REFINE = "refine_lab"
 TAKE_OVER = "take_over_lab"
 ASSIST = "assist_lab"
@@ -98,6 +103,25 @@ def add_vf(lab_: Laboratory, vf_id: str) -> None:
 
 def remove_vf(lab_: Laboratory, vf_id: str) -> None:
     lab_.virtues_flaws = [vf for vf in lab_.virtues_flaws if vf.vf_id != vf_id]
+
+
+def new_lab_name(magus: Character, plan: SeasonPlan) -> str:
+    """The new laboratory's name: the plan's, else the magus's own."""
+    return plan.title.strip() or f"{magus.name}'s laboratory"
+
+
+def new_lab_problems(saga: Saga, magus: Character, plan: SeasonPlan) -> list[str]:
+    """Why `magus` can't set up a new laboratory this season."""
+    found: list[str] = []
+    theory = magic_theory(magus)
+    if theory < 3:
+        found.append(f"Setting up a laboratory needs Magic Theory 3 ({theory}).")
+    if saga.covenant(magus.covenant_id) is None:
+        found.append(
+            f"{magus.name} has no covenant to set the laboratory up in "
+            "(Covenant, on the character sheet)."
+        )
+    return found
 
 
 def refinement(lab_: Laboratory) -> int:
