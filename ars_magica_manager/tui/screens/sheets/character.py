@@ -16,13 +16,14 @@ from textual.widgets import (
 )
 
 from .... import books as bk
-from .... import casting_text, seasons, traditions
+from .... import casting_text, seasons, tradition_text, traditions
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
 from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
+from ....forms import tradition as tradition_forms
 from ....markup import escape
 from ....models import (
     LINE,
@@ -184,20 +185,106 @@ class CharacterSheetView(SheetView):
         """A tradition's chapter: its Arts and Abilities the character has,
         grouped by the part they play, and the chosen one's details."""
         section = tradition_section(tradition.id)
+        # The casting, defenses and seasons text reads the Arts, the bound
+        # beings, the Characteristics, the Virtues and the covenant's aura.
+        sources = (
+            section,
+            traditions.bonds_section(tradition.id),
+            "section-char-info",
+            "section-char-characteristics",
+            "tab-abilities",
+            "section-vf-virtues",
+            "section-vf-flaws",
+        )
         with Vertical(classes="panel-body"):
-            with (
-                VerticalScroll(),
-                SheetSection(title="Arts and Abilities", id=section),
-            ):
-                yield self._list(
-                    section,
-                    lambda: st.grouped_ability_rows(
-                        self.character.abilities,
-                        traditions.chapter_groups(self.character, tradition),
-                        self.character.virtues_flaws,
-                    ),
-                    id=tradition_list(tradition.id),
+            with VerticalScroll():
+                with SheetSection(title="Arts and Abilities", id=section):
+                    yield self._list(
+                        section,
+                        lambda: st.grouped_ability_rows(
+                            self.character.abilities,
+                            traditions.chapter_groups(self.character, tradition),
+                            self.character.virtues_flaws,
+                        ),
+                        id=tradition_list(tradition.id),
+                    )
+                effects = traditions.effects_section(tradition.id)
+                self.core_ops[effects] = tradition_forms.effect_ops(
+                    self.character, tradition
                 )
+                with SheetSection(title="Effects and Items", id=effects):
+                    yield self._list(
+                        (effects, *sources),
+                        lambda: tradition_text.effect_rows(
+                            self.saga, self.character, tradition
+                        ),
+                        id=traditions.effects_list(tradition.id),
+                    )
+                bonds = traditions.bonds_section(tradition.id)
+                self.core_ops[bonds] = tradition_forms.bond_ops(
+                    self.saga, self.character, tradition
+                )
+                with SheetSection(title="Bound Beings", id=bonds):
+                    yield self._list(
+                        bonds,
+                        lambda: tradition_text.bond_rows(self.character, tradition),
+                        id=traditions.bonds_list(tradition.id),
+                    )
+                    yield self._static(
+                        bonds,
+                        lambda: tradition_text.bonds_text(tradition),
+                        id=f"trad-{tradition.id}-bond-rules",
+                    )
+                with SheetSection(
+                    title="Casting", id=traditions.casting_section(tradition.id)
+                ):
+                    yield self._static(
+                        sources,
+                        lambda: tradition_text.casting_text(
+                            self.saga, self.character, tradition
+                        ),
+                        id=f"trad-{tradition.id}-casting",
+                    )
+                with SheetSection(
+                    title="Magical Defenses",
+                    id=traditions.defenses_section(tradition.id),
+                ):
+                    yield self._static(
+                        sources,
+                        lambda: tradition_text.defenses_text(self.character, tradition),
+                        id=f"trad-{tradition.id}-defenses",
+                    )
+                with SheetSection(
+                    title="Seasons", id=traditions.seasons_section(tradition.id)
+                ):
+                    yield self._static(
+                        sources,
+                        lambda: tradition_text.seasons_text(
+                            self.saga, self.character, tradition
+                        ),
+                        id=f"trad-{tradition.id}-seasons",
+                    )
+                with SheetSection(
+                    title="Warping", id=traditions.warping_section(tradition.id)
+                ):
+                    yield self._static(
+                        (*sources, "section-aging"),
+                        lambda: tradition_text.warping_text(self.character, tradition),
+                        id=f"trad-{tradition.id}-warping",
+                    )
+                if tradition.pools:
+                    pools = traditions.pools_section(tradition.id)
+                    self.core_ops[pools] = tradition_forms.pool_ops(
+                        self.character, tradition
+                    )
+                    with SheetSection(title="Pools", id=pools):
+                        yield self._static(
+                            pools,
+                            lambda: tradition_text.pools_text(
+                                self.character, tradition
+                            ),
+                            id=f"trad-{tradition.id}-pools",
+                        )
             yield self._panel(
                 section,
                 lambda: self._ability_info_text(None),
@@ -682,7 +769,7 @@ class CharacterSheetView(SheetView):
         )
 
     def _vf_rows(self, vf_type: str) -> list[tuple[int | None, str]]:
-        free = cv.house_benefit(self.character).free_indices
+        free = cv.free_benefit(self.character).free_indices
         return st.vf_rows(self.character.virtues_flaws, vf_type, free)
 
     def _vf_title(self, vf_type: str) -> str:
@@ -691,7 +778,7 @@ class CharacterSheetView(SheetView):
         Virtue (and Ex Miscellanea's compulsory Flaw) counts nothing
         (cv.HOUSE_SOURCE)."""
         vfs = self.character.virtues_flaws
-        free = cv.house_benefit(self.character).free_indices
+        free = cv.free_benefit(self.character).free_indices
         virtues = st.vf_points(vfs, "Virtue", free)
         flaws = st.vf_points(vfs, "Flaw", free)
         return points_title(

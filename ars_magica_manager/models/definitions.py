@@ -451,6 +451,345 @@ class HouseDef:
 
 #: The realms a non-Hermetic tradition's magic can belong to.
 TRADITION_REALMS: tuple[str, ...] = ("Magic", "Faerie", "Divine", "Infernal")
+#: Whether a tradition's members have The Gift: all, some or none.
+TRADITION_GIFT: tuple[str, ...] = ("required", "optional", "never")
+
+
+@dataclass
+class TraditionTraining:
+    """How a tradition makes a new member at creation: the apprenticeship
+    its book gives (Gifted and unGifted), the scores it leaves, and what
+    a Gifted member's Opening gives. Names are Ability catalog names (a
+    family filled in, "Craft: Runes"); Virtues are catalog ids."""
+
+    gift: str = "optional"
+    #: A Gifted member's apprenticeship: xp on the tradition's Arts and
+    #: Abilities, and levels of its spells or scripts.
+    xp: int = 0
+    levels: int = 0
+    #: An unGifted member's.
+    ungifted_xp: int = 0
+    ungifted_levels: int = 0
+    #: Virtues that change the apprenticeship: id -> [xp, levels] each.
+    modifiers: dict[str, list[int]] = field(default_factory=dict)
+    #: The scores a Gifted member leaves apprenticeship with, at least.
+    minimums: dict[str, int] = field(default_factory=dict)
+    #: The Arts and Abilities a Gifted member's Opening gives, at 0.
+    opening: list[str] = field(default_factory=list)
+    #: Virtues the Opening gives free, outside the Virtue/Flaw balance.
+    opening_virtues: list[str] = field(default_factory=list)
+    #: Free Minor Virtues of `free_category` a Gifted member takes from
+    #: the master, outside the balance.
+    free_minor_virtues: int = 0
+    free_category: str = "Supernatural"
+    #: The highest score an Art on the Art table may have at creation;
+    #: 0 for the usual rules.
+    art_cap: int = 0
+    #: The least of the apprenticeship xp spent on the tradition's Arts.
+    arts_xp: int = 0
+    #: What the worksheet can't yet apply, as the book words it.
+    notes: str = ""
+
+    def __post_init__(self) -> None:
+        if self.gift not in TRADITION_GIFT:
+            raise ValueError(
+                f"Unknown gift rule {self.gift!r}; must be one of {TRADITION_GIFT}"
+            )
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> TraditionTraining:
+        return cls(**known_fields(cls, data))
+
+
+#: How a casting kind finds its scores (rules.hedge_casting.KINDS): a
+#: Technique and a Form; one Ability; the lowest of the runes a script uses.
+CASTING_KINDS: tuple[str, ...] = ("art_pair", "ability", "rune")
+#: The die a casting total adds.
+CASTING_DICE: tuple[str, ...] = ("stress", "simple", "none")
+#: How many pawns of vis a casting may use: each Art's score (the Hermetic
+#: rule), the Ability or rune used, or the sum of the tradition's Forms.
+VIS_CAPS: tuple[str, ...] = ("arts", "score", "forms", "none")
+#: Hedge Magic's Magical Defenses (Hedge Magic RE, Ch. 1).
+DEFENSE_KINDS: tuple[str, ...] = (
+    "Accelerated Expiry",
+    "Alacritous Fortune",
+    "Confounding Magics",
+    "Immovable Object",
+    "Magical Fortitude",
+    "Strength of Form",
+)
+
+
+@dataclass
+class CastingRule:
+    """One way a tradition's members work magic, as data: which scores
+    the total adds, the die, what it is divided by, and what happens when
+    it falls short. A season's Lab Total (`lab`) adds no die."""
+
+    name: str
+    kind: str = "art_pair"
+    #: The Characteristic every total adds; `characteristics` names one
+    #: per Art or Ability instead (Animal Ken: Communication).
+    characteristic: str = ""
+    characteristics: dict[str, str] = field(default_factory=dict)
+    #: The Arts or Abilities it uses: the Techniques and Forms of an
+    #: art_pair, the Abilities of an ability kind, the runes. Empty: the
+    #: tradition's Arts of that role.
+    techniques: list[str] = field(default_factory=list)
+    forms: list[str] = field(default_factory=list)
+    scores: list[str] = field(default_factory=list)
+    #: Abilities the total also adds (Rune Magic), and ones of which it
+    #: adds the best (Refining's Medicine, Philosophiae or a realm Lore).
+    adds: list[str] = field(default_factory=list)
+    best_of: list[str] = field(default_factory=list)
+    die: str = "stress"
+    divisor: int = 1
+    #: How far short a total may fall and still work, at a Fatigue cost;
+    #: 0 when it must reach the level or Ease Factor.
+    failure_margin: int = 0
+    #: What the total is rolled against: a "level" or an "Ease Factor".
+    against: str = "level"
+    #: True when the effect's magnitude is the score used (5 x score is its
+    #: level), as for Supernatural Abilities.
+    magnitude_is_score: bool = False
+    fatigue: str = ""
+    vis_per_pawn: int = 2
+    vis_cap: str = "arts"
+    #: Which vis it may use, as the book words it.
+    vis: str = ""
+    #: Whether an unGifted member may boost it with vis.
+    ungifted_vis: bool = True
+    lab: bool = False
+    penetrates: bool = True
+    #: A roll the target makes even after Penetration (Poetic Justice).
+    resistance: str = ""
+    notes: str = ""
+
+    def __post_init__(self) -> None:
+        for value, allowed, what in (
+            (self.kind, CASTING_KINDS, "casting kind"),
+            (self.die, CASTING_DICE, "die"),
+            (self.vis_cap, VIS_CAPS, "vis cap"),
+        ):
+            if value not in allowed:
+                raise ValueError(f"Unknown {what} {value!r}; must be one of {allowed}")
+        if self.divisor < 1:
+            raise ValueError("A casting divisor is at least 1")
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CastingRule:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class MagicalDefense:
+    """The Magical Defense one of a tradition's Arts or Abilities gives,
+    and the effects it works against (its specialty)."""
+
+    kind: str
+    against: str
+
+    def __post_init__(self) -> None:
+        if self.kind not in DEFENSE_KINDS:
+            raise ValueError(
+                f"Unknown Magical Defense {self.kind!r}; must be one of {DEFENSE_KINDS}"
+            )
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> MagicalDefense:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class DispelRule:
+    """An active dispelling: a casting that ends another effect when its
+    total reaches `multiple` x the effect's level (a Supernatural
+    Ability's effect counting as 5 x its score)."""
+
+    name: str
+    #: The Art pair or Ability that casts it ("Take Curse").
+    uses: str
+    multiple: int = 1
+    #: "level" (the dispelling effect's level + a stress die) or "total"
+    #: (the caster's Casting Total).
+    total: str = "level"
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> DispelRule:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class GroupCasting:
+    """How several members work one effect together: `helper` is what
+    each helper adds ("Ceremony": Characteristic + the score used, as
+    RoP: The Divine's Ceremony; a number: that bonus each), up to `most`
+    helpers ("aura": the aura's strength; "Ceremony": the leader's
+    Ceremony; a number), to the totals named in `applies_to`."""
+
+    name: str
+    helper: str = "Ceremony"
+    most: str = "Ceremony"
+    applies_to: list[str] = field(default_factory=list)
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> GroupCasting:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class OpeningRule:
+    """How a Gifted master of the tradition Opens a Gifted student's Gift
+    to it: the Opening Total's terms (a Characteristic, Abilities added,
+    the highest and the lowest of some, the aura), and the Flaw a student
+    takes for each of the tradition's Arts the master has below 2."""
+
+    characteristic: str = "Intelligence"
+    adds: list[str] = field(default_factory=list)
+    highest_of: list[str] = field(default_factory=list)
+    lowest_of: list[str] = field(default_factory=list)
+    aura: bool = True
+    #: The Flaw a flawed Opening gives (a catalog id), and the parameter
+    #: that names the Art; "" when the troupe picks the Flaw.
+    flaw: str = ""
+    flaw_param: str = ""
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> OpeningRule:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class InitiationScript:
+    """One of the tradition's printed Initiation Scripts."""
+
+    name: str
+    ease_factor: int
+    bonus: int
+    #: What it gives, and the Ordeal, as the book names them.
+    gains: str = ""
+    ordeal: str = ""
+    #: "gifted", "ungifted" or "" (either).
+    who: str = ""
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> InitiationScript:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class InitiationRule:
+    """The tradition's Initiation Total (the Mystagogue's Characteristic +
+    Lore + the Script's bonus) and its scripts. `roll_less`: the Forest
+    Paths' kind, which gives its Flaw then its Virtue with no roll."""
+
+    characteristic: str = "Presence"
+    lore: str = ""
+    self_initiation: bool = True
+    roll_less: bool = False
+    scripts: list[InitiationScript] = field(default_factory=list)
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> InitiationRule:
+        d = known_fields(cls, data)
+        d["scripts"] = [InitiationScript.from_dict(x) for x in d.get("scripts") or []]
+        return cls(**d)
+
+
+@dataclass
+class Advancement:
+    """How the tradition's Arts advance besides the usual sources: whether
+    they may be practised, and whether studied from vis."""
+
+    practice_arts: bool = True
+    vis_study: bool = False
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Advancement:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class TraditionActivity:
+    """A season of the tradition's own work (Refining, brewing, inventing
+    scripts...): Exposure in its Arts, with the Lab Total of the casting
+    rule `lab_rule` (TraditionDef.casting) when it has one."""
+
+    key: str
+    label: str
+    summary: str
+    lab_rule: str = ""
+    gifted_only: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> TraditionActivity:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class PoolDef:
+    """A store of points the tradition's members keep (sparks, Prophecy
+    Points, reagents...): what fills it each year, what spends it, and
+    its cap, as the book words them."""
+
+    name: str
+    income: str = ""
+    costs: str = ""
+    cap: str = ""
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> PoolDef:
+        return cls(**known_fields(cls, data))
+
+
+#: How a tradition's Warping is shown: the book's words only, or worked
+#: out (an elementalist's elemental Personality Traits).
+WARPING_KINDS = ("note", "elemental_traits")
+
+
+@dataclass
+class WarpingRule:
+    """What the tradition's members suffer in place of (or beside) the
+    Hermetic Warping and Twilight: its name, what sets it off, and
+    whether the app works it out."""
+
+    name: str
+    kind: str = "note"
+    replaces_twilight: bool = False
+    trigger: str = ""
+    notes: str = ""
+
+    def __post_init__(self) -> None:
+        if self.kind not in WARPING_KINDS:
+            raise ValueError(
+                f"Unknown kind {self.kind!r}; must be one of {WARPING_KINDS}"
+            )
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> WarpingRule:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class BondRule:
+    """A being the tradition's members bind (a familiar, a fetch, a
+    spirit, a golem): how it is bound and what it adds to its master."""
+
+    name: str
+    how: str = ""
+    feeds: str = ""
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> BondRule:
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -483,8 +822,32 @@ class TraditionDef:
     working_xp: int = 0
     #: The free Social Status Virtue, if the tradition gives one.
     social_status: str = ""
+    #: Its place in the Order of Hermes: "house" for a tradition of House
+    #: Ex Miscellanea, whose magi take its Virtues as the House's free ones;
+    #: "societas" for a Hermetic society any magus may join; "" for neither.
+    hermetic: str = ""
     #: Rules the sheet can't yet apply, as the book words them.
     notes: str = ""
+    #: How a new member is made at creation.
+    training: TraditionTraining = field(default_factory=TraditionTraining)
+    #: How its members cast (rules.hedge_casting), the Magical Defense each
+    #: of its Arts or Abilities gives (by name), its active dispellings,
+    #: and its group castings.
+    casting: list[CastingRule] = field(default_factory=list)
+    defenses: dict[str, MagicalDefense] = field(default_factory=dict)
+    dispels: list[DispelRule] = field(default_factory=list)
+    groups: list[GroupCasting] = field(default_factory=list)
+    #: How a master Opens a student's Gift (None: the tradition doesn't),
+    #: its initiations, how its Arts advance, and its own seasons' work.
+    opening: OpeningRule | None = None
+    initiation: InitiationRule | None = None
+    advancement: Advancement = field(default_factory=Advancement)
+    activities: list[TraditionActivity] = field(default_factory=list)
+    #: The beings its members bind, the pools they keep, and the
+    #: tradition's own Warping (None: the Hermetic rules).
+    bonds: list[BondRule] = field(default_factory=list)
+    pools: list[PoolDef] = field(default_factory=list)
+    warping: WarpingRule | None = None
 
     def __post_init__(self) -> None:
         if self.realm not in TRADITION_REALMS:
@@ -499,7 +862,28 @@ class TraditionDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> TraditionDef:
-        return cls(**known_fields(cls, data))
+        d = known_fields(cls, data)
+        d["training"] = TraditionTraining.from_dict(d.get("training") or {})
+        d["casting"] = [CastingRule.from_dict(c) for c in d.get("casting") or []]
+        d["defenses"] = {
+            name: MagicalDefense.from_dict(v)
+            for name, v in (d.get("defenses") or {}).items()
+        }
+        d["dispels"] = [DispelRule.from_dict(v) for v in d.get("dispels") or []]
+        d["groups"] = [GroupCasting.from_dict(v) for v in d.get("groups") or []]
+        if d.get("opening") is not None:
+            d["opening"] = OpeningRule.from_dict(d["opening"])
+        if d.get("initiation") is not None:
+            d["initiation"] = InitiationRule.from_dict(d["initiation"])
+        d["advancement"] = Advancement.from_dict(d.get("advancement") or {})
+        d["activities"] = [
+            TraditionActivity.from_dict(v) for v in d.get("activities") or []
+        ]
+        d["bonds"] = [BondRule.from_dict(v) for v in d.get("bonds") or []]
+        d["pools"] = [PoolDef.from_dict(v) for v in d.get("pools") or []]
+        if d.get("warping") is not None:
+            d["warping"] = WarpingRule.from_dict(d["warping"])
+        return cls(**d)
 
 
 @dataclass

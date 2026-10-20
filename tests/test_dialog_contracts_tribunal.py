@@ -129,11 +129,18 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "edit faction": Contract(
         prefill={"Faction": "Hedge coven", "Members": "7"},
-        edits={"Decides by": "A council", "Offers": "Herb-lore"},
-        saved=lambda s: s.neighbour("coven").details["offers"],
-        expected="Herb-lore",
+        edits={
+            "Decides by": "A council",
+            "Offers": "Herb-lore",
+            "Tradition": "trad_folk_witches",
+        },
+        saved=lambda s: (
+            s.neighbour("coven").details["offers"],
+            s.neighbour("coven").details["tradition"],
+        ),
+        expected=("Herb-lore", "trad_folk_witches"),
         invalid={"Members": "-3"},
-        shown={"#nb-kind-facts": "A council"},
+        shown={"#nb-kind-facts": "Folk Witches"},
     ),
     "add stage": Contract(
         prefill={"Stage": "", "What became of it": "Pending"},

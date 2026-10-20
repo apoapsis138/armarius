@@ -1847,6 +1847,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     Builder.link(w["andorra_company"], "covenants", provence.covenants["bellaquin"])
     w["sorginak"] = b.faction(
         "The Sorginak Covens",
+        tradition="trad_sorginak",
         faction="Hedge coven",
         decides="A council",
         members=70,
@@ -1877,6 +1878,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["hermetic_sorginak"] = b.faction(
         "The Hermetic Sorginak",
+        tradition="trad_hermetic_sorginak",
         faction="Other",
         decides="Its leader",
         members=3,

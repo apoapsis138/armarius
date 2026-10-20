@@ -43,9 +43,17 @@ import random
 from collections.abc import Callable, Collection, MutableMapping, Sequence
 from dataclasses import dataclass, field, replace
 
-from .. import book_kinds, books, sourcebooks, vis
+from .. import book_kinds, books, catalog, sourcebooks, vis
 from ..arts import ART_BY_NAME, ARTS
-from ..models import SEASONS, Book, Character, Saga, SeasonPlan, XpAllocation
+from ..models import (
+    SEASONS,
+    Book,
+    Character,
+    Saga,
+    SeasonPlan,
+    TraditionDef,
+    XpAllocation,
+)
 from . import (
     aging,
     apprentice_seasons,
@@ -62,6 +70,7 @@ from . import (
     study,
     supplement_seasons,
     supplement_work,
+    tradition_seasons,
     xp,
 )
 from . import (
@@ -173,6 +182,9 @@ class Activity:
     #: The sourcebook it comes from ("" for the core book): offered only
     #: while the saga has that book in play.
     book: str = ""
+    #: A tradition's own work: offered only to its members (a catalog
+    #: id), or "*" to a member of any tradition.
+    tradition: str = ""
 
 
 ACTIVITIES: dict[str, Activity] = {
@@ -589,6 +601,52 @@ ACTIVITIES.update(
         for a in supplement_seasons.ACTIVITIES
     }
 )
+OPEN_TRADITION = tradition_seasons.OPEN
+HEDGE_SOURCE = (
+    "Hedge Magic, Revised Edition "
+    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content)"
+)
+ACTIVITIES[tradition_seasons.OPEN] = Activity(
+    tradition_seasons.OPEN,
+    "Open a student's Gift to a tradition",
+    "A season with a Gifted student: the Opening Total against twice his "
+    "Supernatural Abilities and Arts (+12 if already Opened).",
+    tradition_seasons.SOURCE,
+    book="HMRE",
+    tradition="*",
+)
+
+
+def _tradition_book(tradition: TraditionDef) -> tuple[str, str]:
+    """The book a tradition's own seasons come from (the first its record
+    cites) and their citation."""
+    book = next(iter(sourcebooks.books_of(tradition.source.split(";")[0])), "HMRE")
+    if book == "HMRE":
+        return book, HEDGE_SOURCE
+    title = sourcebooks.SOURCEBOOKS.get(book, book)
+    return book, f"{title}, {tradition.name}"
+
+
+#: Each tradition's own seasons (its catalog record's activities).
+TRADITION_ACTIVITIES: tuple[str, ...] = tuple(
+    a.key for t in catalog.load_tradition_catalog() for a in t.activities
+)
+ACTIVITIES.update(
+    {
+        a.key: Activity(
+            a.key,
+            a.label,
+            a.summary + " Exposure in the Art or Ability worked.",
+            _tradition_book(t)[1],
+            working=True,
+            distractable=True,
+            book=_tradition_book(t)[0],
+            tradition=t.id,
+        )
+        for t in catalog.load_tradition_catalog()
+        for a in t.activities
+    }
+)
 ACTIVITIES[OTHER] = _OTHER_ACTIVITY
 
 
@@ -616,7 +674,16 @@ def activities_for(
         and a.lab == lab
         and not a.hidden
         and (a.key == keep or sourcebooks.in_play(a.book, books))
+        and _member(character, a.tradition)
     ]
+
+
+def _member(character: Character, tradition: str) -> bool:
+    if not tradition:
+        return True
+    if tradition == "*":
+        return bool(character.traditions)
+    return tradition in character.traditions
 
 
 # -- subjects: what a season's experience goes into ---------------------------
@@ -1090,6 +1157,8 @@ class Outcome:
     book_work: book_seasons.BookWork | None = None
     #: Apprentice work.
     apprentice_work: apprentice_seasons.ApprenticeWork | None = None
+    #: An Opening to a hedge tradition, or a tradition's own work.
+    tradition_work: tradition_seasons.TraditionWork | None = None
     #: Seeking an insight: whether one was gained.
     insight: bool = False
     #: Faith Points gained (Good Works).
@@ -1428,6 +1497,54 @@ def _book_outcome(
     )
 
 
+# Hedge traditions: Opening a student gives Exposure in Teaching; a
+# tradition's own work gives Exposure in the Art or Ability worked.
+
+
+def _tradition_problems(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> list[str]:
+    if plan.activity == tradition_seasons.OPEN:
+        found, _ = tradition_seasons.open_work(saga, character, plan)
+        return found
+    chosen = [a for a in plan.allocations if a.subject]
+    if not chosen:
+        return ["Choose the Art or Ability worked."]
+    kind, name = _split(chosen[0].subject)
+    if kind != "ability":
+        return ["Choose the Art or Ability worked."]
+    found, _ = tradition_seasons.work(saga, character, plan, name)
+    return found
+
+
+def _tradition_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    if plan.activity == tradition_seasons.OPEN:
+        _, work = tradition_seasons.open_work(saga, character, plan)
+        result.gains.append(_exposure(character, "Teaching"))
+    else:
+        chosen = next(a for a in plan.allocations if a.subject)
+        name = _split(chosen.subject)[1]
+        _, work = tradition_seasons.work(saga, character, plan, name)
+        result.gains.append(
+            _gain(
+                character,
+                ability_subject(name),
+                EXPOSURE_QUALITY,
+                "exposure",
+                _months(plan),
+            )
+        )
+    result.tradition_work = work
+    if work is not None:
+        result.notes += work.notes
+
+
 # Apprentices: teaching gives Exposure in Teaching; searching for
 # a Gifted child is a roll.
 
@@ -1752,6 +1869,15 @@ def _plain_problems(
                 "Arts can't be practised: study them from vis or books "
                 "(DE Ch. 10, Practice)."
             )
+        for allocation in chosen:
+            kind, name = _split(allocation.subject)
+            hedge = (
+                tradition_seasons.practice_forbidden(character, name)
+                if kind == "ability"
+                else None
+            )
+            if hedge is not None:
+                found.append(f"The {hedge.name}' Arts can't be practised.")
         quality = source_quality(plan)
         if quality is not None and quality < 1:
             found.append("Source Quality must be at least 1.")
@@ -1801,6 +1927,10 @@ def _handlers() -> dict[str, Handler]:
         (
             _with_saga(_apprentice_problems, _apprentice_outcome),
             tuple(apprentice_seasons.ACTIVITIES),
+        ),
+        (
+            _with_saga(_tradition_problems, _tradition_outcome),
+            (tradition_seasons.OPEN, *TRADITION_ACTIVITIES),
         ),
         (Handler(_integrate_problems, _integrate_outcome), (experiment.INTEGRATE,)),
         (

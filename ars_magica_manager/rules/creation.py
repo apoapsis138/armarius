@@ -13,6 +13,7 @@ from . import (  # noqa: F401 -- each registers its step's checks
     creation_later,
     creation_magus,
     creation_packages,
+    creation_tradition,
     creation_virtues,
     creation_xp,
 )

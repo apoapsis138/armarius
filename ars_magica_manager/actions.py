@@ -191,6 +191,9 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         verbs[f"section-pos-{kind}"] = _ALL3
     for tradition in traditions.all_traditions():
         verbs[traditions.tradition_section(tradition.id)] = _ALL3
+        verbs[traditions.effects_section(tradition.id)] = _ALL3
+        verbs[traditions.bonds_section(tradition.id)] = _ALL3
+        verbs[traditions.pools_section(tradition.id)] = _EDIT
     return verbs
 
 

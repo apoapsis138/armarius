@@ -23,6 +23,7 @@ from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
+from ..rules import tradition_seasons
 from ..rules import warping as warping_rules
 from ..tables import Table
 from ..world import takes_part_in_play
@@ -77,6 +78,11 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
             ex.goal(
                 character, outcome.plan.research, outcome.plan.research_kind
             ).insights += 1
+        hedge = outcome.tradition_work
+        if hedge is not None and outcome.plan.activity == rules.OPEN_TRADITION:
+            opened = saga.character(outcome.plan.subject_id)
+            if opened is not None:
+                tradition_seasons.apply_opening(opened, hedge)
         work = outcome.apprentice_work
         student = saga.character(outcome.plan.subject_id)
         if work is not None and student is not None:

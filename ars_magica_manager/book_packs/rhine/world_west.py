@@ -861,6 +861,7 @@ def _factions(b: Builder, w, valley, forest) -> None:
     )
     w["hedge_wizards_of_the_paths"] = b.faction(
         "Hedge wizards of the forest paths",
+        tradition="trad_forest_paths",
         faction="Hedge coven",
         realm="Magic",
         offers="Teaching of a path through the forest to magi, for a suitable price.",

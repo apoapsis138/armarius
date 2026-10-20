@@ -313,6 +313,7 @@ def _celi_de(hibernia: Hibernia) -> None:
     b = hibernia.b
     hibernia.world["celi_de"] = b.faction(
         "The Céli Dé",
+        tradition="trad_celi_de",
         faction="Other",
         realm="Divine",
         rules=(
@@ -368,6 +369,7 @@ def _cailleacha(hibernia: Hibernia) -> None:
     b = hibernia.b
     hibernia.world["cailleacha"] = b.faction(
         "The Cailleacha Phiseogach",
+        tradition="trad_cailleach_phiseogach",
         faction="Hedge coven",
         realm="Infernal",
         members=12,

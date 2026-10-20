@@ -7,6 +7,7 @@ import pytest
 from dialog_contract_support import Contract, all_sagas, run_contract
 from textual.widgets import Select
 
+from ars_magica_manager import catalog
 from ars_magica_manager import players as pl
 
 CONTRACTS: dict[str, Contract] = {
@@ -262,7 +263,11 @@ CONTRACTS: dict[str, Contract] = {
         edits={"Folk Witches (HMRE)": True},
         saved=lambda s: s.traditions,
         expected=["trad_folk_witches", "trad_vitkir"],
-        shown={"#section-traditions": "Traditions Offered (2 of 6)"},
+        shown={
+            "#section-traditions": (
+                f"Traditions Offered (2 of {len(catalog.load_tradition_catalog())})"
+            )
+        },
     ),
 }
 

@@ -1552,6 +1552,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["priory_of_st_nerius"] = b.faction(
         "The Priory of St. Nerius",
+        tradition="trad_priory_of_saint_nerius",
         faction="Other",
         realm="Divine",
         wants="St. Nerius recognised as a saint by the Latin Church.",

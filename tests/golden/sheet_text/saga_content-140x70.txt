@@ -4,15 +4,16 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Books in Play (38 of 38)
+    ▼ Books in Play (41 of 41)
 
         In play  Book       Title
       ○ always   DE         Ars Magica Definitive Edition
       ○ yes      A&A        Art & Academe
       ○ yes      AM         Ancient Magic
       ○ yes      App        Apprentices
-      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal
-      ○ yes      C&G        City & Guild                                                              ▆▆
+      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal                              ▁▁
+      ○ yes      BS&S       Between Sand and Sea: Mythic Africa
+      ○ yes      C&G        City & Guild
       ○ yes      Cal        Calebais: The Broken Covenant
       ○ yes      Covenants  Covenants
       ○ yes      DI         Dies Irae
@@ -20,7 +21,6 @@
       ○ yes      GGHS       The Grand Grimoire of Hermetic Spells
       ○ yes      GotF       Guardians of the Forests: The Rhine Tribunal
       ○ yes      Grogs      Grogs
-      ○ yes      HMRE       Hedge Magic, Revised Edition
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Saga Sources (0)
@@ -29,23 +29,23 @@
       (none recorded)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Traditions Offered (1 of 6)
+    ▼ Traditions Offered (1 of 81)
 
         On       Book       Tradition
       ○ no       HMRE       Elementalists
       ○ no       HMRE       Folk Witches
-      ○ no       HMRE       Gruagachan
+      ○ no       HMRE       Gruagachan                                                                ▄▄
       ○ no       HMRE       Learned Magicians
       ○ no       HMRE       Nightwalkers
       ○ yes      HMRE       Vitkir
-
-
-
-
-
-
-
-
+      ○ no       RoP:F      Ollamhain
+      ○ no       RoP:F      Volkhvy
+      ○ no       RoP:F      Wise Folk
+      ○ no       RoP:F      Borrowers
+      ○ no       RoP:F; DE  Faerie Doctors
+      ○ no       RoP:F      Homunculus Wizards
+      ○ no       LoH; RoP:F Caerfloron's Line
+      ○ no       TCI; C&G   Wordsmiths
 
 
 
@@ -75,10 +75,10 @@
     ▼ Catalogs (6)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1226        0
+      ○ Virtues & Flaws              yes          1347        0
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           217        0
-      ○ Abilities                    yes           144        0
+      ○ Abilities                    yes           258        0
       ○ Spells                       yes          1315        0
       ○ Shapes & Materials           yes           243        0
 

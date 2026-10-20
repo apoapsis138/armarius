@@ -20,6 +20,7 @@ from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
 from ..rules import effects
+from ..rules import hybrid_magic as hybrid
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.rounding import round_down
@@ -127,14 +128,14 @@ def _living_conditions(saga: Saga, character: Character) -> int:
 def _yearly_warping(saga: Saga, character: Character) -> str:
     """A year's automatic Warping Points: +1 for a Longevity
     Ritual, and living in a strong aura of another realm (a magus gains none
-    from a Magic aura). Returns what was added ("" for nothing)."""
+    from a Magic aura, a holy or chthonic magus none from his other realm's). Returns what was added ("" for nothing)."""
     gained: list[str] = []
     points = 0
     if character.aging.longevity_modifier:
         points += 1
         gained.append("Longevity Ritual 1")
     aura, realm = home_aura(saga, character)
-    if not (character.type == "magus" and realm == "Magic"):
+    if hybrid.warps_from_aura(character, realm):
         from_aura = warping_rules.aura_points(aura)
         if from_aura:
             points += from_aura

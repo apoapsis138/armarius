@@ -132,6 +132,7 @@ _SEASON_READS: ChoiceReads = (
             book_seasons.TEACH_ABBREVIATIONS,
             apprentice_seasons.OPEN_ARTS,
             apprentice_seasons.TEACH_VIRTUE,
+            season_rules.OPEN_TRADITION,
         ),
         lambda v: {"subject_id": v.get("student_id")},
     ),
@@ -860,6 +861,7 @@ def _subject_fields(
                 book_seasons.WRITE_SUMMA,
                 book_seasons.WRITE_TRACTATUS,
                 *_SUPPLEMENT_XP,
+                *season_rules.TRADITION_ACTIVITIES,
             )
         elif n == 2:
             shown = _activity_is(season_rules.EXPOSURE, season_rules.ADVENTURE)
@@ -1038,6 +1040,7 @@ def _student_and_research_fields(
                 book_seasons.TEACH_ABBREVIATIONS,
                 apprentice_seasons.OPEN_ARTS,
                 apprentice_seasons.TEACH_VIRTUE,
+                season_rules.OPEN_TRADITION,
             ),
         ),
         DialogField(

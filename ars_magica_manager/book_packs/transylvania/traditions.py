@@ -5,10 +5,11 @@ Fectores and the Hunters' Arts, the hunters marked by their birth
 (sabotnici, glogove, the taltós and the kresnici), the hunters born of
 vampires (dhampiri, vampirdzhia and the lampijeroviki of Sanžak), the
 wolf brotherhoods, the folk witches and the strigoi vii, and the Cuman
-and Pecheneg shamans, each as a faction (the app has no record for a
-hedge tradition yet, so each says it is sketched); one storm wizards'
-ice cave as a place; and Thietmar the storm wizard and Tibor of Borša
-the dhampir as companions with their printed stats.
+and Pecheneg shamans, each as a faction naming the tradition record its
+members are played from (the wolf brotherhoods and the Pechenegs have
+none); one storm wizards' ice cave as a place; and Thietmar the storm
+wizard and Tibor of Borša the dhampir as companions with their printed
+stats.
 
 Laniena, its magi, Murat of Terezin and Bendis the Fector are the
 Hungary part's; Ludmilla is the borders part's; Zuban the four-eyed dog
@@ -31,9 +32,15 @@ if TYPE_CHECKING:
     from . import Transylvania
 
 SKETCHED = (
-    "Sketched as a faction until the app models hedge magic: its powers "
-    "are summarised here, and a member who needs them is played from "
-    "Against the Dark (chapter nine) and Hedge Magic Revised Edition."
+    "A member is played from the tradition record the faction names: "
+    "its powers are summarised here, and what the record only notes is "
+    "in Against the Dark (chapter nine) and Hedge Magic Revised Edition."
+)
+#: For a group no tradition record covers.
+UNRECORDED = (
+    "No tradition record covers them: their powers are summarised here, "
+    "and a member who needs them is played from Against the Dark "
+    "(chapter nine) and Hedge Magic Revised Edition."
 )
 
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
@@ -73,6 +80,7 @@ def _storm_wizards(transylvania: Transylvania) -> None:
     w = transylvania.world
     w["storm_wizards"] = b.faction(
         "The Storm Wizards",
+        tradition="trad_storm_wizards",
         faction="Hedge coven",
         realm="Magic",
         rules=(
@@ -176,6 +184,7 @@ def _hunters(transylvania: Transylvania) -> None:
     w = transylvania.world
     w["fectores"] = b.faction(
         "The Fectores",
+        tradition="trad_fectores",
         faction="Hedge coven",
         decides="Its leader",
         ruler="The magi of Laniena, for House Tremere",
@@ -251,6 +260,7 @@ def _hunters(transylvania: Transylvania) -> None:
     )
     w["sabotnici"] = b.faction(
         "The Sabotnici",
+        tradition="trad_hunters",
         faction="Other",
         realm="Magic",
         rules="None: a sabotnik is made by the day of his birth, not by any school",
@@ -282,6 +292,7 @@ def _hunters(transylvania: Transylvania) -> None:
     )
     w["glogove"] = b.faction(
         "The Glogove",
+        tradition="trad_hunters",
         faction="Other",
         realm="Magic",
         rules="None: a glog is marked at birth (feet first, with teeth, or red-haired)",
@@ -309,6 +320,7 @@ def _hunters(transylvania: Transylvania) -> None:
     )
     w["taltos"] = b.faction(
         "The Taltós",
+        tradition="trad_nightwalkers",
         faction="Hedge coven",
         realm="Magic",
         rules=(
@@ -341,6 +353,7 @@ def _hunters(transylvania: Transylvania) -> None:
     )
     w["kresnici"] = b.faction(
         "The Kresnici",
+        tradition="trad_nightwalkers",
         faction="Hedge coven",
         realm="Magic",
         rules="Born with a clear or white caul",
@@ -361,6 +374,7 @@ def _hunters(transylvania: Transylvania) -> None:
     )
     w["dhampiri"] = b.faction(
         "The Dhampiri and Vampirdzhia",
+        tradition="trad_hunters",
         faction="Other",
         realm="Faerie",
         rules=(
@@ -401,6 +415,7 @@ def _hunters(transylvania: Transylvania) -> None:
     )
     w["lampijeroviki"] = b.faction(
         "The Lampijeroviki of Sanžak",
+        tradition="trad_hunters",
         faction="Family",
         realm="Faerie",
         offers="Vampire hunting for hire, and training in it",
@@ -437,7 +452,7 @@ def _hunters(transylvania: Transylvania) -> None:
             "fears, and may order a Bjornaer magus to root one out, "
             "though the brotherhood is all that keeps a strigoi viu's "
             "vampires off the village.",
-            SKETCHED,
+            UNRECORDED,
             "A varcolac takes Shapeshifter if born to it or Skinchanger "
             "if he learned it, perhaps Lycanthrope and Animal Ken.",
         ),
@@ -452,6 +467,7 @@ def _witches(transylvania: Transylvania) -> None:
     w = transylvania.world
     w["folk_witches"] = b.faction(
         "The Folk Witches",
+        tradition="trad_folk_witches",
         faction="Hedge coven",
         decides="Its leader",
         realm="Magic",
@@ -476,6 +492,7 @@ def _witches(transylvania: Transylvania) -> None:
     )
     w["strigoi_vii"] = b.faction(
         "The Strigoi Vii",
+        tradition="trad_nightwalkers",
         faction="Hedge coven",
         decides="A council",
         rules="Only women; a girl may learn the craft by joining a coven",
@@ -508,6 +525,7 @@ def _shamans(transylvania: Transylvania) -> None:
     w = transylvania.world
     w["cuman_shamans"] = b.faction(
         "The Cuman Shamans",
+        tradition="trad_nightwalkers",
         faction="Hedge coven",
         realm="Magic",
         summary=paragraphs(
@@ -532,7 +550,7 @@ def _shamans(transylvania: Transylvania) -> None:
             "Hungarian kings settled them in the southern Carpathians, "
             "their shamans went into House Tremere's service with many "
             "of their warriors. They count as hospites.",
-            SKETCHED,
+            UNRECORDED,
         ),
     )
 
@@ -663,6 +681,7 @@ THIETMAR: StatBlock = {
     "decrepitude": (0, 0),
     "warping": (0, 4),
     "apparent_age": 37,
+    "traditions": ["trad_storm_wizards"],
     "virtues_flaws": [
         "The Gift",
         "Storm Wizard",
@@ -736,6 +755,7 @@ TIBOR: StatBlock = {
     "decrepitude": (0, 0),
     "warping": (0, 0),
     "apparent_age": 25,
+    "traditions": ["trad_hunters"],
     "virtues_flaws": [
         "Wanderer",
         "Dhampir",
@@ -773,6 +793,8 @@ TIBOR: StatBlock = {
         ("Ride", 1, "mules"),
         ("Second Sight", 3, "vampires"),
         ("Single Weapon", 5, "short spear"),
+        ("Slay", 5, ""),
+        ("Foe: Vampire", 0, ""),
         ("Survival", 2, "scrounging from farmland"),
         ("Swim", 1, "fast-flowing water"),
         ("Living Language: Vlach", 5, "Romanian"),
@@ -791,8 +813,8 @@ TIBOR: StatBlock = {
         "Sympathy Trait Crossroads -1: at a crossroads every Ability "
         "roll he makes is at -1.",
         "Hedge powers: the Hunters' Arts Slay 5 and Vampire 0 (the Foe "
-        "Art free with his first Practice Art), kept here because the "
-        "sheet's Arts are the Hermetic ones. With them he charges a new "
+        "Art free with his first Practice Art), in his Hunters chapter. "
+        "With them he charges a new "
         "weapon in a day's chanting to kill one particular vampire "
         "(Dex + Slay + Vampire + aura + stress die against a level of "
         "25, less 5 for each true fact he has learnt about it and more "

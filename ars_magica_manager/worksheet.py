@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from . import books as bk
-from . import catalog, creation
+from . import catalog, creation, traditions
 from . import covenant_templates as templates
 from . import covenants as cov_rules
 from . import inhabitants as inh
@@ -64,6 +64,7 @@ from .rules import creation_covenant as cov
 from .rules import creation_later as later
 from .rules import creation_magus as magus
 from .rules import creation_packages as packages
+from .rules import creation_tradition as ct
 from .rules import creation_virtues as cv
 from .rules import creation_xp as cx
 from .rules import scores
@@ -229,6 +230,10 @@ def _concept_budget(saga: Saga, record: Record) -> str:
         house_def = catalog.load_house_catalog_by_id().get(house or "")
         if house_def is not None and house_def.benefit:
             rows.append(("House benefit", escape(house_def.benefit)))
+    else:
+        member = ct.tradition(character)
+        if member is not None or traditions.offered(saga):
+            rows.append(("Tradition", escape(member.name) if member else "(none)"))
     rows.append(
         (
             "Age",
@@ -279,6 +284,17 @@ def _concept_actions(saga: Saga, record: Record) -> list[Action]:
         actions.append(
             Action("Choose status Virtue", lambda: wf.mythic_status(saga, character))
         )
+    if traditions.joinable(saga, character):
+        actions.append(
+            Action("Choose tradition", lambda: wf.choose_tradition(saga, character))
+        )
+    if ct.missing_virtues(character):
+        actions.append(
+            Action(
+                "Add the tradition's Virtues",
+                lambda: wf.add_tradition_virtues(character),
+            )
+        )
     return actions
 
 
@@ -301,11 +317,12 @@ def _virtues_budget(saga: Saga, record: Record) -> str:
             f"{t.minor_flaws} of {cv.max_minor_flaws(character)} Minor Flaws",
         ),
     ]
-    house = cv.house_benefit(character)
+    house = cv.free_benefit(character)
+    giver = "House" if house.giver == "the House" else "Tradition"
     if house.held:
-        rows.append(("Free from the House", escape(", ".join(house.held))))
+        rows.append((f"Free from the {giver}", escape(", ".join(house.held))))
     if house.missing:
-        rows.append(("House still gives", escape("; ".join(house.missing))))
+        rows.append((f"{giver} still gives", escape("; ".join(house.missing))))
     return aligned(rows)
 
 
@@ -430,6 +447,7 @@ ENTRY_STEPS: dict[str, str] = {
     "package": "Training package",
     "virtue": "Virtue xp",
     "free": "Free Virtue score",
+    "training": "Tradition Training",
     "apprenticeship": "Apprenticeship",
     "gauntlet": "Years past Gauntlet",
 }
@@ -504,7 +522,9 @@ def xp_details(saga: Saga, character: Character, target: str) -> str:
         lines.append("[b]Affinity:[/] pool xp spent on it gains half again, rounded up")
     if not is_art:
         cap = access.ability_cap_for(character, cc.age(saga, character), target)
-        if cap is None:
+        if cap is None and access.ability_xp_table(target) == "art":
+            lines.append("[b]Creation cap:[/] none (it advances as an Art)")
+        elif cap is None:
             lines.append("[b]Creation cap:[/] none (Mentored by Demons)")
         else:
             over = " [$text-error](over it)[/]" if progress.score > cap else ""
@@ -792,6 +812,56 @@ def _learn_spell(saga: Saga, record: Record, step: str) -> Action:
     return Action(
         "Learn a spell", lambda: wf.learn_spell(saga, _character(record), step)
     )
+
+
+# -- Tradition Training --
+
+
+def _training_budget(saga: Saga, record: Record) -> str:
+    character = _character(record)
+    member = ct.tradition(character)
+    if member is None:
+        return ""
+    lines = [
+        f"{escape(member.name)}, {'Gifted' if ct.gifted(character) else 'unGifted'}"
+    ]
+    budget = ct.xp_budget(character)
+    if budget:
+        used = cx.spent(character, ct.STEP)
+        lines.append(
+            f"Apprenticeship: {budget} xp for the tradition's Arts and Abilities, "
+            f"[b]{used} spent, {budget - used} left[/]"
+        )
+    levels = ct.level_budget(character)
+    if levels:
+        lines.append(
+            f"Spells or scripts: {levels} levels (kept on the tradition's "
+            "chapter for now)"
+        )
+    if ct.opening(character):
+        left = ct.unopened(character)
+        lines.append(
+            "Opening: "
+            + (f"{len(left)} Arts and Abilities to give" if left else "done")
+        )
+    if member.training.notes:
+        lines.append(f"[dim]{escape(member.training.notes)}[/]")
+    return "\n".join(lines)
+
+
+def _training_actions(saga: Saga, record: Record) -> list[Action]:
+    character = _character(record)
+    actions = []
+    if ct.unopened(character):
+        actions.append(Action("Open the Arts", lambda: wf.open_tradition(character)))
+    return actions
+
+
+PANELS[("character", ct.STEP)] = Panel(
+    _training_budget,
+    _training_actions,
+    xp_list(ct.STEP, lambda saga, c: ct.targets(c)),
+)
 
 
 # -- Apprenticeship --

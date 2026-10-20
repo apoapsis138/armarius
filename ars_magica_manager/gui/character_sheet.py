@@ -50,6 +50,7 @@ from .. import (
     portraits,
     seasons,
     sourcebooks,
+    tradition_text,
     traditions,
     vis,
 )
@@ -71,9 +72,11 @@ from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
 from ..forms import season as season_forms
 from ..forms import spell as spell_forms
+from ..forms import tradition as tradition_forms
 from ..forms import trait as trait_forms
 from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
+from ..markup import escape
 from ..models import (
     CHARGED,
     LINE,
@@ -83,6 +86,7 @@ from ..models import (
     ScoredTrait,
     TraditionDef,
 )
+from ..rules import hybrid_magic
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
@@ -859,6 +863,16 @@ class CharacterSheet(QWidget):
             lambda index: self._show_ability(chooser, index),
             category=lambda row: c.abilities[row.index].category,
         )
+        effects = Chooser()
+        effect_rows = tradition_text.effect_table(self.saga, c, tradition)
+        bonds = Chooser()
+        bond_rows = tradition_text.bond_table(c, tradition)
+        casting: list[QWidget] = []
+        for part in tradition_text.casting_parts(self.saga, c, tradition):
+            casting.append(_subheading(part.title, p))
+            if part.table:
+                casting.append(TextBlock(part.table, p, mono=True))
+            casting.append(TextBlock(part.notes, p))
         return scrolling_page(
             p,
             prose(tradition.description, p),
@@ -867,6 +881,74 @@ class CharacterSheet(QWidget):
                 p,
                 table,
                 buttons=verb_buttons(ops, chooser, self.run, p),
+            ),
+            section(
+                f"Effects and Items ({len(effect_rows.rows)})",
+                p,
+                table_view(effect_rows, p, effects.choose)
+                if effect_rows.rows
+                else TextBlock("[dim]None recorded.[/]", p),
+                buttons=verb_buttons(
+                    tradition_forms.effect_ops(c, tradition), effects, self.run, p
+                ),
+            ),
+            section(
+                f"Bound Beings ({len(bond_rows.rows)})",
+                p,
+                table_view(bond_rows, p, bonds.choose)
+                if bond_rows.rows
+                else TextBlock("[dim]None bound.[/]", p),
+                TextBlock(tradition_text.bonds_text(tradition), p),
+                buttons=verb_buttons(
+                    tradition_forms.bond_ops(self.saga, c, tradition),
+                    bonds,
+                    self.run,
+                    p,
+                ),
+            ),
+            section(
+                "Casting",
+                p,
+                *(
+                    casting
+                    or [
+                        TextBlock(
+                            tradition_text.casting_text(self.saga, c, tradition), p
+                        )
+                    ]
+                ),
+            ),
+            section(
+                "Magical Defenses",
+                p,
+                TextBlock(tradition_text.defenses_text(c, tradition), p),
+            ),
+            section(
+                "Seasons",
+                p,
+                TextBlock(tradition_text.seasons_text(self.saga, c, tradition), p),
+            ),
+            section(
+                "Warping",
+                p,
+                TextBlock(tradition_text.warping_text(c, tradition), p),
+            ),
+            *(
+                [
+                    section(
+                        "Pools",
+                        p,
+                        TextBlock(tradition_text.pools_text(c, tradition), p),
+                        buttons=verb_buttons(
+                            tradition_forms.pool_ops(c, tradition),
+                            Chooser(),
+                            self.run,
+                            p,
+                        ),
+                    )
+                ]
+                if tradition.pools
+                else []
             ),
         )
 
@@ -946,6 +1028,11 @@ class CharacterSheet(QWidget):
             ),
             chapter_title("Casting Scores", p),
             self._casting_grid(),
+            *(
+                [TextBlock(escape("\n".join(hybrid)), p)]
+                if (hybrid := hybrid_magic.summary(c))
+                else []
+            ),
             section(
                 f"Known Spells ({len(c.spells_known)})",
                 p,

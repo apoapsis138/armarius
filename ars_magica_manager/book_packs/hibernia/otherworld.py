@@ -421,6 +421,7 @@ def _bards(hibernia: Hibernia) -> None:
     )
     w["ollamhain"] = b.faction(
         "The Ollamhain",
+        tradition="trad_ollamhain",
         faction="Hedge coven",
         realm="Faerie",
         rules="Faerie wizardry worked through music, outside the bardic schools",

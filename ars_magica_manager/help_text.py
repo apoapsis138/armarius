@@ -57,6 +57,15 @@ FRONT_ENDS = (TUI, GUI)
 _LINK = re.compile(r"\]\(help:([\w-]+)\)")
 #: The topic every tradition chapter shares (see shared_topic).
 TRADITION_CHAPTER = "tradition-chapter"
+#: The topics of every tradition chapter's Casting, Magical Defenses and
+#: Seasons.
+TRADITION_CASTING = "tradition-casting"
+TRADITION_DEFENSES = "tradition-defenses"
+TRADITION_SEASONS = "tradition-seasons"
+TRADITION_EFFECTS = "tradition-effects"
+TRADITION_BONDS = "tradition-bonds"
+TRADITION_WARPING = "tradition-warping"
+TRADITION_POOLS = "tradition-pools"
 
 
 @dataclass(frozen=True)
@@ -100,6 +109,13 @@ class HelpError(ValueError):
 SHARED_TOPICS: dict[str, str] = {
     "tab-trad-": TRADITION_CHAPTER,
     "section-trad-": TRADITION_CHAPTER,
+    "section-tcast-": TRADITION_CASTING,
+    "section-tdef-": TRADITION_DEFENSES,
+    "section-tseas-": TRADITION_SEASONS,
+    "section-teff-": TRADITION_EFFECTS,
+    "section-tbond-": TRADITION_BONDS,
+    "section-twarp-": TRADITION_WARPING,
+    "section-tpool-": TRADITION_POOLS,
 }
 
 

@@ -117,6 +117,12 @@ def work(
                 f"{student.name} has Supernatural Abilities: opening the Arts "
                 "also needs an Intellego Vim Lab Total (DE Ch. 8)."
             )
+        if student.traditions:
+            result.notes.append(
+                f"If {student.name}'s Gift was Opened to a hedge tradition, the "
+                "Intellego Vim Lab Total needs 30 more (Hedge Magic RE, "
+                "Introduction)."
+            )
         return [], result
     # Teaching a Hermetic Virtue.
     by_id = {e.id: e for e in catalog.load_virtue_flaw_catalog()}

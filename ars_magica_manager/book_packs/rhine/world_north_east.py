@@ -1073,6 +1073,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["harz_witches"] = b.faction(
         "The Witches of the Harz",
+        tradition="trad_folk_witches",
         faction="Hedge coven",
         realm="Faerie",
         place=central,
@@ -1226,6 +1227,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["forest_brothers_volkhvy"] = b.faction(
         "Volkhvy of the Forest Brothers",
+        tradition="trad_volkhvy",
         faction="Hedge coven",
         realm="Faerie",
         place=east,
@@ -1247,6 +1249,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["svantovit_volkhvy"] = b.faction(
         "Volkhvy of Svantovit",
+        tradition="trad_volkhvy",
         faction="Hedge coven",
         realm="Faerie",
         place=east,

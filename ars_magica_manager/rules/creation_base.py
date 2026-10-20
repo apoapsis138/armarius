@@ -63,12 +63,19 @@ def _magus(record: Record) -> bool:
     return isinstance(record, Character) and record.type == "magus"
 
 
+def _tradition_member(record: Record) -> bool:
+    from .creation_tradition import takes_training
+
+    return takes_training(record)
+
+
 CHARACTER_STEPS: tuple[Step, ...] = (
     Step("concept", "Concept"),
     Step("virtues_flaws", "Virtues and Flaws"),
     Step("characteristics", "Characteristics"),
     Step("childhood", "Early Childhood"),
     Step("later_life", "Later Life"),
+    Step("training", "Tradition Training", _tradition_member),
     Step("apprenticeship", "Apprenticeship", _magus),
     Step("gauntlet", "Years past Gauntlet", _magus),
     Step("finish", "Finishing Touches"),

@@ -51,7 +51,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 
 - **Generated stats**: the 61 magi the book describes without a stat block have stats built by the creation rules, following what the book says they are good at. Each sheet says so, and you can import them as the book's sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
 - **Assumed ages**, from rank and history, where the book gives none: Gudrun Tigurina 70, Xavier 60, Indulius 65, Günther Lupus 55, Rudolph 45, Clemens 65, Marguerite 40, Wilhelm Weiss 60, Garrinchus 27, Hassan El-Megrayhi 80, Odorpes 60 and Caprea 50. Each sheet says the age is assumed.
-
+- **Hedge factions and traditions**: the Witches of the Harz are played as folk witches, the two Volkhvy factions as Volkhvy and the hedge wizards of the forest paths from the Forest Paths record; the priesthoods of Woden and Hertha have no tradition record.
 
 # Assumptions made for The Lion and the Lily: The Normandy Tribunal
 <!-- help: pack-assumptions-normandy -->
@@ -99,7 +99,7 @@ The Normandy pack follows the book wherever this page doesn't say otherwise, inc
 
 - **Generated stats**: a magus with no stat block in the book has Characteristics, Arts, Abilities and spells built by the creation rules, guided by the book's write-up; Iasper, Rotgiers, Anacrôn, Hervé and Baudouin have the book's blocks. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
 - **Assumed ages**, from rank, where the book gives none: Andru 90, Constantina 30, Languidus 45, Marcus of Paris 40, Henri 40, Norlanus 90, Gulo 37, Helios 38, Iacula 40, Philip 45, Renaud 33, Myrina 40 and Porphyrion 160. Each sheet says the age is assumed.
-
+- **Hedge factions and traditions**: the Priory of St. Nerius and the Donatores Requietis Aeternae name their tradition records.
 
 # Assumptions made for Faith & Flame: The Provençal Tribunal
 <!-- help: pack-assumptions-provence -->
@@ -150,7 +150,7 @@ The Provence pack follows the book wherever this page doesn't say otherwise: its
 
 - **Generated stats**: only Dama and Rebecca have printed stat blocks. The other 60 named magi have stats built by the creation rules from what the book says of them; each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
 - **Ages**: where the book gives a true and an apparent age, the pack uses the true one. Where it gives none, one is assumed from standing: Beatrice of Guernicus 45 (young for her office), Tres 60, Oxioun 120 (leader of Aedes Mercurii in 1207), and 50 for Bubulcus, Elornis One-Leg, Calais filius Septentrio, Aloysius Porphyri, Jorin, Aucassin of Tytalus, Romualdus and Fraxinus of Portus Termini. Each sheet says the age is assumed.
-
+- **Hedge factions and traditions**: the Sorginak Covens and the Hermetic Sorginak name their tradition records; the Masques of the Coenobium have none.
 
 # Assumptions made for The Sundered Eagle: The Theban Tribunal
 <!-- help: pack-assumptions-theban -->
@@ -200,7 +200,7 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 - **Generated stats**: a magus with no printed stat block has Characteristics, Arts and Abilities that fit their House and role; the Biography says so. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
 - **Assumed ages**, from standing and story, where the book gives none: Theorus 150, Passara 120, Megethia 110, Polydegmon, Hydatius, Formosos and Evantia 90, Kristophoros 80, Pythia 70, Zacharias 60, Marcus Tauros and Trasaric 45, Helladius 43, Satabus 26; the Redcaps Lysandros 70, Diantha 34 and Niko 20. The Biography says the age is assumed. Leontius, Proximios, Catella, Ionnia, Syagricus and Ziper keep the book's apparent ages.
 - **Language**: the Tribunal's magi speak Classical Greek as their Hermetic language unless the book makes them Latin speakers.
-
+- **Hedge factions and traditions**: the Witches of Thessaly, the Folk Witches of Hekate, the Nightwalkers, the Pharmacopoieans and the Stringles name their records, and the Cunning Folk are played as learned magicians (Hedge Magic counts cunning-folk among them); the Daughters of Erictho, the Apostles of Apollonius, the Makhai and the Cult of Orpheus have none.
 
 # Assumptions made for Against the Dark: The Transylvanian Tribunal
 <!-- help: pack-assumptions-transylvania -->
@@ -237,7 +237,7 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise:
 - **The next Tribunal**: Summer 1221; the book gives the seven-year cycle but no year (Ch. 4). The docket's seven cases are filed in spring 1220.
 - **Placings**: Domostron's first site in Bulgaria near the Theban border, a guess (Ch. 2); Pannonia's first site in Hungary, near the old meeting point of three Tribunals (Ch. 2); the storm wizards' ice cave in Transylvania (Ch. 9).
 - **Who belongs where**: Merit to Old Histria, though he lives at the chapter house in Venice, and Accursius to Shrouded Bay, where he lives (Ch. 5). The unnamed Histrian magi are three at Old Histria (one in Istria, two in Venice) and one at Shrouded Bay, of the book's eight between the two plus three in Venice (Ch. 5).
-- **Record types**: the five legal covenants (Coeris, Domostron, Asclepius, Diodorus, Pannonia) are privileges each magus holds, and the oppida are the saga's covenants; the zenodochia are one covenant with their hospitals as places, and Leviathan a covenant with no magi (Ch. 7); Gigas is a place, as it belongs to the Theban Tribunal (Ch. 4); Kezdö Válasz's other forts and Evredika's sites are places named as theirs (Ch. 4, Ch. 7); the hedge traditions (storm wizards, Fectores, folk witches, taltós, kresnici, Cuman shamans and the rest) are factions (Ch. 9); the Holy Crown is described in Hungary's summary and Coeris's notes (Ch. 3); Bendis, Sebastian and Ludmilla are companions without stats, as the book prints none.
+- **Record types**: the five legal covenants (Coeris, Domostron, Asclepius, Diodorus, Pannonia) are privileges each magus holds, and the oppida are the saga's covenants; the zenodochia are one covenant with their hospitals as places, and Leviathan a covenant with no magi (Ch. 7); Gigas is a place, as it belongs to the Theban Tribunal (Ch. 4); Kezdö Válasz's other forts and Evredika's sites are places named as theirs (Ch. 4, Ch. 7); the hedge traditions (storm wizards, Fectores, folk witches, taltós, kresnici, Cuman shamans and the rest) are factions, each naming the tradition record its members are played from (the hunters marked by birth or born of vampires use the Hunters record; the taltós, kresnici, strigoi vii and Cuman shamans the Nightwalkers; the wolf brotherhoods and Pechenegs have none), and Thietmar and Tibor belong to theirs, with their Arts in their tradition chapters (Ch. 9); the Holy Crown is described in Hungary's summary and Coeris's notes (Ch. 3); Bendis, Sebastian and Ludmilla are companions without stats, as the book prints none.
 - **Stats the book leaves blank**: Monica Ierne's Perception is 0 (Ch. 2); Juturnus and Merit have no privilege (Ch. 2, Ch. 5); the Broukolak's 4 pawns of vis in its teeth are Corpus (Ch. 8).
 
 ### Corrections to the book
@@ -302,3 +302,4 @@ The Hibernia pack follows the book wherever this page doesn't say otherwise: its
 - **Generated stats**: only Indrechtach has a printed stat block (Ch. 6). The other 49 named magi and Redcaps have stats built from the book's description with the core rules' experience for their age, with Virtues and Flaws read from their paragraphs (Pollices's Gentle Gift, Gráinne's Waster of Vis, the Leth Moga Redcaps' Close Family Ties); each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
 - **Assumed ages**, where the book gives none: Meadhbh 120 and Faolán 35 (Ch. 5); Dyfrgi 75, of the founders' generation (Ch. 6); Ruaidrí Mór 95, Áine Dhubh and Ercc Cam 75, Coscrach Cam 65, Rónán 70, Áine 40 (Ch. 8); Peter 70, like his fellow stonemason Lewis, and Bressal 60 (Ch. 9); Cú Chonnacht Cluasach Mac Tire 90 (Ch. 4). Each sheet says the age is assumed. Meadhbh is assumed Ex Miscellanea, and Cú Chonnacht, named only once, has a wolf heartbeast and traits read from his name.
 - **Language**: the Tribunal's magi speak Irish unless the book points elsewhere: Helles French, Pollices and Lugardis Italian, Dyfrgi and Lewis Welsh, Dorján and Konstanczia Hungarian, Tug and Palantus High German, Peter and Igneous Drake English; Oswald adds English and Styrbjórn Old Norse.
+- **Hedge factions and traditions**: the Céli Dé, the Cailleacha Phiseogach and the Ollamhain name their tradition records; the Druids, the Coill Trí, the Pact of Oireadh and the Bards have none.

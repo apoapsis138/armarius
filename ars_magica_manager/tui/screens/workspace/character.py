@@ -956,6 +956,32 @@ class CharacterActions(WorkspaceBase):
                 )
                 for t in traditions.all_traditions()
             },
+            **{
+                traditions.effects_section(t.id): _SectionOps(
+                    partial(self._core_verb, traditions.effects_section(t.id), "add"),
+                    partial(
+                        self._core_verb, traditions.effects_section(t.id), "remove"
+                    ),
+                    partial(self._core_verb, traditions.effects_section(t.id), "edit"),
+                )
+                for t in traditions.all_traditions()
+            },
+            **{
+                traditions.bonds_section(t.id): _SectionOps(
+                    partial(self._core_verb, traditions.bonds_section(t.id), "add"),
+                    partial(self._core_verb, traditions.bonds_section(t.id), "remove"),
+                    partial(self._core_verb, traditions.bonds_section(t.id), "edit"),
+                )
+                for t in traditions.all_traditions()
+            },
+            **{
+                traditions.pools_section(t.id): _SectionOps(
+                    edit=partial(
+                        self._core_verb, traditions.pools_section(t.id), "edit"
+                    )
+                )
+                for t in traditions.all_traditions()
+            },
             "section-aging": _SectionOps(edit=self._edit_aging),
             # Health has two dialogs behind two Edit buttons (Wounds and
             # Fatigue); 'e' opens Wounds, Fatigue is button-only.

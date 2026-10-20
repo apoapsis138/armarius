@@ -15,7 +15,13 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from .. import catalog
-from ..models import SUPERNATURAL_CATEGORIES, AbilityDef, Character, VirtueFlawInstance
+from ..models import (
+    SUPERNATURAL_CATEGORIES,
+    AbilityDef,
+    Character,
+    TraditionDef,
+    VirtueFlawInstance,
+)
 from . import xp
 from .creation_character import THE_GIFT
 from .rounding import round_up
@@ -317,6 +323,20 @@ def _ids(character: Character) -> list[str]:
     return [vf.vf_id for vf in character.virtues_flaws]
 
 
+def traditions_of(character: Character) -> list[TraditionDef]:
+    """The catalog traditions the character belongs to, in their order."""
+    by_id = catalog.load_tradition_catalog_by_id()
+    return [by_id[t] for t in character.traditions if t in by_id]
+
+
+def tradition_opened(character: Character) -> set[str]:
+    """The Arts and Abilities a Gifted member's Opening lets them buy:
+    their tradition's, even the Supernatural ones with no Virtue."""
+    if THE_GIFT not in _ids(character):
+        return set()
+    return {name for t in traditions_of(character) for name in t.training.opening}
+
+
 def opened_types(character: Character, *, apprenticed: bool = False) -> set[str]:
     """The restricted Ability types the character may buy: those its
     Virtues open, and every one for a magus from apprenticeship on."""
@@ -345,7 +365,7 @@ def may_learn(character: Character, name: str, *, apprenticed: bool = False) -> 
     before or during apprenticeship: `apprenticed`)."""
     category = ability_category(name)
     if category in SUPERNATURAL_CATEGORIES:
-        return name in granted_supernatural(character)
+        return name in granted_supernatural(character) | tradition_opened(character)
     if name in {n for vf in _ids(character) for n in OPENS_ABILITY.get(vf, ())}:
         return True
     return category in opened_types(character, apprenticed=apprenticed)
@@ -363,7 +383,7 @@ def learnable_abilities(
     """Catalog Ability names (a family with its blank, "Craft: {craft}")
     and the character's own Abilities that it may buy at this step."""
     types = opened_types(character, apprenticed=apprenticed)
-    granted = granted_supernatural(character)
+    granted = granted_supernatural(character) | tradition_opened(character)
     named = {n for vf in _ids(character) for n in OPENS_ABILITY.get(vf, ())}
     gifted = gifted_non_magus(character)
     names = set()
@@ -457,10 +477,25 @@ AFFINITY_CAP_BONUS = 2
 NO_CAP_VIRTUE = "vf_mentored_by_demons"
 
 
+def art_cap(character: Character, ability: str) -> int | None:
+    """The highest score a tradition's Art on the Art table may have at
+    creation (a vitki's runes: 10), None when its tradition sets none."""
+    caps = [
+        t.training.art_cap
+        for t in traditions_of(character)
+        if t.training.art_cap and ability in t.abilities
+    ]
+    return min(caps) if caps else None
+
+
 def ability_cap_for(character: Character, age: int | None, ability: str) -> int | None:
     """The highest score `ability` may have at creation: the age cap, two
     more with an Affinity with it, None (no cap) when Mentored by Demons.
-    Puissant adds when the Ability is used, so it never counts."""
+    An Ability on the Art table has no age cap, only its tradition's
+    (art_cap). Puissant adds when the Ability is used, so it never
+    counts."""
+    if ability and ability_xp_table(ability) == "art":
+        return art_cap(character, ability)
     if any(vf.vf_id == NO_CAP_VIRTUE for vf in character.virtues_flaws):
         return None
     cap = ability_cap(age)

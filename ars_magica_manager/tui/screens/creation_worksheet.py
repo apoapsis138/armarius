@@ -208,8 +208,19 @@ class CreationWorksheetScreen(ModalDialog[None]):
         record = self.record
         self.query_one("#ws-title", Label).update(ws.title(record))
         steps = self.query_one("#ws-steps", OptionList)
-        for position, step in enumerate(self.steps):
-            steps.replace_option_prompt_at_index(position, self._step_prompt(step))
+        now = rules.steps_for(record)
+        if [s.key for s in now] != [s.key for s in self.steps]:
+            # A change of type or tradition adds or drops a step.
+            self.steps = now
+            keys = [s.key for s in now]
+            self.step = self.step if self.step in keys else keys[0]
+            with self.prevent(OptionList.OptionHighlighted):
+                steps.clear_options()
+                steps.add_options(self._step_options())
+                steps.highlighted = keys.index(self.step)
+        else:
+            for position, step in enumerate(self.steps):
+                steps.replace_option_prompt_at_index(position, self._step_prompt(step))
         self.query_one("#ws-progress", Static).update(
             ws.progress_text(self.saga, record)
         )

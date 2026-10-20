@@ -312,7 +312,10 @@ A faction (the core rules) is a hedge coven, a faerie court, a gild, a
 family or any other company with a will of its own. New Faction and
 Edit record what kind it is, how it decides (its leader, a council, or
 a vote of all), how many members it has, its rules, what it wants and
-what it offers; its Faction tab shows them. Members who are characters
+what it offers; its Faction tab shows them. A hedge coven can also name
+the hedge tradition its members follow, from the traditions the app
+knows (see [A tradition's chapter](help:tradition-chapter)), so the troupe
+knows which record a member is played from. Members who are characters
 can be linked on its Standing tab, and the Faction tab counts them.
 
 **See also:** [A neighbour](help:neighbour)

@@ -22,6 +22,23 @@ from .rules import creation_access as access
 #: section's list.
 TAB_PREFIX = "tab-trad-"
 SECTION_PREFIX = "section-trad-"
+#: The chapter's read-only Casting, Magical Defenses and Seasons sections.
+CASTING_PREFIX = "section-tcast-"
+DEFENSES_PREFIX = "section-tdef-"
+SEASONS_PREFIX = "section-tseas-"
+#: The chapter's list of the character's effects and items of the
+#: tradition (a / e / d through forms.tradition.effect_ops).
+EFFECTS_PREFIX = "section-teff-"
+#: The beings bound to the character by the tradition (a / e / d through
+#: forms.tradition.bond_ops), the tradition's Warping (read-only), and
+#: its pools (Edit, shown only for a tradition that keeps pools).
+BONDS_PREFIX = "section-tbond-"
+WARPING_PREFIX = "section-twarp-"
+POOLS_PREFIX = "section-tpool-"
+
+#: House Ex Miscellanea's catalog id: its magi may belong to its
+#: traditions (TraditionDef.hermetic "house").
+EX_MISCELLANEA = "house_ex_miscellanea"
 
 
 def tradition_tab(tradition_id: str) -> str:
@@ -30,6 +47,42 @@ def tradition_tab(tradition_id: str) -> str:
 
 def tradition_section(tradition_id: str) -> str:
     return f"{SECTION_PREFIX}{tradition_id}"
+
+
+def casting_section(tradition_id: str) -> str:
+    return f"{CASTING_PREFIX}{tradition_id}"
+
+
+def defenses_section(tradition_id: str) -> str:
+    return f"{DEFENSES_PREFIX}{tradition_id}"
+
+
+def seasons_section(tradition_id: str) -> str:
+    return f"{SEASONS_PREFIX}{tradition_id}"
+
+
+def effects_section(tradition_id: str) -> str:
+    return f"{EFFECTS_PREFIX}{tradition_id}"
+
+
+def effects_list(tradition_id: str) -> str:
+    return f"trad-{tradition_id}-effects"
+
+
+def bonds_section(tradition_id: str) -> str:
+    return f"{BONDS_PREFIX}{tradition_id}"
+
+
+def bonds_list(tradition_id: str) -> str:
+    return f"trad-{tradition_id}-bonds"
+
+
+def warping_section(tradition_id: str) -> str:
+    return f"{WARPING_PREFIX}{tradition_id}"
+
+
+def pools_section(tradition_id: str) -> str:
+    return f"{POOLS_PREFIX}{tradition_id}"
 
 
 def tradition_list(tradition_id: str) -> str:
@@ -68,6 +121,20 @@ def offered(saga: Saga | None) -> list[TraditionDef]:
     """The traditions a character can join in this saga: turned on, and
     their book in play."""
     return [t for t in in_play(saga) if is_on(saga, t.id)]
+
+
+def joinable(saga: Saga | None, character: Character) -> list[TraditionDef]:
+    """The offered traditions the character can be made a member of at
+    creation: any for a non-magus; for a magus, the Hermetic societies,
+    and House Ex Miscellanea's traditions for one of that House."""
+    if character.type != "magus":
+        return offered(saga)
+    house = character.hermetic.house == EX_MISCELLANEA
+    return [
+        t
+        for t in offered(saga)
+        if t.hermetic == "societas" or (house and t.hermetic == "house")
+    ]
 
 
 def set_on(saga: Saga, tradition_id: str, on: bool) -> None:

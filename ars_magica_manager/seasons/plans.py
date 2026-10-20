@@ -115,12 +115,12 @@ def subject_options(saga: Saga, character: Character) -> list[tuple[str, str]]:
 
 def working_seasons_done(character: Character, year: int, before: str) -> int:
     """Working seasons `character` has logged in `year` before `before`."""
-    label = rules.ACTIVITIES[rules.EXPOSURE].label
+    labels = {a.label for a in rules.ACTIVITIES.values() if a.working}
     earlier = SEASONS[: SEASONS.index(before)]
     return sum(
         1
         for entry in character.diary
-        if entry.year == year and entry.season in earlier and entry.activity == label
+        if entry.year == year and entry.season in earlier and entry.activity in labels
     )
 
 

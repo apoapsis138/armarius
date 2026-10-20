@@ -540,7 +540,7 @@ def virtue_flaw_cards(character: Character, side: str) -> list[VirtueFlawCard]:
     """The character's Virtues or Flaws (`side`), Qualities and
     Inferiorities among them, in the order taken."""
     return vf_cards(
-        character.virtues_flaws, side, cv.house_benefit(character).free_indices
+        character.virtues_flaws, side, cv.free_benefit(character).free_indices
     )
 
 
@@ -571,7 +571,7 @@ def vf_cards(
 
 def virtue_flaw_points(character: Character, side: str) -> float:
     return st.vf_points(
-        character.virtues_flaws, side, cv.house_benefit(character).free_indices
+        character.virtues_flaws, side, cv.free_benefit(character).free_indices
     )
 
 

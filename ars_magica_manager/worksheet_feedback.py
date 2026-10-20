@@ -24,6 +24,7 @@ from .rules import creation_characteristics as cch
 from .rules import creation_covenant as cov
 from .rules import creation_later as later
 from .rules import creation_magus as magus
+from .rules import creation_tradition as ct
 from .rules import creation_xp as cx
 from .tables import Table
 from .worksheet import ENTRY_STEPS, target_score
@@ -95,6 +96,13 @@ def _apprenticeship(saga: Saga, character: Character) -> list[Meter]:
     ]
 
 
+def _training(saga: Saga, character: Character) -> list[Meter]:
+    meters = []
+    if budget := ct.xp_budget(character):
+        meters.append(Meter("Arts and Abilities", cx.spent(character, ct.STEP), budget))
+    return meters
+
+
 def _gauntlet(saga: Saga, character: Character) -> list[Meter]:
     return [
         Meter(
@@ -123,12 +131,15 @@ _CHARACTER_METERS: dict[str, Callable[[Saga, Character], list[Meter]]] = {
     "characteristics": _characteristics,
     "childhood": _childhood,
     "later_life": _later_life,
+    "training": _training,
     "apprenticeship": _apprenticeship,
     "gauntlet": _gauntlet,
 }
 
 #: The steps whose own list spends xp: each shows the ledger.
-XP_STAGES = frozenset({"childhood", "later_life", "apprenticeship", "gauntlet"})
+XP_STAGES = frozenset(
+    {"childhood", "later_life", "training", "apprenticeship", "gauntlet"}
+)
 
 
 def meters(saga: Saga, record: Record, step: str) -> list[Meter]:

@@ -5,13 +5,19 @@ step's buttons, and Move to In Play."""
 from __future__ import annotations
 
 import pytest
-from support import strip_markup, wait_until
+from support import screen_lines, strip_markup, wait_until
 from textual.widgets import Button, OptionList, Select, Static, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager import worksheet as ws
 from ars_magica_manager.commands import Act
-from ars_magica_manager.models import Character, Covenant, Laboratory, Saga
+from ars_magica_manager.models import (
+    Character,
+    Covenant,
+    Laboratory,
+    Saga,
+    VirtueFlawInstance,
+)
 from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
@@ -723,3 +729,32 @@ async def test_concept_adds_the_house_virtue_asking_which_when_there_is_a_choice
                 == [("vf_puissant_art", {"art": "ignem"})]
             ),
         )
+
+
+async def test_a_hedge_wizard_chooses_a_tradition_and_trains():
+    saga = _saga("companion")
+    saga.traditions = ["trad_vitkir"]
+    vitki = saga.characters[0]
+    vitki.virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open_worksheet(pilot, app)
+        assert "Tradition Training" not in " ".join(_steps(screen))
+        await _press_button(pilot, screen, "Choose tradition")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        await pilot.press("enter")
+        assert await wait_until(
+            pilot, lambda: "Tradition Training" in " ".join(_steps(screen))
+        )
+        assert "Vitkir" in _text(screen, "#ws-budget")
+        steps = screen.query_one("#ws-steps", OptionList)
+        steps.highlighted = [s.key for s in screen.steps].index("training")
+        assert await wait_until(pilot, lambda: screen.step == "training")
+        assert await wait_until(pilot, lambda: "290 xp" in _text(screen, "#ws-budget"))
+        await _press_button(pilot, screen, "Open the Arts")
+        assert await wait_until(
+            pilot, lambda: "Opening: done" in _text(screen, "#ws-budget")
+        )
+        lines = "\n".join(screen_lines(app))
+        assert "Rune Magic at least 1" in lines

@@ -14,11 +14,11 @@
 
   Faction:    Hedge coven
   Decides by: Its leader
+  Tradition:  —
   Members:    7
   Its rules:  —
   Wants:      The Black Pool kept secret
   Offers:     —
-
 
 
 

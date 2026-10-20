@@ -469,7 +469,7 @@ Sources of the saga's own, such as a house-rules list or a fan supplement, that 
 ### Traditions Offered
 <!-- help: section-traditions -->
 
-The non-Hermetic magical traditions whose book is in play (the six of Hedge Magic Revised Edition so far), and whether the saga offers each. Every tradition starts off, so the lists stay short: turn on only the ones your saga uses. A character can join a tradition the saga offers, which gives them [a chapter](help:tradition-chapter) for its Arts and Abilities.
+The non-Hermetic magical traditions whose book is in play (Hedge Magic Revised Edition's six, and those of the Realms of Power, Societates, the Tribunal and regional books, Rival Magic and Ancient Magic), and whether the saga offers each. Every tradition starts off, so the lists stay short: turn on only the ones your saga uses. A character can join a tradition the saga offers, which gives them [a chapter](help:tradition-chapter) for its Arts and Abilities.
 
 <!-- tui -->
 `e` opens a tick for each tradition: tick the ones the saga offers.

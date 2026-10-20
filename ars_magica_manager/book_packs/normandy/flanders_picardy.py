@@ -1501,6 +1501,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["donatores"] = b.faction(
         "The Donatores Requietis Aeternae",
+        tradition="trad_donatores_requietis_aeternae",
         faction="Other",
         realm="Magic",
         place=normandy.places["old_nesle"],

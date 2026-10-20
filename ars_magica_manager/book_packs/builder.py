@@ -507,6 +507,7 @@ class Builder:
         realm: str = "",
         place: Neighbour | None = None,
         arms: Arms | None = None,
+        tradition: str = "",
     ) -> Neighbour:
         return self.neighbour(
             "faction",
@@ -523,6 +524,8 @@ class Builder:
                 "rules": rules,
                 "wants": wants,
                 "offers": offers,
+                # A hedge coven's tradition record, when it has one.
+                **({"tradition": tradition} if tradition else {}),
             },
         )
 
@@ -755,12 +758,19 @@ class Builder:
             Ability(
                 name=name,
                 category=access.ability_category(name),
-                xp=ability_xp(score),
+                # A hedge Art or Accelerated Ability scores on the Art table.
+                xp=(
+                    art_xp(score)
+                    if access.ability_xp_table(name) == "art"
+                    else ability_xp(score)
+                ),
                 xp_table=access.ability_xp_table(name),
                 specialty=specialty or None,
             )
             for name, score, specialty in block.get("abilities", [])
         ]
+        # The hedge traditions the character belongs to (catalog ids).
+        c.traditions = list(block.get("traditions", []))
         c.arts = {
             art.lower(): ArtScore(xp=art_xp(score))
             for art, score in block.get("arts", {}).items()

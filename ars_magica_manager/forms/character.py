@@ -42,7 +42,7 @@ from ..models import (
     known_fields,
 )
 from ..rules import aging as aging_rules
-from ..rules import creation_characteristics, experiment, scores
+from ..rules import creation_characteristics, experiment, integrations, scores
 from ..rules import xp as xp_rules
 from . import possession as possession_forms
 
@@ -577,7 +577,32 @@ def research_goal_fields(existing: Breakthrough | None) -> list[DialogField]:
     def grant(kind: str) -> str:
         return existing.grant if existing and grant_kind == kind else ""
 
+    def kind_target(values: dict[str, Any]) -> dict[str, Any]:
+        kind = values.get("kind") or ""
+        known = integrations.BY_NAME.get(values.get("known") or "")
+        if known is not None and known.kind == kind:
+            return {"target": known.target}
+        return {"target": experiment.KINDS.get(kind, 30)}
+
+    known = (
+        []
+        if existing
+        else [
+            DialogField(
+                "known",
+                "Integration",
+                "select",
+                None,
+                options=[(escape(i.label), i.name) for i in integrations.INTEGRATIONS],
+                allow_blank=True,
+                placeholder="(a goal of your own)",
+                hint="A breakthrough the books name; it fills in the rest.",
+                fills=_integration_fill,
+            )
+        ]
+    )
     return [
+        *known,
         DialogField(
             "name",
             "Goal",
@@ -602,9 +627,7 @@ def research_goal_fields(existing: Breakthrough | None) -> list[DialogField]:
                 for kind, points in experiment.KINDS.items()
             ],
             required=True,
-            fills=lambda values: {
-                "target": experiment.KINDS.get(values.get("kind") or "", 30)
-            },
+            fills=kind_target,
         ),
         DialogField(
             "target",
@@ -649,6 +672,23 @@ def research_goal_fields(existing: Breakthrough | None) -> list[DialogField]:
             show_if=lambda values: values.get("grant_kind") == "Parameter",
         ),
     ]
+
+
+def _integration_fill(values: dict[str, Any]) -> dict[str, Any]:
+    """What a named integration breakthrough fills in."""
+    known = integrations.BY_NAME.get(values.get("known") or "")
+    if known is None:
+        return {}
+    filled: dict[str, Any] = {
+        "name": known.name,
+        "description": f"{known.gives} ({known.book})",
+        "kind": known.kind,
+        "target": known.target,
+        "grant_kind": known.grant_kind or None,
+    }
+    if known.grant_kind:
+        filled[f"grant_{known.grant_kind.lower()}"] = known.grant
+    return filled
 
 
 def research_goal_from(

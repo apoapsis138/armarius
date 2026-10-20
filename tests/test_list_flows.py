@@ -13,6 +13,7 @@ from textual.widgets import Input, TabPane, Tree
 from ars_magica_manager import storage
 from ars_magica_manager.models import (
     BondPower,
+    BoundBeing,
     Breakthrough,
     Character,
     Covenant,
@@ -29,6 +30,7 @@ from ars_magica_manager.models import (
     Saga,
     SagaSource,
     ScoredTrait,
+    TraditionEffect,
 )
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
@@ -69,6 +71,15 @@ def _saga() -> Saga:
         Possession(id="it2", kind="item", name="Cloak"),
     ]
     magus.breakthroughs = [Breakthrough("Aegis [piercing]"), Breakthrough("Wards")]
+    magus.traditions = ["trad_vitkir"]
+    magus.tradition_effects = [
+        TraditionEffect("Rune [wealth]", tradition="trad_vitkir"),
+        TraditionEffect("Ward", tradition="trad_vitkir"),
+    ]
+    magus.bound_beings = [
+        BoundBeing("Huginn [raven]", tradition="trad_vitkir"),
+        BoundBeing("Muninn", tradition="trad_vitkir"),
+    ]
     familiar = Familiar(id="fam1", character_id="mag1", name="Corax")
     familiar.personality_traits = two()
     familiar.reputations = two()
@@ -396,6 +407,18 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-research-goals",
         "research-goals-list",
         lambda s: s.characters[0].breakthroughs,
+    ),
+    "tradition-effects": ListCase(
+        ("character", "mag1"),
+        "section-teff-trad_vitkir",
+        "trad-trad_vitkir-effects",
+        lambda s: s.characters[0].tradition_effects,
+    ),
+    "tradition-bonds": ListCase(
+        ("character", "mag1"),
+        "section-tbond-trad_vitkir",
+        "trad-trad_vitkir-bonds",
+        lambda s: s.characters[0].bound_beings,
     ),
     "familiar-natural-weapons": ListCase(
         ("familiar", "fam1"),

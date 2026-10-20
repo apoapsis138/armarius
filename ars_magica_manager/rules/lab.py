@@ -10,7 +10,8 @@ activity Specialization only to that activity (Spells to inventing spells,
 Items to enchanting...). The aura modifier is Hermetic magic's (a Magic
 power) in the lab's aura, from the realm interaction table. Per-activity
 modifiers (similar spells, shape and material bonuses...) are added by
-each activity.
+each activity. A holy magus uses Holy Magic for Magic Theory, and Holy or
+Chthonic Magic changes the aura's modifier (rules.hybrid_magic).
 """
 
 from __future__ import annotations
@@ -36,6 +37,7 @@ from ..models import (
     Saga,
 )
 from . import effects, realms, scores
+from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .rounding import round_down, round_up
 
@@ -164,7 +166,7 @@ def lab_total(
     notes: list[str] = []
     lines = [
         *_magus_lines(magus, technique, form),
-        _aura_line(saga, lab, covenant, boons),
+        _aura_line(saga, magus, lab, covenant, boons),
         *_quality_lines(lab, lab_catalog, applies),
         *_helper_lines(magus, assistants, familiar, notes),
         *_activity_lines(magus, activity, similar_spell_level, shape_material),
@@ -191,17 +193,18 @@ def lab_total(
 
 def _magus_lines(magus: Character, technique: str, form: str) -> list[Line]:
     """The Arts, Intelligence and Magic Theory."""
-    theory, theory_bonus = ability_score(magus, "Magic Theory")
+    label, theory = hybrid.theory(magus)
     return [
         _art_line(magus, technique),
         _art_line(magus, form),
         Line("Intelligence", amount=magus.characteristics.intelligence, source=SOURCE),
-        Line("Magic Theory", amount=theory + theory_bonus, source=SOURCE),
+        Line(label, amount=theory, source=SOURCE),
     ]
 
 
 def _aura_line(
     saga: Saga,
+    magus: Character,
     lab: Laboratory,
     covenant: Covenant | None,
     boons: dict[str, CovenantBoonHookDef],
@@ -215,11 +218,8 @@ def _aura_line(
     if own is not None:
         covenant_aura, realm = own
     aura = lab_aura_total(lab, covenant_aura)
-    return Line(
-        f"Aura ({realm} {aura})",
-        amount=realms.aura_modifier(realms.HERMETIC, realm, aura),
-        source=realms.SOURCE,
-    )
+    label, amount = hybrid.aura_label(magus, realm, aura)
+    return Line(label, amount=amount, source=realms.SOURCE)
 
 
 def _quality_lines(
@@ -430,14 +430,14 @@ def vis_extracted(lab_total: int) -> int:
 
 def vis_limit(magus: Character) -> int:
     """The most raw vis a magus can use in one season's project: twice
-    Magic Theory."""
-    return 2 * sum(ability_score(magus, "Magic Theory"))
+    Magic Theory (Holy Magic for a holy magus)."""
+    return 2 * hybrid.theory(magus)[1]
 
 
 def shape_material_cap(magus: Character) -> int:
     """Shape and material bonuses to one enchanted effect are capped at the
-    magus's Magic Theory."""
-    return sum(ability_score(magus, "Magic Theory"))
+    magus's Magic Theory (Holy Magic for a holy magus)."""
+    return hybrid.theory(magus)[1]
 
 
 def lowest_total(totals: Sequence[int]) -> int:

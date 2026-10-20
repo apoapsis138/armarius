@@ -8,10 +8,12 @@ limits; Budgets by character type; Types of Virtue and Flaw.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from .. import catalog
-from ..models import Character, Saga
+from ..models import Character, Saga, TraditionDef
+from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import THE_GIFT
 
@@ -37,6 +39,10 @@ HOUSE_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Hermetic Houses "
     "Summary (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
     "_Chapter_Three:_Characters#Hermetic_Houses_Summary)"
+)
+TRADITION_SOURCE = (
+    "Hedge Magic, Revised Edition, each tradition's Character Creation "
+    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content)"
 )
 
 MAX_FLAW_POINTS = 10
@@ -144,6 +150,8 @@ class HouseBenefit:
     #: Indices into character.virtues_flaws of the entries counted above:
     #: the sheet leaves them out of its points, marked Free.
     free_indices: frozenset[int] = frozenset()
+    #: Who gives it, for "free from ...".
+    giver: str = "the House"
 
 
 def held_option(character: Character, option: dict):
@@ -207,34 +215,129 @@ def house_benefit(character: Character) -> HouseBenefit:
         def hermetic(entry) -> bool:
             return "Hermetic" in (entry.category, *entry.extra_categories)
 
+        # The magus's Ex Miscellanea tradition names the three; any match
+        # counts until he has one.
+        own = house_tradition(character)
+        named = own.virtues if own is not None else []
         points, flaw, held, missing, free = 0, 0, [], [], set()
-        index = first(
-            lambda e: e.side == "Virtue" and e.tier == "Minor" and hermetic(e)
-        )
-        if index is not None:
-            points += 1
-            held.append("a Minor Hermetic Virtue")
-            free.add(index)
-        else:
-            missing.append("a free Minor Hermetic Virtue")
-        index = first(
-            lambda e: e.side == "Virtue" and e.tier == "Major" and not hermetic(e)
-        )
-        if index is not None:
-            points += 3
-            held.append("a Major non-Hermetic Virtue")
-            free.add(index)
-        else:
-            missing.append("a free Major non-Hermetic Virtue")
-        index = first(lambda e: e.side == "Flaw" and e.tier == "Major" and hermetic(e))
-        if index is not None:
-            flaw = 3
-            held.append("the compulsory Major Hermetic Flaw")
-            free.add(index)
-        else:
-            missing.append("the compulsory Major Hermetic Flaw")
+        for side, tier, is_hermetic, what, label in (
+            (
+                "Virtue",
+                "Minor",
+                True,
+                "a free Minor Hermetic Virtue",
+                "a Minor Hermetic Virtue",
+            ),
+            (
+                "Virtue",
+                "Major",
+                False,
+                "a free Major non-Hermetic Virtue",
+                "a Major non-Hermetic Virtue",
+            ),
+            (
+                "Flaw",
+                "Major",
+                True,
+                "the compulsory Major Hermetic Flaw",
+                "the compulsory Major Hermetic Flaw",
+            ),
+        ):
+
+            def fits(e, side=side, tier=tier, is_hermetic=is_hermetic) -> bool:
+                return e.side == side and e.tier == tier and hermetic(e) == is_hermetic
+
+            wanted = next((v for v in named if v in by_id and fits(by_id[v])), None)
+            if wanted is None:
+                index = first(fits)
+            else:
+                index = first(lambda e, w=wanted: e.id == w)
+            if index is not None:
+                if side == "Flaw":
+                    flaw = 3
+                else:
+                    points += 3 if tier == "Major" else 1
+                held.append(label)
+                free.add(index)
+            elif wanted is not None and own is not None:
+                name = re.sub(r"\{(\w+)\}", lambda m: m[1].title(), by_id[wanted].name)
+                missing.append(f"{name} ({what}, from the {own.name})")
+            else:
+                missing.append(what)
         return HouseBenefit(points, flaw, tuple(held), tuple(missing), frozenset(free))
     return HouseBenefit()
+
+
+def house_tradition(character: Character) -> TraditionDef | None:
+    """The House Ex Miscellanea tradition a magus belongs to, or None."""
+    if character.type != "magus":
+        return None
+    return next(
+        (t for t in access.traditions_of(character) if t.hermetic == "house"), None
+    )
+
+
+def tradition_benefit(character: Character) -> HouseBenefit:
+    """What a Gifted member's tradition gives free at creation: the
+    Virtues its Opening gives (a learned magician's Entreat the Powers)
+    and the Minor Virtues taken from the master (a vitki's one Minor
+    Vitkar Virtue), all outside the Virtue/Flaw balance."""
+    gifted = THE_GIFT in {vf.vf_id for vf in character.virtues_flaws}
+    traditions = access.traditions_of(character) if gifted else []
+    if character.type == "magus" or not traditions:
+        return HouseBenefit(giver="the tradition")
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    entries = [
+        (index, vf, by_id[vf.vf_id])
+        for index, vf in enumerate(character.virtues_flaws)
+        if vf.vf_id in by_id
+    ]
+    points, held, missing, free = 0, [], [], set()
+    for training in (t.training for t in traditions):
+        for vf_id in training.opening_virtues:
+            index = next((i for i, vf, _ in entries if vf.vf_id == vf_id), None)
+            name = by_id[vf_id].name if vf_id in by_id else vf_id
+            if index is None:
+                missing.append(name)
+            elif index not in free:
+                points += int(by_id[vf_id].cost)
+                held.append(name)
+                free.add(index)
+        for _ in range(training.free_minor_virtues):
+            index = next(
+                (
+                    i
+                    for i, vf, e in entries
+                    if e.side == "Virtue"
+                    and e.tier == "Minor"
+                    and training.free_category in (e.category, *e.extra_categories)
+                    and i not in free
+                ),
+                None,
+            )
+            what = f"a Minor {training.free_category} Virtue from the master"
+            if index is None:
+                missing.append(what)
+            else:
+                points += 1
+                held.append(what)
+                free.add(index)
+    return HouseBenefit(
+        virtue_points=points,
+        held=tuple(held),
+        missing=tuple(missing),
+        free_indices=frozenset(free),
+        giver="the tradition",
+    )
+
+
+def free_benefit(character: Character) -> HouseBenefit:
+    """The Virtues a character has free at creation, outside the
+    balance: a magus's from the House, a hedge wizard's from the
+    tradition."""
+    if character.type == "magus":
+        return house_benefit(character)
+    return tradition_benefit(character)
 
 
 def virtue_allowance(character: Character, flaw_points: int) -> tuple[int, int]:
@@ -249,7 +352,8 @@ def virtue_allowance(character: Character, flaw_points: int) -> tuple[int, int]:
         return points, points
     if character.type == "mythic companion":
         return 0, min(2 * flaw_points + 1, MYTHIC_MAX_VIRTUE_POINTS)
-    return flaw_points, flaw_points
+    points = flaw_points + tradition_benefit(character).virtue_points
+    return points, points
 
 
 def max_flaw_points(character: Character) -> int:
@@ -310,8 +414,8 @@ def _budget_checks(character: Character, t: VirtueFlawTally) -> list[Check]:
                 )
             )
         return found
-    house = house_benefit(character)
-    free = f" (free from the House: {', '.join(house.held)})" if house.held else ""
+    house = free_benefit(character)
+    free = f" (free from {house.giver}: {', '.join(house.held)})" if house.held else ""
     found = [
         _check(
             "Virtue points balance Flaw points",
@@ -326,10 +430,10 @@ def _budget_checks(character: Character, t: VirtueFlawTally) -> list[Check]:
             _check(
                 "Ex Miscellanea's compulsory Flaw is taken"
                 if compulsory
-                else "The House's free Virtue is taken",
+                else f"{house.giver[0].upper()}{house.giver[1:]}'s free Virtue is taken",
                 False,
                 what,
-                HOUSE_SOURCE,
+                HOUSE_SOURCE if character.type == "magus" else TRADITION_SOURCE,
                 advice=not compulsory,
             )
         )

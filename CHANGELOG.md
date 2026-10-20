@@ -107,6 +107,65 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.107.0 — 2026-10-20
+
+### Hedge Magic
+
+- **Creating a tradition member.** A hedge wizard is created by the
+  book: the tradition's free Virtues, its apprenticeship (the vitkir's
+  290 xp, the gruagach's years of training) and its Gift and score
+  rules are checked on the worksheet's Training step.
+- **Casting and Magical Defenses.** Each tradition's chapter shows its
+  Casting Scores in the covenant's aura, with Penetration, and its
+  Magical Defenses, as the book works them out.
+- **A tradition's seasons.** A master can Open a student's Gift to his
+  tradition, each tradition's own work is on the Activity list for its
+  members, and initiation into a tradition's Mysteries uses its Scripts.
+  Each chapter gains a Seasons section saying what its seasons give.
+- **Effects and items.** Each chapter has an Effects and Items list:
+  spells, charms, rune scripts, rites and powers, and the amulets,
+  chartae, fetishes, potions, tattoos and wondrous items made with them,
+  each with its Casting Score or Lab Total.
+- **Bound beings, Warping and pools.** Familiars, fetches and other bound
+  beings, with what they add; each tradition's Warping response in place
+  of Twilight (the elementalists' worked out Trait by Trait); and the
+  pools some traditions keep.
+- **Every tradition in the books.** 81 traditions in all, from the
+  Realms of Power books, the Houses of Hermes, the regional books, Rival
+  Magic, Ancient Magic and Against the Dark, each switched on under
+  Traditions Offered while its book is in play.
+- **Hybrid magic.** A magus with Holy Magic uses it for Magic Theory in
+  the lab and draws on Divine auras; Chthonic Magic draws on Infernal
+  auras; neither gives Warping from its realm's auras. A Ritual adds
+  Method + Power when that is better than Artes Liberales +
+  Philosophiae, and a magus holding a Goetic Art may use Rego and Vim
+  for it.
+- **Magi in traditions.** A magus of House Ex Miscellanea can join his
+  House's traditions, whose Virtues become his free House Virtues, and
+  any magus can join the holy societies; a magus keeps Twilight.
+- **Integration breakthroughs.** Add Research Goal offers the books'
+  integrations (Ancient Magic's nineteen, Subtle Opening and Quick
+  Charged Items) ready-made, with their points and what they grant.
+
+### Florilegium
+
+- **The traditions' Arts, Virtues and Flaws.** 118 more Abilities
+  (Sihr, the Goetic Arts, the Holy, Unholy and Faerie Methods and
+  Powers, Fertility Lore...) and 121 more Virtues and Flaws, among them
+  the six Hermetic Virtues the integrations grant.
+
+### Peregrinatio
+
+- **The packs' hedge wizards.** A faction can name the tradition its
+  members are played from. The six packs' hedge factions are linked, and
+  Thietmar and Tibor of Transylvania are tradition members with real
+  Art scores.
+
+### Insignia
+
+- **Marks for the new Abilities.** Each new Ability shows the mark of a
+  kindred one on the desktop sheet until it has its own.
+
 ## 2.106.0 — 2026-10-20
 
 ### Hedge Magic

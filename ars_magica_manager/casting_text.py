@@ -2,7 +2,8 @@
 Score for every Technique + Form pair, and a known spell's Casting Score
 and what the die must reach. Like the other domain modules it returns
 markup. Casting is worked out in the aura of the magus's covenant, with
-firm words and bold gestures (the book's defaults)."""
+firm words and bold gestures (the book's defaults). A hybrid magus's
+styles (Holy or Chthonic Magic, Goetic Arts, Hermetic rites) close it."""
 
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ from .covenants import home_aura
 from .markup import escape
 from .models import Character, KnownSpell, Saga, Spell
 from .rules import casting, certamen, penetration
+from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
 
 
@@ -87,6 +89,7 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
     halved = sorted({line.label for line in multipliers})
     if halved:
         lines.append(f"Halved totals for: {escape(', '.join(halved))}.")
+    lines += [escape(line) for line in hybrid.summary(magus)]
     return "\n".join(lines)
 
 

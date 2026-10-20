@@ -554,6 +554,66 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-teff-trad_vitkir": {
+      "active": "section-teff-trad_vitkir",
+      "keys": {
+        "a": "FieldsDialog: Add Effect or Item",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-tbond-trad_vitkir": {
+      "active": "section-tbond-trad_vitkir",
+      "keys": {
+        "a": "FieldsDialog: Add Bound Being",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-tcast-trad_vitkir": {
+      "active": "section-tcast-trad_vitkir",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-tdef-trad_vitkir": {
+      "active": "section-tdef-trad_vitkir",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-tseas-trad_vitkir": {
+      "active": "section-tseas-trad_vitkir",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-twarp-trad_vitkir": {
+      "active": "section-twarp-trad_vitkir",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-raw-vis-inventory": {
       "active": "section-raw-vis-inventory",
       "keys": {

@@ -23,6 +23,7 @@ from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog, FieldsDial
 from ars_magica_manager.gui.manage import ModeToggle
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
+from ars_magica_manager.models import VirtueFlawInstance
 
 
 @pytest.fixture(scope="module")
@@ -181,3 +182,25 @@ def test_move_to_in_play_leaves_the_worksheet_for_the_record(app):
     saved = storage.load_saga(saga.id).character(character.id)
     assert saved is not None and not saved.in_creation
     assert isinstance(window.page(), CharacterSheet)
+
+
+def test_a_companion_joins_a_tradition_and_gains_its_training_step(app):
+    saga = _sample_saga_with_covenant()
+    saga.traditions = ["trad_vitkir"]
+    character = _new_companion(saga)
+    character.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
+    window = _window(saga)
+    window.show_character(character.id)
+    _open_worksheet(window)
+    page = _worksheet(window)
+    asked = answering(window, "Vitkir")
+    _press(page, "Choose tradition")
+    assert isinstance(asked[0], ChooseDialog)
+    page = _worksheet(window)
+    assert "Tradition Training" in [name[2:] for name in page.chapters()]
+    page.open_step("training")
+    _press(page, "Open the Arts")
+    saved = storage.load_saga(saga.id).character(character.id)
+    assert saved is not None
+    assert saved.traditions == ["trad_vitkir"]
+    assert "Fehu" in {a.name for a in saved.abilities}

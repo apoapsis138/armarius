@@ -511,7 +511,7 @@ Link the creature to the neighbours it belongs with, such as the threat it serve
 # How to play a hedge wizard
 <!-- help: guide-hedge-magic -->
 
-A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, the gruagachan or the vitkir, with Arts and Abilities of their own. The app has the six traditions of Hedge Magic Revised Edition so far; more books' traditions follow.
+A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, the gruagachan or the vitkir, with Arts and Abilities of their own. The app has the six traditions of Hedge Magic Revised Edition and those of the Realms of Power books, Houses of Hermes: Societates (as Ex Miscellanea traditions), the Tribunal and regional books, Rival Magic and Ancient Magic: each is offered once its book is in play and the saga turns it on.
 
 ### Offering the tradition
 <!-- help: guide-hedge-magic-offer -->
@@ -528,14 +528,16 @@ A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, th
 ### Joining it
 <!-- help: guide-hedge-magic-join -->
 
+A new hedge wizard is made on the [Creation Worksheet](help:creation-worksheet): on Concept, **Choose tradition** makes them a member and adds the tradition's Virtues; a Gifted member also takes The Gift there. The **Tradition Training** step then spends the apprenticeship the book gives and, with **Open the Arts**, gives a Gifted member the tradition's Arts at 0. To add a tradition to a character already made, or one In Play:
+
 <!-- tui -->
-1. Make the character as usual (`n`, **New Character**): a hedge wizard is usually a companion.
+1. Make the character as usual (`n`, **New Character**): a hedge wizard is usually a companion, never a magus.
 2. On their sheet's top panel, press `m` (More) and choose **Traditions**. Tick theirs. A tab named after the tradition's magic appears, such as Folk Witch Magic.
 3. Add the tradition's Virtues in [Virtues & Flaws](help:tab-vf): its Social Status (Folk Witch, Gruagach, Vitki...) and the powers the character has.
 4. In the tradition's tab, press `a` to add each Art or Ability they have and type its XP.
 <!-- /tui -->
 <!-- gui -->
-1. Make the character as usual: a hedge wizard is usually a companion.
+1. Make the character as usual: a hedge wizard is usually a companion, never a magus.
 2. In their Abilities chapter, click **Traditions** and tick theirs. A chapter named after the tradition's magic appears, such as Folk Witch Magic.
 3. Add the tradition's Virtues in [Virtues & Flaws](help:tab-vf): its Social Status (Folk Witch, Gruagach, Vitki...) and the powers the character has.
 4. In the tradition's chapter, click **Add** for each Art or Ability they have and type its XP.
@@ -544,6 +546,6 @@ A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, th
 ### What the app works out
 <!-- help: guide-hedge-magic-app -->
 
-Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The tradition's casting totals, Magical Defenses, Opening and seasons of its own are not worked out yet: the [chapter](help:tradition-chapter) says what is.
+Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The tradition's casting totals, Magical Defenses and seasons of its own are not worked out yet: the [chapter](help:tradition-chapter) says what is.
 
 **See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities tab](help:tab-abilities)

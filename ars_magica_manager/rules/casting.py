@@ -20,6 +20,9 @@
   takes one off (never below 1) and Vulnerable Casting adds one; Mythic
   Blood costs none for a Formulaic spell cast up to 10 short and three
   fewer for a Ritual.
+- A hybrid magus (rules.hybrid_magic): Holy or Chthonic Magic changes
+  what an aura adds, and a Ritual may add Method + Power instead of Artes
+  Liberales + Philosophiae.
 - Botch dice: 1, +1 per pawn of vis, +1 per point of a non-Magic aura (x2 in
   a regio), +2 fast casting, -1 per point of Mastery (Golden Cord too, but
   never to 0 that way).
@@ -33,6 +36,7 @@ from dataclasses import dataclass
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Saga, Spell, VirtueFlawInstance
 from . import effects, options, realms, scores
+from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .derived import carried_load, encumbrance
 from .lab import ability_score, art_score
@@ -95,13 +99,8 @@ def casting_score(
     enc = encumbrance(load, magus.characteristics.strength)
     if enc:
         lines.append(Line("Encumbrance", amount=-enc, source=SOURCE))
-    lines.append(
-        Line(
-            f"Aura ({aura_realm} {aura})",
-            amount=realms.aura_modifier(realms.HERMETIC, aura_realm, aura),
-            source=realms.SOURCE,
-        )
-    )
+    label, amount = hybrid.aura_label(magus, aura_realm, aura)
+    lines.append(Line(label, amount=amount, source=realms.SOURCE))
     for kind, chosen, table, label in (
         ("casting_words", words, WORDS, "words"),
         ("casting_gestures", gestures, GESTURES, "gestures"),
@@ -118,10 +117,7 @@ def casting_score(
             Line(f"{vis_pawns} pawns of vis", amount=2 * vis_pawns, source=SOURCE)
         )
     if ritual:
-        for ability in ("Artes Liberales", "Philosophiae"):
-            score = sum(ability_score(magus, ability))
-            if score:
-                lines.append(Line(ability, amount=score, source=SOURCE))
+        lines += _ritual_lines(magus)
     base = sum(line.amount or 0 for line in lines)
     kind = "spontaneous_total" if spontaneous else "casting_total"
     activity = None if spontaneous else ("ritual" if ritual else "formulaic")
@@ -145,6 +141,26 @@ def casting_score(
     return Breakdown(
         total=combined.total, lines=lines + combined.lines[1:] + multipliers
     )
+
+
+def _ritual_lines(magus: Character) -> list[Line]:
+    """Artes Liberales + Philosophiae, or a hybrid magus's Method +
+    Power when better."""
+    learned = [
+        Line(ability, amount=score, source=SOURCE)
+        for ability in ("Artes Liberales", "Philosophiae")
+        if (score := sum(ability_score(magus, ability)))
+    ]
+    pair = hybrid.ritual_pair(magus)
+    if pair is None or pair.total <= sum(line.amount or 0 for line in learned):
+        return learned
+    return [
+        Line(
+            f"{pair.method} + {pair.power} ({pair.style.name})",
+            amount=pair.total,
+            source=pair.style.source,
+        )
+    ]
 
 
 def _voice(magus: Character, kind: str, form: str, base: int) -> tuple[int, str]:

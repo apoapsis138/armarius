@@ -637,6 +637,7 @@ def _traditions(theban: Theban) -> None:
     w = theban.world
     w["witches_of_thessaly"] = b.faction(
         "The Witches of Thessaly",
+        tradition="trad_witches_of_thessaly",
         faction="Hedge coven",
         decides="Its leader",
         ruler="Destasia of Erebos",
@@ -684,6 +685,7 @@ def _traditions(theban: Theban) -> None:
     )
     w["folk_witches"] = b.faction(
         "The Folk Witches of Hekate",
+        tradition="trad_folk_witches",
         faction="Hedge coven",
         decides="Its leader",
         realm="Magic",
@@ -702,6 +704,7 @@ def _traditions(theban: Theban) -> None:
     )
     w["nightwalkers"] = b.faction(
         "The Nightwalkers",
+        tradition="trad_nightwalkers",
         faction="Hedge coven",
         decides="A vote of all",
         realm="Magic",
@@ -719,6 +722,7 @@ def _traditions(theban: Theban) -> None:
     )
     w["cunning_folk"] = b.faction(
         "The Cunning Folk",
+        tradition="trad_learned_magicians",
         faction="Hedge coven",
         decides="Its leader",
         realm="Faerie",
@@ -794,6 +798,7 @@ def _traditions(theban: Theban) -> None:
     )
     w["pharmacopoieans"] = b.faction(
         "The Pharmacopoieans",
+        tradition="trad_pharmacopoeians",
         faction="Hedge coven",
         decides="A council",
         realm="Magic",
@@ -805,6 +810,7 @@ def _traditions(theban: Theban) -> None:
     )
     w["stringles"] = b.faction(
         "The Stringles",
+        tradition="trad_stringla",
         faction="Hedge coven",
         decides="Its leader",
         realm="Infernal",

@@ -401,6 +401,10 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                 select.value = value
         elif spec.kind == "check":
             self.query_one(widget_id, Checkbox).value = bool(value)
+        elif spec.kind == "area":
+            self.query_one(widget_id, TextArea).text = (
+                "" if value is None else str(value)
+            )
         elif spec.kind in ("text", "secret", "int", "optint", "optfloat"):
             self.query_one(widget_id, Input).value = "" if value is None else str(value)
 

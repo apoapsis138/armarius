@@ -15,6 +15,7 @@ from ars_magica_manager.models import (
     BodyVis,
     BondPower,
     Book,
+    BoundBeing,
     Breakthrough,
     Case,
     Character,
@@ -61,6 +62,7 @@ from ars_magica_manager.models import (
     ShapeMaterialBonus,
     Spell,
     SpellDesign,
+    TraditionEffect,
     TreasuryEntry,
     TribunalDiaryEntry,
     VirtueFlawDef,
@@ -361,6 +363,10 @@ def _saga_with_every_record() -> Saga:
     magus.arts["Creo"] = ArtScore(xp=6)
     magus.spells_known[0].mastery_abilities.append(MasteryAbility("Fast Casting"))
     magus.breakthroughs.append(Breakthrough("Holistic"))
+    magus.bound_beings.append(BoundBeing("Corvus", tradition="trad_folk_witches"))
+    magus.tradition_effects.append(
+        TraditionEffect("Fetch", tradition="trad_gruagachan", uses=["Gruagach Give"])
+    )
     magus.progress.append(Progress("vis", "Study"))
     magus.ordeals.append(Ordeal("Minor"))
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
@@ -459,7 +465,11 @@ def test_the_stale_key_fixture_holds_every_saved_record():
     stale-key test below covers it (a new saved record must be added)."""
     not_saved = {
         "AbilityDef", "ArmorDef", "CharacterTemplateDef", "CovenantSituationDef",
-        "HouseDef", "LabFeatureDef", "ShapeMaterialDef", "TraditionDef", "WeaponDef",
+        "HouseDef", "LabFeatureDef", "ShapeMaterialDef", "TraditionDef",
+        "TraditionTraining", "WeaponDef", "CastingRule", "MagicalDefense",
+        "DispelRule", "GroupCasting", "OpeningRule", "InitiationRule",
+        "InitiationScript", "Advancement", "TraditionActivity", "BondRule",
+        "PoolDef", "WarpingRule",
     }  # fmt: skip
     every = {
         cls.__name__

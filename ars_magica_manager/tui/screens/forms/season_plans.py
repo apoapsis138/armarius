@@ -4,17 +4,15 @@ season_forms.py) and a magus's research goals."""
 
 from __future__ import annotations
 
-from dataclasses import replace
 from functools import partial
 from typing import Any
 
 from .... import catalog, sourcebooks
-from ....form_spec import DialogField
+from ....forms import character as character_forms
 from ....forms import season as season_forms
 from ....forms.season import study_fields as _study_fields
-from ....markup import escape
 from ....models import Breakthrough, Character, GrogYear, Saga, SeasonPlan
-from ....rules import creation_characteristics, experiment
+from ....rules import creation_characteristics
 from ..fields import FieldsDialog
 from ..pickers import VirtueFlawPickerScreen
 
@@ -50,128 +48,17 @@ def _grog_year_dialog(
     return dialog
 
 
-#: What reaching a research goal grants (Breakthrough.grant_kind).
-GRANT_KINDS = [
-    ("An Ability (the points become its xp)", "Ability"),
-    ("A Virtue", "Virtue"),
-    ("A new parameter (the troupe records it)", "Parameter"),
-]
-
-
 def _breakthrough_dialog(existing: Breakthrough | None) -> FieldsDialog[Breakthrough]:
-    """A magus's original research goal: what it
-    is, the kind of Breakthrough sought (Minor, Major, Hermetic; its target
-    follows, and the storyguide may type a secret one), and what reaching it
-    grants."""
-    virtues = sorted(
-        (d for d in catalog.load_virtue_flaw_catalog() if d.type == "Virtue"),
-        key=lambda d: d.name,
-    )
-    grant_kind = existing.grant_kind if existing else ""
-
-    def grant(kind: str) -> str:
-        return existing.grant if existing and grant_kind == kind else ""
-
-    def build(values: dict[str, Any]) -> Breakthrough:
-        kind = values.get("grant_kind") or ""
-        made = replace(existing) if existing else Breakthrough(name="")
-        made.name = values["name"]
-        made.description = values.get("description") or ""
-        made.kind = values["kind"]
-        made.target = values["target"]
-        made.points = values.get("points") or 0
-        made.grant_kind = kind
-        made.grant = values.get(f"grant_{kind.lower()}") or "" if kind else ""
-        made.reached = made.reached and made.points >= made.target
-        return made
-
-    def problem(values: dict[str, Any]) -> str | None:
-        if (values.get("target") or 0) < 1:
-            return "The target is at least 1 point."
-        if (values.get("points") or 0) < 0:
-            return "The points gained can't be negative."
-        return None
-
+    """A magus's original research goal (character_forms.research_goal_fields):
+    what it is, the kind of Breakthrough sought (its target follows, and the
+    storyguide may type a secret one), and what reaching it grants; a new
+    goal may start from an integration breakthrough the books name."""
     return FieldsDialog(
         "Add Research Goal" if existing is None else "Edit Research Goal",
-        [
-            DialogField(
-                "name",
-                "Goal",
-                "text",
-                existing.name if existing else "",
-                required=True,
-                placeholder="e.g. Penetrating the Aegis",
-            ),
-            DialogField(
-                "description",
-                "What it is",
-                "area",
-                existing.description if existing else "",
-            ),
-            DialogField(
-                "kind",
-                "Breakthrough",
-                "select",
-                existing.kind if existing else "Minor",
-                options=[
-                    (f"{kind} ({points} points)", kind)
-                    for kind, points in experiment.KINDS.items()
-                ],
-                required=True,
-                fills=lambda values: {
-                    "target": experiment.KINDS.get(values.get("kind") or "", 30)
-                },
-            ),
-            DialogField(
-                "target",
-                "Target",
-                "int",
-                existing.target if existing else experiment.KINDS["Minor"],
-                hint="The storyguide may set a secret target.",
-            ),
-            DialogField(
-                "points",
-                "Points so far",
-                "int",
-                existing.points if existing else 0,
-            ),
-            DialogField(
-                "grant_kind",
-                "Reaching it grants",
-                "select",
-                grant_kind or None,
-                options=GRANT_KINDS,
-                allow_blank=True,
-                placeholder="(the troupe decides)",
-            ),
-            DialogField(
-                "grant_ability",
-                "Ability",
-                "text",
-                grant("Ability"),
-                show_if=lambda values: values.get("grant_kind") == "Ability",
-            ),
-            DialogField(
-                "grant_virtue",
-                "Virtue",
-                "select",
-                grant("Virtue") or None,
-                options=[(escape(d.name), d.id) for d in virtues],
-                allow_blank=True,
-                show_if=lambda values: values.get("grant_kind") == "Virtue",
-            ),
-            DialogField(
-                "grant_parameter",
-                "Parameter",
-                "text",
-                grant("Parameter"),
-                show_if=lambda values: values.get("grant_kind") == "Parameter",
-            ),
-        ],
+        character_forms.research_goal_fields(existing),
         save_label="Add" if existing is None else "Save",
-        build=build,
-        validate=problem,
+        build=partial(character_forms.research_goal_from, existing),
+        validate=character_forms.research_goal_problem,
     )
 
 

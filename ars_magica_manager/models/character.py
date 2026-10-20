@@ -237,6 +237,90 @@ class GrogYear:
         return cls(**known_fields(cls, data))
 
 
+#: What a tradition's member knows or makes, as the books name them:
+#: effects cast, and items made in a season.
+TRADITION_EFFECT_KINDS: tuple[str, ...] = (
+    "spell",
+    "charm",
+    "rune script",
+    "rite",
+    "power",
+)
+TRADITION_ITEM_KINDS: tuple[str, ...] = (
+    "amulet",
+    "charta",
+    "fetish",
+    "potion",
+    "tattoo",
+    "wondrous item",
+)
+
+
+@dataclass
+class TraditionEffect:
+    """A hedge tradition's spell, charm, rune script or other effect the
+    character knows, or an item they made (an amulet, a fetish, a
+    potion): the casting rule it uses (one of the tradition's
+    CastingRules, by name), the Arts, Ability or runes it uses, its
+    level, and an item's charges."""
+
+    name: str
+    tradition: str = ""
+    kind: str = "spell"
+    rule: str = ""
+    uses: list[str] = field(default_factory=list)
+    level: int = 0
+    #: Range, Duration and Target, or what it does, in the book's words.
+    parameters: str = ""
+    #: An item's charges or doses left (0: none counted).
+    charges: int = 0
+    notes: str = ""
+
+    def __post_init__(self) -> None:
+        kinds = TRADITION_EFFECT_KINDS + TRADITION_ITEM_KINDS
+        if self.kind not in kinds:
+            raise ValueError(f"Unknown kind {self.kind!r}; must be one of {kinds}")
+
+    @property
+    def item(self) -> bool:
+        return self.kind in TRADITION_ITEM_KINDS
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> TraditionEffect:
+        return cls(**known_fields(cls, d))
+
+
+#: What a bound being's bond adds to: the master's casting totals, his
+#: Lab Totals, or nothing the app works out.
+BOND_APPLIES: tuple[str, ...] = ("casting", "lab", "")
+
+
+@dataclass
+class BoundBeing:
+    """A being bound to a tradition's member (a familiar, a fetch, a
+    spirit, an animated statue): its kind (the tradition's BondRule), the
+    Bestiary record it is, if any, and the bonus its bond adds to the
+    master's totals of that tradition."""
+
+    name: str
+    tradition: str = ""
+    kind: str = ""
+    creature_id: str = ""
+    bonus: int = 0
+    applies_to: str = ""
+    notes: str = ""
+
+    def __post_init__(self) -> None:
+        if self.applies_to not in BOND_APPLIES:
+            raise ValueError(
+                f"Unknown applies_to {self.applies_to!r}; must be one of {BOND_APPLIES}"
+            )
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> BoundBeing:
+        return cls(**known_fields(cls, d))
+
+
 @dataclass
 class Breakthrough:
     """A magus's original research goal: what it is, its kind and
@@ -334,6 +418,12 @@ class Character:
     #: The non-Hermetic traditions the character belongs to
     #: (tradition_catalog.json ids); each has its own chapter of the sheet.
     traditions: list[str] = field(default_factory=list)
+    #: What the character knows or made of their traditions' magic.
+    tradition_effects: list[TraditionEffect] = field(default_factory=list)
+    #: Beings bound to the character by a tradition, and the points in
+    #: each of their traditions' pools ("<tradition id>:<pool name>").
+    bound_beings: list[BoundBeing] = field(default_factory=list)
+    tradition_pools: dict[str, int] = field(default_factory=dict)
     #: Spells known, each with its own Spell Mastery.
     spells_known: list[KnownSpell] = field(default_factory=list)
     #: Spells this magus invented: they live with the magus, not the catalog
@@ -450,6 +540,10 @@ class Character:
         d["breakthroughs"] = [
             Breakthrough.from_dict(b) for b in d.get("breakthroughs", [])
         ]
+        d["tradition_effects"] = [
+            TraditionEffect.from_dict(e) for e in d.get("tradition_effects", [])
+        ]
+        d["bound_beings"] = [BoundBeing.from_dict(b) for b in d.get("bound_beings", [])]
         if d.get("grog_year") is not None:
             d["grog_year"] = GrogYear.from_dict(d["grog_year"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]

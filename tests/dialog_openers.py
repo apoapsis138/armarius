@@ -233,6 +233,21 @@ def _pick(open_editor, list_id: str, index: int = 0):
     return opener
 
 
+async def _open_tradition_effect(ws) -> None:
+    """Add an effect in Leandro's vitki chapter (built first, as its
+    tab is first shown)."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._core_verb("section-teff-trad_vitkir", "add")
+
+
+async def _open_bound_being(ws) -> None:
+    """Add a being bound in Leandro's vitki chapter."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._core_verb("section-tbond-trad_vitkir", "add")
+
+
 def _open_meeting(saga: Saga, tribunal) -> None:
     """Open the Tribunal's meeting (its Opening as it comes), once: the
     dialog is opened again after a cancel."""
@@ -569,6 +584,9 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "add research goal": Opener("character", lambda ws: ws._add_research_goal()),
+    "add integration goal": Opener("character", lambda ws: ws._add_research_goal()),
+    "add tradition effect": Opener("character", _open_tradition_effect),
+    "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),
     "virtue ability choice": Opener(
         "character", lambda ws: _open_param_prompt(ws, "vf_puissant_ability")

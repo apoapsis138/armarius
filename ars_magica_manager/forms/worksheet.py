@@ -13,7 +13,7 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 from .. import books as bk
-from .. import catalog, creation, sourcebooks
+from .. import catalog, creation, sourcebooks, traditions
 from .. import covenant_templates as templates
 from .. import covenants as cov_rules
 from .. import inhabitants as inh
@@ -60,6 +60,7 @@ from ..rules import creation_covenant as cov
 from ..rules import creation_later as later
 from ..rules import creation_magus as magus
 from ..rules import creation_packages as packages
+from ..rules import creation_tradition as ct
 from ..rules import creation_xp as cx
 from ..rules import xp as xp_rules
 from . import creation as creation_forms
@@ -468,6 +469,52 @@ def mythic_status(saga: Saga, character: Character) -> Choose:
         character.virtues_flaws.append(VirtueFlawInstance(vf_id))
 
     return Choose("Choose the Mythic Companion status Virtue", offered, chosen)
+
+
+def choose_tradition(saga: Saga, character: Character) -> Command:
+    """Make the character a member of one of the traditions the saga
+    offers (replacing any other), and add the Virtues it requires. A magus
+    chooses among the Hermetic societies and, in House Ex Miscellanea,
+    the House's traditions."""
+    offered = traditions.joinable(saga, character)
+    if not offered:
+        return Refuse(
+            "Choose a tradition",
+            "The saga offers no tradition this character can join: turn one "
+            "on under Traditions Offered on Saga Content's Books tab.",
+        )
+
+    def chosen(tradition_id: str) -> None:
+        character.traditions = [tradition_id]
+        add_tradition_virtues(character).apply()
+
+    return Choose(
+        "Choose the character's tradition",
+        lambda: [Choice(escape(t.name), t.id, escape(t.description)) for t in offered],
+        chosen,
+    )
+
+
+def add_tradition_virtues(character: Character) -> Act:
+    """Add the Virtues the character's tradition requires (and a Gifted
+    member's Opening gives)."""
+
+    def apply() -> None:
+        for vf_id in ct.missing_virtues(character):
+            character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+
+    return Act(apply)
+
+
+def open_tradition(character: Character) -> Act:
+    """A Gifted member's Opening: the tradition's Arts and Abilities at 0,
+    and the Virtues it gives."""
+
+    def apply() -> None:
+        ct.open_tradition(character)
+        add_tradition_virtues(character).apply()
+
+    return Act(apply)
 
 
 def house_virtue_name(option: dict) -> str:

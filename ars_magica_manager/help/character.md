@@ -349,11 +349,183 @@ character belongs to: only those the saga offers are listed (see
 [Traditions Offered](help:section-traditions)).
 <!-- /gui -->
 
+A magus may belong to a tradition too. A Hermetic society, such as Sol
+Invictus or the Priory of Saint Nerius, is open to any magus; a tradition
+of House Ex Miscellanea, such as the Tempestaria or the Rustic Magi, to the
+House's magi, whose free House Virtues are then the tradition's own: its
+Major non-Hermetic Virtue, its Minor Hermetic Virtue and its Major
+Hermetic Flaw (Houses of Hermes: Societates, Chapter 5: House Ex
+Miscellanea). Its chapter shows beside Hermetic Magic.
+
 Leaving a tradition keeps its Arts and Abilities: they move back to the
 Abilities chapter. **The app works out:** each score from its XP, on the
 Art table or the Ability table as the tradition's book says (see the
-[Abilities tab](help:tab-abilities)). Casting totals, Magical Defenses and
-a tradition's own seasons come in later stories.
+[Abilities tab](help:tab-abilities)), the [Casting](help:tradition-casting)
+totals, the [Magical Defenses](help:tradition-defenses), the character's
+[Effects and Items](help:tradition-effects), their
+[Bound Beings](help:tradition-bonds), the tradition's
+[Warping](help:tradition-warping) and [Pools](help:tradition-pools), and
+its [Seasons](help:tradition-seasons).
+
+## A tradition's Effects and Items
+<!-- help: tradition-effects -->
+
+The spells, charms, rune scripts, rites and powers the character knows of
+the tradition, and the items they have made (amulets, chartae, fetishes,
+potions, tattoos, wondrous items). Each names the way of casting it uses
+(one of the tradition's, in [Casting](help:tradition-casting)), the Arts,
+Ability or runes, its level and its Range, Duration and Target.
+
+<!-- tui -->
+**You type:** `a` adds one, `e` edits the chosen one, and `d` deletes it.
+<!-- /tui -->
+<!-- gui -->
+**You type:** **Add** adds one, **Edit** edits the chosen one, and
+**Delete** deletes it.
+<!-- /gui -->
+An item also keeps its charges or doses left, which you count down.
+
+**The app works out:** each one's Casting Score in the covenant's aura and
+the die it needs to reach its level ((Casting Score + die) / divisor at
+least the level), and the die for a Fatigue level where the tradition
+casts up to 10 short; a power whose magnitude is its Ability needs no die;
+an item made by a Lab Total shows that Lab Total.
+
+**Not yet:** a season of work making the item or inventing the effect
+for you (add it here when the season is done), and the catalogs of each
+book's printed spells and charms.
+
+## A tradition's Casting
+<!-- help: tradition-casting -->
+
+How the tradition's members work magic, each way as its book gives it,
+with the character's Casting Score for everything they can cast in their
+covenant's aura. A tradition that pairs a Technique with a Form (the
+gruagachan, the learned magicians, the elementalists) shows a grid,
+Techniques down and Forms across; one whose powers are Abilities (the folk
+witches) lists each with its Characteristic; the vitkir list each rune.
+Below each come what the total adds and what it must reach, the Fatigue,
+how much vis it can use, and the Penetration.
+
+**The app works out:** each Casting Score as the Arts or Ability + the
+Characteristic + any Ability the book adds + the aura's modifier for the
+tradition's realm (a Magic tradition loses three times a Divine aura). The
+total is (score + die) / divisor: a gruagach's spontaneous spell halves
+it, a learned magician's known charm halves it and one cast from a text
+divides it by five. Some traditions cast up to 10 short for a Fatigue
+level; an Ability's effect must reach its Ease Factor, and counts as a
+spell of 5 x its score. Penetration is the total + the Penetration bonus
+- the level, as for a magus. A Lab Total (Refining, a vitki's) adds no
+die. The dispellings a tradition knows and its group castings (the folk
+witches' sabbats) are listed below.
+
+**Not yet:** rolling a casting and the summoning chart. Each charm,
+spell or script the character knows is in
+[Effects and Items](help:tradition-effects).
+
+## A tradition's Magical Defenses
+<!-- help: tradition-defenses -->
+
+The Magical Defenses the character's training gives: one for each of the
+tradition's Arts or Abilities they have, against its own kind of effect.
+Hedge wizards have no Magic Resistance; these only lessen magic.
+
+**The app works out:** the bonus, a hedge Art's score / 5 (rounded up) or
+a Supernatural Ability's score, doubled by Greater Magical Defenses; the
+No Magical Defenses Flaw takes them all. Defenses never add up: only the
+best one against an effect applies, and none works against an effect of
+Personal range. The vitkir and elementalists have none.
+
+## A tradition's Seasons
+<!-- help: tradition-seasons -->
+
+What the tradition does with its seasons, with the character's own totals.
+**Opening** gives the character's Opening Total as the master, and what it
+is set against; **Initiation** lists the tradition's printed Scripts with
+the character's Initiation Total as Mystagogue against each one's Ease
+Factor, what it gives and its Ordeal; **Advancement** says whether the
+tradition's Arts may be practised or studied from vis; and **Seasons of
+work** lists the tradition's own seasons with the character's best Lab
+Total for each.
+
+**The app works out:** the Opening Total (most are a Lab Total:
+Intelligence + an Ability + Arts + the aura; the elementalists' uses their
+highest Technique and lowest Form, a vitki's his lowest rune), the
+Initiation Totals (Presence + the tradition's Lore + the Script's bonus;
+an elementalist's best Organization Lore), and the Lab Totals. The seasons
+themselves are planned on This Season (see [Activities
+offered](help:plan-season-activities)); an initiation uses Undergo an
+Initiation with the Script's bonus.
+
+**Not yet:** what a season of work makes (a potion, a charm, a script)
+isn't added for you: add it to [Effects and Items](help:tradition-effects)
+when the season is done.
+
+## A tradition's Bound Beings
+<!-- help: tradition-bonds -->
+
+The beings bound to the character by the tradition: a folk witch's
+familiar, a gruagach's fetch, and any spirit, statue or beast the troupe
+binds. Each names the kind of bond (the tradition's, as its book gives
+it), the Bestiary creature it is, if the saga has one, and the bonus its
+bond adds to the character's totals.
+
+<!-- tui -->
+**You type:** `a` adds one, `e` edits the chosen one, and `d` deletes it.
+<!-- /tui -->
+<!-- gui -->
+**You type:** **Add** adds one, **Edit** edits the chosen one, and
+**Delete** deletes it.
+<!-- /gui -->
+The bonus is typed in: a folk witch's familiar adds its Intelligence + its
+Folk Witch Magic Theory to her Lab Totals.
+
+**The app works out:** the bonus, added to the tradition's casting totals
+or its Lab Totals (whichever the bond applies to) in
+[Casting](help:tradition-casting), [Effects and Items](help:tradition-effects)
+and [Seasons](help:tradition-seasons). Below the list, each bond the
+tradition's book describes: how it is made and what it gives.
+
+**Not yet:** the season of binding itself (plan it as the tradition's own
+work, then add the being here).
+
+## A tradition's Warping
+<!-- help: tradition-warping -->
+
+What the tradition's Gifted members suffer from Warping. No hedge
+tradition goes into Wizard's Twilight, and none gains Warping Points from
+living in a strong magic aura; each has its own response: the
+elementalists' Elemental Warping, the folk witches' Witch Moon, the
+gruagachan's Transformation, the learned magicians' Intervention and
+Abduction, and the vitkir's Nátt-thel. The section gives what sets it off
+and the rolls it calls for, with the character's Warping Score (from the
+[Aging](help:section-aging) section). A magus, and every member of an Ex
+Miscellanea tradition, is a Hermetic magus: Warping and Twilight as for
+any magus.
+
+**The app works out:** an elementalist's Personality Traits, one for each
+Elementalist Form he holds: the Warping Score + the Form / 5 (rounded up).
+From +3 a Trait acts as a Minor Personality Flaw, from +6 a Major one, and
+at +10 the storyguide takes over.
+
+**Not yet:** rolling the avoidance and its effects.
+
+## A tradition's Pools
+<!-- help: tradition-pools -->
+
+The points the character keeps in each of the tradition's pools, for a
+tradition whose members store power (its book says what fills the pool,
+what spends it and its cap, shown here). A tradition with no pools has no
+such section.
+
+<!-- tui -->
+**You type:** `e` sets the points in each pool.
+<!-- /tui -->
+<!-- gui -->
+**You type:** **Edit** sets the points in each pool.
+<!-- /gui -->
+
+**Not yet:** filling or spending a pool for you: set the points by hand.
 
 ## Virtues & Flaws tab
 <!-- help: tab-vf -->
@@ -484,6 +656,29 @@ Parma Magica), Penetration (Weak Magic) or the Fatigue a spell costs
 (Enfeebled, Withstand Casting, Mythic Blood) are counted, and named where
 they apply.
 
+**Hybrid magic.** A magus whose magic is also non-Hermetic has it counted
+too, and a line for each kind closes the section:
+
+- **Holy Magic** (the Ability, or the Virtue that gives it): Holy Magic
+  stands in for Magic Theory in every Lab Total and in the vis he may use;
+  a Divine or Magic aura adds its full score, a Faerie aura half, and an
+  Infernal aura takes nothing away; living in a Magic or Divine aura gives
+  him no Warping (Realms of Power: The Divine, Holy Magic).
+- **Chthonic Magic**: a Magic or an Infernal aura adds its full score, and
+  living in either gives him no Warping (Realms of Power: The Infernal,
+  Chthonic Magic).
+- **Hermetic rites** (a Faerie Method and Power): rituals from the faerie
+  rite guidelines (Realms of Power: Faerie, Hermetic Rites).
+- A Ritual adds his best **Method + Power** of the style's realm instead of
+  Artes Liberales + Philosophiae, when that is more.
+- **Goetic Arts**: in a Goetic Art's total a magus may use Rego for the Art
+  and Vim for the Realm Lore, when they are higher (Realms of Power: The
+  Infernal, Goetic Magic).
+
+What can't be worked out (Holy Magic's halved totals from Hermetic texts,
+Chthonic Magic's sinful acts, the faerie rite parameters) is written in
+that closing line as the books word it.
+
 ### Raw Vis
 <!-- help: section-raw-vis-hermetic -->
 
@@ -539,6 +734,14 @@ Minor, Major or Hermetic, its target in points and what reaching it grants.
 You type these; the app adds points to a goal when a season of research
 towards it is applied (Houses of Hermes: True Lineages, Chapter 1: House
 Bonisagus, Original Research).
+
+A new goal may start from an **Integration**: the breakthroughs Ancient
+Magic names for folding a lost tradition into Hermetic magic (Canaanite
+Magic, Hermetic Rune Magic, Mutable and Awakened Devices, the Grigori
+Legacies, the Limit of Vis...), and Hedge Magic's Subtle Opening and Quick
+Charged Items. Choosing one fills in its name, kind, points and what it
+grants, which you can still change (Ancient Magic, Introduction, The
+Breakthrough).
 
 ## Inventory tab
 <!-- help: tab-inventory -->

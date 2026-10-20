@@ -482,6 +482,26 @@ def test_the_transylvania_pack_holds_the_tribunal_of_1220():
     assert len(keys) == len(set(keys))
 
 
+def test_the_hedge_factions_name_their_traditions():
+    from ars_magica_manager import traditions
+    from ars_magica_manager.rules import hedge_casting as hc
+
+    saga = TRANSYLVANIA.build()
+    factions = {n.name: n for n in saga.neighbours if n.kind == "faction"}
+    assert factions["The Storm Wizards"].details["tradition"] == "trad_storm_wizards"
+    assert factions["The Taltós"].details["tradition"] == "trad_nightwalkers"
+    assert "tradition" not in factions["The Wolf Brotherhoods"].details
+    for faction in factions.values():
+        named = faction.details.get("tradition")
+        assert named is None or traditions.find(named) is not None, faction.name
+    tibor = next(c for c in saga.characters if c.name == "Tibor of Borša")
+    assert tibor.traditions == ["trad_hunters"]
+    assert hc.score(tibor, "Slay") == 5
+    thietmar = next(c for c in saga.characters if c.name == "Thietmar")
+    assert thietmar.traditions == ["trad_storm_wizards"]
+    assert hc.score(thietmar, "Storm Calling") >= 5
+
+
 def test_monica_ierne_is_entered_as_the_book_prints_her():
     data = book_packs.data(TRANSYLVANIA)
     sketches = data[packs.GENERATED]
@@ -640,3 +660,16 @@ def test_every_pack_names_a_help_page_of_its_assumptions():
     for pack in book_packs.PACKS.values():
         shipped = json.loads(book_packs.path_of(pack).read_text(encoding="utf-8"))
         assert shipped[packs.ASSUMPTIONS] == book_packs.assumptions_topic(pack)
+
+
+def test_every_packs_hedge_factions_name_known_traditions():
+    from ars_magica_manager import traditions
+
+    named = {}
+    for key, pack in book_packs.PACKS.items():
+        for n in pack.build().neighbours:
+            if n.kind == "faction" and n.details.get("tradition"):
+                named[(key, n.name)] = n.details["tradition"]
+    assert all(traditions.find(t) is not None for t in named.values()), named
+    assert named[("hibernia", "The Céli Dé")] == "trad_celi_de"
+    assert named[("provence", "The Sorginak Covens")] == "trad_sorginak"

@@ -30,9 +30,15 @@ def test_every_tradition_names_catalog_abilities_and_virtues():
         "trad_elementalists", "trad_folk_witches", "trad_gruagachan",
         "trad_learned_magicians", "trad_nightwalkers", "trad_vitkir",
     }  # fmt: skip
+    # An instance of a family ("Craft: Runes" of "Craft: {craft}") counts.
+    families = {name.split(":")[0] for name in abilities if "{" in name}
     for tradition in entries:
-        templated = {"Craft: Runes"}  # an instance of "Craft: {craft}"
-        assert set(tradition.abilities) - templated <= abilities, tradition.id
+        unknown = {
+            name
+            for name in set(tradition.abilities) - abilities
+            if name.split(":")[0] not in families
+        }
+        assert not unknown, (tradition.id, unknown)
         assert set(tradition.favored) <= set(tradition.abilities), tradition.id
         assert set(tradition.virtues) <= set(virtues), tradition.id
         if tradition.social_status:
@@ -118,3 +124,42 @@ def test_older_saves_load_with_no_traditions():
 def test_an_old_medicinal_divining_becomes_the_shared_divining_art():
     old = Ability.from_dict({"name": "Medicinal Divining", "xp": 15})  # score 2
     assert (old.name, old.xp_table, old.level) == ("Elementalist Divining", "art", 2)
+
+
+def test_every_traditions_chapter_works_out_for_a_new_member():
+    """Each tradition's record opens, casts and shows its chapter for a new
+    Gifted member (where the tradition takes the Gift) with every Art at 3."""
+    from ars_magica_manager import tradition_text
+    from ars_magica_manager.models import Saga, VirtueFlawInstance
+    from ars_magica_manager.rules import creation_tradition as ct
+    from ars_magica_manager.rules import tradition_seasons as ts
+    from ars_magica_manager.rules.xp import xp_for_score
+
+    saga = Saga(id="s", name="S")
+    for tradition in traditions.all_traditions():
+        c = Character(id="c", name="C", type="companion")
+        c.traditions = [tradition.id]
+        if tradition.training.gift != "never":
+            c.virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
+        ct.open_tradition(c)
+        for name in tradition.abilities:
+            if "{" in name:
+                continue
+            ability = next((a for a in c.abilities if a.name == name), None)
+            if ability is None:
+                ability = ct.opened_ability(name)
+                c.abilities.append(ability)
+            ability.xp = xp_for_score(3, ability.factor)
+        texts = [
+            tradition_text.casting_text(saga, c, tradition),
+            tradition_text.defenses_text(c, tradition),
+            tradition_text.seasons_text(saga, c, tradition),
+            tradition_text.warping_text(c, tradition),
+            tradition_text.bonds_text(tradition),
+            tradition_text.pools_text(c, tradition),
+        ]
+        assert all(isinstance(t, str) for t in texts), tradition.id
+        assert ts.openable(c) is not None
+        assert ct.xp_budget(c) >= 0 and ct.level_budget(c) >= 0, tradition.id
+        ct.missing_virtues(c)
+        ct.targets(c)
