@@ -64,6 +64,7 @@ def assemble() -> Builder:
     stats_gorge.build(rhine)
     history.build(rhine)
     tribunal.finish(rhine)
+    stats_magi.peregrinatores(rhine)
     stats_sketched.build(rhine)
     return rhine.b
 

@@ -221,6 +221,11 @@ class Profile:
     shares: tuple[float, float, float] = SHARES
 
 
+#: The age a magus is built at when the book gives none and the pack
+#: assumes none.
+DEFAULT_AGE = 50
+
+
 @dataclass
 class _Pool:
     """Scores bought one level at a time: each step goes to whatever buys
@@ -391,16 +396,27 @@ def apply(b: Builder, character: Character, profile: Profile) -> None:
     b.stats(character, block)
     if assumed:
         character.background.year_born = b.year - age
-    character.description.biography = note(b.source, age if assumed else None)
+    character.description.biography = note(
+        b.source, age if assumed else None, by_default=profile.age is None
+    )
 
 
-def note(source: str, assumed_age: int | None = None) -> str:
-    """The Biography of a generated magus: whose stats they are not."""
+def note(
+    source: str, assumed_age: int | None = None, *, by_default: bool = False
+) -> str:
+    """The Biography of a generated magus: whose stats they are not. An
+    assumed age is either the pack's reading of the magus's rank and
+    standing, or, where the book gives nothing to go on, DEFAULT_AGE."""
     words = (
         f"{sourcebooks.title_of(source)} prints no stat block for this magus. "
         f"{INFERRED} The storyguide may change them freely."
     )
-    if assumed_age is not None:
+    if assumed_age is not None and by_default:
+        words += (
+            f" The book gives no age, nor anything to judge one by: "
+            f"{assumed_age} is the default for a magus of unknown age."
+        )
+    elif assumed_age is not None:
         words += (
             f" The book gives no age: {assumed_age} is assumed from the magus's rank."
         )
@@ -465,7 +481,7 @@ def stat_block(
     """The magus's stat block, and the age it was built for."""
     rng = random.Random(character.id)
     born = character.background.year_born
-    age = year - born if born is not None else (profile.age or 50)
+    age = year - born if born is not None else (profile.age or DEFAULT_AGE)
     art_weights = _arts_weights(profile)
     ranked = sorted(ARTS, key=lambda a: -art_weights[a])
     top_arts = ranked[:4]

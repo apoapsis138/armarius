@@ -537,3 +537,218 @@ def build(rhine: Rhine) -> None:
             "Wielding the Invisible Sling": (MULTIPLE,),
         },
     )
+
+
+def peregrinatores(rhine: Rhine) -> None:
+    """The two wandering magi of the chapter on the Rhine Tribunal, made
+    once the Tribunal is finished."""
+    b = rhine.b
+    _stats(
+        b,
+        rhine.magi["tabanus"],
+        {
+            "characteristics": {
+                "intelligence": 2,
+                "perception": 3,
+                "presence": -1,
+                "communication": -1,
+                "strength": 0,
+                "stamina": 2,
+                "dexterity": -2,
+                "quickness": 0,
+            },
+            "size": 0,
+            "confidence": (1, 3),
+            "decrepitude": (0, 0),
+            "warping": (2, 15),
+            "apparent_age": 38,
+            "virtues_flaws": [
+                "The Gift",
+                "Journeyman (Rhine Tribunal)",
+                ("Affinity with {ability}", {"ability": "folk ken"}),
+                "Clear Thinker",
+                "Hermetic Prestige",
+                "Intuition",
+                "Premonitions",
+                ("Puissant {art}", {"art": "intellego"}),
+                "Skilled Parens",
+                "Meddler (Major)",
+                ("{gild} Enmity", {"gild": "Hawthorn Gild"}),
+                ("Incompatible Arts", {"arts": "Perdo Imaginem"}),
+                "Infamous",
+            ],
+            "traits": {"Law Abiding": 3, "Tenacious": 3, "Honorable": 2},
+            "reputations": {
+                "Meddlesome Upstart (Hermetic)": 4,
+                "Quaesitor (Hermetic)": 3,
+            },
+            "abilities": [
+                ("Artes Liberales", 2, "logic"),
+                ("Athletics", 1, "stamina"),
+                ("Awareness", 2, "things out of place"),
+                ("Concentration", 1, "Intellego spells"),
+                ("Code of Hermes", 4, "regarding scrying"),
+                ("Folk Ken", 6, "unusual behavior"),
+                ("Area Lore: Germany", 3, "safe roads"),
+                ("Great Weapon", 2, "staff"),
+                ("Living Language: High German", 2, "Swiss"),
+                ("Living Language: Italian", 5, "Apulian"),
+                ("Dead Language: Latin", 4, "Hermetic usage"),
+                ("Magic Theory", 4, "identifying spells"),
+                ("Organization Lore: Order of Hermes", 3, "Rhine covenants"),
+                ("Parma Magica", 3, "Mentem"),
+                ("Penetration", 2, "Intellego spells"),
+                ("Premonitions", 2, "crime"),
+                ("Living Language: Romansch", 1, "southern Alps"),
+                ("Survival", 2, "bad weather"),
+            ],
+            "arts": {
+                "Creo": 4,
+                "Intellego": 10,
+                "Muto": 2,
+                "Perdo": 2,
+                "Rego": 3,
+                "Animal": 1,
+                "Aquam": 4,
+                "Auram": 3,
+                "Corpus": 4,
+                "Herbam": 1,
+                "Ignem": 3,
+                "Imaginem": 8,
+                "Mentem": 8,
+                "Terram": 6,
+                "Vim": 8,
+            },
+            "spells": [
+                ("Image of the Beast", "InAn", 5, 0),
+                ("Comfort of the Drenched Traveler", "PeAq", 5, 0),
+                ("Whispers Through the Black Gate", "InCo(Me)", 15, 0),
+                ("Spasms of the Uncontrolled Hand", "ReCo", 5, 0),
+                ("Discern Images of Truth and Falsehood", "InIm", 25, 0),
+                ("Taste of the Spices and Herbs", "MuIm", 5, 0),
+                ("Sight of the Transparent Motive", "InMe", 10, 1),
+                ("Frosty Breath of the Spoken Lie", "InMe", 20, 1),
+                ("Perceive the Eyes of Knives", "InMe", 20, 0),
+                ("Trust of Childlike Faith", "ReMe", 10, 0),
+                ("Eyes of the Eons", "InTe", 5, 0),
+                ("Tracks of the Faerie Glow", "InTe", 25, 0),
+                ("The Invisible Eye Revealed", "InVi", 20, 0),
+                ("Reveal the Magical Deception", "InVi", 25, 0),
+                ("Sense of the Lingering Magic", "InVi", 30, 0),
+            ],
+            "notes": (
+                "Equipment: a stout blackthorn staff, the knout he carries "
+                "as a walking stick and is thinking of enchanting; "
+                "Encumbrance 2 (2). No Twilight Scars. Gauntleted at 23 "
+                "after training at Magvillus under Jart, the leading "
+                "Traditionalist of his House. The book's block gives "
+                "Intellego as 10+3 with Puissant Intellego; the sheet holds "
+                "the 10 and the Virtue adds the 3."
+            ),
+        },
+        masteries={
+            "Sight of the Transparent Motive": (QUIET,),
+            "Frosty Breath of the Spoken Lie": (PENETRATION,),
+        },
+    )
+    _stats(
+        b,
+        rhine.magi["felicia"],
+        {
+            "characteristics": {
+                "intelligence": 2,
+                "perception": 0,
+                "presence": 0,
+                "communication": 0,
+                "strength": 0,
+                "stamina": 1,
+                "dexterity": 2,
+                "quickness": 0,
+            },
+            "size": 0,
+            "confidence": (1, 3),
+            "decrepitude": (0, 0),
+            "warping": (0, 0),
+            "apparent_age": 24,
+            "virtues_flaws": [
+                "The Gift",
+                "Journeyman (Rhine Tribunal)",
+                ("Major Magical Focus", {"focus": "weather"}),
+                ("Cyclic Magic (Positive)", {"cycle": "the winter months"}),
+                "Free Study",
+                ("{gild} Trained", {"gild": "Linden Gild"}),
+                "Personal Vis Source",
+                ("Puissant {ability}", {"ability": "intrigue"}),
+                "Skilled Parens",
+                "Favors",
+                "Study Requirement",
+                "Busybody",
+                ("Cyclic Magic (Negative)", {"cycle": "the summer months"}),
+            ],
+            "traits": {"Loner": 2, "Self-Reliant": 1, "Suspicious": -2},
+            "abilities": [
+                ("Artes Liberales", 2, "Latin script"),
+                ("Athletics", 1, "sprinting"),
+                ("Awareness", 1, "ambushes"),
+                ("Bargain", 2, "food"),
+                ("Area Lore: Bavaria", 1, "woods"),
+                ("Chirurgy", 1, "sprains"),
+                ("Civil and Canon Law", 1, "vagabond laws"),
+                ("Concentration", 2, "Auram"),
+                ("Dominion Lore", 1, "roadside shrines"),
+                ("Faerie Lore", 1, "weather spirits"),
+                ("Finesse", 1, "Auram"),
+                ("Folk Ken", 3, "travelers"),
+                ("Guile", 2, "as a man"),
+                ("Area Lore: Harz Mountains", 2, "sites to study"),
+                ("Living Language: High German", 5, "disguising accent"),
+                ("Hunt", 1, "small game"),
+                ("Intrigue", 2, "Hermetic"),
+                ("Dead Language: Latin", 4, "Hermetic usage"),
+                ("Magic Theory", 4, "weather spells"),
+                ("Music", 1, "flute"),
+                ("Organization Lore: Order of Hermes", 2, "covenants"),
+                ("Parma Magica", 2, "Corpus"),
+                ("Penetration", 1, "Auram"),
+                ("Area Lore: Rhine", 1, "towns"),
+                ("Area Lore: Saxony", 1, "safe roads"),
+                ("Survival", 2, "summer"),
+                ("Swim", 1, "rivers"),
+            ],
+            "arts": {
+                "Creo": 9,
+                "Intellego": 2,
+                "Muto": 2,
+                "Perdo": 2,
+                "Rego": 7,
+                "Animal": 1,
+                "Aquam": 7,
+                "Auram": 9,
+                "Corpus": 1,
+                "Vim": 2,
+            },
+            "spells": [
+                ("Ward Against Faeries of the Waters", "ReAq", 15, 0),
+                ("Chaos of the Angry Waves", "ReAq", 20, 0),
+                ("Jupiter's Resounding Blow", "CrAu", 10, 0),
+                ("Stench of the Twenty Corpses", "CrAu", 10, 0),
+                ("Broom of the Winds", "CrAu", 15, 0),
+                ("Clouds of Rain and Thunder", "CrAu", 25, 0),
+                ("Ward Against Rain", "ReAu", 10, 0),
+                ("Ward Against Faeries of the Air", "ReAu", 15, 0),
+                ("Clouds of Thunderous Might", "ReAu", 30, 0),
+            ],
+            "notes": (
+                "Equipment: good quality clothes; Encumbrance 0 (0). No "
+                "Twilight Scars. Her Favors are owed to Fengheld. Her magic "
+                "is strongest in the winter months, when she overwinters at "
+                "a covenant, and weakest in summer, when she travels to "
+                "study natural wonders. The book's block gives Intrigue as "
+                "2+2 with Puissant Intrigue; the sheet holds the 2 and the "
+                "Virtue adds the other 2. Story seed, A Peace Emissary: she "
+                "comes to winter at the player covenant to make peace "
+                "between it and an enemy covenant she visited first, and "
+                "the magi may suspect a motive she does not have."
+            ),
+        },
+    )

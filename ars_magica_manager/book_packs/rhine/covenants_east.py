@@ -706,7 +706,7 @@ def _roznov(rhine: Rhine, tribunal: Tribunal) -> None:
         founded=1067,
         place=rhine.places.get("roznov_site"),
         season="Autumn",
-        unnamed_magi=6,
+        unnamed_magi=5,
         summary=paragraphs(
             "An Autumn covenant in a valley at the edge of the Carpathians on "
             "Mount Radhost, in the far east of Moravia on the Hungarian border, "
@@ -718,9 +718,10 @@ def _roznov(rhine: Rhine, tribunal: Tribunal) -> None:
             "magi in Roznov Castle; the other an arch-conservative stronghold of "
             "House Tremere in Roznov Fort. The two act independently, their "
             "political aims often coinciding, yet one half commonly hears of the "
-            "other's schemes only from third parties. Nine magi live here in "
-            "all: Igor Rastvan and two former apprentices at the Castle, "
-            "Severicus with his two filii and a Tytalus at the Fort.",
+            "other's schemes only from third parties. Seven magi live here in "
+            "all: Igor Rastvan and his two former apprentices, the three Ex "
+            "Miscellanea of the Castle; Severicus and two more Tremere, the "
+            "three of the Fort; and a follower of Tytalus.",
             "Its allegiance looks split between the Rhine, whose Tribunals it "
             "attends, and the Tremere-run Transylvanian Tribunal, with which it "
             "is thought to keep regular contact, so most Rhine magi distrust it; "

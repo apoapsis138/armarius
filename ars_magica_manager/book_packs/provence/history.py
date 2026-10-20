@@ -275,9 +275,10 @@ EVENTS: tuple[tuple[int, str, str, str, str], ...] = (
     (
         975,
         "",
-        "Fraxinetum destroyed; the Coenobium formed",
+        "Fraxinetum destroyed",
         "William's army takes the Moorish base and the Fraxinetum magi vanish into the "
-        "forest. The history chapter says the new Coenobium Rhodanien destroyed the "
+        "forest. The history chapter says the Coenobium Rhodanien, which it calls newly "
+        "formed (the Birds of Camargue had joined it in 970), destroyed the "
         "covenant by Wizard's War; the Arelat chapter says no war was ever openly "
         "declared and the league narrowly escaped the Quaesitors' anger for acting "
         "through mundane arms. Either way, the victors stay together as a covenant of "

@@ -364,15 +364,32 @@ def finish(rhine: Rhine) -> None:
             "Tabanus",
             covenant=None,
             house="house_guernicus",
-            age=None,
-            summary="Quaesitor of House Guernicus, a peregrinator sent to the "
-            "Rhine about ten years ago because the House thought its presence "
-            "here weak. His evidence once Marched a Hawthorn Gild magus on what "
-            "many called a technicality, and he is unpopular, that gild "
-            "especially; he moves from covenant to covenant every few years, "
-            "preferring young covenants that will not try to browbeat him. He "
-            "lately left Triamore. With Winfrida of Durenmar he may be one of "
-            "only two Guernicus in the Tribunal.",
+            age=38,
+            summary="Journeyman of House Guernicus and a Quaesitor, filius of "
+            "Jart, a peregrinator sent to the Rhine about ten years ago because "
+            "the House thought its presence here weak. His evidence once "
+            "Marched a Hawthorn Gild magus on what many called a technicality, "
+            "and he is unpopular, that gild especially; he moves from covenant "
+            "to covenant every few years, preferring young covenants that will "
+            "not try to browbeat him. He lately left Triamore. With Winfrida "
+            "of Durenmar he may be one of only two Guernicus in the Tribunal. "
+            "The book offers him as a player character.",
+        )
+    if "felicia" not in rhine.magi:
+        rhine.magi["felicia"] = b.magus(
+            "Felicia",
+            covenant=None,
+            house="house_bonisagus",
+            age=24,
+            summary="Journeyman of House Bonisagus, filia of Dorana of "
+            "Fengheld in the lineage of Irmele, freshly Gauntleted and a "
+            "peregrinator. Sturdy and weather-beaten, often taken for a young "
+            "man, which lets her travel alone. Her weather magic is strongest "
+            "in winter, when she overwinters at a covenant (Fengheld has "
+            "promised her a spare laboratory for favours it has yet to name), "
+            "and weakest in summer, when she takes to the road. The book "
+            "offers her as a player character; it spells her name Felecia "
+            "too.",
         )
     _proxies(rhine)
     for year, title, says in RULINGS:

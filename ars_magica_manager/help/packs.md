@@ -8,7 +8,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 
 - **Caecilius, Schadrit and Eule**: age 160, from the book's "approximately 160" (Ch. 6, Ch. 8).
 - **Gudrun Tigurina and Xavier**: Masters. The book says Durenmar has three masters from other Houses and names these two among them (Ch. 6).
-- **Unnamed magi**: Durenmar 4 (three more Bonisagus and the unnamed third master), Fengheld 7 (the book's 23 magi less the 16 it names), Irencillia 3, as the book says (Ch. 6, Ch. 8, Ch. 10).
+- **Unnamed magi**: Durenmar 4 (three more Bonisagus and the unnamed third master), Fengheld 7 (the book's 23 magi less the 16 it names), Irencillia 3, as the book says; Roznov 5, its three Ex Miscellanea, three Tremere and a Tytalus less Igor Rastvan and Severicus (Ch. 6, Ch. 8, Ch. 10).
 - **Sites with several auras** take one figure: the Brocken Faerie 4 at the summit (the slopes are 2) (Ch. 8); the Rhinefalls Magic 2 on the island (the summit is 4) (Ch. 5); the Source of the Danube Faerie 3 round the pool (5 in the water) (Ch. 6); the woods of Irencillia Faerie 1, the lowest within the wall, with the sancta's stronger patches as a regio level (Ch. 10).
 - **The Four Seasonal Courts**: aura Faerie 3, Might 40. Each court's aura peaks at 3 in its own season and its Might runs from 20 to 50 through the year; the pack takes the peak aura and 40 for the rulers (Ch. 4).
 - **Heorot**: a Spring covenant, as it was founded only in 1215 (Ch. 9).
@@ -42,14 +42,15 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 <!-- help: pack-assumptions-rhine-corrections -->
 
 - **Durenmar**: founded 767, when the Order was founded there; Bonisagus had settled there about 754 (Ch. 3, Ch. 6).
-- **Dates where the book gives two**, the pack takes: Merinita's disappearance 792, not 785 (Ch. 10, Appendix B); Dankmar founded 1052, not 1053 (Ch. 6, Appendix B); Rethra abolished 1207, not 1202 (Ch. 3, Ch. 9); Oakdell founded 934, not 931 (Ch. 3, Ch. 12); Grand Silesia destroyed 1008, not 1009 (Ch. 3, Appendix B). Ulm's freeing keeps both 1155 and 1164 in the text (Ch. 6).
-- **Felecia**: Dorana's apprentice is spelled so; the book uses two spellings (Ch. 3).
+- **Dates where the book gives two**, the pack takes: Merinita's disappearance 792, not 785 (Ch. 10, Appendix B); Dankmar founded 1052, not 1053 (Ch. 6, Appendix B); Rethra abolished 1207, not 1202 (Ch. 3, Ch. 9); Oakdell founded 934, not 931 (Ch. 3, Ch. 12); Grand Silesia destroyed 1008, not 1009 (Ch. 3, Appendix B). Each Diary entry gives the other date too. Ulm's freeing keeps both 1155 and 1164 in the text (Ch. 6).
+- **Felicia**: Dorana's apprentice is spelled as her stat block's heading has it; the book also writes Felecia (Ch. 3, Ch. 8).
+- **The Oak Gild**: Murion leads it. Only her raven Kolkrabus believes Stentorius has usurped her place, and Stentorius's record says so (Ch. 3, Ch. 8).
 - **Rhine customs over the core rules**: the pack keeps the book's year of notice for a case (the core rules say a season) and its proxy sigils (the core rules give each magus one vote). Its rule that the higher rank wins a dispute certamen would settle is recorded as a ruling only (Ch. 3).
 
 ### For every magus
 <!-- help: pack-assumptions-rhine-shared -->
 
-- **Generated stats**: the 61 magi the book describes without a stat block have stats built by the creation rules, following what the book says they are good at. Each sheet says so, and you can import them as the book's sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: the 60 magi the book describes without a stat block have stats built by the creation rules, following what the book says they are good at. Each sheet says so, and you can import them as the book's sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)). The two peregrinatores of Chapter 3, Tabanus (38, Gauntleted at 23) and Felicia (24), have the book's own blocks.
 - **Assumed ages**, from rank and history, where the book gives none: Gudrun Tigurina 70, Xavier 60, Indulius 65, Günther Lupus 55, Rudolph 45, Clemens 65, Marguerite 40, Wilhelm Weiss 60, Garrinchus 27, Hassan El-Megrayhi 80, Odorpes 60 and Caprea 50. Each sheet says the age is assumed.
 - **Hedge factions and traditions**: the Witches of the Harz are played as folk witches, the two Volkhvy factions as Volkhvy and the hedge wizards of the forest paths from the Forest Paths record; the priesthoods of Woden and Hertha have no tradition record.
 
@@ -88,16 +89,16 @@ The Normandy pack follows the book wherever this page doesn't say otherwise, inc
 <!-- help: pack-assumptions-normandy-corrections -->
 
 - **Anacrôn's spells**: Irresistible Pressgang is CrMe 35 and Twisted Spine Mu(Pe)Co 20, as their descriptions say; his spell list gives level 40 and MuCo 25 (Ch. 11).
-- **Puissant Abilities and Arts in Iasper's and Rotgiers' blocks**: the printed scores include the Virtue's bonus, so the pack enters the base score (Concentration 2 + 2, Terram 6 + 3, Single Weapon 5 + 2) and the bonus isn't counted twice.
+- **Puissant Abilities and Arts in Iasper's, Rotgiers' and Barnabé's blocks**: the printed scores include the Virtue's bonus, so the pack enters the base score (Concentration 2 + 2, Terram 6 + 3, Single Weapon 5 + 2, Athletics 5 + 2) and the bonus isn't counted twice.
 - **The Wizard's Mount and The Leap of Homecoming**: levels 20 and 30, the book's stat blocks, not the app's spell list's 35.
 - **Florum's move**: 1117, the timeline's date; Chapter 8 says the tenth century, and the record notes the clash.
 - **The Spider's Palace**: the book puts it both "two days north of Ghent" and "between Bruges and Ghent"; the record notes both (Ch. 8).
-- **Slips kept, with a note**: Mnemon's age of 97 fits his history badly, and Skuld is "resident at Atramentum" before 1178, though Atramentum was founded in 1200.
+- **Slips kept, with a note on the record**: Mnemon's age of 97 fits his history badly, and Skuld is "resident at Atramentum" before 1178, though Atramentum was founded in 1200.
 
 ### For every magus
 <!-- help: pack-assumptions-normandy-shared -->
 
-- **Generated stats**: a magus with no stat block in the book has Characteristics, Arts, Abilities and spells built by the creation rules, guided by the book's write-up; Iasper, Rotgiers, Anacrôn, Hervé and Baudouin have the book's blocks. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: a magus with no stat block in the book has Characteristics, Arts, Abilities and spells built by the creation rules, guided by the book's write-up; Iasper, Rotgiers, Anacrôn, Hervé and Baudouin have the book's blocks, and so does Barnabé, the cursor of Chapter 3, a grog the book gives no covenant (place him at yours). You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
 - **Assumed ages**, from rank, where the book gives none: Andru 90, Constantina 30, Languidus 45, Marcus of Paris 40, Henri 40, Norlanus 90, Gulo 37, Helios 38, Iacula 40, Philip 45, Renaud 33, Myrina 40 and Porphyrion 160. Each sheet says the age is assumed.
 - **Hedge factions and traditions**: the Priory of St. Nerius and the Donatores Requietis Aeternae name their tradition records.
 
@@ -109,11 +110,11 @@ The Provence pack follows the book wherever this page doesn't say otherwise: its
 ### Inferred from the text
 <!-- help: pack-assumptions-provence-inferred -->
 
-- **Founding years**: Tolosa Paratge 773, one of the four covenants of the first Tribunal (Ch. 2, Ch. 4); Ostal des Exiles 1215, "created since the Tribunal of 1214" (Ch. 4); Aedes Mercurii 1003, "just before the Schism War" (Ch. 6); Miniata Sophia 1180, "roughly 40 years ago" (Ch. 6); Ara Maxima Nova 1195, "established 25 years ago" (Ch. 7); the Coenobium Rhodanien 970, as it already existed when the Birds of Camargue joined it then (Ch. 2, Ch. 8).
+- **Founding years**: Tolosa Paratge 773, one of the four covenants of the first Tribunal (Ch. 2, Ch. 4); Ostal des Exiles 1215, "created since the Tribunal of 1214" (Ch. 4); Aedes Mercurii 1003, "just before the Schism War" (Ch. 6); Miniata Sophia 1180, "roughly 40 years ago" (Ch. 6); Ara Maxima Nova 1195, "established 25 years ago" (Ch. 7); the Coenobium Rhodanien 970, as it already existed when the Birds of Camargue joined it then. The book still calls it "newly formed" when it destroyed Fraxinetum in 975, and the Diary says both (Ch. 2, Ch. 8).
 - **Covenant seasons**: Tolosa Paratge Autumn, as madness "drags them deeper into Winter" (Ch. 4); Ostal des Exiles Spring, being newly formed (Ch. 4); the Coenobium Autumn, "such an Autumn covenant" (Ch. 8).
 - **Auras given as a range**: the Médoc Faerie 1, the lowest of its dolmens' 1 to 5 (Ch. 5); the Dolmens and Menhirs of Millau Faerie 3, the middle of 2 to 4 (Ch. 7); Val-Negra's surface Magic 4, the top of the Black Vale's 1 to 4, as the vale is "the magical centre of the mountain" (Ch. 9).
 - **Who holds a town in 1220**, from its last change of hands: Albi a crusader garrison, Castres its consuls for the Montforts, Montcuq and Montauban held for Count Raimond, Termes a crusader garrison with its lords returning this spring, and Pujol (St. Tropez) (Ch. 4).
-- **Unnamed magi**, the book's totals less the magi it names: Tolosa Paratge 4, Ostal des Exiles 3, Castra Solis 11, Aedes Mercurii 8, the Coenobium 17 ("over two dozen" consuls), Miniata Sophia 1, Tres' Band and Fraxinetum Redux 2 each (Ch. 3 to 8).
+- **Unnamed magi**, the book's totals less the magi it names: Tolosa Paratge 4, Ostal des Exiles 3, Castra Solis 11, Aedes Mercurii 7 (about 18, of whom it names 11), the Coenobium 17 ("over two dozen" consuls), Miniata Sophia 1, Tres' Band and Fraxinetum Redux 2 each (Ch. 3 to 8).
 - **The Sorginak Covens**: 70 members, at least 61 unGifted and about 9 Gifted (Ch. 6).
 - **The Jinn Corsair**: at the Gulf of Lion, beside the story seed of a corsair raiding that coast (Ch. 7).
 - **Diary seasons**: the Tribunal of 1207 Summer, when the Tribunal meets; Tolomae's March Spring ("early 1218"); the Wizard's Wars at Tolosa Paratge Summer 1218 ("weeks before de Montfort's death") (Ch. 2 to 4).
@@ -148,8 +149,8 @@ The Provence pack follows the book wherever this page doesn't say otherwise: its
 ### For every magus
 <!-- help: pack-assumptions-provence-shared -->
 
-- **Generated stats**: only Dama and Rebecca have printed stat blocks. The other 60 named magi have stats built by the creation rules from what the book says of them; each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
-- **Ages**: where the book gives a true and an apparent age, the pack uses the true one. Where it gives none, one is assumed from standing: Beatrice of Guernicus 45 (young for her office), Tres 60, Oxioun 120 (leader of Aedes Mercurii in 1207), and 50 for Bubulcus, Elornis One-Leg, Calais filius Septentrio, Aloysius Porphyri, Jorin, Aucassin of Tytalus, Romualdus and Fraxinus of Portus Termini. Each sheet says the age is assumed.
+- **Generated stats**: only Dama and Rebecca have printed stat blocks. The other 59 named magi have stats built by the creation rules from what the book says of them; each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Ages**: where the book gives a true and an apparent age, the pack uses the true one. Where it gives none, one is assumed from standing: Beatrice of Guernicus 45 (young for her office), Tres 60, Oxioun 120 (leader of Aedes Mercurii in 1207). Bubulcus, Elornis One-Leg, Calais filius Septentrio, Aloysius Porphyri, Jorin, Aucassin of Tytalus, Romualdus and Fraxinus of Portus Termini have nothing in the book to judge an age by, so they take the default of 50. Each sheet says which.
 - **Hedge factions and traditions**: the Sorginak Covens and the Hermetic Sorginak name their tradition records; the Masques of the Coenobium have none.
 
 # Assumptions made for The Sundered Eagle: The Theban Tribunal
@@ -164,6 +165,7 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 - **Erebos**: its history dates it 855, from "the second half of the ninth century"; the covenant's own founding year is left blank (Ch. 2, Ch. 5).
 - **Roughly dated history** (Jerbiton's rise, Petronas's term as logothete, Ausculator taking over Hedyosmos): the likeliest year, and the entry says the book gives none (Ch. 2).
 - **Gigas's hunting lodge**: Magic 1, the book's "weak Magic aura" (Ch. 5).
+- **Alexandria**: 13 unnamed Redcaps, the book's fifteen less Leontius and Proximios; Lysandros, Diantha and Niko, whom the book gives no covenant, may be among them (Ch. 3, Ch. 8).
 - **Seasons**: Michael's Tabula Spring, a young covenant (Ch. 7); Moero's Garden Autumn, living on dwindling means (Ch. 8).
 - **The Sibyl**: Magic Might 25, the book's "25+" at its floor (Ch. 9).
 - **Creatures with only a Might score** (the Gorgona, Talos, Klymene, Belisarius of the Serpent Column, Akgah and the Druj of Xerxes's Hill): no stat block is made up; their powers are in the notes, from the book's text.
@@ -174,9 +176,9 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 - **Seasons the book doesn't give**: Summer for Epidauros, Erebos, Gigas, Hedyosmos and Oikos tou Eleous (Ch. 5) and Favonius (Ch. 6). The next Tribunal meeting is Summer 1221 on Delos.
 - **Story stages**: the 1221 stages are in Summer, and the war with Nicaea and the Tremere appeal ("witnesses sought", 1226) have seasons the pack chose; later war stages follow real history, marked "if history holds". Which stories start active and which dormant is the pack's choice.
 - **Houses**: Polydegmon is a Tytalus, as the book gives no House (Ch. 9); Evantia is a Jerbiton, like seven of her covenant's eight magi.
-- **Native tongues**: Boustaphan, Allectores and Krum speak Bulgarian, Caterina and Satabus Italian, Wilrich High German; Boustaphan and Allectores keep Latin as their Hermetic language.
+- **Native tongues**: Boustaphan, Allectores and Krum speak Bulgarian, Caterina and Satabus Italian, Wilrich High German.
 - **Tokens**: Maria Laskarina 5, Ioannes 7, Pythia 1 token and 1 service, Leontius 1 shard, everyone else none. The book says the register is in doubt (Ch. 3).
-- **Metoikoi**: Caterina, Wilrich and Artoud.
+- **Metoikoi**: Caterina, Wilrich and Artoud. A Tremere whom Gigas takes in from another Tribunal would be one too, but the book names none, so Gigas's three named magi are all politai (Ch. 5).
 - **Offices**: Aiakia archon and Maria Laskarina polemarch until 1221, Leontius logothete with no term, the tamias vacant until 1221. Aiakia is the Praeco; there is no Presiding Quaesitor.
 - **Covenant patrons** are Boons: Powerful Ally for the great patrons, Local Ally for Cyra, St Loukia and Hipparchus; Gigas's wolf Čovek gives none.
 - **Rulers' titles**, as the app's nearest: Duke for the great realms (Epiros, Thessaloniki, Athens, Achaea, Bulgaria, Naxos, Candia, the Latin Emperor, the Emperors of Nicaea and Trebizond, the Sultan of Rum); Count for the Venetian Podestà; Baron for the Lords of Thebes and Negroponte; Landed for Lemnos, Rodos and the governors of Sinope and Amastris. Most are Wealthy.
@@ -199,7 +201,7 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 
 - **Generated stats**: a magus with no printed stat block has Characteristics, Arts and Abilities that fit their House and role; the Biography says so. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
 - **Assumed ages**, from standing and story, where the book gives none: Theorus 150, Passara 120, Megethia 110, Polydegmon, Hydatius, Formosos and Evantia 90, Kristophoros 80, Pythia 70, Zacharias 60, Marcus Tauros and Trasaric 45, Helladius 43, Satabus 26; the Redcaps Lysandros 70, Diantha 34 and Niko 20. The Biography says the age is assumed. Leontius, Proximios, Catella, Ionnia, Syagricus and Ziper keep the book's apparent ages.
-- **Language**: the Tribunal's magi speak Classical Greek as their Hermetic language unless the book makes them Latin speakers.
+- **Language**: the Tribunal's magi speak Classical Greek as their Hermetic language unless the book makes them Latin speakers. Gigas's Tremere, Boustaphan, Monorchis and Allectores, keep Latin, as their covenant champions it over Greek (Ch. 5).
 - **Hedge factions and traditions**: the Witches of Thessaly, the Folk Witches of Hekate, the Nightwalkers, the Pharmacopoieans and the Stringles name their records, and the Cunning Folk are played as learned magicians (Hedge Magic counts cunning-folk among them); the Daughters of Erictho, the Apostles of Apollonius, the Makhai and the Cult of Orpheus have none.
 
 # Assumptions made for Against the Dark: The Transylvanian Tribunal

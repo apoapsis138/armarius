@@ -802,7 +802,7 @@ def _aedes_mercurii(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         ),
         aura=5,
         season="Autumn",
-        unnamed_magi=8,
+        unnamed_magi=7,
     )
     provence.covenants["aedes_mercurii"] = aedes
     Builder.link(templum, "covenants", aedes, "A chapter of Aedes Mercurii")

@@ -201,6 +201,28 @@ def test_the_characters_the_book_prints_stat_blocks_for_are_full():
     assert packs.INFERRED not in by_name["Philippus Niger"].description.biography
 
 
+def test_the_rhine_peregrinatores_have_the_book_s_blocks():
+    saga = RHINE.build()
+    by_name = {c.name: c for c in saga.characters}
+    tabanus, felicia = by_name["Tabanus"], by_name["Felicia"]
+    assert saga.current_year - tabanus.background.year_born == 38
+    assert saga.current_year - felicia.background.year_born == 24
+    for magus in (tabanus, felicia):
+        assert magus.detail == "Full" and magus.spells_known
+        assert packs.INFERRED not in magus.description.biography
+    assert tabanus.characteristics.perception == 3
+    # The printed In 10+3 is the score plus Puissant Intellego.
+    assert tabanus.arts["intellego"].level == 10
+
+
+def test_the_rhine_pack_corrects_the_slips_its_review_found():
+    saga = RHINE.build()
+    by_name = {c.name: c for c in saga.characters}
+    assert "leader of the Oak Gild" not in by_name["Stentorius"].summary
+    roznov = next(c for c in saga.covenants if c.name == "Roznov")
+    assert roznov.unnamed_magi == 5 and "Seven magi" in roznov.summary
+
+
 def test_a_stat_block_names_only_catalog_virtues():
     import pytest
 
@@ -406,6 +428,8 @@ def test_theban_magi_learn_the_art_in_greek_and_incomers_in_latin():
 
     assert "Dead Language: Classical Greek" in languages("Aiakia")
     assert "Dead Language: Latin" in languages("Wilrich")
+    for tremere in ("Boustaphan", "Monorchis", "Allectores"):
+        assert "Dead Language: Latin" in languages(tremere), tremere
 
 
 def test_the_theban_pack_keeps_its_secrets_and_credit():

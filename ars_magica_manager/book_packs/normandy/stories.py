@@ -133,7 +133,9 @@ def _people(normandy: Normandy) -> None:
                 "House for Ex Miscellanea in 1178 and vanished a few years later, "
                 "last seen sailing a small boat through the Channel towards "
                 "Scandinavia. The Order believes she never came back. She looks "
-                "about 37.",
+                "about 37. (The book has her living at Atramentum before 1178, "
+                "though Atramentum was founded only in 1200: a slip it leaves "
+                "for the storyguide to settle.)",
                 "She returned in 1205 and lives in a regio on the Seine, on a "
                 "burning longship, as Hierophant of the Children of Odin; she has "
                 "been Mystagogue at every initiation so far. She claims descent "

@@ -29,7 +29,7 @@ def _generated(saga) -> list[Character]:
 def test_every_magus_of_the_rhine_is_statted(saga):
     magi = [c for c in saga.characters if c.type == "magus"]
     assert all(c.detail == "Full" for c in magi)
-    assert len(_generated(saga)) == len(PROFILES) == 61
+    assert len(_generated(saga)) == len(PROFILES) == 60
     for magus in _generated(saga):
         assert magus.description.biography.startswith(GENERATED)
 
@@ -93,10 +93,20 @@ def test_the_pack_generates_the_same_stats_every_build(saga):
 
 def test_an_age_the_book_leaves_out_is_assumed_and_said(saga):
     by_id = {c.id: c for c in saga.characters}
-    tabanus = by_id["tabanus"]
-    assert tabanus.background.year_born == saga.current_year - 50
-    assert "no age: 50 is assumed" in tabanus.description.biography
+    caprea = by_id["caprea"]
+    assert caprea.background.year_born == saga.current_year - 50
+    assert "no age: 50 is assumed from the magus's rank" in (
+        caprea.description.biography
+    )
     assert "assumed" not in by_id["murion"].description.biography
+
+
+def test_an_age_with_nothing_to_go_on_says_it_is_the_default():
+    provence = book_packs.PACKS["provence"].build()
+    jorin = next(c for c in provence.characters if c.name == "Jorin")
+    assert jorin.background.year_born == provence.current_year - generated.DEFAULT_AGE
+    assert "the default for a magus of unknown age" in jorin.description.biography
+    assert "from the magus's rank" not in jorin.description.biography
 
 
 def test_an_ungifted_redcap_has_abilities_but_no_arts(saga):

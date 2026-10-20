@@ -1545,7 +1545,11 @@ def _gigas(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Čovek is a silver wolf of a line that has given familiars to many "
         "great Tremere, every leader of Gigas among them; to be chosen by "
         "one is an honour. It counts as no Boon.",
-        "The book gives no season. Three magi are unnamed.",
+        "The book gives no season. Three magi are unnamed. A Tremere who "
+        "comes to Gigas from another Tribunal, as a guest or a temporary "
+        "member, is a metoikos until the Assembly grants a decree of "
+        "citizenship; the book names none of them, so the register lists "
+        "only Boustaphan, Monorchis and Allectores, all politai.",
         secrets(
             STORYGUIDE,
             _lines(
@@ -2908,6 +2912,7 @@ PROFILES: dict[str, Profile] = {
             "Driven (Minor)",
         ],
         native=GREEK,
+        hermetic="Latin",
     ),
     "allectores": P(
         strong="com pre per",

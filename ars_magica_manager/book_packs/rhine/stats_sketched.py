@@ -1038,25 +1038,6 @@ PROFILES: dict[str, Profile] = {
             "Proud (Minor)",
         ],
     ),
-    # -- the Peregrinator --
-    "tabanus": P(
-        age=50,
-        strong="int per",
-        arts={"In": 6, "Me": 4, "Co": 3, "Vi": 3},
-        abilities={
-            "Code of Hermes": (5, "evidence"),
-            "Area Lore: Rhine Tribunal": 3,
-            "Folk Ken": 3,
-            "Ride": 2,
-        },
-        virtues=[
-            _art("Affinity with {art}", "intellego"),
-            "Clear Thinker",
-            "Infamous",
-            "Rolling Stone",
-            "Proud (Minor)",
-        ],
-    ),
 }
 
 

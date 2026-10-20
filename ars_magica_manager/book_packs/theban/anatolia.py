@@ -1006,7 +1006,9 @@ def _alexandria(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "the building was finished in 1075, the year given here.",
         "Members: fifteen Redcaps and Catella. Leontius and Proximios are "
         "named; the book names none of the other Redcaps of Alexandria, "
-        "kept here as twelve unnamed members.",
+        "kept here as thirteen unnamed members. Lysandros, Diantha and "
+        "Niko, the Redcaps of chapter three, have no covenant in the "
+        "book and may be among them.",
         secrets(
             STORYGUIDE,
             _lines(
@@ -1026,7 +1028,7 @@ def _alexandria(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
-        unnamed_magi=12,
+        unnamed_magi=13,
         detail=FULL,
         season="Autumn",
     )

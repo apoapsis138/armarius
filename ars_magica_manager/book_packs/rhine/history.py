@@ -225,7 +225,7 @@ EVENTS: tuple[tuple[int, str, str, str], ...] = (
         "Oakdell founded (1073 AA)",
         "Diedne magi found Oakdell in the Westerwald, a dozen miles east of the Rhine, with "
         "the Tribunal's sponsorship and on condition that it keeps out of Rudiaria's "
-        "territory.",
+        "territory (the book's list of covenants puts its founding in 931).",
         "",
     ),
     (
@@ -303,7 +303,7 @@ EVENTS: tuple[tuple[int, str, str, str], ...] = (
         "New Slavonic Tribunal declared",
         "The Slavic covenants, Rethra and Grand Silesia among them, break with their "
         "sponsors and declare a New Slavonic Tribunal. Grand Silesia is destroyed the same "
-        "year.",
+        "year (the book's list of covenants says 1009).",
         "",
     ),
     (
@@ -675,7 +675,7 @@ EVENTS: tuple[tuple[int, str, str, str], ...] = (
         "Rethra abolished (1346 AA)",
         "The Tribunal declares the Slavic covenant of Rethra abolished, nothing having been "
         "heard from its magi for decades; the Knights of the Sword had lately desecrated and "
-        "plundered its site.",
+        "plundered its site (the book's list of covenants says 1202).",
         "",
     ),
     (
@@ -740,7 +740,7 @@ EVENTS: tuple[tuple[int, str, str, str], ...] = (
         1220,
         "Fengheld's new masters and journeymen",
         "Imanitos Mendax attains Master rank at Fengheld, Beechleaf joins its main site, "
-        "Felecia, Dorana's apprentice, passes her Gauntlet and Garrinchus is newly "
+        "Felicia, Dorana's apprentice, passes her Gauntlet and Garrinchus is newly "
         "Gauntleted at the Rheingasse chapter.",
         "",
     ),

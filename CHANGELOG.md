@@ -107,6 +107,30 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.109.1 — 2026-10-20
+
+### Peregrinatio
+
+- **Slips in the Rhine pack fixed.** Tabanus and Felicia, the two
+  wandering magi of the Tribunal chapter, now have the book's own stat
+  blocks (Tabanus is 38, not an assumed 50, and Felicia has a record of
+  her own). Stentorius no longer leads the Oak Gild: Murion does, and
+  only her raven thinks otherwise. Roznov has seven magi, so five are
+  unnamed. The Diary gives the book's other date for Rethra, Oakdell
+  and Grand Silesia.
+- **Slips in the Normandy pack fixed.** Barnabé the cursor has the
+  book's stat block, as a grog you can place at your covenant, and
+  Skuld's record notes that the book has her at Atramentum before it
+  was founded.
+- **Slips in the Theban pack fixed.** Monorchis keeps Latin as his
+  Hermetic language, like the rest of Gigas, and Alexandria has
+  thirteen unnamed Redcaps, which matches the book's fifteen.
+- **Slips in the Provence pack fixed.** The Diary no longer dates the
+  Coenobium's founding to 975, which matches its 970 founding year.
+  Aedes Mercurii has seven unnamed magi. The eight magi whose age is
+  only the default of 50 now say so on their sheets.
+- Each pack's Assumptions page in Help says what changed.
+
 ## 2.109.0 — 2026-10-20
 
 ### Insignia

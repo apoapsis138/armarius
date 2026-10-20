@@ -144,6 +144,25 @@ def build(normandy: Normandy) -> None:
     _vis(normandy)
     _ruins(normandy)
     _docket(normandy)
+    normandy.magi["barnabe"] = normandy.b.magus(
+        "Barnabé",
+        covenant=None,
+        house="",
+        age=25,
+        type="grog",
+        traits={"Self-Important": 3, "Loyal": 2, "Brave": -2},
+        summary=(
+            "A cursor, the runner a covenant keeps to prove to the "
+            "Quaesitores that a vis source lies within a day's return march "
+            "and so is its seisin. Picked as a child for his promise and "
+            "trained in long-distance running and sprinting, he grew "
+            "arrogant on the attention, thinks himself indispensable and "
+            "treats others as his inferiors. His Latin often makes him the "
+            "magi's interpreter. The book gives him no covenant; place him "
+            "at yours. An athletic young man with dark hair and a scant "
+            "beard."
+        ),
+    )
 
 
 # -- the Peripheral Code --
@@ -993,4 +1012,59 @@ def finish(normandy: Normandy) -> None:
             site.place_id = around.id
     tribunal.covenants_total = len(
         [c for c in saga.covenants if c.tribunal_id == tribunal.id]
+    )
+
+
+def stats(normandy: Normandy) -> None:
+    """Barnabé the cursor's printed block."""
+    normandy.b.stats(
+        normandy.magi["barnabe"],
+        {
+            "characteristics": {
+                "intelligence": -1,
+                "perception": -1,
+                "presence": 0,
+                "communication": -1,
+                "strength": 0,
+                "stamina": 3,
+                "dexterity": 1,
+                "quickness": 3,
+            },
+            "size": 0,
+            "decrepitude": (0, 0),
+            "apparent_age": 25,
+            "virtues_flaws": [
+                "Enduring Constitution",
+                "Improved Characteristics",
+                ("Puissant {ability}", {"ability": "athletics"}),
+                "Covenant Upbringing",
+                "Proud (Minor)",
+                "Social Handicap",
+            ],
+            "abilities": [
+                ("Area Lore", 4, "roads"),
+                ("Athletics", 5, "day-long running"),
+                ("Carouse", 4, "relaxing"),
+                ("Awareness", 2, "obstacles"),
+                ("Brawl", 3, "dodge"),
+                ("Folk Ken", 3, "grogs"),
+                ("Living Language: French", 5, "covenfolk"),
+                ("Guile", 1, "avoiding work"),
+                ("Dead Language: Latin", 3, "Hermetic"),
+                ("Organization Lore: Order of Hermes", 2, "seisins"),
+                ("Stealth", 3, "woodland"),
+                ("Survival", 2, "woodland"),
+            ],
+            "traits": {"Self-Important": 3, "Loyal": 2, "Brave": -2},
+            "notes": (
+                "A standard grog. His Social Handicap is his arrogance. "
+                "Athletics is 5, +2 from Puissant Athletics; a fit man runs "
+                "10 + (2 x Athletics) miles a day across country, five fewer "
+                "through wilderness and five more on good roads.\n"
+                "Fist: Init +3, Atk +4, Def +6, Dam 0. Dodge: Init +3, "
+                "Def +7. Soak +3; Encumbrance 0 (0); Fatigue OK, 0, 0, -2, "
+                "-4, Unconscious. Wounds: -1 (1-5), -3 (6-10), -5 (11-15), "
+                "Incapacitated (16-20)."
+            ),
+        },
     )

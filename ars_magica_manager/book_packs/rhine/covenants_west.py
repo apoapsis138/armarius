@@ -1438,8 +1438,8 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
         house=TREMERE,
         age=107,
         summary=(
-            "Archmage of House Tremere, leader of the Oak Gild, "
-            "authoritarian princeps of Fengheld and Tremere exarch of the "
+            "Archmage of House Tremere, of the Oak Gild, authoritarian "
+            "princeps of Fengheld and Tremere exarch of the "
             "Rhine, holding about three-fifths of the Tribunal's Tremere "
             "sigils, his filius's and the two Tremere of Triamore among "
             "them, while Severicus of Roznov holds the rest. Large and "
@@ -1450,9 +1450,10 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
             "familiar of more than fifty years is Oswald, a hugely arrogant "
             "large grey cat in a jewelled gold pendant holding several uses "
             "of Aura of Rightful Authority among other effects, who believes "
-            "he rules Fengheld if not the Tribunal; Murion's raven "
-            "Kolkrabus taunts him at Durenmar for usurping her place at the "
-            "head of the Oak Gild."
+            "he rules Fengheld if not the Tribunal. At Durenmar the cat is "
+            "taunted by Murion's raven Kolkrabus, who believes Stentorius "
+            "has usurped Murion's rightful place at the head of the Oak "
+            "Gild; Murion still leads it."
         ),
         traits={"Proud": 3, "Stickler for Rules": 2, "Forgiving": -3},
     )
@@ -1532,7 +1533,7 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
             "contest the Oak Gild and her close ally Occultes of Durenmar "
             "to contest the Primacy. A weather specialist, she manages the "
             "sun, rain and visitor-deterring fog that Fengheld's farms and "
-            "privacy depend on; her latest apprentice Felecia has just "
+            "privacy depend on; her latest apprentice Felicia has just "
             "passed her Gauntlet and gone travelling."
         ),
         traits={"Hedonistic": 2, "Peaceful": 1, "Secretive": -2},
