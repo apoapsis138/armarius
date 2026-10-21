@@ -65,43 +65,82 @@ def escape(text: str) -> str:
     return text.replace("[", "\\[")
 
 
-_EMPHASIS_OPEN = {"*": "[i]", "**": "[b]"}
-_EMPHASIS_CLOSE = {"*": "[/i]", "**": "[/b]"}
+_EMPHASIS_OPEN = {"*": "[i]", "**": "[b]", "~~": "[s]"}
+_EMPHASIS_CLOSE = {"*": "[/i]", "**": "[/b]", "~~": "[/s]"}
+
+#: The glyph a bulleted line is drawn with; a front-end hangs a wrapped
+#: line's continuation under the words after it.
+BULLET = "•"
+
+#: A bulleted line as written ("- ", "* " or "+ ", perhaps indented).
+_BULLET_LINE = re.compile(r"^([ \t]*)[-*+][ \t]+(?=\S)")
+#: A numbered line as written ("1. " or "1) ", perhaps indented).
+_NUMBERED_LINE = re.compile(r"^([ \t]*)(\d{1,3})[.)][ \t]+(?=\S)")
+#: A list line as markdown_text draws it, for a front-end's hanging indent.
+LIST_LINE = re.compile(rf"^([ \t]*)({BULLET}|\d{{1,3}}\.) ")
 
 
-def markdown_inline(text: str) -> str:
-    """Turn user-written text with inline Markdown emphasis into safe Textual
-    markup: `**bold**`, `*italic*` and `***both***` (nesting works); all other
-    text is escaped, so brackets can't be read as markup.
+def markdown_text(text: str) -> str:
+    """Turn user-written text with a little Markdown into safe Textual
+    markup: `**bold**`, `*italic*`, `***both***` and `~~struck through~~`
+    (nesting works), and lines starting `- ` (or `* `, `+ `) as bullets
+    and `1. ` (or `1) `) as numbered items; all other text is escaped, so
+    brackets can't be read as markup.
 
-    An asterisk run only opens emphasis when the character after it isn't
-    whitespace and only closes when the character before it isn't, so "5 * 3"
-    stays literal; unmatched runs and runs of four or more stay literal too;
-    `\\*` is a literal asterisk. Emphasis never spans a blank line, so a stray
-    `*` can't italicise half the page. Deliberately just emphasis -- no
-    headings, lists or links."""
+    An emphasis marker only opens when the character after it isn't
+    whitespace and only closes when the character before it isn't, so
+    "5 * 3" stays literal; unmatched markers and runs of four or more
+    asterisks stay literal too; `\\*` and `\\~` are literal. Emphasis never
+    spans a blank line or runs from one list item into the next, so a
+    stray `*` can't italicise half the page. Deliberately small: no
+    headings, tables or links."""
     parts = re.split(r"(\n[ \t]*\n)", text)  # paragraphs, keeping the separators
     return "".join(
-        part if index % 2 else _emphasis_paragraph(part)
-        for index, part in enumerate(parts)
+        part if index % 2 else _paragraph(part) for index, part in enumerate(parts)
     )
 
 
-def _emphasis_paragraph(text: str) -> str:
-    # Pass 1: split into escaped text pieces and asterisk runs.
-    pieces: list[
-        str | tuple[int, bool, bool]
-    ] = []  # text, or (run length, can open, can close)
+def _paragraph(text: str) -> str:
+    """One paragraph. Each list item (with any lines run on from it) is its
+    own run of emphasis, as are the plain lines before the first."""
+    runs: list[tuple[str, list[str]]] = []  # (list marker drawn, lines)
+    for line in text.split("\n"):
+        bullet = _BULLET_LINE.match(line)
+        numbered = None if bullet else _NUMBERED_LINE.match(line)
+        if bullet:
+            runs.append((f"{bullet.group(1)}{BULLET} ", [line[bullet.end() :]]))
+        elif numbered:
+            marker = f"{numbered.group(1)}{numbered.group(2)}. "
+            runs.append((marker, [line[numbered.end() :]]))
+        elif runs:
+            runs[-1][1].append(line)
+        else:
+            runs.append(("", [line]))
+    return "\n".join(marker + _emphasis("\n".join(lines)) for marker, lines in runs)
+
+
+#: A piece of a run of text: escaped text, or a run of one marker
+#: character as (the character, its length, can open, can close).
+_Piece = str | tuple[str, int, bool, bool]
+
+
+def _emphasis(text: str) -> str:
+    return _pair(_pieces(text))
+
+
+def _pieces(text: str) -> list[_Piece]:
+    """Pass 1: `text` split into escaped text pieces and marker runs."""
+    pieces: list[_Piece] = []
     buffer: list[str] = []
     i = 0
     while i < len(text):
         char = text[i]
-        if char == "\\" and i + 1 < len(text) and text[i + 1] in "*\\":
-            buffer.append(text[i + 1])  # an escaped asterisk (or backslash)
+        if char == "\\" and i + 1 < len(text) and text[i + 1] in "*~\\":
+            buffer.append(text[i + 1])  # an escaped marker (or backslash)
             i += 2
-        elif char == "*":
+        elif char in "*~":
             j = i
-            while j < len(text) and text[j] == "*":
+            while j < len(text) and text[j] == char:
                 j += 1
             if buffer:
                 pieces.append(escape("".join(buffer)))
@@ -110,6 +149,7 @@ def _emphasis_paragraph(text: str) -> str:
             after = text[j] if j < len(text) else ""
             pieces.append(
                 (
+                    char,
                     j - i,
                     bool(after) and not after.isspace(),
                     bool(before) and not before.isspace(),
@@ -121,9 +161,12 @@ def _emphasis_paragraph(text: str) -> str:
             i += 1
     if buffer:
         pieces.append(escape("".join(buffer)))
+    return pieces
 
-    # Pass 2: pair up openers and closers. Every marker starts out literal
-    # and is only rewritten into a tag once it finds its partner.
+
+def _pair(pieces: list[_Piece]) -> str:
+    """Pass 2: pair up openers and closers. Every marker starts out literal
+    and is only rewritten into a tag once it finds its partner."""
     output: list[str] = []
     stack: list[tuple[str, int]] = []  # (marker, slot in `output`)
 
@@ -141,8 +184,13 @@ def _emphasis_paragraph(text: str) -> str:
         if isinstance(piece, str):
             output.append(piece)
             continue
-        length, can_open, can_close = piece
-        if length == 1:
+        char, length, can_open, can_close = piece
+        if char == "~":
+            if length == 2:
+                handle("~~", can_open, can_close)
+            else:
+                output.append("~" * length)
+        elif length == 1:
             handle("*", can_open, can_close)
         elif length == 2:
             handle("**", can_open, can_close)

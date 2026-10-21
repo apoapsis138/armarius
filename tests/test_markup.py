@@ -1,7 +1,7 @@
 import pytest
 from textual.content import Content
 
-from ars_magica_manager.markup import markdown_inline
+from ars_magica_manager.markup import markdown_text
 
 
 @pytest.mark.parametrize(
@@ -17,7 +17,7 @@ from ars_magica_manager.markup import markdown_inline
     ],
 )
 def test_emphasis_becomes_markup(text, expected):
-    assert markdown_inline(text) == expected
+    assert markdown_text(text) == expected
 
 
 @pytest.mark.parametrize(
@@ -29,42 +29,89 @@ def test_emphasis_becomes_markup(text, expected):
         "oops**",
         "a ** b ** c",
         "****",  # four or more: literal
-        "* bullet-looking line",
+        "~one~ and ~~~three~~~",  # only a pair of tildes strikes through
+        "a ~~ b ~~ c",
     ],
 )
-def test_asterisks_that_are_not_emphasis_stay_literal(text):
-    assert markdown_inline(text) == text
+def test_markers_that_are_not_emphasis_stay_literal(text):
+    assert markdown_text(text) == text
 
 
-def test_backslash_gives_a_literal_asterisk():
-    assert markdown_inline(r"\*not italic\*") == "*not italic*"
-    assert markdown_inline(r"a \ b") == r"a \ b"  # and an escaped backslash
+def test_strikethrough_becomes_markup():
+    assert markdown_text("a ~~gone~~ b") == "a [s]gone[/s] b"
+    assert markdown_text("**~~both~~**") == "[b][s]both[/s][/b]"
+
+
+def test_backslash_gives_a_literal_marker():
+    assert markdown_text(r"\*not italic\*") == "*not italic*"
+    assert markdown_text(r"\~~not struck\~~") == "~~not struck~~"
+    assert markdown_text(r"a \ b") == r"a \ b"  # and an escaped backslash
 
 
 def test_everything_else_is_escaped_so_brackets_cannot_become_markup():
     # Capitalised tags were the case Textual's own escape() missed.
     assert (
-        markdown_inline("**[Tower]** of *[Iris]*")
-        == r"[b]\[Tower][/b] of [i]\[Iris][/i]"
+        markdown_text("**[Tower]** of *[Iris]*") == r"[b]\[Tower][/b] of [i]\[Iris][/i]"
     )
-    assert markdown_inline("[b]not bold[/b]") == r"\[b]not bold\[/b]"
+    assert markdown_text("[b]not bold[/b]") == r"\[b]not bold\[/b]"
 
 
 def test_emphasis_never_spans_a_blank_line():
     # The stray * in paragraph one must not pair with the * in paragraph two.
     text = "para *one\n\nstill *literal*"
-    assert markdown_inline(text) == "para *one\n\nstill [i]literal[/i]"
+    assert markdown_text(text) == "para *one\n\nstill [i]literal[/i]"
 
 
 def test_multi_line_text_and_blank_lines_are_preserved():
     text = "Accessible Value: **250**\n\nLocation: sealed *Muto*\nContents: books"
-    assert markdown_inline(text) == (
+    assert markdown_text(text) == (
         "Accessible Value: [b]250[/b]\n\nLocation: sealed [i]Muto[/i]\nContents: books"
     )
 
 
 def test_output_parses_into_the_expected_styled_spans():
-    content = Content.from_markup(markdown_inline("a **bold** and *italic* [Tower]"))
+    content = Content.from_markup(markdown_text("a **bold** and *italic* [Tower]"))
     assert content.plain == "a bold and italic [Tower]"
     styled = {(content.plain[s.start : s.end], str(s.style)) for s in content.spans}
     assert styled == {("bold", "b"), ("italic", "i")}
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("- one\n- two", "• one\n• two"),
+        ("* one\n+ two", "• one\n• two"),
+        ("  - nested", "  • nested"),
+        ("1. one\n2) two\n10. ten", "1. one\n2. two\n10. ten"),
+        ("- **Lead** words", "• [b]Lead[/b] words"),
+        # A line run on from an item belongs to it.
+        ("- an *item\n  run on* here", "• an [i]item\n  run on[/i] here"),
+    ],
+)
+def test_list_lines_become_bullets_and_numbers(text, expected):
+    assert markdown_text(text) == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "-not a bullet",  # no space after the marker
+        "- ",  # nothing after it
+        "1990 was a year",
+        "1234. too many digits",
+        "a - b",  # not at the start of a line
+    ],
+)
+def test_lines_that_are_not_list_items_stay_as_written(text):
+    assert markdown_text(text) == text
+
+
+def test_emphasis_never_runs_from_one_list_item_into_the_next():
+    assert markdown_text("- a *stray\n- b *pair*") == "• a *stray\n• b [i]pair[/i]"
+
+
+def test_list_output_parses_with_its_strikethrough():
+    content = Content.from_markup(markdown_text("- ~~gone~~ [Tower]"))
+    assert content.plain == "• gone [Tower]"
+    styled = {(content.plain[s.start : s.end], str(s.style)) for s in content.spans}
+    assert styled == {("gone", "s")}

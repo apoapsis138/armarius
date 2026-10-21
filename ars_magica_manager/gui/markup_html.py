@@ -1,10 +1,12 @@
 """The app's text markup as Qt rich text (HTML).
 
 The shared core writes its text in a small markup (markup.py): [b] bold,
-[i] italic, [dim], a theme colour such as [$label] or [$text-error], or
-several at once ([i $label]), each closed by [/], [/b] or [/i]; "\\[" is
-a literal bracket. This turns that into the HTML subset a QLabel shows,
-taking the colours from the palette.
+[i] italic, [s] struck through, [dim], a theme colour such as [$label] or
+[$text-error], or several at once ([i $label]), each closed by [/], [/b],
+[/i] or [/s]; "\\[" is a literal bracket. This turns that into the HTML
+subset a QLabel shows, taking the colours from the palette. A bulleted or
+numbered line (markup.LIST_LINE) hangs: its wrapped lines start under its
+words, not under the bullet.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from __future__ import annotations
 import html
 import re
 
+from ..markup import BULLET, LIST_LINE
 from .themes import Palette
 
 _TAG = re.compile(r"(?<!\\)\[(/?)([^\[\]\n]*)\]")
@@ -27,6 +30,8 @@ def _open(spec: str, palette: Palette) -> tuple[str, str]:
             styles.append("font-weight:700")
         elif word == "i":
             styles.append("font-style:italic")
+        elif word == "s":
+            styles.append("text-decoration:line-through")
         elif word == "dim":
             styles.append(f"color:{palette['dim']}")
         elif word.startswith("$") and word[1:] in palette.colours:
@@ -58,12 +63,51 @@ def to_html(text: str, palette: Palette, *, pre: bool = False) -> str:
     body = "".join(out).replace("\\[", "[")
     if pre:
         return f'<div style="white-space:pre-wrap">{body}</div>'
+    if any(LIST_LINE.match(plain(line)) for line in text.split("\n")):
+        return _hanging(body)
     return body.replace("\n", "<br>")
+
+
+#: How far each level of a nested list (two spaces before its marker)
+#: sits in, in pixels.
+_NEST = 22
+
+_LEADING_TAGS = re.compile(r"^((?:<span[^>]*>)*)")
+
+
+def _hanging(body: str) -> str:
+    """`body` (HTML, a line per line of text) as one block per line, each
+    list line a two-cell row (its bullet or number, then its words) so its
+    wrapped lines line up under its words."""
+    blocks: list[str] = []
+    for line in body.split("\n"):
+        words = _LEADING_TAGS.sub("", line, count=1)
+        tags = line[: len(line) - len(words)]
+        found = LIST_LINE.match(html.unescape(words))
+        if found:
+            depth = len(found.group(1).expandtabs(4)) // 2
+            marker = found.group(2)
+            rest = words[len(html.escape(found.group(0))) :]
+            blocks.append(
+                '<table cellspacing="0" cellpadding="0" '
+                f'style="margin-left:{depth * _NEST}px"><tr>'
+                f'<td width="{_marker_width(marker)}">{marker}</td>'
+                f"<td>{tags}{rest}</td></tr></table>"
+            )
+        else:
+            blocks.append(f'<p style="margin:0">{line or "&nbsp;"}</p>')
+    return "".join(blocks)
+
+
+def _marker_width(marker: str) -> int:
+    """The width, in pixels, of a list line's bullet or number cell: one
+    width for every number up to 99, so a list's words line up."""
+    return 18 if marker == BULLET else 30
 
 
 def _looks_like_markup(spec: str) -> bool:
     return all(
-        word in ("b", "i", "dim") or word.startswith("$") for word in spec.split()
+        word in ("b", "i", "s", "dim") or word.startswith("$") for word in spec.split()
     )
 
 

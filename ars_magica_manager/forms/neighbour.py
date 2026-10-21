@@ -12,7 +12,7 @@ from typing import Any
 
 from .. import neighbour_filter, neighbours, places, sourcebooks
 from ..commands import Choice, Choose, Command, Confirm, Form, SectionOps, not_offered
-from ..form_spec import DialogField, pairs
+from ..form_spec import EMPHASIS_HINT, DialogField, pairs
 from ..markup import escape
 from ..models import DETAIL_LEVELS, REALMS, Neighbour, Saga
 from ..neighbour_lists import KindList
@@ -61,7 +61,7 @@ def neighbour_fields(
             "Summary",
             "area",
             n.summary,
-            hint="A paragraph: who they are and what they want.",
+            hint=f"A paragraph: who they are and what they want. {EMPHASIS_HINT}",
         ),
         DialogField(
             "detail",

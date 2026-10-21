@@ -20,7 +20,7 @@ from __future__ import annotations
 from typing import Any
 
 from . import catalog, sourcebooks, storage
-from .markup import escape, fit, markdown_inline
+from .markup import escape, fit, markdown_text
 from .models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
@@ -321,5 +321,5 @@ def detail_text(saga: Saga, chosen: tuple[str, Entry] | None) -> str:
         state = "" if sourcebooks.in_play(entry.source, books) else " (not in play)"
         lines.insert(3, f"[b]Source:[/] {escape(title)}{state}")
     if entry.description.strip():
-        lines += ["", markdown_inline(entry.description.strip())]
+        lines += ["", markdown_text(entry.description.strip())]
     return "\n".join(lines)

@@ -20,7 +20,7 @@ from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
 from ..covenants import home_aura
-from ..markup import aligned, escape, inherited, problem
+from ..markup import aligned, escape, inherited, markdown_text, problem
 from ..models import (
     ABILITY_CATEGORIES,
     FULL,
@@ -112,14 +112,14 @@ def biographical_left_text(saga: Saga, character: Character) -> str:
             f"Hair: {escape(d.hair) or '(not set)'}",
             f"Eyes: {escape(d.eyes) or '(not set)'}",
             f"Handedness: {d.handedness}",
-            f"Physical Description: {escape(d.physical_description) or '(not set)'}",
+            f"Physical Description: {markdown_text(d.physical_description) or '(not set)'}",
         ]
     )
 
 
 def biographical_right_text(character: Character) -> str:
     """Biographical Detail's second column: the free-text Biography."""
-    return escape(character.description.biography) or "(none recorded)"
+    return markdown_text(character.description.biography) or "(none recorded)"
 
 
 def aging_text(character: Character) -> str:
@@ -142,7 +142,7 @@ def aging_text(character: Character) -> str:
         [
             *lines,
             "Effects of Aging:",
-            escape(a.effects) or "(none recorded)",
+            markdown_text(a.effects) or "(none recorded)",
             "",
             f"Warping: {a.warping_score}/{a.warping_points}",
         ]

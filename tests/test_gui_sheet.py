@@ -30,7 +30,7 @@ from ars_magica_manager.gui import choices, pictures, sounds
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.familiar import FamiliarPage
-from ars_magica_manager.gui.figures import Bookcase, BookSpine, CordFigure, Dial
+from ars_magica_manager.gui.figures import Bookcase, BookSpine, CordFigure, Dial, prose
 from ars_magica_manager.gui.forms import ConfirmDialog, FieldsDialog
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.markup_html import plain, to_html
@@ -681,6 +681,33 @@ def test_markup_becomes_spans_in_the_palettes_colours():
         f'<span style="color:{SCRIPTORUM["label"]}">x [y]</span>'
     )
     assert plain("[i $label]1220[/]") == "1220"
+
+
+def test_struck_text_and_list_lines_become_html():
+    assert to_html("[s]gone[/s]", SCRIPTORUM) == (
+        '<span style="text-decoration:line-through">gone</span>'
+    )
+    html = to_html("Found:\n• [b]Study[/b], sealed\n  • nested\n10. ten", SCRIPTORUM)
+    # Each list line is a row: its bullet or number in one cell and its
+    # words in the next, so a wrapped line hangs under the words.
+    assert html.count("<table") == 3
+    assert '<td width="18">•</td><td><span style="font-weight:700">Study' in html
+    assert 'style="margin-left:22px"' in html  # the nested item sits in
+    assert '<td width="30">10.</td><td>ten</td>' in html
+    assert '<p style="margin:0">Found:</p>' in html
+
+
+def test_prose_shows_its_formatting(app):
+    shown = prose("- **Lead** words\n- *more*", SCRIPTORUM)
+    # Opening with a list, it has no initial: the label is the body itself.
+    assert isinstance(shown, QLabel)
+    assert shown.textFormat() == Qt.TextFormat.RichText
+    assert '<span style="font-weight:700">Lead</span>' in shown.text()
+    assert "**" not in shown.text()
+    opened = prose("Hidden **things**", SCRIPTORUM)
+    letter, body = opened.findChildren(QLabel)
+    assert letter.text() == "H"
+    assert body.text() == 'idden <span style="font-weight:700">things</span>'
 
 
 def test_an_art_row_carries_its_score_and_experience():

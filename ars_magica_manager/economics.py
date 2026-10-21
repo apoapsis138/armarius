@@ -18,7 +18,7 @@ from . import inhabitants as inh
 from . import possessions as pos
 from .covenants import covenant_modifiers
 from .laboratories import lab_characteristic_total
-from .markup import aligned, escape, markdown_inline, problem
+from .markup import aligned, escape, markdown_text, problem
 from .models import (
     INCOME_EFFECT_MULTIPLIERS,
     INCOME_TYPE_DEFAULTS,
@@ -563,7 +563,7 @@ def source_detail_text(source: IncomeSource | None) -> str:
     if source.note.strip():
         lines += ["", "[b]Note:[/]", escape(source.note.strip())]
     if source.description.strip():
-        lines += ["", "[b]Description:[/]", markdown_inline(source.description.strip())]
+        lines += ["", "[b]Description:[/]", markdown_text(source.description.strip())]
     return "\n".join(lines)
 
 

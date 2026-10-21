@@ -20,7 +20,7 @@ from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 from .. import acta, artwork, hall, meeting, tribunal_packages, tribunals, world
 from ..commands import Command, Form, Refuse, SectionOps, Then
 from ..forms import tribunal as tribunal_forms
-from ..markup import aligned, escape
+from ..markup import aligned, escape, markdown_text
 from ..models import Case, Saga, Tribunal, TribunalDiaryEntry
 from ..sections import (
     ATTENDANCE_SECTION,
@@ -150,7 +150,7 @@ class TribunalPage(QWidget):
         self.codex.inspect(
             covenant.name,
             f"{covenant.detail} · {world.votes_text(self.saga, covenant)} votes",
-            escape(summary),
+            markdown_text(summary),
         )
 
     def _show_magus(self, row: int) -> None:

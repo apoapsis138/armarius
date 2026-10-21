@@ -143,9 +143,7 @@ def spell_fields(spell: Spell | None) -> list[DialogField]:
             attr(spell, "source", ""),
             placeholder="e.g. a house rule, or a book",
         ),
-        DialogField(
-            "description", "Description", "area", attr(spell, "description", "")
-        ),
+        description_field(attr(spell, "description", "")),
     ]
 
 

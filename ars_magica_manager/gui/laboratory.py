@@ -41,7 +41,7 @@ from ..forms import library as library_forms
 from ..forms import menu as menu_forms
 from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
-from ..markup import escape
+from ..markup import escape, markdown_text
 from ..models import LAB_TEXT_KINDS, Book, Laboratory, Saga
 from ..sheets import laboratory as ls
 from . import pictures
@@ -55,6 +55,7 @@ from .character_sheet import (
 from .editing import Chooser, Run, choose_cards, give_verb, verb_buttons
 from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
 from .manage import RecordControls
+from .markup_html import plain
 from .menus import Placer
 from .pages import card_grid
 from .themes import Palette
@@ -807,4 +808,5 @@ class LaboratoryPage(QWidget):
 
 def _first_line(words: str) -> str:
     line = words.strip().splitlines()[0] if words.strip() else ""
+    line = plain(markdown_text(line))
     return line if len(line) <= 90 else line[:87] + "…"

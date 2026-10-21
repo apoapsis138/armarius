@@ -9,7 +9,7 @@ from typing import Any
 
 from .. import catalog, creation, deletion, places, vassals, world
 from ..commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps
-from ..form_spec import DialogField, attr, pairs
+from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
 from ..markup import escape
 from ..models import (
     ATTITUDE_RANGE,
@@ -491,7 +491,8 @@ def sketch_covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             "In the Saga",
             "area",
             covenant.summary,
-            hint="A sentence or a paragraph: who they are to the player covenants.",
+            hint="A sentence or a paragraph: who they are to the player "
+            f"covenants. {EMPHASIS_HINT}",
         ),
     ]
     if covenant.detail != LINE:

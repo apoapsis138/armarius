@@ -14,7 +14,7 @@ from textual.widgets import Button, Collapsible, Static, TabbedContent
 
 from .... import meeting, tribunal_packages
 from ....forms import tribunal as tribunal_forms
-from ....markup import aligned, escape, markdown_inline
+from ....markup import aligned, escape, markdown_text
 from ....models import Case, Saga, Tribunal
 from ....sections import (
     ATTENDANCE_SECTION,
@@ -134,7 +134,7 @@ class TribunalSheetView(SheetView):
         if not lede:
             return "[$label]In the Saga: not written yet. Edit the Tribunal to say.[/]"
         more = f"\n[$label]{tribunal_sheet.MORE_UNDER_HISTORY}[/]" if rest else ""
-        return markdown_inline(lede) + more
+        return markdown_text(lede) + more
 
     def _grid_section(
         self,
@@ -333,14 +333,14 @@ class TribunalSheetView(SheetView):
         _lede, rest = tribunal_sheet.summary_parts(self.tribunal)
         history = self.tribunal.history.strip()
         told = (
-            markdown_inline(history)
+            markdown_text(history)
             if history
             else "[$label]History: not written yet. Edit the Tribunal (e) to tell it.[/]"
         )
         if not rest:
             return told
         return (
-            f"[$label]In the Saga, continued[/]\n{markdown_inline(rest)}"
+            f"[$label]In the Saga, continued[/]\n{markdown_text(rest)}"
             f"\n\n[$label]History[/]\n{told}"
         )
 

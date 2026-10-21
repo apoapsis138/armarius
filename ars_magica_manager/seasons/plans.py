@@ -13,7 +13,7 @@ from .. import enchanted_devices as ed
 from .. import spells as spl
 from ..familiars import familiar_of
 from ..inhabitants import AUTO_KINDS, character_kind
-from ..markup import escape, problem, todo
+from ..markup import escape, markdown_text, problem, todo
 from ..models import SEASONS, Book, Character, Saga, SeasonPlan, next_season
 from ..rules import activities as rules
 from ..rules import apprentice_seasons as aps
@@ -568,7 +568,7 @@ def _plan_text(
     if note:
         lines.append(todo(escape(note)))
     if plan.details.strip() and worked.activity and worked.activity.gives_xp:
-        lines.append(f"[dim]Notes:[/] {escape(plan.details.strip())}")
+        lines.append(f"[dim]Notes:[/] {markdown_text(plan.details.strip())}")
     if worked.activity is not None:
         lines.append(f"[dim]Rule: {escape(_cite(worked.activity.source))}[/]")
     return "\n".join(lines)

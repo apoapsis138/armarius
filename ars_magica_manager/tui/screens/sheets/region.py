@@ -16,7 +16,7 @@ from textual.widgets import Button, Collapsible, Static, TabbedContent
 
 from .... import arms, neighbour_filter, neighbours
 from ....forms import neighbour as neighbour_forms
-from ....markup import aligned, escape, markdown_inline
+from ....markup import aligned, escape, markdown_text
 from ....models import Covenant, Neighbour, Saga
 from ....neighbour_lists import KindTab
 from ....sections import (
@@ -253,7 +253,7 @@ class NeighbourSheetView(SheetView):
         summary = self.neighbour.summary.strip()
         if not summary:
             return "[$label]Summary: not written yet. Edit the neighbour to say.[/]"
-        return markdown_inline(summary)
+        return markdown_text(summary)
 
     def _standing_tab(self) -> ComposeResult:
         yield from self._relations(self.neighbour, attitude=self.kind.attitude)

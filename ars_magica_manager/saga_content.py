@@ -17,7 +17,7 @@ from typing import Any
 
 from . import catalog, sourcebooks, traditions
 from . import house_rules as hr
-from .markup import escape, fit, markdown_inline
+from .markup import escape, fit, markdown_text
 from .models import Saga, SagaSource
 
 
@@ -360,5 +360,5 @@ def hidden_detail(chosen: tuple[str, Any] | None) -> str:
     ]
     description = getattr(entry, "description", "") or ""
     if description.strip():
-        lines += ["", markdown_inline(description.strip())]
+        lines += ["", markdown_text(description.strip())]
     return "\n".join(lines)

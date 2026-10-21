@@ -44,7 +44,7 @@ from ....covenants import (
 from ....forms import ahead as ahead_forms
 from ....forms import world as world_forms
 from ....forms.secrets import secrets_ops
-from ....markup import aligned, escape, markdown_inline, problem
+from ....markup import aligned, escape, markdown_text, problem
 from ....models import (
     FULL,
     INHABITANT_KINDS,
@@ -198,7 +198,7 @@ class CovenantSheetView(SheetView):
         summary = self.covenant.summary.strip()
         if not summary:
             return "[$label]In the Saga: not written yet. Edit the covenant to say.[/]"
-        return markdown_inline(summary)
+        return markdown_text(summary)
 
     def _overview_tab(self) -> ComposeResult:
         """A Line or Sketch covenant: its magi and their votes, What Matters
@@ -842,7 +842,7 @@ class CovenantSheetView(SheetView):
     def _description_text(self) -> str:
         # Backed by Covenant.notes (the free-text field set at creation).
         text = self.covenant.notes.strip()
-        return markdown_inline(text) if text else "(no description)"
+        return markdown_text(text) if text else "(no description)"
 
     def _reputation_rows(self) -> list[tuple[int, str]]:
         """The covenant's Reputations as (index, label) rows. A bad Reputation

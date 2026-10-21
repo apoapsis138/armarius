@@ -15,7 +15,7 @@ from typing import Any
 from .. import creatures, places
 from ..arts import ARTS, FORMS
 from ..commands import Confirm, Form, SectionOps, delete
-from ..form_spec import DialogField, attr, pairs
+from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
 from ..markup import escape
 from ..models import (
     DETAIL_LEVELS,
@@ -340,7 +340,13 @@ def description_form(creature: Creature) -> Form:
 
     def fields() -> list[DialogField]:
         return [
-            DialogField("appearance", "Appearance", "area", creature.appearance),
+            DialogField(
+                "appearance",
+                "Appearance",
+                "area",
+                creature.appearance,
+                hint=EMPHASIS_HINT,
+            ),
             DialogField(
                 "equipment",
                 "Equipment",
@@ -353,7 +359,7 @@ def description_form(creature: Creature) -> Form:
                 "Notes",
                 "area",
                 creature.notes,
-                hint="Its habits, its lair, the story it belongs to.",
+                hint=f"Its habits, its lair, the story it belongs to. {EMPHASIS_HINT}",
             ),
         ]
 

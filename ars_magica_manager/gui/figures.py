@@ -29,11 +29,13 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import artwork, world
+from ..markup import markdown_text
 from ..models import Attitude
 from ..sheets import character as cs
 from ..sheets import covenant as cs_cov
 from ..sheets import laboratory as cs_lab
 from . import pictures
+from .markup_html import to_html
 from .paper import lift, shade
 from .themes import Palette
 from .widgets import mix, serif, text
@@ -164,13 +166,16 @@ def fact_grid(
 
 
 def prose(words: str, p: Palette, *, initial: bool = True) -> QWidget:
-    """Free text in the book face, opening with a rubricated initial that
-    hangs beside it, as the character's name does; nothing recorded is a
-    dim italic line."""
+    """Free text in the book face, with its formatting (markdown_text),
+    opening with a rubricated initial that hangs beside it, as the
+    character's name does, when it opens with a letter; nothing recorded is
+    a dim italic line."""
     if not words.strip():
         return text("Nothing recorded yet.", p["dim"], serif(12.5, italic=True))
-    body = text(words[1:] if initial else words, p["foreground"], serif(13), wrap=True)
-    body.setTextFormat(Qt.TextFormat.PlainText)
+    initial = initial and words[:1].isalpha()
+    shown = markdown_text(words[1:] if initial else words)
+    body = text(to_html(shown, p), p["foreground"], serif(13), wrap=True)
+    body.setTextFormat(Qt.TextFormat.RichText)
     body.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
     if not initial:
         return body

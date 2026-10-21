@@ -18,8 +18,11 @@ from typing import Any
 from .markup import escape
 from .models import Saga
 
-#: The hint under every free-text field that is shown with markdown_inline.
-EMPHASIS_HINT = "Supports **bold** and *italic*."
+#: The hint under every free-text field that is shown with markdown_text.
+EMPHASIS_HINT = (
+    "Formatting: **bold**, *italic*, ~~struck through~~; start a line with "
+    "- for a bullet or 1. for a numbered list."
+)
 
 
 @dataclass

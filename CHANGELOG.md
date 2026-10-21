@@ -107,6 +107,33 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.115.0 — 2026-10-21
+
+### Pagina
+
+- **Formatting in what you write.** The longer text you write yourself,
+  such as a Biography, a covenant's Description, a record's Secrets, a
+  book's Description or a diary entry's Details, shows `**bold**`,
+  `*italic*` and `~~struck through~~` text, lines starting `- ` as
+  bullets and lines starting `1. ` as numbered items (two spaces in
+  front nests an item). The hint under each such box lists the marks.
+- The same text is formatted wherever it's shown, in the terminal and
+  the desktop version alike: a Biography, Physical Description and
+  Effects of Aging, summaries and a Tribunal's History, a creature's
+  Appearance and Notes, spell descriptions and a season plan's Notes
+  now take it too.
+
+### Illuminatio
+
+- The desktop sheets show that formatting in the text itself, not only
+  in the details pane: the hint promised bold and italic where the
+  sheets showed the asterisks. A bulleted or numbered item that wraps
+  lines up under its words, not under its bullet.
+
+### Glossa
+
+- A guide, How to format your notes, with every mark and an example.
+
 ## 2.114.0 — 2026-10-21
 
 ### Book of Hours

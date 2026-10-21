@@ -33,6 +33,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import saga_overview as ov
+from ..markup import markdown_text
 from ..models import SEASONS
 from . import pictures
 from .themes import Palette
@@ -235,7 +236,7 @@ def season_text(season: ov.Season | None) -> str:
     state = "Planned" if season.planned else "Done"
     lines = [f"[b]{season.label}[/]", f"[$label]{season.kind}  ·  {state}[/]"]
     if season.detail:
-        lines += ["", season.detail]
+        lines += ["", markdown_text(season.detail)]
     return "\n".join(lines)
 
 

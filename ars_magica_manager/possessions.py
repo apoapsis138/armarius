@@ -12,7 +12,7 @@ from typing import Any
 
 from . import catalog, storage, vis
 from .laboratories import lab_build_points, lab_characteristic_total
-from .markup import escape, fit, markdown_inline
+from .markup import escape, fit, markdown_text
 from .models import (
     GEAR_POINTS,
     GEAR_QUALITY_DEFAULT,
@@ -476,7 +476,7 @@ def detail_text(entry: PossessionEntry | None) -> str:
             f"[dim]A laboratory of this covenant: {escape(entry.lab.name)}.[/]"
         )
     if entry.description.strip():
-        lines += ["", "[b]Description:[/]", markdown_inline(entry.description.strip())]
+        lines += ["", "[b]Description:[/]", markdown_text(entry.description.strip())]
     return "\n".join(lines)
 
 

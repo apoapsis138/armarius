@@ -174,5 +174,6 @@ What it looks like, what it carries and any notes, then its links.
 ### Description
 <!-- help: section-cr-description -->
 
-Its appearance, its equipment and any notes. Notes can use *italic*
-and **bold**.
+Its appearance, its equipment and any notes. Each can use
+[formatting](help:guide-formatting): bold, italic, strikethrough and
+bulleted or numbered lists.

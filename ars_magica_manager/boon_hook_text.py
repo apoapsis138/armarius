@@ -17,7 +17,7 @@ from .covenants import (
     covenant_boon_points,
     covenant_hook_points,
 )
-from .markup import escape, markdown_inline
+from .markup import escape, markdown_text
 from .models import (
     BOON_HOOK_DESCRIPTION,
     Covenant,
@@ -126,7 +126,7 @@ def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
     # The user's own description leads; the official rules text follows.
     description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
     if description:
-        lines += ["", "[b]Description:[/]", markdown_inline(description)]
+        lines += ["", "[b]Description:[/]", markdown_text(description)]
     lines += ["", "[b]Rules:[/]", escape(definition.description)]
     if definition.source:
         lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]

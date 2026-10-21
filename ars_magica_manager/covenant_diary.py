@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 from . import catalog
 from .arts import ART_ABBREVIATIONS
-from .markup import escape, markdown_inline
+from .markup import escape, markdown_text
 from .models import (
     BOON_HOOK_DETAIL,
     SEASONS,
@@ -309,7 +309,5 @@ def info_text(covenant: Covenant, index: int | None) -> str:
                 if entry.status != STORY_EVENT_STATUSES[1]:
                     note += "; these count once the event is Resolved"
                 lines.append(f"[dim]{pool.name}: {note}[/]")
-    details = (
-        markdown_inline(entry.details) if entry.details else "[dim](no details)[/]"
-    )
+    details = markdown_text(entry.details) if entry.details else "[dim](no details)[/]"
     return "\n".join([*lines, "", details])

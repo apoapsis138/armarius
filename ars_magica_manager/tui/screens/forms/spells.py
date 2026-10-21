@@ -8,7 +8,7 @@ from typing import Any
 
 from .... import spells as spl
 from ....arts import FORMS, TECHNIQUES
-from ....form_spec import DialogField, attr, pairs
+from ....form_spec import DialogField, attr, description_field, pairs
 from ....forms import spell as spell_forms
 from ....markup import escape
 from ....models import (
@@ -126,9 +126,7 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             attr(spell, "source", ""),
             placeholder="e.g. a house rule, or a book",
         ),
-        DialogField(
-            "description", "Description", "area", attr(spell, "description", "")
-        ),
+        description_field(attr(spell, "description", "")),
     ]
 
 

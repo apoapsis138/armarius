@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 from . import catalog, sourcebooks
 from .arts import ARTS, TECHNIQUES
-from .markup import escape, markdown_inline, problem, todo
+from .markup import escape, markdown_text, problem, todo
 from .models import (
     FEATURE_VIRTUE_POINTS,
     FOCUS_FLAWS,
@@ -932,7 +932,7 @@ def named_info_text(
         return f"[dim]Select {noun} to see its details.[/]"
     entry = entries[index]
     description = (
-        markdown_inline(entry.description)
+        markdown_text(entry.description)
         if entry.description
         else "[dim](no description)[/]"
     )
@@ -976,7 +976,7 @@ def connection_info_text(lab: Laboratory, index: int | None) -> str:
     if c.source:
         lines.append(f"From: {escape(c.source)}")
     if c.description:
-        lines += ["", markdown_inline(c.description)]
+        lines += ["", markdown_text(c.description)]
     return "\n".join(lines)
 
 
@@ -1038,9 +1038,7 @@ def diary_info_text(diary: Sequence[DiaryEntry], index: int | None) -> str:
     if index is None:
         return "[dim]Select a Diary entry to see its details.[/]"
     entry = diary[index]
-    details = (
-        markdown_inline(entry.details) if entry.details else "[dim](no details)[/]"
-    )
+    details = markdown_text(entry.details) if entry.details else "[dim](no details)[/]"
     return "\n".join(
         [
             f"[b]{escape(entry.name)}[/]",

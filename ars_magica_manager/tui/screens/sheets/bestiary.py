@@ -14,7 +14,7 @@ from .... import sheet_text as st
 from ....boon_hook_text import counted
 from ....forms import creature as creature_forms
 from ....forms import world as world_forms
-from ....markup import aligned, escape, markdown_inline
+from ....markup import aligned, escape, markdown_text
 from ....models import Creature, Saga
 from ....sections import (
     BESTIARY_INFO_SECTION,
@@ -317,7 +317,7 @@ class CreatureSheetView(SheetView):
             ("Notes", c.notes),
         ):
             if value.strip():
-                parts.append(f"[$label]{label}:[/] {markdown_inline(value.strip())}")
+                parts.append(f"[$label]{label}:[/] {markdown_text(value.strip())}")
         return "\n\n".join(parts) or (
             "[$label]Nothing written yet. Edit to say what it looks like and "
             "where it lairs.[/]"

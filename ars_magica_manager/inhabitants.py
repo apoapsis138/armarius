@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import catalog, covenant_diary, storage
-from .markup import aligned, escape, fit, inherited, markdown_inline
+from .markup import aligned, escape, fit, inherited, markdown_text
 from .models import (
     COMPANION_TYPES,
     INHABITANT_KINDS,
@@ -707,7 +707,7 @@ def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
             f"[dim]From the character sheet of {escape(entry.character.name)}.[/]"
         )
     if entry.description.strip():
-        lines += ["", "[b]Description:[/]", markdown_inline(entry.description.strip())]
+        lines += ["", "[b]Description:[/]", markdown_text(entry.description.strip())]
     return "\n".join(lines)
 
 

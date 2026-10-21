@@ -22,7 +22,7 @@ from ..commands import (
     SectionOps,
     delete,
 )
-from ..form_spec import DialogField, attr, pairs
+from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
 from ..markup import escape
 from ..models import (
     CASE_KINDS,
@@ -136,14 +136,15 @@ def tribunal_fields(saga: Saga, tribunal: Tribunal | None) -> list[DialogField]:
             "In the Saga",
             "area",
             t.summary,
-            hint="A sentence or a paragraph: what the Tribunal is like.",
+            hint=f"A sentence or a paragraph: what the Tribunal is like. {EMPHASIS_HINT}",
         ),
         DialogField(
             "history",
             "History",
             "area",
             t.history,
-            hint="How it came to be, era by era: shown in its own History tab.",
+            hint="How it came to be, era by era: shown in its own History tab. "
+            + EMPHASIS_HINT,
         ),
         DialogField(
             "meets_every",

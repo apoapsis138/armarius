@@ -24,7 +24,7 @@ from dataclasses import dataclass
 
 from . import books as bk
 from .arts import ART_ABBREVIATIONS
-from .markup import escape, fit, markdown_inline
+from .markup import escape, fit, markdown_text
 from .models import (
     LAB_TEXT_KINDS,
     TEXT_ENCHANTMENT,
@@ -423,7 +423,7 @@ def detail_text(saga: Saga, reader: Character | None, book: Book | None) -> str:
         standing += f"   {escape(copying)}"
     head.append(standing)
     if book.description.strip():
-        head.append(markdown_inline(book.description.strip()))
+        head.append(markdown_text(book.description.strip()))
     head.append(USING_RULE)
     return "\n".join(head)
 

@@ -18,7 +18,7 @@ from . import spells as spl
 from .arts import ART_LOOKUP
 from .book_kinds import Adjustment
 from .csv_import import parse_rows, read_text_any, skipped_preview
-from .markup import PROBLEM_GLYPH, escape, fit, markdown_inline, problem
+from .markup import PROBLEM_GLYPH, escape, fit, markdown_text, problem
 from .models import (
     BOOK_TYPES,
     TEXT_SPELL,
@@ -941,7 +941,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     lines += _research_lines(saga, book)
     lines += _study_lines(saga, book)
     if book.description.strip():
-        lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]
+        lines += ["", "[b]Description:[/]", markdown_text(book.description.strip())]
     return "\n".join(lines)
 
 

@@ -648,3 +648,43 @@ The Treasury step shows the balance and the loans due. Closing then decides each
 The term comes back on its own. [Ahead](help:section-ahead) lists the season before it ends (Spring 1235) and the season it ends (Summer 1235). Advancing into Spring 1235 says the term ends next season; advancing into Summer 1235 says it has ended and puts "Fengheld v. Keep (debated again)" on the Docket, with the old ruling in its charge, for the next meeting.
 
 **See also:** [Hold Tribunal](help:hold-tribunal), [Meeting tab](help:tab-trib-meeting), [Docket](help:tab-trib-docket)
+
+# How to format your notes
+<!-- help: guide-formatting -->
+
+The longer text you write yourself, such as a Biography, a covenant's Description, a record's Secrets or a book's Description, can carry a little formatting. A field that takes it says so in the hint under its box. You type the marks into the box as plain text, and they turn into formatting wherever the app shows what you wrote.
+
+### The marks
+<!-- help: guide-formatting-marks -->
+
+| Type this | To show |
+| --- | --- |
+| `**words**` | **bold** |
+| `*words*` | *italic* |
+| `***words***` | bold and italic together |
+| `~~words~~` | ~~struck through~~ |
+| `- ` at the start of a line (or `* `, `+ `) | a bulleted item |
+| `1. ` at the start of a line (or `1) `) | a numbered item, with your own number |
+| two spaces before the `- ` or `1. ` | an item nested under the one above |
+| a blank line | a new paragraph |
+
+A mark needs words right beside it: `5 * 3` stays as written, and so does a mark left unclosed. To show a mark itself, put a backslash before it: `\*` shows `*`. Emphasis stops at a blank line and at the next list item, so a stray mark can't run on through the rest of the text.
+
+### An example
+<!-- help: guide-formatting-example -->
+
+Typed into a covenant's Secrets:
+
+```
+Hidden Resources (not yet found):
+
+- **Matthaios's sealed study**, in the Echoing Halls.
+- **Nikephoros's vis cache**, under the Watchtower: ~~60~~ 40 pawns.
+```
+
+The sheet shows the first line as written, then two bulleted items, each opening with its name in bold and the 60 struck through. A long item wraps with its lines starting under its words, not under the bullet.
+
+### What it doesn't do
+<!-- help: guide-formatting-limits -->
+
+There are no headings, tables or links: the sheets give each piece of text its own heading already. Fields that are read one entry a line, such as a case's Evidence or a random table's Rows, take no formatting, since the app reads their lines itself. The box you type in shows the marks, not the formatting; save to see it.

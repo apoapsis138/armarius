@@ -10,7 +10,7 @@ from typing import Any
 
 from ..commands import Form, SectionOps
 from ..form_spec import EMPHASIS_HINT, DialogField
-from ..markup import escape, markdown_inline
+from ..markup import escape, markdown_text
 from ..sections import SECRETS_SECTION
 
 #: What a Secrets chapter says while nothing is written in it.
@@ -47,4 +47,4 @@ def secrets_ops(record: Any) -> dict[str, SectionOps]:
 def secrets_text(record: Any) -> str:
     """The record's secrets as markup, or a line saying there are none."""
     hidden = record.secrets.strip()
-    return markdown_inline(hidden) if hidden else f"[$label]{NONE_YET}[/]"
+    return markdown_text(hidden) if hidden else f"[$label]{NONE_YET}[/]"
