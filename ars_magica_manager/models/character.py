@@ -328,6 +328,49 @@ class BoundBeing:
 
 
 @dataclass
+class ResearchAttempt:
+    """One season's work toward a research goal, as its Research log shows
+    it: what was done, the chart roll (stress die + risk), any move of it,
+    and what came of it."""
+
+    year: int
+    season: str
+    #: "seek" (an experiment seeking a Discovery), "stabilize", "insight"
+    #: (a season studying a source) or "invent insight" (its effect).
+    kind: str
+    #: The spell, enchantment or source worked on.
+    work: str = ""
+    magnitude: int = 0
+    lab_total: int = 0
+    risk: int = 0
+    #: The stress die (None: no chart roll, as for an insight season).
+    die: int | None = None
+    #: How many botch dice a 0 would have rolled, and how many came up 0.
+    botch_dice: int = 0
+    zeroes: int = 0
+    #: The move made to the chart roll (0: none).
+    move: int = 0
+    #: The chart results, in words.
+    result: str = ""
+    discovery: bool = False
+    #: An insight season's source gave its insight.
+    insight: bool = False
+    #: Breakthrough points gained, and Warping Points taken.
+    points: int = 0
+    warping: int = 0
+    lab_id: str = ""
+
+    @property
+    def roll(self) -> int | None:
+        """The chart roll before any move: the die + the risk."""
+        return None if self.die is None else self.die + self.risk
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> ResearchAttempt:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Breakthrough:
     """A magus's original research goal: what it is, its kind and
     target (the storyguide may type a secret one), the points gained, what
@@ -368,10 +411,17 @@ class Breakthrough:
     #: Insights gained and not yet invented.
     insights: int = 0
     reached: bool = False
+    #: The storyguide keeps the target secret: the sheet shows the points
+    #: gained, not how many are needed.
+    hidden_target: bool = False
+    #: Every season's work toward it, oldest first.
+    log: list[ResearchAttempt] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Breakthrough:
-        return cls(**known_fields(cls, data))
+        values = known_fields(cls, data)
+        values["log"] = [ResearchAttempt.from_dict(a) for a in values.get("log", [])]
+        return cls(**values)
 
 
 @dataclass

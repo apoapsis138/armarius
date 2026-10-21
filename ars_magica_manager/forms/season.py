@@ -45,6 +45,7 @@ from ..seasons import pairs, repeat
 from ..seasons import plans as season_plans_text
 from ..seasons.projection import as_then
 from . import activity as activity_forms
+from . import character as character_forms
 from . import virtue as virtue_forms
 
 #: A front-end's Virtue/Flaw chooser for the form: (saga, character, side)
@@ -154,7 +155,14 @@ def season_plan_from(
         months_lost=values.get("months_lost") or 0,
         details=values.get("details") or "",
         correspondence=values.get("correspondence") or "",
-        research_kind=values.get("research_kind") or "Minor",
+        research_kind=next(
+            (
+                g.kind
+                for g in character.breakthroughs
+                if g.name == values.get("research")
+            ),
+            "Minor",
+        ),
         **{
             # A supplement activity's title and level, unless the activity
             # reads its own.
@@ -1167,17 +1175,15 @@ def _student_and_research_fields(
         DialogField(
             "research",
             "Research goal",
-            "text",
-            attr(existing, "research", ""),
-            show_if=_activity_is(experiment.INTEGRATE),
-        ),
-        DialogField(
-            "research_kind",
-            "Breakthrough",
             "select",
-            attr(existing, "research_kind", "") or "Minor",
-            options=[(k, k) for k in experiment.KINDS],
+            attr(existing, "research", "") or None,
+            options=character_forms.research_goal_options(character),
+            required=True,
+            allow_blank=True,
+            placeholder="(add one on the Research tab first)",
             show_if=_activity_is(experiment.INTEGRATE),
+            hint="The insight is toward it. Goals are added on the magus's "
+            "Research tab.",
         ),
     ]
 

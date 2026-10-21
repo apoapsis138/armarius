@@ -558,8 +558,18 @@
       "active": "section-research-goals",
       "keys": {
         "a": "FieldsDialog: Add Research Goal",
-        "e": "notice: No research goals to edit.",
-        "d": "notice: No research goals to remove.",
+        "e": "FieldsDialog: Edit Research Goal",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-research-log": {
+      "active": "section-research-log",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -778,6 +788,26 @@
     },
     "SheetSection#section-lab-totals-activity": {
       "active": "section-lab-totals-activity",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-research-goals": {
+      "active": "section-lab-research-goals",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-research-log": {
+      "active": "section-lab-research-log",
       "keys": {
         "a": "(disabled)",
         "e": "(disabled)",

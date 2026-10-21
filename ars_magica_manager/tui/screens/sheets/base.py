@@ -132,7 +132,7 @@ class SheetView(Vertical):
             tuple[Callable[[str], bool], Callable[[], None]]
         ] = []
         #: The ids of the tabs _tab() has made, in order (they are numbered
-        #: as they go; the workspace's 1 to 9 keys open them).
+        #: as they go; the workspace's 1 to 9 and 0 keys open them).
         self.tab_ids: list[str] = []
         #: The core's Add, Edit and Delete (commands.SectionOps) for each
         #: section in sections.CORE_SECTIONS this sheet shows.
@@ -161,10 +161,13 @@ class SheetView(Vertical):
         self, title: str, id: str, build: Callable[[], ComposeResult]
     ) -> LazyTabPane:
         """A tab showing what `build` composes, built when first shown. Its
-        title leads with its number: the key that opens it."""
+        title leads with its number: the key that opens it (1 to 9, then 0
+        for the tenth, as the keys run along the keyboard; any after that
+        have none)."""
         self.tab_ids.append(id)
+        number = len(self.tab_ids)
         return LazyTabPane(
-            f"{len(self.tab_ids)} {title}",
+            f"{number % 10} {title}" if number <= 10 else title,
             build,
             id=id,
             lazy=id != self.INITIAL_TAB,

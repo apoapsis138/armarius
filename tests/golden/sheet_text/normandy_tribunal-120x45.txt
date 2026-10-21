@@ -226,7 +226,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  cket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 S
+  cket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  0 Se
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -269,7 +269,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
+  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -312,7 +312,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
+  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -355,7 +355,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
+  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -398,7 +398,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
+  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

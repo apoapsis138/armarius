@@ -675,6 +675,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "add research goal": Opener("character", lambda ws: ws._add_research_goal()),
     "add integration goal": Opener("character", lambda ws: ws._add_research_goal()),
+    "add secret research goal": Opener("character", lambda ws: ws._add_research_goal()),
     "add tradition effect": Opener("character", _open_tradition_effect),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),

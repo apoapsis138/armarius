@@ -17,6 +17,8 @@ from .... import books as bk
 from .... import catalog, lab_planning, places, seasons
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
+from .... import research_text as rt
+from .... import sheet_text as st
 from ....boon_hook_text import counted, points_title
 from ....covenants import (
     covenant_effective_aura,
@@ -31,6 +33,7 @@ from ....laboratories import (
 from ....markup import aligned, escape
 from ....models import (
     LAB_CHARACTERISTICS,
+    Breakthrough,
     Laboratory,
     Saga,
 )
@@ -42,6 +45,7 @@ from ..widgets import (
     SelectableList,
     SheetSection,
     StackingColumns,
+    TableHeader,
     ToggleList,
     TwoColumns,
     _sign_colored,
@@ -153,6 +157,8 @@ class LaboratorySheetView(SheetView):
             yield self._tab(
                 "Lab Totals", "tab-lab-totals", self._scrolling(self._totals_tab)
             )
+            if rt.under_way(self.saga, self.laboratory):
+                yield self._tab("Research", "tab-lab-research", self._research_tab)
             yield self._tab("Virtues & Flaws", "tab-lab-vf", self._virtues_flaws_tab)
             yield self._tab("Attributes", "tab-lab-attributes", self._attributes_tab)
             yield self._tab("Inventory", "tab-lab-inventory", self._inventory_tab)
@@ -223,6 +229,59 @@ class LaboratorySheetView(SheetView):
                     ),
                     id=f"{section}-content",
                 )
+
+    #: The Research tab's details panel with nothing chosen.
+    _RESEARCH_HINT = (
+        "[dim]Select a research goal or a season of its log to see its details.[/]"
+    )
+
+    def _research_goals(self) -> list[Breakthrough]:
+        return rt.under_way(self.saga, self.laboratory)
+
+    def _research_tab(self) -> ComposeResult:
+        """The owner's research under way while it is: the goals begun and
+        not yet reached, and the Research Log of their seasons, over the
+        chosen one's details. Read only: goals are kept on the magus's
+        sheet."""
+        owner = self.saga.character(self.laboratory.owner_id)
+        assert owner is not None
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with SheetSection(
+                    title="Research under way", id="section-lab-research-goals"
+                ):
+                    yield SelectableList(
+                        [
+                            (index, st.goal_row(goal))
+                            for index, goal in enumerate(self._research_goals())
+                        ],
+                        id="lab-research-goals-list",
+                        group="lab-research",
+                    )
+                with SheetSection(title="Research Log", id="section-lab-research-log"):
+                    yield TableHeader(rt.LOG_HEADER)
+                    yield SelectableList(
+                        rt.log_rows(owner, self._research_goals()),
+                        id="lab-research-log-list",
+                        group="lab-research",
+                    )
+            yield DetailsPanel(self._RESEARCH_HINT, id="lab-research-info")
+
+    def _research_info_text(self) -> str:
+        """The chosen goal (its stage, steps and odds) or season of the
+        log (one selection across the two lists), else the hint."""
+        owner = self.saga.character(self.laboratory.owner_id)
+        goals = self._research_goals()
+        if owner is None:
+            return self._RESEARCH_HINT
+        index = self._selected("lab-research-goals-list")
+        if index is not None and index < len(goals):
+            return rt.goal_panel(self.saga, owner, goals[index])
+        entries = rt.log_entries(owner, goals)
+        index = self._selected("lab-research-log-list")
+        if index is not None and index < len(entries):
+            return rt.attempt_panel(*entries[index])
+        return self._RESEARCH_HINT
 
     def _diary_tab(self) -> ComposeResult:
         with Vertical(classes="panel-body"):
@@ -453,6 +512,14 @@ class LaboratorySheetView(SheetView):
         row's text (None: nothing chosen)."""
         lab = self.laboratory
         return {
+            "lab-research-goals-list": (
+                "lab-research-info",
+                lambda _i: self._research_info_text(),
+            ),
+            "lab-research-log-list": (
+                "lab-research-info",
+                lambda _i: self._research_info_text(),
+            ),
             "lab-vf-virtues-list": (
                 "lab-vf-info",
                 lambda i: lab_text.vf_info_text(lab, i, self.saga),

@@ -7,7 +7,7 @@ import random
 from collections.abc import Sequence
 from dataclasses import replace
 
-from .. import book_kinds, storage
+from .. import book_kinds, research_text, storage
 from .. import books as bk
 from .. import enchanted_devices as ed
 from .. import spells as spl
@@ -25,6 +25,7 @@ from ..models import (
     LabProject,
     Ordeal,
     Progress,
+    ResearchAttempt,
     Saga,
     SeasonPlan,
     SeasonRecordLine,
@@ -39,7 +40,7 @@ from ..rules import creation_characteristics as cch
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons
+from ..rules import lab_seasons, research
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
 from ..world import takes_part_in_play
@@ -570,14 +571,19 @@ def _apply_experiment(
         else None
     )
     stop = chart.wasted
+    points = goal.points if goal is not None else 0
+    kind = "seek"
     if plan.activity == ex.STABILIZE and goal is not None:
         stop = True
+        kind = "stabilize"
         lines += _stabilize(saga, magus, lab, plan, work, goal)
     elif goal is not None and goal.insights > 0 and work.finished and not chart.wasted:
+        kind = "invent insight"
         lines.append(_invent_insight(work, goal))
     elif goal is not None and chart.discovery and not chart.wasted:
         lines.append(_record_discovery(plan, work, goal))
     if goal is not None:
+        _log_attempt(plan, lab, work, goal, kind, goal.points - points)
         lines += _goal_reached(magus, goal)
     lab.diary.append(
         DiaryEntry(
@@ -589,6 +595,52 @@ def _apply_experiment(
         )
     )
     return stop
+
+
+def _log_attempt(
+    plan: SeasonPlan,
+    lab: Laboratory,
+    work: lab_seasons.LabWork,
+    goal: Breakthrough,
+    kind: str,
+    points: int,
+) -> None:
+    """The season's line in the goal's Research log."""
+    chart = work.experiment
+    assert chart is not None
+    stabilizing = kind == "stabilize"
+    name = lab_seasons.made_name(work)
+    if stabilizing:
+        name = goal.discovered_from[-1] if goal.discovered_from else ""
+    research.record(
+        goal,
+        ResearchAttempt(
+            year=plan.year,
+            season=plan.season,
+            kind=kind,
+            work=name,
+            magnitude=(
+                work.research_magnitude
+                if stabilizing
+                else spl.level_magnitude(work.level)
+            ),
+            lab_total=int(work.lab_total.total),
+            risk=goal.discovery_risk if stabilizing else plan.risk,
+            die=chart.die,
+            botch_dice=chart.botch_dice,
+            zeroes=chart.zeroes,
+            move=chart.move,
+            result=" ".join(chart.results),
+            discovery=chart.discovery and not chart.wasted and not stabilizing,
+            points=points,
+            warping=(
+                work.research_warping
+                if stabilizing and (work.finished or chart.wasted or chart.no_benefit)
+                else 0
+            ),
+            lab_id=lab.id,
+        ),
+    )
 
 
 def _disaster(
@@ -962,15 +1014,18 @@ def discovery_moves(
         if chart is None or chart.discovery_shift is None:
             continue
         character = saga.character(outcome.character_id)
-        name = character.name if character else "The magus"
+        if character is None:
+            continue
         found.append(
             (
                 outcome,
-                f"{name}'s experiment toward {outcome.plan.research.strip()} can "
-                f"reach a Discovery by moving its roll {chart.discovery_shift:+d} "
-                "(within the risk modifier); the roll's own result stands either "
-                "way. Take it? The same move is then made every season of this "
-                "project and when stabilizing.",
+                research_text.move_card(
+                    saga,
+                    character,
+                    outcome.plan.research.strip(),
+                    outcome.plan.risk,
+                    chart,
+                ),
             )
         )
     return found

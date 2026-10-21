@@ -27,7 +27,7 @@ from .models import (
     VirtueFlawInstance,
     Wounds,
 )
-from .rules import combat, derived, penetration, scores
+from .rules import combat, derived, penetration, research, scores
 from .rules import xp as xp_rules
 from .tables import Table
 from .totals import describe_modifier
@@ -488,9 +488,7 @@ def goal_row(goal: Breakthrough) -> str:
     if goal.insights:
         extras.append(f"{goal.insights} insight(s) to invent")
     tail = f"  [dim]{'; '.join(extras)}[/]" if extras else ""
-    return (
-        f"{escape(goal.name)} ({goal.kind}): {goal.points}/{goal.target} points" + tail
-    )
+    return f"{escape(goal.name)} ({goal.kind}): {research.target_text(goal)}" + tail
 
 
 def goal_table(goals: Sequence[Breakthrough]) -> Table:
@@ -508,7 +506,9 @@ def goal_table(goals: Sequence[Breakthrough]) -> Table:
             [
                 escape(goal.name),
                 goal.kind,
-                f"{goal.points}/{goal.target}",
+                f"{goal.points}"
+                if goal.hidden_target and not goal.reached
+                else f"{goal.points}/{goal.target}",
                 f"[dim]{'; '.join(extras)}[/]" if extras else "",
             ]
         )
@@ -527,7 +527,8 @@ def goal_text(goal: Breakthrough) -> str:
         grants = f"the Virtue {found.name if found else goal.grant}"
     lines = [
         f"[b]{escape(goal.name)}[/]: a {goal.kind} Breakthrough, "
-        f"{goal.points}/{goal.target} points" + (" (reached)" if goal.reached else ""),
+        f"{research.target_text(goal)}" + (" (reached)" if goal.reached else ""),
+        f"Stage: {research.stage(goal).value}.",
         f"Reaching it grants {escape(grants)}.",
     ]
     if goal.pending_magnitude:

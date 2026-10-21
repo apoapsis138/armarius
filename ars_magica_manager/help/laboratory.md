@@ -141,6 +141,39 @@ can be planned.
 [Lab Totals tab](help:tab-lab-totals),
 [Advancing a season](help:advance-season), [How to plan and run a season](help:guide-seasons), [How lab planning works](help:guide-lab-planning)
 
+## Research tab
+<!-- help: tab-lab-research -->
+
+The research the laboratory's owner has under way, while they have any:
+their goals begun and not yet reached, and the seasons spent on them
+(Ars Magica Definitive Edition, Chapter 8, Experimentation and Arcane
+Discovery). It is the same research as on the magus's own
+[Research tab](help:tab-research), shown here to plan the laboratory's
+seasons by; the goals are added and changed on the magus's sheet.
+<!-- tui -->
+Choosing a goal shows where it stands and the odds of its next season;
+choosing a season of the log shows its roll on the Extraordinary Results
+chart.
+<!-- /tui -->
+<!-- gui -->
+Clicking a goal shows it in the inspector with the odds of its next
+season; choosing a season of the log draws its roll on the chart below
+the log.
+<!-- /gui -->
+
+### Research under way
+<!-- help: section-lab-research-goals -->
+
+The owner's goals begun and not yet reached, each with its points and
+what waits on it: a Discovery to stabilize, or insights to invent.
+
+### Research Log
+<!-- help: section-lab-research-log -->
+
+Every season spent on those goals, newest first: the season, the goal,
+the work, the stress die, the roll (the die plus the risk), any move of
+it, and what came of it.
+
 ## Lab Totals tab
 <!-- help: tab-lab-totals -->
 

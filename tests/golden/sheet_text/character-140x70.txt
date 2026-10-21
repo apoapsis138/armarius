@@ -18,7 +18,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Plannin
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventor
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -86,7 +86,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Plannin
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventor
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   General                 Score           XP
@@ -154,7 +154,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Plannin
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventor
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -222,7 +222,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  scription  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8
+  scription  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Talisman: Ring  Opened 0/0  0 attunements
@@ -254,11 +254,11 @@
 
       Every score adds: Stamina +0, Aura (Magic 1) +1 (firm words, bold gestures).
       Formulaic: score + die >= level casts it; up to 10 short costs a Fatigue level.
-      Spontaneous: score / 5 without Fatigue; (score + stress die) / 2 for a Fatigue level.           ▁▁
+      Spontaneous: score / 5 without Fatigue; (score + stress die) / 2 for a Fatigue level.
       Magic Resistance (Form + Parma 0 x 5 + aura): An 1, Aq 1, Au 1, Co 1, He 1, Ig 1, Im 1, Me 1, Te
       1, Vi 1
       Penetration: Casting Total - spell level +0 (Penetration), multiplied by Arcane Connections.
-      Certamen: Initiative +0, Attack Presence +0 + Art, Defence Perception +0 + the other Art,
+      Certamen: Initiative +0, Attack Presence +0 + Art, Defence Perception +0 + the other Art,       ▇▇
       Weakening +0 + advantage, Resistance +0.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -266,7 +266,75 @@
 
 
   ▌
-  ▌  Select an Art, a Known Spell or a Research Goal to see its details.
+  ▌  Select an Art or a Known Spell to see its details.
+  ▌
+
+
+===== tab-research
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
+          Edit (e)          In Play
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+      Int:  0   Per:  0   Str:  0   Sta:  0
+      Pre:  0   Com:  0   Dex:  0   Qik:  0
+          Edit (e)
+
+  ilities  3 Virtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Dia
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Research Goals (1)
+
+      ○ Range: Horizon (Minor): 3/30 points
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Research Log (1)
+
+        Season      Goal             Work                 Die Roll Move  Result
+      ○ Winter 1219 Range: Horizon   Seek bolt              5    6       side
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Select a research goal or a season of its log to see its details.
   ▌
 
 
@@ -290,7 +358,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  lities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
+  rtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -358,7 +426,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
+  tues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -426,7 +494,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
+  tues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -494,7 +562,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
+  tues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -562,7 +630,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
+  tues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

@@ -26,7 +26,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, giving, lab_planning, seasons, vis
+from .. import artwork, giving, lab_planning, research_text, seasons, vis
 from .. import books as bk
 from .. import lab_texts as lt
 from .. import laboratories as labs
@@ -58,6 +58,7 @@ from .manage import RecordControls
 from .markup_html import plain
 from .menus import Placer
 from .pages import card_grid
+from .research import research_chapter
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (
@@ -194,12 +195,28 @@ class LaboratoryPage(QWidget):
         }
         for name, concept in CHAPTERS:
             self.codex.add(name, concept, builders[name]())
+            if name == "Lab Totals" and research_text.under_way(saga, lab):
+                self.codex.add("Research", "lab_text", self._research())
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(palette))
         outer.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:
         return self.codex.chapters()
+
+    def _research(self) -> QWidget:
+        """The owner's research under way, read only: the goals are kept on
+        the magus's sheet."""
+        owner = self.saga.character(self.lab.owner_id)
+        assert owner is not None
+        return research_chapter(
+            self.saga,
+            owner,
+            self.p,
+            None,
+            lambda title, subtitle, markup: self.inspect(title, subtitle, markup),
+            only=research_text.under_way(self.saga, self.lab),
+        )
 
     def inspect(self, title: str, subtitle: str, markup: str, symbol=None) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)

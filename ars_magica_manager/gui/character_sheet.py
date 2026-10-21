@@ -115,6 +115,7 @@ from .markup_html import to_html
 from .menus import Placer
 from .ornaments import FleuronRule
 from .pages import card_grid, familiar_card
+from .research import research_chapter
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (
@@ -160,6 +161,7 @@ CHAPTERS = (
     ("Abilities", "library"),
     ("Virtues & Flaws", "magic"),
     ("Hermetic Magic", "enchanted_item"),
+    ("Research", "lab_text"),
     ("Inventory", "combat"),
     ("Planning", "season"),
     ("Diary", "year"),
@@ -568,6 +570,7 @@ class CharacterSheet(QWidget):
             "Abilities": self._abilities,
             "Virtues & Flaws": self._virtues_flaws,
             "Hermetic Magic": self._hermetic,
+            "Research": self._research,
             "Inventory": self._inventory,
             "Planning": self._planning,
             "Diary": self._diary,
@@ -1039,12 +1042,6 @@ class CharacterSheet(QWidget):
     def _hermetic(self) -> QWidget:
         p, saga, c = self.p, self.saga, self.character
         spells = Chooser()
-        goals = Chooser()
-
-        def show_goal(index: int) -> None:
-            goals.choose(index)
-            self.inspect("Research Goal", "", st.goal_text(c.breakthroughs[index]))
-
         parts: list[QWidget] = [
             section(
                 "Magical Arts",
@@ -1071,16 +1068,17 @@ class CharacterSheet(QWidget):
                 ),
             ),
             self._raw_vis(),
-            section(
-                f"Research Goals ({len(c.breakthroughs)})",
-                p,
-                table_view(st.goal_table(c.breakthroughs), p, show_goal)
-                if c.breakthroughs
-                else TextBlock("[dim]None recorded.[/]", p),
-                buttons=verb_buttons(cf.research_goal_ops(c), goals, self.run, p),
-            ),
         ]
         return scrolling_page(p, *parts)
+
+    def _research(self) -> QWidget:
+        return research_chapter(
+            self.saga,
+            self.character,
+            self.p,
+            self.run,
+            lambda title, subtitle, markup: self.inspect(title, subtitle, markup),
+        )
 
     def _show_art(self, art: object) -> None:
         assert isinstance(art, str)
@@ -1368,17 +1366,17 @@ class CharacterSheet(QWidget):
 def _left_out(character: Character) -> set[str]:
     """The chapters the character's sheet doesn't have: Hermetic Magic but
     for a magus, the Statblock but for a Line or Sketch character, and
-    what only play needs (Inventory, Planning) for those. A Line character
+    what only play needs (Inventory, Planning, Research) for those. A Line character
     has no scores either."""
     left = set()
     if character.type != "magus":
-        left.add("Hermetic Magic")
+        left |= {"Hermetic Magic", "Research"}
     if cs.has_statblock(character):
-        left |= {"Inventory", "Planning"}
+        left |= {"Inventory", "Planning", "Research"}
     else:
         left.add("Statblock")
     if character.detail == LINE:
-        left |= {"Abilities", "Virtues & Flaws", "Hermetic Magic"}
+        left |= {"Abilities", "Virtues & Flaws", "Hermetic Magic", "Research"}
     return left
 
 

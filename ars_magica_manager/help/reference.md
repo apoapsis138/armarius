@@ -21,7 +21,7 @@ the keys that always work.
 
 - `Tab` and `Shift+Tab` move from section to section; the arrow keys move
   within a list.
-- `1` to `9` open a sheet's tabs; the tabs show their numbers.
+- `1` to `9` open a sheet's tabs, and `0` the tenth; the tabs show their numbers.
 - `Enter` on the tree moves into the sheet it shows; `esc` steps back out:
   from the sheet to the tree, then to the saga picker.
 - `c` collapses or expands the focused section.

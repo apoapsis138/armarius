@@ -195,7 +195,7 @@ After you choose Advance, the app may ask:
 - For the player characters with nothing planned, and any plan that can't be carried out, what to do with the season (see [Unplanned seasons](help:advance-unplanned)).
 - In Winter, if a covenant is in deficit, whether to advance anyway. Advance anyway rolls the year over; No (or Escape) leaves the date alone so the books can be balanced first.
 - Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years; one left unticked gives nothing until it is.
-- For an experiment seeking a Discovery, whether to take the Discovery by using the risk to move the roll, when it could (a tick each). The roll's own result stands either way.
+- For an experiment seeking a Discovery, whether to take the Discovery by using the risk to move the roll, when it could (a tick each). Each is shown as a roll card: the die and the risk, the result the roll landed on, the Extraordinary Results chart with that band marked, and the chance a stabilization would then succeed, since it repeats the same risk and move. The roll's own result stands either way.
 - For a magus setting up a new laboratory, whether they would like to finish it next season (see [A new laboratory](help:advance-new-lab)).
 
 Cancelling any of these leaves the date and the saga as they were.

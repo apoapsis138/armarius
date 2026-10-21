@@ -221,8 +221,9 @@ def _emptied(value):
 
 
 #: Fields that shape a sheet rather than fill it, as a character's type
-#: does: a change to one builds the sheet again (a tradition has a tab).
-_STRUCTURE = {"traditions"}
+#: does: a change to one builds the sheet again (a tradition has a tab, and
+#: research under way gives its owner's laboratory one).
+_STRUCTURE = {"traditions", "breakthroughs"}
 
 
 def _sparse_saga() -> Saga:

@@ -140,7 +140,10 @@ def test_a_roll_the_risk_can_move_onto_ten_is_asked_about():
     # Die 5; chart 8 + 1 = 9: one away from 10, within the risk.
     worked = seasons.resolve(saga, _Dice(5, 8))
     ((outcome, question),) = seasons.discovery_moves(saga, worked)
-    assert "moving its roll +1" in question
+    assert "Roll: die 8 + risk 1 = 9: story event." in question
+    assert "Moving it +1 reaches 10" in question
+    # The odds a stabilization then has, at that risk and move.
+    assert "a stabilization succeeds" in question
     seasons.take_discovery_move(saga, outcome, True)
     assert seasons.discovery_moves(saga, worked) == []
     seasons.apply(saga, worked)
@@ -416,7 +419,7 @@ def test_the_discovery_comes_besides_the_roll_s_own_result():
     # moving it -1 reaches 10.
     worked = seasons.resolve(saga, _Dice(5, 9, 4))
     ((outcome, question),) = seasons.discovery_moves(saga, worked)
-    assert "moving its roll -1" in question
+    assert "Moving it -1 reaches 10" in question
     seasons.take_discovery_move(saga, outcome, True)
     seasons.apply(saga, worked)
     magus = saga.character("m")

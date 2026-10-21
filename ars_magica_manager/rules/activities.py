@@ -402,7 +402,6 @@ ACTIVITIES: dict[str, Activity] = {
             experiment.RESEARCH_SOURCE,
             who=("magus",),
             lab=True,
-            book="HoH:TL",
             group=groups.INVENTING,
         ),
         Activity(
@@ -597,10 +596,10 @@ ACTIVITIES: dict[str, Activity] = {
             experiment.INTEGRATE,
             "Seek an insight",
             "A season studying a source (a text, a relic, a teacher, a site): "
-            "stress die + Intelligence + Magic Theory against 18.",
+            "stress die + Intelligence + Magic Theory (+3 Inventive Genius) "
+            "against 18.",
             experiment.RESEARCH_SOURCE,
             who=("magus",),
-            book="HoH:TL",
             group=groups.STUDY,
         ),
         Activity(

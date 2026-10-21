@@ -238,7 +238,7 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         tabbed = view.query_one(TabbedContent)
         strip = next(line for line in screen_lines(app) if "1 Description" in line)
         assert "2 Abilities  3 Virtues & Flaws  4 Hermetic Magic" in strip
-        assert "5 Rune Magic  6 Inventory  7 Plannin" in strip
+        assert "5 Research  6 Rune Magic  7 Inventor" in strip
 
         await pilot.press("3")
         assert await wait_until(pilot, lambda: tabbed.active == "tab-vf")
@@ -255,10 +255,11 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         )
         await pilot.press("3")
         assert await wait_until(pilot, lambda: app.focused is virtues)
-        # A number past the last tab does nothing; the last, 9, is Secrets.
-        assert view.tab_ids[-1] == "tab-secrets" and len(view.tab_ids) == 9
-        assert not workspace.check_action("show_tab", (10,))
-        await pilot.press("9")
+        # The tenth tab, Secrets, is opened by 0; a number past the last
+        # tab does nothing.
+        assert view.tab_ids[-1] == "tab-secrets" and len(view.tab_ids) == 10
+        assert not workspace.check_action("show_tab", (11,))
+        await pilot.press("0")
         assert await wait_until(pilot, lambda: tabbed.active == "tab-secrets")
 
 

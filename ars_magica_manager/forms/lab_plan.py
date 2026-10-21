@@ -35,6 +35,7 @@ from ..commands import (
     SectionOps,
     notes,
 )
+from ..covenants import home_aura
 from ..familiars import familiar_of
 from ..form_spec import ChoiceReads, DialogField, pairs, read_for_choice
 from ..markup import escape, todo
@@ -53,11 +54,13 @@ from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons, spell_levels
+from ..rules import lab_seasons, research, spell_levels
 from ..rules import laboratory_seasons as ls
+from ..rules.lab import ability_score
 from ..seasons import pairs as paired_plans
 from ..seasons.projection import as_then
 from . import activity as activity_forms
+from . import character as character_forms
 from . import spell as spell_forms
 
 #: The Range/Duration/Target choice for one the app doesn't list.
@@ -722,6 +725,7 @@ class LabPlanForm:
         ]
         experimental = _doing(*lab_seasons.EXPERIMENTAL)
         researching = _doing(*lab_seasons.EXPERIMENTAL, ex.STABILIZE)
+        stabilizing = _doing(ex.STABILIZE)
         found = [
             DialogField(
                 "experimenting",
@@ -735,23 +739,24 @@ class LabPlanForm:
                 "Risk +",
                 "int",
                 plan.risk if plan else 0,
-                show_if=researching,
+                # Stabilizing repeats the risk of the experiment that made
+                # the Discovery.
+                show_if=lambda v: experimental(v) and bool(v.get("experimenting")),
+                hint=self.risk_hint(),
             ),
             DialogField(
                 "research",
                 "Research goal",
-                "text",
-                plan.research if plan else "",
-                placeholder="(optional)",
-                show_if=researching,
-            ),
-            DialogField(
-                "research_kind",
-                "Breakthrough",
                 "select",
-                (plan.research_kind if plan else "Minor") or "Minor",
-                options=pairs(ex.KINDS),
-                show_if=researching,
+                (plan.research if plan else "") or None,
+                options=character_forms.research_goal_options(self.magus),
+                allow_blank=True,
+                placeholder="(none)",
+                show_if=lambda v: (
+                    researching(v) and (stabilizing(v) or bool(v.get("experimenting")))
+                ),
+                hint="Seeking a Discovery toward it. Goals are added on the "
+                "magus's Research tab.",
             ),
             DialogField(
                 "similar",
@@ -1009,7 +1014,7 @@ class LabPlanForm:
             vis_from=self._vis_from(activity, values),
             risk=values.get("risk") or 0,
             research=values.get("research") or "",
-            research_kind=values.get("research_kind") or "Minor",
+            research_kind=self._goal_kind(values.get("research") or ""),
             **read_for_choice(activity, values, self._reads()),
         )
         if activity in (*es.ACTIVITIES, *fs.ACTIVITIES):
@@ -1018,6 +1023,22 @@ class LabPlanForm:
             chosen = values.get("effect_vis")
             plan.vis_art = chosen if chosen in arts else (arts[0] if arts else "")
         return plan
+
+    def _goal_kind(self, name: str) -> str:
+        """The kind of the magus's research goal `name` (Minor for one the
+        magus doesn't have)."""
+        goal = next((g for g in self.magus.breakthroughs if g.name == name), None)
+        return goal.kind if goal is not None else "Minor"
+
+    def risk_hint(self) -> str:
+        """The chance of a Discovery at each risk the magus may take."""
+        aura, _ = home_aura(self.saga, self.magus)
+        score, bonus = ability_score(self.magus, "Magic Theory")
+        odds = research.risk_table(score + bonus, aura)
+        if not odds:
+            return "Magic Theory allows no risk."
+        chances = ", ".join(f"+{o.risk} {o.success * 100:.0f}%" for o in odds)
+        return f"Chance of a Discovery when seeking one: {chances}."
 
     def _reads(self) -> ChoiceReads:
         """The form's fields that only some lab work reads, and the plan's
@@ -1160,10 +1181,43 @@ class LabPlanForm:
                 f"[dim]({', '.join(terms)})[/]"
             )
             parts.append(" ".join(self.when_lines(plan, work)))
+        parts.append(self._odds_line(saga, magus, plan))
         problems = season_rules.problems(magus, plan, saga)
         if problems:
             parts.append(f"[$text-error]{escape(problems[0])}[/]")
         return "\n".join(p for p in parts if p)
+
+    def _odds_line(self, saga: Saga, magus: Character, plan: SeasonPlan) -> str:
+        """The season's chances on the Extraordinary Results chart, while
+        it seeks a Discovery or stabilizes one."""
+        goal = next((g for g in magus.breakthroughs if g.name == plan.research), None)
+        if goal is None:
+            return ""
+        aura, _ = home_aura(saga, magus)
+
+        def pct(chance: float) -> str:
+            return (
+                f"{chance * 100:.1f}%" if 0 < chance < 0.1 else f"{chance * 100:.0f}%"
+            )
+
+        if plan.activity == ex.STABILIZE:
+            risk = goal.discovery_risk
+            odds = research.stabilizing_odds(
+                risk, goal.discovery_shift, ex.botch_dice(magus, risk, aura)
+            )
+            return (
+                f"[b]Odds[/] stabilized {pct(odds.success)} · harmful "
+                f"{pct(odds.harmful)} · disaster {pct(odds.disaster)}  "
+                f"[dim](risk +{risk} and move {goal.discovery_shift:+d}, as before)[/]"
+            )
+        if not plan.experimenting:
+            return ""
+        odds = research.seeking_odds(plan.risk, ex.botch_dice(magus, plan.risk, aura))
+        return (
+            f"[b]Odds[/] Discovery {pct(odds.success)} · harmful "
+            f"{pct(odds.harmful)} · disaster {pct(odds.disaster)}  "
+            f"[dim](risk +{plan.risk}, aura {aura})[/]"
+        )
 
     def when_lines(self, plan: SeasonPlan, work: lab_seasons.LabWork) -> list[str]:
         """When the work is done and what it gives, a sentence a line

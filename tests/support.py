@@ -14,6 +14,7 @@ from ars_magica_manager.models import (
     BodyVis,
     BondPower,
     Book,
+    Breakthrough,
     CalendarEntry,
     Case,
     Character,
@@ -40,6 +41,7 @@ from ars_magica_manager.models import (
     Neighbour,
     Possession,
     Reason,
+    ResearchAttempt,
     Ruling,
     Saga,
     ScoredTrait,
@@ -238,6 +240,14 @@ def everything_saga() -> Saga:
     magus.personality_traits = list(trait)
     magus.reputations = list(rep)
     magus.raw_vis = {"creo": 3}
+    # Research under way: a goal begun, with a season in its log.
+    magus.breakthroughs = [
+        Breakthrough(
+            "Range: Horizon",
+            points=3,
+            log=[ResearchAttempt(1219, "Winter", "seek", "bolt", 2, 20, 1, 5, 2)],
+        )
+    ]
     magus.spells_known = [KnownSpell(spell_id)]
     magus.inventory = [Possession(id="item1", kind="item", name="Staff")]
     magus.assigned_lab_id = "lab1"

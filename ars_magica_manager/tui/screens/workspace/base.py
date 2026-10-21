@@ -501,8 +501,10 @@ class WorkspaceBase(Screen[None]):
         # Moving around: not in the footer (the tabs show their numbers).
         Binding("c", "toggle_section", "Collapse", show=False),
         *(
-            Binding(str(number), f"show_tab({number})", f"Tab {number}", show=False)
-            for number in range(1, 10)
+            Binding(
+                str(number % 10), f"show_tab({number})", f"Tab {number}", show=False
+            )
+            for number in range(1, 11)
         ),
     ]
 
@@ -1022,7 +1024,8 @@ class WorkspaceBase(Screen[None]):
         return [] if view is None else view.tab_ids
 
     def action_show_tab(self, number: int) -> None:
-        """1 to 9: open that tab of the sheet on show and move into it."""
+        """1 to 9, and 0 for the tenth: open that tab of the sheet on show
+        and move into it."""
         view = self._current_sheet_view()
         tab_ids = self._tab_ids()
         if view is None or not 1 <= number <= len(tab_ids):

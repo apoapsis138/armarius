@@ -92,6 +92,12 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_fields_dialog.py",
     ),
     "ars_magica_manager/sheet_text.py": ("test_sheet_text.py",),
+    "ars_magica_manager/research_text.py": (
+        "test_sheet_text.py",
+        "test_research.py",
+        "test_gui_research.py",
+        "test_screens_research.py",
+    ),
     "ars_magica_manager/forms/creature.py": (
         *DIALOG_CONTRACT_TESTS,
         "test_list_flows.py",
@@ -161,6 +167,7 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     ),
     "ars_magica_manager/seasons/plans.py": ("test_seasons_ahead.py",),
     "ars_magica_manager/gui/editing.py": ("test_gui_edit_shared.py",),
+    "ars_magica_manager/gui/research.py": ("test_gui_research.py",),
     "tests/golden/dispatch_matrix.json": ("test_dispatch_matrix.py",),
     "tests/golden/sheet_text/": ("test_sheet_text.py",),
     "tests/dialog_openers.py": DIALOG_CONTRACT_TESTS,

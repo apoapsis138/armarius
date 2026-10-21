@@ -42,7 +42,7 @@ from ..models import (
     known_fields,
 )
 from ..rules import aging as aging_rules
-from ..rules import creation_characteristics, experiment, integrations, scores
+from ..rules import creation_characteristics, experiment, integrations, research, scores
 from ..rules import xp as xp_rules
 from . import possession as possession_forms
 
@@ -564,6 +564,16 @@ GRANT_KINDS = [
 ]
 
 
+def research_goal_options(character: Character) -> list[tuple[str, str]]:
+    """Select options for a season's research goal: the magus's goals not
+    yet reached, each with its kind and where it stands."""
+    return [
+        (f"{escape(goal.name)} ({goal.kind}): {research.stage(goal).value}", goal.name)
+        for goal in character.breakthroughs
+        if not goal.reached
+    ]
+
+
 def research_goal_fields(existing: Breakthrough | None) -> list[DialogField]:
     """A magus's original research goal: what it is, the kind of
     Breakthrough sought (Minor, Major, Hermetic; its target follows, and
@@ -637,6 +647,14 @@ def research_goal_fields(existing: Breakthrough | None) -> list[DialogField]:
             hint="The storyguide may set a secret target.",
         ),
         DialogField(
+            "hidden_target",
+            "Keep the target secret",
+            "check",
+            existing.hidden_target if existing else False,
+            hint="The sheet then shows the points gained, not how many are "
+            "needed (DE recommends the player not know).",
+        ),
+        DialogField(
             "points", "Points so far", "int", existing.points if existing else 0
         ),
         DialogField(
@@ -704,6 +722,7 @@ def research_goal_from(
     made.kind = values["kind"]
     made.target = values["target"]
     made.points = values.get("points") or 0
+    made.hidden_target = bool(values.get("hidden_target"))
     made.grant_kind = kind
     made.grant = (values.get(f"grant_{kind.lower()}") or "") if kind else ""
     made.reached = made.reached and made.points >= made.target

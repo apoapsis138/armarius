@@ -311,6 +311,19 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Goal": ""}, {"Goal": "X", "Target": "0"}],
         shown={"#research-goals-list": "Piercing the Aegis (Major): 0/45"},
     ),
+    "add secret research goal": Contract(
+        prefill={"Goal": "", "Target": "30"},
+        edits={"Goal": "Range: Horizon", "Keep the target secret": True},
+        saved=lambda s: (
+            character(s).breakthroughs[-1].name,
+            character(s).breakthroughs[-1].hidden_target,
+        ),
+        expected=("Range: Horizon", True),
+        shown={
+            "#research-goals-list": "Range: Horizon (Minor): 0 points (target kept "
+            "by the storyguide)"
+        },
+    ),
     "add integration goal": Contract(
         prefill={"Goal": "", "Target": "30"},
         edits={"Integration": "Hermetic Rune Magic"},

@@ -53,6 +53,7 @@ from ars_magica_manager.models import (
     Possession,
     Progress,
     Reason,
+    ResearchAttempt,
     Ruling,
     Saga,
     SagaSource,
@@ -363,7 +364,9 @@ def _saga_with_every_record() -> Saga:
     magus = next(c for c in saga.characters if c.type == "magus")
     magus.arts["Creo"] = ArtScore(xp=6)
     magus.spells_known[0].mastery_abilities.append(MasteryAbility("Fast Casting"))
-    magus.breakthroughs.append(Breakthrough("Holistic"))
+    magus.breakthroughs.append(
+        Breakthrough("Holistic", log=[ResearchAttempt(1220, "Spring", "seek")])
+    )
     magus.bound_beings.append(BoundBeing("Corvus", tradition="trad_folk_witches"))
     magus.tradition_effects.append(
         TraditionEffect("Fetch", tradition="trad_gruagachan", uses=["Gruagach Give"])

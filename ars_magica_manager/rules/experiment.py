@@ -99,6 +99,11 @@ class Extraordinary:
     """What a season's roll on the Extraordinary Results chart does."""
 
     results: list[str] = field(default_factory=list)
+    #: The stress die (0 when it botched), the botch dice a 0 rolls, and the
+    #: move made to the roll (0: none), for the Research log.
+    die: int = 0
+    botch_dice: int = 0
+    move: int = 0
     #: The season's work is lost (Disaster, Complete Failure).
     wasted: bool = False
     #: The experimentation bonus is lost (No Benefit).
@@ -192,6 +197,7 @@ def _roll_once(
     character: Character | None = None,
 ) -> None:
     die = dice.stress_die(rng, dice_count, saga=saga)
+    result.die, result.botch_dice = die.value, dice_count
     if die.botched:
         zeroes = die.botches
         result.zeroes = zeroes
@@ -226,6 +232,7 @@ def _roll_once(
                 f"The roll {roll} moved by {shift:+d}, as when the Discovery was made."
             )
             roll += shift
+            result.move = shift
         _apply(result, roll, rng, risk, art, saga, 0, research=True)
         return
     _apply(result, roll, rng, risk, art, saga, 0, research=seeking, character=character)
@@ -234,6 +241,7 @@ def _roll_once(
     if shift is not None:
         if roll + shift == 10:
             result.discovery = True
+            result.move = shift
             result.results.append(
                 f"The roll {roll} moved by {shift:+d}, as before: a Discovery as well."
             )
@@ -249,6 +257,7 @@ def move_to_discovery(result: Extraordinary) -> None:
     if shift is None or result.wasted:
         return
     result.discovery = True
+    result.move = shift
     result.results.append(
         f"The roll moved {shift:+d} onto 10: a Discovery as well (the roll's own "
         "result stands)."

@@ -603,15 +603,15 @@ section title shows the points the Flaws come to.
 
 A magus's Arts, what they can cast, their raw vis, the spells they know and
 <!-- tui -->
-their research. Only a magus has this tab. The line at the top names the
+their research goals on the [Research tab](help:tab-research). Only a magus has this tab. The line at the top names the
 magus's Talisman, how far it is opened and its attunements.
 <!-- /tui -->
 <!-- gui -->
 their research. Only a magus has this chapter.
 <!-- /gui -->
 
-**You type:** the XP in each Art, the raw vis the magus holds, the spells
-they know and their Mastery, and their research goals.
+**You type:** the XP in each Art, the raw vis the magus holds, and the
+spells they know and their Mastery.
 
 **The app works out:** each Art's score from its XP, the Casting Score for
 every Technique and Form, Magic Resistance, Penetration and the Certamen
@@ -731,17 +731,52 @@ play (**Show everything** lists the rest);
 a spell already known from a book that goes out
 of play stays, marked "(not in play)".
 
+## Research tab
+<!-- help: tab-research -->
+
+A magus's original research: the goals they are working towards and every
+season spent on them (Ars Magica Definitive Edition, Chapter 8,
+Experimentation and Arcane Discovery).
+<!-- tui -->
+Only a magus has this tab. Choosing a goal shows where it stands and the
+odds of its next season; choosing a season of the log shows its roll on
+the Extraordinary Results chart.
+<!-- /tui -->
+<!-- gui -->
+Only a magus has this chapter. Each goal is a card with the road of its
+research drawn under it: the steps behind it filled in green, the one it
+is on ringed in red. Clicking a goal shows it in the inspector with the
+odds of its next season. Choosing a season of the log draws its roll on
+the Extraordinary Results chart below the log, the band it landed in
+filled in.
+<!-- /gui -->
+
+**You type:** the research goals, and, for a secret target, the points the
+storyguide sets.
+
+**The app works out:** each season's roll, any move of it toward a
+Discovery, the points a stabilized Discovery adds, and the chances of the
+next season.
+
+**See also:** [Hermetic Magic tab](help:tab-hermetic),
+[Experimenting](help:guide-lab-planning-experiment)
+
 ### Research Goals
 <!-- help: section-research-goals -->
 
 The Breakthroughs the magus is working towards: what it is, whether it is
-Minor, Major or Hermetic, its target in points and what reaching it grants.
+Minor, Major or Hermetic, its target in points (or only the points gained,
+when the storyguide keeps the target secret) and what reaching it grants.
 You type these; the app adds points to a goal when a season of research
 towards it is applied (Ars Magica Definitive Edition, Chapter 8, Arcane
 Discovery; Houses of Hermes: True Lineages, Chapter 1: House Bonisagus,
 Original Research). A goal's details also say when a failed stabilization
 must be tried again, and which spells and enchantments have already given
-it a Discovery (each gives one at most).
+it a Discovery (each gives one at most). They also show where the goal
+stands, step by step (Goal agreed, Seek, Discovery, Stabilize,
+Breakthrough, Spread), and the odds of its next season: the chance of a
+Discovery at each risk the magus's Magic Theory allows, or, with a
+Discovery waiting, the chance that stabilizing it succeeds.
 
 A new goal may start from an **Integration**: the breakthroughs Ancient
 Magic names for folding a lost tradition into Hermetic magic (Canaanite
@@ -750,6 +785,17 @@ Legacies, the Limit of Vis...), and Hedge Magic's Subtle Opening and Quick
 Charged Items. Choosing one fills in its name, kind, points and what it
 grants, which you can still change (Ancient Magic, Introduction, The
 Breakthrough).
+
+### Research Log
+<!-- help: section-research-log -->
+
+Every season spent on any goal, newest first: seeking a Discovery,
+stabilizing one, or studying a source for an insight. Each row shows the
+season, the goal, the work, the stress die, the roll (the die plus the
+risk), any move of it, and what came of it. The app writes these when a
+season is applied; there is nothing to type. Choosing a row shows the
+chart with the roll's band marked, the botch dice a 0 rolled, and the
+points and Warping it gave.
 
 ## Inventory tab
 <!-- help: tab-inventory -->

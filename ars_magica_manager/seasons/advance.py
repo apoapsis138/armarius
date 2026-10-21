@@ -13,6 +13,7 @@ from ..models import (
     SEASONS,
     Character,
     DiaryEntry,
+    ResearchAttempt,
     Saga,
     SeasonPlan,
     SeasonRecord,
@@ -25,7 +26,7 @@ from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
 from ..rules import laboratory_seasons as ls
-from ..rules import tradition_seasons
+from ..rules import research, tradition_seasons
 from ..rules import warping as warping_rules
 from ..tables import Table
 from ..world import takes_part_in_play
@@ -59,6 +60,28 @@ def resolve(saga: Saga, rng: random.Random | None = None) -> list[rules.Outcome]
     return rules.outcomes(saga, due_plans(saga), rng)
 
 
+def _apply_insight(character: Character, outcome: rules.Outcome) -> None:
+    """A season seeking an insight: an insight gained on the goal, and the
+    season in its Research log either way."""
+    plan = outcome.plan
+    if plan.activity != ex.INTEGRATE or not plan.research.strip():
+        return
+    goal = ex.goal(character, plan.research, plan.research_kind)
+    if outcome.insight:
+        goal.insights += 1
+    research.record(
+        goal,
+        ResearchAttempt(
+            year=plan.year,
+            season=plan.season,
+            kind="insight",
+            work=plan.title.strip(),
+            result=" ".join(outcome.notes),
+            insight=bool(outcome.insight),
+        ),
+    )
+
+
 def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
     """Apply outcomes worked out by resolve(): add each one's experience and
     write its Diary entry. Outcomes that can't be carried out are skipped.
@@ -82,10 +105,7 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
             character.background.faith_points += outcome.faith
         if outcome.supplement is not None:
             apply_supplement(saga, character, outcome.plan, outcome.supplement)
-        if outcome.insight:
-            ex.goal(
-                character, outcome.plan.research, outcome.plan.research_kind
-            ).insights += 1
+        _apply_insight(character, outcome)
         hedge = outcome.tradition_work
         if hedge is not None and outcome.plan.activity == rules.OPEN_TRADITION:
             opened = saga.character(outcome.plan.subject_id)

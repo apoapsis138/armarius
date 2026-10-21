@@ -20,6 +20,7 @@ from .... import casting_text, seasons, tradition_text, traditions
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
+from .... import research_text as rt
 from .... import saga_overview as ov
 from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
@@ -50,6 +51,9 @@ from ..widgets import (
 from .base import SheetView
 from .lists import BookListView
 
+#: What the Research Log is read from: the goals, and the log itself.
+RESEARCH_SECTIONS = ("section-research-goals", "section-research-log")
+
 #: The Seasons Ahead list and the chosen season's plan under it.
 AHEAD_LIST = "char-ahead-list"
 AHEAD_INFO = "char-ahead-info"
@@ -62,7 +66,8 @@ class CharacterSheetView(SheetView):
     permanently expanded, same PinnedCollapsible pattern as
     CovenantSheetView/LaboratorySheetView) above the tabbed body. Tab
     order: Description, Abilities,
-    Virtues & Flaws, Hermetic Magic (magi only), Inventory, Planning, Diary.
+    Virtues & Flaws, Hermetic Magic and Research (magi only), Inventory,
+    Planning, Diary.
     (A magus's Lab Totals are on their laboratory's sheet.)
 
     - Description (tab, id "tab-description"): Hermetic Background (magi
@@ -87,6 +92,10 @@ class CharacterSheetView(SheetView):
       from the old "Spells" tab). The three lists (Techniques, Forms,
       Known Spells) share one details panel docked at the tab's bottom,
       outside every section -- see _refresh_hermetic_info().
+    - Research (tab, id "tab-research", magi only): Research Goals and the
+      Research Log of every season's work toward them, newest first, over
+      one details panel: the chosen goal's stage, steps and odds, or the
+      chosen season's roll on the chart -- see _refresh_research_info().
     - Inventory (tab, id "tab-inventory"): Raw Vis (magi only, the second
       of the two duplicated instances -- see Hermetic Magic above),
       Personal Gear (renamed from "Inventory", same character.inventory
@@ -143,6 +152,8 @@ class CharacterSheetView(SheetView):
                 yield self._tab("Virtues & Flaws", "tab-vf", self._virtues_flaws_tab)
             if scores and character.type == "magus":
                 yield self._tab("Hermetic Magic", "tab-hermetic", self._hermetic_tab)
+                if not sketch:
+                    yield self._tab("Research", "tab-research", self._research_tab)
             if scores:
                 for tradition in traditions.of(character):
                     yield self._tab(
@@ -580,7 +591,7 @@ class CharacterSheetView(SheetView):
     _RAW_VIS_SECTIONS = ("section-raw-vis-hermetic", "section-raw-vis-inventory")
     #: The Hermetic Magic details panel with nothing chosen.
     _HERMETIC_INFO_PLACEHOLDER = (
-        "[dim]Select an Art, a Known Spell or a Research Goal to see its details.[/]"
+        "[dim]Select an Art or a Known Spell to see its details.[/]"
     )
 
     def _hermetic_tab(self) -> ComposeResult:
@@ -645,6 +656,23 @@ class CharacterSheetView(SheetView):
                         id="known-spells-list",
                         group="hermetic",
                     )
+            yield DetailsPanel(self._HERMETIC_INFO_PLACEHOLDER, id="hermetic-info")
+            self._on_refresh(
+                ("section-arts", "section-known-spells"),
+                self._refresh_hermetic_info,
+            )
+
+    #: The Research tab's details panel with nothing chosen.
+    _RESEARCH_INFO_PLACEHOLDER = (
+        "[dim]Select a research goal or a season of its log to see its details.[/]"
+    )
+
+    def _research_tab(self) -> ComposeResult:
+        """Research Goals and the Research Log of every season's work
+        toward them (scrolling), over the chosen goal's or season's details.
+        Magi only."""
+        with Vertical(id="research-body", classes="panel-body"):
+            with VerticalScroll(id="research-scroll"):
                 with SheetSection(
                     title=self._titled(
                         "section-research-goals",
@@ -659,13 +687,46 @@ class CharacterSheetView(SheetView):
                         "section-research-goals",
                         self._research_goal_rows,
                         id="research-goals-list",
-                        group="hermetic",
+                        group="research",
                     )
-            yield DetailsPanel(self._HERMETIC_INFO_PLACEHOLDER, id="hermetic-info")
-            self._on_refresh(
-                ("section-arts", "section-known-spells", "section-research-goals"),
-                self._refresh_hermetic_info,
-            )
+                with SheetSection(
+                    title=self._titled(
+                        RESEARCH_SECTIONS,
+                        "section-research-log",
+                        lambda: counted(
+                            "Research Log", len(rt.log_entries(self.character))
+                        ),
+                    ),
+                    id="section-research-log",
+                ):
+                    yield TableHeader(rt.LOG_HEADER)
+                    yield self._list(
+                        RESEARCH_SECTIONS,
+                        lambda: rt.log_rows(self.character),
+                        id="research-log-list",
+                        group="research",
+                    )
+            yield DetailsPanel(self._RESEARCH_INFO_PLACEHOLDER, id="research-info")
+            self._on_refresh(RESEARCH_SECTIONS, self._refresh_research_info)
+
+    def _refresh_research_info(self) -> None:
+        """The Research tab's details panel: the chosen goal (its stage,
+        steps and odds) or season of the log, else the hint."""
+        try:
+            info = self.query_one("#research-info", Static)
+        except NoMatches:
+            return
+        goals = self.character.breakthroughs
+        index = self.selected_research_goal()
+        if index is not None and index < len(goals):
+            info.update(rt.goal_panel(self.saga, self.character, goals[index]))
+            return
+        entries = rt.log_entries(self.character)
+        index = self.query_one("#research-log-list", SelectableList).selected_data_index
+        if index is not None and index < len(entries):
+            info.update(rt.attempt_panel(*entries[index]))
+            return
+        info.update(self._RESEARCH_INFO_PLACEHOLDER)
 
     def _inventory_tab(self) -> ComposeResult:
         """Raw Vis (magi), Personal Gear and the character's Books over the
@@ -798,11 +859,14 @@ class CharacterSheetView(SheetView):
             "arts-techniques-list",
             "arts-forms-list",
             "known-spells-list",
-            "research-goals-list",
         ):
             event.stop()
-            # One group (one selection across the four), one details panel.
+            # One group (one selection across the three), one details panel.
             self._refresh_hermetic_info()
+            return
+        if list_id in ("research-goals-list", "research-log-list"):
+            event.stop()
+            self._refresh_research_info()
             return
         if list_id not in ("vf-virtues-list", "vf-flaws-list"):
             return
@@ -930,12 +994,6 @@ class CharacterSheetView(SheetView):
         index = self.query_one("#arts-forms-list", SelectableList).selected_data_index
         if index is not None:
             info.update(self._art_info_text(FORMS[index]))
-            return
-        index = self.query_one(
-            "#research-goals-list", SelectableList
-        ).selected_data_index
-        if index is not None and index < len(self.character.breakthroughs):
-            info.update(st.goal_text(self.character.breakthroughs[index]))
             return
         index = self.query_one("#known-spells-list", SelectableList).selected_data_index
         info.update(self._known_spell_info_text(index))

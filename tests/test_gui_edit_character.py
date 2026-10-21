@@ -161,7 +161,7 @@ def test_editing_the_arts_and_a_known_spells_mastery(app):
 def test_adding_a_research_goal_and_an_item_of_personal_gear(app):
     window, saga_id = _window()
     page = _page(window)
-    page.open_chapter("Hermetic Magic")
+    page.open_chapter("Research")
     answering(window, {"name": "Penetrating the Aegis"})
     section_buttons(page, "Research Goals")["Add"].click()
     assert _saved(saga_id).breakthroughs[-1].name == "Penetrating the Aegis"

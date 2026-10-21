@@ -108,6 +108,41 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.123.0 — 2026-10-21
+
+### Pagina
+
+- **A Research tab for every magus.** Their research goals and a Research
+  Log of every season spent on them: the die, the risk, any move and what
+  came of it. A goal's details show where it stands, step by step (Goal
+  agreed, Seek, Discovery, Stabilize, Breakthrough, Spread), and the odds
+  of its next season; a season's show its roll on the Extraordinary
+  Results chart. Research Goals moved here from Hermetic Magic.
+- **Secret targets.** A goal can keep its target secret: the sheet shows
+  only the points gained until it is reached.
+- **A laboratory shows its owner's research** on a Research tab of its
+  own while any is under way.
+
+### Book of Hours
+
+- **Research is chosen, not typed.** Planning lab work or an insight
+  season picks the goal from the magus's own; Risk + names the chance of
+  a Discovery at each risk, and the line above Schedule gives the
+  season's odds as you change it (for stabilizing, the chance it holds).
+- **A roll card when a Discovery is in reach.** Advance Season shows the
+  roll, the chart with its band marked, and the chance a stabilization
+  would then succeed, before asking whether to take the move.
+
+### Illuminatio
+
+- **A Research chapter, set like a book.** Each goal is a card with the
+  road of its research drawn in gilt roundels; the log is a ruled ledger,
+  and the chosen season's roll is drawn on a ribbon of the chart.
+
+### Scriptorum
+
+- **A tenth tab opens with 0**, as the number keys run along the keyboard.
+
 ## 2.122.1 — 2026-10-21
 
 ### Book of Hours
