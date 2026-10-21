@@ -20,6 +20,7 @@ from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_UNKNOWN,
+    VirtueFlawInstance,
 )
 
 CONTRACTS: dict[str, Contract] = {
@@ -90,6 +91,43 @@ CONTRACTS: dict[str, Contract] = {
         ],
         expected=[("companion", "cov1")],
         invalid={"Name": ""},
+    ),
+    "grog template": Contract(
+        # The Animal Trainer's first sample, Madoc, whose list leaves no
+        # names blank: saving makes the grog.
+        prefill={
+            "Character": "0",
+            "Age": "0",
+            "Social Status": "vf_covenfolk",
+            "Puissant Animal Handling": True,
+            "Cursed Guile": True,
+        },
+        edits={"Improved Characteristics": False, "Cursed Guile": False},
+        saved=lambda s: [
+            (
+                c.in_creation,
+                s.current_year - (c.background.year_born or 0),
+                [vf.vf_id for vf in c.virtues_flaws],
+            )
+            for c in s.characters
+            if c.name == "Ulla"
+        ],
+        expected=[
+            (True, 15, ["vf_covenfolk", "vf_puissant_ability", "vf_judged_unfairly"])
+        ],
+        invalid=[
+            {"First Virtue": VirtueFlawInstance("vf_tough")},
+            {
+                "First Flaw": VirtueFlawInstance("vf_carefree"),
+                "Second Flaw": VirtueFlawInstance("vf_clumsy"),
+            },
+        ],
+        aliases={
+            "First Virtue": "fld-virtue_0",
+            "First Flaw": "fld-flaw_0",
+            "Second Flaw": "fld-flaw_1",
+        },
+        live={"#fields-live": "1 Virtue point, 1 Flaw point (1 of 3 Minor Flaws)"},
     ),
     "create laboratory": Contract(
         prefill={"Name": "", "Size": "0", "Covenant": "cov1"},

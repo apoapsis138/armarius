@@ -465,6 +465,7 @@ def test_the_stale_key_fixture_holds_every_saved_record():
     stale-key test below covers it (a new saved record must be added)."""
     not_saved = {
         "AbilityDef", "ArmorDef", "CharacterTemplateDef", "CovenantSituationDef",
+        "GrogTemplateDef",
         "HouseDef", "LabFeatureDef", "ShapeMaterialDef", "TraditionDef",
         "TraditionTraining", "WeaponDef", "CastingRule", "MagicalDefense",
         "DispelRule", "GroupCasting", "OpeningRule", "InitiationRule",

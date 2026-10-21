@@ -14,6 +14,7 @@ from textual.widgets import TabbedContent, Tree
 from ars_magica_manager import (
     catalog,
     giving,
+    grog_templates,
     meeting,
     neighbour_filter,
     spells,
@@ -21,6 +22,7 @@ from ars_magica_manager import (
     vis,
 )
 from ars_magica_manager import economics as eco
+from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import (
     Ability,
@@ -525,6 +527,17 @@ OPENERS: dict[str, Opener] = {
     ),
     # Covenant
     "create character": Opener("covenant", lambda ws: ws.action_create_character()),
+    "grog template": Opener(
+        "covenant",
+        lambda ws: ws._run_steps(
+            creation_forms.grog_template_steps(
+                ws.saga,
+                {"name": "Ulla", "covenant_id": "cov1"},
+                grog_templates.find("gt_animal_trainer"),
+            ),
+            tree=True,
+        ),
+    ),
     "create laboratory": Opener("covenant", lambda ws: ws.action_create_laboratory()),
     "bind familiar": Opener("covenant", lambda ws: ws.action_create_familiar()),
     "edit covenant": Opener("covenant", lambda ws: ws._edit_covenant()),

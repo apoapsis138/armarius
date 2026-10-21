@@ -1,6 +1,6 @@
 """Loads the shared catalogs -- Virtues/Flaws, Abilities, Houses, Boons & Hooks,
 Laboratory Virtues/Flaws, Laboratory Features, Spells, Weapons & Armor,
-Shape & Material bonuses and Character Templates (reference data, not
+Shape & Material bonuses and Character and Grog Templates (reference data, not
 per-saga)."""
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ from .models import (
     CovenantSituationDef,
     Creature,
     Familiar,
+    GrogTemplateDef,
     HouseDef,
     LabFeatureDef,
     LabVirtueFlawDef,
@@ -48,6 +49,7 @@ LAB_FEATURE_CATALOG_PATH = DATA_DIR / "lab_feature_catalog.json"
 WEAPON_ARMOR_CATALOG_PATH = DATA_DIR / "weapon_armor_catalog.json"
 SHAPE_MATERIAL_CATALOG_PATH = DATA_DIR / "shape_material_catalog.json"
 CHARACTER_TEMPLATE_CATALOG_PATH = DATA_DIR / "character_template_catalog.json"
+GROG_TEMPLATE_CATALOG_PATH = DATA_DIR / "grog_template_catalog.json"
 
 
 def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
@@ -457,6 +459,18 @@ def load_character_template_catalog_by_id(
     path: Path = CHARACTER_TEMPLATE_CATALOG_PATH,
 ) -> dict[str, CharacterTemplateDef]:
     return _cached_by_id(path, CharacterTemplateDef.from_dict)
+
+
+def load_grog_template_catalog(
+    path: Path = GROG_TEMPLATE_CATALOG_PATH,
+) -> list[GrogTemplateDef]:
+    return list(_cached_entries(path, GrogTemplateDef.from_dict))
+
+
+def load_grog_template_catalog_by_id(
+    path: Path = GROG_TEMPLATE_CATALOG_PATH,
+) -> dict[str, GrogTemplateDef]:
+    return _cached_by_id(path, GrogTemplateDef.from_dict)
 
 
 def load_lab_virtue_flaw_catalog(

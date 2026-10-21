@@ -122,7 +122,9 @@ def tally(character: Character) -> VirtueFlawTally:
             if "Social Status" in (e.category, *e.extra_categories)
         ],
         major_hermetic_virtues=len(of("Virtue", "Hermetic", "Major")),
-        hermetic=len(of("Virtue", "Hermetic")) + len(of("Flaw", "Hermetic")),
+        # Those only the Gifted may take: Inoffensive to (Beings) and the
+        # like are Hermetic or General.
+        hermetic=sum(1 for _, e in entries if catalog.needs_the_gift(e)),
         hermetic_flaws=len(of("Flaw", "Hermetic")),
         major_personality_flaws=len(of("Flaw", "Personality", "Major")),
         personality_flaws=len(of("Flaw", "Personality")),

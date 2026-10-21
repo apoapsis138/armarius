@@ -23,6 +23,7 @@ from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.widgets import NewCard
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
+from ars_magica_manager.models import VirtueFlawInstance
 
 
 @pytest.fixture(scope="module")
@@ -156,6 +157,38 @@ def test_a_covenants_people_and_laboratories_open_with_new(app):
     assert saga is not None
     lab = next(lab for lab in saga.laboratories if lab.name == "Aelfric")
     assert lab.covenant_id == "cov1"
+
+
+def test_new_grog_from_a_grogs_template_asks_its_choices_first(app):
+    """The Animal Trainer's Madoc: the choices form opens after New Grog,
+    a grog's limits refuse an extra Virtue, and saving the book's own set
+    makes him In Creation, on his worksheet."""
+    window = _window(_sample_saga_with_covenant())
+    window.open_covenant("cov1")
+    page = window.page()
+    assert isinstance(page, CovenantPage)
+    page.codex.open_chapter("People")
+    errors: list[str] = []
+
+    def extra_virtue(dialog, key):
+        dialog.set_value(key, VirtueFlawInstance("vf_tough"))
+        dialog.try_save()
+        errors.append(dialog.error.text())
+        dialog.set_value(key, None)
+
+    asked = answering(
+        window,
+        {"name": "Madoc", "template_grog": "gt_animal_trainer"},
+        {"virtue_0": extra_virtue},
+    )
+    _new(window)["New Grog"].on_click()
+    assert asked[1].windowTitle() == "Animal Trainer template"
+    assert "Flaw points" in errors[0]
+    saga = window.saga
+    assert saga is not None
+    made = next(c for c in saga.characters if c.name == "Madoc")
+    assert made.in_creation and made.creation_xp
+    assert window.crumb_names()[-2:] == ["Madoc", "Creation Worksheet"]
 
 
 def test_new_character_on_a_covenant_belongs_to_it(app):

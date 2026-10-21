@@ -265,8 +265,32 @@ The Create a New Character form asks for a Name, a Type (magus, companion, Mythi
 
 - **None**: the character starts In Creation, to be built step by step with the [Creation Worksheet](help:creation-worksheet).
 - **A template**: one of the book's ready-to-play characters (Ars Magica Definitive Edition, Chapter 3: Characters, Character Templates). It fills the new sheet and the character starts In Play. If the template leaves a name to the player, such as an Area Lore's area, the app asks for it before the character is made; cancelling that cancels the new character.
+- **A Grogs template** (a grog, while Grogs is in play; marked "(Grogs)"): one of the nineteen kinds of grog in Grogs, Chapter 7, such as The Advisor or The Street Thug. These are guidance rather than finished characters, so the app asks for the template's choices next (see [A Grogs template](help:grog-templates)) and the grog starts In Creation.
 
 The line above Create describes the template you chose.
+
+### A Grogs template
+<!-- help: grog-templates -->
+
+After Create, a Grogs template asks for its choices before anything is made (Grogs, Chapter 7: Grog Templates; the limits are the Definitive Edition's, Chapter 3).
+
+**You choose:**
+
+- **Faith**, **Stage** or **Character**, where the book gives several versions: the Confessor's faith, the Craftsman's apprentice or journeyman, and the Animal Trainer's three sample characters.
+- **Age**: one of the book's ages for the template. It sets the year born and which of the book's Ability lists the grog gets.
+- **Social Status**, from the ones the book suggests.
+- **The book's Virtues and Flaws**, ticked: untick one to leave it out.
+- **The book also suggests**: tick any of its other suggestions; where the book says "this or that", pick one.
+- **Another Virtue** and **Another Flaw**: any other Minor Virtue or Flaw a grog may take, from the books in play. Where the book gives a Flaw a grog can't take, the hint under the first Another Flaw says what to choose instead.
+- **The book's Characteristics** (The Advisor only, the one template that gives figures), and a **Personality Trait** where the book gives a choice.
+
+**The app works out:** the line under the form gives the template, the xp a grog has at that age against what the book's list comes to, and the Virtue and Flaw points so far. Next refuses a choice that breaks a grog's limits: no Major Virtues or Flaws, nothing Hermetic and not The Gift, at most three Minor Flaws, no more Virtue points than Flaw points, and exactly one Social Status. Taking fewer Virtues than Flaws is allowed here; the worksheet then shows the points left to balance.
+
+Then the app asks for any names the Ability list leaves to you, such as an Area Lore's area, the Native Language or a Craft (the covenant's own name is filled in for you), and makes the grog. Cancelling either form cancels the new character.
+
+**What the grog starts with:** the age, the Social Status, Virtues and Flaws, the book's Personality Traits (with Loyal +1, and Brave +1 for one with a Martial Ability, if the book's lack them) and any Reputation, and the book's Ability list for that age, with its specialties. The Abilities go on the [Creation Worksheet](help:creation-worksheet) as xp, step by step: 75 xp of Native Language, the free score of a Supernatural Ability its Virtue grants, a Virtue's own xp (Educated, Warrior, Arcane Lore) on what it may buy, the 45 xp of Early Childhood on what a child may learn, and the rest in Later Life. The grog starts **In Creation**, so the worksheet checks the result: where the book's list spends more than the age gives, needs a Virtue the grog doesn't have (a Martial Ability without Warrior), or leaves xp unspent, its checks say so. The Biography notes the template, the book's details, its suggested training packages, and where the app's version differs from the book (a Flaw the Definitive Edition makes Major, an older edition's Ability) and why.
+
+**See also:** [New Character](help:character-group-new), [Creation Worksheet](help:creation-worksheet), [How to start a character](help:guide-creation-character-new)
 
 **See also:** [Laboratories group](help:laboratory-group), [Creation Worksheet](help:creation-worksheet), [The workspace](help:workspace), [How to create a character, covenant or laboratory](help:guide-creation)
 

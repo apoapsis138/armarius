@@ -10,18 +10,27 @@ shows it (the terminal also opens its Creation Worksheet).
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 
 from .. import character_templates, creation, packs, ruling_templates, storage
 from .. import familiars as fam
+from .. import grog_templates as gt
 from ..commands import Form
 from ..form_spec import DialogField, attr, covenant_options, pairs
 from ..markup import escape
-from ..models import REALMS, SEASONS, CharacterTemplateDef, Saga
+from ..models import (
+    REALMS,
+    SEASONS,
+    Character,
+    CharacterTemplateDef,
+    GrogTemplateDef,
+    Saga,
+)
 from ..models.saga import assign_laboratory_owner
 from ..rules import options as rule_options
 from ..seasons import defaults
+from . import grog_templates as grog_forms
 from . import tribunal as tribunal_forms
 
 #: Saga-form keys for the optional rules: the prefix plus the option's key.
@@ -276,13 +285,14 @@ def character_create_fields(
     saga: Saga, covenant_id: str | None, kind: str = "magus"
 ) -> list[DialogField]:
     """Name, Type (`kind` to start with), a Template of that Type (one
-    field per Type, shown while it is chosen) and covenant."""
+    field per Type, shown while it is chosen; a grog's include Grogs'
+    templates while that book is in play) and covenant."""
     return [
         DialogField(
             "name", "Name", "text", "", required=True, placeholder="e.g. Leandro"
         ),
         DialogField("type", "Type", "select", kind, options=CHARACTER_TYPES),
-        *(_template_field(kind) for _, kind in CHARACTER_TYPES),
+        *(_template_field(saga, kind) for _, kind in CHARACTER_TYPES),
         covenant_field(saga, covenant_id),
     ]
 
@@ -292,8 +302,10 @@ def template_key(kind: str) -> str:
     return "template_" + kind.replace(" ", "_")
 
 
-def _template_field(kind: str) -> DialogField:
+def _template_field(saga: Saga, kind: str) -> DialogField:
     options = [(escape(t.name), t.id) for t in character_templates.templates_for(kind)]
+    if kind == "grog":
+        options += [(escape(f"{t.name} (Grogs)"), t.id) for t in gt.templates(saga)]
     return DialogField(
         template_key(kind),
         "Template",
@@ -313,6 +325,12 @@ def character_create_live(values: dict[str, Any]) -> str:
     template = character_templates.find(values.get(template_key(kind)))
     if template is not None:
         return character_templates.summary(template)
+    grog = gt.find(values.get(template_key(kind)))
+    if grog is not None:
+        return (
+            gt.summary(grog) + "\n[dim]Its choices come next: the character "
+            "starts In Creation, built from them on the worksheet.[/]"
+        )
     if not character_templates.templates_for(kind):
         return "[dim]The book has no templates for this type.[/]"
     return (
@@ -321,23 +339,64 @@ def character_create_live(values: dict[str, Any]) -> str:
     )
 
 
-def blanks_fields(blanks: Sequence[str]) -> list[DialogField]:
+def blanks_fields(
+    blanks: Sequence[str], filled: dict[str, str] | None = None
+) -> list[DialogField]:
     """The names a sample childhood or training package leaves blank
-    ("area", "second_area", "language"), one text field each."""
+    ("area", "second_area", "language"), one text field each, starting
+    as `filled` says."""
     return [
         DialogField(
-            blank, blank.replace("_", " ").capitalize(), "text", "", required=True
+            blank,
+            blank.replace("_", " ").capitalize(),
+            "text",
+            (filled or {}).get(blank, ""),
+            required=True,
         )
         for blank in blanks
     ]
+
+
+def grog_template_steps(
+    saga: Saga,
+    values: dict[str, Any],
+    template: GrogTemplateDef,
+    created: Callable[[Character], Any] = lambda _character: None,
+) -> Form:
+    """After New Character (`values`) chose a Grogs template: ask for its
+    choices, then the names its Ability list leaves blank (the covenant's
+    filled in), then make the grog and hand it to `created`."""
+
+    def chosen(choices: gt.Choices) -> Form | None:
+        def make(filled: dict[str, Any] | None = None) -> None:
+            character = creation.add_character(
+                saga, values["name"], "grog", values["covenant_id"]
+            )
+            gt.apply(saga, character, template, choices, filled)
+            created(character)
+
+        wanted = gt.blanks(template, choices)
+        if not wanted:
+            make()
+            return None
+        covenant = saga.covenant(values["covenant_id"])
+        known = {"covenant": covenant.name} if covenant is not None else {}
+        return Form(
+            f"{escape(template.name)} template",
+            lambda: blanks_fields(wanted, known),
+            make,
+            save_label="Use",
+        )
+
+    return grog_forms.grog_template_form(saga, template, chosen)
 
 
 def new_character_form(
     saga: Saga, covenant_id: str | None, kind: str = "magus"
 ) -> Form:
     """Create a New Character, a `kind` to start with; a Template that
-    leaves names blank asks for them next (cancelling that cancels the new
-    character)."""
+    leaves names blank asks for them next, and a Grogs template its
+    choices first (cancelling either cancels the new character)."""
 
     def create(
         values: dict[str, Any],
@@ -351,6 +410,9 @@ def new_character_form(
             character_templates.apply(saga, character, template, filled)
 
     def apply(values: dict[str, Any]) -> Form | None:
+        grog = gt.find(values.get(template_key(values["type"])))
+        if grog is not None:
+            return grog_template_steps(saga, values, grog)
         template = character_templates.find(values.get(template_key(values["type"])))
         wanted = character_templates.blanks(template) if template else []
         if template is None or not wanted:

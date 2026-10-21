@@ -9,6 +9,7 @@ from textual.widgets import Input, Select
 
 from ars_magica_manager import catalog, creation, storage
 from ars_magica_manager import character_templates as ct
+from ars_magica_manager import grog_templates as gt
 from ars_magica_manager.arts import ARTS
 from ars_magica_manager.models import Saga
 from ars_magica_manager.rules import creation_access as access
@@ -148,7 +149,9 @@ async def test_the_template_choice_follows_the_type_and_describes_the_template()
         select = dialog.query_one("#fld-template_grog", Select)
         assert select.is_blank()
         offered = [str(prompt) for prompt, _ in select._options[1:]]
-        assert offered == [t.name for t in ct.templates_for("grog")]
+        assert offered == [t.name for t in ct.templates_for("grog")] + [
+            f"{t.name} (Grogs)" for t in gt.templates(None)
+        ]
 
         select.value = "tpl_hunter"
         assert await wait_until(
@@ -194,3 +197,49 @@ async def test_cancelling_the_blanks_creates_no_character():
         assert await wait_until(pilot, lambda: app.screen is base)
     saga = storage.load_saga(contract_saga().id)
     assert "Ulla" not in {c.name for c in saga.characters}
+
+
+async def test_a_grogs_template_asks_its_choices_and_starts_in_creation():
+    """The Confessor: a Jewish one is refused until he has another Flaw;
+    a Christian one goes on to the names his list leaves blank, then
+    opens on the worksheet."""
+    app = new_app()
+    async with app.run_test(size=(120, 45)) as pilot:
+        _base, dialog = await _new_character(pilot, app, "grog", "gt_confessor")
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot,
+            lambda: app.screen is not dialog and app.screen.query("#fld-variant"),
+            timeout=5.0,
+        )
+        choices = app.screen
+        assert choices.query_one("#btn-save").region.bottom <= 45
+        choices.query_one("#fld-variant", Select).value = "2"
+        await pilot.pause()
+        choices.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot,
+            lambda: "Flaw points" in str(choices.query_one("#fields-error").render()),
+        )
+        assert app.screen is choices
+        choices.query_one("#fld-variant", Select).value = "0"
+        await pilot.pause()
+        choices.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot,
+            lambda: app.screen is not choices and app.screen.query("#fld-area"),
+            timeout=5.0,
+        )
+        blanks = app.screen
+        assert blanks.query_one("#fld-covenant", Input).value == "Keep"
+        blanks.query_one("#fld-area", Input).value = "Black Forest"
+        blanks.query_one("#fld-language", Input).value = "German"
+        blanks.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: app.screen is not blanks, timeout=5.0)
+        for _ in range(10):
+            await pilot.pause()
+    saga = storage.load_saga(contract_saga().id)
+    ulla = next(c for c in saga.characters if c.name == "Ulla")
+    assert ulla.in_creation
+    assert {x.step for x in ulla.creation_xp} >= {"childhood", "later_life"}
+    assert "vf_priest" in {vf.vf_id for vf in ulla.virtues_flaws}

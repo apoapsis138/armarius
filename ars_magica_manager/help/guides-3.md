@@ -159,7 +159,7 @@ Every new covenant, laboratory and character starts **In Creation**, and its pag
 The header of the record's page has a button that shows its mode, **In Creation** or **In Play**. While it is In Creation, a **Worksheet** button sits under it.
 <!-- /gui -->
 
-The one exception is a character made from a template: the book's templates are finished characters, so they start In Play.
+The one exception is a character made from a template: the book's templates are finished characters, so they start In Play. A grog from one of the Grogs templates is not: it starts In Creation, built from the choices you made.
 
 ### Choose the order
 <!-- help: guide-creation-order -->
@@ -185,6 +185,7 @@ You can move freely between records and steps; nothing is locked in by the order
 2. Give a Name and a Type. For a Magus, Companion or Grog the form offers a **Template**: one of the book's ready-to-play characters, such as a magus of each House or The Knight. The Mythic Companion type has none.
 3. Leave Template at None to build the character yourself; the line above Create says the character starts In Creation. Or choose a template and the line describes it.
 4. Choose Create. If the template leaves a name to you, such as an Area Lore's area, the app asks for it first; cancelling there cancels the new character.
+5. A grog's list also has the Grogs templates, marked "(Grogs)", while that book is in play. Create then shows the template's choices: its version and age, Social Status, the book's Virtues and Flaws (ticked), its other suggestions, and up to two more Virtues and three more Flaws. Next refuses anything a grog can't take. Then name what the Ability list leaves blank and choose Use: the grog starts In Creation with the book's Abilities on its worksheet. See [A Grogs template](help:grog-templates).
 
 See [New Character](help:character-group-new).
 

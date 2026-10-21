@@ -94,6 +94,7 @@ from .definitions import CharacterTemplateDef as CharacterTemplateDef
 from .definitions import CovenantBoonHookDef as CovenantBoonHookDef
 from .definitions import CovenantSituationDef as CovenantSituationDef
 from .definitions import DispelRule as DispelRule
+from .definitions import GrogTemplateDef as GrogTemplateDef
 from .definitions import GroupCasting as GroupCasting
 from .definitions import HouseDef as HouseDef
 from .definitions import InitiationRule as InitiationRule

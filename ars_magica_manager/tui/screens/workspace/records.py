@@ -5,12 +5,14 @@ tables)."""
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 from .... import (
     arms,
     character_templates,
     creation,
+    grog_templates,
     place_events,
     places,
     ruins,
@@ -28,6 +30,7 @@ from ....forms import neighbour as neighbour_forms
 from ....forms import tribunal as tribunal_forms
 from ....markup import escape
 from ....models import (
+    Character,
     CharacterTemplateDef,
     Covenant,
     Neighbour,
@@ -171,6 +174,14 @@ class RecordActions(WorkspaceBase):
     def action_create_character(self) -> None:
         covenant = self.selected_covenant
 
+        async def created(character: Character) -> None:
+            storage.save_saga(self.saga)
+            self._rebuild_tree()
+            self.selected_character = character
+            self.selected_kind = NodeKind.CHARACTER
+            await self._show_character_detail(character)
+            self._open_creation_worksheet(character)
+
         async def create(
             values: dict[str, Any],
             template: CharacterTemplateDef | None = None,
@@ -181,15 +192,21 @@ class RecordActions(WorkspaceBase):
             )
             if template is not None:
                 character_templates.apply(self.saga, character, template, blanks)
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            self.selected_character = character
-            self.selected_kind = NodeKind.CHARACTER
-            await self._show_character_detail(character)
-            self._open_creation_worksheet(character)
+            await created(character)
 
         async def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
+                return
+            grog = grog_templates.find(values.get(template_key(values["type"])))
+            if grog is not None:
+                made: list[Character] = []
+                run_steps(
+                    self.app,
+                    creation_forms.grog_template_steps(
+                        self.saga, values, grog, made.append
+                    ),
+                    lambda _end: self._grog_created(made, created),
+                )
                 return
             template = character_templates.find(
                 values.get(template_key(values["type"]))
@@ -217,6 +234,12 @@ class RecordActions(WorkspaceBase):
             _character_create_dialog(self.saga, covenant.id if covenant else None),
             handle_result,
         )
+
+    def _grog_created(
+        self, made: list[Character], created: Callable[[Character], Awaitable[None]]
+    ) -> None:
+        if made:
+            self.call_later(created, made[0])
 
     def action_create_laboratory(self) -> None:
         covenant = self.selected_covenant

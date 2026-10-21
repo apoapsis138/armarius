@@ -107,6 +107,25 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.118.0 — 2026-10-21
+
+### Gauntlet
+
+- **The Grogs templates.** With the Grogs book in play, New Character
+  offers the 19 grog templates of Grogs' Chapter 7, from the Advisor to
+  the Time-Lost Witness. Choosing one first asks its choices: the
+  version (Christian, Islamic or Jewish Confessor, say), the age, the
+  Social Status, the book's Virtues and Flaws (untick any to leave it
+  out), its suggestions, any other Minor Virtue or Flaw, its
+  Characteristics and its Personality Traits. A grog's limits hold: no
+  Major or Hermetic Virtues or Flaws, at most three Minor Flaws, and no
+  more Virtue points than Flaw points. The grog then starts In Creation
+  with the book's Abilities for that age, its traits (with Loyal, and
+  Brave for a warrior), and a biography noting where the app differs
+  from the book.
+- The Creation Worksheet no longer warns a grog off Inoffensive or
+  Offensive to (Being) as if they were Hermetic.
+
 ## 2.117.0 — 2026-10-21
 
 ### Gauntlet

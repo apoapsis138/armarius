@@ -1,0 +1,5882 @@
+{
+ "attribution": "Grog Templates from Grogs, Chapter 7, via Project: Redcap (redcap.org). Restructured as data for Armarius, with the notes condensed. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+ "source": "https://www.redcap.org/page/Grogs_Chapter_Seven:_Grog_Templates",
+ "entries": [
+  {
+   "id": "gt_advisor",
+   "name": "The Advisor",
+   "page": 87,
+   "concept": "A covenant's living memory: an educated custos who knows the Order, its magi and its protocol, and keeps his master out of trouble.",
+   "statuses": [
+    "vf_custos"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_educated",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "organization lore: order of hermes"
+     }
+    },
+    {
+     "vf_id": "vf_ability_block",
+     "params": {
+      "abilities": "martial"
+     }
+    },
+    {
+     "vf_id": "vf_small_frame",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_susceptibility_to_warping",
+     "params": {}
+    }
+   ],
+   "pool": [
+    {
+     "vf_id": "vf_tainted_with_evil",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weak_characteristics",
+     "params": {}
+    }
+   ],
+   "characteristics": {
+    "intelligence": 3,
+    "perception": 2,
+    "presence": 1,
+    "communication": 1,
+    "strength": -1,
+    "stamina": -1,
+    "dexterity": -1,
+    "quickness": -1
+   },
+   "characteristics_advice": "Physical Characteristics -1 each; +3, +2, +1 and +1 for the mental ones, Intelligence highest (+2 to Perception for a watchful Advisor, or to Communication for a messenger or herald).",
+   "traits": [
+    [
+     "Loyal",
+     3
+    ],
+    [
+     "Dependable",
+     2
+    ]
+   ],
+   "trait_choices": [
+    {
+     "score": 1,
+     "options": [
+      "Analytical",
+      "Perfectionist",
+      "Wry Humor"
+     ]
+    }
+   ],
+   "ages": [
+    {
+     "age": 20,
+     "abilities": [
+      {
+       "name": "Art of Memory",
+       "score": 3,
+       "specialty": "scenes"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 3,
+       "specialty": "rhetoric"
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 2,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Etiquette",
+       "score": 3,
+       "specialty": "nobility"
+      },
+      {
+       "name": "Faerie Lore",
+       "score": 1,
+       "specialty": "faerie queens"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "nobles"
+      },
+      {
+       "name": "Code of Hermes",
+       "score": 1,
+       "specialty": "interaction with mundanes"
+      },
+      {
+       "name": "Intrigue",
+       "score": 3,
+       "specialty": "gossip"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 4,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Leadership",
+       "score": 1,
+       "specialty": "covenfolk"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "poetry"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 2,
+       "specialty": "magical traditions"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 2,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 3,
+       "specialty": "moral philosophy"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 35,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "politics"
+      },
+      {
+       "name": "Art of Memory",
+       "score": 5,
+       "specialty": "scenes"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 3,
+       "specialty": "rhetoric"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 2,
+       "specialty": "laws and customs of a specific area"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Etiquette",
+       "score": 3,
+       "specialty": "nobility"
+      },
+      {
+       "name": "Faerie Lore",
+       "score": 2,
+       "specialty": "faerie queens"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "nobles"
+      },
+      {
+       "name": "Code of Hermes",
+       "score": 2,
+       "specialty": "interaction with mundanes"
+      },
+      {
+       "name": "Intrigue",
+       "score": 3,
+       "specialty": "gossip"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 4,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Leadership",
+       "score": 2,
+       "specialty": "covenfolk"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "poetry"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 2,
+       "specialty": "magical traditions"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 5,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 3,
+       "specialty": "moral philosophy"
+      },
+      {
+       "name": "Theology: Christian",
+       "score": 2,
+       "specialty": "local practices"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 50,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 4,
+       "specialty": "politics"
+      },
+      {
+       "name": "Art of Memory",
+       "score": 5,
+       "specialty": "scenes"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 3,
+       "specialty": "rhetoric"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Charm",
+       "score": 4,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 2,
+       "specialty": "laws and customs of a specific area"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 4,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Etiquette",
+       "score": 4,
+       "specialty": "nobility"
+      },
+      {
+       "name": "Faerie Lore",
+       "score": 3,
+       "specialty": "faerie queens"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 4,
+       "specialty": "nobles"
+      },
+      {
+       "name": "Dead Language: Greek",
+       "score": 1,
+       "specialty": "prose"
+      },
+      {
+       "name": "Code of Hermes",
+       "score": 3,
+       "specialty": "interaction with mundanes"
+      },
+      {
+       "name": "Intrigue",
+       "score": 3,
+       "specialty": "gossip"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 5,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Leadership",
+       "score": 2,
+       "specialty": "covenfolk"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "poetry"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 4,
+       "specialty": "magical traditions"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 6,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 3,
+       "specialty": "moral philosophy"
+      },
+      {
+       "name": "Theology: Christian",
+       "score": 2,
+       "specialty": "local practices"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Charmer, Covenfolk, Courtier, Cunning Man, Failed Apprentice (its Penetration xp can go to the Realm Lores instead)",
+   "notes": "The Virtues are almost essential; the Flaws are open (Tainted with Evil, or Weak Characteristics from years of study).",
+   "fixes": []
+  },
+  {
+   "id": "gt_almogavars",
+   "name": "The Almogavars",
+   "page": 90,
+   "concept": "Light infantry of the Aragonese frontier: javelin, short sword and courage, lightly armored and fast.",
+   "statuses": [
+    "vf_almogavar"
+   ],
+   "virtues_flaws": [],
+   "pool": [
+    {
+     "vf_id": "vf_enduring_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reserves_of_strength",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_warrior",
+     "params": {}
+    },
+    {
+     "label": "Affinity",
+     "one_of": [
+      {
+       "vf_id": "vf_affinity_with_ability",
+       "params": {
+        "ability": "single weapon"
+       }
+      },
+      {
+       "vf_id": "vf_affinity_with_ability",
+       "params": {
+        "ability": "thrown weapon"
+       }
+      }
+     ]
+    },
+    {
+     "label": "Puissant",
+     "one_of": [
+      {
+       "vf_id": "vf_puissant_ability",
+       "params": {
+        "ability": "single weapon"
+       }
+      },
+      {
+       "vf_id": "vf_puissant_ability",
+       "params": {
+        "ability": "thrown weapon"
+       }
+      }
+     ]
+    },
+    {
+     "vf_id": "vf_dutybound",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_proud",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reckless",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_oversensitive",
+     "params": {},
+     "note": "insults"
+    },
+    {
+     "vf_id": "vf_generous",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_compassionate",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_disfigured",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_missing_ear",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_missing_eye",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_missing_hand",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_lingering_injury",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 18,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 2,
+       "specialty": "ambush sites"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "hiking"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "ambushes"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "getting away"
+      },
+      {
+       "name": "Carouse",
+       "score": 1,
+       "specialty": "singing"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 1,
+       "specialty": "warriors"
+      },
+      {
+       "name": "Guile",
+       "score": 1,
+       "specialty": "excuses"
+      },
+      {
+       "name": "Hunt",
+       "score": 1,
+       "specialty": "birds"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "cursing"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 4,
+       "specialty": "azcona"
+      },
+      {
+       "name": "Stealth",
+       "score": 1,
+       "specialty": "camouflage"
+      },
+      {
+       "name": "Survival",
+       "score": 1,
+       "specialty": "semi-desert"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 4,
+       "specialty": "azcona"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Young Recruit"
+    },
+    {
+     "age": 30,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "ambush sites"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "hiking"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "ambushes"
+      },
+      {
+       "name": "Bargain",
+       "score": 1,
+       "specialty": "wages"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "getting away"
+      },
+      {
+       "name": "Carouse",
+       "score": 2,
+       "specialty": "singing"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "warriors"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "excuses"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "birds"
+      },
+      {
+       "name": "Leadership",
+       "score": 2,
+       "specialty": "in combat"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "cursing"
+      },
+      {
+       "name": "Profession: Soldier",
+       "score": 2,
+       "specialty": "avoiding duties"
+      },
+      {
+       "name": "Ride",
+       "score": 1,
+       "specialty": "fleeing"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 5,
+       "specialty": "azcona"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "camouflage"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "semi-desert"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 5,
+       "specialty": "azcona"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Mature Soldier"
+    },
+    {
+     "age": 42,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 4,
+       "specialty": "ambush sites"
+      },
+      {
+       "name": "Animal Handling",
+       "score": 1
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "hiking"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "ambushes"
+      },
+      {
+       "name": "Bargain",
+       "score": 2,
+       "specialty": "wages"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "getting away"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "singing"
+      },
+      {
+       "name": "Charm",
+       "score": 1
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "warriors"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "excuses"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "birds"
+      },
+      {
+       "name": "Leadership",
+       "score": 4,
+       "specialty": "in combat"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "cursing"
+      },
+      {
+       "name": "Profession: Soldier",
+       "score": 3,
+       "specialty": "avoiding duties"
+      },
+      {
+       "name": "Ride",
+       "score": 1,
+       "specialty": "fleeing"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 6,
+       "specialty": "azcona"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "camouflage"
+      },
+      {
+       "name": "Survival",
+       "score": 3,
+       "specialty": "semi-desert"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 5,
+       "specialty": "azcona"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Experienced Veteran"
+    }
+   ],
+   "packages": "Childhood: Athletic, Mischievous or Traveling; Javeliner, Soldier, Woodsman; Forager",
+   "notes": "Equipment: sheepskin and an open-faced iron helmet (Protection 1, Load 1), a short sword, perhaps a small round shield, and the azcona, a short spear used on foot or mounted or thrown as a javelin. The book's Ability lists don't count any Virtues or Flaws.",
+   "fixes": []
+  },
+  {
+   "id": "gt_animal_trainer",
+   "name": "Animal Trainer",
+   "page": 94,
+   "concept": "A shepherd, falconer, horse-master or kennel master: anyone whose trade is beasts, mundane or magical.",
+   "statuses": [
+    "vf_covenfolk"
+   ],
+   "variant_label": "Character",
+   "variants": [
+    {
+     "name": "Madoc, age 15, young shepherd",
+     "ages": [
+      {
+       "age": 15,
+       "abilities": [
+        {
+         "name": "Animal Handling",
+         "score": 4,
+         "specialty": "sheep"
+        },
+        {
+         "name": "Area Lore: Bangor",
+         "score": 2,
+         "specialty": "animals"
+        },
+        {
+         "name": "Area Lore: Gwynedd",
+         "score": 2,
+         "specialty": "pastures"
+        },
+        {
+         "name": "Athletics",
+         "score": 2,
+         "specialty": "climbing"
+        },
+        {
+         "name": "Awareness",
+         "score": 2,
+         "specialty": "animals"
+        },
+        {
+         "name": "Bargain",
+         "score": 1,
+         "specialty": "food"
+        },
+        {
+         "name": "Folk Ken",
+         "score": 2,
+         "specialty": "employers"
+        },
+        {
+         "name": "Guile",
+         "score": 2,
+         "specialty": "excuses"
+        },
+        {
+         "name": "Ride",
+         "score": 1,
+         "specialty": "carefully"
+        },
+        {
+         "name": "Stealth",
+         "score": 2,
+         "specialty": "towns"
+        },
+        {
+         "name": "Survival",
+         "score": 3,
+         "specialty": "hills"
+        },
+        {
+         "name": "Living Language: Welsh",
+         "score": 5,
+         "specialty": "wheedling"
+        }
+       ],
+       "native": "Living Language: Welsh",
+       "label": "Madoc, young shepherd"
+      }
+     ],
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_puissant_ability",
+       "params": {
+        "ability": "animal handling"
+       }
+      },
+      {
+       "vf_id": "vf_improved_characteristics",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_cursed_guile",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_judged_unfairly",
+       "params": {}
+      }
+     ]
+    },
+    {
+     "name": "Alyse, age 25, gryphon trainer",
+     "ages": [
+      {
+       "age": 25,
+       "abilities": [
+        {
+         "name": "Animal Handling",
+         "score": 5,
+         "specialty": "gryphons"
+        },
+        {
+         "name": "Animal Ken",
+         "score": 4,
+         "specialty": "gryphons"
+        },
+        {
+         "name": "Area Lore: Black Forest",
+         "score": 3,
+         "specialty": "gryphons"
+        },
+        {
+         "name": "Athletics",
+         "score": 2,
+         "specialty": "falling"
+        },
+        {
+         "name": "Awareness",
+         "score": 3,
+         "specialty": "above"
+        },
+        {
+         "name": "Brawl",
+         "score": 2,
+         "specialty": "grapple"
+        },
+        {
+         "name": "Faerie Lore",
+         "score": 3,
+         "specialty": "gryphons"
+        },
+        {
+         "name": "Folk Ken",
+         "score": 2,
+         "specialty": "magi"
+        },
+        {
+         "name": "Living Language: German",
+         "score": 5,
+         "specialty": "animals"
+        },
+        {
+         "name": "Magic Lore",
+         "score": 4,
+         "specialty": "gryphons"
+        },
+        {
+         "name": "Ride",
+         "score": 4,
+         "specialty": "gryphons"
+        },
+        {
+         "name": "Stealth",
+         "score": 1,
+         "specialty": "forest"
+        },
+        {
+         "name": "Survival",
+         "score": 3,
+         "specialty": "forest"
+        },
+        {
+         "name": "Swim",
+         "score": 1,
+         "specialty": "strong currents"
+        }
+       ],
+       "native": "Living Language: German",
+       "label": "Alyse, gryphon trainer"
+      }
+     ],
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_animal_ken",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_arcane_lore",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_master_of_form_creatures",
+       "params": {
+        "form": "animal"
+       }
+      },
+      {
+       "vf_id": "vf_delusion",
+       "params": {},
+       "note": "everyone can talk to animals"
+      },
+      {
+       "vf_id": "vf_susceptibility_to_warping",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_faerie_upbringing",
+       "params": {}
+      }
+     ]
+    },
+    {
+     "name": "William, age 35, kennel master",
+     "ages": [
+      {
+       "age": 35,
+       "abilities": [
+        {
+         "name": "Animal Handling",
+         "score": 6,
+         "specialty": "hounds"
+        },
+        {
+         "name": "Area Lore: Loire",
+         "score": 3,
+         "specialty": "hunting grounds"
+        },
+        {
+         "name": "Athletics",
+         "score": 3,
+         "specialty": "running"
+        },
+        {
+         "name": "Awareness",
+         "score": 4,
+         "specialty": "hounds"
+        },
+        {
+         "name": "Brawl",
+         "score": 2,
+         "specialty": "grappling"
+        },
+        {
+         "name": "Carouse",
+         "score": 2,
+         "specialty": "drinking games"
+        },
+        {
+         "name": "Etiquette",
+         "score": 3,
+         "specialty": "servant"
+        },
+        {
+         "name": "Folk Ken",
+         "score": 2,
+         "specialty": "nobles"
+        },
+        {
+         "name": "Living Language: French",
+         "score": 5,
+         "specialty": "polite"
+        },
+        {
+         "name": "Hunt",
+         "score": 5,
+         "specialty": "with hounds"
+        },
+        {
+         "name": "Dead Language: Latin",
+         "score": 2,
+         "specialty": "Hermetic usage"
+        },
+        {
+         "name": "Leadership",
+         "score": 3,
+         "specialty": "dogs"
+        },
+        {
+         "name": "Profession: Feuterer",
+         "score": 4,
+         "specialty": "feet"
+        },
+        {
+         "name": "Ride",
+         "score": 4,
+         "specialty": "in woodland"
+        },
+        {
+         "name": "Stealth",
+         "score": 3,
+         "specialty": "woodland"
+        },
+        {
+         "name": "Survival",
+         "score": 1,
+         "specialty": "woodland"
+        }
+       ],
+       "native": "Living Language: French",
+       "label": "William, kennel master"
+      }
+     ],
+     "statuses": [
+      "vf_master_of_kennels"
+     ],
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_inoffensive_to_being",
+       "params": {
+        "being": "animals"
+       }
+      },
+      {
+       "vf_id": "vf_puissant_ability",
+       "params": {
+        "ability": "animal handling"
+       }
+      }
+     ],
+     "flaw_hint": "The book gives William Magical Air, a Major Flaw in the Definitive Edition, which a grog can't take: choose Minor Flaws in its place."
+    }
+   ],
+   "pool": [],
+   "ages": [],
+   "packages": "Animal Trainer, Farmer, Magician (for magical animals), Rider, Woodsman",
+   "notes": "Every Animal Trainer needs a good Animal Handling; also Ride for a horseman, Leadership for a master of kennels, Bargain for a dealer, Survival on the moors, Hunt for a falconer, and a Profession for the trade (Feuterer, master of hounds).",
+   "fixes": [
+    "The book gives Madoc \"Strong Characteristics\", which no book defines; read as Improved Characteristics.",
+    "The book gives William Magical Air; in the Definitive Edition it is a Major Flaw, which a grog can't take, so it is left out.",
+    "The book names no Social Status for Madoc and Alyse; Covenfolk is offered."
+   ]
+  },
+  {
+   "id": "gt_bodyguard_maidservant",
+   "name": "Bodyguard Maidservant",
+   "page": 96,
+   "concept": "A bland, demure maidservant no one notices, who guards her master and can fill many quieter roles.",
+   "statuses": [
+    "vf_covenfolk"
+   ],
+   "virtues_flaws": [],
+   "pool": [
+    {
+     "vf_id": "vf_keen_vision",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_sharp_ears",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_lightning_reflexes",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "awareness"
+     }
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "guile"
+     }
+    },
+    {
+     "vf_id": "vf_forgettable_face",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_warrior",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_educated",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_arcane_lore",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_small_frame",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_oversensitive",
+     "params": {},
+     "note": "chauvinism"
+    },
+    {
+     "vf_id": "vf_weak_personality",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_compulsive_lying",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_uninspirational",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 15,
+     "abilities": [
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "dodging"
+      },
+      {
+       "name": "Awareness",
+       "score": 4,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "dagger"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "magi"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "xp": 10,
+       "specialty": "identity change"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "being subservient"
+      },
+      {
+       "name": "Profession: Maidservant",
+       "score": 3,
+       "specialty": "tidying up"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Young Bodyguard"
+    },
+    {
+     "age": 25,
+     "abilities": [
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "dodging"
+      },
+      {
+       "name": "Awareness",
+       "score": 5,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "dagger"
+      },
+      {
+       "name": "Etiquette",
+       "score": 2,
+       "specialty": "hermetic"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "anticipating attack"
+      },
+      {
+       "name": "Guile",
+       "score": 5,
+       "xp": 20,
+       "specialty": "identity change"
+      },
+      {
+       "name": "Legerdemain",
+       "score": 3,
+       "specialty": "holdout"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "being subservient"
+      },
+      {
+       "name": "Profession: Maidservant",
+       "score": 3,
+       "specialty": "tidying up"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Mature Bodyguard"
+    }
+   ],
+   "packages": "Childhood: Social, Exploring or Mischievous; Courtier, Conman, Harlot, Tumbler, Servant; Charmer, Covenfolk",
+   "notes": "Covenfolk keeps her unnoticed (Custos would make her too visible). Warrior lets her learn weapons beyond daggers; Educated or Arcane Lore suit an older one.",
+   "fixes": [
+    "The book suggests Mistaken Identity, a Major Flaw in the Definitive Edition, which a grog can't take; left out."
+   ]
+  },
+  {
+   "id": "gt_bull",
+   "name": "The Bull",
+   "page": 98,
+   "concept": "The classic big, strong, not-too-bright fighting grog.",
+   "statuses": [
+    "vf_covenfolk",
+    "vf_turb_trained",
+    "vf_wanderer",
+    "vf_branded_criminal",
+    "vf_outcast"
+   ],
+   "virtues_flaws": [],
+   "pool": [
+    {
+     "vf_id": "vf_large",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_rapid_convalescence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reserves_of_strength",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_enduring_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_warrior",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clumsy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_carefree",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_covenant_upbringing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_gullible",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_uncontrollable_strength",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_magical_fascination",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_pack_mentality",
+     "params": {}
+    },
+    {
+     "label": "(Realm) Stigmatic",
+     "one_of": [
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "magic"
+       }
+      },
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "faerie"
+       }
+      },
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "divine"
+       }
+      },
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "infernal"
+       }
+      }
+     ]
+    },
+    {
+     "vf_id": "vf_master_of_none",
+     "params": {}
+    }
+   ],
+   "flaw_hint": "The book also suggests Offensive Fighter, which no book defines: a Minor Personality Flaw is recommended in its place.",
+   "ages": [
+    {
+     "age": 20,
+     "abilities": [
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "climb"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "wrestling"
+      },
+      {
+       "name": "Carouse",
+       "score": 4,
+       "specialty": "merrymaking"
+      },
+      {
+       "name": "Great Weapon",
+       "score": 5,
+       "specialty": "poleaxe"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 4,
+       "specialty": "Hermetic"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "rhyming insults"
+      },
+      {
+       "name": "Ride",
+       "score": 2,
+       "specialty": "trotting"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Young Man"
+    },
+    {
+     "age": 25,
+     "abilities": [
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "climb"
+      },
+      {
+       "name": "Brawl",
+       "score": 5,
+       "specialty": "wrestling"
+      },
+      {
+       "name": "Carouse",
+       "score": 4,
+       "specialty": "merrymaking"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 3,
+       "specialty": "cuts"
+      },
+      {
+       "name": "Great Weapon",
+       "score": 5,
+       "specialty": "poleaxe"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 4,
+       "specialty": "Hermetic"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 1,
+       "specialty": "magical minerals"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "rhyming insults"
+      },
+      {
+       "name": "Ride",
+       "score": 3,
+       "specialty": "trotting"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Mature Man"
+    }
+   ],
+   "packages": "Childhood: Athletic, Covenant-bred or Exploring; Footpad, Laborer, Sentry, Soldier; Brawler, Covenfolk, Local",
+   "notes": "Unless his Social Status lets him learn Martial Abilities, he needs a Virtue for them (Warrior). He is no leader: Custos, Mercenary Captain, Outlaw Leader or Knight don't fit.",
+   "fixes": [
+    "The book suggests Offensive Fighter, which neither Grogs nor the Definitive Edition defines; left out, with a Minor Personality Flaw recommended instead.",
+    "The book suggests Outlaw as his Social Status; in the Definitive Edition it is a Major Flaw, which a grog can't take; left out."
+   ]
+  },
+  {
+   "id": "gt_confessor",
+   "name": "The Confessor",
+   "page": 100,
+   "concept": "The covenant's priest, imam or rabbi, who hears the magi's confessions and confronts them with their deeds.",
+   "statuses": [],
+   "variant_label": "Faith",
+   "variants": [
+    {
+     "name": "Christian",
+     "statuses": [
+      "vf_priest"
+     ],
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_relic",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_clear_thinker",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_uncertain_faith",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_vow",
+       "params": {},
+       "note": "celibacy"
+      },
+      {
+       "vf_id": "vf_weakness",
+       "params": {},
+       "note": "drinking"
+      }
+     ]
+    },
+    {
+     "name": "Islamic",
+     "statuses": [
+      "vf_alim"
+     ],
+     "renames": {
+      "Theology: Christian": "Theology: Islam"
+     },
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_educated_islamic",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_clear_thinker",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_uncertain_faith",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_vow",
+       "params": {},
+       "note": "celibacy"
+      },
+      {
+       "vf_id": "vf_temperate",
+       "params": {}
+      }
+     ]
+    },
+    {
+     "name": "Jewish",
+     "statuses": [
+      "vf_rabbi"
+     ],
+     "renames": {
+      "Theology: Christian": "Theology: Judaism"
+     },
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_educated_hebrew",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_clear_thinker",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_uncertain_faith",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_meddler",
+       "params": {}
+      }
+     ],
+     "flaw_hint": "The book also gives the Jewish Confessor Outsider, a second Social Status, which a grog can't have: choose another Minor Flaw in its place."
+    }
+   ],
+   "pool": [],
+   "characteristics_advice": "High Intelligence, Communication and Presence.",
+   "traits": [
+    [
+     "Good Listener",
+     3
+    ],
+    [
+     "Uncertain Faith",
+     1
+    ]
+   ],
+   "trait_choices": [
+    {
+     "score": 2,
+     "options": [
+      "Compassionate",
+      "Duty-Bound",
+      "Strict"
+     ]
+    }
+   ],
+   "ages": [
+    {
+     "age": 25,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 2,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 2,
+       "specialty": "rhetoric"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "Fist"
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 3,
+       "specialty": "local laws"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "magi"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "keeping confessional secrets"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 4,
+       "specialty": "church ceremonies"
+      },
+      {
+       "name": "Leadership",
+       "score": 3,
+       "specialty": "inspiration"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "local dialect"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 1,
+       "specialty": "practices"
+      },
+      {
+       "name": "Organization Lore: Church",
+       "score": 4,
+       "specialty": "own diocese"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 2,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "hide"
+      },
+      {
+       "name": "Theology: Christian",
+       "score": 3,
+       "specialty": "biblical knowledge"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 40,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 3,
+       "specialty": "rhetoric"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "Fist"
+      },
+      {
+       "name": "Charm",
+       "score": 4,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 4,
+       "specialty": "local laws"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 4,
+       "specialty": "magi"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "keeping confessional secrets"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 4,
+       "specialty": "church ceremonies"
+      },
+      {
+       "name": "Leadership",
+       "score": 4,
+       "specialty": "inspiration"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "local dialect"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 2,
+       "specialty": "practices"
+      },
+      {
+       "name": "Organization Lore: Church",
+       "score": 4,
+       "specialty": "own diocese"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "hide"
+      },
+      {
+       "name": "Theology: Christian",
+       "score": 6,
+       "specialty": "biblical knowledge"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 55,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 4,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 3,
+       "specialty": "rhetoric"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "Fist"
+      },
+      {
+       "name": "Charm",
+       "score": 5,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 4,
+       "specialty": "local laws"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 5,
+       "specialty": "magi"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "keeping confessional secrets"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 5,
+       "specialty": "church ceremonies"
+      },
+      {
+       "name": "Leadership",
+       "score": 5,
+       "specialty": "inspiration"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "local dialect"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 3,
+       "specialty": "practices"
+      },
+      {
+       "name": "Organization Lore: Church",
+       "score": 6,
+       "specialty": "own diocese"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 4,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Stealth",
+       "score": 3,
+       "specialty": "hide"
+      },
+      {
+       "name": "Theology: Christian",
+       "score": 6,
+       "specialty": "biblical knowledge"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Childhood: Mischievous; Student (parish school), Churchman (at least one package in three); Covenfolk, Local, Leader, Public Official",
+   "notes": "The Ability lists are for a Christian priest; an imam or rabbi has a different focus and the 50 xp of his Educated Virtue. Uncertain Faith is also a Personality Trait of at least 1.",
+   "fixes": [
+    "The book gives the Jewish Confessor Outsider (Minor) beside Rabbi; a grog has one Social Status, so Outsider is left out.",
+    "The book's lists are for a Christian priest; for the Islamic and Jewish Confessors their Theology is of their own faith."
+   ]
+  },
+  {
+   "id": "gt_corpse_thief",
+   "name": "The Corpse-Thief",
+   "page": 104,
+   "concept": "A graveyard robber who sells the bodies of the hanged and the unbaptized to witches and warlocks, and knows the occult worth of what he steals.",
+   "statuses": [
+    "vf_wise_one",
+    "vf_wanderer",
+    "vf_outcast"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_arcane_lore",
+     "params": {}
+    }
+   ],
+   "pool": [
+    {
+     "vf_id": "vf_magic_sensitivity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_social_contacts",
+     "params": {
+      "group": "hedge witches"
+     }
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "stealth"
+     }
+    },
+    {
+     "vf_id": "vf_light_touch",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_minor_enchantments",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tainted_with_evil",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_viaticarus",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_nocturnal",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 24,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "graveyards"
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "specialty": "running"
+      },
+      {
+       "name": "Bargain",
+       "score": 1,
+       "specialty": "corpses"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "getting away"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "at night"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 2,
+       "specialty": "crushing injuries"
+      },
+      {
+       "name": "Craft: Poppets",
+       "score": 2,
+       "xp": 5,
+       "specialty": "wizards"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "customers"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "feigning innocence"
+      },
+      {
+       "name": "Legerdemain",
+       "score": 2,
+       "specialty": "acquiring locks of hair"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 3,
+       "specialty": "undead"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "obsequious"
+      },
+      {
+       "name": "Organization Lore: Apothecary Guild",
+       "score": 2,
+       "specialty": "corruption"
+      },
+      {
+       "name": "Penetration",
+       "score": 2,
+       "specialty": "poppets"
+      },
+      {
+       "name": "Profession: Apothecary",
+       "score": 3,
+       "specialty": "preserving arcane connections"
+      },
+      {
+       "name": "Stealth",
+       "score": 4,
+       "specialty": "at night"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 35,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "graveyards"
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "specialty": "running"
+      },
+      {
+       "name": "Bargain",
+       "score": 2,
+       "specialty": "corpses"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "getting away"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "at night"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 2,
+       "specialty": "crushing injuries"
+      },
+      {
+       "name": "Craft: Poppets",
+       "score": 3,
+       "specialty": "wizards"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "customers"
+      },
+      {
+       "name": "Guile",
+       "score": 4,
+       "specialty": "feigning innocence"
+      },
+      {
+       "name": "Infernal Lore",
+       "score": 3,
+       "specialty": "undead"
+      },
+      {
+       "name": "Legerdemain",
+       "score": 3,
+       "specialty": "acquiring locks of hair"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 4,
+       "specialty": "undead"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "obsequious"
+      },
+      {
+       "name": "Organization Lore: Apothecary Guild",
+       "score": 2,
+       "specialty": "corruption"
+      },
+      {
+       "name": "Penetration",
+       "score": 3,
+       "specialty": "poppets"
+      },
+      {
+       "name": "Profession: Apothecary",
+       "score": 4,
+       "specialty": "preserving arcane connections"
+      },
+      {
+       "name": "Stealth",
+       "score": 5,
+       "specialty": "at night"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 50,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "graveyards"
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "specialty": "running"
+      },
+      {
+       "name": "Bargain",
+       "score": 2,
+       "specialty": "corpses"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "getting away"
+      },
+      {
+       "name": "Concentration",
+       "score": 3,
+       "specialty": "at night"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 4,
+       "specialty": "crushing injuries"
+      },
+      {
+       "name": "Craft: Poppets",
+       "score": 4,
+       "specialty": "wizards"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "customers"
+      },
+      {
+       "name": "Guile",
+       "score": 5,
+       "specialty": "feigning innocence"
+      },
+      {
+       "name": "Infernal Lore",
+       "score": 3,
+       "specialty": "undead"
+      },
+      {
+       "name": "Legerdemain",
+       "score": 4,
+       "specialty": "acquiring locks of hair"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 5,
+       "specialty": "undead"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "obsequious"
+      },
+      {
+       "name": "Organization Lore: Apothecary Guild",
+       "score": 2,
+       "specialty": "corruption"
+      },
+      {
+       "name": "Penetration",
+       "score": 4,
+       "specialty": "poppets"
+      },
+      {
+       "name": "Profession: Apothecary",
+       "score": 5,
+       "xp": 10,
+       "specialty": "preserving arcane connections"
+      },
+      {
+       "name": "Stealth",
+       "score": 5,
+       "specialty": "at night"
+      },
+      {
+       "name": "Teaching",
+       "score": 2,
+       "specialty": "Craft: Poppets"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Footpad, Apothecary, Magician, Craftsman, Cultist, Local",
+   "notes": "He needs a Virtue that opens the Arcane Abilities (Arcane Lore). Magic Sensitivity lets him find vis himself; Penetration covers arcane and sympathetic connections.",
+   "fixes": []
+  },
+  {
+   "id": "gt_craftsman",
+   "name": "The Craftsman",
+   "page": 106,
+   "concept": "The covenant's blacksmith (or other craftsman), growing from apprentice to master as the saga goes on.",
+   "statuses": [],
+   "variant_label": "Stage",
+   "variants": [
+    {
+     "name": "Apprentice",
+     "statuses": [
+      "vf_guild_apprentice"
+     ],
+     "ages": [
+      {
+       "age": 15,
+       "abilities": [
+        {
+         "name": "Awareness",
+         "score": 2,
+         "specialty": "alertness"
+        },
+        {
+         "name": "Bargain",
+         "score": 1,
+         "specialty": "goods"
+        },
+        {
+         "name": "Craft: Blacksmith",
+         "score": 3,
+         "specialty": "fine work"
+        },
+        {
+         "name": "Brawl",
+         "score": 3,
+         "specialty": "Fist"
+        },
+        {
+         "name": "Carouse",
+         "score": 3,
+         "specialty": "stories"
+        },
+        {
+         "name": "Charm",
+         "score": 1,
+         "specialty": "first impressions"
+        },
+        {
+         "name": "Chirurgy",
+         "score": 1,
+         "specialty": "burns"
+        },
+        {
+         "name": "Guile",
+         "score": 1,
+         "specialty": "tall stories"
+        },
+        {
+         "name": "Living Language: {language}",
+         "score": 5
+        },
+        {
+         "name": "Organization Lore: {covenant}",
+         "score": 1,
+         "specialty": "names"
+        },
+        {
+         "name": "Single Weapon",
+         "score": 2,
+         "specialty": "Hammer"
+        },
+        {
+         "name": "Stealth",
+         "score": 1,
+         "specialty": "sneak"
+        },
+        {
+         "name": "Survival",
+         "score": 2,
+         "specialty": "camping out"
+        },
+        {
+         "name": "Teaching",
+         "score": 3,
+         "specialty": "blacksmith"
+        }
+       ],
+       "native": "Living Language: {language}"
+      }
+     ],
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_improved_characteristics",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_puissant_ability",
+       "params": {
+        "ability": "craft: blacksmith"
+       }
+      },
+      {
+       "vf_id": "vf_independent_craftsman",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_necessary_realm_aura_for_ability",
+       "params": {
+        "realm": "magic",
+        "ability": "craft: blacksmith"
+       }
+      },
+      {
+       "vf_id": "vf_carefree",
+       "params": {}
+      }
+     ]
+    },
+    {
+     "name": "Journeyman or master",
+     "statuses": [
+      "vf_custos",
+      "vf_craftsman",
+      "vf_journeyman"
+     ],
+     "ages": [
+      {
+       "age": 30,
+       "abilities": [
+        {
+         "name": "Awareness",
+         "score": 2,
+         "specialty": "alertness"
+        },
+        {
+         "name": "Bargain",
+         "score": 3,
+         "specialty": "goods"
+        },
+        {
+         "name": "Craft: Blacksmith",
+         "score": 5,
+         "specialty": "fine work"
+        },
+        {
+         "name": "Brawl",
+         "score": 4,
+         "specialty": "Fist"
+        },
+        {
+         "name": "Carouse",
+         "score": 3,
+         "specialty": "stories"
+        },
+        {
+         "name": "Charm",
+         "score": 2,
+         "specialty": "first impressions"
+        },
+        {
+         "name": "Chirurgy",
+         "score": 3,
+         "specialty": "burns"
+        },
+        {
+         "name": "Faerie Lore",
+         "score": 1,
+         "specialty": "fire sprites"
+        },
+        {
+         "name": "Finesse",
+         "score": 3,
+         "specialty": "enchanted items"
+        },
+        {
+         "name": "Guile",
+         "score": 2,
+         "specialty": "tall stories"
+        },
+        {
+         "name": "Leadership",
+         "score": 2,
+         "specialty": "craftsmen"
+        },
+        {
+         "name": "Living Language: {language}",
+         "score": 5
+        },
+        {
+         "name": "Organization Lore: {covenant}",
+         "score": 3,
+         "specialty": "names"
+        },
+        {
+         "name": "Single Weapon",
+         "score": 3,
+         "specialty": "hammer"
+        },
+        {
+         "name": "Stealth",
+         "score": 1,
+         "specialty": "sneak"
+        },
+        {
+         "name": "Survival",
+         "score": 2,
+         "specialty": "camping out"
+        },
+        {
+         "name": "Teaching",
+         "score": 3,
+         "specialty": "blacksmith"
+        }
+       ],
+       "native": "Living Language: {language}"
+      },
+      {
+       "age": 45,
+       "abilities": [
+        {
+         "name": "Awareness",
+         "score": 3,
+         "specialty": "alertness"
+        },
+        {
+         "name": "Bargain",
+         "score": 4,
+         "specialty": "goods"
+        },
+        {
+         "name": "Craft: Blacksmith",
+         "score": 7,
+         "specialty": "fine work"
+        },
+        {
+         "name": "Brawl",
+         "score": 4,
+         "specialty": "Fist"
+        },
+        {
+         "name": "Carouse",
+         "score": 3,
+         "specialty": "stories"
+        },
+        {
+         "name": "Charm",
+         "score": 2,
+         "specialty": "first impressions"
+        },
+        {
+         "name": "Chirurgy",
+         "score": 3,
+         "specialty": "burns"
+        },
+        {
+         "name": "Faerie Lore",
+         "score": 2,
+         "specialty": "fire sprites"
+        },
+        {
+         "name": "Finesse",
+         "score": 3,
+         "specialty": "enchanted items"
+        },
+        {
+         "name": "Guile",
+         "score": 2,
+         "specialty": "tall stories"
+        },
+        {
+         "name": "Dead Language: Latin",
+         "score": 3,
+         "specialty": "hermetic usage"
+        },
+        {
+         "name": "Leadership",
+         "score": 4,
+         "specialty": "craftsmen"
+        },
+        {
+         "name": "Living Language: {language}",
+         "score": 5
+        },
+        {
+         "name": "Organization Lore: {covenant}",
+         "score": 4,
+         "specialty": "names"
+        },
+        {
+         "name": "Single Weapon",
+         "score": 4,
+         "specialty": "hammer"
+        },
+        {
+         "name": "Stealth",
+         "score": 2,
+         "specialty": "sneak"
+        },
+        {
+         "name": "Survival",
+         "score": 2,
+         "specialty": "camping out"
+        },
+        {
+         "name": "Teaching",
+         "score": 3,
+         "specialty": "blacksmith"
+        }
+       ],
+       "native": "Living Language: {language}"
+      }
+     ],
+     "virtues_flaws": [
+      {
+       "vf_id": "vf_improved_characteristics",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_puissant_ability",
+       "params": {
+        "ability": "craft: blacksmith"
+       }
+      },
+      {
+       "vf_id": "vf_independent_craftsman",
+       "params": {}
+      },
+      {
+       "vf_id": "vf_necessary_realm_aura_for_ability",
+       "params": {
+        "realm": "magic",
+        "ability": "craft: blacksmith"
+       }
+      },
+      {
+       "vf_id": "vf_carefree",
+       "params": {}
+      }
+     ]
+    }
+   ],
+   "pool": [
+    {
+     "vf_id": "vf_animal_companion",
+     "params": {}
+    }
+   ],
+   "characteristics_advice": "A bias toward the physical Characteristics: Strength for a blacksmith, Dexterity for most other crafts.",
+   "traits": [
+    [
+     "Hard-Working",
+     3
+    ]
+   ],
+   "trait_choices": [
+    {
+     "score": 2,
+     "options": [
+      "Kindly",
+      "Generous",
+      "Strict",
+      "Miserly"
+     ]
+    }
+   ],
+   "ages": [],
+   "packages": "Covenfolk, Craftsman, Local, Trader, Trainer (early xp can go to the Realm Lores)",
+   "notes": "An apprentice starts about 15, is a journeyman by 30 and a master by 45. Custos for a journeyman opens Finesse and Latin. Animal Companion is common.",
+   "fixes": []
+  },
+  {
+   "id": "gt_ex_prostitute",
+   "name": "Ex-Prostitute",
+   "page": 109,
+   "concept": "A woman who has left the trade to make a clean start at the covenant.",
+   "statuses": [
+    "vf_covenfolk",
+    "vf_wanderer"
+   ],
+   "virtues_flaws": [],
+   "pool": [],
+   "ages": [
+    {
+     "age": 16,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 2,
+       "specialty": "seedy districts"
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 1,
+       "specialty": "when alone with someone"
+      },
+      {
+       "name": "Bargain",
+       "score": 3,
+       "specialty": "sexual services"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "grappling"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "intimacy"
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "specialty": "licentious"
+      },
+      {
+       "name": "Etiquette",
+       "score": 1,
+       "specialty": "getting past guards"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "clients"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "protesting innocence"
+      },
+      {
+       "name": "Intrigue",
+       "score": 1,
+       "specialty": "romantic"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "cursing"
+      },
+      {
+       "name": "Profession: Prostitute",
+       "score": 2,
+       "specialty": "collecting payment"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 30,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "seedy districts"
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 1,
+       "specialty": "when alone with someone"
+      },
+      {
+       "name": "Bargain",
+       "score": 4,
+       "specialty": "sexual services"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "grappling"
+      },
+      {
+       "name": "Carouse",
+       "score": 5,
+       "specialty": "intimacy"
+      },
+      {
+       "name": "Charm",
+       "score": 4,
+       "specialty": "licentious"
+      },
+      {
+       "name": "Etiquette",
+       "score": 1,
+       "specialty": "getting past guards"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 4,
+       "specialty": "clients"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "protesting innocence"
+      },
+      {
+       "name": "Intrigue",
+       "score": 1,
+       "specialty": "romantic"
+      },
+      {
+       "name": "Legerdemain",
+       "score": 2,
+       "specialty": "coins"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "cursing"
+      },
+      {
+       "name": "Profession: Prostitute",
+       "score": 5,
+       "specialty": "collecting payment"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Lay Brother (Lay Sister), Laborer, Craftsman, Servant",
+   "notes": "Virtues tied to her old trade (Gossip, Protection, Social Contacts) are usually lost when she leaves home: take only what she'll use in play.",
+   "fixes": []
+  },
+  {
+   "id": "gt_failed_apprentice",
+   "name": "The Failed Apprentice",
+   "page": 110,
+   "concept": "An apprentice whose Gift deserted him, with nowhere to go but the covenant that knows what he saw.",
+   "statuses": [
+    "vf_failed_apprentice"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_latent_magic_ability",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_magic_sensitivity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_broken_vessel",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_missing_eye",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_offensive_to_being",
+     "params": {
+      "being": "animals"
+     }
+    }
+   ],
+   "pool": [],
+   "flaw_hint": "In place of Missing Eye, the book suggests a Personality Flaw for his bitterness at losing his Gift.",
+   "characteristics_advice": "Intelligence and Stamina first; positive Perception or Dexterity.",
+   "traits": [
+    [
+     "Worldly-Wise",
+     1
+    ]
+   ],
+   "trait_choices": [
+    {
+     "score": 3,
+     "options": [
+      "Angry",
+      "Bitter",
+      "Resentful"
+     ]
+    },
+    {
+     "score": 2,
+     "options": [
+      "Pessimistic",
+      "Resolute"
+     ]
+    }
+   ],
+   "ages": [
+    {
+     "age": 15,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 1,
+       "specialty": "geography"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 1,
+       "specialty": "astronomy"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "determining effect"
+      },
+      {
+       "name": "Brawl",
+       "score": 1,
+       "specialty": "Fist"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Etiquette",
+       "score": 1,
+       "specialty": "faeries"
+      },
+      {
+       "name": "Faerie Lore",
+       "score": 2,
+       "specialty": "faerie mounds"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "magi"
+      },
+      {
+       "name": "Infernal Lore",
+       "score": 1,
+       "specialty": "curses"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 3,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "storytelling"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 2,
+       "specialty": "regiones"
+      },
+      {
+       "name": "Magic Sensitivity",
+       "score": 2,
+       "specialty": "auras"
+      },
+      {
+       "name": "Magic Theory",
+       "score": 2,
+       "specialty": "learning spells"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 1,
+       "specialty": "history"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 1,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 2,
+       "specialty": "experimental philosophy"
+      },
+      {
+       "name": "Profession: Scribe",
+       "score": 2,
+       "specialty": "copying"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 30,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 1,
+       "specialty": "geography"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 4,
+       "specialty": "astronomy"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "determining effect"
+      },
+      {
+       "name": "Brawl",
+       "score": 1,
+       "specialty": "Fist"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Etiquette",
+       "score": 3,
+       "specialty": "faeries"
+      },
+      {
+       "name": "Faerie Lore",
+       "score": 3,
+       "specialty": "faerie mounds"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "magi"
+      },
+      {
+       "name": "Infernal Lore",
+       "score": 3,
+       "specialty": "curses"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 3,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "storytelling"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 3,
+       "specialty": "regiones"
+      },
+      {
+       "name": "Magic Sensitivity",
+       "score": 4,
+       "specialty": "auras"
+      },
+      {
+       "name": "Magic Theory",
+       "score": 3,
+       "specialty": "learning spells"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 2,
+       "specialty": "history"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 2,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 3,
+       "specialty": "experimental philosophy"
+      },
+      {
+       "name": "Profession: Scribe",
+       "score": 3,
+       "specialty": "copying"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Covenfolk, Failed Apprentice, Magician, Natural Philosopher, Teacher",
+   "notes": "The Ability lists don't count Broken Vessel or any Arts learned from his old master.",
+   "fixes": []
+  },
+  {
+   "id": "gt_farrier",
+   "name": "The Farrier",
+   "page": 112,
+   "concept": "The horses' craftsman: hoof care, shoeing and the horse-doctoring an army or covenant can't do without.",
+   "statuses": [
+    "vf_craftsman",
+    "vf_wanderer",
+    "vf_outcast",
+    "vf_covenfolk"
+   ],
+   "virtues_flaws": [],
+   "pool": [
+    {
+     "vf_id": "vf_animal_ken",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_craft_guild_training",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_mythic_farrier",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "craft: farrier"
+     }
+    },
+    {
+     "vf_id": "vf_curse_of_slander",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_imagined_folk_tradition_vulnerability",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_independent_craftsman",
+     "params": {}
+    },
+    {
+     "label": "Necessary (Realm) Aura for Craft: Farrier",
+     "one_of": [
+      {
+       "vf_id": "vf_necessary_realm_aura_for_ability",
+       "params": {
+        "realm": "magic",
+        "ability": "craft: farrier"
+       }
+      },
+      {
+       "vf_id": "vf_necessary_realm_aura_for_ability",
+       "params": {
+        "realm": "faerie",
+        "ability": "craft: farrier"
+       }
+      },
+      {
+       "vf_id": "vf_necessary_realm_aura_for_ability",
+       "params": {
+        "realm": "divine",
+        "ability": "craft: farrier"
+       }
+      },
+      {
+       "vf_id": "vf_necessary_realm_aura_for_ability",
+       "params": {
+        "realm": "infernal",
+        "ability": "craft: farrier"
+       }
+      }
+     ]
+    }
+   ],
+   "ages": [
+    {
+     "age": 15,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 1,
+       "specialty": "horses"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 2,
+       "specialty": "local"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "animals"
+      },
+      {
+       "name": "Bargain",
+       "score": 3,
+       "specialty": "equine"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "grappling"
+      },
+      {
+       "name": "Carouse",
+       "score": 1,
+       "specialty": "stories"
+      },
+      {
+       "name": "Craft: Farrier",
+       "score": 4,
+       "specialty": "shoes"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Organization Lore: Farriers' Guild",
+       "score": 2,
+       "specialty": "regulations"
+      },
+      {
+       "name": "Ride",
+       "score": 3,
+       "specialty": "jumping"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Apprentice"
+    },
+    {
+     "age": 25,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 3,
+       "specialty": "horses"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 2,
+       "specialty": "local"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "animals"
+      },
+      {
+       "name": "Bargain",
+       "score": 3,
+       "specialty": "equine"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "grappling"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "stories"
+      },
+      {
+       "name": "Craft: Blacksmith",
+       "score": 3,
+       "xp": 15,
+       "specialty": "horseshoes"
+      },
+      {
+       "name": "Craft: Farrier",
+       "score": 5,
+       "xp": 15,
+       "specialty": "shoes"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Organization Lore: Farriers' Guild",
+       "score": 2,
+       "specialty": "regulations"
+      },
+      {
+       "name": "Ride",
+       "score": 3,
+       "specialty": "jumping"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "diving"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Journeyman"
+    },
+    {
+     "age": 40,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 5,
+       "specialty": "horses"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 4,
+       "specialty": "local"
+      },
+      {
+       "name": "Awareness",
+       "score": 4,
+       "specialty": "animals"
+      },
+      {
+       "name": "Bargain",
+       "score": 3,
+       "specialty": "equine"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "grappling"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "stories"
+      },
+      {
+       "name": "Craft: Blacksmith",
+       "score": 5,
+       "specialty": "horseshoes"
+      },
+      {
+       "name": "Craft: Farrier",
+       "score": 6,
+       "specialty": "shoes"
+      },
+      {
+       "name": "Guile",
+       "score": 4,
+       "specialty": "fraud"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Organization Lore: Farriers' Guild",
+       "score": 3,
+       "specialty": "regulations"
+      },
+      {
+       "name": "Ride",
+       "score": 3,
+       "specialty": "jumping"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "diving"
+      }
+     ],
+     "native": "Living Language: {language}",
+     "label": "Master"
+    }
+   ],
+   "packages": "Childhood: Athletic or Social; Craftsman (Craft A Farrier, B Animal Handling or Blacksmith), Farmer, Animal Trainer; Covenfolk, Trainer",
+   "notes": "Craft: Farrier (General) can stand in for Animal Handling or Medicine to cure a horse, +1 (+3 for the feet).",
+   "fixes": [
+    "The book suggests Vulnerable to Folk Tradition, a Hermetic Flaw in the Definitive Edition, which a grog can't take; left out."
+   ]
+  },
+  {
+   "id": "gt_jack_of_all_trades",
+   "name": "Jack-of-All-Trades",
+   "page": 114,
+   "concept": "A drifter who never held a job long: good at a little of everything, master of nothing.",
+   "statuses": [
+    "vf_covenfolk",
+    "vf_wanderer"
+   ],
+   "virtues_flaws": [],
+   "pool": [
+    {
+     "vf_id": "vf_warrior",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_educated",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_arcane_lore",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_privileged_upbringing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_well_traveled",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_jack_of_all_trades",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_craving_for_travel",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_jinxed",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_lesser_malediction",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_unlucky",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_social_handicap",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tainted_with_evil",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_carefree",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_pessimistic",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_master_of_none",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_careless_with_ability",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 22,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 2,
+       "specialty": "oxen"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "jobs"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "climbing"
+      },
+      {
+       "name": "Awareness",
+       "score": 1,
+       "specialty": "being watched"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "punches"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 3,
+       "specialty": "cuts"
+      },
+      {
+       "name": "Craft: Wrought Iron",
+       "score": 1,
+       "specialty": "nails"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "employers"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "qualifications"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "wide vocabulary"
+      },
+      {
+       "name": "Profession: Farmer",
+       "score": 3,
+       "specialty": "plowing"
+      },
+      {
+       "name": "Profession: Storyteller",
+       "score": 3,
+       "specialty": "bawdy tales"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 3,
+       "xp": 15,
+       "specialty": "axe"
+      },
+      {
+       "name": "Stealth",
+       "score": 1,
+       "specialty": "inside"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "on the road"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 34,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 2,
+       "specialty": "oxen"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 4,
+       "specialty": "jobs"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "xp": 10,
+       "specialty": "climbing"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "xp": 5,
+       "specialty": "being watched"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "xp": 5,
+       "specialty": "punches"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "drinking capacity"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 3,
+       "specialty": "cuts"
+      },
+      {
+       "name": "Concentration",
+       "score": 1,
+       "specialty": "on watch"
+      },
+      {
+       "name": "Craft: Wrought Iron",
+       "score": 1,
+       "specialty": "nails"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "employers"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "xp": 5,
+       "specialty": "qualifications"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "deer"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "wide vocabulary"
+      },
+      {
+       "name": "Profession: Farmer",
+       "score": 3,
+       "specialty": "plowing"
+      },
+      {
+       "name": "Profession: Storyteller",
+       "score": 3,
+       "specialty": "bawdy tales"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 4,
+       "xp": 10,
+       "specialty": "axe"
+      },
+      {
+       "name": "Stealth",
+       "score": 1,
+       "specialty": "inside"
+      },
+      {
+       "name": "Survival",
+       "score": 3,
+       "specialty": "on the road"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 3,
+       "specialty": "dagger"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 46,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 2,
+       "specialty": "oxen"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 4,
+       "specialty": "jobs"
+      },
+      {
+       "name": "Athletics",
+       "score": 4,
+       "specialty": "climbing"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "being watched"
+      },
+      {
+       "name": "Bargain",
+       "score": 2,
+       "specialty": "clothes"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "punches"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "drinking capacity"
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "specialty": "women"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 3,
+       "specialty": "cuts"
+      },
+      {
+       "name": "Concentration",
+       "score": 1,
+       "specialty": "on watch"
+      },
+      {
+       "name": "Craft: Wrought Iron",
+       "score": 1,
+       "specialty": "nails"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "employers"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "qualifications"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "deer"
+      },
+      {
+       "name": "Intrigue",
+       "score": 1
+      },
+      {
+       "name": "Leadership",
+       "score": 2,
+       "xp": 10,
+       "specialty": "in combat"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "wide vocabulary"
+      },
+      {
+       "name": "Profession: Farmer",
+       "score": 3,
+       "specialty": "plowing"
+      },
+      {
+       "name": "Profession: Merchant",
+       "score": 2,
+       "specialty": "cloth"
+      },
+      {
+       "name": "Profession: Sailor",
+       "score": 2,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Profession: Storyteller",
+       "score": 3,
+       "specialty": "bawdy tales"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 5,
+       "specialty": "axe"
+      },
+      {
+       "name": "Stealth",
+       "score": 1,
+       "specialty": "inside"
+      },
+      {
+       "name": "Survival",
+       "score": 3,
+       "specialty": "on the road"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 3,
+       "specialty": "dagger"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Many three-year packages, most of them Martial",
+   "notes": "Take at least one Flaw that explains his drifting (Craving for Travel, Jinxed, Lesser Malediction, Unlucky, Social Handicap or Tainted with Evil), and a Virtue that lets him learn Martial Abilities (the lists need them). No Puissant or Affinity.",
+   "fixes": []
+  },
+  {
+   "id": "gt_misguided_mystic",
+   "name": "Misguided Mystic",
+   "page": 116,
+   "concept": "A seer whose power is real, imagined, or misunderstood, sheltering at the covenant from those who want prophecies or a witch-burning.",
+   "statuses": [
+    "vf_wise_one",
+    "vf_covenfolk"
+   ],
+   "virtues_flaws": [],
+   "pool": [
+    {
+     "vf_id": "vf_arcane_lore",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_dowsing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_magic_sensitivity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_premonitions",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_second_sight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_sense_holiness_and_unholiness",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_latent_magic_ability",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_famous",
+     "params": {}
+    },
+    {
+     "label": "(Realm) Stigmatic",
+     "one_of": [
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "magic"
+       }
+      },
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "faerie"
+       }
+      },
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "divine"
+       }
+      },
+      {
+       "vf_id": "vf_realm_stigmatic",
+       "params": {
+        "realm": "infernal"
+       }
+      }
+     ]
+    },
+    {
+     "vf_id": "vf_hallucinations",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_infamous",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_visions",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_compulsion",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fear",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_obsessed",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weakness",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 21,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "specialty": "sincerity"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "visions"
+      },
+      {
+       "name": "Dominion Lore",
+       "score": 3,
+       "specialty": "visions"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 4,
+       "xp": 10,
+       "specialty": "cold reading"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "hiding ignorance"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "religious language"
+      },
+      {
+       "name": "Organization Lore: Church",
+       "score": 1,
+       "specialty": "visionaries"
+      },
+      {
+       "name": "Organization Lore: Town Council",
+       "score": 4,
+       "specialty": "feuds"
+      },
+      {
+       "name": "Profession: Servant",
+       "score": 3,
+       "xp": 5,
+       "specialty": "cooking"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "hills"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 30,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Bargain",
+       "score": 1,
+       "specialty": "\"gifts\""
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "xp": 15,
+       "specialty": "sincerity"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "visions"
+      },
+      {
+       "name": "Dominion Lore",
+       "score": 3,
+       "xp": 10,
+       "specialty": "visions"
+      },
+      {
+       "name": "Faerie Lore",
+       "score": 2,
+       "specialty": "prophecy"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 5,
+       "specialty": "cold reading"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "hiding ignorance"
+      },
+      {
+       "name": "Intrigue",
+       "score": 2,
+       "specialty": "rumors"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "religious language"
+      },
+      {
+       "name": "Organization Lore: Church",
+       "score": 1,
+       "specialty": "visionaries"
+      },
+      {
+       "name": "Organization Lore: Town Council",
+       "score": 4,
+       "specialty": "feuds"
+      },
+      {
+       "name": "Profession: Servant",
+       "score": 4,
+       "specialty": "cooking"
+      },
+      {
+       "name": "Profession: Storyteller",
+       "score": 3,
+       "specialty": "plausible tales"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "hills"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 42,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 4,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Bargain",
+       "score": 2,
+       "specialty": "\"gifts\""
+      },
+      {
+       "name": "Charm",
+       "score": 4,
+       "specialty": "sincerity"
+      },
+      {
+       "name": "Chirurgy",
+       "score": 2,
+       "specialty": "bruises"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "visions"
+      },
+      {
+       "name": "Dominion Lore",
+       "score": 4,
+       "specialty": "visions"
+      },
+      {
+       "name": "Faerie Lore",
+       "score": 3,
+       "xp": 15,
+       "specialty": "prophecy"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 5,
+       "specialty": "cold reading"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "hiding ignorance"
+      },
+      {
+       "name": "Infernal Lore",
+       "score": 2,
+       "specialty": "visions"
+      },
+      {
+       "name": "Intrigue",
+       "score": 3,
+       "specialty": "rumors"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "religious language"
+      },
+      {
+       "name": "Organization Lore: Church",
+       "score": 1,
+       "specialty": "visionaries"
+      },
+      {
+       "name": "Organization Lore: Town Council",
+       "score": 4,
+       "xp": 15,
+       "specialty": "feuds"
+      },
+      {
+       "name": "Profession: Servant",
+       "score": 5,
+       "specialty": "cooking"
+      },
+      {
+       "name": "Profession: Storyteller",
+       "score": 4,
+       "specialty": "plausible tales"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "hills"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Local, Cunning Man, Conman, Mystic, Storyteller",
+   "notes": "The lists need a Virtue that opens the Arcane Abilities, and include no Supernatural ones: a Supernatural Virtue's Ability comes on top (an older Mystic has the xp). Choose the Realm each power is aligned to.",
+   "fixes": []
+  },
+  {
+   "id": "gt_murderer",
+   "name": "The Murderer",
+   "page": 118,
+   "concept": "A killer sheltering in the covenant's sanctuary, making himself useful at any menial task.",
+   "statuses": [
+    "vf_covenfolk"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_good_teacher",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "brawl"
+     }
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_manifest_sin",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_infamous",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_master_of_none",
+     "params": {}
+    }
+   ],
+   "pool": [],
+   "characteristics_advice": "A high Dexterity, and at least positive Strength and Stamina.",
+   "traits": [
+    [
+     "Brave",
+     2
+    ]
+   ],
+   "trait_choices": [
+    {
+     "score": 3,
+     "options": [
+      "Self-Preserving",
+      "Guilty",
+      "Unrepentant"
+     ]
+    }
+   ],
+   "reputations": [
+    [
+     "Murderer (local)",
+     4
+    ]
+   ],
+   "ages": [
+    {
+     "age": 20,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 2,
+       "specialty": "sheep"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Bargain",
+       "score": 1,
+       "specialty": "food"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "bludgeon"
+      },
+      {
+       "name": "Carouse",
+       "score": 1,
+       "specialty": "staying sober"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Concentration",
+       "score": 1
+      },
+      {
+       "name": "Craft: Cooperage",
+       "score": 1,
+       "specialty": "oak barrels"
+      },
+      {
+       "name": "Craft: Furniture Maker",
+       "score": 1,
+       "specialty": "chairs"
+      },
+      {
+       "name": "Craft: Masonry",
+       "score": 1,
+       "specialty": "repairs"
+      },
+      {
+       "name": "Craft: Woodworking",
+       "score": 2,
+       "specialty": "treating wood"
+      },
+      {
+       "name": "Profession: Fisherman",
+       "score": 1,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "concealing his past"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "rabbits"
+      },
+      {
+       "name": "Intrigue",
+       "score": 1,
+       "specialty": "people interested in him"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 1,
+       "specialty": "jobs that need doing"
+      },
+      {
+       "name": "Profession: Farmer",
+       "score": 1,
+       "specialty": "harvest"
+      },
+      {
+       "name": "Profession: Laborer",
+       "score": 1,
+       "specialty": "digging"
+      },
+      {
+       "name": "Profession: Tinker",
+       "score": 2,
+       "specialty": "tin"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "hiding"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "on the road"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Teaching",
+       "score": 1,
+       "specialty": "Craft: Woodworking"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 40,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 2,
+       "specialty": "sheep"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Bargain",
+       "score": 3,
+       "specialty": "food"
+      },
+      {
+       "name": "Brawl",
+       "score": 5,
+       "specialty": "bludgeon"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "staying sober"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Concentration",
+       "score": 2
+      },
+      {
+       "name": "Craft: Cooperage",
+       "score": 2,
+       "specialty": "oak barrels"
+      },
+      {
+       "name": "Profession: Fisherman",
+       "score": 2,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Craft: Furniture Maker",
+       "score": 2,
+       "specialty": "chairs"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "specialty": "concealing his past"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "rabbits"
+      },
+      {
+       "name": "Intrigue",
+       "score": 2,
+       "specialty": "people interested in him"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 2,
+       "specialty": "jobs that need doing"
+      },
+      {
+       "name": "Profession: Brewer",
+       "score": 2,
+       "specialty": "saving materials"
+      },
+      {
+       "name": "Profession: Laborer",
+       "score": 3,
+       "specialty": "digging"
+      },
+      {
+       "name": "Profession: Farmer",
+       "score": 2,
+       "specialty": "harvest"
+      },
+      {
+       "name": "Profession: Tinker",
+       "score": 3,
+       "specialty": "tin"
+      },
+      {
+       "name": "Craft: Masonry",
+       "score": 2,
+       "specialty": "repairs"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "hiding"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "on the road"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Teaching",
+       "score": 2,
+       "specialty": "Carpentry"
+      },
+      {
+       "name": "Craft: Woodworking",
+       "score": 3,
+       "specialty": "treating wood"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 60,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 3,
+       "specialty": "sheep"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Bargain",
+       "score": 3,
+       "specialty": "food"
+      },
+      {
+       "name": "Brawl",
+       "score": 5,
+       "specialty": "bludgeon"
+      },
+      {
+       "name": "Carouse",
+       "score": 4,
+       "specialty": "staying sober"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Concentration",
+       "score": 2
+      },
+      {
+       "name": "Craft: Cooperage",
+       "score": 3,
+       "specialty": "oak barrels"
+      },
+      {
+       "name": "Craft: Furniture Maker",
+       "score": 3,
+       "specialty": "chairs"
+      },
+      {
+       "name": "Craft: Masonry",
+       "score": 4,
+       "specialty": "repairs"
+      },
+      {
+       "name": "Craft: Woodworking",
+       "score": 3,
+       "specialty": "treating wood"
+      },
+      {
+       "name": "Profession: Fisherman",
+       "score": 3,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 4,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Guile",
+       "score": 4,
+       "specialty": "concealing his past"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "rabbits"
+      },
+      {
+       "name": "Intrigue",
+       "score": 2,
+       "specialty": "people interested in him"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 2,
+       "specialty": "jobs that need doing"
+      },
+      {
+       "name": "Profession: Brewer",
+       "score": 4,
+       "specialty": "saving materials"
+      },
+      {
+       "name": "Profession: Farmer",
+       "score": 4,
+       "specialty": "harvest"
+      },
+      {
+       "name": "Profession: Laborer",
+       "score": 4,
+       "specialty": "digging"
+      },
+      {
+       "name": "Profession: Tinker",
+       "score": 4,
+       "specialty": "tin"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "hiding"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "on the road"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "rivers"
+      },
+      {
+       "name": "Teaching",
+       "score": 4,
+       "specialty": "Carpentry"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Brawler, Covenfolk, Craftsman, Laborer, Local, Servant, Tinker (each over four Abilities, for Master of None)",
+   "notes": "With Infamous his Local Reputation as a murderer starts at 4.",
+   "fixes": [
+    "The book's Climb (an older edition's Ability) is added to Athletics, which covers climbing in the Definitive Edition.",
+    "The book's Fishing (an older edition's Ability) is Profession: Fisherman."
+   ]
+  },
+  {
+   "id": "gt_parent_of_gifted_child",
+   "name": "Parent of a Gifted Child",
+   "page": 120,
+   "concept": "A mother or father who followed their Gifted child into the covenant, and now cares for the apprentices.",
+   "statuses": [
+    "vf_covenfolk"
+   ],
+   "virtues_flaws": [],
+   "pool": [],
+   "ages": [
+    {
+     "age": 20,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 2,
+       "specialty": "farm animals"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 1
+      },
+      {
+       "name": "Area Lore: {second_area}",
+       "score": 1
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "specialty": "chasing children"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "location of child"
+      },
+      {
+       "name": "Bargain",
+       "score": 2,
+       "specialty": "food"
+      },
+      {
+       "name": "Carouse",
+       "score": 2,
+       "specialty": "staying sober"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "background noise"
+      },
+      {
+       "name": "Craft: {craft}",
+       "score": 2
+      },
+      {
+       "name": "Craft: {second_craft}",
+       "score": 2
+      },
+      {
+       "name": "Craft: {third_craft}",
+       "score": 2
+      },
+      {
+       "name": "Chirurgy",
+       "score": 2,
+       "specialty": "childhood illnesses"
+      },
+      {
+       "name": "Etiquette",
+       "score": 2,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "lying for child"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "rabbits"
+      },
+      {
+       "name": "Living Language: {second_language}",
+       "score": 1,
+       "specialty": "trading"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "scolding"
+      },
+      {
+       "name": "Profession: {profession}",
+       "score": 2
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "near settlements"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 35,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 2,
+       "specialty": "farm animals"
+      },
+      {
+       "name": "Area Lore: {area}",
+       "score": 2
+      },
+      {
+       "name": "Area Lore: {second_area}",
+       "score": 2
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "specialty": "chasing children"
+      },
+      {
+       "name": "Awareness",
+       "score": 2,
+       "specialty": "location of child"
+      },
+      {
+       "name": "Bargain",
+       "score": 4,
+       "specialty": "food"
+      },
+      {
+       "name": "Carouse",
+       "score": 2,
+       "specialty": "staying sober"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "background noise"
+      },
+      {
+       "name": "Craft: {craft}",
+       "score": 4
+      },
+      {
+       "name": "Craft: {second_craft}",
+       "score": 3
+      },
+      {
+       "name": "Craft: {third_craft}",
+       "score": 3
+      },
+      {
+       "name": "Chirurgy",
+       "score": 3,
+       "specialty": "childhood illnesses"
+      },
+      {
+       "name": "Etiquette",
+       "score": 3,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "specialty": "lying for child"
+      },
+      {
+       "name": "Hunt",
+       "score": 2,
+       "specialty": "rabbits"
+      },
+      {
+       "name": "Living Language: {second_language}",
+       "score": 3,
+       "specialty": "trading"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "scolding"
+      },
+      {
+       "name": "Profession: {profession}",
+       "score": 2
+      },
+      {
+       "name": "Survival",
+       "score": 4,
+       "specialty": "near settlements"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Any, from any background",
+   "notes": "No combat skills, but they have traveled two regions with the child. The Craft and Profession Abilities are left open for the background.",
+   "fixes": []
+  },
+  {
+   "id": "gt_refugee_librarian",
+   "name": "The Refugee Librarian",
+   "page": 122,
+   "concept": "The librarian of a fallen covenant, come to serve new masters.",
+   "statuses": [
+    "vf_custos"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_magic_items",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "profession: librarian"
+     }
+    },
+    {
+     "vf_id": "vf_stuck_in_your_ways",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_ability_block",
+     "params": {
+      "abilities": "martial"
+     }
+    },
+    {
+     "vf_id": "vf_covenant_upbringing",
+     "params": {}
+    }
+   ],
+   "pool": [],
+   "traits": [
+    [
+     "Respectful",
+     2
+    ],
+    [
+     "Keen to Impress",
+     1
+    ]
+   ],
+   "trait_choices": [
+    {
+     "score": 3,
+     "options": [
+      "Loyal to Former Covenant",
+      "Anger at Former Covenant"
+     ]
+    }
+   ],
+   "ages": [
+    {
+     "age": 30,
+     "abilities": [
+      {
+       "name": "Artes Liberales",
+       "score": 4,
+       "specialty": "grammar"
+      },
+      {
+       "name": "Profession: Bookbinder",
+       "score": 2,
+       "specialty": "academic"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 2,
+       "specialty": "laws and customs of a specific area"
+      },
+      {
+       "name": "Concentration",
+       "score": 2,
+       "specialty": "reading"
+      },
+      {
+       "name": "Etiquette",
+       "score": 3,
+       "specialty": "Hermetic"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "magi"
+      },
+      {
+       "name": "Intrigue",
+       "score": 2,
+       "specialty": "rumormongering"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 5,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Leadership",
+       "score": 1,
+       "specialty": "junior librarians"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "expansive vocabulary"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: {former_covenant}",
+       "score": 3,
+       "specialty": "resources"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 2,
+       "specialty": "natural philosophy"
+      },
+      {
+       "name": "Profession: Librarian",
+       "score": 4,
+       "specialty": "ensuring order"
+      },
+      {
+       "name": "Profession: Scribe",
+       "score": 3,
+       "specialty": "copying"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 45,
+     "abilities": [
+      {
+       "name": "Artes Liberales",
+       "score": 4,
+       "specialty": "grammar"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 3,
+       "specialty": "laws and customs of a specific area"
+      },
+      {
+       "name": "Concentration",
+       "score": 3,
+       "specialty": "reading"
+      },
+      {
+       "name": "Etiquette",
+       "score": 3,
+       "specialty": "Hermetic"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "magi"
+      },
+      {
+       "name": "Dead Language: Greek",
+       "score": 3,
+       "specialty": "academic usage"
+      },
+      {
+       "name": "Intrigue",
+       "score": 3,
+       "specialty": "rumormongering"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 5,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Leadership",
+       "score": 3,
+       "specialty": "junior librarians"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "expansive vocabulary"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: {former_covenant}",
+       "score": 3,
+       "specialty": "resources"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 3,
+       "specialty": "customs"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 3,
+       "specialty": "natural philosophy"
+      },
+      {
+       "name": "Profession: Bookbinder",
+       "score": 4,
+       "specialty": "academic"
+      },
+      {
+       "name": "Profession: Librarian",
+       "score": 5,
+       "specialty": "ensuring order"
+      },
+      {
+       "name": "Profession: Scribe",
+       "score": 4,
+       "specialty": "copying"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 60,
+     "abilities": [
+      {
+       "name": "Living Language: Arabic",
+       "score": 3,
+       "specialty": "academic usage"
+      },
+      {
+       "name": "Artes Liberales",
+       "score": 5,
+       "specialty": "grammar"
+      },
+      {
+       "name": "Charm",
+       "score": 3,
+       "specialty": "first impressions"
+      },
+      {
+       "name": "Civil and Canon Law",
+       "score": 3,
+       "specialty": "laws and customs of a specific area"
+      },
+      {
+       "name": "Concentration",
+       "score": 4,
+       "specialty": "reading"
+      },
+      {
+       "name": "Etiquette",
+       "score": 3,
+       "specialty": "Hermetic"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "magi"
+      },
+      {
+       "name": "Dead Language: Greek",
+       "score": 3,
+       "specialty": "academic usage"
+      },
+      {
+       "name": "Dead Language: Hebrew",
+       "score": 4,
+       "specialty": "mystic texts"
+      },
+      {
+       "name": "Intrigue",
+       "score": 3,
+       "specialty": "rumormongering"
+      },
+      {
+       "name": "Dead Language: Latin",
+       "score": 5,
+       "specialty": "Hermetic usage"
+      },
+      {
+       "name": "Leadership",
+       "score": 4,
+       "specialty": "junior librarians"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "expansive vocabulary"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 5,
+       "specialty": "customs"
+      },
+      {
+       "name": "Organization Lore: {former_covenant}",
+       "score": 3,
+       "specialty": "resources"
+      },
+      {
+       "name": "Philosophiae",
+       "score": 4,
+       "specialty": "natural philosophy"
+      },
+      {
+       "name": "Profession: Bookbinder",
+       "score": 4,
+       "specialty": "academic"
+      },
+      {
+       "name": "Profession: Librarian",
+       "score": 5,
+       "specialty": "ensuring order"
+      },
+      {
+       "name": "Profession: Scribe",
+       "score": 4,
+       "specialty": "copying"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Covenfolk, Craftsman (as Bookbinder, Librarian and Scribe), Leader, Trainer",
+   "notes": "Magic Items: the Librarian's Buckle (ReCo 25, 24 uses a day), the old covenant's badge of office, lets him move freely through the air.",
+   "fixes": []
+  },
+  {
+   "id": "gt_role_bound_ferryman",
+   "name": "The Role-Bound Ferryman",
+   "page": 125,
+   "concept": "The only one who knows the way across the marsh to the covenant, bound to his role by a supernatural curse.",
+   "statuses": [
+    "vf_covenfolk"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_piercing_gaze",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_premonitions",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_second_sight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_role_bound",
+     "params": {
+      "role": "ferryman"
+     }
+    },
+    {
+     "vf_id": "vf_judged_unfairly",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_characteristic",
+     "params": {
+      "characteristic": "communication"
+     }
+    }
+   ],
+   "pool": [],
+   "characteristics_advice": "A poor Communication and a high Stamina.",
+   "traits": [
+    [
+     "Loyal to the Covenant",
+     3
+    ],
+    [
+     "Taciturn",
+     2
+    ],
+    [
+     "Reliable",
+     1
+    ]
+   ],
+   "ages": [
+    {
+     "age": 35,
+     "abilities": [
+      {
+       "name": "Area Lore: The Marsh",
+       "score": 5,
+       "specialty": "waterways"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "balance"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "searching"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "Dodge"
+      },
+      {
+       "name": "Craft: Boatbuilder",
+       "score": 3,
+       "specialty": "repairs"
+      },
+      {
+       "name": "Living Language: English",
+       "score": 5,
+       "specialty": "regional dialect"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 3,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 3,
+       "specialty": "creatures"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 1,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: Smugglers",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Premonitions",
+       "score": 3,
+       "specialty": "threats to the covenant"
+      },
+      {
+       "name": "Profession: Ferryman",
+       "score": 4,
+       "specialty": "marsh ferries"
+      },
+      {
+       "name": "Second Sight",
+       "score": 3,
+       "specialty": "illusory disguises"
+      },
+      {
+       "name": "Stealth",
+       "score": 3,
+       "specialty": "sailing quietly"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "marshland"
+      },
+      {
+       "name": "Swim",
+       "score": 3,
+       "specialty": "marshy water"
+      }
+     ],
+     "native": "Living Language: English"
+    },
+    {
+     "age": 50,
+     "abilities": [
+      {
+       "name": "Area Lore: The Marsh",
+       "score": 6,
+       "specialty": "waterways"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "balance"
+      },
+      {
+       "name": "Awareness",
+       "score": 4,
+       "specialty": "searching"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "Dodge"
+      },
+      {
+       "name": "Craft: Boatbuilder",
+       "score": 4,
+       "specialty": "repairs"
+      },
+      {
+       "name": "Living Language: English",
+       "score": 5,
+       "specialty": "regional dialect"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 4,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 4,
+       "specialty": "creatures"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 2,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 4,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: Smugglers",
+       "score": 3,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Premonitions",
+       "score": 4,
+       "specialty": "threats to the covenant"
+      },
+      {
+       "name": "Profession: Ferryman",
+       "score": 5,
+       "specialty": "local waterways"
+      },
+      {
+       "name": "Second Sight",
+       "score": 4,
+       "specialty": "illusory disguises"
+      },
+      {
+       "name": "Stealth",
+       "score": 3,
+       "specialty": "sailing quietly"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "marshland"
+      },
+      {
+       "name": "Swim",
+       "score": 4,
+       "specialty": "marshy water"
+      }
+     ],
+     "native": "Living Language: English"
+    },
+    {
+     "age": 65,
+     "abilities": [
+      {
+       "name": "Area Lore: The Marsh",
+       "score": 7,
+       "specialty": "waterways"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "balance"
+      },
+      {
+       "name": "Awareness",
+       "score": 4,
+       "specialty": "searching"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "Dodge"
+      },
+      {
+       "name": "Craft: Boatbuilder",
+       "score": 4,
+       "specialty": "repairs"
+      },
+      {
+       "name": "Living Language: English",
+       "score": 5,
+       "specialty": "regional dialect"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 5,
+       "specialty": "peasants"
+      },
+      {
+       "name": "Magic Lore",
+       "score": 4,
+       "specialty": "creatures"
+      },
+      {
+       "name": "Organization Lore: Order of Hermes",
+       "score": 2,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: {covenant}",
+       "score": 5,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Organization Lore: Smugglers",
+       "score": 4,
+       "specialty": "personalities"
+      },
+      {
+       "name": "Premonitions",
+       "score": 5,
+       "specialty": "threats to the covenant"
+      },
+      {
+       "name": "Profession: Ferryman",
+       "score": 6,
+       "specialty": "local waterways"
+      },
+      {
+       "name": "Second Sight",
+       "score": 5,
+       "specialty": "illusory disguises"
+      },
+      {
+       "name": "Stealth",
+       "score": 4,
+       "specialty": "sailing quietly"
+      },
+      {
+       "name": "Survival",
+       "score": 3,
+       "specialty": "marshland"
+      },
+      {
+       "name": "Swim",
+       "score": 4,
+       "specialty": "marshy water"
+      }
+     ],
+     "native": "Living Language: English"
+    }
+   ],
+   "packages": "Athletic childhood; then his own three-year packages: Covenfolk (+5 Area Lore, +20 Covenant Lore, +15 Craft: Boatbuilder, +5 Order of Hermes Lore), Local, Magician, Sailor, Scout",
+   "notes": "A role-bound grog needs a Profession or Craft that defines him. By 65 he has an enriched Item of Virtue from the Magician package.",
+   "fixes": []
+  },
+  {
+   "id": "gt_street_thug",
+   "name": "The Street Thug",
+   "page": 128,
+   "concept": "A city brawler with contacts on both sides of the law, who sides with the magi for money and protection.",
+   "statuses": [
+    "vf_branded_criminal"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "brawl"
+     }
+    },
+    {
+     "vf_id": "vf_social_contacts",
+     "params": {
+      "group": "street criminals"
+     }
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fish_out_of_water_terrain",
+     "params": {
+      "terrain": "cities"
+     }
+    },
+    {
+     "vf_id": "vf_poor_living_conditions",
+     "params": {}
+    }
+   ],
+   "pool": [
+    {
+     "vf_id": "vf_berserk",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_large",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_enduring_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_infamous",
+     "params": {}
+    }
+   ],
+   "traits": [
+    [
+     "Aggressive",
+     3
+    ],
+    [
+     "Ruthless",
+     2
+    ],
+    [
+     "Pragmatic",
+     1
+    ]
+   ],
+   "ages": [
+    {
+     "age": 20,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "geography"
+      },
+      {
+       "name": "Athletics",
+       "score": 2,
+       "xp": 5,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "fist"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "power drinking"
+      },
+      {
+       "name": "Charm",
+       "score": 1,
+       "specialty": "being witty"
+      },
+      {
+       "name": "Guile",
+       "score": 2,
+       "xp": 5,
+       "specialty": "townsfolk"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 1,
+       "specialty": "townsfolk"
+      },
+      {
+       "name": "Leadership",
+       "score": 1,
+       "specialty": "intimidation"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "slang"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 3,
+       "specialty": "hatchet"
+      },
+      {
+       "name": "Stealth",
+       "score": 2,
+       "specialty": "streets"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 3,
+       "specialty": "throwing knife"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 35,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 3,
+       "specialty": "geography"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "xp": 15,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Brawl",
+       "score": 6,
+       "specialty": "fist"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "power drinking"
+      },
+      {
+       "name": "Charm",
+       "score": 1,
+       "specialty": "being witty"
+      },
+      {
+       "name": "Guile",
+       "score": 3,
+       "xp": 15,
+       "specialty": "townsfolk"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 2,
+       "specialty": "townsfolk"
+      },
+      {
+       "name": "Intrigue",
+       "score": 1,
+       "specialty": "rumor-mongering"
+      },
+      {
+       "name": "Leadership",
+       "score": 3,
+       "specialty": "intimidation"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "slang"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 3,
+       "specialty": "hatchet"
+      },
+      {
+       "name": "Stealth",
+       "score": 4,
+       "specialty": "streets"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 5,
+       "specialty": "throwing knife"
+      }
+     ],
+     "native": "Living Language: {language}"
+    },
+    {
+     "age": 50,
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 5,
+       "specialty": "geography"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "xp": 15,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "alertness"
+      },
+      {
+       "name": "Brawl",
+       "score": 6,
+       "specialty": "fist"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "power drinking"
+      },
+      {
+       "name": "Charm",
+       "score": 2,
+       "specialty": "being witty"
+      },
+      {
+       "name": "Guile",
+       "score": 4,
+       "xp": 10,
+       "specialty": "townsfolk"
+      },
+      {
+       "name": "Folk Ken",
+       "score": 4,
+       "specialty": "townsfolk"
+      },
+      {
+       "name": "Intrigue",
+       "score": 4,
+       "specialty": "rumor-mongering"
+      },
+      {
+       "name": "Leadership",
+       "score": 5,
+       "specialty": "intimidation"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 5,
+       "specialty": "slang"
+      },
+      {
+       "name": "Organization Lore: Gang",
+       "score": 3,
+       "specialty": "politics"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 3,
+       "specialty": "hatchet"
+      },
+      {
+       "name": "Stealth",
+       "score": 4,
+       "specialty": "streets"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 5,
+       "specialty": "throwing knife"
+      }
+     ],
+     "native": "Living Language: {language}"
+    }
+   ],
+   "packages": "Brawler, Footpad (its Legerdemain xp to Thrown Weapon), Leader, Local, Soldier, Wastrel",
+   "notes": "Puissant Brawl and Tough can give way to Berserk, Large or Enduring Constitution; an older thug may swap a Flaw for Infamous (a bad Reputation of 4). Poor Living Conditions ages him fast.",
+   "fixes": [
+    "The book's Climb (an older edition's Ability) is added to Athletics, which covers climbing in the Definitive Edition.",
+    "The book's Disguise (an older edition's Ability) is added to Guile."
+   ]
+  },
+  {
+   "id": "gt_time_lost_witness",
+   "name": "Time-Lost Witness",
+   "page": 131,
+   "concept": "Someone lost in Faerie for centuries, returned to a world that has moved on: here, a Roman legionary.",
+   "statuses": [
+    "vf_covenfolk",
+    "vf_wanderer"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_warrior",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_worthless_abilities",
+     "params": {}
+    }
+   ],
+   "pool": [],
+   "ages": [
+    {
+     "age": 21,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 1,
+       "specialty": "pack animals"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "marching"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "in battle"
+      },
+      {
+       "name": "Bargain",
+       "score": 1,
+       "specialty": "drink"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "grappling"
+      },
+      {
+       "name": "Carouse",
+       "score": 2,
+       "specialty": "looking sober"
+      },
+      {
+       "name": "Etiquette",
+       "score": 1,
+       "specialty": "military"
+      },
+      {
+       "name": "Living Language: Latin",
+       "score": 5,
+       "specialty": "cursing"
+      },
+      {
+       "name": "Profession: Legionary",
+       "score": 3,
+       "specialty": "not getting caught"
+      },
+      {
+       "name": "Organization Lore: Roman Army",
+       "score": 3,
+       "specialty": "own legion"
+      },
+      {
+       "name": "Survival",
+       "score": 2,
+       "specialty": "in a group"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "in armor"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 5,
+       "specialty": "gladius"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 4,
+       "specialty": "pilum"
+      }
+     ],
+     "native": "Living Language: Latin"
+    },
+    {
+     "age": 30,
+     "abilities": [
+      {
+       "name": "Animal Handling",
+       "score": 1,
+       "specialty": "pack animals"
+      },
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "marching"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "in battle"
+      },
+      {
+       "name": "Bargain",
+       "score": 1,
+       "specialty": "drink"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "grappling"
+      },
+      {
+       "name": "Carouse",
+       "score": 3,
+       "specialty": "looking sober"
+      },
+      {
+       "name": "Etiquette",
+       "score": 1,
+       "specialty": "military"
+      },
+      {
+       "name": "Living Language: Latin",
+       "score": 5,
+       "specialty": "cursing"
+      },
+      {
+       "name": "Profession: Legionary",
+       "score": 5,
+       "specialty": "not getting caught"
+      },
+      {
+       "name": "Organization Lore: Roman Army",
+       "score": 3,
+       "specialty": "own legion"
+      },
+      {
+       "name": "Survival",
+       "score": 3,
+       "specialty": "in a group"
+      },
+      {
+       "name": "Swim",
+       "score": 2,
+       "specialty": "in armor"
+      },
+      {
+       "name": "Single Weapon",
+       "score": 6,
+       "specialty": "gladius"
+      },
+      {
+       "name": "Teaching",
+       "score": 3,
+       "specialty": "Single Weapon"
+      },
+      {
+       "name": "Thrown Weapon",
+       "score": 4,
+       "specialty": "pilum"
+      }
+     ],
+     "native": "Living Language: Latin"
+    }
+   ],
+   "packages": "Any, after their return",
+   "notes": "The example is a Roman legionary lost in a faerie wood, who re-emerges in 1220: Worthless Abilities covers his Organization Lore: Roman Army.",
+   "fixes": [
+    "A legionary's Latin is his native, living language (Living Language: Latin)."
+   ]
+  }
+ ]
+}

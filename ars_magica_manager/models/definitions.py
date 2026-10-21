@@ -937,6 +937,55 @@ class CharacterTemplateDef:
         return cls(**known_fields(cls, data))
 
 
+@dataclass
+class GrogTemplateDef:
+    """One of Grogs' Chapter 7 Grog Templates (grog_template_catalog.json):
+    the book's guidance for a kind of grog, which the player fills in by
+    choosing from it. Ability lists are in the book's notation (scores,
+    with "xp" toward the next), each list for one age; "{area}" and the
+    like in a name are asked for when the template is used.
+
+    `virtues_flaws` are the book's own set, taken unless unticked; `pool`
+    the ones it suggests, each {"vf_id", "params", "note"?} or a single
+    pick {"label", "one_of": [...]}. `variants` (each a dict with "name"
+    and any of "statuses", "virtues_flaws", "ages", "renames" and
+    "flaw_hint", replacing the template's own) are the book's versions
+    of the template to choose between, under `variant_label`."""
+
+    id: str
+    name: str
+    page: int
+    concept: str = ""
+    #: Social Status Virtues or Flaws (vf_ids) to choose from, the first
+    #: offered first.
+    statuses: list[str] = field(default_factory=list)
+    virtues_flaws: list[dict[str, Any]] = field(default_factory=list)
+    pool: list[dict[str, Any]] = field(default_factory=list)
+    variant_label: str = ""
+    variants: list[dict[str, Any]] = field(default_factory=list)
+    #: The book's Characteristics, when it gives figures, and its advice.
+    characteristics: dict[str, int] = field(default_factory=dict)
+    characteristics_advice: str = ""
+    #: [name, score] each, and single picks {"score", "options"}.
+    traits: list[list[Any]] = field(default_factory=list)
+    trait_choices: list[dict[str, Any]] = field(default_factory=list)
+    reputations: list[list[Any]] = field(default_factory=list)
+    #: Each {"age", "label"?, "native", "abilities"}; "native" names the
+    #: Ability that is the Native Language.
+    ages: list[dict[str, Any]] = field(default_factory=list)
+    #: Shown with the extra Flaw fields: what the book suggests instead of
+    #: a Flaw left out.
+    flaw_hint: str = ""
+    packages: str = ""
+    notes: str = ""
+    #: Where this entry differs from the page's text, and why.
+    fixes: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> GrogTemplateDef:
+        return cls(**known_fields(cls, data))
+
+
 #: The book's weapon tables a WeaponDef comes from, in its order.
 WEAPON_TABLES: tuple[str, ...] = ("melee", "missile", "natural")
 

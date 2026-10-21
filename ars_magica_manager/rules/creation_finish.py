@@ -47,7 +47,7 @@ CONFIDENCE_VIRTUES: dict[str, tuple[int, int]] = {
 }
 
 
-def _has_trait(character: Character, name: str) -> bool:
+def has_trait(character: Character, name: str) -> bool:
     return any(name.lower() in t.name.lower() for t in character.personality_traits)
 
 
@@ -119,16 +119,16 @@ def finish_checks(saga: Saga, record: Record) -> list[Check]:
         found.append(
             _check(
                 "A grog has Loyal",
-                _has_trait(character, "Loyal"),
-                "taken" if _has_trait(character, "Loyal") else "missing",
+                has_trait(character, "Loyal"),
+                "taken" if has_trait(character, "Loyal") else "missing",
             )
         )
     if warrior(character):
         found.append(
             _check(
                 "A warrior has Brave",
-                _has_trait(character, "Brave"),
-                "taken" if _has_trait(character, "Brave") else "missing",
+                has_trait(character, "Brave"),
+                "taken" if has_trait(character, "Brave") else "missing",
             )
         )
     if character.reputations:
