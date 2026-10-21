@@ -31,7 +31,9 @@ from ....models import (
     Saga,
     TraditionDef,
 )
+from ....rules import activities as season_rules
 from ....rules import creation_virtues as cv
+from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
 from ....sheets import character as cs
 from ....traditions import tradition_list, tradition_section, tradition_tab
 from ..widgets import (
@@ -44,6 +46,10 @@ from ..widgets import (
 )
 from .base import SheetView
 from .lists import BookListView
+
+#: The Seasons Ahead list and the chosen season's plan under it.
+AHEAD_LIST = "char-ahead-list"
+AHEAD_INFO = "char-ahead-info"
 
 
 class CharacterSheetView(SheetView):
@@ -315,7 +321,9 @@ class CharacterSheetView(SheetView):
             )
 
     def _planning_tab(self) -> ComposeResult:
-        """This Season: the season's plan and what it will give."""
+        """This Season: the season's plan and what it will give; then the
+        Seasons Ahead, the rest of the year, each planned the same way."""
+        planned = ("section-char-season", AHEAD_SECTION)
         with SheetSection(
             title=self._titled(
                 "section-char-season",
@@ -327,10 +335,43 @@ class CharacterSheetView(SheetView):
             id="section-char-season",
         ):
             yield self._static(
-                "section-char-season",
+                planned,
                 lambda: seasons.plan_text(self.saga, self.character),
                 id="char-season-content",
             )
+        ahead = SheetSection(
+            title=self._titled(
+                planned, AHEAD_SECTION, lambda: seasons.ahead_title(self.saga)
+            ),
+            id=AHEAD_SECTION,
+        )
+        # A grog's yearly update covers the year: no seasons ahead. The type
+        # can change on any section's edit.
+        ahead.display = season_rules.is_planned(self.character)
+        self._on_refresh_matching(
+            lambda _section: True,
+            lambda: setattr(ahead, "display", season_rules.is_planned(self.character)),
+        )
+        with ahead:
+            yield self._list(
+                planned,
+                lambda: seasons.ahead_rows(self.saga, self.character),
+                id=AHEAD_LIST,
+            )
+            yield self._static(
+                planned,
+                lambda: seasons.ahead_info(
+                    self.saga, self.character, self.selected_season_ahead()
+                ),
+                id=AHEAD_INFO,
+            )
+
+    def selected_season_ahead(self) -> int | None:
+        """Index into seasons.seasons_ahead of the chosen row, or None."""
+        try:
+            return self.query_one(f"#{AHEAD_LIST}", SelectableList).selected_data_index
+        except NoMatches:
+            return None
 
     def selected_diary_entry(self) -> int | None:
         """Index into character.diary of the chosen row, or None."""
@@ -697,6 +738,12 @@ class CharacterSheetView(SheetView):
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         list_id = event.selectable_list.id or ""
+        if list_id == AHEAD_LIST:
+            event.stop()
+            self.query_one(f"#{AHEAD_INFO}", Static).update(
+                seasons.ahead_info(self.saga, self.character, event.data_index)
+            )
+            return
         if list_id == "char-diary-list":
             event.stop()
             self.query_one("#char-diary-info", Static).update(

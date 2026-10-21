@@ -107,6 +107,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.112.0 — 2026-10-21
+
+### Book of Hours
+
+- **Plan a full year ahead.** A character's Planning tab now lists the
+  Seasons Ahead under This Season: the next three seasons, a full year
+  with this one. Each can be planned, changed or cleared there.
+- **Move a plan within the year.** The Plan Season form has a Season
+  field, so a plan can be moved to another season of the year. A season
+  that already has a plan can't be chosen for another one.
+
 ## 2.111.0 — 2026-10-20
 
 ### Book of Hours

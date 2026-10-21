@@ -58,7 +58,7 @@ def test_planning_and_clearing_a_characters_season(app):
     asked = answering(window, True)
     controls["Clear"].click()
     assert isinstance(asked[0], ConfirmDialog)
-    assert asked[0].question == "Clear Leandro's plan (Other: Hunting)?"
+    assert asked[0].question == "Clear Leandro's plan for Spring 1220 (Other: Hunting)?"
     assert _plans() == []
 
 

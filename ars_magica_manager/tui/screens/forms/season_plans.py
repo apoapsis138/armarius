@@ -63,24 +63,27 @@ def _breakthrough_dialog(existing: Breakthrough | None) -> FieldsDialog[Breakthr
 
 
 def _season_plan_dialog(
-    saga: Saga, character: Character, existing: SeasonPlan | None
+    saga: Saga,
+    character: Character,
+    existing: SeasonPlan | None,
+    when: season_forms.When | None = None,
 ) -> FieldsDialog[SeasonPlan]:
-    """Plan `character`'s current season (season_forms.season_plan_fields):
-    the line above Save shows what the season will give, worked out as
-    the form is filled in."""
+    """Plan `character`'s season `when` (the current one by default;
+    season_forms.season_plan_fields): the line above Save shows what the
+    season will give, worked out as the form is filled in."""
     dialog = FieldsDialog(
-        season_forms.season_plan_title(saga, character),
+        season_forms.season_plan_title(saga, character, when),
         season_forms.season_plan_fields(
-            saga, character, existing, vf_picker=_vf_picker
+            saga, character, existing, vf_picker=_vf_picker, when=when
         ),
         validate=lambda values: season_forms.season_plan_problem(
-            saga, character, values, existing
+            saga, character, values, existing, when
         ),
         live=lambda values: season_forms.season_plan_live(
-            saga, character, values, existing
+            saga, character, values, existing, when
         ),
         build=lambda values: season_forms.season_plan_from(
-            saga, character, values, existing
+            saga, character, values, existing, when
         ),
     )
     dialog.help_id = "plan-season"

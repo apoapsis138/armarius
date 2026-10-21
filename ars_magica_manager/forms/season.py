@@ -23,6 +23,7 @@ from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import EMPHASIS_HINT, ChoiceReads, DialogField, attr, read_for_choice
 from ..markup import escape
 from ..models import (
+    SEASONS,
     Character,
     Covenant,
     GrogYear,
@@ -51,16 +52,61 @@ VfPicker = Callable[[Saga, Character, str], Callable[[Any], Any]]
 ShowIf = Callable[[dict[str, Any]], bool]
 
 
+#: The Plan Season form's Season field: "Summer 1220".
+WHEN = "when"
+When = tuple[str, int]
+
+
+def when_value(when: When) -> str:
+    return f"{when[0]} {when[1]}"
+
+
+def _opened_for(saga: Saga, existing: SeasonPlan | None, when: When | None) -> When:
+    """The season the form opens on: `when`, else the plan's, else the
+    current one."""
+    if when is not None:
+        return when
+    if existing is not None:
+        return existing.season, existing.year
+    return saga.current_season, saga.current_year
+
+
+def when_of(
+    saga: Saga,
+    values: dict[str, Any],
+    existing: SeasonPlan | None = None,
+    when: When | None = None,
+) -> When:
+    """The season the form's values plan: its Season field, else the one
+    it opened on."""
+    chosen = values.get(WHEN)
+    if isinstance(chosen, str) and " " in chosen:
+        season, _, year = chosen.partition(" ")
+        if season in SEASONS and year.isdigit():
+            return season, int(year)
+    return _opened_for(saga, existing, when)
+
+
+def save_plan(saga: Saga, plan: SeasonPlan, existing: SeasonPlan | None) -> None:
+    """Lock in `plan`; a plan moved to another season leaves its old one."""
+    if existing is not None and existing in saga.season_plans:
+        saga.season_plans.remove(existing)
+    seasons.set_plan(saga, plan)
+
+
 def season_plan_from(
     saga: Saga,
     character: Character,
     values: dict[str, Any],
     existing: SeasonPlan | None = None,
+    when: When | None = None,
 ) -> SeasonPlan:
     """The plan the season form's values describe (hidden fields are
     missing from `values`, so everything is read with a default);
     `existing`, the plan being changed, keeps what its Virtue and Flaw
-    name when a drop-down chose the same entry."""
+    name when a drop-down chose the same entry; `when`, the season the
+    form opened on."""
+    season, year = when_of(saga, values, existing, when)
     values = _with_instances(values, existing)
     activity = values.get("activity") or ""
     allocations = [
@@ -70,8 +116,8 @@ def season_plan_from(
     ]
     plan = SeasonPlan(
         character_id=character.id,
-        year=saga.current_year,
-        season=saga.current_season,
+        year=year,
+        season=season,
         activity=activity,
         allocations=allocations,
         source_quality=values.get("source_quality"),
@@ -1169,16 +1215,37 @@ def _closing_fields(
     ]
 
 
+def _when_field(
+    saga: Saga, existing: SeasonPlan | None, when: When | None
+) -> DialogField:
+    opened = _opened_for(saga, existing, when)
+    options = [(when_value(w), when_value(w)) for w in seasons.planning_year(saga)]
+    if when_value(opened) not in dict(options):
+        options.insert(0, (when_value(opened), when_value(opened)))
+    return DialogField(
+        WHEN,
+        "Season",
+        "select",
+        when_value(opened),
+        options=options,
+        hint="This season or one up to a year ahead. A later season is worked "
+        "out from the character as they stand now.",
+    )
+
+
 def season_plan_fields(
     saga: Saga,
     character: Character,
     existing: SeasonPlan | None,
     *,
     vf_picker: VfPicker | None = None,
+    when: When | None = None,
 ) -> list[DialogField]:
-    """The Plan Season form: the activity, what its experience goes into,
-    and notes. Each field shows only for the activities that use it."""
+    """The Plan Season form: the season, the activity, what its experience
+    goes into, and notes. Each field shows only for the activities that
+    use it."""
     return [
+        _when_field(saga, existing, when),
         *study_fields(saga, character, existing),
         *_subject_fields(saga, character, existing),
         *_book_work_fields(saga, character, existing),
@@ -1190,12 +1257,12 @@ def season_plan_fields(
     ]
 
 
-def season_plan_title(saga: Saga, character: Character) -> str:
+def season_plan_title(
+    saga: Saga, character: Character, when: When | None = None
+) -> str:
     """ "Plan Tiberius's Season (Spring 1220)" (markup)."""
-    return (
-        f"Plan {escape(character.name)}'s Season "
-        f"({saga.current_season} {saga.current_year})"
-    )
+    season, year = when or (saga.current_season, saga.current_year)
+    return f"Plan {escape(character.name)}'s Season ({season} {year})"
 
 
 def season_plan_problem(
@@ -1203,9 +1270,17 @@ def season_plan_problem(
     character: Character,
     values: dict[str, Any],
     existing: SeasonPlan | None = None,
+    when: When | None = None,
 ) -> str | None:
     """Why the season the form describes can't be planned, or None."""
-    plan = season_plan_from(saga, character, values, existing)
+    plan = season_plan_from(saga, character, values, existing, when)
+    there = seasons.plan_for(saga, character, plan.season, plan.year)
+    if there is not None and there is not existing:
+        return (
+            f"{plan.season} {plan.year} is already planned "
+            f"({seasons.plan_summary(saga, character, there)}): change that "
+            "plan, or clear it first."
+        )
     found = season_rules.problems(character, plan, saga)
     if not found and plan.activity == season_rules.OTHER and not plan.details:
         return "Say in Notes what the season is spent on."
@@ -1217,11 +1292,12 @@ def season_plan_live(
     character: Character,
     values: dict[str, Any],
     existing: SeasonPlan | None = None,
+    when: When | None = None,
 ) -> str:
     """The line above Save: what the season will give, worked out as the
     form is filled in."""
     return seasons.live_text(
-        saga, character, season_plan_from(saga, character, values, existing)
+        saga, character, season_plan_from(saga, character, values, existing, when)
     )
 
 
@@ -1309,39 +1385,78 @@ def grog_year_form(character: Character) -> Form:
 
 
 def plan_season(
-    saga: Saga, character: Character, *, vf_picker: VfPicker | None = None
+    saga: Saga,
+    character: Character,
+    *,
+    vf_picker: VfPicker | None = None,
+    when: When | None = None,
 ) -> Form:
-    """Plan `character`'s current season, or change the plan; a grog's is
-    the Yearly Update instead."""
+    """Plan `character`'s season `when` (the current one by default), or
+    change its plan; a grog's is the Yearly Update instead."""
     if not season_rules.is_planned(character):
         return grog_year_form(character)
-    existing = seasons.plan_for(saga, character)
+    when = when or (saga.current_season, saga.current_year)
+    existing = seasons.plan_for(saga, character, *when)
 
     def apply(values: dict[str, Any]) -> None:
-        seasons.set_plan(saga, season_plan_from(saga, character, values, existing))
+        save_plan(
+            saga, season_plan_from(saga, character, values, existing, when), existing
+        )
 
     return Form(
-        season_plan_title(saga, character),
-        lambda: season_plan_fields(saga, character, existing, vf_picker=vf_picker),
+        season_plan_title(saga, character, when),
+        lambda: season_plan_fields(
+            saga, character, existing, vf_picker=vf_picker, when=when
+        ),
         apply,
-        validate=lambda values: season_plan_problem(saga, character, values, existing),
-        live=lambda values: season_plan_live(saga, character, values, existing),
+        validate=lambda values: season_plan_problem(
+            saga, character, values, existing, when
+        ),
+        live=lambda values: season_plan_live(saga, character, values, existing, when),
+        help_id="plan-season",
     )
 
 
-def clear_season(saga: Saga, character: Character) -> Confirm | Refuse:
-    """Drop `character`'s plan for the current season, after confirming."""
-    plan = seasons.plan_for(saga, character)
+def clear_season(
+    saga: Saga, character: Character, when: When | None = None
+) -> Confirm | Refuse:
+    """Drop `character`'s plan for season `when` (the current one by
+    default), after confirming."""
+    season, year = when or (saga.current_season, saga.current_year)
+    plan = seasons.plan_for(saga, character, season, year)
     if plan is None:
         return Refuse(
             "Clear the Season",
-            f"Nothing is planned for {escape(character.name)} this season.",
+            f"Nothing is planned for {escape(character.name)} in {season} {year}.",
         )
     return Confirm(
-        f"Clear {escape(character.name)}'s plan "
+        f"Clear {escape(character.name)}'s plan for {season} {year} "
         f"({escape(seasons.plan_summary(saga, character, plan))})?",
-        lambda: seasons.clear_plan(saga, character),
+        lambda: seasons.clear_plan(saga, character, season, year),
         yes_label="Clear",
+    )
+
+
+def ahead_season_ops(saga: Saga, character: Character) -> SectionOps:
+    """The character sheet's Seasons Ahead: Add plans the first free one,
+    Edit plans (or changes) the season chosen, Delete clears it."""
+    ahead = seasons.seasons_ahead(saga)
+
+    def add() -> Command:
+        free = [w for w in ahead if seasons.plan_for(saga, character, *w) is None]
+        if not free:
+            return Refuse(
+                "Plan a Season Ahead",
+                f"Every season ahead is planned for {escape(character.name)}: "
+                "choose one to change it.",
+            )
+        return plan_season(saga, character, when=free[0])
+
+    return SectionOps(
+        add=add,
+        edit=lambda index: plan_season(saga, character, when=ahead[index]),
+        remove=lambda index: clear_season(saga, character, ahead[index]),
+        rows=lambda: [text for _, text in seasons.ahead_rows(saga, character)],
     )
 
 

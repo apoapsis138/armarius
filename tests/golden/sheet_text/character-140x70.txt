@@ -434,13 +434,13 @@
 
       Nothing planned for Spring 1220. Press e to plan the season.
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Seasons Ahead (Summer 1220 - Winter 1220)
 
-
-
-
-
-
-
+      ○ Summer 1220   nothing planned
+      ○ Autumn 1220   nothing planned
+      ○ Winter 1220   nothing planned
+      Choose a season to see its plan. Press e to plan it.
 
 
 

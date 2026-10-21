@@ -86,6 +86,7 @@ from ..models import (
     ScoredTrait,
     TraditionDef,
 )
+from ..rules import activities as season_rules
 from ..rules import hybrid_magic
 from ..sheets import character as cs
 from ..sheets import familiar as fs
@@ -1271,17 +1272,35 @@ class CharacterSheet(QWidget):
             p,
             nouns=season_forms.season_nouns(c),
         )
-        return scrolling_page(
+        this_season = section(
+            f"This Season ({saga.current_season} {saga.current_year})",
             p,
-            section(
-                f"This Season ({saga.current_season} {saga.current_year})",
+            TextBlock(seasons.plan_text(saga, c, "Click Plan to plan the season."), p),
+            buttons=buttons,
+        )
+        if not season_rules.is_planned(c):
+            return scrolling_page(p, this_season)
+        chooser = Chooser()
+        info = TextBlock(seasons.ahead_info(saga, c, None, "Click Edit"), p)
+
+        def show(index: int) -> None:
+            chooser.choose(index)
+            info.setText(to_html(seasons.ahead_info(saga, c, index, "Click Edit"), p))
+
+        ahead = section(
+            seasons.ahead_title(saga),
+            p,
+            table_view(seasons.ahead_table(saga, c), p, show),
+            info,
+            buttons=verb_buttons(
+                season_forms.ahead_season_ops(saga, c),
+                chooser,
+                self.run,
                 p,
-                TextBlock(
-                    seasons.plan_text(saga, c, "Click Plan to plan the season."), p
-                ),
-                buttons=buttons,
+                nouns=season_forms.PLAN_NOUNS,
             ),
         )
+        return scrolling_page(p, this_season, ahead)
 
     def _diary(self) -> QWidget:
         """The character's seasons as a calendar, a row per year, over the

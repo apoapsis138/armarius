@@ -50,6 +50,15 @@ To change a plan, press `e` again; to clear it, press `d` and confirm.
 <!-- gui -->
 To change a plan, click **Edit**; to clear it, click **Clear** and confirm.
 <!-- /gui -->
+To plan further ahead, use **Seasons Ahead** under This Season: it lists the next three seasons, a full year with this one.
+<!-- tui -->
+Highlight one and press `e` to plan it the same way (`a` plans the first free one, `d` clears one).
+<!-- /tui -->
+<!-- gui -->
+Click one and **Edit** to plan it the same way (**Plan** plans the first free one, **Clear** clears one).
+<!-- /gui -->
+The form's **Season** field moves a plan to another season of the year. A season ahead's gains are worked out from the character as they stand now. See [Seasons Ahead](help:section-char-ahead).
+
 Teaching takes two plans: the teacher plans Teach and the student plans Be taught, for the same season. A helper in a laboratory plans **Assist in a laboratory** on their own sheet.
 
 ### Finding an activity

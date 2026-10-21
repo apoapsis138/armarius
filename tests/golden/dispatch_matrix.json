@@ -187,7 +187,7 @@
       "keys": {
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
-        "d": "notice: Nothing is planned for Leandro this season.",
+        "d": "notice: Nothing is planned for Leandro in Spring 1220.",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -197,7 +197,7 @@
       "keys": {
         "a": "FieldsDialog: Plan Alys's Season (Spring 1220)",
         "e": "FieldsDialog: Plan Alys's Season (Spring 1220)",
-        "d": "notice: Nothing is planned for Alys this season.",
+        "d": "notice: Nothing is planned for Alys in Spring 1220.",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -659,7 +659,17 @@
       "keys": {
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
-        "d": "notice: Nothing is planned for Leandro this season.",
+        "d": "notice: Nothing is planned for Leandro in Spring 1220.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-char-ahead": {
+      "active": "section-char-ahead",
+      "keys": {
+        "a": "FieldsDialog: Plan Leandro's Season (Summer 1220)",
+        "e": "FieldsDialog: Plan Leandro's Season (Summer 1220)",
+        "d": "notice: Nothing is planned for Leandro in Summer 1220.",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

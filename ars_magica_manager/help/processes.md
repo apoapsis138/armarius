@@ -1,7 +1,7 @@
 # Plan Season
 <!-- help: plan-season -->
 
-Plans what a magus, companion or Mythic Companion does with the current season. Nothing changes when you save: the plan is applied when the saga is advanced
+Plans what a magus, companion or Mythic Companion does with a season: the current one, or one up to a year ahead. Nothing changes when you save: the plan is applied when the saga is advanced
 <!-- tui -->
 with `t`.
 <!-- /tui -->
@@ -10,19 +10,21 @@ with **Advance Season** in the top bar.
 <!-- /gui -->
 Grogs aren't planned season by season; they have a [yearly update](help:grog-year) instead.
 
-**You type:** the Activity, chosen from a list you can filter by Type and Book (see [Choosing the activity](help:plan-season-activity)), then the fields that activity needs (what the experience goes into, a book, a teacher, a Source Quality, a die roll), months lost to distractions, and Notes.
+**You type:** the **Season** (the one it was opened for; choose another of the year ahead to move the plan there), the Activity, chosen from a list you can filter by Type and Book (see [Choosing the activity](help:plan-season-activity)), then the fields that activity needs (what the experience goes into, a book, a teacher, a Source Quality, a die roll), months lost to distractions, and Notes.
 
-**The app works out:** what the season will give, from the character and the saga as they stand now, shown on the line above Save as you fill the form in.
+**The app works out:** what the season will give, from the character and the saga as they stand now, shown on the line above Save as you fill the form in. For a season ahead it is still worked out from the character as they stand now: the seasons in between are not counted. A season that already has a plan can't be chosen for another one: change that plan, or clear it first.
 
 ### Where it's opened from
 <!-- help: plan-season-where -->
 
 <!-- tui -->
 - A character's **Planning** tab: the This Season section. `a` or `e` plans the season (or changes the plan), and `d` clears it after a confirmation.
+- The same tab's [Seasons Ahead](help:section-char-ahead): highlight a season and press `e` to plan it (or change its plan), `a` to plan the first free one, or `d` to clear one.
 - A covenant's **Seasons** tab: highlight someone in the Magi or Companions list and press `a` or `e` to plan, or `d` to clear the plan.
 <!-- /tui -->
 <!-- gui -->
 - A character's **Planning** chapter: the This Season section. **Plan** plans the season; once it is planned, **Edit** changes the plan and **Clear** clears it after a confirmation.
+- The same chapter's [Seasons Ahead](help:section-char-ahead): click a season, then **Edit** to plan it (or change its plan) or **Clear** to clear it; **Plan** plans the first free one.
 - A covenant's **Seasons** chapter: click someone in the Magi or Companions list, then **Plan** to plan their season (or change the plan), or **Clear** to clear it.
 <!-- /gui -->
 

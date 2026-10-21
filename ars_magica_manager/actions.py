@@ -43,6 +43,7 @@ from .sections import (
     BOOKS_SECTION,
     CASES_SECTION,
     CATALOGS_SECTION,
+    CHAR_AHEAD_SECTION,
     CORE_SECTIONS,
     CREATURE_INFO_SECTION,
     DEVICE_SECTIONS,
@@ -126,6 +127,7 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         "section-raw-vis-hermetic": _ALL3,
         "section-raw-vis-inventory": _ALL3,
         "section-char-season": _ALL3,
+        CHAR_AHEAD_SECTION: _ALL3,
         "tab-diary": _ALL3,
         # Familiar sheet
         "section-fam-info": _EDIT,

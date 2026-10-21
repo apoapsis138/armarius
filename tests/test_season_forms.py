@@ -76,7 +76,7 @@ def test_a_season_is_planned_changed_and_cleared():
     assert len(saga.season_plans) == 1  # replaced, not added
     clear = ops.remove(0)
     assert isinstance(clear, commands.Confirm)
-    assert clear.question.startswith("Clear Leandro's plan (Other")
+    assert clear.question.startswith("Clear Leandro's plan for Spring 1220 (Other")
     assert clear.yes_label == "Clear"
     clear.apply()
     assert seasons.plan_for(saga, magus) is None
@@ -98,7 +98,7 @@ def test_nothing_to_clear_is_refused():
     saga = _sample_saga_with_covenant()
     refused = sf.clear_season(saga, saga.characters[0])
     assert isinstance(refused, commands.Refuse)
-    assert refused.why == "Nothing is planned for Leandro this season."
+    assert refused.why == "Nothing is planned for Leandro in Spring 1220."
 
 
 def test_a_grog_plans_the_yearly_update():

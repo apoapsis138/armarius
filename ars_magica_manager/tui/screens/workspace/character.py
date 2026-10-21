@@ -8,7 +8,7 @@ from collections.abc import Callable
 from functools import partial
 from typing import Any
 
-from .... import creation, sourcebooks, storage, traditions, world
+from .... import creation, seasons, sourcebooks, storage, traditions, world
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
@@ -32,6 +32,7 @@ from ....models import (
     replace_raw_vis,
 )
 from ....rules import activities as season_rules
+from ....sections import CHAR_AHEAD_SECTION
 from ..fields import (
     FieldsDialog,
 )
@@ -868,6 +869,48 @@ class CharacterActions(WorkspaceBase):
         if self.selected_character is not None:
             self._clear_season_plan_for(self.selected_character, "section-char-season")
 
+    # -- Character: Seasons Ahead (the rest of the year) --
+
+    def _season_ahead(self) -> tuple[str, int] | None:
+        """The season chosen in Seasons Ahead, or None."""
+        view = self._character_sheet_view
+        index = view.selected_season_ahead() if view is not None else None
+        ahead = seasons.seasons_ahead(self.saga)
+        return ahead[index] if index is not None and index < len(ahead) else None
+
+    def _plan_season_ahead(self) -> None:
+        """Plan the season chosen in Seasons Ahead, or change its plan."""
+        when = self._season_ahead()
+        if self.selected_character is not None and when is not None:
+            self._plan_season_for(self.selected_character, CHAR_AHEAD_SECTION, when)
+
+    def _plan_free_season_ahead(self) -> None:
+        """Plan the first season ahead with nothing planned."""
+        character = self.selected_character
+        if character is None:
+            return
+        free = [
+            w
+            for w in seasons.seasons_ahead(self.saga)
+            if seasons.plan_for(self.saga, character, *w) is None
+        ]
+        if not free:
+            self.notify(
+                f"Every season ahead is planned for {character.name}: choose one "
+                "to change it."
+            )
+            return
+        self._plan_season_for(character, CHAR_AHEAD_SECTION, free[0])
+
+    def _clear_season_ahead(self) -> None:
+        """Clear the plan of the season chosen in Seasons Ahead (after
+        confirming)."""
+        when = self._season_ahead()
+        if self.selected_character is not None and when is not None:
+            self._clear_season_plan_for(
+                self.selected_character, CHAR_AHEAD_SECTION, when
+            )
+
     # -- Character: Diary --
 
     def _selected_character_diary_entry(self) -> int | None:
@@ -1009,6 +1052,11 @@ class CharacterActions(WorkspaceBase):
             ),
             "section-char-season": _SectionOps(
                 self._plan_season, self._clear_season_plan, self._plan_season
+            ),
+            CHAR_AHEAD_SECTION: _SectionOps(
+                self._plan_free_season_ahead,
+                self._clear_season_ahead,
+                self._plan_season_ahead,
             ),
             "tab-diary": _SectionOps(
                 self._add_character_diary_entry,

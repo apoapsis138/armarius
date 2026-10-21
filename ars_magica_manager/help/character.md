@@ -835,8 +835,8 @@ this character, for example whether they can read it.
 ## Planning tab
 <!-- help: tab-planning -->
 
-What the character does this season, and what it will give them, before the
-season is applied.
+What the character does this season and the three after it, a full year,
+and what each will give them, before the season is applied.
 
 **You type:** the season's activity and its details. Lab work is planned on
 the laboratory's Planning tab instead.
@@ -875,6 +875,28 @@ a grog, `e` sets up the yearly update (Grogs, Chapter 5).
 <!-- gui -->
 a grog, **Yearly Update** sets up the yearly update (Grogs, Chapter 5).
 <!-- /gui -->
+
+### Seasons Ahead
+<!-- help: section-char-ahead -->
+
+The three seasons after this one, named in the title, each with what is
+planned for it or "nothing planned". With This Season above it, a
+character can be planned a full year ahead; when the season is advanced,
+the next one becomes This Season and another joins the list.
+<!-- tui -->
+Highlight a season to see its plan and what it will give under the list.
+`e` plans it or changes its plan, `a` plans the first season with nothing
+planned, and `d` clears the highlighted season's plan after asking.
+<!-- /tui -->
+<!-- gui -->
+Click a season to see its plan and what it will give under the list.
+**Edit** plans it or changes its plan, **Plan** plans the first season with
+nothing planned, and **Clear** clears the chosen season's plan after asking.
+<!-- /gui -->
+What a season ahead will give is worked out from the character as they
+stand now; the seasons before it are not counted. Lab work in a season
+ahead is planned on the laboratory's Planning tab, as for this season. A
+grog has no Seasons Ahead: their yearly update covers the year.
 
 ## Diary tab
 <!-- help: tab-diary -->

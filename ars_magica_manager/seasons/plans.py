@@ -13,7 +13,7 @@ from .. import spells as spl
 from ..familiars import familiar_of
 from ..inhabitants import AUTO_KINDS, character_kind
 from ..markup import escape, problem, todo
-from ..models import SEASONS, Book, Character, Saga, SeasonPlan
+from ..models import SEASONS, Book, Character, Saga, SeasonPlan, next_season
 from ..rules import activities as rules
 from ..rules import apprentice_seasons as aps
 from ..rules import book_seasons as bs
@@ -24,6 +24,7 @@ from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
 from ..rules import xp as xp_rules
 from ..rules.rounding import round_up
+from ..tables import Table
 from ..world import takes_part_in_play
 
 
@@ -54,9 +55,12 @@ def set_plan(saga: Saga, plan: SeasonPlan) -> None:
     saga.season_plans.append(plan)
 
 
-def clear_plan(saga: Saga, character: Character) -> bool:
-    """Drop `character`'s plan for the current season; whether there was one."""
-    plan = plan_for(saga, character)
+def clear_plan(
+    saga: Saga, character: Character, season: str | None = None, year: int | None = None
+) -> bool:
+    """Drop `character`'s plan for a season (by default the current one);
+    whether there was one."""
+    plan = plan_for(saga, character, season, year)
     if plan is None:
         return False
     saga.season_plans.remove(plan)
@@ -382,6 +386,76 @@ def _gain_line(gain: rules.XpGain, names: dict[str, str]) -> str:
     )
 
 
+#: How many seasons after the current one a character's plans reach: with
+#: the current season, a full year.
+AHEAD = 3
+
+
+def seasons_ahead(saga: Saga) -> list[tuple[str, int]]:
+    """The seasons after the current one that can be planned, in order."""
+    found = [next_season(saga.current_season, saga.current_year)]
+    while len(found) < AHEAD:
+        found.append(next_season(*found[-1]))
+    return found
+
+
+def planning_year(saga: Saga) -> list[tuple[str, int]]:
+    """The current season and the seasons ahead: the year that can be
+    planned."""
+    return [(saga.current_season, saga.current_year), *seasons_ahead(saga)]
+
+
+def ahead_rows(saga: Saga, character: Character) -> list[tuple[int, str]]:
+    """The Seasons Ahead list: each season after the current one and what
+    the character has planned for it."""
+    rows = []
+    for index, (season, year) in enumerate(seasons_ahead(saga)):
+        plan = plan_for(saga, character, season, year)
+        what = plan_summary(saga, character, plan) if plan else "nothing planned"
+        rows.append((index, f"{f'{season} {year}':<14}{what}"))
+    return rows
+
+
+def ahead_table(saga: Saga, character: Character) -> Table:
+    """ahead_rows as a table (markup): the season, and the plan."""
+    rows = []
+    for season, year in seasons_ahead(saga):
+        plan = plan_for(saga, character, season, year)
+        what = (
+            escape(plan_summary(saga, character, plan))
+            if plan
+            else "[dim]nothing planned[/]"
+        )
+        rows.append([f"{season} {year}", what])
+    return Table(["Season", "Plan"], rows, markup=True, stretch=1)
+
+
+def ahead_title(saga: Saga) -> str:
+    """ "Seasons Ahead (Summer 1220 - Winter 1220)"."""
+    ahead = seasons_ahead(saga)
+    (first, first_year), (last, last_year) = ahead[0], ahead[-1]
+    return f"Seasons Ahead ({first} {first_year} - {last} {last_year})"
+
+
+def ahead_info(
+    saga: Saga, character: Character, index: int | None, how: str = "Press e"
+) -> str:
+    """The chosen season ahead's plan and what it will give, worked out
+    from the character as they stand now (the seasons before it are not
+    counted). `how` says how to plan a free season."""
+    ahead = seasons_ahead(saga)
+    if index is None or not 0 <= index < len(ahead):
+        return f"[dim]Choose a season to see its plan. {how} to plan it.[/]"
+    season, year = ahead[index]
+    text = _plan_text(saga, character, f"{how} to plan it.", season, year)
+    if plan_for(saga, character, season, year) is None:
+        return text
+    return (
+        f"{text}\n[dim]Worked out from {escape(character.name)} as they stand "
+        "now, before the seasons in between.[/]"
+    )
+
+
 def plan_text(
     saga: Saga, character: Character, how: str = "Press e to plan the season."
 ) -> str:
@@ -395,13 +469,18 @@ def plan_text(
     return f"{text}\n\n{extra}" if extra else text
 
 
-def _plan_text(saga: Saga, character: Character, how: str) -> str:
-    plan = plan_for(saga, character)
+def _plan_text(
+    saga: Saga,
+    character: Character,
+    how: str,
+    season: str | None = None,
+    year: int | None = None,
+) -> str:
+    plan = plan_for(saga, character, season, year)
     if plan is None:
-        return (
-            f"[dim]Nothing planned for {saga.current_season} {saga.current_year}. "
-            f"{how}[/]"
-        )
+        season = season or saga.current_season
+        year = saga.current_year if year is None else year
+        return f"[dim]Nothing planned for {season} {year}. {how}[/]"
     worked = rules.outcome(character, plan, saga)
     lines = [f"[b]{escape(plan_summary(saga, character, plan))}[/]"]
     names = spell_names(saga, character)

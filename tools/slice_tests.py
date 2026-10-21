@@ -118,6 +118,7 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "ars_magica_manager/tui/screens/pickers.py": ("test_activity_picker.py",),
     "ars_magica_manager/tui/screens/invent_spell.py": ("test_spell_template.py",),
     "ars_magica_manager/forms/lab_plan.py": ("test_spell_template.py",),
+    "ars_magica_manager/seasons/plans.py": ("test_seasons_ahead.py",),
     "ars_magica_manager/gui/editing.py": ("test_gui_edit_shared.py",),
     "tests/golden/dispatch_matrix.json": ("test_dispatch_matrix.py",),
     "tests/golden/sheet_text/": ("test_sheet_text.py",),

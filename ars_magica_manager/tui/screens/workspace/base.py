@@ -62,6 +62,7 @@ from ....actions import (
     NodeKind,
 )
 from ....forms import neighbour as neighbour_forms
+from ....forms import season as season_forms
 from ....markup import escape
 from ....models import (
     FULL,
@@ -1864,22 +1865,27 @@ class WorkspaceBase(Screen[None]):
 
     # -- season plans (shared by the character and covenant sheets) --
 
-    def _plan_season_for(self, character: Character, section: str) -> None:
-        """Plan `character`'s current season, or change the plan, then
-        refresh `section`."""
+    def _plan_season_for(
+        self,
+        character: Character,
+        section: str,
+        when: tuple[str, int] | None = None,
+    ) -> None:
+        """Plan `character`'s season `when` (the current one by default), or
+        change its plan, then refresh `section`."""
         if not season_rules.is_planned(character):
             self._grog_year_for(character, section)
             return
+        when = when or (self.saga.current_season, self.saga.current_year)
+        existing = seasons.plan_for(self.saga, character, *when)
 
         def handle_result(plan: SeasonPlan | None) -> None:
             if plan is not None:
-                seasons.set_plan(self.saga, plan)
+                season_forms.save_plan(self.saga, plan, existing)
                 self._commit(section)
 
         self.app.push_screen(
-            _season_plan_dialog(
-                self.saga, character, seasons.plan_for(self.saga, character)
-            ),
+            _season_plan_dialog(self.saga, character, existing, when),
             handle_result,
         )
 
@@ -1895,21 +1901,27 @@ class WorkspaceBase(Screen[None]):
             _grog_year_dialog(character, character.grog_year), handle_result
         )
 
-    def _clear_season_plan_for(self, character: Character, section: str) -> None:
-        """Drop `character`'s plan for the current season (after
-        confirming), then refresh `section`."""
-        plan = seasons.plan_for(self.saga, character)
+    def _clear_season_plan_for(
+        self,
+        character: Character,
+        section: str,
+        when: tuple[str, int] | None = None,
+    ) -> None:
+        """Drop `character`'s plan for season `when` (the current one by
+        default; after confirming), then refresh `section`."""
+        season, year = when or (self.saga.current_season, self.saga.current_year)
+        plan = seasons.plan_for(self.saga, character, season, year)
         if plan is None:
-            self.notify(f"Nothing is planned for {character.name} this season.")
+            self.notify(f"Nothing is planned for {character.name} in {season} {year}.")
             return
 
         def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed and seasons.clear_plan(self.saga, character):
+            if confirmed and seasons.clear_plan(self.saga, character, season, year):
                 self._commit(section)
 
         self.app.push_screen(
             ConfirmScreen(
-                f"Clear {escape(character.name)}'s plan "
+                f"Clear {escape(character.name)}'s plan for {season} {year} "
                 f"({escape(seasons.plan_summary(self.saga, character, plan))})?"
             ),
             handle_confirmed,
