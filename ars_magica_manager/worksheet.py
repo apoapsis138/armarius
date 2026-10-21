@@ -614,7 +614,7 @@ def _childhood_budget(saga: Saga, record: Record) -> str:
                 "Native Language",
                 f"{escape(native.target)} ({native.xp} xp)" if native else "(not set)",
             ),
-            ("Other childhood xp", f"{others} of {cx.CHILDHOOD_XP}"),
+            ("Other childhood xp", f"{others} of {cx.childhood_xp(character)}"),
         ]
     )
 
@@ -623,7 +623,7 @@ def _childhood_rows(saga: Saga, record: Record) -> list[Row]:
     """The childhood's spends; the Native Language's row changes the
     language."""
     character = _character(record)
-    targets = cx.childhood_targets()
+    targets = cx.childhood_targets(character)
     rows = []
     for entry in cx.entries(character, "childhood"):
         row = xp_row(saga, character, entry, targets)
@@ -644,7 +644,7 @@ PANELS[("character", "childhood")] = Panel(
             lambda: wf.sample_childhood(saga, _character(record)),
         ),
     ],
-    xp_list("childhood", lambda saga, c: cx.childhood_targets(), rows=_childhood_rows),
+    xp_list("childhood", lambda saga, c: cx.childhood_targets(c), rows=_childhood_rows),
 )
 
 
@@ -658,9 +658,18 @@ def _later_life_budget(saga: Saga, record: Record) -> str:
     until = "apprenticeship" if character.type == "magus" else "now"
     budget = later.later_life_budget(saga, character)
     spent = cx.spent(character, "later_life")
+    # Name the years the training packages take, or the bought years
+    # look short of the age span.
+    in_packages = packages.years_used(character)
+    span = (
+        f"{later.later_life_years(saga, character)} years: {in_packages} in "
+        f"training packages, {years}"
+        if in_packages
+        else f"{years}"
+    )
     lines = [
         f"Later Life: age 5 to {ends if ends is not None else '?'} ({until}), "
-        f"{years} years at {later.xp_a_year(character)} xp = {budget} xp, "
+        f"{span} years at {later.xp_a_year(character)} xp = {budget} xp, "
         f"[b]{spent} spent, {budget - spent} left[/]"
     ]
     by_id = catalog.load_virtue_flaw_catalog_by_id()

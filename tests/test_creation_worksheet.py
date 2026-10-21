@@ -456,7 +456,9 @@ async def test_later_life_takes_and_drops_a_training_package():
         }
         await screen._refresh()
         assert "Training package: Animal Trainer (5 years)" in _rows(screen)
-        assert "15 years at 15 xp = 225 xp" in _text(screen, "#ws-budget")
+        assert "20 years: 5 in training packages, 15 years at 15 xp = 225 xp" in _text(
+            screen, "#ws-budget"
+        )
         # d on any of the package's rows drops the whole package.
         await _choose_row(pilot, screen, "Ride")
         await pilot.press("d")

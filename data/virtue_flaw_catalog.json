@@ -16891,6 +16891,39 @@
       "source": "AM",
       "summary": "Casts with the Rune duration and Inscription target; the effects are natural and need no vis.",
       "description": "The Hermetic integration of active runes (a Major breakthrough). Rune Magic serves as Magic Theory for runes; spells may take the Rune duration (as Moon, lasting while the runes are whole) and the Inscription target (as Individual), carved at Touch. The effects are natural: they need no vis and pass Magic Resistance unless aimed at a being that has it."
+    },
+    {
+      "id": "vf_mythic_farrier",
+      "name": "Mythic Farrier",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "Grogs",
+      "summary": "Crafts horseshoes with magical effects in one Hermetic Form (Touched by Realm, limited); powers affect only the horse or its immediate surroundings.",
+      "description": "The character may use the Touched by (Realm) Virtue (City & Guild) to a limited extent. He may craft horseshoes with magical effects, using Hermetic guidelines for a single Hermetic Form chosen at character creation (Animal is a popular choice). The horseshoes' powers can only affect the horse itself or its immediate environment: a Terram effect making the ground the horse touches stable is allowed, an Auram power to change the weather is not. The Craft Total is the Craft: Farrier Ability plus Intelligence or Dexterity, a permanent choice made at character creation. Most likely aligned with the Magic or Faerie realm, though an Infernal farrier is possible. May be taken twice, but no more: the second time adds either a second Form or a second Ability, not both. For variations, rename it Mythic (Professional) and replace Craft: Farrier with another Craft Ability, keeping the limit of one Ability and one Form."
+    },
+    {
+      "id": "vf_pack_mentality",
+      "name": "Pack Mentality",
+      "type": "Flaw",
+      "category": "Personality",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "Grogs",
+      "summary": "A follower, not a leader: rarely takes the initiative, but sticks with a decisive leader once found.",
+      "description": "The character is a follower, not a leader. He rarely takes the initiative, but is usually happy to follow the direction of a forthright and decisive person. If he finds a leader, he tends to stick with him."
+    },
+    {
+      "id": "vf_worthless_abilities",
+      "name": "Worthless Abilities",
+      "type": "Flaw",
+      "category": "General",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "Grogs",
+      "summary": "About 30 xp in Abilities made valueless by a shift in time (a time-lost character); companions may take it more than once.",
+      "description": "A time-lost character must have about 30 experience points that have been rendered valueless by her shift in time: for example, Area Lore 3 for a city that no longer exists, or an Etiquette score made useless by changing social structures. Troupes may permit companions to take this Flaw several times. For the legionaries of the Time-lost Witnesses template, the wasted Ability is their Organization Lore: the army it refers to no longer exists."
     }
   ]
 }

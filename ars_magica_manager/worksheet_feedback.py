@@ -60,7 +60,7 @@ def _childhood(saga: Saga, character: Character) -> list[Meter]:
     others = cx.spent(character, "childhood") - native
     return [
         Meter("Native Language", native, cx.NATIVE_XP),
-        Meter("Other childhood xp", others, cx.CHILDHOOD_XP),
+        Meter("Other childhood xp", others, cx.childhood_xp(character)),
     ]
 
 

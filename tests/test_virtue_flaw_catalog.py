@@ -20,7 +20,7 @@ KNOWN_BOOKS = {
     # The DE and the open-content books
     *("DE", "HoH:TL", "HoH:MC", "TMRE", "App", "RoP:M", "RoP:F", "RoP:D"),
     *("RoP:I", "C&G", "LoM", "TC", "GotF", "L&L", "AtD", "TCI", "A&A"),
-    "F&F",
+    *("F&F", "Grogs"),
     # Books only the index was read for
     *("AnM", "Ant", "BCoC", "TC&TC", "Gr", "HMRE", "HP", "HoH:S"),
     *("LoH", "MoH", "RM", "TSE", "ToME"),
@@ -40,11 +40,11 @@ def test_catalog_counts_after_adding_the_supplements():
     # Faith & Flame (11 definitions, 2 of them at both tiers), plus 2 from
     # The Sundered Eagle, plus Hedge Magic RE's 101 hedge Virtues and Flaws,
     # plus the other books' hedge traditions' 115, plus Ancient Magic's 6
-    # integration Virtues.
+    # integration Virtues, plus the 3 Grogs entries the DE doesn't have.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1347
+    assert len(entries) == 1350
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 793, "Flaw": 467, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 794, "Flaw": 469, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

@@ -389,11 +389,63 @@ def test_a_sample_childhood_fills_its_blanks():
     )
     assert filled[:2] == [("Area Lore: Rhine", 5), ("Area Lore: Alps", 5)]
     assert sum(xp for _, xp in filled) == 45
-    assert all(sum(xp for _, xp in c.xp) == 45 for c in cx.CHILDHOODS)
+    assert all(
+        sum(xp for _, xp in c.xp) == (120 if c.name == "Feral" else 45)
+        for c in cx.CHILDHOODS
+    )
     names = [
         c.name for c in cx.childhoods_in_play(Saga(id="s", name="S", books_in_play=[]))
     ]
     assert names == ["Athletic", "Exploring", "Mischievous", "Social", "Traveling"]
+
+
+def test_the_grogs_childhoods_need_their_upbringing():
+    from ars_magica_manager.rules import creation_xp as cx
+
+    saga = Saga(id="s", name="S", books_in_play=["Grogs"])
+    plain = Character(id="c", name="C", type="grog")
+    names = [c.name for c in cx.childhoods_in_play(saga, plain)]
+    assert "Covenant-bred" not in names and "Feral" not in names
+    bred = Character(
+        id="b",
+        name="B",
+        type="grog",
+        virtues_flaws=[VirtueFlawInstance("vf_covenant_upbringing")],
+    )
+    assert "Covenant-bred" in [c.name for c in cx.childhoods_in_play(saga, bred)]
+    # Covenant Upbringing opens Latin and Order of Hermes Lore to the childhood.
+    assert cx.childhood_allows("Dead Language: Latin", bred)
+    assert not cx.childhood_allows("Dead Language: Latin", plain)
+
+
+def test_a_feral_child_has_no_language_and_120_childhood_xp():
+    from ars_magica_manager.models import CreationXp
+    from ars_magica_manager.rules import creation_xp as cx
+
+    saga = Saga(id="s", name="S", books_in_play=["Grogs"])
+    wild = Character(
+        id="w",
+        name="W",
+        type="grog",
+        virtues_flaws=[VirtueFlawInstance("vf_feral_upbringing")],
+    )
+    feral = next(c for c in cx.CHILDHOODS if c.name == "Feral")
+    assert feral in cx.childhoods_in_play(saga, wild)
+    assert cx.childhood_xp(wild) == 120
+    assert "Living Language: {language}" not in cx.childhood_targets(wild)
+    wild.creation_xp = [
+        CreationXp("childhood", name, xp)
+        for name, xp in cx.fill_childhood(feral, {"area": "Black Forest"})
+    ]
+    found = {c.label: c.status for c in cx.childhood_checks(saga, wild)}
+    assert found["No Language (Feral Upbringing)"] == "pass"
+    assert found["At most 120 more xp"] == "pass"
+    assert "Only the childhood Abilities" not in found
+    wild.creation_xp.append(
+        CreationXp("childhood", "Living Language: German", 75, cx.NATIVE)
+    )
+    found = {c.label: c.status for c in cx.childhood_checks(saga, wild)}
+    assert found["No Language (Feral Upbringing)"] == "warn"
 
 
 # -- Later Life --
@@ -549,6 +601,37 @@ def test_an_affinity_adds_half_again_and_15_years_is_the_most():
         creation.spend_creation_xp(grog, CreationXp("package", "Brawl", 1, note))
     found = _vf(grog, "later_life")
     assert found["At most 15 years in Brawler"] == ("warn", "18 years")
+
+
+def test_every_package_is_15_xp_a_year_and_failed_apprentice_needs_its_virtue():
+    from ars_magica_manager import creation
+    from ars_magica_manager.models import CreationXp
+    from ars_magica_manager.rules import creation_packages as packages
+
+    for package in packages.PACKAGES:
+        for years, rows in ((5, package.five), (3, package.three)):
+            # Natural Philosopher's formulae stand for the rest of its xp.
+            if rows and package.name != "Natural Philosopher":
+                assert sum(xp for _, xp in rows) == 15 * years, package.name
+    failed = next(p for p in packages.PACKAGES if p.name == "Failed Apprentice")
+    assert packages.package_label(failed, 3).startswith("Failed Apprentice, 3 years")
+    philosopher = next(p for p in packages.PACKAGES if p.name == "Natural Philosopher")
+    assert packages.package_label(philosopher, 5).endswith("7 formulae")
+    grog = _character("grog", 1190)
+    note = packages.Taken("Failed Apprentice", 3, 1).note
+    for target, xp in packages.package_xp(failed, 3):
+        creation.spend_creation_xp(grog, CreationXp("package", target, xp, note))
+    found = _vf(grog, "later_life")
+    assert found["Failed Apprentice needs the Failed Apprentice Virtue"] == (
+        "warn",
+        "not taken",
+    )
+    grog.virtues_flaws.append(VirtueFlawInstance("vf_failed_apprentice"))
+    found = _vf(grog, "later_life")
+    assert found["Failed Apprentice needs the Failed Apprentice Virtue"] == (
+        "pass",
+        "taken",
+    )
 
 
 # -- Apprenticeship --

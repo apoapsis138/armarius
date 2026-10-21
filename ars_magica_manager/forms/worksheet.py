@@ -345,13 +345,13 @@ def with_blanks(
 
 
 def use_childhood(character: Character, childhood: cx.Childhood) -> Command:
-    """Spend the 45 childhood xp as `childhood` (asking for the names it
+    """Spend the childhood xp as `childhood` (asking for the names it
     leaves blank), replacing what was spent there (the Native Language
-    stays)."""
+    stays, except for a feral child, who has none)."""
 
     def apply(filled: list[tuple[str, int]]) -> None:
         for entry in cx.entries(character, "childhood"):
-            if entry.note != cx.NATIVE:
+            if entry.note != cx.NATIVE or cx.feral(character):
                 creation.refund_creation_xp(character, entry)
         for target, xp in filled:
             creation.spend_creation_xp(character, CreationXp("childhood", target, xp))
@@ -360,11 +360,14 @@ def use_childhood(character: Character, childhood: cx.Childhood) -> Command:
 
 
 def sample_childhood(saga: Saga, character: Character) -> Choose:
-    """Choose one of the sample childhoods to spend the 45 childhood xp
-    as (use_childhood)."""
+    """Choose one of the sample childhoods the character may take, to
+    spend the childhood xp as (use_childhood)."""
     return Choose(
-        "Use a sample childhood (replaces the 45 xp)",
-        lambda: [Choice(cx.childhood_label(c), c) for c in cx.childhoods_in_play(saga)],
+        "Use a sample childhood (replaces the childhood xp)",
+        lambda: [
+            Choice(cx.childhood_label(c), c)
+            for c in cx.childhoods_in_play(saga, character)
+        ],
         lambda childhood: use_childhood(character, childhood),
         empty="(no sample childhoods in play)",
     )

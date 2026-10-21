@@ -107,6 +107,28 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.117.0 — 2026-10-21
+
+### Gauntlet
+
+- **Training packages show their years.** A grog's Later Life line now
+  names the years a training package takes, so a grog of 31 with a
+  5-year package reads "26 years: 5 in training packages, 21 years at
+  15 xp = 315 xp" instead of seeming to have lost five years.
+- **The Grogs childhoods.** With the Grogs book in play, Covenant
+  Upbringing offers the Covenant-bred childhood (which may also buy
+  Latin and Order of Hermes Lore), and Feral Upbringing the Feral one:
+  a feral child has no Language and 120 childhood xp instead of 75 + 45.
+- **More training packages.** Failed Apprentice (which needs that
+  Virtue), Student (monastic school) and Student (private tutor or
+  university), and Natural Philosopher's formulae in its name.
+
+### Florilegium
+
+- **Three Grogs Virtues and Flaws.** Mythic Farrier, Pack Mentality and
+  Worthless Abilities join the catalog; the rest of Grogs' Chapter 6 was
+  already there under its Definitive Edition names.
+
 ## 2.116.0 — 2026-10-21
 
 ### Book of Hours

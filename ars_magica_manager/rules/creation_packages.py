@@ -3,8 +3,9 @@ the Grogs book is in play. A package gives fixed xp for 3 or 5 years of
 the character's life; the years left over are bought at the usual xp a
 year. Wealthy characters take 3/4 of the package years in age, Poor ones
 1.5 times; an Affinity with an Ability adds half again to the package's
-xp in it. No more than 15 years in one package, and a package marked
-(Academic), (Arcane) or (Martial) needs a Virtue opening that type.
+xp in it. No more than 15 years in one package, a package marked
+(Academic), (Arcane) or (Martial) needs a Virtue opening that type, and
+Failed Apprentice needs that Virtue.
 
 The worksheet records a package's xp as "package" entries whose note names
 the package, its length and which time it was taken ("Soldier:5:1").
@@ -16,7 +17,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .. import sourcebooks
+from .. import catalog, sourcebooks
 from ..models import Character, Saga
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
@@ -43,6 +44,10 @@ class Package:
     needs: str
     five: tuple[tuple[str, int], ...] = ()
     three: tuple[tuple[str, int], ...] = ()
+    #: The Virtue a character must have to take it ("" for none).
+    virtue: str = ""
+    #: What the 5- and 3-year packages give besides xp, for the label.
+    extra: tuple[str, str] = ("", "")
 
 
 #: The Grogs book's career and background packages. Where the book offers
@@ -136,6 +141,28 @@ PACKAGES: tuple[Package, ...] = (
     ),
     Package("Cutter", "", three=(("Chirurgy", 40), ("Folk Ken", 5))),
     Package(
+        "Failed Apprentice",
+        "",
+        (
+            ("Artes Liberales", 5),
+            ("Code of Hermes", 5),
+            ("Concentration", 5),
+            ("Finesse", 5),
+            (_LATIN, 10),
+            ("Magic Theory", 25),
+            (_OOH, 15),
+            ("Penetration", 5),
+        ),
+        (
+            ("Concentration", 5),
+            (_LATIN, 10),
+            ("Magic Theory", 20),
+            (_OOH, 5),
+            ("Penetration", 5),
+        ),
+        virtue="vf_failed_apprentice",
+    ),
+    Package(
         "Farmer",
         "",
         (
@@ -221,6 +248,7 @@ PACKAGES: tuple[Package, ...] = (
         "Academic",
         (("Philosophiae", 40),),
         (("Philosophiae", 30),),
+        extra=("7 formulae", "3 formulae"),
     ),
     Package(
         "Pikeman",
@@ -301,6 +329,25 @@ PACKAGES: tuple[Package, ...] = (
             (_LATIN, 30),
             ("Theology: Christian", 15),
             ("Civil and Canon Law", 15),
+        ),
+    ),
+    Package(
+        "Student (monastic school)",
+        "Academic",
+        (
+            ("Artes Liberales", 15),
+            (_LATIN, 30),
+            ("Theology: Christian", 15),
+            ("Medicine", 15),
+        ),
+    ),
+    Package(
+        "Student (private tutor or university)",
+        "Academic",
+        (
+            ("Artes Liberales", 15),
+            (_LATIN, 30),
+            ("{academic_ability}", 30),
         ),
     ),
     Package(
@@ -464,10 +511,11 @@ def package_label(package: Package, years: int) -> str:
     """ "Soldier (Martial), 5 years: Athletics 15, Brawl 20, Single Weapon 40"."""
     rows = package.five if years == 5 else package.three
     needs = f" ({package.needs})" if package.needs else ""
-    parts = ", ".join(
-        f"{name.replace('{', '(').replace('}', ')')} {xp}" for name, xp in rows
-    )
-    return f"{package.name}{needs}, {years} years: {parts}"
+    parts = [f"{name.replace('{', '(').replace('}', ')')} {xp}" for name, xp in rows]
+    extra = package.extra[0 if years == 5 else 1]
+    if extra:
+        parts.append(extra)
+    return f"{package.name}{needs}, {years} years: {', '.join(parts)}"
 
 
 def next_time(character: Character, name: str) -> int:
@@ -510,6 +558,16 @@ def package_checks(saga: Saga, record: Record) -> list[Check]:
                 )
             )
         package = by_name.get(name)
+        if package is not None and package.virtue:
+            held = any(vf.vf_id == package.virtue for vf in character.virtues_flaws)
+            virtue = catalog.load_virtue_flaw_catalog_by_id()[package.virtue].name
+            found.append(
+                _check(
+                    f"{name} needs the {virtue} Virtue",
+                    held,
+                    "taken" if held else "not taken",
+                )
+            )
         if package is not None and package.needs:
             ok = package.needs in access.opened_types(character)
             found.append(
