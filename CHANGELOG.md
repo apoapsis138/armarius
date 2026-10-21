@@ -107,6 +107,28 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.116.0 — 2026-10-21
+
+### Book of Hours
+
+- **Paired plans.** Planning Be taught or Be trained now plans the
+  teacher's or master's season too; planning Teach with a student plans
+  the student's Be taught; and lab work can name an assistant, whose
+  Assist is planned for them. If the other person already has a
+  different plan, Save says so. Clearing either side clears both, after
+  one question.
+- **A default for unplanned seasons.** When you advance the season,
+  anyone with nothing planned gets the saga's default, set in Edit Saga
+  for Magi, Companions and Grogs: Work / Exposure in their Profession,
+  else Magic Theory for a magus, else their highest Ability that isn't a
+  language; for Grogs, 2 xp a season in their best Ability. Their Diary
+  marks it "(default)". Each can be set to Nothing instead.
+- **Who has nothing planned.** Advance Season names the player
+  characters with nothing planned (and, with a new saga setting, the
+  non-player characters too). For each you can choose the default,
+  nothing, or planning their season there and then. A plan that can't
+  be carried out can be planned again from the same step.
+
 ## 2.115.0 — 2026-10-21
 
 ### Pagina

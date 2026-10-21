@@ -31,6 +31,7 @@ from ..tables import Table
 from ..world import takes_part_in_play
 from .character_effects import _add_xp, _yearly_warping, age_character, diary_entry
 from .covenant import covenant_season
+from .defaults import default_text, grog_default, notified
 from .lab_apply import (
     apply_book_work,
     apply_lab_work,
@@ -127,32 +128,41 @@ def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
     practice and exposure xp; the year's story awards are then cleared."""
     lines: list[SeasonRecordLine] = []
     for character in saga.characters:
-        if (
-            rules.is_planned(character)
-            or character.grog_year is None
-            or not takes_part_in_play(character)
-        ):
+        if rules.is_planned(character) or not takes_part_in_play(character):
             continue
-        gains = grog_year_gains(character)
-        for ability, xp, _ in gains:
+        year = character.grog_year
+        default = grog_default(saga, character) if year is None else None
+        if year is None and default is None:
+            continue
+        if year is not None:
+            gains = [(ability, xp) for ability, xp, _ in grog_year_gains(character)]
+        else:
+            assert default is not None
+            gains = [default]
+        for ability, xp in gains:
             _add_xp(character, rules.ability_subject(ability), xp)
-        summary = ", ".join(f"{a} +{xp}" for a, xp, _ in gains) or "no xp"
+        summary = ", ".join(f"{a} +{xp}" for a, xp in gains) or "no xp"
+        if year is None:
+            details = (
+                "No yearly update was set up: the saga's default, 2 xp of "
+                "Exposure a season in their highest Ability (Edit Saga)."
+            )
+        else:
+            details = "Grogs, Chapter 5, Updating Grogs" + (
+                f"; {year.story_awards} story award(s) took seasons of it."
+                if year.story_awards
+                else "."
+            )
+            year.story_awards = 0
         character.diary.append(
             DiaryEntry(
                 year=saga.current_year,
                 season=saga.current_season,
-                name=f"Yearly update: {summary}",
-                details="Grogs, Chapter 5, Updating Grogs"
-                + (
-                    f"; {character.grog_year.story_awards} story award(s) took "
-                    "seasons of it."
-                    if character.grog_year.story_awards
-                    else "."
-                ),
+                name=f"Yearly update{' (default)' if year is None else ''}: {summary}",
+                details=details,
                 activity="Aging",
             )
         )
-        character.grog_year.story_awards = 0
         lines.append(
             SeasonRecordLine(
                 character.id,
@@ -203,12 +213,13 @@ def advance_summary(saga: Saga) -> str:
     ready = [o for o in worked if o.ok]
     if ready:
         lines.append(f"{len(ready)} planned season(s) will be applied.")
-    missing = unplanned(saga)
+    missing = notified(saga)
     if missing:
-        who = ", ".join(f"{escape(c.name)} ({c.type})" for c in missing)
-        lines.append(
-            todo(f"Nothing planned for: {who}. They gain nothing this season.")
+        who = ", ".join(
+            f"{escape(c.name)} ({c.type}: {escape(default_text(saga, c))})"
+            for c in missing
         )
+        lines.append(todo(f"Nothing planned for: {who}. Each is asked about next."))
     for outcome in worked:
         if not outcome.ok:
             character = saga.character(outcome.character_id)

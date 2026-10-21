@@ -61,6 +61,8 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
     if worked.gains:
         total = sum(g.result.xp for g in worked.gains)
         name += f" (+{total} xp)"
+    if plan.by_default:
+        name += " (default)"
     lines = [_gain_line(g, names) for g in worked.gains]
     lines += worked.notes
     if worked.lab_work is not None:

@@ -55,6 +55,7 @@ from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons, spell_levels
 from ..rules import laboratory_seasons as ls
+from ..seasons import pairs as paired_plans
 from . import activity as activity_forms
 from . import spell as spell_forms
 
@@ -800,6 +801,18 @@ class LabPlanForm:
                 show_if=_chosen,
             ),
             DialogField(
+                "assistant",
+                "Assistant",
+                "select",
+                _kept(self.assistant_of(plan), self.helpers()),
+                options=self.helpers(),
+                allow_blank=True,
+                placeholder="(none)",
+                show_if=_chosen,
+                hint="Their season is planned as Assist in a laboratory with "
+                "it: + their Intelligence and Magic Theory.",
+            ),
+            DialogField(
                 "details",
                 "Notes",
                 "text",
@@ -810,6 +823,23 @@ class LabPlanForm:
         return found
 
     # -- the choices --------------------------------------------------------
+
+    def helpers(self) -> list[tuple[str, str]]:
+        """Who could assist: anyone else with The Gift and Magic Theory."""
+        return [
+            (escape(c.name), c.id)
+            for c in self.saga.characters
+            if c is not self.magus and ls.can_assist(c)
+        ]
+
+    def assistant_of(self, plan: SeasonPlan | None) -> str | None:
+        """The assistant named on the plan, or one already assisting."""
+        if plan is None:
+            return None
+        if plan.assistant_ids:
+            return plan.assistant_ids[0]
+        helpers = ls.assistants(self.saga, self.magus, plan)
+        return helpers[0].id if helpers else None
 
     def vis_places(self) -> list[tuple[str, str]]:
         return [
@@ -974,6 +1004,7 @@ class LabPlanForm:
             theory_specialty=bool(values.get("specialty")),
             other_modifier=values.get("other_modifier") or 0,
             details=values.get("details") or "",
+            assistant_ids=[values["assistant"]] if values.get("assistant") else [],
             vis_from=self._vis_from(activity, values),
             risk=values.get("risk") or 0,
             research=values.get("research") or "",
@@ -1079,7 +1110,11 @@ class LabPlanForm:
             device = es.device_of(self.saga, plan)
             if device is None or es.effect_of(device, plan) is None:
                 return "Choose an effect of the chosen device."
-        found = season_rules.problems(self.magus, plan, self.saga)
+        paired = paired_plans.pair_problem(self.saga, self.magus, plan)
+        if paired is not None:
+            return paired
+        with paired_plans.in_place(self.saga, self.magus, plan):
+            found = season_rules.problems(self.magus, plan, self.saga)
         return found[0] if found else None
 
     # -- the line above Schedule ------------------------------------------
@@ -1087,6 +1122,10 @@ class LabPlanForm:
     def live(self, values: dict[str, Any]) -> str:
         """The design's level, the Lab Total and when the work is done."""
         plan = self.plan_of(values)
+        with paired_plans.in_place(self.saga, self.magus, plan):
+            return self._live(plan)
+
+    def _live(self, plan: SeasonPlan) -> str:
         if not plan.activity:
             return "[dim]Choose the lab work.[/]"
         parts: list[str] = []
@@ -1300,20 +1339,24 @@ def clear_lab_season(saga: Saga, lab: Laboratory, index: int | None) -> Command:
     if plan is None:
         return Refuse("Clear Lab Work", f"Nothing is planned for {season} {year}.")
     removed = seasons.scheduled_with(saga, plan)
+    paired = [p for each in removed for p in paired_plans.linked(saga, each)]
 
     def apply() -> None:
-        for each in removed:
-            if each in saga.season_plans:
-                saga.season_plans.remove(each)
+        paired_plans.clear_with(saga, [*removed, *paired])
 
     span = (
         f"{season} {year}"
         if len(removed) == 1
         else f"{season} {year} - {removed[-1].season} {removed[-1].year}"
     )
+    also = (
+        f" {escape(paired_plans.names(saga, paired))}'s plans with it are cleared too."
+        if paired
+        else ""
+    )
     return Confirm(
         f"Clear {escape(owner.name)}'s plan for {span} "
-        f"({escape(seasons.plan_summary(saga, owner, plan))})?",
+        f"({escape(seasons.plan_summary(saga, owner, plan))})?{also}",
         apply,
         yes_label="Clear",
     )

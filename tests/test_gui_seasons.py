@@ -14,7 +14,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering
 from PySide6.QtWidgets import QApplication
-from support import everything_saga
+from support import everything_saga, quiet
 
 from ars_magica_manager import economics as eco
 from ars_magica_manager import seasons, storage
@@ -80,7 +80,7 @@ def test_cancelling_leaves_the_date_alone(app):
 
 
 def test_a_quiet_season_just_says_the_new_date(app):
-    window = _window(everything_saga())
+    window = _window(quiet(everything_saga()))
     answering(window, True)
     window.advance.click()
     assert window.told == [("Advance Season", "It is now Summer 1220.")]

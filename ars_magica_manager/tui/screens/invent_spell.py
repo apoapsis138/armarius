@@ -116,6 +116,7 @@ _WIDGET_OF: dict[str, str] = {
     "days_away": "inv-days",
     "other_modifier": "inv-other",
     "details": "inv-notes",
+    "assistant": "inv-assistant",
 }
 
 
@@ -679,7 +680,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
 
     def _compose_common(self, plan: SeasonPlan | None) -> ComposeResult:
         """What every kind of lab work shares: experimenting, a similar spell,
-        Focus and specialty, days away, other modifiers, notes and the
+        Focus and specialty, days away, other modifiers, notes, an assistant and the
         results."""
         known = [
             (escape(spell.name), spell.id)
@@ -753,6 +754,17 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         with Horizontal(classes="inv-row"):
             yield Label("Notes")
             yield Input(plan.details if plan else "", id="inv-notes", compact=True)
+            helpers = self.form.helpers()
+            if helpers:
+                chosen = self.form.assistant_of(plan)
+                yield Label(" Assistant")
+                yield Select(
+                    helpers,
+                    value=chosen if chosen in [v for _, v in helpers] else Select.NULL,
+                    prompt="(none)",
+                    id="inv-assistant",
+                    compact=True,
+                )
         with Horizontal(id="inv-results"):
             yield Static("", id="inv-total")
             yield Static("", id="inv-when")

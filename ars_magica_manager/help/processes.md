@@ -27,6 +27,20 @@ Choosing For again on a season of a longer plan replaces the seasons planned aft
 
 What each later season gives is worked out from the character as they stand now, as for any season ahead. See [Interruptions](help:advance-interrupted) for how a season is marked interrupted.
 
+### Paired plans
+<!-- help: plan-season-pairs -->
+
+Some seasons take another person's season too, and saving one plans the other for the same season:
+
+- **Be taught** plans the teacher's **Teach** (Exposure in Teaching). A teacher already teaching that season is left as they are, so two students can share one.
+- **Be trained** plans the master's season working at the Ability (Exposure in it, with "Training (name)" in its Notes). A master who already has a plan keeps it: training doesn't need the master's season.
+- **Teach** with a **Student** and **Teaching them** plans the student's **Be taught** from the teacher.
+- Lab work naming an **Assistant** plans the helper's **Assist in a laboratory**, for each season of the work.
+
+If the other person already has a different plan that season, Save is refused with the reason, so nothing is replaced without asking: change or clear that plan first. The line above Save says whose season will be planned too. Changing the plan to another activity clears the season it made.
+
+Clearing either side clears both, after one question that names both people. A Teach another student still needs stays, and clearing an assistant's season only takes them off the lab work.
+
 ### Where it's opened from
 <!-- help: plan-season-where -->
 
@@ -102,7 +116,7 @@ The rules are those of Ars Magica Definitive Edition, Chapter 10: Long-Term Even
 - **Work / Exposure** can give 1 xp in each of two subjects instead of 2 in one.
 - **Adventure** can split the storyguide's Source Quality (5 to 10) among up to three subjects, at most 5 to each; give each one's share in Source Quality to (n).
 
-**Source Quality** is asked for Practice (leave it blank for 4, or 5 for a spell's Mastery), Adventure and some supplement activities. **Book** offers the covenant's library and the character's own books. **Teacher / master** lists the other characters: a teacher must plan Teach for the same season.
+**Source Quality** is asked for Practice (leave it blank for 4, or 5 for a spell's Mastery), Adventure and some supplement activities. **Book** offers the covenant's library and the character's own books. **Teacher / master** lists the other characters: saving Be taught or Be trained plans their season too (see [Paired plans](help:plan-season-pairs)).
 
 **Stress die (blank: rolled)**: for activities that roll, leave it blank and the app rolls the die when the season is applied, or type a roll made at the table. **Months lost (0-3)**: each full month lost to distractions cuts the total by a third.
 
@@ -178,6 +192,7 @@ puts the date back, but it doesn't undo what the season did.
 After you choose Advance, the app may ask:
 
 - For work that runs until it's done, whether anything interrupted it this season (see [Interruptions](help:advance-interrupted)).
+- For the player characters with nothing planned, and any plan that can't be carried out, what to do with the season (see [Unplanned seasons](help:advance-unplanned)).
 - In Winter, if a covenant is in deficit, whether to advance anyway. Advance anyway rolls the year over; No (or Escape) leaves the date alone so the books can be balanced first.
 - Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years; one left unticked gives nothing until it is.
 - For an experiment seeking a Discovery, whether to take the Discovery by using the risk to move the roll, when it could (a tick each).
@@ -192,6 +207,18 @@ When a magus has planned **Set up a new laboratory**, Advance Season asks, for e
 
 - Leave it ticked and **Continue**: the magus's next season is planned as **Set up the laboratory**, lab work in the new laboratory, unless something is already planned for it. It shows on the laboratory's Planning tab, where it can be changed or cleared like any lab work.
 - Untick it to decline: the laboratory keeps the Basic Flaw until you plan **Set up the laboratory** on its Planning tab yourself.
+
+### Unplanned seasons
+<!-- help: advance-unplanned -->
+
+A season left with nothing planned takes the saga's default for that kind of character, set in Edit Saga:
+
+- **Magi** and **Companions with nothing planned**: **Work / Exposure** (the default) gives 2 xp of Exposure in their profession (an Ability named Profession: ...), else a magus's Magic Theory (if they have a score in it), else their highest Ability that isn't a language. The Diary entry is marked "(default)". **Nothing** leaves the season empty.
+- **Grogs with nothing planned**: a grog with no [yearly update](help:grog-year) gains 2 xp of Exposure a season in their highest Ability, 8 when Winter is advanced, marked "Yearly update (default)". **Nothing** gives them nothing.
+
+Advance Season's **Unplanned Seasons** step names each player character (one with a Player) who has nothing planned, with a choice: **Default** (what the saga's default gives them), **Nothing this season**, or **Plan it now**, which opens [Plan Season](help:plan-season) for them and then carries on with the season. A plan that can't be carried out is listed too, with the reason: **Leave it** skips it, as before, or **Plan it again now** opens it to change. Cancelling any of these leaves the date and the saga as they were, apart from plans already saved.
+
+Non-player characters with nothing planned aren't named: they take the default. Tick **Be notified when and which non-player characters do not have seasonal activity** in Edit Saga to have them named and asked about too.
 
 ### Interruptions
 <!-- help: advance-interrupted -->

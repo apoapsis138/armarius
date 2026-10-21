@@ -60,7 +60,7 @@ What each activity gives (Ars Magica Definitive Edition, Chapter 10: Long-Term E
 - **Practice**: Source Quality 4 (5 for a spell's Mastery) in one Ability. Arts can't be practised.
 - **Read a book**: a summa's Quality, never past its Level; a tractatus's Quality, once per reader. The Quality is the one the book is read at: a palimpsest's -3, a commentary's +1, a florilegium's bonus, an exemplar's -3 and (with Extended book Quality) its craftsmanship all count, as its details panel shows. Only one reader a season for a book, or for any book bound in the same codex. A book whose Level or Quality is still to be set can't be read until it has them. A commentary is read only after a season on its summa: the plan notes it when none is on record. Reading a folio's book also gives 1 xp in Order of Hermes Lore. **Gloss it** glosses the book while reading it (+1 Quality, once): the reader needs a score of at least half its Level and better Communication than its author.
 - **Correspondence on** (any season, with Covenants in play): useful correspondence on a theme of the character's research or reading, with at least one letter received that season, adds 1 xp in its subject. One correspondence counts a season.
-- **Be taught**: the teacher's Communication + Teaching + 3, plus 6 for one student or 3 for two, never past the teacher's score. The teacher must plan Teach for the same season.
+- **Be taught**: the teacher's Communication + Teaching + 3, plus 6 for one student or 3 for two, never past the teacher's score. The teacher must Teach the same season: saving Be taught plans it for them.
 - **Be trained**: the master's score + 3, never past it; Abilities only.
 - **Study from vis** (magi): a stress die plus the aura's modifier, using one pawn of the Art's vis for every 5 points of its score (at least one).
 - **Adventure**: the storyguide's Source Quality of 5 to 10, split among up to three subjects, at most 5 to each.
@@ -249,20 +249,20 @@ To compare Lab Totals before choosing, choose [Lab Totals](help:tab-lab-totals) 
 <!-- help: guide-lab-planning-assistants -->
 
 <!-- tui -->
-[Assistants](help:invent-spell-assistants) are planned on the helper's own sheet, not on the Invent Spell screen.
+[Assistants](help:invent-spell-assistants) are named on the Invent Spell screen.
 
-1. Plan the magus's lab work for the current season first.
-2. On the helper's Planning tab, press `e`, choose **Assist in a laboratory** and choose the magus as **Teacher / master**. The helper needs The Gift and Magic Theory.
+1. Plan the magus's lab work, and choose the helper in **Assistant** (next to Notes). Only characters with The Gift and Magic Theory are offered.
+2. Choose **Schedule**: the helper's season is planned as **Assist in a laboratory** with the magus, for each season of the work.
 <!-- /tui -->
 <!-- gui -->
-[Assistants](help:invent-spell-assistants) are planned on the helper's own sheet, not in the lab work form.
+[Assistants](help:invent-spell-assistants) are named in the lab work form.
 
-1. Plan the magus's lab work for the current season first.
-2. In the helper's Planning chapter, click **Plan**, choose **Assist in a laboratory** and choose the magus as **Teacher / master**. The helper needs The Gift and Magic Theory.
+1. Plan the magus's lab work, and choose the helper in **Assistant**. Only characters with The Gift and Magic Theory are offered.
+2. Choose **Schedule**: the helper's season is planned as **Assist in a laboratory** with the magus, for each season of the work.
 <!-- /gui -->
 3. The magus's Lab Total now has a line for the helper: their Intelligence plus Magic Theory, for as many helpers as the magus's Leadership allows (at least one). The helper gains 2 xp of Exposure in Magic Theory.
 
-Since Plan Season plans only the current season, assistants are added one season at a time.
+A second helper is planned on their own sheet: Plan Season, **Assist in a laboratory**, with the magus as **Teacher / master**. If the helper already has another plan for the season, Schedule refuses and says so.
 
 ### Lab Texts
 <!-- help: guide-lab-planning-texts -->

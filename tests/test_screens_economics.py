@@ -17,7 +17,7 @@ from screen_helpers import (
     _wait_for_screen,
     _wait_until_active,
 )
-from support import build_all_tabs, menu, wait_until
+from support import build_all_tabs, menu, quiet, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -900,7 +900,7 @@ async def test_advance_anyway_advances_the_year_regardless():
 
 
 async def test_no_deficit_prompt_without_a_deficit_or_outside_winter():
-    saga = _saga_for_economics()  # a surplus
+    saga = quiet(_saga_for_economics())  # a surplus
     saga.current_season = "Winter"
     storage.save_saga(saga)
     app = ArsMagicaManagerApp()
@@ -912,7 +912,7 @@ async def test_no_deficit_prompt_without_a_deficit_or_outside_winter():
         )
         assert not isinstance(app.screen, ConfirmScreen)
 
-    saga = _saga_with_a_deficit(36, wealth=100)
+    saga = quiet(_saga_with_a_deficit(36, wealth=100))
     saga.current_season = "Autumn"  # a deficit, but not the year's end
     storage.save_saga(saga)
     app = ArsMagicaManagerApp()

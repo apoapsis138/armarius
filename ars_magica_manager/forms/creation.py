@@ -21,6 +21,7 @@ from ..markup import escape
 from ..models import REALMS, SEASONS, CharacterTemplateDef, Saga
 from ..models.saga import assign_laboratory_owner
 from ..rules import options as rule_options
+from ..seasons import defaults
 from . import tribunal as tribunal_forms
 
 #: Saga-form keys for the optional rules: the prefix plus the option's key.
@@ -88,6 +89,49 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "check",
                 saga.keep_season_records,
                 hint="A record of each season as it is applied, listed under Seasons in the tree. Off: only the Diaries keep them.",
+            )
+        )
+        fields += [
+            DialogField(
+                setting,
+                f"{who} with nothing planned",
+                "select",
+                getattr(saga, setting),
+                options=defaults.OPTIONS,
+                hint=hint,
+            )
+            for setting, who, hint in (
+                (
+                    "unplanned_magi",
+                    "Magi",
+                    "When the season is advanced: Work / Exposure (2 xp) in "
+                    "their profession, else Magic Theory, else their highest "
+                    "Ability that isn't a language; marked (default) in the "
+                    "Diary.",
+                ),
+                (
+                    "unplanned_companions",
+                    "Companions",
+                    "Work / Exposure (2 xp) in their profession, else their "
+                    "highest Ability that isn't a language.",
+                ),
+                (
+                    "unplanned_grogs",
+                    "Grogs",
+                    "A grog with no yearly update: 2 xp of Exposure a season "
+                    "in their highest Ability, 8 at the year's end.",
+                ),
+            )
+        ]
+        fields.append(
+            DialogField(
+                "notify_npc_unplanned",
+                "Be notified when and which non-player characters do not "
+                "have seasonal activity",
+                "check",
+                saga.notify_npc_unplanned,
+                hint="Off: Advance Season names only player characters with "
+                "nothing planned; the others take the default above.",
             )
         )
         fields += [

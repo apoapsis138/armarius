@@ -779,3 +779,11 @@ async def choose(pilot, app, text: str):
         next(i for i, c in enumerate(picker._all()) if text in strip_markup(c.label))
     )
     return picker
+
+
+def quiet(saga):
+    """`saga` with the default for an unplanned season set to Nothing, for
+    a test of what a season with nothing planned does."""
+    saga.unplanned_magi = saga.unplanned_companions = "nothing"
+    saga.unplanned_grogs = "nothing"
+    return saga

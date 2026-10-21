@@ -180,6 +180,14 @@ class SeasonPlan:
     series: str = ""
     until_done: bool = False
     more_needed: int = 0
+    #: Paired plans: lab work's assistants (each planned to Assist), the
+    #: subject a teacher teaches the student in `subject_id`, and on a plan
+    #: made to pair another's, whose plan made it.
+    assistant_ids: list[str] = field(default_factory=list)
+    student_subject: str = ""
+    partner_id: str = ""
+    #: Planned by the saga's default for a season with nothing planned.
+    by_default: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:

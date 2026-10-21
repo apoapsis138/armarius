@@ -10,6 +10,7 @@ from typing import Any
 
 from .... import laboratories as lab_text
 from .... import seasons
+from ....forms import lab_plan as lab_plan_forms
 from ....forms import laboratory as lf
 from ....markup import escape
 from ....models import (
@@ -47,6 +48,7 @@ from ..prompts import (
     _raw_vis_dialog,
 )
 from ..sheets import LAB_FEATURE_SECTIONS
+from ..steps import run_steps
 from ..widgets import ToggleList
 from .base import (
     WorkspaceBase,
@@ -599,35 +601,15 @@ class LaboratoryActions(WorkspaceBase):
 
     def _clear_lab_season(self) -> None:
         """Clear the chosen season's plan (after confirming)."""
-        found = self._lab_owner_for_planning()
-        if found is None:
+        lab = self.selected_laboratory
+        if lab is None or self._lab_owner_for_planning() is None:
             return
-        _, owner = found
-        season, year = self._chosen_lab_season()
-        plan = seasons.plan_for(self.saga, owner, season, year)
-        if plan is None:
-            self.notify(f"Nothing is planned for {season} {year}.")
-            return
-
-        removed = seasons.scheduled_with(self.saga, plan)
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                for each in removed:
-                    self.saga.season_plans.remove(each)
-                self._commit("tab-lab-planning")
-
-        span = (
-            f"{season} {year}"
-            if len(removed) == 1
-            else f"{season} {year} - {removed[-1].season} {removed[-1].year}"
-        )
-        self.app.push_screen(
-            ConfirmScreen(
-                f"Clear {escape(owner.name)}'s plan for {span} "
-                f"({escape(seasons.plan_summary(self.saga, owner, plan))})?"
-            ),
-            handle_confirmed,
+        index = self._lab_view_selection("selected_lab_season")
+        run_steps(
+            self.app,
+            lab_plan_forms.clear_lab_season(self.saga, lab, index),
+            lambda _end: self._commit("tab-lab-planning"),
+            notify=lambda _title, why: self.notify(why),
         )
 
     # -- Laboratory: Diary --

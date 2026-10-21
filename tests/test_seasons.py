@@ -352,7 +352,10 @@ def test_unplanned_lists_magi_and_companions_not_grogs_or_the_departed():
     assert seasons.unplanned(saga) == [companion]
     summary = strip_markup(seasons.advance_summary(saga))
     assert "1 planned season(s) will be applied." in summary
-    assert "Nothing planned for: Alys (companion)." in summary
+    assert "Alys" not in summary  # a non-player character
+    saga.notify_npc_unplanned = True
+    summary = strip_markup(seasons.advance_summary(saga))
+    assert "Nothing planned for: Alys (companion: " in summary
 
 
 def test_a_companion_is_reminded_of_their_two_working_seasons():
@@ -465,7 +468,7 @@ async def test_plan_a_season_then_advance_applies_it():
             str(app.screen.query_one("#advance-plans", Static).content)
         )
         assert "1 planned season(s) will be applied." in plans
-        assert "Nothing planned for: Alys (companion)." in plans
+        assert "Alys" not in plans  # a non-player character takes the default
         app.screen.query_one("#btn-advance", Button).press()
         assert await wait_until(
             pilot, lambda: workspace.saga.current_season == "Summer"
@@ -736,7 +739,9 @@ async def test_with_records_off_the_summary_shows_but_nothing_is_kept():
 
 
 async def test_a_season_with_nothing_planned_is_neither_summarised_nor_kept():
-    storage.save_saga(everything_saga())
+    from support import quiet
+
+    storage.save_saga(quiet(everything_saga()))
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await pilot.press("enter")

@@ -41,8 +41,8 @@ from ..rules import (
     supplement_seasons,
 )
 from ..rules import supplement_work as sw
+from ..seasons import pairs, repeat
 from ..seasons import plans as season_plans_text
-from ..seasons import repeat
 from . import activity as activity_forms
 from . import virtue as virtue_forms
 
@@ -109,6 +109,7 @@ def save_season(
     plan = season_plan_from(saga, character, values, existing, when)
     choice = values.get(repeat.FOR) or repeat.ONCE
     if existing is not None:
+        pairs.drop_pairs(saga, existing)
         if choice == repeat.ONCE:
             plan.series, plan.until_done = existing.series, existing.until_done
             plan.more_needed = existing.more_needed
@@ -116,7 +117,10 @@ def save_season(
             repeat.drop_later(saga, existing)
         if existing in saga.season_plans:
             saga.season_plans.remove(existing)
-    return repeat.plan_repeats(saga, character, plan, choice)
+    added = repeat.plan_repeats(saga, character, plan, choice)
+    for each in [plan, *added]:
+        pairs.make_pairs(saga, character, each)
+    return added
 
 
 def season_plan_from(
@@ -208,6 +212,15 @@ _SEASON_READS: ChoiceReads = (
             season_rules.OPEN_TRADITION,
         ),
         lambda v: {"subject_id": v.get("student_id")},
+    ),
+    (
+        (season_rules.TEACH,),
+        lambda v: {
+            "subject_id": v.get("student_id"),
+            "student_subject": (v.get("student_subject") or "")
+            if v.get("student_id")
+            else "",
+        },
     ),
     ((experiment.INTEGRATE,), lambda v: {"research": v.get("research") or ""}),
     (
@@ -1134,7 +1147,21 @@ def _student_and_research_fields(
                 apprentice_seasons.OPEN_ARTS,
                 apprentice_seasons.TEACH_VIRTUE,
                 season_rules.OPEN_TRADITION,
+                season_rules.TEACH,
             ),
+            hint="Teaching: the student's Be taught is planned with it.",
+        ),
+        DialogField(
+            "student_subject",
+            "Teaching them",
+            "select",
+            attr(existing, "student_subject", "") or None,
+            options=seasons.subject_options(saga, character),
+            allow_blank=True,
+            show_if=lambda v: (
+                v.get("activity") == season_rules.TEACH and bool(v.get("student_id"))
+            ),
+            hint="What the student is taught: up to the teacher's own score.",
         ),
         DialogField(
             "research",
@@ -1322,7 +1349,11 @@ def season_plan_problem(
             f"({seasons.plan_summary(saga, character, there)}): change that "
             "plan, or clear it first."
         )
-    found = season_rules.problems(character, plan, saga)
+    paired = pairs.pair_problem(saga, character, plan)
+    if paired is not None:
+        return paired
+    with pairs.in_place(saga, character, plan):
+        found = season_rules.problems(character, plan, saga)
     if not found and plan.activity == season_rules.OTHER and not plan.details:
         return "Say in Notes what the season is spent on."
     if (
@@ -1347,7 +1378,11 @@ def season_plan_live(
     """The line above Save: what the season will give, worked out as the
     form is filled in."""
     plan = season_plan_from(saga, character, values, existing, when)
-    text = seasons.live_text(saga, character, plan)
+    with pairs.in_place(saga, character, plan):
+        text = seasons.live_text(saga, character, plan)
+    made = pairs.to_make(saga, character, plan)
+    if made:
+        text += f"\nAlso plans {escape(pairs.names(saga, made))}'s season."
     if values.get(repeat.FOR) == repeat.UNTIL_DONE:
         needed = repeat.seasons_needed(saga, character, plan)
         if needed:
@@ -1488,18 +1523,22 @@ def clear_season(
         f"({escape(seasons.plan_summary(saga, character, plan))})?"
     )
     later = repeat.later_seasons(saga, plan)
-    if not later:
-        return Confirm(
-            question,
-            lambda: seasons.clear_plan(saga, character, season, year),
-            yes_label="Clear",
+    paired = pairs.linked(saga, plan)
+    if paired:
+        question = question[:-1] + (
+            f" {escape(pairs.names(saga, paired))}'s plan for {season} {year} "
+            "is cleared with it."
         )
 
-    def apply(values: dict[str, Any]) -> bool:
-        for each in [plan, *(later if values.get("rest") else ())]:
-            if each in saga.season_plans:
-                saga.season_plans.remove(each)
+    def clear(chosen: list[SeasonPlan]) -> bool:
+        pairs.clear_with(saga, [p for c in chosen for p in (c, *pairs.linked(saga, c))])
         return True
+
+    if not later:
+        return Confirm(question, lambda: clear([plan]), yes_label="Clear")
+
+    def apply(values: dict[str, Any]) -> bool:
+        return clear([plan, *(later if values.get("rest") else ())])
 
     last = later[-1]
     return Form(

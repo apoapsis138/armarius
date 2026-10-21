@@ -564,10 +564,15 @@ is Averse to Risk can't experiment, and one who is Prone to Chance must.
 ### Assistants
 <!-- help: invent-spell-assistants -->
 
-Assistants aren't chosen here. A character who will help is planned on their
-own sheet, with Assist in a laboratory for the same season; the Lab Total
-then includes their Intelligence and Magic Theory, for as many helpers as
-the magus's Leadership allows (at least one).
+**Assistant** names a helper: anyone else with The Gift and Magic Theory.
+Scheduling plans their season as Assist in a laboratory with this magus,
+for each season the work is planned, and the Lab Total then includes their
+Intelligence and Magic Theory, for as many helpers as the magus's
+Leadership allows (at least one). If the helper already has a different
+plan for the season, Schedule refuses and says so. More helpers are
+planned on their own sheets, with Assist in a laboratory for the same
+season. Clearing the lab work clears the assistant's season too; clearing
+the assistant's season takes them off the lab work.
 
 ### When
 <!-- help: invent-spell-when -->

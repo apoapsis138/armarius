@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import random
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from .. import economics as eco
@@ -24,11 +24,12 @@ from .. import seasons, tribunal_terms, world_turns
 from ..commands import Command, Confirm, Form
 from ..form_spec import DialogField
 from ..markup import escape
-from ..models import SEASONS, Saga, SeasonPlan, next_season
+from ..models import SEASONS, Character, Saga, SeasonPlan, next_season
 from ..rules import laboratory_seasons as ls
 from ..rules.activities import ACTIVITIES, Outcome
-from ..seasons import repeat
+from ..seasons import defaults, repeat
 from ..seasons.advance import Advanced
+from . import season as season_forms
 
 #: Backs the saga up before a season with plans is applied
 #: (storage.backup_saga), or None not to.
@@ -194,7 +195,7 @@ def _interrupted(saga: Saga, backup: Backup, rng: Callable[[], random.Random]):
     the rest of the season."""
     due = interrupted_plans(saga)
     if not due:
-        return _secured(saga, (), backup, rng)
+        return _gaps(saga, (), backup, rng)
 
     def validate(values: dict[str, Any]) -> str | None:
         for index, _plan in enumerate(due):
@@ -216,7 +217,7 @@ def _interrupted(saga: Saga, backup: Backup, rng: Callable[[], random.Random]):
                 plan.days_away = values.get(f"days_{index}") or 0
             if f"months_{index}" in values:
                 plan.months_lost = values.get(f"months_{index}") or 0
-        return _secured(saga, tuple(lost), backup, rng)
+        return _gaps(saga, tuple(lost), backup, rng)
 
     def fields() -> list[DialogField]:
         found = [
@@ -240,6 +241,142 @@ def _interrupted(saga: Saga, backup: Backup, rng: Callable[[], random.Random]):
         validate=validate,
         save_label="Continue",
         help_id="advance-interrupted",
+    )
+
+
+#: The Unplanned Seasons step's choices.
+DEFAULT, NOTHING, PLAN_NOW, LEAVE = "default", "nothing", "plan", "leave"
+
+
+def _shown(saga: Saga, character_id: str) -> bool:
+    character = saga.character(character_id)
+    return character is not None and (
+        saga.notify_npc_unplanned or defaults.is_player_character(character)
+    )
+
+
+def broken_plans(saga: Saga) -> list[Outcome]:
+    """The season's plans that can't be carried out, for the characters
+    Advance Season names (players', and others' when the saga says so)."""
+    return [
+        o for o in seasons.resolve(saga) if not o.ok and _shown(saga, o.character_id)
+    ]
+
+
+def fill_defaults(saga: Saga, skip: set[str] | None = None) -> None:
+    """Plan the saga's default season for everyone left with nothing
+    planned, but those in `skip` (left with nothing)."""
+    for character in seasons.unplanned(saga):
+        if skip and character.id in skip:
+            continue
+        plan = defaults.default_plan(saga, character)
+        if plan is not None:
+            seasons.set_plan(saga, plan)
+
+
+def _plan_each(saga: Saga, people: list[Character], then: Callable[[], Any]) -> Any:
+    """Plan Season for each of `people` in turn, then `then()`."""
+    if not people:
+        return then()
+    form = season_forms.plan_season(saga, people[0])
+
+    def apply(values: dict[str, Any]) -> Any:
+        form.apply(values)
+        return _plan_each(saga, people[1:], then)
+
+    return replace(form, apply=apply, save_label="Save and continue")
+
+
+def _gaps(
+    saga: Saga,
+    lost: tuple[SeasonPlan, ...],
+    backup: Backup,
+    rng: Callable[[], random.Random],
+):
+    """Who has nothing planned, and whose plan can't be carried out: each
+    takes the saga's default, nothing, or is planned now; then the rest
+    of the season. The characters it doesn't name (non-player characters,
+    unless the saga says to) take the saga's default."""
+    missing = defaults.notified(saga)
+    broken = broken_plans(saga)
+
+    def then() -> Any:
+        return _secured(saga, lost, backup, rng)
+
+    if not missing and not broken:
+        fill_defaults(saga)
+        return then()
+
+    def options(character: Character) -> list[tuple[str, str]]:
+        text = defaults.default_text(saga, character)
+        found = [] if text == "nothing" else [(f"Default: {text}", DEFAULT)]
+        return [*found, ("Nothing this season", NOTHING), ("Plan it now", PLAN_NOW)]
+
+    def fields() -> list[DialogField]:
+        found = [
+            DialogField(
+                "_why",
+                "",
+                "info",
+                "Nothing is planned for these characters this season. Each "
+                "can take the saga's default (Edit Saga), do nothing, or be "
+                "planned now.",
+            )
+            if missing
+            else DialogField("_why", "", "info", "These plans can't be carried out.")
+        ]
+        for index, character in enumerate(missing):
+            choices = options(character)
+            found.append(
+                DialogField(
+                    f"gap_{index}",
+                    f"{escape(character.name)} ({character.type})",
+                    "select",
+                    choices[0][1],
+                    options=choices,
+                )
+            )
+        for index, outcome in enumerate(broken):
+            character = saga.character(outcome.character_id)
+            assert character is not None
+            found.append(
+                DialogField(
+                    f"fix_{index}",
+                    f"{escape(character.name)}: "
+                    f"{escape(seasons.plan_summary(saga, character, outcome.plan))}",
+                    "select",
+                    LEAVE,
+                    options=[
+                        ("Leave it: it is skipped", LEAVE),
+                        ("Plan it again now", PLAN_NOW),
+                    ],
+                    hint=escape(outcome.problems[0]),
+                )
+            )
+        return found
+
+    def apply(values: dict[str, Any]):
+        chosen = {c.id: values.get(f"gap_{i}") for i, c in enumerate(missing)}
+        planned = [c for c in missing if chosen[c.id] == PLAN_NOW]
+        for index, outcome in enumerate(broken):
+            if values.get(f"fix_{index}") == PLAN_NOW:
+                character = saga.character(outcome.character_id)
+                if character is not None:
+                    planned.append(character)
+        skip = {cid for cid, how in chosen.items() if how != DEFAULT}
+
+        def after() -> Any:
+            fill_defaults(saga, skip)
+            return then()
+
+        return _plan_each(saga, planned, after)
+
+    return Form(
+        "Unplanned Seasons",
+        fields,
+        apply,
+        save_label="Continue",
+        help_id="advance-unplanned",
     )
 
 

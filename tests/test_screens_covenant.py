@@ -26,6 +26,7 @@ from support import (
     menu,
     picker_labels,
     picker_rows,
+    quiet,
     strip_markup,
     wait_until,
 )
@@ -229,7 +230,7 @@ async def test_edit_covenant_requires_name_and_allows_blank_year_founded():
 
 
 async def test_advance_season_moves_the_whole_saga_forward():
-    storage.save_saga(_saga_with_configured_covenant())
+    storage.save_saga(quiet(_saga_with_configured_covenant()))
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
@@ -254,7 +255,7 @@ async def test_advance_season_moves_the_whole_saga_forward():
 
 
 async def test_advancing_past_winter_rolls_the_year_and_cancel_changes_nothing():
-    saga = _saga_with_configured_covenant()
+    saga = quiet(_saga_with_configured_covenant())
     saga.current_season = "Winter"
     storage.save_saga(saga)
 
@@ -284,7 +285,7 @@ async def test_advancing_past_winter_rolls_the_year_and_cancel_changes_nothing()
 
 
 async def test_set_date_rolls_back_an_accidental_advance():
-    storage.save_saga(_saga_with_configured_covenant())
+    storage.save_saga(quiet(_saga_with_configured_covenant()))
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:

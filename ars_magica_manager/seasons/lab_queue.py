@@ -33,6 +33,7 @@ from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons
 from ..rules import laboratory_seasons as ls
 from ..tables import Table
+from . import pairs
 from .plans import plan_for, plan_summary, schedule, set_plan, work_text
 
 #: How many seasons the laboratory's Planning tab shows, the current first.
@@ -289,21 +290,24 @@ def plan_lab_work(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
     # Rescheduling replaces the seasons planned to continue it.
     start = (plan.year, SEASONS.index(plan.season))
     key = project_key(plan)
-    saga.season_plans = [
+    replaced = [
         p
         for p in saga.season_plans
-        if not (
-            p.character_id == plan.character_id
-            and p.lab_id
-            and key is not None
-            and project_key(p) == key
-            and (p.year, SEASONS.index(p.season)) > start
-        )
+        if p.character_id == plan.character_id
+        and p.lab_id
+        and key is not None
+        and project_key(p) == key
+        and (p.year, SEASONS.index(p.season)) > start
     ]
+    for old in replaced:
+        pairs.drop_pairs(saga, old)
+        saga.season_plans.remove(old)
     for old in _subject_plans(saga, plan):
         saga.season_plans.remove(old)
     set_plan(saga, plan)
     character = saga.character(plan.character_id)
+    if character is not None:
+        pairs.make_pairs(saga, character, plan)
     if character is not None and plan.activity == lab_seasons.LONGEVITY:
         _plan_subject(saga, character, plan)
     if character is None or plan.activity not in lab_seasons.MULTI_SEASON:
@@ -311,7 +315,10 @@ def plan_lab_work(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
     found, work = lab_seasons.work(saga, character, plan)
     if found or work is None:
         return []
-    return schedule(saga, plan, lab_seasons.seasons_left(work))
+    added = schedule(saga, plan, lab_seasons.seasons_left(work))
+    for each in added:
+        pairs.make_pairs(saga, character, each)
+    return added
 
 
 def _subject_plans(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:

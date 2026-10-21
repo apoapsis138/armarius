@@ -61,7 +61,7 @@ The form's **Season** field moves a plan to another season of the year. A season
 
 To plan long work in one go, set the form's **For**. **Until it's done** plans reading a summa up to its Level, or writing, copying or translating a book, for every season it needs; **2 seasons** to **4 seasons** repeats any plan. When the season is advanced, Advance Season asks whether anything interrupted the work, and then works out again how many seasons it still needs. See [For several seasons](help:plan-season-repeat).
 
-Teaching takes two plans: the teacher plans Teach and the student plans Be taught, for the same season. A helper in a laboratory plans **Assist in a laboratory** on their own sheet.
+Teaching takes two plans, and the app makes the second one for you: saving **Be taught** plans the teacher's Teach for the same season, **Be trained** plans the master's season working at the Ability, and **Teach** with a **Student** plans the student's Be taught. Lab work naming an **Assistant** plans their **Assist in a laboratory**. Clearing either side clears both, after one question naming both people. See [Paired plans](help:plan-season-pairs).
 
 ### Finding an activity
 <!-- help: guide-seasons-find -->
@@ -139,6 +139,8 @@ People marked departed on the Inhabitants tab are left out of this tab and aren'
 
 People marked departed in the Covenfolk chapter are left out of this chapter and aren't planned.
 <!-- /gui -->
+
+Anyone still left with nothing planned isn't lost: when the season is advanced, the saga's default for their kind applies (Edit Saga: Work / Exposure, or Nothing). Advance Season names the player characters with nothing planned and asks about each; non-player characters take the default quietly, unless **Be notified when and which non-player characters do not have seasonal activity** is ticked. See [Unplanned seasons](help:advance-unplanned).
 
 ### Advancing the season
 <!-- help: guide-seasons-advance -->

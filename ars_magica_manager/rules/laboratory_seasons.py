@@ -270,14 +270,23 @@ def assistants(saga: Saga, magus: Character, plan: SeasonPlan) -> list[Character
     return found
 
 
+def _gifted(character: Character) -> bool:
+    return character.type == "magus" or any(
+        vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws
+    )
+
+
+def can_assist(character: Character) -> bool:
+    """Whether `character` could help in a laboratory: The Gift and Magic
+    Theory."""
+    return _gifted(character) and magic_theory(character) >= 1
+
+
 def assist_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     lead = saga.character(plan.teacher_id)
     if lead is None or lead is character:
         return ["Choose the magus to assist."]
-    gifted = character.type == "magus" or any(
-        vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws
-    )
-    if not gifted:
+    if not _gifted(character):
         return [f"{character.name} needs The Gift to help in a laboratory."]
     if magic_theory(character) < 1:
         return [f"{character.name} needs Magic Theory to help in a laboratory."]

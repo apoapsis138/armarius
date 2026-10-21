@@ -110,6 +110,13 @@ class Saga:
     season_plans: list[SeasonPlan] = field(default_factory=list)
     #: Whether a record of each applied season is kept.
     keep_season_records: bool = True
+    #: What a character with nothing planned does when the season is
+    #: advanced, by kind (seasons.defaults: "exposure" or "nothing"), and
+    #: whether Advance Season names the non-player characters among them.
+    unplanned_magi: str = "exposure"
+    unplanned_companions: str = "exposure"
+    unplanned_grogs: str = "exposure"
+    notify_npc_unplanned: bool = False
     #: Those records, oldest first.
     season_records: list[SeasonRecord] = field(default_factory=list)
     #: How many years Ahead looks (0: to the next Tribunal); see ahead.
