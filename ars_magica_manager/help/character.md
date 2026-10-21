@@ -737,8 +737,11 @@ of play stays, marked "(not in play)".
 The Breakthroughs the magus is working towards: what it is, whether it is
 Minor, Major or Hermetic, its target in points and what reaching it grants.
 You type these; the app adds points to a goal when a season of research
-towards it is applied (Houses of Hermes: True Lineages, Chapter 1: House
-Bonisagus, Original Research).
+towards it is applied (Ars Magica Definitive Edition, Chapter 8, Arcane
+Discovery; Houses of Hermes: True Lineages, Chapter 1: House Bonisagus,
+Original Research). A goal's details also say when a failed stabilization
+must be tried again, and which spells and enchantments have already given
+it a Discovery (each gives one at most).
 
 A new goal may start from an **Integration**: the breakthroughs Ancient
 Magic names for folding a lost tradition into Hermetic magic (Canaanite

@@ -345,6 +345,21 @@ def work(
     saga: Saga, magus: Character, plan: SeasonPlan
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a lab plan, or what it does."""
+    found, made = _work(saga, magus, plan)
+    if made is not None and seeking(plan):
+        goal = experiment.find_goal(magus, plan.research)
+        name = made_name(made)
+        if goal is not None and name and name in goal.discovered_from:
+            return [
+                f"{name.title()} already gave a Discovery toward {goal.name}: "
+                "seek another with a different spell or enchantment."
+            ], None
+    return found, made
+
+
+def _work(
+    saga: Saga, magus: Character, plan: SeasonPlan
+) -> tuple[list[str], LabWork | None]:
     lab_ = laboratory(saga, magus, plan)
     if lab_ is None:
         return ["Lab work needs a laboratory."], None
@@ -734,6 +749,13 @@ def ritual_again(
     return [], RitualAgain(subject, modifier, pawns)
 
 
+def made_name(work_: LabWork) -> str:
+    """The lower-case name of the spell or enchantment a lab work makes
+    ("" for other work): what a Discovery is recorded against."""
+    made = work_.spell or work_.effect
+    return (getattr(made, "name", "") or "").strip().lower()
+
+
 def seeking(plan: SeasonPlan) -> bool:
     """Whether an experiment seeks a Discovery (it names a research goal)."""
     return plan.experimenting and bool(plan.research.strip())
@@ -747,6 +769,15 @@ def _stabilize(
     found = experiment.find_goal(magus, plan.research)
     if found is None or not found.pending_magnitude:
         return ["Choose a research goal with a Discovery to stabilize."], None
+    if found.retry_season and (plan.season, plan.year) != (
+        found.retry_season,
+        found.retry_year,
+    ):
+        return [
+            "A failed stabilization must be tried again the next season "
+            f"({found.retry_season} {found.retry_year}); later, the Discovery "
+            "is lost."
+        ], None
     cost: dict[str, int] = {}
     if not found.stabilizing_seasons and found.discovery_vis:
         art = found.discovery_vis_art or "Vim"

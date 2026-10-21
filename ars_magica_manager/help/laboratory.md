@@ -564,8 +564,11 @@ work out), and any other modifier the troupe allows.
 
 Work that can be done experimentally shows an Experiment box, a Risk modifier
 and an optional research goal. Experimenting adds a simple die and the risk
-to the Lab Total; the die is rolled when the season is advanced. A magus who
-is Averse to Risk can't experiment, and one who is Prone to Chance must.
+to the Lab Total; the die is rolled when the season is advanced. With a
+research goal, the experiment seeks a Discovery instead: the risk goes on the
+Extraordinary Results roll, not the Lab Total (see the planning guide's
+Experimenting section). A magus who is Averse to Risk can't experiment, and
+one who is Prone to Chance must.
 
 ### Assistants
 <!-- help: invent-spell-assistants -->

@@ -14,13 +14,19 @@ enchanting, a familiar, a Longevity Ritual, investigating an item):
 Original research (a magus's breakthrough goals, Minor ~30, Major ~45,
 Hermetic ~60 points):
 
-- Seeking a Discovery: experimenting on a goal, a chart roll within the
-  risk modifier of 10 is a Discovery (besides the normal result).
-- Stabilizing it: the same experiment again; unless the roll is harmful,
-  the effect's magnitude goes to the goal's points. Every attempt Warps:
-  magnitude - a simple die.
-- Integrating an insight: stress die + Intelligence + Magic Theory against
-  18, a season studying a source.
+- Seeking a Discovery: experimenting on a goal, the risk goes on the chart
+  only. A roll the risk can move onto 10 may be moved: the Discovery comes
+  in addition to the roll's own result, unless that result wastes the
+  season. The Discovery table's experience is ignored. Later seasons of the
+  same project make the same move. Each spell or enchantment gives one
+  Discovery at most.
+- Stabilizing it: the same experiment again, its roll moved as before;
+  unless the result is harmful (Disaster, No Benefit, Complete Failure),
+  the effect's magnitude goes to the goal's points, and any beneficial
+  result is ignored. A failure may be retried the next season. Every
+  attempt Warps: magnitude - a simple die.
+- Integrating an insight: stress die + Intelligence + Magic Theory (+3 for
+  Inventive Genius) against 18, a season studying a source.
 """
 
 from __future__ import annotations
@@ -29,6 +35,7 @@ from dataclasses import dataclass, field
 
 from ..models import Breakthrough, Character, SeasonPlan
 from . import dice, scores
+from . import xp as xp_rules
 from .rounding import round_up
 
 SOURCE = (
@@ -37,9 +44,9 @@ SOURCE = (
     "_Laboratory#Experimentation)"
 )
 RESEARCH_SOURCE = (
-    "Houses of Hermes: True Lineages, Chapter One: House Bonisagus, Original "
-    "Research (https://www.redcap.org/page/Houses_of_Hermes:_True_Lineages"
-    "_Chapter_One:_House_Bonisagus#Original_Research)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Arcane Discovery "
+    "(pp. 277-281); Houses of Hermes: True Lineages, Chapter One: House "
+    "Bonisagus, Original Research"
 )
 
 STABILIZE = "stabilize_discovery"
@@ -83,6 +90,8 @@ CAUTIOUS = "vf_cautious_sorcerer"
 TWO_DICE = ("vf_exciting_experimentation", "vf_creative_block")
 PRONE = "vf_prone_to_chance"
 AVERSE = "vf_averse_to_risk"
+INVENTIVE = "vf_inventive_genius"
+INVENTIVE_INSIGHT = 3
 
 
 @dataclass
@@ -114,9 +123,6 @@ class Extraordinary:
     #: A second roll's results (Exciting Experimentation, Creative Block),
     #: for the storyguide to choose.
     second: list[str] = field(default_factory=list)
-    #: A No Benefit roll that may still be moved onto a Discovery: the
-    #: season's lab work without the experimentation bonus, used if not.
-    fallback: object = None
 
 
 def botch_dice(character: Character, risk: int, aura: int) -> int:
@@ -136,15 +142,28 @@ def chart(
     character: Character | None = None,
     seeking: bool = False,
     shift: int | None = None,
+    stabilizing: bool = False,
     depth: int = 0,
 ) -> Extraordinary:
     """Roll the Extraordinary Results chart. Seeking a Discovery, a roll the
     risk modifier can move onto 10 records the move (`discovery_shift`) to
     be asked about, or, with `shift` given (the project's move so far),
-    applies that same move."""
+    makes that same move. Stabilizing, the roll is moved by `shift` and
+    read there."""
     result = Extraordinary()
     dice_count = botch_dice(character, risk, aura) if character else 1 + risk + aura
-    _roll_once(result, rng, risk, dice_count, art, saga, seeking, shift)
+    _roll_once(
+        result,
+        rng,
+        risk,
+        dice_count,
+        art,
+        saga,
+        seeking,
+        shift,
+        stabilizing=stabilizing,
+        character=character,
+    )
     if character is not None and any(
         vf.vf_id in TWO_DICE for vf in character.virtues_flaws
     ):
@@ -159,7 +178,19 @@ def chart(
     return result
 
 
-def _roll_once(result, rng, risk, dice_count, art, saga, seeking, shift) -> None:
+def _roll_once(
+    result,
+    rng,
+    risk,
+    dice_count,
+    art,
+    saga,
+    seeking,
+    shift,
+    *,
+    stabilizing: bool = False,
+    character: Character | None = None,
+) -> None:
     die = dice.stress_die(rng, dice_count, saga=saga)
     if die.botched:
         zeroes = die.botches
@@ -189,39 +220,55 @@ def _roll_once(result, rng, risk, dice_count, art, saga, seeking, shift) -> None
             result.lab_flaw = "labvf_damaged"
         return
     roll = die.value + risk
-    if seeking and roll != 10:
-        if shift is not None:
-            if roll + shift == 10:
-                result.results.append(
-                    f"The roll {roll} moved by {shift:+d}, as before."
-                )
-                roll = 10
-        elif abs(roll - 10) <= risk:
-            result.discovery_shift = 10 - roll
-    _apply(result, roll, rng, risk, art, saga, 0)
+    if stabilizing:
+        if shift:
+            result.results.append(
+                f"The roll {roll} moved by {shift:+d}, as when the Discovery was made."
+            )
+            roll += shift
+        _apply(result, roll, rng, risk, art, saga, 0, research=True)
+        return
+    _apply(result, roll, rng, risk, art, saga, 0, research=seeking, character=character)
+    if not seeking or result.discovery or result.wasted:
+        return
+    if shift is not None:
+        if roll + shift == 10:
+            result.discovery = True
+            result.results.append(
+                f"The roll {roll} moved by {shift:+d}, as before: a Discovery as well."
+            )
+    elif abs(roll - 10) <= risk:
+        result.discovery_shift = 10 - roll
 
 
-def move_to_discovery(
-    result: Extraordinary, rng, risk: int, art: str, saga=None
-) -> None:
-    """The magus takes the move onto 10 (`discovery_shift`): the roll's own
-    result is replaced by a Discovery."""
+def move_to_discovery(result: Extraordinary) -> None:
+    """The magus takes the move onto 10 (`discovery_shift`): a Discovery, in
+    addition to the roll's own result."""
     shift = result.discovery_shift
     result.discovery_shift = None
-    result.wasted = result.no_benefit = result.failure = False
-    result.effects = []
-    result.xp = []
-    result.results = [f"The roll moved {shift:+d} onto 10."]
-    _apply(result, 10, rng, risk, art, saga, 0)
-    if result.second:
-        result.results.append(
-            "A second roll (Exciting Experimentation / Creative Block): "
-            + " ".join(result.second)
-            + " The storyguide may use it instead."
-        )
+    if shift is None or result.wasted:
+        return
+    result.discovery = True
+    result.results.append(
+        f"The roll moved {shift:+d} onto 10: a Discovery as well (the roll's own "
+        "result stands)."
+    )
 
 
-def _apply(result: Extraordinary, roll: int, rng, risk, art, saga, depth) -> None:
+def _apply(
+    result: Extraordinary,
+    roll: int,
+    rng,
+    risk,
+    art,
+    saga,
+    depth,
+    *,
+    research: bool = False,
+    character: Character | None = None,
+) -> None:
+    """The result of a chart roll. For original research (`research`), a
+    Discovery is the research's and gives no experience."""
     if roll <= 4:
         result.results.append(f"{roll}: no extraordinary effects.")
     elif roll <= 6:
@@ -240,25 +287,14 @@ def _apply(result: Extraordinary, roll: int, rng, risk, art, saga, depth) -> Non
         result.results.append(f"{roll}: a special result or story event (storyguide).")
     elif roll == 10:
         result.discovery = True
-        xp = dice.simple_die(rng) + risk
-        if xp <= 4:
-            result.xp.append(("ability:Magic Theory", 15))
-            what = "15 xp in Magic Theory"
-        elif xp <= 6:
-            result.xp.append(("ability:Magic Theory", 15))
-            what = "15 xp in an Ability related to it (Magic Theory here; change it)"
-        elif xp <= 8:
-            result.xp.append((f"art:{art}", 3))
-            what = f"3 xp in {art}"
-        elif xp == 9:
-            result.xp.append((f"art:{art}", 3))
-            what = f"xp to raise {art} to its next score (3 given; add the rest)"
-        else:
-            result.xp.append(("ability:Magic Theory", 15))
-            what = (
-                "two more Discovery rolls (15 xp in Magic Theory given; add the rest)"
+        if research:
+            result.results.append(
+                f"{roll}: a Discovery toward the research (its experience table "
+                "doesn't apply)."
             )
-        result.results.append(f"{roll}: a Discovery: {what}.")
+        else:
+            whats = _discovery_xp(result, rng, risk, art, character)
+            result.results.append(f"{roll}: a Discovery: {'; '.join(whats)}.")
     elif roll == 11:
         # One die for the whole table (it was rolled again for each row).
         modified_roll = dice.simple_die(rng) + risk
@@ -273,7 +309,61 @@ def _apply(result: Extraordinary, roll: int, rng, risk, art, saga, depth) -> Non
         if depth < 3:
             for _ in range(2):
                 more = dice.stress_die(rng, 0, saga=saga).value + risk
-                _apply(result, more, rng, risk, art, saga, depth + 1)
+                _apply(
+                    result,
+                    more,
+                    rng,
+                    risk,
+                    art,
+                    saga,
+                    depth + 1,
+                    research=research,
+                    character=character,
+                )
+
+
+def _discovery_xp(
+    result: Extraordinary, rng, risk: int, art: str, character, rolls: int = 1
+) -> list[str]:
+    """The Discovery table (a simple die + the risk): its experience added to
+    `result.xp`, and what each roll gave. 10+ rolls twice more, rolling again
+    any 10+ among them."""
+    whats: list[str] = []
+    for _ in range(rolls):
+        roll = dice.simple_die(rng) + risk
+        if rolls > 1:
+            tries = 0
+            while roll >= 10 and tries < 20:
+                roll, tries = dice.simple_die(rng) + risk, tries + 1
+            roll = min(roll, 9)
+        if roll <= 4:
+            result.xp.append(("ability:Magic Theory", 15))
+            whats.append("15 xp in Magic Theory")
+        elif roll <= 6:
+            result.xp.append(("ability:Magic Theory", 15))
+            whats.append(
+                "15 xp in an Ability related to it (Magic Theory here; change it)"
+            )
+        elif roll <= 8:
+            result.xp.append((f"art:{art}", 3))
+            whats.append(f"3 xp in {art}")
+        elif roll == 9:
+            need = _to_next_score(character, art)
+            result.xp.append((f"art:{art}", need))
+            whats.append(f"{need} xp, to raise {art} to its next score")
+        else:
+            whats += _discovery_xp(result, rng, risk, art, character, rolls=2)
+    return whats
+
+
+def _to_next_score(character: Character | None, art: str) -> int:
+    """The xp that brings `art` to its next score, at least 3."""
+    if character is None:
+        return 3
+    held = character.arts.get(art.lower())
+    xp = held.xp if held is not None else 0
+    score = xp_rules.score_from_xp(xp, xp_rules.ART_FACTOR)
+    return max(3, xp_rules.art_xp(score + 1) - xp)
 
 
 def find_goal(character: Character, name: str) -> Breakthrough | None:
@@ -298,13 +388,19 @@ def goal(character: Character, name: str, kind: str = "Minor") -> Breakthrough:
 
 
 def insight_roll(character: Character, plan: SeasonPlan, rng, theory: int, saga=None):
-    """Integrating: stress die + Intelligence + Magic Theory vs 18."""
+    """Integrating: stress die + Intelligence + Magic Theory vs 18, +3 for
+    Inventive Genius."""
     if plan.die is not None:
         value, botched = plan.die, plan.die == 0
     else:
         die = dice.stress_die(rng, 1, saga=saga)
         value, botched = die.value, die.botched
-    total = character.characteristics.intelligence + theory + value
+    genius = (
+        INVENTIVE_INSIGHT
+        if any(vf.vf_id == INVENTIVE for vf in character.virtues_flaws)
+        else 0
+    )
+    total = character.characteristics.intelligence + theory + value + genius
     if botched:
         return False, "Botch: a false insight (it seems real until tried)."
     if total >= INSIGHT_EASE:

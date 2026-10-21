@@ -543,6 +543,17 @@ def goal_text(goal: Breakthrough) -> str:
             )
             + "."
         )
+    if goal.pending_magnitude and goal.retry_season:
+        lines.append(
+            "Its stabilization failed: try again in "
+            f"{goal.retry_season} {goal.retry_year}, or the Discovery is lost."
+        )
+    if goal.discovered_from:
+        lines.append(
+            "Already gave a Discovery (each gives one): "
+            + escape(", ".join(goal.discovered_from))
+            + "."
+        )
     if goal.insights:
         lines.append(
             f"{goal.insights} insight(s) to invent: each effect invented adds "

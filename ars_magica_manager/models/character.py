@@ -358,6 +358,13 @@ class Breakthrough:
     discovery_form: str = ""
     #: Stabilizing: the seasons done of the current attempt.
     stabilizing_seasons: int = 0
+    #: After a failed stabilization, the season it must be retried in
+    #: (consecutive seasons only; "" when none failed).
+    retry_season: str = ""
+    retry_year: int = 0
+    #: The spells and enchantments (lower-case names) that gave a Discovery
+    #: toward it: each gives one at most.
+    discovered_from: list[str] = field(default_factory=list)
     #: Insights gained and not yet invented.
     insights: int = 0
     reached: bool = False

@@ -113,16 +113,17 @@ def test_a_complete_failure_wastes_the_season():
     assert saga.laboratories[0].diary[-1].name == "Arcane Experimentation"
 
 
-def test_a_discovery_gives_experience_and_a_research_discovery():
+def test_a_research_discovery_gives_no_experience():
     saga = _saga()
     seasons.set_plan(
         saga, _plan(research="Ignem at Arcane range", research_kind="Major")
     )
-    # Die 5; chart 9 + 1 = 10: a Discovery; its sub-table 2 + 1 = 3: 15 xp MT.
+    # Die 5; chart 9 + 1 = 10: a Discovery toward the research, whose
+    # experience table doesn't apply.
     seasons.apply(saga, seasons.resolve(saga, _Dice(5, 9, 2)))
     magus = saga.character("m")
     mt = next(a for a in magus.abilities if a.name == "Magic Theory")
-    assert mt.xp == ability_xp(6) + 15 + 2  # the Discovery and Exposure
+    assert mt.xp == ability_xp(6) + 2  # Exposure only
     (goal,) = magus.breakthroughs
     assert (goal.name, goal.kind, goal.target) == ("Ignem at Arcane range", "Major", 45)
     # Seeking a Discovery, the risk goes on the chart, not the Lab Total.
@@ -320,10 +321,22 @@ def test_a_discovery_gives_experience_by_its_roll():
     assert xp(6) == [("ability:Magic Theory", 15)]
     assert xp(8) == [("art:Ignem", 3)]
     assert xp(9) == [("art:Ignem", 3)]
-    assert xp(9, risk=1) == [("ability:Magic Theory", 15)]  # two more rolls
+    # 10+: two more rolls (here 5 + 1 each: an Ability related to it).
+    assert xp(9, risk=1) == [("ability:Magic Theory", 15)] * 2
     assert "15 xp in an Ability related to it" in _chart(10, 6).results[0]
     assert "raise Ignem to its next score" in _chart(10, 9).results[0]
-    assert "two more Discovery rolls" in _chart(10, 0).results[0]  # 0 reads 10
+    assert len(_chart(10, 0).xp) == 2  # 0 reads 10
+
+
+def test_a_discovery_s_nine_raises_the_art_to_its_next_score():
+    magus = _saga().character("m")  # Ignem 10 (55 xp): 11 more for 11
+    result = experiment.Extraordinary()
+    experiment._apply(result, 10, _Dice(9), 0, "Ignem", None, 0, character=magus)
+    assert result.xp == [("art:Ignem", 11)]
+    magus.arts["ignem"].xp += 9  # 2 short of 11: at least 3
+    result = experiment.Extraordinary()
+    experiment._apply(result, 10, _Dice(9), 0, "Ignem", None, 0, character=magus)
+    assert result.xp == [("art:Ignem", 3)]
 
 
 def test_an_eleven_modifies_the_effect():
@@ -366,8 +379,11 @@ def test_a_move_onto_ten_made_before_is_made_again():
     # Seeking with the project's move so far (+1): a 9 becomes the Discovery.
     result = experiment.Extraordinary()
     experiment._roll_once(result, _Dice(9, 3), 0, 1, "Ignem", None, True, 1)
-    assert result.results[0] == "The roll 9 moved by +1, as before."
-    assert result.discovery
+    assert result.results == [
+        "9: a special result or story event (storyguide).",
+        "The roll 9 moved by +1, as before: a Discovery as well.",
+    ]
+    assert result.discovery and not result.xp
 
 
 def test_goals_are_found_by_name_and_made_when_new():
@@ -391,3 +407,111 @@ def test_an_insight_roll():
     assert roll(9) == (False, "17 against 18: nothing this season.")
     rolled, text = experiment.insight_roll(magus, _plan(), _Dice(9), 6)
     assert (rolled, text) == (False, "17 against 18: nothing this season.")
+
+
+def test_the_discovery_comes_besides_the_roll_s_own_result():
+    saga = _saga()
+    seasons.set_plan(saga, _plan(research="Ignem", risk=2))
+    # Die 5; chart 9 + 2 = 11, a modified effect (4 + 2 = 6: increased);
+    # moving it -1 reaches 10.
+    worked = seasons.resolve(saga, _Dice(5, 9, 4))
+    ((outcome, question),) = seasons.discovery_moves(saga, worked)
+    assert "moving its roll -1" in question
+    seasons.take_discovery_move(saga, outcome, True)
+    seasons.apply(saga, worked)
+    magus = saga.character("m")
+    (goal,) = magus.breakthroughs
+    assert (goal.discovery_shift, goal.pending_magnitude) == (-1, 2)
+    assert goal.discovered_from == ["bolt"]
+    spell = magus.invented_spells[0]
+    assert spell.experimental_effects == [
+        "Modified effect: increased range, duration, target or potency"
+    ]
+
+
+def test_a_wasted_season_gives_no_discovery():
+    saga = _saga()
+    seasons.set_plan(saga, _plan(research="Ignem", risk=2))
+    # Chart 6 + 2 = 8, a Complete Failure, though +2 would reach 10.
+    worked = seasons.resolve(saga, _Dice(5, 6))
+    assert seasons.discovery_moves(saga, worked) == []
+
+
+def test_a_spell_gives_one_discovery_at_most():
+    saga = _saga()
+    magus = saga.character("m")
+    magus.breakthroughs = [Breakthrough("Ignem", discovered_from=["bolt"])]
+    found, _ = lab_seasons.work(saga, magus, _plan(research="Ignem"))
+    assert found == [
+        "Bolt already gave a Discovery toward Ignem: seek another with a "
+        "different spell or enchantment."
+    ]
+    assert lab_seasons.work(saga, magus, _plan())[0] == []  # not seeking
+
+
+def _stabilizing(saga, **kw):
+    magus = saga.character("m")
+    magus.breakthroughs = [
+        Breakthrough(
+            "Ignem",
+            pending_magnitude=2,
+            discovery_lab_total=30,
+            discovery_risk=1,
+            discovery_shift=1,
+            **kw,
+        )
+    ]
+    return SeasonPlan(
+        "m", 1220, "Spring", experiment.STABILIZE, lab_id="lab", research="Ignem"
+    )
+
+
+def test_stabilizing_repeats_the_discovery_s_risk_and_move():
+    saga = _saga()
+    seasons.plan_lab_work(saga, _stabilizing(saga))  # the plan's own risk is 0
+    # Die 7 + the Discovery's risk 1 = 8, moved +1 = 9: no harm, stabilized.
+    worked = seasons.resolve(saga, _Dice(7, 9))
+    assert "The roll 8 moved by +1" in worked[0].notes[-1]
+    seasons.apply(saga, worked)
+    assert saga.character("m").breakthroughs[0].points == 2
+
+
+def test_stabilizing_ignores_a_discovery_s_experience():
+    saga = _saga()
+    seasons.plan_lab_work(saga, _stabilizing(saga))
+    # Die 8 + 1 = 9, moved +1 = 10: beneficial, so ignored.
+    seasons.apply(saga, seasons.resolve(saga, _Dice(8, 9)))
+    magus = saga.character("m")
+    mt = next(a for a in magus.abilities if a.name == "Magic Theory")
+    assert mt.xp == ability_xp(6) + 2  # Exposure only
+    assert magus.breakthroughs[0].points == 2
+
+
+def test_a_failed_stabilization_is_retried_the_next_season():
+    saga = _saga()
+    seasons.plan_lab_work(saga, _stabilizing(saga))
+    # Die 6 + 1 = 7, moved +1 = 8: a Complete Failure.
+    seasons.apply(saga, seasons.resolve(saga, _Dice(6, 9)))
+    magus = saga.character("m")
+    goal = magus.breakthroughs[0]
+    assert (goal.points, goal.retry_season, goal.retry_year) == (0, "Summer", 1220)
+    later = SeasonPlan(
+        "m", 1220, "Autumn", experiment.STABILIZE, lab_id="lab", research="Ignem"
+    )
+    assert lab_seasons.work(saga, magus, later)[0] == [
+        "A failed stabilization must be tried again the next season "
+        "(Summer 1220); later, the Discovery is lost."
+    ]
+    next_one = SeasonPlan(
+        "m", 1220, "Summer", experiment.STABILIZE, lab_id="lab", research="Ignem"
+    )
+    assert lab_seasons.work(saga, magus, next_one)[0] == []
+
+
+def test_inventive_genius_helps_an_insight():
+    magus = _saga().character("m")
+    magus.virtues_flaws = [VirtueFlawInstance(experiment.INVENTIVE)]
+    assert experiment.insight_roll(magus, _plan(die=7), None, 6) == (
+        True,
+        "18 against 18: an insight.",
+    )  # Int 2 + MT 6 + 7 + 3

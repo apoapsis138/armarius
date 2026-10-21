@@ -108,6 +108,26 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.122.1 — 2026-10-21
+
+### Book of Hours
+
+- **Original research follows the Definitive Edition.** Taking the move
+  onto 10 now gives a Discovery as well as the roll's own result (a side
+  effect or modified effect still stands), and a season the roll wastes
+  gives none. A Discovery toward a research goal no longer gives the
+  Discovery table's experience, nor does one rolled while stabilizing.
+- **Stabilizing repeats the Discovery exactly.** It uses the Discovery's
+  own risk and moves the roll as before; a failed attempt must be tried
+  again the very next season, and a goal's details say when.
+- **One Discovery per spell.** A spell or enchantment that has given a
+  Discovery toward a goal can't be used to seek another, and the goal's
+  details list them.
+- **Smaller fixes.** Inventive Genius adds 3 to Seek an insight; a
+  Discovery's experience roll of 9 brings the Art to its next score, and
+  10 or more rolls twice more; Stabilize a Discovery and Seek an insight
+  no longer need Houses of Hermes: True Lineages in play.
+
 ## 2.122.0 — 2026-10-21
 
 ### Book of Hours

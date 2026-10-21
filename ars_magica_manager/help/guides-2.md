@@ -305,7 +305,11 @@ Work that can be done [experimentally](help:invent-spell-experiment) shows an **
 
 - Experimenting adds a simple die and the risk (0 to +3) to the Lab Total. The die is rolled when the season is advanced.
 - The Extraordinary Results chart is then rolled and applied by the app, and noted in the Diary: Discovery xp, a disaster's Warping, wounds and laboratory Flaws, a creation destroyed, or side effects kept.
-- When an experiment seeking a Discovery could use the risk to move its roll, Advance Season asks first.
+- With a **Research goal**, the experiment seeks a Discovery (Definitive Edition, Chapter 8, Arcane Discovery): the risk goes on the chart roll, not the Lab Total, and is at most +1 for every 5 points of Magic Theory. A Discovery toward the research gives no experience.
+- When the roll is within the risk of 10, Advance Season asks whether to move it there. Taking the move gives a Discovery *as well as* the roll's own result (a side effect or modified effect still stands), unless that result wastes the season. The same move is then made in every later season of that project, and when stabilizing.
+- Each spell or enchantment gives one Discovery at most: seeking another with it is refused.
+- **Stabilize a Discovery** repeats the experiment: its Lab Total, seasons, vis, risk and move. Any result but a Disaster, No Benefit or Complete Failure stabilizes it, and its magnitude is added to the goal's points; a Discovery rolled then gives nothing. Each attempt gives Warping Points: the magnitude less a simple die. A failed attempt must be tried again the very next season, or the Discovery is lost.
+- **Seek an insight** (a season studying a text, relic or teacher) rolls Intelligence + Magic Theory + a stress die against 18, +3 for Inventive Genius.
 
 ### When the season is advanced
 <!-- help: guide-lab-planning-advance -->

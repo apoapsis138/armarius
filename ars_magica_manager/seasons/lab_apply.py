@@ -641,8 +641,13 @@ def _stabilize(
             pool.pop(art.lower(), None)
     if chart.wasted or chart.no_benefit:
         goal.stabilizing_seasons = 0
-        lines.append("The Discovery isn't stabilized: try again.")
+        goal.retry_season, goal.retry_year = next_season(plan.season, plan.year)
+        lines.append(
+            "The Discovery isn't stabilized: try again next season "
+            f"({goal.retry_season} {goal.retry_year}), or it is lost."
+        )
     else:
+        goal.retry_season, goal.retry_year = "", 0
         goal.stabilizing_seasons += 1
         if work.finished:
             goal.points += work.research_magnitude
@@ -686,6 +691,10 @@ def _record_discovery(
     made = work.spell or work.effect
     goal.discovery_technique = made.technique if made else plan.technique
     goal.discovery_form = made.form if made else plan.form
+    goal.retry_season, goal.retry_year = "", 0
+    name = lab_seasons.made_name(work)
+    if name and name not in goal.discovered_from:
+        goal.discovered_from.append(name)
     return (
         f"A Discovery toward {goal.name}: stabilize it (magnitude "
         f"{goal.pending_magnitude}) in a later season."
@@ -959,15 +968,17 @@ def discovery_moves(
                 outcome,
                 f"{name}'s experiment toward {outcome.plan.research.strip()} can "
                 f"reach a Discovery by moving its roll {chart.discovery_shift:+d} "
-                "(within the risk modifier). Take it? The same move is then made "
-                "every season of this project and when stabilizing.",
+                "(within the risk modifier); the roll's own result stands either "
+                "way. Take it? The same move is then made every season of this "
+                "project and when stabilizing.",
             )
         )
     return found
 
 
 def take_discovery_move(saga: Saga, outcome: rules.Outcome, yes: bool) -> None:
-    """Record the answer: a Discovery, and the move kept on the goal."""
+    """Record the answer: with yes, a Discovery besides the roll's own
+    result, and the move kept on the goal."""
     work = outcome.lab_work
     chart = work.experiment if work is not None else None
     character = saga.character(outcome.character_id)
@@ -975,20 +986,10 @@ def take_discovery_move(saga: Saga, outcome: rules.Outcome, yes: bool) -> None:
         return
     if character is None or not yes:
         chart.discovery_shift = None
-        if chart.no_benefit:
-            plain = chart.fallback
-            if isinstance(plain, lab_seasons.LabWork):
-                plain.experiment = chart
-                outcome.lab_work = plain
-            else:
-                chart.wasted = True
-        chart.fallback = None
         return
     goal = ex.goal(character, outcome.plan.research, outcome.plan.research_kind)
     goal.discovery_shift = chart.discovery_shift
-    art = work.spell.technique if work.spell is not None else "Vim"
-    ex.move_to_discovery(chart, random.Random(), outcome.plan.risk, art, saga)
-    chart.fallback = None
+    ex.move_to_discovery(chart)
     outcome.notes = [
         n for n in outcome.notes if not n.startswith("Extraordinary Results: ")
     ] + ["Extraordinary Results: " + " ".join(chart.results)]

@@ -1304,23 +1304,26 @@ def _experiment(
         if goal is not None and goal.discovery_shift and (seeks or stabilizing)
         else None
     )
+    # Stabilizing repeats the Discovery's experiment: its risk, not the plan's.
+    risk = goal.discovery_risk if stabilizing and goal is not None else plan.risk
     chart = experiment.chart(
         roll_rng,
-        plan.risk,
+        risk,
         aura,
         art,
         saga,
         character=character,
-        seeking=seeks or (stabilizing and shift is not None),
+        seeking=seeks,
         shift=shift,
+        stabilizing=stabilizing,
     )
     if chart.no_benefit and not stabilizing:
+        # The die and risk are lost; a Discovery may still come with it.
         _, plain = lab_seasons.work(saga, character, replace(plan, experimenting=False))
-        if chart.discovery_shift is not None:
-            # Asked before it counts: kept aside in case the move isn't taken.
-            chart.fallback = plain
-        elif plain is None:
+        if plain is None:
             chart.wasted = True
+            chart.discovery = False
+            chart.discovery_shift = None
         else:
             result.lab_work = work = plain
     assert work is not None
