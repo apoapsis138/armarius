@@ -135,6 +135,30 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_dialog_contracts_covenant.py",
         "test_gui_menus.py",
     ),
+    "ars_magica_manager/aging_chart.py": (
+        "test_creation_worksheet.py",
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/rules/grog_aging.py": (
+        "test_creation_worksheet.py",
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/forms/animal.py": (
+        "test_creation_worksheet.py",
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/rules/animal_grogs.py": (
+        "test_creation_worksheet.py",
+        "test_character_templates.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/rules/creation_animal.py": ("test_creation_worksheet.py",),
+    "ars_magica_manager/rules/animal_aging.py": ("test_seasons.py",),
+    "ars_magica_manager/seasons/animal_aging.py": ("test_seasons.py",),
+    "data/animal_template_catalog.json": (
+        "test_character_templates.py",
+        "test_dialog_contracts_covenant.py",
+    ),
     "ars_magica_manager/seasons/plans.py": ("test_seasons_ahead.py",),
     "ars_magica_manager/gui/editing.py": ("test_gui_edit_shared.py",),
     "tests/golden/dispatch_matrix.json": ("test_dispatch_matrix.py",),

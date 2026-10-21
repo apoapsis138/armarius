@@ -30,6 +30,11 @@ from ..models import (
 
 #: The grog chooser's first entry: someone with no character sheet.
 NEW_PERSON = "(New person -- not from a character sheet)"
+NEW_ANIMAL = "(New animal -- not from a character sheet)"
+
+
+def new_entry_label(kind: str) -> str:
+    return NEW_ANIMAL if kind in inh.ANIMAL_KINDS else NEW_PERSON
 
 
 def inhabitant_fields(
@@ -286,18 +291,19 @@ def grog_label(grog: Character) -> str:
 
 def add_inhabitant(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose:
     """Add one. A grog-derived kind first offers the covenant's unassigned
-    grogs (or a new person) when it has any; Magi and Companions offer the
-    saga's characters of that kind who aren't on the list (or someone with
-    no sheet); animals go straight to the form."""
+    grogs (or a new person) when it has any, Horses and Hounds its animal
+    grogs; Magi and Companions offer the saga's characters of that kind
+    who aren't on the list (or someone with no sheet); Livestock go
+    straight to the form."""
     if kind in inh.AUTO_KINDS:
         return _add_from_sheets(saga, covenant, kind)
-    grogs = inh.available_grogs(saga, covenant) if kind in inh.GROG_KINDS else []
+    grogs = inh.available_grogs(saga, covenant, kind) if inh.takes_grogs(kind) else []
     if not grogs:
         return inhabitant_form(covenant, kind, None)
     return Choose(
         f"Add a {inh.KIND_SINGULAR[kind]}",
         lambda: (
-            [Choice(NEW_PERSON, None)]
+            [Choice(new_entry_label(kind), None)]
             + [Choice(grog_label(g), g, search=g.name) for g in grogs]
         ),
         lambda grog: inhabitant_form(covenant, kind, None, grog),

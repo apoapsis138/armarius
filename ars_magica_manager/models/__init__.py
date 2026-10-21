@@ -24,6 +24,7 @@ from .character import BOND_APPLIES as BOND_APPLIES
 from .character import TRADITION_EFFECT_KINDS as TRADITION_EFFECT_KINDS
 from .character import TRADITION_ITEM_KINDS as TRADITION_ITEM_KINDS
 from .character import Aging as Aging
+from .character import AnimalForm as AnimalForm
 from .character import ArtScore as ArtScore
 from .character import Background as Background
 from .character import BoundBeing as BoundBeing

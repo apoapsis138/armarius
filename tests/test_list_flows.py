@@ -58,6 +58,8 @@ def _saga() -> Saga:
     covenant.inhabitants = [
         Inhabitant(id="tu1", kind="turb", name="Guard [a]"),
         Inhabitant(id="tu2", kind="turb", name="Guard B"),
+        Inhabitant(id="ho1", kind="hound", name="Alaunt [war]", quantity=2),
+        Inhabitant(id="ho2", kind="hound", name="Goshawk"),
     ]
     covenant.economics.income_sources = [
         IncomeSource(id="in1", name="Toll [bridge]"),
@@ -448,7 +450,13 @@ ITEM_LISTS: dict[str, ListCase] = {
         ("covenant", "cov1"),
         "section-inh-turb",
         "inh-turb-list",
-        lambda s: s.covenants[0].inhabitants,
+        lambda s: [i for i in s.covenants[0].inhabitants if i.kind == "turb"],
+    ),
+    "covenant-hounds": ListCase(
+        ("covenant", "cov1"),
+        "section-inh-hound",
+        "inh-hound-list",
+        lambda s: [i for i in s.covenants[0].inhabitants if i.kind == "hound"],
     ),
     "covenant-income": ListCase(
         ("covenant", "cov1"),

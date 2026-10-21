@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 from .. import catalog
 from ..models import Character, Saga, TraditionDef
+from . import animal_grogs
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import THE_GIFT
@@ -81,8 +82,13 @@ class VirtueFlawTally:
 
 def tally(character: Character) -> VirtueFlawTally:
     by_id = catalog.load_virtue_flaw_catalog_by_id()
+    # An animal's free Flaws aren't counted, and its Major Personality
+    # Flaws count as Minor.
     entries = [
-        (vf, by_id[vf.vf_id]) for vf in character.virtues_flaws if vf.vf_id in by_id
+        (vf, entry)
+        for vf in character.virtues_flaws
+        if vf.vf_id in by_id
+        and (entry := animal_grogs.counted(character, by_id[vf.vf_id])) is not None
     ]
 
     def of(side: str, category: str | None = None, tier: str | None = None):
@@ -333,12 +339,32 @@ def tradition_benefit(character: Character) -> HouseBenefit:
     )
 
 
+def animal_benefit(character: Character) -> HouseBenefit:
+    """The Flaws an animal grog holds free: No Hands and Mute."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    free = {
+        index
+        for index, vf in enumerate(character.virtues_flaws)
+        if animal_grogs.free_flaw(character, vf.vf_id)
+    }
+    held = tuple(
+        by_id[vf.vf_id].name
+        for index, vf in enumerate(character.virtues_flaws)
+        if index in free and vf.vf_id in by_id
+    )
+    return HouseBenefit(
+        held=held, free_indices=frozenset(free), giver="its animal form"
+    )
+
+
 def free_benefit(character: Character) -> HouseBenefit:
     """The Virtues a character has free at creation, outside the
     balance: a magus's from the House, a hedge wizard's from the
-    tradition."""
+    tradition; the Flaws an animal holds free."""
     if character.type == "magus":
         return house_benefit(character)
+    if animal_grogs.is_animal(character):
+        return animal_benefit(character)
     return tradition_benefit(character)
 
 

@@ -455,7 +455,10 @@ PACKAGES: tuple[Package, ...] = (
 
 def offered(saga: Saga, character: Character) -> bool:
     """Packages are offered to grogs and companions, and a magus's years
-    before apprenticeship, when the Grogs book is in play."""
+    before apprenticeship, when the Grogs book is in play; never to an
+    animal grog, whose Abilities are too few for them."""
+    if character.animal is not None:
+        return False
     return sourcebooks.in_play("Grogs", sourcebooks.saga_books(saga))
 
 

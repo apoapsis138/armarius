@@ -22,7 +22,7 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
 - the catalogs in `data/*_catalog.json` (Virtues & Flaws, laboratory
   Virtues & Flaws and Features, Abilities, Houses, covenant Boons & Hooks,
   spells, weapons & armor, the Definitive Edition's character templates
-  and the grog templates of *Grogs*, Chapter 7);
+  and the grog templates and animal grog samples of *Grogs*, Chapter 7);
 - rules descriptions written into the code, such as the descriptions of
   the fifteen Arts in `ars_magica_manager/arts.py`;
 - the content packs in `data/packs/` and the modules that build them in

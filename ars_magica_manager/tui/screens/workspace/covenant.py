@@ -373,17 +373,21 @@ class CovenantActions(WorkspaceBase):
 
     def _add_inhabitant(self, kind: str) -> None:
         """Add one. Grog-derived kinds first offer the covenant's unassigned
-        grogs (or a brand-new person); Magi, Companions and animals go
-        straight to the form."""
+        grogs (or a brand-new person), Horses and Hounds its animal grogs
+        when it has any; Magi, Companions and Livestock go straight to the
+        form."""
         covenant = self.selected_covenant
         if covenant is None:
             return
-        if kind not in inh.GROG_KINDS:
+        if not inh.takes_grogs(kind):
             self._inhabitant_form(kind, None, None)
             return
 
-        grogs = inh.available_grogs(self.saga, covenant)
-        labels = ["(New person -- not from a character sheet)"] + [
+        grogs = inh.available_grogs(self.saga, covenant, kind)
+        if kind in inh.ANIMAL_KINDS and not grogs:
+            self._inhabitant_form(kind, None, None)
+            return
+        labels = [inhabitant_forms.new_entry_label(kind)] + [
             escape(g.name)
             + (f"  (born {g.background.year_born})" if g.background.year_born else "")
             for g in grogs

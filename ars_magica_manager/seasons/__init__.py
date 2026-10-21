@@ -24,6 +24,7 @@ from .advance import year_end_aging as year_end_aging
 from .advance import year_end_grogs as year_end_grogs
 from .character_effects import age_character as age_character
 from .character_effects import gain_warping as gain_warping
+from .character_effects import living_conditions as living_conditions
 from .covenant import SEASON_KINDS as SEASON_KINDS
 from .covenant import covenant_people as covenant_people
 from .covenant import covenant_season as covenant_season

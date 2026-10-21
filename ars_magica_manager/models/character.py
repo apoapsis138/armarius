@@ -392,13 +392,37 @@ class CreationConditions:
     """A magus's years past Gauntlet at creation: the seasons
     that went to lab work, the working conditions the storyguide set (used
     for lab work and pre-play aging), and the age pre-play aging has been
-    rolled up to (None: not yet)."""
+    rolled up to (None: not yet). A grog's pre-play aging may instead come
+    from the Grogs Aging Chart: the kind of aging taken ("mild", "average"
+    or "harsh"; "" when it wasn't used) and how far it moved the Ability
+    cap at creation."""
 
     lab_seasons: int = 0
     aura: int = 3
     lab_quality: int = 0
     living_conditions: int = 1
     aged_to: int | None = None
+    aging_chart: str = ""
+    aging_chart_cap: int = 0
+
+
+@dataclass
+class AnimalForm:
+    """What makes a grog an animal (Grogs, Chapter 7, Horses & Hounds):
+    the bestiary's kind it belongs to (rules.animal_grogs.KINDS: "clawed",
+    "hoofed", "bird" or "fish"), its species ("Dog"), the Language its
+    kind speaks ("Dog", fixed at 2) and, for a species the storyguide
+    gives its own average lifespan, that lifespan in years (None: the
+    kind's own)."""
+
+    kind: str = "clawed"
+    species: str = ""
+    language: str = ""
+    lifespan: int | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> AnimalForm:
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -471,6 +495,9 @@ class Character:
     breakthroughs: list[Breakthrough] = field(default_factory=list)
     #: A grog's yearly update; None until set up.
     grog_year: GrogYear | None = None
+    #: An animal grog's kind, species and Language; None for a person
+    #: (older saves load as people).
+    animal: AnimalForm | None = None
     #: The supplements' sub-systems: Labor Points and a
     #: workshop's scores (City & Guild), progress records, experimental
     #: philosophy formulas known, and the Ordeals still lowering the Target
@@ -556,6 +583,8 @@ class Character:
         d["bound_beings"] = [BoundBeing.from_dict(b) for b in d.get("bound_beings", [])]
         if d.get("grog_year") is not None:
             d["grog_year"] = GrogYear.from_dict(d["grog_year"])
+        if d.get("animal") is not None:
+            d["animal"] = AnimalForm.from_dict(d["animal"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]

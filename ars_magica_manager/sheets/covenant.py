@@ -224,7 +224,9 @@ _INHABITANT_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
         ("Role", lambda e: e.role),
         ("Qty", lambda e: str(e.quantity)),
     ),
-    **dict.fromkeys(("horse", "livestock"), (("Qty", lambda e: str(e.quantity)),)),
+    **dict.fromkeys(
+        ("horse", "hound", "livestock"), (("Qty", lambda e: str(e.quantity)),)
+    ),
 }
 
 

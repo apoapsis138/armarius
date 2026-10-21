@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from . import seasons, storage
 from .arts import ARTS
 from .models import (
+    SEASONS,
     Ability,
     ArtScore,
     Character,
@@ -24,7 +25,7 @@ from .models import (
     Saga,
     character_age,
 )
-from .rules import creation_access, creation_covenant, creation_magus
+from .rules import animal_aging, creation_access, creation_covenant, creation_magus
 
 
 def new_saga(
@@ -265,16 +266,26 @@ def pre_play_aging(saga: Saga, character: Character, rng: random.Random) -> list
     living = conditions.living_conditions if character.type == "magus" else None
     summaries = []
     for age in range(start, years):
-        line = seasons.age_character(
-            saga,
-            character,
-            age,
-            rng,
-            living=living,
-            when=("Winter", born + age),
-            label=f"Pre-play aging at {age}",
-        )
-        summaries.append(f"{age}: {line.result}")
+        # An animal rolls in the seasons its kind does; a person in Winter.
+        if animal_aging.figures(character) is None:
+            when = [("Winter", 1)]
+        else:
+            when = [
+                (season, animal_aging.rolls_in_season(character, age, season))
+                for season in SEASONS
+            ]
+        for season, rolls in when:
+            for _ in range(rolls):
+                line = seasons.age_character(
+                    saga,
+                    character,
+                    age,
+                    rng,
+                    living=living,
+                    when=(season, born + age),
+                    label=f"Pre-play aging at {age}",
+                )
+                summaries.append(f"{age}: {line.result}")
         conditions.aged_to = age
     return summaries
 

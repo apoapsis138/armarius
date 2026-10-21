@@ -17,8 +17,8 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
+from . import aging_chart, catalog, creation, traditions
 from . import books as bk
-from . import catalog, creation, traditions
 from . import covenant_templates as templates
 from . import covenants as cov_rules
 from . import inhabitants as inh
@@ -30,6 +30,7 @@ from .arts import ART_DESCRIPTIONS, ARTS
 from .boon_hook_text import boon_hook_info_text
 from .commands import Act, Choice, Choose, Command, Confirm
 from .covenants import boon_hook_points, covenant_boon_points, covenant_hook_points
+from .forms import animal as animal_forms
 from .forms import character as cf
 from .forms import covenant as covf
 from .forms import device as device_forms
@@ -56,6 +57,8 @@ from .models import (
     Possession,
     Saga,
 )
+from .rules import animal_aging, scores
+from .rules import animal_grogs as ag
 from .rules import creation as rules
 from .rules import creation_access as access
 from .rules import creation_character as cc
@@ -67,7 +70,6 @@ from .rules import creation_packages as packages
 from .rules import creation_tradition as ct
 from .rules import creation_virtues as cv
 from .rules import creation_xp as cx
-from .rules import scores
 from .rules import xp as xp_rules
 
 Start = Callable[[], Command]
@@ -242,6 +244,12 @@ def _concept_budget(saga: Saga, record: Record) -> str:
             else "(set Year Born)",
         )
     )
+    if character.animal is not None:
+        rows += [
+            ("Animal", escape(ag.describe(character.animal))),
+            ("Aging", escape(animal_aging.schedule_text(character))),
+            ("With humans", escape(ag.penalties_text(character))),
+        ]
     return aligned(rows)
 
 
@@ -284,6 +292,10 @@ def _concept_actions(saga: Saga, record: Record) -> list[Action]:
         actions.append(
             Action("Choose status Virtue", lambda: wf.mythic_status(saga, character))
         )
+    if character.type == "grog":
+        actions.append(
+            Action("Animal form", lambda: animal_forms.animal_form(saga, character))
+        )
     if traditions.joinable(saga, character):
         actions.append(
             Action("Choose tradition", lambda: wf.choose_tradition(saga, character))
@@ -318,11 +330,18 @@ def _virtues_budget(saga: Saga, record: Record) -> str:
         ),
     ]
     house = cv.free_benefit(character)
-    giver = "House" if house.giver == "the House" else "Tradition"
+    giver = {"the House": "the House", "the tradition": "the Tradition"}.get(
+        house.giver, house.giver
+    )
     if house.held:
-        rows.append((f"Free from the {giver}", escape(", ".join(house.held))))
+        rows.append((f"Free from {giver}", escape(", ".join(house.held))))
     if house.missing:
-        rows.append((f"{giver} still gives", escape("; ".join(house.missing))))
+        rows.append(
+            (
+                f"{giver.removeprefix('the ')} still gives",
+                escape("; ".join(house.missing)),
+            )
+        )
     return aligned(rows)
 
 
@@ -412,6 +431,7 @@ def _characteristics_budget(saga: Saga, record: Record) -> str:
             + (f", Great x{line.virtue}" if line.virtue > 0 else "")
             + (f", Poor x{-line.virtue}" if line.virtue < 0 else "")
             + (f", heritage {line.free:+d}" if line.free else "")
+            + (f", Size {line.size:+d}" if line.size else "")
             + ")",
         )
         for line in found
@@ -443,6 +463,7 @@ PANELS[("character", "characteristics")] = Panel(
 #: Each kind of creation entry, as the details say where xp came from.
 ENTRY_STEPS: dict[str, str] = {
     "childhood": "Early Childhood",
+    "youth": "Pre-adult Life",
     "later_life": "Later Life",
     "package": "Training package",
     "virtue": "Virtue xp",
@@ -521,7 +542,7 @@ def xp_details(saga: Saga, character: Character, target: str) -> str:
     if access.xp_multiplier(character, target) > 1:
         lines.append("[b]Affinity:[/] pool xp spent on it gains half again, rounded up")
     if not is_art:
-        cap = access.ability_cap_for(character, cc.age(saga, character), target)
+        cap = access.ability_cap_for(character, ag.cap_age(saga, character), target)
         if cap is None and access.ability_xp_table(target) == "art":
             lines.append("[b]Creation cap:[/] none (it advances as an Art)")
         elif cap is None:
@@ -648,6 +669,75 @@ PANELS[("character", "childhood")] = Panel(
 )
 
 
+# -- Pre-adult Life (an animal's) --
+
+
+def _youth_budget(saga: Saga, record: Record) -> str:
+    character = _character(record)
+    own = animal_forms.language_entry(character)
+    others = cx.spent(character, "youth") - (own.xp if own else 0)
+    grown = ag.grown(character)
+    return aligned(
+        [
+            (
+                "Its Language",
+                f"{escape(own.target)} {ag.LANGUAGE_SCORE} ({own.xp} xp), fixed"
+                if own
+                else "(not set)",
+            ),
+            ("Pre-adult xp", f"{others} of {ag.YOUTH_XP} (to age {grown})"),
+        ]
+    )
+
+
+def youth_targets(character: Character) -> list[str]:
+    """What an animal's pre-adult xp may buy: what it may learn, but its
+    own Language."""
+    return later.later_life_targets(character)
+
+
+def _youth_rows(saga: Saga, record: Record) -> list[Row]:
+    """The pre-adult spends; the animal Language's row can't change."""
+    character = _character(record)
+    targets = youth_targets(character)
+    rows = []
+    for entry in cx.entries(character, "youth"):
+        row = xp_row(saga, character, entry, targets)
+        if entry.note == ag.LANGUAGE_NOTE:
+            row.label = xp_label(character, entry, " (its own)")
+            row.cells = xp_cells(character, entry, " (its own)")
+            row.edit = None
+        rows.append(row)
+    return rows
+
+
+def _youth_actions(saga: Saga, record: Record) -> list[Action]:
+    character = _character(record)
+    actions = [Action("Animal form", lambda: animal_forms.animal_form(saga, character))]
+    animal = character.animal
+    if (
+        animal is not None
+        and animal.language
+        and animal_forms.language_entry(character) is None
+    ):
+        actions.append(
+            Action(
+                f"Set {animal.language} at {ag.LANGUAGE_SCORE}",
+                lambda: Act(
+                    lambda: animal_forms.set_language(character, animal.language)
+                ),
+            )
+        )
+    return actions
+
+
+PANELS[("character", "youth")] = Panel(
+    _youth_budget,
+    _youth_actions,
+    xp_list("youth", lambda saga, c: youth_targets(c), rows=_youth_rows),
+)
+
+
 # -- Later Life --
 
 
@@ -668,7 +758,8 @@ def _later_life_budget(saga: Saga, record: Record) -> str:
         else f"{years}"
     )
     lines = [
-        f"Later Life: age 5 to {ends if ends is not None else '?'} ({until}), "
+        f"Later Life: age {later.later_life_starts(character)} to "
+        f"{ends if ends is not None else '?'} ({until}), "
         f"{span} years at {later.xp_a_year(character)} xp = {budget} xp, "
         f"[b]{spent} spent, {budget - spent} left[/]"
     ]
@@ -676,8 +767,17 @@ def _later_life_budget(saga: Saga, record: Record) -> str:
     for vf_id, rule in access.virtue_xp(character).items():
         own = sum(x.xp for x in cx.entries(character, "virtue") if x.note == vf_id)
         lines.append(f"{escape(by_id[vf_id].name)}: {rule.xp} xp, {own} spent")
-    cap = access.ability_cap(cc.age(saga, character))
-    lines.append(f"Ability cap at this age: {cap} (2 more with an Affinity)")
+    cap = access.character_ability_cap(character, ag.cap_age(saga, character))
+    moved = aging_chart.cap_text(character.creation_conditions.aging_chart_cap)
+    lines.append(
+        f"Ability cap at this age: {cap} (2 more with an Affinity)"
+        + (f"; {moved} for the Grogs Aging Chart" if moved else "")
+    )
+    if character.animal is not None:
+        lines[-1] = (
+            f"Ability cap: {cap}, as a person of {ag.cap_age(saga, character)} "
+            "(the storyguide's choice for an animal)"
+        )
     return "\n".join(lines)
 
 
@@ -915,13 +1015,21 @@ PANELS[("character", "apprenticeship")] = Panel(
 
 
 def _aging_actions(saga: Saga, character: Character) -> list[Action]:
-    """Roll pre-play aging (while due), and the Aging form for a
+    """Roll pre-play aging (while due) or, for a grog while Grogs is in
+    play, use the Grogs Aging Chart instead, and the Aging form for a
     Longevity Ritual."""
     actions = []
     if magus.aging_due(saga, character):
         actions.append(
             Action(
                 "Roll pre-play aging", lambda: wf.roll_pre_play_aging(saga, character)
+            )
+        )
+    if aging_chart.offered(saga, character):
+        actions.append(
+            Action(
+                "Use the Grogs Aging Chart",
+                lambda: wf.grog_aging_chart(saga, character),
             )
         )
     if (cc.age(saga, character) or 0) > cc.aging_age(character):
@@ -1003,6 +1111,8 @@ def _finish_budget(saga: Saga, record: Record) -> str:
         ("Reputations", reputations or "(none)"),
         ("Confidence", f"{b.confidence_score}, {b.confidence_points} points"),
     ]
+    if chart := aging_chart.worksheet_text(character):
+        rows.append(("Pre-play aging", chart))
     return "\n".join([aligned(rows), "Review:", *review_lines(saga, record)])
 
 

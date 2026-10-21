@@ -164,7 +164,7 @@ def template_fields(saga: Saga, template: GrogTemplateDef) -> list[DialogField]:
 
 def _more_fields(saga: Saga, template: GrogTemplateDef) -> list[DialogField]:
     """Pickers for any other Minor Virtue or Flaw a grog may take."""
-    grog = Character(id="", name="", type="grog")
+    grog = Character(id="", name="", type="grog", animal=gt.animal_form(template))
     by_id = catalog.load_virtue_flaw_catalog_by_id()
 
     def display(instance: VirtueFlawInstance) -> str:
@@ -246,10 +246,12 @@ def template_live(template: GrogTemplateDef) -> Callable[[dict[str, Any]], str]:
             f"[b]{escape(template.name)}[/] (Grogs, page {template.page}): "
             + escape(template.concept),
             escape(
-                f"At {age}: {gt.age_xp(age)} xp before Virtues; the book's list "
-                f"comes to {gt.list_xp(template, choices)} xp."
+                f"At {age}: {gt.template_xp(template, age)} xp before Virtues; "
+                f"the book's list comes to {gt.list_xp(template, choices)} xp."
             ),
-            escape(gt.tally_line(choices.all_virtues_flaws())),
+            escape(
+                gt.tally_line(choices.all_virtues_flaws(), gt.animal_form(template))
+            ),
         ]
         if template.notes:
             lines.append(f"[dim]{escape(template.notes)}[/]")
@@ -269,9 +271,10 @@ def grog_template_form(
         lambda: template_fields(saga, template),
         lambda values: then(choices_from(template, values)),
         validate=lambda values: gt.limit_problem(
-            choices_from(template, values).all_virtues_flaws()
+            choices_from(template, values).all_virtues_flaws(),
+            gt.animal_form(template),
         ),
         live=template_live(template),
         save_label="Next",
-        help_id="grog-templates",
+        help_id="animal-grogs" if template.animal else "grog-templates",
     )

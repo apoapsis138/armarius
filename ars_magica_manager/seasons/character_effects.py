@@ -127,6 +127,11 @@ def _living_conditions(saga: Saga, character: Character) -> int:
     return living + int(effects.amount_total(here))
 
 
+#: The Living Conditions modifier aging uses, for the rules outside a
+#: season's aging (pre-play aging from the Grogs Aging Chart).
+living_conditions = _living_conditions
+
+
 def _yearly_warping(saga: Saga, character: Character) -> str:
     """A year's automatic Warping Points: +1 for a Longevity
     Ritual, and living in a strong aura of another realm (a magus gains none

@@ -693,6 +693,57 @@ async def test_gauntlet_step_rolls_pre_play_aging_after_asking():
         )
 
 
+async def test_finishing_touches_takes_a_grogs_aging_from_the_grogs_aging_chart():
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
+
+    saga = _saga("grog")
+    saga.characters[0].background.year_born = 1175  # 45
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open_worksheet(pilot, app)
+        steps = screen.query_one("#ws-steps", OptionList)
+        steps.highlighted = steps.option_count - 1
+        assert await wait_until(pilot, lambda: screen.step == "finish")
+        await _press_button(pilot, screen, "Use the Grogs Aging Chart")
+        dialog = await _wait_for(pilot, app, FieldsDialog)
+        dialog.query_one("#fld-kind", Select).value = "harsh"
+        assert await wait_until(
+            pilot,
+            lambda: (
+                "Total: 6 Aging Point(s)" in strip_markup(_text(dialog, "#fields-live"))
+            ),
+        )
+        dialog.query_one("#btn-save", Button).press()
+
+        def saved():
+            return storage.load_saga("test_saga").characters[0]
+
+        assert await wait_until(
+            pilot, lambda: saved().creation_conditions.aged_to == 44
+        )
+        grog = saved()
+        assert grog.creation_conditions.aging_chart == "harsh"
+        assert grog.creation_conditions.aging_chart_cap == 1
+        assert grog.aging.decrepitude_points == 6
+        assert len(grog.diary) == 1
+        assert await wait_until(pilot, lambda: app.screen is screen)
+        assert await wait_until(
+            pilot,
+            lambda: (
+                "the Grogs Aging Chart, harsh aging (Ability cap 1 higher)"
+                in _text(screen, "#ws-budget")
+            ),
+        )
+        assert await wait_until(
+            pilot, lambda: "Pre-play aging rolled: done" in _text(screen, "#ws-checks")
+        )
+        assert not any(
+            str(b.label) == "Use the Grogs Aging Chart"
+            for b in screen.query("#ws-actions Button")
+        )
+
+
 async def test_finishing_touches_reviews_every_step_and_adds_a_trait():
     from ars_magica_manager.tui.screens.fields import FieldsDialog
 

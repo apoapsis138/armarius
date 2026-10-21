@@ -884,7 +884,7 @@ def test_a_save_from_before_this_session_loads_and_drops_the_stale_fields():
 def test_unknown_inhabitant_kind_is_rejected():
     with pytest.raises(ValueError, match="kind"):
         Inhabitant(id="x", kind="dragon")
-    assert len(INHABITANT_KINDS) == 8
+    assert len(INHABITANT_KINDS) == 9
 
 
 def test_save_entry_adds_updates_and_records_a_listed_character():

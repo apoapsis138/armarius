@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from .. import catalog
 from ..models import Character, Saga, character_age
-from . import aging
+from . import aging, animal_aging
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 
 DE_CH3 = (
@@ -99,7 +99,12 @@ def pre_play_aging_rolls(saga: Saga, character: Character) -> int:
     year from 35 (50 with Strong Faerie Blood) up to their starting age
     (§12)."""
     years = age(saga, character)
-    return max(0, years - aging_age(character)) if years is not None else 0
+    if years is None:
+        return 0
+    if animal_aging.figures(character) is not None:
+        # An animal's kind rolls several a year, or one every few years.
+        return animal_aging.rolls_between(character, aging_age(character), years)
+    return max(0, years - aging_age(character))
 
 
 def aging_age(character: Character) -> int:

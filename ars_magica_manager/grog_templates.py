@@ -17,6 +17,12 @@ Chapter Three: no Major Virtues or Flaws, no Hermetic ones, at most three
 Minor Flaws and no more Virtue points than Flaw points, one Social
 Status); limit_problem() says what a choice breaks.
 
+Grogs' animal grog samples (Horses & Hounds: the Dog, Horse and Hawk)
+are templates too, from their own catalog, each with an animal form: using
+one makes the grog an animal (rules.animal_grogs), its xp spent as the
+animal Language's fixed score, 120 xp of pre-adult life and then Later
+Life, with No Hands and Mute held free.
+
 Rules: SOURCE; each entry's `fixes` say where it differs from the page.
 """
 
@@ -29,6 +35,7 @@ from typing import Any
 from . import catalog, creation, sourcebooks
 from .markup import escape
 from .models import (
+    AnimalForm,
     Character,
     CreationXp,
     GrogTemplateDef,
@@ -36,6 +43,7 @@ from .models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
+from .rules import animal_grogs as ag
 from .rules import creation_access as access
 from .rules import creation_characteristics as cch
 from .rules import creation_finish as finish
@@ -95,10 +103,28 @@ def templates(saga: Saga | None) -> list[GrogTemplateDef]:
     return catalog.load_grog_template_catalog() if in_play(saga) else []
 
 
+def animal_templates(saga: Saga | None) -> list[GrogTemplateDef]:
+    """The animal grog samples offered for a new grog: none while Grogs
+    is out of play."""
+    return catalog.load_animal_template_catalog() if in_play(saga) else []
+
+
 def find(template_id: str | None) -> GrogTemplateDef | None:
     if not template_id:
         return None
-    return catalog.load_grog_template_catalog_by_id().get(template_id)
+    found = catalog.load_grog_template_catalog_by_id().get(template_id)
+    if found is None:
+        found = catalog.load_animal_template_catalog_by_id().get(template_id)
+    return found
+
+
+def animal_form(template: GrogTemplateDef) -> AnimalForm | None:
+    """The animal an animal sample makes the grog; None for a person's
+    template."""
+    animal = template.animal
+    if not animal:
+        return None
+    return AnimalForm(animal["kind"], animal["species"], animal["language"])
 
 
 def instance(entry: dict[str, Any]) -> VirtueFlawInstance:
@@ -162,16 +188,42 @@ def age_xp(age: int) -> int:
     return childhood + years * later.XP_A_YEAR
 
 
+def template_xp(template: GrogTemplateDef, age: int) -> int:
+    """The starting xp at `age` of a grog from `template`: a person's
+    (age_xp), or an animal's 120 to the age its kind is grown, then 15 a
+    year, beside its Language's fixed score."""
+    animal = animal_form(template)
+    if animal is None:
+        return age_xp(age)
+    return ag.years_xp(animal.kind, age)
+
+
+def _sample_grog(
+    chosen: Sequence[VirtueFlawInstance], animal: AnimalForm | None = None
+) -> Character:
+    return Character(
+        id="", name="", type="grog", virtues_flaws=list(chosen), animal=animal
+    )
+
+
 # -- the grog limits --
 
 
-def limit_problem(chosen: Sequence[VirtueFlawInstance]) -> str | None:
+def limit_problem(
+    chosen: Sequence[VirtueFlawInstance], animal: AnimalForm | None = None
+) -> str | None:
     """Why a grog can't take `chosen` (the Definitive Edition's limits),
-    or None if it can."""
+    or None if it can. An `animal` holds No Hands and Mute free, takes a
+    Major Personality Flaw as Minor and nothing about human society."""
     by_id = catalog.load_virtue_flaw_catalog_by_id()
-    grog = Character(id="", name="", type="grog", virtues_flaws=list(chosen))
+    grog = _sample_grog(chosen, animal)
     t = cv.tally(grog)
-    entries = [by_id[vf.vf_id] for vf in chosen if vf.vf_id in by_id]
+    entries = [
+        entry
+        for vf in chosen
+        if vf.vf_id in by_id
+        and (entry := ag.counted(grog, by_id[vf.vf_id])) is not None
+    ]
     hermetic = [
         e.name for e in entries if catalog.needs_the_gift(e) or e.id in catalog.GIFT_IDS
     ]
@@ -197,12 +249,18 @@ def limit_problem(chosen: Sequence[VirtueFlawInstance]) -> str | None:
         )
     if t.repeated:
         return f"Taken more often than the book allows: {', '.join(t.repeated)}."
+    if animal is not None:
+        society = [e.name for e in entries if ag.about_society(e, access.OPENS)]
+        if society:
+            return f"An animal has nothing of human society: {', '.join(society)}."
     return None
 
 
-def tally_line(chosen: Sequence[VirtueFlawInstance]) -> str:
+def tally_line(
+    chosen: Sequence[VirtueFlawInstance], animal: AnimalForm | None = None
+) -> str:
     """ "3 Virtue points, 3 Flaw points (3 of 3 Minor Flaws)"."""
-    grog = Character(id="", name="", type="grog", virtues_flaws=list(chosen))
+    grog = _sample_grog(chosen, animal)
     t = cv.tally(grog)
     return (
         f"{_points(t.virtue_points, 'Virtue')}, {_points(t.flaw_points, 'Flaw')} "
@@ -233,6 +291,9 @@ def apply(
     variant = variants(template)[choices.variant]
     entry = variant.ages[choices.age]
     c.background.year_born = saga.current_year - entry["age"]
+    c.animal = animal_form(template)
+    if c.animal is not None:
+        c.background.size = int(template.animal.get("size", 0))
     if choices.characteristics and template.characteristics:
         c.characteristics = replace(c.characteristics, **template.characteristics)
     c.virtues_flaws = []
@@ -240,6 +301,8 @@ def apply(
         c.virtues_flaws.append(vf)
         cch.apply_virtue(saga, c, vf)
     c.personality_traits = [ScoredTrait(n, s) for n, s in choices.traits]
+    if c.animal is not None:
+        _animal_extras(c)
     c.reputations = [ScoredTrait(n, s) for n, s in template.reputations]
     rows = _rows(template, choices)
     filled = cx.fill_template(_xp_rows(rows), values)
@@ -257,12 +320,27 @@ def apply(
     c.in_creation = True
 
 
+def _animal_extras(character: Character) -> None:
+    """What every animal has: No Hands and Mute (held free), its Size on
+    Strength and Quickness, and Companion Animal's Loyal to Master."""
+    c = character
+    held = {vf.vf_id for vf in c.virtues_flaws}
+    c.virtues_flaws += [VirtueFlawInstance(f) for f in ag.FREE_FLAWS if f not in held]
+    for key in ("strength", "quickness"):
+        score = getattr(c.characteristics, key)
+        setattr(c.characteristics, key, score + cch.size_adjustment(c, key))
+    if ag.COMPANION_ANIMAL in held and not finish.has_trait(c, "Loyal to Master"):
+        c.personality_traits.append(ScoredTrait("Loyal to Master", 1))
+
+
 def spend(character: Character, rows: Sequence[tuple[str, int]], native: str) -> None:
     """Put each Ability's xp on the Creation Worksheet, step by step: the
     Native Language's 75, the free score of a Supernatural Ability a
     Virtue grants, each Virtue's own xp on what it may buy, Early
     Childhood on what a child may learn, then Later Life for the rest
-    (even past its budget, which the worksheet then shows)."""
+    (even past its budget, which the worksheet then shows). An animal has
+    its Language's fixed 15 and 120 xp of pre-adult life in place of the
+    Native Language and Early Childhood."""
     c = character
     left = {name: xp for name, xp in rows}
     order = [name for name, _ in rows]
@@ -282,7 +360,12 @@ def spend(character: Character, rows: Sequence[tuple[str, int]], native: str) ->
         left[name] = need - creation.gained_xp(entry)
         return xp
 
-    if native in left and not cx.feral(c):
+    language = c.animal.language if c.animal is not None else ""
+    if language in left:
+        entry = CreationXp("youth", language, ag.LANGUAGE_XP, ag.LANGUAGE_NOTE)
+        creation.spend_creation_xp(c, entry)
+        left[language] -= creation.gained_xp(entry)
+    elif native in left and not cx.feral(c):
         entry = CreationXp("childhood", native, cx.NATIVE_XP, cx.NATIVE)
         creation.spend_creation_xp(c, entry)
         left[native] -= creation.gained_xp(entry)
@@ -297,10 +380,17 @@ def spend(character: Character, rows: Sequence[tuple[str, int]], native: str) ->
         for name in order:
             if name not in supernatural and access.virtue_xp_allows(rule, name):
                 budget -= put("virtue", name, budget, vf_id)
-    budget = cx.childhood_xp(c)
-    for name in order:
-        if cx.childhood_allows(name, c):
-            budget -= put("childhood", name, budget)
+    if c.animal is not None:
+        # An animal's 120 xp of pre-adult life buy what it may learn.
+        budget = ag.YOUTH_XP
+        for name in order:
+            if name != language:
+                budget -= put("youth", name, budget)
+    else:
+        budget = cx.childhood_xp(c)
+        for name in order:
+            if cx.childhood_allows(name, c):
+                budget -= put("childhood", name, budget)
     for name in order:
         put("later_life", name, None)
 
@@ -323,9 +413,10 @@ def biography(template: GrogTemplateDef, variant: Variant, choices: Choices) -> 
     ]
     version = f", {variant.name}" if variant.name else ""
     age = variant.ages[choices.age]["age"]
+    where = "Horses & Hounds" if template.animal else "Grog Templates"
     parts = [
         f"Built from {template.name}{version} at age {age} (Grogs, Chapter 7: "
-        f"Grog Templates, page {template.page}). {template.concept}"
+        f"{where}, page {template.page}). {template.concept}"
     ]
     if details:
         parts.append(f"Details: {'; '.join(details)}.")

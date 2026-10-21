@@ -980,6 +980,9 @@ class GrogTemplateDef:
     notes: str = ""
     #: Where this entry differs from the page's text, and why.
     fixes: list[str] = field(default_factory=list)
+    #: An animal grog's sample (animal_template_catalog.json): its "kind",
+    #: "species", "language" and "size"; empty for a person.
+    animal: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GrogTemplateDef:

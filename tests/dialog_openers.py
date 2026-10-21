@@ -23,6 +23,7 @@ from ars_magica_manager import (
     vis,
 )
 from ars_magica_manager import economics as eco
+from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import worksheet as wf
@@ -100,6 +101,14 @@ class Opener:
     node: str | None
     #: Opens the dialog, given the workspace (or saga picker) screen.
     open: Callable[[object], object]
+
+
+def _grogs_aging_chart(ws) -> None:
+    """The Grogs Aging Chart for the grog Hugo, made 45 in memory (saved
+    only with the form)."""
+    grog = ws.saga.character("grog9")
+    grog.background.year_born = ws.saga.current_year - 45
+    ws._run_steps(wf.grog_aging_chart(ws.saga, grog))
 
 
 def _found_covenant(ws) -> None:
@@ -584,6 +593,17 @@ OPENERS: dict[str, Opener] = {
             tree=True,
         ),
     ),
+    "animal template": Opener(
+        "covenant",
+        lambda ws: ws._run_steps(
+            creation_forms.grog_template_steps(
+                ws.saga,
+                {"name": "Rex", "covenant_id": "cov1"},
+                grog_templates.find("at_dog"),
+            ),
+            tree=True,
+        ),
+    ),
     "create laboratory": Opener("covenant", lambda ws: ws.action_create_laboratory()),
     "bind familiar": Opener("covenant", lambda ws: ws.action_create_familiar()),
     "edit covenant": Opener("covenant", lambda ws: ws._edit_covenant()),
@@ -847,6 +867,13 @@ OPENERS: dict[str, Opener] = {
         "character",
         lambda ws: ws._run_steps(wf.native_language(ws.selected_character)),
     ),
+    # The fixture's grog, Hugo, made a dog.
+    "animal form": Opener(
+        "character",
+        lambda ws: ws._run_steps(
+            animal_forms.animal_form(ws.saga, ws.saga.character("grog9"))
+        ),
+    ),
     "general spell level": Opener(
         "character",
         lambda ws: ws._run_steps(
@@ -861,6 +888,7 @@ OPENERS: dict[str, Opener] = {
         "character",
         lambda ws: ws._run_steps(wf.gauntlet_conditions(ws.selected_character)),
     ),
+    "grogs aging chart": Opener("character", _grogs_aging_chart),
     "power level": Opener(
         "covenant", lambda ws: ws._run_steps(wf.power_level(ws.selected_covenant))
     ),

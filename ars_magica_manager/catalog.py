@@ -50,6 +50,7 @@ WEAPON_ARMOR_CATALOG_PATH = DATA_DIR / "weapon_armor_catalog.json"
 SHAPE_MATERIAL_CATALOG_PATH = DATA_DIR / "shape_material_catalog.json"
 CHARACTER_TEMPLATE_CATALOG_PATH = DATA_DIR / "character_template_catalog.json"
 GROG_TEMPLATE_CATALOG_PATH = DATA_DIR / "grog_template_catalog.json"
+ANIMAL_TEMPLATE_CATALOG_PATH = DATA_DIR / "animal_template_catalog.json"
 
 
 def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
@@ -342,6 +343,9 @@ class VirtueFlawChooser:
     gifted: bool = False
     audiences: frozenset[str] = frozenset()
     books: frozenset[str] | None = None
+    #: An animal grog: nothing about human society, and its free Flaws and
+    #: Major Personality Flaws (taken as Minor) despite being a grog.
+    animal: bool = False
 
     @classmethod
     def for_character(
@@ -351,11 +355,14 @@ class VirtueFlawChooser:
         makes every magus take it); anyone else once they hold it."""
         held = {vf.vf_id for vf in character.virtues_flaws}
         mythic = character.type == "mythic companion"
+        animal = character.animal is not None
+        audiences = frozenset({"mythic companion"}) if mythic else frozenset()
         return cls(
             grog=character.type == "grog",
             gifted=character.type == "magus" or bool(held & GIFT_IDS),
-            audiences=frozenset({"mythic companion"}) if mythic else frozenset(),
+            audiences=frozenset({"animal"}) if animal else audiences,
             books=books,
+            animal=animal,
         )
 
     @classmethod
@@ -384,7 +391,13 @@ class VirtueFlawChooser:
             return "only for " + " or ".join(names)
         if self.grog and definition.id in GIFT_IDS:
             return "not for grogs"
-        if self.grog and definition.tier == "Major":
+        if self.animal:
+            from .rules import animal_grogs, creation_access
+
+            refused = animal_grogs.refusal(definition, creation_access.OPENS)
+            if refused:
+                return refused
+        elif self.grog and definition.tier == "Major":
             return "not for grogs: Major"
         if self.grog and needs_the_gift(definition):
             return "not for grogs: Hermetic"
@@ -469,6 +482,20 @@ def load_grog_template_catalog(
 
 def load_grog_template_catalog_by_id(
     path: Path = GROG_TEMPLATE_CATALOG_PATH,
+) -> dict[str, GrogTemplateDef]:
+    return _cached_by_id(path, GrogTemplateDef.from_dict)
+
+
+def load_animal_template_catalog(
+    path: Path = ANIMAL_TEMPLATE_CATALOG_PATH,
+) -> list[GrogTemplateDef]:
+    """Grogs' animal grog samples (Dog, Horse, Hawk), as grog templates
+    with an animal form."""
+    return list(_cached_entries(path, GrogTemplateDef.from_dict))
+
+
+def load_animal_template_catalog_by_id(
+    path: Path = ANIMAL_TEMPLATE_CATALOG_PATH,
 ) -> dict[str, GrogTemplateDef]:
     return _cached_by_id(path, GrogTemplateDef.from_dict)
 

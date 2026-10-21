@@ -29,6 +29,7 @@ from ..rules import tradition_seasons
 from ..rules import warping as warping_rules
 from ..tables import Table
 from ..world import takes_part_in_play
+from .animal_aging import season_aging
 from .character_effects import _add_xp, _yearly_warping, age_character, diary_entry
 from .covenant import covenant_season
 from .defaults import default_text, grog_default, notified
@@ -196,6 +197,8 @@ def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
                     activity="Aging",
                 )
             )
+        if character.animal is not None:
+            continue  # an animal rolls in its kind's seasons (season_aging)
         born = character.background.year_born
         age = None if born is None else saga.current_year - born
         if age is None or not aging_rules.rolls_this_year(character, age):
@@ -281,6 +284,7 @@ def finish_season(
         if new_year
         else []
     )
+    year_end += season_aging(saga, rng)
     year_end += covenant_season(saga, secured)
     record.lines += year_end
     if saga.keep_season_records and (worked or year_end):

@@ -1,0 +1,584 @@
+{
+ "attribution": "Animal grog samples from Grogs, Chapter 7, Horses & Hounds, via Project: Redcap (redcap.org). Restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+ "source": "https://www.redcap.org/page/Grogs_Chapter_Seven:_Grog_Templates#Horses_.26_Hounds",
+ "entries": [
+  {
+   "id": "at_dog",
+   "name": "Dog",
+   "page": 137,
+   "concept": "A hound, a guard dog or the covenant's mongrel: a clawed beast that hunts by scent.",
+   "animal": {
+    "kind": "clawed",
+    "species": "Dog",
+    "language": "Dog",
+    "size": -1
+   },
+   "statuses": [
+    "vf_domestic_animal",
+    "vf_wanderer",
+    "vf_companion_animal"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_restricted_learning",
+     "params": {}
+    }
+   ],
+   "pool": [
+    {
+     "vf_id": "vf_berserk",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_enduring_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_ferocity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_lightning_reflexes",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_long_winded",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_natural_leader",
+     "params": {},
+     "note": "Pack Leader, its name for an animal"
+    },
+    {
+     "vf_id": "vf_perfect_balance",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_rapid_convalescence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_piercing_gaze",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reserves_of_strength",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_self_confident",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_wilderness_sense",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clumsy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fragile_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fear",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_noncombatant",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_nocturnal",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_pack_mentality",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_eyesight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_hearing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_living_conditions",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reckless",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reclusive",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weakness",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 1,
+     "native": "",
+     "abilities": [
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "chasing"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "scent"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "biting"
+      },
+      {
+       "name": "Dog",
+       "score": 2,
+       "specialty": "dominance"
+      },
+      {
+       "name": "Hunt",
+       "score": 3,
+       "specialty": "rabbits"
+      }
+     ]
+    },
+    {
+     "age": 4,
+     "native": "",
+     "abilities": [
+      {
+       "name": "Athletics",
+       "score": 3,
+       "specialty": "chasing"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "scent"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "biting"
+      },
+      {
+       "name": "Dog",
+       "score": 2,
+       "specialty": "dominance"
+      },
+      {
+       "name": "Hunt",
+       "score": 4,
+       "specialty": "rabbits"
+      },
+      {
+       "name": "Leadership",
+       "score": 1,
+       "specialty": "dogs"
+      }
+     ]
+    }
+   ],
+   "flaw_hint": "Most Major Personality Flaws can be taken as Minor ones; nothing about human society.",
+   "notes": "Animal grogs typically have Area Lore, Athletics, Awareness, Brawl, Hunt, Leadership (a pack or herd leader), Music (a songbird), Stealth, Survival and Swim.",
+   "fixes": [
+    "The book gives no Size for its samples: -1 is taken from its guideline (cat-sized -3 to horse-sized +2)."
+   ]
+  },
+  {
+   "id": "at_horse",
+   "name": "Horse",
+   "page": 137,
+   "concept": "A riding horse, a destrier or the covenant's pack horse: a hoofed beast, quick to run from danger.",
+   "animal": {
+    "kind": "hoofed",
+    "species": "Horse",
+    "language": "Horse",
+    "size": 2
+   },
+   "statuses": [
+    "vf_domestic_animal",
+    "vf_wanderer",
+    "vf_companion_animal"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_restricted_learning",
+     "params": {}
+    }
+   ],
+   "pool": [
+    {
+     "vf_id": "vf_berserk",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_enduring_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_ferocity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_lightning_reflexes",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_long_winded",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_natural_leader",
+     "params": {},
+     "note": "Pack Leader, its name for an animal"
+    },
+    {
+     "vf_id": "vf_perfect_balance",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_rapid_convalescence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_piercing_gaze",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reserves_of_strength",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_self_confident",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_wilderness_sense",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clumsy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fragile_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fear",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_noncombatant",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_nocturnal",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_pack_mentality",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_eyesight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_hearing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_living_conditions",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reckless",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reclusive",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weakness",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 3,
+     "native": "",
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 1,
+       "specialty": "water",
+       "xp": 5
+      },
+      {
+       "name": "Athletics",
+       "score": 4,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 3,
+       "specialty": "predators"
+      },
+      {
+       "name": "Brawl",
+       "score": 3,
+       "specialty": "kick"
+      },
+      {
+       "name": "Horse",
+       "score": 2,
+       "specialty": "food"
+      }
+     ]
+    },
+    {
+     "age": 10,
+     "native": "",
+     "abilities": [
+      {
+       "name": "Area Lore: {area}",
+       "score": 2,
+       "specialty": "water"
+      },
+      {
+       "name": "Athletics",
+       "score": 6,
+       "specialty": "running"
+      },
+      {
+       "name": "Awareness",
+       "score": 4,
+       "specialty": "predators"
+      },
+      {
+       "name": "Brawl",
+       "score": 4,
+       "specialty": "kick"
+      },
+      {
+       "name": "Horse",
+       "score": 2,
+       "specialty": "food"
+      },
+      {
+       "name": "Living Language: {language}",
+       "score": 1,
+       "specialty": "rider"
+      }
+     ]
+    }
+   ],
+   "flaw_hint": "Most Major Personality Flaws can be taken as Minor ones; nothing about human society.",
+   "notes": "Animal grogs typically have Area Lore, Athletics, Awareness, Brawl, Hunt, Leadership (a pack or herd leader), Music (a songbird), Stealth, Survival and Swim.",
+   "fixes": [
+    "The book gives no Size for its samples: +2 is taken from its guideline (cat-sized -3 to horse-sized +2).",
+    "The 3-year-old's Area Lore 1 (5) is read as score 1 with 5 xp toward 2."
+   ]
+  },
+  {
+   "id": "at_hawk",
+   "name": "Hawk",
+   "page": 137,
+   "concept": "A falconer's hawk: a bird of prey that needs no Ability to fly, only to dive and turn.",
+   "animal": {
+    "kind": "bird",
+    "species": "Hawk",
+    "language": "Hawk",
+    "size": -3
+   },
+   "statuses": [
+    "vf_domestic_animal",
+    "vf_wanderer",
+    "vf_companion_animal"
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_restricted_learning",
+     "params": {}
+    }
+   ],
+   "pool": [
+    {
+     "vf_id": "vf_berserk",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_enduring_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_ferocity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_lightning_reflexes",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_long_winded",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_natural_leader",
+     "params": {},
+     "note": "Pack Leader, its name for an animal"
+    },
+    {
+     "vf_id": "vf_perfect_balance",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_rapid_convalescence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_piercing_gaze",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reserves_of_strength",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_self_confident",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_wilderness_sense",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clumsy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fragile_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_fear",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_noncombatant",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_nocturnal",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_pack_mentality",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_eyesight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_hearing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_living_conditions",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reckless",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reclusive",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weakness",
+     "params": {}
+    }
+   ],
+   "ages": [
+    {
+     "age": 8,
+     "native": "",
+     "abilities": [
+      {
+       "name": "Athletics",
+       "score": 4,
+       "specialty": "diving"
+      },
+      {
+       "name": "Awareness",
+       "score": 4,
+       "specialty": "prey"
+      },
+      {
+       "name": "Brawl",
+       "score": 2,
+       "specialty": "claws"
+      },
+      {
+       "name": "Hawk",
+       "score": 2,
+       "specialty": "mice"
+      },
+      {
+       "name": "Survival",
+       "score": 1,
+       "specialty": "mountains"
+      }
+     ]
+    }
+   ],
+   "flaw_hint": "Most Major Personality Flaws can be taken as Minor ones; nothing about human society.",
+   "notes": "Animal grogs typically have Area Lore, Athletics, Awareness, Brawl, Hunt, Leadership (a pack or herd leader), Music (a songbird), Stealth, Survival and Swim.",
+   "fixes": [
+    "The book gives no Size for its samples: -3 is taken from its guideline (cat-sized -3 to horse-sized +2)."
+   ]
+  }
+ ]
+}

@@ -571,7 +571,7 @@ The left column lists the steps:
 The rail on the left lists the steps:
 <!-- /gui -->
 
-- a character: Concept, Virtues and Flaws, Characteristics, Early Childhood, Later Life, Tradition Training (a hedge tradition's member), Apprenticeship and Years past Gauntlet (magi only), and Finishing Touches;
+- a character: Concept, Virtues and Flaws, Characteristics, Early Childhood (Pre-adult Life for an [animal grog](help:animal-grogs)), Later Life, Tradition Training (a hedge tradition's member), Apprenticeship and Years past Gauntlet (magi only), and Finishing Touches;
 - a covenant: Baseline, Resources, Boons & Hooks, and Review;
 - a laboratory: Setting Up, and Review.
 
@@ -607,6 +607,23 @@ Each budget is also a bar that fills as it is spent: gold while some is left, re
 The Ability cap at creation goes by age (5 under 30); an Affinity with the Ability raises it by 2 for that Ability, and Mentored by Demons lifts it. An Ability that advances as an Art (a hedge Art, a vitki's runes) has no age cap, only its tradition's (a vitki's runes, 10).
 
 A hedge wizard picks their tradition on Concept with **Choose tradition** (once the saga offers one: see [How to play a hedge wizard](help:guide-hedge-magic)), which also adds the Virtues the tradition requires. A magus may choose a Hermetic society there, and a magus of House Ex Miscellanea one of the House's traditions, whose Virtues become his free House Virtues. The tradition's free Virtues, such as a learned magician's Entreat the Powers or a vitki's Minor Virtue from the master, are outside the Virtue and Flaw balance, as a House's are. **Tradition Training** then spends the apprenticeship the book gives (a vitki's 290 xp counting the minimums, a folk witch's 200, a gruagach's 160, or 64 unGifted), changed by Well-Trained and Poorly Trained; **Open the Arts** gives a Gifted member the tradition's Arts and Abilities at 0; and its checks ask for the minimum scores and any share the Arts must have. The spell levels it gives are shown but not yet learned there. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
+
+### The Grogs Aging Chart
+<!-- help: creation-worksheet-aging-chart -->
+
+A character older than 35 makes an aging roll for each year from 35 before play: **Roll pre-play aging** makes them all, each written in the Diary. While the Grogs book is in play, a grog can instead **Use the Grogs Aging Chart**, on the Finishing Touches step: the expected Aging Points for each decade, from the chart in Grogs, Chapter 5 (Aging, the Easy Way, pp. 65-66).
+
+**You type:** the kind of aging, Mild, Average or Harsh (a grog with Mild Aging can only take mild aging, one with Poor Living Conditions only harsh); whether to take the chart's crises (off at first: the book suggests ignoring them for a new character); and, for harsh or mild aging, whether it moves the Ability cap. The line under the form shows each decade and the total as you choose.
+
+**The app works out:**
+
+- the decades: ten years each from the first roll still to make, the last one shorter. Each takes the highest Aging Score of its years: age / 10 (rounded up), less the covenant's Living Conditions (with Mild Aging +1 or Poor Living Conditions -1) and any Longevity Ritual, plus the Virtues that change aging rolls. A score above 10 reads the chart's last row, below 1 its first. A shorter decade takes its share of the chart's points and crises, rounded up;
+- with crises: the Decrepitude score rises by one for each crisis, with the points that score needs, and the chart's points are divided by one more than the crises, rounded up (Paul, 45, average aging at Aging Score 5: 5 points, or 5 + 3 = 8 with his crisis). No Crisis is rolled;
+- where the points go: a crisis's are spread over the Characteristics highest first; of the chart's, 45% go to the highest Characteristic, then of the rest about half to Quickness or Stamina, 30% to Perception or Presence, 15% to Strength or Dexterity and the remainder to Intelligence or Communication. A Characteristic with more Aging Points than its score (ignoring any minus sign) falls by 1, as with the yearly roll;
+- the apparent age: a simple die for each decade, which ages it the whole decade if it is no more than the decade's Aging Points, otherwise by the die;
+- the Ability cap: 1 higher after harsh aging, 1 lower after mild, when you chose to move it. The Later Life step's cap and checks use it, and Finishing Touches notes the chart's use.
+
+It is written in the Diary as one entry and can't be undone.
 
 ### Moving to In Play
 <!-- help: creation-worksheet-play -->

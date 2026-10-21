@@ -14,6 +14,8 @@
 - A Characteristic's Aging Points above the absolute value of its score
   lower it by 1 and start again. Every Aging Point is also a Decrepitude
   point: 5 = 1, 15 = 2, 30 = 3, 50 = 4, 75 = 5.
+- An animal grog's kind has its own start and age modifier, and rolls
+  in other seasons too (rules.animal_aging).
 - A Crisis: a simple die + age / 10 + Decrepitude on the Crisis table; a
   Longevity Ritual guarantees survival, then ends. The survivor spends the
   next season recovering.
@@ -24,8 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from ..models import Character
-from . import dice, effects
-from .rounding import round_up
+from . import animal_aging, dice, effects
 from .scores import character_source
 
 SOURCE = (
@@ -90,7 +91,8 @@ def _amount(character: Character, applies_to: str) -> int:
 def start_age(character: Character) -> int:
     """The age the character's aging rolls start at."""
     found = [e.amount or 0 for e in _effects(character, "aging_start")]
-    return int(max([START_AGE, *found]))
+    animal = animal_aging.start_age(character)
+    return int(max([START_AGE if animal is None else animal, *found]))
 
 
 def unaging(character: Character) -> bool:
@@ -137,6 +139,7 @@ def roll(
 ) -> AgingResult:
     """The year's aging roll for `character` aged `age`."""
     die = dice.stress_die(rng, 0, saga=saga).value
+    for_age = animal_aging.age_modifier(character, age)
     longevity = character.aging.longevity_modifier
     living = living_conditions(character, living)
     virtues = _effects(character, "aging_roll")
@@ -146,7 +149,7 @@ def roll(
         virtues += places.character_effects(saga, character, "aging_roll")
     total = (
         die
-        + round_up(age / 10)
+        + for_age
         - living
         - longevity
         - bronze_cord
@@ -155,7 +158,7 @@ def roll(
     if age < start_age(character) and longevity and total >= 10:
         total = 9
     result = AgingResult(character.id, total, die)
-    parts = [f"die {die}", f"+ age {round_up(age / 10)}"]
+    parts = [f"die {die}", f"+ age {for_age}"]
     if living:
         parts.append(f"- Living Conditions {living:+d}")
     if longevity:
@@ -194,7 +197,7 @@ def crisis(
     Survival rolls are reported, not decided (the storyguide, medicine and
     magic can change them)."""
     die = dice.simple_die(rng)
-    total = die + round_up(age / 10) + decrepitude
+    total = die + animal_aging.age_modifier(character, age) + decrepitude
     ritual = character.aging.longevity_modifier > 0
     what, against = TERMINAL, None
     for top, label, difficulty in CRISIS:

@@ -12,8 +12,8 @@ import random
 from collections.abc import Callable, Sequence
 from typing import Any
 
+from .. import aging_chart, catalog, creation, sourcebooks, traditions
 from .. import books as bk
-from .. import catalog, creation, sourcebooks, traditions
 from .. import covenant_templates as templates
 from .. import covenants as cov_rules
 from .. import inhabitants as inh
@@ -62,6 +62,7 @@ from ..rules import creation_magus as magus
 from ..rules import creation_packages as packages
 from ..rules import creation_tradition as ct
 from ..rules import creation_xp as cx
+from ..rules import grog_aging
 from ..rules import xp as xp_rules
 from . import creation as creation_forms
 from . import spell as spell_forms
@@ -549,10 +550,12 @@ def add_house_virtue(character: Character) -> Command:
 
 def grog_array(character: Character) -> Choose:
     """Set the Characteristics from one of the Grogs book's arrays, in
-    order; the user then moves the scores where they belong."""
+    order (an animal's Size added after); the user then moves the scores
+    where they belong."""
 
     def chosen(array: tuple[int, ...]) -> None:
         for (key, _), score in zip(cch.CHARACTERISTICS, array, strict=True):
+            score += cch.size_adjustment(character, key)
             setattr(character.characteristics, key, score)
 
     return Choose(
@@ -695,6 +698,90 @@ def roll_pre_play_aging(saga: Saga, character: Character) -> Command:
             "; ".join(creation.pre_play_aging(saga, character, random.Random()))
         ),
         yes_label="Roll",
+    )
+
+
+AGING_KIND_LABELS: dict[str, str] = {
+    "mild": "Mild",
+    "average": "Average",
+    "harsh": "Harsh",
+}
+
+
+def grog_aging_chart_fields(character: Character) -> list[DialogField]:
+    """The Grogs Aging Chart's choices: the kind of aging (only the one
+    Mild Aging or Poor Living Conditions requires), whether to take its
+    crises, and whether harsh or mild aging moves the Ability cap."""
+    kinds = grog_aging.kinds_allowed(character)
+    required = len(kinds) == 1
+    return [
+        DialogField(
+            "kind",
+            "Aging",
+            "select",
+            kinds[0] if required else "average",
+            options=[(AGING_KIND_LABELS[k], k) for k in kinds],
+            required=True,
+            hint=(
+                "Required by the character's Virtue or Flaw."
+                if required
+                else "Harsh: a life of adventure before play; mild: a sheltered one."
+            ),
+        ),
+        DialogField(
+            "crises",
+            "Take the chart's crises",
+            "check",
+            False,
+            hint="The storyguide may ignore them for a new character: "
+            "Decrepitude can quickly cripple one.",
+        ),
+        DialogField(
+            "move_cap",
+            "Move the Ability cap",
+            "check",
+            True,
+            hint="The storyguide may allow Abilities 1 above the age cap after "
+            "harsh aging, and hold them 1 below it after mild.",
+            show_if=lambda values: values.get("kind") in ("mild", "harsh"),
+        ),
+    ]
+
+
+def grog_aging_chart(saga: Saga, character: Character) -> Command:
+    """A grog's pre-play aging from the Grogs Aging Chart, a decade at a
+    time, in place of the yearly rolls (it can't be taken back)."""
+    if not aging_chart.offered(saga, character):
+        return Refuse("Use the Grogs Aging Chart", "No aging rolls to make.")
+
+    def live(values: dict[str, Any]) -> str:
+        kind = values.get("kind")
+        if kind not in grog_aging.KINDS:
+            return ""
+        lines = aging_chart.preview(saga, character, kind, bool(values.get("crises")))
+        return escape(" ".join(lines)) + " Written in the Diary; can't be undone."
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        return notes(
+            "; ".join(
+                aging_chart.apply(
+                    saga,
+                    character,
+                    values["kind"],
+                    bool(values["crises"]),
+                    bool(values.get("move_cap")),
+                    random.Random(),
+                )
+            )
+        )
+
+    return Form(
+        "Use the Grogs Aging Chart",
+        lambda: grog_aging_chart_fields(character),
+        apply,
+        live=live,
+        save_label="Apply",
+        help_id="creation-worksheet-aging-chart",
     )
 
 

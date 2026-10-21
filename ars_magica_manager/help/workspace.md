@@ -270,6 +270,7 @@ The Create a New Character form asks for a Name, a Type (magus, companion, Mythi
 - **A Mythic Companion template** (a Mythic Companion; marked with its book, such as "(DE)" or "(RoP:D)"): one kind of Mythic Companion, such as the Faerie Doctor or the Zahid, with the Virtues and Flaws its book requires and its minimum Abilities. See [A Mythic Companion template](help:mythic-companion-templates).
 - **A supplement's companion** (a companion; marked with its book, such as "(RoP:D)"): a ready-made companion from a supplement, such as the Byzantine Priest. See [A supplement's companion](help:companion-sample-templates).
 - **A Grogs template as a companion** (a companion, while Grogs is in play): see [A Grogs template as a companion](help:grog-template-companion).
+- **An animal template** (a grog, while Grogs is in play; marked "(Grogs, an animal)"): the book's sample Dog, Horse and Hawk (Grogs, Chapter 7: Horses & Hounds, page 137). See [Animal grogs](help:animal-grogs).
 
 The line above Create describes the template you chose.
 
@@ -364,6 +365,32 @@ Grogs says any of its grog templates can be played as a companion simply by addi
 It asks for the same choices as [A Grogs template](help:grog-templates), with two differences: the choices are held to a companion's limits rather than a grog's (Major Virtues and Flaws and up to ten points of Flaws are allowed), and Next refuses until a **Story Flaw** is among them: choose one under **Another Flaw**, such as Dark Secret or Visions. The character is made a companion, without the Loyal +1 a grog gets, and the Biography notes it.
 
 **See also:** [A Grogs template](help:grog-templates), [A supplement's companion](help:companion-sample-templates), [New Character](help:character-group-new)
+
+### Animal grogs
+<!-- help: animal-grogs -->
+
+A grog can be an animal: a horse, a hound, a hawk or any other beast that serves the covenant (Grogs, Chapter 7: Grog Templates, Horses & Hounds, pages 133-137). Make one from an animal template on the New Character form, or make a grog with no template and choose **Animal form** on its worksheet's Concept step.
+
+**You choose (Animal Form):**
+
+- **Kind**: a person, or a Clawed Beast, a Hoofed Beast, a Bird, or a Fish or Serpent. Each kind has its own penalties with humans (Presence and Communication: Clawed Beast -2/-5, Hoofed Beast -4/-5, Bird -1/-2, Fish or Serpent -5/-6) and its own aging.
+- **Species**, such as Dog or Horse, and its **Language**, the animal language it speaks (its species', unless you name another).
+- **Lifespan**: blank for the kind's own, or a species' own lifespan in years.
+- **Size**, from -3 to +2. Strength gets +2 for each point of Size and Quickness loses one, added after the Characteristic points are spent.
+
+From an animal template you also choose its age (Dog 1 or 4, Horse 3 or 10, Hawk 8), its Social Status and its Virtues and Flaws, from the book's suggested ones, as for [A Grogs template](help:grog-templates).
+
+**The rules the worksheet checks:**
+
+- An animal takes **Restricted Learning**; **No Hands** and **Mute** are part of its form and cost nothing. Its Social Status is Domestic Animal, Wanderer or Companion Animal (a Companion Animal starts with Loyal to Master +1). A Major Personality Flaw counts as Minor, and nothing about human society (a Craft, Educated, a noble's status and the like) can be taken.
+- **No Early Childhood and no Native Language.** The **Pre-adult Life** step takes its place: its animal Language at score 2, and 120 xp spent up to the age it is grown, then 15 xp a year in Later Life. Restricted Learning puts the xp on at most five Abilities, and the animal Language is never raised.
+- **A human Language** is learnt with a Source Quality of 4 + Cunning (lower for a negative Cunning), and Animal Ken never above its animal Language. On its sheet, Intelligence reads Cunning.
+- **No training packages**, and the Ability cap is that of a person of the same share of a human life (advice, since the book says it "might" apply).
+- **Aging**: a clawed beast is grown at 1, ages from 6 and makes five aging rolls a year (one each season and two in Winter), +1 to the roll every 2 years; a hoofed beast is grown at 3, ages from 20, two rolls (Summer and Winter), +1 every 5 years; a bird is grown at 8, ages from 55, a roll every second year, +1 every 15 years; a fish or serpent is grown at 24, ages from 170, a roll every fifth year, +1 every 50 years. A different lifespan scales the figures by 50 / lifespan. The rolls are made as the seasons pass.
+
+An animal grog can be put on the covenant's Horses or Hounds list (Covenfolk tab).
+
+**See also:** [A Grogs template](help:grog-templates), [Creation Worksheet](help:creation-worksheet), [Hounds](help:section-inh-hound)
 
 **See also:** [Laboratories group](help:laboratory-group), [Creation Worksheet](help:creation-worksheet), [The workspace](help:workspace), [How to create a character, covenant or laboratory](help:guide-creation)
 

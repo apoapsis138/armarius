@@ -11,6 +11,9 @@ the same way. Removing one undoes its point while the score is past +3 or
 -3. This step still warns when a score doesn't match its copies (a save
 from before Great changed the score).
 
+An animal grog has no child modifier, and its Size is added after the
+points: twice to Strength, less from Quickness (rules.animal_grogs).
+
 Rules: reference/rules-engine-reference.md §2 Characteristics; Child
 characters; §5 Great (Characteristic), Improved Characteristics.
 """
@@ -23,8 +26,10 @@ from dataclasses import dataclass
 from .. import sourcebooks
 from ..markup import todo
 from ..models import Character, Saga, VirtueFlawInstance
+from . import animal_grogs
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import age
+from .derived import size
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Characteristics "
@@ -144,6 +149,22 @@ def child_modifier(years: int | None) -> int:
     return -4
 
 
+def age_modifier(saga: Saga, character: Character) -> int:
+    """The child modifier for the character's age; none for an animal,
+    whose kind is grown long before 14."""
+    if animal_grogs.is_animal(character):
+        return 0
+    return child_modifier(age(saga, character))
+
+
+def size_adjustment(character: Character, key: str) -> int:
+    """What an animal's Size adds to Characteristic `key` after the points
+    are spent (animal_grogs.size_adjustment); 0 for a person."""
+    if not animal_grogs.is_animal(character):
+        return 0
+    return animal_grogs.size_adjustment(character, key, int(size(character).total))
+
+
 @dataclass(frozen=True)
 class CharacteristicLine:
     key: str
@@ -156,6 +177,8 @@ class CharacteristicLine:
     cost: int
     #: Free points from a heritage (Sidhe Blood's Presence).
     free: int = 0
+    #: What an animal's Size adds, after the points.
+    size: int = 0
 
 
 def lines(
@@ -163,7 +186,7 @@ def lines(
 ) -> list[CharacteristicLine]:
     """Each Characteristic's score and what it cost: the sheet's, or
     `scores` (a form being filled in; a blank counts as 0)."""
-    modifier = child_modifier(age(saga, character))
+    modifier = age_modifier(saga, character)
     result = []
     for key, name in CHARACTERISTICS:
         score = (
@@ -187,7 +210,8 @@ def lines(
             if (found := heritage(vf)) is not None and found.key == key
         ]
         virtue = great - poor
-        base = score - modifier
+        sized = size_adjustment(character, key)
+        base = score - modifier - sized
         # A heritage's free point is counted as given whenever the score
         # allows it (at its cap it may instead have been bought).
         cap = max((heritage_cap(character, h) for h in heritages), default=0)
@@ -202,7 +226,9 @@ def lines(
         else:
             bought = base
         result.append(
-            CharacteristicLine(key, name, score, virtue, bought, cost(bought), free)
+            CharacteristicLine(
+                key, name, score, virtue, bought, cost(bought), free, sized
+            )
         )
     return result
 
@@ -217,8 +243,10 @@ def _stepped(
     name = dict(CHARACTERISTICS).get(key)
     if step is None or name is None:
         return None
-    base = getattr(character.characteristics, key) - child_modifier(
-        age(saga, character)
+    base = (
+        getattr(character.characteristics, key)
+        - age_modifier(saga, character)
+        - size_adjustment(character, key)
     )
     return key, name, step, base
 
@@ -263,7 +291,7 @@ def apply_virtue(
     add a heritage's free point (not past its cap)."""
     if (free := heritage(instance)) is not None:
         score = getattr(character.characteristics, free.key)
-        if score - child_modifier(age(saga, character)) < heritage_cap(character, free):
+        if score - age_modifier(saga, character) < heritage_cap(character, free):
             setattr(character.characteristics, free.key, score + free.step)
         return
     found = _stepped(saga, character, instance)
@@ -282,7 +310,7 @@ def removal_change(
     comes back off while the score is at its cap or below."""
     if (free := heritage(instance)) is not None:
         score = getattr(character.characteristics, free.key)
-        if score - child_modifier(age(saga, character)) > heritage_cap(character, free):
+        if score - age_modifier(saga, character) > heritage_cap(character, free):
             return None
         return dict(CHARACTERISTICS)[free.key], score, score - free.step
     found = _stepped(saga, character, instance)
@@ -339,6 +367,13 @@ def points_text(
         for line in sorted(found, key=lambda line: order.index(line.key))
     )
     text = [f"[b]Points:[/] {total}", f"[b]Cost:[/] {costs}"]
+    sized = [line for line in found if line.size]
+    if sized:
+        text.append(
+            "[b]Size:[/] "
+            + ", ".join(f"{line.name} {line.size:+d}" for line in sized)
+            + " added after the points"
+        )
     past = [line.name for line in found if abs(line.bought) > BOUGHT_LIMIT]
     if past:
         text.append(
@@ -391,7 +426,7 @@ def characteristic_checks(saga: Saga, record: Record) -> list[Check]:
         if line.virtue > 0:
             # Great (Characteristic): +1 a copy on top of +3, at most +5.
             wanted = min(BOUGHT_LIMIT + line.virtue, VIRTUE_LIMIT)
-            base = line.score - child_modifier(age(saga, character))
+            base = line.score - age_modifier(saga, character) - line.size
             found.append(
                 _check(
                     f"Great {line.name}: {line.name} at +3, then +1 a copy",
@@ -402,7 +437,7 @@ def characteristic_checks(saga: Saga, record: Record) -> list[Check]:
             )
         elif line.virtue < 0:
             wanted = max(-BOUGHT_LIMIT + line.virtue, -VIRTUE_LIMIT)
-            base = line.score - child_modifier(age(saga, character))
+            base = line.score - age_modifier(saga, character) - line.size
             found.append(
                 _check(
                     f"Poor {line.name}: {line.name} at -3, then -1 a copy",
@@ -411,7 +446,7 @@ def characteristic_checks(saga: Saga, record: Record) -> list[Check]:
                     GREAT_SOURCE,
                 )
             )
-    modifier = child_modifier(age(saga, character))
+    modifier = age_modifier(saga, character)
     if modifier:
         found.append(
             _check(

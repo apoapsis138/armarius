@@ -35,6 +35,7 @@ from ..models import (
     character_age,
 )
 from ..rules import aging, casting, derived, scores, warping
+from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
 from ..rules import xp as xp_rules
 from ..rules.breakdown import Breakdown
@@ -74,8 +75,9 @@ def info_right_text(saga: Saga, character: Character) -> str:
             ("Assigned Laboratory", escape(lab.name) if lab else "(unassigned)")
         )
     b = character.background
+    rows += [("Type", character.type)]
+    rows += [(label, escape(value)) for label, value in animal_facts(character)]
     rows += [
-        ("Type", character.type),
         ("Confidence Score", str(b.confidence_score)),
         ("Confidence Points", str(b.confidence_points)),
     ]
@@ -86,6 +88,27 @@ def info_right_text(saga: Saga, character: Character) -> str:
         ]
     rows.append(("Size", st.size_text(character)))
     return aligned(rows)
+
+
+def animal_facts(character: Character) -> list[tuple[str, str]]:
+    """An animal grog's kind, its Presence and Communication with humans,
+    and any human Language its Cunning reads down (plain text); none for
+    a person."""
+    if character.animal is None:
+        return []
+    found = [
+        ("Animal", ag.describe(character.animal)),
+        ("With humans", ag.penalties_text(character, short=True)),
+    ]
+    understood = [
+        f"{a.name.split(': ', 1)[-1]} {a.level} as "
+        f"{ag.understood(character, a.name, a.level)}"
+        for a in character.abilities
+        if ag.understood(character, a.name, a.level) != a.level
+    ]
+    if understood:
+        found.append(("Understands", ", ".join(understood)))
+    return found
 
 
 def biographical_left_text(saga: Saga, character: Character) -> str:
@@ -652,6 +675,7 @@ def glance_facts(saga: Saga, character: Character) -> list[Fact]:
         facts.append(_fact("Laboratory", lab.name if lab else None))
     facts += [
         _fact("Type", character.type.title()),
+        *(_fact(label, value) for label, value in animal_facts(character)),
         _fact("Size", st.size_text(character)),
     ]
     if faith.shows_faith(character):

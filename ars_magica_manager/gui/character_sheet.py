@@ -682,7 +682,11 @@ class CharacterSheet(QWidget):
         row = QHBoxLayout(box)
         row.setContentsMargins(0, 0, 0, 0)
         row.setSpacing(8)
-        row.addWidget(characteristic_cards(self.character.characteristics, self.p), 1)
+        # An animal grog has Cunning, not Intelligence.
+        captions = {"intelligence": "Cunning"} if self.character.animal else None
+        row.addWidget(
+            characteristic_cards(self.character.characteristics, self.p, captions), 1
+        )
         self.characteristics_edit = edit_button(
             "Edit",
             self.p,

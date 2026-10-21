@@ -93,6 +93,7 @@ async def test_inhabitants_tab_has_all_its_sections_with_headcount_titles():
             "Turb (3)",
             "Other Covenfolk (3)",
             "Horses (0)",
+            "Hounds (0)",
             "Livestock (0)",
         ]
         text = str(view.query_one("#inh-population-content", Static).render())

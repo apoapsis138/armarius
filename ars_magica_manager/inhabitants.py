@@ -25,6 +25,7 @@ from .models import (
     character_age,
 )
 from .rules import effects, scores
+from .rules.animal_grogs import describe as describe_animal
 from .rules.rounding import round_away_from_zero
 
 _COVENANTS = "https://www.redcap.org/page/Covenants_Chapter_{}"
@@ -54,6 +55,7 @@ KIND_TITLES: dict[str, str] = {
     "turb": "Turb",
     "inhabitant": "Other Covenfolk",
     "horse": "Horses",
+    "hound": "Hounds",
     "livestock": "Livestock",
 }
 
@@ -66,6 +68,7 @@ KIND_SINGULAR: dict[str, str] = {
     "turb": "Turb Member",
     "inhabitant": "Covenfolk Member",
     "horse": "Horse",
+    "hound": "Hound",
     "livestock": "Livestock",
 }
 
@@ -84,6 +87,13 @@ AUTO_KINDS: tuple[str, ...] = ("magus", "companion")
 
 #: Kinds a grog (a `grog` character) can be assigned to.
 GROG_KINDS: tuple[str, ...] = ("specialist", "craftsperson", "turb", "inhabitant")
+#: Kinds an animal grog can be assigned to: a horse grog is one of the
+#: covenant's horses, a dog or a hawk one of its hounds.
+ANIMAL_KINDS: tuple[str, ...] = ("horse", "hound")
+#: Kinds listed but not counted as inhabitants: Covenants' Points of
+#: Inhabitants count horses (1 point each) but no other animal, so hounds
+#: count no more than livestock do.
+UNCOUNTED_KINDS: tuple[str, ...] = ("hound", "livestock")
 
 #: Points of one inhabitant by kind: (Spring/Winter covenant, Summer/Autumn
 #: covenant). Livestock are not in the book's table and count nothing.
@@ -95,6 +105,7 @@ INHABITANT_POINTS: dict[str, tuple[int, int]] = {
     "turb": (1, 2),
     "inhabitant": (1, 2),
     "horse": (1, 1),
+    "hound": (0, 0),
     "livestock": (0, 0),
 }
 
@@ -399,22 +410,36 @@ def headcount(entries: list[InhabitantEntry]) -> int:
 
 def total_inhabitants(saga: Saga, covenant: Covenant) -> int:
     """The calculated Total Inhabitants: Other People plus every list's headcount
-    except Livestock -- per the book, livestock aren't inhabitants at all (they're
-    tracked here for convenience, but never counted)."""
+    except Hounds and Livestock -- per the book, only people and horses are
+    inhabitants (the others are tracked here for convenience, but never
+    counted)."""
     return covenant.population.other_people + sum(
         headcount(entries_for_kind(saga, covenant, kind))
         for kind in INHABITANT_KINDS
-        if kind != "livestock"
+        if kind not in UNCOUNTED_KINDS
     )
 
 
-def available_grogs(saga: Saga, covenant: Covenant) -> list[Character]:
-    """Grogs belonging to the covenant that aren't assigned to any section yet."""
+def takes_grogs(kind: str) -> bool:
+    """Whether `kind`'s list offers the covenant's grogs: a person's list
+    its people, Horses and Hounds its animals."""
+    return kind in GROG_KINDS or kind in ANIMAL_KINDS
+
+
+def available_grogs(
+    saga: Saga, covenant: Covenant, kind: str | None = None
+) -> list[Character]:
+    """Grogs belonging to the covenant that aren't assigned to any section
+    yet: for `kind`, the animal grogs if it is Horses or Hounds, else the
+    people."""
     assigned = {r.character_id for r in covenant.inhabitants if r.character_id}
     return [
         c
         for c in saga.characters
-        if c.type == "grog" and c.covenant_id == covenant.id and c.id not in assigned
+        if c.type == "grog"
+        and c.covenant_id == covenant.id
+        and c.id not in assigned
+        and (kind is None or (c.animal is not None) == (kind in ANIMAL_KINDS))
     ]
 
 
@@ -626,7 +651,7 @@ def table_header(kind: str) -> str:
         )
     if kind == "inhabitant":
         return f"  {name}{'Role':<{_ROLE_WIDTH}}{'Qty':>{_QTY_WIDTH}}  {year}"
-    return f"  {name}{'Qty':>{_QTY_WIDTH}}  {year}"  # horse, livestock
+    return f"  {name}{'Qty':>{_QTY_WIDTH}}  {year}"  # horse, hound, livestock
 
 
 def row_label(entry: InhabitantEntry) -> str:
@@ -662,7 +687,7 @@ def row_label(entry: InhabitantEntry) -> str:
         qty = f"{entry.quantity:>{_QTY_WIDTH}}"
         shown_year = year if entry.quantity == 1 else f"{'-':>{_YEAR_WIDTH}}"
         return f"{name}{role}{qty}  {shown_year}"
-    qty = f"{entry.quantity:>{_QTY_WIDTH}}"  # horse, livestock
+    qty = f"{entry.quantity:>{_QTY_WIDTH}}"  # horse, hound, livestock
     return f"{name}{qty}  {year}"
 
 
@@ -702,6 +727,8 @@ def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
             lines.append(f"[b]Linked Ability:[/] {escape(entry.linked_ability)}")
     if kind not in AUTO_KINDS:
         lines.append(f"[b]Quantity:[/] {entry.quantity}")
+    if entry.character is not None and entry.character.animal is not None:
+        lines.append(f"[b]Animal:[/] {escape(describe_animal(entry.character.animal))}")
     if entry.character is not None:
         lines.append(
             f"[dim]From the character sheet of {escape(entry.character.name)}.[/]"

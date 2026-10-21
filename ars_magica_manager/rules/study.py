@@ -18,8 +18,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from ..models import Book, Character
+from . import animal_grogs, effects, scores, xp
 from . import creation_access as access
-from . import effects, scores, xp
 from .breakdown import Line
 from .lab import ability_score
 from .rounding import round_up
@@ -101,8 +101,28 @@ def season_of_study(
     months_lost: int = 0,
 ) -> StudyResult:
     """One season studying `subject` (an Art or Ability name) from a source
-    of `source_quality`, for `activity` (a study_total activity)."""
-    lines = [Line("Source Quality", amount=source_quality, source=SOURCE)]
+    of `source_quality`, for `activity` (a study_total activity). An animal
+    grog learns a human Language at its own Source Quality, and never
+    raises its kind's Language (rules.animal_grogs)."""
+    if not is_art and animal_grogs.own_language(student, subject):
+        line = Line("An animal's own Language", amount=0, source=animal_grogs.SOURCE)
+        return StudyResult(
+            advancement_total=0,
+            xp=0,
+            lines=[line],
+            notes=[f"{subject} stays at {animal_grogs.LANGUAGE_SCORE}."],
+        )
+    own = None if is_art else animal_grogs.language_quality(student, subject)
+    if own is not None:
+        lines = [
+            Line(
+                "Source Quality (an animal: 4 + Cunning)",
+                amount=own,
+                source=animal_grogs.LANGUAGE_SOURCE,
+            )
+        ]
+    else:
+        lines = [Line("Source Quality", amount=source_quality, source=SOURCE)]
     source = scores.character_source(student.virtues_flaws)
     for effect in effects.collect([source], "study_total", activity=activity):
         lines.append(

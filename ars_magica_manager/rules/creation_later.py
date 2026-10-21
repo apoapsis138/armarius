@@ -6,6 +6,9 @@ recorded here first: each Virtue's own xp on what it names, and the free
 first 5 xp in a Supernatural Ability a Virtue grants. Every Ability also
 keeps under the creation cap for the character's age.
 
+An animal grog's Later Life runs from the age its kind is grown, at 15
+a year, and its cap is advice (rules.animal_grogs).
+
 Rules: reference/rules-engine-reference.md §3 Later life experience;
 Creation Ability cap by age; Ability types and who may learn them.
 """
@@ -14,6 +17,7 @@ from __future__ import annotations
 
 from .. import catalog
 from ..models import Character, Saga
+from . import animal_grogs
 from . import creation_access as access
 from . import creation_packages as packages
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
@@ -37,6 +41,8 @@ FREE_SUPERNATURAL_XP = 5
 
 
 def xp_a_year(character: Character) -> int:
+    if animal_grogs.is_animal(character):
+        return animal_grogs.LATER_XP_A_YEAR
     ids = {vf.vf_id for vf in character.virtues_flaws}
     if "vf_wealthy" in ids:
         return WEALTHY_XP
@@ -54,9 +60,17 @@ def later_life_ends(saga: Saga, character: Character) -> int | None:
     return age(saga, character)
 
 
+def later_life_starts(character: Character) -> int:
+    """The age Later Life starts at: 5, or the age an animal's kind is
+    grown."""
+    grown = animal_grogs.grown(character)
+    return CHILDHOOD_ENDS if grown is None else grown
+
+
 def later_life_years(saga: Saga, character: Character) -> int:
     ends = later_life_ends(saga, character)
-    return max(0, ends - CHILDHOOD_ENDS) if ends is not None else 0
+    start = later_life_starts(character)
+    return max(0, ends - start) if ends is not None else 0
 
 
 def bought_years(saga: Saga, character: Character) -> int:
@@ -70,7 +84,12 @@ def later_life_budget(saga: Saga, character: Character) -> int:
 
 
 def later_life_targets(character: Character) -> list[str]:
-    return access.learnable_abilities(character, apprenticed=False)
+    """What Later Life xp may buy (an animal's own Language never rises)."""
+    return [
+        name
+        for name in access.learnable_abilities(character, apprenticed=False)
+        if not animal_grogs.own_language(character, name)
+    ]
 
 
 def virtue_targets(character: Character, vf_id: str) -> list[str]:
@@ -217,8 +236,11 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
                 advice=True,
             )
         )
-    years = age(saga, character)
-    cap = access.ability_cap(years)
+    # An animal's cap is read at its age scaled to a human lifespan, and
+    # the book leaves it to the storyguide: advice.
+    years = animal_grogs.cap_age(saga, character)
+    animal = animal_grogs.is_animal(character)
+    cap = access.character_ability_cap(character, years)
     over = []
     for ability in sorted(character.abilities, key=lambda a: a.name):
         own_cap = access.ability_cap_for(character, years, ability.name)
@@ -232,12 +254,15 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
         label = f"No Ability above {cap} at creation (2 more with an Affinity)"
     else:
         label = f"No Ability above {cap} at creation"
+    if animal:
+        label += f" (as a person of {years})"
     found.append(
         _check(
             label,
             not over,
             ", ".join(over) or "none above",
-            access.CAP_SOURCE,
+            animal_grogs.SOURCE if animal else access.CAP_SOURCE,
+            advice=animal,
         )
     )
     return found

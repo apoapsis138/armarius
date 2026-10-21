@@ -18,6 +18,7 @@ from .arts import ARTS
 from .forms.worksheet import Record
 from .markup import escape
 from .models import Character, Covenant, Saga
+from .rules import animal_grogs as ag
 from .rules import creation as rules
 from .rules import creation_access as access
 from .rules import creation_characteristics as cch
@@ -61,6 +62,16 @@ def _childhood(saga: Saga, character: Character) -> list[Meter]:
     return [
         Meter("Native Language", native, cx.NATIVE_XP),
         Meter("Other childhood xp", others, cx.childhood_xp(character)),
+    ]
+
+
+def _youth(saga: Saga, character: Character) -> list[Meter]:
+    own = sum(
+        x.xp for x in cx.entries(character, "youth") if x.note == ag.LANGUAGE_NOTE
+    )
+    return [
+        Meter("Its Language", own, ag.LANGUAGE_XP),
+        Meter("Pre-adult xp", cx.spent(character, "youth") - own, ag.YOUTH_XP),
     ]
 
 
@@ -130,6 +141,7 @@ def _build_points(saga: Saga, covenant: Covenant) -> list[Meter]:
 _CHARACTER_METERS: dict[str, Callable[[Saga, Character], list[Meter]]] = {
     "characteristics": _characteristics,
     "childhood": _childhood,
+    "youth": _youth,
     "later_life": _later_life,
     "training": _training,
     "apprenticeship": _apprenticeship,
@@ -138,7 +150,7 @@ _CHARACTER_METERS: dict[str, Callable[[Saga, Character], list[Meter]]] = {
 
 #: The steps whose own list spends xp: each shows the ledger.
 XP_STAGES = frozenset(
-    {"childhood", "later_life", "training", "apprenticeship", "gauntlet"}
+    {"childhood", "youth", "later_life", "training", "apprenticeship", "gauntlet"}
 )
 
 

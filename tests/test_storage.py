@@ -8,6 +8,7 @@ from ars_magica_manager import models, seasons, storage
 from ars_magica_manager.models import (
     Ability,
     Aging,
+    AnimalForm,
     ArcaneConnection,
     ArtScore,
     Attitude,
@@ -372,6 +373,7 @@ def _saga_with_every_record() -> Saga:
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
     magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
     magus.grog_year = GrogYear()
+    magus.animal = AnimalForm("hoofed", "Horse", "Horse", lifespan=30)
     saga.laboratories[0].arcane_connections.append(ArcaneConnection("ac", "a tree"))
     saga.covenants[0].diary.append(CovenantDiaryEntry(1220))
     rhine = saga.tribunals[0]

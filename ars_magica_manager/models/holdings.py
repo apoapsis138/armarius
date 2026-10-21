@@ -17,6 +17,7 @@ INHABITANT_KINDS: tuple[str, ...] = (
     "turb",
     "inhabitant",
     "horse",
+    "hound",
     "livestock",
 )
 

@@ -22,7 +22,7 @@ from ..models import (
     TraditionDef,
     VirtueFlawInstance,
 )
-from . import xp
+from . import grog_aging, xp
 from .creation_character import THE_GIFT
 from .rounding import round_up
 
@@ -471,6 +471,12 @@ def ability_cap(age: int | None) -> int:
     return 9
 
 
+def character_ability_cap(character: Character, age: int | None) -> int:
+    """The age cap for this character: the Grogs Aging Chart's harsh aging
+    may raise it by 1, its mild aging lower it by 1."""
+    return ability_cap(age) + grog_aging.cap_change(character)
+
+
 #: How far Affinity with Ability lets its Ability go over the age cap.
 AFFINITY_CAP_BONUS = 2
 #: Lifts the age cap on every Ability.
@@ -498,7 +504,7 @@ def ability_cap_for(character: Character, age: int | None, ability: str) -> int 
         return art_cap(character, ability)
     if any(vf.vf_id == NO_CAP_VIRTUE for vf in character.virtues_flaws):
         return None
-    cap = ability_cap(age)
+    cap = character_ability_cap(character, age)
     if affinity_multiplier(character.virtues_flaws, ability) > 1:
         cap += AFFINITY_CAP_BONUS
     return cap

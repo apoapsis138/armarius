@@ -107,6 +107,41 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.120.0 — 2026-10-21
+
+### Gauntlet
+
+- **Animal grogs.** A grog can be a horse, a hound, a hawk or any other
+  beast that serves the covenant (Grogs, Horses & Hounds). The Animal
+  Form on the worksheet sets its kind (Clawed Beast, Hoofed Beast, Bird,
+  or Fish or Serpent), species, animal Language, lifespan and Size, and
+  the worksheet follows the book: Restricted Learning, No Hands and Mute
+  at no cost, an animal's Social Status, a Pre-adult Life step of 120 xp
+  in place of Early Childhood, its Language fixed at 2, no training
+  packages, Strength and Quickness moved by Size, and its kind's
+  penalties with humans on the sheet, where Intelligence reads Cunning.
+- **Animal templates.** New Character offers the book's sample Dog (1
+  or 4 years old), Horse (3 or 10) and Hawk (8), marked "(Grogs, an
+  animal)", through the same choices as the human grog templates.
+- **The Grogs Aging Chart.** An older grog's worksheet can take its
+  pre-play aging from the chart of expected Aging Points a decade, mild,
+  average or harsh, instead of rolling every year; harsh aging may raise
+  the Ability cap by 1 and mild lower it by 1, and the chart's crises
+  are optional.
+
+### Book of Hours
+
+- **Animals age by their kind.** An animal grog ages from its kind's
+  age, with its own roll bonus and number of rolls a year (five for a
+  clawed beast, spread over the seasons, two for a hoofed beast), when
+  the seasons are advanced.
+
+### Pagina
+
+- **Hounds.** The covenant's Covenfolk tab has a Hounds list beside
+  Horses, with a quantity for each. An animal grog can be put on either
+  list; hounds count no inhabitant points.
+
 ## 2.119.0 — 2026-10-21
 
 ### Gauntlet

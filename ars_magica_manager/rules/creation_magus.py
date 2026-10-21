@@ -20,8 +20,8 @@ from __future__ import annotations
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Laboratory, Saga, Spell
+from . import animal_aging, lab
 from . import creation_access as access
-from . import lab
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import age, aging_age
 from .creation_later import DEFAULT_APPRENTICESHIP_AGE
@@ -353,6 +353,8 @@ def aging_due(saga: Saga, character: Character) -> int:
         return 0
     done = character.creation_conditions.aged_to
     start = aging_age(character) if done is None else done + 1
+    if animal_aging.figures(character) is not None:
+        return animal_aging.rolls_between(character, start, years)
     return max(0, years - start)
 
 

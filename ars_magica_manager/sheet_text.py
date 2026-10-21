@@ -33,9 +33,10 @@ from .tables import Table
 from .totals import describe_modifier
 
 
-def characteristics_text(c: Characteristics) -> str:
+def characteristics_text(c: Characteristics, *, cunning: bool = False) -> str:
     """Int/Per/Str/Sta then Pre/Com/Dex/Qik, each value signed (a plain "0"
-    rather than "+0") and right-justified so the columns align."""
+    rather than "+0") and right-justified so the columns align; an
+    animal's (`cunning`) first is Cun."""
 
     def val(n: int) -> str:
         s = f"+{n}" if n > 0 else str(n)
@@ -44,7 +45,7 @@ def characteristics_text(c: Characteristics) -> str:
     row1 = "   ".join(
         f"{label}: {val(value)}"
         for label, value in (
-            ("Int", c.intelligence),
+            ("Cun" if cunning else "Int", c.intelligence),
             ("Per", c.perception),
             ("Str", c.strength),
             ("Sta", c.stamina),

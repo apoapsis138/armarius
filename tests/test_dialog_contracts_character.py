@@ -18,6 +18,7 @@ from dialog_openers import new_app, open_dialog
 from textual.widgets import Select
 
 from ars_magica_manager import catalog
+from ars_magica_manager.models import AnimalForm
 
 CONTRACTS: dict[str, Contract] = {
     # Creation Worksheet
@@ -83,12 +84,48 @@ CONTRACTS: dict[str, Contract] = {
         expected=(6, 5),
         invalid=[{"Seasons of lab work": "-1"}, {"Aura": "x"}],
     ),
+    "grogs aging chart": Contract(
+        prefill={"Aging": "average", "Take the chart's crises": False},
+        edits={"Aging": "harsh", "Move the Ability cap": True},
+        saved=lambda s: (
+            (c := s.character("grog9")).creation_conditions.aging_chart,
+            c.creation_conditions.aging_chart_cap,
+            c.creation_conditions.aged_to,
+            c.aging.decrepitude_points,
+        ),
+        expected=("harsh", 1, 44, 6),
+        live={"#fields-live": "Total: 6 Aging Point(s)."},
+    ),
     "native language": Contract(
         prefill={"Language": ""},
         edits={"Language": "German"},
         saved=lambda s: [(x.target, x.xp, x.note) for x in character(s).creation_xp],
         expected=[("Living Language: German", 75, "native")],
         invalid={"Language": ""},
+    ),
+    "animal form": Contract(
+        prefill={"Kind": "person"},
+        edits={"Kind": "clawed", "Species": "Dog", "Size": "-1"},
+        saved=lambda s: [
+            (
+                c.animal,
+                c.background.size,
+                [vf.vf_id for vf in c.virtues_flaws],
+            )
+            for c in s.characters
+            if c.id == "grog9"
+        ],
+        expected=[
+            (
+                AnimalForm("clawed", "Dog", "Dog"),
+                -1,
+                ["vf_restricted_learning", "vf_no_hands", "vf_mute"],
+            )
+        ],
+        invalid=[
+            {"Kind": "clawed", "Species": ""},
+            {"Kind": "clawed", "Species": "Dog", "Average lifespan": "0"},
+        ],
     ),
     "edit personality trait": Contract(
         prefill={"Name": "Brave", "Score": "2"},

@@ -437,7 +437,18 @@ Provisions on the Economics tab.
 <!-- help: section-inh-horse -->
 
 The covenant's horses, with a Quantity. Each counts as one point of
-inhabitants, whatever the Covenant Season.
+inhabitants, whatever the Covenant Season. Adding one offers the
+covenant's animal grogs (Grogs, Chapter 7: Horses & Hounds) not yet on a
+list, so a named horse can be one of the covenant's horses.
+
+### Hounds
+<!-- help: section-inh-hound -->
+
+The covenant's dogs, hawks and other working animals, with a Quantity.
+Adding one offers the covenant's animal grogs not yet on a list, or an
+animal with no character sheet. Covenants counts only horses among the
+inhabitants, so hounds count towards neither Total Inhabitants nor the
+points of inhabitants, as livestock don't.
 
 ### Livestock
 <!-- help: section-inh-livestock -->

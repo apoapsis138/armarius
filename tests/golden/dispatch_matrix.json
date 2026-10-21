@@ -162,6 +162,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-inh-hound": {
+      "active": "section-inh-hound",
+      "keys": {
+        "a": "FieldsDialog: Add a Hound",
+        "e": "notice: No Hounds to edit.",
+        "d": "notice: No Hounds to remove.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-inh-livestock": {
       "active": "section-inh-livestock",
       "keys": {

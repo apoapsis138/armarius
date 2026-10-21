@@ -20,6 +20,7 @@ from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_UNKNOWN,
+    AnimalForm,
     VirtueFlawInstance,
 )
 
@@ -269,6 +270,37 @@ CONTRACTS: dict[str, Contract] = {
             "Second Flaw": "fld-flaw_1",
         },
         live={"#fields-live": "1 Virtue point, 1 Flaw point (1 of 3 Minor Flaws)"},
+    ),
+    # The book's Dog, whose list leaves no names blank: saving makes
+    # the grog, an animal with its free Flaws.
+    "animal template": Contract(
+        prefill={"Age": "0", "Social Status": "vf_domestic_animal"},
+        edits={"Age": "1", "Social Status": "vf_companion_animal"},
+        saved=lambda s: [
+            (
+                c.in_creation,
+                s.current_year - (c.background.year_born or 0),
+                c.animal,
+                [vf.vf_id for vf in c.virtues_flaws],
+            )
+            for c in s.characters
+            if c.name == "Rex"
+        ],
+        expected=[
+            (
+                True,
+                4,
+                AnimalForm("clawed", "Dog", "Dog"),
+                [
+                    "vf_companion_animal",
+                    "vf_restricted_learning",
+                    "vf_no_hands",
+                    "vf_mute",
+                ],
+            )
+        ],
+        invalid=[{"First Virtue": VirtueFlawInstance("vf_educated")}],
+        aliases={"First Virtue": "fld-virtue_0"},
     ),
     "create laboratory": Contract(
         prefill={"Name": "", "Size": "0", "Covenant": "cov1"},

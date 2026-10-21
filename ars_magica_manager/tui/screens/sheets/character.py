@@ -804,7 +804,9 @@ class CharacterSheetView(SheetView):
         return cs.biographical_right_text(self.character)
 
     def _characteristics_text(self) -> str:
-        return st.characteristics_text(self.character.characteristics)
+        return st.characteristics_text(
+            self.character.characteristics, cunning=self.character.animal is not None
+        )
 
     def _ability_rows(self) -> list[tuple[int | None, str]]:
         return st.ability_rows(

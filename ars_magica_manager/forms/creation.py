@@ -314,6 +314,10 @@ def _template_field(saga: Saga, kind: str) -> DialogField:
     options = [(escape(t.name), t.id) for t in character_templates.templates_for(kind)]
     if kind == "grog":
         options += [(escape(f"{t.name} (Grogs)"), t.id) for t in gt.templates(saga)]
+        options += [
+            (escape(f"{t.name} (Grogs, an animal)"), t.id)
+            for t in gt.animal_templates(saga)
+        ]
     options += [
         (escape(choice_templates.option_label(t)), t.id)
         for t in choice_templates.templates(saga, kind)
