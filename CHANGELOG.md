@@ -58,6 +58,7 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Book of Hours I | The seasons | 1.8.0 | Seasons planned and played out: study, teaching, lab work, books, aging and apprentices |
 | Book of Hours II | The library | 2.39.0 | Codices, palimpsests, commentaries, correspondence, casting tablets and library research |
 | Book of Hours III | Gifts | 2.60.0 | Give vis, books, devices, gear and silver from one record to another |
+| Book of Hours IV | The Labours of the Months | 2.122.0 | Seasons planned a year ahead and laid out on a calendar: paired plans, repeating work, defaults for empty seasons, and previews that count the seasons before them |
 | Florilegium I | Checked against the books | 0.10.0 | The reference catalogs, checked entry by entry against the books |
 | Florilegium II | The Definitive Edition | 2.30.0 | The spell catalog rebuilt from the Definitive Edition, and every picker showing its entry's rules |
 | Florilegium III | Saga Content | 2.41.0 | What a saga offers, gathered in one place, with sources and catalogs it can switch off |
