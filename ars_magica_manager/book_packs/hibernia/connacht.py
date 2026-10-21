@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -1532,80 +1532,78 @@ def _oireadh(hibernia: Hibernia, b: Builder) -> None:
         rules="Druids of every tradition sit as equals; members keep apart but for the seasonal meeting; the research stays secret",
         wants="A single theory of the magics of Ireland, and the protection it would bring",
         offers="Healing, divination, bound spirits and forged wonders, herbs of virtue, and wide contacts among the hedge folk",
-        summary=secrets(
-            paragraphs(
-                "Eight druids of mixed traditions, sworn to work "
-                "together toward a single theory of their magic. Unlike "
-                "the Order they make no distinction of tradition: witch, "
-                "learned magician, goetic sorcerer and Fir Bolg all sit "
-                "together as equals. They do not live together but "
-                "meet each season at Oireadh, each keeping an aura that "
-                "suits his own magic; living apart blunts the Gift's "
-                "ill will, which bites only face to face, and their "
-                "helpers and messengers, often met on the roads of the "
-                "region, carry word between them. They help one another "
-                "in magic and in worldly affairs, live mostly in "
-                "Connacht, and have no love for the English. Hedge "
-                "traditions are not modelled: the druids are told here.",
-                "History. Praesis was once where Connacht's hedge "
-                "wizards met the Ordo Hiberniae, and long talk there made "
-                "some of them wonder what the magi kept from them. These "
-                "druids were Praesis's allies until Meadhbh asked too "
-                "much of them; they left her, and began asking what gave "
-                "the Order its strength and what shielded it while lesser "
-                "wizards fell.",
-                "Ádhamh Brathair (55, looks 55; Charismatic +3, "
-                "Determined +2, Cautious +1), a Gifted learned magician "
-                "whose lineage goes back to Bologna, master of "
-                "experimental philosophy, in minor orders, kept by a "
-                "rich nobleman of Cong. He thought of the Pact and leads "
-                "its research, which he knows will outlast him; he would "
-                "like the glory but works for the greater good. Wary of "
-                "how close the Coill Trí stand to the Ordo Hiberniae, he "
-                "tells them little, the more so since they took a Gifted "
-                "child from him for the Order's tithe.",
-                "Umor Ard Mac Adar (Autumn, looks 50; Magic Might 25; "
-                "Gentle +3, Independent +2, Idealistic +1), a "
-                "transformed Fir Domhnann, one of the few to leave "
-                "Árainn Meáin, still faithful to Domnu: bigger than any "
-                "man, with a second pair of arms from his sides for his "
-                "Fomóir blood, otherwise nearly handsome; his blood gives "
-                "him Might and the power to heal. Bitter at his people's "
-                "exile, he helps Ádhamh to win the favour of men so the "
-                "Fir Domhnann may one day return to the mainland; some "
-                "of his kind call him a traitor. He fears humans but "
-                "trusts Ádhamh, and often calms quarrels between the "
-                "Gifted members. He lives in the hills above Lough Conn "
-                "and can be found only at night.",
-                "Mór Greannach, 'grey-beard' (75, looks 75; Mischievous "
-                "+3, Meddling +2, Trustworthy -1), a folk witch named for "
-                "the thin beard on her chin, who has spent her long life "
-                "serving her community and is as feared and mistrusted "
-                "as she is honoured and asked for help. She knows the "
-                "magical world deeply and enriches the herbs and objects "
-                "of virtue she gathers. She has the widest acquaintance "
-                "of the Pact: her coven, scores of nightwalkers, "
-                "faerie-touched craftsmen, Ollamhain and the Kilkenny "
-                "coven in Leinster. She lives closest to Oireadh, at "
-                "Carrowmore.",
-                "Tuathal an Iarrainn (40, looks 40; Honest +3, "
-                "Disciplined +2), a goetic sorcerer, master of the Ars "
-                "Goetica that summon, bind and command spirits; some "
-                "mistrust his magic and its source, but he never hides "
-                "what he is. A master smith of Rosbeg, he binds spirits "
-                "into what he forges, and lately commands them at "
-                "Ádhamh's asking to hunt for things the research needs.",
-                "The other four members are not named. The Coill Trí "
-                "and the Ordo Hiberniae both know the Pact as a fellowship "
-                "of druids; its research is kept from both.",
-            ),
-            _lines(
-                "The Pact's true aim is a Parma Magica of its own; the Order knows nothing of it.",
-                "Ádhamh's vision is a theory of magic that takes in every Irish tradition and gives every practitioner each tradition's defences: a breakthrough of at least 120 points (the Original Research rules of Houses of Hermes: True Lineages). He has 15. So far he has made amulets, after the Folk Witch tradition, that give their wearer Second Sight, Dowsing or Cursing at a score of 4 for a season; they have shown him how his own magic differs from the witches', and by learning those Abilities he hopes to gain their small magical defences. His notes are hidden for those who come after him.",
-                "The Gifted child the Coill Trí took from Ádhamh is now an apprentice in a Hermetic covenant, and he may yet ask her to report on summoners she meets.",
-                "Tuathal's goetic arts are Infernal at root, though he does not hide them and Ádhamh has not yet seen it. His Goetic master has just died in Dublin, leaving him a book of Infernal Lore on particular demons.",
-                "Umor's three cousins have sworn to kill him for leaving Árainn Meáin.",
-            ),
+        summary=paragraphs(
+            "Eight druids of mixed traditions, sworn to work "
+            "together toward a single theory of their magic. Unlike "
+            "the Order they make no distinction of tradition: witch, "
+            "learned magician, goetic sorcerer and Fir Bolg all sit "
+            "together as equals. They do not live together but "
+            "meet each season at Oireadh, each keeping an aura that "
+            "suits his own magic; living apart blunts the Gift's "
+            "ill will, which bites only face to face, and their "
+            "helpers and messengers, often met on the roads of the "
+            "region, carry word between them. They help one another "
+            "in magic and in worldly affairs, live mostly in "
+            "Connacht, and have no love for the English. Hedge "
+            "traditions are not modelled: the druids are told here.",
+            "History. Praesis was once where Connacht's hedge "
+            "wizards met the Ordo Hiberniae, and long talk there made "
+            "some of them wonder what the magi kept from them. These "
+            "druids were Praesis's allies until Meadhbh asked too "
+            "much of them; they left her, and began asking what gave "
+            "the Order its strength and what shielded it while lesser "
+            "wizards fell.",
+            "Ádhamh Brathair (55, looks 55; Charismatic +3, "
+            "Determined +2, Cautious +1), a Gifted learned magician "
+            "whose lineage goes back to Bologna, master of "
+            "experimental philosophy, in minor orders, kept by a "
+            "rich nobleman of Cong. He thought of the Pact and leads "
+            "its research, which he knows will outlast him; he would "
+            "like the glory but works for the greater good. Wary of "
+            "how close the Coill Trí stand to the Ordo Hiberniae, he "
+            "tells them little, the more so since they took a Gifted "
+            "child from him for the Order's tithe.",
+            "Umor Ard Mac Adar (Autumn, looks 50; Magic Might 25; "
+            "Gentle +3, Independent +2, Idealistic +1), a "
+            "transformed Fir Domhnann, one of the few to leave "
+            "Árainn Meáin, still faithful to Domnu: bigger than any "
+            "man, with a second pair of arms from his sides for his "
+            "Fomóir blood, otherwise nearly handsome; his blood gives "
+            "him Might and the power to heal. Bitter at his people's "
+            "exile, he helps Ádhamh to win the favour of men so the "
+            "Fir Domhnann may one day return to the mainland; some "
+            "of his kind call him a traitor. He fears humans but "
+            "trusts Ádhamh, and often calms quarrels between the "
+            "Gifted members. He lives in the hills above Lough Conn "
+            "and can be found only at night.",
+            "Mór Greannach, 'grey-beard' (75, looks 75; Mischievous "
+            "+3, Meddling +2, Trustworthy -1), a folk witch named for "
+            "the thin beard on her chin, who has spent her long life "
+            "serving her community and is as feared and mistrusted "
+            "as she is honoured and asked for help. She knows the "
+            "magical world deeply and enriches the herbs and objects "
+            "of virtue she gathers. She has the widest acquaintance "
+            "of the Pact: her coven, scores of nightwalkers, "
+            "faerie-touched craftsmen, Ollamhain and the Kilkenny "
+            "coven in Leinster. She lives closest to Oireadh, at "
+            "Carrowmore.",
+            "Tuathal an Iarrainn (40, looks 40; Honest +3, "
+            "Disciplined +2), a goetic sorcerer, master of the Ars "
+            "Goetica that summon, bind and command spirits; some "
+            "mistrust his magic and its source, but he never hides "
+            "what he is. A master smith of Rosbeg, he binds spirits "
+            "into what he forges, and lately commands them at "
+            "Ádhamh's asking to hunt for things the research needs.",
+            "The other four members are not named. The Coill Trí "
+            "and the Ordo Hiberniae both know the Pact as a fellowship "
+            "of druids; its research is kept from both.",
+        ),
+        secrets=_lines(
+            "The Pact's true aim is a Parma Magica of its own; the Order knows nothing of it.",
+            "Ádhamh's vision is a theory of magic that takes in every Irish tradition and gives every practitioner each tradition's defences: a breakthrough of at least 120 points (the Original Research rules of Houses of Hermes: True Lineages). He has 15. So far he has made amulets, after the Folk Witch tradition, that give their wearer Second Sight, Dowsing or Cursing at a score of 4 for a season; they have shown him how his own magic differs from the witches', and by learning those Abilities he hopes to gain their small magical defences. His notes are hidden for those who come after him.",
+            "The Gifted child the Coill Trí took from Ádhamh is now an apprentice in a Hermetic covenant, and he may yet ask her to report on summoners she meets.",
+            "Tuathal's goetic arts are Infernal at root, though he does not hide them and Ádhamh has not yet seen it. His Goetic master has just died in Dublin, leaving him a book of Infernal Lore on particular demons.",
+            "Umor's three cousins have sworn to kill him for leaving Árainn Meáin.",
         ),
     )
 
@@ -1713,14 +1711,11 @@ def _praesis(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "one is the apprentice Guillaume took with the cathach of an "
         "independent magus. The book gives no founding year: 855 is "
         "assumed, soon after the Treaty was signed in 851.",
-        secrets(
-            "What the players do not know.",
-            _lines(
-                "The tower and the spear stand in a regio, out of mortal sight, warded and guarded by magic: the platform the world sees is not where the spear truly is.",
-                "Oscar has seen his own death through the Gáe Bulg. No one knows what he saw; since taking the spear he has been studying the legends of the Fir Bolg.",
-                "Ballack's distant benefactors are a powerful cult or society he does not belong to but took help from; they may soon send someone to remind him of what he owes.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "The tower and the spear stand in a regio, out of mortal sight, warded and guarded by magic: the platform the world sees is not where the spear truly is.",
+        "Oscar has seen his own death through the Gáe Bulg. No one knows what he saw; since taking the spear he has been studying the legends of the Fir Bolg.",
+        "Ballack's distant benefactors are a powerful cult or society he does not belong to but took help from; they may soon send someone to remind him of what he owes.",
     )
     praesis = b.covenant(
         "Praesis",
@@ -1731,6 +1726,7 @@ def _praesis(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=2,
         detail=FULL,
         season="Winter",
@@ -1882,21 +1878,19 @@ def _meadhbh_and_faolan(hibernia: Hibernia, b: Builder) -> None:
         covenant=None,
         house=EX_MISC,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "A magus of the Younger House (Ex Miscellanea) who fled "
-                "into Connacht before Praesis fell and has stayed far "
-                "longer than three nights, a plain breach of the Treaty. "
-                "His parens was one of the true Ollamhain, and he has "
-                "only a weak grasp of the Hermetic Arts, so he feels "
-                "nearer the Connacht druids than the Order; he may have "
-                "friends among the Coill Trí. He belongs to no covenant, "
-                "a vagrant at law.",
-            ),
-            "He is turning his back on the Order. The Tribunal has not "
-            "yet worked out where he is; when it does, it will want him "
-            "brought back, with or without the Coill Trí's help.",
+        summary=paragraphs(
+            "A magus of the Younger House (Ex Miscellanea) who fled "
+            "into Connacht before Praesis fell and has stayed far "
+            "longer than three nights, a plain breach of the Treaty. "
+            "His parens was one of the true Ollamhain, and he has "
+            "only a weak grasp of the Hermetic Arts, so he feels "
+            "nearer the Connacht druids than the Order; he may have "
+            "friends among the Coill Trí. He belongs to no covenant, "
+            "a vagrant at law.",
         ),
+        secrets="He is turning his back on the Order. The Tribunal has not "
+        "yet worked out where he is; when it does, it will want him "
+        "brought back, with or without the Coill Trí's help.",
     )
 
 

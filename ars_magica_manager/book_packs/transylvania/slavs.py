@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -36,8 +36,6 @@ TYTALUS = "house_tytalus"
 VERDITIUS = "house_verditius"
 
 #: The lead line of an oppidum's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -307,17 +305,15 @@ def _bosnia(transylvania: Transylvania) -> None:
         "vrhbosna_mansio",
         "The Mansio of Vrhbosna",
         inside=bosnia,
-        summary=secrets(
-            paragraphs(
-                "One of House Mercere's oldest mansiones, a half-public "
-                "trading post in Vrhbosna with a name for trouble: "
-                "quarrels every day and frequent brawls. Last year two "
-                "local merchants came to blows there and one died; no "
-                "visiting magus or servant was involved.",
-            ),
-            "Some suspect an Infernal aura has grown in the mansio; none "
-            "has yet been detected.",
+        summary=paragraphs(
+            "One of House Mercere's oldest mansiones, a half-public "
+            "trading post in Vrhbosna with a name for trouble: "
+            "quarrels every day and frequent brawls. Last year two "
+            "local merchants came to blows there and one died; no "
+            "visiting magus or servant was involved.",
         ),
+        secrets="Some suspect an Infernal aura has grown in the mansio; none "
+        "has yet been detected.",
         **KNOWN_TRIBUNAL,
     )
 
@@ -376,25 +372,23 @@ def _croatia(transylvania: Transylvania) -> None:
         "Diocletian's Palace",
         inside=croatia,
         realm="Magic",
-        summary=secrets(
-            paragraphs(
-                "The vast limestone palace the emperor Diocletian built "
-                "near Salona, where he was born, and retired to; later "
-                "governments used it as offices, and refugees and the "
-                "persecuted long sought shelter in it. Legend says Cyril "
-                "and Methodius devised the Glagolitic letters in one of "
-                "its halls to put the Gospels into Old Slavonic. In 1220 "
-                "it is a ruin, but not an empty one: Salona's monks dig "
-                "for martyrs' relics, and treasure hunters roam the "
-                "unexplored rooms after the emperor's gold.",
-                "Tremere magi now and then come looking for the dragon "
-                "said to lie inside, coiled round a hoard of Roman gold. "
-                "The current guess is that it lives in a regio; no one "
-                "knows whether it is a Magic beast or an Infernal one, so "
-                "the Magic 3 here is the pack's choice, not the book's.",
-            ),
-            "",
+        summary=paragraphs(
+            "The vast limestone palace the emperor Diocletian built "
+            "near Salona, where he was born, and retired to; later "
+            "governments used it as offices, and refugees and the "
+            "persecuted long sought shelter in it. Legend says Cyril "
+            "and Methodius devised the Glagolitic letters in one of "
+            "its halls to put the Gospels into Old Slavonic. In 1220 "
+            "it is a ruin, but not an empty one: Salona's monks dig "
+            "for martyrs' relics, and treasure hunters roam the "
+            "unexplored rooms after the emperor's gold.",
+            "Tremere magi now and then come looking for the dragon "
+            "said to lie inside, coiled round a hoard of Roman gold. "
+            "The current guess is that it lives in a regio; no one "
+            "knows whether it is a Magic beast or an Infernal one, so "
+            "the Magic 3 here is the pack's choice, not the book's.",
         ),
+        secrets="",
         **RUMOURED,
     )
 
@@ -589,30 +583,28 @@ def _istria(transylvania: Transylvania) -> None:
         "grave_of_aspytrus",
         "The Grave of Aspytrus",
         inside=cres,
-        summary=secrets(
-            paragraphs(
-                "The palatial tomb where Medea laid her brother after "
-                "raising Cres on his body as the focus of her spell. His "
-                "servants, too frightened of her father to go home to "
-                "Colchis, founded a city near Pula; when Jason cast her "
-                "off she lived among them a while, and rid them of a "
-                "plague of magical serpents by shutting the snakes into "
-                "the tomb.",
-                "The magi of Cres leave it alone: Medea's curses may "
-                "still guard it, and the serpents inside may be orms, "
-                "wingless and legless dragons, or votaress snakes "
-                "(zmije zatocnice), clever, vicious faerie snakes sworn "
-                "not to sleep through winter until they have killed a man "
-                "(see the Bestiary). Loosing a swarm of them just to see "
-                "what they guard seems excessive.",
-            ),
-            "Some Seekers think Medea made her brother an airy spirit "
-            "fit to be patron of a mystery cult, the serpents perhaps "
-            "part of its Ordeals. A few magi desperate for her secret of "
-            "regeneration have died to strong wards trying to break in; "
-            "whether Medea, the Histrians or a cult already serving "
-            "Aspytrus set them is unknown.",
+        summary=paragraphs(
+            "The palatial tomb where Medea laid her brother after "
+            "raising Cres on his body as the focus of her spell. His "
+            "servants, too frightened of her father to go home to "
+            "Colchis, founded a city near Pula; when Jason cast her "
+            "off she lived among them a while, and rid them of a "
+            "plague of magical serpents by shutting the snakes into "
+            "the tomb.",
+            "The magi of Cres leave it alone: Medea's curses may "
+            "still guard it, and the serpents inside may be orms, "
+            "wingless and legless dragons, or votaress snakes "
+            "(zmije zatocnice), clever, vicious faerie snakes sworn "
+            "not to sleep through winter until they have killed a man "
+            "(see the Bestiary). Loosing a swarm of them just to see "
+            "what they guard seems excessive.",
         ),
+        secrets="Some Seekers think Medea made her brother an airy spirit "
+        "fit to be patron of a mystery cult, the serpents perhaps "
+        "part of its Ordeals. A few magi desperate for her secret of "
+        "regeneration have died to strong wards trying to break in; "
+        "whether Medea, the Histrians or a cult already serving "
+        "Aspytrus set them is unknown.",
         **RUMOURED,
     )
 
@@ -737,12 +729,9 @@ def _old_histria(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "Histrian oppida, after her censure. The book gives no founding "
         "year and no season. Of the unnamed magi, one is Gifted and in "
         "Istria and two are in Venice.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat, and he may well be the House's spymaster for the Roman Tribunal.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat, and he may well be the House's spymaster for the Roman Tribunal.",
     )
     covenant = b.covenant(
         "Old Histria",
@@ -753,6 +742,7 @@ def _old_histria(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=3,
         detail=FULL,
         season="Autumn",
@@ -913,30 +903,28 @@ def _histrian_magi(transylvania: Transylvania, b: Builder) -> None:
         covenant=old,
         house=TREMERE,
         age=110,
-        summary=secrets(
-            paragraphs(
-                "The aedile of Old Histria, an old Tremere near Twilight "
-                "given the post as a useful retirement, since few in the "
-                "House expect trouble at Histria; he is the House's eyes "
-                "on this western gate. He equips mundane spies, is "
-                "rumoured to run the House's agents in the Roman "
-                "Tribunal, and laughs that off: surely a spymaster would "
-                "live in Venice? He says he is only an old man finishing "
-                "his talisman as a legacy, with Placido as his lab "
-                "assistant.",
-                "Anyone breaking the Code nearby may meet him first, "
-                "sizing things up before he calls the hoplites and "
-                "Quaesitors. A prolific letter writer, he asks Tremere for "
-                "help when he wants to look into something without "
-                "alarming the Redcaps, and trades news with others for "
-                "favours; coloniae often owe senior Tremere aid by their "
-                "terms, so players may be bound to serve his whims. The "
-                "Mercere often send him after strigons, which he passes "
-                "to younger magi.",
-            ),
-            "His doddering is misdirection: he served twenty years as a "
-            "hoplite and has killed three magi in single combat.",
+        summary=paragraphs(
+            "The aedile of Old Histria, an old Tremere near Twilight "
+            "given the post as a useful retirement, since few in the "
+            "House expect trouble at Histria; he is the House's eyes "
+            "on this western gate. He equips mundane spies, is "
+            "rumoured to run the House's agents in the Roman "
+            "Tribunal, and laughs that off: surely a spymaster would "
+            "live in Venice? He says he is only an old man finishing "
+            "his talisman as a legacy, with Placido as his lab "
+            "assistant.",
+            "Anyone breaking the Code nearby may meet him first, "
+            "sizing things up before he calls the hoplites and "
+            "Quaesitors. A prolific letter writer, he asks Tremere for "
+            "help when he wants to look into something without "
+            "alarming the Redcaps, and trades news with others for "
+            "favours; coloniae often owe senior Tremere aid by their "
+            "terms, so players may be bound to serve his whims. The "
+            "Mercere often send him after strigons, which he passes "
+            "to younger magi.",
         ),
+        secrets="His doddering is misdirection: he served twenty years as a "
+        "hoplite and has killed three magi in single combat.",
         traits={
             "Brave": 4,
             "Likes fooling people with his old codger act": 3,

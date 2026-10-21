@@ -22,7 +22,7 @@ from ... import storage
 from ...models import Ability, BodyVis, Familiar, Possession, ScoredTrait
 from ...rules import creation_access as access
 from ...rules.xp import ability_xp
-from ..builder import SECRETS, _virtue_flaw
+from ..builder import _virtue_flaw
 
 if TYPE_CHECKING:
     from ...models import Covenant, Creature, Neighbour
@@ -1745,9 +1745,5 @@ def _named_home(
 
 
 def _append(summary: str, sentence: str) -> str:
-    """`summary` with `sentence` added to its open text, before any
-    Secrets."""
-    marker = f"\n\n{SECRETS}\n"
-    head, found, tail = summary.partition(marker)
-    head = f"{head.rstrip()} {sentence}".strip()
-    return f"{head}{found}{tail}"
+    """`summary` with `sentence` added to its last paragraph."""
+    return f"{summary.rstrip()} {sentence}".strip()

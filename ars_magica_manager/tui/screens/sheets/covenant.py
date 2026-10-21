@@ -43,6 +43,7 @@ from ....covenants import (
 )
 from ....forms import ahead as ahead_forms
 from ....forms import world as world_forms
+from ....forms.secrets import secrets_ops
 from ....markup import aligned, escape, markdown_inline, problem
 from ....models import (
     FULL,
@@ -95,6 +96,7 @@ class CovenantSheetView(SheetView):
                 **self.core_ops,
                 COV_AHEAD_SECTION: ahead_forms.ahead_ops(saga, covenant),
             }
+        self.core_ops.update(secrets_ops(covenant))
         self._register_refreshers()
 
     def _register_refreshers(self) -> None:
@@ -179,6 +181,7 @@ class CovenantSheetView(SheetView):
                     "Overview", "tab-cov-overview", self._scrolling(self._overview_tab)
                 )
                 yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
+                yield from self._secrets_tab(self.covenant)
             return
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Attributes", "tab-cov-attributes", self._attributes_tab)
@@ -189,6 +192,7 @@ class CovenantSheetView(SheetView):
             yield self._tab("Library", "tab-cov-library", self._library_tab)
             yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
             yield self._tab("Build", "tab-cov-build", self._scrolling(self._build_tab))
+            yield from self._secrets_tab(self.covenant)
 
     def _summary_text(self) -> str:
         summary = self.covenant.summary.strip()

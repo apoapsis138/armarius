@@ -17,7 +17,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -32,8 +32,6 @@ MERINITA = "house_merinita"
 TYTALUS = "house_tytalus"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
@@ -204,26 +202,24 @@ def _paris(normandy: Normandy, region: Neighbour) -> None:
         "The Île de la Cité",
         inside=region,
         realm="Divine",
-        summary=secrets(
-            paragraphs(
-                "The mile-long island in the Seine where the Parisii first "
-                "settled: the oldest quarter of Paris and its ecclesiastical "
-                "and administrative centre, a stifling maze of ancient "
-                "timber houses round the grandest churches. Notre-Dame rises "
-                "at the island's upstream end over the ruins of a "
-                "Gallo-Roman temple: begun in 1163, its chancel consecrated "
-                "in 1182 and its nave nearly done, it will be the greatest "
-                "church in the West when finished. The stone Petit Pont of "
-                "1186 joins the island to the left bank, and two longer "
-                "stone bridges cross the broader channel to the right.",
-                "The Seine is too shallow for sea-going ships, so there are "
-                "no great docks, only busy small river craft; most "
-                "long-distance goods travel by the road north to Rouen. Some "
-                "parts of Paris have a high Divine aura (not given in "
-                "numbers).",
-            ),
-            "Infernal auras lurk in the city's worst quarters, unmapped by the book.",
+        summary=paragraphs(
+            "The mile-long island in the Seine where the Parisii first "
+            "settled: the oldest quarter of Paris and its ecclesiastical "
+            "and administrative centre, a stifling maze of ancient "
+            "timber houses round the grandest churches. Notre-Dame rises "
+            "at the island's upstream end over the ruins of a "
+            "Gallo-Roman temple: begun in 1163, its chancel consecrated "
+            "in 1182 and its nave nearly done, it will be the greatest "
+            "church in the West when finished. The stone Petit Pont of "
+            "1186 joins the island to the left bank, and two longer "
+            "stone bridges cross the broader channel to the right.",
+            "The Seine is too shallow for sea-going ships, so there are "
+            "no great docks, only busy small river craft; most "
+            "long-distance goods travel by the road north to Rouen. Some "
+            "parts of Paris have a high Divine aura (not given in "
+            "numbers).",
         ),
+        secrets="Infernal auras lurk in the city's worst quarters, unmapped by the book.",
         **KNOWN_ORDER,
     )
     _place(
@@ -294,17 +290,15 @@ def _paris(normandy: Normandy, region: Neighbour) -> None:
         "Montmartre",
         inside=region,
         realm="Divine",
-        summary=secrets(
-            paragraphs(
-                "The Mount of Martyrs, a hill a little over a mile north of "
-                "the walls, named for the martyrdom of St. Denis there. It "
-                "was once Mons Mercurius and carried a Roman temple; a new "
-                "abbey now stands on its slopes.",
-            ),
-            "In the saga frame of the Boar King, the faerie courtier "
-            "Salvirius asks a magus to carry a message to the Hill of "
-            "Martyrs at an exact day and hour.",
+        summary=paragraphs(
+            "The Mount of Martyrs, a hill a little over a mile north of "
+            "the walls, named for the martyrdom of St. Denis there. It "
+            "was once Mons Mercurius and carried a Roman temple; a new "
+            "abbey now stands on its slopes.",
         ),
+        secrets="In the saga frame of the Boar King, the faerie courtier "
+        "Salvirius asks a magus to carry a message to the Hill of "
+        "Martyrs at an exact day and hour.",
         **KNOWN_REGION,
     )
     _place(
@@ -337,31 +331,29 @@ def _fontainebleau(normandy: Normandy, region: Neighbour) -> None:
         "The Forest of Fontainebleau",
         inside=region,
         realm="Faerie",
-        summary=secrets(
-            paragraphs(
-                "A rocky, varied wild about twenty miles across, on the "
-                "Seine's left bank some thirty miles south of Paris: "
-                "parallel sandstone ridges among limestone, a dry country "
-                "of hillocks, small gorges and old druid groves. Most of it "
-                "is open woodland rich in game, hunted now and then from a "
-                "few lodges; a tiny hermitage is the only settlement, though "
-                "Parisian criminals are said to hide here. Its wettest part "
-                "is a moor of ponds and clefts. Another part is a barren "
-                "waste strewn with oddly shaped boulders, some of which look "
-                "like beasts or even people; these stones can be harvested "
-                "for Animal and Corpus vis (amount and tenure not given).",
-                "At the forest's western end the bare sandstone massif of "
-                "Les Trois Pignons hides the covenant of Lapis Crudus, and "
-                "in the forest's middle lies the faerie regio of the "
-                "Fountain of Fair Waters. The faerie Candidus dwells "
-                "somewhere in the forest: a short man with chalk-white skin "
-                "and hair, no eyes or sockets at all (yet he is not blind), "
-                "dressed in dark blue, who grows in power by striking "
-                "bargains with mortals and always asks a strange price.",
-            ),
-            "The man-shaped boulders may be hunters and hounds who pressed "
-            "their chase into the nymph's domain and were cursed for it.",
+        summary=paragraphs(
+            "A rocky, varied wild about twenty miles across, on the "
+            "Seine's left bank some thirty miles south of Paris: "
+            "parallel sandstone ridges among limestone, a dry country "
+            "of hillocks, small gorges and old druid groves. Most of it "
+            "is open woodland rich in game, hunted now and then from a "
+            "few lodges; a tiny hermitage is the only settlement, though "
+            "Parisian criminals are said to hide here. Its wettest part "
+            "is a moor of ponds and clefts. Another part is a barren "
+            "waste strewn with oddly shaped boulders, some of which look "
+            "like beasts or even people; these stones can be harvested "
+            "for Animal and Corpus vis (amount and tenure not given).",
+            "At the forest's western end the bare sandstone massif of "
+            "Les Trois Pignons hides the covenant of Lapis Crudus, and "
+            "in the forest's middle lies the faerie regio of the "
+            "Fountain of Fair Waters. The faerie Candidus dwells "
+            "somewhere in the forest: a short man with chalk-white skin "
+            "and hair, no eyes or sockets at all (yet he is not blind), "
+            "dressed in dark blue, who grows in power by striking "
+            "bargains with mortals and always asks a strange price.",
         ),
+        secrets="The man-shaped boulders may be hunters and hounds who pressed "
+        "their chase into the nymph's domain and were cursed for it.",
         **KNOWN_REGION,
     )
     _place(
@@ -536,36 +528,34 @@ def _church(normandy: Normandy) -> None:
         order="Benedictine",
         place=region,
         answers_to=w["king"],
-        summary=secrets(
-            paragraphs(
-                "The great royal abbey six miles north of Paris (twice that "
-                "by the winding river), built over the grave of St. Denis, "
-                "martyr and patron of France. Dagobert I founded it in the "
-                "seventh century and Pepin the Short enlarged it; nearly "
-                "every French king since the seventh century lies in its "
-                "crypt, with Clovis and his son Childebert. Its most famous "
-                "abbot, Suger, schoolfellow and confidant of Louis VII, "
-                "became abbot in 1122 and ruled the kingdom justly as regent "
-                "during the Second Crusade, earning the name father of the "
-                "land.",
-                "Suger's basilica of the 1130s, built after his vision of "
-                "the heavenly Bethlehem, is the first church in the new "
-                "French style: soaring pointed arches and slender columns "
-                "that make room for stained glass on a scale never seen "
-                "before. A great spire was recently added to one tower. "
-                "Peter Abélard was a monk here late in life.",
-                "Its greatest treasure is the Oriflamme, the flame-coloured "
-                "royal banner taken by Clovis from Syagrius at Soissons and "
-                "later carried by Charlemagne. It may fly only in the king's "
-                "presence, at the head of his army on a lance; it heartens "
-                "and strengthens his troops and seems to overrule any other "
-                "supernatural effect nearby. It flew last at Bouvines in "
-                "1214. Magi cannot tell whether it is Divine or Magical, and "
-                "none admits to having tried his powers against it.",
-            ),
-            "The Oriflamme's true nature is left open by the book; a "
-            "storyguide may decide.",
+        summary=paragraphs(
+            "The great royal abbey six miles north of Paris (twice that "
+            "by the winding river), built over the grave of St. Denis, "
+            "martyr and patron of France. Dagobert I founded it in the "
+            "seventh century and Pepin the Short enlarged it; nearly "
+            "every French king since the seventh century lies in its "
+            "crypt, with Clovis and his son Childebert. Its most famous "
+            "abbot, Suger, schoolfellow and confidant of Louis VII, "
+            "became abbot in 1122 and ruled the kingdom justly as regent "
+            "during the Second Crusade, earning the name father of the "
+            "land.",
+            "Suger's basilica of the 1130s, built after his vision of "
+            "the heavenly Bethlehem, is the first church in the new "
+            "French style: soaring pointed arches and slender columns "
+            "that make room for stained glass on a scale never seen "
+            "before. A great spire was recently added to one tower. "
+            "Peter Abélard was a monk here late in life.",
+            "Its greatest treasure is the Oriflamme, the flame-coloured "
+            "royal banner taken by Clovis from Syagrius at Soissons and "
+            "later carried by Charlemagne. It may fly only in the king's "
+            "presence, at the head of his army on a lance; it heartens "
+            "and strengthens his troops and seems to overrule any other "
+            "supernatural effect nearby. It flew last at Bouvines in "
+            "1214. Magi cannot tell whether it is Divine or Magical, and "
+            "none admits to having tried his powers against it.",
         ),
+        secrets="The Oriflamme's true nature is left open by the book; a "
+        "storyguide may decide.",
     )
     w["st_genevieve"] = b.church(
         "Abbey of St. Geneviève",
@@ -724,46 +714,44 @@ def _towns(normandy: Normandy) -> None:
         ruler="The King of France",
         answers_to=w["king"],
         place=region,
-        summary=secrets(
-            paragraphs(
-                "The largest city of northern Europe, with more than fifty "
-                "thousand people, built where the Seine is crossed at an "
-                "island: royal capital, seat of churchmen and scholars, and "
-                "a market town. The right bank holds about half the people; "
-                "the Cité and the left bank share the rest. Many Parisians "
-                "are serfs who farm the king's rich fields for miles about, "
-                "so Paris is no city of industry like Ghent, though it has a "
-                "vast trading quarter and every craft. Since the court and "
-                "the university came, it teems with rich young men who fear "
-                "no officer of the law; by night the city boils with lust "
-                "and brawling, by day it trades and argues philosophy.",
-                "It is a melting pot of greed, heresy, petty crime, vice and "
-                "sickness, with every pleasure and luxury for sale. The "
-                "Brethren of the Free Spirit hold secret masses all over "
-                "town, and the King of the Beggars rules its underworld. "
-                "Writers accuse Parisians of idolatry and sorcery, mostly "
-                "without cause: most are more or less devout.",
-                "History: the Parisii fished here first; Roman Lutetia grew "
-                "on the left bank and declined from the late third century. "
-                "Geneviève's prayers turned Attila away in 451. The city "
-                "burned at the end of the sixth century; Vikings sacked it "
-                "in 845 and had to be bought off, and in 885 a far greater "
-                "Viking host besieged it for ten months until Count Odo "
-                "broke the siege. Peace came in 911, and in 987 Hugh Capet, "
-                "elected king, made Paris his capital; it has thrived ever "
-                "since.",
-                "Hermetic: Eboris is the senex of Paris under the ruling of "
-                "1200, so proxy wars between covenants' masks here are now "
-                "illegal, and Eboris may pursue the sponsors of masks it can "
-                "identify. Many covenants keep agents in the city: "
-                "Confluensis among the Seine shippers and the law faculty, "
-                "Fudarus through many independent agents, Montverte in the "
-                "Hanse Parisienne. Folk magicians whose Gifts the Order "
-                "missed are hidden among the crowds, and Parisian magi must "
-                "buy them, warn them off, or kill them.",
-            ),
-            "Hidden Infernal auras fester in the seediest parts of the city.",
+        summary=paragraphs(
+            "The largest city of northern Europe, with more than fifty "
+            "thousand people, built where the Seine is crossed at an "
+            "island: royal capital, seat of churchmen and scholars, and "
+            "a market town. The right bank holds about half the people; "
+            "the Cité and the left bank share the rest. Many Parisians "
+            "are serfs who farm the king's rich fields for miles about, "
+            "so Paris is no city of industry like Ghent, though it has a "
+            "vast trading quarter and every craft. Since the court and "
+            "the university came, it teems with rich young men who fear "
+            "no officer of the law; by night the city boils with lust "
+            "and brawling, by day it trades and argues philosophy.",
+            "It is a melting pot of greed, heresy, petty crime, vice and "
+            "sickness, with every pleasure and luxury for sale. The "
+            "Brethren of the Free Spirit hold secret masses all over "
+            "town, and the King of the Beggars rules its underworld. "
+            "Writers accuse Parisians of idolatry and sorcery, mostly "
+            "without cause: most are more or less devout.",
+            "History: the Parisii fished here first; Roman Lutetia grew "
+            "on the left bank and declined from the late third century. "
+            "Geneviève's prayers turned Attila away in 451. The city "
+            "burned at the end of the sixth century; Vikings sacked it "
+            "in 845 and had to be bought off, and in 885 a far greater "
+            "Viking host besieged it for ten months until Count Odo "
+            "broke the siege. Peace came in 911, and in 987 Hugh Capet, "
+            "elected king, made Paris his capital; it has thrived ever "
+            "since.",
+            "Hermetic: Eboris is the senex of Paris under the ruling of "
+            "1200, so proxy wars between covenants' masks here are now "
+            "illegal, and Eboris may pursue the sponsors of masks it can "
+            "identify. Many covenants keep agents in the city: "
+            "Confluensis among the Seine shippers and the law faculty, "
+            "Fudarus through many independent agents, Montverte in the "
+            "Hanse Parisienne. Folk magicians whose Gifts the Order "
+            "missed are hidden among the crowds, and Parisian magi must "
+            "buy them, warn them off, or kill them.",
         ),
+        secrets="Hidden Infernal auras fester in the seediest parts of the city.",
     )
     w["st_denis_town"] = b.town(
         "St. Denis",
@@ -940,39 +928,37 @@ def _factions(normandy: Normandy) -> None:
         ),
         wants="Every good begging pitch in Paris, and freedom from the watch.",
         offers="Thieves, spies and hired hands for any job, and every rumour in Paris, for coin or vis.",
-        summary=secrets(
-            paragraphs(
-                "A great gang of beggars, cutpurses and burglars that "
-                "dominates, though it does not wholly own, the Paris "
-                "underworld. Its king, also called the Grand Coësre, is "
-                "rumoured to pay the city's officials to look away. Under "
-                "him the cagoux, master thieves, act as his nobles; under "
-                "them the archisuppôts, mostly fallen clergy, teach the "
-                "rules. Both may beg as they like, untaxed.",
-                "The rank and file, the argotiers, speak a secret cant and "
-                "are licensed by trade: marcandiers play robbed merchants, "
-                "francs-mitoux fake fainting fits, malingreux paint their "
-                "faces with fat and ash to feign disease, piètres hobble on "
-                "crutches, sabouleux smear on blood and froth with soap, "
-                "polissons beg naked for clothes, courtauds-de-boutanche "
-                "carry tools and plead lack of work, hutins claim mad-dog "
-                "bites, coquillards show forged pilgrim papers, calots sit "
-                "gaping like simpletons, capons cheat at cards, narquois "
-                "are old soldiers who extort with threats, millards run "
-                "rackets in the countryside, and orphelines cut rich men's "
-                "purses.",
-                "Seeds: a grog who has shown his mettle in Paris is "
-                "kidnapped to be made one of the cagoux; visitors are caught "
-                "up in a turf war between the king and a pretender.",
-            ),
-            "The present king is the magus Anacrôn of House Ex Miscellanea. "
-            "Each year he enslaves a band of fighting men with The "
-            "Irresistible Pressgang to serve as cagoux; when the spell "
-            "ends, the Warping often leaves them witless and they sink "
-            "among the calots. Two of his Hermetic forebears, crippled by "
-            "age and Warping, live hidden among the beggars, kept alive "
-            "against their will.",
+        summary=paragraphs(
+            "A great gang of beggars, cutpurses and burglars that "
+            "dominates, though it does not wholly own, the Paris "
+            "underworld. Its king, also called the Grand Coësre, is "
+            "rumoured to pay the city's officials to look away. Under "
+            "him the cagoux, master thieves, act as his nobles; under "
+            "them the archisuppôts, mostly fallen clergy, teach the "
+            "rules. Both may beg as they like, untaxed.",
+            "The rank and file, the argotiers, speak a secret cant and "
+            "are licensed by trade: marcandiers play robbed merchants, "
+            "francs-mitoux fake fainting fits, malingreux paint their "
+            "faces with fat and ash to feign disease, piètres hobble on "
+            "crutches, sabouleux smear on blood and froth with soap, "
+            "polissons beg naked for clothes, courtauds-de-boutanche "
+            "carry tools and plead lack of work, hutins claim mad-dog "
+            "bites, coquillards show forged pilgrim papers, calots sit "
+            "gaping like simpletons, capons cheat at cards, narquois "
+            "are old soldiers who extort with threats, millards run "
+            "rackets in the countryside, and orphelines cut rich men's "
+            "purses.",
+            "Seeds: a grog who has shown his mettle in Paris is "
+            "kidnapped to be made one of the cagoux; visitors are caught "
+            "up in a turf war between the king and a pretender.",
         ),
+        secrets="The present king is the magus Anacrôn of House Ex Miscellanea. "
+        "Each year he enslaves a band of fighting men with The "
+        "Irresistible Pressgang to serve as cagoux; when the spell "
+        "ends, the Warping often leaves them witless and they sink "
+        "among the calots. Two of his Hermetic forebears, crippled by "
+        "age and Warping, live hidden among the beggars, kept alive "
+        "against their will.",
     )
     w["free_spirit"] = b.faction(
         "The Brethren of the Free Spirit (Paris)",
@@ -1025,25 +1011,23 @@ def _factions(normandy: Normandy) -> None:
         rules="Every bargain must be paid in full, at a price as strange as the wish is great.",
         wants="Pacts with mortals, and odd payments: a stone's breath, a man's reflection, a dying dragon's lament.",
         offers="Almost any wish, through a pact.",
-        summary=secrets(
-            paragraphs(
-                "A powerful faerie of the forest of Fontainebleau who gains "
-                "power by making pacts with mortals: the mere making of a "
-                "bargain seems to give him the power to keep it. His name, "
-                "Latin for chalk-white, was given by Lapis Crudus, who do "
-                "not know his true one. He looks like a short man with "
-                "chalky skin and white hair, dressed in dark blue, with "
-                "smooth skin where eyes and sockets should be, yet he sees.",
-                "In 1118 Aries of Flambeau tricked him into hiding and "
-                "protecting Lapis Crudus. Candidus kept his word by moving "
-                "the covenant into a regio, then sealed it in out of "
-                "resentment. Since Aries's Final Twilight in 1215 he has "
-                "allowed the exchange of the mirror.",
-            ),
-            "His limitless power may be borrowed: he may get the wishes he "
-            "grants from other faeries or from humans through yet more "
-            "pacts. Mnemon owes him an unknown and fearsome task.",
+        summary=paragraphs(
+            "A powerful faerie of the forest of Fontainebleau who gains "
+            "power by making pacts with mortals: the mere making of a "
+            "bargain seems to give him the power to keep it. His name, "
+            "Latin for chalk-white, was given by Lapis Crudus, who do "
+            "not know his true one. He looks like a short man with "
+            "chalky skin and white hair, dressed in dark blue, with "
+            "smooth skin where eyes and sockets should be, yet he sees.",
+            "In 1118 Aries of Flambeau tricked him into hiding and "
+            "protecting Lapis Crudus. Candidus kept his word by moving "
+            "the covenant into a regio, then sealed it in out of "
+            "resentment. Since Aries's Final Twilight in 1215 he has "
+            "allowed the exchange of the mirror.",
         ),
+        secrets="His limitless power may be borrowed: he may get the wishes he "
+        "grants from other faeries or from humans through yet more "
+        "pacts. Mnemon owes him an unknown and fearsome task.",
     )
 
 
@@ -1132,7 +1116,7 @@ def _eboris(normandy: Normandy, tribunal: Tribunal) -> None:
         place=normandy.places["eboris_site"],
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=0,
         unnamed_magi=3,
         season="Autumn",
@@ -1160,32 +1144,30 @@ def _eboris_magi(normandy: Normandy, eboris: Covenant) -> None:
         covenant=eboris,
         house=JERBITON,
         age=104,
-        summary=secrets(
-            paragraphs(
-                "Leader of Eboris and Warden of Paris, an archmagus, filius "
-                "of Maria of Constantinople; apparent age 65. A scion of a "
-                "Constantinopolitan noble house who plays the exiled lord, "
-                "he follows the Jerbiton idea of sufficiency: he knows "
-                "enough magic to live as he likes, and more study would "
-                "only fool bigger crowds or win more certamen. Long bored "
-                "by magic, he spent years in the vices of the rich; now he "
-                "has goals he doubts he will reach.",
-                "He backs the French crown, whose strength is remaking "
-                "Paris into a city that could foster great beauty, which "
-                "sets him against agents of the great dukes, of England "
-                "and of Italian princes. He backs the Antigones, the "
-                "rising Jerbiton generation, hoping they will mend an "
-                "Order he thinks the best but a weak tool for peace. And "
-                "he loathes Venice and the covenants he blames for the "
-                "Fourth Crusade, supporting the French Church as a weight "
-                "against Venice's hold on the pope and distrusting the "
-                "Roman covenants with chapter houses in Venice. He is a "
-                "master of illusion and of casting in a city.",
-            ),
-            "He named Constantina his heir mostly to stop people pestering "
-            "him, and could be talked into naming someone who offers him a "
-            "genuinely new experience.",
+        summary=paragraphs(
+            "Leader of Eboris and Warden of Paris, an archmagus, filius "
+            "of Maria of Constantinople; apparent age 65. A scion of a "
+            "Constantinopolitan noble house who plays the exiled lord, "
+            "he follows the Jerbiton idea of sufficiency: he knows "
+            "enough magic to live as he likes, and more study would "
+            "only fool bigger crowds or win more certamen. Long bored "
+            "by magic, he spent years in the vices of the rich; now he "
+            "has goals he doubts he will reach.",
+            "He backs the French crown, whose strength is remaking "
+            "Paris into a city that could foster great beauty, which "
+            "sets him against agents of the great dukes, of England "
+            "and of Italian princes. He backs the Antigones, the "
+            "rising Jerbiton generation, hoping they will mend an "
+            "Order he thinks the best but a weak tool for peace. And "
+            "he loathes Venice and the covenants he blames for the "
+            "Fourth Crusade, supporting the French Church as a weight "
+            "against Venice's hold on the pope and distrusting the "
+            "Roman covenants with chapter houses in Venice. He is a "
+            "master of illusion and of casting in a city.",
         ),
+        secrets="He named Constantina his heir mostly to stop people pestering "
+        "him, and could be talked into naming someone who offers him a "
+        "genuinely new experience.",
         traits={"Brave": 3, "Genteel": 2, "Debauched": 1, "Sad": 1},
     )
     m["marcus_of_paris"] = b.magus(
@@ -1322,7 +1304,7 @@ def _lapis_crudus(normandy: Normandy, tribunal: Tribunal) -> None:
         level=1,
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=7,
         realm="Faerie",
         unnamed_magi=1,
@@ -1365,23 +1347,21 @@ def _lapis_magi(normandy: Normandy, lapis: Covenant) -> None:
         covenant=lapis,
         house=MERINITA,
         age=113,
-        summary=secrets(
-            paragraphs(
-                "A master of dream magic, apparent age 30. During the "
-                "captivity he sent his mind out in spirit form into the "
-                "dreams of those he met and so kept the covenant informed "
-                "of the world. He found his apprentice Languidus through "
-                "dreams, lured him to the regio and trained him through the "
-                "mirror in the hut that was his schoolroom and scriptorium. "
-                "Warping blurs dream and waking for him, and it is hard to "
-                "tell whether he is awake or sleepwalking.",
-                "With Renita dead and Stellatus gone to Iberia, he is next "
-                "after Celeres of Cunfin in the line of eldest magi from "
-                "which the Praeco is named.",
-            ),
-            "Proctor, who wants a Praeco he can trust or control, finds "
-            "Somnifer as awkward a choice as Celeres.",
+        summary=paragraphs(
+            "A master of dream magic, apparent age 30. During the "
+            "captivity he sent his mind out in spirit form into the "
+            "dreams of those he met and so kept the covenant informed "
+            "of the world. He found his apprentice Languidus through "
+            "dreams, lured him to the regio and trained him through the "
+            "mirror in the hut that was his schoolroom and scriptorium. "
+            "Warping blurs dream and waking for him, and it is hard to "
+            "tell whether he is awake or sleepwalking.",
+            "With Renita dead and Stellatus gone to Iberia, he is next "
+            "after Celeres of Cunfin in the line of eldest magi from "
+            "which the Praeco is named.",
         ),
+        secrets="Proctor, who wants a Praeco he can trust or control, finds "
+        "Somnifer as awkward a choice as Celeres.",
         traits={"Sleepy": 5, "Thoughtful": 2, "Attentive": -2},
     )
     m["mnemon"] = b.magus(
@@ -1389,22 +1369,20 @@ def _lapis_magi(normandy: Normandy, lapis: Covenant) -> None:
         covenant=lapis,
         house=TYTALUS,
         age=97,
-        summary=secrets(
-            paragraphs(
-                "A master of Rego, apparent age 60. He was a year short of "
-                "his Gauntlet when the regio closed (the book's age for him "
-                "fits that badly), and has never really lived his House's "
-                "culture of conflict. Searching for a way out, he grew "
-                "expert in spells of transport; he made the mirror that is "
-                "now the covenant's gate and negotiated the new terms with "
-                "Candidus. Walking and running exasperate him, and he has "
-                "an unsettling habit of popping across a room or snapping "
-                "objects into his hand.",
-            ),
-            "Nobody knows what he promised Candidus. Once someone takes "
-            "his place he must carry out a fearsome task the faerie bound "
-            "him to, which could fall on a player covenant.",
+        summary=paragraphs(
+            "A master of Rego, apparent age 60. He was a year short of "
+            "his Gauntlet when the regio closed (the book's age for him "
+            "fits that badly), and has never really lived his House's "
+            "culture of conflict. Searching for a way out, he grew "
+            "expert in spells of transport; he made the mirror that is "
+            "now the covenant's gate and negotiated the new terms with "
+            "Candidus. Walking and running exasperate him, and he has "
+            "an unsettling habit of popping across a room or snapping "
+            "objects into his hand.",
         ),
+        secrets="Nobody knows what he promised Candidus. Once someone takes "
+        "his place he must carry out a fearsome task the faerie bound "
+        "him to, which could fall on a player covenant.",
         traits={"Impatient": 3, "Sly": 2, "Apparently Trustworthy": 1},
     )
     m["languidus"] = b.magus(
@@ -1431,51 +1409,49 @@ def _eremites(normandy: Normandy) -> None:
         covenant=None,
         house=EX_MISC,
         age=56,
-        summary=secrets(
-            paragraphs(
-                "An eremite of House Ex Miscellanea who lives on the "
-                "streets of Paris as King of the Beggars, the Grand Coësre. "
-                "Bitter, jealous and spiteful, he hates the world and most "
-                "of humanity. His master took his legs above the knee when "
-                "he was a boy, in opening him to the Arts, for his "
-                "tradition's magic rests on pain, hatred and infirmity. He "
-                "rides a two-wheeled cart drawn by two huge mastiffs: "
-                "Affreux, his familiar, who can raise a ward that repels "
-                "people and grow to the size of a bear, and Affreux's son "
-                "Boiteux, his magical companion. Under the rags and filth "
-                "he is a handsome, compelling man.",
-                "When he grew strong enough to take over the gang that "
-                "raised him, his pater crowned him king and left Paris, as "
-                "his own pater had done; where they went, Anacrôn does not "
-                "know. His family has ruled the beggars for over a century, "
-                "far longer than Eboris has existed. Through his subjects "
-                "he can find hands for any job and hears news the Order "
-                "wants, and sells both for vis and enchantments, mostly to "
-                "Eboris and Fudarus. He never takes part in the crimes he "
-                "plans. Twice accused of interfering with mundanes, he was "
-                "cleared once (no ruin was shown); the second time Harpax "
-                "of Fudarus declared Wizard's War on the accuser and no "
-                "charge was ever brought. Many wonder why he has such "
-                "friends. He and Mathieus are still working out their "
-                "terms by deed rather than word; both would avoid war, in "
-                "which Anacrôn has the numbers, the streets and a killer's "
-                "instinct. Montverte has dealt with him on raids against "
-                "other covenants' town storehouses.",
-            ),
-            paragraphs(
-                "His lineage shares a Death Prophecy: none can die until "
-                "he is the eldest of the tradition alive. Two of his "
-                "forebears, his grand-parens's own parens and her mater, "
-                "survive hidden among his beggars in ruined bodies, "
-                "riddled with Decrepitude and Warping and longing to die; "
-                "he will not let them, since each death brings his own "
-                "nearer. An enemy might strike at him through them.",
-                "He knows many dirty secrets of Normandy's magi and has a "
-                "few genuine allies who value his information. He might "
-                "draw help from a cabal or Mystery Cult, or be a double "
-                "agent hunting High Crimes among his apparent friends for "
-                "the Quaesitores.",
-            ),
+        summary=paragraphs(
+            "An eremite of House Ex Miscellanea who lives on the "
+            "streets of Paris as King of the Beggars, the Grand Coësre. "
+            "Bitter, jealous and spiteful, he hates the world and most "
+            "of humanity. His master took his legs above the knee when "
+            "he was a boy, in opening him to the Arts, for his "
+            "tradition's magic rests on pain, hatred and infirmity. He "
+            "rides a two-wheeled cart drawn by two huge mastiffs: "
+            "Affreux, his familiar, who can raise a ward that repels "
+            "people and grow to the size of a bear, and Affreux's son "
+            "Boiteux, his magical companion. Under the rags and filth "
+            "he is a handsome, compelling man.",
+            "When he grew strong enough to take over the gang that "
+            "raised him, his pater crowned him king and left Paris, as "
+            "his own pater had done; where they went, Anacrôn does not "
+            "know. His family has ruled the beggars for over a century, "
+            "far longer than Eboris has existed. Through his subjects "
+            "he can find hands for any job and hears news the Order "
+            "wants, and sells both for vis and enchantments, mostly to "
+            "Eboris and Fudarus. He never takes part in the crimes he "
+            "plans. Twice accused of interfering with mundanes, he was "
+            "cleared once (no ruin was shown); the second time Harpax "
+            "of Fudarus declared Wizard's War on the accuser and no "
+            "charge was ever brought. Many wonder why he has such "
+            "friends. He and Mathieus are still working out their "
+            "terms by deed rather than word; both would avoid war, in "
+            "which Anacrôn has the numbers, the streets and a killer's "
+            "instinct. Montverte has dealt with him on raids against "
+            "other covenants' town storehouses.",
+        ),
+        secrets=paragraphs(
+            "His lineage shares a Death Prophecy: none can die until "
+            "he is the eldest of the tradition alive. Two of his "
+            "forebears, his grand-parens's own parens and her mater, "
+            "survive hidden among his beggars in ruined bodies, "
+            "riddled with Decrepitude and Warping and longing to die; "
+            "he will not let them, since each death brings his own "
+            "nearer. An enemy might strike at him through them.",
+            "He knows many dirty secrets of Normandy's magi and has a "
+            "few genuine allies who value his information. He might "
+            "draw help from a cabal or Mystery Cult, or be a double "
+            "agent hunting High Crimes among his apparent friends for "
+            "the Quaesitores.",
         ),
         traits={"Jealous": 3, "Spiteful": 3, "Bitter": 3},
     )

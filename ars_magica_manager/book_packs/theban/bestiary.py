@@ -14,7 +14,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models import BodyVis
-from ..builder import secrets
 
 if TYPE_CHECKING:
     from ...models import Creature, Neighbour
@@ -1026,25 +1025,23 @@ def _might_only(theban: Theban) -> None:
         realm="Magic",
         might=50,
         appearance="A titan-goddess, the titan of fame.",
-        notes=secrets(
-            "Powers (no stat block): a Kosmokrator Spirit (Realms of Power: "
-            "Magic). Neutral in the war of the titans, she was bound not in "
-            "Tartaros but under the great altar at Pergamos, which is the "
-            "lock of her prison; she thought the cell a kindness, shared "
-            "with her sisters. A flaw in the binding lets a Hermetic magus "
-            "standing on the altar cast a ritual without vis, drawing on "
-            "her power; such spells risk odd side effects, and a botch is "
-            "tainted as if with faerie vis.",
-            "The Theban magi do not know she is there. The bonds have a "
-            "strength of 50, renewed each new year; every ritual cast "
-            "from the altar wears them down by the pawns it would "
-            "normally need. If they reach 0 within one year the altar "
-            "splits and Klymene is free, and unhappy about it, with "
-            "nowhere to go: she may go back to the Magic Realm, settle "
-            "on a mountaintop and upset all around her, or roam the "
-            "Tribunal freeing other bound titanesses. Lucian's Children "
-            "of Olympus are drawn to the altar.",
-        ),
+        notes="Powers (no stat block): a Kosmokrator Spirit (Realms of Power: "
+        "Magic). Neutral in the war of the titans, she was bound not in "
+        "Tartaros but under the great altar at Pergamos, which is the "
+        "lock of her prison; she thought the cell a kindness, shared "
+        "with her sisters. A flaw in the binding lets a Hermetic magus "
+        "standing on the altar cast a ritual without vis, drawing on "
+        "her power; such spells risk odd side effects, and a botch is "
+        "tainted as if with faerie vis.",
+        secrets="The Theban magi do not know she is there. The bonds have a "
+        "strength of 50, renewed each new year; every ritual cast "
+        "from the altar wears them down by the pawns it would "
+        "normally need. If they reach 0 within one year the altar "
+        "splits and Klymene is free, and unhappy about it, with "
+        "nowhere to go: she may go back to the Magic Realm, settle "
+        "on a mountaintop and upset all around her, or roam the "
+        "Tribunal freeing other bound titanesses. Lucian's Children "
+        "of Olympus are drawn to the altar.",
     )
     _MADE["belisarius"] = b.creature(
         "Belisarius of the Serpent Column",

@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
 from ...models.world import FULL
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -39,8 +39,6 @@ TREMERE = "house_tremere"
 VERDITIUS = "house_verditius"
 
 #: The lead line of an oppidum's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -504,14 +502,11 @@ def _lycaneon(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "over years, and go back to retake it.",
         "The book gives no founding year (the Founder's own time) and no "
         "season. Nine of the fourteen magi are unnamed.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.",
-                "A rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.",
-                "Lycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.",
+        "A rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.",
+        "Lycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.",
     )
     lycaneon = b.covenant(
         "Lycaneon",
@@ -521,6 +516,7 @@ def _lycaneon(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=9,
         detail=FULL,
         season="Autumn",
@@ -702,26 +698,24 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
                 ),
             ),
         ],
-        summary=secrets(
-            paragraphs(
-                "A lonely valley high in the Carpathians south of "
-                "Hermannstadt, holding only a small lake with no name, "
-                "glassy on still days and mirroring the whole sky, and a "
-                "Magic aura of 3. Travellers' tales tell of a castle over "
-                "a high pass that shows only in the heart of a storm and "
-                "is gone when the storm-tossed seek shelter there; locals "
-                "nod and call it the Scholomance.",
-                "Storm wizards (see the hedge traditions) have twice "
-                "banded together to storm the tower, using their "
-                "powers to stop it slipping back into its regio, and were "
-                "beaten off both times; they spoke only of taking back "
-                "something they had lost.",
-            ),
-            "There may be a second, deeper level of the regio known only "
-            "to the headmaster; this has never been confirmed or denied. "
-            "Whether the storm wizards want the tower or something hidden "
-            "in it is unknown.",
+        summary=paragraphs(
+            "A lonely valley high in the Carpathians south of "
+            "Hermannstadt, holding only a small lake with no name, "
+            "glassy on still days and mirroring the whole sky, and a "
+            "Magic aura of 3. Travellers' tales tell of a castle over "
+            "a high pass that shows only in the heart of a storm and "
+            "is gone when the storm-tossed seek shelter there; locals "
+            "nod and call it the Scholomance.",
+            "Storm wizards (see the hedge traditions) have twice "
+            "banded together to storm the tower, using their "
+            "powers to stop it slipping back into its regio, and were "
+            "beaten off both times; they spoke only of taking back "
+            "something they had lost.",
         ),
+        secrets="There may be a second, deeper level of the regio known only "
+        "to the headmaster; this has never been confirmed or denied. "
+        "Whether the storm wizards want the tower or something hidden "
+        "in it is unknown.",
         **RUMOURED,
     )
     summary = paragraphs(
@@ -805,16 +799,13 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "Founded as the Coeris mansio about 1125 (the tower was entered "
         "in 1095); the book gives no season. One of the three magi is "
         "unnamed.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.",
-                "A snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.",
-                "A shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.",
-                "A friend in need: an old classmate accused of a Hermetic crime in another Tribunal asks a character of standing for an alibi to buy time.",
-                "Sebastian's name echoes the dragon king Aževastjepan's; see Sebastian.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.",
+        "A snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.",
+        "A shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.",
+        "A friend in need: an old classmate accused of a Hermetic crime in another Tribunal asks a character of standing for an alibi to buy time.",
+        "Sebastian's name echoes the dragon king Aževastjepan's; see Sebastian.",
     )
     scholomance = b.covenant(
         "The Scholomance",
@@ -825,6 +816,7 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=1,
         detail=FULL,
         season="Summer",
@@ -894,29 +886,27 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         house="",
         age=None,
         type="companion",
-        summary=secrets(
-            paragraphs(
-                "The tower's caretaker and a tutor, a riddle: he was its "
-                "only inhabitant when Jeremiah of Tremere first got in, "
-                "in 1095, and has not visibly aged since. He looks an "
-                "ordinary man in his forties. Most magi think him some "
-                "kind of magic kin, but those rude enough to probe him "
-                "with magic found nothing, not even a Might score, and "
-                "the headmaster works to keep the resulting suspicion in "
-                "check. He tells each headmaster his secret, or part of "
-                "it, helps run the school, knows the tower and its regio "
-                "better than anyone, and has helped headmasters master it "
-                "in hard times.",
-                "Friendly but close, he enjoys knowing more than others, "
-                "except when he teaches philosophy, the liberal arts, dead "
-                "languages and forgotten lore, which he loves.",
-                "Some magi have noticed that his name is close to that of "
-                "the dragon king Aževastjepan; nobody has confronted him, "
-                "but they tread warily round him.",
-            ),
-            "Sebastian may be Aževastjepan himself, the seven-headed "
-            "dragon king of the Carpathians, in human guise.",
+        summary=paragraphs(
+            "The tower's caretaker and a tutor, a riddle: he was its "
+            "only inhabitant when Jeremiah of Tremere first got in, "
+            "in 1095, and has not visibly aged since. He looks an "
+            "ordinary man in his forties. Most magi think him some "
+            "kind of magic kin, but those rude enough to probe him "
+            "with magic found nothing, not even a Might score, and "
+            "the headmaster works to keep the resulting suspicion in "
+            "check. He tells each headmaster his secret, or part of "
+            "it, helps run the school, knows the tower and its regio "
+            "better than anyone, and has helped headmasters master it "
+            "in hard times.",
+            "Friendly but close, he enjoys knowing more than others, "
+            "except when he teaches philosophy, the liberal arts, dead "
+            "languages and forgotten lore, which he loves.",
+            "Some magi have noticed that his name is close to that of "
+            "the dragon king Aževastjepan; nobody has confronted him, "
+            "but they tread warily round him.",
         ),
+        secrets="Sebastian may be Aževastjepan himself, the seven-headed "
+        "dragon king of the Carpathians, in human guise.",
     )
     m["ludmilla"] = b.magus(
         "Ludmilla",
@@ -924,24 +914,22 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         house="",
         age=None,
         type="companion",
-        summary=secrets(
-            paragraphs(
-                "A Romanian strigoica, a witch: a Gifted folk witch (see "
-                "the hedge traditions) with the Entrancement Ability, in "
-                "her middle fifties, slim, her beauty fading; she hides "
-                "her hands, which are knotted and swollen at the "
-                "knuckles. She teaches pupils the Supernatural Abilities "
-                "she shares with them, for free use of the oppidum's "
-                "books.",
-                "She also uses the school to spot recruits for the coven "
-                "she leads. The masters politely look away, because she "
-                "has sometimes Initiated an unGifted Tremere agent trained "
-                "there into one of her tradition's Abilities. People "
-                "suspect her of being a nightwalker, which she denies.",
-            ),
-            "She is a nightwalker. When she walks, her phantasticum is a "
-            "white moth with a lovely young girl's face.",
+        summary=paragraphs(
+            "A Romanian strigoica, a witch: a Gifted folk witch (see "
+            "the hedge traditions) with the Entrancement Ability, in "
+            "her middle fifties, slim, her beauty fading; she hides "
+            "her hands, which are knotted and swollen at the "
+            "knuckles. She teaches pupils the Supernatural Abilities "
+            "she shares with them, for free use of the oppidum's "
+            "books.",
+            "She also uses the school to spot recruits for the coven "
+            "she leads. The masters politely look away, because she "
+            "has sometimes Initiated an unGifted Tremere agent trained "
+            "there into one of her tradition's Abilities. People "
+            "suspect her of being a nightwalker, which she denies.",
         ),
+        secrets="She is a nightwalker. When she walks, her phantasticum is a "
+        "white moth with a lovely young girl's face.",
     )
 
 
@@ -1099,82 +1087,80 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
         arms=TEUTONIC_ARMS,
         wants="The Burzenland free of Hungary under the pope, and a road of forts down the Danube to the Black Sea",
         offers="Knights and garrisons against the Cumans; a hand of friendship, not always sincere",
-        summary=secrets(
-            paragraphs(
-                "Formally the Hospital Order of St Mary of the Germans in "
-                "Jerusalem, youngest of the military orders: founded at "
-                "the siege of Acre after Barbarossa's death, when "
-                "crusaders from Bremen and Lübeck set up a hospital for "
-                "sick Germans the Hospitallers neglected, approved by "
-                "Celestine III and given a military charter in 1198. Its "
-                "head, the hochmeister, is elected for life by the "
-                "general chapter; Hermann von Salza has held the post "
-                "since 1210, travelling as diplomat and inspector with a "
-                "council of the masters, the treasurer, the grand "
-                "commander and the marshal. In 1220 it has its seat at "
-                "Acre and just two missions, in the Empire and in "
-                "Transylvania, where Brother Theoderich is master.",
-                "Its rule, the customs, is written in German: poverty, "
-                "chastity and obedience, the canonical hours, priestly "
-                "dress under a white mantle with a black cross, no rowdy "
-                "feasts and no women. Punishment runs from the whip and "
-                "short rations to years in chains; cowardice before the "
-                "enemy, desertion to the infidel and sodomy mean "
-                "expulsion or death. Each knight has ten graymantles, "
-                "half-brothers of common birth, as squires and sergeants. "
-                "Knights are noble, some from the Empire's serf-knights "
-                "and poor; many carry relics, often in their sword hilts, "
-                "and study Theology, Church Lore and Dominion Lore beside "
-                "arms (Brother Chaplain, Brother Knight and Brother "
-                "Sergeant are their Virtues: black cross on green, white "
-                "and grey).",
-                "The Order and House Tremere want much the same, a "
-                "self-ruling state for mankind's good under their own "
-                "guidance. The knights mean to push down the Danube from "
-                "the Burzenland to the Black Sea with garrisoned forts "
-                "and reopen the land road to Constantinople. The pope has "
-                "charged them to hunt heresy and diabolism, so the "
-                "Tremere fear they would call the Order of Hermes heretic "
-                "or pagan, and the House forbids Tribunal magi any formal "
-                "contact; the knights will not stay ignorant long. The "
-                "hochmeister seeks the Scholomance but has found only the "
-                "same tale told again and thinks it a legend; a papal "
-                "legate, sent by Honorius III to look into it, lodges "
-                "with the knights.",
-                "Story: a hedge wizard with a grudge against the Order is "
-                "taken by a Teutonic garrison and tells them all he knows "
-                "of magi. When the garrison starts marking Hermetic "
-                "targets, the troupe must decide how much to reveal, "
-                "which the Tremere ban on contact forbids, or whether to "
-                "wipe out the garrison and leave no witness.",
-            ),
-            paragraphs(
-                "Two optional Orders. A holier one fights for the "
-                "Dominion: its conquests carry a Brave Dominion aura, it "
-                "sends preachers among the Cumans before its armies, and "
-                "an inner circle of Divine wonder-workers uses "
-                "Invocation, Blessing and Cursing and senses holiness. "
-                "Their Blessing of the relic (Invocation 30) lends one "
-                "relic's Magic Resistance and its scourge of demons to up "
-                "to ten men who keep together, for a Sabbath.",
-                "A profane one serves infernal masters, wants power over "
-                "land more than pagan blood, and hoards occult lore, "
-                "capturing shamans, witches and taltós; many of its "
-                "leaders are goetic sorcerers and the rest diabolists, "
-                "and it rules the common folk through fear, possession "
-                "and blackmail. Its favoured knights carry great swords "
-                "with a bound demon that whispers in their dreams, and "
-                "that can trade a blow's damage for an Incapacitating "
-                "wound that heals the wielder's own worst wound, three "
-                "times a day (Consumption 37).",
-                "If history runs its course, Andrew II (home from "
-                "crusade since 1218) is forced to grant the Golden Bull "
-                "in 1222 but will not take the Burzenland back; in 1225 "
-                "Hermann von Salza puts it under the Holy See, and the "
-                "king drives the knights out by force when they refuse "
-                "to go. The Cumans then pour through the weakened "
-                "defences.",
-            ),
+        summary=paragraphs(
+            "Formally the Hospital Order of St Mary of the Germans in "
+            "Jerusalem, youngest of the military orders: founded at "
+            "the siege of Acre after Barbarossa's death, when "
+            "crusaders from Bremen and Lübeck set up a hospital for "
+            "sick Germans the Hospitallers neglected, approved by "
+            "Celestine III and given a military charter in 1198. Its "
+            "head, the hochmeister, is elected for life by the "
+            "general chapter; Hermann von Salza has held the post "
+            "since 1210, travelling as diplomat and inspector with a "
+            "council of the masters, the treasurer, the grand "
+            "commander and the marshal. In 1220 it has its seat at "
+            "Acre and just two missions, in the Empire and in "
+            "Transylvania, where Brother Theoderich is master.",
+            "Its rule, the customs, is written in German: poverty, "
+            "chastity and obedience, the canonical hours, priestly "
+            "dress under a white mantle with a black cross, no rowdy "
+            "feasts and no women. Punishment runs from the whip and "
+            "short rations to years in chains; cowardice before the "
+            "enemy, desertion to the infidel and sodomy mean "
+            "expulsion or death. Each knight has ten graymantles, "
+            "half-brothers of common birth, as squires and sergeants. "
+            "Knights are noble, some from the Empire's serf-knights "
+            "and poor; many carry relics, often in their sword hilts, "
+            "and study Theology, Church Lore and Dominion Lore beside "
+            "arms (Brother Chaplain, Brother Knight and Brother "
+            "Sergeant are their Virtues: black cross on green, white "
+            "and grey).",
+            "The Order and House Tremere want much the same, a "
+            "self-ruling state for mankind's good under their own "
+            "guidance. The knights mean to push down the Danube from "
+            "the Burzenland to the Black Sea with garrisoned forts "
+            "and reopen the land road to Constantinople. The pope has "
+            "charged them to hunt heresy and diabolism, so the "
+            "Tremere fear they would call the Order of Hermes heretic "
+            "or pagan, and the House forbids Tribunal magi any formal "
+            "contact; the knights will not stay ignorant long. The "
+            "hochmeister seeks the Scholomance but has found only the "
+            "same tale told again and thinks it a legend; a papal "
+            "legate, sent by Honorius III to look into it, lodges "
+            "with the knights.",
+            "Story: a hedge wizard with a grudge against the Order is "
+            "taken by a Teutonic garrison and tells them all he knows "
+            "of magi. When the garrison starts marking Hermetic "
+            "targets, the troupe must decide how much to reveal, "
+            "which the Tremere ban on contact forbids, or whether to "
+            "wipe out the garrison and leave no witness.",
+        ),
+        secrets=paragraphs(
+            "Two optional Orders. A holier one fights for the "
+            "Dominion: its conquests carry a Brave Dominion aura, it "
+            "sends preachers among the Cumans before its armies, and "
+            "an inner circle of Divine wonder-workers uses "
+            "Invocation, Blessing and Cursing and senses holiness. "
+            "Their Blessing of the relic (Invocation 30) lends one "
+            "relic's Magic Resistance and its scourge of demons to up "
+            "to ten men who keep together, for a Sabbath.",
+            "A profane one serves infernal masters, wants power over "
+            "land more than pagan blood, and hoards occult lore, "
+            "capturing shamans, witches and taltós; many of its "
+            "leaders are goetic sorcerers and the rest diabolists, "
+            "and it rules the common folk through fear, possession "
+            "and blackmail. Its favoured knights carry great swords "
+            "with a bound demon that whispers in their dreams, and "
+            "that can trade a blow's damage for an Incapacitating "
+            "wound that heals the wielder's own worst wound, three "
+            "times a day (Consumption 37).",
+            "If history runs its course, Andrew II (home from "
+            "crusade since 1218) is forced to grant the Golden Bull "
+            "in 1222 but will not take the Burzenland back; in 1225 "
+            "Hermann von Salza puts it under the Holy See, and the "
+            "king drives the knights out by force when they refuse "
+            "to go. The Cumans then pour through the weakened "
+            "defences.",
         ),
     )
     w["saxons"] = b.faction(

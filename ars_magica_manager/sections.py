@@ -189,6 +189,9 @@ WORLD_TURNS_SECTION = "section-world-turns"
 BUSINESS_SECTION = "section-meeting-business"
 ATTENDANCE_SECTION = "section-meeting-attendance"
 VOTE_SECTION = "section-meeting-vote"
+#: A record's Secrets chapter (forms/secrets.py): the same section on a
+#: covenant's, character's, Tribunal's, neighbour's and creature's sheet.
+SECRETS_SECTION = "section-secrets"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -249,4 +252,5 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     BUSINESS_SECTION: frozenset({"edit", "remove"}),
     ATTENDANCE_SECTION: frozenset({"edit"}),
     VOTE_SECTION: frozenset({"edit"}),
+    SECRETS_SECTION: frozenset({"edit"}),
 }

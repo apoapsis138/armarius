@@ -29,6 +29,13 @@ CONTRACTS: dict[str, Contract] = {
             "#region-info-right": "Church, in The Siebengebirge",
         },
     ),
+    "edit secrets": Contract(
+        prefill={"Secrets": "He owes the Archbishop more than he can pay."},
+        edits={"Secrets": "He has sold the mill to the Archbishop in secret."},
+        saved=lambda s: s.neighbour("gottfried").secrets,
+        expected="He has sold the mill to the Archbishop in secret.",
+        shown={"#secrets-text": "He has sold the mill to the Archbishop in secret."},
+    ),
     "edit neighbour": Contract(
         prefill={
             "Name": "Gottfried of Arnsberg",

@@ -21,7 +21,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -31,8 +31,6 @@ if TYPE_CHECKING:
 TYTALUS = "house_tytalus"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
@@ -212,23 +210,21 @@ def _rennes(normandy: Normandy) -> None:
         "mount_dol",
         "Mount Dol",
         inside=rennes,
-        summary=secrets(
-            paragraphs(
-                "A granite knoll only about two hundred feet high that "
-                "nonetheless commands the marshes, a holy place of the Gallic "
-                "druids. Branugurix, the domus magna of House Diedne, lay "
-                "hidden in a regio here. Christians shun the hill: they say "
-                "St Michael fought the Devil on it and flung him down so hard "
-                "that the hollow and the claw marks still show on its north "
-                "side, beside the cleft of the saint's sword; when the Devil "
-                "reappeared on Mont St Michel, the saint leapt after him and "
-                "left a footprint on the summit.",
-                "South of the town of Dol stands the menhir of Champ-Dolent.",
-            ),
-            "The legend of St Michael is a garbled memory of the Order's "
-            "assault on Branugurix. The regio's entrances were closed in the "
-            "last battle of the Schism War.",
+        summary=paragraphs(
+            "A granite knoll only about two hundred feet high that "
+            "nonetheless commands the marshes, a holy place of the Gallic "
+            "druids. Branugurix, the domus magna of House Diedne, lay "
+            "hidden in a regio here. Christians shun the hill: they say "
+            "St Michael fought the Devil on it and flung him down so hard "
+            "that the hollow and the claw marks still show on its north "
+            "side, beside the cleft of the saint's sword; when the Devil "
+            "reappeared on Mont St Michel, the saint leapt after him and "
+            "left a footprint on the summit.",
+            "South of the town of Dol stands the menhir of Champ-Dolent.",
         ),
+        secrets="The legend of St Michael is a garbled memory of the Order's "
+        "assault on Branugurix. The regio's entrances were closed in the "
+        "last battle of the Schism War.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -326,15 +322,13 @@ def _rennes(normandy: Normandy) -> None:
         "langon",
         "The Young Ladies of Langon",
         inside=rennes,
-        summary=secrets(
-            "About thirty standing stones on the moor by Langon, a village "
-            "on terraces above the Vilaine whose chapel of St Agatha is "
-            "built into the walls of a Romano-Gallic temple of Venus. "
-            "Locals say the stones are girls who danced on the moor instead "
-            "of going to vespers and were turned to stone by God.",
-            "The stones are far older than the tale and belong with the "
-            "temple: they record the fate of the women who served it.",
-        ),
+        summary="About thirty standing stones on the moor by Langon, a village "
+        "on terraces above the Vilaine whose chapel of St Agatha is "
+        "built into the walls of a Romano-Gallic temple of Venus. "
+        "Locals say the stones are girls who danced on the moor instead "
+        "of going to vespers and were turned to stone by God.",
+        secrets="The stones are far older than the tale and belong with the "
+        "temple: they record the fate of the women who served it.",
         **KNOWN_LOCALLY,
     )
     _add(
@@ -405,24 +399,21 @@ def _broceliande(normandy: Normandy) -> None:
         inside=forest,
         realm="Faerie",
         aura=5,
-        summary=secrets(
-            paragraphs(
-                "A spring ringed with stones at the heart of the forest, in "
-                "a glade with a Faerie aura of 5. Washing the face in it "
-                "smooths an old person's wrinkles for a few hours, a faerie "
-                "glamour no magus has yet learned to prolong or use. Merlin "
-                "came here for solitude and met Viviane, the Lady of the "
-                "Lake; tired of him, she put him into a deep sleep, and many "
-                "think he sleeps still under the nearby pair of slabs called "
-                "the Stone of Merlin. A drop of the fountain's water let "
-                "fall on the stone turns to vapour, and the air fills with "
-                "shadows and thunder.",
-                "A magus following the Path of Aging may drink here for the "
-                "second quest.",
-            ),
-            "The drop on the stone is probably the first step of the rite "
-            "that opens the Faerie regio where Merlin may lie sleeping.",
+        summary=paragraphs(
+            "A spring ringed with stones at the heart of the forest, in "
+            "a glade with a Faerie aura of 5. Washing the face in it "
+            "smooths an old person's wrinkles for a few hours, a faerie "
+            "glamour no magus has yet learned to prolong or use. Merlin "
+            "came here for solitude and met Viviane, the Lady of the "
+            "Lake; tired of him, she put him into a deep sleep, and many "
+            "think he sleeps still under the nearby pair of slabs called "
+            "the Stone of Merlin. A drop of the fountain's water let "
+            "fall on the stone turns to vapour, and the air fills with "
+            "shadows and thunder.",
+            "A magus following the Path of Aging may drink here for the second quest.",
         ),
+        secrets="The drop on the stone is probably the first step of the rite "
+        "that opens the Faerie regio where Merlin may lie sleeping.",
         levels=[
             Builder.level(
                 "Merlin's sleeping place",
@@ -512,13 +503,11 @@ def _broceliande(normandy: Normandy) -> None:
         "The Valley of No Return",
         inside=forest,
         realm="Faerie",
-        summary=secrets(
-            "A deep valley just past the Faeries' Mirror, where Morgan le "
-            "Fay, Arthur's half-sister, imprisoned her faithless lover "
-            "Guyomart at False Lover's Rock. Legend says no wrongdoer can "
-            "leave it.",
-            "Only those unfaithful in love are actually held.",
-        ),
+        summary="A deep valley just past the Faeries' Mirror, where Morgan le "
+        "Fay, Arthur's half-sister, imprisoned her faithless lover "
+        "Guyomart at False Lover's Rock. Legend says no wrongdoer can "
+        "leave it.",
+        secrets="Only those unfaithful in love are actually held.",
         **KNOWN_REGION,
     )
 
@@ -719,14 +708,12 @@ def _leon(normandy: Normandy) -> None:
         inside=leon,
         status="Rumoured",
         known="In the Tribunal",
-        summary=secrets(
-            "A Romano-Gallic town near Plougerneau, the westernmost village "
-            "of the north coast, which vanished in 875 while Vikings "
-            "attacked it; the village church stands on a pagan cairn. The "
-            "Quaesitores investigate anyone known to be looking for a way "
-            "in.",
-            "Druids almost certainly hid the town in a regio by magic.",
-        ),
+        summary="A Romano-Gallic town near Plougerneau, the westernmost village "
+        "of the north coast, which vanished in 875 while Vikings "
+        "attacked it; the village church stands on a pagan cairn. The "
+        "Quaesitores investigate anyone known to be looking for a way "
+        "in.",
+        secrets="Druids almost certainly hid the town in a regio by magic.",
         levels=[
             Builder.level(
                 "The hidden town",
@@ -742,34 +729,32 @@ def _leon(normandy: Normandy) -> None:
         "The Isle of Ushant",
         inside=leon,
         aura=7,
-        summary=secrets(
-            paragraphs(
-                "A small island ten miles off Brittany's western tip, four "
-                "miles by two and a half, its sheer cliffs rising 180 feet "
-                "to a nearly flat top, ringed by treacherous currents and by "
-                "reefs that sailors swear wander. The storm-beaten mainland "
-                "opposite is empty. The fishing village of Lampaul lies on "
-                "the gentler south-western shore; the rest is deserted but "
-                "for Fudarus, the domus magna of House Tytalus, which "
-                "crouches on the landward cliff edge in a Magic aura of 7. "
-                "Without magic no one climbs the cliffs.",
-                "Three Great Spirits bound into Fudarus's walls guard the "
-                "island in turn (Magic Might 40, Auram), invisible and "
-                "intangible, aware of all that happens on Ushant, and "
-                "touchable by magic only by a caster who can sense them: "
-                "Mogidell of mist and sea fog, a vast grey bird whose spread "
-                "wings bring down the mist; Kerseenn of misdirection, always "
-                "shifting between monstrous blends of man and beast; and "
-                "Arnev of storms, a huge serpent with a horse's head. Each "
-                "can match any non-Ritual spell of its kind up to level 40 "
-                "at a point of Might a magnitude. Their presence makes 12 "
-                "pawns of vis appear on the island each year, 4 each of "
-                "Creo, Auram and Imaginem. They obey whoever bears the "
-                "Circlet of the Primus, through an old pact that made them "
-                "the island's genii loci.",
-            ),
-            "Only the people of Fudarus know what form the spirits' vis takes.",
+        summary=paragraphs(
+            "A small island ten miles off Brittany's western tip, four "
+            "miles by two and a half, its sheer cliffs rising 180 feet "
+            "to a nearly flat top, ringed by treacherous currents and by "
+            "reefs that sailors swear wander. The storm-beaten mainland "
+            "opposite is empty. The fishing village of Lampaul lies on "
+            "the gentler south-western shore; the rest is deserted but "
+            "for Fudarus, the domus magna of House Tytalus, which "
+            "crouches on the landward cliff edge in a Magic aura of 7. "
+            "Without magic no one climbs the cliffs.",
+            "Three Great Spirits bound into Fudarus's walls guard the "
+            "island in turn (Magic Might 40, Auram), invisible and "
+            "intangible, aware of all that happens on Ushant, and "
+            "touchable by magic only by a caster who can sense them: "
+            "Mogidell of mist and sea fog, a vast grey bird whose spread "
+            "wings bring down the mist; Kerseenn of misdirection, always "
+            "shifting between monstrous blends of man and beast; and "
+            "Arnev of storms, a huge serpent with a horse's head. Each "
+            "can match any non-Ritual spell of its kind up to level 40 "
+            "at a point of Might a magnitude. Their presence makes 12 "
+            "pawns of vis appear on the island each year, 4 each of "
+            "Creo, Auram and Imaginem. They obey whoever bears the "
+            "Circlet of the Primus, through an old pact that made them "
+            "the island's genii loci.",
         ),
+        secrets="Only the people of Fudarus know what form the spirits' vis takes.",
         **KNOWN_ORDER,
     )
     _add(
@@ -1107,27 +1092,25 @@ def _broerec(normandy: Normandy) -> None:
         "belle_ile",
         "Belle-Île",
         inside=broerec,
-        summary=secrets(
-            paragraphs(
-                "The largest Breton island, five miles out from Quiberon: a "
-                "schist plateau cut by fast streams ending in creeks and "
-                "small beaches, swept by westerly wind and rain, with trees "
-                "only where sheltered. At Port-Goulphar on the south-west "
-                "coast, bright algae gathering on the rocks of a deep, calm "
-                "chasm are an unusual Herbam vis; a little further, the "
-                "surf at the rocks called the Needles throws up foam that "
-                "is Aquam vis.",
-                "Two menhirs called Jean and Jeanne stand on a gorse moor in "
-                "the north of the island, one of pale granite and one of "
-                "dark schist: a betrothed couple turned to stone for not "
-                "waiting for their wedding.",
-            ),
-            "A suitable Hermetic ritual could restore Jean and Jeanne, who "
-            "would be glad to join a covenant since their world is long "
-            "gone. Jeanne is pregnant and gives birth three months after "
-            "the spell ends, to a Gifted child with a close affinity for "
-            "Terram.",
+        summary=paragraphs(
+            "The largest Breton island, five miles out from Quiberon: a "
+            "schist plateau cut by fast streams ending in creeks and "
+            "small beaches, swept by westerly wind and rain, with trees "
+            "only where sheltered. At Port-Goulphar on the south-west "
+            "coast, bright algae gathering on the rocks of a deep, calm "
+            "chasm are an unusual Herbam vis; a little further, the "
+            "surf at the rocks called the Needles throws up foam that "
+            "is Aquam vis.",
+            "Two menhirs called Jean and Jeanne stand on a gorse moor in "
+            "the north of the island, one of pale granite and one of "
+            "dark schist: a betrothed couple turned to stone for not "
+            "waiting for their wedding.",
         ),
+        secrets="A suitable Hermetic ritual could restore Jean and Jeanne, who "
+        "would be glad to join a covenant since their world is long "
+        "gone. Jeanne is pregnant and gives birth three months after "
+        "the spell ends, to a Gifted child with a close affinity for "
+        "Terram.",
         **KNOWN_REGION,
     )
     _add(
@@ -1136,59 +1119,57 @@ def _broerec(normandy: Normandy) -> None:
         "Carnac",
         inside=broerec,
         aura=5,
-        summary=secrets(
-            paragraphs(
-                "One of the mightiest magical sites in Mythic Europe: more "
-                "than a thousand rough menhirs, from a child's height to "
-                "over twenty feet, in broken avenues across the heath by the "
-                "village of Carnac, on a scale that dwarfs Stonehenge. By "
-                "day a Magic aura of 5 covers the heath, one of the largest "
-                "the Order knows, rising to 6 or more on the avenues, with "
-                "many regiones; the place is brighter and more real than the "
-                "land round it, and its birds, flowers and beasts show odd "
-                "cleverness, strange powers or speech. As the light goes the "
-                "aura fades, and by night it is Infernal. No covenant has "
-                "ever been built here, and none likely will be.",
-                "The Order's legends set Trianoma's meeting with Diedne the "
-                "Founder here on a bright summer afternoon, and here a "
-                "fleeing remnant of the Diedne was hunted down and killed; "
-                "some say that blood brought the curse. Locals credit "
-                "faeries with the stones and try hedge charms to make them "
-                "build houses overnight; the pious say St Cornelius, fleeing "
-                "in his ox cart, prayed at the shore and God turned his "
-                "faerie pursuers to stone. Most who live nearby agree that "
-                "demons haunt it by night. Processions of the ancient dead "
-                "are seen, and every Midsummer night the villagers bar "
-                "themselves into St Cornelius's church to pray till dawn, "
-                "for even the churchyard's aura turns Infernal 5.",
-                "The Nains guard the stones' mysteries: child-sized, "
-                "misshapen imps with filthy long hair, bandy goat legs and "
-                "burning red eyes (Infernal Might 10, Animal), once korrigan "
-                "corrupted by their own wickedness. They read the strange "
-                "letters on the rocks that show only by starlight on "
-                "moonless nights, dance orgies among the stones and vanish "
-                "into regiones by dawn. They make moon-bright silver coins "
-                "that vanish at daybreak to lure the greedy into ambush, "
-                "conjure false vis that answers a simple Intellego Vim but "
-                "melts away under closer study, and compel up to ten victims "
-                "to dance with them till sunrise, often to death. They "
-                "attack three to a victim, often with worse demons. Their "
-                "unholy night is the first Wednesday in May, when they make "
-                "blood sacrifice and the Infernal aura reaches 6; to come "
-                "near then is suicide.",
-                "Magi of Hermetic geometry and astrology come seeking "
-                "insight, others suspect fertility magic, and a Breakthrough "
-                "might unlock the stones. Jacques Vert of Merinita suggested "
-                "the Nains were dead Diedne dreaming in faerie flesh; nobody "
-                "believed him, and about fifty years ago he disappeared among "
-                "the stones one moonless night, hunting the legendary, "
-                "unnamed treasure of Carnac.",
-            ),
-            "Rumours say Diedne fled into the regiones, or that the stones "
-            "hold portals, like Mercere Portals, to other far-off stone "
-            "rows, through which the surviving Diedne may one day return "
-            "for revenge.",
+        summary=paragraphs(
+            "One of the mightiest magical sites in Mythic Europe: more "
+            "than a thousand rough menhirs, from a child's height to "
+            "over twenty feet, in broken avenues across the heath by the "
+            "village of Carnac, on a scale that dwarfs Stonehenge. By "
+            "day a Magic aura of 5 covers the heath, one of the largest "
+            "the Order knows, rising to 6 or more on the avenues, with "
+            "many regiones; the place is brighter and more real than the "
+            "land round it, and its birds, flowers and beasts show odd "
+            "cleverness, strange powers or speech. As the light goes the "
+            "aura fades, and by night it is Infernal. No covenant has "
+            "ever been built here, and none likely will be.",
+            "The Order's legends set Trianoma's meeting with Diedne the "
+            "Founder here on a bright summer afternoon, and here a "
+            "fleeing remnant of the Diedne was hunted down and killed; "
+            "some say that blood brought the curse. Locals credit "
+            "faeries with the stones and try hedge charms to make them "
+            "build houses overnight; the pious say St Cornelius, fleeing "
+            "in his ox cart, prayed at the shore and God turned his "
+            "faerie pursuers to stone. Most who live nearby agree that "
+            "demons haunt it by night. Processions of the ancient dead "
+            "are seen, and every Midsummer night the villagers bar "
+            "themselves into St Cornelius's church to pray till dawn, "
+            "for even the churchyard's aura turns Infernal 5.",
+            "The Nains guard the stones' mysteries: child-sized, "
+            "misshapen imps with filthy long hair, bandy goat legs and "
+            "burning red eyes (Infernal Might 10, Animal), once korrigan "
+            "corrupted by their own wickedness. They read the strange "
+            "letters on the rocks that show only by starlight on "
+            "moonless nights, dance orgies among the stones and vanish "
+            "into regiones by dawn. They make moon-bright silver coins "
+            "that vanish at daybreak to lure the greedy into ambush, "
+            "conjure false vis that answers a simple Intellego Vim but "
+            "melts away under closer study, and compel up to ten victims "
+            "to dance with them till sunrise, often to death. They "
+            "attack three to a victim, often with worse demons. Their "
+            "unholy night is the first Wednesday in May, when they make "
+            "blood sacrifice and the Infernal aura reaches 6; to come "
+            "near then is suicide.",
+            "Magi of Hermetic geometry and astrology come seeking "
+            "insight, others suspect fertility magic, and a Breakthrough "
+            "might unlock the stones. Jacques Vert of Merinita suggested "
+            "the Nains were dead Diedne dreaming in faerie flesh; nobody "
+            "believed him, and about fifty years ago he disappeared among "
+            "the stones one moonless night, hunting the legendary, "
+            "unnamed treasure of Carnac.",
         ),
+        secrets="Rumours say Diedne fled into the regiones, or that the stones "
+        "hold portals, like Mercere Portals, to other far-off stone "
+        "rows, through which the surviving Diedne may one day return "
+        "for revenge.",
         levels=[
             Builder.level(
                 "The avenues",
@@ -1441,7 +1422,8 @@ def _fudarus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         place=normandy.places["ushant"],
         summary=summary,
         what_matters=what_matters,
-        notes=paragraphs(challenges, items, secrets(STORYGUIDE, hidden)),
+        notes=paragraphs(challenges, items),
+        secrets=hidden,
         aura=7,
         season="Autumn",
     )
@@ -1468,34 +1450,32 @@ def _fudarus_magi(normandy: Normandy, b: Builder, fudarus: Covenant) -> None:
         covenant=fudarus,
         house=TYTALUS,
         age=84,
-        summary=secrets(
-            paragraphs(
-                "Prima of House Tytalus, Buliste filia Bulcis, who led the "
-                "House for twenty years before a long Twilight left her "
-                "seeming dead. She wore the Circlet of the Primus as it "
-                "began, Harpax could not take it from her, and she wears it "
-                "still, setting the covenant's invisible spirits to plague "
-                "her rival: they pull stones from his unfinished tower, put "
-                "ground glass in his food, sew up his clothes, and play "
-                "countless other tricks that border on the deadly. More "
-                "important to the House, she runs Fudarus's vast web of "
-                "spies and speaks mind to mind with several of its key "
-                "agents, through her mastery of Mentem and a collection of "
-                "fixed Arcane Connections; that keeps her respected across "
-                "the Order, though she has little power in the Normandy "
-                "Tribunal. Her followers, the Fideli, rally to her purple "
-                "banner. Her challenges to visitors are philosophical or "
-                "magical.",
-                "She looks a regal woman in her sixties, stout but not fat, "
-                "in violet satin and white Breton lace, with a very "
-                "expressive face. Her plainest Twilight scar is that her "
-                "kindness and her anger can both be felt, the one gently, "
-                "the other painfully. Older than Harpax, she has the more "
-                "raw power, but several Twilights have hemmed in her magic.",
-            ),
-            "She is steering Harpax toward a Diedne relic so she can frame "
-            "him with it.",
+        summary=paragraphs(
+            "Prima of House Tytalus, Buliste filia Bulcis, who led the "
+            "House for twenty years before a long Twilight left her "
+            "seeming dead. She wore the Circlet of the Primus as it "
+            "began, Harpax could not take it from her, and she wears it "
+            "still, setting the covenant's invisible spirits to plague "
+            "her rival: they pull stones from his unfinished tower, put "
+            "ground glass in his food, sew up his clothes, and play "
+            "countless other tricks that border on the deadly. More "
+            "important to the House, she runs Fudarus's vast web of "
+            "spies and speaks mind to mind with several of its key "
+            "agents, through her mastery of Mentem and a collection of "
+            "fixed Arcane Connections; that keeps her respected across "
+            "the Order, though she has little power in the Normandy "
+            "Tribunal. Her followers, the Fideli, rally to her purple "
+            "banner. Her challenges to visitors are philosophical or "
+            "magical.",
+            "She looks a regal woman in her sixties, stout but not fat, "
+            "in violet satin and white Breton lace, with a very "
+            "expressive face. Her plainest Twilight scar is that her "
+            "kindness and her anger can both be felt, the one gently, "
+            "the other painfully. Older than Harpax, she has the more "
+            "raw power, but several Twilights have hemmed in her magic.",
         ),
+        secrets="She is steering Harpax toward a Diedne relic so she can frame "
+        "him with it.",
         traits={"Petty": 3, "Generous": 2, "Caring": -1},
     )
     m["harpax"] = b.magus(
@@ -1503,36 +1483,34 @@ def _fudarus_magi(normandy: Normandy, b: Builder, fudarus: Covenant) -> None:
         covenant=fudarus,
         house=TYTALUS,
         age=70,
-        summary=secrets(
-            paragraphs(
-                "Primus of House Tytalus, the tenth, Harpax filius Bulcis, "
-                "who always felt held back by his elder 'sister', fought her "
-                "hard for the House and lost. When she seemed to die he "
-                "barely paused before breaking into her sanctum and taking "
-                "the Rod of the Primus, and took over her role as Lord Heusaff. He "
-                "torments her with the Rod: one day her sanctum is hot "
-                "enough to melt her candles, the next she must break ice on "
-                "her washbasin.",
-                "He reads Tribunal politics and his fellow Tytali's plots "
-                "better than Buliste, governs the covenant's wealth in vis "
-                "and coin, keeps the oaths of its two vassals, and has "
-                "bought many magi's loyalty; his Decimi, who wear the tenth "
-                "Primus's sigil, are the stronger party in Normandy. Without "
-                "the spies he cannot steer much of the House's business. "
-                "More careful and more varied than his sister, he has a "
-                "wider stock of spells and enchantments but less depth in "
-                "the Arts. His challenges to visitors are physical.",
-                "As himself he is a distinguished, stick-thin man who looks "
-                "about fifty and suffers some arthritis; he keeps other "
-                "guises too, and may first be met as a butler, a sentry or "
-                "a tinker. His obsession and sigil is plurality, and his "
-                "Twilight scar makes the cut of his clothes drift through "
-                "the day, always in his forest green.",
-            ),
-            "As Lord Heusaff he takes the shape of a dashing young nobleman, "
-            "and has played the part so well that he has had to cultivate "
-            "unpleasant habits to keep off marriageable women.",
+        summary=paragraphs(
+            "Primus of House Tytalus, the tenth, Harpax filius Bulcis, "
+            "who always felt held back by his elder 'sister', fought her "
+            "hard for the House and lost. When she seemed to die he "
+            "barely paused before breaking into her sanctum and taking "
+            "the Rod of the Primus, and took over her role as Lord Heusaff. He "
+            "torments her with the Rod: one day her sanctum is hot "
+            "enough to melt her candles, the next she must break ice on "
+            "her washbasin.",
+            "He reads Tribunal politics and his fellow Tytali's plots "
+            "better than Buliste, governs the covenant's wealth in vis "
+            "and coin, keeps the oaths of its two vassals, and has "
+            "bought many magi's loyalty; his Decimi, who wear the tenth "
+            "Primus's sigil, are the stronger party in Normandy. Without "
+            "the spies he cannot steer much of the House's business. "
+            "More careful and more varied than his sister, he has a "
+            "wider stock of spells and enchantments but less depth in "
+            "the Arts. His challenges to visitors are physical.",
+            "As himself he is a distinguished, stick-thin man who looks "
+            "about fifty and suffers some arthritis; he keeps other "
+            "guises too, and may first be met as a butler, a sentry or "
+            "a tinker. His obsession and sigil is plurality, and his "
+            "Twilight scar makes the cut of his clothes drift through "
+            "the day, always in his forest green.",
         ),
+        secrets="As Lord Heusaff he takes the shape of a dashing young nobleman, "
+        "and has played the part so well that he has had to cultivate "
+        "unpleasant habits to keep off marriageable women.",
         traits={"Mercurial": 3, "Impulsive": 1, "Sincere": 1},
     )
 
@@ -1585,7 +1563,7 @@ def _exspectatio(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         place=normandy.places["exspectatio_site"],
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         unnamed_magi=3,
         season="Summer",
     )
@@ -1611,19 +1589,17 @@ def _exspectatio_magi(normandy: Normandy, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=TYTALUS,
         age=57,
-        summary=secrets(
-            "Of House Tytalus, the youngest of Exspectatio's founders, with "
-            "the blood of an earth spirit and a deep affinity for soil, "
-            "stone and clay: over seven feet tall, entirely hairless, with "
-            "skin like rock. He has backed Harpax staunchly ever since "
-            "Buliste refused to take him as her apprentice. In any contest, "
-            "of blows, words or magic, he lets his opponent wear herself out "
-            "against his unbreakable defences and then strikes one crushing "
-            "blow. He is Iasper's master, and wrote The Mole's Work, Terram "
-            "Lab Texts now held for the Tribunal. Looks about forty.",
-            "Like Valerian of Confluensis, he is reputed to belong to the "
-            "Guernicus Terrae cult.",
-        ),
+        summary="Of House Tytalus, the youngest of Exspectatio's founders, with "
+        "the blood of an earth spirit and a deep affinity for soil, "
+        "stone and clay: over seven feet tall, entirely hairless, with "
+        "skin like rock. He has backed Harpax staunchly ever since "
+        "Buliste refused to take him as her apprentice. In any contest, "
+        "of blows, words or magic, he lets his opponent wear herself out "
+        "against his unbreakable defences and then strikes one crushing "
+        "blow. He is Iasper's master, and wrote The Mole's Work, Terram "
+        "Lab Texts now held for the Tribunal. Looks about forty.",
+        secrets="Like Valerian of Confluensis, he is reputed to belong to the "
+        "Guernicus Terrae cult.",
         traits={"Humorless": 2, "Unswerving": 3, "Loyal to Harpax": 3},
     )
     m["kybella"] = b.magus(
@@ -1631,22 +1607,20 @@ def _exspectatio_magi(normandy: Normandy, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=TYTALUS,
         age=68,
-        summary=secrets(
-            "Of House Tytalus, a leading member of the Titanoi, the House's "
-            "cult of theurgists, and a close friend of Prima Buliste. She "
-            "keeps up the enchantments that hold Fudarus's spirits in check "
-            "and casts its Aegis of the Hearth each year for both Primi. "
-            "She specialises in genii loci and searches every place she "
-            "stays for signs of one. Her filius Helios, of Atramentum "
-            "Renatus, is a theurgist too. Looks about fifty.",
-            "Twelve years ago a Twilight showed her Death reaping Europe, "
-            "kings, bishops, commoners and magi alike, and she founded the "
-            "Cabal of the Laden Cart to trap Death and hold it to ransom. "
-            "The other members assume she is one of them but never know "
-            "which disguise is hers. With another theurgist of her line she "
-            "is obsessed with the Ankeu, and her agents listen across "
-            "Brittany for anyone who hears its cart.",
-        ),
+        summary="Of House Tytalus, a leading member of the Titanoi, the House's "
+        "cult of theurgists, and a close friend of Prima Buliste. She "
+        "keeps up the enchantments that hold Fudarus's spirits in check "
+        "and casts its Aegis of the Hearth each year for both Primi. "
+        "She specialises in genii loci and searches every place she "
+        "stays for signs of one. Her filius Helios, of Atramentum "
+        "Renatus, is a theurgist too. Looks about fifty.",
+        secrets="Twelve years ago a Twilight showed her Death reaping Europe, "
+        "kings, bishops, commoners and magi alike, and she founded the "
+        "Cabal of the Laden Cart to trap Death and hold it to ransom. "
+        "The other members assume she is one of them but never know "
+        "which disguise is hers. With another theurgist of her line she "
+        "is obsessed with the Ankeu, and her agents listen across "
+        "Brittany for anyone who hears its cart.",
         traits={"Loyal to Buliste": 3, "Suspicious": 1},
     )
     m["iasper"] = b.magus(
@@ -1844,16 +1818,14 @@ def _lords(normandy: Normandy, b: Builder) -> None:
         wealth="Poor",
         seat="Ushant",
         place=p["ushant"],
-        summary=secrets(
-            "Head of the Heusaff family, an ancient Breton line that owns "
-            "the Isle of Ushant and its only village, Lampaul, whose fishing "
-            "keeps the family. The lord is a dashing young nobleman with "
-            "some off-putting habits; the fishermen have little to do with "
-            "the family and do not know its 'castle' is a magical place.",
-            "Lord Heusaff is Harpax, Primus of House Tytalus, in a deep "
-            "cover disguise taken from Buliste. Through the role he governs "
-            "Fudarus's vis and coin.",
-        ),
+        summary="Head of the Heusaff family, an ancient Breton line that owns "
+        "the Isle of Ushant and its only village, Lampaul, whose fishing "
+        "keeps the family. The lord is a dashing young nobleman with "
+        "some off-putting habits; the fishermen have little to do with "
+        "the family and do not know its 'castle' is a magical place.",
+        secrets="Lord Heusaff is Harpax, Primus of House Tytalus, in a deep "
+        "cover disguise taken from Buliste. Through the role he governs "
+        "Fudarus's vis and coin.",
     )
 
 
@@ -2054,13 +2026,11 @@ def _abbeys(normandy: Normandy, b: Builder) -> None:
         church=chapel,
         order="Knights Templar",
         place=p["rose_coast"],
-        summary=secrets(
-            "A round chapel built by the Templars at Lanleff in the "
-            "eleventh century and the church of Brélévenez at Lannion in "
-            "the twelfth, raised to cleanse the coast of the Diedne's "
-            "diabolic taint.",
-            "Rumour says a Quaesitor suggested the building to the Templars.",
-        ),
+        summary="A round chapel built by the Templars at Lanleff in the "
+        "eleventh century and the church of Brélévenez at Lannion in "
+        "the twelfth, raised to cleanse the coast of the Diedne's "
+        "diabolic taint.",
+        secrets="Rumour says a Quaesitor suggested the building to the Templars.",
     )
     w["our_lady_of_haut"] = b.church(
         "Chapel of Our Lady of Haut",
@@ -2477,20 +2447,18 @@ def _factions(normandy: Normandy, b: Builder) -> None:
         ruler="Kybella of Tytalus (secretly)",
         wants="To trap Death and hold it to ransom, or to defeat disease and age",
         rules="Members are anonymous, meet in disguise or not at all, and write rather than meet",
-        summary=secrets(
-            "A secret cabal of Tytalus magi, from Normandy and beyond, "
-            "formed to entrap Death. Some members mean it literally, others "
-            "as a fight against disease and the ravages of time. Its agents "
-            "listen across Brittany for anyone who hears the creak of the "
-            "Ankeu's cart, and a member soon calls on whoever does.",
-            "Kybella founded it twelve years ago after a Twilight vision of "
-            "Death reaping all Europe; the others assume she is a member but "
-            "never know which disguise is hers. She and another theurgist "
-            "of her line mean to imprison the Ankeu. If they succeed, Death "
-            "will not take kindly to being tamed; the cabal may already have "
-            "caught a night spirit that is not Death, which must be freed "
-            "far from Brittany. Iasper is seeking to join.",
-        ),
+        summary="A secret cabal of Tytalus magi, from Normandy and beyond, "
+        "formed to entrap Death. Some members mean it literally, others "
+        "as a fight against disease and the ravages of time. Its agents "
+        "listen across Brittany for anyone who hears the creak of the "
+        "Ankeu's cart, and a member soon calls on whoever does.",
+        secrets="Kybella founded it twelve years ago after a Twilight vision of "
+        "Death reaping all Europe; the others assume she is a member but "
+        "never know which disguise is hers. She and another theurgist "
+        "of her line mean to imprison the Ankeu. If they succeed, Death "
+        "will not take kindly to being tamed; the cabal may already have "
+        "caught a night spirit that is not Death, which must be freed "
+        "far from Brittany. Iasper is seeking to join.",
     )
     w["fudarus_spies"] = b.faction(
         "The Web of Fudarus",
@@ -2500,18 +2468,16 @@ def _factions(normandy: Normandy, b: Builder) -> None:
         place=p["brittany"],
         wants="Knowledge of everything that moves in the Order and the Tribunal",
         offers="Information, unusual goods and services, mercenaries",
-        summary=secrets(
-            "House Tytalus's vast network of spies, informants, mercenaries "
-            "and suppliers of unusual goods and services, run from Fudarus "
-            "and the root of much of the House's strength. Agents rarely "
-            "know one another: in Paris two merchant partners scheme against "
-            "each other for patrons who are secretly the same magus, and the "
-            "Dyers' Guild, won from Florum's agents, is Fudarus's.",
-            "Buliste controls the network and speaks mind to mind with "
-            "several key agents; Harpax, without it, cannot steer much of "
-            "the House's business and has jailed at least one agent on false "
-            "charges.",
-        ),
+        summary="House Tytalus's vast network of spies, informants, mercenaries "
+        "and suppliers of unusual goods and services, run from Fudarus "
+        "and the root of much of the House's strength. Agents rarely "
+        "know one another: in Paris two merchant partners scheme against "
+        "each other for patrons who are secretly the same magus, and the "
+        "Dyers' Guild, won from Florum's agents, is Fudarus's.",
+        secrets="Buliste controls the network and speaks mind to mind with "
+        "several key agents; Harpax, without it, cannot steer much of "
+        "the House's business and has jailed at least one agent on false "
+        "charges.",
     )
     w["decimi"] = b.faction(
         "The Decimi",

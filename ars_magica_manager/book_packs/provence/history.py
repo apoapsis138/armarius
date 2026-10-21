@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import SECRETS, paragraphs, secrets
+from ..builder import paragraphs, secrets
 
 if TYPE_CHECKING:
     from . import Provence
@@ -937,6 +937,6 @@ def build(provence: Provence) -> None:
     ):
         provence.b.event(tribunal, year, title, secrets(details, hidden), season=season)
     eras = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
-    # Any history already written keeps its place, its secrets after ours.
-    head, _, hidden = tribunal.history.partition("\n\n" + SECRETS + "\n")
-    tribunal.history = secrets(paragraphs(head, eras), paragraphs(hidden, FUTURE))
+    # Any history already written keeps its place, its secrets ahead of ours.
+    tribunal.history = paragraphs(tribunal.history, eras)
+    tribunal.secrets = paragraphs(tribunal.secrets, FUTURE)

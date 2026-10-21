@@ -32,7 +32,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -342,82 +342,80 @@ def _bards(hibernia: Hibernia) -> None:
         ),
         wants="Patrons, the old tales kept, a new Chief Bard",
         offers="Lore, genealogy, praise or satire, and schooling for nobles' sons",
-        summary=secrets(
-            paragraphs(
-                "Of the three druid callings only the bards lived through "
-                "Christianity and Diedne, dismissed as mere poets by the "
-                "one and as petty conjurers by the other, and they are "
-                "little changed in 1220. They keep the old tales and "
-                "Christian homilies in verse and prose and make new works "
-                "for the kings who keep them, and they call themselves "
-                "filídh (singular filí) rather than bards, to put their "
-                "druid past further behind them.",
-                "Their schools double as Ireland's grammar schools for "
-                "aristocrats' sons: four years of grammar, composition, "
-                "history, genealogy, geography and custom, then the "
-                "examination. Those who stay grow their memories further; "
-                "a senior bard knows more than two hundred stories and "
-                "builds poems with many layers of meaning. The Chief "
-                "Bard is the high-king's own poet and king of the bards, "
-                "who settles their quarrels with outsiders and sets the "
-                "fashions of verse. The last, Giolla Ernain Ua Martain, "
-                "died in 1218, and no successor has been chosen.",
-                "Bards inherit the old reverence for druids. Their "
-                "immunity, once the high-king's guarantee, has lapsed, "
-                "but their name still protects them: Irish households "
-                "owe a known bard hospitality, feuding with one was long "
-                "forbidden, and even robbers fear to touch one, so a bard "
-                "walks the roads in safety.",
-                "Bard characters: the Social Status Virtues Bard (free; a "
-                "filí of the rank of Dos, Local Reputation 1, aged 20 or "
-                "more), Senior Bard (Minor; a Cano or Cli after five or "
-                "six years, Reputation 2, 90 extra experience points) and "
-                "Master Bard (Major; an Anruth after nine years, "
-                "Reputation 3, 240 extra points, two seasons a year "
-                "teaching or composing for a lord), with Bardic Education "
-                "(the catalog's Educated (Bardic), 50 points) for the "
-                "years of study; the Protection Virtue for the respect "
-                "they are owed, worth more where the English are weak; "
-                "Profession: Storyteller or Poet, the lores, and the Art "
-                "of Memory (or Concentration). Enchanting Storytelling "
-                "is Enchanting Music told as a tale. All are in the "
-                "catalog.",
-                "Bards of power. A few senior bards keep the druids' "
-                "magic in the making of their works rather than the "
-                "telling: Máistirs whose verse is uncannily beautiful, "
-                "and many of them wordsmiths, with Touched by (Realm), "
-                "usually Faerie, who make wondrous tales and poems as "
-                "others make wondrous items, using Communication + "
-                "Profession: Storyteller or Poet, limited to Personal "
-                "Range, Performance Duration and Sound Target, and usable "
-                "only by the one they were made for; reciting one makes "
-                "an Arcane Connection to the reciter that a magus can "
-                "catch. The Uí hUiginn school has most of them, some able "
-                "to work craft magic like the Rusticani. The book gives "
-                "five such tales: The Youthful Exploits of Cú Chulainn "
-                "(ReCo 30, listeners ignore fatigue and wounds), Fear "
-                "Diadh's Last Stand (CrMe 20, +3 against fear), The "
-                "Daghdha's Escape from Indech's Ráth (ReMe 20, an "
-                "unbreakable sleep), Manannán Mac Lir's Chariot "
-                "(MuAq(Te) 30, walking on water) and Blrrmm, Blrrmm "
-                "(Mu(Re)Im 10, listeners can only babble).",
-                "The new Duration Performance (as Concentration: it lasts "
-                "while the caster performs, after a Communication + "
-                "Ability roll against 3) and Target Sound (as Structure: "
-                "everyone who hears the sound within a Voice range of it) "
-                "need Performance Magic or Sensory Magic for Hermetic use; "
-                "the app does not model either.",
-                "The four great schools are Dromnea of the Uí Dálaigh, "
-                "Baile Uí Eódhasa, Ceall Cluaine of the Uí hUiginn and "
-                "Cahir of the Mac Craith (each its own record). The "
-                "Ollamhain, faerie musicians who steal the ollamh's "
-                "title, are their rivals (see that faction).",
-                SKETCHED,
-            ),
-            "Some senior bards still hold their druid forebears' magic, "
-            "though not every bard of high grade can, and no bard will "
-            "own that such magic exists.",
+        summary=paragraphs(
+            "Of the three druid callings only the bards lived through "
+            "Christianity and Diedne, dismissed as mere poets by the "
+            "one and as petty conjurers by the other, and they are "
+            "little changed in 1220. They keep the old tales and "
+            "Christian homilies in verse and prose and make new works "
+            "for the kings who keep them, and they call themselves "
+            "filídh (singular filí) rather than bards, to put their "
+            "druid past further behind them.",
+            "Their schools double as Ireland's grammar schools for "
+            "aristocrats' sons: four years of grammar, composition, "
+            "history, genealogy, geography and custom, then the "
+            "examination. Those who stay grow their memories further; "
+            "a senior bard knows more than two hundred stories and "
+            "builds poems with many layers of meaning. The Chief "
+            "Bard is the high-king's own poet and king of the bards, "
+            "who settles their quarrels with outsiders and sets the "
+            "fashions of verse. The last, Giolla Ernain Ua Martain, "
+            "died in 1218, and no successor has been chosen.",
+            "Bards inherit the old reverence for druids. Their "
+            "immunity, once the high-king's guarantee, has lapsed, "
+            "but their name still protects them: Irish households "
+            "owe a known bard hospitality, feuding with one was long "
+            "forbidden, and even robbers fear to touch one, so a bard "
+            "walks the roads in safety.",
+            "Bard characters: the Social Status Virtues Bard (free; a "
+            "filí of the rank of Dos, Local Reputation 1, aged 20 or "
+            "more), Senior Bard (Minor; a Cano or Cli after five or "
+            "six years, Reputation 2, 90 extra experience points) and "
+            "Master Bard (Major; an Anruth after nine years, "
+            "Reputation 3, 240 extra points, two seasons a year "
+            "teaching or composing for a lord), with Bardic Education "
+            "(the catalog's Educated (Bardic), 50 points) for the "
+            "years of study; the Protection Virtue for the respect "
+            "they are owed, worth more where the English are weak; "
+            "Profession: Storyteller or Poet, the lores, and the Art "
+            "of Memory (or Concentration). Enchanting Storytelling "
+            "is Enchanting Music told as a tale. All are in the "
+            "catalog.",
+            "Bards of power. A few senior bards keep the druids' "
+            "magic in the making of their works rather than the "
+            "telling: Máistirs whose verse is uncannily beautiful, "
+            "and many of them wordsmiths, with Touched by (Realm), "
+            "usually Faerie, who make wondrous tales and poems as "
+            "others make wondrous items, using Communication + "
+            "Profession: Storyteller or Poet, limited to Personal "
+            "Range, Performance Duration and Sound Target, and usable "
+            "only by the one they were made for; reciting one makes "
+            "an Arcane Connection to the reciter that a magus can "
+            "catch. The Uí hUiginn school has most of them, some able "
+            "to work craft magic like the Rusticani. The book gives "
+            "five such tales: The Youthful Exploits of Cú Chulainn "
+            "(ReCo 30, listeners ignore fatigue and wounds), Fear "
+            "Diadh's Last Stand (CrMe 20, +3 against fear), The "
+            "Daghdha's Escape from Indech's Ráth (ReMe 20, an "
+            "unbreakable sleep), Manannán Mac Lir's Chariot "
+            "(MuAq(Te) 30, walking on water) and Blrrmm, Blrrmm "
+            "(Mu(Re)Im 10, listeners can only babble).",
+            "The new Duration Performance (as Concentration: it lasts "
+            "while the caster performs, after a Communication + "
+            "Ability roll against 3) and Target Sound (as Structure: "
+            "everyone who hears the sound within a Voice range of it) "
+            "need Performance Magic or Sensory Magic for Hermetic use; "
+            "the app does not model either.",
+            "The four great schools are Dromnea of the Uí Dálaigh, "
+            "Baile Uí Eódhasa, Ceall Cluaine of the Uí hUiginn and "
+            "Cahir of the Mac Craith (each its own record). The "
+            "Ollamhain, faerie musicians who steal the ollamh's "
+            "title, are their rivals (see that faction).",
+            SKETCHED,
         ),
+        secrets="Some senior bards still hold their druid forebears' magic, "
+        "though not every bard of high grade can, and no bard will "
+        "own that such magic exists.",
     )
     w["ollamhain"] = b.faction(
         "The Ollamhain",
@@ -427,32 +425,30 @@ def _bards(hibernia: Hibernia) -> None:
         rules="Faerie wizardry worked through music, outside the bardic schools",
         wants="The bardic title, and audiences to enchant",
         offers="Glamour and music stronger than any filí's",
-        summary=secrets(
-            paragraphs(
-                "A small band of faerie magicians (Realms of Power: "
-                "Faerie) who call themselves the masters, taking the "
-                "learned grade of ollamh for a tradition that conjures "
-                "glamour with music. They are stronger in magic than the "
-                "Irish bards but lack their good name. The schools teach "
-                "none of it: music is a lesser art to them, using it for "
-                "glamour betrays the tradition, and the Ollamhain carry "
-                "the title with none of its lore or duty, so they are "
-                "forbidden to call themselves filídh. Some do anyway, and "
-                "wordsmiths have tried to prosecute rivals before the "
-                "Sacred Council. Between single bards and Ollamhain "
-                "things may be respectful, each keeping to its own "
-                "sphere, or a bitter feud.",
-                "Story seed: the bardic schools' enmity could be turned "
-                "against a covenant's rival, sparking a war of satire and "
-                "rhymed slander.",
-                "Faolán of the Younger House is the son in magic of a true "
-                "Ollamh, and an Ollamhain singer was driven out of "
-                "Roscommon (see Connacht).",
-                SKETCHED,
-            ),
-            "A 'bard' who takes the part of the covenant's rival or enemy "
-            "is in truth one of the Ollamhain.",
+        summary=paragraphs(
+            "A small band of faerie magicians (Realms of Power: "
+            "Faerie) who call themselves the masters, taking the "
+            "learned grade of ollamh for a tradition that conjures "
+            "glamour with music. They are stronger in magic than the "
+            "Irish bards but lack their good name. The schools teach "
+            "none of it: music is a lesser art to them, using it for "
+            "glamour betrays the tradition, and the Ollamhain carry "
+            "the title with none of its lore or duty, so they are "
+            "forbidden to call themselves filídh. Some do anyway, and "
+            "wordsmiths have tried to prosecute rivals before the "
+            "Sacred Council. Between single bards and Ollamhain "
+            "things may be respectful, each keeping to its own "
+            "sphere, or a bitter feud.",
+            "Story seed: the bardic schools' enmity could be turned "
+            "against a covenant's rival, sparking a war of satire and "
+            "rhymed slander.",
+            "Faolán of the Younger House is the son in magic of a true "
+            "Ollamh, and an Ollamhain singer was driven out of "
+            "Roscommon (see Connacht).",
+            SKETCHED,
         ),
+        secrets="A 'bard' who takes the part of the covenant's rival or enemy "
+        "is in truth one of the Ollamhain.",
     )
 
 
@@ -535,81 +531,79 @@ def _races(hibernia: Hibernia) -> None:
         ),
         wants="Their stories retold and lived again, and the vitality that brings",
         offers="Craft, enchanted treasures, healing, and a vote at Tribunal",
-        summary=secrets(
-            paragraphs(
-                "Ireland's pagan gods, the children of Danu: faeries first "
-                "bound to the great elemental spirit of the Danube, who "
-                "took up a band of Nemed's grandson's people fleeing "
-                "Ireland, dwelt with them in four mysterious cities, then "
-                "led them back to conquer the Fir Bolg and later the "
-                "Fomórach. For two hundred years they lived among their "
-                "followers, marrying them and teaching their arts, until "
-                "the Mílesians defeated them and they withdrew into "
-                "cairns, tumuli and buried ráths. Many remain, kings, "
-                "warriors and leaders, handsome and dressed like nobles, "
-                "but they are seldom met. The Irish still honour them and "
-                "remember their tales.",
-                "Some of them: Aonghus mac Óg of youth, love and passion; "
-                "Badhbh the war goddess, who bathes in her enemies' blood "
-                "and whose sight is an evil omen; Brigid of fertility, "
-                "healing and poetry, whose holy places a saint of the same "
-                "name took over; Dian Céacht the physician; Donn the death "
-                "god, gathering an army of spirits at Teach Duínn (see "
-                "the Bestiary); Goibhniu the smith, maker of magic spears "
-                "and of an ale that grants immortality, who hates Donn; "
-                "Lugh of many crafts, the Tuatha Dé's saviour at the "
-                "Second Battle of Moytirra; Manannán mac Lir of the sea, "
-                "who drives his chariot round Ireland herding fish and "
-                "whales; Oghma, who made the ogham letters; the Dagda, "
-                "father of the gods as Danu is their mother, though not "
-                "their leader; and Nuadha of the Silver Arm, their leader "
-                "in the wars with the Fir Bolg and the Fomóir. The four "
-                "treasures of the Tuatha Dé still exist.",
-                "Their ambassador is Mug Ruith, a faerie in the role of a "
-                "famous Munster druid who learned his craft from Simon "
-                "Magus in Jerusalem, served many Munster kings as court "
-                "wizard and, some say, beheaded John the Baptist, cursing "
-                "the Irish with violence. He sits on the Sacred Council "
-                "every seven years for Bobd, king of the Munster Tuatha "
-                "Dé, flying in on the roth rámach, his oared wheel, in a "
-                "bull's hide and a bird mask. He lives on Dairbhre off "
-                "Desmond's west coast (see Munster) with his faerie "
-                "daughter Tlachtga, a strong druid herself, who also "
-                "keeps a sídhe on the Hill of Tlachtga (see Meath). His "
-                "treasures, a shining chariot, a magic shield and a "
-                "stone that once became a venomous eel, draw treasure "
-                "seekers to the island.",
-                "Their stories: comical tales they repeat for spectators "
-                "who get caught in them (the Dagda once ate his way out "
-                "of a pit of porridge, and may make a village dig and "
-                "fill another); tales of craft and wonder (Manannán's "
-                "cloaks of invisibility, Goibhniu's ale, Dian Céacht's "
-                "healing pools); feuds, in which locals suffer; and "
-                "tales of bloodshed that stir men to violence or warn "
-                "them off it.",
-                "Story seeds: an Irish rebel steals one of Manannán's "
-                "cloaks to raid the English along the Leinster-Ulster "
-                "border, and its faerie owner torments the next village "
-                "until it is returned; thieves brew Goibhniu's ale and "
-                "sell it to princes and knights, not knowing it turns to "
-                "poison within the month unless he brews it, and a hedge "
-                "wizard asks the magi to find the barrels; a covenfolk's "
-                "contagious old Irish sickness defies Hermetic healing, "
-                "and only one of Dian Céacht's pools will cure it; Donn "
-                "steals Goibhniu's magic cow and hides it in a local "
-                "king's ráth, and Goibhniu arms trooping faeries with "
-                "enchanted spears to raid it; Lugh gathers young men, "
-                "some of the macgnímartha among them, to raid the "
-                "Fomóir islands again, and the magi fear the raid will "
-                "bring a Fomóir invasion; a physician on his way to cure "
-                "his king sees Badhbh and begs the magi to drive her off "
-                "(poets say Strongbow saw her washing severed heads "
-                "before his last battle).",
-            ),
-            "Why the Tuatha Dé sided with House Diedne in the Schism War "
-            "is still unknown, after two centuries of Cliffheart's "
-            "questions (see Munster).",
+        summary=paragraphs(
+            "Ireland's pagan gods, the children of Danu: faeries first "
+            "bound to the great elemental spirit of the Danube, who "
+            "took up a band of Nemed's grandson's people fleeing "
+            "Ireland, dwelt with them in four mysterious cities, then "
+            "led them back to conquer the Fir Bolg and later the "
+            "Fomórach. For two hundred years they lived among their "
+            "followers, marrying them and teaching their arts, until "
+            "the Mílesians defeated them and they withdrew into "
+            "cairns, tumuli and buried ráths. Many remain, kings, "
+            "warriors and leaders, handsome and dressed like nobles, "
+            "but they are seldom met. The Irish still honour them and "
+            "remember their tales.",
+            "Some of them: Aonghus mac Óg of youth, love and passion; "
+            "Badhbh the war goddess, who bathes in her enemies' blood "
+            "and whose sight is an evil omen; Brigid of fertility, "
+            "healing and poetry, whose holy places a saint of the same "
+            "name took over; Dian Céacht the physician; Donn the death "
+            "god, gathering an army of spirits at Teach Duínn (see "
+            "the Bestiary); Goibhniu the smith, maker of magic spears "
+            "and of an ale that grants immortality, who hates Donn; "
+            "Lugh of many crafts, the Tuatha Dé's saviour at the "
+            "Second Battle of Moytirra; Manannán mac Lir of the sea, "
+            "who drives his chariot round Ireland herding fish and "
+            "whales; Oghma, who made the ogham letters; the Dagda, "
+            "father of the gods as Danu is their mother, though not "
+            "their leader; and Nuadha of the Silver Arm, their leader "
+            "in the wars with the Fir Bolg and the Fomóir. The four "
+            "treasures of the Tuatha Dé still exist.",
+            "Their ambassador is Mug Ruith, a faerie in the role of a "
+            "famous Munster druid who learned his craft from Simon "
+            "Magus in Jerusalem, served many Munster kings as court "
+            "wizard and, some say, beheaded John the Baptist, cursing "
+            "the Irish with violence. He sits on the Sacred Council "
+            "every seven years for Bobd, king of the Munster Tuatha "
+            "Dé, flying in on the roth rámach, his oared wheel, in a "
+            "bull's hide and a bird mask. He lives on Dairbhre off "
+            "Desmond's west coast (see Munster) with his faerie "
+            "daughter Tlachtga, a strong druid herself, who also "
+            "keeps a sídhe on the Hill of Tlachtga (see Meath). His "
+            "treasures, a shining chariot, a magic shield and a "
+            "stone that once became a venomous eel, draw treasure "
+            "seekers to the island.",
+            "Their stories: comical tales they repeat for spectators "
+            "who get caught in them (the Dagda once ate his way out "
+            "of a pit of porridge, and may make a village dig and "
+            "fill another); tales of craft and wonder (Manannán's "
+            "cloaks of invisibility, Goibhniu's ale, Dian Céacht's "
+            "healing pools); feuds, in which locals suffer; and "
+            "tales of bloodshed that stir men to violence or warn "
+            "them off it.",
+            "Story seeds: an Irish rebel steals one of Manannán's "
+            "cloaks to raid the English along the Leinster-Ulster "
+            "border, and its faerie owner torments the next village "
+            "until it is returned; thieves brew Goibhniu's ale and "
+            "sell it to princes and knights, not knowing it turns to "
+            "poison within the month unless he brews it, and a hedge "
+            "wizard asks the magi to find the barrels; a covenfolk's "
+            "contagious old Irish sickness defies Hermetic healing, "
+            "and only one of Dian Céacht's pools will cure it; Donn "
+            "steals Goibhniu's magic cow and hides it in a local "
+            "king's ráth, and Goibhniu arms trooping faeries with "
+            "enchanted spears to raid it; Lugh gathers young men, "
+            "some of the macgnímartha among them, to raid the "
+            "Fomóir islands again, and the magi fear the raid will "
+            "bring a Fomóir invasion; a physician on his way to cure "
+            "his king sees Badhbh and begs the magi to drive her off "
+            "(poets say Strongbow saw her washing severed heads "
+            "before his last battle).",
         ),
+        secrets="Why the Tuatha Dé sided with House Diedne in the Schism War "
+        "is still unknown, after two centuries of Cliffheart's "
+        "questions (see Munster).",
     )
     w["fir_bolg"] = b.faction(
         "The Fir Bolg",
@@ -625,59 +619,57 @@ def _races(hibernia: Hibernia) -> None:
         ),
         wants="Respect for their titles; their old pride restored",
         offers="Counsel to Connacht's rulers, healing and fertility, a vote at Tribunal",
-        summary=secrets(
-            paragraphs(
-                "The people who came after the flood that ended the "
-                "Nemedians, in three tribes: the Fir Bolg proper, the "
-                "most numerous, who named the whole race, the Fir "
-                "Domhnann and the Gaileoin. Landing in the south, they "
-                "spread over the island and first cut it into the four "
-                "provinces still used, all but Meath. In the north they "
-                "met the Fomórach, bought peace with tribute and became "
-                "their serfs, farming for idle Fomóir lords. Beaten by "
-                "the Tuatha Dé at the First Battle of Magh Tuireadh, they "
-                "were offered one province and chose Connacht; when the "
-                "Fomórach came for tribute and found the Tuatha Dé there "
-                "instead, those two went to war. Few remain in Connacht; "
-                "most now live on the Aran Isles (see Connacht).",
-                "They were once like humans but greater, taller, stronger, "
-                "fairer and more skilled, peaceful farmers who could "
-                "make the poorest ground bear; but Fomóir lords bred with "
-                "them, and now few escape deformity but the royal line of "
-                "each tribe, and the monstrous blood makes them wrathful "
-                "and prone to the Ríastradh. Royalty is the Gentleman or "
-                "Gentlewoman Virtue, about as much as humans grant their "
-                "titles; the royal caste often has a power of healing or "
-                "fertility, such as Purifying Touch or Control Fertility, "
-                "and one with a Dark Secret or Black Sheep may hide or "
-                "show a malformation.",
-                "The Fir Bolg tribe is still the largest and leads: King "
-                "Rudraige Ua Sláine, who rules the whole race, lives on "
-                "Árainn Mhór with them. They are Christian, converted by "
-                "Saint Grellan as this chapter has it (Connacht's chapter "
-                "says Saint Patrick). The Fir Domhnann, the smallest and "
-                "always closest to the Fomórach, took the Fomóir goddess "
-                "Domnu as their own and keep the night as their Lady of "
-                "Darkness wants; their druids have strange powers of "
-                "darkness and healing that light undoes. The Gaileoin "
-                "look Christian, and are a lazier, more casually sinful "
-                "people than their neighbours.",
-                "Their ambassador is Fothaid, one of the king's younger "
-                "sons: seven feet tall, broad and brawny, graceful, a "
-                "trained speaker as handsome in manner as in looks, and "
-                "fiercely vain of his pure blood, raging at any hint of a "
-                "flaw. He cares little for his people and uses the "
-                "Tribunal to win admirers.",
-                "Fir Bolg characters and battle transformations are as the "
-                "Fomórach's (see that faction); Sláine, their leader, was "
-                "the first high-king of Mythic Ireland.",
-                SKETCHED,
-            ),
-            "A secret circle of Gaileoin infernalists rules the tribe's "
-            "king; the other tribes do not know. The meddling has left "
-            "the Gaileoin royal line feeble-minded, puppets in all but "
-            "name, though the tribe as a whole has been slow to fall.",
+        summary=paragraphs(
+            "The people who came after the flood that ended the "
+            "Nemedians, in three tribes: the Fir Bolg proper, the "
+            "most numerous, who named the whole race, the Fir "
+            "Domhnann and the Gaileoin. Landing in the south, they "
+            "spread over the island and first cut it into the four "
+            "provinces still used, all but Meath. In the north they "
+            "met the Fomórach, bought peace with tribute and became "
+            "their serfs, farming for idle Fomóir lords. Beaten by "
+            "the Tuatha Dé at the First Battle of Magh Tuireadh, they "
+            "were offered one province and chose Connacht; when the "
+            "Fomórach came for tribute and found the Tuatha Dé there "
+            "instead, those two went to war. Few remain in Connacht; "
+            "most now live on the Aran Isles (see Connacht).",
+            "They were once like humans but greater, taller, stronger, "
+            "fairer and more skilled, peaceful farmers who could "
+            "make the poorest ground bear; but Fomóir lords bred with "
+            "them, and now few escape deformity but the royal line of "
+            "each tribe, and the monstrous blood makes them wrathful "
+            "and prone to the Ríastradh. Royalty is the Gentleman or "
+            "Gentlewoman Virtue, about as much as humans grant their "
+            "titles; the royal caste often has a power of healing or "
+            "fertility, such as Purifying Touch or Control Fertility, "
+            "and one with a Dark Secret or Black Sheep may hide or "
+            "show a malformation.",
+            "The Fir Bolg tribe is still the largest and leads: King "
+            "Rudraige Ua Sláine, who rules the whole race, lives on "
+            "Árainn Mhór with them. They are Christian, converted by "
+            "Saint Grellan as this chapter has it (Connacht's chapter "
+            "says Saint Patrick). The Fir Domhnann, the smallest and "
+            "always closest to the Fomórach, took the Fomóir goddess "
+            "Domnu as their own and keep the night as their Lady of "
+            "Darkness wants; their druids have strange powers of "
+            "darkness and healing that light undoes. The Gaileoin "
+            "look Christian, and are a lazier, more casually sinful "
+            "people than their neighbours.",
+            "Their ambassador is Fothaid, one of the king's younger "
+            "sons: seven feet tall, broad and brawny, graceful, a "
+            "trained speaker as handsome in manner as in looks, and "
+            "fiercely vain of his pure blood, raging at any hint of a "
+            "flaw. He cares little for his people and uses the "
+            "Tribunal to win admirers.",
+            "Fir Bolg characters and battle transformations are as the "
+            "Fomórach's (see that faction); Sláine, their leader, was "
+            "the first high-king of Mythic Ireland.",
+            SKETCHED,
         ),
+        secrets="A secret circle of Gaileoin infernalists rules the tribe's "
+        "king; the other tribes do not know. The meddling has left "
+        "the Gaileoin royal line feeble-minded, puppets in all but "
+        "name, though the tribe as a whole has been slow to fall.",
     )
     w["fomorach"] = b.faction(
         "The Fomórach",
@@ -772,36 +764,34 @@ def _beasts(hibernia: Hibernia) -> None:
         ),
         wants="Not to be bound or enslaved by magi",
         offers="A vote at Tribunal; the favour of Ireland's magical beasts",
-        summary=secrets(
-            paragraphs(
-                "Ireland's magical beasts are represented at Tribunal like "
-                "any people. Until two meetings ago a fíorláir, a true "
-                "mare, held the post; then an English magus clumsily "
-                "asked her to be his familiar, which she took for a kind "
-                "of magical bondage, and she gave it up. The King of the "
-                "Eagles, who claims lordship over all Ireland's birds, now "
-                "sits instead; Cliodna of Lámbaird brokered his coming.",
-                "Among them: the fíorláir, sometimes born as a mare's "
-                "seventh filly with no colt between, whom no ill power can "
-                "touch, who keeps her rider from harm and outruns every "
-                "horse. Lámbaird has tried and failed to breed one; a "
-                "magus who enslaves one by magic will face the Eagle "
-                "King's complaint, so she must be befriended. Where she "
-                "first touched the ground grows Mary's Clover, a "
-                "shamrock with four leaves, which may be enriched into a "
-                "talisman: plated in silver, blessed by a priest and sung "
-                "over to the Virgin daily for a season, it gives its "
-                "wearer Luck. And the dobhar-chú, the king otter, white "
-                "with black ears and a black cross on its back, hurt only "
-                "by silver, often hunting in pairs; its killer dies of its "
-                "curse within a day, but the skin with the cross, "
-                "enriched by the one who killed it and survived, keeps a "
-                "boat from drowning, a house from fire or a man from "
-                "accident. Both are in the Bestiary.",
-            ),
-            "Whether the Eagle King's claim to rule all Ireland's birds "
-            "is true is unknown.",
+        summary=paragraphs(
+            "Ireland's magical beasts are represented at Tribunal like "
+            "any people. Until two meetings ago a fíorláir, a true "
+            "mare, held the post; then an English magus clumsily "
+            "asked her to be his familiar, which she took for a kind "
+            "of magical bondage, and she gave it up. The King of the "
+            "Eagles, who claims lordship over all Ireland's birds, now "
+            "sits instead; Cliodna of Lámbaird brokered his coming.",
+            "Among them: the fíorláir, sometimes born as a mare's "
+            "seventh filly with no colt between, whom no ill power can "
+            "touch, who keeps her rider from harm and outruns every "
+            "horse. Lámbaird has tried and failed to breed one; a "
+            "magus who enslaves one by magic will face the Eagle "
+            "King's complaint, so she must be befriended. Where she "
+            "first touched the ground grows Mary's Clover, a "
+            "shamrock with four leaves, which may be enriched into a "
+            "talisman: plated in silver, blessed by a priest and sung "
+            "over to the Virgin daily for a season, it gives its "
+            "wearer Luck. And the dobhar-chú, the king otter, white "
+            "with black ears and a black cross on its back, hurt only "
+            "by silver, often hunting in pairs; its killer dies of its "
+            "curse within a day, but the skin with the cross, "
+            "enriched by the one who killed it and survived, keeps a "
+            "boat from drowning, a house from fire or a man from "
+            "accident. Both are in the Bestiary.",
         ),
+        secrets="Whether the Eagle King's claim to rule all Ireland's birds "
+        "is true is unknown.",
     )
 
 
@@ -1086,32 +1076,30 @@ def _otherworld_places(hibernia: Hibernia) -> None:
                 ),
             )
         ],
-        summary=secrets(
-            paragraphs(
-                "A rocky island off the Munster coast, the palace of "
-                "Donn, the Dark One, death god of the Tuatha Dé (see the "
-                "Bestiary), where the dead gather. Like any king he has "
-                "sons and cattle and raids his neighbours. In wartime his "
-                "three red-haired sons ride the land spreading terror, "
-                "and the slain are said to rise here and join his host; "
-                "in peace he roams adding to it one man at a time, "
-                "killing a sleeper so that the spirit flies here, or "
-                "leaving a false corpse in a living man's place and "
-                "carrying the man off. His hall holds things that "
-                "command the dead, walking corpse and haunting ghost "
-                "alike. He fought the Order in the Schism War beside "
-                "Salmon's Eye, and helped destroy Warbler's Way; "
-                "Cliffheart, close by, still watches the Tuatha Dé.",
-                "Why he takes living captives no one knows: as servants, "
-                "husbands for his daughters, or subjects for his druids' "
-                "experiments. No one knows why he builds an army either, "
-                "beyond that kings do.",
-            ),
-            "His great regio may hide a whole army, and magi wonder if "
-            "he means to invade again. Munster's endless wars may set "
-            "him off, and anyone starting a war with the Order would "
-            "find him a ready ally.",
+        summary=paragraphs(
+            "A rocky island off the Munster coast, the palace of "
+            "Donn, the Dark One, death god of the Tuatha Dé (see the "
+            "Bestiary), where the dead gather. Like any king he has "
+            "sons and cattle and raids his neighbours. In wartime his "
+            "three red-haired sons ride the land spreading terror, "
+            "and the slain are said to rise here and join his host; "
+            "in peace he roams adding to it one man at a time, "
+            "killing a sleeper so that the spirit flies here, or "
+            "leaving a false corpse in a living man's place and "
+            "carrying the man off. His hall holds things that "
+            "command the dead, walking corpse and haunting ghost "
+            "alike. He fought the Order in the Schism War beside "
+            "Salmon's Eye, and helped destroy Warbler's Way; "
+            "Cliffheart, close by, still watches the Tuatha Dé.",
+            "Why he takes living captives no one knows: as servants, "
+            "husbands for his daughters, or subjects for his druids' "
+            "experiments. No one knows why he builds an army either, "
+            "beyond that kings do.",
         ),
+        secrets="His great regio may hide a whole army, and magi wonder if "
+        "he means to invade again. Munster's endless wars may set "
+        "him off, and anyone starting a war with the Order would "
+        "find him a ready ally.",
         **TRIBUNAL_WIDE,
     )
     p["slievanamon"] = b.place(

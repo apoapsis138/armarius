@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -38,8 +38,6 @@ EX_MISC = "house_ex_miscellanea"
 TREMERE = "house_tremere"
 
 #: The lead line of an oppidum's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -375,13 +373,10 @@ def _laniena(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> None
         "children, doomed to slay her own father; and if Lexander learns "
         "that Murat the Younger has let a vampire live, House Tremere's "
         "anger could fall on the whole oppidum.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human (see the Bestiary). He lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.",
-                "Only Murat the Younger knows. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human (see the Bestiary). He lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.",
+        "Only Murat the Younger knows. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.",
     )
     laniena = b.covenant(
         "Laniena",
@@ -391,6 +386,7 @@ def _laniena(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> None
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         detail=FULL,
         season="Summer",
     )

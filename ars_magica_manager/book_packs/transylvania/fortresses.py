@@ -24,7 +24,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -36,8 +36,6 @@ BJORNAER = "house_bjornaer"
 TREMERE = "house_tremere"
 
 #: The lead line of an oppidum's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
@@ -137,29 +135,27 @@ def _fort_places(transylvania: Transylvania) -> None:
         "old_forts",
         "The Abandoned Forts of Kezdö Válasz",
         ruined=True,
-        summary=secrets(
-            paragraphs(
-                "Forts Kezdö Válasz has left behind in the seven-yearly "
-                "moves, scattered across the Tribunal in places that no "
-                "longer interest it. A fort that drew mundane notice is "
-                "cleared away, and one that drew supernatural notice is "
-                "destroyed, by casting tablets made for the purpose; "
-                "others are left standing for later use, or simply "
-                "because the tablet to destroy them was not to hand. "
-                "Abandoned forts are usually left empty. All were built in "
-                "Magic auras, but auras change: some are still Magic, a "
-                "few are now Faerie, and one or two Infernal. The book "
-                "dates none of them.",
-                "Story seeds: wandering coloniae who know the oppidum's "
-                "ways may squat in one, and if a powerful one settles in a "
-                "fort the oppidum wants back, the youngest members are "
-                "sent to deal with it; giants looking for a home near a "
-                "village, a magical dragon in a mountain fort, or knights "
-                "or bandits looking for a refuge may move in too.",
-            ),
-            "Whether a fort left standing still belongs to Kezdö Válasz "
-            "once its magi have gone is an open question.",
+        summary=paragraphs(
+            "Forts Kezdö Válasz has left behind in the seven-yearly "
+            "moves, scattered across the Tribunal in places that no "
+            "longer interest it. A fort that drew mundane notice is "
+            "cleared away, and one that drew supernatural notice is "
+            "destroyed, by casting tablets made for the purpose; "
+            "others are left standing for later use, or simply "
+            "because the tablet to destroy them was not to hand. "
+            "Abandoned forts are usually left empty. All were built in "
+            "Magic auras, but auras change: some are still Magic, a "
+            "few are now Faerie, and one or two Infernal. The book "
+            "dates none of them.",
+            "Story seeds: wandering coloniae who know the oppidum's "
+            "ways may squat in one, and if a powerful one settles in a "
+            "fort the oppidum wants back, the youngest members are "
+            "sent to deal with it; giants looking for a home near a "
+            "village, a magical dragon in a mountain fort, or knights "
+            "or bandits looking for a refuge may move in too.",
         ),
+        secrets="Whether a fort left standing still belongs to Kezdö Válasz "
+        "once its magi have gone is an open question.",
         **KNOWN_LOCALLY,
     )
     _add(
@@ -185,24 +181,21 @@ def _fort_places(transylvania: Transylvania) -> None:
         transylvania,
         "vargyas",
         "The Vargyas River",
-        summary=secrets(
-            paragraphs(
-                "A small river running off the western slopes of the "
-                "Hargitta mountains, which might be the lost Sargetias. "
-                "When Trajan marched on Dacia in 105, Decebalus had "
-                "captive Romans turn the Sargetias aside, sealed his and "
-                "his nobles' gold and silver into its bed under stones, "
-                "let the water back, hid more in caves along its banks, "
-                "and killed the workmen. Captured Dacian nobles betrayed "
-                "the secret, but a Byzantine official's report says the "
-                "hoard was never recovered and says nothing of the caves. "
-                "Neither river nor caves has been found.",
-                "Kezdö Válasz has not looked for it: the hoard is small "
-                "beside Lycaneon's.",
-            ),
-            "Slavonic dragons line their lairs with gold and silver, and a "
-            "treasure this size has very probably drawn one.",
+        summary=paragraphs(
+            "A small river running off the western slopes of the "
+            "Hargitta mountains, which might be the lost Sargetias. "
+            "When Trajan marched on Dacia in 105, Decebalus had "
+            "captive Romans turn the Sargetias aside, sealed his and "
+            "his nobles' gold and silver into its bed under stones, "
+            "let the water back, hid more in caves along its banks, "
+            "and killed the workmen. Captured Dacian nobles betrayed "
+            "the secret, but a Byzantine official's report says the "
+            "hoard was never recovered and says nothing of the caves. "
+            "Neither river nor caves has been found.",
+            "Kezdö Válasz has not looked for it: the hoard is small beside Lycaneon's.",
         ),
+        secrets="Slavonic dragons line their lairs with gold and silver, and a "
+        "treasure this size has very probably drawn one.",
         **RUMOURED,
     )
 
@@ -489,21 +482,19 @@ def _zenodochium_places(transylvania: Transylvania) -> None:
         "zadar_zenodochium",
         "The Lost Zenodochium of Zadar",
         ruined=True,
-        summary=secrets(
-            paragraphs(
-                "After the bloodshed of 1203 the Tremere set up a "
-                "zenodochium inside a regio, in a magical lacuna in Zadar, "
-                "and, expecting more bloodshed, staffed it with a skilled "
-                "surgeon and some helpers. Within months the House lost "
-                "touch with them, and the regio itself seems to have "
-                "vanished. The search has dwindled, but young magi still "
-                "try now and then to find the surgeon. The book gives no "
-                "aura.",
-            ),
-            "Zadar's violence breeds Infernal auras and regiones over its "
-            "worst killings; what became of the lacuna and its people is "
-            "left to the storyguide.",
+        summary=paragraphs(
+            "After the bloodshed of 1203 the Tremere set up a "
+            "zenodochium inside a regio, in a magical lacuna in Zadar, "
+            "and, expecting more bloodshed, staffed it with a skilled "
+            "surgeon and some helpers. Within months the House lost "
+            "touch with them, and the regio itself seems to have "
+            "vanished. The search has dwindled, but young magi still "
+            "try now and then to find the surgeon. The book gives no "
+            "aura.",
         ),
+        secrets="Zadar's violence breeds Infernal auras and regiones over its "
+        "worst killings; what became of the lacuna and its people is "
+        "left to the storyguide.",
         **RUMOURED,
     )
 
@@ -653,23 +644,21 @@ def _gigas(transylvania: Transylvania) -> None:
         "gigas",
         "Gigas",
         aura=1,
-        summary=secrets(
-            paragraphs(
-                "A covenant of the Theban Tribunal, a hunting lodge south-"
-                "west of Sofia, well to the north-west of Evredika's "
-                "sancta in the Rhodopes. It is House Tremere's thinly "
-                "veiled cat's paw among the Theban magi (described in The "
-                "Sundered Eagle and the Theban pack), and has been told not to "
-                "contest the vis Evredika claims. Not a Transylvanian "
-                "oppidum, so not a covenant here. The Theban book gives it "
-                "a weak Magic aura (1 here).",
-                "Story seed: a hunting party led by a nobleman with a "
-                "'pet' white wolf strips all of Evredika's vis sources, "
-                "and Gigas is the obvious suspect. If its denials are true, "
-                "who is framing it, and why?",
-            ),
-            "The book leaves the true raiders to the storyguide.",
+        summary=paragraphs(
+            "A covenant of the Theban Tribunal, a hunting lodge south-"
+            "west of Sofia, well to the north-west of Evredika's "
+            "sancta in the Rhodopes. It is House Tremere's thinly "
+            "veiled cat's paw among the Theban magi (described in The "
+            "Sundered Eagle and the Theban pack), and has been told not to "
+            "contest the vis Evredika claims. Not a Transylvanian "
+            "oppidum, so not a covenant here. The Theban book gives it "
+            "a weak Magic aura (1 here).",
+            "Story seed: a hunting party led by a nobleman with a "
+            "'pet' white wolf strips all of Evredika's vis sources, "
+            "and Gigas is the obvious suspect. If its denials are true, "
+            "who is framing it, and why?",
         ),
+        secrets="The book leaves the true raiders to the storyguide.",
         **KNOWN_ORDER,
     )
 

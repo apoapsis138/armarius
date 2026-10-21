@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models import BodyVis
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from ...models import Creature, CreaturePower, Neighbour
@@ -621,29 +621,27 @@ def _faeries(hibernia: Hibernia) -> None:
                 "left hand and a sword his right, both forever "
                 "dripping blood."
             ),
-            notes=secrets(
-                "The death god of the Tuatha Dé, a king like any other with "
-                "sons, herds and raids on his neighbours. The dead gather at "
-                "his rocky island palace, Teach Duínn, off the Munster "
-                "coast. In war his three red-haired sons ride through the "
-                "land spreading dread, and the slain are said to rise at "
-                "Teach Duínn to march in his host; in peace he adds to it a "
-                "man at a time, killing sleepers so their spirits fly to him, "
-                "or leaving a false corpse behind and carrying the living "
-                "man off. He fought the Order in the Schism War and hates the "
-                "smith Goibhniu. Within Teach Duínn he keeps things that "
-                "command the dead, walking corpse and ghost alike. A "
-                "storyguide character, not balanced: his age and long study "
-                "of men give him more Pretenses than the rules allow; they "
-                "are his Abilities here. Good for feud stories, since his "
-                "enemies are many, and for war. " + _wounds(1),
-                "No one knows why he gathers an army. His great warded "
-                "regio could hide one, and magi fear the endless fighting in "
-                "Munster may set off another war with him; anyone starting a "
-                "war with the Order would find him a ready ally. Nor is it "
-                "known what the living captives are for: servants, husbands "
-                "for his daughters, or subjects for his druids' tests.",
-            ),
+            notes="The death god of the Tuatha Dé, a king like any other with "
+            "sons, herds and raids on his neighbours. The dead gather at "
+            "his rocky island palace, Teach Duínn, off the Munster "
+            "coast. In war his three red-haired sons ride through the "
+            "land spreading dread, and the slain are said to rise at "
+            "Teach Duínn to march in his host; in peace he adds to it a "
+            "man at a time, killing sleepers so their spirits fly to him, "
+            "or leaving a false corpse behind and carrying the living "
+            "man off. He fought the Order in the Schism War and hates the "
+            "smith Goibhniu. Within Teach Duínn he keeps things that "
+            "command the dead, walking corpse and ghost alike. A "
+            "storyguide character, not balanced: his age and long study "
+            "of men give him more Pretenses than the rules allow; they "
+            "are his Abilities here. Good for feud stories, since his "
+            "enemies are many, and for war. " + _wounds(1),
+            secrets="No one knows why he gathers an army. His great warded "
+            "regio could hide one, and magi fear the endless fighting in "
+            "Munster may set off another war with him; anyone starting a "
+            "war with the Order would find him a ready ally. Nor is it "
+            "known what the living captives are for: servants, husbands "
+            "for his daughters, or subjects for his druids' tests.",
         )
     )
     _MADE["trooping_faerie"] = _not_magic(
@@ -809,20 +807,18 @@ def _faeries(hibernia: Hibernia) -> None:
                 "patterned cloak flung over one shoulder and pinned with a "
                 "rich brooch."
             ),
-            notes=secrets(
-                "Fionn mac Cumhaill's nephew, a poet and warrior from the "
-                "Tales of the Elders, who guided Saint Patrick's company "
-                "across Munster telling him Fionn's stories. He believes the "
-                "saint raised him from the dead, and now he roams Ireland's "
-                "fields and woods as a man. Though incognizant, he can raise "
-                "his Pretenses, which are his Abilities here. He is "
-                "baptised and a true Christian, though Dominion auras weaken "
-                "his powers. He leads a band he calls fianna and tries to "
-                "keep them to noble deeds, but they mostly rob and plunder "
-                "as they please. The book builds him as a companion a player "
-                "could run. " + _wounds(0),
-                "His fianna are outlaws who have gone over to the faerie.",
-            ),
+            notes="Fionn mac Cumhaill's nephew, a poet and warrior from the "
+            "Tales of the Elders, who guided Saint Patrick's company "
+            "across Munster telling him Fionn's stories. He believes the "
+            "saint raised him from the dead, and now he roams Ireland's "
+            "fields and woods as a man. Though incognizant, he can raise "
+            "his Pretenses, which are his Abilities here. He is "
+            "baptised and a true Christian, though Dominion auras weaken "
+            "his powers. He leads a band he calls fianna and tries to "
+            "keep them to noble deeds, but they mostly rob and plunder "
+            "as they please. The book builds him as a companion a player "
+            "could run. " + _wounds(0),
+            secrets="His fianna are outlaws who have gone over to the faerie.",
         )
     )
     _MADE["arastotail"] = _not_magic(
@@ -1148,24 +1144,22 @@ def _demons(hibernia: Hibernia) -> None:
                 "dangle from the back of her open pelvis, and her heel bones "
                 "click wetly as she walks."
             ),
-            notes=secrets(
-                "The child of greed and deceit, behind many of Ireland's "
-                "woes since Delgnat betrayed her husband Partholon, among "
-                "them the flight of Dervorgilla, the Uí Ruairc queen, with "
-                "her husband's sworn enemy Dermot MacMurrough. She sows lust "
-                "and strife between men and women, but is too proud to "
-                "trouble the lowly when their betters offer better sport. "
-                "The book prints her Area Lore without a score and a stray 9 "
-                "after Brawl; the 9 is taken as the Area Lore's. " + _wounds(0),
-                "Her chief weapon is Possession: she hides in the courts of "
-                "the rich, preferably in several advisers to the main "
-                "players at once, and urges reckless deeds dressed as wise "
-                "counsel, stirring lust for what cannot be had until "
-                "betrayal and cruel revenge follow. But she has no "
-                "self-control: an insult to one of her hosts can drive her "
-                "to murder, wrecking her schemes and forcing her to flee "
-                "before she is found out.",
-            ),
+            notes="The child of greed and deceit, behind many of Ireland's "
+            "woes since Delgnat betrayed her husband Partholon, among "
+            "them the flight of Dervorgilla, the Uí Ruairc queen, with "
+            "her husband's sworn enemy Dermot MacMurrough. She sows lust "
+            "and strife between men and women, but is too proud to "
+            "trouble the lowly when their betters offer better sport. "
+            "The book prints her Area Lore without a score and a stray 9 "
+            "after Brawl; the 9 is taken as the Area Lore's. " + _wounds(0),
+            secrets="Her chief weapon is Possession: she hides in the courts of "
+            "the rich, preferably in several advisers to the main "
+            "players at once, and urges reckless deeds dressed as wise "
+            "counsel, stirring lust for what cannot be had until "
+            "betrayal and cruel revenge follow. But she has no "
+            "self-control: an insult to one of her hosts can drive her "
+            "to murder, wrecking her schemes and forcing her to flee "
+            "before she is found out.",
         )
     )
 

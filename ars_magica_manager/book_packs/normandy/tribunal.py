@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 
 from ... import vassals
 from ...tribunal_packages.normandy import KEY
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from ...models import Covenant
@@ -133,7 +133,8 @@ def build(normandy: Normandy) -> None:
     normandy.tribunal = tribunal = b.tribunal(
         NAME,
         package=KEY,
-        summary=secrets(SUMMARY, SECRET),
+        summary=SUMMARY,
+        secrets=SECRET,
         meets_every=7,
         next_year=1221,
         next_season="Spring",
@@ -786,28 +787,26 @@ def _ruins(normandy: Normandy) -> None:
     normandy.places["ruin_branugurix"] = b.place(
         "Branugurix (Mount Dol)",
         ruined=True,
-        summary=secrets(
-            paragraphs(
-                "Founded 791, sealed 1012. The Domus Magna of House Diedne, "
-                "properly Bren Gwrac'h, hidden in a regio on Mount Dol, a "
-                "low granite outcrop in the county of Rennes sacred to the "
-                "Gallic druids. In the last great battle of the Schism War "
-                "the Diedne Primus somehow closed every entrance to the "
-                "regio, and some of the Flambeau and Tremere attackers were "
-                "shut inside and never seen again. Its vassals were "
-                "Baiocassium, Kerguntuil and Caput Capra.",
-                "Christians shun the mount; their tale of St. Michael "
-                "hurling the Devil down here, and leaping after him to Mont "
-                "St. Michel, remembers the assault. House Guernicus's "
-                "records hold the regio's exact place and the old way in, "
-                "and the House watches anyone who spends long around Mount "
-                "Dol.",
-            ),
-            "Rumour says some Diedne survived inside the sealed regio and "
-            "that someone is working to free them after two centuries; "
-            "Lapis Crudus's return from its own regio has made the Tribunal "
-            "fear this again.",
+        summary=paragraphs(
+            "Founded 791, sealed 1012. The Domus Magna of House Diedne, "
+            "properly Bren Gwrac'h, hidden in a regio on Mount Dol, a "
+            "low granite outcrop in the county of Rennes sacred to the "
+            "Gallic druids. In the last great battle of the Schism War "
+            "the Diedne Primus somehow closed every entrance to the "
+            "regio, and some of the Flambeau and Tremere attackers were "
+            "shut inside and never seen again. Its vassals were "
+            "Baiocassium, Kerguntuil and Caput Capra.",
+            "Christians shun the mount; their tale of St. Michael "
+            "hurling the Devil down here, and leaping after him to Mont "
+            "St. Michel, remembers the assault. House Guernicus's "
+            "records hold the regio's exact place and the old way in, "
+            "and the House watches anyone who spends long around Mount "
+            "Dol.",
         ),
+        secrets="Rumour says some Diedne survived inside the sealed regio and "
+        "that someone is working to free them after two centuries; "
+        "Lapis Crudus's return from its own regio has made the Tribunal "
+        "fear this again.",
         realm="Magic",
         status="Known",
         known="In the Order",
@@ -827,7 +826,8 @@ def _ruins(normandy: Normandy) -> None:
         normandy.places[f"ruin_{key}"] = b.place(
             name,
             ruined=True,
-            summary=secrets(summary, hidden),
+            summary=summary,
+            secrets=hidden,
             realm=realm,
             status=standing["status"],
             known=standing["known"],

@@ -38,7 +38,7 @@ from ..sheets import tribunal as tribunal_sheet
 from ..sheets.tribunal import Grid
 from ..tribunal_packages.rhine import gild_tree
 from . import marks, print_sheet
-from .character_sheet import TextBlock, section
+from .character_sheet import TextBlock, secrets_chapter, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
 from .hall import GrandHall, OpeningCard
@@ -95,6 +95,7 @@ class TribunalPage(QWidget):
                 ),
             )
         self.codex.add("Diary", "year", self._diary())
+        self.codex.add("Secrets", "secrets", secrets_chapter(tribunal, p, run))
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))
         outer.addWidget(self.codex, 1)

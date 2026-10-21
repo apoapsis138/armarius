@@ -22,7 +22,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -36,8 +36,6 @@ GUERNICUS = "house_guernicus"
 TREMERE = "house_tremere"
 
 #: The lead line of an oppidum's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -160,21 +158,19 @@ def _danube(transylvania: Transylvania) -> None:
         "galleries_tarnovo",
         "The Galleries of Tarnovo",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The Roman city of Nikopolis ad Istrum stood some twelve "
-                "miles north of Tarnovo until the Huns sacked it in 447. "
-                "Legend says its people fled to Trapezitsa Hill carrying "
-                "the city's riches, dug passages deep into the rock, and "
-                "hid the hoard there behind deadly traps. Treasure seekers "
-                "have hunted it ever since, and the townsfolk fear its "
-                "traps and its curse.",
-            ),
-            "A Tarnovo man who has found a tunnel beneath his house looks "
-            "for foreign adventurers to explore it, since no local will "
-            "go down; he means to cheat them of whatever gold they bring "
-            "out.",
+        summary=paragraphs(
+            "The Roman city of Nikopolis ad Istrum stood some twelve "
+            "miles north of Tarnovo until the Huns sacked it in 447. "
+            "Legend says its people fled to Trapezitsa Hill carrying "
+            "the city's riches, dug passages deep into the rock, and "
+            "hid the hoard there behind deadly traps. Treasure seekers "
+            "have hunted it ever since, and the townsfolk fear its "
+            "traps and its curse.",
         ),
+        secrets="A Tarnovo man who has found a tunnel beneath his house looks "
+        "for foreign adventurers to explore it, since no local will "
+        "go down; he means to cheat them of whatever gold they bring "
+        "out.",
         **RUMOURED,
     )
     _add(
@@ -182,25 +178,23 @@ def _danube(transylvania: Transylvania) -> None:
         "baldwins_tower",
         "Baldwin's Tower",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "A tower over Tarnovo's Frankish quarter, built to hold "
-                "Baldwin, the Latin emperor of Constantinople, whom Tsar "
-                "Kaloyan took in battle in 1205. Kept at first as a "
-                "precious hostage, Baldwin ruined himself by courting "
-                "Kaloyan's Cuman wife (or, some say, she charged him with "
-                "rape when he refused her); he was bricked up inside, his "
-                "cries carried over the quarter for months and then "
-                "stopped, and the tsar told the pope he was dead.",
-                "Some say Kaloyan beheaded him and drank from his skull, "
-                "and that his headless body, unburied, walks around the "
-                "tower seeking vengeance on the Asens. At least one band "
-                "of foreigners has tried to break in to free him, and "
-                "failed: the tower cannot be forced.",
-            ),
-            "Others insist Baldwin still lives, a prisoner the present "
-            "tsar keeps for some purpose of his own.",
+        summary=paragraphs(
+            "A tower over Tarnovo's Frankish quarter, built to hold "
+            "Baldwin, the Latin emperor of Constantinople, whom Tsar "
+            "Kaloyan took in battle in 1205. Kept at first as a "
+            "precious hostage, Baldwin ruined himself by courting "
+            "Kaloyan's Cuman wife (or, some say, she charged him with "
+            "rape when he refused her); he was bricked up inside, his "
+            "cries carried over the quarter for months and then "
+            "stopped, and the tsar told the pope he was dead.",
+            "Some say Kaloyan beheaded him and drank from his skull, "
+            "and that his headless body, unburied, walks around the "
+            "tower seeking vengeance on the Asens. At least one band "
+            "of foreigners has tried to break in to free him, and "
+            "failed: the tower cannot be forced.",
         ),
+        secrets="Others insist Baldwin still lives, a prisoner the present "
+        "tsar keeps for some purpose of his own.",
         **KNOWN_LOCALLY,
     )
 
@@ -376,29 +370,27 @@ def _plains(transylvania: Transylvania) -> None:
         "Starosel",
         inside=region,
         aura=6,
-        summary=secrets(
-            paragraphs(
-                "A tomb temple of Bendis, the Thracian earth goddess, on "
-                "the Thracian Plain, ringed by a wall of huge dressed "
-                "stones carved with suns. The tomb is a mound reached by a "
-                "broad stone stair to a landing; its cave-like door, "
-                "framed in cut stone, opens on a plain antechamber and a "
-                "splendid domed inner chamber painted with a bright "
-                "frieze. It has a strong Magic aura of 6.",
-                "Vis: Terram and Herbam, gathered within a few yards of "
-                "the temple (the book gives no amounts).",
-                "A fine site for a new oppidum, with ready-made and easily "
-                "held walls, but it has a guardian: the place's genius "
-                "loci, a hazy woman's shape of black earth and red clay "
-                "with great power over earth, who can rouse the plants to "
-                "help her and hates all change (see the Bestiary). Settlers "
-                "must defeat or lastingly appease her; vis gatherers may "
-                "strike a bargain to guard the temple for her in return.",
-            ),
-            "The genius may or may not be the goddess once worshipped "
-            "here; its Magic nature suggests not, and if so, something "
-            "befell Bendis that settlers would be wise to learn first.",
+        summary=paragraphs(
+            "A tomb temple of Bendis, the Thracian earth goddess, on "
+            "the Thracian Plain, ringed by a wall of huge dressed "
+            "stones carved with suns. The tomb is a mound reached by a "
+            "broad stone stair to a landing; its cave-like door, "
+            "framed in cut stone, opens on a plain antechamber and a "
+            "splendid domed inner chamber painted with a bright "
+            "frieze. It has a strong Magic aura of 6.",
+            "Vis: Terram and Herbam, gathered within a few yards of "
+            "the temple (the book gives no amounts).",
+            "A fine site for a new oppidum, with ready-made and easily "
+            "held walls, but it has a guardian: the place's genius "
+            "loci, a hazy woman's shape of black earth and red clay "
+            "with great power over earth, who can rouse the plants to "
+            "help her and hates all change (see the Bestiary). Settlers "
+            "must defeat or lastingly appease her; vis gatherers may "
+            "strike a bargain to guard the temple for her in return.",
         ),
+        secrets="The genius may or may not be the goddess once worshipped "
+        "here; its Magic nature suggests not, and if so, something "
+        "befell Bendis that settlers would be wise to learn first.",
         **KNOWN_TRIBUNAL,
     )
     madara = _add(
@@ -425,33 +417,31 @@ def _plains(transylvania: Transylvania) -> None:
         inside=madara,
         realm="Faerie",
         aura=5,
-        summary=secrets(
-            paragraphs(
-                "Seventy-five feet up the Madara cliff a vast relief shows "
-                "a rider spearing a lion under his horse's hooves, with an "
-                "eagle flying before him and a hound behind: one of the "
-                "Bulgar shamans' gods. Close to the carving the Faerie "
-                "aura rises to 5.",
-                "The right faerie rite wakes the Horseman, and his horse, "
-                "hound and eagle, which are part of his glamour, with him; "
-                "the lion, a faerie in its own right, wakes too, and he "
-                "must fight and beat it while he lives. He guards the "
-                "local people he swore to protect and goes at once against "
-                "whatever he judges their worst danger. Neither he nor the "
-                "Lion (Faerie Might 20 or more each, the Lion's matching "
-                "his) can be killed for good: the legend is so strong that "
-                "other faeries of the region take up their glamour and they "
-                "can be called again.",
-            ),
-            "Story seed: a bolyar the magi know begs them to shelter him "
-            "from the Horseman, loosed on him, he says, by a faerie "
-            "wizard. In truth he paid the wizard to raise the Horseman "
-            "against his enemies, but the Horseman had heard his people's "
-            "prayers and judged the bolyar's pride and ambition the "
-            "region's worst threat. The wizard only failed to warn him. "
-            "If the magi let things run their course, the Lion may "
-            "interfere.",
+        summary=paragraphs(
+            "Seventy-five feet up the Madara cliff a vast relief shows "
+            "a rider spearing a lion under his horse's hooves, with an "
+            "eagle flying before him and a hound behind: one of the "
+            "Bulgar shamans' gods. Close to the carving the Faerie "
+            "aura rises to 5.",
+            "The right faerie rite wakes the Horseman, and his horse, "
+            "hound and eagle, which are part of his glamour, with him; "
+            "the lion, a faerie in its own right, wakes too, and he "
+            "must fight and beat it while he lives. He guards the "
+            "local people he swore to protect and goes at once against "
+            "whatever he judges their worst danger. Neither he nor the "
+            "Lion (Faerie Might 20 or more each, the Lion's matching "
+            "his) can be killed for good: the legend is so strong that "
+            "other faeries of the region take up their glamour and they "
+            "can be called again.",
         ),
+        secrets="Story seed: a bolyar the magi know begs them to shelter him "
+        "from the Horseman, loosed on him, he says, by a faerie "
+        "wizard. In truth he paid the wizard to raise the Horseman "
+        "against his enemies, but the Horseman had heard his people's "
+        "prayers and judged the bolyar's pride and ambition the "
+        "region's worst threat. The wizard only failed to warn him. "
+        "If the magi let things run their course, the Lion may "
+        "interfere.",
         **KNOWN_REGION,
     )
 
@@ -614,46 +604,44 @@ def _thrace(transylvania: Transylvania) -> None:
         "thracian_valley",
         "The Valley of the Thracian Kings",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The burial ground of the kings of ancient Thrace, close "
-                "to Seuthopolis, their old capital, found four years ago "
-                "by a Tremere necromancer then serving as a hoplite (the "
-                "book gives no aura). House Tremere's necromancers were "
-                "delighted; House Verditius wants to dig too, since the "
-                "Thracians worshipped gods of the forge. Benilda, minding "
-                "an old saying never to trust a happy necromancer, keeps "
-                "everyone out for now, knowing Tremere will win in the end; "
-                "she hopes to look first herself, or to steer who digs and "
-                "why.",
-                "Saga seed: an excavation must be hidden from mundanes, "
-                "get past cunningly trapped tombs, calm guardian spirits "
-                "the magician kings left and the diggers wake, judge the "
-                "magic items among the grave goods and whether they help "
-                "Original Research, and learn of the Cabeiri, the "
-                "Thracians' gods, and the powers they gave their servants, "
-                "perhaps by journeys into the Magic or Faerie realms or by "
-                "seeking Initiation into their Mysteries.",
-            ),
-            _lines(
-                "The false Kabeiros (see the Bestiary), a strong local "
-                "faerie, is reviving the Cabeiri cult here: a tall brass "
-                "man with a great crab claw for a left hand, which serves "
-                "him as smith's tongs and to punish the unjust. He courts "
-                "the servants of Quaesitors, posing as the guide of kings "
-                "and giver of justice. His cult has four degrees "
-                "(Interrogator, Invader, Observer, Liberator), all "
-                "initiated in the valley on a holy day under a Vow to give "
-                "fair and swift justice; they confer Piercing Gaze, "
-                "Invasive Eyes, Bright Eyes and Eyes of Theseus, and he can "
-                "take back Eyes of Theseus from the disloyal. He wants to "
-                "teach Second Sight but has not yet stolen it from anyone.",
-                "He took the idea from a cult of servants at a Quaesitorial "
-                "covenant who long ago worshipped Asmodeus as patron of "
-                "prying; an Infernal scholar of the Black Library might "
-                "trace it, and Asmodeus may punish the cult if he learns "
-                "his idea was reused.",
-            ),
+        summary=paragraphs(
+            "The burial ground of the kings of ancient Thrace, close "
+            "to Seuthopolis, their old capital, found four years ago "
+            "by a Tremere necromancer then serving as a hoplite (the "
+            "book gives no aura). House Tremere's necromancers were "
+            "delighted; House Verditius wants to dig too, since the "
+            "Thracians worshipped gods of the forge. Benilda, minding "
+            "an old saying never to trust a happy necromancer, keeps "
+            "everyone out for now, knowing Tremere will win in the end; "
+            "she hopes to look first herself, or to steer who digs and "
+            "why.",
+            "Saga seed: an excavation must be hidden from mundanes, "
+            "get past cunningly trapped tombs, calm guardian spirits "
+            "the magician kings left and the diggers wake, judge the "
+            "magic items among the grave goods and whether they help "
+            "Original Research, and learn of the Cabeiri, the "
+            "Thracians' gods, and the powers they gave their servants, "
+            "perhaps by journeys into the Magic or Faerie realms or by "
+            "seeking Initiation into their Mysteries.",
+        ),
+        secrets=_lines(
+            "The false Kabeiros (see the Bestiary), a strong local "
+            "faerie, is reviving the Cabeiri cult here: a tall brass "
+            "man with a great crab claw for a left hand, which serves "
+            "him as smith's tongs and to punish the unjust. He courts "
+            "the servants of Quaesitors, posing as the guide of kings "
+            "and giver of justice. His cult has four degrees "
+            "(Interrogator, Invader, Observer, Liberator), all "
+            "initiated in the valley on a holy day under a Vow to give "
+            "fair and swift justice; they confer Piercing Gaze, "
+            "Invasive Eyes, Bright Eyes and Eyes of Theseus, and he can "
+            "take back Eyes of Theseus from the disloyal. He wants to "
+            "teach Second Sight but has not yet stolen it from anyone.",
+            "He took the idea from a cult of servants at a Quaesitorial "
+            "covenant who long ago worshipped Asmodeus as patron of "
+            "prying; an Infernal scholar of the Black Library might "
+            "trace it, and Asmodeus may punish the cult if he learns "
+            "his idea was reused.",
         ),
         **KNOWN_TRIBUNAL,
     )
@@ -707,11 +695,10 @@ def _evredika(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "Tremere's ill-hidden cat's paw in the Theban Tribunal, seems the "
         "obvious thief. If its protests are honest, who is framing Gigas, "
         "and why?",
-        secrets(
-            STORYGUIDE,
-            "Oeagrus keeps the mummified arm of Orpheus and means to remake "
-            "the god by grafting his scattered limbs onto his own body.",
-        ),
+    )
+    hidden = (
+        "Oeagrus keeps the mummified arm of Orpheus and means to remake "
+        "the god by grafting his scattered limbs onto his own body."
     )
     evredika = b.covenant(
         "Evredika",
@@ -722,6 +709,7 @@ def _evredika(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=3,
         detail=FULL,
         season="Summer",
@@ -744,24 +732,22 @@ def _evredika(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         covenant=evredika,
         house=EX_MISC,
         age=109,
-        summary=secrets(
-            paragraphs(
-                "The senior Orphic magus of the Tribunal, looking "
-                "sixty-eight, who fancies himself head of the whole Cult, "
-                "with no grounds at all. Unlike most of the Cult he "
-                "worships Orpheus openly as a god, which has won him no "
-                "friends among the Tremere. He thinks the Cult on Lesbos "
-                "has Orpheus's head and is keeping it from him. He is "
-                "mad: the Cult tends to call it divine madness, everyone "
-                "else plain lunacy. He hates women.",
-                "Outsiders seldom see him. He goes about in a loincloth, "
-                "careless of his looks, his hair wild and twigs caught in "
-                "his tangled beard.",
-            ),
-            "His treasure is the mummified arm of Orpheus, whom the "
-            "Maenads tore apart; he seeks a way to rebuild the god by "
-            "grafting the dismembered body onto himself.",
+        summary=paragraphs(
+            "The senior Orphic magus of the Tribunal, looking "
+            "sixty-eight, who fancies himself head of the whole Cult, "
+            "with no grounds at all. Unlike most of the Cult he "
+            "worships Orpheus openly as a god, which has won him no "
+            "friends among the Tremere. He thinks the Cult on Lesbos "
+            "has Orpheus's head and is keeping it from him. He is "
+            "mad: the Cult tends to call it divine madness, everyone "
+            "else plain lunacy. He hates women.",
+            "Outsiders seldom see him. He goes about in a loincloth, "
+            "careless of his looks, his hair wild and twigs caught in "
+            "his tangled beard.",
         ),
+        secrets="His treasure is the mummified arm of Orpheus, whom the "
+        "Maenads tore apart; he seeks a way to rebuild the god by "
+        "grafting the dismembered body onto himself.",
         traits={"Devout": 3, "Misogynist": 3, "Domineering": 2},
     )
     m["bozhidar"] = b.magus(
@@ -890,20 +876,16 @@ def _seuthopolis(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "former Redcaps among them: like many Western covenants it is "
         "staffed by people who fled the world for a different life, and "
         "the Quaesitors find their skills, some a little shady, useful.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "The town's charter from Diocletian is a clever forgery.",
-                "Rumour, perhaps true, says the Red Library also holds "
-                "magic items, seized in investigations and never destroyed, "
-                "that cast some of the Red Spells; the House might argue "
-                "they are lawful to own, and lawful to use on hedge "
-                "wizards, the Orders of Odin and Solomon, and Renounced "
-                "magi, whom the Code does not protect.",
-                "Saturnino thinks gathering the Red and Black Libraries "
-                "was a grave mistake.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "The town's charter from Diocletian is a clever forgery.",
+        "Rumour, perhaps true, says the Red Library also holds "
+        "magic items, seized in investigations and never destroyed, "
+        "that cast some of the Red Spells; the House might argue "
+        "they are lawful to own, and lawful to use on hedge "
+        "wizards, the Orders of Odin and Solomon, and Renounced "
+        "magi, whom the Code does not protect.",
+        "Saturnino thinks gathering the Red and Black Libraries was a grave mistake.",
     )
     seuthopolis = b.covenant(
         "Seuthopolis",
@@ -913,6 +895,7 @@ def _seuthopolis(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=8,
         detail=FULL,
         season="Summer",
@@ -1013,35 +996,33 @@ def _seuthopolis(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         covenant=seuthopolis,
         house=CRIAMON,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "Marshal of Transylvania: House Guernicus's chief hoplite "
-                "in the Tribunal, the senior lictor and leader of Wizard's "
-                "Marches; his age is unknown. He is one of the elders of "
-                "the Path of Strife, Criamon extremists who do evil so that "
-                "their Housemates may stay clean, and who, unlike other "
-                "Criamon, plunge into the world to dirty themselves. His "
-                "House's notion of evil is so strange that he usually seems "
-                "a very ordinary magus: eating meat is evil, and so is "
-                "having a wife, and he does both.",
-                "Only slowly do others see that he finds no moral "
-                "difference between a bacon pie and burning a child, and "
-                "would do either if it were needed. He knows right from "
-                "wrong and, without remorse, picks wrong when it must be "
-                "done, so others need not; but he does no pointless "
-                "cruelty, will not deal with demons, which he thinks "
-                "personal weakness, and will not betray his sect or his "
-                "wife, since that would be right. He kills magi well and, "
-                "in his own odd terms, can be relied on. He is still a "
-                "Criamon, with riddles, strange quests and errands to "
-                "magical places, only more often bloody to the elbows. He "
-                "excels at surprising foes and at mystical swordplay.",
-            ),
-            "He serves here because he thinks gathering the Red and Black "
-            "Libraries was a deep error, and because he wonders whether "
-            "the Tribunal's strange faeries come of the Criamon having "
-            "stolen the World Tree.",
+        summary=paragraphs(
+            "Marshal of Transylvania: House Guernicus's chief hoplite "
+            "in the Tribunal, the senior lictor and leader of Wizard's "
+            "Marches; his age is unknown. He is one of the elders of "
+            "the Path of Strife, Criamon extremists who do evil so that "
+            "their Housemates may stay clean, and who, unlike other "
+            "Criamon, plunge into the world to dirty themselves. His "
+            "House's notion of evil is so strange that he usually seems "
+            "a very ordinary magus: eating meat is evil, and so is "
+            "having a wife, and he does both.",
+            "Only slowly do others see that he finds no moral "
+            "difference between a bacon pie and burning a child, and "
+            "would do either if it were needed. He knows right from "
+            "wrong and, without remorse, picks wrong when it must be "
+            "done, so others need not; but he does no pointless "
+            "cruelty, will not deal with demons, which he thinks "
+            "personal weakness, and will not betray his sect or his "
+            "wife, since that would be right. He kills magi well and, "
+            "in his own odd terms, can be relied on. He is still a "
+            "Criamon, with riddles, strange quests and errands to "
+            "magical places, only more often bloody to the elbows. He "
+            "excels at surprising foes and at mystical swordplay.",
         ),
+        secrets="He serves here because he thinks gathering the Red and Black "
+        "Libraries was a deep error, and because he wonders whether "
+        "the Tribunal's strange faeries come of the Criamon having "
+        "stolen the World Tree.",
         traits={
             "Determined to do evil by doing what others call good": 5,
             "Spooky and enigmatic": 3,
@@ -1148,70 +1129,68 @@ def _tablinum_site(transylvania: Transylvania) -> Neighbour:
         "tablinum",
         "Tablinum",
         inside=transylvania.places["danube_delta"],
-        summary=secrets(
-            paragraphs(
-                "On the Black Sea coast among the dunes and marshes of the "
-                "Danube delta: to the eye only a palisaded village of a "
-                "few grogs of Slav stock who fish from small boats amid "
-                "clouds of pelicans and egrets. All that marks it is an "
-                "Aegis of the Hearth of magnitude 8 round the palisade "
-                "and a magic bell for calling the magi, which makes no "
-                "sound except within Tablinum's regiones.",
-                "Here dozens of regiones lie on top of one another, each "
-                "an exhibition hall: stone buildings joined by covered "
-                "wooden walkways, vaulted halls under twisting brass "
-                "chandeliers, narrow dark passages lined with scroll "
-                "cases, alike in style but different in plan from level "
-                "to level. The levels can be sensed but not crossed into "
-                "by any path or ritual; one goes in only with an Arcane "
-                "Connection and Leap of Homecoming or the like. The "
-                "Curator holds Fixed Arcane Connections to most of them, "
-                "stone beads on necklaces handed down from Curator to "
-                "Curator, and by holding them controls who sees what. "
-                "Unless noted, the levels can be entered and left by Rego "
-                "Corpus magic.",
-                "Outside the halls, where any opening exists, the light "
-                "is a thick red, as of a summer evening or dawn, with no "
-                "sun in the sky; featureless dunes surround the buildings "
-                "and the Black Sea heaves to the east, its salt wind "
-                "crusting the eastern walls. Every path through the dunes "
-                "leads back to the halls. Some say other, perhaps ruined, "
-                "buildings hide among the dunes on some levels.",
-                "The Everbright Chandeliers that light the exhibits are "
-                "enchanted items (CrIg 24, constant): they give bright "
-                "light as from candles, with no flame to set the exhibits "
-                "alight.",
-            ),
-            _lines(
-                "Six hidden exhibits are rumoured, which most of the "
-                "Tribunal only guesses at; some magi claim to have been "
-                "there, and may be liars or mad. Even the Curator may not "
-                "hold their Arcane Connections, which a cabal or Mystery "
-                "Cult may keep, or which may be lost:",
-                "The Founder's Exhibit: realia of the Founders' lives, "
-                "first traditions and deaths, some say with several "
-                "Founders' bodies on show.",
-                "The Lower Dungeon: a web of wards binding hundreds of "
-                "demons; its keepers would risk a charge of infernalism.",
-                "The Refuge: not an exhibit but stocked laboratories and "
-                "lodgings in hidden regiones, readied for House Tremere to "
-                "flee to should catastrophe strike the House, the Tribunal "
-                "or the world, and outlast it. Hidden laboratories do "
-                "exist (Nestor uses one); if disaster such as the Mongols "
-                "comes, desperate magi will come here.",
-                "The Schism Exhibit: a full record of the Schism War, "
-                "including Expurgatio, said to catalogue all the evidence "
-                "House Tremere gathered against the Diedne in the decades "
-                "before the war, with the artifacts and Lab Texts it "
-                "names; called 'the truth', against a public record many "
-                "think Tremere propaganda.",
-                "The Seeker's Forum: realia of extinct (and not so "
-                "extinct) magical traditions the Tremere have recovered "
-                "across Mythic Europe, a rich source of Insight.",
-                "The Warehouse of Ares: a great store of magic weapons, "
-                "many made by both sides around the Schism War, kept "
-                "against the day the Order splits in war again.",
-            ),
+        summary=paragraphs(
+            "On the Black Sea coast among the dunes and marshes of the "
+            "Danube delta: to the eye only a palisaded village of a "
+            "few grogs of Slav stock who fish from small boats amid "
+            "clouds of pelicans and egrets. All that marks it is an "
+            "Aegis of the Hearth of magnitude 8 round the palisade "
+            "and a magic bell for calling the magi, which makes no "
+            "sound except within Tablinum's regiones.",
+            "Here dozens of regiones lie on top of one another, each "
+            "an exhibition hall: stone buildings joined by covered "
+            "wooden walkways, vaulted halls under twisting brass "
+            "chandeliers, narrow dark passages lined with scroll "
+            "cases, alike in style but different in plan from level "
+            "to level. The levels can be sensed but not crossed into "
+            "by any path or ritual; one goes in only with an Arcane "
+            "Connection and Leap of Homecoming or the like. The "
+            "Curator holds Fixed Arcane Connections to most of them, "
+            "stone beads on necklaces handed down from Curator to "
+            "Curator, and by holding them controls who sees what. "
+            "Unless noted, the levels can be entered and left by Rego "
+            "Corpus magic.",
+            "Outside the halls, where any opening exists, the light "
+            "is a thick red, as of a summer evening or dawn, with no "
+            "sun in the sky; featureless dunes surround the buildings "
+            "and the Black Sea heaves to the east, its salt wind "
+            "crusting the eastern walls. Every path through the dunes "
+            "leads back to the halls. Some say other, perhaps ruined, "
+            "buildings hide among the dunes on some levels.",
+            "The Everbright Chandeliers that light the exhibits are "
+            "enchanted items (CrIg 24, constant): they give bright "
+            "light as from candles, with no flame to set the exhibits "
+            "alight.",
+        ),
+        secrets=_lines(
+            "Six hidden exhibits are rumoured, which most of the "
+            "Tribunal only guesses at; some magi claim to have been "
+            "there, and may be liars or mad. Even the Curator may not "
+            "hold their Arcane Connections, which a cabal or Mystery "
+            "Cult may keep, or which may be lost:",
+            "The Founder's Exhibit: realia of the Founders' lives, "
+            "first traditions and deaths, some say with several "
+            "Founders' bodies on show.",
+            "The Lower Dungeon: a web of wards binding hundreds of "
+            "demons; its keepers would risk a charge of infernalism.",
+            "The Refuge: not an exhibit but stocked laboratories and "
+            "lodgings in hidden regiones, readied for House Tremere to "
+            "flee to should catastrophe strike the House, the Tribunal "
+            "or the world, and outlast it. Hidden laboratories do "
+            "exist (Nestor uses one); if disaster such as the Mongols "
+            "comes, desperate magi will come here.",
+            "The Schism Exhibit: a full record of the Schism War, "
+            "including Expurgatio, said to catalogue all the evidence "
+            "House Tremere gathered against the Diedne in the decades "
+            "before the war, with the artifacts and Lab Texts it "
+            "names; called 'the truth', against a public record many "
+            "think Tremere propaganda.",
+            "The Seeker's Forum: realia of extinct (and not so "
+            "extinct) magical traditions the Tremere have recovered "
+            "across Mythic Europe, a rich source of Insight.",
+            "The Warehouse of Ares: a great store of magic weapons, "
+            "many made by both sides around the Schism War, kept "
+            "against the day the Order splits in war again.",
         ),
         levels=[
             level(
@@ -1410,26 +1389,23 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "hoard of relics; a papal legate comes to learn whether it exists "
         "and, if so, to take the relics to Rome. Nestor asks the visiting "
         "magi to help him deal with it.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "The Empty Laboratory's void window is a vis source the "
-                "residents do not know of: now and then frost forms on its "
-                "sill that can be gathered as Mentem vis before it melts, "
-                "2 pawns a season. The ghost knows.",
-                "Nestor keeps most of the Curators' necklaces hidden and "
-                "carries only the one for the most visited levels; his "
-                "real laboratory is in a level of its own.",
-                "The Dungeon's excess: either infernalists with their own "
-                "Arcane Connections use it to hide their cult's "
-                "paraphernalia, coming and going by Leap of Homecoming, or "
-                "Hell has got in, and possessed exhibits are summoning "
-                "more demons into the hall.",
-                "Theodore once told Nestor many exhibits should be "
-                "destroyed, and lately told Demetrius the Order has "
-                "outlived its purpose.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "The Empty Laboratory's void window is a vis source the "
+        "residents do not know of: now and then frost forms on its "
+        "sill that can be gathered as Mentem vis before it melts, "
+        "2 pawns a season. The ghost knows.",
+        "Nestor keeps most of the Curators' necklaces hidden and "
+        "carries only the one for the most visited levels; his "
+        "real laboratory is in a level of its own.",
+        "The Dungeon's excess: either infernalists with their own "
+        "Arcane Connections use it to hide their cult's "
+        "paraphernalia, coming and going by Leap of Homecoming, or "
+        "Hell has got in, and possessed exhibits are summoning "
+        "more demons into the hall.",
+        "Theodore once told Nestor many exhibits should be "
+        "destroyed, and lately told Demetrius the Order has "
+        "outlived its purpose.",
     )
     tablinum = b.covenant(
         "Tablinum",
@@ -1440,6 +1416,7 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         detail=FULL,
         season="Autumn",
     )
@@ -1712,24 +1689,22 @@ def _churches(transylvania: Transylvania, b: Builder) -> None:
         "The Boyana Church",
         church="Parish church",
         place=p["bulgaria"],
-        summary=secrets(
-            paragraphs(
-                "A church at Sredets, the masterpiece of the city's "
-                "craftsmen, whose frescoes Vasiliy, the Boyana Master, is "
-                "still painting: the dome is done, with Christ, the "
-                "Evangelists, the great feasts, the Passion and ten warrior "
-                "saints, and he is now painting Saint Nicholas's life in "
-                "eighteen panels in the narthex. His work moves men to "
-                "tears; he is a Maestro, and like most of them notices "
-                "little but his art.",
-            ),
-            "An angel has taken Vasiliy under its wing, while a demon has "
-            "fixed on the parish priest through his pride in the work, and "
-            "the congregation are caught between them. Vasiliy may sense "
-            "the struggle and ask for help, or the angel may ask the "
-            "characters, or the demon trick them, to finish off the "
-            "other.",
+        summary=paragraphs(
+            "A church at Sredets, the masterpiece of the city's "
+            "craftsmen, whose frescoes Vasiliy, the Boyana Master, is "
+            "still painting: the dome is done, with Christ, the "
+            "Evangelists, the great feasts, the Passion and ten warrior "
+            "saints, and he is now painting Saint Nicholas's life in "
+            "eighteen panels in the narthex. His work moves men to "
+            "tears; he is a Maestro, and like most of them notices "
+            "little but his art.",
         ),
+        secrets="An angel has taken Vasiliy under its wing, while a demon has "
+        "fixed on the parish priest through his pride in the work, and "
+        "the congregation are caught between them. Vasiliy may sense "
+        "the struggle and ask for help, or the angel may ask the "
+        "characters, or the demon trick them, to finish off the "
+        "other.",
     )
 
 
@@ -1782,18 +1757,16 @@ def _towns(transylvania: Transylvania, b: Builder) -> None:
         charter="A charter it says Diocletian granted",
         council=5,
         place=p["seuthopolis_caverns"],
-        summary=secrets(
-            paragraphs(
-                "The walled town over the Quaesitors' caverns, laid out "
-                "like many small Bulgarian towns, under Bulgaria in name "
-                "but paying homage to no noble. A council of five old men "
-                "governs it in public: one each for the carpenters, "
-                "shepherds, weavers and potters, and a leader chosen from "
-                "the four, whose guild at once names another in his "
-                "place. Its people are Greeks, Bulgars and mountain Slavs.",
-            ),
-            "The charter is a skilful forgery; the oppidum of Seuthopolis rules here.",
+        summary=paragraphs(
+            "The walled town over the Quaesitors' caverns, laid out "
+            "like many small Bulgarian towns, under Bulgaria in name "
+            "but paying homage to no noble. A council of five old men "
+            "governs it in public: one each for the carpenters, "
+            "shepherds, weavers and potters, and a leader chosen from "
+            "the four, whose guild at once names another in his "
+            "place. Its people are Greeks, Bulgars and mountain Slavs.",
         ),
+        secrets="The charter is a skilful forgery; the oppidum of Seuthopolis rules here.",
     )
 
 

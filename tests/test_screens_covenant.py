@@ -70,6 +70,7 @@ _COVENANT_TABS = (
     "tab-cov-library",
     "tab-cov-diary",
     "tab-cov-build",
+    "tab-secrets",
 )
 
 

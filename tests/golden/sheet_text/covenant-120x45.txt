@@ -184,7 +184,7 @@
       +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
-  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
+  bitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Sec
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -227,7 +227,7 @@
       +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
-  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
+  ts  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -270,7 +270,7 @@
       +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
-  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
+  ts  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -313,7 +313,7 @@
       +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
-  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
+  ts  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -340,5 +340,48 @@
       tracked.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
+          Edit (e)          In Play
+
+  ts  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

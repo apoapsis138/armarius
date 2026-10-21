@@ -29,7 +29,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -46,8 +46,6 @@ TYTALUS = "house_tytalus"
 EX_MISC = "house_ex_miscellanea"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
@@ -611,26 +609,24 @@ def _niaux(provence: Provence) -> None:
         "The Cave of Niaux",
         inside=region,
         aura=4,
-        summary=secrets(
-            paragraphs(
-                "A cave system in the hidden Vicdessos valley, about a day's "
-                "ride south of Foix and a little north of Castle Miglos and "
-                "the village of Niaux: three kilometres of galleries, "
-                "formations and grottos, and above all paintings older than "
-                "the Flood. The main gallery is covered with horses, oxen, "
-                "bison, antelope and handprints, and more are scattered down "
-                "the passages. The cave has a Magic aura of 4, the main "
-                "gallery 5. Miniata Sophia lives here; the Redcaps record its "
-                "site as the village of Niaux.",
-            ),
-            "A regio lies in the cave, easily entered by magic at the new "
-            "moon, the equinoxes and the solstices: an ancient magical form of "
-            "the cave where shamans from before the Flood dance, drum and "
-            "paint new pictures on the walls. The only way to stumble in is to "
-            "drum or paint on the walls by firelight at a solstice. The "
-            "Criamon go there for the last initiation of the Avenue of "
-            "Adulation.",
+        summary=paragraphs(
+            "A cave system in the hidden Vicdessos valley, about a day's "
+            "ride south of Foix and a little north of Castle Miglos and "
+            "the village of Niaux: three kilometres of galleries, "
+            "formations and grottos, and above all paintings older than "
+            "the Flood. The main gallery is covered with horses, oxen, "
+            "bison, antelope and handprints, and more are scattered down "
+            "the passages. The cave has a Magic aura of 4, the main "
+            "gallery 5. Miniata Sophia lives here; the Redcaps record its "
+            "site as the village of Niaux.",
         ),
+        secrets="A regio lies in the cave, easily entered by magic at the new "
+        "moon, the equinoxes and the solstices: an ancient magical form of "
+        "the cave where shamans from before the Flood dance, drum and "
+        "paint new pictures on the walls. The only way to stumble in is to "
+        "drum or paint on the walls by firelight at a solstice. The "
+        "Criamon go there for the last initiation of the Avenue of "
+        "Adulation.",
         levels=[
             Builder.level(
                 "The cave of the first painters",
@@ -779,14 +775,11 @@ def _aedes_mercurii(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "After the Schism War a priest of Janus here, Petrarchus of "
         "Guernicus, tried to join the Way of St James to the Via Domitia by "
         "a Mercurian ritual into one great road network, and failed.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Protendus works as an unofficial, tacitly approved Quaesitor, against Tytalan influence from the north; he keeps it quiet by oaths enforced with certamen.",
-                "Ruberus is secretly a friend of Garus, Primus of Flambeau, and secretly loves Dama, the Praeco.",
-                "Flammarcus may stop at nothing to become Primus when Garus dies.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Protendus works as an unofficial, tacitly approved Quaesitor, against Tytalan influence from the north; he keeps it quiet by oaths enforced with certamen.",
+        "Ruberus is secretly a friend of Garus, Primus of Flambeau, and secretly loves Dama, the Praeco.",
+        "Flammarcus may stop at nothing to become Primus when Garus dies.",
     )
     aedes = b.covenant(
         "Aedes Mercurii",
@@ -800,6 +793,7 @@ def _aedes_mercurii(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
             "The book gives no founding year (the split came just before the "
             "Schism War; 1003 is assumed) and no season (Autumn is assumed).",
         ),
+        secrets=hidden,
         aura=5,
         season="Autumn",
         unnamed_magi=7,
@@ -857,21 +851,19 @@ def _aedes_magi(provence: Provence, b: Builder, aedes: Covenant) -> None:
         covenant=aedes,
         house=FLAMBEAU,
         age=121,
-        summary=secrets(
-            paragraphs(
-                "Priest of Mars at the Dorsum, who looks about seventy-five, "
-                "styles himself Pontifex Maximus and thinks himself the "
-                "covenant's leader. Like many at the Dorsum he is a Christian "
-                "and treats the priesthood as ceremony. He worships the memory "
-                "of Flambeau the Founder and holds that Castra Solis has "
-                "corrupted the Founder's story: his research says Flambeau was "
-                "no Mithraian but a Mercurian who held some of the Order of "
-                "Mercury's lost rites. Most magi think him overzealous and "
-                "cannot see why it matters so to him. He burns to become "
-                "Primus of Flambeau as soon as Garus dies.",
-            ),
-            "He may be willing to do anything at all to get there.",
+        summary=paragraphs(
+            "Priest of Mars at the Dorsum, who looks about seventy-five, "
+            "styles himself Pontifex Maximus and thinks himself the "
+            "covenant's leader. Like many at the Dorsum he is a Christian "
+            "and treats the priesthood as ceremony. He worships the memory "
+            "of Flambeau the Founder and holds that Castra Solis has "
+            "corrupted the Founder's story: his research says Flambeau was "
+            "no Mithraian but a Mercurian who held some of the Order of "
+            "Mercury's lost rites. Most magi think him overzealous and "
+            "cannot see why it matters so to him. He burns to become "
+            "Primus of Flambeau as soon as Garus dies.",
         ),
+        secrets="He may be willing to do anything at all to get there.",
         traits={"Passionate": 2, "Ruthless": 2},
     )
     m["protendus"] = b.magus(
@@ -879,30 +871,28 @@ def _aedes_magi(provence: Provence, b: Builder, aedes: Covenant) -> None:
         covenant=aedes,
         house=TREMERE,
         age=112,
-        summary=secrets(
-            paragraphs(
-                "The senior Tremere of the Tribunal (he looks eighty-three), "
-                "priest of Pluto on the covenant's council, and said to be a "
-                "necromancer without equal. He answers, with some "
-                "reluctance, to the exarch of Iberia, who he thinks resents "
-                "the House's weakness in Provence. He has trained several "
-                "apprentices and urges young Tremere to make their names, but "
-                "the House's last venture, Lariander, vanished twenty years "
-                "ago, and he suspects the crusaders and the Merinita around "
-                "Castra Solis. He belongs to the Vexillation of the Golden "
-                "Thread, a secret Tremere society sworn to foil the schemes of "
-                "House Tytalus. Though he holds six sigils he mostly stays out "
-                "of Tribunal politics, abstaining unless his House is touched "
-                "or a Tremere warns him. He is the likeliest magus to look "
-                "into the deaths of Senex and Tibaut.",
-            ),
-            "He acts as an unofficial Quaesitor, tacitly allowed, whose rank "
-            "and secrecy let him investigate discreetly and by methods "
-            "Quaesitors would not use; he guards the secret with oaths backed "
-            "by certamen. He has kept the northern Tytali from gaining a "
-            "foothold so far, but suspects they now work through the "
-            "Mithraian Flambeau of Castra Solis.",
+        summary=paragraphs(
+            "The senior Tremere of the Tribunal (he looks eighty-three), "
+            "priest of Pluto on the covenant's council, and said to be a "
+            "necromancer without equal. He answers, with some "
+            "reluctance, to the exarch of Iberia, who he thinks resents "
+            "the House's weakness in Provence. He has trained several "
+            "apprentices and urges young Tremere to make their names, but "
+            "the House's last venture, Lariander, vanished twenty years "
+            "ago, and he suspects the crusaders and the Merinita around "
+            "Castra Solis. He belongs to the Vexillation of the Golden "
+            "Thread, a secret Tremere society sworn to foil the schemes of "
+            "House Tytalus. Though he holds six sigils he mostly stays out "
+            "of Tribunal politics, abstaining unless his House is touched "
+            "or a Tremere warns him. He is the likeliest magus to look "
+            "into the deaths of Senex and Tibaut.",
         ),
+        secrets="He acts as an unofficial Quaesitor, tacitly allowed, whose rank "
+        "and secrecy let him investigate discreetly and by methods "
+        "Quaesitors would not use; he guards the secret with oaths backed "
+        "by certamen. He has kept the northern Tytali from gaining a "
+        "foothold so far, but suspects they now work through the "
+        "Mithraian Flambeau of Castra Solis.",
         traits={"Reclusive": 2, "Secretive": 2},
     )
     m["ophilio"] = b.magus(
@@ -1007,20 +997,18 @@ def _aedes_magi(provence: Provence, b: Builder, aedes: Covenant) -> None:
         covenant=aedes,
         house=VERDITIUS,
         age=99,
-        summary=secrets(
-            paragraphs(
-                "Priest of Vulcan and keeper of the forge of Hephaestus deep "
-                "in the Dorsum, and head of the Confraternity of Roland, "
-                "Verditius magi who make magic swords (Houses of Hermes: "
-                "Mystery Cults). He looks forty-one. One of the few at Aedes "
-                "with no grudge against Castra Solis, he admires and respects "
-                "Garus, the Flambeau Primus, but the forge obliges him to stay "
-                "on good terms with his covenant-mates.",
-            ),
-            "He hides his friendship with Garus, and he admires and secretly "
-            "loves Dama, the Praeco, and would do nearly anything to protect "
-            "her.",
+        summary=paragraphs(
+            "Priest of Vulcan and keeper of the forge of Hephaestus deep "
+            "in the Dorsum, and head of the Confraternity of Roland, "
+            "Verditius magi who make magic swords (Houses of Hermes: "
+            "Mystery Cults). He looks forty-one. One of the few at Aedes "
+            "with no grudge against Castra Solis, he admires and respects "
+            "Garus, the Flambeau Primus, but the forge obliges him to stay "
+            "on good terms with his covenant-mates.",
         ),
+        secrets="He hides his friendship with Garus, and he admires and secretly "
+        "loves Dama, the Praeco, and would do nearly anything to protect "
+        "her.",
         traits={"Conciliatory": 2, "Relaxed": 2},
     )
     m["oxioun"] = b.magus(
@@ -1132,14 +1120,11 @@ def _bellaquin(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "urged open war on the Church, is called Tolomae of Bellaquin; House "
         "Jerbiton cast him out in 1216, and he was Marched and slain early in "
         "1218 (chapter three also calls the Coenobium his former covenant).",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Rumour says the Danior are homunculi, less open to Mentem magic, easily mended, and with a bloody habit of twisting Artemis's orders.",
-                "Antoinette fears Michael will learn of her affair with Carolus of the Rhine Tribunal during a Jerbiton fosterage at Oculus Septentrionalis.",
-                "Other magi may have engineered the fall of the first Bellaquin.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Rumour says the Danior are homunculi, less open to Mentem magic, easily mended, and with a bloody habit of twisting Artemis's orders.",
+        "Antoinette fears Michael will learn of her affair with Carolus of the Rhine Tribunal during a Jerbiton fosterage at Oculus Septentrionalis.",
+        "Other magi may have engineered the fall of the first Bellaquin.",
     )
     bellaquin = b.covenant(
         "Bellaquin",
@@ -1149,6 +1134,7 @@ def _bellaquin(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         aura=3,
         season="Autumn",
     )
@@ -1250,20 +1236,18 @@ def _bellaquin_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=TREMERE,
         age=49,
-        summary=secrets(
-            paragraphs(
-                "Bellaquin's Guardian, in charge of its security, a "
-                "Blatantly Gifted Tremere invited at Robert's insistence for "
-                "her name for dedication and discipline. She looks "
-                "thirty-three, is strong in Corpus, and is second in command "
-                "of the Andorra Company, working closely with Captain "
-                "Michael; the two are drawn to each other and will not admit "
-                "it, out of duty and propriety. Two guards trained at Coeris, "
-                "the Danior, never leave her side. Her sigil is a dull ache in "
-                "the teeth of those she targets or stands near as she casts.",
-            ),
-            "The Danior may be homunculi of her making.",
+        summary=paragraphs(
+            "Bellaquin's Guardian, in charge of its security, a "
+            "Blatantly Gifted Tremere invited at Robert's insistence for "
+            "her name for dedication and discipline. She looks "
+            "thirty-three, is strong in Corpus, and is second in command "
+            "of the Andorra Company, working closely with Captain "
+            "Michael; the two are drawn to each other and will not admit "
+            "it, out of duty and propriety. Two guards trained at Coeris, "
+            "the Danior, never leave her side. Her sigil is a dull ache in "
+            "the teeth of those she targets or stands near as she casts.",
         ),
+        secrets="The Danior may be homunculi of her making.",
         traits={"Disciplined": 3, "Loyal to Order of Hermes": 3},
     )
     m["antoinette"] = b.magus(
@@ -1271,24 +1255,22 @@ def _bellaquin_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=JERBITON,
         age=26,
-        summary=secrets(
-            paragraphs(
-                "Constantine's daughter (chapter three gives her surname as "
-                "LeBarre), eight when the first covenant fell, who has known "
-                "only Andorra and was apprenticed here; she has the Gentle "
-                "Gift and is a budding Imaginem specialist whose sigil is "
-                "barely audible whispers. She has long loved Captain Michael "
-                "in secret, watching him grow into a bold, able man, and has "
-                "thought of telling him, since she could give him children and "
-                "her father grandchildren, but fears what Artemis would do. "
-                "She would seek out a Verditius to arm Michael's soldiers, or "
-                "a certamen master to teach her to beat Artemis or find the "
-                "Tremere's weak Arts.",
-            ),
-            "She also fears Michael will learn of her fling with Carolus of "
-            "the Rhine Tribunal during a Jerbiton fosterage at Oculus "
-            "Septentrionalis.",
+        summary=paragraphs(
+            "Constantine's daughter (chapter three gives her surname as "
+            "LeBarre), eight when the first covenant fell, who has known "
+            "only Andorra and was apprenticed here; she has the Gentle "
+            "Gift and is a budding Imaginem specialist whose sigil is "
+            "barely audible whispers. She has long loved Captain Michael "
+            "in secret, watching him grow into a bold, able man, and has "
+            "thought of telling him, since she could give him children and "
+            "her father grandchildren, but fears what Artemis would do. "
+            "She would seek out a Verditius to arm Michael's soldiers, or "
+            "a certamen master to teach her to beat Artemis or find the "
+            "Tremere's weak Arts.",
         ),
+        secrets="She also fears Michael will learn of her fling with Carolus of "
+        "the Rhine Tribunal during a Jerbiton fosterage at Oculus "
+        "Septentrionalis.",
         traits={"Creative": 2, "Expressive": 2},
     )
 
@@ -1899,18 +1881,16 @@ def _factions(provence: Provence, b: Builder) -> None:
         "The Crestias",
         faction="Family",
         place=p["basque_country"],
-        summary=secrets(
-            "An outcast people among the Basques, speaking Euskara and "
-            "sharing most customs, but marked by their looks and a few odd "
-            "ways. They may own no weapons, horses or dogs, marry only each "
-            "other, live apart on the poorest land, and enter church by their "
-            "own door to screened pews. Nobody remembers why. Most are "
-            "Christian, with more pagans and old superstitions than other "
-            "Basques. At akelarre they are revered rather than scorned, and "
-            "said to be stronger in dark magic.",
-            "Basque slang calls them not of the people, which may mean the "
-            "leftovers of some invader, or that they are not wholly human.",
-        ),
+        summary="An outcast people among the Basques, speaking Euskara and "
+        "sharing most customs, but marked by their looks and a few odd "
+        "ways. They may own no weapons, horses or dogs, marry only each "
+        "other, live apart on the poorest land, and enter church by their "
+        "own door to screened pews. Nobody remembers why. Most are "
+        "Christian, with more pagans and old superstitions than other "
+        "Basques. At akelarre they are revered rather than scorned, and "
+        "said to be stronger in dark magic.",
+        secrets="Basque slang calls them not of the people, which may mean the "
+        "leftovers of some invader, or that they are not wholly human.",
     )
 
 

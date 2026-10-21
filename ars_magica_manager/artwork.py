@@ -258,6 +258,8 @@ ICON_NAMES: dict[str, str] = {
     "in_creation": "feather",
     "in_play": "seal-check",
     "worksheet": "clipboard-text",
+    # A record's Secrets chapter, for the storyguide's eyes.
+    "secrets": "keyhole",
 }
 
 #: An app concept to an icon the app draws itself (drawn/), in place of

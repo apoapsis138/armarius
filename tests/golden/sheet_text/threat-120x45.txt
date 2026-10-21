@@ -9,7 +9,7 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Stages  2 Standing
+   1 Stages  2 Standing  3 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Antagonist:    A faerie king without a court
@@ -52,7 +52,7 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Stages  2 Standing
+   1 Stages  2 Standing  3 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -70,6 +70,49 @@
     ▼ Links (1)
 
       ○ Creature: Aeolus: Carries its messengers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     The Hollow Crown
+
+      Kind:            Threat                  Answers to: no one
+      Detail:          Sketch                  Realm:      none
+      Ruler or leader: (not named)             Book:       core rules
+      Summary: not written yet. Edit the neighbour to say.
+          Edit (e)
+
+   1 Stages  2 Standing  3 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
+
+
+
+
+
+
+
+
+
+
+
 
 
 

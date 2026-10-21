@@ -31,7 +31,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, StatBlock, paragraphs, secrets
+from ..builder import Builder, StatBlock, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -44,8 +44,6 @@ GUERNICUS = "house_guernicus"
 EX_MISC = "house_ex_miscellanea"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
@@ -190,20 +188,18 @@ def _bordeaux_and_medoc(provence: Provence) -> None:
         "bordeaux_mithraeum",
         "The True Mithraeum of Bordeaux",
         inside=region,
-        summary=secrets(
-            "A natural cavern under the southern quarter of Bordeaux.",
-            paragraphs(
-                "Roman soldiers of the garrison made it a temple of Mithras, "
-                "and it has lain buried and forgotten for centuries. Only "
-                "Kaeso of Flambeau knew where it was: fearing the barbarians "
-                "then holding Bordeaux would find it, he told no one in the "
-                "Order and built a second temple upriver, where Castra Solis "
-                "now stands, so that the true one kept its power undimmed. "
-                "Most Flambeau believe the temple under Castra Solis is "
-                "Kaeso's own. The book gives no aura for the true one.",
-                "Many high initiates of the Legion of Mithras believe their "
-                "rumoured Great Temple lies somewhere in France.",
-            ),
+        summary="A natural cavern under the southern quarter of Bordeaux.",
+        secrets=paragraphs(
+            "Roman soldiers of the garrison made it a temple of Mithras, "
+            "and it has lain buried and forgotten for centuries. Only "
+            "Kaeso of Flambeau knew where it was: fearing the barbarians "
+            "then holding Bordeaux would find it, he told no one in the "
+            "Order and built a second temple upriver, where Castra Solis "
+            "now stands, so that the true one kept its power undimmed. "
+            "Most Flambeau believe the temple under Castra Solis is "
+            "Kaeso's own. The book gives no aura for the true one.",
+            "Many high initiates of the Legion of Mithras believe their "
+            "rumoured Great Temple lies somewhere in France.",
         ),
         **SECRET,
     )
@@ -368,15 +364,13 @@ def _bazas_and_garonne(provence: Provence) -> None:
         "roquetaillade_caves",
         "The Caves of Roquetaillade",
         inside=region,
-        summary=secrets(
-            "Caves near Roquetaillade Castle by Langon, home to a company of "
-            "faerie masons. Each new lord de La Motte enlarges the castle "
-            "with their help, which is how the square four-towered keep has "
-            "grown so grand.",
-            "The masons are bound by a pact to finish one building work for "
-            "each new lord of the family. Its terms are secret, told only by "
-            "a dying lord to his son.",
-        ),
+        summary="Caves near Roquetaillade Castle by Langon, home to a company of "
+        "faerie masons. Each new lord de La Motte enlarges the castle "
+        "with their help, which is how the square four-towered keep has "
+        "grown so grand.",
+        secrets="The masons are bound by a pact to finish one building work for "
+        "each new lord of the family. Its terms are secret, told only by "
+        "a dying lord to his son.",
         realm="Faerie",
         **RUMOURED,
     )
@@ -563,21 +557,19 @@ def _castra_solis_sites(provence: Provence) -> None:
         "castra_solis_mithraeum",
         "The Mithraeum of Castra Solis",
         inside=site,
-        summary=secrets(
-            paragraphs(
-                "The temple under Castra Solis, reached by hidden stairs from "
-                "the library to the chambers behind it. Generations of "
-                "Christian milites and pious magi have given it a Divine "
-                "aura of 4, and it is a church in all but name: the rites "
-                "for the Legion of Mithras's younger initiates are close to "
-                "baptism, communion and the last rites. Tombs in the caves "
-                "hold fallen milites in holy ground; the former Primus "
-                "Entisimon lies here, but Kaeso does not.",
-            ),
-            "It is a copy, built when Bordeaux fell to the raiders; the true "
-            "temple lies under Bordeaux and was kept secret so that its power "
-            "would endure.",
+        summary=paragraphs(
+            "The temple under Castra Solis, reached by hidden stairs from "
+            "the library to the chambers behind it. Generations of "
+            "Christian milites and pious magi have given it a Divine "
+            "aura of 4, and it is a church in all but name: the rites "
+            "for the Legion of Mithras's younger initiates are close to "
+            "baptism, communion and the last rites. Tombs in the caves "
+            "hold fallen milites in holy ground; the former Primus "
+            "Entisimon lies here, but Kaeso does not.",
         ),
+        secrets="It is a copy, built when Bordeaux fell to the raiders; the true "
+        "temple lies under Bordeaux and was kept secret so that its power "
+        "would endure.",
         realm="Divine",
         aura=4,
         **KNOWN_TRIBUNAL,
@@ -587,43 +579,41 @@ def _castra_solis_sites(provence: Provence) -> None:
         "mimizan",
         "Dama's Tower at Mimizan",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "A chapter of Castra Solis: Dama of Merinita's tower on the "
-                "swampy shore on the north side of the lake outside "
-                "Mimizan, a squat block of stone three storeys high over a "
-                "cellar used for storage. Dama lives and works on the top "
-                "floor, guests lodge on the second and the servants on the "
-                "first. The Redcaps call it Mimizan covenant, but at Tribunal "
-                "it counts as part of Castra Solis. It began as one of the "
-                "Hoplites' outposts in the long war with the raiders, and "
-                "Dama has kept it since the century after the Schism War; "
-                "she was born close by.",
-                "The Faerie aura is 4, centred on a muddy black rock almost "
-                "buried at the water's edge, near the ruins of a Gaulish "
-                "shrine where priests made many sacrifices; the wild coast "
-                "and marshes round about often hold pockets of Faerie aura. "
-                "A very strong Aegis of the Hearth (level 50, cast with "
-                "Wizard's Communion and a casting tablet) guards the tower, "
-                "and Dama's Veil of Haunting Terror, laid along the game "
-                "trail that rings the grounds and runs out to the main road, "
-                "fills anyone without Magic Resistance who sets foot on it "
-                "with visions of their worst fear and an overwhelming urge to "
-                "run. The locals fear the marsh and tell ghost stories of the "
-                "things down that trail. Only a small track from the "
-                "south-west is left clear, and Redcaps know to use it.",
-                "Dama and Rebecca are its only magi, with Rebecca's "
-                "apprentice Alexa and their servants.",
-            ),
-            paragraphs(
-                "The black rock is where the Gauls drowned captives for "
-                "Maju, then worshipped as Teutates; an inscription lies under "
-                "the mud, and votive silver rings lie in the lake. The site "
-                "is Infernal now, but Maju keeps the aura cloaked so it seems "
-                "Faerie, at a constant cost to its Might.",
-                "Dama made the place frightening on Maju's advice, saying the "
-                "Veil protects it from crusaders.",
-            ),
+        summary=paragraphs(
+            "A chapter of Castra Solis: Dama of Merinita's tower on the "
+            "swampy shore on the north side of the lake outside "
+            "Mimizan, a squat block of stone three storeys high over a "
+            "cellar used for storage. Dama lives and works on the top "
+            "floor, guests lodge on the second and the servants on the "
+            "first. The Redcaps call it Mimizan covenant, but at Tribunal "
+            "it counts as part of Castra Solis. It began as one of the "
+            "Hoplites' outposts in the long war with the raiders, and "
+            "Dama has kept it since the century after the Schism War; "
+            "she was born close by.",
+            "The Faerie aura is 4, centred on a muddy black rock almost "
+            "buried at the water's edge, near the ruins of a Gaulish "
+            "shrine where priests made many sacrifices; the wild coast "
+            "and marshes round about often hold pockets of Faerie aura. "
+            "A very strong Aegis of the Hearth (level 50, cast with "
+            "Wizard's Communion and a casting tablet) guards the tower, "
+            "and Dama's Veil of Haunting Terror, laid along the game "
+            "trail that rings the grounds and runs out to the main road, "
+            "fills anyone without Magic Resistance who sets foot on it "
+            "with visions of their worst fear and an overwhelming urge to "
+            "run. The locals fear the marsh and tell ghost stories of the "
+            "things down that trail. Only a small track from the "
+            "south-west is left clear, and Redcaps know to use it.",
+            "Dama and Rebecca are its only magi, with Rebecca's "
+            "apprentice Alexa and their servants.",
+        ),
+        secrets=paragraphs(
+            "The black rock is where the Gauls drowned captives for "
+            "Maju, then worshipped as Teutates; an inscription lies under "
+            "the mud, and votive silver rings lie in the lake. The site "
+            "is Infernal now, but Maju keeps the aura cloaked so it seems "
+            "Faerie, at a constant cost to its Might.",
+            "Dama made the place frightening on Maju's advice, saying the "
+            "Veil protects it from crusaders.",
         ),
         realm="Faerie",
         aura=4,
@@ -789,7 +779,8 @@ def _castra_solis(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         place=provence.places["castra_solis_site"],
         summary=summary,
         what_matters=what_matters,
-        notes=paragraphs(votes, secrets(STORYGUIDE, hidden)),
+        notes=paragraphs(votes),
+        secrets=hidden,
         aura=3,
         unnamed_magi=11,
         season="Summer",
@@ -874,38 +865,36 @@ def _castra_solis_magi(provence: Provence, b: Builder, castra: Covenant) -> None
         covenant=castra,
         house=MERINITA,
         age=113,
-        summary=secrets(
-            paragraphs(
-                "Filia of Dama, who trained her as her only apprentice about "
-                "a century ago; she looks about forty-five, and sometimes "
-                "calls herself Marie of France. A famous figure in her "
-                "House, headstrong and independent, she lives in a manor "
-                "near Poitiers counted part of Castra Solis though it stands "
-                "in Normandy's lands, attends the Provençal Tribunal, and "
-                "works to bring all Aquitaine into it by spreading the "
-                "language and culture of the south.",
-                "She escaped her mater's grip mostly through her devotion to "
-                "Eleanor of Aquitaine, whom she sees as her twin or her "
-                "mundane counterpart. She says she rode with Eleanor on the "
-                "Second Crusade in her bare-breasted Amazon procession, "
-                "guarding her with her Parma; came home with her after the "
-                "annulment; followed her to Henry's English court; and wrote "
-                "romances and fables for its nobles. Since Eleanor died she "
-                "has come back to Poitou to grieve and turned to Hermetic "
-                "politics. She has Faerie Blood and the second degree of the "
-                "Matres and Matrones, which lets her initiate others and lead "
-                "rites, though she seldom does; she has trained several "
-                "apprentices, all gone abroad. She says Eleanor was a folk "
-                "witch who brought secrets home from her uncle's court in the "
-                "Holy Land. Dama wants her to become a Matron, but Marie "
-                "thinks of her as a harsh taskmistress; they are cold to each "
-                "other, and Marie honours Eleanor far more.",
-            ),
-            "Perhaps none of it happened: Marie may instead have trailed after "
-            "an Arcadian faerie queen who looks like Eleanor and feeds on the stories "
-            "told of her. Dama drove her away by putting the cult first and "
-            "refusing the rites Marie said Eleanor taught her.",
+        summary=paragraphs(
+            "Filia of Dama, who trained her as her only apprentice about "
+            "a century ago; she looks about forty-five, and sometimes "
+            "calls herself Marie of France. A famous figure in her "
+            "House, headstrong and independent, she lives in a manor "
+            "near Poitiers counted part of Castra Solis though it stands "
+            "in Normandy's lands, attends the Provençal Tribunal, and "
+            "works to bring all Aquitaine into it by spreading the "
+            "language and culture of the south.",
+            "She escaped her mater's grip mostly through her devotion to "
+            "Eleanor of Aquitaine, whom she sees as her twin or her "
+            "mundane counterpart. She says she rode with Eleanor on the "
+            "Second Crusade in her bare-breasted Amazon procession, "
+            "guarding her with her Parma; came home with her after the "
+            "annulment; followed her to Henry's English court; and wrote "
+            "romances and fables for its nobles. Since Eleanor died she "
+            "has come back to Poitou to grieve and turned to Hermetic "
+            "politics. She has Faerie Blood and the second degree of the "
+            "Matres and Matrones, which lets her initiate others and lead "
+            "rites, though she seldom does; she has trained several "
+            "apprentices, all gone abroad. She says Eleanor was a folk "
+            "witch who brought secrets home from her uncle's court in the "
+            "Holy Land. Dama wants her to become a Matron, but Marie "
+            "thinks of her as a harsh taskmistress; they are cold to each "
+            "other, and Marie honours Eleanor far more.",
         ),
+        secrets="Perhaps none of it happened: Marie may instead have trailed after "
+        "an Arcadian faerie queen who looks like Eleanor and feeds on the stories "
+        "told of her. Dama drove her away by putting the cult first and "
+        "refusing the rites Marie said Eleanor taught her.",
         traits={"Unaging": 3, "Political": 3, "Artistic": 2},
     )
     m["beatrice"] = b.magus(
@@ -913,34 +902,32 @@ def _castra_solis_magi(provence: Provence, b: Builder, castra: Covenant) -> None
         covenant=castra,
         house=GUERNICUS,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "Filia of the late Presiding Quaesitor Tibaut, acting in his "
-                "office and presumed to succeed him at the Tribunal of 1221, "
-                "though that may be contested and is the first business of "
-                "the meeting. A troubled woman, she truly means to do right, "
-                "but amid the crusade and the Tribunal's feuds she is no "
-                "longer sure what right is. She is young for the office, has "
-                "won little respect from the factions yet, and would likely "
-                "hand it to another of her House if a better one came "
-                "forward. Registered at Castra Solis, she spends all her time "
-                "in the Arelat, living as the Coenobium's guest at the ruins "
-                "of Glanum, where she studies the Roman shrines of the cults "
-                "that flourished there; some say she has fallen out with "
-                "Garus, others with one of the societies based in the "
-                "Arelat. She is thought to sympathise with the Matres and "
-                "Matrones.",
-            ),
-            paragraphs(
-                "Tibaut told her he believed Senex dead, and sent her sealed "
-                "letters by an Iberian Redcap who was ambushed by crusader "
-                "camp followers and died in the wilds by the Via Domitia; "
-                "the letter is still in his satchel. When Tibaut missed their "
-                "meeting she took her fears to Dama, who calmly suggested she "
-                "hold the office until the Tribunal; honoured, she agreed. "
-                "Dama believes she will not pursue her pater's inquiry and "
-                "has all but drawn her into the cult.",
-            ),
+        summary=paragraphs(
+            "Filia of the late Presiding Quaesitor Tibaut, acting in his "
+            "office and presumed to succeed him at the Tribunal of 1221, "
+            "though that may be contested and is the first business of "
+            "the meeting. A troubled woman, she truly means to do right, "
+            "but amid the crusade and the Tribunal's feuds she is no "
+            "longer sure what right is. She is young for the office, has "
+            "won little respect from the factions yet, and would likely "
+            "hand it to another of her House if a better one came "
+            "forward. Registered at Castra Solis, she spends all her time "
+            "in the Arelat, living as the Coenobium's guest at the ruins "
+            "of Glanum, where she studies the Roman shrines of the cults "
+            "that flourished there; some say she has fallen out with "
+            "Garus, others with one of the societies based in the "
+            "Arelat. She is thought to sympathise with the Matres and "
+            "Matrones.",
+        ),
+        secrets=paragraphs(
+            "Tibaut told her he believed Senex dead, and sent her sealed "
+            "letters by an Iberian Redcap who was ambushed by crusader "
+            "camp followers and died in the wilds by the Via Domitia; "
+            "the letter is still in his satchel. When Tibaut missed their "
+            "meeting she took her fears to Dama, who calmly suggested she "
+            "hold the office until the Tribunal; honoured, she agreed. "
+            "Dama believes she will not pursue her pater's inquiry and "
+            "has all but drawn her into the cult.",
         ),
     )
     _mimizan_magi(provence, b, castra)
@@ -953,120 +940,118 @@ def _mimizan_magi(provence: Provence, b: Builder, castra: Covenant) -> None:
         covenant=castra,
         house=MERINITA,
         age=1220 - 993,
-        summary=secrets(
-            paragraphs(
-                "The Praeco of the Tribunal, by custom its eldest magus, born "
-                "in 993. Twilight has shattered her early memories: she may "
-                "have been the child of a Basque folk witch and a Viking "
-                "raider. Her mater was a Greek Merinita and former Thessalian "
-                "witch who had learned the Hoplite's trade at Val-Negra and "
-                "Castra Solis and was versed in her House's symbolic and sympathetic "
-                "mysteries. Dama became her apprentice in 1001, just before "
-                "the Schism War, and the two hid as guests at the court of "
-                "Oriande la Fée. Gauntleted in 1016, Dama took the whole "
-                "path of Story Magic and unwisely swore herself to Oriande's "
-                "court.",
-                "In 1061 her risks threw her into Twilight. Nineteen years "
-                "later something came back that a Quaesitor confirmed as "
-                "Dama, though it was more a husk woven of patchwork memory, "
-                "ambition and desire, glowing faintly like the Virgin in "
-                "the painted images, with auburn hair and ruddy skin. Her "
-                "fey oath ran for her natural life, and a faerie prophecy "
-                "said she would die at seventy, so she came back free of it. "
-                "A very old man who called himself a childhood friend made "
-                "her take a farewell gift, a green-black stone the size of "
-                "a hen's egg he called a baetylus, and charged her to carry "
-                "it far from the castle and keep it from the one who craved "
-                "it: it would give Dama vigour, but Oriande would use it as "
-                "an Orphic Egg for a great apotheosis. Oriande was "
-                "displeased but could do nothing.",
-                "Resolved to leave a legacy of her own rather than her "
-                "House's, she trained one apprentice, Marie; founded "
-                "Mimizan; bound Maju, a faerie of the lake, as her familiar "
-                "with her House's spell; and founded a mystery cult, the "
-                "Matres and Matrones, devoted to raising up women, which she "
-                "leads as mystagogue. The cult is obscure but not secret, and "
-                "a little digging shows she is at its heart. She favours "
-                "female magi and is a true friend to women. She is openly "
-                "pagan, which leaves the pious of Castra Solis uneasy about "
-                "her and gives Aedes Mercurii hope she is fair; even the "
-                "Mercurians heed her when she speaks. She dislikes visitors, "
-                "and has grown more secretive, paranoid and ambitious.",
-                "She looks an older, handsome Basque woman in rich court "
-                "dress, silver hair with a trace of auburn pulled into a bun "
-                "under a Basque shawl, with a fine dagger, gold rings on her "
-                "fingers and the stone hung from a gold chain, leaning on a walking "
-                "stick; her faint amber glow shows most at evening, when she "
-                "seems almost a ghost. A scent of lilies attends her magic. "
-                "Her voting sigil is an ivory dragon's head gilded in red "
-                "gold, her father's gift and the only thing she has from "
-                "before her apprenticeship.",
-            ),
-            paragraphs(
-                "Maju is not what it seems. Worshipped by the Gauls as "
-                "Teutates, who drowned captives for it at the lake's black "
-                "rock, it later wore the mask of Sugaar among the Basques, "
-                "then returned to play in Oriande's court, where Dama first "
-                "saw it. It has bound her spirit as she bound it, and its "
-                "counsel led her into sin and blasphemy and to the edge of "
-                "infernalism: it had her build the chthonic sorginak into "
-                "her cult under the guise of the Black Madonna, so that at "
-                "its upper levels the Matres and Matrones are a coven of "
-                "tainted witches close to demonic corruption. Through them "
-                "it sets women against men and against Christ, and the sins "
-                "it spreads will soon make it a demon outright (Infernal "
-                "Might 45, a Duke of False Gods); it already hides the "
-                "Infernal aura at Mimizan. It appears as a winged sprite, a "
-                "hare, a dove or, in private, a snake that coils round her "
-                "throat. See the Serpent's Venom.",
-                "In 1210 Senex, Presiding Quaesitor, came to suspect her "
-                "cult. While she was away at an akelarre he slipped into "
-                "Mimizan; she came back early and found him in her sanctum. "
-                "The Aegis, Revoke the Protection of Bonisagus and Maju's "
-                "viper venom killed him; she stripped his goods and Maju, as "
-                "a drake, ate the body. Having entered her sanctum uninvited "
-                "he had forfeited his immunity, so the killing was lawful, "
-                "but she told no one to keep the cult unseen. His successor "
-                "Tibaut found the thread in Senex's notes, began probing the "
-                "Tribunal's cults in 1217, and pressed Luc of Ara Maxima Nova "
-                "about clergy and pilgrims on the Via Domitia; Luc lost a "
-                "Certamen to him and told Dama which Arts to avoid. In 1219 "
-                "she lured Tibaut into an abandoned house near the road to "
-                "Foix, broke his Parma, and set Maju on him; he staggered "
-                "into the road and collapsed, and crusader knights, Divinely "
-                "blessed and proof against her magic, carried him to the "
-                "Abbey of Saint Hilaire, where he died of the poison. They "
-                "later took him for a Cathar and raided the abbey. He lies "
-                "in its cemetery; his belongings sit locked in a chest in "
-                "the abbot's office. Dama does not know whether he told the "
-                "knights or the monks anything.",
-                "She has never killed a woman. She worries a little that "
-                "Beatrice is a woman, but thinks she will not follow her "
-                "pater's trail and has nearly won her for the cult. She "
-                "bought the tacit support of Alazais and the Coenobium by "
-                "secretly making a Longevity Ritual for Alazais's mundane "
-                "companion. Her own ritual is failing: she must renew it "
-                "before 1232, may sacrifice Maju for its vis, and feels her "
-                "legacy slipping away. Maju urges her to draw more sorginak "
-                "in and bend their faith in Mari and Sugaar, and needles her "
-                "about Marie and about Mimizan's smallness beside Rosefleur. "
-                "She has taken no more apprentices, as Maju thinks it too "
-                "risky. If she is shown what her familiar truly is, she may "
-                "yet be saved; if she falls, Maju means to carry her soul to "
-                "Hell.",
-                "The baetylus holds a shard of the beginning of Creation, "
-                "perhaps of Sol Invictus or of Cronus. Touching it she adds "
-                "5 to her aging rolls and suffers no aging crises; it purifies "
-                "her and all she touches or eats as the Greater Purifying "
-                "Touch, so poison cannot harm her; and it gives her visions "
-                "of danger to herself or the stone, which feed her paranoia. "
-                "The tale she believes says it fell into the lake of "
-                "Toulouse and was raised by pagan wizards who later became "
-                "Diedne, and that Maugris kept it, long-lived by its power, "
-                "hid with it at Oriande's court in the Schism War, and gave "
-                "it to her so that he could at last die and so that Oriande, "
-                "whom he foresaw it would corrupt, would never have it.",
-            ),
+        summary=paragraphs(
+            "The Praeco of the Tribunal, by custom its eldest magus, born "
+            "in 993. Twilight has shattered her early memories: she may "
+            "have been the child of a Basque folk witch and a Viking "
+            "raider. Her mater was a Greek Merinita and former Thessalian "
+            "witch who had learned the Hoplite's trade at Val-Negra and "
+            "Castra Solis and was versed in her House's symbolic and sympathetic "
+            "mysteries. Dama became her apprentice in 1001, just before "
+            "the Schism War, and the two hid as guests at the court of "
+            "Oriande la Fée. Gauntleted in 1016, Dama took the whole "
+            "path of Story Magic and unwisely swore herself to Oriande's "
+            "court.",
+            "In 1061 her risks threw her into Twilight. Nineteen years "
+            "later something came back that a Quaesitor confirmed as "
+            "Dama, though it was more a husk woven of patchwork memory, "
+            "ambition and desire, glowing faintly like the Virgin in "
+            "the painted images, with auburn hair and ruddy skin. Her "
+            "fey oath ran for her natural life, and a faerie prophecy "
+            "said she would die at seventy, so she came back free of it. "
+            "A very old man who called himself a childhood friend made "
+            "her take a farewell gift, a green-black stone the size of "
+            "a hen's egg he called a baetylus, and charged her to carry "
+            "it far from the castle and keep it from the one who craved "
+            "it: it would give Dama vigour, but Oriande would use it as "
+            "an Orphic Egg for a great apotheosis. Oriande was "
+            "displeased but could do nothing.",
+            "Resolved to leave a legacy of her own rather than her "
+            "House's, she trained one apprentice, Marie; founded "
+            "Mimizan; bound Maju, a faerie of the lake, as her familiar "
+            "with her House's spell; and founded a mystery cult, the "
+            "Matres and Matrones, devoted to raising up women, which she "
+            "leads as mystagogue. The cult is obscure but not secret, and "
+            "a little digging shows she is at its heart. She favours "
+            "female magi and is a true friend to women. She is openly "
+            "pagan, which leaves the pious of Castra Solis uneasy about "
+            "her and gives Aedes Mercurii hope she is fair; even the "
+            "Mercurians heed her when she speaks. She dislikes visitors, "
+            "and has grown more secretive, paranoid and ambitious.",
+            "She looks an older, handsome Basque woman in rich court "
+            "dress, silver hair with a trace of auburn pulled into a bun "
+            "under a Basque shawl, with a fine dagger, gold rings on her "
+            "fingers and the stone hung from a gold chain, leaning on a walking "
+            "stick; her faint amber glow shows most at evening, when she "
+            "seems almost a ghost. A scent of lilies attends her magic. "
+            "Her voting sigil is an ivory dragon's head gilded in red "
+            "gold, her father's gift and the only thing she has from "
+            "before her apprenticeship.",
+        ),
+        secrets=paragraphs(
+            "Maju is not what it seems. Worshipped by the Gauls as "
+            "Teutates, who drowned captives for it at the lake's black "
+            "rock, it later wore the mask of Sugaar among the Basques, "
+            "then returned to play in Oriande's court, where Dama first "
+            "saw it. It has bound her spirit as she bound it, and its "
+            "counsel led her into sin and blasphemy and to the edge of "
+            "infernalism: it had her build the chthonic sorginak into "
+            "her cult under the guise of the Black Madonna, so that at "
+            "its upper levels the Matres and Matrones are a coven of "
+            "tainted witches close to demonic corruption. Through them "
+            "it sets women against men and against Christ, and the sins "
+            "it spreads will soon make it a demon outright (Infernal "
+            "Might 45, a Duke of False Gods); it already hides the "
+            "Infernal aura at Mimizan. It appears as a winged sprite, a "
+            "hare, a dove or, in private, a snake that coils round her "
+            "throat. See the Serpent's Venom.",
+            "In 1210 Senex, Presiding Quaesitor, came to suspect her "
+            "cult. While she was away at an akelarre he slipped into "
+            "Mimizan; she came back early and found him in her sanctum. "
+            "The Aegis, Revoke the Protection of Bonisagus and Maju's "
+            "viper venom killed him; she stripped his goods and Maju, as "
+            "a drake, ate the body. Having entered her sanctum uninvited "
+            "he had forfeited his immunity, so the killing was lawful, "
+            "but she told no one to keep the cult unseen. His successor "
+            "Tibaut found the thread in Senex's notes, began probing the "
+            "Tribunal's cults in 1217, and pressed Luc of Ara Maxima Nova "
+            "about clergy and pilgrims on the Via Domitia; Luc lost a "
+            "Certamen to him and told Dama which Arts to avoid. In 1219 "
+            "she lured Tibaut into an abandoned house near the road to "
+            "Foix, broke his Parma, and set Maju on him; he staggered "
+            "into the road and collapsed, and crusader knights, Divinely "
+            "blessed and proof against her magic, carried him to the "
+            "Abbey of Saint Hilaire, where he died of the poison. They "
+            "later took him for a Cathar and raided the abbey. He lies "
+            "in its cemetery; his belongings sit locked in a chest in "
+            "the abbot's office. Dama does not know whether he told the "
+            "knights or the monks anything.",
+            "She has never killed a woman. She worries a little that "
+            "Beatrice is a woman, but thinks she will not follow her "
+            "pater's trail and has nearly won her for the cult. She "
+            "bought the tacit support of Alazais and the Coenobium by "
+            "secretly making a Longevity Ritual for Alazais's mundane "
+            "companion. Her own ritual is failing: she must renew it "
+            "before 1232, may sacrifice Maju for its vis, and feels her "
+            "legacy slipping away. Maju urges her to draw more sorginak "
+            "in and bend their faith in Mari and Sugaar, and needles her "
+            "about Marie and about Mimizan's smallness beside Rosefleur. "
+            "She has taken no more apprentices, as Maju thinks it too "
+            "risky. If she is shown what her familiar truly is, she may "
+            "yet be saved; if she falls, Maju means to carry her soul to "
+            "Hell.",
+            "The baetylus holds a shard of the beginning of Creation, "
+            "perhaps of Sol Invictus or of Cronus. Touching it she adds "
+            "5 to her aging rolls and suffers no aging crises; it purifies "
+            "her and all she touches or eats as the Greater Purifying "
+            "Touch, so poison cannot harm her; and it gives her visions "
+            "of danger to herself or the stone, which feed her paranoia. "
+            "The tale she believes says it fell into the lake of "
+            "Toulouse and was raised by pagan wizards who later became "
+            "Diedne, and that Maugris kept it, long-lived by its power, "
+            "hid with it at Oriande's court in the Schism War, and gave "
+            "it to her so that he could at last die and so that Oriande, "
+            "whom he foresaw it would corrupt, would never have it.",
         ),
         traits={"Driven": 4, "Proud": 3, "Optimistic": 2},
     )
@@ -1075,38 +1060,36 @@ def _mimizan_magi(provence: Provence, b: Builder, castra: Covenant) -> None:
         covenant=castra,
         house=EX_MISC,
         age=32,
-        summary=secrets(
-            paragraphs(
-                "A Basque sorgina of House Ex Miscellanea, a folk witch who "
-                "has sworn the Oath, and the only other resident of Mimizan. "
-                "Her father found a hoard of Roman gold in their village and "
-                "spent it quietly on her comfort and schooling, grooming her "
-                "to marry one of the region's lesser knights; but Dama's "
-                "coven found her, talked several of her suitors into going "
-                "on crusade, and took her in. After her apprenticeship she "
-                "became Dama's chief helper, and she serves her as envoy, "
-                "messenger and spy, flying and changing shape to travel fast "
-                "and unseen. She often goes home to fly over the whalers as "
-                "an albatross, and they follow her gladly as a good omen. She "
-                "nurses young mothers through childbirth with potions and "
-                "takes the afterbirth as her fee, rendering it each spring "
-                "equinox at an old hillside shrine for 5 pawns of Corpus "
-                "vis, her own source.",
-                "She still hopes to find a husband, ideally a young magus of "
-                "good breeding and character, and would welcome a quick "
-                "romance and a quicker marriage, for she wants a child soon; "
-                "a mundane knight or ship's captain might do, but her "
-                "upbringing, growing power and pride set the bar high. Close "
-                "to pagan, she sees nothing wrong in the Matres and "
-                "Matrones: does not all mortal life come from women? She is "
-                "teaching an apprentice, young Alexa, who helps Dama while "
-                "Rebecca is away and means to be initiated into Intuition "
-                "when she joins the cult. Rebecca's voting sigil is a wolf "
-                "fetish she took in a fight from a rival sorgina.",
-            ),
-            "She is one of the sorginak Maju is working to corrupt through "
-            "Dama's cult.",
+        summary=paragraphs(
+            "A Basque sorgina of House Ex Miscellanea, a folk witch who "
+            "has sworn the Oath, and the only other resident of Mimizan. "
+            "Her father found a hoard of Roman gold in their village and "
+            "spent it quietly on her comfort and schooling, grooming her "
+            "to marry one of the region's lesser knights; but Dama's "
+            "coven found her, talked several of her suitors into going "
+            "on crusade, and took her in. After her apprenticeship she "
+            "became Dama's chief helper, and she serves her as envoy, "
+            "messenger and spy, flying and changing shape to travel fast "
+            "and unseen. She often goes home to fly over the whalers as "
+            "an albatross, and they follow her gladly as a good omen. She "
+            "nurses young mothers through childbirth with potions and "
+            "takes the afterbirth as her fee, rendering it each spring "
+            "equinox at an old hillside shrine for 5 pawns of Corpus "
+            "vis, her own source.",
+            "She still hopes to find a husband, ideally a young magus of "
+            "good breeding and character, and would welcome a quick "
+            "romance and a quicker marriage, for she wants a child soon; "
+            "a mundane knight or ship's captain might do, but her "
+            "upbringing, growing power and pride set the bar high. Close "
+            "to pagan, she sees nothing wrong in the Matres and "
+            "Matrones: does not all mortal life come from women? She is "
+            "teaching an apprentice, young Alexa, who helps Dama while "
+            "Rebecca is away and means to be initiated into Intuition "
+            "when she joins the cult. Rebecca's voting sigil is a wolf "
+            "fetish she took in a fight from a rival sorgina.",
         ),
+        secrets="She is one of the sorginak Maju is working to corrupt through "
+        "Dama's cult.",
         traits={"Optimistic": 2},
     )
 
@@ -1274,13 +1257,11 @@ def _lords(provence: Provence, b: Builder) -> None:
         seat="Roquetaillade Castle",
         answers_to=w["henry_iii"],
         place=region,
-        summary=secrets(
-            "Lord of Roquetaillade near Langon, said to be the first castle "
-            "Charlemagne built, a square stronghold with four towers that "
-            "each lord of the line has made grander.",
-            "The faerie masons of the nearby caves build for each new lord "
-            "under a family pact passed from father to son on the deathbed.",
-        ),
+        summary="Lord of Roquetaillade near Langon, said to be the first castle "
+        "Charlemagne built, a square stronghold with four towers that "
+        "each lord of the line has made grander.",
+        secrets="The faerie masons of the nearby caves build for each new lord "
+        "under a family pact passed from father to son on the deathbed.",
     )
     w["count_armagnac"] = b.lord(
         "Pierre-Gerald, Count of Armagnac",
@@ -1525,41 +1506,37 @@ def _churches(provence: Provence, b: Builder) -> None:
         "The Bishop's Palace and Cathedral of Tarbes",
         church="Bishop's cathedral",
         place=region,
-        summary=secrets(
-            paragraphs(
-                "The cathedral and bishop's palace at the heart of Tarbes, "
-                "ringed by the town's six walled villages; with no seneschal, "
-                "the bishop and clergy help the towns keep order. Legend says "
-                "Tharbis, the Cushite queen of Ethiopia whom Moses spurned, "
-                "founded the town. Two heirlooms pass from bishop to bishop: "
-                "a polished walking staff of African moringa wood, which the "
-                "bishop keeps in his office unused, and a plain gold ring set "
-                "with amber in a soapstone box.",
-            ),
-            "Whoever is given the ring and told to think of a subject slowly "
-            "forgets it: an Intelligence roll each full moon against 7, plus "
-            "1 for each failure, and after five failures it is gone. The "
-            "effect is not Hermetic (a season and an InMe Lab Total of 30 to "
-            "work out). The ring holds 4 pawns of Mentem vis and is an Arcane "
-            "Connection to the spirit of Tharbis. Its power was forgotten "
-            "when a dying bishop gave it to his successor and told him never "
-            "to forget it.",
+        summary=paragraphs(
+            "The cathedral and bishop's palace at the heart of Tarbes, "
+            "ringed by the town's six walled villages; with no seneschal, "
+            "the bishop and clergy help the towns keep order. Legend says "
+            "Tharbis, the Cushite queen of Ethiopia whom Moses spurned, "
+            "founded the town. Two heirlooms pass from bishop to bishop: "
+            "a polished walking staff of African moringa wood, which the "
+            "bishop keeps in his office unused, and a plain gold ring set "
+            "with amber in a soapstone box.",
         ),
+        secrets="Whoever is given the ring and told to think of a subject slowly "
+        "forgets it: an Intelligence roll each full moon against 7, plus "
+        "1 for each failure, and after five failures it is gone. The "
+        "effect is not Hermetic (a season and an InMe Lab Total of 30 to "
+        "work out). The ring holds 4 pawns of Mentem vis and is an Arcane "
+        "Connection to the spirit of Tharbis. Its power was forgotten "
+        "when a dying bishop gave it to his successor and told him never "
+        "to forget it.",
     )
     w["saint_savin"] = b.church(
         "The Abbey of Saint-Savin",
         church="Monastery or nunnery",
         place=region,
-        summary=secrets(
-            "An abbey and convent south of Lourdes. Roland lodged here while "
-            "Charlemagne besieged Lourdes and repaid the monks by killing the "
-            "giants Passamont and Alabaster, who lived near their priory and "
-            "ate their flocks.",
-            "The giants were faeries and did not die: their essence passed "
-            "into the skull fetishes Roland left behind, and they now dwell "
-            "deeper in the Pyrenees, behind tales of savage brutes haunting "
-            "the high pastures and passes.",
-        ),
+        summary="An abbey and convent south of Lourdes. Roland lodged here while "
+        "Charlemagne besieged Lourdes and repaid the monks by killing the "
+        "giants Passamont and Alabaster, who lived near their priory and "
+        "ate their flocks.",
+        secrets="The giants were faeries and did not die: their essence passed "
+        "into the skull fetishes Roland left behind, and they now dwell "
+        "deeper in the Pyrenees, behind tales of savage brutes haunting "
+        "the high pastures and passes.",
     )
     w["bessaut"] = b.church(
         "The Bessaut Commandery",
@@ -1592,17 +1569,15 @@ def _towns(provence: Provence, b: Builder) -> None:
         ruler="Henry III, as Duke of Aquitaine",
         answers_to=w["henry_iii"],
         place=region,
-        summary=secrets(
-            paragraphs(
-                "The great port on the Garonne and the stronghold of English "
-                "power in the region since Eleanor of Aquitaine's marriage to "
-                "Louis was annulled. It trades briskly in tin and lead from "
-                "southern England, passing the metal on to France and beyond, "
-                "and is a major stop on the Way of St James. Cenodoxus "
-                "Superbia and Julian the Tempter hunt its crowds.",
-            ),
-            "Kaeso's true mithraeum lies in a cavern under its southern quarter.",
+        summary=paragraphs(
+            "The great port on the Garonne and the stronghold of English "
+            "power in the region since Eleanor of Aquitaine's marriage to "
+            "Louis was annulled. It trades briskly in tin and lead from "
+            "southern England, passing the metal on to France and beyond, "
+            "and is a major stop on the Way of St James. Cenodoxus "
+            "Superbia and Julian the Tempter hunt its crowds.",
         ),
+        secrets="Kaeso's true mithraeum lies in a cavern under its southern quarter.",
     )
     w["blaye"] = b.town(
         "Blaye",

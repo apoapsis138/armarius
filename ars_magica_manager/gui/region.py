@@ -17,7 +17,7 @@ from ..models import Neighbour, Saga
 from ..neighbour_lists import KindTab
 from ..sections import FAIRS_SECTION, TABLES_SECTION
 from ..sheets import region as region_sheet
-from .character_sheet import section
+from .character_sheet import secrets_chapter, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
 from .heraldry import arms_section
@@ -63,6 +63,7 @@ class NeighbourPage(QWidget):
         self.codex.add(
             "Standing" if kind.attitude else "Found Here", "region", self._standing()
         )
+        self.codex.add("Secrets", "secrets", secrets_chapter(neighbour, p, run))
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))
         outer.addWidget(self.codex, 1)

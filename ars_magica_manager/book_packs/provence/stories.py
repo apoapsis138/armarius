@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...threats import DORMANT
-from ..builder import SECRETS, Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -62,37 +62,35 @@ def _crusade(provence: Provence) -> None:
     b = provence.b
     provence.world["threat_crusade"] = b.threat(
         "The Albigensian Crusade",
-        summary=secrets(
-            paragraphs(
-                "The war on the southern heretics has run for eleven years. "
-                "The legate's murder by the Rhône in 1208 brought the crusade; "
-                "Béziers was sacked and its people slaughtered in 1209, "
-                "Carcassonne yielded and its viscount died a prisoner, and "
-                "Simon de Montfort, a minor knight of the Île de France, took "
-                "the Trencavel lands. Minerve, Termes and Lavaur followed; the "
-                "massacre at Montgey in 1211 brought down the Tremere covenant "
-                "of Lariander, and Mistridge fell to Tres's Wizard's War. At "
-                "Muret in 1213 King Pedro of Aragon died and the southern host "
-                "broke; Simon entered Toulouse in 1215.",
-                "Then the tide turned. Count Raimond VI slipped back into "
-                "Toulouse in 1217, Simon was killed by a stone from the walls "
-                "in 1218 (some say from one of Tres's engines), and the royal "
-                "expedition of 1219 butchered Marmande but failed before "
-                "Toulouse. In 1220 the count is winning back his county. Amaury "
-                "de Montfort claims his father's titles, with his mother Alice "
-                "still a shrewd hand in the war, but his domain is crumbling. "
-                "There are no borders: castles of either side stand within "
-                "sight of one another and garrisons of both are scattered "
-                "across the land.",
-                "A saga frame as well as a threat: the crusade played as a "
-                "war, in which characters of every faith and loyalty meet, "
-                "change sides and betray one another. Who holds each town in "
-                "1220 is in that place's notes.",
-            ),
-            "The book tells the war only to 1219. The stages after 1221 "
-            "follow history in broad strokes; a troupe that wants the south "
-            "to win, or the war to end sooner, changes them.",
+        summary=paragraphs(
+            "The war on the southern heretics has run for eleven years. "
+            "The legate's murder by the Rhône in 1208 brought the crusade; "
+            "Béziers was sacked and its people slaughtered in 1209, "
+            "Carcassonne yielded and its viscount died a prisoner, and "
+            "Simon de Montfort, a minor knight of the Île de France, took "
+            "the Trencavel lands. Minerve, Termes and Lavaur followed; the "
+            "massacre at Montgey in 1211 brought down the Tremere covenant "
+            "of Lariander, and Mistridge fell to Tres's Wizard's War. At "
+            "Muret in 1213 King Pedro of Aragon died and the southern host "
+            "broke; Simon entered Toulouse in 1215.",
+            "Then the tide turned. Count Raimond VI slipped back into "
+            "Toulouse in 1217, Simon was killed by a stone from the walls "
+            "in 1218 (some say from one of Tres's engines), and the royal "
+            "expedition of 1219 butchered Marmande but failed before "
+            "Toulouse. In 1220 the count is winning back his county. Amaury "
+            "de Montfort claims his father's titles, with his mother Alice "
+            "still a shrewd hand in the war, but his domain is crumbling. "
+            "There are no borders: castles of either side stand within "
+            "sight of one another and garrisons of both are scattered "
+            "across the land.",
+            "A saga frame as well as a threat: the crusade played as a "
+            "war, in which characters of every faith and loyalty meet, "
+            "change sides and betray one another. Who holds each town in "
+            "1220 is in that place's notes.",
         ),
+        secrets="The book tells the war only to 1219. The stages after 1221 "
+        "follow history in broad strokes; a troupe that wants the south "
+        "to win, or the war to end sooner, changes them.",
         antagonist=(
             "The crusaders: Amaury de Montfort, the papal legates, and in time "
             "the French crown"
@@ -247,63 +245,61 @@ def _serpent(provence: Provence) -> None:
     b = provence.b
     provence.world["threat_serpent"] = b.threat(
         "The Serpent's Venom",
-        summary=secrets(
-            paragraphs(
-                "A saga frame, the book's central one, and a threat. Dama of "
-                "Merinita, the Praeco, is the Tribunal's oldest maga: "
-                "respected, even by the Mercurians, and known to favour "
-                "women. She founded the Matres and Matrones, a cult that "
-                "advances women, draws on the Basque folk witches, the "
-                "region's love of the female saints and its Black Madonnas, "
-                "and the memory of Eleanor of Aquitaine. She lives apart from "
-                "Castra Solis in a tower near Mimizan, an eerie and "
-                "unwelcoming place that she says keeps crusaders away.",
-                "Two Presiding Quaesitors have gone in ten years. Senex "
-                "vanished in 1210 on some errand to a village, and Tibaut, "
-                "who took his office, died in 1219. Tibaut's filia Beatrice "
-                "holds the office until the Tribunal of 1221 confirms her, on "
-                "Dama's suggestion.",
-            ),
-            paragraphs(
-                "Dama killed them both. Senex had turned his eye on her cult "
-                "and slipped into Mimizan while she was away at an akelarre "
-                "with the sorginak; she came back early and found him in her "
-                "sanctum. Her Aegis, her spell Revoke the Protection of "
-                "Bonisagus and Maju's venom killed him, and Maju, as a drake, "
-                "ate the body. He had forfeited his immunity by entering her "
-                "sanctum, so the killing was lawful, but she hid it to keep "
-                "the Quaesitores away from the cult.",
-                "Tibaut found the start of Senex's inquiry in his notes, came "
-                "to believe him dead, told Beatrice so, and from 1217 looked "
-                "into the Tribunal's cults. His sealed letter to Beatrice "
-                "still lies in the satchel of a Redcap who died of a camp "
-                "followers' ambush on the Via Domitia. Luc of Ara Maxima Nova, "
-                "after losing a certamen to Tibaut over his questions, told "
-                "Dama which Arts he had used. She lured Tibaut into an "
-                "abandoned house near the road to Foix where Maju waited as a "
-                "viper; he staggered out into the road, crusader knights "
-                "carried him to the Abbey of Saint Hilaire thinking him a "
-                "monk, and he died there of the poison. His belongings sit in "
-                "a locked chest in the abbot's office; the crusaders, "
-                "deciding he had been a Cathar, came back and raided the "
-                "abbey. Dama does not know what he told the knights or the "
-                "monks.",
-                "Maju is the real enemy. The Gauls worshipped it as Teutates "
-                "and drowned captives for it in the lake at Mimizan; among "
-                "the Basques it wore the face of Sugaar, and Dama still calls "
-                "it so before them. It bound her spirit as she bound it, and "
-                "has turned each of her works a little: the cult's upper "
-                "circle is a coven of tainted witches close to diabolism, "
-                "and Dama drove her filia Marie away over it. Maju sets women "
-                "against men and the Black Madonna against the God of the "
-                "Dominion, and its sins are slowly making it a demon (in its "
-                "final form a Duke of False Gods, Infernal Might 45, who "
-                "cloaks the Infernal aura at Mimizan as Magic or Faerie). "
-                "Dama bought the tacit backing of Alazais and the Coenobium "
-                "with a secret Longevity Ritual for the Chief Redcap's "
-                "mundane companion. Her own ritual is failing; she must renew "
-                "it before 1232.",
-            ),
+        summary=paragraphs(
+            "A saga frame, the book's central one, and a threat. Dama of "
+            "Merinita, the Praeco, is the Tribunal's oldest maga: "
+            "respected, even by the Mercurians, and known to favour "
+            "women. She founded the Matres and Matrones, a cult that "
+            "advances women, draws on the Basque folk witches, the "
+            "region's love of the female saints and its Black Madonnas, "
+            "and the memory of Eleanor of Aquitaine. She lives apart from "
+            "Castra Solis in a tower near Mimizan, an eerie and "
+            "unwelcoming place that she says keeps crusaders away.",
+            "Two Presiding Quaesitors have gone in ten years. Senex "
+            "vanished in 1210 on some errand to a village, and Tibaut, "
+            "who took his office, died in 1219. Tibaut's filia Beatrice "
+            "holds the office until the Tribunal of 1221 confirms her, on "
+            "Dama's suggestion.",
+        ),
+        secrets=paragraphs(
+            "Dama killed them both. Senex had turned his eye on her cult "
+            "and slipped into Mimizan while she was away at an akelarre "
+            "with the sorginak; she came back early and found him in her "
+            "sanctum. Her Aegis, her spell Revoke the Protection of "
+            "Bonisagus and Maju's venom killed him, and Maju, as a drake, "
+            "ate the body. He had forfeited his immunity by entering her "
+            "sanctum, so the killing was lawful, but she hid it to keep "
+            "the Quaesitores away from the cult.",
+            "Tibaut found the start of Senex's inquiry in his notes, came "
+            "to believe him dead, told Beatrice so, and from 1217 looked "
+            "into the Tribunal's cults. His sealed letter to Beatrice "
+            "still lies in the satchel of a Redcap who died of a camp "
+            "followers' ambush on the Via Domitia. Luc of Ara Maxima Nova, "
+            "after losing a certamen to Tibaut over his questions, told "
+            "Dama which Arts he had used. She lured Tibaut into an "
+            "abandoned house near the road to Foix where Maju waited as a "
+            "viper; he staggered out into the road, crusader knights "
+            "carried him to the Abbey of Saint Hilaire thinking him a "
+            "monk, and he died there of the poison. His belongings sit in "
+            "a locked chest in the abbot's office; the crusaders, "
+            "deciding he had been a Cathar, came back and raided the "
+            "abbey. Dama does not know what he told the knights or the "
+            "monks.",
+            "Maju is the real enemy. The Gauls worshipped it as Teutates "
+            "and drowned captives for it in the lake at Mimizan; among "
+            "the Basques it wore the face of Sugaar, and Dama still calls "
+            "it so before them. It bound her spirit as she bound it, and "
+            "has turned each of her works a little: the cult's upper "
+            "circle is a coven of tainted witches close to diabolism, "
+            "and Dama drove her filia Marie away over it. Maju sets women "
+            "against men and the Black Madonna against the God of the "
+            "Dominion, and its sins are slowly making it a demon (in its "
+            "final form a Duke of False Gods, Infernal Might 45, who "
+            "cloaks the Infernal aura at Mimizan as Magic or Faerie). "
+            "Dama bought the tacit backing of Alazais and the Coenobium "
+            "with a secret Longevity Ritual for the Chief Redcap's "
+            "mundane companion. Her own ritual is failing; she must renew "
+            "it before 1232.",
         ),
         antagonist=("Maju, the Praeco Dama's familiar: a faerie turning into a demon"),
         realm="Faerie",
@@ -381,28 +377,26 @@ def _spirits(provence: Provence) -> None:
     b = provence.b
     provence.world["threat_spirits"] = b.threat(
         "The Six Deadly Spirits",
-        summary=secrets(
-            "When the pope laid England and its lands under interdict in "
-            "1208, Gascony's churches stood closed for six years, and in the "
-            "wild country off the pilgrim roads a band of demons took root. "
-            "Infernal auras are common there still, and in many villages the "
-            "Dominion holds by day and the Infernal by night; no Divine aura "
-            "below 7 is older than the interdict.",
-            "Each demon descends on a community, possesses its leading folk "
-            "and leads the rest into its own sin until the place lies under "
-            "an Infernal aura; a host who dies unrepentant comes back as a "
-            "lesser demon or a ghost. Three are still in Gascony: Cenodoxus "
-            "Superbia, Lord of Pride and Envy (a Vessel of Iniquity, "
-            "Infernal Might 40), who plays the muse to craftsmen and spreads "
-            "envy through whole guilds; Adrian, the Voice of Safety (a "
-            "Spirit of Deceit, 30), a troubadour preaching the sloth of "
-            "standing aside from the war; and Julian or Julia, the Tempter "
-            "of the Way of St. James (15). Greed has gone to the bridge of "
-            "St. Thibery on the Via Domitia as the Old Man of the Bridge "
-            "(15), who lures travellers into the river after a phantom "
-            "treasure. Gluttony and Wrath march with the crusaders in the "
-            "Narbonnais and the Toulousain, feeding both armies' vices.",
-        ),
+        summary="When the pope laid England and its lands under interdict in "
+        "1208, Gascony's churches stood closed for six years, and in the "
+        "wild country off the pilgrim roads a band of demons took root. "
+        "Infernal auras are common there still, and in many villages the "
+        "Dominion holds by day and the Infernal by night; no Divine aura "
+        "below 7 is older than the interdict.",
+        secrets="Each demon descends on a community, possesses its leading folk "
+        "and leads the rest into its own sin until the place lies under "
+        "an Infernal aura; a host who dies unrepentant comes back as a "
+        "lesser demon or a ghost. Three are still in Gascony: Cenodoxus "
+        "Superbia, Lord of Pride and Envy (a Vessel of Iniquity, "
+        "Infernal Might 40), who plays the muse to craftsmen and spreads "
+        "envy through whole guilds; Adrian, the Voice of Safety (a "
+        "Spirit of Deceit, 30), a troubadour preaching the sloth of "
+        "standing aside from the war; and Julian or Julia, the Tempter "
+        "of the Way of St. James (15). Greed has gone to the bridge of "
+        "St. Thibery on the Via Domitia as the Old Man of the Bridge "
+        "(15), who lures travellers into the river after a phantom "
+        "treasure. Gluttony and Wrath march with the crusaders in the "
+        "Narbonnais and the Toulousain, feeding both armies' vices.",
         antagonist="Six demons of the deadly sins, loose since the interdict",
         realm="Infernal",
         stages=[
@@ -501,23 +495,21 @@ def _procrustean(provence: Provence) -> None:
     b = provence.b
     provence.world["threat_procrustean"] = b.threat(
         "The Procrustean League",
-        summary=secrets(
-            "A short-lived alliance led by Tolomae of Bellaquin, a Cathar "
-            "sympathiser, that called for open war on the Church to save the "
-            "Order's holdings in the south. At the Tribunal of 1214 he urged "
-            "a joint Hermetic answer to the crusade, which would have meant "
-            "open meddling in mundane and Church affairs; he was thrown out "
-            "of the debate and swore revenge on the Mercurian conservatives "
-            "and on the Coenobium, his old covenant. Aedes Mercurii and the "
-            "Coenobium both renounced the League, Jerbiton declared him "
-            "orbus in 1216, and he was Marched for repeated interference and "
-            "slain early in 1218.",
-            "Tolomae was suspected of the papal legate's murder and fled "
-            "rather than answer the Quaesitor. Several of his supporters "
-            "went to other covenants or vanished in the war, and hide among "
-            "the faidits; some magi fear the cause will return, sharpened by "
-            "grief. No one knows who they are, which makes it an open case.",
-        ),
+        summary="A short-lived alliance led by Tolomae of Bellaquin, a Cathar "
+        "sympathiser, that called for open war on the Church to save the "
+        "Order's holdings in the south. At the Tribunal of 1214 he urged "
+        "a joint Hermetic answer to the crusade, which would have meant "
+        "open meddling in mundane and Church affairs; he was thrown out "
+        "of the debate and swore revenge on the Mercurian conservatives "
+        "and on the Coenobium, his old covenant. Aedes Mercurii and the "
+        "Coenobium both renounced the League, Jerbiton declared him "
+        "orbus in 1216, and he was Marched for repeated interference and "
+        "slain early in 1218.",
+        secrets="Tolomae was suspected of the papal legate's murder and fled "
+        "rather than answer the Quaesitor. Several of his supporters "
+        "went to other covenants or vanished in the war, and hide among "
+        "the faidits; some magi fear the cause will return, sharpened by "
+        "grief. No one knows who they are, which makes it an open case.",
         antagonist="Tolomae's surviving followers, hidden among the faidits",
         stages=[
             S(
@@ -575,30 +567,28 @@ def _tolosa(provence: Provence) -> None:
     b = provence.b
     provence.world["threat_tolosa"] = b.threat(
         "Tolosa Paratge's Civil War",
-        summary=secrets(
-            "The old covenant in the regio beside Toulouse is tearing itself "
-            "apart over its Cathars. In 1218, sure the city would fall, its "
-            "leader Augustus, a senior Quaesitor, asked the Gorgiastic Cathar "
-            "magi to leave for their own safety. Marc, one of them, declared "
-            "Wizard's War on him and, convinced he was under a demon's "
-            "sway, killed him in a confused quarrel in the tower; a month "
-            "later Carolus St. Tropez declared war on Marc, who did not "
-            "resist, and killed him. Mariola, made leader, did nothing, and "
-            "the covenant split: the Blacks, who shield the Cathars, hold "
-            "the regio under Cyprian of Flambeau; the Whites, who would "
-            "expel them, follow St. Tropez in the city and try to blockade "
-            "it.",
-            "Both sides are plainly depriving each other of magical "
-            "resources, which the Code forbids, but no one has brought a "
-            "case and the Quaesitores have kept out of it, partly from "
-            "respect. The rest of the Tribunal waits to see what survives. "
-            "Adam Carpentiere's enchanted boom across the Garonne keeps the "
-            "weakening regio alive, and the Gorgiastics opposed it. "
-            "Raimond, a Gorgiastic Good Man, believes he will die by "
-            "drowning in the Garonne and fears no other death. St. Tropez "
-            "would rather die striking at the Gorgiastics than wait for a "
-            "Tribunal to convict him.",
-        ),
+        summary="The old covenant in the regio beside Toulouse is tearing itself "
+        "apart over its Cathars. In 1218, sure the city would fall, its "
+        "leader Augustus, a senior Quaesitor, asked the Gorgiastic Cathar "
+        "magi to leave for their own safety. Marc, one of them, declared "
+        "Wizard's War on him and, convinced he was under a demon's "
+        "sway, killed him in a confused quarrel in the tower; a month "
+        "later Carolus St. Tropez declared war on Marc, who did not "
+        "resist, and killed him. Mariola, made leader, did nothing, and "
+        "the covenant split: the Blacks, who shield the Cathars, hold "
+        "the regio under Cyprian of Flambeau; the Whites, who would "
+        "expel them, follow St. Tropez in the city and try to blockade "
+        "it.",
+        secrets="Both sides are plainly depriving each other of magical "
+        "resources, which the Code forbids, but no one has brought a "
+        "case and the Quaesitores have kept out of it, partly from "
+        "respect. The rest of the Tribunal waits to see what survives. "
+        "Adam Carpentiere's enchanted boom across the Garonne keeps the "
+        "weakening regio alive, and the Gorgiastics opposed it. "
+        "Raimond, a Gorgiastic Good Man, believes he will die by "
+        "drowning in the Garonne and fears no other death. St. Tropez "
+        "would rather die striking at the Gorgiastics than wait for a "
+        "Tribunal to convict him.",
         antagonist="The White and Black factions of Tolosa Paratge",
         stages=[
             S(
@@ -677,26 +667,24 @@ def _coenobium(provence: Provence) -> None:
     b = provence.b
     provence.world["threat_coenobium"] = b.threat(
         "The Coenobium's Hegemony",
-        summary=secrets(
-            "The Coenobium, a league of chapter houses along the Rhône and "
-            "the coast run mostly by Jerbiton magi and the Tribunal's "
-            "Redcaps, has long been praised as a model of cooperation. "
-            "Since it destroyed Fraxinetum in 975 it has gathered most of "
-            "the magical and mundane resources of the County of Provence, "
-            "and it smothers any new covenant in its shadow that will not "
-            "join it as a chapter: none has thrived in southern Provence for "
-            "over a century. With several covenants lost to the crusade it "
-            "has grown unopposed, and even old allies are uneasy. It offers "
-            "help to any petitioner, and everyone knows the help implies "
-            "annexation.",
-            "It allies with Castra Solis and knows the pair can carry most "
-            "votes, but it also knows that isolating the small covenants "
-            "risks a Tribunal too thin to be quorate. Its First Consul, "
-            "Alazais, the Chief Redcap, is rumoured to belong to the Matres "
-            "and Matrones, and Dama's secret Longevity Ritual for her "
-            "companion has bought the Coenobium's quiet support for burying "
-            "a motion when the Praeco needs it.",
-        ),
+        summary="The Coenobium, a league of chapter houses along the Rhône and "
+        "the coast run mostly by Jerbiton magi and the Tribunal's "
+        "Redcaps, has long been praised as a model of cooperation. "
+        "Since it destroyed Fraxinetum in 975 it has gathered most of "
+        "the magical and mundane resources of the County of Provence, "
+        "and it smothers any new covenant in its shadow that will not "
+        "join it as a chapter: none has thrived in southern Provence for "
+        "over a century. With several covenants lost to the crusade it "
+        "has grown unopposed, and even old allies are uneasy. It offers "
+        "help to any petitioner, and everyone knows the help implies "
+        "annexation.",
+        secrets="It allies with Castra Solis and knows the pair can carry most "
+        "votes, but it also knows that isolating the small covenants "
+        "risks a Tribunal too thin to be quorate. Its First Consul, "
+        "Alazais, the Chief Redcap, is rumoured to belong to the Matres "
+        "and Matrones, and Dama's secret Longevity Ritual for her "
+        "companion has bought the Coenobium's quiet support for burying "
+        "a motion when the Praeco needs it.",
         antagonist="The Coenobium Rhodanien and its First Consul, Alazais",
         stages=[
             S(
@@ -764,19 +752,17 @@ def _glanum(provence: Provence) -> None:
     b = provence.b
     provence.world["frame_glanum"] = b.threat(
         "The Tribunal at Glanum",
-        summary=secrets(
-            "A saga frame. The Tribunal meets in summer 1221 in the ruins of "
-            "Glanum, a neutral ground agreed on after the bitter meeting of "
-            "1214, which was driven from Toulouse to Castra Solis by de "
-            "Montfort's army. Midius of Flambeau, the flamen, opens each day "
-            "masked and robed in the old Mercurian rite, to the scorn of the "
-            "pious at Castra Solis. The crusade and interference with "
-            "mundanes will fill the agenda.",
-            "Rumours at Beatrice's confirmation will hint that Senex was "
-            "murdered (The Serpent's Venom). If the Tribunal votes to "
-            "intervene against the crusade, the Pyrenean covenants may walk "
-            "out for good (Pyrenean Secession).",
-        ),
+        summary="A saga frame. The Tribunal meets in summer 1221 in the ruins of "
+        "Glanum, a neutral ground agreed on after the bitter meeting of "
+        "1214, which was driven from Toulouse to Castra Solis by de "
+        "Montfort's army. Midius of Flambeau, the flamen, opens each day "
+        "masked and robed in the old Mercurian rite, to the scorn of the "
+        "pious at Castra Solis. The crusade and interference with "
+        "mundanes will fill the agenda.",
+        secrets="Rumours at Beatrice's confirmation will hint that Senex was "
+        "murdered (The Serpent's Venom). If the Tribunal votes to "
+        "intervene against the crusade, the Pyrenean covenants may walk "
+        "out for good (Pyrenean Secession).",
         antagonist="The Tribunal's factions",
         moves=DATED,
         stages=[
@@ -846,42 +832,40 @@ def _adulteration(provence: Provence) -> None:
     provence.world["threat_adulteration"] = _dormant(
         b.threat(
             "The Adulteration of Flambeau",
-            summary=secrets(
-                paragraphs(
-                    "Val-Negra, Flambeau's own covenant and once the largest "
-                    "in the Order, fell as the Schism War was ending "
-                    "and never rose again. The Quaesitores ruled it must "
-                    "not, the domus magna moved to Castra Solis, and even "
-                    "its site in the far south is forgotten: a regio on "
-                    "Mount Perditu, where travellers go astray and return "
-                    "with no memory, if they return at all.",
-                    "A saga frame as well as a threat: an expedition into "
-                    "the lost covenant, its catacombs, ghosts and Aerie "
-                    "Clan, and perhaps a saga of restoring it against the "
-                    "ban.",
-                ),
-                paragraphs(
-                    "Deep in the mountain a round chamber holds the Iron "
-                    "Door, an iron disc carved as a wheel whose spokes are "
-                    "seven swords, warded against all but the strongest "
-                    "divinations. Since Apromor's time it has been forbidden "
-                    "to touch it. Behind it is the Adulteration of Flambeau: "
-                    "a malignant spirit born of the Founder's Twilights, "
-                    "made of his failings, wants and errors, which believes "
-                    "it is Flambeau. It is Magic Might 65 (Ignem), wrathful "
-                    "and proud, casts the Founder's Pilum of Fire at will, "
-                    "flies on smoke, curses magi with Deficient Ignem or "
-                    "Incompatible Arts, and when furious bursts into flame. "
-                    "Released, it would lay the country waste in rage.",
-                    "When five Diedne archmagi stormed Val-Negra in 1012 "
-                    "something got out and destroyed them. The two "
-                    "surviving defenders put it back, but the old seal, made "
-                    "by a lost Rite of Fenicil, was gone; their Hermetic "
-                    "ward holds only while the door stays shut, and anyone "
-                    "can open it. The Quaesitores hid the whole affair. "
-                    "Abaddon of Tytalus, one of the two, keeps watch over "
-                    "the door as a Living Ghost.",
-                ),
+            summary=paragraphs(
+                "Val-Negra, Flambeau's own covenant and once the largest "
+                "in the Order, fell as the Schism War was ending "
+                "and never rose again. The Quaesitores ruled it must "
+                "not, the domus magna moved to Castra Solis, and even "
+                "its site in the far south is forgotten: a regio on "
+                "Mount Perditu, where travellers go astray and return "
+                "with no memory, if they return at all.",
+                "A saga frame as well as a threat: an expedition into "
+                "the lost covenant, its catacombs, ghosts and Aerie "
+                "Clan, and perhaps a saga of restoring it against the "
+                "ban.",
+            ),
+            secrets=paragraphs(
+                "Deep in the mountain a round chamber holds the Iron "
+                "Door, an iron disc carved as a wheel whose spokes are "
+                "seven swords, warded against all but the strongest "
+                "divinations. Since Apromor's time it has been forbidden "
+                "to touch it. Behind it is the Adulteration of Flambeau: "
+                "a malignant spirit born of the Founder's Twilights, "
+                "made of his failings, wants and errors, which believes "
+                "it is Flambeau. It is Magic Might 65 (Ignem), wrathful "
+                "and proud, casts the Founder's Pilum of Fire at will, "
+                "flies on smoke, curses magi with Deficient Ignem or "
+                "Incompatible Arts, and when furious bursts into flame. "
+                "Released, it would lay the country waste in rage.",
+                "When five Diedne archmagi stormed Val-Negra in 1012 "
+                "something got out and destroyed them. The two "
+                "surviving defenders put it back, but the old seal, made "
+                "by a lost Rite of Fenicil, was gone; their Hermetic "
+                "ward holds only while the door stays shut, and anyone "
+                "can open it. The Quaesitores hid the whole affair. "
+                "Abaddon of Tytalus, one of the two, keeps watch over "
+                "the door as a Living Ghost.",
             ),
             antagonist="The Adulteration of Flambeau, the Founder's Twilight-born shadow",
             realm="Magic",
@@ -956,22 +940,20 @@ def _secession(provence: Provence) -> None:
     provence.world["threat_secession"] = _dormant(
         b.threat(
             "Pyrenean Secession",
-            summary=secrets(
-                "The conservative covenants, led by the Mercurians of Aedes "
-                "Mercurii with Ara Maxima Nova, Stella Durus and Miniata "
-                "Sophia, want the Order to keep out of the crusade and trust "
-                "to their isolation. If the Tribunal decides to act against "
-                "the crusaders and the Church, they may refuse to take part "
-                "any longer and ask the Grand Tribunal of 1228 to make them a "
-                "Tribunal of their own: four covenants, the number a new "
-                "Tribunal needs. Aedes Mercurii already threatened to walk "
-                "out in 1214, which could have made the meeting invalid, "
-                "until Tibaut and the Chief Redcap's threat to suspend the "
-                "Redcaps stopped it.",
-                "Bellaquin, for its own reasons, dreams of a Catalan "
-                "Tribunal, and several of the Tribunal's places lie south of "
-                "the mountains where the Iberian Tribunal also looks.",
-            ),
+            summary="The conservative covenants, led by the Mercurians of Aedes "
+            "Mercurii with Ara Maxima Nova, Stella Durus and Miniata "
+            "Sophia, want the Order to keep out of the crusade and trust "
+            "to their isolation. If the Tribunal decides to act against "
+            "the crusaders and the Church, they may refuse to take part "
+            "any longer and ask the Grand Tribunal of 1228 to make them a "
+            "Tribunal of their own: four covenants, the number a new "
+            "Tribunal needs. Aedes Mercurii already threatened to walk "
+            "out in 1214, which could have made the meeting invalid, "
+            "until Tibaut and the Chief Redcap's threat to suspend the "
+            "Redcaps stopped it.",
+            secrets="Bellaquin, for its own reasons, dreams of a Catalan "
+            "Tribunal, and several of the Tribunal's places lie south of "
+            "the mountains where the Iberian Tribunal also looks.",
             antagonist="The Pyrenean conservatives, led by Aedes Mercurii",
             moves=DATED,
             stages=[
@@ -1052,11 +1034,10 @@ def _find(records: list[Any], *names: str) -> Any | None:
 
 
 def _add_to(record: Any, more: str, hidden: str = "") -> None:
-    """Add a paragraph to a record's summary, before its Secrets heading
-    if it has one, and `hidden` to its Secrets."""
-    head, _sep, kept = record.summary.partition("\n\n" + SECRETS + "\n")
-    hidden_text = paragraphs(kept, hidden)
-    record.summary = secrets(paragraphs(head, more), hidden_text)
+    """Add a paragraph to a record's summary, and `hidden` to its
+    secrets."""
+    record.summary = paragraphs(record.summary, more)
+    record.secrets = paragraphs(record.secrets, hidden)
 
 
 #: The links `finish` makes where the other parts made the target:

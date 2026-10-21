@@ -144,6 +144,14 @@ async def _open_param_prompt(ws, vf_id: str | None = None) -> None:
     )
 
 
+async def _open_secrets(ws) -> None:
+    """Edit on the Secrets tab, shown first (it is built when shown)."""
+    view = ws._current_sheet_view()
+    view.query_one(TabbedContent).active = "tab-secrets"
+    await until(lambda: view.query("#section-secrets CollapsibleTitle"))
+    ws._core_verb("section-secrets", "edit")
+
+
 async def _open_virtue_change(ws) -> None:
     """Change what a Virtue names (Edit on the Virtues list): Puissant
     Magic Theory, taken first, chosen in the list."""
@@ -349,6 +357,7 @@ OPENERS: dict[str, Opener] = {
     "add creature vis": Opener(
         "creature", lambda ws: ws._core_verb("section-cr-vis", "add")
     ),
+    "edit secrets": Opener("neighbour", _open_secrets),
     "edit neighbour": Opener(
         "neighbour", lambda ws: ws._core_verb("section-nb-info", "edit")
     ),

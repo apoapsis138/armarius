@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...tribunal_packages import theban as package
 from ...tribunal_packages.theban import THEBAN
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -122,7 +122,8 @@ def build(theban: Theban) -> None:
     theban.tribunal = tribunal = b.tribunal(
         NAME,
         package=THEBAN.key,
-        summary=secrets(SUMMARY, SECRET),
+        summary=SUMMARY,
+        secrets=SECRET,
         meets_every=7,
         next_year=1221,
         next_season="Summer",
@@ -570,7 +571,8 @@ def _ruins(theban: Theban) -> None:
         theban.places[f"ruin_{key}"] = b.place(
             name,
             ruined=True,
-            summary=secrets(summary, hidden),
+            summary=summary,
+            secrets=hidden,
             realm=realm,
             aura=aura,
             status=status,

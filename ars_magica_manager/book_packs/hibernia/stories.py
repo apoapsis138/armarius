@@ -29,7 +29,7 @@ import unicodedata
 from typing import TYPE_CHECKING, Any
 
 from ...threats import DORMANT
-from ..builder import SECRETS, Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -66,41 +66,39 @@ def _connacht(hibernia: Hibernia) -> None:
     b = hibernia.b
     hibernia.world["threat_connacht"] = b.threat(
         "Guillaume and Connacht",
-        summary=secrets(
-            paragraphs(
-                "Praesis fell to Ballack's siege, and its new masters now "
-                "look west. For two seasons Guillaume Flambeau of Normandy "
-                "has been telling the covenant's guests what his spies have "
-                "found across the border: sites, auras and vis that the "
-                "Treaty of Cnoc Maol Réidh keeps from the Order. Praesis "
-                "plays host to a shifting company of foreign magi fresh to "
-                "Hibernia, and their eyes are turning to Connacht.",
-                "Guillaume has not yet crossed the Sionainne himself. He "
-                "sends his turb of Bréifne mercenaries, who serve him for "
-                "pay, food, wine and plunder, to find vis sources and strip "
-                "them. The villages round Lough Ree have learned to fear "
-                "Praesis and its men, the Coill Trí warns hedge wizards of "
-                "the new danger, and Cacht of Criamon, who fought for "
-                "Ballack only for the joy of overturning things, listens "
-                "closely, sensing a fresh war.",
-                "The Treaty forbids any covenant in Connacht and any magus "
-                "more than three nights under its sky or roof, and no one "
-                "person, druid or magus, can set a clause aside. One old "
-                "clause gives the members of Praesis leave to enter "
-                "Connacht in pursuit of Hermetic justice, at Manannán mac "
-                "Lir's express request, or to seek bees for their hives, "
-                "and its new masters may try to stretch it.",
-            ),
-            paragraphs(
-                "Báetáin, who handed the Gáe Bulg to Ballack, now shares "
-                "his tower with Guillaume, whose fire killed the people he "
-                "knew; his regret is a lever for anyone who would turn "
-                "Praesis from within.",
-                "Maoilfhinnéin of Vigil is quietly steering the shards of "
-                "Gráinne's broken first talisman into Guillaume's hands "
-                "(see Maoilfhinnéin's Plot), which may draw Guillaume's "
-                "attention east to Vigil before he finishes with Connacht.",
-            ),
+        summary=paragraphs(
+            "Praesis fell to Ballack's siege, and its new masters now "
+            "look west. For two seasons Guillaume Flambeau of Normandy "
+            "has been telling the covenant's guests what his spies have "
+            "found across the border: sites, auras and vis that the "
+            "Treaty of Cnoc Maol Réidh keeps from the Order. Praesis "
+            "plays host to a shifting company of foreign magi fresh to "
+            "Hibernia, and their eyes are turning to Connacht.",
+            "Guillaume has not yet crossed the Sionainne himself. He "
+            "sends his turb of Bréifne mercenaries, who serve him for "
+            "pay, food, wine and plunder, to find vis sources and strip "
+            "them. The villages round Lough Ree have learned to fear "
+            "Praesis and its men, the Coill Trí warns hedge wizards of "
+            "the new danger, and Cacht of Criamon, who fought for "
+            "Ballack only for the joy of overturning things, listens "
+            "closely, sensing a fresh war.",
+            "The Treaty forbids any covenant in Connacht and any magus "
+            "more than three nights under its sky or roof, and no one "
+            "person, druid or magus, can set a clause aside. One old "
+            "clause gives the members of Praesis leave to enter "
+            "Connacht in pursuit of Hermetic justice, at Manannán mac "
+            "Lir's express request, or to seek bees for their hives, "
+            "and its new masters may try to stretch it.",
+        ),
+        secrets=paragraphs(
+            "Báetáin, who handed the Gáe Bulg to Ballack, now shares "
+            "his tower with Guillaume, whose fire killed the people he "
+            "knew; his regret is a lever for anyone who would turn "
+            "Praesis from within.",
+            "Maoilfhinnéin of Vigil is quietly steering the shards of "
+            "Gráinne's broken first talisman into Guillaume's hands "
+            "(see Maoilfhinnéin's Plot), which may draw Guillaume's "
+            "attention east to Vigil before he finishes with Connacht.",
         ),
         antagonist="Guillaume Flambeau of Praesis and his Bréifne mercenaries",
         position=1,
@@ -199,38 +197,36 @@ def _treaty_test(hibernia: Hibernia) -> None:
     b = hibernia.b
     hibernia.world["threat_treaty"] = b.threat(
         "The Test of the Treaty",
-        summary=secrets(
-            paragraphs(
-                "The Treaty of Cnoc Maol Réidh has bound every Hibernian "
-                "Tribunal since 898, and every meeting speaks of it as "
-                "binding, yet it has never been formally put to the vote: "
-                "any attempt to question it is shouted down before "
-                "debate can begin. That day is near. The English magi say "
-                "no hedge wizard elsewhere in Mythic Europe has such "
-                "rights, and that the Treaty mocks a Code written for "
-                "Hermetic magi; some Irish magi have long coveted Connacht "
-                "too; and younger magi in their macgnímartha, who are "
-                "outside the Code and venture into Connacht for sport, "
-                "have heard the English message.",
-                "The Coill Trí is no happier. Its members resent the "
-                "tithe of seven Gifted children at every meeting, a tithe "
-                "that is sometimes rejected because a draoi misjudged the "
-                "Gift, and some magi bully druids into service, knowing "
-                "the druids dare not complain. Some churchmen in Connacht "
-                "suspect the federation of heresy, even of worse.",
-                "Open questions sharpen the debate. Bréifne lies on both "
-                "sides of the Sionainne, and the Treaty does not say "
-                "whether Connacht ends at the river or wherever the "
-                "Connachta kings rule; the Coill Trí claims all of it. The "
-                "Black Pig's Dyke, if restored, would ring Ulster and cut "
-                "into Connacht, which is why the druids keep it broken. A "
-                "magical marker along the Slieve Aughty, where magi seeking "
-                "familiars stray across the border, would earn the thanks "
-                "of both sides. A clause can be added only when the "
-                "Tribunal wants it and every ceannaire agrees.",
-            ),
-            "",
+        summary=paragraphs(
+            "The Treaty of Cnoc Maol Réidh has bound every Hibernian "
+            "Tribunal since 898, and every meeting speaks of it as "
+            "binding, yet it has never been formally put to the vote: "
+            "any attempt to question it is shouted down before "
+            "debate can begin. That day is near. The English magi say "
+            "no hedge wizard elsewhere in Mythic Europe has such "
+            "rights, and that the Treaty mocks a Code written for "
+            "Hermetic magi; some Irish magi have long coveted Connacht "
+            "too; and younger magi in their macgnímartha, who are "
+            "outside the Code and venture into Connacht for sport, "
+            "have heard the English message.",
+            "The Coill Trí is no happier. Its members resent the "
+            "tithe of seven Gifted children at every meeting, a tithe "
+            "that is sometimes rejected because a draoi misjudged the "
+            "Gift, and some magi bully druids into service, knowing "
+            "the druids dare not complain. Some churchmen in Connacht "
+            "suspect the federation of heresy, even of worse.",
+            "Open questions sharpen the debate. Bréifne lies on both "
+            "sides of the Sionainne, and the Treaty does not say "
+            "whether Connacht ends at the river or wherever the "
+            "Connachta kings rule; the Coill Trí claims all of it. The "
+            "Black Pig's Dyke, if restored, would ring Ulster and cut "
+            "into Connacht, which is why the druids keep it broken. A "
+            "magical marker along the Slieve Aughty, where magi seeking "
+            "familiars stray across the border, would earn the thanks "
+            "of both sides. A clause can be added only when the "
+            "Tribunal wants it and every ceannaire agrees.",
         ),
+        secrets="",
         antagonist="The Treaty's enemies, English and Irish alike",
         moves=DATED,
         stages=[
@@ -306,48 +302,46 @@ def _reform(hibernia: Hibernia) -> None:
     b = hibernia.b
     hibernia.world["threat_reform"] = b.threat(
         "The English Reform Motions",
-        summary=secrets(
-            paragraphs(
-                "Since England invaded Ireland, magi from across the Order, "
-                "called the English after the first visitors from "
-                "Stonehenge, have come to claim land and to bring the "
-                "Tribunal into line with continental practice. House "
-                "Tremere backed the first of them. They harvest vis when "
-                "it is ready, ignore or intimidate the lesser traditions "
-                "as suits them, and see Connacht as land waiting to be "
-                "taken.",
-                "At every meeting they press the same motions: that law "
-                "made case by case in treaties, where a ruling in Munster "
-                "in 1134 says nothing about the same dispute in 1220, is "
-                "unworkable; that the ambassadors' votes are illegal and "
-                "demeaning; and that the Peripheral Code should be "
-                "rewritten on Stonehenge's model. Helles of Ashenrise leads "
-                "the debate, a Tytalus trained in both academic and "
-                "Tytalus disputation, and answers charges of high crimes "
-                "against himself and his sodales at every meeting. The "
-                "English Council meets at the start of each Tribunal to "
-                "agree its line, but its members disagree, and it needs a "
-                "leader who can see past the legacy of Praesis and the "
-                "menace of Lámbaird.",
-                "Against them stand Circulus Ruber, which will not change "
-                "its time-honoured ways, and Cliffheart, which fights every "
-                "English foundation by law; Milvia, the Praeco, keeps out "
-                "of the quarrel. The Grand Tribunal of 1195 debated "
-                "Hibernia's reform at length and left its Code alone, "
-                "outraging Stonehenge when the parens of the apprentices "
-                "who attacked Damisona were found guilty only of a Low "
-                "Crime.",
-            ),
-            paragraphs(
-                "Lugardis of Elk's Run, sent by Durenmar to judge the "
-                "Order in Hibernia, has concluded that the Tribunal keeps "
-                "the Code, if with an odd Peripheral Code, and has written "
-                "home in its praise; an appeal abroad may find less "
-                "sympathy than the reformers expect.",
-                "Dorján and Konstanczia of Ashenrise are directed by the "
-                "Transylvanian magi who hold their sigils to help Ashenrise "
-                "bring the Tribunal up to date.",
-            ),
+        summary=paragraphs(
+            "Since England invaded Ireland, magi from across the Order, "
+            "called the English after the first visitors from "
+            "Stonehenge, have come to claim land and to bring the "
+            "Tribunal into line with continental practice. House "
+            "Tremere backed the first of them. They harvest vis when "
+            "it is ready, ignore or intimidate the lesser traditions "
+            "as suits them, and see Connacht as land waiting to be "
+            "taken.",
+            "At every meeting they press the same motions: that law "
+            "made case by case in treaties, where a ruling in Munster "
+            "in 1134 says nothing about the same dispute in 1220, is "
+            "unworkable; that the ambassadors' votes are illegal and "
+            "demeaning; and that the Peripheral Code should be "
+            "rewritten on Stonehenge's model. Helles of Ashenrise leads "
+            "the debate, a Tytalus trained in both academic and "
+            "Tytalus disputation, and answers charges of high crimes "
+            "against himself and his sodales at every meeting. The "
+            "English Council meets at the start of each Tribunal to "
+            "agree its line, but its members disagree, and it needs a "
+            "leader who can see past the legacy of Praesis and the "
+            "menace of Lámbaird.",
+            "Against them stand Circulus Ruber, which will not change "
+            "its time-honoured ways, and Cliffheart, which fights every "
+            "English foundation by law; Milvia, the Praeco, keeps out "
+            "of the quarrel. The Grand Tribunal of 1195 debated "
+            "Hibernia's reform at length and left its Code alone, "
+            "outraging Stonehenge when the parens of the apprentices "
+            "who attacked Damisona were found guilty only of a Low "
+            "Crime.",
+        ),
+        secrets=paragraphs(
+            "Lugardis of Elk's Run, sent by Durenmar to judge the "
+            "Order in Hibernia, has concluded that the Tribunal keeps "
+            "the Code, if with an odd Peripheral Code, and has written "
+            "home in its praise; an appeal abroad may find less "
+            "sympathy than the reformers expect.",
+            "Dorján and Konstanczia of Ashenrise are directed by the "
+            "Transylvanian magi who hold their sigils to help Ashenrise "
+            "bring the Tribunal up to date.",
         ),
         antagonist="The English Council and the reformers of Ashenrise",
         position=1,
@@ -440,37 +434,35 @@ def _grainne(hibernia: Hibernia) -> None:
     hibernia.world["threat_grainne"] = _dormant(
         b.threat(
             "Maoilfhinnéin's Plot",
-            summary=secrets(
-                paragraphs(
-                    "Vigil, the Merinita covenant on Cionn Mhálanna, once "
-                    "stood watch over Ireland and now lives fat on its old "
-                    "glories. Gráinne inghean Uaitéar, its boisterous "
-                    "quartermaster, wastes vis without noticing, holds "
-                    "authority over vaults whose worth she does not guess, "
-                    "and has a long rivalry with Guillaume of Praesis, who "
-                    "would love to see her humbled. As a young maga she "
-                    "tired of her first talisman, a sword, broke it in a "
-                    "rite and threw the pieces from the cliffs.",
-                    "Maoilfhinnéin mac Lir, Vigil's Ambassador to the Sea, "
-                    "spends his days in faerie and magical courts and is "
-                    "married to a faerie princess of Inishtrahull, an island "
-                    "six miles out from the head.",
-                ),
-                paragraphs(
-                    "Maoilfhinnéin believes Ireland's old stories are bound "
-                    "to repeat, and that the Ordo Hiberniae will be driven "
-                    "back as the native wizards were; he sees the first "
-                    "signs already. Should Vigil be threatened, he has "
-                    "prepared to carry the tusks to Inishtrahull and found "
-                    "the covenant anew there.",
-                    "He has three schemes in hand. He supports Lámbaird's "
-                    "positions at Tribunal, to mend the harm Éinri's feud "
-                    "has done. He feeds Gráinne's overconfidence, seeing "
-                    "that a sacrifice may soon be needed. And his allies in "
-                    "the sea brought him the shards of her broken sword: he "
-                    "has fixed them as an Arcane Connection to her and is "
-                    "working them into the hands of Guillaume.",
-                ),
+            summary=paragraphs(
+                "Vigil, the Merinita covenant on Cionn Mhálanna, once "
+                "stood watch over Ireland and now lives fat on its old "
+                "glories. Gráinne inghean Uaitéar, its boisterous "
+                "quartermaster, wastes vis without noticing, holds "
+                "authority over vaults whose worth she does not guess, "
+                "and has a long rivalry with Guillaume of Praesis, who "
+                "would love to see her humbled. As a young maga she "
+                "tired of her first talisman, a sword, broke it in a "
+                "rite and threw the pieces from the cliffs.",
+                "Maoilfhinnéin mac Lir, Vigil's Ambassador to the Sea, "
+                "spends his days in faerie and magical courts and is "
+                "married to a faerie princess of Inishtrahull, an island "
+                "six miles out from the head.",
+            ),
+            secrets=paragraphs(
+                "Maoilfhinnéin believes Ireland's old stories are bound "
+                "to repeat, and that the Ordo Hiberniae will be driven "
+                "back as the native wizards were; he sees the first "
+                "signs already. Should Vigil be threatened, he has "
+                "prepared to carry the tusks to Inishtrahull and found "
+                "the covenant anew there.",
+                "He has three schemes in hand. He supports Lámbaird's "
+                "positions at Tribunal, to mend the harm Éinri's feud "
+                "has done. He feeds Gráinne's overconfidence, seeing "
+                "that a sacrifice may soon be needed. And his allies in "
+                "the sea brought him the shards of her broken sword: he "
+                "has fixed them as an Arcane Connection to her and is "
+                "working them into the hands of Guillaume.",
             ),
             antagonist="Maoilfhinnéin mac Lir, Ambassador to the Sea",
             stages=[
@@ -546,26 +538,24 @@ def _ballack(hibernia: Hibernia) -> None:
     hibernia.world["threat_ballack"] = _dormant(
         b.threat(
             "Ballack's Debts",
-            summary=secrets(
-                paragraphs(
-                    "Ballack of Tytalus came from the Rhine to avenge his "
-                    "filius Holzner, whom Praesis executed for stealing its "
-                    "cathach, and after a year's Wizard War he rules the "
-                    "covenant. He relishes turning Hibernia's traditions on "
-                    "the Irish, scorns their magi and courts the English "
-                    "covenants and new adventurers, and Holzner's head "
-                    "still hangs from the palisade where Meadhbh put it.",
-                    "The war cost him dearly. He owes vis and favours to "
-                    "many magi, and with his own resources spent he has "
-                    "borrowed more vis and casting tablets from distant "
-                    "benefactors. Until he pays them, he knows his prize is "
-                    "only on loan, yet he cannot be seen to give it up. "
-                    "Praesis must start paying for itself, and soon.",
-                ),
-                "His benefactors are a powerful, secretive cult or society "
-                "to which Ballack does not belong, though he took its aid; "
-                "lately he has been forgetting what he owes it.",
+            summary=paragraphs(
+                "Ballack of Tytalus came from the Rhine to avenge his "
+                "filius Holzner, whom Praesis executed for stealing its "
+                "cathach, and after a year's Wizard War he rules the "
+                "covenant. He relishes turning Hibernia's traditions on "
+                "the Irish, scorns their magi and courts the English "
+                "covenants and new adventurers, and Holzner's head "
+                "still hangs from the palisade where Meadhbh put it.",
+                "The war cost him dearly. He owes vis and favours to "
+                "many magi, and with his own resources spent he has "
+                "borrowed more vis and casting tablets from distant "
+                "benefactors. Until he pays them, he knows his prize is "
+                "only on loan, yet he cannot be seen to give it up. "
+                "Praesis must start paying for itself, and soon.",
             ),
+            secrets="His benefactors are a powerful, secretive cult or society "
+            "to which Ballack does not belong, though he took its aid; "
+            "lately he has been forgetting what he owes it.",
             antagonist="Ballack's hidden creditors",
             stages=[
                 S(
@@ -631,38 +621,36 @@ def _donn(hibernia: Hibernia) -> None:
     hibernia.world["threat_donn"] = _dormant(
         b.threat(
             "Donn's Army",
-            summary=secrets(
-                paragraphs(
-                    "Donn, the Dark One, the death god of the Tuatha Dé "
-                    "(see the Bestiary), holds court where the dead gather, "
-                    "on Teach Duínn, a bare rock in the sea beyond "
-                    "Munster. He behaves like any king: he has sons, "
-                    "keeps cattle and raids his neighbours, and he is "
-                    "gathering a host, a warrior here and a warrior there. "
-                    "His favoured way is to slay a sleeper and let the spirit fly to his "
-                    "island, or to leave a perfect false corpse behind and "
-                    "carry the living man away. In war his three red-haired "
-                    "sons ride through the land, crying that the slain will "
-                    "rise at Teach Duínn to join him.",
-                    "In the Schism War Donn fought beside the Diedne of "
-                    "Salmon's Eye, and their forces destroyed Warbler's Way "
-                    "before the magi razed Salmon's Eye and drove him home. "
-                    "Cliffheart, founded by Warbler's Way's survivors, never "
-                    "learned why the Tuatha Dé sided with Diedne, and keeps "
-                    "watch. His great warded regio may hide a host, and "
-                    "magi wonder whether he means to invade again; "
-                    "Munster's endless wars may give him his chance, and "
-                    "anyone who makes war on the Order will find him a "
-                    "willing ally. The smith god Goibhniu hates him.",
-                    "In Ulster a faerie called Donn, the dark one of the "
-                    "endless war with bright Find, has caused children of "
-                    "faerie blood to be born, meant as the core of a new "
-                    "army. Find has not yet answered.",
-                ),
-                "Whether Ulster's Donn and the lord of Teach Duínn are one "
-                "being is left to the storyguide; if they are, the "
-                "faerie-blooded children are the first sign of the host.",
+            summary=paragraphs(
+                "Donn, the Dark One, the death god of the Tuatha Dé "
+                "(see the Bestiary), holds court where the dead gather, "
+                "on Teach Duínn, a bare rock in the sea beyond "
+                "Munster. He behaves like any king: he has sons, "
+                "keeps cattle and raids his neighbours, and he is "
+                "gathering a host, a warrior here and a warrior there. "
+                "His favoured way is to slay a sleeper and let the spirit fly to his "
+                "island, or to leave a perfect false corpse behind and "
+                "carry the living man away. In war his three red-haired "
+                "sons ride through the land, crying that the slain will "
+                "rise at Teach Duínn to join him.",
+                "In the Schism War Donn fought beside the Diedne of "
+                "Salmon's Eye, and their forces destroyed Warbler's Way "
+                "before the magi razed Salmon's Eye and drove him home. "
+                "Cliffheart, founded by Warbler's Way's survivors, never "
+                "learned why the Tuatha Dé sided with Diedne, and keeps "
+                "watch. His great warded regio may hide a host, and "
+                "magi wonder whether he means to invade again; "
+                "Munster's endless wars may give him his chance, and "
+                "anyone who makes war on the Order will find him a "
+                "willing ally. The smith god Goibhniu hates him.",
+                "In Ulster a faerie called Donn, the dark one of the "
+                "endless war with bright Find, has caused children of "
+                "faerie blood to be born, meant as the core of a new "
+                "army. Find has not yet answered.",
             ),
+            secrets="Whether Ulster's Donn and the lord of Teach Duínn are one "
+            "being is left to the storyguide; if they are, the "
+            "faerie-blooded children are the first sign of the host.",
             antagonist="Donn of Teach Duínn",
             realm="Faerie",
             stages=[
@@ -729,28 +717,26 @@ def _gaileoin(hibernia: Hibernia) -> None:
     hibernia.world["threat_gaileoin"] = _dormant(
         b.threat(
             "The Gaileoin Infernalists",
-            summary=secrets(
-                paragraphs(
-                    "The Gaileoin, the third tribe of the Fir Bolg, live on "
-                    "Árainn Thiar, smallest of the Aran Isles. They are "
-                    "Christian in name and hardly observant, their island "
-                    "has a single church, and they are lazier and quicker "
-                    "to small sins than their neighbours. The Fir Bolg are "
-                    "allies of the Order, with an ambassador who votes at "
-                    "Tara, and the isles lie in Connacht, where no magus "
-                    "may stay beyond three nights.",
-                ),
-                paragraphs(
-                    "Unknown to the other tribes, a cadre of infernalists "
-                    "rules the Gaileoin through their king. Their meddling "
-                    "has left the royal line feeble-minded, puppets who "
-                    "speak as they are told. The tribe as a whole has been "
-                    "slow to corrupt.",
-                    "Dealing with demons is the one crime for which the "
-                    "Code calls a Wizard's March without debate, which sets "
-                    "the Order's law against the Treaty's limits and the "
-                    "Fir Bolg alliance the moment the truth comes out.",
-                ),
+            summary=paragraphs(
+                "The Gaileoin, the third tribe of the Fir Bolg, live on "
+                "Árainn Thiar, smallest of the Aran Isles. They are "
+                "Christian in name and hardly observant, their island "
+                "has a single church, and they are lazier and quicker "
+                "to small sins than their neighbours. The Fir Bolg are "
+                "allies of the Order, with an ambassador who votes at "
+                "Tara, and the isles lie in Connacht, where no magus "
+                "may stay beyond three nights.",
+            ),
+            secrets=paragraphs(
+                "Unknown to the other tribes, a cadre of infernalists "
+                "rules the Gaileoin through their king. Their meddling "
+                "has left the royal line feeble-minded, puppets who "
+                "speak as they are told. The tribe as a whole has been "
+                "slow to corrupt.",
+                "Dealing with demons is the one crime for which the "
+                "Code calls a Wizard's March without debate, which sets "
+                "the Order's law against the Treaty's limits and the "
+                "Fir Bolg alliance the moment the truth comes out.",
             ),
             antagonist="The infernalists behind the Gaileoin king",
             realm="Infernal",
@@ -821,32 +807,30 @@ def _giant(hibernia: Hibernia) -> None:
     hibernia.world["threat_giant"] = _dormant(
         b.threat(
             "The Giant under Qui Sonant",
-            summary=secrets(
-                paragraphs(
-                    "Legend says a giant sleeps beneath the Cuailnge "
-                    "ridge where Qui Sonant Pro Quieto stands, held asleep "
-                    "for as long as song is heard above him, and that if "
-                    "the songs end or he is disturbed he will rise and "
-                    "quit the island, and its magic will go with him. Day and "
-                    "night a choir of a dozen, magi and covenfolk, chants "
-                    "in the candlelit chantry where no magic is used, and "
-                    "every apprentice learns the songs by heart. The theory "
-                    "in fashion makes the giant a Fomóir, or Finn "
-                    "MacCumhaill himself.",
-                    "Cantarus, Master of the Songs for fifty years and now "
-                    "130, knows he has little time and no heir. Finn, his "
-                    "only filius still at the covenant, takes the office "
-                    "for granted and trades promises on it, but lacks the "
-                    "gift for leading; Cantarus would gladly name any magus "
-                    "willing to commit to Qui Sonant instead. Máel-ruanaid "
-                    "of Vigil, a master of Merinita story magic, believes "
-                    "the giant is held by the symbolic act of singing "
-                    "rather than by the songs, and wants to learn how.",
-                ),
-                "No one knows what the giant truly is. If Máel-ruanaid is "
-                "right, some other symbolic act could take the songs' "
-                "place.",
+            summary=paragraphs(
+                "Legend says a giant sleeps beneath the Cuailnge "
+                "ridge where Qui Sonant Pro Quieto stands, held asleep "
+                "for as long as song is heard above him, and that if "
+                "the songs end or he is disturbed he will rise and "
+                "quit the island, and its magic will go with him. Day and "
+                "night a choir of a dozen, magi and covenfolk, chants "
+                "in the candlelit chantry where no magic is used, and "
+                "every apprentice learns the songs by heart. The theory "
+                "in fashion makes the giant a Fomóir, or Finn "
+                "MacCumhaill himself.",
+                "Cantarus, Master of the Songs for fifty years and now "
+                "130, knows he has little time and no heir. Finn, his "
+                "only filius still at the covenant, takes the office "
+                "for granted and trades promises on it, but lacks the "
+                "gift for leading; Cantarus would gladly name any magus "
+                "willing to commit to Qui Sonant instead. Máel-ruanaid "
+                "of Vigil, a master of Merinita story magic, believes "
+                "the giant is held by the symbolic act of singing "
+                "rather than by the songs, and wants to learn how.",
             ),
+            secrets="No one knows what the giant truly is. If Máel-ruanaid is "
+            "right, some other symbolic act could take the songs' "
+            "place.",
             antagonist="Whatever silences the songs",
             realm="Magic",
             stages=[
@@ -914,24 +898,22 @@ def _aillen(hibernia: Hibernia) -> None:
     hibernia.world["threat_aillen"] = _dormant(
         b.threat(
             "Áillen Burns Tara",
-            summary=secrets(
-                paragraphs(
-                    "The Hill of Tara lies neglected in 1220. Since Saint "
-                    "Ruadán's curse brought a burning beam down on King "
-                    "Diarmait in his own hall, no hall can be raised there, "
-                    "and faeries replay the old tales on the hill, among "
-                    "them Áillen mac Midgna setting the hall alight and "
-                    "Fionn mac Cumhaill driving him away.",
-                    "Áillen is a three-headed magician who lives in the "
-                    "north of Connacht. He has set Tara on fire again and "
-                    "again by spewing up burning rocks, and his attacks keep "
-                    "a regular pattern. Every seven years the hill holds "
-                    "the Tribunal, when Circulus Ruber raises a temporary "
-                    "settlement by magic and every covenant puts its "
-                    "cathach on show.",
-                ),
-                "",
+            summary=paragraphs(
+                "The Hill of Tara lies neglected in 1220. Since Saint "
+                "Ruadán's curse brought a burning beam down on King "
+                "Diarmait in his own hall, no hall can be raised there, "
+                "and faeries replay the old tales on the hill, among "
+                "them Áillen mac Midgna setting the hall alight and "
+                "Fionn mac Cumhaill driving him away.",
+                "Áillen is a three-headed magician who lives in the "
+                "north of Connacht. He has set Tara on fire again and "
+                "again by spewing up burning rocks, and his attacks keep "
+                "a regular pattern. Every seven years the hill holds "
+                "the Tribunal, when Circulus Ruber raises a temporary "
+                "settlement by magic and every covenant puts its "
+                "cathach on show.",
             ),
+            secrets="",
             antagonist="Áillen mac Midgna",
             realm="Faerie",
             stages=[
@@ -987,38 +969,36 @@ def _mellifont(hibernia: Hibernia) -> None:
     hibernia.world["threat_mellifont"] = _dormant(
         b.threat(
             "The Conspiracy of Mellifont",
-            summary=secrets(
-                paragraphs(
-                    "Mellifont, near Drogheda, founded by Saint Malachy in "
-                    "1140, is the greatest Cistercian house in Ireland: a "
-                    "hundred monks and three hundred lay brothers, mother "
-                    "of Bective, Baltinglass and twenty-three more. Since "
-                    "the invasion its Irish and English monks have been at "
-                    "odds, and tales of corruption and debauchery reached "
-                    "Cîteaux. When a visitation came in 1216 to restore the "
-                    "Rule, the monks shut the gates against it. The general "
-                    "chapter deposed Abbot Thomas in 1217, but he still "
-                    "rules, backed by his monks and the daughter houses, "
-                    "and the Order means to send visitors who will put the "
-                    "house in order and remove the abbots at fault; the Pope may "
-                    "step in.",
-                    "Mellifont's nine granges now cover the Brú na Bóinne, "
-                    "built on high ground among the ancient sídhe and "
-                    "ráths, and the forty mounds stand clear of the "
-                    "undergrowth for the first time in ages. The newest "
-                    "grange, New Grange, lies beside the mound of Aonghus. "
-                    "Bective backs its mother house. At Baltinglass the "
-                    "abbot is for Mellifont while his monks stay loyal to "
-                    "Cîteaux, and they long to plant a great cross on the "
-                    "faerie mound above their valley. Jerpoint has joined "
-                    "the revolt.",
-                ),
-                "Why the monks rebelled is the storyguide's choice: the "
-                "quarrel of Irish and English, a lax life they will not "
-                "give up, an Infernal corruption of the Cistercians, or "
-                "some ancient magical secret the lay brothers turned up "
-                "among the barrows of the Brú na Bóinne.",
+            summary=paragraphs(
+                "Mellifont, near Drogheda, founded by Saint Malachy in "
+                "1140, is the greatest Cistercian house in Ireland: a "
+                "hundred monks and three hundred lay brothers, mother "
+                "of Bective, Baltinglass and twenty-three more. Since "
+                "the invasion its Irish and English monks have been at "
+                "odds, and tales of corruption and debauchery reached "
+                "Cîteaux. When a visitation came in 1216 to restore the "
+                "Rule, the monks shut the gates against it. The general "
+                "chapter deposed Abbot Thomas in 1217, but he still "
+                "rules, backed by his monks and the daughter houses, "
+                "and the Order means to send visitors who will put the "
+                "house in order and remove the abbots at fault; the Pope may "
+                "step in.",
+                "Mellifont's nine granges now cover the Brú na Bóinne, "
+                "built on high ground among the ancient sídhe and "
+                "ráths, and the forty mounds stand clear of the "
+                "undergrowth for the first time in ages. The newest "
+                "grange, New Grange, lies beside the mound of Aonghus. "
+                "Bective backs its mother house. At Baltinglass the "
+                "abbot is for Mellifont while his monks stay loyal to "
+                "Cîteaux, and they long to plant a great cross on the "
+                "faerie mound above their valley. Jerpoint has joined "
+                "the revolt.",
             ),
+            secrets="Why the monks rebelled is the storyguide's choice: the "
+            "quarrel of Irish and English, a lax life they will not "
+            "give up, an Infernal corruption of the Cistercians, or "
+            "some ancient magical secret the lay brothers turned up "
+            "among the barrows of the Brú na Bóinne.",
             antagonist="Abbot Thomas and the rebel houses",
             stages=[
                 S(
@@ -1086,41 +1066,39 @@ def _oireadh(hibernia: Hibernia) -> None:
     hibernia.world["threat_oireadh"] = _dormant(
         b.threat(
             "The Pact of Oireadh's Parma",
-            summary=secrets(
-                paragraphs(
-                    "Eight druids of mixed traditions, sworn to the Pact of "
-                    "Oireadh, meet every season in the village of Oireadh, "
-                    "no more than two days from any of them; living apart "
-                    "softens the strife their Gifts bring. They were once "
-                    "allies of Praesis, which was founded as a meeting "
-                    "place of magi and druids, but left Meadhbh when her "
-                    "demands grew too great, and began to ask what gave the "
-                    "Order its power and what kept it safe while lesser "
-                    "wizards fell. They have no love for the English.",
-                    "Ádhamh Brathair, a Gifted learned magician whose "
-                    "magic goes back to Bologna, conceived the Pact and "
-                    "leads its research: a theory of magic that embraces "
-                    "every Irish tradition and gives each the defences of "
-                    "all. He has made amulets that lend the folk witches' "
-                    "Second Sight, Dowsing and Cursing for a season, to "
-                    "learn how their magic differs from his. He is in minor "
-                    "orders, serves a wealthy noble of Cong, and lately lost "
-                    "a Gifted child of his to the Coill Trí's "
-                    "tithe. Among the others are Umor Ard Mac Adar, a "
-                    "four-armed Fir Domhnann healer in the hills above "
-                    "Lough Conn; Mór Greannach, a folk witch of Carrowmore "
-                    "with the widest acquaintance among hedge wizards; and "
-                    "Tuathal an Iarrainn, a goetic smith of Rosbeg.",
-                ),
-                paragraphs(
-                    "The Pact's true aim, hidden from the Order and the "
-                    "Coill Trí alike, is a Parma Magica of its own. Ádhamh "
-                    "needs 120 breakthrough points and has 15, and doubts "
-                    "he will live to finish; he keeps his notes for those "
-                    "who come after.",
-                    "Tuathal's arts are Infernal in origin, which Ádhamh has "
-                    "yet to discover.",
-                ),
+            summary=paragraphs(
+                "Eight druids of mixed traditions, sworn to the Pact of "
+                "Oireadh, meet every season in the village of Oireadh, "
+                "no more than two days from any of them; living apart "
+                "softens the strife their Gifts bring. They were once "
+                "allies of Praesis, which was founded as a meeting "
+                "place of magi and druids, but left Meadhbh when her "
+                "demands grew too great, and began to ask what gave the "
+                "Order its power and what kept it safe while lesser "
+                "wizards fell. They have no love for the English.",
+                "Ádhamh Brathair, a Gifted learned magician whose "
+                "magic goes back to Bologna, conceived the Pact and "
+                "leads its research: a theory of magic that embraces "
+                "every Irish tradition and gives each the defences of "
+                "all. He has made amulets that lend the folk witches' "
+                "Second Sight, Dowsing and Cursing for a season, to "
+                "learn how their magic differs from his. He is in minor "
+                "orders, serves a wealthy noble of Cong, and lately lost "
+                "a Gifted child of his to the Coill Trí's "
+                "tithe. Among the others are Umor Ard Mac Adar, a "
+                "four-armed Fir Domhnann healer in the hills above "
+                "Lough Conn; Mór Greannach, a folk witch of Carrowmore "
+                "with the widest acquaintance among hedge wizards; and "
+                "Tuathal an Iarrainn, a goetic smith of Rosbeg.",
+            ),
+            secrets=paragraphs(
+                "The Pact's true aim, hidden from the Order and the "
+                "Coill Trí alike, is a Parma Magica of its own. Ádhamh "
+                "needs 120 breakthrough points and has 15, and doubts "
+                "he will live to finish; he keeps his notes for those "
+                "who come after.",
+                "Tuathal's arts are Infernal in origin, which Ádhamh has "
+                "yet to discover.",
             ),
             antagonist="Ádhamh Brathair and the Pact of Oireadh",
             realm="Magic",
@@ -1223,13 +1201,11 @@ def _find(records: list[Any], *names: str) -> Any | None:
 
 
 def _add_to(record: Any, more: str, hidden: str = "", attr: str = "summary") -> None:
-    """Add a paragraph to a record's summary (or notes), before its
-    Secrets heading if it has one, and `hidden` to its Secrets."""
-    text = getattr(record, attr) or ""
-    head, _sep, kept = text.partition("\n\n" + SECRETS + "\n")
-    if not _sep and text.startswith(SECRETS + "\n"):
-        head, kept = "", text.removeprefix(SECRETS + "\n")
-    setattr(record, attr, secrets(paragraphs(head, more), paragraphs(kept, hidden)))
+    """Add a paragraph to a record's summary (or notes), and `hidden` to
+    its secrets."""
+    setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
+    if hidden:
+        record.secrets = paragraphs(record.secrets, hidden)
 
 
 def _place(hibernia: Hibernia, places: list[Any], *keys: str) -> Any | None:

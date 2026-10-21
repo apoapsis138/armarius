@@ -21,7 +21,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models.world import FULL
-from ..builder import StatBlock, paragraphs, secrets
+from ..builder import StatBlock, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -33,7 +33,6 @@ TYTALUS = "house_tytalus"
 MERINITA = "house_merinita"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
 
 
 def _lines(*lines: str) -> str:
@@ -93,33 +92,31 @@ def build(transylvania: Transylvania) -> None:
     gate = places["gate_of_eurydice"] = b.place(
         "The Altar of the Standards and the Gate of Eurydice",
         inside=site,
-        summary=secrets(
-            paragraphs(
-                "A cave deep under Coeris. In it is a cleft in the earth said "
-                "to be the road Orpheus took to the underworld, which the "
-                "Tremere call the Gate of Eurydice. Niches line the cave, "
-                "one for every Tremere who has died, most holding their "
-                "sigils, the Founder's among them.",
-                "Asked about it, the Tremere say only that the magi who were "
-                "here before the Founder took it for Orpheus's path to Hades, "
-                "that they keep no Orphic rites and have no proof, and that "
-                "there are many such caves.",
-            ),
-            paragraphs(
-                "The Gate is a permanent, open way into the Magic Realm, to "
-                "an insula the Tremere call the City Below: the place "
-                "Coeris's people will withdraw to if the oppidum can no "
-                "longer be held, almost an afterlife, though perhaps one the "
-                "House could come back from once its enemies stop watching. "
-                "The book gives no aura for it.",
-                "A troupe may prefer another answer: a Portal to a "
-                "warded cemetery far off in Africa or Asia; a fortress deep "
-                "in Faerie built as a last refuge in the Sundering; a prison "
-                "for Diedne magi, still alive since no one ages in the Magic "
-                "Realm; or a pleasant garden where a cheerful old man named "
-                "Tremere grows roses among the ghosts of his family, plays "
-                "with his wolf and wonders whether his brother will call.",
-            ),
+        summary=paragraphs(
+            "A cave deep under Coeris. In it is a cleft in the earth said "
+            "to be the road Orpheus took to the underworld, which the "
+            "Tremere call the Gate of Eurydice. Niches line the cave, "
+            "one for every Tremere who has died, most holding their "
+            "sigils, the Founder's among them.",
+            "Asked about it, the Tremere say only that the magi who were "
+            "here before the Founder took it for Orpheus's path to Hades, "
+            "that they keep no Orphic rites and have no proof, and that "
+            "there are many such caves.",
+        ),
+        secrets=paragraphs(
+            "The Gate is a permanent, open way into the Magic Realm, to "
+            "an insula the Tremere call the City Below: the place "
+            "Coeris's people will withdraw to if the oppidum can no "
+            "longer be held, almost an afterlife, though perhaps one the "
+            "House could come back from once its enemies stop watching. "
+            "The book gives no aura for it.",
+            "A troupe may prefer another answer: a Portal to a "
+            "warded cemetery far off in Africa or Asia; a fortress deep "
+            "in Faerie built as a last refuge in the Sundering; a prison "
+            "for Diedne magi, still alive since no one ages in the Magic "
+            "Realm; or a pleasant garden where a cheerful old man named "
+            "Tremere grows roses among the ghosts of his family, plays "
+            "with his wolf and wonders whether his brother will call.",
         ),
         realm="Magic",
         status="Known",
@@ -174,6 +171,7 @@ def build(transylvania: Transylvania) -> None:
         summary=SUMMARY,
         what_matters=WHAT_MATTERS,
         notes=NOTES,
+        secrets=HIDDEN,
         unnamed_magi=11,
         detail=FULL,
         season="Summer",
@@ -266,17 +264,15 @@ NOTES = paragraphs(
     "Founded: the book gives no year. Of the eleven unnamed magi, five are "
     "on a year's stay, two are being seasoned, and four belong to the core "
     "of thirteen.",
-    secrets(
-        STORYGUIDE,
-        _lines(
-            "The Gate of Eurydice opens on the City Below in the Magic Realm, House Tremere's last refuge (see the Gate's place).",
-            "The Night Contingency for taking Coeris is closely kept and probably salted with false information.",
-            "Janus is a lycanthrope and Tatiana a Keeper of the Silence of the Temple (see their summaries).",
-            "Poena may learn she has a wasting illness that will cloud her judgement, and quietly have possible successors weighed before a decisive certamen at the next Decennial.",
-            "Should Poena die suddenly, Monica is Prima pro tempore while the councillors are summoned, and may use the time to finish Poena's schemes and push a few of her own.",
-            "Poena plans to hold the Order's great chess competition at the Tribunal site in two years, for the House's prestige.",
-        ),
-    ),
+)
+
+HIDDEN = _lines(
+    "The Gate of Eurydice opens on the City Below in the Magic Realm, House Tremere's last refuge (see the Gate's place).",
+    "The Night Contingency for taking Coeris is closely kept and probably salted with false information.",
+    "Janus is a lycanthrope and Tatiana a Keeper of the Silence of the Temple (see their summaries).",
+    "Poena may learn she has a wasting illness that will cloud her judgement, and quietly have possible successors weighed before a decisive certamen at the next Decennial.",
+    "Should Poena die suddenly, Monica is Prima pro tempore while the councillors are summoned, and may use the time to finish Poena's schemes and push a few of her own.",
+    "Poena plans to hold the Order's great chess competition at the Tribunal site in two years, for the House's prestige.",
 )
 
 
@@ -442,30 +438,28 @@ def _magi(transylvania: Transylvania, coeris: Covenant) -> None:
         covenant=coeris,
         house=TREMERE,
         age=91,
-        summary=secrets(
-            paragraphs(
-                "Secretary for contingencies: he keeps the House's "
-                "stockpiles and asks for Tremere, or magi of the oppida, to "
-                "be trained in odd skills in case one of his unlikely "
-                "events comes to pass. Raised in the Rhineland, muscular "
-                "and handsome, chaste and aloof with attractive women; his "
-                "sigil is ribbons of scarlet light. He favours Creo, "
-                "Intellego, Rego and above all Mentem, a well-known "
-                "speciality that weakens him in certamen, and is a "
-                "spiritual necromancer with a gift for spycraft and the "
-                "Visions Flaw. He was secretary for operations under the "
-                "previous Primus.",
-                "He watches characters whose doings might, however "
-                "remotely, start a crisis, and quietly sets counterweights; "
-                "years later he may call on skills he had them learn, to "
-                "untangle a crisis born of several unlikely chances at "
-                "once.",
-            ),
-            "Janus suffers a lycanthropy that magic can hold back and that "
-            "changes only his shape, not his mind. He is ashamed of it and "
-            "keeps it secret, so he will never seek the Primacy, and it "
-            "passes by intercourse, hence his coldness to women.",
+        summary=paragraphs(
+            "Secretary for contingencies: he keeps the House's "
+            "stockpiles and asks for Tremere, or magi of the oppida, to "
+            "be trained in odd skills in case one of his unlikely "
+            "events comes to pass. Raised in the Rhineland, muscular "
+            "and handsome, chaste and aloof with attractive women; his "
+            "sigil is ribbons of scarlet light. He favours Creo, "
+            "Intellego, Rego and above all Mentem, a well-known "
+            "speciality that weakens him in certamen, and is a "
+            "spiritual necromancer with a gift for spycraft and the "
+            "Visions Flaw. He was secretary for operations under the "
+            "previous Primus.",
+            "He watches characters whose doings might, however "
+            "remotely, start a crisis, and quietly sets counterweights; "
+            "years later he may call on skills he had them learn, to "
+            "untangle a crisis born of several unlikely chances at "
+            "once.",
         ),
+        secrets="Janus suffers a lycanthropy that magic can hold back and that "
+        "changes only his shape, not his mind. He is ashamed of it and "
+        "keeps it secret, so he will never seek the Primacy, and it "
+        "passes by intercourse, hence his coldness to women.",
         traits={"Chaste": 3, "Secretive": 2, "Proud": 1},
     )
     p["janus"] = ("cives", "Secretary for contingencies")
@@ -519,26 +513,24 @@ def _magi(transylvania: Transylvania, coeris: Covenant) -> None:
         covenant=coeris,
         house=TREMERE,
         age=85,
-        summary=secrets(
-            paragraphs(
-                "Secretary for emergencies and Poena's spymistress: she "
-                "warns the House of trouble ahead and finds answers when it "
-                "is caught off guard. Of a Szekler family she has not seen "
-                "since her apprenticeship; she turns briefly invisible "
-                "whenever she casts, to her irritation. She favours Creo, "
-                "Muto, Herbam and Corpus, and Isaac assists her.",
-                "She appears when something dreadful is close, takes over "
-                "the characters' help and resources, and sends them into the "
-                "worst of it to buy the House and Order time; magi who "
-                "refuse her are tarnished for good in some circles.",
-            ),
-            "Tatiana secretly belongs to the Keepers of the Silence of the "
-            "Temple, a small, unofficial society named for the man who burnt "
-            "the temple of Artemis at Ephesus to be famous and whose name "
-            "was then forbidden. They hold that Tytalus magi too often do "
-            "monstrous, foolish things for fame, and set out to destroy such "
-            "vandals, then their memory.",
+        summary=paragraphs(
+            "Secretary for emergencies and Poena's spymistress: she "
+            "warns the House of trouble ahead and finds answers when it "
+            "is caught off guard. Of a Szekler family she has not seen "
+            "since her apprenticeship; she turns briefly invisible "
+            "whenever she casts, to her irritation. She favours Creo, "
+            "Muto, Herbam and Corpus, and Isaac assists her.",
+            "She appears when something dreadful is close, takes over "
+            "the characters' help and resources, and sends them into the "
+            "worst of it to buy the House and Order time; magi who "
+            "refuse her are tarnished for good in some circles.",
         ),
+        secrets="Tatiana secretly belongs to the Keepers of the Silence of the "
+        "Temple, a small, unofficial society named for the man who burnt "
+        "the temple of Artemis at Ephesus to be famous and whose name "
+        "was then forbidden. They hold that Tytalus magi too often do "
+        "monstrous, foolish things for fame, and set out to destroy such "
+        "vandals, then their memory.",
         traits={"Ruthless": 3, "Calm": 2},
     )
     p["tatiana"] = ("cives", "Secretary for emergencies")

@@ -178,6 +178,7 @@ async def test_the_terminal_opens_a_sketch_on_its_statblock_and_promotes_it():
             "tab-vf",
             "tab-hermetic",
             "tab-diary",
+            "tab-secrets",
         ]
         text = "\n".join(screen_lines(app))
         assert "Abilities not listed count as 0." in text
@@ -209,7 +210,7 @@ async def test_the_terminal_opens_a_sketch_on_its_statblock_and_promotes_it():
 @pytest.mark.parametrize(
     ("detail", "chapters"),
     [
-        (LINE, ["Statblock", "Description", "Diary"]),
+        (LINE, ["Statblock", "Description", "Diary", "Secrets"]),
         (
             SKETCH,
             [
@@ -219,6 +220,7 @@ async def test_the_terminal_opens_a_sketch_on_its_statblock_and_promotes_it():
                 "Virtues & Flaws",
                 "Hermetic Magic",
                 "Diary",
+                "Secrets",
             ],
         ),
         (
@@ -231,6 +233,7 @@ async def test_the_terminal_opens_a_sketch_on_its_statblock_and_promotes_it():
                 "Inventory",
                 "Planning",
                 "Diary",
+                "Secrets",
             ],
         ),
     ],

@@ -28,7 +28,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import SECRETS, paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -57,17 +57,11 @@ def build(hibernia: Hibernia) -> None:
 # ------------------------------------------------------------ helpers
 
 
-def _added(old: str, text: str, hidden: str = "") -> str:
-    """`old` with `text` added before its Secrets and `hidden` at the end
-    of them."""
-    open_, _, kept = old.partition(f"\n\n{SECRETS}\n")
-    return secrets(paragraphs(open_, text), paragraphs(kept, hidden))
-
-
 def _append(record: Neighbour, text: str, hidden: str = "") -> None:
-    """Add `text` to a record another part made, before its Secrets, and
-    `hidden` at the end of them."""
-    record.summary = _added(record.summary, text, hidden)
+    """Add `text` to the summary of a record another part made, and
+    `hidden` at the end of its secrets."""
+    record.summary = paragraphs(record.summary, text)
+    record.secrets = paragraphs(record.secrets, hidden)
 
 
 def _find(hibernia: Hibernia, *names: str, contains: str = "") -> Neighbour | None:
@@ -263,29 +257,27 @@ def _archbishops(hibernia: Hibernia) -> None:
         "Archdiocese of Dublin",
         church="Archbishop's cathedral",
         ruler="Archbishop Henry de Londres",
-        summary=secrets(
-            paragraphs(
-                "Anglo-Irish Church. The see of the English, held since "
-                "the conquest by Englishmen (John Comyns after Laurence "
-                "O'Toole, now Henry de Londres, who is also the king's "
-                "viceroy). Its two cathedrals are Christchurch, the "
-                "Norse foundation that once looked to Canterbury rather "
-                "than Armagh, and the new Saint Patrick's. The "
-                "archbishop leads the Anglo-Irish Church, trains "
-                "secular priests for it, and claims for Dublin the "
-                "primacy of Ireland over Armagh's ancient right and "
-                "Cashel's lesser one, a claim that has at last turned "
-                "even the Irish reformers against him. His rule against "
-                "Irish-born bishops has been condemned by the Pope, "
-                "though the news has not yet reached him. He has also "
-                "vowed to put out Saint Brigid's undying fire at "
-                "Kildare to prove it a superstition.",
-                ANGLO_IRISH_CHURCH,
-            ),
-            "When the Pope's ruling arrives from Cashel, the archbishop "
-            "must either yield or find another road; a man who dared to "
-            "burn his own tenants' deeds is unlikely to bow quietly.",
+        summary=paragraphs(
+            "Anglo-Irish Church. The see of the English, held since "
+            "the conquest by Englishmen (John Comyns after Laurence "
+            "O'Toole, now Henry de Londres, who is also the king's "
+            "viceroy). Its two cathedrals are Christchurch, the "
+            "Norse foundation that once looked to Canterbury rather "
+            "than Armagh, and the new Saint Patrick's. The "
+            "archbishop leads the Anglo-Irish Church, trains "
+            "secular priests for it, and claims for Dublin the "
+            "primacy of Ireland over Armagh's ancient right and "
+            "Cashel's lesser one, a claim that has at last turned "
+            "even the Irish reformers against him. His rule against "
+            "Irish-born bishops has been condemned by the Pope, "
+            "though the news has not yet reached him. He has also "
+            "vowed to put out Saint Brigid's undying fire at "
+            "Kildare to prove it a superstition.",
+            ANGLO_IRISH_CHURCH,
         ),
+        secrets="When the Pope's ruling arrives from Cashel, the archbishop "
+        "must either yield or find another road; a man who dared to "
+        "burn his own tenants' deeds is unlikely to bow quietly.",
     )
     w["tuam"] = b.church(
         "Archdiocese of Tuam",
@@ -381,37 +373,35 @@ def _cailleacha(hibernia: Hibernia) -> None:
         ),
         wants="Sanctuary and wealth from the lords they serve",
         offers="Secrets of a patron's enemies, curses, spying, prophecy",
-        summary=secrets(
-            paragraphs(
-                "Infernal witches dressed as wise women, who counsel the "
-                "sons of the Irish clans; barely a dozen in all Ireland. "
-                "Their maleficia bargain with and command supernatural "
-                "beings, curse foes, watch from afar and look into past "
-                "and future; they often call up spirits and creatures of "
-                "the Magic and Faerie realms and bind them to a task, for "
-                "their power is Infernal but their knowledge spans every "
-                "realm. A Chailleach's place in her lord's household is "
-                "respected but fragile, resting on what she can learn "
-                "and give. They feed their magic with sacrifice and with "
-                "profaning holy things.",
-                "The Coill Trí know of them but rarely meet them and "
-                "count them no great danger; some druids even seek one "
-                "out for a service or a secret beyond their own powers.",
-                "In play: a Chailleach is a Diabolist made as a Mythic "
-                "Companion (Realms of Power: The Infernal, chapter ten): "
-                "the Diabolist Special Virtue and the Wise One status "
-                "free, then 10 points of Flaws for 20 of Virtues, half of "
-                "them Infernal Supernatural Virtues, including Diablerie "
-                "and Incantation. Often taken: Premonitions, Protection, "
-                "Phantasm, Malediction, Infernal Heirloom and Mentored by "
-                "Demons, with the Flaws Witch Marks, Tainted with Evil, "
-                "Demonic Familiar and Social Handicap. The app has no "
-                "record for the tradition, so it is sketched here.",
-            ),
-            "Their lords rarely know what they harbour, and a "
-            "Chailleach's counsel is the kind of quiet goad the demons of "
-            "Hibernia prefer to open war.",
+        summary=paragraphs(
+            "Infernal witches dressed as wise women, who counsel the "
+            "sons of the Irish clans; barely a dozen in all Ireland. "
+            "Their maleficia bargain with and command supernatural "
+            "beings, curse foes, watch from afar and look into past "
+            "and future; they often call up spirits and creatures of "
+            "the Magic and Faerie realms and bind them to a task, for "
+            "their power is Infernal but their knowledge spans every "
+            "realm. A Chailleach's place in her lord's household is "
+            "respected but fragile, resting on what she can learn "
+            "and give. They feed their magic with sacrifice and with "
+            "profaning holy things.",
+            "The Coill Trí know of them but rarely meet them and "
+            "count them no great danger; some druids even seek one "
+            "out for a service or a secret beyond their own powers.",
+            "In play: a Chailleach is a Diabolist made as a Mythic "
+            "Companion (Realms of Power: The Infernal, chapter ten): "
+            "the Diabolist Special Virtue and the Wise One status "
+            "free, then 10 points of Flaws for 20 of Virtues, half of "
+            "them Infernal Supernatural Virtues, including Diablerie "
+            "and Incantation. Often taken: Premonitions, Protection, "
+            "Phantasm, Malediction, Infernal Heirloom and Mentored by "
+            "Demons, with the Flaws Witch Marks, Tainted with Evil, "
+            "Demonic Familiar and Social Handicap. The app has no "
+            "record for the tradition, so it is sketched here.",
         ),
+        secrets="Their lords rarely know what they harbour, and a "
+        "Chailleach's counsel is the kind of quiet goad the demons of "
+        "Hibernia prefer to open war.",
     )
 
 
@@ -469,23 +459,21 @@ def _infernal_places(hibernia: Hibernia) -> None:
     p["inis_saimera"] = b.place(
         "Inis Saimera",
         realm="Infernal",
-        summary=secrets(
-            paragraphs(
-                "An island where, somewhere underground, lies the Cup of "
-                "Partholon: a horn of red gold worked with the tale of "
-                "Partholon's voyage to Ireland. Partholon's wife Delgnat "
-                "betrayed him with the servant Topa, and a demon let him "
-                "taste their guilt on a cup they had shared; he had Topa "
-                "killed, and so adultery and jealousy came to Ireland. A "
-                "magus hunting a cathach may well go looking for so old "
-                "a symbol of the island. The book gives no aura and does "
-                "not say where the island is; the pack puts it in "
-                "Ulster, at the mouth of the Erne.",
-            ),
-            "The cup is an Infernal relic of betrayal. Anyone who sees it "
-            "gains Envious +3 (Penetration 15) and the urge to betray "
-            "whoever owns it and take it for himself.",
+        summary=paragraphs(
+            "An island where, somewhere underground, lies the Cup of "
+            "Partholon: a horn of red gold worked with the tale of "
+            "Partholon's voyage to Ireland. Partholon's wife Delgnat "
+            "betrayed him with the servant Topa, and a demon let him "
+            "taste their guilt on a cup they had shared; he had Topa "
+            "killed, and so adultery and jealousy came to Ireland. A "
+            "magus hunting a cathach may well go looking for so old "
+            "a symbol of the island. The book gives no aura and does "
+            "not say where the island is; the pack puts it in "
+            "Ulster, at the mouth of the Erne.",
         ),
+        secrets="The cup is an Infernal relic of betrayal. Anyone who sees it "
+        "gains Envious +3 (Penetration 15) and the urge to betray "
+        "whoever owns it and take it for himself.",
         **LOCAL,
     )
     ridge = _find(hibernia, contains="Druim Leatan")
@@ -605,32 +593,30 @@ def _mellifont(hibernia: Hibernia) -> None:
             order="Cistercian",
             founded=1140,
             place=hibernia.places.get("meath"),
-            summary=secrets(
-                paragraphs(
-                    "The greatest Cistercian house in Ireland, near "
-                    "Drogheda, founded by Saint Malachy in 1140 on land "
-                    "from the King of Meath; mother of Bective, "
-                    "Baltinglass and two dozen more. A hundred monks and "
-                    "three hundred lay brothers. Its first abbot, Saint "
-                    "Christian, worked with the reformers to bring in the "
-                    "dioceses, yet its abbots grew as mighty as any "
-                    "comarba: in 1154 a synod here unseated the King of "
-                    "Meath for his brother.",
-                    "The Conspiracy of Mellifont: rumours of corruption "
-                    "and debauchery reached Cîteaux, and in 1216 its "
-                    "visitors found the gates barred against them. The "
-                    "general chapter deposed Abbot Thomas in 1217, but he "
-                    "still rules, backed by his monks and the daughter "
-                    "houses, and Cîteaux, perhaps the Pope too, is "
-                    "readying a deputation to restore order.",
-                    revolt,
-                ),
-                "The cause may be Irish against English, plain "
-                "laxity, or something darker: the abbey's nine granges "
-                "on the Brú na Bóinne sit among ancient sídhe and "
-                "ráths, and the monks may have dug up an old secret "
-                "(The Church, page 94, suggests an Infernal cause).",
+            summary=paragraphs(
+                "The greatest Cistercian house in Ireland, near "
+                "Drogheda, founded by Saint Malachy in 1140 on land "
+                "from the King of Meath; mother of Bective, "
+                "Baltinglass and two dozen more. A hundred monks and "
+                "three hundred lay brothers. Its first abbot, Saint "
+                "Christian, worked with the reformers to bring in the "
+                "dioceses, yet its abbots grew as mighty as any "
+                "comarba: in 1154 a synod here unseated the King of "
+                "Meath for his brother.",
+                "The Conspiracy of Mellifont: rumours of corruption "
+                "and debauchery reached Cîteaux, and in 1216 its "
+                "visitors found the gates barred against them. The "
+                "general chapter deposed Abbot Thomas in 1217, but he "
+                "still rules, backed by his monks and the daughter "
+                "houses, and Cîteaux, perhaps the Pope too, is "
+                "readying a deputation to restore order.",
+                revolt,
             ),
+            secrets="The cause may be Irish against English, plain "
+            "laxity, or something darker: the abbey's nine granges "
+            "on the Brú na Bóinne sit among ancient sídhe and "
+            "ráths, and the monks may have dug up an old secret "
+            "(The Church, page 94, suggests an Infernal cause).",
         )
         hibernia.world["mellifont"] = mellifont
     b.link(
@@ -781,7 +767,7 @@ def _vigil_library(hibernia: Hibernia) -> None:
     vigil = hibernia.covenants.get("vigil")
     if vigil is None:
         return
-    vigil.notes = _added(
+    vigil.notes = paragraphs(
         vigil.notes,
         "The drowned library, from the Infernal chapter: casting "
         "tablets and laboratory texts against Infernal sickness and "

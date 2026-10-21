@@ -33,7 +33,7 @@ from typing import TYPE_CHECKING, Any
 
 from ... import catalog
 from ...models.world import FULL
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -50,8 +50,6 @@ TREMERE = "house_tremere"
 TYTALUS = "house_tytalus"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -1324,14 +1322,11 @@ def _ashenrise(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Cliffheart, if Ashenrise ever wants peace.",
         "Founded 1186, at the Tribunal where the cathach was shown; "
         "recognized 1187 after the year's defence. Season: Spring.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "The Uí Riain rising was the magi's invention: they used minstrels to convince Raymond le Gros that his vassals meant to rebel, and his campaign gave them their chance at the grave.",
-                "Dorján and Konstanczia's sigils are held by magi in Transylvania, who direct them to help Ashenrise modernise the Tribunal.",
-                "Tug's sodales doubt his saint: he met Patrick in the Schwarzwald, a forest full of mischievous faeries, and it may have been a faerie that converted him. Tug admits he met many faeries there but swears it was the saint.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "The Uí Riain rising was the magi's invention: they used minstrels to convince Raymond le Gros that his vassals meant to rebel, and his campaign gave them their chance at the grave.",
+        "Dorján and Konstanczia's sigils are held by magi in Transylvania, who direct them to help Ashenrise modernise the Tribunal.",
+        "Tug's sodales doubt his saint: he met Patrick in the Schwarzwald, a forest full of mischievous faeries, and it may have been a faerie that converted him. Tug admits he met many faeries there but swears it was the saint.",
     )
     ashenrise = b.covenant(
         "Ashenrise",
@@ -1343,6 +1338,7 @@ def _ashenrise(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         detail=FULL,
         season="Spring",
     )
@@ -1591,13 +1587,10 @@ def _lambaird(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Its young men train as warriors, every one eager to hunt the "
         "Normans who plundered their home.",
         "Founded 826. Season: Summer. Aura: Magic 2 in the glen, 4 at the covenant.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Lámbaird gives the mountain clans magical help now and then against the English in the Wicklow Mountains, which the Tribunal would surely judge interference with mundanes if it were known.",
-                "So far it has left no witnesses and has not tied the Order to the raids, but its doings have been noticed: hence the reprimand of 1193.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Lámbaird gives the mountain clans magical help now and then against the English in the Wicklow Mountains, which the Tribunal would surely judge interference with mundanes if it were known.",
+        "So far it has left no witnesses and has not tied the Order to the raids, but its doings have been noticed: hence the reprimand of 1193.",
     )
     lambaird = b.covenant(
         "Lámbaird",
@@ -1609,6 +1602,7 @@ def _lambaird(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         detail=FULL,
         season="Summer",
     )
@@ -1767,13 +1761,10 @@ def _paruchia(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Diarmaid, priest of St. Mary's, a good friend who guards his "
         "isolated flock.",
         "Founded 1189, when the tradition joined the Order. Season: Spring.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Father Diarmaid was posted to Great Saltee for a past wrong that still haunts him; anyone who threatened to reveal it could blackmail him.",
-                "Fedelmid made many enemies in the feuds of his youth, and some may try to kill him on the road before he reaches Qui Sonant to die.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Father Diarmaid was posted to Great Saltee for a past wrong that still haunts him; anyone who threatened to reveal it could blackmail him.",
+        "Fedelmid made many enemies in the feuds of his youth, and some may try to kill him on the road before he reaches Qui Sonant to die.",
     )
     paruchia = b.covenant(
         "The Paruchia of Nerius",
@@ -1785,6 +1776,7 @@ def _paruchia(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         detail=FULL,
         season="Spring",
     )

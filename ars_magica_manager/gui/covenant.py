@@ -49,6 +49,7 @@ from .character_sheet import (
     columns_text,
     device_section,
     label_values,
+    secrets_chapter,
     section,
     side_by_side,
     trait_section,
@@ -175,6 +176,10 @@ class CovenantPage(QWidget):
                 ("Diary", "year", lambda: self._diary(covenant)),
                 ("Build", "covenant", lambda: self._build(covenant)),
             ]
+        if covenant is not None:
+            chapters.append(
+                ("Secrets", "secrets", lambda: secrets_chapter(covenant, p, self.run))
+            )
         for name, concept, build in chapters:
             self.codex.add(name, concept, build())
         if covenant is not None and controls is not None:

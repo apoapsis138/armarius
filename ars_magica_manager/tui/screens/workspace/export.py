@@ -37,6 +37,8 @@ class ExportActions(WorkspaceBase):
                 data = transfer.export_data(
                     self.saga, record, with_members=with_members
                 )
+                if not self._is_storyguide():
+                    data = transfer.without_secrets(data)
                 self.app.deliver_binary(
                     io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
                     save_filename=path.name,

@@ -34,7 +34,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -1235,13 +1235,11 @@ def _circulus_ruber(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Magi: eight, including the Praeco Milvia and the senior "
         "Quaesitor Visioturpis, and Conán Derg, the eldest magus of "
         "Hibernia; the book names no others.",
-        secrets(
-            "The cathach.",
-            _lines(
-                "The cauldron is not the Dagda's, which gives food and drink without end, but the Cauldron of Llasar Llaes Gyfnewid, a notorious giant who lived beneath a lake. Legend says that cauldron passed between Irish and Welsh kings and was broken in a war between them; either the tale is wrong, or this is another vessel with the same powers.",
-                "It brings a dead warrior back to fight for one more day, if his head and spine are whole: he cannot speak, and for the next 24 hours he fights for whoever put him in. It will not raise the same corpse twice. The magi keep this from the Tribunal.",
-            ),
-        ),
+        "The cathach.",
+    )
+    hidden = _lines(
+        "The cauldron is not the Dagda's, which gives food and drink without end, but the Cauldron of Llasar Llaes Gyfnewid, a notorious giant who lived beneath a lake. Legend says that cauldron passed between Irish and Welsh kings and was broken in a war between them; either the tale is wrong, or this is another vessel with the same powers.",
+        "It brings a dead warrior back to fight for one more day, if his head and spine are whole: he cannot speak, and for the next 24 hours he fights for whoever put him in. It will not raise the same corpse twice. The magi keep this from the Tribunal.",
     )
     covenant = b.covenant(
         "Circulus Ruber",
@@ -1251,6 +1249,7 @@ def _circulus_ruber(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=5,
         detail=FULL,
         season="Autumn",
@@ -1609,13 +1608,11 @@ def _elks_run(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "The book puts the founding in 1159 in this chapter and just "
         "after the Grand Tribunal of 1195 in its history; the pack "
         "follows 1159.",
-        secrets(
-            "What the magi do not admit.",
-            _lines(
-                "Oswald has used acts and gifts of magic to help Irish and English nobles and clerics in return for books, which could plainly be judged interfering with mundanes; he does not see how far he has compromised himself.",
-                "Igneous Drake kills raiders, Ua Cathail bandits and hedge wizards who stray out of Connacht, and wages Wizard War on Irish magi he thinks have slighted the covenant, believing Hibernia enforces no law among magi.",
-            ),
-        ),
+        "What the magi do not admit.",
+    )
+    hidden = _lines(
+        "Oswald has used acts and gifts of magic to help Irish and English nobles and clerics in return for books, which could plainly be judged interfering with mundanes; he does not see how far he has compromised himself.",
+        "Igneous Drake kills raiders, Ua Cathail bandits and hedge wizards who stray out of Connacht, and wages Wizard War on Irish magi he thinks have slighted the covenant, believing Hibernia enforces no law among magi.",
     )
     covenant = b.covenant(
         "Elk's Run",
@@ -1625,6 +1622,7 @@ def _elks_run(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         detail=FULL,
         season="Autumn",
     )

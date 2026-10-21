@@ -7,7 +7,7 @@ from typing import Any
 
 from ..arts import ART_BY_NAME
 from .character import ScoredTrait
-from .common import known_fields
+from .common import known_fields, move_secrets
 from .holdings import Economics, Inhabitant, Loyalty, Population, Possession
 from .traits import VirtueFlawInstance
 from .world import FULL, Attitude, Favour, Link
@@ -163,10 +163,14 @@ class Covenant:
     what_matters: str = ""
     #: Its arms (arms.Arms.to_dict); empty for none.
     arms: dict[str, str] = field(default_factory=dict)
+    #: What only the storyguide should read: the record's Secrets
+    #: chapter, hidden from players signed in to a hosted copy.
+    secrets: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
-        d = dict(data)
+        # Older saves kept secrets under a heading in the notes or summary.
+        d = move_secrets(dict(data), "notes", "summary")
         d["economics"] = Economics.from_dict(d.get("economics") or {})
         d["boons_hooks"] = [
             VirtueFlawInstance(**known_fields(VirtueFlawInstance, bh))

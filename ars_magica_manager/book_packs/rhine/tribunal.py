@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...tribunal_packages.rhine import KEY
-from ..builder import SECRETS, paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from . import Rhine
@@ -67,7 +67,8 @@ def build(rhine: Rhine) -> None:
     rhine.tribunal = rhine.b.tribunal(
         NAME,
         package=KEY,
-        summary=secrets(SUMMARY, SECRET),
+        summary=SUMMARY,
+        secrets=SECRET,
         meets_every=7,
         next_year=1221,
         next_season="Spring",
@@ -345,13 +346,12 @@ def finish(rhine: Rhine) -> None:
     assert tribunal is not None
     # The mundane history, by era, in the Tribunal's own History.
     tribunal.history = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
-    tribunal.summary = secrets(SUMMARY, SECRET)
-    # Each region's own history after its description, before any secrets.
+    tribunal.summary = SUMMARY
+    # Each region's own history after its description.
     for key, history in REGION_HISTORY.items():
         region = rhine.places.get(key)
         if region is not None:
-            head, sep, hidden = region.summary.partition("\n\n" + SECRETS + "\n")
-            region.summary = paragraphs(head, history) + (sep + hidden if sep else "")
+            region.summary = paragraphs(region.summary, history)
     for name, dues, keys in GILDS:
         members = [rhine.covenants[k] for k in keys if k in rhine.covenants]
         b.gild(tribunal, name, dues, members)

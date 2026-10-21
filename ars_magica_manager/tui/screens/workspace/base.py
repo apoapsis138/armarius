@@ -1389,6 +1389,9 @@ class WorkspaceBase(Screen[None]):
             # widget not yet removed collides with its freshly-mounted
             # replacement and Textual raises DuplicateIds.
             await detail_pane.remove_children()
+            for widget in widgets:
+                if isinstance(widget, SheetView):
+                    widget.show_secrets = self._is_storyguide()
             await detail_pane.mount(*widgets)
 
     async def _show_placeholder_detail(self, title: str, hint: str) -> None:

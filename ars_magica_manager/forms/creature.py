@@ -53,6 +53,7 @@ from .character import (
     fatigue_fields,
     wounds_fields,
 )
+from .secrets import secrets_ops
 
 # -- the creature itself --
 
@@ -568,6 +569,7 @@ def creature_ops(saga: Saga, creature: Creature) -> dict[str, SectionOps]:
             validate=_vis_problem,
         ),
         LINKS_SECTION: world_forms.link_ops(saga, creature),
+        **secrets_ops(creature),
     }
 
 

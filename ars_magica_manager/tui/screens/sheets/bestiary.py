@@ -159,6 +159,7 @@ class CreatureSheetView(SheetView):
             yield self._tab("Combat", "tab-cr-combat", self._combat_tab)
             yield self._tab("Powers & Vis", "tab-cr-powers", self._powers_tab)
             yield self._tab("Description", "tab-cr-description", self._description_tab)
+            yield from self._secrets_tab(self.creature)
 
     def _refresh_title(self) -> None:
         panel = self.query_one(f"#{CREATURE_INFO_SECTION}", Collapsible)

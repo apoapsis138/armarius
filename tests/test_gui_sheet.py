@@ -93,6 +93,7 @@ def test_the_window_shows_the_first_characters_sheet_with_every_chapter(app):
         "Inventory",
         "Planning",
         "Diary",
+        "Secrets",
         "Manage",
     ]
     shown = _texts(sheet)
@@ -394,6 +395,7 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
         "Seasons",
         "Diary",
         "Build",
+        "Secrets",
         "Manage",
     ]
     people = _chapter(page, "People")

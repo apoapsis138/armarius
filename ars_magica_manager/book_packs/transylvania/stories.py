@@ -25,7 +25,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...threats import DORMANT
-from ..builder import SECRETS, Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -61,68 +61,66 @@ def _dragon_war(transylvania: Transylvania) -> None:
     b = transylvania.b
     transylvania.world["threat_dragon_war"] = b.threat(
         "The Dragon War",
-        summary=secrets(
-            paragraphs(
-                "Hundreds of dragons, perhaps thousands, lair in the "
-                "Tribunal's mountains, gorges, lakes and forests. They are "
-                "of two kinds that hate each other: the aždaje, Infernal "
-                "beasts that plunder for the joy of harm and rank "
-                "themselves by force, and the zmajevi, Magic dragons that "
-                "covet wives and gold as much but hardly notice the misery "
-                "they cause, and rank themselves by remembered favours and "
-                "slights. Intellego Vim tells the two apart, one realm at "
-                "a time.",
-                "Since the second century they have been held to the Pax "
-                "Draconis, the treaty of Fetillusclaviceps, a Roman dragon "
-                "who beat the twelve-headed zmaj Abur-ciocîrlie in a duel "
-                "and brought the aždaje to heel by helping Slomljenakrila "
-                "kill the oath-breaking Britvazub. Under its terms dragons "
-                "do not league against one another, keep their quarrels "
-                "local, defer to the stronger and leave men alone unless "
-                "attacked; a wife may be taken only with a superior's "
-                "leave, and a dragon that takes one without it is outlawed "
-                "and may be hunted for its hoard. The peace holds only "
-                "while its keeper is feared, and Fetillusclaviceps has not "
-                "been seen for fifty years. Early in the ninth century "
-                "Tremere himself put down a rising of raiders while wearing "
-                "the Roman dragon's shape, and some Tremere wonder whether "
-                "later sightings were their own sodales doing the same.",
-                "If the peace fails, every dragon settles old scores and "
-                "seizes what it can, raiding towns for gold and slaves. "
-                "Dragons of one kind may band together, rarely with the "
-                "other. House Tremere, the Order's self-appointed soldiers, "
-                "would see in such a war both a catastrophe and its chance "
-                "to prove itself to the whole Order.",
-                "A saga frame, not a single story: choose the spark that "
-                "suits the troupe (best of all one the player characters "
-                "struck themselves, perhaps with charges laid against them "
-                "for it), escalate through situations that come ever "
-                "closer to what they hold dear, and let them make the "
-                "ending. A peasant legend that a devil's wizard from the "
-                "Scholomance rides an aždaja and makes the storms can be "
-                "woven in: a storm wizard, a shapechanged magus, or a "
-                "magus corrupted to lead the Infernal dragons.",
-            ),
-            paragraphs(
-                "Who keeps the peace: one ending the book offers is that a "
-                "renowned Flambeau hunter tracked Fetillusclaviceps to its "
-                "lair and killed it about a century ago, then, seeing that "
-                "the peace died with it, has played the Roman dragon ever "
-                "since rather than confess. If the troupe uncovers this, "
-                "continuing the pretence is probably a breach of the Code, "
-                "since it means dealing with Infernal beasts, and House "
-                "Tremere's good name rides on whether a substitute keeper "
-                "can be found.",
-                "Another: the stone column where Leontine of Old Histria "
-                "argues ethics with an ancient zmaj was taken by Dominic "
-                "of Tytalus, aedile of Coeris, perhaps to test his protégé "
-                "and perhaps to start the war on purpose. Dominic then "
-                "vanishes, dead or in hiding, and the column may lie "
-                "somewhere within Coeris's defences.",
-                "Sebastian, the ageless caretaker of the Scholomance, may "
-                "be the seven-headed zmaj king Aževastjepan, who rules the "
-                "Carpathian dragons and has banished aždaje from his realm.",
-            ),
+        summary=paragraphs(
+            "Hundreds of dragons, perhaps thousands, lair in the "
+            "Tribunal's mountains, gorges, lakes and forests. They are "
+            "of two kinds that hate each other: the aždaje, Infernal "
+            "beasts that plunder for the joy of harm and rank "
+            "themselves by force, and the zmajevi, Magic dragons that "
+            "covet wives and gold as much but hardly notice the misery "
+            "they cause, and rank themselves by remembered favours and "
+            "slights. Intellego Vim tells the two apart, one realm at "
+            "a time.",
+            "Since the second century they have been held to the Pax "
+            "Draconis, the treaty of Fetillusclaviceps, a Roman dragon "
+            "who beat the twelve-headed zmaj Abur-ciocîrlie in a duel "
+            "and brought the aždaje to heel by helping Slomljenakrila "
+            "kill the oath-breaking Britvazub. Under its terms dragons "
+            "do not league against one another, keep their quarrels "
+            "local, defer to the stronger and leave men alone unless "
+            "attacked; a wife may be taken only with a superior's "
+            "leave, and a dragon that takes one without it is outlawed "
+            "and may be hunted for its hoard. The peace holds only "
+            "while its keeper is feared, and Fetillusclaviceps has not "
+            "been seen for fifty years. Early in the ninth century "
+            "Tremere himself put down a rising of raiders while wearing "
+            "the Roman dragon's shape, and some Tremere wonder whether "
+            "later sightings were their own sodales doing the same.",
+            "If the peace fails, every dragon settles old scores and "
+            "seizes what it can, raiding towns for gold and slaves. "
+            "Dragons of one kind may band together, rarely with the "
+            "other. House Tremere, the Order's self-appointed soldiers, "
+            "would see in such a war both a catastrophe and its chance "
+            "to prove itself to the whole Order.",
+            "A saga frame, not a single story: choose the spark that "
+            "suits the troupe (best of all one the player characters "
+            "struck themselves, perhaps with charges laid against them "
+            "for it), escalate through situations that come ever "
+            "closer to what they hold dear, and let them make the "
+            "ending. A peasant legend that a devil's wizard from the "
+            "Scholomance rides an aždaja and makes the storms can be "
+            "woven in: a storm wizard, a shapechanged magus, or a "
+            "magus corrupted to lead the Infernal dragons.",
+        ),
+        secrets=paragraphs(
+            "Who keeps the peace: one ending the book offers is that a "
+            "renowned Flambeau hunter tracked Fetillusclaviceps to its "
+            "lair and killed it about a century ago, then, seeing that "
+            "the peace died with it, has played the Roman dragon ever "
+            "since rather than confess. If the troupe uncovers this, "
+            "continuing the pretence is probably a breach of the Code, "
+            "since it means dealing with Infernal beasts, and House "
+            "Tremere's good name rides on whether a substitute keeper "
+            "can be found.",
+            "Another: the stone column where Leontine of Old Histria "
+            "argues ethics with an ancient zmaj was taken by Dominic "
+            "of Tytalus, aedile of Coeris, perhaps to test his protégé "
+            "and perhaps to start the war on purpose. Dominic then "
+            "vanishes, dead or in hiding, and the column may lie "
+            "somewhere within Coeris's defences.",
+            "Sebastian, the ageless caretaker of the Scholomance, may "
+            "be the seven-headed zmaj king Aževastjepan, who rules the "
+            "Carpathian dragons and has banished aždaje from his realm.",
         ),
         antagonist="The dragons of the Tribunal, once the Pax Draconis fails",
         realm="Magic",
@@ -339,40 +337,38 @@ def _teutonic(transylvania: Transylvania) -> None:
     transylvania.world["threat_teutonic"] = _dormant(
         b.threat(
             "The Teutonic Expulsion",
-            summary=secrets(
-                paragraphs(
-                    "In 1211 King Andrew II granted the Burzenland to the "
-                    "Teutonic Knights, free of taxes and dues though he "
-                    "kept the coinage and half the gold and silver mined, "
-                    "to hold the Carpathian passes against the Cumans. "
-                    "Brother Theoderich runs the mission almost alone while "
-                    "the hochmeister, Hermann von Salza, divides his time "
-                    "between the Holy Land and Egypt. In nine years the "
-                    "knights have built forts and are finishing five "
-                    "castles around Kronstadt, settled Saxons to feed them, "
-                    "quarrelled with the local bishop over his rights, and "
-                    "courted the pope to slip free of Hungary. They mean to "
-                    "push down the Danube to the Black Sea and reopen the "
-                    "land road to Constantinople.",
-                    "House Tremere has forbidden formal contact with the "
-                    "knights. The pope has charged them to root out heresy "
-                    "and diabolism, and the Tremere fear they will count "
-                    "the Order of Hermes among the pagans and idolaters; "
-                    "the knights have also heard of the Scholomance. The "
-                    "Order cannot stay hidden from them much longer. An "
-                    "isolated order with few friends among the Hungarians "
-                    "might accept a hand held out, but the Code makes such "
-                    "friendship delicate.",
-                ),
-                "The book offers three Teutonic Orders. One is pious and "
-                "mundane. A holier one makes Dominion auras of a brave "
-                "temper on the land it conquers and keeps an inner circle "
-                "of Divine wonder-workers. A profane one serves Hell: its "
-                "leaders are goetic sorcerers, its knights take part in "
-                "infernal rites, it seizes shamans, witches and taltós for "
-                "their lore, and its favoured knights carry great swords "
-                "with a demon bound inside that whispers in their dreams.",
+            summary=paragraphs(
+                "In 1211 King Andrew II granted the Burzenland to the "
+                "Teutonic Knights, free of taxes and dues though he "
+                "kept the coinage and half the gold and silver mined, "
+                "to hold the Carpathian passes against the Cumans. "
+                "Brother Theoderich runs the mission almost alone while "
+                "the hochmeister, Hermann von Salza, divides his time "
+                "between the Holy Land and Egypt. In nine years the "
+                "knights have built forts and are finishing five "
+                "castles around Kronstadt, settled Saxons to feed them, "
+                "quarrelled with the local bishop over his rights, and "
+                "courted the pope to slip free of Hungary. They mean to "
+                "push down the Danube to the Black Sea and reopen the "
+                "land road to Constantinople.",
+                "House Tremere has forbidden formal contact with the "
+                "knights. The pope has charged them to root out heresy "
+                "and diabolism, and the Tremere fear they will count "
+                "the Order of Hermes among the pagans and idolaters; "
+                "the knights have also heard of the Scholomance. The "
+                "Order cannot stay hidden from them much longer. An "
+                "isolated order with few friends among the Hungarians "
+                "might accept a hand held out, but the Code makes such "
+                "friendship delicate.",
             ),
+            secrets="The book offers three Teutonic Orders. One is pious and "
+            "mundane. A holier one makes Dominion auras of a brave "
+            "temper on the land it conquers and keeps an inner circle "
+            "of Divine wonder-workers. A profane one serves Hell: its "
+            "leaders are goetic sorcerers, its knights take part in "
+            "infernal rites, it seizes shamans, witches and taltós for "
+            "their lore, and its favoured knights carry great swords "
+            "with a demon bound inside that whispers in their dreams.",
             antagonist="The Teutonic Knights under Brother Theoderich",
             realm="",
             moves=DATED,
@@ -457,23 +453,21 @@ def _mongols(transylvania: Transylvania) -> None:
     transylvania.world["threat_mongols"] = _dormant(
         b.threat(
             "The Mongols",
-            summary=secrets(
-                paragraphs(
-                    "Beyond the Cuman steppe a greater power is stirring. "
-                    "If history holds, the Mongols come west in waves "
-                    "through the middle of the century, first breaking the "
-                    "Cumans, then driving whole peoples before them, and at "
-                    "last falling on Hungary itself. To the Tribunal's "
-                    "people they will seem as alien as any monster, a "
-                    "horde no one can defeat and few escape, which makes "
-                    "them the natural foe of a horror story.",
-                    "Tablinum is rumoured to hide the Refuge, a network of "
-                    "regiones stocked with laboratories where House Tremere "
-                    "could outlast any calamity. True or not, desperate "
-                    "magi will flock there if the horde comes.",
-                ),
-                "",
+            summary=paragraphs(
+                "Beyond the Cuman steppe a greater power is stirring. "
+                "If history holds, the Mongols come west in waves "
+                "through the middle of the century, first breaking the "
+                "Cumans, then driving whole peoples before them, and at "
+                "last falling on Hungary itself. To the Tribunal's "
+                "people they will seem as alien as any monster, a "
+                "horde no one can defeat and few escape, which makes "
+                "them the natural foe of a horror story.",
+                "Tablinum is rumoured to hide the Refuge, a network of "
+                "regiones stocked with laboratories where House Tremere "
+                "could outlast any calamity. True or not, desperate "
+                "magi will flock there if the horde comes.",
             ),
+            secrets="",
             antagonist="The Mongol horde",
             moves=DATED,
             stages=[
@@ -534,29 +528,27 @@ def _bosnian_crusade(transylvania: Transylvania) -> None:
     transylvania.world["threat_bosnia"] = _dormant(
         b.threat(
             "The Bosnian Crusade",
-            summary=secrets(
-                paragraphs(
-                    "The Bosnian Church, heir to the Bogomils who survived "
-                    "Stefan Nemanja's purge, calls its faithful Patarians "
-                    "and keeps to itself. The King of Hungary has written "
-                    "ordering it to purge them; it answers that Bosnia has "
-                    "no heretics. Pope Honorius III has sent a legate to "
-                    "urge Andrew II on, clerics preach against the "
-                    "Patarians, and Hungarian knights are gathering.",
-                    "House Tremere has not decided what to do. The Oath "
-                    "forbids meddling with mundanes, yet a crusade could "
-                    "remake the Tribunal, and the House remembers how the "
-                    "Fourth Crusade broke Thebes. Several of its leaders "
-                    "know Hungarians, Bosnians and Patarians personally, "
-                    "and the House watches the border for the small "
-                    "incident that could set it alight. In Vrhbosna the "
-                    "Mercere keep one of their oldest mansiones, a "
-                    "quarrelsome place where a brawl ended in murder a year "
-                    "ago.",
-                ),
-                "Some suspect an Infernal aura has grown in the Vrhbosna "
-                "mansio; none has been detected yet.",
+            summary=paragraphs(
+                "The Bosnian Church, heir to the Bogomils who survived "
+                "Stefan Nemanja's purge, calls its faithful Patarians "
+                "and keeps to itself. The King of Hungary has written "
+                "ordering it to purge them; it answers that Bosnia has "
+                "no heretics. Pope Honorius III has sent a legate to "
+                "urge Andrew II on, clerics preach against the "
+                "Patarians, and Hungarian knights are gathering.",
+                "House Tremere has not decided what to do. The Oath "
+                "forbids meddling with mundanes, yet a crusade could "
+                "remake the Tribunal, and the House remembers how the "
+                "Fourth Crusade broke Thebes. Several of its leaders "
+                "know Hungarians, Bosnians and Patarians personally, "
+                "and the House watches the border for the small "
+                "incident that could set it alight. In Vrhbosna the "
+                "Mercere keep one of their oldest mansiones, a "
+                "quarrelsome place where a brawl ended in murder a year "
+                "ago.",
             ),
+            secrets="Some suspect an Infernal aura has grown in the Vrhbosna "
+            "mansio; none has been detected yet.",
             antagonist="The crusaders of Hungary and Croatia",
             realm="Divine",
             moves=DATED,
@@ -613,25 +605,23 @@ def _thracian_valley(transylvania: Transylvania) -> None:
     transylvania.world["threat_thracian_valley"] = _dormant(
         b.threat(
             "The Valley of the Thracian Kings",
-            summary=secrets(
-                paragraphs(
-                    "Four years ago a Tremere necromancer, then a hoplite, "
-                    "found the burial ground of the ancient Thracian kings "
-                    "near Seuthopolis, their old capital. The House's "
-                    "necromancers are delighted, and House Verditius wants "
-                    "a dig too, since the Thracians worshipped smith-gods. "
-                    "Benilda, who never trusts a cheerful necromancer, is "
-                    "blocking access for now, but she knows the Tremere "
-                    "will win in the end and hopes to look first or to "
-                    "choose who digs and why.",
-                    "Seuthopolis itself began as a covenant of Verditius "
-                    "magi of the Cabeiri cult; House Guernicus now forbids "
-                    "its members to worship the old chthonic gods, and has "
-                    "removed three from office for irrationality that "
-                    "looked like the cult's hubris.",
-                ),
-                "",
+            summary=paragraphs(
+                "Four years ago a Tremere necromancer, then a hoplite, "
+                "found the burial ground of the ancient Thracian kings "
+                "near Seuthopolis, their old capital. The House's "
+                "necromancers are delighted, and House Verditius wants "
+                "a dig too, since the Thracians worshipped smith-gods. "
+                "Benilda, who never trusts a cheerful necromancer, is "
+                "blocking access for now, but she knows the Tremere "
+                "will win in the end and hopes to look first or to "
+                "choose who digs and why.",
+                "Seuthopolis itself began as a covenant of Verditius "
+                "magi of the Cabeiri cult; House Guernicus now forbids "
+                "its members to worship the old chthonic gods, and has "
+                "removed three from office for irrationality that "
+                "looked like the cult's hubris.",
             ),
+            secrets="",
             antagonist="The magician-kings of Thrace and their guardians",
             realm="Magic",
             stages=[
@@ -698,30 +688,28 @@ def _zalmoxis(transylvania: Transylvania) -> None:
     transylvania.world["threat_zalmoxis"] = _dormant(
         b.threat(
             "The Return of Zalmoxis",
-            summary=secrets(
-                paragraphs(
-                    "The Geto-Dacians worshipped Zalmoxis before Christ, "
-                    "and his rich, secretive cult went into hiding in the "
-                    "Carpathians as the people converted. The cult says he "
-                    "learned magic from Pythagoras on Samos and the secrets "
-                    "of immortality in Egypt, then spent three years in a "
-                    "cave on holy Kogaionon and came out to teach that the "
-                    "soul does not die. Every five years it sends a "
-                    "messenger to its god by throwing him onto spear "
-                    "points: if he dies, the god has accepted him.",
-                    "In the southern mountains around Maramures several "
-                    "groups of cultists each follow a vrajitoarea, a Vlach "
-                    "folk witch. One of them has the Gift and is slowly "
-                    "drawing the others to him, though his Gift keeps them "
-                    "at a distance. Then he learns that a wizard called "
-                    "Zalmoxis lives in the hollow mountain nearby.",
-                ),
-                "Archmagus Zalmoxis of Verditius, Lycaneon's longevity "
-                "specialist, is only named after the god and has nothing "
-                "to do with the cult, and the magi of Lycaneon know "
-                "nothing of what is brewing. The vrajitoarele belong to "
-                "the Magic realm; none of their powers is Infernal.",
+            summary=paragraphs(
+                "The Geto-Dacians worshipped Zalmoxis before Christ, "
+                "and his rich, secretive cult went into hiding in the "
+                "Carpathians as the people converted. The cult says he "
+                "learned magic from Pythagoras on Samos and the secrets "
+                "of immortality in Egypt, then spent three years in a "
+                "cave on holy Kogaionon and came out to teach that the "
+                "soul does not die. Every five years it sends a "
+                "messenger to its god by throwing him onto spear "
+                "points: if he dies, the god has accepted him.",
+                "In the southern mountains around Maramures several "
+                "groups of cultists each follow a vrajitoarea, a Vlach "
+                "folk witch. One of them has the Gift and is slowly "
+                "drawing the others to him, though his Gift keeps them "
+                "at a distance. Then he learns that a wizard called "
+                "Zalmoxis lives in the hollow mountain nearby.",
             ),
+            secrets="Archmagus Zalmoxis of Verditius, Lycaneon's longevity "
+            "specialist, is only named after the god and has nothing "
+            "to do with the cult, and the magi of Lycaneon know "
+            "nothing of what is brewing. The vrajitoarele belong to "
+            "the Magic realm; none of their powers is Infernal.",
             antagonist="A Gifted vrajitoarea of the Cult of Zalmoxis",
             realm="Magic",
             stages=[
@@ -777,32 +765,30 @@ def _taltos(transylvania: Transylvania) -> None:
     transylvania.world["threat_taltos"] = _dormant(
         b.threat(
             "The Székely Taltós",
-            summary=secrets(
-                paragraphs(
-                    "Serb and Croat legend says a hermit taltós of "
-                    "matchless power led the Slavs south from beyond the "
-                    "Carpathians, and that in hard times another will come "
-                    "to free the people from their masters. The tale is "
-                    "loved most in the poor communities of the forest "
-                    "glens and the upper Danube.",
-                    "The Székely, Magyars thought lesser by their kin, were "
-                    "settled on the kingdom's eastern edge to hold off "
-                    "Cuman and Mongol raiders. They are reckoned the "
-                    "fiercest warriors in the Tribunal and once followed "
-                    "shape-changing taltós into battle. Now a mysterious "
-                    "man preaches in their villages, and the Székely have "
-                    "turned on their Vlach and Saxon neighbours. The Vlachs "
-                    "say a Magyar taltós has won back his tradition's old "
-                    "power, called lesser taltós to him and is building an "
-                    "empire. House Tremere ought to look into it.",
-                    "The true taltós destroyed one another a thousand years "
-                    "ago, so a taltós of real power would be a marvel. "
-                    "Laniena trains its Fectores with initiation scripts "
-                    "taken from a taltós clan, and Tatiana, the Prima's "
-                    "spymistress, was born a Szekler.",
-                ),
-                "",
+            summary=paragraphs(
+                "Serb and Croat legend says a hermit taltós of "
+                "matchless power led the Slavs south from beyond the "
+                "Carpathians, and that in hard times another will come "
+                "to free the people from their masters. The tale is "
+                "loved most in the poor communities of the forest "
+                "glens and the upper Danube.",
+                "The Székely, Magyars thought lesser by their kin, were "
+                "settled on the kingdom's eastern edge to hold off "
+                "Cuman and Mongol raiders. They are reckoned the "
+                "fiercest warriors in the Tribunal and once followed "
+                "shape-changing taltós into battle. Now a mysterious "
+                "man preaches in their villages, and the Székely have "
+                "turned on their Vlach and Saxon neighbours. The Vlachs "
+                "say a Magyar taltós has won back his tradition's old "
+                "power, called lesser taltós to him and is building an "
+                "empire. House Tremere ought to look into it.",
+                "The true taltós destroyed one another a thousand years "
+                "ago, so a taltós of real power would be a marvel. "
+                "Laniena trains its Fectores with initiation scripts "
+                "taken from a taltós clan, and Tatiana, the Prima's "
+                "spymistress, was born a Szekler.",
             ),
+            secrets="",
             antagonist="A taltós preacher among the Székely",
             realm="Magic",
             stages=[
@@ -854,28 +840,26 @@ def _succession(transylvania: Transylvania) -> None:
     transylvania.world["threat_succession"] = _dormant(
         b.threat(
             "Poena's Succession",
-            summary=secrets(
-                paragraphs(
-                    "House Tremere's leader is chosen by appointment and "
-                    "certamen, a quick and plain method that does not stop "
-                    "magi from trying to sway it. Poena has been Prima for "
-                    "two years. Her legata, Monica Ierne, is her heir: if "
-                    "Poena dies or is unfit, Monica acts as Prima until an "
-                    "emergency council meets. Monica does not want the "
-                    "office and would take it only to keep out someone "
-                    "odious; as Prima she would push for the leader to be "
-                    "chosen by a duel of champions, then resign. Horatius, "
-                    "who helped Poena to power, would make a good "
-                    "compromise if the House split, and would plant oppida "
-                    "round the Black Sea. Janus will never stand, for fear "
-                    "of what would come out.",
-                    "The previous Primus nominally leads the Burning Acorns "
-                    "hunt for Diedne survivors. The House has lost touch "
-                    "with him deep in the Novgorod Tribunal, and he knows "
-                    "the House's structure and Coeris's defences.",
-                ),
-                "Janus is a lycanthrope, which is why he will never seek the office.",
+            summary=paragraphs(
+                "House Tremere's leader is chosen by appointment and "
+                "certamen, a quick and plain method that does not stop "
+                "magi from trying to sway it. Poena has been Prima for "
+                "two years. Her legata, Monica Ierne, is her heir: if "
+                "Poena dies or is unfit, Monica acts as Prima until an "
+                "emergency council meets. Monica does not want the "
+                "office and would take it only to keep out someone "
+                "odious; as Prima she would push for the leader to be "
+                "chosen by a duel of champions, then resign. Horatius, "
+                "who helped Poena to power, would make a good "
+                "compromise if the House split, and would plant oppida "
+                "round the Black Sea. Janus will never stand, for fear "
+                "of what would come out.",
+                "The previous Primus nominally leads the Burning Acorns "
+                "hunt for Diedne survivors. The House has lost touch "
+                "with him deep in the Novgorod Tribunal, and he knows "
+                "the House's structure and Coeris's defences.",
             ),
+            secrets="Janus is a lycanthrope, which is why he will never seek the office.",
             antagonist="The House's rival candidates",
             stages=[
                 S(
@@ -947,29 +931,27 @@ def _legate(transylvania: Transylvania) -> None:
     transylvania.world["threat_legate"] = _dormant(
         b.threat(
             "The Papal Legate",
-            summary=secrets(
-                paragraphs(
-                    "Across the Balkans and as far as the Emperor's court, "
-                    "people tell of the Devil's school in the mountains, "
-                    "whose ten pupils learn every secret of nature and "
-                    "magic in seven years, and one of whom the Devil keeps. "
-                    "In truth it is the Scholomance, an oppidum's school "
-                    "for agents, companions, future Redcaps and "
-                    "apprentices. The Church has sent a papal legate to "
-                    "look into it. He lodges with the Teutonic Knights while "
-                    "he builds his case, and has found only hearsay, since "
-                    "the only people who know anything are magi or their "
-                    "former pupils.",
-                    "The school no longer wipes its mundane pupils' "
-                    "memories as it once did: its policy now is to make "
-                    "friends for the Order, neither boasting of its masters "
-                    "nor denying them. That leaves many former pupils who "
-                    "could talk.",
-                ),
-                "Sebastian, the school's ageless caretaker, may be the "
-                "zmaj king Aževastjepan; a legate who found him would find "
-                "more than he bargained for.",
+            summary=paragraphs(
+                "Across the Balkans and as far as the Emperor's court, "
+                "people tell of the Devil's school in the mountains, "
+                "whose ten pupils learn every secret of nature and "
+                "magic in seven years, and one of whom the Devil keeps. "
+                "In truth it is the Scholomance, an oppidum's school "
+                "for agents, companions, future Redcaps and "
+                "apprentices. The Church has sent a papal legate to "
+                "look into it. He lodges with the Teutonic Knights while "
+                "he builds his case, and has found only hearsay, since "
+                "the only people who know anything are magi or their "
+                "former pupils.",
+                "The school no longer wipes its mundane pupils' "
+                "memories as it once did: its policy now is to make "
+                "friends for the Order, neither boasting of its masters "
+                "nor denying them. That leaves many former pupils who "
+                "could talk.",
             ),
+            secrets="Sebastian, the school's ageless caretaker, may be the "
+            "zmaj king Aževastjepan; a legate who found him would find "
+            "more than he bargained for.",
             antagonist="The papal legate, lodged with the Teutonic Knights",
             realm="Divine",
             stages=[
@@ -1046,13 +1028,11 @@ def _find(records: list[Any], *names: str) -> Any | None:
 
 
 def _add_to(record: Any, more: str, hidden: str = "", attr: str = "summary") -> None:
-    """Add a paragraph to a record's summary (or notes), before its
-    Secrets heading if it has one, and `hidden` to its Secrets."""
-    text = getattr(record, attr) or ""
-    head, _sep, kept = text.partition("\n\n" + SECRETS + "\n")
-    if not _sep and text.startswith(SECRETS + "\n"):
-        head, kept = "", text.removeprefix(SECRETS + "\n")
-    setattr(record, attr, secrets(paragraphs(head, more), paragraphs(kept, hidden)))
+    """Add a paragraph to a record's summary (or notes), and `hidden` to
+    its secrets."""
+    setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
+    if hidden:
+        record.secrets = paragraphs(record.secrets, hidden)
 
 
 def _place(transylvania: Transylvania, places: list[Any], *keys: str) -> Any | None:

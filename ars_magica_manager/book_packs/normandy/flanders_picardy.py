@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -31,8 +31,6 @@ MERINITA = "house_merinita"
 VERDITIUS = "house_verditius"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
@@ -292,13 +290,11 @@ def _picardy_places(normandy: Normandy) -> None:
         inside=montagne,
         realm="Faerie",
         aura=4,
-        summary=secrets(
-            "A dark grove of twisted, stunted black beeches in the east of the "
-            "forest, with a Faerie aura of 4, which the local peasants avoid.",
-            "The wilder stories say a dark, dwarfish folk carry off villagers "
-            "who stray in; those who come back bear some deformity and will "
-            "not speak of what happened.",
-        ),
+        summary="A dark grove of twisted, stunted black beeches in the east of the "
+        "forest, with a Faerie aura of 4, which the local peasants avoid.",
+        secrets="The wilder stories say a dark, dwarfish folk carry off villagers "
+        "who stray in; those who come back bear some deformity and will "
+        "not speak of what happened.",
         **RUMOURED,
     )
     _add(
@@ -334,17 +330,15 @@ def _picardy_places(normandy: Normandy) -> None:
         "forest_of_cuise",
         "The Forest of Cuise",
         inside=picardy,
-        summary=secrets(
-            "A great finger of woodland south of Compiègne, some seventy miles "
-            "long, reaching from the edge of the Ile de France toward the "
-            "Ardennes. Much of it is the French kings' hunting chase: sunny, "
-            "open woods of beech and oak over gentle hills, with winding "
-            "rivers and ponds, full of deer, wolves and boar, and crossed by a "
-            "few roads, many hunting paths and the odd village and monastery. "
-            "The abbey of Prémontré lies in a hidden valley within it.",
-            "The Tribunal knows of no real faerie presence here; if the forest "
-            "has a faerie ruler, it is shy and kindly to mortals.",
-        ),
+        summary="A great finger of woodland south of Compiègne, some seventy miles "
+        "long, reaching from the edge of the Ile de France toward the "
+        "Ardennes. Much of it is the French kings' hunting chase: sunny, "
+        "open woods of beech and oak over gentle hills, with winding "
+        "rivers and ponds, full of deer, wolves and boar, and crossed by a "
+        "few roads, many hunting paths and the odd village and monastery. "
+        "The abbey of Prémontré lies in a hidden valley within it.",
+        secrets="The Tribunal knows of no real faerie presence here; if the forest "
+        "has a faerie ruler, it is shy and kindly to mortals.",
         **KNOWN_REGION,
     )
     _add(
@@ -460,7 +454,7 @@ def _florum(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         place=farm,
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         realm="Faerie",
         unnamed_magi=2,
         season="Summer",
@@ -504,22 +498,20 @@ def _florum_magi(normandy: Normandy, b: Builder, florum: Covenant) -> None:
         covenant=florum,
         house=JERBITON,
         age=59,
-        summary=secrets(
-            "A middle-aged magus with the Gentle Gift, looking about "
-            "forty-five. Ghent knows him as 'Uncle Calvin', younger brother of "
-            "Piet de Spinnen's late father, back from decades of trade in "
-            "Italy, whose money is said to have paid for the Farm's last "
-            "building; Piet plainly heeds his advice. A private man who reads a "
-            "great deal and is said to speak five languages, he often "
-            "negotiates or interprets for his nephew. Trained in urban magic "
-            "like many Jerbiton, he is skilled at illusion, at spying on the "
-            "covenant's mundane rivals, and at arranging crimes. His "
-            "apprentice Sophia is charming and as bookish as he is, so that "
-            "her cousins fear she will never marry.",
-            "Piet is really his son Petrus. His Italian wife was invented, and "
-            "the 'daughter' who has just arrived in Ghent, supposedly raised "
-            "by equally invented grandparents, is Sophia.",
-        ),
+        summary="A middle-aged magus with the Gentle Gift, looking about "
+        "forty-five. Ghent knows him as 'Uncle Calvin', younger brother of "
+        "Piet de Spinnen's late father, back from decades of trade in "
+        "Italy, whose money is said to have paid for the Farm's last "
+        "building; Piet plainly heeds his advice. A private man who reads a "
+        "great deal and is said to speak five languages, he often "
+        "negotiates or interprets for his nephew. Trained in urban magic "
+        "like many Jerbiton, he is skilled at illusion, at spying on the "
+        "covenant's mundane rivals, and at arranging crimes. His "
+        "apprentice Sophia is charming and as bookish as he is, so that "
+        "her cousins fear she will never marry.",
+        secrets="Piet is really his son Petrus. His Italian wife was invented, and "
+        "the 'daughter' who has just arrived in Ghent, supposedly raised "
+        "by equally invented grandparents, is Sophia.",
         traits={"Wily": 3, "Aloof": 1},
     )
     m["alroy"] = b.magus(
@@ -546,29 +538,27 @@ def _florum_magi(normandy: Normandy, b: Builder, florum: Covenant) -> None:
         covenant=florum,
         house=MERINITA,
         age=104,
-        summary=secrets(
-            paragraphs(
-                "An elderly maga, looking about sixty-one, who travels the Low "
-                "Countries studying their peculiar faerie realm. Here, she "
-                "teaches, the old gods and ancestral trees made a pact with the "
-                "coming Church: faeries helped spread the Dominion and tame the "
-                "forests, teaching men to clear woods, plough, sow wheat and flax "
-                "and drive piles for dikes; one brought flax, a gnome invented "
-                "starch, and the kabouters, a dwarfish folk, gave a hundred bells "
-                "to the missionaries they favoured, and sang the first carillon "
-                "of the Low Countries under a gnome's baton. Faeries who refused "
-                "were hunted down by saints whom the friendly ones guided, and lie "
-                "now as lone stones in the fields.",
-                "Her House thinks her interest in urban faeries a little odd, but "
-                "she is firmly allied with a tribe of kabouters and has taught "
-                "others her urban faerie magic. She picked the Farm's site over "
-                "an old kabouter workshop. She backs the Lotharingian Tribunal "
-                "because she believes the faeries' strange surrender to the "
-                "Divine belongs to Flanders, Brabant and perhaps Frisia alone.",
-            ),
-            "She could restore the stone faeries but usually harvests them for "
-            "vis instead.",
+        summary=paragraphs(
+            "An elderly maga, looking about sixty-one, who travels the Low "
+            "Countries studying their peculiar faerie realm. Here, she "
+            "teaches, the old gods and ancestral trees made a pact with the "
+            "coming Church: faeries helped spread the Dominion and tame the "
+            "forests, teaching men to clear woods, plough, sow wheat and flax "
+            "and drive piles for dikes; one brought flax, a gnome invented "
+            "starch, and the kabouters, a dwarfish folk, gave a hundred bells "
+            "to the missionaries they favoured, and sang the first carillon "
+            "of the Low Countries under a gnome's baton. Faeries who refused "
+            "were hunted down by saints whom the friendly ones guided, and lie "
+            "now as lone stones in the fields.",
+            "Her House thinks her interest in urban faeries a little odd, but "
+            "she is firmly allied with a tribe of kabouters and has taught "
+            "others her urban faerie magic. She picked the Farm's site over "
+            "an old kabouter workshop. She backs the Lotharingian Tribunal "
+            "because she believes the faeries' strange surrender to the "
+            "Divine belongs to Flanders, Brabant and perhaps Frisia alone.",
         ),
+        secrets="She could restore the stone faeries but usually harvests them for "
+        "vis instead.",
         traits={"Generous": 3, "Secretive": 1},
     )
     m["piet_de_spinnen"] = b.magus(
@@ -576,19 +566,17 @@ def _florum_magi(normandy: Normandy, b: Builder, florum: Covenant) -> None:
         covenant=florum,
         house="",
         age=None,
-        summary=secrets(
-            "The head of the de Spinnen family, Florum's landlords and public "
-            "face in Ghent, and its willing spokesman. Rivals sneer at him as "
-            "old Arne de Spinnen's bastard, which also explains his keen "
-            "interest in the Church's works. He has several children, two of "
-            "whom spent a year at the new university in Paris.",
-            "He is Petrus, the mundane son of Calvinus of Jerbiton, born at "
-            "Valnastium; a successful mercenary in Italy who made dangerous "
-            "rivals, faked his death, and was trained by an old Redcap to be "
-            "the heir the childless Arne needed. He is very content with how "
-            "his life has turned out. His two children went on from Paris to "
-            "Valnastium to train as servants of House Jerbiton.",
-        ),
+        summary="The head of the de Spinnen family, Florum's landlords and public "
+        "face in Ghent, and its willing spokesman. Rivals sneer at him as "
+        "old Arne de Spinnen's bastard, which also explains his keen "
+        "interest in the Church's works. He has several children, two of "
+        "whom spent a year at the new university in Paris.",
+        secrets="He is Petrus, the mundane son of Calvinus of Jerbiton, born at "
+        "Valnastium; a successful mercenary in Italy who made dangerous "
+        "rivals, faked his death, and was trained by an old Redcap to be "
+        "the heir the childless Arne needed. He is very content with how "
+        "his life has turned out. His two children went on from Paris to "
+        "Valnastium to train as servants of House Jerbiton.",
         type="companion",
     )
 
@@ -736,12 +724,9 @@ def _requies_aeterna(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None
         place=site,
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(
-            STORYGUIDE,
-            "Philip of Atramentum Renatus was formerly a member here, and "
-            "other Donatores are scattered across western Europe. Without "
-            "Eulogius the covenant would surely fall.",
-        ),
+        secrets="Philip of Atramentum Renatus was formerly a member here, and "
+        "other Donatores are scattered across western Europe. Without "
+        "Eulogius the covenant would surely fall.",
         aura=5,
         season="Winter",
     )
@@ -1464,26 +1449,24 @@ def _factions(normandy: Normandy, b: Builder) -> None:
         members=30,
         wants="To live well and stay hidden",
         offers="Cloth spun by touch: tents, ropes and sails too",
-        summary=secrets(
-            "A Ghent family of faerie blood, descended from a maiden whose "
-            "ancestral oak, at the end of its thousand years and as the "
-            "Church came, summoned faerie and mystic princes to woo her. She "
-            "refused them all, and the oak told her to wed Spin Head, the last "
-            "and ugliest, whose dowry would replace the dying forests. The oak "
-            "died, the spider passed a simple test and took human shape, and "
-            "he gave his bride the first flax plant, weaving her wedding dress "
-            "from it with his fingers.",
-            "A few in each generation can turn their own weight of fibre into "
-            "cloth each day by touch (the Virtue Faerie Blood (Spinnen)), or "
-            "unweave old cloth within the same limit; some make tents, ropes "
-            "or sails instead. Pelagius of Jerbiton found a dozen soon after "
-            "the Order's founding; in 1220 there are almost thirty, all "
-            "employed by Florum and living far better for it. They hide in "
-            "plain sight, many in the Weavers' Guild of Ghent, and their "
-            "relatives weave by ordinary means in the covenant's workshop. "
-            "Their flax legend is widely known, so the wary might guess the "
-            "truth.",
-        ),
+        summary="A Ghent family of faerie blood, descended from a maiden whose "
+        "ancestral oak, at the end of its thousand years and as the "
+        "Church came, summoned faerie and mystic princes to woo her. She "
+        "refused them all, and the oak told her to wed Spin Head, the last "
+        "and ugliest, whose dowry would replace the dying forests. The oak "
+        "died, the spider passed a simple test and took human shape, and "
+        "he gave his bride the first flax plant, weaving her wedding dress "
+        "from it with his fingers.",
+        secrets="A few in each generation can turn their own weight of fibre into "
+        "cloth each day by touch (the Virtue Faerie Blood (Spinnen)), or "
+        "unweave old cloth within the same limit; some make tents, ropes "
+        "or sails instead. Pelagius of Jerbiton found a dozen soon after "
+        "the Order's founding; in 1220 there are almost thirty, all "
+        "employed by Florum and living far better for it. They hide in "
+        "plain sight, many in the Weavers' Guild of Ghent, and their "
+        "relatives weave by ordinary means in the covenant's workshop. "
+        "Their flax legend is widely known, so the wary might guess the "
+        "truth.",
     )
     w["kabouters"] = b.faction(
         "The kabouters of the Low Countries",

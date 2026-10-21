@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, fields
 from typing import Any, Literal
 
@@ -72,6 +73,45 @@ def known_fields(cls: type, data: dict[str, Any]) -> dict[str, Any]:
     (a field since removed) instead of raising a TypeError."""
     names = {f.name for f in fields(cls)}
     return {k: v for k, v in data.items() if k in names}
+
+
+#: The heading older saves and packs wrote a record's secrets under, at the
+#: end of its summary or notes; a record now keeps them in `secrets`.
+SECRETS_HEADING = "Secrets"
+
+_SECRETS_LINE = re.compile(r"(?:\A|\n\s*\n)[ \t]*\**Secrets:?\**[ \t]*\n")
+
+#: The line the book packs put in a covenant's notes to point at the
+#: secrets under it; with them moved out, it points at nothing.
+_SECRETS_POINTER = "What the players do not know."
+
+
+def split_secrets(text: str) -> tuple[str, str]:
+    """`text` before a line reading only "Secrets" (after a blank line,
+    or at the start), and what follows it; `text` and "" without one."""
+    found = _SECRETS_LINE.search(text)
+    if found is None:
+        return text, ""
+    return text[: found.start()].rstrip(), text[found.end() :].strip()
+
+
+def move_secrets(data: dict[str, Any], *keys: str) -> dict[str, Any]:
+    """`data` (a record as saved) with what follows a Secrets heading in
+    each of its `keys` moved to the end of its `secrets`."""
+    found = [data.get("secrets") or ""]
+    for key in keys:
+        if isinstance(data.get(key), str):
+            shown, hidden = split_secrets(data[key])
+            if hidden:
+                shown = "\n\n".join(
+                    part
+                    for part in re.split(r"\n[ \t]*\n", shown)
+                    if part.strip() != _SECRETS_POINTER
+                )
+            data[key] = shown
+            found.append(hidden)
+    data["secrets"] = "\n\n".join(part for part in found if part.strip())
+    return data
 
 
 SEASONS: tuple[str, ...] = ("Spring", "Summer", "Autumn", "Winter")

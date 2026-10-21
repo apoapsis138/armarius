@@ -226,7 +226,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  istory  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary
+  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -269,7 +269,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  istory  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary
+  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -312,13 +312,56 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  istory  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary
+  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Diary (0)
 
       Nothing written yet: each meeting's minutes go here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Theban
+
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
+      Meets every:   7 years                   Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1225               Covenants:           0
+      Meeting place: Thebes                    Magi:                0
+      Cases:         none pending              Your votes:          0 of 0
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
 
 
 

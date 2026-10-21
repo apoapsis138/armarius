@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -46,8 +46,6 @@ MERINITA = "house_merinita"
 VERDITIUS = "house_verditius"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -378,18 +376,16 @@ def _north(theban: Theban) -> None:
         "samothraki",
         "Samothraki",
         inside=north,
-        summary=secrets(
-            paragraphs(
-                "A mountainous granite island with no natural harbour, home "
-                "of the half-ruined Sanctuary of the Great Gods, centre in "
-                "antiquity of a mystery cult as popular as the more secretive "
-                "Eleusinian one (see Greece). A sunken city lies off the "
-                "east coast; the sponge-divers knew it well and dived there "
-                "until a monster guarding it ate one who went too near.",
-            ),
-            "The islanders notice occasional visitors who are always "
-            "dripping wet, and suspect they come from the drowned city.",
+        summary=paragraphs(
+            "A mountainous granite island with no natural harbour, home "
+            "of the half-ruined Sanctuary of the Great Gods, centre in "
+            "antiquity of a mystery cult as popular as the more secretive "
+            "Eleusinian one (see Greece). A sunken city lies off the "
+            "east coast; the sponge-divers knew it well and dived there "
+            "until a monster guarding it ate one who went too near.",
         ),
+        secrets="The islanders notice occasional visitors who are always "
+        "dripping wet, and suspect they come from the drowned city.",
         **KNOWN_LOCALLY,
     )
 
@@ -428,122 +424,120 @@ def _delos(theban: Theban) -> None:
         inside=cyclades,
         aura=3,
         detail=FULL,
-        summary=secrets(
-            paragraphs(
-                "A small barren island, a mile or two across, once the seat "
-                "of the Delian League and now forgotten: no people, nothing "
-                "to take, no strategic worth. That is why so few mortals "
-                "have noticed that it has torn free of the sea bed and "
-                "floats wherever the Aegean and Kretan currents take it. The "
-                "Theban Tribunal has met here since it began; Thebes and "
-                "other sites were proposed, each by a faction seeking "
-                "advantage, and Delos won for its history, its empty "
-                "shores and its aura. It belongs, in name, to the Duchy of "
-                "Naxos.",
-                "Its legend. The titaness Asteria, sister of Leto and "
-                "mother of Hekate, fled Zeus's advances as a quail and fell "
-                "into the sea as a floating island (hence its old names "
-                "Asteria and Ortygia, from ortyx, quail). When Hera swore "
-                "that the pregnant Leto would find rest on neither land nor "
-                "sea, the drifting island was neither, and Leto bore Apollon "
-                "and Artemis there; in thanks she pinned it to the sea floor "
-                "with four great columns, and Zeus decreed that no one "
-                "should be born or die on it again. Only the priests of "
-                "Artemis, Apollon, Leto and Dionysos lived here, with three "
-                "nymphs Apollon brought from Hyperborea; predators were "
-                "banned to protect the sacred quail, still plentiful. The "
-                "League kept its treasury at Apollon's temple, and markets "
-                "for goods and slaves flourished, but with no food, timber "
-                "or much water the island emptied, and it has been "
-                "deserted for at least a thousand years. Some time between "
-                "eight and twelve centuries ago it began to float again; "
-                "Hermetic study suggests Leto's binding weakened, but the "
-                "titans' magic is little understood.",
-                "Its aura. Magic outweighs Faerie, since Asteria was of "
-                "Magic: the whole island has a Magic aura of 3, rising to 8 "
-                "in places such as the sacred lake, and there are Faerie "
-                "auras or regiones at the abandoned shrines of Apollon (the "
-                "book gives no strengths). The aura is aligned to "
-                "restlessness: anyone ashore gains Restless +1 (+2 where "
-                "the aura is above 3), magi included. Quail, hares and "
-                "lizards never stop moving, plants sprout, fruit and wither "
-                "regardless of season, and visitors never want to stay; "
-                "magi at a meeting pace about or slip out of the agora, and "
-                "leave quickly once it ends.",
-                "Its wanderings. Delos follows the currents, south in "
-                "summer and east-north-east in winter, turning clockwise "
-                "through the Cyclades within roughly the bounds of "
-                "Astipalaia, Thera, Melos and Andros, and comes back to its "
-                "old berth between Mykonos and Syros every 19 years. "
-                "Redcaps crossing the Cyclades watch for it, so the "
-                "Tribunal can chart it roughly.",
-                "The Hyperborean nymphs. Arge, Opis and Loxo, embodiments "
-                "of archery (distance, aim and flight), came with Apollon "
-                "and Artemis and still guard the shrines (see the "
-                "Bestiary). Disturbing a structure or relic calls them out, "
-                "and vandals have moments to explain before the arrows fly; "
-                "the wounded do not die until they have left the island. Two "
-                "more sisters, Hyperoche and Laodice, brought sacred "
-                "offerings from Hyperborea and vanished on the way home; "
-                "the three long for news of them. They speak Hyperborean, "
-                "and seekers of Hyperborean magic (Ancient Magic) may find "
-                "answers in Apollon's temple or from them, if they prove "
-                "worthy.",
-                "The Tribunal's customs here. Zeus's ban on birth and death "
-                "is thought to hold still: it is generations since anyone "
-                "tried to kill here, and every magus present stopped it, "
-                "fearing Olympian wrath. So no pregnant woman or beast may "
-                "come to a meeting, and every predator is barred, familiars "
-                "and companions included; Bjornaer with predatory "
-                "heartbeasts avoid taking that shape here.",
-                "The agora. The meetings are held in the Delian League's old "
-                "assembly place, a natural bowl lined with marble steps and ringed "
-                "with carved marble pillars.",
-                "The four phyle houses. At a distance from the agora stand the "
-                "walls of four large buildings and several huts; before each "
-                "meeting they are roofed and mended, and each phyle shares one of "
-                "the four with its staff. Tables, chairs and bedding must all be "
-                "brought from elsewhere. On Mount Kynthos, at the island's centre, "
-                "among the ruins of the Sanctuary of the Foreign Gods (shrines to "
-                "Egyptian and eastern deities raised by foreign visitors), a few "
-                "houses lodge the metoikoi.",
-                "The treasury. On the very spot of the Delian League's treasury, a "
-                "little temple-like building, empty above but for a great leaden "
-                "trapdoor in the floor, copied from the trapdoor of "
-                "Bonisagus's tower at Durenmar, never breached and opened only by a big "
-                "iron key the archon keeps (a ceremonial charge, as the vault is "
-                "seldom opened between meetings except in emergency). Stairs go "
-                "down to dusty chambers far underground, where several hundred "
-                "pawns of vis and many old items and texts are stored and "
-                "catalogued; so much vis together makes spontaneous magical "
-                "effects common. The nymphs guard it as they guard every sacred "
-                "site here. The tamias draws the next seven years' vis from it at "
-                "each meeting.",
-                "The sacred lake. Its shore, with a Magic aura of 8, is where the "
-                "Ceremony of Propitiation is held after the Rite of Dismissal: "
-                "each covenant has raised a plinth at the water's edge, holding or "
-                "awaiting an Arcane Connection to its patron (or the patron "
-                "itself). The archon opens the rite with an old Ritual from a "
-                "Casting Tablet, paid with eight pawns of Creo or Vim vis from the "
-                "Tribunal, which wakes the lake's power; each covenant then tells "
-                "its patron's deeds, renews its dedication and casts an offering, "
-                "mostly vis, into the water. The League Against Idolatry boycotts "
-                "it.",
-                "Preparing a meeting. The phyle whose turn it is readies the site, "
-                "and the work falls to its youngest magi: food for sixty magi and "
-                "their servants for a week, and seven years of decay, since "
-                "everything perishable rots fast here; repairs anger the nymphs, "
-                "who hate any change to the island. Magical beasts drawn by the "
-                "aura on its wanderings are often stranded on it, and must be "
-                "driven off, not killed, and kept from the agora by wards, which "
-                "the phyle teaches its young magi or lends them on Casting "
-                "Tablets.",
-            ),
-            "The vault is less safe than it looks: a clever magus could "
-            "rob it, or a dishonest arche skim from it, without great "
-            "difficulty. No one thinks it has ever happened, and it would "
-            "be judged a grave crime.",
+        summary=paragraphs(
+            "A small barren island, a mile or two across, once the seat "
+            "of the Delian League and now forgotten: no people, nothing "
+            "to take, no strategic worth. That is why so few mortals "
+            "have noticed that it has torn free of the sea bed and "
+            "floats wherever the Aegean and Kretan currents take it. The "
+            "Theban Tribunal has met here since it began; Thebes and "
+            "other sites were proposed, each by a faction seeking "
+            "advantage, and Delos won for its history, its empty "
+            "shores and its aura. It belongs, in name, to the Duchy of "
+            "Naxos.",
+            "Its legend. The titaness Asteria, sister of Leto and "
+            "mother of Hekate, fled Zeus's advances as a quail and fell "
+            "into the sea as a floating island (hence its old names "
+            "Asteria and Ortygia, from ortyx, quail). When Hera swore "
+            "that the pregnant Leto would find rest on neither land nor "
+            "sea, the drifting island was neither, and Leto bore Apollon "
+            "and Artemis there; in thanks she pinned it to the sea floor "
+            "with four great columns, and Zeus decreed that no one "
+            "should be born or die on it again. Only the priests of "
+            "Artemis, Apollon, Leto and Dionysos lived here, with three "
+            "nymphs Apollon brought from Hyperborea; predators were "
+            "banned to protect the sacred quail, still plentiful. The "
+            "League kept its treasury at Apollon's temple, and markets "
+            "for goods and slaves flourished, but with no food, timber "
+            "or much water the island emptied, and it has been "
+            "deserted for at least a thousand years. Some time between "
+            "eight and twelve centuries ago it began to float again; "
+            "Hermetic study suggests Leto's binding weakened, but the "
+            "titans' magic is little understood.",
+            "Its aura. Magic outweighs Faerie, since Asteria was of "
+            "Magic: the whole island has a Magic aura of 3, rising to 8 "
+            "in places such as the sacred lake, and there are Faerie "
+            "auras or regiones at the abandoned shrines of Apollon (the "
+            "book gives no strengths). The aura is aligned to "
+            "restlessness: anyone ashore gains Restless +1 (+2 where "
+            "the aura is above 3), magi included. Quail, hares and "
+            "lizards never stop moving, plants sprout, fruit and wither "
+            "regardless of season, and visitors never want to stay; "
+            "magi at a meeting pace about or slip out of the agora, and "
+            "leave quickly once it ends.",
+            "Its wanderings. Delos follows the currents, south in "
+            "summer and east-north-east in winter, turning clockwise "
+            "through the Cyclades within roughly the bounds of "
+            "Astipalaia, Thera, Melos and Andros, and comes back to its "
+            "old berth between Mykonos and Syros every 19 years. "
+            "Redcaps crossing the Cyclades watch for it, so the "
+            "Tribunal can chart it roughly.",
+            "The Hyperborean nymphs. Arge, Opis and Loxo, embodiments "
+            "of archery (distance, aim and flight), came with Apollon "
+            "and Artemis and still guard the shrines (see the "
+            "Bestiary). Disturbing a structure or relic calls them out, "
+            "and vandals have moments to explain before the arrows fly; "
+            "the wounded do not die until they have left the island. Two "
+            "more sisters, Hyperoche and Laodice, brought sacred "
+            "offerings from Hyperborea and vanished on the way home; "
+            "the three long for news of them. They speak Hyperborean, "
+            "and seekers of Hyperborean magic (Ancient Magic) may find "
+            "answers in Apollon's temple or from them, if they prove "
+            "worthy.",
+            "The Tribunal's customs here. Zeus's ban on birth and death "
+            "is thought to hold still: it is generations since anyone "
+            "tried to kill here, and every magus present stopped it, "
+            "fearing Olympian wrath. So no pregnant woman or beast may "
+            "come to a meeting, and every predator is barred, familiars "
+            "and companions included; Bjornaer with predatory "
+            "heartbeasts avoid taking that shape here.",
+            "The agora. The meetings are held in the Delian League's old "
+            "assembly place, a natural bowl lined with marble steps and ringed "
+            "with carved marble pillars.",
+            "The four phyle houses. At a distance from the agora stand the "
+            "walls of four large buildings and several huts; before each "
+            "meeting they are roofed and mended, and each phyle shares one of "
+            "the four with its staff. Tables, chairs and bedding must all be "
+            "brought from elsewhere. On Mount Kynthos, at the island's centre, "
+            "among the ruins of the Sanctuary of the Foreign Gods (shrines to "
+            "Egyptian and eastern deities raised by foreign visitors), a few "
+            "houses lodge the metoikoi.",
+            "The treasury. On the very spot of the Delian League's treasury, a "
+            "little temple-like building, empty above but for a great leaden "
+            "trapdoor in the floor, copied from the trapdoor of "
+            "Bonisagus's tower at Durenmar, never breached and opened only by a big "
+            "iron key the archon keeps (a ceremonial charge, as the vault is "
+            "seldom opened between meetings except in emergency). Stairs go "
+            "down to dusty chambers far underground, where several hundred "
+            "pawns of vis and many old items and texts are stored and "
+            "catalogued; so much vis together makes spontaneous magical "
+            "effects common. The nymphs guard it as they guard every sacred "
+            "site here. The tamias draws the next seven years' vis from it at "
+            "each meeting.",
+            "The sacred lake. Its shore, with a Magic aura of 8, is where the "
+            "Ceremony of Propitiation is held after the Rite of Dismissal: "
+            "each covenant has raised a plinth at the water's edge, holding or "
+            "awaiting an Arcane Connection to its patron (or the patron "
+            "itself). The archon opens the rite with an old Ritual from a "
+            "Casting Tablet, paid with eight pawns of Creo or Vim vis from the "
+            "Tribunal, which wakes the lake's power; each covenant then tells "
+            "its patron's deeds, renews its dedication and casts an offering, "
+            "mostly vis, into the water. The League Against Idolatry boycotts "
+            "it.",
+            "Preparing a meeting. The phyle whose turn it is readies the site, "
+            "and the work falls to its youngest magi: food for sixty magi and "
+            "their servants for a week, and seven years of decay, since "
+            "everything perishable rots fast here; repairs anger the nymphs, "
+            "who hate any change to the island. Magical beasts drawn by the "
+            "aura on its wanderings are often stranded on it, and must be "
+            "driven off, not killed, and kept from the agora by wards, which "
+            "the phyle teaches its young magi or lends them on Casting "
+            "Tablets.",
         ),
+        secrets="The vault is less safe than it looks: a clever magus could "
+        "rob it, or a dishonest arche skim from it, without great "
+        "difficulty. No one thinks it has ever happened, and it would "
+        "be judged a grave crime.",
         **KNOWN_ORDER,
     )
 
@@ -574,20 +568,18 @@ def _cyclades(theban: Theban) -> None:
         "The springs of Krini and Karava",
         inside=naxos,
         realm="Faerie",
-        summary=secrets(
-            paragraphs(
-                "Two rival springs in the north-east of Naxos. The spring of "
-                "Krini at Apeiranthos has a shape-changing stoicheion (see "
-                "the Faerie landscape); that of nearby Karava always appears "
-                "as a white cat. Karava is the stronger faerie, Krini the "
-                "more versatile.",
-                "Vis: the springs yield vis to those their guardians allow "
-                "(the book names neither Art nor amount).",
-            ),
-            "When anyone takes an interest in the springs, Krini turns "
-            "into a white cat, passes itself off as Karava, and grants "
-            "leave to take vis from Karava's spring.",
+        summary=paragraphs(
+            "Two rival springs in the north-east of Naxos. The spring of "
+            "Krini at Apeiranthos has a shape-changing stoicheion (see "
+            "the Faerie landscape); that of nearby Karava always appears "
+            "as a white cat. Karava is the stronger faerie, Krini the "
+            "more versatile.",
+            "Vis: the springs yield vis to those their guardians allow "
+            "(the book names neither Art nor amount).",
         ),
+        secrets="When anyone takes an interest in the springs, Krini turns "
+        "into a white cat, passes itself off as Karava, and grants "
+        "leave to take vis from Karava's spring.",
         **KNOWN_LOCALLY,
     )
     andros = _add(
@@ -607,22 +599,20 @@ def _cyclades(theban: Theban) -> None:
         "memnos_shipyard",
         "Memnos's shipyard",
         inside=andros,
-        summary=secrets(
-            paragraphs(
-                "The island workshop of Memnos of Verditius, builder of the "
-                "Favonius fleet, on the Andros shore: where the felled oak "
-                "forest of the spirit Dryops was brought, where each sanctum "
-                "ship was laid down, and where a fifth and last magical ship "
-                "for the covenant is now on the stocks. His laboratory here "
-                "has many specialisations and improvements, and four "
-                "forge-companions work with him. He rarely lacks a "
-                "commission for a sea-going vessel.",
-                "The fifth ship is to carry three laboratories, and the "
-                "book offers it as a home for a troupe's magi.",
-            ),
-            "Memnos never sails: a Death Prophecy says he will die with "
-            "the sky above him and the sea below.",
+        summary=paragraphs(
+            "The island workshop of Memnos of Verditius, builder of the "
+            "Favonius fleet, on the Andros shore: where the felled oak "
+            "forest of the spirit Dryops was brought, where each sanctum "
+            "ship was laid down, and where a fifth and last magical ship "
+            "for the covenant is now on the stocks. His laboratory here "
+            "has many specialisations and improvements, and four "
+            "forge-companions work with him. He rarely lacks a "
+            "commission for a sea-going vessel.",
+            "The fifth ship is to carry three laboratories, and the "
+            "book offers it as a home for a troupe's magi.",
         ),
+        secrets="Memnos never sails: a Death Prophecy says he will die with "
+        "the sky above him and the sea below.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -721,33 +711,31 @@ def _cyclades(theban: Theban) -> None:
         "The Bay of Thera",
         inside=cyclades,
         aura=7,
-        summary=secrets(
-            paragraphs(
-                "Thera, the southernmost of the Cyclades, newly called "
-                "Santorini (St Irene) by the Latins, is a crescent of rock "
-                "round a lagoon that would be a vast harbour but for its "
-                "sheer black cliffs; a few hamlets perch on top. The still "
-                "blue bay, several miles across and entered by two wide "
-                "channels, is fathomless save at its centre, where a "
-                "volcano's peak smoulders just under the surface. It was "
-                "land until the last battle of titans and Olympians blew it "
-                "apart, more than a thousand years before Christ, sending a "
-                "wave to wreck the coasts of the Cyclades and Candia (see the "
-                "Magical landscape). Zeus cast Typhon of the hundred serpent "
-                "heads into Tartaros, and he lies imprisoned in the volcano, "
-                "now and then belching a whirl of dust and fire that sweeps "
-                "the whole Aegean. The lagoon has a Magic aura of 7.",
-                "Vis: the burning pumice the cloud scatters is Perdo vis.",
-                "Outside the bay the Thalassomachos, the Warrior of the Sea "
-                "(see the Faerie landscape), haunts the waters, stealing "
-                "fishermen's nets and raising contrary winds; he never "
-                "enters the bay, and if he suddenly flees Thera, a great "
-                "storm from Typhon may be coming.",
-            ),
-            "The Seekers of the Fallen believe that clearing the mouth of "
-            "the sunken volcano would open a way into Tartaros, part of the "
-            "Magic Realm.",
+        summary=paragraphs(
+            "Thera, the southernmost of the Cyclades, newly called "
+            "Santorini (St Irene) by the Latins, is a crescent of rock "
+            "round a lagoon that would be a vast harbour but for its "
+            "sheer black cliffs; a few hamlets perch on top. The still "
+            "blue bay, several miles across and entered by two wide "
+            "channels, is fathomless save at its centre, where a "
+            "volcano's peak smoulders just under the surface. It was "
+            "land until the last battle of titans and Olympians blew it "
+            "apart, more than a thousand years before Christ, sending a "
+            "wave to wreck the coasts of the Cyclades and Candia (see the "
+            "Magical landscape). Zeus cast Typhon of the hundred serpent "
+            "heads into Tartaros, and he lies imprisoned in the volcano, "
+            "now and then belching a whirl of dust and fire that sweeps "
+            "the whole Aegean. The lagoon has a Magic aura of 7.",
+            "Vis: the burning pumice the cloud scatters is Perdo vis.",
+            "Outside the bay the Thalassomachos, the Warrior of the Sea "
+            "(see the Faerie landscape), haunts the waters, stealing "
+            "fishermen's nets and raising contrary winds; he never "
+            "enters the bay, and if he suddenly flees Thera, a great "
+            "storm from Typhon may be coming.",
         ),
+        secrets="The Seekers of the Fallen believe that clearing the mouth of "
+        "the sunken volcano would open a way into Tartaros, part of the "
+        "Magic Realm.",
         **KNOWN_TRIBUNAL,
     )
 
@@ -831,24 +819,22 @@ def _dodecanese(theban: Theban) -> None:
         "The Tree of Hippocrates",
         inside=kos,
         aura=4,
-        summary=secrets(
-            paragraphs(
-                "An ancient plane tree in the middle of Kos town, the oldest "
-                "and biggest in the Tribunal. Settlers from Epidauros set "
-                "up an asklepieion on Kos, and there Hippocrates, a native, "
-                "learnt healing from Asklepios and taught it in the tree's "
-                "shade; later St Paul preached under it. Each autumn the "
-                "women of Kos weave a wreath of its leaves, which is blessed "
-                "and hung among the church's icons, and carry the last "
-                "year's wreath in procession to the shore and throw it into "
-                "the sea; returning, they hug the tree, which grants them "
-                "long years and strength. The tree has a Magic aura of 4 "
-                "inside the town's Divine aura.",
-                "Vis: the old wreath holds 8 pawns of Creo vis.",
-            ),
-            "A magus usually waits unobtrusively in a boat to fish the "
-            "wreath out of the sea.",
+        summary=paragraphs(
+            "An ancient plane tree in the middle of Kos town, the oldest "
+            "and biggest in the Tribunal. Settlers from Epidauros set "
+            "up an asklepieion on Kos, and there Hippocrates, a native, "
+            "learnt healing from Asklepios and taught it in the tree's "
+            "shade; later St Paul preached under it. Each autumn the "
+            "women of Kos weave a wreath of its leaves, which is blessed "
+            "and hung among the church's icons, and carry the last "
+            "year's wreath in procession to the shore and throw it into "
+            "the sea; returning, they hug the tree, which grants them "
+            "long years and strength. The tree has a Magic aura of 4 "
+            "inside the town's Divine aura.",
+            "Vis: the old wreath holds 8 pawns of Creo vis.",
         ),
+        secrets="A magus usually waits unobtrusively in a boat to fish the "
+        "wreath out of the sea.",
         **KNOWN_LOCALLY,
     )
     _add(
@@ -869,40 +855,38 @@ def _dodecanese(theban: Theban) -> None:
         "rodos",
         "The island of Rodos",
         inside=dodecanese,
-        summary=secrets(
-            paragraphs(
-                "The largest of the Dodecanese, named for the nymph Rhode, "
-                "daughter of Aphrodite and consort of Helios; both were its "
-                "protectors, and her gift, the pink hibiscus called rhoda, "
-                "blooms on every shore. The Colossus, a giant Helios astride "
-                "the harbour mouth and one of the Seven Wonders, stood less "
-                "than a century before an earthquake broke it at the knees; "
-                "the bronze lay for centuries until the Saracens broke it up "
-                "in the seventh century and sold it to a mysterious Jewish "
-                "merchant from the Holy Land, who took it away on a thousand "
-                "camels.",
-                "Vis: small bronze shards of the Colossus can still be found, "
-                "and are Ignem vis; perhaps the merchant knew it.",
-                "The Saracens walled the city and split it into quarters, "
-                "one still largely Jewish, with another for its rulers. The "
-                "First Crusade gave it back to Byzantium; Richard the "
-                "Lionheart took it in 1191 and enlisted its sailors; Venice, "
-                "whose fleet has kept a base here since 1082, claimed it "
-                "after 1204. Leo Gavalas, a rich and corrupt dynatos of "
-                "Constantinople, now rules it as self-proclaimed despot. "
-                "Fearing that free reading breeds rebellion, he seized every "
-                "book on the island; only works he approves, which flatter "
-                "him, may be sold.",
-            ),
-            "The despot's closest adviser is a hedge wizard of foul "
-            "character, very likely Infernal, who bends him to his own "
-            "ends; he wrote the only books left on the island, tainted "
-            "works including a corrupted Bible, and is greedily hoarding "
-            "the island's vis while his demon master watches, pleased. "
-            "Rumours of depravity and sorcery on Rodos may lead the "
-            "Tribunal to ask for volunteers to look into it (The Despot's "
-            "Advisor).",
+        summary=paragraphs(
+            "The largest of the Dodecanese, named for the nymph Rhode, "
+            "daughter of Aphrodite and consort of Helios; both were its "
+            "protectors, and her gift, the pink hibiscus called rhoda, "
+            "blooms on every shore. The Colossus, a giant Helios astride "
+            "the harbour mouth and one of the Seven Wonders, stood less "
+            "than a century before an earthquake broke it at the knees; "
+            "the bronze lay for centuries until the Saracens broke it up "
+            "in the seventh century and sold it to a mysterious Jewish "
+            "merchant from the Holy Land, who took it away on a thousand "
+            "camels.",
+            "Vis: small bronze shards of the Colossus can still be found, "
+            "and are Ignem vis; perhaps the merchant knew it.",
+            "The Saracens walled the city and split it into quarters, "
+            "one still largely Jewish, with another for its rulers. The "
+            "First Crusade gave it back to Byzantium; Richard the "
+            "Lionheart took it in 1191 and enlisted its sailors; Venice, "
+            "whose fleet has kept a base here since 1082, claimed it "
+            "after 1204. Leo Gavalas, a rich and corrupt dynatos of "
+            "Constantinople, now rules it as self-proclaimed despot. "
+            "Fearing that free reading breeds rebellion, he seized every "
+            "book on the island; only works he approves, which flatter "
+            "him, may be sold.",
         ),
+        secrets="The despot's closest adviser is a hedge wizard of foul "
+        "character, very likely Infernal, who bends him to his own "
+        "ends; he wrote the only books left on the island, tainted "
+        "works including a corrupted Bible, and is greedily hoarding "
+        "the island's vis while his demon master watches, pleased. "
+        "Rumours of depravity and sorcery on Rodos may lead the "
+        "Tribunal to ask for volunteers to look into it (The Despot's "
+        "Advisor).",
         **KNOWN_REGION,
     )
 
@@ -1003,31 +987,29 @@ def _candia(theban: Theban) -> None:
                 ),
             )
         ],
-        summary=secrets(
-            paragraphs(
-                "The ruins of Candia's ancient capital on a hillside near "
-                "Chandax, setting of many legends. Poseidon gave Minos a "
-                "splendid white bull for sacrifice; the king kept it, and "
-                "the god made Queen Pasiphae desire it, so Daidalos built "
-                "her a wooden cow, and she bore the bull-headed Minotaur. "
-                "The bull ravaged the island until Herakles caught it in "
-                "his seventh labour. Daidalos built the palace, a maze of "
-                "more than a thousand rooms, to hide the Minotaur, and "
-                "after Zeus helped Minos against Athens the city sent seven "
-                "youths and seven maidens a year to feed it; prisoners "
-                "were turned loose there too, freed if they found the way "
-                "out. The double axe, the labrys that gave the labyrinth "
-                "its name, was a sign of protection.",
-                "The ruins have a Magic aura of 3 over a weaker Faerie one. "
-                "Marcus Tauros of House Criamon, who has had visions of a "
-                "past life as a Minoan priest, may be met here searching "
-                "the catacombs beneath for what a magical bull cult of the "
-                "Minoans knew.",
-            ),
-            "Marcus has not yet found that the whole labyrinth survives "
-            "inside a regio, whose highest level has a Faerie aura of 6. "
-            "Talos was bound in one of the cellars until lately.",
+        summary=paragraphs(
+            "The ruins of Candia's ancient capital on a hillside near "
+            "Chandax, setting of many legends. Poseidon gave Minos a "
+            "splendid white bull for sacrifice; the king kept it, and "
+            "the god made Queen Pasiphae desire it, so Daidalos built "
+            "her a wooden cow, and she bore the bull-headed Minotaur. "
+            "The bull ravaged the island until Herakles caught it in "
+            "his seventh labour. Daidalos built the palace, a maze of "
+            "more than a thousand rooms, to hide the Minotaur, and "
+            "after Zeus helped Minos against Athens the city sent seven "
+            "youths and seven maidens a year to feed it; prisoners "
+            "were turned loose there too, freed if they found the way "
+            "out. The double axe, the labrys that gave the labyrinth "
+            "its name, was a sign of protection.",
+            "The ruins have a Magic aura of 3 over a weaker Faerie one. "
+            "Marcus Tauros of House Criamon, who has had visions of a "
+            "past life as a Minoan priest, may be met here searching "
+            "the catacombs beneath for what a magical bull cult of the "
+            "Minoans knew.",
         ),
+        secrets="Marcus has not yet found that the whole labyrinth survives "
+        "inside a regio, whose highest level has a Faerie aura of 6. "
+        "Talos was bound in one of the cellars until lately.",
         **KNOWN_LOCALLY,
     )
     gorge = _add(
@@ -1199,7 +1181,8 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         realm="Faerie",
         summary=summary,
         what_matters=what_matters,
-        notes=paragraphs(patron, secrets(STORYGUIDE, hidden)),
+        notes=paragraphs(patron),
+        secrets=hidden,
         unnamed_magi=2,
         detail=FULL,
         season="Autumn",
@@ -1224,43 +1207,41 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=aegaea,
         house=MERINITA,
         age=112,
-        summary=secrets(
-            paragraphs(
-                "Aegaea's unchallenged leader and the last filius of its "
-                "founder Orithyia, looking sixty-five: a famous scholar of "
-                "Byzantine and ancient Greek letters who can recite dozens "
-                "of long poems by heart and studies the power of story and "
-                "rhetoric. He is believed to know several Mysteries, among "
-                "them the Folk Mystery of Story Magic. White-haired and "
-                "kindly of face, he wears loud dark blue robes embroidered "
-                "with scenes of Greek and Byzantine legend. Unlike most of "
-                "his covenant he travels widely and cares little for the "
-                "sea.",
-                "He is an active politician with obscure, eccentric aims, "
-                "liable to switch his support at once to any magus he sees "
-                "acting heroically or in keeping with old stories and "
-                "traditions, though Aegaea's name for treachery blunts his "
-                "influence. He leads the Children of Olympos, who want the "
-                "old Greek gods as the covenants' patrons, and coined the "
-                "names of the three titan factions (the Seekers of the "
-                "Fallen, the Legion of Atlas and Kampe's Lovers) in a "
-                "mocking speech four Tribunals ago. He claims to have met "
-                "the infant Zeus on Ida, and enjoyed young Proximios's "
-                "acrobatics when the Redcap brought messages.",
-                "His Twilight Scars are hidden: some mental flaws, above "
-                "all lapses in which he forgets who he is and claims to be "
-                "someone else, usually a hero of Greek legend.",
-            ),
-            "He devised two Mysteries, Elysian Ecstasy and Olympian Pact, "
-            "through which a person is possessed by a Greek god, and he "
-            "alone holds an Olympian Pact. His changeable politics are a "
-            "plan: he has cast the Tribunal's magi and covenants in roles "
-            "in a grand re-enactment of the myths and steers them toward "
-            "their parts, hoping Faerie will one day replace the Magic "
-            "auras of the covenants. He may be duped by pretenders, faerie "
-            "or infernal, and Proximios hopes to slip an infernalist into "
-            "his league so that it raises a False God.",
+        summary=paragraphs(
+            "Aegaea's unchallenged leader and the last filius of its "
+            "founder Orithyia, looking sixty-five: a famous scholar of "
+            "Byzantine and ancient Greek letters who can recite dozens "
+            "of long poems by heart and studies the power of story and "
+            "rhetoric. He is believed to know several Mysteries, among "
+            "them the Folk Mystery of Story Magic. White-haired and "
+            "kindly of face, he wears loud dark blue robes embroidered "
+            "with scenes of Greek and Byzantine legend. Unlike most of "
+            "his covenant he travels widely and cares little for the "
+            "sea.",
+            "He is an active politician with obscure, eccentric aims, "
+            "liable to switch his support at once to any magus he sees "
+            "acting heroically or in keeping with old stories and "
+            "traditions, though Aegaea's name for treachery blunts his "
+            "influence. He leads the Children of Olympos, who want the "
+            "old Greek gods as the covenants' patrons, and coined the "
+            "names of the three titan factions (the Seekers of the "
+            "Fallen, the Legion of Atlas and Kampe's Lovers) in a "
+            "mocking speech four Tribunals ago. He claims to have met "
+            "the infant Zeus on Ida, and enjoyed young Proximios's "
+            "acrobatics when the Redcap brought messages.",
+            "His Twilight Scars are hidden: some mental flaws, above "
+            "all lapses in which he forgets who he is and claims to be "
+            "someone else, usually a hero of Greek legend.",
         ),
+        secrets="He devised two Mysteries, Elysian Ecstasy and Olympian Pact, "
+        "through which a person is possessed by a Greek god, and he "
+        "alone holds an Olympian Pact. His changeable politics are a "
+        "plan: he has cast the Tribunal's magi and covenants in roles "
+        "in a grand re-enactment of the myths and steers them toward "
+        "their parts, hoping Faerie will one day replace the Magic "
+        "auras of the covenants. He may be duped by pretenders, faerie "
+        "or infernal, and Proximios hopes to slip an infernalist into "
+        "his league so that it raises a False God.",
         traits={"Scholarly": 4, "Whimsical": 3, "Treacherous": 2},
     )
     m["leukothea"] = b.magus(
@@ -1288,19 +1269,17 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=aegaea,
         house=BJORNAER,
         age=62,
-        summary=secrets(
-            paragraphs(
-                "A plain, earnest woman who looks forty-three, whose "
-                "heartbeast, as her name says, is a dolphin: she joined "
-                "Aegaea for the water, not for any love of Faerie. Friendly "
-                "and curious, she likes to swim beside ships carrying "
-                "Redcaps to trade gossip (sailors think a dolphin alongside "
-                "lucky). Most magi like her for her open ways, but some "
-                "think her a busybody and distrust her.",
-            ),
-            "Proximios has marked her as one of the innocents the League "
-            "of the Vigilant is to be steered into accusing of diabolism.",
+        summary=paragraphs(
+            "A plain, earnest woman who looks forty-three, whose "
+            "heartbeast, as her name says, is a dolphin: she joined "
+            "Aegaea for the water, not for any love of Faerie. Friendly "
+            "and curious, she likes to swim beside ships carrying "
+            "Redcaps to trade gossip (sailors think a dolphin alongside "
+            "lucky). Most magi like her for her open ways, but some "
+            "think her a busybody and distrust her.",
         ),
+        secrets="Proximios has marked her as one of the innocents the League "
+        "of the Vigilant is to be steered into accusing of diabolism.",
         traits={"Gregarious": 2, "Curious": 2, "Fierce": 1},
     )
     m["krum"] = b.magus(
@@ -1452,7 +1431,8 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         place=p["favonius_fleet"],
         summary=summary,
         what_matters=what_matters,
-        notes=paragraphs(patron, secrets(STORYGUIDE, hidden)),
+        notes=paragraphs(patron),
+        secrets=hidden,
         unnamed_magi=2,
         detail=FULL,
         season="Summer",
@@ -1475,26 +1455,24 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=favonius,
         house=VERDITIUS,
         age=92,
-        summary=secrets(
-            paragraphs(
-                "Founder of Favonius and designer of its wonderful ships, "
-                "looking fifty-eight: a hale man, black-bearded and "
-                "curly-haired, his skin browned by life on the shore and "
-                "his body hugely muscled from heaving beams, a fine climber "
-                "with sure balance. A lifelong lover of ships, he "
-                "specialises in enchanting them and is famous as a builder "
-                "of sea-going vessels, nearly always busy with a "
-                "commission. He is best in Rego and in craft magic, which "
-                "eases his labour; four forge-companions work with him, and "
-                "his laboratory on Andros is richly specialised.",
-                "He belongs to the Mystic Fraternity of Samos (The "
-                "Mysteries Revised Edition), or whatever cult teaches "
-                "Hermetic Architecture in your saga.",
-            ),
-            "An initiation gone wrong left him with a Death Prophecy, that "
-            "he will die with the sky above and the sea below; so he has "
-            "never sailed on any of his own ships.",
+        summary=paragraphs(
+            "Founder of Favonius and designer of its wonderful ships, "
+            "looking fifty-eight: a hale man, black-bearded and "
+            "curly-haired, his skin browned by life on the shore and "
+            "his body hugely muscled from heaving beams, a fine climber "
+            "with sure balance. A lifelong lover of ships, he "
+            "specialises in enchanting them and is famous as a builder "
+            "of sea-going vessels, nearly always busy with a "
+            "commission. He is best in Rego and in craft magic, which "
+            "eases his labour; four forge-companions work with him, and "
+            "his laboratory on Andros is richly specialised.",
+            "He belongs to the Mystic Fraternity of Samos (The "
+            "Mysteries Revised Edition), or whatever cult teaches "
+            "Hermetic Architecture in your saga.",
         ),
+        secrets="An initiation gone wrong left him with a Death Prophecy, that "
+        "he will die with the sky above and the sea below; so he has "
+        "never sailed on any of his own ships.",
         traits={
             "Hubris": 4,
             "Fearful of Open Water": 3,
@@ -1634,7 +1612,8 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         place=p["mosychlos"],
         summary=summary,
         what_matters=what_matters,
-        notes=paragraphs(patron, secrets(STORYGUIDE, hidden)),
+        notes=paragraphs(patron),
+        secrets=hidden,
         detail=FULL,
         season="Autumn",
     )
@@ -1697,25 +1676,23 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=ingasia,
         house=VERDITIUS,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "A magus of Ingasia who follows Stouritus's example and "
-                "will not join in vendettas. With Proximios of Alexandria "
-                "he has just founded the League of the Vigilant to hunt out "
-                "infernal corruption in the Order, he as its general and "
-                "the Redcap as its purse and supplier. They want members "
-                "from outside the Tribunal, fresh blood to root out the "
-                "bad, mean to keep the others' names secret while they "
-                "themselves seek help openly, and watch their fellows "
-                "patiently for a slip. Their fine reputations make the "
-                "league respectable, and its critics hold their tongues.",
-            ),
-            "Proximios, an infernalist, founded the league through him "
-            "and talked him into leading it, meaning to turn it on "
-            "innocents (Caterina, the young magi of Erebos, Delfini). He "
-            "will urge Hydatius to send members after the suspects, and a "
-            "demon in Hydatius's shape will order them to attack.",
+        summary=paragraphs(
+            "A magus of Ingasia who follows Stouritus's example and "
+            "will not join in vendettas. With Proximios of Alexandria "
+            "he has just founded the League of the Vigilant to hunt out "
+            "infernal corruption in the Order, he as its general and "
+            "the Redcap as its purse and supplier. They want members "
+            "from outside the Tribunal, fresh blood to root out the "
+            "bad, mean to keep the others' names secret while they "
+            "themselves seek help openly, and watch their fellows "
+            "patiently for a slip. Their fine reputations make the "
+            "league respectable, and its critics hold their tongues.",
         ),
+        secrets="Proximios, an infernalist, founded the league through him "
+        "and talked him into leading it, meaning to turn it on "
+        "innocents (Caterina, the young magi of Erebos, Delfini). He "
+        "will urge Hydatius to send members after the suspects, and a "
+        "demon in Hydatius's shape will order them to attack.",
     )
     m["eudoxia"] = b.magus(
         "Eudoxia",
@@ -1754,7 +1731,8 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=ingasia,
         house=VERDITIUS,
         age=89,
-        summary=secrets(paragraphs(twins, "Her twin is Bobila."), twins_secret),
+        summary=paragraphs(twins, "Her twin is Bobila."),
+        secrets=twins_secret,
         traits={"Hubris": 3, "Diligent": 2, "Bickering": 1},
     )
     m["bobila"] = b.magus(
@@ -1762,10 +1740,10 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=ingasia,
         house=VERDITIUS,
         age=89,
-        summary=secrets(
-            paragraphs(twins, "Her twin is Gemma. (The book also spells her Boblia.)"),
-            twins_secret,
+        summary=paragraphs(
+            twins, "Her twin is Gemma. (The book also spells her Boblia.)"
         ),
+        secrets=twins_secret,
         traits={"Hubris": 3, "Diligent": 2, "Bickering": 1},
     )
     b.link(m["gemma"], "characters", m["bobila"], "Her conjoined twin")
@@ -1839,11 +1817,9 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "sifnos",
         "The mines of Sifnos",
         inside=cyclades,
-        summary=secrets(
-            "An island a little north of Argentiera, with ancient gold and "
-            "silver mines long abandoned.",
-            "Polyaigos has quietly reopened them.",
-        ),
+        summary="An island a little north of Argentiera, with ancient gold and "
+        "silver mines long abandoned.",
+        secrets="Polyaigos has quietly reopened them.",
         **RUMOURED,
     )
     summary = paragraphs(
@@ -1919,7 +1895,8 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         place=site,
         summary=summary,
         what_matters=what_matters,
-        notes=paragraphs(patron, secrets(STORYGUIDE, hidden)),
+        notes=paragraphs(patron),
+        secrets=hidden,
         unnamed_magi=3,
         detail=FULL,
         season="Autumn",
@@ -1997,26 +1974,24 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=polyaigos,
         house=JERBITON,
         age=53,
-        summary=secrets(
-            paragraphs(
-                "A Venetian maga trained in the Roman Tribunal, newly come to "
-                "Thebes, the reverse of many of her House, who have gone the "
-                "other way; she looks her age. Her apparent ties to Venice, "
-                "chief author of the crusade that took Constantinople, make "
-                "the Theban Jerbiton deeply distrust her. Polyaigos has put "
-                "her in charge of running and growing its mines and trade, "
-                "for which she has a true Venetian gift.",
-                "Like many Jerbiton she long refused a Longevity Ritual, but "
-                "failing vigour has made her accept she needs one; she hopes "
-                "the Tribunal will sponsor it, and is working to build a good "
-                "name and earn tokens. As a metoikos she can hold none until "
-                "her citizenship is decreed.",
-            ),
-            "She has met the Duke of Naxos in the guise of a rich "
-            "noblewoman and is preparing a discreet arrangement with him. "
-            "Proximios has marked her as an innocent for the League of the "
-            "Vigilant to accuse of diabolism.",
+        summary=paragraphs(
+            "A Venetian maga trained in the Roman Tribunal, newly come to "
+            "Thebes, the reverse of many of her House, who have gone the "
+            "other way; she looks her age. Her apparent ties to Venice, "
+            "chief author of the crusade that took Constantinople, make "
+            "the Theban Jerbiton deeply distrust her. Polyaigos has put "
+            "her in charge of running and growing its mines and trade, "
+            "for which she has a true Venetian gift.",
+            "Like many Jerbiton she long refused a Longevity Ritual, but "
+            "failing vigour has made her accept she needs one; she hopes "
+            "the Tribunal will sponsor it, and is working to build a good "
+            "name and earn tokens. As a metoikos she can hold none until "
+            "her citizenship is decreed.",
         ),
+        secrets="She has met the Duke of Naxos in the guise of a rich "
+        "noblewoman and is preparing a discreet arrangement with him. "
+        "Proximios has marked her as an innocent for the League of the "
+        "Vigilant to accuse of diabolism.",
         traits={"Opulent": 2, "Elegant": 2, "Vain": 1},
     )
     m["satabus"] = b.magus(
@@ -2024,20 +1999,18 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         covenant=polyaigos,
         house=VERDITIUS,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "A young Verditius, trained at Ingasia, who has just moved "
-                "to Polyaigos. The book gives no age or traits.",
-            ),
-            "He was born Pietro, younger brother of Marco Sanudo, Duke of "
-            "Naxos, and nephew of Doge Enrico Dandolo: a pleasant, clever, "
-            "bookish boy with something deeply strange about him, who made "
-            "his brother uneasy. Among his last acts Dandolo found him a "
-            "place, which was apprenticeship at Ingasia. At Polyaigos he has "
-            "learnt of Marco's rise; he keeps a warm love for his family but "
-            "has not yet got in touch, while Marco often wonders what became "
-            "of him and hopes for news.",
+        summary=paragraphs(
+            "A young Verditius, trained at Ingasia, who has just moved "
+            "to Polyaigos. The book gives no age or traits.",
         ),
+        secrets="He was born Pietro, younger brother of Marco Sanudo, Duke of "
+        "Naxos, and nephew of Doge Enrico Dandolo: a pleasant, clever, "
+        "bookish boy with something deeply strange about him, who made "
+        "his brother uneasy. Among his last acts Dandolo found him a "
+        "place, which was apprenticeship at Ingasia. At Polyaigos he has "
+        "learnt of Marco's rise; he keeps a warm love for his family but "
+        "has not yet got in touch, while Marco often wonders what became "
+        "of him and hopes for news.",
     )
 
 
@@ -2062,16 +2035,14 @@ def _loose_magi(theban: Theban, b: Builder) -> None:
         covenant=None,
         house=CRIAMON,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "A Criamon described in Magi of Hermes who seems to have "
-                "had visions of a past life as a priest of Minoan Candia, "
-                "and may be found at the ruins of Knossos digging in the "
-                "catacombs for the lore of a magical bull cult of the "
-                "Minoans.",
-            ),
-            "He has not yet found the regio in which the labyrinth survives whole.",
+        summary=paragraphs(
+            "A Criamon described in Magi of Hermes who seems to have "
+            "had visions of a past life as a priest of Minoan Candia, "
+            "and may be found at the ruins of Knossos digging in the "
+            "catacombs for the lore of a magical bull cult of the "
+            "Minoans.",
         ),
+        secrets="He has not yet found the regio in which the labyrinth survives whole.",
     )
 
 
@@ -2089,32 +2060,30 @@ def _lords(theban: Theban, b: Builder) -> None:
         seat="The Kastro, Naxos",
         ruler="Marco Sanudo",
         place=p["cyclades"],
-        summary=secrets(
-            paragraphs(
-                "The new realm of the Cyclades. Marco Sanudo, a Venetian, "
-                "nephew of Doge Enrico Dandolo of the Fourth Crusade and "
-                "heir to much of his charm and good sense, was charged with "
-                "putting down Cycladic piracy; he borrowed Venetian galleys, "
-                "fell on Naxos in 1207 and, after hard fighting, took it, "
-                "and by 1212 he held nearly all the Cyclades, which he split "
-                "into more than fifty lordships under him, many held by his "
-                "kin. Delos is his, in name.",
-                "The duchy thrives: it does homage to the Latin emperor and "
-                "is mostly left alone in the endless wars and intrigues. In "
-                "name a vassal of the Latin Empire, Marco holds his lands in "
-                "his own right, free of Venice and its doge yet close to "
-                "Venetian interests. He brought in the Latin Church and "
-                "barred the Orthodox from high office, but left Greek "
-                "churches and clergy largely in peace, and his people seem "
-                "content to go on as before under new lords. He has just "
-                "finished the Kastro on Naxos and begun a cathedral. He has "
-                "heard tales of Polyaigos's riches and envies them.",
-            ),
-            "His younger brother Pietro, whom he never felt easy with and "
-            "often wonders about, is Satabus of Verditius, now at "
-            "Polyaigos. Caterina da Vigonovo has met him as a wealthy "
-            "noblewoman and is preparing a quiet bargain.",
+        summary=paragraphs(
+            "The new realm of the Cyclades. Marco Sanudo, a Venetian, "
+            "nephew of Doge Enrico Dandolo of the Fourth Crusade and "
+            "heir to much of his charm and good sense, was charged with "
+            "putting down Cycladic piracy; he borrowed Venetian galleys, "
+            "fell on Naxos in 1207 and, after hard fighting, took it, "
+            "and by 1212 he held nearly all the Cyclades, which he split "
+            "into more than fifty lordships under him, many held by his "
+            "kin. Delos is his, in name.",
+            "The duchy thrives: it does homage to the Latin emperor and "
+            "is mostly left alone in the endless wars and intrigues. In "
+            "name a vassal of the Latin Empire, Marco holds his lands in "
+            "his own right, free of Venice and its doge yet close to "
+            "Venetian interests. He brought in the Latin Church and "
+            "barred the Orthodox from high office, but left Greek "
+            "churches and clergy largely in peace, and his people seem "
+            "content to go on as before under new lords. He has just "
+            "finished the Kastro on Naxos and begun a cathedral. He has "
+            "heard tales of Polyaigos's riches and envies them.",
         ),
+        secrets="His younger brother Pietro, whom he never felt easy with and "
+        "often wonders about, is Satabus of Verditius, now at "
+        "Polyaigos. Caterina da Vigonovo has met him as a wealthy "
+        "noblewoman and is preparing a quiet bargain.",
     )
     b.link(
         w["duke_of_naxos"],
@@ -2186,20 +2155,18 @@ def _lords(theban: Theban, b: Builder) -> None:
         seat="Rodos",
         ruler="Leo Gavalas, despot",
         place=p["rodos"],
-        summary=secrets(
-            paragraphs(
-                "Leo Gavalas, a rich and corrupt dynatos who came from "
-                "Constantinople soon after it fell, has made himself despot "
-                "of Rodos, an island Venice claims and where it has kept a "
-                "naval base since 1082. He fears that free reading will "
-                "make his subjects rebel, so one of his first acts was to "
-                "confiscate every book; only works he has approved, which "
-                "show him in a good light, may be sold.",
-            ),
-            "His closest adviser, an infernal hedge wizard, steers him, "
-            "wrote the island's only books (a perverted Bible among them), "
-            "and is gathering all its vis for himself.",
+        summary=paragraphs(
+            "Leo Gavalas, a rich and corrupt dynatos who came from "
+            "Constantinople soon after it fell, has made himself despot "
+            "of Rodos, an island Venice claims and where it has kept a "
+            "naval base since 1082. He fears that free reading will "
+            "make his subjects rebel, so one of his first acts was to "
+            "confiscate every book; only works he has approved, which "
+            "show him in a good light, may be sold.",
         ),
+        secrets="His closest adviser, an infernal hedge wizard, steers him, "
+        "wrote the island's only books (a perverted Bible among them), "
+        "and is gathering all its vis for himself.",
     )
 
 
@@ -2383,17 +2350,15 @@ def _factions(theban: Theban, b: Builder) -> None:
         place=p["favonius_fleet"],
         wants="Plunder, under Favonius's protection",
         offers="A third of the plunder to Favonius; eight capable warriors",
-        summary=secrets(
-            "Peter 'One Hand', a pirate who sails with Favonius in two "
-            "ships of his own, with eight of the covenant's best fighters "
-            "sworn to him. He owes his life to Aeliophanes and is utterly "
-            "loyal.",
-            "He gives the covenant a third of his plunder for the fleet's "
-            "protection, passing anything identifiable to Basil to sell in "
-            "far ports; his men wear masks at work and his ships are "
-            "enchanted to change their look, so nothing leads back to "
-            "Favonius.",
-        ),
+        summary="Peter 'One Hand', a pirate who sails with Favonius in two "
+        "ships of his own, with eight of the covenant's best fighters "
+        "sworn to him. He owes his life to Aeliophanes and is utterly "
+        "loyal.",
+        secrets="He gives the covenant a third of his plunder for the fleet's "
+        "protection, passing anything identifiable to Basil to sell in "
+        "far ports; his men wear masks at work and his ships are "
+        "enchanted to change their look, so nothing leads back to "
+        "Favonius.",
     )
     w["basil_andros"] = b.faction(
         "The trading house of Basil of Andros",

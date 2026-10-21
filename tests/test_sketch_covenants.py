@@ -227,7 +227,7 @@ async def test_the_terminal_opens_a_sketch_on_its_overview_and_edits_the_chosen_
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open(pilot, app)
         view = workspace._covenant_sheet_view
-        assert view.tab_ids == ["tab-cov-overview", "tab-cov-diary"]
+        assert view.tab_ids == ["tab-cov-overview", "tab-cov-diary", "tab-secrets"]
         text = "\n".join(screen_lines(app))
         assert "4 (2 named, 2 unnamed)" in text
         assert "Toward Arnhaven" in text
@@ -281,8 +281,8 @@ async def test_the_terminal_promotes_a_sketch_covenant_to_a_full_sheet():
 @pytest.mark.parametrize(
     ("detail", "chapters"),
     [
-        (LINE, ["Sketch", "Diary", "Manage"]),
-        (SKETCH, ["Sketch", "Diary", "Manage"]),
+        (LINE, ["Sketch", "Diary", "Secrets", "Manage"]),
+        (SKETCH, ["Sketch", "Diary", "Secrets", "Manage"]),
     ],
 )
 def test_the_desktop_draws_a_sketch_covenant_on_one_chapter(detail, chapters):

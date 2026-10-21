@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .common import known_fields
+from .common import known_fields, move_secrets
 from .traits import new_instance_id
 
 #: How much of a character or covenant is written down: a line, a sketch
@@ -121,10 +121,14 @@ class Neighbour:
     #: A lord's, town's or faction's arms (arms.Arms.to_dict); empty for
     #: none.
     arms: dict[str, str] = field(default_factory=dict)
+    #: What only the storyguide should read: the record's Secrets
+    #: chapter, hidden from players signed in to a hosted copy.
+    secrets: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Neighbour:
-        d = known_fields(cls, data)
+        # Older saves kept secrets under a heading in the summary.
+        d = move_secrets(known_fields(cls, data), "summary")
         d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes", [])]
         d["favours"] = [Favour(**known_fields(Favour, f)) for f in d.get("favours", [])]
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]

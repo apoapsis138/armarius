@@ -329,32 +329,30 @@ def _rhine_valley(rhine: Rhine) -> None:
                 ),
             ),
         ],
-        summary=secrets(
-            paragraphs(
-                "The greatest falls of Europe, five hundred feet wide and eighty "
-                "high, on the Upper Rhine below Constance near the south-eastern "
-                "edge of the Black Forest. In their midst stands a rock island "
-                "taller than the falls with a copse on top; it can be reached only "
-                "by boat from downstream (Profession: Boating against 9) and climbed "
-                "only on slippery rock (Athletics against 12), and the summit is a "
-                "deafening place of raw elemental power. The island's Magic aura is "
-                "2, rising to 4 at the summit, and a regio of several levels climbs "
-                "from it.",
-                "Under the rock lies the Spirit of the Rhine (Magic, Might not "
-                "given), a river elemental pinned there long ago when the "
-                "Nibelungs, dwarves and giants tamed the wild river; it is said to "
-                "guard the Rhinegold in revenge. Those who climb the rock and hurl "
-                "valuables into the maelstrom find the smashed fragments washed up "
-                "downstream later, each worth a pawn of Aquam vis; it is never "
-                "found by accident.",
-            ),
-            "Schwall's final Quest is to free the Rhine elemental and merge his "
-            "mind with it, a kind of immortality before Final Twilight takes him; "
-            "the floods that would wreck shipping, towns and cities along the whole "
-            "river are to him a welcome bonus. The early signs are disturbances on "
-            "the river. The Tribunal would March anyone involved, but he expects "
-            "to be beyond its reach.",
+        summary=paragraphs(
+            "The greatest falls of Europe, five hundred feet wide and eighty "
+            "high, on the Upper Rhine below Constance near the south-eastern "
+            "edge of the Black Forest. In their midst stands a rock island "
+            "taller than the falls with a copse on top; it can be reached only "
+            "by boat from downstream (Profession: Boating against 9) and climbed "
+            "only on slippery rock (Athletics against 12), and the summit is a "
+            "deafening place of raw elemental power. The island's Magic aura is "
+            "2, rising to 4 at the summit, and a regio of several levels climbs "
+            "from it.",
+            "Under the rock lies the Spirit of the Rhine (Magic, Might not "
+            "given), a river elemental pinned there long ago when the "
+            "Nibelungs, dwarves and giants tamed the wild river; it is said to "
+            "guard the Rhinegold in revenge. Those who climb the rock and hurl "
+            "valuables into the maelstrom find the smashed fragments washed up "
+            "downstream later, each worth a pawn of Aquam vis; it is never "
+            "found by accident.",
         ),
+        secrets="Schwall's final Quest is to free the Rhine elemental and merge his "
+        "mind with it, a kind of immortality before Final Twilight takes him; "
+        "the floods that would wreck shipping, towns and cities along the whole "
+        "river are to him a welcome bonus. The early signs are disturbances on "
+        "the river. The Tribunal would March anyone involved, but he expects "
+        "to be beyond its reach.",
         **RUMOURED,
     )
     _add(
@@ -385,20 +383,18 @@ def _rhine_valley(rhine: Rhine) -> None:
         realm="Divine",
         aura=3,
         tethers="The rooted staff of Bishop Theobald's servant beneath the altar",
-        summary=secrets(
-            "A chapel of 1161 in the southern Vosges about a dozen miles west of "
-            "Mulhouse, built over the staff of the servant of Bishop Theobald of "
-            "Gubbio, who had hidden his dead master's ring and thumb inside it; the "
-            "staff rooted itself in the fir forest under three lights and could not "
-            "be moved. The lord of the nearby Engelburg raised the chapel, a village "
-            "grew about it, and the Engelburg peasants ceremonially burn three fir "
-            "trees before it each summer. Its Divine aura is 3 and it draws pilgrims.",
-            "The Vosges once had a secretive fir spirit like the Black Forest's. "
-            "Villages, monasteries and felling wore it down, and the planting of "
-            "the holy staff extinguished it, which is why no continuous Vosges "
-            "forest remains. If the staff were removed it might be the one artefact "
-            "able to counter the spirit of the Black Forest.",
-        ),
+        summary="A chapel of 1161 in the southern Vosges about a dozen miles west of "
+        "Mulhouse, built over the staff of the servant of Bishop Theobald of "
+        "Gubbio, who had hidden his dead master's ring and thumb inside it; the "
+        "staff rooted itself in the fir forest under three lights and could not "
+        "be moved. The lord of the nearby Engelburg raised the chapel, a village "
+        "grew about it, and the Engelburg peasants ceremonially burn three fir "
+        "trees before it each summer. Its Divine aura is 3 and it draws pilgrims.",
+        secrets="The Vosges once had a secretive fir spirit like the Black Forest's. "
+        "Villages, monasteries and felling wore it down, and the planting of "
+        "the holy staff extinguished it, which is why no continuous Vosges "
+        "forest remains. If the staff were removed it might be the one artefact "
+        "able to counter the spirit of the Black Forest.",
         **KNOWN_REGION,
     )
     _add(
@@ -439,17 +435,15 @@ def _rhine_valley(rhine: Rhine) -> None:
         "vosges",
         "The Vosges Mountains",
         inside=region,
-        summary=secrets(
-            "The range on the west bank of the Upper Rhine facing the Black Forest, "
-            "as high as it and fir-clad on the upper slopes, but not wholly forested: "
-            "villages lie among the hills. The southern peaks are rounded granite, "
-            "the northern hills red sandstone. Many springs, some of them hot, feed "
-            "the tributaries of the Mosel, and the storks that arrive each spring "
-            "are thought lucky. The mountains have no general aura; Mount Saint "
-            "Odile, Thann Chapel and the Sanctuary of Hercules are its sites.",
-            "The fir spirit of the Vosges is extinct, put out by the holy staff at "
-            "Thann.",
-        ),
+        summary="The range on the west bank of the Upper Rhine facing the Black Forest, "
+        "as high as it and fir-clad on the upper slopes, but not wholly forested: "
+        "villages lie among the hills. The southern peaks are rounded granite, "
+        "the northern hills red sandstone. Many springs, some of them hot, feed "
+        "the tributaries of the Mosel, and the storks that arrive each spring "
+        "are thought lucky. The mountains have no general aura; Mount Saint "
+        "Odile, Thann Chapel and the Sanctuary of Hercules are its sites.",
+        secrets="The fir spirit of the Vosges is extinct, put out by the holy staff at "
+        "Thann.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -533,31 +527,29 @@ def _black_forest(rhine: Rhine) -> None:
         "The valley of Durenmar",
         inside=forest,
         aura=7,
-        summary=secrets(
-            paragraphs(
-                "A steep-sided hidden valley some fifteen miles inside the northern "
-                "Black Forest, about fifteen miles south of Hirsau monastery, with "
-                "Baden to the north-west. A guard post lower down is enchanted to "
-                "hide the three-mile track up to it, and the covenant's towers stand "
-                "below the surrounding treeline. The clearing on the valley floor, "
-                "split by a stream and unfortified, has a Magic aura of 7 and is "
-                "protected by the strongest Aegis of the Hearth in the Order; the "
-                "Cult of Mercury's temple stood here before Bonisagus came in 754. "
-                "Caves of unknown extent run under the north cliffs, with wild "
-                "rumours of enslaved gnomes mining gems.",
-                "Covenfolk born in the aura all carry Warping, and their longevity "
-                "is unexplained. A lone fir near the Great Library, the Black Fir, is "
-                "tolerated for the Perdo vis of its cones; the great vine on the "
-                "Tower of Bonisagus yields Intellego vis in its sap.",
-            ),
-            "The Black Fir was planted over a century ago by the King of the Black "
-            "Mountain at the edge of the Aegis after his direct attacks failed; when "
-            "the magi found it gave vis they moved the Aegis boundary to take it in, "
-            "breaching their own defence. It creeps about six inches a year toward "
-            "the Tower of Bonisagus, and nobody alive remembers it being young. What "
-            "happens when it reaches the tower or the vine is unknown but likely "
-            "severe.",
+        summary=paragraphs(
+            "A steep-sided hidden valley some fifteen miles inside the northern "
+            "Black Forest, about fifteen miles south of Hirsau monastery, with "
+            "Baden to the north-west. A guard post lower down is enchanted to "
+            "hide the three-mile track up to it, and the covenant's towers stand "
+            "below the surrounding treeline. The clearing on the valley floor, "
+            "split by a stream and unfortified, has a Magic aura of 7 and is "
+            "protected by the strongest Aegis of the Hearth in the Order; the "
+            "Cult of Mercury's temple stood here before Bonisagus came in 754. "
+            "Caves of unknown extent run under the north cliffs, with wild "
+            "rumours of enslaved gnomes mining gems.",
+            "Covenfolk born in the aura all carry Warping, and their longevity "
+            "is unexplained. A lone fir near the Great Library, the Black Fir, is "
+            "tolerated for the Perdo vis of its cones; the great vine on the "
+            "Tower of Bonisagus yields Intellego vis in its sap.",
         ),
+        secrets="The Black Fir was planted over a century ago by the King of the Black "
+        "Mountain at the edge of the Aegis after his direct attacks failed; when "
+        "the magi found it gave vis they moved the Aegis boundary to take it in, "
+        "breaching their own defence. It creeps about six inches a year toward "
+        "the Tower of Bonisagus, and nobody alive remembers it being young. What "
+        "happens when it reaches the tower or the vine is unknown but likely "
+        "severe.",
         **KNOWN_ORDER,
     )
     _add(
@@ -635,26 +627,24 @@ def _black_forest(rhine: Rhine) -> None:
                 ),
             ),
         ],
-        summary=secrets(
-            "The highest peak of the southern Black Forest, reached only through the "
-            "Hoellental, and the seat of the King of the Black Mountain, King Fir "
-            "(Faerie, Might 90; Malicious +5, Secretive +3, Vengeful +3), pictured as "
-            "a huge black-cloaked man with a terrible face. He commands the weather, "
-            "grants flaws such as depression, fear, lameness and loss of direction, "
-            "possesses, shrouds and holds a regio of several levels with Faerie auras "
-            "from 3 to 8; victory and virtue he grants very rarely. He is the dread "
-            "and undisputed ruler of every dark faerie court in the forest, and his "
-            "influence covers all of it. Monasteries inside the forest suffer his "
-            "attacks: vanishing monks, blight, landslides and earthquakes.",
-            "His dominion cannot reach the Glade of the Seven Waterfalls or the Fane "
-            "of the Founders; lacking the original spirit's nature, they are "
-            "unknowable to him. He craves revenge on those who bound the old spirit "
-            "and wants to be whole again, so he seeks Durenmar's destruction: were "
-            "it to fall, the rite of the Fane would lapse and the bound spirit would "
-            "be his to dominate and absorb. The raid of 1085 was his, and its "
-            "captives never returned; the Black Fir at Durenmar is his centuries-long "
-            "plan.",
-        ),
+        summary="The highest peak of the southern Black Forest, reached only through the "
+        "Hoellental, and the seat of the King of the Black Mountain, King Fir "
+        "(Faerie, Might 90; Malicious +5, Secretive +3, Vengeful +3), pictured as "
+        "a huge black-cloaked man with a terrible face. He commands the weather, "
+        "grants flaws such as depression, fear, lameness and loss of direction, "
+        "possesses, shrouds and holds a regio of several levels with Faerie auras "
+        "from 3 to 8; victory and virtue he grants very rarely. He is the dread "
+        "and undisputed ruler of every dark faerie court in the forest, and his "
+        "influence covers all of it. Monasteries inside the forest suffer his "
+        "attacks: vanishing monks, blight, landslides and earthquakes.",
+        secrets="His dominion cannot reach the Glade of the Seven Waterfalls or the Fane "
+        "of the Founders; lacking the original spirit's nature, they are "
+        "unknowable to him. He craves revenge on those who bound the old spirit "
+        "and wants to be whole again, so he seeks Durenmar's destruction: were "
+        "it to fall, the rite of the Fane would lapse and the bound spirit would "
+        "be his to dominate and absorb. The raid of 1085 was his, and its "
+        "captives never returned; the Black Fir at Durenmar is his centuries-long "
+        "plan.",
         **RUMOURED,
     )
     _add(
@@ -715,29 +705,27 @@ def _black_forest(rhine: Rhine) -> None:
         inside=forest,
         aura=6,
         tethers="The twelve-sided stone slab and the spirit bound in it",
-        summary=secrets(
-            "A quiet glade not far from Durenmar, its whereabouts hidden by powerful "
-            "magic, with a twelve-sided stone slab at its centre and a Magic aura of "
-            "6. Here the Oath of the Founders was composed and sworn, and every seven "
-            "years during the Rhine Tribunal twelve magi, one of each House, come "
-            "secretly to renew the Founders' vows in a rite believed to preserve the "
-            "Order; they leave with vis as their reward, and the place encourages "
-            "clear and calm thought. Only the Primi and their chosen know it exists, "
-            "though most Durenmar magi know of it, and all who have sought it have "
-            "failed. It is older than the Order: many truces were made here, among "
-            "them one between Germanic chiefs and a Roman general that fixed the "
-            "Empire's northern limit. The rite was skipped only at the Tribunals of "
-            "997, 1004 and 1011 and resumed in 1018 with an Ex Miscellanea magus in "
-            "Diedne's place. Rumour says the attendees met Hermes himself, or a "
-            "powerful faerie posing as him who extracted a terrible service from the "
-            "Founders.",
-            "The Fane is an artefact into which the Cult of Mercury bound much of the "
-            "Black Forest's original magical essence by a great ritual. It behaves as "
-            "a spirit of Magic Might 60 with limited forest powers: it produces vis, "
-            "shrouds, swears oaths and grants clear thought for a time. The rite "
-            "must be renewed regularly or the spirit escapes the stone, which the "
-            "King of the Black Mountain hopes for so that he may seize it.",
-        ),
+        summary="A quiet glade not far from Durenmar, its whereabouts hidden by powerful "
+        "magic, with a twelve-sided stone slab at its centre and a Magic aura of "
+        "6. Here the Oath of the Founders was composed and sworn, and every seven "
+        "years during the Rhine Tribunal twelve magi, one of each House, come "
+        "secretly to renew the Founders' vows in a rite believed to preserve the "
+        "Order; they leave with vis as their reward, and the place encourages "
+        "clear and calm thought. Only the Primi and their chosen know it exists, "
+        "though most Durenmar magi know of it, and all who have sought it have "
+        "failed. It is older than the Order: many truces were made here, among "
+        "them one between Germanic chiefs and a Roman general that fixed the "
+        "Empire's northern limit. The rite was skipped only at the Tribunals of "
+        "997, 1004 and 1011 and resumed in 1018 with an Ex Miscellanea magus in "
+        "Diedne's place. Rumour says the attendees met Hermes himself, or a "
+        "powerful faerie posing as him who extracted a terrible service from the "
+        "Founders.",
+        secrets="The Fane is an artefact into which the Cult of Mercury bound much of the "
+        "Black Forest's original magical essence by a great ritual. It behaves as "
+        "a spirit of Magic Might 60 with limited forest powers: it produces vis, "
+        "shrouds, swears oaths and grants clear thought for a time. The rite "
+        "must be renewed regularly or the spirit escapes the stone, which the "
+        "King of the Black Mountain hopes for so that he may seize it.",
         **RUMOURED,
     )
     _add(
@@ -887,17 +875,15 @@ def _lowlands(rhine: Rhine) -> None:
         "pirates_graveyards",
         "The Pirates' Graveyards",
         inside=region,
-        summary=secrets(
-            "Dozens of graves marked with standing stones and boulders on a low "
-            "ridge some fifty feet above the swamp in Drenthe, a couple of dozen "
-            "miles up the river Ems from its estuary; they are the only stones in "
-            "Friesland. The pirates of Frisia, Waddenzee's among them, bury their "
-            "dead here, and the place is haunted. Lucas von Beck of Waddenzee takes "
-            "vis and corpses from it for his necromancy. The aura is not given and "
-            "its realm is uncertain.",
-            "The power here may be Infernal rather than Magic; Lucas has barely "
-            "considered it.",
-        ),
+        summary="Dozens of graves marked with standing stones and boulders on a low "
+        "ridge some fifty feet above the swamp in Drenthe, a couple of dozen "
+        "miles up the river Ems from its estuary; they are the only stones in "
+        "Friesland. The pirates of Frisia, Waddenzee's among them, bury their "
+        "dead here, and the place is haunted. Lucas von Beck of Waddenzee takes "
+        "vis and corpses from it for his necromancy. The aura is not given and "
+        "its realm is uncertain.",
+        secrets="The power here may be Infernal rather than Magic; Lucas has barely "
+        "considered it.",
         **RUMOURED,
     )
     _add(
@@ -1271,17 +1257,15 @@ def _central(rhine: Rhine) -> None:
         "The Bears' Cave",
         inside=harz,
         aura=3,
-        summary=secrets(
-            "A hidden primeval cave on the slopes of the northern Harz with a Magic "
-            "aura of 3, its floor strewn with the arranged bones, teeth and scraps of "
-            "hide of bears far larger and fiercer than any known today, which can be "
-            "harvested for Animal vis (amount not given).",
-            "The cave is the secret retreat and private vis source of an ancient "
-            "line of bear-heartbeast Bjornaer descending from the Founder herself, "
-            "whose two living members are Archmage Urgen of Crintera and his filia "
-            "Odorpes of Fengheld's Lusatia chapter. Each visits now and then and "
-            "would be furious to find anyone else harvesting their vis.",
-        ),
+        summary="A hidden primeval cave on the slopes of the northern Harz with a Magic "
+        "aura of 3, its floor strewn with the arranged bones, teeth and scraps of "
+        "hide of bears far larger and fiercer than any known today, which can be "
+        "harvested for Animal vis (amount not given).",
+        secrets="The cave is the secret retreat and private vis source of an ancient "
+        "line of bear-heartbeast Bjornaer descending from the Founder herself, "
+        "whose two living members are Archmage Urgen of Crintera and his filia "
+        "Odorpes of Fengheld's Lusatia chapter. Each visits now and then and "
+        "would be furious to find anyone else harvesting their vis.",
         **RUMOURED,
     )
     kyffhauser = _add(
@@ -1526,23 +1510,21 @@ def _central(rhine: Rhine) -> None:
         "The Linden of Neustadt",
         inside=region,
         tethers="The great lime tree in the town",
-        summary=secrets(
-            "The great lime tree of Neustadt an der grossen Linden in Franconia, "
-            "whose spirit (Magic, Might 30; Protective +6), uniquely among forest "
-            "spirits, has adopted the people of the town as the inhabitants of its "
-            "realm; it grants victory, berserk fury and toughness to the town's "
-            "defenders. Having a town for its heart has weakened the spirit, but the "
-            "townsfolk have become very reluctant to clear or exploit the woods. "
-            "During a siege the tree's wide branches were ruined and were afterwards "
-            "propped on stone columns and monuments carved with the arms of the "
-            "princes and nobles who fought there. The prophecy says that when the "
-            "tree dies the town loses its freedom; though an important trading post, "
-            "Neustadt has resisted growth and stays a quiet backwater. A magpie has "
-            "nested in the Linden and is slowly killing it, and every attempt to "
-            "drive it off has failed. The aura is not given.",
-            "The magpie is a Bjornaer magus in heartbeast form. What has he foreseen "
-            "that makes him destroy the tree?",
-        ),
+        summary="The great lime tree of Neustadt an der grossen Linden in Franconia, "
+        "whose spirit (Magic, Might 30; Protective +6), uniquely among forest "
+        "spirits, has adopted the people of the town as the inhabitants of its "
+        "realm; it grants victory, berserk fury and toughness to the town's "
+        "defenders. Having a town for its heart has weakened the spirit, but the "
+        "townsfolk have become very reluctant to clear or exploit the woods. "
+        "During a siege the tree's wide branches were ruined and were afterwards "
+        "propped on stone columns and monuments carved with the arms of the "
+        "princes and nobles who fought there. The prophecy says that when the "
+        "tree dies the town loses its freedom; though an important trading post, "
+        "Neustadt has resisted growth and stays a quiet backwater. A magpie has "
+        "nested in the Linden and is slowly killing it, and every attempt to "
+        "drive it off has failed. The aura is not given.",
+        secrets="The magpie is a Bjornaer magus in heartbeast form. What has he foreseen "
+        "that makes him destroy the tree?",
         **KNOWN_REGION,
     )
     _add(
@@ -1551,23 +1533,21 @@ def _central(rhine: Rhine) -> None:
         "The Harberg and the Drudenbaum",
         inside=region,
         tethers="Whichever tree of the Harberg Forest the spirit possesses",
-        summary=secrets(
-            "The Harberg mountain and its forest overlook Nuremberg, and legend puts "
-            "on its top a tree called the Drudenbaum, so named because wizards meet "
-            "beneath it. Its glossy leaves shed golden drops now and then, milk oozes "
-            "from its roots, a dragon guards a treasure under it, and a great black "
-            "bird perched in its crown claps its wings to raise a storm whenever "
-            "someone tries to take the treasure; whoever drinks a cup of the golden "
-            "liquid becomes a sorcerer. The golden drops are Creo vis and the milk "
-            "Vim vis (amounts not given). The spirit (Magic, Might 30; Mysterious +3) "
-            "grants magic sensitivity and second sight and possesses. Magi, hedge "
-            "wizards and stranger beasts all hunt the tree. The aura is not given.",
-            "The dragon and the treasure are myth; the rest is true. The Drudenbaum "
-            "is no real species: when the spirit possesses any tree of its domain, "
-            "that tree takes on the Drudenbaum's look and vis for a time, and the "
-            "black bird settling in its topmost branches marks the possession, so the "
-            "tree keeps moving about the Harberg Forest.",
-        ),
+        summary="The Harberg mountain and its forest overlook Nuremberg, and legend puts "
+        "on its top a tree called the Drudenbaum, so named because wizards meet "
+        "beneath it. Its glossy leaves shed golden drops now and then, milk oozes "
+        "from its roots, a dragon guards a treasure under it, and a great black "
+        "bird perched in its crown claps its wings to raise a storm whenever "
+        "someone tries to take the treasure; whoever drinks a cup of the golden "
+        "liquid becomes a sorcerer. The golden drops are Creo vis and the milk "
+        "Vim vis (amounts not given). The spirit (Magic, Might 30; Mysterious +3) "
+        "grants magic sensitivity and second sight and possesses. Magi, hedge "
+        "wizards and stranger beasts all hunt the tree. The aura is not given.",
+        secrets="The dragon and the treasure are myth; the rest is true. The Drudenbaum "
+        "is no real species: when the spirit possesses any tree of its domain, "
+        "that tree takes on the Drudenbaum's look and vis for a time, and the "
+        "black bird settling in its topmost branches marks the possession, so the "
+        "tree keeps moving about the Harberg Forest.",
         **RUMOURED,
     )
     _add(
@@ -1691,23 +1671,21 @@ def _east(rhine: Rhine) -> None:
                 ),
             ),
         ],
-        summary=secrets(
-            "Deep in the Stubnitz Forest on the Jasmund peninsula of Rügen, five "
-            "miles from Sagard, a Magic regio of four levels with auras of 1, 3, 5 "
-            "and 8 holds Crintera, the domus magna of House Bjornaer; the mundane "
-            "level looks like virgin forest and its aura is not given. The forest is "
-            "strongly aligned to the Animal Powers, the entities who ruled here "
-            "before the Bjornaer came, and religion of any kind is banned inside the "
-            "regio in their honour. One route, the Watching Path, leads through "
-            "Stubnitz; its start is marked by two mossy, crumbling stones in a glade "
-            "near the forest's edge, known to Redcaps and Bjornaer, and every visitor "
-            "is watched by covenfolk and animal allies. Every visitor, magus or "
-            "mundane, should be given a heartbeast that fits his character before he "
-            "crosses the boundaries. Locals shun the forest with tales of animal "
-            "attacks, shadow-monsters and witches, which the covenant encourages.",
-            "The pristine look of Stubnitz is a deception; the forest is full of "
-            "hidden covenfolk settlements.",
-        ),
+        summary="Deep in the Stubnitz Forest on the Jasmund peninsula of Rügen, five "
+        "miles from Sagard, a Magic regio of four levels with auras of 1, 3, 5 "
+        "and 8 holds Crintera, the domus magna of House Bjornaer; the mundane "
+        "level looks like virgin forest and its aura is not given. The forest is "
+        "strongly aligned to the Animal Powers, the entities who ruled here "
+        "before the Bjornaer came, and religion of any kind is banned inside the "
+        "regio in their honour. One route, the Watching Path, leads through "
+        "Stubnitz; its start is marked by two mossy, crumbling stones in a glade "
+        "near the forest's edge, known to Redcaps and Bjornaer, and every visitor "
+        "is watched by covenfolk and animal allies. Every visitor, magus or "
+        "mundane, should be given a heartbeast that fits his character before he "
+        "crosses the boundaries. Locals shun the forest with tales of animal "
+        "attacks, shadow-monsters and witches, which the covenant encourages.",
+        secrets="The pristine look of Stubnitz is a deception; the forest is full of "
+        "hidden covenfolk settlements.",
         **KNOWN_ORDER,
     )
     _add(
@@ -1718,29 +1696,27 @@ def _east(rhine: Rhine) -> None:
         realm="Faerie",
         aura=2,
         tethers="Centuries of worship of Svantovit, now fading",
-        summary=secrets(
-            "The ruined Slavic fortress-temple on the cliffs of Kap Arkona, the "
-            "northernmost point of Rügen on the Wittow peninsula, once among the "
-            "holiest pagan sites of the Baltic and dedicated to the four-faced sun "
-            "and war god Svantovit (Faerie, Might not given), who opposes the Queen "
-            "of Winter (realm and Might not given). Bishop Absolon of Roskilde "
-            "destroyed it in 1169, and a Faerie aura of 2 remains of centuries of "
-            "worship. Each early spring Falke, Prima of Bjornaer, and the magi of "
-            "Crintera cast the ritual that thaws the Baltic here, Appease the Queen "
-            "of Winter, with a bonus of 10 to the Casting Total from the god's "
-            "presence; she learned it with help from the volkhvy of Arkona and a lab "
-            "text at Crintera. Two priests of Svantovit remain, a very old man "
-            "trying to pass on all he knows and his grandson, who has seen no power "
-            "and follows only from family duty, scraping a living on Wittow. A white "
-            "horse, of which the Danes have left none on the island, is needed for "
-            "the Great Ritual to the god; whoever brought one might rekindle the old "
-            "priest's link to Svantovit and make a zealous pagan messiah of the "
-            "grandson.",
-            "The two priests have laboriously moved the surviving upper half of "
-            "Svantovit's statue from Arkona into a well-hidden shrine: four faces "
-            "looking four ways, a bull's horn in its right hand and the god's huge "
-            "sword laid before it; looters took the jewelled saddle and bridle.",
-        ),
+        summary="The ruined Slavic fortress-temple on the cliffs of Kap Arkona, the "
+        "northernmost point of Rügen on the Wittow peninsula, once among the "
+        "holiest pagan sites of the Baltic and dedicated to the four-faced sun "
+        "and war god Svantovit (Faerie, Might not given), who opposes the Queen "
+        "of Winter (realm and Might not given). Bishop Absolon of Roskilde "
+        "destroyed it in 1169, and a Faerie aura of 2 remains of centuries of "
+        "worship. Each early spring Falke, Prima of Bjornaer, and the magi of "
+        "Crintera cast the ritual that thaws the Baltic here, Appease the Queen "
+        "of Winter, with a bonus of 10 to the Casting Total from the god's "
+        "presence; she learned it with help from the volkhvy of Arkona and a lab "
+        "text at Crintera. Two priests of Svantovit remain, a very old man "
+        "trying to pass on all he knows and his grandson, who has seen no power "
+        "and follows only from family duty, scraping a living on Wittow. A white "
+        "horse, of which the Danes have left none on the island, is needed for "
+        "the Great Ritual to the god; whoever brought one might rekindle the old "
+        "priest's link to Svantovit and make a zealous pagan messiah of the "
+        "grandson.",
+        secrets="The two priests have laboriously moved the surviving upper half of "
+        "Svantovit's statue from Arkona into a well-hidden shrine: four faces "
+        "looking four ways, a bull's horn in its right hand and the god's huge "
+        "sword laid before it; looters took the jewelled saddle and bridle.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -1795,20 +1771,18 @@ def _east(rhine: Rhine) -> None:
         inside=rugen,
         realm="Faerie",
         tethers="The great barrow under the oak",
-        summary=secrets(
-            "The Goats' Stones, a cluster of ancient graves and megaliths in the "
-            "woodland near the Mönchgut peninsula, the most prominent a barrow of two "
-            "great slabs on uprights beneath a giant oak. The volkhvy of the Forest "
-            "Brothers bury devout believers here; the great barrow itself is empty. "
-            "Only a volkhv can open the gate it holds, and they often let Bjornaer "
-            "magi use it because of Crintera's friendship, which makes it useful for "
-            "contact between the Rhine and Novgorod Tribunals. The aura is not given.",
-            "The barrow is a pre-Hermetic supernatural gateway, one end of a faerie "
-            "trod through a particularly dark and frightening region of Arcadia whose "
-            "far end comes out near the covenant of Pripet Major in the Novgorod "
-            "Tribunal. Nobody at the Russian end can open it, so it works one way "
-            "only.",
-        ),
+        summary="The Goats' Stones, a cluster of ancient graves and megaliths in the "
+        "woodland near the Mönchgut peninsula, the most prominent a barrow of two "
+        "great slabs on uprights beneath a giant oak. The volkhvy of the Forest "
+        "Brothers bury devout believers here; the great barrow itself is empty. "
+        "Only a volkhv can open the gate it holds, and they often let Bjornaer "
+        "magi use it because of Crintera's friendship, which makes it useful for "
+        "contact between the Rhine and Novgorod Tribunals. The aura is not given.",
+        secrets="The barrow is a pre-Hermetic supernatural gateway, one end of a faerie "
+        "trod through a particularly dark and frightening region of Arcadia whose "
+        "far end comes out near the covenant of Pripet Major in the Novgorod "
+        "Tribunal. Nobody at the Russian end can open it, so it works one way "
+        "only.",
         **RUMOURED,
     )
     _add(
@@ -2096,29 +2070,27 @@ def _bohemia(rhine: Rhine) -> None:
                 ),
             ),
         ],
-        summary=secrets(
-            "Beech and oak woodland in the northern Bohemian Forest where it meets "
-            "the Bohemian plain, near the Maddenhofen Woods, with fallow deer, boar, "
-            "lynx and bears common and few wolves, where the domus magna of House "
-            "Merinita hides. The Faerie aura is highly patchy: at least 1 everywhere "
-            "within the boundary, up to 6 where the sancta are sited, and odd spots "
-            "run high (a covered walkway to the kitchens is Faerie 4 along its "
-            "length); some high patches lie in small fragmented regiones with marked "
-            "entrances. The theory is that the scattered aura and regiones are the "
-            "fallout of a vast magical outpouring, the war between Quendalon and "
-            "Myanar. The covenant appears differently to every visitor according to "
-            "expectation, a faerie castle of living wood, a foresters' hamlet, a "
-            "wooded hill with a trilithon over a labyrinth, a gully of caves, and "
-            "those who do not know of it see only open woodland and wander through "
-            "unknowingly; common to every view are an enclosing boundary, one "
-            "gateway, and over it the inscription said to be Merinita's last words "
-            "before she vanished in 785. Pieces taken out of the aura turn to dust, "
-            "dry leaves and twigs at sunrise or sunset, and no usable map can be "
-            "made. The surrounding land is kept wild by the covenant's meddling.",
-            "Irencillia was never Merinita's home. Her true first domus magna, the "
-            "temple of Diana of which she was the last Roman priestess, is lost and "
-            "its name forgotten.",
-        ),
+        summary="Beech and oak woodland in the northern Bohemian Forest where it meets "
+        "the Bohemian plain, near the Maddenhofen Woods, with fallow deer, boar, "
+        "lynx and bears common and few wolves, where the domus magna of House "
+        "Merinita hides. The Faerie aura is highly patchy: at least 1 everywhere "
+        "within the boundary, up to 6 where the sancta are sited, and odd spots "
+        "run high (a covered walkway to the kitchens is Faerie 4 along its "
+        "length); some high patches lie in small fragmented regiones with marked "
+        "entrances. The theory is that the scattered aura and regiones are the "
+        "fallout of a vast magical outpouring, the war between Quendalon and "
+        "Myanar. The covenant appears differently to every visitor according to "
+        "expectation, a faerie castle of living wood, a foresters' hamlet, a "
+        "wooded hill with a trilithon over a labyrinth, a gully of caves, and "
+        "those who do not know of it see only open woodland and wander through "
+        "unknowingly; common to every view are an enclosing boundary, one "
+        "gateway, and over it the inscription said to be Merinita's last words "
+        "before she vanished in 785. Pieces taken out of the aura turn to dust, "
+        "dry leaves and twigs at sunrise or sunset, and no usable map can be "
+        "made. The surrounding land is kept wild by the covenant's meddling.",
+        secrets="Irencillia was never Merinita's home. Her true first domus magna, the "
+        "temple of Diana of which she was the last Roman priestess, is lost and "
+        "its name forgotten.",
         **KNOWN_ORDER,
     )
     _add(
@@ -2179,15 +2151,13 @@ def _bohemia(rhine: Rhine) -> None:
         "The valley of Roznov",
         inside=moravia,
         aura=4,
-        summary=secrets(
-            "A valley at the edge of the Carpathians on the Hungarian border in the "
-            "extreme east of Moravia, under Mount Radhost, whose summit stands 3,700 "
-            "feet high; a Magic aura of 4 covers the whole valley. A fort and village "
-            "at the foot of the mountain control the single pass and trail up, and "
-            "two-thirds of the way up a small twin-towered castle inside a curtain "
-            "wall can be seen only from its own valley.",
-            "Castle and fort are linked by tunnels through the mountain.",
-        ),
+        summary="A valley at the edge of the Carpathians on the Hungarian border in the "
+        "extreme east of Moravia, under Mount Radhost, whose summit stands 3,700 "
+        "feet high; a Magic aura of 4 covers the whole valley. A fort and village "
+        "at the foot of the mountain control the single pass and trail up, and "
+        "two-thirds of the way up a small twin-towered castle inside a curtain "
+        "wall can be seen only from its own valley.",
+        secrets="Castle and fort are linked by tunnels through the mountain.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -2197,19 +2167,17 @@ def _bohemia(rhine: Rhine) -> None:
         inside=roznov,
         aura=6,
         tethers="Radegast, whose sacred mountain this has always been",
-        summary=secrets(
-            "A crude stone temple on the summit of Mount Radhost with a Magic aura of "
-            "6. The mountain has always been sacred to Radegast, the Slavic god of "
-            "chieftainship and war, fertility and harvest, and every summer solstice "
-            "the whole covenant of Roznov and its village climb to celebrate him here "
-            "with orgiastic drinking and debauchery, from which dozens of pawns of "
-            "vis are harvested.",
-            "A few celebrants are quietly seized each year and sacrificed inside the "
-            "temple, seen only by the high priest Igor Rastvan's most loyal servants; "
-            "the victims usually come from the covenant's slaves, their blood yields "
-            "Corpus vis and fuels the harvest. It is never discussed, though most "
-            "covenfolk guess why people vanish each summer, and some supernatural "
-            "agency seems to keep it secret from the Tremere of the fort.",
-        ),
+        summary="A crude stone temple on the summit of Mount Radhost with a Magic aura of "
+        "6. The mountain has always been sacred to Radegast, the Slavic god of "
+        "chieftainship and war, fertility and harvest, and every summer solstice "
+        "the whole covenant of Roznov and its village climb to celebrate him here "
+        "with orgiastic drinking and debauchery, from which dozens of pawns of "
+        "vis are harvested.",
+        secrets="A few celebrants are quietly seized each year and sacrificed inside the "
+        "temple, seen only by the high priest Igor Rastvan's most loyal servants; "
+        "the victims usually come from the covenant's slaves, their blood yields "
+        "Corpus vis and fuels the harvest. It is never discussed, though most "
+        "covenfolk guess why people vanish each summer, and some supernatural "
+        "agency seems to keep it secret from the Tremere of the fort.",
         **KNOWN_LOCALLY,
     )

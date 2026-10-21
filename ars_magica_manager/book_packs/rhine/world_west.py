@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 
 if TYPE_CHECKING:
     from . import Rhine
@@ -850,14 +850,12 @@ def _factions(b: Builder, w, valley, forest) -> None:
         faction="Other",
         realm="Magic",
         wants="To channel the forests' primal magic and complete the great work Bonisagus began.",
-        summary=secrets(
-            "A rumour from Causabon's journal: that a remaining few who follow "
-            "Hercynius are working to channel the primal magic of the forests and "
-            "finish the opus maximum of Bonisagus, who believed that Hermetic magic "
-            "was only the beginning of it.",
-            "The lineage's existence and purpose are rumour only; the book "
-            "confirms nothing.",
-        ),
+        summary="A rumour from Causabon's journal: that a remaining few who follow "
+        "Hercynius are working to channel the primal magic of the forests and "
+        "finish the opus maximum of Bonisagus, who believed that Hermetic magic "
+        "was only the beginning of it.",
+        secrets="The lineage's existence and purpose are rumour only; the book "
+        "confirms nothing.",
     )
     w["hedge_wizards_of_the_paths"] = b.faction(
         "Hedge wizards of the forest paths",
@@ -900,25 +898,23 @@ def _factions(b: Builder, w, valley, forest) -> None:
             "free of the Church."
         ),
         offers="Indulgence without sin, and for fanatics a claimed immunity to fire and torture.",
-        summary=secrets(
-            paragraphs(
-                "A heretical pantheist cult born of Paris theologians at the start "
-                "of the thirteenth century, from David of Dinant's teaching that "
-                "God, matter and mind are one substance; it has spread in secret to "
-                "Cologne and the country round it, among commoners and among nobles "
-                "who want lordship free of the Church. Since all is God, nothing is "
-                "sin: the Brethren hold naked masses to recreate Eden and indulge "
-                "in licence and crime, and their fanatics claim that fire and "
-                "torture cannot harm them. They herald a new age of the Holy "
-                "Spirit.",
-                "The Holy Vehm of Saxony counts them mortal enemies, hunts them and "
-                "means to prove their claims false.",
-            ),
-            "An option for the saga: the magi of Fengheld's Cologne chapter house, "
-            "all of the Apple Gild, may lead the Brethren, and a part of the cult "
-            "may be a Mystery Cult of Rhine and Normandy magi; the creed suits the "
-            "Apple Gild's aim of winning mundane acceptance of magic.",
+        summary=paragraphs(
+            "A heretical pantheist cult born of Paris theologians at the start "
+            "of the thirteenth century, from David of Dinant's teaching that "
+            "God, matter and mind are one substance; it has spread in secret to "
+            "Cologne and the country round it, among commoners and among nobles "
+            "who want lordship free of the Church. Since all is God, nothing is "
+            "sin: the Brethren hold naked masses to recreate Eden and indulge "
+            "in licence and crime, and their fanatics claim that fire and "
+            "torture cannot harm them. They herald a new age of the Holy "
+            "Spirit.",
+            "The Holy Vehm of Saxony counts them mortal enemies, hunts them and "
+            "means to prove their claims false.",
         ),
+        secrets="An option for the saga: the magi of Fengheld's Cologne chapter house, "
+        "all of the Apple Gild, may lead the Brethren, and a part of the cult "
+        "may be a Mystery Cult of Rhine and Normandy magi; the creed suits the "
+        "Apple Gild's aim of winning mundane acceptance of magic.",
     )
     w["chasidim"] = b.faction(
         "The Chasidim",
@@ -1023,16 +1019,14 @@ def _threats(b: Builder, w, valley, forest, central) -> None:
         antagonist="Schwall of Bjornaer",
         realm="Magic",
         place=valley,
-        summary=secrets(
-            "An elderly Bjornaer of the Hawthorn Gild, once of Rheinstein, lives "
-            "alone at the Rhinefalls. Odd disturbances of the river would be the "
-            "first sign that something is wrong.",
-            "Schwall, a powerful Wilderist hidden in the Rhinefalls regio, means to "
-            "release the imprisoned spirit of the Rhine and merge with it to cheat "
-            "Final Twilight. The floods would devastate shipping, towns and cities "
-            "the length of the river, a breach of the Code the Tribunal would "
-            "answer with a Wizard's March. Magi may hinder him or help him.",
-        ),
+        summary="An elderly Bjornaer of the Hawthorn Gild, once of Rheinstein, lives "
+        "alone at the Rhinefalls. Odd disturbances of the river would be the "
+        "first sign that something is wrong.",
+        secrets="Schwall, a powerful Wilderist hidden in the Rhinefalls regio, means to "
+        "release the imprisoned spirit of the Rhine and merge with it to cheat "
+        "Final Twilight. The floods would devastate shipping, towns and cities "
+        "the length of the river, a breach of the Code the Tribunal would "
+        "answer with a Wizard's March. Magi may hinder him or help him.",
         stages=[
             Builder.stage(
                 "Disturbances on the river",
@@ -1110,13 +1104,11 @@ def _threats(b: Builder, w, valley, forest, central) -> None:
         antagonist="Pulch of Merinita",
         realm="Magic",
         place=central,
-        summary=secrets(
-            "The folk of Thuringia take Pulch, who haunts the Kammerforst and "
-            "punishes wood-thieves and those who harm the trees, for a spirit of "
-            "the forest.",
-            "He is a Merinita magus skirting the edge of the Code; Quaesitores may "
-            "send characters to bring him to account.",
-        ),
+        summary="The folk of Thuringia take Pulch, who haunts the Kammerforst and "
+        "punishes wood-thieves and those who harm the trees, for a spirit of "
+        "the forest.",
+        secrets="He is a Merinita magus skirting the edge of the Code; Quaesitores may "
+        "send characters to bring him to account.",
     )
     w["wild_hunt_and_holzfrau"] = b.threat(
         "The Wild Hunt and the Holzfrau",
@@ -1183,26 +1175,24 @@ def _threats(b: Builder, w, valley, forest, central) -> None:
         position=2,
         realm="Faerie",
         place=forest,
-        summary=secrets(
-            paragraphs(
-                "The Benedictine monastery of St Georgen, founded in 1084 as a small "
-                "daughter house of Hirsau, was the Dominion's deepest incursion into "
-                "the Black Forest and so the greatest threat to its ancient power; "
-                "its bell was carried off to the Seven Waterfalls. The wilderness "
-                "attacked it again and again, it was abandoned more than once and "
-                "always refounded. In 1208 travellers found its buildings and fields "
-                "in ruin, overgrown with strange dark vines in which the twisted "
-                "bodies of the monks hung, their faces frozen in horror.",
-                "The Order suspected Dankmar. The matter was raised at the Tribunal "
-                "of 1214, where Jiphella, Dankmar's only delegate, denied it; the "
-                "deed would be lawful in the letter under the Guardians of the "
-                "Forests ruling, though the Tribunal would never openly approve, and "
-                "with no mundane witnesses there was no breach of the Code. A close "
-                "vote refused an investigation.",
-            ),
-            "Dankmar's part in the destruction is suspected; the book does not "
-            "state it as fact.",
+        summary=paragraphs(
+            "The Benedictine monastery of St Georgen, founded in 1084 as a small "
+            "daughter house of Hirsau, was the Dominion's deepest incursion into "
+            "the Black Forest and so the greatest threat to its ancient power; "
+            "its bell was carried off to the Seven Waterfalls. The wilderness "
+            "attacked it again and again, it was abandoned more than once and "
+            "always refounded. In 1208 travellers found its buildings and fields "
+            "in ruin, overgrown with strange dark vines in which the twisted "
+            "bodies of the monks hung, their faces frozen in horror.",
+            "The Order suspected Dankmar. The matter was raised at the Tribunal "
+            "of 1214, where Jiphella, Dankmar's only delegate, denied it; the "
+            "deed would be lawful in the letter under the Guardians of the "
+            "Forests ruling, though the Tribunal would never openly approve, and "
+            "with no mundane witnesses there was no breach of the Code. A close "
+            "vote refused an investigation.",
         ),
+        secrets="Dankmar's part in the destruction is suspected; the book does not "
+        "state it as fact.",
         stages=[
             Builder.stage(
                 "The monks found dead",

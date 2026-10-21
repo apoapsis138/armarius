@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from ...models import Tribunal
@@ -64,11 +64,9 @@ def _heorot(rhine: Rhine, tribunal: Tribunal) -> None:
             "Mundane relations: not recorded; Zealand is Danish, under King "
             "Valdemar II",
         ),
-        notes=secrets(
-            "",
-            "Oculus Septentrionalis has very likely struck some private bargain "
-            "with Heorot as the price of its sponsorship.",
-        ),
+        notes="",
+        secrets="Oculus Septentrionalis has very likely struck some private bargain "
+        "with Heorot as the price of its sponsorship.",
     )
     rhine.covenants["heorot"] = heorot
 
@@ -234,28 +232,26 @@ def _crintera(rhine: Rhine, tribunal: Tribunal) -> None:
             "Guests: visiting Bjornaer may raise a temporary sanctum on the "
             "third regio level and stay for years",
         ),
-        notes=secrets(
-            "",
-            _lines(
-                "Urgen is widely suspected of driving mundanes from the wild "
-                "with covert animal attacks, and is stepping them up now that "
-                "the Primacy no longer restrains him.",
-                "Stubnitz only looks untouched: the forest hides many "
-                "settlements of covenfolk, concealed by magic.",
-                "The fetishes of the Animal Powers on the fourth level (a "
-                "wooden squirrel on a stump, a stone otter among cattails, a "
-                "rush-woven snake in a hollow boulder, a clay wolf with shell "
-                "teeth, stone birds in willow saplings hung with feathered "
-                "thongs, and one for every other beast, only a few visible "
-                "from any spot) are truly ancient and said to hold primordial "
-                "nature spirits. Touching one's own brings a deep sense of "
-                "connection; anyone who resisted the regio's changes, or "
-                "nears another's fetish, feels compelled to leave it alone. "
-                "Covenfolk leave offerings at the fetish of their heartbeast.",
-                "Bjornaer the Founder was a Pomeranian shapeshifter-witch; the "
-                "werewolves of Pomerania count her a traitor who sold their "
-                "secrets to the Roman priests.",
-            ),
+        notes="",
+        secrets=_lines(
+            "Urgen is widely suspected of driving mundanes from the wild "
+            "with covert animal attacks, and is stepping them up now that "
+            "the Primacy no longer restrains him.",
+            "Stubnitz only looks untouched: the forest hides many "
+            "settlements of covenfolk, concealed by magic.",
+            "The fetishes of the Animal Powers on the fourth level (a "
+            "wooden squirrel on a stump, a stone otter among cattails, a "
+            "rush-woven snake in a hollow boulder, a clay wolf with shell "
+            "teeth, stone birds in willow saplings hung with feathered "
+            "thongs, and one for every other beast, only a few visible "
+            "from any spot) are truly ancient and said to hold primordial "
+            "nature spirits. Touching one's own brings a deep sense of "
+            "connection; anyone who resisted the regio's changes, or "
+            "nears another's fetish, feels compelled to leave it alone. "
+            "Covenfolk leave offerings at the fetish of their heartbeast.",
+            "Bjornaer the Founder was a Pomeranian shapeshifter-witch; the "
+            "werewolves of Pomerania count her a traitor who sold their "
+            "secrets to the Roman priests.",
         ),
     )
     rhine.covenants["crintera"] = crintera
@@ -525,21 +521,19 @@ def _irencillia(rhine: Rhine, tribunal: Tribunal) -> None:
             "Mundane relations: deliberately none; wanderers are shunned, and "
             "the only indirect tie is the God of Truth in the nearby villages",
         ),
-        notes=secrets(
-            "",
-            _lines(
-                "Irencillia was not Merinita's home; the true first domus "
-                "magna, her temple of Diana, is lost and its name forgotten.",
-                "A caricature's Might grows over time to a cap set by its "
-                "magus's standing at Irencillia, in politics or in faerie "
-                "understanding rather than raw power; a magus who takes on "
-                "his caricature's manner grows hard to tell from it, and the "
-                "two become Arcane Connections to each other.",
-                "The Prophet Iacob of the God of Truth is Iacob filius "
-                "Handri, carrying out the Primus's secret plan to found a "
-                "religion in the name of the fae; the Quaesitors would be "
-                "appalled.",
-            ),
+        notes="",
+        secrets=_lines(
+            "Irencillia was not Merinita's home; the true first domus "
+            "magna, her temple of Diana, is lost and its name forgotten.",
+            "A caricature's Might grows over time to a cap set by its "
+            "magus's standing at Irencillia, in politics or in faerie "
+            "understanding rather than raw power; a magus who takes on "
+            "his caricature's manner grows hard to tell from it, and the "
+            "two become Arcane Connections to each other.",
+            "The Prophet Iacob of the God of Truth is Iacob filius "
+            "Handri, carrying out the Primus's secret plan to found a "
+            "religion in the name of the fae; the Quaesitors would be "
+            "appalled.",
         ),
     )
     rhine.covenants["irencillia"] = irencillia
@@ -549,22 +543,20 @@ def _irencillia(rhine: Rhine, tribunal: Tribunal) -> None:
         covenant=irencillia,
         house="house_merinita",
         age=81,
-        summary=secrets(
-            paragraphs(
-                "Master of House Merinita and its Primus, who shares his plans "
-                "with only a few trusted advisers.",
-                "Where his predecessor Vinaria talked politics with the other "
-                "Primi, he gives himself to long private embassies into faerie "
-                "lands, and is rumoured to have met survivors of House Diedne. "
-                "Nobody admits to seeing him cast anything but the signature "
-                "spell that earned him his Mastery; a magus for some sixty "
-                "years, he trained Iacob and Beechleaf of Fengheld and seems "
-                "never to have sought Archmage status. His caricature is "
-                "Rosmert, the imperious Queen of Irencillia's fae.",
-            ),
-            "He conceived the scheme for a faerie religion on becoming Primus. "
-            "He is secretly afraid of Vinaria and lets her do as she pleases.",
+        summary=paragraphs(
+            "Master of House Merinita and its Primus, who shares his plans "
+            "with only a few trusted advisers.",
+            "Where his predecessor Vinaria talked politics with the other "
+            "Primi, he gives himself to long private embassies into faerie "
+            "lands, and is rumoured to have met survivors of House Diedne. "
+            "Nobody admits to seeing him cast anything but the signature "
+            "spell that earned him his Mastery; a magus for some sixty "
+            "years, he trained Iacob and Beechleaf of Fengheld and seems "
+            "never to have sought Archmage status. His caricature is "
+            "Rosmert, the imperious Queen of Irencillia's fae.",
         ),
+        secrets="He conceived the scheme for a faerie religion on becoming Primus. "
+        "He is secretly afraid of Vinaria and lets her do as she pleases.",
         traits={"Obsessively Secretive": 6, "Indecisive": 1, "Secure in Position": -2},
     )
     rhine.magi["ioannes_acer"] = b.magus(
@@ -593,21 +585,19 @@ def _irencillia(rhine: Rhine, tribunal: Tribunal) -> None:
         covenant=irencillia,
         house="house_merinita",
         age=97,
-        summary=secrets(
-            paragraphs(
-                "Archmaga of House Merinita and its former Prima, who stepped "
-                "down after Handri outmanoeuvred her.",
-                "She is said to have entered Faerie Twilight and returned seven "
-                "years later apparently unchanged. Politically formidable through "
-                "long councils with the other Primi, whose contacts she uses "
-                "skilfully, she is strongest in the raw elemental Arts and always "
-                "dressed in beautiful glamour. Her old caricature, the faerie "
-                "king, passed to Handri, and mysteriously she has acquired no new "
-                "one since her return.",
-            ),
-            "Handri senses a new inner strength in her, fears her and avoids her "
-            "entirely.",
+        summary=paragraphs(
+            "Archmaga of House Merinita and its former Prima, who stepped "
+            "down after Handri outmanoeuvred her.",
+            "She is said to have entered Faerie Twilight and returned seven "
+            "years later apparently unchanged. Politically formidable through "
+            "long councils with the other Primi, whose contacts she uses "
+            "skilfully, she is strongest in the raw elemental Arts and always "
+            "dressed in beautiful glamour. Her old caricature, the faerie "
+            "king, passed to Handri, and mysteriously she has acquired no new "
+            "one since her return.",
         ),
+        secrets="Handri senses a new inner strength in her, fears her and avoids her "
+        "entirely.",
         traits={"Enigmatic": 3, "Self-Assured": 3, "Hostile": -3},
     )
     rhine.magi["glesig"] = b.magus(
@@ -630,20 +620,18 @@ def _irencillia(rhine: Rhine, tribunal: Tribunal) -> None:
         covenant=irencillia,
         house="house_merinita",
         age=43,
-        summary=secrets(
-            paragraphs(
-                "Master of House Merinita, leader of the Elder Gild and, after "
-                "Vinaria, the covenant's most politically active magus.",
-                "A Master of Mentem unusually young, he invents spells that plant "
-                "thoughts and ideas in their targets. Tall, looking barely into "
-                "his thirties, he charms with an almost hypnotic voice. His "
-                "caricature Nestor, a white crow, travels with him.",
-            ),
-            "He runs Handri's secret project to found a religion in the fae's "
-            "name: he is the Prophet Iacob of the God of Truth, known by his "
-            "albino crow. He never shows magic to mundanes, and the Quaesitors "
-            "would be deeply unhappy to learn of it.",
+        summary=paragraphs(
+            "Master of House Merinita, leader of the Elder Gild and, after "
+            "Vinaria, the covenant's most politically active magus.",
+            "A Master of Mentem unusually young, he invents spells that plant "
+            "thoughts and ideas in their targets. Tall, looking barely into "
+            "his thirties, he charms with an almost hypnotic voice. His "
+            "caricature Nestor, a white crow, travels with him.",
         ),
+        secrets="He runs Handri's secret project to found a religion in the fae's "
+        "name: he is the Prophet Iacob of the God of Truth, known by his "
+        "albino crow. He never shows magic to mundanes, and the Quaesitors "
+        "would be deeply unhappy to learn of it.",
         traits={"Independent": 2, "Suspicious": 1, "Talkative": -2},
     )
     rhine.magi["gravis"] = b.magus(
@@ -768,33 +756,31 @@ def _roznov(rhine: Rhine, tribunal: Tribunal) -> None:
             "Transylvania: the Tremere of the Transylvanian Tribunal across the "
             "Hungarian border make their influence felt here",
         ),
-        notes=secrets(
-            "",
-            _lines(
-                "Every summer solstice the whole covenant and village "
-                "celebrate Radegast at the summit temple with orgiastic "
-                "drinking and debauchery, and a few celebrants, usually "
-                "slaves, are quietly seized and sacrificed inside the temple, "
-                "seen only by Igor's most loyal servants. It is never spoken "
-                "of, though most covenfolk guess why people vanish each "
-                "summer. The victims' blood yields Corpus vis and feeds the "
-                "harvest of dozens of pawns. Some supernatural agency seems "
-                "to keep the sacrifices secret.",
-                "The Tremere of the Fort know nothing of the festival's true "
-                "nature and, unusually for their House, neither discourage "
-                "nor disapprove of the paganism; or, at the storyguide's "
-                "choice, they know and hold their tongues for a hidden "
-                "reason.",
-                "Roznov Castle, a small twin-towered castle inside a curtain "
-                "wall two-thirds of the way up Mount Radhost and visible only "
-                "from its own valley, and Roznov Fort, the fort and village "
-                "at the foot that command the single pass, are joined by "
-                "tunnels through the mountain.",
-                "Ladislaus uses Magic Sensitivity at the Prague market to pick "
-                "out Gifted children among the slaves, who go to Coeris, the "
-                "Tremere domus magna in Transylvania; the rest are traded or "
-                "put to work at Roznov.",
-            ),
+        notes="",
+        secrets=_lines(
+            "Every summer solstice the whole covenant and village "
+            "celebrate Radegast at the summit temple with orgiastic "
+            "drinking and debauchery, and a few celebrants, usually "
+            "slaves, are quietly seized and sacrificed inside the temple, "
+            "seen only by Igor's most loyal servants. It is never spoken "
+            "of, though most covenfolk guess why people vanish each "
+            "summer. The victims' blood yields Corpus vis and feeds the "
+            "harvest of dozens of pawns. Some supernatural agency seems "
+            "to keep the sacrifices secret.",
+            "The Tremere of the Fort know nothing of the festival's true "
+            "nature and, unusually for their House, neither discourage "
+            "nor disapprove of the paganism; or, at the storyguide's "
+            "choice, they know and hold their tongues for a hidden "
+            "reason.",
+            "Roznov Castle, a small twin-towered castle inside a curtain "
+            "wall two-thirds of the way up Mount Radhost and visible only "
+            "from its own valley, and Roznov Fort, the fort and village "
+            "at the foot that command the single pass, are joined by "
+            "tunnels through the mountain.",
+            "Ladislaus uses Magic Sensitivity at the Prague market to pick "
+            "out Gifted children among the slaves, who go to Coeris, the "
+            "Tremere domus magna in Transylvania; the rest are traded or "
+            "put to work at Roznov.",
         ),
     )
     rhine.covenants["roznov"] = roznov
@@ -843,15 +829,13 @@ def _roznov(rhine: Rhine, tribunal: Tribunal) -> None:
         house="",
         age=None,
         type="companion",
-        summary=secrets(
-            paragraphs(
-                "A trusted companion of Roznov and its buyer at the Prague slave "
-                "market, where he passes for a shady-looking dealer.",
-                "He has Magic Sensitivity.",
-            ),
-            "He uses it to pick out Gifted children among the slaves, who are "
-            "sent to Coeris, the domus magna of House Tremere in the "
-            "Transylvanian Tribunal; the other slaves he buys are traded or put "
-            "to work by Roznov.",
+        summary=paragraphs(
+            "A trusted companion of Roznov and its buyer at the Prague slave "
+            "market, where he passes for a shady-looking dealer.",
+            "He has Magic Sensitivity.",
         ),
+        secrets="He uses it to pick out Gifted children among the slaves, who are "
+        "sent to Coeris, the domus magna of House Tremere in the "
+        "Transylvanian Tribunal; the other slaves he buys are traded or put "
+        "to work by Roznov.",
     )

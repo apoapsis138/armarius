@@ -96,11 +96,12 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "familiar": 65,
     "laboratory": 50,
     "sketch_covenant": 50,
-    "tribunal": 40,
-    "theban_tribunal": 40,
-    "normandy_tribunal": 42,  # one tab more: History
-    "transylvania_tribunal": 40,
-    "hibernia_tribunal": 40,
+    # Each Tribunal's Secrets tab adds its (unbuilt) pane and its tab: 2.
+    "tribunal": 42,
+    "theban_tribunal": 42,
+    "normandy_tribunal": 44,  # one tab more: History
+    "transylvania_tribunal": 42,
+    "hibernia_tribunal": 42,
     "region": 50,
     "neighbour": 40,
     "town": 40,

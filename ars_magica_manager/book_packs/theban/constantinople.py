@@ -25,7 +25,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -39,8 +39,6 @@ JERBITON = "house_jerbiton"
 VERDITIUS = "house_verditius"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -88,92 +86,90 @@ def _region(theban: Theban) -> None:
         theban,
         "constantinople",
         "Constantinople",
-        summary=secrets(
-            paragraphs(
-                "The Queen of Cities: New Rome, raised by Constantine the "
-                "Great on old Byzantium in 330, on a triangle of seven hills "
-                "between the Golden Horn and the Sea of Marmara, and "
-                "enriched by every emperor after him, by none more than "
-                "Justinian. Roman to the bone, it is a city of forums, "
-                "colonnades, baths, palaces, churches and monasteries, and "
-                "it keeps its hippodrome, its senate house, its aqueduct "
-                "and its slave market. In 1220 it is a filthy, dangerous shadow of itself: "
-                "about a third still lies burnt and broken from the siege "
-                "and the fires of 1203 and 1204, its people number fewer "
-                "than 200,000 where Justinian ruled nearly half a million, "
-                "and the rich live wall to wall with the destitute. The "
-                "Latin conquerors have shipped most of its relics and "
-                "treasures west and spend more effort stripping it than "
-                "mending it. Civil order has gone: each of its many peoples "
-                "mistrusts the others and protects itself with street gangs "
-                "or hired soldiers.",
-                "Auras. Every place in the city lies in some aura, and each "
-                "waxes and wanes with the calendar. The old gods' worship "
-                "first left Faerie auras; Constantine's churches spread "
-                "Divine ones that swallowed most of them; the city's many "
-                "massacres, from the Nika riots to the sack of 1204, left "
-                "Infernal patches that the weakened Dominion has not yet "
-                "worn away. Magic auras were always few, most with "
-                "preternatural tethers, and Jerbiton magi kept them alive by "
-                "working magic in them every year; that has stopped since "
-                "the conquest, so they are no longer tended. Most Divine "
-                "auras here are Dominion, centred on an altar and as strong "
-                "as the faithful who worship there, and so weaker than they "
-                "were; the one relic left that could raise an empyreal aura "
-                "is the Crown of Thorns, in the Venetian Quarter. Auras "
-                "spread until they meet one as strong; where two of equal "
-                "strength meet they simply touch, so a single step can lead "
-                "from a Divine aura into an Infernal one.",
-                "The broken wards. Constantine walked the city's bounds "
-                "behind a plough, binding its spirits in a Sol Invictus "
-                "invocation that Justinian later carried out to the new "
-                "walls. Two level 50 effects came of it: God's City lowered "
-                "the Might of every Faerie and Infernal being inside the "
-                "walls by 10 (Penetration 20), and the Walls of the City of "
-                "God gave anyone storming them three extra botch dice. Both "
-                "have lain dead since 1204, when someone took the palladium "
-                "from a sealed vault beneath the Column of Constantine, "
-                "together with other relics. No one knows what the "
-                "palladium looks like, where it is or who took it; put it "
-                "and the relics back and the wards would wake. The great "
-                "riots that shaped the city's history have also ceased "
-                "since the fall, which some think a side effect of the "
-                "bindings.",
-                "The Order. Before the conquest the city held three "
-                "covenants: Thermakopolis was wiped out, Moero's Garden fled "
-                "to Nicaea with the Greek nobility, and Xylinites shut its "
-                "gates. In 1220 two covenants of the Propontian phyle lie "
-                "inside the walls, Michael's Tabula in the catacombs and the "
-                "Criamon Clutch of Xylinites under an orphanage, while "
-                "Passara of Verditius tends the automata of the Magnaura. "
-                "Young Jerbiton magi above all want a covenant replanted in "
-                "the city, and the Tribunal has not decided whether to "
-                "encourage it; the site of Thermakopolis is the obvious "
-                "place. Visiting magi rest and meet at the Baths of "
-                "Zeuxippus.",
-                "Vis in the city (each described in its place): the "
-                "Medusas' Tears in the Basilica Cistern (8 pawns of "
-                "Imaginem at the summer solstice), the Serpent Column in the "
-                "Hippodrome (8 pawns of Animal, by a rite of ram's blood "
-                "that Moero's Garden found), and a few unnamed sources in "
-                "the catacombs that Michael's Tabula has found. The book "
-                "does not say whether any of them is one of the polity's "
-                "common sources.",
-            ),
-            paragraphs(
-                "Three demons have long taken a close interest in the city: "
-                "Golab, called the Seraphim's Foe, with Hulikang and Nike "
-                "under him, who for centuries each ran one of the circus "
-                "factions, the Greens and the Blues, and through them much "
-                "of its politics and trade, despite the wards. Some suspect "
-                "they now drive the 'Frank' and 'Venetian' factions; the "
-                "book leaves it open, and the stilled riots may be their "
-                "doing rather than the wards'.",
-                "The prince of Hell Akgah, who orchestrated the fall, has "
-                "his lair in an Infernal regio about a dozen miles outside "
-                "the walls (see the realms' places), and fought the Hagka "
-                "in the Hippodrome in 1204.",
-            ),
+        summary=paragraphs(
+            "The Queen of Cities: New Rome, raised by Constantine the "
+            "Great on old Byzantium in 330, on a triangle of seven hills "
+            "between the Golden Horn and the Sea of Marmara, and "
+            "enriched by every emperor after him, by none more than "
+            "Justinian. Roman to the bone, it is a city of forums, "
+            "colonnades, baths, palaces, churches and monasteries, and "
+            "it keeps its hippodrome, its senate house, its aqueduct "
+            "and its slave market. In 1220 it is a filthy, dangerous shadow of itself: "
+            "about a third still lies burnt and broken from the siege "
+            "and the fires of 1203 and 1204, its people number fewer "
+            "than 200,000 where Justinian ruled nearly half a million, "
+            "and the rich live wall to wall with the destitute. The "
+            "Latin conquerors have shipped most of its relics and "
+            "treasures west and spend more effort stripping it than "
+            "mending it. Civil order has gone: each of its many peoples "
+            "mistrusts the others and protects itself with street gangs "
+            "or hired soldiers.",
+            "Auras. Every place in the city lies in some aura, and each "
+            "waxes and wanes with the calendar. The old gods' worship "
+            "first left Faerie auras; Constantine's churches spread "
+            "Divine ones that swallowed most of them; the city's many "
+            "massacres, from the Nika riots to the sack of 1204, left "
+            "Infernal patches that the weakened Dominion has not yet "
+            "worn away. Magic auras were always few, most with "
+            "preternatural tethers, and Jerbiton magi kept them alive by "
+            "working magic in them every year; that has stopped since "
+            "the conquest, so they are no longer tended. Most Divine "
+            "auras here are Dominion, centred on an altar and as strong "
+            "as the faithful who worship there, and so weaker than they "
+            "were; the one relic left that could raise an empyreal aura "
+            "is the Crown of Thorns, in the Venetian Quarter. Auras "
+            "spread until they meet one as strong; where two of equal "
+            "strength meet they simply touch, so a single step can lead "
+            "from a Divine aura into an Infernal one.",
+            "The broken wards. Constantine walked the city's bounds "
+            "behind a plough, binding its spirits in a Sol Invictus "
+            "invocation that Justinian later carried out to the new "
+            "walls. Two level 50 effects came of it: God's City lowered "
+            "the Might of every Faerie and Infernal being inside the "
+            "walls by 10 (Penetration 20), and the Walls of the City of "
+            "God gave anyone storming them three extra botch dice. Both "
+            "have lain dead since 1204, when someone took the palladium "
+            "from a sealed vault beneath the Column of Constantine, "
+            "together with other relics. No one knows what the "
+            "palladium looks like, where it is or who took it; put it "
+            "and the relics back and the wards would wake. The great "
+            "riots that shaped the city's history have also ceased "
+            "since the fall, which some think a side effect of the "
+            "bindings.",
+            "The Order. Before the conquest the city held three "
+            "covenants: Thermakopolis was wiped out, Moero's Garden fled "
+            "to Nicaea with the Greek nobility, and Xylinites shut its "
+            "gates. In 1220 two covenants of the Propontian phyle lie "
+            "inside the walls, Michael's Tabula in the catacombs and the "
+            "Criamon Clutch of Xylinites under an orphanage, while "
+            "Passara of Verditius tends the automata of the Magnaura. "
+            "Young Jerbiton magi above all want a covenant replanted in "
+            "the city, and the Tribunal has not decided whether to "
+            "encourage it; the site of Thermakopolis is the obvious "
+            "place. Visiting magi rest and meet at the Baths of "
+            "Zeuxippus.",
+            "Vis in the city (each described in its place): the "
+            "Medusas' Tears in the Basilica Cistern (8 pawns of "
+            "Imaginem at the summer solstice), the Serpent Column in the "
+            "Hippodrome (8 pawns of Animal, by a rite of ram's blood "
+            "that Moero's Garden found), and a few unnamed sources in "
+            "the catacombs that Michael's Tabula has found. The book "
+            "does not say whether any of them is one of the polity's "
+            "common sources.",
+        ),
+        secrets=paragraphs(
+            "Three demons have long taken a close interest in the city: "
+            "Golab, called the Seraphim's Foe, with Hulikang and Nike "
+            "under him, who for centuries each ran one of the circus "
+            "factions, the Greens and the Blues, and through them much "
+            "of its politics and trade, despite the wards. Some suspect "
+            "they now drive the 'Frank' and 'Venetian' factions; the "
+            "book leaves it open, and the stilled riots may be their "
+            "doing rather than the wards'.",
+            "The prince of Hell Akgah, who orchestrated the fall, has "
+            "his lair in an Infernal regio about a dozen miles outside "
+            "the walls (see the realms' places), and fought the Hagka "
+            "in the Hippodrome in 1204.",
         ),
         **KNOWN_ORDER,
     )
@@ -216,37 +212,35 @@ def _approaches(theban: Theban) -> None:
         "theodosian_walls",
         "The Walls of Theodosius",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The land walls, never yet breached, running from the Golden "
-                "Horn to the Sea of Marmara behind a ditch built in sections "
-                "that can be flooded one by one: an outer wall thirty feet "
-                "high and seven thick, a raised terrace (the peribolos), "
-                "then an inner wall forty feet high and some seventeen "
-                "thick, with nearly a hundred towers; the strip between "
-                "ditch and outer wall, the patateichion, is raised too. With "
-                "the sea walls they close the city in completely. Of the ten "
-                "great gates, five serve travellers and five the army, with "
-                "smaller posterns between.",
-                "The Golden Gate, a triumphal arch plated in gold between "
-                "two great copper elephants, opened only for an emperor "
-                "coming home victorious; it last swung open when Alexios V "
-                "Murzuphlus slipped out through it by night after the "
-                "crusaders took the walls. Further north, the gate of the "
-                "Golden Mantle leads to Blachernae; it is crowned by a "
-                "golden globe bearing a figure wrapped in a cloak, and "
-                "legend says lightning will spare the city while the globe "
-                "stays up. Folk think it ancient Greek work.",
-                "Getting in is easy: travellers and traders pass the gates "
-                "by day, and enough hidden ways exist for a small party to "
-                "slip in after dark. Moero's Garden knows a secret passage "
-                "under the walls near the Gate of Pege, which its search "
-                "parties use to come hunting for lost treasures and relics.",
-            ),
-            "The globe of the Golden Mantle may be one of the protective "
-            "enchantments Hermetic magi made for the city, and one that "
-            "failed.",
+        summary=paragraphs(
+            "The land walls, never yet breached, running from the Golden "
+            "Horn to the Sea of Marmara behind a ditch built in sections "
+            "that can be flooded one by one: an outer wall thirty feet "
+            "high and seven thick, a raised terrace (the peribolos), "
+            "then an inner wall forty feet high and some seventeen "
+            "thick, with nearly a hundred towers; the strip between "
+            "ditch and outer wall, the patateichion, is raised too. With "
+            "the sea walls they close the city in completely. Of the ten "
+            "great gates, five serve travellers and five the army, with "
+            "smaller posterns between.",
+            "The Golden Gate, a triumphal arch plated in gold between "
+            "two great copper elephants, opened only for an emperor "
+            "coming home victorious; it last swung open when Alexios V "
+            "Murzuphlus slipped out through it by night after the "
+            "crusaders took the walls. Further north, the gate of the "
+            "Golden Mantle leads to Blachernae; it is crowned by a "
+            "golden globe bearing a figure wrapped in a cloak, and "
+            "legend says lightning will spare the city while the globe "
+            "stays up. Folk think it ancient Greek work.",
+            "Getting in is easy: travellers and traders pass the gates "
+            "by day, and enough hidden ways exist for a small party to "
+            "slip in after dark. Moero's Garden knows a secret passage "
+            "under the walls near the Gate of Pege, which its search "
+            "parties use to come hunting for lost treasures and relics.",
         ),
+        secrets="The globe of the Golden Mantle may be one of the protective "
+        "enchantments Hermetic magi made for the city, and one that "
+        "failed.",
         **KNOWN_REGION,
     )
     _add(
@@ -254,26 +248,24 @@ def _approaches(theban: Theban) -> None:
         "porphyrio",
         "Porphyrio's Lair",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "Somewhere under the waters off the city lies the lair of "
-                "Porphyrio, the giant whale that wrecked ships in harbour "
-                "and along the strait for months until Belisarius, with one "
-                "galley and a hundred sailors, fought it from dawn to "
-                "sunset; bristling with spears and burnt by Greek fire, it "
-                "sank, and was not seen for generations. It still surfaces "
-                "near the city now and then, without pattern, and has never "
-                "attacked a ship since, but its coming foretells disaster: "
-                "it was last sighted in April 1203, a week before the "
-                "Venetian fleet filled the Sea of Marmara.",
-                "Theban magi, especially students of Hermetic divination, "
-                "hold it to be a magical beast with a lair on the sea floor. "
-                "Every search, even with Alexandria's glass submarine, has "
-                "failed, and the current guess is that the lair lies in a "
-                "Magic regio. The book gives the whale no stat block.",
-            ),
-            "",
+        summary=paragraphs(
+            "Somewhere under the waters off the city lies the lair of "
+            "Porphyrio, the giant whale that wrecked ships in harbour "
+            "and along the strait for months until Belisarius, with one "
+            "galley and a hundred sailors, fought it from dawn to "
+            "sunset; bristling with spears and burnt by Greek fire, it "
+            "sank, and was not seen for generations. It still surfaces "
+            "near the city now and then, without pattern, and has never "
+            "attacked a ship since, but its coming foretells disaster: "
+            "it was last sighted in April 1203, a week before the "
+            "Venetian fleet filled the Sea of Marmara.",
+            "Theban magi, especially students of Hermetic divination, "
+            "hold it to be a magical beast with a lair on the sea floor. "
+            "Every search, even with Alexandria's glass submarine, has "
+            "failed, and the current guess is that the lair lies in a "
+            "Magic regio. The book gives the whale no stat block.",
         ),
+        secrets="",
         **RUMOURED_TRIBUNAL,
     )
 
@@ -288,28 +280,26 @@ def _forums_and_waters(theban: Theban) -> None:
         "forum_constantine",
         "The Forum of Constantine",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The most famous of the city's open plazas, on the crown of "
-                "the Second Hill, ringed by colonnades and porticoes at the "
-                "gateway to the imperial quarter. It is one of the great "
-                "daily markets, and its trade includes the slave markets "
-                "and the brothels; the Mese, the colonnaded Middle Way, "
-                "runs through it from the Philadelpheion crossroads on the "
-                "Third Hill down to the palaces, linking every forum of the "
-                "city. Its column carried a statue of Constantine until a "
-                "storm destroyed it, and a cross has stood there since early "
-                "in the twelfth century.",
-                "Beneath the Column of Constantine lies a sealed underground "
-                "vault, now empty, where the palladium at the heart of "
-                "Constantine's wards was kept with other relics: the twelve "
-                "baskets of the feeding of the five thousand, the axe Noah "
-                "built the Ark with, the Magdalene's jar of perfume and the "
-                "crosses of the two thieves. All went missing in 1204.",
-            ),
-            "Whoever restores the palladium and those relics to the vault "
-            "wakes both of the city's wards again.",
+        summary=paragraphs(
+            "The most famous of the city's open plazas, on the crown of "
+            "the Second Hill, ringed by colonnades and porticoes at the "
+            "gateway to the imperial quarter. It is one of the great "
+            "daily markets, and its trade includes the slave markets "
+            "and the brothels; the Mese, the colonnaded Middle Way, "
+            "runs through it from the Philadelpheion crossroads on the "
+            "Third Hill down to the palaces, linking every forum of the "
+            "city. Its column carried a statue of Constantine until a "
+            "storm destroyed it, and a cross has stood there since early "
+            "in the twelfth century.",
+            "Beneath the Column of Constantine lies a sealed underground "
+            "vault, now empty, where the palladium at the heart of "
+            "Constantine's wards was kept with other relics: the twelve "
+            "baskets of the feeding of the five thousand, the axe Noah "
+            "built the Ark with, the Magdalene's jar of perfume and the "
+            "crosses of the two thieves. All went missing in 1204.",
         ),
+        secrets="Whoever restores the palladium and those relics to the vault "
+        "wakes both of the city's wards again.",
         **KNOWN_REGION,
     )
     _add(
@@ -373,30 +363,28 @@ def _forums_and_waters(theban: Theban) -> None:
         "The Venetian Quarter",
         inside=region,
         realm="Divine",
-        summary=secrets(
-            paragraphs(
-                "The home of the Republic of Venice's officials and people in "
-                "the city, walled off from the rest between 1205 and 1207 "
-                "and patrolled by Venetian soldiers, with its own ports on "
-                "the Golden Horn. Inside it is a hive of trade; most feel "
-                "safe, but many Greeks hate the merchants' exemptions, which "
-                "shut them out of the shipping trade, and mistrust runs "
-                "between Venetians, the other crusaders and the Greeks. "
-                "Life is harder for ordinary Venetians than for their "
-                "officials: much of the quarter is still ash and rubble, "
-                "home to armed gangs and bandits, and smugglers prize it as "
-                "the easiest way into the city.",
-                "Here, locked away, lies the Crown of Thorns: the Latin "
-                "emperor's, pledged to the doge against a loan of 13,134 "
-                "Mythic pounds, and never yet taken from the city. Entire, "
-                "the crown has Faith 7 and the saintly powers Cure "
-                "Blindness, Strengthen the Cripple and Mass Healing; each "
-                "of its thorns is a relic in its own right. It is the one "
-                "relic left in Constantinople strong enough to raise an "
-                "empyreal aura.",
-            ),
-            "",
+        summary=paragraphs(
+            "The home of the Republic of Venice's officials and people in "
+            "the city, walled off from the rest between 1205 and 1207 "
+            "and patrolled by Venetian soldiers, with its own ports on "
+            "the Golden Horn. Inside it is a hive of trade; most feel "
+            "safe, but many Greeks hate the merchants' exemptions, which "
+            "shut them out of the shipping trade, and mistrust runs "
+            "between Venetians, the other crusaders and the Greeks. "
+            "Life is harder for ordinary Venetians than for their "
+            "officials: much of the quarter is still ash and rubble, "
+            "home to armed gangs and bandits, and smugglers prize it as "
+            "the easiest way into the city.",
+            "Here, locked away, lies the Crown of Thorns: the Latin "
+            "emperor's, pledged to the doge against a loan of 13,134 "
+            "Mythic pounds, and never yet taken from the city. Entire, "
+            "the crown has Faith 7 and the saintly powers Cure "
+            "Blindness, Strengthen the Cripple and Mass Healing; each "
+            "of its thorns is a relic in its own right. It is the one "
+            "relic left in Constantinople strong enough to raise an "
+            "empyreal aura.",
         ),
+        secrets="",
         **KNOWN_REGION,
     )
     _add(
@@ -429,23 +417,21 @@ def _forums_and_waters(theban: Theban) -> None:
         "julian_library",
         "The Lost Julian Library",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The library Julian the Apostate built late in the fourth "
-                "century, said to have held over 600,000 texts: his own "
-                "books and copies of every learned and literary work his "
-                "scholars could find, with many curiosities, some magical. "
-                "The most famous was the Iliad and the Odyssey written in "
-                "gold on a dragon's gut thirty-seven yards long, which is "
-                "said to make its reader wiser.",
-                "The building is long gone under later ones, and Julian's "
-                "followers hid the collection after his death. Seekers of "
-                "the Tribunal hunt it constantly and turn up lost sections "
-                "now and then; the finest pieces are still hidden, and the "
-                "competition for them is fierce.",
-            ),
-            "",
+        summary=paragraphs(
+            "The library Julian the Apostate built late in the fourth "
+            "century, said to have held over 600,000 texts: his own "
+            "books and copies of every learned and literary work his "
+            "scholars could find, with many curiosities, some magical. "
+            "The most famous was the Iliad and the Odyssey written in "
+            "gold on a dragon's gut thirty-seven yards long, which is "
+            "said to make its reader wiser.",
+            "The building is long gone under later ones, and Julian's "
+            "followers hid the collection after his death. Seekers of "
+            "the Tribunal hunt it constantly and turn up lost sections "
+            "now and then; the finest pieces are still hidden, and the "
+            "competition for them is fierce.",
         ),
+        secrets="",
         **RUMOURED_TRIBUNAL,
     )
     _add(
@@ -453,23 +439,21 @@ def _forums_and_waters(theban: Theban) -> None:
         "moero_old_site",
         "The Old House of Moero's Garden",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The site in the older part of the city that Ionnia of "
-                "Jerbiton identified in 1163 as the home of the poetess "
-                "Moero, of about 300 BC, lying in one of the city's few "
-                "lacunae; there she founded Moero's Garden, with Moero's "
-                "summoned ghost as its patron. The covenant fled to Nicaea "
-                "after the conquest, leaving most of its library and "
-                "collections behind, and its magi long to return.",
-                "Moero's ghost is still bound here, which is why Ionnia had "
-                "to bind Hipparchus as the covenant's patron at Nicaea: the "
-                "Tribunal requires a covenant's patron to live inside it. "
-                "The covenant's search parties slip in through the passage "
-                "near the Gate of Pege.",
-            ),
-            "",
+        summary=paragraphs(
+            "The site in the older part of the city that Ionnia of "
+            "Jerbiton identified in 1163 as the home of the poetess "
+            "Moero, of about 300 BC, lying in one of the city's few "
+            "lacunae; there she founded Moero's Garden, with Moero's "
+            "summoned ghost as its patron. The covenant fled to Nicaea "
+            "after the conquest, leaving most of its library and "
+            "collections behind, and its magi long to return.",
+            "Moero's ghost is still bound here, which is why Ionnia had "
+            "to bind Hipparchus as the covenant's patron at Nicaea: the "
+            "Tribunal requires a covenant's patron to live inside it. "
+            "The covenant's search parties slip in through the passage "
+            "near the Gate of Pege.",
         ),
+        secrets="",
         **KNOWN_TRIBUNAL,
     )
 
@@ -486,52 +470,50 @@ def _hippodrome(theban: Theban) -> None:
         inside=region,
         realm="Divine",
         aura=1,
-        summary=secrets(
-            paragraphs(
-                "The heart of the city, 1,600 feet long and 400 wide, its "
-                "straight northern end joined to the Great Palace and kept "
-                "for the imperial family, its southern end curved; at its "
-                "height it seated 80,000. Jousts have taken the place of "
-                "chariot races, but jugglers, dancers, beast-tamers and "
-                "tumblers still perform, and festivals, holy days and "
-                "imperial ceremonies are held here. The statues that lined "
-                "its arcades, Athena, an eagle on a serpent, Helen of Troy, "
-                "the wolf with Romulus and Remus, a hippopotamus with a "
-                "crocodile in its jaws, are mostly destroyed, torn down for "
-                "their inlaid metal or from spite; townsfolk say many of "
-                "them could move, sing, play music or act out a scene. Down "
-                "the middle runs the spina, the stone pier the chariots "
-                "raced round, with two great monuments left: the Serpent "
-                "Column at the south and the Egyptian Obelisk at the north.",
-                "By day a Dominion aura of 1 surrounds stronger pockets: "
-                "Faerie 2 round the Serpent Column, Magic 2 round the "
-                "obelisk, and Infernal 2 in patches along the old track "
-                "where the Nika fighting was worst and where the Bogomil "
-                "leader Basil was burnt.",
-                "The ghosts of the Nika riots. Justinian lured the rioting "
-                "Greens and Blues into the Hippodrome, and Belisarius cut "
-                "down 30,000 of them. Every 14 January, at night, hundreds "
-                "of Infernal ghosts rise from the ground here crying 'Nika!' "
-                "(Victory). The city's Dominion once held them inside; it "
-                "is weaker now, and they roam the Great Palace and the "
-                "streets.",
-                "The automata of Ollaferus. Almost a third of the "
-                "Hippodrome's statues were once automata by Ollaferus of "
-                "Verditius, a second-generation magus who perfected the "
-                "inner Mystery of automata for Verditius himself; each "
-                "could play out one scene from Roman or Byzantine history "
-                "or legend. Most have been smashed, melted or carried off. "
-                "Verditius magi of the Tribunal want the few left, to "
-                "decorate their workshops rather than to study, and pay "
-                "others to haul half a ton of stone for them: a novice with "
-                "a shard may be offered a token to neutralise it for "
-                "delivering one.",
-            ),
-            "In 1204 the demon Akgah fought the Hagka here among the "
-            "statues; the battle wrecked part of the arena, Akgah won, and "
-            "the wounded Hagka fled. Crusaders who saw it took it for a "
-            "vision of the lion of Venice triumphant.",
+        summary=paragraphs(
+            "The heart of the city, 1,600 feet long and 400 wide, its "
+            "straight northern end joined to the Great Palace and kept "
+            "for the imperial family, its southern end curved; at its "
+            "height it seated 80,000. Jousts have taken the place of "
+            "chariot races, but jugglers, dancers, beast-tamers and "
+            "tumblers still perform, and festivals, holy days and "
+            "imperial ceremonies are held here. The statues that lined "
+            "its arcades, Athena, an eagle on a serpent, Helen of Troy, "
+            "the wolf with Romulus and Remus, a hippopotamus with a "
+            "crocodile in its jaws, are mostly destroyed, torn down for "
+            "their inlaid metal or from spite; townsfolk say many of "
+            "them could move, sing, play music or act out a scene. Down "
+            "the middle runs the spina, the stone pier the chariots "
+            "raced round, with two great monuments left: the Serpent "
+            "Column at the south and the Egyptian Obelisk at the north.",
+            "By day a Dominion aura of 1 surrounds stronger pockets: "
+            "Faerie 2 round the Serpent Column, Magic 2 round the "
+            "obelisk, and Infernal 2 in patches along the old track "
+            "where the Nika fighting was worst and where the Bogomil "
+            "leader Basil was burnt.",
+            "The ghosts of the Nika riots. Justinian lured the rioting "
+            "Greens and Blues into the Hippodrome, and Belisarius cut "
+            "down 30,000 of them. Every 14 January, at night, hundreds "
+            "of Infernal ghosts rise from the ground here crying 'Nika!' "
+            "(Victory). The city's Dominion once held them inside; it "
+            "is weaker now, and they roam the Great Palace and the "
+            "streets.",
+            "The automata of Ollaferus. Almost a third of the "
+            "Hippodrome's statues were once automata by Ollaferus of "
+            "Verditius, a second-generation magus who perfected the "
+            "inner Mystery of automata for Verditius himself; each "
+            "could play out one scene from Roman or Byzantine history "
+            "or legend. Most have been smashed, melted or carried off. "
+            "Verditius magi of the Tribunal want the few left, to "
+            "decorate their workshops rather than to study, and pay "
+            "others to haul half a ton of stone for them: a novice with "
+            "a shard may be offered a token to neutralise it for "
+            "delivering one.",
         ),
+        secrets="In 1204 the demon Akgah fought the Hagka here among the "
+        "statues; the battle wrecked part of the arena, Akgah won, and "
+        "the wounded Hagka fled. Crusaders who saw it took it for a "
+        "vision of the lion of Venice triumphant.",
         **KNOWN_REGION,
     )
     _add(
@@ -655,29 +637,27 @@ def _palaces(theban: Theban) -> None:
         "magnaura",
         "The Palace of Magnaura",
         inside=great,
-        summary=secrets(
-            paragraphs(
-                "A huge palace whose name means 'fresh breeze', with many "
-                "suites and a throne room for receiving honoured guests. Its "
-                "marvels all still work: a golden throne that rises to the "
-                "ceiling at a word, two gilded lions before it that open "
-                "their jaws to roar and lash their tails, and a gilded "
-                "bronze tree whose jewelled birds of precious metal sing. "
-                "While visitors lay prostrate before the emperor, the "
-                "throne rose, the lions roared and the birds sang together.",
-                "The automata were made early in the tenth century by Aella "
-                "of Verditius, a Cretan, who worked closer to the emperors "
-                "than many liked and was charged several times with being a "
-                "court wizard; her husband, Vaanes of Guernicus, defended "
-                "her, and she was never convicted, though she was "
-                "ostracised twice and came back both times to tend her "
-                "works. Her heir in that duty, Passara of Verditius, keeps "
-                "them from decay in 1220 and lives in apartments here given "
-                "to her by the emperor's autocrat.",
-            ),
-            "Whether Passara serves the Latin emperor, as Formosos of "
-            "Guernicus insists, the book leaves to the storyguide.",
+        summary=paragraphs(
+            "A huge palace whose name means 'fresh breeze', with many "
+            "suites and a throne room for receiving honoured guests. Its "
+            "marvels all still work: a golden throne that rises to the "
+            "ceiling at a word, two gilded lions before it that open "
+            "their jaws to roar and lash their tails, and a gilded "
+            "bronze tree whose jewelled birds of precious metal sing. "
+            "While visitors lay prostrate before the emperor, the "
+            "throne rose, the lions roared and the birds sang together.",
+            "The automata were made early in the tenth century by Aella "
+            "of Verditius, a Cretan, who worked closer to the emperors "
+            "than many liked and was charged several times with being a "
+            "court wizard; her husband, Vaanes of Guernicus, defended "
+            "her, and she was never convicted, though she was "
+            "ostracised twice and came back both times to tend her "
+            "works. Her heir in that duty, Passara of Verditius, keeps "
+            "them from decay in 1220 and lives in apartments here given "
+            "to her by the emperor's autocrat.",
         ),
+        secrets="Whether Passara serves the Latin emperor, as Formosos of "
+        "Guernicus insists, the book leaves to the storyguide.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -747,48 +727,46 @@ def _sacred_sites(theban: Theban) -> None:
         inside=region,
         realm="Divine",
         aura=5,
-        summary=secrets(
-            paragraphs(
-                "The Church of the Holy Wisdom, the Great Church: the third "
-                "church on its site and each bigger than the last, a basilica "
-                "whose great dome, 168 feet above the floor and carried on "
-                "columns, makes it seem round; it is the largest cathedral "
-                "in Mythic Europe. It was stripped in the sack: its relics "
-                "taken, its high altar broken up for the gold, its "
-                "chandeliers torn down for the silver, and orgies of lust "
-                "and slaughter in the three days of looting fouled its "
-                "Divine aura. Worse to the Greeks, it has passed from the "
-                "Orthodox to the Latin rite under a Latin patriarch who "
-                "answers to the pope. Emperors are still crowned here, in "
-                "ceremonies little changed from the Greek ones.",
-                "Auras. The rebuilt high altar, a poor copy of the old, "
-                "centres a Dominion aura of 5; the aisles and the outer "
-                "porticoes have a Dominion aura of 2. The nave holds an "
-                "Infernal aura of 7, left by the crusaders' massacre of "
-                "more than a thousand innocents there, and with most of the "
-                "relics gone the Dominion is too weak to wear it down.",
-                "Relics too heavy to carry off still work. The Column of St. "
-                "Gregory the Thaumaturge, one of the dome's supports, gives "
-                "+6 to Recovery rolls and heals a wound one step faster (a "
-                "Heavy Wound in a Medium Wound's time, a Light Wound in a "
-                "day). On one of the nine doors from the narthex into the "
-                "nave hangs a tube: a sick man who sets it to his lips has "
-                "his illness drawn out of him.",
-                "Its architects were Isidore of Miletus and the "
-                "mathematician Anthemius of Tralles, who gathered columns "
-                "from across the empire, those of Ephesus's Temple of "
-                "Artemis among them. They quarrelled, Isidore wanting "
-                "refinements drawn from Heron of Alexandria, and he had his "
-                "way when Anthemius died within the year, of natural "
-                "causes, it was said, though rumour doubted it. Theban "
-                "magi, Catella of Alexandria above all, would like to study "
-                "the building for Heron's ideas: a season of daily study "
-                "would uncover them, and Catella will pay any magus with a "
-                "workable plan in vis and gold for his time and notes.",
-            ),
-            "The insights from Heron are really there in the building's "
-            "fabric, for a magus who spends the season.",
+        summary=paragraphs(
+            "The Church of the Holy Wisdom, the Great Church: the third "
+            "church on its site and each bigger than the last, a basilica "
+            "whose great dome, 168 feet above the floor and carried on "
+            "columns, makes it seem round; it is the largest cathedral "
+            "in Mythic Europe. It was stripped in the sack: its relics "
+            "taken, its high altar broken up for the gold, its "
+            "chandeliers torn down for the silver, and orgies of lust "
+            "and slaughter in the three days of looting fouled its "
+            "Divine aura. Worse to the Greeks, it has passed from the "
+            "Orthodox to the Latin rite under a Latin patriarch who "
+            "answers to the pope. Emperors are still crowned here, in "
+            "ceremonies little changed from the Greek ones.",
+            "Auras. The rebuilt high altar, a poor copy of the old, "
+            "centres a Dominion aura of 5; the aisles and the outer "
+            "porticoes have a Dominion aura of 2. The nave holds an "
+            "Infernal aura of 7, left by the crusaders' massacre of "
+            "more than a thousand innocents there, and with most of the "
+            "relics gone the Dominion is too weak to wear it down.",
+            "Relics too heavy to carry off still work. The Column of St. "
+            "Gregory the Thaumaturge, one of the dome's supports, gives "
+            "+6 to Recovery rolls and heals a wound one step faster (a "
+            "Heavy Wound in a Medium Wound's time, a Light Wound in a "
+            "day). On one of the nine doors from the narthex into the "
+            "nave hangs a tube: a sick man who sets it to his lips has "
+            "his illness drawn out of him.",
+            "Its architects were Isidore of Miletus and the "
+            "mathematician Anthemius of Tralles, who gathered columns "
+            "from across the empire, those of Ephesus's Temple of "
+            "Artemis among them. They quarrelled, Isidore wanting "
+            "refinements drawn from Heron of Alexandria, and he had his "
+            "way when Anthemius died within the year, of natural "
+            "causes, it was said, though rumour doubted it. Theban "
+            "magi, Catella of Alexandria above all, would like to study "
+            "the building for Heron's ideas: a season of daily study "
+            "would uncover them, and Catella will pay any magus with a "
+            "workable plan in vis and gold for his time and notes.",
         ),
+        secrets="The insights from Heron are really there in the building's "
+        "fabric, for a magus who spends the season.",
         **KNOWN_ORDER,
     )
     _add(
@@ -798,36 +776,34 @@ def _sacred_sites(theban: Theban) -> None:
         inside=region,
         realm="Infernal",
         aura=3,
-        summary=secrets(
-            paragraphs(
-                "The crypts under the Church of the Holy Apostles, burial "
-                "place of emperors and patriarchs until 1028, now looted by "
-                "men who dug up the emperors for their crowns and jewels. "
-                "By day the church's Dominion aura of 4 keeps down an "
-                "Infernal aura of 3 rising from the crypts; at night the "
-                "Dominion falls to 3 and the Infernal rises to 4, taking "
-                "the church over and letting the thing below roam it.",
-                "That thing is Zeno, emperor from 474 to 491: once "
-                "Tarasicodissa, a mercenary chief of the Isaurians from the "
-                "Taurus Mountains, hated, plotted against, overthrown and "
-                "buried alive here, begging for mercy for three days before "
-                "he fell silent. He never died. Demon-blooded, he needs no "
-                "food or air and does not age; Leo Grammaticus painted him "
-                "as shaggy, misshapen, goat-footed, hairy-legged, black of "
-                "skin and absurdly built. Each night he climbs out of his "
-                "open sarcophagus to prowl the church, but he cannot live "
-                "outside an Infernal aura, so he can hardly leave it, and he "
-                "kills and eats anyone he catches. The book gives him no "
-                "stat block.",
-                "Hermetic legend says city magi once hid occult books and "
-                "papers in the crypts, trusting the ghosts of the emperors "
-                "to guard them, and necromancers called up the ghosts of "
-                "emperors not gone to Heaven in the Infernal aura of Zeno's "
-                "lair. Both were perilous.",
-            ),
-            "The storyguide may hide almost any treasure here, perhaps a "
-            "clue to another story, to be won only by getting past Zeno.",
+        summary=paragraphs(
+            "The crypts under the Church of the Holy Apostles, burial "
+            "place of emperors and patriarchs until 1028, now looted by "
+            "men who dug up the emperors for their crowns and jewels. "
+            "By day the church's Dominion aura of 4 keeps down an "
+            "Infernal aura of 3 rising from the crypts; at night the "
+            "Dominion falls to 3 and the Infernal rises to 4, taking "
+            "the church over and letting the thing below roam it.",
+            "That thing is Zeno, emperor from 474 to 491: once "
+            "Tarasicodissa, a mercenary chief of the Isaurians from the "
+            "Taurus Mountains, hated, plotted against, overthrown and "
+            "buried alive here, begging for mercy for three days before "
+            "he fell silent. He never died. Demon-blooded, he needs no "
+            "food or air and does not age; Leo Grammaticus painted him "
+            "as shaggy, misshapen, goat-footed, hairy-legged, black of "
+            "skin and absurdly built. Each night he climbs out of his "
+            "open sarcophagus to prowl the church, but he cannot live "
+            "outside an Infernal aura, so he can hardly leave it, and he "
+            "kills and eats anyone he catches. The book gives him no "
+            "stat block.",
+            "Hermetic legend says city magi once hid occult books and "
+            "papers in the crypts, trusting the ghosts of the emperors "
+            "to guard them, and necromancers called up the ghosts of "
+            "emperors not gone to Heaven in the Infernal aura of Zeno's "
+            "lair. Both were perilous.",
         ),
+        secrets="The storyguide may hide almost any treasure here, perhaps a "
+        "clue to another story, to be won only by getting past Zeno.",
         **RUMOURED_TRIBUNAL,
     )
 
@@ -845,54 +821,52 @@ def _lords(theban: Theban, b: Builder) -> None:
         seat="The Palace of Bucoleon, Constantinople",
         ruler="Robert of Courtenay, emperor-elect (arrives 1221)",
         place=p["constantinople"],
-        summary=secrets(
-            paragraphs(
-                "The emperor of Romania, as the crusaders call the empire "
-                "they made in 1204. By their pact with Venice he holds a "
-                "quarter of the old empire directly, while the Venetians "
-                "and the other crusade lords take three-eighths each; under "
-                "him come the vassalli, the Frankish barons and the Greek "
-                "lords of simple homage who accepted the new order, among "
-                "them the King of Thessaloniki, the Prince of Achaea and "
-                "his barons, the Duke of Athens and the Duke of Naxos. His "
-                "court is his private council of trusted men and the "
-                "council of the empire, which joins him, the Venetian "
-                "podestà with his council, and the Frankish barons; the old "
-                "Byzantine bureaucracy runs on beneath, since taxes, courts "
-                "and supplies still need clerks.",
-                "Its emperors have not lasted. A college of six Venetians "
-                "and six crusaders chose Baldwin of Flanders over Boniface "
-                "of Montferrat; Baldwin was taken by the Bulgarians at "
-                "Adrianople in 1205 and died in captivity. His brother "
-                "Henry, crowned in August 1205, held the shrunken realm "
-                "together until his sudden death in 1216, perhaps poisoned "
-                "by his Bulgarian wife Maria, who fled. Peter of Courtenay, "
-                "elected next, was seized by Theodore Komnenos Doukas of "
-                "Epiros on his way from Durazzo in 1217 and is thought to "
-                "have died his prisoner. His widow Yolanda reached the city "
-                "by sea and ruled as regent from 1217 to 1219, making peace "
-                "with Bulgaria and Nicaea and marrying her daughter Marie "
-                "to the Nicene emperor. After her sudden death the throne "
-                "went to her elder son Philip of Namur, who refused it; his "
-                "brother Robert has accepted but will not reach the city "
-                "until 1221.",
-                "So the empire is leaderless in 1220, a narrow strip round "
-                "its capital, and at war again: Nicaea has just broken three "
-                "years of peace, and the outlook is poor. The emperor still "
-                "owns the Crown of Thorns, though it is pledged to the "
-                "doge, and the Holy Lance lies in his palace.",
-                "The book leaves the throne simply empty; history has the "
-                "barons governing through regents, Conon de Béthune until "
-                "his death late in 1219 and then the papal legate Giovanni "
-                "Colonna.",
-            ),
-            "Some say Baldwin was seen alive in Flanders, and House "
-            "Tremere is whispered to know more of his fate than it says; "
-            "the indiscreet Redcap who spread that tale died soon after in "
-            "a fall from his horse, and the magistrates of the day let it "
-            "lie. Peter's body was never found either. Hermetic gossip ties "
-            "the vanished Maria of Bulgaria to the Daughters of Erictho.",
+        summary=paragraphs(
+            "The emperor of Romania, as the crusaders call the empire "
+            "they made in 1204. By their pact with Venice he holds a "
+            "quarter of the old empire directly, while the Venetians "
+            "and the other crusade lords take three-eighths each; under "
+            "him come the vassalli, the Frankish barons and the Greek "
+            "lords of simple homage who accepted the new order, among "
+            "them the King of Thessaloniki, the Prince of Achaea and "
+            "his barons, the Duke of Athens and the Duke of Naxos. His "
+            "court is his private council of trusted men and the "
+            "council of the empire, which joins him, the Venetian "
+            "podestà with his council, and the Frankish barons; the old "
+            "Byzantine bureaucracy runs on beneath, since taxes, courts "
+            "and supplies still need clerks.",
+            "Its emperors have not lasted. A college of six Venetians "
+            "and six crusaders chose Baldwin of Flanders over Boniface "
+            "of Montferrat; Baldwin was taken by the Bulgarians at "
+            "Adrianople in 1205 and died in captivity. His brother "
+            "Henry, crowned in August 1205, held the shrunken realm "
+            "together until his sudden death in 1216, perhaps poisoned "
+            "by his Bulgarian wife Maria, who fled. Peter of Courtenay, "
+            "elected next, was seized by Theodore Komnenos Doukas of "
+            "Epiros on his way from Durazzo in 1217 and is thought to "
+            "have died his prisoner. His widow Yolanda reached the city "
+            "by sea and ruled as regent from 1217 to 1219, making peace "
+            "with Bulgaria and Nicaea and marrying her daughter Marie "
+            "to the Nicene emperor. After her sudden death the throne "
+            "went to her elder son Philip of Namur, who refused it; his "
+            "brother Robert has accepted but will not reach the city "
+            "until 1221.",
+            "So the empire is leaderless in 1220, a narrow strip round "
+            "its capital, and at war again: Nicaea has just broken three "
+            "years of peace, and the outlook is poor. The emperor still "
+            "owns the Crown of Thorns, though it is pledged to the "
+            "doge, and the Holy Lance lies in his palace.",
+            "The book leaves the throne simply empty; history has the "
+            "barons governing through regents, Conon de Béthune until "
+            "his death late in 1219 and then the papal legate Giovanni "
+            "Colonna.",
         ),
+        secrets="Some say Baldwin was seen alive in Flanders, and House "
+        "Tremere is whispered to know more of his fate than it says; "
+        "the indiscreet Redcap who spread that tale died soon after in "
+        "a fall from his horse, and the magistrates of the day let it "
+        "lie. Peter's body was never found either. Hermetic gossip ties "
+        "the vanished Maria of Bulgaria to the Daughters of Erictho.",
     )
     w["podesta"] = b.lord(
         "Podestà of Romania",
@@ -1016,38 +990,36 @@ def _churches(theban: Theban, b: Builder) -> None:
         church="Monastery or nunnery",
         founded=823,
         place=region,
-        summary=secrets(
-            paragraphs(
-                "A walled monastery of several acres inside the city walls, "
-                "in a quarter mostly given to pasture and orchards, founded "
-                "as a lavra of monks in cells in 823. Romanos III Argyros, "
-                "Zoe's first husband, endowed it richly, founding in 1030 an "
-                "orphanage and school paid for by the treasury and run by "
-                "the monks, and in 1031 giving it a tiny, exquisite icon of "
-                "a little-known saint, Loukia. Under a great golden icon of "
-                "Christ Pantokrator over the gate lie a small vineyard, "
-                "pastures and wide gardens; the basilica stands at the "
-                "centre with the refectory, kitchen, laundry and bakehouse "
-                "round it, and some thirty black clergy live in small "
-                "wooden cell-houses scattered across the grounds. At the "
-                "west end an ancient, roofless bathhouse keeps two baths, "
-                "one a fishpond and one still used by the monks, with the "
-                "infirmary and storehouses behind. At the east end are the "
-                "guest quarters, the school and a hostel for sixty boys, the "
-                "famous orphanage, with the master's house, the boys' "
-                "refectory, a scriptorium and a library beside them.",
-                "The orphanage was long a source of eunuchs for the palace: "
-                "paying families sent boys to learn music, and those whose "
-                "voices suited were gelded for the choirs, while children "
-                "too dangerous to the throne were sent here to be "
-                "castrated. The Latins still fund it, but they find the "
-                "practice disgusting and the demand has nearly gone. The "
-                "monks know that holy hermits of extreme mortification live "
-                "in the old cistern under the orphanage, and leave them "
-                "alone.",
-            ),
-            "The hermits are the Criamon magi of Xylinites.",
+        summary=paragraphs(
+            "A walled monastery of several acres inside the city walls, "
+            "in a quarter mostly given to pasture and orchards, founded "
+            "as a lavra of monks in cells in 823. Romanos III Argyros, "
+            "Zoe's first husband, endowed it richly, founding in 1030 an "
+            "orphanage and school paid for by the treasury and run by "
+            "the monks, and in 1031 giving it a tiny, exquisite icon of "
+            "a little-known saint, Loukia. Under a great golden icon of "
+            "Christ Pantokrator over the gate lie a small vineyard, "
+            "pastures and wide gardens; the basilica stands at the "
+            "centre with the refectory, kitchen, laundry and bakehouse "
+            "round it, and some thirty black clergy live in small "
+            "wooden cell-houses scattered across the grounds. At the "
+            "west end an ancient, roofless bathhouse keeps two baths, "
+            "one a fishpond and one still used by the monks, with the "
+            "infirmary and storehouses behind. At the east end are the "
+            "guest quarters, the school and a hostel for sixty boys, the "
+            "famous orphanage, with the master's house, the boys' "
+            "refectory, a scriptorium and a library beside them.",
+            "The orphanage was long a source of eunuchs for the palace: "
+            "paying families sent boys to learn music, and those whose "
+            "voices suited were gelded for the choirs, while children "
+            "too dangerous to the throne were sent here to be "
+            "castrated. The Latins still fund it, but they find the "
+            "practice disgusting and the demand has nearly gone. The "
+            "monks know that holy hermits of extreme mortification live "
+            "in the old cistern under the orphanage, and leave them "
+            "alone.",
         ),
+        secrets="The hermits are the Criamon magi of Xylinites.",
     )
     w["st_john_hebdomon"] = b.church(
         "The Church of St. John the Baptist at Hebdomon",
@@ -1160,17 +1132,15 @@ def _factions(theban: Theban, b: Builder) -> None:
         place=region,
         wants="Safety for their own people, and loot",
         offers="Protection, muscle, smuggling, a way in by night",
-        summary=secrets(
-            "With civil law gone since the conquest, every people of the "
-            "city, Greek, Venetian, Frankish and the rest, guards its own "
-            "with makeshift gangs or hired swords, and none trusts the "
-            "others. Armed bands and bandits nest in the burnt-out ruins, "
-            "the ash of the Venetian Quarter among them, and smugglers use "
-            "the Venetian ports to slip goods in.",
-            "Some suspect the demons Hulikang and Nike, once patrons of the "
-            "Greens and Blues, of now stirring up a 'Frank' and a "
-            "'Venetian' faction; the book does not say if it is true.",
-        ),
+        summary="With civil law gone since the conquest, every people of the "
+        "city, Greek, Venetian, Frankish and the rest, guards its own "
+        "with makeshift gangs or hired swords, and none trusts the "
+        "others. Armed bands and bandits nest in the burnt-out ruins, "
+        "the ash of the Venetian Quarter among them, and smugglers use "
+        "the Venetian ports to slip goods in.",
+        secrets="Some suspect the demons Hulikang and Nike, once patrons of the "
+        "Greens and Blues, of now stirring up a 'Frank' and a "
+        "'Venetian' faction; the book does not say if it is true.",
     )
     w["venetian_council"] = b.faction(
         "The Venetian Council of Constantinople",
@@ -1216,23 +1186,21 @@ def _michaels_tabula(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The Mithraeum of Michael's Tabula",
         inside=region,
         aura=3,
-        summary=secrets(
-            paragraphs(
-                "A forgotten temple of Mithras under a ruined quarter of the "
-                "city, in a Magic aura of 3, reached through the catacombs. "
-                "The magi of Michael's Tabula have made it a rough council "
-                "chamber, with the stone tablet of their oath laid on the "
-                "old altar, and cut laboratories, some of them shared, in "
-                "the chambers round it. New stone walls, raised with their "
-                "patron's help, close every way in, and only a magus with "
-                "one of the covenant's magical keys can pass them; trusted "
-                "allies alone are brought below, and other visitors are "
-                "met in the magi's houses in the city.",
-                "The covenant has found a few sources of vis in the "
-                "catacombs; the book does not describe them.",
-            ),
-            "",
+        summary=paragraphs(
+            "A forgotten temple of Mithras under a ruined quarter of the "
+            "city, in a Magic aura of 3, reached through the catacombs. "
+            "The magi of Michael's Tabula have made it a rough council "
+            "chamber, with the stone tablet of their oath laid on the "
+            "old altar, and cut laboratories, some of them shared, in "
+            "the chambers round it. New stone walls, raised with their "
+            "patron's help, close every way in, and only a magus with "
+            "one of the covenant's magical keys can pass them; trusted "
+            "allies alone are brought below, and other visitors are "
+            "met in the magi's houses in the city.",
+            "The covenant has found a few sources of vis in the "
+            "catacombs; the book does not describe them.",
         ),
+        secrets="",
         **KNOWN_TRIBUNAL,
     )
     summary = paragraphs(
@@ -1300,16 +1268,13 @@ def _michaels_tabula(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "that the covenant itself stays mostly out of sight.",
         "Founded: 1207, at the Tribunal after the fall; the oath was sworn "
         "in 1204. Season: the book gives none; it is a young covenant.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Fylakas may instead be a demon loosed from its binding in "
-                "the sack, deceiving the pious magi.",
-                "Despite their piety, one or more of the magi might stoop to "
-                "demonic help if it would rid the city of the Franks.",
-                "The book leaves the anonymous sponsor's identity to the storyguide.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Fylakas may instead be a demon loosed from its binding in "
+        "the sack, deceiving the pious magi.",
+        "Despite their piety, one or more of the magi might stoop to "
+        "demonic help if it would rid the city of the Franks.",
+        "The book leaves the anonymous sponsor's identity to the storyguide.",
     )
     tabula = b.covenant(
         "Michael's Tabula",
@@ -1319,6 +1284,7 @@ def _michaels_tabula(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=4,
         detail=FULL,
         season="Spring",
@@ -1399,31 +1365,29 @@ def _xylinites(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The Cistern of Xylinites",
         inside=region,
         aura=3,
-        summary=secrets(
-            paragraphs(
-                "A huge vaulted cistern under the orphanage and eastern "
-                "grounds of the monastery of St. Christopoulos, partly "
-                "drained in the eleventh century and still flooded. Six fine "
-                "laboratories are cut into its walls, reachable only by the "
-                "little boats moored at the foot of the stairs; hidden "
-                "staircases lead down from locked rooms in the orphanage "
-                "buildings, and the cistern passes for a storehouse. Flooded "
-                "tunnels branch off carrying water across the city, a maze a "
-                "boat can explore, and the magi use them to slip out "
-                "unseen on business.",
-                "The icon of St. Loukia sits in a small shrine in an alcove "
-                "still reachable only by boat. A Magic aura of 3 spreads "
-                "from it in a perfect sphere wide enough to take in the "
-                "orphanage and the eastern end of the monastery, and ends "
-                "where it meets the Dominion over the middle and west of "
-                "the grounds. The orphan boys tell tales of haunted "
-                "storerooms and mad hermits below, and a few bold ones have "
-                "broken curfew to explore the vaults.",
-            ),
-            "The aura flows from Loukia herself: she is not dead but held "
-            "in something like Twilight between this world and the Magic "
-            "Realm, and magic pours through her into the world.",
+        summary=paragraphs(
+            "A huge vaulted cistern under the orphanage and eastern "
+            "grounds of the monastery of St. Christopoulos, partly "
+            "drained in the eleventh century and still flooded. Six fine "
+            "laboratories are cut into its walls, reachable only by the "
+            "little boats moored at the foot of the stairs; hidden "
+            "staircases lead down from locked rooms in the orphanage "
+            "buildings, and the cistern passes for a storehouse. Flooded "
+            "tunnels branch off carrying water across the city, a maze a "
+            "boat can explore, and the magi use them to slip out "
+            "unseen on business.",
+            "The icon of St. Loukia sits in a small shrine in an alcove "
+            "still reachable only by boat. A Magic aura of 3 spreads "
+            "from it in a perfect sphere wide enough to take in the "
+            "orphanage and the eastern end of the monastery, and ends "
+            "where it meets the Dominion over the middle and west of "
+            "the grounds. The orphan boys tell tales of haunted "
+            "storerooms and mad hermits below, and a few bold ones have "
+            "broken curfew to explore the vaults.",
         ),
+        secrets="The aura flows from Loukia herself: she is not dead but held "
+        "in something like Twilight between this world and the Magic "
+        "Realm, and magic pours through her into the world.",
         **KNOWN_TRIBUNAL,
     )
     summary = paragraphs(
@@ -1517,21 +1481,18 @@ def _xylinites(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "by the master's house.",
         "Founded: 1074. The book dates the near-destruction to 1205 in "
         "places; the city fell in 1204.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Meditating on the icon works as a summa of Animal Ken, "
-                "level 3, Quality 10. None of the magi has realised it, "
-                "since they fear to meditate on it long, but the Criamon may "
-                "find it out.",
-                "Loukia is not dead but caught in something like Twilight "
-                "between this world and the Magic Realm, which is why the "
-                "aura pours from her icon.",
-                "Artoud knows Trasaricus must soon be sent far from the "
-                "city to avert disaster, but cannot bring himself to "
-                "expel him.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Meditating on the icon works as a summa of Animal Ken, "
+        "level 3, Quality 10. None of the magi has realised it, "
+        "since they fear to meditate on it long, but the Criamon may "
+        "find it out.",
+        "Loukia is not dead but caught in something like Twilight "
+        "between this world and the Magic Realm, which is why the "
+        "aura pours from her icon.",
+        "Artoud knows Trasaricus must soon be sent far from the "
+        "city to avert disaster, but cannot bring himself to "
+        "expel him.",
     )
     xylinites = b.covenant(
         "Xylinites",
@@ -1541,6 +1502,7 @@ def _xylinites(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         detail=FULL,
         season="Winter",
     )
@@ -1582,29 +1544,27 @@ def _xylinites_magi(theban: Theban, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=CRIAMON,
         age=175,
-        summary=secrets(
-            paragraphs(
-                "Brother Artoud, leader of Xylinites, looking about "
-                "seventy-one. Most of his life passed in central Anatolia's "
-                "hills, in the Levantine Tribunal, in a Criamon "
-                "Clutch destroyed in the wars between the Sultanate of Rum "
-                "and the empire. He is fanatically loyal to his House and "
-                "cares little for the wider Order, which he thinks run by "
-                "ignorant, boorish Frankish barbarians. His Gift is "
-                "blatant. As a magus trained outside the Tribunal he is a "
-                "metoikos.",
-                "He has turned down Repose to stay and serve his House, and "
-                "gives sporadic, half-hearted support to the League Against "
-                "Idolatry.",
-            ),
-            "His body is in better shape now than at twenty-one: he does "
-            "not age, shrugs off injuries quickly and moves with more than "
-            "human grace, the fruit of long mastery of the flesh on the "
-            "Path of the Body (Houses of Hermes: Mystery Cults). He hides "
-            "it, passing off the pale scars on his tanned skin as the marks "
-            "of mortification, feigning a stoop and a slight limp among "
-            "mundanes, and moving as little as he can.",
+        summary=paragraphs(
+            "Brother Artoud, leader of Xylinites, looking about "
+            "seventy-one. Most of his life passed in central Anatolia's "
+            "hills, in the Levantine Tribunal, in a Criamon "
+            "Clutch destroyed in the wars between the Sultanate of Rum "
+            "and the empire. He is fanatically loyal to his House and "
+            "cares little for the wider Order, which he thinks run by "
+            "ignorant, boorish Frankish barbarians. His Gift is "
+            "blatant. As a magus trained outside the Tribunal he is a "
+            "metoikos.",
+            "He has turned down Repose to stay and serve his House, and "
+            "gives sporadic, half-hearted support to the League Against "
+            "Idolatry.",
         ),
+        secrets="His body is in better shape now than at twenty-one: he does "
+        "not age, shrugs off injuries quickly and moves with more than "
+        "human grace, the fruit of long mastery of the flesh on the "
+        "Path of the Body (Houses of Hermes: Mystery Cults). He hides "
+        "it, passing off the pale scars on his tanned skin as the marks "
+        "of mortification, feigning a stoop and a slight limp among "
+        "mundanes, and moving as little as he can.",
         traits={"Graceful": 5, "Pious": 3, "Devoted to House Criamon": 3},
     )
     m["theoderet"] = b.magus(
@@ -1653,21 +1613,19 @@ def _palace_magi(theban: Theban, b: Builder) -> None:
         covenant=None,
         house=VERDITIUS,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "Passara filia Bacauda filius Aella, a maga of Verditius with "
-                "the Gentle Gift and of no covenant, who keeps the "
-                "automata of the Palace of Magnaura safe from time and wear "
-                "as her lineage's founder Aella did. She lives in apartments "
-                "in the palace that the emperor's autocrat gave her, and, "
-                "proud of her lineage and its mysteries, will live nowhere "
-                "else. The book gives no age.",
-                "Formosos of Guernicus believes she works for the Latin "
-                "emperor and does more than tend the automata, and means to "
-                "prove it.",
-            ),
-            "The book leaves whether she truly serves the emperor to the storyguide.",
+        summary=paragraphs(
+            "Passara filia Bacauda filius Aella, a maga of Verditius with "
+            "the Gentle Gift and of no covenant, who keeps the "
+            "automata of the Palace of Magnaura safe from time and wear "
+            "as her lineage's founder Aella did. She lives in apartments "
+            "in the palace that the emperor's autocrat gave her, and, "
+            "proud of her lineage and its mysteries, will live nowhere "
+            "else. The book gives no age.",
+            "Formosos of Guernicus believes she works for the Latin "
+            "emperor and does more than tend the automata, and means to "
+            "prove it.",
         ),
+        secrets="The book leaves whether she truly serves the emperor to the storyguide.",
     )
     m["formosos"] = b.magus(
         "Formosos",

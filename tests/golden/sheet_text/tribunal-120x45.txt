@@ -183,7 +183,7 @@
       Gilds and forests.
           Edit (e)
 
-    2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary
+  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary  9
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Rhine: Gilds. Its covenants band together in gilds, with dues.
@@ -226,7 +226,7 @@
       Gilds and forests.
           Edit (e)
 
-    2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary
+    3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 30 pounds
@@ -269,7 +269,7 @@
       Gilds and forests.
           Edit (e)
 
-    2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary
+    3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -312,7 +312,7 @@
       Gilds and forests.
           Edit (e)
 
-    2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary
+    3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -320,6 +320,49 @@
 
         When         Entry                 Numbers  Details
       ○ Summer 1221  The Tribunal of 1221           Gild dues set.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Rhine
+
+      Customs:       Rhine: Gilds              Praeco:              Severinus
+      Meets every:   7 years                   Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228               Covenants:           2
+      Meeting place: Durenmar                  Magi:                4
+      Cases:         2 (1 against you)         Your votes:          1 of 4
+      Gilds and forests.
+          Edit (e)
+
+    3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary  9 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
+
 
 
 

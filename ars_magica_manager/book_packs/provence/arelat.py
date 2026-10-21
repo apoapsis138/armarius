@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -39,8 +39,6 @@ MERCERE = "house_mercere"
 TYTALUS = "house_tytalus"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -86,63 +84,61 @@ def _region(provence: Provence) -> None:
         provence,
         "arelat",
         "Arelat",
-        summary=secrets(
-            paragraphs(
-                "The Tribunal's eastern march: the lands of the old Kingdom "
-                "of Lower Burgundy, bounded on the west by the Rhone (save "
-                "the little County of Viviers, Beaucaire and the Lyonnais, "
-                "which lie across it) and running east along the "
-                "Mediterranean shore to the Maritime Alps a little past "
-                "Nice. Its north-eastern edge is vague, somewhere beyond the "
-                "Grande Chartreuse where the Viennois meets Savoy and the "
-                "Greater Alps; by custom the Tropaeum Alpium marks its "
-                "eastern limit. Rome settled here before anywhere else "
-                "outside Italy, and the churches and towns of the Middle "
-                "Ages stand on a carpet of Roman and Gallic ruins. Franks, "
-                "Lombards and Saracens came in turn until Charles Martel "
-                "conquered it; in 1220 it is calmer, and a heartland of the "
-                "troubadours.",
-                "The country is hot and poor, scoured by the Mistral, and "
-                "known for wine, honey, limes and olives. Frederick II, the "
-                "Emperor, is nominally King of Arles but acts only through "
-                "his viceroy at Arles; the strongest magnate is the Catalan "
-                "Ramon Berenguer V, Count of Provence and now of Forcalquier, "
-                "back from captivity in Aragon since 1219; and the young "
-                "Count of Toulouse still claims the March of Provence, which "
-                "its lords honour when it suits them. Much of the land "
-                "answers to petty lords or to chartered towns, above all "
-                "Arles and Avignon, the great communes of the river. The Albigensian "
-                "Crusade has not ravaged it, though some communes, and "
-                "perhaps some magi, have quietly helped both sides.",
-                "This was once part of the Lotharingian Tribunal; when the "
-                "Grand Tribunal of 898 sent its northern covenants to "
-                "Normandy and the Rhine, the remnant along the Rhone and in "
-                "the Toulousain became the Provençal Tribunal. Proud heirs of "
-                "the Roman Provincia, its first covenants kept their Latin "
-                "names for every official document, a custom still followed. "
-                "Its early magi left many ruins, monuments to how hard "
-                "Hermetic cooperation can be, until the heirs of the fallen "
-                "covenants pooled their holdings in the Coenobium, which now "
-                "has a grip on nearly every easily reached magical resource "
-                "in the region and dominates its hedge wizards. Its magi care "
-                "little for the Rhine's Lotharingian Movement.",
-                "Unclaimed or contested vis in Arelat (each described in its "
-                "place): the yew of the Isle d'Yf (Intellego, with the ruin of Yf), the monthly "
-                "almond blossom of Ste Marguerite at Lérins (Mentem, "
-                "Divine-tainted), the blood-red ford of St Gilles (Corpus, "
-                "Infernal-tainted), the golden goat's wool in the Alpilles "
-                "(Imaginem), the field of the Golden Court of 1174 (Faerie "
-                "vis, suspected), the Source du Groseau below Ventoux "
-                "(Aquam), and the ruined mills of Barbegal north of Arles, "
-                "with a Magic aura of 5 and three magical wheels still lost.",
-            ),
-            "Fraxinetum Redux, heirs of the raider covenant the Coenobium "
-            "destroyed, keep a hidden base on the Hyères islands, and a "
-            "Tytalus eremite, Aucassin, lives in a regio under Beaucaire. "
-            "Individual Tytali may have reason to work their way into the "
-            "Coenobium and undermine it, which could set off a conflict "
-            "across the Order.",
+        summary=paragraphs(
+            "The Tribunal's eastern march: the lands of the old Kingdom "
+            "of Lower Burgundy, bounded on the west by the Rhone (save "
+            "the little County of Viviers, Beaucaire and the Lyonnais, "
+            "which lie across it) and running east along the "
+            "Mediterranean shore to the Maritime Alps a little past "
+            "Nice. Its north-eastern edge is vague, somewhere beyond the "
+            "Grande Chartreuse where the Viennois meets Savoy and the "
+            "Greater Alps; by custom the Tropaeum Alpium marks its "
+            "eastern limit. Rome settled here before anywhere else "
+            "outside Italy, and the churches and towns of the Middle "
+            "Ages stand on a carpet of Roman and Gallic ruins. Franks, "
+            "Lombards and Saracens came in turn until Charles Martel "
+            "conquered it; in 1220 it is calmer, and a heartland of the "
+            "troubadours.",
+            "The country is hot and poor, scoured by the Mistral, and "
+            "known for wine, honey, limes and olives. Frederick II, the "
+            "Emperor, is nominally King of Arles but acts only through "
+            "his viceroy at Arles; the strongest magnate is the Catalan "
+            "Ramon Berenguer V, Count of Provence and now of Forcalquier, "
+            "back from captivity in Aragon since 1219; and the young "
+            "Count of Toulouse still claims the March of Provence, which "
+            "its lords honour when it suits them. Much of the land "
+            "answers to petty lords or to chartered towns, above all "
+            "Arles and Avignon, the great communes of the river. The Albigensian "
+            "Crusade has not ravaged it, though some communes, and "
+            "perhaps some magi, have quietly helped both sides.",
+            "This was once part of the Lotharingian Tribunal; when the "
+            "Grand Tribunal of 898 sent its northern covenants to "
+            "Normandy and the Rhine, the remnant along the Rhone and in "
+            "the Toulousain became the Provençal Tribunal. Proud heirs of "
+            "the Roman Provincia, its first covenants kept their Latin "
+            "names for every official document, a custom still followed. "
+            "Its early magi left many ruins, monuments to how hard "
+            "Hermetic cooperation can be, until the heirs of the fallen "
+            "covenants pooled their holdings in the Coenobium, which now "
+            "has a grip on nearly every easily reached magical resource "
+            "in the region and dominates its hedge wizards. Its magi care "
+            "little for the Rhine's Lotharingian Movement.",
+            "Unclaimed or contested vis in Arelat (each described in its "
+            "place): the yew of the Isle d'Yf (Intellego, with the ruin of Yf), the monthly "
+            "almond blossom of Ste Marguerite at Lérins (Mentem, "
+            "Divine-tainted), the blood-red ford of St Gilles (Corpus, "
+            "Infernal-tainted), the golden goat's wool in the Alpilles "
+            "(Imaginem), the field of the Golden Court of 1174 (Faerie "
+            "vis, suspected), the Source du Groseau below Ventoux "
+            "(Aquam), and the ruined mills of Barbegal north of Arles, "
+            "with a Magic aura of 5 and three magical wheels still lost.",
         ),
+        secrets="Fraxinetum Redux, heirs of the raider covenant the Coenobium "
+        "destroyed, keep a hidden base on the Hyères islands, and a "
+        "Tytalus eremite, Aucassin, lives in a regio under Beaucaire. "
+        "Individual Tytali may have reason to work their way into the "
+        "Coenobium and undermine it, which could set off a conflict "
+        "across the Order.",
         **KNOWN_ORDER,
     )
 
@@ -157,53 +153,51 @@ def _rhone(provence: Provence) -> None:
         "rhone",
         "The Rhone",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "'The Bruiser' to its boatmen: a river of fierce currents, "
-                "shoals and spring floods, navigable by barge up to about "
-                "Macon. Joined by the Saone at Lyon, it runs down the great "
-                "trench between the Massif Central and the Alpine foothills "
-                "and is the south-western frontier of the Empire. Only four "
-                "bridges cross it: Lyon's ancient bridge on oak piles, "
-                "Vienne's Roman one of stone, Avignon's newer Pont "
-                "St Bénezet, and a lesser wooden bridge at Arles "
-                "to Trinquetaille. Going down from Macon to Arles takes about "
-                "three weeks, and the trip back a week or two longer, the "
-                "barges hauled by horse teams or helped by magic; at Arles "
-                "cargoes go onto small sailing barges for the sea.",
-                "Barge trains of five to seven craft, towed by fifty or more "
-                "horses along the banks, carry the bulk goods; nobles ride "
-                "the water coaches, under sail or drawn by horses, which "
-                "Jerbiton magi prefer to magic. Boats bear crosses and holy "
-                "signs against harm, and many magi hide small wards in the "
-                "designs.",
-                "Lesser drac haunt the darker reaches of its tributaries: "
-                "young Faerie drakes (Faerie Might 15, rising by 10 at their "
-                "place of power), greenish-black, long-bodied, with webbed "
-                "legs like a flamingo's and lacy blue fins for wings. They "
-                "lure washerwomen, children and vagrants to watery lairs "
-                "with illusions, can take human size, and let anyone they "
-                "grapple breathe underwater; they feed on the fear their "
-                "stories spread, and some live among people disguised as "
-                "boatmen, laundresses or merchants. Each carries 3 pawns of "
-                "Imaginem vis in its eyes. A human can hold a drac's jaws "
-                "shut, since the muscles that open them are weak.",
-                "Gervase of Tilbury's Otia imperialia, an encyclopedia of "
-                "myth and marvels written at Arles between 1210 and 1214, "
-                "tells of the drac's recent return and names two ways into "
-                "its lair, a pool outside the north gate of Arles and a well "
-                "at Beaucaire; it serves as four tractatus of Quality 6 "
-                "(Provençal Lore, Faerie Lore, Infernal Lore and Magic Lore). "
-                "The Redcaps think a further entrance lies in some Magic "
-                "aura on a lonelier stretch of the river, and that all of "
-                "them open on a great web of regiones under the valley, "
-                "which might serve as a magical road; those who walk it hear "
-                "inhuman breathing and feel hunted.",
-            ),
-            "The Coenobium keeps at least one barge as a floating "
-            "laboratory, moored along the banks or tributaries wherever a "
-            "good Magic aura lies.",
+        summary=paragraphs(
+            "'The Bruiser' to its boatmen: a river of fierce currents, "
+            "shoals and spring floods, navigable by barge up to about "
+            "Macon. Joined by the Saone at Lyon, it runs down the great "
+            "trench between the Massif Central and the Alpine foothills "
+            "and is the south-western frontier of the Empire. Only four "
+            "bridges cross it: Lyon's ancient bridge on oak piles, "
+            "Vienne's Roman one of stone, Avignon's newer Pont "
+            "St Bénezet, and a lesser wooden bridge at Arles "
+            "to Trinquetaille. Going down from Macon to Arles takes about "
+            "three weeks, and the trip back a week or two longer, the "
+            "barges hauled by horse teams or helped by magic; at Arles "
+            "cargoes go onto small sailing barges for the sea.",
+            "Barge trains of five to seven craft, towed by fifty or more "
+            "horses along the banks, carry the bulk goods; nobles ride "
+            "the water coaches, under sail or drawn by horses, which "
+            "Jerbiton magi prefer to magic. Boats bear crosses and holy "
+            "signs against harm, and many magi hide small wards in the "
+            "designs.",
+            "Lesser drac haunt the darker reaches of its tributaries: "
+            "young Faerie drakes (Faerie Might 15, rising by 10 at their "
+            "place of power), greenish-black, long-bodied, with webbed "
+            "legs like a flamingo's and lacy blue fins for wings. They "
+            "lure washerwomen, children and vagrants to watery lairs "
+            "with illusions, can take human size, and let anyone they "
+            "grapple breathe underwater; they feed on the fear their "
+            "stories spread, and some live among people disguised as "
+            "boatmen, laundresses or merchants. Each carries 3 pawns of "
+            "Imaginem vis in its eyes. A human can hold a drac's jaws "
+            "shut, since the muscles that open them are weak.",
+            "Gervase of Tilbury's Otia imperialia, an encyclopedia of "
+            "myth and marvels written at Arles between 1210 and 1214, "
+            "tells of the drac's recent return and names two ways into "
+            "its lair, a pool outside the north gate of Arles and a well "
+            "at Beaucaire; it serves as four tractatus of Quality 6 "
+            "(Provençal Lore, Faerie Lore, Infernal Lore and Magic Lore). "
+            "The Redcaps think a further entrance lies in some Magic "
+            "aura on a lonelier stretch of the river, and that all of "
+            "them open on a great web of regiones under the valley, "
+            "which might serve as a magical road; those who walk it hear "
+            "inhuman breathing and feel hunted.",
         ),
+        secrets="The Coenobium keeps at least one barge as a floating "
+        "laboratory, moored along the banks or tributaries wherever a "
+        "good Magic aura lies.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -238,43 +232,41 @@ def _rhone(provence: Provence) -> None:
         "drac_well",
         "The Drac's Well at Beaucaire",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "A disused well in Beaucaire's old marketplace, with a weak "
-                "Magic aura (the book gives no strength). Local legend tells "
-                "of the Drac, a cruel sorcerer-dragon of the river older than "
-                "the Order, who drew mothers and little children to his lair "
-                "beneath the water, walked unseen among the townsfolk, and "
-                "is blamed for some three thousand dead knights and "
-                "villagers. No tale says he was slain, so he was thought to "
-                "have died of age, until a run of disappearances about ten "
-                "years ago; none have been reported for some years, and "
-                "folk are forgetting, but the well is still said to reach "
-                "his lair.",
-                "Nicolette, a young woman of the town, tells anyone who will "
-                "listen her dreams of dragons and drowned kingdoms. Old folk "
-                "say she once vanished for seven years and came back "
-                "remembering nothing, not even the baby son she left; her "
-                "husband and grown boy turn the talk when strangers press.",
-            ),
-            paragraphs(
-                "Beneath the well opens the underwater regio web that runs "
-                "under the Rhone and the Drac river, with a powerful Magic "
-                "aura. Aucassin of Tytalus has his sanctum there and revived "
-                "the Drac legend to cover his kidnappings. Cave paintings "
-                "within, with the regio itself, make up a Mystery "
-                "Initiation Script to mature a human heir of the Drac into a "
-                "true elder drac; a deeper level, aligned to Imaginem, opens "
-                "on the Magic Realm, where a sleeping dragon Vestige like a "
-                "giant drac guards the far side. Aucassin has taken some odd "
-                "vis from beyond it but dares not face the Vestige yet.",
-                "Living under compulsion in the caves are Aucassin's "
-                "abducted servants, among them a lavender-seller as wet "
-                "nurse and a young scribe once used by Alazais, made to "
-                "teach his sickly Gifted captive, 'Le Petit', Latin and the "
-                "liberal arts. Nicolette may be a former drac bride freed "
-                "to spread tales, or one of Aucassin's escaped grogs.",
-            ),
+        summary=paragraphs(
+            "A disused well in Beaucaire's old marketplace, with a weak "
+            "Magic aura (the book gives no strength). Local legend tells "
+            "of the Drac, a cruel sorcerer-dragon of the river older than "
+            "the Order, who drew mothers and little children to his lair "
+            "beneath the water, walked unseen among the townsfolk, and "
+            "is blamed for some three thousand dead knights and "
+            "villagers. No tale says he was slain, so he was thought to "
+            "have died of age, until a run of disappearances about ten "
+            "years ago; none have been reported for some years, and "
+            "folk are forgetting, but the well is still said to reach "
+            "his lair.",
+            "Nicolette, a young woman of the town, tells anyone who will "
+            "listen her dreams of dragons and drowned kingdoms. Old folk "
+            "say she once vanished for seven years and came back "
+            "remembering nothing, not even the baby son she left; her "
+            "husband and grown boy turn the talk when strangers press.",
+        ),
+        secrets=paragraphs(
+            "Beneath the well opens the underwater regio web that runs "
+            "under the Rhone and the Drac river, with a powerful Magic "
+            "aura. Aucassin of Tytalus has his sanctum there and revived "
+            "the Drac legend to cover his kidnappings. Cave paintings "
+            "within, with the regio itself, make up a Mystery "
+            "Initiation Script to mature a human heir of the Drac into a "
+            "true elder drac; a deeper level, aligned to Imaginem, opens "
+            "on the Magic Realm, where a sleeping dragon Vestige like a "
+            "giant drac guards the far side. Aucassin has taken some odd "
+            "vis from beyond it but dares not face the Vestige yet.",
+            "Living under compulsion in the caves are Aucassin's "
+            "abducted servants, among them a lavender-seller as wet "
+            "nurse and a young scribe once used by Alazais, made to "
+            "teach his sickly Gifted captive, 'Le Petit', Latin and the "
+            "liberal arts. Nicolette may be a former drac bride freed "
+            "to spread tales, or one of Aucassin's escaped grogs.",
         ),
         **RUMOURED,
     )
@@ -532,18 +524,16 @@ def _east(provence: Provence) -> None:
         "frioul",
         "The Frioul Islands",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "Four small, uninhabited islands off Marseille. Smugglers, "
-                "pirates and Saracen raiders from their nest in the Hyères "
-                "moor at Pomègues and Ratonneau, the two largest; Tiboulen "
-                "is the tiniest. The fourth, the Isle d'Yf, with its old yew "
-                "grove and the ruins of the Diedne covenant of Yf, is "
-                "described with that ruin.",
-            ),
-            "The magi of Fraxinetum Redux harvest vis on the small islands "
-            "of the coast, Yf among them.",
+        summary=paragraphs(
+            "Four small, uninhabited islands off Marseille. Smugglers, "
+            "pirates and Saracen raiders from their nest in the Hyères "
+            "moor at Pomègues and Ratonneau, the two largest; Tiboulen "
+            "is the tiniest. The fourth, the Isle d'Yf, with its old yew "
+            "grove and the ruins of the Diedne covenant of Yf, is "
+            "described with that ruin.",
         ),
+        secrets="The magi of Fraxinetum Redux harvest vis on the small islands "
+        "of the coast, Yf among them.",
         **KNOWN_REGION,
     )
     _add(
@@ -572,31 +562,29 @@ def _east(provence: Provence) -> None:
         "hyeres",
         "The Hyères Islands",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The Stoechades of Pliny and the Greeks, opposite old Olbia, "
-                "known for slopes covered in lavender. A monastery holds the "
-                "big eastern island, the Ile du Levant, while pirates haunt "
-                "the quiet coves of Port-Cros and Porquerolles; the Giens "
-                "peninsula to the west is cut off except at the lowest tides, "
-                "a fourth island most of the year. Charlemagne brought the "
-                "lavender (stoechas) to the mainland, and it is now in every "
-                "monastic physic garden and in the folk magic of the "
-                "south-east (+3 to cleansing, purifying or healing, +5 "
-                "against evil spirits).",
-                "Lavender of Virtue holds a pawn of Rego vis a bunch. Dried "
-                "in an open barn through the winter Mistral, tied in a posy "
-                "and steeped a season in asp venom, it becomes an amulet "
-                "that gives a wearer without Magic Resistance Greater "
-                "Immunity to one major disease while its scent can be "
-                "smelled; it lasts a year and warps its wearer as a constant "
-                "low-power effect, and hung over a lintel it protects the "
-                "sick recovering in the room beyond. Unclaimed.",
-            ),
-            "The heirs of Fraxinetum keep their base here, among the "
-            "lavender of the pirate isles, and sponsor raids on the coast "
-            "and on Catalan and Genoese shipping.",
+        summary=paragraphs(
+            "The Stoechades of Pliny and the Greeks, opposite old Olbia, "
+            "known for slopes covered in lavender. A monastery holds the "
+            "big eastern island, the Ile du Levant, while pirates haunt "
+            "the quiet coves of Port-Cros and Porquerolles; the Giens "
+            "peninsula to the west is cut off except at the lowest tides, "
+            "a fourth island most of the year. Charlemagne brought the "
+            "lavender (stoechas) to the mainland, and it is now in every "
+            "monastic physic garden and in the folk magic of the "
+            "south-east (+3 to cleansing, purifying or healing, +5 "
+            "against evil spirits).",
+            "Lavender of Virtue holds a pawn of Rego vis a bunch. Dried "
+            "in an open barn through the winter Mistral, tied in a posy "
+            "and steeped a season in asp venom, it becomes an amulet "
+            "that gives a wearer without Magic Resistance Greater "
+            "Immunity to one major disease while its scent can be "
+            "smelled; it lasts a year and warps its wearer as a constant "
+            "low-power effect, and hung over a lintel it protects the "
+            "sick recovering in the room beyond. Unclaimed.",
         ),
+        secrets="The heirs of Fraxinetum keep their base here, among the "
+        "lavender of the pirate isles, and sponsor raids on the coast "
+        "and on Catalan and Genoese shipping.",
         **KNOWN_REGION,
     )
     ventoux = _add(
@@ -617,37 +605,35 @@ def _east(provence: Provence) -> None:
                 ),
             )
         ],
-        summary=secrets(
-            paragraphs(
-                "'The Home of the Winds', the bald mountain at Provence's "
-                "northern edge, long feared as the source of the Mistral. "
-                "Chapels stand on its lower slopes, among them two chapels "
-                "and a watchtower at Beaumont-du-Ventoux and the great "
-                "monastery of Notre-Dame-du-Groseau. The upper slopes have "
-                "a Magic aura of 7, rising to a regio of 9 near the summit, "
-                "where the endless gale lets nothing grow. There dwell air "
-                "spirits of many strengths under a great daimon called "
-                "Ventoux, who now and then lets his lesser kin loose on the "
-                "country below.",
-                "Calais filius Septentrio of Bonisagus, a Rhine magus "
-                "staying with the Coenobium who calls himself Master of the "
-                "Winds, made a sanctum in a cave just below the summit to "
-                "win the daimon over as its Spirit Votary. That angered the "
-                "Mistrau ('the Master'), an ancient Faerie lord who embodies "
-                "every Provençal tale of the mistral: he has sealed the "
-                "spirits' regio, which has made this season unusually mild, "
-                "and Calais is trapped inside fighting Ventoux's angry "
-                "servants. His hosts expected him back last season. To get "
-                "in, one must beat one of the Mistrau's champions at "
-                "catching two fleeting things out of Arcadia: winter's dying "
-                "breath and spring's first sigh.",
-            ),
-            "The storyguide may make the daimon or the Mistrau an Infernal "
-            "spirit of the Order of Aerial Powers posing as Faerie, hoping "
-            "by a pact to spread corruption through every elementalist "
-            "tradition in the Order; the prayers of the monks of "
-            "Notre-Dame-du-Groseau have partly held it in.",
+        summary=paragraphs(
+            "'The Home of the Winds', the bald mountain at Provence's "
+            "northern edge, long feared as the source of the Mistral. "
+            "Chapels stand on its lower slopes, among them two chapels "
+            "and a watchtower at Beaumont-du-Ventoux and the great "
+            "monastery of Notre-Dame-du-Groseau. The upper slopes have "
+            "a Magic aura of 7, rising to a regio of 9 near the summit, "
+            "where the endless gale lets nothing grow. There dwell air "
+            "spirits of many strengths under a great daimon called "
+            "Ventoux, who now and then lets his lesser kin loose on the "
+            "country below.",
+            "Calais filius Septentrio of Bonisagus, a Rhine magus "
+            "staying with the Coenobium who calls himself Master of the "
+            "Winds, made a sanctum in a cave just below the summit to "
+            "win the daimon over as its Spirit Votary. That angered the "
+            "Mistrau ('the Master'), an ancient Faerie lord who embodies "
+            "every Provençal tale of the mistral: he has sealed the "
+            "spirits' regio, which has made this season unusually mild, "
+            "and Calais is trapped inside fighting Ventoux's angry "
+            "servants. His hosts expected him back last season. To get "
+            "in, one must beat one of the Mistrau's champions at "
+            "catching two fleeting things out of Arcadia: winter's dying "
+            "breath and spring's first sigh.",
         ),
+        secrets="The storyguide may make the daimon or the Mistrau an Infernal "
+        "spirit of the Order of Aerial Powers posing as Faerie, hoping "
+        "by a pact to spread corruption through every elementalist "
+        "tradition in the Order; the prayers of the monks of "
+        "Notre-Dame-du-Groseau have partly held it in.",
         **KNOWN_REGION,
     )
     _add(
@@ -787,27 +773,25 @@ def _north(provence: Provence) -> None:
         inside=burgundy,
         realm="Divine",
         aura=7,
-        summary=secrets(
-            paragraphs(
-                "The Carthusians' motherhouse in the mountains above "
-                "Grenoble: a cloister of separate cells, each a two-storey "
-                "hermitage with its own walled garden off a long corridor. "
-                "The monks' simple devotion gives the motherhouse a Divine "
-                "aura of 7; the valley has 3. Several choir monks are "
-                "unGifted Ascetics of a Holy Tradition; the prior and at "
-                "least one other have True Faith, two elder brothers are "
-                "skilled mythic herbalists, and the old hunchbacked "
-                "cellarer, Salvatore, has the Blatant Gift.",
-                "Its newest retreatant is Romualdus, once a Jerbiton magus, "
-                "now the novice Brother Thomas, who has cut himself off "
-                "from his old sodales.",
-            ),
-            "Romualdus has found that Brother Jude, a shy, clumsy young "
-            "novice, holds True Faith as well as the Gift. He has befriended him "
-            "and fears the boy will be claimed as a Hermetic apprentice if "
-            "word gets out; he might seek a Bonisagus to intervene and "
-            "then help train Jude himself, at the cost of his new vows.",
+        summary=paragraphs(
+            "The Carthusians' motherhouse in the mountains above "
+            "Grenoble: a cloister of separate cells, each a two-storey "
+            "hermitage with its own walled garden off a long corridor. "
+            "The monks' simple devotion gives the motherhouse a Divine "
+            "aura of 7; the valley has 3. Several choir monks are "
+            "unGifted Ascetics of a Holy Tradition; the prior and at "
+            "least one other have True Faith, two elder brothers are "
+            "skilled mythic herbalists, and the old hunchbacked "
+            "cellarer, Salvatore, has the Blatant Gift.",
+            "Its newest retreatant is Romualdus, once a Jerbiton magus, "
+            "now the novice Brother Thomas, who has cut himself off "
+            "from his old sodales.",
         ),
+        secrets="Romualdus has found that Brother Jude, a shy, clumsy young "
+        "novice, holds True Faith as well as the Gift. He has befriended him "
+        "and fears the boy will be claimed as a Hermetic apprentice if "
+        "word gets out; he might seek a Bonisagus to intervene and "
+        "then help train Jude himself, at the cost of his new vows.",
         **KNOWN_REGION,
     )
     _add(
@@ -1046,7 +1030,8 @@ def _coenobium(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         place=p["coenobium_avignon"],
         summary=summary,
         what_matters=what_matters,
-        notes=paragraphs(toll, secrets(STORYGUIDE, hidden)),
+        notes=paragraphs(toll),
+        secrets=hidden,
         unnamed_magi=17,
         season="Autumn",
     )
@@ -1074,30 +1059,28 @@ def _coenobium_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=MERCERE,
         age=59,
-        summary=secrets(
-            paragraphs(
-                "The Coenobium's First Consul and the Provençal Chief "
-                "Redcap, unGifted, looking about twenty-seven thanks to a "
-                "lasting Longevity Ritual. She claims descent from Helen of "
-                "Troy, and from Mercere himself through his granddaughter, "
-                "which wins her respect among Redcaps and Jerbiton alike. She "
-                "wears a classical actor's tragic mask and takes it off only "
-                "before magi or her lover, an unGifted folk witch allied to "
-                "the covenant; rumour, which no magus confirms or denies, "
-                "says a spurned suitor scarred her face with acid.",
-                "Under her the Coenobium has taken in more non-Jerbiton "
-                "magi as long-term guests and adopted lesser hedge wizards "
-                "as nominal Redcaps. She plays the humble manager, urging "
-                "the Jerbiton to chase beauty and leave the running of the "
-                "covenant to supposed inferiors. In 1214 she helped avert "
-                "the Tribunal's collapse by threatening to suspend every "
-                "Redcap service. She is rumoured to belong to the Matres and "
-                "Matrones. She owns the inn of St Cyprian at Arles.",
-            ),
-            "Her lover's longevity was Dama's work, done at great cost, "
-            "and it ties Alazais to the Praeco. She quietly steers every "
-            "vote of the council while seeming never to cast one.",
+        summary=paragraphs(
+            "The Coenobium's First Consul and the Provençal Chief "
+            "Redcap, unGifted, looking about twenty-seven thanks to a "
+            "lasting Longevity Ritual. She claims descent from Helen of "
+            "Troy, and from Mercere himself through his granddaughter, "
+            "which wins her respect among Redcaps and Jerbiton alike. She "
+            "wears a classical actor's tragic mask and takes it off only "
+            "before magi or her lover, an unGifted folk witch allied to "
+            "the covenant; rumour, which no magus confirms or denies, "
+            "says a spurned suitor scarred her face with acid.",
+            "Under her the Coenobium has taken in more non-Jerbiton "
+            "magi as long-term guests and adopted lesser hedge wizards "
+            "as nominal Redcaps. She plays the humble manager, urging "
+            "the Jerbiton to chase beauty and leave the running of the "
+            "covenant to supposed inferiors. In 1214 she helped avert "
+            "the Tribunal's collapse by threatening to suspend every "
+            "Redcap service. She is rumoured to belong to the Matres and "
+            "Matrones. She owns the inn of St Cyprian at Arles.",
         ),
+        secrets="Her lover's longevity was Dama's work, done at great cost, "
+        "and it ties Alazais to the Praeco. She quietly steers every "
+        "vote of the council while seeming never to cast one.",
         traits={"Ambitious": 6, "Wily": 3, "Patient": 2},
     )
     m["nicodemus"] = b.magus(
@@ -1174,27 +1157,25 @@ def _coenobium_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=JERBITON,
         age=73,
-        summary=secrets(
-            paragraphs(
-                "A disgraced master hoplite of Terram from beyond the "
-                "Tribunal, looking about fifty-four, expelled from House "
-                "Guernicus for repeated conduct unworthy of a hoplite. At "
-                "Primus Andru's unexpected insistence House Jerbiton "
-                "grudgingly took her in and gave her a chance to reform, on "
-                "terms that seem to bind her to use her talents to keep the "
-                "Coenobium stable; thanks to her, her gentler housemates "
-                "pursue Beauty and Taste with little trouble from magical "
-                "threats. She claims descent from a legendary Guernicus "
-                "Terrae-magus, Adamantius, and has nearly total mastery of "
-                "metal and blades.",
-                "Her parens Damocles, a disgraced magus, killed Argentius in "
-                "a mundane duel when he was Auriel Blake; she and Argentius "
-                "are now unlikely friends. Chapter three's list of possible "
-                "parentes calls her line 'Damocles of the Coenobium, raised "
-                "Guernicus, now Jerbiton'.",
-            ),
-            "The exact terms of her pardon are unknown.",
+        summary=paragraphs(
+            "A disgraced master hoplite of Terram from beyond the "
+            "Tribunal, looking about fifty-four, expelled from House "
+            "Guernicus for repeated conduct unworthy of a hoplite. At "
+            "Primus Andru's unexpected insistence House Jerbiton "
+            "grudgingly took her in and gave her a chance to reform, on "
+            "terms that seem to bind her to use her talents to keep the "
+            "Coenobium stable; thanks to her, her gentler housemates "
+            "pursue Beauty and Taste with little trouble from magical "
+            "threats. She claims descent from a legendary Guernicus "
+            "Terrae-magus, Adamantius, and has nearly total mastery of "
+            "metal and blades.",
+            "Her parens Damocles, a disgraced magus, killed Argentius in "
+            "a mundane duel when he was Auriel Blake; she and Argentius "
+            "are now unlikely friends. Chapter three's list of possible "
+            "parentes calls her line 'Damocles of the Coenobium, raised "
+            "Guernicus, now Jerbiton'.",
         ),
+        secrets="The exact terms of her pardon are unknown.",
         traits={"Ill-tempered": 3, "Intolerant": 2, "Cruel": 2},
     )
     m["lavandarius"] = b.magus(
@@ -1276,16 +1257,14 @@ def _coenobium_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=BONISAGUS,
         age=None,
-        summary=secrets(
-            "A Bonisagus of the Rhine, guest of the Coenobium, who "
-            "calls himself Master of the Winds, one of the specialists in narrow, "
-            "powerful magic the covenant invites. Drawn by Ventoux's "
-            "spirits, he made a sanctum in a cave just below the summit to "
-            "persuade the daimon there to take him as its Spirit Votary.",
-            "The Faerie lord Mistrau has sealed the spirits' regio with "
-            "Calais inside, still fighting Ventoux's furious servants; his "
-            "hosts expected him back last season and are growing worried.",
-        ),
+        summary="A Bonisagus of the Rhine, guest of the Coenobium, who "
+        "calls himself Master of the Winds, one of the specialists in narrow, "
+        "powerful magic the covenant invites. Drawn by Ventoux's "
+        "spirits, he made a sanctum in a cave just below the summit to "
+        "persuade the daimon there to take him as its Spirit Votary.",
+        secrets="The Faerie lord Mistrau has sealed the spirits' regio with "
+        "Calais inside, still fighting Ventoux's furious servants; his "
+        "hosts expected him back last season and are growing worried.",
     )
     m["aloysius"] = b.magus(
         "Aloysius Porphyri",
@@ -1317,29 +1296,25 @@ def _coenobium_magi(provence: Provence, b: Builder, home: Covenant) -> None:
 
 
 def _fraxinetum_redux(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
-    summary = secrets(
-        paragraphs(
-            "A covenant the Tribunal does not know of.",
-        ),
-        paragraphs(
-            "The heirs of Fraxinetum, the raider covenant of Sayyid Shajarat "
-            "al-Darda and his Tytalan lieutenant Nasr ibn Amaf that the "
-            "Coenobium destroyed in 975, no longer live in the ash forest of "
-            "the Maures but on the Hyères islands. They still back mundane "
-            "raids on the coastal towns of Provence and harry Catalan and "
-            "Genoese shipping, though Ahmad's ships strike only non-Hermetic "
-            "vessels and rely on well-placed spies to keep clear of the "
-            "Coenobium's fleet.",
-            "Two Moorish magi live at the pirates' main base among the "
-            "lavender, and a third has a sanctum aboard one of the larger "
-            "ships of their shady associates; they also harvest vis scattered "
-            "over the small islands of the coast, the deserted Diedne site "
-            "at Yf among them. They have never declared themselves at "
-            "Tribunal for fear their ancestors' shadow would bring a Wizard's "
-            "War down on them, and will not oppose new covenants unless "
-            "someone builds another sea stronghold or takes an island off "
-            "the south coast.",
-        ),
+    summary = "A covenant the Tribunal does not know of."
+    hidden = paragraphs(
+        "The heirs of Fraxinetum, the raider covenant of Sayyid Shajarat "
+        "al-Darda and his Tytalan lieutenant Nasr ibn Amaf that the "
+        "Coenobium destroyed in 975, no longer live in the ash forest of "
+        "the Maures but on the Hyères islands. They still back mundane "
+        "raids on the coastal towns of Provence and harry Catalan and "
+        "Genoese shipping, though Ahmad's ships strike only non-Hermetic "
+        "vessels and rely on well-placed spies to keep clear of the "
+        "Coenobium's fleet.",
+        "Two Moorish magi live at the pirates' main base among the "
+        "lavender, and a third has a sanctum aboard one of the larger "
+        "ships of their shady associates; they also harvest vis scattered "
+        "over the small islands of the coast, the deserted Diedne site "
+        "at Yf among them. They have never declared themselves at "
+        "Tribunal for fear their ancestors' shadow would bring a Wizard's "
+        "War down on them, and will not oppose new covenants unless "
+        "someone builds another sea stronghold or takes an island off "
+        "the south coast.",
     )
     what_matters = _lines(
         "Vis: scattered sources on the small islands of the south coast, the deserted Diedne site of Yf among them",
@@ -1356,8 +1331,8 @@ def _fraxinetum_redux(provence: Provence, b: Builder, tribunal: Tribunal) -> Non
         place=provence.places["hyeres"],
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(
-            STORYGUIDE,
+        secrets=paragraphs(
+            hidden,
             _lines(
                 "Never declared: the Tribunal does not know it exists, and it has never voted.",
                 "Votes: 3 if it ever declared itself, unused.",
@@ -1373,19 +1348,17 @@ def _fraxinetum_redux(provence: Provence, b: Builder, tribunal: Tribunal) -> Non
         covenant=redux,
         house=TYTALUS,
         age=68,
-        summary=secrets(
-            "A Tytalus magus the Tribunal does not know of.",
-            paragraphs(
-                "Leader of the pirates of Fraxinetum Redux, looking "
-                "forty-three, a direct descendant of the raider covenant's "
-                "founder, and a master of sea magic, jinn and water "
-                "elementals. He may have been partly taught by a Hermetic "
-                "sahir of al-Andalus and learned non-Hermetic mysteries from "
-                "faerie jinn. His familiar is a mighty sea-dwelling 'afrit "
-                "who claims to be a prince of an undersea jinn tribe near "
-                "Gibraltar, defeated by Ahmad in his self-taught initiation "
-                "script.",
-            ),
+        summary="A Tytalus magus the Tribunal does not know of.",
+        secrets=paragraphs(
+            "Leader of the pirates of Fraxinetum Redux, looking "
+            "forty-three, a direct descendant of the raider covenant's "
+            "founder, and a master of sea magic, jinn and water "
+            "elementals. He may have been partly taught by a Hermetic "
+            "sahir of al-Andalus and learned non-Hermetic mysteries from "
+            "faerie jinn. His familiar is a mighty sea-dwelling 'afrit "
+            "who claims to be a prince of an undersea jinn tribe near "
+            "Gibraltar, defeated by Ahmad in his self-taught initiation "
+            "script.",
         ),
         traits={"Carefree": 3, "Brave": 2},
     )
@@ -1401,40 +1374,38 @@ def _loose_magi(provence: Provence, b: Builder) -> None:
         covenant=None,
         house=TYTALUS,
         age=None,
-        summary=secrets(
-            "A Tytalus magus, an orphan raised by a peregrinator of the "
-            "Rhine and born at Beaucaire, who does not come to Tribunal and "
-            "is thought by many to have vanished, perhaps after training an "
-            "apprentice.",
-            paragraphs(
-                "Back in his birthplace after his Gauntlet, he was drawn to "
-                "a weak Magic aura round a disused well in the old market of "
-                "Beaucaire and found beneath it the underwater regio web "
-                "under the Rhone and the Drac, where he built his sanctum. "
-                "Styling himself 'Aucassin le Draconnet', he revived the "
-                "Drac legend to cover his search for an apprentice and his "
-                "forcible recruitment of servants. For years he has kept up "
-                "a Persona as Rene of Dragonianum, a prosperous merchant "
-                "boss of Beaucaire, steering its council with craft and "
-                "low-level Mentem magic, dealing as Rene with the "
-                "Coenobium's Redcaps and hedge allies but never meeting a "
-                "Gifted magus, and never working open magic in town.",
-                "Over twenty years he has learned that his Mythic Blood "
-                "comes from the Drac of old, and the cave paintings of his "
-                "regio make up a Mystery script to turn him into a true "
-                "elder drac; beyond a portal to the Magic Realm aligned to "
-                "Imaginem sleeps the dragon Vestige whose legacy he would "
-                "claim when he understands the rites better. About ten years "
-                "ago he kidnapped children round Beaucaire and kept a sickly "
-                "Gifted boy who seems to share his blood, 'Le Petit', whom he "
-                "trains as an apprentice; the boy is wasting from a magical "
-                "illness Aucassin cannot heal, and he may come to magi "
-                "disguised as a poor washerwoman to beg a cure. His agents "
-                "in the boatmen's guild of Beaucaire and Arles spy and "
-                "enforce for him and keep the ferry's toll steep; he leaves "
-                "Redcaps alone, though one of his thugs lately humiliated a "
-                "messenger of the Coenobium.",
-            ),
+        summary="A Tytalus magus, an orphan raised by a peregrinator of the "
+        "Rhine and born at Beaucaire, who does not come to Tribunal and "
+        "is thought by many to have vanished, perhaps after training an "
+        "apprentice.",
+        secrets=paragraphs(
+            "Back in his birthplace after his Gauntlet, he was drawn to "
+            "a weak Magic aura round a disused well in the old market of "
+            "Beaucaire and found beneath it the underwater regio web "
+            "under the Rhone and the Drac, where he built his sanctum. "
+            "Styling himself 'Aucassin le Draconnet', he revived the "
+            "Drac legend to cover his search for an apprentice and his "
+            "forcible recruitment of servants. For years he has kept up "
+            "a Persona as Rene of Dragonianum, a prosperous merchant "
+            "boss of Beaucaire, steering its council with craft and "
+            "low-level Mentem magic, dealing as Rene with the "
+            "Coenobium's Redcaps and hedge allies but never meeting a "
+            "Gifted magus, and never working open magic in town.",
+            "Over twenty years he has learned that his Mythic Blood "
+            "comes from the Drac of old, and the cave paintings of his "
+            "regio make up a Mystery script to turn him into a true "
+            "elder drac; beyond a portal to the Magic Realm aligned to "
+            "Imaginem sleeps the dragon Vestige whose legacy he would "
+            "claim when he understands the rites better. About ten years "
+            "ago he kidnapped children round Beaucaire and kept a sickly "
+            "Gifted boy who seems to share his blood, 'Le Petit', whom he "
+            "trains as an apprentice; the boy is wasting from a magical "
+            "illness Aucassin cannot heal, and he may come to magi "
+            "disguised as a poor washerwoman to beg a cure. His agents "
+            "in the boatmen's guild of Beaucaire and Arles spy and "
+            "enforce for him and keep the ferry's toll steep; he leaves "
+            "Redcaps alone, though one of his thugs lately humiliated a "
+            "messenger of the Coenobium.",
         ),
     )
     m["romualdus"] = b.magus(
@@ -1442,16 +1413,14 @@ def _loose_magi(provence: Provence, b: Builder) -> None:
         covenant=None,
         house=JERBITON,
         age=None,
-        summary=secrets(
-            "A former Jerbiton magus, now Brother Thomas, a novice at the "
-            "Grande Chartreuse. Repelled by the pagan remnants and decaying "
-            "culture of the Order, he has given up active Hermetic life and "
-            "shuns his former sodales. He no longer works ordinary Hermetic "
-            "magic and seeks God through a more ascetic use of his Gift, "
-            "hoping to found a new, prayer-based tradition of holy magic.",
-            "He has found that Brother Jude, a young novice, holds True Faith and "
-            "the Gift, and fears the Order will claim him.",
-        ),
+        summary="A former Jerbiton magus, now Brother Thomas, a novice at the "
+        "Grande Chartreuse. Repelled by the pagan remnants and decaying "
+        "culture of the Order, he has given up active Hermetic life and "
+        "shuns his former sodales. He no longer works ordinary Hermetic "
+        "magic and seeks God through a more ascetic use of his Gift, "
+        "hoping to found a new, prayer-based tradition of holy magic.",
+        secrets="He has found that Brother Jude, a young novice, holds True Faith and "
+        "the Gift, and fears the Order will claim him.",
     )
     m["fraxinus"] = b.magus(
         "Fraxinus of Portus Termini",
@@ -1520,16 +1489,14 @@ def _lords(provence: Provence, b: Builder) -> None:
         ruler="Countess Garsenda, regent",
         answers_to=count,
         place=region,
-        summary=secrets(
-            "Countess Garsenda governs the county along the Durance from "
-            "the citadel on its steep conical hill, as regent; her marriage "
-            "to Alfonso in 1209 added her inheritance to her son's lands as "
-            "Count of Provence. A trobairitz in her own right and a famous "
-            "patron of troubadours across the south, she is said to have "
-            "powers beyond the ordinary troubadour's gift of inspiring song.",
-            "Among her rumoured lovers is at least one Jerbiton magus of "
-            "the Coenobium.",
-        ),
+        summary="Countess Garsenda governs the county along the Durance from "
+        "the citadel on its steep conical hill, as regent; her marriage "
+        "to Alfonso in 1209 added her inheritance to her son's lands as "
+        "Count of Provence. A trobairitz in her own right and a famous "
+        "patron of troubadours across the south, she is said to have "
+        "powers beyond the ordinary troubadour's gift of inspiring song.",
+        secrets="Among her rumoured lovers is at least one Jerbiton magus of "
+        "the Coenobium.",
     )
     w["prince_of_orange"] = b.lord(
         "Prince of Orange",
@@ -1558,27 +1525,25 @@ def _lords(provence: Provence, b: Builder) -> None:
         answers_to=king,
         place=p["alpilles"],
         arms=Arms("Gules", charge="Star", charge_tincture="Argent"),
-        summary=secrets(
-            paragraphs(
-                "Hugh III, son of Bertrand, Seigneur of Baux, whose fortress "
-                "was razed in 1162 at the end of the Baussenque Wars against "
-                "the Catalan counts. He lives mostly in bustling Marseille, "
-                "which he holds as viscount for the Emperor. His kin include "
-                "the Prince of Orange and much of Provence's lesser nobility, "
-                "and his younger cousin Marcus is the wizard Balthazar of "
-                "the Coenobium, through whom Hugh keeps close ties to the "
-                "covenant; his young son Barral deeply distrusts his "
-                "father's dealings with wizards.",
-                "The Baux claim descent from Balthazar, one of the three "
-                "wise kings, and bear the Star of Bethlehem; their deeds "
-                "have been less than Christian. The shield shown follows the "
-                "later blazon, gules a star argent (of sixteen rays, which "
-                "the app draws as a plain star).",
-            ),
-            "The Gift turns up unusually often in the family; the "
-            "Coenobium encourages the Balthazar legend among the nobles to "
-            "its own ends.",
+        summary=paragraphs(
+            "Hugh III, son of Bertrand, Seigneur of Baux, whose fortress "
+            "was razed in 1162 at the end of the Baussenque Wars against "
+            "the Catalan counts. He lives mostly in bustling Marseille, "
+            "which he holds as viscount for the Emperor. His kin include "
+            "the Prince of Orange and much of Provence's lesser nobility, "
+            "and his younger cousin Marcus is the wizard Balthazar of "
+            "the Coenobium, through whom Hugh keeps close ties to the "
+            "covenant; his young son Barral deeply distrusts his "
+            "father's dealings with wizards.",
+            "The Baux claim descent from Balthazar, one of the three "
+            "wise kings, and bear the Star of Bethlehem; their deeds "
+            "have been less than Christian. The shield shown follows the "
+            "later blazon, gules a star argent (of sixteen rays, which "
+            "the app draws as a plain star).",
         ),
+        secrets="The Gift turns up unusually often in the family; the "
+        "Coenobium encourages the Balthazar legend among the nobles to "
+        "its own ends.",
     )
     w["dauphine"] = b.lord(
         "Dauphine of Viennois",
@@ -1630,22 +1595,20 @@ def _churches(provence: Provence, b: Builder) -> None:
         church="Monastery or nunnery",
         ruler="The abbot of St André",
         place=region,
-        summary=secrets(
-            "A prosperous abbey-town on Mont Andaon at the western end of "
-            "Avignon's bridge, commanding the road to the commune and "
-            "lodging pilgrims bound for Santiago. It keeps the relics of "
-            "St Casarie, a Visigothic princess who lived as a hermit in the "
-            "sixth century, under "
-            "a strong Divine aura of 4. The abbot, a distant kinsman of the "
-            "Baux and one of the greatest landowners nearby, is more open "
-            "than most churchmen and sometimes receives the more "
-            "respectable hedge wizards. Magi who refuse the Coenobium's "
-            "hospitality may ask him for lodging in the aptly named Tower "
-            "of Sorcerers, discreetly, or risk the bishop's anger and the "
-            "Coenobium's interest.",
-            "He secretly keeps on good terms with the Coenobium, and Marcus "
-            "d'Les Baux has meddled on his behalf.",
-        ),
+        summary="A prosperous abbey-town on Mont Andaon at the western end of "
+        "Avignon's bridge, commanding the road to the commune and "
+        "lodging pilgrims bound for Santiago. It keeps the relics of "
+        "St Casarie, a Visigothic princess who lived as a hermit in the "
+        "sixth century, under "
+        "a strong Divine aura of 4. The abbot, a distant kinsman of the "
+        "Baux and one of the greatest landowners nearby, is more open "
+        "than most churchmen and sometimes receives the more "
+        "respectable hedge wizards. Magi who refuse the Coenobium's "
+        "hospitality may ask him for lodging in the aptly named Tower "
+        "of Sorcerers, discreetly, or risk the bishop's anger and the "
+        "Coenobium's interest.",
+        secrets="He secretly keeps on good terms with the Coenobium, and Marcus "
+        "d'Les Baux has meddled on his behalf.",
     )
     w["st_ruf"] = b.church(
         "Abbey of St Ruf",
@@ -1892,17 +1855,15 @@ def _factions(provence: Provence, b: Builder) -> None:
         place=p["rhone"],
         wants="Control of every cargo and crossing on the Rhone",
         offers="Passage, barges, river news",
-        summary=secrets(
-            "The boatmen of the Rhone, a powerful guild that controls the "
-            "river's trade. Nominally based at Beaucaire, where they hold "
-            "the wharves and the ferry, they are most numerous at Arles, "
-            "where cargoes pass to sea-going ships. Many venerate "
-            "St Bénezet at his chapel on Avignon's bridge, and they respect "
-            "Nicodemus warily.",
-            "Aucassin of Tytalus has agents among them at Beaucaire and "
-            "Arles who spy and enforce for him and keep the ferry toll "
-            "high; one lately humiliated a Redcap of the Coenobium.",
-        ),
+        summary="The boatmen of the Rhone, a powerful guild that controls the "
+        "river's trade. Nominally based at Beaucaire, where they hold "
+        "the wharves and the ferry, they are most numerous at Arles, "
+        "where cargoes pass to sea-going ships. Many venerate "
+        "St Bénezet at his chapel on Avignon's bridge, and they respect "
+        "Nicodemus warily.",
+        secrets="Aucassin of Tytalus has agents among them at Beaucaire and "
+        "Arles who spy and enforce for him and keep the ferry toll "
+        "high; one lately humiliated a Redcap of the Coenobium.",
     )
     w["masques"] = b.faction(
         "The Masques of the Coenobium",
@@ -1952,14 +1913,12 @@ def _factions(provence: Provence, b: Builder) -> None:
         ruler="Ahmad ibn Nasr (secretly)",
         place=p["hyeres"],
         wants="Plunder from the coast and its shipping",
-        summary=secrets(
-            "Pirates and Saracen raiders who haunt the coves of Port-Cros "
-            "and Porquerolles and moor at the Frioul islands off Marseille, "
-            "raiding the towns of the coast and Catalan and Genoese ships.",
-            "They are the mundane arm of Fraxinetum Redux, led by Ahmad ibn "
-            "Nasr, who keeps them off Hermetic shipping and away from the "
-            "Coenobium's fleet with spies ashore.",
-        ),
+        summary="Pirates and Saracen raiders who haunt the coves of Port-Cros "
+        "and Porquerolles and moor at the Frioul islands off Marseille, "
+        "raiding the towns of the coast and Catalan and Genoese ships.",
+        secrets="They are the mundane arm of Fraxinetum Redux, led by Ahmad ibn "
+        "Nasr, who keeps them off Hermetic shipping and away from the "
+        "Coenobium's fleet with spies ashore.",
     )
 
 

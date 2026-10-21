@@ -49,6 +49,7 @@ from ..sections import (
     TRIBUNAL_INFO_SECTION,
 )
 from ..sheets import tribunal as tribunal_sheet
+from .secrets import secrets_ops
 
 
 def tribunal_field(saga: Saga, tribunal_id: str | None) -> DialogField:
@@ -754,4 +755,5 @@ def tribunal_ops(saga: Saga, tribunal: Tribunal) -> dict[str, SectionOps]:
     for extra in tribunal_packages.of(tribunal).lists:
         ops[extra.section_id] = extra.ops(saga, tribunal)
     ops.update(meeting.ops(saga, tribunal))
+    ops.update(secrets_ops(tribunal))
     return ops

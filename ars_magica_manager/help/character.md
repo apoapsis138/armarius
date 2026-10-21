@@ -5,8 +5,9 @@
 The character sheet holds one character of the saga: a magus, companion or
 grog. The top panel, with the character's name and Characteristics, stays
 on screen above the tabs whichever tab is open. Below it are the numbered
-tabs, opened with `1` to `7` (a character who is not a magus has no Hermetic
-Magic tab, so the later tabs move up a number). On a tab with a list, the
+tabs, opened with `1` to `8` (a character who is not a magus has no Hermetic
+Magic tab, so the later tabs move up a number); the last, Secrets, is the
+storyguide's alone. On a tab with a list, the
 details panel at the bottom shows the chosen row, including the rules text
 of a Virtue, Flaw, Ability or spell.
 
@@ -23,8 +24,8 @@ grog. The header, with the character's name, Confidence, Warping,
 Decrepitude and how they are faring, and the Characteristic cards under it
 stay on the page whichever chapter is open. The rail on the left lists the
 chapters: Description, Abilities, Virtues & Flaws, Hermetic Magic (a
-character who is not a magus has none), Inventory, Planning, Diary and,
-last, Manage. Clicking a row, card, Art or Casting Score shows it in the
+character who is not a magus has none), Inventory, Planning, Diary,
+[Secrets](help:tab-secrets) and, last, Manage. Clicking a row, card, Art or Casting Score shows it in the
 inspector on the right, including the rules text of a Virtue, Flaw, Ability
 or spell.
 

@@ -226,7 +226,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
+  cket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 S
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -269,7 +269,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
+   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -312,7 +312,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
+   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -355,13 +355,56 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
+   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Diary (0)
 
       Nothing written yet: each meeting's minutes go here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Normandy
+
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
+      Meets every:   7 years                   Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1227               Covenants:           0
+      Meeting place: Confluensis               Magi:                0
+      Cases:         none pending              Your votes:          0 of 0
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary  10 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
 
 
 

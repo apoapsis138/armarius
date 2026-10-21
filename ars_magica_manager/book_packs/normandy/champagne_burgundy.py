@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, StatBlock, paragraphs, secrets
+from ..builder import Builder, StatBlock, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -29,8 +29,6 @@ MERCERE = "house_mercere"
 TYTALUS = "house_tytalus"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 
 
@@ -167,31 +165,29 @@ def _places(normandy: Normandy) -> None:
         inside=champagne,
         realm="Infernal",
         aura=3,
-        summary=secrets(
-            paragraphs(
-                "About a dozen miles from Chalons lies the field where, in "
-                "451, the Roman general Aetius with Theoderic's Visigoths "
-                "and the Franks of the sorcerer-king Merovech turned back "
-                "Attila and his Ostrogoth allies at midsummer, after the "
-                "Huns had sacked Reims and besieged Orleans. Theoderic fell; "
-                "Attila escaped to his camp and away. More than forty "
-                "thousand died, and an old chronicle tells of a brook "
-                "swollen with blood that the wounded drank from.",
-                "Today it is empty scrub and fallow, walked by a few thin "
-                "sheep and grimy peasants, under a Malevolent Infernal aura "
-                "of 3. A dark stream runs below the ridge in the middle of "
-                "the field. On the night of the summer solstice, the "
-                "battle's anniversary, it runs red, and the cries of dying "
-                "men and horses are heard; whoever climbs the stream that "
-                "night enters an Infernal regio where the ghosts of both "
-                "armies fight forever, driven on by demons, among heaps of "
-                "the dead and dying. A magus who braves it may harvest a "
-                "great deal of Perdo and Corpus vis; the book gives no "
-                "tenure for it.",
-            ),
-            "Some of the Perdo and Corpus vis gathered in the regio carries "
-            "an Infernal taint, and nothing marks which.",
+        summary=paragraphs(
+            "About a dozen miles from Chalons lies the field where, in "
+            "451, the Roman general Aetius with Theoderic's Visigoths "
+            "and the Franks of the sorcerer-king Merovech turned back "
+            "Attila and his Ostrogoth allies at midsummer, after the "
+            "Huns had sacked Reims and besieged Orleans. Theoderic fell; "
+            "Attila escaped to his camp and away. More than forty "
+            "thousand died, and an old chronicle tells of a brook "
+            "swollen with blood that the wounded drank from.",
+            "Today it is empty scrub and fallow, walked by a few thin "
+            "sheep and grimy peasants, under a Malevolent Infernal aura "
+            "of 3. A dark stream runs below the ridge in the middle of "
+            "the field. On the night of the summer solstice, the "
+            "battle's anniversary, it runs red, and the cries of dying "
+            "men and horses are heard; whoever climbs the stream that "
+            "night enters an Infernal regio where the ghosts of both "
+            "armies fight forever, driven on by demons, among heaps of "
+            "the dead and dying. A magus who braves it may harvest a "
+            "great deal of Perdo and Corpus vis; the book gives no "
+            "tenure for it.",
         ),
+        secrets="Some of the Perdo and Corpus vis gathered in the regio carries "
+        "an Infernal taint, and nothing marks which.",
         levels=[
             Builder.level(
                 "The Endless Battle",
@@ -244,27 +240,25 @@ def _places(normandy: Normandy) -> None:
         "The Valley of Cunfin",
         inside=champagne,
         realm="Divine",
-        summary=secrets(
-            paragraphs(
-                "A deep, well-watered valley in Champagne holding the "
-                "village of Cunfin and its Cistercian abbey: plain buildings "
-                "with almost no ornament, one low tower, undivided windows "
-                "of clear glass and wooden crosses. The monks keep a "
-                "Dominion whose temper Eloi's holy power has made Calm. The "
-                "Dominion's strength is not given.",
-                "Over the abbey and its surroundings lies a Magic regio of a "
-                "single level, unseen by most of the mundane folk. It was "
-                "once a ruined Roman fort; Celeres has rebuilt it as a "
-                "miniature castle with pennons flying, and most of the "
-                "covenant's members live there. Anyone carrying a charm cut "
-                "from the fort's stones can pass in. How a Magic regio "
-                "survives inside so strong a Divine aura is unknown, and "
-                "several Bonisagus magi have studied it.",
-            ),
-            "Rumour, perhaps true, says the abbey was founded in 1136 by "
-            "Valoran, a pupil of St. Nerius; Eloi believes Valoran was "
-            "Angelus's parens.",
+        summary=paragraphs(
+            "A deep, well-watered valley in Champagne holding the "
+            "village of Cunfin and its Cistercian abbey: plain buildings "
+            "with almost no ornament, one low tower, undivided windows "
+            "of clear glass and wooden crosses. The monks keep a "
+            "Dominion whose temper Eloi's holy power has made Calm. The "
+            "Dominion's strength is not given.",
+            "Over the abbey and its surroundings lies a Magic regio of a "
+            "single level, unseen by most of the mundane folk. It was "
+            "once a ruined Roman fort; Celeres has rebuilt it as a "
+            "miniature castle with pennons flying, and most of the "
+            "covenant's members live there. Anyone carrying a charm cut "
+            "from the fort's stones can pass in. How a Magic regio "
+            "survives inside so strong a Divine aura is unknown, and "
+            "several Bonisagus magi have studied it.",
         ),
+        secrets="Rumour, perhaps true, says the abbey was founded in 1136 by "
+        "Valoran, a pupil of St. Nerius; Eloi believes Valoran was "
+        "Angelus's parens.",
         levels=[
             Builder.level(
                 "Celeres's Castle",
@@ -475,7 +469,7 @@ def _cunfin(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         level=1,
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         unnamed_magi=0,
         season="Summer",
     )
@@ -492,37 +486,35 @@ def _cunfin_magi(normandy: Normandy, b: Builder, cunfin: Covenant) -> None:
         house=JERBITON,
         age=62,
         traits={"Pious": 3, "Diplomatic": 3, "Forgiving": 1},
-        summary=secrets(
-            paragraphs(
-                "Founder of Cunfin and the man who holds it together, "
-                "looking about fifty-two. To the monks he is Brother "
-                "Eligius, their prior, loved for his devotion and sought for "
-                "his wise counsel; to the magi he is a magus deeply anxious "
-                "about the Order's standing with the Church. He sees himself "
-                "as a follower of St. Nerius, bridging the Magic and the "
-                "Divine, and his charm and faith bind the covenant's "
-                "quarrelsome members together.",
-                "A younger son of minor nobles meant for the priesthood, he "
-                "was found by Jerome of Jerbiton and trained as a magus "
-                "instead, serving Jerome usefully at Confluensis but never "
-                "reconciling his Gift with his wish to serve God. Meeting "
-                "Angelus in 1191 showed him a way: he joined the abbey, "
-                "founded the covenant with Jerome's blessing, and was soon "
-                "elected prior. He uses Holy Influence to calm the Dominion "
-                "about the abbey.",
-                "Close to the Priory of St. Nerius without belonging to it, "
-                "he wants Nerius recognised by the Latin Church, but above "
-                "all wants peace between Order and Church, and uses his "
-                "weight in the Cistercian Order to head off quarrels between "
-                "magi and clergy. With Jerome and Proctor he was one of the "
-                "three pillars of the late Praeco's Tribunal, its link to "
-                "the Church. His present worry is the new Dominicans and "
-                "their zeal against heresy.",
-            ),
-            "He is Jerome's chief partner in hiding rescued heirs, which "
-            "is very likely a breach of the Code; it brought Artorius to "
-            "Cunfin.",
+        summary=paragraphs(
+            "Founder of Cunfin and the man who holds it together, "
+            "looking about fifty-two. To the monks he is Brother "
+            "Eligius, their prior, loved for his devotion and sought for "
+            "his wise counsel; to the magi he is a magus deeply anxious "
+            "about the Order's standing with the Church. He sees himself "
+            "as a follower of St. Nerius, bridging the Magic and the "
+            "Divine, and his charm and faith bind the covenant's "
+            "quarrelsome members together.",
+            "A younger son of minor nobles meant for the priesthood, he "
+            "was found by Jerome of Jerbiton and trained as a magus "
+            "instead, serving Jerome usefully at Confluensis but never "
+            "reconciling his Gift with his wish to serve God. Meeting "
+            "Angelus in 1191 showed him a way: he joined the abbey, "
+            "founded the covenant with Jerome's blessing, and was soon "
+            "elected prior. He uses Holy Influence to calm the Dominion "
+            "about the abbey.",
+            "Close to the Priory of St. Nerius without belonging to it, "
+            "he wants Nerius recognised by the Latin Church, but above "
+            "all wants peace between Order and Church, and uses his "
+            "weight in the Cistercian Order to head off quarrels between "
+            "magi and clergy. With Jerome and Proctor he was one of the "
+            "three pillars of the late Praeco's Tribunal, its link to "
+            "the Church. His present worry is the new Dominicans and "
+            "their zeal against heresy.",
         ),
+        secrets="He is Jerome's chief partner in hiding rescued heirs, which "
+        "is very likely a breach of the Code; it brought Artorius to "
+        "Cunfin.",
     )
     m["angelus"] = b.magus(
         "Angelus",
@@ -530,26 +522,24 @@ def _cunfin_magi(normandy: Normandy, b: Builder, cunfin: Covenant) -> None:
         house=EX_MISC,
         age=97,
         traits={"Calm": 2, "Merciful": 2},
-        summary=secrets(
-            paragraphs(
-                "A holy hermit of House Ex Miscellanea who looks about "
-                "seventy-five and lives alone in a cave above the abbey, "
-                "contemplating God. The Order's only record of him is from "
-                "the Tribunal of 1144, where he appeared once and then "
-                "dropped out of sight; he had not left his cave for decades "
-                "when Eloi found him in 1191, told him of St. Nerius and "
-                "showed him the abbey and its regio. At the next Tribunal "
-                "Cunfin was recognised with the two of them as founders.",
-                "He holds that Magic flows from the Divine and that Twilight "
-                "is a glimpse of the face of God: a blessing God gives, but "
-                "one it is sinful to seek, since only God judges who is "
-                "worthy. He takes little part in the covenant's affairs, "
-                "though Eloi and even Celeres come to him for counsel. He "
-                "alone of Cunfin's magi lacks the Gentle Gift.",
-            ),
-            "He will not speak of his lineage; Eloi believes his parens was "
-            "Valoran, filius of St. Nerius himself.",
+        summary=paragraphs(
+            "A holy hermit of House Ex Miscellanea who looks about "
+            "seventy-five and lives alone in a cave above the abbey, "
+            "contemplating God. The Order's only record of him is from "
+            "the Tribunal of 1144, where he appeared once and then "
+            "dropped out of sight; he had not left his cave for decades "
+            "when Eloi found him in 1191, told him of St. Nerius and "
+            "showed him the abbey and its regio. At the next Tribunal "
+            "Cunfin was recognised with the two of them as founders.",
+            "He holds that Magic flows from the Divine and that Twilight "
+            "is a glimpse of the face of God: a blessing God gives, but "
+            "one it is sinful to seek, since only God judges who is "
+            "worthy. He takes little part in the covenant's affairs, "
+            "though Eloi and even Celeres come to him for counsel. He "
+            "alone of Cunfin's magi lacks the Gentle Gift.",
         ),
+        secrets="He will not speak of his lineage; Eloi believes his parens was "
+        "Valoran, filius of St. Nerius himself.",
     )
     m["celeres"] = b.magus(
         "Celeres",
@@ -615,20 +605,18 @@ def _cunfin_magi(normandy: Normandy, b: Builder, cunfin: Covenant) -> None:
         house=BONISAGUS,
         age=33,
         traits={"Loyal": 2, "Regal": 2},
-        summary=secrets(
-            paragraphs(
-                "A magus of House Bonisagus newly through his Gauntlet. "
-                "Eloi brought him to Cunfin as an orphan of sixteen, meaning "
-                "to train him as his own successor, but Celeres announced he "
-                "needed a squire and claimed the boy as his own apprentice. "
-                "At his Gauntlet, his knighting as Celeres puts it, his "
-                "parens named him after the legendary king of Britain. He "
-                "has the Gentle Gift; his plans are his own.",
-            ),
-            "He is one of the heirs Jerome saved from death for their "
-            "birthright and hid with Eloi's help; whose heir he is, the book "
-            "does not say.",
+        summary=paragraphs(
+            "A magus of House Bonisagus newly through his Gauntlet. "
+            "Eloi brought him to Cunfin as an orphan of sixteen, meaning "
+            "to train him as his own successor, but Celeres announced he "
+            "needed a squire and claimed the boy as his own apprentice. "
+            "At his Gauntlet, his knighting as Celeres puts it, his "
+            "parens named him after the legendary king of Britain. He "
+            "has the Gentle Gift; his plans are his own.",
         ),
+        secrets="He is one of the heirs Jerome saved from death for their "
+        "birthright and hid with Eloi's help; whose heir he is, the book "
+        "does not say.",
     )
     m["evrard"] = b.magus(
         "Évrard de Tours",
@@ -885,7 +873,7 @@ def _atramentum_renatus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> N
         place=normandy.places["atramentum_renatus_site"],
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         unnamed_magi=0,
         season="Spring",
     )
@@ -1304,21 +1292,19 @@ def _churches(normandy: Normandy, b: Builder) -> None:
         order="Cistercian",
         ruler="Abbot Martin",
         place=normandy.places["cunfin_site"],
-        summary=secrets(
-            paragraphs(
-                "A plain Cistercian abbey in a deep valley of Champagne, "
-                "close to the fair roads, whose monks keep open house for "
-                "the many travellers. Its prior, Brother Eligius, is "
-                "revered for his piety and wisdom, and the monks believe "
-                "the holy hermit in the hills above blesses them twice "
-                "over. Its abbot, Martin, is a man in middle age with "
-                "considerable influence in the Cistercian Order.",
-            ),
-            "Brother Eligius is Eloi of Jerbiton, and the abbey shares its "
-            "valley with the covenant of Cunfin. Martin, the cellarer and a "
-            "few brothers know and help the magi, and Martin uses his "
-            "influence in the Order on their behalf.",
+        summary=paragraphs(
+            "A plain Cistercian abbey in a deep valley of Champagne, "
+            "close to the fair roads, whose monks keep open house for "
+            "the many travellers. Its prior, Brother Eligius, is "
+            "revered for his piety and wisdom, and the monks believe "
+            "the holy hermit in the hills above blesses them twice "
+            "over. Its abbot, Martin, is a man in middle age with "
+            "considerable influence in the Cistercian Order.",
         ),
+        secrets="Brother Eligius is Eloi of Jerbiton, and the abbey shares its "
+        "valley with the covenant of Cunfin. Martin, the cellarer and a "
+        "few brothers know and help the magi, and Martin uses his "
+        "influence in the Order on their behalf.",
     )
     w["st_germanus_auxerre"] = b.church(
         "Abbey of St. Germanus, Auxerre",
@@ -1347,30 +1333,28 @@ def _churches(normandy: Normandy, b: Builder) -> None:
         church="Monastery or nunnery",
         order="Benedictine",
         place=burgundy,
-        summary=secrets(
-            paragraphs(
-                "The Benedictine abbey keeping the relics of St. Mary "
-                "Magdalene, Burgundy's greatest pilgrimage since the "
-                "eleventh century and the start of a main road to "
-                "Compostela. St. Bernard preached the Second Crusade here, "
-                "Philip II and Richard the Lionheart met here before the "
-                "Third, and the exiled Thomas Becket excommunicated Henry "
-                "II's supporters here in 1166.",
-                "Founded by Gerard de Roussillon and destroyed by the "
-                "Normans in the ninth century, it was rebuilt on a hilltop "
-                "on the edge of the Morvan. Its history is chequered: "
-                "peasants killed the abbot over taxes for a larger church "
-                "in 1096, and in 1120 the new church burned on the feast of "
-                "the great pilgrimage, 22 July, with a thousand pilgrims "
-                "inside. The Basilica of St. Mary Magdalene has since been "
-                "rebuilt.",
-            ),
-            "The relics' origin is unclear: one story says St. Badilo "
-            "brought them from the Holy Land in the ninth century, another "
-            "that the saint's tomb was found at St. Maximin in Provence, "
-            "identified by a carving of the anointing at Bethany. The monks "
-            "do not doubt them.",
+        summary=paragraphs(
+            "The Benedictine abbey keeping the relics of St. Mary "
+            "Magdalene, Burgundy's greatest pilgrimage since the "
+            "eleventh century and the start of a main road to "
+            "Compostela. St. Bernard preached the Second Crusade here, "
+            "Philip II and Richard the Lionheart met here before the "
+            "Third, and the exiled Thomas Becket excommunicated Henry "
+            "II's supporters here in 1166.",
+            "Founded by Gerard de Roussillon and destroyed by the "
+            "Normans in the ninth century, it was rebuilt on a hilltop "
+            "on the edge of the Morvan. Its history is chequered: "
+            "peasants killed the abbot over taxes for a larger church "
+            "in 1096, and in 1120 the new church burned on the feast of "
+            "the great pilgrimage, 22 July, with a thousand pilgrims "
+            "inside. The Basilica of St. Mary Magdalene has since been "
+            "rebuilt.",
         ),
+        secrets="The relics' origin is unclear: one story says St. Badilo "
+        "brought them from the Holy Land in the ninth century, another "
+        "that the saint's tomb was found at St. Maximin in Provence, "
+        "identified by a carving of the anointing at Bethany. The monks "
+        "do not doubt them.",
     )
     w["bishop_of_autun"] = b.church(
         "Bishop of Autun (Cathedral of St. Lazarus)",
@@ -1433,33 +1417,31 @@ def _churches(normandy: Normandy, b: Builder) -> None:
         order="Cluniac",
         founded=910,
         place=burgundy,
-        summary=secrets(
-            paragraphs(
-                "Founded in 910 by William I of Aquitaine, the most "
-                "powerful monastery there has ever been: mother of a "
-                "thousand Cluniac houses whose priors meet here every year, "
-                "its abbot answering to the Pope alone. Closely tied to the "
-                "papacy since the Gregorian reforms, it has given the "
-                "Church several popes; Urban II called it the light of the "
-                "world, and St. Bernard asked whether the light needed a "
-                "golden candlestick. A little waned by the Cistercians' "
-                "rise, it still arguably rivals Rome and leads western "
-                "monasticism.",
-                "It is everything Citeaux is not: wealth and splendour, "
-                "with abbots who live like kings. Its abbey church of Sts. "
-                "Peter and Paul, built under St. Hugh and Peter the "
-                "Venerable, is the largest building in Christendom, nearly "
-                "600 feet long with two transepts, four aisles and five "
-                "belfries, lavishly adorned. Its library is among the "
-                "richest in Europe, and the abbots keep a fine townhouse in "
-                "Paris. Its Divine aura is strong (strength not given).",
-            ),
-            "Optionally, dark powers may be working Cluny's slow "
-            "corruption through the monks' love of luxury: servants of the "
-            "Devil hidden in its hierarchy, Infernal auras pocketed inside "
-            "the Divine one, or places where the Divine aura is weaker than "
-            "it should be.",
+        summary=paragraphs(
+            "Founded in 910 by William I of Aquitaine, the most "
+            "powerful monastery there has ever been: mother of a "
+            "thousand Cluniac houses whose priors meet here every year, "
+            "its abbot answering to the Pope alone. Closely tied to the "
+            "papacy since the Gregorian reforms, it has given the "
+            "Church several popes; Urban II called it the light of the "
+            "world, and St. Bernard asked whether the light needed a "
+            "golden candlestick. A little waned by the Cistercians' "
+            "rise, it still arguably rivals Rome and leads western "
+            "monasticism.",
+            "It is everything Citeaux is not: wealth and splendour, "
+            "with abbots who live like kings. Its abbey church of Sts. "
+            "Peter and Paul, built under St. Hugh and Peter the "
+            "Venerable, is the largest building in Christendom, nearly "
+            "600 feet long with two transepts, four aisles and five "
+            "belfries, lavishly adorned. Its library is among the "
+            "richest in Europe, and the abbots keep a fine townhouse in "
+            "Paris. Its Divine aura is strong (strength not given).",
         ),
+        secrets="Optionally, dark powers may be working Cluny's slow "
+        "corruption through the monks' love of luxury: servants of the "
+        "Devil hidden in its hierarchy, Infernal auras pocketed inside "
+        "the Divine one, or places where the Divine aura is weaker than "
+        "it should be.",
     )
     w["pontigny"] = b.church(
         "Pontigny Abbey",

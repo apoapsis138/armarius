@@ -198,6 +198,7 @@ class NeighbourSheetView(SheetView):
                 "tab-nb-standing",
                 self._standing_tab,
             )
+            yield from self._secrets_tab(self.neighbour)
 
     def stale(self) -> bool:
         """Whether the neighbour's kind changed since the sheet was built,

@@ -6,7 +6,13 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..rules import xp as xp_rules
-from .common import CharacterType, FatigueLevel, Handedness, known_fields
+from .common import (
+    CharacterType,
+    FatigueLevel,
+    Handedness,
+    known_fields,
+    move_secrets,
+)
 from .holdings import Possession
 from .laboratory import DiaryEntry
 from .traits import Ability, Characteristics, KnownSpell, Spell, VirtueFlawInstance
@@ -492,11 +498,15 @@ class Character:
     detail: str = FULL
     #: A paragraph about the character in the saga.
     summary: str = ""
+    #: What only the storyguide should read: the record's Secrets
+    #: chapter, hidden from players signed in to a hosted copy.
+    secrets: str = ""
     links: list[Link] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
-        d = dict(data)
+        # Older saves kept secrets under a heading in the summary.
+        d = move_secrets(dict(data), "summary")
         d["characteristics"] = Characteristics.from_dict(d.get("characteristics") or {})
         d["arts"] = {
             art: ArtScore.from_dict(score) for art, score in d.get("arts", {}).items()

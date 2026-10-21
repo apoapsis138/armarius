@@ -641,11 +641,47 @@ Choose who plays a character with **Played by** in the character's Biographical 
 
 - change the characters they play, with those characters' familiars, laboratories and books, and their season plans;
 - change the covenants too, if you ticked May change covenants for them;
-- look at everything else, and Export a character, laboratory or covenant (the file downloads in their browser).
+- look at everything else but each record's [Secrets](help:tab-secrets), which they never see, and Export a character, laboratory or covenant (the file downloads in their browser, without its secrets).
 
 Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, give things between records, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
+
+# A record's Secrets
+<!-- help: tab-secrets -->
+
+What only the storyguide should know about a record: the covenant's
+hidden debt, the magus's true master, where a missing founder really
+went. Every covenant, character, Tribunal, neighbour and creature has
+one, kept apart from its summary and notes so those can be read aloud
+or shown to the players as they are.
+<!-- tui -->
+It is the record's last tab, **Secrets**.
+<!-- /tui -->
+<!-- gui -->
+It is the record's last chapter before Manage, **Secrets**.
+<!-- /gui -->
+
+A player signed in to a hosted copy never sees it: the tab isn't there
+for them, and a record they export downloads without its secrets. Your
+own window, and anyone signed in as Storyguide, always sees it.
+
+Older sagas and content packs kept secrets at the end of a summary or
+notes under a **Secrets** heading. Opening the saga moves them here.
+
+**See also:** [What a signed-in player can do](help:players-access), [How to host a saga](help:guide-hosting)
+
+### Secrets
+<!-- help: section-secrets -->
+
+<!-- tui -->
+**You type:** with `e`, the record's Secrets, as many paragraphs as you
+like. It supports **bold** and *italic*.
+<!-- /tui -->
+<!-- gui -->
+**You type:** with **Edit Secrets**, the record's Secrets, as many
+paragraphs as you like. It supports **bold** and *italic*.
+<!-- /gui -->
 
 # Signing in
 <!-- help: sign-in -->

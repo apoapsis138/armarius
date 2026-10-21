@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING
 
 from ...arms import Arms
 from ...models import Neighbour
-from ..builder import secrets
 
 if TYPE_CHECKING:
     from . import Rhine
@@ -111,17 +110,15 @@ def _lowlands(rhine: Rhine) -> None:
         wealth="Poor",
         seat="Mecklenburg castle",
         place=lowlands,
-        summary=secrets(
-            "A Sorbian dynasty named for their castle between Lübeck and Rostock, a "
-            "little inland north of Schwerin, who rule Rostock. The family and the "
-            "region once worshipped Radegast, until Valdemar I burnt Rostock in 1161 "
-            "and drove the pagans into the countryside. They have since accepted "
-            "Christianity and sworn to the emperor, hoping to win back their "
-            "ancestral lands.",
-            "The Mecklenburgs still secretly worship Radegast and have gained "
-            "unnatural powers from him. Imanitos Mendax of Oculus Septentrionalis "
-            "has lately appeared to them as a prophet of the god.",
-        ),
+        summary="A Sorbian dynasty named for their castle between Lübeck and Rostock, a "
+        "little inland north of Schwerin, who rule Rostock. The family and the "
+        "region once worshipped Radegast, until Valdemar I burnt Rostock in 1161 "
+        "and drove the pagans into the countryside. They have since accepted "
+        "Christianity and sworn to the emperor, hoping to win back their "
+        "ancestral lands.",
+        secrets="The Mecklenburgs still secretly worship Radegast and have gained "
+        "unnatural powers from him. Imanitos Mendax of Oculus Septentrionalis "
+        "has lately appeared to them as a prophet of the god.",
     )
 
     # Churches of the north.
@@ -259,14 +256,12 @@ def _lowlands(rhine: Rhine) -> None:
         ruler="The Princes of Mecklenburg",
         answers_to=w["mecklenburg_princes"],
         place=lowlands,
-        summary=secrets(
-            "A growing Baltic port in Mecklenburg, overshadowed by Lübeck, and the "
-            "chief town of the Sorbian princes of Mecklenburg. Valdemar I burnt it in "
-            "1161 and drove its Radegast-worshippers into the countryside, and it is "
-            "now mostly German.",
-            "The Mecklenburg family still worship Radegast in secret; see their "
-            "record and the Cult of Radegast.",
-        ),
+        summary="A growing Baltic port in Mecklenburg, overshadowed by Lübeck, and the "
+        "chief town of the Sorbian princes of Mecklenburg. Valdemar I burnt it in "
+        "1161 and drove its Radegast-worshippers into the countryside, and it is "
+        "now mostly German.",
+        secrets="The Mecklenburg family still worship Radegast in secret; see their "
+        "record and the Cult of Radegast.",
     )
 
     # Towns of Saxony and Westphalia.
@@ -1050,26 +1045,24 @@ def _factions(rhine: Rhine) -> None:
         ),
         wants="The Blutbann, the power of life and death, which it says the nobility has usurped",
         offers="Judgement on heresy, witchcraft, perjury, murder and sacrilege where the lords will not act",
-        summary=secrets(
-            "A system of secret courts, mainly in northern Germany and seated at "
-            "Dortmund, claiming the power of life and death from an imperial mandate "
-            "of Charlemagne. Its members, the Wissende, number tens of thousands: any "
-            "free, legitimately born man who is neither excommunicate nor outlaw may "
-            "be initiated. It works by secret meetings, kidnappings by night, hostile "
-            "trials and in some regions torture, and passes one sentence, hanging in "
-            "a public place with an SSGG knife left by the corpse. Its officers are "
-            "the Stuhlherr, usually the local secular or church lord; the Freigraf, "
-            "appointed for life, who truly rules the court; the Freischöffen who "
-            "accuse and decide; the Fronboten who execute; and the Fehmenotes, "
-            "secret informants across the Empire. Its supreme head is the archbishop "
-            "of Cologne. Philippus Niger of Durenmar has assured House Guernicus that "
-            "it poses no danger to the Order.",
-            "Philippus Niger uses the Vehm: two of his trusted men are Freigrafs and "
-            "he knows more than twenty Fehmenotes. He has had dozens of suspected "
-            "hedge wizards and at least one Marched magus hanged by its courts, and "
-            "is spreading it southward as a weapon against hedge wizards. He has no "
-            "grounds for his assurance to House Guernicus.",
-        ),
+        summary="A system of secret courts, mainly in northern Germany and seated at "
+        "Dortmund, claiming the power of life and death from an imperial mandate "
+        "of Charlemagne. Its members, the Wissende, number tens of thousands: any "
+        "free, legitimately born man who is neither excommunicate nor outlaw may "
+        "be initiated. It works by secret meetings, kidnappings by night, hostile "
+        "trials and in some regions torture, and passes one sentence, hanging in "
+        "a public place with an SSGG knife left by the corpse. Its officers are "
+        "the Stuhlherr, usually the local secular or church lord; the Freigraf, "
+        "appointed for life, who truly rules the court; the Freischöffen who "
+        "accuse and decide; the Fronboten who execute; and the Fehmenotes, "
+        "secret informants across the Empire. Its supreme head is the archbishop "
+        "of Cologne. Philippus Niger of Durenmar has assured House Guernicus that "
+        "it poses no danger to the Order.",
+        secrets="Philippus Niger uses the Vehm: two of his trusted men are Freigrafs and "
+        "he knows more than twenty Fehmenotes. He has had dozens of suspected "
+        "hedge wizards and at least one Marched magus hanged by its courts, and "
+        "is spreading it southward as a weapon against hedge wizards. He has no "
+        "grounds for his assurance to House Guernicus.",
     )
     w["harz_witches"] = b.faction(
         "The Witches of the Harz",
@@ -1114,22 +1107,20 @@ def _factions(rhine: Rhine) -> None:
         ruler="Igor Rastvan of Roznov, high priest",
         wants="A kingdom of the Slavs united under Radegast",
         offers="Temporal influence at pagan courts; the god's favour to the inspired and the overconfident",
-        summary=secrets(
-            "The worship of Radegast, the Slavic god of chieftainship and war, and "
-            "also of fertility and harvest. His worship was anciently centred in "
-            "Pomerania at his Oracle in the fortress-temple of Rethra, now ruined and "
-            "plundered, though Mount Radhost in Moravia was always his sacred site "
-            "and the Ex Miscellanea half of Roznov is his priesthood, with Igor "
-            "Rastvan as high priest. His devotees are often tied to noble or royal "
-            "pagan families and serve as court advisers; his favoured are inspiring "
-            "and commanding, and overconfident. The princes of Mecklenburg were "
-            "driven from his open worship in 1161.",
-            "The Mecklenburg nobility still come secretly to Rethra to honour "
-            "Radegast and have gained powers from him; Imanitos Mendax poses as the "
-            "god's prophet to them. In the saga plot Between the Devil and the Deep "
-            "Blue Sea, Radegast is a demon. At Roznov the summer-solstice festival "
-            "hides human sacrifices.",
-        ),
+        summary="The worship of Radegast, the Slavic god of chieftainship and war, and "
+        "also of fertility and harvest. His worship was anciently centred in "
+        "Pomerania at his Oracle in the fortress-temple of Rethra, now ruined and "
+        "plundered, though Mount Radhost in Moravia was always his sacred site "
+        "and the Ex Miscellanea half of Roznov is his priesthood, with Igor "
+        "Rastvan as high priest. His devotees are often tied to noble or royal "
+        "pagan families and serve as court advisers; his favoured are inspiring "
+        "and commanding, and overconfident. The princes of Mecklenburg were "
+        "driven from his open worship in 1161.",
+        secrets="The Mecklenburg nobility still come secretly to Rethra to honour "
+        "Radegast and have gained powers from him; Imanitos Mendax poses as the "
+        "god's prophet to them. In the saga plot Between the Devil and the Deep "
+        "Blue Sea, Radegast is a demon. At Roznov the summer-solstice festival "
+        "hides human sacrifices.",
     )
     w["frisian_pirates"] = b.faction(
         "Pirates of Frisia",
@@ -1171,16 +1162,14 @@ def _factions(rhine: Rhine) -> None:
         realm="Magic",
         place=central,
         members=2,
-        summary=secrets(
-            "Bjornaer magi of bear heartbeast who look back to the Founder herself; "
-            "the Senior Elder of the House always has a bear heartbeast in her "
-            "memory.",
-            "An ancient hidden line descending from Bjornaer, now only Archmage "
-            "Urgen of Crintera and his filia Odorpes of Fengheld's Lusatia chapter. "
-            "They keep the Bears' Cave in the northern Harz, floored with the bones "
-            "of primeval bears, as a private source of Animal vis; each visits now "
-            "and then and would be furious to find anyone else harvesting it.",
-        ),
+        summary="Bjornaer magi of bear heartbeast who look back to the Founder herself; "
+        "the Senior Elder of the House always has a bear heartbeast in her "
+        "memory.",
+        secrets="An ancient hidden line descending from Bjornaer, now only Archmage "
+        "Urgen of Crintera and his filia Odorpes of Fengheld's Lusatia chapter. "
+        "They keep the Bears' Cave in the northern Harz, floored with the bones "
+        "of primeval bears, as a private source of Animal vis; each visits now "
+        "and then and would be furious to find anyone else harvesting it.",
     )
     w["harmonists"] = b.faction(
         "Harmonists of House Bjornaer",
@@ -1209,21 +1198,19 @@ def _factions(rhine: Rhine) -> None:
         ruler="Urgen, Senior Elder of Bjornaer",
         wants="Humans confined to walled cities; forests, marshes and moors left to beasts and feared",
         rules="Zealots revert tamed land to wilderness and drive out settlers",
-        summary=secrets(
-            "The more extreme faction of House Bjornaer. Wilderists would keep "
-            "humanity behind city walls and the wild places feared, and their "
-            "zealots work to turn farmland back to wilderness and drive settlers "
-            "off. Urgen, Senior Elder, former Primus and leader of the Hawthorn Gild, "
-            "is their most influential voice, arguing that the Order must hold back "
-            "the growing mundane population and that Bjornaer should enter Hermetic "
-            "politics to do it; Istvan Padas of the Horse seat belongs, and Zora, "
-            "priestess of Hertha, backs them. They gain adherents as the occupation "
-            "of Rügen drags on, and the Gathering of 1227 is expected to bring the "
-            "dispute to a head.",
-            "Urgen is widely suspected of driving mundanes from the wild with covert "
-            "animal attacks, and is stepping up such campaigns now he is free of the "
-            "Primacy.",
-        ),
+        summary="The more extreme faction of House Bjornaer. Wilderists would keep "
+        "humanity behind city walls and the wild places feared, and their "
+        "zealots work to turn farmland back to wilderness and drive settlers "
+        "off. Urgen, Senior Elder, former Primus and leader of the Hawthorn Gild, "
+        "is their most influential voice, arguing that the Order must hold back "
+        "the growing mundane population and that Bjornaer should enter Hermetic "
+        "politics to do it; Istvan Padas of the Horse seat belongs, and Zora, "
+        "priestess of Hertha, backs them. They gain adherents as the occupation "
+        "of Rügen drags on, and the Gathering of 1227 is expected to bring the "
+        "dispute to a head.",
+        secrets="Urgen is widely suspected of driving mundanes from the wild with covert "
+        "animal attacks, and is stepping up such campaigns now he is free of the "
+        "Primacy.",
     )
     w["forest_brothers_volkhvy"] = b.faction(
         "Volkhvy of the Forest Brothers",
@@ -1233,19 +1220,17 @@ def _factions(rhine: Rhine) -> None:
         place=east,
         rules="All male; nearly all have Ways of the Forest and a fierce devotion to family",
         offers="Burial at the Ziegensteine; the opening of its gate for Bjornaer magi",
-        summary=secrets(
-            "The few remaining priests of Rugevit, Porevit and Porenitz, the gods of "
-            "rowan, beech and larch still worshipped in Rügen's wild places. They "
-            "are welcome in the Stubnitz Forest, bury devout believers among the "
-            "graves and megaliths of the Ziegensteine near Mönchgut, and alone can "
-            "open the great empty barrow there, which they often let Bjornaer magi "
-            "use because of their friendship with Crintera; Janis, leader of "
-            "Crintera's Swan clan, is one of them.",
-            "The barrow is a pre-Hermetic gateway, one end of a faerie trod through "
-            "a particularly dark region of Arcadia that comes out near the covenant "
-            "of Pripet Major in the Novgorod Tribunal. Nobody at the Russian end can "
-            "open it, so it works one way only.",
-        ),
+        summary="The few remaining priests of Rugevit, Porevit and Porenitz, the gods of "
+        "rowan, beech and larch still worshipped in Rügen's wild places. They "
+        "are welcome in the Stubnitz Forest, bury devout believers among the "
+        "graves and megaliths of the Ziegensteine near Mönchgut, and alone can "
+        "open the great empty barrow there, which they often let Bjornaer magi "
+        "use because of their friendship with Crintera; Janis, leader of "
+        "Crintera's Swan clan, is one of them.",
+        secrets="The barrow is a pre-Hermetic gateway, one end of a faerie trod through "
+        "a particularly dark region of Arcadia that comes out near the covenant "
+        "of Pripet Major in the Novgorod Tribunal. Nobody at the Russian end can "
+        "open it, so it works one way only.",
     )
     w["svantovit_volkhvy"] = b.faction(
         "Volkhvy of Svantovit",
@@ -1256,22 +1241,20 @@ def _factions(rhine: Rhine) -> None:
         members=2,
         wants="A white horse for a Great Ritual to the four-faced god",
         offers="Knowledge of the rites of Arkona, which helped Falke learn to thaw the Baltic",
-        summary=secrets(
-            "Only two priests of the four-faced sun- and war-god Svantovit remain, a "
-            "very old man and his grandson, scraping a living on the windswept Wittow "
-            "peninsula below the ruined temple of Arkona that Bishop Absalon "
-            "destroyed in 1169. The elder is trying to pass on all he knows; the "
-            "grandson has seen no power and follows only out of family duty. No "
-            "white horse remains on Rügen for the Great Ritual, since the Danes took "
-            "them all; were one brought, the old man would have his grandson steal "
-            "it, and the rite's display of power would make the doubter a zealous "
-            "pagan messiah bent on returning Rügen to the god, which watching magi "
-            "might take for diabolism.",
-            "The two have laboriously moved the surviving upper half of Svantovit's "
-            "statue from Arkona into a well-hidden shrine: four faces looking four "
-            "ways, a bull's horn in its right hand, the god's huge sword laid before "
-            "it. Looters took the jewelled saddle and bridle.",
-        ),
+        summary="Only two priests of the four-faced sun- and war-god Svantovit remain, a "
+        "very old man and his grandson, scraping a living on the windswept Wittow "
+        "peninsula below the ruined temple of Arkona that Bishop Absalon "
+        "destroyed in 1169. The elder is trying to pass on all he knows; the "
+        "grandson has seen no power and follows only out of family duty. No "
+        "white horse remains on Rügen for the Great Ritual, since the Danes took "
+        "them all; were one brought, the old man would have his grandson steal "
+        "it, and the rite's display of power would make the doubter a zealous "
+        "pagan messiah bent on returning Rügen to the god, which watching magi "
+        "might take for diabolism.",
+        secrets="The two have laboriously moved the surviving upper half of Svantovit's "
+        "statue from Arkona into a well-hidden shrine: four faces looking four "
+        "ways, a bull's horn in its right hand, the god's huge sword laid before "
+        "it. Looters took the jewelled saddle and bridle.",
     )
     w["hertha_priesthood"] = b.faction(
         "Priesthood of Hertha",
@@ -1337,28 +1320,26 @@ def _factions(rhine: Rhine) -> None:
         place=east,
         rules="Once a year on Walpurgis Night the factions of a region meet round great bonfires under compacts that forbid fighting",
         wants="Territory, kinship renewed, and the old glory remembered",
-        summary=secrets(
-            "The fireside tales of witches and werewolves in the Eastern Marches are "
-            "warnings, and villagers watch neighbours and strangers for odd features "
-            "or accents, for animals' fear, for a prickling neck. Shapeshifting runs "
-            "in distinct lineages that form one far-flung extended family, passed "
-            "reliably from two werewolf parents and less so from one; some live "
-            "apart from humanity, others prey on livestock and children. Their only "
-            "organisation, contrary to what House Bjornaer believes, is the yearly "
-            "meeting on 30 April where disputes are settled, territories agreed, "
-            "kinships renewed and the young hear the legends of a glorious past "
-            "united under a war-leader against the Romans. Children of werewolf "
-            "families are Skinchangers; those born to human families usually have "
-            "the Lycanthrope Flaw and cannot control the change. Small animals flee "
-            "them, horses shy and dogs bark, unless they have Animal Ken. Some, "
-            "especially women, become greatly respected witches with powers of "
-            "entrancement or second sight. The storyguide may add bear or lynx "
-            "clans.",
-            "Their legends tell of the betrayal of Bjornaer, who carried their "
-            "secrets to the Roman priests, which they blame for their fall from "
-            "kings of men to fringe-dwellers; the Founder was a Pomeranian "
-            "shapeshifter-witch of their kind.",
-        ),
+        summary="The fireside tales of witches and werewolves in the Eastern Marches are "
+        "warnings, and villagers watch neighbours and strangers for odd features "
+        "or accents, for animals' fear, for a prickling neck. Shapeshifting runs "
+        "in distinct lineages that form one far-flung extended family, passed "
+        "reliably from two werewolf parents and less so from one; some live "
+        "apart from humanity, others prey on livestock and children. Their only "
+        "organisation, contrary to what House Bjornaer believes, is the yearly "
+        "meeting on 30 April where disputes are settled, territories agreed, "
+        "kinships renewed and the young hear the legends of a glorious past "
+        "united under a war-leader against the Romans. Children of werewolf "
+        "families are Skinchangers; those born to human families usually have "
+        "the Lycanthrope Flaw and cannot control the change. Small animals flee "
+        "them, horses shy and dogs bark, unless they have Animal Ken. Some, "
+        "especially women, become greatly respected witches with powers of "
+        "entrancement or second sight. The storyguide may add bear or lynx "
+        "clans.",
+        secrets="Their legends tell of the betrayal of Bjornaer, who carried their "
+        "secrets to the Roman priests, which they blame for their fall from "
+        "kings of men to fringe-dwellers; the Founder was a Pomeranian "
+        "shapeshifter-witch of their kind.",
     )
     w["god_of_truth"] = b.faction(
         "The God of Truth",
@@ -1367,21 +1348,19 @@ def _factions(rhine: Rhine) -> None:
         place=bohemia,
         rules="No catechism beyond reverence for the wild and leaving the churches",
         wants="Mankind led into the wild by the angels men call faeries",
-        summary=secrets(
-            "A dualist faith that has arisen in the last decade in the villages near "
-            "the Bohemian Forest. It teaches that a God of Truth made the cosmos, "
-            "while a God of Law made and rules the material world without caring "
-            "for its people, and that the Church errs by worshipping the stern God "
-            "of Law. The God of Truth is immaterial and can be found only in the "
-            "wild, where he has sent his angels, whom men call faeries, to guide "
-            "humanity. With no clear leader or line of transmission, churchmen "
-            "cannot stamp it out. Tales speak of the Prophet Iacob, always "
-            "accompanied by an albino crow, who appears unpredictably and never "
-            "preaches, yet the religion springs up wherever he has been seen.",
-            "The Prophet is Iacob of Irencillia, whose caricature Nestor is the "
-            "white crow, carrying out Primus Handri's plan to found a religion in "
-            "the name of the fae. The Quaesitores would be appalled.",
-        ),
+        summary="A dualist faith that has arisen in the last decade in the villages near "
+        "the Bohemian Forest. It teaches that a God of Truth made the cosmos, "
+        "while a God of Law made and rules the material world without caring "
+        "for its people, and that the Church errs by worshipping the stern God "
+        "of Law. The God of Truth is immaterial and can be found only in the "
+        "wild, where he has sent his angels, whom men call faeries, to guide "
+        "humanity. With no clear leader or line of transmission, churchmen "
+        "cannot stamp it out. Tales speak of the Prophet Iacob, always "
+        "accompanied by an albino crow, who appears unpredictably and never "
+        "preaches, yet the religion springs up wherever he has been seen.",
+        secrets="The Prophet is Iacob of Irencillia, whose caricature Nestor is the "
+        "white crow, carrying out Primus Handri's plan to found a religion in "
+        "the name of the fae. The Quaesitores would be appalled.",
     )
 
 
@@ -1493,16 +1472,14 @@ def _threats(rhine: Rhine) -> None:
         "The Holy Vehm's hangings",
         antagonist="The Holy Vehm, and Philippus Niger behind it",
         place=lowlands,
-        summary=secrets(
-            "The secret courts of the north hang suspected witches and heretics "
-            "after trials no accused can win, and leave an SSGG knife by the corpse. "
-            "Their informants are everywhere, their jurisdiction covers witchcraft "
-            "and sacrilege, and their courts have lately begun to sit south of their "
-            "old lands.",
-            "Philippus Niger of Durenmar turns the Vehm on hedge wizards, has had at "
-            "least one Marched magus hanged by it, and spreads it southward while "
-            "telling House Guernicus it is no threat to the Order.",
-        ),
+        summary="The secret courts of the north hang suspected witches and heretics "
+        "after trials no accused can win, and leave an SSGG knife by the corpse. "
+        "Their informants are everywhere, their jurisdiction covers witchcraft "
+        "and sacrilege, and their courts have lately begun to sit south of their "
+        "old lands.",
+        secrets="Philippus Niger of Durenmar turns the Vehm on hedge wizards, has had at "
+        "least one Marched magus hanged by it, and spreads it southward while "
+        "telling House Guernicus it is no threat to the Order.",
         stages=[
             stage(
                 "Courts in the south",
@@ -1530,23 +1507,21 @@ def _threats(rhine: Rhine) -> None:
         "Imanitos Mendax",
         antagonist="Imanitos Mendax of Jerbiton",
         place=lowlands,
-        summary=secrets(
-            "A master of House Jerbiton at Oculus Septentrionalis in Lübeck who "
-            "poses as the owner of the upmarket Goldenes Kalb tavern, with a "
-            "discreet brothel upstairs for rich clients, and whose third trade is "
-            "the blackmail and extortion of citizens and magi. Tall, lean and "
-            "handsome, a subtle Mentem specialist with competent Imaginem for "
-            "disguises; his covenant-mates find him useful despite his morals.",
-            "He feeds Eric Ribecus of Waddenzee advance word of the covenant's ship "
-            "movements for a share of the plunder, perhaps by tiny Astasian "
-            "messenger demons taken for airy spirits; discovery would mean expulsion "
-            "and undying enmity. Optionally he is a diabolist of a hidden dark "
-            "Jerbiton lineage serving the demon Radegast, corrupting Lübeck's "
-            "notables through the Goldenes Kalb, posing as the prophet of Radegast "
-            "to the Mecklenburgs, able to swap the covenant's three Verditius "
-            "magestones for infernally tainted copies, and perhaps planting "
-            "corruption at the heart of the coming merchant league.",
-        ),
+        summary="A master of House Jerbiton at Oculus Septentrionalis in Lübeck who "
+        "poses as the owner of the upmarket Goldenes Kalb tavern, with a "
+        "discreet brothel upstairs for rich clients, and whose third trade is "
+        "the blackmail and extortion of citizens and magi. Tall, lean and "
+        "handsome, a subtle Mentem specialist with competent Imaginem for "
+        "disguises; his covenant-mates find him useful despite his morals.",
+        secrets="He feeds Eric Ribecus of Waddenzee advance word of the covenant's ship "
+        "movements for a share of the plunder, perhaps by tiny Astasian "
+        "messenger demons taken for airy spirits; discovery would mean expulsion "
+        "and undying enmity. Optionally he is a diabolist of a hidden dark "
+        "Jerbiton lineage serving the demon Radegast, corrupting Lübeck's "
+        "notables through the Goldenes Kalb, posing as the prophet of Radegast "
+        "to the Mecklenburgs, able to swap the covenant's three Verditius "
+        "magestones for infernally tainted copies, and perhaps planting "
+        "corruption at the heart of the coming merchant league.",
         stages=[
             stage(
                 "Word reaches the pirates",
@@ -1635,16 +1610,14 @@ def _threats(rhine: Rhine) -> None:
         "Fengheld's hidden ambition",
         antagonist="The senior magi of Fengheld",
         place=_place(rhine, "fengheld_site") or central,
-        summary=secrets(
-            "Fengheld commands more than forty Tribunal votes, nearly a quarter of "
-            "the whole, though they are seldom all cast together, and presents "
-            "itself as the Tribunal's neutral peacemaker and arbiter of disputes. "
-            "The more paranoid magi already suspect a hidden agenda behind the "
-            "neutrality.",
-            "Fengheld's real policy is to keep every other covenant so tangled in "
-            "politics that nobody notices its own growing power, and it has worked "
-            "so far.",
-        ),
+        summary="Fengheld commands more than forty Tribunal votes, nearly a quarter of "
+        "the whole, though they are seldom all cast together, and presents "
+        "itself as the Tribunal's neutral peacemaker and arbiter of disputes. "
+        "The more paranoid magi already suspect a hidden agenda behind the "
+        "neutrality.",
+        secrets="Fengheld's real policy is to keep every other covenant so tangled in "
+        "politics that nobody notices its own growing power, and it has worked "
+        "so far.",
     )
     w["balastor_liberation"] = b.threat(
         "Balastor's liberation",
@@ -1755,21 +1728,19 @@ def _threats(rhine: Rhine) -> None:
         "The slave trade of Prague",
         antagonist="The Knights of the Sword and the slave merchants of Prague",
         place=bohemia,
-        summary=secrets(
-            "Prague holds a large slave market, and the word for a slave is the word "
-            "for a Slav; the Church forbids only the enslavement of Christians. The "
-            "Knights of the Sword control the trade, which pays for their corrupt "
-            "expansion in Pomerania and beyond: they bring slaves to Prague and sell "
-            "them to Jewish merchants who resell them in Muslim lands. An ordinary "
-            "slave costs a few shillings, less than a good horse; the exceptional "
-            "ten times that, and the young, healthy and strong fetch more. Owning "
-            "slaves is legal in Germany and frowned on by the Church.",
-            "Ladislaus, a shady-looking man at the market, is a trusted companion of "
-            "Roznov with Magic Sensitivity; he picks out Gifted children among the "
-            "slaves, who are delivered to Coeris, the domus magna of House Tremere "
-            "in Transylvania. The other slaves he buys are traded or used by Roznov, "
-            "and some become the victims of its summer-solstice sacrifices.",
-        ),
+        summary="Prague holds a large slave market, and the word for a slave is the word "
+        "for a Slav; the Church forbids only the enslavement of Christians. The "
+        "Knights of the Sword control the trade, which pays for their corrupt "
+        "expansion in Pomerania and beyond: they bring slaves to Prague and sell "
+        "them to Jewish merchants who resell them in Muslim lands. An ordinary "
+        "slave costs a few shillings, less than a good horse; the exceptional "
+        "ten times that, and the young, healthy and strong fetch more. Owning "
+        "slaves is legal in Germany and frowned on by the Church.",
+        secrets="Ladislaus, a shady-looking man at the market, is a trusted companion of "
+        "Roznov with Magic Sensitivity; he picks out Gifted children among the "
+        "slaves, who are delivered to Coeris, the domus magna of House Tremere "
+        "in Transylvania. The other slaves he buys are traded or used by Roznov, "
+        "and some become the victims of its summer-solstice sacrifices.",
     )
     w["bohemian_giants"] = b.threat(
         "Giants of the Bohemian Forest",

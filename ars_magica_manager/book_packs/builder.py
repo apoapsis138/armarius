@@ -6,9 +6,11 @@ Covenant, a Character, a Neighbour of each kind, a Book), so the pack
 is an ordinary export and the sheets show it like anything the user
 typed.
 
-Secrets go at the end of a summary or a covenant's notes under a
-"Secrets" heading (`secrets()` writes it), where the storyguide finds
-them and a player sheet need not show them."""
+A record's secrets go in its own `secrets` (each method's `secrets=`),
+the Secrets chapter a player never sees. The few texts that are part of
+another record (a regio level's notes, a case's charge, a Tribunal's
+diary entry, a book's description) keep theirs at their end under a
+"Secrets" heading (`secrets()` writes it)."""
 
 from __future__ import annotations
 
@@ -42,6 +44,7 @@ from ..models import (
     TribunalDiaryEntry,
     VirtueFlawInstance,
 )
+from ..models.common import SECRETS_HEADING
 from ..models.world import FULL, SKETCH
 from ..places import PLACE, RUINED
 from ..rules import aging, warping
@@ -49,7 +52,7 @@ from ..rules import creation_access as access
 from ..rules.xp import ability_xp, art_xp
 from ..tribunal_packages import rhine as rhine_package
 
-SECRETS = "Secrets"
+SECRETS = SECRETS_HEADING
 
 
 def secrets(text: str, hidden: str) -> str:
@@ -117,6 +120,7 @@ class Builder:
         meeting_place: str,
         covenants_total: int | None = None,
         magi_total: int | None = None,
+        secrets: str = "",
     ) -> Tribunal:
         tribunal = Tribunal(
             id=storage.generate_unique_id(name, [t.id for t in self.saga.tribunals]),
@@ -129,6 +133,7 @@ class Builder:
             meeting_place=meeting_place,
             covenants_total=covenants_total,
             magi_total=magi_total,
+            secrets=secrets,
         )
         self.saga.tribunals.append(tribunal)
         return tribunal
@@ -212,6 +217,7 @@ class Builder:
         arms: Arms | None = None,
         liege: Covenant | None = None,
         oath: str = "",
+        secrets: str = "",
     ) -> Covenant:
         """A covenant of the book's Tribunal, not played: its aura is the
         one typed here, or its place's when it sits in one; `liege` is the
@@ -234,6 +240,7 @@ class Builder:
             arms=arms.to_dict() if arms else {},
             liege_id=liege.id if liege is not None else None,
             oath=oath,
+            secrets=secrets,
         )
         if place is not None:
             covenant.place_id, covenant.place_level = place.id, level
@@ -251,6 +258,7 @@ class Builder:
         traits: dict[str, int] | None = None,
         detail: str = SKETCH,
         type: str = "magus",
+        secrets: str = "",
     ) -> Character:
         """A magus the book names, as a sketch: House, age as of the
         pack's year, a paragraph, and personality traits where given."""
@@ -261,6 +269,7 @@ class Builder:
             covenant_id=covenant.id if covenant else None,
             detail=detail,
             summary=summary,
+            secrets=secrets,
         )
         character.hermetic.house = house
         if age is not None:
@@ -321,6 +330,7 @@ class Builder:
         level: int = 0,
         detail: str = SKETCH,
         arms: Arms | None = None,
+        secrets: str = "",
     ) -> Neighbour:
         neighbour = Neighbour(
             id=self._neighbour_id(name),
@@ -333,6 +343,7 @@ class Builder:
             realm=realm,
             details=dict(details or {}),
             arms=arms.to_dict() if arms else {},
+            secrets=secrets,
         )
         if place is not None:
             neighbour.place_id, neighbour.place_level = place.id, level
@@ -344,6 +355,7 @@ class Builder:
         name: str,
         *,
         summary: str,
+        secrets: str = "",
         inside: Neighbour | None = None,
         level: int = 0,
         realm: str = "Magic",
@@ -362,6 +374,7 @@ class Builder:
             PLACE,
             name,
             summary=summary,
+            secrets=secrets,
             realm=realm,
             place=inside,
             level=level,
@@ -403,6 +416,7 @@ class Builder:
         name: str,
         *,
         summary: str,
+        secrets: str = "",
         charter: str = "",
         population: int | None = None,
         council: int | None = None,
@@ -415,6 +429,7 @@ class Builder:
             "town",
             name,
             summary=summary,
+            secrets=secrets,
             ruler=ruler,
             answers_to=answers_to,
             place=place,
@@ -427,6 +442,7 @@ class Builder:
         name: str,
         *,
         summary: str,
+        secrets: str = "",
         title: str = "landed",
         wealth: str = "Average",
         manors: int = 1,
@@ -440,6 +456,7 @@ class Builder:
             "lord",
             name,
             summary=summary,
+            secrets=secrets,
             ruler=ruler,
             answers_to=answers_to,
             place=place,
@@ -452,6 +469,7 @@ class Builder:
         name: str,
         *,
         summary: str,
+        secrets: str = "",
         church: str = "Parish church",
         order: str = "",
         ruler: str = "",
@@ -464,6 +482,7 @@ class Builder:
             "church",
             name,
             summary=summary,
+            secrets=secrets,
             ruler=ruler,
             answers_to=answers_to,
             place=place,
@@ -477,6 +496,7 @@ class Builder:
         name: str,
         *,
         summary: str,
+        secrets: str = "",
         school: str = "Cathedral school",
         ruler: str = "",
         answers_to: Neighbour | None = None,
@@ -486,6 +506,7 @@ class Builder:
             "university",
             name,
             summary=summary,
+            secrets=secrets,
             ruler=ruler,
             answers_to=answers_to,
             place=place,
@@ -497,6 +518,7 @@ class Builder:
         name: str,
         *,
         summary: str,
+        secrets: str = "",
         faction: str = "Other",
         decides: str = "",
         members: int | None = None,
@@ -513,6 +535,7 @@ class Builder:
             "faction",
             name,
             summary=summary,
+            secrets=secrets,
             ruler=ruler,
             realm=realm,
             place=place,
@@ -534,6 +557,7 @@ class Builder:
         name: str,
         *,
         summary: str,
+        secrets: str = "",
         antagonist: str = "",
         moves: str = "A track",
         position: int = 0,
@@ -545,6 +569,7 @@ class Builder:
             "threat",
             name,
             summary=summary,
+            secrets=secrets,
             realm=realm,
             place=place,
             details={
@@ -614,6 +639,7 @@ class Builder:
         order: str = "",
         hierarchy: int | None = None,
         weakness: str = "",
+        secrets: str = "",
     ) -> Creature:
         """A creature's stat block as the book prints it: its realm, Might
         and Form, Size, and the rest in `block`'s notation
@@ -655,6 +681,7 @@ class Builder:
             order=order,
             hierarchy=hierarchy,
             weakness=weakness,
+            secrets=secrets,
         )
         creature.characteristics = replace(
             creature.characteristics, **block.get("characteristics", {})

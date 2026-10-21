@@ -24,6 +24,7 @@ from .... import world
 from ....boon_hook_text import counted
 from ....commands import SectionOps
 from ....forms import world as world_forms
+from ....forms.secrets import secrets_text
 from ....markup import escape, inherited
 from ....models import (
     FULL,
@@ -33,7 +34,12 @@ from ....models import (
     Laboratory,
     Saga,
 )
-from ....sections import ATTITUDE_SECTION, FAVOURS_SECTION, LINKS_SECTION
+from ....sections import (
+    ATTITUDE_SECTION,
+    FAVOURS_SECTION,
+    LINKS_SECTION,
+    SECRETS_SECTION,
+)
 from ..widgets import DetailsPanel, SelectableList, SheetSection, first_stop
 from .lists import BookListView
 
@@ -131,6 +137,9 @@ class SheetView(Vertical):
         #: The core's Add, Edit and Delete (commands.SectionOps) for each
         #: section in sections.CORE_SECTIONS this sheet shows.
         self.core_ops: dict[str, SectionOps] = {}
+        #: Whether the record's Secrets tab is shown: the workspace turns it
+        #: off for a player signed in to a hosted copy.
+        self.show_secrets = True
 
     def section_row(self, section_id: str) -> int | None:
         """The chosen row of `section_id`'s list, by its data index; 0 for a
@@ -195,6 +204,20 @@ class SheetView(Vertical):
         self.query_one("#btn-worksheet", Button).display = (
             record is not None and record.in_creation
         )
+
+    def _secrets_tab(self, record: Any) -> ComposeResult:
+        """The record's Secrets tab, last, unless the storyguide alone may
+        see it and isn't the one looking."""
+        if not self.show_secrets:
+            return
+
+        def build() -> ComposeResult:
+            with VerticalScroll(), SheetSection(title="Secrets", id=SECRETS_SECTION):
+                yield self._static(
+                    SECRETS_SECTION, lambda: secrets_text(record), id="secrets-text"
+                )
+
+        yield self._tab("Secrets", "tab-secrets", build)
 
     @staticmethod
     def _scrolling(build: Callable[[], ComposeResult]) -> Callable[[], ComposeResult]:

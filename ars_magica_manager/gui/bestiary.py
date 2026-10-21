@@ -35,6 +35,7 @@ from .character_sheet import (
     ability_mark,
     ability_view,
     characteristic_cards,
+    secrets_chapter,
     section,
     trait_section,
 )
@@ -58,6 +59,7 @@ CHAPTERS = (
     ("Combat", "combat"),
     ("Powers & Vis", "vis"),
     ("Description", "library"),
+    ("Secrets", "secrets"),
 )
 
 
@@ -98,6 +100,7 @@ class CreaturePage(QWidget):
             "Combat": self._combat,
             "Powers & Vis": self._powers,
             "Description": self._description,
+            "Secrets": lambda: secrets_chapter(creature, p, run),
         }
         for name, concept in CHAPTERS:
             self.codex.add(name, concept, builders[name]())

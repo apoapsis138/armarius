@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...places import PLACE
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -98,14 +98,8 @@ def _add(
 
 
 def _append(record: Neighbour, text: str) -> None:
-    """Add a paragraph to a record's summary, ahead of its secrets."""
-    marker = "\n\nSecrets\n"
-    summary = record.summary.rstrip()
-    if marker in summary:
-        head, tail = summary.split(marker, 1)
-        record.summary = f"{head.rstrip()}\n\n{text}{marker}{tail}"
-    else:
-        record.summary = paragraphs(summary, text)
+    """Add a paragraph to a record's summary."""
+    record.summary = paragraphs(record.summary, text)
 
 
 def build(theban: Theban) -> None:
@@ -129,29 +123,27 @@ def _magical_sites(theban: Theban) -> None:
         "erythrae",
         "Erythrae",
         "anatolia",
-        summary=secrets(
-            paragraphs(
-                "A small town on the Ionian coast facing the island of "
-                "Khios, home of Demophile, the Erythraean Sibyl. Of the "
-                "ten sibyls she speaks most nearly as a Christian would, "
-                "and so she is the best known of them; her answers come as "
-                "riddles, very often acrostics, a form she is said to have "
-                "devised, in which the first letters of each line spell out "
-                "the meaning.",
-                "Every sibyl sits in a strong Magic aura or regio (the book "
-                "gives no number) and cannot go far from it without "
-                "risking Acclimation and the loss of her sight; she seldom "
-                "lives alone, and keeps guardians, mortal or otherwise. "
-                "For the sibyl's character guide, see the Bestiary.",
-            ),
-            "Sibyls are magic humans, immortal and truly far-seeing, "
-            "though few know it; 'sibyl' may be an office handed on rather "
-            "than one woman. Their daughters by visitors, the sibyllides, "
-            "are magic kin gifted in prophecy and second sight, who must "
-            "come home every ten years to tell their mothers how the world "
-            "goes; at least one is a magus of the Order, with a natural "
-            "bent for Intellego.",
+        summary=paragraphs(
+            "A small town on the Ionian coast facing the island of "
+            "Khios, home of Demophile, the Erythraean Sibyl. Of the "
+            "ten sibyls she speaks most nearly as a Christian would, "
+            "and so she is the best known of them; her answers come as "
+            "riddles, very often acrostics, a form she is said to have "
+            "devised, in which the first letters of each line spell out "
+            "the meaning.",
+            "Every sibyl sits in a strong Magic aura or regio (the book "
+            "gives no number) and cannot go far from it without "
+            "risking Acclimation and the loss of her sight; she seldom "
+            "lives alone, and keeps guardians, mortal or otherwise. "
+            "For the sibyl's character guide, see the Bestiary.",
         ),
+        secrets="Sibyls are magic humans, immortal and truly far-seeing, "
+        "though few know it; 'sibyl' may be an office handed on rather "
+        "than one woman. Their daughters by visitors, the sibyllides, "
+        "are magic kin gifted in prophecy and second sight, who must "
+        "come home every ten years to tell their mothers how the world "
+        "goes; at least one is a magus of the Order, with a natural "
+        "bent for Intellego.",
         **KNOWN_REGION,
     )
     _add(
@@ -192,20 +184,18 @@ def _magical_sites(theban: Theban) -> None:
         "phrygian_sibyl",
         "The Haunt of the Phrygian Sibyl",
         "anatolia",
-        summary=secrets(
-            paragraphs(
-                "Somewhere in the Phrygian uplands of the Anatolian "
-                "plateau lives the sibyl called Lamia, of ill repute even "
-                "if she is probably not the child-eating faerie who shares "
-                "her name. She gives no prophecy freely: a questioner must "
-                "wrestle her down and force the words from her, and she is "
-                "far stronger than any of her sisters. The prophets of "
-                "Lamites (1123 to 1127) took her as their covenant's "
-                "patron and did not live long.",
-            ),
-            "Whether the sibyl or the faerie Lamia killed the magi of "
-            "Lamites is the storyguide's to say; each had cause.",
+        summary=paragraphs(
+            "Somewhere in the Phrygian uplands of the Anatolian "
+            "plateau lives the sibyl called Lamia, of ill repute even "
+            "if she is probably not the child-eating faerie who shares "
+            "her name. She gives no prophecy freely: a questioner must "
+            "wrestle her down and force the words from her, and she is "
+            "far stronger than any of her sisters. The prophets of "
+            "Lamites (1123 to 1127) took her as their covenant's "
+            "patron and did not live long.",
         ),
+        secrets="Whether the sibyl or the faerie Lamia killed the magi of "
+        "Lamites is the storyguide's to say; each had cause.",
         **RUMOURED,
     )
 
@@ -234,40 +224,38 @@ def _infernal_sites(theban: Theban) -> None:
                 ),
             )
         ],
-        summary=secrets(
-            paragraphs(
-                "Open country about twelve miles from Constantinople, "
-                "where nothing marks the way into an Infernal regio, the "
-                "lair of the demon prince that wrecked the Fourth Crusade "
-                "(see the Bestiary). Akgah takes the shape of a "
-                "two-headed leopard the size of an elephant, with golden "
-                "wings and fragrant gold-and-black fur, a twisted mirror "
-                "of Venice's winged lion; greed, lust and battle-madness "
-                "take hold of those around it.",
-                "In the spring of 1204 it fought the Hagka, the Divine "
-                "two-headed eagle that guarded the city, among the statues "
-                "of the Hippodrome, and broke part of the arena in the "
-                "struggle. The Hagka fled wounded; crusaders who saw the "
-                "fight took it for a vision of St Mark's lion winning, and "
-                "fought the harder. The Hagka, Divine Might 40, now keeps "
-                "to the wild mountains of Asia Minor as the protector of "
-                "Nicaea, its white feathers soiled and its wounds open "
-                "until the empire is made whole; it shelters any pious "
-                "Greek loyal to the empire and is the enemy of every "
-                "unrepentant crusader.",
-            ),
-            "Akgah planned the Fourth Crusade and the fall of the city, "
-            "which raised it high among the princes of Hell. It now works "
-            "to keep the successor states at war, feeding their greed and "
-            "mistrust of one another. Before it, Andronikos Komnenos sold "
-            "his soul to a demon in a woman's shape for the throne he took "
-            "in 1182, and his massacre of the Latins set Venice and "
-            "Montferrat against the empire; the excommunication of the "
-            "crusaders after Zara let demons walk among them, and several "
-            "of their lords made pacts for protection, fame or gold. Like "
-            "Andronikos, most of the crusade's leaders were dead within a "
-            "few years.",
+        summary=paragraphs(
+            "Open country about twelve miles from Constantinople, "
+            "where nothing marks the way into an Infernal regio, the "
+            "lair of the demon prince that wrecked the Fourth Crusade "
+            "(see the Bestiary). Akgah takes the shape of a "
+            "two-headed leopard the size of an elephant, with golden "
+            "wings and fragrant gold-and-black fur, a twisted mirror "
+            "of Venice's winged lion; greed, lust and battle-madness "
+            "take hold of those around it.",
+            "In the spring of 1204 it fought the Hagka, the Divine "
+            "two-headed eagle that guarded the city, among the statues "
+            "of the Hippodrome, and broke part of the arena in the "
+            "struggle. The Hagka fled wounded; crusaders who saw the "
+            "fight took it for a vision of St Mark's lion winning, and "
+            "fought the harder. The Hagka, Divine Might 40, now keeps "
+            "to the wild mountains of Asia Minor as the protector of "
+            "Nicaea, its white feathers soiled and its wounds open "
+            "until the empire is made whole; it shelters any pious "
+            "Greek loyal to the empire and is the enemy of every "
+            "unrepentant crusader.",
         ),
+        secrets="Akgah planned the Fourth Crusade and the fall of the city, "
+        "which raised it high among the princes of Hell. It now works "
+        "to keep the successor states at war, feeding their greed and "
+        "mistrust of one another. Before it, Andronikos Komnenos sold "
+        "his soul to a demon in a woman's shape for the throne he took "
+        "in 1182, and his massacre of the Latins set Venice and "
+        "Montferrat against the empire; the excommunication of the "
+        "crusaders after Zara let demons walk among them, and several "
+        "of their lords made pacts for protection, fame or gold. Like "
+        "Andronikos, most of the crusade's leaders were dead within a "
+        "few years.",
         **RUMOURED,
     )
 
@@ -380,49 +368,47 @@ def _leagues(theban: Theban) -> None:
         decides="A council",
         wants="A Greek emperor back on the throne of Constantinople and the Church freed of Rome; first, the lost battle standard, as a clue to the hagka",
         offers="Magi and their martial apprentices for the Nicene cause",
-        summary=secrets(
-            paragraphs(
-                "A Hermetic league that would set the empire back on its "
-                "true road: a rightful Greek emperor in Constantinople and "
-                "the Church out from under the pope. Earlier conquerors of "
-                "the city married into its great houses and carried on "
-                "the Roman line; the Latins did neither, and they bent the "
-                "Church to Rome as well. Its members are all Jerbiton, "
-                "though nothing requires it, and each has an apprentice "
-                "near the Gauntlet from the antigones, more warlike than "
-                "their masters. It is centred at Moero's Garden, where four "
-                "of the seven Jerbiton belong and the two youngest blame "
-                "the city's fall on their elders' idleness.",
-                "Its members have found that Infernal powers helped bring "
-                "the city down, and they believe the missing hagka is the "
-                "key to setting things right. The emperor's divine "
-                "authority rests on three things: his battle standard (a "
-                "bronze staff topped by a gold eagle, its purple silk "
-                "bearing the imperial sign, last seen when Isaac Angelos's "
-                "army broke before the Bulgarians in 1190; borne beside "
-                "the emperor it gives his troops +3 to Discipline and "
-                "Morale), his crown (made for each emperor and of no power "
-                "alone, but needed to wake the others; the Latins took "
-                "every old crown), and the hagka itself, a bronze "
-                "two-headed eagle on a lance with an icon of the Virgin "
-                "hung from it, which gives its bearer Magic Resistance 10. "
-                "Together they spread that resistance to every friendly "
-                "troop in sight and raise the bonus to +6. Today the "
-                "Bulgarians have one, the Latins another, and the third is "
-                "lost: Alexios V Doukas Mourtzouphlos left both crown and "
-                "hagka behind when French knights routed him near Philia "
-                "early in 1204. The league is now searching Bulgarian "
-                "lands for the standard.",
-            ),
-            "The league is right: the city has lost Divine favour, and "
-            "the hagka's return would bless a truly devout emperor, Greek "
-            "or not, with Solomon's wisdom, David's strength and St Paul's "
-            "mercy. But the demons have hidden from its spells; it knows "
-            "the fall was Infernal work but not whose hands, and so cannot "
-            "tell friend from foe. The hagka may be whole or broken, in a "
-            "crusader's treasury, a Greek monastery, the burned Venetian "
-            "quarter's rubble or the bed of the Bosporus.",
+        summary=paragraphs(
+            "A Hermetic league that would set the empire back on its "
+            "true road: a rightful Greek emperor in Constantinople and "
+            "the Church out from under the pope. Earlier conquerors of "
+            "the city married into its great houses and carried on "
+            "the Roman line; the Latins did neither, and they bent the "
+            "Church to Rome as well. Its members are all Jerbiton, "
+            "though nothing requires it, and each has an apprentice "
+            "near the Gauntlet from the antigones, more warlike than "
+            "their masters. It is centred at Moero's Garden, where four "
+            "of the seven Jerbiton belong and the two youngest blame "
+            "the city's fall on their elders' idleness.",
+            "Its members have found that Infernal powers helped bring "
+            "the city down, and they believe the missing hagka is the "
+            "key to setting things right. The emperor's divine "
+            "authority rests on three things: his battle standard (a "
+            "bronze staff topped by a gold eagle, its purple silk "
+            "bearing the imperial sign, last seen when Isaac Angelos's "
+            "army broke before the Bulgarians in 1190; borne beside "
+            "the emperor it gives his troops +3 to Discipline and "
+            "Morale), his crown (made for each emperor and of no power "
+            "alone, but needed to wake the others; the Latins took "
+            "every old crown), and the hagka itself, a bronze "
+            "two-headed eagle on a lance with an icon of the Virgin "
+            "hung from it, which gives its bearer Magic Resistance 10. "
+            "Together they spread that resistance to every friendly "
+            "troop in sight and raise the bonus to +6. Today the "
+            "Bulgarians have one, the Latins another, and the third is "
+            "lost: Alexios V Doukas Mourtzouphlos left both crown and "
+            "hagka behind when French knights routed him near Philia "
+            "early in 1204. The league is now searching Bulgarian "
+            "lands for the standard.",
         ),
+        secrets="The league is right: the city has lost Divine favour, and "
+        "the hagka's return would bless a truly devout emperor, Greek "
+        "or not, with Solomon's wisdom, David's strength and St Paul's "
+        "mercy. But the demons have hidden from its spells; it knows "
+        "the fall was Infernal work but not whose hands, and so cannot "
+        "tell friend from foe. The hagka may be whole or broken, in a "
+        "crusader's treasury, a Greek monastery, the burned Venetian "
+        "quarter's rubble or the bed of the Bosporus.",
     )
     w["children_of_olympos"] = b.faction(
         "The Children of Olympos",
@@ -431,53 +417,51 @@ def _leagues(theban: Theban) -> None:
         ruler="Lucian the Scholar of Aegaea",
         wants="The old Greek gods as the covenants' patrons, bound by lasting pacts",
         offers="Initiation into Elysian Ecstasy, with Lucian as mystagogue",
-        summary=secrets(
-            paragraphs(
-                "A small, odd Hermetic league gathered round Lucian the "
-                "Scholar of Merinita, of Aegaea. It holds that the Order "
-                "should turn from the waning Divine and Infernal to an "
-                "older footing: magical beings care nothing for mortals, "
-                "but faeries are drawn to the fates of men, and the Greek "
-                "gods have outlasted every rival. It wants each covenant's "
-                "patron to be one of the old gods. It has sympathisers but "
-                "few true members, most of them Merinita; its existence is "
-                "open, its methods are not.",
-                "Lucian has invented two Mysteries by which a person "
-                "channels a chosen god, who possesses her and lends her "
-                "his Personality Trait and Sympathy Traits: Elysian "
-                "Ecstasy (Minor) and the stronger, riskier Olympian Pact "
-                "(Major, with a Major Personality Flaw fitting the god, "
-                "and a share of the god's powers at a Warping Point a "
-                "use). The initiation needs no Merinita cult lore: the "
-                "initiate wins a boon from twelve mighty beings, each "
-                "standing for one Olympian, then performs a rite in an "
-                "Olympian's shrine as Sirius rises, taking Susceptibility "
-                "to Faerie Power with the gift. Lucian has been mystagogue "
-                "for every member who knows Elysian Ecstasy; he alone has "
-                "the Pact.",
-                "Seekers commonly match the Houses to the Olympians: "
-                "Bjornaer to Poseidon, Bonisagus to Zeus, Criamon to "
-                "Hestia or Dionysos, Ex Miscellanea to Demeter, Flambeau "
-                "to Apollon, Guernicus to Hera, Jerbiton to Aphrodite, "
-                "Mercere to Hermes, Merinita to Artemis, Tremere to "
-                "Athena, Tytalus to Ares and Verditius to Hephaistos; "
-                "Diedne was Demeter, later Hades. Some say Trianoma chose "
-                "the Founders to fit the pattern, and that a House was "
-                "bound to fall once Ex Miscellanea made thirteen.",
-            ),
-            "Under it lies Lucian's unspoken hope that Faerie will replace "
-            "the Magic auras of the Theban covenants and bring back the "
-            "worship of the gods. He believes the gods feed on their epic "
-            "stories, which must be lived again, and he has cast many of "
-            "the Tribunal's magi and covenants as players in his great "
-            "re-enactment: his sudden, seemingly treacherous shifts at "
-            "Tribunal are attempts to push them into their parts. He may be "
-            "channelling impostors, faerie or Infernal; he has yet to win "
-            "any god as a patron; and his Twilight Scars make him forget "
-            "who he is while a god rides him. Proximios means to set "
-            "Celaenea, who loves Hermes, against him, and to slip an "
-            "infernalist into the league so that it calls up a False God.",
+        summary=paragraphs(
+            "A small, odd Hermetic league gathered round Lucian the "
+            "Scholar of Merinita, of Aegaea. It holds that the Order "
+            "should turn from the waning Divine and Infernal to an "
+            "older footing: magical beings care nothing for mortals, "
+            "but faeries are drawn to the fates of men, and the Greek "
+            "gods have outlasted every rival. It wants each covenant's "
+            "patron to be one of the old gods. It has sympathisers but "
+            "few true members, most of them Merinita; its existence is "
+            "open, its methods are not.",
+            "Lucian has invented two Mysteries by which a person "
+            "channels a chosen god, who possesses her and lends her "
+            "his Personality Trait and Sympathy Traits: Elysian "
+            "Ecstasy (Minor) and the stronger, riskier Olympian Pact "
+            "(Major, with a Major Personality Flaw fitting the god, "
+            "and a share of the god's powers at a Warping Point a "
+            "use). The initiation needs no Merinita cult lore: the "
+            "initiate wins a boon from twelve mighty beings, each "
+            "standing for one Olympian, then performs a rite in an "
+            "Olympian's shrine as Sirius rises, taking Susceptibility "
+            "to Faerie Power with the gift. Lucian has been mystagogue "
+            "for every member who knows Elysian Ecstasy; he alone has "
+            "the Pact.",
+            "Seekers commonly match the Houses to the Olympians: "
+            "Bjornaer to Poseidon, Bonisagus to Zeus, Criamon to "
+            "Hestia or Dionysos, Ex Miscellanea to Demeter, Flambeau "
+            "to Apollon, Guernicus to Hera, Jerbiton to Aphrodite, "
+            "Mercere to Hermes, Merinita to Artemis, Tremere to "
+            "Athena, Tytalus to Ares and Verditius to Hephaistos; "
+            "Diedne was Demeter, later Hades. Some say Trianoma chose "
+            "the Founders to fit the pattern, and that a House was "
+            "bound to fall once Ex Miscellanea made thirteen.",
         ),
+        secrets="Under it lies Lucian's unspoken hope that Faerie will replace "
+        "the Magic auras of the Theban covenants and bring back the "
+        "worship of the gods. He believes the gods feed on their epic "
+        "stories, which must be lived again, and he has cast many of "
+        "the Tribunal's magi and covenants as players in his great "
+        "re-enactment: his sudden, seemingly treacherous shifts at "
+        "Tribunal are attempts to push them into their parts. He may be "
+        "channelling impostors, faerie or Infernal; he has yet to win "
+        "any god as a patron; and his Twilight Scars make him forget "
+        "who he is while a god rides him. Proximios means to set "
+        "Celaenea, who loves Hermes, against him, and to slip an "
+        "infernalist into the league so that it calls up a False God.",
     )
     w["league_of_the_vigilant"] = b.faction(
         "The League of the Vigilant",
@@ -487,33 +471,31 @@ def _leagues(theban: Theban) -> None:
         wants="To find any demon's servant hidden in the Order",
         offers="Funds and magical supplies (from Proximios)",
         rules="Members other than the two founders are kept secret",
-        summary=secrets(
-            paragraphs(
-                "A new league of demon hunters. Most magi know Infernal "
-                "powers rode with both Latin and Greek armies when "
-                "Constantinople fell, and many fear the Order is tainted "
-                "too. Hydatius of Ingasia leads it, and Proximios of "
-                "Alexandria pays for it and supplies it. It is still "
-                "small, with no home or meeting place; the founders want "
-                "magi from outside the Tribunal, fresh eyes to spot the "
-                "rot, and keep the other members' names secret while they "
-                "court help openly themselves. Knowing Hermetic magic "
-                "cannot find a demon, they rely on patient watching for a "
-                "slip.",
-                "The Tribunal tolerates it as it does every league, but "
-                "doubts it will work; the cautious recall how witch hunts "
-                "grow, while others think it needed. The founders' fine "
-                "names keep its critics quiet.",
-            ),
-            "Proximios is an infernalist and founded the league as the "
-            "first move of his plan to bring the Order down, starting in "
-            "Thebes. He will steer it against innocents who look guilty "
-            "(Caterina da Vigonovo of Polyaigos, the young magi of Erebos, "
-            "and inquisitive Delfini of Aegaea), never leading in person: "
-            "a demon wearing Hydatius's face will give the order to "
-            "strike. As he gains ground he will use the league ever more "
-            "openly as his shock troops. See the story An Enemy Within.",
+        summary=paragraphs(
+            "A new league of demon hunters. Most magi know Infernal "
+            "powers rode with both Latin and Greek armies when "
+            "Constantinople fell, and many fear the Order is tainted "
+            "too. Hydatius of Ingasia leads it, and Proximios of "
+            "Alexandria pays for it and supplies it. It is still "
+            "small, with no home or meeting place; the founders want "
+            "magi from outside the Tribunal, fresh eyes to spot the "
+            "rot, and keep the other members' names secret while they "
+            "court help openly themselves. Knowing Hermetic magic "
+            "cannot find a demon, they rely on patient watching for a "
+            "slip.",
+            "The Tribunal tolerates it as it does every league, but "
+            "doubts it will work; the cautious recall how witch hunts "
+            "grow, while others think it needed. The founders' fine "
+            "names keep its critics quiet.",
         ),
+        secrets="Proximios is an infernalist and founded the league as the "
+        "first move of his plan to bring the Order down, starting in "
+        "Thebes. He will steer it against innocents who look guilty "
+        "(Caterina da Vigonovo of Polyaigos, the young magi of Erebos, "
+        "and inquisitive Delfini of Aegaea), never leading in person: "
+        "a demon wearing Hydatius's face will give the order to "
+        "strike. As he gains ground he will use the league ever more "
+        "openly as his shock troops. See the story An Enemy Within.",
     )
     w["league_against_idolatry"] = b.faction(
         "The League Against Idolatry",
@@ -603,29 +585,27 @@ def _titan_factions(theban: Theban) -> None:
         decides="A vote of all",
         ruler="Tisiphon of Hedyosmos, most prominent",
         wants="A closer bond with the imprisoned titans, and Hades' hold on their prison loosened",
-        summary=secrets(
-            paragraphs(
-                "Magi who draw on the titans' power though the titans lie "
-                "chained: some say all magic reaches men through them, and "
-                "that Hermes first learned to tap it without loosening the "
-                "chains. They want a closer bond with the Magic Realm's "
-                "primal spirits, not the gods' fall, and are named for "
-                "Kampe, the she-dragon who keeps Tartaros and has been the "
-                "living chain of the gods since Zeus killed her. The faction "
-                "draws Tytalus magi, for its aims echo the Titanoi's "
-                "(Houses of Hermes: Societates); Tisiphon of Hedyosmos is "
-                "its best-known member, and the threskeia geine of "
-                "Hedyosmos is its heart.",
-                named,
-            ),
-            "The binding magics of old (the epanankoi) are almost "
-            "forgotten; some think Kampe's power fed them. Some ancient "
-            "bindings still hold, and magi fear they could not mend one: "
-            "the defeated giants buried under mountains and islands, the "
-            "monsters of the Persian Wars sealed in objects, the oaths "
-            "beneath the old leagues, and the rumoured Jar of Pandora. "
-            "Delos's binding to the sea floor has already failed.",
+        summary=paragraphs(
+            "Magi who draw on the titans' power though the titans lie "
+            "chained: some say all magic reaches men through them, and "
+            "that Hermes first learned to tap it without loosening the "
+            "chains. They want a closer bond with the Magic Realm's "
+            "primal spirits, not the gods' fall, and are named for "
+            "Kampe, the she-dragon who keeps Tartaros and has been the "
+            "living chain of the gods since Zeus killed her. The faction "
+            "draws Tytalus magi, for its aims echo the Titanoi's "
+            "(Houses of Hermes: Societates); Tisiphon of Hedyosmos is "
+            "its best-known member, and the threskeia geine of "
+            "Hedyosmos is its heart.",
+            named,
         ),
+        secrets="The binding magics of old (the epanankoi) are almost "
+        "forgotten; some think Kampe's power fed them. Some ancient "
+        "bindings still hold, and magi fear they could not mend one: "
+        "the defeated giants buried under mountains and islands, the "
+        "monsters of the Persian Wars sealed in objects, the oaths "
+        "beneath the old leagues, and the rumoured Jar of Pandora. "
+        "Delos's binding to the sea floor has already failed.",
     )
 
 
@@ -643,31 +623,29 @@ def _traditions(theban: Theban) -> None:
         ruler="Destasia of Erebos",
         realm="Magic",
         wants="Their mainland grounds and vis kept from rivals",
-        summary=secrets(
-            paragraphs(
-                "The old stygian witches of the mainland (Realms of Power: "
-                "The Infernal), perhaps Trianoma's own native tradition. "
-                "Those who joined the Order lead Erebos, whose head has "
-                "always been one of them, of Cyra's line; others still "
-                "work their binding magic outside it and quarrel with "
-                "Erebos over land and vis. Binding is called the 'Stygian "
-                "Art' in Thebes and is widely thought suspect, even "
-                "Infernal, since goetia leads the field; Polydegmon of "
-                "Hedyosmos practises a binding tradition of his own, "
-                "unique until he trains an heir. Greek wizards of old "
-                "hired the Witches to bind the monsters of the Persian "
-                "Wars.",
-            ),
-            "Mainland magi call the slander rites (diabolai) witchcraft. "
-            "Anyone with the right Lore and a personal tie to a being "
-            "that has taken a place or a matter under its care (a "
-            "village's nymph, an old shrine's god, Asklepios for a "
-            "physician, a mythic forebear) can shame it into using one of "
-            "its powers on a chosen target, by burning or soaking its "
-            "effigy or reversing its rites: Presence + Realm Lore + "
-            "modifiers + stress die against 9 + Might/5. Failure angers "
-            "it for a month; a bad failure turns its power on the caller.",
+        summary=paragraphs(
+            "The old stygian witches of the mainland (Realms of Power: "
+            "The Infernal), perhaps Trianoma's own native tradition. "
+            "Those who joined the Order lead Erebos, whose head has "
+            "always been one of them, of Cyra's line; others still "
+            "work their binding magic outside it and quarrel with "
+            "Erebos over land and vis. Binding is called the 'Stygian "
+            "Art' in Thebes and is widely thought suspect, even "
+            "Infernal, since goetia leads the field; Polydegmon of "
+            "Hedyosmos practises a binding tradition of his own, "
+            "unique until he trains an heir. Greek wizards of old "
+            "hired the Witches to bind the monsters of the Persian "
+            "Wars.",
         ),
+        secrets="Mainland magi call the slander rites (diabolai) witchcraft. "
+        "Anyone with the right Lore and a personal tie to a being "
+        "that has taken a place or a matter under its care (a "
+        "village's nymph, an old shrine's god, Asklepios for a "
+        "physician, a mythic forebear) can shame it into using one of "
+        "its powers on a chosen target, by burning or soaking its "
+        "effigy or reversing its rites: Presence + Realm Lore + "
+        "modifiers + stress die against 9 + Might/5. Failure angers "
+        "it for a month; a bad failure turns its power on the caller.",
     )
     w["daughters_of_erictho"] = b.faction(
         "The Daughters of Erictho",
@@ -758,28 +736,26 @@ def _traditions(theban: Theban) -> None:
         decides="Its leader",
         realm="Magic",
         wants="Vengeance on the gods for the titans' prison",
-        summary=secrets(
-            paragraphs(
-                "Rumoured sorcerers who serve Ekhidna and Typhon, the "
-                "monsters Earth bore to avenge the titans on the faerie "
-                "gods; a Greek kin of the Muspelli (Rival Magic). The "
-                "storyguide may fold them into the Pelasgian wizards "
-                "below, or use them in their place.",
-            ),
-            "A Greek version of the gruagachan could be drawn from the "
-            "Pelasgians before the Hellenes: worshippers of the titans, "
-            "descended from the serpent-tailed giants, with power over "
-            "curses and blessings tied to what is allowed and forbidden, "
-            "some goetic spirit magic in place of tattoos, and perhaps a "
-            "store of Defixio Lore. Giant-blooded Greeks take Mythic Blood "
-            "(Gigantes), usually with a Focus in strength or Terram and the "
-            "Rebellious Flaw; Large, Snake Legs and needing to touch the "
-            "ground are common. Magi also comb the islands for "
-            "katadesmoi, the cursing tablets of Katadesmos (Defixio) "
-            "Magic, which struck at any range and set conditional curses; "
-            "it is why Leadworker turns up among hedge wizards, though "
-            "among magi it is Tremere's secret.",
+        summary=paragraphs(
+            "Rumoured sorcerers who serve Ekhidna and Typhon, the "
+            "monsters Earth bore to avenge the titans on the faerie "
+            "gods; a Greek kin of the Muspelli (Rival Magic). The "
+            "storyguide may fold them into the Pelasgian wizards "
+            "below, or use them in their place.",
         ),
+        secrets="A Greek version of the gruagachan could be drawn from the "
+        "Pelasgians before the Hellenes: worshippers of the titans, "
+        "descended from the serpent-tailed giants, with power over "
+        "curses and blessings tied to what is allowed and forbidden, "
+        "some goetic spirit magic in place of tattoos, and perhaps a "
+        "store of Defixio Lore. Giant-blooded Greeks take Mythic Blood "
+        "(Gigantes), usually with a Focus in strength or Terram and the "
+        "Rebellious Flaw; Large, Snake Legs and needing to touch the "
+        "ground are common. Magi also comb the islands for "
+        "katadesmoi, the cursing tablets of Katadesmos (Defixio) "
+        "Magic, which struck at any range and set conditional curses; "
+        "it is why Leadworker turns up among hedge wizards, though "
+        "among magi it is Tremere's secret.",
     )
     w["cult_of_orpheus"] = b.faction(
         "The Cult of Orpheus",
@@ -816,26 +792,24 @@ def _traditions(theban: Theban) -> None:
         realm="Infernal",
         rules="Covens of thirteen; each witch takes the Infernal Blessing on joining",
         wants="The Church's power and men's rule over women broken",
-        summary=secrets(
-            paragraphs(
-                "Witches of the Byzantine lands (an Infernal tradition "
-                "like the Strigae) who look like any other woman, save "
-                "that in time their wrists and ankles twist, so the old "
-                "ones hide them; many a husband has found after years "
-                "that his wife, and usually her mother, is one. They meet "
-                "in covens of thirteen in rocky clefts and echoing gorges. "
-                "Mykonos is said to swarm with them, and some small "
-                "islands are full of their covens; Polyaigos was a nest "
-                "of them until Laskaris cleared it.",
-            ),
-            "Each coven has a bodiless demon, a Watcher of the Deluders, "
-            "who speaks to them as a voice and teaches maleficia. A new "
-            "witch takes the Infernal Blessing, and her coven's leader can "
-            "give her one more power: flight on gathered winds, healing "
-            "herself with another's blood, or a breath that blights "
-            "crops. Witches elsewhere can call a Mykonian stringles demon "
-            "for a yearly tithe of one infant.",
+        summary=paragraphs(
+            "Witches of the Byzantine lands (an Infernal tradition "
+            "like the Strigae) who look like any other woman, save "
+            "that in time their wrists and ankles twist, so the old "
+            "ones hide them; many a husband has found after years "
+            "that his wife, and usually her mother, is one. They meet "
+            "in covens of thirteen in rocky clefts and echoing gorges. "
+            "Mykonos is said to swarm with them, and some small "
+            "islands are full of their covens; Polyaigos was a nest "
+            "of them until Laskaris cleared it.",
         ),
+        secrets="Each coven has a bodiless demon, a Watcher of the Deluders, "
+        "who speaks to them as a voice and teaches maleficia. A new "
+        "witch takes the Infernal Blessing, and her coven's leader can "
+        "give her one more power: flight on gathered winds, healing "
+        "herself with another's blood, or a breath that blights "
+        "crops. Witches elsewhere can call a Mykonian stringles demon "
+        "for a yearly tithe of one infant.",
     )
     w["cult_of_heroes"] = b.faction(
         "The Cult of Heroes",
@@ -917,25 +891,23 @@ def _holy_and_heretic(theban: Theban) -> None:
         realm="Infernal",
         rules="Only the inner circle knows the creed is Infernal",
         wants="Rebel armies, as in the ninth century; for now, harm to Christians and Jews",
-        summary=secrets(
-            paragraphs(
-                "A heretic sect of the great cities, above all "
-                "Constantinople, Philippopolis and Thessaloniki, free to "
-                "worship since 990 and left alone by the Orthodox Church. "
-                "Its Manichaean creed sets Satan and God at endless war "
-                "and its folk alone as the chosen; outwardly austere and "
-                "devout, it seems harmless. The holy magae of Oikos tou "
-                "Eleous preach and argue against it, and most people take "
-                "them for bigots.",
-            ),
-            "The sect is an Infernal tradition (favoured Abilities "
-            "Ceremony, Debauchery, Diablerie and Malediction). Holding "
-            "the world to be Satan's, its leaders hate Church and "
-            "synagogue alike, slander and denounce both, and strike at "
-            "them with Infernal powers when they can; a diabolist ring "
-            "tied to it worked in Thessaloniki after 1185. Its "
-            "communities grow, but cannot yet raise an army.",
+        summary=paragraphs(
+            "A heretic sect of the great cities, above all "
+            "Constantinople, Philippopolis and Thessaloniki, free to "
+            "worship since 990 and left alone by the Orthodox Church. "
+            "Its Manichaean creed sets Satan and God at endless war "
+            "and its folk alone as the chosen; outwardly austere and "
+            "devout, it seems harmless. The holy magae of Oikos tou "
+            "Eleous preach and argue against it, and most people take "
+            "them for bigots.",
         ),
+        secrets="The sect is an Infernal tradition (favoured Abilities "
+        "Ceremony, Debauchery, Diablerie and Malediction). Holding "
+        "the world to be Satan's, its leaders hate Church and "
+        "synagogue alike, slander and denounce both, and strike at "
+        "them with Infernal powers when they can; a diabolist ring "
+        "tied to it worked in Thessaloniki after 1185. Its "
+        "communities grow, but cannot yet raise an army.",
     )
     w["eleusinian_cult"] = b.faction(
         "The Cult of Eleusis",
@@ -965,16 +937,14 @@ def _holy_and_heretic(theban: Theban) -> None:
             realm="Infernal",
             members=200,
             ruler="A dozen priests",
-            summary=secrets(
-                "A heretic sect hidden beneath Sinope that worships "
-                "Serapis in God's place, around a cult statue smuggled "
-                "there when the sect was thought wiped out in the fourth "
-                "century. Its priests dress and act like Orthodox clergy "
-                "and win converts quietly; Etoumes, the Greek lord of "
-                "Sinope, has just taken one as his confessor.",
-                "Serapis is a False God, who hides the Infernal source of "
-                "the powers he grants; few of his flock know what he is.",
-            ),
+            summary="A heretic sect hidden beneath Sinope that worships "
+            "Serapis in God's place, around a cult statue smuggled "
+            "there when the sect was thought wiped out in the fourth "
+            "century. Its priests dress and act like Orthodox clergy "
+            "and win converts quietly; Etoumes, the Greek lord of "
+            "Sinope, has just taken one as his confessor.",
+            secrets="Serapis is a False God, who hides the Infernal source of "
+            "the powers he grants; few of his flock know what he is.",
         )
 
 

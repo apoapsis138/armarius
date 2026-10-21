@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -25,8 +25,6 @@ MERCERE = "house_mercere"
 TYTALUS = "house_tytalus"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 # Where the Tribunal's own books are kept.
 HELD = "Held for the Tribunal at Confluensis, as a Tourney prize"
 
@@ -73,23 +71,21 @@ def _places(normandy: Normandy, b: Builder) -> None:
         inside=p["cotentin_marshes"],
         status="Claimed",
         tethers="The tide, where fresh river water turns back the salt",
-        summary=secrets(
-            "The site of Confluensis, in the swamp's tidal zone at the very "
-            "middle of the band where the rivers' fresh, fertile water "
-            "pushes back the barren salt. Under the covenant's raised "
-            "floors creation and destruction wrestle with every tide, and "
-            "on spring tides they spin up dancing whirlpools that the magi "
-            "catch in enchanted nets for vis. The book calls the Magic "
-            "aura powerful but gives no score. A ring of magical mist and "
-            "contrary currents hides the place: the covenfolk learn the "
-            "currents' usual pattern, which a device in the council "
-            "chamber can change; the watch carry items that see through "
-            "the mist and the turb captain one that thickens or thins it; "
-            "and a ring of active defences, which the magi say they change "
-            "often, lies beyond.",
-            "One of the covenant's founders had a flaw in her Gift that "
-            "made building on the tide necessary; only a few magi know it.",
-        ),
+        summary="The site of Confluensis, in the swamp's tidal zone at the very "
+        "middle of the band where the rivers' fresh, fertile water "
+        "pushes back the barren salt. Under the covenant's raised "
+        "floors creation and destruction wrestle with every tide, and "
+        "on spring tides they spin up dancing whirlpools that the magi "
+        "catch in enchanted nets for vis. The book calls the Magic "
+        "aura powerful but gives no score. A ring of magical mist and "
+        "contrary currents hides the place: the covenfolk learn the "
+        "currents' usual pattern, which a device in the council "
+        "chamber can change; the watch carry items that see through "
+        "the mist and the turb captain one that thickens or thins it; "
+        "and a ring of active defences, which the magi say they change "
+        "often, lies beyond.",
+        secrets="One of the covenant's founders had a flaw in her Gift that "
+        "made building on the tide necessary; only a few magi know it.",
     )
     p["the_orchard"] = b.place(
         "The Orchard",
@@ -337,7 +333,8 @@ def _confluensis(normandy: Normandy, b: Builder, tribunal: Tribunal) -> Covenant
         place=normandy.places["confluensis_site"],
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(paragraphs(sagas, seed, STORYGUIDE), hidden),
+        notes=paragraphs(sagas, seed),
+        secrets=hidden,
         season="Autumn",
     )
     normandy.covenants["confluensis"] = confluensis
@@ -416,26 +413,24 @@ def _magi(normandy: Normandy, b: Builder, confluensis: Covenant) -> None:
         covenant=confluensis,
         house=GUERNICUS,
         age=78,
-        summary=secrets(
-            "Chief hoplite and enforcer of the Tribunal, the general the "
-            "Praeco would trust to plan a Wizard's March. A known master "
-            "of Terram, he is said, like Adanos Lutorum of Exspectatio, to "
-            "belong to the Guernicus Terrae cult. Slow, methodical and "
-            "relentless in a hunt, with blunt, physical ideas of justice. "
-            "Dark-haired and black-eyed, with perfect teeth, he never "
-            "smiles beyond a quick sideways twitch of the mouth; he wears "
-            "the covenant's slate-green cloth and, on great occasions, the "
-            "Tribunal's crimson-and-grey swirled sash of a standing "
-            "hoplite, edged with leopard fur for his rank. His talisman is "
-            "a five-foot steel mason's crowbar he walks with. His familiar "
-            "is an invisible spirit that can move dozens of things at once "
-            "and seems to fly, and often wears a crow's shape to look less "
-            "strange. The covenfolk like him, since he leaves their doings "
-            "alone; he gardens, his tools and methods have eased the "
-            "gatherers' work, and he mends their homes with rituals.",
-            "No Hermetic magus could bind such a familiar: Valerian is a "
-            "Mystery Cult initiate, and the crow form hides it.",
-        ),
+        summary="Chief hoplite and enforcer of the Tribunal, the general the "
+        "Praeco would trust to plan a Wizard's March. A known master "
+        "of Terram, he is said, like Adanos Lutorum of Exspectatio, to "
+        "belong to the Guernicus Terrae cult. Slow, methodical and "
+        "relentless in a hunt, with blunt, physical ideas of justice. "
+        "Dark-haired and black-eyed, with perfect teeth, he never "
+        "smiles beyond a quick sideways twitch of the mouth; he wears "
+        "the covenant's slate-green cloth and, on great occasions, the "
+        "Tribunal's crimson-and-grey swirled sash of a standing "
+        "hoplite, edged with leopard fur for his rank. His talisman is "
+        "a five-foot steel mason's crowbar he walks with. His familiar "
+        "is an invisible spirit that can move dozens of things at once "
+        "and seems to fly, and often wears a crow's shape to look less "
+        "strange. The covenfolk like him, since he leaves their doings "
+        "alone; he gardens, his tools and methods have eased the "
+        "gatherers' work, and he mends their homes with rituals.",
+        secrets="No Hermetic magus could bind such a familiar: Valerian is a "
+        "Mystery Cult initiate, and the crow form hides it.",
         traits={"Indifferent": 3, "Deliberate": 2, "Reliable": 2},
     )
     m["jerome"] = b.magus(
@@ -443,29 +438,27 @@ def _magi(normandy: Normandy, b: Builder, confluensis: Covenant) -> None:
         covenant=confluensis,
         house=JERBITON,
         age=87,
-        summary=secrets(
-            "The Tribunal's chief go-between with the nobles of France and "
-            "Flanders, and one of the three who held up Renita's rule, "
-            "with Proctor and his own former apprentice Eloi of Cunfin. "
-            "Son of a minor noble, he was left to die by an uncle greedy "
-            "for his inheritance, found by a Redcap and nursed back by the "
-            "Jerbiton magus who took him as apprentice. He loves chess, "
-            "plays it indifferently, keeps many boards in his laboratory "
-            "and plays by letter with far better players, who like him "
-            "because he never resigns; they have agreed one day to seek "
-            "the magic chessboard among the Treasures of Britain. He "
-            "dresses like a preaching friar rather than a lord, carries a "
-            "wand, and has a bearded vulture for familiar, its breast "
-            "turned moss green by what it eats in the swamp.",
-            "Jerome saves 'troublesome heirs', children likely to be killed "
-            "for their birthright, convinces everyone they are dead with "
-            "Mentem magic and places them in monasteries or covenants; now "
-            "and then one is Gifted, as Artorius was. He knows it is very "
-            "likely a breach of the Code. Proctor does not know. Eloi is "
-            "his chief partner, and anyone in the network has the Dark "
-            "Secret Flaw but a strong ally in Jerome. The network may be "
-            "old: William the Bastard vanished for eight years as a child.",
-        ),
+        summary="The Tribunal's chief go-between with the nobles of France and "
+        "Flanders, and one of the three who held up Renita's rule, "
+        "with Proctor and his own former apprentice Eloi of Cunfin. "
+        "Son of a minor noble, he was left to die by an uncle greedy "
+        "for his inheritance, found by a Redcap and nursed back by the "
+        "Jerbiton magus who took him as apprentice. He loves chess, "
+        "plays it indifferently, keeps many boards in his laboratory "
+        "and plays by letter with far better players, who like him "
+        "because he never resigns; they have agreed one day to seek "
+        "the magic chessboard among the Treasures of Britain. He "
+        "dresses like a preaching friar rather than a lord, carries a "
+        "wand, and has a bearded vulture for familiar, its breast "
+        "turned moss green by what it eats in the swamp.",
+        secrets="Jerome saves 'troublesome heirs', children likely to be killed "
+        "for their birthright, convinces everyone they are dead with "
+        "Mentem magic and places them in monasteries or covenants; now "
+        "and then one is Gifted, as Artorius was. He knows it is very "
+        "likely a breach of the Code. Proctor does not know. Eloi is "
+        "his chief partner, and anyone in the network has the Dark "
+        "Secret Flaw but a strong ally in Jerome. The network may be "
+        "old: William the Bastard vanished for eight years as a child.",
         traits={"Caring": 3, "Friendly": 2, "Modest": 2},
     )
     m["augustina"] = b.magus(
@@ -473,31 +466,29 @@ def _magi(normandy: Normandy, b: Builder, confluensis: Covenant) -> None:
         covenant=confluensis,
         house=TYTALUS,
         age=46,
-        summary=secrets(
-            "The Traitor of House Tytalus, trained from early "
-            "apprenticeship for the role by the mater of Buliste, the "
-            "Prima, and as a hoplite mostly by the previous Traitor. A "
-            "Traitor volunteers for exile from the House, counts as having "
-            "lost every contest she was in, and is beneath any Tytalus's "
-            "notice as a rival; her one duty is to stir the House's "
-            "contests back to life when they stall, and since Tasgillia's "
-            "fall she has carried a magical key as her badge of office. "
-            "The first Traitor, Promethea filia Kalliste, sat out the war "
-            "on Tasgillia to restore the House if it fell, and became a "
-            "hoplite and then a Quaesitor; Guernicus sometimes chooses "
-            "Traitors as Quaesitors, and otherwise accepts them as "
-            "hoplites. Augustina has spent most of her life in Normandy "
-            "advising her covenant's leader on Tytalus games; given "
-            "Proctor's feelings, she gets the riskiest, least trusted "
-            "assignments. Small and assertive, black-haired and blue-eyed, "
-            "she often looks tired and happy at once. Her familiar is a "
-            "small ape; her talisman is a locket on a ribbon or a dagger, "
-            "nobody knows which, as one is always wound round the other.",
-            "She is a member of the Cabal of Frankish Gold, which works for "
-            "the Lotharingian Tribunal. She expects it to fail but holds "
-            "that discontented magi should be able to leave a Tribunal, "
-            "and wants to see how the Order answers.",
-        ),
+        summary="The Traitor of House Tytalus, trained from early "
+        "apprenticeship for the role by the mater of Buliste, the "
+        "Prima, and as a hoplite mostly by the previous Traitor. A "
+        "Traitor volunteers for exile from the House, counts as having "
+        "lost every contest she was in, and is beneath any Tytalus's "
+        "notice as a rival; her one duty is to stir the House's "
+        "contests back to life when they stall, and since Tasgillia's "
+        "fall she has carried a magical key as her badge of office. "
+        "The first Traitor, Promethea filia Kalliste, sat out the war "
+        "on Tasgillia to restore the House if it fell, and became a "
+        "hoplite and then a Quaesitor; Guernicus sometimes chooses "
+        "Traitors as Quaesitors, and otherwise accepts them as "
+        "hoplites. Augustina has spent most of her life in Normandy "
+        "advising her covenant's leader on Tytalus games; given "
+        "Proctor's feelings, she gets the riskiest, least trusted "
+        "assignments. Small and assertive, black-haired and blue-eyed, "
+        "she often looks tired and happy at once. Her familiar is a "
+        "small ape; her talisman is a locket on a ribbon or a dagger, "
+        "nobody knows which, as one is always wound round the other.",
+        secrets="She is a member of the Cabal of Frankish Gold, which works for "
+        "the Lotharingian Tribunal. She expects it to fail but holds "
+        "that discontented magi should be able to leave a Tribunal, "
+        "and wants to see how the Order answers.",
         traits={"Concerned About House Tytalus": 3, "Carefree": 1},
     )
 

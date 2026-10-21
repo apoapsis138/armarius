@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from ...models import Covenant, Tribunal
@@ -31,7 +31,6 @@ TYTALUS = "house_tytalus"
 VERDITIUS = "house_verditius"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
 
 
 def _lines(*lines: str) -> str:
@@ -169,7 +168,7 @@ def _durenmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         place=rhine.places.get("durenmar_site"),
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=7,
         unnamed_magi=4,
         season="Autumn",
@@ -186,21 +185,19 @@ def _durenmar_magi(rhine: Rhine, b: Builder, durenmar: Covenant) -> None:
         covenant=durenmar,
         house=BONISAGUS,
         age=98,
-        summary=secrets(
-            "Archmage, Prima of House Bonisagus, leader of Durenmar, leader "
-            "of the Oak Gild and, as holder of Bonisagus's sigil, Praeco of "
-            "the Rhine Tribunal: the most politically powerful maga in the "
-            "Tribunal. Haughty and overbearing, she wants Durenmar and the "
-            "Rhine restored to the first place in the Order, and so quietly "
-            "favours the Ash Gild's war on the Norse wizards, which would "
-            "draw mighty magi and loot to the Rhine. Brilliant in every Art, "
-            "above all Rego and Imaginem; she wears a great cloak of white "
-            "feathers enchanted with illusions, and there are theories about "
-            "whom she has impersonated in it. Her familiar is the raven "
-            "Kolkrabus.",
-            "She sends Kolkrabus to spy on Dankmar and on others she takes "
-            "for enemies, in breach of the Code.",
-        ),
+        summary="Archmage, Prima of House Bonisagus, leader of Durenmar, leader "
+        "of the Oak Gild and, as holder of Bonisagus's sigil, Praeco of "
+        "the Rhine Tribunal: the most politically powerful maga in the "
+        "Tribunal. Haughty and overbearing, she wants Durenmar and the "
+        "Rhine restored to the first place in the Order, and so quietly "
+        "favours the Ash Gild's war on the Norse wizards, which would "
+        "draw mighty magi and loot to the Rhine. Brilliant in every Art, "
+        "above all Rego and Imaginem; she wears a great cloak of white "
+        "feathers enchanted with illusions, and there are theories about "
+        "whom she has impersonated in it. Her familiar is the raven "
+        "Kolkrabus.",
+        secrets="She sends Kolkrabus to spy on Dankmar and on others she takes "
+        "for enemies, in breach of the Code.",
         traits={
             "Loyal to Personal Agenda": 3,
             "Judgmental": 2,
@@ -266,22 +263,20 @@ def _durenmar_magi(rhine: Rhine, b: Builder, durenmar: Covenant) -> None:
         covenant=durenmar,
         house=BONISAGUS,
         age=72,
-        summary=secrets(
-            "Master of House Bonisagus, leader of the Linden Gild and "
-            "figurehead of Durenmar's outward-looking faction, which would "
-            "admit exotic magic; a sizeable minority of the House would "
-            "rather have him as Primus. A colourful man who researches "
-            "manuscripts and items of every kind, has made a small golem "
-            "that serves in his lab, enchanted many texts and quills, and "
-            "collects news of artifacts and strange practices from far "
-            "away. He was librarian until the former Primus Avarret removed "
-            "him. Murion tolerates and watches him, judging his ambitions "
-            "modest and fearing a schism in the House if she moved against "
-            "him.",
-            "He knows the restricted texts and has quietly copied or moved "
-            "the most interesting into his own sanctum, passing them to "
-            "close allies whose research they suit.",
-        ),
+        summary="Master of House Bonisagus, leader of the Linden Gild and "
+        "figurehead of Durenmar's outward-looking faction, which would "
+        "admit exotic magic; a sizeable minority of the House would "
+        "rather have him as Primus. A colourful man who researches "
+        "manuscripts and items of every kind, has made a small golem "
+        "that serves in his lab, enchanted many texts and quills, and "
+        "collects news of artifacts and strange practices from far "
+        "away. He was librarian until the former Primus Avarret removed "
+        "him. Murion tolerates and watches him, judging his ambitions "
+        "modest and fearing a schism in the House if she moved against "
+        "him.",
+        secrets="He knows the restricted texts and has quietly copied or moved "
+        "the most interesting into his own sanctum, passing them to "
+        "close allies whose research they suit.",
         traits={"Friendly": 3, "Inquisitive": 2, "Showy": 1},
     )
     m["ricardus_caespuus"] = b.magus(
@@ -307,23 +302,21 @@ def _durenmar_magi(rhine: Rhine, b: Builder, durenmar: Covenant) -> None:
         covenant=durenmar,
         house=BONISAGUS,
         age=32,
-        summary=secrets(
-            "Journeyman of House Bonisagus, an otherwise mediocre magus "
-            "whose seed is Vim vis, whether by faerie gift or through the "
-            "obsessive research into fertility and the Gift of his "
-            "liberal-minded mater Susanna, now in Final Twilight. Tandaline "
-            "talked him into an experiment that fathered a Gifted son on a "
-            "serving maid, now her apprentice, and on Murion's orders he "
-            "has fathered four more, all Gifted, and all sons when born at "
-            "Durenmar because of Philippus Niger's Twilight scar. Averse to "
-            "sex and ill at ease with women, he would keep his vis to "
-            "himself, but the covenant deems his talent too valuable; "
-            "interested young magae write to him.",
-            "He plans to invent a longevity ritual that would probably "
-            "leave him infertile; Murion would be furious. A maga wanting a "
-            "Gifted child must offer more than seduction; he might instead "
-            "fall for a peasant girl and plan a wedding in a nearby town.",
-        ),
+        summary="Journeyman of House Bonisagus, an otherwise mediocre magus "
+        "whose seed is Vim vis, whether by faerie gift or through the "
+        "obsessive research into fertility and the Gift of his "
+        "liberal-minded mater Susanna, now in Final Twilight. Tandaline "
+        "talked him into an experiment that fathered a Gifted son on a "
+        "serving maid, now her apprentice, and on Murion's orders he "
+        "has fathered four more, all Gifted, and all sons when born at "
+        "Durenmar because of Philippus Niger's Twilight scar. Averse to "
+        "sex and ill at ease with women, he would keep his vis to "
+        "himself, but the covenant deems his talent too valuable; "
+        "interested young magae write to him.",
+        secrets="He plans to invent a longevity ritual that would probably "
+        "leave him infertile; Murion would be furious. A maga wanting a "
+        "Gifted child must offer more than seduction; he might instead "
+        "fall for a peasant girl and plan a wedding in a nearby town.",
         traits={"Shy": 3, "Rebellious": 1, "Trusting": -2},
     )
     m["winfrida"] = b.magus(
@@ -696,7 +689,7 @@ def _dankmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         place=rhine.places.get("dankmar_site"),
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=5,
         realm="Faerie",
         unnamed_magi=0,
@@ -823,7 +816,7 @@ def _triamore(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         place=rhine.places.get("triamore_site"),
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=2,
     )
     rhine.covenants["triamore"] = triamore
@@ -941,7 +934,7 @@ def _waddenzee(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         place=rhine.places.get("waddenzee_site"),
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=3,
         unnamed_magi=0,
         season="Spring",
@@ -1042,12 +1035,10 @@ def _waddenzee(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         covenant=waddenzee,
         house="",
         age=None,
-        summary=secrets(
-            "A Frisian shipwright of near-magical skill who keeps the "
-            "covenant's five ships at sea.",
-            "He secretly corresponds with Marcus Navicularius of Oculus "
-            "Septentrionalis.",
-        ),
+        summary="A Frisian shipwright of near-magical skill who keeps the "
+        "covenant's five ships at sea.",
+        secrets="He secretly corresponds with Marcus Navicularius of Oculus "
+        "Septentrionalis.",
         type="companion",
     )
     b.book(
@@ -1133,7 +1124,7 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         founded=1144,
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=0,
         realm="Divine",
         unnamed_magi=0,
@@ -1198,17 +1189,15 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         covenant=oculus,
         house=VERDITIUS,
         age=58,
-        summary=secrets(
-            "Master of House Verditius and of the Apple Gild, Lübeck's "
-            "foremost shipwright: large and stern, with iron-grey hair and "
-            "beard, owner of a shipyard that is also his workshop and lab, "
-            "staffed by skilled craftsmen. A Terram master whose enchanting "
-            "suits very large things such as ships and cannot work on "
-            "anything smaller than a sword; he sells magical ships to "
-            "covenants for vis and lost the Nebelkönigin to Waddenzee. He "
-            "is designing the Baltic cog the Hanse will adopt.",
-            "He secretly corresponds with Aelfhere, Waddenzee's shipwright.",
-        ),
+        summary="Master of House Verditius and of the Apple Gild, Lübeck's "
+        "foremost shipwright: large and stern, with iron-grey hair and "
+        "beard, owner of a shipyard that is also his workshop and lab, "
+        "staffed by skilled craftsmen. A Terram master whose enchanting "
+        "suits very large things such as ships and cannot work on "
+        "anything smaller than a sword; he sells magical ships to "
+        "covenants for vis and lost the Nebelkönigin to Waddenzee. He "
+        "is designing the Baltic cog the Hanse will adopt.",
+        secrets="He secretly corresponds with Aelfhere, Waddenzee's shipwright.",
         traits={"Proud of his Abilities": 3, "Skillful": 1, "Friendly": -2},
     )
     m["imanitos_mendax"] = b.magus(
@@ -1216,30 +1205,28 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         covenant=oculus,
         house=JERBITON,
         age=55,
-        summary=secrets(
-            "Master of House Jerbiton, lately so by the approval of three "
-            "Fengheld magi, Apple Gild trained, Gauntleted at twenty-two "
-            "after an apprenticeship at Doissetep in Provence. Tall, lean "
-            "and handsome, black-haired and blue-eyed, in fashionable blue "
-            "or black, with a serpent-and-ruby ring he means for his "
-            "talisman; a vanity longevity ritual keeps him looking "
-            "thirty-nine. He poses as owner of the upmarket tavern Goldenes "
-            "Kalb, above which a discreet brothel for rich clients is helped "
-            "along by wine that heightens lust, and his third trade is the "
-            "blackmail and extortion of citizens and magi. His focus is "
-            "Mentem, with competent Imaginem for disguises; his Twilight "
-            "has left him a hidden forked tongue, a compelling voice and a "
-            "faint smell of funerary incense. His covenant-mates find him "
-            "useful despite his morals; his sanctum on the top floors of "
-            "his townhouse is secret and magically guarded.",
-            "He sells Oculus Septentrionalis's ship movements to Eric "
-            "Ribecus of Waddenzee for a share of the plunder. Optionally a "
-            "diabolist of a hidden dark Jerbiton lineage, servant of the "
-            "demon Radegast, corrupting Lübeck's notables through the "
-            "Goldenes Kalb and posing as Radegast's prophet to the "
-            "Mecklenburgs; he might swap the covenant's magestones for "
-            "tainted copies.",
-        ),
+        summary="Master of House Jerbiton, lately so by the approval of three "
+        "Fengheld magi, Apple Gild trained, Gauntleted at twenty-two "
+        "after an apprenticeship at Doissetep in Provence. Tall, lean "
+        "and handsome, black-haired and blue-eyed, in fashionable blue "
+        "or black, with a serpent-and-ruby ring he means for his "
+        "talisman; a vanity longevity ritual keeps him looking "
+        "thirty-nine. He poses as owner of the upmarket tavern Goldenes "
+        "Kalb, above which a discreet brothel for rich clients is helped "
+        "along by wine that heightens lust, and his third trade is the "
+        "blackmail and extortion of citizens and magi. His focus is "
+        "Mentem, with competent Imaginem for disguises; his Twilight "
+        "has left him a hidden forked tongue, a compelling voice and a "
+        "faint smell of funerary incense. His covenant-mates find him "
+        "useful despite his morals; his sanctum on the top floors of "
+        "his townhouse is secret and magically guarded.",
+        secrets="He sells Oculus Septentrionalis's ship movements to Eric "
+        "Ribecus of Waddenzee for a share of the plunder. Optionally a "
+        "diabolist of a hidden dark Jerbiton lineage, servant of the "
+        "demon Radegast, corrupting Lübeck's notables through the "
+        "Goldenes Kalb and posing as Radegast's prophet to the "
+        "Mecklenburgs; he might swap the covenant's magestones for "
+        "tainted copies.",
         traits={"Lustful": 3, "Scheming": 2, "Brave": -1},
     )
     m["carolus"] = b.magus(
@@ -1397,7 +1384,7 @@ def _fengheld(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         place=rhine.places.get("fengheld_site"),
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=5,
         unnamed_magi=7,
         season="Autumn",
@@ -1481,22 +1468,20 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
         covenant=fengheld,
         house=BJORNAER,
         age=160,
-        summary=secrets(
-            "Master of House Bjornaer with the honorary rank of Quaesitor "
-            "from House Guernicus, retired from official duty; for many "
-            "years she was the Rhine's only senior Quaesitor. Owl "
-            "heartbeast, and with Caecilius of Durenmar and Schadrit of "
-            "Dankmar one of the oldest magi in the Tribunal. Magi still "
-            "come to her for her celebrated advice.",
-            "Only her filius Günther Lupus suspects that she has passed "
-            "into Final Twilight: she has not taken human shape for years "
-            "and has not spoken for longer. Her wisdom is a fraud. An item "
-            "hidden in the floor of her audience room casts a low-level, "
-            "very high Penetration Perdo Mentem effect that calms the mind "
-            "and strips emotion, Günther translates her hoots with a few "
-            "leading prompts, and the calmed petitioners find their own "
-            "answers and thank Eule.",
-        ),
+        summary="Master of House Bjornaer with the honorary rank of Quaesitor "
+        "from House Guernicus, retired from official duty; for many "
+        "years she was the Rhine's only senior Quaesitor. Owl "
+        "heartbeast, and with Caecilius of Durenmar and Schadrit of "
+        "Dankmar one of the oldest magi in the Tribunal. Magi still "
+        "come to her for her celebrated advice.",
+        secrets="Only her filius Günther Lupus suspects that she has passed "
+        "into Final Twilight: she has not taken human shape for years "
+        "and has not spoken for longer. Her wisdom is a fraud. An item "
+        "hidden in the floor of her audience room casts a low-level, "
+        "very high Penetration Perdo Mentem effect that calms the mind "
+        "and strips emotion, Günther translates her hoots with a few "
+        "leading prompts, and the calmed petitioners find their own "
+        "answers and thank Eule.",
         traits={"Owlish": 6, "Apathetic": 3, "Wise": 3},
     )
     m["peter_von_wurzburg"] = b.magus(
@@ -1554,14 +1539,12 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
         covenant=fengheld,
         house=BJORNAER,
         age=None,
-        summary=secrets(
-            "Magus of House Bjornaer (rank not given), Eule's filius, wolf "
-            "heartbeast. He hunts oath-breakers with Indulius and attends "
-            "his ancient parens.",
-            "He is the author of the Eule fraud, keeping up the myth of her "
-            "wisdom with a hidden Perdo Mentem item and his own translation "
-            "of her hoots.",
-        ),
+        summary="Magus of House Bjornaer (rank not given), Eule's filius, wolf "
+        "heartbeast. He hunts oath-breakers with Indulius and attends "
+        "his ancient parens.",
+        secrets="He is the author of the Eule fraud, keeping up the myth of her "
+        "wisdom with a hidden Perdo Mentem item and his own translation "
+        "of her hoots.",
     )
     m["balastor"] = b.magus(
         "Balastor",
@@ -1684,19 +1667,17 @@ def _fengheld_chapters(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
         covenant=fengheld,
         house=BJORNAER,
         age=None,
-        summary=secrets(
-            "Maga of House Bjornaer (rank not given), filia of Urgen, "
-            "Archmage of Crintera, and sole inhabitant of the Lusatia "
-            "chapter, an idyllic house on a bend of the Spree in the March "
-            "of Lusatia only ten miles from the agreed Novgorod border, "
-            "whose founding caused the latest boundary dispute between the "
-            "two Tribunals. Bear heartbeast, in which she spends most of "
-            "her time, hibernating all winter; a poor member, accused by "
-            "Fengheld at Tribunal more than once of neglecting her duties, "
-            "but never punished hard for fear of her aggressive, powerful "
-            "parens.",
-            "She and Urgen are the two living magi of a hidden lineage of "
-            "bear-heartbeast Bjornaer descending from the Founder herself; "
-            "they harvest the Bears' Cave in the northern Harz.",
-        ),
+        summary="Maga of House Bjornaer (rank not given), filia of Urgen, "
+        "Archmage of Crintera, and sole inhabitant of the Lusatia "
+        "chapter, an idyllic house on a bend of the Spree in the March "
+        "of Lusatia only ten miles from the agreed Novgorod border, "
+        "whose founding caused the latest boundary dispute between the "
+        "two Tribunals. Bear heartbeast, in which she spends most of "
+        "her time, hibernating all winter; a poor member, accused by "
+        "Fengheld at Tribunal more than once of neglecting her duties, "
+        "but never punished hard for fear of her aggressive, powerful "
+        "parens.",
+        secrets="She and Urgen are the two living magi of a hidden lineage of "
+        "bear-heartbeast Bjornaer descending from the Founder herself; "
+        "they harvest the Bears' Cave in the northern Harz.",
     )

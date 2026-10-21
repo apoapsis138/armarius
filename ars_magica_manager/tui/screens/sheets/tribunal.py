@@ -94,6 +94,7 @@ class TribunalSheetView(SheetView):
             for extra in self.package.tabs:
                 yield self._tab(extra.title, extra.tab_id, self._package_tab(extra))
             yield self._tab("Diary", "tab-trib-diary", self._diary_tab)
+            yield from self._secrets_tab(self.tribunal)
 
     def stale(self) -> bool:
         """Whether the Tribunal's customs changed since the sheet was

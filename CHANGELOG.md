@@ -107,6 +107,39 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.113.0 — 2026-10-21
+
+### Pagina
+
+- **Every record keeps its secrets apart.** Covenants, characters,
+  Tribunals, neighbours and creatures have a Secrets tab of their own,
+  the last on the sheet: what only the storyguide should know, written
+  and edited there instead of under a heading at the end of the notes.
+- Older saves move what they kept under a "Secrets" heading in a
+  record's notes or summary into its Secrets when they load.
+
+### Sodales
+
+- A player signed in to a hosted copy doesn't see a record's Secrets,
+  and a web export a player makes leaves them out.
+
+### Peregrinatio
+
+- The Tribunal packs put their secrets on covenants, characters,
+  Tribunals, neighbours and creatures in the new Secrets tab. Places,
+  cases, diary events and book descriptions keep theirs under a Secrets
+  heading as before.
+- Aedes Mercurii's founding is no longer hidden among its secrets.
+
+### Illuminatio
+
+- The desktop sheets have a Secrets chapter, marked with a keyhole.
+
+### Glossa
+
+- A help page for the Secrets tab, and a guide to keeping secrets from
+  the players.
+
 ## 2.112.0 — 2026-10-21
 
 ### Book of Hours

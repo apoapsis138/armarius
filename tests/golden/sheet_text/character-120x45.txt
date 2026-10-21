@@ -233,7 +233,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  laws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -276,7 +276,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  laws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -319,7 +319,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  laws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -340,5 +340,48 @@
   ▌
   ▌  Select a Diary entry to see its details.
   ▌
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:        (not set)                Covenant:            Keep
+      Age:            (unknown -- set Year     Assigned Laboratory: Tower
+      Born)                                    Type:                magus
+      Current Year:   1220                     Confidence Score:    0
+      Current Season: Spring                   Confidence Points:   0
+                                               Size:                0
+          Edit (e)          In Play
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+      Int:  0   Per:  0   Str:  0   Sta:  0
+      Pre:  0   Com:  0   Dex:  0   Qik:  0
+          Edit (e)
+
+  laws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

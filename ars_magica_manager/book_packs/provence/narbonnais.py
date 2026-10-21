@@ -25,7 +25,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...places import PLACE
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -40,8 +40,6 @@ MERINITA = "house_merinita"
 MERCERE = "house_mercere"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
@@ -248,39 +246,37 @@ def _lodeve(provence: Provence, b: Builder) -> None:
         "The Bridge of St. Thibery",
         inside=county,
         realm="Infernal",
-        summary=secrets(
-            paragraphs(
-                "The Via Domitia crosses the Hérault at the town of St. "
-                "Thibery on a segmented stone bridge some 450 feet long. "
-                "It passes for Roman work, but its spans do not match how "
-                "the Empire built, and locals wonder whether a faerie or a "
-                "demon raised it.",
-                "A frail old peasant haunts it, bent under a bundle of "
-                "firewood, leaning on a cane and carrying a lantern. He "
-                "points out to travellers a split strongbox spilling gold "
-                "and silver into what looks like calm, deep, clear water "
-                "below the bridge, offers to mind their goods while they "
-                "dive for it, and asks only half of what they bring up.",
-            ),
-            paragraphs(
-                "The old man is the Tempter of St. Thibery, a demon of "
-                "greed (Infernal Might 15, Vim; Hierarchy 0; a tempter). "
-                "He is the demon of Greed among the Six Deadly Spirits "
-                "that came to Gascony with the interdict of 1208, moved "
-                "here from there. The treasure is his phantasm (Trove Just "
-                "Beyond Reach, CrIm 20); once the dupe leaps, he turns the "
-                "river into a churning undertow (Rushing Wages of Greed, "
-                "ReAq 40, Swim rolls at -6 or drown). He can also take or "
-                "drop a body, change shape (often a raven), impose an "
-                "Obsession of Greed, and send dreams of desperate poverty "
-                "that cost a long-term Fatigue level unless the dreamer "
-                "makes a Brave roll against 9. He is greedy, selfish, "
-                "tricky and cowardly; he fights with his stick if he must "
-                "(Attack +6, Damage +6, Defense +7, Init +4; Soak +2).",
-                "Weakness: he can do nothing else until he has counted "
-                "every coin thrown on the ground and put it in his purse. "
-                "The purse holds 3 pawns of Vim vis.",
-            ),
+        summary=paragraphs(
+            "The Via Domitia crosses the Hérault at the town of St. "
+            "Thibery on a segmented stone bridge some 450 feet long. "
+            "It passes for Roman work, but its spans do not match how "
+            "the Empire built, and locals wonder whether a faerie or a "
+            "demon raised it.",
+            "A frail old peasant haunts it, bent under a bundle of "
+            "firewood, leaning on a cane and carrying a lantern. He "
+            "points out to travellers a split strongbox spilling gold "
+            "and silver into what looks like calm, deep, clear water "
+            "below the bridge, offers to mind their goods while they "
+            "dive for it, and asks only half of what they bring up.",
+        ),
+        secrets=paragraphs(
+            "The old man is the Tempter of St. Thibery, a demon of "
+            "greed (Infernal Might 15, Vim; Hierarchy 0; a tempter). "
+            "He is the demon of Greed among the Six Deadly Spirits "
+            "that came to Gascony with the interdict of 1208, moved "
+            "here from there. The treasure is his phantasm (Trove Just "
+            "Beyond Reach, CrIm 20); once the dupe leaps, he turns the "
+            "river into a churning undertow (Rushing Wages of Greed, "
+            "ReAq 40, Swim rolls at -6 or drown). He can also take or "
+            "drop a body, change shape (often a raven), impose an "
+            "Obsession of Greed, and send dreams of desperate poverty "
+            "that cost a long-term Fatigue level unless the dreamer "
+            "makes a Brave roll against 9. He is greedy, selfish, "
+            "tricky and cowardly; he fights with his stick if he must "
+            "(Attack +6, Damage +6, Defense +7, Init +4; Soak +2).",
+            "Weakness: he can do nothing else until he has counted "
+            "every coin thrown on the ground and put it in his purse. "
+            "The purse holds 3 pawns of Vim vis.",
         ),
         **KNOWN_LOCALLY,
     )
@@ -290,23 +286,21 @@ def _lodeve(provence: Provence, b: Builder) -> None:
         "The Ancient Wine Press",
         inside=county,
         realm="Faerie",
-        summary=secrets(
-            paragraphs(
-                "A great rectangular trough hewn from the living rock "
-                "beside a vineyard near St. Thibery, older than anyone "
-                "remembers. Long ago a mob came upon village girls there "
-                "at the end of the vintage, took what they saw for a pagan "
-                "rite, and stoned them all, deaf to their pleas.",
-                "Vis (unclaimed): if the first harvest's grapes are trodden "
-                "here barefoot, the pomace (the seeds, skins and stalks "
-                "left from the must) holds 4 pawns of Herbam. Treading the "
-                "last harvest the same way yields 6 pawns, but of vis "
-                "Infesta.",
-            ),
-            "The girls had been pressing the last grapes when fauns "
-            "seduced them, and the crowd caught them just after; the taint "
-            "on the last harvest's vis is that killing.",
+        summary=paragraphs(
+            "A great rectangular trough hewn from the living rock "
+            "beside a vineyard near St. Thibery, older than anyone "
+            "remembers. Long ago a mob came upon village girls there "
+            "at the end of the vintage, took what they saw for a pagan "
+            "rite, and stoned them all, deaf to their pleas.",
+            "Vis (unclaimed): if the first harvest's grapes are trodden "
+            "here barefoot, the pomace (the seeds, skins and stalks "
+            "left from the must) holds 4 pawns of Herbam. Treading the "
+            "last harvest the same way yields 6 pawns, but of vis "
+            "Infesta.",
         ),
+        secrets="The girls had been pressing the last grapes when fauns "
+        "seduced them, and the crowd caught them just after; the taint "
+        "on the last harvest's vis is that killing.",
         **RUMOURED,
     )
 
@@ -343,26 +337,24 @@ def _beziers(provence: Provence, b: Builder) -> None:
             seat="Carcassonne (lost)",
             ruler="Raimond II Trencavel, aged 17",
             place=county,
-            summary=secrets(
-                paragraphs(
-                    "The viscounts of Béziers and Carcassonne, lords also "
-                    "of Albi and the Razès, and overlords of Béziers since "
-                    "1034. Raimond-Rogier Trencavel tried to join the "
-                    "crusade in 1209 and was turned away by the legate; he "
-                    "took Béziers' Jews to safety and fell back on "
-                    "Carcassonne, where he was seized while parleying "
-                    "under a promise of safe conduct and died in his own "
-                    "dungeon, of dysentery or of poison. He leaned heavily "
-                    "on the Jews of Béziers to run his affairs.",
-                    "His son, Raimond II, was stripped of everything by "
-                    "Simon de Montfort and is now seventeen and pressing "
-                    "his claim; many local clergy put out of their posts "
-                    "by northern churchmen have taken his side, and the "
-                    "southern lords and faidits look to him.",
-                ),
-                "Rumours of a lady's betrayal hang over Raimond-Rogier's "
-                "capture; see Lastours in the Toulousain.",
+            summary=paragraphs(
+                "The viscounts of Béziers and Carcassonne, lords also "
+                "of Albi and the Razès, and overlords of Béziers since "
+                "1034. Raimond-Rogier Trencavel tried to join the "
+                "crusade in 1209 and was turned away by the legate; he "
+                "took Béziers' Jews to safety and fell back on "
+                "Carcassonne, where he was seized while parleying "
+                "under a promise of safe conduct and died in his own "
+                "dungeon, of dysentery or of poison. He leaned heavily "
+                "on the Jews of Béziers to run his affairs.",
+                "His son, Raimond II, was stripped of everything by "
+                "Simon de Montfort and is now seventeen and pressing "
+                "his claim; many local clergy put out of their posts "
+                "by northern churchmen have taken his side, and the "
+                "southern lords and faidits look to him.",
             ),
+            secrets="Rumours of a lady's betrayal hang over Raimond-Rogier's "
+            "capture; see Lastours in the Toulousain.",
         )
     w["trencavel"] = trencavel
     massacre = _add(
@@ -593,14 +585,12 @@ def _nimes(provence: Provence, b: Builder) -> None:
         inside=county,
         realm="Divine",
         aura=3,
-        summary=secrets(
-            "The Roman amphitheatre of Nîmes, big enough for sixteen "
-            "thousand, now the seat of the city's government and its "
-            "refuge in danger; the viscount's knights and the bishop's "
-            "palace live in apartments built into it. Divine aura 3.",
-            "Legend says tunnels under the arena run all the way to the "
-            "amphitheatre of Arles, which has also been made a fortress.",
-        ),
+        summary="The Roman amphitheatre of Nîmes, big enough for sixteen "
+        "thousand, now the seat of the city's government and its "
+        "refuge in danger; the viscount's knights and the bishop's "
+        "palace live in apartments built into it. Divine aura 3.",
+        secrets="Legend says tunnels under the arena run all the way to the "
+        "amphitheatre of Arles, which has also been made a fortress.",
         **KNOWN_REGION,
     )
     w["nimes"] = b.town(
@@ -797,15 +787,13 @@ def _rodez_millau(provence: Provence, b: Builder) -> None:
         church="Monastery or nunnery",
         order="Knights Templar",
         place=rodez_land,
-        summary=secrets(
-            "The Templars' houses in the county of Rodez: the "
-            "commanderies of Viala du Pas de Jaux and Sainte-Eulalie de "
-            "Cernon and the walled villages of Saint-Jean d'Alcas, La "
-            "Couvertoirade and La Cavalerie, all supporting the order's work here "
-            "since the middle of the last century. Guillaume de Saunhac "
-            "tutors the commander of Sainte-Eulalie.",
-            "Guillaume de Saunhac will be Master of the Temple in 1245.",
-        ),
+        summary="The Templars' houses in the county of Rodez: the "
+        "commanderies of Viala du Pas de Jaux and Sainte-Eulalie de "
+        "Cernon and the walled villages of Saint-Jean d'Alcas, La "
+        "Couvertoirade and La Cavalerie, all supporting the order's work here "
+        "since the middle of the last century. Guillaume de Saunhac "
+        "tutors the commander of Sainte-Eulalie.",
+        secrets="Guillaume de Saunhac will be Master of the Temple in 1245.",
     )
     w["order_of_aubrac"] = b.church(
         "The Order of Aubrac",
@@ -972,17 +960,15 @@ def _gevaudan_montpellier(provence: Provence, b: Builder) -> None:
         "The Wolves' Cave Shrine",
         inside=gevaudan,
         aura=3,
-        summary=secrets(
-            "An ancient Gaulish cave shrine somewhere in the wilds of the "
-            "Massif Central, with a Magic aura of 3, in country so empty a "
-            "covenant could grow there far from the crusade, though "
-            "specialists and rare supplies would be hard to get.",
-            "The wolves that hunt travellers in these hills are not "
-            "ordinary wolves: they are a little tribe of shape-changing "
-            "werewolves, and "
-            "this cave is their lair. Could they be tamed, and the shrine "
-            "become a covenant?",
-        ),
+        summary="An ancient Gaulish cave shrine somewhere in the wilds of the "
+        "Massif Central, with a Magic aura of 3, in country so empty a "
+        "covenant could grow there far from the crusade, though "
+        "specialists and rare supplies would be hard to get.",
+        secrets="The wolves that hunt travellers in these hills are not "
+        "ordinary wolves: they are a little tribe of shape-changing "
+        "werewolves, and "
+        "this cave is their lair. Could they be tamed, and the shrine "
+        "become a covenant?",
         **RUMOURED,
     )
     montpellier_land = _add(
@@ -1033,25 +1019,23 @@ def _gevaudan_montpellier(provence: Provence, b: Builder) -> None:
         faction="Other",
         decides="A council",
         place=montpellier_land,
-        summary=secrets(
-            paragraphs(
-                "The yeshivas of Arles, Montpellier and Narbonne (Realms of "
-                "Power: The Divine), where Jewish scholars interpret and "
-                "set down Talmudic thought. Famous rabbis and kabbalists "
-                "have studied at Narbonne: Moses ha-Darshan in the "
-                "eleventh century, and in the twelfth Moses ben Joseph ben "
-                "Merwan ha-Levi, thought by many the greatest Jewish "
-                "mystic of his day. Called Hachmei Provence, they set the "
-                "literary style and pedigree that remain the standard of "
-                "Jewish scholarship.",
-            ),
-            "Story: a divinely blessed golem, servant of a kabbalist, "
-            "breaks loose when a mob hangs its maker's grandson for "
-            "something he never did, a lynching perhaps stirred up by a demon, "
-            "a tainted jinn or a mischievous faerie. It beats its way "
-            "through the town and will not stop until it finds the true "
-            "culprit.",
+        summary=paragraphs(
+            "The yeshivas of Arles, Montpellier and Narbonne (Realms of "
+            "Power: The Divine), where Jewish scholars interpret and "
+            "set down Talmudic thought. Famous rabbis and kabbalists "
+            "have studied at Narbonne: Moses ha-Darshan in the "
+            "eleventh century, and in the twelfth Moses ben Joseph ben "
+            "Merwan ha-Levi, thought by many the greatest Jewish "
+            "mystic of his day. Called Hachmei Provence, they set the "
+            "literary style and pedigree that remain the standard of "
+            "Jewish scholarship.",
         ),
+        secrets="Story: a divinely blessed golem, servant of a kabbalist, "
+        "breaks loose when a mob hangs its maker's grandson for "
+        "something he never did, a lynching perhaps stirred up by a demon, "
+        "a tainted jinn or a mischievous faerie. It beats its way "
+        "through the town and will not stop until it finds the true "
+        "culprit.",
     )
 
 
@@ -1091,17 +1075,15 @@ def _roussillon(provence: Provence, b: Builder) -> None:
         ruler="Sancho, with his son Nuno Sanche",
         answers_to=aragon,
         place=county,
-        summary=secrets(
-            "Viscount Gerard II died heirless in 1172, and "
-            "Roussillon passed to Alphonso II of Aragon by an agreement "
-            "made beforehand with Gerard and his nobles, and Alphonso gave "
-            "it to his brother Sancho. Sancho, count of Roussillon and "
-            "Cerdagne, and his son Nuno Sanche, who holds Roussillon, "
-            "Conflent, Vallespir and Cerdagne, are regents of Aragon for "
-            "young James, who lives at Zaragoza.",
-            "Sancho, backed by Nuno, now and then plots against the king "
-            "he serves as regent.",
-        ),
+        summary="Viscount Gerard II died heirless in 1172, and "
+        "Roussillon passed to Alphonso II of Aragon by an agreement "
+        "made beforehand with Gerard and his nobles, and Alphonso gave "
+        "it to his brother Sancho. Sancho, count of Roussillon and "
+        "Cerdagne, and his son Nuno Sanche, who holds Roussillon, "
+        "Conflent, Vallespir and Cerdagne, are regents of Aragon for "
+        "young James, who lives at Zaragoza.",
+        secrets="Sancho, backed by Nuno, now and then plots against the king "
+        "he serves as regent.",
     )
     w["perpignan"] = b.town(
         "Perpignan",
@@ -1229,44 +1211,42 @@ def _flavour(provence: Provence, b: Builder) -> None:
         "gulf_of_lion",
         "The Gulf of Lion",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The Narbonnais shore, from Collioure past the mouths of "
-                "the Aude and the Hérault toward the Rhône. Since the "
-                "Umayyads took Iberia in the eighth century, Moorish "
-                "corsairs have hunted these waters, and no crossing from "
-                "the Catalan Sea to the Ligurian or Sardinian seas is safe "
-                "from capture and slavery, so ships sail together in "
-                "flotillas. Passing it takes a Moorish ship, magic, or a "
-                "story (City & Guild).",
-                "A brutal corsair raids this coast, landing reavers to "
-                "fall on caravans and pilgrims and taking captives for "
-                "ransom. He has struck a bargain with a jinn called "
-                "Howling Knife of the Dunes.",
-            ),
-            paragraphs(
-                "The Jinn Corsair (Faerie Might 20, Vim) looks like a "
-                "handsome, grinning Maghrebi pirate with a brand on his "
-                "left cheek, dressed in rich cloth, bearing a fine "
-                "scimitar that looks like glass in the morning light. He "
-                "is Muslim, proud and overconfident, and sells his "
-                "service as a bodyguard; he has lost a charge only twice, "
-                "once to a dragon and once to a Hermetic magus, perhaps "
-                "of the players' own covenant. Powers: become a gritty "
-                "desert whirlwind that can carry one person (Sirocco's "
-                "Form, CrAu 50); find whoever an Arcane Connection he "
-                "holds belongs to (InCo 20); sheathe his blade in white "
-                "fire for +10 damage (CrIg 20); make one he touches "
-                "invisible, though a shadow remains (PeIm 15). Scimitar: "
-                "Attack +12, Damage +8, Defense +9, Init +3; Soak +6. He "
-                "is bound by his name and serves whoever he has agreed "
-                "to; failing a mission drives him to fury. His scimitar, "
-                "weightless, holds one pawn apiece of Ignem, Auram, Imaginem "
-                "and Corpus, and its bearer gains Puissant Single Weapon.",
-                "The jinn knows of the Order and has promised the pirates "
-                "untold wealth if they bring him one particular magus; he "
-                "has a second master, someone the players have angered.",
-            ),
+        summary=paragraphs(
+            "The Narbonnais shore, from Collioure past the mouths of "
+            "the Aude and the Hérault toward the Rhône. Since the "
+            "Umayyads took Iberia in the eighth century, Moorish "
+            "corsairs have hunted these waters, and no crossing from "
+            "the Catalan Sea to the Ligurian or Sardinian seas is safe "
+            "from capture and slavery, so ships sail together in "
+            "flotillas. Passing it takes a Moorish ship, magic, or a "
+            "story (City & Guild).",
+            "A brutal corsair raids this coast, landing reavers to "
+            "fall on caravans and pilgrims and taking captives for "
+            "ransom. He has struck a bargain with a jinn called "
+            "Howling Knife of the Dunes.",
+        ),
+        secrets=paragraphs(
+            "The Jinn Corsair (Faerie Might 20, Vim) looks like a "
+            "handsome, grinning Maghrebi pirate with a brand on his "
+            "left cheek, dressed in rich cloth, bearing a fine "
+            "scimitar that looks like glass in the morning light. He "
+            "is Muslim, proud and overconfident, and sells his "
+            "service as a bodyguard; he has lost a charge only twice, "
+            "once to a dragon and once to a Hermetic magus, perhaps "
+            "of the players' own covenant. Powers: become a gritty "
+            "desert whirlwind that can carry one person (Sirocco's "
+            "Form, CrAu 50); find whoever an Arcane Connection he "
+            "holds belongs to (InCo 20); sheathe his blade in white "
+            "fire for +10 damage (CrIg 20); make one he touches "
+            "invisible, though a shadow remains (PeIm 15). Scimitar: "
+            "Attack +12, Damage +8, Defense +9, Init +3; Soak +6. He "
+            "is bound by his name and serves whoever he has agreed "
+            "to; failing a mission drives him to fury. His scimitar, "
+            "weightless, holds one pawn apiece of Ignem, Auram, Imaginem "
+            "and Corpus, and its bearer gains Puissant Single Weapon.",
+            "The jinn knows of the Order and has promised the pirates "
+            "untold wealth if they bring him one particular magus; he "
+            "has a second master, someone the players have angered.",
         ),
         **KNOWN_REGION,
     )
@@ -1312,38 +1292,36 @@ def _flavour(provence: Provence, b: Builder) -> None:
         "via_domitia",
         "The Via Domitia",
         inside=region,
-        summary=secrets(
-            paragraphs(
-                "The ancient road the Romans paved: from the Pyrenean pass "
-                "near Le Perthus through Perpignan, over a bridge of seven "
-                "arches into Narbonne, on through Béziers, Montpellier and "
-                "Nîmes into the Kingdom of Arelat, north at Céreste into "
-                "the Piedmont, and over the Alps by the Col de Montgenèvre, "
-                "the lowest main pass between France and Italy. Locals "
-                "believe Heracles walked it on his labours, and Hannibal "
-                "certainly marched it toward Rome. In Roman times "
-                "mansiones, staging posts a day's journey apart, gave "
-                "travellers rest and food.",
-                "Ara Maxima Nova guards the road jealously and uses it in "
-                "its initiations and rites; its magi often challenge to "
-                "certamen any magus they think is studying the road's "
-                "secrets rather than simply travelling it. Stella Durus "
-                "respects its claim.",
-            ),
-            paragraphs(
-                "Heraclean vis: someone who walks the whole road from the "
-                "Le Perthus pass to the Col de Montgenèvre carrying a lion's "
-                "skin, and camps for the night at six of the old mansio "
-                "sites, finds 6 pawns of Intellego vis in the skin. One "
-                "site is an open lot inside Narbonne, and Ara Maxima Nova "
-                "watches the road closely. Its magi do not yet know of "
-                "this vis, but some local faeries do and might trade the "
-                "knowledge.",
-                "An Iberian Redcap carrying Tibaut's sealed letter to "
-                "Beatrice died of an ambush by crusader camp followers in "
-                "the wilds along the road; the letter is still in his "
-                "satchel (see The Serpent's Venom).",
-            ),
+        summary=paragraphs(
+            "The ancient road the Romans paved: from the Pyrenean pass "
+            "near Le Perthus through Perpignan, over a bridge of seven "
+            "arches into Narbonne, on through Béziers, Montpellier and "
+            "Nîmes into the Kingdom of Arelat, north at Céreste into "
+            "the Piedmont, and over the Alps by the Col de Montgenèvre, "
+            "the lowest main pass between France and Italy. Locals "
+            "believe Heracles walked it on his labours, and Hannibal "
+            "certainly marched it toward Rome. In Roman times "
+            "mansiones, staging posts a day's journey apart, gave "
+            "travellers rest and food.",
+            "Ara Maxima Nova guards the road jealously and uses it in "
+            "its initiations and rites; its magi often challenge to "
+            "certamen any magus they think is studying the road's "
+            "secrets rather than simply travelling it. Stella Durus "
+            "respects its claim.",
+        ),
+        secrets=paragraphs(
+            "Heraclean vis: someone who walks the whole road from the "
+            "Le Perthus pass to the Col de Montgenèvre carrying a lion's "
+            "skin, and camps for the night at six of the old mansio "
+            "sites, finds 6 pawns of Intellego vis in the skin. One "
+            "site is an open lot inside Narbonne, and Ara Maxima Nova "
+            "watches the road closely. Its magi do not yet know of "
+            "this vis, but some local faeries do and might trade the "
+            "knowledge.",
+            "An Iberian Redcap carrying Tibaut's sealed letter to "
+            "Beatrice died of an ambush by crusader camp followers in "
+            "the wilds along the road; the letter is still in his "
+            "satchel (see The Serpent's Venom).",
         ),
         **KNOWN_ORDER,
     )
@@ -1352,18 +1330,16 @@ def _flavour(provence: Provence, b: Builder) -> None:
         "aude",
         "The River Aude",
         inside=region,
-        summary=secrets(
-            "The river that runs down from the Pyrenees past Carcassonne "
-            "to Narbonne and the sea, giving the city its port. A powerful "
-            "magic spirit, a daimon, dwells in it. Stella Durus sits on "
-            "its left bank, and Marcella of Bonisagus has studied its "
-            "spirit for years.",
-            "Marcella hopes to tap the Aude's spirit for vis without "
-            "killing it. One of the paths open to her is a ritual murder "
-            "of the spirit for a single great store of vis; if that is "
-            "done, the river will silt up over the years and Narbonne "
-            "will decline as a port.",
-        ),
+        summary="The river that runs down from the Pyrenees past Carcassonne "
+        "to Narbonne and the sea, giving the city its port. A powerful "
+        "magic spirit, a daimon, dwells in it. Stella Durus sits on "
+        "its left bank, and Marcella of Bonisagus has studied its "
+        "spirit for years.",
+        secrets="Marcella hopes to tap the Aude's spirit for vis without "
+        "killing it. One of the paths open to her is a ritual murder "
+        "of the spirit for a single great store of vis; if that is "
+        "done, the river will silt up over the years and Narbonne "
+        "will decline as a port.",
         **KNOWN_REGION,
     )
 
@@ -1460,14 +1436,11 @@ def _stella_durus(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "of Barbegal, which would set her against the Coenobium, so she "
         "would pay others, perhaps the players, in texts and connections "
         "to look for her.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Marcella has not yet found how to link a city's people to a daimon, how to call up an Aspect to harvest without the daimon noticing, or how to tap a spirit's locus for vis and leave it undisturbed; she guards her progress closely, and Toulouse's spirit would teach her much, but she will not go there.",
-                "If the ritual murder of the Aude's spirit is done, the river will silt up over the years and Narbonne will decline as a port.",
-                "Ducaru may have helped Ramon Berenguer IV escape the Templars in 1219, and works toward marriages that will, in time, marry the count's daughters into the royal houses of France, England and Sicily and to Richard of Cornwall.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Marcella has not yet found how to link a city's people to a daimon, how to call up an Aspect to harvest without the daimon noticing, or how to tap a spirit's locus for vis and leave it undisturbed; she guards her progress closely, and Toulouse's spirit would teach her much, but she will not go there.",
+        "If the ritual murder of the Aude's spirit is done, the river will silt up over the years and Narbonne will decline as a port.",
+        "Ducaru may have helped Ramon Berenguer IV escape the Templars in 1219, and works toward marriages that will, in time, marry the count's daughters into the royal houses of France, England and Sicily and to Richard of Cornwall.",
     )
     covenant = b.covenant(
         "Stella Durus",
@@ -1477,6 +1450,7 @@ def _stella_durus(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         aura=2,
         season="Autumn",
     )
@@ -1518,31 +1492,29 @@ def _stella_durus_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=BONISAGUS,
         age=92,
-        summary=secrets(
-            paragraphs(
-                "The elder Bonisagus of Stella Durus, far from her native "
-                "Lancaster; she looks about sixty-three. She believes a "
-                "genius loci or daimon and a nearby town can live in "
-                "symbiosis, the people strengthening the spirit, so that "
-                "vis it makes regularly, too little to be worth hunting, "
-                "could be gathered; she is working on the spirit of the "
-                "Aude. Obsessive in research, she keeps strange hours, "
-                "chases tangents and travels wherever a lead or an expert "
-                "takes her. She loves talking Hermetic theory with anyone, "
-                "and at Tribunal is known for trapping listeners with odd "
-                "trivia until something more urgent rescues them.",
-                "She leaves the covenant's necessary chores to Jean Marie "
-                "and cares only that there is money for supplies. She "
-                "talked her filia Giacoma into coming back to help her for "
-                "seven years in return for getting her out of trouble; "
-                "Giacoma's indiscretions disappoint her. She is a "
-                "suitable parens for a new magus of the Tribunal.",
-            ),
-            "She secretly fears that one day she may be unable to protect "
-            "or rescue her old apprentice. She keeps her progress on "
-            "the Aude a close secret, and will not risk going to Toulouse "
-            "to study its spirit, though it would help her.",
+        summary=paragraphs(
+            "The elder Bonisagus of Stella Durus, far from her native "
+            "Lancaster; she looks about sixty-three. She believes a "
+            "genius loci or daimon and a nearby town can live in "
+            "symbiosis, the people strengthening the spirit, so that "
+            "vis it makes regularly, too little to be worth hunting, "
+            "could be gathered; she is working on the spirit of the "
+            "Aude. Obsessive in research, she keeps strange hours, "
+            "chases tangents and travels wherever a lead or an expert "
+            "takes her. She loves talking Hermetic theory with anyone, "
+            "and at Tribunal is known for trapping listeners with odd "
+            "trivia until something more urgent rescues them.",
+            "She leaves the covenant's necessary chores to Jean Marie "
+            "and cares only that there is money for supplies. She "
+            "talked her filia Giacoma into coming back to help her for "
+            "seven years in return for getting her out of trouble; "
+            "Giacoma's indiscretions disappoint her. She is a "
+            "suitable parens for a new magus of the Tribunal.",
         ),
+        secrets="She secretly fears that one day she may be unable to protect "
+        "or rescue her old apprentice. She keeps her progress on "
+        "the Aude a close secret, and will not risk going to Toulouse "
+        "to study its spirit, though it would help her.",
         traits={"Focused": 2, "Nurturing": 2, "Oblivious": 2},
     )
     m["giacoma"] = b.magus(
@@ -1598,33 +1570,31 @@ def _stella_durus_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=JERBITON,
         age=87,
-        summary=secrets(
-            paragraphs(
-                "A follower of Jerbiton in pleasant semi-retirement, who "
-                "looks about forty-five. Born just outside Marseilles, he "
-                "goes back every five years, and now and then travels to "
-                "Paris or on pilgrimage to Compostela or Rome. He advises "
-                "and helps manage a relative's shipping company, and "
-                "manages Stella Durus too, keeping it tasteful and "
-                "observing every rule of Hermetic courtesy and "
-                "hospitality. His strengths are Intellego, Mentem, Rego "
-                "and Vim, and his paradoxographia, travel letters full of "
-                "lies with a prize for the reader who finds the most, are "
-                "much enjoyed, at Bellaquin above all.",
-                "He likes Renaud's idea of a troubadour in the household "
-                "and thinks of founding a league of magi who love "
-                "troubadours and courtly love, to help the poets flourish "
-                "despite the crusade, though he fears it might draw "
-                "crusaders hunting Cathar refugees among the region's "
-                "sympathetic nobles. He has lately taken up subtle "
-                "Imaginem to tell better stories. A suitable parens for a "
-                "new magus.",
-            ),
-            "Through letters with Mariola of Tolosa Paratge he has fallen "
-            "in love with her. He suspects Ducaru's game, since the Tytalus "
-            "sometimes pumps him for news of the local nobles gathered "
-            "through his troubadour friends.",
+        summary=paragraphs(
+            "A follower of Jerbiton in pleasant semi-retirement, who "
+            "looks about forty-five. Born just outside Marseilles, he "
+            "goes back every five years, and now and then travels to "
+            "Paris or on pilgrimage to Compostela or Rome. He advises "
+            "and helps manage a relative's shipping company, and "
+            "manages Stella Durus too, keeping it tasteful and "
+            "observing every rule of Hermetic courtesy and "
+            "hospitality. His strengths are Intellego, Mentem, Rego "
+            "and Vim, and his paradoxographia, travel letters full of "
+            "lies with a prize for the reader who finds the most, are "
+            "much enjoyed, at Bellaquin above all.",
+            "He likes Renaud's idea of a troubadour in the household "
+            "and thinks of founding a league of magi who love "
+            "troubadours and courtly love, to help the poets flourish "
+            "despite the crusade, though he fears it might draw "
+            "crusaders hunting Cathar refugees among the region's "
+            "sympathetic nobles. He has lately taken up subtle "
+            "Imaginem to tell better stories. A suitable parens for a "
+            "new magus.",
         ),
+        secrets="Through letters with Mariola of Tolosa Paratge he has fallen "
+        "in love with her. He suspects Ducaru's game, since the Tytalus "
+        "sometimes pumps him for news of the local nobles gathered "
+        "through his troubadour friends.",
         traits={"Genial": 3, "Spendthrift": 2, "Talkative": 2},
     )
     m["ducaru"] = b.magus(
@@ -1632,36 +1602,34 @@ def _stella_durus_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         covenant=home,
         house=TYTALUS,
         age=44,
-        summary=secrets(
-            paragraphs(
-                "A Romanian trained in the Theban Tribunal, who looks about "
-                "thirty-four and is never seen without his goatskin cap. "
-                "He joined Stella Durus for his own ends, and most of the "
-                "Tribunal is very aware of him. His mastery of Mentem "
-                "serves his purposes, though his expert Vim only makes "
-                "people suspicious. He listens more than he talks, prefers "
-                "to make a suggestion and watch what follows, and often "
-                "acts, especially unexpectedly, just to see the outcome. "
-                "He does not think himself evil but lets neither morals "
-                "nor custom limit him.",
-                "The least involved in running the covenant, he always "
-                "helps at the most telling moment. He keeps a chess game "
-                "going in a Perpignan tavern, where he is beating Etienne "
-                "of Ara Maxima Nova after months of play, and Redcaps wager "
-                "on the result.",
-            ),
-            paragraphs(
-                "He means to work his way into the nobility and broker "
-                "marriages and alliances from the shadows, and has begun, "
-                "under a Norman persona; if it became well known he could "
-                "face charges at Tribunal. He may have helped Ramon "
-                "Berenguer IV escape the Templars in 1219, and the count's "
-                "four daughters will one day marry into the royal "
-                "houses of France, England and Sicily and to Richard of Cornwall; how "
-                "he picks his matches (divination, eastern prophecy or "
-                "sharp politics) and what he gains is unknown. He may be "
-                "conspiring with Isabella of Angoulême to secure her line.",
-            ),
+        summary=paragraphs(
+            "A Romanian trained in the Theban Tribunal, who looks about "
+            "thirty-four and is never seen without his goatskin cap. "
+            "He joined Stella Durus for his own ends, and most of the "
+            "Tribunal is very aware of him. His mastery of Mentem "
+            "serves his purposes, though his expert Vim only makes "
+            "people suspicious. He listens more than he talks, prefers "
+            "to make a suggestion and watch what follows, and often "
+            "acts, especially unexpectedly, just to see the outcome. "
+            "He does not think himself evil but lets neither morals "
+            "nor custom limit him.",
+            "The least involved in running the covenant, he always "
+            "helps at the most telling moment. He keeps a chess game "
+            "going in a Perpignan tavern, where he is beating Etienne "
+            "of Ara Maxima Nova after months of play, and Redcaps wager "
+            "on the result.",
+        ),
+        secrets=paragraphs(
+            "He means to work his way into the nobility and broker "
+            "marriages and alliances from the shadows, and has begun, "
+            "under a Norman persona; if it became well known he could "
+            "face charges at Tribunal. He may have helped Ramon "
+            "Berenguer IV escape the Templars in 1219, and the count's "
+            "four daughters will one day marry into the royal "
+            "houses of France, England and Sicily and to Richard of Cornwall; how "
+            "he picks his matches (divination, eastern prophecy or "
+            "sharp politics) and what he gains is unknown. He may be "
+            "conspiring with Isabella of Angoulême to secure her line.",
         ),
         traits={"Boastful": 2, "Calculating": 2, "Reckless": 2},
     )
@@ -1776,14 +1744,11 @@ def _ara_maxima_nova(provence: Provence, b: Builder, tribunal: Tribunal) -> None
         "are cordial but distant neighbours. The Plaine de la Crau in "
         "Arelat, where Heracles stoned the giants Bergion and Ligur, "
         "interests it greatly.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Luc's cult is the secret behind the covenant; Castra Solis's devout members would quietly move against his resources if they learned of it.",
-                "The magi do not know that walking the whole Via Domitia with a lion's skin yields 6 pawns of Intellego; local faeries do, and might sell the knowledge.",
-                "Luc's grumbling to Dama about Tibaut's questions, after a certamen he lost to the Quaesitor, warned her of the investigation (see The Serpent's Venom).",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Luc's cult is the secret behind the covenant; Castra Solis's devout members would quietly move against his resources if they learned of it.",
+        "The magi do not know that walking the whole Via Domitia with a lion's skin yields 6 pawns of Intellego; local faeries do, and might sell the knowledge.",
+        "Luc's grumbling to Dama about Tibaut's questions, after a certamen he lost to the Quaesitor, warned her of the investigation (see The Serpent's Venom).",
     )
     covenant = b.covenant(
         "Ara Maxima Nova",
@@ -1793,6 +1758,7 @@ def _ara_maxima_nova(provence: Provence, b: Builder, tribunal: Tribunal) -> None
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         season="Summer",
     )
     provence.covenants["ara_maxima_nova"] = covenant
@@ -1833,50 +1799,48 @@ def _ara_maxima_nova_magi(provence: Provence, b: Builder, home: Covenant) -> Non
         covenant=home,
         house=MERINITA,
         age=66,
-        summary=secrets(
-            paragraphs(
-                "Mystagogue of a splinter of the Merinita branch of the "
-                "Keepers of a Thousand Tales, a branch now absorbing the ways "
-                "of the Cult of Heroes (Houses of Hermes: True Lineages), "
-                "and unofficial leader of Ara Maxima Nova; he looks about "
-                "fifty-four. A master of Imaginem, Mentem and Vim, "
-                "obsessed with mysteries, he put off his Longevity Ritual "
-                "until nearly fifty for fear it would spoil his pursuit of "
-                "the Dionysian mysteries' sexual side. An inventive "
-                "genius, thought to have been initiated as an apprentice, "
-                "he crafts new initiations by blending odd esoterica, "
-                "faerie tales and encounters, and astrological and "
-                "natural signs, guided by visions from drinks laced with "
-                "mandrake or poppy. He neglects the covenant's daily "
-                "business, to Etienne's annoyance.",
-                "His wife Miriam, a failed apprentice, is his lab "
-                "assistant, fellow cultist and muse; they have two "
-                "marriageable daughters. He leans on his sister Jeanne in "
-                "every crisis, feeling only she understands their "
-                "childhood under a harsh, sometimes cruel deacon in "
-                "Brittany. He is infatuated with Guillermo. A suitable "
-                "parens for a new magus.",
-                "His goals: to find the Hesperides and steal their apples, "
-                "the last labours but one of his reenactment, and then "
-                "pass a lapis manalis he believes he has found into a "
-                "regio where Cerberus may wait; to leave a lasting legacy "
-                "for his cult in House Merinita and perhaps the Order, "
-                "through a fine text (he would seize on the Elysian "
-                "Ecstasy or Olympian Pact of The Sundered Eagle if he "
-                "learned of them); and to undo his Longevity Ritual's "
-                "sterility and father a son who could be his apprentice, "
-                "the one dream that might make him set aside ascension.",
-            ),
-            paragraphs(
-                "He has had many lovers of both sexes during his studies "
-                "and does not say so, and there may be unknown bastards of "
-                "his around the Mediterranean.",
-                "After Tibaut questioned him hard about trouble with clergy "
-                "or pilgrims on the Via Domitia and beat him at certamen "
-                "for the answers, Luc gave only the barest replies and "
-                "complained of it to Dama, telling her which Arts to "
-                "expect: that warned her of the investigation.",
-            ),
+        summary=paragraphs(
+            "Mystagogue of a splinter of the Merinita branch of the "
+            "Keepers of a Thousand Tales, a branch now absorbing the ways "
+            "of the Cult of Heroes (Houses of Hermes: True Lineages), "
+            "and unofficial leader of Ara Maxima Nova; he looks about "
+            "fifty-four. A master of Imaginem, Mentem and Vim, "
+            "obsessed with mysteries, he put off his Longevity Ritual "
+            "until nearly fifty for fear it would spoil his pursuit of "
+            "the Dionysian mysteries' sexual side. An inventive "
+            "genius, thought to have been initiated as an apprentice, "
+            "he crafts new initiations by blending odd esoterica, "
+            "faerie tales and encounters, and astrological and "
+            "natural signs, guided by visions from drinks laced with "
+            "mandrake or poppy. He neglects the covenant's daily "
+            "business, to Etienne's annoyance.",
+            "His wife Miriam, a failed apprentice, is his lab "
+            "assistant, fellow cultist and muse; they have two "
+            "marriageable daughters. He leans on his sister Jeanne in "
+            "every crisis, feeling only she understands their "
+            "childhood under a harsh, sometimes cruel deacon in "
+            "Brittany. He is infatuated with Guillermo. A suitable "
+            "parens for a new magus.",
+            "His goals: to find the Hesperides and steal their apples, "
+            "the last labours but one of his reenactment, and then "
+            "pass a lapis manalis he believes he has found into a "
+            "regio where Cerberus may wait; to leave a lasting legacy "
+            "for his cult in House Merinita and perhaps the Order, "
+            "through a fine text (he would seize on the Elysian "
+            "Ecstasy or Olympian Pact of The Sundered Eagle if he "
+            "learned of them); and to undo his Longevity Ritual's "
+            "sterility and father a son who could be his apprentice, "
+            "the one dream that might make him set aside ascension.",
+        ),
+        secrets=paragraphs(
+            "He has had many lovers of both sexes during his studies "
+            "and does not say so, and there may be unknown bastards of "
+            "his around the Mediterranean.",
+            "After Tibaut questioned him hard about trouble with clergy "
+            "or pilgrims on the Via Domitia and beat him at certamen "
+            "for the answers, Luc gave only the barest replies and "
+            "complained of it to Dama, telling her which Arts to "
+            "expect: that warned her of the investigation.",
         ),
         traits={"Intense": 3, "Charismatic": 2, "Outspoken": 2},
     )
@@ -1933,29 +1897,27 @@ def _ara_maxima_nova_magi(provence: Provence, b: Builder, home: Covenant) -> Non
         covenant=home,
         house=MERCERE,
         age=56,
-        summary=secrets(
-            paragraphs(
-                "A Gifted Mercere from Genoa, the covenant's newest member "
-                "and the only one from outside France, who looks about "
-                "thirty-three. Research into Heracles and Hannibal for the "
-                "Cult of Heroes, plus a lord's mistaken idea about him and "
-                "the lord's wife, sent him to the Via Domitia, where he kept "
-                "meeting Luc; after several friendly certamen bouts over "
-                "ruins and resources, which he lost, and long talks on "
-                "heroic ascension, Luc invited him into the cult's first "
-                "initiations. Luc is fascinated by his knowledge of old "
-                "tales and of the land, and Guillermo feeds the "
-                "infatuation to learn all he can.",
-                "Soon after his Gauntlet he saved a young Tremere, "
-                "Sagittaire, from bandits, and she taught him the Carvers' "
-                "school of certamen (Houses of Hermes: True Lineages); he "
-                "is known for gladly standing champion for any Redcap of "
-                "the Tribunal who asks. A suitable parens for a new magus.",
-            ),
-            "His loyalty is to himself alone: made to choose between a "
-            "great sacrifice for the covenant and his own good, he will "
-            "choose himself.",
+        summary=paragraphs(
+            "A Gifted Mercere from Genoa, the covenant's newest member "
+            "and the only one from outside France, who looks about "
+            "thirty-three. Research into Heracles and Hannibal for the "
+            "Cult of Heroes, plus a lord's mistaken idea about him and "
+            "the lord's wife, sent him to the Via Domitia, where he kept "
+            "meeting Luc; after several friendly certamen bouts over "
+            "ruins and resources, which he lost, and long talks on "
+            "heroic ascension, Luc invited him into the cult's first "
+            "initiations. Luc is fascinated by his knowledge of old "
+            "tales and of the land, and Guillermo feeds the "
+            "infatuation to learn all he can.",
+            "Soon after his Gauntlet he saved a young Tremere, "
+            "Sagittaire, from bandits, and she taught him the Carvers' "
+            "school of certamen (Houses of Hermes: True Lineages); he "
+            "is known for gladly standing champion for any Redcap of "
+            "the Tribunal who asks. A suitable parens for a new magus.",
         ),
+        secrets="His loyalty is to himself alone: made to choose between a "
+        "great sacrifice for the covenant and his own good, he will "
+        "choose himself.",
         traits={"Bold": 2, "Foolhardy": 2, "Proud": 2},
     )
 

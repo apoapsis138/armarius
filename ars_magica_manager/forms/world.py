@@ -36,6 +36,7 @@ from ..sections import (
 )
 from ..sheets.character import house_name
 from ..tables import Table
+from .secrets import secrets_ops
 from .tribunal import package_fields, save_package_fields, tribunal_field
 
 #: How each link kind is named in a form.
@@ -717,11 +718,13 @@ def covenant_ops(saga: Saga, covenant: Covenant) -> dict[str, SectionOps]:
 
 
 def record_ops(saga: Saga, record: Any) -> dict[str, SectionOps]:
-    """Attitude, favours and links: the sections any world record has."""
+    """Attitude, favours, links and secrets: the sections any world
+    record has."""
     return {
         ATTITUDE_SECTION: attitude_ops(saga, record),
         FAVOURS_SECTION: favour_ops(saga, record),
         LINKS_SECTION: link_ops(saga, record),
+        **secrets_ops(record),
     }
 
 

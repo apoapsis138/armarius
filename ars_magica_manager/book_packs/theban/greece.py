@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -43,8 +43,6 @@ TREMERE = "house_tremere"
 TYTALUS = "house_tytalus"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -176,28 +174,26 @@ def _epiros(theban: Theban) -> None:
         inside=epiros,
         realm="Infernal",
         aura=2,
-        summary=secrets(
-            paragraphs(
-                "A graceful bridge of pale stone on long slender arches "
-                "over the Arachthos at Arta. For as long as anyone "
-                "remembers, forty-five master masons and sixty apprentices "
-                "built it by day and watched it fall into the river by "
-                "night, until, after Michael Komnenos came, a great black "
-                "raven told the chief mason to give up his lovely wife if "
-                "he wanted it to stand and to escape his new lord's anger. "
-                "He agreed and tried to trick the bird, and failed: his "
-                "wife died walled into the footings, cursing that men "
-                "would fall from the bridge as birds fall from the sky.",
-                "The finished bridge has a treacherous Infernal aura of 2, "
-                "and the raven still watches it. Whoever crosses gains +2 "
-                "to Greedy (or Greedy +2) until the next day, and with "
-                "merchants and townsfolk crossing all day, Arta's market "
-                "has turned sordid and dishonest.",
-            ),
-            "The raven could perhaps be driven off, but the bridge might "
-            "fall with it, and the ruler of Epiros would want to know who "
-            "brought it down.",
+        summary=paragraphs(
+            "A graceful bridge of pale stone on long slender arches "
+            "over the Arachthos at Arta. For as long as anyone "
+            "remembers, forty-five master masons and sixty apprentices "
+            "built it by day and watched it fall into the river by "
+            "night, until, after Michael Komnenos came, a great black "
+            "raven told the chief mason to give up his lovely wife if "
+            "he wanted it to stand and to escape his new lord's anger. "
+            "He agreed and tried to trick the bird, and failed: his "
+            "wife died walled into the footings, cursing that men "
+            "would fall from the bridge as birds fall from the sky.",
+            "The finished bridge has a treacherous Infernal aura of 2, "
+            "and the raven still watches it. Whoever crosses gains +2 "
+            "to Greedy (or Greedy +2) until the next day, and with "
+            "merchants and townsfolk crossing all day, Arta's market "
+            "has turned sordid and dishonest.",
         ),
+        secrets="The raven could perhaps be driven off, but the bridge might "
+        "fall with it, and the ruler of Epiros would want to know who "
+        "brought it down.",
         **KNOWN_LOCALLY,
     )
     _add(
@@ -493,20 +489,18 @@ def _macedonia(theban: Theban) -> None:
         "cambunian_mountains",
         "The Cambunian Mountains",
         inside=macedonia,
-        summary=secrets(
-            paragraphs(
-                "The range between Macedonia and Thessaly, crowned by "
-                "Olympos at its eastern end: the old homeland of the "
-                "Witches of Thessaly. The covenant of Erebos lies in a "
-                "long valley on its northern side.",
-                "The Daughters of Erictho, the Witches of Thessaly who "
-                "would not join the Order, hide among these mountains and "
-                "are Erebos's enemies, clashing with it over ground and "
-                "magical resources.",
-            ),
-            "Cyra, Erebos's patron, curses whoever comes into the valley "
-            "meaning the covenant harm.",
+        summary=paragraphs(
+            "The range between Macedonia and Thessaly, crowned by "
+            "Olympos at its eastern end: the old homeland of the "
+            "Witches of Thessaly. The covenant of Erebos lies in a "
+            "long valley on its northern side.",
+            "The Daughters of Erictho, the Witches of Thessaly who "
+            "would not join the Order, hide among these mountains and "
+            "are Erebos's enemies, clashing with it over ground and "
+            "magical resources.",
         ),
+        secrets="Cyra, Erebos's patron, curses whoever comes into the valley "
+        "meaning the covenant harm.",
         **KNOWN_REGION,
     )
     _add(
@@ -529,33 +523,31 @@ def _macedonia(theban: Theban) -> None:
         inside=macedonia,
         realm="Divine",
         aura=3,
-        summary=secrets(
-            paragraphs(
-                "'Hanging in the heavens': a forest of huge sandstone "
-                "pillars, some over a thousand feet tall, near the "
-                "north-west edge of the Thessalian plain where the "
-                "Salambria leaves the Pindos. On top, especially when mist "
-                "fills the plain, one feels marooned on a little island "
-                "near Heaven. The skete of Doupiani lives here, and most "
-                "pillars have Divine auras from 3 to 6, each named for the "
-                "mystic experience found on it (the Pillar of Dreams, of "
-                "Solitude and so on).",
-                "Giant Divine eagles nest among the pillars: a devout, "
-                "humble hermit who falls may be caught and carried back up "
-                "to his cave, or to a still more dangerous ledge, and they "
-                "often bring scraps to starving hermits, though not to "
-                "those fasting by choice.",
-                "The tallest, Agio Pnevma, the Tower of the Holy Ghost, "
-                "has the strongest aura, and its summit is thought a gate "
-                "to Heaven; no mortal who reached it ever came back to "
-                "say so.",
-                "Several vis sources are believed to lie here, but magi "
-                "rarely come. The last one tried to fly up the Agio "
-                "Pnevma; his levitation failed, perhaps in punishment for "
-                "his pride, and the vultures ate him.",
-            ),
-            "",
+        summary=paragraphs(
+            "'Hanging in the heavens': a forest of huge sandstone "
+            "pillars, some over a thousand feet tall, near the "
+            "north-west edge of the Thessalian plain where the "
+            "Salambria leaves the Pindos. On top, especially when mist "
+            "fills the plain, one feels marooned on a little island "
+            "near Heaven. The skete of Doupiani lives here, and most "
+            "pillars have Divine auras from 3 to 6, each named for the "
+            "mystic experience found on it (the Pillar of Dreams, of "
+            "Solitude and so on).",
+            "Giant Divine eagles nest among the pillars: a devout, "
+            "humble hermit who falls may be caught and carried back up "
+            "to his cave, or to a still more dangerous ledge, and they "
+            "often bring scraps to starving hermits, though not to "
+            "those fasting by choice.",
+            "The tallest, Agio Pnevma, the Tower of the Holy Ghost, "
+            "has the strongest aura, and its summit is thought a gate "
+            "to Heaven; no mortal who reached it ever came back to "
+            "say so.",
+            "Several vis sources are believed to lie here, but magi "
+            "rarely come. The last one tried to fly up the Agio "
+            "Pnevma; his levitation failed, perhaps in punishment for "
+            "his pride, and the vultures ate him.",
         ),
+        secrets="",
         **KNOWN_REGION,
     )
     _add(
@@ -697,56 +689,54 @@ def _attica(theban: Theban) -> None:
         "Delphi",
         inside=parnassos,
         aura=7,
-        summary=secrets(
-            paragraphs(
-                "The most famous oracle of the ancient world, once asked "
-                "by kings, emperors, tyrants and philosophers about "
-                "politics, war and religion, and famed for answers that "
-                "came true, if often darkly put. It lies on a terraced "
-                "plateau among crags below Parnassos: the Temple of "
-                "Apollon at the centre of a small cluster of temples, "
-                "ruins and an amphitheatre. The oracle itself has a Magic "
-                "aura of 9, the rest of the sanctuary 7; the omphalos and "
-                "its ties to the titans make Magic, not Faerie, the "
-                "stronger here.",
-                "It is in the keeping of the Tribunal and the Order. A "
-                "lone Criamon maga lives here as the oracle under the old "
-                "ceremonial name, Pythia, and in time picks her successor "
-                "(often her filia), who after initiation into the "
-                "oracle's Mysteries takes the name and role without "
-                "announcement; so, though many magae have served, Pythia "
-                "is thought of as one lasting being. Magi come to consult "
-                "her before great ventures, the founding of a covenant or "
-                "the taking of a patron, and often before important "
-                "Tribunal decisions. How much of the future she sees, if "
-                "any, is unclear, but her riddles nearly always prove wise "
-                "in the end. Supplicants are received only from spring to "
-                "autumn; they bring money or valuables, and larger gifts "
-                "later if the prophecy bears fruit.",
-                "The temple, which Pythia uses as her laboratory, is "
-                "richly adorned with these gifts. In its secret inner room, "
-                "the adyton, is the omphalos, the hollow egg-shaped navel "
-                "stone carved with a woven net, said to mark the centre of "
-                "the earth: the stone Rhea swaddled and gave Kronos to "
-                "swallow in place of Zeus. Vapours rising from a small hole "
-                "in it are Intellego vis, which Pythia breathes to "
-                "prophesy; and an eternal flame burns in an inner hearth, "
-                "a strong Creo vis source, any fire lit from it burning "
-                "for ever without fuel. Pythia gathers both for the "
-                "Tribunal, a common source of the polity, after taking "
-                "what she needs.",
-                "Herophile, the Delphic Sibyl, dwells in the same precinct "
-                "but is not, and never was, the Pythia; she prophesies only "
-                "for those of royal blood, however thin (see the Bestiary "
-                "for a sibyl).",
-            ),
-            "The Absent Oracle: visitors may find only a young girl who "
-            "says she is Pythia's apprentice, that her mistress is away, "
-            "and repeats a last prophecy that seems to foretell both the "
-            "disappearance and its rescuers. Whether Pythia has been "
-            "taken or is being eccentric, the riddle must be solved to "
-            "bring her back.",
+        summary=paragraphs(
+            "The most famous oracle of the ancient world, once asked "
+            "by kings, emperors, tyrants and philosophers about "
+            "politics, war and religion, and famed for answers that "
+            "came true, if often darkly put. It lies on a terraced "
+            "plateau among crags below Parnassos: the Temple of "
+            "Apollon at the centre of a small cluster of temples, "
+            "ruins and an amphitheatre. The oracle itself has a Magic "
+            "aura of 9, the rest of the sanctuary 7; the omphalos and "
+            "its ties to the titans make Magic, not Faerie, the "
+            "stronger here.",
+            "It is in the keeping of the Tribunal and the Order. A "
+            "lone Criamon maga lives here as the oracle under the old "
+            "ceremonial name, Pythia, and in time picks her successor "
+            "(often her filia), who after initiation into the "
+            "oracle's Mysteries takes the name and role without "
+            "announcement; so, though many magae have served, Pythia "
+            "is thought of as one lasting being. Magi come to consult "
+            "her before great ventures, the founding of a covenant or "
+            "the taking of a patron, and often before important "
+            "Tribunal decisions. How much of the future she sees, if "
+            "any, is unclear, but her riddles nearly always prove wise "
+            "in the end. Supplicants are received only from spring to "
+            "autumn; they bring money or valuables, and larger gifts "
+            "later if the prophecy bears fruit.",
+            "The temple, which Pythia uses as her laboratory, is "
+            "richly adorned with these gifts. In its secret inner room, "
+            "the adyton, is the omphalos, the hollow egg-shaped navel "
+            "stone carved with a woven net, said to mark the centre of "
+            "the earth: the stone Rhea swaddled and gave Kronos to "
+            "swallow in place of Zeus. Vapours rising from a small hole "
+            "in it are Intellego vis, which Pythia breathes to "
+            "prophesy; and an eternal flame burns in an inner hearth, "
+            "a strong Creo vis source, any fire lit from it burning "
+            "for ever without fuel. Pythia gathers both for the "
+            "Tribunal, a common source of the polity, after taking "
+            "what she needs.",
+            "Herophile, the Delphic Sibyl, dwells in the same precinct "
+            "but is not, and never was, the Pythia; she prophesies only "
+            "for those of royal blood, however thin (see the Bestiary "
+            "for a sibyl).",
         ),
+        secrets="The Absent Oracle: visitors may find only a young girl who "
+        "says she is Pythia's apprentice, that her mistress is away, "
+        "and repeats a last prophecy that seems to foretell both the "
+        "disappearance and its rescuers. Whether Pythia has been "
+        "taken or is being eccentric, the riddle must be solved to "
+        "bring her back.",
         **KNOWN_ORDER,
     )
     _add(
@@ -774,20 +764,18 @@ def _attica(theban: Theban) -> None:
         "The Palace of the Lamia",
         inside=attica,
         realm="Faerie",
-        summary=secrets(
-            paragraphs(
-                "A shore of the Gulf of Corinth some miles south of "
-                "Parnassos, where a lamia (see the Bestiary) rises from the "
-                "sea whenever a young man pipes on the beach, and promises "
-                "him an easy, delightful life at her side. If he refuses she "
-                "tears him apart; if he accepts she drags him under and "
-                "drowns him.",
-            ),
-            "Sometimes the man is instead carried to her palace beneath "
-            "the waves and given that life, and she teaches him many "
-            "secrets she has gathered: a perilous way to study, with "
-            "great rewards. Many lamiae can initiate Mystery Virtues.",
+        summary=paragraphs(
+            "A shore of the Gulf of Corinth some miles south of "
+            "Parnassos, where a lamia (see the Bestiary) rises from the "
+            "sea whenever a young man pipes on the beach, and promises "
+            "him an easy, delightful life at her side. If he refuses she "
+            "tears him apart; if he accepts she drags him under and "
+            "drowns him.",
         ),
+        secrets="Sometimes the man is instead carried to her palace beneath "
+        "the waves and given that life, and she teaches him many "
+        "secrets she has gathered: a perilous way to study, with "
+        "great rewards. Many lamiae can initiate Mystery Virtues.",
         **KNOWN_LOCALLY,
     )
     _add(
@@ -822,31 +810,29 @@ def _attica(theban: Theban) -> None:
         "The Tumulus of Marathon",
         inside=attica,
         aura=3,
-        summary=secrets(
-            paragraphs(
-                "On a small plain in eastern Attica in sight of the "
-                "Aegean, a big grassy cone, Magic aura 3, over the 192 "
-                "Athenians who fell beating the Persians; an old stone "
-                "before it bears Simonides's verse.",
-                "Every September, on the anniversary, the ghost of the "
-                "herald Pheidippides runs the 26 miles to Athens and looks "
-                "up at the Acropolis. If Greeks rule there he cries "
-                "victory and dies again, leaving his sandals, each with 3 "
-                "pawns of Creo vis. If barbarians hold it he turns away "
-                "silent and fades, and the next nightfall the 192 wake and "
-                "fight their way across Attica, attacking anything in their "
-                "path, to storm the Acropolis after a few days.",
-                "That is Otto de la Roche's problem: the local Greeks will "
-                "not fight their own dead, he must hold the city with "
-                "several hundred crusaders and mercenaries, and as an "
-                "excommunicate he can expect no help from Heaven. The "
-                "beaten ghosts leave weapons and gear holding Perdo vis, "
-                "which the Tribunal has so far declined to gather rather "
-                "than profit from a Greek defeat, even a symbolic one.",
-            ),
-            "The Perdo vis vanishes soon after the battle, and no one "
-            "knows who or what is collecting it.",
+        summary=paragraphs(
+            "On a small plain in eastern Attica in sight of the "
+            "Aegean, a big grassy cone, Magic aura 3, over the 192 "
+            "Athenians who fell beating the Persians; an old stone "
+            "before it bears Simonides's verse.",
+            "Every September, on the anniversary, the ghost of the "
+            "herald Pheidippides runs the 26 miles to Athens and looks "
+            "up at the Acropolis. If Greeks rule there he cries "
+            "victory and dies again, leaving his sandals, each with 3 "
+            "pawns of Creo vis. If barbarians hold it he turns away "
+            "silent and fades, and the next nightfall the 192 wake and "
+            "fight their way across Attica, attacking anything in their "
+            "path, to storm the Acropolis after a few days.",
+            "That is Otto de la Roche's problem: the local Greeks will "
+            "not fight their own dead, he must hold the city with "
+            "several hundred crusaders and mercenaries, and as an "
+            "excommunicate he can expect no help from Heaven. The "
+            "beaten ghosts leave weapons and gear holding Perdo vis, "
+            "which the Tribunal has so far declined to gather rather "
+            "than profit from a Greek defeat, even a symbolic one.",
         ),
+        secrets="The Perdo vis vanishes soon after the battle, and no one "
+        "knows who or what is collecting it.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -1093,19 +1079,17 @@ def _morea(theban: Theban) -> None:
         "cyllene_laboratory",
         "Celaenea's Laboratory on Mount Cyllene",
         inside=arcadia,
-        summary=secrets(
-            paragraphs(
-                "Mount Cyllene in the north of Arcadia, where Hermes is "
-                "said to have been born. Celaenea of Bonisagus, a Seeker "
-                "of Hedyosmos obsessed with the god's legends, keeps a "
-                "secret laboratory here, sure that by divining the nature "
-                "of Hermes she can reach the very roots of magic. The book "
-                "gives no aura.",
-            ),
-            "Proximios means to tell her that Lucian of Aegaea hopes to "
-            "raise the forgotten gods, trusting her love of Hermes to turn "
-            "her against him and his league.",
+        summary=paragraphs(
+            "Mount Cyllene in the north of Arcadia, where Hermes is "
+            "said to have been born. Celaenea of Bonisagus, a Seeker "
+            "of Hedyosmos obsessed with the god's legends, keeps a "
+            "secret laboratory here, sure that by divining the nature "
+            "of Hermes she can reach the very roots of magic. The book "
+            "gives no aura.",
         ),
+        secrets="Proximios means to tell her that Lucian of Aegaea hopes to "
+        "raise the forgotten gods, trusting her love of Hermes to turn "
+        "her against him and his league.",
         **RUMOURED,
     )
     zakynthos = _add(
@@ -1258,13 +1242,10 @@ def _epidauros(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Epidauros.",
         "The book gives no founding year (only before the Order's "
         "founding) and no season. Two magi are unnamed.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Healing the Realm: Geoffrey II of Achaea, in whose land the covenant lies, falls gravely ill, and his wife Agnes begs the magi for a cure. Refuse, and if he dies they make an enemy of her and leave a war of succession; heal him, and a rival accuses him of dealing with pagan sorcerers. Either way the covenant could be charged with interfering with mundanes.",
-                "Magi of Epidauros wonder whether the nectar and ambrosia Tantalus is said to have stolen could improve Longevity Rituals.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Healing the Realm: Geoffrey II of Achaea, in whose land the covenant lies, falls gravely ill, and his wife Agnes begs the magi for a cure. Refuse, and if he dies they make an enemy of her and leave a war of succession; heal him, and a rival accuses him of dealing with pagan sorcerers. Either way the covenant could be charged with interfering with mundanes.",
+        "Magi of Epidauros wonder whether the nectar and ambrosia Tantalus is said to have stolen could improve Longevity Rituals.",
     )
     epidauros = b.covenant(
         "Epidauros",
@@ -1274,6 +1255,7 @@ def _epidauros(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=2,
         detail=FULL,
         season="Summer",
@@ -1339,23 +1321,21 @@ def _erebos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The Valley of Erebos",
         inside=mountains,
         aura=2,
-        summary=secrets(
-            paragraphs(
-                "A long, mostly empty valley on the north side of the "
-                "Cambunian Mountains at the edge of Thessaly, home of the "
-                "covenant of Erebos. There is no common building: the "
-                "magi's sancta are strung along several miles of it with "
-                "no plan, most in hillside and cliff caves, a few in "
-                "cottages or tree houses. The valley's Magic aura is mostly "
-                "2, with other auras in a few spots.",
-                "Nearby is a bat-haunted cave complex, once a sanctuary "
-                "of a chthonic cult of Hecate. The magi harvest Perdo vis "
-                "from its bats, but have not gone in because of the "
-                "cultists' traps.",
-            ),
-            "Cyra, the patron, curses anyone entering the valley with ill "
-            "intent towards Erebos.",
+        summary=paragraphs(
+            "A long, mostly empty valley on the north side of the "
+            "Cambunian Mountains at the edge of Thessaly, home of the "
+            "covenant of Erebos. There is no common building: the "
+            "magi's sancta are strung along several miles of it with "
+            "no plan, most in hillside and cliff caves, a few in "
+            "cottages or tree houses. The valley's Magic aura is mostly "
+            "2, with other auras in a few spots.",
+            "Nearby is a bat-haunted cave complex, once a sanctuary "
+            "of a chthonic cult of Hecate. The magi harvest Perdo vis "
+            "from its bats, but have not gone in because of the "
+            "cultists' traps.",
         ),
+        secrets="Cyra, the patron, curses anyone entering the valley with ill "
+        "intent towards Erebos.",
         **KNOWN_TRIBUNAL,
     )
     summary = paragraphs(
@@ -1417,13 +1397,10 @@ def _erebos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "shawl, gripping an obsidian staff enchanted for destruction.",
         "The book gives no founding year (the later ninth century) and no "
         "season. Nine magi are unnamed.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Cyra is most likely a Magic spirit, but given the dark magic of the Witches of Thessaly she might be Infernal.",
-                "Proximios, through the League of the Vigilant, means to set demon-hunters on the young magi of Erebos as supposed diabolists.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Cyra is most likely a Magic spirit, but given the dark magic of the Witches of Thessaly she might be Infernal.",
+        "Proximios, through the League of the Vigilant, means to set demon-hunters on the young magi of Erebos as supposed diabolists.",
     )
     erebos = b.covenant(
         "Erebos",
@@ -1433,6 +1410,7 @@ def _erebos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=9,
         detail=FULL,
         season="Summer",
@@ -1550,12 +1528,9 @@ def _gigas(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "member, is a metoikos until the Assembly grants a decree of "
         "citizenship; the book names none of them, so the register lists "
         "only Boustaphan, Monorchis and Allectores, all politai.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Proximios hopes to convince Aiakia that Gigas's Tremere brought about the fall of Constantinople and plan to strike at her covenant, and Tisiphon that they have escaped justice; Boustaphan would never open Gigas's records to clear them.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Proximios hopes to convince Aiakia that Gigas's Tremere brought about the fall of Constantinople and plan to strike at her covenant, and Tisiphon that they have escaped justice; Boustaphan would never open Gigas's records to clear them.",
     )
     gigas = b.covenant(
         "Gigas",
@@ -1565,6 +1540,7 @@ def _gigas(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=3,
         detail=FULL,
         season="Summer",
@@ -1782,16 +1758,13 @@ def _hedyosmos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "said to have found the Jar of Pandora, and then for Normandy. "
         "The book gives no founding year (before the Order) and no "
         "season. Three magi are unnamed.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Kampe's Lovers, centred on Hedyosmos's cult, mean to weaken Hades's power over the titans' prison and set them free to bring a golden age of magic; this is the Theban cult's aim, not the Terrae Cult's at large.",
-                "Ausculator's mater vanished; he says she will not return, and most think she went into the lower labyrinth and never came out.",
-                "Vrakos the cook, beneath the magi's notice, has been won over by Askalaphos, the faerie tattletale of Hades whom Demeter cursed into a screech owl. He has become a priest of Hades, holds secret rites in the depths and quietly recruits among the servants; for now he asks only offerings of milk, honey and a black ram's blood.",
-                "The Estate of Hades: Askalaphos means in time to make the covenant a temple of Hades again and rid it of the magi; the Aegis of the Hearth stands in his way, and he wonders how to get himself invited into the ritual.",
-                "Proximios hopes to turn Aiakia and Tisiphon against Gigas, and Celaenea against Lucian of Aegaea.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Kampe's Lovers, centred on Hedyosmos's cult, mean to weaken Hades's power over the titans' prison and set them free to bring a golden age of magic; this is the Theban cult's aim, not the Terrae Cult's at large.",
+        "Ausculator's mater vanished; he says she will not return, and most think she went into the lower labyrinth and never came out.",
+        "Vrakos the cook, beneath the magi's notice, has been won over by Askalaphos, the faerie tattletale of Hades whom Demeter cursed into a screech owl. He has become a priest of Hades, holds secret rites in the depths and quietly recruits among the servants; for now he asks only offerings of milk, honey and a black ram's blood.",
+        "The Estate of Hades: Askalaphos means in time to make the covenant a temple of Hades again and rid it of the magi; the Aegis of the Hearth stands in his way, and he wonders how to get himself invited into the ritual.",
+        "Proximios hopes to turn Aiakia and Tisiphon against Gigas, and Celaenea against Lucian of Aegaea.",
     )
     hedyosmos = b.covenant(
         "Hedyosmos",
@@ -1801,6 +1774,7 @@ def _hedyosmos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=3,
         detail=FULL,
         season="Summer",
@@ -2137,24 +2111,22 @@ def _pythia(theban: Theban, b: Builder) -> None:
         covenant=None,
         house=CRIAMON,
         age=None,
-        summary=secrets(
-            paragraphs(
-                "The oracle of Delphi: a lone Criamon maga living in the "
-                "Temple of Apollon, which is her laboratory, under the "
-                "ancient oracle's ceremonial name. Each Pythia chooses her "
-                "successor, often her filia, who takes the name after "
-                "initiation into the oracle's Mysteries without telling "
-                "anyone, so Pythia is treated as one enduring person. Magi "
-                "consult her before founding a covenant, adopting a patron "
-                "or a great Tribunal decision; she breathes the omphalos's "
-                "vapours to prophesy and gathers Delphi's Intellego and "
-                "Creo vis for the Tribunal after taking her own share. She "
-                "sees supplicants only between spring and autumn.",
-                "The book gives no age; her present self is not described.",
-            ),
-            "In the Absent Oracle a girl claiming to be her apprentice "
-            "meets visitors with the news that Pythia is gone.",
+        summary=paragraphs(
+            "The oracle of Delphi: a lone Criamon maga living in the "
+            "Temple of Apollon, which is her laboratory, under the "
+            "ancient oracle's ceremonial name. Each Pythia chooses her "
+            "successor, often her filia, who takes the name after "
+            "initiation into the oracle's Mysteries without telling "
+            "anyone, so Pythia is treated as one enduring person. Magi "
+            "consult her before founding a covenant, adopting a patron "
+            "or a great Tribunal decision; she breathes the omphalos's "
+            "vapours to prophesy and gathers Delphi's Intellego and "
+            "Creo vis for the Tribunal after taking her own share. She "
+            "sees supplicants only between spring and autumn.",
+            "The book gives no age; her present self is not described.",
         ),
+        secrets="In the Absent Oracle a girl claiming to be her apprentice "
+        "meets visitors with the news that Pythia is gone.",
     )
     b.link(
         theban.magi["pythia"],
@@ -2177,39 +2149,37 @@ def _lords(theban: Theban, b: Builder) -> None:
         seat="Arta",
         ruler="Theodore Komnenos Doukas",
         place=p["epiros"],
-        summary=secrets(
-            paragraphs(
-                "The largest of the new realms of Greece, born of the Greek "
-                "revolt against the Latins. Its founder, Michael Komnenos "
-                "Doukas, cousin of the emperors Isaac II and Alexios III, "
-                "served the Latins in the Morea until William de "
-                "Champlitte crushed him at the Olive Grove (Koundouros) "
-                "in 1205; he fell back to Arta and built a realm there, "
-                "savage and faithless, changing Church and allies at will. "
-                "He struck at Thessaloniki with Venice in 1210, betraying "
-                "his son-in-law the infant king, was excommunicated for "
-                "crucifying three Latin priests, had to bow to Emperor "
-                "Henry, then from 1213 seized the Adriatic and Ionian coast "
-                "from Venice, Corfu and Durazzo among it. In 1215 a "
-                "servant driven past bearing by his cruelty stabbed him, "
-                "and nobody mourned.",
-                "His half-brother Theodore, who fled to Nicaea in 1204 and "
-                "came over to Epiros in 1210, succeeded him, the bastard "
-                "son having fled. Theodore is as ruthless and grasping: he "
-                "has taken Ohrid and Pelagonia from the Bulgarians and most "
-                "of Thessaly, captured the Latin emperor Peter of Courtenay "
-                "on the Via Egnatia in 1217 (presumed dead, many of his men "
-                "murdered or dead in prison), and with a strong army of "
-                "Frankish mercenaries is closing on Thessaloniki. He has "
-                "not yet called himself emperor, but Constantinople's "
-                "throne is plainly his goal, and he holds the western Via "
-                "Egnatia, by which he could strangle the Latin Empire. "
-                "The book calls him both Theodore Dukas and Theodore "
-                "Komnenos.",
-            ),
-            "Arta's new castle has an Infernal aura from Michael's "
-            "depravities, guarded by a flock of sinister ravens.",
+        summary=paragraphs(
+            "The largest of the new realms of Greece, born of the Greek "
+            "revolt against the Latins. Its founder, Michael Komnenos "
+            "Doukas, cousin of the emperors Isaac II and Alexios III, "
+            "served the Latins in the Morea until William de "
+            "Champlitte crushed him at the Olive Grove (Koundouros) "
+            "in 1205; he fell back to Arta and built a realm there, "
+            "savage and faithless, changing Church and allies at will. "
+            "He struck at Thessaloniki with Venice in 1210, betraying "
+            "his son-in-law the infant king, was excommunicated for "
+            "crucifying three Latin priests, had to bow to Emperor "
+            "Henry, then from 1213 seized the Adriatic and Ionian coast "
+            "from Venice, Corfu and Durazzo among it. In 1215 a "
+            "servant driven past bearing by his cruelty stabbed him, "
+            "and nobody mourned.",
+            "His half-brother Theodore, who fled to Nicaea in 1204 and "
+            "came over to Epiros in 1210, succeeded him, the bastard "
+            "son having fled. Theodore is as ruthless and grasping: he "
+            "has taken Ohrid and Pelagonia from the Bulgarians and most "
+            "of Thessaly, captured the Latin emperor Peter of Courtenay "
+            "on the Via Egnatia in 1217 (presumed dead, many of his men "
+            "murdered or dead in prison), and with a strong army of "
+            "Frankish mercenaries is closing on Thessaloniki. He has "
+            "not yet called himself emperor, but Constantinople's "
+            "throne is plainly his goal, and he holds the western Via "
+            "Egnatia, by which he could strangle the Latin Empire. "
+            "The book calls him both Theodore Dukas and Theodore "
+            "Komnenos.",
         ),
+        secrets="Arta's new castle has an Infernal aura from Michael's "
+        "depravities, guarded by a flock of sinister ravens.",
     )
     w["thessaloniki_kingdom"] = b.lord(
         "Kingdom of Thessaloniki",
@@ -2302,36 +2272,34 @@ def _lords(theban: Theban, b: Builder) -> None:
         seat="Andravida",
         ruler="Geoffrey II de Villehardouin",
         place=p["morea"],
-        summary=secrets(
-            paragraphs(
-                "The Morea's twelve small baronies. Geoffrey I de "
-                "Villehardouin, shipwrecked at Modon on his way to Syria, "
-                "fought for a Greek warlord there, fled north when the "
-                "next one turned on him, and met his old friend William de "
-                "Champlitte in Boniface's camp; seeing the Morea in "
-                "near-anarchy, they set out to win it. William's victory "
-                "at the Olive Grove over an Epirote army ten times larger "
-                "made the principality in 1204. William died in 1209 on "
-                "his way home, leaving Geoffrey regent until the heir "
-                "Robert came within a year and a day; Geoffrey and the "
-                "Venetians saw that he did not, and Geoffrey took the "
-                "throne. The Greek resistance faltered after Leo Sgouros "
-                "rode his horse off the walls of Acrocorinth in 1208, and "
-                "the whole Morea was taken by 1211; in thanks Geoffrey gave "
-                "the Cistercians land at Zaraka.",
-                "Geoffrey II succeeded in 1218. He is married to Agnes de "
-                "Courtenay, daughter of the late Empress Yolanda and "
-                "Emperor Peter, and is on good terms with the Latin Empire "
-                "and the Venetians, whose trade is making the principality "
-                "rich. Generous to Greek and Latin alike, he is popular, and "
-                "unlike Athens's duke he gets on with the Orthodox clergy, "
-                "excusing them tax and military service while taxing Latin "
-                "church lands, to the pope's annoyance. Epidauros lies in "
-                "his lands. The book names no seat; Andravida is history's.",
-            ),
-            "If he falls gravely ill, Agnes will come to Epidauros begging "
-            "for a cure (Healing the Realm).",
+        summary=paragraphs(
+            "The Morea's twelve small baronies. Geoffrey I de "
+            "Villehardouin, shipwrecked at Modon on his way to Syria, "
+            "fought for a Greek warlord there, fled north when the "
+            "next one turned on him, and met his old friend William de "
+            "Champlitte in Boniface's camp; seeing the Morea in "
+            "near-anarchy, they set out to win it. William's victory "
+            "at the Olive Grove over an Epirote army ten times larger "
+            "made the principality in 1204. William died in 1209 on "
+            "his way home, leaving Geoffrey regent until the heir "
+            "Robert came within a year and a day; Geoffrey and the "
+            "Venetians saw that he did not, and Geoffrey took the "
+            "throne. The Greek resistance faltered after Leo Sgouros "
+            "rode his horse off the walls of Acrocorinth in 1208, and "
+            "the whole Morea was taken by 1211; in thanks Geoffrey gave "
+            "the Cistercians land at Zaraka.",
+            "Geoffrey II succeeded in 1218. He is married to Agnes de "
+            "Courtenay, daughter of the late Empress Yolanda and "
+            "Emperor Peter, and is on good terms with the Latin Empire "
+            "and the Venetians, whose trade is making the principality "
+            "rich. Generous to Greek and Latin alike, he is popular, and "
+            "unlike Athens's duke he gets on with the Orthodox clergy, "
+            "excusing them tax and military service while taxing Latin "
+            "church lands, to the pope's annoyance. Epidauros lies in "
+            "his lands. The book names no seat; Andravida is history's.",
         ),
+        secrets="If he falls gravely ill, Agnes will come to Epidauros begging "
+        "for a cure (Healing the Realm).",
     )
     w["bulgaria"] = b.lord(
         "Tsardom of Bulgaria",
@@ -2378,32 +2346,30 @@ def _churches(theban: Theban, b: Builder) -> None:
         "Hagios Demetrios, Thessaloniki",
         church="Large urban church",
         place=p["macedonia"],
-        summary=secrets(
-            paragraphs(
-                "The city's foremost church, an ancient basilica over the "
-                "old Roman forum and shrine of its patron, St Demetrios, a "
-                "martyred Roman soldier whose relics give off the scent of "
-                "myrrh. His miracles have saved the city from Slav armies "
-                "many times; if it is gravely threatened he rises from his "
-                "shrine and fights beside its defenders, and with St George "
-                "he is patron of the crusades, which may be why the Fourth "
-                "Crusade wisely left the city alone. The great Fair of "
-                "St Demetrios is held outside the walls for six days each "
-                "October, where traders from across Europe meet Arab and "
-                "Jewish merchants of Africa and the Levant.",
-                "Priests still struggle to explain 1185: some say William "
-                "the Good's war on the vile Andronikos was just and the "
-                "saint would not rise for such an emperor, even helping the "
-                "attackers, when the catapults and archers inexplicably ran "
-                "dry and the walls gave way as if by magic. But he still "
-                "rises for a just cause: in early October 1207 a shining "
-                "armoured rider came out against the besieging Bulgarians "
-                "and killed Tsar Kaloyan with a spear, and many on the "
-                "walls saw it. He is the patron of Oikos tou Eleous, whose "
-                "sisters invoked him that day.",
-            ),
-            "",
+        summary=paragraphs(
+            "The city's foremost church, an ancient basilica over the "
+            "old Roman forum and shrine of its patron, St Demetrios, a "
+            "martyred Roman soldier whose relics give off the scent of "
+            "myrrh. His miracles have saved the city from Slav armies "
+            "many times; if it is gravely threatened he rises from his "
+            "shrine and fights beside its defenders, and with St George "
+            "he is patron of the crusades, which may be why the Fourth "
+            "Crusade wisely left the city alone. The great Fair of "
+            "St Demetrios is held outside the walls for six days each "
+            "October, where traders from across Europe meet Arab and "
+            "Jewish merchants of Africa and the Levant.",
+            "Priests still struggle to explain 1185: some say William "
+            "the Good's war on the vile Andronikos was just and the "
+            "saint would not rise for such an emperor, even helping the "
+            "attackers, when the catapults and archers inexplicably ran "
+            "dry and the walls gave way as if by magic. But he still "
+            "rises for a just cause: in early October 1207 a shining "
+            "armoured rider came out against the besieging Bulgarians "
+            "and killed Tsar Kaloyan with a spear, and many on the "
+            "walls saw it. He is the patron of Oikos tou Eleous, whose "
+            "sisters invoked him that day.",
         ),
+        secrets="",
     )
     w["rotunda_st_george"] = b.church(
         "Rotunda of St George, Thessaloniki",
@@ -2736,20 +2702,18 @@ def _factions(theban: Theban, b: Builder) -> None:
         place=p["macedonia"],
         wants="William VI of Montferrat on the throne of Thessaloniki in place of Demetrios",
         offers="Frankish swords and plots at court",
-        summary=secrets(
-            "The Frankish lords of the Kingdom of Thessaloniki who back "
-            "the claim of William VI, Marquis of Montferrat, Boniface's son "
-            "by his first wife Helena del Bosco, against his half-brother "
-            "the boy king. Their moving spirit, Count Oberto II of "
-            "Biandrate, forced Queen Margaret from the regency, and in "
-            "1209 conspired with Emperor Henry, but when Henry heard "
-            "Margaret out he saw the justice of her cause and had the "
-            "count chained in the castle at Serres. Freed years later, "
-            "Oberto swore revenge on the emperor and still works "
-            "tirelessly for William; he is King Demetrios's mortal enemy.",
-            "Oberto may have poisoned Henry in 1216, though others blame "
-            "his Bulgarian empress Maria.",
-        ),
+        summary="The Frankish lords of the Kingdom of Thessaloniki who back "
+        "the claim of William VI, Marquis of Montferrat, Boniface's son "
+        "by his first wife Helena del Bosco, against his half-brother "
+        "the boy king. Their moving spirit, Count Oberto II of "
+        "Biandrate, forced Queen Margaret from the regency, and in "
+        "1209 conspired with Emperor Henry, but when Henry heard "
+        "Margaret out he saw the justice of her cause and had the "
+        "count chained in the castle at Serres. Freed years later, "
+        "Oberto swore revenge on the emperor and still works "
+        "tirelessly for William; he is King Demetrios's mortal enemy.",
+        secrets="Oberto may have poisoned Henry in 1216, though others blame "
+        "his Bulgarian empress Maria.",
     )
     w["thessalonian_greeks"] = b.faction(
         "The Greek Families of Thessaloniki",

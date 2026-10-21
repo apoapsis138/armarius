@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .common import known_fields
+from .common import known_fields, move_secrets
 from .traits import new_instance_id
 
 #: The Tribunal package every saga has: the Definitive Edition's rules,
@@ -145,10 +145,14 @@ class Tribunal:
     package_data: dict[str, dict[str, Any]] = field(default_factory=dict)
     #: The meeting being held (a dict the meeting module reads), or None.
     meeting: dict[str, Any] | None = None
+    #: What only the storyguide should read: the record's Secrets
+    #: chapter, hidden from players signed in to a hosted copy.
+    secrets: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Tribunal:
-        d = known_fields(cls, data)
+        # Older saves kept secrets under a heading in the summary or history.
+        d = move_secrets(known_fields(cls, data), "summary", "history")
         d["cases"] = [Case(**known_fields(Case, c)) for c in d.get("cases", [])]
         d["rulings"] = [Ruling(**known_fields(Ruling, r)) for r in d.get("rulings", [])]
         d["treasury"] = [

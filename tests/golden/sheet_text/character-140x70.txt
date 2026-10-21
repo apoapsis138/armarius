@@ -290,7 +290,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ion  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  lities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -358,7 +358,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ion  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -426,7 +426,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ion  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -494,7 +494,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  ion  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary
+  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -540,5 +540,73 @@
   ▌
   ▌  Select a Diary entry to see its details.
   ▌
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
+          Edit (e)          In Play
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+      Int:  0   Per:  0   Str:  0   Sta:  0
+      Pre:  0   Com:  0   Dex:  0   Qik:  0
+          Edit (e)
+
+  ities  3 Virtues & Flaws  4 Hermetic Magic  5 Rune Magic  6 Inventory  7 Planning  8 Diary  9 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

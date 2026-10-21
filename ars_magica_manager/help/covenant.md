@@ -17,8 +17,8 @@ the **People** and **Laboratories** chapters, and clicking one opens it.
 
 <!-- tui -->
 The top panel, with the covenant's name, stays in view above the tabs
-whichever tab is open. The tabs are numbered, and the number keys `1` to `8`
-open them. Most tabs have a details panel docked at the bottom: choose a row
+whichever tab is open. The tabs are numbered, and the number keys `1` to `9`
+open them; the last, Secrets, is the storyguide's alone. Most tabs have a details panel docked at the bottom: choose a row
 and it shows that row's figures and, where there is one, its rules text and
 where in the books it comes from.
 
@@ -34,7 +34,8 @@ The header, with the covenant's name, its Tribunal and season, the Aegis,
 the Living Conditions, and the Aura and Loyalty as seals, stays in view
 above the chapters. The rail on the left lists the chapters: **Charter**,
 **People**, **Covenfolk**, **Laboratories**, **Possessions**, **Treasury**,
-**Library**, **Seasons**, **Diary**, **Build** and **Manage**. The help
+**Library**, **Seasons**, **Diary**, **Build**, [**Secrets**](help:tab-secrets)
+and **Manage**. The help
 below names three of them as the terminal's tabs: Charter is the Attributes
 tab, Covenfolk the Inhabitants tab and Treasury the Economics tab. Click a row or card and
 the inspector on the right shows its figures and, where there is one, its

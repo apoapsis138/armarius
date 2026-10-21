@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import StatBlock, paragraphs, secrets
+from ..builder import StatBlock, paragraphs
 
 if TYPE_CHECKING:
     from ...models import Character
@@ -90,71 +90,69 @@ def _storm_wizards(transylvania: Transylvania) -> None:
         ),
         wants="Their ice sites kept secret; giants hunted; to be let alone",
         offers="Storms moved away from a village, for gifts of food left out",
-        summary=secrets(
-            paragraphs(
-                "A lonely, ancient Gifted tradition found only in "
-                "Transylvania. Mountain villagers have long exposed "
-                "unwanted babies (the deformed, the seemingly mad, the "
-                "children of incest) on the bare slopes to rid themselves "
-                "of whatever curse they feared; nearly all die, but the "
-                "few with The Gift are carried off by bearded giants "
-                "striding above the storm clouds, and so the storm wizards "
-                "find their apprentices and open their Gift. The grown "
-                "wizards are huge, bearded and solitary.",
-                "Magi know only that they raise and steer storms and are "
-                "said to number fewer than six; peasants blame every storm "
-                "on them, and since a called storm looks wholly natural, "
-                "nobody can be sure there are not many more. Being Gifted, "
-                "they fall under Join or Die, but they are so rare and "
-                "seem so harmless that hardly any magus has found out. "
-                "Some joined House Ex Miscellanea in the Schism War and "
-                "fought beside the Tremere, a service the Order has "
-                "forgotten; no text on their powers is known to survive. "
-                "Their aims, if they have any, are unknown.",
-                "Twice they have banded together to storm the Scholomance's "
-                "tower, holding it out of its regio, and twice been driven "
-                "off; they talk of taking back something they lost. A "
-                "Transylvanian tale of a dragon-riding weather wizard, the "
-                "tenth scholar the Devil keeps from the Scholomance, may "
-                "owe something to them. Thietmar is one of them.",
-                "Story seeds: travellers caught in a mountain storm see, "
-                "by the lightning, a giant fleeing bolts that keep finding "
-                "him, and must choose whether to help the giant or the "
-                "young wizard whose initiation they have walked into; or "
-                "they find an ice cave carved with runes and full of Auram "
-                "vis, and with it the wizards who harvest it.",
-                SKETCHED,
-                "Their magic: three Supernatural Abilities, Storm Calling "
-                "(Communication + ability: raise a storm, local, "
-                "provincial or national, lasting from a Diameter to a "
-                "Moon, for 1, 2 or 4 pawns of Auram vis, or move any "
-                "storm without cost, even against the wind or indoors), "
-                "Storm Riding (Perception + ability: see from, travel to, "
-                "or send a touched person to any point of a storm in "
-                "sight) and Storm Fighting (buffets, deluge, hail, "
-                "erosion that topples a building, and lightning at +20), "
-                "with the Arcane Ability Organization Lore: Storm Wizards "
-                "and Penetration. Once raised a storm is natural, so it "
-                "needs no Penetration and crosses an Aegis. In a season "
-                "of ice harvesting a wizard gathers (Int + Organization "
-                "Lore + aura) / 3 pawns of Auram vis as ice that never "
-                "melts, at sites he keeps secret. A wizard who takes two "
-                "or more Warping Points at once, or reaches a new Warping "
-                "Score, may become a storm for a Moon (Strength + stress "
-                "die against 3 + Warping Score), and dies if he cannot "
-                "gather himself again before it blows out. The Heart of "
-                "the Storm initiation (Ease Factor 21, script bonus +15: "
-                "the giant's heart as a Quest, the Feud with the giants' "
-                "tribe as a Major Ordeal) gives Giant Blood, free to a "
-                "storm wizard. The Virtues Storm Calling, Storm Riding "
-                "and Storm Fighting and the Social Status Storm Wizard are "
-                "in the catalog.",
-            ),
-            "The Tremere may be burying what they know of the storm "
-            "wizards on purpose: their powers baffled the Diedne in the "
-            "Schism War, and the House may want that surprise kept for "
-            "the next war.",
+        summary=paragraphs(
+            "A lonely, ancient Gifted tradition found only in "
+            "Transylvania. Mountain villagers have long exposed "
+            "unwanted babies (the deformed, the seemingly mad, the "
+            "children of incest) on the bare slopes to rid themselves "
+            "of whatever curse they feared; nearly all die, but the "
+            "few with The Gift are carried off by bearded giants "
+            "striding above the storm clouds, and so the storm wizards "
+            "find their apprentices and open their Gift. The grown "
+            "wizards are huge, bearded and solitary.",
+            "Magi know only that they raise and steer storms and are "
+            "said to number fewer than six; peasants blame every storm "
+            "on them, and since a called storm looks wholly natural, "
+            "nobody can be sure there are not many more. Being Gifted, "
+            "they fall under Join or Die, but they are so rare and "
+            "seem so harmless that hardly any magus has found out. "
+            "Some joined House Ex Miscellanea in the Schism War and "
+            "fought beside the Tremere, a service the Order has "
+            "forgotten; no text on their powers is known to survive. "
+            "Their aims, if they have any, are unknown.",
+            "Twice they have banded together to storm the Scholomance's "
+            "tower, holding it out of its regio, and twice been driven "
+            "off; they talk of taking back something they lost. A "
+            "Transylvanian tale of a dragon-riding weather wizard, the "
+            "tenth scholar the Devil keeps from the Scholomance, may "
+            "owe something to them. Thietmar is one of them.",
+            "Story seeds: travellers caught in a mountain storm see, "
+            "by the lightning, a giant fleeing bolts that keep finding "
+            "him, and must choose whether to help the giant or the "
+            "young wizard whose initiation they have walked into; or "
+            "they find an ice cave carved with runes and full of Auram "
+            "vis, and with it the wizards who harvest it.",
+            SKETCHED,
+            "Their magic: three Supernatural Abilities, Storm Calling "
+            "(Communication + ability: raise a storm, local, "
+            "provincial or national, lasting from a Diameter to a "
+            "Moon, for 1, 2 or 4 pawns of Auram vis, or move any "
+            "storm without cost, even against the wind or indoors), "
+            "Storm Riding (Perception + ability: see from, travel to, "
+            "or send a touched person to any point of a storm in "
+            "sight) and Storm Fighting (buffets, deluge, hail, "
+            "erosion that topples a building, and lightning at +20), "
+            "with the Arcane Ability Organization Lore: Storm Wizards "
+            "and Penetration. Once raised a storm is natural, so it "
+            "needs no Penetration and crosses an Aegis. In a season "
+            "of ice harvesting a wizard gathers (Int + Organization "
+            "Lore + aura) / 3 pawns of Auram vis as ice that never "
+            "melts, at sites he keeps secret. A wizard who takes two "
+            "or more Warping Points at once, or reaches a new Warping "
+            "Score, may become a storm for a Moon (Strength + stress "
+            "die against 3 + Warping Score), and dies if he cannot "
+            "gather himself again before it blows out. The Heart of "
+            "the Storm initiation (Ease Factor 21, script bonus +15: "
+            "the giant's heart as a Quest, the Feud with the giants' "
+            "tribe as a Major Ordeal) gives Giant Blood, free to a "
+            "storm wizard. The Virtues Storm Calling, Storm Riding "
+            "and Storm Fighting and the Social Status Storm Wizard are "
+            "in the catalog.",
         ),
+        secrets="The Tremere may be burying what they know of the storm "
+        "wizards on purpose: their powers baffled the Diedne in the "
+        "Schism War, and the House may want that surprise kept for "
+        "the next war.",
     )
     transylvania.places["ice_cave"] = b.place(
         "A storm wizards' ice cave",
@@ -197,66 +195,64 @@ def _hunters(transylvania: Transylvania) -> None:
         ),
         wants="Vampires and other supernatural threats destroyed",
         offers="Trained hunters, Hermetic or not, on the Tribunal's front line",
-        summary=secrets(
-            paragraphs(
-                "House Tremere's corps of monster hunters, named from "
-                "interfectores, slayers. A century ago the vampire of a "
-                "dead dhampir magus was trying to fill the House with "
-                "vampires; the famed hunter Murat of Terezin came to "
-                "Coeris and with Radomir of Tremere cleared every one "
-                "out. Murat joined House Ex Miscellanea, and the two used "
-                "a hoard of initiation scripts, a Gnostic's notes on a "
-                "taltós clan he had spied on, to learn how to open a "
-                "Gifted person to the Hunters' Arts. Laniena, by the "
-                "Aggtelek caves, trains them (see the Hungary chapter).",
-                "Two in three of the Gifted children Laniena finds are "
-                "trained as Fectores: peasants, soldiers and dhampirs "
-                "with no taste for fifteen years of books, three of them "
-                "made in the time one apprentice takes. The other third "
-                "become Hermetic Fectores, magi Ex Miscellanea who also "
-                "hold one Practice Art. Those who prove untrustworthy "
-                "never swear the Oath and are spent where the danger is "
-                "worst. Some magi call the training a deprivation of "
-                "magical power, since the trainees could have learnt the "
-                "Hermetic Arts; Laniena answers that they are not yet "
-                "members of the Order, and the Tribunal, which is to say "
-                "House Tremere, lets it go on. Bendis is the best of the "
-                "non-Hermetic Fectores.",
-                SKETCHED,
-                "The Hunters' Arts, the scattered remnant of the old "
-                "taltós magic: three Practice Arts like Techniques, Scry, "
-                "Ban and Slay (each a Major Supernatural Virtue), joined "
-                "with Foe Arts like narrow Forms (Minor Virtues; the "
-                "first Practice Art brings one free). All are Difficult "
-                "Arts, raised on the Ability table; against a mortal foe "
-                "with no Might every level is 10 higher. Scry forges a "
-                "lasting bond to a foe (Per + Scry + Foe + aura) that "
-                "gives its direction, then its smells, sounds or sight, "
-                "and a sympathetic bonus; a botch ties the foe to the "
-                "scryer. Ban makes amulets lasting a Sun from twelve "
-                "hours' work, one soaking up wounds from the foe and one "
-                "cutting short its powers, and staked hawthorn wards "
-                "that lower the Might of a foe inside for three days. "
-                "Slay charges a new weapon in a day's chanting; each true "
-                "fact about the foe lowers the level by 5 and each false "
-                "one raises it, and a hit that penetrates leaves the foe "
-                "Incapacitated, after which the weapon is spent. A Fector "
-                "has The Gift, the free Fector Social Status, Second "
-                "Sight, all three Practice Arts and three Foe Arts, 120 "
-                "experience points from training, and no magical "
-                "defence but Ban; the Fectores know the Foes Vampire, "
-                "Werewolf, Ghost, Nightwalker and Witch. Hermetic "
-                "Fectores take a Practice Art as their Major non-Hermetic "
-                "Virtue, a Minor Magical Focus against their foe, and "
-                "Weak Spontaneous Magic. The Virtues Fector, Scry Art, "
-                "Ban Art, Slay Art and the Foe Art are in the catalog.",
-            ),
-            "Murat of Terezin was a dhampir and rose as a vampire when "
-            "he died: he is now a kukudhi living far from Laniena with "
-            "his fourth mortal wife and has fathered over twenty dhampir "
-            "children. Only Murat the Younger knows, and lets him be for "
-            "the hunters his children make.",
+        summary=paragraphs(
+            "House Tremere's corps of monster hunters, named from "
+            "interfectores, slayers. A century ago the vampire of a "
+            "dead dhampir magus was trying to fill the House with "
+            "vampires; the famed hunter Murat of Terezin came to "
+            "Coeris and with Radomir of Tremere cleared every one "
+            "out. Murat joined House Ex Miscellanea, and the two used "
+            "a hoard of initiation scripts, a Gnostic's notes on a "
+            "taltós clan he had spied on, to learn how to open a "
+            "Gifted person to the Hunters' Arts. Laniena, by the "
+            "Aggtelek caves, trains them (see the Hungary chapter).",
+            "Two in three of the Gifted children Laniena finds are "
+            "trained as Fectores: peasants, soldiers and dhampirs "
+            "with no taste for fifteen years of books, three of them "
+            "made in the time one apprentice takes. The other third "
+            "become Hermetic Fectores, magi Ex Miscellanea who also "
+            "hold one Practice Art. Those who prove untrustworthy "
+            "never swear the Oath and are spent where the danger is "
+            "worst. Some magi call the training a deprivation of "
+            "magical power, since the trainees could have learnt the "
+            "Hermetic Arts; Laniena answers that they are not yet "
+            "members of the Order, and the Tribunal, which is to say "
+            "House Tremere, lets it go on. Bendis is the best of the "
+            "non-Hermetic Fectores.",
+            SKETCHED,
+            "The Hunters' Arts, the scattered remnant of the old "
+            "taltós magic: three Practice Arts like Techniques, Scry, "
+            "Ban and Slay (each a Major Supernatural Virtue), joined "
+            "with Foe Arts like narrow Forms (Minor Virtues; the "
+            "first Practice Art brings one free). All are Difficult "
+            "Arts, raised on the Ability table; against a mortal foe "
+            "with no Might every level is 10 higher. Scry forges a "
+            "lasting bond to a foe (Per + Scry + Foe + aura) that "
+            "gives its direction, then its smells, sounds or sight, "
+            "and a sympathetic bonus; a botch ties the foe to the "
+            "scryer. Ban makes amulets lasting a Sun from twelve "
+            "hours' work, one soaking up wounds from the foe and one "
+            "cutting short its powers, and staked hawthorn wards "
+            "that lower the Might of a foe inside for three days. "
+            "Slay charges a new weapon in a day's chanting; each true "
+            "fact about the foe lowers the level by 5 and each false "
+            "one raises it, and a hit that penetrates leaves the foe "
+            "Incapacitated, after which the weapon is spent. A Fector "
+            "has The Gift, the free Fector Social Status, Second "
+            "Sight, all three Practice Arts and three Foe Arts, 120 "
+            "experience points from training, and no magical "
+            "defence but Ban; the Fectores know the Foes Vampire, "
+            "Werewolf, Ghost, Nightwalker and Witch. Hermetic "
+            "Fectores take a Practice Art as their Major non-Hermetic "
+            "Virtue, a Minor Magical Focus against their foe, and "
+            "Weak Spontaneous Magic. The Virtues Fector, Scry Art, "
+            "Ban Art, Slay Art and the Foe Art are in the catalog.",
         ),
+        secrets="Murat of Terezin was a dhampir and rose as a vampire when "
+        "he died: he is now a kukudhi living far from Laniena with "
+        "his fourth mortal wife and has fathered over twenty dhampir "
+        "children. Only Murat the Younger knows, and lets him be for "
+        "the hunters his children make.",
     )
     w["sabotnici"] = b.faction(
         "The Sabotnici",
@@ -585,27 +581,25 @@ def _companions(transylvania: Transylvania) -> None:
         house="",
         age=25,
         type="companion",
-        summary=secrets(
-            paragraphs(
-                "A dhampir vampire hunter, plain-looking in a peasant's "
-                "smock and leather vambraces, his hauberk kept for "
-                "trouble, a cloth tied over an empty eye socket and a "
-                "spear carved from one piece of wood in his hand.",
-                "His father came home from a war unlooked for, and only "
-                "later did his mother learn her husband had fallen in "
-                "battle a month before. At eleven Tibor left the "
-                "Transylvanian grain-lands to hunt that vampire down and "
-                "has been a merciless hunter since. A few years ago he "
-                "found it at last; it took his eye and left him for "
-                "dead. The nearby village mourned him, and, not knowing "
-                "the proper rites, thought nothing strange when his "
-                "corpse came back to haunt them. Now one rumour says he "
-                "is dead and another that he hunts vampires, and he must "
-                "live with both.",
-            ),
-            "The thing that came back was not Tibor: his father's "
-            "vampire took his shape, and it still follows him.",
+        summary=paragraphs(
+            "A dhampir vampire hunter, plain-looking in a peasant's "
+            "smock and leather vambraces, his hauberk kept for "
+            "trouble, a cloth tied over an empty eye socket and a "
+            "spear carved from one piece of wood in his hand.",
+            "His father came home from a war unlooked for, and only "
+            "later did his mother learn her husband had fallen in "
+            "battle a month before. At eleven Tibor left the "
+            "Transylvanian grain-lands to hunt that vampire down and "
+            "has been a merciless hunter since. A few years ago he "
+            "found it at last; it took his eye and left him for "
+            "dead. The nearby village mourned him, and, not knowing "
+            "the proper rites, thought nothing strange when his "
+            "corpse came back to haunt them. Now one rumour says he "
+            "is dead and another that he hunts vampires, and he must "
+            "live with both.",
         ),
+        secrets="The thing that came back was not Tibor: his father's "
+        "vampire took his shape, and it still follows him.",
         traits={"Brave": 3, "Implacable": 3, "Uncompromising": 2},
     )
 

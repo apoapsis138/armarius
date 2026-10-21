@@ -255,11 +255,11 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         )
         await pilot.press("3")
         assert await wait_until(pilot, lambda: app.focused is virtues)
-        # A number past the last tab does nothing.
-        assert not workspace.check_action("show_tab", (9,))
+        # A number past the last tab does nothing; the last, 9, is Secrets.
+        assert view.tab_ids[-1] == "tab-secrets" and len(view.tab_ids) == 9
+        assert not workspace.check_action("show_tab", (10,))
         await pilot.press("9")
-        await pilot.pause()
-        assert tabbed.active == "tab-vf"
+        assert await wait_until(pilot, lambda: tabbed.active == "tab-secrets")
 
 
 async def test_escape_steps_out_from_the_sheet_to_the_tree_to_the_saga_picker():

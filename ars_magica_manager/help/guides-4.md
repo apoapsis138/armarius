@@ -347,6 +347,21 @@ a name, the Role *Player*, and a passcode you give them yourself. Add a *Storygu
 <!-- /gui -->
 3. Set up the private network (Tailscale or ZeroTier below) and note your computer's address on it.
 
+### Keeping secrets from the players
+<!-- help: guide-hosting-secrets -->
+
+Write what the players mustn't learn on each record's
+[Secrets](help:tab-secrets)
+<!-- tui -->
+tab (its last; `e` there edits it),
+<!-- /tui -->
+<!-- gui -->
+chapter (**Edit Secrets** there),
+<!-- /gui -->
+not in its summary or notes. A player who signs in never sees that tab,
+and a record they export leaves its secrets out; everything else on the
+sheet they can read.
+
 ### Starting and stopping
 <!-- help: guide-hosting-start -->
 
@@ -448,7 +463,7 @@ More books follow in later versions.
 - The mundane world: lords, towns, churches, schools, factions and threats, with historical arms where they are known.
 - The Bestiary: the creatures the book prints a stat block for (the Rhine's boglins, bockmen and great trees, Normandy's korrigans and the Boar King, Provence's faeries and demons), each found at the place it haunts and linked from the threat or faction it belongs to. Untick **The Bestiary** when importing to leave them out.
 - Assumptions: where a book leaves a value out (an aura without a number, a founding year, a season), the pack fills it in, and importing it says so. Each pack's page lists what it inferred, what it chose and where it corrects the book: [the Rhine](help:pack-assumptions-rhine), [Normandy](help:pack-assumptions-normandy), [Provence](help:pack-assumptions-provence), [the Theban Tribunal](help:pack-assumptions-theban) and [Transylvania](help:pack-assumptions-transylvania).
-- Secrets: what the book tells the storyguide and not the players is at the end of a record's summary or notes under a **Secrets** heading.
+- Secrets: what the book tells the storyguide and not the players is on each covenant's, magus's, Tribunal's, neighbour's or creature's [Secrets](help:tab-secrets) tab. The few that belong to part of a record (a regio level, a case, an entry in the Tribunal's Diary, a book) are at the end of its text under a **Secrets** heading.
 
 The packs follow the Definitive Edition where a book's numbers differ from it; the differences are listed in the project's notes.
 

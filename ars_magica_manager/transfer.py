@@ -141,6 +141,24 @@ def export_data(
     )
 
 
+def without_secrets(data: dict[str, Any]) -> dict[str, Any]:
+    """An export with every record's secrets left out: what a player
+    signed in to a hosted copy downloads."""
+    kept = dict(data)
+    kept["saga"] = {
+        key: (
+            [
+                {**r, "secrets": ""} if isinstance(r, dict) and "secrets" in r else r
+                for r in value
+            ]
+            if isinstance(value, list)
+            else value
+        )
+        for key, value in data["saga"].items()
+    }
+    return kept
+
+
 def bundle_data(
     saga: Saga,
     kind: str,

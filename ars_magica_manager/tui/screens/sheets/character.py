@@ -24,6 +24,7 @@ from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
 from ....forms import tradition as tradition_forms
+from ....forms.secrets import secrets_ops
 from ....markup import escape
 from ....models import (
     LINE,
@@ -111,6 +112,7 @@ class CharacterSheetView(SheetView):
     def __init__(self, saga: Saga, character: Character) -> None:
         super().__init__(saga)
         self.character = character
+        self.core_ops = secrets_ops(character)
         if cs.has_statblock(character):
             self.INITIAL_TAB = "tab-statblock"
 
@@ -151,6 +153,7 @@ class CharacterSheetView(SheetView):
                     "Planning", "tab-planning", self._scrolling(self._planning_tab)
                 )
             yield self._tab("Diary", "tab-diary", self._diary_tab)
+            yield from self._secrets_tab(character)
 
     #: Every section a statblock summarises: it is redrawn when one changes.
     _STATBLOCK_SOURCES = (

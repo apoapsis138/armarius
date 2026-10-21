@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING
 
 from ... import storage
 from ...models import Book
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from . import Provence
@@ -34,7 +34,8 @@ def build(provence: Provence) -> None:
     site = b.place(
         "Val-Negra",
         ruined=True,
-        summary=secrets(_summary(), _hidden()),
+        summary=_summary(),
+        secrets=_hidden(),
         realm="Magic",
         aura=4,
         status="Rumoured",

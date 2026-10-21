@@ -550,6 +550,7 @@ def everything_saga() -> Saga:
                 name="Gottfried of Arnsberg",
                 kind="lord",
                 summary="Count of Arnsberg. Wants the mill rent.",
+                secrets="He owes the Archbishop more than he can pay.",
                 ruler="Count Gottfried",
                 answers_to="cologne",
                 attitudes=[

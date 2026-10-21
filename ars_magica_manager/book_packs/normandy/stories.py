@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import SECRETS, Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -52,17 +52,15 @@ def _places(normandy: Normandy) -> None:
     b = normandy.b
     normandy.places["boar_kings_hall"] = b.place(
         "The Boar King's Hall",
-        summary=secrets(
-            "A timber stronghold in a faerie regio, reached from several dark, "
-            "damp groves deep in the Tribunal's forests where the air is close and "
-            "the sun hardly reaches the ground. From outside the groves show only "
-            "gloom and rot; it takes days of travel to reach the forest's heart.",
-            "The hall is the Boar King's, and his court of faerie knights and "
-            "courtiers camps there between hunts. Some of the plenty the court "
-            "offers guests is glamour. The King learns each day roughly where "
-            "and how many humans are in his forest, so visitors are expected "
-            "long before they arrive.",
-        ),
+        summary="A timber stronghold in a faerie regio, reached from several dark, "
+        "damp groves deep in the Tribunal's forests where the air is close and "
+        "the sun hardly reaches the ground. From outside the groves show only "
+        "gloom and rot; it takes days of travel to reach the forest's heart.",
+        secrets="The hall is the Boar King's, and his court of faerie knights and "
+        "courtiers camps there between hunts. Some of the plenty the court "
+        "offers guests is glamour. The King learns each day roughly where "
+        "and how many humans are in his forest, so visitors are expected "
+        "long before they arrive.",
         realm="Faerie",
         status="Rumoured",
         known="Locally",
@@ -78,22 +76,20 @@ def _places(normandy: Normandy) -> None:
     )
     normandy.places["ships_of_flame"] = b.place(
         "The Ships of Flame",
-        summary=secrets(
-            "Three small magical regiones along the Seine, each holding a Viking "
-            "longship that burns without end as the pyre of a dead warlord. A "
-            "regio opens only to someone drifting down the river in a burning "
-            "boat on the day that warlord died; leaving needs only a swim to the "
-            "bank. The fire needs no fuel and never consumes the ship, but it "
-            "burns away anything brought in that magic does not protect, and "
-            "anyone on deck suffers +20 fire damage each round, a magical attack "
-            "of Penetration 30. A strong Perdo Ignem effect could put a fire out, "
-            "and would probably destroy the regio with it.",
-            "Queen Skuld, Hierophant of the Children of Odin, lives here alone "
-            "and keeps her laboratory on the deck of one ship. A cult initiate's "
-            "first Quest is to reach a deck unaided and take an axe from a fallen "
-            "warrior. Few others visit, as the days are hard to time, so Skuld "
-            "speaks to her cult through Haunt of the Living Ghost.",
-        ),
+        summary="Three small magical regiones along the Seine, each holding a Viking "
+        "longship that burns without end as the pyre of a dead warlord. A "
+        "regio opens only to someone drifting down the river in a burning "
+        "boat on the day that warlord died; leaving needs only a swim to the "
+        "bank. The fire needs no fuel and never consumes the ship, but it "
+        "burns away anything brought in that magic does not protect, and "
+        "anyone on deck suffers +20 fire damage each round, a magical attack "
+        "of Penetration 30. A strong Perdo Ignem effect could put a fire out, "
+        "and would probably destroy the regio with it.",
+        secrets="Queen Skuld, Hierophant of the Children of Odin, lives here alone "
+        "and keeps her laboratory on the deck of one ship. A cult initiate's "
+        "first Quest is to reach a deck unaided and take an axe from a fallen "
+        "warrior. Few others visit, as the days are hard to time, so Skuld "
+        "speaks to her cult through Haunt of the Living Ghost.",
         realm="Magic",
         status="Rumoured",
         known="Locally",
@@ -128,24 +124,22 @@ def _people(normandy: Normandy) -> None:
             covenant=None,
             house="house_ex_miscellanea",
             age=77,
-            summary=secrets(
-                "Once an unremarkable Tytalus maga of Atramentum, Skuld left her "
-                "House for Ex Miscellanea in 1178 and vanished a few years later, "
-                "last seen sailing a small boat through the Channel towards "
-                "Scandinavia. The Order believes she never came back. She looks "
-                "about 37. (The book has her living at Atramentum before 1178, "
-                "though Atramentum was founded only in 1200: a slip it leaves "
-                "for the storyguide to settle.)",
-                "She returned in 1205 and lives in a regio on the Seine, on a "
-                "burning longship, as Hierophant of the Children of Odin; she has "
-                "been Mystagogue at every initiation so far. She claims descent "
-                "from Rollo and means to be crowned maga-queen of a Normandy "
-                "taken back from the French king. She may not be the Skuld who "
-                "left at all, but an impostor: a faerie or magical creature, a "
-                "powerful hedge wizard (perhaps of the Order of Odin), or a "
-                "survivor of the Schism War. If the cult's Viking magic is not "
-                "genuine, she may know it.",
-            ),
+            summary="Once an unremarkable Tytalus maga of Atramentum, Skuld left her "
+            "House for Ex Miscellanea in 1178 and vanished a few years later, "
+            "last seen sailing a small boat through the Channel towards "
+            "Scandinavia. The Order believes she never came back. She looks "
+            "about 37. (The book has her living at Atramentum before 1178, "
+            "though Atramentum was founded only in 1200: a slip it leaves "
+            "for the storyguide to settle.)",
+            secrets="She returned in 1205 and lives in a regio on the Seine, on a "
+            "burning longship, as Hierophant of the Children of Odin; she has "
+            "been Mystagogue at every initiation so far. She claims descent "
+            "from Rollo and means to be crowned maga-queen of a Normandy "
+            "taken back from the French king. She may not be the Skuld who "
+            "left at all, but an impostor: a faerie or magical creature, a "
+            "powerful hedge wizard (perhaps of the Order of Odin), or a "
+            "survivor of the Schism War. If the cult's Viking magic is not "
+            "genuine, she may know it.",
             traits={"Driven": 3, "Proud": 2, "Secretive": 2},
         )
     if not _find(b.saga.characters, "Porphyrion"):
@@ -154,17 +148,15 @@ def _people(normandy: Normandy) -> None:
             covenant=None,
             house="house_tytalus",
             age=None,
-            summary=secrets(
-                "A powerful Tytalus archmagus who came to Normandy from the Rome "
-                "Tribunal three years ago and has lived alone since. He may ask "
-                "to join a young covenant, bringing political and magical weight "
-                "it could hardly refuse.",
-                "Tytali who have looked into him think he wants the House's "
-                "leadership, before or more likely after Harpax or Buliste falls, "
-                "and that joining a weak covenant serves that end. A third "
-                "contender is the one thing that would make the two Primi work "
-                "together.",
-            ),
+            summary="A powerful Tytalus archmagus who came to Normandy from the Rome "
+            "Tribunal three years ago and has lived alone since. He may ask "
+            "to join a young covenant, bringing political and magical weight "
+            "it could hardly refuse.",
+            secrets="Tytali who have looked into him think he wants the House's "
+            "leadership, before or more likely after Harpax or Buliste falls, "
+            "and that joining a weak covenant serves that end. A third "
+            "contender is the one thing that would make the two Primi work "
+            "together.",
         )
     if not _find(b.saga.characters, "Salvirius"):
         normandy.magi["salvirius"] = b.magus(
@@ -173,20 +165,18 @@ def _people(normandy: Normandy) -> None:
             house="",
             age=None,
             type="mythic companion",
-            summary=secrets(
-                "Adviser to the Boar King, who looks about fifty and dresses as a "
-                "hunter or woodsman. He keeps his own road, joins the court only "
-                "when it is camped, and takes little part in its feasts. A huge "
-                "scar, like the mark of a spear wound to the heart, crosses his "
-                "chest, usually hidden. He can grant Virtues by setting a quest "
-                "that demands a sacrifice: Strong Faerie Blood, Shapeshifter, "
-                "Animal Ken, Faerie Blood, Second Sight and Wilderness Sense, and "
-                "the storyguide may add Hermetic ones.",
-                "He may be a faerie, a magus turned faerie, a magus living at the "
-                "faerie court, or a Diedne refugee from the Schism War. He can "
-                "teach Diedne Magic, and uses the offer to mark a magus for a "
-                "watcher who scries the road to the Hill of Martyrs in Paris.",
-            ),
+            summary="Adviser to the Boar King, who looks about fifty and dresses as a "
+            "hunter or woodsman. He keeps his own road, joins the court only "
+            "when it is camped, and takes little part in its feasts. A huge "
+            "scar, like the mark of a spear wound to the heart, crosses his "
+            "chest, usually hidden. He can grant Virtues by setting a quest "
+            "that demands a sacrifice: Strong Faerie Blood, Shapeshifter, "
+            "Animal Ken, Faerie Blood, Second Sight and Wilderness Sense, and "
+            "the storyguide may add Hermetic ones.",
+            secrets="He may be a faerie, a magus turned faerie, a magus living at the "
+            "faerie court, or a Diedne refugee from the Schism War. He can "
+            "teach Diedne Magic, and uses the offer to mark a magus for a "
+            "watcher who scries the road to the Hill of Martyrs in Paris.",
             traits={"Reclusive": 3, "Manipulative": 2},
         )
 
@@ -245,39 +235,37 @@ def _factions(normandy: Normandy) -> None:
     b, world = normandy.b, normandy.world
     world["court_of_the_boar_king"] = b.faction(
         "The Court of the Boar King",
-        summary=secrets(
-            paragraphs(
-                "A faerie the Gauls once worshipped, the Boar King is a big man "
-                "with a boar's head and two great tusks that thicken his speech; "
-                "his bare arms and chest carry abstract tattoos and bronze rings, "
-                "and he wears hide trousers and a cloak and rides a wild horse "
-                "bareback with faerie knights and courtiers at his side. He claims "
-                "the Tribunal's forests, as other powers also do, hunts boar each "
-                "autumn, and turns the hunt on hunters who take too much.",
-                "Centuries ago House Diedne helped him guard his woods. He knows "
-                "the House fell, has watched men and the Divine eat into the "
-                "forest, and has decided that killing the odd greedy hunter "
-                "changes nothing; he now looks for new Hermetic allies, most "
-                "likely among Merinita and Bjornaer, to halt and undo the "
-                "clearing of the forest. His offer copies the Forest Paths of the "
-                "Rhine; whether it is a true one hardly matters given what his "
-                "court can supply an ally.",
-                "In brief, as the book gives him: Faerie Might 40 (Animal), Size "
-                "+1, Reckless +3, Proud +2, Wrathful +1, known locally as King of "
-                "the Forest and in the Order as an ally of House Diedne. He "
-                "fights with boar spears and his tusks, is a master hunter and "
-                "woodsman, and speaks Gaulish, Latin and Breton. His powers let "
-                "him command the forest's beasts and plants, sense the human "
-                "intruders in his forest each day, fall into a day-long rage that "
-                "will not retreat or spare anyone, pin a victim helpless with a "
-                "thrown spear until it is pulled out (a Heavy Wound), and appear "
-                "anywhere in his forest. Each tusk holds 4 pawns of Animal vis.",
-            ),
-            "Salvirius, his subtle adviser, sounds out the magi the King "
-            "approaches and sets the quests by which the court grants Virtues. "
-            "A Diedne magus thought dead in the Schism War is rumoured to ride "
-            "with the court.",
+        summary=paragraphs(
+            "A faerie the Gauls once worshipped, the Boar King is a big man "
+            "with a boar's head and two great tusks that thicken his speech; "
+            "his bare arms and chest carry abstract tattoos and bronze rings, "
+            "and he wears hide trousers and a cloak and rides a wild horse "
+            "bareback with faerie knights and courtiers at his side. He claims "
+            "the Tribunal's forests, as other powers also do, hunts boar each "
+            "autumn, and turns the hunt on hunters who take too much.",
+            "Centuries ago House Diedne helped him guard his woods. He knows "
+            "the House fell, has watched men and the Divine eat into the "
+            "forest, and has decided that killing the odd greedy hunter "
+            "changes nothing; he now looks for new Hermetic allies, most "
+            "likely among Merinita and Bjornaer, to halt and undo the "
+            "clearing of the forest. His offer copies the Forest Paths of the "
+            "Rhine; whether it is a true one hardly matters given what his "
+            "court can supply an ally.",
+            "In brief, as the book gives him: Faerie Might 40 (Animal), Size "
+            "+1, Reckless +3, Proud +2, Wrathful +1, known locally as King of "
+            "the Forest and in the Order as an ally of House Diedne. He "
+            "fights with boar spears and his tusks, is a master hunter and "
+            "woodsman, and speaks Gaulish, Latin and Breton. His powers let "
+            "him command the forest's beasts and plants, sense the human "
+            "intruders in his forest each day, fall into a day-long rage that "
+            "will not retreat or spare anyone, pin a victim helpless with a "
+            "thrown spear until it is pulled out (a Heavy Wound), and appear "
+            "anywhere in his forest. Each tusk holds 4 pawns of Animal vis.",
         ),
+        secrets="Salvirius, his subtle adviser, sounds out the magi the King "
+        "approaches and sets the quests by which the court grants Virtues. "
+        "A Diedne magus thought dead in the Schism War is rumoured to ride "
+        "with the court.",
         faction="Faerie court",
         decides="Its leader",
         ruler="The Boar King",
@@ -295,52 +283,50 @@ def _factions(normandy: Normandy) -> None:
     )
     world["children_of_odin"] = b.faction(
         "The Children of Odin",
-        summary=secrets(
-            paragraphs(
-                "A secret Mystery Cult whose magi call themselves heirs to the "
-                "magic of the ninth-century Viking raiders. The pedigree is "
-                "claimed, not real: the cult is barely ten years old. It is "
-                "small, probably no more than half a dozen magi, and the Order "
-                "has not found it. Members need a good Ignem score to survive "
-                "their first Quest, which suits Flambeau, and Montverte magi "
-                "descended from that covenant's Scandinavian founders are likely "
-                "recruits. It is not the Order of Odin, only a cult claiming to "
-                "have found some of its secrets.",
-                "Initiation Scripts. The cult can initiate three Virtues: Life "
-                "Boost (Minor Hermetic), Minor Magical Focus in shape-shifting "
-                "(Minor Hermetic) and Life-Linked Spontaneous Magic (Major "
-                "Hermetic). The Ordeals that go with them may leave the "
-                "initiate with Blood Haze (Minor Hermetic: within a dozen paces "
-                "of blood shed in violence the maga takes -10 to Formulaic magic "
-                "and -3 to Concentration), Flawed Parma Magica against Vim "
-                "(Minor Hermetic) or Deficient Technique in Creo (Major "
-                "Hermetic).",
-                "Initiation. Without the Mystery Cult rules, the Mystagogue sets "
-                "the initiate a Quest of about a year, during which they suffer "
-                "an Ordeal (a Flaw) and gain the Mystery (a Virtue); the "
-                "instructions are an Initiation Script, a special Laboratory "
-                "Text. The first Quest is to reach the deck of one of the Ships "
-                "of Flame unaided and bring back an axe from a dead Viking. "
-                "Raiding with Nordic Triumph has served as another.",
-                "Nordic Triumph is the cult's ritual (MuMe(He)(Te) 65; Touch, "
-                "Moon, Structure): cast aboard a ship, it turns her into a "
-                "dragon-prowed longship and her crew into Viking warriors who "
-                "follow the caster as their chief, fighting as a trained band "
-                "though they gain no Abilities they lacked.",
-            ),
-            paragraphs(
-                "Queen Skuld is Hierophant and has been Mystagogue at every "
-                "initiation. Her aim is power: Normandy back in Norman hands and "
-                "herself crowned its maga-queen as Rollo's heir. What draws other "
-                "magi is not her politics but the Viking secrets she says she "
-                "found in wrecks and ruins as a young maga.",
-                "Thormod of Montverte is a leading member who practises the "
-                "cult's Viking magic and uses his influence for it; he may be "
-                "Skuld's kin or lover. If the cult truly descends from the Order "
-                "of Odin, it may know rune magic, or a researcher may one day "
-                "bring the runes into Hermetic theory; if it does not, Skuld may "
-                "be lying to her followers.",
-            ),
+        summary=paragraphs(
+            "A secret Mystery Cult whose magi call themselves heirs to the "
+            "magic of the ninth-century Viking raiders. The pedigree is "
+            "claimed, not real: the cult is barely ten years old. It is "
+            "small, probably no more than half a dozen magi, and the Order "
+            "has not found it. Members need a good Ignem score to survive "
+            "their first Quest, which suits Flambeau, and Montverte magi "
+            "descended from that covenant's Scandinavian founders are likely "
+            "recruits. It is not the Order of Odin, only a cult claiming to "
+            "have found some of its secrets.",
+            "Initiation Scripts. The cult can initiate three Virtues: Life "
+            "Boost (Minor Hermetic), Minor Magical Focus in shape-shifting "
+            "(Minor Hermetic) and Life-Linked Spontaneous Magic (Major "
+            "Hermetic). The Ordeals that go with them may leave the "
+            "initiate with Blood Haze (Minor Hermetic: within a dozen paces "
+            "of blood shed in violence the maga takes -10 to Formulaic magic "
+            "and -3 to Concentration), Flawed Parma Magica against Vim "
+            "(Minor Hermetic) or Deficient Technique in Creo (Major "
+            "Hermetic).",
+            "Initiation. Without the Mystery Cult rules, the Mystagogue sets "
+            "the initiate a Quest of about a year, during which they suffer "
+            "an Ordeal (a Flaw) and gain the Mystery (a Virtue); the "
+            "instructions are an Initiation Script, a special Laboratory "
+            "Text. The first Quest is to reach the deck of one of the Ships "
+            "of Flame unaided and bring back an axe from a dead Viking. "
+            "Raiding with Nordic Triumph has served as another.",
+            "Nordic Triumph is the cult's ritual (MuMe(He)(Te) 65; Touch, "
+            "Moon, Structure): cast aboard a ship, it turns her into a "
+            "dragon-prowed longship and her crew into Viking warriors who "
+            "follow the caster as their chief, fighting as a trained band "
+            "though they gain no Abilities they lacked.",
+        ),
+        secrets=paragraphs(
+            "Queen Skuld is Hierophant and has been Mystagogue at every "
+            "initiation. Her aim is power: Normandy back in Norman hands and "
+            "herself crowned its maga-queen as Rollo's heir. What draws other "
+            "magi is not her politics but the Viking secrets she says she "
+            "found in wrecks and ruins as a young maga.",
+            "Thormod of Montverte is a leading member who practises the "
+            "cult's Viking magic and uses his influence for it; he may be "
+            "Skuld's kin or lover. If the cult truly descends from the Order "
+            "of Odin, it may know rune magic, or a researcher may one day "
+            "bring the runes into Hermetic theory; if it does not, Skuld may "
+            "be lying to her followers.",
         ),
         faction="Other",
         decides="Its leader",
@@ -358,24 +344,22 @@ def _factions(normandy: Normandy) -> None:
     )
     world["cabal_of_frankish_gold"] = b.faction(
         "The Cabal of Frankish Gold",
-        summary=secrets(
-            paragraphs(
-                "A Tytalan cabal working to make the Lotharingian Tribunal "
-                "happen. Like every Tytalus cabal its members are anonymous to one "
-                "another, meet in disguise or not at all, and may come from more "
-                "than one Tribunal; they share the goal, not the reasons. Some "
-                "honestly want the new Tribunal as a utopia for magi, Tytali "
-                "above all, free of the weight of their old Peripheral Codes, "
-                "and mean to found a new covenant there whether or not their "
-                "own covenants join.",
-            ),
-            "Augustina of Confluensis, the Traitor, belongs: she thinks the new "
-            "Tribunal doomed but likes the principle that unhappy magi may "
-            "break from an old Tribunal, and wants to see how the Order answers "
-            "a challenge in its heartland. Prima Buliste joins only to keep her "
-            "brother Harpax busy. At least one member is a saboteur, quietly "
-            "souring relations between the movement's covenants.",
+        summary=paragraphs(
+            "A Tytalan cabal working to make the Lotharingian Tribunal "
+            "happen. Like every Tytalus cabal its members are anonymous to one "
+            "another, meet in disguise or not at all, and may come from more "
+            "than one Tribunal; they share the goal, not the reasons. Some "
+            "honestly want the new Tribunal as a utopia for magi, Tytali "
+            "above all, free of the weight of their old Peripheral Codes, "
+            "and mean to found a new covenant there whether or not their "
+            "own covenants join.",
         ),
+        secrets="Augustina of Confluensis, the Traitor, belongs: she thinks the new "
+        "Tribunal doomed but likes the principle that unhappy magi may "
+        "break from an old Tribunal, and wants to see how the Order answers "
+        "a challenge in its heartland. Prima Buliste joins only to keep her "
+        "brother Harpax busy. At least one member is a saboteur, quietly "
+        "souring relations between the movement's covenants.",
         faction="Other",
         rules="Membership anonymous; meetings in disguise or by letter and spell",
         wants="A Lotharingian Tribunal founded, each member for their own reasons",
@@ -383,19 +367,17 @@ def _factions(normandy: Normandy) -> None:
     )
     world["cabal_of_the_golden_coin"] = b.faction(
         "The Cabal of the Golden Coin",
-        summary=secrets(
-            "A cabal that fixes the Hermetic Tourney so its members take the "
-            "best prizes. Tytali began it, but most members now come from other "
-            "Houses. Several of the changes to the prize levels, put forward as "
-            "points of tradition, were its work, meant to open gaps in the "
-            "prizes it can exploit.",
-            "Members agree in secret which contests to throw so their teams "
-            "place best. Some leave their covenant's team to field a separate "
-            "one, which places remarkably well: a team of three young magi, each "
-            "of a different covenant and House, has come fourteenth at the last "
-            "three Tourneys. Late in a Tourney a member may quietly offer a "
-            "covenant a fixed contest for a little vis.",
-        ),
+        summary="A cabal that fixes the Hermetic Tourney so its members take the "
+        "best prizes. Tytali began it, but most members now come from other "
+        "Houses. Several of the changes to the prize levels, put forward as "
+        "points of tradition, were its work, meant to open gaps in the "
+        "prizes it can exploit.",
+        secrets="Members agree in secret which contests to throw so their teams "
+        "place best. Some leave their covenant's team to field a separate "
+        "one, which places remarkably well: a team of three young magi, each "
+        "of a different covenant and House, has come fourteenth at the last "
+        "three Tourneys. Late in a Tourney a member may quietly offer a "
+        "covenant a fixed contest for a little vis.",
         faction="Other",
         rules="Members anonymous to outsiders; agreements made in secret and kept",
         wants="The Tourney's prizes, the tropaeum leases above all",
@@ -403,35 +385,33 @@ def _factions(normandy: Normandy) -> None:
     )
     world["lotharingian_movement"] = b.faction(
         "The Lotharingian Movement",
-        summary=secrets(
-            paragraphs(
-                "Covenants of the north and west of the Rhine and the neighbouring "
-                "part of Normandy that want to revive the Lotharingian Tribunal, "
-                "which the Grand Tribunal of 865 created and that of 898 "
-                "dissolved. Four Rhine covenants back it in whole or part "
-                "(Triamore, Fengheld's supporters, Waddenzee and Oculus "
-                "Septentrionalis) with three of Normandy (Florum, its vassal "
-                "Spider's Palace, and Requies Aeterna, also Florum's vassal). "
-                "Florum and Triamore conceived it.",
-                "Their aim is a Tribunal where magi need not hide what they are, "
-                "brought about slowly with help from churchmen in the Rhine "
-                "cities, using their arts for mankind's good without breaking "
-                "the Oath's ban on meddling. Writing their own Peripheral Code, "
-                "they would allow more than the Rhine and less than Normandy, and "
-                "they think the consortium strong enough to keep nobles from "
-                "dragging them into war and politics. They mean to put the "
-                "proposal to the Grand Tribunal of 1228 and found the Tribunal "
-                "only later, expecting resistance.",
-            ),
-            "Their reasons differ: Daria la Gris wants Triamore to matter; about "
-            "half of Fengheld's 23 magi agree in theory and plan chapter houses "
-            "beyond Cologne; Waddenzee wants a Code that permits its piracy; "
-            "Oculus Septentrionalis wants open trade and may plant a covenant to "
-            "counter Waddenzee. Requies Aeterna expects a Lotharingian Code to "
-            "dissolve its oath to Florum and would not mind. Montverte and "
-            "Waddenzee plan for Waddenzee to join and then defect as Montverte's "
-            "vassal, crippling the new Tribunal.",
+        summary=paragraphs(
+            "Covenants of the north and west of the Rhine and the neighbouring "
+            "part of Normandy that want to revive the Lotharingian Tribunal, "
+            "which the Grand Tribunal of 865 created and that of 898 "
+            "dissolved. Four Rhine covenants back it in whole or part "
+            "(Triamore, Fengheld's supporters, Waddenzee and Oculus "
+            "Septentrionalis) with three of Normandy (Florum, its vassal "
+            "Spider's Palace, and Requies Aeterna, also Florum's vassal). "
+            "Florum and Triamore conceived it.",
+            "Their aim is a Tribunal where magi need not hide what they are, "
+            "brought about slowly with help from churchmen in the Rhine "
+            "cities, using their arts for mankind's good without breaking "
+            "the Oath's ban on meddling. Writing their own Peripheral Code, "
+            "they would allow more than the Rhine and less than Normandy, and "
+            "they think the consortium strong enough to keep nobles from "
+            "dragging them into war and politics. They mean to put the "
+            "proposal to the Grand Tribunal of 1228 and found the Tribunal "
+            "only later, expecting resistance.",
         ),
+        secrets="Their reasons differ: Daria la Gris wants Triamore to matter; about "
+        "half of Fengheld's 23 magi agree in theory and plan chapter houses "
+        "beyond Cologne; Waddenzee wants a Code that permits its piracy; "
+        "Oculus Septentrionalis wants open trade and may plant a covenant to "
+        "counter Waddenzee. Requies Aeterna expects a Lotharingian Code to "
+        "dissolve its oath to Florum and would not mind. Montverte and "
+        "Waddenzee plan for Waddenzee to join and then defect as Montverte's "
+        "vassal, crippling the new Tribunal.",
         faction="Other",
         decides="A council",
         members=7,
@@ -454,18 +434,16 @@ def _boar_king(normandy: Normandy) -> None:
     b = normandy.b
     normandy.world["threat_boar_king"] = b.threat(
         "The Boar King's Hunt",
-        summary=secrets(
-            "The Boar King, a faerie lord of the old Gaulish forests, has "
-            "decided that hunting down greedy hunters no longer holds back the "
-            "plough, the axe and the Church. He wants Hermetic wardens for his "
-            "woods, as House Diedne once was, and is ready to court them, with "
-            "Salvirius to make the offers. Whether he exists in this saga is the "
-            "troupe's choice.",
-            "A Diedne magus believed killed in the Schism War is rumoured to "
-            "ride with him, and the Quaesitores will come. Salvirius is not what "
-            "he seems: he can teach Diedne Magic, and his last offer marks the "
-            "magus who takes it for an unknown watcher in Paris.",
-        ),
+        summary="The Boar King, a faerie lord of the old Gaulish forests, has "
+        "decided that hunting down greedy hunters no longer holds back the "
+        "plough, the axe and the Church. He wants Hermetic wardens for his "
+        "woods, as House Diedne once was, and is ready to court them, with "
+        "Salvirius to make the offers. Whether he exists in this saga is the "
+        "troupe's choice.",
+        secrets="A Diedne magus believed killed in the Schism War is rumoured to "
+        "ride with him, and the Quaesitores will come. Salvirius is not what "
+        "he seems: he can teach Diedne Magic, and his last offer marks the "
+        "magus who takes it for an unknown watcher in Paris.",
         antagonist="The Boar King, faerie lord of the forests",
         realm="Faerie",
         place=normandy.places["boar_kings_hall"],
@@ -583,18 +561,16 @@ def _children_of_odin(normandy: Normandy) -> None:
     b = normandy.b
     normandy.world["threat_children_of_odin"] = b.threat(
         "Queen Skuld and the Ships of Flame",
-        summary=secrets(
-            "Raiders out of the Viking age appear on a coast that has not seen "
-            "them in two hundred years. Behind them is the Children of Odin, a "
-            "young and secret Mystery Cult, and its Hierophant Queen Skuld, who "
-            "wants Normandy back from the French king and herself crowned its "
-            "maga-queen. Whether the cult exists in this saga is the troupe's "
-            "choice.",
-            "Thormod of Montverte is a leading member. Skuld wants the Bayeux "
-            "Tapestry to help her spell get through to King Philip, Normandy's "
-            "duke in law. She may be an impostor, and the cult's magic may not "
-            "be the Order of Odin's at all.",
-        ),
+        summary="Raiders out of the Viking age appear on a coast that has not seen "
+        "them in two hundred years. Behind them is the Children of Odin, a "
+        "young and secret Mystery Cult, and its Hierophant Queen Skuld, who "
+        "wants Normandy back from the French king and herself crowned its "
+        "maga-queen. Whether the cult exists in this saga is the troupe's "
+        "choice.",
+        secrets="Thormod of Montverte is a leading member. Skuld wants the Bayeux "
+        "Tapestry to help her spell get through to King Philip, Normandy's "
+        "duke in law. She may be an impostor, and the cult's magic may not "
+        "be the Order of Odin's at all.",
         antagonist="Queen Skuld, Hierophant of the Children of Odin",
         realm="Magic",
         place=normandy.places["ships_of_flame"],
@@ -703,29 +679,27 @@ def _augustina(normandy: Normandy) -> None:
     b = normandy.b
     normandy.world["threat_augustina"] = b.threat(
         "The Traitor's Game",
-        summary=secrets(
-            paragraphs(
-                "House Tytalus keeps a Traitor: a volunteer exiled from the House "
-                "and counted the loser of all her contests, beneath any Tytalus's "
-                "notice as a rival, whose one duty to the House is to restart its "
-                "struggles when they stall. Since the time of Tasgillia the "
-                "Traitor has carried a magical key; most think it once weakened "
-                "Fudarus's defences, and some think it now only a symbol.",
-                "The present Traitor, Augustina of Confluensis, a hoplite trained "
-                "by the last Traitor, serves Proctor, who trusts no Tytalus and "
-                "gives her the riskiest work. Meanwhile the House's two Primi, "
-                "Harpax and Buliste, have been deadlocked for twenty years, and "
-                "only one can take the House's seat at the Grand Tribunal of "
-                "1228.",
-            ),
-            "Augustina sits in the Cabal of Frankish Gold, backing the "
-            "Lotharingian Tribunal she expects to fail, to see how the Order "
-            "answers a challenge in its heartland. She was trained by Buliste's "
-            "own mater. Buliste is in the cabal only to keep Harpax busy, and a "
-            "saboteur in it works against the movement. Each of the feud's ends "
-            "is open: one Primus yields, one dies or disappears (neither will "
-            "commit a High Crime), or a third contender beats both.",
+        summary=paragraphs(
+            "House Tytalus keeps a Traitor: a volunteer exiled from the House "
+            "and counted the loser of all her contests, beneath any Tytalus's "
+            "notice as a rival, whose one duty to the House is to restart its "
+            "struggles when they stall. Since the time of Tasgillia the "
+            "Traitor has carried a magical key; most think it once weakened "
+            "Fudarus's defences, and some think it now only a symbol.",
+            "The present Traitor, Augustina of Confluensis, a hoplite trained "
+            "by the last Traitor, serves Proctor, who trusts no Tytalus and "
+            "gives her the riskiest work. Meanwhile the House's two Primi, "
+            "Harpax and Buliste, have been deadlocked for twenty years, and "
+            "only one can take the House's seat at the Grand Tribunal of "
+            "1228.",
         ),
+        secrets="Augustina sits in the Cabal of Frankish Gold, backing the "
+        "Lotharingian Tribunal she expects to fail, to see how the Order "
+        "answers a challenge in its heartland. She was trained by Buliste's "
+        "own mater. Buliste is in the cabal only to keep Harpax busy, and a "
+        "saboteur in it works against the movement. Each of the feud's ends "
+        "is open: one Primus yields, one dies or disappears (neither will "
+        "commit a High Crime), or a third contender beats both.",
         antagonist="Augustina of Tytalus, the Traitor",
         stages=[
             S(
@@ -820,32 +794,30 @@ def _lotharingia(normandy: Normandy) -> None:
     b = normandy.b
     normandy.world["threat_lotharingia"] = b.threat(
         "The Lotharingian Secession",
-        summary=secrets(
-            paragraphs(
-                "A Tribunal needs twelve magi from four covenants. Florum and "
-                "Triamore lead a movement to carve a new Lotharingian Tribunal "
-                "from the north and west of the Rhine and the neighbouring part "
-                "of Normandy, to be proposed at the Grand Tribunal of 1228. The "
-                "last new Tribunal was Novgorod in 1008, but this one would take "
-                "land the Rhine and Normandy have held for centuries, and the "
-                "traditionalists, most of the Rhine among them, are horrified. "
-                "Both losing Tribunals have their critics, and the distant ones "
-                "do not care.",
-                "For Normandy the loss is serious: the region holds great mundane "
-                "wealth and some of the Tribunal's best vis, and without it "
-                "Brittany, Tytalus country, would produce more vis than the rest "
-                "of the Tribunal together. A covenant in Flanders, Picardy or "
-                "Champagne must watch closely, and so must any covenant holding "
-                "legacies there, which a Lotharingian Code might not honour.",
-            ),
-            "The Cabal of Frankish Gold backs the movement, with a saboteur "
-            "inside. Montverte and Waddenzee plan for Waddenzee to join and then "
-            "defect as Montverte's vassal, leaving the new Tribunal hemmed in by "
-            "predatory Normandy covenants. Provençal may welcome the new "
-            "Tribunal and try to merge with it, or fear for its own old "
-            "Lotharingian lands; with all eyes on Lotharingia, Normandy's Tytali "
-            "may try to win back ground lost to the Provençal Flambeau.",
+        summary=paragraphs(
+            "A Tribunal needs twelve magi from four covenants. Florum and "
+            "Triamore lead a movement to carve a new Lotharingian Tribunal "
+            "from the north and west of the Rhine and the neighbouring part "
+            "of Normandy, to be proposed at the Grand Tribunal of 1228. The "
+            "last new Tribunal was Novgorod in 1008, but this one would take "
+            "land the Rhine and Normandy have held for centuries, and the "
+            "traditionalists, most of the Rhine among them, are horrified. "
+            "Both losing Tribunals have their critics, and the distant ones "
+            "do not care.",
+            "For Normandy the loss is serious: the region holds great mundane "
+            "wealth and some of the Tribunal's best vis, and without it "
+            "Brittany, Tytalus country, would produce more vis than the rest "
+            "of the Tribunal together. A covenant in Flanders, Picardy or "
+            "Champagne must watch closely, and so must any covenant holding "
+            "legacies there, which a Lotharingian Code might not honour.",
         ),
+        secrets="The Cabal of Frankish Gold backs the movement, with a saboteur "
+        "inside. Montverte and Waddenzee plan for Waddenzee to join and then "
+        "defect as Montverte's vassal, leaving the new Tribunal hemmed in by "
+        "predatory Normandy covenants. Provençal may welcome the new "
+        "Tribunal and try to merge with it, or fear for its own old "
+        "Lotharingian lands; with all eyes on Lotharingia, Normandy's Tytali "
+        "may try to win back ground lost to the Provençal Flambeau.",
         antagonist="The Lotharingian movement, led by Florum and Triamore",
         stages=[
             S(
@@ -936,15 +908,13 @@ def _golden_coin(normandy: Normandy) -> None:
     b = normandy.b
     normandy.world["threat_golden_coin"] = b.threat(
         "The Fixed Tourney",
-        summary=secrets(
-            "The Hermetic Tourney after each Tribunal decides the tropaeum "
-            "leases for seven years, the Tribunal's books and other prizes. The "
-            "Cabal of the Golden Coin rigs it.",
-            "The cabal's members trade thrown contests, field 'lucky' separate "
-            "teams, and shaped the prize levels to suit themselves. Members of "
-            "the Cabal of the Crushed Viper, who hate the chivalric ideal, may "
-            "want the Tourney ended altogether.",
-        ),
+        summary="The Hermetic Tourney after each Tribunal decides the tropaeum "
+        "leases for seven years, the Tribunal's books and other prizes. The "
+        "Cabal of the Golden Coin rigs it.",
+        secrets="The cabal's members trade thrown contests, field 'lucky' separate "
+        "teams, and shaped the prize levels to suit themselves. Members of "
+        "the Cabal of the Crushed Viper, who hate the chivalric ideal, may "
+        "want the Tourney ended altogether.",
         antagonist="The Cabal of the Golden Coin",
         stages=[
             S(
@@ -1014,32 +984,30 @@ def _frames(normandy: Normandy) -> None:
     b, world = normandy.b, normandy.world
     world["frame_romantic"] = b.threat(
         "A Romantic Saga",
-        summary=secrets(
-            paragraphs(
-                "A saga frame. The romances sung by trouvères (noble poets who "
-                "collect their songs in chansonniers) and jongleurs (lower-born "
-                "minstrels) shape the Tribunal's culture: chivalry, courtly love, "
-                "and more and more often wizards, faeries and devils. Their two "
-                "great cycles are the Matter of Britain, which Chrétien de Troyes "
-                "and his followers made French, and the Matter of France, "
-                "Charlemagne and his twelve paladins, with Roland's fall at "
-                "Roncevaux the best known of all. In Mythic Europe the Arthurian "
-                "tales lack Galahad, and Camelot does not fall through Lancelot "
-                "and Guinevere.",
-                "The songs hide true lore: monsters, regiones, treasures, vis "
-                "sources and faerie places, and many cite old books, perhaps lost "
-                "Hermetic works, such as the ancient Breton book Geoffrey of "
-                "Monmouth claimed and the book Meister Kyot found in Toledo. "
-                "Magi read them as clues, Grail-seekers such as the Knights of "
-                "the Green Stone as maps, and a few, like Celeres of Cunfin, as a "
-                "code to live by. In a high-fantasy telling, the magi keep "
-                "stumbling into faerie regiones where faerie knights guard every "
-                "crossroads.",
-            ),
-            "The troupe should decide early whether the Grail is a thing to be "
-            "found, as in the early romances, or a symbol of spiritual "
-            "perfection, as in the later ones.",
+        summary=paragraphs(
+            "A saga frame. The romances sung by trouvères (noble poets who "
+            "collect their songs in chansonniers) and jongleurs (lower-born "
+            "minstrels) shape the Tribunal's culture: chivalry, courtly love, "
+            "and more and more often wizards, faeries and devils. Their two "
+            "great cycles are the Matter of Britain, which Chrétien de Troyes "
+            "and his followers made French, and the Matter of France, "
+            "Charlemagne and his twelve paladins, with Roland's fall at "
+            "Roncevaux the best known of all. In Mythic Europe the Arthurian "
+            "tales lack Galahad, and Camelot does not fall through Lancelot "
+            "and Guinevere.",
+            "The songs hide true lore: monsters, regiones, treasures, vis "
+            "sources and faerie places, and many cite old books, perhaps lost "
+            "Hermetic works, such as the ancient Breton book Geoffrey of "
+            "Monmouth claimed and the book Meister Kyot found in Toledo. "
+            "Magi read them as clues, Grail-seekers such as the Knights of "
+            "the Green Stone as maps, and a few, like Celeres of Cunfin, as a "
+            "code to live by. In a high-fantasy telling, the magi keep "
+            "stumbling into faerie regiones where faerie knights guard every "
+            "crossroads.",
         ),
+        secrets="The troupe should decide early whether the Grail is a thing to be "
+        "found, as in the early romances, or a symbol of spiritual "
+        "perfection, as in the later ones.",
         antagonist="The romance's own peril: the gap between the ideal of chivalry and its practice",
         stages=[
             S(
@@ -1135,17 +1103,15 @@ def _frames(normandy: Normandy) -> None:
     )
     world["frame_boar_and_dragon"] = b.threat(
         "The Boar and the Dragon",
-        summary=secrets(
-            "A saga frame. The boar stood for the kings of Gaul a thousand years "
-            "ago, the dragon for the Vikings who ruled the region three centuries "
-            "back. The lion and the lily eclipse both now, but leftovers of those "
-            "courts remember their greatness and plot its return: the Boar King "
-            "and the Children of Odin, antagonists for a hoplite saga or any "
-            "other, or courts the characters may join.",
-            "One, both or neither may exist in a given saga; the troupe decides. "
-            "Begin The Boar King's Hunt or Queen Skuld and the Ships of Flame "
-            "alongside this frame for their detail.",
-        ),
+        summary="A saga frame. The boar stood for the kings of Gaul a thousand years "
+        "ago, the dragon for the Vikings who ruled the region three centuries "
+        "back. The lion and the lily eclipse both now, but leftovers of those "
+        "courts remember their greatness and plot its return: the Boar King "
+        "and the Children of Odin, antagonists for a hoplite saga or any "
+        "other, or courts the characters may join.",
+        secrets="One, both or neither may exist in a given saga; the troupe decides. "
+        "Begin The Boar King's Hunt or Queen Skuld and the Ships of Flame "
+        "alongside this frame for their detail.",
         antagonist="The Boar King and Queen Skuld, old courts seeking revival",
         stages=[
             S(
@@ -1204,27 +1170,25 @@ def _frames(normandy: Normandy) -> None:
     )
     world["frame_tradition_of_kings"] = b.threat(
         "The Tradition of Kings",
-        summary=secrets(
-            paragraphs(
-                "A saga frame for a covenant with ties to the nobility. Philip "
-                "Augustus rules France absolutely under a divine mandate, yet "
-                "several plots aim at the throne or at the holy oil of anointing "
-                "kept at Reims. The characters meet each plot in turn through "
-                "their noble kin, oaths and the Order, and the ending is best "
-                "saved for when several ripen at once.",
-                "Where does kingship lie: in the oil, in the oil with the Church's "
-                "blessing, in the crown or throne, or in the blood of Merovech, "
-                "whose long hair and beard the Frankish kings still wear in their "
-                "images? A magus who solved it might turn the secret to power in "
-                "the Order. Saints linked to the Frankish kings (Clotilde, "
-                "Martin of Tours, Remi, Riquier, Valery, Vedast) may answer a "
-                "prayer with guidance. If history holds, Louis IX, now five, "
-                "becomes king in 1226 and is canonised in 1297, and diviners may "
-                "try to help or hinder that.",
-            ),
-            "Behind the king's bad counsel is a truly evil man on his staff, "
-            "prompted by a demon.",
+        summary=paragraphs(
+            "A saga frame for a covenant with ties to the nobility. Philip "
+            "Augustus rules France absolutely under a divine mandate, yet "
+            "several plots aim at the throne or at the holy oil of anointing "
+            "kept at Reims. The characters meet each plot in turn through "
+            "their noble kin, oaths and the Order, and the ending is best "
+            "saved for when several ripen at once.",
+            "Where does kingship lie: in the oil, in the oil with the Church's "
+            "blessing, in the crown or throne, or in the blood of Merovech, "
+            "whose long hair and beard the Frankish kings still wear in their "
+            "images? A magus who solved it might turn the secret to power in "
+            "the Order. Saints linked to the Frankish kings (Clotilde, "
+            "Martin of Tours, Remi, Riquier, Valery, Vedast) may answer a "
+            "prayer with guidance. If history holds, Louis IX, now five, "
+            "becomes king in 1226 and is canonised in 1297, and diviners may "
+            "try to help or hinder that.",
         ),
+        secrets="Behind the king's bad counsel is a truly evil man on his staff, "
+        "prompted by a demon.",
         antagonist="The plotters against the oil and the throne of France",
         stages=[
             S(
@@ -1303,35 +1267,33 @@ def _frames(normandy: Normandy) -> None:
     )
     world["frame_advance_of_dominion"] = b.threat(
         "The Advance of the Dominion",
-        summary=secrets(
-            paragraphs(
-                "A saga frame, as the central arc or as a background theme. "
-                "Towns grow, and each one turns the land for twenty miles round "
-                "into farmland under the Dominion, which hampers magic and wears "
-                "away vis sites. Paris, as big as some kingdoms, is a diamond the "
-                "magi long for and cannot grasp, and anything that harms it "
-                "harms the many covenants that buy rare supplies there. The "
-                "royal court has settled in Paris, drawing the great lords there "
-                "and leaving their lands to stewards who are easier to suborn "
-                "but punish harder. The French Church grows rich and spends on "
-                "good works that spread the Dominion, though its quarrel with "
-                "the pope gives magi room to settle scores.",
-                "Covenants work through masks, mundane agents who can be dropped "
-                "or killed: Confluensis among the Seine shippers and the law "
-                "faculty, Fudarus in the Dyers' Guild and the fashionable "
-                "clothiers, Eboris among the ivory carvers and the "
-                "underworld, Montverte in the Hanse Parisienne, Oleron with "
-                "sailors' gangs. Eboris is senex of Paris, so proxy wars there "
-                "are now illegal, and Eboris may raise the alarm if something "
-                "monstrous threatens the city.",
-            ),
-            "The strong will prey on the weak: young covenants become vassals "
-            "at a rising price, some lieges fail, and some covenants may seek "
-            "lieges outside the Tribunal. A coalition may set out to colonise "
-            "Denmark, West Africa or a vis-rich Tribunal. Old wards set in the "
-            "Schism War or the Corruption of Tytalus will crack as the Dominion "
-            "rises.",
+        summary=paragraphs(
+            "A saga frame, as the central arc or as a background theme. "
+            "Towns grow, and each one turns the land for twenty miles round "
+            "into farmland under the Dominion, which hampers magic and wears "
+            "away vis sites. Paris, as big as some kingdoms, is a diamond the "
+            "magi long for and cannot grasp, and anything that harms it "
+            "harms the many covenants that buy rare supplies there. The "
+            "royal court has settled in Paris, drawing the great lords there "
+            "and leaving their lands to stewards who are easier to suborn "
+            "but punish harder. The French Church grows rich and spends on "
+            "good works that spread the Dominion, though its quarrel with "
+            "the pope gives magi room to settle scores.",
+            "Covenants work through masks, mundane agents who can be dropped "
+            "or killed: Confluensis among the Seine shippers and the law "
+            "faculty, Fudarus in the Dyers' Guild and the fashionable "
+            "clothiers, Eboris among the ivory carvers and the "
+            "underworld, Montverte in the Hanse Parisienne, Oleron with "
+            "sailors' gangs. Eboris is senex of Paris, so proxy wars there "
+            "are now illegal, and Eboris may raise the alarm if something "
+            "monstrous threatens the city.",
         ),
+        secrets="The strong will prey on the weak: young covenants become vassals "
+        "at a rising price, some lieges fail, and some covenants may seek "
+        "lieges outside the Tribunal. A coalition may set out to colonise "
+        "Denmark, West Africa or a vis-rich Tribunal. Old wards set in the "
+        "Schism War or the Corruption of Tytalus will crack as the Dominion "
+        "rises.",
         antagonist="The spread of towns, fields and the Dominion",
         stages=[
             S(
@@ -1430,11 +1392,11 @@ def _find(records: list[Any], *names: str) -> Any | None:
     return None
 
 
-def _add_to(record: Any, more: str) -> None:
-    """Add a paragraph to a record's summary, before its Secrets heading
-    if it has one."""
-    head, sep, hidden = record.summary.partition("\n\n" + SECRETS + "\n")
-    record.summary = paragraphs(head, more) + (sep + hidden if sep else "")
+def _add_to(record: Any, more: str, hidden: str = "") -> None:
+    """Add a paragraph to a record's summary, and `hidden` to its
+    secrets."""
+    record.summary = paragraphs(record.summary, more)
+    record.secrets = paragraphs(record.secrets, hidden)
 
 
 def _merge_duplicates(normandy: Normandy) -> None:
@@ -1461,7 +1423,7 @@ def _merge_duplicates(normandy: Normandy) -> None:
         )
         if other is None:
             continue
-        _add_to(other, mine.summary)
+        _add_to(other, mine.summary, mine.secrets)
         for field, value in mine.details.items():
             if value and not other.details.get(field):
                 other.details[field] = value

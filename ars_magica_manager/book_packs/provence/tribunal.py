@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...tribunal_packages.provence import PROVENCE
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 
 if TYPE_CHECKING:
     from ...models import Covenant
@@ -145,7 +145,8 @@ def build(provence: Provence) -> None:
     provence.tribunal = tribunal = b.tribunal(
         NAME,
         package=PROVENCE.key,
-        summary=secrets(SUMMARY, SECRET),
+        summary=SUMMARY,
+        secrets=SECRET,
         meets_every=7,
         next_year=1221,
         next_season="Summer",
@@ -866,7 +867,8 @@ def _ruins(provence: Provence) -> None:
         provence.places[f"ruin_{key}"] = b.place(
             name,
             ruined=True,
-            summary=secrets(summary, hidden),
+            summary=summary,
+            secrets=hidden,
             realm=realm,
             aura=aura,
             status=status,

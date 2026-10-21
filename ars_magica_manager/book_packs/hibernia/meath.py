@@ -278,36 +278,34 @@ def _boyne(hibernia: Hibernia) -> None:
         inside=meath,
         realm="Faerie",
         aura=4,
-        summary=secrets(
-            paragraphs(
-                "A plain of nearly two thousand acres in the bend of the "
-                "Boyne, crowded with sídhe, standing stones and dolmens, "
-                "the river closing it on the south, west and east. Until "
-                "lately it lay wild and half forgotten; now Mellifont's "
-                "monks have laid nine granges over it, fortified farms the "
-                "size of manors whose barns and outbuildings ring each one "
-                "and sit on high ground, often on old sídhe and ráths. With "
-                "the scrub cleared the forty sídhe stand out plainly, and "
-                "the faeries asleep inside may be stirring.",
-                "Many stones, and some old bones and slates, carry marks in "
-                "a wholly unknown script, which, gathered and somehow "
-                "read, might open the old mysteries once worked here "
-                "(Ancient Magic). Magic and Faerie auras of many strengths "
-                "shift and wander across the plain (the pack gives it "
-                "Faerie 4), and no magus has found out why. Hibernian magi "
-                "mostly keep away, fearing to wake the Tuatha Dé who sleep "
-                "here. The Dagdha built it, and Bóinn (see the Bestiary) is "
-                "often met here, but it is the home of their son Aonghus "
-                "mac Óg, god of youth and lovers, who tricked his father "
-                "out of it; he is perilous to cross. In 778 the four "
-                "founders of the Order in Hibernia dug the Dagda's "
-                "cauldron out of one of its mounds, then held a barrow "
-                "here for a year against the high-king's men.",
-            ),
-            "The monks working among the barrows may have stumbled on "
-            "some old magical secret, which could lie behind the "
-            "Conspiracy of Mellifont.",
+        summary=paragraphs(
+            "A plain of nearly two thousand acres in the bend of the "
+            "Boyne, crowded with sídhe, standing stones and dolmens, "
+            "the river closing it on the south, west and east. Until "
+            "lately it lay wild and half forgotten; now Mellifont's "
+            "monks have laid nine granges over it, fortified farms the "
+            "size of manors whose barns and outbuildings ring each one "
+            "and sit on high ground, often on old sídhe and ráths. With "
+            "the scrub cleared the forty sídhe stand out plainly, and "
+            "the faeries asleep inside may be stirring.",
+            "Many stones, and some old bones and slates, carry marks in "
+            "a wholly unknown script, which, gathered and somehow "
+            "read, might open the old mysteries once worked here "
+            "(Ancient Magic). Magic and Faerie auras of many strengths "
+            "shift and wander across the plain (the pack gives it "
+            "Faerie 4), and no magus has found out why. Hibernian magi "
+            "mostly keep away, fearing to wake the Tuatha Dé who sleep "
+            "here. The Dagdha built it, and Bóinn (see the Bestiary) is "
+            "often met here, but it is the home of their son Aonghus "
+            "mac Óg, god of youth and lovers, who tricked his father "
+            "out of it; he is perilous to cross. In 778 the four "
+            "founders of the Order in Hibernia dug the Dagda's "
+            "cauldron out of one of its mounds, then held a barrow "
+            "here for a year against the high-king's men.",
         ),
+        secrets="The monks working among the barrows may have stumbled on "
+        "some old magical secret, which could lie behind the "
+        "Conspiracy of Mellifont.",
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -473,24 +471,22 @@ def _clonmacnoise(hibernia: Hibernia) -> None:
         inside=clon,
         realm="Divine",
         aura=3,
-        summary=secrets(
-            "One of several big yellow sandstone boulders in "
-            "Clonmacnoise, also called the Horseman's Stone. It bears the "
-            "same strange script as the stones of the Brú na Bóinne and "
-            "the prints of two human feet, and locals hold it the door of "
-            "a faerie fort: a rider in golden armour was said to come out "
-            "and cross the land on Midsummer night, the Feast of John the "
-            "Baptist, but none has seen him for centuries, perhaps "
-            "because the priests lead a procession to the rock and bless "
-            "it that day. It sits in the town's Dominion aura of 3. Twenty "
-            "years ago Josiane of Merinita, of the Normandy Tribunal, "
-            "shrank it with Terram magic and led it off on a mule for her "
-            "laboratory, but by morning it was gone, and back in "
-            "Clonmacnoise she found it where she had first seen it; she "
-            "sensibly did not try again.",
-            "Whatever makes the stone return, it is bound to this spot; "
-            "the faerie fort behind it may still be inhabited.",
-        ),
+        summary="One of several big yellow sandstone boulders in "
+        "Clonmacnoise, also called the Horseman's Stone. It bears the "
+        "same strange script as the stones of the Brú na Bóinne and "
+        "the prints of two human feet, and locals hold it the door of "
+        "a faerie fort: a rider in golden armour was said to come out "
+        "and cross the land on Midsummer night, the Feast of John the "
+        "Baptist, but none has seen him for centuries, perhaps "
+        "because the priests lead a procession to the rock and bless "
+        "it that day. It sits in the town's Dominion aura of 3. Twenty "
+        "years ago Josiane of Merinita, of the Normandy Tribunal, "
+        "shrank it with Terram magic and led it off on a mule for her "
+        "laboratory, but by morning it was gone, and back in "
+        "Clonmacnoise she found it where she had first seen it; she "
+        "sensibly did not try again.",
+        secrets="Whatever makes the stone return, it is bound to this spot; "
+        "the faerie fort behind it may still be inhabited.",
         **KNOWN_LOCALLY,
     )
 
@@ -558,34 +554,32 @@ def _lordship(hibernia: Hibernia, b: Builder) -> None:
         ruler="Archbishop Henry de Londres",
         answers_to=w["regent"],
         place=ireland,
-        summary=secrets(
-            paragraphs(
-                "Henry de Londres, Archbishop of Dublin, holds the king's "
-                "authority in Ireland as viceroy, the Justiciar to whom "
-                "the lords of the Liberties answer; his see is the Church "
-                "part's record. He is energetic, ambitious and personally "
-                "fearless, and almost universally loathed. He once "
-                "summoned his tenants to show the deeds to their lands, "
-                "then tried to throw the parchments on the fire; they "
-                "seized him, thrashed his men, pulled their deeds back by "
-                "main force and frightened him into granting their "
-                "rights, and they call him 'Henry the Scorcher'. He "
-                "squeezes Dublin's tithes hard, cared little for those "
-                "the fire of 1190 ruined, levied the royal tallage on the "
-                "citizens in 1217, and simply takes what he fancies from "
-                "merchants.",
-                "He has sworn to put out Saint Brigid's Sacred Fire at "
-                "Kildare. He will appoint only English-born bishops, a "
-                "policy the Pope has ruled unlawful, and claims for "
-                "Dublin primacy over Armagh (and Cashel), which has turned "
-                "even the Irish reform party against him and wrecked much "
-                "of the trust between the reformers and the English "
-                "clergy. Itinerant justices hold his assizes in the "
-                "Liberties.",
-            ),
-            "The Pope's ruling against his English-only bishops has not "
-            "yet reached Dublin; he does not know he has lost.",
+        summary=paragraphs(
+            "Henry de Londres, Archbishop of Dublin, holds the king's "
+            "authority in Ireland as viceroy, the Justiciar to whom "
+            "the lords of the Liberties answer; his see is the Church "
+            "part's record. He is energetic, ambitious and personally "
+            "fearless, and almost universally loathed. He once "
+            "summoned his tenants to show the deeds to their lands, "
+            "then tried to throw the parchments on the fire; they "
+            "seized him, thrashed his men, pulled their deeds back by "
+            "main force and frightened him into granting their "
+            "rights, and they call him 'Henry the Scorcher'. He "
+            "squeezes Dublin's tithes hard, cared little for those "
+            "the fire of 1190 ruined, levied the royal tallage on the "
+            "citizens in 1217, and simply takes what he fancies from "
+            "merchants.",
+            "He has sworn to put out Saint Brigid's Sacred Fire at "
+            "Kildare. He will appoint only English-born bishops, a "
+            "policy the Pope has ruled unlawful, and claims for "
+            "Dublin primacy over Armagh (and Cashel), which has turned "
+            "even the Irish reform party against him and wrecked much "
+            "of the trust between the reformers and the English "
+            "clergy. Itinerant justices hold his assizes in the "
+            "Liberties.",
         ),
+        secrets="The Pope's ruling against his English-only bishops has not "
+        "yet reached Dublin; he does not know he has lost.",
     )
     w["walter_de_lacy"] = b.lord(
         "Walter de Lacy, Lord of Meath",
@@ -810,18 +804,16 @@ def _towns(hibernia: Hibernia, b: Builder) -> None:
         ruler="Walter de Lacy",
         answers_to=lord,
         place=meath,
-        summary=secrets(
-            "Home of the Cenél Lóegairi túath and, above all, of Trim "
-            "Castle, the largest stone castle in Ireland, which Walter de "
-            "Lacy raised on a hill to govern Meath in place of the "
-            "ringwork his father built and the Irish destroyed. De Lacy "
-            "and his household are often here. Saint Patrick's church of "
-            "Saint Lommán and Saint Malachy's Augustinian abbey of Saint "
-            "Mary stand in the town. The castle was lately the scene of a "
-            "strange affair, the tale of the Three Sisters of Trim.",
-            "The book names the Three Sisters of Trim but tells nothing "
-            "more of them: the storyguide decides what happened.",
-        ),
+        summary="Home of the Cenél Lóegairi túath and, above all, of Trim "
+        "Castle, the largest stone castle in Ireland, which Walter de "
+        "Lacy raised on a hill to govern Meath in place of the "
+        "ringwork his father built and the Irish destroyed. De Lacy "
+        "and his household are often here. Saint Patrick's church of "
+        "Saint Lommán and Saint Malachy's Augustinian abbey of Saint "
+        "Mary stand in the town. The castle was lately the scene of a "
+        "strange affair, the tale of the Three Sisters of Trim.",
+        secrets="The book names the Three Sisters of Trim but tells nothing "
+        "more of them: the storyguide decides what happened.",
     )
     w["kells_town"] = b.town(
         "Kells",

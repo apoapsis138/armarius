@@ -20,7 +20,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -33,8 +33,6 @@ TREMERE = "house_tremere"
 TYTALUS = "house_tytalus"
 
 # The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
@@ -161,13 +159,11 @@ def _places(normandy: Normandy) -> None:
         "The Forest of Lyons",
         inside=seine,
         realm="Magic",
-        summary=secrets(
-            "A surviving fragment of the primordial forest of the Seine basin, "
-            "a favourite hunting ground of the Norman nobility. A castle stands "
-            "at its heart, and building it destroyed the spirit of the forest.",
-            "The wild woodsmen say the forest is not dead and will rise one day "
-            "to take back its heart.",
-        ),
+        summary="A surviving fragment of the primordial forest of the Seine basin, "
+        "a favourite hunting ground of the Norman nobility. A castle stands "
+        "at its heart, and building it destroyed the spirit of the forest.",
+        secrets="The wild woodsmen say the forest is not dead and will rise one day "
+        "to take back its heart.",
         **KNOWN_LOCALLY,
     )
     _place(
@@ -341,33 +337,31 @@ def _places(normandy: Normandy) -> None:
                 ),
             )
         ],
-        summary=secrets(
-            paragraphs(
-                "A rocky islet at the mouth of the Couesnon on the Breton "
-                "border, crowned by a Benedictine abbey that draws many "
-                "pilgrims. Once called Mount Tombe, it was a ritual site of the "
-                "druids who came before House Diedne, until in 708 the "
-                "archangel Michael appeared to Aubert, bishop of Avranches, and "
-                "bade him desecrate the pagan graves and build a chapel. Aubert "
-                "was slow to obey but finished in 709. His relics, kept here, "
-                "include his skull, pierced where the angel struck him for his "
-                "delay.",
-                "Hermetic scholars think Aubert destroyed a Magic aura and that "
-                "taking his relics away might in time revive it, but fear of the "
-                "Divine and of the Diedne taint has kept every magus away.",
-                "At low tide pilgrims cross less than a mile of sand to it, "
-                "dangerous with quicksand (William the Conqueror had to be "
-                "pulled out). Then its Divine aura is 4; at high tide it is "
-                "a regio of 8.",
-            ),
-            "The Uncovered Crypt: a magus dreams of the archangel pointing to "
-            "the Mont, with headaches that halve her Study and Lab Totals until "
-            "she goes. As she arrives, builders open a crypt under a tower: a "
-            "dozen skeletons and an untitled Holy Magic Theory summa (Level 3, "
-            "Quality 17). Whoever studies it is visited by Michael, who means "
-            "to replace Hermetic magic, which he thinks pagan, with a Divine "
-            "kind.",
+        summary=paragraphs(
+            "A rocky islet at the mouth of the Couesnon on the Breton "
+            "border, crowned by a Benedictine abbey that draws many "
+            "pilgrims. Once called Mount Tombe, it was a ritual site of the "
+            "druids who came before House Diedne, until in 708 the "
+            "archangel Michael appeared to Aubert, bishop of Avranches, and "
+            "bade him desecrate the pagan graves and build a chapel. Aubert "
+            "was slow to obey but finished in 709. His relics, kept here, "
+            "include his skull, pierced where the angel struck him for his "
+            "delay.",
+            "Hermetic scholars think Aubert destroyed a Magic aura and that "
+            "taking his relics away might in time revive it, but fear of the "
+            "Divine and of the Diedne taint has kept every magus away.",
+            "At low tide pilgrims cross less than a mile of sand to it, "
+            "dangerous with quicksand (William the Conqueror had to be "
+            "pulled out). Then its Divine aura is 4; at high tide it is "
+            "a regio of 8.",
         ),
+        secrets="The Uncovered Crypt: a magus dreams of the archangel pointing to "
+        "the Mont, with headaches that halve her Study and Lab Totals until "
+        "she goes. As she arrives, builders open a crypt under a tower: a "
+        "dozen skeletons and an untitled Holy Magic Theory summa (Level 3, "
+        "Quality 17). Whoever studies it is visited by Michael, who means "
+        "to replace Hermetic magic, which he thinks pagan, with a Divine "
+        "kind.",
         **KNOWN_ORDER,
     )
 
@@ -511,26 +505,24 @@ def _crown_and_lords(normandy: Normandy, b: Builder) -> None:
         title="baron",
         seat="The castle of Montverte",
         place=normandy.places["montverte_site"],
-        summary=secrets(
-            paragraphs(
-                "Lord of the green mount, descended from Haland, the un-Gifted "
-                "Norse elder brother of the founding magus Harivald. His family "
-                "took their name from the hilltop castle the brothers seized, "
-                "and the magi of Montverte have lived in it beside them since "
-                "941. His household is the covenant's covenfolk, and his "
-                "soldiers are rather too many and too well armed for a baron. "
-                "The magi are called 'the resident scholars' or 'our valued "
-                "guests', and the steward Edward sits at his side.",
-                "His peers have quarrelled with him often over what the castle "
-                "does, but its walls have won every war. The magi swear him no "
-                "oath and say he runs his own affairs.",
-            ),
-            "For generations the family has been wholly, and unknowingly, "
-            "ruled by the magi through persuasion and subtle magic. The "
-            "baron's high chair, centuries old, was enchanted by an early magus "
-            "with a Mentem effect that keeps whoever sits in it compliant; long "
-            "use has left a line of slightly Warped barons.",
+        summary=paragraphs(
+            "Lord of the green mount, descended from Haland, the un-Gifted "
+            "Norse elder brother of the founding magus Harivald. His family "
+            "took their name from the hilltop castle the brothers seized, "
+            "and the magi of Montverte have lived in it beside them since "
+            "941. His household is the covenant's covenfolk, and his "
+            "soldiers are rather too many and too well armed for a baron. "
+            "The magi are called 'the resident scholars' or 'our valued "
+            "guests', and the steward Edward sits at his side.",
+            "His peers have quarrelled with him often over what the castle "
+            "does, but its walls have won every war. The magi swear him no "
+            "oath and say he runs his own affairs.",
         ),
+        secrets="For generations the family has been wholly, and unknowingly, "
+        "ruled by the magi through persuasion and subtle magic. The "
+        "baron's high chair, centuries old, was enchanted by an early magus "
+        "with a Mentem effect that keeps whoever sits in it compliant; long "
+        "use has left a line of slightly Warped barons.",
     )
 
 
@@ -546,35 +538,33 @@ def _church(normandy: Normandy, b: Builder) -> None:
         order="secular clergy",
         ruler="Master Robert Poulain",
         place=p["seine_basin"],
-        summary=secrets(
-            paragraphs(
-                "Metropolitan of a province whose borders almost match the "
-                "duchy's, a hard-fought field in the conversion of the pagans. "
-                "The first bishop, Nicaise, was martyred on arrival from Rome in "
-                "the mid-third century; St Mellon founded the see, which became "
-                "an archdiocese in 744. Sainted bishops include St Ouen "
-                "(641-684), who converted or destroyed many pagans, and St "
-                "Romanus, who overcame the Gargouille.",
-                "The archbishop since 1208 is Master Robert Poulain, a "
-                "theologian; if history holds, Thibaud d'Amiens follows him in "
-                "1222. He holds the Order of Hermes heretical but has only "
-                "argued the point with his bishops, who are not persuaded. The "
-                "Norman church accepted Philip as king, by the Pope's leave; "
-                "Philip has not meddled in elections and has given generously "
-                "to religious houses, but in 1218 he made the archbishop yield "
-                "the King's officers from excommunication.",
-                "Each year Rouen's clergy pick one condemned prisoner to be "
-                "pardoned before St Romanus's relics, remembering the prisoner "
-                "who helped the saint drag the Gargouille, a scaled beast of the "
-                "Seine with pale blue eyes, back to the town to be burned.",
-            ),
-            "The Gargouille: townsmen are found dead near a covenant and the "
-            "magi blamed. Archbishop Robert calls the magi the Gargouilles of "
-            "the age, frees half a dozen condemned men and marches with them "
-            "on the covenant behind the shrine of St Romanus (Faith Points 5). "
-            "Harming him could start a crusade against the Order in Normandy; "
-            "if the magi are innocent, someone framed them.",
+        summary=paragraphs(
+            "Metropolitan of a province whose borders almost match the "
+            "duchy's, a hard-fought field in the conversion of the pagans. "
+            "The first bishop, Nicaise, was martyred on arrival from Rome in "
+            "the mid-third century; St Mellon founded the see, which became "
+            "an archdiocese in 744. Sainted bishops include St Ouen "
+            "(641-684), who converted or destroyed many pagans, and St "
+            "Romanus, who overcame the Gargouille.",
+            "The archbishop since 1208 is Master Robert Poulain, a "
+            "theologian; if history holds, Thibaud d'Amiens follows him in "
+            "1222. He holds the Order of Hermes heretical but has only "
+            "argued the point with his bishops, who are not persuaded. The "
+            "Norman church accepted Philip as king, by the Pope's leave; "
+            "Philip has not meddled in elections and has given generously "
+            "to religious houses, but in 1218 he made the archbishop yield "
+            "the King's officers from excommunication.",
+            "Each year Rouen's clergy pick one condemned prisoner to be "
+            "pardoned before St Romanus's relics, remembering the prisoner "
+            "who helped the saint drag the Gargouille, a scaled beast of the "
+            "Seine with pale blue eyes, back to the town to be burned.",
         ),
+        secrets="The Gargouille: townsmen are found dead near a covenant and the "
+        "magi blamed. Archbishop Robert calls the magi the Gargouilles of "
+        "the age, frees half a dozen condemned men and marches with them "
+        "on the covenant behind the shrine of St Romanus (Faith Points 5). "
+        "Harming him could start a crusade against the Order in Normandy; "
+        "if the magi are innocent, someone framed them.",
     )
     bishops = (
         (
@@ -733,29 +723,27 @@ def _church(normandy: Normandy, b: Builder) -> None:
         order="Benedictine",
         answers_to=w["bishop_of_bayeux"],
         place=p["bayeux_county"],
-        summary=secrets(
-            paragraphs(
-                "The fortified abbey William the Conqueror built at Caen, as "
-                "Matilda built the Women's Abbey, the price of lifting the "
-                "excommunication Pope Nicholas II laid on the cousins for "
-                "marrying.",
-                "William lies here. He died at the priory of St Gervais in "
-                "Rouen in 1087 after a fall from his horse; his body rotted "
-                "and stank, his servants defiled it and his courtiers fled, "
-                "an omen of the anarchy that followed. A fire broke out as the "
-                "corpse reached Caen, and at the funeral the swollen body "
-                "burst from its coffin and the bishops, choking, botched the "
-                "rite.",
-            ),
-            "The Infernal Grave: an infernalist's belongings hold The "
-            "Conquered Bastard (Infernal Lore tractatus, Quality 6), which says "
-            "a demon inhabits William's corpse, helped him to his conquests and "
-            "rotted his body, and was trapped in it by the botched rite; the "
-            "infernalist's notes show he was trying to free her. Freeing or "
-            "destroying her means digging William up and crossing the Church "
-            "in Caen. The text may be a forgery, by demons or by rivals in the "
-            "Tribunal, to drag the magi into an infernal plot.",
+        summary=paragraphs(
+            "The fortified abbey William the Conqueror built at Caen, as "
+            "Matilda built the Women's Abbey, the price of lifting the "
+            "excommunication Pope Nicholas II laid on the cousins for "
+            "marrying.",
+            "William lies here. He died at the priory of St Gervais in "
+            "Rouen in 1087 after a fall from his horse; his body rotted "
+            "and stank, his servants defiled it and his courtiers fled, "
+            "an omen of the anarchy that followed. A fire broke out as the "
+            "corpse reached Caen, and at the funeral the swollen body "
+            "burst from its coffin and the bishops, choking, botched the "
+            "rite.",
         ),
+        secrets="The Infernal Grave: an infernalist's belongings hold The "
+        "Conquered Bastard (Infernal Lore tractatus, Quality 6), which says "
+        "a demon inhabits William's corpse, helped him to his conquests and "
+        "rotted his body, and was trapped in it by the botched rite; the "
+        "infernalist's notes show he was trying to free her. Freeing or "
+        "destroying her means digging William up and crossing the Church "
+        "in Caen. The text may be a forgery, by demons or by rivals in the "
+        "Tribunal, to drag the magi into an infernal plot.",
     )
     w["womens_abbey"] = b.church(
         "The Women's Abbey of Caen",
@@ -862,18 +850,16 @@ def _towns(normandy: Normandy, b: Builder) -> None:
         charter="Church",
         answers_to=normandy.world["bishop_of_bayeux"],
         place=p["bayeux_county"],
-        summary=secrets(
-            "Once Baiocasses, chief town of the Gauls, taken by Rome in the "
-            "first century BC. Fragments of Roman buildings still stand and "
-            "much of the town is built of their stone; nothing Gallic remains, "
-            "but the land remembers where it stood. In the duchy's early years "
-            "it was the seat of rival Norse settlers who sometimes rose against "
-            "Rouen; it is quiet now. Its mills serve the country round, and "
-            "its cathedral keeps Odo's tapestry.",
-            "Rumour puts a regio somewhere in the town that held the small "
-            "Diedne vassal covenant Baiocassium Minor; no living magus admits "
-            "to knowing where.",
-        ),
+        summary="Once Baiocasses, chief town of the Gauls, taken by Rome in the "
+        "first century BC. Fragments of Roman buildings still stand and "
+        "much of the town is built of their stone; nothing Gallic remains, "
+        "but the land remembers where it stood. In the duchy's early years "
+        "it was the seat of rival Norse settlers who sometimes rose against "
+        "Rouen; it is quiet now. Its mills serve the country round, and "
+        "its cathedral keeps Odo's tapestry.",
+        secrets="Rumour puts a regio somewhere in the town that held the small "
+        "Diedne vassal covenant Baiocassium Minor; no living magus admits "
+        "to knowing where.",
     )
     w["avranches"] = b.town(
         "Avranches",
@@ -1050,7 +1036,7 @@ def _montverte(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         place=normandy.places["montverte_site"],
         summary=summary,
         what_matters=what_matters,
-        notes=secrets(STORYGUIDE, hidden),
+        secrets=hidden,
         aura=5,
         unnamed_magi=5,
         season="Autumn",
@@ -1101,20 +1087,18 @@ def _montverte_magi(normandy: Normandy, b: Builder, montverte: Covenant) -> None
         covenant=montverte,
         house=FLAMBEAU,
         age=87,
-        summary=secrets(
-            "Filius of Geirlaug and her opposite: meticulously neat, his "
-            "feelings and plans always hidden (he looks 48). Thought to "
-            "specialise in Perdo, though nothing is really known of his tastes. "
-            "He never seems to doubt or falter, which makes him secretly the "
-            "most hated and feared magus of Montverte. He is the covenant's "
-            "Hermetic ambassador, coldly efficient, and directs its vassals. "
-            "Alone on the council he seems quite untroubled by Geirlaug and "
-            "trusts her rule completely; if anyone knows her true state, it is "
-            "he, and he says nothing.",
-            "He is a leading member of the Children of Odin, practises Viking "
-            "magic and bends his influence to the cult's ends; he may be "
-            "related to its hierophant, Queen Skuld, by blood or by a tryst.",
-        ),
+        summary="Filius of Geirlaug and her opposite: meticulously neat, his "
+        "feelings and plans always hidden (he looks 48). Thought to "
+        "specialise in Perdo, though nothing is really known of his tastes. "
+        "He never seems to doubt or falter, which makes him secretly the "
+        "most hated and feared magus of Montverte. He is the covenant's "
+        "Hermetic ambassador, coldly efficient, and directs its vassals. "
+        "Alone on the council he seems quite untroubled by Geirlaug and "
+        "trusts her rule completely; if anyone knows her true state, it is "
+        "he, and he says nothing.",
+        secrets="He is a leading member of the Children of Odin, practises Viking "
+        "magic and bends his influence to the cult's ends; he may be "
+        "related to its hierophant, Queen Skuld, by blood or by a tryst.",
         traits={"Scheming": 2, "Tidy": 2, "Emotional": -3},
     )
     m["eduardus"] = b.magus(

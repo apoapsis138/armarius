@@ -329,3 +329,17 @@ async def test_only_the_storyguide_says_who_plays_a_character(in_a_browser):
         assert (
             storage.load_saga(saga.id).character("comp1").background.player_id == ana.id
         )
+
+
+async def test_only_the_storyguide_sees_a_records_secrets(in_a_browser):
+    saga, ana, hedda = _troupe()
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        ws = await _workspace_as(app, pilot, saga, ana)
+        for node in (("neighbour", "gottfried"), ("character", "mag1")):
+            await _show(pilot, ws, node)
+            assert not ws._current_sheet_view().query("#tab-secrets"), node
+
+        app.player = hedda
+        await _show(pilot, ws, ("neighbour", "gottfried"))
+        assert ws._current_sheet_view().query("#tab-secrets")

@@ -34,7 +34,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -50,8 +50,6 @@ MERINITA = "house_merinita"
 BONISAGUS = "house_bonisagus"
 
 #: The lead line of a covenant's notes, before its secrets.
-STORYGUIDE = "What the players do not know."
-
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
@@ -949,17 +947,15 @@ def _earldom(hibernia: Hibernia) -> None:
             "Vis: some of the stones carried up hold vis, gathered over "
             "many years and spread among many stones; magi have noticed. "
             "No one holds it.",
-            secrets(
-                "",
-                "The kings must stay buried. Eleven of the twelve graves "
-                "hold a demon bound into a dead tyrant's body. The "
-                "Cailleacha Phiseogach know a legend that if mortal hands "
-                "uncover the kings they will rise, and that when a twelfth "
-                "king joins them the world will end. They cannot dig the "
-                "graves themselves, so they mean to lure vis-hungry magi "
-                "into doing it.",
-            ),
+            "",
         ),
+        secrets="The kings must stay buried. Eleven of the twelve graves "
+        "hold a demon bound into a dead tyrant's body. The "
+        "Cailleacha Phiseogach know a legend that if mortal hands "
+        "uncover the kings they will rise, and that when a twelfth "
+        "king joins them the world will end. They cannot dig the "
+        "graves themselves, so they mean to lure vis-hungry magi "
+        "into doing it.",
         **RUMOURED,
     )
     _add(
@@ -1930,19 +1926,16 @@ def _qui_sonant(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Magi: seven, each owing the covenant one season's work a year. "
         "Cantarus, Master of the Songs, Finn, Lewis and Turlough are "
         "described.",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "Turlough of Criamon, who keeps the cemetery and the spirits, "
-                "wants more from the dead than summoning them, and hides his "
-                "growing interest from his sodales; any help he gets must "
-                "come from outside, and he would trade his favour with the "
-                "Coill Trí for it.",
-                "Should a magus appear who would commit himself to the covenant, "
-                "Cantarus would happily pass Finn over and make that magus Master of "
-                "the Songs.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "Turlough of Criamon, who keeps the cemetery and the spirits, "
+        "wants more from the dead than summoning them, and hides his "
+        "growing interest from his sodales; any help he gets must "
+        "come from outside, and he would trade his favour with the "
+        "Coill Trí for it.",
+        "Should a magus appear who would commit himself to the covenant, "
+        "Cantarus would happily pass Finn over and make that magus Master of "
+        "the Songs.",
     )
     qui_sonant = b.covenant(
         "Qui Sonant Pro Quieto",
@@ -1954,6 +1947,7 @@ def _qui_sonant(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=3,
         detail=FULL,
         season="Summer",
@@ -2036,21 +2030,19 @@ def _qui_sonant(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         covenant=qui_sonant,
         house=CRIAMON,
         age=80,
-        summary=secrets(
-            paragraphs(
-                "Turlough of Criamon, who looks fifty-five, governs the "
-                "cemetery, the funeral rites and the protection of the "
-                "spirits in the covenant's keeping, and is well thought of "
-                "inside the covenant and out. His own magic is the "
-                "summoning of spirits. He has trained one apprentice and "
-                "won another at the last Tribunal through his warm "
-                "relations with the Coill Trí.",
-            ),
-            "He feels there is more to gain from the spirits than summoning "
-            "them, and fears his sodales will learn of this growing "
-            "interest, so any help must come from outside; he would gladly "
-            "bargain his influence with the Coill Trí for it.",
+        summary=paragraphs(
+            "Turlough of Criamon, who looks fifty-five, governs the "
+            "cemetery, the funeral rites and the protection of the "
+            "spirits in the covenant's keeping, and is well thought of "
+            "inside the covenant and out. His own magic is the "
+            "summoning of spirits. He has trained one apprentice and "
+            "won another at the last Tribunal through his warm "
+            "relations with the Coill Trí.",
         ),
+        secrets="He feels there is more to gain from the spirits than summoning "
+        "them, and fears his sodales will learn of this growing "
+        "interest, so any help must come from outside; he would gladly "
+        "bargain his influence with the Coill Trí for it.",
         traits={"Secretive": 3, "Affable": 2, "Disciplined": 1},
     )
 
@@ -2089,16 +2081,14 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
             "over the sea, long abandoned; little is left, its stone carted "
             "off for newer buildings. Beneath it lie the vaults, flooded and "
             "mostly forgotten.",
-            secrets(
-                "",
-                "Many magical weapons and devices brought from distant lands "
-                "have outlasted centuries of rot in the drowned vaults, with "
-                "a library of casting tablets and lab texts against Infernal "
-                "sickness and foul weather. The old records are lost and "
-                "Vigil's magi have no idea what lies under their feet, but "
-                "the Vitae Magorum of Hibernia's magi mention the vaults.",
-            ),
+            "",
         ),
+        secrets="Many magical weapons and devices brought from distant lands "
+        "have outlasted centuries of rot in the drowned vaults, with "
+        "a library of casting tablets and lab texts against Infernal "
+        "sickness and foul weather. The old records are lost and "
+        "Vigil's magi have no idea what lies under their feet, but "
+        "the Vitae Magorum of Hibernia's magi mention the vaults.",
         **KNOWN_LOCALLY,
     )
     _add(
@@ -2276,24 +2266,21 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "macgnímartha. Éinri, Gráinne, Máel-ruanaid and Maoilfhinnéin are "
         "described. The founding year is not given (the Merinita took the "
         "tusks soon after 851).",
-        secrets(
-            STORYGUIDE,
-            _lines(
-                "The drowned vaults hold forgotten magical weapons and "
-                "devices from far lands and a library against Infernal "
-                "plague and winters; covenants struck by such troubles may "
-                "come asking for it.",
-                "No one recorded what turned Vigil's Merinita against the "
-                "Diedne; those who know how demons work may wonder.",
-                "Maoilfhinnéin expects the Ordo Hiberniae to be driven back "
-                "as the native wizards once were, and has readied Inishtrahull "
-                "to take the cathach and a rebuilt Vigil; he is courting "
-                "Lámbaird, feeding Gráinne's overconfidence because a "
-                "sacrifice may be needed, and steering the shards of her "
-                "first talisman, now an Arcane Connection to her, toward "
-                "Guillaume of Praesis.",
-            ),
-        ),
+    )
+    hidden = _lines(
+        "The drowned vaults hold forgotten magical weapons and "
+        "devices from far lands and a library against Infernal "
+        "plague and winters; covenants struck by such troubles may "
+        "come asking for it.",
+        "No one recorded what turned Vigil's Merinita against the "
+        "Diedne; those who know how demons work may wonder.",
+        "Maoilfhinnéin expects the Ordo Hiberniae to be driven back "
+        "as the native wizards once were, and has readied Inishtrahull "
+        "to take the cathach and a rebuilt Vigil; he is courting "
+        "Lámbaird, feeding Gráinne's overconfidence because a "
+        "sacrifice may be needed, and steering the shards of her "
+        "first talisman, now an Arcane Connection to her, toward "
+        "Guillaume of Praesis.",
     )
     vigil = b.covenant(
         "Vigil",
@@ -2305,6 +2292,7 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         summary=summary,
         what_matters=what_matters,
         notes=notes,
+        secrets=hidden,
         unnamed_magi=2,
         detail=FULL,
         season="Autumn",
@@ -2414,27 +2402,25 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         covenant=vigil,
         house=MERINITA,
         age=70,
-        summary=secrets(
-            paragraphs(
-                "The Ambassador to the Sea, a magus of Merinita who looks "
-                "fifty and spends much of his time at faerie and magical "
-                "courts. His talisman is a staff of sea-unicorn horn, his "
-                "familiar a porpoise, and his wife a faerie princess of "
-                "Inishtrahull. With his long white hair and beard and his "
-                "sturdy frame he looks like some old sea god, a likeness he "
-                "plays up to keep eyes off what he is really doing.",
-            ),
-            "He believes the old stories must repeat, that the Ordo "
-            "Hiberniae will be driven back as the native wizards were, and "
-            "sees the first signs already. Should Vigil come under threat, all is "
-            "ready for the cathach to go to Inishtrahull and the covenant to be "
-            "rebuilt on the island. Meanwhile he backs Lámbaird's views at Tribunal "
-            "to mend the harm Éinri has done; he feeds Gráinne's "
-            "overconfidence, knowing a sacrifice may soon be needed; and his "
-            "allies in the sea have brought him the shards of her first "
-            "talisman, which he has fixed as an Arcane Connection and is "
-            "steering into the hands of Guillaume of Praesis.",
+        summary=paragraphs(
+            "The Ambassador to the Sea, a magus of Merinita who looks "
+            "fifty and spends much of his time at faerie and magical "
+            "courts. His talisman is a staff of sea-unicorn horn, his "
+            "familiar a porpoise, and his wife a faerie princess of "
+            "Inishtrahull. With his long white hair and beard and his "
+            "sturdy frame he looks like some old sea god, a likeness he "
+            "plays up to keep eyes off what he is really doing.",
         ),
+        secrets="He believes the old stories must repeat, that the Ordo "
+        "Hiberniae will be driven back as the native wizards were, and "
+        "sees the first signs already. Should Vigil come under threat, all is "
+        "ready for the cathach to go to Inishtrahull and the covenant to be "
+        "rebuilt on the island. Meanwhile he backs Lámbaird's views at Tribunal "
+        "to mend the harm Éinri has done; he feeds Gráinne's "
+        "overconfidence, knowing a sacrifice may soon be needed; and his "
+        "allies in the sea have brought him the shards of her first "
+        "talisman, which he has fixed as an Arcane Connection and is "
+        "steering into the hands of Guillaume of Praesis.",
         traits={"Scheming": 3, "Loyal to Hibernia": 2, "Friendly": 1},
     )
 

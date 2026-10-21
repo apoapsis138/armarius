@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .character import ScoredTrait, Wounds
-from .common import FatigueLevel, known_fields
+from .common import FatigueLevel, known_fields, move_secrets
 from .traits import Ability, Characteristics, VirtueFlawInstance, new_instance_id
 from .world import SKETCH, Link
 
@@ -129,10 +129,14 @@ class Creature:
     place_id: str | None = None
     place_level: int = 0
     links: list[Link] = field(default_factory=list)
+    #: What only the storyguide should read: the record's Secrets
+    #: chapter, hidden from players signed in to a hosted copy.
+    secrets: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Creature:
-        d = known_fields(cls, data)
+        # Older saves kept secrets under a heading in the notes.
+        d = move_secrets(known_fields(cls, data), "notes")
         d["characteristics"] = Characteristics.from_dict(d.get("characteristics") or {})
         d["virtues_flaws"] = [
             VirtueFlawInstance(**known_fields(VirtueFlawInstance, vf))

@@ -23,6 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models import new_instance_id
+from ...models.common import split_secrets
 from ...tribunal_packages import hibernia as package
 from ..builder import paragraphs, secrets
 from ..generated import Profile, apply
@@ -627,11 +628,14 @@ RUINS: tuple[tuple[str, str, str, tuple[str, ...], str, int, str, str, str], ...
 
 def _ruins(hibernia: Hibernia) -> None:
     b = hibernia.b
-    for key, name, _province, _near, realm, aura, status, known, summary in RUINS:
+    for key, name, _province, _near, realm, aura, status, known, text in RUINS:
+        # A ruin's text is written with its secrets under their heading.
+        summary, hidden = split_secrets(text)
         hibernia.places[key] = b.place(
             name,
             ruined=True,
             summary=summary,
+            secrets=hidden,
             realm=realm,
             aura=aura,
             status=status,
@@ -903,18 +907,16 @@ def _cu_chonnacht(hibernia: Hibernia) -> None:
         covenant=None,
         house="house_bjornaer",
         age=None,
-        summary=secrets(
-            "An independent Bjornaer magus, a vagrant at law: he belongs to "
-            "no covenant, so he has no vote, no Redcap calls on him and "
-            "nothing he owns is protected by the Code. He is famous for the "
-            "Wizard War between him and Gráinne inghean Uaitéar of Vigil, "
-            "which has never ended though the two have met face to face "
-            "many times, the Tribunal's best example of a War that runs on "
-            "until someone dies, yields or makes a treaty.",
-            "The book says nothing more of him. His heartbeast is assumed "
-            "to be a wolf, from his name (mac tíre is Irish for a wolf, and "
-            "cluasach means big-eared).",
-        ),
+        summary="An independent Bjornaer magus, a vagrant at law: he belongs to "
+        "no covenant, so he has no vote, no Redcap calls on him and "
+        "nothing he owns is protected by the Code. He is famous for the "
+        "Wizard War between him and Gráinne inghean Uaitéar of Vigil, "
+        "which has never ended though the two have met face to face "
+        "many times, the Tribunal's best example of a War that runs on "
+        "until someone dies, yields or makes a treaty.",
+        secrets="The book says nothing more of him. His heartbeast is assumed "
+        "to be a wolf, from his name (mac tíre is Irish for a wolf, and "
+        "cluasach means big-eared).",
     )
 
 

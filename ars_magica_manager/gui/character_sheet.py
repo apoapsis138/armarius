@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Sequence
+from typing import Any
 
 from PySide6.QtCore import QRectF, QSize, QSortFilterProxyModel, Qt
 from PySide6.QtGui import (
@@ -76,6 +77,7 @@ from ..forms import tradition as tradition_forms
 from ..forms import trait as trait_forms
 from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
+from ..forms.secrets import NONE_YET, secrets_form
 from ..markup import escape
 from ..models import (
     CHARGED,
@@ -161,6 +163,7 @@ CHAPTERS = (
     ("Inventory", "combat"),
     ("Planning", "season"),
     ("Diary", "year"),
+    ("Secrets", "secrets"),
 )
 
 #: A status tone's colour (character_sheet.condition).
@@ -332,6 +335,23 @@ def section(
     for widget in widgets:
         column.addWidget(widget)
     return box
+
+
+def secrets_chapter(record: Any, p: Palette, run: Callable[[Command], None]) -> QWidget:
+    """A record's Secrets chapter (forms/secrets.py): what only the
+    storyguide should read, edited through the core's form."""
+    hidden = record.secrets.strip()
+    return scrolling_page(
+        p,
+        section(
+            "Secrets",
+            p,
+            prose(hidden, p)
+            if hidden
+            else text(NONE_YET, p["dim"], serif(12.5, italic=True), wrap=True),
+            edits={"Edit Secrets": lambda: run(secrets_form(record))},
+        ),
+    )
 
 
 def trait_section(
@@ -551,6 +571,7 @@ class CharacterSheet(QWidget):
             "Inventory": self._inventory,
             "Planning": self._planning,
             "Diary": self._diary,
+            "Secrets": lambda: secrets_chapter(character, palette, run),
         }
         for name, concept in CHAPTERS:
             if name in _left_out(character):

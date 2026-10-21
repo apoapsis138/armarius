@@ -10,6 +10,7 @@ from ars_magica_manager import book_packs, packs, sourcebooks, transfer
 from ars_magica_manager.book_packs import builder
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.models import Saga
+from ars_magica_manager.models.common import split_secrets
 from ars_magica_manager.tribunal_packages import normandy as normandy_package
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
 
@@ -26,6 +27,32 @@ def _texts(value) -> list[str]:
     if isinstance(value, list):
         return [t for v in value for t in _texts(v)]
     return []
+
+
+#: The records that keep their secrets apart, and the texts that once
+#: held them under a Secrets heading.
+_SECRET_KEEPERS = {
+    "covenants": ("notes", "summary"),
+    "characters": ("summary",),
+    "neighbours": ("summary",),
+    "tribunals": ("summary", "history"),
+    "creatures": ("notes",),
+}
+
+
+def _secrets_kept(saga: dict) -> int:
+    """How many of the pack's records have secrets, checking that none is
+    left under a heading in the text the players see."""
+    kept = 0
+    for kind, keys in _SECRET_KEEPERS.items():
+        for record in saga[kind]:
+            for key in keys:
+                assert split_secrets(record.get(key) or "")[1] == "", (
+                    record["name"],
+                    key,
+                )
+            kept += bool(record.get("secrets"))
+    return kept
 
 
 def test_the_rhine_pack_holds_the_tribunal_of_1220():
@@ -102,12 +129,11 @@ def test_the_rhine_pack_places_its_covenants_in_the_forests():
             assert level["realm"] in ("Magic", "Faerie", "Divine", "Infernal")
 
 
-def test_the_pack_text_keeps_its_secrets_under_the_heading():
+def test_the_pack_keeps_its_secrets_apart():
     data = book_packs.data(RHINE)
     texts = _texts(data["saga"])
     assert not [t for t in texts if "SECRET" in t]
-    hidden = [t for t in texts if builder.SECRETS + "\n" in t]
-    assert len(hidden) >= 10
+    assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "GotF" and "Creative Commons" in data["source"]
 
 
@@ -262,8 +288,7 @@ def test_the_normandy_pack_holds_the_tribunal_of_1220():
 
 def test_the_normandy_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(NORMANDY)
-    texts = _texts(data["saga"])
-    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "L&L" and "Creative Commons" in data["source"]
 
 
@@ -343,8 +368,7 @@ def test_the_provence_pack_holds_the_tribunal_of_1220():
 
 def test_the_provence_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(PROVENCE)
-    texts = _texts(data["saga"])
-    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "F&F" and "Creative Commons" in data["source"]
 
 
@@ -434,8 +458,7 @@ def test_theban_magi_learn_the_art_in_greek_and_incomers_in_latin():
 
 def test_the_theban_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(THEBAN)
-    texts = _texts(data["saga"])
-    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "TSE" and "Creative Commons" in data["source"]
 
 
@@ -538,8 +561,7 @@ def test_monica_ierne_is_entered_as_the_book_prints_her():
 
 def test_the_transylvania_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(TRANSYLVANIA)
-    texts = _texts(data["saga"])
-    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "AtD" and "Creative Commons" in data["source"]
 
 
@@ -635,8 +657,7 @@ def test_indrechtach_is_entered_as_the_book_prints_him():
 
 def test_the_hibernia_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(HIBERNIA)
-    texts = _texts(data["saga"])
-    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "TCI" and "Creative Commons" in data["source"]
 
 
