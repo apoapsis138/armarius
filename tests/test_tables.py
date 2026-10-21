@@ -135,7 +135,8 @@ def test_seasons_and_planning_match_their_rows():
     covenant = saga.covenants[0]
     for kind in ("magus", "companion", "grog"):
         table = seasons.season_table(saga, covenant, kind)
-        assert len(table.rows) == len(seasons.season_rows(saga, covenant, kind))
+        # The rows have a heading of the seasons.
+        assert len(table.rows) + 1 == len(seasons.season_rows(saga, covenant, kind))
         _square(table)
     lab = saga.laboratories[0]
     table = seasons.lab_queue_table(saga, lab)

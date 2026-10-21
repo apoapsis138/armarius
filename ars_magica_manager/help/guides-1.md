@@ -126,16 +126,16 @@ The laboratory's **Lab work** list works the same way, with its own Types: Inven
 <!-- gui -->
 1. Open the covenant's page and choose **Seasons** in the rail.
 <!-- /gui -->
-2. The **Magi** and **Companions** titles count how many are planned, for example "Magi (2 of 3 planned)". Each row shows what the person has planned, or "nothing planned"; grogs show "updated yearly".
+2. The **Magi** and **Companions** titles count how many are planned this season, for example "Magi (2 of 3 planned)". Each row is a person, with a column for this season and each of the three after it: the activity planned, or "nothing" (this season's in the warning colour). Companions also show **Worked**, their working seasons this year out of two ("1 of 2"). Grogs show "yearly".
 <!-- tui -->
 3. Use Tab to move between the lists and the arrow keys to choose someone. The details panel shows their plan in full.
-4. Press `e` (or `a`) on a magus or companion to plan their season here, or `d` to clear it. Lab work is still planned on the laboratory's Planning tab.
+4. Press `e` (or `a`) on a magus or companion to plan their season here: the form opens on this season, and its **Season** field moves the plan to a season ahead to fill a gap on the board. `d` clears this season's plan. Lab work is still planned on the laboratory's Planning tab.
 
 People marked departed on the Inhabitants tab are left out of this tab and aren't planned.
 <!-- /tui -->
 <!-- gui -->
 3. Click someone. The inspector on the right shows their plan in full.
-4. Click **Plan** to plan a magus's or companion's season here, or **Clear** to clear it. Lab work is still planned on the laboratory's Seasons chapter.
+4. Click **Plan** to plan a magus's or companion's season here: the form opens on this season, and its **Season** field moves the plan to a season ahead to fill a gap on the board. **Clear** clears this season's plan. Lab work is still planned on the laboratory's Seasons chapter.
 
 People marked departed in the Covenfolk chapter are left out of this chapter and aren't planned.
 <!-- /gui -->

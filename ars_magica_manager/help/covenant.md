@@ -460,16 +460,21 @@ inhabitants.
 ## Seasons tab
 <!-- help: tab-cov-seasons -->
 
-The covenant's planning board: everyone at the covenant and what each has
-planned for the current season, in one place. Each title counts how many
-are planned, and the
+The covenant's planning board: everyone at the covenant down the side, and
+the year that can be planned across it (this season and the three after
+it), each cell the activity planned for that season or "nothing" (this
+season's in the warning colour, so a gap that matters now stands out).
+Companions also have **Worked**: their working seasons this year, those in
+their Diary and those planned for the rest of it, out of the two a
+companion owes (Ars Magica Definitive Edition, Chapter 10: Assigning
+Seasons). Each title counts how many are planned this season, and the
 <!-- tui -->
 details panel
 <!-- /tui -->
 <!-- gui -->
 inspector
 <!-- /gui -->
-shows the chosen person's plan in full.
+shows the chosen person's plan in full, then each season ahead.
 People marked departed on the Inhabitants tab are left out.
 <!-- gui -->
 On the desktop, the Seasons chapter also draws a timeline of everyone's
@@ -500,22 +505,27 @@ again at 0. A deficit is never taken from Wealth by itself.
 ### Magi
 <!-- help: section-cov-seasons-magus -->
 
-The covenant's magi, each with what they have planned this season or
-"nothing planned".
+The covenant's magi, each with what they have planned for each season of
+the year ahead, or "nothing".
 <!-- tui -->
 `a` or `e` opens the chosen magus's season plan, the same
-dialog as on their own sheet; `d` clears the plan after asking first.
+dialog as on their own sheet, for this season: its **Season** field plans
+one of the seasons ahead instead. `d` clears this season's plan after
+asking first.
 <!-- /tui -->
 <!-- gui -->
 **Plan** opens the season plan of the magus last clicked, the same form as
-on their own page; **Clear** clears the plan after asking first.
+on their own page, for this season: its **Season** field plans one of the
+seasons ahead instead. **Clear** clears this season's plan after asking
+first.
 <!-- /gui -->
 
 ### Companions
 <!-- help: section-cov-seasons-companion -->
 
 The covenant's companions and Mythic Companions, planned the same way as
-the magi:
+the magi, with **Worked** counting their working seasons this year ("1 of
+2"):
 <!-- tui -->
 `a` or `e` plans the chosen companion's season and `d` clears the
 plan.
@@ -528,8 +538,8 @@ plan.
 ### Grogs
 <!-- help: section-cov-seasons-grog -->
 
-The covenant's grogs. They are not planned season by season but "updated
-yearly":
+The covenant's grogs. They are not planned season by season: the board
+shows "yearly" for their yearly update.
 <!-- tui -->
 `a` or `e`
 <!-- /tui -->

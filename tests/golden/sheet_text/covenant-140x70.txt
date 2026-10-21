@@ -167,19 +167,19 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Magi (0 of 1 planned)
 
-      ○ Leandro                   ☞ nothing planned
+        Name     Spring 1220  Summer 1220  Autumn 1220  Winter 1220
+      ○ Leandro  nothing      nothing      nothing      nothing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Companions (0 of 1 planned)
 
-      ○ Alys                      ☞ nothing planned
+        Name  Spring 1220  Summer 1220  Autumn 1220  Winter 1220  Worked
+      ○ Alys  nothing      nothing      nothing      nothing      0 of 2
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Grogs (0)
 
-      (none recorded)
-
-
+      Nobody here.
 
 
 
@@ -198,7 +198,7 @@
 
 
   ▌
-  ▌  Select someone to see their season.
+  ▌  Select someone to see their seasons.
   ▌
 
 

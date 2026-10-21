@@ -107,6 +107,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.122.0 — 2026-10-21
+
+### Book of Hours
+
+- **The covenant's Seasons board.** A covenant's Seasons tab is now a
+  board for the year: each person down the side, this season and the
+  three after it across, with what each has planned or "nothing", and
+  each companion's working seasons this year ("1 of 2"). The details
+  panel lists the chosen person's seasons ahead.
+
 ## 2.121.0 — 2026-10-21
 
 ### Book of Hours

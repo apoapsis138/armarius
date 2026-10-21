@@ -29,6 +29,7 @@ from .covenant import SEASON_KINDS as SEASON_KINDS
 from .covenant import covenant_people as covenant_people
 from .covenant import covenant_season as covenant_season
 from .covenant import lapsed_resources as lapsed_resources
+from .covenant import season_board as season_board
 from .covenant import season_info_text as season_info_text
 from .covenant import season_rows as season_rows
 from .covenant import season_table as season_table

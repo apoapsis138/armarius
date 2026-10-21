@@ -5,8 +5,9 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from ..grids import Grid
 from ..inhabitants import character_kind
-from ..markup import escape, fit, todo
+from ..markup import escape
 from ..models import (
     SEASONS,
     Character,
@@ -22,7 +23,15 @@ from ..rules import activities as rules
 from ..rules.rounding import round_away_from_zero, round_down
 from ..tables import Table
 from ..world import takes_part_in_play
-from .plans import is_departed, plan_for, plan_summary, plan_text
+from .plans import (
+    is_departed,
+    plan_for,
+    plan_summary,
+    plan_text,
+    planning_year,
+    seasons_ahead,
+    working_seasons_done,
+)
 
 DWINDLING_SOURCE = (
     "Covenants, Chapter Two: Boons & Hooks, Minor Resources Hooks, Dwindling "
@@ -207,8 +216,9 @@ SEASON_KINDS: tuple[tuple[str, str], ...] = (
 )
 
 
-#: Width of the name column in the Seasons lists.
-_NAME_WIDTH = 24
+#: The widest the name and each season's column may be on the Seasons
+#: board, so the year fits the tab at 120 columns.
+_NAME_CAP, _SEASON_CAP = 18, 12
 
 
 def covenant_people(saga: Saga, covenant: Covenant, kind: str) -> list[Character]:
@@ -233,48 +243,84 @@ def season_title(saga: Saga, covenant: Covenant, kind: str, title: str) -> str:
     return f"{title} ({planned} of {len(people)} planned)"
 
 
-def _season_cells(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[str, str]]:
-    """Each person's name and what they have planned for the current
-    season ("Practice: Latin"), or that nothing is (markup)."""
-    cells = []
-    for character in covenant_people(saga, covenant, kind):
-        name = character.name + (
+def _worked(saga: Saga, character: Character) -> str:
+    """ "1 of 2": a companion's working seasons this year, those in the
+    Diary and those planned for the rest of it."""
+    year = saga.current_year
+    done = working_seasons_done(character, year, saga.current_season)
+    for season in SEASONS[SEASONS.index(saga.current_season) :]:
+        plan = plan_for(saga, character, season, year)
+        activity = rules.ACTIVITIES.get(plan.activity) if plan else None
+        if activity is not None and activity.working:
+            done += 1
+    return f"{done} of {rules.WORKING_SEASONS_PER_YEAR}"
+
+
+def season_board(saga: Saga, covenant: Covenant, kind: str) -> Grid:
+    """People of `kind` down and the year to plan across (this season and
+    the three after it), each cell the activity planned or "nothing";
+    companions also count their working seasons this year. A grog's
+    yearly update covers the year."""
+    year = planning_year(saga)
+    companions = kind == "companion"
+    columns = ["Name", *(f"{season} {y}" for season, y in year)]
+    if companions:
+        columns.append("Worked")
+    rows: list[list[str]] = []
+    styles: dict[tuple[int, int], str] = {}
+    for row, character in enumerate(covenant_people(saga, covenant, kind)):
+        name = (character.name or "(unnamed)") + (
             " (Mythic)" if character.type == "mythic companion" else ""
         )
+        cells = [name]
         if not rules.is_planned(character):
-            what = "[dim]updated yearly[/]"
+            cells += ["yearly", *([""] * (len(year) - 1))]
         else:
-            plan = plan_for(saga, character)
-            what = (
-                escape(plan_summary(saga, character, plan))
-                if plan is not None
-                else todo("nothing planned")
-            )
-        cells.append((name, what))
-    return cells
+            for column, (season, y) in enumerate(year, start=1):
+                plan = plan_for(saga, character, season, y)
+                activity = rules.ACTIVITIES.get(plan.activity) if plan else None
+                if plan is None:
+                    cells.append("nothing")
+                    styles[(row, column)] = "$text-warning" if column == 1 else "dim"
+                else:
+                    cells.append(activity.label if activity else plan.activity)
+        if companions:
+            cells.append(_worked(saga, character))
+        rows.append(cells)
+    return Grid(
+        columns,
+        rows,
+        list(range(len(rows))),
+        "Nobody here.",
+        styles,
+        caps=[_NAME_CAP, *([_SEASON_CAP] * len(year)), 6],
+    )
 
 
-def season_rows(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[int, str]]:
-    """(index, row) per person: their name and what they have planned for
-    the current season ("Practice: Latin"), or that nothing is."""
-    return [
-        (index, f"{escape(fit(name, _NAME_WIDTH).ljust(_NAME_WIDTH))}  {what}")
-        for index, (name, what) in enumerate(_season_cells(saga, covenant, kind))
-    ]
+def season_rows(
+    saga: Saga, covenant: Covenant, kind: str
+) -> list[tuple[int | None, str]]:
+    """The Seasons board as a list's rows (season_board): a heading of the
+    seasons, then a row per person."""
+    return season_board(saga, covenant, kind).lines()
 
 
 def season_table(saga: Saga, covenant: Covenant, kind: str) -> Table:
-    """season_rows as a table (markup): each person and their season."""
-    return Table(
-        ["Name", "This season"],
-        [[escape(name), what] for name, what in _season_cells(saga, covenant, kind)],
-        markup=True,
-        stretch=1,
-    )
+    """season_board as a table (markup)."""
+    return season_board(saga, covenant, kind).table()
 
 
 def season_info_text(saga: Saga, character: Character | None) -> str:
     """The Seasons tab's details panel for the chosen person."""
     if character is None:
-        return "[dim]Select someone to see their season.[/]"
-    return f"[b]{escape(character.name)}[/]\n" + plan_text(saga, character)
+        return "[dim]Select someone to see their seasons.[/]"
+    text = f"[b]{escape(character.name)}[/]\n" + plan_text(saga, character)
+    if not rules.is_planned(character):
+        return text
+    ahead = [
+        f"{season} {year}: "
+        + (escape(plan_summary(saga, character, plan)) if plan else "[dim]nothing[/]")
+        for season, year in seasons_ahead(saga)
+        for plan in [plan_for(saga, character, season, year)]
+    ]
+    return text + "\n\n[$label]Seasons ahead[/]\n" + "\n".join(ahead)

@@ -578,10 +578,17 @@ def test_seasons_lists_the_covenants_people_by_kind():
             for _, label in seasons.season_rows(saga, covenant, kind)
         ]
 
-    assert [r.split() for r in rows("magus")] == [["Leandro", "Practice:", "Latin"]]
-    assert rows("companion")[0].endswith("nothing planned")
-    assert rows("companion")[1].startswith("Wode (Mythic)")
-    assert rows("grog")[0].endswith("updated yearly")
+    # A heading of the year's seasons, then a row per person.
+    assert rows("magus")[0].split()[:3] == ["Name", "Spring", "1220"]
+    assert rows("magus")[1].split() == [
+        "Leandro", "Practice", "nothing", "nothing", "nothing",
+    ]  # fmt: skip
+    assert rows("companion")[0].split()[-1] == "Worked"
+    assert rows("companion")[1].split()[1:] == [
+        "nothing", "nothing", "nothing", "nothing", "0", "of", "2",
+    ]  # fmt: skip
+    assert rows("companion")[2].startswith("Wode (Mythic)")
+    assert rows("grog")[1].split()[1:] == ["yearly"]
     assert (
         seasons.season_title(saga, covenant, "magus", "Magi") == "Magi (1 of 1 planned)"
     )
@@ -633,7 +640,7 @@ async def test_plan_a_season_from_the_covenant_seasons_tab():
         await pilot.pause()
         rows = view.query_one("#cov-seasons-companion-list")
         text = " ".join(str(o.prompt) for o in rows.options)
-        assert "Other: Visiting family" in text
+        assert "Alys  Other" in text and "0 of 2" in text
     saga = storage.load_saga("test_saga")
     assert [p.details for p in saga.season_plans] == ["Visiting family"]
 
