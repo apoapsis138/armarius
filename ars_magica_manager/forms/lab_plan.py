@@ -56,6 +56,7 @@ from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons, spell_levels
 from ..rules import laboratory_seasons as ls
 from ..seasons import pairs as paired_plans
+from ..seasons.projection import as_then
 from . import activity as activity_forms
 from . import spell as spell_forms
 
@@ -1120,18 +1121,28 @@ class LabPlanForm:
     # -- the line above Schedule ------------------------------------------
 
     def live(self, values: dict[str, Any]) -> str:
-        """The design's level, the Lab Total and when the work is done."""
+        """The design's level, the Lab Total and when the work is done,
+        for a season ahead from the magus and laboratory as the seasons
+        planned before it leave them."""
         plan = self.plan_of(values)
-        with paired_plans.in_place(self.saga, self.magus, plan):
-            return self._live(plan)
+        then, magus = as_then(self.saga, self.magus, plan.season, plan.year)
+        with paired_plans.in_place(then, magus, plan):
+            return self._live(then, magus, plan)
 
-    def _live(self, plan: SeasonPlan) -> str:
+    def work_of(self, plan: SeasonPlan) -> lab_seasons.LabWork | None:
+        """What the plan does (its Lab Total and progress), for a season
+        ahead from the magus as the seasons planned before it leave them."""
+        then, magus = as_then(self.saga, self.magus, plan.season, plan.year)
+        with paired_plans.in_place(then, magus, plan):
+            return lab_seasons.work(then, magus, plan)[1]
+
+    def _live(self, saga: Saga, magus: Character, plan: SeasonPlan) -> str:
         if not plan.activity:
             return "[dim]Choose the lab work.[/]"
         parts: list[str] = []
         if plan.design is not None:
             parts.append(level_text(plan.design))
-        _, work = lab_seasons.work(self.saga, self.magus, plan)
+        _, work = lab_seasons.work(saga, magus, plan)
         if work is None:
             parts.append("[b]Lab Total[/] [dim]--[/]")
         elif not work.lab_total.lines:
@@ -1149,7 +1160,7 @@ class LabPlanForm:
                 f"[dim]({', '.join(terms)})[/]"
             )
             parts.append(" ".join(self.when_lines(plan, work)))
-        problems = season_rules.problems(self.magus, plan, self.saga)
+        problems = season_rules.problems(magus, plan, saga)
         if problems:
             parts.append(f"[$text-error]{escape(problems[0])}[/]")
         return "\n".join(p for p in parts if p)

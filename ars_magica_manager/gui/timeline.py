@@ -106,7 +106,11 @@ class SeasonDelegate(QStyledItemDelegate):
                 pill.adjusted(3, 0, -3, 0),
                 Qt.AlignmentFlag.AlignCenter,
                 painter.fontMetrics().elidedText(
-                    season.label, Qt.TextElideMode.ElideRight, round(pill.width()) - 6
+                    f"{season.label} · {season.result}"
+                    if season.result
+                    else season.label,
+                    Qt.TextElideMode.ElideRight,
+                    round(pill.width()) - 6,
                 ),
             )
         if option.state & QStyle.StateFlag.State_Selected:  # type: ignore[attr-defined]
@@ -235,6 +239,8 @@ def season_text(season: ov.Season | None) -> str:
         return "[dim]Nothing recorded or planned.[/]"
     state = "Planned" if season.planned else "Done"
     lines = [f"[b]{season.label}[/]", f"[$label]{season.kind}  ·  {state}[/]"]
+    if season.result:
+        lines.append(f"Expected: {season.result}")
     if season.detail:
         lines += ["", markdown_text(season.detail)]
     return "\n".join(lines)
@@ -265,7 +271,13 @@ class Calendar(QWidget):
                 cell.setEditable(False)
                 if season is not None:
                     cell.setData(season, SEASON)
-                    cell.setToolTip(f"{season.label}\n{season.detail}".strip())
+                    cell.setToolTip(
+                        "\n".join(
+                            part
+                            for part in (season.label, season.result, season.detail)
+                            if part
+                        )
+                    )
                 model.setItem(row, i, cell)
         view = QTableView()
         view.setModel(model)

@@ -183,6 +183,8 @@ SEASONS_RECORDED_SECTION = "section-seasons-recorded"
 COV_AHEAD_SECTION = "section-cov-ahead"
 #: A character's Planning tab: the seasons after the current one.
 CHAR_AHEAD_SECTION = "section-char-ahead"
+#: A character's Planning tab: their seasons as a calendar, a year a line.
+CHAR_CALENDAR_SECTION = "section-char-calendar"
 WORLD_TURNS_SECTION = "section-world-turns"
 #: A Tribunal's meeting being held (or the next): its order of
 #: business, who is in the hall, and the vote on the case in hand.

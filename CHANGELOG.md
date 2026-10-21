@@ -107,6 +107,22 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.121.0 — 2026-10-21
+
+### Book of Hours
+
+- **Seasons ahead count the seasons before them.** A season ahead is
+  now worked out from the character as the seasons planned before it
+  will leave them: a summa read in Spring counts in Summer's Lab Total,
+  and a second season on the same book starts where the first leaves
+  off. A season whose die isn't rolled yet counts as nothing gained, and
+  the seasons after it say so.
+- **A calendar of each character's seasons.** Each character has a
+  calendar of their seasons, a year a line: in the terminal a new
+  Calendar section on the Planning tab, on the desktop the Diary's
+  Seasons calendar. Each planned season shows what it's expected to
+  give, such as "Ignem 7 (+15 xp)".
+
 ## 2.120.0 — 2026-10-21
 
 ### Gauntlet

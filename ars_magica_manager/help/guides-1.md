@@ -57,7 +57,7 @@ Highlight one and press `e` to plan it the same way (`a` plans the first free on
 <!-- gui -->
 Click one and **Edit** to plan it the same way (**Plan** plans the first free one, **Clear** clears one).
 <!-- /gui -->
-The form's **Season** field moves a plan to another season of the year. A season ahead's gains are worked out from the character as they stand now. See [Seasons Ahead](help:section-char-ahead).
+The form's **Season** field moves a plan to another season of the year. A season ahead's gains are worked out from the character as the seasons planned before it will leave them. See [Seasons Ahead](help:section-char-ahead).
 
 To plan long work in one go, set the form's **For**. **Until it's done** plans reading a summa up to its Level, or writing, copying or translating a book, for every season it needs; **2 seasons** to **4 seasons** repeats any plan. When the season is advanced, Advance Season asks whether anything interrupted the work, and then works out again how many seasons it still needs. See [For several seasons](help:plan-season-repeat).
 

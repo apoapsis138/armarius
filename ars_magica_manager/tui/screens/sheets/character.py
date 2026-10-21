@@ -20,6 +20,7 @@ from .... import casting_text, seasons, tradition_text, traditions
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
+from .... import saga_overview as ov
 from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
@@ -35,6 +36,7 @@ from ....models import (
 from ....rules import activities as season_rules
 from ....rules import creation_virtues as cv
 from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
+from ....sections import CHAR_CALENDAR_SECTION as CALENDAR_SECTION
 from ....sheets import character as cs
 from ....traditions import tradition_list, tradition_section, tradition_tab
 from ..widgets import (
@@ -91,7 +93,8 @@ class CharacterSheetView(SheetView):
       data), Books.
     - Planning (tab, id "tab-planning", every character type): This Season,
       the season's plan and what it will give; a grog's
-      says grogs are updated yearly.
+      says grogs are updated yearly. Then the Seasons Ahead and the
+      Calendar, a line per year, each planned season with its result.
     - Diary (tab, id "tab-diary", every character type): a flat pane like
       the laboratory's Diary -- the entries written as seasons are applied
       (editable), with the details panel docked below. In
@@ -367,6 +370,23 @@ class CharacterSheetView(SheetView):
                     self.saga, self.character, self.selected_season_ahead()
                 ),
                 id=AHEAD_INFO,
+            )
+        calendar = SheetSection(
+            title="Calendar",
+            id=CALENDAR_SECTION,
+        )
+        calendar.display = season_rules.is_planned(self.character)
+        self._on_refresh_matching(
+            lambda _section: True,
+            lambda: setattr(
+                calendar, "display", season_rules.is_planned(self.character)
+            ),
+        )
+        with calendar:
+            yield self._static(
+                (*planned, "tab-diary", CALENDAR_SECTION),
+                lambda: ov.calendar_text(self.saga, self.character),
+                id="char-calendar-content",
             )
 
     def selected_season_ahead(self) -> int | None:

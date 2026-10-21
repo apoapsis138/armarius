@@ -50,7 +50,7 @@ def test_the_seasons_ahead_run_to_a_full_year():
     rows = [text for _, text in seasons.ahead_rows(saga, magus)]
     assert rows[0].endswith("nothing planned")
     assert rows[1].startswith("Spring 1221") and "Practice" in rows[1]
-    assert "as they stand now" in seasons.ahead_info(saga, magus, 1)
+    assert "as the seasons planned before it" in seasons.ahead_info(saga, magus, 1)
 
 
 def test_the_ops_plan_change_and_clear_a_season_ahead():

@@ -937,7 +937,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
 
     def _show_lab_total(self, plan: SeasonPlan) -> None:
         """The work's Lab Total, line by line, and when it is done."""
-        _, work = lab_seasons.work(self.saga, self.magus, plan)
+        work = self.form.work_of(plan)
         total, when = (
             self.query_one("#inv-total", Static),
             self.query_one("#inv-when", Static),

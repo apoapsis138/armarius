@@ -842,9 +842,11 @@ and what each will give them, before the season is applied.
 **You type:** the season's activity and its details. Lab work is planned on
 the laboratory's Planning tab instead.
 
-**The app works out:** the XP and other gains the plan will give, from the
-character as they stand now, with any problem with the plan shown in red
-(Ars Magica Definitive Edition, Chapter 10: Long-Term Events).
+**The app works out:** the XP and other gains the plan will give, with any
+problem with the plan shown in red (Ars Magica Definitive Edition, Chapter
+10: Long-Term Events). This season is worked out from the character as they
+stand now; a season ahead from the character as the seasons planned before
+it will leave them (see [Seasons Ahead](help:section-char-ahead)).
 
 A grog is not planned season by season: the tab sets up the grog's yearly
 update instead, applied in Winter.
@@ -894,10 +896,29 @@ Click a season to see its plan and what it will give under the list.
 **Edit** plans it or changes its plan, **Plan** plans the first season with
 nothing planned, and **Clear** clears the chosen season's plan after asking.
 <!-- /gui -->
-What a season ahead will give is worked out from the character as they
-stand now; the seasons before it are not counted. Lab work in a season
-ahead is planned on the laboratory's Planning tab, as for this season. A
-grog has no Seasons Ahead: their yearly update covers the year.
+What a season ahead will give is worked out from the character as the
+seasons planned before it will leave them: the app plays the planned
+seasons forward on a copy of the saga, so the xp, books read, vis spent
+and lab work of the earlier seasons count, and the copy is thrown away.
+The details say so under the plan. A season whose die isn't rolled yet
+(study from vis, an experiment) counts as gaining nothing, and the seasons
+after it say "Counts nothing gained from ...". The year's end (aging, a
+grog's year, the covenant's harvests) and the seasons nobody planned are
+not counted. Lab work in a season ahead is planned on the laboratory's
+Planning tab, as for this season. A grog has no Seasons Ahead: their
+yearly update covers the year.
+
+### Calendar
+<!-- help: section-char-calendar; tui -->
+
+The character's seasons as a calendar: a line per year, newest first, from
+three years ago to the last season planned, with Spring, Summer, Autumn
+and Winter across. A season already played shows its Diary entry's
+activity; a planned one is in italics, with what it is expected to give
+on the line under it ("Ignem 7 (+15 xp)": the score it leaves, "8/15
+points", "die not rolled"), worked out as the Seasons Ahead are. The current season is
+in bold. The calendar only shows: plan or change a season in This Season
+or Seasons Ahead above it.
 
 ## Diary tab
 <!-- help: tab-diary -->
@@ -907,8 +928,11 @@ A record of the character's seasons, in one list with a details panel.
 <!-- /tui -->
 <!-- gui -->
 A record of the character's seasons. Seasons at the top is a calendar, a
-row per year, of what the character did each season; clicking one shows it
-in the inspector. The Diary below lists the entries.
+row per year, of what the character did each season and plans to do: a
+planned season (a dashed outline) also says what it is expected to give,
+worked out from the seasons planned before it as for the
+[Seasons Ahead](help:section-char-ahead). Clicking one shows it in the
+inspector. The Diary below lists the entries.
 <!-- /gui -->
 
 **You type:** entries of your own, with a year, season, activity and notes;

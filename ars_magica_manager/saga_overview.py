@@ -8,10 +8,11 @@ Plain values rather than markup, so a front-end gives each its own type.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from . import catalog, places, tribunal_packages, tribunals, world
 from . import laboratories as labs
+from .markup import escape, fit
 from .models import (
     COMPANION_TYPES,
     SEASONS,
@@ -24,6 +25,8 @@ from .models import (
 from .rules import activity_groups as groups
 from .rules.activities import ACTIVITIES
 from .rules.activities import OTHER as OTHER_KEY
+from .seasons.plans import result_text
+from .seasons.projection import projection
 from .sheets import character as cs
 
 #: The groups a covenant's people are shown in, in order, by type.
@@ -250,6 +253,9 @@ class Season:
     label: str
     detail: str
     planned: bool
+    #: A planned season's result in a few words, worked out from the
+    #: seasons planned before it ("" when not worked out).
+    result: str = ""
 
 
 def _when(season: str, year: int) -> int:
@@ -333,8 +339,58 @@ def timeline(saga: Saga, characters: Sequence[Character]) -> Timeline:
 def calendar(saga: Saga, character: Character) -> list[tuple[int, list[Season | None]]]:
     """One character's seasons as a calendar: a row per year, newest
     first, from their first recorded season (or this year) to the last
-    planned, each with its four seasons."""
-    return calendar_rows(saga, character_seasons(saga, character))
+    planned, each with its four seasons; a planned one with its result,
+    worked out from the seasons planned before it."""
+    found = character_seasons(saga, character)
+    ahead = projection(saga)
+    for when, season in found.items():
+        if season.planned:
+            name, year = _at(when)
+            worked = ahead.outcome(character.id, name, year)
+            if worked is not None:
+                found[when] = replace(
+                    season, result=result_text(saga, character, worked)
+                )
+    return calendar_rows(saga, found)
+
+
+def calendar_text(saga: Saga, character: Character, years: int = 3) -> str:
+    """The calendar as text (markup) for the terminal: a line per year,
+    newest first, the year's four seasons across, each the activity
+    (italic while only planned, bold for the current season) and, under
+    it, a planned season's result; the years with plans and the `years`
+    before this one."""
+    now = (saga.current_season, saga.current_year)
+    rows = [
+        (year, row)
+        for year, row in calendar(saga, character)
+        if year >= saga.current_year - years
+    ]
+    lines = ["      " + "".join(f"[b]{_cell(s)}[/]" for s in SEASONS)]
+    for year, row in rows:
+        tops, bottoms = [], []
+        for name, season in zip(SEASONS, row, strict=True):
+            words = escape(_cell(season.label if season else "-"))
+            if season is not None and season.planned:
+                words = f"[i]{words}[/]"
+            if (name, year) == now:
+                words = f"[b]{words}[/]"
+            tops.append(words)
+            result = season.result if season else ""
+            bottoms.append(f"[dim]{escape(_cell(result))}[/]")
+        lines.append(f"[b]{year}[/]  " + "".join(tops))
+        if any(season is not None and season.result for season in row):
+            lines.append("      " + "".join(bottoms))
+    return "\n".join(lines)
+
+
+#: A season's column in the terminal's calendar: four, after the year,
+#: fit the Planning tab at 120 columns (76 wide).
+CALENDAR_WIDTH = 17
+
+
+def _cell(words: str) -> str:
+    return fit(words, CALENDAR_WIDTH - 1) + " "
 
 
 def lab_seasons(saga: Saga, lab: Laboratory) -> dict[int, Season]:

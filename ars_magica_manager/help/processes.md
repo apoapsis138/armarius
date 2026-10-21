@@ -12,7 +12,7 @@ Grogs aren't planned season by season; they have a [yearly update](help:grog-yea
 
 **You type:** the **Season** (the one it was opened for; choose another of the year ahead to move the plan there), the Activity, chosen from a list you can filter by Type and Book (see [Choosing the activity](help:plan-season-activity)), then the fields that activity needs (what the experience goes into, a book, a teacher, a Source Quality, a die roll), months lost to distractions, Notes, and **For**: this season only, until the work is done, or a number of seasons (see [For several seasons](help:plan-season-repeat)).
 
-**The app works out:** what the season will give, from the character and the saga as they stand now, shown on the line above Save as you fill the form in. For a season ahead it is still worked out from the character as they stand now: the seasons in between are not counted. A season that already has a plan can't be chosen for another one: change that plan, or clear it first.
+**The app works out:** what the season will give, from the character and the saga as they stand now, shown on the line above Save as you fill the form in. For a season ahead it is worked out from the character as the seasons planned before it will leave them, as the [Seasons Ahead](help:section-char-ahead) are, with a die not rolled yet counted as nothing gained. A season that already has a plan can't be chosen for another one: change that plan, or clear it first.
 
 ### For several seasons
 <!-- help: plan-season-repeat -->
@@ -25,7 +25,7 @@ Grogs aren't planned season by season; they have a [yearly update](help:grog-yea
 
 Choosing For again on a season of a longer plan replaces the seasons planned after it. Clearing the first season asks whether to clear the later ones too.
 
-What each later season gives is worked out from the character as they stand now, as for any season ahead. See [Interruptions](help:advance-interrupted) for how a season is marked interrupted.
+What each later season gives is worked out from the character as the seasons before it will leave them, as for any season ahead. See [Interruptions](help:advance-interrupted) for how a season is marked interrupted.
 
 ### Paired plans
 <!-- help: plan-season-pairs -->

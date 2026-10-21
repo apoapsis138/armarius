@@ -694,6 +694,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-char-calendar": {
+      "active": "section-char-calendar",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "TabPane#tab-diary": {
       "active": "tab-diary",
       "keys": {

@@ -442,11 +442,11 @@
       ○ Winter 1220   nothing planned
       Choose a season to see its plan. Press e to plan it.
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Calendar
 
-
-
-
-
+            Spring           Summer           Autumn           Winter
+      1220  -                -                -                -
 
 
 

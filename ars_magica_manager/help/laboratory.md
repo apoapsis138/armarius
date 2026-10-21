@@ -107,7 +107,10 @@ scheduled to continue it, after asking.
 **The app works out:** whether each plan can be done (a row that can't says
 so in red, and the details panel says why), the Lab Total of each plan line
 by line in the details panel, and the progress of work that takes several
-seasons. The laboratory needs a magus as its owner before anything can be
+seasons. A season ahead is worked out from the magus and laboratory as the
+seasons planned before it will leave them: an Art raised by an earlier
+season's study raises a later Lab Total, and an invention's points carry
+on. The laboratory needs a magus as its owner before anything can be
 planned.
 <!-- /tui -->
 <!-- gui -->
@@ -127,8 +130,11 @@ Longevity Ritual's Lab Text (see [Lab Texts](help:section-lab-texts)).
 **The app works out:** whether each plan can be done (a row that can't says
 so in red, and the inspector says why when it is clicked), the Lab Total of
 each plan line by line in the inspector, and the progress of work that
-takes several seasons. The laboratory needs a magus as its owner before
-anything can be planned.
+takes several seasons. A season ahead is worked out from the magus and
+laboratory as the seasons planned before it will leave them: an Art raised
+by an earlier season's study raises a later Lab Total, and an invention's
+points carry on. The laboratory needs a magus as its owner before anything
+can be planned.
 <!-- /gui -->
 
 **See also:** [Invent Spell screen](help:invent-spell),

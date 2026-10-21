@@ -76,6 +76,21 @@ Grogs aren't planned season by season. On a grog's Planning tab, `e` sets up the
 Grogs aren't planned season by season. In a grog's Planning chapter, **Yearly Update** sets up their [yearly update](help:grog-year), applied in Winter.
 <!-- /gui -->
 
+### Seasons ahead
+<!-- help: guide-advancement-ahead -->
+
+A plan for a season ahead is worked out from the character as the seasons planned before it will leave them. The app copies the saga, plays each planned season on the copy as Advance Season would (every plan's outcome first, then each applied), and reads the later season from the copy; the copy is then thrown away, so nothing in the saga changes. So a magus who reads an Ignem summa in Spring and invents an Ignem spell in Summer sees the Summer's Lab Total with the higher Ignem, and a second season on the same summa starts from the xp the first leaves.
+
+- **Where it shows**: the details under [Seasons Ahead](help:section-char-ahead), the line above Save in [Plan Season](help:plan-season) for a season ahead, the laboratory's [Planning tab](help:tab-lab-planning) and its lab work form, and the character's calendar, where each planned season says what it is expected to give.
+<!-- tui -->
+- **The calendar** is the [Calendar](help:section-char-calendar) section at the bottom of the character's Planning tab.
+<!-- /tui -->
+<!-- gui -->
+- **The calendar** is Seasons, at the top of the character's [Diary](help:tab-diary): a planned season's pill gives its expected result after its activity, and clicking it shows it in the inspector.
+<!-- /gui -->
+- **A die not rolled yet** (study from vis, an experiment, a search) counts as gaining nothing. The seasons after it say "Counts nothing gained from ...: the die isn't rolled yet." Once the season is played, the later ones are worked out again from what it really gave.
+- **Not counted**: the year's end (aging, a grog's year, the covenant's harvests and upkeep), anything the storyguide adds, and seasons nobody planned (the saga's [default](help:advance-unplanned) for them is only filled in when the season is advanced).
+
 ### When the season is advanced
 <!-- help: guide-advancement-applying -->
 
@@ -175,7 +190,7 @@ A magus with no laboratory yet starts one from their own sheet: on their Plannin
 
 1. In the tree, open the covenant's Laboratories group and choose the laboratory. Press `1` for the [Planning tab](help:tab-lab-planning).
 2. The list shows the owner's seasons from the current one on: each planned activity with the seasons it spans and its progress, the free seasons in between, and the first free season after the last plan. A season planned on the owner's own sheet is marked "on (name)'s sheet"; planning lab work there replaces it.
-3. Highlight a season. The details panel shows its plan and its Lab Total line by line, or, in red, why it can't be done.
+3. Highlight a season. The details panel shows its plan and its Lab Total line by line, or, in red, why it can't be done. A later season's Lab Total counts the seasons planned before it: a season reading an Ignem summa first raises the Ignem in a later invention's total (see [Seasons ahead](help:guide-advancement-ahead)).
 4. Press `e` to plan lab work for that season (or reopen the plan there), `a` to start inventing a new spell from a blank design, or `d` to clear the season's plan, with any later seasons scheduled to continue it, after a confirmation.
 <!-- /tui -->
 <!-- gui -->
@@ -185,7 +200,7 @@ A magus with no laboratory yet starts one from their own page: in their Planning
 
 1. On the covenant's page, choose **Laboratories** in the rail and click the laboratory. Choose **Seasons** in its rail: the [Planning](help:tab-lab-planning) list is at the top.
 2. The list shows the owner's seasons from the current one on: each planned activity with the seasons it spans and its progress, the free seasons in between, and the first free season after the last plan. A season planned on the owner's own sheet is marked "on (name)'s sheet"; planning lab work there replaces it.
-3. Click a season. The inspector on the right shows its plan and its Lab Total line by line, or, in red, why it can't be done.
+3. Click a season. The inspector on the right shows its plan and its Lab Total line by line, or, in red, why it can't be done. A later season's Lab Total counts the seasons planned before it: a season reading an Ignem summa first raises the Ignem in a later invention's total (see [Seasons ahead](help:guide-advancement-ahead)).
 4. Click **Plan** to plan lab work for that season (or reopen the plan there), **New Spell** to start inventing a new spell, or **Clear** to clear the season's plan, with any later seasons scheduled to continue it, after a confirmation.
 <!-- /gui -->
 

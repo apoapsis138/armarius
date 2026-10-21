@@ -35,6 +35,7 @@ from ..rules import laboratory_seasons as ls
 from ..tables import Table
 from . import pairs
 from .plans import plan_for, plan_summary, schedule, set_plan, work_text
+from .projection import projection
 
 #: How many seasons the laboratory's Planning tab shows, the current first.
 QUEUE_LENGTH = 4
@@ -80,8 +81,10 @@ class QueueRow:
 def lab_queue(saga: Saga, lab: Laboratory) -> list[QueueRow]:
     """The owner's scheduled activities from this season on, one row each
     with the seasons it spans; seasons with nothing planned in between,
-    and the first free season after the last. An invention's points carry
-    from season to season, so each row shows where it will stand."""
+    and the first free season after the last. Each row's work is worked
+    out from the saga as the seasons before it leave it (projection.py):
+    an invention's points carry on, and a higher Art raises the Lab
+    Total."""
     owner = saga.character(lab.owner_id)
     if owner is None:
         return [QueueRow(saga.current_season, saga.current_year, None)]
@@ -95,18 +98,15 @@ def lab_queue(saga: Saga, lab: Laboratory) -> list[QueueRow]:
         default=-1,
     )
     rows: list[QueueRow] = []
-    carried: dict[str, int] = {}
+    ahead = projection(saga)
     for season, year in seasons_[: last + 2]:
         plan = plan_for(saga, owner, season, year)
         work = None
         found: list[str] = []
         if plan is not None and plan.lab_id:
-            found, work = lab_seasons.work(saga, owner, plan)
-            if work is not None and plan.activity in lab_seasons.MULTI_SEASON:
-                key = project_key(plan) or ""
-                work.points_before = carried.get(key, work.points_before)
-                work.finished = work.points_after >= work.level
-                carried[key] = work.points_after
+            found, work = ahead.work(owner.id, season, year) or lab_seasons.work(
+                saga, owner, plan
+            )
         previous = rows[-1] if rows else None
         if (
             previous is not None

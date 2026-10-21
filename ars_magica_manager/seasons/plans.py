@@ -27,6 +27,7 @@ from ..rules import xp as xp_rules
 from ..rules.rounding import round_up
 from ..tables import Table
 from ..world import takes_part_in_play
+from .projection import projection, unrolled_text
 
 
 def plan_for(
@@ -442,6 +443,32 @@ def _gain_line(gain: rules.XpGain, names: dict[str, str]) -> str:
     )
 
 
+def result_text(saga: Saga, character: Character, worked: rules.Outcome) -> str:
+    """A season's result in a few words, for a calendar cell: "Ignem 7
+    (+15 xp)" (the score it leaves), "8/15 points", "die not rolled"
+    (plain text)."""
+    if worked.problems:
+        return "can't be done"
+    if worked.pending_roll:
+        return "die not rolled"
+    work = worked.lab_work
+    if work is not None:
+        if work.finished:
+            return "finished"
+        return f"{work.points_after}/{work.level} points" if work.level else ""
+    names = spell_names(saga, character)
+    parts = []
+    for gain in worked.gains:
+        if gain.result.xp:
+            factor = rules.subject_factor(gain.subject)
+            score = xp_rules.score_from_xp(gain.after, factor)
+            parts.append(
+                f"{rules.subject_label(gain.subject, names)} {score} "
+                f"(+{gain.result.xp} xp)"
+            )
+    return ", ".join(parts)
+
+
 #: How many seasons after the current one a character's plans reach: with
 #: the current season, a full year.
 AHEAD = 3
@@ -501,19 +528,25 @@ def ahead_info(
     saga: Saga, character: Character, index: int | None, how: str = "Press e"
 ) -> str:
     """The chosen season ahead's plan and what it will give, worked out
-    from the character as they stand now (the seasons before it are not
-    counted). `how` says how to plan a free season."""
+    from the character as the seasons planned before it leave them
+    (projection.py). `how` says how to plan a free season."""
     ahead = seasons_ahead(saga)
     if index is None or not 0 <= index < len(ahead):
         return f"[dim]Choose a season to see its plan. {how} to plan it.[/]"
     season, year = ahead[index]
-    text = _plan_text(saga, character, f"{how} to plan it.", season, year)
+    worked = projection(saga).outcome(character.id, season, year)
+    text = _plan_text(saga, character, f"{how} to plan it.", season, year, worked)
     if plan_for(saga, character, season, year) is None:
         return text
-    return (
-        f"{text}\n[dim]Worked out from {escape(character.name)} as they stand "
-        "now, before the seasons in between.[/]"
-    )
+    lines = [
+        text,
+        f"[dim]Worked out from {escape(character.name)} as the seasons planned "
+        "before it will leave them.[/]",
+    ]
+    unrolled = unrolled_text(saga, character.id, season, year)
+    if unrolled:
+        lines.append(todo(escape(unrolled)))
+    return "\n".join(lines)
 
 
 def plan_text(
@@ -535,13 +568,17 @@ def _plan_text(
     how: str,
     season: str | None = None,
     year: int | None = None,
+    worked: rules.Outcome | None = None,
 ) -> str:
+    """The plan's text and what it gives: `worked` (a projection's
+    outcome) when given, else worked out from the character now."""
     plan = plan_for(saga, character, season, year)
     if plan is None:
         season = season or saga.current_season
         year = saga.current_year if year is None else year
         return f"[dim]Nothing planned for {season} {year}. {how}[/]"
-    worked = rules.outcome(character, plan, saga)
+    if worked is None:
+        worked = rules.outcome(character, plan, saga)
     lines = [f"[b]{escape(plan_summary(saga, character, plan))}[/]"]
     names = spell_names(saga, character)
     lines += [f"  {escape(_gain_line(g, names))}" for g in worked.gains]

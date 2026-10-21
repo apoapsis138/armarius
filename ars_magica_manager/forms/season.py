@@ -43,6 +43,7 @@ from ..rules import (
 from ..rules import supplement_work as sw
 from ..seasons import pairs, repeat
 from ..seasons import plans as season_plans_text
+from ..seasons.projection import as_then
 from . import activity as activity_forms
 from . import virtue as virtue_forms
 
@@ -1281,7 +1282,7 @@ def _when_field(
         when_value(opened),
         options=options,
         hint="This season or one up to a year ahead. A later season is worked "
-        "out from the character as they stand now.",
+        "out from the character as the seasons planned before it leave them.",
     )
 
 
@@ -1378,8 +1379,9 @@ def season_plan_live(
     """The line above Save: what the season will give, worked out as the
     form is filled in."""
     plan = season_plan_from(saga, character, values, existing, when)
-    with pairs.in_place(saga, character, plan):
-        text = seasons.live_text(saga, character, plan)
+    then, who = as_then(saga, character, plan.season, plan.year)
+    with pairs.in_place(then, who, plan):
+        text = seasons.live_text(then, who, plan)
     made = pairs.to_make(saga, character, plan)
     if made:
         text += f"\nAlso plans {escape(pairs.names(saga, made))}'s season."
