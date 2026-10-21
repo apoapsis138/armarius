@@ -107,6 +107,25 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.114.0 — 2026-10-21
+
+### Book of Hours
+
+- **Plan long work in one go.** The Plan Season form's new For field
+  plans a season for this season only, for 2 to 4 seasons, or until the
+  work is done: reading a summa up to its Level, or writing, copying or
+  translating a book, for as many seasons as it needs. A number of
+  seasons repeats any plan.
+- **Plans that keep up.** After each season of work planned until it's
+  done, the seasons it still needs are worked out again: an interrupted
+  or weak season adds one at the end, and finishing early clears the
+  seasons no longer needed.
+- **Interruptions.** When work runs until it's done, Advance Season
+  first asks whether anything interrupted it: days away from the
+  laboratory, months lost to distractions, or the whole season lost.
+- **Clearing a longer plan.** Clearing the first season of a plan that
+  runs for several seasons asks whether to clear the later seasons too.
+
 ## 2.113.0 — 2026-10-21
 
 ### Pagina

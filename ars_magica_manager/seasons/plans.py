@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable
+from dataclasses import replace
 from functools import partial
 
 from .. import enchanted_devices as ed
@@ -53,6 +54,61 @@ def set_plan(saga: Saga, plan: SeasonPlan) -> None:
         != (plan.character_id, plan.season, plan.year)
     ]
     saga.season_plans.append(plan)
+
+
+def schedule(saga: Saga, plan: SeasonPlan, count: int) -> list[SeasonPlan]:
+    """Plan `count` more seasons like `plan` straight after its season,
+    stopping at the first season already planned for something else (each
+    starts without the months lost or days away of the one it copies).
+    Returns the plans added."""
+    added: list[SeasonPlan] = []
+    season, year = plan.season, plan.year
+    character = saga.character(plan.character_id)
+    for _ in range(max(0, count)):
+        season, year = next_season(season, year)
+        if character is None or plan_for(saga, character, season, year) is not None:
+            break
+        follow = replace(
+            plan, season=season, year=year, days_away=0, months_lost=0, more_needed=0
+        )
+        set_plan(saga, follow)
+        added.append(follow)
+    return added
+
+
+def when_label(plan: SeasonPlan) -> str:
+    return f"{plan.season} {plan.year}"
+
+
+def series_text(saga: Saga, plan: SeasonPlan) -> str:
+    """ "Season 2 of 4, until it's done (to Summer 1221)", or "" for a plan
+    of one season."""
+    if not plan.series:
+        return ""
+    whole = sorted(
+        (
+            p
+            for p in saga.season_plans
+            if p.character_id == plan.character_id and p.series == plan.series
+        ),
+        key=lambda p: (p.year, SEASONS.index(p.season)),
+    )
+    if len(whole) < 2 and not plan.more_needed:
+        return ""
+    place = next((i for i, p in enumerate(whole) if p is plan), 0) + 1
+    how = ", until it's done" if plan.until_done else ""
+    return f"Season {place} of {len(whole)}{how} (to {when_label(whole[-1])})"
+
+
+def more_needed_text(plan: SeasonPlan) -> str:
+    """What the last planned season of unfinished work says, or ""."""
+    if not plan.more_needed:
+        return ""
+    seasons_ = "season" if plan.more_needed == 1 else "seasons"
+    return (
+        f"The work needs {plan.more_needed} more {seasons_} after this one, "
+        "but the season after is planned for something else."
+    )
 
 
 def clear_plan(
@@ -412,6 +468,8 @@ def ahead_rows(saga: Saga, character: Character) -> list[tuple[int, str]]:
     for index, (season, year) in enumerate(seasons_ahead(saga)):
         plan = plan_for(saga, character, season, year)
         what = plan_summary(saga, character, plan) if plan else "nothing planned"
+        if plan is not None and plan.more_needed:
+            what += " (needs more seasons)"
         rows.append((index, f"{f'{season} {year}':<14}{what}"))
     return rows
 
@@ -426,6 +484,8 @@ def ahead_table(saga: Saga, character: Character) -> Table:
             if plan
             else "[dim]nothing planned[/]"
         )
+        if plan is not None and plan.more_needed:
+            what += f"  {todo('needs more seasons')}"
         rows.append([f"{season} {year}", what])
     return Table(["Season", "Plan"], rows, markup=True, stretch=1)
 
@@ -499,6 +559,11 @@ def _plan_text(
     if plan.months_lost and worked.activity and worked.activity.distractable:
         lines.append(f"  {plan.months_lost} month(s) lost to distractions.")
     lines += [problem(escape(p)) for p in worked.problems]
+    series = series_text(saga, plan)
+    if series:
+        lines.append(f"  [dim]{escape(series)}.[/]")
+    if plan.more_needed:
+        lines.append(todo(escape(more_needed_text(plan))))
     note = working_seasons_note(character, plan)
     if note:
         lines.append(todo(escape(note)))

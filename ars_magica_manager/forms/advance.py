@@ -3,9 +3,9 @@ terminal and the desktop play a season out the same way.
 
 The question first (what the season's plans will do, and the new year's
 note), then, at the year's end with a covenant in deficit, whether to
-advance anyway; then whether each contested resource whose security
-lapsed was secured, whether to take each Discovery an experiment's
-risk can reach, and whether each magus setting up a new laboratory
+advance anyway; then whether anything interrupted work that runs until
+it's done, whether each contested resource whose security lapsed was
+secured, whether to take each Discovery an experiment's risk can reach, and whether each magus setting up a new laboratory
 spends the next season finishing it. Only then is the season played out (seasons.finish_season)
 and the date moved on. The last step ends with `Played`: what the season
 did and the line saying so, for the front-end to show the season's
@@ -24,9 +24,10 @@ from .. import seasons, tribunal_terms, world_turns
 from ..commands import Command, Confirm, Form
 from ..form_spec import DialogField
 from ..markup import escape
-from ..models import SEASONS, Saga, next_season
+from ..models import SEASONS, Saga, SeasonPlan, next_season
 from ..rules import laboratory_seasons as ls
-from ..rules.activities import Outcome
+from ..rules.activities import ACTIVITIES, Outcome
+from ..seasons import repeat
 from ..seasons.advance import Advanced
 
 #: Backs the saga up before a season with plans is applied
@@ -120,26 +121,146 @@ def play_season(
     if in_deficit:
         return Confirm(
             deficit_question(in_deficit),
-            lambda: _secured(saga, backup, rng),
+            lambda: _interrupted(saga, backup, rng),
             yes_label="Advance anyway",
             title="A Covenant in Deficit",
         )
-    return _secured(saga, backup, rng)
+    return _interrupted(saga, backup, rng)
 
 
-def _secured(saga: Saga, backup: Backup, rng: Callable[[], random.Random]):
+def interrupted_plans(saga: Saga) -> list[SeasonPlan]:
+    """The season's plans for work that runs over several seasons until
+    it's done, whose seasons are worked out again once it is played."""
+    return [
+        p
+        for p in seasons.due_plans(saga)
+        if repeat.runs_until_done(p) and saga.character(p.character_id) is not None
+    ]
+
+
+def _interruption_fields(saga: Saga, index: int, plan: SeasonPlan) -> list[DialogField]:
+    character = saga.character(plan.character_id)
+    assert character is not None
+    later = repeat.later_seasons(saga, plan)
+    until = f", planned to {later[-1].season} {later[-1].year}" if later else ""
+    fields = [
+        DialogField(
+            f"_plan_{index}",
+            "",
+            "info",
+            f"{escape(character.name)}: "
+            f"{escape(seasons.plan_summary(saga, character, plan))}{until}.",
+        )
+    ]
+    activity = ACTIVITIES.get(plan.activity)
+    if plan.lab_id:
+        fields.append(
+            DialogField(
+                f"days_{index}",
+                "Days away from the laboratory",
+                "int",
+                plan.days_away,
+                hint="Up to 10 cost nothing; 11 to 20 lower the Lab Total; "
+                "more rule out lab work this season.",
+            )
+        )
+    elif activity is not None and activity.distractable:
+        fields.append(
+            DialogField(
+                f"months_{index}",
+                "Months lost",
+                "int",
+                plan.months_lost,
+                hint="Each full month lost to distractions cuts the season's "
+                "total by a third (0 to 3).",
+            )
+        )
+    fields.append(
+        DialogField(
+            f"lost_{index}",
+            "The whole season lost",
+            "check",
+            False,
+            hint="Nothing is done on it this season.",
+        )
+    )
+    return fields
+
+
+def _interrupted(saga: Saga, backup: Backup, rng: Callable[[], random.Random]):
+    """Whether anything interrupted the season's work that runs until it's
+    done (days away, months lost, or the whole season), so that the
+    seasons it still needs are worked out from what it really did; then
+    the rest of the season."""
+    due = interrupted_plans(saga)
+    if not due:
+        return _secured(saga, (), backup, rng)
+
+    def validate(values: dict[str, Any]) -> str | None:
+        for index, _plan in enumerate(due):
+            months = values.get(f"months_{index}") or 0
+            days = values.get(f"days_{index}") or 0
+            if not 0 <= months <= 3:
+                return "Months lost must be 0 to 3."
+            if not 0 <= days <= 92:
+                return "Days away must be 0 to 92."
+        return None
+
+    def apply(values: dict[str, Any]):
+        lost: list[SeasonPlan] = []
+        for index, plan in enumerate(due):
+            if values.get(f"lost_{index}"):
+                lost.append(plan)
+                continue
+            if f"days_{index}" in values:
+                plan.days_away = values.get(f"days_{index}") or 0
+            if f"months_{index}" in values:
+                plan.months_lost = values.get(f"months_{index}") or 0
+        return _secured(saga, tuple(lost), backup, rng)
+
+    def fields() -> list[DialogField]:
+        found = [
+            DialogField(
+                "_why",
+                "",
+                "info",
+                "Work that runs over several seasons until it's done: say if "
+                "anything interrupted it this season. The seasons it still "
+                "needs are worked out again once the season is played.",
+            )
+        ]
+        for index, plan in enumerate(due):
+            found += _interruption_fields(saga, index, plan)
+        return found
+
+    return Form(
+        "Interruptions",
+        fields,
+        apply,
+        validate=validate,
+        save_label="Continue",
+        help_id="advance-interrupted",
+    )
+
+
+def _secured(
+    saga: Saga,
+    lost: tuple[SeasonPlan, ...],
+    backup: Backup,
+    rng: Callable[[], random.Random],
+):
     """Whether each contested resource whose security lapsed was secured
     this season (a tick each), then the season played out."""
     lapsed = seasons.lapsed_resources(saga)
     if not lapsed:
-        return _discoveries(saga, {}, backup, rng)
+        return _discoveries(saga, {}, lost, backup, rng)
 
     def apply(values: dict[str, Any]):
         answers = {
             resource_id: bool(values.get(f"secured_{index}"))
             for index, (resource_id, _label) in enumerate(lapsed)
         }
-        return _discoveries(saga, answers, backup, rng)
+        return _discoveries(saga, answers, lost, backup, rng)
 
     return Form(
         "Contested Resources",
@@ -167,23 +288,26 @@ def _secured(saga: Saga, backup: Backup, rng: Callable[[], random.Random]):
 def _discoveries(
     saga: Saga,
     secured: dict[str, bool],
+    lost: tuple[SeasonPlan, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
 ):
     """Work out every plan's outcome (before any is applied, so a season's
-    results can't change that same season), ask whether to take each
-    Discovery an experiment's risk can reach, then play the season out."""
-    worked = seasons.resolve(saga, rng())
+    results can't change that same season; a season lost isn't played),
+    ask whether to take each Discovery an experiment's risk can reach, then
+    play the season out."""
+    gone = {p.character_id for p in lost}
+    worked = [o for o in seasons.resolve(saga, rng()) if o.character_id not in gone]
     moves = seasons.discovery_moves(saga, worked)
     if not moves:
-        return _new_labs(saga, worked, secured, backup, rng)
+        return _new_labs(saga, worked, secured, lost, backup, rng)
 
     def apply(values: dict[str, Any]):
         for index, (outcome, _text) in enumerate(moves):
             seasons.take_discovery_move(
                 saga, outcome, bool(values.get(f"move_{index}"))
             )
-        return _new_labs(saga, worked, secured, backup, rng)
+        return _new_labs(saga, worked, secured, lost, backup, rng)
 
     fields: list[DialogField] = []
     for index, (_outcome, text) in enumerate(moves):
@@ -210,6 +334,7 @@ def _new_labs(
     saga: Saga,
     worked: list[Any],
     secured: dict[str, bool],
+    lost: tuple[SeasonPlan, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
 ):
@@ -218,13 +343,13 @@ def _new_labs(
     then the season played out."""
     found = new_lab_seasons(saga, worked)
     if not found:
-        return _world_turns(saga, worked, secured, (), backup, rng)
+        return _world_turns(saga, worked, secured, (), lost, backup, rng)
 
     def apply(values: dict[str, Any]):
         finish = tuple(
             o for index, o in enumerate(found) if values.get(f"finish_{index}")
         )
-        return _world_turns(saga, worked, secured, finish, backup, rng)
+        return _world_turns(saga, worked, secured, finish, lost, backup, rng)
 
     fields: list[DialogField] = []
     for index, outcome in enumerate(found):
@@ -263,6 +388,7 @@ def _world_turns(
     worked: list[Any],
     secured: dict[str, bool],
     finish: tuple[Outcome, ...],
+    lost: tuple[SeasonPlan, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
 ):
@@ -272,9 +398,9 @@ def _world_turns(
         world_turns.proposals(saga, rng()) if saga.current_season == SEASONS[-1] else []
     )
     if not found:
-        return _finish(saga, worked, secured, finish, backup, rng)
+        return _finish(saga, worked, secured, finish, lost, backup, rng)
     return world_turns.review(
-        saga, found, lambda: _finish(saga, worked, secured, finish, backup, rng)
+        saga, found, lambda: _finish(saga, worked, secured, finish, lost, backup, rng)
     )
 
 
@@ -283,19 +409,29 @@ def _finish(
     worked: list[Any],
     secured: dict[str, bool],
     finish: tuple[Outcome, ...],
+    lost: tuple[SeasonPlan, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
 ) -> Played:
     """Play the season out in the rules' order and move the date on (the
     caller saves); then plan the second season of each new laboratory
     `finish` names."""
-    done = seasons.finish_season(saga, worked, secured, rng(), backup=backup)
+    whose = [
+        (c.name, seasons.plan_summary(saga, c, p))
+        for p in lost
+        if (c := saga.character(p.character_id)) is not None
+    ]
+    done = seasons.finish_season(saga, worked, secured, rng(), backup=backup, lost=lost)
     message = f"It is now {saga.current_season} {saga.current_year}."
     if done.applied:
         message += (
             f" Seasons applied for {', '.join(c.name for c in done.applied)}"
             " (see each one's Diary)."
         )
+    for name, what in whose:
+        message += f" {name}'s season of {what} was lost."
+    for line in done.forecast:
+        message += f" {line}"
     for outcome in finish:
         planned = seasons.plan_lab_finish(saga, outcome)
         magus = saga.character(outcome.character_id)

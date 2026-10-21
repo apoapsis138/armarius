@@ -172,6 +172,14 @@ class SeasonPlan:
     ordeal_kind: str = ""
     ordeal_lost_id: str | None = None
     ordeal_lost_params: dict[str, str] = field(default_factory=dict)
+    #: A plan saved for several seasons: what ties its seasons together
+    #: ("" for a single season, and for lab work, which its project ties),
+    #: whether it runs until its work is done (its seasons are worked out
+    #: again after each), and, on its last season, how many more the work
+    #: needs that couldn't be planned (the season after was taken).
+    series: str = ""
+    until_done: bool = False
+    more_needed: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:

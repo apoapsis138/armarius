@@ -77,7 +77,6 @@ from ....models import (
     Player,
     Saga,
     ScoredTrait,
-    SeasonPlan,
     Tribunal,
 )
 from ....rules import activities as season_rules
@@ -1882,9 +1881,9 @@ class WorkspaceBase(Screen[None]):
         when = when or (self.saga.current_season, self.saga.current_year)
         existing = seasons.plan_for(self.saga, character, *when)
 
-        def handle_result(plan: SeasonPlan | None) -> None:
-            if plan is not None:
-                season_forms.save_plan(self.saga, plan, existing)
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                season_forms.save_season(self.saga, character, values, existing, when)
                 self._commit(section)
 
         self.app.push_screen(
@@ -1912,22 +1911,11 @@ class WorkspaceBase(Screen[None]):
     ) -> None:
         """Drop `character`'s plan for season `when` (the current one by
         default; after confirming), then refresh `section`."""
-        season, year = when or (self.saga.current_season, self.saga.current_year)
-        plan = seasons.plan_for(self.saga, character, season, year)
-        if plan is None:
-            self.notify(f"Nothing is planned for {character.name} in {season} {year}.")
-            return
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed and seasons.clear_plan(self.saga, character, season, year):
-                self._commit(section)
-
-        self.app.push_screen(
-            ConfirmScreen(
-                f"Clear {escape(character.name)}'s plan for {season} {year} "
-                f"({escape(seasons.plan_summary(self.saga, character, plan))})?"
-            ),
-            handle_confirmed,
+        run_steps(
+            self.app,
+            season_forms.clear_season(self.saga, character, when),
+            lambda _end: self._commit(section),
+            notify=lambda _title, why: self.notify(why),
         )
 
     @staticmethod

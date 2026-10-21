@@ -42,6 +42,7 @@ from ..rules import (
 )
 from ..rules import supplement_work as sw
 from ..seasons import plans as season_plans_text
+from ..seasons import repeat
 from . import activity as activity_forms
 from . import virtue as virtue_forms
 
@@ -92,6 +93,30 @@ def save_plan(saga: Saga, plan: SeasonPlan, existing: SeasonPlan | None) -> None
     if existing is not None and existing in saga.season_plans:
         saga.season_plans.remove(existing)
     seasons.set_plan(saga, plan)
+
+
+def save_season(
+    saga: Saga,
+    character: Character,
+    values: dict[str, Any],
+    existing: SeasonPlan | None = None,
+    when: When | None = None,
+) -> list[SeasonPlan]:
+    """Lock in the plan the form's values describe, For the seasons its For
+    field says (repeat.FOR_OPTIONS). Planned for more than this season, it
+    replaces the later seasons of the plan it changes; for this season
+    only, it stays one of them. Returns the plans added after the first."""
+    plan = season_plan_from(saga, character, values, existing, when)
+    choice = values.get(repeat.FOR) or repeat.ONCE
+    if existing is not None:
+        if choice == repeat.ONCE:
+            plan.series, plan.until_done = existing.series, existing.until_done
+            plan.more_needed = existing.more_needed
+        else:
+            repeat.drop_later(saga, existing)
+        if existing in saga.season_plans:
+            saga.season_plans.remove(existing)
+    return repeat.plan_repeats(saga, character, plan, choice)
 
 
 def season_plan_from(
@@ -1233,6 +1258,21 @@ def _when_field(
     )
 
 
+def _for_field(existing: SeasonPlan | None) -> DialogField:
+    return DialogField(
+        repeat.FOR,
+        "For",
+        "select",
+        repeat.ONCE,
+        options=repeat.FOR_OPTIONS,
+        hint="Until it's done plans the seasons the work needs (reading a "
+        "summa up to its Level, writing a summa, copying or translating), "
+        "straight after this one, and works them out again as each is "
+        "played. A number of seasons repeats the plan."
+        + (" This season only keeps the seasons planned after it." if existing else ""),
+    )
+
+
 def season_plan_fields(
     saga: Saga,
     character: Character,
@@ -1254,6 +1294,7 @@ def season_plan_fields(
         *_supplement_fields(saga, character, existing, _activity_is, vf_picker),
         *_correspondence_fields(saga, character, existing),
         *_closing_fields(character, existing),
+        _for_field(existing),
     ]
 
 
@@ -1284,6 +1325,15 @@ def season_plan_problem(
     found = season_rules.problems(character, plan, saga)
     if not found and plan.activity == season_rules.OTHER and not plan.details:
         return "Say in Notes what the season is spent on."
+    if (
+        not found
+        and values.get(repeat.FOR) == repeat.UNTIL_DONE
+        and not repeat.can_run_until_done(plan.activity)
+    ):
+        return (
+            "Only reading, writing a summa, copying or translating a book is "
+            "planned until it's done: choose a number of seasons instead."
+        )
     return found[0] if found else None
 
 
@@ -1296,9 +1346,14 @@ def season_plan_live(
 ) -> str:
     """The line above Save: what the season will give, worked out as the
     form is filled in."""
-    return seasons.live_text(
-        saga, character, season_plan_from(saga, character, values, existing, when)
-    )
+    plan = season_plan_from(saga, character, values, existing, when)
+    text = seasons.live_text(saga, character, plan)
+    if values.get(repeat.FOR) == repeat.UNTIL_DONE:
+        needed = repeat.seasons_needed(saga, character, plan)
+        if needed:
+            seasons_ = "season" if needed == 1 else "seasons"
+            text += f"\nUntil it's done: {needed} {seasons_} as things stand."
+    return text
 
 
 # -- a grog's Yearly Update ----------------------------------------------------
@@ -1399,9 +1454,7 @@ def plan_season(
     existing = seasons.plan_for(saga, character, *when)
 
     def apply(values: dict[str, Any]) -> None:
-        save_plan(
-            saga, season_plan_from(saga, character, values, existing, when), existing
-        )
+        save_season(saga, character, values, existing, when)
 
     return Form(
         season_plan_title(saga, character, when),
@@ -1419,9 +1472,10 @@ def plan_season(
 
 def clear_season(
     saga: Saga, character: Character, when: When | None = None
-) -> Confirm | Refuse:
+) -> Confirm | Form | Refuse:
     """Drop `character`'s plan for season `when` (the current one by
-    default), after confirming."""
+    default), after confirming; a plan with seasons planned after it to
+    continue its work offers to clear those too."""
     season, year = when or (saga.current_season, saga.current_year)
     plan = seasons.plan_for(saga, character, season, year)
     if plan is None:
@@ -1429,11 +1483,39 @@ def clear_season(
             "Clear the Season",
             f"Nothing is planned for {escape(character.name)} in {season} {year}.",
         )
-    return Confirm(
+    question = (
         f"Clear {escape(character.name)}'s plan for {season} {year} "
-        f"({escape(seasons.plan_summary(saga, character, plan))})?",
-        lambda: seasons.clear_plan(saga, character, season, year),
-        yes_label="Clear",
+        f"({escape(seasons.plan_summary(saga, character, plan))})?"
+    )
+    later = repeat.later_seasons(saga, plan)
+    if not later:
+        return Confirm(
+            question,
+            lambda: seasons.clear_plan(saga, character, season, year),
+            yes_label="Clear",
+        )
+
+    def apply(values: dict[str, Any]) -> bool:
+        for each in [plan, *(later if values.get("rest") else ())]:
+            if each in saga.season_plans:
+                saga.season_plans.remove(each)
+        return True
+
+    last = later[-1]
+    return Form(
+        "Clear the Season",
+        lambda: [
+            DialogField("_question", "", "info", question),
+            DialogField(
+                "rest",
+                f"Clear the later seasons of it too (to {last.season} {last.year})",
+                "check",
+                True,
+                hint="Untick to keep the seasons planned after this one.",
+            ),
+        ],
+        apply,
+        save_label="Clear",
     )
 
 

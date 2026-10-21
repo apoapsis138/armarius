@@ -4,7 +4,7 @@ lab work, and the Lab Texts, effects and spells it produces."""
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 
 from .. import enchanted_devices as ed
 from .. import spells as spl
@@ -33,7 +33,7 @@ from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons
 from ..rules import laboratory_seasons as ls
 from ..tables import Table
-from .plans import plan_for, plan_summary, set_plan, work_text
+from .plans import plan_for, plan_summary, schedule, set_plan, work_text
 
 #: How many seasons the laboratory's Planning tab shows, the current first.
 QUEUE_LENGTH = 4
@@ -254,12 +254,22 @@ def lab_queue_info(
 
 
 def scheduled_with(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
-    """`plan` and, for lab work, the later seasons scheduled to continue it
-    (the same project), in season order."""
+    """`plan` and the later seasons scheduled to continue it (a plan saved
+    for several seasons, or lab work on the same project), in season
+    order."""
     key = project_key(plan) if plan.lab_id else None
     start = (plan.year, SEASONS.index(plan.season))
     found = [plan, *_subject_plans(saga, plan)]
-    if key is not None:
+    if plan.series:
+        found += [
+            p
+            for p in saga.season_plans
+            if p is not plan
+            and p.character_id == plan.character_id
+            and p.series == plan.series
+            and (p.year, SEASONS.index(p.season)) > start
+        ]
+    elif key is not None:
         found += [
             p
             for p in saga.season_plans
@@ -301,16 +311,7 @@ def plan_lab_work(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
     found, work = lab_seasons.work(saga, character, plan)
     if found or work is None:
         return []
-    added: list[SeasonPlan] = []
-    season, year = plan.season, plan.year
-    for _ in range(lab_seasons.seasons_left(work)):
-        season, year = next_season(season, year)
-        if plan_for(saga, character, season, year) is not None:
-            break
-        follow = replace(plan, season=season, year=year, days_away=0)
-        set_plan(saga, follow)
-        added.append(follow)
-    return added
+    return schedule(saga, plan, lab_seasons.seasons_left(work))
 
 
 def _subject_plans(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:

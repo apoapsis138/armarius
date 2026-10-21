@@ -233,7 +233,7 @@ To compare Lab Totals before choosing, choose [Lab Totals](help:tab-lab-totals) 
 <!-- help: guide-lab-planning-schedule -->
 
 1. Choose **Schedule**. It refuses, and says why, if the work can't be done.
-2. For work that takes several seasons, such as inventing a spell, the app also plans each following season the work is projected to need, stopping at a season that already has a plan. A message names the last season planned.
+2. For work that takes several seasons, such as inventing a spell, the app also plans each following season the work is projected to need, stopping at a season that already has a plan. A message names the last season planned. When each season is advanced, Advance Season asks about [interruptions](help:advance-interrupted) (days away, or the season lost) and works the remaining seasons out again: a season is added when the work fell behind.
 <!-- tui -->
 3. The Planning tab shows the work as one row spanning its seasons, with its progress, for example "8/15 points".
 

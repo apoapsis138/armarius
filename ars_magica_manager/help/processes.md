@@ -10,9 +10,22 @@ with **Advance Season** in the top bar.
 <!-- /gui -->
 Grogs aren't planned season by season; they have a [yearly update](help:grog-year) instead.
 
-**You type:** the **Season** (the one it was opened for; choose another of the year ahead to move the plan there), the Activity, chosen from a list you can filter by Type and Book (see [Choosing the activity](help:plan-season-activity)), then the fields that activity needs (what the experience goes into, a book, a teacher, a Source Quality, a die roll), months lost to distractions, and Notes.
+**You type:** the **Season** (the one it was opened for; choose another of the year ahead to move the plan there), the Activity, chosen from a list you can filter by Type and Book (see [Choosing the activity](help:plan-season-activity)), then the fields that activity needs (what the experience goes into, a book, a teacher, a Source Quality, a die roll), months lost to distractions, Notes, and **For**: this season only, until the work is done, or a number of seasons (see [For several seasons](help:plan-season-repeat)).
 
 **The app works out:** what the season will give, from the character and the saga as they stand now, shown on the line above Save as you fill the form in. For a season ahead it is still worked out from the character as they stand now: the seasons in between are not counted. A season that already has a plan can't be chosen for another one: change that plan, or clear it first.
+
+### For several seasons
+<!-- help: plan-season-repeat -->
+
+**For** plans the same activity for the seasons after this one too, straight after it, stopping at the first season that already has a plan:
+
+- **This season**: only this one. Changing one season of a longer plan this way keeps the seasons planned after it.
+- **Until it's done**: as many seasons as the work needs, as things stand now: reading a summa until the reader's score reaches its Level, writing a summa, or copying or translating a book until it is finished (lab work that takes several seasons is always planned this way, from the laboratory's Planning tab). The line above Save says how many seasons that is. Each season of it is worked out again after it is played: one interrupted, or one that gave less than expected, adds a season at the end; one that finishes the work early clears the seasons no longer needed. If the season after the last is already planned, the last season says the work needs more, and Seasons Ahead shows "(needs more seasons)". At most ten years are planned at once.
+- **2 seasons** to **4 seasons**: the plan repeated that many times, for any activity (practice, exposure, a companion's working seasons). These aren't worked out again.
+
+Choosing For again on a season of a longer plan replaces the seasons planned after it. Clearing the first season asks whether to clear the later ones too.
+
+What each later season gives is worked out from the character as they stand now, as for any season ahead. See [Interruptions](help:advance-interrupted) for how a season is marked interrupted.
 
 ### Where it's opened from
 <!-- help: plan-season-where -->
@@ -164,6 +177,7 @@ puts the date back, but it doesn't undo what the season did.
 
 After you choose Advance, the app may ask:
 
+- For work that runs until it's done, whether anything interrupted it this season (see [Interruptions](help:advance-interrupted)).
 - In Winter, if a covenant is in deficit, whether to advance anyway. Advance anyway rolls the year over; No (or Escape) leaves the date alone so the books can be balanced first.
 - Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years; one left unticked gives nothing until it is.
 - For an experiment seeking a Discovery, whether to take the Discovery by using the risk to move the roll, when it could (a tick each).
@@ -178,6 +192,17 @@ When a magus has planned **Set up a new laboratory**, Advance Season asks, for e
 
 - Leave it ticked and **Continue**: the magus's next season is planned as **Set up the laboratory**, lab work in the new laboratory, unless something is already planned for it. It shows on the laboratory's Planning tab, where it can be changed or cleared like any lab work.
 - Untick it to decline: the laboratory keeps the Basic Flaw until you plan **Set up the laboratory** on its Planning tab yourself.
+
+### Interruptions
+<!-- help: advance-interrupted -->
+
+When a season has work planned until it's done (reading a summa to its Level, writing, copying or translating a book, or lab work over several seasons such as inventing a spell), Advance Season first asks whether anything interrupted it. Each piece of work is listed with its character, the work, and the last season planned for it:
+
+- **Days away from the laboratory** (lab work): up to 10 cost nothing, 11 to 20 lower the Lab Total, and more rule out lab work this season.
+- **Months lost** (reading and other study): each full month lost to distractions cuts the season's total by a third (0 to 3).
+- **The whole season lost**: nothing is done on the work this season, and no Diary entry is written for it.
+
+Leave them as they are and **Continue** if nothing interrupted it. Once the season is played, the seasons the work still needs are worked out again from where it stands: a season is added at the end when it fell behind (or a note says the season after is planned for something else), and seasons no longer needed are cleared when it finished early. The message after the season says what changed.
 
 ### How the season is applied
 <!-- help: advance-season-apply -->

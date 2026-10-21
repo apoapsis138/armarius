@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import random
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .. import economics as eco
 from ..markup import escape, problem, todo
@@ -14,6 +14,7 @@ from ..models import (
     Character,
     DiaryEntry,
     Saga,
+    SeasonPlan,
     SeasonRecord,
     SeasonRecordLine,
     VirtueFlawInstance,
@@ -46,6 +47,7 @@ from .plans import (
     unplanned,
     work_text,
 )
+from .repeat import reforecast
 
 
 def resolve(saga: Saga, rng: random.Random | None = None) -> list[rules.Outcome]:
@@ -234,6 +236,9 @@ class Advanced:
     #: At a new year, each covenant's surplus added to its Wealth: (name,
     #: amount).
     added: list[tuple[str, int]]
+    #: Work that runs until done whose seasons were worked out again: a
+    #: line for each change (repeat.reforecast).
+    forecast: list[str] = field(default_factory=list)
 
 
 def finish_season(
@@ -242,6 +247,7 @@ def finish_season(
     secured: dict[str, bool],
     rng: random.Random,
     backup: Callable[[Saga], object] | None = None,
+    lost: Sequence[SeasonPlan] = (),
 ) -> Advanced:
     """Play out the season, once its questions are answered (`secured`: was
     each lapsed contested resource secured; the Discovery moves already
@@ -250,12 +256,15 @@ def finish_season(
     Winter, the year's end -- grogs, business, then aging; the covenants'
     season (harvests, resources); the season record; at a new year, each
     covenant's surplus into its Wealth; then the date moves on (the caller
-    saves it)."""
+    saves it). Work that runs until done has its seasons worked out again
+    once its season is applied (`lost`: the plans whose season was lost to
+    an interruption)."""
     new_year = saga.current_season == SEASONS[-1]
     record = make_record(saga, worked)
     if worked and backup is not None:
         backup(saga)
     applied = apply(saga, worked)
+    forecast = reforecast(saga, worked, lost)
     year_end = (
         year_end_grogs(saga) + year_end_business(saga) + year_end_aging(saga, rng)
         if new_year
@@ -269,7 +278,7 @@ def finish_season(
     saga.current_season, saga.current_year = next_season(
         saga.current_season, saga.current_year
     )
-    return Advanced(record, applied, year_end, added)
+    return Advanced(record, applied, year_end, added, forecast)
 
 
 def make_record(saga: Saga, worked: Sequence[rules.Outcome]) -> SeasonRecord:

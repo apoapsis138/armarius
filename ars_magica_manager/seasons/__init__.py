@@ -50,6 +50,7 @@ from .plans import ahead_table as ahead_table
 from .plans import ahead_title as ahead_title
 from .plans import book_label as book_label
 from .plans import clear_plan as clear_plan
+from .plans import due_plans as due_plans
 from .plans import live_text as live_text
 from .plans import plan_for as plan_for
 from .plans import plan_summary as plan_summary

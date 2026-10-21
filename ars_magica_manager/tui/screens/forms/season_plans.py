@@ -67,10 +67,11 @@ def _season_plan_dialog(
     character: Character,
     existing: SeasonPlan | None,
     when: season_forms.When | None = None,
-) -> FieldsDialog[SeasonPlan]:
+) -> FieldsDialog[dict[str, Any]]:
     """Plan `character`'s season `when` (the current one by default;
     season_forms.season_plan_fields): the line above Save shows what the
-    season will give, worked out as the form is filled in."""
+    season will give, worked out as the form is filled in. It returns the
+    values, for season_forms.save_season."""
     dialog = FieldsDialog(
         season_forms.season_plan_title(saga, character, when),
         season_forms.season_plan_fields(
@@ -82,9 +83,7 @@ def _season_plan_dialog(
         live=lambda values: season_forms.season_plan_live(
             saga, character, values, existing, when
         ),
-        build=lambda values: season_forms.season_plan_from(
-            saga, character, values, existing, when
-        ),
+        build=dict,
     )
     dialog.help_id = "plan-season"
     return dialog
