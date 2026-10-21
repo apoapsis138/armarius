@@ -151,7 +151,7 @@ async def test_the_template_choice_follows_the_type_and_describes_the_template()
         offered = [str(prompt) for prompt, _ in select._options[1:]]
         assert offered == [t.name for t in ct.templates_for("grog")] + [
             f"{t.name} (Grogs)" for t in gt.templates(None)
-        ]
+        ] + ["Grog (DE quick)"]
 
         select.value = "tpl_hunter"
         assert await wait_until(

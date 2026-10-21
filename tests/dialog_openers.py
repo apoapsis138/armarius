@@ -13,6 +13,7 @@ from textual.widgets import TabbedContent, Tree
 
 from ars_magica_manager import (
     catalog,
+    choice_templates,
     giving,
     grog_templates,
     meeting,
@@ -22,6 +23,7 @@ from ars_magica_manager import (
     vis,
 )
 from ars_magica_manager import economics as eco
+from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import (
@@ -531,6 +533,50 @@ OPENERS: dict[str, Opener] = {
         "covenant",
         lambda ws: ws._run_steps(
             creation_forms.grog_template_steps(
+                ws.saga,
+                {"name": "Ulla", "covenant_id": "cov1"},
+                grog_templates.find("gt_animal_trainer"),
+            ),
+            tree=True,
+        ),
+    ),
+    "companion template": Opener(
+        "covenant",
+        lambda ws: ws._run_steps(
+            choice_forms.choice_template_steps(
+                ws.saga,
+                {"name": "Ulla", "covenant_id": "cov1"},
+                choice_templates.find("ct_quick_martial"),
+            ),
+            tree=True,
+        ),
+    ),
+    "mythic companion template": Opener(
+        "covenant",
+        lambda ws: ws._run_steps(
+            choice_forms.choice_template_steps(
+                ws.saga,
+                {"name": "Ulla", "covenant_id": "cov1"},
+                choice_templates.find("ct_mc_faerie_doctor"),
+            ),
+            tree=True,
+        ),
+    ),
+    "companion sample": Opener(
+        "covenant",
+        lambda ws: ws._run_steps(
+            choice_forms.choice_template_steps(
+                ws.saga,
+                {"name": "Ulla", "covenant_id": "cov1"},
+                choice_templates.find("ct_anne_holy_hermit"),
+            ),
+            tree=True,
+        ),
+    ),
+    "grog template as companion": Opener(
+        "covenant",
+        lambda ws: ws._run_steps(
+            choice_forms.grog_companion_steps(
                 ws.saga,
                 {"name": "Ulla", "covenant_id": "cov1"},
                 grog_templates.find("gt_animal_trainer"),

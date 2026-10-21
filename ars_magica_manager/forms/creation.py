@@ -13,7 +13,14 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from typing import Any
 
-from .. import character_templates, creation, packs, ruling_templates, storage
+from .. import (
+    character_templates,
+    choice_templates,
+    creation,
+    packs,
+    ruling_templates,
+    storage,
+)
 from .. import familiars as fam
 from .. import grog_templates as gt
 from ..commands import Form
@@ -30,6 +37,7 @@ from ..models import (
 from ..models.saga import assign_laboratory_owner
 from ..rules import options as rule_options
 from ..seasons import defaults
+from . import choice_templates as choice_forms
 from . import grog_templates as grog_forms
 from . import tribunal as tribunal_forms
 
@@ -306,6 +314,12 @@ def _template_field(saga: Saga, kind: str) -> DialogField:
     options = [(escape(t.name), t.id) for t in character_templates.templates_for(kind)]
     if kind == "grog":
         options += [(escape(f"{t.name} (Grogs)"), t.id) for t in gt.templates(saga)]
+    options += [
+        (escape(choice_templates.option_label(t)), t.id)
+        for t in choice_templates.templates(saga, kind)
+    ]
+    if kind == "companion":
+        options += choice_forms.grog_companion_options(saga)
     return DialogField(
         template_key(kind),
         "Template",
@@ -330,6 +344,27 @@ def character_create_live(values: dict[str, Any]) -> str:
         return (
             gt.summary(grog) + "\n[dim]Its choices come next: the character "
             "starts In Creation, built from them on the worksheet.[/]"
+        )
+    chosen = choice_templates.find(values.get(template_key(kind)))
+    if chosen is not None:
+        return (
+            choice_templates.summary(chosen) + "\n[dim]Its choices come next: the "
+            "character starts In Creation with those Virtues and Flaws, finished "
+            "on the worksheet.[/]"
+        )
+    as_companion = choice_forms.grog_companion_find(values.get(template_key(kind)))
+    if as_companion is not None:
+        return (
+            gt.summary(as_companion) + "\n[dim]Played as a companion: its choices "
+            "come next, held to a companion's limits, with a Story Flaw added "
+            "(Grogs, page 95).[/]"
+        )
+    if not character_templates.templates_for(kind) and choice_templates.templates(
+        None, kind
+    ):
+        return (
+            "[dim]None: the character starts In Creation, built step by step. "
+            "A template asks for the book's choices first.[/]"
         )
     if not character_templates.templates_for(kind):
         return "[dim]The book has no templates for this type.[/]"
@@ -413,6 +448,14 @@ def new_character_form(
         grog = gt.find(values.get(template_key(values["type"])))
         if grog is not None:
             return grog_template_steps(saga, values, grog)
+        chosen = choice_templates.find(values.get(template_key(values["type"])))
+        if chosen is not None:
+            return choice_forms.choice_template_steps(saga, values, chosen)
+        as_companion = choice_forms.grog_companion_find(
+            values.get(template_key(values["type"]))
+        )
+        if as_companion is not None:
+            return choice_forms.grog_companion_steps(saga, values, as_companion)
         template = character_templates.find(values.get(template_key(values["type"])))
         wanted = character_templates.blanks(template) if template else []
         if template is None or not wanted:

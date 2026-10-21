@@ -191,6 +191,32 @@ def test_new_grog_from_a_grogs_template_asks_its_choices_first(app):
     assert window.crumb_names()[-2:] == ["Madoc", "Creation Worksheet"]
 
 
+def test_new_companion_from_a_quick_recipe_asks_its_choices_first(app):
+    """The Definitive Edition's quick Martial companion: the choices form
+    opens after New Companion, and using it makes her In Creation with the
+    recipe's Virtues and Flaws, on her worksheet."""
+    window = _window(_sample_saga_with_covenant())
+    window.open_covenant("cov1")
+    page = window.page()
+    assert isinstance(page, CovenantPage)
+    page.codex.open_chapter("People")
+    asked = answering(
+        window,
+        {"name": "Hild", "template_companion": "ct_quick_martial"},
+        {"slot_0_1": "bows", "flaw": "vf_dark_secret"},
+    )
+    _new(window)["New Companion"].on_click()
+    assert asked[1].windowTitle() == "Martial companion (DE quick)"
+    saga = window.saga
+    assert saga is not None
+    made = next(c for c in saga.characters if c.name == "Hild")
+    assert made.in_creation and made.type == "companion"
+    assert VirtueFlawInstance("vf_puissant_ability", {"ability": "bows"}) in (
+        made.virtues_flaws
+    )
+    assert window.crumb_names()[-2:] == ["Hild", "Creation Worksheet"]
+
+
 def test_new_character_on_a_covenant_belongs_to_it(app):
     window = _window(_sample_saga_with_covenant())
     window.open_covenant("cov1")

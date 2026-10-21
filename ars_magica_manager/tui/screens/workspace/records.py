@@ -11,6 +11,7 @@ from typing import Any
 from .... import (
     arms,
     character_templates,
+    choice_templates,
     creation,
     grog_templates,
     place_events,
@@ -24,6 +25,7 @@ from .... import familiars as fam
 from ....actions import (
     NodeKind,
 )
+from ....forms import choice_templates as choice_forms
 from ....forms import creation as creation_forms
 from ....forms import creature as creature_forms
 from ....forms import neighbour as neighbour_forms
@@ -204,6 +206,30 @@ class RecordActions(WorkspaceBase):
                     self.app,
                     creation_forms.grog_template_steps(
                         self.saga, values, grog, made.append
+                    ),
+                    lambda _end: self._grog_created(made, created),
+                )
+                return
+            chosen = choice_templates.find(values.get(template_key(values["type"])))
+            if chosen is not None:
+                made = []
+                run_steps(
+                    self.app,
+                    choice_forms.choice_template_steps(
+                        self.saga, values, chosen, made.append
+                    ),
+                    lambda _end: self._grog_created(made, created),
+                )
+                return
+            as_companion = choice_forms.grog_companion_find(
+                values.get(template_key(values["type"]))
+            )
+            if as_companion is not None:
+                made = []
+                run_steps(
+                    self.app,
+                    choice_forms.grog_companion_steps(
+                        self.saga, values, as_companion, made.append
                     ),
                     lambda _end: self._grog_created(made, created),
                 )

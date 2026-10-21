@@ -182,10 +182,13 @@ You can move freely between records and steps; nothing is locked in by the order
 <!-- gui -->
 1. On the covenant's page, open its **People** chapter and click the **New Character** card.
 <!-- /gui -->
-2. Give a Name and a Type. For a Magus, Companion or Grog the form offers a **Template**: one of the book's ready-to-play characters, such as a magus of each House or The Knight. The Mythic Companion type has none.
+2. Give a Name and a Type. For a Magus, Companion or Grog the form offers a **Template**: one of the book's ready-to-play characters, such as a magus of each House or The Knight. A Mythic Companion's are the kinds of Mythic Companion: see step 7.
 3. Leave Template at None to build the character yourself; the line above Create says the character starts In Creation. Or choose a template and the line describes it.
 4. Choose Create. If the template leaves a name to you, such as an Area Lore's area, the app asks for it first; cancelling there cancels the new character.
 5. A grog's list also has the Grogs templates, marked "(Grogs)", while that book is in play. Create then shows the template's choices: its version and age, Social Status, the book's Virtues and Flaws (ticked), its other suggestions, and up to two more Virtues and three more Flaws. Next refuses anything a grog can't take. Then name what the Ability list leaves blank and choose Use: the grog starts In Creation with the book's Abilities on its worksheet. See [A Grogs template](help:grog-templates).
+6. For a quick start, choose one of the "(DE quick)" templates: Grog (DE quick), a Martial, Learned, Social or Magical companion, or Magus (DE quick). Create then asks for the recipe's choices: what its Puissant and Affinity name (or which Virtue), the Flaw, and the Social Status. Choose Use: the character starts In Creation with those Virtues and Flaws, and you finish Characteristics and Abilities on its worksheet. See [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws).
+7. For a Mythic Companion, choose the Mythic Companion type and the kind, such as Faerie Doctor (DE) or Zahid (RoP:D). Create then asks for its choices: what the book lets you choose, any Flaw you substitute, more Virtues and Flaws of your own to balance it, and whether to put the book's minimum Abilities on the worksheet. Choose Use: the Mythic Companion starts In Creation with them. See [A Mythic Companion template](help:mythic-companion-templates).
+8. A companion's list also has the supplements' ready-made companions, marked with their book (such as Mystic Nun (TC)), and each Grogs template marked "(Grogs, as a companion)". Both ask for their choices, as a Grogs template does; a Grogs template played as a companion also needs a Story Flaw. See [A supplement's companion](help:companion-sample-templates) and [A Grogs template as a companion](help:grog-template-companion).
 
 See [New Character](help:character-group-new).
 

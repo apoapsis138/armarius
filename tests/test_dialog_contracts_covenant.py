@@ -92,6 +92,147 @@ CONTRACTS: dict[str, Contract] = {
         expected=[("companion", "cov1")],
         invalid={"Name": ""},
     ),
+    "companion template": Contract(
+        # The Definitive Edition's quick Martial companion.
+        prefill={
+            "Martial Ability": Select.NULL,
+            "Major Flaw": Select.NULL,
+            "Social Status": "vf_covenfolk",
+        },
+        edits={"Martial Ability": "single weapon", "Major Flaw": "vf_dark_secret"},
+        saved=lambda s: [
+            (c.type, c.in_creation, [vf.vf_id for vf in c.virtues_flaws])
+            for c in s.characters
+            if c.name == "Ulla"
+        ],
+        expected=[
+            (
+                "companion",
+                True,
+                [
+                    "vf_covenfolk",
+                    "vf_warrior",
+                    "vf_puissant_ability",
+                    "vf_affinity_with_ability",
+                    "vf_dark_secret",
+                ],
+            )
+        ],
+        invalid=[
+            {"Martial Ability": "single weapon"},
+            {
+                "Martial Ability": "single weapon",
+                "Major Flaw": "vf_dark_secret",
+                "Social Status": "vf_knight",
+            },
+        ],
+        live={"#fields-live": "3 Virtue points, 3 Flaw points (of 10)"},
+    ),
+    "mythic companion template": Contract(
+        # The Definitive Edition's Faerie Doctor, its Dutybound swapped for
+        # another Minor Flaw and the book's minimum Abilities left out.
+        prefill={
+            "Faerie Friend": "vf_faerie_friend",
+            "Dutybound": "vf_dutybound",
+            "The book's minimum Abilities": True,
+            "Social Status": "vf_wise_one",
+        },
+        edits={"Dutybound": "vf_reckless", "The book's minimum Abilities": False},
+        saved=lambda s: [
+            (c.type, c.in_creation, [vf.vf_id for vf in c.virtues_flaws], c.abilities)
+            for c in s.characters
+            if c.name == "Ulla"
+        ],
+        expected=[
+            (
+                "mythic companion",
+                True,
+                [
+                    "vf_wise_one",
+                    "vf_faerie_doctor",
+                    "vf_dowsing",
+                    "vf_curse_throwing",
+                    "vf_faerie_friend",
+                    "vf_reckless",
+                ],
+                [],
+            )
+        ],
+        invalid={"First Virtue": VirtueFlawInstance("vf_tough")},
+        aliases={"First Virtue": "fld-virtue_0"},
+        live={"#fields-live": "5 Virtue points of 5 allowed, 2 Flaw points (of 10)"},
+    ),
+    "companion sample": Contract(
+        # The Church's Anne, a Holy Hermit, without her Visions and Small
+        # Frame (3 + 1 points of Flaws), so a Virtue must go too.
+        prefill={
+            "Guardian Angel": True,
+            "Visions": True,
+            "The book's Characteristics": True,
+            "The book's Abilities": True,
+            "Social Status": "vf_religious",
+        },
+        edits={"Visions": False, "Small Frame": False, "Guardian Angel": False},
+        saved=lambda s: [
+            (
+                c.type,
+                c.in_creation,
+                s.current_year - (c.background.year_born or 0),
+                [vf.vf_id for vf in c.virtues_flaws],
+                bool(c.abilities),
+            )
+            for c in s.characters
+            if c.name == "Ulla"
+        ],
+        expected=[
+            (
+                "companion",
+                True,
+                28,
+                [
+                    "vf_religious",
+                    "vf_strong_willed",
+                    "vf_missing_eye",
+                    "vf_poor_eyesight",
+                    "vf_vow",
+                ],
+                True,
+            )
+        ],
+        invalid={"Visions": False},
+    ),
+    "grog template as companion": Contract(
+        # The Animal Trainer's Madoc as a companion: a Major Story Flaw
+        # (which no grog may take) makes him one.
+        prefill={
+            "Character": "0",
+            "Social Status": "vf_covenfolk",
+            "Cursed Guile": True,
+        },
+        edits={"First Flaw": VirtueFlawInstance("vf_dark_secret")},
+        saved=lambda s: [
+            (c.type, c.in_creation, [vf.vf_id for vf in c.virtues_flaws])
+            for c in s.characters
+            if c.name == "Ulla"
+        ],
+        expected=[
+            (
+                "companion",
+                True,
+                [
+                    "vf_covenfolk",
+                    "vf_puissant_ability",
+                    "vf_improved_characteristics",
+                    "vf_cursed_guile",
+                    "vf_judged_unfairly",
+                    "vf_dark_secret",
+                ],
+            )
+        ],
+        invalid={"Cursed Guile": False},
+        aliases={"First Flaw": "fld-flaw_0"},
+        live={"#fields-live": "Flaw points (of 10)"},
+    ),
     "grog template": Contract(
         # The Animal Trainer's first sample, Madoc, whose list leaves no
         # names blank: saving makes the grog.

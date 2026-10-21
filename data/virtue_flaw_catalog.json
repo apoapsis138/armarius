@@ -8891,6 +8891,20 @@
       "description": "As stated above, the zahids are exceptionally ascetic Sufis. They seek, through an ascetic, pious life, to achieve a closer experience of God. Many zahids are shaykhs -- leaders of Sufi tariqas although this is not exclusively the case. Through their pious contemplation, they gain the ability to work miraculous acts, karamas, and those who do associate with tariqas often have the ability to synchronize the efforts of their followers, enabling them to gain deep insights into the nature of the Divine. Required Virtues and Flaws: All zahids must begin with the free Virtue Zahid, a Mythic Companion Virtue. A zahid must also take the following Virtues: True Faith, Major General Meditation, Major Supernatural (Method) Understanding, Major Supernatural (Power) Second Sight, Minor Supernatural This leaves a zahid with ten points of Flaws and ten points of Virtues remaining. Note that in order to balance the character's Virtues and Flaws, the character will have to take, at minimum, five points of Flaws. A zahid must take one Social Status, normally one of the Minor Virtues Wise One or 'Alim, if living in Muslim lands, or the Major Flaw Outsider (Muslim), if living elsewhere. A zahid who is a shaykh should take the Minor Supernatural Virtue Ceremony and the Major Story Flaw Dependent, representing a Sufi tariqa. Minimum Ability Scores: Zahid characters must spend 90 experience points on the following Abilities. While these include one Arcane and two Academic Knowledges, a zahid must take appropriate Virtues in order to gain access to other such Abilities: Concentration 1 Dominion Lore 1 Islamic Law 1 Meditation 3 Second Sight 2 Theology: Islam 2 Understanding 2 The character's remaining experience points may be spent as the player sees fit."
     },
     {
+      "id": "vf_perfectus_mythic",
+      "name": "Perfectus (Mythic Companion)",
+      "type": "Virtue",
+      "category": "Mythic Companion",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
+      "source": "RoP:D",
+      "summary": "Marks a Cathar Perfectus Mythic Companion: Enemies (the Church), Purity, Second Sight and Transcendence; 50 xp minimum in Purity, Transcendence, Theology and others.",
+      "description": "The Perfecti and their followers, the Cathars, are a group of holy men and women that developed in Southern France in the twelfth and thirteenth centuries. They consider themselves Christians, but profess dualist doctrine that is contrary to Roman practices. Required Virtues and Flaws: Perfecti must begin with Enemies (the Church) as a Major Story Flaw. They also begin with the following Virtues: Perfectus (Mythic Companion Virtue), Purity, Second Sight, Transcendence. This leaves them with seven points of Flaws remaining, which may be spent to allow a total of fourteen more points of Virtues. Minimum Ability Scores: Perfecti characters must spend 50 of their starting experience points to achieve these scores in the following Abilities: Church Lore 1, Concentration 1, Dominion Lore 1, Purity 2, Theology 2, Transcendence 2. The Definitive Edition's Perfectus, a Minor Social Status, is the same calling played as an ordinary companion."
+    },
+    {
       "id": "vf_a_deal_with_the_devil",
       "name": "A Deal with the Devil",
       "type": "Flaw",

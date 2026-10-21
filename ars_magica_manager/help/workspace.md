@@ -266,6 +266,10 @@ The Create a New Character form asks for a Name, a Type (magus, companion, Mythi
 - **None**: the character starts In Creation, to be built step by step with the [Creation Worksheet](help:creation-worksheet).
 - **A template**: one of the book's ready-to-play characters (Ars Magica Definitive Edition, Chapter 3: Characters, Character Templates). It fills the new sheet and the character starts In Play. If the template leaves a name to the player, such as an Area Lore's area, the app asks for it before the character is made; cancelling that cancels the new character.
 - **A Grogs template** (a grog, while Grogs is in play; marked "(Grogs)"): one of the nineteen kinds of grog in Grogs, Chapter 7, such as The Advisor or The Street Thug. These are guidance rather than finished characters, so the app asks for the template's choices next (see [A Grogs template](help:grog-templates)) and the grog starts In Creation.
+- **A quick recipe** (marked "(DE quick)"): the Definitive Edition's Quick and Easy Virtues and Flaws, for a grog, a martial, learned, social or magical companion, or a magus. The app asks for the recipe's choices next (see [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws)) and the character starts In Creation with those Virtues and Flaws.
+- **A Mythic Companion template** (a Mythic Companion; marked with its book, such as "(DE)" or "(RoP:D)"): one kind of Mythic Companion, such as the Faerie Doctor or the Zahid, with the Virtues and Flaws its book requires and its minimum Abilities. See [A Mythic Companion template](help:mythic-companion-templates).
+- **A supplement's companion** (a companion; marked with its book, such as "(RoP:D)"): a ready-made companion from a supplement, such as the Byzantine Priest. See [A supplement's companion](help:companion-sample-templates).
+- **A Grogs template as a companion** (a companion, while Grogs is in play): see [A Grogs template as a companion](help:grog-template-companion).
 
 The line above Create describes the template you chose.
 
@@ -291,6 +295,75 @@ Then the app asks for any names the Ability list leaves to you, such as an Area 
 **What the grog starts with:** the age, the Social Status, Virtues and Flaws, the book's Personality Traits (with Loyal +1, and Brave +1 for one with a Martial Ability, if the book's lack them) and any Reputation, and the book's Ability list for that age, with its specialties. The Abilities go on the [Creation Worksheet](help:creation-worksheet) as xp, step by step: 75 xp of Native Language, the free score of a Supernatural Ability its Virtue grants, a Virtue's own xp (Educated, Warrior, Arcane Lore) on what it may buy, the 45 xp of Early Childhood on what a child may learn, and the rest in Later Life. The grog starts **In Creation**, so the worksheet checks the result: where the book's list spends more than the age gives, needs a Virtue the grog doesn't have (a Martial Ability without Warrior), or leaves xp unspent, its checks say so. The Biography notes the template, the book's details, its suggested training packages, and where the app's version differs from the book (a Flaw the Definitive Edition makes Major, an older edition's Ability) and why.
 
 **See also:** [New Character](help:character-group-new), [Creation Worksheet](help:creation-worksheet), [How to start a character](help:guide-creation-character-new)
+
+### Quick and Easy Virtues and Flaws
+<!-- help: quick-virtues-flaws -->
+
+The Definitive Edition's Quick and Easy Virtues and Flaws (Chapter 3, page 46) are a fast way to choose a character's Virtues and Flaws. Each type's Template list has its recipes, marked "(DE quick)":
+
+- **Grog**: a Minor Personality Flaw for how you want to play the grog, Covenfolk, and one Minor Virtue: Warrior for a grog who fights, Educated for one who is educated, Arcane Lore for one who knows about the supernatural, or Puissant in the grog's specialty for anyone else (typed in, such as Craft: Blacksmith).
+- **Companions**: a Major Personality or Story Flaw, which says what stories they are in, Covenfolk, and three points of Virtues from one of four recipes:
+  - **Martial companion**: Warrior, with Puissant and Affinity in one Martial Ability.
+  - **Learned companion**: Educated, with either Puissant in two Academic Abilities, or Puissant and Affinity in one.
+  - **Social companion**: one of Gossip, Piercing Gaze, Social Contacts, Well-Traveled or Venus' Blessing, with Puissant in two Social Abilities. The book doesn't say which Abilities are Social; the app offers Bargain, Carouse, Charm, Etiquette, Folk Ken, Guile, Intrigue and Leadership.
+  - **Magical companion**: one Minor Supernatural Virtue that grants an Ability, such as Second Sight, with Puissant and Affinity in that Ability.
+- **Magus**: a Major Personality or Story Flaw, The Gift and the Hermetic Magus Social Status, Deficient Form in a Form you are not interested in, a Minor Magical Focus that doesn't rely on that Form (typed in, such as Fire), Puissant and Affinity in one Technique that overlaps the Focus, and Puissant in one Form that overlaps it. The House's free Virtue is chosen on the worksheet.
+
+**You choose:** where the recipe gives several ways (the grog's Virtue, the Learned companion's), which one; the Abilities, Arts or Virtue each part names; the **Flaw**, from the books in play; and the **Social Status** (Covenfolk to start with; a magus's is Hermetic Magus).
+
+**The app works out:** the line under the form gives the Virtue and Flaw points so far. Use refuses a choice that breaks the type's limits. A grog's are those of [A Grogs template](help:grog-templates). A companion's and a magus's: nothing Hermetic without The Gift, at most one Major Hermetic Virtue, at most ten points of Flaws and five Minor Flaws, no more Virtue points than Flaw points, exactly one Social Status, and the same Ability or Art named twice by the same Virtue. A Social Status that costs a point is refused here, since it leaves the Virtues a point over: take it on the worksheet with another Flaw. Cancelling makes no character.
+
+**What the character starts with:** those Virtues and Flaws, and nothing else: the recipe is only the Virtues and Flaws. The character starts **In Creation**, so you finish on the [Creation Worksheet](help:creation-worksheet): Characteristics, a childhood, Later Life, training packages, and a magus's House, apprenticeship and spells. You can change the Virtues and Flaws there too.
+
+**See also:** [New Character](help:character-group-new), [Creation Worksheet](help:creation-worksheet), [How to start a character](help:guide-creation-character-new)
+
+### A Mythic Companion template
+<!-- help: mythic-companion-templates -->
+
+A Mythic Companion's Template list has one template for each kind of Mythic Companion the books in play describe, marked with its book: the Definitive Edition's Devil Child, Faerie Doctor, Nephilim and Spirit Votary (Chapter 3, pages 56 to 58), Realms of Power: The Divine's Zahid, Perfectus and Kabbalist, Realms of Power: The Infernal's Diabolist and Summoner, Houses of Hermes: True Lineages' Blood of Heroes, and Art & Academe's Maestro.
+
+**The template gives:** the Mythic Companion Virtue and every Virtue and Flaw the book says that kind must take, such as a Faerie Doctor's Dowsing, Curse-Throwing and Wise One.
+
+**You choose:**
+
+- where the book gives a choice, which one: a Devil Child's Demonic Might or Demonic Powers, a Spirit Votary's one Major or three Minor Supernatural Virtues, a Kabbalist's Holy Method and two Holy Powers, the free Minor Virtue of a Diabolist, Summoner or Maestro;
+- each Flaw the book allows "or a suitable substitute" for, the book's own chosen to start with;
+- anything the Virtues name, such as the spirit of a Spirit Votary's Spiritual Pact;
+- **Another Virtue** and **Another Flaw**: more of the player's own, from the books in play. Each point of Flaws allows two points of Virtues, plus the free Minor Virtue, so a Nephilim, Zahid or Kabbalist needs about five points of Flaws to pay for what the book requires;
+- **The book's minimum Abilities**, ticked: the scores the book says the character should start with (90 xp for a Zahid), put on the [Creation Worksheet](help:creation-worksheet) as xp. Untick it to spend the xp yourself. Where they leave a name to you, such as a Spirit Votary's local Area Lore, the form asks for it;
+- the **Social Status**, where the book doesn't fix it.
+
+**The app works out:** the line under the form gives the Virtue points so far against what the Flaws allow, and the Flaw points. Use refuses a choice that breaks a Mythic Companion's limits: exactly one Mythic Companion Virtue, no Gift and nothing Hermetic, at most ten points of Flaws and five Minor Flaws, no more Virtue points than twice the Flaw points plus one, and nothing taken more often than the book allows. The Biography notes the template, its book's advice and where the app differs from the book (the Hebrew of a Nephilim or Kabbalist is taken as Dead Language: Hebrew, a Perfectus's Church Lore as Organization Lore: Church).
+
+The Definitive Edition's Perfectus is a Minor Social Status for an ordinary companion; the Perfectus template is Realms of Power: The Divine's Mythic Companion, a separate Virtue. The character starts **In Creation**, and the worksheet does the rest.
+
+**See also:** [New Character](help:character-group-new), [Creation Worksheet](help:creation-worksheet), [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws)
+
+### A supplement's companion
+<!-- help: companion-sample-templates -->
+
+A companion's Template list also has the ready-made companions the supplements in play print, marked with their book, such as Byzantine Priest (RoP:D), Mystic Nun (TC), Gilpatrick (A&A) or Rothiger (HMRE). Unlike the Definitive Edition's templates, which start In Play, these start **In Creation**, so the worksheet checks them against the rules.
+
+**You choose:**
+
+- **The book's Virtues and Flaws**, ticked: untick one to leave it out.
+- **Another Virtue** and **Another Flaw**: more of your own, from the books in play.
+- **The book's Characteristics**, ticked: untick them to buy your own on the worksheet.
+- **The book's Abilities**, ticked: the character's Abilities and specialties, put on the worksheet as xp (Native Language, a Virtue's own xp, Early Childhood, then Later Life). Where the book leaves a name to you, such as an Area Lore's area or a language, the form asks for it.
+- the **Social Status**, from the book's.
+
+**The app works out:** the line under the form gives the Virtue and Flaw points, and the xp a character has at the book's age against what its Abilities come to. Use refuses a choice that breaks a companion's limits (as for [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws)); fewer Virtue points than Flaw points is allowed, since some books leave a companion a few points short for the player to fill. The character's age sets the year born, and its Personality Traits and Reputations come with it. The Biography notes the book's advice and where the app differs from the page, such as an older edition's Ability (Church Lore taken as Organization Lore: Church).
+
+**See also:** [New Character](help:character-group-new), [Creation Worksheet](help:creation-worksheet), [A Grogs template as a companion](help:grog-template-companion)
+
+### A Grogs template as a companion
+<!-- help: grog-template-companion -->
+
+Grogs says any of its grog templates can be played as a companion simply by adding a Story Flaw (Chapter 7, page 95, and the "as Companion" notes of many templates). While Grogs is in play, a companion's Template list has each one, marked "(Grogs, as a companion)".
+
+It asks for the same choices as [A Grogs template](help:grog-templates), with two differences: the choices are held to a companion's limits rather than a grog's (Major Virtues and Flaws and up to ten points of Flaws are allowed), and Next refuses until a **Story Flaw** is among them: choose one under **Another Flaw**, such as Dark Secret or Visions. The character is made a companion, without the Loyal +1 a grog gets, and the Biography notes it.
+
+**See also:** [A Grogs template](help:grog-templates), [A supplement's companion](help:companion-sample-templates), [New Character](help:character-group-new)
 
 **See also:** [Laboratories group](help:laboratory-group), [Creation Worksheet](help:creation-worksheet), [The workspace](help:workspace), [How to create a character, covenant or laboratory](help:guide-creation)
 

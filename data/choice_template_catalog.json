@@ -1,0 +1,5411 @@
+{
+  "attribution": "Quick and Easy Virtues and Flaws and the Mythic Companions from Ars Magica Definitive Edition, Chapter Three; Mythic Companions from Realms of Power: The Divine, Realms of Power: The Infernal, Houses of Hermes: True Lineages and Art & Academe; and ready-made companions from Realms of Power: The Divine, The Church, Art & Academe, City & Guild, Covenants, Apprentices, Magi of Hermes, Hedge Magic Revised Edition and Between Sand and Sea: Mythic Africa, via Project: Redcap (redcap.org) and the books. Restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "source": "https://redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:_Characters",
+  "entries": [
+    {
+      "id": "ct_quick_martial",
+      "name": "Martial companion (DE quick)",
+      "type": "companion",
+      "kind": "quick",
+      "book": "DE",
+      "page": 46,
+      "concept": "A fighter: Warrior, with Puissant and Affinity in one Martial Ability.",
+      "flaw": {
+        "tier": "Major",
+        "categories": [
+          "Personality",
+          "Story"
+        ]
+      },
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_warrior"
+            },
+            {
+              "kind": "ability",
+              "label": "Martial Ability",
+              "categories": [
+                "Martial"
+              ],
+              "vf_ids": [
+                "vf_puissant_ability",
+                "vf_affinity_with_ability"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ct_quick_learned",
+      "name": "Learned companion (DE quick)",
+      "type": "companion",
+      "kind": "quick",
+      "book": "DE",
+      "page": 46,
+      "concept": "A scholar: Educated, with Puissant in two Academic Abilities, or Puissant and Affinity in one.",
+      "flaw": {
+        "tier": "Major",
+        "categories": [
+          "Personality",
+          "Story"
+        ]
+      },
+      "variant_label": "Learning",
+      "variants": [
+        {
+          "name": "Puissant in two Academic Abilities",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_educated"
+            },
+            {
+              "kind": "ability",
+              "label": "Academic Ability",
+              "categories": [
+                "Academic"
+              ],
+              "vf_ids": [
+                "vf_puissant_ability"
+              ]
+            },
+            {
+              "kind": "ability",
+              "label": "Second Academic Ability",
+              "categories": [
+                "Academic"
+              ],
+              "vf_ids": [
+                "vf_puissant_ability"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Puissant and Affinity with one Academic Ability",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_educated"
+            },
+            {
+              "kind": "ability",
+              "label": "Academic Ability",
+              "categories": [
+                "Academic"
+              ],
+              "vf_ids": [
+                "vf_puissant_ability",
+                "vf_affinity_with_ability"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ct_quick_social",
+      "name": "Social companion (DE quick)",
+      "type": "companion",
+      "kind": "quick",
+      "book": "DE",
+      "page": 46,
+      "concept": "A talker: one social Virtue, with Puissant in two Social Abilities.",
+      "flaw": {
+        "tier": "Major",
+        "categories": [
+          "Personality",
+          "Story"
+        ]
+      },
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "one_of",
+              "label": "Social Virtue",
+              "vf_ids": [
+                "vf_gossip",
+                "vf_piercing_gaze",
+                "vf_social_contacts",
+                "vf_well_traveled",
+                "vf_venus_blessing"
+              ]
+            },
+            {
+              "kind": "ability",
+              "label": "Social Ability",
+              "names": [
+                "Bargain",
+                "Carouse",
+                "Charm",
+                "Etiquette",
+                "Folk Ken",
+                "Guile",
+                "Intrigue",
+                "Leadership"
+              ],
+              "vf_ids": [
+                "vf_puissant_ability"
+              ]
+            },
+            {
+              "kind": "ability",
+              "label": "Second Social Ability",
+              "names": [
+                "Bargain",
+                "Carouse",
+                "Charm",
+                "Etiquette",
+                "Folk Ken",
+                "Guile",
+                "Intrigue",
+                "Leadership"
+              ],
+              "vf_ids": [
+                "vf_puissant_ability"
+              ]
+            }
+          ]
+        }
+      ],
+      "fixes": [
+        "The book doesn't say which Abilities are Social; the app offers Bargain, Carouse, Charm, Etiquette, Folk Ken, Guile, Intrigue and Leadership."
+      ]
+    },
+    {
+      "id": "ct_quick_magical",
+      "name": "Magical companion (DE quick)",
+      "type": "companion",
+      "kind": "quick",
+      "book": "DE",
+      "page": 46,
+      "concept": "A touch of the supernatural: one Minor Supernatural Virtue that grants an Ability, with Puissant and Affinity in that Ability.",
+      "flaw": {
+        "tier": "Major",
+        "categories": [
+          "Personality",
+          "Story"
+        ]
+      },
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "supernatural",
+              "label": "Supernatural Virtue",
+              "vf_ids": [
+                "vf_puissant_ability",
+                "vf_affinity_with_ability"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ct_quick_grog",
+      "name": "Grog (DE quick)",
+      "type": "grog",
+      "kind": "quick",
+      "book": "DE",
+      "page": 46,
+      "concept": "A Minor Personality Flaw for how you want to play the grog, and one Minor Virtue for what the grog does.",
+      "flaw": {
+        "tier": "Minor",
+        "categories": [
+          "Personality"
+        ]
+      },
+      "variant_label": "The grog",
+      "variants": [
+        {
+          "name": "Fights: Warrior",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_warrior"
+            }
+          ]
+        },
+        {
+          "name": "Educated",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_educated"
+            }
+          ]
+        },
+        {
+          "name": "Knows the supernatural: Arcane Lore",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_arcane_lore"
+            }
+          ]
+        },
+        {
+          "name": "Anything else: Puissant in the specialty",
+          "slots": [
+            {
+              "kind": "ability",
+              "label": "Specialty Ability",
+              "free": true,
+              "hint": "The Ability the grog is good at, e.g. Craft: Blacksmith or Hunt.",
+              "vf_ids": [
+                "vf_puissant_ability"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ct_quick_magus",
+      "name": "Magus (DE quick)",
+      "type": "magus",
+      "kind": "quick",
+      "book": "DE",
+      "page": 46,
+      "concept": "A Minor Magical Focus, Puissant and Affinity in a Technique and Puissant in a Form that overlap it, and Deficient Form in a Form you are not interested in.",
+      "flaw": {
+        "tier": "Major",
+        "categories": [
+          "Personality",
+          "Story"
+        ]
+      },
+      "statuses": [
+        "vf_hermetic_magus"
+      ],
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_the_gift"
+            },
+            {
+              "kind": "art",
+              "label": "Deficient Form",
+              "group": "form",
+              "param": "form",
+              "hint": "A Form you are not interested in.",
+              "vf_ids": [
+                "vf_deficient_form"
+              ]
+            },
+            {
+              "kind": "text",
+              "label": "Minor Magical Focus",
+              "param": "focus",
+              "hint": "What the magic is focused on, not relying on the Deficient Form, e.g. Fire.",
+              "vf_ids": [
+                "vf_minor_magical_focus"
+              ]
+            },
+            {
+              "kind": "art",
+              "label": "Technique",
+              "group": "technique",
+              "hint": "One that overlaps the Minor Magical Focus: Puissant and Affinity.",
+              "vf_ids": [
+                "vf_puissant_art",
+                "vf_affinity_with_art"
+              ]
+            },
+            {
+              "kind": "art",
+              "label": "Form",
+              "group": "form",
+              "hint": "One that overlaps the Minor Magical Focus: Puissant.",
+              "vf_ids": [
+                "vf_puissant_art"
+              ]
+            }
+          ]
+        }
+      ],
+      "notes": "The House's free Virtue is chosen on the worksheet."
+    },
+    {
+      "id": "ct_mc_devil_child",
+      "name": "Devil Child",
+      "book": "DE",
+      "page": 56,
+      "concept": "A child of a demon's scheme: Demonic Blood, Demonic Might or Demonic Powers, Puissant Guile and Tragic Life.",
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_devil_child"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_demonic_blood"
+            },
+            {
+              "kind": "one_of",
+              "label": "Free Supernatural Virtue",
+              "vf_ids": [
+                "vf_demonic_might",
+                "vf_demonic_powers"
+              ]
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_puissant_ability",
+              "params": {
+                "ability": "guile"
+              }
+            },
+            {
+              "kind": "flaw",
+              "label": "Tragic Life",
+              "tier": "Major",
+              "default": "vf_tragic_life",
+              "hint": "The book's Flaw, or a suitable substitute agreed with the troupe."
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 4,
+      "notes": "The book lets a Devil Child take three more points of Virtues at no cost; the worksheet doesn't count them as free. Devil Children have no common Abilities: theirs should suit the task they were made for.",
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_faerie_doctor",
+      "name": "Faerie Doctor",
+      "book": "DE",
+      "page": 57,
+      "concept": "An intermediary between people and the fae: Dowsing, Curse-Throwing, Wise One, Faerie Friend and Dutybound.",
+      "statuses": [
+        "vf_wise_one"
+      ],
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_faerie_doctor"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_dowsing"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_curse_throwing"
+            },
+            {
+              "kind": "flaw",
+              "label": "Faerie Friend",
+              "tier": "Minor",
+              "default": "vf_faerie_friend",
+              "hint": "The book's Flaw, or a suitable substitute agreed with the troupe."
+            },
+            {
+              "kind": "flaw",
+              "label": "Dutybound",
+              "tier": "Minor",
+              "default": "vf_dutybound",
+              "hint": "Obeying a faerie doctor's oaths, or a suitable substitute."
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 4,
+      "abilities": [
+        {
+          "name": "Curse-Throwing",
+          "score": 4
+        },
+        {
+          "name": "Dowsing",
+          "score": 1
+        },
+        {
+          "name": "Faerie Lore",
+          "score": 3
+        },
+        {
+          "name": "Profession: Storyteller",
+          "score": 1
+        }
+      ],
+      "notes": "Student of Faerie and Faerie Upbringing are common among faerie doctors; Immunities, Rapid Convalescence, Free Expression, Purifying Touch and Second Sight are useful.",
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_spirit_votary",
+      "name": "Spirit Votary",
+      "book": "DE",
+      "page": 58,
+      "concept": "A pagan bound to a spirit: Second Sight, Spiritual Pact, more Supernatural Virtues and the Pagan Flaw.",
+      "variant_label": "Supernatural Virtues",
+      "variants": [
+        {
+          "name": "One more Major Supernatural Virtue",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_spirit_votary"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_second_sight"
+            },
+            {
+              "kind": "text",
+              "label": "Spiritual Pact: the spirit",
+              "param": "spirit",
+              "vf_ids": [
+                "vf_spiritual_pact"
+              ]
+            },
+            {
+              "kind": "virtue",
+              "label": "Major Supernatural Virtue",
+              "tier": "Major",
+              "categories": [
+                "Supernatural"
+              ],
+              "hint": "A Major Supernatural Virtue the player chooses."
+            },
+            {
+              "kind": "flaw",
+              "label": "Pagan",
+              "tier": "Major",
+              "default": "vf_pagan_major",
+              "hint": "The book's Flaw, or a suitable substitute agreed with the troupe."
+            }
+          ]
+        },
+        {
+          "name": "Three Minor Supernatural Virtues",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_spirit_votary"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_second_sight"
+            },
+            {
+              "kind": "text",
+              "label": "Spiritual Pact: the spirit",
+              "param": "spirit",
+              "vf_ids": [
+                "vf_spiritual_pact"
+              ]
+            },
+            {
+              "kind": "virtue",
+              "label": "Minor Supernatural Virtue",
+              "tier": "Minor",
+              "categories": [
+                "Supernatural"
+              ]
+            },
+            {
+              "kind": "virtue",
+              "label": "Second Minor Supernatural",
+              "tier": "Minor",
+              "categories": [
+                "Supernatural"
+              ]
+            },
+            {
+              "kind": "virtue",
+              "label": "Third Minor Supernatural",
+              "tier": "Minor",
+              "categories": [
+                "Supernatural"
+              ]
+            },
+            {
+              "kind": "flaw",
+              "label": "Pagan",
+              "tier": "Major",
+              "default": "vf_pagan_major",
+              "hint": "The book's Flaw, or a suitable substitute agreed with the troupe."
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 4,
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 1
+        },
+        {
+          "name": "Magic Lore",
+          "score": 4
+        },
+        {
+          "name": "Penetration",
+          "score": 1
+        },
+        {
+          "name": "Second Sight",
+          "score": 3
+        }
+      ],
+      "fixes": [
+        "The book's Local Area Lore is Area Lore for the area named."
+      ],
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_nephilim",
+      "name": "Nephilim",
+      "book": "DE",
+      "page": 58,
+      "concept": "A divine giant of the old heroes' line: Blood of the Nephilim, Greater Immunity to Disease, Great Stamina and Strength, and more.",
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_nephilim"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_blood_of_the_nephilim"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_greater_immunity",
+              "params": {
+                "hazard": "disease"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_great_characteristic",
+              "params": {
+                "characteristic": "stamina"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_great_characteristic",
+              "params": {
+                "characteristic": "strength"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_improved_characteristics"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_sense_holiness_and_unholiness"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_strong_angelic_heritage"
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 5,
+      "abilities": [
+        {
+          "name": "Dominion Lore",
+          "score": 4
+        },
+        {
+          "name": "Dead Language: Hebrew",
+          "score": 1
+        },
+        {
+          "name": "Penetration",
+          "score": 1
+        },
+        {
+          "name": "Sense Holiness and Unholiness",
+          "score": 3
+        }
+      ],
+      "notes": "Nephilim must take five points of Flaws to pay for these Virtues, and may take five more.",
+      "fixes": [
+        "The book's Hebrew is taken as Dead Language: Hebrew."
+      ],
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_zahid",
+      "name": "Zahid",
+      "book": "RoP:D",
+      "page": 117,
+      "concept": "An ascetic Sufi who works miracles: True Faith, Meditation, Understanding and Second Sight.",
+      "statuses": [
+        "vf_wise_one",
+        "vf_outsider_major"
+      ],
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_zahid"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_true_faith"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_meditation"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_understanding"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_second_sight"
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 5,
+      "abilities": [
+        {
+          "name": "Concentration",
+          "score": 1
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 1
+        },
+        {
+          "name": "Islamic Law",
+          "score": 1
+        },
+        {
+          "name": "Meditation",
+          "score": 3
+        },
+        {
+          "name": "Second Sight",
+          "score": 2
+        },
+        {
+          "name": "Theology: Islam",
+          "score": 2
+        },
+        {
+          "name": "Understanding",
+          "score": 2
+        }
+      ],
+      "notes": "A zahid takes at least five points of Flaws. A shaykh takes Ceremony and the Major Story Flaw Dependent (his tariqa). Social Status: Wise One or `Alim in Muslim lands, Outsider (Muslim) elsewhere.",
+      "fixes": [
+        "`Alim isn't in the catalog yet, so the Social Statuses offered are Wise One and Outsider."
+      ],
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_perfectus",
+      "name": "Perfectus",
+      "book": "RoP:D",
+      "page": 94,
+      "concept": "A Cathar holy man or woman: Purity, Second Sight, Transcendence and Enemies (the Church).",
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_perfectus_mythic"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_purity"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_second_sight"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_transcendence"
+            },
+            {
+              "kind": "flaw",
+              "label": "Enemies (the Church)",
+              "tier": "Major",
+              "default": "vf_enemies",
+              "hint": "The book's Major Story Flaw."
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 4,
+      "abilities": [
+        {
+          "name": "Organization Lore: Church",
+          "score": 1
+        },
+        {
+          "name": "Concentration",
+          "score": 1
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 1
+        },
+        {
+          "name": "Purity",
+          "score": 2
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 2
+        },
+        {
+          "name": "Transcendence",
+          "score": 2
+        }
+      ],
+      "fixes": [
+        "The book's Church Lore is Organization Lore: Church, and its Theology is Theology: Christian.",
+        "The Definitive Edition's Perfectus is a Minor Social Status for an ordinary companion; this is Realms of Power: The Divine's Mythic Companion."
+      ],
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_kabbalist",
+      "name": "Kabbalist",
+      "book": "RoP:D",
+      "page": 138,
+      "concept": "A Jewish mystic: a favoured Holy Method, two Holy Powers, Educated (Hebrew) and Outsider.",
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_kabbalist"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_educated_hebrew"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_outsider_major"
+            },
+            {
+              "kind": "one_of",
+              "label": "Favoured Holy Method",
+              "vf_ids": [
+                "vf_gematria",
+                "vf_kabbalah",
+                "vf_merkavah"
+              ]
+            },
+            {
+              "kind": "one_of",
+              "label": "Holy Power",
+              "vf_ids": [
+                "vf_adjuration",
+                "vf_blessing",
+                "vf_intervention",
+                "vf_transcendence",
+                "vf_understanding",
+                "vf_wonders"
+              ]
+            },
+            {
+              "kind": "one_of",
+              "label": "Second Holy Power",
+              "vf_ids": [
+                "vf_adjuration",
+                "vf_blessing",
+                "vf_intervention",
+                "vf_transcendence",
+                "vf_understanding",
+                "vf_wonders"
+              ]
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 5,
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 1
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 1
+        },
+        {
+          "name": "Dead Language: Hebrew",
+          "score": 4
+        },
+        {
+          "name": "Judaic Lore",
+          "score": 1
+        },
+        {
+          "name": "Theology: Judaism",
+          "score": 3
+        },
+        {
+          "name": "Rabbinic Law",
+          "score": 1
+        }
+      ],
+      "notes": "A kabbalist takes at least five points of Flaws, and a Social Status Virtue for his place in the community (such as Rabbi) besides Outsider.",
+      "fixes": [
+        "The book's Hebrew is taken as Dead Language: Hebrew."
+      ],
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_diabolist",
+      "name": "Diabolist",
+      "book": "RoP:I",
+      "page": 112,
+      "concept": "One sworn to Hell, who gains Infernal blessings for his service.",
+      "variant_label": "Free Minor Virtue",
+      "variants": [
+        {
+          "name": "Arcane Lore (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_diabolist"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_arcane_lore"
+            }
+          ]
+        },
+        {
+          "name": "Student of (Infernal) (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_diabolist"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_student_of_realm",
+              "params": {
+                "realm": "infernal"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Wise One (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_diabolist"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_wise_one"
+            }
+          ]
+        }
+      ],
+      "more_virtues": 4,
+      "more_flaws": 5,
+      "notes": "Half of the Virtues bought should be Supernatural Virtues the Infernal grants (the maleficia's Methods and Powers, Infernal Blessing). With Demon Blood or Diabolic Past, another Minor Virtue may replace the free one.",
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_summoner",
+      "name": "Summoner",
+      "book": "RoP:I",
+      "page": 118,
+      "concept": "A sorcerer who commands spirits through the Goetic Art of Summoning.",
+      "variant_label": "Free Minor Virtue",
+      "variants": [
+        {
+          "name": "Arcane Lore (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_summoner"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_summoning"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_arcane_lore"
+            }
+          ]
+        },
+        {
+          "name": "Student of (Infernal) (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_summoner"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_summoning"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_student_of_realm",
+              "params": {
+                "realm": "infernal"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Wise One (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_summoner"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_summoning"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_wise_one"
+            }
+          ]
+        }
+      ],
+      "more_virtues": 4,
+      "more_flaws": 5,
+      "notes": "With Diabolic Past or Demon Blood, another Minor Virtue may replace the free one. Many summoners have a ghostly warder as a familiar spirit.",
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_blood_of_heroes",
+      "name": "Blood of Heroes",
+      "book": "HoH:TL",
+      "page": 103,
+      "concept": "A descendant of a legendary hero, never Gifted: a free heritage Virtue, Heroic Virtues and Flaws, and the Heroic Personality Flaw.",
+      "statuses": [
+        "vf_redcap"
+      ],
+      "variants": [
+        {
+          "name": "",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_blood_of_heroes"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_heroic_personality"
+            },
+            {
+              "kind": "virtue",
+              "label": "Heritage Virtue (free)",
+              "tier": "Minor",
+              "categories": [
+                "Heroic",
+                "Supernatural"
+              ],
+              "hint": "A Minor Virtue that describes the supernatural heritage."
+            }
+          ]
+        }
+      ],
+      "more_virtues": 4,
+      "more_flaws": 5,
+      "notes": "A hero normally belongs to House Mercere as a Redcap. The book advises against more than one such player character in a saga.",
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_mc_maestro",
+      "name": "Maestro",
+      "book": "A&A",
+      "page": 133,
+      "concept": "An artist of inspired talent whose work carries magic.",
+      "variant_label": "Free Minor Virtue",
+      "variants": [
+        {
+          "name": "Free Expression (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_maestro"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_free_expression"
+            }
+          ]
+        },
+        {
+          "name": "Inspirational (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_maestro"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_inspirational"
+            }
+          ]
+        },
+        {
+          "name": "Affinity with the art's Craft or Profession (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_maestro"
+            },
+            {
+              "kind": "ability",
+              "label": "The art's Craft or Profession",
+              "free": true,
+              "hint": "e.g. Craft: Painter or Profession: Minstrel.",
+              "vf_ids": [
+                "vf_affinity_with_ability"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Puissant in the art's Craft or Profession (free)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_maestro"
+            },
+            {
+              "kind": "ability",
+              "label": "The art's Craft or Profession",
+              "free": true,
+              "hint": "e.g. Craft: Painter or Profession: Minstrel.",
+              "vf_ids": [
+                "vf_puissant_ability"
+              ]
+            }
+          ]
+        }
+      ],
+      "more_virtues": 4,
+      "more_flaws": 5,
+      "type": "mythic companion",
+      "kind": "mythic"
+    },
+    {
+      "id": "ct_byzantine_priest",
+      "name": "Byzantine Priest",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 95,
+      "concept": "A married Orthodox priest who escaped the sack of Constantinople and now works holy healing while repaying old debts.",
+      "age": 31,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 1,
+        "presence": 1,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 2,
+        "dexterity": -1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_eastern_priest"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_intervention",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_purity",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_student_of_realm",
+          "params": {
+            "realm": "divine"
+          }
+        },
+        {
+          "vf_id": "vf_favors",
+          "params": {},
+          "note": "Owes favors to those who helped him, especially his wife's family"
+        },
+        {
+          "vf_id": "vf_generous_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_fear",
+          "params": {},
+          "note": "Fire"
+        },
+        {
+          "vf_id": "vf_no_sense_of_direction",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 5,
+          "specialty": "people"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "faithful"
+        },
+        {
+          "name": "Concentration",
+          "score": 2,
+          "specialty": "ignoring pain"
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 2,
+          "specialty": "Eastern saints"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "Church"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "people he knows very well"
+        },
+        {
+          "name": "Living Language: Greek",
+          "score": 5,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Intervention",
+          "score": 4,
+          "specialty": "healing burns"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 3,
+          "specialty": "correspondence"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Organization Lore: Orthodox Church",
+          "score": 3,
+          "specialty": "practices"
+        },
+        {
+          "name": "Purity",
+          "score": 5,
+          "specialty": "vigils"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 2,
+          "specialty": "heresy"
+        }
+      ],
+      "native": "Living Language: Greek",
+      "traits": [
+        [
+          "Generous",
+          3
+        ],
+        [
+          "Helpful",
+          2
+        ],
+        [
+          "Pessimistic",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "Has two more points of Virtues and Flaws to spend. Born in Constantinople and fled its fall as a young student; ordained and married since, as the Eastern Church allows.",
+      "fixes": [
+        "[Area] Lore 5 has no area on the page: written Area Lore: {area} (he was born in Constantinople).",
+        "Greek 5 is taken as Living Language: Greek, taken as his native language (no separate Native Language line).",
+        "Latin is taken as Dead Language: Latin.",
+        "Orthodox Church Lore is taken as Organization Lore: Orthodox Church.",
+        "Theology is taken as Theology: Christian.",
+        "Dominion Lore printed 2+2: score 2 recorded, the +2 is Student of the Divine's bonus.",
+        "Student of the Divine is taken as Student of {realm} with realm 'divine'.",
+        "Generous (Major) is taken as Generous (Major); Fear (fire) is taken as Fear with the fear in a note."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_knight_templar",
+      "name": "Knight Templar",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 96,
+      "concept": "A scarred, battle-loving Templar back from the Holy Land to mind his order's European affairs, with a weakness for luxury.",
+      "age": 25,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 0,
+        "presence": 1,
+        "communication": 1,
+        "strength": 1,
+        "stamina": 1,
+        "dexterity": 2,
+        "quickness": 2
+      },
+      "statuses": [
+        "vf_brother_knight"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_ceremony",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "single weapon"
+          }
+        },
+        {
+          "vf_id": "vf_student_of_realm",
+          "params": {
+            "realm": "divine"
+          }
+        },
+        {
+          "vf_id": "vf_black_sheep",
+          "params": {},
+          "note": "Estranged from his family by joining the Church"
+        },
+        {
+          "vf_id": "vf_greedy_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_disfigured",
+          "params": {},
+          "note": "Scar down the side of his face from a Holy Land skirmish"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: Arabic",
+          "score": 2,
+          "specialty": "formal"
+        },
+        {
+          "name": "Animal Handling",
+          "score": 2,
+          "specialty": "horses"
+        },
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "running"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "battle"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "punching"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 1,
+          "specialty": "sword wounds"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "military orders"
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 1,
+          "specialty": "holy places"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "Muslims"
+        },
+        {
+          "name": "Great Weapon",
+          "score": 3,
+          "specialty": "lance and shield"
+        },
+        {
+          "name": "Living Language: Greek",
+          "score": 2,
+          "specialty": "trade"
+        },
+        {
+          "name": "Area Lore: Holy Land",
+          "score": 4,
+          "specialty": "crusaders"
+        },
+        {
+          "name": "Leadership",
+          "score": 4,
+          "specialty": "soldiers"
+        },
+        {
+          "name": "Music",
+          "score": 1,
+          "specialty": "singing"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "giving orders"
+        },
+        {
+          "name": "Ride",
+          "score": 5,
+          "specialty": "in combat"
+        },
+        {
+          "name": "Single Weapon",
+          "score": 5,
+          "specialty": "sword and heater shield"
+        },
+        {
+          "name": "Survival",
+          "score": 2,
+          "specialty": "desert"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Brave",
+          3
+        ],
+        [
+          "Indulgent",
+          3
+        ],
+        [
+          "Proud",
+          -2
+        ]
+      ],
+      "reputations": [],
+      "notes": "Has room for three more points of Virtues and Flaws. Sworn to own no property, he gets his fine living by lending his sword to wealthy neighbours' ventures.",
+      "fixes": [
+        "Arabic is taken as Living Language: Arabic; Greek is taken as Living Language: Greek.",
+        "Native Language 5 has no language named: Living Language: {language}.",
+        "Church Lore is taken as Organization Lore: Church.",
+        "Holy Land Lore is taken as Area Lore: Holy Land.",
+        "Dominion Lore printed 1+2 and Single Weapon 5+2: base scores recorded, the +2s are Student of the Divine and Puissant Single Weapon.",
+        "Greedy sits in the Major Flaw group on the page (Black Sheep, Greedy) is taken as Greedy (Major).",
+        "Ceremony is in a group of its own between the Social Status and the Minor Virtues, which reads as Major, but the catalog's RoP:D Ceremony is Minor: used Ceremony; the page also lists no Ceremony Ability though the catalog says the Virtue grants Ceremony 1.",
+        "Student of the Divine is taken as Student of {realm} with realm 'divine'.",
+        "Proud is printed -2 (a negative trait), kept as printed."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_franciscan_teacher",
+      "name": "Franciscan Teacher",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 96,
+      "concept": "A university master who became a poor friar to escape his debts and now hopes to convert pagans, and eventually the Order of Hermes.",
+      "age": 25,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": 0,
+        "presence": 0,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 1,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_mendicant_friar"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_magister_in_artibus",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "teaching"
+          }
+        },
+        {
+          "vf_id": "vf_good_teacher",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_inspirational",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ambitious_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_monastic_vows",
+          "params": {},
+          "note": "Obedience, celibacy and poverty as a Franciscan"
+        },
+        {
+          "vf_id": "vf_higher_purpose",
+          "params": {},
+          "note": "Converting anyone, pagans and magi included, to Christianity"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 5,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "begging"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 1,
+          "specialty": "friars"
+        },
+        {
+          "name": "Civil and Canon Law",
+          "score": 3,
+          "specialty": "mendicant orders"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "city folk"
+        },
+        {
+          "name": "Dead Language: Greek",
+          "score": 3,
+          "specialty": "religious writings"
+        },
+        {
+          "name": "Leadership",
+          "score": 4,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 3,
+          "specialty": "the wealthy"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 5,
+          "specialty": "lectures"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Philosophiae",
+          "score": 3,
+          "specialty": "moral philosophy"
+        },
+        {
+          "name": "Survival",
+          "score": 2,
+          "specialty": "cities"
+        },
+        {
+          "name": "Teaching",
+          "score": 5,
+          "specialty": "Artes Liberales"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 5,
+          "specialty": "St. Paul's writings"
+        },
+        {
+          "name": "Organization Lore: University",
+          "score": 4,
+          "specialty": "students"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Ambitious",
+          3
+        ],
+        [
+          "Dedicated",
+          2
+        ],
+        [
+          "Tolerant",
+          2
+        ]
+      ],
+      "reputations": [
+        [
+          "Zealous (university)",
+          2
+        ]
+      ],
+      "notes": "",
+      "fixes": [
+        "Two Social Status Virtues on the page (Mendicant Friar, Magister in Artibus): both among its Social Statuses.",
+        "Ambitious sits in the Major Flaw group (Ambitious, Monastic Vows) is taken as Ambitious (Major); Higher Purpose is in the Minor group is taken as Higher Purpose.",
+        "Church Lore is taken as Organization Lore: Church; University Lore is taken as Organization Lore: University.",
+        "Local Area Lore is taken as Area Lore: {area}.",
+        "Greek (religious writings) is taken as Dead Language: Greek, read as the classical tongue of scripture and the Fathers.",
+        "Latin is taken as Dead Language: Latin; Theology is taken as Theology: Christian.",
+        "Native Language 5 has no language named: Living Language: {language}.",
+        "Teaching printed 5+2: score 5 recorded, the +2 is Puissant Teaching."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_high_ranking_qadi",
+      "name": "The High-Ranking Qadi",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 119,
+      "concept": "A senior Islamic judge who climbed the judiciary through political skill and connections rather than bodily strength.",
+      "age": 30,
+      "characteristics": {
+        "intelligence": 3,
+        "perception": 1,
+        "presence": 3,
+        "communication": 3,
+        "strength": -3,
+        "stamina": -3,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_alim"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_wealthy",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_clear_thinker",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_inspirational",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_piercing_gaze",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "islamic law"
+          }
+        },
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {
+            "group": "'ulama'"
+          }
+        },
+        {
+          "vf_id": "vf_temporal_influence",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ambitious_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_difficult_underlings",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "Martial"
+          }
+        },
+        {
+          "vf_id": "vf_fragile_constitution",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_motion_sickness",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_oversensitive",
+          "params": {},
+          "note": "Disrespect"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: Arabic",
+          "score": 5,
+          "specialty": "public speaking"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 3,
+          "specialty": "personalities"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "logic"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "alertness"
+        },
+        {
+          "name": "Bargain",
+          "score": 3,
+          "specialty": "hard sell"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "being witty"
+        },
+        {
+          "name": "Concentration",
+          "score": 2,
+          "specialty": "reading"
+        },
+        {
+          "name": "Etiquette",
+          "score": 4,
+          "specialty": "nobility"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "nobles"
+        },
+        {
+          "name": "Guile",
+          "score": 4,
+          "specialty": "spot lies"
+        },
+        {
+          "name": "Intrigue",
+          "score": 4,
+          "specialty": "alliances"
+        },
+        {
+          "name": "Islamic Law",
+          "score": 5,
+          "specialty": "local customs"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "intimidate"
+        },
+        {
+          "name": "Stealth",
+          "score": 2,
+          "specialty": "sneak"
+        },
+        {
+          "name": "Teaching",
+          "score": 2,
+          "specialty": "Islamic Law"
+        },
+        {
+          "name": "Theology: Islam",
+          "score": 5,
+          "specialty": "Qur'an"
+        }
+      ],
+      "native": "Living Language: Arabic",
+      "traits": [
+        [
+          "Ambitious",
+          3
+        ],
+        [
+          "Determined",
+          3
+        ],
+        [
+          "Politician",
+          3
+        ]
+      ],
+      "reputations": [],
+      "notes": "Built for an ambitious, political qadi. A more scholarly qadi could move the social Abilities' experience into Artes Liberales, Philosophiae and languages; at age 30-35 he may start with scores of 6, so Theology: Islam and Islamic Law could also be raised.",
+      "fixes": [
+        "Arabic is taken as Living Language: Arabic, taken as his native language (no separate Native Language line).",
+        "Area Lore has no area named: Area Lore: {area}.",
+        "Puissant Ability (Islamic Law) is taken as Puissant {ability} with ability 'islamic law'.",
+        "Ability Block (Martial) is taken as params abilities 'Martial'; Oversensitive (Disrespect) is taken as Oversensitive (Minor group) with the trigger in a note."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_mamluk_emir",
+      "name": "The Mamluk Emir",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 119,
+      "concept": "A proud, reckless Turkish slave-soldier risen to land-holding noble, a fine swordsman with some talent for intrigue.",
+      "age": 31,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 1,
+        "presence": -1,
+        "communication": 0,
+        "strength": 2,
+        "stamina": 2,
+        "dexterity": 1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_emir"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_mamluk",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_muqta",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_inspirational",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lightning_reflexes",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_long_winded",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_self_confident",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_tough",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_oath_of_fealty",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_proud_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lesser_malediction",
+          "params": {},
+          "note": "Cursed by jinn to wound a companion in every battle"
+        },
+        {
+          "vf_id": "vf_missing_ear",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_reckless",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_social_handicap",
+          "params": {},
+          "note": "Superiority complex"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Animal Handling",
+          "score": 2,
+          "specialty": "horses"
+        },
+        {
+          "name": "Living Language: Arabic",
+          "score": 3,
+          "specialty": "giving orders"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 2,
+          "specialty": "history"
+        },
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "leap"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "peoples' reactions"
+        },
+        {
+          "name": "Bargain",
+          "score": 2,
+          "specialty": "political support"
+        },
+        {
+          "name": "Bows",
+          "score": 4,
+          "specialty": "short bow"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "punching"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "stay sober"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "recruiting"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "nobles"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 1,
+          "specialty": "soldiers"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "spot lies"
+        },
+        {
+          "name": "Hunt",
+          "score": 2,
+          "specialty": "lions"
+        },
+        {
+          "name": "Intrigue",
+          "score": 2,
+          "specialty": "alliances"
+        },
+        {
+          "name": "Leadership",
+          "score": 2,
+          "specialty": "rallying troops"
+        },
+        {
+          "name": "Ride",
+          "score": 4,
+          "specialty": "battle"
+        },
+        {
+          "name": "Single Weapon",
+          "score": 5,
+          "specialty": "two long swords"
+        },
+        {
+          "name": "Survival",
+          "score": 2,
+          "specialty": "mountains"
+        },
+        {
+          "name": "Theology: Islam",
+          "score": 2,
+          "specialty": "social structures"
+        },
+        {
+          "name": "Living Language: Turkish",
+          "score": 5,
+          "specialty": "rhetoric"
+        }
+      ],
+      "native": "Living Language: Turkish",
+      "traits": [
+        [
+          "Arrogant",
+          3
+        ],
+        [
+          "Proud",
+          3
+        ],
+        [
+          "Reckless",
+          3
+        ]
+      ],
+      "reputations": [],
+      "notes": "Martial first, political second; shift his Characteristics and Abilities toward politics for a courtier emir.",
+      "fixes": [
+        "Three Social Status Virtues on the page (Emir, Mamluk, Muqta'): the others are among its Virtues and Flaws.",
+        "Arabic is taken as Living Language: Arabic; Turkish 5 is taken as Living Language: Turkish, taken as his native language (Turkish Mamluk, no Native Language line).",
+        "Area Lore has no area named: Area Lore: {area}.",
+        "Proud (Major) is taken as Proud (Major); Reckless is in the Minor Flaw group is taken as Reckless.",
+        "Lesser Malediction and Social Handicap details kept as notes."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_muslim_traveller",
+      "name": "The Muslim Traveller",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 119,
+      "concept": "A curious, friendly Muslim scholar wandering Europe at his guardian angel's urging to see holy places beyond the Islamic world.",
+      "age": 26,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 3,
+        "presence": 0,
+        "communication": 0,
+        "strength": 0,
+        "stamina": 2,
+        "dexterity": -2,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_outsider_major"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_guardian_angel",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_common_sense",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_educated",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_keen_vision",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_long_winded",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_venus_blessing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_well_traveled",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_wilderness_sense",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_enemies",
+          "params": {},
+          "note": "Local clergy"
+        },
+        {
+          "vf_id": "vf_afflicted_tongue",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_clumsy",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_compulsion",
+          "params": {},
+          "note": "Curious"
+        },
+        {
+          "vf_id": "vf_humble",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Animal Handling",
+          "score": 2,
+          "specialty": "horses"
+        },
+        {
+          "name": "Living Language: Arabic",
+          "score": 5,
+          "specialty": "colorful phrases"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 2,
+          "specialty": "dialect"
+        },
+        {
+          "name": "Living Language: {second_language}",
+          "score": 2,
+          "specialty": "expansive vocabulary"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 2,
+          "specialty": "personalities"
+        },
+        {
+          "name": "Area Lore: {second_area}",
+          "score": 2,
+          "specialty": "geography"
+        },
+        {
+          "name": "Area Lore: {third_area}",
+          "score": 2,
+          "specialty": "geography"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "astronomy"
+        },
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "running"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "alertness"
+        },
+        {
+          "name": "Bargain",
+          "score": 3,
+          "specialty": "traveling supplies"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "punching"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "first impressions"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 2,
+          "specialty": "bind wounds"
+        },
+        {
+          "name": "Etiquette",
+          "score": 1,
+          "specialty": "travelers"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "clergy"
+        },
+        {
+          "name": "Guile",
+          "score": 3,
+          "specialty": "in danger"
+        },
+        {
+          "name": "Hunt",
+          "score": 3,
+          "specialty": "tracking"
+        },
+        {
+          "name": "Islamic Law",
+          "score": 2,
+          "specialty": "laws of travel"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 2,
+          "specialty": "Hermetic usage"
+        },
+        {
+          "name": "Ride",
+          "score": 1,
+          "specialty": "speed"
+        },
+        {
+          "name": "Stealth",
+          "score": 1,
+          "specialty": "sneak"
+        },
+        {
+          "name": "Survival",
+          "score": 3,
+          "specialty": "deserts"
+        },
+        {
+          "name": "Swim",
+          "score": 2,
+          "specialty": "rough water"
+        },
+        {
+          "name": "Theology: Islam",
+          "score": 2,
+          "specialty": "prophets"
+        },
+        {
+          "name": "Wilderness Sense",
+          "score": 3,
+          "specialty": "hazards"
+        }
+      ],
+      "native": "Living Language: Arabic",
+      "traits": [
+        [
+          "Curious",
+          3
+        ],
+        [
+          "Friendly",
+          3
+        ],
+        [
+          "Humble",
+          3
+        ]
+      ],
+      "reputations": [
+        [
+          "Infidel (local clergy)",
+          3
+        ]
+      ],
+      "notes": "A generalist and travelling scholar. For a wandering warrior, swap Educated for Warrior and his Academic Abilities for Martial ones, or concentrate the experience in fewer Abilities.",
+      "fixes": [
+        "Outsider's tier is not printed; it is the lone Social Status entry, and Major (3 points) balances the Flaws at 10 against 10 points of Virtues, so used Outsider (Major).",
+        "Educated is taken as Educated (exact name match; his Latin and Artes Liberales fit it, though Educated (Islamic) is the Muslim variant).",
+        "Arabic is taken as Living Language: Arabic, taken as his native language.",
+        "'Another Living Language' twice is taken as Living Language: {language} and Living Language: {second language}.",
+        "Area Lore plus 'Another Area Lore' twice is taken as Area Lore: {area}, {second area}, {third area}.",
+        "Latin is taken as Dead Language: Latin.",
+        "Enemies (Local Clergy) and Compulsion (Curious) details kept as notes; Compulsion is in the Minor group is taken as Compulsion."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_sufi_poetess",
+      "name": "The Sufi Poetess",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 120,
+      "concept": "A young blind mystic who seeks God through verse and is revered as a healer by the poor, though her family has cast her out.",
+      "age": 19,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 1,
+        "presence": 2,
+        "communication": 3,
+        "strength": -3,
+        "stamina": 0,
+        "dexterity": 1,
+        "quickness": 1
+      },
+      "statuses": [
+        "vf_sufi"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_meditation",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_understanding",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_free_expression",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lesser_purifying_touch",
+          "params": {
+            "disease": "quotidian fever"
+          }
+        },
+        {
+          "vf_id": "vf_student_of_realm",
+          "params": {
+            "realm": "divine"
+          }
+        },
+        {
+          "vf_id": "vf_black_sheep",
+          "params": {},
+          "note": "Disowned by her family over her unorthodox worship"
+        },
+        {
+          "vf_id": "vf_blind",
+          "params": {},
+          "note": "Blind since birth"
+        },
+        {
+          "vf_id": "vf_pious_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_compassionate",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: Arabic",
+          "score": 5,
+          "specialty": "poetry"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "sounds"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "the sick"
+        },
+        {
+          "name": "Concentration",
+          "score": 3,
+          "specialty": "Sufi rituals"
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 4,
+          "specialty": "visions"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "'ulama'"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "Sufis"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "spot lies"
+        },
+        {
+          "name": "Islamic Law",
+          "score": 2,
+          "specialty": "women"
+        },
+        {
+          "name": "Meditation",
+          "score": 2,
+          "specialty": "dhikr"
+        },
+        {
+          "name": "Stealth",
+          "score": 1,
+          "specialty": "hide"
+        },
+        {
+          "name": "Theology: Islam",
+          "score": 4,
+          "specialty": "angels"
+        },
+        {
+          "name": "Understanding",
+          "score": 2,
+          "specialty": "visions of God"
+        }
+      ],
+      "native": "Living Language: Arabic",
+      "traits": [
+        [
+          "Creative",
+          3
+        ],
+        [
+          "Pious",
+          3
+        ],
+        [
+          "Soft-Hearted",
+          3
+        ]
+      ],
+      "reputations": [
+        [
+          "Recalcitrant (allies of her family)",
+          2
+        ]
+      ],
+      "notes": "For a poetess less cut off from society, replace Black Sheep and Blind with other Major Story Flaws (Curse of Venus, Dependent, Favors) or Major General Flaws (Crippled, Enfeebled, Low Self-Esteem).",
+      "fixes": [
+        "Arabic is taken as Living Language: Arabic, taken as her native language.",
+        "Dominion Lore printed 4+2: score 4 recorded, the +2 is Student of the Divine.",
+        "Student of Divine is taken as Student of {realm} with realm 'divine'.",
+        "Lesser Purifying Touch (Quotidian Fever) is taken as params disease 'quotidian fever'.",
+        "Pious (Major) is taken as Pious (Major); Compassionate (Minor) is taken as Compassionate."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_baal_shem",
+      "name": "Ba'al Shem",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 140,
+      "concept": "A cheerful itinerant Jewish wonder-worker who travels between communities selling blessings and amulets, plagued by roadside faeries.",
+      "age": 26,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 0,
+        "presence": 1,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 2,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_baal_shem"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_outsider_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_adjuration",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_blessing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_invocation",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_craft_amulets",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_magical_air",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_supernatural_nuisance",
+          "params": {},
+          "note": "Faeries of the road"
+        },
+        {
+          "vf_id": "vf_carefree",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Adjuration",
+          "score": 3,
+          "specialty": "assisting Jews"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 2,
+          "specialty": "roads"
+        },
+        {
+          "name": "Athletics",
+          "score": 1,
+          "specialty": "running"
+        },
+        {
+          "name": "Blessing",
+          "score": 3,
+          "specialty": "houses"
+        },
+        {
+          "name": "Brawl",
+          "score": 1,
+          "specialty": "bludgeon"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "games of chance"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "first impressions"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 3,
+          "specialty": "setting bones"
+        },
+        {
+          "name": "Craft Amulets",
+          "score": 4,
+          "specialty": "Adjuration"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "townsfolk"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "storytelling"
+        },
+        {
+          "name": "Dead Language: Hebrew",
+          "score": 4,
+          "specialty": "talking with rabbis"
+        },
+        {
+          "name": "Invocation",
+          "score": 3,
+          "specialty": "Blessing"
+        },
+        {
+          "name": "Judaic Lore",
+          "score": 2,
+          "specialty": "folklore"
+        },
+        {
+          "name": "Penetration",
+          "score": 1,
+          "specialty": "Adjuration"
+        },
+        {
+          "name": "Theology: Judaism",
+          "score": 1,
+          "specialty": "folklore"
+        },
+        {
+          "name": "Craft: Tinker",
+          "score": 4,
+          "specialty": "pans"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Cheerful",
+          3
+        ],
+        [
+          "Helpful",
+          1
+        ],
+        [
+          "Honest",
+          1
+        ]
+      ],
+      "reputations": [
+        [
+          "Jew (Christians)",
+          2
+        ]
+      ],
+      "notes": "Jewish companions must take Outsider (Major). The book's example works the communities around Bremen.",
+      "fixes": [
+        "Outsider (Major, Jew) is a Social Status Flaw in the catalog: put among its Social Statuses (Outsider (Major)) beside Ba'al Shem, rather than in virtues_flaws.",
+        "Area Lore: Home County is taken as Area Lore: {area} (the book's example travels around Bremen).",
+        "Local Language 5 is taken as Living Language: {language}, native.",
+        "Hebrew is taken as Dead Language: Hebrew.",
+        "Tinker 4 is taken as Craft: Tinker (no Tinker Ability in the catalog).",
+        "Supernatural Nuisance (faeries of the road) detail kept as a note."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_kabbalist",
+      "name": "Kabbalist, ready-made",
+      "type": "mythic companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 140,
+      "concept": "A rabbi torn between his community's daily needs and his drive to master the hidden truths of Kabbalah.",
+      "age": 32,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": 0,
+        "presence": 0,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 1,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_kabbalist"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_rabbi",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_outsider_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_gematria",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_kabbalah",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_understanding",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_wonders",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ceremony",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_philosophic_magic",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_clear_thinker",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_good_teacher",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "kabbalah"
+          }
+        },
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {
+            "group": "kabbalists"
+          }
+        },
+        {
+          "vf_id": "vf_educated_hebrew",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_driven_major",
+          "params": {},
+          "note": "Obtain kabbalistic secrets"
+        },
+        {
+          "vf_id": "vf_feud",
+          "params": {},
+          "note": "Karaite kabbalists"
+        },
+        {
+          "vf_id": "vf_fragile_constitution",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Dead Language: Aramaic",
+          "score": 4,
+          "specialty": "scripture"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Ceremony",
+          "score": 1,
+          "specialty": "Kabbalah"
+        },
+        {
+          "name": "Civil and Canon Law",
+          "score": 2,
+          "specialty": "as affects Jews"
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 2,
+          "specialty": "angels"
+        },
+        {
+          "name": "Finesse",
+          "score": 1,
+          "specialty": "Wonders"
+        },
+        {
+          "name": "Gematria",
+          "score": 4,
+          "specialty": "Understanding"
+        },
+        {
+          "name": "Dead Language: Hebrew",
+          "score": 5,
+          "specialty": "Torah readings"
+        },
+        {
+          "name": "Judaic Lore",
+          "score": 2,
+          "specialty": "folklore"
+        },
+        {
+          "name": "Kabbalah",
+          "score": 4,
+          "specialty": "Wonders"
+        },
+        {
+          "name": "Leadership",
+          "score": 2,
+          "specialty": "in court"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "storytelling"
+        },
+        {
+          "name": "Penetration",
+          "score": 2,
+          "specialty": "Wonders"
+        },
+        {
+          "name": "Philosophiae",
+          "score": 1,
+          "specialty": "natural philosophy"
+        },
+        {
+          "name": "Rabbinic Law",
+          "score": 4,
+          "specialty": "property"
+        },
+        {
+          "name": "Teaching",
+          "score": 3,
+          "specialty": "Talmud"
+        },
+        {
+          "name": "Theology: Judaism",
+          "score": 2,
+          "specialty": "Halakha"
+        },
+        {
+          "name": "Understanding",
+          "score": 4,
+          "specialty": "concerning Jews"
+        },
+        {
+          "name": "Wonders",
+          "score": 4,
+          "specialty": "golems"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Inquisitive",
+          2
+        ],
+        [
+          "Humble",
+          1
+        ],
+        [
+          "Persistent",
+          1
+        ]
+      ],
+      "reputations": [
+        [
+          "Jew (Christians)",
+          2
+        ]
+      ],
+      "notes": "Built as a Mythic Companion. As rabbi he must not let mystical study crowd out his duties to his community.",
+      "fixes": [
+        "Kabbalist (Free Mythic Companion Virtue) is a Social Status in the catalog: put among its Social Statuses with Rabbi and Outsider (Major) is taken as Kabbalist, Rabbi, Outsider (Major).",
+        "Aramaic is taken as Dead Language: Aramaic; Hebrew is taken as Dead Language: Hebrew.",
+        "Local Language 5 is taken as Living Language: {language}, native.",
+        "Rabbinical Law is taken as Rabbinic Law (catalog name).",
+        "Civil & Canon Law is taken as Civil and Canon Law.",
+        "Kabbalah printed 4 +2: score 4 recorded, the +2 is Puissant Kabbalah.",
+        "Driven (Major) is taken as Driven (Major); Driven and Feud details kept as notes.",
+        "The book's minimum for a kabbalist is Theology: Judaism 3, but the template prints 2; kept as printed."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_radhanite_merchant",
+      "name": "Radhanite Merchant",
+      "type": "companion",
+      "kind": "sample",
+      "book": "RoP:D",
+      "page": 140,
+      "concept": "A rich, many-tongued Jewish silk trader who works for a still more powerful patron, the muqta' of Baghdad.",
+      "age": 40,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 2,
+        "presence": 0,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_merchant"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_outsider_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_wealthy",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_educated_hebrew",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_protection",
+          "params": {
+            "protector": "the muqta' of Baghdad"
+          }
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "profession: merchant"
+          }
+        },
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_well_traveled",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_enemies",
+          "params": {},
+          "note": "Christian merchants"
+        },
+        {
+          "vf_id": "vf_greedy",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_obese",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: Arabic",
+          "score": 5,
+          "specialty": "mercantile matters"
+        },
+        {
+          "name": "Area Lore: Mediterranean",
+          "score": 4,
+          "specialty": "personalities"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 3,
+          "specialty": "arithmetic"
+        },
+        {
+          "name": "Bargain",
+          "score": 4,
+          "specialty": "silk"
+        },
+        {
+          "name": "Carouse",
+          "score": 3,
+          "specialty": "power drinking"
+        },
+        {
+          "name": "Charm",
+          "score": 4,
+          "specialty": "being witty"
+        },
+        {
+          "name": "Common Law",
+          "score": 2,
+          "specialty": "exchequer law"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "merchant society"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "merchants"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 4,
+          "specialty": "mercantile matters"
+        },
+        {
+          "name": "Guile",
+          "score": 4,
+          "specialty": "lying about weights and measures"
+        },
+        {
+          "name": "Dead Language: Hebrew",
+          "score": 5,
+          "specialty": "prayers and blessings"
+        },
+        {
+          "name": "Intrigue",
+          "score": 3,
+          "specialty": "the muqta's enemies"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 4,
+          "specialty": "mercantile matters"
+        },
+        {
+          "name": "Judaic Lore",
+          "score": 2,
+          "specialty": "poetry"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 2,
+          "specialty": "academic usage"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "intimidation"
+        },
+        {
+          "name": "Profession: Merchant",
+          "score": 5,
+          "specialty": "silk"
+        },
+        {
+          "name": "Living Language: Persian",
+          "score": 5,
+          "specialty": "mercantile matters"
+        },
+        {
+          "name": "Philosophiae",
+          "score": 1,
+          "specialty": "moral philosophy"
+        },
+        {
+          "name": "Living Language: Slavic",
+          "score": 1,
+          "specialty": "mercantile matters"
+        },
+        {
+          "name": "Living Language: Spanish",
+          "score": 4,
+          "specialty": "mercantile matters"
+        },
+        {
+          "name": "Theology: Judaism",
+          "score": 2,
+          "specialty": "mitzvot"
+        }
+      ],
+      "native": "Living Language: Arabic",
+      "traits": [
+        [
+          "Greedy",
+          2
+        ],
+        [
+          "Ruthless",
+          1
+        ],
+        [
+          "Fair",
+          -1
+        ]
+      ],
+      "reputations": [
+        [
+          "Jew (Christians)",
+          3
+        ],
+        [
+          "Protected by Muqta' of Baghdad (merchants)",
+          3
+        ]
+      ],
+      "notes": "Wealthy himself, but in the service of a richer and more powerful master.",
+      "fixes": [
+        "Outsider (Major, Jew) is a Social Status Flaw in the catalog: put among its Social Statuses with Merchant.",
+        "No native language printed: Arabic (5) taken as native, as his patron is in Baghdad (Persian is also 5).",
+        "Merchant 5+2 is taken as Profession: Merchant, score 5 recorded, the +2 is Puissant Merchant is taken as Puissant {ability} with ability 'profession: merchant'.",
+        "Mediterranean Lore is taken as Area Lore: Mediterranean.",
+        "Arabic, French, Italian, Persian, Slavic, Spanish is taken as Living Language: ...; Hebrew is taken as Dead Language: Hebrew; Latin is taken as Dead Language: Latin.",
+        "Social Contacts names no group on the page: params left empty.",
+        "Protection's protector taken from his Reputation (Protected by Muqta' of Baghdad).",
+        "Greedy (Minor) is taken as Greedy; Enemies (Christian merchants) detail kept as a note.",
+        "Statblock runs onto p. 141 (Abilities)."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_mystic_nun",
+      "name": "Mystic Nun",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 81,
+      "concept": "A noble-born nun whose mystical visions have made her verses respected by her abbess and bishop.",
+      "age": 23,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 2,
+        "presence": -2,
+        "communication": 3,
+        "strength": -1,
+        "stamina": 2,
+        "dexterity": -1,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_religious"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_privileged_upbringing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "concentration"
+          }
+        },
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {
+            "group": "diocesan clergy"
+          }
+        },
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {
+            "group": "local nobility"
+          }
+        },
+        {
+          "vf_id": "vf_true_faith",
+          "params": {},
+          "note": "Faith Score 1, Faith Points 3"
+        },
+        {
+          "vf_id": "vf_pious_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "Athletic"
+          }
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "Martial"
+          }
+        },
+        {
+          "vf_id": "vf_disfigured",
+          "params": {},
+          "note": "birthmark on face"
+        },
+        {
+          "vf_id": "vf_small_frame",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_visions",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 3,
+          "specialty": "people"
+        },
+        {
+          "name": "Area Lore: {second_area}",
+          "score": 2,
+          "specialty": "people"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 3,
+          "specialty": "composition"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "birds"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "people"
+        },
+        {
+          "name": "Concentration",
+          "score": 4,
+          "specialty": "meditation"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "nobility"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "women"
+        },
+        {
+          "name": "Living Language: German",
+          "score": 5,
+          "specialty": "poetry"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 5,
+          "specialty": "lives of the saints"
+        },
+        {
+          "name": "Meditation",
+          "score": 3,
+          "specialty": "adoration of the Blessed Sacrament"
+        },
+        {
+          "name": "Music",
+          "score": 2,
+          "specialty": "church music"
+        },
+        {
+          "name": "Profession: Scribe",
+          "score": 2,
+          "specialty": "legibility"
+        },
+        {
+          "name": "Understanding",
+          "score": 3,
+          "specialty": "visions of Heaven"
+        }
+      ],
+      "native": "Living Language: German",
+      "traits": [
+        [
+          "Pious",
+          6
+        ],
+        [
+          "Scholarly",
+          2
+        ],
+        [
+          "Spontaneous",
+          2
+        ]
+      ],
+      "reputations": [
+        [
+          "Mystic (home diocese)",
+          2
+        ]
+      ],
+      "notes": "Room for up to 2 more points each of Virtues and Flaws.",
+      "fixes": [
+        "Area Lore: the page gives two unnamed areas ([Area 1] Lore 3, [Area 2] Lore 2); both written as 'Area Lore: {area}', so the two entries share a name.",
+        "Church Lore is taken as Organization Lore: Church.",
+        "German is taken as Living Language: German (taken as native); Latin is taken as Dead Language: Latin.",
+        "Meditation and Understanding (Realms of Power: The Divine mystic Abilities) are listed with no Virtue granting them on the page; kept as printed.",
+        "Puissant Concentration is taken as Puissant {ability} (concentration); Ability Block (Athletic)/(Martial) is taken as Ability Block with abilities param."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_anne_holy_hermit",
+      "name": "Anne, a Holy Hermit",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 82,
+      "concept": "A Breton fisher-village girl turned woodland recluse, guided by her guardian angel and living in chosen poverty.",
+      "age": 28,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 2,
+        "presence": 1,
+        "communication": 1,
+        "strength": -1,
+        "stamina": 2,
+        "dexterity": -1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_religious"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_guardian_angel",
+          "params": {},
+          "note": "angel: Soak +5, Magic Resistance 15"
+        },
+        {
+          "vf_id": "vf_strong_willed",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_missing_eye",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_poor_eyesight",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_small_frame",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_visions",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_vow",
+          "params": {},
+          "note": "Poverty"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Awareness",
+          "score": 4,
+          "specialty": "people"
+        },
+        {
+          "name": "Living Language: Breton",
+          "score": 5,
+          "specialty": "peasant chatter"
+        },
+        {
+          "name": "Area Lore: Brittany",
+          "score": 4,
+          "specialty": "home village"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "fisherfolk"
+        },
+        {
+          "name": "Concentration",
+          "score": 5,
+          "specialty": "prayer"
+        },
+        {
+          "name": "Craft: Seaweed Preparation",
+          "score": 2,
+          "specialty": "for food"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 1
+        },
+        {
+          "name": "Etiquette",
+          "score": 1,
+          "specialty": "fisherfolk"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "fisherfolk"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "children"
+        },
+        {
+          "name": "Survival",
+          "score": 4,
+          "specialty": "woodlands"
+        },
+        {
+          "name": "Swim",
+          "score": 2,
+          "specialty": "seawater"
+        },
+        {
+          "name": "Stealth",
+          "score": 3,
+          "specialty": "in woodlands"
+        }
+      ],
+      "native": "Living Language: Breton",
+      "traits": [
+        [
+          "Compassionate",
+          1
+        ],
+        [
+          "Disciplined",
+          2
+        ],
+        [
+          "Reclusive",
+          3
+        ]
+      ],
+      "reputations": [
+        [
+          "Dedicated (Christians)",
+          1
+        ]
+      ],
+      "notes": "Room for up to 5 more points of Virtues and Flaws. Lives alone but does not have the Reclusive Flaw.",
+      "fixes": [
+        "Church Lore is taken as Organization Lore: Church (no specialty printed).",
+        "Breton is taken as Living Language: Breton (native); Brittany Lore is taken as Area Lore: Brittany.",
+        "Vow (Poverty) taken as the Minor Vow (listed among Minor Flaws); the vow's subject kept as a note.",
+        "Guardian Angel is printed in the same group as Strong-Willed (no separate Major group); used the catalog's Major Guardian Angel."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_imposter",
+      "name": "Imposter",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 82,
+      "concept": "A demon-befriended young nobleman who can change sex and hides as a novice nun, gathering secrets to spread corruption.",
+      "age": 22,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": 0,
+        "presence": 3,
+        "communication": 2,
+        "strength": -1,
+        "stamina": 0,
+        "dexterity": 0,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_religious"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_affinity_with_ability",
+          "params": {
+            "ability": "charm"
+          }
+        },
+        {
+          "vf_id": "vf_gender_shift",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_privileged_upbringing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "Martial"
+          }
+        },
+        {
+          "vf_id": "vf_impious_friend",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_incomprehensible",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_motion_sickness",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_reckless",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 3,
+          "specialty": "reading"
+        },
+        {
+          "name": "Athletics",
+          "score": 3,
+          "specialty": "climbing"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "women"
+        },
+        {
+          "name": "Organization Lore: Benedictines",
+          "score": 1,
+          "specialty": "nuns"
+        },
+        {
+          "name": "Bargain",
+          "score": 2,
+          "specialty": "for favors"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "jokes"
+        },
+        {
+          "name": "Charm",
+          "score": 5,
+          "specialty": "seduction"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "wrestling"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "nobility"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "girls"
+        },
+        {
+          "name": "Guile",
+          "score": 3,
+          "specialty": "lies"
+        },
+        {
+          "name": "Intrigue",
+          "score": 2,
+          "specialty": "plotting"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 2,
+          "specialty": "impudence"
+        },
+        {
+          "name": "Music",
+          "score": 1,
+          "specialty": "chant"
+        },
+        {
+          "name": "Organization Lore: Nunnery",
+          "score": 3,
+          "specialty": "weaknesses"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 2,
+          "specialty": "women"
+        },
+        {
+          "name": "Living Language: Provençal",
+          "score": 5,
+          "specialty": "lies"
+        },
+        {
+          "name": "Ride",
+          "score": 1,
+          "specialty": "staying on"
+        },
+        {
+          "name": "Stealth",
+          "score": 2,
+          "specialty": "move silently"
+        }
+      ],
+      "native": "Living Language: Provençal",
+      "traits": [
+        [
+          "Reckless",
+          3
+        ],
+        [
+          "Selfish",
+          2
+        ],
+        [
+          "Lecherous",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "Gender Shift and Impious Friend are tainted Virtues/Flaws (Realms of Power: The Infernal). Room for up to 5 more points of Virtues and Flaws.",
+      "fixes": [
+        "Stat block starts on p. 82 and continues on p. 83.",
+        "Benedictines Lore is taken as Organization Lore: Benedictines.",
+        "Nunnery Lore (knowledge of the nunnery's people and weak points) is taken as Organization Lore: Nunnery; Area Lore would also fit.",
+        "Original Home Area Lore is taken as Area Lore: {area} (area not named).",
+        "Latin is taken as Dead Language: Latin; Provençal is taken as Living Language: Provençal (taken as native).",
+        "Affinity with Charm is taken as Affinity with {ability} (charm)."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_brother_julian",
+      "name": "Brother Julian",
+      "type": "companion",
+      "kind": "sample",
+      "book": "A&A",
+      "page": 85,
+      "concept": "A deformed, monastery-raised Dominican friar with a hunger for learning who preaches against the Cathars and wants to reach a university.",
+      "age": 20,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": 2,
+        "presence": 1,
+        "communication": 3,
+        "strength": -4,
+        "stamina": 2,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_mendicant_friar"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_true_faith",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_academic_concentration_subject",
+          "params": {
+            "subject": "rhetoric"
+          }
+        },
+        {
+          "vf_id": "vf_aristotelian_training",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_clear_thinker",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_educated",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_strong_willed",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_driven_major",
+          "params": {},
+          "note": "knowledge"
+        },
+        {
+          "vf_id": "vf_monastic_vows",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_fragile_constitution",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_hunchback",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lame",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_poor_characteristic",
+          "params": {
+            "characteristic": "strength"
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "running"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "searching"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "fist"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "offices"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 5,
+          "specialty": "directions"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "peasants"
+        },
+        {
+          "name": "Dead Language: Greek",
+          "score": 2,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Area Lore: Languedoc",
+          "score": 2,
+          "specialty": "geography"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 4,
+          "specialty": "church ceremonies"
+        },
+        {
+          "name": "Medicine",
+          "score": 2,
+          "specialty": "anatomy"
+        },
+        {
+          "name": "Living Language: Occitan",
+          "score": 3,
+          "specialty": "directions"
+        },
+        {
+          "name": "Philosophiae",
+          "score": 2,
+          "specialty": "moral philosophy"
+        },
+        {
+          "name": "Teaching",
+          "score": 2,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 3,
+          "specialty": "heresy"
+        }
+      ],
+      "native": "Living Language: French",
+      "traits": [
+        [
+          "Driven",
+          3
+        ],
+        [
+          "Boisterous",
+          2
+        ],
+        [
+          "Polite",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "Ready to use as a starting companion.",
+      "fixes": [
+        "Preaching 3 (charity) is not in the ability catalog; left out.",
+        "Driven (knowledge) is in the Major Flaw group is taken as Driven (Major); its goal kept as a note.",
+        "Poor Strength is taken as Poor {characteristic} (strength).",
+        "Academic Concentration (rhetoric) is taken as Academic Concentration {subject} (rhetoric).",
+        "Church Lore is taken as Organization Lore: Church; Theology is taken as Theology: Christian; Latin is taken as Dead Language: Latin.",
+        "Greek is taken as Dead Language: Greek (scholarly Greek; the page does not say living or dead).",
+        "French is taken as Living Language: French (taken as native); Occitan is taken as Living Language: Occitan; Languedoc Lore is taken as Area Lore: Languedoc."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_gilpatrick",
+      "name": "Gilpatrick",
+      "type": "companion",
+      "kind": "sample",
+      "book": "A&A",
+      "page": 98,
+      "concept": "A boastful Irish bachelor of arts at Paris who talks his way through life with a supernatural knack for entrancing people.",
+      "age": 19,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": 1,
+        "presence": -1,
+        "communication": 2,
+        "strength": 1,
+        "stamina": 0,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_baccalaureus"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_entrancement",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_book_learner",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_intuition",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_latent_magic_ability",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_favors",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_overconfident_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_small_frame",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: Arabic",
+          "score": 2,
+          "specialty": "astronomical terms"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 3,
+          "specialty": "astronomy"
+        },
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "contortions"
+        },
+        {
+          "name": "Awareness",
+          "score": 1,
+          "specialty": "alertness"
+        },
+        {
+          "name": "Bargain",
+          "score": 2,
+          "specialty": "writing supplies"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "flattery"
+        },
+        {
+          "name": "Living Language: English",
+          "score": 3,
+          "specialty": "slang"
+        },
+        {
+          "name": "Entrancement",
+          "score": 3,
+          "specialty": "social equals"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 1,
+          "specialty": "clergy"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 4,
+          "specialty": "slang"
+        },
+        {
+          "name": "Dead Language: Greek",
+          "score": 3,
+          "specialty": "mathematical terms"
+        },
+        {
+          "name": "Living Language: Irish",
+          "score": 5,
+          "specialty": "slang"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 5,
+          "specialty": "academic usage"
+        },
+        {
+          "name": "Swim",
+          "score": 1,
+          "specialty": "long distances"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 3,
+          "specialty": "ontological arguments"
+        }
+      ],
+      "native": "Living Language: Irish",
+      "traits": [
+        [
+          "Overconfident",
+          3
+        ],
+        [
+          "Chatty",
+          2
+        ],
+        [
+          "Self-obsessed",
+          2
+        ]
+      ],
+      "reputations": [
+        [
+          "Good Astronomer (academic)",
+          1
+        ]
+      ],
+      "notes": "Room for 3 more points of Virtues and Flaws. For a university nearer Italy, swap French for Italian and Theology for Civil and Canon Law. Reads the Latin, Greek and Arabic scripts.",
+      "fixes": [
+        "Overconfident is in the Major Flaw group is taken as Overconfident (Major).",
+        "Latin is taken as Dead Language: Latin; Theology is taken as Theology: Christian.",
+        "Arabic is taken as Living Language: Arabic and Greek is taken as Dead Language: Greek (the page does not say living or dead).",
+        "Irish is taken as Living Language: Irish (taken as native); English, French is taken as Living Language."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_banco",
+      "name": "Banco, Dean of the Goldsmith's Guild",
+      "type": "companion",
+      "kind": "sample",
+      "book": "C&G",
+      "page": 51,
+      "concept": "An aging Roman master goldsmith of a powerful family who leads his guild and covets the secrets of Hermetic enchantment.",
+      "age": 50,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": -3,
+        "presence": 2,
+        "communication": 0,
+        "strength": -2,
+        "stamina": -3,
+        "dexterity": 3,
+        "quickness": -2
+      },
+      "statuses": [
+        "vf_guild_dean"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_touched_by_realm",
+          "params": {
+            "realm": "Divine"
+          }
+        },
+        {
+          "vf_id": "vf_educated",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_famous",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ambitious_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_favors",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_fragile_constitution",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_poor_hearing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_weakness",
+          "params": {},
+          "note": "flattery"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "guild inquisitors"
+        },
+        {
+          "name": "Bargain",
+          "score": 5,
+          "specialty": "contracts with other guilds"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "dagger"
+        },
+        {
+          "name": "Carouse",
+          "score": 3,
+          "specialty": "guild functions"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "guild inquisitors"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 1,
+          "specialty": "papal curia"
+        },
+        {
+          "name": "Civil and Canon Law",
+          "score": 3,
+          "specialty": "town law"
+        },
+        {
+          "name": "Craft: Goldsmith",
+          "score": 8,
+          "specialty": "wondrous items"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "guild funerals"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "fellow masters"
+        },
+        {
+          "name": "Organization Lore: Goldsmiths' Guild",
+          "score": 5,
+          "specialty": "roster membership"
+        },
+        {
+          "name": "Guile",
+          "score": 3,
+          "specialty": "masters"
+        },
+        {
+          "name": "Intrigue",
+          "score": 3,
+          "specialty": "guild politics"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "technical language"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 5,
+          "specialty": "legal codes"
+        },
+        {
+          "name": "Leadership",
+          "score": 5,
+          "specialty": "guild masters"
+        },
+        {
+          "name": "Teaching",
+          "score": 2,
+          "specialty": "young apprentices"
+        },
+        {
+          "name": "Area Lore: Rome",
+          "score": 2,
+          "specialty": "city gates"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [
+        [
+          "Ambitious",
+          3
+        ]
+      ],
+      "reputations": [
+        [
+          "Renown Goldsmith (Rome)",
+          4
+        ]
+      ],
+      "notes": "A dean made at creation should be at least 50, with Craft 7+ and Bargain, Leadership and Guild Lore of 5+, and Virtues and Flaws that show the political ties that won him the post.",
+      "fixes": [
+        "Characteristics carry aging points on the page (Str -2 (2), Sta -3 (1), Qik -2 (1)); only the scores are recorded. Decrepitude 2 (8) not recorded.",
+        "Touched by the Divine Realm is taken as Touched by {realm} (Divine).",
+        "Ambitious is in the Major Flaw group is taken as Ambitious (Major).",
+        "Goldsmith is taken as Craft: Goldsmith; Guild Lore is taken as Organization Lore: Goldsmiths' Guild; Church Lore is taken as Organization Lore: Church.",
+        "Town Area Lore is taken as Area Lore: Rome (the town is not named, but he lives and is renowned in Rome).",
+        "Italian is taken as Living Language: Italian (taken as native); Latin is taken as Dead Language: Latin."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_julian_apprentice_carpenter",
+      "name": "Julian, Apprentice Carpenter",
+      "type": "companion",
+      "kind": "sample",
+      "book": "C&G",
+      "page": 44,
+      "concept": "A curious young carpenter's apprentice who can sense enchanted things and follows his visions into trouble.",
+      "age": 15,
+      "characteristics": {
+        "intelligence": -1,
+        "perception": 1,
+        "presence": 1,
+        "communication": 0,
+        "strength": 1,
+        "stamina": 2,
+        "dexterity": 2,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_guild_apprentice"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_magic_sensitivity",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_busybody",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_short_attention_span",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_small_frame",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_visions",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "running"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "strangers"
+        },
+        {
+          "name": "Bargain",
+          "score": 1,
+          "specialty": "meals"
+        },
+        {
+          "name": "Brawl",
+          "score": 3,
+          "specialty": "fists"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "meeting women"
+        },
+        {
+          "name": "Craft: Carpenter",
+          "score": 3,
+          "specialty": "framing houses"
+        },
+        {
+          "name": "Living Language: English",
+          "score": 5,
+          "specialty": "rhyming"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "city folk"
+        },
+        {
+          "name": "Organization Lore: Carpenters' Guild",
+          "score": 1,
+          "specialty": "apprentice rules"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "lying to master"
+        },
+        {
+          "name": "Intrigue",
+          "score": 1,
+          "specialty": "guild members"
+        },
+        {
+          "name": "Magic Sensitivity",
+          "score": 3,
+          "specialty": "enchanted items"
+        },
+        {
+          "name": "Stealth",
+          "score": 2,
+          "specialty": "hiding"
+        }
+      ],
+      "native": "Living Language: English",
+      "traits": [
+        [
+          "Curious",
+          2
+        ],
+        [
+          "Brave",
+          1
+        ],
+        [
+          "Loyal",
+          -1
+        ]
+      ],
+      "reputations": [],
+      "notes": "Printed as a grog; as a player character either swap the Story Flaw Visions for a General Flaw or make him a companion (done here, keeping Visions).",
+      "fixes": [
+        "Grog upgraded to companion as the book suggests; Visions kept since companions may take Story Flaws. No Confidence score is printed.",
+        "Busybody is printed in the Virtue group (Guild Apprentice; Busybody, Magic Sensitivity; ...) but the catalog only has it as a Minor Flaw is taken as Busybody as a Flaw. As printed the points are then 2 Virtue vs 4 Flaw, so there is room for 2 more points of Virtues.",
+        "Carpenter is taken as Craft: Carpenter; Guild Lore is taken as Organization Lore: Carpenters' Guild.",
+        "English is taken as Living Language: English (taken as native)."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_lady_of_the_manor",
+      "name": "Lady of the Manor",
+      "type": "companion",
+      "kind": "sample",
+      "book": "Covenants",
+      "page": 44,
+      "concept": "A proud young gentlewoman who runs the covenant's manor household and senses danger to it before it comes.",
+      "age": 20,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": 1,
+        "presence": 2,
+        "communication": 1,
+        "strength": -1,
+        "stamina": -1,
+        "dexterity": 1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_gentleman_woman"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_premonitions",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_privileged_upbringing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "Martial"
+          }
+        },
+        {
+          "vf_id": "vf_dutybound",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_proud",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: {language}",
+          "score": 5
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 1,
+          "specialty": "arithmetic"
+        },
+        {
+          "name": "Awareness",
+          "score": 1,
+          "specialty": "alertness"
+        },
+        {
+          "name": "Bargain",
+          "score": 3,
+          "specialty": "household purchases"
+        },
+        {
+          "name": "Carouse",
+          "score": 1,
+          "specialty": "ladies' games"
+        },
+        {
+          "name": "Charm",
+          "score": 1,
+          "specialty": "first impression"
+        },
+        {
+          "name": "Civil and Canon Law",
+          "score": 2,
+          "specialty": "local area"
+        },
+        {
+          "name": "Organization Lore: Covenant",
+          "score": 1,
+          "specialty": "people"
+        },
+        {
+          "name": "Etiquette",
+          "score": 4,
+          "specialty": "nobles"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "nobles"
+        },
+        {
+          "name": "Intrigue",
+          "score": 3,
+          "specialty": "ladies"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 3,
+          "specialty": "vocabulary"
+        },
+        {
+          "name": "Premonitions",
+          "score": 3,
+          "specialty": "peril to manor"
+        },
+        {
+          "name": "Profession: Steward",
+          "score": 4,
+          "specialty": "manor"
+        },
+        {
+          "name": "Ride",
+          "score": 1,
+          "specialty": "safely"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 3,
+          "specialty": "customs"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Proud",
+          3
+        ],
+        [
+          "Brave",
+          2
+        ],
+        [
+          "Loyal",
+          2
+        ]
+      ],
+      "reputations": [],
+      "notes": "Meant as wife to a companion Lord of the Manor. To make her a full companion, raise Proud to a Major Flaw and add a few more Virtues and Flaws. Abilities can be reshuffled, but she must keep exactly 50 xp in Academic Abilities from Privileged Upbringing unless she also takes Educated.",
+      "fixes": [
+        "Covenfolk template upgraded to companion as the book suggests; Proud kept Minor as printed (the book's upgrade advice is in notes). No Confidence score is printed.",
+        "[Native Language] is taken as Living Language: {language}.",
+        "Village Lore is taken as Area Lore: {area} (the manor's village, not named).",
+        "Covenant Lore is taken as Organization Lore: Covenant.",
+        "Civil & Canon Law is taken as Civil and Canon Law; Latin is taken as Dead Language: Latin.",
+        "Gentlewoman is taken as Gentleman/woman."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_noble_child",
+      "name": "Noble Child",
+      "type": "companion",
+      "kind": "sample",
+      "book": "App",
+      "page": 19,
+      "concept": "A reckless six-year-old lordling, fated to die by fire, already at home in the saddle.",
+      "age": 6,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": -1,
+        "presence": 0,
+        "communication": -3,
+        "strength": 1,
+        "stamina": 2,
+        "dexterity": 3,
+        "quickness": 2
+      },
+      "statuses": [
+        "vf_landed_noble"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_death_prophecy",
+          "params": {},
+          "note": "prophesied at birth to die by fire"
+        },
+        {
+          "vf_id": "vf_inherited_virtue",
+          "params": {
+            "virtue": "great dexterity"
+          }
+        },
+        {
+          "vf_id": "vf_inherited_virtue",
+          "params": {
+            "virtue": "skinchanger"
+          }
+        },
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_feud",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_know_it_all_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "academic"
+          }
+        },
+        {
+          "vf_id": "vf_poor_hearing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_poor_student",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_reckless",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "running"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "kick"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "courtly terms"
+        },
+        {
+          "name": "Ride",
+          "score": 2,
+          "specialty": "galloping"
+        },
+        {
+          "name": "Swim",
+          "score": 2,
+          "specialty": "diving"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Know-It-All",
+          3
+        ],
+        [
+          "Reckless",
+          3
+        ],
+        [
+          "Brave",
+          2
+        ]
+      ],
+      "reputations": [],
+      "notes": "Built on the book's Athletic Childhood. The printed Characteristics already include a -4 total modifier for his age, and his Size is -2. His inherited Skinchanger and Great Dexterity have not yet shown themselves and are meant to appear as he grows up; he learned to ride from his father's grooms.",
+      "fixes": [
+        "Social status 'Son of Landed Noble' is not in the catalog: used Landed Noble (its Major Virtue cost is what balances the page's Virtues and Flaws).",
+        "Native Language has no named language on the page: used 'Living Language: {language}'.",
+        "Inherited Great Dexterity and Inherited Skinchanger: Inherited {virtue} (Minor) with params virtue 'great dexterity' / 'skinchanger'.",
+        "Improved Characteristics (x2): listed as two Improved Characteristics entries.",
+        "Ability Block (Academic): Ability Block with params abilities 'academic'.",
+        "Death Prophecy is in the page's Major Virtue slot; its condition (death by fire) comes from the prose and is kept as a note."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_merchants_son",
+      "name": "Merchant's Son",
+      "type": "companion",
+      "kind": "sample",
+      "book": "App",
+      "page": 31,
+      "concept": "A merchant's boy, uneasy in his father's trade and devoted to saints' tales, who is meant to grow into a wandering preacher.",
+      "age": 13,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 0,
+        "presence": 1,
+        "communication": 3,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": -1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_merchant"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_wealthy",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_inherited_virtue_major",
+          "params": {
+            "virtue": "true faith"
+          }
+        },
+        {
+          "vf_id": "vf_luck",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_relic",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_dark_secret",
+          "params": {},
+          "note": "knows of his father's illegal business dealings"
+        },
+        {
+          "vf_id": "vf_overconfident_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_obsessed",
+          "params": {},
+          "note": "with saints' lives"
+        },
+        {
+          "vf_id": "vf_short_of_breath",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 1,
+          "specialty": "people"
+        },
+        {
+          "name": "Area Lore: {second_area}",
+          "score": 1,
+          "specialty": "history"
+        },
+        {
+          "name": "Animal Handling",
+          "score": 2,
+          "specialty": "pack mules"
+        },
+        {
+          "name": "Bargain",
+          "score": 2,
+          "specialty": "best price"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "dagger"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 3,
+          "specialty": "saints' days"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "merchants"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "teamsters"
+        },
+        {
+          "name": "Living Language: {second_language}",
+          "score": 3,
+          "specialty": "merchant terminology"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "merchant terminology"
+        },
+        {
+          "name": "Profession: Merchant",
+          "score": 2,
+          "specialty": "exchange rates"
+        },
+        {
+          "name": "Ride",
+          "score": 2,
+          "specialty": "long distances"
+        },
+        {
+          "name": "Survival",
+          "score": 2,
+          "specialty": "roads"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Bully",
+          3
+        ],
+        [
+          "Brave",
+          2
+        ],
+        [
+          "Loyal",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "Built on the Traveling Childhood; being Wealthy he earned 20 xp a year after age five (160 in all). The printed Characteristics include a -1 age modifier, and his Size is -1. He is planned to turn from trade to the life of a preaching friar: venerating the relic he found should eventually bring out his inherited True Faith, while the strain of hiding his father's crimes pushes him along.",
+      "fixes": [
+        "Social status 'Son of Merchant' is not in the catalog: used Merchant.",
+        "Inherited True Faith: Inherited {virtue} (Major) (True Faith is a Major Virtue) with params virtue 'true faith'.",
+        "Overconfident sits in the page's Major Flaw group (after Dark Secret), so Overconfident (Major) was used.",
+        "Page gives 'Area Lore: Area A' and 'Area Lore: Area B': used 'Area Lore: {area}' and 'Area Lore: {second area}' so the two stay distinct.",
+        "Native Language and Living Language have no named languages: used 'Living Language: {language}' (native) and 'Living Language: {second language}' for the second tongue.",
+        "Church Lore is taken as Organization Lore: Church."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_kore",
+      "name": "Kore",
+      "type": "companion",
+      "kind": "sample",
+      "book": "MoH",
+      "page": 90,
+      "concept": "A scarred, infernally gifted wise woman who secretly wages her sister's vendetta against a Hermetic magus.",
+      "age": 24,
+      "characteristics": {
+        "intelligence": 3,
+        "perception": 0,
+        "presence": 3,
+        "communication": -3,
+        "strength": 1,
+        "stamina": 1,
+        "dexterity": -1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_wise_one"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_entrancement",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_hex",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_arcane_lore",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_strong_willed",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_true_love_pc",
+          "params": {},
+          "note": "her sister, the maga Persephone"
+        },
+        {
+          "vf_id": "vf_enemies",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_hatred_major",
+          "params": {},
+          "note": "her sister's pater"
+        },
+        {
+          "vf_id": "vf_disfigured",
+          "params": {},
+          "note": "burn scar down the left side of her body and face"
+        },
+        {
+          "vf_id": "vf_offensive_to_being",
+          "params": {
+            "being": "animals"
+          }
+        },
+        {
+          "vf_id": "vf_palsied_hands",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_reclusive",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "grammar"
+        },
+        {
+          "name": "Brawl",
+          "score": 3,
+          "specialty": "knife"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 2,
+          "specialty": "on sister"
+        },
+        {
+          "name": "Entrancement",
+          "score": 4,
+          "specialty": "men"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "magi"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 5,
+          "specialty": "Norman"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "to magi"
+        },
+        {
+          "name": "Hex",
+          "score": 4,
+          "specialty": "sudden fires"
+        },
+        {
+          "name": "Infernal Lore",
+          "score": 3,
+          "specialty": "curses"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 3,
+          "specialty": "Hermetic"
+        },
+        {
+          "name": "Leadership",
+          "score": 2,
+          "specialty": "agents"
+        },
+        {
+          "name": "Magic Lore",
+          "score": 3,
+          "specialty": "fire spirits"
+        },
+        {
+          "name": "Magic Theory",
+          "score": 3,
+          "specialty": "spells"
+        },
+        {
+          "name": "Organization Lore: Order of Hermes",
+          "score": 2,
+          "specialty": "local tribunal"
+        },
+        {
+          "name": "Penetration",
+          "score": 2,
+          "specialty": "Hex"
+        },
+        {
+          "name": "Profession: Apothecary",
+          "score": 3,
+          "specialty": "poisons"
+        },
+        {
+          "name": "Stealth",
+          "score": 1,
+          "specialty": "avoiding attention"
+        }
+      ],
+      "native": "Living Language: French",
+      "traits": [
+        [
+          "Wrathful",
+          3
+        ],
+        [
+          "Ruthless",
+          3
+        ],
+        [
+          "Devoted to Sister",
+          2
+        ],
+        [
+          "Secretive",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "Companion to the maga Persephone in the same chapter. Hex and Entrancement follow Realms of Power: The Infernal (page 85). The book also gives her at +15 years (age 39), +30 (age 54) and +45 (age 69): she gains Awareness, Intrigue, later Area Lore and Church Lore, higher Hex, Entrancement and lores, and Warping adds a hand-washing Compulsion and, by the last stage, a Lesser Malediction that withers plants near her. Confidence 1 (3).",
+      "fixes": [
+        "Transcribed the starting stat block (age 24); the +15, +30 and +45 year versions are summarized in notes only.",
+        "True Love (sister) is in the page's Minor Virtue group: used True Love (PC) (the Virtue form), with the sister as a note.",
+        "Enemy is taken as Enemies (Major Flaw).",
+        "Hatred sits in the page's Major Flaw group: used Hatred (Major); its target (her sister's pater) is taken from the prose.",
+        "Offensive to Animals is taken as Offensive to {being} with params being 'animals' (catalog files it as a Hermetic Minor Flaw).",
+        "French is taken as Living Language: French; Latin is taken as Dead Language: Latin; Order of Hermes Lore is taken as Organization Lore: Order of Hermes."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_rothiger",
+      "name": "Rothiger",
+      "type": "companion",
+      "kind": "sample",
+      "book": "HMRE",
+      "page": 117,
+      "concept": "A roaming farmhand who sought out the Hounds of God and now fights night battles as a wolf, with an appetite for the kill he cannot master.",
+      "age": 21,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 1,
+        "presence": 0,
+        "communication": 0,
+        "strength": 1,
+        "stamina": 1,
+        "dexterity": 0,
+        "quickness": 2
+      },
+      "statuses": [
+        "vf_wanderer"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_nightwalker_tradition",
+          "params": {
+            "tradition": "hounds of god"
+          }
+        },
+        {
+          "vf_id": "vf_nightwalker",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_intuition",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_versatile_phantasticum",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_dark_secret",
+          "params": {},
+          "note": "a werewolf who cannot stop himself killing animals"
+        },
+        {
+          "vf_id": "vf_compulsion",
+          "params": {},
+          "note": "loves to kill in wolf form, so must keep moving on to avoid discovery"
+        },
+        {
+          "vf_id": "vf_higher_purpose",
+          "params": {},
+          "note": "sought out his role as a nightwalker"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "running"
+        },
+        {
+          "name": "Awareness",
+          "score": 1,
+          "specialty": "animals"
+        },
+        {
+          "name": "Bargain",
+          "score": 1,
+          "specialty": "food and lodging"
+        },
+        {
+          "name": "Brawl",
+          "score": 3,
+          "specialty": "knife"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "agricultural festivals"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 1,
+          "specialty": "farmworkers"
+        },
+        {
+          "name": "Living Language: German",
+          "score": 5,
+          "specialty": "peasants"
+        },
+        {
+          "name": "Guile",
+          "score": 3,
+          "specialty": "covering his tracks"
+        },
+        {
+          "name": "Hunt",
+          "score": 1,
+          "specialty": "small game"
+        },
+        {
+          "name": "Organization Lore: Pack",
+          "score": 2,
+          "specialty": "history"
+        },
+        {
+          "name": "Profession: Laborer",
+          "score": 1,
+          "specialty": "slaughtering"
+        },
+        {
+          "name": "Second Sight",
+          "score": 2,
+          "specialty": "demons"
+        },
+        {
+          "name": "Survival",
+          "score": 1,
+          "specialty": "outskirts of settled areas"
+        },
+        {
+          "name": "Swim",
+          "score": 2,
+          "specialty": "icy water"
+        }
+      ],
+      "native": "Living Language: German",
+      "traits": [
+        [
+          "Loyalty (pack)",
+          3
+        ],
+        [
+          "Enjoys hunting",
+          3
+        ]
+      ],
+      "reputations": [],
+      "notes": "His Wanderer status is as an itinerant farm labourer. Second Sight comes from Nightwalker and works only for his phantasticum. The book gives a separate wolf-form block for his phantasticum (not transcribed here), and says he works unchanged as a villainous werewolf. Confidence 1 (3).",
+      "fixes": [
+        "Added Nightwalker Tradition ({tradition}) with tradition 'hounds of god' (a Free Virtue the page does not list; implied by the Hound of God title).",
+        "The page's 'Nightwalker' in the Major Virtue slot is taken as Nightwalker.",
+        "Compulsion is marked Minor on the page is taken as Compulsion; Higher Purpose is in the Minor Flaw group is taken as Higher Purpose.",
+        "Pack Lore is not in the ability catalog: used 'Organization Lore: Pack'.",
+        "German is taken as Living Language: German; 'Profession: laborer' is taken as Profession: Laborer.",
+        "Second Sight 2 kept as printed although it is usable only in phantastic form.",
+        "Wolf form (separate stat block with its own Virtues, Qualities and Abilities) left out as instructed."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_arno",
+      "name": "Arno",
+      "type": "companion",
+      "kind": "sample",
+      "book": "HMRE",
+      "page": 118,
+      "concept": "A devout young village smith who, as one of the benandanti, goes out in spirit by night to fight witches with a fennel club.",
+      "age": 21,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 0,
+        "presence": 0,
+        "communication": 0,
+        "strength": 2,
+        "stamina": 1,
+        "dexterity": 1,
+        "quickness": 1
+      },
+      "statuses": [
+        "vf_craftsman"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_nightwalker_tradition",
+          "params": {
+            "tradition": "benandanti"
+          }
+        },
+        {
+          "vf_id": "vf_nightwalker",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_sense_holiness_and_unholiness",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_tough",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_dark_secret",
+          "params": {},
+          "note": "lives in a community that persecutes benandanti"
+        },
+        {
+          "vf_id": "vf_close_family_ties",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_higher_purpose",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "battlefield"
+        },
+        {
+          "name": "Athletics",
+          "score": 1,
+          "specialty": "running"
+        },
+        {
+          "name": "Bargain",
+          "score": 1,
+          "specialty": "domestic goods"
+        },
+        {
+          "name": "Brawl",
+          "score": 1,
+          "specialty": "supernatural foes"
+        },
+        {
+          "name": "Carouse",
+          "score": 1,
+          "specialty": "Saturdays"
+        },
+        {
+          "name": "Craft: Smith",
+          "score": 5,
+          "specialty": "agricultural tools"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "festivals"
+        },
+        {
+          "name": "Area Lore: Home Village",
+          "score": 3,
+          "specialty": "supernatural dangers"
+        },
+        {
+          "name": "Second Sight",
+          "score": 3,
+          "specialty": "ghosts"
+        },
+        {
+          "name": "Sense Holiness and Unholiness",
+          "score": 3,
+          "specialty": "infernal witches"
+        },
+        {
+          "name": "Single Weapon",
+          "score": 5,
+          "specialty": "club"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "commoners"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [
+        [
+          "Devout",
+          2
+        ],
+        [
+          "Practical",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "Second Sight comes from Nightwalker and works only for his phantasticum. To make him a malandante (evil nightwalker), swap Sense Holiness and Unholiness for Venus' Blessing, move its Ability points into Charm 2 and Guile 2 (both women), and make his Single Weapon specialty spear. As a weak ghost, give him Magic Might 10 and spend a Might point each time he turns solid. Confidence 1 (3).",
+      "fixes": [
+        "Added Nightwalker Tradition ({tradition}) with tradition 'benandanti' (a Free Virtue the page does not list; implied by the Benandante title).",
+        "The page's 'Nightwalker' in the Major Virtue slot is taken as Nightwalker.",
+        "Higher Purpose is in the Minor Flaw group is taken as Higher Purpose.",
+        "Home Village Lore is taken as Area Lore: Home Village.",
+        "Speak Italian is taken as Living Language: Italian.",
+        "Second Sight 3 kept as printed although it is usable only in phantastic form."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_aljilani_ag_ibrahim",
+      "name": "Aljilani ag Ibrahim",
+      "type": "companion",
+      "kind": "sample",
+      "book": "BS&S",
+      "page": 33,
+      "concept": "A proud, veiled Tuareg noble who leads camel-mounted raids across the Sahara.",
+      "age": 37,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 1,
+        "presence": -1,
+        "communication": 0,
+        "strength": 1,
+        "stamina": 2,
+        "dexterity": 1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_knight"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_inspirational",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lightning_reflexes",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_long_winded",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_self_confident",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_tough",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_strong_willed",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_proud_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_infamous",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_poor_hearing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_oversensitive",
+          "params": {},
+          "note": "being shown a lack of respect"
+        },
+        {
+          "vf_id": "vf_vow",
+          "params": {},
+          "note": "always wears the litham veil"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Animal Handling",
+          "score": 2,
+          "specialty": "camels"
+        },
+        {
+          "name": "Living Language: Arabic",
+          "score": 3,
+          "specialty": "demands"
+        },
+        {
+          "name": "Area Lore: Ahaggar",
+          "score": 2,
+          "specialty": "history"
+        },
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "leap"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "ambushes"
+        },
+        {
+          "name": "Bargain",
+          "score": 3,
+          "specialty": "beg food"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "kick from horseback"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "Tuareg"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 1,
+          "specialty": "soldiers"
+        },
+        {
+          "name": "Great Weapon",
+          "score": 4,
+          "specialty": "lance"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "spot lies"
+        },
+        {
+          "name": "Hunt",
+          "score": 2,
+          "specialty": "gazelle"
+        },
+        {
+          "name": "Intrigue",
+          "score": 2,
+          "specialty": "alliances"
+        },
+        {
+          "name": "Leadership",
+          "score": 2,
+          "specialty": "rallying troops"
+        },
+        {
+          "name": "Ride",
+          "score": 4,
+          "specialty": "battle"
+        },
+        {
+          "name": "Single Weapon",
+          "score": 5,
+          "specialty": "long sword & shield"
+        },
+        {
+          "name": "Stealth",
+          "score": 2,
+          "specialty": "ambushes"
+        },
+        {
+          "name": "Survival",
+          "score": 3,
+          "specialty": "Desert"
+        },
+        {
+          "name": "Living Language: Tamazight",
+          "score": 5,
+          "specialty": "Tamahak"
+        }
+      ],
+      "native": "Living Language: Tamazight",
+      "traits": [
+        [
+          "Arrogant",
+          3
+        ],
+        [
+          "Proud",
+          3
+        ],
+        [
+          "Oversensitive",
+          3
+        ]
+      ],
+      "reputations": [
+        [
+          "Merciless raider (local)",
+          2
+        ]
+      ],
+      "notes": "Meant as a starting companion, but he still needs two more Minor Virtues to balance and may take one more Minor Virtue if paired with another Minor Flaw. Constantly wearing his enchanted litham veil (which wards off sandstorms and minor desert faeries) has given him Warping 3 (8) and, through it, Desert Regio Network, Disfigured (indigo skin) and Short Attention Span. Confidence 2 (5). An older raid leader could have more martial skill, amulets or Warping-born traits.",
+      "fixes": [
+        "Social status printed as 'Amghar (Knight)': used Knight.",
+        "Proud is marked Major is taken as Proud (Major).",
+        "Left out the three Warping-gained traits (Desert Regio Network is taken as would be {land} Regio Network with land 'desert'; Disfigured; Short Attention Span) since they are not creation choices; recorded in notes.",
+        "Arabic is taken as Living Language: Arabic; Tamazight (Tamahak) is taken as Living Language: Tamazight with specialty Tamahak, taken as native.",
+        "Wilderness Sense 3 (desert) granted by his enchanted amulet is equipment, not an Ability, so it is not listed."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    }
+  ]
+}

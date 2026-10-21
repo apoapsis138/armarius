@@ -582,6 +582,8 @@ Each step is marked by how its checks stand:
 - **☞** advice: something the book says should be done isn't, such as too many or too few of something;
 - **○** the step has no checks.
 
+A companion may take The Gift (it is free) and then Hermetic Virtues and Flaws. The Definitive Edition says this should be extremely unusual, mainly to play through a magus's apprenticeship, since without magical training The Gift is almost entirely a Flaw (Chapter 3, page 45), so Virtues and Flaws gives that as advice. A Mythic Companion has no Gift, and a grog never has it.
+
 <!-- tui -->
 Below the list the app counts how many steps pass and sums up the checks ("2 warnings, 1 advice", or "all checks pass").
 

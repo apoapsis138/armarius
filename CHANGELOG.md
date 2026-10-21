@@ -107,6 +107,41 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.119.0 — 2026-10-21
+
+### Gauntlet
+
+- **Quick and Easy Virtues and Flaws.** New Character offers the
+  Definitive Edition's quick recipes, marked "(DE quick)": one for a
+  grog, four for a companion (martial, learned, social and magical) and
+  one for a magus. Each asks only for its few choices (the Ability its
+  Puissant and Affinity name, the Flaw, the Social Status) and makes the
+  character In Creation with just those Virtues and Flaws, to finish on
+  the worksheet.
+- **Mythic Companion templates.** A Mythic Companion's Template list
+  has one for each kind the books describe: the Definitive Edition's
+  Devil Child, Faerie Doctor, Nephilim and Spirit Votary, and the Zahid,
+  Perfectus, Kabbalist, Diabolist, Summoner, Blood of Heroes and Maestro
+  of the supplements. Each gives the Virtues and Flaws that kind must
+  take, lets you swap a Flaw where the book allows a substitute, offers
+  more Virtues and Flaws of your own, and can put the book's minimum
+  Abilities on the worksheet. Realms of Power: The Divine's Mythic
+  Companion Perfectus is now a Virtue of its own, beside the Definitive
+  Edition's Perfectus Social Status.
+- **The supplements' companions.** A companion's list has 24 ready-made
+  companions from Realms of Power: The Divine, The Church, Art &
+  Academe, City & Guild, Covenants, Apprentices, Magi of Hermes, Hedge
+  Magic and Mythic Africa, such as the Byzantine Priest and the Mystic
+  Nun. Each brings the book's age, Characteristics, Virtues and Flaws
+  (untick any to leave it out), Abilities and specialties, and starts
+  In Creation so the worksheet checks it.
+- **A Grogs template as a companion.** With Grogs in play, each of its
+  grog templates can be played as a companion, held to a companion's
+  limits once a Story Flaw is added, as Grogs says.
+- **A Gifted companion.** The worksheet now gives the Definitive
+  Edition's advice when a companion takes The Gift: allowed, but it
+  should be extremely unusual.
+
 ## 2.118.0 — 2026-10-21
 
 ### Gauntlet

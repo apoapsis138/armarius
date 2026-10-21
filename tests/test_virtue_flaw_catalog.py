@@ -40,11 +40,12 @@ def test_catalog_counts_after_adding_the_supplements():
     # Faith & Flame (11 definitions, 2 of them at both tiers), plus 2 from
     # The Sundered Eagle, plus Hedge Magic RE's 101 hedge Virtues and Flaws,
     # plus the other books' hedge traditions' 115, plus Ancient Magic's 6
-    # integration Virtues, plus the 3 Grogs entries the DE doesn't have.
+    # integration Virtues, plus the 3 Grogs entries the DE doesn't have,
+    # plus Realms of Power: The Divine's Perfectus Mythic Companion Virtue.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1350
+    assert len(entries) == 1351
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 794, "Flaw": 469, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 795, "Flaw": 469, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

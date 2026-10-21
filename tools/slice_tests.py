@@ -122,6 +122,14 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_character_templates.py",
         "test_dialog_contracts_covenant.py",
     ),
+    "ars_magica_manager/choice_templates.py": (
+        "test_dialog_contracts_covenant.py",
+        "test_gui_menus.py",
+    ),
+    "ars_magica_manager/forms/choice_templates.py": (
+        "test_dialog_contracts_covenant.py",
+        "test_gui_menus.py",
+    ),
     "ars_magica_manager/forms/grog_templates.py": (
         "test_character_templates.py",
         "test_dialog_contracts_covenant.py",
