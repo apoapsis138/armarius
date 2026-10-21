@@ -23,6 +23,10 @@ SOURCE = (
 )
 
 
+#: Any Range, Duration or Target for a spell being invented (Other...),
+#: not only those a Virtue or breakthrough opens (spell_parameters).
+ANY_SPELL_PARAMETER = "any_spell_parameter"
+
 #: Covenants' extended rules for the Quality of books (book_kinds.CRAFT).
 EXTENDED_BOOK_QUALITY = "extended_book_quality"
 
@@ -100,6 +104,21 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Detailed Character Creation Summary (https://www.redcap.org/page/"
             "Ars_Magica_Definitive_Edition,_Chapter_Three:_Characters"
             "#Detailed_Character_Creation_Summary)"
+        ),
+    ),
+    RuleOption(
+        key=ANY_SPELL_PARAMETER,
+        label="Any spell parameter",
+        effect=(
+            "Invent Spell offers Other...: any Range, Duration or Target, its "
+            "magnitudes typed, not only those a Virtue, a breakthrough or a "
+            "known spell opens to the magus."
+        ),
+        source=(
+            "Ars Magica Definitive Edition, Chapter Nine: Spells, Changing "
+            "Ranges, Durations, and Targets (https://www.redcap.org/page/Ars_"
+            "Magica_Definitive_Edition,_Chapter_Nine:_Spells#Changing_Ranges,"
+            "_Durations,_and_Targets)"
         ),
     ),
     RuleOption(

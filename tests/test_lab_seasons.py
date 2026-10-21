@@ -422,7 +422,8 @@ async def test_the_invent_spell_screen_offers_parameters_from_virtues():
         await pilot.pause()
         _, screen = await _open_invent(pilot, app, key="a")
         durations = [v for _, v in screen.parameter_options["duration"]]
-        assert "Held" in durations and durations[-1] == OTHER
+        # Other... only with the saga's optional rule, off by default.
+        assert "Held" in durations and OTHER not in durations
         ranges = [v for _, v in screen.parameter_options["range"]]
         assert "Adelphixis" not in ranges
         # Everything that matters fits a 120x45 terminal.

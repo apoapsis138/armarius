@@ -8,7 +8,9 @@ add into the same goal (rules.experiment).
 
 Rules: reference/rules-engine-reference.md §18, Ancient Magic:
 integrating a lost tradition and the breakthroughs summary; Hedge Magic
-RE's integrations whose Virtue is in the catalog.
+RE's integrations whose Virtue is in the catalog; True Lineages' example
+discoveries of House Bonisagus (its rule of thumb: 30 points for a Minor
+Breakthrough, 45 for a Major).
 """
 
 from __future__ import annotations
@@ -20,9 +22,11 @@ SOURCE = (
     "Revised Edition, The Integration Process "
     "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content"
     "#The_Integration_Process)"
+    "; Houses of Hermes: True Lineages, Bonisagus, Example Discoveries (p. 30)"
 )
 AM = "Ancient Magic"
 HMRE = "Hedge Magic, Revised Edition"
+TL = "Houses of Hermes: True Lineages"
 
 
 @dataclass(frozen=True)
@@ -60,14 +64,24 @@ INTEGRATIONS: tuple[Integration, ...] = (
         "vf_canaanite_magic",
     ),
     Integration(
-        "Duration Event", "Minor", 30, "A Ritual duration that ends on a trigger.", AM
+        "Duration Event",
+        "Minor",
+        30,
+        "A Ritual held until a trigger: +1 magnitude over the Duration of what "
+        "it then does.",
+        AM,
+        "Parameter",
+        "Duration: Event",
     ),
     Integration(
         "Range Unlimited",
         "Hermetic",
         60,
-        "A Ritual range reaching any target through sympathy alone.",
+        "A Ritual range reaching any target through sympathy alone: Arcane "
+        "Connection + 2 magnitudes.",
         AM,
+        "Parameter",
+        "Range: Unlimited",
     ),
     Integration(
         "Fertility Lore",
@@ -198,6 +212,79 @@ INTEGRATIONS: tuple[Integration, ...] = (
         HMRE,
         "Virtue",
         "vf_quick_charged_items",
+    ),
+    Integration(
+        "Arma Magica: Parma Ablativa",
+        "Major",
+        45,
+        "A fold of the Parma Magica: Double Parma Magica, worn down by each Penetration it stops.",
+        TL,
+    ),
+    Integration(
+        "Arma Magica: Parma Absorbea",
+        "Major",
+        45,
+        "A fold of the Parma Magica: Half Parma Magica; a resisted spell's Penetration feeds the next spell.",
+        TL,
+    ),
+    Integration(
+        "Arma Magica: Parma Condensa",
+        "Major",
+        45,
+        "A fold of the Parma Magica: Double Parma Magica against one Form, half against the rest.",
+        TL,
+    ),
+    Integration(
+        "Arma Magica: Parma Custodia",
+        "Major",
+        45,
+        "A fold of the Parma Magica: Twice Parma Magica added to Defense, no Magic Resistance.",
+        TL,
+    ),
+    Integration(
+        "Arma Magica: Parma Repercussa",
+        "Major",
+        45,
+        "A fold of the Parma Magica: Half Parma Magica; a spell it stops is reflected at a target.",
+        TL,
+    ),
+    Integration(
+        "Arma Magica: Parma Restricta",
+        "Major",
+        45,
+        "A fold of the Parma Magica: Parma Magica - 3, wrapped around another to hold their magic in.",
+        TL,
+    ),
+    Integration(
+        "Parmulae",
+        "Minor",
+        30,
+        "Lesser enchanted 'little shields' giving Magic Resistance 30 for a year.",
+        TL,
+    ),
+    Integration(
+        "Figurine Magic",
+        "Major",
+        45,
+        "Wax and wooden figurines holding a Virtue or a Hermetic spell for "
+        "their recipient.",
+        TL,
+        "Virtue",
+        "vf_figurine_magic",
+    ),
+    Integration(
+        "Realm-aligned spells",
+        "Minor",
+        30,
+        "Spells untouched by the aura of the Realm they are aligned to.",
+        TL,
+    ),
+    Integration(
+        "Realm-aligned mastery",
+        "Minor",
+        30,
+        "Realm alignment as a special ability of a mastered spell.",
+        TL,
     ),
 )
 

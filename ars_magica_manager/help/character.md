@@ -781,10 +781,19 @@ Discovery waiting, the chance that stabilizing it succeeds.
 A new goal may start from an **Integration**: the breakthroughs Ancient
 Magic names for folding a lost tradition into Hermetic magic (Canaanite
 Magic, Hermetic Rune Magic, Mutable and Awakened Devices, the Grigori
-Legacies, the Limit of Vis...), and Hedge Magic's Subtle Opening and Quick
-Charged Items. Choosing one fills in its name, kind, points and what it
-grants, which you can still change (Ancient Magic, Introduction, The
-Breakthrough).
+Legacies, the Limit of Vis, the Event Duration and Unlimited Range...),
+Hedge Magic's Subtle Opening and Quick Charged Items, and True Lineages'
+discoveries of House Bonisagus (the six Parma Magica folds of the Arma
+Magica, Parmulae, Figurine Magic and Realm-aligned spells). Choosing one
+fills in its name, kind, points and what it grants, which you can still
+change (Ancient Magic, Introduction, The Breakthrough).
+
+A goal that grants **a new Range, Duration or Target** names it as
+"Range: Horizon (as Sight)": its kind, its name, and the standard one it
+costs as (add +n inside the brackets for more magnitudes); one the app
+already knows, such as Duration: 19 Years, needs only its name. Once the
+goal is reached, Invent Spell offers it to the magus (see
+[Which Ranges, Durations and Targets](help:invent-spell-parameters)).
 
 ### Research Log
 <!-- help: section-research-log -->

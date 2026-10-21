@@ -548,8 +548,33 @@ You type the
 name, the effect, the Technique and Form, any requisites, the base level,
 whether it is a Ritual, the Range, Duration and Target, any size or extra
 magnitudes and the guideline used. The app works out the spell's level from
-the base level and the parameters; a Range, Duration or Target the app
-doesn't list can be chosen as Other, with the magnitudes it adds typed in.
+the base level and the parameters.
+
+### Which Ranges, Durations and Targets
+<!-- help: invent-spell-parameters -->
+
+The Range, Duration and Target lists offer the standard ones, and beyond
+them only those open to the magus, each with the standard one it costs as;
+the line under the list says what opened each:
+
+- **A Virtue or Mystery** that grants it: Hermetic Geometry's Line and
+  Arcane Circle, Spell Timing's Held, Canaanite Magic's Veil of Death
+  (as Sight), Fertility Ritual Magic's Unborn Child (as Individual),
+  Hermetic Rune Magic's Rune (as Moon) and Inscription (as Individual), and
+  the rest.
+- **A breakthrough they reached** whose research goal grants a new Range,
+  Duration or Target (see [Research Goals](help:section-research-goals)):
+  Ancient Magic's Event (a Ritual: +1 magnitude over the Duration of what
+  it does when triggered), Unlimited (a Ritual: Arcane Connection + 2
+  magnitudes) and 19 Years (a Ritual: Year + 1), or one of the troupe's
+  own, such as Range: Horizon (as Sight).
+- **A spell they know** that uses a breakthrough's parameter: a Minor
+  Breakthrough is learned with the Lab Text of a spell that uses it.
+
+A spell started from one with a parameter the magus can't use takes the
+standard one it costs as. With the optional rule **Any spell parameter**
+(Edit Saga), the lists also offer **Other...**: any Range, Duration or
+Target, with the magnitudes it adds typed in.
 
 ### Starting from a spell
 <!-- help: invent-spell-start -->

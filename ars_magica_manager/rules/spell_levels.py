@@ -61,9 +61,9 @@ TARGET_STEPS: dict[str, int] = {
 
 @dataclass(frozen=True)
 class ExtraParameter:
-    """A Range, Duration or Target beyond the standard ones, which a Virtue
-    or Mystery grants (reference/spell-parameters.md): it costs the same
-    magnitudes as a standard parameter."""
+    """A Range, Duration or Target beyond the standard ones, which a Virtue,
+    Mystery or breakthrough grants (reference/spell-parameters.md): it costs
+    the same magnitudes as a standard parameter, plus any it adds."""
 
     kind: str  # "range", "duration" or "target"
     name: str
@@ -74,6 +74,15 @@ class ExtraParameter:
     ritual: bool = False
     #: Extra magnitudes on top of what it costs as (If (Condition): +4).
     plus: int = 0
+    #: The name a breakthrough grants it under, when that grants several
+    #: (Event, whatever the triggered effect's own Duration).
+    family: str = ""
+
+    @property
+    def label(self) -> str:
+        """Its name and what it costs, as a select lists it."""
+        more = f" +{self.plus}" if self.plus else ""
+        return f"{self.name} (as {self.costs_as}{more})"
 
 
 EXTRA_PARAMETERS: tuple[ExtraParameter, ...] = (
@@ -118,6 +127,34 @@ EXTRA_PARAMETERS: tuple[ExtraParameter, ...] = (
     ExtraParameter("target", "Texture", "Part", ("vf_sensory_magic",)),
     ExtraParameter("target", "Scent", "Group", ("vf_sensory_magic",)),
     ExtraParameter("target", "Sound", "Structure", ("vf_sensory_magic",)),
+    # Ancient Magic. Those granted by no Virtue come from a breakthrough
+    # (spell_parameters), or from knowing a spell that uses one.
+    ExtraParameter("range", "Veil of Death", "Sight", ("vf_canaanite_magic",)),
+    ExtraParameter("range", "Unlimited", "Arcane Connection", (), ritual=True, plus=2),
+    *(
+        ExtraParameter(
+            "duration",
+            f"Event ({short})",
+            then,
+            (),
+            ritual=True,
+            plus=1,
+            family="Event",
+        )
+        for short, then in (
+            ("Mom", "Momentary"),
+            ("Diam", "Diameter"),
+            ("Sun", "Sun"),
+            ("Moon", "Moon"),
+            ("Year", "Year"),
+        )
+    ),
+    ExtraParameter("duration", "19 Years", "Year", (), ritual=True, plus=1),
+    ExtraParameter(
+        "target", "Unborn Child", "Individual", ("vf_fertility_ritual_magic",)
+    ),
+    ExtraParameter("duration", "Rune", "Moon", ("vf_hermetic_rune_magic",)),
+    ExtraParameter("target", "Inscription", "Individual", ("vf_hermetic_rune_magic",)),
 )
 
 _STANDARD: dict[str, dict[str, int]] = {}  # filled below
@@ -133,18 +170,23 @@ def extra_parameters(kind: str, vf_ids: set[str]) -> list[ExtraParameter]:
     ]
 
 
+def extra(kind: str, name: str) -> ExtraParameter | None:
+    """The extra parameter of this kind and name, if the app knows it."""
+    return next(
+        (e for e in EXTRA_PARAMETERS if e.kind == kind and e.name == name), None
+    )
+
+
 def steps_of(kind: str, name: str) -> int | None:
     """The magnitudes a Range/Duration/Target costs, standard or extra
     (None for one the app doesn't know)."""
     standard = _STANDARD[kind]
     if name in standard:
         return standard[name]
-    extra = next(
-        (e for e in EXTRA_PARAMETERS if e.kind == kind and e.name == name), None
-    )
-    if extra is None:
+    found = extra(kind, name)
+    if found is None:
         return None
-    return standard[extra.costs_as] + extra.plus
+    return standard[found.costs_as] + found.plus
 
 
 def needs_ritual(kind: str, name: str) -> bool:

@@ -22,6 +22,7 @@ from typing import Any
 from .. import books, seasons
 from .. import enchanted_devices as ed
 from .. import lab_texts as lt
+from .. import spell_parameters as sp
 from .. import spells as spl
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..commands import (
@@ -224,16 +225,33 @@ class LabPlanForm:
                 design = design_from(spell) if spell else None
         self.design = design
         self.key = design.key if design and design.key else uuid.uuid4().hex[:12]
-        vf_ids = {vf.vf_id for vf in magus.virtues_flaws}
-        self.parameter_options = {
-            kind: [(name, name) for name in _STANDARD[kind]]
-            + [
-                (escape(f"{e.name} (as {e.costs_as})"), e.name)
-                for e in spell_levels.extra_parameters(kind, vf_ids)
+        # Only the parameters open to the magus, and Other... only when the
+        # troupe allows any (or the design in hand already has one).
+        self.opened = {kind: sp.available(saga, magus, kind) for kind in KINDS}
+        self.parameter_options = {}
+        for kind in KINDS:
+            listed = [(name, name) for name in _STANDARD[kind]] + [
+                (escape(o.parameter.label), o.parameter.name) for o in self.opened[kind]
             ]
-            + [("Other...", OTHER)]
-            for kind in KINDS
-        }
+            current = getattr(design, kind) if design else ""
+            if sp.any_allowed(saga) or (
+                current and current not in {v for _, v in listed}
+            ):
+                listed.append(("Other...", OTHER))
+            self.parameter_options[kind] = listed
+
+    def parameter_choice(self, kind: str, current: str) -> tuple[str, str]:
+        """The select's value and the Other name for a design's `kind`
+        parameter. One not open to the magus is Other when the form offers
+        it, else the standard one it costs as (the first, for one the app
+        doesn't know)."""
+        values = [v for _, v in self.parameter_options[kind]]
+        if current in values:
+            return current, ""
+        if OTHER in values:
+            return OTHER, current
+        found = spell_levels.extra(kind, current)
+        return (found.costs_as if found else values[0]), ""
 
     # -- the fields ----------------------------------------------------------
 
@@ -346,7 +364,7 @@ class LabPlanForm:
         ]
         for kind in KINDS:
             current = getattr(design, kind) if design else FIRST_STEPS[kind]
-            values = [v for _, v in self.parameter_options[kind]]
+            chosen, other_name = self.parameter_choice(kind, current)
             steps = design.custom_steps.get(kind) if design else None
             other = _other_is(kind)
             found += [
@@ -354,15 +372,16 @@ class LabPlanForm:
                     kind,
                     kind.title(),
                     "select",
-                    current if current in values else OTHER,
+                    chosen,
                     options=self.parameter_options[kind],
                     show_if=inventing,
+                    hint=self._opened_hint(kind),
                 ),
                 DialogField(
                     f"{kind}_name",
                     f"Other {kind}",
                     "text",
-                    current if current not in values else "",
+                    other_name,
                     placeholder="name",
                     show_if=other,
                 ),
@@ -412,11 +431,15 @@ class LabPlanForm:
         }
         for kind in KINDS:
             current = getattr(design, kind) if design else FIRST_STEPS[kind]
-            listed = [v for _, v in self.parameter_options[kind]]
-            found[kind] = current if current in listed else OTHER
-            found[f"{kind}_name"] = current if current not in listed else ""
+            found[kind], found[f"{kind}_name"] = self.parameter_choice(kind, current)
             found[f"{kind}_steps"] = None
         return found
+
+    def _opened_hint(self, kind: str) -> str:
+        """What opened each extra `kind` parameter the select lists."""
+        return "; ".join(
+            escape(f"{o.parameter.name}: {o.why}") for o in self.opened[kind]
+        )
 
     def _start_hint(self) -> str:
         source = spl.find_spell(
@@ -970,6 +993,13 @@ class LabPlanForm:
                     custom[kind] = steps
             else:
                 chosen[kind] = value
+                own = next(
+                    (o for o in self.opened[kind] if o.parameter.name == value), None
+                )
+                if own is not None and spell_levels.extra(kind, value) is None:
+                    # The troupe's own, from a breakthrough: its cost is
+                    # the grant's.
+                    custom[kind] = own.steps
         design = self.design
         if "start_from" in values:
             # The spell Start from names now, and its level as printed when

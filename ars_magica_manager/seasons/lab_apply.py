@@ -7,7 +7,7 @@ import random
 from collections.abc import Sequence
 from dataclasses import replace
 
-from .. import book_kinds, research_text, storage
+from .. import book_kinds, research_text, spell_parameters, storage
 from .. import books as bk
 from .. import enchanted_devices as ed
 from .. import spells as spl
@@ -861,6 +861,9 @@ def _goal_reached(magus: Character, goal) -> list[str]:
     elif goal.grant_kind == "Virtue" and goal.grant:
         magus.virtues_flaws.append(VirtueFlawInstance(goal.grant))
         lines.append("Its Virtue is added.")
+    elif goal.grant_kind == "Parameter" and spell_parameters.parse_grant(goal.grant):
+        names = ", ".join(p.name for p in spell_parameters.parse_grant(goal.grant))
+        lines.append(f"Invent Spell now offers {magus.name} {names}.")
     else:
         lines.append("The troupe records what it grants.")
     return lines

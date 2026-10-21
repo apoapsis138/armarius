@@ -108,6 +108,33 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.124.0 — 2026-10-21
+
+### Book of Hours
+
+- **Breakthroughs unlock spell parameters.** Inventing a spell offers
+  the standard Ranges, Durations and Targets, and beyond them only those
+  open to the magus: from a Virtue (Canaanite Magic's Veil of Death,
+  Fertility Ritual Magic's Unborn Child, Hermetic Rune Magic's Rune and
+  Inscription, and the rest), from a breakthrough they reached, or from a
+  spell they know that uses a breakthrough's parameter. The line under
+  each list says what opened it.
+- **Ancient Magic's new parameters.** Event (a Ritual held until its
+  trigger), Unlimited Range and the 19 Years Duration, each costed as the
+  book gives it.
+- **A goal can grant a Range, Duration or Target of the troupe's own,**
+  written as "Range: Horizon (as Sight)"; reaching it puts it on the
+  magus's lists.
+- **True Lineages' discoveries** join the ready-made research goals: the
+  six Parma Magica folds, Parmulae, Figurine Magic, and Realm-aligned
+  spells and mastery.
+
+### Computus
+
+- **Other... is now an optional rule.** Any spell parameter (Edit Saga,
+  off by default) lets a spell have any Range, Duration or Target with
+  its magnitudes typed in.
+
 ## 2.123.0 — 2026-10-21
 
 ### Pagina

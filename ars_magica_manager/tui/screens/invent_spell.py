@@ -457,7 +457,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 current = getattr(design, kind) if design else ""
                 values = [v for _, v in self.parameter_options[kind]]
                 choice = (
-                    current if current in values else OTHER if current else values[0]
+                    self.form.parameter_choice(kind, current)[0]
+                    if current
+                    else values[0]
                 )
                 yield Select(
                     self.parameter_options[kind],
@@ -472,9 +474,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 current = getattr(design, kind) if design else ""
                 steps = design.custom_steps.get(kind) if design else None
                 yield Label(("" if kind == "range" else " ") + f"Other {kind}")
-                listed = [v for _, v in self.parameter_options[kind]]
                 yield Input(
-                    current if current not in listed else "",
+                    self.form.parameter_choice(kind, current)[1] if current else "",
                     placeholder="name",
                     id=f"inv-{kind}-name",
                     classes="inv-other",
@@ -1115,13 +1116,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.query_one("#inv-ritual", Checkbox).value = bool(design and design.ritual)
         for kind in KINDS:
             current = getattr(design, kind) if design else lpf.FIRST_STEPS[kind]
-            values = [v for _, v in self.parameter_options[kind]]
-            self.query_one(f"#inv-{kind}", Select).value = (
-                current if current in values else OTHER
-            )
-            self.query_one(f"#inv-{kind}-name", Input).value = (
-                current if current not in values else ""
-            )
+            chosen, other_name = self.form.parameter_choice(kind, current)
+            self.query_one(f"#inv-{kind}", Select).value = chosen
+            self.query_one(f"#inv-{kind}-name", Input).value = other_name
             steps = design.custom_steps.get(kind) if design else None
             self.query_one(f"#inv-{kind}-steps", Input).value = (
                 "" if steps is None else str(steps)

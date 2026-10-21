@@ -560,7 +560,7 @@ def arts_form(character: Character) -> Form:
 GRANT_KINDS = [
     ("An Ability (the points become its xp)", "Ability"),
     ("A Virtue", "Virtue"),
-    ("A new parameter (the troupe records it)", "Parameter"),
+    ("A new Range, Duration or Target", "Parameter"),
 ]
 
 
@@ -687,6 +687,9 @@ def research_goal_fields(existing: Breakthrough | None) -> list[DialogField]:
             "Parameter",
             "text",
             grant("Parameter"),
+            placeholder="e.g. Range: Horizon (as Sight)",
+            hint="Range, Duration or Target, its name, and the standard one it "
+            "costs as (+n for more); one the app knows needs only its name.",
             show_if=lambda values: values.get("grant_kind") == "Parameter",
         ),
     ]
