@@ -95,7 +95,8 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "covenant": 65,
     "familiar": 65,
     "laboratory": 50,
-    "sketch_covenant": 50,
+    # Its Overview tab's Connections section: 2.
+    "sketch_covenant": 52,
     # Each Tribunal's Secrets tab adds its (unbuilt) pane and its tab: 2.
     "tribunal": 42,
     "theban_tribunal": 42,

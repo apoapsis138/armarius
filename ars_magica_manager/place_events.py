@@ -435,18 +435,25 @@ def diary_title(_saga: Saga, place: Neighbour) -> str:
 
 
 def diary_grid(_saga: Saga, place: Neighbour) -> Grid:
+    return diary_rows(
+        place, "Nothing written yet: a roll on one of its tables is written here."
+    )
+
+
+def diary_rows(record: Neighbour, empty: str) -> Grid:
+    """A neighbour's diary, oldest first; `empty` says why there is none."""
     rows = [
         [
             " ".join(str(p) for p in (e.get("season"), e.get("year")) if p),
             e.get("text", ""),
         ]
-        for e in diary(place)
+        for e in diary(record)
     ]
     return Grid(
         ["When", "What happened"],
         rows,
         list(range(len(rows))),
-        "Nothing written yet: a roll on one of its tables is written here.",
+        empty,
         caps=[12, 0],
         stretch=1,
     )

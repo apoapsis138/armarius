@@ -101,6 +101,9 @@ ATTITUDE_SECTION = "section-attitudes"
 FAVOURS_SECTION = "section-favours"
 LINKS_SECTION = "section-links"
 MAGI_SECTION = "section-cov-magi"
+#: A character's, covenant's or laboratory's Connections: the records
+#: that point at it or that it sits in (connections.py), read-only.
+CONNECTIONS_SECTION = "section-connections"
 WHAT_MATTERS_SECTION = "section-cov-what-matters"
 #: A Tribunal sheet's top panel.
 TRIBUNAL_INFO_SECTION = "section-trib-info"

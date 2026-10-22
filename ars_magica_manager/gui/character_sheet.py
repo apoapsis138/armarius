@@ -46,6 +46,7 @@ from PySide6.QtWidgets import (
 
 from .. import (
     artwork,
+    connections,
     creation,
     giving,
     portraits,
@@ -100,6 +101,7 @@ from .editing import (
     Section,
     choose_cards,
     choose_rows,
+    follower,
     give_verb,
     verb_buttons,
 )
@@ -354,6 +356,22 @@ def secrets_chapter(record: Any, p: Palette, run: Callable[[Command], None]) -> 
             else text(NONE_YET, p["dim"], serif(12.5, italic=True), wrap=True),
             edits={"Edit Secrets": lambda: run(secrets_form(record))},
         ),
+    )
+
+
+def connections_section(
+    saga: Saga, record: Any, p: Palette, run: Callable[[Command], None]
+) -> QWidget:
+    """A character's, covenant's or laboratory's Connections: the records
+    that point at it or that it sits in (connections.py), each name a
+    link that opens it."""
+    found = connections.facts(saga, record)
+    return section(
+        "Connections",
+        p,
+        fact_grid(found, p, 2, follow=follower(run))
+        if found
+        else text("No connections.", p["dim"], serif(12.5, italic=True)),
     )
 
 
@@ -807,6 +825,7 @@ class CharacterSheet(QWidget):
                 edits=edits("Biographical Detail"),
             )
         )
+        parts.append(connections_section(saga, c, p, self.run))
         health: list[QWidget] = [
             wound_track(cs.wound_track(c), p),
             _subheading("Fatigue", p),

@@ -109,6 +109,33 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.2.0 — 2026-10-22
+
+### Pagina
+
+- **Connections.** A character's, covenant's and laboratory's sheet has
+  a Connections section listing every record tied to it, each name a
+  link: its covenant, where it is (and each place around it), the Rhine
+  gilds a covenant belongs to, the factions whose links include it
+  (**Member of**, with the note on the link), the neighbours it rules,
+  and anything else that links to it. On the desktop click a name to
+  open it (Back returns); in the terminal click it, or press `m` for Go
+  To. Nothing new is stored: each connection is worked out from the
+  record that makes it, so changing that record changes both sides.
+
+### Orbis
+
+- **Linked from, clickable.** A place's and a creature's page lists what
+  links to it among its facts, on the desktop too, each name opening its
+  record; the unclickable rows under Links are gone.
+- **A faction's Diary.** A faction has a Diary tab, as a place has, for
+  what it does season by season.
+
+### Glossa
+
+- Help on Connections and a faction's Diary, and the faction how-to now
+  follows a member back to the faction and keeps its history.
+
 ## 3.1.0 — 2026-10-22
 
 ### Orbis

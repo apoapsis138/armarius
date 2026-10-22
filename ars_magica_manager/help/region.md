@@ -186,7 +186,9 @@ called Found Here and shows only its favours and links.
 A page that names another record of the saga names it as a link: a
 neighbour's ruler or leader, who it answers to, where it is and who
 answers to it; a place's claimant and what is found there; a creature's
-place and the neighbours it rules.
+place and the neighbours it rules; what links to a place or creature
+(**Linked from**); and a character's, covenant's or laboratory's
+[Connections](help:section-connections).
 <!-- gui -->
 Click an underlined name to open its record's page. **Back** returns to
 the page you came from. On the Standing tab, **Open** in Links opens
@@ -382,10 +384,20 @@ Its leader is its **Ruler or leader**: a character, another neighbour or
 a creature from the Bestiary (see [Ruler or Leader](help:neighbour-ruler)).
 A member that is itself a neighbour (a courtier, a branch of the gild)
 names the faction in its own **Answers to**, and the faction's page
-lists it under **Answer to it**. See
+lists it under **Answer to it**. A member linked from the faction lists
+it under **Member of** in their own
+[Connections](help:section-connections). See
 [How to set up a faction's leader and members](help:guide-faction).
 
 **See also:** [A neighbour](help:neighbour)
+
+## Diary tab
+<!-- help: tab-nb-faction-diary -->
+
+What the faction has done, season by season: its schemes, its quarrels,
+who joined or left. A place's Diary works the same way (see
+[Diary](help:section-nb-place-diary)); a faction's is written only by
+hand. Add, edit or delete an entry.
 
 # A threat
 <!-- help: tab-nb-threat -->
@@ -553,6 +565,7 @@ What has happened at the place.
 ## Diary
 <!-- help: section-nb-place-diary -->
 
-What has happened at the place, a line each, with the season it
-happened: the rolls on its tables, the aura rising, or anything the
-storyguide writes. Add, edit or delete an entry.
+What has happened at the place, or what the faction has done, a line
+each, with the season it happened: for a place, the rolls on its tables
+and the aura rising; for either, anything the storyguide writes. Add,
+edit or delete an entry.

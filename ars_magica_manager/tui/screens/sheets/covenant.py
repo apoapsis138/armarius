@@ -202,8 +202,9 @@ class CovenantSheetView(SheetView):
 
     def _overview_tab(self) -> ComposeResult:
         """A Line or Sketch covenant: its magi and their votes, What Matters
-        beside its attitude to each player covenant, then favours and
-        links. A Line covenant has only its attitudes, favours and links."""
+        beside its attitude to each player covenant, then favours, links
+        and connections. A Line covenant has only its attitudes, favours,
+        links and connections."""
         saga, covenant = self.saga, self.covenant
         if covenant.detail != LINE:
             with SheetSection(
@@ -230,6 +231,7 @@ class CovenantSheetView(SheetView):
                     yield from self._relations(covenant)
         else:
             yield from self._relations(covenant)
+        yield from self._connections(covenant)
 
     def _build_tab(self) -> ComposeResult:
         """What the covenant's Build Points went on: the one
@@ -265,6 +267,7 @@ class CovenantSheetView(SheetView):
             with VerticalScroll():
                 with SheetSection(title="Description", id="section-cov-description"):
                     yield Static(self._description_text(), id="cov-description-content")
+                yield from self._connections(self.covenant)
                 with SheetSection(
                     title=self._titled(
                         "section-cov-reputations",

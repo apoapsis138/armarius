@@ -21,7 +21,6 @@ from ..models import (
     Attitude,
     Character,
     Covenant,
-    Creature,
     Favour,
     Link,
     Reason,
@@ -449,32 +448,12 @@ def link_ops(saga: Saga, record: Any) -> SectionOps:
 
 
 def link_rows(saga: Saga, record: Any) -> list[tuple[int | None, str]]:
-    """The links as rows, each with its kind; then, unselectable, the
-    records that link here."""
-    rows: list[tuple[int | None, str]] = [
+    """The links as rows, each with its kind. The records that link here
+    are the page's Linked from (connections)."""
+    return [
         (i, f"{LINK_NOUNS.get(link.kind, link.kind)}: {world.link_label(saga, link)}")
         for i, link in enumerate(record.links)
     ]
-    kind = (
-        "covenants"
-        if isinstance(record, Covenant)
-        else "creatures"
-        if isinstance(record, Creature)
-        else "characters"
-    )
-    back = world.links_to(saga, kind, record.id)
-    if back:
-        rows.append((None, "[$label]Linked from:[/]"))
-        rows += [
-            (
-                None,
-                f"  {escape(other.name)}: {escape(link.note)}"
-                if link.note
-                else f"  {escape(other.name)}",
-            )
-            for other, link in back
-        ]
-    return rows
 
 
 # -- a sketch covenant --

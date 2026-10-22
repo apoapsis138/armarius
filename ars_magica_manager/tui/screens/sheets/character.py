@@ -449,7 +449,7 @@ class CharacterSheetView(SheetView):
 
     def _description_tab(self) -> ComposeResult:
         """Hermetic Background (magi), Biographical Detail, Personality
-        Traits and Reputations, Aging & Warping, and Health."""
+        Traits and Reputations, Connections, Aging & Warping, and Health."""
         character = self.character
         with VerticalScroll():
             if character.type == "magus":
@@ -522,6 +522,7 @@ class CharacterSheetView(SheetView):
                         self._reputation_rows,
                         id="character-reputations-list",
                     )
+            yield from self._connections(character)
             with SheetSection(title="Aging & Warping", id="section-aging"):
                 yield self._static(
                     "section-aging", self._aging_text, id="aging-content"

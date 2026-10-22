@@ -21,6 +21,11 @@
       (no description)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Connections
+
+      Gilds: Hermetic, in Rhine
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Reputations (1)
 
       ○ Fair dealing: +2
@@ -29,11 +34,6 @@
     ▼ Boons (1 pt)                            ▼ Hooks (1 pt)
 
       ○ Aura                                    ○ Contested Resource
-
-
-
-
-
 
 
   ▌

@@ -101,13 +101,14 @@ async def test_tab_stops_once_per_section_and_never_on_a_button():
             for stop in stops
         ]
         # One stop each: the top panel's two sections, the Description tab's
-        # seven, and the tree. (It was 19 stops before.)
+        # eight, and the tree. (It was 19 stops before.)
         assert sections == [
             "section-char-characteristics",
             "section-hermetic-background",
             "section-char-biographical",
             "section-personality-traits",
             "section-reputations",
+            "section-connections",
             "section-aging",
             "section-char-health",
             "nav-tree",
@@ -473,6 +474,7 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             "Update from a File",
             "In Creation / In Play",
             "Demote",
+            "Go To",
         ]
         await menu(pilot, app, "m", "In Creation / In Play")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))

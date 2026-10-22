@@ -438,6 +438,9 @@ OPENERS: dict[str, Opener] = {
     "add place diary entry": Opener(
         "place", lambda ws: ws._core_verb("section-nb-place-diary", "add")
     ),
+    "add faction diary entry": Opener(
+        "faction", lambda ws: ws._core_verb("section-nb-place-diary", "add")
+    ),
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),

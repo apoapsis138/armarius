@@ -144,7 +144,8 @@ another tab.
 <!-- help: tab-description -->
 
 Who the character is, and how they are faring: background, personality,
-reputation, age and health.
+reputation, the records they are connected to (see
+[Connections](help:section-connections)), age and health.
 <!-- gui -->
 At a Glance at the top lists the Age, Covenant, Laboratory, Type, Size and
 any True Faith; a magus's familiar has its card here, which opens its page.
@@ -209,6 +210,10 @@ All of it is typed in with the section's **Edit** button.
 <!-- /gui -->
 Year Born is what the app works the character's Age out
 from.
+
+Below Personality Traits and Reputations come the character's
+[Connections](help:section-connections): their covenant, the factions they are a member of, what they rule, and any
+other record that links to them.
 
 ### Personality Traits
 <!-- help: section-personality-traits -->

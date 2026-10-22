@@ -548,25 +548,30 @@ A faction's page can name its leader and list its members, each a link to its re
 <!-- gui -->
 2. On the faction's page click **Edit**, and click **Ruler or leader**. Pick the leader from the list (it is headed Characters, Neighbours and Bestiary; type to search), or choose **Type a name...** for one the saga has no record of yet.
 <!-- /gui -->
-3. Save. The leader's name on the faction's page now opens their record, and a creature or neighbour leading it lists the faction under **Rules**.
+3. Save. The leader's name on the faction's page now opens their record, and the leader lists the faction under **Rules**: a character in their sheet's [Connections](help:section-connections), a creature or neighbour on its page.
 
 ### The members
 <!-- help: guide-faction-members -->
 
 - **A member who is a neighbour** (a courtier, a branch of the gild): edit that neighbour and set its **Answers to** to the faction. The faction's page lists it under **Answer to it**.
-- **A member who is a character or a creature**: add a link to them in the faction's [Links](help:section-links), on its Standing tab, with a note on their place in it. The Faction tab counts the characters linked.
+- **A member who is a character or a creature**: add a link to them in the faction's [Links](help:section-links), on its Standing tab, with a note on their place in it. The Faction tab counts the characters linked. A character's sheet then lists the faction under **Member of** in their [Connections](help:section-connections), with your note; a creature's page lists it under **Linked from**.
 - **Members with no record**: type how many there are in the faction's **Members**.
 
 ### Following them
 <!-- help: guide-faction-follow -->
 
-Every name the faction's page links opens that record (see [Following a record's links](help:record-links)).
+Every name the faction's page links opens that record (see [Following a record's links](help:record-links)), and a member's Connections lead back to the faction, so you can go from the court to a courtier and on to every other faction they belong to.
 <!-- gui -->
 Click it, and **Back** brings you to the faction again.
 <!-- /gui -->
 <!-- tui -->
 Click it, or press `m` and choose **Go To** for a list of them all.
 <!-- /tui -->
+
+### Its history
+<!-- help: guide-faction-diary -->
+
+What the faction does over the saga goes in its **Diary** tab, a line a season, rather than in its summary (see [Diary tab](help:tab-nb-faction-diary)). Add an entry for each season it acts: a scheme begun, a member lost, a quarrel with a covenant.
 
 **See also:** [A faction](help:tab-nb-faction), [Ruler or Leader](help:neighbour-ruler), [A neighbour](help:neighbour)
 

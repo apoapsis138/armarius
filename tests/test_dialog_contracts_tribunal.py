@@ -257,6 +257,14 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"What happened": ""},
         shown={"#nb-place-diary-list": "The mist lifted"},
     ),
+    "add faction diary entry": Contract(
+        prefill={"Year": "1220"},
+        edits={"What happened": "The coven courted the Count."},
+        saved=lambda s: s.neighbour("coven").details["diary"][-1]["text"],
+        expected="The coven courted the Count.",
+        invalid={"What happened": ""},
+        shown={"#nb-place-diary-list": "The coven courted"},
+    ),
     "edit tribunal": Contract(
         prefill={
             "Name": "Rhine",

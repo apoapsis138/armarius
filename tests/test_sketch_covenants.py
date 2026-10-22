@@ -10,7 +10,7 @@ import pytest
 from support import screen_lines, wait_until
 from textual.widgets import Collapsible, Tree
 
-from ars_magica_manager import storage, world
+from ars_magica_manager import connections, storage, world
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
@@ -138,8 +138,8 @@ def test_a_link_is_made_by_kind_then_record_and_shows_from_the_other_side():
     assert targets == {"arn": "Arnhaven"}  # never itself
     form.apply({"target_id": "arn", "note": "Rivals"})
     assert ops.rows() == ["Arnhaven: Rivals"]
-    rows = world_forms.link_rows(saga, saga.covenants[0])
-    assert any("Fengheld: Rivals" in label for _, label in rows)
+    linked = {f.label: f.value for f in connections.facts(saga, saga.covenants[0])}
+    assert linked["Linked from"] == "Fengheld (Rivals)"
 
 
 def test_a_magus_added_to_a_sketch_is_a_line_in_play_nowhere():

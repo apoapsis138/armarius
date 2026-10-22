@@ -4,15 +4,16 @@ instead, and gives a Links row an Open button (open_link).
 
 What a page names comes from its facts' references (references.Ref):
 a neighbour's ruler, liege and place, who answers to it, and what its
-kind works out (a place's claimant and what is found there); then its
-Links. Choosing one ends the steps with a commands.Go, which the
-front-end follows."""
+kind works out (a place's claimant and what is found there); a
+character's, covenant's or laboratory's Connections; then its Links.
+Choosing one ends the steps with a commands.Go, which the front-end
+follows."""
 
 from __future__ import annotations
 
 from typing import Any
 
-from .. import neighbours, references
+from .. import connections, neighbours, references
 from ..commands import Act, Choice, Choose, Command, Go, Refuse
 from ..markup import escape
 from ..models import Creature, Neighbour, Saga
@@ -29,6 +30,8 @@ def _facts(saga: Saga, record: Any) -> list[Fact]:
     """The facts `record`'s page shows that can name other records."""
     if isinstance(record, Creature):
         return creature_sheet.facts(saga, record)
+    if isinstance(record, connections.SHOWN_ON):
+        return connections.facts(saga, record)
     if not isinstance(record, Neighbour):
         return []
     facts = region_sheet.neighbour_facts(saga, record)

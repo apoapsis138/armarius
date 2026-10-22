@@ -154,6 +154,7 @@ for _kind in (
         factions.problem,
         factions.facts,
         factions.TAB,
+        (factions.DIARY_TAB,),
     ),
     NeighbourKind(
         "threat",

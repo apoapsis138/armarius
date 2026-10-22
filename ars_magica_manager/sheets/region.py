@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from .. import (
     arms,
+    connections,
     neighbour_filter,
     neighbours,
     places,
@@ -289,6 +290,7 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
             Fact("Realm", neighbour.realm or "none"),
             inside_fact(saga, neighbour, "nowhere entered"),
             Fact("Book", kind.book or "core rules"),
+            *connections.links_back(saga, neighbour),
         ]
     place = places.place(saga, neighbour.place_id)
     return [
@@ -301,6 +303,7 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         *([Fact("Place", where, references.refs(place))] if where else []),
         *below_fact(saga, neighbour),
         *creature_sheet.rules_facts(saga, neighbour),
+        *connections.links_back(saga, neighbour),
     ]
 
 

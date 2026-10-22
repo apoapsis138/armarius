@@ -178,8 +178,11 @@ until a season it was repaid in is set, then shows dimmed.
 <!-- help: section-links -->
 
 Links to other records of the saga (a character, covenant, book,
-possession or familiar), each with a short note. Below them, unselectable,
-are the records that link here.
+possession, familiar, place or creature), each with a short note. The
+record linked to lists this one in its own
+[Connections](help:section-connections) (or, on a place's or creature's
+page, under **Linked from**), so a link is made once and shows from both
+ends.
 <!-- gui -->
 **Open** opens the record the chosen link points at (a book or a
 possession has no page of its own to open).
@@ -189,10 +192,41 @@ possession has no page of its own to open).
 one.
 <!-- /tui -->
 
+### Connections
+<!-- help: section-connections -->
+
+The records that point at this one, or that it sits in, worked out from
+theirs, so nothing is entered here:
+
+- **Covenant**: a character's or laboratory's covenant.
+- **Located in**: a covenant's or laboratory's place (a laboratory with
+  none of its own is where its covenant is), then each place around it.
+- **Gilds**: the Rhine gilds a covenant belongs to, and the Tribunal they
+  are in.
+- **Member of**: each faction whose Links include this record, with the
+  note on its link.
+- **Rules**: each neighbour whose Ruler or leader this is.
+- **Linked from**: any other record whose Links include this one.
+
+A connection is changed where it is made: on the faction's Links, the
+neighbour's Ruler or leader, the covenant's or laboratory's place, or
+the Tribunal's gilds.
+<!-- gui -->
+Click an underlined name to open its record; **Back** returns here.
+<!-- /gui -->
+<!-- tui -->
+Click a name to open its record, or press `m` (**Go To**) for a list of
+them all to choose from.
+<!-- /tui -->
+
+**See also:** [Following a record's links](help:record-links),
+[Links](help:section-links)
+
 ## Attributes tab
 <!-- help: tab-cov-attributes -->
 
-What the covenant is like: its description, its Reputations, and its Boons
+What the covenant is like: its description, its
+[Connections](help:section-connections), its Reputations, and its Boons
 and Hooks.
 <!-- gui -->
 On the desktop this is the **Charter** chapter.

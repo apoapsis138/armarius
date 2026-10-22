@@ -356,7 +356,7 @@ class LaboratorySheetView(SheetView):
 
     def _attributes_tab(self) -> ComposeResult:
         """Specializations (with the hand-entered sources nested in it),
-        Features and Rooms over the details panel of the chosen row, docked
+        Features, Rooms and Connections over the details panel of the chosen row, docked
         below the scrolling part."""
         with Vertical(id="lab-attr-body", classes="panel-body"):
             with VerticalScroll(id="lab-attr-scroll"):
@@ -416,6 +416,7 @@ class LaboratorySheetView(SheetView):
                         id="lab-rooms-list",
                         group="lab-attr",
                     )
+                yield from self._connections(self.laboratory)
             yield DetailsPanel(lab_text.ATTRIBUTES_PANEL_HINT, id="lab-attr-panel")
         self._on_refresh(
             ("section-lab-rooms", *LAB_SPECIALIZATION_SECTIONS),

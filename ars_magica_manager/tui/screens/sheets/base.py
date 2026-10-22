@@ -19,13 +19,13 @@ from textual.widgets import (
 )
 from textual.widgets._collapsible import CollapsibleTitle
 
+from .... import connections, world
 from .... import enchanted_devices as ed
-from .... import world
 from ....boon_hook_text import counted
 from ....commands import SectionOps
 from ....forms import world as world_forms
 from ....forms.secrets import secrets_text
-from ....markup import escape, inherited
+from ....markup import aligned, escape, inherited
 from ....models import (
     FULL,
     Book,
@@ -36,11 +36,18 @@ from ....models import (
 )
 from ....sections import (
     ATTITUDE_SECTION,
+    CONNECTIONS_SECTION,
     FAVOURS_SECTION,
     LINKS_SECTION,
     SECRETS_SECTION,
 )
-from ..widgets import DetailsPanel, SelectableList, SheetSection, first_stop
+from ..widgets import (
+    DetailsPanel,
+    SelectableList,
+    SheetSection,
+    fact_markup,
+    first_stop,
+)
 from .lists import BookListView
 
 
@@ -396,6 +403,19 @@ class SheetView(Vertical):
                 ),
                 id="links-list",
             )
+
+    def _connections(self, record: Any) -> ComposeResult:
+        """The Connections section: the records that point at `record` or
+        that it sits in, each name a link that opens it."""
+
+        def text() -> str:
+            found = connections.facts(self.saga, record)
+            if not found:
+                return "[$label]No connections.[/]"
+            return aligned([(f.label, fact_markup(f)) for f in found])
+
+        with SheetSection(title="Connections", id=CONNECTIONS_SECTION):
+            yield self._static(CONNECTIONS_SECTION, text, id="connections-text")
 
     def _list(
         self,

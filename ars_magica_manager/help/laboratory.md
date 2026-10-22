@@ -289,7 +289,8 @@ laboratory may have only one Focus Flaw.
 ## Attributes tab
 <!-- help: tab-lab-attributes -->
 
-The laboratory's Specializations, its Features and its rooms.
+The laboratory's Specializations, its Features and its rooms, then its
+[Connections](help:section-connections): its covenant and where it is.
 <!-- gui -->
 On the desktop they are in the laboratory's **Specializations** chapter.
 <!-- /gui -->

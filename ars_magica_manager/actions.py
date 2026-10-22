@@ -54,6 +54,7 @@ from .sections import (
     CASES_SECTION,
     CATALOGS_SECTION,
     CHAR_AHEAD_SECTION,
+    CONNECTIONS_SECTION,
     CORE_SECTIONS,
     CREATURE_INFO_SECTION,
     DEVICE_SECTIONS,
@@ -534,11 +535,18 @@ def _on_dormant_threat(facts: ActionFacts) -> bool:
 
 
 def _goes_to(facts: ActionFacts) -> bool:
-    """Go To: on a record whose page names another record."""
+    """Go To: on a record whose page names another record. On a
+    character, covenant or laboratory, whose sections have More items of
+    their own, only on the record itself or its Connections."""
+    from . import connections
     from .forms import go_to
 
     record = facts.record_to_delete()
-    return record is not None and go_to.has_targets(facts.saga, record)
+    if record is None or not go_to.has_targets(facts.saga, record):
+        return False
+    if isinstance(record, connections.SHOWN_ON):
+        return facts.on_record() or facts.active_section() == CONNECTIONS_SECTION
+    return True
 
 
 #: When each action that acts on the record on show (or the saga) is

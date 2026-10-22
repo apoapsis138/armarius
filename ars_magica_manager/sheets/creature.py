@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import creatures, places, references
+from .. import connections, creatures, places, references
 from .. import possessions as pos
 from ..forms import virtue as virtue_forms
 from ..grids import Grid
@@ -122,6 +122,7 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
         Fact("Detail", c.detail),
         Fact("Source", c.source),
         *rules_facts(saga, c),
+        *connections.links_back(saga, c),
     ]
 
 

@@ -1,23 +1,25 @@
 """A faction in detail (the core rules): what kind of faction it is, how
 it decides, its rules, what it wants and what it offers, and how many
 members it has. Its members who are characters are its links, on its
-Standing tab.
+Standing tab. Its Diary is kept as a place's is (place_events).
 
 A hedge coven may name the tradition its members follow (a tradition
 catalog id), so its page says which tradition record they are played
 from.
 
 Kept in Neighbour.details: "faction", "decides", "tradition", "rules",
-"wants", "offers" and "members"."""
+"wants", "offers", "members" and "diary"."""
 
 from __future__ import annotations
 
 from typing import Any
 
-from . import traditions
+from . import place_events, traditions
 from .form_spec import DialogField, pairs
+from .grids import Grid
 from .models import Neighbour, Saga
-from .neighbour_lists import KindTab
+from .neighbour_lists import KindList, KindTab
+from .sections import DIARY_SECTION
 from .sheets.character import Fact
 
 FACTION_KINDS: tuple[str, ...] = (
@@ -109,3 +111,24 @@ def problem(values: dict[str, Any]) -> str | None:
 
 
 TAB = KindTab("Faction", "tab-nb-faction", ())
+
+
+def diary_grid(_saga: Saga, faction: Neighbour) -> Grid:
+    return place_events.diary_rows(
+        faction, "Nothing written yet: add what the faction has done, season by season."
+    )
+
+
+#: Its Diary: what the faction has done, kept as a place's is.
+DIARY_TAB = KindTab(
+    "Diary",
+    "tab-nb-faction-diary",
+    (
+        KindList(
+            DIARY_SECTION,
+            place_events.diary_title,
+            diary_grid,
+            place_events.diary_ops,
+        ),
+    ),
+)

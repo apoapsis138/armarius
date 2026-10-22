@@ -48,6 +48,7 @@ from .bookmark import with_bookmark
 from .character_sheet import (
     TextBlock,
     columns_text,
+    connections_section,
     device_section,
     label_values,
     secrets_chapter,
@@ -329,6 +330,7 @@ class CovenantPage(QWidget):
                 p,
                 self.run,
             ),
+            connections_section(self.saga, covenant, p, self.run),
         ]
         if not covenant.played:
             parts += relations(self.saga, covenant, p, self.run)
@@ -343,7 +345,7 @@ class CovenantPage(QWidget):
     def _sketch(self, covenant: Covenant) -> QWidget:
         """A Line or Sketch covenant: who it is, its magi and their votes,
         What Matters, and its attitude to each player covenant, the favours
-        owed and its links. A Line covenant has no magi or What Matters."""
+        owed, its links and its connections. A Line covenant has no magi or What Matters."""
         p, saga = self.p, self.saga
         ops = world_forms.covenant_ops(saga, covenant)
         summary = covenant.summary.strip()
@@ -396,6 +398,7 @@ class CovenantPage(QWidget):
                 )
             )
         parts += relations(saga, covenant, p, self.run)
+        parts.append(connections_section(saga, covenant, p, self.run))
         parts.append(
             text(
                 "A sketch covenant counts toward its Tribunal's roster and votes. "

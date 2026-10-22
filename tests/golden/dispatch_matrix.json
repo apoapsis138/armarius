@@ -18,7 +18,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Demote, Arms",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Demote, Arms, Go To",
         "slash": "(disabled)"
       }
     },
@@ -29,6 +29,16 @@
         "e": "FieldsDialog: Edit Covenant Description",
         "d": "(disabled)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-connections": {
+      "active": "section-connections",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -410,7 +420,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Export, Update from a File, In Creation / In Play, Demote",
+        "m": "MenuScreen: Traditions, Export, Update from a File, In Creation / In Play, Demote, Go To",
         "slash": "(disabled)"
       }
     },
@@ -461,6 +471,16 @@
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-connections": {
+      "active": "section-connections",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -742,7 +762,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Laboratory Identity",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, In Creation / In Play",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Go To",
         "slash": "(disabled)"
       }
     },
@@ -873,6 +893,16 @@
         "e": "FieldsDialog: Edit a Room",
         "d": "ConfirmScreen",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-connections": {
+      "active": "section-connections",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1160,7 +1190,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, Promote, Demote, Arms",
+        "m": "MenuScreen: Export, Update from a File, Promote, Demote, Arms, Go To",
         "slash": "(disabled)"
       }
     },
@@ -1211,6 +1241,16 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-connections": {
+      "active": "section-connections",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2059,6 +2099,16 @@
         "e": "FieldsDialog: Edit The Black Pool Coven",
         "d": "ConfirmScreen",
         "m": "FieldsDialog: Arms of The Black Pool Coven",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-place-diary": {
+      "active": "section-nb-place-diary",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },

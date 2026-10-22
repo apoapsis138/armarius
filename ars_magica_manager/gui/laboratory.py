@@ -49,6 +49,7 @@ from .bookmark import with_bookmark
 from .character_sheet import (
     TextBlock,
     columns_text,
+    connections_section,
     device_section,
     section,
     side_by_side,
@@ -440,6 +441,7 @@ class LaboratoryPage(QWidget):
         parts.append(self._specialty_sources())
         parts.append(self._features())
         parts.append(self._named_section("Rooms", "section-lab-rooms", "a room"))
+        parts.append(connections_section(self.saga, lab, p, self.run))
         return scrolling_page(p, *parts)
 
     def _specialization_group(
