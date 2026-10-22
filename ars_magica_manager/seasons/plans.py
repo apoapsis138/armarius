@@ -588,7 +588,13 @@ def _plan_text(
     if plan.lab_id:
         lab = saga.laboratory(plan.lab_id)
         where = escape(lab.name) if lab else "the laboratory"
-        lines.append(f"  [dim]Lab work, planned on {where}'s Planning tab.[/]")
+        if lab is not None and lab.owner_id != character.id:
+            lines.append(
+                f"  [dim]{where} becomes {escape(character.name)}'s when the "
+                "season is applied.[/]"
+            )
+        else:
+            lines.append(f"  [dim]Lab work, planned on {where}'s Planning tab.[/]")
     if plan.days_away:
         lines.append(f"  {plan.days_away} days away from the laboratory.")
     if worked.pending_roll:

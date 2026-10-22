@@ -12,7 +12,10 @@ assisting in someone else's (planned on the assistant's sheet).
 - Taking over another's laboratory (Covenants): a season rearranging it,
   rolled like refining; Refinement becomes at most the new owner's Magic
   Theory - 3. A Perception + Magic Theory roll against 3 x the old
-  Refinement: failure adds Predecessor (a botch, Hidden Defect too).
+  Refinement: failure adds Predecessor (a botch, Hidden Defect too). A
+  laboratory with no owner is taken over from the magus's own sheet, and
+  becomes theirs when the season is applied (their old one, if any, is
+  left without an owner).
 - Assisting: a season helping the magus whose lab work it is adds
   Intelligence + Magic Theory to his Lab Total (up to his Leadership in
   helpers) and gives the assistant Exposure in Magic Theory.
@@ -122,6 +125,20 @@ def new_lab_problems(saga: Saga, magus: Character, plan: SeasonPlan) -> list[str
             "(Covenant, on the character sheet)."
         )
     return found
+
+
+def vacant(saga: Saga, lab_: Laboratory) -> bool:
+    """Whether `lab_` has no owner in the saga, so a magus may take it over."""
+    return saga.character(lab_.owner_id) is None
+
+
+def can_take_over(saga: Saga, magus: Character) -> list[Laboratory]:
+    """The laboratories `magus` could take over from their sheet: those with
+    no owner, their covenant's first."""
+    return sorted(
+        (lab_ for lab_ in saga.laboratories if vacant(saga, lab_)),
+        key=lambda lab_: (lab_.covenant_id != magus.covenant_id, lab_.name.lower()),
+    )
 
 
 def refinement(lab_: Laboratory) -> int:

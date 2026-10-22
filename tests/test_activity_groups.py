@@ -53,7 +53,11 @@ def test_the_activity_picker_lists_activities_by_group_then_name():
     study = [c.value for c in choices if commands.heading(step, c) == groups.STUDY]
     labels = [rules.ACTIVITIES[k].label.lower() for k in study]
     assert labels == sorted(labels)
-    assert not any(rules.ACTIVITIES[c.value].lab for c in choices)
+    # Only the lab work that takes over a laboratory is on the sheet, with
+    # Order & covenant.
+    lab_work = [c for c in choices if rules.ACTIVITIES[c.value].lab]
+    assert [c.value for c in lab_work] == ["take_over_lab"]
+    assert commands.heading(step, lab_work[0]) == groups.ORDER
     practice = next(c for c in choices if c.value == rules.PRACTICE)
     assert commands.facet(practice, activity_forms.BOOK) == activity_forms.CORE_BOOK
     assert step.apply("practice") == Picked("practice")

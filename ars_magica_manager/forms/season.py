@@ -27,6 +27,7 @@ from ..models import (
     Character,
     Covenant,
     GrogYear,
+    Laboratory,
     Saga,
     SeasonPlan,
     VirtueFlawInstance,
@@ -199,6 +200,10 @@ _SEASON_READS: ChoiceReads = (
         lambda v: {"title": v.get("title") or ""},
     ),
     ((laboratory_seasons.NEW,), lambda v: {"title": v.get("lab_name") or ""}),
+    (
+        (laboratory_seasons.TAKE_OVER,),
+        lambda v: {"lab_id": v.get("take_over_lab_id")},
+    ),
     ((book_seasons.WRITE_SUMMA,), lambda v: {"book_level": v.get("book_level")}),
     (
         (
@@ -1106,6 +1111,42 @@ def _new_lab_fields(
     ]
 
 
+def _take_over_fields(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> list[DialogField]:
+    """Taking over a laboratory: which one (those with no owner, and the
+    plan's own)."""
+    current = (
+        existing.lab_id
+        if existing is not None and existing.activity == laboratory_seasons.TAKE_OVER
+        else None
+    )
+    labs = laboratory_seasons.can_take_over(saga, character)
+    chosen = saga.laboratory(current) if current else None
+    if chosen is not None and chosen not in labs:
+        labs.insert(0, chosen)
+
+    def label(lab: Laboratory) -> str:
+        covenant = saga.covenant(lab.covenant_id)
+        if covenant is None or lab.covenant_id == character.covenant_id:
+            return escape(lab.name)
+        return escape(f"{lab.name} ({covenant.name})")
+
+    return [
+        DialogField(
+            "take_over_lab_id",
+            "Laboratory",
+            "select",
+            current,
+            options=[(label(lab), lab.id) for lab in labs],
+            allow_blank=True,
+            show_if=_activity_is(laboratory_seasons.TAKE_OVER),
+            hint="A laboratory with no owner. It becomes the magus's when the "
+            "season is applied; one they already have is left without an owner.",
+        )
+    ]
+
+
 def _florilegium_subjects(saga: Saga, character: Character) -> list[tuple[str, str]]:
     """The subjects the character can get at unbound tractatus on."""
     names = season_plans_text.spell_names(saga, character)
@@ -1324,6 +1365,7 @@ def season_plan_fields(
         *_subject_fields(saga, character, existing),
         *_book_work_fields(saga, character, existing),
         *_new_lab_fields(character, existing),
+        *_take_over_fields(saga, character, existing),
         *_student_and_research_fields(saga, character, existing),
         *_supplement_fields(saga, character, existing, _activity_is, vf_picker),
         *_correspondence_fields(saga, character, existing),

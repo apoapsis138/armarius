@@ -32,6 +32,7 @@ from ..models import (
     SeasonPlan,
     SeasonRecordLine,
     VirtueFlawInstance,
+    assign_laboratory,
     new_instance_id,
     next_season,
 )
@@ -545,6 +546,8 @@ def _apply_laboratory(
             if plan_for(saga, magus, season, year) is None:
                 set_plan(saga, replace(plan, season=season, year=year, days_away=0))
         return
+    if plan.activity == ls.TAKE_OVER and lab.owner_id != magus.id:
+        assign_laboratory(saga, magus, lab.id)
     # Refining or taking over: the Refinement it now has, and the roll's
     # Virtues and Flaws.
     lab.characteristics.refinement += work.refinement - ls.refinement(lab)

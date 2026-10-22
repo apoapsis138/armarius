@@ -39,26 +39,35 @@ def book_name(activity: season_rules.Activity) -> str:
     return sourcebooks.SOURCEBOOKS.get(activity.book, activity.book)
 
 
-def _choice(activity: season_rules.Activity) -> Choice:
+def _group(activity: season_rules.Activity, lab: bool) -> str:
+    """The group `activity` is listed under: lab work offered on the
+    character sheet goes with Order & covenant, beside setting up a new
+    laboratory."""
+    return groups.ORDER if activity.lab and not lab else activity.group
+
+
+def _choice(activity: season_rules.Activity, lab: bool = False) -> Choice:
     book = book_name(activity)
+    group = _group(activity, lab)
     return Choice(
         escape(activity.label),
         activity.key,
         f"[b]{escape(activity.label)}[/]\n{escape(activity.summary)}\n\n"
-        f"[dim]Type: {escape(activity.group)}. Book: {escape(book)}. "
+        f"[dim]Type: {escape(group)}. Book: {escape(book)}. "
         f"Rule: {escape(_cite(activity.source))}.[/]",
-        f"{activity.summary} {activity.group} {book}",
-        ((TYPE, activity.group), (BOOK, book)),
+        f"{activity.summary} {group} {book}",
+        ((TYPE, group), (BOOK, book)),
     )
 
 
 def _in_order(
-    activities: list[season_rules.Activity], order: tuple[str, ...]
+    activities: list[season_rules.Activity], order: tuple[str, ...], lab: bool
 ) -> list[season_rules.Activity]:
     """`activities` by their group's place in `order`, then by label."""
     place = {group: index for index, group in enumerate(order)}
     return sorted(
-        activities, key=lambda a: (place.get(a.group, len(order)), a.label.lower())
+        activities,
+        key=lambda a: (place.get(_group(a, lab), len(order)), a.label.lower()),
     )
 
 
@@ -95,24 +104,24 @@ def choose_activity(
         )
         everything = season_rules.activities_for(character, books=None)
         others = [a for a in everything if a not in offered]
-    offered = _in_order(offered, order)
+    offered = _in_order(offered, order, lab)
     keys = {a.key for a in offered}
 
     def recent() -> list[Choice]:
         found = [k for k in _recent_keys(saga, character) if k in keys]
-        return [_choice(season_rules.ACTIVITIES[k]) for k in found[:RECENT_COUNT]]
+        return [_choice(season_rules.ACTIVITIES[k], lab) for k in found[:RECENT_COUNT]]
 
     who = escape(character.name)
     return Choose(
         f"Choose {who}'s lab work" if lab else f"Choose {who}'s activity",
-        lambda: [_choice(a) for a in offered],
+        lambda: [_choice(a, lab) for a in offered],
         Picked,
         empty="No activities to choose from.",
         others=(
             (
                 lambda: [
-                    not_offered(_choice(a), "book not in play")
-                    for a in _in_order(others, order)
+                    not_offered(_choice(a, lab), "book not in play")
+                    for a in _in_order(others, order, lab)
                 ]
             )
             if others

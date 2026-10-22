@@ -177,6 +177,9 @@ class Activity:
     #: Lab work: planned on the laboratory's Planning tab, not
     #: the character sheet.
     lab: bool = False
+    #: Lab work also offered on the character sheet, in a laboratory that
+    #: isn't the character's yet (taking one over).
+    sheet: bool = False
     #: Planned for the character by someone else's lab work (the subject of
     #: a Longevity Ritual), not picked from the menu.
     hidden: bool = False
@@ -428,11 +431,13 @@ ACTIVITIES: dict[str, Activity] = {
         Activity(
             laboratory_seasons.TAKE_OVER,
             "Take over the laboratory",
-            "Rearranging another's laboratory: rolled like refining; Refinement "
-            "at most Magic Theory - 3; the Predecessor may linger.",
+            "Rearranging another's laboratory, which becomes yours: rolled "
+            "like refining; Refinement at most Magic Theory - 3; the "
+            "Predecessor may linger.",
             laboratory_seasons.TAKE_OVER_SOURCE,
             who=("magus",),
             lab=True,
+            sheet=True,
             book="Covenants",
             group=groups.LABORATORY,
         ),
@@ -724,7 +729,8 @@ def activities_for(
     keep: str = "",
 ) -> list[Activity]:
     """The activities `character` may plan, in menu order: lab work (on the
-    laboratory's Planning tab) or everything else (on the character sheet).
+    laboratory's Planning tab) or everything else (on the character sheet,
+    with the lab work that takes over a laboratory not yet theirs).
     With `books` (sourcebooks.saga_books), a supplement's activities only
     while it is in play -- except `keep`, a plan's activity already chosen,
     so editing that plan still shows it."""
@@ -732,7 +738,7 @@ def activities_for(
         a
         for a in ACTIVITIES.values()
         if character.type in a.who
-        and a.lab == lab
+        and (a.lab == lab or (a.sheet and not lab))
         and not a.hidden
         and (a.key == keep or sourcebooks.in_play(a.book, books))
         and _member(character, a.tradition)

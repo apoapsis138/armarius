@@ -105,6 +105,8 @@ def test_magi_and_companions_plan_every_activity_built_so_far():
     writing = [bs.WRITE_SUMMA, bs.WRITE_TRACTATUS, bs.COPY_BOOK, bs.TRANSLATE_BOOK]
     magus_only = [
         rules.VIS_STUDY,
+        # The one lab work on the sheet, where it sits in the registry.
+        ls.TAKE_OVER,
         *writing,
         bs.REWRITE_TEXTS,
         bs.COPY_TEXTS,

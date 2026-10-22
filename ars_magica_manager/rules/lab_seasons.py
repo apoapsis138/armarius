@@ -367,8 +367,20 @@ def _work(
 ) -> tuple[list[str], LabWork | None]:
     lab_ = laboratory(saga, magus, plan)
     if lab_ is None:
+        if plan.activity == laboratory_seasons.TAKE_OVER:
+            return ["Choose the laboratory to take over."], None
         return ["Lab work needs a laboratory."], None
-    if lab_.owner_id != magus.id:
+    taking = plan.activity == laboratory_seasons.TAKE_OVER and (
+        laboratory_seasons.vacant(saga, lab_)
+    )
+    if lab_.owner_id != magus.id and not taking:
+        if plan.activity == laboratory_seasons.TAKE_OVER:
+            owner = saga.character(lab_.owner_id)
+            who = owner.name if owner else "someone"
+            return [
+                f"{lab_.name} is {who}'s laboratory: only one with no owner "
+                "can be taken over."
+            ], None
         return [f"{magus.name} doesn't work in {lab_.name}."], None
     vf_ids = {vf.vf_id for vf in magus.virtues_flaws}
     if plan.experimenting:

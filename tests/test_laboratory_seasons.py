@@ -3,6 +3,7 @@
 import random
 
 from ars_magica_manager import seasons
+from ars_magica_manager.forms import season as season_forms
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -16,7 +17,7 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
-from ars_magica_manager.rules import lab_seasons
+from ars_magica_manager.rules import activities, lab_seasons
 from ars_magica_manager.rules import laboratory_seasons as ls
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
@@ -101,6 +102,45 @@ def test_taking_over_caps_refinement_at_magic_theory_minus_3():
     saga.laboratories[0].characteristics.refinement = 4
     _, work = lab_seasons.work(saga, saga.character("m"), _plan(ls.TAKE_OVER))
     assert (work.refinement, work.old_refinement) == (2, 4)
+
+
+def test_a_laboratory_with_no_owner_is_taken_over_from_the_sheet():
+    saga = _saga()
+    magus = saga.character("m")
+    magus.assigned_lab_id = "lab"
+    vacant = Laboratory(id="old", covenant_id="cov", name="Crucible")
+    saga.laboratories.append(vacant)
+    offered = {a.key for a in activities.activities_for(magus)}
+    assert ls.TAKE_OVER in offered and ls.REFINE not in offered
+    assert ls.can_take_over(saga, magus) == [vacant]
+    values = {"activity": ls.TAKE_OVER, "take_over_lab_id": "old"}
+    assert season_forms.season_plan_problem(saga, magus, values) is None
+    season_forms.save_season(saga, magus, values, None, None)
+    _run(saga)
+    # It becomes his; the laboratory he had is left without an owner.
+    assert (vacant.owner_id, magus.assigned_lab_id) == ("m", "old")
+    assert saga.laboratory("lab").owner_id is None
+
+
+def test_only_a_laboratory_with_no_owner_can_be_taken_over():
+    saga = _saga()
+    magus = saga.character("m")
+    rival = Character(id="r", name="Kyrillos", type="magus", covenant_id="cov")
+    saga.characters.append(rival)
+    saga.laboratories.append(
+        Laboratory(id="theirs", covenant_id="cov", name="Hall", owner_id="r")
+    )
+    assert ls.can_take_over(saga, magus) == []
+    found, _ = lab_seasons.work(
+        saga, magus, SeasonPlan("m", 1220, "Spring", ls.TAKE_OVER, lab_id="theirs")
+    )
+    assert found == [
+        "Hall is Kyrillos's laboratory: only one with no owner can be taken over."
+    ]
+    found, _ = lab_seasons.work(
+        saga, magus, SeasonPlan("m", 1220, "Spring", ls.TAKE_OVER)
+    )
+    assert found == ["Choose the laboratory to take over."]
 
 
 def test_an_assistant_adds_int_and_magic_theory():

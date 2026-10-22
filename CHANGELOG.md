@@ -108,6 +108,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.125.2 — 2026-10-22
+
+### Book of Hours
+
+- **Taking over a laboratory with no owner.** A laboratory left with no
+  owner couldn't be taken over: the season was only offered on the
+  laboratory's own Planning tab, which plans for its owner. A magus now
+  plans Take over the laboratory on their own Planning tab (under
+  Order & covenant), choosing the laboratory; when the season is
+  played the laboratory becomes theirs, its Refinement drops to at
+  most their Magic Theory - 3, and the Predecessor may linger. Any
+  laboratory they had is left with no owner.
+
 ## 2.125.1 — 2026-10-22
 
 ### Illuminatio

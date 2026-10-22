@@ -82,7 +82,10 @@ NOUNS = ("New Spell", "Plan", "Clear")
 #: The last line of most lab work's results.
 EXPOSURE = "Every lab season also gives 2 xp Exposure in Magic Theory."
 
-NO_OWNER = "Give the laboratory a magus as its owner to plan lab work."
+NO_OWNER = (
+    "Give the laboratory a magus as its owner to plan lab work, or plan "
+    "Take over the laboratory on a magus's own sheet."
+)
 
 ShowIf = Callable[[dict[str, Any]], bool]
 

@@ -549,7 +549,7 @@ class LaboratoryActions(WorkspaceBase):
             return None
         owner = self.saga.character(lab.owner_id)
         if owner is None or owner.type != "magus":
-            self.notify("Give the laboratory a magus as its owner to plan lab work.")
+            self.notify(lab_plan_forms.NO_OWNER)
             return None
         return lab, owner
 
