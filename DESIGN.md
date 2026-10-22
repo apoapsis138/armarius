@@ -335,7 +335,7 @@ which entity owns which relationship.
 - Spec: the "Saga World: data and forms spec" Claude Doc; mockups in the
   project's shared files (`saga-modules/mockups/`). FEAT-17 in the
   kanban. 3.0.0 ships when this phase and the desktop's parity with
-  the terminal are both done (decided 2026-10-14).
+  the terminal are both done (decided 2026-10-14). Shipped 2026-10-22.
 
 **Phase 6+ — Polish / open-ended**
 - Character sheet export/printing, multi-saga management UI, possible

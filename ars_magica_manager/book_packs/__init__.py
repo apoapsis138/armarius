@@ -1,16 +1,19 @@
 """Book packs: the content packs built from the Tribunal sourcebooks and
-shipped with the app (data/packs/*.amm.json), one module per book.
+the region books, shipped with the app (data/packs/*.amm.json), one
+module per book.
 
 A book's module assembles a Saga in code with a `Builder` (builder.py),
 one record at a time -- the Tribunal with its package's customs filled
 in, its covenants and their magi, the places, towns and neighbours of
-the region, its Peripheral Code, its open cases and its history -- and
+the region, its Peripheral Code, its open cases and its history; a
+region book, with no Tribunal, has covenants outside every Tribunal and
+keeps its history in a covenant's Diary and the saga's calendar -- and
 registers a `BookPack` here naming the book it comes from. The pack
 writer (packs.py) then turns that saga into a pack file, so the shipped
 file can be rebuilt after a format change (tools/build_packs.py) and a
 test can check it still imports clean.
 
-Importing a book pack puts its book in play for the saga (the Tribunal
+Importing a book pack puts its book in play for the saga (a Tribunal
 record carries its package already), so the book's neighbour kinds and
 catalog entries show.
 
@@ -105,6 +108,7 @@ def write_all(folder: Path = PACKS_DIR) -> list[Path]:
 
 
 from . import (  # noqa: F401
+    cradle,
     hibernia,
     levant,
     normandy,

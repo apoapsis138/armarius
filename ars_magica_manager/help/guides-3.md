@@ -17,7 +17,7 @@ This guide takes you from the start screen to a saga you can play: a saga with i
 3. The new saga opens at once, on [its page](help:saga). Next time, click its card on the Sagas page, or choose **Open Saga** on the title page to go back to the saga you had open last.
 <!-- /gui -->
 
-To begin with a Tribunal and its covenants already written, choose a pack in **Start from a pack**: a Tribunal sourcebook's pack shipped with the app (see [How to start a saga from a Tribunal book](help:guide-book-packs)) or one in your exports folder (see [Content packs](help:export-pack)). A pack imported into a saga that already exists can leave parts out, such as the mundane world or the history (see [Choosing what a pack imports](help:import-pack)).
+To begin with a Tribunal and its covenants already written, choose a pack in **Start from a pack**: a sourcebook's pack shipped with the app (see [How to start a saga from a sourcebook](help:guide-book-packs)) or one in your exports folder (see [Content packs](help:export-pack)). A pack imported into a saga that already exists can leave parts out, such as the mundane world or the history (see [Choosing what a pack imports](help:import-pack)).
 
 The saga is saved as soon as it is made, and every change after that is saved as you make it: there is no Save command to remember.
 
@@ -137,7 +137,7 @@ Click **Help** in the top bar, or press `?` or F1, for help on the page and chap
 - [How lab planning works](help:guide-lab-planning): inventing spells, enchanting and other lab projects.
 - [How to bind and keep a familiar](help:guide-familiars).
 - [How to import and export](help:guide-import-export): moving records between sagas.
-- [How to start a saga from a Tribunal book](help:guide-book-packs): the shipped content packs.
+- [How to start a saga from a sourcebook](help:guide-book-packs): the shipped content packs.
 
 **See also:** [Saga picker](help:saga-picker), [The workspace](help:workspace), [The saga](help:saga), [Keys](help:keys)
 

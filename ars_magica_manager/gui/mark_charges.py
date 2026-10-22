@@ -447,6 +447,19 @@ def theology_pagan() -> QPainterPath:
     return union(rays, circle(50, 50, 20)).subtracted(ring(50, 50, 14, 3))
 
 
+def theology_zoroastrian() -> QPainterPath:
+    """The sacred fire burning on its stepped altar."""
+    flame = QPainterPath()
+    flame.moveTo(50, 10)
+    flame.quadTo(68, 30, 64, 44)
+    flame.quadTo(60, 54, 50, 54)
+    flame.quadTo(40, 54, 36, 44)
+    flame.quadTo(32, 30, 50, 10)
+    flame.closeSubpath()
+    altar = union(rect(34, 58, 32, 6), rect(40, 64, 20, 16), rect(30, 80, 40, 8))
+    return union(flame.subtracted(circle(50, 44, 5)), altar)
+
+
 # -- Martial --
 
 
@@ -1796,6 +1809,7 @@ MARKS: dict[str, Charge] = {
     "Theology: Islam": theology_islam,
     "Theology: Judaism": theology_judaism,
     "Theology: Pagan": theology_pagan,
+    "Theology: Zoroastrian": theology_zoroastrian,
     "Bows": bows,
     "Great Weapon": great_weapon,
     "Single Weapon": single_weapon,

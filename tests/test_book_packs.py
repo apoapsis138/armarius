@@ -299,6 +299,140 @@ def test_a_creature_from_another_book_cites_that_book():
     assert b.creature("Ghul", page="p. 9").source.startswith("Blood and Sand")
 
 
+def test_a_creature_prices_an_art_table_ability_as_stats_does():
+    from ars_magica_manager.rules.xp import ability_xp, art_xp
+
+    b, _ = _a_builder()
+    block = {"abilities": [("Sihr", 10, ""), ("Awareness", 3, "")]}
+    sihr, awareness = b.creature("Jinni", page="p. 1", block=block).abilities
+    assert (sihr.xp, sihr.xp_table) == (art_xp(10), "art") == (55, "art")
+    assert awareness.xp == ability_xp(3)
+
+
+def test_a_sketch_belongs_to_the_traditions_it_is_given():
+    b, _ = _a_builder()
+    sahir = b.magus(
+        "Niya",
+        covenant=None,
+        house="",
+        age=50,
+        summary="",
+        type="companion",
+        traditions=["trad_sahirs"],
+    )
+    assert sahir.type == "companion" and sahir.traditions == ["trad_sahirs"]
+    assert (
+        b.magus("Plain", covenant=None, house="", age=None, summary="").traditions == []
+    )
+    # A stat block that names no traditions keeps the sketch's.
+    b.stats(sahir, {"abilities": [("Sihr", 6, "")]})
+    assert sahir.traditions == ["trad_sahirs"]
+
+
+def test_a_stat_block_carries_tradition_effects_and_bound_beings():
+    from ars_magica_manager.models import Character
+
+    b, _ = _a_builder()
+    jinni = b.creature("Kharrat", page="p. 2")
+    block = {
+        "traditions": ["trad_sahirs"],
+        "effects": [
+            b.effect("Call Kharrat", rule="Summoning", uses=["Sihr"], level=15),
+            b.effect("A Naranj", rule="Naranj", level=20, tradition="trad_mobeds"),
+        ],
+        "bound_beings": [
+            b.bound_being("Kharrat", kind="Bargained jinni", creature=jinni)
+        ],
+    }
+    sahir = b.stats(Character(id="a", name="'Arkhaman", type="companion"), block)
+    call, naranj = sahir.tradition_effects
+    assert (call.tradition, call.rule, call.uses, call.level) == (
+        "trad_sahirs",
+        "Summoning",
+        ["Sihr"],
+        15,
+    )
+    assert naranj.tradition == "trad_mobeds"
+    (bound,) = sahir.bound_beings
+    assert (bound.tradition, bound.kind, bound.creature_id) == (
+        "trad_sahirs",
+        "Bargained jinni",
+        jinni.id,
+    )
+
+
+def _a_region_pack() -> builder.Builder:
+    """A pack with no Tribunal: a covenant outside every Tribunal, its
+    history in that covenant's Diary, a yearly council in the calendar,
+    and a place known in the region."""
+    b = builder.Builder("Region", source="TC&TC", known="In the region")
+    city = b.place("Baghdad", summary="A city.", realm="Divine", aura=4)
+    house = b.covenant("Dar al-Hikma", founded=805, summary="An academy.", place=city)
+    b.chronicle(house, 805, "The Order is founded", "Its first council.")
+    b.calendar("The Majlis", 1220, "Summer", repeats="Each year", note="In Baghdad.")
+    return b
+
+
+def test_a_region_pack_builds_with_no_tribunal():
+    import pytest
+
+    b = _a_region_pack()
+    (house,) = b.saga.covenants
+    assert house.tribunal_id is None and b.saga.tribunals == []
+    (entry,) = house.diary
+    assert (entry.year, entry.season, entry.name) == (
+        805,
+        "Spring",
+        "The Order is founded",
+    )
+    (council,) = b.saga.calendar
+    assert (council.title, council.season, council.repeats, council.covenant_id) == (
+        "The Majlis",
+        "Summer",
+        "Each year",
+        None,
+    )
+    (city,) = b.saga.neighbours
+    assert city.details["known"] == "In the region"
+    assert b.place("Elsewhere", summary="", known="Locally").details["known"] == (
+        "Locally"
+    )
+    # A Tribunal's book keeps its default.
+    rhine, _ = _a_builder()
+    assert rhine.place("A wood", summary="").details["known"] == "In the Tribunal"
+    with pytest.raises(ValueError):
+        b.chronicle(house, 806, "No season", season="")
+    with pytest.raises(ValueError):
+        b.calendar("Never", 1221, repeats="Sometimes")
+
+
+def test_a_region_pack_imports_clean_and_is_listed_by_name():
+    pack = book_packs.BookPack(
+        key="region", book="TC&TC", name="A Region", assemble=_a_region_pack, source=""
+    )
+    data = book_packs.data(pack)
+    assert data["saga"]["tribunals"] == []
+    assert packs.choice_label(data, "fallback") == (
+        "A Region: 1 covenant, 1 place or neighbour, 1 calendar entry"
+    )
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    (house,) = target.covenants
+    assert house.tribunal_id is None and target.tribunals == []
+    assert [e.name for e in house.diary] == ["The Order is founded"]
+    assert [e.title for e in target.calendar] == ["The Majlis"]
+    assert house.place_id == target.neighbours[0].id
+    notes = packs.after_import(target, data)
+    assert "The Cradle and the Crescent is now in play." in notes[0]
+    assert target.books_in_play is not None and "TC&TC" in target.books_in_play
+    # Leaving the history out leaves out the covenant's Diary too.
+    fields = {f.key for f in packs.import_fields(data)}
+    assert "history" in fields
+    bare = packs.narrow(data, {key: False for key in fields})
+    assert [c["diary"] for c in bare["saga"]["covenants"]] == [[]]
+    assert bare["saga"]["calendar"] == []
+
+
 # -- The Lion and the Lily --
 
 
@@ -866,6 +1000,140 @@ def test_the_levant_pack_imports_clean_into_a_new_saga():
     for name in covenants & {"The Hermetic Embassy", "Foothold", "Para Belli"}:
         assert name in renewal.brought_by or name in renewal.against
     assert {"The Hermetic Embassy", "Foothold", "Para Belli"} <= covenants
+
+
+# -- The Cradle and the Crescent --
+
+CRADLE = book_packs.PACKS["cradle"]
+
+
+def test_the_cradle_pack_holds_its_region_with_no_tribunal():
+    data = book_packs.data(CRADLE)
+    held = data["saga"]
+    assert held["tribunals"] == [] and data["book"] == "TC&TC"
+    assert {c["tribunal_id"] for c in held["covenants"]} == {None}
+    saga = CRADLE.build()
+    houses = {c.name: c for c in saga.covenants}
+    assert len(houses) == 13
+    assert {
+        "Dar al-Hikma",
+        "The House of Wisdom of Savah",
+        "The House of Healing",
+        "Dayr Qunna",
+        "The House of Wisdom of Damascus",
+        "The House of Wisdom of Cairo",
+    } <= set(houses)
+    # No house of wisdom is left without an aura.
+    assert all(c.aura > 0 for c in saga.covenants)
+    assert (houses["Dayr Qunna"].aura, houses["Dayr Qunna"].aura_realm) == (
+        3,
+        "Magic",
+    )
+    assert (houses["The House of Wisdom of Savah"].aura_realm) == "Magic"
+    # The Order's history is the Dar al-Hikma's Diary.
+    assert len(houses["Dar al-Hikma"].diary) >= 20
+    (majlis,) = [e for e in saga.calendar if e.title == "The Majlis al-Sulayman"]
+    assert (majlis.season, majlis.repeats) == ("Summer", "Each year")
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+    order = next(n for n in saga.neighbours if n.name == "The Order of Suleiman")
+    families = [n for n in saga.neighbours if n.answers_to == order.id]
+    assert len(families) == 6
+    names = {n.name for n in saga.neighbours}
+    assert {"Iraq", "Baghdad", "The Mazdeans", "The Mongol Conquest"} <= names
+
+
+def test_the_cradle_pack_s_sahirs_are_companions_and_arkhaman_is_printed():
+    from ars_magica_manager.rules import hedge_casting as hc
+
+    data = book_packs.data(CRADLE)
+    saga = CRADLE.build()
+    sahirs = [c for c in saga.characters if "trad_sahirs" in c.traditions]
+    assert len(sahirs) == 5 and {c.type for c in sahirs} == {"companion"}
+    arkhaman = next(c for c in sahirs if c.name.startswith("'Arkhaman"))
+    assert arkhaman.id not in data.get(packs.GENERATED, {})
+    chars = arkhaman.characteristics
+    assert (chars.intelligence, chars.presence, chars.strength) == (2, 2, -1)
+    assert hc.score(arkhaman, "Sihr") == 10
+    # The book's 10+2: Puissant adds its 2.
+    assert hc.score(arkhaman, "Solomonic Travel") == 12
+    held = {v.vf_id for v in arkhaman.virtues_flaws}
+    assert {"vf_the_gift", "vf_sahir", "vf_vizier", "vf_sihr"} <= held
+    effects = arkhaman.tradition_effects
+    assert len(effects) == 7
+    assert [e.rule for e in effects].count("Summoning") == 1
+    assert {e.tradition for e in effects} == {"trad_sahirs"}
+    (kharrat,) = arkhaman.bound_beings
+    creature = next(c for c in saga.creatures if c.name.startswith("Kharrat"))
+    assert (kharrat.name, kharrat.creature_id) == ("Kharrat", creature.id)
+
+
+def test_the_cradle_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(CRADLE)
+    assert _secrets_kept(data["saga"]) >= 10
+    assert data["book"] == "TC&TC" and "Creative Commons" in data["source"]
+    assert "The Cradle and the Crescent" in data["source"]
+
+
+def test_the_shipped_cradle_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(CRADLE).read_text(encoding="utf-8"))
+    built = book_packs.data(CRADLE)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "creatures"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+    assert {c["name"]: c["aura"] for c in shipped["saga"]["covenants"]} == {
+        c["name"]: c["aura"] for c in built["saga"]["covenants"]
+    }
+
+
+def test_the_cradle_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(CRADLE)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "The Cradle and the Crescent is now in play.",
+        packs.assumptions_note("The Cradle and the Crescent"),
+    ]
+    assert target.books_in_play is not None and "TC&TC" in target.books_in_play
+    assert target.tribunals == []
+    assert len(target.covenants) == len(data["saga"]["covenants"])
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+    dar = next(c for c in target.covenants if c.name == "Dar al-Hikma")
+    assert dar.diary and target.calendar
+    creatures = {c.id for c in target.creatures}
+    arkhaman = next(c for c in target.characters if c.name.startswith("'Arkhaman"))
+    assert all(b.creature_id in creatures for b in arkhaman.bound_beings)
+
+
+def test_the_levant_and_cradle_packs_share_their_records_without_doubling():
+    from collections import Counter
+
+    from ars_magica_manager.book_packs import east
+
+    shared = east.middle_east(builder.Builder("Probe", source="TC&TC"))
+    names = {r.name for r in shared.values()}
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    for pack in (LEVANT, CRADLE):
+        data = book_packs.data(pack)
+        transfer.apply(target, transfer.plan_import(target, data))
+    counts = Counter(
+        [n.name for n in target.neighbours] + [c.name for c in target.creatures]
+    )
+    assert {name: counts[name] for name in names} == dict.fromkeys(names, 1)
+    keys = [(n.name, n.kind) for n in target.neighbours]
+    assert len(keys) == len(set(keys))
+    covenants = [c.name for c in target.covenants]
+    assert len(covenants) == len(set(covenants)) == 25
+    # A record both packs hold stays where the first import put it: the
+    # pit lies beneath the Levant pack's Babel.
+    pit = next(n for n in target.neighbours if n.name == "The Pit of Harut and Marut")
+    place = target.neighbour(pit.place_id or "")
+    assert place is not None and place.name == "Babel"
 
 
 def test_every_pack_names_a_help_page_of_its_assumptions():

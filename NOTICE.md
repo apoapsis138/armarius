@@ -27,7 +27,7 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
   the fifteen Arts in `ars_magica_manager/arts.py`;
 - the content packs in `data/packs/` and the modules that build them in
   `ars_magica_manager/book_packs/`: summaries, in the program's own words,
-  of the Tribunal sourcebooks' open content (*Guardians of the Forests:
+  of the Tribunal and region sourcebooks' open content (*Guardians of the Forests:
   The Rhine Tribunal*, from its [open content on Project: Redcap](https://redcap.org/page/Guardians_of_the_Forest:_The_Rhine_Tribunal_Open_Content);
   *The Lion and the Lily: The Normandy Tribunal*; *Faith & Flame: The
   Provençal Tribunal*; *The Sundered Eagle: The Theban Tribunal*,
@@ -36,9 +36,11 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
   content on Project: Redcap](https://redcap.org/page/Against_the_Dark_Open_Content);
   *The Contested Isle: The Hibernian Tribunal*, from its [open
   content on Project: Redcap](https://redcap.org/page/The_Contested_Isle:_the_Hibernian_Tribunal);
-  and *Blood and Sand: The Levant Tribunal* with its web supplement
+  *Blood and Sand: The Levant Tribunal* with its web supplement
   *Secrets in Sand*, from Atlas Games' open content release on
-  Project: Redcap).
+  Project: Redcap; and *The Cradle and the Crescent*, the region book
+  of Arabia, Mesopotamia, Persia and the Silk Road, from the same
+  release).
 
 ### Attribution
 
@@ -54,8 +56,8 @@ packs, *Guardians of the Forests: The Rhine Tribunal*, *The Lion and the
 Lily: The Normandy Tribunal*, *Faith & Flame: The Provençal
 Tribunal*, *The Sundered Eagle: The Theban Tribunal*, *Against the
 Dark: The Transylvanian Tribunal*, *The Contested Isle: The Hibernian
-Tribunal* and *Blood and Sand: The Levant Tribunal* with *Secrets in
-Sand*. Where it is
+Tribunal*, *Blood and Sand: The Levant Tribunal* with *Secrets in
+Sand*, and *The Cradle and the Crescent*. Where it is
 recorded, each catalog entry's `source` field names its book. The spell
 catalog was built from [The Grand
 Grimoire](https://www.redcap.org/page/The_Grand_Grimoire) on Project:

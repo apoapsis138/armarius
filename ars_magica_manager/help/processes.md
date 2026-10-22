@@ -758,7 +758,7 @@ and dropped. Importing the same pack twice adds nothing the second time.
 
 **Starting a saga from a pack:** the Create a New Saga form offers **Start
 from a pack**, listing the packs shipped with the app (one per Tribunal
-sourcebook; see [How to start a saga from a Tribunal book](help:guide-book-packs))
+sourcebook; see [How to start a saga from a sourcebook](help:guide-book-packs))
 and then any pack in the exports folder; the new saga begins with
 everything in it. A pack built from a sourcebook puts that book in play
 when it is imported.
@@ -851,7 +851,7 @@ What it replaces: the record's own contents, and what travels with it in an expo
 The form shown after choosing a pack's file in Import Data, **A Content Pack**: which of its parts to bring in.
 
 A pack's Tribunals and covenants always come in: they are what the rest
-hangs on. The rest is a tick each, all ticked to begin with, and a part
+hangs on (a region book's pack has covenants and no Tribunal). The rest is a tick each, all ticked to begin with, and a part
 the pack holds nothing of isn't asked about:
 
 - **Their people**: the covenants' characters, laboratories and
@@ -869,7 +869,8 @@ the pack holds nothing of isn't asked about:
   and threats.
 - **Code, cases and fines**: each Tribunal's Peripheral Code,
   docket and fines.
-- **The history**: each Tribunal's Diary, and the calendar entries.
+- **The history**: each Tribunal's Diary, each covenant's Diary (where a
+  pack with no Tribunal keeps its history), and the calendar entries.
 
 Then each of the pack's stories (its threats) that this saga doesn't
 already have is a **Begin** tick, shown while the mundane world is

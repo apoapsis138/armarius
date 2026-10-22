@@ -6,7 +6,7 @@ from collections import Counter
 
 import pytest
 
-from ars_magica_manager import catalog
+from ars_magica_manager import catalog, sourcebooks
 from ars_magica_manager import sheet_text as st
 from ars_magica_manager.models import (
     VIRTUE_FLAW_AUDIENCES,
@@ -44,11 +44,12 @@ def test_catalog_counts_after_adding_the_supplements():
     # plus the other books' hedge traditions' 115, plus Ancient Magic's 6
     # integration Virtues, plus the 3 Grogs entries the DE doesn't have,
     # plus Realms of Power: The Divine's Perfectus Mythic Companion Virtue,
-    # plus Secrets in Sand's 2 Virtues and 2 Flaws.
+    # plus Secrets in Sand's 2 Virtues and 2 Flaws, plus The Cradle and the
+    # Crescent's Jinni.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1355
+    assert len(entries) == 1356
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 797, "Flaw": 471, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 798, "Flaw": 471, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 
@@ -77,6 +78,20 @@ def test_secrets_in_sand_adds_the_islamic_tradition_s_entries():
         assert e.category == "Hermetic" and e.source == "SiS"
         assert e.summary and e.description
     assert {e.id for e in vfs.values() if e.source == "SiS"} == set(expected)
+
+
+def test_the_jinni_free_virtue_is_for_spirits_of_its_book():
+    jinni = by_id()["vf_jinni"]
+    assert (jinni.name, jinni.type, jinni.tier, jinni.cost) == (
+        "Jinni",
+        "Virtue",
+        "Free",
+        0,
+    )
+    assert jinni.source == "TC&TC" and jinni.summary and jinni.description
+    assert set(jinni.audience) == {"faerie", "magic being"}
+    assert sourcebooks.in_play(jinni.source, ["TC&TC"])
+    assert not sourcebooks.in_play(jinni.source, [])
 
 
 def test_the_wrongly_filed_entries_are_fixed():

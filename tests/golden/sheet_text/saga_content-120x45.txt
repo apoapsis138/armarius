@@ -50,10 +50,10 @@
     ▼ Catalogs (6)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1355        0
+      ○ Virtues & Flaws              yes          1356        0
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           217        0
-      ○ Abilities                    yes           258        0
+      ○ Abilities                    yes           259        0
       ○ Spells                       yes          1315        0
       ○ Shapes & Materials           yes           243        0
 

@@ -457,9 +457,10 @@ GROUPS: tuple[Group, ...] = (
     Group(
         "history",
         "The history",
-        "Each Tribunal's Diary, and the calendar entries.",
+        "Each Tribunal's and covenant's Diary, and the calendar entries.",
         lambda data: (
             sum(len(t.get("diary") or []) for t in _held(data, "tribunals"))
+            + sum(len(c.get("diary") or []) for c in _held(data, "covenants"))
             + len(_held(data, "calendar"))
         ),
     ),
@@ -607,7 +608,9 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
             {**t, **{key: [] for key in blank}} for t in held.get("tribunals") or []
         ]
     if "history" in left:
+        # A pack with no Tribunal keeps its history in a covenant's Diary.
         held["calendar"] = []
+        held["covenants"] = [{**c, "diary": []} for c in held.get("covenants") or []]
     return {**data, "links": links, "saga": held}
 
 

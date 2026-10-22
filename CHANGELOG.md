@@ -20,11 +20,11 @@ manuscript; the *orbis* is the world; a *concilium* is a council;
 *insignia* are marks of honour; and a *peregrinatio* is a journey into
 other lands. Each major version has a name of its own: an *incipit* is
 the opening words of a manuscript, a *folio* a sheet folded into leaves,
-and a *codex* the bound book.
+a *codex* the bound book, and a *nomen novum* a new name.
 
 Versions are `MAJOR.MINOR.PATCH`: MAJOR marks a finished phase of the
 plan (1.0.0: Phase 1, the core tracker; 2.0.0: Phase 4, creation by the
-book), a new or changed feature bumps MINOR, and a bug fix or
+book; 3.0.0: Phase 5, the Saga World), a new or changed feature bumps MINOR, and a bug fix or
 behind-the-scenes improvement bumps PATCH. The version is shown in the
 app's title bar and on the saga picker, recorded in every saga file that
 version saves, and tagged in git (`v0.2.0`, ...).
@@ -101,12 +101,35 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | 0 | Incipit | the first sheets, catalogs and checks |
 | 1 | Folio | Phase 1 finished: the core tracker, the rules and the seasons |
 | 2 | Codex | Phase 4, creation by the book, and the app that became Armarius |
+| 3 | Nomen Novum | Phase 5, the Saga World, and the desktop at parity with the terminal |
 
 ## Milestones
 
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 3.0.0 — 2026-10-22
+
+### Peregrinatio
+
+- **The Cradle and the Crescent region pack.** Arabia, Mesopotamia,
+  Persia and the Silk Road ship as a content pack that sits outside any
+  Tribunal: thirteen houses of wisdom kept as covenants, each with an
+  aura; the sahirs as companions, 'Arkhaman with the stats the book
+  prints and the jinni Kharrat bound to him; the region's cities, holy
+  and magical places, peoples and powers; the jinn and other creatures in
+  the Bestiary; the Zoroastrians; and the book's history and stories. Its
+  assumptions page in Help lists the judgement calls, and the guide to
+  starting a saga from a sourcebook names the traditions to turn on.
+- **Shared with the Levant pack.** The Order of Suleiman, the jinn, the
+  caliph and the other records both books describe are built the same
+  way, so a saga can import both packs; the first pack imported keeps its
+  version of a record they share.
+- **New catalog entries.** The Jinni Virtue and Theology: Zoroastrian,
+  which has its own mark on the desktop: a sacred fire on its altar.
+- **Leaving out a pack's history** now also leaves out its covenants'
+  diary entries.
 
 ## 2.127.2 — 2026-10-22
 

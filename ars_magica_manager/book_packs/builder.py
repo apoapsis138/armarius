@@ -19,6 +19,7 @@ from functools import cache
 from typing import Any
 
 from .. import catalog, sourcebooks, storage
+from ..ahead import ONCE, REPEATS
 from ..arms import Arms
 from ..arts import ART_LOOKUP
 from ..models import (
@@ -26,9 +27,12 @@ from ..models import (
     ArtScore,
     BodyVis,
     Book,
+    BoundBeing,
+    CalendarEntry,
     Case,
     Character,
     Covenant,
+    CovenantDiaryEntry,
     Creature,
     CreatureAttack,
     CreaturePower,
@@ -40,11 +44,12 @@ from ..models import (
     Saga,
     ScoredTrait,
     Spell,
+    TraditionEffect,
     Tribunal,
     TribunalDiaryEntry,
     VirtueFlawInstance,
 )
-from ..models.common import SECRETS_HEADING
+from ..models.common import SEASONS, SECRETS_HEADING
 from ..models.world import FULL, SKETCH
 from ..places import PLACE, RUINED
 from ..rules import aging, warping
@@ -72,11 +77,19 @@ class Builder:
     """A saga under construction, as of a year and season."""
 
     def __init__(
-        self, name: str, year: int = 1220, season: str = "Spring", source: str = ""
+        self,
+        name: str,
+        year: int = 1220,
+        season: str = "Spring",
+        source: str = "",
+        known: str = "In the Tribunal",
     ) -> None:
         #: The book's abbreviation (sourcebooks.SOURCEBOOKS), for the
         #: spells its stat blocks add.
         self.source = source
+        #: How widely a place is known when `place()` is not told: a
+        #: region pack, with no Tribunal, says "In the region".
+        self.known = known
         self.saga = Saga(
             id=storage.generate_unique_id(name, []),
             name=name,
@@ -196,13 +209,64 @@ class Builder:
         tribunal.diary.append(entry)
         return entry
 
+    # -- history outside a Tribunal --
+
+    def chronicle(
+        self,
+        covenant: Covenant,
+        year: int,
+        title: str,
+        details: str = "",
+        season: str = "Spring",
+        category: str = "",
+    ) -> CovenantDiaryEntry:
+        """A line of a covenant's own Diary: the history a pack with no
+        Tribunal keeps there, where a Tribunal's book would use `event`."""
+        if season not in SEASONS:
+            raise ValueError(f"Unknown season {season!r}; must be one of {SEASONS}")
+        entry = CovenantDiaryEntry(
+            year=year, season=season, name=title, details=details, category=category
+        )
+        covenant.diary.append(entry)
+        return entry
+
+    def calendar(
+        self,
+        title: str,
+        year: int,
+        season: str = "Spring",
+        *,
+        repeats: str = ONCE,
+        every: int | None = None,
+        note: str = "",
+        covenant: Covenant | None = None,
+    ) -> CalendarEntry:
+        """An entry in the saga's calendar, for Ahead: something coming in
+        the pack's year or later (a yearly council, say), for one covenant
+        or, with none, the whole saga."""
+        if season not in SEASONS:
+            raise ValueError(f"Unknown season {season!r}; must be one of {SEASONS}")
+        if repeats not in REPEATS:
+            raise ValueError(f"Unknown repeats {repeats!r}; must be one of {REPEATS}")
+        entry = CalendarEntry(
+            title=title,
+            year=year,
+            season=season,
+            repeats=repeats,
+            every=every,
+            note=note,
+            covenant_id=covenant.id if covenant is not None else None,
+        )
+        self.saga.calendar.append(entry)
+        return entry
+
     # -- covenants and their people --
 
     def covenant(
         self,
         name: str,
         *,
-        tribunal: Tribunal,
+        tribunal: Tribunal | None = None,
         founded: int | None,
         summary: str,
         what_matters: str = "",
@@ -220,8 +284,9 @@ class Builder:
         aegis: int = 0,
         secrets: str = "",
     ) -> Covenant:
-        """A covenant of the book's Tribunal, not played: its aura is the
-        one typed here, or its place's when it sits in one; `liege` is the
+        """A covenant of the book's Tribunal, not played, or with no
+        `tribunal` one outside every Tribunal, on no Tribunal's roster: its
+        aura is the one typed here, or its place's when it sits in one; `liege` is the
         covenant it is sworn to, with the oath's duties in `oath`; `aegis`
         is the level of its Aegis of the Hearth, where the book gives one."""
         covenant = Covenant(
@@ -231,7 +296,7 @@ class Builder:
             notes=notes,
             aura=aura,
             aura_realm=realm,
-            tribunal_id=tribunal.id,
+            tribunal_id=tribunal.id if tribunal is not None else None,
             year_founded=founded,
             covenant_season=season,
             detail=detail,
@@ -261,10 +326,14 @@ class Builder:
         traits: dict[str, int] | None = None,
         detail: str = SKETCH,
         type: str = "magus",
+        traditions: list[str] | None = None,
         secrets: str = "",
     ) -> Character:
         """A magus the book names, as a sketch: House, age as of the
-        pack's year, a paragraph, and personality traits where given."""
+        pack's year, a paragraph, and personality traits where given. Any
+        other character too, by its `type`; `traditions` are the hedge
+        traditions it belongs to (tradition catalog ids), each giving it
+        that tradition's chapter."""
         character = Character(
             id=self._character_id(name),
             name=name,
@@ -273,6 +342,7 @@ class Builder:
             detail=detail,
             summary=summary,
             secrets=secrets,
+            traditions=list(traditions or []),
         )
         character.hermetic.house = house
         if age is not None:
@@ -364,7 +434,7 @@ class Builder:
         realm: str = "Magic",
         aura: int = 0,
         status: str = "Known",
-        known: str = "In the Tribunal",
+        known: str | None = None,
         tethers: str = "",
         levels: list[dict[str, Any]] | None = None,
         detail: str = SKETCH,
@@ -372,7 +442,8 @@ class Builder:
     ) -> Neighbour:
         """A forest, a site or a regio: its surface aura in `realm`, and
         its regio levels as `level(...)` entries, each with its own aura.
-        `ruined` marks a fallen covenant's site."""
+        `known` is how widely it is known, the Builder's `known` unless
+        given. `ruined` marks a fallen covenant's site."""
         found = self.neighbour(
             PLACE,
             name,
@@ -386,7 +457,7 @@ class Builder:
                 "aura": aura,
                 "tethers": tethers,
                 "status": status,
-                "known": known,
+                "known": self.known if known is None else known,
                 "levels": list(levels or []),
             },
         )
@@ -695,13 +766,7 @@ class Builder:
             _virtue_flaw(entry) for entry in block.get("virtues_flaws", [])
         ]
         creature.abilities = [
-            Ability(
-                name=ability,
-                category=access.ability_category(ability),
-                xp=ability_xp(score),
-                xp_table=access.ability_xp_table(ability),
-                specialty=specialty or None,
-            )
+            _ability(ability, score, specialty)
             for ability, score, specialty in block.get("abilities", [])
         ]
         creature.personality_traits = [
@@ -753,6 +818,59 @@ class Builder:
         )
 
     @staticmethod
+    def effect(
+        name: str,
+        *,
+        kind: str = "spell",
+        rule: str = "",
+        uses: list[str] | None = None,
+        level: int = 0,
+        parameters: str = "",
+        charges: int = 0,
+        notes: str = "",
+        tradition: str = "",
+    ) -> TraditionEffect:
+        """One of a stat block's tradition effects or items, for
+        `stats(block={"effects": [...]})`: the casting rule it uses (by
+        the tradition's name for it), the Arts or Abilities it uses, its
+        level, and its Range, Duration and Target or what it does."""
+        return TraditionEffect(
+            name=name,
+            tradition=tradition,
+            kind=kind,
+            rule=rule,
+            uses=list(uses or []),
+            level=level,
+            parameters=parameters,
+            charges=charges,
+            notes=notes,
+        )
+
+    @staticmethod
+    def bound_being(
+        name: str,
+        *,
+        kind: str,
+        creature: Creature | None = None,
+        bonus: int = 0,
+        applies_to: str = "",
+        notes: str = "",
+        tradition: str = "",
+    ) -> BoundBeing:
+        """A being bound to the character, for `stats(block={"bound_beings":
+        [...]})`: its bond (the tradition's name for it), the Bestiary
+        record it is, and the bonus the bond gives, if any."""
+        return BoundBeing(
+            name=name,
+            tradition=tradition,
+            kind=kind,
+            creature_id=creature.id if creature is not None else "",
+            bonus=bonus,
+            applies_to=applies_to,
+            notes=notes,
+        )
+
+    @staticmethod
     def link(record: Any, kind: str, target: Any, note: str = "") -> Link:
         """A link from `record` to `target` (a saga record), with a note."""
         link = Link(kind=kind, target_id=target.id, note=note)
@@ -792,22 +910,26 @@ class Builder:
             _virtue_flaw(entry) for entry in block.get("virtues_flaws", [])
         ]
         c.abilities = [
-            Ability(
-                name=name,
-                category=access.ability_category(name),
-                # A hedge Art or Accelerated Ability scores on the Art table.
-                xp=(
-                    art_xp(score)
-                    if access.ability_xp_table(name) == "art"
-                    else ability_xp(score)
-                ),
-                xp_table=access.ability_xp_table(name),
-                specialty=specialty or None,
-            )
+            _ability(name, score, specialty)
             for name, score, specialty in block.get("abilities", [])
         ]
-        # The hedge traditions the character belongs to (catalog ids).
-        c.traditions = list(block.get("traditions", []))
+        # The hedge traditions the character belongs to (catalog ids); a
+        # block that names none keeps those the sketch gave.
+        if "traditions" in block:
+            c.traditions = list(block["traditions"])
+        # Its traditions' effects and items, and the beings bound to it;
+        # one that names no tradition is of the character's first.
+        first = c.traditions[0] if c.traditions else ""
+        if "effects" in block:
+            c.tradition_effects = [
+                e if e.tradition else replace(e, tradition=first)
+                for e in block["effects"]
+            ]
+        if "bound_beings" in block:
+            c.bound_beings = [
+                b if b.tradition else replace(b, tradition=first)
+                for b in block["bound_beings"]
+            ]
         c.arts = {
             art.lower(): ArtScore(xp=art_xp(score))
             for art, score in block.get("arts", {}).items()
@@ -876,8 +998,24 @@ class Builder:
 #: both of], "abilities" [(name, score, specialty)], "arts" {art: score},
 #: "traits" and "reputations" {name: score}, "spells" [(name, "CrIg" or
 #: "CrIg(Co)", level, mastery)] (the pack's own book's printing first),
-#: "masteries" {spell name: [Mastery Ability names]}, "notes" (words).
+#: "masteries" {spell name: [Mastery Ability names]}, "traditions"
+#: [tradition catalog ids], "effects" [Builder.effect(...)],
+#: "bound_beings" [Builder.bound_being(...)], "notes" (words).
 StatBlock = dict[str, Any]
+
+
+def _ability(name: str, score: int, specialty: str) -> Ability:
+    """An Ability at the score a block prints: a hedge Art or an
+    Accelerated Ability (its catalog entry's xp table) is priced on the
+    Art table, every other on the Ability table."""
+    table = access.ability_xp_table(name)
+    return Ability(
+        name=name,
+        category=access.ability_category(name),
+        xp=art_xp(score) if table == "art" else ability_xp(score),
+        xp_table=table,
+        specialty=specialty or None,
+    )
 
 
 def _spell_key(name: str) -> str:

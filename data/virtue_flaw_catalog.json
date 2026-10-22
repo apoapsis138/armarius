@@ -15928,6 +15928,21 @@
       "description": "The character's qareen, the Faerie jinni born beside him, has accepted Islam. It acts as a Ghostly Warder, but gives no general Magic Resistance."
     },
     {
+      "id": "vf_jinni",
+      "name": "Jinni",
+      "type": "Virtue",
+      "category": "Special",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "faerie",
+        "magic being"
+      ],
+      "source": "TC&TC",
+      "summary": "Marks a spirit of the Islamic lands as a jinni: a true name that can be learnt, Arabic, Theology: Islam (jinn), a power to hide; Sihr summons only jinn.",
+      "description": "The being is one of the jinn, the spirits at home in the lands of Islam, from Iberia and the Maghreb to Transoxiana, of whichever realm its answer to the Prophet's teaching put it in: Faerie if it took Islam, dark Faerie if it refused it, Magic if it paid no heed, Infernal if it fights it. There are no Divine jinn. Every jinni has a true name that can be learnt, however small its Might; nearly all know classical Arabic, as an Ability, a Pretense or by magic (a few old ones only Aramaic, Hebrew or a lost tongue); it has Theology: Islam (jinn), as a Pretense if it is a faerie; and it has some power to hide, such as invisibility, an immaterial or illusory body, or an animal shape. Sihr summons only beings with this Virtue. Ghosts, demons that are not jinn, the spirits of Europe and physical creatures with a Might are not jinn, and the storyguide settles any doubtful case."
+    },
+    {
       "id": "vf_afrit_blood",
       "name": "'Afrit Blood",
       "type": "Virtue",

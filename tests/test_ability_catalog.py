@@ -76,3 +76,12 @@ def test_a_supernatural_or_hedge_ability_needs_the_virtue_that_grants_it():
     assert not creation_access.may_learn(magus, "Elementalist Fire")
     magus.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_kabbalah"))
     assert creation_access.may_learn(magus, "Kabbalah")
+
+
+def test_theology_zoroastrian_follows_its_book():
+    theology = catalog.load_ability_catalog_by_id()["ab_theology_zoroastrian"]
+    assert (theology.name, theology.category) == ("Theology: Zoroastrian", "Academic")
+    assert theology.source == "TC&TC" and theology.description
+    assert sourcebooks.in_play(theology.source, ["TC&TC"])
+    assert not sourcebooks.in_play(theology.source, [])
+    assert creation_access.ability_category("Theology: Zoroastrian") == "Academic"

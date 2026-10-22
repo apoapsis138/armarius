@@ -50,7 +50,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 ### For every magus
 <!-- help: pack-assumptions-rhine-shared -->
 
-- **Generated stats**: the 60 magi the book describes without a stat block have stats built by the creation rules, following what the book says they are good at. Each sheet says so, and you can import them as the book's sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)). The two peregrinatores of Chapter 3, Tabanus (38, Gauntleted at 23) and Felicia (24), have the book's own blocks.
+- **Generated stats**: the 60 magi the book describes without a stat block have stats built by the creation rules, following what the book says they are good at. Each sheet says so, and you can import them as the book's sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)). The two peregrinatores of Chapter 3, Tabanus (38, Gauntleted at 23) and Felicia (24), have the book's own blocks.
 - **Assumed ages**, from rank and history, where the book gives none: Gudrun Tigurina 70, Xavier 60, Indulius 65, Günther Lupus 55, Rudolph 45, Clemens 65, Marguerite 40, Wilhelm Weiss 60, Garrinchus 27, Hassan El-Megrayhi 80, Odorpes 60 and Caprea 50. Each sheet says the age is assumed.
 - **Hedge factions and traditions**: the Witches of the Harz are played as folk witches, the two Volkhvy factions as Volkhvy and the hedge wizards of the forest paths from the Forest Paths record; the priesthoods of Woden and Hertha have no tradition record.
 
@@ -98,7 +98,7 @@ The Normandy pack follows the book wherever this page doesn't say otherwise, inc
 ### For every magus
 <!-- help: pack-assumptions-normandy-shared -->
 
-- **Generated stats**: a magus with no stat block in the book has Characteristics, Arts, Abilities and spells built by the creation rules, guided by the book's write-up; Iasper, Rotgiers, Anacrôn, Hervé and Baudouin have the book's blocks, and so does Barnabé, the cursor of Chapter 3, a grog the book gives no covenant (place him at yours). You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: a magus with no stat block in the book has Characteristics, Arts, Abilities and spells built by the creation rules, guided by the book's write-up; Iasper, Rotgiers, Anacrôn, Hervé and Baudouin have the book's blocks, and so does Barnabé, the cursor of Chapter 3, a grog the book gives no covenant (place him at yours). You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 - **Assumed ages**, from rank, where the book gives none: Andru 90, Constantina 30, Languidus 45, Marcus of Paris 40, Henri 40, Norlanus 90, Gulo 37, Helios 38, Iacula 40, Philip 45, Renaud 33, Myrina 40 and Porphyrion 160. Each sheet says the age is assumed.
 - **Hedge factions and traditions**: the Priory of St. Nerius and the Donatores Requietis Aeternae name their tradition records.
 
@@ -149,7 +149,7 @@ The Provence pack follows the book wherever this page doesn't say otherwise: its
 ### For every magus
 <!-- help: pack-assumptions-provence-shared -->
 
-- **Generated stats**: only Dama and Rebecca have printed stat blocks. The other 59 named magi have stats built by the creation rules from what the book says of them; each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: only Dama and Rebecca have printed stat blocks. The other 59 named magi have stats built by the creation rules from what the book says of them; each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 - **Ages**: where the book gives a true and an apparent age, the pack uses the true one. Where it gives none, one is assumed from standing: Beatrice of Guernicus 45 (young for her office), Tres 60, Oxioun 120 (leader of Aedes Mercurii in 1207). Bubulcus, Elornis One-Leg, Calais filius Septentrio, Aloysius Porphyri, Jorin, Aucassin of Tytalus, Romualdus and Fraxinus of Portus Termini have nothing in the book to judge an age by, so they take the default of 50. Each sheet says which.
 - **Hedge factions and traditions**: the Sorginak Covens and the Hermetic Sorginak name their tradition records; the Masques of the Coenobium have none.
 
@@ -199,7 +199,7 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 ### For every magus
 <!-- help: pack-assumptions-theban-shared -->
 
-- **Generated stats**: a magus with no printed stat block has Characteristics, Arts and Abilities that fit their House and role; the Biography says so. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: a magus with no printed stat block has Characteristics, Arts and Abilities that fit their House and role; the Biography says so. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 - **Assumed ages**, from standing and story, where the book gives none: Theorus 150, Passara 120, Megethia 110, Polydegmon, Hydatius, Formosos and Evantia 90, Kristophoros 80, Pythia 70, Zacharias 60, Marcus Tauros and Trasaric 45, Helladius 43, Satabus 26; the Redcaps Lysandros 70, Diantha 34 and Niko 20. The Biography says the age is assumed. Leontius, Proximios, Catella, Ionnia, Syagricus and Ziper keep the book's apparent ages.
 - **Language**: the Tribunal's magi speak Classical Greek as their Hermetic language unless the book makes them Latin speakers. Gigas's Tremere, Boustaphan, Monorchis and Allectores, keep Latin, as their covenant champions it over Greek (Ch. 5).
 - **Hedge factions and traditions**: the Witches of Thessaly, the Folk Witches of Hekate, the Nightwalkers, the Pharmacopoieans and the Stringles name their records, and the Cunning Folk are played as learned magicians (Hedge Magic counts cunning-folk among them); the Daughters of Erictho, the Apostles of Apollonius, the Makhai and the Cult of Orpheus have none.
@@ -254,7 +254,7 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise:
 ### For every magus
 <!-- help: pack-assumptions-transylvania-shared -->
 
-- **Generated stats**: only Monica Ierne has a printed stat block among the magi (Ch. 2), and Thietmar and Tibor are entered as printed (Ch. 9). The other 41 named magi have stats built from the book's description with the core rules' experience for their age; each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: only Monica Ierne has a printed stat block among the magi (Ch. 2), and Thietmar and Tibor are entered as printed (Ch. 9). The other 41 named magi have stats built from the book's description with the core rules' experience for their age; each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 - **Assumed ages**, where the book gives none: Saturnino 80, "his age is unknown" (Ch. 4); Merit 70, "an older Tremere" (Ch. 5); Isaac of Merinita 40, who looks forty but has spent years in Faerie (Ch. 2). Each sheet says the age is assumed.
 
 # Assumptions made for The Contested Isle: The Hibernian Tribunal
@@ -301,7 +301,7 @@ The Hibernia pack follows the book wherever this page doesn't say otherwise: its
 ### For every magus
 <!-- help: pack-assumptions-hibernia-shared -->
 
-- **Generated stats**: only Indrechtach has a printed stat block (Ch. 6). The other 49 named magi and Redcaps have stats built from the book's description with the core rules' experience for their age, with Virtues and Flaws read from their paragraphs (Pollices's Gentle Gift, Gráinne's Waster of Vis, the Leth Moga Redcaps' Close Family Ties); each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: only Indrechtach has a printed stat block (Ch. 6). The other 49 named magi and Redcaps have stats built from the book's description with the core rules' experience for their age, with Virtues and Flaws read from their paragraphs (Pollices's Gentle Gift, Gráinne's Waster of Vis, the Leth Moga Redcaps' Close Family Ties); each sheet says they are not an official write-up. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 - **Assumed ages**, where the book gives none: Meadhbh 120 and Faolán 35 (Ch. 5); Dyfrgi 75, of the founders' generation (Ch. 6); Ruaidrí Mór 95, Áine Dhubh and Ercc Cam 75, Coscrach Cam 65, Rónán 70, Áine 40 (Ch. 8); Peter 70, like his fellow stonemason Lewis, and Bressal 60 (Ch. 9); Cú Chonnacht Cluasach Mac Tire 90 (Ch. 4). Each sheet says the age is assumed. Meadhbh is assumed Ex Miscellanea, and Cú Chonnacht, named only once, has a wolf heartbeast and traits read from his name.
 - **Language**: the Tribunal's magi speak Irish unless the book points elsewhere: Helles French, Pollices and Lugardis Italian, Dyfrgi and Lewis Welsh, Dorján and Konstanczia Hungarian, Tug and Palantus High German, Peter and Igneous Drake English; Oswald adds English and Styrbjórn Old Norse.
 - **Hedge factions and traditions**: the Céli Dé, the Cailleacha Phiseogach and the Ollamhain name their tradition records; the Druids, the Coill Trí, the Pact of Oireadh and the Bards have none.
@@ -363,6 +363,51 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 ### For every magus
 <!-- help: pack-assumptions-levant-shared -->
 
-- **Generated stats**: the 30 other named magi, Tau, Aurora and Scipio among them, have stats built from the book's description with the core rules' experience for their age, at the book's age without the conversion's added fifth; each sheet says they are not an official write-up. Venti Rosa's four Redcaps without the Gift are generated without it. Arash, who swore the Treaty of Barcelona and not the Oath, has no House. You can import them as sketches instead (see [How to start a saga from a Tribunal book](help:guide-book-packs)).
+- **Generated stats**: the 30 other named magi, Tau, Aurora and Scipio among them, have stats built from the book's description with the core rules' experience for their age, at the book's age without the conversion's added fifth; each sheet says they are not an official write-up. Venti Rosa's four Redcaps without the Gift are generated without it. Arash, who swore the Treaty of Barcelona and not the Oath, has no House. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 - **Shared records**: the Order of Suleiman and its families, the jinn, the Nizaris, the caliph and the Ayyubid princes, Georgia, Iraq and Baghdad, the Fifth Crusade and the Mongols follow *The Cradle and the Crescent*'s account, and the Sultan of Rum and the Emperor of Trebizond the Theban pack's, so importing another pack that shares them updates them and never doubles them. The Levant pack adds only its own records beside them.
 - **Hedge factions and traditions**: the Order of Suleiman and its two families, the Nizaris and the Syrian Nizaris, and the Karaites name their tradition records; the jinn, the Islamic Tradition, the Bedouin, the Turcomans, the Druze and the other faiths have none.
+
+# Assumptions made for The Cradle and the Crescent
+<!-- help: pack-assumptions-cradle -->
+
+The Cradle and the Crescent pack is built from *The Cradle and the Crescent*, a Fifth Edition book, so nothing in it had to be converted: its names, dates, Might scores, stat blocks and vis are the book's. It is a region book, not a Tribunal book: Arabia, Mesopotamia, Persia and the Silk Road lie east of the Levant, outside every Hermetic Tribunal, so the pack holds no Tribunal, Praeco, Quaesitor, Peripheral Code or docket. Where the book is silent or contradicts itself, the pack inferred a value from the text or chose one, and this page lists each. You can change any of them in your saga.
+
+### Inferred from the text
+<!-- help: pack-assumptions-cradle-inferred -->
+
+- **Auras the book's rules give but don't number**: a house of wisdom or shrine in a city takes Divine 4, the book's value for a city; Mecca and Medina take 5 (a city's 4 and one more for a holy city), their harams Divine 3; Zamzam takes the Haram Mosque's Divine 10. Where a place has two auras by day and night, or one beside another, it takes the stronger: Isma'il Samanid's tomb Magic 3, the Shahr-i-Zindah Faerie 5, the Taklimakan Magic 7, the Mosque of the Jinn Faerie 5.
+- **Ages**, where the book gives none: Kha'trazh 97, looking 50; Niya 35; Meriq 75. 'Arkhaman is 25, as printed; the book gives no age for Nil or for Cartophilius of Mercere.
+- **Dates and seasons**: the Dar al-Hikma is founded in 787, the year of the First Council its house grew from. Where the book gives only an era, its history takes a round year, and each Diary entry says so (the guides to Nur al-Din and Salah al-Din in 1174, Kha'trazh's election in 1190, and so on). Entries about the Majlis and the Crusades are in Summer, the rest in Spring. The Majlis is in the calendar each Summer, on 15 to 17 August in 1220.
+- **Places the book leaves vague**: the Stone Lovers in the Najd, Iram in 'Uman, Lukman's nest in the Hijaz, Arzanjan in Greater Armenia, Takht-i-Suleiman in Jibal; a creature with no printed home lives where its people or its story do (the Bedouin beasts in the Najd, the girtablullu and mushhushshu in the Jazira, Azi Dahak at Mount Damavand). The qareen and the 'afrit of the Bottle have no place.
+- **Who answers to whom**: the Grand Sharif and Medina's governor to al-Kamil, Atabeg Uzbek to the Khwarazm-shah, the Hazarasp atabeg to the shah; rulers the book doesn't name are left unnamed.
+
+### Judgement calls
+<!-- help: pack-assumptions-cradle-judgement -->
+
+- **No Tribunal**: the houses of wisdom belong to none, and nothing on the Tribunal pages comes with the pack. The Order of Suleiman's history, from the first wazirs to Kha'trazh's election, is the Dar al-Hikma's covenant Diary; the yearly Majlis is a calendar entry.
+- **The houses of wisdom are covenants**: the app's covenant stands for a bayt al-hikma. The Dar al-Hikma, Savah's and the House of Healing are sketches; the other ten are line records. The several houses of Nizwa are one record. Kha'trazh belongs to none, as the book names his city but no house in it.
+- **Covenant auras the book doesn't give**: a house in a city has Divine 4; Savah's sits in its observatory at the printed Magic 5; the House of Healing is Divine 4 with its laboratories in a Magic 3 regio below. Dayr Qunna, a walled house posing as a monastery outside the town, is given Magic 3, the pack's value for a magical site the book leaves unnumbered, since sahirs are unlikely to settle where there is no aura at all. Other unnumbered Magic pockets take 3 too, and an unnumbered holy site Divine 3.
+- **The Stone's and River's seats** are covenants at Damascus and Cairo with no place record: those cities lie outside the book's lands and are the Levant pack's to describe.
+- **Sahirs are companions**, not magi: Kha'trazh, Niya, Meriq, Nil and 'Arkhaman belong to the Sahirs (Suhhar Sulayman) tradition, with the Sahir Virtue, The Gift for Niya and 'Arkhaman, and Vizier for the book's viziers. Kha'trazh, Niya, Meriq and Nil are sketches; the creation tools are still Hermetic, so they don't generate a sahir's stats. **'Arkhaman** is entered as the book prints him, his seven spells as tradition effects (Kharrat's summoning with Summoning, the others with Naranj) at their printed levels and Penetration, and **Kharrat**, his Infernal jinni, is bound to him and in the Bestiary.
+- **Turn the traditions on**: importing a pack doesn't change which traditions a saga offers, as it doesn't change the year. Before creating new members, turn on the Sahirs, Nizari Mustajibs, Mobeds and Bedouin Hakima under [Traditions Offered](help:section-traditions). The sahirs already in the pack show their tradition's chapter either way.
+- **Factions and traditions**: the Order and its six families name the Sahirs tradition, the Nizaris the Nizari Mustajibs, the Mazdeans the Mobeds, and the Bedouin sahirs and their code the Bedouin Hakima. The yatus, Sabians, ashipu, brass-smiths, witches of Nizwa and peris have no tradition record; their powers are in their summaries.
+- **Suggested vis sources are notes, not records.** Where the book says a place is rich in vis but places no source (the Empty Quarter, the Stone Lovers, Mazandaran), its notes suggest two or three sources that are not in the book, for you to use, change or ignore. They are never Vis Source records and add nothing to a covenant's income. Printed sources keep the book's Form and, where it gives one, amount; the houses of wisdom have no vis, as the book gives none.
+- **Catalog names the book uses that the app lacks**: Pass as Human is Passes for Human (Jumayl), Tough Feathers is Thick Fur/Thick Scales (the ruq), Water Lore is Nature Lore (Water) (Ighraq), Increased Might is Increased Faerie Might (the aladlammu); Gluttonous, Positive Reputation and Thick Skin are left out and named in the creature's notes. Theology: Mazdean is Theology: Zoroastrian, Mobed Lore is Organization Lore: Mobeds, and Rostam's line is the general Mythic Blood, its power and Flaw in Seistan's summary. The Ghuzz's great size is the catalog's Large Virtue, which the book gives every Ghuzz, so no Large Blood entry is needed. Every jinni takes the Jinni Free Virtue, and 'Arkhaman's Sihr is the Sihr Virtue.
+- **Creatures**: Might Forms the book leaves out are chosen from the being's nature (Ighraq Aquam, the faerie ghula Imaginem, the Infernal ghul Vim); a template's Might takes the book's usual value; a score the book marks n/a is 0, named in the notes.
+- **Stories**: the Majlis and the succession, the counter-crusade, the Nizari feud, Mecca's succession, Azi Dahak's search for a host, the demons of Ghur and Kabul, Merv's books and the apparition at Durenmar are under way; Itineris Serica and the return of the Iberian sahirs are dormant. Whether Azi Dahak stands behind the Mongols is left open, in the threat's secrets. The book's story seeds are one line each on the record they hang on.
+- **The jinn's lands** (Amerabad, Golden Baghdad, the jinn's Khashgar and Al-Khadar) are Rumoured places with no aura, as the book numbers none; all but Al-Khadar, a Magic barrier, lie in Faerie across a Threshold rather than in a regio.
+
+### Where the book disagrees with itself
+<!-- help: pack-assumptions-cradle-corrections -->
+
+- **Al-Khayzuran** is Harun al-Rashid's mother, not a grand vizier, as the timeline has her.
+- **The Iberian split** runs from 912 to 925, as Chapter 3 tells it, ending in the timeline's year; the timeline's out-of-order entry for 848 is left out.
+- **Kharrat's Envisioning** costs 1 point for a dream and 5 for a waking vision; his text's "1 or 2" is noted on the power.
+- **The racehorse** is Bali' al-Ard: "Hesaan" in the text only means horse.
+- **Page numbers** on creatures are read from the extracted text's page markers, so one may be a page off.
+
+### Shared with other packs
+<!-- help: pack-assumptions-cradle-shared -->
+
+- **Shared records**: the Order of Suleiman with its Stone and River families, the jinn, the Nizaris, the caliph and the Ayyubid princes, Georgia, Greater Armenia, Iraq, Baghdad and Mosul, the Fifth Crusade and the Mongols follow this book, and are built exactly as the Levant pack builds them (the Sultan of Rum and the Emperor of Trebizond as the Theban pack does). Importing both packs into one saga never doubles them: a record the saga already holds is kept as it is, and the second pack's links go to it. The one record placed differently is the **Pit of Harut and Marut**, which this pack puts in Iraq and the Levant pack beneath the ruins of Babel: the saga keeps it where the first pack imported put it.
+- **Hermetic dates** (the Order of Hermes's founding, the Schism War, the Grand Tribunal of 1195 and the like) are left to the Order of Hermes's own packs; this pack's history is the Order of Suleiman's.
