@@ -230,7 +230,7 @@ class InPlace:
         self.layout.insertWidget(self.index, step)
         step.show()
         self.step = step
-        area = _scroll_area_of(step)
+        area = scroll_area_of(step)
         if area is not None:
             area.ensureWidgetVisible(step, 0, 40)
 
@@ -264,7 +264,7 @@ def place_for(button: QWidget | None, page: QWidget) -> InPlace | None:
     return InPlace(layout, 0) if isinstance(layout, QBoxLayout) else None
 
 
-def _scroll_area_of(widget: QWidget) -> QScrollArea | None:
+def scroll_area_of(widget: QWidget) -> QScrollArea | None:
     parent = widget.parentWidget()
     while parent is not None and not isinstance(parent, QScrollArea):
         parent = parent.parentWidget()

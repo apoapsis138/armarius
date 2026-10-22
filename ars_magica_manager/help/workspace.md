@@ -165,7 +165,7 @@ A covenant, laboratory or character still being made is In Creation: its page is
 <!-- help: workspace-keys; gui -->
 
 - A section's **Add**, **Edit** and **Delete** buttons act on that section. Edit and Delete act on the row or card last clicked in it (or the only one there is), and stay greyed out until there is one. Delete asks first.
-- A form opens in place, under the section's title; a question (such as Delete's) opens above the section. The form's Save keeps what you typed, and Cancel leaves things as they were. Every change is saved to the saga file at once.
+- A form opens in place, under the section's title; a question (such as Delete's) opens above the section. The form's Save keeps what you typed, and Cancel leaves things as they were. Every change is saved to the saga file at once. One form is open at a time: while one is open, the page's other buttons wait, and clicking a New card (such as **New Magus** while a New Character form is open) takes you back to the form already open instead of opening another.
 - Buttons in a page's header or chapter heading, such as **Edit Covenant**, act on the record itself.
 - What the terminal keeps in its New and More menus is on the page itself: a New card at the end of the cards it adds to (**New Covenant**, **New Character**, **New Laboratory**), or a button in the chapter or section it acts on, such as **Give** beside a list's Add, Edit and Delete, **Set Up Research Library** on a covenant's Library or **Set Date** in the saga's Seasons chapter.
 - A record's **Manage** chapter holds what acts on the record as a whole: Export, Update from a File, Print to PDF and Delete.

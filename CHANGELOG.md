@@ -108,6 +108,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.125.3 — 2026-10-22
+
+### Illuminatio
+
+- **One New Character at a time.** On the desktop, New Magus, New
+  Companion and New Grog in a covenant's People chapter could each open
+  another New Character form while one was already open, so several
+  could pile up. Now, while any form is open on a page, clicking a New
+  card takes you back to the open form (scrolled to, with the cursor in
+  its first field) instead of opening another.
+
 ## 2.125.2 — 2026-10-22
 
 ### Book of Hours

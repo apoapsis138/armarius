@@ -70,7 +70,7 @@ from . import choices, gilding, pictures, print_sheet, printing, snapping, sound
 from .bestiary import CreaturePage
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
-from .editing import InPlace, place_for
+from .editing import InPlace, place_for, scroll_area_of
 from .familiar import FamiliarPage
 from .forms import ConfirmDialog, NoticeDialog, answer, run_steps, step_dialog
 from .frame import MAXIMISE, DragStrip, Grips, TopStrip, WindowButtons
@@ -707,8 +707,13 @@ class MainWindow(QMainWindow):
         the last is answered, save the saga and show the page again at the
         same chapter and place (or, given `then`, call it instead: a
         menu's New shows the new record; given `ended`, call it with what
-        the steps ended with). Cancelling any step changes nothing."""
+        the steps ended with). Cancelling any step changes nothing. While
+        a step is open, other steps wait: the open one is shown instead."""
         if self.saga is None:
+            return
+        if self._step_open():
+            take_pressed()
+            self._bring_forward()
             return
         title = _title(command)
         page = self.page()
@@ -780,6 +785,19 @@ class MainWindow(QMainWindow):
         """Show a message (markup): what a step refused, or the notes
         after it. Tests replace it to read the message instead."""
         NoticeDialog(title, words, self.palette_, self).exec()
+
+    def _bring_forward(self) -> None:
+        """Show the step open in place again: scrolled to, its first field
+        focused."""
+        dialog = self._open
+        assert dialog is not None
+        area = scroll_area_of(dialog)
+        if area is not None:
+            area.ensureWidgetVisible(dialog, 0, 40)
+        dialog.raise_()
+        first = _first_input(dialog)
+        if first is not None:
+            first.setFocus()
 
     def _present(self, dialog: QDialog) -> int:
         """Show a step and wait for it: in place on the page when it was

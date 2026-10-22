@@ -11,7 +11,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
@@ -20,6 +20,7 @@ from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui import window as window_module
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
+from ars_magica_manager.gui.forms import FieldsDialog
 from ars_magica_manager.gui.widgets import NewCard
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
@@ -235,6 +236,35 @@ def test_new_character_on_a_covenant_belongs_to_it(app):
     made = next(c for c in saga.characters if c.name == "Osric")
     assert (made.covenant_id, made.type) == ("cov1", "companion")
     assert window.crumb_names()[-2:] == ["Osric", "Creation Worksheet"]
+
+
+def test_a_second_new_character_waits_for_the_one_open(app):
+    """While New Magus is open, New Magus, New Companion and New Grog
+    open no second New Character: the open one is brought forward."""
+    window = _window(_sample_saga_with_covenant())
+    window.open_covenant("cov1")
+    page = window.page()
+    assert isinstance(page, CovenantPage)
+    page.codex.open_chapter("People")
+    window.ask = window._present  # the real one, not a test's
+    cards = _new(window)
+    before = len(storage.load_saga("test_saga").characters)
+    seen: dict[str, object] = {}
+
+    def click_again() -> None:
+        first = next(d for d in window.findChildren(FieldsDialog) if d.isVisible())
+        for words in ("New Magus", "New Companion", "New Grog"):
+            cards[words].on_click()
+        shown = [d for d in window.findChildren(FieldsDialog) if d.isVisible()]
+        seen["open"] = shown == [first]
+        first.reject()
+
+    QTimer.singleShot(0, click_again)
+    cards["New Magus"].on_click()
+    assert seen == {"open": True}
+    assert window._open is None
+    assert len(storage.load_saga("test_saga").characters) == before
+    window.close()
 
 
 def test_no_new_on_a_companion(app):
