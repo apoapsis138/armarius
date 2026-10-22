@@ -85,7 +85,14 @@ from .paper import Paper
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .seasons import SeasonsPage
-from .themes import PALETTES, Palette, for_mode, style_sheet
+from .themes import (
+    PALETTES,
+    Palette,
+    for_mode,
+    remember_theme,
+    saved_theme,
+    style_sheet,
+)
 from .title import TitleScreen
 from .tribunal import TribunalPage
 from .widgets import take_pressed
@@ -196,11 +203,11 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(pictures.app_icon())
         # The window draws its own title bar (frame.py).
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
-        self.palette_index = 0
+        self.palette_index = saved_theme()
         #: The palette pages are built in while one is printed.
         self._printing: Palette | None = None
         #: The palette the window is drawn in now.
-        self._applied = PALETTES[0]
+        self._applied = PALETTES[self.palette_index]
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
         self.trail: list[Place] = []
@@ -1252,6 +1259,7 @@ class MainWindow(QMainWindow):
 
     def toggle_theme(self) -> None:
         self.palette_index = (self.palette_index + 1) % len(PALETTES)
+        remember_theme(self.palette_index)
         self._apply_theme()
         if self.trail:  # the pages' colours are drawn in
             self.go(self.trail)

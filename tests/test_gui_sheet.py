@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import familiars as fam
-from ars_magica_manager import storage
+from ars_magica_manager import settings, storage
 from ars_magica_manager.form_spec import DialogField
 from ars_magica_manager.gui import choices, pictures, sounds
 from ars_magica_manager.gui.character_sheet import CharacterSheet
@@ -154,6 +154,22 @@ def test_the_theme_toggle_redraws_the_sheet_in_the_other_palette(app):
     assert window.palette_ is PALETTES[1]
     assert window.character_id == saga.characters[0].id
     assert window.sheet_area.findChild(CharacterSheet) is not None
+
+
+def test_the_desktop_opens_in_the_theme_chosen_last(app):
+    assert MainWindow(saga_ids=[]).palette_ is PALETTES[0]
+    MainWindow(saga_ids=[]).toggle_theme()
+    reopened = MainWindow(saga_ids=[])
+    assert reopened.palette_ is PALETTES[1]
+    body = reopened.stack.widget(0)
+    assert isinstance(body, Paper) and body.p is PALETTES[1]
+    # The terminal's own theme setting is left alone.
+    assert "theme" not in settings.load_settings()
+
+
+def test_a_theme_no_longer_offered_opens_in_scriptorum(app):
+    settings.update_settings(desktop_theme="Gone Theme")
+    assert MainWindow(saga_ids=[]).palette_ is PALETTES[0]
 
 
 def test_the_pages_lie_on_paper_and_their_cards_cast_shadows(app):

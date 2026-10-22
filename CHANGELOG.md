@@ -108,6 +108,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.127.1 — 2026-10-22
+
+### Illuminatio
+
+- **The desktop remembers its theme.** Whether you last chose Scriptorum
+  or Scriptorum Dark, the desktop now opens in it next time, instead of
+  always opening in Scriptorum. The choice is kept in this computer's
+  settings, beside your bookmarks and the sounds setting.
+
 ## 2.127.0 — 2026-10-22
 
 ### Peregrinatio
