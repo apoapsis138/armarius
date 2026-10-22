@@ -33,6 +33,7 @@ from ars_magica_manager.models import (
     DeviceComponent,
     DiaryEntry,
     EnchantedDevice,
+    ExperimentalEffect,
     Familiar,
     Favour,
     GrogYear,
@@ -365,7 +366,14 @@ def _saga_with_every_record() -> Saga:
     magus.arts["Creo"] = ArtScore(xp=6)
     magus.spells_known[0].mastery_abilities.append(MasteryAbility("Fast Casting"))
     magus.breakthroughs.append(
-        Breakthrough("Holistic", log=[ResearchAttempt(1220, "Spring", "seek")])
+        Breakthrough(
+            "Holistic",
+            log=[
+                ResearchAttempt(
+                    1220, "Spring", "seek", effects=[ExperimentalEffect("side")]
+                )
+            ],
+        )
     )
     magus.bound_beings.append(BoundBeing("Corvus", tradition="trad_folk_witches"))
     magus.tradition_effects.append(

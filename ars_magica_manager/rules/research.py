@@ -1,4 +1,4 @@
-"""Original research as a process: where a goal stands, the odds of an
+"""Arcane Discovery as a process: where a goal stands, the odds of an
 experiment's chart roll, and the Research log each season adds to.
 
 A goal's stage is worked out from the goal, never stored, so it can't

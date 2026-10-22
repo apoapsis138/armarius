@@ -575,7 +575,7 @@ def research_goal_options(character: Character) -> list[tuple[str, str]]:
 
 
 def research_goal_fields(existing: Breakthrough | None) -> list[DialogField]:
-    """A magus's original research goal: what it is, the kind of
+    """A magus's Arcane Discovery goal: what it is, the kind of
     Breakthrough sought (Minor, Major, Hermetic; its target follows, and
     the storyguide may type a secret one), and what reaching it grants."""
     virtues = sorted(

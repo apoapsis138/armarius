@@ -19,6 +19,7 @@ from ars_magica_manager.models import (
     Characteristics,
     Covenant,
     EnchantedDevice,
+    ExperimentalEffect,
     InstilledEffect,
     Laboratory,
     Saga,
@@ -252,6 +253,24 @@ def test_a_lab_text_instils_an_effect_in_one_season():
     # No experimenting from a text; and it can't be used below its level.
     found, _ = _work(saga, _plan(**{**_plan_fields(plan), "experimenting": True}))
     assert found == ["There's no experimenting while working from a Lab Text."]
+
+
+def test_an_effect_instilled_from_a_text_keeps_its_experimental_effects():
+    saga = _saga()
+    _device(saga, "staff").pawns_opened = 6
+    flaw = ExperimentalEffect("side", "minor flaw", "sparks fly", range="Touch")
+    text = _text(saga, "staff", "fire", experimental_effects=[flaw])
+    plan = _plan(
+        es.INSTIL, device_id="staff", effect_id="fire", vis_art="Creo", book_id=text.id
+    )
+    seasons.plan_lab_work(saga, plan)
+    _run(saga)
+    effect = _device(saga, "staff").effects[0]
+    assert [e.description for e in effect.experimental_effects] == ["sparks fly"]
+    assert effect.range == "Touch"
+    # The raw text written as it is instilled keeps them too.
+    assert saga.books[-1].experimental_effects == effect.experimental_effects
+    assert saga.books[-1].experimental_effects[0] is not flaw
 
 
 def _plan_fields(plan) -> dict:

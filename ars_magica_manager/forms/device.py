@@ -51,6 +51,7 @@ from ..models import (
     ShapeMaterialDef,
     new_instance_id,
 )
+from . import experimental_effects
 
 #: The Maker select's value for a maker who isn't one of the saga's
 #: characters (their name is typed).
@@ -647,7 +648,7 @@ def effect_from_values(
     effect's own value, except the ones a checkbox turned off)."""
     copy = replace(effect)
     for key, value in values.items():
-        if not hasattr(copy, key):
+        if not hasattr(copy, key) or key == experimental_effects.KEY:
             continue
         setattr(copy, key, "" if value is None and key in _EFFECT_TEXT else value)
     if not copy.restricted_use:
@@ -656,6 +657,7 @@ def effect_from_values(
         copy.linked_to = ""
     if copy.expiry == "None":
         copy.first_use_year = None
+    experimental_effects.keep(copy, values)
     return copy
 
 
@@ -911,6 +913,7 @@ def effect_fields(
         *_effect_trigger_fields(device, base),
         *_effect_state_fields(device, base),
         description_field(base.description),
+        experimental_effects.effects_field(base.experimental_effects, base.name),
     ]
 
 

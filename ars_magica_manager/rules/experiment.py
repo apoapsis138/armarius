@@ -1,4 +1,4 @@
-"""Arcane experimentation and original research.
+"""Arcane experimentation and Arcane Discovery.
 
 Experimentation, with any lab work that allows it (inventing a spell,
 enchanting, a familiar, a Longevity Ritual, investigating an item):
@@ -11,7 +11,7 @@ enchanting, a familiar, a Longevity Ritual, investigating an item):
   8 complete failure (the season wasted), 9 a special or story event, 10 a
   Discovery (xp), 11 a modified effect, 12+ two more rolls.
 
-Original research (a magus's breakthrough goals, Minor ~30, Major ~45,
+Arcane Discovery (original research in Houses of Hermes; a magus's breakthrough goals, Minor ~30, Major ~45,
 Hermetic ~60 points):
 
 - Seeking a Discovery: experimenting on a goal, the risk goes on the chart
@@ -32,8 +32,9 @@ Hermetic ~60 points):
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
-from ..models import Breakthrough, Character, SeasonPlan
+from ..models import Breakthrough, Character, ExperimentalEffect, SeasonPlan
 from . import dice, scores
 from . import xp as xp_rules
 from .rounding import round_up
@@ -124,10 +125,67 @@ class Extraordinary:
     lab_flaw: str = ""
     #: Side effects and modified effects the creation keeps ("warts and
     #: all").
-    effects: list[str] = field(default_factory=list)
-    #: A second roll's results (Exciting Experimentation, Creative Block),
-    #: for the storyguide to choose.
-    second: list[str] = field(default_factory=list)
+    effects: list[ExperimentalEffect] = field(default_factory=list)
+    #: Each effect's sub-table results to choose from: two with two dice
+    #: (Exciting Experimentation, Creative Block), the first standing until
+    #: the storyguide chooses.
+    effect_options: list[list[str]] = field(default_factory=list)
+    #: Each roll on the Discovery table, as the candidates rolled (two with
+    #: two dice); `xp` holds what the first of each gives.
+    discoveries: list[list[int]] = field(default_factory=list)
+    #: Investigating an item: the id of the power each effect falls on
+    #: (the storyguide's choice).
+    targets: list[str] = field(default_factory=list)
+    #: Special results or story events (9), each the storyguide's choice.
+    specials: int = 0
+    #: The Art the experience of a Discovery goes to unless chosen
+    #: otherwise.
+    art: str = ""
+    #: What the storyguide made of the special results: story events (a
+    #: line each, for the Diaries), the extra vis the work needs ({Art:
+    #: pawns}), and the spells the magus also creates (each a spell form's
+    #: values, made when the season is applied).
+    stories: list[str] = field(default_factory=list)
+    extra_vis: dict[str, int] = field(default_factory=dict)
+    bonus_spells: list[dict[str, Any]] = field(default_factory=list)
+    #: A Disaster of 5+: "covenant" (a story threatens it) or "lab" (the
+    #: laboratory destroyed, the default).
+    disaster_choice: str = ""
+    #: Investigating an item, a result that destroys it (a Disaster of two
+    #: zeroes or more, or a Complete Failure's 0): `item_at_risk`; and
+    #: `protected` when one of its effects protects it with a level above
+    #: the Lab Total (the storyguide's word), so it survives.
+    item_at_risk: bool = False
+    protected: bool = False
+    #: With two dice on the chart (Exciting Experimentation, Creative
+    #: Block), the other roll, whole, for the storyguide to choose.
+    other: Extraordinary | None = None
+
+    @property
+    def second(self) -> list[str]:
+        """The other roll's results (none without two dice)."""
+        return self.other.results if self.other is not None else []
+
+    @property
+    def choices(self) -> bool:
+        """Whether anything in it waits on the storyguide: which roll
+        stands, a sub-table's two dice, an effect to describe or apply, a
+        Discovery's subject, a special result, a Disaster of 5+, or a move
+        onto a Discovery."""
+        return bool(
+            self.other is not None
+            or self.effects
+            or self.discoveries
+            or self.specials
+            or self.zeroes >= DISASTER_CHOICE
+            or self.item_at_risk
+            or self.discovery_shift is not None
+        )
+
+
+#: A Disaster with this many zeroes or more is the storyguide's choice:
+#: a story threatening the covenant, or the laboratory destroyed.
+DISASTER_CHOICE = 5
 
 
 def botch_dice(character: Character, risk: int, aura: int) -> int:
@@ -135,6 +193,24 @@ def botch_dice(character: Character, risk: int, aura: int) -> int:
     dice (Cautious Sorcerer takes 3 off, never below 1)."""
     change, _ = scores.botch_dice_change(character.virtues_flaws, ("laboratory",))
     return scores.with_botch_change(1 + risk + max(0, aura), change)
+
+
+def too_low(why: str) -> str:
+    """The note on an experiment whose Lab Total is too low for its work:
+    the season goes ahead, as experimenting is a gamble."""
+    return (
+        f"{why}, unless the experiment's die lifts it. Experimenting, the "
+        "season goes ahead all the same: the Extraordinary Results chart is "
+        "rolled, any vis paid is lost, and the work makes no progress."
+    )
+
+
+def two_dice(character: Character | None) -> bool:
+    """Whether the experimenter rolls two dice on every experimentation
+    table (Exciting Experimentation, Creative Block)."""
+    return character is not None and any(
+        vf.vf_id in TWO_DICE for vf in character.virtues_flaws
+    )
 
 
 def chart(
@@ -154,9 +230,11 @@ def chart(
     risk modifier can move onto 10 records the move (`discovery_shift`) to
     be asked about, or, with `shift` given (the project's move so far),
     makes that same move. Stabilizing, the roll is moved by `shift` and
-    read there."""
-    result = Extraordinary()
+    read there. With two dice (Exciting Experimentation, Creative Block)
+    the other roll is made the same way and kept whole (`other`), for the
+    storyguide to choose."""
     dice_count = botch_dice(character, risk, aura) if character else 1 + risk + aura
+    result = Extraordinary(art=art)
     _roll_once(
         result,
         rng,
@@ -169,18 +247,153 @@ def chart(
         stabilizing=stabilizing,
         character=character,
     )
-    if character is not None and any(
-        vf.vf_id in TWO_DICE for vf in character.virtues_flaws
-    ):
-        other = Extraordinary()
-        _roll_once(other, rng, risk, dice_count, art, saga, False, None)
-        result.second = other.results
+    if two_dice(character):
+        other = Extraordinary(art=art)
+        _roll_once(
+            other,
+            rng,
+            risk,
+            dice_count,
+            art,
+            saga,
+            seeking,
+            shift,
+            stabilizing=stabilizing,
+            character=character,
+        )
+        result.other = other
         result.results.append(
             "A second roll (Exciting Experimentation / Creative Block): "
             + " ".join(other.results)
-            + " The storyguide may use it instead."
+            + " The storyguide chooses which stands."
         )
     return result
+
+
+#: What the storyguide can make of a special result (9): the creation
+#: needs more vis, the magus also creates a spell, the creation is changed
+#: some other way, or a story event.
+SPECIALS: tuple[tuple[str, str], ...] = (
+    ("story", "A story event"),
+    ("changed", "The creation is changed some other way"),
+    ("vis", "The work needs more vis (magnitude + risk pawns)"),
+    ("spell", "The magus also creates a spell"),
+)
+
+
+@dataclass
+class EffectChoice:
+    """The storyguide's word on one side or modified effect: which of two
+    dice stands (`result`), what it is, any new Range, Duration or Target,
+    the potency's change in steps, and, investigating an item, the power it
+    falls on."""
+
+    result: str = ""
+    description: str = ""
+    range: str = ""
+    duration: str = ""
+    target: str = ""
+    potency: int = 0
+    power: str = ""
+
+
+@dataclass
+class DiscoveryChoice:
+    """One Discovery roll: which of two dice stands, and the Ability (for
+    5-6) or the Art used (for 7-9) its experience goes to."""
+
+    roll: int = 0
+    ability: str = "Magic Theory"
+    art: str = ""
+
+
+@dataclass
+class SpecialChoice:
+    """What the storyguide makes of a special result (a key of SPECIALS),
+    and its words (the story, or how the creation is changed)."""
+
+    kind: str = "story"
+    text: str = ""
+
+
+@dataclass
+class Settlement:
+    """Everything the storyguide decides about one experiment's season,
+    in the order the chart gave it: which of two rolls stands, then each
+    effect, Discovery roll and special result of that roll, a Disaster of
+    5+, and whether to move the roll onto a Discovery."""
+
+    second: bool = False
+    effects: list[EffectChoice] = field(default_factory=list)
+    discoveries: list[DiscoveryChoice] = field(default_factory=list)
+    specials: list[SpecialChoice] = field(default_factory=list)
+    disaster: str = ""
+    move: bool = False
+    protected: bool = False
+
+
+def destroys(result: Extraordinary) -> bool:
+    """Whether the roll destroys the creation: a Disaster of two zeroes or
+    more, or a Complete Failure whose simple die is 0."""
+    return result.zeroes >= 2 or (result.failure and result.failure_die == 0)
+
+
+def settle(
+    result: Extraordinary, settlement: Settlement, character: Character | None
+) -> None:
+    """Apply the storyguide's choices (but the choice of roll and the move,
+    which the season's work answers) to the roll that stands: each effect
+    as chosen, the Discoveries' experience recomputed, the special results
+    turned into a changed creation or a story (the extra vis and the spell
+    are the season's to settle), and a Disaster's choice."""
+    for effect, choice, options in zip(
+        result.effects, settlement.effects, result.effect_options, strict=False
+    ):
+        if choice.result in options:
+            effect.result = choice.result
+        effect.fatal = effect.result == FATAL_FLAW
+        effect.description = choice.description.strip()
+        effect.range, effect.duration, effect.target = (
+            choice.range,
+            choice.duration,
+            choice.target,
+        )
+        effect.potency = choice.potency
+    result.targets = [choice.power for choice in settlement.effects]
+    if result.discoveries and settlement.discoveries:
+        gains: list[tuple[str, int]] = []
+        for candidates, choice in zip(
+            result.discoveries, settlement.discoveries, strict=False
+        ):
+            roll = choice.roll if choice.roll in candidates else candidates[0]
+            gain, _ = discovery_gain(
+                roll, character, choice.art or result.art, choice.ability
+            )
+            gains.append(gain)
+        result.xp = gains
+    for special in settlement.specials[: result.specials]:
+        words = special.text.strip()
+        if special.kind == "changed":
+            result.effects.append(
+                ExperimentalEffect("special", "the creation changed", words)
+            )
+            result.effect_options.append(["the creation changed"])
+        elif special.kind == "story":
+            result.stories.append(words or "A story event (the storyguide's).")
+    if result.zeroes >= DISASTER_CHOICE:
+        result.disaster_choice = settlement.disaster or "lab"
+    result.protected = result.item_at_risk and settlement.protected
+
+
+def take_other(result: Extraordinary) -> Extraordinary:
+    """The other roll of two dice, chosen by the storyguide to stand."""
+    other = result.other
+    assert other is not None
+    other.results = [
+        *other.results,
+        "The storyguide chose this, the second roll, to stand.",
+    ]
+    return other
 
 
 def _roll_once(
@@ -199,31 +412,7 @@ def _roll_once(
     die = dice.stress_die(rng, dice_count, saga=saga)
     result.die, result.botch_dice = die.value, dice_count
     if die.botched:
-        zeroes = die.botches
-        result.zeroes = zeroes
-        result.wasted = True
-        result.results.append(
-            f"Disaster ({zeroes} zero(es)): {zeroes} Warping Point(s), the season "
-            "wasted"
-            + ("; the creation destroyed" if zeroes >= 2 else "")
-            + ("; the lab is Damaged" if zeroes == 3 else "")
-            + (
-                "; an explosion wrecks the lab (two Heavy Wounds each)"
-                if zeroes >= 4
-                else ""
-            )
-            + (
-                "; the lab is destroyed and everyone in it takes an Incapacitating "
-                "Wound (the storyguide may choose a covenant disaster instead)"
-                if zeroes >= 5
-                else ""
-            )
-            + "."
-        )
-        if zeroes >= 4:
-            result.lab_flaw = "labvf_wrecked"
-        elif zeroes == 3:
-            result.lab_flaw = "labvf_damaged"
+        _disaster(result, die.botches)
         return
     roll = die.value + risk
     if stabilizing:
@@ -235,7 +424,18 @@ def _roll_once(
             result.move = shift
         _apply(result, roll, rng, risk, art, saga, 0, research=True)
         return
-    _apply(result, roll, rng, risk, art, saga, 0, research=seeking, character=character)
+    _apply(
+        result,
+        roll,
+        rng,
+        risk,
+        art,
+        saga,
+        0,
+        research=seeking,
+        character=character,
+        dice_count=dice_count,
+    )
     if not seeking or result.discovery or result.wasted:
         return
     if shift is not None:
@@ -247,6 +447,79 @@ def _roll_once(
             )
     elif abs(roll - 10) <= risk:
         result.discovery_shift = 10 - roll
+
+
+def _disaster(result: Extraordinary, zeroes: int) -> None:
+    """A botch: by its zeroes, Warping for everyone in the lab and the
+    season wasted, then the creation destroyed, the lab Damaged, an
+    explosion that wrecks it, and at 5+ the storyguide's choice."""
+    zeroes = max(zeroes, result.zeroes)
+    result.zeroes = zeroes
+    result.wasted = True
+    result.results.append(
+        f"Disaster ({zeroes} zero(es)): {zeroes} Warping Point(s), the season "
+        "wasted"
+        + ("; the creation destroyed" if zeroes >= 2 else "")
+        + ("; the lab is Damaged" if zeroes == 3 else "")
+        + (
+            "; an explosion wrecks the lab (two Heavy Wounds each)"
+            if zeroes >= 4
+            else ""
+        )
+        + (
+            "; the storyguide chooses a story threatening the covenant, or the "
+            "lab destroyed and an Incapacitating Wound for everyone in it"
+            if zeroes >= DISASTER_CHOICE
+            else ""
+        )
+        + "."
+    )
+    if zeroes >= 4:
+        result.lab_flaw = "labvf_wrecked"
+    elif zeroes == 3:
+        result.lab_flaw = "labvf_damaged"
+
+
+def describe(effect: ExperimentalEffect) -> str:
+    """An experimental effect in a line (plain text): what the chart gave,
+    what it is, what it changed, and a fatal flaw marked."""
+    text = effect.label or "An experimental effect"
+    if effect.fatal and effect.result != FATAL_FLAW:
+        text += " (fatal flaw)"
+    if effect.description.strip():
+        text += f": {effect.description.strip()}"
+    elif effect.kind == "side":
+        text += " (not yet described)"
+    changes = [
+        f"{label} {value}"
+        for label, value in (
+            ("Range", effect.range),
+            ("Duration", effect.duration),
+            ("Target", effect.target),
+        )
+        if value
+    ]
+    if effect.potency:
+        steps = abs(effect.potency)
+        changes.append(
+            f"potency {'+' if effect.potency > 0 else '-'}{steps} step"
+            + ("s" if steps > 1 else "")
+        )
+    if changes:
+        text += f" [{', '.join(changes)}; level kept]"
+    if effect.year:
+        text += f" ({effect.season} {effect.year})"
+    return text
+
+
+def apply_changes(made, effects: list[ExperimentalEffect]) -> None:
+    """A creation (a spell or an instilled effect) takes each effect's new
+    Range, Duration or Target. Its level is never changed."""
+    for effect in effects:
+        for name in ("range", "duration", "target"):
+            value = getattr(effect, name)
+            if value and hasattr(made, name):
+                setattr(made, name, value)
 
 
 def move_to_discovery(result: Extraordinary) -> None:
@@ -264,6 +537,32 @@ def move_to_discovery(result: Extraordinary) -> None:
     )
 
 
+def _sub_dice(rng, two: bool, risk: int = 0) -> list[int]:
+    """A sub-table's roll: a simple die (+ the risk), or two of them."""
+    return [dice.simple_die(rng) + risk for _ in range(2 if two else 1)]
+
+
+def _or(options: list[str]) -> str:
+    return ", or ".join(dict.fromkeys(options))
+
+
+def modified_result(roll: int) -> str:
+    """The Modified Effect sub-table's result for a simple die + risk."""
+    return next(
+        (text for top, text in MODIFIED if roll <= top),
+        CHANGED_COMPLETELY,
+    )
+
+
+CHANGED_COMPLETELY = (
+    "effect changed completely (same Technique and Form, similar level)"
+)
+#: The Modified Effect results that change a parameter or the potency,
+#: and which way.
+REDUCED, INCREASED = MODIFIED[0][1], MODIFIED[1][1]
+FATAL_FLAW = SIDE_EFFECTS[10]
+
+
 def _apply(
     result: Extraordinary,
     roll: int,
@@ -275,15 +574,23 @@ def _apply(
     *,
     research: bool = False,
     character: Character | None = None,
+    dice_count: int = 0,
 ) -> None:
-    """The result of a chart roll. For original research (`research`), a
-    Discovery is the research's and gives no experience."""
+    """The result of a chart roll. For Arcane Discovery (`research`), a
+    Discovery is the research's and gives no experience. Two dice
+    (Exciting Experimentation, Creative Block) roll each sub-table twice.
+    The further rolls of a 12+ are stress dice with `dice_count` botch
+    dice."""
+    two = two_dice(character)
     if roll <= 4:
         result.results.append(f"{roll}: no extraordinary effects.")
     elif roll <= 6:
-        side = SIDE_EFFECTS[dice.simple_die(rng)]
-        result.results.append(f"{roll}: a side effect ({side}).")
-        result.effects.append(f"Side effect: {side}")
+        options = [SIDE_EFFECTS[d] for d in _sub_dice(rng, two)]
+        result.results.append(f"{roll}: a side effect ({_or(options)}).")
+        result.effects.append(
+            ExperimentalEffect("side", options[0], fatal=options[0] == FATAL_FLAW)
+        )
+        result.effect_options.append(options)
     elif roll == 7:
         result.no_benefit = True
         result.results.append(f"{roll}: no benefit (the die and risk are lost).")
@@ -293,6 +600,7 @@ def _apply(
         result.failure_die = dice.simple_die(rng) % 10
         result.results.append(f"{roll}: complete failure (the season is wasted).")
     elif roll == 9:
+        result.specials += 1
         result.results.append(f"{roll}: a special result or story event (storyguide).")
     elif roll == 10:
         result.discovery = True
@@ -302,25 +610,25 @@ def _apply(
                 "doesn't apply)."
             )
         else:
-            whats = _discovery_xp(result, rng, risk, art, character)
+            whats = _discovery_xp(result, rng, risk, art, character, two=two)
             result.results.append(f"{roll}: a Discovery: {'; '.join(whats)}.")
     elif roll == 11:
         # One die for the whole table (it was rolled again for each row).
-        modified_roll = dice.simple_die(rng) + risk
-        modified = next(
-            (text for top, text in MODIFIED if modified_roll <= top),
-            "effect changed completely (same Technique and Form, similar level)",
-        )
-        result.results.append(f"{roll}: a modified effect ({modified}).")
-        result.effects.append(f"Modified effect: {modified}")
+        options = [modified_result(r) for r in _sub_dice(rng, two, risk)]
+        result.results.append(f"{roll}: a modified effect ({_or(options)}).")
+        result.effects.append(ExperimentalEffect("modified", options[0]))
+        result.effect_options.append(options)
     else:
         result.results.append(f"{roll}: roll twice more.")
         if depth < 3:
             for _ in range(2):
-                more = dice.stress_die(rng, 0, saga=saga).value + risk
+                die = dice.stress_die(rng, dice_count, saga=saga)
+                if die.botched:
+                    _disaster(result, die.botches)
+                    continue
                 _apply(
                     result,
-                    more,
+                    die.value + risk,
                     rng,
                     risk,
                     art,
@@ -328,40 +636,79 @@ def _apply(
                     depth + 1,
                     research=research,
                     character=character,
+                    dice_count=dice_count,
                 )
 
 
+#: What each Discovery roll gives: (the highest roll, the kind of gain).
+DISCOVERY = (
+    (4, "theory"),
+    (6, "ability"),
+    (8, "art"),
+    (9, "next"),
+)
+
+
+def discovery_kind(roll: int) -> str:
+    """ "theory" (15 xp in Magic Theory), "ability" (15 xp in an Ability
+    related to the experiment), "art" (3 xp in an Art used) or "next"
+    (an Art used to its next score)."""
+    return next((kind for top, kind in DISCOVERY if roll <= top), "next")
+
+
+def discovery_gain(
+    roll: int, character: Character | None, art: str, ability: str = "Magic Theory"
+) -> tuple[tuple[str, int], str]:
+    """A Discovery roll's experience, (subject, xp), toward `art` (an Art
+    used) or `ability` (for 5-6), and what it gave in words."""
+    kind = discovery_kind(roll)
+    if kind == "theory":
+        return ("ability:Magic Theory", 15), "15 xp in Magic Theory"
+    if kind == "ability":
+        return (f"ability:{ability}", 15), f"15 xp in {ability}"
+    if kind == "art":
+        return (f"art:{art}", 3), f"3 xp in {art}"
+    need = _to_next_score(character, art)
+    return (f"art:{art}", need), f"{need} xp, to raise {art} to its next score"
+
+
 def _discovery_xp(
-    result: Extraordinary, rng, risk: int, art: str, character, rolls: int = 1
+    result: Extraordinary,
+    rng,
+    risk: int,
+    art: str,
+    character,
+    rolls: int = 1,
+    *,
+    two: bool = False,
 ) -> list[str]:
-    """The Discovery table (a simple die + the risk): its experience added to
-    `result.xp`, and what each roll gave. 10+ rolls twice more, rolling again
-    any 10+ among them."""
+    """The Discovery table (a simple die + the risk): each roll kept in
+    `result.discoveries`, the first candidate's experience added to
+    `result.xp`, and what each roll gave. 10+ rolls twice more, rolling
+    again any 10+ among them."""
     whats: list[str] = []
     for _ in range(rolls):
-        roll = dice.simple_die(rng) + risk
+        candidates = _sub_dice(rng, two, risk)
         if rolls > 1:
-            tries = 0
-            while roll >= 10 and tries < 20:
-                roll, tries = dice.simple_die(rng) + risk, tries + 1
-            roll = min(roll, 9)
-        if roll <= 4:
-            result.xp.append(("ability:Magic Theory", 15))
-            whats.append("15 xp in Magic Theory")
-        elif roll <= 6:
-            result.xp.append(("ability:Magic Theory", 15))
-            whats.append(
-                "15 xp in an Ability related to it (Magic Theory here; change it)"
-            )
-        elif roll <= 8:
-            result.xp.append((f"art:{art}", 3))
-            whats.append(f"3 xp in {art}")
-        elif roll == 9:
-            need = _to_next_score(character, art)
-            result.xp.append((f"art:{art}", need))
-            whats.append(f"{need} xp, to raise {art} to its next score")
-        else:
-            whats += _discovery_xp(result, rng, risk, art, character, rolls=2)
+            kept = []
+            for roll in candidates:
+                tries = 0
+                while roll >= 10 and tries < 20:
+                    roll, tries = dice.simple_die(rng) + risk, tries + 1
+                kept.append(min(roll, 9))
+            candidates = kept
+        roll = candidates[0]
+        if roll >= 10:
+            whats += _discovery_xp(result, rng, risk, art, character, rolls=2, two=two)
+            continue
+        result.discoveries.append(candidates)
+        gain, what = discovery_gain(roll, character, art)
+        result.xp.append(gain)
+        if discovery_kind(roll) == "ability":
+            what = "15 xp in an Ability related to it (Magic Theory unless chosen)"
+        whats.append(
+            what if len(candidates) == 1 else f"{what} (or roll {candidates[1]})"
+        )
     return whats
 
 

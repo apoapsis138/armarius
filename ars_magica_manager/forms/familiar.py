@@ -40,6 +40,7 @@ from ..models import (
 )
 from ..rules import creation_access as access
 from ..rules import scores
+from . import experimental_effects
 from .character import (
     characteristics_fields,
     characteristics_from,
@@ -514,6 +515,9 @@ def bond_power_fields(power: BondPower | None) -> list[DialogField]:
             "optint",
             attr(power, "instilling_progress", None),
             hint="0 to instil it as lab work (the lab's Planning tab).",
+        ),
+        experimental_effects.effects_field(
+            attr(power, "experimental_effects", []), attr(power, "name", "")
         ),
     ]
 

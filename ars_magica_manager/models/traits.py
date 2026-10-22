@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..rules import xp as xp_rules
-from .common import known_fields
+from .common import ExperimentalEffect, experimental_effects, known_fields
 
 
 @dataclass
@@ -131,13 +131,15 @@ class Spell:
     page: str = ""
     #: Side effects and modified effects from the experiment that invented
     #: it: anyone who learns it learns them too.
-    experimental_effects: list[str] = field(default_factory=list)
+    experimental_effects: list[ExperimentalEffect] = field(default_factory=list)
     #: A catalog entry listed without its details (the source page lacks them).
     details_missing: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Spell:
-        return cls(**known_fields(cls, data))
+        d = dict(data)
+        d["experimental_effects"] = experimental_effects(d.get("experimental_effects"))
+        return cls(**known_fields(cls, d))
 
 
 @dataclass

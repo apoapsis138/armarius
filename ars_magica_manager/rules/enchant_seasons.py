@@ -43,7 +43,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import book_seasons, lab
+from . import book_seasons, experiment, lab
 from .breakdown import Line
 from .rounding import round_up
 
@@ -432,11 +432,14 @@ def _effect_work(
     arts = (effect.technique, effect.form)
     art = plan.vis_art if plan.vis_art in arts else ""
     if plan.activity == LESSER_WORK:
+        why = ""
         if text is None and lab_total < 2 * level:
-            return [
+            why = (
                 f"Lab Total {lab_total}: a lesser enchantment of level {level} "
-                f"needs {2 * level} (twice the level) to be made in one season."
-            ], None
+                f"needs {2 * level} (twice the level) to be made in one season"
+            )
+            if not plan.experimenting:
+                return [f"{why}."], None
         room = ed.capacity(saga, device)
         if room is not None and pawns > room:
             return [
@@ -449,11 +452,12 @@ def _effect_work(
             None,
             total,
             level,
-            points_gained=level,
-            finished=True,
+            points_gained=0 if why else level,
+            finished=not why,
             vis_cost={art: pawns},
             device=device,
             effect=effect,
+            too_low=experiment.too_low(why) if why else "",
         )
 
     # Instilling in an invested device.
@@ -468,11 +472,14 @@ def _effect_work(
             f"{device.name}'s effects take {ed.pawns_used(device)} pawns; only "
             f"{device.pawns_opened} were opened."
         ], None
+    why = ""
     if text is None and lab_total <= level:
-        return [
+        why = (
             f"Lab Total {lab_total} isn't above {name}'s level {level}: it "
-            "can't be instilled yet."
-        ], None
+            "can't be instilled yet"
+        )
+        if not plan.experimenting:
+            return [f"{why}."], None
     before = effect.instilling_progress
     cost: dict[str, int] = {}
     if before == 0:
@@ -483,6 +490,8 @@ def _effect_work(
     gained = (
         max(0, level - before)
         if text is not None
+        else 0
+        if why
         else lab.points_per_season(lab_total, level)
     )
     return [], LabWork(
@@ -491,10 +500,11 @@ def _effect_work(
         level,
         points_before=before,
         points_gained=gained,
-        finished=before + gained >= level,
+        finished=not why and before + gained >= level,
         vis_cost=cost,
         device=device,
         effect=effect,
+        too_low=experiment.too_low(why) if why else "",
     )
 
 

@@ -33,7 +33,7 @@ Lab Texts:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from .. import book_kinds, books
 from .. import spells as spl
@@ -507,6 +507,7 @@ def _copy_of(
         shape_material=book.shape_material,
         ritual_subject=book.ritual_subject,
         ritual_extra_vis=book.ritual_extra_vis,
+        experimental_effects=[replace(e) for e in book.experimental_effects],
     )
 
 

@@ -1292,7 +1292,7 @@ def _experiment(
     if work is None:
         return
     aura, _ = _home_aura(saga, character)
-    art = work.spell.technique if work.spell is not None else "Vim"
+    art, _ = lab_seasons.made_arts(work, plan)
     goal = experiment.find_goal(character, plan.research) if plan.research else None
     # With an insight waiting, the experiment invents it (integration);
     # otherwise it seeks a Discovery, keeping the move made before.
@@ -1316,22 +1316,39 @@ def _experiment(
         shift=shift,
         stabilizing=stabilizing,
     )
-    if chart.no_benefit and not stabilizing:
-        # The die and risk are lost; a Discovery may still come with it.
+    work.experiment = chart
+    settle_chart(result, character, saga)
+    if stabilizing:
+        assert result.lab_work is not None
+        result.lab_work.research_warping = max(
+            0, result.lab_work.research_magnitude - dice.simple_die(roll_rng)
+        )
+
+
+def settle_chart(result: Outcome, character: Character, saga: Saga) -> None:
+    """The work as the season's chart roll leaves it: with No Benefit the
+    die and risk are lost (a Discovery may still come with it), and the
+    work is abandoned if it is now too low; and the roll noted. Run again
+    when the storyguide chooses the other of two rolls."""
+    work = result.lab_work
+    assert work is not None and work.experiment is not None
+    chart = work.experiment
+    plan = result.plan
+    if chart.no_benefit and plan.activity != experiment.STABILIZE:
         _, plain = lab_seasons.work(saga, character, replace(plan, experimenting=False))
         if plain is None:
             chart.wasted = True
             chart.discovery = False
             chart.discovery_shift = None
         else:
-            result.lab_work = work = plain
-    assert work is not None
-    work.experiment = chart
-    if stabilizing:
-        work.research_warping = max(
-            0, work.research_magnitude - dice.simple_die(roll_rng)
-        )
-    result.notes += ["Extraordinary Results: " + " ".join(chart.results)]
+            plain.experiment = chart
+            result.lab_work = plain
+    chart.item_at_risk = (
+        plan.activity == enchant_seasons.INVESTIGATE and experiment.destroys(chart)
+    )
+    result.notes = [
+        n for n in result.notes if not n.startswith("Extraordinary Results: ")
+    ] + ["Extraordinary Results: " + " ".join(chart.results)]
 
 
 def outcome(
@@ -1527,6 +1544,8 @@ def _lab_outcome(
         plan.experimenting or plan.activity == experiment.STABILIZE
     ):
         _experiment(result, character, saga, rng)
+    if result.lab_work is not None and result.lab_work.too_low:
+        result.notes.append(result.lab_work.too_low)
     rolled = plan.activity in laboratory_seasons.ROLLED and (
         plan.activity != laboratory_seasons.MOVE or plan.by_spell
     )
@@ -1661,7 +1680,7 @@ def _apprentice_outcome(
     )
 
 
-# Integrating an insight into original research: a roll.
+# Integrating an insight into Arcane Discovery: a roll.
 
 
 def _integrate_problems(

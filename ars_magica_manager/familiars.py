@@ -6,7 +6,7 @@ Health, Abilities, Bond Powers.
 
 from __future__ import annotations
 
-from . import catalog, storage
+from . import catalog, experiment_text, storage
 from . import possessions as pos
 from . import sheet_text as st
 from .markup import escape
@@ -103,6 +103,9 @@ def binding_text(familiar: Familiar) -> str:
             f"Initial Binding Lab Total: {f.binding_lab_total}",
             f"Target Binding Level: {f.target_binding_level}",
             f"Cumulative Vis Spent on Binding: {f.vis_spent_binding} pawns",
+            *experiment_text.effect_lines(
+                f.experimental_effects, "What experimenting left on the bond"
+            ),
         ]
     )
 
@@ -215,5 +218,6 @@ def bond_power_info_text(familiar: Familiar, index: int | None) -> str:
         f"[b]Penetration:[/] {power.penetration}",
         f"[b]Vis Spent:[/] {power.vis_spent}",
         f"[b]Cosmetic Trait:[/] {escape(power.cosmetic_trait) or '(none)'}",
+        *experiment_text.effect_lines(power.experimental_effects),
     ]
     return "\n".join(lines)

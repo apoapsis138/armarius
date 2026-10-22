@@ -626,7 +626,12 @@ to the Lab Total; the die is rolled when the season is advanced. With a
 research goal, the experiment seeks a Discovery instead: the risk goes on the
 Extraordinary Results roll, not the Lab Total (see the planning guide's
 Experimenting section). A magus who is Averse to Risk can't experiment, and
-one who is Prone to Chance must.
+one who is Prone to Chance must. Work whose Lab Total is too low can still be
+planned experimentally: the season goes ahead, the chart is rolled and any
+vis paid is lost if the die doesn't lift it. What the chart gives is settled
+in Advance Season's [Experiment Results](help:advance-experiment-results)
+step, and kept with the creation (see
+[Living with an experiment](help:guide-lab-planning-living)).
 
 ### Assistants
 <!-- help: invent-spell-assistants -->

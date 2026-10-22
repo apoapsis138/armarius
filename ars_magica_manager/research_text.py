@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from . import experiment_text
 from .markup import escape
 from .models import Breakthrough, Character, Laboratory, ResearchAttempt, Saga
 from .models.common import SEASONS
@@ -280,6 +281,7 @@ def attempt_panel(
         lines.append(f"Breakthrough points: +{attempt.points}.")
     if attempt.warping:
         lines.append(f"Warping Points: {attempt.warping}.")
+    lines += experiment_text.effect_lines(attempt.effects, "Left on the work")
     return "\n".join(lines)
 
 

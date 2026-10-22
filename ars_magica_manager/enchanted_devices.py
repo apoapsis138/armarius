@@ -15,6 +15,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Sequence
 
+from . import experiment_text
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .markup import PROBLEM_GLYPH, escape, fit, markdown_text, problem
 from .models import (
@@ -705,6 +706,7 @@ def effect_info_text(device: EnchantedDevice, effect: InstilledEffect) -> str:
         )
     if effect.description:
         lines += ["", markdown_text(effect.description)]
+    lines += experiment_text.effect_lines(effect.experimental_effects)
     return "\n".join(lines)
 
 

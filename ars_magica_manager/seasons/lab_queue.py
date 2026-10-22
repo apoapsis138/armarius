@@ -4,7 +4,7 @@ lab work, and the Lab Texts, effects and spells it produces."""
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from .. import enchanted_devices as ed
 from .. import spells as spl
@@ -17,6 +17,7 @@ from ..models import (
     Book,
     Character,
     EnchantedDevice,
+    ExperimentalEffect,
     InstilledEffect,
     Laboratory,
     Saga,
@@ -29,8 +30,8 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
+from ..rules import experiment, lab_seasons
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons
 from ..rules import laboratory_seasons as ls
 from ..tables import Table
 from . import pairs
@@ -412,6 +413,7 @@ def _effect_text(
         device_type=kind,
         shape_material="; ".join(p for p in parts if p),
         description=effect.description,
+        experimental_effects=[replace(e) for e in effect.experimental_effects],
     )
 
 
@@ -461,7 +463,7 @@ def project_key(plan: SeasonPlan) -> str | None:
 
 
 def _with_effects(
-    saga: Saga, magus: Character, spell: Spell, effects: list[str]
+    saga: Saga, magus: Character, spell: Spell, effects: list[ExperimentalEffect]
 ) -> Spell:
     """The spell as invented with its experimental effects: the magus's own
     record (a copy when it was someone else's), which anyone learning it
@@ -484,6 +486,7 @@ def _with_effects(
         own.source = "Invented"
         spell = own
     spell.experimental_effects += effects
+    experiment.apply_changes(spell, effects)
     return spell
 
 

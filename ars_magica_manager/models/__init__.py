@@ -45,6 +45,7 @@ from .character import Wounds as Wounds
 from .character import character_age as character_age
 from .common import ABILITY_CATEGORIES as ABILITY_CATEGORIES
 from .common import COMPANION_TYPES as COMPANION_TYPES
+from .common import EXPERIMENTAL_KINDS as EXPERIMENTAL_KINDS
 from .common import FATIGUE_LEVELS as FATIGUE_LEVELS
 from .common import LAB_CHARACTERISTICS as LAB_CHARACTERISTICS
 from .common import LAB_VF_PARAMETERS as LAB_VF_PARAMETERS
@@ -57,12 +58,14 @@ from .common import VIRTUE_FLAW_TIER_COST as VIRTUE_FLAW_TIER_COST
 from .common import BoonHookType as BoonHookType
 from .common import CharacterType as CharacterType
 from .common import CharacterVirtueFlawType as CharacterVirtueFlawType
+from .common import ExperimentalEffect as ExperimentalEffect
 from .common import FatigueLevel as FatigueLevel
 from .common import Handedness as Handedness
 from .common import Modifier as Modifier
 from .common import VirtueFlawTier as VirtueFlawTier
 from .common import VirtueFlawType as VirtueFlawType
 from .common import _validate_vf_tier_cost as _validate_vf_tier_cost
+from .common import experimental_effects as experimental_effects
 from .common import known_fields as known_fields
 from .covenant import BOON_HOOK_DESCRIPTION as BOON_HOOK_DESCRIPTION
 from .covenant import BOON_HOOK_DETAIL as BOON_HOOK_DETAIL

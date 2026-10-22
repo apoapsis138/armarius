@@ -1,4 +1,4 @@
-"""Arcane experimentation and original research."""
+"""Arcane experimentation and Arcane Discovery."""
 
 import random
 
@@ -93,7 +93,7 @@ def test_a_two_dice_flaw_shows_both_results():
     chart = experiment.chart(_Dice(3, 8), 1, 0, "Creo", character=magus)
     assert chart.results[0] == "4: no extraordinary effects."
     assert chart.second == ["9: a special result or story event (storyguide)."]
-    assert "The storyguide may use it instead." in chart.results[-1]
+    assert "The storyguide chooses which stands." in chart.results[-1]
 
 
 def test_experimenting_adds_a_simple_die_and_the_risk():
@@ -288,7 +288,9 @@ def test_an_invented_spell_keeps_its_side_effect():
     magus = saga.character("m")
     (known,) = magus.spells_known
     spell = next(s for s in magus.invented_spells if s.id == known.spell_id)
-    assert spell.experimental_effects == [f"Side effect: {experiment.SIDE_EFFECTS[3]}"]
+    assert [e.label for e in spell.experimental_effects] == [
+        f"Side effect: {experiment.SIDE_EFFECTS[3]}"
+    ]
 
 
 # -- the Extraordinary Results chart, roll by roll ------------------
@@ -308,7 +310,9 @@ def test_low_rolls_have_no_extraordinary_effect():
 
 def test_a_five_or_six_is_a_side_effect():
     result = _chart(5, 1)
-    assert result.effects == ["Side effect: sigil greatly exaggerated"]
+    assert [e.label for e in result.effects] == [
+        "Side effect: sigil greatly exaggerated"
+    ]
 
 
 def test_a_seven_is_no_benefit_and_a_nine_is_the_storyguides():
@@ -343,7 +347,7 @@ def test_a_discovery_s_nine_raises_the_art_to_its_next_score():
 
 
 def test_an_eleven_modifies_the_effect():
-    assert _chart(11, 2).effects == [
+    assert [e.label for e in _chart(11, 2).effects] == [
         "Modified effect: reduced range, duration, target or potency"
     ]
 
@@ -352,7 +356,7 @@ def test_an_eleven_rolls_one_die_for_the_modified_effect():
     """One simple die + risk for the whole table, not a
     new die for each row checked."""
     # One die of 10 (face 0) + risk 2 = 12: past every row, so the last.
-    assert _chart(11, 0, 1, 1, 1, risk=2).effects == [
+    assert [e.label for e in _chart(11, 0, 1, 1, 1, risk=2).effects] == [
         "Modified effect: effect changed completely (same Technique and Form, "
         "similar level)"
     ]
@@ -427,7 +431,7 @@ def test_the_discovery_comes_besides_the_roll_s_own_result():
     assert (goal.discovery_shift, goal.pending_magnitude) == (-1, 2)
     assert goal.discovered_from == ["bolt"]
     spell = magus.invented_spells[0]
-    assert spell.experimental_effects == [
+    assert [e.label for e in spell.experimental_effects] == [
         "Modified effect: increased range, duration, target or potency"
     ]
 

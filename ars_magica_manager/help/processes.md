@@ -195,7 +195,7 @@ After you choose Advance, the app may ask:
 - For the player characters with nothing planned, and any plan that can't be carried out, what to do with the season (see [Unplanned seasons](help:advance-unplanned)).
 - In Winter, if a covenant is in deficit, whether to advance anyway. Advance anyway rolls the year over; No (or Escape) leaves the date alone so the books can be balanced first.
 - Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years; one left unticked gives nothing until it is.
-- For an experiment seeking a Discovery, whether to take the Discovery by using the risk to move the roll, when it could (a tick each). Each is shown as a roll card: the die and the risk, the result the roll landed on, the Extraordinary Results chart with that band marked, and the chance a stabilization would then succeed, since it repeats the same risk and move. The roll's own result stands either way.
+- For each experiment whose Extraordinary Results need the storyguide's word, what they are: which of two rolls stands, what each side or modified effect is, what a Discovery teaches, what a special result becomes, and whether to take a Discovery the risk can reach (see [Experiment Results](help:advance-experiment-results)).
 - For a magus setting up a new laboratory, whether they would like to finish it next season (see [A new laboratory](help:advance-new-lab)).
 
 Cancelling any of these leaves the date and the saga as they were.
@@ -207,6 +207,22 @@ When a magus has planned **Set up a new laboratory**, Advance Season asks, for e
 
 - Leave it ticked and **Continue**: the magus's next season is planned as **Set up the laboratory**, lab work in the new laboratory, unless something is already planned for it. It shows on the laboratory's Planning tab, where it can be changed or cleared like any lab work.
 - Untick it to decline: the laboratory keeps the Basic Flaw until you plan **Set up the laboratory** on its Planning tab yourself.
+
+### Experiment Results
+<!-- help: advance-experiment-results -->
+
+When a magus experimented this season (Ars Magica Definitive Edition, Chapter 8: Laboratory, Experimentation), the Extraordinary Results chart has already been rolled when the season is advanced. Before anything is applied, Advance Season asks the storyguide about each experiment whose results need a decision, one form per experiment, titled **Experiment Results** with the magus's name. Nothing on it is applied until the season is played, and cancelling leaves the saga as it was.
+
+- **Which roll stands**: a magus with Exciting Experimentation or Creative Block rolls the chart twice. Both rolls are shown, and the storyguide picks the one that stands (the more amusing, says the Virtue). Only the chosen roll's questions are shown. While seeking an Arcane Discovery, both rolls already have the risk modifier's move applied.
+- **Side effect** and **Modified effect**: what the sub-table gave, with **Which stands** when two dice gave different results, and **What it is**, the storyguide's description. It may be left blank and filled in later on the creation's experimental effects. A modified effect can also change the creation's **Range**, **Duration** or **Target**, or its **Potency** in steps. The level never changes and no requisite is added. A fatal flaw is marked on the creation.
+- **Discovery**: the Ability (15 xp) or Art the experience goes to.
+- **A special result or story event** (a 9): **A story event** is written in the laboratory's and the covenant's Diaries as an open story; **The creation changed** is described and kept with the creation's experimental effects; **Extra vis** asks for the effect's magnitude plus the risk modifier in pawns of the project's Technique or Form vis, and without them (or more than the magus can handle in a season) the season is a Complete Failure; **A spell as well** opens a spell form next, for a spell of the same Technique and Form up to half the Lab Total, which the magus learns with a Lab Text.
+- **The Disaster** with 5 or more zeroes: the laboratory destroyed (Deformed and Unstable, and the magus Incapacitated), or a story threatening the whole covenant.
+- **Take the Discovery**: when seeking an Arcane Discovery and the risk modifier could move the roll onto 10, a roll card shows the die and the risk, where the roll landed on the chart, and the chance a stabilization would then succeed, since it repeats the same move. The roll's own result stands either way.
+
+On a further roll for a 12 or more, each extra roll is a stress die plus the risk modifier; a 0 there rolls botch dice (1, plus the risk modifier, plus the aura, less Cautious Sorcerer's), and a botch is a Disaster.
+
+**The app's assumption about Potency.** The rules say a modified effect can be more or less potent but give no size. The app takes one step as 5 points of the Lab Total behind the creation, which for a Longevity Ritual is 1 point of its modifier (so a ritual reduced by a step protects one point less on every aging roll). Where nothing is worked out from the Lab Total, the change is only described and recorded.
 
 ### Unplanned seasons
 <!-- help: advance-unplanned -->

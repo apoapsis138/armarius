@@ -12,7 +12,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import catalog, sourcebooks, storage
+from . import catalog, experiment_text, sourcebooks, storage
 from .arts import ART_ABBREVIATIONS, ART_LOOKUP, FORMS, TECHNIQUES
 from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit, markdown_text
@@ -489,9 +489,9 @@ def detail_text(saga: Saga, spell: Spell | None) -> str:
         )
     if spell.description.strip():
         lines += ["", markdown_text(spell.description.strip())]
-    if spell.experimental_effects:
-        lines += ["", "[b]Experimental effects[/] (learned with it):"]
-        lines += [f"  {escape(e)}" for e in spell.experimental_effects]
+    lines += experiment_text.effect_lines(
+        spell.experimental_effects, "Experimental effects (learned with it)"
+    )
     return "\n".join(lines)
 
 

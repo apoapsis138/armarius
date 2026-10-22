@@ -204,12 +204,20 @@ def _spell_live(values: dict[str, Any]) -> str:
     return text
 
 
-def _mastery_dialog(spell_name: str, existing: KnownSpell) -> FieldsDialog[KnownSpell]:
+def _mastery_dialog(
+    spell_name: str,
+    existing: KnownSpell,
+    effects: list[DialogField] | None = None,
+) -> FieldsDialog[tuple[KnownSpell, dict[str, Any]]]:
     """Edits a known spell's Mastery: score, xp, and its Mastery Abilities
-    (each with its own name/level/xp, see MasteryAbility). Builds the
-    finished KnownSpell."""
+    (each with its own name/level/xp, see MasteryAbility), and `effects`
+    (the spell's experimental effects, when its record can change). Builds
+    the finished KnownSpell, with the values for the spell's own record."""
     return FieldsDialog(
         spell_forms.mastery_title(spell_name),
-        terminal_fields(spell_forms.mastery_fields(existing, spell_name=spell_name)),
-        build=lambda values: spell_forms.known_spell_from(existing, values),
+        terminal_fields(
+            spell_forms.mastery_fields(existing, spell_name=spell_name)
+            + (effects or [])
+        ),
+        build=lambda values: (spell_forms.known_spell_from(existing, values), values),
     )

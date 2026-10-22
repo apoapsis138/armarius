@@ -12,6 +12,7 @@ from ..commands import Choice, Choose, Form, SectionOps, delete, not_offered, pi
 from ..form_spec import DialogField, ListEditor, attr
 from ..markup import escape
 from ..models import Character, KnownSpell, MasteryAbility, Saga, Spell
+from . import experimental_effects
 
 
 def known_spell_name(saga: Saga, known: KnownSpell) -> str:
@@ -161,6 +162,26 @@ def shared_fields(
     return []
 
 
+def editable_spell(saga: Saga, character: Character, spell: Spell | None) -> bool:
+    """Whether the spell's own record can be changed from the magus's
+    sheet: one they invented, or one of the saga's own (not a catalog
+    spell)."""
+    if spell is None:
+        return False
+    return bool(spl.invention(saga, character, spell.id)) or spl.is_own(saga, spell)
+
+
+def spell_effects_fields(
+    saga: Saga, character: Character, spell: Spell | None
+) -> list[DialogField]:
+    """The spell's experimental effects, editable when its record is
+    (editable_spell); shown on the Mastery form, which is where a magus's
+    spell is opened."""
+    if spell is None or not editable_spell(saga, character, spell):
+        return []
+    return [experimental_effects.effects_field(spell.experimental_effects, spell.name)]
+
+
 def known_spell_ops(saga: Saga, character: Character) -> SectionOps:
     """Add, Edit (its Mastery) and Delete for the magus's Known Spells."""
     known = character.spells_known
@@ -186,12 +207,18 @@ def known_spell_ops(saga: Saga, character: Character) -> SectionOps:
 
         def apply(values: dict[str, Any]) -> None:
             known[index] = known_spell_from(existing, values)
+            if spell is not None:
+                experimental_effects.keep(spell, values)
             if values.get("shared") and spell in character.invented_spells:
                 spl.share_invented_spell(saga, character, spell)
 
         return Form(
             mastery_title(name),
-            lambda: mastery_fields(existing) + shared_fields(saga, character, spell),
+            lambda: (
+                mastery_fields(existing)
+                + spell_effects_fields(saga, character, spell)
+                + shared_fields(saga, character, spell)
+            ),
             apply,
         )
 

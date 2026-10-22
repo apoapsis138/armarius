@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .common import known_fields
+from .common import ExperimentalEffect, experimental_effects, known_fields
 
 #: The three kinds of enchanted item. A Talisman is an Invested Device with
 #: `EnchantedDevice.talisman` set (DE ch. 8, Talisman Attunement).
@@ -160,6 +160,24 @@ class InstilledEffect:
     #: Typed figures replacing the worked-out ones (None: worked out).
     modified_level_override: int | None = None
     vis_override: int | None = None
+    #: What the experiments that instilled it left on it.
+    experimental_effects: list[ExperimentalEffect] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> InstilledEffect:
+        d = dict(data)
+        effects = experimental_effects(d.get("experimental_effects"))
+        # Older saves wrote them into the description, after "Experimental:".
+        description, marker, old = str(d.get("description", "")).partition(
+            "\nExperimental: "
+        )
+        if not marker and description.startswith("Experimental: "):
+            description, old = "", description.removeprefix("Experimental: ")
+        if old:
+            d["description"] = description.rstrip()
+            effects += experimental_effects(old.split("; "))
+        d["experimental_effects"] = effects
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -209,8 +227,5 @@ class EnchantedDevice:
                 ShapeMaterialBonus(**known_fields(ShapeMaterialBonus, b))
                 for b in d.get(key, [])
             ]
-        d["effects"] = [
-            InstilledEffect(**known_fields(InstilledEffect, e))
-            for e in d.get("effects", [])
-        ]
+        d["effects"] = [InstilledEffect.from_dict(e) for e in d.get("effects", [])]
         return cls(**known_fields(cls, d))

@@ -49,7 +49,7 @@ def _grog_year_dialog(
 
 
 def _breakthrough_dialog(existing: Breakthrough | None) -> FieldsDialog[Breakthrough]:
-    """A magus's original research goal (character_forms.research_goal_fields):
+    """A magus's Arcane Discovery goal (character_forms.research_goal_fields):
     what it is, the kind of Breakthrough sought (its target follows, and the
     storyguide may type a secret one), and what reaching it grants; a new
     goal may start from an integration breakthrough the books name."""

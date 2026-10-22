@@ -14,7 +14,9 @@ from .... import possessions as pos
 from .... import spells as spl
 from ....arts import ARTS
 from ....forms import character as character_forms
+from ....forms import experimental_effects
 from ....forms import menu as menu_forms
+from ....forms import spell as spell_forms
 from ....markup import escape
 from ....models import (
     Ability,
@@ -612,12 +614,15 @@ class CharacterActions(WorkspaceBase):
         spell = spl.find_spell(self.saga, known.spell_id)
         name = spell.name if spell else known.spell_id
 
-        def handle_result(result: KnownSpell | None) -> None:
+        def handle_result(result: tuple[KnownSpell, dict[str, Any]] | None) -> None:
             if result is not None:
-                character.spells_known[index] = result
+                character.spells_known[index], values = result
+                if spell is not None:
+                    experimental_effects.keep(spell, values)
                 self._commit("section-known-spells")
 
-        self.app.push_screen(_mastery_dialog(name, known), handle_result)
+        effects = spell_forms.spell_effects_fields(self.saga, character, spell)
+        self.app.push_screen(_mastery_dialog(name, known, effects), handle_result)
 
     def _remove_spell(self) -> None:
         """Delete the chosen known spell (after confirming)."""

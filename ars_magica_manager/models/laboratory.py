@@ -87,7 +87,7 @@ LAB_ACTIVITIES: tuple[str, ...] = (
     "Train Apprentice",
     "Translate Lab Text",
     "Arcane Experimentation",
-    "Original Research",
+    "Arcane Discovery",
     "Study",
     "Refine Laboratory",
     "Build/Modify Laboratory",
@@ -270,7 +270,11 @@ class DiaryEntry:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> DiaryEntry:
-        return cls(**known_fields(cls, data))
+        d = dict(data)
+        if d.get("activity") == "Original Research":
+            # Ars Magica Definitive Edition's name for it.
+            d["activity"] = "Arcane Discovery"
+        return cls(**known_fields(cls, d))
 
 
 @dataclass

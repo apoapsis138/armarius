@@ -39,6 +39,7 @@ from ..models import (
     Book,
     Character,
     EnchantedDevice,
+    ExperimentalEffect,
     Familiar,
     InstilledEffect,
     Laboratory,
@@ -178,10 +179,14 @@ class LabWork:
     #: Stabilizing: the Discovery's magnitude.
     research_magnitude: int = 0
     #: Experimental effects an invention carries to its spell.
-    carried_effects: list[str] = field(default_factory=list)
+    carried_effects: list[ExperimentalEffect] = field(default_factory=list)
     research_warping: int = 0
     #: Experimenting: the season's Extraordinary Results.
     experiment: experiment.Extraordinary | None = None
+    #: Experimenting with a Lab Total too low for the work: why. The
+    #: season makes no progress, but the chart is still rolled and any vis
+    #: paid is lost.
+    too_low: str = ""
 
     @property
     def points_after(self) -> int:
@@ -458,10 +463,15 @@ def _work(
         result.finished = True
         return [], result
     if lab_total <= level:
-        return [
+        why = (
             f"Lab Total {lab_total} isn't above {spell.name}'s level "
-            f"{level}: it can't be invented yet."
-        ], None
+            f"{level}: it can't be invented yet"
+        )
+        if not plan.experimenting:
+            return [f"{why}."], None
+        result.points_before = project_points(saga, magus, spell.id)
+        result.too_low = experiment.too_low(why)
+        return [], result
     result.points_before = project_points(saga, magus, spell.id)
     result.points_gained = lab.points_per_season(lab_total, level)
     result.finished = result.points_after >= level
@@ -754,6 +764,21 @@ def made_name(work_: LabWork) -> str:
     ("" for other work): what a Discovery is recorded against."""
     made = work_.spell or work_.effect
     return (getattr(made, "name", "") or "").strip().lower()
+
+
+def made_arts(work_: LabWork, plan: SeasonPlan) -> tuple[str, str]:
+    """The Technique and Form a lab work uses: its spell's, effect's or
+    power's, Creo Corpus for a Longevity Ritual, else the plan's (Vim
+    when none is named). A Discovery's experience goes to one of them."""
+    made = work_.spell or work_.effect or work_.power
+    technique = getattr(made, "technique", "") or ""
+    form = getattr(made, "form", "") or ""
+    if not (technique and form) and plan.activity == LONGEVITY:
+        return "Creo", "Corpus"
+    return (
+        technique or plan.technique or "Vim",
+        form or plan.form or "Vim",
+    )
 
 
 def seeking(plan: SeasonPlan) -> bool:

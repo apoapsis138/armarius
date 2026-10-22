@@ -734,8 +734,9 @@ of play stays, marked "(not in play)".
 ## Research tab
 <!-- help: tab-research -->
 
-A magus's original research: the goals they are working towards and every
-season spent on them (Ars Magica Definitive Edition, Chapter 8,
+A magus's Arcane Discovery (what Houses of Hermes: True Lineages calls
+original research): the goals they are working towards and every season
+spent on them (Ars Magica Definitive Edition, Chapter 8,
 Experimentation and Arcane Discovery).
 <!-- tui -->
 Only a magus has this tab. Choosing a goal shows where it stands and the

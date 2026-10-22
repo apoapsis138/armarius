@@ -209,6 +209,68 @@ class Modifier:
             )
 
 
+#: What an experimental effect came from: the Extraordinary Results
+#: chart's side effect (5-6), modified effect (11), or the storyguide's
+#: change to the creation on a special result (9).
+EXPERIMENTAL_KINDS: tuple[str, ...] = ("side", "modified", "special")
+_KIND_LABELS = {"side": "Side effect", "modified": "Modified effect"}
+
+
+@dataclass
+class ExperimentalEffect:
+    """One thing an experiment left on its creation (a spell, an instilled
+    effect, a bond power, a Longevity Ritual), "warts and all". The level
+    never changes and no requisite is added, whatever it does.
+
+    `result` is the sub-table's wording ("major side benefit"); the
+    storyguide's `description` says what it actually is. A modified effect
+    may give the creation a new Range, Duration or Target ("" leaves it as
+    it was) or change its potency by whole steps (each step moves the Lab
+    Total behind it by 5; a Longevity Ritual's modifier by 1). `fatal` marks
+    a fatal flaw. `magic_theory` is the experimenter's Magic Theory that
+    season, for recreating the creation without its flaws."""
+
+    kind: str = "side"
+    result: str = ""
+    description: str = ""
+    range: str = ""
+    duration: str = ""
+    target: str = ""
+    potency: int = 0
+    fatal: bool = False
+    year: int | None = None
+    season: str = ""
+    magic_theory: int | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any] | str) -> ExperimentalEffect:
+        if isinstance(data, str):
+            # Older saves kept a label ("Side effect: minor flaw").
+            kind, _, result = data.partition(": ")
+            for key, label in _KIND_LABELS.items():
+                if kind == label:
+                    return cls(kind=key, result=result.strip())
+            return cls(kind="special", result=data.strip())
+        return cls(**known_fields(cls, data))
+
+    @property
+    def label(self) -> str:
+        """ "Side effect: minor flaw", or the result alone."""
+        kind = _KIND_LABELS.get(self.kind, "")
+        return f"{kind}: {self.result}" if kind and self.result else self.result
+
+
+def experimental_effects(items: Any) -> list[ExperimentalEffect]:
+    """A saved list of experimental effects (records, or an older save's
+    labels) as records."""
+    return [
+        item
+        if isinstance(item, ExperimentalEffect)
+        else ExperimentalEffect.from_dict(item)
+        for item in items or []
+    ]
+
+
 def _validate_vf_tier_cost(id_: str, tier: str, cost: float) -> None:
     """Shared by VirtueFlawDef and LabVirtueFlawDef: cost's magnitude must
     match VIRTUE_FLAW_TIER_COST[tier] (0/1/3 for Free/Minor/Major)."""

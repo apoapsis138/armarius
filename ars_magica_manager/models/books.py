@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..arts import ART_BY_NAME
-from .common import known_fields
+from .common import ExperimentalEffect, experimental_effects, known_fields
 
 #: Standard Hermetic Ranges, Durations and Targets (ArM5 Chapter Nine), in the
 #: book's order. Supplements add their own (Road, Bargain...), kept as typed.
@@ -117,6 +117,9 @@ class Book:
     device_type: str = ""
     shape_material: str = ""
     ritual_subject: str = ""
+    #: An enchantment's Lab Text: what experimenting left on the effect
+    #: when it was written, which an effect instilled from it keeps.
+    experimental_effects: list[ExperimentalEffect] = field(default_factory=list)
     #: A Longevity Ritual's extra vis: the pawns beyond age / 5 it was first
     #: made with, which must be spent again each time it is performed.
     ritual_extra_vis: int = 0
@@ -178,6 +181,7 @@ class Book:
             d.setdefault("name", d.get("spell_name") or subject)
             if d.get("notes"):
                 d.setdefault("description", d["notes"])
+        d["experimental_effects"] = experimental_effects(d.get("experimental_effects"))
         return cls(**known_fields(cls, d))
 
 

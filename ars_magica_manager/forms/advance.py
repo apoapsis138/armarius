@@ -5,8 +5,10 @@ The question first (what the season's plans will do, and the new year's
 note), then, at the year's end with a covenant in deficit, whether to
 advance anyway; then whether anything interrupted work that runs until
 it's done, whether each contested resource whose security lapsed was
-secured, whether to take each Discovery an experiment's risk can reach, and whether each magus setting up a new laboratory
-spends the next season finishing it. Only then is the season played out (seasons.finish_season)
+secured, what each experiment's results are (Experiment Results: which
+roll stands, its effects, Discoveries and special results, and whether to
+take a Discovery its risk can reach), and whether each magus setting up a
+new laboratory spends the next season finishing it. Only then is the season played out (seasons.finish_season)
 and the date moved on. The last step ends with `Played`: what the season
 did and the line saying so, for the front-end to show the season's
 results.
@@ -29,6 +31,7 @@ from ..rules import laboratory_seasons as ls
 from ..rules.activities import ACTIVITIES, Outcome
 from ..seasons import defaults, repeat
 from ..seasons.advance import Advanced
+from . import experiment_results
 from . import season as season_forms
 
 #: Backs the saga up before a season with plans is applied
@@ -431,28 +434,17 @@ def _discoveries(
 ):
     """Work out every plan's outcome (before any is applied, so a season's
     results can't change that same season; a season lost isn't played),
-    ask whether to take each Discovery an experiment's risk can reach, then
-    play the season out."""
+    ask the storyguide about each experiment's results (which roll stands,
+    its effects, Discoveries and special results, and whether to take a
+    Discovery its risk can reach), then play the season out."""
     gone = {p.character_id for p in lost}
     worked = [o for o in seasons.resolve(saga, rng()) if o.character_id not in gone]
-    moves = seasons.discovery_moves(saga, worked)
-    if not moves:
-        return _new_labs(saga, worked, secured, lost, backup, rng)
-
-    def apply(values: dict[str, Any]):
-        for index, (outcome, _text) in enumerate(moves):
-            seasons.take_discovery_move(
-                saga, outcome, bool(values.get(f"move_{index}"))
-            )
-        return _new_labs(saga, worked, secured, lost, backup, rng)
-
-    fields: list[DialogField] = []
-    for index, (_outcome, text) in enumerate(moves):
-        fields += [
-            DialogField(f"_move_{index}", "", "info", text),
-            DialogField(f"move_{index}", "Take the Discovery", "check", False),
-        ]
-    return Form("Discoveries", lambda: fields, apply, save_label="Continue")
+    return experiment_results.experiment_results(
+        saga,
+        worked,
+        lambda: _new_labs(saga, worked, secured, lost, backup, rng),
+        rng,
+    )
 
 
 def new_lab_seasons(saga: Saga, worked: list[Any]) -> list[Outcome]:

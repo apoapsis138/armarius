@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
 from .character import ScoredTrait, Wounds
-from .common import FatigueLevel, known_fields
+from .common import (
+    ExperimentalEffect,
+    FatigueLevel,
+    experimental_effects,
+    known_fields,
+)
 from .holdings import Possession
 from .traits import Ability, Characteristics, VirtueFlawInstance
 
@@ -35,6 +41,23 @@ class BondPower:
     #: Points instilled so far while it is being instilled as lab work;
     #: None when finished.
     instilling_progress: int | None = None
+    #: What the experiments that instilled it left on it.
+    experimental_effects: list[ExperimentalEffect] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> BondPower:
+        d = dict(data)
+        effects = experimental_effects(d.get("experimental_effects"))
+        # Older saves wrote them after the cosmetic trait, in brackets.
+        found = _OLD_EFFECTS.search(str(d.get("cosmetic_trait", "")))
+        if found:
+            d["cosmetic_trait"] = d["cosmetic_trait"][: found.start()].rstrip()
+            effects += experimental_effects(found.group(1).split("; "))
+        d["experimental_effects"] = effects
+        return cls(**known_fields(cls, d))
+
+
+_OLD_EFFECTS = re.compile(r"\(((?:Side|Modified) effect: [^()]*)\)\s*$")
 
 
 @dataclass
@@ -98,6 +121,8 @@ class Familiar:
     #: unless the user wants to note an exception).
     abilities: list[Ability] = field(default_factory=list)
     bond_powers: list[BondPower] = field(default_factory=list)
+    #: What experimenting on the binding left on the bond.
+    experimental_effects: list[ExperimentalEffect] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Familiar:
@@ -121,9 +146,8 @@ class Familiar:
             for w in d.get("natural_weapons", [])
         ]
         d["abilities"] = [Ability.from_dict(a) for a in d.get("abilities", [])]
-        d["bond_powers"] = [
-            BondPower(**known_fields(BondPower, p)) for p in d.get("bond_powers", [])
-        ]
+        d["bond_powers"] = [BondPower.from_dict(p) for p in d.get("bond_powers", [])]
+        d["experimental_effects"] = experimental_effects(d.get("experimental_effects"))
         return cls(**known_fields(cls, d))
 
 

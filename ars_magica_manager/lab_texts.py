@@ -23,6 +23,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from . import books as bk
+from . import experiment_text
 from .arts import ART_ABBREVIATIONS
 from .markup import escape, fit, markdown_text
 from .models import (
@@ -424,6 +425,12 @@ def detail_text(saga: Saga, reader: Character | None, book: Book | None) -> str:
     head.append(standing)
     if book.description.strip():
         head.append(markdown_text(book.description.strip()))
+    warts = (
+        spell.experimental_effects if spell is not None else book.experimental_effects
+    )
+    head += experiment_text.effect_lines(
+        warts, "Experimental effects (kept by the text)"
+    )
     head.append(USING_RULE)
     return "\n".join(head)
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .common import SEASONS, known_fields
+from .common import SEASONS, ExperimentalEffect, experimental_effects, known_fields
 
 
 def next_season(season: str, year: int) -> tuple[str, int]:
@@ -207,11 +207,13 @@ class LabProject:
     spell_id: str
     points: int = 0
     #: Experimental side effects and modified effects so far.
-    effects: list[str] = field(default_factory=list)
+    effects: list[ExperimentalEffect] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabProject:
-        return cls(**known_fields(cls, data))
+        d = dict(data)
+        d["effects"] = experimental_effects(d.get("effects"))
+        return cls(**known_fields(cls, d))
 
 
 @dataclass

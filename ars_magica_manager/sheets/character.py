@@ -12,7 +12,7 @@ from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 
 from .. import casting_text as ct
-from .. import catalog, faith, traditions, tribunal_packages
+from .. import catalog, experiment_text, faith, traditions, tribunal_packages
 from .. import lab_texts as lt
 from .. import players as pl
 from .. import possessions as pos
@@ -34,7 +34,7 @@ from ..models import (
     Wounds,
     character_age,
 )
-from ..rules import aging, casting, derived, scores, warping
+from ..rules import aging, casting, derived, experiment, scores, warping
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
 from ..rules import xp as xp_rules
@@ -159,6 +159,9 @@ def aging_text(character: Character) -> str:
         lines.append("Aging Points: " + ", ".join(points))
     if a.longevity_modifier:
         lines.append(f"Longevity Ritual: -{a.longevity_modifier} to aging rolls")
+        lines += experiment_text.effect_lines(
+            a.longevity_effects, "The ritual's experimental effects"
+        )
     if a.recovering:
         lines.append(f"Recovering from an Aging Crisis: {a.recovering}")
     return "\n".join(
@@ -731,6 +734,13 @@ def aging_facts(character: Character) -> list[Fact]:
             facts.append(_fact(f"{name.title()} Aging Points", points))
     if a.longevity_modifier:
         facts.append(_fact("Longevity Ritual", f"-{a.longevity_modifier} to aging"))
+        if a.longevity_effects:
+            facts.append(
+                _fact(
+                    "Its experimental effects",
+                    "; ".join(experiment.describe(e) for e in a.longevity_effects),
+                )
+            )
     if a.recovering:
         facts.append(_fact("Recovering", a.recovering))
     return facts

@@ -13,12 +13,14 @@ from .. import enchanted_devices as ed
 from .. import spells as spl
 from ..models import (
     SEASONS,
+    STORY_EVENT,
     TEXT_OTHER,
     Ability,
     ArcaneConnection,
     Book,
     Breakthrough,
     Character,
+    CovenantDiaryEntry,
     DiaryEntry,
     KnownSpell,
     Laboratory,
@@ -118,7 +120,11 @@ def _apply_one_season_work(
             if plan_for(saga, magus, season, year) is None:
                 set_plan(saga, replace(plan, season=season, year=year, days_away=0))
     if work.subject is not None and work.longevity:
-        work.subject.aging.longevity_modifier = work.longevity
+        # A new ritual replaces the old, with what experimenting left on it;
+        # each step of potency moves the modifier by 1.
+        steps = sum(e.potency for e in work.carried_effects)
+        work.subject.aging.longevity_modifier = max(0, work.longevity + steps)
+        work.subject.aging.longevity_effects = list(work.carried_effects)
         work.subject.aging.longevity_year = plan.year
         work.subject.aging.longevity_by = magus.name
         saga.books.append(
@@ -217,6 +223,13 @@ def _apply_enchanting(
         return
     instilling = (es.LESSER_WORK, es.CHARGED_WORK, es.INSTIL)
     if effect is not None and plan.activity in instilling and work.finished:
+        text = es.lab_text_of(saga, plan)
+        if text is not None and not effect.experimental_effects:
+            # A Lab Text reproduces the effect exactly, warts and all.
+            effect.experimental_effects = [
+                replace(e) for e in text.experimental_effects
+            ]
+            ex.apply_changes(effect, effect.experimental_effects)
         saga.books.append(_effect_text(saga, magus, lab, device, effect))
     making = (es.OPEN, es.LESSER_WORK, es.CHARGED_WORK, es.ATTUNE)
     if plan.activity in making and not device.maker_id and not device.maker_name:
@@ -558,11 +571,22 @@ def _apply_experiment(
         _add_xp(magus, subject, xp)
     lines = list(chart.results)
     lines += _disaster(saga, magus, lab, plan, chart)
+    lines += _extra_vis(saga, magus, plan, chart)
+    lines += _bonus_spells(saga, magus, lab, chart)
+    lines += _stories(saga, magus, lab, plan, chart)
     creation = plan.activity in _CREATIONS
-    if chart.zeroes >= 2 or (chart.failure and chart.failure_die == 0 and creation):
+    investigating = plan.activity == es.INVESTIGATE
+    if investigating and ex.destroys(chart):
+        # The item investigated is destroyed, unless an effect of its own
+        # protects it with a level above the Lab Total.
+        if chart.protected:
+            lines.append("An effect of the item's own protects it: it survives.")
+        elif work.device is not None:
+            lines.append(_destroy(saga, magus, plan, work, whole=True))
+    elif chart.zeroes >= 2 or (chart.failure and chart.failure_die == 0 and creation):
         lines.append(_destroy(saga, magus, plan, work, whole=chart.zeroes < 2))
     elif chart.effects and not chart.wasted:
-        _keep_effects(saga, plan, work, chart.effects)
+        _keep_effects(saga, magus, plan, work, chart)
     # A goal named on the plan and not yet on the sheet is made, of the
     # kind the plan chose.
     goal = (
@@ -639,6 +663,7 @@ def _log_attempt(
                 else 0
             ),
             lab_id=lab.id,
+            effects=[replace(e) for e in chart.effects],
         ),
     )
 
@@ -663,10 +688,91 @@ def _disaster(
         for person in everyone:
             person.wounds.heavy += 2
         lines.append("Two Heavy Wounds for everyone in the lab.")
-    if chart.zeroes >= 5:
+    if chart.zeroes >= ex.DISASTER_CHOICE and chart.disaster_choice == "covenant":
+        chart.stories.append(
+            "The Disaster's after-effects threaten the whole covenant (the "
+            "storyguide's story)."
+        )
+    elif chart.zeroes >= ex.DISASTER_CHOICE:
         for person in everyone:
             person.wounds.incapacitated = True
-        lines.append("An Incapacitating Wound for everyone in the lab.")
+        for flaw in _DESTROYED:
+            ls.add_vf(lab, flaw)
+        lines.append(
+            "The laboratory is destroyed: it is Deformed and Unstable and must "
+            "be rebuilt from nothing. An Incapacitating Wound for everyone in "
+            "the lab."
+        )
+    return lines
+
+
+#: The Flaws of a laboratory a Disaster destroys, to be rebuilt from
+#: nothing.
+_DESTROYED = ("labvf_deformed", "labvf_unstable")
+
+
+def _extra_vis(
+    saga: Saga, magus: Character, plan: SeasonPlan, chart: ex.Extraordinary
+) -> list[str]:
+    """The extra vis a special result asked for, paid from the pool."""
+    if not chart.extra_vis or chart.wasted:
+        return []
+    pool = lab_seasons.vis_pool(saga, magus, plan)
+    for art, pawns in chart.extra_vis.items():
+        key = art.lower()
+        pool[key] = max(0, pool.get(key, 0) - pawns)
+        if not pool[key]:
+            del pool[key]
+    return []
+
+
+def _bonus_spells(
+    saga: Saga, magus: Character, lab: Laboratory, chart: ex.Extraordinary
+) -> list[str]:
+    """The spells a special result let the magus also create: known, with
+    a Lab Text in the laboratory."""
+    lines = []
+    for values in chart.bonus_spells:
+        spell = spl.add_invented_spell(
+            saga, magus, values["name"], values["technique"], values["form"]
+        )
+        for name, value in values.items():
+            if name not in ("name", "technique", "form") and hasattr(spell, name):
+                setattr(spell, name, value)
+        spell.source = "Invented"
+        if not any(k.spell_id == spell.id for k in magus.spells_known):
+            magus.spells_known.append(KnownSpell(spell_id=spell.id))
+        saga.books.append(_lab_text_book(saga, magus, lab, spell))
+        lines.append(
+            f"{magus.name} also creates {spell.name} ({spl.shorthand(spell)})."
+        )
+    return lines
+
+
+def _stories(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    plan: SeasonPlan,
+    chart: ex.Extraordinary,
+) -> list[str]:
+    """Each story event, a line in the lab's Diary entry and an open Story
+    Event in the covenant's Diary."""
+    covenant = saga.covenant(lab.covenant_id) if lab.covenant_id else None
+    lines = []
+    for story in chart.stories:
+        lines.append(f"Story event: {story}")
+        if covenant is not None:
+            covenant.diary.append(
+                CovenantDiaryEntry(
+                    year=plan.year,
+                    season=plan.season,
+                    name=f"From {magus.name}'s experiment",
+                    details=story,
+                    category=STORY_EVENT,
+                    status="Open",
+                )
+            )
     return lines
 
 
@@ -822,21 +928,41 @@ def _destroy(
 
 
 def _keep_effects(
-    saga: Saga, plan: SeasonPlan, work: lab_seasons.LabWork, effects: list[str]
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
+    chart: ex.Extraordinary,
 ) -> None:
     """Side effects and modified effects stay with the creation ("warts and
-    all"): an invention carries them to its spell; an item's effect and a
-    bond power keep them in their description."""
-    if work.effect is not None:
-        extra = "; ".join(effects)
-        work.effect.description = (
-            f"{work.effect.description}\nExperimental: {extra}".strip()
-        )
+    all"): an item's effect (or, investigating, the power the storyguide
+    named) and a bond power take them at once, with any new Range,
+    Duration or Target; a familiar's binding taints the bond; an invention
+    and a Longevity Ritual carry them to the spell or ritual they make."""
+    effects = list(chart.effects)
+    theory = ls.magic_theory(magus)
+    for effect in effects:
+        effect.year, effect.season = plan.year, plan.season
+        effect.magic_theory = theory
+    device = work.device
+    if plan.activity == es.INVESTIGATE and device is not None:
+        for index, effect in enumerate(effects):
+            target_id = chart.targets[index] if index < len(chart.targets) else ""
+            power = next((e for e in device.effects if e.id == target_id), None)
+            if power is None and device.effects:
+                power = device.effects[0]
+            if power is not None:
+                power.experimental_effects.append(effect)
+                ex.apply_changes(power, [effect])
+    elif work.effect is not None:
+        work.effect.experimental_effects += effects
+        ex.apply_changes(work.effect, effects)
     elif work.power is not None:
-        extra = "; ".join(effects)
-        work.power.cosmetic_trait = f"{work.power.cosmetic_trait} ({extra})".strip()
-    elif plan.activity == lab_seasons.INVENT:
-        work.carried_effects = list(effects)
+        work.power.experimental_effects += effects
+    elif work.familiar is not None and plan.activity == fs.BIND:
+        work.familiar.experimental_effects += effects
+    elif plan.activity in (lab_seasons.INVENT, lab_seasons.LONGEVITY):
+        work.carried_effects = effects
 
 
 def _goal_reached(magus: Character, goal) -> list[str]:

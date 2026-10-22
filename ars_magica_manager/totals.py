@@ -94,7 +94,7 @@ ACTIVITIES_BY_TYPE: dict[str, dict[str, str]] = {
         "enchant_items": "Enchant Items",
         "extract_vis": "Extract Vis",
         "longevity_ritual": "Longevity Ritual",
-        "original_research": "Original Research",
+        "original_research": "Arcane Discovery",
         "bind_familiar": "Binding a familiar",
         "learn_from_lab_text": "Working from a Lab Text",
         # Adds to (or replaces, for the same Virtue) the activity's own.

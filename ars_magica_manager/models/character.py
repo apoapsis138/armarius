@@ -8,8 +8,10 @@ from typing import Any
 from ..rules import xp as xp_rules
 from .common import (
     CharacterType,
+    ExperimentalEffect,
     FatigueLevel,
     Handedness,
+    experimental_effects,
     known_fields,
     move_secrets,
 )
@@ -113,6 +115,8 @@ class Aging:
     longevity_modifier: int = 0
     longevity_year: int | None = None
     longevity_by: str = ""
+    #: What experimenting on the ritual left on it.
+    longevity_effects: list[ExperimentalEffect] = field(default_factory=list)
     #: Aging: Decrepitude points (the score is worked out from
     #: them and kept in `decrepitude`), Aging Points per Characteristic, the
     #: apparent age (None: the actual age), and the season spent recovering
@@ -128,6 +132,7 @@ class Aging:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Aging:
         aging = cls(**known_fields(cls, data))
+        aging.longevity_effects = experimental_effects(aging.longevity_effects)
         if aging.decrepitude and "decrepitude_points" not in data:
             # A typed Decrepitude score: the points that give it.
             thresholds = (0, 5, 15, 30, 50, 75)
@@ -359,6 +364,8 @@ class ResearchAttempt:
     points: int = 0
     warping: int = 0
     lab_id: str = ""
+    #: What the season left on the work (side and modified effects).
+    effects: list[ExperimentalEffect] = field(default_factory=list)
 
     @property
     def roll(self) -> int | None:
@@ -367,12 +374,14 @@ class ResearchAttempt:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ResearchAttempt:
-        return cls(**known_fields(cls, data))
+        d = dict(data)
+        d["effects"] = experimental_effects(d.get("effects"))
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
 class Breakthrough:
-    """A magus's original research goal: what it is, its kind and
+    """A magus's Arcane Discovery goal: what it is, its kind and
     target (the storyguide may type a secret one), the points gained, what
     reaching it grants, a Discovery waiting to be stabilized, and insights
     waiting to be invented."""
@@ -548,7 +557,7 @@ class Character:
     #: author's character id -- or name, for an author outside the saga
     #: (rules.book_seasons.author_key).
     lab_text_access: dict[str, LabTextAccess] = field(default_factory=dict)
-    #: Original research goals.
+    #: Arcane Discovery goals.
     breakthroughs: list[Breakthrough] = field(default_factory=list)
     #: A grog's yearly update; None until set up.
     grog_year: GrogYear | None = None
