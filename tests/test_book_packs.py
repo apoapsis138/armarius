@@ -256,6 +256,49 @@ def test_a_stat_block_names_only_catalog_virtues():
         builder._virtue_flaw("No Such Virtue")
 
 
+def _a_builder() -> tuple[builder.Builder, object]:
+    b = builder.Builder("Test", source="B&S")
+    tribunal = b.tribunal(
+        "The Levant Tribunal",
+        package="levant",
+        summary="",
+        meets_every=7,
+        next_year=1221,
+        next_season="Summer",
+        meeting_place="Domus Pacis",
+    )
+    return b, tribunal
+
+
+def test_a_covenant_takes_the_aegis_the_book_gives():
+    b, tribunal = _a_builder()
+    warded = b.covenant("Warded", tribunal=tribunal, founded=1200, summary="", aegis=35)
+    plain = b.covenant("Plain", tribunal=tribunal, founded=1200, summary="")
+    assert warded.aegis_of_the_hearth == 35
+    assert plain.aegis_of_the_hearth == 0
+
+
+def test_a_stat_block_from_another_book_cites_that_book():
+    from ars_magica_manager.models import Character
+
+    b, _ = _a_builder()
+    block = {"spells": [("A Spell No Book Prints", "CrIg", 10, 0)]}
+    elsewhere = b.stats(Character(id="a", name="A", type="magus"), block, source="SiS")
+    (spell,) = elsewhere.invented_spells
+    assert spell.source == "SiS" and "Secrets in Sand" in spell.description
+    own = b.stats(Character(id="b", name="B", type="magus"), block)
+    (spell,) = own.invented_spells
+    assert spell.source == "B&S" and "Blood and Sand" in spell.description
+
+
+def test_a_creature_from_another_book_cites_that_book():
+    b, _ = _a_builder()
+    assert b.creature("Jinni", page="p. 3", source="SiS").source == (
+        "Secrets in Sand p. 3"
+    )
+    assert b.creature("Ghul", page="p. 9").source.startswith("Blood and Sand")
+
+
 # -- The Lion and the Lily --
 
 
@@ -454,6 +497,10 @@ def test_theban_magi_learn_the_art_in_greek_and_incomers_in_latin():
     assert "Dead Language: Latin" in languages("Wilrich")
     for tremere in ("Boustaphan", "Monorchis", "Allectores"):
         assert "Dead Language: Latin" in languages(tremere), tremere
+    # Artoud's old Tribunal goes by the Levant pack's name for it.
+    artoud = next(c for c in saga.characters if c.name == "Artoud")
+    assert "Area Lore: Levant Tribunal" in {a.name for a in artoud.abilities}
+    assert "the Levant Tribunal" in artoud.summary
 
 
 def test_the_theban_pack_keeps_its_secrets_and_credit():
@@ -693,16 +740,145 @@ def test_the_hibernia_pack_imports_clean_into_a_new_saga():
     assert len(package.cathaigh(tribunal)) == 9
 
 
+# -- Blood and Sand --
+
+LEVANT = book_packs.PACKS["levant"]
+
+
+def test_the_levant_pack_holds_the_tribunal_of_1220():
+    from ars_magica_manager.tribunal_packages import levant as package
+
+    saga = LEVANT.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.name == "The Levant Tribunal"
+    assert tribunal.package == package.LEVANT.key
+    assert (tribunal.next_year, tribunal.meets_every) == (1221, 7)
+    assert tribunal.meeting_place == "Domus Pacis"
+    assert (tribunal.covenants_total, tribunal.magi_total) == (15, 59)
+    quaesitor = saga.character(tribunal.quaesitor_id or "")
+    assert quaesitor is not None and quaesitor.name == "Scipio"
+    titles = {r.title for r in tribunal.rulings}
+    assert {"The Treaty of Baghdad", "The Treaty's term", "The chair"} <= titles
+    # The renewal is a motion whose parties lean their own way.
+    (renewal,) = [c for c in tribunal.cases if c.kind == "motion"]
+    assert "1228" in renewal.charge and renewal.term_ends_year is None
+    for name in ("The Hermetic Embassy", "Domus Pacis", "Aedes Veritatis"):
+        assert name in renewal.brought_by
+    for name in ("Foothold", "Para Belli", "The True Cross"):
+        assert name in renewal.against
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_the_levant_and_theban_packs_build_their_shared_lords_alike():
+    def lords(pack: book_packs.BookPack) -> dict[str, tuple[str, str, dict]]:
+        return {
+            n.name: (n.summary, n.ruler, n.details)
+            for n in pack.build().neighbours
+            if n.name in ("Sultan of Rum", "Emperor of Trebizond")
+        }
+
+    theban = lords(THEBAN)
+    assert len(theban) == 2 and lords(LEVANT) == theban
+
+
+def test_the_levant_pack_holds_the_shared_middle_east():
+    from ars_magica_manager.book_packs import east
+
+    saga = LEVANT.build()
+    shared = east.middle_east(builder.Builder("Probe", source="TC&TC"))
+    names = {n.name for n in saga.neighbours} | {c.name for c in saga.creatures}
+    assert {r.name for r in shared.values()} <= names
+    order = next(n for n in saga.neighbours if n.name == "The Order of Suleiman")
+    assert order.details["tradition"] == "trad_sahirs"
+    families = [n for n in saga.neighbours if n.answers_to == order.id]
+    assert len(families) == 2
+
+
+def test_the_levant_pack_converts_its_printed_magi():
+    data = book_packs.data(LEVANT)
+    sketches = data[packs.GENERATED]
+    printed = [
+        c for c in data["saga"]["characters"] if c["id"] not in sketches and c["arts"]
+    ]
+    assert len(printed) == 7 and len(sketches) == 30
+    saga = LEVANT.build()
+    umar = next(c for c in saga.characters if c.name == "Sharaf al-Din 'Umar")
+    assert umar.hermetic.house == "house_jerbiton"
+    # Twilight Points become Warping, a third of them.
+    assert umar.aging.warping_score == 4
+    assert [s.name for s in umar.invented_spells] == ["The Wrath of Allah"]
+    assert len(umar.spells_known) == 39
+
+
+def test_wardat_is_a_hermetic_sahir():
+    from ars_magica_manager.rules import hedge_casting as hc
+
+    saga = LEVANT.build()
+    wardat = next(c for c in saga.characters if c.name == "Wardat al-Quds")
+    assert wardat.hermetic.house == "house_ex_miscellanea"
+    assert wardat.traditions == ["trad_hermetic_sahirs"]
+    assert hc.score(wardat, "Sihr") == 6 and not wardat.arts
+    held = {v.vf_id for v in wardat.virtues_flaws}
+    assert {"vf_sihr", "vf_minor_magical_focus", "vf_twilight_prone"} <= held
+    creatures = {c.id for c in saga.creatures}
+    assert {b.name for b in wardat.bound_beings} == {"Al-Manqa'i", "Sharif"}
+    assert all(b.creature_id in creatures for b in wardat.bound_beings)
+
+
+def test_the_levant_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(LEVANT)
+    assert _secrets_kept(data["saga"]) >= 10
+    assert data["book"] == "B&S" and "Creative Commons" in data["source"]
+    assert "Secrets in Sand" in data["source"]
+
+
+def test_the_shipped_levant_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(LEVANT).read_text(encoding="utf-8"))
+    built = book_packs.data(LEVANT)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_levant_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(LEVANT)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "Blood and Sand: The Levant Tribunal is now in play.",
+        packs.assumptions_note("Blood and Sand: The Levant Tribunal"),
+    ]
+    assert target.books_in_play is not None and "B&S" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+    # The Tribunal's officers and the motion's parties are the imported
+    # records.
+    (tribunal,) = target.tribunals
+    people = {c.id for c in target.characters}
+    assert {tribunal.praeco_id, tribunal.quaesitor_id} <= people
+    covenants = {c.name for c in target.covenants}
+    (renewal,) = [c for c in tribunal.cases if c.kind == "motion"]
+    for name in covenants & {"The Hermetic Embassy", "Foothold", "Para Belli"}:
+        assert name in renewal.brought_by or name in renewal.against
+    assert {"The Hermetic Embassy", "Foothold", "Para Belli"} <= covenants
+
+
 def test_every_pack_names_a_help_page_of_its_assumptions():
     from ars_magica_manager import help_text
 
+    shipped_packs = list(book_packs.PACKS.values())
     for front_end in help_text.FRONT_ENDS:
         pages = help_text.load(front_end).pages
-        for pack in book_packs.PACKS.values():
+        for pack in shipped_packs:
             topic = book_packs.assumptions_topic(pack)
             assert topic in pages, (front_end, topic)
             assert pages[topic].title.startswith("Assumptions made for ")
-    for pack in book_packs.PACKS.values():
+    for pack in shipped_packs:
         shipped = json.loads(book_packs.path_of(pack).read_text(encoding="utf-8"))
         assert shipped[packs.ASSUMPTIONS] == book_packs.assumptions_topic(pack)
 

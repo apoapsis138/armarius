@@ -217,11 +217,13 @@ class Builder:
         arms: Arms | None = None,
         liege: Covenant | None = None,
         oath: str = "",
+        aegis: int = 0,
         secrets: str = "",
     ) -> Covenant:
         """A covenant of the book's Tribunal, not played: its aura is the
         one typed here, or its place's when it sits in one; `liege` is the
-        covenant it is sworn to, with the oath's duties in `oath`."""
+        covenant it is sworn to, with the oath's duties in `oath`; `aegis`
+        is the level of its Aegis of the Hearth, where the book gives one."""
         covenant = Covenant(
             id=self._covenant_id(name),
             saga_id=self.saga.id,
@@ -240,6 +242,7 @@ class Builder:
             arms=arms.to_dict() if arms else {},
             liege_id=liege.id if liege is not None else None,
             oath=oath,
+            aegis_of_the_hearth=aegis,
             secrets=secrets,
         )
         if place is not None:
@@ -640,6 +643,7 @@ class Builder:
         hierarchy: int | None = None,
         weakness: str = "",
         secrets: str = "",
+        source: str = "",
     ) -> Creature:
         """A creature's stat block as the book prints it: its realm, Might
         and Form, Size, and the rest in `block`'s notation
@@ -647,7 +651,8 @@ class Builder:
         Inferiorities too), "abilities", "traits", "reputations"), its
         attacks and powers (`attack()`, `power()`), and the vis in its
         body; `how_many` makes it a kind that comes in numbers. `page` is
-        where in the pack's book it is printed. `cunning` marks an animal
+        where in the pack's book it is printed, or in `source` (a
+        sourcebook's abbreviation) when another book prints it. `cunning` marks an animal
         mind (its "intelligence" is Cunning), `confidence` is (Score,
         Points), and `order`, `hierarchy` and `weakness` are a demon's."""
         block = block or {}
@@ -669,7 +674,7 @@ class Builder:
             equipment=equipment,
             appearance=appearance,
             notes=notes,
-            source=f"{sourcebooks.title_of(self.source)} {page}",
+            source=f"{sourcebooks.title_of(source or self.source)} {page}",
             detail=FULL,
             cunning=cunning,
             age=age,
@@ -754,9 +759,14 @@ class Builder:
         record.links.append(link)
         return link
 
-    def stats(self, character: Character, block: StatBlock) -> Character:
+    def stats(
+        self, character: Character, block: StatBlock, *, source: str = ""
+    ) -> Character:
         """Fill `character` from a stat block the book prints, in the
         book's notation (scores, not xp), and make it a full character.
+        `source` is the abbreviation of the book that prints the block,
+        when it is not the pack's own: its printing of a spell is taken
+        first, and a spell it adds cites it.
         A Virtue or Flaw given by name is matched to the catalog; a spell
         the catalog lacks becomes one of the character's own, at the
         level and Arts the book gives; whatever has no place on the sheet
@@ -810,7 +820,8 @@ class Builder:
             ScoredTrait(n, s) for n, s in block.get("reputations", {}).items()
         ]
         c.spells_known = [
-            self._known_spell(c, entry) for entry in block.get("spells", [])
+            self._known_spell(c, entry, source or self.source)
+            for entry in block.get("spells", [])
         ]
         masteries = block.get("masteries", {})
         for (name, *_), known in zip(block.get("spells", []), c.spells_known):
@@ -821,13 +832,14 @@ class Builder:
             c.description.biography = block["notes"]
         return c
 
+    @staticmethod
     def _known_spell(
-        self, character: Character, entry: tuple[str, str, int | None, int]
+        character: Character, entry: tuple[str, str, int | None, int], source: str
     ) -> KnownSpell:
         name, arts, level, mastery = entry
         printings = _catalog_spells().get(_spell_key(name), [])
         found = next(
-            (s for s in printings if s.source == self.source),
+            (s for s in printings if s.source == source),
             printings[0] if printings else None,
         )
         if found is None:
@@ -846,8 +858,8 @@ class Builder:
                 form=ART_LOOKUP[short[2:4].lower()],
                 level=level,
                 requisites=[ART_LOOKUP[r[:2].lower()] for r in requisites],
-                source=self.source,
-                description=f"From the stat block in {sourcebooks.title_of(self.source)}.",
+                source=source,
+                description=f"From the stat block in {sourcebooks.title_of(source)}.",
             )
             character.invented_spells.append(spell)
             found = spell

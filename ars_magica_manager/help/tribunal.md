@@ -64,6 +64,13 @@ what the old ones recorded, hidden, and switching back shows it again.
 - **Provence: Open founding** (Faith & Flame): any magus may found a
   covenant without the Tribunal's leave. A rule, not a list: it shows as
   a note on the Peripheral Code tab.
+- **Levant: The Treaty of Baghdad** (Blood and Sand): its magi keep out
+  of Crusade and jihad under a treaty renewed every ten years. Renewal
+  is a motion like any other: give its ruling a term, and the app puts
+  it back on the docket as the term ends. A rule, not a list: it shows
+  as a note on the Peripheral Code tab. The book's Tribunal of 1220
+  ships as a content pack: see [How to start a saga from a Tribunal
+  book](help:guide-book-packs).
 - **Hibernia: Cathaigh and ambassadors** (The Contested Isle): a covenant is represented
   only while it shows its **cathach**, the trophy it took when it was
   founded. Each covenant's form (Edit Covenant) says what its cathach is,

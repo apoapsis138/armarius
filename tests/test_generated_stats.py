@@ -154,6 +154,27 @@ def test_a_theban_magus_learns_the_art_in_greek_and_knows_their_tribunal():
     assert "Dead Language: Latin" in _abilities(block)
 
 
+def test_a_levant_magus_may_learn_the_art_in_a_living_language():
+    magus = Character(id="z", name="Z", type="magus")
+    magus.hermetic.house = "house_jerbiton"
+    arabic = "Living Language: Arabic"
+    block, _ = generated.stat_block(
+        magus, generated.Profile(native="Arabic", hermetic=arabic), 1220, "B&S"
+    )
+    found = _abilities(block)
+    assert found[arabic][0] >= 5
+    assert not any(name.startswith("Dead Language") for name in found)
+    lore = found.get("Organization Lore: Order of Hermes")
+    assert lore is None or lore[1] == "the Levant Tribunal"
+    # The rest of the Tribunal's magi learnt it in Latin.
+    block, _ = generated.stat_block(
+        magus, generated.Profile(native="French"), 1220, "B&S"
+    )
+    found = _abilities(block)
+    assert found["Dead Language: Latin"][1] == "Hermetic usage"
+    assert arabic not in found
+
+
 def test_the_import_form_offers_the_book_s_sketches_instead():
     from ars_magica_manager import packs, transfer
     from ars_magica_manager.models import Saga

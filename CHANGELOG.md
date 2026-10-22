@@ -108,6 +108,36 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.127.0 — 2026-10-22
+
+### Peregrinatio
+
+- **The Levant Tribunal pack.** Blood and Sand, with its web companion
+  Secrets in Sand, ships as a content pack: the Levant Tribunal of 1220
+  with its Code and the Treaty of Baghdad up for renewal in 1221; its
+  twelve covenants, four of them rebuilt in full; 49 magi, the eight the
+  books print converted from Fourth Edition and Wardat a Hermetic Sahir;
+  the crusader states, the Muslim powers, the military orders and the
+  region's churches and faiths; its holy and magical places, Bestiary,
+  history and stories. Its assumptions page in Help says the stats follow
+  the Definitive Edition's conversion guide where it applies, and lists
+  every judgement call made for the rest.
+- **Shared records for the Middle East.** The Order of Suleiman, the jinn,
+  the Nizaris, the Ayyubid sultans and the other powers the Levant shares
+  with its neighbours are built the same way in every pack that has them,
+  so importing two such packs updates them rather than making copies.
+
+### Concilium
+
+- **The Levant's customs.** A Tribunal can keep the Levant's customs: the
+  Treaty of Baghdad, renewed every ten years, shown on its Peripheral
+  Code tab.
+
+### Florilegium
+
+- **Secrets in Sand in the catalog.** Its four Virtues and Flaws for magi
+  of the Islamic Tradition, and the book itself among the saga's sources.
+
 ## 2.126.0 — 2026-10-22
 
 ### Sodales

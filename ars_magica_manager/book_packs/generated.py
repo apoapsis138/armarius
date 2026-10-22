@@ -180,10 +180,13 @@ TRIBUNALS = {
     "TSE": "Theban Tribunal",
     "AtD": "Transylvanian Tribunal",
     "TCI": "Hibernian Tribunal",
+    "B&S": "Levant Tribunal",
 }
 #: The language a book's magi learn their Art in, where it is not Latin.
 HERMETIC_LANGUAGES = {"TSE": "Classical Greek"}
 LATIN = "Dead Language: Latin"
+#: How a Living Language's Ability name begins.
+LIVING = "Living Language: "
 RHINE_LORE = "Area Lore: Rhine Tribunal"
 
 #: The Ability types later life (before apprenticeship) may buy.
@@ -205,7 +208,10 @@ class Profile:
     Virtue points the Flaws leave unspent go on the top Arts. `age` is
     used only when the book gives none; `native` is the magus's mother
     tongue; `hermetic` is the language they learnt the Art in, when it
-    is not their book's (an incomer to the Theban Tribunal keeps Latin);
+    is not their book's (an incomer to the Theban Tribunal keeps Latin):
+    a Dead Language by its name ("Latin"), or a Living Language as the
+    whole Ability ("Living Language: Arabic", for a magus taught the Art
+    in the tongue they speak);
     `gifted` is False for an un-Gifted Redcap."""
 
     strong: str = "int sta"
@@ -425,21 +431,21 @@ def note(
 
 @dataclass(frozen=True)
 class _Local:
-    """The book's own Tribunal and Hermetic language, put in place of the
-    Rhine's and Latin in the tables above."""
+    """The book's own Tribunal and Hermetic language (as the Ability that
+    holds it), put in place of the Rhine's and Latin in the tables above."""
 
     language: str
     tribunal: str
 
     def name(self, ability: str) -> str:
         if ability == LATIN:
-            return f"Dead Language: {self.language}"
+            return self.language
         if ability == RHINE_LORE:
             return f"Area Lore: {self.tribunal}"
         return ability
 
     def specialty(self, ability: str) -> str:
-        if ability == f"Dead Language: {self.language}":
+        if ability == self.language:
             return SPECIALTIES[LATIN]
         if ability == f"Area Lore: {self.tribunal}":
             return SPECIALTIES[RHINE_LORE]
@@ -449,6 +455,8 @@ class _Local:
 
 def _local(profile: Profile, source: str) -> _Local:
     language = profile.hermetic or HERMETIC_LANGUAGES.get(source, "Latin")
+    if not language.startswith(LIVING):
+        language = f"Dead Language: {language}"
     return _Local(language, TRIBUNALS.get(source, "Rhine Tribunal"))
 
 

@@ -4,14 +4,15 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Books in Play (41 of 41)
+    ▼ Books in Play (43 of 43)
 
         In play  Book       Title
       ○ always   DE         Ars Magica Definitive Edition
       ○ yes      A&A        Art & Academe
       ○ yes      AM         Ancient Magic
       ○ yes      App        Apprentices
-      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal        ▁▁
+      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal        ▃▃
+      ○ yes      B&S        Blood and Sand: The Levant Tribunal
       ○ yes      BS&S       Between Sand and Sea: Mythic Africa
       ○ yes      C&G        City & Guild
       ○ yes      Cal        Calebais: The Broken Covenant
@@ -20,7 +21,6 @@
       ○ yes      F&F        Faith & Flame: The Provençal Tribunal
       ○ yes      GGHS       The Grand Grimoire of Hermetic Spells
       ○ yes      GotF       Guardians of the Forests: The Rhine Tribunal
-      ○ yes      Grogs      Grogs
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Saga Sources (0)
@@ -50,7 +50,7 @@
     ▼ Catalogs (6)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1351        0
+      ○ Virtues & Flaws              yes          1355        0
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           217        0
       ○ Abilities                    yes           258        0

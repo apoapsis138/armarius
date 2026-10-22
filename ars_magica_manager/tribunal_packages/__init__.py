@@ -218,4 +218,12 @@ def entries(tribunal: Tribunal, key: str, name: str) -> list[dict[str, Any]]:
 
 
 # The packages register themselves as they are imported.
-from . import hibernia, normandy, provence, rhine, theban, transylvania  # noqa: F401
+from . import (  # noqa: F401
+    hibernia,
+    levant,
+    normandy,
+    provence,
+    rhine,
+    theban,
+    transylvania,
+)

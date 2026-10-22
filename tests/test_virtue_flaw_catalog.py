@@ -21,6 +21,8 @@ KNOWN_BOOKS = {
     *("DE", "HoH:TL", "HoH:MC", "TMRE", "App", "RoP:M", "RoP:F", "RoP:D"),
     *("RoP:I", "C&G", "LoM", "TC", "GotF", "L&L", "AtD", "TCI", "A&A"),
     *("F&F", "Grogs"),
+    # Secrets in Sand, Blood and Sand's free web supplement
+    "SiS",
     # Books only the index was read for
     *("AnM", "Ant", "BCoC", "TC&TC", "Gr", "HMRE", "HP", "HoH:S"),
     *("LoH", "MoH", "RM", "TSE", "ToME"),
@@ -41,11 +43,12 @@ def test_catalog_counts_after_adding_the_supplements():
     # The Sundered Eagle, plus Hedge Magic RE's 101 hedge Virtues and Flaws,
     # plus the other books' hedge traditions' 115, plus Ancient Magic's 6
     # integration Virtues, plus the 3 Grogs entries the DE doesn't have,
-    # plus Realms of Power: The Divine's Perfectus Mythic Companion Virtue.
+    # plus Realms of Power: The Divine's Perfectus Mythic Companion Virtue,
+    # plus Secrets in Sand's 2 Virtues and 2 Flaws.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1351
+    assert len(entries) == 1355
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 795, "Flaw": 469, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 797, "Flaw": 471, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 
@@ -53,6 +56,27 @@ def test_every_entry_names_known_source_books():
     for e in catalog.load_virtue_flaw_catalog():
         books = e.source.split("; ")
         assert books and set(books) <= KNOWN_BOOKS, (e.id, e.source)
+
+
+def test_secrets_in_sand_adds_the_islamic_tradition_s_entries():
+    vfs = by_id()
+    expected = {
+        "vf_islamic_magic": ("Islamic Magic", "Virtue", "Minor", 1),
+        "vf_interfaith_magic": ("Interfaith Magic", "Virtue", "Major", 3),
+        "vf_poorly_meshed_hermetic_islamic_magic": (
+            "Poorly-Meshed Hermetic-Islamic Magic",
+            "Flaw",
+            "Minor",
+            -1,
+        ),
+        "vf_the_faerie_problem": ("The Faerie Problem", "Flaw", "Minor", -1),
+    }
+    for vf_id, (name, kind, tier, cost) in expected.items():
+        e = vfs[vf_id]
+        assert (e.name, e.type, e.tier, e.cost) == (name, kind, tier, cost)
+        assert e.category == "Hermetic" and e.source == "SiS"
+        assert e.summary and e.description
+    assert {e.id for e in vfs.values() if e.source == "SiS"} == set(expected)
 
 
 def test_the_wrongly_filed_entries_are_fixed():

@@ -16938,6 +16938,50 @@
       "source": "Grogs",
       "summary": "About 30 xp in Abilities made valueless by a shift in time (a time-lost character); companions may take it more than once.",
       "description": "A time-lost character must have about 30 experience points that have been rendered valueless by her shift in time: for example, Area Lore 3 for a city that no longer exists, or an Etiquette score made useless by changing social structures. Troupes may permit companions to take this Flaw several times. For the legionaries of the Time-lost Witnesses template, the wasted Ability is their Organization Lore: the army it refers to no longer exists."
+    },
+    {
+      "id": "vf_islamic_magic",
+      "name": "Islamic Magic",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "SiS",
+      "summary": "Islamic Tradition: Formulaic and Ritual spells may use the Islamic Ranges, Durations and Targets; Theology: Islam is a Lab requisite for such spells.",
+      "description": "You belong to the Islamic Tradition of the Order, though you need not be a Muslim yourself. Your Formulaic and Ritual spells may use the Ranges, Durations and Targets that Blood and Sand calls Islamic, but you cannot use them in spontaneous magic. When you learn, invent or otherwise work in the laboratory with a spell that uses any of them, your Theology: Islam acts as a requisite on your Magic Theory; your work on ordinary Hermetic spells is unaffected. You begin with Theology: Islam 2 and a bad Reputation of 1 among Hermetic magi, who find your magic unsettling."
+    },
+    {
+      "id": "vf_interfaith_magic",
+      "name": "Interfaith Magic",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Major",
+      "cost": 3,
+      "source": "SiS",
+      "summary": "A gifted member of the Islamic Tradition: free use of the Islamic Ranges, Durations and Targets; may learn the Art in Arabic.",
+      "description": "You are an unusually able member of the Islamic Tradition, and may use the Islamic Ranges, Durations and Targets that Blood and Sand describes without limit, alongside the ordinary Hermetic ones. You begin with Theology: Islam 3 and a bad Reputation of 1 among Hermetic magi, whom your magic makes uneasy. If you like, you were taught the Art in Arabic: your House's starting Latin becomes Living Language: Arabic."
+    },
+    {
+      "id": "vf_poorly_meshed_hermetic_islamic_magic",
+      "name": "Poorly-Meshed Hermetic-Islamic Magic",
+      "type": "Flaw",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "SiS",
+      "summary": "Trained mostly in Islamic magic: free use of the Islamic parameters, but ordinary Hermetic ones only in Formulaic and Ritual spells, and Theology: Islam is taken off Magic Theory in all Lab work.",
+      "description": "Your training was chiefly in Islamic magic, and the Order's own magic sits awkwardly with it. The Islamic Ranges, Durations and Targets that Blood and Sand describes are open to you without limit, but the ordinary Hermetic ones may be used only in Formulaic and Ritual spells, never in spontaneous magic. In every laboratory activity with a spell, Hermetic or Islamic, your Theology: Islam is subtracted from your Magic Theory. You learnt the Art in Arabic rather than Latin, so your House's starting Latin becomes Living Language: Arabic, and you begin with Theology: Islam 2 and a bad Reputation of 1 among Hermetic magi."
+    },
+    {
+      "id": "vf_the_faerie_problem",
+      "name": "The Faerie Problem",
+      "type": "Flaw",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "SiS",
+      "summary": "Trained only in the Levant, where faeries are scarce: a Faerie aura is subtracted from your magic rolls instead of helping them.",
+      "description": "You learnt your magic in the Levant and nowhere else, and the fay are so rare there that you have almost never met them. Within a Faerie aura, its strength counts against your spellcasting and other magic rolls, instead of the usual effect a Faerie aura has on Hermetic magic. Any Hermetic magus may take this Flaw, not only one of the Islamic Tradition. A magus who lives in a Faerie aura for some years may grow used to it, and the storyguide may then let the Flaw lapse."
     }
   ]
 }

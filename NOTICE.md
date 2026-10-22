@@ -34,8 +34,11 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
   from its [open content on Project: Redcap](https://redcap.org/page/The_Sundered_Eagle:_the_Theban_Tribunal);
   *Against the Dark: The Transylvanian Tribunal*, from its [open
   content on Project: Redcap](https://redcap.org/page/Against_the_Dark_Open_Content);
-  and *The Contested Isle: The Hibernian Tribunal*, from its [open
-  content on Project: Redcap](https://redcap.org/page/The_Contested_Isle:_the_Hibernian_Tribunal)).
+  *The Contested Isle: The Hibernian Tribunal*, from its [open
+  content on Project: Redcap](https://redcap.org/page/The_Contested_Isle:_the_Hibernian_Tribunal);
+  and *Blood and Sand: The Levant Tribunal* with its web supplement
+  *Secrets in Sand*, from Atlas Games' open content release on
+  Project: Redcap).
 
 ### Attribution
 
@@ -50,8 +53,9 @@ Hermes: Societates*, *The Mysteries: Revised Edition* and, for the content
 packs, *Guardians of the Forests: The Rhine Tribunal*, *The Lion and the
 Lily: The Normandy Tribunal*, *Faith & Flame: The Provençal
 Tribunal*, *The Sundered Eagle: The Theban Tribunal*, *Against the
-Dark: The Transylvanian Tribunal* and *The Contested Isle: The Hibernian
-Tribunal*. Where it is
+Dark: The Transylvanian Tribunal*, *The Contested Isle: The Hibernian
+Tribunal* and *Blood and Sand: The Levant Tribunal* with *Secrets in
+Sand*. Where it is
 recorded, each catalog entry's `source` field names its book. The spell
 catalog was built from [The Grand
 Grimoire](https://www.redcap.org/page/The_Grand_Grimoire) on Project:

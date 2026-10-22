@@ -29,6 +29,9 @@ SOURCEBOOKS: dict[str, str] = {
     "AM": "Ancient Magic",
     "App": "Apprentices",
     "AtD": "Against the Dark: The Transylvanian Tribunal",
+    # Atlas Games, 2002: a Fourth Edition Tribunal book, converted by the
+    # Definitive Edition's appendix when a pack uses it.
+    "B&S": "Blood and Sand: The Levant Tribunal",
     "BS&S": "Between Sand and Sea: Mythic Africa",
     "C&G": "City & Guild",
     "Cal": "Calebais: The Broken Covenant",
@@ -56,6 +59,8 @@ SOURCEBOOKS: dict[str, str] = {
     "RoP:F": "Realms of Power: Faerie",
     "RoP:I": "Realms of Power: The Infernal",
     "RoP:M": "Realms of Power: Magic",
+    # Atlas Games' free web supplement to Blood and Sand (Fourth Edition).
+    "SiS": "Secrets in Sand",
     "TC": "The Church",
     "TC&TC": "The Cradle and the Crescent",
     "TCI": "The Contested Isle: The Hibernian Tribunal",

@@ -1547,7 +1547,7 @@ def _xylinites_magi(theban: Theban, b: Builder, home: Covenant) -> None:
         summary=paragraphs(
             "Brother Artoud, leader of Xylinites, looking about "
             "seventy-one. Most of his life passed in central Anatolia's "
-            "hills, in the Levantine Tribunal, in a Criamon "
+            "hills, in the Levant Tribunal, in a Criamon "
             "Clutch destroyed in the wars between the Sultanate of Rum "
             "and the empire. He is fanatically loyal to his House and "
             "cares little for the wider Order, which he thinks run by "
@@ -1737,7 +1737,7 @@ PROFILES: dict[str, Profile] = {
             "Enigmatic Wisdom": (5, "the Path of the Body"),
             "Athletics": (3, "grace"),
             "Concentration": (3, "stillness"),
-            "Area Lore: Levantine Tribunal": 2,
+            "Area Lore: Levant Tribunal": 2,
             CITY: 2,
         },
         virtues=[

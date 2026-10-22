@@ -104,4 +104,12 @@ def write_all(folder: Path = PACKS_DIR) -> list[Path]:
     return [packs.write(path_of(pack, folder), data(pack)) for pack in PACKS.values()]
 
 
-from . import hibernia, normandy, provence, rhine, theban, transylvania  # noqa: F401
+from . import (  # noqa: F401
+    hibernia,
+    levant,
+    normandy,
+    provence,
+    rhine,
+    theban,
+    transylvania,
+)

@@ -23,6 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
+from .. import east
 from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 
@@ -1504,28 +1505,7 @@ def _lords(theban: Theban, b: Builder) -> None:
         ),
     )
     nicaea = w["emperor_of_nicaea"]
-    w["sultan_of_rum"] = b.lord(
-        "Sultan of Rum",
-        title="duke",
-        wealth="Wealthy",
-        seat="Konya",
-        ruler="Kayqubad I",
-        place=region,
-        summary=paragraphs(
-            "The Seljuk Sultanate of Rum holds the Anatolian plateau, lost "
-            "to the empire after Manzikert, and in the north reaches the "
-            "Black Sea at Sinope, splitting Nicaea from Trebizond. It drove "
-            "north between them in 1214, killing David Komnenos, but could "
-            "not reach Trebizond through the mountains. Its sultan "
-            "Kaykhusraw I died at Antioch-on-the-Maeander in 1211, and the "
-            "Maeander has been the border with Nicaea since. Trebizond "
-            "still fears it.",
-            "The book names no sultan for 1220. History has Kaykhusraw's "
-            "son Kaykaus I reign from 1211 to his death about 1220, "
-            "followed by his brother Kayqubad I, who is named as ruler "
-            "here.",
-        ),
-    )
+    w["sultan_of_rum"] = east.sultan_of_rum(b, place=region)
     rum = w["sultan_of_rum"]
     w["lord_of_sinope"] = b.lord(
         "Governor of Sinope",
@@ -1542,31 +1522,7 @@ def _lords(theban: Theban, b: Builder) -> None:
         secrets="The confessor is a priest of the Christians of Serapis, to the "
         "demon's delight; nothing good can come of it.",
     )
-    w["emperor_of_trebizond"] = b.lord(
-        "Emperor of Trebizond",
-        title="duke",
-        wealth="Wealthy",
-        seat="Trebizond",
-        ruler="Alexios I Komnenos",
-        place=p["pontus"],
-        summary=paragraphs(
-            "Alexios Komnenos, thirty-eight, grandson of the Emperor "
-            "Andronikos Komnenos, who seized Trebizond with his brother "
-            "David in 1204, the very year Constantinople fell, and calls "
-            "himself 'Emperor and Autocrat of the Romans'. David pushed "
-            "west into Paphlagonia and Heraclea, provoking Rum and then "
-            "Nicaea, which won back most of his gains in 1212; Rum killed "
-            "him in 1214. Alexios rules on, propped by Georgian troops and "
-            "Latin and Seljuk mercenaries, cut off from Nicaea and still "
-            "threatened by Rum, and also rules Cherson and Kerch across "
-            "the Black Sea; Cherson pays him tribute.",
-            "He lives with his family in the castle behind the city. Like "
-            "his grandfather he patronises art and letters, giving titles "
-            "and stipends to astronomers, alchemists and experimental "
-            "philosophers, and his Silk Road market and its taxes make "
-            "Trebizond very rich.",
-        ),
-    )
+    w["emperor_of_trebizond"] = east.emperor_of_trebizond(b, place=p["pontus"])
     w["amastris_border"] = b.lord(
         "Nicene Governor of Amastris",
         title="landed",

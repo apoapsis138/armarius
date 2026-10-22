@@ -344,6 +344,20 @@ def test_a_package_without_data_is_a_note_on_the_peripheral_code():
     assert [p.key for p in tribunal_packages.offered(saga)] == ["core", "provence"]
 
 
+def test_the_levant_package_is_the_treaty_of_baghdad_as_a_note():
+    saga = everything_saga()
+    tribunal = saga.tribunals[0]
+    tribunal.package = "levant"
+    package = tribunal_packages.of(tribunal)
+    assert tribunal_packages.label(package) == "Levant: The Treaty of Baghdad"
+    # Renewing the Treaty is a motion with a term: no step of its own.
+    assert package.book == "B&S" and package.tabs == () and not package.meeting_steps
+    note = tribunal_sheet.customs_note(tribunal)
+    assert "Treaty of Baghdad" in note and "Guernicus" in note
+    saga.books_in_play = ["B&S"]
+    assert [p.key for p in tribunal_packages.offered(saga)] == ["core", "levant"]
+
+
 def _export(saga: Saga) -> dict:
     return transfer.export_data(saga, saga.covenants[0])
 
