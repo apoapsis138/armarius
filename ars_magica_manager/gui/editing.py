@@ -248,20 +248,29 @@ class InPlace:
 
 def place_for(button: QWidget | None, page: QWidget) -> InPlace | None:
     """Where the steps of `button` (None: a menu's) open on `page`: in the
-    section the button is in, else under the part of the page holding it,
-    else at the top of the page. None if the page has no layout to open
-    them in."""
+    section the button is in, else under the part of the chapter or page
+    holding it, else at the top of the page. None if the page has no
+    layout to open them in. A step opened in a scrolling chapter scrolls
+    with it, so a form taller than the window can still be read."""
     widget = button
     while widget is not None and widget is not page:
         if isinstance(widget, Section):
             return InPlace(widget.column, 1, widget.body)
         parent = widget.parentWidget()
-        layout = page.layout() if parent is page else None
+        layout = None
+        if parent is not None and (parent is page or _scrolled(parent)):
+            layout = parent.layout()
         if isinstance(layout, QBoxLayout):
             return InPlace(layout, layout.indexOf(widget) + 1, [widget])
         widget = parent
     layout = page.layout()
     return InPlace(layout, 0) if isinstance(layout, QBoxLayout) else None
+
+
+def _scrolled(widget: QWidget) -> bool:
+    """Whether `widget` is what a scroll area scrolls: a chapter's body."""
+    area = scroll_area_of(widget)
+    return area is not None and area.widget() is widget
 
 
 def scroll_area_of(widget: QWidget) -> QScrollArea | None:

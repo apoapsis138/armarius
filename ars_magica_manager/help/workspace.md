@@ -147,7 +147,7 @@ The desktop version shows one page at a time, the way a book is read: the Sagas,
 The trail at the top left names the pages above the one on show, for example "Sagas › Matrix › Keep › Leandro". Click one to go back to it.
 
 - **Sagas** shows every saga as a card. Click one to open it.
-- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The World** shows its covenants and Tribunals as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import, Export Saga and Host for Players.
+- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The World** shows its covenants and Tribunals as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players.
 - A covenant's page lists its people, laboratories and possessions; click a person or a laboratory to open their page. A magus's familiar opens from the magus's page.
 
 A covenant, laboratory or character still being made is In Creation: its page is drawn on drafting vellum, and its header has the In Creation / In Play switch and the Creation Worksheet.
@@ -165,7 +165,7 @@ A covenant, laboratory or character still being made is In Creation: its page is
 <!-- help: workspace-keys; gui -->
 
 - A section's **Add**, **Edit** and **Delete** buttons act on that section. Edit and Delete act on the row or card last clicked in it (or the only one there is), and stay greyed out until there is one. Delete asks first.
-- A form opens in place, under the section's title; a question (such as Delete's) opens above the section. The form's Save keeps what you typed, and Cancel leaves things as they were. Every change is saved to the saga file at once. One form is open at a time: while one is open, the page's other buttons wait, and clicking a New card (such as **New Magus** while a New Character form is open) takes you back to the form already open instead of opening another.
+- A form opens in place, under the section's title (in a chapter with no sections, such as Saga Management, in place of the chapter's buttons), and scrolls with the chapter, so a long form such as Export Pack's list of ticks can be read to its end; a question (such as Delete's) opens above the section. The form's Save keeps what you typed, and Cancel leaves things as they were. Every change is saved to the saga file at once. One form is open at a time: while one is open, the page's other buttons wait, and clicking a New card (such as **New Magus** while a New Character form is open) takes you back to the form already open instead of opening another.
 - Buttons in a page's header or chapter heading, such as **Edit Covenant**, act on the record itself.
 - What the terminal keeps in its New and More menus is on the page itself: a New card at the end of the cards it adds to (**New Covenant**, **New Character**, **New Laboratory**), or a button in the chapter or section it acts on, such as **Give** beside a list's Add, Edit and Delete, **Set Up Research Library** on a covenant's Library or **Set Date** in the saga's Seasons chapter.
 - A record's **Manage** chapter holds what acts on the record as a whole: Export, Update from a File, Print to PDF and Delete.
@@ -196,7 +196,7 @@ Covenants, Tribunals, Unassigned Characters and Unassigned Laboratories as cards
 heading ending in a blank card (New Covenant, New Tribunal, New Character, New
 Laboratory) that makes one more. **The Region** holds its neighbours and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Seasons** sets the date (Set Date) and
 opens the seasons played; **Rules and Content** opens Saga Content; and
-**Saga Management** holds Edit Saga, Import, Export Saga and Host for Players. A familiar is bound on its
+**Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players. A familiar is bound on its
 magus or in their laboratory.
 <!-- /gui -->
 

@@ -4,6 +4,7 @@ itself, where menu_forms.PLACES puts them, and has no New or More menu."""
 from __future__ import annotations
 
 import os
+from dataclasses import replace
 
 import pytest
 
@@ -20,6 +21,7 @@ from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui import window as window_module
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
+from ars_magica_manager.gui.editing import scroll_area_of
 from ars_magica_manager.gui.forms import FieldsDialog
 from ars_magica_manager.gui.widgets import NewCard
 from ars_magica_manager.gui.window import MainWindow
@@ -320,6 +322,35 @@ def test_more_import_reads_a_file_chosen_in_the_open_window(app, tmp_path):
     assert window.told == [
         ("Import Data", "Imported 1 book as unassigned books; skipped 1 duplicate.")
     ]
+
+
+def test_a_long_form_from_saga_management_scrolls_with_the_chapter(app):
+    """Export Pack, with a tick for each of many covenants, opens in the
+    chapter in place of its buttons, so the chapter scrolls to its last
+    tick and its Export button."""
+    saga = _sample_saga_with_covenant()
+    first = saga.covenants[0]
+    saga.covenants += [
+        replace(first, id=f"more{i}", name=f"Covenant {i}") for i in range(30)
+    ]
+    window = _window(saga)
+    window.resize(1200, 800)
+    _saga_chapter(window, "Saga Management")
+    window.ask = window._present  # the real one, not a test's
+    seen: dict[str, object] = {}
+
+    def look() -> None:
+        form = next(d for d in window.findChildren(FieldsDialog) if d.isVisible())
+        area = scroll_area_of(form)
+        seen["scrolls"] = area is not None and area.verticalScrollBar().maximum() > 0
+        seen["buttons hidden"] = "Export Saga" not in _buttons(window)
+        form.reject()
+
+    QTimer.singleShot(0, look)
+    _buttons(window)["Export Pack"].click()
+    assert seen == {"scrolls": True, "buttons hidden": True}
+    assert "Export Saga" in _buttons(window)
+    window.close()
 
 
 def test_a_magus_binds_a_familiar_where_it_would_be_shown(app):

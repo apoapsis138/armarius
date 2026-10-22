@@ -108,6 +108,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.127.2 — 2026-10-22
+
+### Illuminatio
+
+- **A long form in Saga Management scrolls.** Export Pack's list of
+  Tribunals, covenants and neighbours to tick ran off the bottom of the
+  window on the desktop, with no way to reach the last ticks or the
+  Export button. A form opened from a chapter with no sections, such as
+  Saga Management, now opens in the chapter in place of its buttons and
+  scrolls with it, as forms in a section always have.
+
 ## 2.127.1 — 2026-10-22
 
 ### Illuminatio
