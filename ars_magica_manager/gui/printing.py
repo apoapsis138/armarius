@@ -34,6 +34,7 @@ from PySide6.QtWidgets import (
 
 from .. import print_layout as pl
 from . import pictures
+from .bookmark import Ribbon
 from .editing import Section
 from .paper import paper
 from .themes import SCRIPTORUM, Palette, style_sheet
@@ -72,6 +73,8 @@ def _hide_controls(page: QWidget) -> None:
             button.hide()
     for card in page.findChildren(NewCard):
         card.hide()
+    for ribbon in page.findChildren(Ribbon):
+        ribbon.hide()
 
 
 @dataclass(frozen=True)

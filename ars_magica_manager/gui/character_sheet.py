@@ -94,6 +94,7 @@ from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
 from . import marks, pictures
+from .bookmark import with_bookmark
 from .editing import (
     Chooser,
     Section,
@@ -559,7 +560,11 @@ class CharacterSheet(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
-        outer.addWidget(self._header())
+        outer.addWidget(
+            with_bookmark(
+                self._header(), controls.bookmark(self.p) if controls else None
+            )
+        )
         outer.addWidget(self._characteristics())
 
         self.codex = Codex(palette)

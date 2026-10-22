@@ -147,7 +147,7 @@ The desktop version shows one page at a time, the way a book is read: the Sagas,
 The trail at the top left names the pages above the one on show, for example "Sagas › Matrix › Keep › Leandro". Click one to go back to it.
 
 - **Sagas** shows every saga as a card. Click one to open it.
-- A saga's page has four chapters. **The World** shows its covenants as cards, then the characters and laboratories that belong to no covenant. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import and Export Saga.
+- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The World** shows its covenants and Tribunals as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import and Export Saga.
 - A covenant's page lists its people, laboratories and possessions; click a person or a laboratory to open their page. A magus's familiar opens from the magus's page.
 
 A covenant, laboratory or character still being made is In Creation: its page is drawn on drafting vellum, and its header has the In Creation / In Play switch and the Creation Worksheet.
@@ -155,7 +155,8 @@ A covenant, laboratory or character still being made is In Creation: its page is
 ### Moving around
 <!-- help: workspace-moving; gui -->
 
-- A record's page is a book of chapters: the rail on the left lists them, and a click shows one. The chapter scrolls if it is longer than the window.
+- A record's page is a book of chapters: the rail on the left lists them, and a click shows one. The chapter scrolls if it is longer than the window. Come back to a page and it opens on the chapter you left it at, until the app is closed.
+- The player characters are on the saga's first chapter, [The Troupe](help:saga-troupe), and so is any page you bookmark.
 - Cards and rows are chosen with a click; a card that opens a page (a covenant, a person, a laboratory, a familiar) opens it on a click.
 - The trail goes back up. Leaving a page cancels a form left open on it.
 - The window can be moved by dragging the app's name in the middle of the top bar (a double-click maximises it), and resized from its edges and corners.
@@ -169,6 +170,7 @@ A covenant, laboratory or character still being made is In Creation: its page is
 - What the terminal keeps in its New and More menus is on the page itself: a New card at the end of the cards it adds to (**New Covenant**, **New Character**, **New Laboratory**), or a button in the chapter or section it acts on, such as **Give** beside a list's Add, Edit and Delete, **Set Up Research Library** on a covenant's Library or **Set Date** in the saga's Seasons chapter.
 - A record's **Manage** chapter holds what acts on the record as a whole: Export, Update from a File, Print to PDF and Delete.
 - **Advance Season**, in the top bar, shows the saga's date and advances it by one season. See [Advance Season](help:advance-season).
+- The **bookmark**, a ribbon at the right of the header of a character, covenant, laboratory, familiar, Tribunal, neighbour or creature, keeps that page on the saga's [The Troupe](help:saga-troupe) chapter; it fills in when the page is bookmarked, and a second click takes the bookmark out.
 - **Help**, or `?` or `F1`, opens Help on the page and chapter on show. `Esc` goes back a page (or cancels a form that is open), and `q` quits. See [Keys](help:keys).
 
 ### The Inspector and the theme
@@ -189,10 +191,10 @@ The speaker beside the theme turns the sounds on or off, and the app remembers w
 The top node of the tree. It shows the saga's own details and what it holds.
 <!-- /tui -->
 <!-- gui -->
-The saga's page, opened from its card on the Sagas page. It has four chapters. **The World** shows its
-Covenants, Unassigned Characters and Unassigned Laboratories as cards, each
-heading ending in a blank card (New Covenant, New Character, New
-Laboratory) that makes one more. **Seasons** sets the date (Set Date) and
+The saga's page, opened from its card on the Sagas page. It has seven chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The World** shows its
+Covenants, Tribunals, Unassigned Characters and Unassigned Laboratories as cards, each
+heading ending in a blank card (New Covenant, New Tribunal, New Character, New
+Laboratory) that makes one more. **The Region** holds its neighbours and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Seasons** sets the date (Set Date) and
 opens the seasons played; **Rules and Content** opens Saga Content; and
 **Saga Management** holds Edit Saga, Import and Export Saga. A familiar is bound on its
 magus or in their laboratory.
@@ -226,6 +228,19 @@ magus or in their laboratory.
 
 On the desktop, the books in play are counted on the Saga Content card in Rules and Content, and the optional rules turned on are shown in Edit Saga.
 <!-- /gui -->
+
+### The Troupe
+<!-- help: saga-troupe; gui -->
+
+The saga page's first chapter, so the characters you play are a click away rather than inside their covenant's People.
+
+- **Player Characters**: every character whose Biographical Detail, in their Description chapter, names their **Player** (or who is **Played by** one of the saga's [players](help:players-access)), by covenant: the troupe's covenants first, then the others, then those who belong to none. Click one to open their sheet.
+- **Troupe Covenants**: the covenants the troupe plays, marked ✦ as on The World.
+- **Bookmarked**: anything else you bookmarked, by kind: characters, covenants, laboratories, familiars, Tribunals, neighbours and creatures. A bookmarked page that is a player character or a troupe covenant is shown once, above.
+
+To bookmark a page, open it and click the ribbon at the right of its header, below its buttons: a faint outline becomes a filled ribbon. Click it again to take the bookmark out. Bookmarks belong to whoever reads the saga, so they are kept on this computer, saga by saga, and are not saved in the saga file: another computer, or someone who opens the same saga, has their own. A bookmarked record that is deleted drops off the chapter.
+
+**The app works out:** who is a player character, from their Player; the cards' figures, as on The World.
 
 ### More on the saga
 <!-- help: saga-more -->

@@ -1,7 +1,7 @@
 """What a record's page draws to manage the record itself: its Manage
 chapter (Export, Update from a File, Print to PDF, Delete: the record as a
 file rather than as part of the saga) and, in its header, the In Creation / In Play
-toggle with the Creation Worksheet beside it.
+toggle with the Creation Worksheet beside it, and its bookmark.
 
 The chapter is built from the core's list of what the record offers
 (menu_forms.manage_items), as each sheet is built from the core's text.
@@ -26,11 +26,13 @@ from PySide6.QtWidgets import (
 )
 
 from .. import world
+from ..actions import NodeKind
 from ..commands import Command
 from ..forms import menu as menu_forms
 from ..forms.menu import DELETE_RECORD, Page
 from ..models import FULL, Character, Covenant, Laboratory
 from . import pictures
+from .bookmark import Ribbon
 from .markup_html import plain
 from .themes import Palette
 from .widgets import chapter_title, edit_button, scrolling_page, serif, text
@@ -47,6 +49,18 @@ ICONS: dict[str, str] = {
     "export_record": "export",
     "update_record": "update",
     DELETE_RECORD: "delete",
+}
+
+#: The pages that can be bookmarked, by the kind the bookmark names
+#: (troupe.KIND_TITLES).
+BOOKMARKED: dict[NodeKind, str] = {
+    NodeKind.CHARACTER: "character",
+    NodeKind.COVENANT: "covenant",
+    NodeKind.LABORATORY: "laboratory",
+    NodeKind.FAMILIAR: "familiar",
+    NodeKind.TRIBUNAL: "tribunal",
+    NodeKind.NEIGHBOUR: "neighbour",
+    NodeKind.CREATURE: "creature",
 }
 
 #: Print to PDF: the desktop's own, as only it draws the page for paper.
@@ -77,6 +91,15 @@ class RecordControls:
 
     def chapter(self, p: Palette) -> QWidget:
         return manage_chapter(self, p)
+
+    def bookmark(self, p: Palette) -> Ribbon | None:
+        """The record's bookmark (bookmark.py), for its page's header."""
+        page = self.page
+        kind = BOOKMARKED.get(page.kind) if page.kind is not None else None
+        record = page.record_to_delete()
+        if kind is None or record is None:
+            return None
+        return Ribbon(page.saga.id, kind, record.id, p)
 
     def mode(self, p: Palette) -> QWidget | None:
         record = self.page.creation_record()

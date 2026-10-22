@@ -204,6 +204,9 @@ class MainWindow(QMainWindow):
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
         self.trail: list[Place] = []
+        #: The chapter each page was last left on, to open it there again
+        #: (for this sitting only).
+        self._chapters: dict[Place, str] = {}
         #: Shows a step and waits for it (in place; a test answers it).
         self.ask: Callable[[QDialog], int] = self._present
         #: Where the running button's steps open (editing.place_for), and
@@ -847,6 +850,7 @@ class MainWindow(QMainWindow):
         if self.isVisible() and (not self.trail or self.trail[-1] != trail[-1]):
             # A longer page turned for another record or page.
             sounds.play("page-long")
+        self._leave_chapter()
         self.trail = trail
         before = None
         if self.palette_ is not self._applied:
@@ -854,7 +858,9 @@ class MainWindow(QMainWindow):
             if self.isVisible() and self.title is None:
                 before = self.stack.grab()
             self._apply_theme()
-        self._show(self._build(trail[-1]))
+        page = self._build(trail[-1])
+        self._reopen_chapter(trail[-1], page)
+        self._show(page)
         self._draw_trail()
         self._draw_advance()
         if before is not None:
@@ -899,6 +905,7 @@ class MainWindow(QMainWindow):
                 self.open_tribunal,
                 self.open_neighbour,
                 self.open_creature,
+                self.open_familiar,
             )
         if place.kind == CONTENT:
             return SagaContentPage(saga, p, self.run)
@@ -1178,6 +1185,20 @@ class MainWindow(QMainWindow):
                 f"  {saga.current_season} {saga.current_year} · Advance Season"
             )
             self.advance.setIcon(pictures.icon("season", self.palette_["label"]))
+
+    def _leave_chapter(self) -> None:
+        """Note the chapter the page on show is at, to open it there again."""
+        codex = getattr(self.page(), "codex", None)
+        item = codex.rail.currentItem() if codex is not None else None
+        if self.trail and item is not None:
+            self._chapters[self.trail[-1]] = item.text()
+
+    def _reopen_chapter(self, place: Place, page: QWidget) -> None:
+        """Turn `page`, before it is shown, to the chapter it was left at."""
+        codex = getattr(page, "codex", None)
+        name = self._chapters.get(place)
+        if codex is not None and name in codex.chapters():
+            codex.open_chapter(name)
 
     def _placer(self) -> Placer:
         """What the page on show sets out itself (menu_forms.PLACES)."""

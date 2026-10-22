@@ -44,6 +44,7 @@ from ..sheets import covenant as cvs
 from ..sheets import familiar as fs
 from ..sheets.character import Fact
 from .ahead import ahead_section
+from .bookmark import with_bookmark
 from .character_sheet import (
     TextBlock,
     columns_text,
@@ -142,7 +143,11 @@ class CovenantPage(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
-        outer.addWidget(self._header(covenant))
+        outer.addWidget(
+            with_bookmark(
+                self._header(covenant), controls.bookmark(p) if controls else None
+            )
+        )
         self.codex = Codex(p)
         self.inspector = self.codex.inspector
         labs = ov.lab_cards(saga, covenant_id)

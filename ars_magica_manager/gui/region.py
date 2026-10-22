@@ -17,6 +17,7 @@ from ..models import Neighbour, Saga
 from ..neighbour_lists import KindTab
 from ..sections import FAIRS_SECTION, TABLES_SECTION
 from ..sheets import region as region_sheet
+from .bookmark import with_bookmark
 from .character_sheet import secrets_chapter, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
@@ -45,11 +46,14 @@ class NeighbourPage(QWidget):
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
         outer.addWidget(
-            page_header(
-                neighbour.name,
-                region_sheet.card_subtitle(neighbour),
-                p,
-                neighbours.icon_concept(neighbour),
+            with_bookmark(
+                page_header(
+                    neighbour.name,
+                    region_sheet.card_subtitle(neighbour),
+                    p,
+                    neighbours.icon_concept(neighbour),
+                ),
+                controls.bookmark(p) if controls else None,
             )
         )
         outer.addWidget(fact_grid(region_sheet.neighbour_facts(saga, neighbour), p, 3))

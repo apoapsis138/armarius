@@ -209,6 +209,8 @@ ICON_NAMES: dict[str, str] = {
     "lab_text": "scroll",
     "familiar": "paw-print",
     "players": "users-three",
+    # The Troupe chapter, and a record starred to be kept there.
+    "troupe": "star",
     # A Tribunal: the magi of a region in council.
     "tribunal": "users-three",
     # The Region beyond the covenants, and each kind of neighbour in it.

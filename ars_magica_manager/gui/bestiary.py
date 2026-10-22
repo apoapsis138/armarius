@@ -31,6 +31,7 @@ from ..sections import (
     CREATURE_VIS_SECTION,
 )
 from ..sheets import creature as crs
+from .bookmark import with_bookmark
 from .character_sheet import (
     ability_mark,
     ability_view,
@@ -85,7 +86,9 @@ class CreaturePage(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
-        outer.addWidget(self._header())
+        outer.addWidget(
+            with_bookmark(self._header(), controls.bookmark(p) if controls else None)
+        )
         outer.addWidget(fact_grid(crs.facts(saga, creature), p, 4))
         outer.addWidget(
             characteristic_cards(

@@ -45,6 +45,7 @@ from ..markup import escape, markdown_text
 from ..models import LAB_TEXT_KINDS, Book, Laboratory, Saga
 from ..sheets import laboratory as ls
 from . import pictures
+from .bookmark import with_bookmark
 from .character_sheet import (
     TextBlock,
     columns_text,
@@ -182,7 +183,11 @@ class LaboratoryPage(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
-        outer.addWidget(self._header())
+        outer.addWidget(
+            with_bookmark(
+                self._header(), controls.bookmark(palette) if controls else None
+            )
+        )
         self.codex = Codex(palette)
         self.inspector = self.codex.inspector
         outer.addWidget(self._characteristics())

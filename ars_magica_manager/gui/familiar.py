@@ -24,6 +24,7 @@ from ..forms import familiar as ff
 from ..forms import virtue as virtue_forms
 from ..models import Familiar, Saga
 from ..sheets import familiar as fs
+from .bookmark import with_bookmark
 from .character_sheet import (
     ability_mark,
     ability_view,
@@ -90,7 +91,9 @@ class FamiliarPage(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
-        outer.addWidget(self._header())
+        outer.addWidget(
+            with_bookmark(self._header(), controls.bookmark(p) if controls else None)
+        )
         outer.addWidget(characteristic_cards(familiar.characteristics, p))
         self.codex = Codex(p)
         self.inspector = self.codex.inspector

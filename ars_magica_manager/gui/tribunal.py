@@ -38,6 +38,7 @@ from ..sheets import tribunal as tribunal_sheet
 from ..sheets.tribunal import Grid
 from ..tribunal_packages.rhine import gild_tree
 from . import marks, print_sheet
+from .bookmark import with_bookmark
 from .character_sheet import TextBlock, secrets_chapter, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
@@ -68,7 +69,9 @@ class TribunalPage(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
-        outer.addWidget(self._header())
+        outer.addWidget(
+            with_bookmark(self._header(), controls.bookmark(p) if controls else None)
+        )
         self.codex = Codex(p)
         self.ops = tribunal_forms.tribunal_ops(saga, tribunal)
         self.ops[BUSINESS_SECTION] = self._with_opening_card(self.ops[BUSINESS_SECTION])

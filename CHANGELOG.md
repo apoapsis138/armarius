@@ -108,6 +108,49 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.125.0 — 2026-10-22
+
+### Book of Hours
+
+- **Experiment Results in Advance Season.** Each experiment whose
+  Extraordinary Results need the storyguide's word gets one form: which
+  of two rolls stands (Exciting Experimentation, Creative Block), what
+  each side or modified effect is, where a Discovery's experience goes,
+  what a special result becomes, a Disaster of 5 or more, and whether to
+  take a Discovery the risk can reach.
+- **Experimental effects stay with the creation,** warts and all: on
+  spells (and the copies learned from them), instilled effects and their
+  Lab Texts, bond powers, the familiar's bond and Longevity Rituals, each
+  with the season it came from and a fatal flaw marked. They can be
+  described or changed later from a known spell's Mastery, an item's
+  effect or a bond power; a new Range, Duration or Target changes the
+  creation, never its level.
+- **Potency is worked out.** One step is 5 points of the Lab Total, or 1
+  point of a Longevity Ritual's modifier, so a weakened ritual protects
+  less on every aging roll. Help names this as the app's assumption.
+- **Special results are carried out:** a story event goes into the
+  laboratory's and covenant's Diaries as an open Story Event, a spell
+  created as well is learned with its Lab Text, and extra vis is paid
+  (or the season is a Complete Failure).
+- **Experimenting follows the Definitive Edition more closely:** a 12+'s
+  further rolls are stress dice that can botch; a Disaster of 5 or more
+  is a story for the covenant or the laboratory destroyed; work whose Lab
+  Total is too low still rolls the chart and loses its vis; and
+  investigating an item by experiment can destroy it unless one of its
+  own effects protects it.
+- **Original research is now Arcane Discovery,** the Definitive Edition's
+  name, and its Research log keeps what each season left on the work.
+
+### Illuminatio
+
+- **The Troupe.** The saga page opens on a new first chapter gathering
+  the player characters (by covenant), the covenants the troupe plays
+  and any page you bookmark, each a click from its sheet.
+- **Bookmarks.** A ribbon at the right of a record's header bookmarks it
+  onto The Troupe; bookmarks are kept on this computer, saga by saga.
+- **A page reopens on the chapter you left it at,** until the app is
+  closed.
+
 ## 2.124.0 — 2026-10-21
 
 ### Book of Hours

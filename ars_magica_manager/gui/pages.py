@@ -9,6 +9,7 @@ choosing a card calls back to the window, which opens the next page.
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+from typing import Any
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
@@ -20,10 +21,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, creatures, neighbour_filter, neighbours, world
+from .. import artwork, creatures, neighbour_filter, neighbours, troupe, world
 from .. import saga_overview as ov
 from ..forms import menu as menu_forms
-from ..models import Character, Creature, Neighbour, Saga
+from ..models import Character, Creature, Neighbour, Saga, Tribunal
 from ..sheets import character as cs
 from ..sheets import creature as crs
 from ..sheets import familiar as fs
@@ -495,11 +496,122 @@ def bestiary_chapter(
     )
 
 
+def covenant_card(
+    figures: ov.CovenantCard, p: Palette, open_covenant: Callable[[str | None], None]
+) -> ClickableCard:
+    """A covenant as a card that opens its page; a troupe covenant's with
+    its mark and a flourish."""
+    card = ClickableCard(p, pad=16, flourished=figures.played)
+    card_title(
+        card,
+        f"{world.TROUPE_GLYPH} {figures.name}" if figures.played else figures.name,
+        figures.subtitle,
+        p,
+        symbol_label(artwork.icon("covenant"), p),
+    )
+    card.column.addWidget(fact_grid(list(figures.facts), p, 5))
+    card.clicked = lambda: open_covenant(figures.id)
+    return card
+
+
+def tribunal_card(
+    saga: Saga, tribunal: Tribunal, p: Palette, open_tribunal: Open
+) -> ClickableCard:
+    """A Tribunal as a card with its next meeting, that opens its page."""
+    card = ClickableCard(p, pad=16)
+    card_title(
+        card,
+        tribunal.name,
+        f"Next meeting: {tribunal_sheet.next_meeting(tribunal)}",
+        p,
+        symbol_label(artwork.icon("tribunal"), p),
+    )
+    card.column.addWidget(fact_grid(tribunal_sheet.facts(saga, tribunal)[5:], p, 3))
+    card.clicked = lambda: open_tribunal(tribunal.id)
+    return card
+
+
+def troupe_chapter(
+    saga: Saga, p: Palette, opens: dict[str, Callable[[Any], None]]
+) -> QWidget:
+    """The Troupe: the player characters by covenant, the covenants the
+    troupe plays, then whatever else the reader has bookmarked, by kind.
+    `opens` opens a record of each kind (troupe.KIND_TITLES)."""
+    covenants = {f.id: f for f in ov.covenant_cards(saga)}
+    # How each kind of record is drawn as a card.
+    cards: dict[str, Callable[[Any], QWidget]] = {
+        "character": lambda r: person_card(saga, r, p, opens["character"]),
+        "covenant": lambda r: covenant_card(covenants[r.id], p, opens["covenant"]),
+        "laboratory": lambda r: lab_card(
+            next(f for f in ov.lab_cards(saga, r.covenant_id) if f.id == r.id),
+            p,
+            opens["laboratory"],
+        ),
+        "familiar": lambda r: familiar_card(
+            fs.familiar_card(saga, r),
+            p,
+            opens["familiar"],
+        ),
+        "tribunal": lambda r: tribunal_card(saga, r, p, opens["tribunal"]),
+        "neighbour": lambda r: neighbour_card(saga, r, p, opens["neighbour"]),
+        "creature": lambda r: creature_card(saga, r, p, opens["creature"]),
+    }
+
+    def quiet(words: str) -> QWidget:
+        return text(words, p["dim"], serif(12.5, italic=True), wrap=True)
+
+    groups = troupe.player_characters(saga)
+    played = sum(len(members) for _, members in groups)
+    parts: list[QWidget] = [chapter_title(f"Player Characters ({played})", p)]
+    for covenant, members in groups:
+        if len(groups) > 1:
+            parts.append(
+                divider(
+                    world.marked_name(covenant) if covenant else "Of no covenant", p
+                )
+            )
+        parts.append(card_grid([cards["character"](c) for c in members]))
+    if not groups:
+        parts.append(
+            quiet(
+                "No one yet. A character whose Biographical Detail names their "
+                "Player is a player character, and is gathered here."
+            )
+        )
+    homes = troupe.troupe_covenants(saga)
+    parts.append(chapter_title(f"Troupe Covenants ({len(homes)})", p))
+    parts.append(
+        card_grid([cards["covenant"](c) for c in homes], 2)
+        if homes
+        else quiet("None. A covenant's Edit says whether the troupe plays it.")
+    )
+    marked = troupe.other_bookmarks(saga)
+    count = sum(len(records) for _, records in marked)
+    parts.append(chapter_title(f"Bookmarked ({count})", p))
+    for kind, records in marked:
+        parts.append(divider(troupe.KIND_TITLES[kind], p))
+        parts.append(
+            card_grid(
+                [cards[kind](r) for r in records],
+                2 if kind in ("covenant", "laboratory", "tribunal") else CARDS_ACROSS,
+            )
+        )
+    if not marked:
+        parts.append(
+            quiet(
+                "Nothing yet. Bookmark a page you keep going back to, with the "
+                "ribbon at the right of its header, and it is kept here."
+            )
+        )
+    return scrolling_page(p, *parts)
+
+
 class SagaPage(QWidget):
-    """A saga as a Codex: The World (its covenants, and the characters and
-    laboratories that belong to none, each list ending in a New card),
-    The Region (its neighbours), The Bestiary (its creatures), its Seasons, its Rules and Content, and
-    Saga Management."""
+    """A saga as a Codex: The Troupe (its player characters, the troupe's
+    covenants and what the reader has bookmarked), The World (its covenants,
+    and the characters and laboratories that belong to none, each list
+    ending in a New card), The Region (its neighbours), The Bestiary (its
+    creatures), its Seasons, its Rules and Content, and Saga Management."""
 
     def __init__(
         self,
@@ -514,6 +626,7 @@ class SagaPage(QWidget):
         open_tribunal: Open = lambda _id: None,
         open_neighbour: Open = lambda _id: None,
         open_creature: Open = lambda _id: None,
+        open_familiar: Open = lambda _id: None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
@@ -531,6 +644,16 @@ class SagaPage(QWidget):
                 text(saga.description, p["foreground"], serif(13), wrap=True)
             )
         self.codex = Codex(p)
+        opens: dict[str, Callable[[Any], None]] = {
+            "character": open_character,
+            "covenant": open_covenant,
+            "laboratory": open_laboratory,
+            "familiar": open_familiar,
+            "tribunal": open_tribunal,
+            "neighbour": open_neighbour,
+            "creature": open_creature,
+        }
+        self.codex.add("The Troupe", "troupe", troupe_chapter(saga, p, opens))
         self.codex.add("The World", "covenant", self._world())
         # The Region and The Bestiary are built when first opened: a
         # pack's Tribunal brings hundreds of neighbours and dozens of
@@ -565,42 +688,14 @@ class SagaPage(QWidget):
 
     def _world(self) -> QWidget:
         p, saga = self.p, self.saga
-        covenants: list[QWidget] = []
-        troupe = 0
-        for figures in ov.covenant_cards(saga):
-            troupe += figures.played
-            card = ClickableCard(p, pad=16, flourished=figures.played)
-            card_title(
-                card,
-                f"{world.TROUPE_GLYPH} {figures.name}"
-                if figures.played
-                else figures.name,
-                figures.subtitle,
-                p,
-                symbol_label(artwork.icon("covenant"), p),
-            )
-            card.column.addWidget(fact_grid(list(figures.facts), p, 5))
-            card.clicked = lambda covenant_id=figures.id: self.open_covenant(
-                covenant_id
-            )
-            covenants.append(card)
-        courts: list[QWidget] = []
-        for tribunal in saga.tribunals:
-            card = ClickableCard(p, pad=16)
-            card_title(
-                card,
-                tribunal.name,
-                f"Next meeting: {tribunal_sheet.next_meeting(tribunal)}",
-                p,
-                symbol_label(artwork.icon("tribunal"), p),
-            )
-            card.column.addWidget(
-                fact_grid(tribunal_sheet.facts(saga, tribunal)[5:], p, 3)
-            )
-            card.clicked = lambda tribunal_id=tribunal.id: self.open_tribunal(
-                tribunal_id
-            )
-            courts.append(card)
+        figures = ov.covenant_cards(saga)
+        troupe = sum(f.played for f in figures)
+        covenants: list[QWidget] = [
+            covenant_card(f, p, self.open_covenant) for f in figures
+        ]
+        courts: list[QWidget] = [
+            tribunal_card(saga, t, p, self.open_tribunal) for t in saga.tribunals
+        ]
         people = [
             person_card(saga, c, p, self.open_character) for c in ov.members(saga, None)
         ]

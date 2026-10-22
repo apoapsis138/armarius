@@ -114,6 +114,7 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 4. **Making and managing.** A **New** card at the end of a page's cards makes one more (New Covenant, New Character, New Laboratory), and the rarer actions are buttons in the chapter or section they act on. A record's own **Manage** chapter holds Export, Update from a File, Print to PDF and Delete.
 5. **The top bar.** **Advance Season** shows the saga's date and plays the season out; **Help** opens help on the page on show; the button beside it switches the theme, and the speaker turns the sounds on or off.
 6. **The Inspector.** The right of a page shows whatever you last clicked in full, with the rules text of a Virtue, Flaw or spell. See [The Inspector and the theme](help:workspace-status).
+7. **Your troupe, close at hand.** Fill in each player character's **Player** in their Biographical Detail (in their Description chapter), and they gather on the saga's first chapter, **The Troupe**, a click from their sheets. For any other page you keep going back to (a rival magus, a Tribunal, a neighbour), open it and click the ribbon at the right of its header to bookmark it: it joins The Troupe too. See [The Troupe](help:saga-troupe).
 <!-- /gui -->
 
 ### Help
