@@ -79,8 +79,14 @@ An Infernal creature also has the facts Realms of Power: The Infernal
 gives a demon: its **Order**, its **Hierarchy** score (the highest of
 its Infernal Reputations, or of its rank) and its **Weakness**.
 
-Deleting a creature removes the links to it from other records; nothing
-else changes.
+When it rules or leads a neighbour (a faerie court's queen, a dragon
+lording it over a valley), its facts say so under **Rules**. The place
+it is found at and each neighbour it rules are links that open them:
+see [Following a record's links](help:record-links).
+
+Deleting a creature removes the links to it from other records, and a
+neighbour it ruled keeps its name as a name typed; nothing else
+changes.
 
 ## Traits tab
 <!-- help: tab-cr-traits -->

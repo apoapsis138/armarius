@@ -34,6 +34,7 @@ from ..models import (
     Wounds,
     character_age,
 )
+from ..references import Ref
 from ..rules import aging, casting, derived, experiment, scores, warping
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
@@ -643,10 +644,13 @@ def casting_cell_text(score: Breakdown) -> str:
 
 @dataclass(frozen=True)
 class Fact:
-    """One labelled value; `value` is plain text, "" when not set."""
+    """One labelled value; `value` is plain text, "" when not set. `refs`
+    are the records named in it, which a front-end can draw as links
+    (references.segments)."""
 
     label: str
     value: str
+    refs: tuple[Ref, ...] = ()
 
     @property
     def missing(self) -> bool:

@@ -111,6 +111,8 @@ NOT_ON_PAGES = frozenset(
         "withdraw_case",
         "roll_fair",
         "roll_table",
+        # The desktop draws the names a page holds as links instead.
+        "go_to",
     }
 )
 

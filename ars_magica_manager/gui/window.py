@@ -44,7 +44,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import familiars as fam
-from .. import help_text, hotkeys, paths, storage, title_page
+from .. import help_text, hotkeys, paths, references, storage, title_page
 from .. import print_layout as pl
 from ..actions import NodeKind
 from ..commands import (
@@ -54,6 +54,7 @@ from ..commands import (
     Command,
     Confirm,
     Form,
+    Go,
     Picked,
     Refuse,
     Then,
@@ -194,6 +195,19 @@ class Place:
 
     kind: str
     id: str | None = None
+
+
+#: The page that shows each kind of record a link can name
+#: (references.KINDS).
+_REF_PLACES: dict[str, str] = {
+    "characters": CHARACTER,
+    "covenants": COVENANT,
+    "laboratories": LABORATORY,
+    "familiars": FAMILIAR,
+    "tribunals": TRIBUNAL,
+    "neighbours": NEIGHBOUR,
+    "creatures": CREATURE,
+}
 
 
 class MainWindow(QMainWindow):
@@ -583,6 +597,17 @@ class MainWindow(QMainWindow):
         if magus is not None:
             self._visit(Place(CHARACTER, magus.id))
 
+    def open_ref(self, found: references.Ref) -> None:
+        """Open the record a link on a page names, below the page on show,
+        so Back returns to it."""
+        kind = _REF_PLACES.get(found.kind)
+        if self.saga is None or kind is None:
+            return
+        if references.target(self.saga, found) is None:
+            self.tell("Open", f"{escape(found.name)} is no longer in the saga.")
+            return
+        self._visit(Place(kind, found.id))
+
     def _visit(self, place: Place) -> None:
         """Go to `place` below the page on show, or back to it if the
         trail already passes through it (from a sanctum to its magus and
@@ -739,6 +764,10 @@ class MainWindow(QMainWindow):
             if self._place is not None:
                 self._place.close()
             self._place = None
+        if isinstance(step, Go):
+            # Opening another record changes nothing, so nothing is saved.
+            self.open_ref(step.ref)
+            return
         if isinstance(step, Refuse):
             # A refusal changes nothing, so there is nothing to save.
             sounds.play("tock")

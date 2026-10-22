@@ -25,9 +25,11 @@ from .... import familiars as fam
 from ....actions import (
     NodeKind,
 )
+from ....commands import Go
 from ....forms import choice_templates as choice_forms
 from ....forms import creation as creation_forms
 from ....forms import creature as creature_forms
+from ....forms import go_to as go_to_forms
 from ....forms import neighbour as neighbour_forms
 from ....forms import tribunal as tribunal_forms
 from ....markup import escape
@@ -60,6 +62,18 @@ from .base import (
     WorkspaceBase,
     _tree_node_with_data,
 )
+
+#: The tree node that shows each kind of record a page can name
+#: (references.KINDS).
+_REF_NODES: dict[str, NodeKind] = {
+    "characters": NodeKind.CHARACTER,
+    "covenants": NodeKind.COVENANT,
+    "laboratories": NodeKind.LABORATORY,
+    "familiars": NodeKind.FAMILIAR,
+    "tribunals": NodeKind.TRIBUNAL,
+    "neighbours": NodeKind.NEIGHBOUR,
+    "creatures": NodeKind.CREATURE,
+}
 
 
 class RecordActions(WorkspaceBase):
@@ -367,6 +381,39 @@ class RecordActions(WorkspaceBase):
                 self.run_worker(show(fresh[-1]))
 
         run_steps(self.app, ruins.found_form(self.saga, record), finished)
+
+    def action_go_to(self) -> None:
+        """More's Go To: one of the records the page names, opened."""
+        record = self._record_to_delete()
+        if record is None:
+            return
+
+        def follow(end: object) -> None:
+            if isinstance(end, Go):
+                self.action_open_ref(end.ref.kind, end.ref.id)
+
+        run_steps(self.app, go_to_forms.go_to(self.saga, record), follow)
+
+    def action_open_ref(self, kind: str, record_id: str) -> None:
+        """Open the record a name on the page links to (a click on it, or
+        Go To): its node chosen in the tree, the branches above it
+        opened."""
+        node_kind = _REF_NODES.get(kind)
+        tree = self._nav_tree()
+        node = (
+            _tree_node_with_data(tree, (node_kind, record_id))
+            if node_kind is not None
+            else None
+        )
+        if node is None:
+            self.notify("That record isn't in the saga's tree.", severity="warning")
+            return
+        above = node.parent
+        while above is not None:
+            above.expand()
+            above = above.parent
+        tree.move_cursor(node)
+        tree.select_node(node)
 
     def action_begin_story(self) -> None:
         """More's Begin This Story on a dormant threat."""

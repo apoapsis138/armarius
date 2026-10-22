@@ -21,6 +21,7 @@ from . import (
     lords,
     place_events,
     places,
+    references,
     sourcebooks,
     storage,
     threats,
@@ -258,6 +259,7 @@ def deletion_consequences(saga: Saga, neighbour: Neighbour) -> list[str]:
 def delete(saga: Saga, neighbour: Neighbour) -> None:
     for other in vassals(saga, neighbour):
         other.answers_to = None
+    references.forget_ruler(saga, neighbour)
     saga.neighbours.remove(neighbour)
     places.sync(saga)
 
@@ -281,8 +283,3 @@ def score(saga: Saga, record: Neighbour | Covenant) -> int | None:
     if isinstance(record, Neighbour) and not kind_of(record).attitude:
         return None
     return world.attitude_score(world.attitude_toward(record, covenant.id))
-
-
-def answers_to_name(saga: Saga, neighbour: Neighbour) -> str:
-    above = saga.neighbour(neighbour.answers_to)
-    return above.name if above is not None else ""

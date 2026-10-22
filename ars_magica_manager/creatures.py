@@ -12,7 +12,7 @@ kind of Character; the rules here are plain functions."""
 
 from __future__ import annotations
 
-from . import places, storage, world
+from . import places, references, storage, world
 from .models import BodyVis, Creature, CreaturePower, Neighbour, Saga
 from .rules import derived, scores
 
@@ -110,6 +110,7 @@ def delete(saga: Saga, creature: Creature) -> None:
     """Remove the creature, and every link to it."""
     for record, link in world.links_to(saga, "creatures", creature.id):
         record.links.remove(link)
+    references.forget_ruler(saga, creature)
     saga.creatures.remove(creature)
 
 

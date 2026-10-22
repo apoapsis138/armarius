@@ -4,17 +4,18 @@ Attitude, Favours and Links (world_forms)."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from typing import Any
 
 from PySide6.QtWidgets import QWidget
 
 from ..commands import SectionOps
+from ..forms import go_to as go_to_forms
 from ..forms import world as world_forms
 from ..models import Saga
 from ..tables import Table
 from .character_sheet import section
-from .editing import Chooser, Run, verb_buttons
+from .editing import Chooser, RowVerb, Run, verb_buttons
 from .themes import Palette
 from .widgets import serif, table_view, text
 
@@ -28,9 +29,10 @@ def table_section(
     *,
     empty: str = "None yet.",
     on_choose: Callable[[int], None] | None = None,
+    more: Sequence[RowVerb] = (),
 ) -> QWidget:
-    """`table` under `title`, with the core's Add, Edit and Delete acting
-    on the row chosen."""
+    """`table` under `title`, with the core's Add, Edit and Delete (and
+    `more`) acting on the row chosen."""
     chooser = Chooser()
 
     def choose(row: int) -> None:
@@ -43,7 +45,9 @@ def table_section(
         if table.rows
         else text(empty, p["dim"], serif(12.5, italic=True))
     )
-    return section(title, p, body, buttons=verb_buttons(ops, chooser, run, p))
+    return section(
+        title, p, body, buttons=verb_buttons(ops, chooser, run, p, more=more)
+    )
 
 
 def relations(
@@ -80,6 +84,14 @@ def relations(
             p,
             run,
             empty="No links.",
+            more=[
+                (
+                    "Open",
+                    "open",
+                    lambda row: go_to_forms.open_link(saga, record, row),
+                    lambda row: go_to_forms.opens(saga, record, row),
+                )
+            ],
         ),
     ]
     return parts

@@ -34,14 +34,20 @@ from ....sections import (
 )
 from ....sheets import creature as crs
 from ....sheets.character import Fact
-from ..widgets import PinnedCollapsible, SelectableList, SheetSection, TwoColumns
+from ..widgets import (
+    PinnedCollapsible,
+    SelectableList,
+    SheetSection,
+    TwoColumns,
+    fact_markup,
+)
 from .base import SheetView
 
 
 def _facts_text(facts: list[Fact], column: int) -> str:
     half = (len(facts) + 1) // 2
     shown = facts[:half] if column == 0 else facts[half:]
-    return aligned([(f.label, escape(f.value) or "[$label]—[/]") for f in shown])
+    return aligned([(f.label, fact_markup(f) or "[$label]—[/]") for f in shown])
 
 
 def _list_id(section_id: str) -> str:

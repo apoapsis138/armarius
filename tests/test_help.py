@@ -377,6 +377,7 @@ GUIDES = [
     "guide-hosting",
     "guide-book-packs",
     "guide-bestiary",
+    "guide-faction",
     "guide-hedge-magic",
     "guide-tribunal",
     "guide-formatting",

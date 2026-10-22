@@ -21,7 +21,7 @@ confirmation prompt; each `delete_*` does it. Nothing here saves."""
 from __future__ import annotations
 
 from . import books as bk
-from . import catalog
+from . import catalog, references
 from . import familiars as fam
 from .enchanted_devices import held_by
 from .inhabitants import AUTO_KINDS
@@ -164,6 +164,7 @@ def delete_character(saga: Saga, character: Character) -> None:
     saga.spells.extend(spells_still_used(saga, character))
     _rehome_devices(saga, "character", character.id, character.covenant_id)
     _forget_maker(saga, character)
+    references.forget_ruler(saga, character)
     saga.characters = [c for c in saga.characters if c is not character]
 
 

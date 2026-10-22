@@ -11,6 +11,7 @@ same as the terminal sheet's text.
 
 from __future__ import annotations
 
+import html
 import math
 import random
 from collections.abc import Callable, Mapping, Sequence
@@ -28,7 +29,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork, world
+from .. import artwork, references, world
 from ..markup import markdown_text
 from ..models import Attitude
 from ..sheets import character as cs
@@ -121,16 +122,45 @@ class Dial(QWidget):
         painter.end()
 
 
+def linked_value(
+    fact: cs.Fact, p: Palette, follow: Callable[[references.Ref], None]
+) -> QLabel:
+    """A fact's value with each record it names a link in the primary ink
+    (a rubric), which `follow` opens."""
+    by_href: dict[str, references.Ref] = {}
+    parts: list[str] = []
+    for words, found in references.segments(fact.value, fact.refs):
+        if found is None:
+            parts.append(html.escape(words))
+            continue
+        href = f"{found.kind}/{len(by_href)}"
+        by_href[href] = found
+        parts.append(
+            f'<a href="{href}" style="color:{p["primary"]}; '
+            f'text-decoration:underline">{html.escape(words)}</a>'
+        )
+    label = text("".join(parts), p["foreground"], serif(13.5), wrap=True)
+    label.setTextFormat(Qt.TextFormat.RichText)
+    label.setCursor(Qt.CursorShape.PointingHandCursor)
+    label.setToolTip("Open " + ", ".join(r.name for r in by_href.values()))
+    label.linkActivated.connect(
+        lambda href: follow(by_href[href]) if href in by_href else None
+    )
+    return label
+
+
 def fact_grid(
     facts: Sequence[cs.Fact],
     p: Palette,
     columns: int = 3,
     beside: Mapping[str, QWidget] | None = None,
+    follow: Callable[[references.Ref], None] | None = None,
 ) -> QWidget:
     """Facts as small-caps labels over their values in the book face; a
     value not set is a dim dash, so the ones that are stand out. A widget
     in `beside`, by a fact's label, sits just after its value (a button
-    that opens what it names)."""
+    that opens what it names). Given `follow`, the records a value names
+    are links that open them."""
     box = QWidget()
     grid = QGridLayout(box)
     grid.setContentsMargins(0, 0, 0, 0)
@@ -145,6 +175,8 @@ def fact_grid(
         extra = (beside or {}).get(fact.label)
         if fact.missing:
             value = text("—", p["dim"], serif(13))
+        elif follow is not None and fact.refs:
+            value = linked_value(fact, p, follow)
         else:
             # A value with a button after it keeps to one line, beside it.
             value = text(fact.value, p["foreground"], serif(13.5), wrap=extra is None)

@@ -3,9 +3,10 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Archbishop of Cologne
 
-      Kind:            Church                            Answers to: no one
-      Detail:          Line                              Realm:      Divine
-      Ruler or leader: (not named)                       Book:       TC
+      Kind:            Church                            Realm:        Divine
+      Detail:          Line                              Book:         TC
+      Ruler or leader: (not named)                       Answer to it: Gottfried of Arnsberg
+      Answers to:      no one
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
@@ -65,15 +66,15 @@
 
 
 
-
 ===== tab-nb-standing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Archbishop of Cologne
 
-      Kind:            Church                            Answers to: no one
-      Detail:          Line                              Realm:      Divine
-      Ruler or leader: (not named)                       Book:       TC
+      Kind:            Church                            Realm:        Divine
+      Detail:          Line                              Book:         TC
+      Ruler or leader: (not named)                       Answer to it: Gottfried of Arnsberg
+      Answers to:      no one
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
@@ -133,15 +134,15 @@
 
 
 
-
 ===== tab-secrets
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Archbishop of Cologne
 
-      Kind:            Church                            Answers to: no one
-      Detail:          Line                              Realm:      Divine
-      Ruler or leader: (not named)                       Book:       TC
+      Kind:            Church                            Realm:        Divine
+      Detail:          Line                              Book:         TC
+      Ruler or leader: (not named)                       Answer to it: Gottfried of Arnsberg
+      Answers to:      no one
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
@@ -152,7 +153,6 @@
     ▼ Secrets
 
       Nothing secret written yet: edit it to add what only you should know.
-
 
 
 

@@ -10,8 +10,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import neighbour_filter, neighbours, places, sourcebooks
-from ..commands import Choice, Choose, Command, Confirm, Form, SectionOps, not_offered
+from .. import neighbour_filter, neighbours, places, references, sourcebooks
+from ..commands import (
+    Choice,
+    Choose,
+    Command,
+    Confirm,
+    Form,
+    Picked,
+    SectionOps,
+    not_offered,
+)
 from ..form_spec import EMPHASIS_HINT, DialogField, pairs
 from ..markup import escape
 from ..models import DETAIL_LEVELS, REALMS, Neighbour, Saga
@@ -71,13 +80,7 @@ def neighbour_fields(
             options=pairs(DETAIL_LEVELS),
             hint="A line, a sketch, or written in full.",
         ),
-        DialogField(
-            "ruler",
-            "Ruler or leader",
-            "text",
-            n.ruler,
-            placeholder="e.g. Count Gottfried",
-        ),
+        ruler_field(saga, n),
         DialogField(
             "answers_to",
             "Answers to",
@@ -115,6 +118,110 @@ def neighbour_fields(
     return [f for f in fields if f.key not in hides]
 
 
+#: The Ruler or leader chooser's entry that types a name instead.
+TYPE_A_NAME = "\0name"
+
+#: How the chooser heads each kind of record it offers.
+_RULER_KINDS: tuple[tuple[str, str], ...] = (
+    ("characters", "Characters"),
+    ("neighbours", "Neighbours"),
+    ("creatures", "Bestiary"),
+)
+
+
+def _ruler_display(saga: Saga, value: Any) -> str:
+    """The ruler as the field shows them: a record's name, or the name
+    typed."""
+    for kind, _heading in _RULER_KINDS:
+        found = references.find(saga, kind, value)
+        if found is not None:
+            return found.name
+    return str(value or "")
+
+
+def choose_ruler(saga: Saga, neighbour: Neighbour, current: Any) -> Choose:
+    """Ruler or leader's chooser: a character, another neighbour or a
+    Bestiary creature, or a name typed for one the saga has no record of."""
+
+    def choices() -> list[Choice]:
+        found = [
+            Choice(
+                "[i]Type a name...[/]",
+                TYPE_A_NAME,
+                "A ruler the saga has no record of: their name only.",
+                facets=(("Kind", "A name"),),
+            )
+        ]
+        for kind, heading in _RULER_KINDS:
+            for record in getattr(saga, kind):
+                if record is neighbour:
+                    continue
+                found.append(
+                    Choice(
+                        escape(record.name),
+                        record.id,
+                        _ruler_detail(record),
+                        facets=(("Kind", heading),),
+                    )
+                )
+        return found
+
+    def typed(values: dict[str, Any]) -> Picked:
+        return Picked(values.get("name") or "")
+
+    def apply(value: Any) -> Any:
+        if value != TYPE_A_NAME:
+            return Picked(value)
+        named = "" if _ruler_display(saga, current) != current else current
+        return Form(
+            "Ruler or Leader",
+            lambda: [
+                DialogField(
+                    "name",
+                    "Name",
+                    "text",
+                    named or "",
+                    required=True,
+                    placeholder="e.g. Count Gottfried",
+                )
+            ],
+            typed,
+        )
+
+    return Choose(
+        "Ruler or Leader",
+        choices,
+        apply,
+        filters=("Kind",),
+        help_id="neighbour-ruler",
+    )
+
+
+def _ruler_detail(record: Any) -> str:
+    """What the chooser says beside a record it offers."""
+    if isinstance(record, Neighbour):
+        return escape(neighbours.kind_of(record).name)
+    realm = getattr(record, "realm", "")
+    kind = getattr(record, "type", "") or "creature"
+    return escape(f"{kind.capitalize()}{f', {realm}' if realm else ''}")
+
+
+def ruler_field(saga: Saga, neighbour: Neighbour) -> DialogField:
+    """Ruler or leader: a record (opened from the neighbour's page) or a
+    name typed."""
+    return DialogField(
+        "ruler",
+        "Ruler or leader",
+        "picker",
+        neighbour.ruler or None,
+        allow_blank=True,
+        placeholder="(not named)",
+        hint="A character, a neighbour or a Bestiary creature, or a name.",
+        choose=lambda current: choose_ruler(saga, neighbour, current),
+        display=lambda value: _ruler_display(saga, value),
+    )
+
+
 def _kind_keys(saga: Saga, kind: str) -> set[str]:
     """The keys of the fields `kind` adds, kept in the details."""
     own = neighbours.KINDS[kind].fields if kind in neighbours.KINDS else None
@@ -131,6 +238,7 @@ def _apply(saga: Saga, neighbour: Neighbour, values: dict[str, Any]) -> None:
             neighbour.details[key] = value
         else:
             setattr(neighbour, key, value)
+    neighbour.ruler = values.get("ruler") or ""
     neighbour.answers_to = values.get("answers_to") or None
     neighbour.realm = values.get("realm") or ""
     places.sync(saga)

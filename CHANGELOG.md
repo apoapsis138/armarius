@@ -109,6 +109,34 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.1.0 — 2026-10-22
+
+### Orbis
+
+- **Names that open their records.** A neighbour's page draws the
+  records it names as links: its ruler or leader, the neighbour it
+  answers to, the place it is in, and a place's claimant and what is
+  found there. On the desktop click one to open its page, and Back
+  returns; in the terminal (and a player's browser) click it, or use
+  **Go To** in More to choose from them all by keyboard. A Links row
+  has an **Open** button on the desktop.
+- **Ruler or leader is a record.** Choose a character, another
+  neighbour or a creature from the Bestiary (a faerie queen can lead her
+  court), or type a name for one the saga has no record of. A typed name
+  opens the one record that has it, so packs' rulers link as soon as
+  their records are there; deleting the ruler keeps their name, and
+  importing keeps the link.
+- **Who answers to it, and what it rules.** A neighbour's page lists
+  under **Answer to it** every neighbour whose Answers to names it (a
+  lord's vassals, a faction's members), and a creature's page lists the
+  neighbours it rules.
+
+### Glossa
+
+- **How to set up a faction's leader and members**, a new how-to, and
+  help on following a record's links, Go To and the Ruler or Leader
+  chooser.
+
 ## 3.0.0 — 2026-10-22
 
 ### Peregrinatio

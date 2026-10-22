@@ -5,7 +5,9 @@ whole stat block as the books print one."""
 
 from __future__ import annotations
 
-from .. import creatures, places
+from typing import Any
+
+from .. import creatures, places, references
 from .. import possessions as pos
 from ..forms import virtue as virtue_forms
 from ..grids import Grid
@@ -112,10 +114,24 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
         *([Fact("Age", c.age)] if c.age else []),
         *([Fact("Confidence", confidence_text(c))] if confidence_text(c) else []),
         Fact("How many", c.how_many if c.many else "One"),
-        Fact("Found at", places.where_text(saga, c.place_id, c.place_level)),
+        Fact(
+            "Found at",
+            places.where_text(saga, c.place_id, c.place_level),
+            references.refs(places.place(saga, c.place_id)),
+        ),
         Fact("Detail", c.detail),
         Fact("Source", c.source),
+        *rules_facts(saga, c),
     ]
+
+
+def rules_facts(saga: Saga, record: Any) -> list[Fact]:
+    """The neighbours `record` rules or leads, each linked; none while it
+    rules none."""
+    ruled = references.ruled_by(saga, record)
+    if not ruled:
+        return []
+    return [Fact("Rules", ", ".join(n.name for n in ruled), references.refs(*ruled))]
 
 
 def infernal_facts(creature: Creature) -> list[Fact]:

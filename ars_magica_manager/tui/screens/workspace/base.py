@@ -300,6 +300,7 @@ _LOOKING_ACTIONS = frozenset(
         "quit",
         "more",
         "export_record",
+        "go_to",
     }
 )
 

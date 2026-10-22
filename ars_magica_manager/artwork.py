@@ -248,6 +248,8 @@ ICON_NAMES: dict[str, str] = {
     "new": "file-plus",
     "filter": "funnel",
     "search": "magnifying-glass",
+    # Open the record a link names: its page.
+    "open": "book-open",
     "help": "question",
     "theme": "palette",
     "sounds_on": "speaker-high",

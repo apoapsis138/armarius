@@ -18,7 +18,7 @@ from ..sections import FAIRS_SECTION, TABLES_SECTION
 from ..sheets import region as region_sheet
 from .bookmark import with_bookmark
 from .character_sheet import secrets_chapter, section
-from .editing import Chooser, RowVerb, Run, verb_buttons
+from .editing import Chooser, RowVerb, Run, follower, verb_buttons
 from .figures import fact_grid, prose
 from .heraldry import arms_section
 from .manage import RecordControls
@@ -55,7 +55,14 @@ class NeighbourPage(QWidget):
                 controls.bookmark(p) if controls else None,
             )
         )
-        outer.addWidget(fact_grid(region_sheet.neighbour_facts(saga, neighbour), p, 3))
+        outer.addWidget(
+            fact_grid(
+                region_sheet.neighbour_facts(saga, neighbour),
+                p,
+                3,
+                follow=follower(run),
+            )
+        )
         self.codex = Codex(p)
         self.ops = neighbour_forms.neighbour_ops(saga, neighbour)
         kind = neighbours.kind_of(neighbour)
@@ -89,7 +96,10 @@ class NeighbourPage(QWidget):
                     tab.title,
                     p,
                     fact_grid(
-                        worked_out(saga, n) if worked_out is not None else [], p, 2
+                        worked_out(saga, n) if worked_out is not None else [],
+                        p,
+                        2,
+                        follow=follower(self.run),
                     ),
                     edits={"Edit Neighbour": self._edit},
                 )

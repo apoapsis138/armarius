@@ -10,6 +10,7 @@ from .. import (
     neighbour_filter,
     neighbours,
     places,
+    references,
     threats,
     tribunal_packages,
     tribunals,
@@ -18,6 +19,7 @@ from .. import (
 from ..grids import Grid
 from ..markup import escape
 from ..models import Covenant, Neighbour, Saga, Tribunal
+from . import creature as creature_sheet
 from .character import Fact
 
 
@@ -219,7 +221,7 @@ def group_grid(saga: Saga, group_key: str) -> Grid:
             [
                 neighbour.name,
                 kind_text(neighbour),
-                neighbour.ruler,
+                references.ruler_name(saga, neighbour),
                 words,
                 neighbour.detail,
             ]
@@ -238,6 +240,46 @@ def group_grid(saga: Saga, group_key: str) -> Grid:
 # -- a neighbour --
 
 
+def ruler_fact(saga: Saga, neighbour: Neighbour, label: str, blank: str) -> Fact:
+    """Its ruler or leader, linked to their record when they have one."""
+    name = references.ruler_name(saga, neighbour)
+    found = references.ruler(saga, neighbour)
+    return Fact(label, name or blank, references.refs(found))
+
+
+def answers_to_fact(saga: Saga, neighbour: Neighbour, blank: str) -> Fact:
+    above = saga.neighbour(neighbour.answers_to)
+    return Fact(
+        "Answers to",
+        above.name if above is not None else blank,
+        references.refs(above),
+    )
+
+
+def inside_fact(saga: Saga, neighbour: Neighbour, blank: str) -> Fact:
+    """The places it sits in, outward, each linked."""
+    return Fact(
+        "Inside",
+        places.inside_text(saga, neighbour) or blank,
+        references.refs(*places.inside_of(saga, neighbour)),
+    )
+
+
+def below_fact(saga: Saga, neighbour: Neighbour) -> list[Fact]:
+    """Who answers to it (a lord's vassals, a faction's members), each
+    linked; none while no one does."""
+    below = neighbours.vassals(saga, neighbour)
+    if not below:
+        return []
+    return [
+        Fact(
+            "Answer to it",
+            ", ".join(n.name for n in below),
+            references.refs(*below),
+        )
+    ]
+
+
 def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     kind = neighbours.kind_of(neighbour)
     where = places.where_text(saga, neighbour.place_id, neighbour.place_level)
@@ -245,17 +287,21 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         return [
             Fact("Kind", kind.name),
             Fact("Realm", neighbour.realm or "none"),
-            Fact("Inside", places.inside_text(saga, neighbour) or "nowhere entered"),
+            inside_fact(saga, neighbour, "nowhere entered"),
             Fact("Book", kind.book or "core rules"),
         ]
+    place = places.place(saga, neighbour.place_id)
     return [
         Fact("Kind", kind.name),
         Fact("Detail", neighbour.detail),
-        Fact("Ruler or leader", neighbour.ruler or "(not named)"),
-        Fact("Answers to", neighbours.answers_to_name(saga, neighbour) or "no one"),
+        ruler_fact(saga, neighbour, "Ruler or leader", "(not named)"),
+        answers_to_fact(saga, neighbour, "no one"),
         Fact("Realm", neighbour.realm or "none"),
         Fact("Book", kind.book or "core rules"),
-    ] + ([Fact("Place", where)] if where else [])
+        *([Fact("Place", where, references.refs(place))] if where else []),
+        *below_fact(saga, neighbour),
+        *creature_sheet.rules_facts(saga, neighbour),
+    ]
 
 
 def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
@@ -323,19 +369,20 @@ def card_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     """Its attitude toward the home covenant, and its ruler and liege
     when it has them."""
     if places.is_place(neighbour):
-        inside = places.inside_text(saga, neighbour)
-        return ([Fact("Inside", inside)] if inside else []) + [
+        inside = inside_fact(saga, neighbour, "")
+        return ([inside] if inside.value else []) + [
             f
             for f in places.facts(saga, neighbour)
             if f.value and f.label in ("Regio", "Claimed by")
         ]
     words, _colour = _attitude_cell(saga, neighbour)
     facts = [Fact("Attitude", words)] if words else []
-    if neighbour.ruler:
-        facts.append(Fact("Ruler", neighbour.ruler))
-    above = neighbours.answers_to_name(saga, neighbour)
-    if above:
-        facts.append(Fact("Answers to", above))
+    ruler = ruler_fact(saga, neighbour, "Ruler", "")
+    if ruler.value:
+        facts.append(ruler)
+    above = answers_to_fact(saga, neighbour, "")
+    if above.value:
+        facts.append(above)
     return facts
 
 

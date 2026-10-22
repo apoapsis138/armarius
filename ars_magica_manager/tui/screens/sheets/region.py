@@ -28,7 +28,13 @@ from ....sections import (
 )
 from ....sheets import region as region_sheet
 from ....sheets.character import Fact
-from ..widgets import PinnedCollapsible, SelectableList, SheetSection, TwoColumns
+from ..widgets import (
+    PinnedCollapsible,
+    SelectableList,
+    SheetSection,
+    TwoColumns,
+    fact_markup,
+)
 from .base import SheetView
 
 #: Every list of neighbours the Region can show.
@@ -42,7 +48,7 @@ def _list_id(section_id: str) -> str:
 def _facts_text(facts: list[Fact], column: int) -> str:
     half = (len(facts) + 1) // 2
     shown = facts[:half] if column == 0 else facts[half:]
-    return aligned([(f.label, escape(f.value)) for f in shown])
+    return aligned([(f.label, fact_markup(f)) for f in shown])
 
 
 class RegionSheetView(SheetView):
@@ -231,7 +237,7 @@ class NeighbourSheetView(SheetView):
             return ""
         return aligned(
             [
-                (f.label, escape(f.value) or "[$label]—[/]")
+                (f.label, fact_markup(f) or "[$label]—[/]")
                 for f in facts(self.saga, self.neighbour)
             ]
         )

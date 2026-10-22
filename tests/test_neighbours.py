@@ -576,3 +576,90 @@ def test_choosing_a_row_of_another_list_shows_its_columns():
     table.setCurrentIndex(table.model().index(0, 0))
     castle = lords.castles_grid(saga, gottfried).rows[0][0]
     assert page.codex.inspector.title.text() == castle
+
+
+async def test_a_name_on_the_sheet_and_go_to_open_the_record_it_names():
+    from ars_magica_manager.forms import go_to as go_to_forms
+    from ars_magica_manager.tui.screens.steps import ChooseScreen
+    from ars_magica_manager.tui.screens.widgets import fact_markup
+
+    saga = everything_saga()
+    coven = saga.neighbour("coven")
+    assert coven is not None
+    coven.ruler = "aeolus"
+    storage.save_saga(saga)
+    facts = region_sheet.neighbour_facts(saga, coven)
+    ruler = next(f for f in facts if f.label == "Ruler or leader")
+    assert (
+        fact_markup(ruler) == "[@click=screen.open_ref('creatures', 'aeolus')]Aeolus[/]"
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await pilot.pause()
+        app.screen.query_one("#saga-list").focus()
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        workspace = app.screen
+        # A click on a name runs open_ref: the record's node is chosen.
+        workspace.action_open_ref("neighbours", "coven")
+        assert await wait_until(
+            pilot,
+            lambda: (
+                (view := workspace._neighbour_sheet_view) is not None
+                and view.neighbour.id == "coven"
+            ),
+        )
+        assert go_to_forms.targets(workspace.saga, coven)
+        workspace.action_go_to()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        await pilot.press("enter")  # its leader, first
+        assert await wait_until(
+            pilot,
+            lambda: (
+                (view := workspace._creature_sheet_view) is not None
+                and view.creature.id == "aeolus"
+            ),
+        )
+
+
+def test_the_desktop_opens_a_name_on_the_page_and_a_link_s_record():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from gui_steps import section_buttons
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QApplication, QLabel
+
+    from ars_magica_manager.gui.bestiary import CreaturePage
+    from ars_magica_manager.gui.region import NeighbourPage
+    from ars_magica_manager.gui.window import MainWindow
+
+    QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    coven = saga.neighbour("coven")
+    assert coven is not None
+    coven.ruler = "aeolus"
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    window.show()
+    window.open_neighbour("coven")
+    page = window.page()
+    assert isinstance(page, NeighbourPage)
+    [link] = [
+        label
+        for label in page.findChildren(QLabel)
+        if label.textFormat() == Qt.TextFormat.RichText and "Aeolus</a>" in label.text()
+    ]
+    link.linkActivated.emit("creatures/0")
+    assert isinstance(window.page(), CreaturePage)
+    # Back returns to the faction.
+    assert window.trail[-2].id == "coven"
+    window.go(window.trail[:-1])
+    assert isinstance(window.page(), NeighbourPage)
+    # The Hollow Crown's one link, to Aeolus: Open opens it.
+    window.open_neighbour("crown")
+    page = window.page()
+    assert isinstance(page, NeighbourPage)
+    page.codex.open_chapter("Standing")
+    section_buttons(page, "Links")["Open"].click()
+    assert isinstance(window.page(), CreaturePage)
+    window.close()

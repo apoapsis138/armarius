@@ -1770,7 +1770,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Gottfried of Arnsberg",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Arms of Gottfried of Arnsberg",
+        "m": "MenuScreen: Arms, Go To",
         "slash": "(disabled)"
       }
     },
@@ -1780,7 +1780,7 @@
         "a": "FieldsDialog: Add a Castle",
         "e": "FieldsDialog: Edit a Castle",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1790,7 +1790,7 @@
         "a": "FieldsDialog: Add a Debt of Gratitude",
         "e": "FieldsDialog: Edit a Debt of Gratitude",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1800,7 +1800,7 @@
         "a": "FieldsDialog: Add a Reason",
         "e": "FieldsDialog: Attitude toward Keep",
         "d": "notice: Where it started can't be deleted: edit it to change it.",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1810,7 +1810,7 @@
         "a": "FieldsDialog: Add a Favour",
         "e": "FieldsDialog: Edit a Favour",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1820,7 +1820,7 @@
         "a": "ChooseScreen: Link to what?",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1830,7 +1830,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Secrets of Gottfried of Arnsberg",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     }
@@ -1914,7 +1914,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Archbishop of Cologne",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Arms of Archbishop of Cologne",
+        "m": "MenuScreen: Arms, Go To",
         "slash": "(disabled)"
       }
     },
@@ -1924,7 +1924,7 @@
         "a": "FieldsDialog: Add a Relic",
         "e": "FieldsDialog: Edit a Relic",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1934,7 +1934,7 @@
         "a": "FieldsDialog: Add a Reason",
         "e": "FieldsDialog: Attitude toward Keep",
         "d": "notice: Where it started can't be deleted: edit it to change it.",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1944,7 +1944,7 @@
         "a": "FieldsDialog: Add a Favour",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1954,7 +1954,7 @@
         "a": "ChooseScreen: Link to what?",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -1964,7 +1964,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Secrets of Archbishop of Cologne",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     }
@@ -2110,7 +2110,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Hollow Crown",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2120,7 +2120,7 @@
         "a": "FieldsDialog: Add a Stage",
         "e": "FieldsDialog: Edit a Stage",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2130,7 +2130,7 @@
         "a": "FieldsDialog: Add a Reason",
         "e": "FieldsDialog: Attitude toward Keep",
         "d": "notice: Where it started can't be deleted: edit it to change it.",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2140,7 +2140,7 @@
         "a": "FieldsDialog: Add a Favour",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2150,7 +2150,7 @@
         "a": "ChooseScreen: Link to what?",
         "e": "FieldsDialog: Edit a Link",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2160,7 +2160,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Secrets of The Hollow Crown",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     }
@@ -2172,7 +2172,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Drachenfels",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2182,7 +2182,7 @@
         "a": "FieldsDialog: Add a Regio Level",
         "e": "FieldsDialog: Edit a Regio Level",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2192,7 +2192,7 @@
         "a": "FieldsDialog: Add an Effect",
         "e": "FieldsDialog: Edit an Effect",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2202,7 +2202,7 @@
         "a": "FieldsDialog: Add a Trigger",
         "e": "FieldsDialog: Edit a Trigger",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2212,7 +2212,7 @@
         "a": "FieldsDialog: Add a Roll Table",
         "e": "FieldsDialog: Edit a Roll Table",
         "d": "ConfirmScreen",
-        "m": "ConfirmScreen",
+        "m": "MenuScreen: Roll, Go To",
         "slash": "(disabled)"
       }
     },
@@ -2222,7 +2222,7 @@
         "a": "FieldsDialog: Add a Diary Entry",
         "e": "FieldsDialog: Edit a Diary Entry",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2232,7 +2232,7 @@
         "a": "FieldsDialog: Add a Favour",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2242,7 +2242,7 @@
         "a": "ChooseScreen: Link to what?",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2252,7 +2252,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Secrets of The Drachenfels",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     }
@@ -2328,7 +2328,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Aeolus",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2338,7 +2338,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Characteristics",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2348,7 +2348,7 @@
         "a": "ChooseScreen: Add a Virtue or Flaw",
         "e": "notice: Magic Animal names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2358,7 +2358,7 @@
         "a": "FieldsDialog: Add a Personality Trait",
         "e": "FieldsDialog: Edit a Personality Trait",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2368,7 +2368,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2378,7 +2378,7 @@
         "a": "ChooseScreen: Add an Ability",
         "e": "FieldsDialog: Athletics",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2388,7 +2388,7 @@
         "a": "FieldsDialog: Add an Attack",
         "e": "FieldsDialog: Edit Kick",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2398,7 +2398,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Wounds and Fatigue",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2408,7 +2408,7 @@
         "a": "FieldsDialog: Add a Power",
         "e": "FieldsDialog: Edit From Nag to Charger",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2418,7 +2418,7 @@
         "a": "FieldsDialog: Add Vis",
         "e": "FieldsDialog: Edit 2 pawns of Animal, in head",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2428,7 +2428,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Description",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2438,7 +2438,7 @@
         "a": "ChooseScreen: Link to what?",
         "e": "FieldsDialog: Edit a Link",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2448,7 +2448,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Secrets of Aeolus",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     }

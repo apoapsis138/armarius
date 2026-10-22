@@ -12,7 +12,7 @@ from ars_magica_manager import neighbour_filter
 
 CONTRACTS: dict[str, Contract] = {
     "add faction": Contract(
-        prefill={"Name": "", "Ruler or leader": "", "Detail": "Sketch"},
+        prefill={"Name": "", "Ruler or leader": None, "Detail": "Sketch"},
         edits={"Name": "The Soest wool merchants", "Ruler or leader": "Hanno"},
         saved=lambda s: [(n.name, n.kind, n.ruler) for n in s.neighbours][-1],
         expected=("The Soest wool merchants", "faction", "Hanno"),

@@ -273,6 +273,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("r", "roll_table", "Roll"),
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
     MenuItem("b", "begin_story", "Begin This Story"),
+    MenuItem("g", "go_to", "Go To"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -532,6 +533,14 @@ def _on_dormant_threat(facts: ActionFacts) -> bool:
     return facts.on_record() and threats.is_dormant(facts.record_to_delete())
 
 
+def _goes_to(facts: ActionFacts) -> bool:
+    """Go To: on a record whose page names another record."""
+    from .forms import go_to
+
+    record = facts.record_to_delete()
+    return record is not None and go_to.has_targets(facts.saga, record)
+
+
 #: When each action that acts on the record on show (or the saga) is
 #: offered, one rule per action (Strategy, as a table).
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
@@ -554,6 +563,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "edit_arms": _bears_arms,
     "found_covenant": _on_ruin,
     "begin_story": _on_dormant_threat,
+    "go_to": _goes_to,
 }
 
 

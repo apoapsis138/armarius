@@ -180,6 +180,14 @@ until a season it was repaid in is set, then shows dimmed.
 Links to other records of the saga (a character, covenant, book,
 possession or familiar), each with a short note. Below them, unselectable,
 are the records that link here.
+<!-- gui -->
+**Open** opens the record the chosen link points at (a book or a
+possession has no page of its own to open).
+<!-- /gui -->
+<!-- tui -->
+**Go To**, in More (`m`), lists the records the links point at, to open
+one.
+<!-- /tui -->
 
 ## Attributes tab
 <!-- help: tab-cov-attributes -->

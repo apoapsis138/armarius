@@ -16,6 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from . import references
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -151,6 +152,7 @@ def dues(saga: Saga, neighbour: Neighbour) -> list[Fact]:
             "Owes",
             f"{liege.name}: {knights} knight{'' if knights == 1 else 's'} for "
             f"{SERVICE_DAYS} days, or {knights * SCUTAGE} pounds scutage",
+            references.refs(liege),
         ),
         Fact("Aids", f"{knights} pounds; relief {relief(neighbour)} pounds"),
     ]

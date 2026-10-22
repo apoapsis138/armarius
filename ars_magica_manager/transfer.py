@@ -868,8 +868,22 @@ def _plan_neighbours(job: _Import) -> None:
             continue
         neighbour.id = job.record_map[NEIGHBOUR][neighbour.id]
         neighbour.answers_to = job.link(NEIGHBOUR, neighbour.answers_to)
+        neighbour.ruler = _ruler(job, neighbour.ruler)
         _relink(job, neighbour)
         job.plan.neighbours.append(neighbour)
+
+
+def _ruler(job: _Import, old: str) -> str:
+    """A neighbour's ruler through the maps: the record's new id, or its
+    name when it isn't here; a typed name stays."""
+    for record_kind in (CHARACTER, NEIGHBOUR, CREATURE):
+        new = job.link(record_kind, old)
+        if new is not None:
+            return new
+        named = job.link_name(record_kind, old)
+        if named:
+            return named
+    return old
 
 
 def _plan_creatures(job: _Import) -> None:

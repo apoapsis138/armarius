@@ -29,8 +29,9 @@ from PySide6.QtWidgets import (
 )
 
 from .. import giving
-from ..commands import Command, SectionOps
+from ..commands import Act, Command, Go, SectionOps
 from ..models import Saga
+from ..references import Ref
 from .themes import Palette
 from .widgets import ClickableCard, edit_button
 
@@ -40,6 +41,12 @@ Run = Callable[[Command], None]
 #: concept, its first step (for the row) and whether it can act on the
 #: row (Instill an Effect only on a device with room for one).
 RowVerb = tuple[str, str, Callable[[int], Command], Callable[[int], bool]]
+
+
+def follower(run: Run) -> Callable[[Ref], None]:
+    """What a link to a record does: open it, through the window's steps
+    (a commands.Go)."""
+    return lambda found: run(Act(lambda: Go(found)))
 
 
 def give_verb(

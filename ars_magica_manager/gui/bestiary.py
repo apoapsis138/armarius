@@ -40,7 +40,7 @@ from .character_sheet import (
     section,
     trait_section,
 )
-from .editing import Chooser, Run, verb_buttons
+from .editing import Chooser, Run, follower, verb_buttons
 from .figures import fact_grid, fatigue_ladder, prose, wound_track
 from .manage import RecordControls
 from .pages import page_header
@@ -89,7 +89,9 @@ class CreaturePage(QWidget):
         outer.addWidget(
             with_bookmark(self._header(), controls.bookmark(p) if controls else None)
         )
-        outer.addWidget(fact_grid(crs.facts(saga, creature), p, 4))
+        outer.addWidget(
+            fact_grid(crs.facts(saga, creature), p, 4, follow=follower(run))
+        )
         outer.addWidget(
             characteristic_cards(
                 creature.characteristics,

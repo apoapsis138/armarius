@@ -533,6 +533,44 @@ Link the creature to the neighbours it belongs with, such as the threat it serve
 **See also:** [The Bestiary](help:bestiary), [A creature](help:creature)
 
 
+# How to set up a faction's leader and members
+<!-- help: guide-faction -->
+
+A faction's page can name its leader and list its members, each a link to its record, so the troupe can follow the court from its queen to her courtiers and back. The same works for a lord and his vassals, or a bishop and his churches.
+
+### The leader
+<!-- help: guide-faction-leader -->
+
+1. Make the leader's record first, if the saga has none: a character for a mortal, a neighbour for another company, or a creature in the [Bestiary](help:bestiary) for a faerie, a demon or a beast (see [How to add a creature from a book](help:guide-bestiary)).
+<!-- tui -->
+2. On the faction's sheet press `e`, and choose **Ruler or leader**. Pick the leader from the list (it is headed Characters, Neighbours and Bestiary; type to search), or choose **Type a name...** for one the saga has no record of yet.
+<!-- /tui -->
+<!-- gui -->
+2. On the faction's page click **Edit**, and click **Ruler or leader**. Pick the leader from the list (it is headed Characters, Neighbours and Bestiary; type to search), or choose **Type a name...** for one the saga has no record of yet.
+<!-- /gui -->
+3. Save. The leader's name on the faction's page now opens their record, and a creature or neighbour leading it lists the faction under **Rules**.
+
+### The members
+<!-- help: guide-faction-members -->
+
+- **A member who is a neighbour** (a courtier, a branch of the gild): edit that neighbour and set its **Answers to** to the faction. The faction's page lists it under **Answer to it**.
+- **A member who is a character or a creature**: add a link to them in the faction's [Links](help:section-links), on its Standing tab, with a note on their place in it. The Faction tab counts the characters linked.
+- **Members with no record**: type how many there are in the faction's **Members**.
+
+### Following them
+<!-- help: guide-faction-follow -->
+
+Every name the faction's page links opens that record (see [Following a record's links](help:record-links)).
+<!-- gui -->
+Click it, and **Back** brings you to the faction again.
+<!-- /gui -->
+<!-- tui -->
+Click it, or press `m` and choose **Go To** for a list of them all.
+<!-- /tui -->
+
+**See also:** [A faction](help:tab-nb-faction), [Ruler or Leader](help:neighbour-ruler), [A neighbour](help:neighbour)
+
+
 # How to play a hedge wizard
 <!-- help: guide-hedge-magic -->
 

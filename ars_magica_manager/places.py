@@ -39,6 +39,7 @@ from collections.abc import Collection, Iterator
 from dataclasses import dataclass, field
 from typing import Any
 
+from . import references
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -180,15 +181,18 @@ def within(saga: Saga, outer: Neighbour) -> set[str]:
     return {p.id for p in all_places(saga) if outer in inside_of(saga, p)}
 
 
+def here_records(saga: Saga, outer: Neighbour) -> list[Any]:
+    """The records placed in `outer`, places last."""
+    found: list[Any] = [c for c in saga.covenants if c.place_id == outer.id]
+    found += [lab for lab in saga.laboratories if lab.place_id == outer.id]
+    found += [n for n in saga.neighbours if n.place_id == outer.id and not is_place(n)]
+    found += [c for c in saga.creatures if c.place_id == outer.id]
+    return found + [p for p in all_places(saga) if p.place_id == outer.id]
+
+
 def here(saga: Saga, outer: Neighbour) -> list[str]:
     """The names of the records placed in `outer`, places last."""
-    found = [c.name for c in saga.covenants if c.place_id == outer.id]
-    found += [lab.name for lab in saga.laboratories if lab.place_id == outer.id]
-    found += [
-        n.name for n in saga.neighbours if n.place_id == outer.id and not is_place(n)
-    ]
-    found += [c.name for c in saga.creatures if c.place_id == outer.id]
-    return found + [p.name for p in all_places(saga) if p.place_id == outer.id]
+    return [record.name for record in here_records(saga, outer)]
 
 
 # -- where a record is --
@@ -499,6 +503,7 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
         s.lower() if i else s
         for i, s in enumerate(x for x in (d.get("status"), d.get("known")) if x)
     )
+    found = here_records(saga, place)
     shown = levels(place)
     regio = f"{len(shown)} level{'' if len(shown) == 1 else 's'}" if shown else "none"
     seen = [
@@ -511,9 +516,13 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
         Fact("Regio", regio),
         *([Fact("Can see", "; ".join(seen))] if seen else []),
         Fact("Gazetteer", status),
-        Fact("Claimed by", claimed.name if claimed is not None else ""),
+        Fact(
+            "Claimed by",
+            claimed.name if claimed is not None else "",
+            references.refs(claimed),
+        ),
         Fact("Tethers", d.get("tethers", "")),
-        Fact("Here", ", ".join(here(saga, place))),
+        Fact("Here", ", ".join(r.name for r in found), references.refs(*found)),
     ]
 
 

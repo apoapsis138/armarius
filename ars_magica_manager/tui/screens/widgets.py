@@ -33,8 +33,10 @@ from textual.widgets._footer import FooterKey
 from textual.widgets._tabbed_content import ContentTabs
 from textual.widgets.option_list import Option
 
-from ... import world
+from ... import references, world
+from ...markup import escape
 from ...models import Attitude
+from ...sheets.character import Fact
 
 
 def _sign_colored(value: float, text: str) -> str:
@@ -860,3 +862,14 @@ class TableHeader(Static):
         color: $text-muted;
     }
     """
+
+
+def fact_markup(fact: Fact) -> str:
+    """A fact's value as markup, each record it names a link that opens
+    it (the workspace's open_ref)."""
+    return "".join(
+        escape(words)
+        if found is None
+        else f"[@click=screen.open_ref({found.kind!r}, {found.id!r})]{escape(words)}[/]"
+        for words, found in references.segments(fact.value, fact.refs)
+    )

@@ -141,10 +141,12 @@ needs), then a plain form:
   and gazetteer (see [A place](help:tab-nb-place)).
 - **Summary**: a paragraph on who they are and what they want.
 - **Detail**: a line, a sketch, or written in full.
-- **Ruler or leader**: a name.
+- **Ruler or leader**: chosen from the saga's characters, its other
+  neighbours or the Bestiary's creatures, or a name typed for one the
+  saga has no record of (see [Ruler or Leader](help:neighbour-ruler)).
 - **Answers to**: its liege, bishop or master among the neighbours.
   Deleting a neighbour leaves those that answered to it answering to no
-  one.
+  one, and a neighbour it ruled keeps its name as a name typed.
 - **Realm**: Divine, Faerie, Infernal or Magic, or none.
 - **Place**: the place it is in, or one of that place's regio levels.
 
@@ -160,7 +162,13 @@ threat's stages...) to read it in full in the Inspector.
 <!-- help: section-nb-info -->
 
 Its kind, detail, ruler or leader, who it answers to, its realm and the
-book its kind comes from, with its summary. Edit changes them.
+book its kind comes from, with its summary; then, under **Answer to
+it**, every neighbour whose Answers to names this one (a lord's
+vassals, a faction's members). Edit changes them.
+
+The ruler, the neighbour it answers to, the place it is in and each
+name under Answer to it are links that open that record: see
+[Following a record's links](help:record-links).
 
 ## Standing tab
 <!-- help: tab-nb-standing -->
@@ -171,6 +179,54 @@ records, as on a sketch covenant: see
 [Attitude](help:section-attitudes), [Favours](help:section-favours) and
 [Links](help:section-links). A place holds no attitude: its tab is
 called Found Here and shows only its favours and links.
+
+### Following a record's links
+<!-- help: record-links -->
+
+A page that names another record of the saga names it as a link: a
+neighbour's ruler or leader, who it answers to, where it is and who
+answers to it; a place's claimant and what is found there; a creature's
+place and the neighbours it rules.
+<!-- gui -->
+Click an underlined name to open its record's page. **Back** returns to
+the page you came from. On the Standing tab, **Open** in Links opens
+the record the chosen link points at.
+<!-- /gui -->
+<!-- tui -->
+Click a name with the mouse to open its record: it is chosen in the
+tree and its sheet shown. From the keyboard, **Go To** in More (`m`)
+lists every record the page names, its links' too, under what it is
+named as (Ruler or leader, Answers to, Links...); choose one to open
+it.
+<!-- /tui -->
+
+**See also:** [A neighbour](help:neighbour), [Links](help:section-links)
+
+### Go To
+<!-- help: go-to; tui -->
+
+The records the page on show names, each under what it is named as.
+Choose one to open its sheet; the filter at the top narrows the list to
+one kind of name. See [Following a record's links](help:record-links).
+
+### Ruler or Leader
+<!-- help: neighbour-ruler -->
+
+Who rules or leads the neighbour, chosen from the saga's records:
+
+- **Characters**: a lord, an abbess, a hedge wizard, at any detail.
+- **Neighbours**: another neighbour, such as the faction a puppet lord
+  really serves.
+- **Bestiary**: a creature, such as the faerie who rules a court.
+- **Type a name...**: a name only, for a ruler the saga has no record
+  of yet. A name typed opens the record of that name if exactly one
+  character, neighbour or creature has it, so a pack's rulers link as
+  soon as their records are there.
+
+The ruler shows on the neighbour's page as a link to their record, and
+a ruling creature's or neighbour's page lists what it rules under
+**Rules**. Deleting the
+ruler's record keeps their name on the neighbours they ruled.
 
 # A lord
 <!-- help: tab-nb-fief -->
@@ -321,6 +377,13 @@ the hedge tradition its members follow, from the traditions the app
 knows (see [A tradition's chapter](help:tradition-chapter)), so the troupe
 knows which record a member is played from. Members who are characters
 can be linked on its Standing tab, and the Faction tab counts them.
+
+Its leader is its **Ruler or leader**: a character, another neighbour or
+a creature from the Bestiary (see [Ruler or Leader](help:neighbour-ruler)).
+A member that is itself a neighbour (a courtier, a branch of the gild)
+names the faction in its own **Answers to**, and the faction's page
+lists it under **Answer to it**. See
+[How to set up a faction's leader and members](help:guide-faction).
 
 **See also:** [A neighbour](help:neighbour)
 
