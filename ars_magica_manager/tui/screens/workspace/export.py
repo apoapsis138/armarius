@@ -1,5 +1,5 @@
 """WorkspaceScreen's export actions: a record, the saga or a pack written to a
-file, and a record updated from one."""
+file, a record updated from one, and the saga hosted for players."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .... import packs, storage, transfer
+from ....forms import hosting as hosting_forms
 from ....forms import importing as import_forms
 from ....forms import menu as menu_forms
 from ....markup import escape
@@ -106,6 +107,22 @@ class ExportActions(WorkspaceBase):
         run_steps(
             self.app, packs.export_pack(self.saga, storage.EXPORTS_DIR, deliver), done
         )
+
+    def action_host_saga(self) -> None:
+        """More's Host for Players on the saga: start the host the desktop's
+        Saga Management starts (hosting.HOST)."""
+        self._run_hosting(hosting_forms.host_form())
+
+    def action_stop_hosting(self) -> None:
+        """More's Stop Hosting on the saga, after asking."""
+        self._run_hosting(hosting_forms.stop_hosting())
+
+    def _run_hosting(self, step: Any) -> None:
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(end))
+
+        run_steps(self.app, step, done)
 
     def action_update_record(self) -> None:
         """More's Update from a File on a covenant, laboratory or

@@ -326,7 +326,7 @@ The storyguide can let the players open the saga in a web browser on their own c
 You need a private network that you and the players share. The app doesn't come with one: use your home network, **Tailscale** or **ZeroTier** (recipes below). Never host on an address the whole internet can reach.
 
 <!-- gui -->
-The desktop version can't host a saga itself. Hosting is a command you run in a terminal, and what the players get in their browser (or over SSH) is the terminal version of the app, so the rest of this guide describes that. You can keep using the desktop window while you host: it and the players' copies all save into the same saga file, each change merged with the others.
+What the players get in their browser (or over SSH) is the terminal version of the app, so their screens look like it rather than like this window. You keep using the desktop window while you host: it and the players' copies all save into the same saga file, each change merged with the others.
 <!-- /gui -->
 
 ### Before the first session
@@ -365,17 +365,25 @@ sheet they can read.
 ### Starting and stopping
 <!-- help: guide-hosting-start -->
 
-1. In a terminal in the app's folder, run `uv run python tools/serve.py --host ADDRESS`, with your address on the private network (add `--port 8001` if 8000 is taken). The first time, Windows asks whether to let it through the firewall: allow it on **private** networks.
-2. Players open `http://ADDRESS:8000` in their browser, choose the saga and sign in.
-3. Keep your computer awake while people play: nobody can reach the saga while it sleeps.
 <!-- tui -->
-4. To stop, press Ctrl+C in that terminal. Your own window of the app is separate: open it as usual.
+1. Open the saga, select the saga node and choose **Host for Players** from More (`m`, then `h`). Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Press **Host**.
 <!-- /tui -->
 <!-- gui -->
-4. To stop, press Ctrl+C in that terminal. Your own desktop window is separate: open it as usual.
+1. Open the saga and, in its **Saga Management** chapter, click **Host for Players**. Choose your **Address** on the private network (the Tailscale one is marked; **Another address...** lets you type one), and the **Browser port** (8000 unless another program has it). Tick **Also over SSH** to take SSH clients too (see below). The line under the fields says what players will open. Click **Host**.
+<!-- /gui -->
+2. The first time, Windows asks whether to let Python through the firewall: allow it on **private** networks.
+3. Players open `http://ADDRESS:8000` in their browser, choose the saga and sign in. Saga Management says the address for as long as you host. The form remembers what you chose for next time.
+4. Keep your computer awake while people play: nobody can reach the saga while it sleeps.
+<!-- tui -->
+5. To stop, choose **Stop Hosting** from More on the saga node. Every player's copy closes at once; what they saved is kept. Quitting the app stops hosting too.
+<!-- /tui -->
+<!-- gui -->
+5. To stop, click **Stop Hosting** in Saga Management. Every player's copy closes at once; what they saved is kept. Closing the window stops hosting too.
 <!-- /gui -->
 
-If you give an address the computer doesn't have, the command says so and lists the ones it does.
+If you choose an address the computer doesn't have, or a port another program is using, the app says so and nothing starts.
+
+**From a terminal instead.** The same host runs in a terminal in the app's folder with `uv run python tools/serve.py --host ADDRESS` (add `--port 8001` for another port, `--ssh-port 2222` for SSH). It hosts until you press Ctrl+C there, whichever window of the app you have open.
 
 ### Tailscale
 <!-- help: guide-hosting-tailscale -->
@@ -407,7 +415,7 @@ drop;
 ### Over SSH instead of a browser
 <!-- help: guide-hosting-ssh -->
 
-A player who prefers a terminal can connect with SSH instead. Add `--ssh-port 2222` when you start hosting (`uv run python tools/serve.py --host ADDRESS --ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key (`ssh_host_key` in your data folder); players' SSH clients ask once whether to trust it.
+A player who prefers a terminal can connect with SSH instead. Tick **Also over SSH** when you start hosting (the SSH port is 2222 unless you change it; from a terminal, add `--ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key (`ssh_host_key` in your data folder); players' SSH clients ask once whether to trust it.
 
 Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows 10 and 11 include `ssh`), macOS Terminal or any Linux terminal, and get the same saga list and sign-in. Their terminal should be at least 120 columns by 45 rows and support true colour and Unicode: Windows Terminal, iTerm2, macOS Terminal and the usual Linux terminals do; the old Windows console does not. Over SSH, Export isn't offered, since the file could only land on your computer.
 

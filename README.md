@@ -51,7 +51,8 @@ starting from a Character Template if you like, then moves the record
 into play.
 
 **Sharing a saga.** The storyguide can host a saga so players use it from
-their own computers, in a browser or over SSH (`tools/serve.py`). Players
+their own computers, in a browser or over SSH: Host for Players, in the
+saga's Saga Management (or More), or `tools/serve.py` in a terminal. Players
 sign in, change only what is theirs, and see each other's changes as they
 happen. Help (F1, or `?`) explains whatever has focus and has how-to guides,
 including one on hosting.
@@ -109,8 +110,9 @@ before the rename still import.
 
 - `ars_magica_manager/tui/` — the terminal front-end: `app.py` (the
   Textual app, started by `main.py`), `themes.py` (the Scriptorum
-  light/dark themes), `styles.py` (the app-wide CSS) and `hosting.py`
-  (serving it to players, started by `tools/serve.py`).
+  light/dark themes), `styles.py` (the app-wide CSS), and `serve.py` with
+  `hosting.py` (serving it to players: run by `tools/serve.py`, or as its
+  own process by the core's `hosting.py`, which both front-ends start).
 - `ars_magica_manager/gui/` — the desktop front-end (PySide6), in
   progress and read-only so far: `window.py` (saga chooser, covenant tree
   and sheet), `character_sheet.py`, `themes.py` (the Scriptorum palettes as

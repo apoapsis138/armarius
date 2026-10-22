@@ -17,7 +17,17 @@ from enum import StrEnum
 from functools import partial
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
-from . import arms, giving, places, seasons, sourcebooks, threats, traditions, world
+from . import (
+    arms,
+    giving,
+    hosting,
+    places,
+    seasons,
+    sourcebooks,
+    threats,
+    traditions,
+    world,
+)
 from . import book_value as bv
 from . import familiars as fam
 from . import inhabitants as inh
@@ -249,6 +259,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("x", "export_record", "Export"),
     MenuItem("x", "export_saga", "Export Saga"),
     MenuItem("k", "export_pack", "Export Pack"),
+    MenuItem("h", "host_saga", "Host for Players"),
+    MenuItem("h", "stop_hosting", "Stop Hosting"),
     MenuItem("u", "update_record", "Update from a File"),
     MenuItem("m", "toggle_mode", "In Creation / In Play"),
     MenuItem("p", "promote", "Promote"),
@@ -423,6 +435,16 @@ def _exports_saga(facts: ActionFacts) -> bool:
     return _on_saga(facts) and facts.can_send_files()
 
 
+def _hosts(facts: ActionFacts) -> bool:
+    """Host for Players: on the saga, in the storyguide's own window, while
+    it isn't hosting yet."""
+    return _on_saga(facts) and not hosting.is_hosted_copy() and not hosting.HOST.running
+
+
+def _stops_hosting(facts: ActionFacts) -> bool:
+    return _on_saga(facts) and hosting.HOST.running
+
+
 def _in_full_creation(facts: ActionFacts, *, worksheet: bool) -> bool:
     """Toggle Mode, or (`worksheet`) the creation worksheet: on a full
     record with an In Creation / In Play mode, the worksheet only while it
@@ -516,6 +538,8 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
     "export_pack": _exports_saga,
+    "host_saga": _hosts,
+    "stop_hosting": _stops_hosting,
     "toggle_mode": partial(_in_full_creation, worksheet=False),
     "creation_worksheet": partial(_in_full_creation, worksheet=True),
     "promote": partial(_changes_detail, up=True),

@@ -1,6 +1,6 @@
 """The saga's players and signing in.
 
-When the storyguide hosts the app (tools/serve.py), each browser copy asks
+When the storyguide hosts the app (hosting.py), each browser copy asks
 who is there before opening a saga: a name from the saga's player list and
 that player's passcode. The storyguide's own window -- the app run on their
 computer, not in a browser -- never asks. The list lives in the saga, where

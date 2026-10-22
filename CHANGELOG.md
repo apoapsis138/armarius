@@ -108,6 +108,23 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.126.0 — 2026-10-22
+
+### Sodales
+
+- **Host for Players from inside the app.** The saga page's Saga
+  Management on the desktop, and More on the saga in the terminal, now
+  have **Host for Players**: choose your address on the private network
+  (a Tailscale one is marked), the browser port and, if you like, SSH,
+  and the players can open the saga in their browsers. Saga Management
+  then says where they reach it, and **Stop Hosting** ends it and closes
+  every player's copy; closing the app stops it too. The form remembers
+  what you chose, and refuses an address the computer doesn't have or a
+  port another program is using. `tools/serve.py` still hosts from a
+  terminal as before.
+- The hosting guide now walks through starting and stopping from either
+  version.
+
 ## 2.125.3 — 2026-10-22
 
 ### Illuminatio

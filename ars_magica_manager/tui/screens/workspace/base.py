@@ -41,6 +41,7 @@ from .... import (
     creatures,
     deletion,
     giving,
+    hosting,
     neighbours,
     presence,
     seasons,
@@ -92,7 +93,6 @@ from ....sections import (
     SEASONS_INFO_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
-from ... import hosting
 from ..creation_worksheet import CreationWorksheetScreen
 from ..fields import (
     FieldsDialog,
@@ -283,6 +283,8 @@ _STORYGUIDE_ACTIONS = frozenset(
         "update_record",
         "export_saga",
         "export_pack",
+        "host_saga",
+        "stop_hosting",
     }
 )
 

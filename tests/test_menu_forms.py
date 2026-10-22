@@ -47,6 +47,7 @@ def test_each_page_offers_what_applies_there():
         "Import",
         "Export Saga",
         "Export Pack",
+        "Host for Players",
         "Set Date",
     ]
     assert _labels(menu_forms.new_items(page)) == [
@@ -394,7 +395,13 @@ def test_places_sets_out_where_each_action_is_offered():
         "Unassigned Characters": ["New Character"],
         "Unassigned Laboratories": ["New Laboratory"],
         "Seasons": ["Set Date"],
-        "Saga Management": ["Edit Saga", "Import", "Export Saga", "Export Pack"],
+        "Saga Management": [
+            "Edit Saga",
+            "Import",
+            "Export Saga",
+            "Export Pack",
+            "Host for Players",
+        ],
     }
     covenant = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
     assert _labels(menu_forms.placed(covenant, "People")) == ["New Character"]

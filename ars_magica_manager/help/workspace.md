@@ -147,7 +147,7 @@ The desktop version shows one page at a time, the way a book is read: the Sagas,
 The trail at the top left names the pages above the one on show, for example "Sagas › Matrix › Keep › Leandro". Click one to go back to it.
 
 - **Sagas** shows every saga as a card. Click one to open it.
-- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The World** shows its covenants and Tribunals as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import and Export Saga.
+- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The World** shows its covenants and Tribunals as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import, Export Saga and Host for Players.
 - A covenant's page lists its people, laboratories and possessions; click a person or a laboratory to open their page. A magus's familiar opens from the magus's page.
 
 A covenant, laboratory or character still being made is In Creation: its page is drawn on drafting vellum, and its header has the In Creation / In Play switch and the Creation Worksheet.
@@ -196,7 +196,7 @@ Covenants, Tribunals, Unassigned Characters and Unassigned Laboratories as cards
 heading ending in a blank card (New Covenant, New Tribunal, New Character, New
 Laboratory) that makes one more. **The Region** holds its neighbours and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Seasons** sets the date (Set Date) and
 opens the seasons played; **Rules and Content** opens Saga Content; and
-**Saga Management** holds Edit Saga, Import and Export Saga. A familiar is bound on its
+**Saga Management** holds Edit Saga, Import, Export Saga and Host for Players. A familiar is bound on its
 magus or in their laboratory.
 <!-- /gui -->
 
@@ -247,12 +247,13 @@ To bookmark a page, open it and click the ribbon at the right of its header, bel
 
 - **Set Date** moves the saga to any season and year without applying anything. Use it to put the date back after advancing by mistake; it does not undo what the season did (a backup is kept for that, see [Advance Season](help:advance-season)).
 - **Import** opens the Import Data dialog: characters, covenants or laboratories exported from another saga, books from a CSV file, or spells from a CSV file. See [Import Data](help:import-data).
+- **Host for Players** lets the players open the app in a web browser on their own computers, and **Stop Hosting** ends it. Only the storyguide's own window offers them. See [How to host a saga](help:guide-hosting).
 
 <!-- tui -->
 New (`n`) on the saga offers New Covenant, New Character, New Laboratory and, while a magus has no familiar, Bind Familiar.
 <!-- /tui -->
 <!-- gui -->
-Set Date is in the Seasons chapter, and Import and Export Saga in Saga Management. The New cards on The World make a covenant, character or laboratory.
+Set Date is in the Seasons chapter, and Import, Export Saga and Host for Players in Saga Management. The New cards on The World make a covenant, character or laboratory.
 <!-- /gui -->
 
 **See also:** [The workspace](help:workspace), [Advance Season](help:advance-season), [Import Data](help:import-data), [Creation Worksheet](help:creation-worksheet), [Getting started](help:guide-getting-started)
@@ -749,7 +750,7 @@ They become the saga's own spells. See [Import Spells](help:import-spells).
 Who can sign in to this saga when you host it, so that players open it in a web browser from their own computers. Each player signs in with their name and the passcode you give them. Your own window, the app run on your computer, never asks.
 <!-- gui -->
 
-The saga is hosted from the terminal version (see [How to host a saga](help:guide-hosting)); the players you add here are the ones it lets in.
+Host the saga with **Host for Players**, in the saga page's Saga Management (see [How to host a saga](help:guide-hosting)); the players you add here are the ones it lets in.
 <!-- /gui -->
 
 Only the storyguide sees this tab: your own window, or someone signed in with the Storyguide role.

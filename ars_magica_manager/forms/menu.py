@@ -83,6 +83,7 @@ from ..rules import lab_seasons
 from ..sections import LAB_TEXTS_SECTION
 from . import creation as creation_forms
 from . import creature as creature_forms
+from . import hosting as hosting_forms
 from . import importing as import_forms
 from . import library as library_forms
 from . import neighbour as neighbour_forms
@@ -391,6 +392,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "Library")),
     "export_saga": ((NodeKind.SAGA, "Saga Management"),),
     "export_pack": ((NodeKind.SAGA, "Saga Management"),),
+    "host_saga": ((NodeKind.SAGA, "Saga Management"),),
+    "stop_hosting": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
     "create_tribunal": ((NodeKind.SAGA, "Tribunals"),),
@@ -439,7 +442,17 @@ SAGA_MANAGEMENT: dict[str, str] = {
     "export_pack": "Write chosen Tribunals, covenants, places and neighbours, "
     "with what goes with them, to a content pack another saga can import or "
     "start from.",
+    "host_saga": "Let the players open the saga in a web browser on their own "
+    "computers, over your private network, each signing in as one of Saga "
+    "Content's Players.",
 }
+
+
+def management_note(action: str) -> str:
+    """What Saga Management says beside `action` (plain text)."""
+    if action == "stop_hosting":
+        return hosting_forms.hosting_note()
+    return SAGA_MANAGEMENT.get(action, "")
 
 
 def lives_at(action: str, kind: NodeKind, spot: str) -> bool:
@@ -1331,6 +1344,8 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "export_record": _export_command,
     "export_saga": lambda page: export_saga(page.saga, storage.EXPORTS_DIR),
     "export_pack": lambda page: packs.export_pack(page.saga, storage.EXPORTS_DIR),
+    "host_saga": lambda _page: hosting_forms.host_form(),
+    "stop_hosting": lambda _page: hosting_forms.stop_hosting(),
     "update_record": _update_command,
     "toggle_mode": _record_command,
     "promote": _detail_command("promote"),

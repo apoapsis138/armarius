@@ -1,4 +1,4 @@
-"""Hosting the app for players: the pieces tools/serve.py runs.
+"""Hosting the app for players: the pieces serve.py runs.
 
 Each player gets their own copy of the app, a separate process running
 Textual's web driver, which talks to this process in packets: terminal
@@ -18,7 +18,6 @@ Either way, who the player is comes from the app's own sign-in
 from __future__ import annotations
 
 import asyncio
-import os
 import sys
 from pathlib import Path
 
@@ -27,18 +26,7 @@ from textual_serve.app_service import AppService
 from textual_serve.download_manager import DownloadManager
 
 from .. import paths
-
-#: How a hosted copy is reached, told to it in this environment variable:
-#: "web" (a browser) or "ssh".
-TRANSPORT_VAR = "ARMARIUS_TRANSPORT"
-#: The variable's name before the app was Armarius, still read.
-OLD_TRANSPORT_VAR = "ARS_MAGICA_MANAGER_TRANSPORT"
-
-
-def transport() -> str:
-    """How this copy of the app is reached: "web", "ssh", or "" for the
-    storyguide's own window."""
-    return os.environ.get(TRANSPORT_VAR) or os.environ.get(OLD_TRANSPORT_VAR, "")
+from ..hosting import TRANSPORT_VAR
 
 
 class HostedAppService(AppService):

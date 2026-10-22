@@ -448,6 +448,7 @@ async def test_more_on_the_saga_offers_import_export_and_set_date():
             "Import",
             "Export Saga",
             "Export Pack",
+            "Host for Players",
             "Set Date",
         ]
         assert "m More" in _footer(app)

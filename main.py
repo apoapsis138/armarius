@@ -8,7 +8,7 @@ def main() -> None:
     # is, and the app says why.
     renamed = paths.move_old_default_folder()
     problem = paths.settle_data_dir()
-    from ars_magica_manager.tui import hosting
+    from ars_magica_manager import hosting
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
 
     app = ArsMagicaManagerApp()

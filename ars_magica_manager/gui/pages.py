@@ -777,8 +777,7 @@ class SagaPage(QWidget):
         p = self.p
         placed = self.placer.placed_buttons("Saga Management") if self.placer else []
         rows = [
-            (button, menu_forms.SAGA_MANAGEMENT.get(item.action, ""))
-            for item, button in placed
+            (button, menu_forms.management_note(item.action)) for item, button in placed
         ]
         return scrolling_page(
             p,

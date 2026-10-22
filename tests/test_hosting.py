@@ -11,6 +11,7 @@ from pathlib import Path
 import asyncssh
 import pytest
 
+from ars_magica_manager import hosting as core_hosting
 from ars_magica_manager import players as pl
 from ars_magica_manager import storage
 from ars_magica_manager.models import Saga
@@ -88,14 +89,14 @@ async def test_an_ssh_client_gets_the_app_and_signs_in(hosted_data):
 
 
 def test_a_copy_knows_how_it_is_reached(monkeypatch):
-    monkeypatch.delenv(hosting.TRANSPORT_VAR, raising=False)
-    monkeypatch.delenv(hosting.OLD_TRANSPORT_VAR, raising=False)
-    assert hosting.transport() == ""
+    monkeypatch.delenv(core_hosting.TRANSPORT_VAR, raising=False)
+    monkeypatch.delenv(core_hosting.OLD_TRANSPORT_VAR, raising=False)
+    assert core_hosting.transport() == ""
     # The variable's name before the rename is still read.
-    monkeypatch.setenv(hosting.OLD_TRANSPORT_VAR, "web")
-    assert hosting.transport() == "web"
-    monkeypatch.setenv(hosting.TRANSPORT_VAR, "ssh")
-    assert hosting.transport() == "ssh"
+    monkeypatch.setenv(core_hosting.OLD_TRANSPORT_VAR, "web")
+    assert core_hosting.transport() == "web"
+    monkeypatch.setenv(core_hosting.TRANSPORT_VAR, "ssh")
+    assert core_hosting.transport() == "ssh"
 
     async def nothing(*_args) -> None:
         pass
