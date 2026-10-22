@@ -12,9 +12,8 @@ from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from .. import arms, neighbours, place_events, towns
 from ..forms import neighbour as neighbour_forms
-from ..grids import Grid
 from ..models import Neighbour, Saga
-from ..neighbour_lists import KindTab
+from ..neighbour_lists import KindList, KindTab
 from ..sections import FAIRS_SECTION, TABLES_SECTION
 from ..sheets import region as region_sheet
 from .bookmark import with_bookmark
@@ -115,26 +114,36 @@ class NeighbourPage(QWidget):
                         lambda _row: True,
                     )
                 )
-            shown.append(
-                self._grid(
-                    entry.title(saga, n), entry.grid(saga, n), entry.section_id, more
-                )
-            )
+            shown.append(self._grid(entry, more))
         return scrolling_page(p, *shown)
 
-    def _grid(
-        self, title: str, grid: Grid, section_id: str, more: Sequence[RowVerb]
-    ) -> QWidget:
-        """`grid` as a table under `title`, with its section's Add, Edit
-        and Delete (and `more`) acting on the row chosen."""
-        p = self.p
+    def _grid(self, entry: KindList, more: Sequence[RowVerb]) -> QWidget:
+        """The list `entry` as a table under its title, with its section's
+        Add, Edit and Delete (and `more`) acting on the row chosen;
+        choosing a row also shows it in full in the inspector."""
+        saga, n, p = self.saga, self.neighbour, self.p
+        title, grid = entry.title(saga, n), entry.grid(saga, n)
         chooser = Chooser()
+
+        def choose(row: int) -> None:
+            chooser.choose(row)
+            shown = (
+                entry.info(saga, n, row)
+                if entry.info is not None
+                else grid.row_text(row)
+            )
+            if shown and row in grid.keys:
+                name = grid.rows[grid.keys.index(row)][0]
+                self.codex.inspect(name, title.split(" (")[0], shown)
+
         body = (
-            table_view(grid.table(), p, chooser.choose)
+            table_view(grid.table(), p, choose)
             if grid.rows
             else text(grid.empty, p["dim"], serif(12.5, italic=True), wrap=True)
         )
-        buttons = verb_buttons(self.ops[section_id], chooser, self.run, p, more=more)
+        buttons = verb_buttons(
+            self.ops[entry.section_id], chooser, self.run, p, more=more
+        )
         return section(title, p, body, buttons=buttons)
 
     def _standing(self) -> QWidget:

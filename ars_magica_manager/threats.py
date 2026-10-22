@@ -295,6 +295,15 @@ def stages_title(_saga: Saga, neighbour: Neighbour) -> str:
     return f"Stages ({len(stages(neighbour))})"
 
 
+def state_text(saga: Saga, neighbour: Neighbour, stage: dict[str, Any]) -> str:
+    """What became of `stage`: its outcome, or for one still pending
+    whether it has been reached."""
+    outcome = stage.get("outcome") or PENDING
+    if outcome != PENDING:
+        return outcome
+    return "Reached" if has_come(saga, neighbour, stage) else "To come"
+
+
 def stages_grid(saga: Saga, neighbour: Neighbour) -> Grid:
     """Each stage in order: when it comes, what became of it, and what
     happens if it is ignored. The stage reached is marked."""
@@ -302,10 +311,6 @@ def stages_grid(saga: Saga, neighbour: Neighbour) -> Grid:
     rows = []
     styles: dict[tuple[int, int], str] = {}
     for index, stage in enumerate(stages(neighbour)):
-        outcome = stage.get("outcome") or PENDING
-        state = outcome
-        if outcome == PENDING:
-            state = "Reached" if has_come(saga, neighbour, stage) else "To come"
         if stage is at.current:
             styles[(index, 0)] = "b"
             styles[(index, 2)] = "$text-warning"
@@ -313,7 +318,7 @@ def stages_grid(saga: Saga, neighbour: Neighbour) -> Grid:
             [
                 stage["title"],
                 when_text(neighbour, stage),
-                state,
+                state_text(saga, neighbour, stage),
                 stage.get("ignored", ""),
             ]
         )
@@ -326,6 +331,35 @@ def stages_grid(saga: Saga, neighbour: Neighbour) -> Grid:
         caps=[24, 12, 9, 0],
         stretch=3,
     )
+
+
+#: A stage's words, by key, as the inspector titles them.
+STAGE_WORDS: tuple[tuple[str, str], ...] = (
+    ("clues", "Clues"),
+    ("ignored", "If ignored"),
+    ("stopped", "If stopped"),
+    ("turned", "If turned"),
+)
+
+
+def stage_text(saga: Saga, neighbour: Neighbour, index: int) -> str:
+    """The stage at `index` in full, for the desktop's inspector: when it
+    comes and what became of it, then its clues and what happens if it
+    is ignored, stopped or turned, each it has; "" for no such stage."""
+    every = stages(neighbour)
+    if not 0 <= index < len(every):
+        return ""
+    stage = every[index]
+    lines = [
+        f"[$label]When:[/] {escape(when_text(neighbour, stage) or 'not set')}",
+        f"[$label]Now:[/] {escape(state_text(saga, neighbour, stage))}",
+    ]
+    lines += [
+        f"[$label]{title}:[/] {escape(words)}"
+        for key, title in STAGE_WORDS
+        if (words := (stage.get(key) or "").strip())
+    ]
+    return "\n".join(lines)
 
 
 def stage_fields(
@@ -391,5 +425,5 @@ def stage_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
 TAB = KindTab(
     "Stages",
     "tab-nb-threat",
-    (KindList(STAGES_SECTION, stages_title, stages_grid, stage_ops),),
+    (KindList(STAGES_SECTION, stages_title, stages_grid, stage_ops, stage_text),),
 )

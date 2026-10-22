@@ -108,6 +108,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 2.125.1 — 2026-10-22
+
+### Illuminatio
+
+- **A neighbour's lists fill the Inspector.** Clicking a row in a
+  neighbour's lists on the desktop now shows it in full in the
+  Inspector, as other pages' tables do. A threat's stage shows when it
+  comes, what became of it, its clues, and what happens if it is
+  ignored, stopped or turned; a lord's castles, a town's guilds and the
+  rest show each of their columns.
+
 ## 2.125.0 — 2026-10-22
 
 ### Book of Hours

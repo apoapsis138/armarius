@@ -520,3 +520,59 @@ def test_a_threat_on_a_track_moves_with_its_position():
     assert threats.due(saga, omen) is None  # not dated: not in Threat due
     keys = [f.key for f in threats.stage_fields(saga, omen, None)]
     assert "at" in keys and "year" not in keys
+
+
+def _table_headed(page, column: str):
+    """The page's table whose first column is titled `column`."""
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QTableView
+
+    for table in page.findChildren(QTableView):
+        if table.model().headerData(0, Qt.Orientation.Horizontal) == column:
+            return table
+    raise AssertionError(f"no table headed {column}")
+
+
+def test_choosing_a_stage_shows_it_in_full_in_the_inspector():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication
+
+    from ars_magica_manager.gui.region import NeighbourPage
+    from ars_magica_manager.gui.themes import PALETTES
+
+    QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    crown = saga.neighbour("crown")
+    assert crown is not None
+    threats.stages(crown)[1]["clues"] = "The river runs red"
+    text = threats.stage_text(saga, crown, 1)
+    assert "Winter 1220" in text and "To come" in text
+    assert "The river runs red" in text and "The mill is lost" in text
+    assert "If stopped" not in text  # nothing written for it
+    assert threats.stage_text(saga, crown, 9) == ""
+    page = NeighbourPage(saga, crown, PALETTES[0])
+    table = _table_headed(page, "Stage")
+    table.setCurrentIndex(table.model().index(1, 0))
+    inspector = page.codex.inspector
+    assert inspector.title.text() == "The ford floods"
+    assert "The river runs red" in inspector.body.text()
+
+
+def test_choosing_a_row_of_another_list_shows_its_columns():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication
+
+    from ars_magica_manager.gui.region import NeighbourPage
+    from ars_magica_manager.gui.themes import PALETTES
+
+    QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    gottfried = saga.neighbour("gottfried")
+    assert gottfried is not None
+    page = NeighbourPage(saga, gottfried, PALETTES[0])
+    table = _table_headed(page, "Castle")
+    table.setCurrentIndex(table.model().index(0, 0))
+    castle = lords.castles_grid(saga, gottfried).rows[0][0]
+    assert page.codex.inspector.title.text() == castle

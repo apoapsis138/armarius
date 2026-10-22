@@ -24,12 +24,15 @@ Entry = dict[str, Any]
 @dataclass(frozen=True)
 class KindList:
     """A list a kind shows: its section's id and title, its rows, and its
-    Add, Edit and Delete."""
+    Add, Edit and Delete. `info` is a row (by its key) in full, as markup
+    for the desktop's inspector, when that holds more than its columns;
+    without it the inspector shows the row's columns (Grid.row_text)."""
 
     section_id: str
     title: Callable[[Saga, Neighbour], str]
     grid: Callable[[Saga, Neighbour], Grid]
     ops: Callable[[Saga, Neighbour], SectionOps]
+    info: Callable[[Saga, Neighbour, int], str] | None = None
 
 
 @dataclass(frozen=True)

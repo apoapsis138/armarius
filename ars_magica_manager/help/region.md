@@ -149,6 +149,10 @@ needs), then a plain form:
 - **Place**: the place it is in, or one of that place's regio levels.
 
 Edit can also change its kind.
+<!-- gui -->
+Click a row in any of its lists (a lord's castles, a town's guilds, a
+threat's stages...) to read it in full in the Inspector.
+<!-- /gui -->
 
 **See also:** [The Region](help:region)
 
@@ -350,6 +354,11 @@ pending stage comes when its date (or its place on the track) is
 reached; mark one **Happened** to say it came anyway, or **Stopped** or
 **Turned** to say the troupe kept it from coming. The stage reached is
 in bold. Add, edit or delete one.
+<!-- gui -->
+Click a stage to read it in full in the Inspector: when it comes, what
+became of it, its clues, and what happens if it is ignored, stopped or
+turned.
+<!-- /gui -->
 
 # A place
 <!-- help: tab-nb-place -->
