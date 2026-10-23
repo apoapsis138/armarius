@@ -49,6 +49,7 @@ from .models import (
     Tribunal,
 )
 from .sections import (
+    BATTLES_SECTION,
     BOOK_SECTIONS,
     BOOKS_SECTION,
     CASES_SECTION,
@@ -253,6 +254,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("s", "give_silver", "Give Silver"),
     MenuItem("l", "lab_text_access", "Lab Texts Read"),
     MenuItem("t", "edit_traditions", "Traditions"),
+    MenuItem("d", "disputatio", "Disputatio"),
     MenuItem("f", "edit_fatigue", "Edit Fatigue"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue"),
     MenuItem("i", "import_data", "Import"),
@@ -272,6 +274,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("w", "withdraw_case", "Withdraw"),
     MenuItem("r", "roll_fair", "Roll Income"),
     MenuItem("r", "roll_table", "Roll"),
+    MenuItem("b", "battle_event", "Battle Event"),
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
     MenuItem("b", "begin_story", "Begin This Story"),
     MenuItem("g", "go_to", "Go To"),
@@ -285,6 +288,7 @@ MORE_SECTIONS: dict[str, str] = {
     "withdraw_case": CASES_SECTION,
     "roll_fair": FAIRS_SECTION,
     "roll_table": TABLES_SECTION,
+    "battle_event": BATTLES_SECTION,
 }
 
 #: Where in the navigation each record can be created: the saga, and
@@ -504,6 +508,18 @@ def _binds_familiar(facts: ActionFacts) -> bool:
     return bool(fam.unbonded_magi(facts.saga))
 
 
+def _disputes(facts: ActionFacts) -> bool:
+    """A character, with another to dispute with, when Art & Academe is in
+    play."""
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and facts.on_record()
+        and facts.selected_character is not None
+        and len(facts.saga.characters) > 1
+        and sourcebooks.in_play("A&A", sourcebooks.saga_books(facts.saga))
+    )
+
+
 def _joins_traditions(facts: ActionFacts) -> bool:
     """A full or sketched character, with a tradition the saga offers or
     one they belong to."""
@@ -563,6 +579,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "demote": partial(_changes_detail, up=False),
     "give": _gives,
     "edit_traditions": _joins_traditions,
+    "disputatio": _disputes,
     "give_silver": _gives_silver,
     "export_record": _exports_record,
     "update_record": _updates_record,

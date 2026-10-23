@@ -380,6 +380,13 @@ OPENERS: dict[str, Opener] = {
     "add gratitude": Opener(
         "neighbour", lambda ws: ws._core_verb("section-nb-gratitude", "add")
     ),
+    "add battle": Opener(
+        "neighbour", lambda ws: ws._core_verb("section-nb-battles", "add")
+    ),
+    "battle event": Opener(
+        "neighbour",
+        _pick(lambda ws: ws.action_battle_event(), "nb-battles-list"),
+    ),
     "edit guild": Opener(
         "town",
         _pick(lambda ws: ws._core_verb("section-nb-guilds", "edit"), "nb-guilds-list"),

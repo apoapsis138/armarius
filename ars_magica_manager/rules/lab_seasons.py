@@ -30,6 +30,7 @@ from collections.abc import MutableMapping
 from dataclasses import dataclass, field, replace
 
 from .. import books, vis
+from .. import enchanted_devices as ed
 from .. import spells as spl
 from ..models import (
     SUPERNATURAL_CATEGORIES,
@@ -54,6 +55,7 @@ from . import (
     experiment,
     familiar_seasons,
     lab,
+    lab_virtues,
     laboratory_seasons,
     spell_levels,
 )
@@ -149,8 +151,12 @@ class LabWork:
     points_gained: int = 0
     finished: bool = False
     notes: list[str] = field(default_factory=list)
-    #: Extracting vis: pawns of Vim gained.
+    #: Extracting vis: pawns gained, and of which Art (Vim, or a Form
+    #: with Hermetic Alchemy or an Extractor Virtue).
     vis_gained: int = 0
+    vis_gained_art: str = "Vim"
+    #: Waster of Vis: the pawns wasted on top of vis_cost (Art -> pawns).
+    vis_wasted: dict[str, int] = field(default_factory=dict)
     #: Vis paid for the work: Art -> pawns.
     vis_cost: dict[str, int] = field(default_factory=dict)
     #: A Longevity Ritual: its subject and aging-roll modifier.
@@ -351,6 +357,10 @@ def work(
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a lab plan, or what it does."""
     found, made = _work(saga, magus, plan)
+    if made is not None and made.vis_cost:
+        why = _waste(saga, magus, plan, made)
+        if why:
+            return [why], None
     if made is not None and seeking(plan):
         goal = experiment.find_goal(magus, plan.research)
         name = made_name(made)
@@ -437,8 +447,10 @@ def _work(
             "to invent a variant of it."
         ], None
     similar = spl.find_spell(saga, plan.similar_spell_id)
-    if similar is not None and not any(
-        k.spell_id == similar.id for k in magus.spells_known
+    # Disjointed Magic: no benefit from a similar spell known.
+    if similar is not None and (
+        not any(k.spell_id == similar.id for k in magus.spells_known)
+        or lab_virtues.has(magus, lab_virtues.DISJOINTED)
     ):
         similar = None
     technique, form = requisite_arts(magus, spell)
@@ -488,6 +500,51 @@ def _work(
     result.points_gained = lab.points_per_season(lab_total, level)
     result.finished = result.points_after >= level
     return [], result
+
+
+def vis_spent(work_: LabWork) -> dict[str, int]:
+    """The pawns a season's work takes from the pool: its cost and any
+    Waster of Vis wastes."""
+    spent = dict(work_.vis_cost)
+    for art, pawns in work_.vis_wasted.items():
+        spent[art] = spent.get(art, 0) + pawns
+    return spent
+
+
+def _waste(saga: Saga, magus: Character, plan: SeasonPlan, made: LabWork) -> str:
+    """Waster of Vis: the pawns it wastes, noted on the work; why the
+    season can't be done when the pool or the magus's limit can't take
+    them ("" when it can)."""
+    made.vis_wasted = lab_virtues.wasted(magus, made.vis_cost)
+    if not made.vis_wasted:
+        return ""
+    spent = vis_spent(made)
+    limit = lab.vis_limit(magus)
+    if sum(spent.values()) > limit:
+        return (
+            f"Waster of Vis: the work takes {sum(spent.values())} pawns with "
+            f"those wasted; {magus.name} can handle {limit} in a season."
+        )
+    pool = vis_pool(saga, magus, plan)
+    for art, pawns in spent.items():
+        if pool.get(art.lower(), 0) < pawns:
+            return (
+                f"Waster of Vis: the work takes {pawns} pawns of {art} with "
+                f"those wasted; {whose_vis(magus, plan)} raw vis has "
+                f"{pool.get(art.lower(), 0)}."
+            )
+    return ""
+
+
+def waste_note(work_: LabWork) -> str:
+    """ "Waster of Vis: 1 pawn(s) of Vim wasted." ("" for none)."""
+    if not work_.vis_wasted:
+        return ""
+    return (
+        "Waster of Vis: "
+        + ", ".join(f"{n} pawn(s) of {art}" for art, n in work_.vis_wasted.items())
+        + " wasted."
+    )
 
 
 def vis_pool(
@@ -548,6 +605,62 @@ def longevity_vis(age: int) -> int:
     return max(0, round_up(age / 5))
 
 
+def _extraction(
+    saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory, days: int
+) -> tuple[list[str], LabWork | None]:
+    """Extracting vis in a Magic aura: Vim, or a Form's with Hermetic
+    Alchemy or its Extractor Virtue."""
+    form = plan.extract_form
+    if form and form not in lab_virtues.extraction_forms(magus):
+        return [
+            f"{magus.name} extracts only Vim vis: Form vis needs Hermetic "
+            f"Alchemy or Extractor of {form} Vis."
+        ], None
+    # Form vis: the Creo Vim total with the Form as a requisite.
+    art = "Vim"
+    if form and sum(lab.art_score(magus, form)) < sum(lab.art_score(magus, "Vim")):
+        art = form
+    total = lab.lab_total(
+        saga,
+        magus,
+        "Creo",
+        art,
+        lab_,
+        activity=_TOTAL_ACTIVITY[EXTRACT],
+        days_missed=days,
+        experimenting=plan.experimenting,
+    )
+    if lab_virtues.has(magus, lab_virtues.ALCHEMY) and plan.shape_bonus > 0:
+        capped = min(plan.shape_bonus, lab.shape_material_cap(magus))
+        total = replace(
+            total,
+            total=total.total + capped,
+            lines=[
+                *total.lines,
+                Line(
+                    "Shape and material (Hermetic Alchemy)",
+                    amount=capped,
+                    source=lab_virtues.ALCHEMY_SOURCE,
+                ),
+            ],
+        )
+    total = _with_options(magus, plan, "Creo", art, total, saga)
+    lab_total = max(0, int(total.total))
+    if form:
+        divisor = lab_virtues.form_extraction_divisor(magus, form)
+        pawns = max(1, round_up(lab_total / divisor))
+    else:
+        pawns = lab.vis_extracted(lab_total)
+    return [], LabWork(
+        None,
+        total,
+        0,
+        finished=True,
+        vis_gained=pawns,
+        vis_gained_art=form or "Vim",
+    )
+
+
 def _one_season_work(
     saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory
 ) -> tuple[list[str], LabWork | None]:
@@ -587,19 +700,7 @@ def _one_season_work(
             return [
                 f"Vis is extracted only in a Magic aura; {lab_.name}'s is {realm}."
             ], None
-        total = lab.lab_total(
-            saga,
-            magus,
-            "Creo",
-            "Vim",
-            lab_,
-            activity=_TOTAL_ACTIVITY[EXTRACT],
-            days_missed=days,
-            experimenting=plan.experimenting,
-        )
-        total = _with_options(magus, plan, "Creo", "Vim", total, saga)
-        pawns = lab.vis_extracted(max(0, int(total.total)))
-        return [], LabWork(None, total, 0, finished=True, vis_gained=pawns)
+        return _extraction(saga, magus, plan, lab_, days)
     # A Longevity Ritual.
     subject = subject_of(saga, magus, plan)
     if subject is None:
@@ -725,7 +826,7 @@ def ritual_again(
     text's level)."""
     if text.type != "Lab Text" or text.text_kind != TEXT_LONGEVITY:
         return [f"{text.name} isn't the Lab Text of a Longevity Ritual."], None
-    if not books.can_read(saga, magus, text):
+    if not books.can_read(saga, magus, text) and not lab_virtues.remembers(magus, text):
         return [f"{magus.name} can't get at {text.name}."], None
     if not book_seasons.can_use_lab_text(magus, text):
         return [
@@ -994,8 +1095,10 @@ def _with_options(
     saga: Saga | None = None,
 ) -> lab.LabTotal:
     """The Lab Total with the plan's options: a Magical Focus counts the
-    lower Art twice, a Magic Theory Specialty that applies adds 1, and any
-    other modifier the troupe allows."""
+    lower Art twice, a Magic Theory Specialty that applies adds 1, any
+    other modifier the troupe allows, and the Virtues and Flaws of
+    rules.lab_virtues (Potent Magic, a Laboratory Horoscope... and the
+    halvings, last)."""
     extra: list[Line] = []
     if plan.focus and has_focus(magus):
         lower = min(
@@ -1037,13 +1140,60 @@ def _with_options(
                     source=laboratory_seasons.ASSIST_SOURCE,
                 )
             )
-    if not extra:
+    virtues, notes = lab_virtues.option_lines(
+        magus,
+        plan,
+        enchanting=plan.activity in _ENCHANTING,
+        talisman=_in_own_talisman(saga, magus, plan),
+        binding=plan.activity == familiar_seasons.BIND,
+        horoscope_score=lab_virtues.horoscope_score(magus),
+    )
+    extra += virtues
+    halvings = lab_virtues.halving_lines(magus, plan, _design_range(saga, plan))
+    if not extra and not halvings and not notes:
         return total
+    summed = int(total.total + sum(line.amount or 0 for line in extra))
     return replace(
         total,
-        total=total.total + sum(line.amount or 0 for line in extra),
-        lines=[*total.lines, *extra],
+        total=lab_virtues.halved(summed, halvings),
+        lines=[*total.lines, *extra, *halvings],
+        notes=[*(total.notes or []), *notes] or None,
     )
+
+
+#: Lab work that makes an enchanted device (Planetary Magic's horoscope).
+_ENCHANTING: tuple[str, ...] = (
+    enchant_seasons.INSTIL,
+    enchant_seasons.LESSER_WORK,
+    enchant_seasons.CHARGED_WORK,
+)
+
+
+def _in_own_talisman(saga: Saga | None, magus: Character, plan: SeasonPlan) -> bool:
+    """Instilling an effect in the magus's own talisman (Hubris's)."""
+    if saga is None or plan.activity != enchant_seasons.INSTIL:
+        return False
+    device = enchant_seasons.device_of(saga, plan)
+    return (
+        device is not None
+        and device.talisman
+        and ed.talisman_magus_id(device) == magus.id
+    )
+
+
+def _design_range(saga: Saga | None, plan: SeasonPlan) -> str | None:
+    """The Range of the spell or effect a season designs (Short-Ranged
+    Magic's), or None for work that designs nothing."""
+    if plan.activity == INVENT:
+        if plan.design is not None:
+            return plan.design.range
+        spell = the_spell(saga, plan) if saga is not None else None
+        return spell.range if spell is not None else None
+    if saga is not None and plan.activity in _ENCHANTING:
+        device = enchant_seasons.device_of(saga, plan)
+        effect = enchant_seasons.effect_of(device, plan) if device else None
+        return effect.range if effect is not None else None
+    return None
 
 
 #: Lab work that can be done experimenting (not from a Lab Text).

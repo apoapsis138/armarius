@@ -92,6 +92,11 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_fields_dialog.py",
     ),
     "ars_magica_manager/sheet_text.py": ("test_sheet_text.py",),
+    "ars_magica_manager/battles.py": (
+        "test_dialog_contracts_tribunal.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/disputations.py": ("test_screens_academe.py",),
     "ars_magica_manager/research_text.py": (
         "test_sheet_text.py",
         "test_research.py",

@@ -119,6 +119,8 @@ The rules are those of Ars Magica Definitive Edition, Chapter 10: Long-Term Even
 
 **Source Quality** is asked for Practice (leave it blank for 4, or 5 for a spell's Mastery), Adventure and some supplement activities. **Book** offers the covenant's library and the character's own books. **Teacher / master** lists the other characters: saving Be taught or Be trained plans their season too (see [Paired plans](help:plan-season-pairs)).
 
+**The Art is present** (Read a book, Study from vis; a character with Study Bonus or Study Requirement): the Art is studied beside its substance, a fire for Ignem or a pond for Aquam. **Secondary Insight** (Read a book, Be taught, Study from vis; a character with the Virtue): choose the Book or **Experience in** first, then open it to tick the Arts that gain 1 xp: up to 4 Forms when the season studies a Technique, up to 2 Techniques when it studies a Form, each shown with its score. With none ticked (or Clear), the lowest-scored are chosen. See [Virtues and Flaws the app applies](help:guide-advancement-virtues).
+
 **Stress die (blank: rolled)**: for activities that roll, leave it blank and the app rolls the die when the season is applied, or type a roll made at the table. **Months lost (0-3)**: each full month lost to distractions cuts the total by a third.
 
 ### The line above Save
@@ -126,7 +128,7 @@ The rules are those of Ars Magica Definitive Edition, Chapter 10: Long-Term Even
 
 As you fill the form in, the line above Save shows what the season will give: for each subject, the Advancement Total, the xp gained and how the score and xp change, for example "Latin: Advancement Total 4, +4 xp (score 3, 34 -> 38 xp)". For book work it shows the progress or the book made.
 
-If the plan breaks a rule (a book the character can't read, a teacher whose score is too low), the line shows the problem and Save refuses the plan until it is fixed. For a companion, it also reminds you when the plan leaves too few seasons that year for their two working seasons; this is a reminder, not a block.
+If the plan breaks a rule (a book the character can't read, a teacher whose score is too low), the line shows the problem and Save refuses the plan until it is fixed. Experience a Virtue shares with another subject says so, for example "Auram: +1 xp from Secondary Insight". For a companion, it also reminds you when the plan leaves too few seasons that year for their working seasons (two, one with Wealthy, three if Poor); this is a reminder, not a block.
 
 **See also:** [Advance Season](help:advance-season), [Grog's Yearly Update](help:grog-year), [Laboratory Planning tab](help:tab-lab-planning), [How to plan and run a season](help:guide-seasons), [How the app handles advancement](help:guide-advancement)
 
@@ -269,8 +271,8 @@ The season's plans are then removed.
 When Winter is advanced, the year ends:
 
 - each grog's [yearly update](help:grog-year) is applied;
-- a character running a business pays its yearly upkeep in Labor Points (City & Guild);
-- yearly Warping Points are added, for a Longevity Ritual and for living in a strong aura of another realm;
+- a character running a business pays its yearly upkeep in Labor Points (City & Guild), with Perfect Eye for Commodity's gain and Bigamist's second household;
+- yearly Warping Points are added, for a Longevity Ritual, for living in a strong aura of another realm, and for Raised from the Dead, Immortality of the Forest (which makes no aging roll) and Susceptibility to Warping;
 - every character aged 35 or more (50 with Strong Faerie Blood or Dhampir), or with a Longevity Ritual, makes an aging roll (Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging), written in their Diary;
 - Dwindling Resources lose a tenth of their value when they began dwindling (gone after ten years), and a contested resource still not secured gives nothing that year;
 - each covenant's surplus is added to its Wealth.
@@ -356,7 +358,8 @@ The steps run in a fixed order:
   side's debate Fatigue levels
   lost, or leave both blank and the debate is rolled round by round by
   the rules of Houses of Hermes: Societates (The Fine Arts of Debate):
-  Communication + Folk Ken, Intrigue or Artes Liberales against
+  Communication + Folk Ken, Intrigue or Artes Liberales (as logic and
+  rhetoric, for Academic Concentration and Aristotelian Training) against
   Intelligence + Charm, Guile or Leadership, each debater using what
   they are best at. A speaker with none of those scores written down (an
   advocate, the Tribunal, a sketch magus) debates at the skill you give:

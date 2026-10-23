@@ -393,7 +393,9 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
 
             run_steps(
                 self.app,
-                spec.choose(self._picked.get(spec.key)),
+                fs.first_choice(
+                    spec, self._picked.get(spec.key), self.current_values()
+                ),
                 lambda end: handle_choice(
                     end.value if isinstance(end, Picked) else None
                 ),

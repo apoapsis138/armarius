@@ -35,7 +35,7 @@ from ..models import (
     character_age,
 )
 from ..references import Ref
-from ..rules import aging, casting, derived, experiment, scores, warping
+from ..rules import aging, casting, derived, experiment, medicine, scores, warping
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
 from ..rules import xp as xp_rules
@@ -146,8 +146,9 @@ def biographical_right_text(character: Character) -> str:
     return markdown_text(character.description.biography) or "(none recorded)"
 
 
-def aging_text(character: Character) -> str:
-    """Aging & Warping: Decrepitude, the aging roll's figures and Warping."""
+def aging_text(character: Character, saga: Saga | None = None) -> str:
+    """Aging & Warping: Decrepitude, the aging roll's figures (a
+    physician's regimen among them) and Warping."""
     a = character.aging
     lines = [f"Decrepitude: {a.decrepitude}"]
     # The yearly aging roll's figures, once there are any.
@@ -162,6 +163,15 @@ def aging_text(character: Character) -> str:
         lines.append(f"Longevity Ritual: -{a.longevity_modifier} to aging rolls")
         lines += experiment_text.effect_lines(
             a.longevity_effects, "The ritual's experimental effects"
+        )
+    if a.regimen and saga is not None:
+        lines.append(
+            medicine.regimen_text(
+                saga.character(a.regimen_by),
+                a.regimen,
+                a.regimen_since,
+                saga.current_year,
+            )
         )
     if a.recovering:
         lines.append(f"Recovering from an Aging Crisis: {a.recovering}")

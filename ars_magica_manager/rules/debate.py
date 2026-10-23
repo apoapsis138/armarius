@@ -31,7 +31,7 @@ import random
 from dataclasses import dataclass, field
 
 from ..models import Character
-from . import dice
+from . import dice, work_virtues
 from .lab import ability_score
 from .rounding import round_nearest, round_up
 
@@ -43,6 +43,8 @@ SOURCE = (
 
 ATTACKS = ("Folk Ken", "Intrigue", "Artes Liberales")
 DEFENCES = ("Charm", "Guile", "Leadership")
+#: The subjects of Artes Liberales a debating attack uses.
+DEBATE_SUBJECTS = ("logic", "rhetoric")
 
 #: The attacker's modifier, by its Attack Ability and the defender's
 #: Defence Ability.
@@ -179,7 +181,13 @@ def debater(name: str, character: Character | None, skill: str = MIDDLING) -> De
         communication=c.communication,
         intelligence=c.intelligence,
         presence=c.presence,
-        attacks={a: sum(ability_score(character, a)) for a in ATTACKS},
+        attacks={a: sum(ability_score(character, a)) for a in ATTACKS}
+        | {
+            "Artes Liberales": sum(ability_score(character, "Artes Liberales"))
+            + sum(
+                n for _, n in work_virtues.artes_liberales(character, DEBATE_SUBJECTS)
+            )
+        },
         defences={d: sum(ability_score(character, d)) for d in DEFENCES},
         resistance=reputation + character.background.confidence_score + strong,
         clear_thinker="vf_clear_thinker" in names,
@@ -192,7 +200,7 @@ def debater(name: str, character: Character | None, skill: str = MIDDLING) -> De
 _PENALTIES = (0, 0, -1, -3, -5)
 
 
-def _penalty(lost: int, clear_thinker: bool) -> int:
+def fatigue_penalty(lost: int, clear_thinker: bool) -> int:
     penalty = _PENALTIES[min(lost, len(_PENALTIES) - 1)]
     if clear_thinker and penalty < 0:
         penalty += 1
@@ -256,14 +264,14 @@ def run(
                 a.communication
                 + a.attacks.get(attack_ability, 0)
                 + ATTACK_MODIFIERS[(attack_ability, defence_ability)]
-                + _penalty(lost[attacker], a.clear_thinker)
+                + fatigue_penalty(lost[attacker], a.clear_thinker)
                 + boost
                 + _roll(rng)
             )
             defence = (
                 d.intelligence
                 + d.defences.get(defence_ability, 0)
-                + _penalty(lost[defender], d.clear_thinker)
+                + fatigue_penalty(lost[defender], d.clear_thinker)
                 + guard
                 + _roll(rng)
             )

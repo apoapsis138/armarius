@@ -2,7 +2,7 @@
 Connection and Longevity Rituals, planned on the laboratory's Planning tab."""
 
 from support import strip_markup, wait_until
-from textual.widgets import Button, Input, Select, Static, Tree
+from textual.widgets import Button, Checkbox, Input, Select, Static, Tree
 
 from ars_magica_manager import laboratories, seasons, storage
 from ars_magica_manager.models import (
@@ -394,3 +394,46 @@ async def test_the_lab_work_screen_plans_a_longevity_ritual():
         "character",
     )
     assert plan.design is None
+
+
+async def test_the_lab_work_screen_offers_the_magus_s_lab_virtues():
+    saga = _saga()
+    saga.character("m").virtues_flaws = [
+        VirtueFlawInstance("vf_potent_magic", params={"field": "fire"}),
+        VirtueFlawInstance("vf_hermetic_alchemy"),
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        ws = app.screen
+        tree = ws.query_one("#nav-tree", Tree)
+        tree.select_node(_find(tree, ("laboratory", "lab")))
+        await wait_until(pilot, lambda: ws._laboratory_sheet_view is not None)
+        view = ws._laboratory_sheet_view
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(pilot, lambda: ws._active_section() == "tab-lab-planning")
+        await pilot.press("e")
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, InventSpellScreen)
+        )
+        screen = app.screen
+        await wait_until(pilot, lambda: bool(screen.query("#inv-activity")))
+        assert not screen.query("#inv-v-horoscope")  # not the magus's
+        screen.set_activity(lab_seasons.EXTRACT)
+        screen.query_one("#inv-vis-from", Select).value = "laboratory"
+        screen.query_one("#inv-v-potent", Checkbox).value = True
+        screen.query_one("#inv-v-extract_form", Select).value = "Ignem"
+        await pilot.pause()
+        total = strip_markup(str(screen.query_one("#inv-total", Static).content))
+        assert "Potent Magic" in total
+        screen.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: app.screen is ws)
+        await pilot.pause()
+    (plan,) = storage.load_saga("s").season_plans
+    assert (plan.activity, plan.potent, plan.extract_form) == (
+        lab_seasons.EXTRACT,
+        True,
+        "Ignem",
+    )

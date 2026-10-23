@@ -618,6 +618,39 @@ and a Magic Theory specialty, if the magus has them, days away from the
 laboratory (up to 10 cost nothing, 11 to 20 lower the total, more rule lab
 work out), and any other modifier the troupe allows.
 
+Some Virtues and Flaws add a field of their own, shown only to a magus who
+has them:
+
+- **Potent Magic**: tick it when the work is in the Virtue's field (+3, or
+  +6 for the Major Virtue; only the best one counts).
+- **Cyclic Magic: in its time** (+3, when the good part of the cycle covers
+  the whole season) and **Cyclic Magic: its bad time** (-3, when the bad
+  part touches any of it).
+- **Environmental Magic Condition**: tick it when the condition holds; the
+  Lab Total is halved.
+- **Laboratory Horoscope (+0 to +5)** (Planetary Magic, for enchanting a
+  device; Celestial Magic, any lab work): the bonus sought. It needs a
+  stress die + Intelligence + Artes Liberales (Astronomy, with Celestial
+  Magic, when the magus has it; Academic Concentration counts it as
+  astronomy) of three times the bonus. Type the die in
+  **Horoscope die** or leave it blank for the app to roll it when the
+  season is applied; a botch wastes the season.
+- **Vis extracted** (Hermetic Alchemy, or an Extractor of a Form's Vis):
+  extract a Form's vis instead of Vim. The Creo Vim total takes the Form
+  as a requisite (the lower of the two counts); Hermetic Alchemy gives a
+  pawn for every 20 points, the Form's Extractor a pawn for every 10. With
+  Hermetic Alchemy, **Shape & material** adds the vessel's bonuses, up to
+  Magic Theory.
+
+Others apply by themselves: **Short-Ranged Magic** halves the total when
+the spell or effect designed has a Range beyond Touch; **Disjointed Magic**
+gets nothing from a similar spell known or from effects already in a device
+sharing its Technique or Form; **Hubris** adds its Personality score to
+instilling the magus's own talisman and to binding a familiar; **Waster of
+Vis** needs a third more pawns (a quarter of those used is wasted), which
+count toward the season's limit; **Magical Memory** lets the magus work from
+their own Lab Texts wherever they are kept.
+
 ### Experimenting
 <!-- help: invent-spell-experiment -->
 

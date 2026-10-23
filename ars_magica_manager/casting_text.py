@@ -12,7 +12,7 @@ from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .covenants import home_aura
 from .markup import escape
 from .models import Character, KnownSpell, Saga, Spell
-from .rules import casting, certamen, penetration
+from .rules import casting, casting_virtues, certamen, penetration
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
 
@@ -22,6 +22,22 @@ def _levels(count: int) -> str:
     if count <= 0:
         return "no Fatigue"
     return "a Fatigue level" if count == 1 else f"{count} Fatigue levels"
+
+
+def casting_virtue_lines(magus: Character) -> list[str]:
+    """Lines (markup) for the Virtues and Flaws that change a cast beyond
+    the Casting Score: Diedne Magic's Spontaneous division, and those that
+    count only when their circumstance holds."""
+    lines: list[str] = []
+    if casting_virtues.diedne_spontaneous(magus):
+        lines.append(
+            "Diedne Magic: without Fatigue, (score + stress die) / 2 may be "
+            "chosen instead of / 5; with Fatigue, the lower Art counts twice."
+        )
+    reminders = casting_virtues.reminders(magus)
+    if reminders:
+        lines.append("When they apply: " + " ".join(escape(r) for r in reminders))
+    return lines
 
 
 def casting_scores_text(saga: Saga, magus: Character) -> str:
@@ -55,6 +71,7 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         + _levels(casting.fatigue_levels(1, magus.virtues_flaws, "spontaneous"))
         + ".",
     ]
+    lines += casting_virtue_lines(magus)
     resistances = [
         f"{ART_ABBREVIATIONS[form]} "
         + str(
@@ -150,8 +167,15 @@ def known_spell_casting_lines(
     lines = [f"[b]Casting Score:[/] {total} ({terms})"]
     if spell.level is None:
         return lines
+    vis = spl.vis_cost(spell) or 0
+    if spell.ritual:
+        pawns = casting_virtues.ritual_vis(magus, vis)
+        if pawns is None:
+            lines.append("Rigid Magic: no vis in casting, so no Ritual.")
+            return lines
+        vis = pawns
     botch = casting.botch_dice(
-        vis_pawns=spl.vis_cost(spell) or 0,
+        vis_pawns=vis,
         aura_realm=realm,
         aura=aura,
         mastery=known.mastery_score,
@@ -169,7 +193,7 @@ def known_spell_casting_lines(
         lines.append(
             "Ritual, stress die: "
             + ", ".join(steps)
-            + f" long-term Fatigue levels; {botch} botch "
+            + f" long-term Fatigue levels; {vis} pawn(s) of vis; {botch} botch "
             + ("die." if botch == 1 else "dice.")
         )
     elif need <= 0:

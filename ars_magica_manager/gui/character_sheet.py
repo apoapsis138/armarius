@@ -46,6 +46,7 @@ from PySide6.QtWidgets import (
 
 from .. import (
     artwork,
+    casting_text,
     connections,
     creation,
     giving,
@@ -1075,6 +1076,11 @@ class CharacterSheet(QWidget):
             ),
             chapter_title("Casting Scores", p),
             self._casting_grid(),
+            *(
+                [TextBlock("\n".join(virtues), p)]
+                if (virtues := casting_text.casting_virtue_lines(c))
+                else []
+            ),
             *(
                 [TextBlock(escape("\n".join(hybrid)), p)]
                 if (hybrid := hybrid_magic.summary(c))

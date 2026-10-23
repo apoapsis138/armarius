@@ -465,8 +465,9 @@ class _PickerField(QWidget):
         self.clear.setEnabled(self.value is not None)
 
     def pick(self) -> None:
-        assert self.spec.choose is not None
-        answered, result = self.form.run(self.spec.choose(self.value))
+        values = form_spec.current_values(self.form._readable(), self.form.read)
+        step = form_spec.first_choice(self.spec, self.value, values)
+        answered, result = self.form.run(step)
         if answered and isinstance(result, Picked):
             self._set(result.value)
 

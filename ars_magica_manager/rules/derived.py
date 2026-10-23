@@ -139,6 +139,18 @@ def worn_armour(inventory: Sequence[Possession]) -> Possession | None:
     return max(armour, key=lambda item: item.armor_protection, default=None)
 
 
+def primitive_armour(character: Character, armour: Possession) -> bool:
+    """Primitive Equipment in armour that isn't Inexpensive: -1 to its
+    Protection (and to Initiative, rules.combat)."""
+    if not any(vf.vf_id == "vf_primitive_equipment" for vf in character.virtues_flaws):
+        return False
+    from .. import catalog
+
+    definition = catalog.load_armor_catalog_by_id().get(armour.gear_id or "")
+    cost = definition.cost if definition is not None else armour.gear_quality
+    return cost != "Inexpensive"
+
+
 def soak(character: Character) -> Breakdown:
     """Stamina + armour Protection + Soak Virtues + the typed adjustment."""
     lines = [Line("Stamina", amount=character.characteristics.stamina, source=SOURCE)]
@@ -147,6 +159,11 @@ def soak(character: Character) -> Breakdown:
     if armour is not None and armour.armor_protection:
         lines.append(Line(armour.name, amount=armour.armor_protection, source=SOURCE))
         total += armour.armor_protection
+        if primitive_armour(character, armour):
+            lines.append(
+                Line("Primitive Equipment (armour)", amount=-1, source="character")
+            )
+            total -= 1
     for effect in effects.collect([character_source(character.virtues_flaws)], "soak"):
         amount = effect.amount or 0
         lines.append(Line(effect.entry.name, amount=amount, source="character"))

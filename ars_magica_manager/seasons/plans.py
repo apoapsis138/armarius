@@ -186,8 +186,8 @@ def working_seasons_done(character: Character, year: int, before: str) -> int:
 
 
 def working_seasons_note(character: Character, plan: SeasonPlan) -> str | None:
-    """A companion's plan that leaves too few seasons this year for their two
-    working seasons: why (DE Ch. 10, Assigning Seasons). A reminder, not a
+    """A companion's plan that leaves too few seasons this year for their
+    working seasons (two, or as Wealthy, Poor... change it): why (DE Ch. 10, Assigning Seasons). A reminder, not a
     block: a season of adventure or recovery can take a working season's
     place."""
     if character.type not in rules.WORKING_TYPES:
@@ -196,12 +196,13 @@ def working_seasons_note(character: Character, plan: SeasonPlan) -> str | None:
     if activity is None or activity.working:
         return None
     done = working_seasons_done(character, plan.year, plan.season)
-    owed = rules.WORKING_SEASONS_PER_YEAR - done
+    working = rules.working_seasons(character)
+    owed = working - done
     left = len(SEASONS) - SEASONS.index(plan.season) - 1
     if owed <= left:
         return None
     return (
-        f"A companion works {rules.WORKING_SEASONS_PER_YEAR} seasons a year "
+        f"A companion works {working} season{'' if working == 1 else 's'} a year "
         f"(DE Ch. 10, Assigning Seasons): {done} worked in {plan.year} so far, "
         f"and this leaves {left} season(s) for the other {owed}."
     )
@@ -377,7 +378,7 @@ def _vis_study_subject(saga: Saga, character: Character, plan: SeasonPlan) -> st
     shares = rules.allocations(plan)
     if not shares:
         return _xp_subject(saga, character, plan)
-    pawns = study.vis_pawns(rules.score(character, shares[0].subject))
+    pawns = study.season_vis_pawns(character, rules.score(character, shares[0].subject))
     return f"{_first_subject(saga, character, plan)} ({pawns} pawn(s) of vis)"
 
 
@@ -401,7 +402,9 @@ _SUBJECTS: dict[str, Callable[[Saga, Character, SeasonPlan], str]] = {
     **{key: _laboratory_subject for key in ls.ACTIVITIES},
     **{key: _familiar_subject for key in fs.ACTIVITIES},
     **{key: _device_subject for key in es.ACTIVITIES},
-    lab_seasons.EXTRACT: lambda saga, character, plan: "Vim vis",
+    lab_seasons.EXTRACT: lambda saga, character, plan: (
+        f"{plan.extract_form or 'Vim'} vis"
+    ),
     lab_seasons.FIX_AC: _connection_subject,
     lab_seasons.LONGEVITY: _longevity_subject,
     rules.READ: _read_subject,
@@ -430,15 +433,32 @@ def plan_summary(saga: Saga, character: Character, plan: SeasonPlan) -> str:
 
 
 def _gain_line(gain: rules.XpGain, names: dict[str, str]) -> str:
-    """ "Latin: Advancement Total 4, +4 xp (score 3, 34 -> 38 xp)" (plain)."""
+    """ "Latin: Advancement Total 4, +4 xp (score 3, 34 -> 38 xp)" (plain),
+    with the terms that changed the Source Quality ("Book Learner +3",
+    "Affinity with Ignem x1.5"); shared experience names its Virtue."""
     factor = rules.subject_factor(gain.subject)
     before = xp_rules.score_from_xp(gain.before, factor)
     after = xp_rules.score_from_xp(gain.after, factor)
     scores = f"score {before}" if before == after else f"score {before} -> {after}"
     notes = "".join(f" {n}" for n in gain.result.notes)
+    if gain.via:
+        return (
+            f"{rules.subject_label(gain.subject, names)}: +{gain.result.xp} xp "
+            f"from {gain.via} ({scores}, {gain.before} -> {gain.after} xp).{notes}"
+        )
+    terms = [
+        f"{line.label} {line.amount:+g}"
+        for line in gain.result.lines[1:]
+        if line.amount is not None
+    ] + [
+        f"{line.label} x{line.multiplier:g}"
+        for line in gain.result.lines
+        if line.multiplier is not None
+    ]
+    why = f" ({', '.join(terms)})" if terms else ""
     return (
         f"{rules.subject_label(gain.subject, names)}: Advancement Total "
-        f"{gain.result.advancement_total}, +{gain.result.xp} xp "
+        f"{gain.result.advancement_total}{why}, +{gain.result.xp} xp "
         f"({scores}, {gain.before} -> {gain.after} xp).{notes}"
     )
 
@@ -776,7 +796,7 @@ _WORK_TEXT: dict[str, Callable[[lab_seasons.LabWork, SeasonPlan], str]] = {
     ),
     es.INSTIL: partial(_points_text, done="instilled", vis=True),
     lab_seasons.EXTRACT: lambda work, plan: (
-        f"Lab Total {int(work.lab_total.total)}: {work.vis_gained} pawn(s) of Vim vis"
+        f"Lab Total {int(work.lab_total.total)}: {work.vis_gained} pawn(s) of {work.vis_gained_art} vis"
     ),
     lab_seasons.FIX_AC: lambda work, plan: (
         "1 pawn of Vim vis: the Arcane Connection is fixed"

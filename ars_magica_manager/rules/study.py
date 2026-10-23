@@ -2,6 +2,8 @@
 Total and the xp a season gives.
 
     Advancement Total = Source Quality + Virtue bonuses - Flaw penalties
+    Advancement Total x Virtues such as Linguist (x1.25, round up) or
+                        Savantism (x0.5, round down)
     xp gained         = Advancement Total, then x Affinity (x1.5, round up),
                         and never past the source's Gain Limit
 
@@ -15,14 +17,15 @@ Each full month lost cuts the total by a third, the rest rounded up.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 
 from ..models import Book, Character
-from . import animal_grogs, effects, scores, xp
+from . import animal_grogs, effects, lab_virtues, scores, xp
 from . import creation_access as access
 from .breakdown import Line
 from .lab import ability_score
-from .rounding import round_up
+from .rounding import round_down, round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Advancement "
@@ -73,6 +76,15 @@ def vis_pawns(art_score: int) -> int:
     return max(1, round_up(art_score / 5))
 
 
+def season_vis_pawns(student: Character, art_score: int) -> int:
+    """The pawns `student` uses in a season of vis study: vis_pawns, a
+    third more with Waster of Vis (a quarter of those used is wasted)."""
+    pawns = vis_pawns(art_score)
+    if lab_virtues.has(student, lab_virtues.WASTER):
+        return lab_virtues.with_waste(pawns)
+    return pawns
+
+
 def after_distraction(total: int, months_lost: int) -> int:
     """What's left after full months lost: a third less per month, the
     remainder rounded up (16, one month lost -> 11)."""
@@ -99,11 +111,15 @@ def season_of_study(
     is_art: bool,
     gain_limit: int | None = None,
     months_lost: int = 0,
+    mastery: bool = False,
+    bonuses: Sequence[Line] = (),
 ) -> StudyResult:
-    """One season studying `subject` (an Art or Ability name) from a source
-    of `source_quality`, for `activity` (a study_total activity). An animal
-    grog learns a human Language at its own Source Quality, and never
-    raises its kind's Language (rules.animal_grogs)."""
+    """One season studying `subject` (an Art or Ability name, or a spell's
+    id for its Mastery, `mastery`) from a source of `source_quality`, for
+    `activity` (a study_total activity); `bonuses` add to the Source
+    Quality (Study Bonus's +2). An animal grog learns a human Language at
+    its own Source Quality, and never raises its kind's Language
+    (rules.animal_grogs)."""
     if not is_art and animal_grogs.own_language(student, subject):
         line = Line("An animal's own Language", amount=0, source=animal_grogs.SOURCE)
         return StudyResult(
@@ -123,6 +139,7 @@ def season_of_study(
         ]
     else:
         lines = [Line("Source Quality", amount=source_quality, source=SOURCE)]
+    lines += bonuses
     source = scores.character_source(student.virtues_flaws)
     for effect in effects.collect([source], "study_total", activity=activity):
         lines.append(
@@ -142,6 +159,9 @@ def season_of_study(
             Line(f"{months_lost} month(s) lost", amount=reduced - total, source=SOURCE)
         )
         total = reduced
+    total = _multiplied(
+        source, total, lines, f"Mastery: {subject}" if mastery else subject
+    )
     gained: float = total
     kind = "art_xp_gain" if is_art else "ability_xp_gain"
     for effect in effects.collect([source], kind, target=subject):
@@ -166,6 +186,29 @@ def season_of_study(
             )
             gained_xp = room
     return StudyResult(advancement_total=total, xp=gained_xp, lines=lines, notes=notes)
+
+
+def _multiplied(
+    source: effects.EffectSource, total: int, lines: list[Line], target: str
+) -> int:
+    """The Advancement Total with its advancement_total multipliers: all of
+    them multiply together, then a total raised rounds up (Linguist: "a
+    quarter, rounded up") and one lowered rounds down (the default)."""
+    factor = 1.0
+    for effect in effects.collect([source], "advancement_total", target=target):
+        if effect.modifier.multiplier is None:
+            continue
+        factor *= effect.modifier.multiplier
+        lines.append(
+            Line(
+                effect.entry.name,
+                multiplier=effect.modifier.multiplier,
+                source="character",
+            )
+        )
+    if factor == 1:
+        return total
+    return round_up(total * factor) if factor > 1 else round_down(total * factor)
 
 
 def _current_xp(student: Character, subject: str, is_art: bool) -> int:

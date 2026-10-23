@@ -94,6 +94,22 @@ OPTIONAL_PARAMS: dict[str, tuple[str, str]] = {
         "Favoured Craft or Profession",
         "Dwarf or Brownie Blood only, e.g. Craft: Smith",
     ),
+    "chosen": (
+        "Its five Abilities",
+        "e.g. Athletics, Awareness, Brawl, Hunt, Survival",
+    ),
+    "connected": (
+        "Its three connected Abilities",
+        "e.g. Magic Lore, Dominion Lore, Premonitions",
+    ),
+    "bonus": (
+        "Damage bonus (up to +5)",
+        "nominated before each combat; above +2 it shows",
+    ),
+    "status": (
+        "Posing as of lower status",
+        "lower, to halve the second household's cost",
+    ),
 }
 
 #: An Add list's title, by the side it lists (None: both).
@@ -122,6 +138,14 @@ def param_choices(
         "form": FORMS,
         "realm": REALM_NAMES,
         "blood": BLOOD_NAMES,
+        # A natural weapon's Quality or Inferiority names the weapon.
+        "weapon": list(
+            dict.fromkeys(
+                w.name
+                for w in catalog.load_weapon_catalog()
+                if w.cost is None and w.attack is not None
+            )
+        ),
     }
     found: dict[str, list[tuple[str, str]]] = {}
     for param in entry.parameters:

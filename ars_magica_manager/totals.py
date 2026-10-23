@@ -36,8 +36,21 @@ MODIFIER_TYPES: dict[str, str] = {
     "form_resistance": "The Form's part of Magic Resistance",
     "parma_resistance": "Parma Magica's part of Magic Resistance",
     "soak": "Soak total",
+    # Combat totals; the `target` narrows one to a weapon's table ("melee",
+    # which covers natural weapons too, "missile", "natural") or a weapon's
+    # name ("Dodge", "{weapon}").
+    "combat_initiative": "Initiative total in combat",
+    "combat_attack": "Attack total in combat",
+    "combat_defense": "Defense total in combat",
+    "combat_damage": "Damage total in combat",
     "size": "A character's Size",
     "study_total": "Study total, for seasonal learning",
+    # A season's Advancement Total multiplied, after its flat bonuses and
+    # before Affinity: for every subject, or the `target`'s ("Mastery: *"
+    # for spell Mastery, "Living Language: *").
+    "advancement_total": "A season's Advancement Total, multiplied",
+    # Working seasons a companion owes each year (Wealthy -1, Poor +1).
+    "working_seasons": "Working seasons a year",
     "teaching_source_quality": "Source Quality of those this character teaches",
     "aging_roll": "Aging roll",
     # Warping Points each season spent somewhere (a place's effect).

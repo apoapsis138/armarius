@@ -269,6 +269,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "create_creature",
         "roll_fair",
         "roll_table",
+        "battle_event",
         "found_covenant",
         "begin_story",
         "create_character",

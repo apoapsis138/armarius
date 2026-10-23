@@ -154,7 +154,7 @@ def _when_finished(
 #: A queue row's progress for each kind of lab work (Strategy, as a table);
 #: None, or work not listed, shows its points until it is finished.
 _PROGRESS: dict[str, Callable[[lab_seasons.LabWork, SeasonPlan], str | None]] = {
-    lab_seasons.EXTRACT: lambda work, plan: f"+{work.vis_gained} Vim",
+    lab_seasons.EXTRACT: lambda work, plan: f"+{work.vis_gained} {work.vis_gained_art}",
     lab_seasons.FIX_AC: lambda work, plan: "fixed",
     lab_seasons.LONGEVITY: lambda work, plan: f"aging -{work.longevity}",
     bs.DECODE_TEXT: _when_finished("decoded"),

@@ -109,6 +109,52 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.3.0 — 2026-10-23
+
+### Computus
+
+- **Virtues and Flaws in study.** Linguist, Savantism, Flawless Magic
+  and Loose Magic change what a season's study gives; Study Bonus and
+  Study Requirement ask whether the Art is present; Ability Block and
+  Restricted Learning refuse what they forbid; Secondary Insight
+  (with a grid to tick the Arts that gain), Elemental Magic, Hermetic
+  Sorcery and Magian Lineage share the experience; Master of None
+  loses a second raise in a year; Waster of Vis wastes vis studied.
+- **Virtues and Flaws in the laboratory.** The lab plan offers only the
+  magus's own options (Potent Magic, Cyclic Magic, Environmental Magic
+  Condition, a Laboratory Horoscope, extracting Form vis), and counts
+  Short-Ranged and Disjointed Magic, Hubris, Waster of Vis, Magical
+  Memory and Hermetic Alchemy by themselves.
+- **Casting.** The Casting Scores list the Virtues that count only
+  sometimes, with a Spontaneous line for Diedne Magic; a Ritual's vis
+  counts Mercurian Magic and Waster of Vis.
+- **Working seasons and the year.** Wealthy, Poor and License of Absence
+  change the working seasons; Perfect Eye for Commodity and Bigamist
+  change the business year; Necessary Realm Aura and Independent
+  Craftsman change workshop seasons; Academic Concentration and
+  Aristotelian Training adjust Artes Liberales by subject; Raised from
+  the Dead, Immortality of the Forest and Susceptibility to Warping add
+  the year's Warping.
+- **Combat.** A specialty naming the weapon adds 1 to Attack and
+  Defence, and the combat Flaws (Lame, Missing Eye, Hobbled, Poor
+  Eyesight, Slow Reflexes, Primitive Equipment) and natural weapons'
+  Qualities and Inferiorities count, each named on a Counted line. A
+  character with Ride gets a Mounted line: Ride (at most +3) to Attack
+  and Defence, and a charge.
+- **Battles (Lords of Men).** A lord's Fief tab lists his battles, and
+  More > Battle Event plays each one's next event: the Event Total
+  against the stage's Ease Factor, and the losing side's losses.
+- **Disputatio (Art & Academe).** More > Disputatio stages a schoolmen's
+  debate between two characters, with the Virtues and Flaws that change
+  it, and keeps it in both Diaries.
+- **A physician's regimen (Art & Academe).** The Aging form takes a
+  physician's regimen, which raises Living Conditions for aging once
+  lived under for a year.
+
+### Glossa
+
+- Help for each of these, and a guide, How to fight a battle.
+
 ## 3.2.1 — 2026-10-23
 
 ### Peregrinatio

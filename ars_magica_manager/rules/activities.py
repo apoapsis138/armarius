@@ -62,13 +62,17 @@ from . import (
     casting,
     derived,
     dice,
+    effects,
     enchant_seasons,
     experiment,
     familiar_seasons,
     lab_seasons,
+    lab_virtues,
     laboratory_seasons,
     realms,
+    scores,
     study,
+    study_virtues,
     supplement_seasons,
     supplement_work,
     tradition_seasons,
@@ -77,6 +81,7 @@ from . import (
 from . import (
     creation_access as access,
 )
+from .breakdown import Line
 from .rounding import round_down
 from .study import StudyResult, season_of_study
 
@@ -133,7 +138,8 @@ SOURCE = ASSIGNING_SOURCE
 PLANNED_TYPES: tuple[str, ...] = ("magus", "companion", "mythic companion")
 #: The types that work two seasons a year (Assigning Seasons).
 WORKING_TYPES: tuple[str, ...] = ("companion", "mythic companion")
-#: Working seasons a companion owes each year.
+#: Working seasons a companion owes each year, before Virtues and Flaws
+#: (working_seasons).
 WORKING_SEASONS_PER_YEAR = 2
 
 OTHER = "other"
@@ -716,6 +722,17 @@ ACTIVITIES.update(
 ACTIVITIES[OTHER] = _OTHER_ACTIVITY
 
 
+def working_seasons(character: Character) -> int:
+    """The working seasons a companion owes each year: two, one fewer with
+    Wealthy or License of Absence, one more if Poor (DE Ch. 4), between
+    none and all four."""
+    found = effects.collect(
+        [scores.character_source(character.virtues_flaws)], "working_seasons"
+    )
+    owed = WORKING_SEASONS_PER_YEAR + int(effects.amount_total(found))
+    return max(0, min(len(SEASONS), owed))
+
+
 def is_planned(character: Character) -> bool:
     """Whether `character` is planned season by season (not a grog)."""
     return character.type in PLANNED_TYPES
@@ -1130,7 +1147,7 @@ def _vis_study_problems(
     if kind != "art":
         found.append("Vis is studied for an Art.")
     else:
-        pawns = study.vis_pawns(score(character, subject))
+        pawns = study.season_vis_pawns(character, score(character, subject))
         held = vis_pool(saga, character, plan).get(art.lower(), 0)
         if held < pawns:
             found.append(
@@ -1189,6 +1206,9 @@ class XpGain:
     subject: str
     result: StudyResult
     before: int  # total xp before the season
+    #: The Virtue that shared this experience from the season's own subject
+    #: (Secondary Insight); "" for the season's own Advancement Total.
+    via: str = ""
 
     @property
     def after(self) -> int:
@@ -1247,6 +1267,7 @@ def _gain(
     activity: str,
     months: int,
     gain_limit: int | None = None,
+    bonuses: Sequence[Line] = (),
 ) -> XpGain:
     kind, name = _split(subject)
     result = season_of_study(
@@ -1257,6 +1278,8 @@ def _gain(
         is_art=kind == "art",
         gain_limit=gain_limit,
         months_lost=months,
+        mastery=kind == "mastery",
+        bonuses=bonuses,
     )
     return XpGain(subject, result, subject_xp(character, subject))
 
@@ -1381,6 +1404,9 @@ def outcome(
     if found or activity is None or not activity.gives_xp:
         return result
     result = _outcome(character, plan, saga, rng, result, activity)
+    if plan.activity in ADVANCEMENT_ACTIVITIES and not result.problems:
+        _master_of_none(saga, character, plan, result)
+        _share(character, plan, result)
     if plan.correspondence and not result.problems:
         result.gains.append(_correspondence(character, plan.correspondence))
         result.notes.append(
@@ -1427,6 +1453,89 @@ def _wound_problem(character: Character, plan: SeasonPlan, activity: Activity) -
     if penalty <= -3 and (activity.lab or plan.activity in _CRAFT):
         return f"{character.name}'s wounds ({penalty}) allow no lab or craft work."
     return ""
+
+
+#: The activities whose experience is an Advancement Total in the subjects
+#: chosen (Master of None's, and the Virtues that share it: rules.study_virtues).
+ADVANCEMENT_ACTIVITIES: tuple[str, ...] = (
+    *STUDY_ACTIVITIES,
+    EXPOSURE,
+    PRACTICE,
+    ADVENTURE,
+)
+
+
+def _raised_earlier(
+    saga: Saga | None, character: Character, plan: SeasonPlan
+) -> set[str]:
+    """Subjects an Advancement Total has raised, or a plan still to be
+    played will raise, earlier in the plan's year."""
+    raised = study_virtues.raised_this_year(character, plan.year)
+    if saga is None:
+        return raised
+    for earlier in saga.season_plans:
+        if (
+            earlier.character_id != character.id
+            or earlier.year != plan.year
+            or SEASONS.index(earlier.season) >= SEASONS.index(plan.season)
+            or earlier.activity not in ADVANCEMENT_ACTIVITIES
+        ):
+            continue
+        raised |= {a.subject for a in allocations(earlier)}
+        book = next((b for b in saga.books if b.id == earlier.book_id), None)
+        subject = book_subject(book) if book is not None else None
+        if earlier.activity == READ and subject:
+            raised.add(subject)
+    return raised
+
+
+def _master_of_none(
+    saga: Saga | None, character: Character, plan: SeasonPlan, result: Outcome
+) -> None:
+    """Master of None: an Advancement Total's xp in a subject already raised
+    this year is lost (DE Ch. 4)."""
+    if not study_virtues.has(character, study_virtues.MASTER_OF_NONE):
+        return
+    raised = _raised_earlier(saga, character, plan)
+    for gain in result.gains:
+        if gain.via or gain.subject not in raised or not gain.result.xp:
+            continue
+        name = _split(gain.subject)[1]
+        gain.result.notes.append(
+            f"Master of None: {name} was already raised this year; "
+            f"{gain.result.xp} xp lost."
+        )
+        gain.result.xp = 0
+
+
+def _share(character: Character, plan: SeasonPlan, result: Outcome) -> None:
+    """Experience the character's Virtues share from the season's subject
+    with others (Secondary Insight, Elemental Magic...)."""
+    kind = _STUDY_KIND[plan.activity]
+    for gain in list(result.gains):
+        subject_kind, name = _split(gain.subject)
+        if gain.via or subject_kind not in ("art", "ability"):
+            continue
+        season = study_virtues.Studied(
+            character,
+            subject_kind,
+            name,
+            kind,
+            gain.result.advancement_total,
+            gain.result.xp,
+            plan.insight_arts,
+        )
+        for each in study_virtues.shared(season):
+            line = Line(each.via, amount=each.xp, source=study_virtues.SOURCE)
+            notes = [each.note.strip()] if each.note else []
+            result.gains.append(
+                XpGain(
+                    each.subject,
+                    StudyResult(0, each.xp, [line], notes),
+                    subject_xp(character, each.subject),
+                    via=each.via,
+                )
+            )
 
 
 def _correspondence(character: Character, subject: str) -> XpGain:
@@ -1538,7 +1647,18 @@ def _lab_outcome(
     rng: random.Random | None,
     result: Outcome,
 ) -> None:
+    if _horoscope_botched(saga, character, plan, rng, result):
+        return
+    plan = result.plan
     _, result.lab_work = lab_seasons.work(saga, character, plan)
+    if result.lab_work is not None and result.lab_work.vis_wasted:
+        result.notes.append(lab_seasons.waste_note(result.lab_work))
+    if result.lab_work is not None and result.lab_work.lab_total.notes:
+        result.notes += [
+            n
+            for n in result.lab_work.lab_total.notes
+            if n.startswith("Laboratory Horoscope")
+        ]
     if plan.activity == enchant_seasons.INVESTIGATE and result.lab_work is not None:
         if _pending(plan, rng):
             result.pending_roll = True
@@ -1564,6 +1684,37 @@ def _lab_outcome(
                 result.lab_work, character, plan, rng or random.Random(), saga
             )
     result.gains.append(_exposure(character, "Magic Theory"))
+
+
+def _horoscope_botched(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> bool:
+    """A Laboratory Horoscope to roll as the season is played: the stress
+    die joins the plan (as one typed at the table would); a botch wastes
+    the season (The Mysteries, Planetary Magic)."""
+    if not plan.horoscope or plan.horoscope_die is not None or rng is None:
+        return False
+    enchanting = plan.activity in (
+        enchant_seasons.INSTIL,
+        enchant_seasons.LESSER_WORK,
+        enchant_seasons.CHARGED_WORK,
+    )
+    if not lab_virtues.horoscope_applies(character, plan.activity, enchanting):
+        return False
+    wanted = min(plan.horoscope, lab_virtues.HOROSCOPE_MAX)
+    die = dice.stress_die(rng, wanted, saga=saga)
+    result.plan = replace(plan, horoscope_die=die.value)
+    if die.botches:
+        result.problems.append(
+            f"The Laboratory Horoscope botched ({die.botches} on {wanted} botch "
+            "dice): the season's lab work is wasted."
+        )
+        return True
+    return False
 
 
 # Writing and copying books: Exposure in the writing's
@@ -1799,12 +1950,35 @@ def _study_family_problems(
 ) -> list[str]:
     chosen = [a for a in plan.allocations if a.subject]
     found = _months_problem(plan) + _study_problems(saga, character, plan, chosen)
+    found += _virtue_problems(saga, character, plan)
     if plan.activity != READ:
         for allocation in chosen[:1]:
             if not has_subject(character, allocation.subject):
                 kind, name = _split(allocation.subject)
                 if kind != "ability" or plan.activity == TEACH:
                     found.append(f"{character.name} doesn't have {name}.")
+    return found
+
+
+def _virtue_problems(
+    saga: Saga | None, character: Character, plan: SeasonPlan
+) -> list[str]:
+    """What the student's Virtues and Flaws rule out (rules.study_virtues):
+    an Ability they can't learn, an Art away from its substance."""
+    if plan.activity == TEACH:
+        return []
+    subjects = [a.subject for a in plan.allocations if a.subject]
+    if plan.activity == READ and saga is not None:
+        book = next((b for b in saga.books if b.id == plan.book_id), None)
+        subject = book_subject(book) if book is not None else None
+        subjects = [subject] if subject else []
+    kind = _STUDY_KIND[plan.activity]
+    abilities = [_split(s)[1] for s in subjects if _split(s)[0] == "ability"]
+    found = study_virtues.learning_problems(character, abilities, kind)
+    if any(_split(s)[0] == "art" for s in subjects):
+        found += study_virtues.presence_problems(
+            character, kind, True, plan.art_present
+        )
     return found
 
 
@@ -1849,8 +2023,19 @@ def _study_outcome(
         quality = books.effective_quality(saga, book)
         assert subject is not None and quality is not None
         limit = book.level if book.type != "Tractatus" else None
+        bonuses = study_virtues.presence_lines(
+            character, kind, _split(subject)[0] == "art", plan.art_present
+        )
         result.gains.append(
-            _gain(character, subject, quality, kind, months, gain_limit=limit)
+            _gain(
+                character,
+                subject,
+                quality,
+                kind,
+                months,
+                gain_limit=limit,
+                bonuses=bonuses,
+            )
         )
         if book.type == "Tractatus":
             result.tractatus = book.id
@@ -1916,7 +2101,7 @@ def _vis_study_outcome(
 ) -> None:
     subject = allocations(plan)[0].subject
     art = _split(subject)[1]
-    pawns = study.vis_pawns(score(character, subject))
+    pawns = study.season_vis_pawns(character, score(character, subject))
     aura, realm = _home_aura(saga, character)
     aura_mod = realms.aura_modifier(realms.HERMETIC, realm, aura)
     botch_dice = pawns + realms.extra_botch_dice(realms.HERMETIC, realm, aura)
@@ -1950,7 +2135,10 @@ def _vis_study_outcome(
             )
         )
     quality = max(0, die_value + aura_mod)
-    result.gains.append(_gain(character, subject, quality, kind, months))
+    bonuses = study_virtues.presence_lines(character, kind, True, plan.art_present)
+    result.gains.append(
+        _gain(character, subject, quality, kind, months, bonuses=bonuses)
+    )
 
 
 # Exposure, Practice and Adventure (DE Ch. 10): experience in the subjects
@@ -1971,6 +2159,7 @@ def _plain_problems(
             )
     if len({a.subject for a in chosen}) < len(chosen):
         found.append("The same subject is named twice.")
+    found += _virtue_problems(saga, character, plan)
     if plan.activity == EXPOSURE and len(chosen) > 2:
         found.append("Exposure goes into one subject, or is split between two.")
     if plan.activity == PRACTICE:

@@ -576,6 +576,43 @@ What the faction does over the saga goes in its **Diary** tab, a line a season, 
 **See also:** [A faction](help:tab-nb-faction), [Ruler or Leader](help:neighbour-ruler), [A neighbour](help:neighbour)
 
 
+# How to fight a battle
+<!-- help: guide-battle -->
+
+Lords of Men plays a battle as a few events, each a fight with a player character at its heart, rather than every blow. The app keeps the battle on the lord's sheet and works out each event's total.
+
+### Before the battle
+<!-- help: guide-battle-setup -->
+
+1. Open the lord's sheet (a neighbour of the lord kind) and go to its **Fief** tab.
+<!-- tui -->
+2. In [Battles](help:section-nb-battles), press `a`.
+<!-- /tui -->
+<!-- gui -->
+2. Under [Battles](help:section-nb-battles), click **Add**.
+<!-- /gui -->
+3. Name the battle and the enemy. **His combat groups** starts at the groups of five his title's army raises: add his allies (a Presence + Leadership + Affinity roll: 6 adds half his forces, 12 as many again, 18 double, 24 treble) and the mercenaries he hires. Type the enemy's groups too.
+4. Each commander rolls Intelligence + Area Lore + a stress die for a **Deployment Total**; type both. The difference is the lord's **Ground** in every event.
+5. Check **His baggage groups**: one for every ten combat groups. Save.
+
+### Each event
+<!-- help: guide-battle-events -->
+
+<!-- tui -->
+1. With the battle chosen, press `m` and choose **Battle Event**.
+<!-- /tui -->
+<!-- gui -->
+1. Choose the battle and click **Battle Event**.
+<!-- /gui -->
+2. Choose the character at the heart of the event and its Maneuver, Enemy and Size. The line above Record shows the Event Total and whether it reaches this stage's Ease Factor (9, then 12, then 15). A total too low can't win, so pick a smaller task or give up the initiative for +1.
+3. Play the event out as an ordinary fight with the character and the enemies it names.
+4. Back in the form, say who won and click **Record**. The losing side loses combat groups, and the battle's line shows the new numbers for the next event.
+
+Most battles take three events. When one side has won enough of them, or its commander fails a Morale roll, the battle is over; note how it ended in the lord's Diary. See [Battle Event](help:battle-event).
+
+**See also:** [Battles](help:section-nb-battles), [A lord](help:tab-nb-fief)
+
+
 # How to play a hedge wizard
 <!-- help: guide-hedge-magic -->
 

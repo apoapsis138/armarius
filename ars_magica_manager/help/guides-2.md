@@ -31,6 +31,15 @@ These Virtues and Flaws from the catalog are taken into account wherever the app
 - **Puissant** doesn't change the xp. It adds a fixed bonus to the score used (+2 for an Ability, +3 for an Art), shown in brackets after the score.
 - **Book Learner**, **Apt Student**, **Independent Study** and **Free Study** add to the Advancement Total of the activity they name; **Poor Student** and **Unimaginative Learner** take from it. Being taught or reading never falls below 1.
 - **Good Teacher** raises the Source Quality of the students the character teaches.
+- **Linguist** raises the Advancement Total of any Language by a quarter, rounded up. **Savantism** halves every Advancement Total (rounded down) except the favoured Ability's. **Flawless Magic** doubles a spell Mastery's Advancement Total and **Loose Magic** halves it. These multiply the total after its bonuses and before Affinity, and the line above Save names them, for example "Advancement Total 5 (Linguist x1.25)".
+- **Secondary Insight**: a season studying a Technique from a book, a teacher or raw vis also gives 1 xp in each of 4 Forms, and a Form gives 1 xp in each of 2 Techniques. Tick them in the plan's **Secondary Insight** grid, which offers only the other kind of Art; with fewer ticked, the lowest-scored make up the rest. No Affinity multiplies these points.
+- **Elemental Magic**: a book, teacher or vis for Aquam, Auram, Ignem or Terram also gives half the season's Advancement Total (rounded up) in each of the other three. **Magian Lineage** (Major) does the same for its three connected Abilities, named when the Virtue is taken; a Supernatural one the character can't use yet loses its share. **Hermetic Sorcery** gives half the xp of a season studying a Goetic Art in Rego, and of a supernatural Lore in Vim.
+- **Study Bonus** adds 2 to a text's Quality or the vis die when an Art is studied beside its substance (tick **The Art is present** on the plan); **Study Requirement** refuses an Art from books or vis without it.
+- **Ability Block** refuses experience in the Abilities it names, or in their category ("Martial"). **Restricted Learning** refuses experience in any Ability but its five (named when the Flaw is taken, else those the character's creation xp went on) and a Virtue's Supernatural Abilities, except from Be taught or Be trained.
+- **Master of None**: once an Advancement Total has given xp to an Ability or Art in a year, another that year gives it none; the line above Save says the xp is lost. A plan for an earlier season of the year counts as soon as it is planned. Experience shared by the Virtues above isn't affected.
+- **Wealthy** and **License of Absence** each free one of a companion's two working seasons; **Poor** adds one. The covenant's Seasons chapter and the plan's reminder count them.
+- **Labor Points** (City & Guild): **Perfect Eye for Commodity** gains 3 x the Wealth Multiplier each Winter and **Bigamist** costs 6 x it (3 x it posing as of lower status: type "lower" when the Flaw is taken). **Necessary Realm Aura** for a Craft or Profession takes 3 off its Labor Points and Workshop Total outside an aura of its realm (Dominion is the Divine). **Independent Craftsman** is a note on a workshop season: take 3 off the Other modifier when working with assistants.
+- **Artes Liberales by subject**: **Academic Concentration** adds 3 for its subject and takes 1 for the other six; **Aristotelian Training** adds 1 for grammar, logic and rhetoric. A Laboratory Horoscope counts as astronomy, and a Tribunal debate's Artes Liberales attack as logic and rhetoric.
 
 Other Virtues and Flaws change figures the app shows everywhere, not only in seasons:
 
@@ -120,7 +129,7 @@ The [Season Summary](help:season-summary) then shows what everyone gained.
 
 When Winter is advanced, the app also does the following, each written in the character's Diary:
 
-- **Warping**: +1 Warping Point a year for a Longevity Ritual, and points for living in a strong aura (6 or more) of another realm. A magus gains none from a Magic aura.
+- **Warping**: +1 Warping Point a year for a Longevity Ritual, and points for living in a strong aura (6 or more) of another realm. A magus gains none from a Magic aura. **Raised from the Dead** adds one a year; **Immortality of the Forest** adds one and makes no aging roll; **Susceptibility to Warping** adds one more in a year that gave any Warping Points, these or an event's.
 - **Aging**: everyone aged 35 or more (50 with Strong Faerie Blood or Dhampir), or under a Longevity Ritual, makes an aging roll. The Age is worked out from Year Born, so a character without one never rolls. The roll subtracts the Living Conditions (the covenant's, plus half the Health of a magus's laboratory, plus 1 for Mild Aging, less 1 for Poor Living Conditions or 2 for Leprosy), the Longevity Ritual's modifier and a familiar's bronze cord. Faerie Blood, Magical Blood, Magian Lineage and similar Virtues take 1 off the roll; Strong Faerie Blood and Dhampir take 3.
 <!-- tui -->
 - The result adds apparent age, Aging Points and Decrepitude. When a Characteristic has more Aging Points than its score (ignoring any minus sign), it falls by 1 (never with Unaging or Demonic Blood), and the Decrepitude score follows from the points. A Crisis is rolled and the survival roll reported for the storyguide (with Mild Aging's +3); a Longevity Ritual sees the character through it and then ends, and the next season is spent recovering. All of this shows in [Aging & Warping](help:section-aging) on the Description tab (`1`).
@@ -225,7 +234,7 @@ To take over a laboratory that has no owner (one left by a magus who died or mov
 <!-- /gui -->
 3. To invent from a Lab Text, choose **Invent from a Lab Text** and the **Lab Text**. Texts the magus can't read yet are marked, for example "(can't read: decode first)".
 4. For work that pays with vis, choose whose in **Vis**: the laboratory's raw vis, the magus's own or the covenant's vis stores.
-5. Under Lab work, tick what applies: **Similar spell known**, a **Magical Focus** or Magic Theory Specialty (shown only if the magus has one), **Days away** and **Other modifiers**.
+5. Under Lab work, tick what applies: **Similar spell known**, a **Magical Focus** or Magic Theory Specialty (shown only if the magus has one), **Days away** and **Other modifiers**. A magus with Potent Magic, Cyclic Magic, Environmental Magic Condition, Planetary or Celestial Magic, or Hermetic Alchemy sees its option too (see [Lab Total](help:invent-spell-total)).
 
 ### The Lab Total and when it finishes
 <!-- help: guide-lab-planning-total -->

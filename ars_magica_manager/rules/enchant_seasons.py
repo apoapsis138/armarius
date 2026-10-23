@@ -43,7 +43,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import book_seasons, experiment, lab
+from . import book_seasons, experiment, lab, lab_virtues
 from .breakdown import Line
 from .rounding import round_up
 
@@ -142,7 +142,7 @@ def text_problem(
     name = ed.effect_name(effect)
     if text.type != "Lab Text" or text.text_kind != TEXT_ENCHANTMENT:
         return f"{text.name} isn't the Lab Text of an enchantment."
-    if not books.can_read(saga, magus, text):
+    if not books.can_read(saga, magus, text) and not lab_virtues.remembers(magus, text):
         return f"{magus.name} can't get at {text.name}."
     if not book_seasons.can_use_lab_text(magus, text):
         return (
@@ -217,6 +217,8 @@ def _effect_total(
             and other.instilling_progress is None
             and (other.technique == effect.technique or other.form == effect.form)
         )
+        if lab_virtues.has(magus, lab_virtues.DISJOINTED):
+            shared = 0  # no bonus from the Arts already in it
         if shared:
             extra.append(
                 Line(

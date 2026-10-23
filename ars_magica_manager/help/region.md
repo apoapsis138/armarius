@@ -271,6 +271,58 @@ renowned feat 5. Each line says what its points are enough for: 5 for
 freedom or knighthood, 10 for a manor of one's own, 20 for a barony
 held of the king. Add, edit or delete one.
 
+## Battles
+<!-- help: section-nb-battles -->
+
+The battles his army fights, played as Lords of Men plays them: a few
+heroic events, each with a player character at its heart, rather than
+every blow. Each line shows the two armies in combat groups of five
+men, his **Ground** (Territorial Advantage: his commander's Deployment
+Total less the enemy's) and his **Numbers** (Weight of Numbers: +1 when
+he has half as many groups again as the enemy, +2 for twice as many, +3
+for three times, +4 for four times or more; as much below 0 when
+outnumbered), and the events won and lost so far. Add, edit or delete
+one: a new battle starts with the groups his title's army raises, to
+which you add his allies and mercenaries.
+
+A Deployment Total is Intelligence + Area Lore + a stress die, the
+commander's own or a lieutenant's, plus the magnitude of any spell that
+shapes the field in his favour.
+
+## Battle Event
+<!-- help: battle-event -->
+
+<!-- tui -->
+More (`m`) > **Battle Event** plays the chosen battle's next event.
+<!-- /tui -->
+<!-- gui -->
+**Battle Event** plays the chosen battle's next event.
+<!-- /gui -->
+Choose the character **Leading the event**, then its **Maneuver**
+(Defend +0, Attack +1, Run the Gauntlet +2, Take +3, a Heroic Gesture
++4), its **Enemy** (Inexpensive troops such as levies +0, Standard +1,
+Expensive such as knights +2, Special +3, the Baggage +4) and its
+**Size** (Lesser +0, Even +1, Outnumbered +2, Overwhelmed +3, I Stand
+Alone +4). The line above Record shows the Event Total: the character's
+Stamina + Leadership + Ground + Numbers + those three, +1 for giving up
+the initiative. It must reach the stage's Ease Factor to be won at all:
+9 for the first event (Engaged), 12 for the second (Advantage or
+Setback), 15 for the third and any after (Imminent Victory or Defeat).
+
+Play the event out as a fight, then say how it went and **Record**. The
+side that lost it loses combat groups equal to its Size times the
+winner's Numbers, when the winner has the greater army, and the next
+event's Numbers are worked out from what is left. Morale rolls (6 to
+hold, 9 to rally) and the troops lost in the fight itself are left to
+the troupe; edit the battle to change its groups.
+
+When the lord raises his army, his allies add a share of his own forces
+for a Presence + Leadership + Affinity roll (6 half, 12 as many again,
+18 double, 24 treble), and mercenaries cost 15 pounds a group of
+knights, 5 of serjeants, 2 of infantry or archers and 1 of levies. Every
+ten groups need a group of baggage, and each one short is -1 to the
+Event Totals.
+
 # A town
 <!-- help: tab-nb-town -->
 

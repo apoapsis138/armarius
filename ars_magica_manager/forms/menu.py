@@ -27,6 +27,7 @@ from .. import (
     creation,
     creatures,
     deletion,
+    disputations,
     giving,
     neighbours,
     packs,
@@ -111,6 +112,7 @@ NOT_ON_PAGES = frozenset(
         "withdraw_case",
         "roll_fair",
         "roll_table",
+        "battle_event",
         # The desktop draws the names a page holds as links instead.
         "go_to",
     }
@@ -423,6 +425,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     ),
     # Beside the Abilities chapter's own buttons.
     "edit_traditions": ((NodeKind.CHARACTER, "Abilities"),),
+    "disputatio": ((NodeKind.CHARACTER, "Abilities"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
@@ -1341,6 +1344,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "give_silver": _silver_command,
     "lab_text_access": _needs(_character, lab_text_access),
     "edit_traditions": _needs(_character, character_traditions),
+    "disputatio": _needs(_character, disputations.disputatio_form),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,

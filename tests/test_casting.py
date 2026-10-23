@@ -2,7 +2,10 @@
 
 import pytest
 
-from ars_magica_manager.casting_text import known_spell_casting_lines
+from ars_magica_manager.casting_text import (
+    casting_scores_text,
+    known_spell_casting_lines,
+)
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -159,8 +162,40 @@ def test_the_spell_details_say_what_the_die_must_reach():
     # Rego 4 + Ignem 8 + Sta 2 + aura 3 + AL 2 + Phil 1 = 20: 10 short
     assert lines[1] == (
         "Ritual, stress die: 10+ for 1, 5+ for 2, 0+ for 3 long-term Fatigue "
-        "levels; 7 botch dice."
+        "levels; 6 pawn(s) of vis; 7 botch dice."
     )
+    # Mercurian Magic halves the vis; Waster of Vis wastes a quarter of
+    # those used (and they count as botch dice); Rigid Magic casts none.
+    magus.virtues_flaws = [VirtueFlawInstance("vf_mercurian_magic")]
+    lines = known_spell_casting_lines(saga, magus, KnownSpell(spell_id="r"), ritual)
+    assert lines[1].endswith("3 pawn(s) of vis; 4 botch dice.")
+    magus.virtues_flaws = [VirtueFlawInstance("vf_waster_of_vis")]
+    lines = known_spell_casting_lines(saga, magus, KnownSpell(spell_id="r"), ritual)
+    assert lines[1].endswith("8 pawn(s) of vis; 9 botch dice.")
+    magus.virtues_flaws = [VirtueFlawInstance("vf_rigid_magic")]
+    lines = known_spell_casting_lines(saga, magus, KnownSpell(spell_id="r"), ritual)
+    assert lines[1] == "Rigid Magic: no vis in casting, so no Ritual."
+
+
+def test_casting_virtues_that_depend_on_the_moment_are_reminders():
+    magus = _magus()
+    saga = Saga(
+        id="s",
+        name="S",
+        covenants=[Covenant(id="c", saga_id="s", name="C", aura=3)],
+        characters=[magus],
+    )
+    magus.virtues_flaws = [
+        VirtueFlawInstance("vf_special_circumstances", {"circumstance": "storms"}),
+        VirtueFlawInstance("vf_life_boost"),
+        VirtueFlawInstance("vf_diedne_magic"),
+    ]
+    text = casting_scores_text(saga, magus)
+    assert "Special Circumstances (storms): +3" in text
+    assert "Life Boost: +5" in text
+    assert "Diedne Magic: without Fatigue" in text
+    magus.virtues_flaws = []
+    assert "When they apply" not in casting_scores_text(saga, magus)
 
 
 def test_infernal_vis_doubles_the_botch_dice_or_uses_the_harsher_option():

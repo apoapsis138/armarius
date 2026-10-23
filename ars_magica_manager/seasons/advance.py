@@ -26,7 +26,7 @@ from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
 from ..rules import laboratory_seasons as ls
-from ..rules import research, tradition_seasons
+from ..rules import research, study_virtues, tradition_seasons, work_virtues
 from ..rules import warping as warping_rules
 from ..tables import Table
 from ..world import takes_part_in_play
@@ -82,6 +82,17 @@ def _apply_insight(character: Character, outcome: rules.Outcome) -> None:
     )
 
 
+def _record_raised(character: Character, outcome: rules.Outcome) -> None:
+    """Master of None: the subjects a season's own Advancement Total raised
+    (not experience a Virtue shared), with the year."""
+    if outcome.plan.activity in rules.ADVANCEMENT_ACTIVITIES:
+        study_virtues.record_raised(
+            character,
+            [g.subject for g in outcome.gains if g.result.xp and not g.via],
+            outcome.plan.year,
+        )
+
+
 def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
     """Apply outcomes worked out by resolve(): add each one's experience and
     write its Diary entry. Outcomes that can't be carried out are skipped.
@@ -95,6 +106,7 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         for gain in outcome.gains:
             if gain.result.xp:
                 _add_xp(character, gain.subject, gain.result.xp)
+        _record_raised(character, outcome)
         if outcome.lab_work is not None:
             apply_lab_work(saga, character, outcome)
         if outcome.plan.activity == ls.NEW:
@@ -223,6 +235,8 @@ def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
         age = None if born is None else saga.current_year - born
         if age is None or not aging_rules.rolls_this_year(character, age):
             continue
+        if work_virtues.forest_replaces_aging(character):
+            continue  # its Warping Point stands in for the roll (_yearly_warping)
         lines.append(age_character(saga, character, age, rng))
     return lines
 

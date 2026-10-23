@@ -420,7 +420,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Export, Update from a File, In Creation / In Play, Demote, Go To",
+        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To",
         "slash": "(disabled)"
       }
     },
@@ -1831,6 +1831,16 @@
         "e": "FieldsDialog: Edit a Debt of Gratitude",
         "d": "ConfirmScreen",
         "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-battles": {
+      "active": "section-nb-battles",
+      "keys": {
+        "a": "FieldsDialog: Add a Battle",
+        "e": "FieldsDialog: Edit a Battle",
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Battle Event, Go To",
         "slash": "(disabled)"
       }
     },

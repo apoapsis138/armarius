@@ -40,6 +40,8 @@ DIALOG_PAGES = {
     "import-data",
     "import-spells",
     "import-pack",
+    "battle-event",
+    "disputatio",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.
@@ -378,6 +380,7 @@ GUIDES = [
     "guide-book-packs",
     "guide-bestiary",
     "guide-faction",
+    "guide-battle",
     "guide-hedge-magic",
     "guide-tribunal",
     "guide-formatting",

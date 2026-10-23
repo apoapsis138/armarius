@@ -55,7 +55,7 @@ from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons, research, spell_levels
+from ..rules import lab_seasons, lab_virtues, research, spell_levels
 from ..rules import laboratory_seasons as ls
 from ..rules.lab import ability_score
 from ..seasons import pairs as paired_plans
@@ -816,6 +816,7 @@ class LabPlanForm:
                     show_if=_chosen,
                 )
             )
+        found += self.virtue_fields(plan)
         found += [
             DialogField(
                 "days_away",
@@ -1028,6 +1029,98 @@ class LabPlanForm:
             printed_level=design.printed_level if design else None,
         )
 
+    def virtue_fields(self, plan: SeasonPlan | None) -> list[DialogField]:
+        """The options the magus's lab Virtues and Flaws give the plan
+        (rules.lab_virtues), each only for a magus who has it."""
+        magus = self.magus
+        found: list[DialogField] = []
+
+        def tick(key: str, label: str, value: bool, hint: str) -> None:
+            found.append(
+                DialogField(key, label, "check", value, show_if=_chosen, hint=hint)
+            )
+
+        if lab_virtues.potent_bonus(magus):
+            field_ = lab_virtues.potent_field(magus)
+            tick(
+                "potent",
+                f"Potent Magic ({escape(field_)})" if field_ else "Potent Magic",
+                bool(plan and plan.potent),
+                f"The work is in its field: +{lab_virtues.potent_bonus(magus)}.",
+            )
+        if lab_virtues.has(magus, lab_virtues.CYCLIC_POSITIVE):
+            tick(
+                "cycle_bonus",
+                "Cyclic Magic: in its time",
+                bool(plan and plan.cycle_bonus),
+                "Its good time covers the whole season: +3.",
+            )
+        if lab_virtues.has(magus, lab_virtues.CYCLIC_NEGATIVE):
+            tick(
+                "cycle_penalty",
+                "Cyclic Magic: its bad time",
+                bool(plan and plan.cycle_penalty),
+                "Its bad time touches any of the season: -3.",
+            )
+        if lab_virtues.has(magus, lab_virtues.CONDITION):
+            tick(
+                "condition",
+                "Environmental Magic Condition",
+                bool(plan and plan.condition),
+                "Its condition holds this season: the Lab Total is halved.",
+            )
+        if lab_virtues.has(magus, lab_virtues.PLANETARY) or lab_virtues.has(
+            magus, lab_virtues.CELESTIAL
+        ):
+            ability = lab_virtues.horoscope_ability(magus)
+            found += [
+                DialogField(
+                    "horoscope",
+                    "Laboratory Horoscope (+0 to +5)",
+                    "int",
+                    plan.horoscope if plan else 0,
+                    show_if=_chosen,
+                    hint=f"The bonus sought: stress die + Intelligence + {ability} "
+                    "against three times it. Planetary Magic: enchanting a device "
+                    "only.",
+                ),
+                DialogField(
+                    "horoscope_die",
+                    "Horoscope die (blank: rolled)",
+                    "optint",
+                    plan.horoscope_die if plan else None,
+                    show_if=lambda v: _chosen(v) and bool(v.get("horoscope")),
+                ),
+            ]
+        forms = lab_virtues.extraction_forms(magus)
+        if forms:
+            found.append(
+                DialogField(
+                    "extract_form",
+                    "Vis extracted",
+                    "select",
+                    (plan.extract_form if plan else "") or None,
+                    options=[(f, f) for f in forms],
+                    allow_blank=True,
+                    placeholder="Vim",
+                    show_if=_doing(lab_seasons.EXTRACT),
+                    hint="Form vis: the Creo Vim total with the Form as a "
+                    "requisite, a pawn per 20 points (10 with its Extractor Virtue).",
+                )
+            )
+        if lab_virtues.has(magus, lab_virtues.ALCHEMY):
+            found.append(
+                DialogField(
+                    "extract_shape",
+                    "Shape & material",
+                    "int",
+                    plan.shape_bonus if plan else 0,
+                    show_if=_doing(lab_seasons.EXTRACT),
+                    hint="Hermetic Alchemy: the vessel's bonuses, up to Magic Theory.",
+                )
+            )
+        return found
+
     def plan_of(self, values: dict[str, Any]) -> SeasonPlan:
         """The plan the form's values describe (hidden fields are missing
         from `values`, so everything is read with a default)."""
@@ -1042,6 +1135,14 @@ class LabPlanForm:
             focus=bool(values.get("focus")),
             theory_specialty=bool(values.get("specialty")),
             other_modifier=values.get("other_modifier") or 0,
+            potent=bool(values.get("potent")),
+            cycle_bonus=bool(values.get("cycle_bonus")),
+            cycle_penalty=bool(values.get("cycle_penalty")),
+            condition=bool(values.get("condition")),
+            horoscope=max(0, min(values.get("horoscope") or 0, 5)),
+            horoscope_die=values.get("horoscope_die")
+            if values.get("horoscope")
+            else None,
             details=values.get("details") or "",
             assistant_ids=[values["assistant"]] if values.get("assistant") else [],
             vis_from=self._vis_from(activity, values),
@@ -1117,6 +1218,13 @@ class LabPlanForm:
             (
                 lab_seasons.EXPERIMENTAL,
                 lambda v: {"experimenting": bool(v.get("experimenting"))},
+            ),
+            (
+                (lab_seasons.EXTRACT,),
+                lambda v: {
+                    "extract_form": v.get("extract_form") or "",
+                    "shape_bonus": v.get("extract_shape") or 0,
+                },
             ),
             (
                 (ls.MOVE,),
@@ -1259,7 +1367,7 @@ class LabPlanForm:
         lab_total = int(work.lab_total.total)
         if plan.activity == lab_seasons.EXTRACT:
             return [
-                f"Lab Total {lab_total}: {work.vis_gained} pawn(s) of Vim vis "
+                f"Lab Total {lab_total}: {work.vis_gained} pawn(s) of {work.vis_gained_art} vis "
                 f"this season, {season} {year}.",
                 EXPOSURE,
             ]

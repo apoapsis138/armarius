@@ -79,6 +79,22 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Points": "-2"},
         shown={"#nb-gratitude-list": "A manor; 20 for a barony"},
     ),
+    "add battle": Contract(
+        prefill={"Battle": "", "The enemy's combat groups": "0"},
+        edits={"Battle": "Siege of Soest", "The enemy's combat groups": "30"},
+        saved=lambda s: s.neighbours[0].details["battles"][-1]["theirs"],
+        expected=30,
+        invalid=[{"Battle": ""}, {"The enemy's combat groups": "-1"}],
+        shown={"#nb-battles-list": "Siege of Soest", "#section-nb-battles": "(2)"},
+    ),
+    "battle event": Contract(
+        prefill={"Maneuver": "Defend", "Size": "Even", "How it went": "won"},
+        edits={"Leading the event": "comp1", "Size": "Outnumbered"},
+        saved=lambda s: s.neighbours[0].details["battles"][0]["theirs"],
+        expected=16,
+        shown={"#nb-battles-list": "1 won, 0 lost"},
+        live={"#fields-live": "Engaged, Ease Factor 9"},
+    ),
     "edit guild": Contract(
         prefill={"Trade": "Weavers", "Dean": "Heinrich", "Masters": "9"},
         edits={"Journeymen": "14"},

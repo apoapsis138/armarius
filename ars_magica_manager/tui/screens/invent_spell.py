@@ -66,6 +66,13 @@ _EXPOSURE_LINES = ("Every lab season also gives 2 xp", "Exposure in Magic Theory
 
 #: The widget drawing each field of the core's form (LabPlanForm.fields),
 #: by its key.
+#: The rows the lab Virtue options are drawn in, by their fields' keys.
+VIRTUE_ROWS = (
+    ("potent", "cycle_bonus", "cycle_penalty", "condition"),
+    ("horoscope", "horoscope_die"),
+    ("extract_form", "extract_shape"),
+)
+
 _WIDGET_OF: dict[str, str] = {
     "activity": "inv-activity",
     "name": "inv-name",
@@ -117,6 +124,8 @@ _WIDGET_OF: dict[str, str] = {
     "other_modifier": "inv-other",
     "details": "inv-notes",
     "assistant": "inv-assistant",
+    # The magus's own lab Virtues and Flaws (LabPlanForm.virtue_fields).
+    **{key: f"inv-v-{key}" for keys in VIRTUE_ROWS for key in keys},
 }
 
 
@@ -745,6 +754,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                     id="inv-specialty",
                     compact=True,
                 )
+        yield from self._compose_virtues(plan)
         with Horizontal(classes="inv-row"):
             yield Label("Days away")
             yield _number(str(plan.days_away) if plan else "0", "inv-days")
@@ -769,6 +779,44 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         with Horizontal(id="inv-results"):
             yield Static("", id="inv-total")
             yield Static("", id="inv-when")
+
+    def _compose_virtues(self, plan: SeasonPlan | None) -> ComposeResult:
+        """The options the magus's lab Virtues and Flaws give, a row of
+        each kind (only the magus's own)."""
+        specs = {spec.key: spec for spec in self.form.virtue_fields(plan)}
+        for keys in VIRTUE_ROWS:
+            shown = [specs[key] for key in keys if key in specs]
+            if not shown:
+                continue
+            with Horizontal(classes="inv-row"):
+                for position, spec in enumerate(shown):
+                    widget_id = _WIDGET_OF[spec.key]
+                    yield Label(
+                        (" " if position else "") + spec.label,
+                        id=f"{widget_id}-label",
+                    )
+                    if spec.kind == "check":
+                        yield Checkbox(
+                            "",
+                            value=bool(spec.value),
+                            id=widget_id,
+                            compact=True,
+                            tooltip=spec.hint or None,
+                        )
+                    elif spec.kind == "select":
+                        yield Select(
+                            spec.options,
+                            value=spec.value if spec.value else Select.NULL,
+                            prompt=spec.placeholder or "(none)",
+                            id=widget_id,
+                            compact=True,
+                            tooltip=spec.hint or None,
+                        )
+                    else:
+                        value = "" if spec.value is None else str(spec.value)
+                        number = _number(value, widget_id)
+                        number.tooltip = spec.hint or None
+                        yield number
 
     def on_mount(self) -> None:
         self._ready = True
@@ -920,6 +968,11 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.query_one("#inv-header", Static).update(self._header(plan.activity))
         for row, shown in _ROWS_SHOWN.items():
             self.query_one(f"#{row}").display = shown(plan.activity)
+        for spec in self.form.virtue_fields(plan):
+            visible = spec.show_if is None or bool(spec.show_if(values))
+            widget_id = _WIDGET_OF[spec.key]
+            for found in self.query(f"#{widget_id}, #{widget_id}-label"):
+                found.display = visible
         self.query_one("#inv-vis-from-label", Label).update(
             "Vis goes to" if plan.activity == lab_seasons.EXTRACT else "Vis from"
         )

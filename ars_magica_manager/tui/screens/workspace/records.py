@@ -10,6 +10,7 @@ from typing import Any
 
 from .... import (
     arms,
+    battles,
     character_templates,
     choice_templates,
     creation,
@@ -40,6 +41,7 @@ from ....models import (
     Neighbour,
 )
 from ....sections import (
+    BATTLES_SECTION,
     CASES_SECTION,
     DIARY_SECTION,
     FAIRS_SECTION,
@@ -173,6 +175,18 @@ class RecordActions(WorkspaceBase):
             self.app,
             towns.roll_fair(self.saga, view.neighbour, row),
             lambda _end: self._commit(FAIRS_SECTION),
+        )
+
+    def action_battle_event(self) -> None:
+        """More's Battle Event on a lord's chosen battle."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(BATTLES_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            battles.event_form(self.saga, view.neighbour, row),
+            lambda _end: self._commit(BATTLES_SECTION),
         )
 
     def action_roll_table(self) -> None:

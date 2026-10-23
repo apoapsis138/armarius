@@ -72,7 +72,10 @@ class DialogField:
     #: A "picker" field's chooser as command steps: the current value ->
     #: the first step (a commands.Command), whose last step's apply
     #: returns commands.Picked(the new value).
-    choose: Callable[[Any], Any] | None = None
+    choose: Callable[..., Any] | None = None
+    #: The chooser also needs the form's other values (Secondary Insight's
+    #: Arts depend on the Art studied): `choose(current, values)`.
+    choose_with_values: bool = False
     #: A "picker" field holding a small list, edited entry by entry.
     items: ListEditor | None = None
 
@@ -153,6 +156,15 @@ def current_values(
     return {
         spec.key: lenient(spec, read(spec)) for spec in fields if spec.kind != "info"
     }
+
+
+def first_choice(spec: DialogField, current: Any, values: dict[str, Any]) -> Any:
+    """A picker field's first step for its value `current`, given the
+    form's `values` when its chooser asks for them."""
+    assert spec.choose is not None
+    if spec.choose_with_values:
+        return spec.choose(current, values)
+    return spec.choose(current)
 
 
 def shown(spec: DialogField, values: dict[str, Any]) -> bool:

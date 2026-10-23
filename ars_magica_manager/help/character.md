@@ -251,6 +251,18 @@ Decrepitude points and any Longevity Ritual here, and adds the year's
 Warping Points from a Longevity Ritual or a strong aura of another realm
 (Ars Magica Definitive Edition, Chapter 10: Long-Term Events).
 
+With Art & Academe in play, the form also takes a physician's
+**Regimen**: its bonus to the Living Conditions the aging roll uses, the
+physician (a character with Medicine) and the year it began. It helps
+once the character has lived under it a year: +1 from a physician with
+Medicine 1, who can keep up to five times his Medicine in clients on it;
++2 from Medicine 4, for up to his Medicine in clients; +3 from Medicine
+7, for one client. A physician keeps a single regimen, and it needs
+bloodletting from someone with Chirurgy 3. The section says when the
+physician's Medicine is too low for the bonus chosen. A month away, a
+neglected diet, broken sleep, a disease or a Twilight loses it: set the
+year it began again (Art & Academe, Chapter Three: Medicine).
+
 ### Health
 <!-- help: section-char-health -->
 
@@ -331,8 +343,62 @@ lozenge as far as the XP reaches, with the XP over the next total after
 it.
 <!-- /gui -->
 
+With Art & Academe in play, a character can dispute with another
+(see [Disputatio](help:disputatio)).
+
 **See also:** [Virtues & Flaws tab](help:tab-vf),
 [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
+
+## Disputatio
+<!-- help: disputatio -->
+
+<!-- tui -->
+More (`m`) > **Disputatio**, on a character's sheet with Art & Academe in
+play, stages a schoolmen's debate with another character.
+<!-- /tui -->
+<!-- gui -->
+**Disputatio**, in the Abilities chapter of a character's page with Art &
+Academe in play, stages a schoolmen's debate with another character.
+<!-- /gui -->
+Choose who they dispute with, whether they are the **Opponent** (who
+states first) or the **Respondent**, the **Subject** (Artes Liberales,
+Philosophiae, Theology or Civil and Canon Law: each side uses its score in
+it), the **Kind**, the number of the judge's **Questions** (usually 7, 9
+or 12) and any Ease Factor the judge sets for the statements (6 among
+students, 9 for baccalaureates, 12 for a candidate's examination). The
+line above Dispute shows each side's totals before the die:
+
+- **Attack**: Communication + the subject's Ability.
+- **Defence**: Perception + the Ability.
+- **Weakening**: Intelligence + how far the Attack beat the Defence.
+- **Resistance**: Presence + the highest Academic Reputation.
+
+Each question is an exchange: the opponent states and the respondent
+replies, then the respondent states and the opponent replies. A statement
+that beats the reply costs the other side a symbolic Fatigue level for
+every 5 points (or part of 5) its Weakening beats their Resistance, with
+the usual penalties; five lose the disputatio, and otherwise the side that
+lost fewer wins when the questions run out. **Dispute** rolls it all and
+shows each exchange; **Keep** writes it in both characters' Diaries.
+Afterwards each rolls Stamina + a stress die against the number of
+questions: a failure costs a real Long-Term Fatigue level, and a botch
+one more for each 0, which Keep takes off their Fatigue.
+
+The winner of an epideictic or deliberative disputatio gains an
+experience point toward a Good Academic Reputation, or gives the loser
+one toward a Bad one (once a season at most), which the Diary notes for
+you to add. The winner of a forensic one proves the case.
+
+Virtues and Flaws count: Afflicted Tongue -2 and Incomprehensible -6 to
+Attack, Good Teacher +3 in a deliberative disputatio and Inspirational +3
+in an epideictic one, Short Attention Span -3 to Defence, Piercing Gaze
++3 to Weakening, Strong-Willed +3 to Resistance, Aristotelian Training +1
+to every total, Poor Disputer -3 to each roll, Clear Thinker easing the
+Fatigue penalties by one, and Enfeebled -1 a question after the first.
+Before a crowd, **Before a crowd** takes 3 from each roll of a Gifted
+disputer (not a Gentle Gift). Academic Concentration and Aristotelian
+Training count for Artes Liberales as logic and rhetoric (Art & Academe,
+Chapter Eight: Universities).
 
 ## A tradition's chapter
 <!-- help: tradition-chapter -->
@@ -666,6 +732,20 @@ Parma Magica), Penetration (Weak Magic) or the Fatigue a spell costs
 (Enfeebled, Withstand Casting, Mythic Blood) are counted, and named where
 they apply.
 
+**Virtues that count only sometimes.** The app works out the scores but
+doesn't play a cast out, so a Virtue or Flaw that counts only in its
+circumstance is named in a "When they apply" line under the scores:
+Special Circumstances (+3), Potent Magic (+3, or +6 Major, in its field),
+Hermetic Geometry (+3 for a circle or line), Cyclic Magic (+3 or -3 in its
+time), Corrupted Arts and Spells (+3 selfish, -3 selfless), Blood Haze (-10
+to Formulaic magic in a fight), Environmental Magic Condition and
+Short-Ranged Magic (the total halved), Life Boost (+5 a Fatigue level spent)
+and Spell Improvisation (a similar spell's magnitude). Diedne Magic's
+Spontaneous casting gets a line of its own. A Ritual's vis on the Known
+Spells lines counts Mercurian Magic (half, at least one pawn) and Waster of
+Vis (a third more); with Rigid Magic it says no Ritual can be cast (Ars
+Magica Definitive Edition, Chapter Four: Virtues and Flaws).
+
 **Hybrid magic.** A magus whose magic is also non-Hermetic has it counted
 too, and a line for each kind closes the section:
 
@@ -863,6 +943,25 @@ Damage totals and the character's Soak, worked out from the weapon and the
 character (Ars Magica Definitive Edition, Chapter 11: Obstacles). A weapon
 typed in by hand rather than chosen from the catalog counts no Combat
 Ability.
+
+A specialty in the Combat Ability that names the weapon ("pole axe" for a
+Pole Axe, the weapon's own name or its catalog name) adds 1 to Attack and
+Defence. Virtues and Flaws count too, and a **Counted** line names each:
+Lame (-1 to Initiative, Attack and Defence, -3 Dodging), Missing Eye (-1
+to a melee Attack, -3 with a missile), Hobbled (-6), Poor Eyesight (-3
+Attack and Defence), Slow Reflexes (-3 Initiative) and Primitive Equipment
+(-1 Attack and Defence with a weapon that isn't Inexpensive; -1 Initiative
+and Protection in such armour). A natural weapon's Qualities and
+Inferiorities (Improved or Reduced Attack, Defense, Damage, Initiative)
+count for the weapon named when they are taken; Improved Damage takes the
+bonus nominated for the fight.
+
+A character with Ride also gets a **Mounted** line: on a trained
+warhorse, Ride (at most +3) adds to Attack and Defence, and a charge
+with a melee weapon adds the Combat Ability to the Attack again, at the
+cost of a Fatigue level the horse spends. A lance says that it breaks
+on a charge that hits. An untrained mount, or a horse at the gallop,
+is left to the storyguide (Lords of Men).
 
 The title also shows the character's silver, in pounds, when they have
 any; type it in the character's details (Silver).

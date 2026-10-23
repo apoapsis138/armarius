@@ -126,7 +126,7 @@ The laboratory's **Lab work** list works the same way, with its own Types: Inven
 <!-- gui -->
 1. Open the covenant's page and choose **Seasons** in the rail.
 <!-- /gui -->
-2. The **Magi** and **Companions** titles count how many are planned this season, for example "Magi (2 of 3 planned)". Each row is a person, with a column for this season and each of the three after it: the activity planned, or "nothing" (this season's in the warning colour). Companions also show **Worked**, their working seasons this year out of two ("1 of 2"). Grogs show "yearly".
+2. The **Magi** and **Companions** titles count how many are planned this season, for example "Magi (2 of 3 planned)". Each row is a person, with a column for this season and each of the three after it: the activity planned, or "nothing" (this season's in the warning colour). Companions also show **Worked**, their working seasons this year out of those they owe ("1 of 2"; Wealthy owes one, Poor three). Grogs show "yearly".
 <!-- tui -->
 3. Use Tab to move between the lists and the arrow keys to choose someone. The details panel shows their plan in full.
 4. Press `e` (or `a`) on a magus or companion to plan their season here: the form opens on this season, and its **Season** field moves the plan to a season ahead to fill a gap on the board. `d` clears this season's plan. Lab work is still planned on the laboratory's Planning tab.

@@ -19,7 +19,7 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
-from ..rules import effects
+from ..rules import effects, medicine, work_virtues
 from ..rules import hybrid_magic as hybrid
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
@@ -103,7 +103,8 @@ LAB_HEALTH_SOURCE = (
 def _living_conditions(saga: Saga, character: Character) -> int:
     """The Living Conditions modifier: the covenant's for magi or mundanes,
     plus half the Health of a magus's laboratory, rounded down (negative
-    Health too: -3 gives -2), per LAB_HEALTH_SOURCE."""
+    Health too: -3 gives -2), per LAB_HEALTH_SOURCE, plus a physician's
+    regimen (rules.medicine)."""
     covenant = saga.covenant(character.covenant_id)
     living = 0
     if covenant is not None:
@@ -124,7 +125,16 @@ def _living_conditions(saga: Saga, character: Character) -> int:
     from .. import places
 
     here = places.character_effects(saga, character, "living_conditions")
-    return living + int(effects.amount_total(here))
+    return (
+        living
+        + int(effects.amount_total(here))
+        + medicine.regimen_bonus(
+            saga.character(character.aging.regimen_by),
+            character.aging.regimen,
+            character.aging.regimen_since,
+            saga.current_year,
+        )
+    )
 
 
 #: The Living Conditions modifier aging uses, for the rules outside a
@@ -132,10 +142,23 @@ def _living_conditions(saga: Saga, character: Character) -> int:
 living_conditions = _living_conditions
 
 
+def _warped_this_year(saga: Saga, character: Character) -> bool:
+    """Whether an event gave the character Warping Points this year (each
+    is written in the Diary by gain_warping)."""
+    return any(
+        entry.year == saga.current_year
+        and (entry.name.startswith("Warping +") or entry.name == "Wizard's Twilight")
+        for entry in character.diary
+    )
+
+
 def _yearly_warping(saga: Saga, character: Character) -> str:
     """A year's automatic Warping Points: +1 for a Longevity
     Ritual, and living in a strong aura of another realm (a magus gains none
-    from a Magic aura, a holy or chthonic magus none from his other realm's). Returns what was added ("" for nothing)."""
+    from a Magic aura, a holy or chthonic magus none from his other realm's),
+    the Virtues and Flaws that give one a year, and one more with
+    Susceptibility to Warping in a year that gave any. Returns what was
+    added ("" for nothing)."""
     gained: list[str] = []
     points = 0
     if character.aging.longevity_modifier:
@@ -155,6 +178,14 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
         where = places.character_place(saga, character)
         name = where[0].name if where is not None else "Where they live"
         gained.append(f"{name}: {from_place}")
+    for name, each in work_virtues.yearly_warping(character):
+        points += each
+        gained.append(f"{name} {each}")
+    if work_virtues.susceptible(character) and (
+        points or _warped_this_year(saga, character)
+    ):
+        points += 1
+        gained.append("Susceptibility to Warping 1")
     if not points:
         return ""
     warping_rules.set_total(character, warping_rules.total_points(character) + points)

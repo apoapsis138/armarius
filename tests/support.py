@@ -589,6 +589,18 @@ def everything_saga() -> Saga:
                     "gratitude": [
                         {"who": "comp1", "points": 6, "why": "Drove off the wolves"}
                     ],
+                    "battles": [
+                        {
+                            "name": "The ford at Werl",
+                            "enemy": "the Count of Mark",
+                            "ours": 40,
+                            "theirs": 20,
+                            "our_deployment": 12,
+                            "their_deployment": 10,
+                            "baggage": 4,
+                            "events": [],
+                        }
+                    ],
                 },
             ),
             Neighbour(

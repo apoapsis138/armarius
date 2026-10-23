@@ -31,7 +31,7 @@ from ..models import (
     SeasonPlan,
     VirtueFlawInstance,
 )
-from . import dice
+from . import dice, work_virtues
 from .rounding import round_down, round_up
 
 SOURCE = (
@@ -416,10 +416,14 @@ def _working_season(
         "tournament": "dexterity",
         "apothecary": "intelligence",
     }[plan.activity]
-    lp = (_characteristic(character, plan, default) + ability(character, craft)) * wm
+    penalty = work_virtues.aura_penalty(saga, character, craft)
+    lp = (
+        _characteristic(character, plan, default) + ability(character, craft) + penalty
+    ) * wm
     result.labor_points = lp
+    away = f" {penalty:+d} (Necessary Realm Aura)" if penalty else ""
     result.notes.append(
-        f"Labor Points: ({(plan.characteristic or default).title()} + {craft}) x "
+        f"Labor Points: ({(plan.characteristic or default).title()} + {craft}{away}) x "
         f"{wm} ({wealth(character)}) = {lp}."
     )
 
@@ -451,15 +455,26 @@ def _workshop_production(
             f"Exertion: + simple die {die}; the exertion roll {roll.value}: "
             f"{outcome}. An Aging roll this season."
         )
+    penalty = work_virtues.aura_penalty(saga, character, craft)
+    total += penalty
     quality = quality_for(total, level)
     lp = (
-        _characteristic(character, plan, "dexterity") + ability(character, craft)
+        _characteristic(character, plan, "dexterity")
+        + ability(character, craft)
+        + penalty
     ) * wm
     result.labor_points = lp
     result.notes.append(
         f"Workshop Total {total} against Craft Level {level}: {quality} goods. "
         f"Labor Points {lp}."
     )
+    if penalty:
+        result.notes.append(
+            f"Necessary Realm Aura for {craft}: {penalty} to the total and the "
+            "Labor Points outside its aura."
+        )
+    if note := work_virtues.independent_note(character, craft):
+        result.notes.append(note)
     if plan.quick:
         if ability(character, "Artes Liberales") < 1:
             result.notes.append("No craft manual: it needs Artes Liberales 1.")

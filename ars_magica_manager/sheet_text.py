@@ -398,6 +398,26 @@ def combat_text(character: Character, weapon: Possession) -> str:
         f"Defence {show(totals.defence)}   Damage {show(totals.damage)}",
         f"Soak {int(derived.soak(character).total):+d}",
     ]
+    riding = combat.mounted(character, weapon)
+    if riding is not None:
+        charge = (
+            f"; charging, Attack {riding.charge:+d} (the horse spends the "
+            "Fatigue level)"
+            if riding.charge is not None
+            else ""
+        )
+        attack = "n/a" if riding.attack is None else f"{riding.attack:+d}"
+        lines.append(
+            f"Mounted (Ride +{riding.ride}): Attack {attack}   Defence "
+            f"{riding.defence:+d}{charge}."
+        )
+    if weapon.gear_id == combat.LANCE:
+        lines.append(
+            "[dim]A lance is wielded from horseback; on foot it is a Long Spear.[/]"
+        )
+    counted = combat.counted_text(totals)
+    if counted:
+        lines.append(f"[dim]Counted: {escape(counted)}.[/]")
     if totals.ability is None:
         lines.append(
             "[dim]Typed in by hand, so no Combat Ability is counted: choose it "

@@ -112,6 +112,20 @@ class SeasonPlan:
     focus: bool = False
     theory_specialty: bool = False
     other_modifier: int = 0
+    #: Lab work's Virtue options (rules.lab_virtues): Potent Magic's field,
+    #: Cyclic Magic's good time covering the season or its bad time
+    #: touching it, Environmental Magic Condition holding; a Laboratory
+    #: Horoscope's bonus (+1 to +5, 0: none) and its stress die as rolled
+    #: at the table (None: rolled when the season is applied).
+    potent: bool = False
+    cycle_bonus: bool = False
+    cycle_penalty: bool = False
+    condition: bool = False
+    horoscope: int = 0
+    horoscope_die: int | None = None
+    #: Extracting vis: the Form extracted ("": Vim), with Hermetic Alchemy
+    #: or an Extractor of (Form) Vis.
+    extract_form: str = ""
     #: Longevity Ritual: who it is for (the magus when None), the
     #: Art of the vis paid with, and extra pawns (+1 Lab Total each). Being
     #: its subject: the magus making it.
@@ -145,6 +159,12 @@ class SeasonPlan:
     correspondence: str = ""
     #: Reading: the reader glosses the book this season (+1 Quality, once).
     gloss: bool = False
+    #: Reading or vis study: the Art's substance is present (Study Bonus's
+    #: +2; Study Requirement's condition).
+    art_present: bool = False
+    #: Secondary Insight: the Arts its bonus experience goes to (empty:
+    #: the lowest-scored).
+    insight_arts: list[str] = field(default_factory=list)
     #: Editing a florilegium: the subject ("art:Vim", "ability:Medicine")
     #: whose tractatus it binds.
     florilegium_subject: str = ""

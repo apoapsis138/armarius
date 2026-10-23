@@ -14,7 +14,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import replace
 from typing import Any
 
-from .. import catalog, creation, faith, seasons, storage
+from .. import catalog, creation, faith, seasons, sourcebooks, storage
 from .. import possessions as pos
 from .. import sheet_text as st
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
@@ -42,7 +42,14 @@ from ..models import (
     known_fields,
 )
 from ..rules import aging as aging_rules
-from ..rules import creation_characteristics, experiment, integrations, research, scores
+from ..rules import (
+    creation_characteristics,
+    experiment,
+    integrations,
+    medicine,
+    research,
+    scores,
+)
 from ..rules import xp as xp_rules
 from . import possession as possession_forms
 
@@ -145,7 +152,9 @@ def apply_biographical(character: Character, result: dict[str, Any]) -> None:
     character.description = Description(**known_fields(Description, result))
 
 
-def aging_fields(aging: Aging) -> list[DialogField]:
+def aging_fields(aging: Aging, saga: Saga | None = None) -> list[DialogField]:
+    """The Aging & Warping form; with Art & Academe in play, a physician's
+    regimen too."""
     return [
         DialogField("decrepitude", "Decrepitude", "int", aging.decrepitude),
         DialogField("effects", "Effects of Aging", "text", aging.effects),
@@ -159,6 +168,40 @@ def aging_fields(aging: Aging) -> list[DialogField]:
             hint="From one event (a powerful effect, a botch...): 2 or more "
             "take a magus to the edge of Wizard's Twilight, rolled at once.",
         ),
+        *_regimen_fields(aging, saga),
+    ]
+
+
+def _regimen_fields(aging: Aging, saga: Saga | None) -> list[DialogField]:
+    if saga is None or not sourcebooks.in_play("A&A", sourcebooks.saga_books(saga)):
+        return []
+    physicians = [c for c in saga.characters if medicine.medicine(c) > 0]
+    if not physicians and not aging.regimen:
+        return []
+    return [
+        DialogField(
+            "regimen",
+            "Regimen",
+            "select",
+            str(aging.regimen),
+            options=[
+                ("None", "0"),
+                ("+1 (Medicine 1; up to Medicine x 5 clients)", "1"),
+                ("+2 (Medicine 4; up to Medicine clients)", "2"),
+                ("+3 (Medicine 7; a single client)", "3"),
+            ],
+            hint="A physician's diet and bloodletting: its bonus to Living "
+            "Conditions for aging, once lived under for a year.",
+        ),
+        DialogField(
+            "regimen_by",
+            "Its physician",
+            "select",
+            aging.regimen_by or None,
+            options=[(escape(c.name), c.id) for c in physicians],
+            allow_blank=True,
+        ),
+        DialogField("regimen_since", "Begun in (year)", "optint", aging.regimen_since),
     ]
 
 
@@ -172,6 +215,9 @@ def apply_aging(
     (a Twilight episode rolled at once)."""
     result = dict(result)
     gained = result.pop("gain_warping", 0) or 0
+    if "regimen" in result:
+        result["regimen"] = int(result["regimen"] or 0)
+        result["regimen_by"] = result.get("regimen_by") or ""
     aging = character.aging
     if result["decrepitude"] != aging.decrepitude:
         aging.decrepitude_points = aging_rules.points_for_score(result["decrepitude"])
@@ -282,7 +328,7 @@ def description_edits(
         ),
         "Aging": Form(
             "Edit Aging & Warping",
-            lambda: aging_fields(c.aging),
+            lambda: aging_fields(c.aging, saga),
             lambda result: apply_aging(saga, c, result),
         ),
     }

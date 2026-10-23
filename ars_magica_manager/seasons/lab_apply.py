@@ -43,7 +43,7 @@ from ..rules import creation_characteristics as cch
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons, research
+from ..rules import lab_seasons, research, work_virtues
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
 from ..world import takes_part_in_play
@@ -89,13 +89,14 @@ def _apply_one_season_work(
     vis paid or gained, the subject's Longevity modifier, the lab's Diary."""
     plan = outcome.plan
     pool = lab_seasons.vis_pool(saga, magus, plan)
-    for art, pawns in work.vis_cost.items():
+    for art, pawns in lab_seasons.vis_spent(work).items():
         key = art.lower()
         pool[key] = max(0, pool.get(key, 0) - pawns)
         if not pool[key]:
             del pool[key]
     if work.vis_gained:
-        pool["vim"] = pool.get("vim", 0) + work.vis_gained
+        key = work.vis_gained_art.lower()
+        pool[key] = pool.get(key, 0) + work.vis_gained
     connection = lab_seasons.connection_of(saga, plan)
     if plan.activity == lab_seasons.FIX_AC and connection is not None:
         connection.fixed = True
@@ -419,13 +420,17 @@ def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
             sw.BUSINESS_UPKEEP
             + sw.RAW_MATERIALS_UPKEEP * character.workshop_raw_materials
         )
+        virtues = work_virtues.yearly_labor(character, sw.multiplier(character))
+        cost -= sum(points for _, points in virtues)
         character.labor_points -= cost
+        named = "".join(f"; {name} {points:+d}" for name, points in virtues)
         character.diary.append(
             DiaryEntry(
                 year=saga.current_year,
                 season=saga.current_season,
-                name=f"Business upkeep: -{cost} Labor Points",
-                details=f"Labor Points now {character.labor_points} (City & Guild).",
+                name=f"Business upkeep: {-cost:+d} Labor Points",
+                details=f"Labor Points now {character.labor_points}{named} "
+                "(City & Guild).",
                 activity="Aging",
             )
         )
@@ -436,7 +441,7 @@ def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
                 character.covenant_id,
                 "Business upkeep",
                 "",
-                f"-{cost} Labor Points",
+                f"{-cost:+d} Labor Points",
             )
         )
     return lines
@@ -794,7 +799,7 @@ def _stabilize(
     assert chart is not None
     lines: list[str] = []
     pool = lab_seasons.vis_pool(saga, magus, plan)
-    for art, pawns in work.vis_cost.items():
+    for art, pawns in lab_seasons.vis_spent(work).items():
         left = pool.get(art.lower(), 0) - pawns
         if left > 0:
             pool[art.lower()] = left

@@ -19,7 +19,7 @@ from .. import book_kinds, catalog, seasons, sourcebooks
 from .. import books as bk
 from .. import lab_texts as lt
 from .. import spells as spl
-from ..commands import Command, Confirm, Form, Refuse, SectionOps
+from ..commands import Command, Confirm, Form, Picked, Refuse, SectionOps
 from ..form_spec import EMPHASIS_HINT, ChoiceReads, DialogField, attr, read_for_choice
 from ..markup import escape
 from ..models import (
@@ -39,6 +39,7 @@ from ..rules import (
     book_seasons,
     experiment,
     laboratory_seasons,
+    study_virtues,
     supplement_seasons,
 )
 from ..rules import supplement_work as sw
@@ -254,6 +255,14 @@ _SEASON_READS: ChoiceReads = (
             "record_lectures",
         ),
         lambda v: {"teacher_id": v.get("teacher_id")},
+    ),
+    (
+        (season_rules.READ, season_rules.VIS_STUDY),
+        lambda v: {"art_present": bool(v.get("art_present"))},
+    ),
+    (
+        (season_rules.READ, season_rules.TAUGHT, season_rules.VIS_STUDY),
+        lambda v: {"insight_arts": list(v.get("insight_arts") or [])},
     ),
     (
         (season_rules.VIS_STUDY,),
@@ -837,6 +846,63 @@ def _supplement_fields(
     ]
 
 
+def studied_art(saga: Saga, values: dict[str, Any]) -> str | None:
+    """The Art the season form's values study (a book's, or the first
+    subject's), or None when it studies none yet."""
+    subject = values.get("subject_1") or ""
+    if values.get("activity") == season_rules.READ:
+        book = next((b for b in saga.books if b.id == values.get("book_id")), None)
+        subject = (season_rules.book_subject(book) if book else None) or ""
+    kind, _, name = subject.partition(":")
+    return name if kind == "art" else None
+
+
+def insight_choice(
+    saga: Saga, character: Character, current: Any, values: dict[str, Any]
+) -> Form | Refuse:
+    """Secondary Insight's Arts, ticked on a grid: the Forms when the
+    season studies a Technique, the Techniques when a Form, each with its
+    score; no more than the Virtue allows."""
+    art = studied_art(saga, values)
+    if art is None:
+        return Refuse("Secondary Insight", "Choose the Art the season studies first.")
+    pool, count, side = study_virtues.insight_pool(art)
+    chosen = set(current or [])
+
+    def label(name: str) -> str:
+        return f"{name} ({season_rules.score(character, f'art:{name}')})"
+
+    fields = [
+        DialogField(
+            "studied",
+            "",
+            "info",
+            f"Studying {escape(art)}: tick up to {count} {side}, 1 xp each "
+            "(no Affinity). None ticked: the lowest-scored.",
+        ),
+        *(DialogField(name, label(name), "check", name in chosen) for name in pool),
+    ]
+
+    def ticked(values: dict[str, Any]) -> list[str]:
+        return [name for name in pool if values.get(name)]
+
+    def too_many(values: dict[str, Any]) -> str | None:
+        found = len(ticked(values))
+        return (
+            f"Tick no more than {count} {side} ({found} ticked)."
+            if found > count
+            else None
+        )
+
+    return Form(
+        "Secondary Insight",
+        lambda: fields,
+        lambda values: Picked(ticked(values)),
+        validate=too_many,
+        save_label="Choose",
+    )
+
+
 def _activity_is(*keys: str) -> ShowIf:
     """A field's show_if: shown while the Activity is one of `keys`."""
     return lambda values: values.get("activity") in keys
@@ -862,6 +928,11 @@ def study_fields(
         if gloss or sourcebooks.in_play(book_kinds.GLOSS.book, books)
         else {"gloss"}
     )
+    # Fields for a Virtue or Flaw only its holders see.
+    if not study_virtues.needs_presence(character):
+        hidden.add("art_present")
+    if not study_virtues.shows_insight(character):
+        hidden.add("insight_arts")
     fields = [
         DialogField(
             "activity",
@@ -908,6 +979,33 @@ def study_fields(
             hint="A reader at least half as skilled as its Level, with better "
             "Communication than its author, glosses it while reading: +1, once.",
             show_if=_activity_is(season_rules.READ),
+        ),
+        DialogField(
+            "art_present",
+            "The Art is present",
+            "check",
+            bool(attr(existing, "art_present", False)),
+            hint="Studying an Art beside its substance (a fire for Ignem): "
+            "Study Bonus adds 2; Study Requirement needs it.",
+            show_if=_activity_is(season_rules.READ, season_rules.VIS_STUDY),
+        ),
+        DialogField(
+            "insight_arts",
+            "Secondary Insight",
+            "picker",
+            list(attr(existing, "insight_arts", None) or []) or None,
+            allow_blank=True,
+            placeholder="(the lowest-scored)",
+            hint="Tick the 4 Forms (studying a Technique) or 2 Techniques "
+            "(a Form) that gain 1 xp.",
+            choose=lambda current, values: insight_choice(
+                saga, character, current, values
+            ),
+            choose_with_values=True,
+            display=lambda arts: ", ".join(arts or []) or "(the lowest-scored)",
+            show_if=_activity_is(
+                season_rules.READ, season_rules.TAUGHT, season_rules.VIS_STUDY
+            ),
         ),
         DialogField(
             "teacher_id",

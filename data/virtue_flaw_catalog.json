@@ -3483,6 +3483,13 @@
       "category": "Hermetic",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "advancement_total",
+          "target": "Mastery: *",
+          "multiplier": 2
+        }
+      ],
       "source": "DE",
       "summary": "Every spell starts with Spell Mastery 1 (own special ability each); Spell Mastery Advancement Totals doubled.",
       "description": "You automatically master every spell that you learn. All your spells start with a score of 1 in the corresponding Spell Mastery Ability. You may choose a different special ability for every spell you have. Further, all your Advancement Totals for Spell Mastery Abilities are doubled."
@@ -4685,7 +4692,18 @@
       ],
       "source": "RoP:F",
       "summary": "One natural weapon does up to +5 extra Damage, chosen before each combat; above +2 onlookers may tell it is supernatural.",
-      "description": "One of the character's natural weapons has been enhanced by a story event before play begins, making it sharper, heavier, or somehow more dangerous. Before each combat, the player nominates how much additional damage the weapon does, up to +5. If the player chooses a score above +2, then those watching the combat can deduce that the weapon is supernatural after it causes injury. This requires an Intelligence + Awareness roll against an Ease Factor of 11-Damage amount chosen."
+      "description": "One of the character's natural weapons has been enhanced by a story event before play begins, making it sharper, heavier, or somehow more dangerous. Before each combat, the player nominates how much additional damage the weapon does, up to +5. If the player chooses a score above +2, then those watching the combat can deduce that the weapon is supernatural after it causes injury. This requires an Intelligence + Awareness roll against an Ease Factor of 11-Damage amount chosen.",
+      "modifiers": [
+        {
+          "applies_to": "combat_damage",
+          "target": "{weapon}",
+          "amount_param": "bonus"
+        }
+      ],
+      "parameters": [
+        "weapon",
+        "bonus"
+      ]
     },
     {
       "id": "vf_improved_initiative",
@@ -4699,7 +4717,17 @@
       ],
       "source": "RoP:F",
       "summary": "+3 Initiative with one natural weapon.",
-      "description": "One of the character's natural weapons has been enhanced due to a story event before play commences, making the character more likely to act first in combat. Increase its Initiative score by 3."
+      "description": "One of the character's natural weapons has been enhanced due to a story event before play commences, making the character more likely to act first in combat. Increase its Initiative score by 3.",
+      "modifiers": [
+        {
+          "applies_to": "combat_initiative",
+          "target": "{weapon}",
+          "amount": 3
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_improved_powers",
@@ -5485,6 +5513,12 @@
       "category": "General",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "working_seasons",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Priest gains one extra free season a year (maximum four free seasons); may be expected to use it for study.",
       "description": "This priest character has a license of absence that relieves him from some duties. The license might be valid for only a few years or it could be valid indefinitely. The character has an extra free season each year, but sometimes it is expected that the extra season is used for study. This Virtue is compatible with the Wealthy Virtue and Poor Flaw. A Wealthy priest with a license of absence thus has the whole year free; a character can never have more than four free seasons in a year. A license of absence may only be taken by a character with the Priest Social Status. It may not be taken by Senior Clergy."
@@ -5551,6 +5585,18 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "advancement_total",
+          "target": "Living Language: *",
+          "multiplier": 1.25
+        },
+        {
+          "applies_to": "advancement_total",
+          "target": "Dead Language: *",
+          "multiplier": 1.25
+        }
+      ],
       "source": "DE",
       "summary": "Advancement Totals and character-creation xp for any Language (living or dead) increased by a quarter, rounded up.",
       "description": "You are extremely proficient learning new languages. All Advancement Totals for any Language are increased by a quarter, rounded up, as are any experience points you put into any language at character generation. Both Living and Dead languages are augmented with this Virtue."
@@ -5656,6 +5702,9 @@
           "applies_to": "aging_roll",
           "amount": -1
         }
+      ],
+      "parameters": [
+        "connected"
       ],
       "source": "DE",
       "summary": "Minor: -1 to Aging rolls, +3 to resist disease. Major: also three linked Arcane/Supernatural Abilities sharing half Source Quality xp.",
@@ -8766,6 +8815,12 @@
       "category": "General",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "working_seasons",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Three genuinely free seasons a year; rich for your class; not supported by a covenant.",
       "description": "You are a rich member of your class. You may spend three seasons per year on study or adventuring, as you can pay people to look after your interests, and these seasons are genuinely free. Exactly how wealthy you are depends on your social class; a noble would have at least a dozen servants, including some bodyguards, while a wealthy townsman would have a good house and maybe three servants. Whatever your class, you are wealthy enough to afford goods generally associated with a higher class, and thus risk being labeled a vulgar social climber. Wealthy characters may live at a covenant, but they are not supported by the covenant. As all Hermetic magi are supported by their covenant, no magi may take this Virtue."
@@ -9169,7 +9224,10 @@
       "cost": -3,
       "source": "DE",
       "summary": "Keeps two households and spouses in two cities; with City and Guild rules, +6 x Wealth Multiplier Labor Points upkeep (half if posing lower-status).",
-      "description": "The character has two entirely separate lives, in two cities, and moves between the two on some pretext, most likely trade. Bigamists have two spouses, and maintain two households, which they must pay for. If you are using the rules in City and Guild, the merchant's annual cost of maintaining his business rises by (6 x Wealth Multiplier) Labor Points. Some bigamists mitigate this expense by pretending to be of lower status in their alternate life, which reduces the additional Labor Point cost by half (to 3 x Wealth Multiplier)."
+      "description": "The character has two entirely separate lives, in two cities, and moves between the two on some pretext, most likely trade. Bigamists have two spouses, and maintain two households, which they must pay for. If you are using the rules in City and Guild, the merchant's annual cost of maintaining his business rises by (6 x Wealth Multiplier) Labor Points. Some bigamists mitigate this expense by pretending to be of lower status in their alternate life, which reduces the additional Labor Point cost by half (to 3 x Wealth Multiplier).",
+      "parameters": [
+        "status"
+      ]
     },
     {
       "id": "vf_black_sheep",
@@ -11051,7 +11109,21 @@
       "cost": -1,
       "source": "DE",
       "summary": "Needs crutches (half mile per hour); -9 to moving quickly, -6 to Dodge and combat, double botch dice in combat.",
-      "description": "Both of the character's legs are severely damaged. She may not walk unless assisted by crutches or other devices, with which she can only move a mere half mile per hour. Any roll that requires moving quickly is penalized by -9. Her Dodge and other combat rolls are penalized by -6, and you roll double the normal botch dice in combat situations."
+      "description": "Both of the character's legs are severely damaged. She may not walk unless assisted by crutches or other devices, with which she can only move a mere half mile per hour. Any roll that requires moving quickly is penalized by -9. Her Dodge and other combat rolls are penalized by -6, and you roll double the normal botch dice in combat situations.",
+      "modifiers": [
+        {
+          "applies_to": "combat_initiative",
+          "amount": -6
+        },
+        {
+          "applies_to": "combat_attack",
+          "amount": -6
+        },
+        {
+          "applies_to": "combat_defense",
+          "amount": -6
+        }
+      ]
     },
     {
       "id": "vf_homunculus_wizard",
@@ -11445,7 +11517,26 @@
       "cost": -1,
       "source": "DE",
       "summary": "Speed one mile per hour; -6 to quick/agile movement, -3 Dodge, -1 other combat scores.",
-      "description": "One of your legs is weakened, whether since birth or through some accident. You move slowly and clumsily. Your base speed is a mere one mile per hour, and anyone can outrun you. You suffer a -6 penalty on rolls involving moving quickly or with agility, -3 on Dodge, and -1 on other combat scores."
+      "description": "One of your legs is weakened, whether since birth or through some accident. You move slowly and clumsily. Your base speed is a mere one mile per hour, and anyone can outrun you. You suffer a -6 penalty on rolls involving moving quickly or with agility, -3 on Dodge, and -1 on other combat scores.",
+      "modifiers": [
+        {
+          "applies_to": "combat_initiative",
+          "amount": -1
+        },
+        {
+          "applies_to": "combat_attack",
+          "amount": -1
+        },
+        {
+          "applies_to": "combat_defense",
+          "amount": -1
+        },
+        {
+          "applies_to": "combat_defense",
+          "target": "Dodge",
+          "amount": -2
+        }
+      ]
     },
     {
       "id": "vf_late_bloomer",
@@ -11597,6 +11688,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "advancement_total",
+          "target": "Mastery: *",
+          "multiplier": 0.5
+        }
+      ],
       "source": "DE",
       "summary": "Advancement Total halved whenever you Master spells.",
       "description": "Your Advancement Total is halved whenever you try to Master spells."
@@ -11858,7 +11956,19 @@
       "cost": -1,
       "source": "DE",
       "summary": "-3 on missile Attack and spell targeting rolls, -1 on melee Attack; has a blind side.",
-      "description": "You cannot judge close distances easily and get -3 on Attack rolls for missiles and targeting rolls for spells. In melee combat you suffer -1 on Attack rolls because your field of vision is limited. You also have a blind side from which people can approach unseen. This Flaw can be combined with Poor Eyesight, but the penalties are cumulative."
+      "description": "You cannot judge close distances easily and get -3 on Attack rolls for missiles and targeting rolls for spells. In melee combat you suffer -1 on Attack rolls because your field of vision is limited. You also have a blind side from which people can approach unseen. This Flaw can be combined with Poor Eyesight, but the penalties are cumulative.",
+      "modifiers": [
+        {
+          "applies_to": "combat_attack",
+          "target": "melee",
+          "amount": -1
+        },
+        {
+          "applies_to": "combat_attack",
+          "target": "missile",
+          "amount": -3
+        }
+      ]
     },
     {
       "id": "vf_missing_hand",
@@ -12371,6 +12481,12 @@
       "category": "General",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "working_seasons",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "Must work three seasons a year for necessities, leaving one fewer season for advancement other than exposure.",
       "description": "You are a poor member of your social class. You must work three seasons per year in order to make ends meet, and can afford only the necessities of life, as measured by your status. This also means that you have one fewer season available for any form of advancement other than exposure, which is a major hindrance. You cannot take this Flaw if you are supported by the covenant. In particular, this Flaw is not available to magi."
@@ -12436,7 +12552,17 @@
       "cost": -1,
       "source": "DE",
       "summary": "-3 to rolls involving sight, including attack and defense rolls.",
-      "description": "Bleary vision impedes your performance. Rolls involving sight, including rolls to attack and defend, are at -3. New environments are disorienting and perhaps frightening for you. This Flaw can be combined with Missing Eye (above), but the penalties are cumulative."
+      "description": "Bleary vision impedes your performance. Rolls involving sight, including rolls to attack and defend, are at -3. New environments are disorienting and perhaps frightening for you. This Flaw can be combined with Missing Eye (above), but the penalties are cumulative.",
+      "modifiers": [
+        {
+          "applies_to": "combat_attack",
+          "amount": -3
+        },
+        {
+          "applies_to": "combat_defense",
+          "amount": -3
+        }
+      ]
     },
     {
       "id": "vf_poor_formulaic_magic",
@@ -12718,7 +12844,17 @@
       ],
       "source": "RoP:F",
       "summary": "-2 Damage on one natural weapon (only if its Damage is above 0).",
-      "description": "One of the character's natural weapons has been blunted by a story or event before play commences, making it less damaging or dangerous. Decrease its Damage score by 2, but only if it is naturally greater than 0."
+      "description": "One of the character's natural weapons has been blunted by a story or event before play commences, making it less damaging or dangerous. Decrease its Damage score by 2, but only if it is naturally greater than 0.",
+      "modifiers": [
+        {
+          "applies_to": "combat_damage",
+          "target": "{weapon}",
+          "amount": -2
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_reduced_initiative",
@@ -12732,7 +12868,17 @@
       ],
       "source": "RoP:F",
       "summary": "-3 Initiative on one natural weapon (only if above 0).",
-      "description": "One of the character's natural weapons has been slowed due to a story or event before play commences, making the character less likely to act first. Decrease its Initiative score by 3, but only if it is naturally greater than 0."
+      "description": "One of the character's natural weapons has been slowed due to a story or event before play commences, making the character less likely to act first. Decrease its Initiative score by 3, but only if it is naturally greater than 0.",
+      "modifiers": [
+        {
+          "applies_to": "combat_initiative",
+          "target": "{weapon}",
+          "amount": -3
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_reduced_power",
@@ -12802,6 +12948,9 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "parameters": [
+        "chosen"
+      ],
       "source": "DE",
       "summary": "Only five chosen Abilities (plus Virtue-granted Supernatural ones) can take xp except by Teaching/Training; no unscored Ability use.",
       "description": "The character is incapable of learning new things without assistance. Pick five Abilities at character creation; you can only apply experience points to these Abilities. The character cannot learn any new Abilities on her own; she must receive experience points from Teaching or Training to develop a new Ability or to improve one that is not part of the initial five. Furthermore, she cannot use an Ability with no score, even if it can normally be used untrained. Any Supernatural Abilities from Virtues she possesses are added to the list of Abilities to which she can apply experience points. All mundane animals are required to take this Flaw. A character with Intelligence rather than Cunning is not a mundane animal for these purposes."
@@ -12903,6 +13052,17 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "advancement_total",
+          "multiplier": 0.5
+        },
+        {
+          "applies_to": "advancement_total",
+          "target": "{ability}",
+          "multiplier": 2
+        }
+      ],
       "parameters": [
         "ability"
       ],
@@ -13116,7 +13276,13 @@
       "cost": -1,
       "source": "DE",
       "summary": "-3 to Initiative totals in situations needing a quick response.",
-      "description": "The character does not react well to surprises. He receives a -3 to his Initiative total in situations warranting a quick response."
+      "description": "The character does not react well to surprises. He receives a -3 to his Initiative total in situations warranting a quick response.",
+      "modifiers": [
+        {
+          "applies_to": "combat_initiative",
+          "amount": -3
+        }
+      ]
     },
     {
       "id": "vf_small_frame",
@@ -14454,7 +14620,17 @@
       ],
       "source": "RoP:M",
       "summary": "+2 Attack with one natural weapon.",
-      "description": "One of the character's natural weapons is magically enhanced, making it more accurate. Increase its Attack value by 2. This Quality may be taken more than once."
+      "description": "One of the character's natural weapons is magically enhanced, making it more accurate. Increase its Attack value by 2. This Quality may be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_attack",
+          "target": "{weapon}",
+          "amount": 2
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_improved_characteristic",
@@ -14503,7 +14679,17 @@
       ],
       "source": "RoP:M",
       "summary": "+3 Damage with one natural weapon.",
-      "description": "One of the character's natural weapons is magically enhanced, making it sharper, heavier, or somehow more dangerous. Increase its Damage value by 3. This Quality may be taken more than once."
+      "description": "One of the character's natural weapons is magically enhanced, making it sharper, heavier, or somehow more dangerous. Increase its Damage value by 3. This Quality may be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_damage",
+          "target": "{weapon}",
+          "amount": 3
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_improved_defense",
@@ -14518,7 +14704,17 @@
       ],
       "source": "RoP:M",
       "summary": "+2 Defense with one natural weapon.",
-      "description": "One of the character's natural weapons is magically enhanced, so that the character can better parry or dodge. Increase its Defense value by 2. This Quality may be taken more than once."
+      "description": "One of the character's natural weapons is magically enhanced, so that the character can better parry or dodge. Increase its Defense value by 2. This Quality may be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_defense",
+          "target": "{weapon}",
+          "amount": 2
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_improved_fatigue",
@@ -14548,7 +14744,17 @@
       ],
       "source": "RoP:M",
       "summary": "+3 Initiative with one natural weapon.",
-      "description": "One of the character's natural weapons is magically enhanced, making it faster. Increase its Initiative value by 3. This Quality may be taken more than once."
+      "description": "One of the character's natural weapons is magically enhanced, making it faster. Increase its Initiative value by 3. This Quality may be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_initiative",
+          "target": "{weapon}",
+          "amount": 3
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_improved_might",
@@ -15243,7 +15449,17 @@
       ],
       "source": "RoP:M",
       "summary": "-2 Attack with one natural weapon.",
-      "description": "One of the character's natural weapons has been magically worsened, making it less accurate and less likely to hit. Decrease its Attack bonus by 2. This Inferiority may be taken only if the character's Attack bonus for that weapon is greater than 0, though it can be taken more than once."
+      "description": "One of the character's natural weapons has been magically worsened, making it less accurate and less likely to hit. Decrease its Attack bonus by 2. This Inferiority may be taken only if the character's Attack bonus for that weapon is greater than 0, though it can be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_attack",
+          "target": "{weapon}",
+          "amount": -2
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_reduced_characteristic",
@@ -15275,7 +15491,17 @@
       ],
       "source": "RoP:M",
       "summary": "-3 Damage with one natural weapon.",
-      "description": "One of the character's natural weapons has been magically blunted, making it less damaging or dangerous. Decrease its Damage bonus by 3. This Inferiority may be taken only if the character's Damage bonus for that weapon is greater than 0, though it can be taken more than once."
+      "description": "One of the character's natural weapons has been magically blunted, making it less damaging or dangerous. Decrease its Damage bonus by 3. This Inferiority may be taken only if the character's Damage bonus for that weapon is greater than 0, though it can be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_damage",
+          "target": "{weapon}",
+          "amount": -3
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_reduced_defense",
@@ -15290,7 +15516,17 @@
       ],
       "source": "RoP:M",
       "summary": "-2 Defense with one natural weapon.",
-      "description": "One of the character's natural weapons has been magically weakened, making it less effective at blocking or dodging other attacks. Decrease its Defense bonus by 2. This Inferiority may be taken only if the character's Defense bonus for that weapon is greater than 0, though it can be taken more than once."
+      "description": "One of the character's natural weapons has been magically weakened, making it less effective at blocking or dodging other attacks. Decrease its Defense bonus by 2. This Inferiority may be taken only if the character's Defense bonus for that weapon is greater than 0, though it can be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_defense",
+          "target": "{weapon}",
+          "amount": -2
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_reduced_fatigue",
@@ -15321,7 +15557,17 @@
       ],
       "source": "RoP:M",
       "summary": "-3 Initiative with one natural weapon.",
-      "description": "One of the character's natural weapons has been magically slowed, making the character less able to act quickly. Decrease its Initiative bonus by 3. This Inferiority may be taken only if the character's Initiative bonus for that weapon is greater than 0, though it can be taken more than once."
+      "description": "One of the character's natural weapons has been magically slowed, making the character less able to act quickly. Decrease its Initiative bonus by 3. This Inferiority may be taken only if the character's Initiative bonus for that weapon is greater than 0, though it can be taken more than once.",
+      "modifiers": [
+        {
+          "applies_to": "combat_initiative",
+          "target": "{weapon}",
+          "amount": -3
+        }
+      ],
+      "parameters": [
+        "weapon"
+      ]
     },
     {
       "id": "vf_reduced_might",

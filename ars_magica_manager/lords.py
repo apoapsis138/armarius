@@ -16,14 +16,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from . import references
+from . import battles, references
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
 from .models import Neighbour, Saga
 from .neighbour_lists import KindList, KindTab, details_list, list_ops
-from .sections import CASTLES_SECTION, GRATITUDE_SECTION
+from .sections import BATTLES_SECTION, CASTLES_SECTION, GRATITUDE_SECTION
 from .sheets.character import Fact
 
 #: The titles a lord may hold, from least to greatest.
@@ -383,5 +383,8 @@ TAB = KindTab(
     (
         KindList(CASTLES_SECTION, castles_title, castles_grid, castle_ops),
         KindList(GRATITUDE_SECTION, gratitude_title, gratitude_grid, gratitude_ops),
+        KindList(
+            BATTLES_SECTION, battles.title, battles.grid, battles.ops, battles.info
+        ),
     ),
 )

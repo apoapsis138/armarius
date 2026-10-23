@@ -128,6 +128,12 @@ class Aging:
     #: Wizard's Twilight: the last season it takes ("Winter
     #: 1224"); no activity can be planned until after it.
     twilight_until: str = ""
+    #: A physician's regimen (Art & Academe): its bonus to Living
+    #: Conditions (0: none), the physician (a character's id) and the
+    #: year it began.
+    regimen: int = 0
+    regimen_by: str = ""
+    regimen_since: int | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Aging:
@@ -574,6 +580,9 @@ class Character:
     progress: list[Progress] = field(default_factory=list)
     formulas: list[str] = field(default_factory=list)
     ordeals: list[Ordeal] = field(default_factory=list)
+    #: Master of None: each subject ("art:Ignem") an Advancement Total
+    #: raised, and the last year it did.
+    advanced: dict[str, int] = field(default_factory=dict)
     #: Being created by the book: the creation checks run and
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).

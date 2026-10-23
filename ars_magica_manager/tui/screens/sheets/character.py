@@ -928,7 +928,7 @@ class CharacterSheetView(SheetView):
         return st.vf_info_text(self.character.virtues_flaws, index)
 
     def _aging_text(self) -> str:
-        return cs.aging_text(self.character)
+        return cs.aging_text(self.character, self.saga)
 
     def _personality_trait_rows(self) -> list[tuple[int | None, str]]:
         return st.trait_rows(self.character.personality_traits)

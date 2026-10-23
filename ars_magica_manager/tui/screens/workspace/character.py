@@ -8,7 +8,15 @@ from collections.abc import Callable
 from functools import partial
 from typing import Any
 
-from .... import creation, seasons, sourcebooks, storage, traditions, world
+from .... import (
+    creation,
+    disputations,
+    seasons,
+    sourcebooks,
+    storage,
+    traditions,
+    world,
+)
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
@@ -117,6 +125,18 @@ class CharacterActions(WorkspaceBase):
 
         run_steps(self.app, menu_forms.character_traditions(self.saga, character), done)
 
+    def action_disputatio(self) -> None:
+        """More's Disputatio: a schoolmen's debate with another character,
+        kept in both Diaries."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            disputations.disputatio_form(self.saga, character),
+            lambda _end: self._commit("section-char-info"),
+        )
+
     # -- Character Info / Characteristics --
 
     def _edit_character_info(self) -> None:
@@ -192,7 +212,8 @@ class CharacterActions(WorkspaceBase):
 
         self.app.push_screen(
             FieldsDialog(
-                "Edit Aging & Warping", character_forms.aging_fields(character.aging)
+                "Edit Aging & Warping",
+                character_forms.aging_fields(character.aging, self.saga),
             ),
             handle_result,
         )
