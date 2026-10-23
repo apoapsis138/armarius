@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -48,11 +48,6 @@ KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(theban: Theban, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1203,7 +1198,7 @@ def _epidauros(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "nowhere else to go, most with some disability from punishment or "
         "injury (tongues cut out, limbs lost, blinded or castrated).",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the Blood of Medusa, 16 pawns of extraordinary Corpus vis a year, kept in a basin atop a carved stele by the statue of Asklepios in the Hall of Repose",
         "Vis: Imaginem from the ancient theatre",
         "Vis: a small stipend from the Tribunal for healing magi",
@@ -1243,7 +1238,7 @@ def _epidauros(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The book gives no founding year (only before the Order's "
         "founding) and no season. Two magi are unnamed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Healing the Realm: Geoffrey II of Achaea, in whose land the covenant lies, falls gravely ill, and his wife Agnes begs the magi for a cure. Refuse, and if he dies they make an enemy of her and leave a war of succession; heal him, and a rival accuses him of dealing with pagan sorcerers. Either way the covenant could be charged with interfering with mundanes.",
         "Magi of Epidauros wonder whether the nectar and ambrosia Tantalus is said to have stolen could improve Longevity Rituals.",
     )
@@ -1375,7 +1370,7 @@ def _erebos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "devil-worshippers' nest, and Erebos and Gigas, to its north, "
         "loathe each other.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: Perdo from the bats of Hecate's cave near the valley",
         "Library: no books named; the leader shares out the books and vis",
         "Boon: Local Ally (Cyra, the covenant's patron)",
@@ -1398,7 +1393,7 @@ def _erebos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The book gives no founding year (the later ninth century) and no "
         "season. Nine magi are unnamed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Cyra is most likely a Magic spirit, but given the dark magic of the Witches of Thessaly she might be Infernal.",
         "Proximios, through the League of the Vigilant, means to set demon-hunters on the young magi of Erebos as supposed diabolists.",
     )
@@ -1506,7 +1501,7 @@ def _gigas(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "the slow road fail. With Oikos tou Eleous it makes up the League "
         "Against Idolatry.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Library: no books named; records Boustaphan will not open to outsiders",
         "Boon: Hidden Resources (underground sancta under a modest lodge)",
         "Hook: Superiors (Coeris, the Tremere domus magna)",
@@ -1529,7 +1524,7 @@ def _gigas(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "citizenship; the book names none of them, so the register lists "
         "only Boustaphan, Monorchis and Allectores, all politai.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Proximios hopes to convince Aiakia that Gigas's Tremere brought about the fall of Constantinople and plan to strike at her covenant, and Tisiphon that they have escaped justice; Boustaphan would never open Gigas's records to clear them.",
     )
     gigas = b.covenant(
@@ -1714,7 +1709,7 @@ def _hedyosmos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "it fabulously rich, all worked through intermediaries to avoid "
         "any charge of meddling.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Income: hidden mines of gold, silver and gemstones found by dowsing covenfolk, worked through intermediaries",
         "Library: Ausculator's works on Terram, and the covenant's records of the time of the Sundering",
         "Mysteries: Initiation Scripts of the threskeia geine for Divination and Augury (Geomancy), Summoning (of Terram-aligned Magic beings), Dowsing, Puissant Terram, Silent Magic and Spirit Familiar",
@@ -1759,7 +1754,7 @@ def _hedyosmos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The book gives no founding year (before the Order) and no "
         "season. Three magi are unnamed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Kampe's Lovers, centred on Hedyosmos's cult, mean to weaken Hades's power over the titans' prison and set them free to bring a golden age of magic; this is the Theban cult's aim, not the Terrae Cult's at large.",
         "Ausculator's mater vanished; he says she will not return, and most think she went into the lower labyrinth and never came out.",
         "Vrakos the cook, beneath the magi's notice, has been won over by Askalaphos, the faerie tattletale of Hades whom Demeter cursed into a screech owl. He has become a priest of Hades, holds secret rites in the depths and quietly recruits among the servants; for now he asks only offerings of milk, honey and a black ram's blood.",
@@ -1975,7 +1970,7 @@ def _oikos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "up the League Against Idolatry, which wants the Ceremony of "
         "Propitiation banned.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Laboratory: the chapel of Koukoubiou (Divine aura 4), and the twins' cramped room in the royal palace",
         "Resources: very few in common; the nuns live on their own wealth",
         "Boon: Powerful Ally (Saint Demetrios, the covenant's patron)",
@@ -2763,10 +2758,6 @@ GREEK = "Greek"
 THEBAN = "Area Lore: Theban Tribunal"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the book sketches without a stat block, by character key.
 PROFILES: dict[str, Profile] = {
     "xenias": P(
@@ -2781,7 +2772,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Leper Magus",
-            _art("Affinity with {art}", "corpus"),
+            vf_art("Affinity with {art}", "corpus"),
             "Twilight Prone",
             "Dutybound",
         ],
@@ -2813,7 +2804,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Curse-Throwing",
-            _art("Affinity with {art}", "perdo"),
+            vf_art("Affinity with {art}", "perdo"),
             "Disfigured",
             "Wrathful (Minor)",
             "Dark Secret",
@@ -2869,8 +2860,8 @@ PROFILES: dict[str, Profile] = {
             "Organization Lore: Theban Tribunal": 1,
         },
         virtues=[
-            _art("Affinity with {art}", "ignem"),
-            _art("Puissant {art}", "ignem"),
+            vf_art("Affinity with {art}", "ignem"),
+            vf_art("Puissant {art}", "ignem"),
             "Restricted Learning",
             "Obsessed (Minor)",
             "Driven (Minor)",
@@ -2908,8 +2899,8 @@ PROFILES: dict[str, Profile] = {
             "Magic Lore": (3, "the titans"),
         },
         virtues=[
-            _art("Affinity with {art}", "terram"),
-            _art("Puissant {art}", "terram"),
+            vf_art("Affinity with {art}", "terram"),
+            vf_art("Puissant {art}", "terram"),
             "Spirit Familiar",
             "Good Teacher",
             "Blind",

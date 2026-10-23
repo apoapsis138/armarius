@@ -36,7 +36,7 @@ from textual.widgets.option_list import Option
 from ... import references, world
 from ...markup import escape
 from ...models import Attitude
-from ...sheets.character import Fact
+from ...references import Fact
 
 
 def _sign_colored(value: float, text: str) -> str:

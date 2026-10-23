@@ -9,21 +9,20 @@ from collections.abc import Callable
 from dataclasses import replace
 from functools import partial
 
-from .. import enchanted_devices as ed
+from .. import catalog
 from .. import spells as spl
-from ..familiars import familiar_of
-from ..inhabitants import AUTO_KINDS, character_kind
 from ..markup import escape, markdown_text, problem, todo
 from ..models import SEASONS, Book, Character, Saga, SeasonPlan, next_season
 from ..rules import activities as rules
 from ..rules import apprentice_seasons as aps
 from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
+from ..rules import enchantment, lab_seasons, study
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons, study
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
 from ..rules import xp as xp_rules
+from ..rules.covenfolk import AUTO_KINDS, character_kind
 from ..rules.rounding import round_up
 from ..tables import Table
 from ..world import takes_part_in_play
@@ -161,7 +160,7 @@ def spell_names(saga: Saga, character: Character) -> dict[str, str]:
     """Spell id -> name for the spells `character` knows."""
     names: dict[str, str] = {}
     for known in character.spells_known:
-        spell = spl.find_spell(saga, known.spell_id)
+        spell = catalog.find_spell(saga, known.spell_id)
         names[known.spell_id] = spell.name if spell else known.spell_id
     return names
 
@@ -317,7 +316,7 @@ def _laboratory_subject(saga: Saga, character: Character, plan: SeasonPlan) -> s
 
 
 def _familiar_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
-    familiar = familiar_of(saga, character.id)
+    familiar = saga.familiar_of(character.id)
     if familiar is None:
         return ""
     power = fs.power_of(familiar, plan)
@@ -332,7 +331,7 @@ def _device_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
         return ""
     effect = es.effect_of(device, plan)
     if plan.activity == es.INSTIL and effect is not None:
-        return f"{ed.effect_name(effect)} in {device.name}"
+        return f"{enchantment.effect_name(effect)} in {device.name}"
     return device.name
 
 
@@ -352,7 +351,7 @@ def _spell_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     """The spell invented, or learned from a Lab Text: "Pilum of Fire (CrIg 20)"."""
     if plan.activity == lab_seasons.LAB_TEXT:
         text = lab_seasons.lab_text_of(saga, plan)
-        spell = spl.find_spell(saga, text.spell_id) if text else None
+        spell = catalog.find_spell(saga, text.spell_id) if text else None
     else:
         spell = (
             lab_seasons.design_spell(plan.design)

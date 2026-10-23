@@ -65,7 +65,13 @@ from ...models import (
 from ...rules import creation_access as access
 from ...rules import lab
 from ...rules.xp import ability_xp, score_from_xp
-from ..builder import StatBlock, _catalog_spells, _spell_key, _virtue_flaw
+from ..builder import (
+    StatBlock,
+    _catalog_spells,
+    _spell_key,
+    _virtue_flaw,
+    characteristics,
+)
 
 if TYPE_CHECKING:
     from ...models import Character
@@ -506,21 +512,6 @@ def convert(key: str, block: Fourth) -> tuple[StatBlock, int]:
     return stat, age
 
 
-def _chars(
-    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
-) -> dict[str, int]:
-    return {
-        "intelligence": int_,
-        "perception": per,
-        "presence": pre,
-        "communication": com,
-        "strength": str_,
-        "stamina": sta,
-        "dexterity": dex,
-        "quickness": qik,
-    }
-
-
 def _arts(cr: int, in_: int, mu: int, pe: int, re: int, *forms: int) -> dict[str, int]:
     """Arts in the book's order: Techniques, then An Aq Au Co He Ig Im Me
     Te Vi."""
@@ -541,7 +532,7 @@ def _arts(cr: int, in_: int, mu: int, pe: int, re: int, *forms: int) -> dict[str
 UMAR = Fourth(
     age=72,
     apparent=54,
-    characteristics=_chars(3, 3, 0, 3, 0, -1, -1, -2),
+    characteristics=characteristics(3, 3, 0, 3, 0, -1, -1, -2),
     confidence=4,
     twilight=14,
     decrepitude=0,
@@ -667,7 +658,7 @@ AMBER = Fourth(
     age=54,
     apparent=37,
     size=-1,
-    characteristics=_chars(3, 2, -2, 0, 0, 0, 0, 0),
+    characteristics=characteristics(3, 2, -2, 0, 0, 0, 0, 0),
     confidence=3,
     twilight=5,
     decrepitude=0,
@@ -783,7 +774,7 @@ AMBER = Fourth(
 FELIX = Fourth(
     age=48,
     apparent=45,
-    characteristics=_chars(4, 4, 0, 0, 2, 3, 0, -2),
+    characteristics=characteristics(4, 4, 0, 0, 2, 3, 0, -2),
     confidence=3,
     twilight=1,
     decrepitude=0,
@@ -862,7 +853,7 @@ FELIX = Fourth(
 ESTHER = Fourth(
     age=43,
     apparent=39,
-    characteristics=_chars(3, 0, 3, 0, -3, 0, 0, -1),
+    characteristics=characteristics(3, 0, 3, 0, -3, 0, 0, -1),
     confidence=3,
     twilight=3,
     decrepitude=0,
@@ -962,7 +953,7 @@ GUILLAUME = Fourth(
     age=43,
     apparent=39,
     size=1,
-    characteristics=_chars(2, 1, -2, -1, 3, 3, 1, 1),
+    characteristics=characteristics(2, 1, -2, -1, 3, 3, 1, 1),
     confidence=3,
     twilight=5,
     decrepitude=0,
@@ -1049,7 +1040,7 @@ GUILLAUME = Fourth(
 RUFUS = Fourth(
     age=45,
     apparent=36,
-    characteristics=_chars(3, 2, 2, 1, -2, -1, -1, -1),
+    characteristics=characteristics(3, 2, 2, 1, -2, -1, -1, -1),
     confidence=3,
     twilight=2,
     decrepitude=1,
@@ -1143,7 +1134,7 @@ RUFUS = Fourth(
 SPIRAL = Fourth(
     age=53,
     apparent=42,
-    characteristics=_chars(3, 1, -3, -5, 0, 1, 0, 0),
+    characteristics=characteristics(3, 1, -3, -5, 0, 1, 0, 0),
     confidence=3,
     twilight=6,
     decrepitude=0,
@@ -1245,7 +1236,7 @@ SPIRAL = Fourth(
 WARDAT = Fourth(
     age=33,
     apparent=None,
-    characteristics=_chars(0, -2, 3, 2, 1, 3, -2, -2),
+    characteristics=characteristics(0, -2, 3, 2, 1, 3, -2, -2),
     confidence=3,
     twilight=0,
     decrepitude=0,

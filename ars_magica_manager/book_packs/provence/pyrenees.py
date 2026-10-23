@@ -29,7 +29,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -51,11 +51,6 @@ KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
 RUMOURED = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(provence: Provence, key: str, name: str, **kw: Any) -> Neighbour:
@@ -733,7 +728,7 @@ def _aedes_mercurii(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "in the region that will not ally with it, though its magi agree on "
         "nothing but blocking Castra Solis, so newcomers get mixed answers.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Site: two sites joined by a Mercere Portal, the Dorsum fortress (aura 5) and the Templum (aura 4, 8 inside the Temple of Mercury)",
         "Vis: the book names no source",
         "Library: the casting notes of the Mercurian ritual Set the Stones of the Via, kept with reverence in the Templum",
@@ -776,7 +771,7 @@ def _aedes_mercurii(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "Guernicus, tried to join the Way of St James to the Via Domitia by "
         "a Mercurian ritual into one great road network, and failed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Protendus works as an unofficial, tacitly approved Quaesitor, against Tytalan influence from the north; he keeps it quiet by oaths enforced with certamen.",
         "Ruberus is secretly a friend of Garus, Primus of Flambeau, and secretly loves Dama, the Praeco.",
         "Flammarcus may stop at nothing to become Primus when Garus dies.",
@@ -1092,7 +1087,7 @@ def _bellaquin(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "and three more have since died or passed into Twilight. Bellaquin "
         "has room and wealth for more and would welcome promising young magi.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: nearly 100 pawns in store, and sources yielding about 30 pawns a year (not named)",
         "Income: banking, moving funds for magi and mundanes; a merchant network from Iberia to Germany and Italy",
         "Income: the Andorrans' fairs, where Castra Solis and Ara Maxima Nova send agents to gather news",
@@ -1121,7 +1116,7 @@ def _bellaquin(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "Jerbiton cast him out in 1216, and he was Marched and slain early in "
         "1218 (chapter three also calls the Coenobium his former covenant).",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Rumour says the Danior are homunculi, less open to Mentem magic, easily mended, and with a bloody habit of twisting Artemis's orders.",
         "Antoinette fears Michael will learn of her affair with Carolus of the Rhine Tribunal during a Jerbiton fosterage at Oculus Septentrionalis.",
         "Other magi may have engineered the fall of the first Bellaquin.",
@@ -1323,7 +1318,7 @@ def _miniata_sophia(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "small loads of iron mined in the hills and worked into ingots and "
         "rods.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Income: iron mined in the hills and worked into ingots and rod stock",
         "Library: texts traded by correspondence; the cave paintings themselves, studied as the Enigma",
         "Mystery: the Path of Walking Backwards, with the paintings built into later initiations",
@@ -1935,14 +1930,6 @@ P = Profile
 OCCITAN = "Occitan"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
 #: Each magus of the Pyrenees the book sketches without a stat block, by
 #: the key in provence.magi.
 PROFILES: dict[str, Profile] = {
@@ -1970,7 +1957,7 @@ PROFILES: dict[str, Profile] = {
             "Magic Lore": (3, "ghosts"),
             "Teaching": 2,
         },
-        virtues=[_art("Affinity with {art}", "mentem"), "Secretive", "Reclusive"],
+        virtues=[vf_art("Affinity with {art}", "mentem"), "Secretive", "Reclusive"],
         reputations={"Necromancer (Hermetic)": 3},
         native=OCCITAN,
     ),
@@ -2155,7 +2142,7 @@ PROFILES: dict[str, Profile] = {
         virtues=[
             "Blatant Gift",
             "Strong-Willed",
-            _art("Affinity with {art}", "corpus"),
+            vf_art("Affinity with {art}", "corpus"),
             "Dutybound",
         ],
         native=OCCITAN,
@@ -2193,7 +2180,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Second Sight",
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             "Arthritis",
             "Driven (Minor)",
         ],

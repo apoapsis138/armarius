@@ -23,10 +23,11 @@
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 
-from ..models import Character
-from . import animal_aging, dice, effects
+from ..models import Character, Saga
+from . import animal_aging, dice, effects, sites
 from .scores import character_source
 
 SOURCE = (
@@ -134,8 +135,8 @@ def roll(
     age: int,
     living: int,
     bronze_cord: int,
-    rng,
-    saga=None,
+    rng: random.Random,
+    saga: Saga | None = None,
 ) -> AgingResult:
     """The year's aging roll for `character` aged `age`."""
     die = dice.stress_die(rng, 0, saga=saga).value
@@ -144,9 +145,7 @@ def roll(
     living = living_conditions(character, living)
     virtues = _effects(character, "aging_roll")
     if saga is not None:
-        from .. import places  # places reads the sheets, which read this
-
-        virtues += places.character_effects(saga, character, "aging_roll")
+        virtues += sites.character_effects(saga, character, "aging_roll")
     total = (
         die
         + for_age
@@ -191,7 +190,11 @@ def roll(
 
 
 def crisis(
-    character: Character, age: int, decrepitude: int, rng, saga=None
+    character: Character,
+    age: int,
+    decrepitude: int,
+    rng: random.Random,
+    saga: Saga | None = None,
 ) -> tuple[str, bool]:
     """Roll the Crisis: (what happens, whether the Longevity Ritual ends).
     Survival rolls are reported, not decided (the storyguide, medicine and

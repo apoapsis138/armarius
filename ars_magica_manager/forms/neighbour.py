@@ -25,6 +25,7 @@ from ..form_spec import EMPHASIS_HINT, DialogField, pairs
 from ..markup import escape
 from ..models import DETAIL_LEVELS, REALMS, Neighbour, Saga
 from ..neighbour_lists import KindList
+from ..rules import sites
 from ..sections import NEIGHBOUR_INFO_SECTION
 from . import world as world_forms
 
@@ -101,7 +102,7 @@ def neighbour_fields(
             placeholder="(none)",
         ),
     ]
-    if kind == places.PLACE:
+    if kind == sites.PLACE:
         mine = {n.id, *places.within(saga, n)} if neighbour is not None else set()
         fields.insert(
             len(fields) - 1,
@@ -397,7 +398,3 @@ def tab_lists(neighbour: Neighbour) -> tuple[KindList, ...]:
     kind = neighbours.kind_of(neighbour)
     tabs = ([kind.tab] if kind.tab is not None else []) + list(kind.more)
     return tuple(entry for tab in tabs for entry in tab.lists)
-
-
-def delete_neighbour(saga: Saga, neighbour: Neighbour) -> Confirm:
-    return _delete(saga, neighbour)

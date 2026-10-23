@@ -25,7 +25,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -45,11 +45,6 @@ KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
 RUMOURED_TRIBUNAL: dict[str, Any] = {"status": "Rumoured", "known": "In the Tribunal"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(theban: Theban, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1233,7 +1228,7 @@ def _michaels_tabula(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "by Petros, Michael's filius, and with Wilrich of Flambeau as its "
         "sword.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Boon: Powerful Ally (Fylakas, the covenant's patron)",
         "Vis: a few unnamed sources in the catacombs",
         "Income: a generous gift of money and books every year or two, "
@@ -1269,7 +1264,7 @@ def _michaels_tabula(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Founded: 1207, at the Tribunal after the fall; the oath was sworn "
         "in 1204. Season: the book gives none; it is a young covenant.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Fylakas may instead be a demon loosed from its binding in "
         "the sack, deceiving the pious magi.",
         "Despite their piety, one or more of the magi might stoop to "
@@ -1434,7 +1429,7 @@ def _xylinites(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "parents has won the Clutch some standing at Tribunal. How long "
         "this can last, no one knows.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Boon: Local Ally (St. Loukia, the covenant's patron)",
         "Vis: the book names none",
         "Income: the orphanage, still paid for from the imperial treasury "
@@ -1482,7 +1477,7 @@ def _xylinites(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Founded: 1074. The book dates the near-destruction to 1205 in "
         "places; the city fell in 1204.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Meditating on the icon works as a summa of Animal Ken, "
         "level 3, Quality 10. None of the magi has realised it, "
         "since they fear to meditate on it long, but the Criamon may "
@@ -1694,10 +1689,6 @@ GREEK = "Greek"
 CITY = "Area Lore: Constantinople"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the book sketches without a stat block, by character key.
 PROFILES: dict[str, Profile] = {
     "petros": P(
@@ -1763,7 +1754,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             ("Deft Form", {"form": "corpus"}),
-            _art("Affinity with {art}", "corpus"),
+            vf_art("Affinity with {art}", "corpus"),
             "Pious (Minor)",
             "Reclusive",
             "Infamous",

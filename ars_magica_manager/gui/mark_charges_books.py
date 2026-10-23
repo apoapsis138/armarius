@@ -108,7 +108,7 @@ def empathy():
     """An eye closed in trance, a spiral turning below it."""
     lid = stroke(curve((14, 30), (50, 56), (86, 30)), 5)
 
-    def under(x):
+    def under(x: float):
         return 30 + 26 * (1 - ((x - 50) / 36) ** 2) * 0.5 + 2
 
     lashes = union_of(
@@ -119,7 +119,7 @@ def empathy():
     return union(lid, lashes, spiral)
 
 
-def _spiral(cx, cy, r):
+def _spiral(cx: float, cy: float, r: float):
     """A spiral of 1.3 turns winding out from its centre."""
     pts = []
     for i in range(80):
@@ -298,7 +298,7 @@ def evocation():
         rotate(vesica(84, 18, 12, 5), -20, 84, 18),
     )
 
-    def bell(x, y):
+    def bell(x: float, y: float):
         body = poly((x - 3, y), (x + 3, y), (x + 7, y + 13), (x - 7, y + 13))
         return union(body, circle(x, y + 15, 2.4), circle(x, y, 3))
 
@@ -310,7 +310,7 @@ def evocation():
 # -- Holy Methods and Powers, and the holy traditions --
 
 
-def _candle(x, base, h, w=8):
+def _candle(x: float, base: float, h: float, w: float = 8):
     return union(rect(x - w / 2, base - h, w, h), flame(x, base - h - 2, w * 0.9, 14))
 
 
@@ -448,7 +448,7 @@ def dream_interpretation():
     return union(sun, moon, stars)
 
 
-def _trefoil_end(x, y, r):
+def _trefoil_end(x: float, y: float, r: float):
     return union(
         circle(x, y, r),
         circle(x - r * 0.9, y + r * 0.9, r * 0.8),
@@ -521,7 +521,7 @@ def gematria():
     cells = {4: (0, 0), 9: (1, 0), 2: (2, 0), 3: (0, 1), 5: (1, 1), 7: (2, 1),
              8: (0, 2), 1: (1, 2), 6: (2, 2)}  # fmt: skip
 
-    def at(n):
+    def at(n: int):
         c, r = cells[n]
         return (28.7 + 21.3 * c, 28.7 + 21.3 * r)
 
@@ -811,12 +811,6 @@ def diablerie():
 # -- Ex Miscellanea and the regional traditions --
 
 
-def _hexagram(cx, cy, r, w):
-    a = [_pt(cx, cy, r, d) for d in (-90, 30, 150, -90)]
-    b = [_pt(cx, cy, r, d) for d in (90, 210, 330, 90)]
-    return weave([_open(*a), _open(*b)], w, 1.2)
-
-
 def control_fertility():
     """An egg broken open, a green shoot rising out of it."""
     egg = ellipse(26, 36, 48, 58)
@@ -936,7 +930,7 @@ def soban_alchemy():
     return union(phial.subtracted(hollow), fill, crown)
 
 
-def _tcherot(sign):
+def _tcherot(sign: QPainterPath):
     """A Tuareg leather amulet: a square pouch under a triangle, its face
     worked with a sign."""
     pouch = rrect(26, 40, 48, 44, 3)
@@ -1004,7 +998,7 @@ def dissolution():
 def settut_divination():
     """The seeress's cowries, cast and fallen."""
 
-    def cowrie(x, y, r):
+    def cowrie(x: float, y: float, r: float):
         shell = rotate(vesica(x, y, 34, 22), r, x, y)
         slit = rotate(rect(x - 12, y - 1.2, 24, 2.4), r, x, y)
         teeth = union_of(
@@ -1050,7 +1044,7 @@ def hermetic_viresculture():
     return union(pot, rim, stems, buds)
 
 
-def _caduceus(cx, top, h):
+def _caduceus(cx: float, top: float, h: float):
     rod = rect(cx - 1.5, top, 3, h)
     pts1 = [
         (cx + 7 * math.sin(i * 0.45), top + 6 + i * (h - 10) / 30) for i in range(31)
@@ -1219,7 +1213,7 @@ def amazonian_chant():
     return union(shield, waves)
 
 
-def _scaled_pelta(k, cx, cy):
+def _scaled_pelta(k: float, cx: float, cy: float):
     return QTransform().translate(cx, cy).scale(k, k).translate(-50, -50).map(_pelta())
 
 
@@ -1253,7 +1247,7 @@ def amazonia_lore():
     return union(_scaled_pelta(0.9, 46, 56), bow)
 
 
-def _wreath(sign):
+def _wreath(sign: QPainterPath):
     """A laurel wreath round the school's sign, as a Roman watch-post's
     standard bore it."""
     leaves = []
@@ -1508,7 +1502,7 @@ def aloe_magic():
 def cinnabar_magic():
     """A cluster of cinnabar crystals."""
 
-    def crystal(x, y, w, h, a):
+    def crystal(x: float, y: float, w: float, h: float, a: float):
         return rotate(
             poly(
                 (x - w / 2, y),
@@ -1614,7 +1608,7 @@ def defixio_lore():
     return over(nail, union(roll.subtracted(lines), edge), 2)
 
 
-def _hymn(sign):
+def _hymn(sign: QPainterPath):
     """A ring of the seven vowels round the hymn's sign."""
     vowels = union_of(
         circle(*_pt(50, 50, 40, -90 + i * 360 / 7), 4.2) for i in range(7)

@@ -7,6 +7,7 @@ import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 
+import pytest
 from support import everything_saga, screen_lines, wait_until
 from textual.widgets import Tree
 
@@ -100,7 +101,7 @@ def test_presence_says_who_else_has_a_record_open():
     assert presence.others_on("me", "test_saga", "characters:mag1") == []
 
     # A copy that stopped saying it's there (closed, or crashed) drops out.
-    stale = storage.SAGAS_DIR / ".presence" / "ben.json"
+    stale = storage.sagas_dir() / ".presence" / "ben.json"
     entry = json.loads(stale.read_text(encoding="utf-8"))
     entry["seen"] = time.time() - presence.FRESH - 1
     stale.write_text(json.dumps(entry), encoding="utf-8")
@@ -197,3 +198,14 @@ async def test_picking_up_another_copys_save_rebuilds_the_footer_at_most_once():
         await pilot.pause()
         await pilot.pause()
         _check_rebuilds(app, before, "picking up another copy's save")
+
+
+def test_a_damaged_file_is_reported_and_the_next_save_replaces_it():
+    storage.save_saga(_saga())
+    mine = storage.load_saga("test_saga")
+    storage.saga_path("test_saga").write_text("{ not json", encoding="utf-8")
+    with pytest.raises(ValueError, match="can't be read"):
+        storage.reload_into(mine)
+    assert mine.character("comp1") is not None  # this copy keeps its data
+    storage.save_saga(mine)
+    assert storage.load_saga("test_saga").character("comp1") is not None

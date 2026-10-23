@@ -78,7 +78,6 @@ def use_save_folder(old: Path, folder: Path, move: bool) -> list[str]:
     `old` if `move`: what it did, as notes."""
     moved_notes = paths.move_user_data(old, folder) if move else []
     paths.remember_data_dir(folder)
-    storage.use_data_dir(folder)
     moved = sum(1 for note in moved_notes if note.startswith("Moved"))
     left = [note for note in moved_notes if not note.startswith("Moved")]
     return notes(

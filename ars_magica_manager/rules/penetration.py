@@ -16,6 +16,9 @@ The optional Dominion rule gives the faithful 5 x the Dominion aura.
 Virtues and Flaws can take the Form's part away against one Form (Limited
 Magic Resistance), halve Parma's part against one (Flawed Parma Magica), or
 halve the Penetration Total (Weak Magic).
+
+No screen uses aegis_penalty() yet: it is a rule for a screen still to come,
+and only the tests call it.
 """
 
 from __future__ import annotations

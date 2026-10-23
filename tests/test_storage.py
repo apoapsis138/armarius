@@ -4,7 +4,7 @@ import json
 import pytest
 from support import everything_saga
 
-from ars_magica_manager import models, seasons, storage
+from ars_magica_manager import models, seasons, settings, storage
 from ars_magica_manager.models import (
     Ability,
     Aging,
@@ -173,10 +173,9 @@ def _sample_saga() -> Saga:
 
 
 def test_saga_round_trip(tmp_path, monkeypatch):
-    monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
     saga = _sample_saga()
 
-    path = storage.save_saga(saga)
+    path = storage.save_saga(saga).path
     loaded = storage.load_saga(saga.id)
 
     assert path.exists()
@@ -196,7 +195,7 @@ def test_delete_saga_removes_the_file_and_ignores_a_missing_one():
 def test_list_sagas_is_empty_when_the_sagas_folder_does_not_exist(
     tmp_path, monkeypatch
 ):
-    monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path / "missing")
+    monkeypatch.setattr(storage.paths, "_in_use", tmp_path / "missing")
     assert storage.list_sagas() == []
 
 
@@ -511,3 +510,14 @@ def test_a_save_with_stale_keys_everywhere_still_loads():
     assert Saga.from_dict(_stale(saga, None)) == Saga.from_dict(
         dataclasses.asdict(saga)
     )
+
+
+def test_storage_follows_the_data_folder_whenever_it_changes(tmp_path):
+    """Nothing about the folder is fixed when storage is imported: a folder
+    chosen later is where the next save goes, settings and exports too."""
+    chosen = tmp_path / "chosen"
+    storage.paths.remember_data_dir(chosen)
+    storage.save_saga(Saga(id="moved", name="Moved"))
+    assert (chosen / "sagas" / "moved.json").is_file()
+    assert storage.exports_dir() == chosen / "exports"
+    assert settings.settings_path() == chosen / "app_settings.json"

@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -51,11 +51,6 @@ RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
 #: The two churches of Ireland, as each church record names its own.
 IRISH = "Of the Irish church."
 ANGLO_IRISH = "Of the Anglo-Irish church."
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(hibernia: Hibernia, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1598,7 +1593,7 @@ def _oireadh(hibernia: Hibernia, b: Builder) -> None:
             "and the Ordo Hiberniae both know the Pact as a fellowship "
             "of druids; its research is kept from both.",
         ),
-        secrets=_lines(
+        secrets=joined_lines(
             "The Pact's true aim is a Parma Magica of its own; the Order knows nothing of it.",
             "Ádhamh's vision is a theory of magic that takes in every Irish tradition and gives every practitioner each tradition's defences: a breakthrough of at least 120 points (the Original Research rules of Houses of Hermes: True Lineages). He has 15. So far he has made amulets, after the Folk Witch tradition, that give their wearer Second Sight, Dowsing or Cursing at a score of 4 for a season; they have shown him how his own magic differs from the witches', and by learning those Abilities he hopes to gain their small magical defences. His notes are hidden for those who come after him.",
             "The Gifted child the Coill Trí took from Ádhamh is now an apprentice in a Hermetic covenant, and he may yet ask her to report on summoners she meets.",
@@ -1647,7 +1642,7 @@ def _praesis(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Infamous, with a bad Reputation of 4. Mundanes will not help, "
         "and the Coill Trí warn hedge wizards against it.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Cathach: the Gáe Bulg, held by Ballack's Praesis since the siege",
         "Vis: the covenant's own sources round the island and the lake, stripped bare by Ballack's besiegers and slow to recover",
         "Vis (contested): sources over the Connacht border that Guillaume's Bréifne mercenaries seek out and raid",
@@ -1712,7 +1707,7 @@ def _praesis(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "independent magus. The book gives no founding year: 855 is "
         "assumed, soon after the Treaty was signed in 851.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The tower and the spear stand in a regio, out of mortal sight, warded and guarded by magic: the platform the world sees is not where the spear truly is.",
         "Oscar has seen his own death through the Gáe Bulg. No one knows what he saw; since taking the spear he has been studying the legends of the Fir Bolg.",
         "Ballack's distant benefactors are a powerful cult or society he does not belong to but took help from; they may soon send someone to remind him of what he owes.",
@@ -2009,10 +2004,6 @@ P = Profile
 IRISH_TONGUE = "Irish"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the chapter sketches without a stat block, by key.
 PROFILES: dict[str, Profile] = {
     "ballack": P(
@@ -2027,7 +2018,7 @@ PROFILES: dict[str, Profile] = {
             "Area Lore: Hibernia": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             "Driven (Minor)",
             "Proud (Minor)",
         ],
@@ -2061,7 +2052,7 @@ PROFILES: dict[str, Profile] = {
             "Intrigue": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "ignem"),
+            vf_art("Affinity with {art}", "ignem"),
             "Mercenary Captain",
             "Overconfident (Minor)",
             "Wrathful (Minor)",

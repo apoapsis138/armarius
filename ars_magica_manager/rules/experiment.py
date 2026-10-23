@@ -31,10 +31,11 @@ Hermetic ~60 points):
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 from typing import Any
 
-from ..models import Breakthrough, Character, ExperimentalEffect, SeasonPlan
+from ..models import Breakthrough, Character, ExperimentalEffect, Saga, SeasonPlan
 from . import dice, scores
 from . import xp as xp_rules
 from .rounding import round_up
@@ -214,11 +215,11 @@ def two_dice(character: Character | None) -> bool:
 
 
 def chart(
-    rng,
+    rng: random.Random,
     risk: int,
     aura: int,
     art: str,
-    saga=None,
+    saga: Saga | None = None,
     *,
     character: Character | None = None,
     seeking: bool = False,
@@ -397,14 +398,14 @@ def take_other(result: Extraordinary) -> Extraordinary:
 
 
 def _roll_once(
-    result,
-    rng,
-    risk,
-    dice_count,
-    art,
-    saga,
-    seeking,
-    shift,
+    result: Extraordinary,
+    rng: random.Random,
+    risk: int,
+    dice_count: int,
+    art: str,
+    saga: Saga | None,
+    seeking: bool,
+    shift: int | None,
     *,
     stabilizing: bool = False,
     character: Character | None = None,
@@ -512,7 +513,7 @@ def describe(effect: ExperimentalEffect) -> str:
     return text
 
 
-def apply_changes(made, effects: list[ExperimentalEffect]) -> None:
+def apply_changes(made: object, effects: list[ExperimentalEffect]) -> None:
     """A creation (a spell or an instilled effect) takes each effect's new
     Range, Duration or Target. Its level is never changed."""
     for effect in effects:
@@ -537,7 +538,7 @@ def move_to_discovery(result: Extraordinary) -> None:
     )
 
 
-def _sub_dice(rng, two: bool, risk: int = 0) -> list[int]:
+def _sub_dice(rng: random.Random, two: bool, risk: int = 0) -> list[int]:
     """A sub-table's roll: a simple die (+ the risk), or two of them."""
     return [dice.simple_die(rng) + risk for _ in range(2 if two else 1)]
 
@@ -566,11 +567,11 @@ FATAL_FLAW = SIDE_EFFECTS[10]
 def _apply(
     result: Extraordinary,
     roll: int,
-    rng,
-    risk,
-    art,
-    saga,
-    depth,
+    rng: random.Random,
+    risk: int,
+    art: str,
+    saga: Saga | None,
+    depth: int,
     *,
     research: bool = False,
     character: Character | None = None,
@@ -674,10 +675,10 @@ def discovery_gain(
 
 def _discovery_xp(
     result: Extraordinary,
-    rng,
+    rng: random.Random,
     risk: int,
     art: str,
-    character,
+    character: Character | None,
     rolls: int = 1,
     *,
     two: bool = False,
@@ -743,7 +744,13 @@ def goal(character: Character, name: str, kind: str = "Minor") -> Breakthrough:
     return found
 
 
-def insight_roll(character: Character, plan: SeasonPlan, rng, theory: int, saga=None):
+def insight_roll(
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random,
+    theory: int,
+    saga: Saga | None = None,
+):
     """Integrating: stress die + Intelligence + Magic Theory vs 18, +3 for
     Inventive Genius."""
     if plan.die is not None:

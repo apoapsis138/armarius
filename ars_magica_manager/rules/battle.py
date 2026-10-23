@@ -22,6 +22,9 @@ simple roll (6 half, 12 equal, 18 double, 24 treble), plus mercenaries
 bought from his budget (knights 15 pounds a group, serjeants 5, infantry
 and archers 2, levies 1). Every ten groups (rounded up) need a group of
 baggage; each one short is -1 to Leadership totals.
+
+No screen uses group_members(), allied_groups(), mercenary_cost() yet: they
+are the rules for screens still to come, and only the tests call them.
 """
 
 from __future__ import annotations

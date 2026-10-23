@@ -81,7 +81,9 @@ def reputation_virtues(character: Character) -> list[str]:
     ]
 
 
-def _check(label: str, ok: bool, detail: str, source: str = SOURCE, *, advice=False):
+def _check(
+    label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
+):
     status = "pass" if ok else ("advice" if advice else "warn")
     return Check("finish", label, status, detail, source)
 

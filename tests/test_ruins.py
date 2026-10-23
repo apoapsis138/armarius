@@ -5,12 +5,13 @@ from __future__ import annotations
 
 from ars_magica_manager import artwork, book_packs, neighbours, packs, places, ruins
 from ars_magica_manager.models import Neighbour, Saga
+from ars_magica_manager.rules import sites
 from ars_magica_manager.sheets import region as region_sheet
 
 
 def _saga() -> tuple[Saga, Neighbour]:
     saga = Saga(id="s", name="Saga")
-    ruin = neighbours.add(saga, places.PLACE, "Rethra")
+    ruin = neighbours.add(saga, sites.PLACE, "Rethra")
     ruin.realm = "Faerie"
     ruin.details.update({"aura": 4, places.RUINED: True})
     return saga, ruin
@@ -18,7 +19,7 @@ def _saga() -> tuple[Saga, Neighbour]:
 
 def test_a_ruin_shows_as_a_ruin():
     saga, ruin = _saga()
-    plain = neighbours.add(saga, places.PLACE, "The Black Forest")
+    plain = neighbours.add(saga, sites.PLACE, "The Black Forest")
     assert places.is_ruin(ruin) and not places.is_ruin(plain)
     assert region_sheet.kind_text(ruin) == "Ruin"
     assert region_sheet.kind_text(plain) == "Place"

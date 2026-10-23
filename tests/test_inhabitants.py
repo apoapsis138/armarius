@@ -19,6 +19,7 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import covenfolk
 from ars_magica_manager.rules.xp import ability_xp
 
 
@@ -57,7 +58,7 @@ def _saga() -> tuple[Saga, Covenant]:
 
 
 def _labels(saga: Saga, cov: Covenant, kind: str) -> list[str]:
-    return [inh.row_label(e) for e in inh.entries_for_kind(saga, cov, kind)]
+    return [inh.row_label(e) for e in covenfolk.entries_for_kind(saga, cov, kind)]
 
 
 # ------------------------------------------------------------------ entries
@@ -65,11 +66,13 @@ def _labels(saga: Saga, cov: Covenant, kind: str) -> list[str]:
 
 def test_magi_and_companions_are_listed_from_character_sheets():
     saga, cov = _saga()
-    magi = inh.entries_for_kind(saga, cov, "magus")
+    magi = covenfolk.entries_for_kind(saga, cov, "magus")
     assert [e.name for e in magi] == ["Corvinus"]  # only this covenant's magus
     assert magi[0].auto and magi[0].year_born == 1195
     assert inh.house_name(magi[0].house_id) == "Bonisagus"
-    assert [e.name for e in inh.entries_for_kind(saga, cov, "companion")] == ["Alys"]
+    assert [e.name for e in covenfolk.entries_for_kind(saga, cov, "companion")] == [
+        "Alys"
+    ]
 
 
 def test_a_mythic_companion_is_listed_among_the_companions():
@@ -79,12 +82,14 @@ def test_a_mythic_companion_is_listed_among_the_companions():
             id="myth1", name="Brunhild", type="mythic companion", covenant_id="cov1"
         )
     )
-    companions = inh.entries_for_kind(saga, cov, "companion")
+    companions = covenfolk.entries_for_kind(saga, cov, "companion")
     assert [e.name for e in companions] == ["Alys", "Brunhild"]
     cov.inhabitants.append(
         Inhabitant(id="d1", kind="companion", character_id="myth1", departed=True)
     )
-    assert [e.name for e in inh.entries_for_kind(saga, cov, "companion")] == ["Alys"]
+    assert [e.name for e in covenfolk.entries_for_kind(saga, cov, "companion")] == [
+        "Alys"
+    ]
     departed = inh.departed_entries_for_kind(saga, cov, "companion")
     assert [e.name for e in departed] == ["Brunhild"]
 
@@ -94,7 +99,7 @@ def test_manual_npc_magi_follow_the_listed_characters():
     cov.inhabitants.append(
         Inhabitant(id="npc", kind="magus", name="Hidden Hermit", house="house_criamon")
     )
-    entries = inh.entries_for_kind(saga, cov, "magus")
+    entries = covenfolk.entries_for_kind(saga, cov, "magus")
     assert [e.name for e in entries] == ["Corvinus", "Hidden Hermit"]
     assert not entries[1].auto and entries[1].character is None
     assert inh.house_name(entries[1].house_id) == "Criamon"
@@ -113,7 +118,7 @@ def test_a_record_for_a_listed_character_only_overrides_covenant_side_fields():
             description="Trusted.",
         )
     )
-    entries = inh.entries_for_kind(saga, cov, "magus")
+    entries = covenfolk.entries_for_kind(saga, cov, "magus")
     assert len(entries) == 1  # not listed twice
     entry = entries[0]
     assert entry.name == "Corvinus" and entry.year_born == 1195  # live from the sheet
@@ -127,8 +132,8 @@ def test_a_departed_magus_or_companion_is_neither_listed_nor_counted():
         Inhabitant(id="d1", kind="magus", character_id="mag1", departed=True),
         Inhabitant(id="d2", kind="companion", character_id="comp1", departed=True),
     ]
-    assert inh.entries_for_kind(saga, cov, "magus") == []
-    assert inh.entries_for_kind(saga, cov, "companion") == []
+    assert covenfolk.entries_for_kind(saga, cov, "magus") == []
+    assert covenfolk.entries_for_kind(saga, cov, "companion") == []
     assert inh.total_inhabitants(saga, cov) == before - 2
     # Still in the covenant on their sheets.
     assert {c.id for c in saga.characters if c.covenant_id == "cov1"} >= {
@@ -143,10 +148,12 @@ def test_a_departed_record_only_hides_that_character_and_kind():
         Inhabitant(id="d", kind="magus", character_id="mag1", departed=True),
         Inhabitant(id="npc", kind="magus", name="Hidden Hermit"),
     ]
-    assert [e.name for e in inh.entries_for_kind(saga, cov, "magus")] == [
+    assert [e.name for e in covenfolk.entries_for_kind(saga, cov, "magus")] == [
         "Hidden Hermit"
     ]
-    assert [e.name for e in inh.entries_for_kind(saga, cov, "companion")] == ["Alys"]
+    assert [e.name for e in covenfolk.entries_for_kind(saga, cov, "companion")] == [
+        "Alys"
+    ]
 
 
 def test_departed_entries_for_kind_lists_only_departed_magi_and_companions():
@@ -193,7 +200,7 @@ def test_a_craftspersons_score_is_manual_unless_tied_to_a_sheets_ability():
             linked_ability="Smithing",
         ),
     ]
-    entries = inh.entries_for_kind(saga, cov, "craftsperson")
+    entries = covenfolk.entries_for_kind(saga, cov, "craftsperson")
     assert [e.skill_value for e in entries] == [6, 3, 4, 2]
     assert [e.skill_from_ability for e in entries] == [None, None, 4, None]
     assert strip_markup(inh.row_label(entries[2])).split() == ["B", "4", "1", "Unknown"]
@@ -208,7 +215,7 @@ def test_grog_kinds_list_only_stored_records_in_order():
         Inhabitant(id="b", kind="specialist", name="Other"),
         Inhabitant(id="c", kind="turb", name="Second"),
     ]
-    turb = inh.entries_for_kind(saga, cov, "turb")
+    turb = covenfolk.entries_for_kind(saga, cov, "turb")
     assert [e.name for e in turb] == ["First", "Second"]
     assert turb[0].linked  # tied to grog1's sheet
     assert not turb[1].linked
@@ -223,8 +230,8 @@ def test_headcount_adds_up_quantities_not_rows():
         Inhabitant(id="a", kind="inhabitant", name="Marta and Simon", quantity=2),
         Inhabitant(id="b", kind="inhabitant", name="Jakob"),
     ]
-    entries = inh.entries_for_kind(saga, cov, "inhabitant")
-    assert len(entries) == 2 and inh.headcount(entries) == 3
+    entries = covenfolk.entries_for_kind(saga, cov, "inhabitant")
+    assert len(entries) == 2 and covenfolk.headcount(entries) == 3
 
 
 def test_total_inhabitants_is_calculated_from_every_list_and_other_people():
@@ -244,16 +251,16 @@ def test_total_inhabitants_is_calculated_from_every_list_and_other_people():
 
 def test_livestock_are_tracked_but_never_counted():
     saga, cov = _saga()
-    points_before = inh.inhabitant_points(saga, cov)
+    points_before = covenfolk.inhabitant_points(saga, cov)
     total_before = inh.total_inhabitants(saga, cov)
     cov.inhabitants.append(
         Inhabitant(id="l1", kind="livestock", name="Sheep", quantity=50)
     )
     # Neither Total Inhabitants nor the Economics points move.
     assert inh.total_inhabitants(saga, cov) == total_before
-    assert inh.inhabitant_points(saga, cov) == points_before
+    assert covenfolk.inhabitant_points(saga, cov) == points_before
     # Still listed and headcount-able on its own list.
-    assert inh.headcount(inh.entries_for_kind(saga, cov, "livestock")) == 50
+    assert covenfolk.headcount(covenfolk.entries_for_kind(saga, cov, "livestock")) == 50
 
 
 # --------------------------------------------------------------------- grogs
@@ -336,7 +343,7 @@ def test_magus_row_label_lines_up_under_the_table_header():
         Inhabitant(id="m", kind="magus", name="NPC", year_born=None, gift="Blatant")
     )
     header = inh.table_header("magus")
-    rows = [inh.row_label(e) for e in inh.entries_for_kind(saga, cov, "magus")]
+    rows = [inh.row_label(e) for e in covenfolk.entries_for_kind(saga, cov, "magus")]
     assert rows == [
         "Corvinus            Bonisagus             1195  The Gift",
         "NPC                 Unknown            Unknown  Blatant Gift",
@@ -396,7 +403,7 @@ def test_other_covenfolk_detail_panel_shows_the_role():
         )
     )
     text = strip_markup(
-        inh.detail_text(inh.entries_for_kind(saga, cov, "inhabitant")[0], 1220)
+        inh.detail_text(covenfolk.entries_for_kind(saga, cov, "inhabitant")[0], 1220)
     )
     for expected in (
         "Name: Old Marta",
@@ -435,7 +442,9 @@ def test_detail_text_shows_the_fields_and_renders_description_emphasis():
             description="Master **smith**. Works *only* in iron.",
         )
     )
-    text = inh.detail_text(inh.entries_for_kind(saga, cov, "craftsperson")[0], 1220)
+    text = inh.detail_text(
+        covenfolk.entries_for_kind(saga, cov, "craftsperson")[0], 1220
+    )
     plain = strip_markup(text)
     for expected in (
         "Name: Gerhard",
@@ -459,7 +468,7 @@ def test_detail_text_shows_the_fields_and_renders_description_emphasis():
 def test_detail_text_for_a_listed_character_and_for_nothing():
     saga, cov = _saga()
     text = strip_markup(
-        inh.detail_text(inh.entries_for_kind(saga, cov, "magus")[0], 1220)
+        inh.detail_text(covenfolk.entries_for_kind(saga, cov, "magus")[0], 1220)
     )
     assert "House: Bonisagus" in text and "Year Born: 1195 (age 25)" in text
     assert "From the character sheet of Corvinus." in text
@@ -503,7 +512,7 @@ def test_population_text_colors_the_needed_pair_by_theme():
     # Enough inhabitant points (1 magus + 1 companion + 5 other = 8+3+5=16) that
     # some servants/teamsters are required.
     population = inh.population_text(saga, cov)
-    minimum = inh.minimum_servants(saga, cov)
+    minimum = covenfolk.minimum_servants(saga, cov)
     assert f"[$text-error]0 / {minimum}[/]" in population  # none hired yet
     # Hiring them (excluded from the minimum's own formula, so it stays put).
     cov.inhabitants.append(
@@ -522,14 +531,14 @@ def test_population_text_colors_the_needed_pair_by_theme():
 
 def test_gift_is_read_from_a_sheets_virtues_or_a_manual_choice():
     saga, cov = _saga()  # Corvinus has no Gift-related Virtue/Flaw
-    magus = inh.entries_for_kind(saga, cov, "magus")[0]
+    magus = covenfolk.entries_for_kind(saga, cov, "magus")[0]
     assert magus.gift == "The Gift"  # the default assumption
 
     gentle = next(c for c in saga.characters if c.id == "mag1")
     gentle.virtues_flaws = [VirtueFlawInstance(vf_id="vf_gentle_gift")]
-    assert inh.entries_for_kind(saga, cov, "magus")[0].gift == "Gentle Gift"
+    assert covenfolk.entries_for_kind(saga, cov, "magus")[0].gift == "Gentle Gift"
     gentle.virtues_flaws = [VirtueFlawInstance(vf_id="vf_blatant_gift")]
-    assert inh.entries_for_kind(saga, cov, "magus")[0].gift == "Blatant Gift"
+    assert covenfolk.entries_for_kind(saga, cov, "magus")[0].gift == "Blatant Gift"
 
     for choice, expected in (
         ("", ""),
@@ -539,13 +548,13 @@ def test_gift_is_read_from_a_sheets_virtues_or_a_manual_choice():
         ("None", "No Gift"),
     ):
         cov.inhabitants = [Inhabitant(id="npc", kind="magus", name="NPC", gift=choice)]
-        entry = inh.entries_for_kind(saga, cov, "magus")[1]
+        entry = covenfolk.entries_for_kind(saga, cov, "magus")[1]
         assert entry.gift == expected, choice
 
 
 def test_gift_does_not_apply_to_non_magi():
     saga, cov = _saga()
-    companion = inh.entries_for_kind(saga, cov, "companion")[0]
+    companion = covenfolk.entries_for_kind(saga, cov, "companion")[0]
     assert companion.gift == ""
 
 
@@ -607,7 +616,7 @@ def test_role_bonus_is_presence_plus_the_roles_ability_from_the_sheet():
             role="Turb Captain",
         )
     )
-    entry = inh.entries_for_kind(saga, cov, "specialist")[0]
+    entry = covenfolk.entries_for_kind(saga, cov, "specialist")[0]
     assert entry.role_presence == 2 and entry.role_ability_total == 5
     assert entry.role_bonus == 7
 
@@ -629,7 +638,7 @@ def test_autocrat_sums_both_profession_abilities():
             role="Autocrat",
         )
     )
-    entry = inh.entries_for_kind(saga, cov, "specialist")[0]
+    entry = covenfolk.entries_for_kind(saga, cov, "specialist")[0]
     assert entry.role_ability_total == 7  # 3 + 4
     assert entry.role_bonus == 8  # + Presence 1
 
@@ -647,7 +656,7 @@ def test_role_bonus_is_manual_without_a_sheet_and_none_for_other_roles():
         ),
         Inhabitant(id="t", kind="specialist", name="A Teacher", role="Teacher"),
     ]
-    entries = inh.entries_for_kind(saga, cov, "specialist")
+    entries = covenfolk.entries_for_kind(saga, cov, "specialist")
     assert entries[0].role_bonus == 7  # manual Presence + manual Ability
     assert entries[1].role_bonus is None  # not one of the four bonus roles
 
@@ -712,28 +721,19 @@ def test_prevailing_loyalty_score_is_symmetric_and_clamps_beyond_the_table():
         assert inh.prevailing_loyalty_score(-points) == -score
 
 
-def test_current_loyalty_points_is_base_plus_total_modifiers():
-    saga, cov = _saga()
-    cov.loyalty.familiarity = 10
-    assert inh.current_loyalty_points(saga, cov) == (
-        inh.base_loyalty(saga, cov) + inh.total_modifiers(saga, cov)
-    )
-    assert inh.current_loyalty_points(saga, cov) == -30 + 10
-
-
 def test_a_covenants_season_picks_the_column_of_the_points_table():
     saga, cov = _saga()
     saga.characters = [c for c in saga.characters if c.type == "grog"]
     cov.covenant_season = "Spring"
     cov.inhabitants = [Inhabitant(id="m", kind="magus", name="M", quantity=1)]
     # A manual magus with no listed grogs/other categories: just the one.
-    assert inh.inhabitant_points(saga, cov) == 5
+    assert covenfolk.inhabitant_points(saga, cov) == 5
     cov.covenant_season = "Winter"
-    assert inh.inhabitant_points(saga, cov) == 5
+    assert covenfolk.inhabitant_points(saga, cov) == 5
     cov.covenant_season = "Summer"
-    assert inh.inhabitant_points(saga, cov) == 10
+    assert covenfolk.inhabitant_points(saga, cov) == 10
     cov.covenant_season = "Autumn"
-    assert inh.inhabitant_points(saga, cov) == 10
+    assert covenfolk.inhabitant_points(saga, cov) == 10
 
 
 def test_inhabitant_points_count_each_kind_and_everyone_counted_by_number():
@@ -757,7 +757,7 @@ def test_inhabitant_points_count_each_kind_and_everyone_counted_by_number():
     ]
     cov.population.other_people = 1
     # 8 (magus + companion) + 2 + 2 + 4 + 2 + 0 + (3 + 1 + 2) covenfolk + 1 other
-    assert inh.inhabitant_points(saga, cov) == 8 + 10 + 7
+    assert covenfolk.inhabitant_points(saga, cov) == 8 + 10 + 7
 
 
 def test_a_departed_magus_no_longer_counts_toward_the_points():
@@ -765,7 +765,7 @@ def test_a_departed_magus_no_longer_counts_toward_the_points():
     cov.inhabitants.append(
         Inhabitant(id="d", kind="magus", character_id="mag1", departed=True)
     )
-    assert inh.inhabitant_points(saga, cov) == 3  # just the companion
+    assert covenfolk.inhabitant_points(saga, cov) == 3  # just the companion
 
 
 def test_exclude_roles_leaves_matching_other_covenfolk_entries_out_of_the_total():
@@ -775,11 +775,11 @@ def test_exclude_roles_leaves_matching_other_covenfolk_entries_out_of_the_total(
             id="f", kind="inhabitant", name="Laborers", quantity=4, role="Laborer"
         )
     )
-    with_ = inh.inhabitant_points(saga, cov)
-    without = inh.inhabitant_points(saga, cov, exclude_roles=("Laborer",))
+    with_ = covenfolk.inhabitant_points(saga, cov)
+    without = covenfolk.inhabitant_points(saga, cov, exclude_roles=("Laborer",))
     assert with_ - without == 4  # 1 point per laborer at Spring
     # A role that doesn't appear on the list changes nothing.
-    assert inh.inhabitant_points(saga, cov, exclude_roles=("Servant",)) == with_
+    assert covenfolk.inhabitant_points(saga, cov, exclude_roles=("Servant",)) == with_
 
 
 # ------------------------------------------------------- servants/teamsters
@@ -797,9 +797,9 @@ def test_other_covenfolk_count_sums_quantities_by_role():
         ),
         Inhabitant(id="d", kind="inhabitant", name="Unassigned"),  # no role: ignored
     ]
-    assert inh.other_covenfolk_count(saga, cov, "Teamster") == 1
-    assert inh.other_covenfolk_count(saga, cov, "Servant") == 6
-    assert inh.other_covenfolk_count(saga, cov, "Laborer") == 0
+    assert covenfolk.other_covenfolk_count(saga, cov, "Teamster") == 1
+    assert covenfolk.other_covenfolk_count(saga, cov, "Servant") == 6
+    assert covenfolk.other_covenfolk_count(saga, cov, "Laborer") == 0
 
 
 def test_minimum_servants_and_teamsters_follow_the_formulas():
@@ -807,10 +807,10 @@ def test_minimum_servants_and_teamsters_follow_the_formulas():
     cov.inhabitants.append(Inhabitant(id="t", kind="turb", name="Turb", quantity=17))
     # Points excluding servants/laborers/teamsters: 1 magus(5) + 1 companion(3)
     # + 17 turb(1 each) = 25 -> 2 servants per 10 or part of 10 -> 6.
-    assert inh.minimum_servants(saga, cov) == 6
+    assert covenfolk.minimum_servants(saga, cov) == 6
     # Points excluding laborers/teamsters: same 25 (no servants/laborers
     # hired yet) -> 1 teamster per 10 -> 3 (rounded up from 2.5).
-    assert inh.minimum_teamsters(saga, cov) == 3
+    assert covenfolk.minimum_teamsters(saga, cov) == 3
 
 
 def test_laborers_reduce_the_minimum_teamsters_but_not_servants():
@@ -823,10 +823,10 @@ def test_laborers_reduce_the_minimum_teamsters_but_not_servants():
     ]
     # The servants formula excludes laborers entirely, so hiring some doesn't
     # change it: still 25 points -> 6.
-    assert inh.minimum_servants(saga, cov) == 6
+    assert covenfolk.minimum_servants(saga, cov) == 6
     # The teamsters formula also excludes laborers' own points, then
     # subtracts 2 per laborer on top: 25 - 2*5 = 15 -> 2 (rounded up from 1.5).
-    assert inh.minimum_teamsters(saga, cov) == 2
+    assert covenfolk.minimum_teamsters(saga, cov) == 2
 
 
 def test_minimum_teamsters_never_goes_negative():
@@ -836,7 +836,7 @@ def test_minimum_teamsters_never_goes_negative():
             id="f", kind="inhabitant", name="Laborers", quantity=100, role="Laborer"
         )
     )
-    assert inh.minimum_teamsters(saga, cov) == 0
+    assert covenfolk.minimum_teamsters(saga, cov) == 0
 
 
 # -------------------------------------------------------------------- model
@@ -893,13 +893,15 @@ def test_save_entry_adds_updates_and_records_a_listed_character():
     scribe = cov.inhabitants[-1]
     assert (scribe.id, scribe.kind, scribe.name) == ("scribe", "specialist", "Scribe")
 
-    entry = next(e for e in inh.entries_for_kind(saga, cov, "specialist") if e.record)
+    entry = next(
+        e for e in covenfolk.entries_for_kind(saga, cov, "specialist") if e.record
+    )
     inh.save_entry(cov, "specialist", entry, {"name": "Head Scribe"})
     assert scribe.name == "Head Scribe" and len(cov.inhabitants) == 1
 
     # A magus listed from their sheet gets a record the first time it's edited.
     corvinus = next(
-        e for e in inh.entries_for_kind(saga, cov, "magus") if e.record is None
+        e for e in covenfolk.entries_for_kind(saga, cov, "magus") if e.record is None
     )
     inh.save_entry(cov, "magus", corvinus, {"presence": 2})
     record = cov.inhabitants[-1]
@@ -918,13 +920,13 @@ def test_save_entry_links_a_new_grogs_record_to_the_grog():
 
 def test_mark_departed_flags_the_record_or_creates_a_departed_one():
     saga, cov = _saga()
-    corvinus = next(e for e in inh.entries_for_kind(saga, cov, "magus"))
+    corvinus = next(e for e in covenfolk.entries_for_kind(saga, cov, "magus"))
     inh.mark_departed(cov, "magus", corvinus)
     record = cov.inhabitants[-1]
     assert (record.character_id, record.departed) == ("mag1", True)
 
     record.departed = False
-    again = next(e for e in inh.entries_for_kind(saga, cov, "magus"))
+    again = next(e for e in covenfolk.entries_for_kind(saga, cov, "magus"))
     inh.mark_departed(cov, "magus", again)
     assert record.departed and len(cov.inhabitants) == 1
 
@@ -949,7 +951,9 @@ def test_add_on_the_magi_offers_every_magus_not_on_the_list():
     corvinus = saga.character("mag1")
     assert corvinus is not None
     inh.take_in(cov, "magus", corvinus)
-    assert [e.name for e in inh.entries_for_kind(saga, cov, "magus")] == ["Corvinus"]
+    assert [e.name for e in covenfolk.entries_for_kind(saga, cov, "magus")] == [
+        "Corvinus"
+    ]
     # From another covenant: they join this one.
     far = saga.character("mag2")
     assert far is not None

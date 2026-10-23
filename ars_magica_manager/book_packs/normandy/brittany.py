@@ -21,7 +21,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_ability, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -46,11 +46,6 @@ INFERRED_CONTEST = (
     "The book gives no tenure; a Tribunal source whose harvest rests on "
     "the harvester's skill is a luctatio under the ruling of 1039."
 )
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(normandy: Normandy, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1352,7 +1347,7 @@ def _fudarus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "green cloak lets a man stab one of Buliste's grogs unopposed. "
         "Wearing both colours cancels the effect.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: 12 pawns a year manifest on Ushant through the Three Great Spirits, 4 each of Creo, Auram and Imaginem (seisin)",
         "Vis: Brittany's rich vis fell largely to Fudarus after 1018; Harpax governs it as Lord Heusaff",
         "Vis: stripped of a legacy lease in 1172, granted to House Mercere, after Atlax of Tytalus read a Redcap's messages here",
@@ -1407,7 +1402,7 @@ def _fudarus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "servant spirits, and affects any whose Might is below its "
         "Penetration.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Lord Heusaff is Harpax in disguise: he stole the identity from Buliste's sanctum along with the Rod when she seemed dead.",
         "The Three Great Spirits obey the Circlet's wearer through the old pact, not because the Circlet compels them; their vis's form is known only inside Fudarus.",
         "Harpax is offering generous terms to new vassals for pawns in his feud, and wants the pieces of a pre-Hermetic item; it is a Diedne relic, Buliste has steered him to it, and she means to frame him once he has it.",
@@ -1540,7 +1535,7 @@ def _exspectatio(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "laboratory. Its two leading magi are Adanos and Kybella, who stand "
         "on opposite sides of the Primi's feud.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: none given; the covenant draws on Fudarus's resources",
         "Library: Fudarus's, to which its members return for books",
         "Aura: not given; weaker than Fudarus's, so its magi do some laboratory work at the domus magna",
@@ -1551,7 +1546,7 @@ def _exspectatio(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: Cynics say the founders of Atramentum were duped into preparing the site for them",
         "Hook: Iasper's family, the Foutins, and his taste for turmoil",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Iasper, looking for a way into the Cabal of the Laden Cart, draws a crossroads faerie of the passage between life and death, which blurs the border: corpses walk, the living fall into a death-like pallor, and Iasper must be freed from his own death-state to break the spell.",
         "When one of Iasper's Foutin cousins gets into trouble (perhaps a grog of the player covenant), Iasper smooths things over with the authorities by framing the player magi in a grand plot to destabilise the region, then comes to them contrite to help untangle the mess without admitting his part.",
         "Kybella founded the Cabal of the Laden Cart and hunts the Ankeu to imprison Death itself.",
@@ -2517,14 +2512,6 @@ def _factions(normandy: Normandy, b: Builder) -> None:
 P = Profile
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
 #: Each magus the book sketches without a stat block, by character id.
 PROFILES: dict[str, Profile] = {
     "buliste": P(
@@ -2540,8 +2527,8 @@ PROFILES: dict[str, Profile] = {
         virtues=[
             "Hermetic Prestige",
             ("Social Contacts", {"group": "Fudarus's spies"}),
-            _art("Affinity with {art}", "mentem"),
-            _art("Puissant {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
+            vf_art("Puissant {art}", "mentem"),
             "Twilight Prone",
             "Beloved Rival (Major)",
         ],
@@ -2561,8 +2548,8 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Hermetic Prestige",
-            _art("Affinity with {art}", "muto"),
-            _ability("Puissant {ability}", "guile"),
+            vf_art("Affinity with {art}", "muto"),
+            vf_ability("Puissant {ability}", "guile"),
             "Inventive Genius",
             "Beloved Rival (Major)",
             "Arthritis",
@@ -2594,7 +2581,7 @@ PROFILES: dict[str, Profile] = {
         virtues=[
             "Hermetic Theurgy",
             "Second Sight",
-            _art("Affinity with {art}", "vim"),
+            vf_art("Affinity with {art}", "vim"),
             "Visions",
             "Obsessed (Minor)",
             "Secretive",

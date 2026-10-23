@@ -640,7 +640,7 @@ async def test_d_deletes_the_highlighted_saga_only_after_confirmation():
 async def test_an_unreadable_saga_is_listed_and_can_be_deleted():
     # One damaged file used to crash the picker on startup.
     _save_sagas("Alpha", "Gamma")
-    (storage.SAGAS_DIR / "broken.json").write_text("{not json", encoding="utf-8")
+    (storage.sagas_dir() / "broken.json").write_text("{not json", encoding="utf-8")
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:

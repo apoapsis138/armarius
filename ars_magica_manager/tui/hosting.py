@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 
 import asyncssh
@@ -105,7 +106,12 @@ class _Session(asyncssh.SSHServerSession):
     def connection_made(self, chan: asyncssh.SSHServerChannel) -> None:
         self._chan = chan
 
-    def pty_requested(self, term_type: str, term_size, term_modes) -> bool:
+    def pty_requested(
+        self,
+        term_type: str,
+        term_size: tuple[int, int, int, int],
+        term_modes: Mapping[int, int],
+    ) -> bool:
         return True
 
     def shell_requested(self) -> bool:
@@ -146,12 +152,12 @@ class _Session(asyncssh.SSHServerSession):
         if self._service is not None:
             await self._service.focus()
 
-    def data_received(self, data: bytes, datatype) -> None:
+    def data_received(self, data: bytes, datatype: int | None) -> None:
         if self._service is not None:
             asyncio.create_task(self._service.send_bytes(data))
 
     def terminal_size_changed(
-        self, width: int, height: int, pixwidth, pixheight
+        self, width: int, height: int, pixwidth: int, pixheight: int
     ) -> None:
         if self._service is not None:
             asyncio.create_task(self._service.set_terminal_size(width, height))

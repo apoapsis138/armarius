@@ -17,6 +17,7 @@ from .models.common import SEASONS
 from .rules import experiment, research
 from .rules.experiment import Extraordinary
 from .rules.lab import ability_score
+from .rules.realms import home_aura
 from .tables import Table
 
 #: The Research Log's columns, as its header shows them.
@@ -204,8 +205,6 @@ def _pct(chance: float) -> str:
 
 def odds_lines(saga: Saga, character: Character, goal: Breakthrough) -> list[str]:
     """The chances of the goal's next season at the chart."""
-    from .covenants import home_aura
-
     aura, _ = home_aura(saga, character)
     if research.stage(goal) in (
         research.Stage.DISCOVERY,
@@ -296,8 +295,6 @@ def move_card(
     onto 10: the roll and where it landed, the chart with it marked, what
     the move gives, and the odds a stabilization at that move then has.
     Plain text: it is a form's note."""
-    from .covenants import home_aura
-
     shift = chart.discovery_shift or 0
     roll = chart.die + risk
     band = research.band_of(roll)

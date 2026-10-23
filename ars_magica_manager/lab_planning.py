@@ -9,11 +9,11 @@ import re
 
 from . import catalog
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from .laboratories import specialization_scores
 from .markup import escape
 from .models import Character, Laboratory, Saga
 from .rules import effects, scores
 from .rules import lab as lab_rules
+from .rules.lab_stats import specialization_scores
 
 #: The terms every total shares, drawn from the breakdown's first lines.
 _SHARED_FROM = 2  # after the Technique and Form lines

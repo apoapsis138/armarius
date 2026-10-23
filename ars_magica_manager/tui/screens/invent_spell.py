@@ -26,8 +26,7 @@ from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Checkbox, Input, Label, Select, Static, TextArea
 
-from ... import enchanted_devices as ed
-from ... import form_spec
+from ... import catalog, form_spec
 from ... import lab_texts as lt
 from ... import spells as spl
 from ...arts import FORMS, TECHNIQUES
@@ -54,9 +53,9 @@ from ...models import (
 from ...rules import activities as season_rules
 from ...rules import book_seasons as bs
 from ...rules import enchant_seasons as es
+from ...rules import enchantment, lab_seasons
 from ...rules import experiment as ex
 from ...rules import familiar_seasons as fs
-from ...rules import lab_seasons
 from ...rules import laboratory_seasons as ls
 from .fields import ModalDialog
 from .steps import run_steps
@@ -695,7 +694,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         known = [
             (escape(spell.name), spell.id)
             for k in self.magus.spells_known
-            if (spell := spl.find_spell(self.saga, k.spell_id)) is not None
+            if (spell := catalog.find_spell(self.saga, k.spell_id)) is not None
         ]
         yield Static("── Lab work ────────", classes="inv-title")
         with Horizontal(classes="inv-row", id="inv-experiment-row"):
@@ -892,7 +891,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             return []
         return [
             (
-                f"{escape(ed.effect_name(e))} (level {ed.modified_level(device, e)})",
+                f"{escape(enchantment.effect_name(e))} (level {enchantment.modified_level(device, e)})",
                 e.id,
             )
             for e in device.effects
@@ -953,7 +952,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
 
     def _start_label(self) -> str:
         design = self.form.design
-        source = spl.find_spell(self.saga, design.source_spell_id if design else None)
+        source = catalog.find_spell(
+            self.saga, design.source_spell_id if design else None
+        )
         if source is None:
             return "(New spell) -- choose a spell to start from..."
         level = "Gen" if source.level is None else source.level
@@ -1128,7 +1129,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         )
 
     def _start_from(self, spell_id: str | None) -> None:
-        spell = spl.find_spell(self.saga, spell_id)
+        spell = catalog.find_spell(self.saga, spell_id)
         self._fill(
             design_from(spell) if spell is not None else None,
             None,

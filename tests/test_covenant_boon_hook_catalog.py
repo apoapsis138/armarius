@@ -7,7 +7,6 @@ from ars_magica_manager.covenants import (
     UNKNOWN_HOOK_POINTS,
     boon_hook_is_unknown,
     covenant_boon_points,
-    covenant_effective_aura,
     covenant_hook_points,
 )
 from ars_magica_manager.models import (
@@ -17,6 +16,7 @@ from ars_magica_manager.models import (
     CovenantBoonHookDef,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules.realms import covenant_effective_aura
 
 CASTLE = "covbh_hook_major_castle"
 

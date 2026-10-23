@@ -1,13 +1,5 @@
 from dataclasses import asdict
 
-from ars_magica_manager.laboratories import (
-    lab_aura_total,
-    lab_base_safety,
-    lab_characteristic_total,
-    lab_free_virtues,
-    lab_net_vf_points,
-    lab_occupied_size,
-)
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
@@ -27,6 +19,14 @@ from ars_magica_manager.models import (
     character_age,
     next_season,
     replace_raw_vis,
+)
+from ars_magica_manager.rules.lab_stats import (
+    lab_aura_total,
+    lab_base_safety,
+    lab_characteristic_total,
+    lab_free_virtues,
+    lab_net_vf_points,
+    lab_occupied_size,
 )
 
 
@@ -204,15 +204,12 @@ def test_next_season_steps_through_the_year_and_rolls_over_after_winter():
 
 def test_covenant_modifiers_count_every_instance_and_filter_by_activity():
     from ars_magica_manager import catalog
-    from ars_magica_manager.covenants import (
-        covenant_effective_aura,
-        covenant_modifier_total,
-        covenant_modifiers,
-    )
+    from ars_magica_manager.covenants import covenant_modifiers
     from ars_magica_manager.models import (
         Covenant,
         VirtueFlawInstance,
     )
+    from ars_magica_manager.rules.realms import covenant_effective_aura
 
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
     cov = Covenant(id="c", saga_id="s", name="C", aura=3)
@@ -226,8 +223,6 @@ def test_covenant_modifiers_count_every_instance_and_filter_by_activity():
     assert covenant_effective_aura(cov, by_id) == 5  # 3 + 1 + 1: they stack
     pairs = covenant_modifiers(cov, by_id, "covenant_expense", "buildings")
     assert [entry.name for entry, _ in pairs] == ["Edifice", "Edifice"]
-    assert covenant_modifier_total(cov, by_id, "covenant_expense", "buildings") == 4
-    assert covenant_modifier_total(cov, by_id, "lab_total") == 0
 
 
 def _saga_with_two_labs() -> Saga:

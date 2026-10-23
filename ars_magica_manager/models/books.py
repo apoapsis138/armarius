@@ -75,7 +75,7 @@ class Book:
     """One book. Fields a type doesn't use stay blank: `art` is for Art Summae
     and Art Tractatus, `ability` for Ability Summae and Ability Tractatus,
     `spell_id`/`spell_name` for Lab Texts and Casting Tablets. The Build Point
-    cost is always calculated (books.cost)."""
+    cost is always calculated (rules.library.cost)."""
 
     id: str
     name: str

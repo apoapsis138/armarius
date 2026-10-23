@@ -26,6 +26,7 @@ from .form_spec import DialogField
 from .markup import escape, todo
 from .models import Character, Covenant, Creature, Neighbour, Saga, Tribunal
 from .neighbours import kind_of
+from .rules import sites
 
 PACK = transfer.PACK
 
@@ -35,7 +36,7 @@ def _places_round(saga: Saga, ids: set[str]) -> set[str]:
     place inside them, however deep."""
     found = set(ids)
     for place_id in ids:
-        record = places.place(saga, place_id)
+        record = sites.place(saga, place_id)
         if record is None:
             continue
         found |= {p.id for p in places.inside_of(saga, record)}
@@ -394,7 +395,7 @@ def _held(data: dict[str, Any], key: str) -> list[dict[str, Any]]:
 
 
 def _is_place(neighbour: dict[str, Any]) -> bool:
-    return neighbour.get("kind") == places.PLACE
+    return neighbour.get("kind") == sites.PLACE
 
 
 #: The pack key holding the sketch of each magus a book describes but
@@ -621,8 +622,13 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
 SHIPPED_DIR = DATA_DIR / "packs"
 
 
-def available(*folders: Path) -> list[tuple[str, str]]:
-    """The packs in `folders`, as (label, path) choices: the shipped
+#: A pack offered by Start from a pack: (label, path, its data). The data
+#: is read once, when the packs are listed, and reused for their stories.
+PackChoice = tuple[str, str, dict[str, Any]]
+
+
+def available(*folders: Path) -> list[PackChoice]:
+    """The packs in `folders`, as (label, path, data) choices: the shipped
     packs first when SHIPPED_DIR is given first."""
     found = []
     for folder in folders:
@@ -634,7 +640,7 @@ def available(*folders: Path) -> list[tuple[str, str]]:
             except OSError, ValueError:
                 continue
             if data.get("kind") == PACK:
-                found.append((choice_label(data, path.stem), str(path)))
+                found.append((choice_label(data, path.stem), str(path), data))
     return found
 
 
@@ -695,15 +701,11 @@ def start_prefix(index: int) -> str:
     return f"pack{index}_"
 
 
-def start_story_fields(found: list[tuple[str, str]]) -> list[DialogField]:
+def start_story_fields(found: list[PackChoice]) -> list[DialogField]:
     """Start from a pack's ticks for the stories to begin, each pack's
     shown while it is the one chosen."""
     fields = []
-    for index, (_label, path) in enumerate(found):
-        try:
-            data = transfer.read(Path(path))
-        except OSError, ValueError:
-            continue
+    for index, (_label, path, data) in enumerate(found):
         fields += story_fields(
             data,
             prefix=start_prefix(index),

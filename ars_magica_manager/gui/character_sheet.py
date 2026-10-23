@@ -17,14 +17,16 @@ import re
 from collections.abc import Callable, Sequence
 from typing import Any
 
-from PySide6.QtCore import QRectF, QSize, QSortFilterProxyModel, Qt
+from PySide6.QtCore import QModelIndex, QRectF, QSize, QSortFilterProxyModel, Qt
 from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
     QFontDatabase,
     QIcon,
+    QMouseEvent,
     QPainter,
+    QPaintEvent,
     QPen,
     QPixmap,
     QStandardItem,
@@ -47,6 +49,7 @@ from PySide6.QtWidgets import (
 from .. import (
     artwork,
     casting_text,
+    catalog,
     connections,
     creation,
     giving,
@@ -59,7 +62,6 @@ from .. import (
 )
 from .. import books as bk
 from .. import enchanted_devices as ed
-from .. import familiars as fam
 from .. import lab_texts as lt
 from .. import laboratories as labs
 from .. import saga_overview as ov
@@ -91,7 +93,7 @@ from ..models import (
     TraditionDef,
 )
 from ..rules import activities as season_rules
-from ..rules import hybrid_magic
+from ..rules import enchantment, hybrid_magic, library
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
@@ -415,7 +417,7 @@ def device_section(
     def show(index: int) -> None:
         chooser.choose(index)
         device, effect = targets[index]
-        name = ed.effect_name(effect) if effect is not None else device.name
+        name = enchantment.effect_name(effect) if effect is not None else device.name
         inspect(name, "Enchanted Device", ed.target_info_text(saga, targets[index]))
 
     more = [
@@ -437,7 +439,7 @@ def device_section(
         more.append(
             give_verb(saga, giving.DEVICE, holder, lambda: [t[0] for t in targets])
         )
-    devices = len(ed.held_by(saga, kind, holder_id))
+    devices = len(enchantment.held_by(saga, kind, holder_id))
     return section(
         f"Enchanted Devices ({devices})",
         p,
@@ -535,7 +537,7 @@ class XpTable(QTreeView):
     def sizeHintForRow(self, row: int) -> int:
         return self.row
 
-    def _chosen(self, current, _previous) -> None:
+    def _chosen(self, current: QModelIndex, _previous: QModelIndex) -> None:
         key = current.siblingAtColumn(0).data(Qt.ItemDataRole.UserRole)
         if key is not None:
             self.on_choose(key)
@@ -781,7 +783,7 @@ class CharacterSheet(QWidget):
                     buttons=self._texts_read(),
                 )
             )
-            familiar = fam.familiar_of(saga, c.id)
+            familiar = saga.familiar_of(c.id)
             if familiar is not None:
                 parts.append(
                     section(
@@ -1193,12 +1195,12 @@ class CharacterSheet(QWidget):
         _table_style(view, p)
         _fit_height(view, max(len(rows), 1))
 
-        def show(current, _previous) -> None:
+        def show(current: QModelIndex, _previous: QModelIndex) -> None:
             index = current.siblingAtColumn(0).data(Qt.ItemDataRole.UserRole)
             if index is None:
                 return
             known = c.spells_known[index]
-            spell = spl.find_spell(saga, known.spell_id)
+            spell = catalog.find_spell(saga, known.spell_id)
             subtitle = (
                 f"{spl.shorthand(spell)}  ·  {spell.range}/{spell.duration}/{spell.target}"
                 if spell
@@ -1268,7 +1270,7 @@ class CharacterSheet(QWidget):
             )
         )
         parts.append(device_section(saga, "character", c.id, p, self.run, self.inspect))
-        books = bk.books_owned_by(saga, "character", c.id)
+        books = library.books_owned_by(saga, "character", c.id)
         chosen_book = Chooser()
 
         def show_book(index: int) -> None:
@@ -1519,11 +1521,11 @@ class Portrait(QWidget):
     def has_picture(self) -> bool:
         return not self.picture.isNull()
 
-    def mousePressEvent(self, event) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         self.clicked()
         super().mousePressEvent(event)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)

@@ -47,7 +47,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -88,11 +88,6 @@ COVENANT_LINKS: tuple[tuple[str, str, str], ...] = (
     ("embassy", "foothold", "Enemy"),
     ("embassy", "aedes_veritatis", "Enemy"),
 )
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _tribunal(levant: Levant) -> Tribunal | None:
@@ -218,7 +213,7 @@ def _aedes_veritatis(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "Magi: 'Umar, Amber the Golden of Tremere and the sahira Wardat "
         "al-Quds; the book counts four, and names no fourth.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Stance: counter-Crusader",
         "Vis stores: 150 pawns of every Art (Creo 12, Intellego 7, Muto 13, Perdo 6, Rego 10, Animal 12, Aquam 10, Auram 11, Corpus 14, Herbam 5, Ignem 15, Imaginem 5, Mentem 5, Terram 11, Vim 14)",
         "Vis: about 40 pawns a year (Animal 6, Aquam 6, Auram 3, Corpus 8, Ignem 7, Terram 4, Vim 6), from sources the book does not place",
@@ -462,7 +457,7 @@ def _domus_pacis(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "Magi: Tau, Felix of Guernicus and Esther of Verditius; the book "
         "counts four, and names no fourth.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Stance: mediator",
         "Duty: the Tribunal meets here every seven years; the next meeting is in 1221",
         "Vis stores: 200 pawns (20 of each Technique and 10 of each Form)",
@@ -669,7 +664,7 @@ def _foothold(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "peace and suspect its magi of crusading still. If the Treaty "
         "ever fails, Foothold may well be the first to fall.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Stance: Crusader",
         "Vis stores: none; it is used nearly as fast as it comes in",
         "Vis: about 15 pawns a year (Creo 3, Perdo 4, Mentem 1, Corpus 3, Ignem 4), from sources the book does not place",
@@ -824,7 +819,7 @@ def _embassy(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "once. The Suhhar Sulayman of Baghdad, who never signed the "
         "Treaty, distrust it.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Stance: mediator",
         "Duty: keeping the Treaty of Baghdad, and the Order's relations with the caliph and the Ayyubids",
         "Vis stores: 50 pawns of every Art (Creo 4, Intellego 5, Muto 3, Perdo 3, Rego 5, Animal 3, Aquam 2, Auram 2, Corpus 5, Herbam 3, Ignem 2, Imaginem 4, Mentem 2, Terram 2, Vim 5)",

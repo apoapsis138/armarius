@@ -7,23 +7,20 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Collection, Mapping, Sequence
-from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
-from . import DATA_DIR, sourcebooks
+from . import DATA_DIR
 from .models import (
     BOON_HOOK_DETAIL,
     COVENANT_BOON_HOOK_CATEGORIES,
     AbilityDef,
     ArmorDef,
-    Character,
     CharacterTemplateDef,
     CovenantBoonHookDef,
     CovenantSituationDef,
-    Creature,
-    Familiar,
     GrogTemplateDef,
     HouseDef,
     LabFeatureDef,
@@ -75,11 +72,11 @@ def load_spell_catalog(path: Path = SPELL_CATALOG_PATH) -> list[Spell]:
 
 
 @lru_cache(maxsize=4)
-def _spell_catalog_by_id(path: Path) -> dict[str, Spell]:
-    return {spell.id: spell for spell in _spell_catalog(path)}
+def _spell_catalog_by_id(path: Path) -> Mapping[str, Spell]:
+    return MappingProxyType({spell.id: spell for spell in _spell_catalog(path)})
 
 
-def load_spell_catalog_by_id(path: Path = SPELL_CATALOG_PATH) -> dict[str, Spell]:
+def load_spell_catalog_by_id(path: Path = SPELL_CATALOG_PATH) -> Mapping[str, Spell]:
     return _spell_catalog_by_id(path)
 
 
@@ -99,8 +96,11 @@ def _cached_entries(
 @lru_cache(maxsize=16)
 def _cached_by_id(
     path: Path, from_dict: Callable[[dict[str, Any]], Any]
-) -> dict[str, Any]:
-    return {entry.id: entry for entry in _cached_entries(path, from_dict)}
+) -> Mapping[str, Any]:
+    """Shared by every caller, so read-only: a change raises TypeError."""
+    return MappingProxyType(
+        {entry.id: entry for entry in _cached_entries(path, from_dict)}
+    )
 
 
 #: The user-made entries of the saga in use, by the kind of
@@ -108,7 +108,7 @@ def _cached_by_id(
 _SAGA_ENTRIES: dict[str, tuple[Any, ...]] = {"character": (), "lab": (), "covenant": ()}
 #: Each catalog with the saga's entries merged in, by (kind, path): built on
 #: first use and dropped whenever use_saga() changes the entries.
-_MERGED_BY_ID: dict[tuple[str, Path], dict[str, Any]] = {}
+_MERGED_BY_ID: dict[tuple[str, Path], Mapping[str, Any]] = {}
 
 
 def use_saga(saga: Saga | None) -> None:
@@ -188,14 +188,14 @@ def _with_saga_entries(kind: str, entries: tuple[Any, ...]) -> list[Any]:
 
 def _by_id_with_saga_entries(
     kind: str, path: Path, from_dict: Callable[[dict[str, Any]], Any]
-) -> dict[str, Any]:
+) -> Mapping[str, Any]:
     shared = _cached_by_id(path, from_dict)
     extra = _SAGA_ENTRIES[kind]
     if not extra:
         return shared
     merged = _MERGED_BY_ID.get((kind, path))
     if merged is None:
-        merged = {**shared, **{entry.id: entry for entry in extra}}
+        merged = MappingProxyType({**shared, **{entry.id: entry for entry in extra}})
         _MERGED_BY_ID[(kind, path)] = merged
     return merged
 
@@ -213,7 +213,7 @@ def load_virtue_flaw_catalog(path: Path = CATALOG_PATH) -> list[VirtueFlawDef]:
 
 def load_virtue_flaw_catalog_by_id(
     path: Path = CATALOG_PATH,
-) -> dict[str, VirtueFlawDef]:
+) -> Mapping[str, VirtueFlawDef]:
     return _by_id_with_saga_entries("character", path, VirtueFlawDef.from_dict)
 
 
@@ -310,15 +310,6 @@ CREATURE_AUDIENCES: frozenset[str] = frozenset(
     {"faerie", "magic being", "corrupted beast", "animal"}
 )
 
-#: Each audience as named in an "only for ..." note.
-_AUDIENCE_PLURALS: dict[str, str] = {
-    "faerie": "faeries",
-    "magic being": "magic beings",
-    "corrupted beast": "corrupted beasts",
-    "animal": "animals",
-    "mythic companion": "Mythic Companions",
-}
-
 
 def needs_the_gift(definition: VirtueFlawDef) -> bool:
     """Whether only a Gifted character may take `definition`: a Hermetic
@@ -328,95 +319,13 @@ def needs_the_gift(definition: VirtueFlawDef) -> bool:
     return "Hermetic" in types and definition.id not in HERMETIC_OR_OTHER_IDS
 
 
-@dataclass(frozen=True)
-class VirtueFlawChooser:
-    """Who is choosing from the character Virtue/Flaw catalog, for the
-    picker's structural eligibility rules; prose prerequisites
-    ("requires Demonic Blood") are left to the description.
-
-    `audiences` are the VIRTUE_FLAW_AUDIENCES this chooser belongs to (an
-    entry with an audience is only for those); `books` the sourcebooks in
-    play, or None for every book.
-    """
-
-    grog: bool = False
-    gifted: bool = False
-    audiences: frozenset[str] = frozenset()
-    books: frozenset[str] | None = None
-    #: An animal grog: nothing about human society, and its free Flaws and
-    #: Major Personality Flaws (taken as Minor) despite being a grog.
-    animal: bool = False
-
-    @classmethod
-    def for_character(
-        cls, character: Character, books: frozenset[str] | None = None
-    ) -> VirtueFlawChooser:
-        """A magus counts as Gifted before The Gift is added (the book
-        makes every magus take it); anyone else once they hold it."""
-        held = {vf.vf_id for vf in character.virtues_flaws}
-        mythic = character.type == "mythic companion"
-        animal = character.animal is not None
-        audiences = frozenset({"mythic companion"}) if mythic else frozenset()
-        return cls(
-            grog=character.type == "grog",
-            gifted=character.type == "magus" or bool(held & GIFT_IDS),
-            audiences=frozenset({"animal"}) if animal else audiences,
-            books=books,
-            animal=animal,
-        )
-
-    @classmethod
-    def for_familiar(
-        cls, familiar: Familiar, books: frozenset[str] | None = None
-    ) -> VirtueFlawChooser:
-        held = {vf.vf_id for vf in familiar.virtues_flaws}
-        return cls(
-            gifted=bool(held & GIFT_IDS), audiences=FAMILIAR_AUDIENCES, books=books
-        )
-
-    @classmethod
-    def for_creature(
-        cls, creature: Creature, books: frozenset[str] | None = None
-    ) -> VirtueFlawChooser:
-        held = {vf.vf_id for vf in creature.virtues_flaws}
-        return cls(
-            gifted=bool(held & GIFT_IDS), audiences=CREATURE_AUDIENCES, books=books
-        )
-
-    def refusal(self, definition: VirtueFlawDef) -> str:
-        """Why this chooser can't take `definition`, as a short note ("needs
-        The Gift"), or "" if it can."""
-        if definition.audience and not self.audiences & set(definition.audience):
-            names = [_AUDIENCE_PLURALS[who] for who in definition.audience]
-            return "only for " + " or ".join(names)
-        if self.grog and definition.id in GIFT_IDS:
-            return "not for grogs"
-        if self.animal:
-            from .rules import animal_grogs, creation_access
-
-            refused = animal_grogs.refusal(definition, creation_access.OPENS)
-            if refused:
-                return refused
-        elif self.grog and definition.tier == "Major":
-            return "not for grogs: Major"
-        if self.grog and needs_the_gift(definition):
-            return "not for grogs: Hermetic"
-        if not self.gifted and needs_the_gift(definition):
-            return "needs The Gift"
-        if not sourcebooks.in_play(definition.source, self.books):
-            return "book not in play"
-        if hidden(definition):
-            return "hidden in this saga"
-        return ""
-
-
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:
     return list(_cached_entries(path, AbilityDef.from_dict))
 
 
 def load_ability_catalog_by_id(
     path: Path = ABILITY_CATALOG_PATH,
-) -> dict[str, AbilityDef]:
+) -> Mapping[str, AbilityDef]:
     return _cached_by_id(path, AbilityDef.from_dict)
 
 
@@ -448,7 +357,7 @@ def load_house_catalog(path: Path = HOUSE_CATALOG_PATH) -> list[HouseDef]:
     return list(_cached_entries(path, HouseDef.from_dict))
 
 
-def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> dict[str, HouseDef]:
+def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> Mapping[str, HouseDef]:
     return _cached_by_id(path, HouseDef.from_dict)
 
 
@@ -458,7 +367,7 @@ def load_tradition_catalog(path: Path = TRADITION_CATALOG_PATH) -> list[Traditio
 
 def load_tradition_catalog_by_id(
     path: Path = TRADITION_CATALOG_PATH,
-) -> dict[str, TraditionDef]:
+) -> Mapping[str, TraditionDef]:
     return _cached_by_id(path, TraditionDef.from_dict)
 
 
@@ -470,7 +379,7 @@ def load_character_template_catalog(
 
 def load_character_template_catalog_by_id(
     path: Path = CHARACTER_TEMPLATE_CATALOG_PATH,
-) -> dict[str, CharacterTemplateDef]:
+) -> Mapping[str, CharacterTemplateDef]:
     return _cached_by_id(path, CharacterTemplateDef.from_dict)
 
 
@@ -482,7 +391,7 @@ def load_grog_template_catalog(
 
 def load_grog_template_catalog_by_id(
     path: Path = GROG_TEMPLATE_CATALOG_PATH,
-) -> dict[str, GrogTemplateDef]:
+) -> Mapping[str, GrogTemplateDef]:
     return _cached_by_id(path, GrogTemplateDef.from_dict)
 
 
@@ -496,7 +405,7 @@ def load_animal_template_catalog(
 
 def load_animal_template_catalog_by_id(
     path: Path = ANIMAL_TEMPLATE_CATALOG_PATH,
-) -> dict[str, GrogTemplateDef]:
+) -> Mapping[str, GrogTemplateDef]:
     return _cached_by_id(path, GrogTemplateDef.from_dict)
 
 
@@ -508,7 +417,7 @@ def load_lab_virtue_flaw_catalog(
 
 def load_lab_virtue_flaw_catalog_by_id(
     path: Path = LAB_VF_CATALOG_PATH,
-) -> dict[str, LabVirtueFlawDef]:
+) -> Mapping[str, LabVirtueFlawDef]:
     return _by_id_with_saga_entries("lab", path, LabVirtueFlawDef.from_dict)
 
 
@@ -524,6 +433,14 @@ def load_lab_feature_catalog(
     """The 36 Laboratory Features, in the reference's (alphabetical) order.
     Cached: read for every Feature shown."""
     return list(_lab_feature_catalog(path))
+
+
+def lab_feature_names() -> dict[str, str]:
+    """Each Laboratory Feature's name, to its id: what an older save's
+    free-text Features are matched by (Saga.from_dict)."""
+    return {
+        entry.name: entry.id for entry in _lab_feature_catalog(LAB_FEATURE_CATALOG_PATH)
+    }
 
 
 def load_lab_feature_catalog_by_id(
@@ -542,7 +459,7 @@ def load_covenant_boon_hook_catalog(
 
 def load_covenant_boon_hook_catalog_by_id(
     path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
-) -> dict[str, CovenantBoonHookDef]:
+) -> Mapping[str, CovenantBoonHookDef]:
     return _by_id_with_saga_entries("covenant", path, CovenantBoonHookDef.from_dict)
 
 
@@ -554,7 +471,7 @@ def load_covenant_situation_catalog(
 
 
 def describe_boon_hook(
-    instance: VirtueFlawInstance, catalog_by_id: dict[str, CovenantBoonHookDef]
+    instance: VirtueFlawInstance, catalog_by_id: Mapping[str, CovenantBoonHookDef]
 ) -> str:
     """A human-readable label for a covenant Boon/Hook instance: its name
     with what it names filled in (as describe_virtue_flaw's), then " - "
@@ -640,3 +557,47 @@ def load_shape_material_catalog(
     """DE's Shape and Material Bonuses Table, row for row in its order
     (built by tools/build_shape_material_catalog.py). Cached."""
     return list(_shape_material_catalog(path))
+
+
+def find_spell(saga: Saga, spell_id: str | None) -> Spell | None:
+    """The spell with this id, wherever it lives: the shared catalog, then the
+    saga's own spells, then any magus's invented spells."""
+    if not spell_id:
+        return None
+    found = load_spell_catalog_by_id().get(spell_id)
+    if found is not None:
+        return found
+    for spell in saga.spells:
+        if spell.id == spell_id:
+            return spell
+    for character in saga.characters:
+        for spell in character.invented_spells:
+            if spell.id == spell_id:
+                return spell
+    return None
+
+
+def name_key(name: str) -> str:
+    """How spell names are compared: any case, any spacing, typographic
+    apostrophes allowed."""
+    return " ".join(name.replace("’", "'").lower().split())
+
+
+def find_spell_by_name(saga: Saga, name: str) -> Spell | None:
+    """The spell with this name (any case, typographic apostrophes allowed),
+    wherever it lives: the catalog, then the saga's own, then any magus's
+    invented spells. How a book whose spell was typed (or imported) links."""
+    key = name_key(name)
+    if not key:
+        return None
+    for spell in load_spell_catalog():
+        if name_key(spell.name) == key:
+            return spell
+    for spell in saga.spells:
+        if name_key(spell.name) == key:
+            return spell
+    for character in saga.characters:
+        for spell in character.invented_spells:
+            if name_key(spell.name) == key:
+                return spell
+    return None

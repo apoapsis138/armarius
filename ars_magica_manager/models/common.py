@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, fields
-from typing import Any, Literal
+from typing import Any, Literal, NotRequired, TypedDict
 
 from ..totals import validate_modifier_type
 
@@ -23,6 +23,46 @@ VirtueFlawTier = Literal["Free", "Minor", "Major"]
 BoonHookType = Literal["Boon", "Hook"]
 Handedness = Literal["right", "left", "ambidextrous"]
 FatigueLevel = Literal["fresh", "winded", "weary", "tired", "dazed", "unconscious"]
+
+
+class SetChange(TypedDict):
+    """Set `after` at `path` within a record, keeping `before` (and
+    `absent` when the key was new, so undoing takes it out again)."""
+
+    op: Literal["set"]
+    record: str
+    id: str
+    path: list[Any]
+    before: Any
+    after: Any
+    absent: NotRequired[bool]
+
+
+class AppendChange(TypedDict):
+    """Append `value` to the list at `path` within a record."""
+
+    op: Literal["append"]
+    record: str
+    id: str
+    path: list[Any]
+    value: Any
+
+
+class ReasonChange(TypedDict):
+    """Give a record's attitude toward `covenant_id` a reason (a Reason's
+    fields)."""
+
+    op: Literal["reason"]
+    record: str
+    id: str
+    covenant_id: str
+    reason: dict[str, Any]
+
+
+#: One change the yearly step made (world_turns.py), kept with the saga
+#: so deleting its entry undoes it.
+Change = SetChange | AppendChange | ReasonChange
+
 
 #: Display order for the Fatigue Levels track on the character sheet, from
 #: least to most fatigued -- Fresh -> Winded -> Weary -> Tired -> Dazed ->

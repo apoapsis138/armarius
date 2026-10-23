@@ -25,7 +25,7 @@ def test_the_changelog_has_an_entry_for_this_version():
 
 
 def test_a_save_records_the_version_that_wrote_it():
-    path = storage.save_saga(Saga(id="s", name="S"))
+    path = storage.save_saga(Saga(id="s", name="S")).path
     assert json.loads(path.read_text(encoding="utf-8"))["app_version"] == __version__
     assert storage.load_saga("s").app_version == __version__
 

@@ -11,6 +11,9 @@ defender), and costs ceil((Weakening - Resistance) / 5) Fatigue levels when
 positive. Each pawn of vis matching the Art adds +2 to Attack or Defence for
 a round, up to the score in that Art. Fatigue penalties apply to Attack and
 Defence.
+
+No screen uses attack_advantage(), fatigue_lost(), max_vis() yet: they are
+the rules for screens still to come, and only the tests call them.
 """
 
 from __future__ import annotations

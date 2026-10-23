@@ -10,11 +10,10 @@ are the same markup the terminal sheet shows.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from .. import books as bk
 from .. import catalog, tribunal_packages, tribunals, vassals, world
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
@@ -25,7 +24,6 @@ from ..covenants import (
     UNKNOWN_HOOK_POINTS,
     boon_hook_is_unknown,
     covenant_boon_points,
-    covenant_effective_aura,
     covenant_hook_points,
 )
 from ..forms import world as world_forms
@@ -38,9 +36,10 @@ from ..models import (
     CovenantDiaryEntry,
     Saga,
 )
-from ..rules import realms
+from ..references import Fact
+from ..rules import covenfolk, library, realms
+from ..rules.realms import covenant_effective_aura
 from ..tables import Table
-from .character import Fact
 from .laboratory import Aura
 
 
@@ -195,7 +194,7 @@ def _year(year: int | None) -> str:
 
 
 #: Each kind of inhabitant's columns after its name: a title, and how to
-#: read the cell from an inhabitants.InhabitantEntry.
+#: read the cell from a covenfolk.InhabitantEntry.
 _INHABITANT_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
     "magus": (
         ("House", lambda e: inh.house_name(e.house_id)),
@@ -230,7 +229,9 @@ _INHABITANT_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
 }
 
 
-def _table(columns, entries) -> Table:
+def _table(
+    columns: tuple[tuple[str, Callable[[Any], str]], ...], entries: Sequence[Any]
+) -> Table:
     return Table(
         ["Name", *(title for title, _ in columns)],
         [
@@ -255,13 +256,13 @@ def inhabitant_groups(saga: Saga, covenant: Covenant) -> list[Group]:
     """Each kind of inhabitant the covenant has, Magi first."""
     groups = []
     for kind in INHABITANT_KINDS:
-        entries = inh.entries_for_kind(saga, covenant, kind)
+        entries = covenfolk.entries_for_kind(saga, covenant, kind)
         if not entries:
             continue
         groups.append(
             Group(
                 kind,
-                f"{inh.KIND_TITLES[kind]} ({inh.headcount(entries)})",
+                f"{inh.KIND_TITLES[kind]} ({covenfolk.headcount(entries)})",
                 _table(_INHABITANT_COLUMNS[kind], entries),
                 [inh.detail_text(e, saga.current_year) for e in entries],
             )
@@ -395,14 +396,14 @@ def _spine(saga: Saga, book: Book) -> Spine:
         book,
         subject.title() if subject == book.art else subject,
         art.title(),
-        bk.level_of(book, saga),
-        bk.effective_quality(saga, book),
+        library.level_of(book, saga),
+        library.effective_quality(saga, book),
     )
 
 
 def shelves(saga: Saga, covenant: Covenant) -> list[tuple[str, list[Spine]]]:
     """The covenant's books on their shelves, each shelf that has any."""
-    books = bk.books_in_covenant(saga, covenant)
+    books = library.books_in_covenant(saga, covenant)
     result = []
     for title, types in SHELVES:
         spines = [_spine(saga, b) for b in books if b.type in types]

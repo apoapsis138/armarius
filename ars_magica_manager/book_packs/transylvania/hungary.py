@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -42,11 +42,6 @@ KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(transylvania: Transylvania, key: str, name: str, **kw: Any) -> Neighbour:
@@ -314,7 +309,7 @@ def _laniena(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> None
         "them, are always at odds. Anyone keen on the Hunters' Arts is "
         "welcome to join.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: Baradla Cave, Imaginem and Muto",
         "Vis: Dobsinska Cave, Ignem",
         "Vis: Ochtinska Cave, Rego (the flowers of iron, also lesser enchantment vis)",
@@ -374,7 +369,7 @@ def _laniena(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> None
         "that Murat the Younger has let a vampire live, House Tremere's "
         "anger could fall on the whole oppidum.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human (see the Bestiary). He lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.",
         "Only Murat the Younger knows. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.",
     )
@@ -766,10 +761,6 @@ P = Profile
 HUNGARIAN = "Hungarian"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the chapter sketches without a stat block, by key.
 PROFILES: dict[str, Profile] = {
     "lexander": P(
@@ -785,7 +776,7 @@ PROFILES: dict[str, Profile] = {
             "Athletics": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "rego"),
+            vf_art("Affinity with {art}", "rego"),
             "Driven (Minor)",
             "Wrathful (Minor)",
         ],

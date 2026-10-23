@@ -43,7 +43,7 @@ def test_a_chosen_picture_is_copied_into_the_save_folder(app, tmp_path):
     original = _picture(tmp_path)
     portraits.set_portrait(saga, magus, original)
     copy = portraits.path(magus)
-    assert copy is not None and copy.parent == storage.PORTRAITS_DIR
+    assert copy is not None and copy.parent == storage.portraits_dir()
     original.unlink()
     assert portraits.path(magus) == copy
     # Another picture replaces it, and the old copy goes.
@@ -85,7 +85,7 @@ def test_the_sheet_frames_the_portrait_and_choosing_one_shows_it(app, tmp_path):
     page = window.page()
     assert isinstance(page, CharacterSheet) and page.portrait.has_picture()
     saved = storage.load_saga(saga.id).characters[0]
-    assert saved.portrait and (storage.PORTRAITS_DIR / saved.portrait).is_file()
+    assert saved.portrait and (storage.portraits_dir() / saved.portrait).is_file()
     # With one set, it can be taken off again.
     answering(window, "Remove the portrait")
     page.portrait.clicked()

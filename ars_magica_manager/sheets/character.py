@@ -19,7 +19,6 @@ from .. import possessions as pos
 from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
-from ..covenants import home_aura
 from ..markup import aligned, escape, inherited, markdown_text, problem
 from ..models import (
     ABILITY_CATEGORIES,
@@ -34,12 +33,13 @@ from ..models import (
     Wounds,
     character_age,
 )
-from ..references import Ref
+from ..references import Fact
 from ..rules import aging, casting, derived, experiment, medicine, scores, warping
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
 from ..rules import xp as xp_rules
 from ..rules.breakdown import Breakdown
+from ..rules.realms import home_aura
 from ..tables import Table
 from ..world import signed
 
@@ -374,7 +374,7 @@ def known_spell_info_text(saga: Saga, character: Character, index: int) -> str:
     """A known spell's details: the spell, how well the magus casts it, and
     its Mastery."""
     known = character.spells_known[index]
-    spell = spl.find_spell(saga, known.spell_id)
+    spell = catalog.find_spell(saga, known.spell_id)
     if spell is None:
         lines = [problem(f"Unknown spell: {escape(known.spell_id)}")]
     else:
@@ -524,7 +524,7 @@ class SpellRow:
 def spell_table(saga: Saga, character: Character) -> list[SpellRow]:
     rows = []
     for index, known in enumerate(character.spells_known):
-        spell = spl.find_spell(saga, known.spell_id)
+        spell = catalog.find_spell(saga, known.spell_id)
         if spell is None:
             rows.append(
                 SpellRow(
@@ -650,21 +650,6 @@ def casting_cell_text(score: Breakdown) -> str:
 
 # The figures a graphical sheet draws: plain values rather than markup,
 # so a front-end can give each its own type and emphasis.
-
-
-@dataclass(frozen=True)
-class Fact:
-    """One labelled value; `value` is plain text, "" when not set. `refs`
-    are the records named in it, which a front-end can draw as links
-    (references.segments)."""
-
-    label: str
-    value: str
-    refs: tuple[Ref, ...] = ()
-
-    @property
-    def missing(self) -> bool:
-        return not self.value
 
 
 def _fact(label: str, value: object) -> Fact:

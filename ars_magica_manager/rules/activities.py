@@ -43,7 +43,7 @@ import random
 from collections.abc import Callable, Collection, MutableMapping, Sequence
 from dataclasses import dataclass, field, replace
 
-from .. import book_kinds, books, catalog, sourcebooks, vis
+from .. import book_kinds, catalog, sourcebooks, vis
 from ..arts import ART_BY_NAME, ARTS
 from ..models import (
     SEASONS,
@@ -69,6 +69,7 @@ from . import (
     lab_seasons,
     lab_virtues,
     laboratory_seasons,
+    library,
     realms,
     scores,
     study,
@@ -971,7 +972,7 @@ def _gloss_problems(
             f"{character.name} {com:+d}, {author.name} "
             f"{author.characteristics.communication:+d}."
         )
-    if books.extended_quality(saga) and (
+    if library.extended_quality(saga) and (
         "clarified" in book.craft or any(p in book.craft for p in book_kinds.RESONANCE)
     ):
         found.append(
@@ -994,7 +995,7 @@ def _codex_reader_problems(
         if other.character_id == character.id or other.activity != READ:
             continue
         theirs = next((b for b in saga.books if b.id == other.book_id), None)
-        if theirs is None or not books.same_codex(saga, book, theirs):
+        if theirs is None or not library.same_codex(saga, book, theirs):
             continue
         reader = saga.character(other.character_id)
         who = reader.name if reader is not None else "Someone else"
@@ -1032,13 +1033,13 @@ def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> lis
     book = next((b for b in saga.books if b.id == plan.book_id), None)
     if book is None:
         return ["Choose the book to study."]
-    if not books.can_read(saga, character, book):
+    if not library.can_read(saga, character, book):
         return [
             f"{character.name} can't get at {book.name}: it isn't in their "
             "covenant's library or their own keeping."
         ]
     subject = book_subject(book)
-    missing = books.numbers_to_set(book)
+    missing = library.numbers_to_set(book)
     if subject is not None and missing:
         return [
             f"{book.name}'s {' and '.join(missing)} {'are' if len(missing) > 1 else 'is'} "
@@ -1320,7 +1321,7 @@ def _experiment(
     work = result.lab_work
     if work is None:
         return
-    aura, _ = _home_aura(saga, character)
+    aura, _ = realms.home_aura(saga, character)
     art, _ = lab_seasons.made_arts(work, plan)
     goal = experiment.find_goal(character, plan.research) if plan.research else None
     # With an insight waiting, the experiment invents it (integration);
@@ -2020,7 +2021,7 @@ def _study_outcome(
     if plan.activity == READ:
         book = next(b for b in saga.books if b.id == plan.book_id)
         subject = book_subject(book)
-        quality = books.effective_quality(saga, book)
+        quality = library.effective_quality(saga, book)
         assert subject is not None and quality is not None
         limit = book.level if book.type != "Tractatus" else None
         bonuses = study_virtues.presence_lines(
@@ -2053,7 +2054,7 @@ def _study_outcome(
                     "Its author isn't a character of the saga: check the "
                     "glosser's Communication is the better at the table."
                 )
-        codex = books.codex_of(saga, book)
+        codex = library.codex_of(saga, book)
         if codex is not None and codex.collection == book_kinds.FOLIO:
             result.gains.append(
                 _gain(
@@ -2102,7 +2103,7 @@ def _vis_study_outcome(
     subject = allocations(plan)[0].subject
     art = _split(subject)[1]
     pawns = study.season_vis_pawns(character, score(character, subject))
-    aura, realm = _home_aura(saga, character)
+    aura, realm = realms.home_aura(saga, character)
     aura_mod = realms.aura_modifier(realms.HERMETIC, realm, aura)
     botch_dice = pawns + realms.extra_botch_dice(realms.HERMETIC, realm, aura)
     result.vis_spent = (plan.vis_from or "character", art, pawns)
@@ -2259,12 +2260,6 @@ def _handlers() -> dict[str, Handler]:
 
 #: The family each activity that gives experience belongs to.
 HANDLERS: dict[str, Handler] = _handlers()
-
-
-def _home_aura(saga: Saga, character: Character) -> tuple[int, str]:
-    from ..covenants import home_aura
-
-    return home_aura(saga, character)
 
 
 def outcomes(

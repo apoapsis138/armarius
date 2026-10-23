@@ -29,9 +29,7 @@ from __future__ import annotations
 from collections.abc import MutableMapping
 from dataclasses import dataclass, field, replace
 
-from .. import books, vis
-from .. import enchanted_devices as ed
-from .. import spells as spl
+from .. import catalog, vis
 from ..models import (
     SUPERNATURAL_CATEGORIES,
     TEXT_LONGEVITY,
@@ -52,11 +50,14 @@ from ..models import (
 from . import (
     book_seasons,
     enchant_seasons,
+    enchantment,
     experiment,
     familiar_seasons,
     lab,
     lab_virtues,
     laboratory_seasons,
+    library,
+    sites,
     spell_levels,
 )
 from .breakdown import Line
@@ -204,7 +205,7 @@ def laboratory(saga: Saga, magus: Character, plan: SeasonPlan) -> Laboratory | N
 
 
 def the_spell(saga: Saga, plan: SeasonPlan) -> Spell | None:
-    return spl.find_spell(saga, plan.spell_id)
+    return catalog.find_spell(saga, plan.spell_id)
 
 
 def lab_text_of(saga: Saga, plan: SeasonPlan) -> Book | None:
@@ -222,7 +223,7 @@ def lab_texts(saga: Saga, magus: Character) -> list[Book]:
         if b.type == "Lab Text"
         and b.spell_id
         and b.spell_id not in known
-        and books.can_read(saga, magus, b)
+        and library.can_read(saga, magus, b)
         and book_seasons.can_use_lab_text(magus, b)
     ]
 
@@ -238,7 +239,7 @@ def lab_texts_at_hand(saga: Saga, magus: Character) -> list[Book]:
         if b.type == "Lab Text"
         and b.spell_id
         and b.spell_id not in known
-        and books.can_read(saga, magus, b)
+        and library.can_read(saga, magus, b)
     ]
 
 
@@ -321,14 +322,14 @@ def _chosen_spell(
         text = lab_text_of(saga, plan)
         if text is None:
             return ["Choose the Lab Text to work from."], None
-        if not books.can_read(saga, magus, text):
+        if not library.can_read(saga, magus, text):
             return [f"{magus.name} can't get at {text.name}."], None
         if not book_seasons.can_use_lab_text(magus, text):
             return [
                 f"{text.name} is {book_seasons.author_name(saga, text)}'s raw "
                 "text: decode it first (or have it rewritten for general use)."
             ], None
-        spell = spl.find_spell(saga, text.spell_id)
+        spell = catalog.find_spell(saga, text.spell_id)
         if spell is None:
             return [f"{text.name} doesn't record a spell."], None
     elif plan.design is not None:
@@ -420,7 +421,9 @@ def _work(
     if plan.activity in laboratory_seasons.ACTIVITIES:
         return laboratory_seasons.work(saga, magus, plan, lab_)
 
-    def options(m, p, technique, form, total):
+    def options(
+        m: Character, p: SeasonPlan, technique: str, form: str, total: lab.LabTotal
+    ):
         return _with_options(m, p, technique, form, total, saga)
 
     if plan.activity in enchant_seasons.ACTIVITIES:
@@ -436,7 +439,9 @@ def _work(
         return found, None
     if any(k.spell_id == spell.id for k in magus.spells_known):
         return [f"{magus.name} already knows {spell.name}."], None
-    source = spl.find_spell(saga, plan.design.source_spell_id if plan.design else None)
+    source = catalog.find_spell(
+        saga, plan.design.source_spell_id if plan.design else None
+    )
     if (
         source is not None
         and any(k.spell_id == source.id for k in magus.spells_known)
@@ -446,7 +451,7 @@ def _work(
             f"{magus.name} already knows {source.name}: change the design "
             "to invent a variant of it."
         ], None
-    similar = spl.find_spell(saga, plan.similar_spell_id)
+    similar = catalog.find_spell(saga, plan.similar_spell_id)
     # Disjointed Magic: no benefit from a similar spell known.
     if similar is not None and (
         not any(k.spell_id == similar.id for k in magus.spells_known)
@@ -691,9 +696,8 @@ def _one_season_work(
     if plan.activity == EXTRACT:
         covenant = saga.covenant(lab_.covenant_id)
         realm = covenant.aura_realm if covenant is not None else "Magic"
-        from .. import places  # places reads the sheets, which read this
 
-        own = places.lab_aura(saga, lab_)
+        own = sites.lab_aura(saga, lab_)
         if own is not None:
             realm = own[1]
         if realm != "Magic":
@@ -826,7 +830,9 @@ def ritual_again(
     text's level)."""
     if text.type != "Lab Text" or text.text_kind != TEXT_LONGEVITY:
         return [f"{text.name} isn't the Lab Text of a Longevity Ritual."], None
-    if not books.can_read(saga, magus, text) and not lab_virtues.remembers(magus, text):
+    if not library.can_read(saga, magus, text) and not lab_virtues.remembers(
+        magus, text
+    ):
         return [f"{magus.name} can't get at {text.name}."], None
     if not book_seasons.can_use_lab_text(magus, text):
         return [
@@ -1021,7 +1027,7 @@ def _decode(
     text = lab_text_of(saga, plan)
     if text is None or text.type != "Lab Text":
         return ["Choose the Lab Text to decode."], None
-    if not books.can_read(saga, magus, text):
+    if not library.can_read(saga, magus, text):
         return [f"{magus.name} can't get at {text.name}."], None
     if book_seasons.can_use_lab_text(magus, text):
         return [f"{magus.name} can already read {text.name}."], None
@@ -1177,7 +1183,7 @@ def _in_own_talisman(saga: Saga | None, magus: Character, plan: SeasonPlan) -> b
     return (
         device is not None
         and device.talisman
-        and ed.talisman_magus_id(device) == magus.id
+        and enchantment.talisman_magus_id(device) == magus.id
     )
 
 

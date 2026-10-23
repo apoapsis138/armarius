@@ -75,7 +75,9 @@ class ArsMagicaManagerApp(App[None]):
         self.register_theme(SCRIPTORUM_DARK)
         saved_theme = load_settings().get("theme")
         self.theme = (
-            saved_theme if saved_theme in self.available_themes else DEFAULT_THEME
+            saved_theme
+            if isinstance(saved_theme, str) and saved_theme in self.available_themes
+            else DEFAULT_THEME
         )
         self.push_screen(SagaPickerScreen())
         if self.show_title:

@@ -13,6 +13,9 @@ requisite magnitudes.
 A magnitude is 5 levels, except below level 5, where it is 1 level. A spell
 must be a Ritual with Year Duration, Boundary Target or a level over 50, and
 a Ritual is always at least level 20.
+
+No screen uses extra_parameters() yet: it is a rule for a screen still to
+come, and only the tests call it.
 """
 
 from __future__ import annotations

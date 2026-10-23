@@ -26,6 +26,7 @@ from ..models import (
     SeasonPlan,
     VirtueFlawInstance,
 )
+from .scores import ability_level
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Opening the Arts "
@@ -65,11 +66,6 @@ class ApprenticeWork:
     @property
     def succeeds(self) -> bool:
         return self.quality >= self.target
-
-
-def ability(character: Character, name: str) -> int:
-    found = next((a for a in character.abilities if a.name == name), None)
-    return found.level if found else 0
 
 
 def gifted(character: Character) -> bool:
@@ -133,11 +129,11 @@ def work(
         return [f"{magus.name} doesn't have {virtue.name}."], None
     if any(vf.vf_id == virtue.id for vf in student.virtues_flaws):
         return [f"{student.name} already has {virtue.name}."], None
-    if ability(student, "Magic Theory") < 1:
+    if ability_level(student, "Magic Theory") < 1:
         return [f"{student.name} needs Magic Theory."], None
     minor, major = _hermetic(student)
     target = (21 if virtue.tier == "Major" else 15) + 3 * minor + 9 * major
-    quality = magus.characteristics.communication + ability(magus, "Teaching") + 9
+    quality = magus.characteristics.communication + ability_level(magus, "Teaching") + 9
     return [], ApprenticeWork(quality=quality, target=target)
 
 

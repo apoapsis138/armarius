@@ -56,6 +56,7 @@ from .rules import creation_character as cc
 from .rules import creation_characteristics as cch
 from .rules import creation_virtues as cv
 from .rules import creation_xp as cx
+from .rules.vf_eligibility import VirtueFlawChooser
 from .rules.xp import ability_xp
 
 SOURCE = (
@@ -212,8 +213,8 @@ def _blank(character_type: str) -> Character:
     return Character(id="", name="", type=character_type)  # type: ignore[arg-type]
 
 
-def _chooser(saga: Saga | None, character_type: str) -> catalog.VirtueFlawChooser:
-    return catalog.VirtueFlawChooser.for_character(
+def _chooser(saga: Saga | None, character_type: str) -> VirtueFlawChooser:
+    return VirtueFlawChooser.for_character(
         _blank(character_type), sourcebooks.saga_books(saga)
     )
 

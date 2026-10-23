@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import sourcebooks
+from .. import catalog, sourcebooks
 from .. import spells as spl
 from ..commands import Choice, Choose, Form, SectionOps, delete, not_offered, picked
 from ..form_spec import DialogField, ListEditor, attr
@@ -17,7 +17,7 @@ from . import experimental_effects
 
 def known_spell_name(saga: Saga, known: KnownSpell) -> str:
     """A known spell's name (plain text; its id if it's missing)."""
-    spell = spl.find_spell(saga, known.spell_id)
+    spell = catalog.find_spell(saga, known.spell_id)
     return spell.name if spell else f"{known.spell_id} (unknown spell)"
 
 
@@ -202,7 +202,7 @@ def known_spell_ops(saga: Saga, character: Character) -> SectionOps:
 
     def edit(index: int) -> Form:
         existing = known[index]
-        spell = spl.find_spell(saga, existing.spell_id)
+        spell = catalog.find_spell(saga, existing.spell_id)
         name = spell.name if spell else existing.spell_id
 
         def apply(values: dict[str, Any]) -> None:

@@ -20,8 +20,8 @@ from .. import (
 from ..grids import Grid
 from ..markup import escape
 from ..models import Covenant, Neighbour, Saga, Tribunal
-from . import creature as creature_sheet
-from .character import Fact
+from ..references import Fact
+from ..rules import sites
 
 
 def _attitude_cell(saga: Saga, record: Neighbour | Covenant) -> tuple[str, str | None]:
@@ -187,7 +187,7 @@ def places_grid(saga: Saga) -> Grid:
     """The places: where each is, its aura, its regio and the gazetteer."""
     rows = []
     for found in neighbour_filter.shown(saga, "places"):
-        levels = len(places.levels(found))
+        levels = len(sites.levels(found))
         rows.append(
             [
                 found.name,
@@ -292,7 +292,7 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
             Fact("Book", kind.book or "core rules"),
             *connections.links_back(saga, neighbour),
         ]
-    place = places.place(saga, neighbour.place_id)
+    place = sites.place(saga, neighbour.place_id)
     return [
         Fact("Kind", kind.name),
         Fact("Detail", neighbour.detail),
@@ -302,7 +302,7 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         Fact("Book", kind.book or "core rules"),
         *([Fact("Place", where, references.refs(place))] if where else []),
         *below_fact(saga, neighbour),
-        *creature_sheet.rules_facts(saga, neighbour),
+        *connections.rules_facts(saga, neighbour),
         *connections.links_back(saga, neighbour),
     ]
 
@@ -313,7 +313,7 @@ def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
     summary and the favours owed."""
     if record is None:
         return "[$label]Choose a neighbour to see how it stands.[/]"
-    if places.is_place(record):
+    if sites.is_place(record):
         assert isinstance(record, Neighbour)
         lines = [f"[b]{escape(record.name)}[/]   Place · {places.aura_text(record)}"]
         inside = places.inside_text(saga, record)
@@ -362,7 +362,7 @@ def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
 def card_subtitle(neighbour: Neighbour) -> str:
     """ "Lord · Sketch"; a place's aura, "Place · Magic 5" ("Ruined
     covenant · Magic 5")."""
-    if places.is_place(neighbour):
+    if sites.is_place(neighbour):
         what = "Ruined covenant" if places.is_ruin(neighbour) else "Place"
         return f"{what} · {places.aura_text(neighbour)}"
     return f"{kind_text(neighbour)} · {neighbour.detail}"
@@ -371,7 +371,7 @@ def card_subtitle(neighbour: Neighbour) -> str:
 def card_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     """Its attitude toward the home covenant, and its ruler and liege
     when it has them."""
-    if places.is_place(neighbour):
+    if sites.is_place(neighbour):
         inside = inside_fact(saga, neighbour, "")
         return ([inside] if inside.value else []) + [
             f

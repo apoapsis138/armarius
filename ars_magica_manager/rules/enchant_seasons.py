@@ -25,11 +25,10 @@ Inventory tab (its components, effects and levels are entered there).
 
 from __future__ import annotations
 
+import random
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
-from .. import books
-from .. import enchanted_devices as ed
 from ..models import (
     CHARGED,
     INVESTED,
@@ -43,7 +42,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import book_seasons, experiment, lab, lab_virtues
+from . import book_seasons, enchantment, experiment, lab, lab_virtues, library
 from .breakdown import Line
 from .rounding import round_up
 
@@ -100,11 +99,11 @@ def devices_for(
 ) -> list[EnchantedDevice]:
     """The devices a magus can work on in his laboratory: his own and the
     laboratory's (and the covenant's, for investigating)."""
-    held = ed.held_by(saga, "character", magus.id) + ed.held_by(
+    held = enchantment.held_by(saga, "character", magus.id) + enchantment.held_by(
         saga, "laboratory", lab_.id
     )
     if lab_.covenant_id:
-        held += ed.held_by(saga, "covenant", lab_.covenant_id)
+        held += enchantment.held_by(saga, "covenant", lab_.covenant_id)
     return held
 
 
@@ -139,10 +138,12 @@ def text_problem(
     it can't: a Lab Text reproduces its effect exactly -- the same Arts and
     level, in the same kind of device (lesser and invested texts aren't
     interchangeable; a talisman's is no use to anyone else)."""
-    name = ed.effect_name(effect)
+    name = enchantment.effect_name(effect)
     if text.type != "Lab Text" or text.text_kind != TEXT_ENCHANTMENT:
         return f"{text.name} isn't the Lab Text of an enchantment."
-    if not books.can_read(saga, magus, text) and not lab_virtues.remembers(magus, text):
+    if not library.can_read(saga, magus, text) and not lab_virtues.remembers(
+        magus, text
+    ):
         return f"{magus.name} can't get at {text.name}."
     if not book_seasons.can_use_lab_text(magus, text):
         return (
@@ -154,7 +155,7 @@ def text_problem(
             f"{text.name} is {text.technique} {text.form}; {name} is "
             f"{effect.technique} {effect.form}."
         )
-    level = ed.modified_level(device, effect)
+    level = enchantment.modified_level(device, effect)
     if (text.level or 0) != level:
         return f"{text.name} is level {text.level or 0}; {name} is level {level}."
     kind = text_device_type(device)
@@ -206,7 +207,7 @@ def _effect_total(
     )
     extra: list[Line] = []
     if device.type == INVESTED:
-        if device.talisman and ed.talisman_magus_id(device) == magus.id:
+        if device.talisman and enchantment.talisman_magus_id(device) == magus.id:
             extra.append(
                 Line("Own talisman", amount=TALISMAN_BONUS, source=ATTUNE_SOURCE)
             )
@@ -241,7 +242,7 @@ def _open_device(
     magus: Character,
     plan: SeasonPlan,
     lab_: Laboratory,
-    options,
+    options: lab.LabOptions,
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
     """Opening a device for enchantment: its Vim vis."""
@@ -249,7 +250,7 @@ def _open_device(
 
     limit = lab.vis_limit(magus)
     empty = lab.LabTotal(total=0, lines=[])
-    room = ed.capacity(saga, device)
+    room = enchantment.capacity(saga, device)
     if room is None:
         return [
             f"{device.name} has no capacity yet: give it a material and size "
@@ -276,20 +277,20 @@ def _attune(
     magus: Character,
     plan: SeasonPlan,
     lab_: Laboratory,
-    options,
+    options: lab.LabOptions,
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
     """Attuning an opened device as the magus's talisman."""
     from .lab_seasons import LabWork
 
     empty = lab.LabTotal(total=0, lines=[])
-    if not ed.is_opened(saga, device) and not device.pawns_opened:
+    if not enchantment.is_opened(saga, device) and not device.pawns_opened:
         return [f"{device.name} has to be opened first."], None
     if device.maker_id and device.maker_id != magus.id:
         return [f"Only the magus who opened {device.name} can attune it."], None
     if device.talisman:
         return [f"{device.name} is already a talisman."], None
-    current = ed.talisman_of(saga, magus)
+    current = enchantment.talisman_of(saga, magus)
     if current is not None:
         return [
             f"{magus.name} already has a talisman ({current.name}); the old "
@@ -303,7 +304,7 @@ def _investigate(
     magus: Character,
     plan: SeasonPlan,
     lab_: Laboratory,
-    options,
+    options: lab.LabOptions,
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
     """Investigating a device for its hidden powers."""
@@ -336,7 +337,7 @@ def work(
     magus: Character,
     plan: SeasonPlan,
     lab_: Laboratory,
-    options,
+    options: lab.LabOptions,
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a season of enchanting, or what it does. `options`
     adds the plan's Focus / Specialty / Other lines to a Lab Total."""
@@ -365,7 +366,7 @@ def _effect_work(
     magus: Character,
     plan: SeasonPlan,
     lab_: Laboratory,
-    options,
+    options: lab.LabOptions,
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
     """Instilling, a lesser enchantment or a charged item: one effect."""
@@ -376,10 +377,10 @@ def _effect_work(
     if effect is None:
         return ["Choose the effect (add it to the device on its Inventory tab)."], None
     if not effect.technique or not effect.form:
-        return [f"Give {ed.effect_name(effect)} its Technique and Form."], None
-    level = ed.modified_level(device, effect)
+        return [f"Give {enchantment.effect_name(effect)} its Technique and Form."], None
+    level = enchantment.modified_level(device, effect)
     if level <= 0:
-        return [f"Give {ed.effect_name(effect)} its level."], None
+        return [f"Give {enchantment.effect_name(effect)} its level."], None
     # Working from a Lab Text: one season if the Lab Total is at
     # least the level; no experimenting.
     text = lab_text_of(saga, plan)
@@ -403,7 +404,7 @@ def _effect_work(
         )
     total = options(magus, plan, effect.technique, effect.form, total)
     lab_total = int(total.total)
-    name = ed.effect_name(effect)
+    name = enchantment.effect_name(effect)
     if text is not None and lab_total < level:
         return [
             f"Lab Total {lab_total} is below {name}'s level {level}: the Lab "
@@ -430,7 +431,7 @@ def _effect_work(
             ),
         )
 
-    pawns = ed.vis_cost(device, effect)
+    pawns = enchantment.vis_cost(device, effect)
     arts = (effect.technique, effect.form)
     art = plan.vis_art if plan.vis_art in arts else ""
     if plan.activity == LESSER_WORK:
@@ -442,7 +443,7 @@ def _effect_work(
             )
             if not plan.experimenting:
                 return [f"{why}."], None
-        room = ed.capacity(saga, device)
+        room = enchantment.capacity(saga, device)
         if room is not None and pawns > room:
             return [
                 f"{name} takes {pawns} pawns of vis; {device.name} holds {room}."
@@ -465,13 +466,16 @@ def _effect_work(
     # Instilling in an invested device.
     if effect.instilling_progress is None:
         return [f"{name} is already instilled."], None
-    if device.talisman and ed.talisman_magus_id(device) not in (None, magus.id):
+    if device.talisman and enchantment.talisman_magus_id(device) not in (
+        None,
+        magus.id,
+    ):
         return [f"No one else can instil effects in {device.name}, a talisman."], None
     if not device.pawns_opened:
         return [f"{device.name} has to be opened first."], None
-    if ed.pawns_used(device) > device.pawns_opened:
+    if enchantment.pawns_used(device) > device.pawns_opened:
         return [
-            f"{device.name}'s effects take {ed.pawns_used(device)} pawns; only "
+            f"{device.name}'s effects take {enchantment.pawns_used(device)} pawns; only "
             f"{device.pawns_opened} were opened."
         ], None
     why = ""
@@ -541,13 +545,15 @@ def hidden_powers(device: EnchantedDevice) -> list[tuple[int, str]]:
     """The powers an investigation can still find, weakest first: (level,
     effect id)."""
     found: list[tuple[int, str]] = [
-        (ed.modified_level(device, e), e.id) for e in device.effects if not e.known
+        (enchantment.modified_level(device, e), e.id)
+        for e in device.effects
+        if not e.known
     ]
     return sorted(found)
 
 
 def investigate(
-    work_: LabWork, plan: SeasonPlan, rng, saga: Saga | None = None
+    work_: LabWork, plan: SeasonPlan, rng: random.Random, saga: Saga | None = None
 ) -> list[str]:
     """Roll the investigation: Lab Total + a stress die against each hidden
     power, weakest first, until one fails. Records the found effect ids on

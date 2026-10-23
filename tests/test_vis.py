@@ -50,26 +50,10 @@ def test_held_lists_a_pool_by_art_and_a_covenants_stores():
     assert [h.label for h in vis.held(saga.covenants[0])] == ["Cask (Vim: 5 pawn(s))"]
 
 
-def test_destinations_are_everyone_else_who_holds_vis():
-    saga = _saga()
-    magus = saga.characters[0]
-    # Not himself, and not the grog (only a magus's sheet has Raw Vis).
-    assert vis.destinations(saga, magus) == [
-        ("Covenant: Keep", "covenant:cov1"),
-        ("Covenant: Far", "covenant:cov2"),
-        ("Laboratory: Tower", "laboratory:lab1"),
-    ]
-    assert ("Leandro", "character:mag1") in vis.destinations(saga, saga.covenants[0])
-    assert vis.parse_destination(saga, "laboratory:lab1") is saga.laboratories[0]
-
-
 def test_a_move_between_pools_records_both_diaries():
     saga = _saga()
     magus, lab = saga.characters[0], saga.laboratories[0]
     creo = vis.held(magus)[0]
-    assert vis.move_problem(creo, 4) == "Only 3 pawn(s) of Creo vis to move."
-    assert vis.move_problem(creo, 0) == "Move at least 1 pawn."
-    assert vis.move_problem(creo, 3) is None
     vis.move(saga, magus, creo, 3, lab)
     # An emptied Art leaves the pool.
     assert magus.raw_vis == {"vim": 1}

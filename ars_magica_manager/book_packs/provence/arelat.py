@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -44,11 +44,6 @@ KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(provence: Provence, key: str, name: str, **kw: Any) -> Neighbour:
@@ -956,7 +951,7 @@ def _coenobium(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "hint of later annexation, and no independent covenant has "
         "flourished in southern Provence in over a century.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: Castra Peccaius salt, from a brackish pond in the ruins on the Petit Rhone; 1 to 3 pawns of Corpus a year, dedicated to longevity (+2 to a Longevity Ritual's Creo Corpus total, one pawn a ritual); the land is leased from the Abbey of Psalmody through dependants",
         "Vis: the round sling stones of the Crau, a handful of Terram pawns a year, gathered by grogs as a punishment",
         "Vis: Imaginem in rare murex shells and kermes beetles at Toulon, taken by Aloysius Porphyri",
@@ -1015,7 +1010,7 @@ def _coenobium(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "about two centuries ago; it already existed when the Birds of "
         "Camargue joined it in 970.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Alazais never seems to vote in council but pulls the strings behind it, steering the covenant to her own ends.",
         "Dama made a Longevity Ritual for Alazais's lover, a folk witch; that bought the Praeco the Coenobium's tacit support, which she means to spend to bury any inquiry into the Presiding Quaesitors' deaths.",
         "The Coenobium drove Elisii Campi from the Alyscamps by spreading rumours of diabolists; many suspect hoplites it sponsored hunted down the survivors at Portus Termini.",
@@ -1316,7 +1311,7 @@ def _fraxinetum_redux(provence: Provence, b: Builder, tribunal: Tribunal) -> Non
         "someone builds another sea stronghold or takes an island off "
         "the south coast.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: scattered sources on the small islands of the south coast, the deserted Diedne site of Yf among them",
         "Income: a share of the pirates' raids on the coast and on Catalan and Genoese shipping",
         "Allies: the corsairs of the Hyères and their spies ashore",
@@ -1333,7 +1328,7 @@ def _fraxinetum_redux(provence: Provence, b: Builder, tribunal: Tribunal) -> Non
         what_matters=what_matters,
         secrets=paragraphs(
             hidden,
-            _lines(
+            joined_lines(
                 "Never declared: the Tribunal does not know it exists, and it has never voted.",
                 "Votes: 3 if it ever declared itself, unused.",
                 "Founded: the book gives no year; its magi descend from Fraxinetum (889-975).",
@@ -1946,14 +1941,6 @@ OCCITAN = "Occitan"
 PROVENCE = "Area Lore: Provençal Tribunal"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
 #: Each magus the book sketches without a stat block, by character key.
 PROFILES: dict[str, Profile] = {
     "alazais": P(
@@ -1986,7 +1973,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Atlantean Magic",
-            _art("Affinity with {art}", "aquam"),
+            vf_art("Affinity with {art}", "aquam"),
             "Blatant Gift",
             "Reclusive",
             "Warped by Magic",
@@ -2038,8 +2025,8 @@ PROFILES: dict[str, Profile] = {
             "Hunt": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "terram"),
-            _art("Puissant {art}", "terram"),
+            vf_art("Affinity with {art}", "terram"),
+            vf_art("Puissant {art}", "terram"),
             ("Minor Magical Focus", {"focus": "metal and blades"}),
             "Wrathful (Minor)",
             "Infamous",
@@ -2118,7 +2105,7 @@ PROFILES: dict[str, Profile] = {
             "Area Lore: Rhine Tribunal": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "auram"),
+            vf_art("Affinity with {art}", "auram"),
             "Driven (Minor)",
             "Overconfident (Minor)",
         ],
@@ -2165,7 +2152,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Spirit Familiar",
-            _art("Affinity with {art}", "aquam"),
+            vf_art("Affinity with {art}", "aquam"),
             "Educated (Islamic)",
             "Dark Secret",
             "Reckless (Minor)",

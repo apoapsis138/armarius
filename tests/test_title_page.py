@@ -63,7 +63,9 @@ def _keys(page: tp.TitlePage) -> list[str]:
     return [choice.key for choice in page.choices]
 
 
-def test_the_release_name_is_the_major_versions_name():
+def test_the_release_name_is_the_major_versions_name(monkeypatch):
+    # The sample changelog's versions are 2.x: name this one of them.
+    monkeypatch.setattr(tp, "__version__", "2.53.1")
     assert tp.release_name(CHANGELOG) == "Rego"
     assert tp.release_name("# Changelog\n\n## 1.0.0 — 2026-09-29\n") == ""
 

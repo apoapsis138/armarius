@@ -95,28 +95,6 @@ def held(holder: Holder) -> list[Held]:
     return [Held(_title(art), pawns) for art, pawns in sorted(holder.raw_vis.items())]
 
 
-def destinations(saga: Saga, source: Holder) -> list[tuple[str, str]]:
-    """Where vis can go, as (label, "kind:id"): every covenant, laboratory
-    and magus of the saga but the source itself."""
-    found: list[tuple[str, str]] = []
-    for covenant in saga.covenants:
-        if covenant is not source:
-            found.append((f"Covenant: {covenant.name}", f"{COVENANT}:{covenant.id}"))
-    for lab in saga.laboratories:
-        if lab is not source:
-            found.append((f"Laboratory: {lab.name}", f"{LABORATORY}:{lab.id}"))
-    for character in saga.characters:
-        # Only a magus's sheet has Raw Vis.
-        if character is not source and character.type == "magus":
-            found.append((f"{character.name}", f"{CHARACTER}:{character.id}"))
-    return found
-
-
-def parse_destination(saga: Saga, value: str) -> Holder | None:
-    kind, _, holder_id = value.partition(":")
-    return find_holder(saga, kind, holder_id)
-
-
 # ------------------------------------------------------------------ moving
 
 
@@ -248,14 +226,6 @@ def _record(saga: Saga, holder: Holder, text: str, art: str, pawns: int) -> None
         holder.diary.append(
             DiaryEntry(year=saga.current_year, season=saga.current_season, name=text)
         )
-
-
-def move_problem(what: Held, pawns: int) -> str | None:
-    if pawns < 1:
-        return "Move at least 1 pawn."
-    if pawns > what.pawns:
-        return f"Only {what.pawns} pawn(s) of {what.art} vis to move."
-    return None
 
 
 def move(

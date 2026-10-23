@@ -36,7 +36,7 @@ from ..arms import (
     shield_outline,
 )
 from ..markup import escape
-from ..models import Covenant, Saga
+from ..models import Covenant, Neighbour, Saga
 from .character_sheet import TextBlock, section
 from .editing import Run
 from .themes import TINCTURES, Palette
@@ -193,7 +193,7 @@ def shield_label(
 LARGE, SMALL = 110, 44
 
 
-def arms_section(record, p: Palette, run: Run) -> QWidget:
+def arms_section(record: Covenant | Neighbour, p: Palette, run: Run) -> QWidget:
     """Arms: the shield, its motto and, smaller under it, its blazon,
     with Edit. The motto is the bearer's own words, so it leads."""
     found = heraldry.arms_of(record)

@@ -26,6 +26,7 @@ from ..models import (
     Reason,
     Saga,
 )
+from ..rules import sites
 from ..sections import (
     ATTITUDE_SECTION,
     FAVOURS_SECTION,
@@ -485,7 +486,7 @@ def sketch_covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             ),
             *(
                 []
-                if places.place(saga, covenant.place_id) is not None
+                if sites.place(saga, covenant.place_id) is not None
                 else [DialogField("aura", "Aura", "int", covenant.aura)]
             ),
             places.where_field(saga, covenant, "Place"),

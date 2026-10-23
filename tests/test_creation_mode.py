@@ -47,7 +47,7 @@ def test_new_records_start_in_creation_and_old_saves_load_in_play():
     lab = creation.add_laboratory(saga, "Tower", 0, covenant.id)
     assert covenant.in_creation and character.in_creation and lab.in_creation
     # An older save has no mode: it loads In Play.
-    data = json.loads(storage.save_saga(saga).read_text(encoding="utf-8"))
+    data = json.loads(storage.save_saga(saga).path.read_text(encoding="utf-8"))
     for key in ("covenants", "characters", "laboratories"):
         for record in data[key]:
             del record["in_creation"]

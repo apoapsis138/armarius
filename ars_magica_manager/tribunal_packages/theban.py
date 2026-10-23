@@ -69,7 +69,8 @@ def archai(tribunal: Tribunal) -> list[dict[str, Any]]:
 def phylai(tribunal: Tribunal) -> dict[str, str]:
     """Each covenant's phyle, by covenant id."""
     found = data(tribunal, KEY).setdefault("phylai", {})
-    assert isinstance(found, dict)
+    if not isinstance(found, dict):
+        raise ValueError(f"The Tribunal's phylai should be a mapping, not {found!r}.")
     return found
 
 

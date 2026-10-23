@@ -17,7 +17,7 @@ Abilities at Gauntlet.
 
 from __future__ import annotations
 
-from .. import spells as spl
+from .. import catalog
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Laboratory, Saga, Spell
 from . import animal_aging, lab
@@ -26,6 +26,7 @@ from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import age, aging_age
 from .creation_later import DEFAULT_APPRENTICESHIP_AGE
 from .creation_xp import entries, is_art, spent
+from .scores import ability_level
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Magus Only -- "
@@ -114,12 +115,9 @@ def spell_entries(character: Character, step: str = SPELLS_STEP):
     return entries(character, step)
 
 
-def ability_level(character: Character, name: str) -> int:
-    ability = next((a for a in character.abilities if a.name == name), None)
-    return ability.level if ability is not None else 0
-
-
-def _check(label: str, ok: bool, detail: str, source: str = SOURCE, *, advice=False):
+def _check(
+    label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
+):
     status = "pass" if ok else ("advice" if advice else "warn")
     return Check("apprenticeship", label, status, detail, source)
 
@@ -128,7 +126,7 @@ def spell_checks(saga: Saga, character: Character, step: str) -> list[Check]:
     """Each spell at or under its creation cap (for `step`'s spells)."""
     found = []
     for entry in spell_entries(character, step):
-        spell = spl.find_spell(saga, entry.target)
+        spell = catalog.find_spell(saga, entry.target)
         if spell is None:
             found.append(
                 Check(
@@ -299,7 +297,12 @@ def gauntlet_targets(character: Character) -> list[str]:
 
 
 def _g(
-    label: str, ok: bool, detail: str, source: str = GAUNTLET_SOURCE, *, advice=False
+    label: str,
+    ok: bool,
+    detail: str,
+    source: str = GAUNTLET_SOURCE,
+    *,
+    advice: bool = False,
 ):
     status = "pass" if ok else ("advice" if advice else "warn")
     return Check("gauntlet", label, status, detail, source)

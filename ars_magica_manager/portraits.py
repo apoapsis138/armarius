@@ -25,7 +25,7 @@ def path(character: Character) -> Path | None:
     """The character's portrait file, if they have one and it is there."""
     if not character.portrait:
         return None
-    found = storage.PORTRAITS_DIR / character.portrait
+    found = storage.portraits_dir() / character.portrait
     return found if found.is_file() else None
 
 
@@ -40,7 +40,7 @@ def set_portrait(saga: Saga, character: Character, picture: Path) -> None:
     portrait, in place of any they had."""
     if picture.suffix.lower() not in SUFFIXES:
         raise ValueError(f"{picture.name} isn't a picture.")
-    folder = storage.PORTRAITS_DIR
+    folder = storage.portraits_dir()
     folder.mkdir(parents=True, exist_ok=True)
     name = file_name(saga, character, picture.suffix)
     old = path(character)

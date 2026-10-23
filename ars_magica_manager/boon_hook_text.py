@@ -8,6 +8,8 @@ Also the small title helpers the record sheets share ("Rooms (3)",
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+
 from . import catalog, sourcebooks
 from . import covenant_diary as cov_diary
 from . import sheet_text as st
@@ -52,7 +54,7 @@ def tier_text(entry: CovenantBoonHookDef) -> str:
     return f"{entry.tier} {entry.type} ({points:g} {'pt' if points == 1 else 'pts'})"
 
 
-def boon_hook_names(ids: list[str], by_id: dict[str, CovenantBoonHookDef]) -> str:
+def boon_hook_names(ids: list[str], by_id: Mapping[str, CovenantBoonHookDef]) -> str:
     """Names of catalog entries, each listed once (Road/Urban exist at both
     tiers), for prerequisite/exclusion notes."""
     return ", ".join(dict.fromkeys(by_id[i].name for i in ids if i in by_id))
@@ -134,7 +136,7 @@ def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
 
 
 def _boon_hook_rule_lines(
-    definition: CovenantBoonHookDef, by_id: dict[str, CovenantBoonHookDef]
+    definition: CovenantBoonHookDef, by_id: Mapping[str, CovenantBoonHookDef]
 ) -> list[str]:
     """A Boon's or Hook's prerequisites, exclusions, effects and how often
     it may be taken, one details-panel line each."""
@@ -159,7 +161,7 @@ def _boon_hook_rule_lines(
 
 
 def boon_hook_entry_text(
-    definition: CovenantBoonHookDef, by_id: dict[str, CovenantBoonHookDef]
+    definition: CovenantBoonHookDef, by_id: Mapping[str, CovenantBoonHookDef]
 ) -> str:
     """A catalog Boon or Hook as the picker shows it under the list: its
     type, tier, rules and book."""

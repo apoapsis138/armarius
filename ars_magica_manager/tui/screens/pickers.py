@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import asyncio
 from collections import Counter
-from collections.abc import Callable, Collection, Sequence
+from collections.abc import Callable, Collection, Iterable, Sequence
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -53,6 +53,7 @@ from ...models import (
     VirtueFlawInstance,
 )
 from ...rules import creation_access as access
+from ...rules.vf_eligibility import VirtueFlawChooser
 from .fields import FieldsDialog, ModalDialog
 from .prompts import (
     _ability_dialog,
@@ -477,7 +478,7 @@ class VirtueFlawPickerScreen(
     Opened on one side (Virtues or Flaws, from the section it was launched
     from), with a filter bar: that side or both (F2 cycles), a printed type,
     a tier, and whether to list the entries `chooser` can't take (F3), each
-    marked with why (catalog.VirtueFlawChooser). The search also matches
+    marked with why (VirtueFlawChooser). The search also matches
     each entry's summary, which shows under the list for the chosen row.
 
     Laboratories have their own, separate Virtue/Flaw catalog and picker
@@ -535,7 +536,7 @@ class VirtueFlawPickerScreen(
         taken: Sequence[VirtueFlawInstance] = (),
         *,
         side: str = "both",
-        chooser: catalog.VirtueFlawChooser | None = None,
+        chooser: VirtueFlawChooser | None = None,
         own_abilities: Sequence[str] = (),
         refusal: Callable[[VirtueFlawInstance], str] | None = None,
     ) -> None:
@@ -1312,7 +1313,7 @@ class _CsvDirectoryTree(DirectoryTree):
         super().__init__(path, id=id)
         self.suffix = suffix
 
-    def filter_paths(self, paths):
+    def filter_paths(self, paths: Iterable[Path]):
         return [
             path
             for path in paths
@@ -1445,7 +1446,7 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
 class _FolderTree(DirectoryTree):
     """Folders only (hidden ones left out)."""
 
-    def filter_paths(self, paths):
+    def filter_paths(self, paths: Iterable[Path]):
         return [p for p in paths if p.is_dir() and not p.name.startswith(".")]
 
 

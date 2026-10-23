@@ -2,7 +2,10 @@
 or down, and where it doesn't, round down (rules reference section 1,
 Default rounding; decision 29). Every division in the Rules Engine rounds
 through one of these, named by the rule that decides, so no rule rounds by
-accident."""
+accident.
+
+No screen uses round_toward_zero() yet: it is a rule for a screen still to
+come, and only the tests call it."""
 
 from __future__ import annotations
 

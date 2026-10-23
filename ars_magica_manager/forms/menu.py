@@ -78,9 +78,9 @@ from ..models import (
     Spell,
     Tribunal,
 )
+from ..rules import covenfolk, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
-from ..rules import lab_seasons
 from ..sections import LAB_TEXTS_SECTION
 from . import creation as creation_forms
 from . import creature as creature_forms
@@ -141,7 +141,7 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
     ),
     NodeKind.COVENANT: (
         RECORD_SECTION[NodeKind.COVENANT],
-        *(f"section-inh-{kind}" for kind in inh.AUTO_KINDS),
+        *(f"section-inh-{kind}" for kind in covenfolk.AUTO_KINDS),
         "section-eco-income",
         "section-eco-wealth",
         "section-pos-vis_store",
@@ -477,7 +477,7 @@ def familiar_binder(page: Page) -> Character | None:
     if (
         magus is None
         or magus.type != "magus"
-        or fam.familiar_of(page.saga, magus.id) is not None
+        or page.saga.familiar_of(magus.id) is not None
     ):
         return None
     return magus
@@ -810,7 +810,7 @@ def restore(saga: Saga, covenant: Covenant) -> Command:
     they start counting as an inhabitant again."""
     kinds = [
         kind
-        for kind in inh.AUTO_KINDS
+        for kind in covenfolk.AUTO_KINDS
         if inh.departed_entries_for_kind(saga, covenant, kind)
     ]
     entries = [
@@ -822,12 +822,12 @@ def restore(saga: Saga, covenant: Covenant) -> Command:
         return Refuse("Restore", "No departed Magi or Companions to restore.")
     who = inh.KIND_SINGULAR[kinds[0]] if len(kinds) == 1 else "Magus or Companion"
 
-    def label(pair: tuple[str, inh.InhabitantEntry]) -> str:
+    def label(pair: tuple[str, covenfolk.InhabitantEntry]) -> str:
         kind, entry = pair
         name = escape(entry.name) or "(unnamed)"
         return name if len(kinds) == 1 else f"{name} ({inh.KIND_SINGULAR[kind]})"
 
-    def choose(pair: tuple[str, inh.InhabitantEntry]) -> None:
+    def choose(pair: tuple[str, covenfolk.InhabitantEntry]) -> None:
         _, entry = pair
         if entry.record is not None:
             entry.record.departed = False
@@ -1264,7 +1264,7 @@ def _export_command(page: Page) -> Command:
     record = page.record_to_export()
     if record is None:
         return Refuse("Export", "Nothing here to export.")
-    return export_record(page.saga, record, storage.EXPORTS_DIR)
+    return export_record(page.saga, record, storage.exports_dir())
 
 
 def _update_command(page: Page) -> Command:
@@ -1348,8 +1348,8 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
-    "export_saga": lambda page: export_saga(page.saga, storage.EXPORTS_DIR),
-    "export_pack": lambda page: packs.export_pack(page.saga, storage.EXPORTS_DIR),
+    "export_saga": lambda page: export_saga(page.saga, storage.exports_dir()),
+    "export_pack": lambda page: packs.export_pack(page.saga, storage.exports_dir()),
     "host_saga": lambda _page: hosting_forms.host_form(),
     "stop_hosting": lambda _page: hosting_forms.stop_hosting(),
     "update_record": _update_command,

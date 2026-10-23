@@ -23,10 +23,10 @@ assisting in someone else's (planned on the assistant's sheet).
 
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING
 
 from .. import catalog
-from ..laboratories import lab_characteristic_total
 from ..models import (
     Character,
     Laboratory,
@@ -36,6 +36,7 @@ from ..models import (
     new_instance_id,
 )
 from . import lab
+from .lab_stats import lab_characteristic_total
 
 if TYPE_CHECKING:
     from .lab_seasons import LabWork
@@ -191,7 +192,9 @@ def work(
     )
 
 
-def roll(work_: LabWork, magus: Character, plan: SeasonPlan, rng, saga) -> list[str]:
+def roll(
+    work_: LabWork, magus: Character, plan: SeasonPlan, rng: random.Random, saga: Saga
+) -> list[str]:
     """The season's stress die + Intelligence + Magic Theory (and for a
     take-over, the Perception + Magic Theory roll against 3 x the old
     Refinement). A die typed on the plan is used for the first roll."""
@@ -241,7 +244,9 @@ def roll(work_: LabWork, magus: Character, plan: SeasonPlan, rng, saga) -> list[
     return notes
 
 
-def _move_by_spell(work_: LabWork, magus: Character, plan: SeasonPlan, rng, saga):
+def _move_by_spell(
+    work_: LabWork, magus: Character, plan: SeasonPlan, rng: random.Random, saga: Saga
+):
     """Moving by spell: Perception + Finesse + stress die against 9 + 3 x
     Refinement (+3 if Highly Organized, -3 if Disorganized, + the room's
     difference typed as the plan's Other modifier). Failure: Disorganized, or

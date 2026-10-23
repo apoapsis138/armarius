@@ -132,17 +132,6 @@ def test_other_kinds_list_only_their_records_in_order():
     assert pos.entries_for_kind(saga, cov, "item") == []
 
 
-def test_total_pawns_adds_up_a_vis_list():
-    saga, cov = _saga()
-    cov.possessions += [
-        Possession(id="a", kind="vis_store", name="A", art="Vim", pawns=9),
-        Possession(id="b", kind="vis_store", name="B", art="Creo", pawns=3),
-        Possession(id="c", kind="vis_source", name="C", art="Vim", pawns=4),
-    ]
-    assert pos.total_pawns(saga, cov, "vis_store") == 12
-    assert pos.total_pawns(saga, cov, "vis_source") == 4
-
-
 # --------------------------------------------------------------------- text
 
 
@@ -538,7 +527,7 @@ def test_book_text_describes_the_chosen_entry():
 def test_a_new_save_has_no_vis_stock():
     # The field was migrated away but still written (as {}) every save.
     saga = Saga(id="s", name="S", covenants=[Covenant(id="c", saga_id="s", name="C")])
-    path = storage.save_saga(saga)
+    path = storage.save_saga(saga).path
     assert (
         "vis_stock" not in json.loads(path.read_text(encoding="utf-8"))["covenants"][0]
     )

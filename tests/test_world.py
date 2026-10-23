@@ -62,7 +62,7 @@ def test_no_attitude_counts_as_neutral():
     assert world.attitude_toward(covenant, "arnhaven") is covenant.attitudes[0]
 
 
-def test_the_seal_and_reasons_read_as_on_the_mockups():
+def test_the_seal_and_working_read_as_on_the_mockups():
     attitude = Attitude(
         "arnhaven",
         0,
@@ -70,15 +70,9 @@ def test_the_seal_and_reasons_read_as_on_the_mockups():
     )
     assert world.seal_markup(-1) == "[$text-warning]◉ −1 Wary[/]"
     assert world.seal_markup(0) == "[$label]◉ 0 Neutral[/]"
-    assert world.reason_rows(attitude) == [
-        (None, "Started       0"),
-        (0, "Spring 1221  −2  Took the ford source"),
-        (1, "—            +1  Apologised"),
-    ]
     assert world.attitude_working(attitude) == (
         "Started at 0; −2 Took the ford source; +1 Apologised"
     )
-    assert world.reason_rows(None) == []
 
 
 def test_favours_are_open_until_repaid():

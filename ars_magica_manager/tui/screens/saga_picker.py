@@ -202,7 +202,6 @@ class SagaPickerScreen(Screen[None]):
             folder, move = result
             notes = paths.move_user_data(old, folder) if move else []
             paths.remember_data_dir(folder)
-            storage.use_data_dir(folder)
             self.query_one("#picker-folder", Static).update(self._folder_text())
             await self.refresh_list()
             moved = sum(1 for note in notes if note.startswith("Moved"))

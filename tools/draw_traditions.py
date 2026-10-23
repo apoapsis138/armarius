@@ -1302,63 +1302,6 @@ def outline_tri(
     return outer.subtracted(inner)
 
 
-def _blaze(cx: float, base: float, w: float, h: float) -> QPainterPath:
-    """A flame with three licking tongues, the middle one tallest."""
-    p = QPainterPath()
-    p.moveTo(cx - w * 0.5, base)
-    p.cubicTo(
-        cx - w * 0.6,
-        base - h * 0.3,
-        cx - w * 0.5,
-        base - h * 0.5,
-        cx - w * 0.36,
-        base - h * 0.7,
-    )
-    p.cubicTo(
-        cx - w * 0.3,
-        base - h * 0.55,
-        cx - w * 0.18,
-        base - h * 0.5,
-        cx - w * 0.14,
-        base - h * 0.55,
-    )
-    p.cubicTo(
-        cx - w * 0.2,
-        base - h * 0.8,
-        cx - w * 0.05,
-        base - h * 0.9,
-        cx + w * 0.04,
-        base - h,
-    )
-    p.cubicTo(
-        cx + w * 0.02,
-        base - h * 0.8,
-        cx + w * 0.14,
-        base - h * 0.62,
-        cx + w * 0.2,
-        base - h * 0.58,
-    )
-    p.cubicTo(
-        cx + w * 0.26,
-        base - h * 0.66,
-        cx + w * 0.3,
-        base - h * 0.74,
-        cx + w * 0.4,
-        base - h * 0.78,
-    )
-    p.cubicTo(
-        cx + w * 0.52,
-        base - h * 0.5,
-        cx + w * 0.62,
-        base - h * 0.25,
-        cx + w * 0.5,
-        base,
-    )
-    p.quadTo(cx, base + h * 0.08, cx - w * 0.5, base)
-    p.closeSubpath()
-    return p
-
-
 def _tongue(points: Sequence[Point], w: float) -> QPainterPath:
     """A tongue of flame: a band along the curve, tapering to its tip."""
     return union_of(

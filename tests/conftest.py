@@ -4,7 +4,7 @@ import sys
 import pytest
 from tiers import is_screen_test_file
 
-from ars_magica_manager import catalog, neighbour_filter, paths, settings, storage
+from ars_magica_manager import catalog, neighbour_filter, paths, storage
 
 # The desktop version's sounds stay silent under test (gui/sounds.py).
 os.environ["ARMARIUS_SOUNDS"] = "off"
@@ -28,24 +28,13 @@ def pytest_collection_modifyitems(config, items):
 def isolated_sagas_dir(tmp_path, monkeypatch):
     """Every test reads and writes sagas in its own temp dir, never
     data/sagas/ -- which also makes the suite safe to run in parallel."""
-    monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
-    # Exports ('x' on a sheet) go to a temp folder too.
-    monkeypatch.setattr(storage, "EXPORTS_DIR", tmp_path / "exports")
-    # And portraits chosen for a character.
-    monkeypatch.setattr(storage, "PORTRAITS_DIR", tmp_path / "portraits")
+    # The data folder in use is the test's temp dir: its sagas, exports
+    # ('x' on a sheet), portraits and settings all go there.
+    monkeypatch.setattr(paths, "_in_use", tmp_path)
     # What this "copy" of the app last saw of each saga.
     monkeypatch.setattr(storage, "_last_seen", {})
     # And how each saga's Region lists are filtered.
     monkeypatch.setattr(neighbour_filter, "_CURRENT", {})
-
-
-@pytest.fixture(autouse=True)
-def isolated_settings_path(tmp_path, monkeypatch):
-    # A sibling dir, not tmp_path itself -- isolated_sagas_dir points
-    # storage.SAGAS_DIR at tmp_path and globs it for "*.json".
-    monkeypatch.setattr(
-        settings, "SETTINGS_PATH", tmp_path / "config" / "app_settings.json"
-    )
 
 
 @pytest.fixture(autouse=True)

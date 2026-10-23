@@ -38,7 +38,6 @@ from pathlib import Path
 from typing import Any
 
 from . import __version__, catalog, places, storage
-from . import spells as spl
 from .files import write_atomic
 from .models import (
     Book,
@@ -199,7 +198,7 @@ def bundle_data(
     for spell_id in wanted:
         if spell_id in shared or spell_id in carried:
             continue
-        found = spl.find_spell(saga, spell_id)
+        found = catalog.find_spell(saga, spell_id)
         if found is not None and all(s.id != found.id for s in spells):
             spells.append(found)
     held = {
@@ -539,8 +538,7 @@ def _map_entries(job: _Import) -> None:
                 continue
             new_id = ids.new(entry.id, entry.name)
             job.entry_map[entry.id] = new_id
-            entry.id = new_id
-            added.append(entry)
+            added.append(replace(entry, id=new_id))
         job.plan.custom[key] = added
 
 
@@ -944,7 +942,8 @@ def plan_import(
     id) gives records in the file the id they are to have, whatever is
     free: updating a record from a file keeps the record's own id. A
     pack's records are matched by name to the target's own."""
-    source = Saga.from_dict(data["saga"])  # runs the load-time migrations
+    # Runs the load-time migrations.
+    source = Saga.from_dict(data["saga"], lab_feature_names=catalog.lab_feature_names())
     job = _Import(
         source=source,
         target=target,

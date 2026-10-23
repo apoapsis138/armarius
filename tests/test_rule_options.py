@@ -24,7 +24,6 @@ def test_an_unknown_option_is_a_mistake():
 
 
 def test_turning_an_option_on_is_saved(tmp_path, monkeypatch):
-    monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
     saga = Saga(id="s", name="S", rule_options={"simple_dice_only": True})
     storage.save_saga(saga)
     loaded = storage.load_saga("s")

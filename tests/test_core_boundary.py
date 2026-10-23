@@ -127,3 +127,119 @@ def test_the_check_catches_one_front_end_importing_the_other():
     assert _breaks_the_boundary("textual.app", "gui")
     assert not _breaks_the_boundary("textual.app", "tui")
     assert not _breaks_the_boundary(f"{PACKAGE}.form_spec", "gui")
+
+
+# -- the core's layers --
+
+#: The core's layers, lowest first: a module may import its own layer or
+#: one below it, never one above. The package itself (`ROOT`, `DATA_DIR`,
+#: the version) is in the lowest.
+LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
+    (
+        "models",
+        frozenset({"", "arts", "markup", "models", "paths", "totals", "rules.xp"}),
+    ),
+    # The catalogs and the books they come from: data the rules look up.
+    ("data", frozenset({"book_kinds", "catalog", "sourcebooks"})),
+    # The rules, and the top-level modules that are rules too (a covenant's
+    # Boons and Hooks, what a book is worth, raw vis): they keep to the
+    # layers below.
+    ("rules", frozenset({"rules", "book_value", "covenants", "vis"})),
+    ("app", frozenset()),  # every other top-level module and package
+    # What a page shows and does: the sheets and forms, and the pages
+    # built from them (the hall and the meeting held in it, Ahead, the
+    # saga overview, the creation worksheet, the printed sheets, each
+    # section's verbs).
+    (
+        "sheets",
+        frozenset(
+            {
+                "acta",
+                "actions",
+                "ahead",
+                "forms",
+                "hall",
+                "hibernia_meeting",
+                "meeting",
+                "print_layout",
+                "ruins",
+                "saga_overview",
+                "sheets",
+                "theban_meeting",
+                "troupe",
+                "worksheet",
+                "worksheet_feedback",
+            }
+        ),
+    ),
+    ("front-ends", frozenset(FRONT_ENDS)),
+)
+APP = next(i for i, (name, _) in enumerate(LAYERS) if name == "app")
+
+
+def _layer(module: str) -> int:
+    """The layer of `module`: its own entry in LAYERS (`rules.xp`), else
+    its top-level module's or package's."""
+    parts = module.split(".")[1:]
+    for name in (".".join(parts[:2]), parts[0] if parts else ""):
+        for i, (_, tops) in enumerate(LAYERS):
+            if name in tops:
+                return i
+    return APP
+
+
+def _runs_code(path: Path) -> bool:
+    """Whether a package's `__init__` imports anything (a docstring alone
+    doesn't tie its importer to the package's layer)."""
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    return any(isinstance(n, (ast.Import, ast.ImportFrom)) for n in ast.walk(tree))
+
+
+def _upward_imports(root: Path = ROOT) -> set[str]:
+    """Every import of a module in a higher layer than the importer's.
+    `from package import module` counts the package only when its
+    `__init__` imports something."""
+    paths = {_module_name(path, root): path for path in root.rglob("*.py")}
+    found = set()
+    for name, path in paths.items():
+        targets = set(_imports(path, root)) & set(paths)
+        for target in targets:
+            inside = [t for t in targets if t.startswith(target + ".")]
+            empty = paths[target].name == "__init__.py" and not _runs_code(
+                paths[target]
+            )
+            if inside and empty:
+                continue
+            if _layer(target) > _layer(name):
+                found.add(f"{name} -> {target}")
+    return found
+
+
+def test_no_import_points_up_a_layer():
+    found = sorted(_upward_imports())
+    assert not found, (
+        "These import a module in a higher layer (see LAYERS): "
+        + "; ".join(found)
+        + ". Move what is needed down a layer, or pass it in as an argument."
+    )
+
+
+def test_the_layer_check_catches_an_upward_import(tmp_path):
+    root = tmp_path / PACKAGE
+    (root / "models").mkdir(parents=True)
+    (root / "rules").mkdir()
+    (root / "__init__.py").write_text("")
+    (root / "catalog.py").write_text("")
+    (root / "rules" / "__init__.py").write_text("")
+    (root / "rules" / "xp.py").write_text("from .. import catalog\n")
+    (root / "models" / "__init__.py").write_text(
+        "def f():\n    from ..rules import xp\n"
+    )
+    (root / "rules" / "lab.py").write_text("")
+    (root / "models" / "laboratory.py").write_text("from ..rules import lab\n")
+    # rules.xp is in the lowest layer, with models; rules.lab is not, and
+    # the rules package's empty __init__ isn't counted.
+    assert _upward_imports(root) == {
+        f"{PACKAGE}.models.laboratory -> {PACKAGE}.rules.lab",
+        f"{PACKAGE}.rules.xp -> {PACKAGE}.catalog",
+    }

@@ -7,6 +7,7 @@ import pytest
 
 from ars_magica_manager import covenant_templates as templates
 from ars_magica_manager.models import Covenant, Saga
+from ars_magica_manager.rules import base_covenants
 from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.rules import creation_covenant as cov
 
@@ -16,7 +17,7 @@ def _saga() -> tuple[Saga, Covenant]:
     return Saga(id="s", name="S", covenants=[covenant]), covenant
 
 
-@pytest.mark.parametrize("base", templates.BASE_COVENANTS, ids=lambda b: b.key)
+@pytest.mark.parametrize("base", base_covenants.BASE_COVENANTS, ids=lambda b: b.key)
 def test_a_base_covenant_spends_its_build_points(base):
     """Its books and vis, plus the Lab Text and enchanted item levels it
     leaves to choose, come to exactly its Build Points."""
@@ -28,7 +29,7 @@ def test_a_base_covenant_spends_its_build_points(base):
         base.power_level,
         base.build_points,
     )
-    books, vis = templates.placeholders(saga, covenant)
+    books, vis = base_covenants.placeholders(saga, covenant)
     assert len(books) == (
         len(base.art_summae) + len(base.ability_summae) + len(base.tractatus)
     )
@@ -37,7 +38,10 @@ def test_a_base_covenant_spends_its_build_points(base):
 
 def test_filling_in_and_choosing_another_base_covenant():
     saga, covenant = _saga()
-    weak, medium = templates.BASE_BY_KEY["weak"], templates.BASE_BY_KEY["medium"]
+    weak, medium = (
+        base_covenants.BASE_BY_KEY["weak"],
+        base_covenants.BASE_BY_KEY["medium"],
+    )
     templates.apply(saga, covenant, weak)
     found = {c.label: c for c in rules.checks(saga, covenant, "build_points")}
     placeholders = found["The base covenant's placeholders are filled in"]
@@ -48,10 +52,10 @@ def test_filling_in_and_choosing_another_base_covenant():
     lab = found["The base covenant's Lab Texts chosen"]
     assert (lab.status, lab.detail) == ("advice", "0 of 200 levels")
     # The troupe chooses one book's Art; another base covenant keeps it.
-    books, _ = templates.placeholders(saga, covenant)
+    books, _ = base_covenants.placeholders(saga, covenant)
     books[0].art = "Creo"
     templates.apply(saga, covenant, medium)
-    books, vis = templates.placeholders(saga, covenant)
+    books, vis = base_covenants.placeholders(saga, covenant)
     assert len(books) == 8 + 3 + 7  # Medium: Art summae, Ability summae, tractatus
     assert any(b.art == "Creo" for b in saga.books)
     assert covenant.base_covenant == "medium"

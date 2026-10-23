@@ -129,7 +129,9 @@ def free_scores_missing(character: Character) -> list[str]:
     return sorted(free_score_abilities(character) - recorded)
 
 
-def _check(label: str, ok: bool, detail: str, source: str = SOURCE, *, advice=False):
+def _check(
+    label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
+):
     status = "pass" if ok else ("advice" if advice else "warn")
     return Check("later_life", label, status, detail, source)
 

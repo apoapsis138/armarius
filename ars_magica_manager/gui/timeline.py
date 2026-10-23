@@ -15,6 +15,7 @@ from PySide6.QtGui import (
     QFont,
     QPainter,
     QPen,
+    QShowEvent,
     QStandardItem,
     QStandardItemModel,
 )
@@ -212,7 +213,7 @@ class SeasonTimeline(QTableView):
         )
         self.selectionModel().currentChanged.connect(self._chosen)
 
-    def showEvent(self, event) -> None:
+    def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
         # Open on now: the current season toward the right, the past to
         # its left.

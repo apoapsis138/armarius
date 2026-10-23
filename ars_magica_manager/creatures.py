@@ -12,8 +12,8 @@ kind of Character; the rules here are plain functions."""
 
 from __future__ import annotations
 
-from . import places, references, storage, world
-from .models import BodyVis, Creature, CreaturePower, Neighbour, Saga
+from . import references, storage, world
+from .models import BodyVis, Creature, CreaturePower, Saga
 from .rules import derived, scores
 
 #: What the Bestiary calls a creature with no realm.
@@ -85,12 +85,6 @@ def penetration(creature: Creature, power: CreaturePower) -> int:
 def wound_ranges(creature: Creature) -> list[tuple[str, int, int | None]]:
     """The creature's Damage Table, by its Size."""
     return derived.wound_ranges(creature.size)
-
-
-def found_at(saga: Saga, place: Neighbour) -> list[Creature]:
-    """The creatures found at `place` or at any place inside it."""
-    inside = {place.id} | places.within(saga, place)
-    return [c for c in saga.creatures if c.place_id in inside]
 
 
 def linked_from(saga: Saga, creature: Creature) -> list[str]:

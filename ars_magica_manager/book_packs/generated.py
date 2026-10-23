@@ -298,7 +298,7 @@ def rank(summary: str, age: int, source: str = "GotF") -> str:
     return "Hermetic Magus"
 
 
-def _params(entries, name: str, key: str) -> list[str]:
+def _params(entries: Sequence[Any], name: str, key: str) -> list[str]:
     return [
         e[1][key].lower()
         for e in entries

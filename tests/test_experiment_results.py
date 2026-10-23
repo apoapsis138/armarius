@@ -3,8 +3,7 @@ experiment, and what it does to the season and the creation."""
 
 from test_experiment import _Dice, _plan, _saga
 
-from ars_magica_manager import seasons
-from ars_magica_manager import spells as spl
+from ars_magica_manager import catalog, seasons
 from ars_magica_manager.commands import Form
 from ars_magica_manager.forms import experiment_results as er
 from ars_magica_manager.models import (
@@ -43,7 +42,7 @@ def _values(form: Form, **answers):
 
 def _bolt(saga):
     (known,) = saga.character("m").spells_known
-    return spl.find_spell(saga, known.spell_id)
+    return catalog.find_spell(saga, known.spell_id)
 
 
 def test_nothing_to_decide_asks_nothing():
@@ -149,7 +148,8 @@ def test_a_bonus_spell_opens_the_spell_form_and_is_learned():
     assert spell_form.apply(values | {"level": 5}) == "done"
     seasons.apply(saga, worked)
     names = {
-        spl.find_spell(saga, k.spell_id).name for k in saga.character("m").spells_known
+        catalog.find_spell(saga, k.spell_id).name
+        for k in saga.character("m").spells_known
     }
     assert names == {"Bolt", "Spark"}
     assert any(b.name.endswith("Spark") for b in saga.books)

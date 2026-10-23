@@ -11,6 +11,9 @@ caller (or a test) decides the source of chance.
 
 With the saga's "Simple dice only" option on (rules.options), every stress
 die is rolled as a simple die.
+
+No screen uses botch_chance(), ease_factor_label() yet: they are the rules
+for screens still to come, and only the tests call them.
 """
 
 from __future__ import annotations

@@ -18,7 +18,6 @@ from .. import covenant_templates as templates
 from .. import covenants as cov_rules
 from .. import inhabitants as inh
 from .. import sheet_text as st
-from .. import spells as spl
 from ..arts import ART_DESCRIPTIONS, ARTS
 from ..commands import (
     Act,
@@ -52,6 +51,7 @@ from ..models import (
     VirtueFlawInstance,
     new_instance_id,
 )
+from ..rules import base_covenants, grog_aging, library
 from ..rules import creation as rules
 from ..rules import creation_access as access
 from ..rules import creation_character as cc
@@ -62,7 +62,6 @@ from ..rules import creation_magus as magus
 from ..rules import creation_packages as packages
 from ..rules import creation_tradition as ct
 from ..rules import creation_xp as cx
-from ..rules import grog_aging
 from ..rules import xp as xp_rules
 from . import creation as creation_forms
 from . import spell as spell_forms
@@ -580,7 +579,7 @@ def learn_spell(saga: Saga, character: Character, step: str) -> Choose:
         for choice in spell_forms.spell_choices(
             saga, {k.spell_id for k in character.spells_known}
         ):
-            spell = spl.find_spell(saga, choice.value)
+            spell = catalog.find_spell(saga, choice.value)
             if spell is None:
                 continue
             cap = magus.spell_cap(saga, character, spell)
@@ -597,7 +596,7 @@ def learn_spell(saga: Saga, character: Character, step: str) -> Choose:
         return found
 
     def chosen(spell_id: str) -> Command | None:
-        spell = spl.find_spell(saga, spell_id)
+        spell = catalog.find_spell(saga, spell_id)
         if spell is None:
             return None
         if spell.level is not None:
@@ -632,7 +631,7 @@ def spell_level_form(character: Character, step: str, spell: Spell) -> Form:
 
 
 def forget_spell(saga: Saga, character: Character, entry: CreationXp) -> Confirm:
-    spell = spl.find_spell(saga, entry.target)
+    spell = catalog.find_spell(saga, entry.target)
     name = escape(spell.name if spell else entry.target)
     return Confirm(
         f"Forget {name}?",
@@ -963,9 +962,9 @@ def base_covenant(saga: Saga, covenant: Covenant) -> Choose:
     Points and placeholders for its books and vis, after asking (and
     warning when another is in use)."""
 
-    def chosen(base: templates.BaseCovenant) -> Confirm:
-        earlier = templates.BASE_BY_KEY.get(covenant.base_covenant)
-        books, vis = templates.placeholders(saga, covenant)
+    def chosen(base: base_covenants.BaseCovenant) -> Confirm:
+        earlier = base_covenants.BASE_BY_KEY.get(covenant.base_covenant)
+        books, vis = base_covenants.placeholders(saga, covenant)
         message = (
             f"Start {escape(covenant.name)} from the {base.name}: Power Level "
             f"{base.power_level}, {base.build_points} Build Points, and "
@@ -994,7 +993,7 @@ def base_covenant(saga: Saga, covenant: Covenant) -> Choose:
                 b,
                 escape(templates.summary(b)),
             )
-            for b in templates.BASE_COVENANTS
+            for b in base_covenants.BASE_COVENANTS
         ],
         chosen,
     )
@@ -1007,14 +1006,14 @@ def saga_book(saga: Saga, covenant: Covenant) -> Choose:
     cap = power.max_level if power is not None else None
 
     def choice(book: Book) -> Choice:
-        level = bk.level_of(book, saga)
+        level = library.level_of(book, saga)
         return Choice(
             f"{escape(book.name)}  [dim]{escape(book.type)}  L"
             f"{level if level is not None else '-'} Q{book.quality or '-'}  "
-            f"{bk.cost(book, saga)} BP[/]",
+            f"{library.cost(book, saga)} BP[/]",
             book,
             bk.detail_text(saga, book),
-            f"{book.type} {bk.subject(book, saga)} {book.author} {book.language}",
+            f"{book.type} {library.subject(book, saga)} {book.author} {book.language}",
         )
 
     def books(over: bool) -> list[Choice]:

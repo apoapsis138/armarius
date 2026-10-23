@@ -3,26 +3,30 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from . import paths
 from .files import write_atomic
 
-SETTINGS_PATH = paths.data_dir() / paths.SETTINGS
+
+def settings_path() -> Path:
+    """The settings file, in the data folder in use."""
+    return paths.data_dir() / paths.SETTINGS
 
 
-def load_settings() -> dict:
+def load_settings() -> dict[str, object]:
     """The saved settings; {} when there are none, or when the file can't be
     read as a JSON object (settings are only conveniences, so a damaged file
     must never stop the app starting)."""
     try:
-        data = json.loads(SETTINGS_PATH.read_text(encoding="utf-8"))
+        data = json.loads(settings_path().read_text(encoding="utf-8"))
     except OSError, ValueError:
         return {}
     return data if isinstance(data, dict) else {}
 
 
-def save_settings(settings: dict) -> None:
-    write_atomic(SETTINGS_PATH, json.dumps(settings, indent=2))
+def save_settings(settings: dict[str, object]) -> None:
+    write_atomic(settings_path(), json.dumps(settings, indent=2))
 
 
 def update_settings(**changes: object) -> None:

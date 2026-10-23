@@ -9,6 +9,9 @@ buy and how much there is, and the checks on what the character spent
   wilds teach (DE: no Language score; Grogs: the Feral childhood).
 
 Rules: reference/rules-engine-reference.md §3.
+
+No screen uses childhood_blanks(), fill_childhood() yet: they are the rules
+for screens still to come, and only the tests call them.
 """
 
 from __future__ import annotations

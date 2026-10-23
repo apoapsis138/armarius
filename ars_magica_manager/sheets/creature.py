@@ -5,16 +5,15 @@ whole stat block as the books print one."""
 
 from __future__ import annotations
 
-from typing import Any
-
 from .. import connections, creatures, places, references
 from .. import possessions as pos
 from ..forms import virtue as virtue_forms
 from ..grids import Grid
 from ..markup import escape
 from ..models import REALMS, Creature, Saga
+from ..references import Fact
+from ..rules import sites
 from . import character as cs
-from .character import Fact
 
 #: The Characteristics as a stat block abbreviates them, in its order.
 CHARACTERISTICS: tuple[tuple[str, str], ...] = (
@@ -117,22 +116,13 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
         Fact(
             "Found at",
             places.where_text(saga, c.place_id, c.place_level),
-            references.refs(places.place(saga, c.place_id)),
+            references.refs(sites.place(saga, c.place_id)),
         ),
         Fact("Detail", c.detail),
         Fact("Source", c.source),
-        *rules_facts(saga, c),
+        *connections.rules_facts(saga, c),
         *connections.links_back(saga, c),
     ]
-
-
-def rules_facts(saga: Saga, record: Any) -> list[Fact]:
-    """The neighbours `record` rules or leads, each linked; none while it
-    rules none."""
-    ruled = references.ruled_by(saga, record)
-    if not ruled:
-        return []
-    return [Fact("Rules", ", ".join(n.name for n in ruled), references.refs(*ruled))]
 
 
 def infernal_facts(creature: Creature) -> list[Fact]:

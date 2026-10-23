@@ -5,7 +5,6 @@ import pytest
 from support import strip_markup
 
 from ars_magica_manager import economics as eco
-from ars_magica_manager import inhabitants as inh
 from ars_magica_manager.models import (
     INCOME_TYPE_DEFAULTS,
     INCOME_TYPES,
@@ -22,6 +21,7 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import covenfolk
 from ars_magica_manager.rules.xp import ability_xp
 
 
@@ -86,7 +86,7 @@ def test_summarize_uses_inhabitants_points_formula():
     just checks summarize() picks it up correctly."""
     saga, cov = _saga("Summer")
     cov.inhabitants = [Inhabitant(id="t", kind="turb", name="Turb", quantity=2)]
-    assert eco.summarize(saga, cov).inhabitant_points == inh.inhabitant_points(
+    assert eco.summarize(saga, cov).inhabitant_points == covenfolk.inhabitant_points(
         saga, cov
     )
 

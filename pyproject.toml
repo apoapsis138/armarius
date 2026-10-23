@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "3.3.0"
+version = "3.3.1"
 description = "Armarius, a saga manager for Ars Magica: a GM-facing tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -50,12 +50,15 @@ gui = [
 ]
 
 [tool.ruff.lint]
-ignore = ["UP045", "ISC004"]
+# TRY004: data of the wrong shape read from a save raises ValueError, as
+# loading does, so one handler covers a damaged file (CLAUDE.md).
+ignore = ["UP045", "ISC004", "TRY004"]
 # Too many statements in one function (default limit 50). The functions
 # already over it carry a noqa until they are broken up.
 extend-select = ["PLR0915"]
 
 [tool.pyright]
+reportMissingParameterType = "error"
 include = ["ars_magica_manager", "tools", "main.py"]
 typeCheckingMode = "basic"
 pythonVersion = "3.14"

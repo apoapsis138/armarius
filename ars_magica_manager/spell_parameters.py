@@ -19,7 +19,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from . import spells as spl
+from . import catalog
 from .models import Character, Saga
 from .rules import options, spell_levels
 from .rules.spell_levels import ExtraParameter
@@ -81,7 +81,7 @@ def parse_grant(text: str) -> list[ExtraParameter]:
 
 def _known_spells(saga: Saga, magus: Character):
     for known in magus.spells_known:
-        spell = spl.find_spell(saga, known.spell_id)
+        spell = catalog.find_spell(saga, known.spell_id)
         if spell is not None:
             yield spell
     yield from magus.invented_spells

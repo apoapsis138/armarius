@@ -141,22 +141,6 @@ def attitude_working(attitude: Attitude | None) -> str:
     return "; ".join(parts)
 
 
-def reason_rows(attitude: Attitude | None) -> list[tuple[int | None, str]]:
-    """An attitude's reasons as (index, "Spring 1221  +1  What happened")
-    rows, after a first row for the score it started at."""
-    if attitude is None:
-        return []
-    rows: list[tuple[int | None, str]] = [
-        (None, f"{'Started':<12} {signed(attitude.start):>2}")
-    ]
-    for index, reason in enumerate(attitude.reasons):
-        when = when_text(reason.year, reason.season) or "—"
-        rows.append(
-            (index, f"{when:<12} {signed(reason.change):>2}  {escape(reason.what)}")
-        )
-    return rows
-
-
 def when_text(year: int | None, season: str) -> str:
     """ "Spring 1221", "1221", or "" when there is no year."""
     if year is None:

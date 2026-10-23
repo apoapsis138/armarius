@@ -34,6 +34,7 @@ from ..models import (
     Covenant,
     Saga,
 )
+from ..rules import library
 from . import spell as spell_forms
 
 #: The Codex select's value for binding the book into a new codex.
@@ -71,10 +72,12 @@ class _BookShows:
         return values.get("type") or ""
 
     def art_book(self, values: dict[str, Any]) -> bool:
-        return bk.is_art_book(self.book_type(values), values.get("subject_kind") or "")
+        return library.is_art_book(
+            self.book_type(values), values.get("subject_kind") or ""
+        )
 
     def ability_book(self, values: dict[str, Any]) -> bool:
-        return bk.is_ability_book(
+        return library.is_ability_book(
             self.book_type(values), values.get("subject_kind") or ""
         )
 
@@ -92,11 +95,11 @@ class _BookShows:
 
     def needs_level(self, values: dict[str, Any]) -> bool:
         kind = self.book_type(values)
-        if kind not in bk.SPELL_TYPES:
+        if kind not in library.SPELL_TYPES:
             return bk.has_level(kind)
         if not self.of_spell(values):
             return True  # an enchantment's, a ritual's: the text's own
-        spell = spl.find_spell(self.saga, values.get("spell_id"))
+        spell = catalog.find_spell(self.saga, values.get("spell_id"))
         if spell is None:
             # No spell chosen: ask for the spell first -- unless this is a book
             # whose typed spell is unknown, which keeps its own Level.
@@ -149,11 +152,11 @@ def _book_subject_fields(
 
     # A Lab Text / Casting Tablet takes its spell's Level; only a General (or
     # not yet chosen) spell needs the book's own.
-    linked = bk.book_spell(saga, book) if book is not None else None
+    linked = library.book_spell(saga, book) if book is not None else None
     spell_id = linked.id if linked is not None else None
 
     def spell_display(chosen_id: str) -> str:
-        spell = spl.find_spell(saga, chosen_id)
+        spell = catalog.find_spell(saga, chosen_id)
         if spell is None:
             return chosen_id
         return f"{spell.name}  ({spl.shorthand(spell)})"
@@ -281,7 +284,7 @@ def _book_level_fields(book: Book | None, shows: _BookShows) -> list[DialogField
             "optint",
             attr(book, "quality", None),
             required=True,
-            show_if=lambda v: bk.has_quality(shows.book_type(v)),
+            show_if=lambda v: library.has_quality(shows.book_type(v)),
         ),
     ]
 
@@ -294,7 +297,7 @@ def _book_kind_fields(
     summae = [
         (b.name or "(untitled)", b.id)
         for b in saga.books
-        if b.type in bk.SUMMA_TYPES and b is not book
+        if b.type in library.SUMMA_TYPES and b is not book
     ]
 
     def commentary(values: dict[str, Any]) -> bool:
@@ -367,7 +370,7 @@ def _book_kind_fields(
             hint="Annotated by a reader at least half as skilled as its Level, "
             "with better Communication than the author (a Read season can do "
             "it); +1 once.",
-            show_if=lambda v: bk.has_quality(shows.book_type(v)),
+            show_if=lambda v: library.has_quality(shows.book_type(v)),
         ),
         DialogField(
             "physical_form",
@@ -401,12 +404,12 @@ def _craft_fields(
 ) -> list[DialogField]:
     """Under the extended book Quality rule: who made the book, and how
     (book_kinds.CRAFT), each adding to its Quality."""
-    if not bk.extended_quality(saga):
+    if not library.extended_quality(saga):
         return []
     craft = list(attr(book, "craft", []) or [])
 
     def has_quality(values: dict[str, Any]) -> bool:
-        return bk.has_quality(shows.book_type(values))
+        return library.has_quality(shows.book_type(values))
 
     fields = [
         DialogField(
@@ -656,7 +659,7 @@ def _book_ownership_fields(
     saga: Saga, book: Book | None, default_owner: str
 ) -> list[DialogField]:
     """Who keeps the book, and the codex it is bound in."""
-    codex = bk.codex_of(saga, book) if book is not None else None
+    codex = library.codex_of(saga, book) if book is not None else None
     books = sourcebooks.saga_books(saga)
     collections = book_kinds.offered(
         book_kinds.COLLECTIONS, books, codex.collection if codex is not None else ""
@@ -773,7 +776,7 @@ def book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     if author is not None and not book.author:
         book.author = author.name
     book.level = values.get("level")
-    spell = spl.find_spell(saga, book.spell_id)
+    spell = catalog.find_spell(saga, book.spell_id)
     if spell is not None:
         # A copy for display without the saga; level_of() reads the spell.
         book.spell_name = spell.name
@@ -790,17 +793,17 @@ def _kinds_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     commentary = book.opus == book_kinds.COMMENTARY
     book.commentary_on = (values.get("commentary_on") or None) if commentary else None
     book.physical_form = values.get("physical_form") or ""
-    book.glossed = bool(values.get("glossed")) and bk.has_quality(book.type)
+    book.glossed = bool(values.get("glossed")) and library.has_quality(book.type)
     epitome = values.get("epitome") or None
     if epitome == NEW_EPITOME:
         bk.enchant_as_epitome(saga, book)
     else:
         book.device_id = epitome
-    if bk.extended_quality(saga):
+    if library.extended_quality(saga):
         craft = [part for key, part in _CRAFT_CHECKS.items() if values.get(key)]
         if values.get("craft_resonance"):
             craft.append(values["craft_resonance"])
-        book.craft = craft if bk.has_quality(book.type) else []
+        book.craft = craft if library.has_quality(book.type) else []
 
 
 def book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) -> str:
@@ -819,7 +822,7 @@ def book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) -
     )
     probe.text_kind = values.get("text_kind") or ""
     probe.spell_id = values.get("spell_id") if bk.needs_spell(probe) else None
-    spell = spl.find_spell(saga, probe.spell_id)
+    spell = catalog.find_spell(saga, probe.spell_id)
     from_spell = (
         f"Level {spell.level}, from the spell"
         if spell is not None and spell.level is not None
@@ -830,23 +833,23 @@ def book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) -
     if not values.get("type"):
         return "[dim]Cost: choose a Type.[/]"
     probe.level = values.get("level") if bk.has_level(probe.type) else None
-    probe.quality = values.get("quality") if bk.has_quality(probe.type) else None
+    probe.quality = values.get("quality") if library.has_quality(probe.type) else None
     if bk.pooled(probe.type):
         # Bought as a pool: what the covenant's pool comes to with this one
         # (in place of `editing`, the book being edited).
         others = [
             b
-            for b in bk.books_owned_by(saga, "covenant", probe.owner_id or "")
+            for b in library.books_owned_by(saga, "covenant", probe.owner_id or "")
             if b is not editing
         ]
-        level = bk.level_of(probe, saga) or 0
-        pool = bk.pool([*others, probe], probe.type, saga)
+        level = library.level_of(probe, saga) or 0
+        pool = library.pool([*others, probe], probe.type, saga)
         lines = [
             f"[b]Cost:[/] part of the {probe.type} pool, which with these "
             f"{level} levels comes to {bk.pool_text(pool)}"
         ]
     else:
-        lines = [f"[b]Cost:[/] {bk.cost(probe, saga)} Build Points"]
+        lines = [f"[b]Cost:[/] {library.cost(probe, saga)} Build Points"]
     if from_spell:
         lines[0] += f"  [dim]({from_spell})[/]"
     lines += [problem(escape(w)) for w in bk.limit_warnings(probe)]

@@ -7,12 +7,13 @@ from __future__ import annotations
 from functools import partial
 from typing import Any
 
-from .... import catalog, sourcebooks
+from .... import sourcebooks
 from ....forms import character as character_forms
 from ....forms import season as season_forms
 from ....forms.season import study_fields as _study_fields
 from ....models import Breakthrough, Character, GrogYear, Saga, SeasonPlan
 from ....rules import creation_characteristics
+from ....rules.vf_eligibility import VirtueFlawChooser
 from ..fields import FieldsDialog
 from ..pickers import VirtueFlawPickerScreen
 
@@ -27,7 +28,7 @@ def _vf_picker(saga: Saga, character: Character, side: str) -> Any:
         return VirtueFlawPickerScreen(
             character.virtues_flaws,
             side=side,
-            chooser=catalog.VirtueFlawChooser.for_character(character, books),
+            chooser=VirtueFlawChooser.for_character(character, books),
             own_abilities=[a.name for a in character.abilities],
             refusal=partial(creation_characteristics.virtue_refusal, saga, character),
         )

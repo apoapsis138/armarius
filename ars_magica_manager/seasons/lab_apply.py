@@ -9,7 +9,6 @@ from dataclasses import replace
 
 from .. import book_kinds, research_text, spell_parameters, storage
 from .. import books as bk
-from .. import enchanted_devices as ed
 from .. import spells as spl
 from ..models import (
     SEASONS,
@@ -41,9 +40,9 @@ from ..rules import book_seasons as bs
 from ..rules import creation_access as access
 from ..rules import creation_characteristics as cch
 from ..rules import enchant_seasons as es
+from ..rules import enchantment, lab_seasons, research, work_virtues
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons, research, work_virtues
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
 from ..world import takes_part_in_play
@@ -918,7 +917,7 @@ def _destroy(
     if device is not None and effect is not None:
         if effect in device.effects:
             device.effects.remove(effect)
-        return f"{ed.effect_name(effect)} is lost from {device.name}."
+        return f"{enchantment.effect_name(effect)} is lost from {device.name}."
     familiar = work.familiar
     if familiar is not None and whole and plan.activity in (fs.BIND, fs.EMPOWER):
         if familiar in saga.familiars:
@@ -973,7 +972,7 @@ def _keep_effects(
         work.carried_effects = effects
 
 
-def _goal_reached(magus: Character, goal) -> list[str]:
+def _goal_reached(magus: Character, goal: Breakthrough) -> list[str]:
     """A research goal reaching its target grants what it names
     automatically: an Ability (the points as its xp), or a
     Virtue."""
@@ -1003,7 +1002,13 @@ def _goal_reached(magus: Character, goal) -> list[str]:
     return lines
 
 
-def _discovery_text(saga, magus, lab, goal, work) -> Book:
+def _discovery_text(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    goal: Breakthrough,
+    work: lab_seasons.LabWork,
+) -> Book:
     return Book(
         id=f"discovery_{magus.id}_{new_instance_id()}",
         name=f"Lab Text: Discovery toward {goal.name}",

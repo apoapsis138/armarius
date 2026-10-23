@@ -22,16 +22,16 @@ Kept in Neighbour.details: "antagonist", "moves", "position",
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Required, TypedDict, cast
 
 from .commands import Confirm, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import SEASONS, Neighbour, Saga
-from .neighbour_lists import KindList, KindTab, details_list, list_ops
+from .models import SEASONS, Neighbour, Saga, details_list, season_order
+from .neighbour_lists import KindList, KindTab, list_ops
+from .references import Fact
 from .sections import STAGES_SECTION
-from .sheets.character import Fact
 
 #: The neighbour kind, and the mark of a threat not yet begun.
 THREAT = "threat"
@@ -50,8 +50,8 @@ class Reached:
     """The stage a threat has reached (None before its first) and the
     next one still to come (None after its last)."""
 
-    current: dict[str, Any] | None
-    next: dict[str, Any] | None
+    current: Stage | None
+    next: Stage | None
 
 
 # -- the record --
@@ -147,30 +147,42 @@ def position(neighbour: Neighbour) -> int:
     return int(neighbour.details.get("position") or 0)
 
 
-def stages(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "stages")
+class Stage(TypedDict, total=False):
+    """A stage of a threat's plan: its title, the clues it leaves, what
+    happens if it is ignored, stopped or turned, how it came out, and
+    when it comes (a date, or the threat's position it is reached at)."""
+
+    title: Required[str]
+    clues: str
+    ignored: str
+    stopped: str
+    turned: str
+    outcome: str
+    year: int | None
+    season: str
+    at: int | None
+
+
+def stages(neighbour: Neighbour) -> list[Stage]:
+    return cast(list[Stage], details_list(neighbour, "stages"))
 
 
 # -- worked out --
 
 
-def stage_order(stage: dict[str, Any]) -> int | None:
+def stage_order(stage: Stage) -> int | None:
     """A dated stage's season, as a number that sorts by date."""
     year = stage.get("year")
     if year is None:
         return None
-    season = stage.get("season")
-    return year * len(SEASONS) + (SEASONS.index(season) if season in SEASONS else 0)
+    return season_order(season=stage.get("season"), year=year)
 
 
 def _now(saga: Saga) -> int:
-    season = saga.current_season
-    return saga.current_year * len(SEASONS) + (
-        SEASONS.index(season) if season in SEASONS else 0
-    )
+    return season_order(season=saga.current_season, year=saga.current_year)
 
 
-def has_come(saga: Saga, neighbour: Neighbour, stage: dict[str, Any]) -> bool:
+def has_come(saga: Saga, neighbour: Neighbour, stage: Stage) -> bool:
     """Whether `stage` has come: marked as happened, or (still pending)
     its date or its place on the track reached."""
     outcome = stage.get("outcome") or PENDING
@@ -200,7 +212,7 @@ def reached(saga: Saga, neighbour: Neighbour) -> Reached:
     return Reached(current, upcoming)
 
 
-def when_text(neighbour: Neighbour, stage: dict[str, Any]) -> str:
+def when_text(neighbour: Neighbour, stage: Stage) -> str:
     """ "Winter 1220", or "at 3" on a track; "" when not set."""
     if by_date(neighbour):
         year = stage.get("year")
@@ -295,7 +307,7 @@ def stages_title(_saga: Saga, neighbour: Neighbour) -> str:
     return f"Stages ({len(stages(neighbour))})"
 
 
-def state_text(saga: Saga, neighbour: Neighbour, stage: dict[str, Any]) -> str:
+def state_text(saga: Saga, neighbour: Neighbour, stage: Stage) -> str:
     """What became of `stage`: its outcome, or for one still pending
     whether it has been reached."""
     outcome = stage.get("outcome") or PENDING
@@ -363,7 +375,7 @@ def stage_text(saga: Saga, neighbour: Neighbour, index: int) -> str:
 
 
 def stage_fields(
-    _saga: Saga, neighbour: Neighbour, stage: dict[str, Any] | None
+    _saga: Saga, neighbour: Neighbour, stage: Stage | None
 ) -> list[DialogField]:
     s = stage or {}
     found = [

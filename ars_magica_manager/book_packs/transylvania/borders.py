@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
 from ...models.world import FULL
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -47,11 +47,6 @@ RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
 
 #: The Teutonic Knights' black cross on white.
 TEUTONIC_ARMS = Arms("Argent", charge="Cross", charge_tincture="Sable")
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(transylvania: Transylvania, key: str, name: str, **kw: Any) -> Neighbour:
@@ -436,7 +431,7 @@ def _lycaneon(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "projects, sees them done, and deals with magi who want to "
         "commission, buy or borrow an item.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Portal: the Tribunal's Mercere Portal, to Harco, in a hall with an eighteen-foot statue of Tremere bearing a golden eagle on his wrist",
         "Manufactory: makes and stores House Tremere's strategic reserve of magic and mundane goods; heavy work by enchanted tools, finishing by mundane craftsmen",
         "Stores: caverns of arrows, rooms of swords and other war goods, kept from decay in Circle wards",
@@ -503,7 +498,7 @@ def _lycaneon(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "The book gives no founding year (the Founder's own time) and no "
         "season. Nine of the fourteen magi are unnamed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.",
         "A rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.",
         "Lycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.",
@@ -755,7 +750,7 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "trails, but the present policy is to make friends for the "
         "Order, so the school's ties are not advertised but not denied.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the Furus brook at Ikafalva, a pawn of Aquam each full moon, gathered by the older Gifted pupils",
         "School: ten pupils for seven years; magi teach a season a year in return for the library, and extend their Parma over their pupils",
         "Library: on the second floor, mundane and occult learning and an unmatched collection on non-Hermetic magic, but nothing on the Arts or the Order",
@@ -800,7 +795,7 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "in 1095); the book gives no season. One of the three magi is "
         "unnamed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.",
         "A snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.",
         "A shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.",
@@ -1376,10 +1371,6 @@ P = Profile
 ROMANIAN = "Romanian"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the chapter sketches without a stat block, by character key.
 PROFILES: dict[str, Profile] = {
     "albertus": P(
@@ -1396,7 +1387,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Inventive Genius",
-            _art("Affinity with {art}", "rego"),
+            vf_art("Affinity with {art}", "rego"),
             "Dutybound",
             "Busybody",
         ],
@@ -1425,7 +1416,7 @@ PROFILES: dict[str, Profile] = {
             "Living Language: Arabic": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             ("Minor Magical Focus", {"focus": "ghosts"}),
             "Driven (Minor)",
             "Obsessed (Minor)",
@@ -1442,7 +1433,7 @@ PROFILES: dict[str, Profile] = {
             "Profession: Sailor": 1,
         },
         virtues=[
-            _art("Affinity with {art}", "herbam"),
+            vf_art("Affinity with {art}", "herbam"),
             "Obsessed (Minor)",
         ],
         native=ROMANIAN,

@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QColor, QMouseEvent, QPainter, QPen
+from PySide6.QtGui import QColor, QMouseEvent, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QCheckBox,
@@ -85,7 +85,7 @@ class _Page(Paper):
 
     edged = False
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)
         painter = QPainter(self)
         if self.edged:
@@ -350,7 +350,7 @@ class FieldsDialog(_Sheet):
         return answered, result
 
     def _changed(self, spec: DialogField) -> Callable[..., None]:
-        def changed(*_args) -> None:
+        def changed(*_args: object) -> None:
             if spec.fills is not None:
                 current = form_spec.current_values(self._readable(), self.read)
                 for key, value in spec.fills(current).items():

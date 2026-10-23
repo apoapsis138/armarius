@@ -26,7 +26,7 @@ from .holdings import GEAR_QUALITIES
 from .laboratory import LAB_SPECIALIZATIONS
 
 
-@dataclass
+@dataclass(frozen=True)
 class VirtueFlawDef:
     """A character Virtue/Flaw catalog entry (shared reference data, not
     per-saga). The field-by-field reference, with every source book's
@@ -49,7 +49,7 @@ class VirtueFlawDef:
     the books in play. `summary` is a one-line paraphrase for
     searching. `audience` restricts the entry to non-human characters or
     Mythic Companions (VIRTUE_FLAW_AUDIENCES); empty means anyone may take
-    it. The picker hides what a character can't take (VirtueFlawChooser).
+    it. The picker hides what a character can't take (rules.vf_eligibility).
     """
 
     id: str
@@ -113,7 +113,7 @@ class VirtueFlawDef:
         return cls(**known_fields(cls, d))
 
 
-@dataclass
+@dataclass(frozen=True)
 class LabVirtueFlawDef:
     """A catalog entry for a Laboratory Virtue/Flaw (ArM5 Covenants, Chapter 9) --
     shared reference data, not per-saga. Distinct from VirtueFlawDef:
@@ -126,7 +126,7 @@ class LabVirtueFlawDef:
     modifier whose `target` names one of LAB_CHARACTERISTICS (Superior
     Construction: Safety +1, Aesthetics +1). They feed the virtue/flaw
     component of each Characteristic's manual + virtue_sum + flaw_sum =
-    total (laboratories.lab_characteristic_total).
+    total (rules.lab_stats.lab_characteristic_total).
     A Specialization grant is a `lab_specialization` modifier:
     its `target` names the Specialization, or is "{specialization}" when the
     lab's owner picks it from `choices["specialization"]` as the Virtue is
@@ -257,7 +257,7 @@ COVENANT_BOON_HOOK_CATEGORIES: tuple[str, ...] = (
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class CovenantBoonHookDef:
     """A catalog entry for a covenant Boon or Hook (ArM5 Chapter 6) --
     shared reference data, not per-saga. They work like Virtues & Flaws:
@@ -353,7 +353,7 @@ class CovenantBoonHookDef:
         return cls(**known_fields(cls, d))
 
 
-@dataclass
+@dataclass(frozen=True)
 class CovenantSituationDef:
     """A Covenant Situation: one of the books' ready-made sets
     of Boons and Hooks for a new covenant. `entries` are the Boons, Hooks
@@ -375,7 +375,7 @@ class CovenantSituationDef:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class AbilityDef:
     """A catalog entry for an Ability name (shared reference data, not per-saga).
 
@@ -418,7 +418,7 @@ class AbilityDef:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class HouseDef:
     """A catalog entry for one of the 12 Hermetic Houses (shared reference
     data, not per-saga), with the benefit its members get at character
@@ -455,7 +455,7 @@ TRADITION_REALMS: tuple[str, ...] = ("Magic", "Faerie", "Divine", "Infernal")
 TRADITION_GIFT: tuple[str, ...] = ("required", "optional", "never")
 
 
-@dataclass
+@dataclass(frozen=True)
 class TraditionTraining:
     """How a tradition makes a new member at creation: the apprenticeship
     its book gives (Gifted and unGifted), the scores it leaves, and what
@@ -520,7 +520,7 @@ DEFENSE_KINDS: tuple[str, ...] = (
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class CastingRule:
     """One way a tradition's members work magic, as data: which scores
     the total adds, the die, what it is divided by, and what happens when
@@ -581,7 +581,7 @@ class CastingRule:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class MagicalDefense:
     """The Magical Defense one of a tradition's Arts or Abilities gives,
     and the effects it works against (its specialty)."""
@@ -600,7 +600,7 @@ class MagicalDefense:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class DispelRule:
     """An active dispelling: a casting that ends another effect when its
     total reaches `multiple` x the effect's level (a Supernatural
@@ -620,7 +620,7 @@ class DispelRule:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class GroupCasting:
     """How several members work one effect together: `helper` is what
     each helper adds ("Ceremony": Characteristic + the score used, as
@@ -639,7 +639,7 @@ class GroupCasting:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class OpeningRule:
     """How a Gifted master of the tradition Opens a Gifted student's Gift
     to it: the Opening Total's terms (a Characteristic, Abilities added,
@@ -662,7 +662,7 @@ class OpeningRule:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class InitiationScript:
     """One of the tradition's printed Initiation Scripts."""
 
@@ -681,7 +681,7 @@ class InitiationScript:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class InitiationRule:
     """The tradition's Initiation Total (the Mystagogue's Characteristic +
     Lore + the Script's bonus) and its scripts. `roll_less`: the Forest
@@ -701,7 +701,7 @@ class InitiationRule:
         return cls(**d)
 
 
-@dataclass
+@dataclass(frozen=True)
 class Advancement:
     """How the tradition's Arts advance besides the usual sources: whether
     they may be practised, and whether studied from vis."""
@@ -715,7 +715,7 @@ class Advancement:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class TraditionActivity:
     """A season of the tradition's own work (Refining, brewing, inventing
     scripts...): Exposure in its Arts, with the Lab Total of the casting
@@ -732,7 +732,7 @@ class TraditionActivity:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class PoolDef:
     """A store of points the tradition's members keep (sparks, Prophecy
     Points, reagents...): what fills it each year, what spends it, and
@@ -754,7 +754,7 @@ class PoolDef:
 WARPING_KINDS = ("note", "elemental_traits")
 
 
-@dataclass
+@dataclass(frozen=True)
 class WarpingRule:
     """What the tradition's members suffer in place of (or beside) the
     Hermetic Warping and Twilight: its name, what sets it off, and
@@ -777,7 +777,7 @@ class WarpingRule:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class BondRule:
     """A being the tradition's members bind (a familiar, a fetch, a
     spirit, a golem): how it is bound and what it adds to its master."""
@@ -792,7 +792,7 @@ class BondRule:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class TraditionDef:
     """A catalog entry for a non-Hermetic magical tradition (shared
     reference data, not per-saga): what its members learn, how they
@@ -886,7 +886,7 @@ class TraditionDef:
         return cls(**d)
 
 
-@dataclass
+@dataclass(frozen=True)
 class CharacterTemplateDef:
     """A ready-to-play character from the book's Character Templates
     (character_template_catalog.json), in the book's notation:
@@ -937,7 +937,7 @@ class CharacterTemplateDef:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class GrogTemplateDef:
     """One of Grogs' Chapter 7 Grog Templates (grog_template_catalog.json):
     the book's guidance for a kind of grog, which the player fills in by
@@ -993,7 +993,7 @@ class GrogTemplateDef:
 WEAPON_TABLES: tuple[str, ...] = ("melee", "missile", "natural")
 
 
-@dataclass
+@dataclass(frozen=True)
 class WeaponDef:
     """A catalog weapon (weapon_armor_catalog.json): one row of the book's
     Melee, Missile or Natural Weapons table (`table`, one of WEAPON_TABLES).
@@ -1028,7 +1028,7 @@ class WeaponDef:
         return cls(**known_fields(cls, data))
 
 
-@dataclass
+@dataclass(frozen=True)
 class ArmorDef:
     """A catalog armor Material (weapon_armor_catalog.json): its Protection
     (bonus to Soak) and Load as partial and as full armor -- full is None

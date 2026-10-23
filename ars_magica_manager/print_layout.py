@@ -18,12 +18,13 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
+from typing import Any
 
-from . import familiars
-from . import spells as spl
+from . import catalog
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .models import Character, Saga
 from .rules import combat, derived
+from .rules.breakdown import Breakdown
 from .sheets import character as cs
 
 # ---------------------------------------------------------------- options
@@ -475,7 +476,7 @@ def combat_blocks(character: Character) -> list[Block]:
     encumbrance = derived.encumbrance(load, character.characteristics.strength)
     soak = int(derived.soak(character).total)
 
-    def total(part) -> str:
+    def total(part: Breakdown | None) -> str:
         return "—" if part is None else _signed(int(part.total))
 
     weapons = []
@@ -687,7 +688,7 @@ def _grimoire(saga: Saga, character: Character, options: PrintOptions) -> list[B
         level = "Gen." if row.level is None else str(row.level)
         description = ""
         if options.full_spells:
-            spell = spl.find_spell(saga, character.spells_known[row.index].spell_id)
+            spell = catalog.find_spell(saga, character.spells_known[row.index].spell_id)
             description = spell.description if spell else ""
         blocks.append(
             Spell(
@@ -716,7 +717,7 @@ def _story(saga: Saga, character: Character) -> list[Block]:
             for part in d.biography.split("\n\n")
             if part.strip()
         ]
-    familiar = familiars.familiar_of(saga, character.id)
+    familiar = saga.familiar_of(character.id)
     if familiar is not None:
         blocks += [
             Heading("Familiar"),
@@ -843,7 +844,7 @@ LAYOUTS: dict[str, Callable[..., Document]] = {
 
 
 def document(
-    saga: Saga, kind: str, record, options: PrintOptions = DEFAULT_OPTIONS
+    saga: Saga, kind: str, record: Any, options: PrintOptions = DEFAULT_OPTIONS
 ) -> Document:
     """The printed sheet of `record`, a record of `kind`; KeyError for a
     kind that can't be printed yet."""

@@ -25,6 +25,9 @@ sheet has an AnimalForm (Character.animal).
   advice.
 
 Rules: SOURCE.
+
+No screen uses language_lines() yet: it is a rule for a screen still to
+come, and only the tests call it.
 """
 
 from __future__ import annotations

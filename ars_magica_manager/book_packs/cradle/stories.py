@@ -43,11 +43,9 @@ import unicodedata
 from typing import TYPE_CHECKING, Any
 
 from ...models import Covenant, Creature
-from ...threats import DORMANT
-from ..builder import Builder, paragraphs
+from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
-    from ...models import Neighbour
     from . import Cradle
 
 S = Builder.stage
@@ -67,12 +65,6 @@ def build(cradle: Cradle) -> None:
     _durenmar(cradle)
     _itineris_serica(cradle)
     _iberians(cradle)
-
-
-def _dormant(threat: Neighbour) -> Neighbour:
-    """Mark a threat as not yet begun: More, Begin This Story starts it."""
-    threat.details[DORMANT] = True
-    return threat
 
 
 # -- under way in 1220 --
@@ -630,7 +622,7 @@ def _itineris_serica(cradle: Cradle) -> None:
             "devoted to research. He belongs to no covenant yet.",
         ),
     )
-    cradle.world["threat_itineris_serica"] = _dormant(
+    cradle.world["threat_itineris_serica"] = dormant(
         b.threat(
             "Itineris Serica",
             antagonist="Cartophilius of Mercere and the Exarch of Tremere",
@@ -693,7 +685,7 @@ def _itineris_serica(cradle: Cradle) -> None:
 
 
 def _iberians(cradle: Cradle) -> None:
-    cradle.world["threat_iberians"] = _dormant(
+    cradle.world["threat_iberians"] = dormant(
         cradle.b.threat(
             "The Followers of the Circle Return",
             antagonist="Young Hermetic sahirs of Iberia",

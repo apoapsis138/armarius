@@ -20,7 +20,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_ability, vf_art, vf_focus
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -40,11 +40,6 @@ RUMOURED = {"status": "Rumoured", "known": "Locally"}
 
 #: The arms of Normandy: gules, two lions passant or.
 NORMANDY_ARMS = Arms("Gules", charge="Lion", charge_tincture="Or", count=2)
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one hook or secret a line."""
-    return "\n".join(lines)
 
 
 def _place(normandy: Normandy, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1007,7 +1002,7 @@ def _montverte(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "it one of the richest covenants in the Tribunal, and its magi live "
         "in luxury.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the book names no source; the covenant's wealth comes from raiding, its vassals and its stores, which Runild keeps",
         "Income: the baron's domain and village, and the spoils of raids by Montverte and its vassals; one of the wealthiest covenants in the Tribunal",
         "Library: in the central keep, overseen by Runild; contents not described",
@@ -1022,7 +1017,7 @@ def _montverte(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: the succession to the Praeco: Geirlaug is third eldest in the Tribunal, after Celeres and Somnifer",
         "Tension: the Lotharingian Tribunal movement, which would carve covenants away from Normandy",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The inner council is largely dysfunctional: each councillor is very able alone, but they barely coordinate, and behind a polite show of deference to Geirlaug runs a quiet contest of wills.",
         "The baron's high chair carries an old Mentem enchantment that keeps its occupant compliant, and has left several barons slightly Warped.",
         "Through a Mirror, Darkly: Geirlaug's face in the mirror begins to show two personalities quarrelling; perhaps a demon has supplanted her and rules through her image. Only Thormod seems untroubled.",
@@ -1168,18 +1163,6 @@ def _montverte_magi(normandy: Normandy, b: Builder, montverte: Covenant) -> None
 # ------------------------------------------------------------------- stats
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
-def _focus(name: str, focus: str) -> tuple[str, dict[str, str]]:
-    return (name, {"focus": focus})
-
-
 P = Profile
 
 #: Each sketched magus's profile, by character id.
@@ -1196,9 +1179,9 @@ PROFILES: dict[str, Profile] = {
             "Magic Lore": (2, "Twilight"),
         },
         virtues=[
-            _art("Affinity with {art}", "ignem"),
-            _art("Puissant {art}", "ignem"),
-            _focus("Major Magical Focus", "fire"),
+            vf_art("Affinity with {art}", "ignem"),
+            vf_art("Puissant {art}", "ignem"),
+            vf_focus("Major Magical Focus", "fire"),
             "Twilight Prone",
             "Hatred (Major)",
             "Reclusive",
@@ -1219,7 +1202,7 @@ PROFILES: dict[str, Profile] = {
             "Code of Hermes": (3, "vassalage"),
         },
         virtues=[
-            _art("Affinity with {art}", "perdo"),
+            vf_art("Affinity with {art}", "perdo"),
             "Self-Confident",
             "Clear Thinker",
             "Dark Secret",
@@ -1241,7 +1224,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Gentle Gift",
-            _ability("Puissant {ability}", "guile"),
+            vf_ability("Puissant {ability}", "guile"),
             "Lecherous (Minor)",
             "Dutybound",
             "Ambitious (Minor)",
@@ -1261,7 +1244,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Book Learner",
-            _art("Affinity with {art}", "vim"),
+            vf_art("Affinity with {art}", "vim"),
             "Clear Thinker",
             "Busybody",
             "Dutybound",

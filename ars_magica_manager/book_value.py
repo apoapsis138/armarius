@@ -18,8 +18,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from . import book_kinds
-from . import books as bk
 from .models import SUPERNATURAL_CATEGORIES, Book, Covenant, Saga
+from .rules import library
 from .rules.rounding import round_up
 
 SOURCE = (
@@ -56,7 +56,11 @@ _TRACTATUS_BANDS: tuple[tuple[int, str], ...] = (
 
 def summa_score(book: Book) -> int | None:
     """Quality + Level (+ 3 x Level for an Ability summa), or None."""
-    if book.type not in bk.SUMMA_TYPES or book.quality is None or book.level is None:
+    if (
+        book.type not in library.SUMMA_TYPES
+        or book.quality is None
+        or book.level is None
+    ):
         return None
     factor = 3 if book.type == "Ability Summa" else 1
     return book.quality + factor * book.level
@@ -65,7 +69,7 @@ def summa_score(book: Book) -> int | None:
 def category(book: Book) -> str | None:
     """Excellent, Sound, Vain or Discarded, for a summa or tractatus with
     its numbers set; None for any other book."""
-    if bk.numbers_to_set(book):
+    if library.numbers_to_set(book):
         return None
     if book.type == "Tractatus" and book.quality is not None:
         value, bands = book.quality, _TRACTATUS_BANDS
@@ -80,7 +84,7 @@ def category(book: Book) -> str | None:
 def is_hermetic(book: Book) -> bool:
     """A book on an Art, an Arcane Ability or a supernatural power: traded
     among magi for vis. Any other book is a mundane one, bought for money."""
-    if bk.is_art_book(book.type, book.subject_kind):
+    if library.is_art_book(book.type, book.subject_kind):
         return True
     from .rules.creation_access import ability_category
 
@@ -128,16 +132,16 @@ RESEARCH_LEVELS: tuple[tuple[int, str], ...] = (
 
 def subject_of(book: Book) -> str:
     """The Art or Ability a summa or tractatus is on ("" for other books)."""
-    if book.type not in (*bk.SUMMA_TYPES, "Tractatus"):
+    if book.type not in (*library.SUMMA_TYPES, "Tractatus"):
         return ""
-    return bk.subject(book)
+    return library.subject(book)
 
 
 def library_subjects(saga: Saga, covenant: Covenant) -> dict[str, list[Book]]:
     """Each subject the covenant's library has a summa or tractatus on, with
     those books, in order of first appearance."""
     found: dict[str, list[Book]] = {}
-    for book in bk.books_in_covenant(saga, covenant):
+    for book in library.books_in_covenant(saga, covenant):
         subject = subject_of(book)
         if subject:
             found.setdefault(subject, []).append(book)
@@ -156,8 +160,8 @@ def encyclopedias(
     """The encyclopedias in the covenant's library that aid research on
     `subject`, each with its bonus, best first."""
     counts: dict[str, int] = {}
-    for book in bk.books_in_covenant(saga, covenant):
-        codex = bk.codex_of(saga, book)
+    for book in library.books_in_covenant(saga, covenant):
+        codex = library.codex_of(saga, book)
         if (
             codex is not None
             and codex.encyclopedia
@@ -172,7 +176,7 @@ def encyclopedias(
 def guide_text(saga: Saga, covenant: Covenant, subject: str, books: list[Book]) -> str:
     """What the library holds on `subject`, to choose its level by: how many
     summae (the best one) and tractatus, and its encyclopedias."""
-    summae = [b for b in books if b.type in bk.SUMMA_TYPES]
+    summae = [b for b in books if b.type in library.SUMMA_TYPES]
     tracts = [b for b in books if b.type == "Tractatus"]
     parts = []
     if summae:

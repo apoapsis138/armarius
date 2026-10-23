@@ -4,9 +4,9 @@ worked examples."""
 import pytest
 
 from ars_magica_manager import catalog
-from ars_magica_manager.covenants import covenant_effective_aura
 from ars_magica_manager.models import Covenant, VirtueFlawInstance
 from ars_magica_manager.rules import realms
+from ars_magica_manager.rules.realms import covenant_effective_aura
 
 
 @pytest.mark.parametrize(

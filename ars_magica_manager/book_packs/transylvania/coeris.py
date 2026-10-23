@@ -21,7 +21,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models.world import FULL
-from ..builder import StatBlock, paragraphs
+from ..builder import StatBlock, joined_lines, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -33,11 +33,6 @@ TYTALUS = "house_tytalus"
 MERINITA = "house_merinita"
 
 #: The lead line of a covenant's notes, before its secrets.
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def build(transylvania: Transylvania) -> None:
@@ -205,7 +200,7 @@ SUMMARY = paragraphs(
     "other thirteen are the core that makes the House's policy.",
 )
 
-WHAT_MATTERS = _lines(
+WHAT_MATTERS = joined_lines(
     "Seat: the Prima of House Tremere, Poena, with her secretaries and the legata",
     "Treasury: the House's chief stores of items, vis and resources, among them the Blessings of the Dead, the talismans of Tremere who have passed",
     "Library: the Book of Legacies (most of its twelve copies), the Book of Placements and the House's official war plans",
@@ -266,7 +261,7 @@ NOTES = paragraphs(
     "of thirteen.",
 )
 
-HIDDEN = _lines(
+HIDDEN = joined_lines(
     "The Gate of Eurydice opens on the City Below in the Magic Realm, House Tremere's last refuge (see the Gate's place).",
     "The Night Contingency for taking Coeris is closely kept and probably salted with false information.",
     "Janus is a lycanthrope and Tatiana a Keeper of the Silence of the Temple (see their summaries).",
@@ -741,10 +736,6 @@ MONICA: StatBlock = {
 P = Profile
 HUNGARIAN = "Hungarian"
 TREMERE_LORE = "Organization Lore: House Tremere"
-
-
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
 
 
 #: The magi of Coeris the book sketches without a stat block.

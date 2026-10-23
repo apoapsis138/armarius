@@ -6,6 +6,7 @@ from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import familiars as fam
 from ars_magica_manager.models import BondPower, Possession
+from ars_magica_manager.rules import familiar_seasons
 from ars_magica_manager.sheets import familiar as fs
 
 
@@ -31,7 +32,7 @@ def test_each_cord_has_its_score_cost_and_effect():
     assert (golden.name, golden.score, golden.cost) == (
         "Golden Cord",
         3,
-        fam.cord_cost(3),
+        familiar_seasons.cord_cost(3),
     )
     assert "Botch" in golden.effect
     assert (silver.score, bronze.score) == (0, 0)

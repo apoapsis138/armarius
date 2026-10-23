@@ -17,10 +17,9 @@ from .. import connections, neighbours, references
 from ..commands import Act, Choice, Choose, Command, Go, Refuse
 from ..markup import escape
 from ..models import Creature, Neighbour, Saga
-from ..references import Ref
+from ..references import Fact, Ref
 from ..sheets import creature as creature_sheet
 from ..sheets import region as region_sheet
-from ..sheets.character import Fact
 
 #: A Link's kind as Go To heads it.
 _LINK_HEADING = "Links"

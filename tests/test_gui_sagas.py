@@ -15,11 +15,12 @@ from gui_steps import answering, buttons
 from PySide6.QtWidgets import QApplication
 from support import everything_saga
 
-from ars_magica_manager import paths, storage
+from ars_magica_manager import catalog, paths, storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.forms import ConfirmDialog
 from ars_magica_manager.gui.pages import SagaPage, SagaShelf
 from ars_magica_manager.gui.window import SHELF, MainWindow, Place
+from ars_magica_manager.models import VirtueFlawDef
 
 
 @pytest.fixture(scope="module")
@@ -75,7 +76,7 @@ def test_a_cards_delete_asks_then_deletes_the_saga(app):
 
 def test_change_save_folder_moves_the_saves_there(app, tmp_path):
     # The saves start in the data folder, as the app keeps them.
-    storage.use_data_dir(paths.data_dir())
+    paths.use_data_dir(paths.data_dir())
     window = _shelf()
     saga_id = window.saga_ids[0]
     folder = tmp_path / "elsewhere"
@@ -98,3 +99,24 @@ def test_choosing_no_folder_changes_nothing(app):
     answering(window)
     window.page().change_folder.click()
     assert paths.data_dir() == before
+
+
+def test_opening_a_saga_makes_its_own_entries_part_of_the_catalogs(app):
+    """As in the terminal: a saga's house-rule Virtues and Flaws are
+    offered as soon as it is open, not only once one is edited."""
+    saga = everything_saga()
+    saga.custom_virtues_flaws.append(
+        VirtueFlawDef(
+            id="custom_vf_storm_touched",
+            name="Storm-Touched",
+            type="Virtue",
+            category="General",
+            tier="Minor",
+            cost=1,
+        )
+    )
+    storage.save_saga(saga)
+    catalog.use_saga(None)
+    window = MainWindow(saga_ids=[saga.id])
+    window.open_saga(saga.id)
+    assert "custom_vf_storm_touched" in catalog.load_virtue_flaw_catalog_by_id()

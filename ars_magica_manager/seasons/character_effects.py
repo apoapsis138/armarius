@@ -5,8 +5,6 @@ from __future__ import annotations
 
 import random
 
-from ..covenants import home_aura
-from ..familiars import familiar_of
 from ..models import (
     Ability,
     ArtScore,
@@ -19,10 +17,11 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
-from ..rules import effects, medicine, work_virtues
+from ..rules import effects, medicine, sites, work_virtues
 from ..rules import hybrid_magic as hybrid
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
+from ..rules.realms import home_aura
 from ..rules.rounding import round_down
 from .plans import _cite, _gain_line, book_text, plan_subject, spell_names, work_text
 
@@ -116,15 +115,13 @@ def _living_conditions(saga: Saga, character: Character) -> int:
     lab = saga.laboratory(character.assigned_lab_id)
     if lab is not None and character.type == "magus":
         from .. import catalog
-        from ..laboratories import lab_characteristic_total
+        from ..rules.lab_stats import lab_characteristic_total
 
         health = lab_characteristic_total(
             lab, catalog.load_lab_virtue_flaw_catalog_by_id(), "health"
         )[3]
         living += round_down(health / LAB_HEALTH_DIVISOR)
-    from .. import places
-
-    here = places.character_effects(saga, character, "living_conditions")
+    here = sites.character_effects(saga, character, "living_conditions")
     return (
         living
         + int(effects.amount_total(here))
@@ -170,12 +167,10 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
         if from_aura:
             points += from_aura
             gained.append(f"{realm} aura {aura}: {from_aura}")
-    from .. import places
-
-    from_place = places.warping_per_year(saga, character)
+    from_place = sites.warping_per_year(saga, character)
     if from_place:
         points += from_place
-        where = places.character_place(saga, character)
+        where = sites.character_place(saga, character)
         name = where[0].name if where is not None else "Where they live"
         gained.append(f"{name}: {from_place}")
     for name, each in work_virtues.yearly_warping(character):
@@ -248,7 +243,7 @@ def age_character(
     Characteristics, Decrepitude, a Crisis; written in the Diary. Pre-play
     aging gives its own Living Conditions, the (season, year)
     the roll belongs to, and a label for the Diary."""
-    familiar = familiar_of(saga, character.id)
+    familiar = saga.familiar_of(character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
     if living is None:
         living = _living_conditions(saga, character)

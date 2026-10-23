@@ -6,7 +6,6 @@ import pytest
 from support import strip_markup
 
 from ars_magica_manager import catalog, sheet_text
-from ars_magica_manager.laboratories import lab_characteristic_total
 from ars_magica_manager.models import (
     Ability,
     Laboratory,
@@ -16,6 +15,7 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import effects, scores
+from ars_magica_manager.rules.lab_stats import lab_characteristic_total
 
 
 def _entry(id_: str, type_: str, *modifiers: Modifier, **kw) -> VirtueFlawDef:

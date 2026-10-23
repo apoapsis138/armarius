@@ -29,7 +29,6 @@ def test_progress_keeps_the_total():
     # doesn't reset at 75); score 6 needs 105 in total.
     progress = xp.progress(85, xp.ABILITY_FACTOR)
     assert (progress.score, progress.total, progress.next_total) == (5, 85, 105)
-    assert progress.to_next == 20
 
 
 def test_negative_xp_scores_zero():

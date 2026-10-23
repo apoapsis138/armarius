@@ -32,6 +32,8 @@ from . import (
 from .form_spec import DialogField
 from .models import Covenant, Neighbour, Saga
 from .neighbour_lists import KindTab
+from .references import Fact
+from .rules import sites
 from .sections import (
     REGION_CHURCH_SECTION,
     REGION_FACTIONS_SECTION,
@@ -40,7 +42,6 @@ from .sections import (
     REGION_THREATS_SECTION,
     REGION_UNIVERSITIES_SECTION,
 )
-from .sheets.character import Fact
 
 
 @dataclass(frozen=True)
@@ -168,7 +169,7 @@ for _kind in (
         threats.TAB,
     ),
     NeighbourKind(
-        places.PLACE,
+        sites.PLACE,
         "Place",
         "a forest, a ruin, a regio",
         "places",

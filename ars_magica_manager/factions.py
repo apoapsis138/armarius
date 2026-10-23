@@ -19,8 +19,8 @@ from .form_spec import DialogField, pairs
 from .grids import Grid
 from .models import Neighbour, Saga
 from .neighbour_lists import KindList, KindTab
+from .references import Fact
 from .sections import DIARY_SECTION
-from .sheets.character import Fact
 
 FACTION_KINDS: tuple[str, ...] = (
     "Hedge coven",

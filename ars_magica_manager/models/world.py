@@ -134,3 +134,12 @@ class Neighbour:
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         d["details"] = dict(d.get("details") or {})
         return cls(**d)
+
+
+def details_list(neighbour: Neighbour, name: str) -> list[dict[str, Any]]:
+    """The list `name` in the neighbour's details, made empty if
+    missing."""
+    found = neighbour.details.setdefault(name, [])
+    if not isinstance(found, list):
+        raise ValueError(f"A neighbour's {name} should be a list, not {found!r}.")
+    return found

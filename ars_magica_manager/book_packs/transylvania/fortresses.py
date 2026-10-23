@@ -24,7 +24,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -55,11 +55,6 @@ REGIONS: dict[str, tuple[str, tuple[str, ...]]] = {
     "leviathan": ("slavs", ()),
     "gigas": ("bulgaria", ()),
 }
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(transylvania: Transylvania, key: str, name: str, **kw: Any) -> Neighbour:
@@ -250,7 +245,7 @@ def _kezdo_valasz(transylvania: Transylvania, b: Builder, tribunal: Tribunal) ->
         "share its privileges and duties but must follow Essedarius, "
         "who never runs short of errands for them.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the oppidum's stockpile at Sarmizegethusa (the book names no source)",
         "Library: casting tablets for the ritual that raises a fort, for generic laboratories, and for one that destroys a fort (Destroy the Fort)",
         "Enchantments: devices that carry a magus at once to places the oppidum holds Arcane Connections to, and the signal charms its agents carry",
@@ -538,7 +533,7 @@ def _zenodochia(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> N
         "as his aedile, is a magus, often a Redcap or a magus fresh from "
         "Gauntlet.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: up to two rooks of Corpus vis in each zenodochium, to be replaced after use",
         "Enchantments: the Hippocratic Staff, the Bowl of the Honest Traveler, the Chest of Good Food, the Vermin Ward, the Ankh of Moving Forward, and the two wards against disease demons and faeries",
         "Library: casting tablets of Arms of the Salamander, The Rite of Healing and Universal Poultice in each",
@@ -628,7 +623,7 @@ def _leviathan(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> No
             "with his skill at making ships' parts and the base's "
             "facilities, the House would lack crews, not hulls.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Facilities: stores and works to fit out ships, for Phillip's craft",
             "Hook: Superiors (House Tremere's war plans)",
         ),
@@ -699,10 +694,6 @@ P = Profile
 HUNGARIAN = "Hungarian"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the chapter sketches without a stat block, by key.
 PROFILES: dict[str, Profile] = {
     "essedarius": P(
@@ -715,7 +706,7 @@ PROFILES: dict[str, Profile] = {
             "Area Lore: Transylvanian Tribunal": (3, "borders"),
             "Intrigue": 2,
         },
-        virtues=[_art("Affinity with {art}", "corpus"), "Dutybound"],
+        virtues=[vf_art("Affinity with {art}", "corpus"), "Dutybound"],
         native=HUNGARIAN,
     ),
     "leona": P(
@@ -730,7 +721,7 @@ PROFILES: dict[str, Profile] = {
             "Survival": (3, "mountains"),
         },
         virtues=[
-            _art("Affinity with {art}", "herbam"),
+            vf_art("Affinity with {art}", "herbam"),
             "Wrathful (Minor)",
             "Hatred (Minor)",
         ],

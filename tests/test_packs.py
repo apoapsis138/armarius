@@ -4,6 +4,8 @@ starting a new saga from one."""
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from support import everything_saga, menu
 
 from ars_magica_manager import packs, storage, transfer
@@ -145,11 +147,11 @@ def test_the_export_form_ticks_records_and_writes_the_pack(tmp_path):
 
 def test_a_new_saga_starts_from_a_pack(tmp_path):
     saga = everything_saga()
-    packs.write(storage.EXPORTS_DIR / "rhine.amm.json", _rhine_pack(saga))
+    packs.write(storage.exports_dir() / "rhine.amm.json", _rhine_pack(saga))
     # Other exports in the folder are not packs.
-    transfer.export_saga_to(storage.EXPORTS_DIR / "all.amm.json", saga)
-    found = packs.available(storage.EXPORTS_DIR)
-    assert [label.split(":")[0] for label, _path in found] == ["Rhine Tribunal"]
+    transfer.export_saga_to(storage.exports_dir() / "all.amm.json", saga)
+    found = packs.available(storage.exports_dir())
+    assert [label.split(":")[0] for label, _path, _data in found] == ["Rhine Tribunal"]
     assert "Tribunal," not in found[0][0]
     fields = {f.key: f for f in creation_forms.saga_fields(None)}
     assert fields["pack"].value == ""
@@ -202,7 +204,7 @@ async def test_the_terminal_exports_a_pack_from_more():
         box.value = True
         assert await wait_until(pilot, lambda: bool(app.screen.query("#btn-save")))
         app.screen.query_one("#btn-save").press()
-        target = storage.EXPORTS_DIR / packs.file_name(f"{source.name} pack")
+        target = storage.exports_dir() / packs.file_name(f"{source.name} pack")
         assert await wait_until(pilot, lambda: target.is_file())
         assert transfer.read(target)["kind"] == transfer.PACK
 
@@ -274,3 +276,20 @@ def test_importing_a_pack_asks_what_to_bring_then_previews(tmp_path):
     confirm.apply()
     assert {c.name for c in target.covenants} == {"Keep", "Fengheld"}
     assert all(n.kind == "place" for n in target.neighbours)
+
+
+def test_the_new_saga_form_reads_each_pack_once(monkeypatch):
+    saga = everything_saga()
+    packs.write(storage.exports_dir() / "rhine.amm.json", _rhine_pack(saga))
+    packs.write(storage.exports_dir() / "other.amm.json", _rhine_pack(saga))
+    reads: list[Path] = []
+    real_read = transfer.read
+
+    def counted(path: Path) -> dict:
+        reads.append(Path(path))
+        return real_read(path)
+
+    monkeypatch.setattr(transfer, "read", counted)
+    monkeypatch.setattr(packs, "SHIPPED_DIR", storage.exports_dir() / "none")
+    creation_forms.saga_fields(None)
+    assert sorted(p.name for p in reads) == ["other.amm.json", "rhine.amm.json"]

@@ -17,7 +17,7 @@ import html
 from collections.abc import Callable
 
 from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QColor, QPainter
+from PySide6.QtGui import QColor, QPainter, QPaintEvent
 from PySide6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 from .. import worksheet as ws
@@ -25,7 +25,7 @@ from .. import worksheet_feedback as feedback
 from ..commands import Command, SectionOps
 from ..forms import worksheet as wf
 from ..markup import escape
-from ..models import Character
+from ..models import Character, Saga
 from ..rules import creation as rules
 from ..tables import Table
 from .character_sheet import TextBlock, is_aligned, label_values, section
@@ -45,7 +45,7 @@ class WorksheetPage(QWidget):
 
     def __init__(
         self,
-        saga,
+        saga: Saga,
         record: wf.Record,
         palette: Palette,
         run: Run = lambda _command: None,
@@ -276,7 +276,7 @@ class MeterBar(QWidget):
     def colour(self) -> str:
         return self.p["text-error"] if self.meter.over else self.p["accent"]
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         meter, p = self.meter, self.p
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -315,7 +315,7 @@ class MeterBar(QWidget):
 
 
 def broken_line(
-    saga, record: wf.Record, p: Palette, open_step: Callable[[str], None]
+    saga: Saga, record: wf.Record, p: Palette, open_step: Callable[[str], None]
 ) -> QLabel:
     """One line naming each step with a broken creation rule and how many,
     each a link to that step (its rules in the tooltip); hidden while none

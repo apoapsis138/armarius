@@ -103,7 +103,7 @@ def print_entry(
         return Refuse(
             "Print", "Only an Acta prints; the minutes are read in the Diary."
         )
-    folder = storage.EXPORTS_DIR
+    folder = storage.exports_dir()
     stem = re.sub(r'[\\/:*?"<>|]', "", entry.title).strip() or "Acta"
 
     def save(path: Path) -> list[str]:

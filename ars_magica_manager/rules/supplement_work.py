@@ -18,6 +18,7 @@
 
 from __future__ import annotations
 
+import random
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
@@ -33,6 +34,7 @@ from ..models import (
 )
 from . import dice, work_virtues
 from .rounding import round_down, round_up
+from .scores import ability_level
 
 SOURCE = (
     "City & Guild, Chapter Two: Labor and Livelihood "
@@ -136,11 +138,6 @@ class SupplementWork:
     summa_level: tuple[str, int] | None = None
 
 
-def ability(character: Character, name: str) -> int:
-    found = next((a for a in character.abilities if a.name == name), None)
-    return found.level if found else 0
-
-
 def wealth(character: Character) -> str:
     ids = {vf.vf_id for vf in character.virtues_flaws}
     if "vf_wealthy" in ids:
@@ -174,7 +171,7 @@ def progress_of(character: Character, kind: str, name: str) -> Progress | None:
 def workshop_total(character: Character, plan: SeasonPlan, craft: str) -> int:
     return (
         _characteristic(character, plan, "dexterity")
-        + ability(character, craft)
+        + ability_level(character, craft)
         + character.workshop_innovation
         + character.workshop_raw_materials
         + plan.other_modifier
@@ -278,9 +275,9 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
     if not lore:
         return "Name the Mystagogue's (Mystery Cult) Lore."
     mystagogue = saga.character(plan.teacher_id) or character
-    if ability(mystagogue, lore) < 1:
+    if ability_level(mystagogue, lore) < 1:
         return f"{mystagogue.name} doesn't know {lore}."
-    if ability(character, lore) < 1 and not _house_lore(character, lore):
+    if ability_level(character, lore) < 1 and not _house_lore(character, lore):
         return f"{character.name} needs {lore} 1 to be Initiated."
     return _ordeal_problem(character, plan)
 
@@ -339,10 +336,10 @@ def _lecture_problems(saga: Saga, teacher: Character, plan: SeasonPlan) -> list[
         and b.author_id == teacher.id
         and b.ability == name
     )
-    if made >= ability(teacher, name):
+    if made >= ability_level(teacher, name):
         return [
             f"{teacher.name} has {made} lecture commentaries on {name}: the most "
-            f"a score of {ability(teacher, name)} allows."
+            f"a score of {ability_level(teacher, name)} allows."
         ]
     return []
 
@@ -405,7 +402,11 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
 
 
 def _working_season(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     wm = multiplier(character)
     craft = _subject_ability(plan)
@@ -418,7 +419,9 @@ def _working_season(
     }[plan.activity]
     penalty = work_virtues.aura_penalty(saga, character, craft)
     lp = (
-        _characteristic(character, plan, default) + ability(character, craft) + penalty
+        _characteristic(character, plan, default)
+        + ability_level(character, craft)
+        + penalty
     ) * wm
     result.labor_points = lp
     away = f" {penalty:+d} (Necessary Realm Aura)" if penalty else ""
@@ -429,7 +432,11 @@ def _working_season(
 
 
 def _workshop_production(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     wm = multiplier(character)
     name = plan.title.strip()
@@ -438,7 +445,7 @@ def _workshop_production(
     level = plan.book_level if plan.book_level is not None else 6
     if plan.experimenting and rng is None:
         result.notes.append("Exertion: its dice are rolled when the season is played.")
-    elif plan.experimenting:
+    elif plan.experimenting and rng is not None:
         die = dice.simple_die(rng)
         roll = dice.stress_die(rng, 1, saga=saga)
         outcome = (
@@ -460,7 +467,7 @@ def _workshop_production(
     quality = quality_for(total, level)
     lp = (
         _characteristic(character, plan, "dexterity")
-        + ability(character, craft)
+        + ability_level(character, craft)
         + penalty
     ) * wm
     result.labor_points = lp
@@ -476,10 +483,10 @@ def _workshop_production(
     if note := work_virtues.independent_note(character, craft):
         result.notes.append(note)
     if plan.quick:
-        if ability(character, "Artes Liberales") < 1:
+        if ability_level(character, "Artes Liberales") < 1:
             result.notes.append("No craft manual: it needs Artes Liberales 1.")
         else:
-            score = round_up(ability(character, craft) / MANUAL_DIVISOR)
+            score = round_up(ability_level(character, craft) / MANUAL_DIVISOR)
             result.labor_points -= 1
             result.books.append(
                 Book(
@@ -500,7 +507,11 @@ def _workshop_production(
 
 
 def _make_excellent_item(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     craft = _subject_ability(plan)
@@ -514,7 +525,11 @@ def _make_excellent_item(
 
 
 def _merchant_venture(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     lp = plan.other_modifier
     result.labor_points = lp
@@ -522,7 +537,11 @@ def _merchant_venture(
 
 
 def _improve_workshop(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     step = name.lower()
@@ -537,7 +556,11 @@ def _improve_workshop(
 
 
 def _produce_remedies(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     level = plan.book_level or 0
     doses = max(1, plan.extra_vis)
@@ -549,17 +572,25 @@ def _produce_remedies(
 
 
 def _medical_season(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     result.notes.append(
-        f"Can care for {ability(character, 'Chirurgy')} patients (palliative) "
-        f"and treat {ability(character, 'Medicine')} (therapy) alongside, or "
+        f"Can care for {ability_level(character, 'Chirurgy')} patients (palliative) "
+        f"and treat {ability_level(character, 'Medicine')} (therapy) alongside, or "
         "five times as many as the season's whole work."
     )
 
 
 def _create_art(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     craft = _subject_ability(plan)
@@ -568,7 +599,7 @@ def _create_art(
     else:
         base = character.characteristics.dexterity
     ids = {vf.vf_id for vf in character.virtues_flaws}
-    aq = base + ability(character, craft) + plan.other_modifier
+    aq = base + ability_level(character, craft) + plan.other_modifier
     if ids & {"vf_inspirational", "vf_free_expression"}:
         aq += ARTWORK_VIRTUE_BONUS
     seasons = max(1, round_up(aq / ARTWORK_QUALITY_PER_SEASON))
@@ -577,7 +608,11 @@ def _create_art(
 
 
 def _research_formula(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     xp = plan.source_quality if plan.source_quality is not None else FORMULA_XP
@@ -586,7 +621,11 @@ def _research_formula(
 
 
 def _attend_university(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     craft = _subject_ability(plan)
@@ -594,7 +633,7 @@ def _attend_university(
     exam = name.lower()
     if exam in EXAMS and rng is None:
         result.notes.append(f"The {exam} exam is rolled when the season is played.")
-    elif exam in EXAMS:
+    elif exam in EXAMS and rng is not None:
         reps = sum(
             t.score for t in character.reputations if "academic" in t.name.lower()
         )
@@ -602,7 +641,7 @@ def _attend_university(
         die = dice.stress_die(rng, 1, saga=saga)
         total = (
             character.characteristics.communication
-            + ability(character, subject)
+            + ability_level(character, subject)
             + reps
             + die.value
         )
@@ -614,7 +653,11 @@ def _attend_university(
 
 
 def _pilgrimage(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     target = plan.book_level if plan.book_level in (18, 30) else 18
@@ -632,7 +675,11 @@ def _pilgrimage(
 
 
 def _care_of_souls(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     theme = name or "the sermons' theme"
@@ -643,7 +690,11 @@ def _care_of_souls(
 
 
 def _tame_animal(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     might = plan.book_level or 0
@@ -653,8 +704,8 @@ def _tame_animal(
     points = max(
         0,
         character.characteristics.intelligence
-        + ability(character, "Animal Handling")
-        + ability(character, "Animal Ken")
+        + ability_level(character, "Animal Handling")
+        + ability_level(character, "Animal Ken")
         - might
         - gift,
     )
@@ -667,12 +718,19 @@ def _tame_animal(
 
 
 def _search_lacuna(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
-    if plan.die is None and rng is None:
+    if plan.die is not None:
+        die = plan.die
+    elif rng is not None:
+        die = dice.stress_die(rng, 1, saga=saga).value
+    else:
         result.notes.append("The search is rolled when the season is played.")
         return
-    die = plan.die if plan.die is not None else dice.stress_die(rng, 1, saga=saga).value
     lore = max(
         (a.level for a in character.abilities if a.name.startswith("Area Lore")),
         default=0,
@@ -685,13 +743,17 @@ def _search_lacuna(
 
 
 def _undergo_initiation(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     mystagogue = saga.character(plan.teacher_id) or character
     total = (
         mystagogue.characteristics.presence
-        + ability(mystagogue, name)
+        + ability_level(mystagogue, name)
         + plan.other_modifier
     )
     target = initiation_target(saga, character, plan)
@@ -713,13 +775,17 @@ def _undergo_initiation(
 
 
 def _record_lectures(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     name = plan.title.strip()
     teacher = saga.character(plan.teacher_id)
     assert teacher is not None
     quality = teacher.characteristics.communication + round_down(
-        ability(character, "Profession: Scribe") / LECTURES_SCRIBE_DIVISOR
+        ability_level(character, "Profession: Scribe") / LECTURES_SCRIBE_DIVISOR
     )
     subject = next((a.subject for a in plan.allocations if a.subject), "")
     kind, _, what = subject.partition(":")
@@ -744,14 +810,18 @@ def _record_lectures(
 
 
 def _inspeximus(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     book = next(b for b in saga.books if b.id == plan.book_id)
     art = (book.art or "").lower()
     now = (
         character.arts[art].level
         if art in character.arts
-        else ability(character, book.ability)
+        else ability_level(character, book.ability)
     )
     then = plan.book_level if plan.book_level is not None else (book.level or 0) * 2
     new = min(
@@ -762,7 +832,11 @@ def _inspeximus(
 
 
 def _bind_catalog(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     result.notes.append(
         "The library catalog bound: an Arcane Connection to the library and "
@@ -772,7 +846,11 @@ def _bind_catalog(
 
 #: What each supplement activity does, by its key (Strategy, as a table).
 def _library_research(
-    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
 ) -> None:
     """The research roll's total before the die: Intelligence + the Ability
     + the better of the covenant library's bonus for it and its best
@@ -796,7 +874,9 @@ def _library_research(
             if best == library
             else f"{found[0].name} +{found[0].bonus}"
         )
-    total = character.characteristics.intelligence + ability(character, name) + best
+    total = (
+        character.characteristics.intelligence + ability_level(character, name) + best
+    )
     text = f"Research roll: Intelligence + {name}"
     text += f" + {source}" if source else " (no library bonus)"
     result.notes.append(
@@ -829,7 +909,9 @@ _WORK: dict[str, Callable[[Saga, Character, SeasonPlan, Any, SupplementWork], No
 }
 
 
-def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementWork:
+def work(
+    saga: Saga, character: Character, plan: SeasonPlan, rng: random.Random | None
+) -> SupplementWork:
     """What the season does (rolls made with `rng`)."""
     result = SupplementWork()
     handler = _WORK.get(plan.activity)

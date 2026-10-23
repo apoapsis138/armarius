@@ -48,6 +48,7 @@ from .models import (
     Saga,
     Tribunal,
 )
+from .rules import covenfolk
 from .sections import (
     BATTLES_SECTION,
     BOOK_SECTIONS,
@@ -195,7 +196,7 @@ def _section_verbs() -> dict[str, frozenset[str]]:
     for kind in INHABITANT_KINDS:
         # Only Magi and Companions can be departed, and so restored.
         verbs[f"section-inh-{kind}"] = (
-            _ALL3 | {"restore"} if kind in inh.AUTO_KINDS else _ALL3
+            _ALL3 | {"restore"} if kind in covenfolk.AUTO_KINDS else _ALL3
         )
     for kind, _ in seasons.SEASON_KINDS:
         verbs[f"section-cov-seasons-{kind}"] = _ALL3

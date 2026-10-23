@@ -19,8 +19,7 @@ import uuid
 from collections.abc import Callable
 from typing import Any
 
-from .. import books, seasons
-from .. import enchanted_devices as ed
+from .. import catalog, seasons
 from .. import lab_texts as lt
 from .. import spell_parameters as sp
 from .. import spells as spl
@@ -36,8 +35,6 @@ from ..commands import (
     SectionOps,
     notes,
 )
-from ..covenants import home_aura
-from ..familiars import familiar_of
 from ..form_spec import ChoiceReads, DialogField, pairs, read_for_choice
 from ..markup import escape, todo
 from ..models import (
@@ -53,11 +50,19 @@ from ..models import (
 from ..rules import activities as season_rules
 from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
+from ..rules import (
+    enchantment,
+    lab_seasons,
+    lab_virtues,
+    library,
+    research,
+    spell_levels,
+)
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
-from ..rules import lab_seasons, lab_virtues, research, spell_levels
 from ..rules import laboratory_seasons as ls
 from ..rules.lab import ability_score
+from ..rules.realms import home_aura
 from ..seasons import pairs as paired_plans
 from ..seasons.projection import as_then
 from . import activity as activity_forms
@@ -192,7 +197,7 @@ def choose_template(
 
 def template_label(saga: Saga, spell_id: str | None) -> str:
     """How the Start from field shows the spell a design started from."""
-    source = spl.find_spell(saga, spell_id)
+    source = catalog.find_spell(saga, spell_id)
     if source is None:
         return "(a new spell)"
     level = "Gen" if source.level is None else source.level
@@ -224,7 +229,7 @@ class LabPlanForm:
         if design is None and plan is not None:
             design = plan.design
             if design is None and plan.spell_id:
-                spell = spl.find_spell(saga, plan.spell_id)
+                spell = catalog.find_spell(saga, plan.spell_id)
                 design = design_from(spell) if spell else None
         self.design = design
         self.key = design.key if design and design.key else uuid.uuid4().hex[:12]
@@ -419,7 +424,7 @@ class LabPlanForm:
     def design_values(self, values: dict[str, Any]) -> dict[str, Any]:
         """The design fields' values from the spell Start from names (all
         blank for a new spell)."""
-        spell = spl.find_spell(self.saga, values.get("start_from"))
+        spell = catalog.find_spell(self.saga, values.get("start_from"))
         design = design_from(spell) if spell is not None else None
         found: dict[str, Any] = {
             "name": design.name if design else "",
@@ -445,7 +450,7 @@ class LabPlanForm:
         )
 
     def _start_hint(self) -> str:
-        source = spl.find_spell(
+        source = catalog.find_spell(
             self.saga, self.design.source_spell_id if self.design else None
         )
         if source is None:
@@ -747,7 +752,7 @@ class LabPlanForm:
         known = [
             (escape(spell.name), spell.id)
             for k in self.magus.spells_known
-            if (spell := spl.find_spell(self.saga, k.spell_id)) is not None
+            if (spell := catalog.find_spell(self.saga, k.spell_id)) is not None
         ]
         experimental = _doing(*lab_seasons.EXPERIMENTAL)
         researching = _doing(*lab_seasons.EXPERIMENTAL, ex.STABILIZE)
@@ -901,8 +906,8 @@ class LabPlanForm:
         """Every effect of those devices, named with its device."""
         return [
             (
-                f"{escape(d.name)}: {escape(ed.effect_name(e))} "
-                f"(level {ed.modified_level(d, e)})",
+                f"{escape(d.name)}: {escape(enchantment.effect_name(e))} "
+                f"(level {enchantment.modified_level(d, e)})",
                 e.id,
             )
             for d in es.devices_for(self.saga, self.magus, self.lab)
@@ -944,12 +949,12 @@ class LabPlanForm:
             for b in self.saga.books
             if b.type == "Lab Text"
             and b.raw
-            and books.can_read(self.saga, self.magus, b)
+            and library.can_read(self.saga, self.magus, b)
             and not bs.can_use_lab_text(self.magus, b)
         ]
 
     def powers(self) -> list[tuple[str, str]]:
-        familiar = familiar_of(self.saga, self.magus.id)
+        familiar = self.saga.familiar_of(self.magus.id)
         if familiar is None:
             return []
         return [
@@ -974,7 +979,7 @@ class LabPlanForm:
         if plan.activity == fs.BIND:
             return [a for a in (plan.technique, plan.form) if a]
         if plan.activity == fs.EMPOWER:
-            familiar = familiar_of(self.saga, self.magus.id)
+            familiar = self.saga.familiar_of(self.magus.id)
             power = fs.power_of(familiar, plan) if familiar is not None else None
             return [a for a in (power.technique, power.form) if a] if power else []
         device = es.device_of(self.saga, plan)
@@ -1008,7 +1013,7 @@ class LabPlanForm:
         if "start_from" in values:
             # The spell Start from names now, and its level as printed when
             # it records no base level.
-            source = spl.find_spell(self.saga, values.get("start_from"))
+            source = catalog.find_spell(self.saga, values.get("start_from"))
             design = design_from(source) if source is not None else None
         return SpellDesign(
             key=self.key,
@@ -1519,7 +1524,7 @@ def new_spell(saga: Saga, lab: Laboratory, index: int | None) -> Command:
     season, year = queue_season(saga, lab, index)
 
     def start(spell_id: str | None) -> Form:
-        spell = spl.find_spell(saga, spell_id) if spell_id else None
+        spell = catalog.find_spell(saga, spell_id) if spell_id else None
         return LabPlanForm(
             saga,
             owner,

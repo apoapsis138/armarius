@@ -26,12 +26,17 @@
 - Botch dice: 1, +1 per pawn of vis, +1 per point of a non-Magic aura (x2 in
   a regio), +2 fast casting, -1 per point of Mastery (Golden Cord too, but
   never to 0 that way).
+
+No screen uses formulaic_outcome(), ritual_outcome(), tablet_outcome(),
+spontaneous_fatiguing(), spontaneous_non_fatiguing() yet: they are the rules
+for screens still to come, and only the tests call them.
 """
 
 from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Any
 
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Saga, Spell, VirtueFlawInstance
@@ -221,7 +226,7 @@ def spell_casting_score(
     aura: int = 0,
     aura_realm: str = realms.HERMETIC,
     mastery: int = 0,
-    **kwargs,
+    **kwargs: Any,
 ) -> Breakdown:
     return casting_score(
         magus,

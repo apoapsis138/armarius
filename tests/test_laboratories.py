@@ -15,6 +15,7 @@ from ars_magica_manager.models import (
     NamedDescription,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import lab_stats
 
 
 def _lab(*vf_ids: str, **characteristics: int) -> Laboratory:
@@ -149,7 +150,7 @@ def test_scores_sum_every_source_and_keep_where_they_came_from():
         LabSpecialtyEntry("Terram", 2, "Old notes"),
         LabSpecialtyEntry("Spells", 1, ""),
     ]
-    scores = {s.name: s for s in lab_text.specialization_scores(lab)}
+    scores = {s.name: s for s in lab_stats.specialization_scores(lab)}
     assert scores["Terram"].points == 3
     assert scores["Terram"].sources == (("Subterranean", 1), ("Old notes", 2))
     assert scores["Spells"].sources == (("(no source given)", 1),)
@@ -313,7 +314,8 @@ def test_old_free_text_features_match_the_catalog_and_take_free_virtues():
                 "Summoning circle of salt",
                 "Hanging gardens",
             ],
-        }
+        },
+        catalog.lab_feature_names(),
     )
     lesser, _, greater = lab.virtues_flaws
     assert all(vf.id for vf in lab.virtues_flaws)
@@ -362,7 +364,7 @@ def test_feature_points_and_focus_feed_the_specializations():
         focus_allocations=[LabSpecialtyGrant("Ignem", 3)],
     )
     lab.specialties = [LabSpecialtyEntry("Ignem", -1, "Hearth")]
-    ignem = next(s for s in lab_text.specialization_scores(lab) if s.name == "Ignem")
+    ignem = next(s for s in lab_stats.specialization_scores(lab) if s.name == "Ignem")
     assert ignem.points == 4
     assert ignem.sources == (
         ("Cauldron (Feature)", 2),

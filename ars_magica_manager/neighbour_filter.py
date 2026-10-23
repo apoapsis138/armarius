@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 from . import neighbours, places
 from .models import Neighbour, Saga
+from .rules import sites
 
 
 @dataclass(frozen=True)
@@ -38,7 +39,7 @@ def regions(saga: Saga) -> list[Neighbour]:
         for record in saga.neighbours
         for outer in places.inside_of(saga, record)
     }
-    return [p for p in places.all_places(saga) if not p.place_id and p.id in held]
+    return [p for p in sites.all_places(saga) if not p.place_id and p.id in held]
 
 
 def kinds(saga: Saga) -> list[neighbours.NeighbourKind]:
@@ -50,7 +51,7 @@ def kinds(saga: Saga) -> list[neighbours.NeighbourKind]:
 def current(saga: Saga) -> Filter:
     """The saga's filter; a region since deleted no longer narrows it."""
     wanted = _CURRENT.get(saga.id, Filter())
-    if wanted.region and places.place(saga, wanted.region) is None:
+    if wanted.region and sites.place(saga, wanted.region) is None:
         wanted = Filter(kind=wanted.kind)
     return wanted
 
@@ -68,7 +69,7 @@ def describe(saga: Saga, wanted: Filter) -> str:
     kind = neighbours.KINDS.get(wanted.kind)
     if kind is not None:
         parts.append(kind.name)
-    region = places.place(saga, wanted.region) if wanted.region else None
+    region = sites.place(saga, wanted.region) if wanted.region else None
     if region is not None:
         parts.append(f"in {region.name}")
     return ", ".join(parts)

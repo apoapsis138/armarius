@@ -32,6 +32,7 @@ from .models import (
     Saga,
     new_instance_id,
 )
+from .rules import library
 
 Holder = Character | Laboratory | Covenant
 
@@ -284,7 +285,7 @@ def gift(saga: Saga, kind: str, shown: Holder | None, thing: Any = None) -> Gift
     whoever owns it and a device from whoever holds it, wherever it is
     listed; None when nobody does."""
     if kind == BOOK:
-        source = bk.owner_record(saga, thing)
+        source = library.owner_record(saga, thing)
     elif kind == DEVICE:
         source = vis.find_holder(saga, thing.holder_kind or "", thing.holder_id)
     else:

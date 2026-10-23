@@ -11,8 +11,8 @@ as the terminal's Saga Content view does.
 
 from __future__ import annotations
 
-from PySide6.QtCore import QSize, QSortFilterProxyModel, Qt
-from PySide6.QtGui import QIcon, QStandardItem, QStandardItemModel
+from PySide6.QtCore import QModelIndex, QSize, QSortFilterProxyModel, Qt
+from PySide6.QtGui import QFont, QIcon, QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QHBoxLayout,
@@ -46,6 +46,7 @@ from .widgets import (
     Card,
     ClickableCard,
     Codex,
+    Symbol,
     badge,
     cells_table,
     chip,
@@ -118,7 +119,9 @@ class SagaContentPage(QWidget):
     def chapters(self) -> list[str]:
         return self.codex.chapters()
 
-    def inspect(self, title: str, subtitle: str, markup: str, symbol=None) -> None:
+    def inspect(
+        self, title: str, subtitle: str, markup: str, symbol: Symbol | None = None
+    ) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
 
     # Chapters
@@ -463,7 +466,7 @@ class SagaContentPage(QWidget):
                 f"Spells ({len(self.shown_spells)} of {len(self.all_spells)})"
             )
 
-    def _show_spell(self, current, _previous) -> None:
+    def _show_spell(self, current: QModelIndex, _previous: QModelIndex) -> None:
         index = current.siblingAtColumn(0).data(Qt.ItemDataRole.UserRole)
         if index is None:
             return
@@ -511,7 +514,7 @@ class SagaContentPage(QWidget):
         )
 
 
-def _cell(words: str, sort: object, *, font=None) -> QStandardItem:
+def _cell(words: str, sort: object, *, font: QFont | None = None) -> QStandardItem:
     item = QStandardItem(words)
     item.setEditable(False)
     item.setData(sort, SORT)

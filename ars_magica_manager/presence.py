@@ -21,7 +21,7 @@ FRESH = 10.0
 
 
 def _folder() -> Path:
-    return storage.SAGAS_DIR / ".presence"
+    return storage.sagas_dir() / ".presence"
 
 
 def note(session: str, saga_id: str, who: str, record: str | None) -> None:

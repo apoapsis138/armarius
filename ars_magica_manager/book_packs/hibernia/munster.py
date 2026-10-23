@@ -34,7 +34,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -54,11 +54,6 @@ KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(hibernia: Hibernia, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1180,7 +1175,7 @@ def _circulus_ruber(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "have gone back in time, which is just what Circulus Ruber "
         "wants. It sees itself as the Tribunal's leader and model.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the book names none",
         "Wealth: cattle, as tradition demands; the covenant never meets its wealth needs any other way",
         "Library: unnamed (see its library record)",
@@ -1237,7 +1232,7 @@ def _circulus_ruber(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Hibernia; the book names no others.",
         "The cathach.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The cauldron is not the Dagda's, which gives food and drink without end, but the Cauldron of Llasar Llaes Gyfnewid, a notorious giant who lived beneath a lake. Legend says that cauldron passed between Irish and Welsh kings and was broken in a war between them; either the tale is wrong, or this is another vessel with the same powers.",
         "It brings a dead warrior back to fight for one more day, if his head and spine are whole: he cannot speak, and for the next 24 hours he fights for whoever put him in. It will not raise the same corpse twice. The magi keep this from the Tribunal.",
     )
@@ -1345,7 +1340,7 @@ def _cliffheart(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Latin. Its magi keep their Oath and the Peripheral Code; they "
         "are anxious recluses, not criminals or troublemakers.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the book names none",
         "Library: untidy on purpose (see its library record)",
         "Research: Palantus's spells in Irish, built from faeries' true speech",
@@ -1531,7 +1526,7 @@ def _elks_run(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "party: raided by Irish clansmen and by Irish magi after its "
         "cathach, it has turned more and more to English nobles for help.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the sources across the mountains, loughs and forests Oswald rode round before sunset; the book does not list them",
         "Library: very large; mundane books, laboratory texts and rare magical volumes, among them the Ars Notoria (see its library record)",
         "Boon: Prestige (Oswald's name for generosity and scholarship across Mythic Europe)",
@@ -1610,7 +1605,7 @@ def _elks_run(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "follows 1159.",
         "What the magi do not admit.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Oswald has used acts and gifts of magic to help Irish and English nobles and clerics in return for books, which could plainly be judged interfering with mundanes; he does not see how far he has compromised himself.",
         "Igneous Drake kills raiders, Ua Cathail bandits and hedge wizards who stray out of Connacht, and wages Wizard War on Irish magi he thinks have slighted the covenant, believing Hibernia enforces no law among magi.",
     )
@@ -1741,7 +1736,7 @@ def _leth_moga(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Hiberniae and the English magi, though who may read the Red Book "
         "is a sore point with both.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Income: its barn laboratory, rented to visiting magi for one pawn of vis a season",
         "Vis: stored behind locked doors in the caves beneath Cloyne; the book gives no amount",
         "Library: the Red Book of Cloyne (Diarmait's own, under his sanctum marker)",
@@ -1968,10 +1963,6 @@ LORE = "Area Lore: Hibernian Tribunal"
 MUNSTER = "Area Lore: Munster"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus and Redcap the chapter sketches without a stat block, by key.
 PROFILES: dict[str, Profile] = {
     "milvia": P(
@@ -2033,7 +2024,7 @@ PROFILES: dict[str, Profile] = {
             MUNSTER: (4, "faerie haunts"),
             "Survival": 3,
         },
-        virtues=[_art("Affinity with {art}", "terram"), "Wrathful (Minor)"],
+        virtues=[vf_art("Affinity with {art}", "terram"), "Wrathful (Minor)"],
         native=IRISH,
     ),
     "ruaidri": P(
@@ -2087,7 +2078,7 @@ PROFILES: dict[str, Profile] = {
             "Craft: Smith": (4, "weapons"),
             "Living Language: Old Norse": 4,
         },
-        virtues=[_art("Affinity with {art}", "terram"), "Reclusive"],
+        virtues=[vf_art("Affinity with {art}", "terram"), "Reclusive"],
         native=IRISH,
     ),
     "oswald": P(
@@ -2128,7 +2119,11 @@ PROFILES: dict[str, Profile] = {
             "Hunt": (3, "fugitives"),
             "Athletics": 2,
         },
-        virtues=[_art("Puissant {art}", "ignem"), "Wrathful (Major)", "Hatred (Minor)"],
+        virtues=[
+            vf_art("Puissant {art}", "ignem"),
+            "Wrathful (Major)",
+            "Hatred (Minor)",
+        ],
         native="English",
     ),
     "diarmait": P(

@@ -37,7 +37,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from ars_magica_manager import DATA_DIR, catalog, settings, storage
+from textual.pilot import Pilot
+
+from ars_magica_manager import DATA_DIR, catalog, paths, storage
 from ars_magica_manager.models import Saga
 
 SIZE = (140, 60)
@@ -115,14 +117,16 @@ def catalog_timings() -> None:
         print(f"{_ms(first)}  {label} ({kb:.0f} KB); cached call {again * 1e6:.0f} us")
 
 
-async def _settle(pilot) -> None:
+async def _settle(pilot: Pilot[Any]) -> None:
     await pilot.pause()
     if WAIT_ANIMATIONS:
         await pilot.wait_for_scheduled_animations()
     await pilot.pause()
 
 
-async def _until(pilot, condition, timeout: float = 30.0) -> None:
+async def _until(
+    pilot: Pilot[Any], condition: Callable[[], bool], timeout: float = 30.0
+) -> None:
     start = time.perf_counter()
     while not condition():
         if time.perf_counter() - start > timeout:
@@ -219,15 +223,14 @@ def main() -> None:
     parser.add_argument("--no-ui", action="store_true")
     args = parser.parse_args()
 
-    real_dir = storage.SAGAS_DIR
+    real_dir = storage.sagas_dir()
     saga_id = args.saga_id or storage.list_sagas()[0]
     data = json.loads((real_dir / f"{saga_id}.json").read_text(encoding="utf-8"))
 
     with tempfile.TemporaryDirectory() as tmp:
-        storage.SAGAS_DIR = Path(tmp) / "sagas"
-        storage.SAGAS_DIR.mkdir()
-        settings.SETTINGS_PATH = Path(tmp) / "app_settings.json"
-        (storage.SAGAS_DIR / f"{saga_id}.json").write_text(
+        paths.use_data_dir(Path(tmp))
+        storage.sagas_dir().mkdir()
+        (storage.sagas_dir() / f"{saga_id}.json").write_text(
             json.dumps(scaled(data, args.scale), indent=2), encoding="utf-8"
         )
         print(f"saga {saga_id}, scale x{args.scale}")

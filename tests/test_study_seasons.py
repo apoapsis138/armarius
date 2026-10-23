@@ -20,6 +20,7 @@ from ars_magica_manager.models import (
     XpAllocation,
 )
 from ars_magica_manager.rules import activities as rules
+from ars_magica_manager.rules import library
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 
@@ -113,14 +114,14 @@ def test_the_library_is_open_to_the_covenant_but_kept_books_are_not():
     saga = _saga()
     tib, oda, alys = saga.characters
     book = {b.id: b for b in saga.books}
-    assert books.can_read(saga, tib, book["summa"])
-    assert books.can_read(saga, alys, book["summa"])
-    assert books.can_read(saga, tib, book["tract"])
-    assert not books.can_read(saga, oda, book["tract"])
-    assert not books.can_read(saga, tib, book["alys-book"])
-    assert books.can_read(saga, tib, book["lab-book"])  # his own laboratory's
-    assert not books.can_read(saga, oda, book["lab-book"])
-    assert not books.can_read(saga, tib, book["loose"])  # in nobody's library
+    assert library.can_read(saga, tib, book["summa"])
+    assert library.can_read(saga, alys, book["summa"])
+    assert library.can_read(saga, tib, book["tract"])
+    assert not library.can_read(saga, oda, book["tract"])
+    assert not library.can_read(saga, tib, book["alys-book"])
+    assert library.can_read(saga, tib, book["lab-book"])  # his own laboratory's
+    assert not library.can_read(saga, oda, book["lab-book"])
+    assert not library.can_read(saga, tib, book["loose"])  # in nobody's library
     assert [b.id for b in books.studyable_books(saga, tib)] == [
         "summa",
         "tract",

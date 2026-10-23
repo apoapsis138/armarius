@@ -34,7 +34,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -56,11 +56,6 @@ KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
 HIDDEN: dict[str, Any] = {"status": "Rumoured", "known": "In the Tribunal"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(hibernia: Hibernia, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1602,7 +1597,7 @@ def _leth_cuinn(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Moga, and his heir, Dáire an Chogaidh, hates the English and has "
         "even voted at Tribunal.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Income: the Peripheral Code's guarantee and the Tribunal's "
         "covenants, which pay for Initiation into the clesrada",
         "Services: Initiation into the clesrada for Redcaps, grogs and "
@@ -1821,7 +1816,7 @@ def _qui_sonant(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "cobbled courtyard, holding sanctums, libraries and the chantry; "
         "the craftsmen's workshops lie outside the wall.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Services: burial of magi, hedge wizards, faeries and magical "
         "beasts, with tombs that keep the body whole",
         "Services: summoning the spirits of the buried, by leave of the "
@@ -1927,7 +1922,7 @@ def _qui_sonant(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Cantarus, Master of the Songs, Finn, Lewis and Turlough are "
         "described.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Turlough of Criamon, who keeps the cemetery and the spirits, "
         "wants more from the dead than summoning them, and hides his "
         "growing interest from his sodales; any help he gets must "
@@ -2173,7 +2168,7 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "A Merinita covenant, though a half-forgotten treaty with House "
         "Verditius lets a magus of that House claim one laboratory here.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Income: an endless supply of silver; Éinri's herds and bees "
         "(honey among Hibernia's best)",
         "Library: the drowned vaults, with anti-Infernal lab texts and "
@@ -2267,7 +2262,7 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "described. The founding year is not given (the Merinita took the "
         "tusks soon after 851).",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The drowned vaults hold forgotten magical weapons and "
         "devices from far lands and a library against Infernal "
         "plague and winters; covenants struck by such troubles may "
@@ -2505,14 +2500,6 @@ IRISH = "Irish"
 HIBERNIA_LORE = "Area Lore: Hibernian Tribunal"
 ORDER_LORE = "Organization Lore: Order of Hermes"
 LOCAL_ORDER = (1, "the Hibernian Tribunal")
-
-
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _char(name: str, characteristic: str) -> tuple[str, dict[str, str]]:
-    return (name, {"characteristic": characteristic})
 
 
 #: Leth Cuinn's Redcaps: un-Gifted, their House's Rhine lore given no

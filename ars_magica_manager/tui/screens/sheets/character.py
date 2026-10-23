@@ -36,6 +36,7 @@ from ....models import (
 )
 from ....rules import activities as season_rules
 from ....rules import creation_virtues as cv
+from ....rules import library
 from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
 from ....sections import CHAR_CALENDAR_SECTION as CALENDAR_SECTION
 from ....sheets import character as cs
@@ -761,7 +762,9 @@ class CharacterSheetView(SheetView):
                 )
                 yield self._book_list(
                     ("section-char-info",),
-                    lambda: bk.books_owned_by(self.saga, "character", character.id),
+                    lambda: library.books_owned_by(
+                        self.saga, "character", character.id
+                    ),
                     section_id="section-books",
                     docked=False,
                     group="char-inv",

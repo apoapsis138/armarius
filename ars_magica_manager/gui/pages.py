@@ -9,6 +9,7 @@ choosing a card calls back to the window, which opens the next page.
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import Qt, QTimer
@@ -119,7 +120,7 @@ def card_title(
     card.column.addLayout(top)
 
 
-def symbol_label(path, p: Palette, size: int = 36) -> QLabel:
+def symbol_label(path: Path, p: Palette, size: int = 36) -> QLabel:
     label = QLabel()
     label.setPixmap(pictures.pixmap(path, p["heading"], size, 2.0))
     return label

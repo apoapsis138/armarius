@@ -17,23 +17,18 @@ Kept in Neighbour.details: "charter", "council", "population", "guilds"
 from __future__ import annotations
 
 import random
-from typing import Any
+from typing import Any, Required, TypedDict, cast
 
 from . import economics
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import (
-    INCOME_TYPE_DEFAULTS,
-    SEASONS,
-    Neighbour,
-    Saga,
-)
-from .neighbour_lists import KindList, KindTab, details_list, list_ops
+from .models import INCOME_TYPE_DEFAULTS, SEASONS, Neighbour, Saga, details_list
+from .neighbour_lists import KindList, KindTab, list_ops
+from .references import Fact
 from .rules import dice
 from .sections import FAIRS_SECTION, GUILDS_SECTION
-from .sheets.character import Fact
 
 #: Who holds a town's charter.
 CHARTERS: tuple[str, ...] = ("Noble lord", "Church", "Commune", "Faerie", "Infernal")
@@ -61,12 +56,36 @@ def population(neighbour: Neighbour) -> int | None:
     return int(found) if found else None
 
 
-def guilds(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "guilds")
+class Guild(TypedDict, total=False):
+    """A guild of the town: its trade, its dean and its members."""
+
+    trade: Required[str]
+    dean: str
+    masters: int | None
+    journeymen: int | None
+    apprentices: int | None
 
 
-def fairs(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "fairs")
+def guilds(neighbour: Neighbour) -> list[Guild]:
+    return cast(list[Guild], details_list(neighbour, "guilds"))
+
+
+class Fair(TypedDict, total=False):
+    """A fair or market of the town: when it is held, the covenant
+    trading there (by id), its income band or a fixed income, and the
+    last year's takings."""
+
+    name: Required[str]
+    kind: str
+    season: str
+    covenant_id: str
+    band: str
+    income: int | None
+    last: str
+
+
+def fairs(neighbour: Neighbour) -> list[Fair]:
+    return cast(list[Fair], details_list(neighbour, "fairs"))
 
 
 # -- worked out --
@@ -185,7 +204,7 @@ def guilds_grid(_saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def guild_fields(
-    _saga: Saga, _neighbour: Neighbour, guild: dict[str, Any] | None
+    _saga: Saga, _neighbour: Neighbour, guild: Guild | None
 ) -> list[DialogField]:
     g = guild or {}
     return [
@@ -230,12 +249,12 @@ def guild_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
 # -- fairs and markets --
 
 
-def _trader(saga: Saga, fair: dict[str, Any]) -> str:
+def _trader(saga: Saga, fair: Fair) -> str:
     covenant = saga.covenant(fair.get("covenant_id"))
     return covenant.name if covenant is not None else ""
 
 
-def fair_income(fair: dict[str, Any]) -> int:
+def fair_income(fair: Fair) -> int:
     """The fair's yearly income to the covenant that trades there."""
     income = fair.get("income")
     if income is None:
@@ -273,7 +292,7 @@ def fairs_grid(saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def fair_fields(
-    saga: Saga, _neighbour: Neighbour, fair: dict[str, Any] | None
+    saga: Saga, _neighbour: Neighbour, fair: Fair | None
 ) -> list[DialogField]:
     f = fair or {}
     return [

@@ -124,11 +124,11 @@ def test_find_spell_looks_in_the_catalog_then_the_saga_then_the_magi():
             )
         ],
     )
-    assert sp.find_spell(saga, "spell_pilum_of_fire").name == "Pilum of Fire"
-    assert sp.find_spell(saga, "saga_spell").name == "House Rule"
-    assert sp.find_spell(saga, "inv_spell").name == "Leandro's Light"
-    assert sp.find_spell(saga, "nope") is None
-    assert sp.find_spell(saga, None) is None
+    assert catalog.find_spell(saga, "spell_pilum_of_fire").name == "Pilum of Fire"
+    assert catalog.find_spell(saga, "saga_spell").name == "House Rule"
+    assert catalog.find_spell(saga, "inv_spell").name == "Leandro's Light"
+    assert catalog.find_spell(saga, "nope") is None
+    assert catalog.find_spell(saga, None) is None
     ids = sp.all_spell_ids(saga)
     assert {"spell_pilum_of_fire", "saga_spell", "inv_spell"} <= ids
 
@@ -455,8 +455,8 @@ def test_the_spell_import_preview():
 
 
 def test_spell_names_match_in_any_case_and_spacing():
-    assert sp.name_key("  Palm of  Warming Flame") == "palm of warming flame"
-    assert sp.name_key("Hermes’ Portal") == sp.name_key("hermes' portal")
+    assert catalog.name_key("  Palm of  Warming Flame") == "palm of warming flame"
+    assert catalog.name_key("Hermes’ Portal") == catalog.name_key("hermes' portal")
 
 
 def test_add_own_spell_uses_a_saga_prefixed_id():

@@ -19,7 +19,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from ..models import REALMS, Covenant
+from .. import catalog
+from ..models import REALMS, Character, Covenant, CovenantBoonHookDef, Saga
 from . import effects
 from .breakdown import Breakdown
 from .rounding import round_down
@@ -111,3 +112,24 @@ def covenant_aura(covenant: Covenant, catalog_by_id: Mapping[str, Any]) -> Break
         base_source=COVENANT_AURA_SOURCE,
         rounding=round_down,
     )
+
+
+def covenant_effective_aura(
+    covenant: Covenant, catalog_by_id: Mapping[str, CovenantBoonHookDef]
+) -> int:
+    """The covenant's Aura score (covenant_aura): its base `aura` plus
+    every `covenant_aura` modifier of its Boons/Hooks. This is what its
+    laboratories inherit."""
+    return int(covenant_aura(covenant, catalog_by_id).total)
+
+
+def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
+    """The aura (score, realm) a character lives in: their covenant's
+    effective Aura (its Boons and Hooks included); 0 Magic without one. The
+    one place this is worked out (casting totals, vis study,
+    aging and warping all use it)."""
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is None:
+        return 0, HERMETIC
+    boons = catalog.load_covenant_boon_hook_catalog_by_id()
+    return covenant_effective_aura(covenant, boons), covenant.aura_realm

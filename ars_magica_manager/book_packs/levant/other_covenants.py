@@ -41,7 +41,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -97,11 +97,6 @@ PRIESTS: dict[str, str] = {
     "hekait_inepu": "Hekait Inepu",
     "tepher_hem_necher_inepu": "Tepher Hem-necher Inepu",
 }
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _tribunal(levant: Levant) -> Tribunal | None:
@@ -217,7 +212,7 @@ def _urbs_rubra(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "one has seen the pair for years, which is why the "
             "quaesitores ruled Tau the eldest in 1207.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: aloof",
             "Aura: Magic 3 (assumed; the book gives none)",
             "Guardians: the jinn of the entrance gorge, who let no one in",
@@ -296,7 +291,7 @@ def _urania(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "has other magi and more of its layout and its dealings with "
             "the Genjii.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: aloof",
             "Aura: Magic 3 (assumed; the book gives none)",
             "Pact: with the Genjii, limiting what Selene may learn of them",
@@ -384,7 +379,7 @@ def _para_belli(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "they do Foothold's, of fighting in the Crusaders' battles, "
             "but have proved nothing.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: Crusader",
             "Aura: Magic 3 (assumed; the book gives none)",
             "Guardians: two animated lion statues",
@@ -459,7 +454,7 @@ def _al_arama(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "other magi of Domus Pacis no grudge, but would help anyone "
             "hostile to Esther if it thought it could get away with it.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: trader",
             "Aura: Magic 3 (assumed; the book gives none)",
             "Vis: rich in vis, with the Levant's whole vis trade to Rome; the book gives no figures and places no source (suggestions in the notes)",
@@ -530,7 +525,7 @@ def _venti_rosa(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "keeps to the caravan; the other three are mostly away, "
             "carrying messages that cannot wait for the next visit.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: messengers",
             "Site: none; the caravan visits each covenant about twice a year",
             "Laboratory: Simon's, wherever the caravan camps, with a howdah for long work",
@@ -619,7 +614,7 @@ def _pyramids_i(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "unsettles other magi, and no one knows how far they will go, "
             "or what they might let loose if another pyramid opens.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: aloof",
             "Aura: Magic 5, and 6 beside the great pyramids and the Sphinx",
             "Servants: the spirits of the place, bound to the magi",
@@ -686,7 +681,7 @@ def _pyramids_ii(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "he would be a power. And nobody knows what magic the temple "
             "hides.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: aloof",
             "Aura: Magic 6, in the temple's regio (assumed; the book gives none)",
             "Season: Winter (assumed; the book wavers between spring and winter)",
@@ -753,7 +748,7 @@ def _true_cross(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "warns that the Treaty is most likely to break if this "
             "covenant is destroyed.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Stance: Crusader",
             "Aura: Divine 1, and none at night",
             "Contacts: friends of influence in the Crusader garrison",

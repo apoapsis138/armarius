@@ -114,7 +114,7 @@ def test_an_entry_in_use_keeps_its_id_through_an_edit():
     saga.covenants[0].boons_hooks.append(VirtueFlawInstance(hook.id))
     assert hr.used_by(saga, hr.CHARACTER, virtue) == ["Ana"]
     assert hr.used_by(saga, hr.COVENANT, hook) == ["Keep"]
-    hr.update(
+    virtue = hr.update(
         saga,
         hr.CHARACTER,
         virtue,

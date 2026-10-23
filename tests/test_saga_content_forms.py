@@ -124,6 +124,7 @@ def test_a_house_rule_is_added_edited_and_refused_while_held():
     assert isinstance(edit, commands.Form)
     assert edit.fields()[0].kind == "info"  # what it is for is fixed
     _save(edit, {"tier": "Major"})
+    [(kind, entry)] = hr.all_entries(saga)
     assert entry.cost == 3
     saga.characters[0].virtues_flaws.append(VirtueFlawInstance(entry.id))
     refused = ops.remove(0)
@@ -174,14 +175,17 @@ def test_a_saga_source_is_added_renamed_and_refused_while_cited():
     assert [s.abbreviation for s in saga.sources] == ["HR"]
     _, problem = _answer(ops.add(), {"abbreviation": "HR"})
     assert problem is not None
-    entry = hr.add(saga, hr.CHARACTER, {"name": "X", "type": "Virtue", "tier": "Minor"})
-    entry.source = "HR"
+    hr.add(
+        saga,
+        hr.CHARACTER,
+        {"name": "X", "type": "Virtue", "tier": "Minor", "source": "HR"},
+    )
     _save(ops.edit(0), {"abbreviation": "OR"})
-    assert entry.source == "OR"
+    assert saga.custom_virtues_flaws[0].source == "OR"
     refused = ops.remove(0)
     assert isinstance(refused, commands.Refuse)
     assert refused.why == "OR is cited by X: change them first."
-    entry.source = ""
+    hr.recite(saga, "OR", "")
     confirm = ops.remove(0)
     assert isinstance(confirm, commands.Confirm)
     confirm.apply()

@@ -138,7 +138,8 @@ def privilege_label(entry: dict[str, Any] | None) -> str:
 def aediles(tribunal: Tribunal) -> dict[str, list[str]]:
     """Each oppidum's aediles, by covenant id."""
     found = data(tribunal, KEY).setdefault("aediles", {})
-    assert isinstance(found, dict)
+    if not isinstance(found, dict):
+        raise ValueError(f"The Tribunal's aediles should be a mapping, not {found!r}.")
     return found
 
 

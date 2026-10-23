@@ -19,9 +19,7 @@ from typing import Any
 
 from . import aging_chart, catalog, creation, traditions
 from . import books as bk
-from . import covenant_templates as templates
 from . import covenants as cov_rules
-from . import inhabitants as inh
 from . import laboratories as lab_rules
 from . import possessions as pos
 from . import sheet_text as st
@@ -57,7 +55,7 @@ from .models import (
     Possession,
     Saga,
 )
-from .rules import animal_aging, scores
+from .rules import animal_aging, base_covenants, covenfolk, realms, scores
 from .rules import animal_grogs as ag
 from .rules import creation as rules
 from .rules import creation_access as access
@@ -70,6 +68,7 @@ from .rules import creation_packages as packages
 from .rules import creation_tradition as ct
 from .rules import creation_virtues as cv
 from .rules import creation_xp as cx
+from .rules import library as book_rules
 from .rules import xp as xp_rules
 
 Start = Callable[[], Command]
@@ -872,7 +871,7 @@ def spell_rows(saga: Saga, character: Character, step: str, heading: str) -> lis
     found = cx.entries(character, step)
     rows = [Row(heading, heading=True, cells=[heading, "", "", "Level", "Lab Total"])]
     for entry in found:
-        spell = spl.find_spell(saga, entry.target)
+        spell = catalog.find_spell(saga, entry.target)
 
         def forget(entry: CreationXp = entry) -> Command:
             return wf.forget_spell(saga, character, entry)
@@ -1166,7 +1165,7 @@ def _power_budget(saga: Saga, record: Record) -> str:
     power = cov.POWER_BY_NAME.get(covenant.power_level)
     founded = covenant.year_founded
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
-    aura = cov_rules.covenant_effective_aura(covenant, boons)
+    aura = realms.covenant_effective_aura(covenant, boons)
     rows: list[tuple[str, object]] = [
         ("Power Level", covenant.power_level or "(not chosen)"),
         (
@@ -1180,7 +1179,7 @@ def _power_budget(saga: Saga, record: Record) -> str:
         (
             "Base covenant",
             base.name
-            if (base := templates.BASE_BY_KEY.get(covenant.base_covenant))
+            if (base := base_covenants.BASE_BY_KEY.get(covenant.base_covenant))
             else "(none)",
         ),
         ("Aura", f"{escape(covenant.aura_realm)} {aura}"),
@@ -1354,14 +1353,14 @@ def _build_points_budget(saga: Saga, record: Record) -> str:
     else:
         head = f"Build Points: {budget}, [b]{spent} spent, {budget - spent} left[/]"
     lines = [head]
-    base = templates.BASE_BY_KEY.get(covenant.base_covenant)
+    base = base_covenants.BASE_BY_KEY.get(covenant.base_covenant)
     if base is not None:
         lines.append(f"From the {base.name}:")
         lines += [
             f"  {a.what}: {a.chosen} of {a.levels} levels chosen"
-            for a in templates.allowances(saga, covenant)
+            for a in base_covenants.allowances(saga, covenant)
         ]
-        books, vis = templates.placeholders(saga, covenant)
+        books, vis = base_covenants.placeholders(saga, covenant)
         if books or vis:
             lines.append(
                 f"  Placeholders to fill in: {len(books)} book(s), {len(vis)} vis "
@@ -1390,11 +1389,11 @@ def _possession_entry(
 
 def _inhabitant_entry(
     saga: Saga, covenant: Covenant, person: Inhabitant
-) -> inh.InhabitantEntry | None:
+) -> covenfolk.InhabitantEntry | None:
     return next(
         (
             e
-            for e in inh.entries_for_kind(saga, covenant, person.kind)
+            for e in covenfolk.entries_for_kind(saga, covenant, person.kind)
             if e.record is person
         ),
         None,
@@ -1482,7 +1481,7 @@ def _pooled_text_row(saga: Saga, covenant: Covenant, book: Book) -> Row:
     """A Lab Text or Casting Tablet, under its pool's row: it has no Build
     Points of its own (the pool has them), but Edit and Delete act on
     it."""
-    level = bk.level_of(book, saga)
+    level = book_rules.level_of(book, saga)
     note = f"level {level}" if level else "set its level"
     edit, delete = _book_ops(saga, covenant, book)
     return _bp_row(
@@ -1503,7 +1502,7 @@ def _build_points_rows(saga: Saga, record: Record) -> list[Row]:
     covenant = _covenant(record)
     found = cov.costs(saga, covenant)
     priced = {id(c.item) for c in found if c.item is not None}
-    library = bk.books_owned_by(saga, "covenant", covenant.id)
+    library = book_rules.books_owned_by(saga, "covenant", covenant.id)
     unpriced = [b for b in library if id(b) not in priced and not bk.pooled(b.type)]
     rows: list[Row] = []
     for category in (*cov.CATEGORIES, ""):
