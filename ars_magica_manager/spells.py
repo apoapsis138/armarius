@@ -14,6 +14,7 @@ from pathlib import Path
 
 from . import catalog, experiment_text, sourcebooks, storage
 from .arts import ART_ABBREVIATIONS, ART_LOOKUP, FORMS, TECHNIQUES
+from .catalog import name_key
 from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit, markdown_text
 from .models import (
@@ -28,50 +29,6 @@ from .rules import spell_levels
 from .rules.rounding import round_up
 
 # ------------------------------------------------------------ where they live
-
-
-def find_spell(saga: Saga, spell_id: str | None) -> Spell | None:
-    """The spell with this id, wherever it lives: the shared catalog, then the
-    saga's own spells, then any magus's invented spells."""
-    if not spell_id:
-        return None
-    found = catalog.load_spell_catalog_by_id().get(spell_id)
-    if found is not None:
-        return found
-    for spell in saga.spells:
-        if spell.id == spell_id:
-            return spell
-    for character in saga.characters:
-        for spell in character.invented_spells:
-            if spell.id == spell_id:
-                return spell
-    return None
-
-
-def name_key(name: str) -> str:
-    """How spell names are compared: any case, any spacing, typographic
-    apostrophes allowed."""
-    return " ".join(name.replace("’", "'").lower().split())
-
-
-def find_spell_by_name(saga: Saga, name: str) -> Spell | None:
-    """The spell with this name (any case, typographic apostrophes allowed),
-    wherever it lives: the catalog, then the saga's own, then any magus's
-    invented spells. How a book whose spell was typed (or imported) links."""
-    key = name_key(name)
-    if not key:
-        return None
-    for spell in catalog.load_spell_catalog():
-        if name_key(spell.name) == key:
-            return spell
-    for spell in saga.spells:
-        if name_key(spell.name) == key:
-            return spell
-    for character in saga.characters:
-        for spell in character.invented_spells:
-            if name_key(spell.name) == key:
-                return spell
-    return None
 
 
 def pickable_spells(saga: Saga) -> list[tuple[Spell, str]]:

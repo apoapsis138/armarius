@@ -21,6 +21,9 @@ Mounted on a trained warhorse, a rider adds his Ride, at most +3, to
 Attack and Defence (the DE); a mounted charge adds his Combat Ability to
 the Attack again, and the horse, not the rider, spends a Fatigue level
 (Lords of Men).
+
+No screen uses damage_dealt() yet: it is a rule for a screen still to come,
+and only the tests call it.
 """
 
 from __future__ import annotations

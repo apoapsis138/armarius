@@ -13,6 +13,7 @@ from ars_magica_manager.commands import Choose, Form
 from ars_magica_manager.forms import virtue as virtue_forms
 from ars_magica_manager.models import Character, Characteristics, VirtueFlawInstance
 from ars_magica_manager.models.traits import new_instance_id
+from ars_magica_manager.rules import lab_stats
 from ars_magica_manager.sheets import laboratory as ls
 
 
@@ -41,7 +42,7 @@ def _grog(saga, id_: str, name: str, intelligence: int, covenant_id=None):
 
 def _safety(saga, lab) -> int:
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
-    return labs.lab_characteristic_total(lab, by_id, "safety", saga)[3]
+    return lab_stats.lab_characteristic_total(lab, by_id, "safety", saga)[3]
 
 
 @pytest.mark.parametrize(
@@ -56,7 +57,7 @@ def test_two_servants_stack_and_keep_their_other_effects():
     saga, lab = _lab(_servant(intelligence="3"), _servant(intelligence="1"))
     assert _safety(saga, lab) == 3
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
-    assert labs.lab_characteristic_total(lab, by_id, "aesthetics", saga)[3] == 2
+    assert lab_stats.lab_characteristic_total(lab, by_id, "aesthetics", saga)[3] == 2
 
 
 def test_a_servant_with_nothing_entered_adds_nothing_and_says_so():

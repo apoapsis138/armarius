@@ -9,6 +9,7 @@ from ars_magica_manager.models import (
     Saga,
     Spell,
 )
+from ars_magica_manager.rules import library
 
 
 def _book(book_type: str, **kwargs) -> Book:
@@ -30,7 +31,7 @@ def _book(book_type: str, **kwargs) -> Book:
     ],
 )
 def test_cost(book, expected):
-    assert bk.cost(book) == expected
+    assert library.cost(book) == expected
 
 
 def test_lab_texts_and_tablets_are_bought_as_a_pool():
@@ -38,13 +39,15 @@ def test_lab_texts_and_tablets_are_bought_as_a_pool():
     Tablets, summed over the library first; whole points are spent, so the
     last 5 levels round up and the rest is unspent."""
     texts = [_book("Lab Text", spell_name="x", level=12)]
-    assert bk.pool(texts, "Lab Text") == bk.Pool("Lab Text", 12, 3, 3)
+    assert library.pool(texts, "Lab Text") == library.Pool("Lab Text", 12, 3, 3)
     texts.append(_book("Lab Text", spell_name="y", level=3))  # uses the 3 left
-    assert bk.pool(texts, "Lab Text") == bk.Pool("Lab Text", 15, 3, 0)
+    assert library.pool(texts, "Lab Text") == library.Pool("Lab Text", 15, 3, 0)
     tablets = [*texts, _book("Casting Tablet", spell_name="z", level=12)]
-    assert bk.pool(tablets, "Casting Tablet") == bk.Pool("Casting Tablet", 12, 6, 3)
-    assert bk.pool([], "Lab Text") == bk.Pool("Lab Text", 0, 0, 0)
-    assert bk.pool_text(bk.Pool("Lab Text", 12, 3, 3)) == (
+    assert library.pool(tablets, "Casting Tablet") == library.Pool(
+        "Casting Tablet", 12, 6, 3
+    )
+    assert library.pool([], "Lab Text") == library.Pool("Lab Text", 0, 0, 0)
+    assert bk.pool_text(library.Pool("Lab Text", 12, 3, 3)) == (
         "12 levels, 3 Build Points (3 levels unspent)"
     )
 
@@ -146,7 +149,7 @@ def _saga() -> Saga:
 
 def test_books_in_covenant_includes_labs_and_characters():
     saga = _saga()
-    ids = [b.id for b in bk.books_in_covenant(saga, saga.covenants[0])]
+    ids = [b.id for b in library.books_in_covenant(saga, saga.covenants[0])]
     assert ids == ["b1", "b2", "b3"]
 
 
@@ -491,10 +494,10 @@ def test_lab_texts_link_to_spells_by_id_or_typed_name():
     by_id = _book("Lab Text", spell_id="spell_pilum_of_fire", spell_name="whatever")
     by_name = _book("Casting Tablet", spell_name="wizard\u2019s sidestep", level=15)
     unknown = _book("Lab Text", spell_name="The Lost Art", level=10)
-    assert bk.book_spell(saga, by_id).name == "Pilum of Fire"
-    assert bk.book_spell(saga, by_name).id == "spell_wizard_s_sidestep"
-    assert bk.book_spell(saga, unknown) is None
-    assert bk.book_spell(saga, _book("Art Summa", art="Ignem")) is None
+    assert library.book_spell(saga, by_id).name == "Pilum of Fire"
+    assert library.book_spell(saga, by_name).id == "spell_wizard_s_sidestep"
+    assert library.book_spell(saga, unknown) is None
+    assert library.book_spell(saga, _book("Art Summa", art="Ignem")) is None
 
 
 def test_a_linked_books_level_and_cost_come_from_its_spell():
@@ -503,14 +506,14 @@ def test_a_linked_books_level_and_cost_come_from_its_spell():
     tablet = _book(
         "Casting Tablet", spell_name="Stench of the Twenty Corpses", level=15
     )
-    assert bk.level_of(tablet, saga) == 10
-    assert bk.pool([tablet], "Casting Tablet", saga).points == 4  # 2 per 5
+    assert library.level_of(tablet, saga) == 10
+    assert library.pool([tablet], "Casting Tablet", saga).points == 4  # 2 per 5
     # Without the saga, only the stored level.
-    assert bk.pool([tablet], "Casting Tablet").points == 6
+    assert library.pool([tablet], "Casting Tablet").points == 6
     # A General spell (the Aegis) keeps the book's own level.
     aegis = _book("Lab Text", spell_id="spell_aegis_of_the_hearth", level=30)
-    assert bk.level_of(aegis, saga) == 30
-    assert bk.pool([aegis], "Lab Text", saga).points == 6
+    assert library.level_of(aegis, saga) == 30
+    assert library.pool([aegis], "Lab Text", saga).points == 6
     text = bk.detail_text(saga, aegis)
     assert "Aegis of the Hearth (ReVi Gen)" in text
     assert "30 (General spell)" in text
@@ -527,7 +530,7 @@ def test_a_book_whose_spell_cant_be_found_is_flagged():
         "choose one."
     ]
     assert bk.row_label(saga, lost).startswith("[$text-error]")
-    assert bk.level_of(lost, saga) == 10  # its typed level is kept
+    assert library.level_of(lost, saga) == 10  # its typed level is kept
     assert bk.status_problems(lost) == []  # without the saga, no lookup
     linked = _book("Lab Text", spell_id="spell_pilum_of_fire")
     assert bk.status_problems(linked, saga) == []
@@ -608,7 +611,7 @@ def test_a_var_level_or_quality_is_imported_to_be_set():
     ]
     assert result.skipped == ["Row 4 (Blank): no Level."]
     dioptra, works = result.books
-    assert bk.numbers_to_set(dioptra) == ["Quality"]
+    assert library.numbers_to_set(dioptra) == ["Quality"]
     assert bk.status_problems(works) == [
         "Level to be set: edit the book to give it once it comes into play."
     ]

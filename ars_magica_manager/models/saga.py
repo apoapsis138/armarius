@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -175,8 +176,16 @@ class Saga:
         """The laboratory with this id, if there is one."""
         return next((lab for lab in self.laboratories if lab.id == laboratory_id), None)
 
+    def familiar_of(self, character_id: str) -> Familiar | None:
+        """The one Familiar bound to `character_id`, if any."""
+        return next((f for f in self.familiars if f.character_id == character_id), None)
+
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> Saga:
+    def from_dict(
+        cls, data: dict[str, Any], *, lab_feature_names: Mapping[str, str] | None = None
+    ) -> Saga:
+        """`lab_feature_names` names an older save's free-text laboratory
+        Features (Laboratory.from_dict)."""
         d = dict(data)
         d["tribunals"] = [Tribunal.from_dict(t) for t in d.get("tribunals", [])]
         d["neighbours"] = [Neighbour.from_dict(n) for n in d.get("neighbours", [])]
@@ -185,7 +194,8 @@ class Saga:
         d["covenants"] = [Covenant.from_dict(c) for c in raw_covenants]
         d["characters"] = [Character.from_dict(c) for c in d.get("characters", [])]
         d["laboratories"] = [
-            Laboratory.from_dict(lab) for lab in d.get("laboratories", [])
+            Laboratory.from_dict(lab, lab_feature_names)
+            for lab in d.get("laboratories", [])
         ]
         d["familiars"] = [Familiar.from_dict(f) for f in d.get("familiars", [])]
         d["creatures"] = [Creature.from_dict(c) for c in d.get("creatures", [])]

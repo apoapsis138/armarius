@@ -20,17 +20,17 @@ Kept in Neighbour.details: "church", "order", "founded", "abandoned" and
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Required, TypedDict, cast
 
 from . import sourcebooks
 from .commands import SectionOps
 from .form_spec import DialogField
 from .grids import Grid
-from .models import Neighbour, Saga
-from .neighbour_lists import KindList, KindTab, details_list, list_ops
+from .models import Neighbour, Saga, details_list
+from .neighbour_lists import KindList, KindTab, list_ops
+from .references import Fact
 from .rules import options
 from .sections import RELICS_SECTION
-from .sheets.character import Fact
 
 #: The kinds of church, and each one's Dominion aura.
 CHURCH_KINDS: dict[str, int] = {
@@ -54,11 +54,19 @@ def church_kind(neighbour: Neighbour) -> str:
     return found if found in CHURCH_KINDS else "Parish church"
 
 
-def relics(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "relics")
+class Relic(TypedDict, total=False):
+    """A relic the church holds: its name, its saint and its Faith Points."""
+
+    name: Required[str]
+    saint: str
+    faith: int
 
 
-def _faith(relic: dict[str, Any]) -> int:
+def relics(neighbour: Neighbour) -> list[Relic]:
+    return cast(list[Relic], details_list(neighbour, "relics"))
+
+
+def _faith(relic: Relic) -> int:
     return max(0, int(relic.get("faith") or 0))
 
 
@@ -197,7 +205,7 @@ def relics_grid(saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def relic_fields(
-    _saga: Saga, _neighbour: Neighbour, relic: dict[str, Any] | None
+    _saga: Saga, _neighbour: Neighbour, relic: Relic | None
 ) -> list[DialogField]:
     r = relic or {}
     return [

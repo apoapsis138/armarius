@@ -27,6 +27,7 @@ from ....models import (
     VirtueFlawInstance,
     new_instance_id,
 )
+from ....rules import covenfolk
 from ..fields import FieldsDialog
 from ..forms import (
     _improve_income_dialog,
@@ -365,11 +366,11 @@ class CovenantActions(WorkspaceBase):
         view = self._covenant_sheet_view
         return view.selected_inhabitant(kind) if view is not None else None
 
-    def _inhabitant_entries(self, kind: str) -> list[inh.InhabitantEntry]:
+    def _inhabitant_entries(self, kind: str) -> list[covenfolk.InhabitantEntry]:
         covenant = self.selected_covenant
         if covenant is None:
             return []
-        return inh.entries_for_kind(self.saga, covenant, kind)
+        return covenfolk.entries_for_kind(self.saga, covenant, kind)
 
     def _add_inhabitant(self, kind: str) -> None:
         """Add one. Grog-derived kinds first offer the covenant's unassigned
@@ -413,7 +414,7 @@ class CovenantActions(WorkspaceBase):
         )
 
     def _inhabitant_form(
-        self, kind: str, entry: inh.InhabitantEntry | None, grog: Character | None
+        self, kind: str, entry: covenfolk.InhabitantEntry | None, grog: Character | None
     ) -> None:
         covenant = self.selected_covenant
         if covenant is None:
@@ -450,7 +451,9 @@ class CovenantActions(WorkspaceBase):
             then=lambda index: self._confirm_remove_inhabitant(kind, entries[index]),
         )
 
-    def _confirm_remove_inhabitant(self, kind: str, entry: inh.InhabitantEntry) -> None:
+    def _confirm_remove_inhabitant(
+        self, kind: str, entry: covenfolk.InhabitantEntry
+    ) -> None:
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -494,7 +497,7 @@ class CovenantActions(WorkspaceBase):
             self.notify(f"No departed {inh.KIND_TITLES[kind]} to restore.")
             return
 
-        def do_restore(entry: inh.InhabitantEntry) -> None:
+        def do_restore(entry: covenfolk.InhabitantEntry) -> None:
             if entry.record is not None:
                 entry.record.departed = False
                 self._commit(f"section-inh-{kind}")
@@ -861,7 +864,7 @@ class CovenantActions(WorkspaceBase):
                 partial(self._edit_inhabitant, kind),
                 # Only Magi/Companions can go "departed" (Inhabitant.departed).
                 partial(self._restore_inhabitant, kind)
-                if kind in inh.AUTO_KINDS
+                if kind in covenfolk.AUTO_KINDS
                 else None,
             )
         for kind, _ in seasons.SEASON_KINDS:

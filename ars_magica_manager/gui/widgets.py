@@ -27,8 +27,10 @@ from PySide6.QtGui import (
     QFont,
     QFontMetricsF,
     QIcon,
+    QMouseEvent,
     QPainter,
     QPainterPath,
+    QPaintEvent,
     QPen,
     QPixmap,
     QStandardItem,
@@ -186,7 +188,7 @@ class NewCard(QFrame):
             column.addWidget(text(hint, p["dim"], serif(11, italic=True), wrap=True))
         row.addLayout(column, 1)
 
-    def mousePressEvent(self, event) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         _pressed[:] = []
         self.on_click()
         super().mousePressEvent(event)
@@ -229,7 +231,7 @@ class GiltName(QLabel):
     def minimumSizeHint(self) -> QSize:
         return self.sizeHint()
 
-    def paintEvent(self, _event) -> None:
+    def paintEvent(self, _event: QPaintEvent) -> None:
         big, small = self._metrics()
         box = QRectF(self.contentsRect())
         ascent = max(big.ascent(), small.ascent())
@@ -274,7 +276,7 @@ class Card(QFrame):
         self.column.setContentsMargins(pad, pad - 2, pad, pad)
         self.column.setSpacing(6)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)
         frame = QRectF(self.rect()).adjusted(3 if self.edge else 0, 0, 0, 0)
         corner_flourishes(
@@ -330,7 +332,7 @@ class Pips(QWidget):
         self.setFixedSize(total * self.SIZE, self.SIZE)
         self.setToolTip(f"{filled} of {total}")
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(QPen(QColor(self.colour), 1.2))
@@ -525,7 +527,7 @@ class Inspector(QFrame):
         area.setStyleSheet("background:transparent")
         column.addWidget(area, 1)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         gilding.gilt_leaf(painter, QRectF(self.rect()), self.p)
         painter.end()
@@ -572,7 +574,7 @@ class ClickableCard(Card):
             + f" QFrame#card:hover {{ border:1px solid {p['accent']}; {left} }}"
         )
 
-    def mousePressEvent(self, event) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         self.clicked()
         super().mousePressEvent(event)
 
@@ -582,7 +584,7 @@ class ClickableCard(Card):
         self.chosen = chosen
         self.update()
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)
         if self.flourished:
             painter = QPainter(self)

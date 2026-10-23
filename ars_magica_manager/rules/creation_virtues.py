@@ -9,10 +9,11 @@ limits; Budgets by character type; Types of Virtue and Flaw.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from .. import catalog
-from ..models import Character, Saga, TraditionDef
+from ..models import Character, Saga, TraditionDef, VirtueFlawDef
 from . import animal_grogs
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
@@ -191,7 +192,7 @@ def house_benefit(character: Character) -> HouseBenefit:
         if vf.vf_id in by_id
     ]
 
-    def first(match) -> int | None:
+    def first(match: Callable[[VirtueFlawDef], bool]) -> int | None:
         """The index of the first entry `match` accepts, or None."""
         return next((index for index, e in entries if match(e)), None)
 
@@ -220,7 +221,7 @@ def house_benefit(character: Character) -> HouseBenefit:
         return HouseBenefit(missing=(house.benefit,))
     if house.free == "ex_miscellanea":
 
-        def hermetic(entry) -> bool:
+        def hermetic(entry: VirtueFlawDef) -> bool:
             return "Hermetic" in (entry.category, *entry.extra_categories)
 
         # The magus's Ex Miscellanea tradition names the three; any match
@@ -252,7 +253,12 @@ def house_benefit(character: Character) -> HouseBenefit:
             ),
         ):
 
-            def fits(e, side=side, tier=tier, is_hermetic=is_hermetic) -> bool:
+            def fits(
+                e: VirtueFlawDef,
+                side: str = side,
+                tier: str = tier,
+                is_hermetic: bool = is_hermetic,
+            ) -> bool:
                 return e.side == side and e.tier == tier and hermetic(e) == is_hermetic
 
             wanted = next((v for v in named if v in by_id and fits(by_id[v])), None)

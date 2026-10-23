@@ -42,11 +42,11 @@ from .grids import Grid
 from .markup import escape
 from .models import (
     CASE_DECIDED,
-    CASE_OPEN,
     Attitude,
     Case,
     Character,
     Covenant,
+    Meeting,
     Reason,
     Ruling,
     Saga,
@@ -54,10 +54,10 @@ from .models import (
     Tribunal,
     TribunalDiaryEntry,
 )
+from .references import Fact
 from .rules import debate
 from .sections import ATTENDANCE_SECTION, BUSINESS_SECTION, VOTE_SECTION
 from .sheets import tribunal as tribunal_sheet
-from .sheets.character import Fact
 from .tribunal_packages import Envoy
 
 #: How many days a meeting lasts unless the storyguide says otherwise.
@@ -89,10 +89,10 @@ def day_name(day: int) -> str:
     return f"Day {day}"
 
 
-def _begin(saga: Saga, tribunal: Tribunal) -> dict[str, Any]:
+def _begin(saga: Saga, tribunal: Tribunal) -> Meeting:
     """A new meeting record: when the Tribunal is due to meet (or now),
     where, and its cases spread over the days but the last."""
-    meeting: dict[str, Any] = {
+    meeting: Meeting = {
         "year": tribunal.next_year
         if tribunal.next_year is not None
         else saga.current_year,
@@ -104,7 +104,7 @@ def _begin(saga: Saga, tribunal: Tribunal) -> dict[str, Any]:
         "attendance": {},
         "notes": {},
     }
-    meeting["day_of"] = _spread(business(tribunal), DEFAULT_DAYS)
+    meeting["day_of"] = _spread(tribunal_sheet.open_cases(tribunal), DEFAULT_DAYS)
     return meeting
 
 
@@ -116,16 +116,11 @@ def _spread(cases: list[Case], days: int) -> dict[str, int]:
     return {c.id: 1 + i * open_days // count for i, c in enumerate(cases)}
 
 
-def business(tribunal: Tribunal) -> list[Case]:
-    """The cases and motions the meeting hears: those still open."""
-    return [c for c in tribunal.cases if c.status == CASE_OPEN]
-
-
-def days(meeting: dict[str, Any]) -> int:
+def days(meeting: Meeting) -> int:
     return max(1, int(meeting.get("days") or DEFAULT_DAYS))
 
 
-def day_of(meeting: dict[str, Any], case: Case) -> int:
+def day_of(meeting: Meeting, case: Case) -> int:
     """The day `case` is heard: as the Opening set it, else the first."""
     day = meeting.get("day_of", {}).get(case.id, 1)
     return max(1, min(days(meeting), int(day)))
@@ -134,13 +129,11 @@ def day_of(meeting: dict[str, Any], case: Case) -> int:
 # -- attendance --
 
 
-def _attendance(meeting: dict[str, Any], covenant: Covenant) -> dict[str, Any]:
+def _attendance(meeting: Meeting, covenant: Covenant) -> dict[str, Any]:
     return meeting.get("attendance", {}).get(covenant.id, {})
 
 
-def named_present(
-    saga: Saga, meeting: dict[str, Any], covenant: Covenant
-) -> list[Character]:
+def named_present(saga: Saga, meeting: Meeting, covenant: Covenant) -> list[Character]:
     """`covenant`'s named magi answering the roll: those ticked present,
     or (before the roll call, or in an older save that kept only a count)
     all of them."""
@@ -152,7 +145,7 @@ def named_present(
     return [m for m in magi if m.id in ticked]
 
 
-def in_person(saga: Saga, meeting: dict[str, Any], covenant: Covenant) -> int:
+def in_person(saga: Saga, meeting: Meeting, covenant: Covenant) -> int:
     """How many of `covenant`'s magi, named or not, are in the hall."""
     entry = _attendance(meeting, covenant)
     if "present" in entry:
@@ -161,7 +154,7 @@ def in_person(saga: Saga, meeting: dict[str, Any], covenant: Covenant) -> int:
     return max(0, world.votes(saga, covenant) - int(entry.get("absent") or 0))
 
 
-def absent(saga: Saga, meeting: dict[str, Any], covenant: Covenant) -> int:
+def absent(saga: Saga, meeting: Meeting, covenant: Covenant) -> int:
     return world.votes(saga, covenant) - in_person(saga, meeting, covenant)
 
 
@@ -172,7 +165,7 @@ def officers(tribunal: Tribunal) -> set[str]:
 
 
 def magi_present(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+    saga: Saga, tribunal: Tribunal, meeting: Meeting
 ) -> list[tuple[Character, Covenant]]:
     """Every named magus in the hall, with their covenant, in the order of
     the roll."""
@@ -188,7 +181,7 @@ def magi_present(
 QUORUM_MAGI, QUORUM_COVENANTS = 12, 4
 
 
-def quorum(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
+def quorum(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
     """ "13 magi from 5 covenants, and a Quaesitor: quorate", or what it
     lacks."""
     counts = [
@@ -221,7 +214,7 @@ def quorum(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
     return f"{words}: quorate"
 
 
-def carried(tribunal: Tribunal, meeting: dict[str, Any], covenant: Covenant) -> int:
+def carried(tribunal: Tribunal, meeting: Meeting, covenant: Covenant) -> int:
     """The proxies `covenant` carries into the hall: as attendance
     recorded them, else as the Tribunal's roster holds them."""
     entry = _attendance(meeting, covenant)
@@ -230,13 +223,11 @@ def carried(tribunal: Tribunal, meeting: dict[str, Any], covenant: Covenant) -> 
     return tribunal_sheet.proxies(tribunal, covenant)
 
 
-def ruling(meeting: dict[str, Any], covenant: Covenant) -> str:
+def ruling(meeting: Meeting, covenant: Covenant) -> str:
     return _attendance(meeting, covenant).get("ruling") or ALLOWED
 
 
-def shows(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], covenant: Covenant
-) -> bool:
+def shows(saga: Saga, tribunal: Tribunal, meeting: Meeting, covenant: Covenant) -> bool:
     """Whether `covenant` shows what its Tribunal's customs ask of it to
     be represented (Hibernia's cathach): as attendance recorded it, else
     unless the customs say it can't."""
@@ -249,7 +240,7 @@ def shows(
 
 
 def present(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], covenant: Covenant
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, covenant: Covenant
 ) -> tuple[int, int]:
     """`covenant`'s votes in the hall: its magi present (but the Praeco
     and the Presiding Quaesitor, who don't vote), and the proxies it
@@ -266,9 +257,7 @@ def present(
     return magi, allowed
 
 
-def voters(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
-) -> list[Covenant | Envoy]:
+def voters(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> list[Covenant | Envoy]:
     """Who the Praeco calls, in order: the covenants of the roll, then
     those its customs let vote beside them (Hibernia's ambassadors)."""
     return [
@@ -278,7 +267,7 @@ def voters(
 
 
 def votes_of(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], voter: Covenant | Envoy
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, voter: Covenant | Envoy
 ) -> int:
     """A voter's votes in the hall: a covenant's magi present and allowed
     proxies, an envoy's one."""
@@ -287,7 +276,7 @@ def votes_of(
     return sum(present(saga, tribunal, meeting, voter))
 
 
-def hall(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> tuple[int, int]:
+def hall(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> tuple[int, int]:
     """Every vote in the hall, and how many of them are proxies."""
     magi = proxies = 0
     for covenant in tribunals.covenants_of(saga, tribunal):
@@ -298,7 +287,7 @@ def hall(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> tuple[int, 
     return magi + proxies, proxies
 
 
-def present_text(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
+def present_text(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
     """ "23 votes, 3 by proxy"."""
     votes, proxies = hall(saga, tribunal, meeting)
     words = f"{votes} vote{'' if votes == 1 else 's'}"
@@ -359,7 +348,7 @@ def default_leaning(saga: Saga, case: Case, covenant: Covenant | Envoy) -> str:
 
 
 def leanings(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], case: Case
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, case: Case
 ) -> dict[str, str]:
     """Each voter's leaning on `case`, by id: as the vote was held, else
     the defaults."""
@@ -370,17 +359,17 @@ def leanings(
     }
 
 
-def debate_of(meeting: dict[str, Any], case: Case) -> dict[str, Any] | None:
+def debate_of(meeting: Meeting, case: Case) -> dict[str, Any] | None:
     return meeting.get("debates", {}).get(case.id)
 
 
-def settled(meeting: dict[str, Any], case: Case) -> bool:
+def settled(meeting: Meeting, case: Case) -> bool:
     """Whether `case` was settled at the private hearing: it is neither
     debated nor voted on."""
     return bool((debate_of(meeting, case) or {}).get("settled"))
 
 
-def strength(meeting: dict[str, Any], case: Case) -> tuple[str | None, int]:
+def strength(meeting: Meeting, case: Case) -> tuple[str | None, int]:
     """Who won the debate (FOR the prosecution or proposer, AGAINST the
     defence, None for none yet or a tie) and its Argument Strength,
     after a proposal's penalty."""
@@ -415,7 +404,7 @@ class Called:
 def call_the_vote(
     saga: Saga,
     tribunal: Tribunal,
-    meeting: dict[str, Any],
+    meeting: Meeting,
     case: Case,
     leaning: dict[str, str] | None = None,
 ) -> Iterator[Called]:
@@ -470,7 +459,7 @@ def call_the_vote(
 def tally(
     saga: Saga,
     tribunal: Tribunal,
-    meeting: dict[str, Any],
+    meeting: Meeting,
     case: Case,
     leaning: dict[str, str] | None = None,
 ) -> tuple[int, int, int]:
@@ -496,7 +485,7 @@ def kept_votes(kept: dict[str, Any]) -> tuple[int, int, int]:
     return kept["for"], kept["against"], kept.get("abstain", 0)
 
 
-def vote_outcome(meeting: dict[str, Any], case: Case) -> str:
+def vote_outcome(meeting: Meeting, case: Case) -> str:
     """ "Carried, 9 to 7" or "Failed, 4 to 10", as the vote went ("" with
     no vote held); a tie says the Praeco broke it."""
     kept = meeting.get("votes", {}).get(case.id)
@@ -547,37 +536,37 @@ class Step:
     day: int
 
     def fields(
-        self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting
     ) -> list[DialogField]:
         return [_note_field(meeting, self.key)]
 
-    def validate(self, meeting: dict[str, Any], values: dict[str, Any]) -> str | None:
+    def validate(self, meeting: Meeting, values: dict[str, Any]) -> str | None:
         return None
 
     def apply(
         self,
         saga: Saga,
         tribunal: Tribunal,
-        meeting: dict[str, Any],
+        meeting: Meeting,
         values: dict[str, Any],
     ) -> None:
         _keep_note(meeting, self.key, values)
 
-    def text(self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
         return _note_text(meeting, self.key)
 
     def save_label(self) -> str:
         return "Hold"
 
     def guide(
-        self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting
     ) -> tuple[str, str]:
         """What the app works out at this step, and what each thing
         entered changes (plain words; "" for nothing to say)."""
         return "", "Anything noted goes into the minutes."
 
     def minutes(
-        self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting
     ) -> tuple[str, str]:
         """What the minutes say of the step, and the numbers set in their
         margin (the step's Note is added to them)."""
@@ -587,7 +576,7 @@ class Step:
         self,
         saga: Saga,
         tribunal: Tribunal,
-        meeting: dict[str, Any],
+        meeting: Meeting,
         values: dict[str, Any],
     ) -> str:
         """A line kept up to date under the form as it is filled in ("":
@@ -595,7 +584,7 @@ class Step:
         return ""
 
 
-def _note_field(meeting: dict[str, Any], key: str) -> DialogField:
+def _note_field(meeting: Meeting, key: str) -> DialogField:
     return DialogField(
         "note",
         "Note",
@@ -605,7 +594,7 @@ def _note_field(meeting: dict[str, Any], key: str) -> DialogField:
     )
 
 
-def _keep_note(meeting: dict[str, Any], key: str, values: dict[str, Any]) -> None:
+def _keep_note(meeting: Meeting, key: str, values: dict[str, Any]) -> None:
     note = (values.get("note") or "").strip()
     notes = meeting.setdefault("notes", {})
     if note:
@@ -614,7 +603,7 @@ def _keep_note(meeting: dict[str, Any], key: str, values: dict[str, Any]) -> Non
         notes.pop(key, None)
 
 
-def _note_text(meeting: dict[str, Any], key: str) -> str:
+def _note_text(meeting: Meeting, key: str) -> str:
     note = meeting.get("notes", {}).get(key, "")
     return f"[$label]Note:[/] {escape(note)}" if note else ""
 
@@ -626,8 +615,8 @@ def _join(*parts: str) -> str:
 class Opening(Step):
     """The day count, where it is held, and the day each case is heard."""
 
-    def fields(self, saga, tribunal, meeting):
-        cases = business(tribunal)
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        cases = tribunal_sheet.open_cases(tribunal)
         found = [
             DialogField(
                 "place",
@@ -656,7 +645,7 @@ class Opening(Step):
         ]
         return found
 
-    def validate(self, meeting, values):
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
         count = values.get("days") or 0
         if count < 1:
             return "A meeting lasts at least a day."
@@ -665,7 +654,9 @@ class Opening(Step):
                 return f"Each case is heard on a day from 1 to {count}."
         return None
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         meeting["place"] = values.get("place", "")
         meeting["days"] = values["days"]
         meeting["day_of"] = {
@@ -674,7 +665,7 @@ class Opening(Step):
             if key.startswith("day_")
         }
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         roll = ", ".join(c.name for c in tribunals.covenants_of(saga, tribunal))
         return _join(
             f"[$label]Held at:[/] {escape(meeting.get('place') or '(not set)')}",
@@ -685,7 +676,7 @@ class Opening(Step):
     def save_label(self):
         return "Open"
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "Each case and motion is spread over the days but the last, in "
             "the order of the docket; the last day is kept for the rulings "
@@ -695,7 +686,7 @@ class Opening(Step):
             "hearing and vote come in the order of business.",
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         roll = ", ".join(c.name for c in tribunals.covenants_of(saga, tribunal))
         place = meeting.get("place") or ""
         at = f" at {place}" if place else ""
@@ -712,7 +703,7 @@ class Attendance(Step):
     and the proxies each carries with the Presiding Quaesitor's ruling on
     them."""
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         found: list[DialogField] = []
         credential = tribunal_packages.of(tribunal).credential
         for covenant in tribunals.covenants_of(saga, tribunal):
@@ -808,7 +799,7 @@ class Attendance(Step):
             )
         return found
 
-    def validate(self, meeting, values):
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
         if any(
             (v or 0) < 0
             for k, v in values.items()
@@ -817,7 +808,9 @@ class Attendance(Step):
             return "Magi present and proxies can't be fewer than none."
         return None
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         attendance = meeting.setdefault("attendance", {})
         for covenant in tribunals.covenants_of(saga, tribunal):
             cid = covenant.id
@@ -846,7 +839,7 @@ class Attendance(Step):
             else:
                 tribunal.proxies.pop(cid, None)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return _join(
             f"[$label]Present:[/] {escape(present_text(saga, tribunal, meeting))}",
             f"[$label]Quorum:[/] {escape(quorum(saga, tribunal, meeting))}",
@@ -855,7 +848,7 @@ class Attendance(Step):
     def save_label(self):
         return "Call the roll"
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "The votes in the hall: one for each magus present and each "
             "proxy the Presiding Quaesitor allows. The Praeco and the "
@@ -867,7 +860,7 @@ class Attendance(Step):
             "the roster for the next meeting.",
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = []
         credential = tribunal_packages.of(tribunal).credential
         for covenant in tribunals.covenants_of(saga, tribunal):
@@ -933,7 +926,7 @@ def speaker_name(saga: Saga, value: str) -> str:
 
 
 def speaker_options(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], case: Case, side: str
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, case: Case, side: str
 ) -> list[tuple[str, str]]:
     """Who can speak for (FOR) or against (AGAINST) `case`: the magi
     present, then the Presiding Quaesitor (prosecuting a charge), a
@@ -967,7 +960,7 @@ def _magus_named(saga: Saga, words: str) -> Character | None:
 
 
 def default_speaker(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], case: Case, side: str
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, case: Case, side: str
 ) -> str:
     """Who speaks unless the storyguide says otherwise: as the hearing was
     held, else the case's speaker, else the magus (or a magus of the
@@ -1029,7 +1022,7 @@ class Hearing(Step):
         super().__init__(f"case:{case.id}", title, day)
         self.case = case
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         case = self.case
         motion = case.kind == "motion"
         kept = debate_of(meeting, case) or {}
@@ -1142,7 +1135,7 @@ class Hearing(Step):
         ]
         return [*found, _note_field(meeting, self.key)]
 
-    def validate(self, meeting, values):
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
         if values.get("settled"):
             return None
         if not 1 <= (values.get("rounds") or 0) <= debate.MAX_ROUNDS:
@@ -1158,7 +1151,9 @@ class Hearing(Step):
             return "One magus can't speak for both sides."
         return None
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         case = self.case
         speakers = [values.get("prosecutor") or "", values.get("defender") or ""]
         skills = [
@@ -1198,7 +1193,7 @@ class Hearing(Step):
         meeting.setdefault("debates", {})[case.id] = record
         _keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         # The details panel names the step: the case's own heading goes.
         lines = tribunal_sheet.case_text(saga, tribunal, self.case).split("\n")
         return _join(
@@ -1207,7 +1202,7 @@ class Hearing(Step):
             _note_text(meeting, self.key),
         )
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         motion = self.case.kind == "motion"
         cost = (
             " A motion's proposer loses 1 of it for an Addition to the Code, "
@@ -1236,7 +1231,7 @@ class Hearing(Step):
             "levels lost replaces the roll." + settle,
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         case = self.case
         if settled(meeting, case):
             return (
@@ -1270,7 +1265,7 @@ def _character(saga: Saga, name: str) -> Character | None:
     return next((c for c in saga.characters if c.name.casefold() == wanted), None)
 
 
-def debate_text(meeting: dict[str, Any], case: Case) -> str:
+def debate_text(meeting: Meeting, case: Case) -> str:
     """The debate's outcome, and each round as it went."""
     held_debate = debate_of(meeting, case)
     if held_debate is None:
@@ -1311,7 +1306,7 @@ class Vote(Step):
         super().__init__(f"vote:{case.id}", f"The vote: {case.title}", day)
         self.case = case
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lean = leanings(saga, tribunal, meeting, self.case)
         kept = meeting.get("votes", {}).get(self.case.id, {})
 
@@ -1353,13 +1348,17 @@ class Vote(Step):
             _note_field(meeting, self.key),
         ]
 
-    def _leaning(self, saga, tribunal, meeting, values) -> dict[str, str]:
+    def _leaning(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ) -> dict[str, str]:
         return {
             c.id: values.get(f"lean_{c.id}") or UNDECIDED
             for c in voters(saga, tribunal, meeting)
         }
 
-    def live(self, saga, tribunal, meeting, values) -> str:
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ) -> str:
         votes = tally(
             saga,
             tribunal,
@@ -1369,7 +1368,9 @@ class Vote(Step):
         )
         return escape(tally_text(votes, values.get("tie") or ""))
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         lean = self._leaning(saga, tribunal, meeting, values)
         yes, no, abstain = tally(saga, tribunal, meeting, self.case, lean)
         meeting.setdefault("votes", {})[self.case.id] = {
@@ -1381,7 +1382,7 @@ class Vote(Step):
         }
         _keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         kept = meeting.get("votes", {}).get(self.case.id)
         if kept is None:
             return ""
@@ -1391,7 +1392,7 @@ class Vote(Step):
             _note_text(meeting, self.key),
         )
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "Each covenant starts leaning by its attitude to the parties (said "
             "under it). The debate's victor wins a share of the undecided votes "
@@ -1403,7 +1404,7 @@ class Vote(Step):
             "starting point.",
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         kept = meeting.get("votes", {}).get(self.case.id)
         if kept is None:
             return "", ""
@@ -1424,7 +1425,7 @@ class Elections(Step):
     def _offices(self, tribunal: Tribunal) -> list[dict[str, Any]]:
         return tribunal_packages.entries(tribunal, tribunal.package, "archai")
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         offices = self._offices(tribunal)
         magi = [
             (m.name, m.id)
@@ -1454,21 +1455,23 @@ class Elections(Step):
             )
         return [*found, _note_field(meeting, self.key)]
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "Nothing is worked out: the offices are as recorded on the Tribunal's tab.",
             "Each holder you choose takes the office now, until the term's "
             "end you give; the Acta lists them.",
         )
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         for index, office in enumerate(self._offices(tribunal)):
             if f"holder_{index}" in values:
                 office["holder_id"] = values[f"holder_{index}"]
                 office["term_ends"] = values.get(f"term_{index}")
         _keep_note(meeting, self.key, values)
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = []
         for office in self._offices(tribunal):
             holder = saga.character(office.get("holder_id"))
@@ -1497,7 +1500,7 @@ class Succession(Step):
     """A Tribunal whose customs name its eldest magus Praeco: with none,
     the eldest is offered; set them aside and the next eldest is."""
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         praeco = saga.character(tribunal.praeco_id)
         if praeco is not None:
             return [
@@ -1534,7 +1537,9 @@ class Succession(Step):
             _note_field(meeting, self.key),
         ]
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         if values.get("praeco"):
             meeting["succession"] = {
                 "named": values["praeco"],
@@ -1548,7 +1553,7 @@ class Succession(Step):
             tribunal.praeco_id = values["praeco"]
         _keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         praeco = saga.character(tribunal.praeco_id)
         if praeco is None:
             return _join("[$label]Praeco:[/] vacant", _note_text(meeting, self.key))
@@ -1559,7 +1564,7 @@ class Succession(Step):
     def save_label(self):
         return "Name"
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "With no Praeco, the eldest magus of the Tribunal (by Year Born) "
             "is offered.",
@@ -1567,7 +1572,7 @@ class Succession(Step):
             "the minutes as set aside.",
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = meeting.get("succession") or {}
         named = saga.character(held.get("named"))
         if named is None:
@@ -1593,9 +1598,7 @@ class HostByLot(Step):
     """The next meeting's host covenant drawn by lot, with one redraw;
     it becomes the Tribunal's meeting place."""
 
-    def _lot(
-        self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
-    ) -> list[str]:
+    def _lot(self, saga: Saga, tribunal: Tribunal, meeting: Meeting) -> list[str]:
         """The two draws (the lot and its one redraw), made once and kept
         with the meeting so the form shows the same each time."""
         ids = [c.id for c in lot_choices(saga, tribunal)]
@@ -1605,13 +1608,15 @@ class HostByLot(Step):
             meeting["lot"] = drawn
         return drawn
 
-    def _host(self, saga, tribunal, meeting, redraw: bool) -> Covenant | None:
+    def _host(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, redraw: bool
+    ) -> Covenant | None:
         drawn = self._lot(saga, tribunal, meeting)
         if not drawn:
             return None
         return saga.covenant(drawn[1] if redraw else drawn[0])
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         host = self._host(saga, tribunal, meeting, False)
         if host is None:
             return [
@@ -1635,18 +1640,22 @@ class HostByLot(Step):
             _note_field(meeting, self.key),
         ]
 
-    def live(self, saga, tribunal, meeting, values):
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         host = self._host(saga, tribunal, meeting, bool(values.get("redraw")))
         return f"Next host: {escape(host.name)}." if host is not None else ""
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         host = self._host(saga, tribunal, meeting, bool(values.get("redraw")))
         if host is not None:
             meeting["host"] = {"id": host.id, "redrawn": bool(values.get("redraw"))}
             tribunal.meeting_place = host.name
         _keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = meeting.get("host") or {}
         host = saga.covenant(held.get("id"))
         shown = f"[$label]Next host:[/] {escape(host.name)}" if host else ""
@@ -1655,7 +1664,7 @@ class HostByLot(Step):
     def save_label(self):
         return "Draw"
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "The lot is drawn from the Tribunal's covenants, with one redraw, "
             "and kept, so holding the step again draws the same.",
@@ -1663,7 +1672,7 @@ class HostByLot(Step):
             "becomes the next meeting's place.",
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = meeting.get("host") or {}
         host = saga.covenant(held.get("id"))
         if host is None:
@@ -1684,8 +1693,8 @@ class Rulings(Step):
     attitude toward a troupe covenant on the other side moves. All of it
     is written when the meeting closes."""
 
-    def fields(self, saga, tribunal, meeting):
-        cases = business(tribunal)
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        cases = tribunal_sheet.open_cases(tribunal)
         found: list[DialogField] = []
         offered = ruling_templates.templates(saga)
         termed = {
@@ -1779,7 +1788,7 @@ class Rulings(Step):
             found.append(DialogField("none", "", "info", "No case was heard."))
         return [*found, _note_field(meeting, self.key)]
 
-    def validate(self, meeting, values):
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
         for key, value in values.items():
             if key.startswith("fine_") and value is not None and value <= 0:
                 return "A fine is more than nothing; leave it blank for none."
@@ -1787,10 +1796,12 @@ class Rulings(Step):
                 return "A term is a year or more; leave it blank for none."
         return None
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         kept = meeting.setdefault("rulings", {})
         asked: list[Case] = []
-        for case in business(tribunal):
+        for case in tribunal_sheet.open_cases(tribunal):
             if f"template_{case.id}" not in values:
                 continue
             before = kept.get(case.id, {})
@@ -1818,9 +1829,9 @@ class Rulings(Step):
         _keep_note(meeting, self.key, values)
         return _ask_blanks(saga, tribunal, meeting, self, asked)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = []
-        for c in business(tribunal):
+        for c in tribunal_sheet.open_cases(tribunal):
             kept = ruling_of(meeting, c)
             line = f"[b]{escape(c.title)}:[/] {escape(c.outcome or '(no ruling yet)')}"
             if kept.get("fine"):
@@ -1830,7 +1841,7 @@ class Rulings(Step):
             lines.append(line)
         return _join(*lines, _note_text(meeting, self.key))
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "Each ruling starts from how its vote went. Closing the meeting "
             "writes them: each case decided, a fine owed to the treasury, the "
@@ -1843,10 +1854,10 @@ class Rulings(Step):
             "are yours.",
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = []
         fines = []
-        for c in business(tribunal):
+        for c in tribunal_sheet.open_cases(tribunal):
             if not c.outcome.strip():
                 continue
             lines.append(f"{c.title}: {c.outcome.rstrip('.')}.")
@@ -1877,7 +1888,7 @@ def _blanks(
 def _ask_blanks(
     saga: Saga,
     tribunal: Tribunal,
-    meeting: dict[str, Any],
+    meeting: Meeting,
     step: Step,
     cases: list[Case],
 ) -> Form | None:
@@ -1951,7 +1962,7 @@ def _short(title: str) -> str:
     return title if len(title) <= 18 else title[:17] + "…"
 
 
-def ruling_of(meeting: dict[str, Any], case: Case) -> dict[str, Any]:
+def ruling_of(meeting: Meeting, case: Case) -> dict[str, Any]:
     return meeting.get("rulings", {}).get(case.id, {})
 
 
@@ -1987,7 +1998,7 @@ def parties(saga: Saga, case: Case) -> tuple[Covenant, Covenant] | None:
     return None
 
 
-def default_attitude(meeting: dict[str, Any], case: Case, other: Covenant) -> str:
+def default_attitude(meeting: Meeting, case: Case, other: Covenant) -> str:
     """A party that lost its case takes it ill (-1); otherwise no move."""
     kept = meeting.get("votes", {}).get(case.id)
     if kept is None:
@@ -2000,7 +2011,7 @@ def default_attitude(meeting: dict[str, Any], case: Case, other: Covenant) -> st
 class Treasury(Step):
     """The treasury as it stands, and the loans that fall due this year."""
 
-    def _due(self, tribunal: Tribunal, meeting: dict[str, Any]) -> list[str]:
+    def _due(self, tribunal: Tribunal, meeting: Meeting) -> list[str]:
         year = meeting.get("year")
         return [
             f"{e.who or 'a loan'}: {tribunal_sheet.amount_text(e)}"
@@ -2008,7 +2019,7 @@ class Treasury(Step):
             if e.kind == "loan" and not e.paid and e.due_year == year
         ]
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         found = [
             DialogField(f"balance_{n}", "", "info", f"{label}: {words}")
             for n, (label, words) in enumerate(tribunal_sheet.balance_lines(tribunal))
@@ -2018,14 +2029,14 @@ class Treasury(Step):
             found.append(DialogField("due", "", "info", "Loans due: " + "; ".join(due)))
         return [*found, _note_field(meeting, self.key)]
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             "The treasury's balance, and the loans that fall due this year.",
             "Nothing changes here: note anything paid or lent, and record it "
             "on the Treasury tab.",
         )
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         balance = [
             f"[$label]{escape(label)}:[/] {escape(words)}"
             for label, words in tribunal_sheet.balance_lines(tribunal)
@@ -2037,7 +2048,7 @@ class Treasury(Step):
             _note_text(meeting, self.key),
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         due = self._due(tribunal, meeting)
         words = "The treasury was reckoned."
         if due:
@@ -2050,25 +2061,25 @@ class Closing(Step):
     """Ends the meeting: each case with a ruling is decided, the meeting
     goes into the Diary, and the next one is set."""
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return [
             DialogField("what", "", "info", closing_text(saga, tribunal, meeting)),
             _note_field(meeting, self.key),
         ]
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return escape(closing_text(saga, tribunal, meeting))
 
     def save_label(self):
         return "Close"
 
-    def guide(self, saga, tribunal, meeting):
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             closing_text(saga, tribunal, meeting),
             "Closing ends the meeting; its steps can't be held again afterwards.",
         )
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         return (
             f"The Tribunal closed; it meets again in "
             f"{meeting.get('season', 'Summer')} {_next(tribunal, meeting)}.",
@@ -2076,13 +2087,13 @@ class Closing(Step):
         )
 
 
-def _next(tribunal: Tribunal, meeting: dict[str, Any]) -> int:
+def _next(tribunal: Tribunal, meeting: Meeting) -> int:
     return int(meeting.get("year") or 0) + max(1, tribunal.meets_every)
 
 
-def closing_text(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
+def closing_text(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
     """What closing the meeting does."""
-    decided = sum(bool(c.outcome.strip()) for c in business(tribunal))
+    decided = sum(bool(c.outcome.strip()) for c in tribunal_sheet.open_cases(tribunal))
     words = f"{decided} case{'' if decided == 1 else 's'}"
     return (
         f"Closing ends the meeting: {words} with a ruling are decided (their "
@@ -2113,7 +2124,7 @@ def register_step(name: str, title: str, kind: type[Step], when: str) -> None:
     _PACKAGE_STEPS[name] = (title, kind, when)
 
 
-def steps(tribunal: Tribunal, meeting: dict[str, Any]) -> list[Step]:
+def steps(tribunal: Tribunal, meeting: Meeting) -> list[Step]:
     """The order of business, in the order it is held."""
     last = days(meeting)
     added: dict[str, list[Step]] = {"opening": [], "end": [], "closing": []}
@@ -2125,7 +2136,9 @@ def steps(tribunal: Tribunal, meeting: dict[str, Any]) -> list[Step]:
         Opening("opening", "Opening and the oaths", 1),
         *added["opening"],
     ]
-    cases = sorted(business(tribunal), key=lambda c: day_of(meeting, c))
+    cases = sorted(
+        tribunal_sheet.open_cases(tribunal), key=lambda c: day_of(meeting, c)
+    )
     for case in cases:
         found.append(Hearing(case, day_of(meeting, case)))
         if not settled(meeting, case):
@@ -2140,17 +2153,17 @@ def steps(tribunal: Tribunal, meeting: dict[str, Any]) -> list[Step]:
     return found
 
 
-def held(meeting: dict[str, Any], step: Step) -> bool:
+def held(meeting: Meeting, step: Step) -> bool:
     return step.key in meeting.get("done", [])
 
 
-def current(tribunal: Tribunal, meeting: dict[str, Any]) -> Step:
+def current(tribunal: Tribunal, meeting: Meeting) -> Step:
     """The step in hand: the first not yet held."""
     found = steps(tribunal, meeting)
     return next((s for s in found if not held(meeting, s)), found[-1])
 
 
-def now_text(tribunal: Tribunal, meeting: dict[str, Any]) -> str:
+def now_text(tribunal: Tribunal, meeting: Meeting) -> str:
     """ "The Second Day › Fengheld v. Arnhaven"."""
     step = current(tribunal, meeting)
     return f"{day_name(step.day)} › {step.title}"
@@ -2159,13 +2172,11 @@ def now_text(tribunal: Tribunal, meeting: dict[str, Any]) -> str:
 # -- holding a step --
 
 
-def _when(saga: Saga, meeting: dict[str, Any]) -> tuple[int, str]:
+def _when(saga: Saga, meeting: Meeting) -> tuple[int, str]:
     return int(meeting.get("year") or saga.current_year), meeting.get("season", "")
 
 
-def write_minutes(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], step: Step
-) -> None:
+def write_minutes(saga: Saga, tribunal: Tribunal, meeting: Meeting, step: Step) -> None:
     """The step's minutes, one Diary entry a step with its numbers in the
     margin; holding a step again rewrites its entry."""
     words, margin = step.minutes(saga, tribunal, meeting)
@@ -2186,17 +2197,15 @@ def write_minutes(
 
 #: What is told when a step is held (Observer): each gets the step just
 #: held, after it is marked held. The minutes are the first.
-LISTENERS: list[Callable[[Saga, Tribunal, dict[str, Any], Step], None]] = [
-    write_minutes
-]
+LISTENERS: list[Callable[[Saga, Tribunal, Meeting, Step], None]] = [write_minutes]
 
 
-def _decide(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> None:
+def _decide(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> None:
     """Each case with a ruling is decided, and what its ruling says is
     written: the Peripheral Code, the fine owed to the treasury, and the
     party's attitude."""
     year, season = _when(saga, meeting)
-    for case in business(tribunal):
+    for case in tribunal_sheet.open_cases(tribunal):
         if not case.outcome.strip():
             continue
         case.status = CASE_DECIDED
@@ -2232,7 +2241,7 @@ def _decide(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> None:
             )
 
 
-def acta_text(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
+def acta_text(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
     """The Acta, built from the meeting (acta.ActaBuilder)."""
     year, season = _when(saga, meeting)
     builder = acta.ActaBuilder().heading(
@@ -2244,7 +2253,7 @@ def acta_text(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
         if sum(present(saga, tribunal, meeting, c)) > 0
     ]
     builder.attendance(attending, present_text(saga, tribunal, meeting))
-    for case in business(tribunal):
+    for case in tribunal_sheet.open_cases(tribunal):
         if case.outcome.strip():
             kept = ruling_of(meeting, case)
             fine = fine_text(kept) if kept.get("fine") else ""
@@ -2270,7 +2279,7 @@ def acta_text(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
     return builder.witnesses(witnesses).text()
 
 
-def _close(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> None:
+def _close(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> None:
     """The meeting ends: its rulings are written, the Acta goes into the
     Diary, and the next meeting is set."""
     year, season = _when(saga, meeting)
@@ -2287,7 +2296,7 @@ def _close(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> None:
 
 
 def position(
-    tribunal: Tribunal, meeting: dict[str, Any], step: Step
+    tribunal: Tribunal, meeting: Meeting, step: Step
 ) -> tuple[int, int, Step | None]:
     """Where `step` stands in the order of business: its number, how many
     steps there are, and the next one (None after the last)."""
@@ -2298,7 +2307,7 @@ def position(
     return index + 1, len(found), following
 
 
-def next_step(tribunal: Tribunal, meeting: dict[str, Any], step: Step) -> Step | None:
+def next_step(tribunal: Tribunal, meeting: Meeting, step: Step) -> Step | None:
     """The step holding `step` leads to: the one after it, or (when that
     was held already) the step in hand; None after the Closing."""
     if isinstance(step, Closing):
@@ -2315,7 +2324,7 @@ def next_step(tribunal: Tribunal, meeting: dict[str, Any], step: Step) -> Step |
 def guide_lines(
     saga: Saga,
     tribunal: Tribunal,
-    meeting: dict[str, Any],
+    meeting: Meeting,
     step: Step,
     markup: bool = True,
 ) -> list[str]:
@@ -2340,7 +2349,7 @@ def guide_lines(
 
 
 def _intro(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], step: Step
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, step: Step
 ) -> list[DialogField]:
     """The head of a step's form: where it stands and what follows, then
     its guide."""
@@ -2377,7 +2386,7 @@ def step_form(
     saga: Saga,
     tribunal: Tribunal,
     step: Step,
-    meeting: dict[str, Any] | None = None,
+    meeting: Meeting | None = None,
 ) -> Form:
     """Hold `step` of the meeting being held (or of `meeting`, a new one
     its roll call begins): its form; on saving it (and any form it asks
@@ -2436,7 +2445,7 @@ def hold(saga: Saga, tribunal: Tribunal) -> Command:
 # -- what the hall shows --
 
 
-def record(saga: Saga, tribunal: Tribunal) -> dict[str, Any]:
+def record(saga: Saga, tribunal: Tribunal) -> Meeting:
     """The meeting being held, or the one Hold Tribunal would open (not
     kept): what the hall shows before it opens."""
     return tribunal.meeting if tribunal.meeting is not None else _begin(saga, tribunal)
@@ -2551,7 +2560,7 @@ def vote_case(saga: Saga, tribunal: Tribunal) -> Case | None:
     """The case the Vote section shows: the one in hand (its debate or
     its vote), else the last voted on, else the first to be heard."""
     meeting = record(saga, tribunal)
-    cases = business(tribunal)
+    cases = tribunal_sheet.open_cases(tribunal)
     if not cases:
         return None
     if tribunal.meeting is not None:

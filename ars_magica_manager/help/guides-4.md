@@ -383,6 +383,8 @@ sheet they can read.
 
 If you choose an address the computer doesn't have, or a port another program is using, the app says so and nothing starts.
 
+Every few seconds each player's copy picks up what the others saved. If it finds the saga file damaged (edited by hand, or cut short by another program), it says so once and goes on with its own data; its next save writes the whole file again.
+
 **From a terminal instead.** The same host runs in a terminal in the app's folder with `uv run python tools/serve.py --host ADDRESS` (add `--port 8001` for another port, `--ssh-port 2222` for SSH). It hosts until you press Ctrl+C there, whichever window of the app you have open.
 
 ### Tailscale

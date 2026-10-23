@@ -39,7 +39,7 @@ from ..models import (
     Wounds,
 )
 from ..rules import creation_access as access
-from ..rules import scores
+from ..rules import familiar_seasons, scores
 from . import experimental_effects
 from .character import (
     characteristics_fields,
@@ -84,7 +84,7 @@ def binding_fields(familiar: Familiar) -> list[DialogField]:
     """A Familiar's Initial Binding details and its three Cords (each
     option shows its point cost)."""
     cord_options = [
-        (f"+{score} ({fam.cord_cost(score)} pts)", str(score))
+        (f"+{score} ({familiar_seasons.cord_cost(score)} pts)", str(score))
         for score in CORD_SCORE_COSTS
     ]
     return [

@@ -17,16 +17,16 @@ Kept in Neighbour.details: "school", "fees", "faculties" (each
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Required, TypedDict, cast
 
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import Neighbour, Saga
-from .neighbour_lists import KindList, KindTab, details_list, list_ops
+from .models import Neighbour, Saga, details_list
+from .neighbour_lists import KindList, KindTab, list_ops
+from .references import Fact
 from .sections import FACULTIES_SECTION, MASTERS_SECTION
-from .sheets.character import Fact
 
 #: The kinds of school: the highest an Academic Ability can be taught
 #: there (None for a university's, which has no limit), and its yearly
@@ -59,12 +59,30 @@ def school(neighbour: Neighbour) -> str:
     return found if found in SCHOOLS else "University"
 
 
-def faculties(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "faculties")
+class Faculty(TypedDict, total=False):
+    """A faculty of the university: its rector and its chairs."""
+
+    faculty: Required[str]
+    rector: str
+    chairs: int | None
 
 
-def masters(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "masters")
+def faculties(neighbour: Neighbour) -> list[Faculty]:
+    return cast(list[Faculty], details_list(neighbour, "faculties"))
+
+
+class Master(TypedDict, total=False):
+    """A master who teaches there: a name, or a character (by id), with
+    a licence and a faculty."""
+
+    name: str
+    who: str
+    licence: str
+    faculty: str
+
+
+def masters(neighbour: Neighbour) -> list[Master]:
+    return cast(list[Master], details_list(neighbour, "masters"))
 
 
 # -- worked out --
@@ -168,7 +186,7 @@ def faculties_grid(_saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def faculty_fields(
-    _saga: Saga, _neighbour: Neighbour, faculty: dict[str, Any] | None
+    _saga: Saga, _neighbour: Neighbour, faculty: Faculty | None
 ) -> list[DialogField]:
     f = faculty or {}
     return [
@@ -212,7 +230,7 @@ def faculty_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
 # -- masters --
 
 
-def _master_name(saga: Saga, master: dict[str, Any]) -> str:
+def _master_name(saga: Saga, master: Master) -> str:
     character = saga.character(master.get("who"))
     return character.name if character is not None else master.get("name", "")
 
@@ -243,7 +261,7 @@ def masters_grid(saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def master_fields(
-    saga: Saga, _neighbour: Neighbour, master: dict[str, Any] | None
+    saga: Saga, _neighbour: Neighbour, master: Master | None
 ) -> list[DialogField]:
     m = master or {}
     return [

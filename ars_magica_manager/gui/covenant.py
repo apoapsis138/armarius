@@ -39,10 +39,11 @@ from ..forms import possession as possession_forms
 from ..forms import season as season_forms
 from ..forms import world as world_forms
 from ..models import FULL, INHABITANT_KINDS, LINE, POSSESSION_KINDS, Covenant, Saga
+from ..references import Fact
+from ..rules import library
 from ..sheets import character as cs
 from ..sheets import covenant as cvs
 from ..sheets import familiar as fs
-from ..sheets.character import Fact
 from .ahead import ahead_section
 from .bookmark import with_bookmark
 from .character_sheet import (
@@ -76,6 +77,7 @@ from .widgets import (
     Card,
     ClickableCard,
     Codex,
+    Symbol,
     badge,
     cells_table,
     chapter_title,
@@ -195,7 +197,9 @@ class CovenantPage(QWidget):
     def chapters(self) -> list[str]:
         return self.codex.chapters()
 
-    def inspect(self, title: str, subtitle: str, markup: str, symbol=None) -> None:
+    def inspect(
+        self, title: str, subtitle: str, markup: str, symbol: Symbol | None = None
+    ) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
 
     # Above the chapters
@@ -708,11 +712,11 @@ class CovenantPage(QWidget):
     def _library(self, covenant: Covenant) -> QWidget:
         """The books on their shelves, a summa as tall as its level."""
         p, saga = self.p, self.saga
-        books = bk.books_in_covenant(saga, covenant)
+        books = library.books_in_covenant(saga, covenant)
         chooser = Chooser()
         ops = library_forms.book_ops(
             saga,
-            lambda: bk.books_in_covenant(saga, covenant),
+            lambda: library.books_in_covenant(saga, covenant),
             bk.owner_value("covenant", covenant.id),
         )
 
@@ -743,7 +747,7 @@ class CovenantPage(QWidget):
                                 saga,
                                 giving.BOOK,
                                 covenant,
-                                lambda: bk.books_in_covenant(saga, covenant),
+                                lambda: library.books_in_covenant(saga, covenant),
                             )
                         ],
                     ),
@@ -754,7 +758,7 @@ class CovenantPage(QWidget):
                                 p,
                                 lambda: self.run(
                                     library_forms.change_owner(
-                                        saga, bk.books_in_covenant(saga, covenant)
+                                        saga, library.books_in_covenant(saga, covenant)
                                     )
                                 ),
                                 "library",

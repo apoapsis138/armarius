@@ -8,19 +8,19 @@ import random
 
 from support import everything_saga
 
-from ars_magica_manager import place_events, places
+from ars_magica_manager import neighbour_filter, place_events, places, world_turns
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import neighbour as neighbour_forms
 from ars_magica_manager.forms.covenant import covenant_form
 from ars_magica_manager.forms.laboratory import identity_form
 from ars_magica_manager.models import Ability, Neighbour
-from ars_magica_manager.rules import aging, lab
+from ars_magica_manager.rules import aging, lab, sites
 from ars_magica_manager.seasons import character_effects
 from ars_magica_manager.sheets import laboratory as laboratory_sheet
 
 
 def _drachenfels(saga):
-    found = places.place(saga, "drachenfels")
+    found = sites.place(saga, "drachenfels")
     assert found is not None
     return found
 
@@ -31,7 +31,7 @@ def test_a_place_sits_inside_another_and_lists_what_is_here():
     assert [p.name for p in places.inside_of(saga, drachenfels)] == [
         "The Siebengebirge"
     ]
-    outer = places.place(saga, "siebengebirge")
+    outer = sites.place(saga, "siebengebirge")
     assert outer is not None
     assert places.within(saga, outer) == {"drachenfels"}
     saga.covenants[0].place_id = "drachenfels"
@@ -48,7 +48,7 @@ def test_a_place_sits_inside_another_and_lists_what_is_here():
 
 def test_a_place_cannot_be_put_inside_itself_or_what_is_inside_it():
     saga = everything_saga()
-    outer = places.place(saga, "siebengebirge")
+    outer = sites.place(saga, "siebengebirge")
     assert outer is not None
     form = neighbour_forms.edit_neighbour_form(saga, outer)
     inside = next(f for f in form.fields() if f.key == "where")
@@ -62,14 +62,14 @@ def test_a_place_cannot_be_put_inside_itself_or_what_is_inside_it():
 def test_each_level_has_its_aura_and_an_aura_effect_replaces_it():
     saga = everything_saga()
     drachenfels = _drachenfels(saga)
-    assert places.aura_at(drachenfels, 0) == (5, "Magic")
-    assert places.aura_at(drachenfels, 1) == (6, "Faerie")
-    assert places.aura_at(drachenfels, 2) == (7, "Magic")
-    places.effects(drachenfels).append(
+    assert sites.aura_at(drachenfels, 0) == (5, "Magic")
+    assert sites.aura_at(drachenfels, 1) == (6, "Faerie")
+    assert sites.aura_at(drachenfels, 2) == (7, "Magic")
+    sites.effects(drachenfels).append(
         {"what": "aura", "amount": 3, "target": "faerie", "where": "1+"}
     )
-    assert places.aura_at(drachenfels, 0) == (5, "Magic")
-    assert places.aura_at(drachenfels, 2) == (3, "Faerie")
+    assert sites.aura_at(drachenfels, 0) == (5, "Magic")
+    assert sites.aura_at(drachenfels, 2) == (3, "Faerie")
 
 
 def test_a_roll_says_who_can_see_or_enter_a_level():
@@ -118,7 +118,10 @@ def test_deleting_a_place_places_what_was_in_it_nowhere():
     covenant.place_id = "drachenfels"
     places.sync(saga)
     assert covenant.aura == 5
-    command = neighbour_forms.delete_neighbour(saga, _drachenfels(saga))
+    # As the Region's Places list deletes its chosen row.
+    shown = neighbour_filter.shown(saga, "places")
+    row = shown.index(_drachenfels(saga))
+    command = neighbour_forms.group_ops(saga, "places").remove(row)
     assert isinstance(command, Confirm)
     assert "Keep, Aeolus will be placed nowhere" in command.question
     command.apply()
@@ -158,16 +161,16 @@ def test_warping_and_aging_reach_those_who_live_there():
     assert magus is not None
     covenant = saga.covenants[0]
     covenant.place_id, covenant.place_level = "drachenfels", 2
-    assert places.warping_per_year(saga, magus) == 4
-    places.effects(_drachenfels(saga)).append(
+    assert sites.warping_per_year(saga, magus) == 4
+    sites.effects(_drachenfels(saga)).append(
         {"what": "aging_roll", "amount": -1, "where": "all"}
     )
-    found = places.character_effects(saga, magus, "aging_roll")
+    found = sites.character_effects(saga, magus, "aging_roll")
     assert [e.modifier.amount for e in found] == [-1]
     result = aging.roll(magus, 60, 0, 0, random.Random(3), saga)
     assert "The Drachenfels 1" in result.notes[0]
     covenant.place_level = 0
-    assert places.warping_per_year(saga, magus) == 0
+    assert sites.warping_per_year(saga, magus) == 0
     covenant.place_level = 2
     magus.aging.longevity_modifier = 0
     before = magus.aging.warping_score
@@ -244,16 +247,21 @@ def test_auras_change_only_with_the_option():
     saga = everything_saga()
     drachenfels = _drachenfels(saga)
     assert place_events.change_text(saga, drachenfels) == ""
-    assert place_events.raise_aura(saga, drachenfels, random.Random(1)) == ""
+    assert place_events.aura_roll(saga, drachenfels, random.Random(1)) is None
     keys = [f.key for f in place_events.place_fields(saga, drachenfels)]
     assert "raising" not in keys
     saga.rule_options["aura_change"] = True
     keys = [f.key for f in place_events.place_fields(saga, drachenfels)]
     assert "raising" in keys and "focus_gone" in keys
     drachenfels.details["raising"] = 30  # sure to rise
-    assert "rose to Magic 6" in place_events.raise_aura(
-        saga, drachenfels, random.Random(1)
-    )
+    # The year's turn offers the rise; ticking it applies it.
+    [rise] = [
+        p
+        for p in world_turns.proposals(saga, random.Random(1))
+        if p.text.startswith(f"{drachenfels.name}: aura 5 → 6")
+    ]
+    for change in rise.changes:
+        world_turns.apply_change(saga, change)
     assert drachenfels.details["aura"] == 6
     assert "aura rose" in place_events.diary(drachenfels)[-1]["text"]
     facts = {f.label: f.value for f in place_events.place_facts(saga, drachenfels)}

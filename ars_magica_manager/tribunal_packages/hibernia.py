@@ -26,7 +26,7 @@ from ..commands import Command, Confirm, Form, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
 from ..markup import escape
-from ..models import Covenant, Saga, Tribunal, new_instance_id
+from ..models import Covenant, Meeting, Saga, Tribunal, new_instance_id
 from ..sections import AMBASSADORS_SECTION, TREATIES_SECTION
 from . import (
     Envoy,
@@ -54,7 +54,8 @@ _FIELDS = ("cathach", "taken_by", "taken_year", "since")
 def cathaigh(tribunal: Tribunal) -> dict[str, dict[str, Any]]:
     """Each covenant's cathach, by covenant id."""
     found = data(tribunal, KEY).setdefault("cathaigh", {})
-    assert isinstance(found, dict)
+    if not isinstance(found, dict):
+        raise ValueError(f"The Tribunal's cathaigh should be a mapping, not {found!r}.")
     return found
 
 
@@ -176,7 +177,7 @@ def tuatha(tribunal: Tribunal) -> list[tuple[str, str]]:
     ]
 
 
-def confirmed(tribunal: Tribunal, meeting: dict[str, Any]) -> list[dict[str, Any]]:
+def confirmed(tribunal: Tribunal, meeting: Meeting) -> list[dict[str, Any]]:
     """The ambassadors who vote at `meeting`: those its Sacred Council
     confirmed, else (before it sits) those confirmed on the list."""
     council = meeting.get("council")
@@ -186,7 +187,7 @@ def confirmed(tribunal: Tribunal, meeting: dict[str, Any]) -> list[dict[str, Any
     return [a for a in ambassadors(tribunal) if a.get("confirmed")]
 
 
-def envoys(_saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> list[Envoy]:
+def envoys(_saga: Saga, tribunal: Tribunal, meeting: Meeting) -> list[Envoy]:
     """Each ambassador confirmed for the meeting, a vote each."""
     return [
         Envoy(f"envoy_{a['id']}", a.get("name") or a.get("faction", ""), a["faction"])

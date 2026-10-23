@@ -22,7 +22,7 @@ from ... import storage
 from ...models import Ability, BodyVis, Familiar, Possession, ScoredTrait
 from ...rules import creation_access as access
 from ...rules.xp import ability_xp
-from ..builder import _virtue_flaw
+from ..builder import _virtue_flaw, characteristics, vf_great, vf_ward, wound_ranges
 
 if TYPE_CHECKING:
     from ...models import Covenant, Creature, Neighbour
@@ -89,42 +89,8 @@ _ROLE = {
 _MADE: dict[str, Creature] = {}
 
 
-def _great(characteristic: str) -> tuple[str, dict[str, str]]:
-    return ("Great {characteristic}", {"characteristic": characteristic})
-
-
-def _ward(ward: str) -> tuple[str, dict[str, str]]:
-    return ("Traditional Ward", {"ward": ward})
-
-
 def _power(name: str) -> tuple[str, dict[str, str]]:
     return ("Lesser Power", {"power": name})
-
-
-def _chars(
-    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
-) -> dict[str, int]:
-    """Characteristics in the book's order (Int or Cun, Per, Pre, Com, Str,
-    Sta, Dex, Qik)."""
-    return {
-        "intelligence": int_,
-        "perception": per,
-        "presence": pre,
-        "communication": com,
-        "strength": str_,
-        "stamina": sta,
-        "dexterity": dex,
-        "quickness": qik,
-    }
-
-
-def _wounds(size: int) -> str:
-    """The wound ranges for a Size, as the book's blocks print them."""
-    step = 5 + size
-    return (
-        f"Wound ranges: Light 1-{step}, Medium to {2 * step}, Heavy to "
-        f"{3 * step}, Incapacitated to {4 * step}, Dead from {4 * step + 1}."
-    )
 
 
 def build(transylvania: Transylvania) -> None:
@@ -151,11 +117,11 @@ def _dragons(transylvania: Transylvania) -> None:
         confidence=(1, 3),
         weakness="Abhorrent Material (Serbian spruce)",
         block={
-            "characteristics": _chars(0, 0, -2, -5, 2, 4, 1, -2),
+            "characteristics": characteristics(0, 0, -2, -5, 2, 4, 1, -2),
             "virtues_flaws": [
                 "Greater Infernal Power",
                 "Greater Infernal Power",
-                _great("Stamina"),
+                vf_great("Stamina"),
                 "Lesser Infernal Power",
                 "Tough",
                 "Greedy",
@@ -218,7 +184,7 @@ def _dragons(transylvania: Transylvania) -> None:
             "the water waiting for merchant boats; once one has passed above "
             "him he rears up behind it, kills everyone aboard, sinks the "
             "hull and hauls the cargo home. "
-            + _wounds(2)
+            + wound_ranges(2)
             + "\nThe aždaje rank themselves by raw strength, the stronger "
             "taking the best lairs and hunting grounds and punishing the "
             "weaker; their lairs are bleak, rotting places, mostly in "
@@ -236,7 +202,7 @@ def _dragons(transylvania: Transylvania) -> None:
         season="Summer",
         confidence=(2, 6),
         block={
-            "characteristics": _chars(1, 0, -2, -5, 10, 3, 3, -2),
+            "characteristics": characteristics(1, 0, -2, -5, 10, 3, 3, -2),
             "virtues_flaws": [
                 "Magic Animal",
                 "Magical Monster",
@@ -325,7 +291,7 @@ def _dragons(transylvania: Transylvania) -> None:
             "but not violent, and, like most zmajevi, in search of a wife. "
             "He may bite many times a round, but a Size 0 foe only twice, "
             "plus once more for each point of Size above 0. "
-            + _wounds(4)
+            + wound_ranges(4)
             + "\nThe zmajevi want what the aždaje want, wives and gold, but "
             "do harm without noticing or caring. Some walk on their hind "
             "legs with small clawed hands. Their lairs are lavish, and their "
@@ -349,14 +315,14 @@ def _giants(transylvania: Transylvania) -> None:
         size=4,
         how_many="two giant brothers, who share these statistics",
         block={
-            "characteristics": _chars(-2, -1, 0, -2, 11, 3, 2, -5),
+            "characteristics": characteristics(-2, -1, 0, -2, 11, 3, 2, -5),
             "virtues_flaws": [
                 "Negative Reaction",
                 ("Focus Power", {"focus": "Shrinking"}),
                 *["Huge"] * 3,
                 "Humanoid Faerie",
                 "Incognizant",
-                _ward("places"),
+                vf_ward("places"),
             ],
             "abilities": [
                 ("Area Lore: (their district)", 2, "hidden pastures"),
@@ -418,7 +384,7 @@ def _giants(transylvania: Transylvania) -> None:
         form="Mentem",
         size=3,
         block={
-            "characteristics": _chars(2, 2, -3, -3, 7, 3, 3, -6),
+            "characteristics": characteristics(2, 2, -3, -3, 7, 3, 3, -6),
             "virtues_flaws": [
                 "Negative Reaction",
                 "Greater Power",
@@ -427,7 +393,7 @@ def _giants(transylvania: Transylvania) -> None:
                 "Huge",
                 "Humanoid Faerie",
                 "Incognizant",
-                _ward("iron"),
+                vf_ward("iron"),
             ],
             "abilities": [
                 ("Athletics", 3, "running"),
@@ -485,7 +451,7 @@ def _giants(transylvania: Transylvania) -> None:
             "He is easily caught and hard to keep, for his power makes the "
             "household curious, and he feeds on the thrill and dread of "
             "people prying where they have been told not to. Scores are "
-            "Pretenses. " + _wounds(3)
+            "Pretenses. " + wound_ranges(3)
         ),
     )
     _MADE["nicoleta"] = b.creature(
@@ -497,7 +463,7 @@ def _giants(transylvania: Transylvania) -> None:
         size=1,
         confidence=(1, 3),
         block={
-            "characteristics": _chars(2, 0, -3, -1, 1, 2, 1, 3),
+            "characteristics": characteristics(2, 0, -3, -1, 1, 2, 1, 3),
             "virtues_flaws": [
                 "Monstrous Appearance",
                 "Greater Power",
@@ -506,7 +472,7 @@ def _giants(transylvania: Transylvania) -> None:
                 "Large",
                 "Lesser Power",
                 "Incognizant",
-                _ward("edelweiss"),
+                vf_ward("edelweiss"),
                 "Slow Might Recovery",
             ],
             "abilities": [
@@ -562,7 +528,7 @@ def _giants(transylvania: Transylvania) -> None:
             "what it is. Stories have someone trying to win that horse from "
             "her with impossible chores. Roused, she becomes the burning "
             "wheel and tries to crush her enemies. Scores are Pretenses. "
-            + _wounds(1)
+            + wound_ranges(1)
             + "\nA giant's mother is always a sorceress, cleverer than her "
             "son: she picks the home, runs the household and the herd, "
             "steers his choices and hunts down whoever beats him; without a "
@@ -579,12 +545,12 @@ def _giants(transylvania: Transylvania) -> None:
         form="Auram",
         size=2,
         block={
-            "characteristics": _chars(3, 1, 2, 2, 4, 2, 1, -2),
+            "characteristics": characteristics(3, 1, 2, 2, 4, 2, 1, -2),
             "virtues_flaws": [
                 "Positive Folktales",
                 "Highly Cognizant",
                 "Huge",
-                _great("Strength"),
+                vf_great("Strength"),
                 "Improved Characteristics",
                 "Improved Characteristics",
                 "Faerie Speech",
@@ -626,7 +592,7 @@ def _giants(transylvania: Transylvania) -> None:
             "than most faeries, he can foresee how other faeries will play "
             "theirs (that a thwarted giant's mother will storm the maiden's "
             "castle, say), which mortals take for prophecy; he knows nothing "
-            "of what other realms will do. Scores are Pretenses. " + _wounds(2)
+            "of what other realms will do. Scores are Pretenses. " + wound_ranges(2)
         ),
     )
 
@@ -672,7 +638,7 @@ def _vampires(transylvania: Transylvania) -> None:
         form="Corpus",
         how_many="a template: the commonest vampire of the Tribunal",
         block={
-            "characteristics": _chars(-2, 0, -3, 0, 3, 2, 1, 3),
+            "characteristics": characteristics(-2, 0, -3, 0, 3, 2, 1, 3),
             "virtues_flaws": [
                 "Negative Reaction",
                 "Feast of the Dead",
@@ -681,7 +647,7 @@ def _vampires(transylvania: Transylvania) -> None:
                 "Increased Faerie Might",
                 _power("Sap the Life"),
                 "Incognizant",
-                _ward("sunlight"),
+                vf_ward("sunlight"),
             ],
             "abilities": [
                 ("Area Lore: (its village)", 3, "livestock"),
@@ -709,7 +675,7 @@ def _vampires(transylvania: Transylvania) -> None:
             "daylight (though direct sun still hurts them) and live among "
             "people. 5 points of Virtues and 3 of Flaws; a template to "
             "tailor. "
-            + _wounds(0)
+            + wound_ranges(0)
             + _VAMPIRES
             + "\nThe life cycle: an unseen haunting of the family (zduhacz) "
             "for seven or forty days, then a shapeless gadja for forty days, "
@@ -727,7 +693,7 @@ def _vampires(transylvania: Transylvania) -> None:
         form="Animal",
         how_many="a template: the vukodlaci, wolf-shaped vampires",
         block={
-            "characteristics": _chars(-3, 2, -3, -1, 3, 3, 2, 1),
+            "characteristics": characteristics(-3, 2, -3, -1, 3, 3, 2, 1),
             "virtues_flaws": [
                 "Increased Faerie Might (Major)",
                 "Feast of the Dead",
@@ -737,7 +703,7 @@ def _vampires(transylvania: Transylvania) -> None:
                 "Tough",
                 "Monstrous Appearance",
                 "Incognizant",
-                _ward("sunlight"),
+                vf_ward("sunlight"),
             ],
             "abilities": [
                 ("Area Lore: (its district)", 3, "livestock"),
@@ -784,7 +750,7 @@ def _vampires(transylvania: Transylvania) -> None:
             "wolf, eating from a wolf's kill or a violent crime such as "
             "murder draws them, and every varcolac becomes one when he dies. "
             "8 points of Virtues and 5 of Flaws; the single Lesser Power "
-            "covers both its lesser powers. " + _wounds(0) + _VAMPIRES
+            "covers both its lesser powers. " + wound_ranges(0) + _VAMPIRES
         ),
     )
     _MADE["vampire_incorporeal"] = b.creature(
@@ -795,7 +761,7 @@ def _vampires(transylvania: Transylvania) -> None:
         form="Ignem",
         how_many="a template: the ghostly zduhacz, luderc and their kin",
         block={
-            "characteristics": _chars(1, 0, 2, 0, 0, 0, 0, 2),
+            "characteristics": characteristics(1, 0, 2, 0, 0, 0, 0, 2),
             "virtues_flaws": [
                 "Feast of the Dead",
                 ("Focus Power", {"focus": "Ghost Touch"}),
@@ -806,7 +772,7 @@ def _vampires(transylvania: Transylvania) -> None:
                 "Freshly Sprung",
                 "Incognizant",
                 "Negative Reaction",
-                _ward("sunlight"),
+                vf_ward("sunlight"),
             ],
             "abilities": [
                 ("Area Lore: (its village)", 3, "village"),
@@ -863,7 +829,7 @@ def _vampires(transylvania: Transylvania) -> None:
             "unbaptised child's death and threatens newborns and young "
             "mothers, the sjanka rises from the blood of a man knifed to "
             "death, and the ljugat is a gentler kind that feeds only "
-            "briefly. 7 points of Virtues and Flaws. " + _wounds(0) + _VAMPIRES
+            "briefly. 7 points of Virtues and Flaws. " + wound_ranges(0) + _VAMPIRES
         ),
     )
     _MADE["gadja"] = b.creature(
@@ -874,7 +840,7 @@ def _vampires(transylvania: Transylvania) -> None:
         form="Corpus",
         how_many="a template: the formless stage of a young vampire",
         block={
-            "characteristics": _chars(0, 2, -3, 0, 3, 3, -2, 0),
+            "characteristics": characteristics(0, 2, -3, 0, 3, 3, -2, 0),
             "virtues_flaws": [
                 "Feast of the Dead",
                 "Hybrid Form",
@@ -883,8 +849,8 @@ def _vampires(transylvania: Transylvania) -> None:
                 "Monstrous Appearance",
                 "Clumsy",
                 "Incognizant",
-                _ward("sunlight"),
-                _ward("thorns"),
+                vf_ward("sunlight"),
+                vf_ward("thorns"),
             ],
             "abilities": [
                 ("Area Lore: (its district)", 3, "livestock"),
@@ -921,7 +887,7 @@ def _vampires(transylvania: Transylvania) -> None:
             "blood mostly from animals through its snout. Thorns and "
             "piercing weapons do it fearful harm. 4 points of Virtues and 7 "
             "of Flaws. Its Init values are the book's Qik-based ones worked "
-            "out. " + _wounds(0) + _VAMPIRES
+            "out. " + wound_ranges(0) + _VAMPIRES
         ),
     )
     _MADE["vampire_snake"] = b.creature(
@@ -934,14 +900,14 @@ def _vampires(transylvania: Transylvania) -> None:
         cunning=True,
         how_many="a template: a venomous snake turned vampire",
         block={
-            "characteristics": _chars(-1, -2, -5, -6, -6, 0, 2, 2),
+            "characteristics": characteristics(-1, -2, -5, -6, -6, 0, 2, 2),
             "virtues_flaws": [
                 "Faerie Beast",
                 "Feast of the Dead",
                 "Lightning Reflexes",
                 "Incognizant",
                 "Negative Reaction",
-                _ward("sunlight"),
+                vf_ward("sunlight"),
             ],
             "abilities": [
                 ("Awareness", 2, "prey"),
@@ -978,7 +944,7 @@ def _vampires(transylvania: Transylvania) -> None:
         cunning=True,
         how_many="a template: a tree turned vampire, most often a hanging tree",
         block={
-            "characteristics": _chars(-3, -1, 1, -3, 10, 5, 0, -5),
+            "characteristics": characteristics(-3, -1, 1, -3, 10, 5, 0, -5),
             "virtues_flaws": [
                 *["Huge"] * 4,
                 "Feast of the Dead",
@@ -988,7 +954,7 @@ def _vampires(transylvania: Transylvania) -> None:
                 "Freshly Sprung",
                 "Incognizant",
                 "Limited Movement",
-                _ward("fire"),
+                vf_ward("fire"),
             ],
             "abilities": [
                 ("Area Lore: (its fields)", 3, "fields"),
@@ -1025,7 +991,7 @@ def _vampires(transylvania: Transylvania) -> None:
             "Passes for Human stands for the book's Passes for Plant, and "
             "Limited Movement is from Realms of Power: Magic. Sap the "
             "Life's Init is Qik-3 worked out. Not for a player. "
-            + _wounds(5)
+            + wound_ranges(5)
             + _VAMPIRES
         ),
     )
@@ -1040,7 +1006,7 @@ def _vampires(transylvania: Transylvania) -> None:
         order="Vessels of Iniquity",
         weakness="Protected Group (those born on a Saturday)",
         block={
-            "characteristics": _chars(0, 0, 0, 0, 4, 4, 0, 2),
+            "characteristics": characteristics(0, 0, 0, 0, 4, 4, 0, 2),
             "virtues_flaws": [
                 "Shapeshifter",
                 "Improved Characteristics",
@@ -1118,7 +1084,7 @@ def _vampires(transylvania: Transylvania) -> None:
             "declines as it feeds by night on beasts and people. It likes "
             "lone victims, grapples and bites, and may keep one alive for "
             "nightly feeding with scuffle damage. Its Spittle has no "
-            "Defense. " + _wounds(0)
+            "Defense. " + wound_ranges(0)
         ),
     )
 
@@ -1136,13 +1102,13 @@ def _vila(transylvania: Transylvania) -> None:
         form="Corpus",
         how_many="a template: the white ladies, cast to suit each role",
         block={
-            "characteristics": _chars(0, 0, 3, 0, 1, 0, 0, 0),
+            "characteristics": characteristics(0, 0, 3, 0, 1, 0, 0, 0),
             "virtues_flaws": [
                 "Passes for Human",
                 "Faerie Sight",
                 "Humanoid Faerie",
                 "Incognizant",
-                _ward("offerings: food, cakes or ribbons"),
+                vf_ward("offerings: food, cakes or ribbons"),
             ],
             "abilities": [
                 ("Athletics", 3, "dance"),
@@ -1164,7 +1130,7 @@ def _vila(transylvania: Transylvania) -> None:
             "any Virtue added must be balanced by a Flaw (antagonists need "
             "not balance). The book's Human Form is the catalog's Humanoid "
             "Faerie. Her Might Form is usually Corpus. "
-            + _wounds(0)
+            + wound_ranges(0)
             + "\nPowers by role (all Greater unless marked; in a hurry, "
             "double the Might cost and quadruple the Init penalty): "
             "shapeshifting into a falcon, horse, serpent, swan or wolf (2 to "
@@ -1264,7 +1230,7 @@ def _elsewhere(transylvania: Transylvania) -> None:
         season="Spring",
         cunning=True,
         block={
-            "characteristics": _chars(0, 2, -2, 1, -4, 2, 0, 4),
+            "characteristics": characteristics(0, 2, -2, 1, -4, 2, 0, 4),
             "virtues_flaws": [
                 "Magic Animal",
                 "Magical Friend",
@@ -1365,7 +1331,7 @@ def _elsewhere(transylvania: Transylvania) -> None:
     )
 
 
-_SILEXA_CHARS = _chars(2, 1, -2, 1, -1, 3, 2, 2)
+_SILEXA_CHARS = characteristics(2, 1, -2, 1, -1, 3, 2, 2)
 
 _SILEXA_VIRTUES: list[Any] = [
     "Magic Animal",

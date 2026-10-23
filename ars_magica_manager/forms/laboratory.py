@@ -36,6 +36,7 @@ from ..models import (
     assign_laboratory_owner,
     new_instance_id,
 )
+from ..rules import lab_stats
 
 # -- Identity and Characteristics --
 
@@ -460,7 +461,7 @@ def feature_details(
 def new_feature_virtue_question(lab: Laboratory, vf_id: str) -> str:
     """Asked before a Feature adds a new Feature Virtue to the lab."""
     points = FEATURE_VIRTUE_POINTS[vf_id]
-    free = lab_rules.lab_free_virtues(lab, catalog.load_lab_virtue_flaw_catalog_by_id())
+    free = lab_stats.lab_free_virtues(lab, catalog.load_lab_virtue_flaw_catalog_by_id())
     return (
         f"Add a {lab_rules.tier_word(vf_id)} Feature Virtue to the "
         f"lab ({points} {'point' if points == 1 else 'points'}; "

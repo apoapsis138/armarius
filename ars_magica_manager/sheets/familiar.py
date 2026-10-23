@@ -13,10 +13,10 @@ from .. import familiars as fam
 from .. import possessions as pos
 from .. import sheet_text as st
 from ..models import Familiar, Saga
-from ..rules import derived
+from ..references import Fact
+from ..rules import derived, familiar_seasons
 from . import character as cs
 from . import covenant as cvs
-from .character import Fact
 
 
 def subtitle(saga: Saga, familiar: Familiar) -> str:
@@ -73,7 +73,7 @@ class Cord:
 
 def cords(familiar: Familiar) -> list[Cord]:
     return [
-        Cord(label, score, fam.cord_cost(score), effect)
+        Cord(label, score, familiar_seasons.cord_cost(score), effect)
         for attribute, label, effect in fam.CORDS
         for score in [getattr(familiar, attribute)]
     ]

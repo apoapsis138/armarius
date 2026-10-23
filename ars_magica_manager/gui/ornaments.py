@@ -9,14 +9,16 @@ bundled; the rules, lozenges and corners are drawn, in the palette's gilt.
 
 from __future__ import annotations
 
-from PySide6.QtCore import QPointF, QRectF, Qt
+from PySide6.QtCore import QEvent, QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QBrush,
     QColor,
+    QEnterEvent,
     QFont,
     QLinearGradient,
     QPainter,
     QPainterPath,
+    QPaintEvent,
     QPen,
 )
 from PySide6.QtWidgets import QPushButton, QWidget
@@ -64,7 +66,7 @@ class _Ornament(QWidget):
         self.setFixedHeight(self.HEIGHT)
         self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
 
-    def paintEvent(self, _event) -> None:
+    def paintEvent(self, _event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.draw(painter, self.width(), self.HEIGHT / 2)
@@ -76,7 +78,7 @@ class _Ornament(QWidget):
 class FleuronRule(_Ornament):
     """A heading's rule: a hedera leaf, then a double rule fading out."""
 
-    def draw(self, painter, width, cy):
+    def draw(self, painter: QPainter, width: float, cy: float):
         gilt = self.p["accent"]
         start = _leaf(painter, 9, cy, HEDERA_RIGHT, 13, gilt) + 13
         painter.setPen(_fading(gilt, start, width * 0.8, 1.4))
@@ -91,7 +93,7 @@ class ShortRule(_Ornament):
 
     HEIGHT = 26
 
-    def draw(self, painter, width, cy):
+    def draw(self, painter: QPainter, width: float, cy: float):
         gilt = self.p["accent"]
         cx = width / 2
         _leaf(painter, cx, cy, HEDERA, 15, gilt)
@@ -107,7 +109,7 @@ class Headpiece(_Ornament):
 
     HEIGHT = 34
 
-    def draw(self, painter, width, cy):
+    def draw(self, painter: QPainter, width: float, cy: float):
         gilt = self.p["accent"]
         cx = width / 2
         _leaf(painter, cx, cy, HEDERA, 24, gilt)
@@ -141,7 +143,7 @@ class Tailpiece(_Ornament):
 
     HEIGHT = 60
 
-    def draw(self, painter, width, _cy):
+    def draw(self, painter: QPainter, width: float, _cy: float):
         gilt = self.p["accent"]
         cx, top = width / 2, 14
         painter.setPen(_fading(gilt, cx - 34, cx - 150, 1.0))
@@ -173,7 +175,7 @@ class FleuronButton(QPushButton):
         self.setFixedSize(30, 22)
         self.setStyleSheet("QPushButton { background: transparent; border: none; }")
 
-    def paintEvent(self, _event) -> None:
+    def paintEvent(self, _event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         hot = self.underMouse() or self.hasFocus()
@@ -187,11 +189,11 @@ class FleuronButton(QPushButton):
         )
         painter.end()
 
-    def enterEvent(self, event) -> None:
+    def enterEvent(self, event: QEnterEvent) -> None:
         self.update()
         super().enterEvent(event)
 
-    def leaveEvent(self, event) -> None:
+    def leaveEvent(self, event: QEvent) -> None:
         self.update()
         super().leaveEvent(event)
 

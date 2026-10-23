@@ -29,7 +29,7 @@ from .models import (
 )
 from .rules import combat, derived, penetration, research, scores
 from .rules import xp as xp_rules
-from .tables import Table
+from .rules.breakdown import Breakdown
 from .totals import describe_modifier
 
 
@@ -360,7 +360,7 @@ def known_spell_rows(saga: Saga, character: Character) -> list[tuple[int | None,
     the stored id when the spell can't be found."""
     rows: list[tuple[int | None, str]] = []
     for index, known in enumerate(character.spells_known):
-        spell = spl.find_spell(saga, known.spell_id)
+        spell = catalog.find_spell(saga, known.spell_id)
         if spell is None:
             rows.append((index, f"{escape(known.spell_id)} (unknown spell)"))
             continue
@@ -387,7 +387,7 @@ def combat_text(character: Character, weapon: Possession) -> str:
     """A weapon's combat totals for the character, before the die."""
     totals = combat.combat_totals(character, weapon)
 
-    def show(breakdown) -> str:
+    def show(breakdown: Breakdown | None) -> str:
         if breakdown is None:
             return "n/a"
         return f"{int(breakdown.total):+d}"
@@ -509,30 +509,6 @@ def goal_row(goal: Breakthrough) -> str:
         extras.append(f"{goal.insights} insight(s) to invent")
     tail = f"  [dim]{'; '.join(extras)}[/]" if extras else ""
     return f"{escape(goal.name)} ({goal.kind}): {research.target_text(goal)}" + tail
-
-
-def goal_table(goals: Sequence[Breakthrough]) -> Table:
-    """Research goals as a table (markup), with goal_row's parts."""
-    rows = []
-    for goal in goals:
-        extras = []
-        if goal.reached:
-            extras.append("reached")
-        if goal.pending_magnitude:
-            extras.append(f"Discovery to stabilize ({goal.pending_magnitude})")
-        if goal.insights:
-            extras.append(f"{goal.insights} insight(s) to invent")
-        rows.append(
-            [
-                escape(goal.name),
-                goal.kind,
-                f"{goal.points}"
-                if goal.hidden_target and not goal.reached
-                else f"{goal.points}/{goal.target}",
-                f"[dim]{'; '.join(extras)}[/]" if extras else "",
-            ]
-        )
-    return Table(["Goal", "Kind", "Points", "Waiting on"], rows, markup=True)
 
 
 def goal_text(goal: Breakthrough) -> str:

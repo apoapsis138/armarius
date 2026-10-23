@@ -23,6 +23,7 @@ from ars_magica_manager.models import (
     Saga,
     ShapeMaterialBonus,
 )
+from ars_magica_manager.rules import enchantment
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 
@@ -64,7 +65,7 @@ def _effect(**kwargs) -> InstilledEffect:
 )
 def test_capacity_is_material_times_size(material, size, pawns):
     device = _device(components=[DeviceComponent("x", material, size)])
-    assert ed.capacity(_saga(device), device) == pawns
+    assert enchantment.capacity(_saga(device), device) == pawns
 
 
 def _staff() -> list[DeviceComponent]:
@@ -78,22 +79,22 @@ def _staff() -> list[DeviceComponent]:
 
 def test_compound_item_pays_the_sum_or_the_highest_component():
     device = _device(components=_staff())
-    assert ed.capacity(_saga(device), device) == 25
+    assert enchantment.capacity(_saga(device), device) == 25
     device.payment = PAY_HIGHEST
-    assert ed.capacity(_saga(device), device) == 12
+    assert enchantment.capacity(_saga(device), device) == 12
 
 
 def test_talisman_capacity_is_the_magus_highest_technique_plus_form():
     device = _device(talisman=True, maker_id="mag1", components=_staff())
-    assert ed.capacity(_saga(device), device) == 8 + 10
+    assert enchantment.capacity(_saga(device), device) == 8 + 10
 
 
 def test_capacity_override_wins_and_charged_items_have_none():
     device = _device(components=_staff(), capacity_override=30)
-    assert ed.capacity(_saga(device), device) == 30
+    assert enchantment.capacity(_saga(device), device) == 30
     assert "typed; worked out: 25" in ed.capacity_text(_saga(device), device)
     charged = _device(type=CHARGED, components=_staff())
-    assert ed.capacity(_saga(charged), charged) is None
+    assert enchantment.capacity(_saga(charged), charged) is None
 
 
 def test_opening_status():
@@ -120,8 +121,8 @@ def test_modified_level_adds_frequency_penetration_and_modifications():
         linked_trigger=True,
     )
     device = _device(effects=[effect])
-    assert ed.modified_level(device, effect) == 30 + 3 + 5 + 5 + 3 + 3 + 5 + 3
-    assert ed.vis_cost(device, effect) == 6
+    assert enchantment.modified_level(device, effect) == 30 + 3 + 5 + 5 + 3 + 3 + 5 + 3
+    assert enchantment.vis_cost(device, effect) == 6
 
 
 @pytest.mark.parametrize(
@@ -139,29 +140,29 @@ def test_modified_level_adds_frequency_penetration_and_modifications():
 )
 def test_uses_per_day_table(uses, added):
     effect = _effect(level=10, uses_per_day=uses)
-    assert ed.modified_level(_device(), effect) == 10 + added
+    assert enchantment.modified_level(_device(), effect) == 10 + added
 
 
 def test_charged_items_take_no_uses_per_day_and_no_vis():
     effect = _effect(level=10, uses_per_day="Unlimited")
     device = _device(type=CHARGED, effects=[effect])
-    assert ed.modified_level(device, effect) == 10
-    assert ed.vis_cost(device, effect) == 0
+    assert enchantment.modified_level(device, effect) == 10
+    assert enchantment.vis_cost(device, effect) == 0
 
 
 @pytest.mark.parametrize(("level", "vis"), [(1, 1), (10, 1), (30, 3), (31, 4)])
 def test_vis_is_modified_level_over_ten_rounded_up(level, vis):
     effect = _effect(level=level)
-    assert ed.vis_cost(_device(), effect) == vis
+    assert enchantment.vis_cost(_device(), effect) == vis
 
 
 def test_overrides_replace_modified_level_and_vis():
     effect = _effect(level=30, modified_level_override=44)
     device = _device(effects=[effect])
-    assert ed.modified_level(device, effect) == 44
-    assert ed.vis_cost(device, effect) == 5
+    assert enchantment.modified_level(device, effect) == 44
+    assert enchantment.vis_cost(device, effect) == 5
     effect.vis_override = 2
-    assert ed.vis_cost(device, effect) == 2
+    assert enchantment.vis_cost(device, effect) == 2
 
 
 def test_pawns_used_counts_every_effect_including_unknown_and_partial():
@@ -170,7 +171,7 @@ def test_pawns_used_counts_every_effect_including_unknown_and_partial():
         _effect(id="b", level=20, known=False),
         _effect(id="c", level=25, instilling_progress=5),
     ]
-    assert ed.pawns_used(_device(effects=effects)) == 1 + 2 + 3
+    assert enchantment.pawns_used(_device(effects=effects)) == 1 + 2 + 3
 
 
 def test_expiry_year_counts_from_first_use():

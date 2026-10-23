@@ -48,7 +48,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models import BodyVis
-from ..builder import paragraphs
+from ..builder import characteristics, paragraphs, wound_ranges
 
 if TYPE_CHECKING:
     from ...models import Creature, CreaturePower, Neighbour
@@ -108,31 +108,6 @@ ROLE = {
 
 #: The creatures this part makes, by key, for `finish`.
 _MADE: dict[str, Creature] = {}
-
-
-def _chars(
-    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
-) -> dict[str, int]:
-    """Characteristics in the Definitive Edition's order (Int, Per, Pre,
-    Com, Str, Sta, Dex, Qik); the book prints them in another."""
-    return {
-        "intelligence": int_,
-        "perception": per,
-        "presence": pre,
-        "communication": com,
-        "strength": str_,
-        "stamina": sta,
-        "dexterity": dex,
-        "quickness": qik,
-    }
-
-
-def _wounds(size: int) -> str:
-    step = 5 + size
-    return (
-        f"Wound ranges: Light 1-{step}, Medium to {2 * step}, Heavy to "
-        f"{3 * step}, Incapacitated to {4 * step}, Dead from {4 * step + 1}."
-    )
 
 
 def _control(levant: Levant, form: str, rating: int, qik: int) -> CreaturePower:
@@ -225,7 +200,7 @@ def _jinn(levant: Levant) -> None:
         form="Terram",
         size=4,
         block={
-            "characteristics": _chars(1, 0, 4, 0, 10, 10, 0, -3),
+            "characteristics": characteristics(1, 0, 4, 0, 10, 10, 0, -3),
             "virtues_flaws": [
                 "Reserves of Strength",
                 ("Ways of the {land}", {"land": "Desert"}),
@@ -293,7 +268,7 @@ def _jinn(levant: Levant) -> None:
             "in name, she keeps the faith fitfully, always being drawn off "
             "by her charges' troubles. Talking is wiser than fighting her.",
             JINN_NATURE,
-            DAWN + " " + _wounds(4),
+            DAWN + " " + wound_ranges(4),
         ),
     )
     _MADE["abd_al_misbah"] = b.creature(
@@ -304,7 +279,7 @@ def _jinn(levant: Levant) -> None:
         form="Ignem",
         size=3,
         block={
-            "characteristics": _chars(0, 2, -2, 0, 7, 7, 3, 4),
+            "characteristics": characteristics(0, 2, -2, 0, 7, 7, 3, 4),
             "virtues_flaws": [
                 "Reserves of Strength",
                 ("Ways of the {land}", {"land": "Desert"}),
@@ -377,7 +352,7 @@ def _jinn(levant: Levant) -> None:
             "of his raw power. The book places neither the lamp nor its "
             "owner.",
             JINN_NATURE,
-            DAWN + " " + _wounds(3),
+            DAWN + " " + wound_ranges(3),
         ),
         secrets=(
             "Someone who meets the conditions of his release can free him "
@@ -394,7 +369,7 @@ def _jinn(levant: Levant) -> None:
         might=20,
         form="Vim",
         block={
-            "characteristics": _chars(0, 0, -2, -3, 5, 4, 5, 4),
+            "characteristics": characteristics(0, 0, -2, -3, 5, 4, 5, 4),
             "virtues_flaws": [
                 "Lightning Reflexes",
                 "Weakness",
@@ -479,7 +454,7 @@ def _jinn(levant: Levant) -> None:
             "Weakness is for human flesh. He changes his looks to slip into "
             "the ranks.",
             JINN_NATURE,
-            DAWN + " " + _wounds(0),
+            DAWN + " " + wound_ranges(0),
         ),
         secrets=(
             "He can pass as an ordinary soldier among a covenant's grogs, "
@@ -501,7 +476,7 @@ def _naddaha(levant: Levant) -> None:
         form="Mentem",
         how_many="a lone creature at a well or oasis, most often in Upper Egypt",
         block={
-            "characteristics": _chars(0, 0, 1, 0, 5, 4, 3, 3),
+            "characteristics": characteristics(0, 0, 1, 0, 5, 4, 3, 3),
             "abilities": [
                 ("Brawl", 5, "grapple"),
                 ("Living Language: Arabic", 5, "Egyptian speech"),
@@ -545,7 +520,7 @@ def _naddaha(levant: Levant) -> None:
             "not true jinn, so Sihr has no special hold on her.",
             "She nearly always grapples. Once she holds a victim he is "
             "immobilised and takes a wound level each round, starting with "
-            "the round she seizes him, until her hold is broken. " + _wounds(0),
+            "the round she seizes him, until her hold is broken. " + wound_ranges(0),
         ),
         secrets=(
             "She throws what is left of her victims into the nearest river, "
@@ -568,7 +543,7 @@ def _luigi(levant: Levant) -> None:
         form="Animal",
         size=-3,
         block={
-            "characteristics": _chars(1, 3, 0, 0, -3, 0, 3, 3),
+            "characteristics": characteristics(1, 3, 0, 0, -3, 0, 3, 3),
             "virtues_flaws": ["Magic Animal", "Lightning Reflexes", "Piercing Gaze"],
             "abilities": [
                 ("Awareness", 2, "sounds"),
@@ -592,7 +567,7 @@ def _luigi(levant: Levant) -> None:
             "to Cat gives him. Presence and Communication n/a as printed.",
             "Combat from the Definitive Edition's claws (Init Qik + -1, "
             "Attack Dex + 2, Defense Qik + 3, Damage Str + 2), with no Brawl "
-            "score printed. " + _wounds(-3),
+            "score printed. " + wound_ranges(-3),
         ),
     )
 

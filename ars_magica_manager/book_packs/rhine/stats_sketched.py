@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..builder import vf_ability, vf_art, vf_focus, vf_great
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -16,24 +17,8 @@ P = Profile
 LOW = "Low German"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
-def _focus(name: str, focus: str) -> tuple[str, dict[str, str]]:
-    return (name, {"focus": focus})
-
-
 def _gild(gild: str) -> tuple[str, dict[str, str]]:
     return ("{gild} Trained", {"gild": f"{gild} Gild"})
-
-
-def _great(characteristic: str) -> tuple[str, dict[str, str]]:
-    return ("Great {characteristic}", {"characteristic": characteristic})
 
 
 def _deficient(form: str) -> tuple[str, dict[str, str]]:
@@ -69,9 +54,9 @@ PROFILES: dict[str, Profile] = {
             "Animal Ken": (1, "ravens"),
         },
         virtues=[
-            _ability("Puissant {ability}", "intrigue"),
-            _great("intelligence"),
-            _focus("Minor Magical Focus", "illusions"),
+            vf_ability("Puissant {ability}", "intrigue"),
+            vf_great("intelligence"),
+            vf_focus("Minor Magical Focus", "illusions"),
             "Magic Items",
             "Proud (Major)",
             "Ambitious (Minor)",
@@ -113,8 +98,8 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Tenens Occultorum",
-            _art("Affinity with {art}", "muto"),
-            _art("Affinity with {art}", "auram"),
+            vf_art("Affinity with {art}", "muto"),
+            vf_art("Affinity with {art}", "auram"),
             ("Social Contacts", {"group": "Bonisagus magi"}),
             "Secretive",
             "Driven (Minor)",
@@ -134,8 +119,8 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Hermetic Prestige",
-            _art("Affinity with {art}", "intellego"),
-            _focus("Minor Magical Focus", "investigation"),
+            vf_art("Affinity with {art}", "intellego"),
+            vf_focus("Minor Magical Focus", "investigation"),
             "Clear Thinker",
             "Twilight Prone",
             "Slothful",
@@ -174,7 +159,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             ("Extractor of {form} Vis", {"form": "herbam"}),
-            _art("Affinity with {art}", "herbam"),
+            vf_art("Affinity with {art}", "herbam"),
             "Personal Vis Source",
             "Reclusive",
             "Incomprehensible",
@@ -259,7 +244,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Faerie Sympathy",
-            _art("Affinity with {art}", "imaginem"),
+            vf_art("Affinity with {art}", "imaginem"),
             "Magical Air",
             "Wrathful (Minor)",
             "Faerie Upbringing",
@@ -356,7 +341,7 @@ PROFILES: dict[str, Profile] = {
             "Bargain": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             "Wealthy",
             "Proud (Minor)",
             "Avaricious (Minor)",
@@ -475,7 +460,7 @@ PROFILES: dict[str, Profile] = {
         virtues=[
             _gild("Apple"),
             "Wealthy",
-            _art("Affinity with {art}", "terram"),
+            vf_art("Affinity with {art}", "terram"),
             "Proud (Minor)",
             "Restriction",
             "Dark Secret",
@@ -541,8 +526,8 @@ PROFILES: dict[str, Profile] = {
             "Animal Ken": (1, "cats"),
         },
         virtues=[
-            _art("Affinity with {art}", "rego"),
-            _art("Puissant {art}", "rego"),
+            vf_art("Affinity with {art}", "rego"),
+            vf_art("Puissant {art}", "rego"),
             "Magic Items",
             "Proud (Major)",
             "Enemies",
@@ -618,7 +603,7 @@ PROFILES: dict[str, Profile] = {
             "Teaching": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "auram"),
+            vf_art("Affinity with {art}", "auram"),
             "Well-Traveled",
             "Grudge",
             "Lecherous (Minor)",
@@ -677,7 +662,7 @@ PROFILES: dict[str, Profile] = {
             "Organization Lore: Durenmar": 2,
         },
         virtues=[
-            _ability("Puissant {ability}", "intrigue"),
+            vf_ability("Puissant {ability}", "intrigue"),
             "Ambitious (Minor)",
             "Meddler (Minor)",
         ],
@@ -810,7 +795,7 @@ PROFILES: dict[str, Profile] = {
             "Survival": 2,
             "Intrigue": 2,
         },
-        virtues=[_great("strength"), "Wrathful (Major)", "Enemies", "Dark Secret"],
+        virtues=[vf_great("strength"), "Wrathful (Major)", "Enemies", "Dark Secret"],
         reputations={
             "Former Primus of House Bjornaer (Hermetic)": 5,
             "Victor in Wizard War (Hermetic)": 4,
@@ -855,7 +840,7 @@ PROFILES: dict[str, Profile] = {
             "Premonitions": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "intellego"),
+            vf_art("Affinity with {art}", "intellego"),
             "Premonitions",
             "Temperate",
             "Magical Fascination",
@@ -890,7 +875,7 @@ PROFILES: dict[str, Profile] = {
             "Profession: Scribe": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "animal"),
+            vf_art("Affinity with {art}", "animal"),
             "Animal Ken",
             "Reckless (Minor)",
             "Feud",
@@ -926,7 +911,7 @@ PROFILES: dict[str, Profile] = {
             "Etiquette": 2,
         },
         virtues=[
-            _great("presence"),
+            vf_great("presence"),
             "Elemental Magic",
             ("Social Contacts", {"group": "the Primi"}),
             "Faerie Upbringing",
@@ -949,7 +934,7 @@ PROFILES: dict[str, Profile] = {
             "Area Lore: Black Forest": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "terram"),
+            vf_art("Affinity with {art}", "terram"),
             "Faerie Friend",
             "Wrathful (Minor)",
             "Social Handicap",
@@ -967,7 +952,7 @@ PROFILES: dict[str, Profile] = {
             "Folk Ken": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             "Inventive Genius",
             "Dark Secret",
             "Secretive",
@@ -980,7 +965,7 @@ PROFILES: dict[str, Profile] = {
         abilities={"Faerie Lore": (5, "Irencillia's fae")},
         virtues=[
             "Book Learner",
-            _ability("Affinity with {ability}", "faerie lore"),
+            vf_ability("Affinity with {ability}", "faerie lore"),
             "Optimistic (Minor)",
             "Obsessed (Minor)",
             "Magical Fascination",
@@ -992,7 +977,7 @@ PROFILES: dict[str, Profile] = {
         arts={"He": 6, "Pe": 3, "Re": 3, "Ig": 2},
         abilities={"Faerie Lore": 2, "Living Language: High German": 3},
         virtues=[
-            _art("Affinity with {art}", "herbam"),
+            vf_art("Affinity with {art}", "herbam"),
             ("Faerie Blood", {"blood": "Kupala's"}),
             _deficient("ignem"),
             "Grudge",
@@ -1031,7 +1016,7 @@ PROFILES: dict[str, Profile] = {
             "Living Language: High German": 3,
         },
         virtues=[
-            _art("Affinity with {art}", "terram"),
+            vf_art("Affinity with {art}", "terram"),
             "Strong-Willed",
             "Stuck in Your Ways",
             "Obsessed (Minor)",

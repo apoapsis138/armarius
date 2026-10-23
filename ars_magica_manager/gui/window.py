@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import shiboken6
-from PySide6.QtCore import QEvent, Qt, QTimer
+from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
 from PySide6.QtGui import QFont, QKeySequence, QShortcut, QShowEvent
 from PySide6.QtWidgets import (
     QAbstractSpinBox,
@@ -43,8 +43,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .. import catalog, help_text, hotkeys, paths, references, storage, title_page
 from .. import familiars as fam
-from .. import help_text, hotkeys, paths, references, storage, title_page
 from .. import print_layout as pl
 from ..actions import NodeKind
 from ..commands import (
@@ -369,9 +369,13 @@ class MainWindow(QMainWindow):
         snapping.make_snappable(self)
         super().showEvent(event)
 
-    def nativeEvent(self, eventType, message) -> tuple[bool, int]:
+    def nativeEvent(
+        self, eventType: QByteArray | bytes | bytearray | memoryview, message: int
+    ) -> tuple[bool, int]:
         """Windows Snap for the drawn title bar (snapping.py)."""
-        result = snapping.native_event(self, bytes(eventType), int(message))
+        raw = eventType.data() if isinstance(eventType, QByteArray) else eventType
+        kind = bytes(raw)
+        result = snapping.native_event(self, kind, int(message))
         if result is not None:
             return True, result
         return super().nativeEvent(eventType, message)  # pyright: ignore[reportReturnType]
@@ -521,6 +525,8 @@ class MainWindow(QMainWindow):
     def load(self, saga: Saga) -> None:
         """Open `saga` at its page of covenants."""
         self.saga = saga
+        # Its user-made entries join the shared catalogs, as in the terminal.
+        catalog.use_saga(saga)
         title_page.remember_saga(saga.id)
         self.go([Place(SHELF), Place(SAGA)])
 
@@ -1060,7 +1066,7 @@ class MainWindow(QMainWindow):
         if record is None:
             return
         name = record.name or "Untitled"
-        folder = storage.EXPORTS_DIR
+        folder = storage.exports_dir()
         folder.mkdir(parents=True, exist_ok=True)
 
         def where(options: pl.PrintOptions) -> ChooseFile:

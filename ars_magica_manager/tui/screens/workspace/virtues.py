@@ -27,6 +27,7 @@ from ....models import (
     new_instance_id,
 )
 from ....rules import creation_characteristics as cch
+from ....rules.vf_eligibility import VirtueFlawChooser
 from ..pickers import (
     LabVirtueFlawPickerScreen,
     VirtueFlawPickerScreen,
@@ -93,9 +94,9 @@ class VirtueFlawActions(CreationActions):
             )
             return
         chooser = (
-            catalog.VirtueFlawChooser.for_familiar(target, books)
+            VirtueFlawChooser.for_familiar(target, books)
             if isinstance(target, Familiar)
-            else catalog.VirtueFlawChooser.for_character(target, books)
+            else VirtueFlawChooser.for_character(target, books)
         )
         self.app.push_screen(
             VirtueFlawPickerScreen(

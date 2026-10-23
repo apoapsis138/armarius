@@ -22,7 +22,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from . import books as bk
 from . import experiment_text
 from .arts import ART_ABBREVIATIONS
 from .markup import escape, fit, markdown_text
@@ -37,7 +36,7 @@ from .models import (
     Saga,
 )
 from .rules import book_seasons as bs
-from .rules import lab_seasons
+from .rules import lab_seasons, library, scores
 from .tables import Table
 
 LAB_TEXT = "Lab Text"
@@ -71,13 +70,17 @@ def kind(book: Book) -> str:
 
 def texts_of(saga: Saga, owner_kind: str, owner_id: str) -> list[Book]:
     """The Lab Texts an owner keeps, in the saga's order."""
-    return [b for b in bk.books_owned_by(saga, owner_kind, owner_id) if is_lab_text(b)]
+    return [
+        b for b in library.books_owned_by(saga, owner_kind, owner_id) if is_lab_text(b)
+    ]
 
 
 def other_books_of(saga: Saga, owner_kind: str, owner_id: str) -> list[Book]:
     """The owner's books that aren't Lab Texts."""
     return [
-        b for b in bk.books_owned_by(saga, owner_kind, owner_id) if not is_lab_text(b)
+        b
+        for b in library.books_owned_by(saga, owner_kind, owner_id)
+        if not is_lab_text(b)
     ]
 
 
@@ -161,7 +164,7 @@ def copy_text(saga: Saga, reader: Character | None, book: Book) -> str:
         return ""
     if not bs.can_use_lab_text(reader, book):
         return "Copy: decode first"
-    budget = 60 * bs.ability_score(reader, "Profession: Scribe")
+    budget = 60 * scores.ability_level(reader, "Profession: Scribe")
     if budget <= 0:
         return "Copy: needs Profession: Scribe"
     size = max(1, level(saga, book))
@@ -376,7 +379,7 @@ def detail_text(saga: Saga, reader: Character | None, book: Book | None) -> str:
     if book is None:
         return "[dim]Select a Lab Text to see its details.[/]\n" + USING_RULE
     technique, form = arts(saga, book)
-    spell = bk.book_spell(saga, book)
+    spell = library.book_spell(saga, book)
     what = kind(book)
     if spell is not None:
         what = f"{what}: {spell.name}"

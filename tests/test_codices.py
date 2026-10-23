@@ -12,7 +12,7 @@ from ars_magica_manager.models import (
     Saga,
     SeasonPlan,
 )
-from ars_magica_manager.rules import activities
+from ars_magica_manager.rules import activities, library
 
 
 def _saga() -> Saga:
@@ -103,9 +103,9 @@ def test_a_palimpsest_is_read_and_priced_at_minus_3():
     saga = _saga()
     saga.codices[0].palimpsest = True
     hunt = saga.books[0]
-    assert bk.effective_quality(saga, hunt) == 6
-    assert bk.cost(hunt, saga) == 6
-    assert bk.effective_quality(saga, saga.books[2]) == 14
+    assert library.effective_quality(saga, hunt) == 6
+    assert library.cost(hunt, saga) == 6
+    assert library.effective_quality(saga, saga.books[2]) == 14
     plan = _read(saga, "ana", "hunt")
     gains = activities.outcome(saga.characters[0], plan, saga).gains
     assert [g.result.xp for g in gains] == [6]

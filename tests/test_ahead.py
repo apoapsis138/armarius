@@ -8,7 +8,7 @@ from support import everything_saga
 from ars_magica_manager import ahead
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import ahead as ahead_forms
-from ars_magica_manager.models import CalendarEntry
+from ars_magica_manager.models import EVERY, YEARLY, CalendarEntry, season_order
 
 
 def _titles(found):
@@ -27,7 +27,7 @@ def test_each_source_says_what_is_coming_in_the_span():
     assert [(s, y) for s, y, _ in fair] == [("Autumn", 1220), ("Autumn", 1221)]
     # Two years from Spring 1220: nothing from 1222 on.
     assert all(year <= 1221 for _s, year, _t in found)
-    assert found == sorted(found, key=lambda t: ahead.order(t[1], t[0]))
+    assert found == sorted(found, key=lambda t: season_order(season=t[0], year=t[1]))
 
 
 def test_the_span_is_kept_with_the_saga():
@@ -51,8 +51,8 @@ def test_a_calendar_entry_comes_once_or_again():
     saga = everything_saga()
     saga.calendar = [
         CalendarEntry("Vis lease ends", 1221, "Spring"),
-        CalendarEntry("Midsummer rites", 1219, "Summer", repeats=ahead.YEARLY),
-        CalendarEntry("The comet", 1218, "Autumn", repeats=ahead.EVERY, every=3),
+        CalendarEntry("Midsummer rites", 1219, "Summer", repeats=YEARLY),
+        CalendarEntry("The comet", 1218, "Autumn", repeats=EVERY, every=3),
     ]
     found = _titles(e for e in ahead.entries(saga) if e.show == ahead.CALENDAR)
     assert found == [
@@ -96,7 +96,7 @@ def test_only_your_own_entries_are_edited_here():
     edit = ops.edit(mine)
     assert isinstance(edit, Form)
     values = {f.key: f.value for f in edit.fields()}
-    values.update(repeats=ahead.EVERY, every=None)
+    values.update(repeats=EVERY, every=None)
     assert edit.validate is not None and edit.validate(values)
     confirm = ops.remove(mine)
     assert isinstance(confirm, Confirm)

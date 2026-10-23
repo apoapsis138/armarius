@@ -5,7 +5,7 @@ from __future__ import annotations
 from support import wait_until
 from textual.widgets import Input, Static
 
-from ars_magica_manager import storage
+from ars_magica_manager import catalog, storage
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.rules import creation_character as cc
@@ -649,12 +649,11 @@ def _magus_with(**arts):
 
 
 def test_a_spells_creation_cap_is_the_lab_total_with_aura_3():
-    from ars_magica_manager import spells as spl
     from ars_magica_manager.rules import creation_magus as magus_rules
 
     saga = _saga()
     magus = _magus_with(creo=15, ignem=21)  # Creo 5, Ignem 6
-    pilum = spl.find_spell(saga, "spell_pilum_of_fire")
+    pilum = catalog.find_spell(saga, "spell_pilum_of_fire")
     assert pilum is not None
     # 5 + 6 + Int 2 + Magic Theory 3 + aura 3.
     assert magus_rules.spell_cap(saga, magus, pilum) == 19

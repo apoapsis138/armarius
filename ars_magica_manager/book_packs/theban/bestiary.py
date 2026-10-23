@@ -14,6 +14,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models import BodyVis
+from ..builder import characteristics, vf_great, vf_minor
 
 if TYPE_CHECKING:
     from ...models import Creature, Neighbour
@@ -61,37 +62,12 @@ HOMES: dict[str, tuple[tuple[str, ...], tuple[str, ...], str]] = {
 IN_REGIO = {"belisarius"}
 
 
-def _great(characteristic: str) -> tuple[str, dict[str, str]]:
-    return ("Great {characteristic}", {"characteristic": characteristic})
-
-
 def _improved(characteristic: str) -> tuple[str, dict[str, str]]:
     return ("Improved {characteristic}", {"characteristic": characteristic})
 
 
-def _minor(virtue: str) -> tuple[str, dict[str, str]]:
-    return ("Minor Virtue", {"virtue": virtue})
-
-
 def _resistance(form: str) -> tuple[str, dict[str, str]]:
     return ("{form} Resistance", {"form": form})
-
-
-def _chars(
-    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
-) -> dict[str, int]:
-    """Characteristics in the book's order (Int or Cun, Per, Pre, Com, Str,
-    Sta, Dex, Qik)."""
-    return {
-        "intelligence": int_,
-        "perception": per,
-        "presence": pre,
-        "communication": com,
-        "strength": str_,
-        "stamina": sta,
-        "dexterity": dex,
-        "quickness": qik,
-    }
 
 
 #: The creatures this part makes, by slug, for `finish`.
@@ -178,7 +154,7 @@ def _culture(theban: Theban) -> None:
         order="Tempters",
         weakness="Abhorrent Material (an amulet against the evil eye)",
         block={
-            "characteristics": _chars(2, 5, -5, -2, -2, 1, 1, 3),
+            "characteristics": characteristics(2, 5, -5, -2, -2, 1, 1, 3),
             "virtues_flaws": ["Hex", "Sharp Ears", "Restriction", "Weak-Willed"],
             "abilities": [
                 ("Awareness", 4, "compliments"),
@@ -234,12 +210,12 @@ def _delos(theban: Theban) -> None:
     """Chapter 6's three Hyperborean nymphs: one block, a power each."""
     b = theban.b
     block = {
-        "characteristics": _chars(1, 2, 2, -1, 1, 2, 6, 3),
+        "characteristics": characteristics(1, 2, 2, -1, 1, 2, 6, 3),
         "virtues_flaws": [
             "Daimon",
             "Magic Spirit",
-            _great("Dexterity"),
-            _great("Dexterity"),
+            vf_great("Dexterity"),
+            vf_great("Dexterity"),
             "Improved Characteristics",
             "Improved Characteristics",
             ("Puissant {ability}", {"ability": "Bows"}),
@@ -259,11 +235,11 @@ def _delos(theban: Theban) -> None:
             "Improved Defense",
             "Improved Initiative",
             _resistance("Mentem"),
-            _minor("Keen Vision"),
-            *[_minor("Improved Characteristics")] * 4,
-            _minor("Inoffensive to Animals"),
-            _minor("Tethered Magic"),
-            _minor("Voice of the Island"),
+            vf_minor("Keen Vision"),
+            *[vf_minor("Improved Characteristics")] * 4,
+            vf_minor("Inoffensive to Animals"),
+            vf_minor("Tethered Magic"),
+            vf_minor("Voice of the Island"),
         ],
         "abilities": [
             ("Dead Language: Classical Greek", 4, "sacred hymns"),
@@ -420,7 +396,7 @@ def _anatolia(theban: Theban) -> None:
         hierarchy=1,
         weakness="Abhorrent Circumstance: a sunny day",
         block={
-            "characteristics": _chars(-1, 3, -1, 1, 3, 3, 3, 2),
+            "characteristics": characteristics(-1, 3, -1, 1, 3, 3, 3, 2),
             "virtues_flaws": ["Berserk", "Tough"],
             "abilities": [
                 ("Athletics", 4, "pursuit"),
@@ -487,7 +463,7 @@ def _anatolia(theban: Theban) -> None:
         size=4,
         cunning=True,
         block={
-            "characteristics": _chars(-3, -2, -5, -6, 7, 1, 3, -3),
+            "characteristics": characteristics(-3, -2, -5, -6, 7, 1, 3, -3),
             "virtues_flaws": ["Lightning Reflexes", "Poor Eyesight"],
             "abilities": [
                 ("Awareness", 2, "food"),
@@ -580,7 +556,7 @@ def _realms(theban: Theban) -> None:
         how_many="a character guide for any of the ten sibyls, half of them "
         "in the Tribunal",
         block={
-            "characteristics": _chars(5, 6, 0, 1, -1, 0, -1, -1),
+            "characteristics": characteristics(5, 6, 0, 1, -1, 0, -1, -1),
             "virtues_flaws": [
                 "Magic Human",
                 "Magical Master",
@@ -594,12 +570,12 @@ def _realms(theban: Theban) -> None:
                 "Natural Appearance",
                 *["Improved Abilities"] * 3,
                 _resistance("Mentem"),
-                *[_minor("Additional Divination Method")] * 5,
-                *[_minor("Great Intelligence")] * 2,
-                *[_minor("Great Perception")] * 2,
-                _minor("Improved Characteristics"),
-                _minor("Premonitions"),
-                _minor("Puissant Divination"),
+                *[vf_minor("Additional Divination Method")] * 5,
+                *[vf_minor("Great Intelligence")] * 2,
+                *[vf_minor("Great Perception")] * 2,
+                vf_minor("Improved Characteristics"),
+                vf_minor("Premonitions"),
+                vf_minor("Puissant Divination"),
             ],
             "abilities": [
                 ("Dead Language: Classical Greek", 5, "prophetic pronouncement"),
@@ -667,7 +643,7 @@ def _realms(theban: Theban) -> None:
         size=2,
         how_many="a character guide: every village and landmark has one",
         block={
-            "characteristics": _chars(0, 1, 2, -1, 1, 2, 0, 0),
+            "characteristics": characteristics(0, 1, 2, -1, 1, 2, 0, 0),
             "virtues_flaws": [
                 "Faerie Beast",
                 "Focus Power",
@@ -801,7 +777,7 @@ def _infernal(theban: Theban) -> None:
         order="Vessels of Iniquity",
         weakness="Protected Group (those born on a Saturday)",
         block={
-            "characteristics": _chars(0, 0, 0, 0, 4, 4, 0, 2),
+            "characteristics": characteristics(0, 0, 0, 0, 4, 4, 0, 2),
             "virtues_flaws": [
                 "Shapeshifter",
                 "Improved Characteristics",
@@ -904,7 +880,7 @@ def _infernal(theban: Theban) -> None:
         order="Tempters / Evil Spirits",
         weakness="Compulsiveness",
         block={
-            "characteristics": _chars(0, 0, 0, 2, 1, 0, 3, 2),
+            "characteristics": characteristics(0, 0, 0, 2, 1, 0, 3, 2),
             "virtues_flaws": ["Hex", "Weak-Willed"],
             "abilities": [
                 ("Animal Handling", 5, "inducing stampede"),

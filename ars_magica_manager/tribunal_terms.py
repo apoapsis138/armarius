@@ -12,12 +12,8 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 
-from .models import CASE_OPEN, SEASONS, Case, Saga, Tribunal
+from .models import CASE_OPEN, Case, Saga, Tribunal, season_order
 from .models.seasons import next_season
-
-
-def _order(year: int, season: str) -> int:
-    return year * len(SEASONS) + (SEASONS.index(season) if season in SEASONS else 0)
 
 
 def termed(saga: Saga) -> Iterator[tuple[Tribunal, Case]]:
@@ -31,7 +27,9 @@ def termed(saga: Saga) -> Iterator[tuple[Tribunal, Case]]:
 def ends(case: Case) -> int:
     """When the term ends, as a season that sorts by date."""
     assert case.term_ends_year is not None
-    return _order(case.term_ends_year, case.term_ends_season or "Summer")
+    return season_order(
+        season=case.term_ends_season or "Summer", year=case.term_ends_year
+    )
 
 
 def ends_text(case: Case) -> str:
@@ -58,9 +56,9 @@ def come_due(saga: Saga) -> list[str]:
     """After the date moves on: each term ending next season is told, and
     each that has ended (and isn't on the docket yet) is put back on its
     Tribunal's docket and told. Returns the lines to tell."""
-    now = _order(saga.current_year, saga.current_season)
+    now = season_order(season=saga.current_season, year=saga.current_year)
     following = next_season(saga.current_season, saga.current_year)
-    soon = _order(following[1], following[0])
+    soon = season_order(season=following[0], year=following[1])
     lines: list[str] = []
     for tribunal, case in list(termed(saga)):
         if case.term_docketed:

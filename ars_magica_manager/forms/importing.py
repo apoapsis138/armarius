@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from .. import books as bk
-from .. import packs, record_update, storage, transfer
+from .. import catalog, packs, record_update, storage, transfer
 from .. import spells as spl
 from ..commands import Choice, Choose, ChooseFile, Command, Confirm, Form, Refuse, notes
 from ..form_spec import DialogField
@@ -97,7 +97,7 @@ def choose_file(saga: Saga, kind: str, covenant: Covenant | None = None) -> Choo
 
     if kind in RECORD_IMPORTS:
         wanted = transfer.KIND_LABELS[RECORD_IMPORTS[kind]].lower()
-        start = storage.EXPORTS_DIR if storage.EXPORTS_DIR.is_dir() else Path.cwd()
+        start = storage.exports_dir() if storage.exports_dir().is_dir() else Path.cwd()
         return ChooseFile(f"Import a {wanted}", ".json", start, read)
     if kind == "spells":
         return ChooseFile(
@@ -267,7 +267,7 @@ def update_record(saga: Saga, record: transfer.Record) -> Command:
     choose the file, see what would change, then confirm."""
     kind = transfer.KIND_LABELS[transfer.kind_of(record)].lower()
     title = f"Update {escape(record.name)} from a File"
-    start = storage.EXPORTS_DIR if storage.EXPORTS_DIR.is_dir() else Path.cwd()
+    start = storage.exports_dir() if storage.exports_dir().is_dir() else Path.cwd()
 
     def read(path: Path) -> Command:
         try:
@@ -360,7 +360,7 @@ def _import_spells(saga: Saga, path: Path) -> Command:
     return Confirm(
         spl.spell_import_preview(result, path.name, existing),
         lambda: _ask_about_duplicates(
-            result.spells, existing, "spell", finish, spl.name_key
+            result.spells, existing, "spell", finish, catalog.name_key
         ),
         yes_label="Import",
         title=TITLE,

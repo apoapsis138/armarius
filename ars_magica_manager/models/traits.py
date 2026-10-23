@@ -102,7 +102,7 @@ class Spell:
     """A Hermetic spell. The shared catalog (data/spell_catalog.json) holds the
     published ones; `Saga.spells` holds the saga's own (added by hand or
     imported); a magus's `Character.invented_spells` holds theirs. All share
-    one id namespace -- spells.find_spell() resolves an id from any of them.
+    one id namespace -- catalog.find_spell() resolves an id from any of them.
 
     `level` is None for a General-level spell (the Aegis of the Hearth, the
     Wards), which is cast at any level. Range/Duration/Target are plain
@@ -162,7 +162,7 @@ class MasteryAbility:
 class KnownSpell:
     """One spell a character knows, plus their Spell Mastery in it (ArM5
     Chapter Seven): a score/xp track and the Mastery Abilities bought with
-    it. `spell_id` resolves through spells.find_spell() like any other
+    it. `spell_id` resolves through catalog.find_spell() like any other
     spell reference (catalog, saga's own, or the magus's invented spells)."""
 
     spell_id: str

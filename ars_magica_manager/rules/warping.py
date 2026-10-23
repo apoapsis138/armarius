@@ -15,10 +15,12 @@
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 
-from ..models import Character
+from ..models import Character, Saga
 from . import dice
+from .scores import ability_level
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Warping "
@@ -78,11 +80,6 @@ def aura_points(aura: int) -> int:
     return AURA_POINTS.get(min(aura, 10), 0)
 
 
-def ability(character: Character, name: str) -> int:
-    found = next((a for a in character.abilities if a.name == name), None)
-    return found.level if found else 0
-
-
 @dataclass
 class TwilightResult:
     entered: bool
@@ -94,16 +91,20 @@ class TwilightResult:
 
 
 def twilight(
-    character: Character, gained: int, aura: int, rng, saga=None
+    character: Character,
+    gained: int,
+    aura: int,
+    rng: random.Random,
+    saga: Saga | None = None,
 ) -> TwilightResult:
     """The avoidance roll (and, failing it, Twilight) after `gained` points
     from one event, already added to the character's Warping."""
     a = character.aging
-    wisdom = ability(character, "Enigmatic Wisdom")
+    wisdom = ability_level(character, "Enigmatic Wisdom")
     stats = character.characteristics
     mine = dice.stress_die(rng, 1, saga=saga)
     theirs = dice.stress_die(rng, 0, saga=saga).value
-    resist = stats.stamina + ability(character, "Concentration") + mine.value
+    resist = stats.stamina + ability_level(character, "Concentration") + mine.value
     against = a.warping_score + gained + wisdom + aura + theirs
     notes = [
         f"Avoiding Twilight: {resist} against {against}"

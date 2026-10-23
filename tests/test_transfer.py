@@ -213,8 +213,8 @@ def test_importing_a_character_matches_links_by_name_or_drops_them():
     )
     [book] = target.books
     assert (book.owner_id, book.author_id) == (magus.id, magus.id)
-    assert spl.find_spell(target, book.spell_id).name == "Spark of Wit"
-    assert [spl.find_spell(target, k.spell_id).name for k in magus.spells_known][
+    assert catalog.find_spell(target, book.spell_id).name == "Spark of Wit"
+    assert [catalog.find_spell(target, k.spell_id).name for k in magus.spells_known][
         :2
     ] == ["Spark of Wit", "Ward of Thorns"]
     assert [s.name for s in target.spells] == ["Ward of Thorns"]
@@ -408,7 +408,7 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
         assert region.bottom <= 45 and region.right <= 120
         box = dialog.query_one("#fld-file", Input)
         # Offered in the exports folder, named for the character.
-        target = storage.EXPORTS_DIR / "leandro.amm.json"
+        target = storage.exports_dir() / "leandro.amm.json"
         assert box.value == str(target)
         dialog.query_one("#btn-save").press()
         assert await wait_until(pilot, lambda: target.is_file())
@@ -437,7 +437,9 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
         )
         picker = app.screen
         # The explorer opens in the exports folder, showing .json files.
-        assert picker.query_one("#picker-path", Input).value == str(storage.EXPORTS_DIR)
+        assert picker.query_one("#picker-path", Input).value == str(
+            storage.exports_dir()
+        )
         path_box = picker.query_one("#picker-path", Input)
         path_box.value = str(target)
         path_box.focus()
@@ -514,6 +516,6 @@ async def test_the_terminal_exports_the_saga_from_more():
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert await wait_until(pilot, lambda: bool(app.screen.query("#btn-save")))
         app.screen.query_one("#btn-save").press()
-        target = storage.EXPORTS_DIR / "source_saga.amm.json"
+        target = storage.exports_dir() / "source_saga.amm.json"
         assert await wait_until(pilot, lambda: target.is_file())
         assert transfer.read(target)["kind"] == transfer.SAGA

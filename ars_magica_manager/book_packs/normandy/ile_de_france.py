@@ -17,7 +17,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -42,11 +42,6 @@ RUMOURED = {"status": "Rumoured", "known": "Locally"}
 #: fleurs-de-lis or (in 1220 the lilies were still strewn over the field).
 ARMS_FRANCE = Arms("Azure", charge="Fleur-de-lis", charge_tincture="Or", count=3)
 ARMS_TEMPLARS = Arms("Argent", charge="Cross", charge_tincture="Gules")
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _place(normandy: Normandy, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1085,7 +1080,7 @@ def _eboris(normandy: Normandy, tribunal: Tribunal) -> None:
         "experience of casting in a city, his knowledge of Paris, his band "
         "of young allies and his political friends.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: a modest income (sources not given), enough to leave a surplus for trade",
         "Income: the ivory-carving business; silent shares in at least thirty Paris businesses; hospitality repaid in favours",
         "Income: Marcus of Paris's intelligence and recruiting services, sold to other covenants",
@@ -1100,7 +1095,7 @@ def _eboris(normandy: Normandy, tribunal: Tribunal) -> None:
         "Mundane: influence over the quarter's thugs and the criminal class; patronage of artists; trust of the Byzantine émigrés",
         "Mundane: supports the French crown and the French Church",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Mathieus's revels may honour magi long forgotten or entirely invented; some say the maga who never existed ought to have.",
         "Mathieus will help the Quaesitores by claiming injury when it suits him.",
         "Seed, the Folk Magicians: hedge wizards hidden in Paris need buying, warning off or killing.",
@@ -1277,7 +1272,7 @@ def _lapis_crudus(normandy: Normandy, tribunal: Tribunal) -> None:
         "forties); they assume every covenant uses magic items for "
         "everyday work.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the Bleeding Stone, in a cavern under the council chamber, Corpus and Terram (seisin; amount not given)",
         "Vis: the vines down the valley cliffs, Herbam (seisin; amount not given)",
         "Vis: large old stocks, much drawn down by eighty years of study",
@@ -1290,7 +1285,7 @@ def _lapis_crudus(normandy: Normandy, tribunal: Tribunal) -> None:
         "Tension: Mnemon's unknown debt to Candidus",
         "Tension: Somnifer is second in line for Praeco after Celeres of Cunfin",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Seed, Through the Looking Glass: to travel, the magi must tempt other magi to take their place, offering seasons in the library; once out, they do not want to go back.",
         "Seed: as the price of the new terms Candidus bound Mnemon to a fearsome task once he gets out, which might destroy a player covenant's faerie-bound vis source, kill its guardian, or stir mundane politics to have it disbanded.",
         "Seed: Lapis Crudus will try to reassert its lost Oaths of Fealty, perhaps over the player covenant.",

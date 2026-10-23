@@ -11,6 +11,8 @@ opens in the browser.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import (
     QColor,
@@ -118,7 +120,9 @@ class HelpPage(QWidget):
         """The topic list as shown: headings and titles."""
         return [self.topics.item(i).text().strip() for i in range(self.topics.count())]
 
-    def _item(self, matches) -> QListWidgetItem | None:
+    def _item(
+        self, matches: Callable[[QListWidgetItem], bool]
+    ) -> QListWidgetItem | None:
         for i in range(self.topics.count()):
             item = self.topics.item(i)
             if item.data(_TOPIC) is not None and matches(item):

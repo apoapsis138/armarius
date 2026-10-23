@@ -186,12 +186,6 @@ class TraditionWork:
         return self.result in (AUTOMATIC, LOSES, KEEPS)
 
 
-def _aura(saga: Saga, character: Character) -> tuple[int, str]:
-    from ..covenants import home_aura
-
-    return home_aura(saga, character)
-
-
 def open_work(
     saga: Saga, master: Character, plan: SeasonPlan
 ) -> tuple[list[str], TraditionWork | None]:
@@ -213,7 +207,7 @@ def open_work(
         a for a in tradition.training.opening if not hc.holds(student, a)
     ]:
         return [f"{student.name} is already Opened to {tradition.name}."], None
-    aura, realm = _aura(saga, master)
+    aura, realm = realms.home_aura(saga, master)
     total = int(opening_total(master, tradition, aura, realm).total)
     ease = opening_ease(student, tradition)
     work = TraditionWork(
@@ -366,7 +360,7 @@ def work(
         ], None
     result = TraditionWork(tradition.id)
     if chosen.lab_rule:
-        aura, realm = _aura(saga, character)
+        aura, realm = realms.home_aura(saga, character)
         total = lab_total(character, tradition, chosen.lab_rule, subject, aura, realm)
         if total is not None:
             label, value = total

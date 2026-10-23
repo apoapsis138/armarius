@@ -24,7 +24,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
 from .. import east
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -43,11 +43,6 @@ KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
 RUMOURED_TRIBUNAL: dict[str, Any] = {"status": "Rumoured", "known": "In the Tribunal"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(theban: Theban, key: str, name: str, **kw: Any) -> Neighbour:
@@ -927,7 +922,7 @@ def _alexandria(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "off and ride as messengers and heralds, building the standing "
         "for weightier work.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Purpose: to give the Tribunal's bureaucracy a central seat and its Redcaps a safe, handy home",
         "Boon: Powerful Ally (Fides, the covenant's patron)",
         "Boon: Regio (two levels inside the citadel, Magic 3 and 5)",
@@ -993,7 +988,7 @@ def _alexandria(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Niko, the Redcaps of chapter three, have no covenant in the "
         "book and may be among them.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Proximios, the likely next logothete and co-founder of the League of the Vigilant, is secretly an infernalist bent on the Order's downfall; his place at Alexandria lets him read the missives and private letters that pass through it (see his entry and An Enemy Within).",
         "The garrison does not know of the regio; if it finds it, the covenant's secrecy and the Tribunal's records are at risk.",
     )
@@ -1219,7 +1214,7 @@ def _moeros_garden(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "has come through disasters before and this occupation will pass "
         "too. The covenant is evenly split.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Purpose: to collect the art and literature of the past to show the harmony of beauty, and to recover what was lost in 1204",
         "Boon: Local Ally (Hipparchus's ghost, the covenant's patron)",
         "Boon: Secondary Income (the craftsmen and artists of Nicaea that its autocrat backs)",
@@ -1867,10 +1862,6 @@ P = Profile
 GREEK = "Greek"
 THEBES = "Area Lore: Theban Tribunal"
 CONSTANTINOPLE = "Area Lore: Constantinople"
-
-
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
 
 
 #: Each magus the book sketches without a stat block, by character key.

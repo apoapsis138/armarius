@@ -35,7 +35,7 @@ COVENANT_ROLES: tuple[str, ...] = (
 )
 
 #: A magus's Gift, for the manual (not sheet-linked) case -- see
-#: inhabitants.InhabitantEntry.gift / base_loyalty(). "" means not yet set
+#: rules.covenfolk.InhabitantEntry.gift / base_loyalty(). "" means not yet set
 #: (base_loyalty() then assumes "Normal", the default expectation for a
 #: magus); "None" is a deliberate choice that the magus has no Gift at all,
 #: distinct from leaving it blank.

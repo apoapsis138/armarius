@@ -20,11 +20,8 @@ confirmation prompt; each `delete_*` does it. Nothing here saves."""
 
 from __future__ import annotations
 
-from . import books as bk
 from . import catalog, references
 from . import familiars as fam
-from .enchanted_devices import held_by
-from .inhabitants import AUTO_KINDS
 from .models import (
     Character,
     Covenant,
@@ -36,6 +33,9 @@ from .models import (
     VirtueFlawInstance,
 )
 from .rules import familiar_seasons as fs
+from .rules import library
+from .rules.covenfolk import AUTO_KINDS
+from .rules.enchantment import held_by
 
 
 def _count(count: int, noun: str, plural: str | None = None) -> str:
@@ -48,7 +48,7 @@ def _becomes(count: int) -> str:
 
 
 def _unassign_books(saga: Saga, kind: str, owner_id: str) -> None:
-    for book in bk.books_owned_by(saga, kind, owner_id):
+    for book in library.books_owned_by(saga, kind, owner_id):
         book.owner_kind = None
         book.owner_id = None
 
@@ -112,7 +112,7 @@ def spells_still_used(saga: Saga, character: Character) -> list[Spell]:
             if spell is not None:
                 used[id(spell)] = spell
     for book in saga.books:
-        spell = bk.book_spell(saga, book)
+        spell = library.book_spell(saga, book)
         if spell is not None and id(spell) in invented:
             used[id(spell)] = spell
     return [s for s in character.invented_spells if id(s) in used]
@@ -120,13 +120,13 @@ def spells_still_used(saga: Saga, character: Character) -> list[Spell]:
 
 def character_consequences(saga: Saga, character: Character) -> list[str]:
     lines: list[str] = []
-    familiar = fam.familiar_of(saga, character.id)
+    familiar = saga.familiar_of(character.id)
     if familiar is not None:
         lines.append(f"Their Familiar, {familiar.name}, is deleted too.")
     labs = [lab for lab in saga.laboratories if lab.owner_id == character.id]
     for lab in labs:
         lines.append(f"{lab.name} no longer has an owner.")
-    books = bk.books_owned_by(saga, "character", character.id)
+    books = library.books_owned_by(saga, "character", character.id)
     if books:
         n = len(books)
         lines.append(f"{_count(n, 'book')} they own {_becomes(n)} unassigned.")
@@ -247,7 +247,7 @@ def laboratory_consequences(saga: Saga, lab: Laboratory) -> list[str]:
     owner = saga.character(lab.owner_id)
     if owner is not None:
         lines.append(f"{owner.name} no longer has a laboratory.")
-    books = bk.books_owned_by(saga, "laboratory", lab.id)
+    books = library.books_owned_by(saga, "laboratory", lab.id)
     if books:
         n = len(books)
         lines.append(f"{_count(n, 'book')} kept there {_becomes(n)} unassigned.")
@@ -273,7 +273,7 @@ def covenant_consequences(saga: Saga, covenant: Covenant) -> list[str]:
     lines: list[str] = []
     characters = [c for c in saga.characters if c.covenant_id == covenant.id]
     labs = [lab for lab in saga.laboratories if lab.covenant_id == covenant.id]
-    books = bk.books_owned_by(saga, "covenant", covenant.id)
+    books = library.books_owned_by(saga, "covenant", covenant.id)
     for count, noun, plural in (
         (len(characters), "character", None),
         (len(labs), "laboratory", "laboratories"),

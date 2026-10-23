@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, StatBlock, paragraphs
+from ..builder import Builder, StatBlock, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -32,12 +32,7 @@ TYTALUS = "house_tytalus"
 KNOWN_ORDER: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 
 
-def _lines(*lines: str) -> str:
-    """The lines as one text, one hook or secret a line."""
-    return "\n".join(lines)
-
-
-def _add(normandy: Normandy, key: str, name: str, **kw) -> Neighbour:
+def _add(normandy: Normandy, key: str, name: str, **kw: Any) -> Neighbour:
     place = normandy.b.place(name, **kw)
     normandy.places[key] = place
     return place
@@ -441,7 +436,7 @@ def _cunfin(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "the magi; the rest of the monks have met the magi without knowing "
         "what they are.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: none is named in the book",
         "Library: Celeres's Grail library, said to hold every book written on the Grail and many on Arthur and Merlin",
         "Income: the Tribunal's Mercer House, and the Redcaps' trade at the temporary Mercer Houses of the Champagne fairs",
@@ -456,7 +451,7 @@ def _cunfin(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: the new Dominican Order's hunt for heretics; Eloi fears the inquisitors will turn north once the Cathars are done",
         "Hook: everything rests on Eloi; without him the arrangement would fall apart",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The abbot knows what Eloi and the magi are and shares their aims.",
         "Jerome of Confluensis secretly saves troublesome heirs marked for death, convincing the world they are dead and hiding them in monasteries and covenants; Eloi is his chief partner, and Artorius was one such child. It is very likely a breach of the Code.",
         "The covenant may not survive the Church's growing hostility even with Eloi (The Specter of Rome).",
@@ -853,7 +848,7 @@ def _atramentum_renatus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> N
         "Tourney to pay its feudal debts, in return for Fudarus's generous "
         "political support.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the source about which the covenant was built, formerly a legacy of Fudarus (Art and amount not given)",
         "Library: no books are named",
         "Oath: a harsh contract of obligation to Exspectatio and Fudarus, paid partly from Tourney winnings",
@@ -862,7 +857,7 @@ def _atramentum_renatus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> N
         "Tension: the founders were evicted from their first covenant by their liege's own magi",
         "Hook: Iacula's new projectile spells have great martial potential",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Whether the ravaging beast is Gulo in his heartbeast's shape, and whether he harmed mundanes by it, is the Quaesitor's open question.",
         "Cynics say Helios and Gulo were duped into preparing Atramentum's site for the elder Tytali of Exspectatio.",
     )
@@ -1576,10 +1571,6 @@ def _vis(normandy: Normandy) -> None:
 # ---------------------------------------------------------------- stats
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 P = Profile
 FRENCH = "French"
 
@@ -1748,7 +1739,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Inventive Genius",
-            _art("Affinity with {art}", "rego"),
+            vf_art("Affinity with {art}", "rego"),
             "Obsessed (Minor)",
             "Weak Parens",
         ],

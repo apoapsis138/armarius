@@ -14,17 +14,17 @@ Kept in Neighbour.details: "title", "wealth", "manors", "seat",
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Required, TypedDict, cast
 
 from . import battles, references
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import Neighbour, Saga
-from .neighbour_lists import KindList, KindTab, details_list, list_ops
+from .models import Neighbour, Saga, details_list
+from .neighbour_lists import KindList, KindTab, list_ops
+from .references import Fact
 from .sections import BATTLES_SECTION, CASTLES_SECTION, GRATITUDE_SECTION
-from .sheets.character import Fact
 
 #: The titles a lord may hold, from least to greatest.
 TITLES: dict[str, str] = {
@@ -112,12 +112,29 @@ def manors(neighbour: Neighbour) -> int:
     return max(0, int(neighbour.details.get("manors") or 0))
 
 
-def castles(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "castles")
+class Castle(TypedDict, total=False):
+    """A castle the lord holds: its garrison, defences and supplies."""
+
+    name: Required[str]
+    garrison: str
+    defences: str
+    supplies: str
 
 
-def gratitude(neighbour: Neighbour) -> list[dict[str, Any]]:
-    return details_list(neighbour, "gratitude")
+def castles(neighbour: Neighbour) -> list[Castle]:
+    return cast(list[Castle], details_list(neighbour, "castles"))
+
+
+class Gratitude(TypedDict, total=False):
+    """What the lord owes a character (by id): the points and why."""
+
+    who: str
+    points: int
+    why: str
+
+
+def gratitude(neighbour: Neighbour) -> list[Gratitude]:
+    return cast(list[Gratitude], details_list(neighbour, "gratitude"))
 
 
 # -- worked out --
@@ -254,7 +271,7 @@ def castles_grid(_saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def castle_fields(
-    _saga: Saga, _neighbour: Neighbour, castle: dict[str, Any] | None
+    _saga: Saga, _neighbour: Neighbour, castle: Castle | None
 ) -> list[DialogField]:
     c = castle or {}
     return [
@@ -297,7 +314,7 @@ def castle_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
 # -- Gratitude --
 
 
-def _who(saga: Saga, entry: dict[str, Any]) -> str:
+def _who(saga: Saga, entry: Gratitude) -> str:
     character = saga.character(entry.get("who"))
     return character.name if character is not None else "(gone)"
 
@@ -330,7 +347,7 @@ def gratitude_grid(saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def gratitude_fields(
-    saga: Saga, _neighbour: Neighbour, entry: dict[str, Any] | None
+    saga: Saga, _neighbour: Neighbour, entry: Gratitude | None
 ) -> list[DialogField]:
     e = entry or {}
     return [

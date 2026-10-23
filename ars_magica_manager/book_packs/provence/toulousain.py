@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -46,11 +46,6 @@ KNOWN_REGION = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
 RUMOURED = {"status": "Rumoured", "known": "Locally"}
 HIDDEN = {"status": "Hidden", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(provence: Provence, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1060,7 +1055,7 @@ def _tolosa_paratge(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "from magi outside the city or by Redcap, and covenfolk of both sides "
         "brawl in the streets, drawing citizens into the fighting.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Votes: 9 at Tribunal, divided between the factions",
         "Vis: none named in the book",
         "Income: an inn in Toulouse, thirty houses, and the trades of some eighty covenfolk in the city",
@@ -1094,7 +1089,7 @@ def _tolosa_paratge(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "that made up the Tribunal when the regional Tribunals were set up "
         "in 773.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The regio is tied to the prosperity of Toulouse as well as to the river: the city's conquest and strife weakened it, and the magi's feud mirrors the city's. Healing the city (a university, or championing Occitan learning) is the only lasting cure.",
         "Bishop Foulques came to the island as a gifted young troubadour; his memory of it may have been altered by magic, or he may think it a dream.",
         "Mariola is rumoured to be an initiate of the Matres & Matrones.",
@@ -1287,7 +1282,7 @@ def _ostal(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "everything for their homeland. Some of the maimed defenders of Bram "
         "serve as grogs, and Pons de Morlhon is among the companions.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Votes: 6 counted at Tribunal, though the covenant is not yet recognised",
         "Vis: the grotto was a known vis source of old (Art and amount not given)",
         "Aura: Magic 3 in the grottoes; the Flambeau mithraeum within (Magic 5) lies inside their Aegis, untouched",
@@ -1317,7 +1312,7 @@ def _ostal(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "The founding year is not given; the covenant took shape after the "
         "Tribunal of 1214.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Garsenda roused the villagers of Montgey, with the demesoilles, to massacre the crusader column in 1211, and so brought the crusaders down on Lariander. She dreads the Order learning she brought ruin on her sodales.",
         "Gilbert may be a mystagogue of the Knights of the Green Stone; Garsenda met him through an esoteric cult, perhaps the same.",
         "Gilbert has boasted that he would fight a second Schism War for his homeland even if the Grand Tribunal condemned him.",
@@ -2098,10 +2093,6 @@ P = Profile
 OCCITAN = "Occitan"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: The apparent age the book gives each magus, by character id.
 APPARENT = {
     "mariola": 80,
@@ -2129,7 +2120,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             ("Social Contacts", {"group": "the count's and the bishop's factions"}),
-            _art("Affinity with {art}", "imaginem"),
+            vf_art("Affinity with {art}", "imaginem"),
             "Proud (Minor)",
             "Covenant Upbringing",
         ],
@@ -2147,8 +2138,8 @@ PROFILES: dict[str, Profile] = {
             "Area Lore: Toulouse": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "perdo"),
-            _art("Puissant {art}", "perdo"),
+            vf_art("Affinity with {art}", "perdo"),
+            vf_art("Puissant {art}", "perdo"),
             "Hatred (Major)",
             "Driven (Minor)",
             "Dark Secret",
@@ -2166,8 +2157,8 @@ PROFILES: dict[str, Profile] = {
             "Organization Lore: Cult of Mercury": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "perdo"),
-            _art("Affinity with {art}", "terram"),
+            vf_art("Affinity with {art}", "perdo"),
+            vf_art("Affinity with {art}", "terram"),
             "Seeker",
             "Reckless (Minor)",
             "Heroic Personality",
@@ -2223,7 +2214,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Gentle Gift",
-            _art("Affinity with {art}", "perdo"),
+            vf_art("Affinity with {art}", "perdo"),
             "Enemies",
             "Wrathful (Minor)",
         ],
@@ -2239,7 +2230,7 @@ PROFILES: dict[str, Profile] = {
             "Artes Liberales": (2, "letters"),
         },
         virtues=[
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             "Dream Magic",
             "Optimistic (Minor)",
             "Compassionate (Minor)",
@@ -2256,7 +2247,7 @@ PROFILES: dict[str, Profile] = {
             "Magic Lore": (2, "pagan gods"),
         },
         virtues=[
-            _art("Affinity with {art}", "imaginem"),
+            vf_art("Affinity with {art}", "imaginem"),
             "Second Sight",
             "Seeker",
             "Dark Secret",

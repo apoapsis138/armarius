@@ -166,7 +166,16 @@ def test_pyright_flags_a_typed_dialog_without_build(tmp_path):
         encoding="utf-8",
     )
     run = subprocess.run(
-        [sys.executable, "-m", "pyright", "--outputjson", str(probe)],
+        # --pythonpath: this interpreter's packages, as when run under uv.
+        [
+            sys.executable,
+            "-m",
+            "pyright",
+            "--outputjson",
+            "--pythonpath",
+            sys.executable,
+            str(probe),
+        ],
         capture_output=True,
         text=True,
         cwd=ROOT,

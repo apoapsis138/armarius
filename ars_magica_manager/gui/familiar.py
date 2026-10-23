@@ -49,6 +49,7 @@ from .widgets import (
     Card,
     ClickableCard,
     Codex,
+    Symbol,
     badge,
     cells_table,
     display_name,
@@ -113,7 +114,9 @@ class FamiliarPage(QWidget):
     def chapters(self) -> list[str]:
         return self.codex.chapters()
 
-    def inspect(self, title: str, subtitle: str, markup: str, symbol=None) -> None:
+    def inspect(
+        self, title: str, subtitle: str, markup: str, symbol: Symbol | None = None
+    ) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
 
     def _edit(self, *names: str, label: str = "Edit") -> dict[str, Callable[[], None]]:

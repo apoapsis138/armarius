@@ -5,7 +5,7 @@ familiar or a laboratory (commands.SectionOps). Which Virtue it is can't
 be changed: that is a delete and an add.
 
 A character and a familiar choose from the character catalog, each entry
-checked against who is choosing (catalog.VirtueFlawChooser) and what
+checked against who is choosing (VirtueFlawChooser) and what
 they hold already; a character's Great or Poor (Characteristic) moves
 the Characteristic it names as it is added, changed or deleted. A laboratory
 chooses from its own catalog (ArM5 Covenants, Chapter 9); deleting a
@@ -49,6 +49,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import creation_characteristics as cch
+from ..rules.vf_eligibility import VirtueFlawChooser
 
 Owner = Character | Familiar | Creature | Laboratory
 
@@ -373,11 +374,11 @@ class _Adder:
         self.saga, self.owner, self.side = saga, owner, side
         books = sourcebooks.saga_books(saga)
         self.chooser = (
-            catalog.VirtueFlawChooser.for_familiar(owner, books)
+            VirtueFlawChooser.for_familiar(owner, books)
             if isinstance(owner, Familiar)
-            else catalog.VirtueFlawChooser.for_creature(owner, books)
+            else VirtueFlawChooser.for_creature(owner, books)
             if isinstance(owner, Creature)
-            else catalog.VirtueFlawChooser.for_character(owner, books)
+            else VirtueFlawChooser.for_character(owner, books)
         )
 
     def instance_refusal(self, instance: VirtueFlawInstance) -> str:
@@ -433,7 +434,7 @@ class _Adder:
 
     def offered(self) -> list[VirtueFlawDef]:
         """The entries the owner may take, on the side asked for: not taken
-        already (unless repeatable), allowed them (catalog.VirtueFlawChooser),
+        already (unless repeatable), allowed them (VirtueFlawChooser),
         from a book in play and not hidden."""
         taken = self.owner.virtues_flaws
         return [

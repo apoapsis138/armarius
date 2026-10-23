@@ -24,6 +24,7 @@ from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import THE_GIFT
 from .creation_xp import entries, spent
+from .scores import ability_level
 
 SOURCE = (
     "Hedge Magic, Revised Edition, each tradition's Character Creation "
@@ -166,11 +167,6 @@ def opened_ability(name: str) -> Ability:
     )
 
 
-def _level(character: Character, name: str) -> int:
-    ability = next((a for a in character.abilities if a.name == name), None)
-    return ability.level if ability is not None else 0
-
-
 def _check(
     label: str, ok: bool, detail: str, *, advice: bool = False, step: str = STEP
 ) -> Check:
@@ -272,7 +268,7 @@ def training_checks(saga: Saga, record: Record) -> list[Check]:
                 )
             )
         for name, least in t.training.minimums.items():
-            level = _level(character, name)
+            level = ability_level(character, name)
             found.append(_check(f"{name} at least {least}", level >= least, f"{level}"))
     if t.training.art_cap:
         over = [

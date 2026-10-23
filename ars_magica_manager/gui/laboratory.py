@@ -68,6 +68,7 @@ from .widgets import (
     Card,
     ClickableCard,
     Codex,
+    Symbol,
     arts_heat_grid,
     badge,
     chapter_title,
@@ -147,7 +148,7 @@ class LabTextFilterBar(QWidget):
             readable=self.readable.isChecked(),
         )
 
-    def changed(self, then) -> None:
+    def changed(self, then: Callable[[], None]) -> None:
         """Call `then` whenever any part of the filter changes."""
         for combo in (self.kind, self.technique, self.form):
             combo.currentIndexChanged.connect(lambda _index: then())
@@ -224,7 +225,9 @@ class LaboratoryPage(QWidget):
             only=research_text.under_way(self.saga, self.lab),
         )
 
-    def inspect(self, title: str, subtitle: str, markup: str, symbol=None) -> None:
+    def inspect(
+        self, title: str, subtitle: str, markup: str, symbol: Symbol | None = None
+    ) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
 
     # Above the chapters

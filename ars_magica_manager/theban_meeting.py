@@ -21,7 +21,7 @@ from . import meeting as core
 from . import tribunals, world
 from .form_spec import DialogField
 from .markup import escape
-from .models import Character, Saga, Tribunal
+from .models import Character, Meeting, Saga, Tribunal
 from .tribunal_packages import data
 from .tribunal_packages.theban import (
     KEY,
@@ -45,11 +45,11 @@ OSTRACISM_YEARS = 7
 ARCHE = "Arche"
 
 
-def _record(meeting: dict[str, Any]) -> dict[str, Any]:
+def _record(meeting: Meeting) -> dict[str, Any]:
     return meeting.setdefault("theban", {})
 
 
-def _year(saga: Saga, meeting: dict[str, Any]) -> int:
+def _year(saga: Saga, meeting: Meeting) -> int:
     return int(meeting.get("year") or saga.current_year)
 
 
@@ -139,7 +139,7 @@ class Assembly(core.Step):
     which gives a shard to the accused if upheld or to the accuser if
     not. The principal phyle governing the meeting is set here."""
 
-    def _undo(self, tribunal: Tribunal, meeting: dict[str, Any]) -> None:
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
         held = _record(meeting).pop("assembly", None)
         if not held:
             return
@@ -155,7 +155,7 @@ class Assembly(core.Step):
         if "principal_before" in held:
             data(tribunal, KEY)["principal_phyle"] = held["principal_before"]
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("assembly") or {}
         year = _year(saga, meeting)
         principal = held.get("principal") or next_principal(tribunal)
@@ -245,7 +245,7 @@ class Assembly(core.Step):
         ]
         return found
 
-    def validate(self, meeting, values):
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
         if (
             values.get("accused")
             and values.get("verdict") == "rejected"
@@ -256,7 +256,9 @@ class Assembly(core.Step):
             return "A magus can't bring a decree of defamation against themselves."
         return None
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         self._undo(tribunal, meeting)
         held: dict[str, Any] = {
             "principal": values.get("principal") or next_principal(tribunal),
@@ -296,7 +298,7 @@ class Assembly(core.Step):
         _record(meeting)["assembly"] = held
         core._keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("assembly") or {}
         shown = (
             f"[$label]Principal phyle:[/] {escape(held['principal'])}"
@@ -305,7 +307,7 @@ class Assembly(core.Step):
         )
         return core._join(shown, core._note_text(meeting, self.key))
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("assembly") or {}
         parts = []
         if held.get("principal"):
@@ -338,7 +340,7 @@ class Assembly(core.Step):
 
 
 def ostracism_candidates(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+    saga: Saga, tribunal: Tribunal, meeting: Meeting
 ) -> list[tuple[Character, int]]:
     """Every polites with a shard, and how many, but those made politai
     at this meeting."""
@@ -364,7 +366,7 @@ class Ostrakismos(core.Step):
     citizenship, and the tokens and shards with it, and is kept out of the
     Tribunal for seven years; if he returns, it is as a metoikos."""
 
-    def _undo(self, tribunal: Tribunal, meeting: dict[str, Any]) -> None:
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
         held = _record(meeting).pop("ostrakismos", None)
         if not held or not held.get("ostracised"):
             return
@@ -376,7 +378,7 @@ class Ostrakismos(core.Step):
                 else:
                     entry[key] = value
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("ostrakismos") or {}
         candidates = ostracism_candidates(saga, tribunal, meeting)
         if not candidates:
@@ -409,14 +411,18 @@ class Ostrakismos(core.Step):
             core._note_field(meeting, self.key),
         ]
 
-    def live(self, saga, tribunal, meeting, values):
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         magus = saga.character(values.get("ostracised"))
         if magus is None:
             return ""
         until = _year(saga, meeting) + OSTRACISM_YEARS
         return f"{escape(magus.name)} leaves the Tribunal until {until}."
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         self._undo(tribunal, meeting)
         held: dict[str, Any] = {}
         chosen = values.get("ostracised")
@@ -436,7 +442,7 @@ class Ostrakismos(core.Step):
         _record(meeting)["ostrakismos"] = held
         core._keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("ostrakismos") or {}
         magus = saga.character(held.get("ostracised"))
         shown = (
@@ -447,7 +453,7 @@ class Ostrakismos(core.Step):
     def save_label(self):
         return "Count"
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         if "ostrakismos" not in _record(meeting):
             return "", ""
         held = _record(meeting)["ostrakismos"]
@@ -479,7 +485,7 @@ class EndOfTerm(core.Step):
     same magi."""
 
     def _outgoing(
-        self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting
     ) -> list[dict[str, Any]]:
         record = _record(meeting)
         if "outgoing" not in record:
@@ -496,11 +502,11 @@ class EndOfTerm(core.Step):
             ]
         return record["outgoing"]
 
-    def _undo(self, tribunal: Tribunal, meeting: dict[str, Any]) -> None:
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
         for paid in _record(meeting).pop("paid", []):
             _adjust(tribunal, paid["holder_id"], "tokens", -paid["tokens"])
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         outgoing = self._outgoing(saga, tribunal, meeting)
         if not outgoing:
             return [
@@ -529,7 +535,9 @@ class EndOfTerm(core.Step):
         found.append(core._note_field(meeting, self.key))
         return found
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         self._undo(tribunal, meeting)
         paid = []
         for index, out in enumerate(self._outgoing(saga, tribunal, meeting)):
@@ -546,7 +554,7 @@ class EndOfTerm(core.Step):
     def save_label(self):
         return "Pay"
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         paid = _record(meeting).get("paid", [])
         if not paid:
             return "", ""
@@ -591,7 +599,7 @@ class Sortition(core.Step):
     the seat. A phyle with too few politai leaves seats for the
     logothete to fill with Redcaps."""
 
-    def _order(self, tribunal: Tribunal, meeting: dict[str, Any]) -> list[str]:
+    def _order(self, tribunal: Tribunal, meeting: Meeting) -> list[str]:
         principal = (_record(meeting).get("assembly") or {}).get(
             "principal"
         ) or next_principal(tribunal)
@@ -600,7 +608,7 @@ class Sortition(core.Step):
         return order[start:] + order[:start]
 
     def _draw(
-        self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting
     ) -> dict[str, list[str]]:
         record = _record(meeting)
         if "draw" not in record:
@@ -621,7 +629,7 @@ class Sortition(core.Step):
             seated[phyle] = names[:ARCHAI_PER_PHYLE]
         return seated
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         draw = self._draw(saga, tribunal, meeting)
         if not any(draw.values()):
             return [
@@ -666,7 +674,9 @@ class Sortition(core.Step):
         ]
         return found
 
-    def live(self, saga, tribunal, meeting, values):
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         set_aside = values.get("set_aside")
         if not set_aside:
             return ""
@@ -680,7 +690,9 @@ class Sortition(core.Step):
                 return "No one is left in the phyle to take the seat."
         return ""
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         draw = self._draw(saga, tribunal, meeting)
         seated = self._seated(draw, values.get("set_aside"))
         ends = core._next(tribunal, meeting)
@@ -704,7 +716,7 @@ class Sortition(core.Step):
     def save_label(self):
         return "Draw"
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("sortition")
         if not held:
             return "", ""
@@ -738,7 +750,7 @@ class ArchonAndPolemarch(core.Step):
     every polites (the same magus is often chosen again). The archon is
     the Tribunal's Praeco."""
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         new = _named(saga, [o["holder_id"] for o in archai(tribunal) if is_arche(o)])
         year = _year(saga, meeting)
         if not new:
@@ -780,7 +792,9 @@ class ArchonAndPolemarch(core.Step):
             core._note_field(meeting, self.key),
         ]
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         ends = core._next(tribunal, meeting)
         if values.get("archon"):
             archon = _office(tribunal, "Archon")
@@ -794,7 +808,7 @@ class ArchonAndPolemarch(core.Step):
         }
         core._keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("election") or {}
         archon = saga.character(held.get("archon"))
         polemarch = saga.character(held.get("polemarch"))
@@ -807,7 +821,7 @@ class ArchonAndPolemarch(core.Step):
     def save_label(self):
         return "Elect"
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         held = _record(meeting).get("election") or {}
         archon = saga.character(held.get("archon"))
         polemarch = saga.character(held.get("polemarch"))

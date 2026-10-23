@@ -39,11 +39,9 @@ import unicodedata
 from typing import TYPE_CHECKING, Any
 
 from ...models import Covenant, Creature
-from ...threats import DORMANT
-from ..builder import Builder, paragraphs
+from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
-    from ...models import Neighbour
     from . import Levant
 
 S = Builder.stage
@@ -64,12 +62,6 @@ def build(levant: Levant) -> None:
     _arash(levant)
     _true_cross(levant)
     _pyramids(levant)
-
-
-def _dormant(threat: Neighbour) -> Neighbour:
-    """Mark a threat as not yet begun: More, Begin This Story starts it."""
-    threat.details[DORMANT] = True
-    return threat
 
 
 # -- under way in 1220 --
@@ -290,7 +282,7 @@ def _secret_war(levant: Levant) -> None:
 
 
 def _umar(levant: Levant) -> None:
-    levant.world["threat_umar"] = _dormant(
+    levant.world["threat_umar"] = dormant(
         levant.b.threat(
             "'Umar's Double Loyalty",
             summary=paragraphs(
@@ -383,7 +375,7 @@ def _umar(levant: Levant) -> None:
 
 
 def _esther(levant: Levant) -> None:
-    levant.world["threat_esther"] = _dormant(
+    levant.world["threat_esther"] = dormant(
         levant.b.threat(
             "Esther's Trade",
             summary=paragraphs(
@@ -460,7 +452,7 @@ def _esther(levant: Levant) -> None:
 
 
 def _rufus(levant: Levant) -> None:
-    levant.world["threat_rufus"] = _dormant(
+    levant.world["threat_rufus"] = dormant(
         levant.b.threat(
             "Rufus's Hoard",
             summary=paragraphs(
@@ -535,7 +527,7 @@ def _rufus(levant: Levant) -> None:
 
 
 def _amber(levant: Levant) -> None:
-    levant.world["threat_amber"] = _dormant(
+    levant.world["threat_amber"] = dormant(
         levant.b.threat(
             "Amber against Her House",
             summary=paragraphs(
@@ -606,7 +598,7 @@ def _amber(levant: Levant) -> None:
 
 
 def _aurora(levant: Levant) -> None:
-    levant.world["threat_aurora"] = _dormant(
+    levant.world["threat_aurora"] = dormant(
         levant.b.threat(
             "Aurora's Twilight",
             summary=paragraphs(
@@ -685,7 +677,7 @@ def _aurora(levant: Levant) -> None:
 
 
 def _urbs_rubra(levant: Levant) -> None:
-    levant.world["threat_urbs_rubra"] = _dormant(
+    levant.world["threat_urbs_rubra"] = dormant(
         levant.b.threat(
             "Fade and Wraith",
             summary=paragraphs(
@@ -760,7 +752,7 @@ def _urbs_rubra(levant: Levant) -> None:
 
 
 def _heliobus(levant: Levant) -> None:
-    levant.world["threat_heliobus"] = _dormant(
+    levant.world["threat_heliobus"] = dormant(
         levant.b.threat(
             "Heliobus's Bloc",
             summary=paragraphs(
@@ -824,7 +816,7 @@ def _heliobus(levant: Levant) -> None:
 
 
 def _theban_border(levant: Levant) -> None:
-    levant.world["threat_theban_border"] = _dormant(
+    levant.world["threat_theban_border"] = dormant(
         levant.b.threat(
             "The Theban Border",
             summary=paragraphs(
@@ -889,7 +881,7 @@ def _theban_border(levant: Levant) -> None:
 
 
 def _arash(levant: Levant) -> None:
-    levant.world["threat_arash"] = _dormant(
+    levant.world["threat_arash"] = dormant(
         levant.b.threat(
             "Arash and the Oath",
             summary=paragraphs(
@@ -947,7 +939,7 @@ def _arash(levant: Levant) -> None:
 
 
 def _true_cross(levant: Levant) -> None:
-    levant.world["threat_true_cross"] = _dormant(
+    levant.world["threat_true_cross"] = dormant(
         levant.b.threat(
             "The True Cross's Call",
             summary=paragraphs(
@@ -1018,7 +1010,7 @@ def _true_cross(levant: Levant) -> None:
 
 
 def _pyramids(levant: Levant) -> None:
-    levant.world["threat_pyramids"] = _dormant(
+    levant.world["threat_pyramids"] = dormant(
         levant.b.threat(
             "The Opening of the Pyramids",
             summary=paragraphs(

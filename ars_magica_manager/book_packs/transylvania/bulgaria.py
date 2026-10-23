@@ -22,7 +22,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -41,11 +41,6 @@ KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(transylvania: Transylvania, key: str, name: str, **kw: Any) -> Neighbour:
@@ -624,7 +619,7 @@ def _thrace(transylvania: Transylvania) -> None:
             "perhaps by journeys into the Magic or Faerie realms or by "
             "seeking Initiation into their Mysteries.",
         ),
-        secrets=_lines(
+        secrets=joined_lines(
             "The false Kabeiros (see the Bestiary), a strong local "
             "faerie, is reviving the Cabeiri cult here: a tall brass "
             "man with a great crab claw for a left hand, which serves "
@@ -675,7 +670,7 @@ def _evredika(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "By the old Orphic rule women may not enter the cult's holy "
         "places and stay in the oppidum's unconsecrated buildings.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: Imaginem from the year's first silivriak flowers",
         "Vis: Corpus, bone fragments washed up in the Devil's Throat (now and then)",
         "Vis: a yearly grant to the teacher at Gela (a Personal Vis Source)",
@@ -836,7 +831,7 @@ def _seuthopolis(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "movement. Mediation is a common alternative to a case at "
         "Tribunal, where the Tremere always win but make enemies doing it.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Aura: Magic 5 in the caverns; the vault of the libraries is Divine 3",
         "Library: the Red and Black Libraries, Benilda's charge",
         "Boon: Hidden Resources (laboratories and libraries in the caverns beneath the town)",
@@ -877,7 +872,7 @@ def _seuthopolis(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "staffed by people who fled the world for a different life, and "
         "the Quaesitors find their skills, some a little shady, useful.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The town's charter from Diocletian is a clever forgery.",
         "Rumour, perhaps true, says the Red Library also holds "
         "magic items, seized in investigations and never destroyed, "
@@ -1162,7 +1157,7 @@ def _tablinum_site(transylvania: Transylvania) -> Neighbour:
             "light as from candles, with no flame to set the exhibits "
             "alight.",
         ),
-        secrets=_lines(
+        secrets=joined_lines(
             "Six hidden exhibits are rumoured, which most of the "
             "Tribunal only guesses at; some magi claim to have been "
             "there, and may be liars or mad. Even the Curator may not "
@@ -1341,7 +1336,7 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "magi among them, may call it theft. Tremere collectors may serve "
         "in the vexillation Convectoris-Tablinum.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Aura: Magic 5 in the Curator's Sanctum; ten listed levels from Infernal 3 to Divine 6",
         "Defence: an Aegis of the Hearth of magnitude 8 round the village palisade",
         "Vis: Vim, extracted from the aura in the shared Vim Distillery (Vis Extraction +10)",
@@ -1355,7 +1350,7 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
     )
     notes = paragraphs(
         "The book gives no season. All four magi are named.",
-        _lines(
+        joined_lines(
             "Past Curators:",
             "878-900 Akilina, the first, who found the site in the mid-800s, named her apprentice Potitus to follow her, resigned and vanished in 917; presumed dead, though magi as late as 1137 claim to have met her, or someone using her name, in the regiones.",
             "900-948 Potitus, the first to live there, who opened the storehouse to study.",
@@ -1373,7 +1368,7 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "mentions them. One story says a ritual path through a labyrinth "
         "once led into all of them, and the founders walked it fixing "
         "Arcane Connections and destroying the labyrinth behind them.",
-        _lines(
+        joined_lines(
             "Laboratories:",
             "Nestor's true laboratory, in an otherwise empty level, used by Curators for centuries: Greater Feature (orrery), Palatial, Extensive Stores, Specimens, Missing Sanctum Marker, Regio, Impregnable, Predecessor; Size +3, Quality +1, Refinement +3, Safety +1, Upkeep +4, Health +2, Warping +2, Aesthetics +4; Experimentation +1, Teaching +2, Rego +2, Vim +3.",
             "Demetrius's: Greater Feature (desk), Specimens (now Aquam, changed in a few days), Studio (where new acquisitions wait), Cramped; Size 0, Quality -1, Refinement +3, Safety 1, Upkeep 0, Health 0, Warping 0, Aesthetics +4; Texts +4, Aquam +1.",
@@ -1390,7 +1385,7 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "and, if so, to take the relics to Rome. Nestor asks the visiting "
         "magi to help him deal with it.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The Empty Laboratory's void window is a vis source the "
         "residents do not know of: now and then frost forms on its "
         "sill that can be gathered as Mentem vis before it melts, "
@@ -1845,10 +1840,6 @@ AREA = "Area Lore: Bulgaria"
 ORPHEUS = "Mystery Cult Lore: Cult of Orpheus"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the book sketches without a stat block, by character key.
 PROFILES: dict[str, Profile] = {
     "oeagrus": P(
@@ -1972,7 +1963,7 @@ PROFILES: dict[str, Profile] = {
             "Stealth": 3,
             AREA: 2,
         },
-        virtues=[_art("Affinity with {art}", "rego"), "Ambitious (Minor)", "Humble"],
+        virtues=[vf_art("Affinity with {art}", "rego"), "Ambitious (Minor)", "Humble"],
         native=BULGARIAN,
     ),
     "vigilia": P(

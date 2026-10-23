@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import random
 
+import pytest
 from support import everything_saga
 
 from ars_magica_manager import place_events, threats, towns, world, world_turns
@@ -113,6 +114,28 @@ def test_a_change_made_since_is_left_alone_on_undo():
     notes = world_turns.undo(saga, turn)
     assert notes and "left as they are" in notes[0]
     assert stage["outcome"] == "Stopped"
+
+
+def test_undo_leaves_a_change_whose_record_is_gone():
+    saga = _winter()
+    change = world_turns.set_change("neighbour", "gone", ["details", "x"], 1, 2)
+    assert world_turns.undo_change(saga, change) is False
+    crown = saga.neighbour("crown")
+    assert crown is not None
+    missing_field = world_turns.set_change("neighbour", "crown", ["no_such", "x"], 1, 2)
+    assert world_turns.undo_change(saga, missing_field) is False
+
+
+def test_undo_lets_a_programming_error_through(monkeypatch):
+    saga = _winter()
+    change = world_turns.set_change("neighbour", "crown", ["details", "x"], 1, 2)
+
+    def broken(*_args):
+        raise AttributeError("a renamed field")
+
+    monkeypatch.setattr(world_turns, "_parent", broken)
+    with pytest.raises(AttributeError):
+        world_turns.undo_change(saga, change)
 
 
 def test_an_attitude_change_needs_its_reason():

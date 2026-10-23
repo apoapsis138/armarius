@@ -10,6 +10,7 @@ from ars_magica_manager import catalog, sourcebooks, storage
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import saga_content as sc
 from ars_magica_manager.models import Saga, SagaSource
+from ars_magica_manager.rules.vf_eligibility import VirtueFlawChooser
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
@@ -83,7 +84,7 @@ def test_a_source_is_a_book_its_house_rules_cite():
     # A new abbreviation goes with the entries citing it, in play or not.
     sc.set_books_in_play(saga, ["HR"])
     sc.update_source(saga, source, {"abbreviation": "OHR", "title": "Ours"})
-    assert entry.source == "OHR"
+    assert [e.id for e in hr.citing(saga, "OHR")] == [entry.id]
     assert saga.books_in_play == ["OHR"]
     assert [e.name for e in hr.citing(saga, "OHR")] == ["Storm-Touched"]
 
@@ -123,7 +124,7 @@ def test_a_hidden_catalog_keeps_the_sagas_own_entries():
     # Other catalogs are untouched.
     assert not any(catalog.hidden(a) for a in catalog.load_ability_catalog())
     shared = next(e for e in entries if e.id != own.id)
-    assert catalog.VirtueFlawChooser().refusal(shared) == "hidden in this saga"
+    assert VirtueFlawChooser().refusal(shared) == "hidden in this saga"
     sc.set_catalog_shown(saga, "virtues_flaws", True)
     assert saga.hidden_catalogs == []
     assert not catalog.hides_any()

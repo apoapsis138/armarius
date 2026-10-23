@@ -31,6 +31,7 @@ from .forms import tribunal as tribunal_forms
 from .forms.creation import covenant_create_fields
 from .markup import escape
 from .models import Neighbour, Saga, VirtueFlawInstance, new_instance_id
+from .rules import sites
 
 #: The Covenant Situation of a covenant raised on a ruin.
 WINTER_RUINS = "situation_de_winter_ruins"
@@ -47,7 +48,7 @@ NON_MAGICAL_REGIO = "covbh_hook_minor_non_magical_regio"
 def _site_fields(ruin: Neighbour) -> list[DialogField]:
     """Where on a ruin with a regio the covenant stands, and the Regio
     Boon or Hook that brings."""
-    shown = places.levels(ruin)
+    shown = sites.levels(ruin)
     if not shown:
         return []
     options = [
@@ -69,7 +70,7 @@ def _site_fields(ruin: Neighbour) -> list[DialogField]:
             hint="The surface, or one of the ruin's regio levels: the "
             "covenant takes its aura.",
             fills=lambda values: {
-                "aura_realm": places.aura_at(ruin, int(values.get("site") or 0))[1]
+                "aura_realm": sites.aura_at(ruin, int(values.get("site") or 0))[1]
             },
         ),
         DialogField(
@@ -101,14 +102,14 @@ def _site_fields(ruin: Neighbour) -> list[DialogField]:
 
 def _regio_boons_hooks(ruin: Neighbour, values: dict[str, Any]) -> list[str]:
     """The Regio Boon or Hooks the covenant's site brings, by catalog id."""
-    shown = places.levels(ruin)
+    shown = sites.levels(ruin)
     if not shown:
         return []
     level = int(values.get("site") or 0)
     if level:
         return [REGIO_BOONS[values.get("regio_boon") or "minor"]]
     taken = [REGIO_HOOKS[values.get("regio_hook") or "minor"]]
-    if any(places.aura_at(ruin, i)[1] != "Magic" for i in range(1, len(shown) + 1)):
+    if any(sites.aura_at(ruin, i)[1] != "Magic" for i in range(1, len(shown) + 1)):
         taken.append(NON_MAGICAL_REGIO)
     return taken
 
@@ -121,7 +122,7 @@ def found_fields(saga: Saga, ruin: Neighbour) -> list[DialogField]:
         if field.key == "name":
             field.value = ruin.name
         elif field.key == "aura_realm":
-            field.value = places.aura_at(ruin)[1]
+            field.value = sites.aura_at(ruin)[1]
         fields.append(field)
     fields.extend(_site_fields(ruin))
     if saga.tribunals:

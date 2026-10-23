@@ -25,11 +25,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...threats import DORMANT
-from ..builder import Builder, paragraphs
+from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
-    from ...models import Neighbour
     from . import Theban
 
 S = Builder.stage
@@ -56,12 +54,6 @@ def build(theban: Theban) -> None:
     _zeno(theban)
     _thermakopolis(theban)
     _wilusa(theban)
-
-
-def _dormant(threat: Neighbour) -> Neighbour:
-    """Mark a threat as not yet begun: More, Begin This Story starts it."""
-    threat.details[DORMANT] = True
-    return threat
 
 
 # -- the hidden enemy --
@@ -677,7 +669,7 @@ def _nicaea(theban: Theban) -> None:
 
 def _akgah(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_akgah"] = _dormant(
+    theban.world["threat_akgah"] = dormant(
         b.threat(
             "Akgah's War",
             summary="The magi of Thebes know that the Infernal had a hand in "
@@ -770,7 +762,7 @@ def _akgah(theban: Theban) -> None:
 
 def _lucian(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_lucian"] = _dormant(
+    theban.world["threat_lucian"] = dormant(
         b.threat(
             "Lucian's Pacts",
             summary=paragraphs(
@@ -886,7 +878,7 @@ def _lucian(theban: Theban) -> None:
 
 def _kampe(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_kampe"] = _dormant(
+    theban.world["threat_kampe"] = dormant(
         b.threat(
             "Kampe's Lovers and the Titans",
             summary=paragraphs(
@@ -978,7 +970,7 @@ def _kampe(theban: Theban) -> None:
 
 def _klymene(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_klymene"] = _dormant(
+    theban.world["threat_klymene"] = dormant(
         b.threat(
             "Klymene's Prison",
             summary="On the acropolis of Pergamos stands the Great Altar, its "
@@ -1052,7 +1044,7 @@ def _klymene(theban: Theban) -> None:
 
 def _hades(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_hades"] = _dormant(
+    theban.world["threat_hades"] = dormant(
         b.threat(
             "The Estate of Hades",
             summary="Hedyosmos stands on the ruins of an oracle of the dead, "
@@ -1123,7 +1115,7 @@ def _hades(theban: Theban) -> None:
 
 def _tremere_appeal(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_tremere_appeal"] = _dormant(
+    theban.world["threat_tremere_appeal"] = dormant(
         b.threat(
             "The Tremere Appeal of 1228",
             summary="The League of Advisors, Greek magi who after 1185 lived "
@@ -1194,7 +1186,7 @@ def _tremere_appeal(theban: Theban) -> None:
 
 def _verditius_contest(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_verditius"] = _dormant(
+    theban.world["threat_verditius"] = dormant(
         b.threat(
             "The Verditius Contest of 1234",
             summary="Stouritus of Ingasia, newly primus of House Verditius, has "
@@ -1272,7 +1264,7 @@ def _verditius_contest(theban: Theban) -> None:
 
 def _talos(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_talos"] = _dormant(
+    theban.world["threat_talos"] = dormant(
         b.threat(
             "Talos of Candia",
             summary="Talos, the bronze bull-headed giant that Hephaistos made "
@@ -1340,7 +1332,7 @@ def _talos(theban: Theban) -> None:
 
 def _naxos(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_naxos"] = _dormant(
+    theban.world["threat_naxos"] = dormant(
         b.threat(
             "The Duke of Naxos",
             summary="Marco Sanudo, nephew of the doge Enrico Dandolo, took the "
@@ -1414,7 +1406,7 @@ def _naxos(theban: Theban) -> None:
 
 def _hagka(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_hagka"] = _dormant(
+    theban.world["threat_hagka"] = dormant(
         b.threat(
             "The Lost Hagka",
             summary=paragraphs(
@@ -1499,7 +1491,7 @@ def _hagka(theban: Theban) -> None:
 
 def _serapis(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_serapis"] = _dormant(
+    theban.world["threat_serapis"] = dormant(
         b.threat(
             "The Christians of Serapis",
             summary="Sinope, a Seljuk port on the Black Sea, is known for its "
@@ -1574,7 +1566,7 @@ def _serapis(theban: Theban) -> None:
 
 def _zeno(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_zeno"] = _dormant(
+    theban.world["threat_zeno"] = dormant(
         b.threat(
             "The Return of Zeno",
             summary="The Church of the Holy Apostles, once the resting place "
@@ -1638,7 +1630,7 @@ def _zeno(theban: Theban) -> None:
 
 def _thermakopolis(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_thermakopolis"] = _dormant(
+    theban.world["threat_thermakopolis"] = dormant(
         b.threat(
             "Thermakopolis Refounded",
             summary="Thermakopolis, the great Jerbiton covenant of "
@@ -1708,7 +1700,7 @@ def _thermakopolis(theban: Theban) -> None:
 
 def _wilusa(theban: Theban) -> None:
     b = theban.b
-    theban.world["threat_wilusa"] = _dormant(
+    theban.world["threat_wilusa"] = dormant(
         b.threat(
             "In Search of Wilusa",
             summary="In 1109 the Tribunal let Droserius of Merinita and four "

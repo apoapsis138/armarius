@@ -4,22 +4,22 @@ Boons/Hooks carry."""
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+
 from .models import (
     BOON_HOOK_DETAIL,
     BOON_HOOK_RESOURCE,
     BOON_HOOK_SITUATION,
     BOON_HOOK_UNKNOWN,
-    Character,
     Covenant,
     CovenantBoonHookDef,
     CovenantSituationDef,
     Modifier,
-    Saga,
     VirtueFlawInstance,
     boon_hook_params,
     new_instance_id,
 )
-from .rules import effects, realms
+from .rules import effects
 
 #: What an Unknown Minor Hook counts for balancing: as a Major Hook.
 UNKNOWN_HOOK_POINTS = 3
@@ -44,7 +44,7 @@ def boon_hook_points(
 
 
 def covenant_boon_points(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+    covenant: Covenant, catalog_by_id: Mapping[str, CovenantBoonHookDef]
 ) -> float:
     """Total points the covenant's attached Boons cost."""
     return sum(
@@ -56,7 +56,7 @@ def covenant_boon_points(
 
 
 def covenant_hook_points(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+    covenant: Covenant, catalog_by_id: Mapping[str, CovenantBoonHookDef]
 ) -> float:
     """Total points the covenant's attached Hooks provide (a positive
     number -- Hooks are stored with negative costs, like Flaws); an Unknown
@@ -69,31 +69,8 @@ def covenant_hook_points(
     )
 
 
-def covenant_effective_aura(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
-) -> int:
-    """The covenant's Aura score (rules.realms.covenant_aura): its base
-    `aura` plus every `covenant_aura` modifier of its Boons/Hooks. This is
-    what its laboratories inherit."""
-    return int(realms.covenant_aura(covenant, catalog_by_id).total)
-
-
-def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
-    """The aura (score, realm) a character lives in: their covenant's
-    effective Aura (its Boons and Hooks included); 0 Magic without one. The
-    one place this is worked out (casting totals, vis study,
-    aging and warping all use it)."""
-    from . import catalog
-
-    covenant = saga.covenant(character.covenant_id)
-    if covenant is None:
-        return 0, realms.HERMETIC
-    boons = catalog.load_covenant_boon_hook_catalog_by_id()
-    return covenant_effective_aura(covenant, boons), covenant.aura_realm
-
-
 def covenant_source(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+    covenant: Covenant, catalog_by_id: Mapping[str, CovenantBoonHookDef]
 ) -> effects.EffectSource:
     """The covenant's Boons and Hooks as a source for the shared effect
     lookup (rules.effects)."""
@@ -102,7 +79,7 @@ def covenant_source(
 
 def covenant_modifiers(
     covenant: Covenant,
-    catalog_by_id: dict[str, CovenantBoonHookDef],
+    catalog_by_id: Mapping[str, CovenantBoonHookDef],
     applies_to: str,
     activity: str | None = None,
 ) -> list[tuple[CovenantBoonHookDef, Modifier]]:
@@ -117,20 +94,6 @@ def covenant_modifiers(
             [covenant_source(covenant, catalog_by_id)], applies_to, activity=activity
         )
     ]
-
-
-def covenant_modifier_total(
-    covenant: Covenant,
-    catalog_by_id: dict[str, CovenantBoonHookDef],
-    applies_to: str,
-    activity: str | None = None,
-) -> float:
-    """The sum of the flat `amount`s of covenant_modifiers()."""
-    return effects.amount_total(
-        effects.collect(
-            [covenant_source(covenant, catalog_by_id)], applies_to, activity=activity
-        )
-    )
 
 
 # -- Covenant Situations and what doesn't fit together --
@@ -179,7 +142,7 @@ def use_situation(covenant: Covenant, added: list[VirtueFlawInstance]) -> None:
 
 
 def situation_points(
-    situation: CovenantSituationDef, catalog_by_id: dict[str, CovenantBoonHookDef]
+    situation: CovenantSituationDef, catalog_by_id: Mapping[str, CovenantBoonHookDef]
 ) -> tuple[float, float]:
     """(Hook points, Boon points) a Covenant Situation comes to."""
     hooks = boons = 0.0
@@ -196,7 +159,7 @@ def situation_points(
 
 
 def boon_hook_problems(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+    covenant: Covenant, catalog_by_id: Mapping[str, CovenantBoonHookDef]
 ) -> list[str]:
     """What doesn't fit together among the covenant's Boons and Hooks
     (plain text): two the catalog says exclude each other (the Minor
@@ -307,7 +270,7 @@ def link_resource(
 
 
 def unlinked_resource_hooks(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+    covenant: Covenant, catalog_by_id: Mapping[str, CovenantBoonHookDef]
 ) -> list[str]:
     """The Resource Hooks not yet tied to a source, by name (and detail)."""
     return [

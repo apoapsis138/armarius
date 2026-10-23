@@ -4,7 +4,7 @@ Library; Houses of Hermes: True Lineages, Folios)."""
 from ars_magica_manager import book_kinds as kinds
 from ars_magica_manager import books as bk
 from ars_magica_manager.models import Book, Character, Codex, Covenant, Saga, SeasonPlan
-from ars_magica_manager.rules import activities
+from ars_magica_manager.rules import activities, enchantment, library
 from ars_magica_manager.seasons import advance
 
 
@@ -79,14 +79,14 @@ def test_quality_adjustments_and_what_cost_counts():
     saga = _saga()
     gloss, t1, t2 = saga.books[1], saga.books[2], saga.books[3]
     # A commentary: +1, which its Build Point cost ignores.
-    assert bk.effective_quality(saga, gloss) == 10
-    assert bk.cost(gloss, saga) == 9
+    assert library.effective_quality(saga, gloss) == 10
+    assert library.cost(gloss, saga) == 9
     # A florilegium's tractatus: +2 here, also left out of the cost.
-    assert bk.effective_quality(saga, t1) == 10
-    assert bk.cost(t1, saga) == 8
+    assert library.effective_quality(saga, t1) == 10
+    assert library.cost(t1, saga) == 8
     # An exemplar: -3, counted in the cost.
-    assert bk.effective_quality(saga, t2) == 5
-    assert bk.cost(t2, saga) == 5
+    assert library.effective_quality(saga, t2) == 5
+    assert library.cost(t2, saga) == 5
     assert "Quality:[/] 10 (written 9; commentary +1)" in bk.detail_text(saga, gloss)
     assert "Kind:[/] Commentary on Physics" in bk.detail_text(saga, gloss)
     assert "Codex:[/] Flowers of Medicine (florilegium, +2)" in bk.detail_text(saga, t1)
@@ -133,10 +133,10 @@ def test_extended_quality_counts_craftsmanship_only_when_on():
     saga = _saga()
     physics = saga.books[0]
     physics.craft = ["scribe", "binder", "illuminator", "story_resonance"]
-    assert bk.effective_quality(saga, physics) == 12  # the rule is off
+    assert library.effective_quality(saga, physics) == 12  # the rule is off
     saga.rule_options = {"extended_book_quality": True}
-    assert bk.effective_quality(saga, physics) == 17  # +1 +1 +1 +2
-    assert bk.cost(physics, saga) == 17 + 3 * 6  # craftsmanship is paid for
+    assert library.effective_quality(saga, physics) == 17  # +1 +1 +1 +2
+    assert library.cost(physics, saga) == 17 + 3 * 6  # craftsmanship is paid for
     assert "skilled scribe +1" in bk.detail_text(saga, physics)
 
 
@@ -179,7 +179,7 @@ def test_a_bound_correspondence_is_a_kind_of_tractatus():
     )
     assert [b.opus for b in result.books] == [kinds.CORRESPONDENCE]
     # It is read at the Quality typed (the writers' Communication added).
-    assert bk.effective_quality(None, result.books[0]) == 5
+    assert library.effective_quality(None, result.books[0]) == 5
 
 
 def test_glossing_while_reading():
@@ -204,7 +204,7 @@ def test_glossing_while_reading():
     assert activities.problems(ana, plan, saga) == []
     outcome = activities.outcome(ana, plan, saga)
     advance.apply(saga, [outcome])
-    assert physics.glossed and bk.effective_quality(saga, physics) == 13
+    assert physics.glossed and library.effective_quality(saga, physics) == 13
     # Old saves kept a gloss as craftsmanship.
     old = Book.from_dict(
         {"id": "x", "name": "X", "type": "Tractatus", "craft": ["glossed", "scribe"]}
@@ -235,7 +235,7 @@ def test_editing_a_florilegium():
     title, bound, bonus = work.florilegium
     assert (title, bound, bonus) == ("Florilegium of Medicine", ["m5", "m4", "m3"], 1)
     apply_book_work(saga, ana, plan, work)
-    codex = bk.codex_of(saga, next(b for b in saga.books if b.id == "m5"))
+    codex = library.codex_of(saga, next(b for b in saga.books if b.id == "m5"))
     assert (codex.collection, codex.florilegium_bonus) == (kinds.FLORILEGIUM, 1)
     ana.abilities = [Ability("Medicine", xp=ability_xp(5))]
     found, _ = bs.work(saga, ana, plan)
@@ -267,13 +267,12 @@ def test_lecture_commentaries_have_their_own_limit():
 
 
 def test_an_epitome_is_the_book_enchanted():
-    from ars_magica_manager import enchanted_devices as ed
 
     saga = _saga()
     physics = saga.books[0]
     device = bk.enchant_as_epitome(saga, physics)
     assert bk.epitome_device(saga, physics) is device
-    assert ed.capacity(saga, device) == 8  # material 2 x size 4
+    assert enchantment.capacity(saga, device) == 8  # material 2 x size 4
     assert (device.holder_kind, device.holder_id) == ("covenant", "cov")
     assert "Epitome:[/] Physics" in bk.detail_text(saga, physics)
     # It goes where the book goes.

@@ -13,15 +13,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .. import catalog, places
+from .. import catalog
 from .. import laboratories as labs
 from ..arts import FORMS, TECHNIQUES
-from ..covenants import covenant_effective_aura
 from ..markup import escape
 from ..models import LAB_CHARACTERISTICS, Character, Laboratory, Saga
-from ..rules import effects, realms
+from ..references import Fact
+from ..rules import effects, lab_stats, realms, sites
 from ..rules import lab as lab_rules
-from .character import Fact
+from ..rules.realms import covenant_effective_aura
 
 
 def owner(saga: Saga, lab: Laboratory) -> Character | None:
@@ -70,10 +70,10 @@ def aura(saga: Saga, lab: Laboratory) -> Aura:
         else 0
     )
     realm = covenant.aura_realm if covenant else "Magic"
-    own = places.lab_aura(saga, lab)
+    own = sites.lab_aura(saga, lab)
     if own is not None:
         inherited, realm = own
-    total = labs.lab_aura_total(lab, inherited)
+    total = lab_stats.lab_aura_total(lab, inherited)
     return Aura(
         inherited, lab.aura_modifier, total, realm, realms.aura_note(realm, total)
     )
@@ -104,12 +104,12 @@ def characteristics(lab: Laboratory, saga: Saga | None = None) -> list[Character
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
     rows = []
     for key in LAB_CHARACTERISTICS:
-        manual, virtues, flaws, _total = labs.lab_characteristic_total(
+        manual, virtues, flaws, _total = lab_stats.lab_characteristic_total(
             lab, by_id, key, saga
         )
         sources = tuple(
             _source_text(saga, effect)
-            for effect in labs.characteristic_effects(lab, by_id, key, saga)
+            for effect in lab_stats.characteristic_effects(lab, by_id, key, saga)
         )
         rows.append(
             Characteristic(
@@ -148,9 +148,9 @@ def capacity_facts(lab: Laboratory) -> list[Fact]:
     occupy, the points still free and the Safety that leaves."""
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
     return [
-        Fact("Occupied Size", f"{labs.lab_occupied_size(lab, by_id):g}"),
-        Fact("Free Virtues", f"{labs.lab_free_virtues(lab, by_id):g}"),
-        Fact("Base Safety", f"{labs.lab_base_safety(lab, by_id):+g}"),
+        Fact("Occupied Size", f"{lab_stats.lab_occupied_size(lab, by_id):g}"),
+        Fact("Free Virtues", f"{lab_stats.lab_free_virtues(lab, by_id):g}"),
+        Fact("Base Safety", f"{lab_stats.lab_base_safety(lab, by_id):+g}"),
     ]
 
 
@@ -235,7 +235,7 @@ def specializations(lab: Laboratory) -> list[Specialization]:
         Specialization(
             s.name, s.points, s.counts, "Art" if s.name in arts else "Activity"
         )
-        for s in labs.specialization_scores(lab)
+        for s in lab_stats.specialization_scores(lab)
         if s.points
     ]
     return sorted(rows, key=lambda s: (s.kind != "Activity", -s.points))
@@ -243,7 +243,7 @@ def specializations(lab: Laboratory) -> list[Specialization]:
 
 def specialization_text(lab: Laboratory, name: str) -> str:
     """Where a Specialization's points come from (app markup)."""
-    score = next(s for s in labs.specialization_scores(lab) if s.name == name)
+    score = next(s for s in lab_stats.specialization_scores(lab) if s.name == name)
     lines = [
         f"[$label]{escape(source)}[/] {points:+d}" for source, points in score.sources
     ]

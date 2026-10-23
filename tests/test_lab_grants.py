@@ -4,7 +4,6 @@ from ars_magica_manager import catalog
 from ars_magica_manager.laboratories import (
     migrate_specialty_stand_ins,
     specialization_grant_text,
-    specialization_scores,
     vf_warnings,
 )
 from ars_magica_manager.models import (
@@ -12,6 +11,7 @@ from ars_magica_manager.models import (
     LabSpecialtyEntry,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules.lab_stats import specialization_scores
 
 
 def _lab(*instances: VirtueFlawInstance, specialties=()) -> Laboratory:

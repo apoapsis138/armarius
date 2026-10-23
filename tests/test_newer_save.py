@@ -15,7 +15,7 @@ NEWER = "99.0.0"
 
 
 def _write(saga_id: str, data: dict) -> None:
-    storage.SAGAS_DIR.mkdir(parents=True, exist_ok=True)
+    storage.sagas_dir().mkdir(parents=True, exist_ok=True)
     storage.saga_path(saga_id).write_text(json.dumps(data), encoding="utf-8")
 
 
@@ -41,7 +41,8 @@ def _from_newer_app(version: str = NEWER) -> dict:
     ("version", "newer"),
     [
         ("99.0.0", True),
-        ("2.999.0", True),
+        # A later minor version of this major one.
+        (f"{__version__.split('.')[0]}.999.0", True),
         (__version__, False),
         ("0.1.0", False),
         ("", False),

@@ -13,6 +13,9 @@ Communication + Teaching + 3, +6 for one student, +3 for two (limit: his
 score); a summa its Quality (limit: its Level); a tractatus its Quality;
 raw vis a stress die + the aura's modifier, using ceil(Art / 5) pawns.
 Each full month lost cuts the total by a third, the rest rounded up.
+
+No screen uses training_quality() yet: it is a rule for a screen still to
+come, and only the tests call it.
 """
 
 from __future__ import annotations
@@ -225,7 +228,7 @@ def reading(
     """A season reading a summa or tractatus (None for other books, or one
     without a Quality). A summa can't take the reader past its Level.
     `quality`, when given, is what the book is read at instead of its own
-    (a palimpsest's text, see books.effective_quality)."""
+    (a palimpsest's text, see library.effective_quality)."""
     if book.quality is None or book.type not in (
         "Art Summa",
         "Ability Summa",

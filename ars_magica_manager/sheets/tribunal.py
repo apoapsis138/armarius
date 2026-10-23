@@ -27,7 +27,8 @@ from ..models import (
     Tribunal,
     TribunalDiaryEntry,
 )
-from .character import Fact, house_name
+from ..references import Fact
+from .character import house_name
 
 # -- In the Saga --
 

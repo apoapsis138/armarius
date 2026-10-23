@@ -652,6 +652,8 @@ class WorkspaceBase(Screen[None]):
     #: Who this copy last said is also on the open record, so each is
     #: announced once.
     _also_here: tuple[str | None, frozenset[str]] = (None, frozenset())
+    #: Whether the saga file couldn't be read at the last tick (said once).
+    _unreadable: bool = False
 
     def _who(self) -> str:
         player = self._signed_in()
@@ -674,7 +676,21 @@ class WorkspaceBase(Screen[None]):
     async def _shared_tick(self) -> None:
         """Every few seconds: pick up another copy's save, and say who else
         has the open record."""
-        changed = storage.reload_into(self.saga)
+        try:
+            changed = storage.reload_into(self.saga)
+        except ValueError as problem:
+            if not self._unreadable:
+                self.notify(
+                    f"Another copy's save couldn't be read: {escape(str(problem))}. "
+                    "Your copy keeps its own data, and your next save replaces "
+                    "the damaged file.",
+                    severity="warning",
+                    timeout=10,
+                )
+            self._unreadable = True
+            changed = None
+        else:
+            self._unreadable = False
         if changed:
             await self._show_reloaded(changed)
         if self._session is None:
@@ -820,7 +836,9 @@ class WorkspaceBase(Screen[None]):
         )
         tree.root.add_leaf("Saga Content", data=(NodeKind.SAGA_CONTENT,))
 
-    def _add_covenant_node(self, parent, covenant: Covenant, *, expand: bool) -> None:
+    def _add_covenant_node(
+        self, parent: TreeNode[Any], covenant: Covenant, *, expand: bool
+    ) -> None:
         """A covenant's node, with its characters and laboratories under it.
         A covenant kept at Line or Sketch detail lists only the groups it
         has anything in."""
@@ -853,7 +871,7 @@ class WorkspaceBase(Screen[None]):
                     data=(NodeKind.LABORATORY, lab.id),
                 )
 
-    def _add_region(self, parent) -> None:
+    def _add_region(self, parent: TreeNode[Any]) -> None:
         """The Region: each Tribunal with the covenants the troupe doesn't
         play under it, then any such covenant that has no Tribunal."""
         region = parent.add("The Region", data=(NodeKind.REGION,), expand=True)
@@ -885,7 +903,7 @@ class WorkspaceBase(Screen[None]):
                     escape(neighbour.name), data=(NodeKind.NEIGHBOUR, neighbour.id)
                 )
 
-    def _add_bestiary(self, parent) -> None:
+    def _add_bestiary(self, parent: TreeNode[Any]) -> None:
         """The Bestiary: every creature, by name."""
         listed = creatures.listed(self.saga)
         node = parent.add(
@@ -894,16 +912,14 @@ class WorkspaceBase(Screen[None]):
         for creature in listed:
             node.add_leaf(escape(creature.name), data=(NodeKind.CREATURE, creature.id))
 
-    def _add_character_node(self, parent, character: Character) -> None:
+    def _add_character_node(self, parent: TreeNode[Any], character: Character) -> None:
         """A character's own tree node: a plain leaf, unless it's a magus
         with a bound Familiar, in which case it becomes an expandable node
         with the Familiar as its one child leaf (nested under its creator,
         never its own group)."""
         label = f"{escape(character.name)} ({character.type}){_creating(character)}"
         familiar = (
-            fam.familiar_of(self.saga, character.id)
-            if character.type == "magus"
-            else None
+            self.saga.familiar_of(character.id) if character.type == "magus" else None
         )
         if familiar is None:
             parent.add_leaf(label, data=(NodeKind.CHARACTER, character.id))

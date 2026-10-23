@@ -24,10 +24,19 @@ from dataclasses import dataclass
 from . import place_events, threats, tribunal_terms
 from .grids import Grid
 from .markup import escape
-from .models import FULL, SEASONS, CalendarEntry, Covenant, Saga
+from .models import (
+    EVERY,
+    FULL,
+    SEASONS,
+    YEARLY,
+    CalendarEntry,
+    Covenant,
+    Saga,
+    season_order,
+)
+from .references import Fact
 from .rules import aging
 from .sheets import tribunal as tribunal_sheet
-from .sheets.character import Fact
 
 #: How each source is shown in the filter, in order.
 EVERYTHING = "Everything"
@@ -53,10 +62,6 @@ SHOWS: tuple[str, ...] = (
 SPANS: tuple[int, ...] = (1, 2, 3, 5, 0)
 DEFAULT_SPAN = 2
 
-#: How often a storyguide's entry repeats.
-ONCE, YEARLY, EVERY = "Once", "Each year", "Every N years"
-REPEATS: tuple[str, ...] = (ONCE, YEARLY, EVERY)
-
 
 @dataclass(frozen=True)
 class Entry:
@@ -76,12 +81,7 @@ class Entry:
 
     @property
     def when(self) -> int:
-        return order(self.year, self.season)
-
-
-def order(year: int, season: str) -> int:
-    """A season as a number that sorts by date."""
-    return year * len(SEASONS) + (SEASONS.index(season) if season in SEASONS else 0)
+        return season_order(season=self.season, year=self.year)
 
 
 def _from_order(value: int) -> tuple[int, str]:
@@ -103,14 +103,15 @@ def register(source: Source) -> Source:
 
 
 def now(saga: Saga) -> int:
-    return order(saga.current_year, saga.current_season)
+    return season_order(season=saga.current_season, year=saga.current_year)
 
 
 def _next_tribunal(saga: Saga) -> int | None:
     meetings = [
-        order(t.next_year, t.next_season)
+        season_order(season=t.next_season, year=t.next_year)
         for t in saga.tribunals
-        if t.next_year is not None and order(t.next_year, t.next_season) >= now(saga)
+        if t.next_year is not None
+        and season_order(season=t.next_season, year=t.next_year) >= now(saga)
     ]
     return min(meetings) if meetings else None
 
@@ -171,7 +172,7 @@ def _tribunals(saga: Saga, start: int, stop: int) -> list[Entry]:
     for tribunal in saga.tribunals:
         if tribunal.next_year is None:
             continue
-        meeting = order(tribunal.next_year, tribunal.next_season)
+        meeting = season_order(season=tribunal.next_season, year=tribunal.next_year)
         if start <= meeting <= stop:
             found.append(
                 Entry(
@@ -186,7 +187,7 @@ def _tribunals(saga: Saga, start: int, stop: int) -> list[Entry]:
         if any(not c.notice_given for c in tribunal_sheet.open_cases(tribunal)):
             due = tribunal_sheet.notice_due(tribunal)
             season, _, year = due.partition(" ")
-            if year and start <= order(int(year), season) <= stop:
+            if year and start <= season_order(season=season, year=int(year)) <= stop:
                 found.append(
                     Entry(
                         int(year),
@@ -243,7 +244,10 @@ def _fairs(saga: Saga, start: int, stop: int) -> list[Entry]:
             if trading:
                 title += " (income roll)"
             for year, when in repeats(
-                order(saga.current_year, season), len(SEASONS), start, stop
+                season_order(season=season, year=saga.current_year),
+                len(SEASONS),
+                start,
+                stop,
             ):
                 found.append(
                     Entry(
@@ -276,7 +280,9 @@ def _places(saga: Saga, start: int, stop: int) -> list[Entry]:
                 if when == place_events.EVERY
                 else None
             )
-            for year, season in repeats(order(*date), step, start, stop):
+            for year, season in repeats(
+                season_order(season=date[1], year=date[0]), step, start, stop
+            ):
                 found.append(
                     Entry(
                         year,
@@ -306,7 +312,7 @@ def _threats(saga: Saga, start: int, stop: int) -> list[Entry]:
             if year is None:
                 continue
             season = stage.get("season") or SEASONS[-1]
-            if start <= order(year, season) <= stop:
+            if start <= season_order(season=season, year=year) <= stop:
                 found.append(
                     Entry(
                         year,
@@ -326,7 +332,10 @@ def _characters(saga: Saga, start: int, stop: int) -> list[Entry]:
         born = character.background.year_born
         if born is not None and character.detail == FULL:
             year = born + aging.start_age(character)
-            if start <= order(year, "Winter") <= stop and year > saga.current_year - 1:
+            if (
+                start <= season_order(season="Winter", year=year) <= stop
+                and year > saga.current_year - 1
+            ):
                 found.append(
                     Entry(
                         year,
@@ -340,7 +349,7 @@ def _characters(saga: Saga, start: int, stop: int) -> list[Entry]:
         until = character.aging.twilight_until
         season, _, year_text = until.partition(" ")
         if year_text.isdigit() and season in SEASONS:
-            back = order(int(year_text), season) + 1
+            back = season_order(season=season, year=int(year_text)) + 1
             if start <= back <= stop:
                 year, when = _from_order(back)
                 found.append(
@@ -358,7 +367,7 @@ def _characters(saga: Saga, start: int, stop: int) -> list[Entry]:
 
 @register
 def _world_turns(saga: Saga, start: int, stop: int) -> list[Entry]:
-    first = order(saga.current_year, "Winter")
+    first = season_order(season="Winter", year=saga.current_year)
     return [
         Entry(year, season, "The world turns: the yearly step", EVERYTHING, "the saga")
         for year, season in repeats(first, len(SEASONS), start, stop)
@@ -377,7 +386,7 @@ def calendar_step(entry: CalendarEntry) -> int | None:
 def _calendar(saga: Saga, start: int, stop: int) -> list[Entry]:
     found = []
     for index, entry in enumerate(saga.calendar):
-        first = order(entry.year, entry.season)
+        first = season_order(season=entry.season, year=entry.year)
         for year, season in repeats(first, calendar_step(entry), start, stop):
             found.append(
                 Entry(
@@ -446,7 +455,11 @@ def next_tribunal_text(saga: Saga) -> str:
 def season_text(saga: Saga, year: int, season: str) -> str:
     """ "Summer 1220", with " · now" for the current season."""
     shown = f"{season} {year}"
-    return f"{shown} · now" if order(year, season) == now(saga) else shown
+    return (
+        f"{shown} · now"
+        if season_order(season=season, year=year) == now(saga)
+        else shown
+    )
 
 
 def shown(saga: Saga, covenant: Covenant | None = None) -> list[Entry]:
@@ -476,7 +489,9 @@ def grid(saga: Saga, covenant: Covenant | None = None) -> Grid:
             row = len(rows)
             if index == 0:
                 styles[(row, 0)] = (
-                    "$text-warning" if order(year, season) == now(saga) else "b"
+                    "$text-warning"
+                    if season_order(season=season, year=year) == now(saga)
+                    else "b"
                 )
             if entry.calendar is not None:
                 styles[(row, 2)] = "i"

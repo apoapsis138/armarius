@@ -16,7 +16,14 @@ from .. import research_text, seasons
 from ..commands import Form
 from ..form_spec import DialogField, pairs
 from ..markup import escape
-from ..models import SPELL_DURATIONS, SPELL_RANGES, SPELL_TARGETS, Character, Saga
+from ..models import (
+    SPELL_DURATIONS,
+    SPELL_RANGES,
+    SPELL_TARGETS,
+    Character,
+    ExperimentalEffect,
+    Saga,
+)
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import lab_seasons
@@ -179,7 +186,7 @@ def _roll_fields(
 def _effect_fields(
     outcome: Outcome,
     key: str,
-    effect,
+    effect: ExperimentalEffect,
     options: list[str],
     made: str,
     shown: Callable[[dict[str, Any]], bool],

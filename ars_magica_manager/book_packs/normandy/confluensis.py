@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs, vf_ability, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -27,11 +27,6 @@ TYTALUS = "house_tytalus"
 # The lead line of a covenant's notes, before its secrets.
 # Where the Tribunal's own books are kept.
 HELD = "Held for the Tribunal at Confluensis, as a Tourney prize"
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def build(normandy: Normandy) -> None:
@@ -241,7 +236,7 @@ def _confluensis(normandy: Normandy, b: Builder, tribunal: Tribunal) -> Covenant
         "games and whose one duty is to start its quarrels again when "
         "they stall.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: whirlpools spun up by the spring tides beneath the covenant, caught in enchanted nets (seisin; Art and amount not given)",
         "Vis: Intellego in the sour apples of the Orchard island (seisin; amount not given)",
         "Vis: a tithe from Dragon's Rest of one pawn a year for each of its members",
@@ -263,7 +258,7 @@ def _confluensis(normandy: Normandy, b: Builder, tribunal: Tribunal) -> Covenant
         "Tension: a Fengheld chapter house magus at Cherbourg takes vis Confluensis has always gathered",
         "Tension: the Hospitallers' City of God, with a Dominion aura of 4, on the peninsula",
     )
-    sagas = _lines(
+    sagas = joined_lines(
         "Sagas: eight starting points the book gives for a Confluensis saga.",
         "- The Praeco is Dead, Long Live the Praeco: the players work for "
         "Proctor, who cannot be seen to take sides, to settle the "
@@ -318,7 +313,7 @@ def _confluensis(normandy: Normandy, b: Builder, tribunal: Tribunal) -> Covenant
         "skinchangers, the watery ghosts of past boar kings, or a white "
         "lady sent as the marsh's envoy."
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "One of the founders had a flaw in her Gift that made building on the tide necessary.",
         "Jerome secretly saves 'troublesome heirs' from murder with Mentem magic and hides them in monasteries and covenants, very likely against the Code; Eloi of Cunfin is his chief partner, and Proctor does not know.",
         "Valerian's familiar is a spirit beyond Hermetic binding, so he must belong to a Mystery Cult, probably the Guernicus Terrae cult.",
@@ -720,7 +715,7 @@ def _dragons_rest(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Its oath to Confluensis is long-winded but fairly even-handed, "
         "since Guernicus and Mercere are on good terms; its terms are in the notes.",
     )
-    oath = _lines(
+    oath = joined_lines(
         "Each comes to the other's aid when a member of either faces Wizard's War.",
         "Each votes with the other at Tribunal, granting that un-Gifted Redcaps are loath to vote.",
         "Each offers membership to the other's magi if their covenant is destroyed.",
@@ -729,7 +724,7 @@ def _dragons_rest(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Dragon's Rest pays Confluensis a tithe of one pawn of vis a year for each member.",
         "Dragon's Rest hosts Confluensis's magi who want its laboratories; Confluensis hosts Redcaps who want its library.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: pays a tithe of one pawn a year per member to Confluensis",
         "Income: trade by its covenfolk and the Mercere network",
         "Laboratories: excellent, shared with Confluensis",
@@ -781,14 +776,6 @@ FRENCH = "French"
 NORMANDY = "Area Lore: Normandy Tribunal"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
 #: Each magus's profile, by the key it has in normandy.magi.
 PROFILES: dict[str, Profile] = {
     "proctor": P(
@@ -804,7 +791,7 @@ PROFILES: dict[str, Profile] = {
             "Animal Ken": (1, "ibis"),
         },
         virtues=[
-            _ability("Puissant {ability}", "code of hermes"),
+            vf_ability("Puissant {ability}", "code of hermes"),
             "Hermetic Prestige",
             "Strong-Willed",
             "Hatred (Major)",
@@ -826,7 +813,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Gift of Speech",
-            _ability("Affinity with {ability}", "code of hermes"),
+            vf_ability("Affinity with {ability}", "code of hermes"),
             "Proud (Minor)",
             "Wrathful (Minor)",
         ],
@@ -863,8 +850,8 @@ PROFILES: dict[str, Profile] = {
             NORMANDY: 3,
         },
         virtues=[
-            _art("Affinity with {art}", "terram"),
-            _art("Puissant {art}", "terram"),
+            vf_art("Affinity with {art}", "terram"),
+            vf_art("Puissant {art}", "terram"),
             "Spirit Familiar",
             "Secretive",
             "Dutybound",

@@ -28,18 +28,19 @@ from __future__ import annotations
 import random
 import re
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Required, TypedDict, cast
 
 from . import places
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import SEASONS, Neighbour, Saga
-from .neighbour_lists import KindList, KindTab, details_list, list_ops
+from .models import SEASONS, Neighbour, Saga, details_list, season_order
+from .neighbour_lists import KindList, KindTab, list_ops
+from .references import Fact
 from .rules import dice, options
+from .rules.sites import whole_number
 from .sections import DIARY_SECTION, TABLES_SECTION, TRIGGERS_SECTION
-from .sheets.character import Fact
 
 #: The aura change option's key (rules.options).
 AURA_CHANGE = "aura_change"
@@ -55,13 +56,6 @@ DICE: tuple[str, ...] = ("Simple die", "Stress die", "d6", "d10")
 RAISE_EASE = 15
 
 
-def _int(value: Any) -> int:
-    try:
-        return int(value or 0)
-    except TypeError, ValueError:
-        return 0
-
-
 def _season_index(season: Any) -> int:
     return SEASONS.index(season) if season in SEASONS else 0
 
@@ -69,11 +63,23 @@ def _season_index(season: Any) -> int:
 # -- triggers --
 
 
-def triggers(place: Neighbour) -> list[dict[str, Any]]:
-    return details_list(place, "triggers")
+class Trigger(TypedDict, total=False):
+    """An event that comes to a place on a date: once, yearly or every
+    few years, and what happens."""
+
+    name: Required[str]
+    when: str
+    season: str
+    year: int | None
+    every: int | None
+    what: str
 
 
-def next_date(saga: Saga, trigger: dict[str, Any]) -> tuple[int, str] | None:
+def triggers(place: Neighbour) -> list[Trigger]:
+    return cast(list[Trigger], details_list(place, "triggers"))
+
+
+def next_date(saga: Saga, trigger: Trigger) -> tuple[int, str] | None:
     """The next season (this one included) a dated trigger comes, as
     (year, season); None for a sentence, or a one-off already past."""
     when = trigger.get("when") or ONCE
@@ -88,7 +94,7 @@ def next_date(saga: Saga, trigger: dict[str, Any]) -> tuple[int, str] | None:
     if when == YEARLY:
         return (now_year + 1 if passed else now_year), season
     if when == EVERY:
-        step = max(1, _int(trigger.get("every")))
+        step = max(1, whole_number(trigger.get("every")))
         start = trigger.get("year")
         year = now_year if start is None else start
         while (year, _season_index(season)) < (now_year, now):
@@ -97,7 +103,7 @@ def next_date(saga: Saga, trigger: dict[str, Any]) -> tuple[int, str] | None:
     return None
 
 
-def comes_in(trigger: dict[str, Any], year: int) -> str | None:
+def comes_in(trigger: Trigger, year: int) -> str | None:
     """The season a dated trigger comes in `year`, or None."""
     when = trigger.get("when") or ONCE
     season = trigger.get("season") or SEASONS[0]
@@ -107,14 +113,14 @@ def comes_in(trigger: dict[str, Any], year: int) -> str | None:
     if when == YEARLY:
         return season
     if when == EVERY:
-        step = max(1, _int(trigger.get("every")))
+        step = max(1, whole_number(trigger.get("every")))
         if start is None:
             return season
         return season if year >= start and (year - start) % step == 0 else None
     return None
 
 
-def when_text(trigger: dict[str, Any]) -> str:
+def when_text(trigger: Trigger) -> str:
     """ "Summer 1220", "Summer each year", "Winter every 7 years" (its
     next date says which), or "Whenever"."""
     when = trigger.get("when") or ONCE
@@ -125,7 +131,7 @@ def when_text(trigger: dict[str, Any]) -> str:
     if when == YEARLY:
         return f"{season or 'Once'} each year".replace("Once each", "Each")
     if when == EVERY:
-        every = max(1, _int(trigger.get("every")))
+        every = max(1, whole_number(trigger.get("every")))
         return f"{season} every {every} years".strip()
     return WHENEVER
 
@@ -140,7 +146,7 @@ def upcoming(saga: Saga, place: Neighbour) -> list[tuple[int, str]]:
             year, season = date
             found.append(
                 (
-                    year * len(SEASONS) + _season_index(season),
+                    season_order(season=season, year=year),
                     f"{trigger['name']}, {season} {year}",
                 )
             )
@@ -180,7 +186,7 @@ def triggers_grid(saga: Saga, place: Neighbour) -> Grid:
 
 
 def trigger_fields(
-    _saga: Saga, _place: Neighbour, entry: dict[str, Any] | None
+    _saga: Saga, _place: Neighbour, entry: Trigger | None
 ) -> list[DialogField]:
     e = entry or {}
     return [
@@ -291,8 +297,18 @@ def parse_rows(text: str) -> list[TableRow] | None:
     return found
 
 
-def tables(place: Neighbour) -> list[dict[str, Any]]:
-    return details_list(place, "tables")
+class RollTable(TypedDict, total=False):
+    """A table rolled at a place: its die, its rows as typed, and the
+    last roll."""
+
+    name: Required[str]
+    die: str
+    rows: str
+    last: str
+
+
+def tables(place: Neighbour) -> list[RollTable]:
+    return cast(list[RollTable], details_list(place, "tables"))
 
 
 def tables_title(_saga: Saga, place: Neighbour) -> str:
@@ -320,7 +336,7 @@ def tables_grid(_saga: Saga, place: Neighbour) -> Grid:
 
 
 def table_fields(
-    _saga: Saga, _place: Neighbour, entry: dict[str, Any] | None
+    _saga: Saga, _place: Neighbour, entry: RollTable | None
 ) -> list[DialogField]:
     e = entry or {}
     return [
@@ -426,8 +442,16 @@ def roll_table(
 # -- the diary --
 
 
-def diary(place: Neighbour) -> list[dict[str, Any]]:
-    return details_list(place, "diary")
+class PlaceDiaryEntry(TypedDict, total=False):
+    """A line of a place's diary."""
+
+    year: int | None
+    season: str
+    text: str
+
+
+def diary(place: Neighbour) -> list[PlaceDiaryEntry]:
+    return cast(list[PlaceDiaryEntry], details_list(place, "diary"))
 
 
 def diary_title(_saga: Saga, place: Neighbour) -> str:
@@ -460,7 +484,7 @@ def diary_rows(record: Neighbour, empty: str) -> Grid:
 
 
 def diary_fields(
-    saga: Saga, _place: Neighbour, entry: dict[str, Any] | None
+    saga: Saga, _place: Neighbour, entry: PlaceDiaryEntry | None
 ) -> list[DialogField]:
     e = entry or {"year": saga.current_year, "season": saga.current_season}
     return [
@@ -503,7 +527,7 @@ def infernal_aura(saga: Saga, place: Neighbour) -> int | None:
     gone = place.details.get("focus_gone")
     if not changes(saga) or place.realm != "Infernal" or gone is None:
         return None
-    aura = _int(place.details.get("aura"))
+    aura = whole_number(place.details.get("aura"))
     year = gone
     while aura > 0 and year + aura <= saga.current_year:
         year += aura
@@ -517,7 +541,7 @@ def change_text(saga: Saga, place: Neighbour) -> str:
         return ""
     realm = place.realm or "Magic"
     if realm == "Magic":
-        bonus = _int(place.details.get("raising"))
+        bonus = whole_number(place.details.get("raising"))
         return (
             f"Rises by 1 on a stress die {bonus:+d} against {RAISE_EASE}, "
             "rolled each year"
@@ -537,29 +561,10 @@ def aura_roll(
     aura rises; None when the option is off or the aura isn't Magic."""
     if not changes(saga) or (place.realm or "Magic") != "Magic":
         return None
-    bonus = _int(place.details.get("raising"))
+    bonus = whole_number(place.details.get("raising"))
     die = dice.stress_die(rng, saga=saga)
     total = (0 if die.botched else die.value) + bonus
     return total, not die.botched and total >= RAISE_EASE
-
-
-def raise_aura(saga: Saga, place: Neighbour, rng: random.Random) -> str:
-    """The year's roll to raise a Magic aura: on success the aura rises
-    by 1 and the diary says so. Returns what happened ("" when the
-    option is off or the aura isn't Magic)."""
-    rolled = aura_roll(saga, place, rng)
-    if rolled is None:
-        return ""
-    total, rises = rolled
-    if not rises:
-        return f"{place.name}: the aura holds ({total} against {RAISE_EASE})."
-    place.details["aura"] = _int(place.details.get("aura")) + 1
-    text = f"The aura rose to Magic {place.details['aura']} ({total} against {RAISE_EASE})."
-    diary(place).append(
-        {"year": saga.current_year, "season": saga.current_season, "text": text}
-    )
-    places.sync(saga)
-    return f"{place.name}: {text}"
 
 
 def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:

@@ -9,37 +9,34 @@ import re
 import time
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
-from dataclasses import asdict, is_dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 from dataclasses import fields as dataclass_fields
 from pathlib import Path
 from typing import Any
 
-from . import __version__, laboratories, paths, settings
+from . import __version__, catalog, laboratories, paths
 from .files import write_atomic
 from .merge import merge
 from .models import Saga
 
-SAGAS_DIR = paths.data_dir() / paths.SAGAS
+
+def sagas_dir() -> Path:
+    """The folder of saga files, in the data folder in use."""
+    return paths.data_dir() / paths.SAGAS
+
 
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 
-#: Where Export offers to write an exported covenant, laboratory or character;
-#: the folder is made on the first export.
-EXPORTS_DIR = paths.data_dir() / paths.EXPORTS
-
-#: Where a character's portrait is copied when it is chosen.
-PORTRAITS_DIR = paths.data_dir() / paths.PORTRAITS
+def exports_dir() -> Path:
+    """Where Export offers to write an exported covenant, laboratory or
+    character; the folder is made on the first export."""
+    return paths.data_dir() / paths.EXPORTS
 
 
-def use_data_dir(folder: Path) -> None:
-    """Read and write the sagas, exports and settings in `folder` from now
-    on (a save folder chosen while the app runs)."""
-    global SAGAS_DIR, EXPORTS_DIR, PORTRAITS_DIR
-    SAGAS_DIR = folder / paths.SAGAS
-    EXPORTS_DIR = folder / paths.EXPORTS
-    PORTRAITS_DIR = folder / paths.PORTRAITS
-    settings.SETTINGS_PATH = folder / paths.SETTINGS
+def portraits_dir() -> Path:
+    """Where a character's portrait is copied when it is chosen."""
+    return paths.data_dir() / paths.PORTRAITS
 
 
 def slugify(text: str) -> str:
@@ -71,7 +68,7 @@ def generate_saga_id(name: str) -> str:
 
 
 def saga_path(saga_id: str) -> Path:
-    return SAGAS_DIR / f"{saga_id}.json"
+    return sagas_dir() / f"{saga_id}.json"
 
 
 #: What this copy of the app last saw of each saga, by its file: the file's
@@ -97,16 +94,21 @@ guard: (
 #: storyguide's own window), recorded in the saga as Saga.saved_by.
 saved_by: str = ""
 
-#: Where save_saga last kept this copy's value over another copy's newer
-#: one ("characters[mag1].name", ...), for the saga last saved.
-last_conflicts: list[str] = []
+
+@dataclass(frozen=True)
+class Saved:
+    """What save_saga wrote: the file, and where this copy's value was kept
+    over another copy's newer one ("characters[mag1].name", ...)."""
+
+    path: Path
+    conflicts: list[str]
 
 
-def save_saga(saga: Saga) -> Path:
+def save_saga(saga: Saga) -> Saved:
     """Save `saga`. Other copies of the app may share the file (a hosted saga): under a
     lock, the file is re-read and only what this copy changed since it last loaded or
     saved the saga is written into it, so another copy's changes stay. Where both
-    changed the same value, this save's wins (listed in last_conflicts)."""
+    changed the same value, this save's wins (listed in the result's conflicts)."""
     path = saga_path(saga.id)
     newer = _newer_data.get(str(path))
     saga.app_version = __version__ if newer is None else newer["app_version"]
@@ -129,8 +131,7 @@ def save_saga(saga: Saga) -> Path:
         text = json.dumps(data, indent=2)
         write_atomic(path, text)
     _last_seen[str(path)] = (text, data, ours)
-    last_conflicts[:] = conflicts
-    return path
+    return Saved(path, conflicts)
 
 
 def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
@@ -139,7 +140,9 @@ def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
     show hold them -- and updating them in place. Returns the records that
     changed, as (list, id) pairs such as ("characters", "mag1"), with
     ("saga", "") for the saga's own fields; None when the file is as this
-    copy last saw it (or can't be read)."""
+    copy last saw it, or is gone. Raises ValueError when the file is there
+    but can't be read as a saga: this copy keeps its own data, and its
+    next save replaces the damaged file."""
     path = saga_path(saga.id)
     seen = _last_seen.get(str(path))
     text = _read_text(path)
@@ -148,8 +151,8 @@ def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
     try:
         raw = json.loads(text)
         fresh = _from_data(raw)
-    except ValueError, TypeError, KeyError:
-        return None
+    except (ValueError, TypeError, KeyError) as problem:
+        raise ValueError(f"the saga file can't be read ({problem})") from problem
     changed = _update_in_place(saga, fresh)
     data = _with_newer(asdict(saga), _remember_newer(path, raw))
     _last_seen[str(path)] = (text, data, data)
@@ -300,7 +303,7 @@ _LOCK_STALE = 30.0
 def _saga_lock(saga_id: str) -> Iterator[None]:
     """Hold the saga's lock file (".<id>.lock" beside it) while saving, so two
     copies never merge into the file at once."""
-    lock = SAGAS_DIR / f".{saga_id}.lock"
+    lock = sagas_dir() / f".{saga_id}.lock"
     lock.parent.mkdir(parents=True, exist_ok=True)
     deadline = time.monotonic() + _LOCK_WAIT
     while True:
@@ -332,7 +335,7 @@ def backup_path(saga_id: str, age: int = 0) -> Path:
     list_sagas() never lists them): `<id>.json` for the newest (age 0), and
     `<id>.1.json` ... for older ones."""
     name = f"{saga_id}.json" if age == 0 else f"{saga_id}.{age}.json"
-    return SAGAS_DIR / "backups" / name
+    return sagas_dir() / "backups" / name
 
 
 def backup_saga(saga: Saga) -> Path:
@@ -363,7 +366,7 @@ def load_saga(saga_id: str) -> Saga:
 
 
 def _from_data(data: dict[str, Any]) -> Saga:
-    saga = Saga.from_dict(data)
+    saga = Saga.from_dict(data, lab_feature_names=catalog.lab_feature_names())
     for lab in saga.laboratories:
         # Specialization grants typed in before the catalog carried them.
         laboratories.migrate_specialty_stand_ins(lab)
@@ -378,6 +381,7 @@ def delete_saga(saga_id: str) -> None:
 
 
 def list_sagas() -> list[str]:
-    if not SAGAS_DIR.exists():
+    folder = sagas_dir()
+    if not folder.exists():
         return []
-    return sorted(path.stem for path in SAGAS_DIR.glob("*.json"))
+    return sorted(path.stem for path in folder.glob("*.json"))

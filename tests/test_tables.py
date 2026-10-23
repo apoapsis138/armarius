@@ -11,12 +11,10 @@ from ars_magica_manager import creation, seasons
 from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager import lab_texts as lt
 from ars_magica_manager import laboratories as labs
-from ars_magica_manager import sheet_text as st
 from ars_magica_manager import worksheet as ws
 from ars_magica_manager.markup import PROBLEM_GLYPH
 from ars_magica_manager.models import (
     Book,
-    Breakthrough,
     CreationXp,
     DiaryEntry,
     Possession,
@@ -65,13 +63,6 @@ def test_personal_gear_is_a_table_per_kind_keyed_by_inventory_place():
 def test_raw_vis_is_by_art():
     table = cs.raw_vis_table({"vim": 12, "creo": 3})
     assert table.rows == [["Creo", "3"], ["Vim", "12"]]
-
-
-def test_research_goals_split_their_parts():
-    table = st.goal_table([Breakthrough("Ritual Magic", "Major", 45, 12, insights=1)])
-    assert table.rows == [
-        ["Ritual Magic", "Major", "12/45", "[dim]1 insight(s) to invent[/]"]
-    ]
 
 
 def test_the_diary_has_its_rows_in_order():

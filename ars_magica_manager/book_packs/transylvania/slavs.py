@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -41,11 +41,6 @@ KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(transylvania: Transylvania, key: str, name: str, **kw: Any) -> Neighbour:
@@ -638,7 +633,7 @@ def _old_histria(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "families' many projects, but cold and stormy in winter; the "
         "strong aura is what keeps researchers there through the sleet.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the mercury pool, a rich Terram source (a child dipped in it gains Visions and often worse Flaws)",
         "Vis: the truffles of the northern Istrian woods (Herbam), sought by faeries, worth their weight in gold",
         "Vis: the Strange Vis, a little Creo in the roof tar of the four corner houses of random villages on Saint John's Eve, collected Tribunal-wide",
@@ -730,7 +725,7 @@ def _old_histria(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "year and no season. Of the unnamed magi, one is Gifted and in "
         "Istria and two are in Venice.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat, and he may well be the House's spymaster for the Roman Tribunal.",
     )
     covenant = b.covenant(
@@ -790,7 +785,7 @@ def _shrouded_bay(transylvania: Transylvania, b: Builder, tribunal: Tribunal) ->
         "the support works for the small Mercere and Tremere trading "
         "fleets, and its aedile, Placido, runs the Tremere fleet from it.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the well of blood, a major Corpus source, used for the Redcaps' longevity rituals",
         "Vis: Rego washed up on one beach after storms among ships' wreckage, accruing through the year",
         "Laboratory: Accursius's, less good than his suite at Old Histria",
@@ -1402,10 +1397,6 @@ ITALIAN = "Italian"
 TRANSYLVANIA = "Area Lore: Transylvanian Tribunal"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each Histrian magus the book sketches without a stat block.
 PROFILES: dict[str, Profile] = {
     "accursius": P(
@@ -1421,7 +1412,7 @@ PROFILES: dict[str, Profile] = {
             TRANSYLVANIA: 3,
         },
         virtues=[
-            _art("Affinity with {art}", "imaginem"),
+            vf_art("Affinity with {art}", "imaginem"),
             "Social Contacts",
             "Dutybound",
             "Fragile Constitution",
@@ -1462,7 +1453,7 @@ PROFILES: dict[str, Profile] = {
             TRANSYLVANIA: 3,
         },
         virtues=[
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             "Social Contacts",
             "Hermetic Prestige",
             "Twilight Prone",
@@ -1481,7 +1472,7 @@ PROFILES: dict[str, Profile] = {
             "Penetration": 3,
         },
         virtues=[
-            _art("Affinity with {art}", "aquam"),
+            vf_art("Affinity with {art}", "aquam"),
             "Hatred",
         ],
         native=CROATIAN,

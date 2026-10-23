@@ -11,7 +11,6 @@ from . import possessions as pos
 from . import sheet_text as st
 from .markup import escape
 from .models import (
-    CORD_SCORE_COSTS,
     FULL,
     Character,
     Familiar,
@@ -19,11 +18,7 @@ from .models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
-
-
-def familiar_of(saga: Saga, character_id: str) -> Familiar | None:
-    """The one Familiar bound to `character_id`, if any."""
-    return next((f for f in saga.familiars if f.character_id == character_id), None)
+from .rules.familiar_seasons import cord_cost
 
 
 def unbonded_magi(saga: Saga) -> list[Character]:
@@ -61,11 +56,6 @@ def bind_familiar(saga: Saga, magus: Character, name: str) -> Familiar:
 def magus_of(saga: Saga, familiar: Familiar) -> Character | None:
     """The magus who bound `familiar`."""
     return saga.character(familiar.character_id)
-
-
-def cord_cost(score: int) -> int:
-    """The point cost of a Cord score (0-5), from the fixed table."""
-    return CORD_SCORE_COSTS[score]
 
 
 def identity_text(saga: Saga, familiar: Familiar) -> str:

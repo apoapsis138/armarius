@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models import BodyVis
+from ..builder import characteristics, vf_great, vf_minor, vf_puissant
 
 if TYPE_CHECKING:
     from ...models import Creature, Neighbour
@@ -20,35 +21,6 @@ if TYPE_CHECKING:
 
 #: A person's Fatigue levels, as most of the book's stat blocks print them.
 FATIGUE = "OK, 0, -1, -3, -5, Unconscious"
-
-
-def _puissant(ability: str) -> tuple[str, dict[str, str]]:
-    return ("Puissant {ability}", {"ability": ability})
-
-
-def _minor(virtue: str) -> tuple[str, dict[str, str]]:
-    return ("Minor Virtue", {"virtue": virtue})
-
-
-def _great(characteristic: str) -> tuple[str, dict[str, str]]:
-    return ("Great {characteristic}", {"characteristic": characteristic})
-
-
-def _chars(
-    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
-) -> dict[str, int]:
-    """Characteristics in the book's order (Int or Cun, Per, Pre, Com, Str,
-    Sta, Dex, Qik)."""
-    return {
-        "intelligence": int_,
-        "perception": per,
-        "presence": pre,
-        "communication": com,
-        "strength": str_,
-        "stamina": sta,
-        "dexterity": dex,
-        "quickness": qik,
-    }
 
 
 def build(provence: Provence) -> None:
@@ -85,7 +57,7 @@ def _toulousain(provence: Provence, at: Any, tie: Any) -> None:
         size=0,
         season="Autumn",
         block={
-            "characteristics": _chars(0, 0, 3, 1, 0, 0, 0, 0),
+            "characteristics": characteristics(0, 0, 3, 1, 0, 0, 0, 0),
             "virtues_flaws": [
                 "Magic Spirit",
                 ("Ways of the {land}", {"land": "Land (Toulouse)"}),
@@ -93,7 +65,7 @@ def _toulousain(provence: Provence, at: Any, tie: Any) -> None:
                 ("Affinity with {ability}", {"ability": "Area Lore"}),
                 ("Inoffensive to {being}", {"being": "the Magic Realm"}),
                 "Magic Sensitivity",
-                _puissant("Area Lore"),
+                vf_puissant("Area Lore"),
                 "Dependent",
                 ("Servant of the {land}", {"land": "Land (Toulouse)"}),
                 ("Anchored to the {land}", {"land": "Land (Toulouse)"}),
@@ -224,7 +196,7 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         form="Vim",
         size=0,
         block={
-            "characteristics": _chars(2, 2, 1, 2, 3, 4, 3, 3),
+            "characteristics": characteristics(2, 2, 1, 2, 3, 4, 3, 3),
             "virtues_flaws": [
                 "Improved Characteristics",
                 "Self-Confident",
@@ -362,8 +334,12 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         form="Vim",
         size=0,
         block={
-            "characteristics": _chars(0, 1, 2, 2, 4, 4, 2, 2),
-            "virtues_flaws": [_puissant("Charm"), _puissant("Guile"), "Weak-Willed"],
+            "characteristics": characteristics(0, 1, 2, 2, 4, 4, 2, 2),
+            "virtues_flaws": [
+                vf_puissant("Charm"),
+                vf_puissant("Guile"),
+                "Weak-Willed",
+            ],
             "abilities": [
                 ("Brawl", 5, "Dodge"),
                 ("Carouse", 4, "appearing drunk"),
@@ -490,12 +466,12 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         form="Vim",
         size=0,
         block={
-            "characteristics": _chars(1, 2, 3, 2, 2, 3, 2, 2),
+            "characteristics": characteristics(1, 2, 3, 2, 2, 3, 2, 2),
             "virtues_flaws": [
                 "Improved Characteristics",
                 "Improved Characteristics",
-                _puissant("Charm"),
-                _puissant("Guile"),
+                vf_puissant("Charm"),
+                vf_puissant("Guile"),
                 "Weak-Willed",
             ],
             "abilities": [
@@ -600,13 +576,13 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         form="Herbam",
         size=0,
         block={
-            "characteristics": _chars(4, 0, 4, 4, 1, 2, 2, 0),
+            "characteristics": characteristics(4, 0, 4, 4, 1, 2, 2, 0),
             "virtues_flaws": [
                 "Focus Power",
                 "Focus Power",
-                _great("intelligence"),
-                _great("presence"),
-                _great("communication"),
+                vf_great("intelligence"),
+                vf_great("presence"),
+                vf_great("communication"),
                 *["Greater Power"] * 3,
                 "Faerie Sight",
                 "Faerie Speech",
@@ -788,7 +764,7 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         size=3,
         season="Summer",
         block={
-            "characteristics": _chars(-2, 2, 2, -2, 6, 3, 1, -1),
+            "characteristics": characteristics(-2, 2, 2, -2, 6, 3, 1, -1),
             "virtues_flaws": [
                 ("Greater Purifying Touch", {"disease": "poison"}),
                 "Improved Characteristics",
@@ -809,7 +785,7 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
                 *["Improved Powers"] * 3,
                 "Improved Recovery",
                 "Lesser Power",
-                *[_minor("Improved Characteristics")] * 3,
+                *[vf_minor("Improved Characteristics")] * 3,
                 "No Fatigue",
             ],
             "abilities": [
@@ -889,12 +865,12 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         season="Summer",
         how_many="many, around the ruins of Nemetannais",
         block={
-            "characteristics": _chars(0, 1, -2, -4, -7, 0, 3, 4),
+            "characteristics": characteristics(0, 1, -2, -4, -7, 0, 3, 4),
             "virtues_flaws": [
                 "Magic Animal",
                 "Luck",
                 "Perfect Balance",
-                _puissant("Awareness"),
+                vf_puissant("Awareness"),
                 "Sharp Ears (Minor)",
                 "Unaffected by The Gift",
                 "Magical Friend",
@@ -909,8 +885,8 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
                 "Improved Recovery",
                 "Improved Soak",
                 "Lesser Power",
-                _minor("Shapeshifter"),
-                _minor("Tough"),
+                vf_minor("Shapeshifter"),
+                vf_minor("Tough"),
                 "Susceptible to Deprivation",
                 "Ambush Predator",
                 "Crafty",
@@ -1008,7 +984,7 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         size=5,
         season="Summer",
         block={
-            "characteristics": _chars(0, 0, -2, -5, 10, 7, 1, -3),
+            "characteristics": characteristics(0, 0, -2, -5, 10, 7, 1, -3),
             "virtues_flaws": [
                 "Magic Animal",
                 "Magical Monster",
@@ -1016,7 +992,7 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
                 "Ferocity",
                 "Homing Instinct",
                 "Improved Characteristics",
-                _puissant("Brawl"),
+                vf_puissant("Brawl"),
                 "Tough",
                 "Mute",
                 "No Hands",
@@ -1122,7 +1098,7 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         size=9,
         how_many="pods off the Basque coast",
         block={
-            "characteristics": _chars(-3, -2, 2, 0, 19, 5, 2, -4),
+            "characteristics": characteristics(-3, -2, 2, 0, 19, 5, 2, -4),
             "virtues_flaws": [
                 "Improved Characteristics",
                 "Reserves of Strength",
@@ -1174,10 +1150,10 @@ def _gascony(provence: Provence, at: Any, tie: Any) -> None:
         form="Vim",
         size=-2,
         block={
-            "characteristics": _chars(2, 1, 2, 1, 4, 5, 4, 4),
+            "characteristics": characteristics(2, 1, 2, 1, 4, 5, 4, 4),
             "virtues_flaws": [
-                _puissant("Charm"),
-                _puissant("Guile"),
+                vf_puissant("Charm"),
+                vf_puissant("Guile"),
                 "Overconfident (Minor)",
             ],
             "abilities": [
@@ -1352,13 +1328,13 @@ def _pyrenees(provence: Provence, at: Any, tie: Any) -> None:
         size=-1,
         season="Autumn",
         block={
-            "characteristics": _chars(0, 1, 6, 1, -2, 0, 1, 1),
+            "characteristics": characteristics(0, 1, 6, 1, -2, 0, 1, 1),
             "virtues_flaws": [
                 "Magic Spirit",
                 "Magical Monster",
                 "Good Teacher",
-                _great("presence"),
-                _great("presence"),
+                vf_great("presence"),
+                vf_great("presence"),
                 "Homing Instinct",
                 ("Inoffensive to {being}", {"being": "Animals"}),
                 "Lesser Power",
@@ -1454,8 +1430,12 @@ def _narbonnais(provence: Provence, at: Any, tie: Any) -> None:
         form="Vim",
         size=0,
         block={
-            "characteristics": _chars(1, 2, -1, 2, 3, 2, 1, 3),
-            "virtues_flaws": [_puissant("Charm"), _puissant("Guile"), "Weak-Willed"],
+            "characteristics": characteristics(1, 2, -1, 2, 3, 2, 1, 3),
+            "virtues_flaws": [
+                vf_puissant("Charm"),
+                vf_puissant("Guile"),
+                "Weak-Willed",
+            ],
             "abilities": [
                 ("Awareness", 3, "humans"),
                 ("Brawl", 2, "club"),
@@ -1567,7 +1547,7 @@ def _narbonnais(provence: Provence, at: Any, tie: Any) -> None:
         form="Vim",
         size=0,
         block={
-            "characteristics": _chars(0, 2, 1, 1, 2, 3, 1, 1),
+            "characteristics": characteristics(0, 2, 1, 1, 2, 3, 1, 1),
             "virtues_flaws": [
                 "Narrowly Cognizant",
                 "Passes for Human",
@@ -1582,7 +1562,7 @@ def _narbonnais(provence: Provence, at: Any, tie: Any) -> None:
                 *["Lesser Power"] * 3,
                 "Positive Folktales",
                 "Pretentious",
-                _puissant("Single Weapon"),
+                vf_puissant("Single Weapon"),
                 "Fury",
                 ("Sovereign Ward", {"ward": "the person it has agreed to serve"}),
                 "Overconfident (Minor)",
@@ -1707,7 +1687,7 @@ def _arelat(provence: Provence, at: Any, tie: Any) -> None:
         size=3,
         how_many="a kind haunting the Rhone and its tributaries",
         block={
-            "characteristics": _chars(1, 0, -2, -5, 0, 0, 1, 3),
+            "characteristics": characteristics(1, 0, -2, -5, 0, 0, 1, 3),
             "virtues_flaws": [
                 "Focus Power",
                 "Greater Power",
@@ -1811,7 +1791,7 @@ def _arelat(provence: Provence, at: Any, tie: Any) -> None:
         size=3,
         season="Summer",
         block={
-            "characteristics": _chars(0, 1, -2, -5, 6, 3, 2, -1),
+            "characteristics": characteristics(0, 1, -2, -5, 6, 3, 2, -1),
             "virtues_flaws": [
                 "Magic Animal",
                 "Greater Immunity (Deprivation)",
@@ -1908,7 +1888,7 @@ def _arelat(provence: Provence, at: Any, tie: Any) -> None:
         form="Vim",
         size=3,
         block={
-            "characteristics": _chars(1, 1, 0, 1, 6, 3, 1, -3),
+            "characteristics": characteristics(1, 1, 0, 1, 6, 3, 1, -3),
             "virtues_flaws": [
                 "External Vis (Major)",
                 "Increased Faerie Might (Major)",
@@ -2064,13 +2044,13 @@ def _val_negra(provence: Provence, at: Any, tie: Any) -> None:
         size=0,
         season="Autumn",
         block={
-            "characteristics": _chars(4, 1, 2, -1, 1, 4, 0, 0),
+            "characteristics": characteristics(4, 1, 2, -1, 1, 4, 0, 0),
             "virtues_flaws": [
                 "Magic Spirit",
                 "Greater Immunity (Deprivation)",
                 *["Improved Characteristics"] * 3,
-                _great("intelligence"),
-                _great("stamina"),
+                vf_great("intelligence"),
+                vf_great("stamina"),
                 "Tough",
                 "Warrior",
                 "Blatant Magical Air",
@@ -2092,9 +2072,9 @@ def _val_negra(provence: Provence, at: Any, tie: Any) -> None:
                 *["Improved Abilities"] * 5,
                 "Improved Confidence",
                 *["Improved Powers"] * 9,
-                _minor("Arcane Lore"),
-                _minor("Educated"),
-                _minor("Unaffected by the Gift"),
+                vf_minor("Arcane Lore"),
+                vf_minor("Educated"),
+                vf_minor("Unaffected by the Gift"),
                 "Improved Recovery",
             ],
             "abilities": [
@@ -2311,7 +2291,7 @@ def _val_negra(provence: Provence, at: Any, tie: Any) -> None:
         size=0,
         how_many="the Aerie Clan; this is a soldier of the Black Guard",
         block={
-            "characteristics": _chars(0, 1, 0, 0, 1, 2, 1, 1),
+            "characteristics": characteristics(0, 1, 0, 0, 1, 2, 1, 1),
             "virtues_flaws": [
                 "Magic Human",
                 ("Affinity with {ability}", {"ability": "Single Weapon"}),
@@ -2328,7 +2308,7 @@ def _val_negra(provence: Provence, at: Any, tie: Any) -> None:
                 "Lesser Power",
                 "Lesser Power",
                 ("{form} Resistance", {"form": "Mentem"}),
-                _minor("Arcane Lore"),
+                vf_minor("Arcane Lore"),
                 "Second Sight",
                 "Unaffected by The Gift",
                 ("Restricted Power", {"power": "Silent Speech of the Aerie Clan"}),

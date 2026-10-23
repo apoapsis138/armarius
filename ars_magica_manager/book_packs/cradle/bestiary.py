@@ -56,7 +56,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models import BodyVis
-from ..builder import paragraphs
+from ..builder import characteristics, paragraphs, vf_great, vf_minor, vf_puissant
 
 if TYPE_CHECKING:
     from ...models import Creature, Neighbour
@@ -174,23 +174,6 @@ JINN = {
 _MADE: dict[str, Creature] = {}
 
 
-def _chars(
-    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
-) -> dict[str, int]:
-    """Characteristics in the book's order (Int or Cun, Per, Pre, Com,
-    Str, Sta, Dex, Qik)."""
-    return {
-        "intelligence": int_,
-        "perception": per,
-        "presence": pre,
-        "communication": com,
-        "strength": str_,
-        "stamina": sta,
-        "dexterity": dex,
-        "quickness": qik,
-    }
-
-
 def _times(entry: Any, count: int) -> list[Any]:
     """A Virtue or Quality the block takes `count` times."""
     return [entry] * count
@@ -198,10 +181,6 @@ def _times(entry: Any, count: int) -> list[Any]:
 
 def _ways(land: str) -> tuple[str, dict[str, str]]:
     return ("Ways of the {land}", {"land": land})
-
-
-def _puissant(ability: str) -> tuple[str, dict[str, str]]:
-    return ("Puissant {ability}", {"ability": ability})
 
 
 def _ward(kind: str, against: str = BISMILLAH) -> tuple[str, dict[str, str]]:
@@ -212,16 +191,8 @@ def _immune(hazard: str) -> tuple[str, dict[str, str]]:
     return ("Greater Immunity", {"hazard": hazard})
 
 
-def _minor(virtue: str) -> tuple[str, dict[str, str]]:
-    return ("Minor Virtue", {"virtue": virtue})
-
-
 def _major(virtue: str) -> tuple[str, dict[str, str]]:
     return ("Major Virtue", {"virtue": virtue})
-
-
-def _great(characteristic: str) -> tuple[str, dict[str, str]]:
-    return ("Great {characteristic}", {"characteristic": characteristic})
 
 
 def build(cradle: Cradle) -> None:
@@ -258,7 +229,7 @@ def _infernal_jinn(cradle: Cradle) -> None:
             "Bismillah."
         ),
         block={
-            "characteristics": _chars(0, 1, 3, 0, 2, 2, 2, 1),
+            "characteristics": characteristics(0, 1, 3, 0, 2, 2, 2, 1),
             "virtues_flaws": [JINNI, "Greater Malediction", "Weak-Willed"],
             "abilities": [
                 ("Living Language: Arabic", 5, "threats"),
@@ -366,7 +337,7 @@ def _infernal_jinn(cradle: Cradle) -> None:
         tires=False,
         can_be_wounded=False,
         block={
-            "characteristics": _chars(-5, 0, 3, -2, 0, 0, 3, 6),
+            "characteristics": characteristics(-5, 0, 3, -2, 0, 0, 3, 6),
             "virtues_flaws": [
                 JINNI,
                 "Berserk",
@@ -542,7 +513,7 @@ def _infernal_jinn(cradle: Cradle) -> None:
         tires=False,
         can_be_wounded=False,
         block={
-            "characteristics": _chars(1, 1, 2, 3, 0, 0, 0, 2),
+            "characteristics": characteristics(1, 1, 2, 3, 0, 0, 0, 2),
             "virtues_flaws": [JINNI],
         },
         powers=[
@@ -616,7 +587,7 @@ def _infernal_jinn(cradle: Cradle) -> None:
         confidence=(3, 9),
         weakness="Abhorrent Material: flame from a Mazdean fire temple.",
         block={
-            "characteristics": _chars(2, 2, 0, 1, 12, 4, 5, -1),
+            "characteristics": characteristics(2, 2, 0, 1, 12, 4, 5, -1),
             "virtues_flaws": [
                 "Ablating",
                 "Binding",
@@ -765,7 +736,7 @@ def _faerie_jinn(cradle: Cradle) -> None:
         confidence=(1, 3),
         tires=False,
         block={
-            "characteristics": _chars(-1, 2, 0, 0, 2, 0, 2, 3),
+            "characteristics": characteristics(-1, 2, 0, 0, 2, 0, 2, 3),
             "virtues_flaws": [
                 JINNI,
                 "Passes for Human",
@@ -890,12 +861,12 @@ def _faerie_jinn(cradle: Cradle) -> None:
         confidence=(1, 3),
         tires=False,
         block={
-            "characteristics": _chars(-2, 0, 2, -4, 4, 3, 1, 5),
+            "characteristics": characteristics(-2, 0, 2, -4, 4, 3, 1, 5),
             "virtues_flaws": [
                 JINNI,
                 "Faerie Beast",
                 "Greater Power",
-                *_times(_great("Quickness"), 2),
+                *_times(vf_great("Quickness"), 2),
                 "Improved Characteristics",
                 ("Mythic {characteristic}", {"characteristic": "Quickness"}),
                 *_times("Personal Power", 2),
@@ -975,7 +946,7 @@ def _faerie_jinn(cradle: Cradle) -> None:
         confidence=(1, 3),
         tires=False,
         block={
-            "characteristics": _chars(0, 2, 2, 0, 4, 2, 1, 1),
+            "characteristics": characteristics(0, 2, 2, 0, 4, 2, 1, 1),
             "virtues_flaws": [
                 JINNI,
                 "Monstrous Appearance",
@@ -1109,7 +1080,7 @@ def _faerie_jinn(cradle: Cradle) -> None:
         how_many="in the cities and deserts, each in her chosen household",
         tires=False,
         block={
-            "characteristics": _chars(0, 0, 5, 1, 1, 0, 0, 1),
+            "characteristics": characteristics(0, 0, 5, 1, 1, 0, 0, 1),
             "virtues_flaws": [
                 JINNI,
                 *_times("Greater Power", 2),
@@ -1223,7 +1194,7 @@ def _magic_jinn(cradle: Cradle) -> None:
         confidence=(1, 3),
         tires=False,
         block={
-            "characteristics": _chars(-2, 2, 1, -1, 3, 3, 1, -1),
+            "characteristics": characteristics(-2, 2, 1, -1, 3, 3, 1, -1),
             "virtues_flaws": [
                 "Magic Spirit",
                 JINNI,
@@ -1241,7 +1212,7 @@ def _magic_jinn(cradle: Cradle) -> None:
                 *_times("Greater Power", 2),
                 *_times("Improved Abilities", 3),
                 *_times("Lesser Power", 2),
-                _minor("Improved Characteristics"),
+                vf_minor("Improved Characteristics"),
             ],
             "abilities": [
                 ("Living Language: Arabic", 5, "stone"),
@@ -1337,7 +1308,7 @@ def _magic_jinn(cradle: Cradle) -> None:
         tires=False,
         how_many="one whirlwind to a stretch of desert",
         block={
-            "characteristics": _chars(-2, -1, -3, -1, 3, 3, 2, 2),
+            "characteristics": characteristics(-2, -1, -3, -1, 3, 3, 2, 2),
             "virtues_flaws": [
                 "Magic Spirit",
                 JINNI,
@@ -1441,7 +1412,7 @@ def _magic_jinn(cradle: Cradle) -> None:
         confidence=(1, 3),
         tires=False,
         block={
-            "characteristics": _chars(1, 2, 2, 0, 9, 2, 1, -3),
+            "characteristics": characteristics(1, 2, 2, 0, 9, 2, 1, -3),
             "virtues_flaws": [
                 "Magic Spirit",
                 JINNI,
@@ -1619,7 +1590,7 @@ def _arabia(cradle: Cradle) -> None:
         confidence=(1, 3),
         how_many="many, in the forests of Yemen and Hadramawt",
         block={
-            "characteristics": _chars(0, 1, -3, 0, 0, 2, 2, 3),
+            "characteristics": characteristics(0, 1, -3, 0, 0, 2, 2, 3),
             "virtues_flaws": [
                 "Magic Human",
                 "Magical Monster",
@@ -1704,7 +1675,7 @@ def _arabia(cradle: Cradle) -> None:
         confidence=(1, 3),
         how_many="a people, in regiones deep in the deserts of 'Uman",
         block={
-            "characteristics": _chars(0, 2, -1, -1, 13, 0, 1, -4),
+            "characteristics": characteristics(0, 2, -1, -1, 13, 0, 1, -4),
             "virtues_flaws": [
                 "Magic Human",
                 "Improved Characteristics",
@@ -1794,7 +1765,7 @@ def _mesopotamia(cradle: Cradle) -> None:
         tires=False,
         how_many="a pair: the male aladlammu and the female apsasu",
         block={
-            "characteristics": _chars(1, 1, 1, 1, 8, 2, 2, -2),
+            "characteristics": characteristics(1, 1, 1, 1, 8, 2, 2, -2),
             "virtues_flaws": [
                 *_times("Huge", 3),
                 "Greater Power",
@@ -1897,11 +1868,11 @@ def _mesopotamia(cradle: Cradle) -> None:
         encumbrance="0 (3)",
         how_many="small bands, each a Trained Group, at old ruins",
         block={
-            "characteristics": _chars(-1, 1, 0, -2, 3, 2, 3, 4),
+            "characteristics": characteristics(-1, 1, 0, -2, 3, 2, 3, 4),
             "virtues_flaws": [
                 "Magic Human",
                 _ways("Desert"),
-                _great("Quickness"),
+                vf_great("Quickness"),
                 "Greater Malediction",
                 "Dutybound",
                 "Improved Abilities",
@@ -1912,7 +1883,7 @@ def _mesopotamia(cradle: Cradle) -> None:
                 "Improved Powers",
                 *_times("Improved Soak", 2),
                 "Lesser Power",
-                _minor("Large"),
+                vf_minor("Large"),
             ],
             "abilities": [
                 ("Living Language: Arabic", 1, "Maslawi"),
@@ -1983,7 +1954,7 @@ def _mesopotamia(cradle: Cradle) -> None:
         confidence=(1, 3),
         cunning=False,
         block={
-            "characteristics": _chars(2, 0, 2, 0, 6, 2, 1, -1),
+            "characteristics": characteristics(2, 0, 2, 0, 6, 2, 1, -1),
             "virtues_flaws": [
                 "Magic Animal",
                 "Arcane Lore",
@@ -2005,11 +1976,11 @@ def _mesopotamia(cradle: Cradle) -> None:
                 *_times("Improved Powers", 2),
                 *_times("Improved Soak", 2),
                 *_times("Lesser Power", 2),
-                _minor("Desert Regio Network"),
-                _minor("Large"),
-                _minor("Lesser Immunity to Arrows"),
-                _minor("Puissant Brawl"),
-                _minor("Second Sight"),
+                vf_minor("Desert Regio Network"),
+                vf_minor("Large"),
+                vf_minor("Lesser Immunity to Arrows"),
+                vf_minor("Puissant Brawl"),
+                vf_minor("Second Sight"),
             ],
             "abilities": [
                 ("Living Language: Arabic", 4, "Maslawi"),
@@ -2108,7 +2079,7 @@ def _persia(cradle: Cradle) -> None:
         cunning=True,
         how_many="a swarm, as large as the corpses it has fed on",
         block={
-            "characteristics": _chars(0, 1, 0, 0, -20, 0, 3, 10),
+            "characteristics": characteristics(0, 1, 0, 0, -20, 0, 3, 10),
             "virtues_flaws": [
                 "Magic Spirit",
                 "Magic Sensitivity",
@@ -2199,17 +2170,17 @@ def _persia(cradle: Cradle) -> None:
         tires=False,
         how_many="lone hunters of Mazandaran and Persia's northern desert",
         block={
-            "characteristics": _chars(1, 0, -2, -5, 0, 1, 2, 5),
+            "characteristics": characteristics(1, 0, -2, -5, 0, 1, 2, 5),
             "virtues_flaws": [
                 "Magic Animal",
                 ("Affinity with {ability}", {"ability": "Athletics"}),
                 "Improved Characteristics",
-                _puissant("Athletics"),
+                vf_puissant("Athletics"),
                 "Proud (Minor)",
                 "No Fatigue",
                 *_times("Improved Abilities", 3),
                 "Improved Attack",
-                *_times(_minor("Great Quickness"), 2),
+                *_times(vf_minor("Great Quickness"), 2),
                 "Personal Power",
                 "Crafty",
                 "Fast Runner",
@@ -2275,7 +2246,7 @@ def _persia(cradle: Cradle) -> None:
         size=9,
         tires=False,
         block={
-            "characteristics": _chars(1, 2, 0, 1, 15, 3, 1, 0),
+            "characteristics": characteristics(1, 2, 0, 1, 15, 3, 1, 0),
             "virtues_flaws": [
                 "External Vis (Major)",
                 *_times("Huge", 8),
@@ -2366,7 +2337,7 @@ def _persia(cradle: Cradle) -> None:
         cunning=True,
         how_many="herds, led by a male",
         block={
-            "characteristics": _chars(-2, 1, -4, -4, -2, 3, 1, 3),
+            "characteristics": characteristics(-2, 1, -4, -4, -2, 3, 1, 3),
             "virtues_flaws": [
                 "Improved Abilities",
                 "Long-Winded",
@@ -2419,12 +2390,12 @@ def _persia(cradle: Cradle) -> None:
         cunning=True,
         how_many="lone worms under the northern deserts of Persia and Transoxiana",
         block={
-            "characteristics": _chars(-1, 1, 0, -5, 2, 3, 3, 1),
+            "characteristics": characteristics(-1, 1, 0, -5, 2, 3, 3, 1),
             "virtues_flaws": [
                 "Magic Animal",
                 _ways("Desert"),
                 "Improved Characteristics",
-                _puissant("Stealth"),
+                vf_puissant("Stealth"),
                 "Tough",
                 ("Offensive to {being}", {"being": "animals"}),
                 *_times(
@@ -2519,7 +2490,7 @@ def _silk_road(cradle: Cradle) -> None:
         confidence=(0, 0),
         how_many="strings of them in every caravan",
         block={
-            "characteristics": _chars(-2, -1, -4, -5, 3, 4, -1, -2),
+            "characteristics": characteristics(-2, -1, -4, -5, 3, 4, -1, -2),
             "virtues_flaws": ["Long-Winded", "Feral Scent", "Hardy", "Herd Animal"],
             "abilities": [
                 ("Athletics", 4, "running"),
@@ -2583,7 +2554,7 @@ def _silk_road(cradle: Cradle) -> None:
         confidence=(0, 0),
         how_many="a few, kept by nobles or the Khwarazmian army",
         block={
-            "characteristics": _chars(0, 1, -4, -5, 10, 3, 0, -2),
+            "characteristics": characteristics(0, 1, -4, -5, 10, 3, 0, -2),
             "virtues_flaws": [
                 *_times("Improved Characteristics", 3),
                 "Tough",
@@ -2662,7 +2633,7 @@ def _silk_road(cradle: Cradle) -> None:
         tires=False,
         how_many="herds in the valley of Farghana",
         block={
-            "characteristics": _chars(-2, 0, 2, -4, 5, 4, 1, 3),
+            "characteristics": characteristics(-2, 0, 2, -4, 5, 4, 1, 3),
             "virtues_flaws": [
                 "External Vis (Minor)",
                 "Faerie Beast",
@@ -2747,7 +2718,7 @@ def _silk_road(cradle: Cradle) -> None:
         confidence=(1, 3),
         how_many="roosting in the diamond-strewn valleys of the Roof of the World",
         block={
-            "characteristics": _chars(0, 3, 2, 0, 13, 3, 1, -4),
+            "characteristics": characteristics(0, 3, 2, 0, 13, 3, 1, -4),
             "virtues_flaws": [
                 "Magic Animal",
                 "Ferocity",
@@ -2841,7 +2812,7 @@ def _silk_road(cradle: Cradle) -> None:
         confidence=(0, 0),
         how_many="the nomads' herds; most horses of the eastern provinces",
         block={
-            "characteristics": _chars(-2, 0, 0, -4, 2, 4, -2, 3),
+            "characteristics": characteristics(-2, 0, 0, -4, 2, 4, -2, 3),
             "virtues_flaws": [
                 "Enduring Constitution",
                 "Long-Winded",
@@ -3032,10 +3003,10 @@ def _mongols(cradle: Cradle) -> None:
         encumbrance="2 (3)",
         how_many="the horde's vanguard, scouts and guards",
         block={
-            "characteristics": _chars(-1, 1, 0, -1, 1, 2, 1, 2),
+            "characteristics": characteristics(-1, 1, 0, -1, 1, 2, 1, 2),
             "virtues_flaws": [
-                _puissant("Ride"),
-                _puissant("Bows"),
+                vf_puissant("Ride"),
+                vf_puissant("Bows"),
                 "Warrior",
                 "Reckless (Minor)",
                 "Disfigured",
@@ -3118,12 +3089,12 @@ def _mongols(cradle: Cradle) -> None:
         encumbrance="3 (3)",
         how_many="a few among the horde",
         block={
-            "characteristics": _chars(1, -1, 2, 1, -2, 2, -1, 1),
+            "characteristics": characteristics(1, -1, 2, 1, -2, 2, -1, 1),
             "virtues_flaws": [
                 "Wise One",
                 "Summoning",
                 "Ghostly Warder",
-                _puissant("Ride"),
+                vf_puissant("Ride"),
                 "Warrior",
                 "Enemies",
                 "Outsider (Major)",

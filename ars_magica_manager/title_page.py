@@ -60,7 +60,7 @@ def last_saga(saga_ids: list[str]) -> str | None:
     """The saga Open Saga opens, of `saga_ids` (the sagas saved): the one
     opened last, else the only one there is."""
     remembered = settings.load_settings().get(LAST_SAGA)
-    if remembered in saga_ids:
+    if isinstance(remembered, str) and remembered in saga_ids:
         return remembered
     return saga_ids[0] if len(saga_ids) == 1 else None
 

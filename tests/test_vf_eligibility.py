@@ -4,8 +4,8 @@ rules the picker hides entries by."""
 import pytest
 
 from ars_magica_manager import catalog
-from ars_magica_manager.catalog import VirtueFlawChooser
 from ars_magica_manager.models import Character, Familiar, VirtueFlawInstance
+from ars_magica_manager.rules.vf_eligibility import VirtueFlawChooser
 
 #: The Free Virtues that make a character a Mythic Companion.
 MYTHIC_COMPANION_VIRTUES = (

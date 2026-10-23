@@ -16,7 +16,6 @@ from typing import Any
 from . import book_kinds, catalog, storage
 from . import spells as spl
 from .arts import ART_LOOKUP
-from .book_kinds import Adjustment
 from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import PROBLEM_GLYPH, escape, fit, markdown_text, problem
 from .models import (
@@ -31,63 +30,39 @@ from .models import (
     Saga,
     Spell,
 )
-from .rules import options
-from .rules.rounding import round_up
+from .rules.library import (
+    POOL_LEVELS,
+    POOL_POINTS,
+    SPELL_TYPES,
+    SUMMA_TYPES,
+    Pool,
+    book_spell,
+    books_owned_by,
+    can_read,
+    codex_of,
+    cost,
+    covenant_of,
+    effective_quality,
+    extended_quality,
+    has_quality,
+    is_ability_book,
+    is_art_book,
+    level_of,
+    numbers_to_set,
+    owner_record,
+    pool,
+    priced_quality,
+    quality_adjustments,
+    subject,
+)
 from .tables import Table
-
-#: Book types whose subject is an Art / an Ability (a Tractatus depends on its
-#: `subject_kind`).
-SUMMA_TYPES: tuple[str, ...] = ("Art Summa", "Ability Summa")
-#: Book types that record a spell (name + level) instead of an Art or Ability.
-SPELL_TYPES: tuple[str, ...] = ("Lab Text", "Casting Tablet")
-
-
-def is_art_book(book_type: str, subject_kind: str = "") -> bool:
-    return book_type == "Art Summa" or (
-        book_type == "Tractatus" and subject_kind == "Art"
-    )
-
-
-def is_ability_book(book_type: str, subject_kind: str = "") -> bool:
-    return book_type == "Ability Summa" or (
-        book_type == "Tractatus" and subject_kind == "Ability"
-    )
 
 
 def has_level(book_type: str) -> bool:
     return book_type in SUMMA_TYPES or book_type in SPELL_TYPES
 
 
-def has_quality(book_type: str) -> bool:
-    return book_type in SUMMA_TYPES or book_type == "Tractatus"
-
-
-def numbers_to_set(book: Book) -> list[str]:
-    """The figures a summa or tractatus still lacks ("Level", "Quality"):
-    a book whose value is variable until it comes into play (imported with
-    "var"). It can't be studied until they are set."""
-    missing = []
-    if book.type in SUMMA_TYPES and book.level is None:
-        missing.append("Level")
-    if has_quality(book.type) and book.quality is None:
-        missing.append("Quality")
-    return missing
-
-
 # ------------------------------------------------------- the linked spell
-
-
-def book_spell(saga: Saga, book: Book) -> Spell | None:
-    """A Lab Text's or Casting Tablet's spell: the one its `spell_id` names,
-    else the one its typed `spell_name` matches (how imported books link).
-    None for other books, or when nothing matches."""
-    if book.type not in SPELL_TYPES:
-        return None
-    if book.spell_id:
-        found = spl.find_spell(saga, book.spell_id)
-        if found is not None:
-            return found
-    return spl.find_spell_by_name(saga, book.spell_name)
 
 
 def records_spell(book_type: str, text_kind: str) -> bool:
@@ -105,17 +80,6 @@ def needs_spell(book: Book) -> bool:
     return records_spell(book.type, book.text_kind)
 
 
-def level_of(book: Book, saga: Saga | None = None) -> int | None:
-    """The book's Level. A Lab Text's or Casting Tablet's is its spell's,
-    unless the spell is General-level (or unknown), when the book's own
-    `level` counts. Without a saga the stored level is all there is."""
-    if saga is not None and book.type in SPELL_TYPES:
-        spell = book_spell(saga, book)
-        if spell is not None and spell.level is not None:
-            return spell.level
-    return book.level
-
-
 # ------------------------------------------------------------------- rules
 
 
@@ -123,24 +87,6 @@ POOL_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Six: Covenants, Lab Texts and "
     "Casting Tablets (p. 180)"
 )
-#: Lab Texts and Casting Tablets are bought as a pool of levels for the
-#: library, not text by text (POOL_SOURCE): POOL_POINTS Build Points buy
-#: POOL_LEVELS levels. The pool's levels are summed first; whole Build
-#: Points are spent, so the last purchase rounds up and its unused levels
-#: are the pool's unspent remainder.
-POOL_LEVELS = 5
-POOL_POINTS: dict[str, int] = {"Lab Text": 1, "Casting Tablet": 2}
-
-
-@dataclass(frozen=True)
-class Pool:
-    """A covenant's Lab Text or Casting Tablet pool."""
-
-    book_type: str
-    levels: int
-    points: int
-    #: Levels bought but not yet used by a text.
-    unspent: int
 
 
 def pooled(book_type: str) -> bool:
@@ -148,35 +94,10 @@ def pooled(book_type: str) -> bool:
     return book_type in POOL_POINTS
 
 
-def pool(books: list[Book], book_type: str, saga: Saga | None = None) -> Pool:
-    """The `book_type` pool of `books` (a covenant's library): the levels
-    summed, the Build Points they take, and the levels left over."""
-    levels = sum(level_of(b, saga) or 0 for b in books if b.type == book_type)
-    lots = round_up(levels / POOL_LEVELS)
-    return Pool(
-        book_type, levels, lots * POOL_POINTS[book_type], lots * POOL_LEVELS - levels
-    )
-
-
 def pool_text(pool_: Pool) -> str:
     """ "12 levels, 3 Build Points (3 levels unspent)"."""
     text = f"{pool_.levels} levels, {pool_.points} Build Points"
     return text + (f" ({pool_.unspent} levels unspent)" if pool_.unspent else "")
-
-
-def cost(book: Book, saga: Saga | None = None) -> int:
-    """Build Points the book costs at covenant creation. A blank level or
-    quality counts as 0; Other books cost nothing, and neither does a Lab
-    Text or Casting Tablet on its own: those are bought as a pool (pool())."""
-    level = level_of(book, saga) or 0
-    quality = priced_quality(saga, book) or 0
-    if book.type == "Art Summa":
-        return level + quality
-    if book.type == "Ability Summa":
-        return quality + 3 * level
-    if book.type == "Tractatus":
-        return quality
-    return 0
 
 
 def priced(saga: Saga, book: Book) -> bool:
@@ -301,17 +222,6 @@ def status_problems(book: Book, saga: Saga | None = None) -> list[str]:
 # ------------------------------------------------------------------ owners
 
 
-def owner_record(saga: Saga, book: Book):
-    """The covenant, laboratory or character that owns the book, or None
-    (unowned, or the owner no longer exists)."""
-    records = {
-        "covenant": saga.covenants,
-        "laboratory": saga.laboratories,
-        "character": saga.characters,
-    }.get(book.owner_kind or "", [])
-    return next((r for r in records if r.id == book.owner_id), None)
-
-
 def is_unassigned(saga: Saga, book: Book) -> bool:
     return owner_record(saga, book) is None
 
@@ -319,37 +229,6 @@ def is_unassigned(saga: Saga, book: Book) -> bool:
 def unassigned_books(saga: Saga) -> list[Book]:
     """Books filed under the saga: no owner, or one that no longer exists."""
     return [b for b in saga.books if is_unassigned(saga, b)]
-
-
-def books_owned_by(saga: Saga, kind: str, owner_id: str) -> list[Book]:
-    return [b for b in saga.books if b.owner_kind == kind and b.owner_id == owner_id]
-
-
-def covenant_of(saga: Saga, book: Book) -> str | None:
-    """The id of the covenant the book is kept in: its owner, or the covenant
-    of the laboratory or character that owns it."""
-    owner = owner_record(saga, book)
-    if owner is None:
-        return None
-    if book.owner_kind == "covenant":
-        return owner.id
-    return owner.covenant_id
-
-
-def can_read(saga: Saga, character: Character, book: Book) -> bool:
-    """Whether `character` may study `book`: a
-    book in the covenant's library (owned by the covenant) is open to
-    everyone of that covenant; a book someone keeps (in their inventory, or
-    in their laboratory) only to them. A book with no owner is in nobody's
-    library."""
-    owner = owner_record(saga, book)
-    if owner is None:
-        return False
-    if book.owner_kind == "covenant":
-        return character.covenant_id == owner.id
-    if book.owner_kind == "laboratory":
-        return owner.owner_id == character.id
-    return owner.id == character.id
 
 
 def readers(saga: Saga, book: Book) -> list[Character]:
@@ -365,12 +244,6 @@ def studyable_books(saga: Saga, character: Character) -> list[Book]:
         if b.type in ("Art Summa", "Ability Summa", "Tractatus")
         and can_read(saga, character, b)
     ]
-
-
-def books_in_covenant(saga: Saga, covenant: Covenant) -> list[Book]:
-    """Everything the covenant's Library lists: books it owns, and books owned
-    by its laboratories and characters, in the order added."""
-    return [b for b in saga.books if covenant_of(saga, b) == covenant.id]
 
 
 def owner_value(kind: str | None, owner_id: str | None) -> str:
@@ -425,17 +298,6 @@ def location_label(saga: Saga, book: Book) -> str:
 
 # ------------------------------------------------------------------ codices
 
-#: The Quality lost by each text of a palimpsest (Covenants, Secondary
-#: Functions).
-PALIMPSEST_PENALTY = 3
-
-
-def codex_of(saga: Saga, book: Book) -> Codex | None:
-    """The codex the book is bound in with others, or None (bound alone)."""
-    if not book.codex_id:
-        return None
-    return next((c for c in saga.codices if c.id == book.codex_id), None)
-
 
 def codex_books(saga: Saga, book: Book) -> list[Book]:
     """Every book bound in the same codex as `book`, itself included, in the
@@ -443,15 +305,6 @@ def codex_books(saga: Saga, book: Book) -> list[Book]:
     if codex_of(saga, book) is None:
         return [book]
     return [b for b in saga.books if b.codex_id == book.codex_id]
-
-
-def same_codex(saga: Saga, a: Book, b: Book) -> bool:
-    """Whether two books are one physical codex (or the same book)."""
-    return (
-        a is b
-        or a.id == b.id
-        or (codex_of(saga, a) is not None and a.codex_id == b.codex_id)
-    )
 
 
 def new_codex(saga: Saga, name: str) -> Codex:
@@ -515,12 +368,6 @@ def prune_codices(saga: Saga) -> None:
             book.codex_id = None
 
 
-def extended_quality(saga: Saga | None) -> bool:
-    """Whether the saga uses Covenants' extended book Quality rules (its
-    craftsmanship counts, an author gives Communication + 3)."""
-    return options.is_on(saga, options.EXTENDED_BOOK_QUALITY)
-
-
 def craft_warnings(saga: Saga, book: Book) -> list[str]:
     """Under the extended rules: craftsmanship that can't go together, and
     a Quality over what an Art book effectively reaches (35 - Level for a
@@ -550,55 +397,6 @@ def craft_warnings(saga: Saga, book: Book) -> list[str]:
                 "effectively reaches."
             )
     return found
-
-
-def quality_adjustments(saga: Saga | None, book: Book) -> list[Adjustment]:
-    """What changes the Quality the book is studied at, beyond its own: its
-    opus type, its physical form, and the codex it is bound in (a
-    palimpsest's -3, a florilegium's bonus). See book_kinds."""
-    found: list[Adjustment] = []
-    opus = book_kinds.OPUS_TYPES.get(book.opus)
-    if opus is not None and opus.quality:
-        found.append(Adjustment(opus.name.lower(), opus.quality, opus.priced))
-    form = book_kinds.PHYSICAL_FORMS.get(book.physical_form)
-    if form is not None and form.quality:
-        found.append(Adjustment(form.name.lower(), form.quality, form.priced))
-    if extended_quality(saga):
-        for key in book.craft:
-            part = book_kinds.CRAFT.get(key)
-            if part is not None:
-                found.append(Adjustment(part.name.lower(), part.quality, part.priced))
-    if book.glossed:
-        gloss = book_kinds.GLOSS
-        found.append(Adjustment(gloss.name.lower(), gloss.quality, gloss.priced))
-    codex = codex_of(saga, book) if saga is not None else None
-    if codex is not None:
-        if codex.palimpsest:
-            found.append(Adjustment("palimpsest", -PALIMPSEST_PENALTY))
-        if codex.collection == book_kinds.FLORILEGIUM and book.type == "Tractatus":
-            found.append(
-                Adjustment("florilegium", codex.florilegium_bonus, priced=False)
-            )
-    return found
-
-
-def effective_quality(saga: Saga | None, book: Book) -> int | None:
-    """The Quality a reader studies the book at: its own, with its
-    quality_adjustments (never below 0)."""
-    if book.quality is None:
-        return None
-    total = book.quality + sum(a.amount for a in quality_adjustments(saga, book))
-    return max(0, total)
-
-
-def priced_quality(saga: Saga | None, book: Book) -> int | None:
-    """The Quality its Build Point cost counts: its own, with the
-    adjustments that count toward cost (not a commentary's or a
-    florilegium's bonus)."""
-    if book.quality is None:
-        return None
-    adjustments = quality_adjustments(saga, book)
-    return max(0, book.quality + sum(a.amount for a in adjustments if a.priced))
 
 
 def grouped(saga: Saga, books: list[Book]) -> list[Book]:
@@ -646,18 +444,6 @@ def kind_text(saga: Saga, book: Book) -> str:
 
 
 # -------------------------------------------------------------------- text
-
-
-def subject(book: Book, saga: Saga | None = None) -> str:
-    """The Art, Ability or spell the book is about ("" if not set)."""
-    if book.type in SPELL_TYPES:
-        spell = book_spell(saga, book) if saga is not None else None
-        return spell.name if spell is not None else book.spell_name
-    if is_art_book(book.type, book.subject_kind):
-        return book.art
-    if is_ability_book(book.type, book.subject_kind):
-        return book.ability
-    return ""
 
 
 def subject_title(book: Book) -> str:

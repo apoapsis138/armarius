@@ -8,15 +8,15 @@ unchanged."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from .commands import Command, Confirm, Form, SectionOps
 from .form_spec import DialogField
 from .grids import Grid
 from .markup import escape
-from .models import Neighbour, Saga
+from .models import Neighbour, Saga, details_list
 
 Entry = dict[str, Any]
 
@@ -45,39 +45,33 @@ class KindTab:
     lists: tuple[KindList, ...]
 
 
-def details_list(neighbour: Neighbour, name: str) -> list[Entry]:
-    """The list `name` in the neighbour's details, made empty if
-    missing."""
-    found = neighbour.details.setdefault(name, [])
-    assert isinstance(found, list)
-    return found
-
-
-def list_ops(
+def list_ops[E: Mapping[str, object]](
     saga: Saga,
     neighbour: Neighbour,
     name: str,
     noun: str,
-    fields: Callable[[Saga, Neighbour, Entry | None], list[DialogField]],
-    describe: Callable[[Entry], str],
+    fields: Callable[[Saga, Neighbour, E | None], list[DialogField]],
+    describe: Callable[[E], str],
     validate: Callable[[dict[str, Any]], str | None] | None = None,
     after: Callable[[], None] = lambda: None,
 ) -> SectionOps:
     """Add, Edit and Delete on the list `name`: a form of `fields` titled
     "Add a `noun`" (or an), and a confirmation naming `describe(entry)`; `after`
-    runs once each has changed the list."""
+    runs once each has changed the list. `E` is the list's own type of
+    entry (a TypedDict); the form's values are written into it as they
+    are."""
 
     article = "an" if noun[:1] in "AEIOU" else "a"
 
-    def entries() -> list[Entry]:
-        return details_list(neighbour, name)
+    def entries() -> list[E]:
+        return cast(list[E], details_list(neighbour, name))
 
-    def form(entry: Entry | None) -> Form:
+    def form(entry: E | None) -> Form:
         def apply(values: dict[str, Any]) -> None:
-            target = entry if entry is not None else {}
-            target.update(values)
             if entry is None:
-                entries().append(target)
+                entries().append(cast(E, dict(values)))
+            else:
+                cast(Entry, entry).update(values)
             after()
 
         return Form(

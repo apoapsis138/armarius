@@ -59,11 +59,6 @@ class Progress:
     total: int
     next_total: int
 
-    @property
-    def to_next(self) -> int:
-        """xp still needed to reach the next score."""
-        return self.next_total - self.total
-
 
 def progress(xp: int, factor: int) -> Progress:
     total = max(xp, 0)

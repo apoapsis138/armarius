@@ -34,6 +34,7 @@ from ....models import (
     Laboratory,
     Saga,
 )
+from ....rules import enchantment
 from ....sections import (
     ATTITUDE_SECTION,
     CONNECTIONS_SECTION,
@@ -441,7 +442,8 @@ class SheetView(Vertical):
                 section_id,
                 section_id,
                 lambda: counted(
-                    "Enchanted Devices", len(ed.held_by(self.saga, kind, holder_id))
+                    "Enchanted Devices",
+                    len(enchantment.held_by(self.saga, kind, holder_id)),
                 ),
             ),
             id=section_id,

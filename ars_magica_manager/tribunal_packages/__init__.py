@@ -22,7 +22,7 @@ from .. import sourcebooks
 from ..commands import SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
-from ..models import CORE_PACKAGE, Character, Covenant, Saga, Tribunal
+from ..models import CORE_PACKAGE, Character, Covenant, Meeting, Saga, Tribunal
 
 
 @dataclass(frozen=True)
@@ -123,7 +123,7 @@ class TribunalPackage:
     no_vassals: str = ""
     #: Those who vote at the meeting beside the covenants, a vote each
     #: (Hibernia's confirmed ambassadors).
-    envoys: Callable[[Saga, Tribunal, dict[str, Any]], list[Envoy]] | None = None
+    envoys: Callable[[Saga, Tribunal, Meeting], list[Envoy]] | None = None
 
     @property
     def lists(self) -> tuple[PackageList, ...]:
@@ -188,7 +188,7 @@ def magus_facts(saga: Saga, character: Character) -> list[tuple[str, str]]:
     return package.magus_facts(saga, tribunal, character)
 
 
-def envoys(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> list[Envoy]:
+def envoys(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> list[Envoy]:
     """Who votes at `meeting` beside the covenants, as its customs say."""
     package = of(tribunal)
     return package.envoys(saga, tribunal, meeting) if package.envoys else []
@@ -213,7 +213,8 @@ def data(tribunal: Tribunal, key: str) -> dict[str, Any]:
 def entries(tribunal: Tribunal, key: str, name: str) -> list[dict[str, Any]]:
     """The list `name` in package `key`'s data, made empty if missing."""
     found = data(tribunal, key).setdefault(name, [])
-    assert isinstance(found, list)
+    if not isinstance(found, list):
+        raise ValueError(f"The Tribunal's {name} should be a list, not {found!r}.")
     return found
 
 

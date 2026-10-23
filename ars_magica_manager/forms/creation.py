@@ -83,7 +83,9 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
         )
     )
     found = (
-        packs.available(packs.SHIPPED_DIR, storage.EXPORTS_DIR) if saga is None else []
+        packs.available(packs.SHIPPED_DIR, storage.exports_dir())
+        if saga is None
+        else []
     )
     if found:
         fields.append(
@@ -92,7 +94,7 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "Start from a pack",
                 "select",
                 "",
-                options=[("None", ""), *found],
+                options=[("None", ""), *((label, path) for label, path, _ in found)],
                 hint="Its Tribunals, covenants, characters, places, neighbours "
                 "and calendar are added to the new saga.",
             )

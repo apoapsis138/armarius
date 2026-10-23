@@ -35,8 +35,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
 
-from .. import book_kinds, books
-from .. import spells as spl
+from .. import book_kinds, catalog
 from ..arts import ART_BY_NAME
 from ..models import (
     TEXT_LONGEVITY,
@@ -46,8 +45,9 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import options
+from . import library, options
 from .rounding import round_down, round_up
+from .scores import ability_level
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Writing Books "
@@ -140,12 +140,6 @@ class BookWork:
 # -- scores -----------------------------------------------------------------------
 
 
-def ability_score(character: Character, name: str) -> int:
-    """An Ability's score (0 without it)."""
-    ability = next((a for a in character.abilities if a.name == name), None)
-    return ability.level if ability else 0
-
-
 def language_score(character: Character, language: str) -> int:
     """The character's score in `language` (a Living or Dead Language
     Ability named for it, or an Ability of that name)."""
@@ -166,7 +160,7 @@ def subject_score(character: Character, subject: str) -> tuple[bool, int]:
     if kind == "art":
         art = character.arts.get(name.lower())
         return True, art.level if art else 0
-    return False, ability_score(character, name)
+    return False, ability_level(character, name)
 
 
 def book_subject(book: Book) -> str:
@@ -238,7 +232,7 @@ def author_name(saga: Saga, book: Book) -> str:
 def text_level(book: Book, saga: Saga | None = None) -> int:
     """A Lab Text's level: its spell's, else the book's own."""
     if saga is not None:
-        spell = spl.find_spell(saga, book.spell_id)
+        spell = catalog.find_spell(saga, book.spell_id)
         if spell is not None and spell.level is not None:
             return spell.level
     return book.level or 0
@@ -280,8 +274,8 @@ def florilegium_candidates(
         if b.type == "Tractatus"
         and book_subject(b) == subject
         and b.quality is not None
-        and books.codex_of(saga, b) is None
-        and books.can_read(saga, character, b)
+        and library.codex_of(saga, b) is None
+        and library.can_read(saga, character, b)
     ]
     return sorted(found, key=lambda b: -(b.quality or 0))
 
@@ -430,7 +424,7 @@ def _copy(
         return ["Choose the book."], None
     if book.type not in (*SUMMA_TYPES, "Tractatus"):
         return [f"{book.name} isn't a summa or tractatus."], None
-    if not books.can_read(saga, character, book):
+    if not library.can_read(saga, character, book):
         return [f"{character.name} can't get at {book.name}."], None
     source = language_score(character, book.language or "Latin")
     is_summa = book.type in SUMMA_TYPES
@@ -440,9 +434,9 @@ def _copy(
     if plan.activity == COPY_BOOK:
         if source < 3:
             return [f"Copying needs {book.language} at 3."], None
-        if is_art and ability_score(character, "Magic Theory") < 1:
+        if is_art and ability_level(character, "Magic Theory") < 1:
             return ["Copying a book on an Art needs Magic Theory 1."], None
-        scribe = ability_score(character, "Profession: Scribe")
+        scribe = ability_level(character, "Profession: Scribe")
         quick = plan.quick
         quality = (book.quality or 0) - (1 if quick else 0)
         copy = _copy_of(saga, character, book, quality, book.language)
@@ -520,7 +514,7 @@ def _write_tablet(
     known = next(
         (k for k in character.spells_known if k.spell_id == plan.spell_id), None
     )
-    spell = spl.find_spell(saga, plan.spell_id)
+    spell = catalog.find_spell(saga, plan.spell_id)
     if known is None or spell is None:
         return ["Choose the spell, one the magus knows."], None
     if known.mastery_score < 1:
@@ -585,7 +579,7 @@ def _lab_texts(
         book = _book(saga, plan.book_id)
         if book is None or book.type not in ("Lab Text", "Casting Tablet"):
             return ["Choose the Lab Text or Casting Tablet to copy."], None
-        if not books.can_read(saga, character, book):
+        if not library.can_read(saga, character, book):
             return [f"{character.name} can't get at {book.name}."], None
         if not can_use_lab_text(character, book):
             return [
@@ -593,7 +587,7 @@ def _lab_texts(
                 f"{character.name} must decode it first (or have it rewritten "
                 "for general use)."
             ], None
-        scribe = ability_score(character, "Profession: Scribe")
+        scribe = ability_level(character, "Profession: Scribe")
         level = max(1, text_level(book, saga))
         copies = round_down(60 * scribe / level)
         if copies <= 0:
@@ -607,7 +601,7 @@ def _lab_texts(
     student = saga.character(plan.subject_id)
     if student is None or student is character:
         return ["Choose the student."], None
-    if ability_score(student, "Magic Theory") < 1:
+    if ability_level(student, "Magic Theory") < 1:
         return [f"{student.name} needs Magic Theory 1 to learn abbreviations."], None
     if latin <= 0:
         return ["Teaching abbreviations needs Latin."], None
@@ -639,7 +633,7 @@ def exposure_ability(character: Character, plan: SeasonPlan) -> str:
 def decode_total_arts(saga: Saga, book: Book) -> tuple[str, str] | None:
     """A Lab Text's Technique and Form: its spell's, else the text's own
     (an enchantment, a Longevity Ritual, a taming or a Discovery)."""
-    spell = spl.find_spell(saga, book.spell_id)
+    spell = catalog.find_spell(saga, book.spell_id)
     if spell is not None and spell.technique and spell.form:
         return spell.technique, spell.form
     if book.technique and book.form:

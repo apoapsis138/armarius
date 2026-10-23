@@ -385,7 +385,9 @@ def points_text(
     return "\n".join(text)
 
 
-def _check(label: str, ok: bool, detail: str, source: str = SOURCE, *, advice=False):
+def _check(
+    label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
+):
     status = "pass" if ok else ("advice" if advice else "warn")
     return Check("characteristics", label, status, detail, source)
 

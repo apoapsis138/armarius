@@ -24,11 +24,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...threats import DORMANT
-from ..builder import Builder, paragraphs
+from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
-    from ...models import Neighbour
     from . import Transylvania
 
 S = Builder.stage
@@ -46,12 +44,6 @@ def build(transylvania: Transylvania) -> None:
     _taltos(transylvania)
     _succession(transylvania)
     _legate(transylvania)
-
-
-def _dormant(threat: Neighbour) -> Neighbour:
-    """Mark a threat as not yet begun: More, Begin This Story starts it."""
-    threat.details[DORMANT] = True
-    return threat
 
 
 # -- the main saga --
@@ -334,7 +326,7 @@ def _dragon_war(transylvania: Transylvania) -> None:
 
 def _teutonic(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_teutonic"] = _dormant(
+    transylvania.world["threat_teutonic"] = dormant(
         b.threat(
             "The Teutonic Expulsion",
             summary=paragraphs(
@@ -450,7 +442,7 @@ def _teutonic(transylvania: Transylvania) -> None:
 
 def _mongols(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_mongols"] = _dormant(
+    transylvania.world["threat_mongols"] = dormant(
         b.threat(
             "The Mongols",
             summary=paragraphs(
@@ -525,7 +517,7 @@ def _mongols(transylvania: Transylvania) -> None:
 
 def _bosnian_crusade(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_bosnia"] = _dormant(
+    transylvania.world["threat_bosnia"] = dormant(
         b.threat(
             "The Bosnian Crusade",
             summary=paragraphs(
@@ -602,7 +594,7 @@ def _bosnian_crusade(transylvania: Transylvania) -> None:
 
 def _thracian_valley(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_thracian_valley"] = _dormant(
+    transylvania.world["threat_thracian_valley"] = dormant(
         b.threat(
             "The Valley of the Thracian Kings",
             summary=paragraphs(
@@ -685,7 +677,7 @@ def _thracian_valley(transylvania: Transylvania) -> None:
 
 def _zalmoxis(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_zalmoxis"] = _dormant(
+    transylvania.world["threat_zalmoxis"] = dormant(
         b.threat(
             "The Return of Zalmoxis",
             summary=paragraphs(
@@ -762,7 +754,7 @@ def _zalmoxis(transylvania: Transylvania) -> None:
 
 def _taltos(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_taltos"] = _dormant(
+    transylvania.world["threat_taltos"] = dormant(
         b.threat(
             "The Székely Taltós",
             summary=paragraphs(
@@ -837,7 +829,7 @@ def _taltos(transylvania: Transylvania) -> None:
 
 def _succession(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_succession"] = _dormant(
+    transylvania.world["threat_succession"] = dormant(
         b.threat(
             "Poena's Succession",
             summary=paragraphs(
@@ -928,7 +920,7 @@ def _succession(transylvania: Transylvania) -> None:
 
 def _legate(transylvania: Transylvania) -> None:
     b = transylvania.b
-    transylvania.world["threat_legate"] = _dormant(
+    transylvania.world["threat_legate"] = dormant(
         b.threat(
             "The Papal Legate",
             summary=paragraphs(

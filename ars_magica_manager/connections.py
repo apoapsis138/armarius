@@ -17,9 +17,8 @@ from typing import Any
 
 from . import neighbours, places, references, world
 from .models import Character, Covenant, Creature, Familiar, Laboratory, Neighbour, Saga
-from .references import Ref
-from .sheets import creature as creature_sheet
-from .sheets.character import Fact
+from .references import Fact, Ref
+from .rules import sites
 from .tribunal_packages import rhine
 
 #: The sheets that show a Connections section.
@@ -30,7 +29,7 @@ def link_kind(record: Any) -> str | None:
     """The kind a Link to `record` has (models.LINK_KINDS), or None for
     a record no Link points at."""
     if isinstance(record, Neighbour):
-        return "places" if places.is_place(record) else None
+        return "places" if sites.is_place(record) else None
     return {
         Character: "characters",
         Covenant: "covenants",
@@ -109,9 +108,9 @@ def where_fact(label: str, saga: Saga, at: tuple[Neighbour, int] | None) -> list
 def _located_in(saga: Saga, record: Any) -> list[Fact]:
     """Where a covenant or laboratory is."""
     if isinstance(record, Covenant):
-        return where_fact("Located in", saga, places.covenant_place(saga, record))
+        return where_fact("Located in", saga, sites.covenant_place(saga, record))
     if isinstance(record, Laboratory):
-        return where_fact("Located in", saga, places.lab_place(saga, record))
+        return where_fact("Located in", saga, sites.lab_place(saga, record))
     return []
 
 
@@ -133,9 +132,13 @@ def _gilds(saga: Saga, record: Any) -> list[Fact]:
     ]
 
 
-def _rules(saga: Saga, record: Any) -> list[Fact]:
-    """The neighbours `record` rules or leads."""
-    return creature_sheet.rules_facts(saga, record)
+def rules_facts(saga: Saga, record: Any) -> list[Fact]:
+    """The neighbours `record` rules or leads, each linked; none while it
+    rules none."""
+    ruled = references.ruled_by(saga, record)
+    if not ruled:
+        return []
+    return [Fact("Rules", ", ".join(n.name for n in ruled), references.refs(*ruled))]
 
 
 #: Each heading's query, in the order a sheet shows them.
@@ -144,7 +147,7 @@ QUERIES: tuple[Callable[[Saga, Any], list[Fact]], ...] = (
     _located_in,
     _gilds,
     member_of,
-    _rules,
+    rules_facts,
     linked_from,
 )
 

@@ -6,7 +6,6 @@ import random
 
 from support import strip_markup
 
-from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager import seasons
 from ars_magica_manager.models import (
     CHARGED,
@@ -28,7 +27,7 @@ from ars_magica_manager.models import (
 )
 from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import enchant_seasons as es
-from ars_magica_manager.rules import lab_seasons
+from ars_magica_manager.rules import enchantment, lab_seasons
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 
@@ -181,7 +180,7 @@ def test_instilling_takes_seasons_and_its_vis_in_the_first():
     assert (text.technique, text.form, text.level) == (
         effect.technique,
         effect.form,
-        ed.modified_level(staff, effect),
+        enchantment.modified_level(staff, effect),
     )
     assert (text.author_id, text.owner_kind) == ("m", "laboratory")
     assert text.device_type == "Invested Device"
@@ -225,7 +224,7 @@ def _text(saga, device_id, effect_id, **fields) -> Book:
         "text_kind": "Enchantment",
         "technique": effect.technique,
         "form": effect.form,
-        "level": ed.modified_level(device, effect),
+        "level": enchantment.modified_level(device, effect),
         "device_type": es.text_device_type(device),
         "owner_kind": "covenant",
         "owner_id": saga.covenants[0].id,

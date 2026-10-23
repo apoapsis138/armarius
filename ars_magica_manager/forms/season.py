@@ -39,6 +39,7 @@ from ..rules import (
     book_seasons,
     experiment,
     laboratory_seasons,
+    library,
     study_virtues,
     supplement_seasons,
 )
@@ -90,13 +91,6 @@ def when_of(
         if season in SEASONS and year.isdigit():
             return season, int(year)
     return _opened_for(saga, existing, when)
-
-
-def save_plan(saga: Saga, plan: SeasonPlan, existing: SeasonPlan | None) -> None:
-    """Lock in `plan`; a plan moved to another season leaves its old one."""
-    if existing is not None and existing in saga.season_plans:
-        saga.season_plans.remove(existing)
-    seasons.set_plan(saga, plan)
 
 
 def save_season(
@@ -1163,7 +1157,7 @@ def _book_work_fields(
                 (escape(b.name + lt.cant_read_tag(saga, character, b)), b.id)
                 for b in saga.books
                 if b.type in ("Lab Text", "Casting Tablet")
-                and bk.can_read(saga, character, b)
+                and library.can_read(saga, character, b)
             ],
             allow_blank=True,
             show_if=_activity_is(book_seasons.COPY_TEXTS),
@@ -1254,8 +1248,8 @@ def _florilegium_subjects(saga: Saga, character: Character) -> list[tuple[str, s
         if (
             book.type == "Tractatus"
             and subject
-            and bk.codex_of(saga, book) is None
-            and bk.can_read(saga, character, book)
+            and library.codex_of(saga, book) is None
+            and library.can_read(saga, character, book)
         ):
             found[subject] = found.get(subject, 0) + 1
     return [
@@ -1268,7 +1262,7 @@ def _mastered_spells(saga: Saga, character: Character) -> list[tuple[str, str]]:
     """The spells the character has mastered, for writing Casting Tablets."""
     found = []
     for known in character.spells_known:
-        spell = spl.find_spell(saga, known.spell_id)
+        spell = catalog.find_spell(saga, known.spell_id)
         if spell is not None and known.mastery_score >= 1:
             found.append((escape(f"{spell.name} ({spl.shorthand(spell)})"), spell.id))
     return found

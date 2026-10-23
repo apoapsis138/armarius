@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs
 
 if TYPE_CHECKING:
     from ...models import Covenant, Tribunal
@@ -31,11 +31,6 @@ TYTALUS = "house_tytalus"
 VERDITIUS = "house_verditius"
 
 # The lead line of a covenant's notes, before its secrets.
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one hook or secret a line."""
-    return "\n".join(lines)
 
 
 def build(rhine: Rhine) -> None:
@@ -133,7 +128,7 @@ def _durenmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "friendly covenant Sinews of Knowledge, or directly by the Mercere "
         "Portal to Harco.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: Intellego from the golden-green sap of the great vine on the Tower of Bonisagus (amount not given)",
         "Vis: Perdo from the pine cones of the Black Fir, gathered yearly (amount not given)",
         "Vis: Vim from Petrus Virilis's seed",
@@ -153,7 +148,7 @@ def _durenmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Tension: the Fane of the Founders, where twelve magi renew the Founders' vows every seventh year during the Tribunal; most Durenmar magi know of it, none has found it",
         "Hook: the library is unhelpful about exotic and non-Hermetic lore; obscure lab notes and old books hint at forgotten artifacts; magi from distant Tribunals pass through",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The Black Fir near the Great Library is the King of the Black Mountain's slow revenge: planted at the Aegis's edge over a century ago after his direct attacks failed, it was taken inside the Aegis when the magi found its cones gave vis, and so breached their own defence. It creeps about six inches a year toward the Tower of Bonisagus; what happens when it reaches the tower or the vine is unknown but likely severe. The magi think it immemorial.",
         "Murion sends her raven familiar Kolkrabus to spy on Dankmar and others she counts enemies, against the Code.",
         "Vis donations are quietly accepted in place of a contribution to the library and prop up the dwindling vis income; this is never admitted.",
@@ -667,7 +662,7 @@ def _dankmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "at a word, but slack-witted, unable to think for themselves and "
         "needing to be told to eat each day. There are no consortes.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: not given",
         "Income: not given",
         "Mundane: hostile to the emperor's deforestation; mundanes who feel the Shrouded Glen never return",
@@ -795,7 +790,7 @@ def _triamore(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "covenants. Both its Tremere sigils are held by Stentorius of "
         "Fengheld, the Tremere exarch of the Rhine.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: not given",
         "Income: a manorial estate (details not given)",
         "Mundane: deep in local politics, details not given; Redcaps pass through on the road between the Rhine and Normandy",
@@ -911,7 +906,7 @@ def _waddenzee(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "are at sea at any time in two ships and most of the rest are "
         "drunk, but they obey the magi and their deputies.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: rich, but mostly other people's, taken as plunder",
         "Vis: Lucas von Beck harvests vis at the Pirates' Graveyards in Drenthe, where the Frisian pirates bury their dead",
         "Income: piracy on the North Sea with five enchanted ships",
@@ -923,7 +918,7 @@ def _waddenzee(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Hook: a generation hence the Hanseatic League will build bigger ships, sail in convoy and hire soldiers against pirates; with Oculus Septentrionalis at its head an assault on Waddenzee is plausible, but the League is more than twenty years off",
         "Hook: the stolen Hermetic books may have been placed in the pirates' hands and tainted; Lucas may be using infernal lore in his necromancy without knowing it, and only Hachim may have the wisdom to resist",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Imanitos Mendax of Oculus Septentrionalis feeds Eric advance word of that covenant's ship movements for a share of the plunder, and the Waddenzee magi are party to it; the messages may travel by Astasians, tiny messenger demons taken for airy spirits.",
         "The power of the Pirates' Graveyards may be Infernal rather than Magic; Lucas has barely considered it.",
     )
@@ -1101,7 +1096,7 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "recently left to help found Heorot in Denmark and remains "
         "friendly.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: chronically short; a few sources, all far from Lübeck around the Baltic, gathered by Estrid Danesson",
         "Vis: Boris of Novgorod buys Novgorod vis cheaply",
         "Income: trade, shipbuilding and the businesses of its magi; perhaps the richest covenant in the Rhine",
@@ -1113,7 +1108,7 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Hook: Henri de Tours may negotiate the treaty of Lübeck and Hamburg of 1241 or become Älderman; the League may be the covenant's own idea, and growing wealth brings Quaesitorial risk and the temptation to bribe at Tribunal",
         "Hook: Marcus Navicularius is designing the Baltic cog, round, flat-bottomed, with a centre rudder and one square sail, carrying hundreds of tons of Novgorod timber, which the Hanse will adopt by mid-century",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The covenant holds three Verditius magestones, given secretly in 1144, each giving a Magic aura of 3 over a large room; they are shared so each magus has a Magic-aura lab for up to two seasons a year. Only Durenmar's senior magi also know. Imanitos might swap them for infernally tainted copies to breed greed in the labs.",
         "Imanitos Mendax betrays the covenant to Waddenzee, selling its ship movements for a share of the loot; discovery would mean expulsion and undying enmity. He may also be a diabolist of a hidden dark Jerbiton lineage serving the demon Radegast, corrupting Lübeck's notables through the Goldenes Kalb and posing as Radegast's prophet to the Mecklenburg family, with low-Might demons for messengers, thieves, spies and seducers.",
         "A secret deal with Fengheld: a rook of vis a year in exchange for a huge yearly shipment of luxuries and over a hundred pounds of silver.",
@@ -1357,7 +1352,7 @@ def _fengheld(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Black Forest come here instead of Durenmar. This near-monopoly of "
         "the Order's news serves Fengheld well.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: about two dozen sites, some hundreds of miles away, many seized in the eastern conquests of the 11th century; none is named",
         "Vis: a rook a year goes to Oculus Septentrionalis (secretly) for luxuries and silver",
         "Income: a vast farming estate, Peter von Würzburg's wines, and the trade of the Rheingasse and Cherbourg chapters",
@@ -1372,7 +1367,7 @@ def _fengheld(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Hook: the library is vast but weighted to low-level books, so Fengheld-trained magi are generalists; specialists are invited as guests to improve it",
         "Hook: Balastor means to return others to a feral state whether they consent or not",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Fengheld's real policy is to keep every other covenant so tangled in politics that nobody notices its own growing power; it has worked so far, and its vote bloc is the Tribunal's largest.",
         "Eule has passed into Final Twilight, and her celebrated wisdom is her filius Günther Lupus's fraud.",
         "The Bears' Cave in the northern Harz is the private vis source of a hidden lineage of bear-heartbeast Bjornaer descending from the Founder: Urgen of Crintera and his filia Odorpes of the Lusatia chapter.",

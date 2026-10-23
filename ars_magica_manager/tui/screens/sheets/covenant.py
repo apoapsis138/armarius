@@ -25,7 +25,6 @@ from .... import (
     vassals,
     world,
 )
-from .... import books as bk
 from .... import covenant_build as cov_build
 from .... import covenant_diary as cov_diary
 from .... import economics as eco
@@ -37,10 +36,7 @@ from ....boon_hook_text import (
     boon_hook_title,
     counted,
 )
-from ....covenants import (
-    boon_hook_problems,
-    covenant_effective_aura,
-)
+from ....covenants import boon_hook_problems
 from ....forms import ahead as ahead_forms
 from ....forms import world as world_forms
 from ....forms.secrets import secrets_ops
@@ -54,7 +50,8 @@ from ....models import (
     Covenant,
     Saga,
 )
-from ....rules import realms
+from ....rules import covenfolk, library, realms
+from ....rules.realms import covenant_effective_aura
 from ....sections import COV_AHEAD_SECTION, MAGI_SECTION, WHAT_MATTERS_SECTION
 from ..widgets import (
     DetailsPanel,
@@ -365,7 +362,7 @@ class CovenantSheetView(SheetView):
     def _library_tab(self) -> ComposeResult:
         yield self._book_list(
             ("section-cov-info",),
-            lambda: bk.books_in_covenant(self.saga, self.covenant),
+            lambda: library.books_in_covenant(self.saga, self.covenant),
             section_id="section-lib-books",
             summary=True,
             research=lambda: book_value.research_count(self.saga, self.covenant),
@@ -567,15 +564,17 @@ class CovenantSheetView(SheetView):
             )
         self.query_one("#pos-panel", Static).update(pos.detail_text(None))
 
-    def _inh_entries(self, kind: str) -> list[inh.InhabitantEntry]:
-        return inh.entries_for_kind(self.saga, self.covenant, kind)
+    def _inh_entries(self, kind: str) -> list[covenfolk.InhabitantEntry]:
+        return covenfolk.entries_for_kind(self.saga, self.covenant, kind)
 
     def _inh_rows(self, kind: str) -> list[tuple[int, str]]:
         return [(i, inh.row_label(e)) for i, e in enumerate(self._inh_entries(kind))]
 
     def _inh_title(self, kind: str) -> str:
         """ "Magi (1)": the list's headcount -- quantities added up."""
-        return f"{inh.KIND_TITLES[kind]} ({inh.headcount(self._inh_entries(kind))})"
+        return (
+            f"{inh.KIND_TITLES[kind]} ({covenfolk.headcount(self._inh_entries(kind))})"
+        )
 
     def selected_inhabitant(self, kind: str) -> int | None:
         """Index into the `kind` list's entries of the chosen row, or None."""

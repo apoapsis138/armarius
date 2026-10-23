@@ -5,6 +5,8 @@ worked out in creature_sheet.py and edited through creature_forms.py."""
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
+
 from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
@@ -16,6 +18,7 @@ from ....forms import creature as creature_forms
 from ....forms import world as world_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Creature, Saga
+from ....references import Fact
 from ....sections import (
     BESTIARY_INFO_SECTION,
     BESTIARY_SECTION,
@@ -33,7 +36,6 @@ from ....sections import (
     LINKS_SECTION,
 )
 from ....sheets import creature as crs
-from ....sheets.character import Fact
 from ..widgets import (
     PinnedCollapsible,
     SelectableList,
@@ -175,7 +177,12 @@ class CreatureSheetView(SheetView):
         return _facts_text(crs.facts(self.saga, self.creature), column)
 
     def _section(
-        self, section_id: str, title: str, rows, *, count=None
+        self,
+        section_id: str,
+        title: str,
+        rows: Callable[[], Sequence[tuple[int | None, str]]],
+        *,
+        count: Callable[[], int] | None = None,
     ) -> ComposeResult:
         """A list section of the creature's, its title counting its rows
         when `count` is given."""

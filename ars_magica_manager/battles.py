@@ -10,25 +10,54 @@ Kept in Neighbour.details["battles"], each {"name", "enemy", "ours",
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Required, TypedDict, cast
 
 from .commands import Command, Form, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import Character, Saga
-from .neighbour_lists import details_list, list_ops
+from .models import Character, Neighbour, Saga, details_list
+from .neighbour_lists import list_ops
 from .rules import battle
 from .rules.lab import ability_score
 
-Entry = dict[str, Any]
+
+class BattleEvent(TypedDict):
+    """A battlefield event played: who led it (a character's id), the
+    maneuver, the enemy unit and its size, whether the initiative was
+    given up, its Event Total, whether it was won, and the combat groups
+    lost."""
+
+    who: str
+    maneuver: str
+    enemy: str
+    size: str
+    initiative: bool
+    total: int
+    won: bool
+    losses: int
 
 
-def battles(neighbour) -> list[Entry]:
-    return details_list(neighbour, "battles")
+class Battle(TypedDict, total=False):
+    """A battle the lord's army fights: the enemy, both armies in combat
+    groups now, the commanders' Deployment Totals, the baggage train, and
+    the events played."""
+
+    name: Required[str]
+    enemy: str
+    ours: int
+    theirs: int
+    our_deployment: int
+    their_deployment: int
+    baggage: int
+    events: list[BattleEvent]
 
 
-def army_groups(neighbour) -> int:
+def battles(neighbour: Neighbour) -> list[Battle]:
+    return cast(list[Battle], details_list(neighbour, "battles"))
+
+
+def army_groups(neighbour: Neighbour) -> int:
     """The combat groups of five the lord's title raises (his levies
     included)."""
     from . import lords  # lords' Fief tab lists the battles
@@ -38,25 +67,26 @@ def army_groups(neighbour) -> int:
     return men // battle.GROUP_SIZE
 
 
-def territorial(entry: Entry) -> int:
+def territorial(entry: Battle) -> int:
     return battle.territorial_advantage(
         int(entry.get("our_deployment") or 0), int(entry.get("their_deployment") or 0)
     )
 
 
-def weight(entry: Entry) -> int:
+def weight(entry: Battle) -> int:
     return battle.weight_of_numbers(
         int(entry.get("ours") or 0), int(entry.get("theirs") or 0)
     )
 
 
-def events(entry: Entry) -> list[Entry]:
+def events(entry: Battle) -> list[BattleEvent]:
     found = entry.setdefault("events", [])
-    assert isinstance(found, list)
+    if not isinstance(found, list):
+        raise ValueError(f"A battle's events should be a list, not {found!r}.")
     return found
 
 
-def record_text(entry: Entry) -> str:
+def record_text(entry: Battle) -> str:
     """Events won and lost ("2 won, 1 lost"; "none yet")."""
     played = events(entry)
     if not played:
@@ -68,11 +98,11 @@ def record_text(entry: Entry) -> str:
 # -- the list --
 
 
-def title(_saga: Saga, neighbour) -> str:
+def title(_saga: Saga, neighbour: Neighbour) -> str:
     return f"Battles ({len(battles(neighbour))})"
 
 
-def grid(_saga: Saga, neighbour) -> Grid:
+def grid(_saga: Saga, neighbour: Neighbour) -> Grid:
     rows = [
         [
             b.get("name", ""),
@@ -94,7 +124,9 @@ def grid(_saga: Saga, neighbour) -> Grid:
     )
 
 
-def fields(_saga: Saga, neighbour, entry: Entry | None) -> list[DialogField]:
+def fields(
+    _saga: Saga, neighbour: Neighbour, entry: Battle | None
+) -> list[DialogField]:
     e = entry or {}
     return [
         DialogField(
@@ -146,7 +178,7 @@ def fields(_saga: Saga, neighbour, entry: Entry | None) -> list[DialogField]:
     ]
 
 
-def baggage_short(entry: Entry) -> int:
+def baggage_short(entry: Battle) -> int:
     """Baggage groups the lord's army lacks for its size now."""
     needed = battle.baggage_needed(int(entry.get("ours") or 0))
     return max(0, needed - int(entry.get("baggage") or 0))
@@ -158,7 +190,7 @@ def problem(values: dict[str, Any]) -> str | None:
     return None
 
 
-def ops(saga: Saga, neighbour) -> SectionOps:
+def ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
     return list_ops(
         saga,
         neighbour,
@@ -170,7 +202,7 @@ def ops(saga: Saga, neighbour) -> SectionOps:
     )
 
 
-def info(saga: Saga, neighbour, index: int) -> str:
+def info(saga: Saga, neighbour: Neighbour, index: int) -> str:
     """A battle in full: the armies, the ground and each event (markup)."""
     entry = battles(neighbour)[index]
     lines = [
@@ -204,7 +236,7 @@ def info(saga: Saga, neighbour, index: int) -> str:
 # -- a battlefield event --
 
 
-def event_of(saga: Saga, entry: Entry, values: dict[str, Any]) -> battle.Event | None:
+def event_of(saga: Saga, entry: Battle, values: dict[str, Any]) -> battle.Event | None:
     who: Character | None = saga.character(values.get("who"))
     if who is None:
         return None
@@ -221,7 +253,7 @@ def event_of(saga: Saga, entry: Entry, values: dict[str, Any]) -> battle.Event |
     )
 
 
-def event_live(saga: Saga, entry: Entry, values: dict[str, Any]) -> str:
+def event_live(saga: Saga, entry: Battle, values: dict[str, Any]) -> str:
     stage = len(events(entry))
     event = event_of(saga, entry, values)
     if event is None:
@@ -241,7 +273,7 @@ def event_live(saga: Saga, entry: Entry, values: dict[str, Any]) -> str:
     )
 
 
-def event_form(saga: Saga, neighbour, index: int) -> Command:
+def event_form(saga: Saga, neighbour: Neighbour, index: int) -> Command:
     """More's Battle Event on the chosen battle: the next event's focal
     character and its Maneuver, Enemy and Size, its Event Total, and how
     it went; the losing side loses its groups."""

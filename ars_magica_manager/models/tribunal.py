@@ -6,9 +6,9 @@ Most of its sheet is worked out from the covenants that belong to it
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, TypedDict
 
-from .common import known_fields, move_secrets
+from .common import Change, known_fields, move_secrets
 from .traits import new_instance_id
 
 #: The Tribunal package every saga has: the Definitive Edition's rules,
@@ -92,6 +92,39 @@ class TreasuryEntry:
     id: str = field(default_factory=new_instance_id, compare=False)
 
 
+class Meeting(TypedDict, total=False):
+    """The meeting a Tribunal is holding (meeting.py), kept as a plain
+    dict so a save holds it as it is. A step keeps what it decided under
+    its own key; a package's steps keep theirs too (Hibernia's council
+    and tithe, the Theban elections)."""
+
+    year: int
+    season: str
+    place: str
+    days: int
+    #: The keys of the steps held.
+    done: list[str]
+    #: Each case's day, by case id.
+    day_of: dict[str, int]
+    #: Each covenant's roll call, by covenant id: "present" (magus ids),
+    #: "unnamed", "absent", "proxies", "ruling".
+    attendance: dict[str, dict[str, Any]]
+    #: What the storyguide noted at each step, by step key.
+    notes: dict[str, str]
+    #: The Diary entry each step's minutes went into, by step key.
+    minutes: dict[str, str]
+    #: Each case's vote, debate and ruling, by case id.
+    votes: dict[str, dict[str, Any]]
+    debates: dict[str, dict[str, Any]]
+    rulings: dict[str, dict[str, Any]]
+    succession: dict[str, Any]
+    lot: list[str]
+    host: dict[str, Any]
+    council: dict[str, Any]
+    tithe: dict[str, Any]
+    theban: dict[str, Any]
+
+
 @dataclass
 class TribunalDiaryEntry:
     """A line of the Tribunal's Diary: the minutes of a meeting, a change
@@ -103,7 +136,7 @@ class TribunalDiaryEntry:
     details: str = ""
     #: What the entry changed, so deleting it can undo it (see the
     #: yearly step); empty for an entry typed in.
-    changes: list[dict[str, Any]] = field(default_factory=list)
+    changes: list[Change] = field(default_factory=list)
     #: The numbers a meeting's minutes set in the margin ("23 votes, 3
     #: by proxy").
     margin: str = ""
@@ -144,7 +177,7 @@ class Tribunal:
     #: switched, so switching back finds it again.
     package_data: dict[str, dict[str, Any]] = field(default_factory=dict)
     #: The meeting being held (a dict the meeting module reads), or None.
-    meeting: dict[str, Any] | None = None
+    meeting: Meeting | None = None
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""

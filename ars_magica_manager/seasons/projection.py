@@ -21,7 +21,7 @@ from __future__ import annotations
 import pickle
 from dataclasses import dataclass, field
 
-from ..models import SEASONS, Character, Saga, next_season
+from ..models import Character, Saga, next_season, season_order
 from ..rules import activities as rules
 from ..rules import lab_seasons
 
@@ -30,10 +30,6 @@ from ..rules import lab_seasons
 LONGEST = 40
 
 Key = tuple[str, str, int]  # (character id, season, year)
-
-
-def _when(season: str, year: int) -> int:
-    return year * len(SEASONS) + SEASONS.index(season)
 
 
 @dataclass
@@ -51,17 +47,19 @@ class Projection:
     played: int = 0
 
     def _reached(self) -> int:
-        return _when(self.copy.current_season, self.copy.current_year)
+        return season_order(
+            season=self.copy.current_season, year=self.copy.current_year
+        )
 
     def _play_through(self, season: str, year: int) -> None:
-        target = _when(season, year)
+        target = season_order(season=season, year=year)
         while self._reached() <= target and self.played < LONGEST:
             self._play_one()
 
     def at(self, season: str, year: int) -> Saga:
         """A copy of the saga as it will stand when that season begins (its
         own plans not yet played), free to change."""
-        target = _when(season, year)
+        target = season_order(season=season, year=year)
         played = self
         if self._reached() > target:
             played = Projection(pickle.loads(self.state), self.state)
@@ -109,11 +107,13 @@ class Projection:
         """The character's seasons before this one whose die isn't rolled
         yet, counted as gaining nothing: (season, year, activity label)."""
         self._play_through(season, year)
-        target = _when(season, year)
+        target = season_order(season=season, year=year)
         return [
             (s, y, o.activity.label if o.activity else o.plan.activity)
             for (who, s, y), o in self.outcomes.items()
-            if who == character_id and _when(s, y) < target and o.pending_roll
+            if who == character_id
+            and season_order(season=s, year=y) < target
+            and o.pending_roll
         ]
 
 
@@ -148,7 +148,9 @@ def as_then(
     """The saga and `character` as they will stand when that season
     begins: the real ones for the current season, else a projection's copy
     (to work out a plan for a season ahead)."""
-    if _when(season, year) <= _when(saga.current_season, saga.current_year):
+    if season_order(season=season, year=year) <= season_order(
+        season=saga.current_season, year=saga.current_year
+    ):
         return saga, character
     then = projection(saga).at(season, year)
     return then, then.character(character.id) or character

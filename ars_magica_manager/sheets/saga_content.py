@@ -16,7 +16,7 @@ from .. import saga_content as sc
 from .. import sourcebooks, traditions
 from .. import spells as spl
 from ..models import Saga, Spell
-from .character import Fact
+from ..references import Fact
 from .covenant import Table
 
 ALWAYS, IN_PLAY, OUT_OF_PLAY = "Always", "In play", "Not in play"

@@ -6,7 +6,6 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from ..grids import Grid
-from ..inhabitants import character_kind
 from ..markup import escape
 from ..models import (
     SEASONS,
@@ -20,6 +19,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import activities as rules
+from ..rules.covenfolk import character_kind
 from ..rules.rounding import round_away_from_zero, round_down
 from ..tables import Table
 from ..world import takes_part_in_play
@@ -125,7 +125,7 @@ def _add_vis(covenant: Covenant, art: str, pawns: int, name: str) -> None:
         store.pawns += pawns
 
 
-def available(resource, year: int) -> bool:
+def available(resource: Possession | IncomeSource, year: int) -> bool:
     """Whether a vis or income source gives anything this year: not contested,
     or secured through it: an unaddressed contested resource isn't
     available until it is addressed."""

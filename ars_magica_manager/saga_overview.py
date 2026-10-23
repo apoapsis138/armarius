@@ -10,8 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
 
-from . import catalog, places, tribunal_packages, tribunals, world
-from . import laboratories as labs
+from . import catalog, tribunal_packages, tribunals, world
 from .markup import escape, fit
 from .models import (
     COMPANION_TYPES,
@@ -21,8 +20,10 @@ from .models import (
     Laboratory,
     Saga,
     character_age,
+    season_order,
 )
 from .rules import activity_groups as groups
+from .rules import lab_stats, sites
 from .rules.activities import ACTIVITIES
 from .rules.activities import OTHER as OTHER_KEY
 from .seasons.plans import result_text
@@ -179,14 +180,14 @@ def lab_cards(saga: Saga, covenant_id: str | None) -> list[LabCard]:
 def _lab_card(saga: Saga, lab: Laboratory) -> LabCard:
     owner = saga.character(lab.owner_id)
     covenant = saga.covenant(lab.covenant_id)
-    own = places.lab_aura(saga, lab)
-    aura = labs.lab_aura_total(
+    own = sites.lab_aura(saga, lab)
+    aura = lab_stats.lab_aura_total(
         lab, own[0] if own is not None else covenant.aura if covenant else 0
     )
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
 
     def total(name: str) -> str:
-        return f"{labs.lab_characteristic_total(lab, by_id, name, saga)[3]:+d}"
+        return f"{lab_stats.lab_characteristic_total(lab, by_id, name, saga)[3]:+d}"
 
     return LabCard(
         lab.id,
@@ -258,10 +259,6 @@ class Season:
     result: str = ""
 
 
-def _when(season: str, year: int) -> int:
-    return year * len(SEASONS) + SEASONS.index(season)
-
-
 def _at(index: int) -> tuple[str, int]:
     return SEASONS[index % len(SEASONS)], index // len(SEASONS)
 
@@ -280,11 +277,13 @@ def character_seasons(saga: Saga, character: Character) -> dict[int, Season]:
             kind = REST
         name = entry.name if entry.name != label else ""
         detail = "\n".join(part for part in (name, entry.details) if part)
-        seasons[_when(entry.season, entry.year)] = Season(kind, label, detail, False)
+        seasons[season_order(season=entry.season, year=entry.year)] = Season(
+            kind, label, detail, False
+        )
     for plan in saga.season_plans:
         if plan.character_id != character.id or plan.season not in SEASONS:
             continue
-        when = _when(plan.season, plan.year)
+        when = season_order(season=plan.season, year=plan.year)
         activity = ACTIVITIES.get(plan.activity)
         seasons.setdefault(
             when,
@@ -314,7 +313,7 @@ BACK, AHEAD = 39, 4
 
 
 def timeline(saga: Saga, characters: Sequence[Character]) -> Timeline:
-    now = _when(saga.current_season, saga.current_year)
+    now = season_order(season=saga.current_season, year=saga.current_year)
     every = {c.id: character_seasons(saga, c) for c in characters}
     known = [when for seasons in every.values() for when in seasons]
     first = max(min([*known, now - 3]), now - BACK)
@@ -402,14 +401,16 @@ def lab_seasons(saga: Saga, lab: Laboratory) -> dict[int, Season]:
             label = entry.activity or entry.name or "Diary entry"
             name = entry.name if entry.name != label else ""
             detail = "\n".join(part for part in (name, entry.details) if part)
-            seasons[_when(entry.season, entry.year)] = Season(LAB, label, detail, False)
+            seasons[season_order(season=entry.season, year=entry.year)] = Season(
+                LAB, label, detail, False
+            )
     for plan in saga.season_plans:
         if plan.lab_id != lab.id or plan.season not in SEASONS:
             continue
         activity = ACTIVITIES.get(plan.activity)
         who = saga.character(plan.character_id)
         seasons.setdefault(
-            _when(plan.season, plan.year),
+            season_order(season=plan.season, year=plan.year),
             Season(
                 activity_kind(plan.activity),
                 activity.label if activity else plan.activity,
@@ -425,7 +426,7 @@ def calendar_rows(
 ) -> list[tuple[int, list[Season | None]]]:
     """Seasons by when as a calendar: a row per year, newest first, from
     the first (or this year) to the last, each with its four seasons."""
-    now = _when(saga.current_season, saga.current_year)
+    now = season_order(season=saga.current_season, year=saga.current_year)
     years = [when // len(SEASONS) for when in seasons] or [saga.current_year]
     first, last = min(*years, now // len(SEASONS)), max(*years, now // len(SEASONS))
     return [

@@ -109,6 +109,25 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.3.1 — 2026-10-23
+
+### Orbis
+
+- **Undoing a world turn.** Deleting a world turn's entry puts back what
+  that year changed more reliably.
+
+### Fundamenta
+
+- **A code-health pass.** Behind the scenes: each shared helper is
+  written once (the season order, an Ability's level, the Tribunal
+  packs' helpers), the rules no longer reach up into the parts of the
+  app built on them (a test now keeps it so), the lists a neighbour
+  keeps (castles, guilds, fairs, a threat's stages, a place's levels and
+  the rest) and other saved records are type-checked, data read from a
+  file is checked with a message rather than a crash, the Tribunal packs
+  are read once per form, and code nothing used is gone. The app works
+  as before.
+
 ## 3.3.0 — 2026-10-23
 
 ### Computus
@@ -163,14 +182,6 @@ version saves, and tagged in git (`v0.2.0`, ...).
   Mountain Faerie Might 60, as the book's errata corrects (it prints 90),
   on his Bestiary entry and in the Black Forest and Feldberg places. His
   notes say why it differs from the printed page.
-
-## 3.2.1 — 2026-10-23
-
-### Peregrinatio
-
-- **King Fir's Might.** The Rhine pack gives the King of the Black
-  Mountain Faerie Might 60, as the book's errata corrects (it prints 90),
-  on his Bestiary entry and in the Black Forest and Feldberg places.
 
 ## 3.2.0 — 2026-10-22
 

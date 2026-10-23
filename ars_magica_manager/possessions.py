@@ -11,7 +11,6 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import catalog, storage, vis
-from .laboratories import lab_build_points, lab_characteristic_total
 from .markup import escape, fit, markdown_text
 from .models import (
     GEAR_POINTS,
@@ -26,6 +25,7 @@ from .models import (
     Saga,
     WeaponDef,
 )
+from .rules.lab_stats import lab_build_points, lab_characteristic_total
 from .tables import Table
 
 #: Section titles on the tab.
@@ -77,11 +77,11 @@ class PossessionEntry:
     record: Possession | None
     lab: Laboratory | None = None
     lab_owner: str = ""
-    lab_catalog: dict[str, LabVirtueFlawDef] | None = None
+    lab_catalog: Mapping[str, LabVirtueFlawDef] | None = None
     #: A Raw Vis Store: where it is kept, by name (vis.location_label).
     place: str = ""
 
-    def _own(self, attribute: str, default):
+    def _own(self, attribute: str, default: Any):
         return getattr(self.record, attribute) if self.record is not None else default
 
     @property
@@ -212,7 +212,7 @@ def entries_for_kind(
     saga: Saga,
     covenant: Covenant,
     kind: str,
-    lab_catalog: dict[str, LabVirtueFlawDef] | None = None,
+    lab_catalog: Mapping[str, LabVirtueFlawDef] | None = None,
 ) -> list[PossessionEntry]:
     """The rows of `kind`'s list, in display order: for Sanctums the covenant's
     laboratories first, then stored entries in the order added."""
@@ -487,11 +487,6 @@ def gear_points(saga: Saga, covenant: Covenant) -> int:
         for kind in ("weapon", "armor")
         for entry in entries_for_kind(saga, covenant, kind)
     )
-
-
-def total_pawns(saga: Saga, covenant: Covenant, kind: str) -> int:
-    """Pawns held in a vis list ("vis_source" per year, "vis_store" on hand)."""
-    return sum(e.pawns for e in entries_for_kind(saga, covenant, kind))
 
 
 # ------------------------------------------------------------------ changes

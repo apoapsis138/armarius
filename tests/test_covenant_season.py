@@ -109,6 +109,7 @@ async def test_advancing_asks_whether_a_lapsed_resource_was_secured():
     from ars_magica_manager import storage
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
     from ars_magica_manager.tui.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.season_records import SeasonSummaryScreen
 
     saga = everything_saga()
     covenant = saga.covenants[0]
@@ -141,6 +142,13 @@ async def test_advancing_asks_whether_a_lapsed_resource_was_secured():
         assert await wait_until(
             pilot, lambda: workspace.saga.current_season != saga.current_season
         )
+        # The season's results open next: close them before the app ends.
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, SeasonSummaryScreen)
+        )
+        await pilot.pause()
+        app.screen.query_one("#btn-close", Button).press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)
     saved = storage.load_saga(saga.id)
     well = next(p for p in saved.covenants[0].possessions if p.id == "well")
     assert well.secured_until == saga.current_year + 4

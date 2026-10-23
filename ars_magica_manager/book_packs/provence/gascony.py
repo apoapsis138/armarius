@@ -31,7 +31,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, StatBlock, paragraphs
+from ..builder import (
+    Builder,
+    StatBlock,
+    joined_lines,
+    paragraphs,
+    vf_ability,
+    vf_art,
+    vf_focus,
+)
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -50,11 +58,6 @@ KNOWN_REGION = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
 RUMOURED = {"status": "Rumoured", "known": "Locally"}
 SECRET = {"status": "Secret", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(provence: Provence, key: str, name: str, **kw: Any) -> Neighbour:
@@ -724,7 +727,7 @@ def _castra_solis(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "Mimizan and near Poitiers; Beatrice of Guernicus is registered here "
         "but lives in the Arelat.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Votes: 17 at Tribunal, plus the votes of the Praeco and (if Beatrice is confirmed) the Presiding Quaesitor",
         "Library: a fine collection with a military bent (described in Houses of Hermes: Societates; no books named in Faith & Flame)",
         "Enchantments: many devices kept to defend the House when needed",
@@ -766,7 +769,7 @@ def _castra_solis(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "pretensions; the pious here think the Mercurian flamen at "
         "Tribunal blasphemous.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "The mithraeum under the covenant is Kaeso's copy; the true temple lies secret under Bordeaux.",
         "Dama, the Praeco, killed the Presiding Quaesitors Senex (1210) and Tibaut (1219); her familiar Maju is becoming a demon (see her sheet and the Serpent's Venom).",
         "Tibaut's lab notes on Senex's last inquiry are in his sanctum here; Senex told no one where he went.",
@@ -1123,7 +1126,7 @@ def _tres_band(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "to dissuade; it would rather not teach the lesson of Mistridge again "
         "but would not shrink from it.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Votes: 3, never used; the band does not attend Tribunal",
         "Craft: Tres's magic weapons and siege engines; some think one of them struck down Simon de Montfort at Toulouse in 1218",
         "Boon: Hedge Tradition (the rusticani, an Ex Miscellanea tradition of craft magic)",
@@ -2154,18 +2157,6 @@ P = Profile
 OCCITAN = "Occitan"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
-def _focus(name: str, focus: str) -> tuple[str, dict[str, str]]:
-    return (name, {"focus": focus})
-
-
 #: Each sketched magus's profile, by key in provence.magi.
 PROFILES: dict[str, Profile] = {
     "garus": P(
@@ -2182,8 +2173,8 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Hermetic Prestige",
-            _art("Affinity with {art}", "ignem"),
-            _ability("Puissant {ability}", "intrigue"),
+            vf_art("Affinity with {art}", "ignem"),
+            vf_ability("Puissant {ability}", "intrigue"),
             "Enemies",
             "Dutybound",
         ],
@@ -2201,8 +2192,8 @@ PROFILES: dict[str, Profile] = {
             "Guile": 2,
         },
         virtues=[
-            _ability("Puissant {ability}", "leadership"),
-            _art("Affinity with {art}", "ignem"),
+            vf_ability("Puissant {ability}", "leadership"),
+            vf_art("Affinity with {art}", "ignem"),
             "Pious (Minor)",
             "Dark Secret",
         ],
@@ -2219,8 +2210,8 @@ PROFILES: dict[str, Profile] = {
             "Single Weapon": 2,
         },
         virtues=[
-            _focus("Minor Magical Focus", "horses"),
-            _art("Affinity with {art}", "animal"),
+            vf_focus("Minor Magical Focus", "horses"),
+            vf_art("Affinity with {art}", "animal"),
             "Proud (Minor)",
             "Compassionate (Minor)",
         ],
@@ -2261,7 +2252,7 @@ PROFILES: dict[str, Profile] = {
             "Area Lore: Provence": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "intellego"),
+            vf_art("Affinity with {art}", "intellego"),
             "Clear Thinker",
             "Dutybound",
             "Heir",
@@ -2282,7 +2273,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             "Inventive Genius",
-            _art("Affinity with {art}", "terram"),
+            vf_art("Affinity with {art}", "terram"),
             "Infamous",
             "Enemies",
         ],

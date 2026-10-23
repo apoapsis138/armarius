@@ -127,10 +127,23 @@ def chosen_data_dir() -> Path | None:
 #: one can't be used.
 _fallback: Path | None = None
 
+#: The folder in use, once the app has settled it (use_data_dir()): taken
+#: before everything else, so the folder isn't worked out again (a file
+#: read) on every path asked for. None until then.
+_in_use: Path | None = None
+
 
 def data_dir() -> Path:
     """The folder holding the user's data."""
-    return _fallback or chosen_data_dir() or default_data_dir()
+    return _in_use or _fallback or chosen_data_dir() or default_data_dir()
+
+
+def use_data_dir(folder: Path | None) -> None:
+    """Read and write the sagas, exports and settings in `folder` from now
+    on: the folder the app settled on as it started, or one chosen while it
+    runs. None works it out again from the environment and LOCATION_FILE."""
+    global _in_use
+    _in_use = folder
 
 
 def source() -> str:
@@ -162,12 +175,13 @@ def source_text() -> str:
 def remember_data_dir(folder: Path) -> None:
     """Use `folder` as the data folder from now on: it goes in
     LOCATION_FILE, and any fallback is dropped."""
-    global _fallback
+    global _fallback, _in_use
     LOCATION_FILE.parent.mkdir(parents=True, exist_ok=True)
     LOCATION_FILE.write_text(
         json.dumps({"data_dir": str(folder)}, indent=2), encoding="utf-8"
     )
     _fallback = None
+    _in_use = folder
 
 
 def writable(folder: Path) -> bool:

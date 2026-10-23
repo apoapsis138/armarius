@@ -25,6 +25,7 @@ from .models import (
     Character,
     Covenant,
     HermeticBackground,
+    Meeting,
     Saga,
     Tribunal,
 )
@@ -54,7 +55,7 @@ class SacredCouncil(core.Step):
     """Each faction's ambassador confirmed (or not) for this meeting, and
     the Coill Trí's disputes heard."""
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         kept = meeting.get("council")
         found: list[DialogField] = []
         for entry in ambassadors(tribunal):
@@ -95,7 +96,9 @@ class SacredCouncil(core.Step):
         ]
         return found
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         chosen = []
         for entry in ambassadors(tribunal):
             on = bool(values.get(f"confirm_{entry['id']}"))
@@ -108,7 +111,7 @@ class SacredCouncil(core.Step):
         }
         core._keep_note(meeting, self.key, values)
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         voting = ", ".join(_named(a) for a in confirmed(tribunal, meeting))
         disputes = (meeting.get("council") or {}).get("disputes", "")
         return core._join(
@@ -120,7 +123,7 @@ class SacredCouncil(core.Step):
     def save_label(self):
         return "Confirm"
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         voting = confirmed(tribunal, meeting)
         names = ", ".join(f"{_named(a)} for {a['faction']}" for a in voting)
         words = (
@@ -138,16 +141,16 @@ class SacredCouncil(core.Step):
 # -- the tithe of Gifted children --
 
 
-def _record(meeting: dict[str, Any]) -> dict[str, Any]:
+def _record(meeting: Meeting) -> dict[str, Any]:
     return meeting.setdefault("tithe", {})
 
 
-def _year(saga: Saga, meeting: dict[str, Any]) -> int:
+def _year(saga: Saga, meeting: Meeting) -> int:
     return int(meeting.get("year") or saga.current_year)
 
 
 def candidates(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+    saga: Saga, tribunal: Tribunal, meeting: Meeting
 ) -> list[list[dict[str, Any]]]:
     """The children each túath offers, CHOICES of them: made once and
     kept with the meeting, so the form shows the same each time."""
@@ -164,7 +167,7 @@ def candidates(
 
 
 def chosen(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], values: dict[str, Any]
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
 ) -> list[dict[str, Any]]:
     """The child each túath brings, as the form chooses."""
     found = []
@@ -184,9 +187,7 @@ def apprenticed(saga: Saga, magus: Character) -> bool:
     )
 
 
-def represented(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
-) -> list[Covenant]:
+def represented(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> list[Covenant]:
     """The covenants represented at the meeting (those showing their
     cathach)."""
     return [
@@ -206,7 +207,7 @@ def _pawns(covenant: Covenant) -> int:
 
 
 def bidders(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+    saga: Saga, tribunal: Tribunal, meeting: Meeting
 ) -> list[gifted_children.Bidder]:
     return [
         gifted_children.Bidder(
@@ -217,7 +218,7 @@ def bidders(
 
 
 def awards(
-    saga: Saga, tribunal: Tribunal, meeting: dict[str, Any], values: dict[str, Any]
+    saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
 ) -> list[gifted_children.Award]:
     """Where each child goes, as the form says: by the bidding (the same
     each time the form is shown) or by the storyguide's hand."""
@@ -301,10 +302,10 @@ class Tithe(core.Step):
     simulated bidding. Once given, holding it again changes only the
     note."""
 
-    def _given(self, meeting: dict[str, Any]) -> list[dict[str, Any]] | None:
+    def _given(self, meeting: Meeting) -> list[dict[str, Any]] | None:
         return _record(meeting).get("given")
 
-    def fields(self, saga, tribunal, meeting):
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         if self._given(meeting) is not None:
             return [
                 DialogField(
@@ -376,7 +377,7 @@ class Tithe(core.Step):
         found.append(core._note_field(meeting, self.key))
         return found
 
-    def validate(self, meeting, values):
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
         if values.get("how") != BY_HAND:
             return None
         claimed = [v for k, v in values.items() if k.startswith("claim_") and v]
@@ -390,7 +391,9 @@ class Tithe(core.Step):
                 return f"{child['name']} has no true Gift: no magus takes them."
         return None
 
-    def live(self, saga, tribunal, meeting, values):
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         if self._given(meeting) is not None:
             return ""
         children = chosen(saga, tribunal, meeting, values)
@@ -399,7 +402,9 @@ class Tithe(core.Step):
             escape(_award_text(saga, c, a)) for c, a in zip(children, given)
         )
 
-    def apply(self, saga, tribunal, meeting, values):
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
         core._keep_note(meeting, self.key, values)
         if self._given(meeting) is not None:
             return
@@ -423,7 +428,7 @@ class Tithe(core.Step):
             given.append(kept)
         _record(meeting)["given"] = given
 
-    def _lines(self, saga: Saga, meeting: dict[str, Any]) -> list[str]:
+    def _lines(self, saga: Saga, meeting: Meeting) -> list[str]:
         return [
             _award_text(
                 saga,
@@ -435,7 +440,7 @@ class Tithe(core.Step):
             for g in self._given(meeting) or []
         ]
 
-    def text(self, saga, tribunal, meeting):
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = self._lines(saga, meeting)
         return core._join(
             *(escape(line) for line in lines), core._note_text(meeting, self.key)
@@ -444,7 +449,7 @@ class Tithe(core.Step):
     def save_label(self):
         return "Give"
 
-    def minutes(self, saga, tribunal, meeting):
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = self._lines(saga, meeting)
         if not lines:
             return "", ""

@@ -21,6 +21,7 @@ from textual.widgets import Button, Collapsible, Input, Label, ListView, Select,
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import storage
 from ars_magica_manager.models import Inhabitant, VirtueFlawInstance
+from ars_magica_manager.rules import covenfolk
 from ars_magica_manager.rules.xp import ability_xp
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
@@ -190,7 +191,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
     [record] = _records("magus")
     assert record.departed
     assert record.description == "Trusted." and record.character_id == "mag1"
-    assert inh.entries_for_kind(saved, saved.covenants[0], "magus") == []
+    assert covenfolk.entries_for_kind(saved, saved.covenants[0], "magus") == []
 
 
 async def test_removing_a_listed_companion_with_no_record_creates_one():
@@ -658,7 +659,7 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
             ),
         )
         text = str(view.query_one("#inh-population-content", Static).render())
-        minimum = inh.minimum_servants(view.saga, view.covenant)
+        minimum = covenfolk.minimum_servants(view.saga, view.covenant)
         assert f"3 / {minimum}" in text  # 3 servants already on the list
         assert re.search(
             r"Total Inhabitants:\s+11\b", text

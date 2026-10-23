@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models import BodyVis
-from ..builder import paragraphs
+from ..builder import characteristics, paragraphs, vf_ward, wound_ranges
 
 if TYPE_CHECKING:
     from ...models import Creature, CreaturePower, Neighbour
@@ -123,36 +123,6 @@ _NOT_MAGIC = {
 }
 
 
-def _chars(
-    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
-) -> dict[str, int]:
-    """Characteristics in the book's order (Int or Cun, Per, Pre, Com, Str,
-    Sta, Dex, Qik)."""
-    return {
-        "intelligence": int_,
-        "perception": per,
-        "presence": pre,
-        "communication": com,
-        "strength": str_,
-        "stamina": sta,
-        "dexterity": dex,
-        "quickness": qik,
-    }
-
-
-def _wounds(size: int) -> str:
-    """The wound ranges for a Size, as the book's blocks print them."""
-    step = 5 + size
-    return (
-        f"Wound ranges: Light 1-{step}, Medium to {2 * step}, Heavy to "
-        f"{3 * step}, Incapacitated to {4 * step}, Dead from {4 * step + 1}."
-    )
-
-
-def _ward(ward: str) -> tuple[str, dict[str, str]]:
-    return ("Traditional Ward", {"ward": ward})
-
-
 def _salt() -> tuple[str, dict[str, str]]:
     return ("Vulnerable to {substance} (Minor)", {"substance": "salt water"})
 
@@ -190,7 +160,7 @@ def _beasts(hibernia: Hibernia) -> None:
         confidence=(1, 3),
         how_many="a rare kind; each is a mare's seventh filly in a row",
         block={
-            "characteristics": _chars(-2, 0, 0, -4, 4, 2, -2, 3),
+            "characteristics": characteristics(-2, 0, 0, -4, 4, 2, -2, 3),
             "virtues_flaws": [
                 "Magic Animal",
                 "Magical Friend",
@@ -283,7 +253,7 @@ def _beasts(hibernia: Hibernia) -> None:
             "Mhuire, Mary's Clover, a four-leaved shamrock. Enriched "
             "(Realms of Power: Magic), set in silver, blessed by a priest "
             "and sung over to the Virgin daily for a season, it gives its "
-            "wearer the Luck Virtue. " + _wounds(2)
+            "wearer the Luck Virtue. " + wound_ranges(2)
         ),
     )
     _MADE["dobhar_chu"] = b.creature(
@@ -298,7 +268,7 @@ def _beasts(hibernia: Hibernia) -> None:
         confidence=(2, 5),
         how_many="usually a mated pair, one hiding while the other fights",
         block={
-            "characteristics": _chars(0, 0, 1, -3, 3, 1, 2, 1),
+            "characteristics": characteristics(0, 0, 1, -3, 3, 1, 2, 1),
             "virtues_flaws": [
                 "Magic Animal",
                 "Magical Monster",
@@ -387,7 +357,7 @@ def _beasts(hibernia: Hibernia) -> None:
             "season, a scrap gives a ship Greater Immunity to Water, a house "
             "Greater Immunity to Fire, or a man Charmed Life (Houses of "
             "Hermes: True Lineages). The ship and the house are kept safe, "
-            "not always the people in them. " + _wounds(1)
+            "not always the people in them. " + wound_ranges(1)
         ),
     )
 
@@ -407,7 +377,7 @@ def _faeries(hibernia: Hibernia) -> None:
             size=2,
             confidence=(3, 1),
             block={
-                "characteristics": _chars(-1, 0, 2, -1, 7, 3, 2, -2),
+                "characteristics": characteristics(-1, 0, 2, -1, 7, 3, 2, -2),
                 "virtues_flaws": [
                     "Narrowly Cognizant",
                     "Animal Ken",
@@ -519,7 +489,7 @@ def _faeries(hibernia: Hibernia) -> None:
                 "here. Her Pretentious Quality concerns the rulers of Meath. "
                 "The book prints Medium wounds to 13 and Incapacitated from "
                 "21, which do not fit Size +2; the ranges below are the "
-                "standard ones. " + _wounds(2)
+                "standard ones. " + wound_ranges(2)
             ),
         )
     )
@@ -533,7 +503,7 @@ def _faeries(hibernia: Hibernia) -> None:
             size=1,
             confidence=(4, 3),
             block={
-                "characteristics": _chars(2, 0, -3, -3, 2, 3, 3, 1),
+                "characteristics": characteristics(2, 0, -3, -3, 2, 3, 3, 1),
                 "virtues_flaws": [
                     "Negative Reaction",
                     "Greater Power",
@@ -548,7 +518,7 @@ def _faeries(hibernia: Hibernia) -> None:
                     "Reputation As Confidence",
                     _salt(),
                     "Infamous",
-                    _ward("a red ribbon tied in the hair or to a tail"),
+                    vf_ward("a red ribbon tied in the hair or to a tail"),
                 ],
                 "abilities": [
                     ("Animal Handling", 3, "chariots"),
@@ -635,7 +605,7 @@ def _faeries(hibernia: Hibernia) -> None:
             "storyguide character, not balanced: his age and long study "
             "of men give him more Pretenses than the rules allow; they "
             "are his Abilities here. Good for feud stories, since his "
-            "enemies are many, and for war. " + _wounds(1),
+            "enemies are many, and for war. " + wound_ranges(1),
             secrets="No one knows why he gathers an army. His great warded "
             "regio could hide one, and magi fear the endless fighting in "
             "Munster may set off another war with him; anyone starting a "
@@ -654,14 +624,14 @@ def _faeries(hibernia: Hibernia) -> None:
             size=0,
             how_many="a troop of about twenty, each like the rest",
             block={
-                "characteristics": _chars(-3, 3, -1, 0, 0, 1, 1, 3),
+                "characteristics": characteristics(-3, 3, -1, 0, 0, 1, 1, 3),
                 "virtues_flaws": [
                     "Negative Reaction",
                     "Faerie Speech",
                     "Hybrid Form",
                     "Personal Power",
                     "Incognizant",
-                    _ward("a bowl or a drop of fresh cow's milk"),
+                    vf_ward("a bowl or a drop of fresh cow's milk"),
                 ],
                 "abilities": [
                     ("Awareness", 4, "lone travellers"),
@@ -718,7 +688,7 @@ def _faeries(hibernia: Hibernia) -> None:
                 "other faeries from their homes. A horse skull buried under a "
                 "house, or a hearth kept lit all year, keeps them out. Lay "
                 "brothers at Mellifont's grange near Newgrange have watched "
-                "them ruin the crops. " + _wounds(0)
+                "them ruin the crops. " + wound_ranges(0)
             ),
         )
     )
@@ -731,7 +701,7 @@ def _faeries(hibernia: Hibernia) -> None:
             form="Corpus",
             size=0,
             block={
-                "characteristics": _chars(-2, 0, -2, 3, 1, 2, 2, 0),
+                "characteristics": characteristics(-2, 0, -2, 3, 1, 2, 2, 0),
                 "virtues_flaws": [
                     ("Infiltrator (Minor)", {"status": "outlaw leader"}),
                     "Greater Power",
@@ -744,7 +714,7 @@ def _faeries(hibernia: Hibernia) -> None:
                     "Optimistic (Major)",
                     "Incognizant",
                     "Role Requires Suffering",
-                    _ward("church bells"),
+                    vf_ward("church bells"),
                 ],
                 "abilities": [
                     ("Athletics", 4, "hurling"),
@@ -817,7 +787,7 @@ def _faeries(hibernia: Hibernia) -> None:
             "his powers. He leads a band he calls fianna and tries to "
             "keep them to noble deeds, but they mostly rob and plunder "
             "as they please. The book builds him as a companion a player "
-            "could run. " + _wounds(0),
+            "could run. " + wound_ranges(0),
             secrets="His fianna are outlaws who have gone over to the faerie.",
         )
     )
@@ -830,7 +800,7 @@ def _faeries(hibernia: Hibernia) -> None:
             form="Mentem",
             size=-3,
             block={
-                "characteristics": _chars(3, 3, 1, 3, -3, 2, -3, -2),
+                "characteristics": characteristics(3, 3, 1, 3, -3, 2, -3, -2),
                 "virtues_flaws": [
                     "Negative Reaction",
                     ("Focus Power", {"focus": "Aquam"}),
@@ -899,7 +869,7 @@ def _faeries(hibernia: Hibernia) -> None:
                 "their better, a feeble proof, and now and then enjoys a "
                 "learned dispute on philosophy. Women are beyond its power, "
                 "and near one it grows slow and foolish. Its Pretenses are "
-                "its Abilities here. " + _wounds(-3)
+                "its Abilities here. " + wound_ranges(-3)
             ),
         )
     )
@@ -923,7 +893,7 @@ def _demons(hibernia: Hibernia) -> None:
             weakness="Abhorrent Material (the sound of a barking dog)",
             how_many="hundreds, loosed on the fields together",
             block={
-                "characteristics": _chars(-2, 1, 0, 0, -20, 0, 3, 10),
+                "characteristics": characteristics(-2, 1, 0, 0, -20, 0, 3, 10),
                 "virtues_flaws": ["Weak Characteristics"],
                 "abilities": [
                     ("Area Lore: (local area)", 5, "farmlands"),
@@ -991,7 +961,7 @@ def _demons(hibernia: Hibernia) -> None:
             ),
             how_many="a flock, gathering wherever a death is near",
             block={
-                "characteristics": _chars(0, 2, 0, 0, 0, 0, 1, 2),
+                "characteristics": characteristics(0, 2, 0, 0, 0, 0, 1, 2),
                 "virtues_flaws": ["Berserk", "Sharp Ears", "Blind"],
                 "abilities": [
                     ("Area Lore: (county)", 5, "settlements"),
@@ -1053,7 +1023,7 @@ def _demons(hibernia: Hibernia) -> None:
                 "them (+3 Attack and +6 Defense for the foe), except when "
                 "grappling. They travel together but always fight as an "
                 "untrained group, and leave damp patches where they took a "
-                "victim, from their slavering. " + _wounds(0)
+                "victim, from their slavering. " + wound_ranges(0)
             ),
         )
     )
@@ -1069,7 +1039,7 @@ def _demons(hibernia: Hibernia) -> None:
             hierarchy=5,
             weakness="Protected Group (those truly happy in marriage)",
             block={
-                "characteristics": _chars(0, 3, 0, 1, 2, 3, 4, 4),
+                "characteristics": characteristics(0, 3, 0, 1, 2, 3, 4, 4),
                 "virtues_flaws": ["Berserk"],
                 "abilities": [
                     ("Area Lore: Hibernia", 9, "personalities"),
@@ -1151,7 +1121,7 @@ def _demons(hibernia: Hibernia) -> None:
             "and strife between men and women, but is too proud to "
             "trouble the lowly when their betters offer better sport. "
             "The book prints her Area Lore without a score and a stray 9 "
-            "after Brawl; the 9 is taken as the Area Lore's. " + _wounds(0),
+            "after Brawl; the 9 is taken as the Area Lore's. " + wound_ranges(0),
             secrets="Her chief weapon is Possession: she hides in the courts of "
             "the rich, preferably in several advisers to the main "
             "players at once, and urges reckless deeds dressed as wise "

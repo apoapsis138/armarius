@@ -9,8 +9,7 @@ domain modules it returns markup text, never widgets."""
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Collection, Iterable, Sequence
-from dataclasses import dataclass
+from collections.abc import Collection, Iterable, Mapping, Sequence
 
 from . import catalog, sourcebooks
 from .arts import ARTS, TECHNIQUES
@@ -21,7 +20,6 @@ from .models import (
     LAB_ACTIVITY_SPECIALIZATIONS,
     LAB_SPECIALIZATIONS,
     ArcaneConnection,
-    Character,
     DiaryEntry,
     LabFeature,
     Laboratory,
@@ -34,27 +32,17 @@ from .models import (
     VirtueFlawInstance,
 )
 from .rules import effects
+from .rules.lab_stats import (
+    lab_free_virtues,
+    servant,
+    specialization_scores,
+    specialty_source_label,
+    vf_params,
+)
 from .tables import Table
 
 #: The two Focus Flaws; a lab may only have one Focus at a time.
 FOCUS_FLAW_IDS = frozenset(FOCUS_FLAWS)
-
-
-def lab_aura_total(lab: Laboratory, covenant_aura: int) -> int:
-    """The lab's effective aura: the covenant's inherited aura plus the lab's
-    own manual modifier."""
-    return covenant_aura + lab.aura_modifier
-
-
-def lab_net_vf_points(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """Current Virtue points minus Flaw points attached to the lab."""
-    return sum(
-        catalog_by_id[vf.vf_id].cost
-        for vf in lab.virtues_flaws
-        if vf.vf_id in catalog_by_id
-    )
 
 
 def vf_points(lab: Laboratory, vf_type: str) -> float:
@@ -69,86 +57,8 @@ def vf_points(lab: Laboratory, vf_type: str) -> float:
     )
 
 
-def lab_occupied_size(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """OCCUPIED SIZE: current Virtue points - Flaw points - Refinement."""
-    return lab_net_vf_points(lab, catalog_by_id) - lab.characteristics.refinement
-
-
-def lab_free_virtues(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """How many more points of Virtues (minus Flaws) the lab has room for:
-    (Size + Refinement) - current Virtue points minus Flaw points."""
-    limit = lab.characteristics.size + lab.characteristics.refinement
-    return limit - lab_net_vf_points(lab, catalog_by_id)
-
-
-#: A laboratory's Build Points at covenant creation (DE ch. 8, Build Point
-#: Cost for Starting Laboratories): Size x 20, and each Virtue (Free
-#: Virtues and Flaws cost nothing).
-LAB_SIZE_BUILD_POINTS = 20
-LAB_VIRTUE_BUILD_POINTS: dict[str, int] = {"Minor": 10, "Major": 20}
-
-
-def lab_build_points(lab: Laboratory) -> int:
-    """The laboratory's Build Points, worked out (never typed): Size x 20
-    plus 10 for each Minor Virtue and 20 for each Major one."""
-    lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
-    points = LAB_SIZE_BUILD_POINTS * lab.characteristics.size
-    for vf in lab.virtues_flaws:
-        entry = lab_catalog.get(vf.vf_id)
-        if entry is not None and entry.type == "Virtue":
-            points += LAB_VIRTUE_BUILD_POINTS.get(entry.tier, 0)
-    return points
-
-
-def lab_base_safety(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """BASE SAFETY OF LAB: Refinement - occupied Size (if positive)."""
-    occupied = lab_occupied_size(lab, catalog_by_id)
-    return lab.characteristics.refinement - max(occupied, 0)
-
-
-def lab_characteristic_total(
-    lab: Laboratory,
-    catalog_by_id: dict[str, LabVirtueFlawDef],
-    characteristic: str,
-    saga: Saga | None = None,
-) -> tuple[int, int, int, int]:
-    """(manual, virtue_sum, flaw_sum, total) for one of LAB_CHARACTERISTICS.
-
-    manual + virtue_sum + flaw_sum = total, per the user's explicit
-    formula: the manual component is a free player adjustment on top of
-    whatever the lab's attached Virtues/Flaws contribute. Given the `saga`,
-    a Servant who is one of its grogs counts with the grog's Intelligence.
-    """
-    manual = getattr(lab.characteristics, characteristic)
-    found = characteristic_effects(lab, catalog_by_id, characteristic, saga)
-    virtue_sum = int(effects.amount_total(e for e in found if not e.is_negative_side))
-    flaw_sum = int(effects.amount_total(e for e in found if e.is_negative_side))
-    return manual, virtue_sum, flaw_sum, manual + virtue_sum + flaw_sum
-
-
-def characteristic_effects(
-    lab: Laboratory,
-    catalog_by_id: dict[str, LabVirtueFlawDef],
-    characteristic: str,
-    saga: Saga | None = None,
-) -> list[effects.Effect]:
-    """What the lab's Virtues and Flaws do to one Characteristic, one
-    effect each (lab_characteristic_total adds them up)."""
-    return effects.collect(
-        [laboratory_source(lab, catalog_by_id, saga)],
-        "lab_characteristic",
-        target=characteristic,
-    )
-
-
 def migrate_specialty_stand_ins(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef] | None = None
+    lab: Laboratory, catalog_by_id: Mapping[str, LabVirtueFlawDef] | None = None
 ) -> None:
     """Older saves typed a Virtue's Specialization grant in as a
     source named after it (Subterranean: Terram +1). Now the catalog carries
@@ -166,7 +76,7 @@ def migrate_specialty_stand_ins(
 def _absorb_stand_in(
     lab: Laboratory,
     entry: LabSpecialtyEntry,
-    catalog_by_id: dict[str, LabVirtueFlawDef],
+    catalog_by_id: Mapping[str, LabVirtueFlawDef],
 ) -> bool:
     source = entry.source.strip().casefold()
     for vf in lab.virtues_flaws:
@@ -188,38 +98,7 @@ def _absorb_stand_in(
     return False
 
 
-def laboratory_source(
-    lab: Laboratory,
-    catalog_by_id: dict[str, LabVirtueFlawDef] | None = None,
-    saga: Saga | None = None,
-) -> effects.EffectSource:
-    """The lab's Virtues and Flaws as a source for the shared effect
-    lookup; given the `saga`, a Servant who is one of its grogs reads the
-    grog's Intelligence (vf_params)."""
-    if catalog_by_id is None:
-        catalog_by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
-    params = None if saga is None else lambda vf: vf_params(saga, vf)
-    return effects.EffectSource("laboratory", lab.virtues_flaws, catalog_by_id, params)
-
-
 # -- a Virtue's servant --
-
-
-def servant(saga: Saga, instance: VirtueFlawInstance) -> Character | None:
-    """The grog a Virtue names as its servant, or None: none named, or the
-    character named is gone or no longer a grog."""
-    character = saga.character(instance.params.get("servant") or None)
-    return character if character is not None and character.type == "grog" else None
-
-
-def vf_params(saga: Saga, instance: VirtueFlawInstance) -> dict[str, str]:
-    """The Virtue's parameters, with its servant's Intelligence in place of
-    the typed one when it names a grog of the saga: the grog's sheet is
-    read each time, so a change to it follows."""
-    grog = servant(saga, instance)
-    if grog is None:
-        return dict(instance.params)
-    return {**instance.params, "intelligence": str(grog.characteristics.intelligence)}
 
 
 def entered_intelligence(saga: Saga | None, instance: VirtueFlawInstance) -> int | None:
@@ -481,71 +360,6 @@ MAX_ART_SPECIALIZATIONS = 4
 MAX_TECHNIQUE_SPECIALIZATIONS = 2
 
 
-@dataclass(frozen=True)
-class SpecializationScore:
-    """One Specialization's total over every source. It doesn't count when
-    it's turned off (in lab.dropped_specializations) or scores 0 or less."""
-
-    name: str
-    points: int
-    #: (where the points come from, how many), in the order found.
-    sources: tuple[tuple[str, int], ...]
-    dropped: bool
-
-    @property
-    def counts(self) -> bool:
-        return self.points > 0 and not self.dropped
-
-
-def _source_label(entry: LabSpecialtyEntry) -> str:
-    return entry.source or "(no source given)"
-
-
-def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
-    """Every Specialization the lab has points in (from its Features, their
-    Focus and the hand-entered sources, even if they sum to 0 or less), in
-    LAB_SPECIALIZATIONS order."""
-    found: list[tuple[str, str, int]] = []  # (Specialization, source, points)
-    for feature in lab.features:
-        found += [
-            (g.specialization, f"{feature.name} (Feature)", g.points)
-            for g in feature.allocations
-        ]
-        found += [
-            (g.specialization, f"{feature.name} (Focus)", g.points)
-            for g in feature.focus_allocations
-        ]
-    source = laboratory_source(lab)
-    found += [
-        (effect.target or "", effect.entry.name, int(effect.amount or 0))
-        for effect in effects.collect([source], "lab_specialization")
-    ]
-    found += [
-        (entry.specialization, _source_label(entry), entry.points)
-        for entry in lab.specialties
-    ]
-    sources: dict[str, list[tuple[str, int]]] = {}
-    for name, label, points in found:
-        if name in LAB_SPECIALIZATIONS:
-            sources.setdefault(name, []).append((label, points))
-    # Undecorated and the like: each Specialization scoring 2 or more loses
-    # a point (read once the other sources are summed).
-    for effect in effects.collect([source], "lab_specialization_high"):
-        for name, entries in sources.items():
-            if sum(points for _, points in entries) >= 2:
-                entries.append((effect.entry.name, int(effect.amount or 0)))
-    return [
-        SpecializationScore(
-            name,
-            sum(points for _, points in sources[name]),
-            tuple(sources[name]),
-            name in lab.dropped_specializations,
-        )
-        for name in LAB_SPECIALIZATIONS
-        if name in sources
-    ]
-
-
 def counted_specializations(lab: Laboratory) -> set[str]:
     """The Specializations that count: scored above 0 and not turned off."""
     return {score.name for score in specialization_scores(lab) if score.counts}
@@ -691,7 +505,7 @@ def specialty_entry_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
             head = f"{entry.specialization:<{width}}  {entry.points:+d}"
         else:
             head = todo("needs a Specialization")
-        rows.append((index, f"{head}  {escape(_source_label(entry))}"))
+        rows.append((index, f"{head}  {escape(specialty_source_label(entry))}"))
     return rows
 
 
@@ -701,12 +515,12 @@ def specialty_entry_info_text(lab: Laboratory, index: int | None) -> str:
         return ATTRIBUTES_PANEL_HINT
     entry = lab.specialties[index]
     if not entry.specialization:
-        return f"[b]{escape(_source_label(entry))}[/]\n\n" + todo(
+        return f"[b]{escape(specialty_source_label(entry))}[/]\n\n" + todo(
             "Names no Activity or Art: edit it (e) to choose its Specialization."
         )
     return (
         f"[b]{entry.specialization} {entry.points:+d}[/]\n"
-        f"[b]Source:[/] {escape(_source_label(entry))}\n\n"
+        f"[b]Source:[/] {escape(specialty_source_label(entry))}\n\n"
         f"[dim]Counts towards {entry.specialization} in Specializations.[/]"
     )
 

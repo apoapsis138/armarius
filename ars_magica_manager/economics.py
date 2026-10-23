@@ -14,10 +14,8 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import catalog, storage
-from . import inhabitants as inh
 from . import possessions as pos
 from .covenants import covenant_modifiers
-from .laboratories import lab_characteristic_total
 from .markup import aligned, escape, markdown_text, problem
 from .models import (
     INCOME_EFFECT_MULTIPLIERS,
@@ -28,6 +26,8 @@ from .models import (
     IncomeSource,
     Saga,
 )
+from .rules import covenfolk
+from .rules.lab_stats import lab_characteristic_total
 from .rules.rounding import round_away_from_zero, round_down
 from .world import takes_part_in_play
 
@@ -107,7 +107,7 @@ def laboratory_points(saga: Saga, covenant: Covenant) -> int:
     return round_away_from_zero(total)
 
 
-def craft_saving_each(entry: inh.InhabitantEntry) -> int:
+def craft_saving_each(entry: covenfolk.InhabitantEntry) -> int:
     """What one craftsperson saves a year: a rare one their skill, a common one
     one plus half of it, rounded down."""
     skill = entry.skill_value
@@ -213,7 +213,7 @@ def _typed_row(
 def _labor_savings(
     saga: Saga,
     covenant: Covenant,
-    craftspeople: list[inh.InhabitantEntry],
+    craftspeople: list[covenfolk.InhabitantEntry],
     costs: dict[str, float],
 ) -> tuple[int, float, int, dict[str, float]]:
     """(laborers, their savings, craftspeople counted, craft savings per
@@ -238,7 +238,7 @@ def _labor_savings(
             amount, limit * costs[row_key]
         )
 
-    laborers = inh.other_covenfolk_count(saga, covenant, "Laborer")
+    laborers = covenfolk.other_covenfolk_count(saga, covenant, "Laborer")
     laborer_savings = min(float(laborers), LABORER_LIMIT * costs["provisions"])
     craft_savings: dict[str, float] = {}
     for row_key, cost in costs.items():
@@ -249,12 +249,12 @@ def _labor_savings(
 
 def summarize(saga: Saga, covenant: Covenant) -> Summary:
     eco = covenant.economics
-    people = inh.inhabitant_points(saga, covenant)
+    people = covenfolk.inhabitant_points(saga, covenant)
     labs = laboratory_points(saga, covenant)
     gear = pos.gear_points(saga, covenant)
     wage_multiplier = WAGE_MULTIPLIERS.get(covenant.loyalty.money, 1.0)
-    magi = inh.headcount(inh.entries_for_kind(saga, covenant, "magus"))
-    craftspeople = inh.entries_for_kind(saga, covenant, "craftsperson")
+    magi = covenfolk.headcount(covenfolk.entries_for_kind(saga, covenant, "magus"))
+    craftspeople = covenfolk.entries_for_kind(saga, covenant, "craftsperson")
     writers = magi + sum(e.quantity for e in craftspeople if e.field_of_work == "Books")
 
     # Boons that add to the size, magnificence or quantity of the covenant's

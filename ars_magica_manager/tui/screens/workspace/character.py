@@ -9,6 +9,7 @@ from functools import partial
 from typing import Any
 
 from .... import (
+    catalog,
     creation,
     disputations,
     seasons,
@@ -604,7 +605,7 @@ class CharacterActions(WorkspaceBase):
 
     def _known_spell_name(self, known: KnownSpell) -> str:
         """A known spell's name (plain text; its id if it's missing)."""
-        spell = spl.find_spell(self.saga, known.spell_id)
+        spell = catalog.find_spell(self.saga, known.spell_id)
         return spell.name if spell else f"{known.spell_id} (unknown spell)"
 
     def _known_spell_labels(self, character: Character) -> list[str]:
@@ -632,7 +633,7 @@ class CharacterActions(WorkspaceBase):
         if character is None:
             return
         known = character.spells_known[index]
-        spell = spl.find_spell(self.saga, known.spell_id)
+        spell = catalog.find_spell(self.saga, known.spell_id)
         name = spell.name if spell else known.spell_id
 
         def handle_result(result: tuple[KnownSpell, dict[str, Any]] | None) -> None:

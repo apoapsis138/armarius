@@ -25,10 +25,6 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .. import book_value, catalog, sourcebooks
-from .. import books as bk
-from .. import covenant_templates as templates
-from .. import enchanted_devices as ed
-from .. import inhabitants as inh
 from ..covenants import (
     MAJOR_POVERTY,
     MINOR_POVERTY,
@@ -37,15 +33,17 @@ from ..covenants import (
     covenant_hook_points,
     unlinked_resource_hooks,
 )
-from ..laboratories import (
+from ..models import INCOME_TYPE_DEFAULTS, Covenant, Laboratory, Saga
+from . import base_covenants, covenfolk, enchantment
+from . import library as book_rules
+from . import options as rule_options
+from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
+from .lab_stats import (
     LAB_SIZE_BUILD_POINTS,
     lab_base_safety,
     lab_build_points,
     lab_free_virtues,
 )
-from ..models import INCOME_TYPE_DEFAULTS, Covenant, Laboratory, Saga
-from . import options as rule_options
-from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
 from .rounding import round_up
 
 SOURCE = (
@@ -150,8 +148,10 @@ _BOOK_CATEGORY = {
     "Lab Text": "Lab Texts",
     "Casting Tablet": "Casting Tablets",
 }
-#: The categories of the book types bought as a pool (bk.pool()).
-POOL_CATEGORIES = {book_type: _BOOK_CATEGORY[book_type] for book_type in bk.POOL_POINTS}
+#: The categories of the book types bought as a pool (book_rules.pool()).
+POOL_CATEGORIES = {
+    book_type: _BOOK_CATEGORY[book_type] for book_type in book_rules.POOL_POINTS
+}
 
 
 def _covenant_labs(
@@ -190,7 +190,7 @@ def baseline_covenfolk_note(saga: Saga, covenant: Covenant) -> str:
 
 
 def lab_points(lab: Laboratory) -> int:
-    """A laboratory's own Build Points (laboratories.lab_build_points)."""
+    """A laboratory's own Build Points (lab_stats.lab_build_points)."""
     return lab_build_points(lab)
 
 
@@ -212,9 +212,9 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
     only its starting laboratories count; `every_lab` counts all of them
     (the covenant's Build Point value in play)."""
     lines: list[Cost] = []
-    library = [b for b in bk.books_owned_by(saga, "covenant", covenant.id)]
+    library = [b for b in book_rules.books_owned_by(saga, "covenant", covenant.id)]
     for book in library:
-        points = bk.cost(book, saga)
+        points = book_rules.cost(book, saga)
         if points:
             # "Lab Text: Pilum of Fire" is already named for its type.
             label = (
@@ -223,8 +223,8 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                 else f"{book.type}: {book.name}"
             )
             lines.append(Cost(label, points, _BOOK_CATEGORY.get(book.type, ""), book))
-    for book_type in bk.POOL_POINTS:
-        pool = bk.pool(library, book_type, saga)
+    for book_type in book_rules.POOL_POINTS:
+        pool = book_rules.pool(library, book_type, saga)
         if pool.levels:
             lines.append(
                 Cost(
@@ -261,9 +261,9 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                     possession,
                 )
             )
-    for device in ed.held_by(saga, "covenant", covenant.id):
+    for device in enchantment.held_by(saga, "covenant", covenant.id):
         for effect in device.effects:
-            level = ed.modified_level(device, effect)
+            level = enchantment.modified_level(device, effect)
             lines.append(
                 Cost(
                     f"Enchanted: {device.name}, {effect.name} (level {level})",
@@ -388,20 +388,28 @@ def record_initial(saga: Saga, covenant: Covenant) -> None:
 def over_level(saga: Saga, covenant: Covenant, max_level: int) -> list[str]:
     """Lab Texts, Casting Tablets and enchanted effects above `max_level`."""
     found = []
-    for book in bk.books_owned_by(saga, "covenant", covenant.id):
-        if book.type in bk.SPELL_TYPES:
-            level = bk.level_of(book, saga) or 0
+    for book in book_rules.books_owned_by(saga, "covenant", covenant.id):
+        if book.type in book_rules.SPELL_TYPES:
+            level = book_rules.level_of(book, saga) or 0
             if level > max_level:
                 found.append(f"{book.name} ({level})")
-    for device in ed.held_by(saga, "covenant", covenant.id):
+    for device in enchantment.held_by(saga, "covenant", covenant.id):
         for effect in device.effects:
-            level = ed.modified_level(device, effect)
+            level = enchantment.modified_level(device, effect)
             if level > max_level:
                 found.append(f"{device.name}: {effect.name} ({level})")
     return found
 
 
-def _c(step: str, label: str, ok: bool, detail: str, source=SOURCE, *, advice=False):
+def _c(
+    step: str,
+    label: str,
+    ok: bool,
+    detail: str,
+    source: str = SOURCE,
+    *,
+    advice: bool = False,
+):
     status = "pass" if ok else ("advice" if advice else "warn")
     return Check(step, label, status, detail, source)
 
@@ -583,7 +591,7 @@ def _template_checks(saga: Saga, covenant: Covenant) -> list[Check]:
     """A base covenant's placeholders still to fill in, and the Lab Text
     and enchanted item levels it gives still to choose (advice)."""
     found = []
-    books, vis = templates.placeholders(saga, covenant)
+    books, vis = base_covenants.placeholders(saga, covenant)
     if books or vis:
         parts = []
         if books:
@@ -596,18 +604,18 @@ def _template_checks(saga: Saga, covenant: Covenant) -> list[Check]:
                 "The base covenant's placeholders are filled in",
                 False,
                 ", ".join(parts),
-                templates.SOURCE,
+                base_covenants.SOURCE,
                 advice=True,
             )
         )
-    for allowance in templates.allowances(saga, covenant):
+    for allowance in base_covenants.allowances(saga, covenant):
         found.append(
             _c(
                 "build_points",
                 f"The base covenant's {allowance.what} chosen",
                 allowance.chosen >= allowance.levels,
                 f"{allowance.chosen} of {allowance.levels} levels",
-                templates.SOURCE,
+                base_covenants.SOURCE,
                 advice=True,
             )
         )
@@ -712,10 +720,10 @@ def staff_checks(saga: Saga, record: Record) -> list[Check]:
     covenant = record
     found = []
     for role, needed in (
-        ("Servant", inh.minimum_servants(saga, covenant)),
-        ("Teamster", inh.minimum_teamsters(saga, covenant)),
+        ("Servant", covenfolk.minimum_servants(saga, covenant)),
+        ("Teamster", covenfolk.minimum_teamsters(saga, covenant)),
     ):
-        have = inh.other_covenfolk_count(saga, covenant, role)
+        have = covenfolk.other_covenfolk_count(saga, covenant, role)
         short = f", {needed - have} too few" if have < needed else ""
         found.append(
             _c(

@@ -29,8 +29,8 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import Literal
 
-from ..models import Character
-from . import aging, dice, effects
+from ..models import Character, Saga
+from . import aging, dice, effects, sites
 from .rounding import round_up
 from .scores import character_source
 
@@ -100,16 +100,16 @@ def kinds_allowed(character: Character) -> tuple[Kind, ...]:
     return tuple(k for k in KINDS if k in required) or KINDS
 
 
-def aging_score(character: Character, age: int, living: int, saga=None) -> int:
+def aging_score(
+    character: Character, age: int, living: int, saga: Saga | None = None
+) -> int:
     """The Aging Total without its stress die at `age`, for base Living
     Conditions `living`: age / 10 (rounded up) - Living Conditions (with
     the character's Virtues) - the Longevity Ritual, plus the Virtues and
     places that change aging rolls."""
     found = effects.collect([character_source(character.virtues_flaws)], "aging_roll")
     if saga is not None:
-        from .. import places  # places reads the sheets, which read this
-
-        found += places.character_effects(saga, character, "aging_roll")
+        found += sites.character_effects(saga, character, "aging_roll")
     return (
         round_up(age / 10)
         - aging.living_conditions(character, living)

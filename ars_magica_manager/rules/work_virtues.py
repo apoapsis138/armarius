@@ -22,6 +22,7 @@ function of the character (and of where they live):
 from __future__ import annotations
 
 from ..models import Character, Saga
+from . import realms
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws "
@@ -100,9 +101,7 @@ def _realm(name: str) -> str:
 def aura_penalty(saga: Saga, character: Character, ability: str) -> int:
     """Necessary Realm Aura for (Ability): the penalty to a total with
     `ability` where the character lives (0 inside the right aura)."""
-    from ..covenants import home_aura
-
-    aura, realm = home_aura(saga, character)
+    aura, realm = realms.home_aura(saga, character)
     for params in _with(character, NECESSARY_AURA):
         if params.get("ability", "").strip().lower() != ability.lower():
             continue

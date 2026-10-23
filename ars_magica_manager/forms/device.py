@@ -51,6 +51,7 @@ from ..models import (
     ShapeMaterialDef,
     new_instance_id,
 )
+from ..rules import enchantment
 from . import experimental_effects
 
 #: The Maker select's value for a maker who isn't one of the saga's
@@ -101,7 +102,7 @@ def component_fields(component: DeviceComponent | None) -> list[DialogField]:
 def component_live(values: dict[str, Any]) -> str:
     """The component form's live line: its capacity."""
     c = DeviceComponent("", values.get("material") or "", values.get("size") or "")
-    return f"Capacity: {ed.component_capacity(c)} pawns"
+    return f"Capacity: {enchantment.component_capacity(c)} pawns"
 
 
 def component_from(values: dict[str, Any]) -> DeviceComponent:
@@ -332,7 +333,7 @@ def device_live(saga: Saga, device: EnchantedDevice, values: dict[str, Any]) -> 
     else:
         text = f"Capacity: {ed.capacity_text(saga, draft)}"
         if draft.effects:
-            text += f"; its effects use {ed.pawns_used(draft)}"
+            text += f"; its effects use {enchantment.pawns_used(draft)}"
     problems = ed.warnings(saga, draft)
     if problems:
         text += "\n" + "\n".join(problem(line) for line in problems)
@@ -669,8 +670,8 @@ def effect_live(
     draft = effect_from_values(effect, values)
     others = [e for e in device.effects if e.id != effect.id]
     trial = replace(device, effects=[*others, draft])
-    level = ed.modified_level(trial, draft)
-    parts = ed.level_breakdown(trial, draft)
+    level = enchantment.modified_level(trial, draft)
+    parts = enchantment.level_breakdown(trial, draft)
     breakdown = " + ".join(
         [str(parts[0][1]), *(f"{n} ({label})" for label, n in parts[1:])]
     )
@@ -681,8 +682,8 @@ def effect_live(
     )
     if device.type == CHARGED:
         return text
-    used = ed.pawns_used(trial)
-    text += f"; vis {ed.vis_cost(trial, draft)}; the device's effects would use {used}"
+    used = enchantment.pawns_used(trial)
+    text += f"; vis {enchantment.vis_cost(trial, draft)}; the device's effects would use {used}"
     room = device.pawns_opened if device.type == INVESTED else None
     if room is not None and used > room:
         text += "\n" + problem(f"More than the {room} pawns opened.")
@@ -776,7 +777,7 @@ def _effect_use_fields(
                 "select",
                 base.uses_per_day,
                 options=[
-                    (f"{ed.uses_text(uses)} (+{added})", uses)
+                    (f"{enchantment.uses_text(uses)} (+{added})", uses)
                     for uses, added in EFFECT_FREQUENCIES.items()
                 ],
             )
@@ -809,7 +810,7 @@ def _effect_trigger_fields(
     """What sets it off: an environmental, fast or linked trigger (and the
     device's other effect it is linked to), and the trigger itself."""
     linked_options = [
-        (escape(ed.effect_name(e)) or "(unnamed)", e.id)
+        (escape(enchantment.effect_name(e)) or "(unnamed)", e.id)
         for e in device.effects
         if e.id != base.id
     ]
@@ -951,7 +952,9 @@ def remove_question(device: EnchantedDevice, effect: InstilledEffect | None) -> 
         count = len(device.effects)
         extra = f" and its {count} effect{'' if count == 1 else 's'}" if count else ""
         return f"Delete {escape(device.name)}{extra}?"
-    return f"Delete {escape(ed.effect_name(effect))} from {escape(device.name)}?"
+    return (
+        f"Delete {escape(enchantment.effect_name(effect))} from {escape(device.name)}?"
+    )
 
 
 def remove_target(
@@ -1007,7 +1010,8 @@ def device_ops(saga: Saga, kind: str, holder_id: str) -> SectionOps:
         edit=edit,
         remove=remove,
         rows=lambda: [
-            ed.effect_name(e) if e is not None else d.name for d, e in targets()
+            enchantment.effect_name(e) if e is not None else d.name
+            for d, e in targets()
         ],
     )
 

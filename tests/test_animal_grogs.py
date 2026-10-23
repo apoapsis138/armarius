@@ -31,6 +31,7 @@ from ars_magica_manager.rules import creation_later as later
 from ars_magica_manager.rules import creation_packages as packages
 from ars_magica_manager.rules import creation_virtues as cv
 from ars_magica_manager.rules.creation_base import steps_for
+from ars_magica_manager.rules.vf_eligibility import VirtueFlawChooser
 from ars_magica_manager.seasons.animal_aging import season_aging
 
 VFS = catalog.load_virtue_flaw_catalog_by_id()
@@ -206,7 +207,7 @@ def test_an_animal_s_free_flaws_show_as_free():
 
 
 def test_an_animal_is_refused_human_society_and_the_wrong_social_status():
-    chooser = catalog.VirtueFlawChooser.for_character(_animal())
+    chooser = VirtueFlawChooser.for_character(_animal())
     assert chooser.animal
     assert "human society" in chooser.refusal(VFS["vf_educated"])
     assert chooser.refusal(VFS["vf_companion_animal"]) == ""

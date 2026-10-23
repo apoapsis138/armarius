@@ -15,7 +15,7 @@ from ars_magica_manager.tui.screens.fields import FieldsDialog
 def _user_data(folder):
     """A saga, its backup, an export, the settings and a presence mark in
     `folder`."""
-    storage.use_data_dir(folder)
+    paths.use_data_dir(folder)
     storage.save_saga(Saga(id="mythic", name="Mythic", current_year=1220))
     (folder / paths.SAGAS / "backups" / "mythic").mkdir(parents=True)
     (folder / paths.SAGAS / "backups" / "mythic" / "1.json").write_text("{}")
@@ -90,8 +90,8 @@ async def test_the_picker_moves_the_saves_and_reads_the_new_folder(tmp_path):
     assert (new / paths.SAGAS / "mythic.json").is_file()
     assert not (old / paths.SAGAS / "mythic.json").exists()
     assert paths.data_dir() == new
-    assert storage.SAGAS_DIR == new / paths.SAGAS
-    assert settings.SETTINGS_PATH == new / paths.SETTINGS
+    assert storage.sagas_dir() == new / paths.SAGAS
+    assert settings.settings_path() == new / paths.SETTINGS
 
 
 async def test_the_folder_can_change_without_moving_the_saves(tmp_path):

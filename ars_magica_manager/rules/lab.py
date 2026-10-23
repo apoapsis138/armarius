@@ -12,21 +12,17 @@ power) in the lab's aura, from the realm interaction table. Per-activity
 modifiers (similar spells, shape and material bonuses...) are added by
 each activity. A holy magus uses Holy Magic for Magic Theory, and Holy or
 Chthonic Magic changes the aura's modifier (rules.hybrid_magic).
+
+No screen uses seasons_to_invent(), lab_text_usable(), lowest_total() yet:
+they are the rules for screens still to come, and only the tests call them.
 """
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 
 from .. import catalog
-from ..covenants import covenant_effective_aura
-from ..laboratories import (
-    lab_aura_total,
-    lab_characteristic_total,
-    laboratory_source,
-    specialization_scores,
-)
 from ..models import (
     Character,
     Covenant,
@@ -35,10 +31,18 @@ from ..models import (
     Laboratory,
     LabVirtueFlawDef,
     Saga,
+    SeasonPlan,
 )
-from . import effects, realms, scores
+from . import effects, realms, scores, sites
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
+from .lab_stats import (
+    lab_aura_total,
+    lab_characteristic_total,
+    laboratory_source,
+    specialization_scores,
+)
+from .realms import covenant_effective_aura
 from .rounding import round_down, round_up
 
 SOURCE = (
@@ -207,14 +211,13 @@ def _aura_line(
     magus: Character,
     lab: Laboratory,
     covenant: Covenant | None,
-    boons: dict[str, CovenantBoonHookDef],
+    boons: Mapping[str, CovenantBoonHookDef],
 ) -> Line:
     """The aura the lab sits in: its own place's, else its covenant's."""
     covenant_aura = covenant_effective_aura(covenant, boons) if covenant else 0
     realm = covenant.aura_realm if covenant else realms.HERMETIC
-    from .. import places  # places reads the sheets, which read this
 
-    own = places.lab_aura(saga, lab)
+    own = sites.lab_aura(saga, lab)
     if own is not None:
         covenant_aura, realm = own
     aura = lab_aura_total(lab, covenant_aura)
@@ -224,7 +227,7 @@ def _aura_line(
 
 def _quality_lines(
     lab: Laboratory,
-    lab_catalog: dict[str, LabVirtueFlawDef],
+    lab_catalog: Mapping[str, LabVirtueFlawDef],
     applies: set[str | None],
 ) -> list[Line]:
     """General Quality, and the lab's Specializations that `applies` names."""
@@ -326,9 +329,9 @@ def _virtue_effects(
     saga: Saga,
     magus: Character,
     lab: Laboratory,
-    lab_catalog: dict[str, LabVirtueFlawDef],
+    lab_catalog: Mapping[str, LabVirtueFlawDef],
     covenant: Covenant | None,
-    boons: dict[str, CovenantBoonHookDef],
+    boons: Mapping[str, CovenantBoonHookDef],
     technique: str,
     form: str,
     activity: str | None,
@@ -339,7 +342,6 @@ def _virtue_effects(
 ) -> list[effects.Effect]:
     """The magus's, lab's, covenant's and place's Virtues and Flaws that
     change this Lab Total."""
-    from .. import places  # places reads the sheets, which read this
 
     sources = [
         scores.character_source(magus.virtues_flaws),
@@ -347,7 +349,7 @@ def _virtue_effects(
     ]
     if covenant is not None:
         sources.append(effects.EffectSource("covenant", covenant.boons_hooks, boons))
-    sources.append(places.lab_source(saga, lab))
+    sources.append(sites.lab_source(saga, lab))
     found = _pair_effects(sources, technique, form, activity, experimenting)
     if from_lab_text:
         found = [e for e in found if e.entry.id not in NOT_FROM_A_TEXT]
@@ -444,3 +446,9 @@ def lowest_total(totals: Sequence[int]) -> int:
     """Several activities in one season use the lowest of their Lab Totals
     (against the sum of their levels)."""
     return min(totals)
+
+
+#: Adds a season plan's options (a Magical Focus, a Magic Theory
+#: Specialty, the troupe's other modifiers) to the Lab Total for a
+#: Technique and Form.
+LabOptions = Callable[[Character, SeasonPlan, str, str, LabTotal], LabTotal]

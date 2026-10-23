@@ -11,16 +11,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import paragraphs
+from ..builder import joined_lines, paragraphs
 
 if TYPE_CHECKING:
     from ...models import Tribunal
     from . import Rhine
-
-
-def _lines(*lines: str) -> str:
-    """The hooks or secrets, one a line."""
-    return "\n".join(lines)
 
 
 def build(rhine: Rhine) -> None:
@@ -44,7 +39,7 @@ def _heorot(rhine: Rhine, tribunal: Tribunal) -> None:
         place=rhine.places.get("heorot_site"),
         season="Spring",
         summary=_heorot_summary(),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Membership: not yet a member of the Rhine Tribunal; applies at the "
             "Tribunal of 1221, and the Novgorod Tribunal, whose territory Zealand "
             "nominally is, has not been told",
@@ -183,7 +178,7 @@ def _crintera(rhine: Rhine, tribunal: Tribunal) -> None:
             "Tribunal of 1207, leaving Crintera the Order's only presence in the "
             "Marches.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Factions: Harmonists against Wilderists on the council, with "
             "Urgen's Wilderists gaining ground as the occupation drags on; the "
             "next Gathering, in 1227, is expected to be explosive",
@@ -233,7 +228,7 @@ def _crintera(rhine: Rhine, tribunal: Tribunal) -> None:
             "third regio level and stay for years",
         ),
         notes="",
-        secrets=_lines(
+        secrets=joined_lines(
             "Urgen is widely suspected of driving mundanes from the wild "
             "with covert animal attacks, and is stepping them up now that "
             "the Primacy no longer restrains him.",
@@ -489,7 +484,7 @@ def _irencillia(rhine: Rhine, tribunal: Tribunal) -> None:
             "is a spell, a faerie power or something else. Every magus who stays "
             "more than a season gains a caricature, a faerie double.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "House politics: Handri outmanoeuvred Vinaria and took the Primacy "
             "from her; she went into what is called Faerie Twilight and came "
             "back after seven years apparently unchanged",
@@ -522,7 +517,7 @@ def _irencillia(rhine: Rhine, tribunal: Tribunal) -> None:
             "the only indirect tie is the God of Truth in the nearby villages",
         ),
         notes="",
-        secrets=_lines(
+        secrets=joined_lines(
             "Irencillia was not Merinita's home; the true first domus "
             "magna, her temple of Diana, is lost and its name forgotten.",
             "A caricature's Might grows over time to a cap set by its "
@@ -719,7 +714,7 @@ def _roznov(rhine: Rhine, tribunal: Tribunal) -> None:
             "declared abolished in 1207, but Mount Radhost was always his sacred "
             "place.",
         ),
-        what_matters=_lines(
+        what_matters=joined_lines(
             "Founding suspicion: Roznov could have joined Novgorod or "
             "Transylvania but took Durenmar's and Crintera's richer offer; two "
             "Transylvanian Tremere joined almost at once in 1074, and some Rhine "
@@ -757,7 +752,7 @@ def _roznov(rhine: Rhine, tribunal: Tribunal) -> None:
             "Hungarian border make their influence felt here",
         ),
         notes="",
-        secrets=_lines(
+        secrets=joined_lines(
             "Every summer solstice the whole covenant and village "
             "celebrate Radegast at the summit temple with orgiastic "
             "drinking and debauchery, and a few celebrants, usually "

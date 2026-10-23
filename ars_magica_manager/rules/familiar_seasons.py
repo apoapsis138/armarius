@@ -16,8 +16,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..familiars import cord_cost, familiar_of
-from ..models import BondPower, Character, Familiar, Laboratory, Saga, SeasonPlan
+from ..models import (
+    CORD_SCORE_COSTS,
+    BondPower,
+    Character,
+    Familiar,
+    Laboratory,
+    Saga,
+    SeasonPlan,
+)
 from . import lab
 from .rounding import round_up
 
@@ -64,12 +71,12 @@ def work(
     magus: Character,
     plan: SeasonPlan,
     lab_: Laboratory,
-    options,
+    options: lab.LabOptions,
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a season of familiar work, or what it does."""
     from .lab_seasons import LabWork, vis_pool, whose_vis
 
-    familiar = familiar_of(saga, magus.id)
+    familiar = saga.familiar_of(magus.id)
     if familiar is None:
         return [
             f"{magus.name} has no familiar: add it (with its Might and Size) "
@@ -199,3 +206,8 @@ def work(
         familiar=familiar,
         power=power,
     )
+
+
+def cord_cost(score: int) -> int:
+    """The point cost of a Cord score (0-5), from the fixed table."""
+    return CORD_SCORE_COSTS[score]

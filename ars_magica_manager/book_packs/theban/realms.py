@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...places import PLACE
+from ...rules.sites import PLACE
 from ..builder import Builder, paragraphs
 from ..generated import Profile, apply
 

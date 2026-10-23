@@ -26,11 +26,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...threats import DORMANT
-from ..builder import Builder, paragraphs
+from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
-    from ...models import Neighbour
     from . import Provence
 
 S = Builder.stage
@@ -47,12 +45,6 @@ def build(provence: Provence) -> None:
     _glanum(provence)
     _adulteration(provence)
     _secession(provence)
-
-
-def _dormant(threat: Neighbour) -> Neighbour:
-    """Mark a threat as not yet begun: More, Begin This Story starts it."""
-    threat.details[DORMANT] = True
-    return threat
 
 
 # -- the war --
@@ -829,7 +821,7 @@ def _glanum(provence: Provence) -> None:
 
 def _adulteration(provence: Provence) -> None:
     b = provence.b
-    provence.world["threat_adulteration"] = _dormant(
+    provence.world["threat_adulteration"] = dormant(
         b.threat(
             "The Adulteration of Flambeau",
             summary=paragraphs(
@@ -937,7 +929,7 @@ def _adulteration(provence: Provence) -> None:
 
 def _secession(provence: Provence) -> None:
     b = provence.b
-    provence.world["threat_secession"] = _dormant(
+    provence.world["threat_secession"] = dormant(
         b.threat(
             "Pyrenean Secession",
             summary="The conservative covenants, led by the Mercurians of Aedes "

@@ -4,7 +4,10 @@ tiers, costs, categories, targets -- is checked as it loads; see the Defs'
 __post_init__ in models/definitions.py. Which books a catalog cites is checked in
 test_sourcebooks.py.)"""
 
+import dataclasses
 from dataclasses import fields, is_dataclass
+
+import pytest
 
 from ars_magica_manager import catalog
 
@@ -59,3 +62,14 @@ def test_no_text_was_mis_decoded():
         for entry in entries:
             for text in _texts(entry):
                 assert "�" not in text, (name, entry.id, text)
+
+
+def test_the_shared_catalogs_cannot_be_changed_by_accident():
+    """Every caller gets the same cached catalog, so a change would reach
+    them all: the by-id maps are read-only and the definitions frozen."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    some_id, definition = next(iter(by_id.items()))
+    with pytest.raises(TypeError):
+        by_id[some_id] = definition  # type: ignore[index]
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        definition.name = "Changed"  # type: ignore[misc]

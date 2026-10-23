@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -16,7 +17,7 @@ class LabCharacteristics:
     """The 8 Laboratory Characteristics' manual (base) component only.
 
     Each Characteristic's effective total is manual + virtue_sum +
-    flaw_sum (see laboratories.lab_characteristic_total) -- virtue_sum and
+    flaw_sum (see rules.lab_stats.lab_characteristic_total) -- virtue_sum and
     flaw_sum are derived from the lab's attached Virtues/Flaws, never stored
     here.
     """
@@ -196,16 +197,12 @@ class LabFeature:
 
 
 def _feature_from_old_text(
-    text: str, feature_names: dict[str, str] | None = None, *, id: str = ""
+    text: str, feature_names: Mapping[str, str], *, id: str = ""
 ) -> LabFeature:
     """An older save's free-text Feature as a LabFeature named with the text,
     of the catalog Feature named in it (by whole word, a plural too: "Big
     windows" is a Window), else custom. `feature_names` maps catalog names
-    to ids (loaded from the catalog when not given)."""
-    if feature_names is None:
-        from ..catalog import load_lab_feature_catalog
-
-        feature_names = {f.name: f.id for f in load_lab_feature_catalog()}
+    to ids."""
     feature_id = None
     for name in sorted(feature_names, key=len, reverse=True):
         if re.search(rf"\b{re.escape(name)}s?\b", text, re.IGNORECASE):
@@ -286,7 +283,7 @@ class Laboratory:
     owner_id: str | None = None
     location: str = ""
     #: Manual adjustment on top of the covenant's aura this lab inherits
-    #: (e.g. from Virtues) -- see laboratories.lab_aura_total().
+    #: (e.g. from Virtues) -- see rules.lab_stats.lab_aura_total().
     aura_modifier: int = 0
     #: The place it is in and which level, when not its covenant's (a lab
     #: built in a regio; places.py).
@@ -320,7 +317,12 @@ class Laboratory:
     in_creation: bool = False
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> Laboratory:
+    def from_dict(
+        cls, data: dict[str, Any], feature_names: Mapping[str, str] | None = None
+    ) -> Laboratory:
+        """`feature_names` (the catalog Features' names to their ids) names
+        an older save's free-text Features; without it they load as
+        custom ones."""
         d = dict(data)
         d.pop("aura", None)  # moved to Covenant.aura -- discard the old per-lab value
         legacy_size = d.pop("size", None)
@@ -350,7 +352,9 @@ class Laboratory:
             vf.id = vf.id or f"{d.get('id', '')}-vf{i}"
         old_features = [f for f in d.get("features", []) if isinstance(f, str)]
         d["features"] = [
-            _feature_from_old_text(f, id=f"{d.get('id', '')}-feature{i}")
+            _feature_from_old_text(
+                f, feature_names or {}, id=f"{d.get('id', '')}-feature{i}"
+            )
             if isinstance(f, str)  # older saves' free text
             else LabFeature.from_dict(f)
             for i, f in enumerate(d.get("features", []))

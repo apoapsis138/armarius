@@ -123,8 +123,7 @@ def update_source(saga: Saga, source: SagaSource, values: dict[str, Any]) -> Non
     new = values["abbreviation"].strip()
     source.title = (values.get("title") or "").strip()
     if new != old:
-        for entry in hr.citing(saga, old):
-            entry.source = new
+        hr.recite(saga, old, new)
         if saga.books_in_play is not None:
             saga.books_in_play = [new if b == old else b for b in saga.books_in_play]
         source.abbreviation = new

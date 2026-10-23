@@ -25,9 +25,10 @@ def claim_taskbar_identity() -> None:
 def main() -> int:
     from .. import paths
 
-    # As main.py: the data folder is settled before storage reads it.
+    # As main.py: the data folder is settled, then kept to.
     renamed = paths.move_old_default_folder()
     problem = paths.settle_data_dir()
+    paths.use_data_dir(paths.data_dir())
     from PySide6.QtWidgets import QApplication
 
     # Before any window exists: the taskbar reads the id when one opens.

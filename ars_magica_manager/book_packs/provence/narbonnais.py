@@ -24,8 +24,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...places import PLACE
-from ..builder import Builder, paragraphs
+from ...rules.sites import PLACE
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -45,11 +45,6 @@ KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
 RUMOURED = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(provence: Provence, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1397,7 +1392,7 @@ def _stella_durus(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "skilled but bored, and may not drill where it could be seen, so "
         "Renaud looks for ways to keep it sharp.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: none named by the book; Marcella and Giacoma seek a way to draw vis from the spirit of the Aude",
         "Income: Jean Marie helps run a relative's shipping company",
         "Library: Bonisagus research on spirits and genii loci, and Jean Marie's Intellego, Mentem, Rego and Vim (no books named)",
@@ -1437,7 +1432,7 @@ def _stella_durus(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "would pay others, perhaps the players, in texts and connections "
         "to look for her.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Marcella has not yet found how to link a city's people to a daimon, how to call up an Aspect to harvest without the daimon noticing, or how to tap a spirit's locus for vis and leave it undisturbed; she guards her progress closely, and Toulouse's spirit would teach her much, but she will not go there.",
         "If the ritual murder of the Aude's spirit is done, the river will silt up over the years and Narbonne will decline as a port.",
         "Ducaru may have helped Ramon Berenguer IV escape the Templars in 1219, and works toward marriages that will, in time, marry the count's daughters into the royal houses of France, England and Sicily and to Richard of Cornwall.",
@@ -1708,7 +1703,7 @@ def _ara_maxima_nova(provence: Provence, b: Builder, tribunal: Tribunal) -> None
         "only the small, well-trained turb, the foremen and the men who "
         "deal with Perpignan's merchants go farther.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: none of its own named by the book; the Ancient Wine Press (Herbam 4, or Infesta 6), the Nemausian Spring (Creo or Aquam 3) and the Abandoned Mine (Terram 2) lie unclaimed in Narbonnais",
         "Vis: the Via Domitia's Heraclean vis (Intellego 6) is on the road it guards, though its magi do not know of it",
         "Income: wine and cork, sold to loyal customers who ask few questions",
@@ -1745,7 +1740,7 @@ def _ara_maxima_nova(provence: Provence, b: Builder, tribunal: Tribunal) -> None
         "Arelat, where Heracles stoned the giants Bergion and Ligur, "
         "interests it greatly.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Luc's cult is the secret behind the covenant; Castra Solis's devout members would quietly move against his resources if they learned of it.",
         "The magi do not know that walking the whole Via Domitia with a lion's skin yields 6 pawns of Intellego; local faeries do, and might sell the knowledge.",
         "Luc's grumbling to Dama about Tibaut's questions, after a certamen he lost to the Quaesitor, warned her of the investigation (see The Serpent's Venom).",
@@ -1948,14 +1943,6 @@ def finish(provence: Provence) -> None:
 P = Profile
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
-    return (name, {"ability": ability})
-
-
 AREA = "Area Lore: Provençal Tribunal"
 
 #: Each magus the book sketches without a stat block, by character id.
@@ -1970,7 +1957,7 @@ PROFILES: dict[str, Profile] = {
             AREA: 2,
         },
         virtues=[
-            _art("Affinity with {art}", "vim"),
+            vf_art("Affinity with {art}", "vim"),
             "Inventive Genius",
             "Obsessed (Minor)",
             "Busybody",
@@ -2020,7 +2007,7 @@ PROFILES: dict[str, Profile] = {
             "Etiquette": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "mentem"),
+            vf_art("Affinity with {art}", "mentem"),
             "Dark Secret",
             "Reckless",
         ],

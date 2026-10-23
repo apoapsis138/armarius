@@ -14,12 +14,11 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from dataclasses import replace
 
-from .. import books
 from ..models import SEASONS, Character, Saga, SeasonPlan, new_instance_id, next_season
 from ..rules import activities as rules
 from ..rules import book_seasons as bs
 from ..rules import creation_access as access
-from ..rules import lab_seasons, study
+from ..rules import lab_seasons, library, study
 from ..rules import xp as xp_rules
 from ..rules.rounding import round_up
 from .lab_queue import scheduled_with
@@ -68,7 +67,7 @@ def _reading_needed(saga: Saga, character: Character, plan: SeasonPlan) -> int |
     if book.type == "Tractatus":
         return 1
     subject = bs.book_subject(book)
-    quality = books.effective_quality(saga, book)
+    quality = library.effective_quality(saga, book)
     if not subject or quality is None or book.level is None:
         return None
     kind, _, name = subject.partition(":")

@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -51,11 +51,6 @@ KNOWN_TRIBUNAL: dict[str, Any] = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION: dict[str, Any] = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY: dict[str, Any] = {"status": "Known", "known": "Locally"}
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(theban: Theban, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1133,7 +1128,7 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "and go; non-Merinita who live long here, eating faerie food and "
         "using faerie materials, become heavily Warped.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Boon: Powerful Ally (Triton, the covenant's patron)",
         "Boon: Regio (the palace, Faerie aura 8); Fantastic Environment (air-like water, constant sunlight); Inhuman Residents (the tritones and nereids); Wealth (faerie treasure, real only inside the regio)",
         "Hook: Faerie Aura; Hermetic Politics (Lucian's shifting alliances); Warping to a Pattern (non-Merinita are heavily Warped)",
@@ -1167,7 +1162,7 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "meaning must be read between the lines.",
         "Founded: the book says about two centuries ago; 1020 is assumed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "They probably could do real harm to other covenants' shipping if they ever cared to.",
         "Lucian is the only magus with an Olympian Pact; he is mystagogue of every member of his league who has Elysian Ecstasy, and may be channelling pretenders, faerie or infernal, rather than gods.",
         "Proximios means to have the nosy Delfini falsely accused of diabolism by the League of the Vigilant, and to set Celaenea of Hedyosmos against Lucian.",
@@ -1377,7 +1372,7 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "the fifth ship coming the covenant could be a home for a troupe's "
         "magi).",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Boon: Powerful Ally (Dryops, the covenant's patron)",
         "Boon: Magical Fortress (the four enchanted ships); Regio (a laboratory regio on each sanctum ship); Hunters or Sailors",
         "Hook: Constantly Mobile; Indebted (a great debt to Dryops)",
@@ -1420,7 +1415,7 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "covenant about fifty years ago and spent decades on the first "
         "ship; 1190 is assumed for the Philomela's first voyage.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Peter Monocheiros pays the covenant a third of his plunder for its protection; Basil sells anything traceable in distant ports.",
         "Peter's crew wear masks at their 'work', and his ships are enchanted to change their look, so nothing can be traced to Favonius.",
     )
@@ -1552,7 +1547,7 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Stouritus, Theorus the Old, Hydatius, Eudoxia, and the twins "
         "Gemma and Bobila.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Boon: Powerful Ally (Mosychlos, the covenant's patron)",
         "Boon: Aura (Magic 4); Vast and Labyrinthine (the tunnels under the volcano); Famous Resident (the primus); Prestige (Verditius domus magna in all but name)",
         "Boon: a shared forge laboratory at the Forge of Hephaistos, +8 to Rego and +5 to enchanting",
@@ -1600,7 +1595,7 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Founded: the book gives no year: in law after Verdi; the pact "
         "with Mosychlos dates from the Tribunal's founding.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Gemma and Bobila sell more enchanted items than the law allows, and favour Nicaea, sworn enemy of Venice; Stouritus, busy with his buildings, has not noticed, and they raise the covenant's wealth slowly to avoid notice. Their long-term aims are unknown.",
         "Theodorus has seen the twins' rising takings but says nothing, since the money will pay for Stouritus's building.",
         "Proximios is using Hydatius and the League of the Vigilant to persecute innocent magi; a demon in Hydatius's likeness is to lead the league's members to attack.",
@@ -1852,7 +1847,7 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "looming. It is run with military discipline under a leader chosen "
         "by the council of magi, who takes the rank and title of general.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Boon: Powerful Ally (Varazes, the covenant's patron)",
         "Boon: Island; Veteran Fighters (a famous, well-equipped turb); Militocracy (an elected general); Aura (Magic 4)",
         "Hook: School (the Gifted children's school); Hermetic Services (defence of the Tribunal); Mundane Politics (the Duke of Naxos covets its wealth)",
@@ -1882,7 +1877,7 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "mans the warship. Several have wives and families on Melos.",
         "Founded: the book gives only the eleventh century; 1050 is assumed.",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Marco Sanudo, Duke of Naxos, overlord in name of the Cyclades, has heard of the school's wealth and envies it.",
         "Caterina has met the duke, posing as a rich noblewoman, and is laying the ground for a quiet arrangement with him.",
         "Satabus, newly arrived, is the duke's lost brother Pietro and has not yet written to him.",
@@ -2394,10 +2389,6 @@ P = Profile
 GREEK = "Greek"
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
 #: Each magus the book sketches without a stat block, by character key.
 PROFILES: dict[str, Profile] = {
     "lucian": P(
@@ -2428,7 +2419,7 @@ PROFILES: dict[str, Profile] = {
         abilities={"Swim": (4, "underwater"), "Faerie Lore": (3, "the sea fae")},
         virtues=[
             ("Strong Faerie Blood", {"blood": "nereid"}),
-            _art("Affinity with {art}", "aquam"),
+            vf_art("Affinity with {art}", "aquam"),
             "Warped by Magic",
             "Disfigured",
             "Reclusive",
@@ -2562,7 +2553,7 @@ PROFILES: dict[str, Profile] = {
             "Leadership": (4, "hoplites"),
             "Penetration": 4,
         },
-        virtues=[_art("Puissant {art}", "terram"), "Dutybound", "Proud (Minor)"],
+        virtues=[vf_art("Puissant {art}", "terram"), "Dutybound", "Proud (Minor)"],
         native=GREEK,
     ),
     "gerasimos": P(

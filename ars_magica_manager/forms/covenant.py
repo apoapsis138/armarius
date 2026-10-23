@@ -35,6 +35,7 @@ from ..models import (
     boon_hook_params,
     new_instance_id,
 )
+from ..rules import sites
 from .possession import contested_fields
 from .tribunal import package_fields, save_package_fields, tribunal_field
 from .virtue import param_choices, param_fields, params_from
@@ -56,7 +57,7 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
     """Edit Covenant: its name, Tribunal, founding, Aegis, living
     conditions, aura (unless its place gives it one), place and season."""
     cov = covenant
-    placed = places.place(saga, cov.place_id) is not None
+    placed = sites.place(saga, cov.place_id) is not None
     fields = [
         DialogField("name", "Name", "text", cov.name, required=True),
         tribunal_field(saga, cov.tribunal_id),

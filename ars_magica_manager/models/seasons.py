@@ -5,7 +5,19 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .common import SEASONS, ExperimentalEffect, experimental_effects, known_fields
+from .common import (
+    SEASONS,
+    Change,
+    ExperimentalEffect,
+    experimental_effects,
+    known_fields,
+)
+
+
+def season_order(*, season: str | None, year: int) -> int:
+    """A season as a number that sorts by date (an unknown season counts as
+    Spring). Keyword-only, so season and year can't be swapped."""
+    return year * len(SEASONS) + (SEASONS.index(season) if season in SEASONS else 0)
 
 
 def next_season(season: str, year: int) -> tuple[str, int]:
@@ -236,16 +248,21 @@ class LabProject:
         return cls(**known_fields(cls, d))
 
 
+#: How often a storyguide's calendar entry repeats.
+ONCE, YEARLY, EVERY = "Once", "Each year", "Every N years"
+REPEATS: tuple[str, ...] = (ONCE, YEARLY, EVERY)
+
+
 @dataclass
 class CalendarEntry:
     """Something the storyguide wrote into the saga's calendar, for Ahead
     to show: in its season, once, each year or every `every` years (see
-    ahead.REPEATS), for one covenant or (None) the whole saga."""
+    REPEATS), for one covenant or (None) the whole saga."""
 
     title: str
     year: int
     season: str = "Spring"
-    repeats: str = "Once"
+    repeats: str = ONCE
     every: int | None = None
     note: str = ""
     covenant_id: str | None = None
@@ -263,7 +280,7 @@ class WorldTurn:
     year: int
     season: str = "Winter"
     lines: list[str] = field(default_factory=list)
-    changes: list[dict[str, Any]] = field(default_factory=list)
+    changes: list[Change] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> WorldTurn:

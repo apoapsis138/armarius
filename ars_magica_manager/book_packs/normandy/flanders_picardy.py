@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -38,11 +38,6 @@ RUMOURED = {"status": "Rumoured", "known": "Locally"}
 
 #: The Count of Flanders' arms: or, a lion sable.
 ARMS_FLANDERS = Arms("Or", charge="Lion", charge_tincture="Sable")
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _add(normandy: Normandy, key: str, name: str, **kw: Any) -> Neighbour:
@@ -422,7 +417,7 @@ def _florum(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "earlier vassals have gone: Lixivia in Champagne (1021 to 1124) and "
         "Alcuin's Auberge, the Mercer House at Tours (1124 to 1197).",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Income: cloth woven by touch by the Spinnen, almost thirty of them in 1220, sold through international traders and much of it exported in secret",
         "Income: a mundane weaving workshop of the Spinnen's relatives, and a seat in Ghent's Weavers' Guild",
         "Vis: half the harvest of Requies Aeterna, its vassal, sent as a tithe",
@@ -440,7 +435,7 @@ def _florum(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: suspected by some magi of raising the tidal wave of 1134 that opened the Zwin to Bruges; never investigated for want of evidence",
         "Tension: champion needed for Tourneys and raids; Alroy hopes to fight Tytali",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Piet de Spinnen is Petrus, Calvinus's mundane son, born at Valnastium; a mercenary in Italy who faked his death to escape his rivals and was trained by an old Redcap to play the heir of the childless Arne de Spinnen, who was himself a front. The de Spinnens are a fiction the magi keep up.",
         "Two of Piet's children spent a year at the new university in Paris and then went secretly to Valnastium to be trained as servants of House Jerbiton.",
         "Calvinus's 'uncle Calvin' persona, his Italian wife and his daughter brought up by her grandparents are all invented; the daughter newly arrived in Ghent is his apprentice Sophia.",
@@ -623,7 +618,7 @@ def _spiders_palace(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "what is wrong with Normandy's way of sharing out vis; the covenant is "
         "an eager supporter of its liege in the Lotharingian movement.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the old site's sources, held as seisins for Florum's line (amounts not given)",
         "Labs: excellent laboratories in the faded palace, used by Florum's magi",
         "Boon: Regio (the palace has faded from the mundane world)",
@@ -707,7 +702,7 @@ def _requies_aeterna(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None
         "Tribunal; its magi will go along, expecting the Rhine magi there to "
         "reject vassalage and cancel their oath, which they would not mind.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the site is rich in vis, Perdo and Corpus among it (amounts not given); roughly half goes to Florum as tithe",
         "Library: the noted library of Donatores lore, the tradition's chief repository",
         "Boon: Aura (Magic 5), Hedge Tradition (the Donatores)",
@@ -1547,14 +1542,6 @@ def _vis(normandy: Normandy) -> None:
 P = Profile
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _focus(focus: str) -> tuple[str, dict[str, str]]:
-    return ("Minor Magical Focus", {"focus": focus})
-
-
 #: Each magus's generated-stats profile, by key in normandy.magi.
 PROFILES: dict[str, Profile] = {
     "rhesus": P(
@@ -1568,7 +1555,7 @@ PROFILES: dict[str, Profile] = {
             "Living Language: Flemish": 2,
         },
         virtues=[
-            _art("Affinity with {art}", "herbam"),
+            vf_art("Affinity with {art}", "herbam"),
             "Inventive Genius",
             "Proud (Minor)",
             "Obsessed (Minor)",
@@ -1604,7 +1591,7 @@ PROFILES: dict[str, Profile] = {
             "Living Language: Flemish": 1,
         },
         virtues=[
-            _art("Puissant {art}", "ignem"),
+            vf_art("Puissant {art}", "ignem"),
             "Warrior",
             "Hermetic Prestige",
             "Overconfident (Minor)",

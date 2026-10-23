@@ -17,8 +17,9 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
+from ars_magica_manager.references import Fact
+from ars_magica_manager.rules import sites
 from ars_magica_manager.sheets import creature as creature_sheet
-from ars_magica_manager.sheets.character import Fact
 
 
 def _with_creature() -> tuple[Saga, Creature]:
@@ -70,13 +71,10 @@ def test_wound_ranges_follow_size():
     assert ranges[-1] == ("Dead", 29, None)
 
 
-def test_a_creature_is_found_at_its_place_and_the_places_round_it():
-    saga, creature = _with_creature()
-    drachenfels = places.place(saga, "drachenfels")
-    outer = places.place(saga, "siebengebirge")
-    assert drachenfels is not None and outer is not None
-    assert creatures.found_at(saga, drachenfels) == [creature]
-    assert creatures.found_at(saga, outer) == [creature]
+def test_a_creature_is_listed_at_its_place():
+    saga, _creature = _with_creature()
+    drachenfels = sites.place(saga, "drachenfels")
+    assert drachenfels is not None
     assert "Aeolus" in places.here(saga, drachenfels)
 
 

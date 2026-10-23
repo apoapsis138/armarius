@@ -13,6 +13,7 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import covenfolk, library
 from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.rules import creation_covenant as cov
 
@@ -559,7 +560,7 @@ def test_a_covenant_in_play_before_tracking_has_no_initial():
 
 
 def test_a_labs_build_points_are_worked_out():
-    from ars_magica_manager.laboratories import lab_build_points
+    from ars_magica_manager.rules.lab_stats import lab_build_points
 
     lab = Laboratory(
         id="l1",
@@ -903,13 +904,12 @@ def test_left_over_build_points_are_converted_once_without_covenants():
 
 
 def test_review_advises_on_servants_and_teamsters():
-    from ars_magica_manager import inhabitants as inh
     from ars_magica_manager.models import Inhabitant
 
     saga = _saga()
     covenant = saga.covenants[0]
-    servants = inh.minimum_servants(saga, covenant)
-    teamsters = inh.minimum_teamsters(saga, covenant)
+    servants = covenfolk.minimum_servants(saga, covenant)
+    teamsters = covenfolk.minimum_teamsters(saga, covenant)
     assert servants > 0 and teamsters > 0
     found = _found(saga, covenant, "finish")
     assert found["Enough servants for its inhabitants"][0] == "advice"
@@ -953,7 +953,7 @@ def test_a_saga_book_a_new_covenant_may_buy_is_copied_into_its_library():
     copy = bk.copy_to(saga, legal, "covenant", "cov1")
     assert copy is not legal and copy.id != legal.id
     assert bk.is_unassigned(saga, legal)
-    assert bk.books_owned_by(saga, "covenant", "cov1") == [copy]
+    assert library.books_owned_by(saga, "covenant", "cov1") == [copy]
     assert cov.spent(saga, saga.covenants[0]) == 22
 
 

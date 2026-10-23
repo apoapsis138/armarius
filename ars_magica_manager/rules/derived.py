@@ -14,6 +14,9 @@ ranges, Wound and Fatigue penalties, Encumbrance and Soak.
 - Soak: Stamina + armour Protection (+ Virtues such as Tough), plus the
   adjustment typed on the sheet. A magus's Form bonus adds only against harm
   of that Form, so it is not part of the standing figure.
+
+No screen uses wound_for() yet: it is a rule for a screen still to come, and
+only the tests call it.
 """
 
 from __future__ import annotations

@@ -11,7 +11,7 @@ from .. import ahead, world_turns
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, pairs
 from ..markup import escape
-from ..models import SEASONS, CalendarEntry, Covenant, Saga
+from ..models import EVERY, ONCE, REPEATS, SEASONS, CalendarEntry, Covenant, Saga
 from ..sections import AHEAD_SECTION, SEASONS_INFO_SECTION, WORLD_TURNS_SECTION
 
 _SPAN_CHOICES = [(ahead.span_label(years), str(years)) for years in ahead.SPANS]
@@ -67,8 +67,8 @@ def calendar_fields(saga: Saga, entry: CalendarEntry | None) -> list[DialogField
             "repeats",
             "Comes",
             "select",
-            e.repeats if e.repeats in ahead.REPEATS else ahead.ONCE,
-            options=pairs(ahead.REPEATS),
+            e.repeats if e.repeats in REPEATS else ONCE,
+            options=pairs(REPEATS),
             required=True,
             hint="From its season and year on: once, each year, or every so "
             "many years.",
@@ -95,7 +95,7 @@ def calendar_fields(saga: Saga, entry: CalendarEntry | None) -> list[DialogField
 
 
 def _calendar_problem(values: dict[str, Any]) -> str | None:
-    if values.get("repeats") == ahead.EVERY and (values.get("every") or 0) < 1:
+    if values.get("repeats") == EVERY and (values.get("every") or 0) < 1:
         return "Say every how many years it comes (1 or more)."
     return None
 
@@ -123,7 +123,7 @@ def calendar_form(
         target.year = values["year"]
         target.season = values["season"]
         target.repeats = values["repeats"]
-        target.every = values.get("every") if target.repeats == ahead.EVERY else None
+        target.every = values.get("every") if target.repeats == EVERY else None
         target.covenant_id = values.get("covenant_id") or None
         target.note = values.get("note") or ""
 
@@ -171,7 +171,7 @@ def ahead_ops(saga: Saga, covenant: Covenant | None = None) -> SectionOps:
             del saga.calendar[index]
 
         written = saga.calendar[index]
-        again = "" if written.repeats == ahead.ONCE else " (every time it comes)"
+        again = "" if written.repeats == ONCE else " (every time it comes)"
         return Confirm(f"Delete {escape(written.title)}{again}?", apply)
 
     return SectionOps(

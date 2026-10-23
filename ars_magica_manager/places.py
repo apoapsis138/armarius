@@ -36,7 +36,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Collection, Iterator
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 from . import references
@@ -47,20 +47,26 @@ from .markup import escape
 from .models import (
     REALMS,
     Character,
-    Covenant,
-    Laboratory,
-    Modifier,
     Neighbour,
     Saga,
-    VirtueFlawInstance,
 )
-from .neighbour_lists import KindList, details_list, list_ops
-from .rules import effects as fx
+from .neighbour_lists import KindList, list_ops
+from .references import Fact
+from .rules.sites import (
+    EFFECT_TYPES,
+    PLACE,
+    AuraEffect,
+    RegioLevel,
+    all_places,
+    aura_at,
+    effects,
+    is_place,
+    levels,
+    place,
+    realm_of,
+    whole_number,
+)
 from .sections import EFFECTS_SECTION, LEVELS_SECTION
-from .sheets.character import Fact
-
-#: The kind of neighbour a place is.
-PLACE = "place"
 
 #: How far the troupe has got with a place, and how widely it is known.
 STATUS: tuple[str, ...] = ("Rumoured", "Known", "Visited", "Claimed")
@@ -71,28 +77,6 @@ SURFACE = "Surface"
 #: The detail that marks a place as a ruined covenant.
 RUINED = "ruined"
 
-
-@dataclass(frozen=True)
-class EffectType:
-    """What a place's effect can change: its name in the lists, the
-    Modifier type it is, and who it reaches."""
-
-    key: str
-    name: str
-    reaches: str
-
-
-#: The effects a place can have, by Modifier type (totals.MODIFIER_TYPES).
-EFFECT_TYPES: dict[str, EffectType] = {
-    t.key: t
-    for t in (
-        EffectType("lab_total", "Lab totals", "Labs here"),
-        EffectType("aging_roll", "Aging rolls", "Who lives here"),
-        EffectType("living_conditions", "Living Conditions", "Who lives here"),
-        EffectType("warping_per_season", "Warping", "Who lives here"),
-        EffectType("aura", "The aura", "Everything here"),
-    )
-}
 
 #: Each Characteristic, by the names a roll may use.
 _CHARACTERISTICS: dict[str, str] = {}
@@ -114,10 +98,6 @@ _CHARACTERISTICS["qik"] = "quickness"
 # -- the record --
 
 
-def is_place(record: object) -> bool:
-    return isinstance(record, Neighbour) and record.kind == PLACE
-
-
 def is_ruin(record: object) -> bool:
     """Whether `record` is a place marked as a ruined covenant: a fallen
     covenant's site, which shows a ruin and can be founded anew."""
@@ -126,31 +106,6 @@ def is_ruin(record: object) -> bool:
         and record.kind == PLACE
         and bool(record.details.get(RUINED))
     )
-
-
-def all_places(saga: Saga) -> list[Neighbour]:
-    return [n for n in saga.neighbours if n.kind == PLACE]
-
-
-def place(saga: Saga, place_id: str | None) -> Neighbour | None:
-    found = saga.neighbour(place_id)
-    return found if is_place(found) else None
-
-
-def levels(place: Neighbour) -> list[dict[str, Any]]:
-    """Its regio levels, Level 1 (just above the surface) first."""
-    return details_list(place, "levels")
-
-
-def effects(place: Neighbour) -> list[dict[str, Any]]:
-    return details_list(place, "effects")
-
-
-def _int(value: Any) -> int:
-    try:
-        return int(value or 0)
-    except TypeError, ValueError:
-        return 0
 
 
 # -- nesting --
@@ -218,7 +173,7 @@ def split(value: str | None) -> tuple[str | None, int]:
     if not value:
         return None, 0
     found, _, level = value.partition("@")
-    return found, _int(level)
+    return found, whole_number(level)
 
 
 def where_text(saga: Saga, place_id: str | None, level: int = 0) -> str:
@@ -276,39 +231,6 @@ def put(record: Any, value: str | None) -> None:
 # -- auras --
 
 
-def _realm(value: Any, fallback: str = "Magic") -> str:
-    found = next((r for r in REALMS if r.casefold() == str(value or "").casefold()), "")
-    return found or fallback
-
-
-def _reaches(where: str | None, level: int) -> bool:
-    """Whether an effect kept for `where` ("all", "2" or "1+") reaches
-    `level`."""
-    if not where or where == "all":
-        return True
-    if where.endswith("+"):
-        return level >= _int(where[:-1])
-    return level == _int(where)
-
-
-def aura_at(place: Neighbour, level: int = 0) -> tuple[int, str]:
-    """The aura and its realm at `level` of `place`: the surface's or the
-    level's, unless an aura effect there replaces it."""
-    shown = levels(place)
-    if 0 < level <= len(shown):
-        entry = shown[level - 1]
-        aura, realm = _int(entry.get("aura")), _realm(entry.get("realm"))
-    else:
-        aura, realm = _int(place.details.get("aura")), _realm(place.realm)
-    for effect in effects(place):
-        if effect.get("what") == "aura" and _reaches(effect.get("where"), level):
-            aura, realm = (
-                _int(effect.get("amount")),
-                _realm(effect.get("target"), realm),
-            )
-    return aura, realm
-
-
 def aura_text(place: Neighbour, level: int = 0) -> str:
     aura, realm = aura_at(place, level)
     return f"{realm} {aura}"
@@ -339,90 +261,7 @@ def sync(saga: Saga) -> None:
             covenant.own_aura, covenant.own_realm = None, ""
 
 
-def lab_place(saga: Saga, lab: Laboratory) -> tuple[Neighbour, int] | None:
-    """Where a laboratory is: its own place, or its covenant's."""
-    found = place(saga, lab.place_id)
-    if found is not None:
-        return found, lab.place_level
-    covenant = saga.covenant(lab.covenant_id)
-    return covenant_place(saga, covenant) if covenant is not None else None
-
-
-def covenant_place(saga: Saga, covenant: Covenant) -> tuple[Neighbour, int] | None:
-    found = place(saga, covenant.place_id)
-    return (found, covenant.place_level) if found is not None else None
-
-
-def character_place(saga: Saga, character: Character) -> tuple[Neighbour, int] | None:
-    """Where a character lives: their covenant's place."""
-    covenant = saga.covenant(character.covenant_id)
-    return covenant_place(saga, covenant) if covenant is not None else None
-
-
-def lab_aura(saga: Saga, lab: Laboratory) -> tuple[int, str] | None:
-    """The aura of a laboratory placed somewhere of its own (a lab built
-    in a regio); None when it takes its covenant's."""
-    found = place(saga, lab.place_id)
-    return aura_at(found, lab.place_level) if found is not None else None
-
-
 # -- effects, as the totals collect them --
-
-
-@dataclass(frozen=True)
-class _Entry:
-    """A place's effect as a catalog entry, for rules.effects."""
-
-    id: str
-    name: str
-    type: str
-    modifiers: list[Modifier] = field(default_factory=list)
-
-
-def source(where: tuple[Neighbour, int] | None) -> fx.EffectSource:
-    """The effects that reach `where` (a place and level), as a source
-    for the shared effect lookup; an empty one for nowhere."""
-    if where is None:
-        return fx.EffectSource("place", [], {})
-    found, level = where
-    instances: list[VirtueFlawInstance] = []
-    catalog: dict[str, _Entry] = {}
-    for index, effect in enumerate(effects(found)):
-        what = effect.get("what")
-        if what not in EFFECT_TYPES or what == "aura":
-            continue
-        if not _reaches(effect.get("where"), level):
-            continue
-        amount = _int(effect.get("amount"))
-        key = f"{found.id}#{index}"
-        catalog[key] = _Entry(
-            key,
-            found.name,
-            "Virtue" if amount >= 0 else "Flaw",
-            [Modifier(what, amount=amount, target=effect.get("target") or None)],
-        )
-        instances.append(VirtueFlawInstance(key))
-    return fx.EffectSource("place", instances, catalog)
-
-
-def lab_source(saga: Saga, lab: Laboratory) -> fx.EffectSource:
-    return source(lab_place(saga, lab))
-
-
-def character_effects(
-    saga: Saga | None, character: Character, applies_to: str
-) -> list[fx.Effect]:
-    """The effects of type `applies_to` from where `character` lives."""
-    if saga is None:
-        return []
-    return fx.collect([source(character_place(saga, character))], applies_to)
-
-
-def warping_per_year(saga: Saga, character: Character) -> int:
-    """The Warping Points a year where `character` lives gives: its
-    Warping a season, four times."""
-    found = character_effects(saga, character, "warping_per_season")
-    return 4 * int(fx.amount_total(found))
 
 
 # -- who can see or enter a level --
@@ -628,7 +467,7 @@ def levels_grid(saga: Saga, place: Neighbour) -> Grid:
 
 
 def level_fields(
-    _saga: Saga, place: Neighbour, entry: dict[str, Any] | None
+    _saga: Saga, place: Neighbour, entry: RegioLevel | None
 ) -> list[DialogField]:
     e = entry or {}
     return [
@@ -642,7 +481,10 @@ def level_fields(
             required=True,
         ),
         DialogField(
-            "aura", "Aura", "int", e.get("aura", _int(place.details.get("aura")) + 1)
+            "aura",
+            "Aura",
+            "int",
+            e.get("aura", whole_number(place.details.get("aura")) + 1),
         ),
         DialogField(
             "see",
@@ -700,12 +542,12 @@ def _where_label(place: Neighbour, where: str | None) -> str:
     return found.get(where or "all") or str(where or "")
 
 
-def amount_text(effect: dict[str, Any]) -> str:
+def amount_text(effect: AuraEffect) -> str:
     what = effect.get("what")
-    amount = _int(effect.get("amount"))
+    amount = whole_number(effect.get("amount"))
     target = effect.get("target") or ""
     if what == "aura":
-        return f"{_realm(target)} {amount}"
+        return f"{realm_of(target)} {amount}"
     text = f"{amount:+d}"
     if what == "warping_per_season":
         return f"{text} a season"
@@ -741,7 +583,7 @@ def effects_grid(_saga: Saga, place: Neighbour) -> Grid:
 
 
 def effect_fields(
-    _saga: Saga, place: Neighbour, entry: dict[str, Any] | None
+    _saga: Saga, place: Neighbour, entry: AuraEffect | None
 ) -> list[DialogField]:
     e = entry or {}
     return [
@@ -786,7 +628,7 @@ def _effect_problem(values: dict[str, Any]) -> str | None:
     if values.get("what") == "aura":
         if (values.get("amount") or 0) < 0:
             return "An aura can't be below 0."
-        if target and _realm(target, "") == "":
+        if target and realm_of(target, "") == "":
             return f"The aura's realm is one of {', '.join(REALMS)}."
     if values.get("what") == "lab_total" and target:
         from .arts import ARTS

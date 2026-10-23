@@ -17,6 +17,7 @@ them alongside the catalog's once the saga is the one in use
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any
 
 from . import catalog, sourcebooks, storage
@@ -215,12 +216,28 @@ def add(saga: Saga, kind: str, values: dict[str, Any]) -> Entry:
     return made
 
 
-def update(saga: Saga, kind: str, entry: Entry, values: dict[str, Any]) -> None:
-    """Change a user-made entry in place (its id stays, so whoever holds it
-    keeps it, with its new name and points)."""
-    for key, value in _fields(kind, values).items():
-        setattr(entry, key, value)
+def update(saga: Saga, kind: str, entry: Entry, values: dict[str, Any]) -> Entry:
+    """Change a user-made entry (its id stays, so whoever holds it keeps
+    it, with its new name and points): definitions are frozen, so the
+    changed one takes the old one's place in the saga's list. Returns it."""
+    changed = _replace(saga, kind, entry, **_fields(kind, values))
     catalog.use_saga(saga)
+    return changed
+
+
+def recite(saga: Saga, old: str, new: str) -> None:
+    """Make the entries citing the saga source `old` cite `new`."""
+    for kind, entry in all_entries(saga):
+        if entry.source == old:
+            _replace(saga, kind, entry, source=new)
+
+
+def _replace(saga: Saga, kind: str, entry: Entry, **changes: Any) -> Entry:
+    """`entry` with `changes`, in its place in the saga's list."""
+    listed = entries_of(saga, kind)
+    index = next(i for i, e in enumerate(listed) if e is entry)
+    listed[index] = changed = replace(entry, **changes)
+    return changed
 
 
 def citing(saga: Saga, source: str) -> list[Entry]:

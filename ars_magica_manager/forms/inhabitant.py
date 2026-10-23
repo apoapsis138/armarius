@@ -27,6 +27,7 @@ from ..models import (
     Covenant,
     Saga,
 )
+from ..rules import covenfolk
 
 #: The grog chooser's first entry: someone with no character sheet.
 NEW_PERSON = "(New person -- not from a character sheet)"
@@ -39,7 +40,7 @@ def new_entry_label(kind: str) -> str:
 
 def inhabitant_fields(
     kind: str,
-    entry: inh.InhabitantEntry | None,
+    entry: covenfolk.InhabitantEntry | None,
     grog: Character | None,
 ) -> list[DialogField]:
     """The add/edit form for one kind of inhabitant. For a person listed from a
@@ -73,7 +74,7 @@ def inhabitant_fields(
         )
     if kind == "craftsperson":
         fields += _craftsperson_fields(entry, character)
-    if kind not in inh.AUTO_KINDS:
+    if kind not in covenfolk.AUTO_KINDS:
         fields.append(
             DialogField("quantity", "Quantity", "int", entry.quantity if entry else 1)
         )
@@ -83,7 +84,7 @@ def inhabitant_fields(
 
 def _identity_fields(
     kind: str,
-    entry: inh.InhabitantEntry | None,
+    entry: covenfolk.InhabitantEntry | None,
     grog: Character | None,
 ) -> list[DialogField]:
     """Name, Year Born, and House and Gift for a magus: read-only for a
@@ -146,7 +147,7 @@ def _identity_fields(
     return fields
 
 
-def _covenant_role_fields(entry: inh.InhabitantEntry | None) -> list[DialogField]:
+def _covenant_role_fields(entry: covenfolk.InhabitantEntry | None) -> list[DialogField]:
     """A companion's or specialist's Covenant Role, and the inputs of the
     Loyalty bonus that role earns."""
     fields = [
@@ -162,9 +163,9 @@ def _covenant_role_fields(entry: inh.InhabitantEntry | None) -> list[DialogField
     # Steward/Chamberlain/Turb Captain/Autocrat earn the covenant a
     # Loyalty bonus (Presence + a specific Ability). The role has to be
     # chosen and saved first -- editing again then shows this.
-    if entry is None or entry.role not in inh.ROLE_ABILITY_MAP:
+    if entry is None or entry.role not in covenfolk.ROLE_ABILITY_MAP:
         return fields
-    ability_label = " + ".join(inh.ROLE_ABILITY_MAP[entry.role])
+    ability_label = " + ".join(covenfolk.ROLE_ABILITY_MAP[entry.role])
     if entry.character is not None:
         fields.append(
             DialogField(
@@ -195,7 +196,7 @@ def _covenant_role_fields(entry: inh.InhabitantEntry | None) -> list[DialogField
 
 
 def _craftsperson_fields(
-    entry: inh.InhabitantEntry | None, character: Character | None
+    entry: covenfolk.InhabitantEntry | None, character: Character | None
 ) -> list[DialogField]:
     """A craftsperson's skill value, Field of Work, Rare and Linked Ability
     (chosen from their character's Abilities, when they have a sheet)."""
@@ -254,7 +255,7 @@ def _craftsperson_fields(
 # Add, Edit and Delete
 
 
-def form_title(kind: str, entry: inh.InhabitantEntry | None) -> str:
+def form_title(kind: str, entry: covenfolk.InhabitantEntry | None) -> str:
     """ "Add a Magus", or "Edit <their name>"."""
     singular = inh.KIND_SINGULAR[kind]
     if entry is None:
@@ -265,7 +266,7 @@ def form_title(kind: str, entry: inh.InhabitantEntry | None) -> str:
 def inhabitant_form(
     covenant: Covenant,
     kind: str,
-    entry: inh.InhabitantEntry | None,
+    entry: covenfolk.InhabitantEntry | None,
     grog: Character | None = None,
 ) -> Form:
     """Add (`entry` None; for `grog`, if one was chosen) or edit one
@@ -295,7 +296,7 @@ def add_inhabitant(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose:
     grogs; Magi and Companions offer the saga's characters of that kind
     who aren't on the list (or someone with no sheet); Livestock go
     straight to the form."""
-    if kind in inh.AUTO_KINDS:
+    if kind in covenfolk.AUTO_KINDS:
         return _add_from_sheets(saga, covenant, kind)
     grogs = inh.available_grogs(saga, covenant, kind) if inh.takes_grogs(kind) else []
     if not grogs:
@@ -350,7 +351,7 @@ def _add_from_sheets(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose
 
 
 def remove_inhabitant(
-    covenant: Covenant, kind: str, entry: inh.InhabitantEntry
+    covenant: Covenant, kind: str, entry: covenfolk.InhabitantEntry
 ) -> Confirm:
     """Delete one, after confirming. Someone listed from a character sheet
     is not deleted: they stop counting as an inhabitant, still in the
@@ -374,10 +375,10 @@ def remove_inhabitant(
 
 def inhabitant_ops(saga: Saga, covenant: Covenant, kind: str) -> SectionOps:
     """The Inhabitants section of `kind`: Add, Edit and Delete, by the
-    row's index in the section's list (inhabitants.entries_for_kind)."""
+    row's index in the section's list (covenfolk.entries_for_kind)."""
 
-    def entries() -> list[inh.InhabitantEntry]:
-        return inh.entries_for_kind(saga, covenant, kind)
+    def entries() -> list[covenfolk.InhabitantEntry]:
+        return covenfolk.entries_for_kind(saga, covenant, kind)
 
     return SectionOps(
         add=lambda: add_inhabitant(saga, covenant, kind),
@@ -483,25 +484,28 @@ def population_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             "_tm",
             "Number of Teamsters",
             "info",
-            inh.other_covenfolk_count(saga, covenant, "Teamster"),
+            covenfolk.other_covenfolk_count(saga, covenant, "Teamster"),
         ),
         DialogField(
-            "_tn", "Teamsters Needed", "info", inh.minimum_teamsters(saga, covenant)
+            "_tn",
+            "Teamsters Needed",
+            "info",
+            covenfolk.minimum_teamsters(saga, covenant),
         ),
         DialogField(
             "_sv",
             "Number of Servants",
             "info",
-            inh.other_covenfolk_count(saga, covenant, "Servant"),
+            covenfolk.other_covenfolk_count(saga, covenant, "Servant"),
         ),
         DialogField(
-            "_sn", "Servants Needed", "info", inh.minimum_servants(saga, covenant)
+            "_sn", "Servants Needed", "info", covenfolk.minimum_servants(saga, covenant)
         ),
         DialogField(
             "_lb",
             "Number of Laborers",
             "info",
-            inh.other_covenfolk_count(saga, covenant, "Laborer"),
+            covenfolk.other_covenfolk_count(saga, covenant, "Laborer"),
         ),
         DialogField("other_people", "Other People", "int", pop.other_people),
         DialogField(

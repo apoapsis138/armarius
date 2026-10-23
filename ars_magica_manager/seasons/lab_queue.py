@@ -6,7 +6,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 
-from .. import enchanted_devices as ed
+from .. import catalog
 from .. import spells as spl
 from ..markup import escape, problem, todo
 from ..models import (
@@ -30,7 +30,7 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
-from ..rules import experiment, lab_seasons
+from ..rules import enchantment, experiment, lab_seasons
 from ..rules import familiar_seasons as fs
 from ..rules import laboratory_seasons as ls
 from ..tables import Table
@@ -355,7 +355,7 @@ def _plan_subject(saga: Saga, magus: Character, plan: SeasonPlan) -> None:
     )
 
 
-def _lab_text_book(saga: Saga, magus: Character, lab: Laboratory, spell) -> Book:
+def _lab_text_book(saga: Saga, magus: Character, lab: Laboratory, spell: Spell) -> Book:
     ids = {b.id for b in saga.books}
     base = f"labtext_{spell.id}_{magus.id}"
     book_id, n = base, 2
@@ -403,7 +403,7 @@ def _effect_text(
         owner_id=lab.id,
         year_published=saga.current_year,
         # The level it was instilled at (with its uses a day and the rest).
-        level=ed.modified_level(device, effect),
+        level=enchantment.modified_level(device, effect),
         text_kind=TEXT_ENCHANTMENT,
         technique=effect.technique,
         form=effect.form,
@@ -494,7 +494,7 @@ def _invented_spell(saga: Saga, magus: Character, design: SpellDesign) -> Spell:
     """The spell a finished design gives: the spell it started from when it
     wasn't changed, otherwise a new spell of the magus's own."""
     designed = lab_seasons.design_spell(design)
-    source = spl.find_spell(saga, design.source_spell_id)
+    source = catalog.find_spell(saga, design.source_spell_id)
     if source is not None and lab_seasons.same_spell(source, designed):
         return source
     spell = spl.add_invented_spell(

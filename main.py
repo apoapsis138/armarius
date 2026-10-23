@@ -2,12 +2,12 @@ from ars_magica_manager import paths
 
 
 def main() -> None:
-    # The data folder is settled before the app (and so storage and
-    # settings, which read it on import) is loaded: the default folder
-    # takes the app's new name, and if the folder can't be used, another
-    # is, and the app says why.
+    # The data folder is settled first: the default folder takes the app's
+    # new name, and if the folder can't be used, another is, and the app
+    # says why. The app then keeps to that folder until another is chosen.
     renamed = paths.move_old_default_folder()
     problem = paths.settle_data_dir()
+    paths.use_data_dir(paths.data_dir())
     from ars_magica_manager import hosting
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
 

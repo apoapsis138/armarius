@@ -12,6 +12,7 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import familiar_seasons
 from ars_magica_manager.rules.xp import ability_xp
 
 
@@ -24,8 +25,8 @@ def _saga() -> tuple[Saga, Character, Familiar]:
 
 def test_familiar_of_finds_the_one_bound_to_a_character():
     saga, _magus, familiar = _saga()
-    assert fam.familiar_of(saga, "mag1") is familiar
-    assert fam.familiar_of(saga, "someone-else") is None
+    assert saga.familiar_of("mag1") is familiar
+    assert saga.familiar_of("someone-else") is None
 
 
 def test_magus_of_finds_the_binding_character():
@@ -43,7 +44,7 @@ def test_magus_of_returns_none_if_the_character_no_longer_exists():
     "score,expected", [(0, 0), (1, 5), (2, 15), (3, 30), (4, 50), (5, 75)]
 )
 def test_cord_cost_follows_the_fixed_table(score, expected):
-    assert fam.cord_cost(score) == expected
+    assert familiar_seasons.cord_cost(score) == expected
 
 
 def test_identity_text_shows_the_magus_and_core_fields():

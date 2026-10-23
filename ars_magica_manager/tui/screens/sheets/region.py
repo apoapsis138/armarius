@@ -19,6 +19,7 @@ from ....forms import neighbour as neighbour_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Covenant, Neighbour, Saga
 from ....neighbour_lists import KindTab
+from ....references import Fact
 from ....sections import (
     ATTITUDE_SECTION,
     FAVOURS_SECTION,
@@ -27,7 +28,6 @@ from ....sections import (
     REGION_INFO_SECTION,
 )
 from ....sheets import region as region_sheet
-from ....sheets.character import Fact
 from ..widgets import (
     PinnedCollapsible,
     SelectableList,

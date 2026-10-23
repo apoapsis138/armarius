@@ -60,8 +60,11 @@ def test_a_saga_source_is_added_edited_and_refused_while_cited(app):
     assert storage.load_saga(saga_id).sources[0].title == "Our rules"
     saga = window.saga
     assert saga is not None
-    entry = hr.add(saga, hr.CHARACTER, {"name": "X", "type": "Virtue", "tier": "Minor"})
-    entry.source = "HR"
+    hr.add(
+        saga,
+        hr.CHARACTER,
+        {"name": "X", "type": "Virtue", "tier": "Minor", "source": "HR"},
+    )
     answering(window)
     section_buttons(_page(window), "Saga Sources")["Delete"].click()
     assert [why for _title, why in window.told] == [

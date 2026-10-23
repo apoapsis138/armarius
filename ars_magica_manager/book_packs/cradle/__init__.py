@@ -28,7 +28,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ...models import Character, Covenant, Creature, Neighbour, Saga
-from ...places import PLACE
+from ...rules.sites import PLACE
 from .. import BookPack, east, register
 from ..builder import Builder
 
@@ -75,13 +75,6 @@ class Cradle:
         found = next((n for n in self.b.saga.neighbours if n.name == name), None)
         if found is None:
             raise KeyError(f"No neighbour named {name!r} yet")
-        return found
-
-    def person_named(self, name: str) -> Character:
-        """The character of that name, made by any part."""
-        found = next((c for c in self.b.saga.characters if c.name == name), None)
-        if found is None:
-            raise KeyError(f"No character named {name!r} yet")
         return found
 
     def creature_named(self, name: str) -> Creature:

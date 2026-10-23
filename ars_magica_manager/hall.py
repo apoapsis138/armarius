@@ -9,11 +9,11 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any
 
 from . import arms, meeting, tribunals, world
 from .arms import Arms
-from .models import Case, Covenant, Saga, Tribunal
+from .models import Case, Covenant, Meeting, Saga, Tribunal
+from .sheets import tribunal as tribunal_sheet
 from .tribunal_packages import Envoy
 
 
@@ -40,9 +40,7 @@ class Bench:
     called: bool = True
 
 
-def _members(
-    saga: Saga, tribunal: Tribunal, meeting_: dict[str, Any], covenant: Covenant
-):
+def _members(saga: Saga, tribunal: Tribunal, meeting_: Meeting, covenant: Covenant):
     """Who sits for `covenant`: its named magi, then its unnamed ones,
     less those absent, then the proxies it carries."""
     magi, proxies = meeting.present(saga, tribunal, meeting_, covenant)
@@ -55,7 +53,7 @@ def _members(
 def benches(
     saga: Saga,
     tribunal: Tribunal,
-    meeting_: dict[str, Any],
+    meeting_: Meeting,
     case: Case | None,
     called: int | None = None,
 ) -> list[Bench]:
@@ -184,7 +182,7 @@ def opening_card(saga: Saga, tribunal: Tribunal) -> OpeningCard:
     place = record.get("place") or ""
     members = tribunals.covenants_of(saga, tribunal)
     votes, _proxies = meeting.hall(saga, tribunal, record)
-    cases = meeting.business(tribunal)
+    cases = tribunal_sheet.open_cases(tribunal)
     motions = sum(1 for c in cases if c.kind == "motion")
     heard = len(cases) - motions
     numbers = [

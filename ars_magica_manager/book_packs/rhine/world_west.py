@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...arms import Arms
+from ...models import Neighbour
 from ..builder import Builder, paragraphs
 
 if TYPE_CHECKING:
@@ -39,7 +40,13 @@ def build(rhine: Rhine) -> None:
 # -- the crown and the princes --
 
 
-def _crown_and_princes(b: Builder, w, valley, forest, lowlands) -> None:
+def _crown_and_princes(
+    b: Builder,
+    w: dict[str, Neighbour],
+    valley: Neighbour | None,
+    forest: Neighbour | None,
+    lowlands: Neighbour | None,
+) -> None:
     w["emperor"] = b.lord(
         "Emperor Frederick II",
         title="duke",
@@ -247,7 +254,12 @@ def _crown_and_princes(b: Builder, w, valley, forest, lowlands) -> None:
 # -- the Church --
 
 
-def _archbishops_and_bishops(b: Builder, w, valley, forest) -> None:
+def _archbishops_and_bishops(
+    b: Builder,
+    w: dict[str, Neighbour],
+    valley: Neighbour | None,
+    forest: Neighbour | None,
+) -> None:
     w["archbishop_of_mainz"] = b.church(
         "Archbishop of Mainz",
         church="Archbishop's cathedral",
@@ -424,7 +436,7 @@ def _archbishops_and_bishops(b: Builder, w, valley, forest) -> None:
 # -- the Rhine, Lorraine and the Low Countries --
 
 
-def _rhine_towns(b: Builder, w, valley) -> None:
+def _rhine_towns(b: Builder, w: dict[str, Neighbour], valley: Neighbour | None) -> None:
     w["cologne"] = b.town(
         "Cologne",
         charter="Church",
@@ -707,7 +719,9 @@ def _rhine_towns(b: Builder, w, valley) -> None:
 # -- Swabia and the Black Forest --
 
 
-def _swabian_towns(b: Builder, w, forest) -> None:
+def _swabian_towns(
+    b: Builder, w: dict[str, Neighbour], forest: Neighbour | None
+) -> None:
     w["baden"] = b.town(
         "Baden",
         charter="Noble lord",
@@ -812,7 +826,7 @@ def _swabian_towns(b: Builder, w, forest) -> None:
 # -- schools --
 
 
-def _schools(b: Builder, w, valley) -> None:
+def _schools(b: Builder, w: dict[str, Neighbour], valley: Neighbour | None) -> None:
     w["jewish_academy_of_mainz"] = b.university(
         "Jewish academy of Mainz",
         school="Urban school",
@@ -830,7 +844,12 @@ def _schools(b: Builder, w, valley) -> None:
 # -- factions --
 
 
-def _factions(b: Builder, w, valley, forest) -> None:
+def _factions(
+    b: Builder,
+    w: dict[str, Neighbour],
+    valley: Neighbour | None,
+    forest: Neighbour | None,
+) -> None:
     w["forest_guides"] = b.faction(
         "Bjornaer and Merinita, guides of the forest paths",
         faction="Other",
@@ -1013,7 +1032,13 @@ def _factions(b: Builder, w, valley, forest) -> None:
 # -- threats --
 
 
-def _threats(b: Builder, w, valley, forest, central) -> None:
+def _threats(
+    b: Builder,
+    w: dict[str, Neighbour],
+    valley: Neighbour | None,
+    forest: Neighbour | None,
+    central: Neighbour | None,
+) -> None:
     w["schwall"] = b.threat(
         "Schwall of Bjornaer and the Rhine elemental",
         antagonist="Schwall of Bjornaer",

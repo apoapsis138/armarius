@@ -29,8 +29,18 @@ from .commands import Confirm, Form, SectionOps
 from .form_spec import DialogField
 from .grids import Grid
 from .markup import escape
-from .models import SEASONS, Attitude, Reason, Saga, WorldTurn, new_instance_id
-from .rules import dice
+from .models import (
+    SEASONS,
+    AppendChange,
+    Attitude,
+    Change,
+    Reason,
+    Saga,
+    SetChange,
+    WorldTurn,
+    new_instance_id,
+)
+from .rules import dice, sites
 
 #: The groups the review lists, in order.
 PLACES, THREATS, NEIGHBOURS, TREASURY, ATTITUDES = (
@@ -61,7 +71,7 @@ class Proposal:
 
     group: str
     text: str
-    changes: list[dict[str, Any]] = field(default_factory=list)
+    changes: list[Change] = field(default_factory=list)
     ticked: bool = True
     #: For an attitude line: the neighbour, the player covenant, and what
     #: happened between them this year.
@@ -93,6 +103,9 @@ def _step(target: Any, step: Any) -> Any:
         return target[step]
     if isinstance(target, list):
         return target[int(step)]
+    if not hasattr(target, step):
+        # A field a save's change names that the record no longer has.
+        raise LookupError(step)
     return getattr(target, step)
 
 
@@ -111,7 +124,7 @@ def _get(target: Any, step: Any) -> Any:
 
 def set_change(
     kind: str, record_id: str, path: list[Any], before: Any, after: Any
-) -> dict[str, Any]:
+) -> SetChange:
     return {
         "op": "set",
         "record": kind,
@@ -124,7 +137,7 @@ def set_change(
 
 def append_change(
     kind: str, record_id: str, path: list[Any], value: Any
-) -> dict[str, Any]:
+) -> AppendChange:
     return {
         "op": "append",
         "record": kind,
@@ -134,7 +147,7 @@ def append_change(
     }
 
 
-def _parent(saga: Saga, change: dict[str, Any]) -> Any:
+def _parent(saga: Saga, change: SetChange | AppendChange) -> Any:
     target = _record(saga, change["record"], change["id"])
     if target is None:
         raise LookupError
@@ -143,7 +156,7 @@ def _parent(saga: Saga, change: dict[str, Any]) -> Any:
     return target
 
 
-def _list(saga: Saga, change: dict[str, Any]) -> list[Any]:
+def _list(saga: Saga, change: AppendChange) -> list[Any]:
     parent = _parent(saga, change)
     last = change["path"][-1]
     found = _get(parent, last)
@@ -153,18 +166,17 @@ def _list(saga: Saga, change: dict[str, Any]) -> list[Any]:
     return found
 
 
-def apply_change(saga: Saga, change: dict[str, Any]) -> None:
-    op = change["op"]
-    if op == "set":
+def apply_change(saga: Saga, change: Change) -> None:
+    if change["op"] == "set":
         parent = _parent(saga, change)
         last = change["path"][-1]
         # A key the record didn't have is taken out again on undo.
         if isinstance(parent, dict) and last not in parent:
             change["absent"] = True
         _put(parent, last, change["after"])
-    elif op == "append":
+    elif change["op"] == "append":
         _list(saga, change).append(change["value"])
-    elif op == "reason":
+    elif change["op"] == "reason":
         record = _record(saga, change["record"], change["id"])
         attitude = world.attitude_toward(record, change["covenant_id"])
         if attitude is None:
@@ -173,12 +185,11 @@ def apply_change(saga: Saga, change: dict[str, Any]) -> None:
         attitude.reasons.append(Reason(**change["reason"]))
 
 
-def undo_change(saga: Saga, change: dict[str, Any]) -> bool:
+def undo_change(saga: Saga, change: Change) -> bool:
     """Reverse `change`; False (nothing done) when what it set has been
     changed or removed since."""
     try:
-        op = change["op"]
-        if op == "set":
+        if change["op"] == "set":
             parent = _parent(saga, change)
             last = change["path"][-1]
             if _get(parent, last) != change["after"]:
@@ -188,13 +199,13 @@ def undo_change(saga: Saga, change: dict[str, Any]) -> bool:
             else:
                 _put(parent, last, change["before"])
             return True
-        if op == "append":
+        if change["op"] == "append":
             entries = _list(saga, change)
             if change["value"] not in entries:
                 return False
             entries.remove(change["value"])
             return True
-        if op == "reason":
+        if change["op"] == "reason":
             record = _record(saga, change["record"], change["id"])
             attitude = world.attitude_toward(record, change["covenant_id"])
             wanted = change["reason"]["id"]
@@ -202,7 +213,7 @@ def undo_change(saga: Saga, change: dict[str, Any]) -> bool:
                 return False
             attitude.reasons = [r for r in attitude.reasons if r.id != wanted]
             return True
-    except LookupError, StopIteration, IndexError, KeyError, AttributeError:
+    except LookupError, StopIteration:
         return False
     return False
 
@@ -216,7 +227,7 @@ def _diary_line(year: int, season: str, text: str) -> dict[str, Any]:
 
 def _places(saga: Saga, year: int, rng: random.Random) -> list[Proposal]:
     found = []
-    for place in places.all_places(saga):
+    for place in sites.all_places(saga):
         for trigger in place_events.triggers(place):
             season = place_events.comes_in(trigger, year)
             if season is None:
@@ -476,7 +487,7 @@ def review_fields(found: list[Proposal]) -> list[DialogField]:
 
 def _chosen(
     saga: Saga, found: list[Proposal], values: dict[str, Any]
-) -> list[tuple[str, list[dict[str, Any]]]]:
+) -> list[tuple[str, list[Change]]]:
     """The ticked lines (and the attitudes given a change), each with its
     changes."""
     year = saga.current_year
@@ -558,9 +569,7 @@ def review(saga: Saga, found: list[Proposal], then: Any) -> Form:
     )
 
 
-def record(
-    saga: Saga, chosen: list[tuple[str, list[dict[str, Any]]]]
-) -> WorldTurn | None:
+def record(saga: Saga, chosen: list[tuple[str, list[Change]]]) -> WorldTurn | None:
     """Apply the chosen lines and keep them as one entry (None: nothing
     chosen)."""
     if not chosen:

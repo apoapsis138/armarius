@@ -28,11 +28,9 @@ from __future__ import annotations
 import unicodedata
 from typing import TYPE_CHECKING, Any
 
-from ...threats import DORMANT
-from ..builder import Builder, paragraphs
+from ..builder import Builder, dormant, paragraphs
 
 if TYPE_CHECKING:
-    from ...models import Neighbour
     from . import Hibernia
 
 S = Builder.stage
@@ -51,12 +49,6 @@ def build(hibernia: Hibernia) -> None:
     _aillen(hibernia)
     _mellifont(hibernia)
     _oireadh(hibernia)
-
-
-def _dormant(threat: Neighbour) -> Neighbour:
-    """Mark a threat as not yet begun: More, Begin This Story starts it."""
-    threat.details[DORMANT] = True
-    return threat
 
 
 # -- under way in 1220 --
@@ -431,7 +423,7 @@ def _reform(hibernia: Hibernia) -> None:
 
 def _grainne(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_grainne"] = _dormant(
+    hibernia.world["threat_grainne"] = dormant(
         b.threat(
             "Maoilfhinnéin's Plot",
             summary=paragraphs(
@@ -535,7 +527,7 @@ def _grainne(hibernia: Hibernia) -> None:
 
 def _ballack(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_ballack"] = _dormant(
+    hibernia.world["threat_ballack"] = dormant(
         b.threat(
             "Ballack's Debts",
             summary=paragraphs(
@@ -618,7 +610,7 @@ def _ballack(hibernia: Hibernia) -> None:
 
 def _donn(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_donn"] = _dormant(
+    hibernia.world["threat_donn"] = dormant(
         b.threat(
             "Donn's Army",
             summary=paragraphs(
@@ -714,7 +706,7 @@ def _donn(hibernia: Hibernia) -> None:
 
 def _gaileoin(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_gaileoin"] = _dormant(
+    hibernia.world["threat_gaileoin"] = dormant(
         b.threat(
             "The Gaileoin Infernalists",
             summary=paragraphs(
@@ -804,7 +796,7 @@ def _gaileoin(hibernia: Hibernia) -> None:
 
 def _giant(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_giant"] = _dormant(
+    hibernia.world["threat_giant"] = dormant(
         b.threat(
             "The Giant under Qui Sonant",
             summary=paragraphs(
@@ -895,7 +887,7 @@ def _giant(hibernia: Hibernia) -> None:
 
 def _aillen(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_aillen"] = _dormant(
+    hibernia.world["threat_aillen"] = dormant(
         b.threat(
             "Áillen Burns Tara",
             summary=paragraphs(
@@ -966,7 +958,7 @@ def _aillen(hibernia: Hibernia) -> None:
 
 def _mellifont(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_mellifont"] = _dormant(
+    hibernia.world["threat_mellifont"] = dormant(
         b.threat(
             "The Conspiracy of Mellifont",
             summary=paragraphs(
@@ -1063,7 +1055,7 @@ def _mellifont(hibernia: Hibernia) -> None:
 
 def _oireadh(hibernia: Hibernia) -> None:
     b = hibernia.b
-    hibernia.world["threat_oireadh"] = _dormant(
+    hibernia.world["threat_oireadh"] = dormant(
         b.threat(
             "The Pact of Oireadh's Parma",
             summary=paragraphs(

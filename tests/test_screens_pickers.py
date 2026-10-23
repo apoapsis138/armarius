@@ -19,6 +19,7 @@ from textual.widgets import Button, Input, Label, Select, Static
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
+from ars_magica_manager.rules.vf_eligibility import VirtueFlawChooser
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     AbilityPickerScreen,
@@ -250,7 +251,7 @@ async def test_vf_picker_search_matches_summaries_after_names():
 
 async def test_vf_picker_hides_ineligible_entries_and_f3_marks_them():
     companion = Character(id="c", name="Alys", type="companion")
-    chooser = catalog.VirtueFlawChooser.for_character(companion)
+    chooser = VirtueFlawChooser.for_character(companion)
     app = ArsMagicaManagerApp()
     results: list[VirtueFlawInstance | None] = []
     async with app.run_test(size=(140, 60)) as pilot:

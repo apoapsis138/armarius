@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, joined_lines, paragraphs, secrets, vf_art, vf_focus
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -36,11 +36,6 @@ KNOWN_ORDER = {"status": "Known", "known": "In the Order"}
 KNOWN_TRIBUNAL = {"status": "Known", "known": "In the Tribunal"}
 KNOWN_REGION = {"status": "Known", "known": "In the region"}
 KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
-
-
-def _lines(*lines: str) -> str:
-    """The lines as one text, one entry a line."""
-    return "\n".join(lines)
 
 
 def _place(normandy: Normandy, key: str, name: str, **kw: Any) -> Neighbour:
@@ -1505,7 +1500,7 @@ def _oleron(normandy: Normandy, tribunal: Tribunal) -> None:
         "it fears House Tytalus, whose easiest way to strike at the "
         "unassailable regio is through weak vassals outside it.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: surplus vis harvested in the Apple Mile, traded to vassals for mundane goods (kinds and amounts not given)",
         "Income: the vassals' mundane goods, and purchases through House Mercere",
         "Boon: Regio (Major): the Apple Mile, a Faerie regio of aura 5",
@@ -1521,7 +1516,7 @@ def _oleron(normandy: Normandy, tribunal: Tribunal) -> None:
         "Tension: the Keepers of a Thousand Tales dislike the Stone Couches for fixing stories to one place and one version",
         "Mundane: can raise gangs of sailors from the isle to make trouble in Paris, but keeps no agents there",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Caprican has helped other covenants claim Fudarus's resources while Fudarus is weak, and has added and fortified vassals; if House Tytalus learns of it there will be reprisals once it unites behind a Primus.",
         "One ancient Sleeper, older than the Hermetic colony, may be a mighty faerie Ogier the Dane, Charlemagne's paladin whom Morgan le Fay kept two hundred years in Avalon with a rejuvenating ring and a crown of forgetfulness. He has woken and escaped at least once and might again if disaster strikes Denmark; Rhine and Norman magi who dream of colonising Denmark would like his help, but he is hard to control and would likely seek service with Philip II. Whoever puts on the ring he wears dies at once, his place taken by a faerie that believes it is, and may be, his spirit.",
         "The prophecy of a last battle may itself be a story planted to wake every Sleeper at the covenant's hour of need.",
@@ -1727,7 +1722,7 @@ def _nidi(normandy: Normandy, tribunal: Tribunal) -> None:
         "territory and want more members, knowing Micropedus is near his "
         "end.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the lilac-grown oak grove in the chase, Herbam vis from the flowers; Regulus can turn it into honey holding Animal vis, losing a third",
         "Vis: pays its tithes openly, through the Redcaps and at Tribunal, for show",
         "Boon: Tame Nobleman: Lord Henri, who hosts the magi and holds their lands",
@@ -1739,7 +1734,7 @@ def _nidi(normandy: Normandy, tribunal: Tribunal) -> None:
         "Tension: Henri's only child Lila must marry a man the covenant can manage, and be happy, or the arrangement fails; Henri will soon want a longevity potion",
         "Tension: a girl found as a baby in a wild hive a few days south may be a Bee Queen; Regulus wants her raised far away",
     )
-    hidden = _lines(
+    hidden = joined_lines(
         "Nidi's weakness is deliberate. Oleron means it to look a fit target for House Tytalus once the Tytalan civil war ends and its magi go back to provoking the Tribunal: Tytalus magi who attack it in earnest will underestimate it, be driven off and be exposed before the Tribunal.",
         "Its hidden resources: many small magic items it never uses, several copies of a remarkably strong Aegis of the Hearth, and servants whom awakened Sleepers have trained. Its magi may use them only with Oleron's leave or against magi of Fudarus, and Oleron can reinforce it quickly by travel magic.",
         "For over thirty years its tithes have been repaid, or traded at good rates for other vis, by Oleron.",
@@ -1954,7 +1949,7 @@ def _atsingani(normandy: Normandy, tribunal: Tribunal) -> None:
         "deadly with the crossbow. There may be one or two more magi beyond "
         "the two the book describes.",
     )
-    what_matters = _lines(
+    what_matters = joined_lines(
         "Vis: the one permanent source, gathered each summer at the ruined council tower (kind and amount not given)",
         "Vis: whatever the magi find, take or win at the Tourney",
         "Income: mercenary service when there are rich masters; robbery when there are not",
@@ -2129,14 +2124,6 @@ def _stats_baudouin(b: Builder, baudouin: Any) -> None:
 P = Profile
 
 
-def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
-    return (name, {"art": art})
-
-
-def _focus(name: str, focus: str) -> tuple[str, dict[str, str]]:
-    return (name, {"focus": focus})
-
-
 #: Each sketched magus's profile, by its key in `normandy.magi`.
 PROFILES: dict[str, Profile] = {
     # -- Oleron --
@@ -2153,7 +2140,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             ("Strong Faerie Blood", {"blood": "faun"}),
-            _focus("Minor Magical Focus", "emotions"),
+            vf_focus("Minor Magical Focus", "emotions"),
             "Proud (Minor)",
             "Hatred (Minor)",
             "Dark Secret",
@@ -2173,7 +2160,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             ("Faerie Blood", {"blood": "river nymph"}),
-            _art("Affinity with {art}", "aquam"),
+            vf_art("Affinity with {art}", "aquam"),
             "Small Frame",
             "Meddler (Minor)",
         ],
@@ -2234,8 +2221,8 @@ PROFILES: dict[str, Profile] = {
             "Philosophiae": (2, "natural philosophy"),
         },
         virtues=[
-            _art("Affinity with {art}", "auram"),
-            _focus("Minor Magical Focus", "weather"),
+            vf_art("Affinity with {art}", "auram"),
+            vf_focus("Minor Magical Focus", "weather"),
             "Driven (Minor)",
             "Lame",
         ],
@@ -2253,7 +2240,7 @@ PROFILES: dict[str, Profile] = {
         },
         virtues=[
             ("Divination and Augury", {"method": "soothsaying"}),
-            _focus("Minor Magical Focus", "healing"),
+            vf_focus("Minor Magical Focus", "healing"),
             "Necessary Condition",
             "Wanderer",
             "Rolling Stone",

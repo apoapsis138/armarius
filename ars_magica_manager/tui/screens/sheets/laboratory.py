@@ -14,22 +14,12 @@ from textual.widgets import (
 )
 
 from .... import books as bk
-from .... import catalog, lab_planning, places, seasons
+from .... import catalog, lab_planning, seasons
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
 from .... import research_text as rt
 from .... import sheet_text as st
 from ....boon_hook_text import counted, points_title
-from ....covenants import (
-    covenant_effective_aura,
-)
-from ....laboratories import (
-    lab_aura_total,
-    lab_base_safety,
-    lab_characteristic_total,
-    lab_free_virtues,
-    lab_occupied_size,
-)
 from ....markup import aligned, escape
 from ....models import (
     LAB_CHARACTERISTICS,
@@ -37,7 +27,15 @@ from ....models import (
     Laboratory,
     Saga,
 )
-from ....rules import realms
+from ....rules import lab_stats, realms, sites
+from ....rules.lab_stats import (
+    lab_aura_total,
+    lab_base_safety,
+    lab_characteristic_total,
+    lab_free_virtues,
+    lab_occupied_size,
+)
+from ....rules.realms import covenant_effective_aura
 from ....sections import LAB_TEXTS_SECTION, LAB_VF_SECTIONS
 from ..widgets import (
     DetailsPanel,
@@ -767,7 +765,7 @@ class LaboratorySheetView(SheetView):
         return aligned(
             [
                 ("Location", escape(lab.location) or "(not set)"),
-                ("Build Points", lab_text.lab_build_points(lab)),
+                ("Build Points", lab_stats.lab_build_points(lab)),
                 ("Sanctum?", "Yes" if lab.sanctum_marked else "No"),
             ]
         )
@@ -785,7 +783,7 @@ class LaboratorySheetView(SheetView):
         )
         realm = covenant.aura_realm if covenant else "Magic"
         source = "covenant"
-        own = places.lab_aura(self.saga, lab)
+        own = sites.lab_aura(self.saga, lab)
         if own is not None:
             (covenant_aura, realm), source = own, "place"
         total = lab_aura_total(lab, covenant_aura)

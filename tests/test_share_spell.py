@@ -5,8 +5,8 @@ from __future__ import annotations
 from support import menu, wait_until
 from test_list_flows import ListCase, _open
 
+from ars_magica_manager import catalog, storage
 from ars_magica_manager import spells as spl
-from ars_magica_manager import storage
 from ars_magica_manager.models import Book, Character, Covenant, KnownSpell, Saga
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import ConfirmScreen
@@ -42,8 +42,8 @@ def test_sharing_moves_the_spell_to_the_saga_and_keeps_every_link():
     assert [s.name for s in saga.spells] == ["Spark of Wit"]
     assert spark.source == "Invented by Leandro"
     # Same id: he still knows it, and his Lab Text still points at it.
-    assert spl.find_spell(saga, magus.spells_known[0].spell_id) is spark
-    assert spl.find_spell(saga, saga.books[0].spell_id) is spark
+    assert catalog.find_spell(saga, magus.spells_known[0].spell_id) is spark
+    assert catalog.find_spell(saga, saga.books[0].spell_id) is spark
     assert spl.is_own(saga, spark)
     assert spl.shareable_spells(magus) == []
 

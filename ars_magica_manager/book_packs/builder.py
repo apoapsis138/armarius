@@ -19,10 +19,11 @@ from functools import cache
 from typing import Any
 
 from .. import catalog, sourcebooks, storage
-from ..ahead import ONCE, REPEATS
 from ..arms import Arms
 from ..arts import ART_LOOKUP
 from ..models import (
+    ONCE,
+    REPEATS,
     Ability,
     ArtScore,
     BodyVis,
@@ -51,10 +52,12 @@ from ..models import (
 )
 from ..models.common import SEASONS, SECRETS_HEADING
 from ..models.world import FULL, SKETCH
-from ..places import PLACE, RUINED
+from ..places import RUINED
 from ..rules import aging, warping
 from ..rules import creation_access as access
+from ..rules.sites import PLACE
 from ..rules.xp import ability_xp, art_xp
+from ..threats import DORMANT
 from ..tribunal_packages import rhine as rhine_package
 
 SECRETS = SECRETS_HEADING
@@ -71,6 +74,74 @@ def secrets(text: str, hidden: str) -> str:
 def paragraphs(*parts: str) -> str:
     """The parts as paragraphs, blank ones left out."""
     return "\n\n".join(p.strip() for p in parts if p.strip())
+
+
+def joined_lines(*lines: str) -> str:
+    """The lines as one text, one a line."""
+    return "\n".join(lines)
+
+
+def vf_art(name: str, art: str) -> tuple[str, dict[str, str]]:
+    """A Virtue or Flaw taken for an Art ("Affinity with {art}")."""
+    return (name, {"art": art})
+
+
+def vf_ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
+    """A Virtue or Flaw taken for an Ability ("Affinity with {ability}")."""
+    return (name, {"ability": ability})
+
+
+def vf_focus(name: str, focus: str) -> tuple[str, dict[str, str]]:
+    """A Virtue taken with a focus (a Magical Focus's)."""
+    return (name, {"focus": focus})
+
+
+def vf_puissant(ability: str) -> tuple[str, dict[str, str]]:
+    return ("Puissant {ability}", {"ability": ability})
+
+
+def vf_minor(virtue: str) -> tuple[str, dict[str, str]]:
+    return ("Minor Virtue", {"virtue": virtue})
+
+
+def vf_great(characteristic: str) -> tuple[str, dict[str, str]]:
+    return ("Great {characteristic}", {"characteristic": characteristic})
+
+
+def vf_ward(ward: str) -> tuple[str, dict[str, str]]:
+    return ("Traditional Ward", {"ward": ward})
+
+
+def characteristics(
+    int_: int, per: int, pre: int, com: int, str_: int, sta: int, dex: int, qik: int
+) -> dict[str, int]:
+    """Characteristics in the book's order (Int or Cun, Per, Pre, Com, Str,
+    Sta, Dex, Qik)."""
+    return {
+        "intelligence": int_,
+        "perception": per,
+        "presence": pre,
+        "communication": com,
+        "strength": str_,
+        "stamina": sta,
+        "dexterity": dex,
+        "quickness": qik,
+    }
+
+
+def wound_ranges(size: int) -> str:
+    """The wound ranges for a Size, as the book's blocks print them."""
+    step = 5 + size
+    return (
+        f"Wound ranges: Light 1-{step}, Medium to {2 * step}, Heavy to "
+        f"{3 * step}, Incapacitated to {4 * step}, Dead from {4 * step + 1}."
+    )
+
+
+def dormant(threat: Neighbour) -> Neighbour:
+    """Mark a threat as not yet begun: More, Begin This Story starts it."""
+    threat.details[DORMANT] = True
+    return threat
 
 
 class Builder:

@@ -103,8 +103,7 @@ def test_two_copies_changing_different_records_both_keep_their_changes(two_copie
     gm_saga.character("mag1").name = "Corvinus of Bonisagus"
     gm_saga.books.append(Book(id="b2", name="Tractatus on Corpus", type="Tractatus"))
     with _copy(gm):
-        storage.save_saga(gm_saga)
-        assert storage.last_conflicts == []
+        assert storage.save_saga(gm_saga).conflicts == []
 
     on_disk = storage.load_saga("dammerstein")
     assert [c.name for c in on_disk.characters] == [
@@ -134,8 +133,8 @@ def test_the_later_save_wins_the_same_value(two_copies):
         storage.save_saga(ana_saga)
     gm_saga.character("com1").name = "Banna the Wise"
     with _copy(gm):
-        storage.save_saga(gm_saga)
-        assert storage.last_conflicts == ["characters[com1].name"]
+        saved = storage.save_saga(gm_saga)
+        assert saved.conflicts == ["characters[com1].name"]
     assert storage.load_saga("dammerstein").character("com1").name == "Banna the Wise"
 
 
@@ -166,7 +165,7 @@ def test_one_copy_saving_alone_writes_exactly_its_saga():
 
 
 def test_a_lock_left_by_a_copy_that_died_is_taken_over(monkeypatch):
-    lock = storage.SAGAS_DIR / ".dammerstein.lock"
+    lock = storage.sagas_dir() / ".dammerstein.lock"
     lock.parent.mkdir(parents=True, exist_ok=True)
     lock.write_text("")
     monkeypatch.setattr(storage, "_LOCK_WAIT", 0.1)

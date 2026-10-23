@@ -39,6 +39,21 @@ class Ref:
     name: str
 
 
+@dataclass(frozen=True)
+class Fact:
+    """One labelled value; `value` is plain text, "" when not set. `refs`
+    are the records named in it, which a front-end can draw as links
+    (references.segments)."""
+
+    label: str
+    value: str
+    refs: tuple[Ref, ...] = ()
+
+    @property
+    def missing(self) -> bool:
+        return not self.value
+
+
 #: The kinds of record a Ref opens, as the saga lists them.
 KINDS: dict[type, str] = {
     Character: "characters",

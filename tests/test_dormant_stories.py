@@ -109,8 +109,8 @@ def test_the_import_form_asks_which_stories_to_begin():
 
 def test_starting_from_a_pack_asks_which_stories_to_begin(tmp_path):
     saga = everything_saga()
-    path = packs.write(storage.EXPORTS_DIR / "threats.amm.json", _pack(saga))
-    found = [("Threats", str(path))]
+    path = packs.write(storage.exports_dir() / "threats.amm.json", _pack(saga))
+    found = [("Threats", str(path), transfer.read(path))]
     (tick,) = packs.start_story_fields(found)
     assert tick.key == "pack0_story_crown"
     assert tick.show_if is not None and tick.show_if({"pack": str(path)})

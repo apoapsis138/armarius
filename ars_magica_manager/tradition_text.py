@@ -9,13 +9,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .covenants import home_aura
 from .markup import escape
 from .models import CastingRule, Character, Saga, TraditionDef
 from .rules import hedge_casting as hc
 from .rules import hedge_effects as he
 from .rules import hedge_warping as hw
 from .rules import tradition_seasons as ts
+from .rules.realms import home_aura
 from .tables import Table
 
 #: Characteristic abbreviations, as the books print them.

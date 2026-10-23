@@ -18,7 +18,6 @@ from ars_magica_manager import (
     grog_templates,
     meeting,
     neighbour_filter,
-    spells,
     storage,
     vis,
 )
@@ -891,7 +890,7 @@ OPENERS: dict[str, Opener] = {
             wf.spell_level_form(
                 ws.selected_character,
                 "apprenticeship_spells",
-                spells.find_spell(ws.saga, "spell_aegis_of_the_hearth"),
+                catalog.find_spell(ws.saga, "spell_aegis_of_the_hearth"),
             )
         ),
     ),

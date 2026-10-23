@@ -22,6 +22,7 @@ from ars_magica_manager.models import (
     Inhabitant,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import library
 
 
 def _answer(form: Any, typed: dict[str, Any]) -> tuple[dict[str, Any], str | None]:
@@ -322,7 +323,7 @@ def test_adding_editing_and_deleting_a_book():
     covenant = saga.covenants[0]
     owner = bk.owner_value("covenant", covenant.id)
     ops = library_forms.book_ops(
-        saga, lambda: bk.books_in_covenant(saga, covenant), owner
+        saga, lambda: library.books_in_covenant(saga, covenant), owner
     )
     form = ops.add()
     assert form.title == "Add a Book"

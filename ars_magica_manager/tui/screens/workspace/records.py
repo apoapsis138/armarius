@@ -335,7 +335,7 @@ class RecordActions(WorkspaceBase):
             if character is not None
             and self.selected_kind == NodeKind.CHARACTER
             and character.type == "magus"
-            and fam.familiar_of(self.saga, character.id) is None
+            and self.saga.familiar_of(character.id) is None
             else None
         )
 

@@ -16,16 +16,21 @@ import math
 import random
 from collections.abc import Callable, Mapping, Sequence
 
-from PySide6.QtCore import QEasingCurve, QPointF, QRectF, Qt, QVariantAnimation
+from PySide6.QtCore import QEasingCurve, QEvent, QPointF, QRectF, Qt, QVariantAnimation
 from PySide6.QtGui import (
     QColor,
+    QEnterEvent,
     QFont,
     QFontMetricsF,
     QLinearGradient,
+    QMouseEvent,
     QPainter,
+    QPaintEvent,
     QPen,
     QPolygonF,
     QRadialGradient,
+    QResizeEvent,
+    QShowEvent,
 )
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
@@ -73,7 +78,7 @@ class Dial(QWidget):
         self.shown = value
         self.update()
 
-    def showEvent(self, event) -> None:
+    def showEvent(self, event: QShowEvent) -> None:
         super().showEvent(event)
         if not self._wound:
             self._wound = True
@@ -84,7 +89,7 @@ class Dial(QWidget):
         pen.setCapStyle(Qt.PenCapStyle.RoundCap)
         return pen
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p, d = self.p, self.dial
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -235,7 +240,7 @@ class TraitBar(QWidget):
         self.setFixedHeight(14)
         self.setMinimumWidth(90)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p = self.p
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -304,11 +309,11 @@ class _TraitRow(QWidget):
         self.chosen = False
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
-    def mousePressEvent(self, event) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         self.clicked(self.index)
         super().mousePressEvent(event)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         if not self.chosen:
             return
         painter = QPainter(self)
@@ -337,7 +342,7 @@ class CordFigure(QWidget):
         step = (self.width() - 16) / self.TOP
         return [8 + step * (i + 0.5) for i in range(self.TOP)]
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p, metal = self.p, self.metal
         dark, light = p["binding-ink"], p["binding-light"]
         painter = QPainter(self)
@@ -387,7 +392,7 @@ class _Box(QWidget):
         self.count, self.colour, self.p = count, colour, p
         self.setFixedSize(26, 26)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(QPen(QColor(self.colour), 1.5))
@@ -476,7 +481,7 @@ class CompassRose(QWidget):
             c.x() + math.cos(angle) * distance, c.y() + math.sin(angle) * distance
         )
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p = self.p
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -545,7 +550,7 @@ class Seal(QWidget):
         self.setToolTip(tooltip)
         lift(self, p, blur=12, drop=2)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p = self.p
         colour = QColor(self.colour)
         painter = QPainter(self)
@@ -635,7 +640,7 @@ class _Bar(QWidget):
         self.setFixedHeight(14)
         self.setMinimumWidth(90)
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p = self.p
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -726,18 +731,18 @@ class BookSpine(QWidget):
         )
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
-    def enterEvent(self, event) -> None:
+    def enterEvent(self, event: QEnterEvent) -> None:
         self.hovered = True
         self.update()
 
-    def leaveEvent(self, event) -> None:
+    def leaveEvent(self, event: QEvent) -> None:
         self.hovered = False
         self.update()
 
-    def mousePressEvent(self, event) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:
         self.clicked()
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p, body, spine = self.p, self.body, self.spine
         hide = self.leather.name()
         gilt = mix(p["accent"], p["gilt"], 0.25)
@@ -863,10 +868,10 @@ class Bookcase(QWidget):
             y = floor + self.PLANK + self.BETWEEN
         self.setFixedHeight(max(y - self.BETWEEN, 0))
 
-    def resizeEvent(self, event) -> None:
+    def resizeEvent(self, event: QResizeEvent) -> None:
         self._arrange(event.size().width())
 
-    def paintEvent(self, event) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None:
         p, width = self.p, self.width()
         wall, wood = p["shelf-back"], p["shelf-plank"]
         dark, light = p["binding-ink"], p["binding-light"]

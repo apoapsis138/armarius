@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from .. import catalog
-from ..models import VirtueFlawInstance
+from ..models import Character, Familiar, VirtueFlawInstance
 from . import effects
 
 SOURCE = (
@@ -115,3 +115,9 @@ def _legacy_bonus(virtues_flaws: Sequence[VirtueFlawInstance], ability: str) -> 
             if prefix and wanted.startswith(prefix) and favored == wanted:
                 return 1
     return 0
+
+
+def ability_level(character: Character | Familiar, name: str) -> int:
+    """The level of the Ability named `name`, 0 when it isn't held."""
+    found = next((a for a in character.abilities if a.name == name), None)
+    return found.level if found is not None else 0

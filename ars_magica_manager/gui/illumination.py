@@ -22,6 +22,7 @@ from PySide6.QtGui import (
     QPainter,
     QPainterPath,
     QPainterPathStroker,
+    QPaintEvent,
     QPen,
     QRadialGradient,
 )
@@ -433,7 +434,7 @@ class IlluminatedInitial(QWidget):
         self.setFixedSize(side + 2 * self.margin, side + 2 * self.margin)
         self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
 
-    def paintEvent(self, _event) -> None:
+    def paintEvent(self, _event: QPaintEvent) -> None:
         painter = QPainter(self)
         paint_initial(
             painter,

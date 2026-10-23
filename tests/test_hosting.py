@@ -47,7 +47,7 @@ def hosted_data(tmp_path, monkeypatch):
     monkeypatched storage), and by this process's host key."""
     data = tmp_path / "hosted"
     monkeypatch.setenv(hosting.paths.ENV_VAR, str(data))
-    monkeypatch.setattr(storage, "SAGAS_DIR", data / "sagas")
+    monkeypatch.setattr(hosting.paths, "_in_use", data)
     monkeypatch.setattr(hosting.paths, "data_dir", lambda: data)
     saga = Saga(id="dammerstein", name="Dammerstein")
     pl.add(saga, {"name": "Ana", "role": pl.PLAYER, "passcode": "rosemary"})

@@ -6,6 +6,14 @@ import pytest
 
 from ars_magica_manager import paths
 
+
+@pytest.fixture(autouse=True)
+def no_folder_in_use(monkeypatch):
+    """These tests work out the data folder from the environment and the
+    location file, as the app does before it settles on one."""
+    monkeypatch.setattr(paths, "_in_use", None)
+
+
 #: The real default (conftest points it at a temp folder for every test).
 DEFAULT_DATA_DIR = paths.default_data_dir
 OLD_DEFAULT_DATA_DIR = paths.old_default_data_dir

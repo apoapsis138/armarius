@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
 from .. import ahead
 from ..commands import Act
 from ..forms import ahead as ahead_forms
-from ..models import SEASONS, Covenant, Saga
+from ..models import SEASONS, Covenant, Saga, season_order
 from .character_sheet import section
 from .editing import Chooser, Run, verb_buttons
 from .themes import Palette
@@ -102,7 +102,7 @@ def ahead_section(
         cell_column = QVBoxLayout(cell)
         cell_column.setContentsMargins(0, 0, 0, 0)
         cell_column.setSpacing(6)
-        now = ahead.order(year, season) == ahead.now(saga)
+        now = season_order(season=season, year=year) == ahead.now(saga)
         cell_column.addWidget(
             text(
                 ahead.season_text(saga, year, season),

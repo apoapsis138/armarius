@@ -32,6 +32,10 @@ against an effect applies.
 Rules: reference/rules-engine-reference.md §18 (Generic Supernatural
 Ability casting, Limits of Magic and Magical Defenses, each tradition's
 Casting), §3 (Ceremony).
+
+No screen uses best_defense(), ability_effect_level(), group_bonus(),
+leaderless_modifier() yet: they are the rules for screens still to come, and
+only the tests call them.
 """
 
 from __future__ import annotations
@@ -272,12 +276,6 @@ def casting_total(rule: CastingRule, casting_score: int, die: int = 0) -> int:
     if rule.lab or rule.die == "none":
         die = 0
     return round_down((casting_score + die) / rule.divisor)
-
-
-def least_total(rule: CastingRule, casting_score: int) -> int:
-    """The total with the die at its lowest that still can't botch (a
-    stress die's 1, a simple die's 1, none for a lab)."""
-    return casting_total(rule, casting_score, 0 if rule.lab else 1)
 
 
 @dataclass(frozen=True)

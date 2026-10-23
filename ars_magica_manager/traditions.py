@@ -89,13 +89,6 @@ def tradition_list(tradition_id: str) -> str:
     return f"trad-{tradition_id}-list"
 
 
-def section_tradition(section: str | None) -> str | None:
-    """The tradition whose chapter section `section` is, or None."""
-    if section and section.startswith(SECTION_PREFIX):
-        return section.removeprefix(SECTION_PREFIX)
-    return None
-
-
 def all_traditions() -> list[TraditionDef]:
     """Every tradition in the catalog, in catalog order."""
     return catalog.load_tradition_catalog()
