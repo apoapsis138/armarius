@@ -81,7 +81,7 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The King Fir of the Black Forest",
         page="p. 50",
         realm="Faerie",
-        might=90,
+        might=60,
         block={"traits": {"Malicious": 5, "Secretive": 3, "Vengeful": 3}},
         appearance=(
             "A great dark fir alone on the bare summit of the Feldberg; the "
@@ -89,6 +89,8 @@ def _forest_spirits(rhine: Rhine) -> None:
             "a huge man in a black cloak with a dreadful face."
         ),
         notes=(
+            "Faerie Might 60: the book prints 90, which its errata "
+            "corrects.\n"
             "Special Powers: Control Weather, Grant Flaw (many, among them "
             "Depressed, Fear, Lame and No Sense of Direction), Grant Victory "
             "(very seldom used), Grant Virtue (unknown, very seldom used), "

@@ -100,7 +100,7 @@ def _regions(rhine: Rhine) -> None:
             "into what is now the Fane of the Founders, and the peaceful remnant "
             "withdrew to the Glade; a rebellious splinter fled south, dwindled, "
             "and regrew on mortal fear as the dark faerie King of the Black "
-            "Mountain (Faerie, Might 90), who now rules every dark court of the "
+            "Mountain (Faerie, Might 60), who now rules every dark court of the "
             "forest. Since Durenmar's condemnation in 1151 the forest has been a "
             "hazard to magi, and no peace with the fay was ever made. The Swabian "
             "lands east of the forest, the Jura and the sources of the Danube, "
@@ -629,7 +629,7 @@ def _black_forest(rhine: Rhine) -> None:
         ],
         summary="The highest peak of the southern Black Forest, reached only through the "
         "Hoellental, and the seat of the King of the Black Mountain, King Fir "
-        "(Faerie, Might 90; Malicious +5, Secretive +3, Vengeful +3), pictured as "
+        "(Faerie, Might 60; Malicious +5, Secretive +3, Vengeful +3), pictured as "
         "a huge black-cloaked man with a terrible face. He commands the weather, "
         "grants flaws such as depression, fear, lameness and loss of direction, "
         "possesses, shrouds and holds a regio of several levels with Faerie auras "

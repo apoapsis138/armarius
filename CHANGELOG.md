@@ -109,6 +109,23 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.2.1 — 2026-10-23
+
+### Peregrinatio
+
+- **King Fir's Might.** The Rhine pack gives the King of the Black
+  Mountain Faerie Might 60, as the book's errata corrects (it prints 90),
+  on his Bestiary entry and in the Black Forest and Feldberg places. His
+  notes say why it differs from the printed page.
+
+## 3.2.1 — 2026-10-23
+
+### Peregrinatio
+
+- **King Fir's Might.** The Rhine pack gives the King of the Black
+  Mountain Faerie Might 60, as the book's errata corrects (it prints 90),
+  on his Bestiary entry and in the Black Forest and Feldberg places.
+
 ## 3.2.0 — 2026-10-22
 
 ### Pagina
