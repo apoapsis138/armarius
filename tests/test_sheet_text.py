@@ -16,12 +16,17 @@ and review the diff.
 
 import difflib
 import os
-from collections.abc import Callable
 from dataclasses import fields, is_dataclass
 from pathlib import Path
 
 import pytest
-from support import NODES, everything_saga, screen_lines, wait_until
+from footer_guard import check_footer_current, check_footer_rebuilds, footer
+from support import (
+    NODES,
+    everything_saga,
+    screen_lines,
+    wait_until,
+)
 from textual.widgets import TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
@@ -32,6 +37,7 @@ from ars_magica_manager.tui.screens.widgets import (
     DETAILS_PANEL_MAX_HEIGHT,
     DETAILS_PANEL_MIN_HEIGHT,
     DetailsPanel,
+    SelectableList,
 )
 
 GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
@@ -127,16 +133,30 @@ async def _all_tabs(pilot, app, workspace, check_panels: bool = False) -> list[s
     return lines
 
 
-async def _open_node(pilot, app, node: str) -> WorkspaceScreen:
+def _keep_focus_out(workspace: WorkspaceScreen) -> None:
+    """What a sheet shows, not where focus is: opening a sheet or a tab
+    moves focus into a section or list, which chooses a row, fills the
+    details panel and can scroll. Keep focus out of the sheet while it is
+    walked."""
+    workspace._focus_first_section = lambda *, initial=False: None
+
+
+async def _open_node(
+    pilot, app, node: str, keep_focus_out: bool = True
+) -> WorkspaceScreen:
     """From the saga picker, open `node` in the workspace and let it
-    settle."""
+    settle; with `keep_focus_out`, focus stays out of the sheet."""
     await pilot.press("enter")  # picker -> workspace
     assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
     workspace = app.screen
-    # What a sheet shows, not where focus is: opening a sheet or a tab moves
-    # focus into a section or list, which chooses a row, fills the details
-    # panel and can scroll. Keep focus out of the sheet while it is walked.
-    workspace._focus_first_section = lambda *, initial=False: None
+    if keep_focus_out:
+        _keep_focus_out(workspace)
+    await _show_node(pilot, workspace, node)
+    return workspace
+
+
+async def _show_node(pilot, workspace: WorkspaceScreen, node: str) -> None:
+    """Choose `node` in the tree and let its sheet settle."""
     tree = workspace.query_one(Tree)
 
     def find_node():
@@ -160,50 +180,98 @@ async def _open_node(pilot, app, node: str) -> WorkspaceScreen:
     if view is not None:
         assert await wait_until(pilot, lambda: view.initial_tab_seen)
     await _settle(pilot)
-    return workspace
 
 
-async def _snapshot(
-    node: str,
-    size: tuple[int, int],
-    saga: Saga | None = None,
-    change: Callable[[Saga], None] | None = None,
-) -> tuple[str, str | None]:
-    """The node's text as first shown, and (for a sheet) after `change`
-    (if any) is made to the open saga and every section and tab id is
-    refreshed. The saga shown is `saga`, by default everything_saga(), whose
-    details panels are checked as it is first shown."""
-    storage.save_saga(saga if saga is not None else everything_saga())
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=size) as pilot:
-        workspace = await _open_node(pilot, app, node)
-        view = workspace._current_sheet_view()
-        shown = "\n".join(await _all_tabs(pilot, app, workspace, saga is None)) + "\n"
-        if view is None:
-            return shown, None
-        if change is not None:
-            change(workspace.saga)
-        for widget in view.query("Collapsible, TabPane"):
-            if widget.id:
-                view.refresh_section(widget.id)
-        await _settle(pilot)
-        refreshed = "\n".join(await _all_tabs(pilot, app, workspace)) + "\n"
-        assert view is workspace._current_sheet_view()  # not re-mounted
-        return shown, refreshed
+async def _reopen(pilot, workspace: WorkspaceScreen, node: str) -> None:
+    """Show another node, then `node` again, built afresh with focus kept
+    out of it."""
+    _keep_focus_out(workspace)
+    workspace.set_focus(None)
+    await _show_node(pilot, workspace, "book_group" if node == "saga" else "saga")
+    await _show_node(pilot, workspace, node)
 
 
-@pytest.mark.parametrize(
-    ("node", "size"), [(node, size) for node in NODES for size in SIZES]
-)
-async def test_sheet_text(node, size):
+async def _refreshed(pilot, app, workspace, view) -> str:
+    """The sheet's text after every section and tab id is refreshed."""
+    for widget in view.query("Collapsible, TabPane"):
+        if widget.id:
+            view.refresh_section(widget.id)
+    await _settle(pilot)
+    refreshed = "\n".join(await _all_tabs(pilot, app, workspace)) + "\n"
+    assert view is workspace._current_sheet_view()  # not re-mounted
+    return refreshed
+
+
+def _check_golden(node: str, size: tuple[int, int], shown: str) -> None:
     golden = GOLDEN_DIR / f"{node}-{size[0]}x{size[1]}.txt"
-    shown, refreshed = await _snapshot(node, size)
     if os.environ.get("UPDATE_GOLDEN"):
         golden.parent.mkdir(parents=True, exist_ok=True)
         golden.write_text(shown, encoding="utf-8")
-    assert shown == golden.read_text(encoding="utf-8")
-    if refreshed is not None:
-        assert refreshed == shown
+    expected = golden.read_text(encoding="utf-8")
+    assert shown == expected, _diff(expected, shown)
+
+
+async def _check_footer_rebuilds(pilot, app, view) -> None:
+    """The performance guard on the Footer (CLAUDE.md "Performance rules"):
+    switching to each tab (its first visit, which builds it), focusing a
+    section and arrowing down a list each rebuild the Footer at most once,
+    and leave it showing the keys there are. Run with the sheet's own focus
+    moves, before its text is walked."""
+    check_footer_current(app, "opening the sheet")
+    tabbed = view.query_one(TabbedContent)
+    panes = list(tabbed.query(TabPane))
+    for pane in panes[1:] + panes[:1]:
+        before = footer(app).rebuilds
+        tabbed.active = pane.id or ""
+        assert await wait_until(pilot, lambda pane=pane: tabbed.active == pane.id)
+        await _settle(pilot)
+        check_footer_rebuilds(app, before, f"switching to {pane.id}")
+
+        for title in list(pane.query("CollapsibleTitle"))[:3]:
+            before = footer(app).rebuilds
+            title.focus()
+            await _settle(pilot)
+            check_footer_rebuilds(app, before, f"focusing a section on {pane.id}")
+
+        lists = [lst for lst in pane.query(SelectableList) if lst.option_count >= 2]
+        if lists:
+            lists[0].focus()
+            await _settle(pilot)
+            for _ in range(2):
+                before = footer(app).rebuilds
+                await pilot.press("down")
+                await _settle(pilot)
+                check_footer_rebuilds(app, before, f"arrowing down {lists[0].id}")
+
+
+@pytest.mark.parametrize("node", sorted(NODES))
+async def test_sheet_text(node):
+    """One app session per node: for a sheet, the Footer guard first (it
+    needs the sheet's own focus moves and each tab's first visit), after
+    which the sheet is built again with focus kept out; then the text at
+    each size, the terminal resized and the sheet built again between them,
+    checking the details panels; and, at the first size, that refreshing
+    every section changes nothing."""
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=SIZES[0]) as pilot:
+        workspace = await _open_node(
+            pilot, app, node, keep_focus_out=node not in SHEETS
+        )
+        if node in SHEETS:
+            await _check_footer_rebuilds(pilot, app, workspace._current_sheet_view())
+            await _reopen(pilot, workspace, node)
+        for size in SIZES:
+            if size != SIZES[0]:
+                # A table sizes its columns as it is built: build it again.
+                await pilot.resize_terminal(*size)
+                await _reopen(pilot, workspace, node)
+            view = workspace._current_sheet_view()
+            shown = "\n".join(await _all_tabs(pilot, app, workspace, True)) + "\n"
+            _check_golden(node, size, shown)
+            if view is not None and size == SIZES[0]:
+                refreshed = await _refreshed(pilot, app, workspace, view)
+                assert refreshed == shown, _diff(shown, refreshed)
 
 
 _RECORD_LISTS = ("covenants", "characters", "laboratories", "familiars")
@@ -261,8 +329,14 @@ async def test_refresh_shows_changed_data(node):
     depend on the terminal size, so one size does."""
     size = SIZES[0]
     golden = GOLDEN_DIR / f"{node}-{size[0]}x{size[1]}.txt"
-    _, refreshed = await _snapshot(node, size, _sparse_saga(), _fill)
-    assert refreshed is not None
+    storage.save_saga(_sparse_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=size) as pilot:
+        workspace = await _open_node(pilot, app, node)
+        view = workspace._current_sheet_view()
+        assert view is not None
+        _fill(workspace.saga)
+        refreshed = await _refreshed(pilot, app, workspace, view)
     expected = golden.read_text(encoding="utf-8")
     assert refreshed == expected, _diff(expected, refreshed)
 

@@ -189,17 +189,23 @@ CONTRACTS: dict[str, Contract] = {
         edits={
             "Player": "Sam",
             "Year Born": "1190",
+            "Height": "1.8",
             "Handedness": "left",
             "Biography": "Born in a storm.",
         },
         saved=lambda s: (
             character(s).background.player,
             character(s).background.year_born,
+            character(s).description.height,
             character(s).description.handedness,
             character(s).description.biography,
         ),
-        expected=("Sam", 1190, "left", "Born in a storm."),
-        shown={"#char-biographical-left": "Sam"},
+        expected=("Sam", 1190, 1.8, "left", "Born in a storm."),
+        # Age, from Year Born, is in the top panel, refreshed with it.
+        shown={
+            "#char-biographical-left": "Height: 1.8",
+            "#char-info-left": "Age:            30",
+        },
     ),
     "edit aging": Contract(
         prefill={"Decrepitude": "0", "Effects of Aging": ""},
@@ -240,14 +246,21 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "edit hermetic background": Contract(
         prefill={"Domus Magna": "", "Age of Apprenticeship": ""},
-        edits={"Domus Magna": "Durenmar", "Age of Apprenticeship": "15"},
+        edits={
+            "House": "house_bonisagus",
+            "Parens": "Trianoma",
+            "Domus Magna": "Durenmar",
+            "Age of Apprenticeship": "15",
+        },
         saved=lambda s: (
+            character(s).hermetic.house,
+            character(s).hermetic.parens,
             character(s).hermetic.domus_magna,
             character(s).hermetic.age_of_apprenticeship,
         ),
-        expected=("Durenmar", 15),
+        expected=("house_bonisagus", "Trianoma", "Durenmar", 15),
         invalid={"Age of Apprenticeship": "-"},  # crashed before
-        shown={"#hermetic-background-left": "Durenmar"},
+        shown={"#hermetic-background-left": "House: Bonisagus"},
     ),
     "edit ability": Contract(
         prefill={"XP": "50"},
@@ -445,6 +458,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (familiar(s).wounds.light, familiar(s).wounds.dead),
         expected=(2, True),
         invalid={"Light Wounds": "-"},
+        shown={"#fam-wounds-content": "Light Wounds:  2"},
     ),
     "grog yearly update": Contract(
         prefill={"Vocational xp": "7", "Story awards this year": "0"},

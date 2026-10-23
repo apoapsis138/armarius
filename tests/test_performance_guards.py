@@ -1,91 +1,20 @@
 """Performance guards (CLAUDE.md "Performance rules").
 
 Counts, not timings: timings flake under a parallel run. Each guard is a
-budget on work that made the app sluggish before.
+budget on work that made the app sluggish before. The guard on Footer
+rebuilds runs in test_sheet_text, on the same walk through every sheet.
 """
 
 import pytest
 from support import NODES, everything_saga, wait_until
 from test_sheet_text import SHEETS, _open_node, _settle
-from textual.widgets import TabbedContent, TabPane
-from textual.widgets._footer import FooterKey
+from textual.widgets import TabbedContent
 
 from ars_magica_manager import storage
 from ars_magica_manager.models import DiaryEntry
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens.sheets import LazyTabPane
-from ars_magica_manager.tui.screens.widgets import SelectableList, SplitFooter
-
-#: Footer rebuilds allowed per action (a tab switch, a focus move, an arrow
-#: key). A tab switch once rebuilt it 4-6 times.
-FOOTER_REBUILDS_PER_ACTION = 1
-
-
-def _footer(app) -> SplitFooter:
-    return app.screen.query_one(SplitFooter)
-
-
-def _check_footer_current(app, action: str) -> None:
-    """The Footer shows exactly the keys the screen has now (a skipped
-    rebuild must never leave it stale)."""
-    shown = {
-        binding.action: enabled
-        for binding, enabled in (
-            (b, e) for (_, b, e, _) in app.screen.active_bindings.values()
-        )
-        if binding.show
-    }
-    in_footer = {
-        key.action: not key.disabled
-        for key in app.screen.query(FooterKey)
-        if key.action != "command_palette"  # ^p, always shown on the right
-    }
-    assert in_footer == shown, f"stale Footer after {action}"
-
-
-def _check_rebuilds(app, before: int, action: str) -> None:
-    rebuilds = _footer(app).rebuilds - before
-    assert rebuilds <= FOOTER_REBUILDS_PER_ACTION, (
-        f"{action}: the Footer was rebuilt {rebuilds} times"
-    )
-    _check_footer_current(app, action)
-
-
-@pytest.mark.parametrize("node", sorted(SHEETS))
-async def test_footer_is_rebuilt_at_most_once_per_action(node):
-    storage.save_saga(everything_saga())
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 60)) as pilot:
-        workspace = await _open_node(pilot, app, node)
-        view = workspace._current_sheet_view()
-        assert view is not None
-        _check_footer_current(app, "opening the sheet")
-
-        tabbed = view.query_one(TabbedContent)
-        panes = list(tabbed.query(TabPane))
-        for pane in panes[1:] + panes[:1]:
-            before = _footer(app).rebuilds
-            tabbed.active = pane.id or ""
-            assert await wait_until(pilot, lambda pane=pane: tabbed.active == pane.id)
-            await _settle(pilot)
-            _check_rebuilds(app, before, f"switching to {pane.id}")
-
-            for title in list(pane.query("CollapsibleTitle"))[:3]:
-                before = _footer(app).rebuilds
-                title.focus()
-                await _settle(pilot)
-                _check_rebuilds(app, before, f"focusing a section on {pane.id}")
-
-            lists = [lst for lst in pane.query(SelectableList) if lst.option_count >= 2]
-            if lists:
-                lists[0].focus()
-                await _settle(pilot)
-                for _ in range(2):
-                    before = _footer(app).rebuilds
-                    await pilot.press("down")
-                    await _settle(pilot)
-                    _check_rebuilds(app, before, f"arrowing down {lists[0].id}")
-
+from ars_magica_manager.tui.screens.widgets import SelectableList
 
 #: Widgets mounted when each sheet opens (everything_saga). Before
 #: Tabs were once all built up front: character 149, covenant 195,
