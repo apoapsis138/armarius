@@ -204,31 +204,6 @@ async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
     assert (cov.aura, cov.covenant_season) == (3, "Autumn")
 
 
-async def test_edit_covenant_requires_name_and_allows_blank_year_founded():
-    storage.save_saga(_saga_with_configured_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        await pilot.press("e")
-        await pilot.pause()
-        dialog = app.screen
-
-        dialog.query_one("#fld-name", Input).value = "  "
-        dialog.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Covenant")  # refused
-
-        dialog.query_one("#fld-name", Input).value = "Kept"
-        dialog.query_one("#fld-year_founded", Input).value = ""
-        dialog.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-    cov = storage.load_saga("test_saga").covenants[0]
-    assert cov.name == "Kept"
-    assert cov.year_founded is None
-
-
 async def test_advance_season_moves_the_whole_saga_forward():
     storage.save_saga(quiet(_saga_with_configured_covenant()))
 

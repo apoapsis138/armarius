@@ -50,6 +50,8 @@ def test_edit_covenant_and_its_description():
     assert form.title == "Edit Covenant"
     _save(form, {"name": "Fengheld", "aura": "5"})
     assert (covenant.name, covenant.aura) == ("Fengheld", 5)
+    _save(covenant_forms.covenant_form(saga, covenant), {"year_founded": ""})
+    assert covenant.year_founded is None  # a blank Year Founded is allowed
     form = covenant_forms.description_form(covenant)
     assert form.title == "Edit Covenant Description"
     assert form.fields()[0].value == "A nice place"

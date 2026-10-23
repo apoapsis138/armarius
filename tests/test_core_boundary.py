@@ -86,10 +86,14 @@ def test_the_core_is_most_of_the_package():
     assert len(_files("tui")) > 30
 
 
-@pytest.mark.parametrize("path", _files(None), ids=lambda path: _module_name(path))
-def test_core_module_imports_no_ui(path):
-    bad = sorted({m for m in _imports(path) if _breaks_the_boundary(m)})
-    assert not bad, f"{_module_name(path)} imports {', '.join(bad)}"
+def test_no_core_module_imports_a_ui():
+    bad = sorted(
+        f"{_module_name(path)} imports {module}"
+        for path in _files(None)
+        for module in set(_imports(path))
+        if _breaks_the_boundary(module)
+    )
+    assert not bad, "; ".join(bad)
 
 
 @pytest.mark.parametrize("front_end", sorted(FRONT_ENDS))

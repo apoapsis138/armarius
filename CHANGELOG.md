@@ -109,6 +109,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.4.1 — 2026-10-23
+
+### Fundamenta
+
+- **A faster, leaner test suite.** Behind the scenes: the app's checks
+  run about a tenth faster, and there are about 570 fewer of them, with
+  nothing left unchecked. The check that each sheet shows what it should
+  and the check that the key bar stays quick now share one pass through
+  the sheets. The check of every key on every section no longer waits a
+  second after each key that does nothing. A few form tests that the
+  per-form checks already covered are gone, and what only they checked
+  has moved into those per-form checks.
+
 ## 3.4.0 — 2026-10-23
 
 ### Pagina

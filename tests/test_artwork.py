@@ -6,8 +6,6 @@ NOTICE.md."""
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-import pytest
-
 from ars_magica_manager import ROOT, artwork, catalog
 from ars_magica_manager.arts import ARTS
 from ars_magica_manager.models import Character
@@ -84,20 +82,34 @@ def test_there_are_svgs_to_check():
     assert len(SVGS) > 40
 
 
-@pytest.mark.parametrize(
-    "path", SVGS, ids=lambda path: str(path.relative_to(artwork.ASSETS))
-)
-def test_svg_is_one_colour_sized_by_its_viewbox(path):
+def _svg_faults(path: Path) -> list[str]:
+    """What keeps the SVG at `path` from being one colour sized by its
+    viewBox."""
     root = ET.parse(path).getroot()
-    assert root.tag == f"{SVG}svg"
-    assert len(root.get("viewBox", "").split()) == 4
+    faults: list[str] = []
+    if root.tag != f"{SVG}svg":
+        faults.append(f"its root is {root.tag}")
+    if len(root.get("viewBox", "").split()) != 4:
+        faults.append("it has no viewBox")
     fills = {
         element.get("fill")
         for element in root.iter()
         if element.get("fill") is not None
     }
-    assert fills == {"currentColor"}
-    assert 'stroke="#' not in path.read_text(encoding="utf-8")
+    if fills != {"currentColor"}:
+        faults.append(f"its fills are {sorted(map(str, fills))}")
+    if 'stroke="#' in path.read_text(encoding="utf-8"):
+        faults.append("it strokes in a fixed colour")
+    return faults
+
+
+def test_every_svg_is_one_colour_sized_by_its_viewbox():
+    faults = [
+        f"{path.relative_to(artwork.ASSETS)}: {', '.join(found)}"
+        for path in SVGS
+        if (found := _svg_faults(path))
+    ]
+    assert not faults, "; ".join(faults)
 
 
 def test_notice_credits_the_artwork_icons_fonts_and_sounds():

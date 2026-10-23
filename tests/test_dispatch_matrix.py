@@ -160,11 +160,19 @@ async def _record_keys(
         spied.clear()
         await pilot.press(key)
         await pilot.pause()
+        # Done when something has happened, or when nothing is left to run:
+        # a key that does nothing is decided at once, not by a timeout.
         await wait_until(
             pilot,
-            lambda: app.screen is not workspace or notices or spied,
+            lambda: (
+                app.screen is not workspace
+                or notices
+                or spied
+                or not any(worker.is_running for worker in app.workers)
+            ),
             timeout=1.0,
         )
+        await pilot.pause()
         if spied and app.screen is workspace:
             title = _title(spied[0])
             outcomes[key] = type(spied[0]).__name__ + (f": {title}" if title else "")

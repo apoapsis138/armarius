@@ -1,7 +1,5 @@
 """The character sheet: Arts, spells, Mastery, inventory, biography, fatigue and vis."""
 
-import re
-
 from screen_helpers import (
     _ability_labels,
     _fill,
@@ -38,7 +36,6 @@ from textual.widgets import (
     Select,
     Static,
     TabbedContent,
-    TextArea,
     Tree,
 )
 
@@ -755,50 +752,6 @@ async def test_add_and_remove_inventory_item():
     assert saga.characters[0].inventory == []
 
 
-async def test_edit_biographical_detail_updates_background_and_description():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-char-biographical")
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Biographical Detail")
-
-        app.screen.query_one("#fld-player", Input).value = "Alex"
-        app.screen.query_one("#fld-year_born", Input).value = "1180"
-        app.screen.query_one("#fld-height", Input).value = "1.8"
-        app.screen.query_one("#fld-handedness", Select).value = "left"
-        app.screen.query_one("#fld-biography", TextArea).text = "Born in Aachen."
-
-        # The dialog has many fields, taller than the default 80x24 test
-        # terminal -- pilot.click() needs an on-screen target, so trigger
-        # the button directly rather than by pixel coordinate.
-        app.screen.query_one("#btn-save", Button).press()
-        await _wait_for_screen(pilot, app, WorkspaceScreen)
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        view = app.screen._character_sheet_view
-        left = view._biographical_left_text()
-        assert "Player: Alex" in left
-        assert "Height: 1.8" in left
-        assert "Handedness: left" in left
-        assert view._biographical_right_text() == "Born in Aachen."
-        # Age (derived from Year Born) lives in the top panel, refreshed
-        # alongside Biographical Detail since they share Year Born.
-        assert re.search(r"Age:\s+40\b", strip_markup(view._info_left_text()))
-
-    saga = storage.load_saga("test_saga")
-    character = saga.characters[0]
-    assert character.background.player == "Alex"
-    assert character.background.year_born == 1180
-    assert character.description.height == 1.8
-    assert character.description.handedness == "left"
-    assert character.description.biography == "Born in Aachen."
-
-
 async def test_edit_fatigue_updates_level():
     storage.save_saga(_saga_with_bare_character())
 
@@ -938,39 +891,6 @@ async def test_raw_vis_stays_live_across_both_tabs():
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].raw_vis == {}
-
-
-async def test_edit_hermetic_background_sets_house_and_fields():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-hermetic-background")
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Hermetic Background")
-
-        app.screen.query_one("#fld-house", Select).value = "house_bonisagus"
-        app.screen.query_one("#fld-parens", Input).value = "Trianoma"
-        app.screen.query_one("#fld-age_of_apprenticeship", Input).value = "12"
-
-        app.screen.query_one("#btn-save", Button).press()
-        await _wait_for_screen(pilot, app, WorkspaceScreen)
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        view = app.screen._character_sheet_view
-        text = view._hermetic_background_left_text()
-        assert "House: Bonisagus" in text
-        assert "Parens: Trianoma" in text
-        assert "Age of Apprenticeship: 12" in text
-
-    saga = storage.load_saga("test_saga")
-    hermetic = saga.characters[0].hermetic
-    assert hermetic.house == "house_bonisagus"
-    assert hermetic.parens == "Trianoma"
-    assert hermetic.age_of_apprenticeship == 12
 
 
 async def test_bracketed_names_survive_the_nav_tree_and_top_panels():

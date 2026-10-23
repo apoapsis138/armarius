@@ -21,7 +21,7 @@ from screen_helpers import (
     _wait_for_screen,
 )
 from support import build_all_tabs, menu, wait_until
-from textual.widgets import Button, Checkbox, Input, Select, Static, Tree
+from textual.widgets import Button, Input, Select, Static, Tree
 
 from ars_magica_manager import familiars as fam
 from ars_magica_manager import storage
@@ -232,44 +232,6 @@ async def test_editing_familiar_binding_shows_cord_costs_and_saves():
 
     [familiar] = storage.load_saga("test_saga").familiars
     assert (familiar.golden_cord, familiar.binding_lab_total) == (3, 45)
-
-
-async def test_editing_familiar_wounds_and_fatigue_updates_the_health_panel():
-    storage.save_saga(_saga_with_familiar())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_familiar(pilot, app)
-        await _open_familiar_section(pilot, app, "section-fam-health")
-        assert app.screen._active_section() == "section-fam-health"
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Wounds")
-        app.screen.query_one("#fld-light", Input).value = "2"
-        app.screen.query_one("#fld-incapacitated", Checkbox).value = True
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        view = app.screen._familiar_sheet_view
-        wounds_text = str(view.query_one("#fam-wounds-content", Static).render())
-        assert "Light Wounds:  2" in wounds_text
-        assert "Incapacitated: yes" in wounds_text
-
-        await pilot.click("#btn-fam-health-fatigue-edit")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Fatigue Level")
-        app.screen.query_one("#fld-level", Select).value = "weary"
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        fatigue_text = str(view.query_one("#fam-fatigue-content", Static).render())
-        assert "Fatigue Level: Weary" in fatigue_text
-
-    [familiar] = storage.load_saga("test_saga").familiars
-    assert (familiar.wounds.light, familiar.wounds.incapacitated) == (2, True)
-    assert familiar.fatigue_level == "weary"
 
 
 async def test_familiar_natural_weapons_use_generic_add_edit_remove():

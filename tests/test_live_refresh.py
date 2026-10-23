@@ -8,7 +8,12 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 
 import pytest
-from support import everything_saga, screen_lines, wait_until
+from footer_guard import check_footer_rebuilds, footer
+from support import (
+    everything_saga,
+    screen_lines,
+    wait_until,
+)
 from textual.widgets import Tree
 
 from ars_magica_manager import players as pl
@@ -182,14 +187,12 @@ async def test_a_saga_without_players_doesnt_look_for_other_copies():
 
 
 async def test_picking_up_another_copys_save_rebuilds_the_footer_at_most_once():
-    from test_performance_guards import _check_rebuilds, _footer
-
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         ws = await _open(pilot, app, ("character", "comp1"))
         await pilot.pause()
-        before = _footer(app).rebuilds
+        before = footer(app).rebuilds
         with _other_copy():
             theirs = storage.load_saga("test_saga")
             theirs.character("comp1").name = "Alys the Bold"
@@ -197,7 +200,7 @@ async def test_picking_up_another_copys_save_rebuilds_the_footer_at_most_once():
         await ws._shared_tick()
         await pilot.pause()
         await pilot.pause()
-        _check_rebuilds(app, before, "picking up another copy's save")
+        check_footer_rebuilds(app, before, "picking up another copy's save")
 
 
 def test_a_damaged_file_is_reported_and_the_next_save_replaces_it():
