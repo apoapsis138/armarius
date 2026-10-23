@@ -6,7 +6,9 @@ The topics are listed on the left under THIS PAGE, HOW-TO GUIDES,
 REFERENCE and ALL PAGES (help_text.contents), with a box that filters
 them; the chosen topic's page is on the right, drawn from its Markdown
 and scrolled to the topic. A `help:` link shows that topic; a web link
-opens in the browser.
+opens in the browser. Go there (the button under the list, or a `go:`
+link) turns back to the page Help was opened from, at the chapter the topic
+describes.
 """
 
 from __future__ import annotations
@@ -23,9 +25,11 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QHBoxLayout,
+    QLabel,
     QLineEdit,
     QListWidget,
     QListWidgetItem,
+    QPushButton,
     QSplitter,
     QTextBrowser,
     QVBoxLayout,
@@ -45,13 +49,24 @@ _TOPIC = Qt.ItemDataRole.UserRole
 
 class HelpPage(QWidget):
     """Help, opened on `here` (the topic ids for the page it was opened
-    from, most specific first; `where` names that page)."""
+    from, most specific first; `where` names that page). `places` are the
+    chapters of that page Go there can open, by help topic, and `go` opens
+    one."""
 
-    def __init__(self, p: Palette, here: list[str], where: str = "") -> None:
+    def __init__(
+        self,
+        p: Palette,
+        here: list[str],
+        where: str = "",
+        places: dict[str, str] | None = None,
+        go: Callable[[str], None] | None = None,
+    ) -> None:
         super().__init__()
         self.p = p
         self.book = ht.book(ht.GUI)
         self.here = here
+        self.places = places or {}
+        self.go = go
         self._page_shown: str | None = None
         #: The topic on show.
         self.topic_id: str | None = None
@@ -72,6 +87,16 @@ class HelpPage(QWidget):
         column.setContentsMargins(0, 0, 0, 0)
         column.addWidget(self.filter)
         column.addWidget(self.topics, 1)
+        self.go_there = QPushButton("Go there")
+        self.go_there.setToolTip("Close Help and open this part of the page")
+        self.go_there.clicked.connect(lambda: self.go_to(self.topic_id or ""))
+        column.addWidget(self.go_there)
+        #: Why a Go there link can't be followed from here.
+        self.note = QLabel()
+        self.note.setWordWrap(True)
+        self.note.setStyleSheet(f"color:{p['text-warning']};")
+        self.note.hide()
+        column.addWidget(self.note)
         self.page = QTextBrowser()
         self.page.setOpenLinks(False)
         self.page.anchorClicked.connect(self._link)
@@ -151,6 +176,8 @@ class HelpPage(QWidget):
             return
         page_id, markdown = found
         self.topic_id = topic_id
+        self.go_there.setEnabled(self.go is not None and topic_id in self.places)
+        self.note.hide()
         if page_id != self._page_shown:
             self._page_shown = page_id
             self.page.setMarkdown(markdown)
@@ -211,9 +238,21 @@ class HelpPage(QWidget):
             )
         )
 
+    def go_to(self, place: str) -> None:
+        """Go there: open `place` (a tab's or section's topic) on the page
+        Help was opened from, or say why it can't be."""
+        chapter = self.places.get(place)
+        if self.go is not None and chapter is not None:
+            self.go(chapter)
+            return
+        self.note.setText(self.book.not_here(place))
+        self.note.show()
+
     def _link(self, url: QUrl) -> None:
         href = url.toString()
-        if href.startswith("help:"):
+        if href.startswith(ht.GO):
+            self.go_to(href.removeprefix(ht.GO))
+        elif href.startswith("help:"):
             self.show_topic(href.removeprefix("help:"))
         elif href.startswith(("http://", "https://")):
             QDesktopServices.openUrl(url)

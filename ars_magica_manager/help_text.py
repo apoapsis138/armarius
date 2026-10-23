@@ -10,8 +10,10 @@ dialog). The line right after a heading names the topic's id:
 
 The ids are the sheet's own: a tab's or section's widget id, a tree node's
 page (`character`, `spells`...) or a dialog's `help_id`. A link to another
-topic is written `[Lab Totals](help:tab-lab-totals)`. The comment lines don't
-show on screen or on GitHub, so the files read as plain Markdown there too.
+topic is written `[Lab Totals](help:tab-lab-totals)`, and a link that closes
+Help and opens that tab or section of the record on show (Go there)
+`[Go there](go:tab-lab-totals)`. The comment lines don't show on screen or on
+GitHub, so the files read as plain Markdown there too.
 
 The terminal and the desktop are drawn differently, so some help is for one
 of them only. A topic for one front-end names it after its id, and a page's
@@ -55,6 +57,11 @@ TUI = "tui"
 GUI = "gui"
 FRONT_ENDS = (TUI, GUI)
 _LINK = re.compile(r"\]\(help:([\w-]+)\)")
+#: A Go there link's scheme: `go:` and a tab's or section's id.
+GO = "go:"
+_GO_LINK = re.compile(r"\]\(go:([\w-]+)\)")
+#: The ids of the topics that are places on a sheet, which Go there opens.
+PLACE_PREFIXES = ("tab-", "section-")
 #: The topic every tradition chapter shares (see shared_topic).
 TRADITION_CHAPTER = "tradition-chapter"
 #: The topics of every tradition chapter's Casting, Magical Defenses and
@@ -168,6 +175,50 @@ class HelpBook:
     def links(self) -> dict[str, set[str]]:
         """The topics each page links to (`help:` links)."""
         return {page.id: set(_LINK.findall(page.text)) for page in self.pages.values()}
+
+    def go_links(self) -> dict[str, set[str]]:
+        """The places each page's Go there links open (`go:` links)."""
+        return {
+            page.id: set(_GO_LINK.findall(page.text)) for page in self.pages.values()
+        }
+
+    def is_place(self, topic_id: str) -> bool:
+        """Whether `topic_id` is a tab or section of a sheet, which Go there
+        can open."""
+        return topic_id.startswith(PLACE_PREFIXES) and topic_id in self.topics
+
+    def sheet_of(self, topic_id: str) -> Topic | None:
+        """The sheet a topic is part of: the level-1 page above it in its
+        file."""
+        sheet: Topic | None = None
+        for topic in self.topics.values():
+            if topic.level == 1:
+                sheet = topic
+            if topic.id == topic_id:
+                return sheet
+        return None
+
+    def not_here(self, topic_id: str) -> str:
+        """Why Go there can't open `topic_id` from what is on show."""
+        topic = self.topics.get(topic_id)
+        if topic is None or not self.is_place(topic_id):
+            return "There's no place to go to for this topic."
+        sheet = self.sheet_of(topic_id)
+        where = (
+            f" It is on {_the(sheet.title)}."
+            if sheet is not None and sheet is not topic
+            else ""
+        )
+        what = _the(topic.title)
+        return f"{what[0].upper()}{what[1:]} isn't on what Help was opened from.{where}"
+
+
+def _the(title: str) -> str:
+    """`title` within a sentence: "the Laboratory sheet", "a creature"."""
+    first, _, rest = title.partition(" ")
+    if first in ("A", "An", "The"):
+        return f"{first.lower()} {rest}"
+    return f"the {title}"
 
 
 def display_text(text: str) -> str:

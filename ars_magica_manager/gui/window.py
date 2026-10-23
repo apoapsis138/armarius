@@ -173,6 +173,25 @@ _CHAPTER_TABS = {
 }
 
 
+def _chapter_topic(kind: str, chapter: str) -> str | None:
+    """The help topic (a tab's) of a page's chapter, by the chapter's
+    name: _CHAPTER_TABS, else the page's tab whose title starts with it."""
+    name = plain(chapter).strip().casefold()
+    prefix = _TAB_PREFIX.get(kind)
+    if not name or prefix is None:
+        return None
+    return _CHAPTER_TABS.get((kind, name)) or next(
+        (
+            topic.id
+            for topic in help_text.book(help_text.GUI).topics.values()
+            if topic.id.startswith(prefix)
+            and (prefix != "tab-" or not topic.id.startswith(_OTHER_TABS))
+            and topic.title.casefold().startswith(name)
+        ),
+        None,
+    )
+
+
 def _first_input(dialog: QDialog) -> QWidget | None:
     """The widget a step's typing starts in: a form's first field, a
     list's search, a question's Cancel."""
@@ -658,22 +677,33 @@ class MainWindow(QMainWindow):
         ids = list(_HELP_IDS.get(place.kind, []))
         codex = getattr(page, "codex", None)
         item = codex.rail.currentItem() if codex is not None else None
-        chapter = plain(item.text()).strip().casefold() if item is not None else ""
-        prefix = _TAB_PREFIX.get(place.kind)
-        if chapter and prefix is not None:
-            tab = _CHAPTER_TABS.get((place.kind, chapter)) or next(
-                (
-                    topic.id
-                    for topic in help_text.book(help_text.GUI).topics.values()
-                    if topic.id.startswith(prefix)
-                    and (prefix != "tab-" or not topic.id.startswith(_OTHER_TABS))
-                    and topic.title.casefold().startswith(chapter)
-                ),
-                None,
-            )
-            if tab is not None:
-                ids.insert(0, tab)
+        tab = _chapter_topic(place.kind, item.text()) if item is not None else None
+        if tab is not None:
+            ids.insert(0, tab)
         return ids
+
+    def _help_places(self, place: Place, page: QWidget | None) -> dict[str, str]:
+        """The chapters of `page` Help's Go there can open, by the help
+        topic of each: its tab and the sections the help puts on it."""
+        codex = getattr(page, "codex", None)
+        if codex is None:
+            return {}
+        book = help_text.book(help_text.GUI)
+        places: dict[str, str] = {}
+        for name in codex.chapters():
+            tab = _chapter_topic(place.kind, name)
+            if tab is None or tab in places:
+                continue
+            for topic in book.topics.values():
+                if topic.id == tab or topic.page == tab:
+                    places[topic.id] = name
+        return places
+
+    def _go_there(self, chapter: str) -> None:
+        """Help's Go there: back to the page below Help, at `chapter`."""
+        below = self.trail[:-1]
+        self._chapters[below[-1]] = chapter
+        self.go(below)
 
     def open_seasons(self) -> None:
         """Open the saga's Seasons, below the saga."""
@@ -935,6 +965,8 @@ class MainWindow(QMainWindow):
             self.palette_,
             self._help_ids(below, self._help_from),
             self._name(below),
+            self._help_places(below, self._help_from),
+            self._go_there,
         )
 
     def _build(self, place: Place) -> QWidget:

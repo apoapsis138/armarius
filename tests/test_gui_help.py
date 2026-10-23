@@ -105,3 +105,31 @@ def test_a_chapter_named_otherwise_opens_help_on_its_tab(app):
     window.page().codex.rail.setCurrentRow(0)  # Charter
     window.help.click()
     assert _help(window).topic_id == "tab-cov-attributes"
+
+
+def test_go_there_turns_back_to_the_chapter_the_topic_describes(app):
+    window = _window()
+    window.show_character("char1")
+    sheet = window.page()
+    assert isinstance(sheet, CharacterSheet)
+    sheet.open_chapter("Hermetic Magic")
+    window.help.click()
+    page = _help(window)
+    assert page.go_there.isEnabled()  # the Hermetic Magic tab
+    page.show_topic("tab-vf")
+    page.go_there.click()
+    sheet = window.page()
+    assert isinstance(sheet, CharacterSheet)
+    assert sheet.codex.rail.currentItem().text() == "Virtues & Flaws"
+
+
+def test_go_there_says_where_a_place_on_another_page_is(app):
+    window = _window()
+    window.show_character("char1")
+    window.help.click()
+    page = _help(window)
+    page.show_topic("tab-lab-totals")
+    assert not page.go_there.isEnabled()
+    page._link(QUrl("go:tab-lab-totals"))
+    assert isinstance(window.page(), HelpPage)
+    assert page.note.text().endswith("It is on the Laboratory sheet.")
