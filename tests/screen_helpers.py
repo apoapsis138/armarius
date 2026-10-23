@@ -263,6 +263,7 @@ _LAB_SECTION_TAB: dict[str, str] = {
     "section-lab-specializations": "tab-lab-attributes",
     "section-lab-specialties": "tab-lab-attributes",
     "section-lab-features": "tab-lab-attributes",
+    "section-lab-magic-items": "tab-lab-attributes",
     "section-lab-rooms": "tab-lab-attributes",
     "section-lab-raw-vis": "tab-lab-inventory",
     "section-lab-items": "tab-lab-inventory",

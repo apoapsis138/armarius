@@ -40,6 +40,7 @@ from typing import Any
 from . import __version__, catalog, places, storage
 from .files import write_atomic
 from .models import (
+    ITEM_DEVICE_PARAM,
     Book,
     CalendarEntry,
     Character,
@@ -824,6 +825,15 @@ def _plan_devices(job: _Import) -> None:
                 device.maker_name = job.link_name(CHARACTER, device.maker_id)
             device.maker_id = maker
         job.plan.devices.append(device)
+    # A laboratory's magic items name their devices by id.
+    for lab in job.plan.laboratories:
+        for benefit in lab.item_benefits:
+            benefit.device_id = job.device_map.get(benefit.device_id, "")
+        for held in lab.virtues_flaws:
+            if ITEM_DEVICE_PARAM in held.params:
+                held.params[ITEM_DEVICE_PARAM] = job.device_map.get(
+                    held.params[ITEM_DEVICE_PARAM], ""
+                )
 
 
 def _plan_books(job: _Import) -> None:

@@ -197,20 +197,20 @@ def specialty_entry_name(entry: LabSpecialtyEntry) -> str:
     )
 
 
-def _reconciled(lab: Laboratory, change: Callable[[], None]) -> None:
+def _reconciled(saga: Saga, lab: Laboratory, change: Callable[[], None]) -> None:
     """Make `change` to what gives the lab Specialization points, then turn
     off any Specialization it newly makes count that would break a cap."""
-    counted = lab_rules.counted_specializations(lab)
+    counted = lab_rules.counted_specializations(saga, lab)
     change()
-    lab_rules.reconcile_dropped(lab, counted)
+    lab_rules.reconcile_dropped(saga, lab, counted)
 
 
-def toggle_specialization(lab: Laboratory, name: str) -> Act:
+def toggle_specialization(saga: Saga, lab: Laboratory, name: str) -> Act:
     """Turn a Specialization off, or back on (refused when it scores 0 or
     less, or when turning it on would break a cap)."""
 
     def apply() -> Refuse | None:
-        refusal = lab_rules.toggle_specialization(lab, name)
+        refusal = lab_rules.toggle_specialization(saga, lab, name)
         if refusal is None:
             return None
         return Refuse(f"Turn {escape(name)} on or off", escape(refusal))
@@ -218,7 +218,7 @@ def toggle_specialization(lab: Laboratory, name: str) -> Act:
     return Act(apply)
 
 
-def specialty_ops(lab: Laboratory) -> SectionOps:
+def specialty_ops(saga: Saga, lab: Laboratory) -> SectionOps:
     """Add, Edit and Delete for the lab's hand-entered Specialization
     sources."""
     entries = lab.specialties
@@ -235,7 +235,7 @@ def specialty_ops(lab: Laboratory) -> SectionOps:
                 else:
                     entries[index] = entry
 
-            _reconciled(lab, change)
+            _reconciled(saga, lab, change)
 
         return Form(
             "Add a Specialization source"
@@ -252,7 +252,7 @@ def specialty_ops(lab: Laboratory) -> SectionOps:
             del entries[index]
 
         def apply() -> None:
-            _reconciled(lab, change)
+            _reconciled(saga, lab, change)
 
         name = specialty_entry_name(entries[index])
         return Confirm(f"Delete {escape(name)}?", apply)
@@ -470,6 +470,7 @@ def new_feature_virtue_question(lab: Laboratory, vf_id: str) -> str:
 
 
 def save_feature(
+    saga: Saga,
     lab: Laboratory,
     feature: LabFeature | None,
     feature_id: str | None,
@@ -499,10 +500,10 @@ def save_feature(
         if feature is None:
             lab.features.append(target)
 
-    _reconciled(lab, change)
+    _reconciled(saga, lab, change)
 
 
-def feature_ops(lab: Laboratory) -> SectionOps:
+def feature_ops(saga: Saga, lab: Laboratory) -> SectionOps:
     """Add, Edit and Delete for the lab's Features. Adding or editing one
     is two forms: which Feature and the Virtue it's built on -- confirming
     first if that means adding a new Feature Virtue -- then its name,
@@ -523,7 +524,7 @@ def feature_ops(lab: Laboratory) -> SectionOps:
                 title,
                 lambda: details.fields,
                 lambda values: save_feature(
-                    lab, feature, feature_id, virtue_choice, details.build(values)
+                    saga, lab, feature, feature_id, virtue_choice, details.build(values)
                 ),
                 save_label="Add" if feature is None else "Save",
             )
@@ -557,7 +558,7 @@ def feature_ops(lab: Laboratory) -> SectionOps:
         )
 
         def apply() -> None:
-            _reconciled(lab, lambda: lab.features.remove(feature))
+            _reconciled(saga, lab, lambda: lab.features.remove(feature))
 
         return Confirm(f"Delete {escape(feature.name)}?{keeps}", apply)
 

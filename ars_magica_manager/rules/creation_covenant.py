@@ -261,7 +261,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                     possession,
                 )
             )
-    for device in enchantment.held_by(saga, "covenant", covenant.id):
+    for device in enchantment.covenant_devices(saga, covenant.id, every_lab=every_lab):
         for effect in device.effects:
             level = enchantment.modified_level(device, effect)
             lines.append(
@@ -393,7 +393,7 @@ def over_level(saga: Saga, covenant: Covenant, max_level: int) -> list[str]:
             level = book_rules.level_of(book, saga) or 0
             if level > max_level:
                 found.append(f"{book.name} ({level})")
-    for device in enchantment.held_by(saga, "covenant", covenant.id):
+    for device in enchantment.covenant_devices(saga, covenant.id):
         for effect in device.effects:
             level = enchantment.modified_level(device, effect)
             if level > max_level:

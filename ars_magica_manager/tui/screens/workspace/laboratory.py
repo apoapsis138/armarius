@@ -142,7 +142,7 @@ class LaboratoryActions(WorkspaceBase):
             return
         event.stop()
         refusal = lab_text.toggle_specialization(
-            lab, LAB_SPECIALIZATIONS[event.data_index]
+            self.saga, lab, LAB_SPECIALIZATIONS[event.data_index]
         )
         if refusal is not None:
             self.notify(refusal, severity="warning")
@@ -156,7 +156,7 @@ class LaboratoryActions(WorkspaceBase):
 
         def handle_result(entry: LabSpecialtyEntry | None) -> None:
             if entry is not None:
-                counted = lab_text.counted_specializations(lab)
+                counted = lab_text.counted_specializations(self.saga, lab)
                 lab.specialties.append(entry)
                 self._commit_specialties(counted)
 
@@ -171,7 +171,7 @@ class LaboratoryActions(WorkspaceBase):
         def edit(index: int) -> None:
             def handle_result(entry: LabSpecialtyEntry | None) -> None:
                 if entry is not None:
-                    counted = lab_text.counted_specializations(lab)
+                    counted = lab_text.counted_specializations(self.saga, lab)
                     lab.specialties[index] = entry
                     self._commit_specialties(counted)
 
@@ -206,7 +206,7 @@ class LaboratoryActions(WorkspaceBase):
 
             def handle_confirmed(confirmed: bool | None) -> None:
                 if confirmed:
-                    counted = lab_text.counted_specializations(lab)
+                    counted = lab_text.counted_specializations(self.saga, lab)
                     del lab.specialties[index]
                     self._commit_specialties(counted)
 
@@ -227,7 +227,7 @@ class LaboratoryActions(WorkspaceBase):
         lab = self.selected_laboratory
         if lab is None:
             return
-        lab_text.reconcile_dropped(lab, previously_counted)
+        lab_text.reconcile_dropped(self.saga, lab, previously_counted)
         self._commit("section-lab-specialties")
 
     # -- Laboratory: Features --
@@ -297,7 +297,7 @@ class LaboratoryActions(WorkspaceBase):
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            lf.save_feature(lab, feature, feature_id, virtue_choice, values)
+            lf.save_feature(self.saga, lab, feature, feature_id, virtue_choice, values)
             self._commit(*LAB_FEATURE_SECTIONS)
 
         self.app.push_screen(
@@ -324,9 +324,9 @@ class LaboratoryActions(WorkspaceBase):
 
             def handle_confirmed(confirmed: bool | None) -> None:
                 if confirmed:
-                    counted = lab_text.counted_specializations(lab)
+                    counted = lab_text.counted_specializations(self.saga, lab)
                     del lab.features[index]
-                    lab_text.reconcile_dropped(lab, counted)
+                    lab_text.reconcile_dropped(self.saga, lab, counted)
                     self._commit(*LAB_FEATURE_SECTIONS)
 
             self.app.push_screen(

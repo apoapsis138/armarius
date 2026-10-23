@@ -21,7 +21,7 @@ from ars_magica_manager.gui.forms import ConfirmDialog
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.widgets import ClickableCard
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import NamedDescription
+from ars_magica_manager.models import EnchantedDevice, InstilledEffect, NamedDescription
 
 
 @pytest.fixture(scope="module")
@@ -135,3 +135,34 @@ def test_raw_vis_and_an_arcane_connection(app):
     answering(window, {"name": "Silver Mirror"})
     section_buttons(_page(window), "Equipment & Stores")["Add"].click()
     assert [i.name for i in _lab().inventory_items] == ["Silver Mirror"]
+
+
+def test_a_magic_item_is_added_and_removed(app):
+    saga = _sample_saga_with_covenant()
+    lab = saga.laboratories[0]
+    saga.enchanted_devices.append(
+        EnchantedDevice(
+            "lectern",
+            "Rowan Lectern",
+            holder_kind="laboratory",
+            holder_id=lab.id,
+            effects=[InstilledEffect(id="e1", name="Steady Page", level=20)],
+        )
+    )
+    window, page = _open(saga)
+    answering(
+        window,
+        {"effect": "lectern/e1", "installed": "item", "gives": "points"},
+        {"specialization0": "Texts", "specialization_points0": "2"},
+    )
+    section_buttons(page, "Magic Items")["Add"].click()
+    [benefit] = _lab().item_benefits
+    assert [(g.specialization, g.points) for g in benefit.specializations] == [
+        ("Texts", 2)
+    ]
+    assert [vf.vf_id for vf in _lab().virtues_flaws][-1] == "labvf_magic_item"
+    asked = answering(window, True)
+    section_buttons(_page(window), "Magic Items")["Delete"].click()
+    assert asked[0].question.startswith("Remove what Rowan Lectern gives")
+    assert _lab().item_benefits == []
+    assert "labvf_magic_item" not in [vf.vf_id for vf in _lab().virtues_flaws]

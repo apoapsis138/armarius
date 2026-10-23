@@ -279,6 +279,12 @@ The Virtue's details, and its card, say whose Intelligence it is and what it
 comes to: "Safety +2 (Kurt's Intelligence +3, halved, rounded up)". A Feature Virtue is usually added along with its Feature on the
 Attributes tab.
 
+A Virtue a magic item grants reads "(Minor, from Wand)": it takes no space
+and costs no Build Points. The Magic Item and Enchantment Virtues name
+their item, and are added for you under
+[Magic Items](help:section-lab-magic-items). Deleting a Virtue an item
+grants, or the item's own Virtue, says what the laboratory loses with it.
+
 ### Flaws
 <!-- help: section-lab-vf-flaws -->
 
@@ -289,16 +295,20 @@ laboratory may have only one Focus Flaw.
 ## Attributes tab
 <!-- help: tab-lab-attributes -->
 
-The laboratory's Specializations, its Features and its rooms, then its
+The laboratory's Specializations, its Features, its magic items and its
+rooms, then its
 [Connections](help:section-connections): its covenant and where it is.
 <!-- gui -->
 On the desktop they are in the laboratory's **Specializations** chapter.
 <!-- /gui -->
 
-**You type:** the Features and what their points go to, any Specialization
-points from a source the app doesn't work out itself, and the rooms.
+**You type:** the Features and what their points go to, what each magic
+item's effects give the laboratory, any Specialization points from a source
+the app doesn't work out itself, and the rooms.
 
-**The app works out:** each Specialization's score from all its sources, and
+**The app works out:** each Specialization's score from all its sources
+(magic items included), whether each magic item's points fit its effect's
+level, and
 how many count against the limits on Activity and Art Specializations
 (Ars Magica Fifth Edition: Covenants, Chapter 9).
 
@@ -355,6 +365,46 @@ the Virtue it is built on, offering to add a new Feature Virtue if there is
 no free one; then its name, where its points go and whether it is the
 laboratory's Focus. Deleting a Feature keeps its Feature Virtue, free for
 another.
+
+### Magic Items
+<!-- help: section-lab-magic-items -->
+
+What the enchanted devices kept in the laboratory give it (Ars Magica
+Definitive Edition, Chapter 8: Laboratory, and Covenants, Chapter 9: Magic
+Items for Laboratories), one row for each effect, its title counting them.
+An item is installed as a Free **Magic Item** Virtue (Minor when it is very
+large) or as an **Enchantment** of the laboratory itself; the app adds that
+Virtue for you. Each of its effects then gives the laboratory one of two
+things:
+
+- **A Virtue or Flaw it duplicates.** The laboratory gains it at once, with
+  no space cost and no Build Points at creation, and its modifications
+  apply as usual. The Virtues & Flaws tab shows it as "from" the item.
+- **Points bought by its level:** one Specialization point for every 10
+  levels of the effect, one Characteristic point for every 20. The app
+  refuses to save more points than the level buys.
+
+Adding one takes two steps: the effect (from the devices kept here), how
+the item is installed and which kind of benefit it gives; then the Virtue
+it grants, or the points and where they go. With no enchanted device kept
+in the laboratory there is nothing to choose: add one under Enchanted
+Devices on the Inventory tab first. Deleting a row removes what that effect
+gives, and the Magic Item Virtue once nothing else uses it; the device
+itself stays. Deleting the device, or its effect, removes what it gave.
+
+An item gives the laboratory nothing while its device is kept elsewhere:
+its points and the Virtue it grants stop counting, and its row says so,
+until the device is back.
+
+An effect must be new to the laboratory: the row warns when it grants a
+Virtue the laboratory has already, or when its points need a higher level
+than the effect has.
+
+An item made into a Feature is not entered here: add it under Features, and
+its Feature Virtue is paid for as usual.
+
+**See also:** [Enchanted Devices](help:section-lab-devices),
+[How to install a magic item in a laboratory](help:guide-lab-magic-item)
 
 ### Rooms
 <!-- help: section-lab-rooms -->
@@ -426,6 +476,9 @@ Charged Item.
 effects. **Instill** adds an effect to a device that can take another, and
 **Use Charge** uses up a charge of a Charged Item.
 <!-- /gui -->
+What a device's effects give the laboratory itself, a Virtue or
+Specialization and Characteristic points, is set under
+[Magic Items](help:section-lab-magic-items) on the Attributes tab.
 
 ### Lab Texts
 <!-- help: section-lab-texts -->

@@ -218,13 +218,14 @@ class VirtueFlawActions(CreationActions):
                 f" {escape(focus.name)} stops being the Focus and loses its "
                 "Focus points."
             )
+        message += escape(lab_rules.item_delete_note(lab, instance))
 
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
-                counted = lab_rules.counted_specializations(lab)
+                counted = lab_rules.counted_specializations(self.saga, lab)
                 del lab.virtues_flaws[index]
                 lab_rules.prune_features(lab)
-                lab_rules.reconcile_dropped(lab, counted)
+                lab_rules.reconcile_dropped(self.saga, lab, counted)
                 self._commit(*LAB_FEATURE_SECTIONS)
 
         self.app.push_screen(ConfirmScreen(message), handle_confirmed)

@@ -171,7 +171,7 @@ def lab_total(
     lines = [
         *_magus_lines(magus, technique, form),
         _aura_line(saga, magus, lab, covenant, boons),
-        *_quality_lines(lab, lab_catalog, applies),
+        *_quality_lines(saga, lab, lab_catalog, applies),
         *_helper_lines(magus, assistants, familiar, notes),
         *_activity_lines(magus, activity, similar_spell_level, shape_material),
         *_distraction_lines(days_missed, notes),
@@ -226,16 +226,17 @@ def _aura_line(
 
 
 def _quality_lines(
+    saga: Saga,
     lab: Laboratory,
     lab_catalog: Mapping[str, LabVirtueFlawDef],
     applies: set[str | None],
 ) -> list[Line]:
     """General Quality, and the lab's Specializations that `applies` names."""
     lines: list[Line] = []
-    quality = lab_characteristic_total(lab, lab_catalog, "general_quality")[3]
+    quality = lab_characteristic_total(lab, lab_catalog, "general_quality", saga)[3]
     if quality:
         lines.append(Line("General Quality", amount=quality, source=QUALITY_SOURCE))
-    for spec in specialization_scores(lab):
+    for spec in specialization_scores(saga, lab):
         if spec.counts and spec.name in applies:
             lines.append(
                 Line(

@@ -585,7 +585,7 @@ def remove_virtue_flaw(saga: Saga, owner: Owner, index: int) -> Confirm:
     name = vf_name(owner, index)
     instance = owner.virtues_flaws[index]
     if isinstance(owner, Laboratory):
-        return _remove_lab(owner, index, name)
+        return _remove_lab(saga, owner, index, name)
     if isinstance(owner, Character):
         change = cch.removal_change(saga, owner, instance)
         if change is not None:
@@ -607,7 +607,7 @@ def remove_virtue_flaw(saga: Saga, owner: Owner, index: int) -> Confirm:
     return Confirm(f"Delete {escape(name)}?", apply)
 
 
-def _remove_lab(lab: Laboratory, index: int, name: str) -> Confirm:
+def _remove_lab(saga: Saga, lab: Laboratory, index: int, name: str) -> Confirm:
     instance = lab.virtues_flaws[index]
     feature = lab_rules.feature_on(lab, instance)
     focus = lab_rules.focus_feature(lab)
@@ -618,12 +618,13 @@ def _remove_lab(lab: Laboratory, index: int, name: str) -> Confirm:
         message += (
             f" {escape(focus.name)} stops being the Focus and loses its Focus points."
         )
+    message += escape(lab_rules.item_delete_note(lab, instance))
 
     def apply() -> None:
-        counted = lab_rules.counted_specializations(lab)
+        counted = lab_rules.counted_specializations(saga, lab)
         del lab.virtues_flaws[index]
         lab_rules.prune_features(lab)
-        lab_rules.reconcile_dropped(lab, counted)
+        lab_rules.reconcile_dropped(saga, lab, counted)
 
     return Confirm(message, apply)
 
@@ -739,9 +740,9 @@ def _edit_lab(saga: Saga, lab: Laboratory, index: int, name: str) -> Command:
         )
 
     def apply(values: dict[str, Any]) -> None:
-        counted = lab_rules.counted_specializations(lab)
+        counted = lab_rules.counted_specializations(saga, lab)
         instance.params = lab_params_from(entry, values)
-        lab_rules.reconcile_dropped(lab, counted)
+        lab_rules.reconcile_dropped(saga, lab, counted)
 
     return Form(
         f"Change {escape(name)}",

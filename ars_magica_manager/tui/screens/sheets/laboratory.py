@@ -20,6 +20,7 @@ from .... import laboratories as lab_text
 from .... import research_text as rt
 from .... import sheet_text as st
 from ....boon_hook_text import counted, points_title
+from ....forms import lab_item as item_forms
 from ....markup import aligned, escape
 from ....models import (
     LAB_CHARACTERISTICS,
@@ -36,7 +37,7 @@ from ....rules.lab_stats import (
     lab_occupied_size,
 )
 from ....rules.realms import covenant_effective_aura
-from ....sections import LAB_TEXTS_SECTION, LAB_VF_SECTIONS
+from ....sections import LAB_ITEMS_SECTION, LAB_TEXTS_SECTION, LAB_VF_SECTIONS
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -51,9 +52,16 @@ from ..widgets import (
 from .base import SheetView
 from .lists import BookListView, LabTextListView
 
+#: The sections whose changes move what the lab's magic items give it:
+#: their own list, and its devices (one deleted takes what it gave).
+_LAB_ITEM_SECTIONS = (LAB_ITEMS_SECTION, "section-lab-devices")
+#: What refreshes the Virtues & Flaws: their own lists, and the magic items
+#: (an item adds its Virtue and the Virtue it grants).
+_LAB_VF_REFRESH = (*LAB_VF_SECTIONS, *_LAB_ITEM_SECTIONS)
 #: What refreshes the lab's Characteristics: their own section, and the
-#: Virtues & Flaws (whose modifiers and points feed every figure there).
-_LAB_CHARACTERISTICS_SECTIONS = ("section-lab-characteristics", *LAB_VF_SECTIONS)
+#: Virtues & Flaws and magic items (whose modifiers and points feed every
+#: figure there).
+_LAB_CHARACTERISTICS_SECTIONS = ("section-lab-characteristics", *_LAB_VF_REFRESH)
 #: The Features list follows its own changes and the Virtues & Flaws' (a
 #: Feature Virtue or Focus Flaw deleted).
 LAB_FEATURE_SECTIONS = ("section-lab-features", *LAB_VF_SECTIONS)
@@ -62,6 +70,7 @@ LAB_SPECIALIZATION_SECTIONS = (
     "section-lab-specializations",
     "section-lab-specialties",
     *LAB_FEATURE_SECTIONS,
+    *_LAB_ITEM_SECTIONS,
 )
 
 
@@ -75,6 +84,7 @@ _LAB_TOTAL_SECTIONS: tuple[str, ...] = (
     "section-lab-features",
     "section-lab-vf-virtues",
     "section-lab-vf-flaws",
+    *_LAB_ITEM_SECTIONS,
 )
 
 
@@ -301,7 +311,7 @@ class LaboratorySheetView(SheetView):
         with Vertical(classes="panel-body"):
             with VerticalScroll():
                 warnings = self._static(
-                    (*LAB_VF_SECTIONS, "section-lab-characteristics"),
+                    (*_LAB_VF_REFRESH, "section-lab-characteristics"),
                     lambda: lab_text.vf_warnings(self.laboratory, self.saga),
                     id="lab-vf-warnings",
                 )
@@ -310,13 +320,13 @@ class LaboratorySheetView(SheetView):
                 )
                 yield warnings
                 self._on_refresh(
-                    (*LAB_VF_SECTIONS, "section-lab-characteristics"),
+                    (*_LAB_VF_REFRESH, "section-lab-characteristics"),
                     self._show_vf_warnings_if_any,
                 )
                 with TwoColumns(id="lab-vf-row"):
                     with SheetSection(
                         title=self._titled(
-                            LAB_VF_SECTIONS,
+                            _LAB_VF_REFRESH,
                             "section-lab-vf-virtues",
                             lambda: points_title(
                                 "Virtues", lab_text.vf_points(self.laboratory, "Virtue")
@@ -325,14 +335,14 @@ class LaboratorySheetView(SheetView):
                         id="section-lab-vf-virtues",
                     ):
                         yield self._list(
-                            LAB_VF_SECTIONS,
+                            _LAB_VF_REFRESH,
                             lambda: lab_text.vf_rows(self.laboratory, "Virtue"),
                             id="lab-vf-virtues-list",
                             group="lab-vf",
                         )
                     with SheetSection(
                         title=self._titled(
-                            LAB_VF_SECTIONS,
+                            _LAB_VF_REFRESH,
                             "section-lab-vf-flaws",
                             lambda: points_title(
                                 "Flaws", lab_text.vf_points(self.laboratory, "Flaw")
@@ -341,13 +351,13 @@ class LaboratorySheetView(SheetView):
                         id="section-lab-vf-flaws",
                     ):
                         yield self._list(
-                            LAB_VF_SECTIONS,
+                            _LAB_VF_REFRESH,
                             lambda: lab_text.vf_rows(self.laboratory, "Flaw"),
                             id="lab-vf-flaws-list",
                             group="lab-vf",
                         )
             yield self._panel(
-                LAB_VF_SECTIONS,
+                _LAB_VF_REFRESH,
                 lambda: lab_text.vf_info_text(self.laboratory, None, self.saga),
                 id="lab-vf-info",
             )
@@ -362,7 +372,7 @@ class LaboratorySheetView(SheetView):
                     title="Specializations", id="section-lab-specializations"
                 ):
                     yield ToggleList(
-                        lab_text.specialization_rows(self.laboratory),
+                        lab_text.specialization_rows(self.saga, self.laboratory),
                         id="lab-specializations-list",
                         group="lab-attr",
                     )
@@ -398,6 +408,23 @@ class LaboratorySheetView(SheetView):
                         LAB_FEATURE_SECTIONS,
                         lambda: lab_text.feature_rows(self.laboratory),
                         id="lab-features-list",
+                        group="lab-attr",
+                    )
+                self.core_ops[LAB_ITEMS_SECTION] = item_forms.item_ops(
+                    self.saga, self.laboratory
+                )
+                with PinnedCollapsible(
+                    title=self._titled(
+                        (*_LAB_ITEM_SECTIONS, *LAB_VF_SECTIONS),
+                        LAB_ITEMS_SECTION,
+                        lambda: lab_text.items_title(self.laboratory),
+                    ),
+                    id=LAB_ITEMS_SECTION,
+                ):
+                    yield self._list(
+                        (*_LAB_ITEM_SECTIONS, *LAB_VF_SECTIONS),
+                        lambda: lab_text.item_rows(self.saga, self.laboratory),
+                        id="lab-magic-items-list",
                         group="lab-attr",
                     )
                 with SheetSection(
@@ -502,7 +529,7 @@ class LaboratorySheetView(SheetView):
         panel follows it) if it's still there."""
         grid = self.query_one("#lab-specializations-list", ToggleList)
         chosen = grid.selected_data_index
-        grid.set_rows(lab_text.specialization_rows(self.laboratory))
+        grid.set_rows(lab_text.specialization_rows(self.saga, self.laboratory))
         if chosen is not None:
             grid.select_data_index(chosen)
 
@@ -529,7 +556,7 @@ class LaboratorySheetView(SheetView):
             ),
             "lab-specializations-list": (
                 "lab-attr-panel",
-                lambda i: lab_text.specialization_info_text(lab, i),
+                lambda i: lab_text.specialization_info_text(self.saga, lab, i),
             ),
             "lab-specialties-list": (
                 "lab-attr-panel",
@@ -539,6 +566,14 @@ class LaboratorySheetView(SheetView):
                 "lab-attr-panel",
                 lambda i: (
                     lab_text.feature_info_text(lab, i)
+                    if i is not None
+                    else lab_text.ATTRIBUTES_PANEL_HINT
+                ),
+            ),
+            "lab-magic-items-list": (
+                "lab-attr-panel",
+                lambda i: (
+                    lab_text.item_info_text(self.saga, lab, i)
                     if i is not None
                     else lab_text.ATTRIBUTES_PANEL_HINT
                 ),

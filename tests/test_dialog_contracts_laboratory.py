@@ -74,6 +74,18 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Points": "0"},
         shown={"#lab-specialties-list": "Garden"},
     ),
+    "add lab magic item points": Contract(
+        # The Wand's level 10 effect buys one Specialization point.
+        prefill={"Specialization 1": Select.NULL, "Specialization 1 points": ""},
+        edits={"Specialization 1": "Ignem", "Specialization 1 points": "1"},
+        saved=lambda s: (
+            laboratory(s).item_benefits[-1].specializations,
+            [vf.vf_id for vf in laboratory(s).virtues_flaws][-1],
+        ),
+        expected=([LabSpecialtyGrant("Ignem", 1)], "labvf_magic_item"),
+        invalid={"Specialization 1 points": "2"},
+        shown={"#lab-magic-items-list": "Wand: Pilum"},
+    ),
     "edit lab feature": Contract(
         prefill={
             "Name": "Big windows",

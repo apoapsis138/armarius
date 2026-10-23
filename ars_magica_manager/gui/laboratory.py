@@ -35,6 +35,7 @@ from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import SectionOps
 from ..forms import diary as diary_forms
+from ..forms import lab_item as item_forms
 from ..forms import lab_plan as lab_plan_forms
 from ..forms import laboratory as lf
 from ..forms import library as library_forms
@@ -430,7 +431,7 @@ class LaboratoryPage(QWidget):
 
     def _specializations(self) -> QWidget:
         p, lab = self.p, self.lab
-        rows = ls.specializations(lab)
+        rows = ls.specializations(self.saga, lab)
         parts: list[QWidget] = []
         for kind in ("Activity", "Art"):
             group = [s for s in rows if s.kind == kind]
@@ -443,6 +444,7 @@ class LaboratoryPage(QWidget):
             ]
         parts.append(self._specialty_sources())
         parts.append(self._features())
+        parts.append(self._magic_items())
         parts.append(self._named_section("Rooms", "section-lab-rooms", "a room"))
         parts.append(connections_section(self.saga, lab, p, self.run))
         return scrolling_page(p, *parts)
@@ -460,14 +462,16 @@ class LaboratoryPage(QWidget):
             chooser.choose(index)
             name = group[index].name
             self.inspect(
-                name, f"{kind} Specialization", ls.specialization_text(lab, name)
+                name,
+                f"{kind} Specialization",
+                ls.specialization_text(self.saga, lab, name),
             )
 
         ops = SectionOps(rows=lambda: [s.name for s in group])
         toggle = (
             "Turn Off/On",
             "edit",
-            lambda row: lf.toggle_specialization(lab, group[row].name),
+            lambda row: lf.toggle_specialization(self.saga, lab, group[row].name),
             lambda _row: True,
         )
         return section(
@@ -494,7 +498,9 @@ class LaboratoryPage(QWidget):
             f"Specialization sources ({len(rows)})",
             p,
             trait_list(rows, p, chooser.choose),
-            buttons=verb_buttons(lf.specialty_ops(lab), chooser, self.run, p),
+            buttons=verb_buttons(
+                lf.specialty_ops(self.saga, lab), chooser, self.run, p
+            ),
         )
 
     def _features(self) -> QWidget:
@@ -516,7 +522,37 @@ class LaboratoryPage(QWidget):
             )
             cards.append(card)
         return self._card_section(
-            f"Features ({len(features)})", cards, lf.feature_ops(lab), "None yet."
+            f"Features ({len(features)})",
+            cards,
+            lf.feature_ops(self.saga, lab),
+            "None yet.",
+        )
+
+    def _magic_items(self) -> QWidget:
+        """What the lab's magic items give it: a card for each effect, with
+        Add, Edit and Delete."""
+        p, lab, saga = self.p, self.lab, self.saga
+        items = ls.item_cards(saga, lab)
+        cards = []
+        for item in items:
+            card = ClickableCard(p, pad=10)
+            card.column.addWidget(
+                text(item.name, p["foreground"], serif(13.5, bold=True))
+            )
+            card.column.addWidget(
+                text(item.gives, p["label"], serif(11.5, italic=True))
+            )
+            if item.problem:
+                card.column.addWidget(text(item.problem, p["text-warning"]))
+            card.clicked = lambda index=item.index, name=item.name: self.inspect(
+                name, "Magic Item", labs.item_info_text(saga, lab, index)
+            )
+            cards.append(card)
+        return self._card_section(
+            f"Magic Items ({len(items)})",
+            cards,
+            item_forms.item_ops(saga, lab),
+            "None yet.",
         )
 
     def _card_section(

@@ -156,7 +156,7 @@ def test_lab_characteristics_come_through_the_collector():
     ]
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
     # manual 1, Superior Construction +1, Deformed -1.
-    assert lab_characteristic_total(lab, by_id, "safety") == (1, 1, -1, 1)
+    assert lab_characteristic_total(lab, by_id, "safety", None) == (1, 1, -1, 1)
 
 
 @pytest.mark.parametrize(

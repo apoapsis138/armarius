@@ -100,7 +100,7 @@ def laboratory_points(saga: Saga, covenant: Covenant) -> int:
     total = 0.0
     for entry in pos.entries_for_kind(saga, covenant, "sanctum"):
         if entry.lab is not None:
-            score = lab_characteristic_total(entry.lab, lab_catalog, "upkeep")[3]
+            score = lab_characteristic_total(entry.lab, lab_catalog, "upkeep", saga)[3]
         else:
             score = entry.upkeep or 0
         total += upkeep_points(score) * USAGE_MULTIPLIERS.get(entry.usage, 1.0)

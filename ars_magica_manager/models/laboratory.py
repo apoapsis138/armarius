@@ -196,6 +196,58 @@ class LabFeature:
         return cls(**known_fields(cls, d))
 
 
+#: The lab Virtues a magic item is installed as: a Magic Item kept in the
+#: lab, or an Enchantment on the lab itself (Covenants, Laboratory Virtues;
+#: DE ch. 8). Each is Free; a Magic Item with VERY_LARGE in its params is
+#: Minor, taking space.
+ITEM_VIRTUES: tuple[str, ...] = ("labvf_magic_item", "labvf_enchantment")
+#: An item Virtue's params: the device it is, and whether it is very large.
+ITEM_DEVICE_PARAM = "device"
+ITEM_SIZE_PARAM = "size"
+VERY_LARGE = "very large"
+
+
+@dataclass
+class LabCharacteristicGrant:
+    """Points a magic item adds to one of LAB_CHARACTERISTICS."""
+
+    characteristic: str
+    points: int
+
+
+@dataclass
+class LabItemBenefit:
+    """What one effect of a magic item gives its laboratory, installed as
+    the lab's Magic Item or Enchantment Virtue `virtue_id` (a
+    VirtueFlawInstance.id). Either it duplicates a lab Virtue or Flaw and
+    grants it (`granted_id`, the instance it added, which takes no space and
+    costs no Build Points), or it buys points by its level: a Specialization
+    point per 10 levels, a Characteristic point per 20. `name` is the
+    device's name when it was saved, for where the points come from."""
+
+    id: str
+    device_id: str
+    effect_id: str
+    virtue_id: str | None = None
+    name: str = ""
+    granted_id: str | None = None
+    specializations: list[LabSpecialtyGrant] = field(default_factory=list)
+    characteristics: list[LabCharacteristicGrant] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> LabItemBenefit:
+        d = dict(data)
+        d["specializations"] = [
+            LabSpecialtyGrant(**known_fields(LabSpecialtyGrant, g))
+            for g in d.get("specializations", [])
+        ]
+        d["characteristics"] = [
+            LabCharacteristicGrant(**known_fields(LabCharacteristicGrant, g))
+            for g in d.get("characteristics", [])
+        ]
+        return cls(**known_fields(cls, d))
+
+
 def _feature_from_old_text(
     text: str, feature_names: Mapping[str, str], *, id: str = ""
 ) -> LabFeature:
@@ -291,6 +343,8 @@ class Laboratory:
     place_level: int = 0
     characteristics: LabCharacteristics = field(default_factory=LabCharacteristics)
     features: list[LabFeature] = field(default_factory=list)
+    #: What its magic items give it (rules.lab_items).
+    item_benefits: list[LabItemBenefit] = field(default_factory=list)
     #: Specialization points from sources entered by hand (see
     #: laboratories.lab_specializations for the totals).
     specialties: list[LabSpecialtyEntry] = field(default_factory=list)
@@ -358,6 +412,9 @@ class Laboratory:
             if isinstance(f, str)  # older saves' free text
             else LabFeature.from_dict(f)
             for i, f in enumerate(d.get("features", []))
+        ]
+        d["item_benefits"] = [
+            LabItemBenefit.from_dict(b) for b in d.get("item_benefits", [])
         ]
         d["specialties"] = [
             _parse_old_specialty(s)

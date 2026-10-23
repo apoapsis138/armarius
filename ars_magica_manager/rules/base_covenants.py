@@ -179,7 +179,7 @@ def allowances(saga: Saga, covenant: Covenant) -> list[Allowance]:
     if base.enchanted_levels:
         levels = sum(
             enchantment.modified_level(device, effect)
-            for device in enchantment.held_by(saga, "covenant", covenant.id)
+            for device in enchantment.covenant_devices(saga, covenant.id)
             for effect in device.effects
         )
         found.append(Allowance("Enchanted items", base.enchanted_levels, levels))

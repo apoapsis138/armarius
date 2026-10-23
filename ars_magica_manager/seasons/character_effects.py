@@ -118,7 +118,7 @@ def _living_conditions(saga: Saga, character: Character) -> int:
         from ..rules.lab_stats import lab_characteristic_total
 
         health = lab_characteristic_total(
-            lab, catalog.load_lab_virtue_flaw_catalog_by_id(), "health"
+            lab, catalog.load_lab_virtue_flaw_catalog_by_id(), "health", saga
         )[3]
         living += round_down(health / LAB_HEALTH_DIVISOR)
     here = sites.character_effects(saga, character, "living_conditions")

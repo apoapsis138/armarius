@@ -25,6 +25,7 @@ from ars_magica_manager import economics as eco
 from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
+from ars_magica_manager.forms import lab_item
 from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import (
     Ability,
@@ -722,6 +723,17 @@ OPENERS: dict[str, Opener] = {
     ),
     "add lab specialization source": Opener(
         "laboratory", lambda ws: ws._add_specialty_entry()
+    ),
+    "add lab magic item points": Opener(
+        "laboratory",
+        lambda ws: ws._run_steps(
+            lab_item.points_form(
+                ws.saga,
+                ws.saga.laboratories[0],
+                None,
+                lab_item.ItemChoice("dev-lab", "eff1", lab_item.ITEM, lab_item.POINTS),
+            )
+        ),
     ),
     "edit lab feature": Opener(
         "laboratory",

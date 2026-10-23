@@ -780,3 +780,59 @@ The sheet shows the first line as written, then two bulleted items, each opening
 <!-- help: guide-formatting-limits -->
 
 There are no headings, tables or links: the sheets give each piece of text its own heading already. Fields that are read one entry a line, such as a case's Evidence or a random table's Rows, take no formatting, since the app reads their lines itself. The box you type in shows the marks, not the formatting; save to see it.
+
+# How to install a magic item in a laboratory
+<!-- help: guide-lab-magic-item -->
+
+An enchanted device kept in a laboratory can improve the laboratory itself (Ars Magica Definitive Edition, Chapter 8: Laboratory, and Covenants, Chapter 9: Magic Items for Laboratories). This guide covers the two kinds of benefit, installing an item in play and while a laboratory is being set up, and when an item is a Feature instead.
+
+### Two kinds of benefit
+<!-- help: guide-lab-magic-item-kinds -->
+
+The item is installed as a **Magic Item** Virtue, which is Free (Minor, and so takes a point of space, when the item is very large), or as an **Enchantment** of the laboratory itself, also Free. One Virtue covers all of an item's effects. Each effect then gives one of two things:
+
+- **A Virtue or Flaw it duplicates.** An effect that does what a laboratory Virtue or Flaw does (a cauldron that always stays at the right heat, say) simply grants it. The laboratory gains it with no space cost, and so no Build Points at creation, and its modifications apply as usual.
+- **Points bought by its level.** Otherwise the effect's final level buys one Specialization point for every 10 levels, or one Characteristic point for every 20: a level 20 lectern's effect could give Texts +2, or Safety +1. These points need no Virtue at all beyond the Free Magic Item.
+
+An effect must be new to the laboratory: one that grants a Virtue the laboratory has already is flagged. A benefit counts only while its device is kept in the laboratory: move the device elsewhere and its points and the Virtue it grants stop counting, and its row says so, until the device comes back.
+
+### Install one in play
+<!-- help: guide-lab-magic-item-play -->
+
+<!-- tui -->
+1. The device must be kept in the laboratory: press `5` for the laboratory's Inventory tab and `a` in [Enchanted Devices](help:section-lab-devices) to add it with its effects, or set an existing device's **Held by** to the laboratory.
+2. Press `4` for the [Attributes tab](help:tab-lab-attributes) and `a` in [Magic Items](help:section-lab-magic-items).
+3. Choose the **Effect**, how the item is **Installed as**, and what it **Gives**, then press Next.
+4. For a Virtue or Flaw, pick it from the catalog (Feature Virtues and Focus Flaws aren't offered: those are Features). For points, choose up to three Specializations and two Characteristics with their points. The form says the effect's level, and refuses more points than the level buys.
+<!-- /tui -->
+<!-- gui -->
+1. The device must be kept in the laboratory: choose **Stores** in the laboratory's rail and add it under [Enchanted Devices](help:section-lab-devices) with its effects, or set an existing device's **Held by** to the laboratory.
+2. Choose **Specializations** in the rail and click **Add** under [Magic Items](help:section-lab-magic-items).
+3. Choose the **Effect**, how the item is **Installed as**, and what it **Gives**, then click Next.
+4. For a Virtue or Flaw, pick it from the catalog (Feature Virtues and Focus Flaws aren't offered: those are Features). For points, choose up to three Specializations and two Characteristics with their points. The form says the effect's level, and refuses more points than the level buys.
+<!-- /gui -->
+
+The Virtues & Flaws list shows a granted Virtue as "from" its item, and the Magic Item Virtue with its item's name. The points join the laboratory's Specializations and Characteristics, each named "(magic item)" where its sources are listed.
+
+### Install one while setting up a laboratory
+<!-- help: guide-lab-magic-item-creation -->
+
+On a new laboratory's **Setting Up** step, **Install a magic item** offers **A new enchanted device**, or a device already kept in the laboratory. A new device is made in three forms: the device (kept in this laboratory), its effect, then what the effect gives, as above. The device and its effect are kept as each is saved, so cancelling later leaves them in the laboratory's Enchanted Devices, ready to install another time. The step lists what each magic item gives.
+
+For a starting laboratory, the covenant's Build Points pay for the device as for any enchanted item (2 for every 5 levels of each effect), on the covenant's Resources step under Enchanted items, and its effects count against the Power Level's highest effect level. A Virtue the item grants costs no Build Points.
+
+### When the item is a Feature
+<!-- help: guide-lab-magic-item-feature -->
+
+An item can instead be made a Feature: a Lesser or Greater Feature, with the Aesthetics and the Specializations a Feature brings. Then it is not installed here: add it under [Features](help:section-lab-features), and its Feature Virtue takes space and costs Build Points as usual. The usual reason to choose a Feature is for what a Feature gives that points bought by level don't, such as Aesthetics or a Focus.
+
+### What the app does for you
+<!-- help: guide-lab-magic-item-app -->
+
+**The app works out:** the effect's final level, how many points it can buy, the space and Build Points each Virtue takes (none for a granted one, a Minor Virtue's for a very large item), the Specializations and Characteristics with the item's points added, and the Build Points of a starting laboratory's devices.
+
+**You type:** the device and its effects, how the item is installed, and what each effect gives.
+
+When the device or one of its effects is deleted or destroyed, what it gave goes with it, and the Magic Item Virtue once no other effect uses it.
+
+**See also:** [Magic Items](help:section-lab-magic-items), [Enchanted Devices](help:section-lab-devices), [Set up a laboratory](help:guide-creation-lab), [How lab planning works](help:guide-lab-planning)

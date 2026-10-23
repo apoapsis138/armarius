@@ -142,9 +142,9 @@ def can_take_over(saga: Saga, magus: Character) -> list[Laboratory]:
     )
 
 
-def refinement(lab_: Laboratory) -> int:
+def refinement(saga: Saga, lab_: Laboratory) -> int:
     return lab_characteristic_total(
-        lab_, catalog.load_lab_virtue_flaw_catalog_by_id(), "refinement"
+        lab_, catalog.load_lab_virtue_flaw_catalog_by_id(), "refinement", saga
     )[3]
 
 
@@ -163,7 +163,7 @@ def work(
         # The first season leaves it Basic; the second finishes it.
         second = has_vf(lab_, BASIC)
         return [], LabWork(None, empty, 0, finished=True, second_season=second)
-    current = refinement(lab_)
+    current = refinement(saga, lab_)
     if plan.activity == MOVE:
         if not plan.title.strip():
             return ["Say where the laboratory is moving to."], None

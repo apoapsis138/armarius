@@ -17,11 +17,13 @@ from .markup import escape, markdown_text, problem, todo
 from .models import (
     FEATURE_VIRTUE_POINTS,
     FOCUS_FLAWS,
+    ITEM_VIRTUES,
     LAB_ACTIVITY_SPECIALIZATIONS,
     LAB_SPECIALIZATIONS,
     ArcaneConnection,
     DiaryEntry,
     LabFeature,
+    LabItemBenefit,
     Laboratory,
     LabSpecialtyEntry,
     LabSpecialtyGrant,
@@ -31,7 +33,7 @@ from .models import (
     Saga,
     VirtueFlawInstance,
 )
-from .rules import effects
+from .rules import effects, enchantment, lab_items
 from .rules.lab_stats import (
     lab_free_virtues,
     servant,
@@ -47,10 +49,12 @@ FOCUS_FLAW_IDS = frozenset(FOCUS_FLAWS)
 
 def vf_points(lab: Laboratory, vf_type: str) -> float:
     """The points the lab's Virtues or Flaws (`vf_type`) come to, each side
-    counted on its own (Minor 1, Major 3, Free 0)."""
+    counted on its own (Minor 1, Major 3, Free 0; one a magic item grants,
+    0)."""
     lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
+    granted = lab_items.granted_ids(lab)
     return sum(
-        abs(definition.cost)
+        abs(lab_items.space_cost(lab, vf, definition, granted))
         for vf in lab.virtues_flaws
         if (definition := lab_catalog.get(vf.vf_id)) is not None
         and definition.type == vf_type
@@ -272,7 +276,10 @@ def _plural(count: int, word: str) -> str:
 def prune_features(lab: Laboratory) -> None:
     """After a Virtue or Flaw is removed: a Feature whose Virtue went goes
     too, and a Focus with no matching Focus Flaw left is cleared with its
-    points. (A Feature that never had a Virtue stays, flagged.)"""
+    points. (A Feature that never had a Virtue stays, flagged.) A magic
+    item effect installed as a Virtue that went goes too
+    (rules.lab_items.prune)."""
+    lab_items.prune(lab)
     ids = {vf.id for vf in lab.virtues_flaws}
     lab.features[:] = [
         f for f in lab.features if f.virtue_id is None or f.virtue_id in ids
@@ -284,6 +291,25 @@ def prune_features(lab: Laboratory) -> None:
         ):
             feature.focus = False
             feature.focus_allocations = []
+
+
+def item_delete_note(lab: Laboratory, instance: VirtueFlawInstance) -> str:
+    """What deleting a lab Virtue/Flaw does to its magic items, for the
+    confirmation ("" when nothing)."""
+    benefit = lab_items.granting(lab, instance)
+    if benefit is not None:
+        return (
+            f" {benefit.name or 'Its magic item'} stays installed, granting "
+            "nothing until it is edited."
+        )
+    installed = sum(1 for b in lab.item_benefits if b.virtue_id == instance.id)
+    if installed:
+        name = _item_name(lab, instance.id) or "the item"
+        return (
+            f" What {name} gives the lab goes too ({installed} "
+            f"{_plural(installed, 'effect')})."
+        )
+    return ""
 
 
 def feature_on(lab: Laboratory, virtue: VirtueFlawInstance) -> LabFeature | None:
@@ -351,6 +377,97 @@ def feature_info_text(lab: Laboratory, index: int | None) -> str:
     return "\n".join(lines)
 
 
+# -- Magic items --
+
+
+def item_name(saga: Saga, benefit: LabItemBenefit) -> str:
+    """ "Rowan Lectern: Steady Page" (plain text)."""
+    effect = lab_items.effect_of(saga, benefit)
+    device = lab_items.device_of(saga, benefit)
+    name = device.name if device else benefit.name or "(device gone)"
+    return f"{name}: {enchantment.effect_name(effect)}" if effect else name
+
+
+def item_gives(lab: Laboratory, benefit: LabItemBenefit) -> str:
+    """What the effect gives, plain text: "Auspicious Shape" or "Texts +2,
+    Safety +1"."""
+    if benefit.granted_id:
+        granted = next(
+            (vf for vf in lab.virtues_flaws if vf.id == benefit.granted_id), None
+        )
+        if granted is None:
+            return "(its Virtue is gone)"
+        return catalog.describe_virtue_flaw(
+            granted, catalog.load_lab_virtue_flaw_catalog_by_id()
+        )
+    parts = [f"{g.specialization} {g.points:+d}" for g in benefit.specializations]
+    parts += [
+        f"{_characteristic_label(g.characteristic)} {g.points:+d}"
+        for g in benefit.characteristics
+    ]
+    return ", ".join(parts) or "(nothing yet)"
+
+
+def items_title(lab: Laboratory) -> str:
+    return f"Magic Items ({len(lab.item_benefits)})"
+
+
+def item_rows(saga: Saga, lab: Laboratory) -> list[tuple[int | None, str]]:
+    """Each magic item effect as (index, "Rowan Lectern: Steady Page  (Texts
+    +2)"), with the first thing wrong in the theme's error colour."""
+    rows: list[tuple[int | None, str]] = []
+    for index, benefit in enumerate(lab.item_benefits):
+        label = (
+            f"{escape(item_name(saga, benefit))}  "
+            f"[dim]({escape(item_gives(lab, benefit))})[/]"
+        )
+        problems = lab_items.problems(saga, lab, benefit)
+        if problems:
+            label += f"  {todo(problems[0])}"
+        rows.append((index, label))
+    return rows
+
+
+def item_info_text(saga: Saga, lab: Laboratory, index: int | None) -> str:
+    """The details panel for a magic item effect: the device and effect,
+    how it is installed, what it gives, the levels it uses, and what's
+    wrong."""
+    if index is None:
+        return "[dim]Select a magic item to see its details.[/]"
+    benefit = lab.item_benefits[index]
+    host = next((vf for vf in lab.virtues_flaws if vf.id == benefit.virtue_id), None)
+    lines = [f"[b]{escape(item_name(saga, benefit))}[/]"]
+    if host is not None:
+        installed = (
+            "Enchantment of the laboratory (Free Virtue)"
+            if host.vf_id == lab_items.ENCHANTMENT
+            else "Magic Item, very large (Minor Virtue)"
+            if lab_items.is_very_large(host)
+            else "Magic Item (Free Virtue)"
+        )
+        lines.append(f"[b]Installed as:[/] {installed}")
+    level = lab_items.level_of(saga, benefit)
+    if level is not None:
+        lines.append(f"[b]Effect level:[/] {level}")
+    if benefit.granted_id:
+        lines.append(
+            f"[b]Grants:[/] {escape(item_gives(lab, benefit))} "
+            "(no space, no Build Points; its effects apply as usual)"
+        )
+    else:
+        lines.append(f"[b]Gives:[/] {escape(item_gives(lab, benefit))}")
+        lines.append(
+            f"[b]Levels used:[/] {lab_items.levels_needed(benefit)}"
+            + (f" of {level}" if level is not None else "")
+            + " (10 a Specialization point, 20 a Characteristic point)"
+        )
+    lines += [
+        todo(f"{p[0].upper()}{p[1:]}.") for p in lab_items.problems(saga, lab, benefit)
+    ]
+    lines += ["", f"[dim]Source: {escape(lab_items.SOURCE)}[/]"]
+    return "\n".join(lines)
+
+
 # -- Specializations --
 
 #: How many Specializations count at once (ArM5 p.115): Activities, Arts,
@@ -360,9 +477,9 @@ MAX_ART_SPECIALIZATIONS = 4
 MAX_TECHNIQUE_SPECIALIZATIONS = 2
 
 
-def counted_specializations(lab: Laboratory) -> set[str]:
+def counted_specializations(saga: Saga, lab: Laboratory) -> set[str]:
     """The Specializations that count: scored above 0 and not turned off."""
-    return {score.name for score in specialization_scores(lab) if score.counts}
+    return {score.name for score in specialization_scores(saga, lab) if score.counts}
 
 
 #: Each cap: its name in messages, the Specializations it covers, its size.
@@ -386,16 +503,16 @@ def _within_caps(names: Iterable[str]) -> bool:
     return _broken_cap(names) is None
 
 
-def toggle_specialization(lab: Laboratory, name: str) -> str | None:
+def toggle_specialization(saga: Saga, lab: Laboratory, name: str) -> str | None:
     """Turn a Specialization off, or back on: None when done, else why not
     (it scores 0 or less, or turning it on would break a cap)."""
-    score = next((s for s in specialization_scores(lab) if s.name == name), None)
+    score = next((s for s in specialization_scores(saga, lab) if s.name == name), None)
     if score is None or score.points <= 0:
         return f"{name} scores 0 or less, so it doesn't count either way."
     if not score.dropped:
         lab.dropped_specializations.append(name)
         return None
-    broken = _broken_cap(counted_specializations(lab) | {name})
+    broken = _broken_cap(counted_specializations(saga, lab) | {name})
     if broken is not None:
         label, cap = broken
         return (
@@ -406,12 +523,14 @@ def toggle_specialization(lab: Laboratory, name: str) -> str | None:
     return None
 
 
-def reconcile_dropped(lab: Laboratory, previously_counted: Collection[str]) -> None:
+def reconcile_dropped(
+    saga: Saga, lab: Laboratory, previously_counted: Collection[str]
+) -> None:
     """After a change that can add points: a Specialization that newly
     counts (not in `previously_counted`) is turned off if it would break a
     cap; ones that already counted stay on. Names with no points from any
     source any more are forgotten."""
-    scores = specialization_scores(lab)
+    scores = specialization_scores(saga, lab)
     counted = {s.name for s in scores if s.counts and s.name in previously_counted}
     for score in scores:
         if not score.counts or score.name in counted:
@@ -429,7 +548,7 @@ def reconcile_dropped(lab: Laboratory, previously_counted: Collection[str]) -> N
 #: The lab sheet's Attributes and Inventory tabs' shared details panel,
 #: with nothing chosen.
 ATTRIBUTES_PANEL_HINT = (
-    "[dim]Select a Specialization, Feature or Room to see its details.[/]"
+    "[dim]Select a Specialization, Feature, Magic Item or Room to see its details.[/]"
 )
 INVENTORY_PANEL_HINT = (
     "[dim]Select Raw Vis, stores, a connection, a device or a book to see its "
@@ -437,20 +556,20 @@ INVENTORY_PANEL_HINT = (
 )
 
 
-def _cap_count(lab: Laboratory, group: Sequence[str], cap: int) -> str:
+def _cap_count(saga: Saga, lab: Laboratory, group: Sequence[str], cap: int) -> str:
     """ "(3 of 4)": how many of `group` count against their cap, in the
     theme's error colour when over it."""
-    count = len(counted_specializations(lab) & set(group))
+    count = len(counted_specializations(saga, lab) & set(group))
     text = f"({count} of {cap})"
     return f"[$text-error]{text}[/]" if count > cap else text
 
 
-def specialization_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
+def specialization_rows(saga: Saga, lab: Laboratory) -> list[tuple[int | None, str]]:
     """The Specializations grid: an "Activity (1 of 2)" and an "Art (3 of
     4)" header (how many count against the cap), each over its rows "Ignem
     +3" (data index: position in LAB_SPECIALIZATIONS). One that's turned off
     is dimmed and struck through; one scoring 0 or less is dimmed."""
-    scores = specialization_scores(lab)
+    scores = specialization_scores(saga, lab)
     width = max((len(s.name) for s in scores), default=0)
     rows: list[tuple[int | None, str]] = []
     for header, group, cap in (
@@ -458,7 +577,7 @@ def specialization_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
         ("Art", ARTS, MAX_ART_SPECIALIZATIONS),
     ):
         in_group = [s for s in scores if s.name in group]
-        rows.append((None, f"{header} {_cap_count(lab, group, cap)}"))
+        rows.append((None, f"{header} {_cap_count(saga, lab, group, cap)}"))
         for score in in_group:
             label = f"{score.name:<{width}}  {score.points:+d}"
             if score.dropped and score.points > 0:
@@ -469,7 +588,7 @@ def specialization_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
     return rows
 
 
-def specialization_info_text(lab: Laboratory, index: int | None) -> str:
+def specialization_info_text(saga: Saga, lab: Laboratory, index: int | None) -> str:
     """The details panel for the Specialization at `index` (into
     LAB_SPECIALIZATIONS): its score and whether it counts, where each point
     comes from, and for a Technique how many Techniques count (at most 2 of
@@ -477,7 +596,7 @@ def specialization_info_text(lab: Laboratory, index: int | None) -> str:
     if index is None:
         return ATTRIBUTES_PANEL_HINT
     name = LAB_SPECIALIZATIONS[index]
-    score = next((s for s in specialization_scores(lab) if s.name == name), None)
+    score = next((s for s in specialization_scores(saga, lab) if s.name == name), None)
     if score is None:
         return ATTRIBUTES_PANEL_HINT
     if score.points <= 0:
@@ -489,7 +608,7 @@ def specialization_info_text(lab: Laboratory, index: int | None) -> str:
     lines = [f"[b]{name} {score.points:+d}[/]: {status}", "", "[b]Sources:[/]"]
     lines += [f"  {points:+d}  {escape(label)}" for label, points in score.sources]
     if name in TECHNIQUES:
-        techniques = _cap_count(lab, TECHNIQUES, MAX_TECHNIQUE_SPECIALIZATIONS)
+        techniques = _cap_count(saga, lab, TECHNIQUES, MAX_TECHNIQUE_SPECIALIZATIONS)
         lines += ["", f"[b]Techniques counting:[/] {techniques}"]
     return "\n".join(lines)
 
@@ -548,12 +667,39 @@ def vf_rows(lab: Laboratory, vf_type: str) -> list[tuple[int | None, str]]:
         (
             index,
             f"{escape(catalog.describe_virtue_flaw(vf, lab_catalog))} "
-            f"({definition.tier})",
+            f"({escape(_tier_note(lab, vf, definition))})",
         )
         for index, vf in enumerate(lab.virtues_flaws)
         if (definition := lab_catalog.get(vf.vf_id)) is not None
         and definition.type == vf_type
     ]
+
+
+def _item_name(lab: Laboratory, virtue_id: str) -> str:
+    """The device a Magic Item or Enchantment Virtue is, by the name its
+    effects were saved with ("" when none is installed as it)."""
+    return next(
+        (b.name for b in lab.item_benefits if b.virtue_id == virtue_id and b.name), ""
+    )
+
+
+def _tier_note(
+    lab: Laboratory, vf: VirtueFlawInstance, definition: LabVirtueFlawDef
+) -> str:
+    """ "Minor"; "Minor, from the Rowan Lectern" for one a magic item grants
+    (taking no space); "Free, the Rowan Lectern" for the item's own Virtue
+    ("Minor, very large, ..." when it takes space)."""
+    benefit = lab_items.granting(lab, vf)
+    if benefit is not None:
+        return f"{definition.tier}, from {benefit.name or 'a magic item'}"
+    if vf.vf_id in ITEM_VIRTUES:
+        parts = [lab_items.tier(lab, vf, definition)]
+        if lab_items.is_very_large(vf):
+            parts.append("very large")
+        if name := _item_name(lab, vf.id):
+            parts.append(name)
+        return ", ".join(parts)
+    return definition.tier
 
 
 def vf_info_text(lab: Laboratory, index: int | None, saga: Saga | None = None) -> str:
@@ -567,11 +713,27 @@ def vf_info_text(lab: Laboratory, index: int | None, saga: Saga | None = None) -
     definition = lab_catalog.get(instance.vf_id)
     if definition is None:
         return escape(f"{instance.vf_id} (not in catalog)")
+    tier = lab_items.tier(lab, instance, definition)
+    cost = lab_items.space_cost(lab, instance, definition)
     lines = [
         f"[b]Name:[/] {escape(catalog.describe_virtue_flaw(instance, lab_catalog))}",
         f"[b]Category:[/] {definition.category}",
-        f"[b]Tier:[/] {definition.tier} {definition.type} ({_points(definition.cost)})",
+        f"[b]Tier:[/] {tier} {definition.type} ({_points(cost)})",
     ]
+    benefit = lab_items.granting(lab, instance)
+    if benefit is not None:
+        lines.append(
+            f"[b]Granted by:[/] {escape(benefit.name or 'a magic item')} "
+            f"(as {definition.tier}: no space, no Build Points)"
+        )
+    if instance.vf_id in ITEM_VIRTUES:
+        name = _item_name(lab, instance.id)
+        size = (
+            ", very large: a Minor Virtue" if lab_items.is_very_large(instance) else ""
+        )
+        lines.append(
+            f"[b]Item:[/] {escape(name) if name else '(none installed)'}{size}"
+        )
     if "servant" in definition.parameters:
         grog = servant(saga, instance) if saga is not None else None
         lines.append(

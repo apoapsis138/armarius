@@ -33,7 +33,7 @@ from .models import (
     VirtueFlawInstance,
 )
 from .rules import familiar_seasons as fs
-from .rules import library
+from .rules import lab_items, library
 from .rules.covenfolk import AUTO_KINDS
 from .rules.enchantment import held_by
 
@@ -79,6 +79,8 @@ def _rehome_devices(
     held = held_by(saga, kind, holder_id)
     if saga.covenant(covenant_id) is None:
         saga.enchanted_devices = [d for d in saga.enchanted_devices if d not in held]
+        for device in held:
+            lab_items.forget_device(saga, device.id)
         return
     for device in held:
         device.holder_kind = "covenant"

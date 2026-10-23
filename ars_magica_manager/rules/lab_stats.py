@@ -19,7 +19,7 @@ from ..models import (
     Saga,
     VirtueFlawInstance,
 )
-from . import effects
+from . import effects, lab_items
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Creating a "
@@ -37,9 +37,12 @@ def lab_aura_total(lab: Laboratory, covenant_aura: int) -> int:
 def lab_net_vf_points(
     lab: Laboratory, catalog_by_id: Mapping[str, LabVirtueFlawDef]
 ) -> float:
-    """Current Virtue points minus Flaw points attached to the lab."""
+    """Current Virtue points minus Flaw points attached to the lab: those a
+    magic item grants take no space, a very large Magic Item a Minor
+    Virtue's (rules.lab_items)."""
+    granted = lab_items.granted_ids(lab)
     return sum(
-        catalog_by_id[vf.vf_id].cost
+        lab_items.space_cost(lab, vf, catalog_by_id[vf.vf_id], granted)
         for vf in lab.virtues_flaws
         if vf.vf_id in catalog_by_id
     )
@@ -72,13 +75,17 @@ LAB_VIRTUE_BUILD_POINTS: dict[str, int] = {"Minor": 10, "Major": 20}
 
 def lab_build_points(lab: Laboratory) -> int:
     """The laboratory's Build Points, worked out (never typed): Size x 20
-    plus 10 for each Minor Virtue and 20 for each Major one."""
+    plus 10 for each Minor Virtue and 20 for each Major one. A Virtue a
+    magic item grants costs nothing (the item is priced as an enchanted
+    item); a very large Magic Item is a Minor Virtue."""
     lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
+    granted = lab_items.granted_ids(lab)
     points = LAB_SIZE_BUILD_POINTS * lab.characteristics.size
     for vf in lab.virtues_flaws:
         entry = lab_catalog.get(vf.vf_id)
         if entry is not None and entry.type == "Virtue":
-            points += LAB_VIRTUE_BUILD_POINTS.get(entry.tier, 0)
+            tier = lab_items.tier(lab, vf, entry, granted)
+            points += LAB_VIRTUE_BUILD_POINTS.get(tier, 0)
     return points
 
 
@@ -94,14 +101,16 @@ def lab_characteristic_total(
     lab: Laboratory,
     catalog_by_id: Mapping[str, LabVirtueFlawDef],
     characteristic: str,
-    saga: Saga | None = None,
+    saga: Saga | None,
 ) -> tuple[int, int, int, int]:
     """(manual, virtue_sum, flaw_sum, total) for one of LAB_CHARACTERISTICS.
 
     manual + virtue_sum + flaw_sum = total, per the user's explicit
     formula: the manual component is a free player adjustment on top of
-    whatever the lab's attached Virtues/Flaws contribute. Given the `saga`,
-    a Servant who is one of its grogs counts with the grog's Intelligence.
+    whatever the lab's attached Virtues/Flaws contribute. A Servant who is
+    one of the `saga`'s grogs counts with the grog's Intelligence, and a
+    magic item counts only while its device is kept in the lab (with no
+    saga, every one counts).
     """
     manual = getattr(lab.characteristics, characteristic)
     found = characteristic_effects(lab, catalog_by_id, characteristic, saga)
@@ -114,12 +123,13 @@ def characteristic_effects(
     lab: Laboratory,
     catalog_by_id: Mapping[str, LabVirtueFlawDef],
     characteristic: str,
-    saga: Saga | None = None,
+    saga: Saga | None,
 ) -> list[effects.Effect]:
-    """What the lab's Virtues and Flaws do to one Characteristic, one
-    effect each (lab_characteristic_total adds them up)."""
+    """What the lab's Virtues and Flaws, and the points its magic items
+    buy, do to one Characteristic, one effect each
+    (lab_characteristic_total adds them up)."""
     return effects.collect(
-        [laboratory_source(lab, catalog_by_id, saga)],
+        [laboratory_source(lab, catalog_by_id, saga), lab_items.item_source(saga, lab)],
         "lab_characteristic",
         target=characteristic,
     )
@@ -132,11 +142,17 @@ def laboratory_source(
 ) -> effects.EffectSource:
     """The lab's Virtues and Flaws as a source for the shared effect
     lookup; given the `saga`, a Servant who is one of its grogs reads the
-    grog's Intelligence (vf_params)."""
+    grog's Intelligence (vf_params), and a Virtue a magic item grants
+    counts only while the item's device is kept in the lab."""
     if catalog_by_id is None:
         catalog_by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
-    params = None if saga is None else lambda vf: vf_params(saga, vf)
-    return effects.EffectSource("laboratory", lab.virtues_flaws, catalog_by_id, params)
+    if saga is None:
+        return effects.EffectSource("laboratory", lab.virtues_flaws, catalog_by_id)
+    away = lab_items.away_grants(saga, lab)
+    instances = [vf for vf in lab.virtues_flaws if vf.id not in away]
+    return effects.EffectSource(
+        "laboratory", instances, catalog_by_id, lambda vf: vf_params(saga, vf)
+    )
 
 
 def servant(saga: Saga, instance: VirtueFlawInstance) -> Character | None:
@@ -176,9 +192,9 @@ def specialty_source_label(entry: LabSpecialtyEntry) -> str:
     return entry.source or "(no source given)"
 
 
-def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
+def specialization_scores(saga: Saga, lab: Laboratory) -> list[SpecializationScore]:
     """Every Specialization the lab has points in (from its Features, their
-    Focus and the hand-entered sources, even if they sum to 0 or less), in
+    Focus, its Virtues, its magic items and the hand-entered sources, even if they sum to 0 or less), in
     LAB_SPECIALIZATIONS order."""
     found: list[tuple[str, str, int]] = []  # (Specialization, source, points)
     for feature in lab.features:
@@ -190,10 +206,12 @@ def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
             (g.specialization, f"{feature.name} (Focus)", g.points)
             for g in feature.focus_allocations
         ]
-    source = laboratory_source(lab)
+    source = laboratory_source(lab, saga=saga)
     found += [
         (effect.target or "", effect.entry.name, int(effect.amount or 0))
-        for effect in effects.collect([source], "lab_specialization")
+        for effect in effects.collect(
+            [source, lab_items.item_source(saga, lab)], "lab_specialization"
+        )
     ]
     found += [
         (entry.specialization, specialty_source_label(entry), entry.points)

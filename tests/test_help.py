@@ -384,6 +384,7 @@ GUIDES = [
     "guide-hedge-magic",
     "guide-tribunal",
     "guide-formatting",
+    "guide-lab-magic-item",
 ]
 
 

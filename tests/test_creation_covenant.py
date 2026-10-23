@@ -7,6 +7,8 @@ from ars_magica_manager.models import (
     Book,
     Character,
     Covenant,
+    EnchantedDevice,
+    InstilledEffect,
     LabCharacteristics,
     Laboratory,
     Possession,
@@ -100,6 +102,41 @@ def test_build_points_price_the_library_vis_items_and_labs():
     saga.laboratories = saga.laboratories[:1]  # one lab for two magi
     costs = {c.label: c.points for c in cov.costs(saga, covenant)}
     assert "Magi without a laboratory (1)" not in costs  # B's lab isn't entered
+
+
+def test_a_device_in_a_starting_lab_costs_build_points():
+    """An enchanted item costs 2 Build Points per five levels whether the
+    covenant holds it or one of its starting laboratories does; a lab not
+    starting counts only for the covenant's value in play."""
+    saga = _saga()
+    covenant = saga.covenants[0]
+    saga.laboratories = [
+        Laboratory(id="l0", covenant_id="cov1", name="L0", starting=True),
+        Laboratory(id="l1", covenant_id="cov1", name="L1"),
+    ]
+    saga.enchanted_devices = [
+        EnchantedDevice(
+            id=f"d{i}",
+            name=f"Lectern {i}",
+            holder_kind=kind,
+            holder_id=holder,
+            effects=[InstilledEffect(id=f"e{i}", name="Read", level=level)],
+        )
+        for i, (kind, holder, level) in enumerate(
+            [
+                ("covenant", "cov1", 10),
+                ("laboratory", "l0", 20),
+                ("laboratory", "l1", 50),
+            ]
+        )
+    ]
+    costs = {c.label: c.points for c in cov.costs(saga, covenant)}
+    assert costs["Enchanted: Lectern 0, Read (level 10)"] == 4
+    assert costs["Enchanted: Lectern 1, Read (level 20)"] == 8
+    assert "Enchanted: Lectern 2, Read (level 50)" not in costs
+    assert cov.over_level(saga, covenant, 15) == ["Lectern 1: Read (20)"]
+    labels = [c.label for c in cov.costs(saga, covenant, every_lab=True)]
+    assert "Enchanted: Lectern 2, Read (level 50)" in labels
 
 
 def test_only_magi_said_to_go_without_a_lab_refund():

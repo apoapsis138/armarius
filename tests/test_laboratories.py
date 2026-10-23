@@ -13,9 +13,13 @@ from ars_magica_manager.models import (
     LabSpecialtyEntry,
     LabSpecialtyGrant,
     NamedDescription,
+    Saga,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import lab_stats
+
+#: A saga with nothing in it, for the lab helpers that look in one.
+_SAGA = Saga(id="s", name="S")
 
 
 def _lab(*vf_ids: str, **characteristics: int) -> Laboratory:
@@ -150,7 +154,7 @@ def test_scores_sum_every_source_and_keep_where_they_came_from():
         LabSpecialtyEntry("Terram", 2, "Old notes"),
         LabSpecialtyEntry("Spells", 1, ""),
     ]
-    scores = {s.name: s for s in lab_stats.specialization_scores(lab)}
+    scores = {s.name: s for s in lab_stats.specialization_scores(_SAGA, lab)}
     assert scores["Terram"].points == 3
     assert scores["Terram"].sources == (("Subterranean", 1), ("Old notes", 2))
     assert scores["Spells"].sources == (("(no source given)", 1),)
@@ -160,28 +164,28 @@ def test_scores_sum_every_source_and_keep_where_they_came_from():
 
 def test_grid_rows_group_and_dim_what_does_not_count():
     lab = _with(("Items", 1), ("Ignem", 2), ("Perdo", -1), dropped=("Ignem",))
-    assert lab_text.specialization_rows(lab) == [
+    assert lab_text.specialization_rows(_SAGA, lab) == [
         (None, "Activity (1 of 2)"),
         (LAB_SPECIALIZATIONS.index("Items"), "Items  +1"),
         (None, "Art (0 of 4)"),
         (LAB_SPECIALIZATIONS.index("Perdo"), "[dim]Perdo  -1[/]"),
         (LAB_SPECIALIZATIONS.index("Ignem"), "[dim strike]Ignem  +2[/]"),
     ]
-    assert lab_text.counted_specializations(lab) == {"Items"}
+    assert lab_text.counted_specializations(_SAGA, lab) == {"Items"}
 
 
 def test_toggle_refuses_a_zero_score_and_turning_on_over_a_cap():
     lab = _with(("Creo", 1), ("Rego", 1), ("Muto", 1), ("Vim", 0), dropped=("Muto",))
-    assert lab_text.toggle_specialization(lab, "Vim") == (
+    assert lab_text.toggle_specialization(_SAGA, lab, "Vim") == (
         "Vim scores 0 or less, so it doesn't count either way."
     )
-    assert lab_text.toggle_specialization(lab, "Muto") == (
+    assert lab_text.toggle_specialization(_SAGA, lab, "Muto") == (
         "Can't turn Muto on: 2 Technique Specializations already count, "
         "the most a laboratory can have. Turn one off first."
     )
     assert lab.dropped_specializations == ["Muto"]
-    assert lab_text.toggle_specialization(lab, "Rego") is None
-    assert lab_text.toggle_specialization(lab, "Muto") is None
+    assert lab_text.toggle_specialization(_SAGA, lab, "Rego") is None
+    assert lab_text.toggle_specialization(_SAGA, lab, "Muto") is None
     assert lab.dropped_specializations == ["Rego"]
 
 
@@ -191,19 +195,23 @@ def test_caps_allow_four_arts_and_two_activities():
         ("Creo", 1), ("Ignem", 1), ("Aquam", 1), ("Vim", 1), ("Corpus", 1),
         dropped=("Texts", "Corpus"),
     )  # fmt: skip
-    headers = [label for i, label in lab_text.specialization_rows(lab) if i is None]
+    headers = [
+        label for i, label in lab_text.specialization_rows(_SAGA, lab) if i is None
+    ]
     assert headers == ["Activity (2 of 2)", "Art (4 of 4)"]
-    assert lab_text.toggle_specialization(lab, "Texts") is not None
-    assert lab_text.toggle_specialization(lab, "Corpus") is not None
+    assert lab_text.toggle_specialization(_SAGA, lab, "Texts") is not None
+    assert lab_text.toggle_specialization(_SAGA, lab, "Corpus") is not None
     # Over a cap (e.g. an old save) shows in the theme's error colour.
     lab.dropped_specializations = []
-    headers = [label for i, label in lab_text.specialization_rows(lab) if i is None]
+    headers = [
+        label for i, label in lab_text.specialization_rows(_SAGA, lab) if i is None
+    ]
     assert headers == [
         "Activity [$text-error](3 of 2)[/]",
         "Art [$text-error](5 of 4)[/]",
     ]
     # An empty lab still shows both headers.
-    assert lab_text.specialization_rows(_lab()) == [
+    assert lab_text.specialization_rows(_SAGA, _lab()) == [
         (None, "Activity (0 of 2)"),
         (None, "Art (0 of 4)"),
     ]
@@ -211,27 +219,29 @@ def test_caps_allow_four_arts_and_two_activities():
 
 def test_reconcile_turns_off_newcomers_over_a_cap_and_forgets_stale_names():
     lab = _with(("Spells", 1), ("Items", 1), dropped=("Longevity Rituals",))
-    before = lab_text.counted_specializations(lab)
+    before = lab_text.counted_specializations(_SAGA, lab)
     lab.specialties.append(LabSpecialtyEntry("Texts", 1))
-    lab_text.reconcile_dropped(lab, before)
+    lab_text.reconcile_dropped(_SAGA, lab, before)
     # Texts is new and there's no room; Longevity Rituals has no points now.
     assert lab.dropped_specializations == ["Texts"]
     # Room for a newcomer: it stays on.
     lab.specialties.append(LabSpecialtyEntry("Creo", 2))
-    lab_text.reconcile_dropped(lab, before)
-    assert "Creo" in lab_text.counted_specializations(lab)
+    lab_text.reconcile_dropped(_SAGA, lab, before)
+    assert "Creo" in lab_text.counted_specializations(_SAGA, lab)
     # One that already counted stays on even if a newcomer comes first.
     lab = _with(("Items", 1), ("Spells", 1))
     before = {"Spells", "Teaching"}
     lab.specialties.insert(0, LabSpecialtyEntry("Teaching", 1))
-    lab_text.reconcile_dropped(lab, before)
+    lab_text.reconcile_dropped(_SAGA, lab, before)
     assert lab.dropped_specializations == ["Items"]
 
 
 def test_specialization_info_text_lists_sources_and_status():
     lab = _with(("Terram", 1), ("Terram", 1), dropped=("Terram",))
     text = strip_markup(
-        lab_text.specialization_info_text(lab, LAB_SPECIALIZATIONS.index("Terram"))
+        lab_text.specialization_info_text(
+            _SAGA, lab, LAB_SPECIALIZATIONS.index("Terram")
+        )
     )
     assert text.splitlines() == [
         "Terram +2: turned off (Space turns it back on)",
@@ -241,12 +251,13 @@ def test_specialization_info_text_lists_sources_and_status():
         "  +1  Notes",
     ]
     assert (
-        lab_text.specialization_info_text(lab, None) == lab_text.ATTRIBUTES_PANEL_HINT
+        lab_text.specialization_info_text(_SAGA, lab, None)
+        == lab_text.ATTRIBUTES_PANEL_HINT
     )
     # A Technique's panel says how many Techniques count.
     lab = _with(("Creo", 1))
     text = strip_markup(
-        lab_text.specialization_info_text(lab, LAB_SPECIALIZATIONS.index("Creo"))
+        lab_text.specialization_info_text(_SAGA, lab, LAB_SPECIALIZATIONS.index("Creo"))
     )
     assert text.splitlines()[-1] == "Techniques counting: (1 of 2)"
 
@@ -364,7 +375,9 @@ def test_feature_points_and_focus_feed_the_specializations():
         focus_allocations=[LabSpecialtyGrant("Ignem", 3)],
     )
     lab.specialties = [LabSpecialtyEntry("Ignem", -1, "Hearth")]
-    ignem = next(s for s in lab_stats.specialization_scores(lab) if s.name == "Ignem")
+    ignem = next(
+        s for s in lab_stats.specialization_scores(_SAGA, lab) if s.name == "Ignem"
+    )
     assert ignem.points == 4
     assert ignem.sources == (
         ("Cauldron (Feature)", 2),

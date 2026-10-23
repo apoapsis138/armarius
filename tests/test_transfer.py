@@ -19,8 +19,11 @@ from ars_magica_manager.models import (
     EnchantedDevice,
     Familiar,
     Inhabitant,
+    InstilledEffect,
     KnownSpell,
+    LabItemBenefit,
     Laboratory,
+    LabSpecialtyGrant,
     LabTextAccess,
     Possession,
     Saga,
@@ -519,3 +522,41 @@ async def test_the_terminal_exports_the_saga_from_more():
         target = storage.exports_dir() / "source_saga.amm.json"
         assert await wait_until(pilot, lambda: target.is_file())
         assert transfer.read(target)["kind"] == transfer.SAGA
+
+
+def test_a_laboratory_s_magic_items_follow_its_device_to_its_new_id():
+    source = _source()
+    lab = source.laboratory("tower")
+    source.enchanted_devices.append(
+        EnchantedDevice(
+            "lectern",
+            "Lectern",
+            holder_kind="laboratory",
+            holder_id="tower",
+            effects=[InstilledEffect(id="e1", name="Steady", level=20)],
+        )
+    )
+    lab.virtues_flaws.append(
+        VirtueFlawInstance("labvf_magic_item", {"device": "lectern"}, id="host")
+    )
+    lab.item_benefits = [
+        LabItemBenefit(
+            "b1",
+            "lectern",
+            "e1",
+            virtue_id="host",
+            name="Lectern",
+            specializations=[LabSpecialtyGrant("Texts", 2)],
+        )
+    ]
+    data = _roundtrip(source, lab)
+    target = _target()
+    # A device here already has that id: the imported one gets another.
+    target.enchanted_devices.append(EnchantedDevice("lectern", "Old Lectern"))
+    transfer.apply(target, transfer.plan_import(target, data))
+    [imported] = [d for d in target.enchanted_devices if d.name == "Lectern"]
+    assert imported.id != "lectern"
+    [new_lab] = target.laboratories
+    assert new_lab.item_benefits[0].device_id == imported.id
+    host = next(vf for vf in new_lab.virtues_flaws if vf.vf_id == "labvf_magic_item")
+    assert host.params["device"] == imported.id

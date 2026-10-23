@@ -115,7 +115,7 @@ def base_lab_total_text(saga: Saga, lab: Laboratory, magus: Character | None) ->
             if line.amount is not None and "Specialization" not in line.label
         ]
     )
-    counted = [s for s in specialization_scores(lab) if s.counts]
+    counted = [s for s in specialization_scores(saga, lab) if s.counts]
     art_specs = [s for s in counted if s.name in (*TECHNIQUES, *FORMS)]
     if art_specs:
         lines += ["", "[b]Art Specializations[/] [dim](in totals using that Art)[/]"]

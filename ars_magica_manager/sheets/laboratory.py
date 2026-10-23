@@ -19,7 +19,7 @@ from ..arts import FORMS, TECHNIQUES
 from ..markup import escape
 from ..models import LAB_CHARACTERISTICS, Character, Laboratory, Saga
 from ..references import Fact
-from ..rules import effects, lab_stats, realms, sites
+from ..rules import effects, lab_items, lab_stats, realms, sites
 from ..rules import lab as lab_rules
 from ..rules.realms import covenant_effective_aura
 
@@ -228,22 +228,24 @@ class Specialization:
     kind: str  # "Activity" or "Art"
 
 
-def specializations(lab: Laboratory) -> list[Specialization]:
+def specializations(saga: Saga, lab: Laboratory) -> list[Specialization]:
     """Every Specialization the lab has points in, Activities first."""
     arts = (*TECHNIQUES, *FORMS)
     rows = [
         Specialization(
             s.name, s.points, s.counts, "Art" if s.name in arts else "Activity"
         )
-        for s in lab_stats.specialization_scores(lab)
+        for s in lab_stats.specialization_scores(saga, lab)
         if s.points
     ]
     return sorted(rows, key=lambda s: (s.kind != "Activity", -s.points))
 
 
-def specialization_text(lab: Laboratory, name: str) -> str:
+def specialization_text(saga: Saga, lab: Laboratory, name: str) -> str:
     """Where a Specialization's points come from (app markup)."""
-    score = next(s for s in lab_stats.specialization_scores(lab) if s.name == name)
+    score = next(
+        s for s in lab_stats.specialization_scores(saga, lab) if s.name == name
+    )
     lines = [
         f"[$label]{escape(source)}[/] {points:+d}" for source, points in score.sources
     ]
@@ -274,6 +276,32 @@ def feature_cards(lab: Laboratory) -> list[FeatureCard]:
         cards.append(
             FeatureCard(
                 index, feature.name, ", ".join(details), problems[0] if problems else ""
+            )
+        )
+    return cards
+
+
+@dataclass(frozen=True)
+class ItemCard:
+    """One magic item effect, as the desktop's card shows it."""
+
+    index: int
+    name: str  # "Rowan Lectern: Steady Page"
+    gives: str  # "Texts +2" or the Virtue it grants
+    problem: str  # the first thing wrong, or ""
+
+
+def item_cards(saga: Saga, lab: Laboratory) -> list[ItemCard]:
+    cards = []
+    for index, benefit in enumerate(lab.item_benefits):
+        problems = lab_items.problems(saga, lab, benefit)
+        gives = labs.item_gives(lab, benefit)
+        cards.append(
+            ItemCard(
+                index,
+                labs.item_name(saga, benefit),
+                f"Grants {gives}" if benefit.granted_id else gives,
+                problems[0] if problems else "",
             )
         )
     return cards

@@ -51,7 +51,7 @@ from ..models import (
     ShapeMaterialDef,
     new_instance_id,
 )
-from ..rules import enchantment
+from ..rules import enchantment, lab_items
 from . import experimental_effects
 
 #: The Maker select's value for a maker who isn't one of the saga's
@@ -964,8 +964,10 @@ def remove_target(
     effect it triggered."""
     if effect is None:
         saga.enchanted_devices.remove(device)
+        lab_items.forget_device(saga, device.id)
         return
     device.effects.remove(effect)
+    lab_items.forget_device(saga, device.id, effect.id)
     for other in device.effects:
         if other.linked_to == effect.id:
             other.linked_to = ""

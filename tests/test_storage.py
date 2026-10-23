@@ -39,10 +39,13 @@ from ars_magica_manager.models import (
     GrogYear,
     HermeticBackground,
     InstilledEffect,
+    LabCharacteristicGrant,
     LabCharacteristics,
+    LabItemBenefit,
     Laboratory,
     LabProject,
     LabSpecialtyEntry,
+    LabSpecialtyGrant,
     LabTextAccess,
     LabVirtueFlawDef,
     Link,
@@ -385,6 +388,15 @@ def _saga_with_every_record() -> Saga:
     magus.grog_year = GrogYear()
     magus.animal = AnimalForm("hoofed", "Horse", "Horse", lifespan=30)
     saga.laboratories[0].arcane_connections.append(ArcaneConnection("ac", "a tree"))
+    saga.laboratories[0].item_benefits.append(
+        LabItemBenefit(
+            "ib",
+            "dev-lab",
+            "eff1",
+            specializations=[LabSpecialtyGrant("Ignem", 1)],
+            characteristics=[LabCharacteristicGrant("safety", 1)],
+        )
+    )
     saga.covenants[0].diary.append(CovenantDiaryEntry(1220))
     rhine = saga.tribunals[0]
     rhine.cases.append(Case("Interference"))

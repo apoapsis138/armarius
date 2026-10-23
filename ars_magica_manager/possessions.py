@@ -78,6 +78,8 @@ class PossessionEntry:
     lab: Laboratory | None = None
     lab_owner: str = ""
     lab_catalog: Mapping[str, LabVirtueFlawDef] | None = None
+    #: The saga a `lab` entry's laboratory is in (for its magic items).
+    lab_saga: Saga | None = None
     #: A Raw Vis Store: where it is kept, by name (vis.location_label).
     place: str = ""
 
@@ -110,7 +112,7 @@ class PossessionEntry:
     def quality(self) -> int | None:
         if self.lab is not None:
             _, _, _, total = lab_characteristic_total(
-                self.lab, self.lab_catalog or {}, "general_quality"
+                self.lab, self.lab_catalog or {}, "general_quality", self.lab_saga
             )
             return total
         return self._own("quality", None)
@@ -119,7 +121,7 @@ class PossessionEntry:
     def upkeep(self) -> int | None:
         if self.lab is not None:
             _, _, _, total = lab_characteristic_total(
-                self.lab, self.lab_catalog or {}, "upkeep"
+                self.lab, self.lab_catalog or {}, "upkeep", self.lab_saga
             )
             return total
         return self._own("upkeep", None)
@@ -232,7 +234,12 @@ def entries_for_kind(
             owner = next((c.name for c in saga.characters if c.id == lab.owner_id), "")
             entries.append(
                 PossessionEntry(
-                    kind, record, lab, lab_owner=owner, lab_catalog=lab_catalog
+                    kind,
+                    record,
+                    lab,
+                    lab_owner=owner,
+                    lab_catalog=lab_catalog,
+                    lab_saga=saga,
                 )
             )
     for record in covenant.possessions:

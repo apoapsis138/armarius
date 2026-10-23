@@ -158,14 +158,19 @@ def _sample_lab(**overrides) -> Laboratory:
 def test_lab_characteristic_total_sums_manual_virtue_and_flaw():
     lab = _sample_lab()
     manual, virtue_sum, flaw_sum, total = lab_characteristic_total(
-        lab, _LAB_VF_CATALOG, "safety"
+        lab, _LAB_VF_CATALOG, "safety", None
     )
     assert (manual, virtue_sum, flaw_sum, total) == (-1, 1, -1, -1)
 
 
 def test_lab_characteristic_total_for_a_characteristic_with_no_modifiers():
     lab = _sample_lab()
-    assert lab_characteristic_total(lab, _LAB_VF_CATALOG, "warping") == (0, 0, 0, 0)
+    assert lab_characteristic_total(lab, _LAB_VF_CATALOG, "warping", None) == (
+        0,
+        0,
+        0,
+        0,
+    )
 
 
 def test_lab_net_vf_points_sums_catalog_costs():

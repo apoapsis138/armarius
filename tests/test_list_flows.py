@@ -8,7 +8,7 @@ from typing import Any
 
 import pytest
 from support import build_all_tabs, wait_until
-from textual.widgets import Input, TabPane, Tree
+from textual.widgets import Input, Select, TabPane, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager.models import (
@@ -21,16 +21,21 @@ from ars_magica_manager.models import (
     CreatureAttack,
     CreaturePower,
     DiaryEntry,
+    EnchantedDevice,
     Familiar,
     IncomeSource,
     Inhabitant,
+    InstilledEffect,
+    LabItemBenefit,
     Laboratory,
+    LabSpecialtyGrant,
     NamedDescription,
     Possession,
     Saga,
     SagaSource,
     ScoredTrait,
     TraditionEffect,
+    VirtueFlawInstance,
 )
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
@@ -617,3 +622,72 @@ async def test_saga_content_delete_uses_the_chosen_row_after_asking(name):
         await _press(pilot, app, "d", ConfirmScreen)
         await pilot.press("y")
         assert await wait_until(pilot, lambda: _saved(case) == left)
+
+
+# -- A laboratory's Magic Items --
+
+
+async def test_lab_magic_items_edit_and_delete_act_on_the_chosen_row():
+    """e opens the chosen effect's first step, its effect filled in; d asks
+    first, then removes only the chosen effect's benefit, keeping the
+    device and the Magic Item Virtue the other still uses."""
+    saga = _saga()
+    lab = saga.laboratories[0]
+    saga.enchanted_devices = [
+        EnchantedDevice(
+            id="wand",
+            name="Wand",
+            holder_kind="laboratory",
+            holder_id="lab1",
+            effects=[
+                InstilledEffect(id="e1", name="Steady", level=20),
+                InstilledEffect(id="e2", name="Spark", level=10),
+            ],
+        )
+    ]
+    lab.virtues_flaws = [
+        VirtueFlawInstance("labvf_magic_item", {"device": "wand"}, id="host")
+    ]
+    lab.item_benefits = [
+        LabItemBenefit(
+            "b1",
+            "wand",
+            "e1",
+            virtue_id="host",
+            name="Wand",
+            specializations=[LabSpecialtyGrant("Texts", 1)],
+        ),
+        LabItemBenefit(
+            "b2",
+            "wand",
+            "e2",
+            virtue_id="host",
+            name="Wand",
+            specializations=[LabSpecialtyGrant("Ignem", 1)],
+        ),
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("laboratory", "lab1"),
+        "section-lab-magic-items",
+        "lab-magic-items-list",
+        lambda s: s.laboratories[0].item_benefits,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-effect", Select).value == "wand/e2"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app).startswith("Remove what Wand gives")
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+        saved = storage.load_saga("test_saga")
+        assert [b.id for b in saved.laboratories[0].item_benefits] == ["b1"]
+        assert [vf.id for vf in saved.laboratories[0].virtues_flaws] == ["host"]
+        assert [e.id for e in saved.enchanted_devices[0].effects] == ["e1", "e2"]

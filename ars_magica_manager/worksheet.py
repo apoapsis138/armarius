@@ -33,6 +33,7 @@ from .forms import character as cf
 from .forms import covenant as covf
 from .forms import device as device_forms
 from .forms import inhabitant as inhf
+from .forms import lab_item as item_forms
 from .forms import laboratory as labf
 from .forms import library as library_forms
 from .forms import possession as posf
@@ -1712,6 +1713,18 @@ def _setup_budget(saga: Saga, record: Record) -> str:
     ]
     if lab.starting:
         rows.append(("Build Points", cov.lab_points(lab)))
+    if lab.item_benefits:
+        rows.append(
+            (
+                "Magic items",
+                "; ".join(
+                    escape(
+                        f"{lab_rules.item_name(saga, b)} ({lab_rules.item_gives(lab, b)})"
+                    )
+                    for b in lab.item_benefits
+                ),
+            )
+        )
     return aligned(rows)
 
 
@@ -1731,6 +1744,7 @@ def _setup_actions(saga: Saga, record: Record) -> list[Action]:
         Action("Edit identity (owner)", lambda: labf.identity_form(saga, lab)),
         Action("Edit Characteristics", lambda: labf.characteristics_form(lab)),
         Action("Starting lab: yes/no", lambda: toggle_starting(lab)),
+        Action("Install a magic item", lambda: item_forms.install(saga, lab)),
     ]
 
 

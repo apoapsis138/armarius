@@ -492,7 +492,7 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Build Points (28)
+    ▼ Build Points (32)
 
                             Initial  Current
       Art Summae                  -        0
@@ -503,11 +503,11 @@
       Pictorial works             -        0
       Vis sources                 -        0
       Vis stocks                  -        0
-      Enchanted items             -        8
+      Enchanted items             -       12
       Laboratories                -       20
       Specialists                 -        0
       Money                       -        0
-      Total                       -       28
+      Total                       -       32
 
       Power Level: (not set)
       Storyguide's Build Points: (not set)
@@ -518,9 +518,9 @@
 
       Enchanted items
         Potions, Heal (level 20): 8
+        Wand, Pilum (level 10): 4
       Laboratories
         Tower: 20
-
 
 
 

@@ -57,6 +57,8 @@ BOOK_SECTIONS: frozenset[str] = frozenset(
 #: The lab's Virtues and Flaws sections: either refreshes both lists and
 #: their shared details panel.
 LAB_VF_SECTIONS = ("section-lab-vf-virtues", "section-lab-vf-flaws")
+#: What a laboratory's magic items give it (forms/lab_item.py).
+LAB_ITEMS_SECTION = "section-lab-magic-items"
 
 #: The scored-trait lists (Personality Traits and Reputations) of the
 #: character, familiar and covenant sheets.
@@ -199,6 +201,7 @@ VOTE_SECTION = "section-meeting-vote"
 #: covenant's, character's, Tribunal's, neighbour's and creature's sheet.
 SECRETS_SECTION = "section-secrets"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
+    LAB_ITEMS_SECTION: frozenset({"add", "edit", "remove"}),
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
     LINKS_SECTION: frozenset({"add", "edit", "remove"}),

@@ -15,8 +15,12 @@ from ars_magica_manager.models import (
     Character,
     LabFeature,
     LabSpecialtyEntry,
+    Saga,
     VirtueFlawInstance,
 )
+
+#: A saga with nothing in it, for the lab helpers that look in one.
+_SAGA = Saga(id="s", name="S")
 
 
 def _values(form: commands.Form, typed: dict[str, Any]) -> dict[str, Any]:
@@ -66,7 +70,7 @@ def test_characteristics_are_the_typed_values():
 
 def test_specialization_sources_add_edit_delete_and_refuse_zero():
     lab = _saga_with_bare_laboratory().laboratories[0]
-    ops = lf.specialty_ops(lab)
+    ops = lf.specialty_ops(_SAGA, lab)
     assert ops.add and ops.edit and ops.remove
     add = ops.add()
     assert isinstance(add, commands.Form)
@@ -90,7 +94,7 @@ def test_specialization_sources_add_edit_delete_and_refuse_zero():
 
 def test_adding_a_feature_with_a_new_virtue_confirms_and_changes_nothing_until_saved():
     lab = _saga_with_bare_laboratory().laboratories[0]
-    ops = lf.feature_ops(lab)
+    ops = lf.feature_ops(_SAGA, lab)
     assert ops.add is not None
     first = ops.add()
     assert isinstance(first, commands.Form)
@@ -123,7 +127,7 @@ def test_editing_a_feature_on_a_free_virtue_then_deleting_it_keeps_the_virtue():
     lab = _saga_with_bare_laboratory().laboratories[0]
     lab.virtues_flaws.append(VirtueFlawInstance("labvf_lesser_feature", id="v1"))
     lab.features.append(LabFeature("f1", "Old", virtue_id="v1"))
-    ops = lf.feature_ops(lab)
+    ops = lf.feature_ops(_SAGA, lab)
     assert ops.edit and ops.remove
     first = ops.edit(0)
     assert isinstance(first, commands.Form)

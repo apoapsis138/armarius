@@ -886,6 +886,16 @@
         "slash": "(disabled)"
       }
     },
+    "PinnedCollapsible#section-lab-magic-items": {
+      "active": "section-lab-magic-items",
+      "keys": {
+        "a": "FieldsDialog: Add a magic item",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-lab-rooms": {
       "active": "section-lab-rooms",
       "keys": {

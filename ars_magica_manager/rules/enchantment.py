@@ -53,6 +53,19 @@ def held_by(saga: Saga, kind: str, holder_id: str) -> list[EnchantedDevice]:
     return sorted(held, key=lambda d: not is_talisman(d))
 
 
+def covenant_devices(
+    saga: Saga, covenant_id: str, *, every_lab: bool = False
+) -> list[EnchantedDevice]:
+    """The enchanted devices a covenant's Build Points pay for: those it
+    holds, then those held by its starting laboratories (`every_lab`: by
+    any of its laboratories)."""
+    found = held_by(saga, "covenant", covenant_id)
+    for lab in saga.laboratories:
+        if lab.covenant_id == covenant_id and (every_lab or lab.starting):
+            found += held_by(saga, "laboratory", lab.id)
+    return found
+
+
 def is_talisman(device: EnchantedDevice) -> bool:
     return device.type == INVESTED and device.talisman
 

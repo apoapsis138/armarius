@@ -40,7 +40,7 @@ from ..rules import book_seasons as bs
 from ..rules import creation_access as access
 from ..rules import creation_characteristics as cch
 from ..rules import enchant_seasons as es
-from ..rules import enchantment, lab_seasons, research, work_virtues
+from ..rules import enchantment, lab_items, lab_seasons, research, work_virtues
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import laboratory_seasons as ls
@@ -554,7 +554,7 @@ def _apply_laboratory(
         assign_laboratory(saga, magus, lab.id)
     # Refining or taking over: the Refinement it now has, and the roll's
     # Virtues and Flaws.
-    lab.characteristics.refinement += work.refinement - ls.refinement(lab)
+    lab.characteristics.refinement += work.refinement - ls.refinement(saga, lab)
     for vf_id in work.loses_vf:
         ls.remove_vf(lab, vf_id)
     for vf_id in work.gains_vf:
@@ -913,10 +913,12 @@ def _destroy(
     ):
         if device in saga.enchanted_devices:
             saga.enchanted_devices.remove(device)
+            lab_items.forget_device(saga, device.id)
         return f"{device.name} is destroyed."
     if device is not None and effect is not None:
         if effect in device.effects:
             device.effects.remove(effect)
+            lab_items.forget_device(saga, device.id, effect.id)
         return f"{enchantment.effect_name(effect)} is lost from {device.name}."
     familiar = work.familiar
     if familiar is not None and whole and plan.activity in (fs.BIND, fs.EMPOWER):

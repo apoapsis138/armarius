@@ -198,8 +198,8 @@
 
       Activity (0 of 2)
       Art (4 of 4)
-      ○ Intellego  +2
-      ○ Auram      +1                                                             ▃▃
+      ○ Intellego  +2                                                             ▃▃
+      ○ Auram      +1
       ○ Ignem      +1
       ○ Imaginem   +4
       ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -209,7 +209,7 @@
 
 
   ▌
-  ▌  Select a Specialization, Feature or Room to see its details.
+  ▌  Select a Specialization, Feature, Magic Item or Room to see its details.
   ▌
 
 

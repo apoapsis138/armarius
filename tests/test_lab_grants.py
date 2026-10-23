@@ -9,9 +9,13 @@ from ars_magica_manager.laboratories import (
 from ars_magica_manager.models import (
     Laboratory,
     LabSpecialtyEntry,
+    Saga,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules.lab_stats import specialization_scores
+
+#: A saga with nothing in it, for the lab helpers that look in one.
+_SAGA = Saga(id="s", name="S")
 
 
 def _lab(*instances: VirtueFlawInstance, specialties=()) -> Laboratory:
@@ -22,7 +26,7 @@ def _lab(*instances: VirtueFlawInstance, specialties=()) -> Laboratory:
 
 
 def _scores(lab: Laboratory) -> dict[str, int]:
-    return {s.name: s.points for s in specialization_scores(lab)}
+    return {s.name: s.points for s in specialization_scores(_SAGA, lab)}
 
 
 def test_fixed_grants_apply_automatically():

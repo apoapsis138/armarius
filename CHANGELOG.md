@@ -109,6 +109,34 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.4.0 — 2026-10-23
+
+### Pagina
+
+- **Magic items in a laboratory.** A laboratory's Attributes (on the
+  desktop, its Specializations chapter) gain a **Magic Items** list: an
+  enchanted device kept in the lab is installed as a Free Magic Item
+  Virtue (Minor when very large) or an Enchantment of the lab, and each
+  of its effects either grants the lab Virtue or Flaw it duplicates, with
+  no space or Build Point cost, or buys points by its level (a
+  Specialization point for every 10 levels, a Characteristic point for
+  every 20). The form refuses more points than the level buys. An item
+  gives nothing while it is kept elsewhere, and its row says so. Deleting
+  the device or its effect takes away what it gave.
+
+### Gauntlet
+
+- **Install a magic item while setting up a laboratory.** The Setting Up
+  step makes a new device kept in the lab, then its effect, then asks
+  what the effect gives; or it installs a device already there. A
+  starting laboratory's devices are paid for from the covenant's Build
+  Points and listed on its Resources step.
+
+### Glossa
+
+- **How to install a magic item in a laboratory**, a new guide, and help
+  for the Magic Items list.
+
 ## 3.3.1 — 2026-10-23
 
 ### Orbis
