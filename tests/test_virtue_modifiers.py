@@ -300,3 +300,28 @@ def test_faerie_legacy_adds_to_the_favoured_craft():
     by_id = catalog.load_virtue_flaw_catalog_by_id()
     assert catalog.describe_virtue_flaw(legacy, by_id) == "Faerie Legacy (Craft: Smith)"
     assert catalog.describe_virtue_flaw(V("vf_faerie_legacy"), by_id) == "Faerie Legacy"
+
+
+def test_a_merinita_untouched_by_the_fay_starts_with_a_warping_point():
+    # DE p. 236: the parens gives him one, to qualify him for the Mystery.
+    magus = Character(id="m", name="M", type="magus")
+    magus.hermetic.house = "house_merinita"
+    magus.virtues_flaws = [V("vf_faerie_magic")]
+    saga = Saga(id="s", name="S", characters=[magus])
+
+    def warping_check():
+        return next(
+            c
+            for c in creation_finish.finish_checks(saga, magus)
+            if "Warping Point" in c.label
+        )
+
+    assert warping_check().status == "warn"
+    magus.aging.warping_points = 1
+    assert warping_check().status == "pass"
+    magus.aging.warping_points = 0
+    magus.virtues_flaws.append(V("vf_faerie_blood"))
+    assert creation_finish.touched_by_the_fay(magus)
+    assert not any(
+        "Warping Point" in c.label for c in creation_finish.finish_checks(saga, magus)
+    )

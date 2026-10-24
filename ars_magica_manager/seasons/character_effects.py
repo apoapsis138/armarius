@@ -194,10 +194,13 @@ def gain_warping(
     rng: random.Random,
     *,
     opened: bool = False,
+    aura: int | None = None,
 ) -> list[str]:
     """Add Warping Points from one event; 2 or more take a
     magus (with `opened`, anyone whose Arts are opened) to the edge of
-    Wizard's Twilight. Writes a Diary entry and returns its lines."""
+    Wizard's Twilight, rolled against the aura where it happened (`aura`;
+    where they live when not given). Writes a Diary entry and returns its
+    lines."""
     warping_rules.set_total(character, warping_rules.total_points(character) + points)
     notes = [
         f"+{points} Warping Points; Warping Score {character.aging.warping_score}."
@@ -207,7 +210,8 @@ def gain_warping(
         warping_rules.opened_to_arts(character) if opened else character.type == "magus"
     )
     if at_risk and points >= 2:
-        aura, _ = home_aura(saga, character)
+        if aura is None:
+            aura, _ = home_aura(saga, character)
         result = warping_rules.twilight(character, points, aura, rng, saga)
         notes += result.notes
         if result.entered:

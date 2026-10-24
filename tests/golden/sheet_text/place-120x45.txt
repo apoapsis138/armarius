@@ -22,9 +22,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Regio Levels (2)
 
-        Level    Name               Aura      To enter                Can enter
-      ○ Level 2  The Vine Terraces  Magic 7   Per + Awareness again…  no one yet
-      ○ Level 1  The Mist Wood      Faerie 6  walk the path backwar…
+        Level    Name               Aura      See  To enter        Can enter
+      ○ Level 2  The Vine Terraces  Magic 7   9    Per + Awarene…  no one yet
+      ○ Level 1  The Mist Wood      Faerie 6  9    walk the path…
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Effects (2)

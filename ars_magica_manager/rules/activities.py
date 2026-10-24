@@ -83,6 +83,7 @@ from . import (
 from . import (
     creation_access as access,
 )
+from . import hybrid_magic as hybrid
 from . import lab as lab_rules
 from .breakdown import Line
 from .rounding import round_down
@@ -2159,9 +2160,19 @@ def _vis_study_outcome(
     subject = allocations(plan)[0].subject
     art = _split(subject)[1]
     pawns = study.season_vis_pawns(character, score(character, subject))
-    aura, realm = realms.home_aura(saga, character)
-    aura_mod = realms.aura_modifier(realms.HERMETIC, realm, aura)
-    botch_dice = pawns + realms.extra_botch_dice(realms.HERMETIC, realm, aura)
+    # Studied where it is usually done, in the student's laboratory, with
+    # that laboratory's aura (DE p. 378); else where they live.
+    lab = saga.laboratory(character.assigned_lab_id)
+    if lab is not None:
+        aura, realm = lab_rules.lab_aura(saga, lab)
+        in_regio = bool(lab.place_id) and lab.place_level > 0
+    else:
+        aura, realm = realms.home_aura(saga, character)
+        in_regio = realms.home_in_regio(saga, character)
+    aura_mod, _ = hybrid.aura_modifier(character, realm, aura)
+    botch_dice = pawns + hybrid.foreign_botch_dice(
+        character, realm, aura, in_regio=in_regio
+    )
     result.vis_spent = (plan.vis_from or "character", art, pawns)
     result.notes.append(
         f"Source Quality: stress die + aura {aura_mod:+d} ({aura} {realm}); "

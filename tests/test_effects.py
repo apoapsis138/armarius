@@ -2,6 +2,8 @@
 laboratories and covenants, how flat amounts and multipliers stack, the lab
 catalog on the shared Modifier shape, and Puissant as a character effect."""
 
+import re
+
 import pytest
 from support import strip_markup
 
@@ -208,8 +210,11 @@ def test_every_rules_module_cites_its_source():
         if module.name in _PLUMBING:
             continue
         loaded = importlib.import_module(f"ars_magica_manager.rules.{module.name}")
-        source = getattr(loaded, "SOURCE", "")
-        assert "redcap.org" in str(source), f"rules.{module.name} cites no source"
+        source = str(getattr(loaded, "SOURCE", ""))
+        # A book and its printed page (checked in the book), or the
+        # redcap.org page older modules cite.
+        cited = "redcap.org" in source or re.search(r"\bpp?\. \d", source)
+        assert cited, f"rules.{module.name} cites no source"
 
 
 def test_a_virtue_s_ability_or_characteristic_is_chosen_from_a_list():

@@ -156,13 +156,16 @@ OPTIONS: tuple[RuleOption, ...] = (
         key="aura_change",
         label="Auras change",
         effect=(
-            "A Magic aura rises by 1 on a yearly stress die, plus the magic "
-            "worked there, against 15; an Infernal aura whose focus is gone "
-            "falls by 1 after as many years as its strength."
+            "Each winter a Magic aura's yearly modifier (its tethers, the "
+            "magic worked there, vis spent and extracted, auras around it) "
+            "may strengthen or weaken it on the books' tables; an Infernal "
+            "aura inside a stronger aura erodes by 1 after as many years as "
+            "its strength unless something keeps it."
         ),
         source=(
-            "Realms of Power: Magic, Chapter Two: Magic Auras, Changing an "
-            "Aura, as summarised in The Mysteries and Mythic Locations"
+            "Realms of Power: Magic, Chapter Two: Magic Auras, pp. 7-12; "
+            "Realms of Power: The Infernal, Chapter One: Infernal Auras in "
+            "Play, pp. 10-12"
         ),
         book="RoP:M",
     ),

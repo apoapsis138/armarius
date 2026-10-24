@@ -344,10 +344,13 @@ def botch_dice(
     infernal_vis_pawns: int = 0,
     saga: Saga | None = None,
     virtues_flaws: Sequence[VirtueFlawInstance] = (),
+    magus: Character | None = None,
 ) -> int:
     """How many botch dice a stressed casting roll that shows 0 rolls.
     Infernal vis (counted in `vis_pawns` too) doubles them; with the saga's
-    harsher option, each pawn adds 3 instead (vis sordida). The caster's
+    harsher option, each pawn adds 3 instead (vis sordida). A foreign aura
+    adds its points, twice that in a regio level, unless `magus` is attuned
+    to it (Faerie Magic). The caster's
     Virtues and Flaws (Cautious Sorcerer, Careless Sorcerer, Deaf...) count
     before the Golden Cord and Mastery reduce them; spells are
     cast with words and gestures."""
@@ -357,9 +360,12 @@ def botch_dice(
             dice += 2 * infernal_vis_pawns  # +3 per pawn, 1 of it counted above
         else:
             dice *= 2
-    dice += realms.extra_botch_dice(
-        realms.HERMETIC, aura_realm, aura, in_regio=in_regio
-    )
+    if magus is not None:
+        dice += hybrid.foreign_botch_dice(magus, aura_realm, aura, in_regio=in_regio)
+    else:
+        dice += realms.extra_botch_dice(
+            realms.HERMETIC, aura_realm, aura, in_regio=in_regio
+        )
     change, _ = scores.botch_dice_change(
         virtues_flaws, ("casting", "casting_words", "casting_gestures")
     )

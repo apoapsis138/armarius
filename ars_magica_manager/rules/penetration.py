@@ -27,7 +27,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from ..models import Character, Saga, VirtueFlawInstance
-from . import effects, options, realms
+from . import effects, options, realms, senses
+from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .lab import ability_score, art_score
 from .rounding import round_down
@@ -191,25 +192,49 @@ def magic_resistance(
                     source=SOURCE,
                 )
             )
-    modifier = realms.aura_modifier(realms.HERMETIC, aura_realm, aura)
+    label, modifier = hybrid.aura_label(magus, aura_realm, aura)
     if modifier:
+        lines.append(Line(label, amount=modifier, source=realms.SOURCE))
+    sensitivity, sensitivity_bonus = ability_score(magus, senses.MAGIC_SENSITIVITY)
+    if sensitivity + sensitivity_bonus > 0:
         lines.append(
-            Line(f"Aura ({aura_realm} {aura})", amount=modifier, source=realms.SOURCE)
+            Line(
+                senses.MAGIC_SENSITIVITY,
+                amount=-(sensitivity + sensitivity_bonus),
+                source=senses.SOURCE,
+            )
         )
     return Breakdown(total=max(0, sum(line.amount or 0 for line in lines)), lines=lines)
+
+
+#: Words in a character's religion that make them one of the faithful the
+#: Dominion option protects; a blank religion counts, as most of Mythic
+#: Europe shares in the Divine.
+FAITHFUL = ("christian", "catholic", "orthodox", "jew", "jewish", "muslim", "islam")
+
+
+def faithful(character: Character) -> bool:
+    """A Christian, Jew or Muslim, as the Dominion option reads them."""
+    religion = character.background.religion.casefold()
+    return not religion.strip() or any(word in religion for word in FAITHFUL)
 
 
 def faith_magic_resistance(
     character: Character,
     saga: Saga | None = None,
     *,
-    dominion_aura: int = 0,
+    dominion_aura: int | None = None,
 ) -> int:
     """True Faith's Magic Resistance (Score x 10); with the saga's optional
-    Dominion rule, at least 5 x the Dominion aura for the faithful."""
+    Dominion rule, at least 5 x the Dominion aura for the faithful. The aura
+    is where the character lives unless `dominion_aura` says otherwise."""
     resistance = 10 * character.background.true_faith_score
-    if options.is_on(saga, "dominion_magic_resistance"):
-        resistance = max(resistance, 5 * dominion_aura)
+    if saga is not None and options.is_on(saga, "dominion_magic_resistance"):
+        if dominion_aura is None:
+            aura, realm = realms.home_aura(saga, character)
+            dominion_aura = aura if realm == "Divine" else 0
+        if faithful(character):
+            resistance = max(resistance, 5 * dominion_aura)
     return resistance
 
 

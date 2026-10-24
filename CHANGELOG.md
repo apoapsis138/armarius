@@ -109,6 +109,49 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.7.0 — 2026-10-24
+
+### Computus
+
+- **Faerie Magic.** House Merinita's magi, and anyone else with Faerie
+  Magic, are attuned to Faerie auras as to Magic ones (Definitive Edition
+  p. 236): a Faerie aura adds its full score to their casting, Lab Totals
+  and Magic Resistance, neither aura adds botch dice to their magic, and
+  neither gives them Warping. Finishing Touches checks that a Merinita
+  with no faerie Virtue or Flaw starts with the Warping Point his parens
+  gave him.
+- **At home in an aura.** Nobody gains Warping from living in an aura of
+  the realm their supernatural powers come from (p. 390): a hedge wizard
+  in his tradition's realm, anyone with a supernatural Ability in a Magic
+  aura (a Divine one for Sense Holiness and Unholiness), as well as magi.
+- **Regiones and botch dice.** A foreign aura's extra botch dice double
+  when the covenant stands on a regio level, in casting and in vis study.
+  Vis study now takes the aura of the student's laboratory, and the
+  Twilight from a laboratory mishap or research is rolled against the
+  laboratory's aura.
+- **The senses.** Magic Sensitivity, Second Sight and Sense Holiness and
+  Unholiness list the Ease Factors of what each senses (pp. 168-170), and
+  Magic Sensitivity's score comes off Magic Resistance.
+- **Dominion Magic Resistance** now takes effect: with the option on, a
+  Christian, Jew or Muslim (or anyone whose religion is blank) living in a
+  Dominion aura shows Magic Resistance of 5 x that aura on their sheet.
+
+### Orbis
+
+- **Seeing into a regio.** Regio Levels has a See column: the Ease Factor
+  to see into each level from the one below, the level's own roll when it
+  has one, else the Definitive Edition's (p. 421).
+- **Auras that change, by the books.** With the Auras change option, a
+  Magic aura follows Realms of Power: Magic: its tethers (scored in the
+  place's Tethers) give a base aura, and each winter its yearly modifier
+  (the base, auras impinging on it, the covenant's magic, vis study and
+  extraction there, this year's botches) may roll it on the Strengthening
+  or Weakening table, with botch dice that build up. An Infernal aura
+  inside a stronger one erodes as Realms of Power: The Infernal says,
+  unless a demon or an enchantment keeps it, and shows its corruption
+  roll's Ease Factors. Any Infernal place may now be tarnished with a sin
+  and corrupted.
+
 ## 3.6.0 — 2026-10-24
 
 ### Book of Hours

@@ -11,6 +11,13 @@ Hermetic formulas ask this module what changes:
   both add; no Warping from living in either.
 - Hermetic rites (a Faerie Method and Power): rituals from the faerie
   rite guidelines.
+- Faerie Magic (House Merinita's Virtue, or its Ability): attuned to
+  Magic and Faerie auras, so the full aura adds in both, neither gives
+  Warping, and neither adds botch dice (DE p. 236).
+
+`attuned` says which realms' auras a character is at home in: the realms
+their supernatural powers come from. Nobody gains Warping from living in
+such an aura (DE p. 390).
 
 A Ritual adds Method + Power instead of Artes Liberales + Philosophiae
 when the magus has a Method and Power of his style's realm (holy for Holy
@@ -57,6 +64,14 @@ GOETIC_SOURCE = (
     "(https://www.redcap.org/page/Realms_of_Power:_The_Infernal_Chapter_Twelve:"
     "_Black_Magic#Goetic_Magic)"
 )
+FAERIE_MAGIC_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Merinita "
+    "— Faerie Magic, p. 236"
+)
+ATTUNED_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Ten: Long-Term Events, Living in "
+    "Strong Auras, p. 390"
+)
 RITES_SOURCE = (
     "Realms of Power: Faerie, Hermetic Rites "
     "(https://www.redcap.org/page/Realms_of_Power:_Faerie_Chapter_Six:"
@@ -84,6 +99,8 @@ class Style:
     auras: tuple[tuple[str, float], ...] = ()
     #: Realms whose auras give him no Warping from living in them.
     no_warping: tuple[str, ...] = ()
+    #: Realms whose auras add no botch dice to his magic.
+    no_botch: tuple[str, ...] = ()
     #: What the formulas don't apply.
     notes: str = ""
 
@@ -131,6 +148,26 @@ RITES = Style(
         "the aura counts from the Faerie or the Magic column."
     ),
 )
+
+
+FAERIE_MAGIC = Style(
+    "Faerie Magic",
+    "Faerie",
+    FAERIE_MAGIC_SOURCE,
+    auras=(("Faerie", 1),),
+    no_warping=("Magic", "Faerie"),
+    no_botch=("Magic", "Faerie"),
+    notes=(
+        "Attuned to Magic and Faerie auras: the full aura adds in both, "
+        "neither gives Warping, and neither adds botch dice. His magic "
+        "counts as a fay power, and opens the Mystery's special Ranges, "
+        "Durations and Targets."
+    ),
+)
+
+#: Supernatural Abilities whose realm isn't Magic, the realm most come
+#: from (DE p. 411).
+ABILITY_REALMS = {"Sense Holiness and Unholiness": "Divine"}
 
 
 def _ids(character: Character) -> set[str]:
@@ -189,6 +226,8 @@ def styles(character: Character) -> list[Style]:
         found.append(HOLY)
     if "vf_chthonic_magic" in ids or _holds(character, "Chthonic Magic"):
         found.append(CHTHONIC)
+    if "vf_faerie_magic" in ids or _holds(character, "Faerie Magic"):
+        found.append(FAERIE_MAGIC)
     if _has_pair(character, "Faerie"):
         found.append(RITES)
     return found
@@ -227,13 +266,54 @@ def aura_label(magus: Character, aura_realm: str, aura: int) -> tuple[str, int]:
     return (f"{label}, {why}" if why else label), amount
 
 
+def attuned(character: Character) -> frozenset[str]:
+    """The realms whose auras the character is at home in: those their
+    supernatural powers come from. Magic for anyone opened to the Hermetic
+    Arts or holding a supernatural Ability (most are Magical); a hybrid
+    style's realms; each hedge tradition's realm."""
+    found: set[str] = set()
+    if character.type == "magus" or any(a.xp > 0 for a in character.arts.values()):
+        found.add(realms.HERMETIC)
+    for style in styles(character):
+        found.update(style.no_warping)
+    for ability_ in character.abilities:
+        if ability_.level > 0 and _supernatural(ability_.name):
+            found.add(ABILITY_REALMS.get(ability_.name, realms.HERMETIC))
+    traditions = catalog.load_tradition_catalog_by_id()
+    for tradition_id in character.traditions:
+        tradition = traditions.get(tradition_id)
+        if tradition is not None and tradition.realm:
+            found.add(tradition.realm)
+    return frozenset(found)
+
+
+@cache
+def _supernatural_names() -> frozenset[str]:
+    return frozenset(
+        a.name for a in catalog.load_ability_catalog() if a.category == "Supernatural"
+    )
+
+
+def _supernatural(name: str) -> bool:
+    return name in _supernatural_names()
+
+
 def warps_from_aura(character: Character, aura_realm: str) -> bool:
     """Whether living in an aura of this realm gives the character Warping
-    Points (a magus none from a Magic aura, a hybrid magus none from his
-    style's realms either)."""
-    if character.type == "magus" and aura_realm == realms.HERMETIC:
-        return False
-    return not any(aura_realm in s.no_warping for s in styles(character))
+    Points: not if their supernatural powers come from its realm (DE p.
+    390)."""
+    return aura_realm not in attuned(character)
+
+
+def foreign_botch_dice(
+    magus: Character, aura_realm: str, aura: int, *, in_regio: bool = False
+) -> int:
+    """The extra botch dice an aura adds to his Hermetic magic: one a point
+    of a foreign aura, two in a foreign regio level (DE p. 411); none in an
+    aura a style attunes him to."""
+    if any(aura_realm in s.no_botch for s in styles(magus)):
+        return 0
+    return realms.extra_botch_dice(realms.HERMETIC, aura_realm, aura, in_regio=in_regio)
 
 
 @dataclass(frozen=True)

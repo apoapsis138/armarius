@@ -14,7 +14,7 @@ from .models import Character, KnownSpell, Saga, Spell
 from .rules import casting, casting_virtues, certamen, penetration
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
-from .rules.realms import home_aura
+from .rules.realms import home_aura, home_in_regio
 
 
 def _levels(count: int) -> str:
@@ -179,8 +179,10 @@ def known_spell_casting_lines(
         vis_pawns=vis,
         aura_realm=realm,
         aura=aura,
+        in_regio=home_in_regio(saga, magus),
         mastery=known.mastery_score,
         virtues_flaws=magus.virtues_flaws,
+        magus=magus,
     )
     need = spell.level - total
     if spell.ritual:

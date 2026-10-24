@@ -12,21 +12,21 @@ A roll table names its die (a simple die, a stress die, a d6 or a d10)
 and its rows, one a line: "1-3: Nothing stirs", "4: The stag", "9+: The
 Hall opens"; a stress die's botch reads a "botch" row.
 
-With the aura change option on (Realms of Power: Magic), a Magic aura
-rises by 1 on a stress die plus the magic worked there (+1 to +3)
-against 15, rolled once a year; and an Infernal aura whose focus is gone
-falls by 1 after as many years as its strength, until it is gone.
+With the aura change option on, a Magic aura varies each year as
+Realms of Power: Magic says, and an Infernal aura inside a stronger one
+erodes as Realms of Power: The Infernal says (rules.aura_change); this
+module adds their fields to a place's form.
 
 Kept in Neighbour.details: "triggers" (each {"name", "when", "season",
 "year", "every", "what"}), "tables" (each {"name", "die", "rows",
-"last"}), "diary" (each {"year", "season", "text"}), "raising" (the
-magic worked there) and "focus_gone" (the year an Infernal focus was
-removed)."""
+"last"}) and "diary" (each {"year", "season", "text"}); the aura
+change's own keys are listed in rules.aura_change."""
 
 from __future__ import annotations
 
 import random
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
@@ -38,12 +38,9 @@ from .markup import escape
 from .models import SEASONS, Neighbour, Saga, details_list, season_order
 from .neighbour_lists import KindList, KindTab, list_ops
 from .references import Fact
-from .rules import dice, options
+from .rules import aura_change, dice
 from .rules.sites import whole_number
 from .sections import DIARY_SECTION, TABLES_SECTION, TRIGGERS_SECTION
-
-#: The aura change option's key (rules.options).
-AURA_CHANGE = "aura_change"
 
 #: How often a trigger comes.
 ONCE, YEARLY, EVERY, WHENEVER = "Once", "Each year", "Every N years", "Whenever"
@@ -51,9 +48,6 @@ WHEN: tuple[str, ...] = (ONCE, YEARLY, EVERY, WHENEVER)
 
 #: The dice a roll table can name.
 DICE: tuple[str, ...] = ("Simple die", "Stress die", "d6", "d10")
-
-#: What a Magic aura's yearly roll must reach to rise.
-RAISE_EASE = 15
 
 
 def _season_index(season: Any) -> int:
@@ -513,100 +507,172 @@ def diary_ops(saga: Saga, place: Neighbour) -> SectionOps:
     )
 
 
-# -- the aura's change (Realms of Power: Magic) --
+# -- the aura's change (Realms of Power: Magic and The Infernal) --
 
 
 def changes(saga: Saga) -> bool:
-    return options.is_on(saga, AURA_CHANGE)
+    return aura_change.is_on(saga)
 
 
-def infernal_aura(saga: Saga, place: Neighbour) -> int | None:
-    """An Infernal aura whose focus is gone, as it stands this year: it
-    falls by 1 after as many years as its strength. None unless the
-    option is on, the place is Infernal and its focus is gone."""
-    gone = place.details.get("focus_gone")
-    if not changes(saga) or place.realm != "Infernal" or gone is None:
-        return None
-    aura = whole_number(place.details.get("aura"))
-    year = gone
-    while aura > 0 and year + aura <= saga.current_year:
-        year += aura
-        aura -= 1
-    return aura
-
-
-def change_text(saga: Saga, place: Neighbour) -> str:
-    """How its aura changes, with the option on; "" otherwise."""
-    if not changes(saga):
-        return ""
-    realm = place.realm or "Magic"
-    if realm == "Magic":
-        bonus = whole_number(place.details.get("raising"))
-        return (
-            f"Rises by 1 on a stress die {bonus:+d} against {RAISE_EASE}, "
-            "rolled each year"
-        )
-    if realm == "Infernal":
-        now = infernal_aura(saga, place)
-        if now is None:
-            return "Steady while its focus remains"
-        return "Gone" if now == 0 else f"Fading: Infernal {now} this year"
-    return "Steady"
-
-
-def aura_roll(
-    saga: Saga, place: Neighbour, rng: random.Random
-) -> tuple[int, bool] | None:
-    """The year's roll to raise a Magic aura: its total and whether the
-    aura rises; None when the option is off or the aura isn't Magic."""
-    if not changes(saga) or (place.realm or "Magic") != "Magic":
-        return None
-    bonus = whole_number(place.details.get("raising"))
-    die = dice.stress_die(rng, saga=saga)
-    total = (0 if die.botched else die.value) + bonus
-    return total, not die.botched and total >= RAISE_EASE
+def _realm_is(realm: str) -> Callable[[dict[str, Any]], bool]:
+    """A show_if for fields of one realm's rule, read from the form's Realm
+    (the place's realm while the form has none)."""
+    return lambda values: (values.get("realm") or "Magic") == realm
 
 
 def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
-    """What the aura change option adds to a place's form."""
+    """What the aura change option adds to a place's form: for a Magic aura
+    what moves it each year, for an Infernal one what it sits in."""
     if not changes(saga):
         return []
     d = place.details if place is not None else {}
-    return [
+    magic, infernal = _realm_is("Magic"), _realm_is("Infernal")
+    found = [
         DialogField(
-            "raising",
-            "Magic worked there",
+            f"impinging_{realm.lower()}",
+            f"A stronger {realm} aura impinges",
+            "check",
+            bool(d.get(f"impinging_{realm.lower()}")),
+            hint=f"Around it or sharing its ground: {amount:+d} to the yearly "
+            "modifier (RoP: Magic p. 10).",
+            show_if=magic,
+        )
+        for realm, amount in aura_change.IMPINGING.items()
+    ]
+    found += [
+        DialogField(
+            "aura_adjust",
+            "This year's botches and other magic",
             "int",
-            d.get("raising", 0),
-            hint="+1 to +3 for lab work, spells and vis study there: added to "
-            "the yearly roll to raise a Magic aura.",
+            d.get("aura_adjust", d.get("raising", 0)),
+            hint="+1 for each beneficial botch of 2+ Warping Points, -1 for each "
+            "detrimental one, +1 for each other spending of 3+ pawns of vis "
+            "there; the app counts vis study and extraction itself. Cleared "
+            "each winter.",
+            show_if=magic,
         ),
         DialogField(
-            "focus_gone",
-            "Infernal focus gone in (year)",
+            "aura_botch_dice",
+            "Aura roll botch dice",
+            "int",
+            d.get("aura_botch_dice", 0),
+            hint="Starts at 0; +1 after each roll of 9 or more, -1 after a year "
+            "with no roll.",
+            show_if=magic,
+        ),
+        DialogField(
+            "around",
+            "Stronger aura around it",
+            "int",
+            d.get("around", 0),
+            hint="The aura it sits inside: weaker than that, it erodes by 1 "
+            "after as many years as its strength (RoP: The Infernal p. 11).",
+            show_if=infernal,
+        ),
+        DialogField(
+            "around_realm",
+            "Realm of that aura",
+            "select",
+            d.get("around_realm") or "Divine",
+            options=pairs(("Divine", "Magic", "Faerie")),
+            show_if=infernal,
+        ),
+        DialogField(
+            "maintained",
+            "Kept by a demon or an Infernal enchantment",
+            "check",
+            bool(d.get("maintained")),
+            hint="While something keeps it, it doesn't erode.",
+            show_if=infernal,
+        ),
+        DialogField(
+            "eroding_since",
+            "Eroding since (year)",
             "optint",
-            d.get("focus_gone"),
-            hint="An Infernal aura then fades by 1 every so many years.",
+            aura_change.eroding_since(place) if place is not None else None,
+            hint="When its erosion clock last started; a corruption roll that "
+            "keeps it starts the clock again.",
+            show_if=infernal,
         ),
     ]
+    return found
+
+
+#: The corrupted auras of Realms of Power: The Infernal pp. 14-15.
+CORRUPTIONS: tuple[str, ...] = ("Debauched", "Malevolent", "Perfidious")
+
+
+def infernal_fields(place: Neighbour | None) -> list[DialogField]:
+    """An Infernal aura's tarnish and corruption (RoP: The Infernal pp.
+    13-15), asked of an Infernal place."""
+    d = place.details if place is not None else {}
+    infernal = _realm_is("Infernal")
+    return [
+        DialogField(
+            "tarnish",
+            "Tarnished with",
+            "text",
+            d.get("tarnish", ""),
+            placeholder="e.g. Lust",
+            hint="A sinful Personality Trait: everyone in the aura acts as if "
+            "theirs were moved by its strength.",
+            show_if=infernal,
+        ),
+        DialogField(
+            "corruption",
+            "Corrupted",
+            "select",
+            d.get("corruption") or None,
+            options=pairs(CORRUPTIONS),
+            allow_blank=True,
+            placeholder="(not corrupted)",
+            hint="Only an aura of 3 or more; its tarnish then can't change. "
+            "Write its features in Notes.",
+            show_if=infernal,
+        ),
+    ]
+
+
+def infernal_problem(values: dict[str, Any]) -> str | None:
+    if values.get("corruption") and (values.get("aura") or 0) < 3:
+        return "Only an Infernal aura of 3 or more can be corrupted."
+    return None
 
 
 # -- a place, as its kind shows it --
 
 
 def place_fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
-    """New Place's and Edit's own fields: the place's, then the aura
-    change option's."""
-    return places.fields(saga, place) + fields(saga, place)
+    """New Place's and Edit's own fields: the place's, an Infernal aura's
+    tarnish, then the aura change option's."""
+    return places.fields(saga, place) + infernal_fields(place) + fields(saga, place)
+
+
+def place_problem(values: dict[str, Any]) -> str | None:
+    return places.problem(values) or infernal_problem(values)
 
 
 def place_facts(saga: Saga, place: Neighbour) -> list[Fact]:
     """The place's facts, its next trigger and how its aura changes."""
     found = places.facts(saga, place)
     found.insert(1, Fact("Next", next_text(saga, place)))
-    change = change_text(saga, place)
+    change = aura_change.summary(saga, place)
     if change:
         found.insert(2, Fact("Aura change", change))
+    if place.realm == "Infernal" and (
+        place.details.get("tarnish") or place.details.get("corruption")
+    ):
+        tarnish = place.details.get("tarnish") or ""
+        corruption = place.details.get("corruption") or ""
+        text = ", ".join(
+            part
+            for part in (
+                f"tarnished with {tarnish}" if tarnish else "",
+                f"{corruption.lower()}" if corruption else "",
+            )
+            if part
+        )
+        found.insert(2, Fact("Infernal", text[0].upper() + text[1:]))
     return found
 
 

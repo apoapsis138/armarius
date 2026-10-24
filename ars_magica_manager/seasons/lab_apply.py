@@ -43,6 +43,7 @@ from ..rules import enchant_seasons as es
 from ..rules import enchantment, lab_items, lab_seasons, research, work_virtues
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
+from ..rules import lab as lab_rules
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
 from ..world import takes_part_in_play
@@ -729,8 +730,11 @@ def _disaster(
     lines: list[str] = []
     everyone = [magus, *ls.assistants(saga, magus, plan)]
     if chart.zeroes:
+        aura, _ = lab_rules.lab_aura(saga, lab)
         for person in everyone:
-            gain_warping(saga, person, chart.zeroes, random.Random(), opened=True)
+            gain_warping(
+                saga, person, chart.zeroes, random.Random(), opened=True, aura=aura
+            )
     if chart.lab_flaw:
         ls.add_vf(lab, chart.lab_flaw)
     if chart.zeroes >= 4:
@@ -870,7 +874,8 @@ def _stabilize(
     if work.finished or chart.wasted or chart.no_benefit:
         warping = work.research_warping
         if warping:
-            gain_warping(saga, magus, warping, random.Random())
+            aura, _ = lab_rules.lab_aura(saga, lab)
+            gain_warping(saga, magus, warping, random.Random(), aura=aura)
     return lines
 
 

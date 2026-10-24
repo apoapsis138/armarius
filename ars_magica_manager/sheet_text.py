@@ -27,7 +27,7 @@ from .models import (
     VirtueFlawInstance,
     Wounds,
 )
-from .rules import combat, derived, penetration, research, scores
+from .rules import combat, derived, penetration, research, scores, senses
 from .rules import xp as xp_rules
 from .rules.breakdown import Breakdown
 from .totals import describe_modifier
@@ -234,7 +234,11 @@ def ability_info_text(
     else:
         description = escape(definition.description)
     bonus, bonus_from = scores.ability_bonus(virtues_flaws, ability.name)
-    return "\n\n".join([xp_line(ability.progress, bonus, bonus_from), description])
+    parts = [xp_line(ability.progress, bonus, bonus_from), description]
+    ease = senses.ease_text(ability.name)
+    if ease:
+        parts.append(escape(ease))
+    return "\n\n".join(parts)
 
 
 def ability_entry_text(definition: AbilityDef) -> str:
@@ -428,12 +432,14 @@ def combat_text(character: Character, weapon: Possession) -> str:
     return "\n".join(lines)
 
 
-def faith_score_text(character: Character) -> str:
-    """The True Faith Score, with the Magic Resistance it gives (x10)."""
+def faith_score_text(character: Character, saga: Saga | None = None) -> str:
+    """The True Faith Score, with the Magic Resistance it gives (x10, or
+    the Dominion option's where that is more)."""
     score = character.background.true_faith_score
-    if score <= 0:
+    resistance = penetration.faith_magic_resistance(character, saga)
+    if score <= 0 and not resistance:
         return str(score)
-    return f"{score} (Magic Resistance {penetration.faith_magic_resistance(character)})"
+    return f"{score} (Magic Resistance {resistance})"
 
 
 def size_text(character: Character) -> str:

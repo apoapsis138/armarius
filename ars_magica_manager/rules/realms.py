@@ -123,6 +123,13 @@ def covenant_effective_aura(
     return int(covenant_aura(covenant, catalog_by_id).total)
 
 
+def home_in_regio(saga: Saga, character: Character) -> bool:
+    """Whether the character's covenant stands on a regio level above the
+    mundane one, where a foreign aura's botch dice double (DE p. 421)."""
+    covenant = saga.covenant(character.covenant_id)
+    return covenant is not None and bool(covenant.place_id) and covenant.place_level > 0
+
+
 def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
     """The aura (score, realm) a character lives in: their covenant's
     effective Aura (its Boons and Hooks included); 0 Magic without one. The

@@ -537,13 +537,38 @@ with a native guide). On the surface, the regio on its site is the
 **Regio Hook** (Minor, or Major when its folk come out and make trouble),
 with the Non-magical Regio Hook too when the regio isn't Magical.
 
-With the **Auras change** Rule Option on (Realms of Power: Magic, in
-Saga Content), Edit also asks for **Magic worked there** (+1 to +3 for
-lab work, spells and vis study) and, for an Infernal place, the year
-its **Infernal focus** was removed. A Magic aura then rises by 1 on a
-yearly stress die plus the magic worked there against 15, and an
-Infernal aura whose focus is gone falls by 1 after as many years as its
-strength, until it is gone.
+With the **Auras change** Rule Option on (Realms of Power: Magic and The
+Infernal, in Saga Content), auras move each winter as those books say:
+
+- **A Magic aura** has a base aura from its **Tethers**: end each one in
+  the place's Tethers with "(natural 1)" or "(natural 2)", or
+  "(preternatural 1)" to "(preternatural 5)" (RoP: Magic p. 8; a magical
+  being gives its Might / 10, a monument a point a century of use, a vis
+  source its yearly pawns / 3). Each winter its yearly modifier adds up
+  +3 for every point the aura is below its base (-3 above it), the
+  stronger auras that impinge on it (Edit asks which: Magic +2, Faerie
+  +1, Divine -6, Infernal -2), +1 to +3 for the magic its covenant works
+  (by the covenant's season), +1 for each season of vis study there using
+  3 or more pawns and -1 for each season of vis extraction (both counted
+  from the season records), and **This year's botches and other magic**,
+  which you type. From -3 to +3 nothing happens; at +4 or more the year's
+  turn rolls on the Strengthening table, at -4 or less on the Weakening
+  table, with the **Aura roll botch dice** the place has built up (one
+  more after every roll of 9 or more, one fewer after a year with no
+  roll). A permanent rise or fall changes the aura (a regio's top level);
+  the rest go into the place's Diary.
+- **An Infernal aura** sitting inside a **Stronger aura around it** (Edit
+  asks its score and realm) loses 1 after as many years as its strength,
+  unless it is **Kept by a demon or an Infernal enchantment**; a
+  corruption roll that keeps it starts its clock again (**Eroding
+  since**). Its Regio tab shows the corruption roll's Ease Factors: to
+  keep it, 3 + the strongest aura there; to raise it, 6 + that aura.
+
+Any Infernal place's Edit asks what it is **Tarnished with** (a sinful
+Personality Trait, which everyone in the aura acts as if moved by its
+strength) and whether it is **Corrupted** (Debauched, Malevolent or
+Perfidious; only an aura of 3 or more, with its features written in its
+Notes) (Realms of Power: The Infernal pp. 13-15).
 
 **See also:** [A neighbour](help:neighbour)
 
@@ -558,6 +583,13 @@ shows which of the player covenants' characters reach it with their
 scores alone, best first. Anything else is kept as a sentence ("walk the
 path backwards at dusk"). Add puts a new level above the deepest; edit
 or delete one.
+
+**See** is the Ease Factor to see into the level from the one below:
+its own roll's when it names one, else the Definitive Edition's (marked
+DE): 5 + 2 x the difference in aura, or 5 + 2 x the two auras added when
+the level below is of another realm (p. 421). Second Sight or Magic
+Sensitivity sees into any level, Sense Holiness and Unholiness into a
+Divine or Infernal one.
 
 ## Effects
 <!-- help: section-nb-effects -->

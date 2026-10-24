@@ -1,7 +1,8 @@
 """Creation checks for Finishing Touches: Personality Traits
 (-3..+3; a grog needs Loyal, a warrior Brave), Reputations only from
-Virtues and Flaws, and Confidence (score 1 and 3 points for magi and
-companions, none for grogs). The step's "Move to In Play" then shows the
+Virtues and Flaws, Confidence (score 1 and 3 points for magi and
+companions, none for grogs), and a Merinita magus's Warping Point when
+nothing faerie touched him. The step's "Move to In Play" then shows the
 review of every check.
 
 Rules: reference/rules-engine-reference.md §2 Personality Traits;
@@ -32,6 +33,11 @@ CONFIDENCE_SOURCE = (
     "Character Creation Summary (https://www.redcap.org/page/Ars_Magica_"
     "Definitive_Edition,_Chapter_Three:_Characters#Detailed_Character_"
     "Creation_Summary)"
+)
+
+MERINITA_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Merinita "
+    "— Faerie Magic, p. 236"
 )
 
 TRAIT_LIMIT = 3
@@ -69,6 +75,18 @@ def expected_confidence(character: Character) -> tuple[int, int]:
         if extra:
             score, points = score + extra[0], points + extra[1]
     return score, points
+
+
+def touched_by_the_fay(character: Character) -> bool:
+    """A Virtue or Flaw related to the fay, besides Faerie Magic itself:
+    what qualifies a character for the Mystery (DE p. 236)."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    for vf in character.virtues_flaws:
+        entry = by_id.get(vf.vf_id)
+        name = entry.name if entry is not None else ""
+        if vf.vf_id != "vf_faerie_magic" and re.search(r"\bFa(erie|e|y)\b", name):
+            return True
+    return False
 
 
 def reputation_virtues(character: Character) -> list[str]:
@@ -142,6 +160,20 @@ def finish_checks(saga: Saga, record: Record) -> list[Check]:
                 ", ".join(granted) or "no Virtue or Flaw gives one",
                 REPUTATION_SOURCE,
                 advice=True,
+            )
+        )
+    if character.hermetic.house == "house_merinita" and not touched_by_the_fay(
+        character
+    ):
+        warped = character.aging.warping_score > 0 or character.aging.warping_points > 0
+        found.append(
+            _check(
+                "A Merinita untouched by the fay starts with a Warping Point",
+                warped,
+                "taken"
+                if warped
+                else "his parens gave him one (no faerie Virtue or Flaw)",
+                MERINITA_SOURCE,
             )
         )
     score, points = expected_confidence(character)

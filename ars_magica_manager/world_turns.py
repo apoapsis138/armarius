@@ -40,7 +40,7 @@ from .models import (
     WorldTurn,
     new_instance_id,
 )
-from .rules import dice, sites
+from .rules import aura_change, dice, sites
 
 #: The groups the review lists, in order.
 PLACES, THREATS, NEIGHBOURS, TREASURY, ATTITUDES = (
@@ -221,6 +221,17 @@ def undo_change(saga: Saga, change: Change) -> bool:
 # -- what the year brought --
 
 
+def _details_value(details: dict[str, Any], path: list[Any]) -> Any:
+    """The value at `path` within a record's details (None where absent)."""
+    target: Any = details
+    for step in path:
+        try:
+            target = target[step]
+        except LookupError:
+            return None
+    return target
+
+
 def _diary_line(year: int, season: str, text: str) -> dict[str, Any]:
     return {"year": year, "season": season, "text": text}
 
@@ -247,36 +258,35 @@ def _places(saga: Saga, year: int, rng: random.Random) -> list[Proposal]:
                     ],
                 )
             )
-        rolled = place_events.aura_roll(saga, place, rng)
-        if rolled is not None:
-            total, rises = rolled
-            before = int(place.details.get("aura") or 0)
-            if rises:
-                text = (
-                    f"The aura rose to Magic {before + 1} ({total} against "
-                    f"{place_events.RAISE_EASE})."
+        reckoned = aura_change.year(saga, place, year, rng)
+        if reckoned is not None:
+            changes: list[Change] = [
+                set_change(
+                    "neighbour",
+                    place.id,
+                    ["details", *path],
+                    _details_value(place.details, path),
+                    value,
                 )
-                found.append(
-                    Proposal(
-                        PLACES,
-                        f"{place.name}: aura {before} → {before + 1} (rolled {total})",
-                        [
-                            set_change(
-                                "neighbour",
-                                place.id,
-                                ["details", "aura"],
-                                place.details.get("aura"),
-                                before + 1,
-                            ),
-                            append_change(
-                                "neighbour",
-                                place.id,
-                                ["details", "diary"],
-                                _diary_line(year, SEASONS[-1], text),
-                            ),
-                        ],
+                for path, value in reckoned.sets
+            ]
+            if reckoned.diary:
+                changes.append(
+                    append_change(
+                        "neighbour",
+                        place.id,
+                        ["details", "diary"],
+                        _diary_line(year, SEASONS[-1], reckoned.diary),
                     )
                 )
+            found.append(
+                Proposal(
+                    PLACES,
+                    f"{reckoned.headline}: {'; '.join(reckoned.lines)}",
+                    changes,
+                    reckoned.ticked,
+                )
+            )
     return found
 
 

@@ -326,6 +326,10 @@ Edition, Chapter 3: Characters, Advancement Table). When a Virtue or Flaw
 gives a fixed bonus or penalty, such as Puissant, the score used follows in
 brackets. While the XP is typed, the form shows the score it buys and the
 total XP the next score needs ("Latin: Score 2 · Score 3 at 30 xp").
+The details of **Magic Sensitivity**, **Second Sight** and **Sense
+Holiness and Unholiness** list the Ease Factors of what each senses
+(Definitive Edition pp. 168-170), and Magic Sensitivity's score comes off
+the magus's Magic Resistance.
 
 <!-- gui -->
 Each Ability has a mark beside its name, cut like the
@@ -757,6 +761,11 @@ too, and a line for each kind closes the section:
 - **Chthonic Magic**: a Magic or an Infernal aura adds its full score, and
   living in either gives him no Warping (Realms of Power: The Infernal,
   Chthonic Magic).
+- **Faerie Magic** (House Merinita's Virtue, or its Ability): a Faerie
+  aura adds its full score as a Magic one does, neither adds botch dice,
+  and living in either gives him no Warping (Definitive Edition p. 236).
+  Finishing Touches checks that a Merinita with no faerie Virtue or Flaw
+  starts with the Warping Point his parens gave him.
 - **Hermetic rites** (a Faerie Method and Power): rituals from the faerie
   rite guidelines (Realms of Power: Faerie, Hermetic Rites).
 - A Ritual adds his best **Method + Power** of the style's realm instead of

@@ -52,6 +52,7 @@ from .models import (
 )
 from .neighbour_lists import KindList, list_ops
 from .references import Fact
+from .rules import senses
 from .rules.sites import (
     EFFECT_TYPES,
     PLACE,
@@ -393,6 +394,8 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
             "text",
             d.get("tethers", ""),
             placeholder="e.g. The dragon's bones, an Ignem source",
+            hint="With Auras change on, end each with (natural 1-2) or "
+            "(preternatural 1-5) to give its base aura (RoP: Magic p. 8).",
         ),
         DialogField(
             "status",
@@ -439,8 +442,9 @@ def levels_title(_saga: Saga, place: Neighbour) -> str:
 
 def levels_grid(saga: Saga, place: Neighbour) -> Grid:
     """Each level, deepest first (the surface's aura is the place's own):
-    its aura, how to enter it, and who can enter it without a die (who
-    can see it is among the place's facts)."""
+    its aura, the Ease Factor to see into it from the level below (its own
+    roll's, else the book's, DE p. 421), how to enter it, and who can enter
+    it without a die (who can see it is among the place's facts)."""
     shown = levels(place)
     rows = []
     keys: list[int | None] = []  # deepest first, so each row's own index
@@ -451,19 +455,31 @@ def levels_grid(saga: Saga, place: Neighbour) -> Grid:
                 f"Level {index + 1}",
                 entry.get("name", ""),
                 aura_text(place, index + 1),
+                see_in_text(place, index + 1),
                 entry.get("enter", ""),
                 who_can_text(saga, entry.get("enter", "")),
             ]
         )
         keys.append(index)
     return Grid(
-        ["Level", "Name", "Aura", "To enter", "Can enter"],
+        ["Level", "Name", "Aura", "See", "To enter", "Can enter"],
         rows,
         keys,
         "No regio: add its levels, from just above the surface upward.",
-        caps=[7, 18, 9, 22, 0],
-        stretch=3,
+        caps=[7, 18, 9, 5, 14, 0],
+        stretch=4,
     )
+
+
+def see_in_text(place: Neighbour, level: int) -> str:
+    """The Ease Factor to see into `level` from the one below: the level's
+    own roll's when it names one, else the book's from the two auras."""
+    own = parse_roll(levels(place)[level - 1].get("see", ""))
+    if own is not None:
+        return str(own.against)
+    below_aura, below_realm = aura_at(place, level - 1)
+    aura, realm = aura_at(place, level)
+    return f"{senses.regio_sight_ease(below_aura, below_realm, aura, realm)} DE"
 
 
 def level_fields(

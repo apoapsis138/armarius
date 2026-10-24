@@ -34,7 +34,16 @@ from ..models import (
     character_age,
 )
 from ..references import Fact
-from ..rules import aging, casting, derived, experiment, medicine, scores, warping
+from ..rules import (
+    aging,
+    casting,
+    derived,
+    experiment,
+    medicine,
+    penetration,
+    scores,
+    warping,
+)
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
 from ..rules import xp as xp_rules
@@ -84,9 +93,11 @@ def info_right_text(saga: Saga, character: Character) -> str:
     ]
     if faith.shows_faith(character):
         rows += [
-            ("True Faith Score", st.faith_score_text(character)),
+            ("True Faith Score", st.faith_score_text(character, saga)),
             ("Faith Points", str(b.faith_points)),
         ]
+    elif resistance := penetration.faith_magic_resistance(character, saga):
+        rows.append(("Magic Resistance", f"{resistance} (the Dominion)"))
     rows.append(("Size", st.size_text(character)))
     return aligned(rows)
 
@@ -681,7 +692,9 @@ def glance_facts(saga: Saga, character: Character) -> list[Fact]:
         _fact("Size", st.size_text(character)),
     ]
     if faith.shows_faith(character):
-        facts.append(_fact("True Faith", st.faith_score_text(character)))
+        facts.append(_fact("True Faith", st.faith_score_text(character, saga)))
+    elif resistance := penetration.faith_magic_resistance(character, saga):
+        facts.append(_fact("Magic Resistance", f"{resistance} (the Dominion)"))
     return facts
 
 

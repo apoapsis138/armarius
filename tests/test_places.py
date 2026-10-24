@@ -246,38 +246,64 @@ def test_a_roll_table_reads_its_rows_and_writes_to_the_diary():
 def test_auras_change_only_with_the_option():
     saga = everything_saga()
     drachenfels = _drachenfels(saga)
-    assert place_events.change_text(saga, drachenfels) == ""
-    assert place_events.aura_roll(saga, drachenfels, random.Random(1)) is None
     keys = [f.key for f in place_events.place_fields(saga, drachenfels)]
-    assert "raising" not in keys
+    assert "aura_adjust" not in keys
+    facts = {f.label: f.value for f in place_events.place_facts(saga, drachenfels)}
+    assert "Aura change" not in facts
     saga.rule_options["aura_change"] = True
     keys = [f.key for f in place_events.place_fields(saga, drachenfels)]
-    assert "raising" in keys and "focus_gone" in keys
-    drachenfels.details["raising"] = 30  # sure to rise
-    # The year's turn offers the rise; ticking it applies it.
+    assert {"impinging_divine", "aura_adjust", "aura_botch_dice"} <= set(keys)
+    assert {"around", "maintained", "eroding_since"} <= set(keys)
+
+
+def test_a_strong_yearly_modifier_rolls_on_the_strengthening_table():
+    saga = everything_saga()
+    saga.rule_options["aura_change"] = True
+    drachenfels = _drachenfels(saga)
+    drachenfels.details["levels"] = []
+    drachenfels.details["aura"] = 3
+    # Tethers of base 6 (natural 1 + preternatural 4 + 1): +9 to the modifier.
+    drachenfels.details["tethers"] = (
+        "A perfect valley (natural 1), the dragon's bones (preternatural 4), "
+        "a standing stone (preternatural 2)"
+    )
     [rise] = [
         p
-        for p in world_turns.proposals(saga, random.Random(1))
-        if p.text.startswith(f"{drachenfels.name}: aura 5 → 6")
+        for p in world_turns.proposals(saga, random.Random(3))
+        if p.text.startswith(f"{drachenfels.name}: Magic aura strengthening")
     ]
+    assert "Base aura 6, now 3 +9" in rise.text
     for change in rise.changes:
         world_turns.apply_change(saga, change)
-    assert drachenfels.details["aura"] == 6
-    assert "aura rose" in place_events.diary(drachenfels)[-1]["text"]
+    assert drachenfels.details["aura_botch_dice"] >= 1  # every total here is 9+
+    assert "Strengthening of the aura" in place_events.diary(drachenfels)[-1]["text"]
     facts = {f.label: f.value for f in place_events.place_facts(saga, drachenfels)}
-    assert facts["Aura change"].startswith("Rises by 1 on a stress die +30")
+    assert facts["Aura change"].startswith("Base 6 from its tethers")
 
 
-def test_an_infernal_aura_fades_once_its_focus_is_gone():
+def test_a_weak_infernal_aura_erodes_inside_a_stronger_one():
     saga = everything_saga()
     saga.rule_options["aura_change"] = True
     pit = Neighbour(id="pit", name="The Pit", kind="place", realm="Infernal")
-    pit.details = {"aura": 3}
-    assert place_events.change_text(saga, pit) == "Steady while its focus remains"
-    pit.details["focus_gone"] = 1215  # 3 to 2 in 1218, to 1 in 1220
-    saga.current_year = 1220
-    assert place_events.infernal_aura(saga, pit) == 1
-    saga.current_year = 1219
-    assert place_events.change_text(saga, pit) == "Fading: Infernal 2 this year"
-    saga.current_year = 1221
-    assert place_events.infernal_aura(saga, pit) == 0
+    pit.details = {"aura": 3, "around": 4, "around_realm": "Divine"}
+    saga.neighbours.append(pit)
+    facts = {f.label: f.value for f in place_events.place_facts(saga, pit)}
+    assert facts["Aura change"].startswith("Eroding inside the Divine 4")
+    assert "keeps it at 7, raises it at 10" in facts["Aura change"]
+
+    def turn(year):
+        saga.current_year = year
+        for proposal in world_turns.proposals(saga, random.Random(1)):
+            if proposal.text.startswith("The Pit:"):
+                for change in proposal.changes:
+                    world_turns.apply_change(saga, change)
+
+    turn(1220)  # the clock starts
+    assert pit.details["eroding_since"] == 1220
+    turn(1221)
+    assert pit.details["aura"] == 3
+    turn(1222)  # three years at strength 3
+    assert pit.details["aura"] == 2
+    pit.details["maintained"] = True  # a demon moves in
+    turn(1224)
+    assert pit.details["aura"] == 2

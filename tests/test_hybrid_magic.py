@@ -180,3 +180,44 @@ def test_a_magus_in_a_hedge_tradition_keeps_twilight():
     sol = catalog.load_tradition_catalog_by_id()["trad_sol_invictus"]
     text = tradition_text.warping_text(_magus(), sol)
     assert "Warping and Twilight as for any magus" in text
+
+
+def test_faerie_magic_attunes_a_magus_to_faerie_auras():
+    # DE p. 236: the full aura in both, no Warping from either, no extra
+    # botch dice in either.
+    merinita = _magus(vf_ids=("vf_faerie_magic",))
+    plain = _magus()
+    assert hybrid.FAERIE_MAGIC in hybrid.styles(merinita)
+    assert hybrid.aura_modifier(merinita, "Faerie", 4)[0] == 4
+    assert hybrid.aura_modifier(plain, "Faerie", 4)[0] == 2
+    assert not hybrid.warps_from_aura(merinita, "Faerie")
+    assert hybrid.warps_from_aura(plain, "Faerie")
+    assert hybrid.foreign_botch_dice(merinita, "Faerie", 4) == 0
+    assert hybrid.foreign_botch_dice(plain, "Faerie", 4) == 4
+    assert casting.botch_dice(aura_realm="Faerie", aura=4, magus=merinita) == 1
+    assert casting.botch_dice(aura_realm="Faerie", aura=4, magus=plain) == 5
+    # A foreign regio level doubles them (DE p. 553).
+    assert hybrid.foreign_botch_dice(plain, "Faerie", 4, in_regio=True) == 8
+
+
+def test_anyone_is_at_home_where_their_powers_come_from():
+    # DE p. 390: supernatural abilities from the aura's realm spare its
+    # Warping, Hermetic or not.
+    seer = _magus(("Second Sight", 2), kind="companion")
+    seer.arts = {}
+    assert hybrid.attuned(seer) == frozenset({"Magic"})
+    assert not hybrid.warps_from_aura(seer, "Magic")
+    holy = _magus(("Sense Holiness and Unholiness", 1), kind="companion")
+    holy.arts = {}
+    assert hybrid.attuned(holy) == frozenset({"Divine"})
+    mundane = _magus(kind="grog")
+    mundane.arts = {}
+    assert hybrid.attuned(mundane) == frozenset()
+    assert hybrid.warps_from_aura(mundane, "Magic")
+    witch = _magus(kind="companion")
+    witch.arts = {}
+    infernal = next(
+        t for t in catalog.load_tradition_catalog() if t.realm == "Infernal"
+    )
+    witch.traditions = [infernal.id]
+    assert "Infernal" in hybrid.attuned(witch)

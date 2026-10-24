@@ -175,7 +175,7 @@ for _kind in (
         "places",
         "",
         place_events.place_fields,
-        places.problem,
+        place_events.place_problem,
         place_events.place_facts,
         place_events.REGIO_TAB,
         (place_events.TABLES_TAB, place_events.DIARY_TAB),

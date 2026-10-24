@@ -486,9 +486,10 @@ the covenants. Each line has a tick box, and only the ticked lines are
 applied.
 
 - **Places**: each place's triggers that came this year (written into
-  the place's Diary), and, with the Auras change rule option, the roll
-  to raise a Magic aura (already rolled: what you see is what is
-  applied).
+  the place's Diary), and, with the Auras change rule option, each
+  aura's year: a Magic aura's yearly modifier and its roll on the
+  Strengthening or Weakening table, or an Infernal aura's erosion
+  (already rolled: what you see is what is applied).
 - **Threats**: a dated stage whose season has come is marked as having
   happened.
 - **Neighbours**: each fair a covenant trades at rolls its income for
