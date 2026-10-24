@@ -504,6 +504,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Writing a summa: Communication + language points a season until "
             "its Level (5 x Level for an Ability); Quality Communication + 6.",
             book_seasons.SOURCE,
+            distractable=True,
             group=groups.WRITING,
         ),
         Activity(
@@ -519,6 +520,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Copying: carefully a tractatus, or 6 + Scribe summa points, a "
             "season; quickly three times as much at 1 Quality lower.",
             book_seasons.COPY_SOURCE,
+            distractable=True,
             group=groups.WRITING,
         ),
         Activity(
@@ -528,6 +530,7 @@ ACTIVITIES: dict[str, Activity] = {
             "the source language points a season; 2 Quality lower (1 on an Art).",
             book_seasons.TRANSLATE_SOURCE,
             book="A&A",
+            distractable=True,
             group=groups.WRITING,
         ),
         Activity(
@@ -1937,12 +1940,21 @@ def _apprentice_outcome(
     if _pending(plan, rng):
         result.pending_roll = True
         return
-    die = (
-        plan.die
-        if plan.die is not None
-        else dice.stress_die(rng or random.Random(), 1, saga=saga).value
-    )
+    botched = False
+    if plan.die is not None:
+        die = plan.die
+    else:
+        rolled = dice.stress_die(rng or random.Random(), 1, saga=saga)
+        die, botched = rolled.value, rolled.botched
     total = character.characteristics.perception + die
+    if botched:
+        # A botch dupes the searcher (DE p. 269).
+        result.notes.append(
+            "Perception + a botch: the magus thinks he has found a Gifted "
+            "child, but is duped, by the child or by a power that has "
+            "replaced it with its servant (the storyguide decides)."
+        )
+        return
     result.notes.append(
         f"Perception + die {die} = {total} against "
         f"{apprentice_seasons.SEARCH_EASE}: "
@@ -2189,7 +2201,7 @@ def _study_outcome(
         if plan.activity == TAUGHT:
             quality = study.teaching_quality(teacher, students_of(saga, plan))
         else:
-            quality = score(teacher, subject) + 3
+            quality = score(teacher, subject) + 3 + study.teacher_bonus(teacher)
         name = _split(subject)[1]
         first = _split(subject)[0] == "ability" and study.learning_supernatural(
             character, name

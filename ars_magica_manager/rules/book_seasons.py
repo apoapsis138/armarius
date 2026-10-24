@@ -48,6 +48,7 @@ from ..models import (
 from . import effects, library, options
 from .rounding import round_down, round_up
 from .scores import ability_level, character_source
+from .study import after_distraction, supernatural_ability
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Writing Books, pp. "
@@ -277,12 +278,22 @@ def work(
     """The problems with a season of book work, or what it does."""
     com = character.characteristics.communication
     if plan.activity in (WRITE_SUMMA, WRITE_TRACTATUS):
-        return _write(saga, character, plan, com)
+        return _distracted(plan, *_write(saga, character, plan, com))
     if plan.activity in (COPY_BOOK, TRANSLATE_BOOK):
-        return _copy(saga, character, plan, com)
+        return _distracted(plan, *_copy(saga, character, plan, com))
     if plan.activity == EDIT_FLORILEGIUM:
         return _edit_florilegium(saga, character, plan)
     return _lab_texts(saga, character, plan)
+
+
+def _distracted(
+    plan: SeasonPlan, problems: list[str], done: BookWork | None
+) -> tuple[list[str], BookWork | None]:
+    """A summa's season of writing, copying or translating loses a third
+    of its points for each full month lost to distractions (DE p. 379)."""
+    if done is not None and done.needed > 1 and plan.months_lost:
+        done.points_gained = after_distraction(done.points_gained, plan.months_lost)
+    return problems, done
 
 
 #: Editing a florilegium (Covenants, Other Opus Types): the score an editor
@@ -474,8 +485,18 @@ def _copy(
     if plan.activity == COPY_BOOK:
         if source < 3:
             return [f"Copying needs {book.language} at 3."], None
-        if is_art and ability_level(character, "Magic Theory") < 1:
-            return ["Copying a book on an Art needs Magic Theory 1."], None
+        if (is_art or book.ability == PARMA) and ability_level(
+            character, "Magic Theory"
+        ) < 1:
+            return [
+                f"Copying a book on {book.art or PARMA} needs Magic Theory 1."
+            ], None
+        if supernatural_ability(book.ability) and not _can_copy_supernatural(
+            character, book.ability
+        ):
+            return [
+                f"Copying a book on {book.ability} needs it, or a Realm Lore, at 1."
+            ], None
         scribe = ability_level(character, "Profession: Scribe")
         quick = plan.quick
         quality = (book.quality or 0) - (1 if quick else 0)
@@ -509,6 +530,19 @@ def _copy(
         made=copy,
         copies=1,
     )
+
+
+#: Without Magic Theory 1 a book on the Arts or Parma Magica is copied
+#: corrupt; one on a Supernatural Ability needs it or its Realm Lore at 1
+#: (DE p. 381).
+PARMA = "Parma Magica"
+REALM_LORES = ("Magic Lore", "Faerie Lore", "Dominion Lore", "Infernal Lore")
+
+
+def _can_copy_supernatural(character: Character, ability: str) -> bool:
+    """Whether the scribe has the Ability, or a Realm Lore (the catalog
+    doesn't say which realm an Ability belongs to, so any counts), at 1."""
+    return any(ability_level(character, name) >= 1 for name in (ability, *REALM_LORES))
 
 
 def _copy_of(

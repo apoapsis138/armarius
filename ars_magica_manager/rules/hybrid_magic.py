@@ -245,7 +245,18 @@ def aura_modifier(magus: Character, aura_realm: str, aura: int) -> tuple[int, st
                 amount = round_down(multiple * aura)
                 if amount > best:
                     best, why = amount, style.name
+    if aura_realm == DIVINE and best < 0 and divine_susceptible(magus):
+        best, why = 2 * best, "Susceptibility to Divine Power"
     return best, why
+
+
+DIVINE = "Divine"
+#: Twice a Divine aura's penalties to his magic (DE p. 146).
+DIVINE_SUSCEPTIBILITY = "vf_susceptibility_to_divine_power"
+
+
+def divine_susceptible(magus: Character) -> bool:
+    return any(vf.vf_id == DIVINE_SUSCEPTIBILITY for vf in magus.virtues_flaws)
 
 
 def aura_label(magus: Character, aura_realm: str, aura: int) -> tuple[str, int]:
@@ -306,7 +317,9 @@ def foreign_botch_dice(
     aura a style attunes him to."""
     if any(aura_realm in s.no_botch for s in styles(magus)):
         return 0
-    return realms.extra_botch_dice(realms.HERMETIC, aura_realm, aura, in_regio=in_regio)
+    dice = realms.extra_botch_dice(realms.HERMETIC, aura_realm, aura, in_regio=in_regio)
+    # Susceptibility to Divine Power doubles them in a Divine aura (DE p. 146).
+    return 2 * dice if aura_realm == DIVINE and divine_susceptible(magus) else dice
 
 
 @dataclass(frozen=True)

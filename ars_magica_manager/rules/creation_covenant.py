@@ -34,7 +34,7 @@ from ..covenants import (
     unlinked_resource_hooks,
 )
 from ..models import INCOME_TYPE_DEFAULTS, Covenant, Laboratory, Saga
-from . import base_covenants, covenfolk, enchantment
+from . import base_covenants, covenfolk, enchantment, realms
 from . import library as book_rules
 from . import options as rule_options
 from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
@@ -413,6 +413,9 @@ INCOME_SOURCE = (
     "Baseline, p. 188"
 )
 AURA_SOURCE = "Covenants, Chapter Two: Boons and Hooks, Faerie Aura"
+AURA_BOON = "covbh_boon_minor_aura"
+MOST_AURA_BOONS, MOST_AURA = 7, 10
+AURA_BOON_SOURCE = "Ars Magica Definitive Edition, Minor Boons, Aura, p. 183"
 MINOR_WEALTH = "covbh_boon_minor_wealth"
 MAJOR_WEALTH = "covbh_boon_major_wealth"
 SECONDARY_INCOME = "covbh_boon_minor_secondary_income"
@@ -682,6 +685,18 @@ def boon_hook_checks(saga: Saga, record: Record) -> list[Check]:
                 f"aura realm {realm}",
                 SOURCE,
                 advice=True,
+            )
+        )
+    aura_boons = sum(1 for bh in covenant.boons_hooks if bh.vf_id == AURA_BOON)
+    if aura_boons:
+        aura = int(realms.covenant_aura(covenant, boons_catalog).total)
+        found.append(
+            _c(
+                "boons_hooks",
+                "Aura Boons: up to seven, for an aura of at most 10",
+                aura_boons <= MOST_AURA_BOONS and aura <= MOST_AURA,
+                f"{aura_boons} Aura Boon{'s' if aura_boons > 1 else ''}, aura {aura}",
+                AURA_BOON_SOURCE,
             )
         )
     unlinked = unlinked_resource_hooks(covenant, boons_catalog)

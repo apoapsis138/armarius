@@ -117,20 +117,30 @@ def season_bonus(student: Character, activity: str) -> int:
     )
 
 
+def teacher_bonus(teacher: Character) -> int:
+    """What the teacher's or master's Virtues add to the Source Quality of
+    anyone who studies with him: Good Teacher +5 (DE p. 83)."""
+    return int(
+        effects.amount_total(
+            effects.collect(
+                [scores.character_source(teacher.virtues_flaws)],
+                "teaching_source_quality",
+            )
+        )
+    )
+
+
 def training_quality(master: Character, ability: str) -> int:
-    """A master's training: his score + 3."""
-    return sum(ability_score(master, ability)) + 3
+    """A master's training: his score + 3, plus Virtues such as Good
+    Teacher (+5)."""
+    return sum(ability_score(master, ability)) + 3 + teacher_bonus(master)
 
 
 def teaching_quality(teacher: Character, students: int = 1) -> int:
     """A teacher's Source Quality: Communication + Teaching + 3, +6 with one
     student, +3 with two, plus Virtues such as Good Teacher (+5)."""
     bonus = {1: 6, 2: 3}.get(students, 0)
-    extra = effects.amount_total(
-        effects.collect(
-            [scores.character_source(teacher.virtues_flaws)], "teaching_source_quality"
-        )
-    )
+    extra = teacher_bonus(teacher)
     return (
         teacher.characteristics.communication
         + sum(ability_score(teacher, "Teaching"))

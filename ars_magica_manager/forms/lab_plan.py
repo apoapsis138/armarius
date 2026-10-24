@@ -1627,6 +1627,7 @@ def level_text(design: SpellDesign) -> str:
         extra_magnitudes=design.extra_magnitudes,
         ritual=design.ritual,
         custom_steps=design.custom_steps,
+        technique=design.technique,
     )
     if worked is None:
         return todo(

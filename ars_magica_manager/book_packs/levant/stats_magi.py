@@ -214,7 +214,6 @@ NO_ABILITY = {"Certamen", "Verditius Magic"}
 SPELL_RENAMES: dict[str, str] = {
     "Parting the Waves": "Parting of the Waves",
     "The Seven-League Stride": "Seven-League Stride",
-    "Circle of Encompassing Flames": "Circle of Encompassing Flame",
     "Confusion of the Numbed Will": "Confusion of the Numb Will",
     "Transformation of the Ravenous Beast to a Torpid Toad": (
         "Transformation Of The Ravenous Beast To The Torpid Toad"
@@ -262,7 +261,7 @@ SWAPS: dict[str, str] = {
     "Mighty Fling of the Menacing Knight": "Jump of the Lynx",
     "Enlarging the Distant Image": "Aura of the Ennobled Presence",
     "Eyes of the Serpent": "Rise of the Feathery Body",
-    "Eyes of Flame": "Circle of Encompassing Flame",
+    "Eyes of Flame": "Circle of Encompassing Flames",
     "Pain of the Wizard's Gaze": "Bane of the Decrepit Body",
     "Spectacle of Abject Terror": "Convince a Man he has an Enemy",
     "Spell Analysis": "Impression of the Faded Sigil",
@@ -827,7 +826,7 @@ FELIX = Fourth(
         ("Eyes of the Past", "InIm", 20),
         ("Ear for the Distant Voice", "InIm", 20),
         ("Summoning the Distant Image", "InIm", 25),
-        ("Discern Images of Truth and Falsehood", "InIm", 30),
+        ("Discern the Images of Truth and Falsehood", "InIm", 30),
         ("Peering into the Mortal Mind", "InMe", 30),
         ("Thoughts Within Babble", "InMe", 25),
         ("The Chirurgeon's Healing Touch", "CrCo", 20),
@@ -1204,7 +1203,7 @@ SPIRAL = Fourth(
         ("Warping the Magical Veil", "MuVi", 20),
         ("Hammer of Thaumaturgical Shattering", "PeVi(In)", 35),
         ("Wizard's Wait", "ReVi", 35),
-        ("Discern Images of Truth and Falsehood", "InIm", 30),
+        ("Discern the Images of Truth and Falsehood", "InIm", 30),
         ("Summoning the Distant Image", "InIm", 25),
         ("Peering into the Mortal Mind", "InMe", 30),
         ("Thoughts Within Babble", "InMe", 25),

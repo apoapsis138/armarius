@@ -64,6 +64,10 @@ def _named(what: str, names: list[str]) -> str:
     return f"{what} ({', '.join(names)})" if names else what
 
 
+HEARTBEAST = "vf_heartbeast"
+VERDITIUS_MAGIC = "vf_verditius_magic"
+
+
 def reminders(magus: Character) -> list[str]:
     """What the magus's Virtues and Flaws add when they apply at the moment
     of casting, a sentence each (plain text)."""
@@ -164,6 +168,16 @@ def reminders(magus: Character) -> list[str]:
         found.append(
             "Mystical Choreography: ceremonial casting takes a minute a "
             "magnitude, wherever it is done (DE p. 99)."
+        )
+    if has(magus, HEARTBEAST):
+        found.append(
+            "Heartbeast: in animal form a spell is cast with no words or "
+            "gestures, normally -15 (DE p. 234)."
+        )
+    if has(magus, VERDITIUS_MAGIC):
+        found.append(
+            "Verditius Magic: Formulaic and Ritual spells need his casting "
+            "tools; Spontaneous spells don't (DE p. 241)."
         )
     return found
 

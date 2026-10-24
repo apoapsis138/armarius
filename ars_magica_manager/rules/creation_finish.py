@@ -52,6 +52,22 @@ def has_trait(character: Character, name: str) -> bool:
     return any(name.lower() in t.name.lower() for t in character.personality_traits)
 
 
+CHURCH_UPBRINGING = "vf_church_upbringing"
+CHURCH_XP = 25
+CHURCH_SOURCE = "Ars Magica Definitive Edition, Church Upbringing, p. 122"
+
+
+def church_xp(character: Character) -> int:
+    """Creation xp spent on Church Upbringing's Abilities: Artes Liberales,
+    Latin, Music, Organization Lore: Church and Theology (DE p. 122)."""
+    return sum(
+        entry.xp
+        for entry in character.creation_xp
+        if entry.target in ("Artes Liberales", "Dead Language: Latin", "Music")
+        or entry.target.startswith(("Organization Lore: Church", "Theology"))
+    )
+
+
 def warrior(character: Character) -> bool:
     """A character with xp in a Martial Ability."""
     return any(
@@ -136,6 +152,7 @@ def finish_checks(saga: Saga, record: Record) -> list[Check]:
                 "A grog has Loyal",
                 has_trait(character, "Loyal"),
                 "taken" if has_trait(character, "Loyal") else "missing",
+                advice=True,
             )
         )
     if warrior(character):
@@ -144,6 +161,18 @@ def finish_checks(saga: Saga, record: Record) -> list[Check]:
                 "A warrior has Brave",
                 has_trait(character, "Brave"),
                 "taken" if has_trait(character, "Brave") else "missing",
+                advice=True,
+            )
+        )
+    if any(vf.vf_id == CHURCH_UPBRINGING for vf in character.virtues_flaws):
+        spent = church_xp(character)
+        found.append(
+            _check(
+                f"Church Upbringing: {CHURCH_XP} xp on its Abilities",
+                spent >= CHURCH_XP,
+                f"{spent} xp",
+                CHURCH_SOURCE,
+                advice=True,
             )
         )
     if character.reputations:

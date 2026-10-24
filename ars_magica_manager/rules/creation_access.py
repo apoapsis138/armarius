@@ -110,6 +110,9 @@ OPENS: dict[str, tuple[str, ...]] = {
     "vf_failed_apprentice": RESTRICTED,
     "vf_redcap": RESTRICTED,
 }
+#: A Virtue giving a Supernatural Ability that may need to penetrate Magic
+#: Resistance lets the character take Penetration too (DE p. 158).
+PENETRATION = "Penetration"
 #: Virtues opening one named Arcane Ability only.
 OPENS_ABILITY: dict[str, tuple[str, ...]] = {
     "vf_diabolic_past": ("Infernal Lore",),
@@ -123,6 +126,15 @@ OPENS_ABILITY: dict[str, tuple[str, ...]] = {
         "Magic Lore",
     ),
     "vf_senior_bard": ("Dominion Lore", "Faerie Lore", "Infernal Lore", "Magic Lore"),
+    # DE pp. 93, 96, 128, 133, 136, 138, 140.
+    "vf_faerie_upbringing": ("Faerie Lore",),
+    "vf_faerie_friend": ("Faerie Lore",),
+    "vf_imagined_folk_tradition_vulnerability": ("Faerie Lore",),
+    "vf_magical_blood": ("Magic Lore",),
+    "vf_monstrous_blood": ("Magic Lore",),
+    "vf_master_of_form_creatures": ("Magic Lore",),
+    "vf_magical_fascination": ("Magic Lore", "Faerie Lore"),
+    "vf_outsider": ("Magic Lore", "Faerie Lore"),
 }
 
 
@@ -374,6 +386,8 @@ def may_learn(character: Character, name: str, *, apprenticed: bool = False) -> 
         return name in granted_supernatural(character) | tradition_opened(character)
     if name in {n for vf in _ids(character) for n in OPENS_ABILITY.get(vf, ())}:
         return True
+    if name == PENETRATION and granted_supernatural(character):
+        return True
     return category in opened_types(character, apprenticed=apprenticed)
 
 
@@ -398,6 +412,7 @@ def learnable_abilities(
             ok = entry.name in granted or gifted
         else:
             ok = entry.name in named or entry.category in types
+            ok = ok or (entry.name == PENETRATION and bool(granted))
         if ok:
             names.add(entry.name)
     names.update(

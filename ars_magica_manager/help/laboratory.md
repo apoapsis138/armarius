@@ -223,8 +223,10 @@ What each kind of lab work adds on top of the grid: inventing spells,
 enchanting items, working from a Lab Text, binding a familiar, Longevity
 Rituals, extracting vis and experimenting. Below that are the results the
 app works out from them: the Longevity Ritual's modifier to aging rolls, the
-pawns of vis extracted in a season, and the most raw vis a season and the
-largest shape and material bonus the owner's Magic Theory allows.
+pawns of vis extracted in a season (a pawn for every 10 points, rounded
+up; vis is extracted only in a Magic aura, DE p. 250), and the most raw
+vis a season and the largest shape and material bonus the owner's Magic
+Theory allows.
 
 ## Virtues & Flaws tab
 <!-- help: tab-lab-vf -->

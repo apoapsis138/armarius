@@ -674,11 +674,23 @@ def casting_cell_text(
             "",
             f"[b]Casting Score {total}[/]",
             "",
-            "Formulaic: score + die >= level casts it; up to 10 short costs a "
-            "Fatigue level.",
+            "Formulaic: score + die >= level casts it; up to 10 short costs "
+            + _fatigue_cost(magus)
+            + ".",
             spontaneous_cell_line(spontaneous or score, magus),
         ]
     )
+
+
+def _fatigue_cost(magus: Character | None) -> str:
+    """What a Formulaic spell cast up to 10 short costs ("a Fatigue
+    level"; two with Enfeebled)."""
+    levels = (
+        1
+        if magus is None
+        else casting.fatigue_levels(1, magus.virtues_flaws, "formulaic")
+    )
+    return "a Fatigue level" if levels == 1 else f"{levels} Fatigue levels"
 
 
 def spontaneous_cell_line(score: Breakdown, magus: Character | None) -> str:

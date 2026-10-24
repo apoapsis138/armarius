@@ -50,3 +50,15 @@ def test_in_thebes_the_archon_votes_and_redcaps_dont():
     redcap = Character(id="r", name="R", type="magus")
     redcap.hermetic.house = meeting.REDCAP_HOUSE
     assert meeting._silent(Saga(id="s", name="S"), thebes, redcap)
+
+
+def test_ungifted_redcaps_have_no_vote_at_any_tribunal_but_gifted_ones_do():
+    # DE p. 15.
+    rhine = Tribunal(id="t", name="Rhine")
+    saga = Saga(id="s", name="S")
+    courier = Character(id="r", name="R", type="companion")
+    courier.hermetic.house = meeting.REDCAP_HOUSE
+    magus = Character(id="m", name="M", type="magus")
+    magus.hermetic.house = meeting.REDCAP_HOUSE
+    assert meeting._silent(saga, rhine, courier)
+    assert not meeting._silent(saga, rhine, magus)

@@ -168,7 +168,9 @@ def option_lines(saga: Saga, magus: Character) -> list[str]:
         f"Fast casting (Spontaneous): speed Quickness + Finesse "
         f"{casting.fast_casting_speed(magus):+d} + stress die against the foe's "
         f"Initiative, -6 for each spell after the first; score "
-        f"{casting.FAST_PENALTY}, +{casting.FAST_BOTCH_DICE} botch dice, no vis.",
+        f"{casting.FAST_PENALTY}, +{casting.FAST_BOTCH_DICE} botch dice, no vis. "
+        "To know an attacking spell's Form: Perception + Awareness + die "
+        "against 15 - its magnitude (DE p. 217).",
     ]
     if casting.can_ceremonial(magus):
         learned = sum(lab_rules.ability_score(magus, "Artes Liberales")) + sum(

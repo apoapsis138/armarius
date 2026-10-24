@@ -158,7 +158,10 @@ A Tribunal whose book has its own word for a covenant uses it: a
 Transylvanian Tribunal's list is headed Oppida.
 
 A covenant has one vote for each of its magi, and one for each proxy it
-carries: the sigil of an absent magus, given for one meeting. Proxies
+carries: the sigil of an absent magus, given for one meeting. An unGifted
+Redcap has no vote of his own at any Tribunal, while a Gifted one votes
+(DE p. 15); a Redcap carrying an absent magus's sigil casts that vote,
+so count it among his covenant's proxies. Proxies
 change at every meeting, so they are kept here rather than on the
 covenant.
 

@@ -56,6 +56,7 @@ from .models import (
 )
 from .references import Fact
 from .rules import debate
+from .rules.apprentice_seasons import gifted
 from .sections import ATTENDANCE_SECTION, BUSINESS_SECTION, VOTE_SECTION
 from .sheets import tribunal as tribunal_sheet
 from .tribunal_packages import Envoy
@@ -167,14 +168,15 @@ def officers(tribunal: Tribunal) -> set[str]:
 
 
 def _silent(saga: Saga, tribunal: Tribunal, magus: Character) -> bool:
-    """Whether a magus present casts no vote: an officer, or a Redcap where
-    the customs say Redcaps don't vote."""
+    """Whether a magus present casts no vote: an officer; an unGifted
+    Redcap, at every Tribunal (DE p. 15), where a Gifted one votes; or any
+    Redcap where the customs say Redcaps don't vote. A Redcap carrying a
+    magus's sigil still casts that vote, as his covenant's proxy."""
     if magus.id in officers(tribunal):
         return True
-    return (
-        not tribunal_packages.of(tribunal).redcaps_vote
-        and magus.hermetic.house == REDCAP_HOUSE
-    )
+    if magus.hermetic.house != REDCAP_HOUSE:
+        return False
+    return not tribunal_packages.of(tribunal).redcaps_vote or not gifted(magus)
 
 
 def magi_present(

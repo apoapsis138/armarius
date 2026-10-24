@@ -114,6 +114,10 @@ RITUAL_WOUNDS = ("light", "medium", "heavy", "incapacitating")
 
 #: Words and gestures (Casting Score modifiers).
 WORDS: dict[str, int] = {"Loud": 1, "Firm": 0, "Quiet": -5, "None": -10}
+#: A speech impediment: -2 to the Casting Score of a spell cast with words.
+AFFLICTED_TONGUE = "vf_afflicted_tongue"
+AFFLICTED_TONGUE_PENALTY = -2
+AFFLICTED_SOURCE = "Ars Magica Definitive Edition, Afflicted Tongue, p. 119"
 GESTURES: dict[str, int] = {"Exaggerated": 1, "Bold": 0, "Subtle": -2, "None": -5}
 
 
@@ -196,6 +200,14 @@ def casting_score(
             lines.append(
                 Line(name or f"{chosen} {label}", amount=amount, source=SOURCE)
             )
+    if words != "None" and _has(magus, AFFLICTED_TONGUE):
+        lines.append(
+            Line(
+                "Afflicted Tongue",
+                amount=AFFLICTED_TONGUE_PENALTY,
+                source=AFFLICTED_SOURCE,
+            )
+        )
     if mastery:
         lines.append(Line("Spell Mastery", amount=mastery, source=MASTERY_SOURCE))
     if fast:
@@ -528,42 +540,78 @@ def mastery_counts(abilities: Sequence[Any]) -> dict[str, int]:
     return found
 
 
+FAST_CASTER = "vf_fast_caster"
+FAST_CASTER_BONUS = 3
+TWILIGHT_PRONE = "vf_twilight_prone"
+#: Concentration takes three times the Wound Penalty, instead of the
+#: normal penalty (DE p. 215).
+CONCENTRATION_WOUND_MULTIPLE = 3
+
+
+def _has(magus: Character, vf_id: str) -> bool:
+    return any(vf.vf_id == vf_id for vf in magus.virtues_flaws)
+
+
+def _wounds(magus: Character) -> int:
+    return wound_penalty(magus.wounds, magus.virtues_flaws)
+
+
+def _fatigue(magus: Character) -> int:
+    return fatigue_penalty(magus.fatigue_level, magus.virtues_flaws)
+
+
 def fast_casting_speed(magus: Character, quick: int = 0) -> int:
     """Fast Casting Speed before the stress die: Quickness + Finesse, +1
-    for each Quick Casting on a mastered spell (DE pp. 217, 226); each
-    spell after the first that round takes -6 more."""
+    for each Quick Casting on a mastered spell, +3 with Fast Caster, less
+    the Wound and Fatigue penalties (DE pp. 80, 217, 226, 404); each spell
+    after the first that round takes -6 more."""
     return (
-        magus.characteristics.quickness + sum(ability_score(magus, "Finesse")) + quick
+        magus.characteristics.quickness
+        + sum(ability_score(magus, "Finesse"))
+        + quick
+        + (FAST_CASTER_BONUS if _has(magus, FAST_CASTER) else 0)
+        + _wounds(magus)
+        + _fatigue(magus)
     )
 
 
 def concentration_base(magus: Character, imperturbable: int = 0) -> int:
     """A Concentration roll before the stress die: Stamina +
-    Concentration, + the Mastery score with Imperturbable Casting (DE pp.
-    215, 225)."""
+    Concentration, + the Mastery score with Imperturbable Casting, with
+    three times the Wound Penalty (instead of the normal one) and the
+    Fatigue penalty (DE pp. 215, 225, 404)."""
     return (
         magus.characteristics.stamina
         + sum(ability_score(magus, "Concentration"))
         + imperturbable
+        + CONCENTRATION_WOUND_MULTIPLE * _wounds(magus)
+        + _fatigue(magus)
     )
 
 
 def aiming_base(magus: Character, precise: int = 0) -> int:
     """An aiming roll before the die: Perception + Finesse, +1 for each
-    Precise Casting; +6 for each size step past a basic Individual, -1 for
-    each target of a Multiple Casting (DE pp. 223, 226)."""
+    Precise Casting, less the Wound and Fatigue penalties; +6 for each
+    size step past a basic Individual, -1 for each target of a Multiple
+    Casting (DE pp. 223, 226, 404)."""
     return (
         magus.characteristics.perception
         + sum(ability_score(magus, "Finesse"))
         + precise
+        + _wounds(magus)
+        + _fatigue(magus)
     )
 
 
-def botch_warping(zeros: int) -> tuple[int, bool]:
+def botch_warping(zeros: int, *, prone: bool = False) -> tuple[int, bool]:
     """A spell botch's Warping Points (one for each zero on the botch
-    dice) and whether they risk Wizard's Twilight (two or more) (DE p.
-    227)."""
-    return max(0, zeros), zeros >= 2
+    dice) and whether they risk Wizard's Twilight: two or more, or one for
+    a magus who is Twilight Prone (DE pp. 148, 227)."""
+    return max(0, zeros), zeros >= (1 if prone else 2)
+
+
+def twilight_prone(magus: Character) -> bool:
+    return _has(magus, TWILIGHT_PRONE)
 
 
 def ritual_fatigue(levels_left: int, lost: int) -> tuple[int, str | None]:

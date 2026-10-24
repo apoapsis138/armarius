@@ -8,7 +8,7 @@ This guide follows a familiar from the magus's first meeting with the creature t
 
 Finding a suitable creature and winning it over is a matter for your stories, not for the app. Play it out at the table; the app only comes in once the creature has agreed to the bond.
 
-A magus can have one familiar at a time, so Bind Familiar is only offered while at least one magus in the saga has none.
+A magus can have one familiar at a time, so Bind Familiar is only offered while at least one magus in the saga has none. A Bjornaer, whose heartbeast takes its place, can't bind one (DE p. 234).
 
 ### Making the familiar's record
 <!-- help: guide-familiars-record -->
@@ -63,7 +63,7 @@ Binding the familiar is a season of lab work, planned in the magus's laboratory.
 2. Click the season, then **Plan**. The lab work form opens in place.
 <!-- /gui -->
 3. In **Lab work**, choose **Bind or strengthen a familiar**.
-4. Choose the **Technique** and **Form** the bond is made with, and type the **Golden cord**, **Silver cord** and **Bronze cord** scores you want, each 0 to 5.
+4. Choose the **Technique** and **Form** the bond is made with (strengthening it later uses the same two, DE p. 267), and type the **Golden cord**, **Silver cord** and **Bronze cord** scores you want, each 0 to 5.
 5. In **Vis from**, choose whose raw vis pays (the laboratory's, the magus's own or the covenant's stores), and in **Art** whether it is vis of the Technique or the Form.
 <!-- tui -->
 6. Check the Lab Total panel.

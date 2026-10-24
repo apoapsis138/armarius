@@ -10251,7 +10251,7 @@
     },
     {
       "id": "spell_circle_of_encompassing_flame",
-      "name": "Circle of Encompassing Flame",
+      "name": "Circle of Encompassing Flames",
       "technique": "Creo",
       "form": "Ignem",
       "level": 35,
@@ -11891,7 +11891,7 @@
     },
     {
       "id": "spell_discern_images_of_truth_and_falsehood",
-      "name": "Discern Images of Truth and Falsehood",
+      "name": "Discern the Images of Truth and Falsehood",
       "technique": "Intellego",
       "form": "Imaginem",
       "level": null,

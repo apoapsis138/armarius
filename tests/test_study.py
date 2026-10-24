@@ -98,7 +98,8 @@ def test_teaching_and_training_quality():
     teacher.virtues_flaws = [VirtueFlawInstance(vf_id="vf_good_teacher")]
     assert study.teaching_quality(teacher, students=3) == 2 + 3 + 3 + 5
     assert study.max_students(teacher) == 15
-    assert study.training_quality(teacher, "Latin") == 8
+    # Good Teacher adds its +5 to training too (DE p. 83).
+    assert study.training_quality(teacher, "Latin") == 8 + 5
 
 
 @pytest.mark.parametrize(

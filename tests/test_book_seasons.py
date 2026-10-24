@@ -241,3 +241,47 @@ def test_copies_of_his_own_tractatus_dont_use_up_his_allowance():
     assert saga.books[-1].copy_of == first.id
     found, _ = _work(saga, plan)
     assert found == []
+
+
+def test_months_lost_cut_a_summa_season_by_thirds():
+    saga = _saga()
+    # Careful copying gives 6 + Scribe 3 = 9; one month lost leaves 6 (DE p. 379).
+    _, work = _work(saga, _plan(bs.COPY_BOOK, book_id="summa", months_lost=1))
+    assert work.points_gained == 6
+    _, work = _work(saga, _plan(bs.COPY_BOOK, book_id="summa", months_lost=3))
+    assert work.points_gained == 0
+
+
+def test_a_copy_without_the_knowledge_is_corrupt():
+    saga = _saga()
+    saga.books += [
+        Book(
+            "parma",
+            "Parma",
+            "Ability Summa",
+            owner_kind="covenant",
+            owner_id="cov",
+            ability="Parma Magica",
+            level=2,
+            quality=8,
+        ),
+        Book(
+            "sight",
+            "Sight",
+            "Ability Summa",
+            owner_kind="covenant",
+            owner_id="cov",
+            ability="Second Sight",
+            level=2,
+            quality=8,
+        ),
+    ]
+    magus = saga.character("m")
+    magus.abilities = [a for a in magus.abilities if a.name != "Magic Theory"]
+    found, _ = _work(saga, _plan(bs.COPY_BOOK, book_id="parma"))
+    assert found == ["Copying a book on Parma Magica needs Magic Theory 1."]
+    found, _ = _work(saga, _plan(bs.COPY_BOOK, book_id="sight"))
+    assert found == ["Copying a book on Second Sight needs it, or a Realm Lore, at 1."]
+    magus.abilities.append(Ability("Magic Lore", xp=ability_xp(1)))
+    found, _ = _work(saga, _plan(bs.COPY_BOOK, book_id="sight"))
+    assert found == []  # DE p. 381

@@ -59,10 +59,10 @@ from . import (
     lab_virtues,
     laboratory_seasons,
     library,
-    sites,
     spell_levels,
     spell_teaching,
     supplement_work,
+    warping,
 )
 from .breakdown import Line
 from .casting import _lowest
@@ -790,8 +790,9 @@ def subject_of(saga: Saga, magus: Character, plan: SeasonPlan) -> Character | No
 
 def is_mundane(character: Character) -> bool:
     """Whether a Longevity Ritual works at half strength for `character`:
-    neither a magus nor someone with a Supernatural Ability."""
-    if character.type == "magus":
+    neither a magus (nor anyone whose Arts are opened) nor someone with a
+    Supernatural Ability (DE p. 262)."""
+    if warping.opened_to_arts(character):
         return False
     return not any(a.category in SUPERNATURAL_CATEGORIES for a in character.abilities)
 
@@ -847,7 +848,7 @@ def _extraction(
     lab_total = max(0, int(total.total))
     if form:
         divisor = lab_virtues.form_extraction_divisor(magus, form)
-        pawns = max(1, round_up(lab_total / divisor))
+        pawns = max(0, round_up(lab_total / divisor))
     else:
         pawns = lab.vis_extracted(lab_total)
     return [], LabWork(
@@ -888,15 +889,15 @@ def _one_season_work(
         total = lab.LabTotal(total=0, lines=[])
         return [], LabWork(None, total, 0, finished=True, vis_cost={"Vim": 1})
     if plan.activity == EXTRACT:
-        covenant = saga.covenant(lab_.covenant_id)
-        realm = covenant.aura_realm if covenant is not None else "Magic"
-
-        own = sites.lab_aura(saga, lab_)
-        if own is not None:
-            realm = own[1]
+        strength, realm = lab.lab_aura(saga, lab_)
         if realm != "Magic":
             return [
                 f"Vis is extracted only in a Magic aura; {lab_.name}'s is {realm}."
+            ], None
+        if strength <= 0:
+            return [
+                f"Vis is extracted only where there is a Magic aura; "
+                f"{lab_.name}'s is {strength} (DE p. 250)."
             ], None
         return _extraction(saga, magus, plan, lab_, days)
     # A Longevity Ritual.

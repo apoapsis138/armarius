@@ -18,17 +18,21 @@ from .models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
-from .rules.familiar_seasons import cord_cost
+from .rules.familiar_seasons import HEARTBEAST, cord_cost
 
 
 def unbonded_magi(saga: Saga) -> list[Character]:
     """Full magi with no Familiar bound yet -- one per magus at a time. A
-    line or sketch magus has no sheet to bind one to."""
+    line or sketch magus has no sheet to bind one to, and a Bjornaer can't
+    bind one (DE p. 234)."""
     bonded = {f.character_id for f in saga.familiars}
     return [
         c
         for c in saga.characters
-        if c.type == "magus" and c.detail == FULL and c.id not in bonded
+        if c.type == "magus"
+        and c.detail == FULL
+        and c.id not in bonded
+        and not any(vf.vf_id == HEARTBEAST for vf in c.virtues_flaws)
     ]
 
 

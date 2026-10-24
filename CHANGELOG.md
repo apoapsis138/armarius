@@ -109,6 +109,48 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.10.1 — 2026-10-24
+
+### Computus
+
+The closing audit's small fixes, each checked against the Definitive
+Edition:
+
+- **Casting.** Fast Caster adds +3 to fast-casting speed; Wound and
+  Fatigue penalties apply to fast casting, Concentration (three times the
+  Wound Penalty) and aiming; Afflicted Tongue takes 2 off a spell cast
+  with words; Susceptibility to Divine Power doubles a Divine aura's
+  penalty and botch dice; Twilight Prone risks Twilight on a single botch.
+  The sheet reminds you of Heartbeast's -15 and Verditius casting tools,
+  and its Casting Score names the Fatigue it costs.
+- **Character creation.** Weak Characteristics takes 3 points off the
+  budget; eight Virtues and Flaws open the Lore they name; a Supernatural
+  Ability from a Virtue lets the character take Penetration; Magic Theory
+  3 is advised at Gauntlet; Church Upbringing's 25 xp is checked; missing
+  Loyal and Brave are advice, not warnings.
+- **Covenants.** Winter Ruins takes the right monster Hook, and a
+  covenant has at most seven Aura Boons and an aura of at most 10.
+- **The laboratory.** Penetration levels in a device round up; vis
+  extraction gives no free pawn and needs a Magic aura; a device's
+  capacity counts only effects begun; a companion whose Arts are opened
+  gets a full Longevity Ritual; a Momentary Creo spell that isn't a
+  Ritual gets a note; a Bjornaer can't bind a familiar, and strengthening
+  a bond uses the Arts it was made with.
+- **Seasons.** Months lost cut a summa's writing, copying or translating;
+  magi can plan Worship; Good Teacher's +5 applies to training; copying a
+  Parma Magica or Supernatural Ability book needs the matching score; a
+  botched apprentice search leaves the magus duped; the Crisis text says
+  what a physician adds.
+- **Fights and sieges.** A botched roll keeps its negative total.
+- Two spells carry their printed names.
+
+### Concilium
+
+- **The Redcap vote.** An unGifted Redcap has no vote at any Tribunal,
+  while a Gifted one votes (DE p. 15); a Redcap carrying a magus's sigil
+  casts that magus's vote. Tribunals whose customs give Redcaps no vote
+  keep them silent.
+
 ## 3.10.0 — 2026-10-24
 
 ### Orbis

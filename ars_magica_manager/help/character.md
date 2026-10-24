@@ -949,7 +949,9 @@ Hermetic Magic).
 <!-- /gui -->
 It changes as
 the Arts, Characteristics or covenant change. Virtues and Flaws that change
-words and gestures (Mute, Quiet Magic, Deft Form), Magic Resistance (Flawed
+words and gestures (Mute, Quiet Magic, Deft Form, Afflicted Tongue's -2 to
+a spell spoken aloud), a Divine aura (Susceptibility to Divine Power
+doubles its penalty and its botch dice), Magic Resistance (Flawed
 Parma Magica), Penetration (Weak Magic) or the Fatigue a spell costs
 (Enfeebled, Withstand Casting, Mythic Blood) are counted, and named where
 they apply.
@@ -968,7 +970,8 @@ Spells lines counts Mercurian Magic (half, at least one pawn) and Waster of
 Vis (a third more); with Rigid Magic it says no Ritual can be cast (Ars
 Magica Definitive Edition, Chapter Four: Virtues and Flaws). Magical
 Focus, Deleterious Circumstances and Mystical Choreography are named there
-too.
+too, as are a Heartbeast's -15 in animal form and Verditius Magic's casting
+tools.
 
 **Spontaneous levels.** A Spontaneous spell uses its own Casting Score,
 without the Virtues that count only for Formulaic spells (Method Caster's
@@ -991,13 +994,16 @@ Improvisation depends on the spell, so it stays a reminder.
 
 **Casting options** (DE pp. 215-218, 223, 260), each a line under the
 scores with the magus's own figures: fast casting (speed Quickness +
-Finesse + stress die against the foe's Initiative, -6 for each spell after
-the first; the score -10, +2 botch dice, no vis); ceremonial casting (+
+Finesse + stress die against the foe's Initiative, +3 with Fast Caster,
+-6 for each spell after the first; the score -10, +2 botch dice, no vis;
+knowing an attacking spell's Form takes Perception + Awareness + die
+against 15 - its magnitude); ceremonial casting (+
 Artes Liberales + Philosophiae and props +1 to +5 instead of words and
 gestures, 15 minutes a magnitude, 3 in a laboratory; it needs experience in
-one of the two); Concentration (Stamina + Concentration; a failure ends the
-spell and adds a botch die); aiming (Perception + Finesse, +6 for each size
-step past a basic Individual); and a talisman's attunements, best first,
+one of the two); Concentration (Stamina + Concentration, with three times
+the Wound Penalty and the Fatigue penalty; a failure ends the spell and adds
+a botch die); aiming (Perception + Finesse, less the Wound and Fatigue
+penalties, +6 for each size step past a basic Individual); and a talisman's attunements, best first,
 of which the best that applies adds to the score while he touches it.
 
 **A known spell's lines** count the Golden Cord of the magus's bound

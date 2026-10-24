@@ -42,7 +42,7 @@ from .rounding import round_down, round_up
 SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 59-154"
 MYSTERIES_SOURCE = "The Mysteries Revised Edition, Chapter 6: Hermetic Astrology"
 ALCHEMY_SOURCE = "The Mysteries Revised Edition, Chapter 3: Hermetic Alchemy"
-HUBRIS_SOURCE = "Houses of Hermes: Mystery Cults, House Verditius, Hubris"
+HUBRIS_SOURCE = "Ars Magica Definitive Edition, House Verditius, Hubris, pp. 241-242"
 
 POTENT = ("vf_potent_magic", "vf_potent_magic_house")
 POTENT_MAJOR = ("vf_potent_magic_major", "vf_potent_magic_sign_planet")

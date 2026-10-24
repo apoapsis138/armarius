@@ -67,20 +67,22 @@ def _run(saga):
 
 def test_extracting_vis_gives_a_tenth_of_the_creo_vim_lab_total():
     saga = _saga()
+    saga.covenants[0].aura = 1  # vis is extracted only in a Magic aura
     found, work = _work(saga, _plan(lab_seasons.EXTRACT, vis_from="laboratory"))
-    assert found == [] and int(work.lab_total.total) == 14
-    assert work.vis_gained == 2  # 14 / 10, rounded up
+    assert found == [] and int(work.lab_total.total) == 15
+    assert work.vis_gained == 2  # 15 / 10, rounded up
     seasons.plan_lab_work(saga, _plan(lab_seasons.EXTRACT, vis_from="laboratory"))
     (worked,) = _run(saga)
     assert saga.laboratories[0].raw_vis == {"vim": 2}
     assert [g.result.xp for g in worked.gains] == [2]  # Magic Theory Exposure
     entry = saga.laboratories[0].diary[-1]
     assert (entry.name, entry.activity) == ("Extract vis: Vim vis", "Extract Vis")
-    assert entry.details == "Tiberius: Lab Total 14: 2 pawn(s) of Vim vis."
+    assert entry.details == "Tiberius: Lab Total 15: 2 pawn(s) of Vim vis."
 
 
 def test_lab_work_can_use_the_covenants_vis_stores():
     saga = _saga()
+    saga.covenants[0].aura = 1  # vis is extracted only in a Magic aura
     keep, lab = saga.covenants[0], saga.laboratories[0]
     # Extracted vis goes to the covenant: a new Vim store, kept there.
     seasons.plan_lab_work(saga, _plan(lab_seasons.EXTRACT, vis_from="covenant"))
@@ -337,6 +339,7 @@ def test_difficult_longevity_ritual_halves_the_lab_total():
 
 def test_the_planning_tab_shows_one_season_work():
     saga = _saga()
+    saga.covenants[0].aura = 1  # vis is extracted only in a Magic aura
     seasons.plan_lab_work(saga, _plan(lab_seasons.EXTRACT))
     rows = [
         strip_markup(r) for _, r in seasons.lab_queue_rows(saga, saga.laboratories[0])
@@ -402,6 +405,7 @@ async def test_the_lab_work_screen_offers_the_magus_s_lab_virtues():
         VirtueFlawInstance("vf_potent_magic", params={"field": "fire"}),
         VirtueFlawInstance("vf_hermetic_alchemy"),
     ]
+    saga.covenants[0].aura = 1  # vis is extracted only in a Magic aura
     storage.save_saga(saga)
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:

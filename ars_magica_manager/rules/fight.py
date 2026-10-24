@@ -333,7 +333,8 @@ def _roll(
     die = dice.stress_die(rng, saga=saga)
     if die.botched:
         lines.append(f"{label}: {base:+d} + a botch ({die.botches} on the botch dice)")
-        return 0, True
+        # A botch adds nothing, so a negative base stays negative (DE p. 393).
+        return min(0, base), True
     lines.append(f"{label}: {base:+d} + stress die {die.value} = {base + die.value}")
     return base + die.value, False
 

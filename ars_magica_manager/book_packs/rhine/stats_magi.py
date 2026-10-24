@@ -624,7 +624,7 @@ def peregrinatores(rhine: Rhine) -> None:
                 ("Comfort of the Drenched Traveler", "PeAq", 5, 0),
                 ("Whispers Through the Black Gate", "InCo(Me)", 15, 0),
                 ("Spasms of the Uncontrolled Hand", "ReCo", 5, 0),
-                ("Discern Images of Truth and Falsehood", "InIm", 25, 0),
+                ("Discern the Images of Truth and Falsehood", "InIm", 25, 0),
                 ("Taste of the Spices and Herbs", "MuIm", 5, 0),
                 ("Sight of the Transparent Motive", "InMe", 10, 1),
                 ("Frosty Breath of the Spoken Lie", "InMe", 20, 1),

@@ -49,7 +49,11 @@ REQUIRED: tuple[tuple[str, int], ...] = (
     ("Magic Theory", 1),
     (LATIN, 1),
 )
-ADVISED: tuple[tuple[str, int], ...] = ((LATIN, 4), ("Artes Liberales", 1))
+ADVISED: tuple[tuple[str, int], ...] = (
+    (LATIN, 4),
+    ("Artes Liberales", 1),
+    ("Magic Theory", 3),
+)
 SPELLS_STEP = "apprenticeship_spells"
 
 

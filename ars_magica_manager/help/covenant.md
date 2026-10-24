@@ -286,7 +286,8 @@ are under the title.
 That total and the Hooks' total share one colour: plain while there are
 points still to spend, the success colour when they match, and the error
 colour when the Boons cost more than the Hooks provide. Some Boons change
-figures elsewhere: an Aura Boon raises the covenant's Aura, a Style of
+figures elsewhere: an Aura Boon raises the covenant's Aura (at most seven
+of them, for an Aura of at most 10, DE p. 183), a Style of
 Governance Boon fills in the Type of Governance under Loyalty, and a
 Boon that enlarges the buildings adds to the Buildings cost on the
 Economics tab. A Hidden Resources Boon holds 250 Build Points the magi can't

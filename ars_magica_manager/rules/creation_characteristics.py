@@ -62,6 +62,7 @@ VIRTUE_LIMIT = 5
 GREAT = "vf_great_characteristic"
 POOR = "vf_poor_characteristic"
 IMPROVED = "vf_improved_characteristics"
+WEAK = "vf_weak_characteristics"
 #: The point a copy of Great or Poor (Characteristic) moves its score.
 STEPS = {GREAT: 1, POOR: -1}
 
@@ -349,8 +350,12 @@ def unapply_virtue(
 
 
 def budget(character: Character) -> int:
+    """The points to buy Characteristics with: 7, +3 for each Improved
+    Characteristics, -3 for each Weak Characteristics (two leave one;
+    DE pp. 86, 152)."""
     improved = sum(1 for vf in character.virtues_flaws if vf.vf_id == IMPROVED)
-    return BUDGET + IMPROVED_POINTS * improved
+    weak = sum(1 for vf in character.virtues_flaws if vf.vf_id == WEAK)
+    return BUDGET + IMPROVED_POINTS * (improved - weak)
 
 
 def points_text(

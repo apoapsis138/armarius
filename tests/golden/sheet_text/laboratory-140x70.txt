@@ -127,7 +127,7 @@
       Experimenting            + a simple die
 
       Longevity result         Creo Corpus -1: aging rolls -0
-      Vis extraction           Creo Vim -1: 1 pawns a season
+      Vis extraction           Creo Vim -1: 0 pawns a season
       Raw vis a season         up to 0 pawns (Magic Theory)
       Shape and material       bonuses up to +0 (Magic Theory)
 

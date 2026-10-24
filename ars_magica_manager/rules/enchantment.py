@@ -22,7 +22,7 @@ from ..models import (
     InstilledEffect,
     Saga,
 )
-from .rounding import round_down, round_up
+from .rounding import round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Enchantments, pp. 252-260"
@@ -149,14 +149,16 @@ def level_breakdown(
 ) -> list[tuple[str, int]]:
     """What makes up the modified level (DE ch. 8, Designing the Effect):
     the effect level, the uses-per-day addition (not on a Charged Item),
-    Penetration (+1 per 2 points) and each modification."""
+    Penetration (a level per 2 points, rounded up) and each modification."""
     parts = [("level", effect.level)]
     if device.type != CHARGED:
         uses = EFFECT_FREQUENCIES.get(effect.uses_per_day, 0)
         if uses:
             parts.append((f"{uses_text(effect.uses_per_day)}", uses))
     if effect.penetration > 0:
-        parts.append((f"Pen {effect.penetration}", round_down(effect.penetration / 2)))
+        # Each added level gives +2 Penetration, so an odd score takes the
+        # next level up (DE p. 257).
+        parts.append((f"Pen {effect.penetration}", round_up(effect.penetration / 2)))
     parts += [
         (label, levels)
         for flag, label, levels in MODIFICATIONS
@@ -190,10 +192,18 @@ def vis_cost(device: EnchantedDevice, effect: InstilledEffect) -> int:
     return computed_vis(device, effect)
 
 
-def pawns_used(device: EnchantedDevice) -> int:
-    """The capacity the effects take: the vis of every effect, including
-    partly instilled and unknown ones."""
-    return sum(vis_cost(device, effect) for effect in device.effects)
+def pawns_used(device: EnchantedDevice, starting: InstilledEffect | None = None) -> int:
+    """The capacity the effects take: the vis of every effect instilled or
+    begun (an effect's vis is spent in its first season), unknown ones
+    included, and of `starting`, the one about to be begun. An effect
+    planned but not begun takes none yet (DE p. 258)."""
+    return sum(
+        vis_cost(device, effect)
+        for effect in device.effects
+        if effect is starting
+        or effect.instilling_progress is None
+        or effect.instilling_progress > 0
+    )
 
 
 def uses_text(uses_per_day: str) -> str:

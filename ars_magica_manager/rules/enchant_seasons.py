@@ -497,9 +497,9 @@ def _effect_work(
         return [f"No one else can instil effects in {device.name}, a talisman."], None
     if not device.pawns_opened:
         return [f"{device.name} has to be opened first."], None
-    if enchantment.pawns_used(device) > device.pawns_opened:
+    if enchantment.pawns_used(device, effect) > device.pawns_opened:
         return [
-            f"{device.name}'s effects take {enchantment.pawns_used(device)} pawns; only "
+            f"{device.name}'s effects take {enchantment.pawns_used(device, effect)} pawns; only "
             f"{device.pawns_opened} were opened."
         ], None
     why = ""

@@ -231,6 +231,12 @@ class Design:
         )
 
 
+#: A lasting thing made by Creo needs the power of a Ritual.
+MOMENTARY_CREO = (
+    "A Momentary Creo spell that creates a lasting thing must be a Ritual (DE p. 311)."
+)
+
+
 def spell_level(
     base: int,
     range_: str,
@@ -240,12 +246,16 @@ def spell_level(
     extra_magnitudes: int = 0,
     ritual: bool = False,
     custom_steps: dict[str, int] | None = None,
+    technique: str = "",
 ) -> Design | None:
     """The level of a spell with this base and Range/Duration/Target, plus
     `extra_magnitudes` of size and requisites. A parameter a Virtue or
     Mystery grants costs as its standard counterpart; `custom_steps` gives
     the magnitudes of any other ("range"/"duration"/"target" -> n: a
-    breakthrough or a troupe ruling). None when a parameter is unknown."""
+    breakthrough or a troupe ruling). Given the `technique`, a Momentary
+    Creo spell that isn't a Ritual gets a note: what it creates vanishes
+    unless the spell is a Ritual (DE p. 311). None when a parameter is
+    unknown."""
     custom = custom_steps or {}
     steps = []
     for kind, name in (("range", range_), ("duration", duration), ("target", target)):
@@ -266,6 +276,8 @@ def spell_level(
     if (ritual or design.ritual_required) and level < RITUAL_MINIMUM:
         design.level = RITUAL_MINIMUM
         design.notes.append(f"A Ritual is at least level {RITUAL_MINIMUM}.")
+    if technique == "Creo" and duration == "Momentary" and not ritual:
+        design.notes.append(MOMENTARY_CREO)
     if range_ == "Personal" and target in CONTAINER_TARGETS:
         design.notes.append(
             f"A Personal Range spell can't have a {target} Target (DE p. 303)."

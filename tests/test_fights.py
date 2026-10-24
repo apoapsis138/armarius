@@ -162,3 +162,18 @@ def test_restart_clears_the_order_and_chronicle_but_keeps_wounds():
     assert (fight.round, fight.order, fight.log, fight.over) == (0, [], [], "")
     assert not fight.recorded
     assert target.wounds.dead
+
+
+def test_a_botch_leaves_a_negative_base_where_it_was():
+    # A botch adds nothing: a negative base Defence stays negative (DE p. 393).
+    lines: list[str] = []
+    assert rules._roll(
+        Scripted(0, 0), Saga(id="s", name="S"), "Defence", -3, lines
+    ) == (
+        -3,
+        True,
+    )
+    assert rules._roll(Scripted(0, 0), Saga(id="s", name="S"), "Defence", 4, lines) == (
+        0,
+        True,
+    )

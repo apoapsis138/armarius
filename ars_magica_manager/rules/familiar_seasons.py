@@ -48,6 +48,10 @@ ACTIVITIES: tuple[str, ...] = (BIND, EMPOWER)
 BASE_LEVEL = 25
 
 
+#: Bjornaer magi cannot bind familiars (DE p. 234).
+HEARTBEAST = "vf_heartbeast"
+
+
 def binding_level(familiar: Familiar) -> int:
     """25 + Magic Might + 5 x Size."""
     return BASE_LEVEL + familiar.magic_might + 5 * familiar.size
@@ -86,8 +90,20 @@ def work(
     pool = vis_pool(saga, magus, plan)
 
     if plan.activity == BIND:
+        if any(vf.vf_id == HEARTBEAST for vf in magus.virtues_flaws):
+            return ["Bjornaer magi cannot bind familiars (DE p. 234)."], None
         if not plan.technique or not plan.form:
             return ["Choose the Technique and Form the bond is made with."], None
+        bound = (familiar.binding_technique, familiar.binding_form)
+        if (
+            familiar.year_bound is not None
+            and all(bound)
+            and (plan.technique, plan.form) != bound
+        ):
+            return [
+                f"Strengthening the bond uses the Arts it was made with: "
+                f"{bound[0]} {bound[1]} (DE p. 267)."
+            ], None
         total = lab.lab_total(
             saga,
             magus,

@@ -759,7 +759,7 @@ def test_traits_confidence_and_reputations_at_the_end():
     grog.personality_traits = [ScoredTrait("Brave", 2), ScoredTrait("Greedy", 5)]
     grog.background.confidence_score = 1
     found = _vf(grog, "finish")
-    assert found["A grog has Loyal"] == ("warn", "missing")
+    assert found["A grog has Loyal"] == ("advice", "missing")  # DE p. 52
     assert found["A warrior has Brave"] == ("pass", "taken")
     assert found["Greedy past 3 only from a Personality Flaw"] == ("advice", "+5")
     assert found["A grog has no Confidence"] == ("warn", "1, 0 points")

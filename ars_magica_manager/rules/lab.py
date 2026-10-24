@@ -564,8 +564,8 @@ def longevity_modifier(lab_total: int, *, mundane: bool = False) -> int:
 
 def vis_extracted(lab_total: int) -> int:
     """Pawns of Vim vis from a season of extraction: Creo Vim Lab Total /
-    10, rounded up."""
-    return max(1, round_up(lab_total / 10))
+    10, rounded up; none from a total of 0 or less (DE p. 250)."""
+    return max(0, round_up(lab_total / 10))
 
 
 def vis_limit(magus: Character) -> int:

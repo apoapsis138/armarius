@@ -87,8 +87,9 @@ def test_cyclic_magic_and_environmental_magic_condition():
     assert _total(saga, _plan(cycle_bonus=True)) == 18
     assert _total(saga, _plan(cycle_penalty=True)) == 12
     saga.characters[0].virtues_flaws = [_vf("vf_environmental_magic_condition")]
+    saga.covenants[0].aura = 1  # vis is extracted only in a Magic aura
     extract = _plan(lab_seasons.EXTRACT, None, vis_from="laboratory", condition=True)
-    assert _total(saga, extract) == 7  # 14 halved
+    assert _total(saga, extract) == 7  # 15 halved
 
 
 def test_short_ranged_magic_halves_designing_beyond_touch():
@@ -160,11 +161,12 @@ def test_waster_of_vis_needs_a_third_more():
 
 def test_hermetic_alchemy_extracts_form_vis_at_a_twentieth():
     saga = _saga(_vf("vf_hermetic_alchemy"))
+    saga.covenants[0].aura = 1  # vis is extracted only in a Magic aura
     extract = _plan(lab_seasons.EXTRACT, None, vis_from="laboratory")
     _found, work = lab_seasons.work(saga, saga.characters[0], extract)
-    assert (work.vis_gained, work.vis_gained_art) == (2, "Vim")  # 14 / 10
-    # Ignem (5) above Vim (4): the total stays 14, plus shape and
-    # material up to Magic Theory 3; 17 / 20 rounds up to 1.
+    assert (work.vis_gained, work.vis_gained_art) == (2, "Vim")  # 15 / 10
+    # Ignem (5) above Vim (4): the total stays 15, plus shape and
+    # material up to Magic Theory 3; 18 / 20 rounds up to 1.
     ignem = _plan(
         lab_seasons.EXTRACT,
         None,
@@ -173,13 +175,13 @@ def test_hermetic_alchemy_extracts_form_vis_at_a_twentieth():
         shape_bonus=5,
     )
     _found, work = lab_seasons.work(saga, saga.characters[0], ignem)
-    assert int(work.lab_total.total) == 17
+    assert int(work.lab_total.total) == 18
     assert (work.vis_gained, work.vis_gained_art) == (1, "Ignem")
     # Aquam (2) below Vim limits the total as a requisite.
     aquam = _plan(
         lab_seasons.EXTRACT, None, vis_from="laboratory", extract_form="Aquam"
     )
-    assert _total(saga, aquam) == 12
+    assert _total(saga, aquam) == 13
     seasons.plan_lab_work(saga, ignem)
     seasons.apply(saga, seasons.resolve(saga))
     assert saga.laboratories[0].raw_vis == {"ignem": 1}
@@ -187,11 +189,12 @@ def test_hermetic_alchemy_extracts_form_vis_at_a_twentieth():
 
 def test_an_extractor_of_form_vis_gets_a_tenth_and_only_its_form():
     saga = _saga(_vf("vf_extractor_of_form_vis", form="ignem"))
+    saga.covenants[0].aura = 1  # vis is extracted only in a Magic aura
     ignem = _plan(
         lab_seasons.EXTRACT, None, vis_from="laboratory", extract_form="Ignem"
     )
     _found, work = lab_seasons.work(saga, saga.characters[0], ignem)
-    assert (work.vis_gained, work.vis_gained_art) == (2, "Ignem")  # 14 / 10
+    assert (work.vis_gained, work.vis_gained_art) == (2, "Ignem")  # 15 / 10
     aquam = _plan(
         lab_seasons.EXTRACT, None, vis_from="laboratory", extract_form="Aquam"
     )

@@ -253,6 +253,13 @@ def roll(
     return result
 
 
+#: Medical attention through a crisis (DE p. 392).
+PHYSICIAN = (
+    "An attendant's Int + Medicine against 6 adds his Medicine score to it; "
+    "only one doctor helps, and his botch takes 3 off (DE p. 392)."
+)
+
+
 def crisis(
     character: Character,
     age: int,
@@ -278,4 +285,5 @@ def crisis(
         bonus = _effects(character, "crisis_survival")
         extra = "".join(f" + {e.entry.name} {int(e.amount or 0)}" for e in bonus)
         text += f" Survival: Stamina{extra} stress roll against {against}."
+        text += " " + PHYSICIAN
     return text, ritual

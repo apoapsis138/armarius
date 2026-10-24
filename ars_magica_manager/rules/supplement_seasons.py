@@ -408,7 +408,8 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "921",
         None,
         "the church's Divine aura",
-        _C,
+        # Any Christian with a chapel may worship, a magus too (DE p. 378).
+        (*_M, *_C),
         group=groups.FAITH,
     ),
     SimpleActivity(
