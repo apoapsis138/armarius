@@ -277,7 +277,7 @@ When Winter is advanced, the year ends:
 - Dwindling Resources lose a tenth of their value when they began dwindling (gone after ten years), and a contested resource still not secured gives nothing that year;
 - each covenant's surplus is added to its Wealth.
 
-Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary.
+Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary, and every wounded character makes the season's [Recovery rolls](help:recovery-roll) (bruises first leave their residual wounds), written in their Diary; everyone's Fatigue is rested away.
 
 ### Afterwards
 <!-- help: advance-season-after -->

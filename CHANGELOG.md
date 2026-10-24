@@ -109,6 +109,44 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.8.0 — 2026-10-24
+
+### Computus
+
+- **Wounds that heal.** Each wound now remembers where it came from (an
+  injury, which heals with Chirurgy, or a disease, poison or deprivation,
+  which heal with Medicine) and the +3 its stable Recovery rolls have
+  built up. The Recovery Total (Definitive Edition p. 405) is Stamina +
+  the best Chirurgy or Medicine among the character's covenant-mates,
+  named, + those +3s + magical aid (a Zenodochium's +9) + the
+  laboratory's Health + a familiar's Bronze Cord + Rapid Convalescence or
+  Fragile Constitution, less an Infernal aura where they live, in which a
+  disease can't improve. Health shows it under the wounds.
+- **Take Harm**, in More on Health: an injury from heat and corrosion (by
+  how much of the body it covers), a fall or an impact, read on the Damage
+  Table against Soak; a poison or a disease from the books' tables, a
+  Stamina check against its Ease Factor; deprivation of air, water or food,
+  costing Fatigue (long-term for food and water) and then wounds. **Recovery
+  Roll** rolls the wounds now, during a story. Both are kept only when you
+  choose Keep.
+- **Long-term Fatigue.** The Fatigue Level shows how many of its levels
+  are long-term.
+- **Bruises**, a Lords of Men rule option: a non-lethal blow gives a
+  bruise, whose penalty counts as a wound's; it heals within hours and a
+  Heavy or worse one leaves a residual wound.
+- **Penalties everywhere.** Wound and Fatigue penalties now come off the
+  Casting Score and certamen totals too.
+- **Animal grogs' natural Protection** (at least 1, Grogs p. 137) is
+  added to their Soak and can be set on their animal form.
+
+### Book of Hours
+
+- **A season of healing.** When a season is advanced, every wounded
+  character makes its Recovery rolls: a Light wound weekly, a Medium one
+  monthly, a Heavy one once, an Incapacitating one twice a day until it
+  becomes Heavy or kills; bruises leave their residual wounds; everyone's
+  Fatigue is rested away. The rolls go into the Diary.
+
 ## 3.7.0 — 2026-10-24
 
 ### Computus

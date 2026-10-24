@@ -36,7 +36,6 @@ from ..models import (
     Possession,
     Saga,
     VirtueFlawInstance,
-    Wounds,
 )
 from ..rules import creation_access as access
 from ..rules import familiar_seasons, scores
@@ -172,7 +171,7 @@ def edits(familiar: Familiar) -> dict[str, Form]:
     f = familiar
 
     def set_wounds(values: dict[str, Any]) -> None:
-        f.wounds = Wounds(soak=f.wounds.soak, **values)
+        f.wounds = f.wounds.with_counts(soak=f.wounds.soak, **values)
 
     def set_fatigue(values: dict[str, Any]) -> None:
         f.fatigue_level = values["level"]

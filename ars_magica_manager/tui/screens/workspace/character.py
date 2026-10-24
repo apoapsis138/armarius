@@ -12,6 +12,7 @@ from .... import (
     catalog,
     creation,
     disputations,
+    health,
     seasons,
     sourcebooks,
     storage,
@@ -38,7 +39,6 @@ from ....models import (
     LabTextAccess,
     Possession,
     Spell,
-    Wounds,
     add_raw_vis,
     replace_raw_vis,
 )
@@ -125,6 +125,29 @@ class CharacterActions(WorkspaceBase):
             self.call_later(self._show_character, character)
 
         run_steps(self.app, menu_forms.character_traditions(self.saga, character), done)
+
+    def action_take_harm(self) -> None:
+        """More's Take Harm on Health: an injury, poison, disease or
+        deprivation, rolled and kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            health.take_harm_form(self.saga, character),
+            lambda _end: self._commit("section-char-health"),
+        )
+
+    def action_recovery_roll(self) -> None:
+        """More's Recovery Roll on Health: a roll for each wound now."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            health.recovery_form(self.saga, character),
+            lambda _end: self._commit("section-char-health"),
+        )
 
     def action_disputatio(self) -> None:
         """More's Disputatio: a schoolmen's debate with another character,
@@ -405,7 +428,7 @@ class CharacterActions(WorkspaceBase):
 
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is not None:
-                character.wounds = Wounds(**result)
+                character.wounds = character.wounds.with_counts(**result)
                 self._commit("section-char-health")
 
         self.app.push_screen(

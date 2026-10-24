@@ -13,7 +13,6 @@ from ....markup import escape
 from ....models import (
     Ability,
     Possession,
-    Wounds,
 )
 from ..fields import (
     FieldsDialog,
@@ -100,7 +99,9 @@ class FamiliarActions(WorkspaceBase):
 
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is not None:
-                familiar.wounds = Wounds(soak=familiar.wounds.soak, **result)
+                familiar.wounds = familiar.wounds.with_counts(
+                    soak=familiar.wounds.soak, **result
+                )
                 self._commit("section-fam-health")
 
         self.app.push_screen(

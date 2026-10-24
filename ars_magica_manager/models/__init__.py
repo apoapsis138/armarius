@@ -21,8 +21,11 @@ from .books import TRACTATUS_SUBJECTS as TRACTATUS_SUBJECTS
 from .books import Book as Book
 from .books import Codex as Codex
 from .character import BOND_APPLIES as BOND_APPLIES
+from .character import BRUISE_SEVERITIES as BRUISE_SEVERITIES
 from .character import TRADITION_EFFECT_KINDS as TRADITION_EFFECT_KINDS
 from .character import TRADITION_ITEM_KINDS as TRADITION_ITEM_KINDS
+from .character import WOUND_SEVERITIES as WOUND_SEVERITIES
+from .character import WOUND_SOURCES as WOUND_SOURCES
 from .character import Aging as Aging
 from .character import AnimalForm as AnimalForm
 from .character import ArtScore as ArtScore
@@ -42,6 +45,7 @@ from .character import ResearchAttempt as ResearchAttempt
 from .character import ScoredTrait as ScoredTrait
 from .character import TraditionEffect as TraditionEffect
 from .character import Wounds as Wounds
+from .character import WoundState as WoundState
 from .character import character_age as character_age
 from .common import ABILITY_CATEGORIES as ABILITY_CATEGORIES
 from .common import COMPANION_TYPES as COMPANION_TYPES

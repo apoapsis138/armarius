@@ -26,7 +26,6 @@ from ..models import (
     CreatureAttack,
     CreaturePower,
     Saga,
-    Wounds,
 )
 from ..sections import (
     BESTIARY_SECTION,
@@ -381,7 +380,7 @@ def health_form(creature: Creature) -> Form:
     def apply(values: dict[str, Any]) -> None:
         values = dict(values)
         creature.fatigue_level = values.pop("level")
-        creature.wounds = Wounds(**values)
+        creature.wounds = creature.wounds.with_counts(**values)
 
     return Form("Edit Wounds and Fatigue", fields, apply)
 

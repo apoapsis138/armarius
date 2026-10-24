@@ -65,6 +65,15 @@ def animal_fields(character: Character) -> list[DialogField]:
             show_if=_animal,
         ),
         DialogField(
+            "protection",
+            "Natural Protection",
+            "int",
+            animal.protection if animal is not None else 1,
+            hint="Its fur, feathers or scales, added to Soak: at least 1 for most "
+            "animals (Grogs p. 137); Thick Fur, Tough Hide and Shell add more.",
+            show_if=_animal,
+        ),
+        DialogField(
             "size",
             "Size",
             "int",
@@ -94,7 +103,13 @@ def animal_from(values: dict[str, Any]) -> AnimalForm | None:
         return None
     species = str(values.get("species") or "").strip()
     language = str(values.get("language") or "").strip() or species
-    return AnimalForm(values["kind"], species, language, values.get("lifespan"))
+    return AnimalForm(
+        values["kind"],
+        species,
+        language,
+        values.get("lifespan"),
+        int(values.get("protection", 1) or 0),
+    )
 
 
 def animal_live(values: dict[str, Any]) -> str:

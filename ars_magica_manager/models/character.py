@@ -146,10 +146,42 @@ class Aging:
         return aging
 
 
+#: Where a wound came from: an injury heals with Chirurgy, the rest with
+#: Medicine (DE p. 405).
+WOUND_SOURCES: tuple[str, ...] = ("injury", "disease", "poison", "deprivation")
+#: A wound's severities, least first; "incapacitating" is the
+#: incapacitated flag's.
+WOUND_SEVERITIES: tuple[str, ...] = ("light", "medium", "heavy", "incapacitating")
+#: A bruise's severities (Lords of Men p. 132).
+BRUISE_SEVERITIES: tuple[str, ...] = (
+    "light",
+    "medium",
+    "heavy",
+    "incapacitating",
+    "fatal",
+)
+
+
+@dataclass
+class WoundState:
+    """What one wound carries beyond its severity: where it came from, and
+    the +3s its stable Recovery rolls have built up (DE p. 405)."""
+
+    severity: str = "light"
+    source: str = "injury"
+    bonus: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> WoundState:
+        return cls(**known_fields(cls, data))
+
+
 @dataclass
 class Wounds:
-    """Simple per-severity counts, not individual wound records -- matches
-    checking boxes on the paper sheet, not the calculated Wound Penalty."""
+    """Per-severity counts -- the boxes on the paper sheet -- with, for each
+    wound, its source and stable-roll bonus in `states` (lined up with the
+    counts by rules.recovery.states; a wound with none is an injury with no
+    bonus)."""
 
     light: int = 0
     medium: int = 0
@@ -160,10 +192,35 @@ class Wounds:
     #: Stamina, armour and Virtues (rules.derived.soak); a
     #: familiar's wounds leave it 0 (a familiar has base_soak).
     soak: int = 0
+    states: list[WoundState] = field(default_factory=list)
+    #: Magical aid to every Recovery roll, typed (a Zenodochium's +9, a
+    #: Purification of the Festering Wound).
+    aid: int = 0
+    #: For an Incapacitating wound, the cumulative -1 of its rolls so far.
+    crisis: int = 0
+    #: Bruises by severity (Lords of Men's option): they heal within hours
+    #: and leave a residual wound.
+    bruises: dict[str, int] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Wounds:
-        return cls(**known_fields(cls, data))
+        d = dict(data)
+        d["states"] = [WoundState.from_dict(s) for s in d.get("states") or []]
+        d["bruises"] = {
+            k: int(v) for k, v in (d.get("bruises") or {}).items() if int(v) > 0
+        }
+        return cls(**known_fields(cls, d))
+
+    def with_counts(self, **counts: Any) -> Wounds:
+        """These wounds with new counts (Edit Wounds), keeping each
+        remaining wound's state and the aid."""
+        return Wounds(
+            **counts,
+            states=list(self.states),
+            aid=self.aid,
+            crisis=self.crisis,
+            bruises=dict(self.bruises),
+        )
 
 
 @dataclass
@@ -491,6 +548,9 @@ class AnimalForm:
     species: str = ""
     language: str = ""
     lifespan: int | None = None
+    #: Its fur, feathers or scales: Protection of at least 1 for most
+    #: animals (Grogs p. 137), before the Qualities that add more.
+    protection: int = 1
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> AnimalForm:
@@ -544,6 +604,9 @@ class Character:
     aging: Aging = field(default_factory=Aging)
     wounds: Wounds = field(default_factory=Wounds)
     fatigue_level: FatigueLevel = "fresh"
+    #: How many of the Fatigue levels lost are long-term (DE p. 404): the
+    #: more serious levels count as short-term.
+    long_term_fatigue: int = 0
     personality_traits: list[ScoredTrait] = field(default_factory=list)
     reputations: list[ScoredTrait] = field(default_factory=list)
     raw_vis: dict[str, int] = field(default_factory=dict)  # Art -> pawns

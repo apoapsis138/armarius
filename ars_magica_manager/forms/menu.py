@@ -29,6 +29,7 @@ from .. import (
     deletion,
     disputations,
     giving,
+    health,
     neighbours,
     packs,
     places,
@@ -426,6 +427,9 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # Beside the Abilities chapter's own buttons.
     "edit_traditions": ((NodeKind.CHARACTER, "Abilities"),),
     "disputatio": ((NodeKind.CHARACTER, "Abilities"),),
+    # Beside Health's Edit buttons.
+    "take_harm": ((NodeKind.CHARACTER, "Health"),),
+    "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
@@ -1345,6 +1349,8 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "lab_text_access": _needs(_character, lab_text_access),
     "edit_traditions": _needs(_character, character_traditions),
     "disputatio": _needs(_character, disputations.disputatio_form),
+    "take_harm": _needs(_character, health.take_harm_form),
+    "recovery_roll": _needs(_character, health.recovery_form),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,

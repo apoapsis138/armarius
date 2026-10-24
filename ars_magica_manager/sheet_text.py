@@ -26,8 +26,9 @@ from .models import (
     VirtueFlawDef,
     VirtueFlawInstance,
     Wounds,
+    WoundState,
 )
-from .rules import combat, derived, penetration, research, scores, senses
+from .rules import combat, derived, penetration, recovery, research, scores, senses
 from .rules import xp as xp_rules
 from .rules.breakdown import Breakdown
 from .totals import describe_modifier
@@ -453,9 +454,44 @@ def size_text(character: Character) -> str:
     return f"{total} (base {base}, {rest})"
 
 
-def character_wounds_text(character: Character) -> str:
+def recovery_lines(saga: Saga | None, character: Character) -> list[str]:
+    """What the wounds carry beyond their counts (each one's source and
+    stable-roll bonus, bruises, magical aid) and the Recovery Total for an
+    injury and for anything healed with Medicine (DE p. 405)."""
+    found = recovery.states(character.wounds)
+    lines: list[str] = []
+    marked = [
+        f"{s.severity.title()}"
+        + (f" ({s.source}" if s.source != recovery.INJURY else " (")
+        + (f", +{s.bonus}" if s.bonus else "")
+        + ")"
+        for s in found
+        if s.source != recovery.INJURY or s.bonus
+    ]
+    if marked:
+        lines.append("Wounds: " + ", ".join(m.replace("(, ", "(") for m in marked))
+    bruises = character.wounds.bruises
+    if bruises:
+        lines.append(
+            "Bruises: " + ", ".join(f"{n} {k.title()}" for k, n in bruises.items() if n)
+        )
+    if not found:
+        return lines
+    sources = {s.source == recovery.INJURY for s in found}
+    for injury in sorted(sources, reverse=True):
+        state = WoundState("light", recovery.INJURY if injury else "disease")
+        total = recovery.total(saga, character, state)
+        terms = ", ".join(
+            f"{escape(line.label)} {line.amount:+g}" for line in total.lines
+        )
+        what = "Injuries" if injury else "Disease, poison, deprivation"
+        lines.append(f"Recovery ({what}): {int(total.total)} + stress die ({terms})")
+    return lines
+
+
+def character_wounds_text(character: Character, saga: Saga | None = None) -> str:
     """A character's Health column: Soak and Encumbrance worked out, the
-    Wound Penalty, then the wounds as typed."""
+    Wound Penalty, the wounds as typed, and their recovery."""
     soak = derived.soak(character)
     load = derived.carried_load(character.inventory)
     burden = derived.burden(load)
@@ -472,6 +508,9 @@ def character_wounds_text(character: Character) -> str:
         "",
         wounds_text(character.wounds),
     ]
+    extra = recovery_lines(saga, character)
+    if extra:
+        lines += ["", *extra]
     return "\n".join(lines)
 
 
@@ -488,7 +527,12 @@ def character_fatigue_text(character: Character) -> str:
     ]
     return "\n".join(
         [
-            f"Fatigue Level: {level.title()} ({fatigue:+d})",
+            f"Fatigue Level: {level.title()} ({fatigue:+d})"
+            + (
+                f", {character.long_term_fatigue} long-term"
+                if character.long_term_fatigue
+                else ""
+            ),
             f"Total Penalty: {wounds + fatigue:+d} (wounds, fatigue)",
             "",
             f"Damage Table (Size {size}):",

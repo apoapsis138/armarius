@@ -257,6 +257,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("t", "edit_traditions", "Traditions"),
     MenuItem("d", "disputatio", "Disputatio"),
     MenuItem("f", "edit_fatigue", "Edit Fatigue"),
+    MenuItem("h", "take_harm", "Take Harm"),
+    MenuItem("y", "recovery_roll", "Recovery Roll"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue"),
     MenuItem("i", "import_data", "Import"),
     MenuItem("b", "research_bonuses", "Set Up Research Library"),
@@ -285,6 +287,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
 MORE_SECTIONS: dict[str, str] = {
     "lab_text_access": "section-hermetic-background",
     "edit_fatigue": "section-char-health",
+    "take_harm": "section-char-health",
+    "recovery_roll": "section-char-health",
     "edit_familiar_fatigue": "section-fam-health",
     "withdraw_case": CASES_SECTION,
     "roll_fair": FAIRS_SECTION,

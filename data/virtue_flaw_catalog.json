@@ -3043,6 +3043,10 @@
       "cost": 1,
       "modifiers": [
         {
+          "applies_to": "recovery",
+          "amount": 1
+        },
+        {
           "applies_to": "aging_roll",
           "amount": -1
         }
@@ -7116,6 +7120,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "recovery",
+          "amount": 3
+        }
+      ],
       "source": "DE",
       "summary": "+3 on all rolls to recover from wounds.",
       "description": "Your body can heal quickly. You get a +3 bonus on all rolls to recover from wounds."
@@ -10797,6 +10807,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "recovery",
+          "amount": -3
+        }
+      ],
       "source": "DE",
       "summary": "-3 on all rolls to recover from wounds and diseases.",
       "description": "You are sickly and weak. You suffer a -3 penalty on all rolls to recover from wounds and diseases."

@@ -293,6 +293,88 @@ edits the wounds and a Soak adjustment, and the **Fatigue** button sets the
 Fatigue Level.
 <!-- /gui -->
 
+Wounds and Fatigue take their penalty from every roll and total, the
+Casting Score and certamen included, though not from Soak or Recovery
+rolls. A wound that isn't an injury (a disease, poison or deprivation), a
+wound with stable rolls behind it, bruises and the Recovery Total are
+listed under the wounds: **Recovery** is Stamina + the medic's Chirurgy
+for an injury or Medicine for the rest (the best among the character's
+covenant-mates, named) + the stable rolls' +3s + magical aid + the
+laboratory's Health for those who live in one + a familiar's Bronze Cord +
+Rapid Convalescence or Fragile Constitution, less an Infernal aura where
+they live (Definitive Edition pp. 289, 267, 405; Realms of Power: The
+Infernal p. 12). Each season the wounds heal on their own (see
+[Recovery](help:recovery-roll)). The Fatigue Level shows how many of its
+levels are long-term: those come back a night's rest each, the rest in
+minutes; a season clears both.
+
+**Activities while injured** (DE p. 405): a Wound Penalty of -1 or -2
+allows travel and study but nothing strenuous, such as spells that cost
+Fatigue; -3 to -5 halves travel and halves study for a month or more of
+it, and forbids lab and craft work; -6 or worse allows only talking,
+eating and moving short distances with help. Doing more than that means a
+[Recovery Roll](help:recovery-roll) for the worst wound, which can only
+hold or worsen. After a battle, -6 or worse can't travel and -3 or worse
+can't keep pace with an army (Lords of Men p. 108). **First aid** (Grogs
+p. 59): within a day, Dexterity + Chirurgy + stress die against the
+Improvement Ease Factor of the worst wound lets the wounded act one
+category better for a day; a botch means an immediate Recovery roll.
+
+<!-- tui -->
+More (`m`) on Health offers [Take Harm](help:take-harm) and a
+[Recovery Roll](help:recovery-roll).
+<!-- /tui -->
+<!-- gui -->
+**Take Harm** and **Recovery Roll**, beside Health's Edit buttons, harm the
+character or roll for their wounds now.
+<!-- /gui -->
+
+## Take Harm
+<!-- help: take-harm -->
+
+Harm from more than weapons, rolled and then kept in the Diary when you
+choose Keep:
+
+- **An injury**: a damage bonus (from the Heat and Corrosion or Impact
+  tables, or typed; falling is +1 per two feet, doubled on a hard surface,
+  halved on a soft one) + stress die against Soak + stress die, read on
+  the Damage Table for the character's Size. Heat and corrosion multiply
+  their bonus by how much of the body they cover (a hand x1, a limb x2,
+  half the body x3, all of it x4); untick **Armour protects** for boiling
+  water and the like (Definitive Edition p. 407).
+- **A poison** or **a disease**: a Stamina check (stress die) against its
+  Ease Factor, from the Poison table (p. 406), City & Guild's urban
+  diseases (pp. 27-28), or typed. Failing it gives the wound named, which
+  heals with Medicine. A disease spirit's attack must first pass Magic
+  Resistance.
+- **Deprivation** of air, water or food for a number of periods (30
+  seconds, a day, three days): a Stamina check each period against 3, 1
+  more each period; each failure a Fatigue level (long-term for water and
+  food), and once unconscious a Light Wound, then each a level worse
+  (p. 407).
+- **A bruise**, with the Bruises rule option (Lords of Men pp. 131-132): a
+  non-lethal blow read on the Damage Table as a bruise. Its penalty works
+  as a wound's; it heals within hours, and a Heavy, Incapacitating or
+  Fatal one leaves a Light, Medium or Incapacitating wound.
+
+## Recovery Roll
+<!-- help: recovery-roll -->
+
+Wounds heal season by season, when the season is advanced: a Light wound
+rolls weekly, a Medium one monthly, a Heavy one once a season, each
+against its Ease Factors (Light 4 and 10, Medium 6 and 12, Heavy 9 and
+15). At or over the higher, the wound improves a level; at or over the
+lower, it holds and gains +3 to its later rolls; below, it worsens. An
+Incapacitating wound rolls twice a day: 0 or less dies, 9 or more makes
+it Heavy, anything else worse, -1 to later rolls (Definitive Edition
+p. 405). The rolls go into the Diary.
+
+**Recovery Roll** rolls once for each wound now, or for the worst one only
+(the roll for doing more than the wounds allow, which can only hold or
+worsen), and sets the **magical aid** every Recovery roll adds: a
+Zenodochium's +9 (Against the Dark p. 98) or a Purification of the
+Festering Wound. Keep applies the rolls.
+
 ## Abilities tab
 <!-- help: tab-abilities -->
 

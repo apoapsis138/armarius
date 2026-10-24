@@ -833,7 +833,7 @@ class CharacterSheet(QWidget):
             wound_track(cs.wound_track(c), p),
             _subheading("Fatigue", p),
             fatigue_ladder(cs.fatigue_track(c), p),
-            fact_grid(cs.health_facts(c), p, 4),
+            fact_grid(cs.health_facts(c, saga), p, 4),
         ]
         parts.append(section("Health", p, *health, edits=edits("Wounds", "Fatigue")))
         aging = cs.aging_facts(c)

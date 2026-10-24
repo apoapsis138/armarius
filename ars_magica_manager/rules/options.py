@@ -138,6 +138,17 @@ OPTIONS: tuple[RuleOption, ...] = (
         book="Covenants",
     ),
     RuleOption(
+        key="bruises",
+        label="Bruises",
+        effect=(
+            "Non-lethal blows deal bruises instead of costing Fatigue: a "
+            "bruise's penalty works as a wound's, it heals within hours, and "
+            "a Heavy or worse one leaves a residual wound."
+        ),
+        source="Lords of Men, Chapter Nine: Non-Lethal Combat, pp. 131-132",
+        book="LoM",
+    ),
+    RuleOption(
         key="dominion_growth",
         label="Dominion growth",
         effect=(

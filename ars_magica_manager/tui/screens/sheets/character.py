@@ -940,7 +940,7 @@ class CharacterSheetView(SheetView):
         return st.trait_rows(self.character.reputations)
 
     def _wounds_text(self) -> str:
-        return st.character_wounds_text(self.character)
+        return st.character_wounds_text(self.character, self.saga)
 
     def _fatigue_text(self) -> str:
         return st.character_fatigue_text(self.character)

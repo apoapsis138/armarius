@@ -34,6 +34,7 @@ from .animal_aging import season_aging
 from .character_effects import _add_xp, _yearly_warping, age_character, diary_entry
 from .covenant import covenant_season
 from .defaults import default_text, grog_default, notified
+from .healing import season_healing
 from .lab_apply import (
     apply_book_work,
     apply_lab_work,
@@ -319,6 +320,7 @@ def finish_season(
         else []
     )
     year_end += season_aging(saga, rng)
+    year_end += season_healing(saga, rng)
     year_end += covenant_season(saga, secured)
     record.lines += year_end
     if saga.keep_season_records and (worked or year_end):

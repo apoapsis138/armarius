@@ -34,6 +34,7 @@ SOURCE = (
     "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eleven:"
     "_Obstacles#Combat_Scores)"
 )
+ANIMAL_SOURCE = "Grogs, Chapter Seven: Horses & Hounds, p. 137"
 SIZE_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Size "
     "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
@@ -98,10 +99,13 @@ def _adjusted(
 def wound_penalty(
     wounds: Wounds, virtues_flaws: Sequence[VirtueFlawInstance] = ()
 ) -> int:
+    bruises = wounds.bruises
     return _adjusted(
         wounds.light * WOUND_PENALTIES["light"]
         + wounds.medium * WOUND_PENALTIES["medium"]
-        + wounds.heavy * WOUND_PENALTIES["heavy"],
+        + wounds.heavy * WOUND_PENALTIES["heavy"]
+        # Bruises' penalties work as wounds' (Lords of Men p. 132).
+        + sum(bruises.get(k, 0) * p for k, p in WOUND_PENALTIES.items()),
         virtues_flaws,
         "wound_penalty",
     )
@@ -158,6 +162,15 @@ def soak(character: Character) -> Breakdown:
     """Stamina + armour Protection + Soak Virtues + the typed adjustment."""
     lines = [Line("Stamina", amount=character.characteristics.stamina, source=SOURCE)]
     total = character.characteristics.stamina
+    if character.animal is not None and character.animal.protection:
+        lines.append(
+            Line(
+                "Natural Protection",
+                amount=character.animal.protection,
+                source=ANIMAL_SOURCE,
+            )
+        )
+        total += character.animal.protection
     armour = worn_armour(character.inventory)
     if armour is not None and armour.armor_protection:
         lines.append(Line(armour.name, amount=armour.armor_protection, source=SOURCE))

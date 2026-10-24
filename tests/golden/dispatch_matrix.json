@@ -500,7 +500,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Wounds",
         "d": "(disabled)",
-        "m": "FieldsDialog: Edit Fatigue Level",
+        "m": "MenuScreen: Edit Fatigue, Take Harm, Recovery Roll",
         "slash": "(disabled)"
       }
     },

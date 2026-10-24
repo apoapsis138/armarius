@@ -853,8 +853,9 @@ def fatigue_levels(
     ]
 
 
-def health_facts(character: Character) -> list[Fact]:
-    """Soak, Encumbrance and the penalties wounds and Fatigue give."""
+def health_facts(character: Character, saga: Saga | None = None) -> list[Fact]:
+    """Soak, Encumbrance and the penalties wounds and Fatigue give, then
+    what the wounds carry and how they recover."""
     soak = derived.soak(character)
     load = derived.carried_load(character.inventory)
     encumbrance = derived.encumbrance(load, character.characteristics.strength)
@@ -865,6 +866,12 @@ def health_facts(character: Character) -> list[Fact]:
         _fact("Encumbrance", encumbrance),
         _fact("Wound Penalty", f"{wounds:+d}"),
         _fact("Total Penalty", f"{wounds + fatigue:+d}"),
+        *(
+            _fact(label, value)
+            for label, value in (
+                line.split(": ", 1) for line in st.recovery_lines(saga, character)
+            )
+        ),
     ]
 
 

@@ -304,7 +304,7 @@ def description_edits(
     c = character
 
     def set_wounds(result: dict[str, Any]) -> None:
-        c.wounds = Wounds(**result)
+        c.wounds = c.wounds.with_counts(**result)
 
     def set_fatigue(result: dict[str, Any]) -> None:
         c.fatigue_level = result["level"]

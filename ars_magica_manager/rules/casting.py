@@ -43,7 +43,7 @@ from ..models import Character, Saga, Spell, VirtueFlawInstance
 from . import effects, options, realms, scores
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
-from .derived import carried_load, encumbrance
+from .derived import carried_load, encumbrance, fatigue_penalty, wound_penalty
 from .lab import ability_score, art_score
 from .rounding import round_down
 
@@ -104,6 +104,13 @@ def casting_score(
     enc = encumbrance(load, magus.characteristics.strength)
     if enc:
         lines.append(Line("Encumbrance", amount=-enc, source=SOURCE))
+    # Wounds and Fatigue take from every roll and total (DE pp. 403-404).
+    wounded = wound_penalty(magus.wounds, magus.virtues_flaws)
+    if wounded:
+        lines.append(Line("Wounds", amount=wounded, source=SOURCE))
+    tired = fatigue_penalty(magus.fatigue_level, magus.virtues_flaws)
+    if tired:
+        lines.append(Line("Fatigue", amount=tired, source=SOURCE))
     label, amount = hybrid.aura_label(magus, aura_realm, aura)
     lines.append(Line(label, amount=amount, source=realms.SOURCE))
     for kind, chosen, table, label in (

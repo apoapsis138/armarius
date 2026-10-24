@@ -504,14 +504,17 @@ async def test_more_reaches_what_only_a_button_did():
         assert await wait_until(
             pilot, lambda: workspace._active_section() == "section-char-health"
         )
-        # One thing to do: the footer names it and m runs it.
-        assert await wait_until(pilot, lambda: "m Edit Fatigue" in _footer(app))
+        # Several things to do: More's menu, whose letters run them.
+        assert await wait_until(pilot, lambda: "m More" in _footer(app))
         await pilot.press("m")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen))
+        await pilot.press("f")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert "Fatigue" in app.screen.title_text
         await pilot.press("escape")
         assert await wait_until(pilot, lambda: app.screen is workspace)
 
+        # One thing to do: the footer names it and m runs it.
         view.query_one("#section-hermetic-background", Collapsible).focus_section()
         assert await wait_until(pilot, lambda: "m Lab Texts Read" in _footer(app))
 

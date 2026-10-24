@@ -36,6 +36,9 @@ MODIFIER_TYPES: dict[str, str] = {
     "form_resistance": "The Form's part of Magic Resistance",
     "parma_resistance": "Parma Magica's part of Magic Resistance",
     "soak": "Soak total",
+    # Every Recovery roll for a wound (DE p. 405): Rapid Convalescence,
+    # Fragile Constitution.
+    "recovery": "Wound Recovery rolls",
     # Combat totals; the `target` narrows one to a weapon's table ("melee",
     # which covers natural weapons too, "missile", "natural") or a weapon's
     # name ("Dodge", "{weapon}").

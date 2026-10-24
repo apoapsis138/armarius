@@ -75,6 +75,7 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
     WorldTurn,
     Wounds,
+    WoundState,
     XpAllocation,
 )
 from ars_magica_manager.rules import activities as season_rules
@@ -386,6 +387,7 @@ def _saga_with_every_record() -> Saga:
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
     magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
     magus.grog_year = GrogYear()
+    magus.wounds = Wounds(light=1, states=[WoundState("light", "disease", 3)])
     magus.animal = AnimalForm("hoofed", "Horse", "Horse", lifespan=30)
     saga.laboratories[0].arcane_connections.append(ArcaneConnection("ac", "a tree"))
     saga.laboratories[0].item_benefits.append(
