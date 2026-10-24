@@ -21,19 +21,14 @@ from . import animal_grogs
 from . import creation_access as access
 from . import creation_packages as packages
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
-from .creation_character import age
+from .creation_character import (
+    later_life_years,
+)
 from .creation_virtues import held_option
 from .creation_xp import entries, spent
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Later Life "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Later_Life)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter Three: Characters, Later Life, p. 49"
 
-CHILDHOOD_ENDS = 5
-#: When a magus's apprenticeship starts if the sheet doesn't say.
-DEFAULT_APPRENTICESHIP_AGE = 10
 XP_A_YEAR = 15
 WEALTHY_XP, POOR_XP = 20, 10
 #: The free xp in a Supernatural Ability its Virtue grants (score 1).
@@ -49,28 +44,6 @@ def xp_a_year(character: Character) -> int:
     if "vf_poor" in ids:
         return POOR_XP
     return XP_A_YEAR
-
-
-def later_life_ends(saga: Saga, character: Character) -> int | None:
-    """The age Later Life runs to: the character's age, or a magus's start
-    of apprenticeship."""
-    if character.type == "magus":
-        start = character.hermetic.age_of_apprenticeship
-        return start if start is not None else DEFAULT_APPRENTICESHIP_AGE
-    return age(saga, character)
-
-
-def later_life_starts(character: Character) -> int:
-    """The age Later Life starts at: 5, or the age an animal's kind is
-    grown."""
-    grown = animal_grogs.grown(character)
-    return CHILDHOOD_ENDS if grown is None else grown
-
-
-def later_life_years(saga: Saga, character: Character) -> int:
-    ends = later_life_ends(saga, character)
-    start = later_life_starts(character)
-    return max(0, ends - start) if ends is not None else 0
 
 
 def bought_years(saga: Saga, character: Character) -> int:

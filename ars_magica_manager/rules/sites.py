@@ -24,11 +24,7 @@ from ..models import (
 )
 from . import effects as fx
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Twelve: Realms, Regiones "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Twelve:"
-    "_Realms#Regiones)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter Twelve: Realms, Regiones, pp. 420-422"
 
 #: The kind of neighbour a place is.
 PLACE = "place"

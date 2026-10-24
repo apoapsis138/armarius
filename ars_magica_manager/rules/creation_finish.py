@@ -19,20 +19,15 @@ from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Personality "
-    "Traits (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Personality_Traits)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Personality Traits, p. "
+    "28"
 )
 REPUTATION_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Reputations "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Reputations_2)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Reputations, p. 52"
 )
 CONFIDENCE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Detailed "
-    "Character Creation Summary (https://www.redcap.org/page/Ars_Magica_"
-    "Definitive_Edition,_Chapter_Three:_Characters#Detailed_Character_"
-    "Creation_Summary)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Detailed Character "
+    "Creation Summary, p. 44"
 )
 
 MERINITA_SOURCE = (

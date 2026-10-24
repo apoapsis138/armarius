@@ -39,6 +39,7 @@ from .. import catalog
 from ..models import (
     SUPERNATURAL_CATEGORIES,
     Character,
+    OpeningRule,
     Saga,
     SeasonPlan,
     TraditionActivity,
@@ -52,9 +53,7 @@ from .creation_access import ability_def, ability_xp_table, traditions_of
 from .creation_tradition import opened_ability
 
 SOURCE = (
-    "Hedge Magic, Revised Edition, Chapter One: Introduction, Opening The "
-    "Gift (https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content"
-    "#Opening_The_Gift)"
+    "Hedge Magic, Revised Edition, Chapter One: Introduction, Opening The Gift, pp. 7-8"
 )
 
 OPEN = "open_tradition_gift"
@@ -160,12 +159,20 @@ def opening_ease(student: Character, tradition: TraditionDef) -> int:
     return total
 
 
-def opening_result(total: int, ease: int) -> str:
+def opening_result(total: int, ease: int, rule: OpeningRule | None = None) -> str:
+    """Whether an Opening fails, Opens losing the student's Supernatural
+    Abilities, or Opens keeping them: at least the Ease Factor Opens, more
+    than twice it keeps (Hedge Magic Revised Edition p. 8), unless the
+    tradition sets its own bands (the Amazons: twice, and four times or
+    more, Rival Magic p. 30)."""
+    rule = rule or OpeningRule()
     if ease <= 0:
         return AUTOMATIC
-    if total < ease:
+    if total < rule.opens_at * ease:
         return FAILS
-    return KEEPS if total > 2 * ease else LOSES
+    if rule.keeps_at is not None:
+        return KEEPS if total >= rule.keeps_at * ease else LOSES
+    return KEEPS if total > rule.keeps_over * ease else LOSES
 
 
 @dataclass
@@ -211,7 +218,10 @@ def open_work(
     total = int(opening_total(master, tradition, aura, realm).total)
     ease = opening_ease(student, tradition)
     work = TraditionWork(
-        tradition.id, total=total, ease=ease, result=opening_result(total, ease)
+        tradition.id,
+        total=total,
+        ease=ease,
+        result=opening_result(total, ease, tradition.opening),
     )
     work.flawed = [
         a for a in tradition.training.opening if hc.score(master, a) < COMPETENT
@@ -238,6 +248,10 @@ def _opening_note(
                 KEEPS: f"Opened to {tradition.name}, keeping what he had.",
             }[work.result]
         )
+    rule = tradition.opening
+    if work.opens and rule is not None and rule.loses_other_arts:
+        said += " The Arts of any other tradition are lost (remove them by hand)."
+
     if work.opens and work.flawed:
         rule = tradition.opening
         assert rule is not None

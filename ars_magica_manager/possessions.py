@@ -209,6 +209,26 @@ class PossessionEntry:
     def gear_id(self) -> str | None:
         return self._own("gear_id", None)
 
+    @property
+    def make(self) -> str:
+        return self._own("make", "")
+
+    @property
+    def make_bonus(self) -> int:
+        return self._own("make_bonus", 0)
+
+    @property
+    def carried(self) -> bool:
+        return self._own("carried", True)
+
+    @property
+    def assists(self) -> str:
+        return self._own("assists", "")
+
+    @property
+    def assistance(self) -> str:
+        return self._own("assistance", "")
+
 
 def entries_for_kind(
     saga: Saga,

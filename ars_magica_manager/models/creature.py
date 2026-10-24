@@ -43,6 +43,9 @@ class CreaturePower:
     target: str = ""
     level: int | None = None
     penetration_bonus: int = 0
+    #: The Magic Quality the power comes from (rules.creature_build.POWERS,
+    #: "" for typed figures), which suggests its cost and Initiative.
+    quality: str = ""
     description: str = ""
     id: str = field(default_factory=new_instance_id, compare=False)
 

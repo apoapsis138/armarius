@@ -738,9 +738,14 @@ async def test_finishing_touches_takes_a_grogs_aging_from_the_grogs_aging_chart(
         assert await wait_until(
             pilot, lambda: "Pre-play aging rolled: done" in _text(screen, "#ws-checks")
         )
-        assert not any(
-            str(b.label) == "Use the Grogs Aging Chart"
-            for b in screen.query("#ws-actions Button")
+        assert await wait_until(
+            pilot,
+            lambda: (
+                not any(
+                    str(b.label) == "Use the Grogs Aging Chart"
+                    for b in screen.query("#ws-actions Button")
+                )
+            ),
         )
 
 

@@ -35,9 +35,7 @@ from .rounding import round_up
 from .scores import character_source
 
 SOURCE = (
-    "Grogs, Chapter 5: Creating & Maintaining Grogs, Aging, the Easy Way, "
-    "pp. 65-66 (https://www.redcap.org/page/Grogs_Chapter_Five:_Creating_"
-    "%26_Maintaining_Grogs#Aging.2C_the_Easy_Way)"
+    "Grogs, Chapter 5: Creating & Maintaining Grogs, Aging, the Easy Way, pp. 65-66"
 )
 
 Kind = Literal["mild", "average", "harsh"]

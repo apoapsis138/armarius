@@ -140,7 +140,8 @@ def _progress(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
         if shown is not None:
             return shown
     if work.finished:
-        return "learned" if plan.activity == lab_seasons.LAB_TEXT else "invented"
+        learned = (lab_seasons.LAB_TEXT, lab_seasons.TAUGHT_SPELLS)
+        return "learned" if plan.activity in learned else "invented"
     return f"{work.points_after}/{work.level} points"
 
 

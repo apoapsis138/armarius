@@ -47,25 +47,19 @@ from .lab_stats import (
 from .rounding import round_up
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Six: Covenants, Accessible Power "
-    "Level (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter"
-    "_Six:_Covenants#Accessible_Power_Level)"
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Accessible Power Level, p. "
+    "179"
 )
 BOON_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Six: Covenants, Boons "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Six:"
-    "_Covenants#Boons)"
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Boons, pp. 183-184"
 )
 LAB_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Build Point Cost "
-    "for Starting Laboratories (https://www.redcap.org/page/Ars_Magica_"
-    "Definitive_Edition,_Chapter_Eight:_Laboratory#Build_Point_Cost_for_"
-    "Starting_Laboratories)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Build Point Cost for "
+    "Starting Laboratories, p. 291"
 )
 SETUP_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Setting Up a "
-    "Laboratory (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory#Setting_Up_a_Laboratory)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Setting Up a Laboratory, p. "
+    "250"
 )
 
 
@@ -415,9 +409,8 @@ def _c(
 
 
 INCOME_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenant "
-    "Finances, Baseline (https://www.redcap.org/page/Ars_Magica_Definitive_"
-    "Edition,_Chapter_Six:_Covenants#Baseline_2)"
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenant Finances, "
+    "Baseline, p. 188"
 )
 AURA_SOURCE = "Covenants, Chapter Two: Boons and Hooks, Faerie Aura"
 MINOR_WEALTH = "covbh_boon_minor_wealth"
@@ -574,6 +567,19 @@ def build_point_checks(saga: Saga, record: Record) -> list[Check]:
                 )
             )
     found += _template_checks(saga, covenant)
+    over_limits = [
+        f"{book.name}: {' '.join(warnings)}"
+        for book in book_rules.books_owned_by(saga, "covenant", covenant.id)
+        if (warnings := book_rules.limit_warnings(book))
+    ]
+    found.append(
+        _c(
+            "build_points",
+            "Books within the creation limits (DE p. 179)",
+            not over_limits,
+            "; ".join(over_limits) or "all within",
+        )
+    )
     if power.max_level is not None:
         over = over_level(saga, covenant, power.max_level)
         found.append(
@@ -705,9 +711,8 @@ def boon_hook_checks(saga: Saga, record: Record) -> list[Check]:
 
 
 STAFF_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenfolk "
-    "Categories (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Six:_Covenants#Covenfolk_Categories)"
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenfolk Categories, p. "
+    "190"
 )
 
 

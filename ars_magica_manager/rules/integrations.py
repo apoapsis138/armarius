@@ -18,11 +18,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 SOURCE = (
-    "Ancient Magic, Introduction, The Breakthrough (p. 7); Hedge Magic, "
-    "Revised Edition, The Integration Process "
-    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content"
-    "#The_Integration_Process)"
-    "; Houses of Hermes: True Lineages, Bonisagus, Example Discoveries (p. 30)"
+    "Ancient Magic, Introduction, The Breakthrough (p. 7); Hedge Magic, Revised "
+    "Edition, The Integration Process (p. 14); Houses of Hermes: True Lineages, "
+    "Bonisagus, Example Discoveries (p. 30)"
 )
 AM = "Ancient Magic"
 HMRE = "Hedge Magic, Revised Edition"

@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..models import FATIGUE_LEVELS, Character, Saga
-from . import derived, dice, options, recovery
+from . import derived, dice, disease, living, options, recovery
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Other Perils, "
@@ -262,6 +262,50 @@ def bruise(
     return done
 
 
+def catch_disease(
+    saga: Saga | None,
+    character: Character,
+    values: dict[str, Any],
+    rng: random.Random,
+) -> Harmed:
+    """Art & Academe's Disease Avoidance roll (p. 46): Stamina + Living
+    Conditions + Corpus / 5 + the Wound Penalty + stress die must exceed
+    the Stable Ease Factor; failing catches the disease as its own record,
+    a botch a stage worse."""
+    found = disease.CATALOG_BY_NAME.get(str(values.get("aa_disease") or ""))
+    if found is None:
+        level = str(values.get("level") or "Minor")
+        interval = str(values.get("interval") or "week")
+        stable = values.get("stable")
+        improve = values.get("improve") if interval != disease.LIFELONG else None
+        found = disease.DiseaseDef(
+            str(values.get("name") or "A disease"),
+            level,
+            disease.severity_of(level, interval, stable, improve),
+            stable,
+            improve,
+            interval,
+        )
+    living_now = living.living_conditions(saga, character) if saga is not None else 0
+    total = int(disease.avoidance_total(character, living_now).total)
+    die = dice.stress_die(rng, saga=saga)
+    rolled = total + (0 if die.botched else die.value)
+    caught = disease.from_def(found, worse=die.botched)
+    if found.stable is None:
+        done = Harmed([f"{found.name} can't be avoided."])
+    else:
+        done = Harmed([f"Disease Avoidance {rolled} against {found.stable}"])
+        if disease.avoids(rolled, caught):
+            done.lines.append("Avoided.")
+            return done
+    if die.botched:
+        done.lines.append("Botched: caught a stage worse.")
+    character.wounds.diseases.append(caught)
+    done.wounds.append(caught.level.lower())
+    done.lines.append(disease.describe(caught))
+    return done
+
+
 HARMS: dict[str, Callable[..., Harmed]] = {
     INJURY: injury,
     POISON: _debilitation(POISON),
@@ -283,7 +327,10 @@ def apply(
     values: dict[str, Any],
     rng: random.Random,
 ) -> Harmed:
-    """Harm the character by `kind`'s rule."""
+    """Harm the character by `kind`'s rule: a disease by Art & Academe's
+    when its option is on."""
+    if kind == DISEASE and disease.on(saga):
+        return catch_disease(saga, character, values, rng)
     return HARMS[kind](saga, character, values, rng)
 
 

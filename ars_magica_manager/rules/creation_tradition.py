@@ -26,10 +26,7 @@ from .creation_character import THE_GIFT
 from .creation_xp import entries, spent
 from .scores import ability_level
 
-SOURCE = (
-    "Hedge Magic, Revised Edition, each tradition's Character Creation "
-    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content)"
-)
+SOURCE = "Hedge Magic, Revised Edition, each tradition's Character Creation, pp. 17-141"
 STEP = "training"
 
 

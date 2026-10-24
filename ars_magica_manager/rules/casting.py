@@ -24,8 +24,27 @@
   what an aura adds, and a Ritual may add Method + Power instead of Artes
   Liberales + Philosophiae.
 - Botch dice: 1, +1 per pawn of vis, +1 per point of a non-Magic aura (x2 in
-  a regio), +2 fast casting, -1 per point of Mastery (Golden Cord too, but
-  never to 0 that way).
+  a regio), +2 fast casting, +1 for a failed Concentration roll, -1 per
+  point of Mastery (Golden Cord too, but never to 0 that way). Each zero
+  on them is a Warping Point; two or more from one botch risk Twilight
+  (DE p. 227).
+- Options (DE pp. 216-218): fast casting (Spontaneous, or a spell with the
+  Fast Casting Mastery ability) takes 10 off the score, adds 2 botch dice
+  and allows no vis; ceremonial casting adds Artes Liberales +
+  Philosophiae (at least one with experience) and props (+1 to +5),
+  instead of words and gestures. Vis is limited to the score in its Art;
+  extra pawns on a Ritual still add +2 each.
+- Spell Mastery's special abilities (DE pp. 225-226) are matched by name:
+  Quiet Casting (5 off the words penalty, each), Still Casting (no
+  gestures penalty), Penetration (the score added to Penetration), and the
+  rest shown with the spell.
+- A talisman's attunement: the best one that applies adds to the score
+  while the magus touches it (DE p. 260).
+- A Deficiency halves a total that uses its Art, as a requisite too (DE
+  pp. 125, 312). Method Caster's +3 is lost with any other words or
+  gestures (DE p. 98).
+- A Ritual's Fatigue past unconsciousness becomes a wound: one level more
+  Light, two Medium, three Heavy, four Incapacitating (DE p. 213).
 
 No screen uses formulaic_outcome(), ritual_outcome(), tablet_outcome(),
 spontaneous_fatiguing(), spontaneous_non_fatiguing() yet: they are the rules
@@ -40,7 +59,7 @@ from typing import Any
 
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Saga, Spell, VirtueFlawInstance
-from . import effects, options, realms, scores
+from . import effects, enchantment, options, realms, scores
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .derived import carried_load, encumbrance, fatigue_penalty, wound_penalty
@@ -48,11 +67,50 @@ from .lab import ability_score, art_score
 from .rounding import round_down
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Casting "
-    "Spells "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Seven:"
-    "_Hermetic_Magic#Casting_Spells)"
+    "Ars Magica Definitive Edition, Chapter 7: Hermetic Magic, Casting Spells, "
+    "pp. 213-218"
 )
+MASTERY_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 7: Hermetic Magic, Spell Mastery, "
+    "pp. 225-226"
+)
+BOTCH_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 7: Hermetic Magic, Botches, p. 227"
+)
+TALISMAN_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Talisman, p. 260"
+)
+FAST_PENALTY = -10
+FAST_BOTCH_DICE = 2
+MOST_PROPS = 5
+METHOD_CASTER = "vf_method_caster"
+CEREMONIAL_SPONTANEOUS = "vf_ceremonial_spontaneous_magic"
+UNSTRUCTURED_CASTER = "vf_unstructured_caster"
+WEAK_SPONTANEOUS = "vf_weak_spontaneous_magic"
+DIFFICULT_SPONTANEOUS = "vf_difficult_spontaneous_magic"
+DIEDNE_MAGIC = "vf_diedne_magic"
+#: How a magus may cast Spontaneous spells (spontaneous_mode).
+NORMAL, WEAK, DIFFICULT, NO_SPONTANEOUS, DIEDNE = (
+    "normal",
+    "weak",
+    "difficult",
+    "none",
+    "diedne",
+)
+#: The Mastery special abilities the app reads, by the name a magus gives
+#: them (DE pp. 225-226).
+QUIET_CASTING = "quiet casting"
+STILL_CASTING = "still casting"
+FAST_CASTING = "fast casting"
+CEREMONIAL_CASTING = "ceremonial casting"
+PENETRATION_MASTERY = "penetration"
+RESISTANCE_MASTERY = "magic resistance"
+IMPERTURBABLE = "imperturbable casting"
+MULTIPLE_CASTING = "multiple casting"
+PRECISE_CASTING = "precise casting"
+QUICK_CASTING = "quick casting"
+#: A Ritual's Fatigue past unconsciousness: the wound for each level more.
+RITUAL_WOUNDS = ("light", "medium", "heavy", "incapacitating")
 
 #: Words and gestures (Casting Score modifiers).
 WORDS: dict[str, int] = {"Loud": 1, "Firm": 0, "Quiet": -5, "None": -10}
@@ -90,10 +148,19 @@ def casting_score(
     vis_pawns: int = 0,
     ritual: bool = False,
     spontaneous: bool = False,
+    fast: bool = False,
+    ceremonial: bool = False,
+    props: int = 0,
+    talisman: int = 0,
+    mastery_abilities: dict[str, int] | None = None,
 ) -> Breakdown:
-    """The Casting Score, with its terms. A Ritual uses loud words and
-    exaggerated gestures at some point, so `words` and `gestures` don't
-    apply to it."""
+    """The Casting Score, with its terms. A Ritual or ceremonial casting
+    uses loud words and exaggerated gestures at some point, so `words` and
+    `gestures` don't apply to it. A Ritual's `vis_pawns` are those beyond
+    what it needs, each +2; fast casting allows none. `mastery_abilities`
+    are the spell's Mastery special abilities (mastery_counts)."""
+    abilities = mastery_abilities or {}
+    ritual, ceremonial = _how_cast(magus, spontaneous, ritual, ceremonial)
     lines: list[Line] = []
     for art in (technique, form):
         name, score = _lowest(magus, art, requisites)
@@ -113,33 +180,60 @@ def casting_score(
         lines.append(Line("Fatigue", amount=tired, source=SOURCE))
     label, amount = hybrid.aura_label(magus, aura_realm, aura)
     lines.append(Line(label, amount=amount, source=realms.SOURCE))
+    whole = ritual or ceremonial
+    relief = {
+        "casting_words": 5 * abilities.get(QUIET_CASTING, 0),
+        "casting_gestures": 5 if abilities.get(STILL_CASTING) else 0,
+    }
     for kind, chosen, table, label in (
         ("casting_words", words, WORDS, "words"),
         ("casting_gestures", gestures, GESTURES, "gestures"),
     ):
-        amount, name = _voice(magus, kind, form, 0 if ritual else table[chosen])
+        amount, name = _voice(
+            magus, kind, form, 0 if whole else table[chosen], relief[kind]
+        )
         if amount:
             lines.append(
                 Line(name or f"{chosen} {label}", amount=amount, source=SOURCE)
             )
     if mastery:
-        lines.append(Line("Spell Mastery", amount=mastery, source=SOURCE))
-    if vis_pawns and not ritual:
-        lines.append(
-            Line(f"{vis_pawns} pawns of vis", amount=2 * vis_pawns, source=SOURCE)
-        )
-    if ritual:
+        lines.append(Line("Spell Mastery", amount=mastery, source=MASTERY_SOURCE))
+    if fast:
+        lines.append(Line("Fast casting", amount=FAST_PENALTY, source=SOURCE))
+    elif vis_pawns:
+        label = "extra pawns of vis" if ritual else "pawns of vis"
+        lines.append(Line(f"{vis_pawns} {label}", amount=2 * vis_pawns, source=SOURCE))
+    if ritual or ceremonial:
         lines += _ritual_lines(magus)
+    if ceremonial and props:
+        lines.append(
+            Line(
+                "Ceremonial props",
+                amount=max(0, min(props, MOST_PROPS)),
+                source=SOURCE,
+            )
+        )
+    if talisman:
+        lines.append(
+            Line("Talisman attunement", amount=talisman, source=TALISMAN_SOURCE)
+        )
     base = sum(line.amount or 0 for line in lines)
     kind = "spontaneous_total" if spontaneous else "casting_total"
     activity = None if spontaneous else ("ritual" if ritual else "formulaic")
+    own = (technique.casefold(), form.casefold())
+    used = (*own, *(r.casefold() for r in requisites))
+    # Method Caster's bonus needs the method: firm words, bold gestures.
+    method = whole or (words, gestures) == ("Firm", "Bold")
     found = [
         e
         for e in effects.collect([scores.character_source(magus.virtues_flaws)], kind)
         if e.modifier.activity in (None, activity)
+        and (method or e.entry.id != METHOD_CASTER)
         and (
             e.target is None
-            or e.target.casefold() in (technique.casefold(), form.casefold())
+            # A Deficiency counts where its Art is a requisite too.
+            or e.target.casefold()
+            in (used if e.modifier.multiplier is not None else own)
         )
     ]
     combined = effects.combine(base, [e for e in found if e.amount is not None])
@@ -163,6 +257,7 @@ def _ritual_lines(magus: Character) -> list[Line]:
         for ability in ("Artes Liberales", "Philosophiae")
         if (score := sum(ability_score(magus, ability)))
     ]
+    # (Ceremonial casting needs experience in one of them: can_ceremonial.)
     pair = hybrid.ritual_pair(magus)
     if pair is None or pair.total <= sum(line.amount or 0 for line in learned):
         return learned
@@ -175,10 +270,13 @@ def _ritual_lines(magus: Character) -> list[Line]:
     ]
 
 
-def _voice(magus: Character, kind: str, form: str, base: int) -> tuple[int, str]:
+def _voice(
+    magus: Character, kind: str, form: str, base: int, mastered: int = 0
+) -> tuple[int, str]:
     """The words (or gestures) term: the chosen one's, or a Flaw's when
     worse (Mute casts as with no words), less any Virtue's relief (Quiet
-    Magic), never past 0; and the Flaw it comes from, if any."""
+    Magic) and the spell's Mastery (`mastered`: Quiet or Still Casting),
+    never past 0; and the Flaw it comes from, if any."""
     found = [
         e
         for e in effects.collect([scores.character_source(magus.virtues_flaws)], kind)
@@ -189,7 +287,7 @@ def _voice(magus: Character, kind: str, form: str, base: int) -> tuple[int, str]
     worst = min(flaws, key=lambda e: e.amount or 0, default=None)
     if worst is not None and (worst.amount or 0) < amount:
         amount, name = int(worst.amount or 0), worst.entry.name
-    relief = sum(int(e.amount or 0) for e in found if e not in flaws)
+    relief = sum(int(e.amount or 0) for e in found if e not in flaws) + mastered
     if amount < 0 and relief:
         amount = min(0, amount + relief)
     return amount, name
@@ -269,9 +367,7 @@ def ritual_outcome(total: int, level: int) -> Outcome:
 
 
 TABLET_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Eight: Laboratory, Casting "
-    "Tablets (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Casting Tablets, pp. 263-264"
 )
 
 
@@ -339,6 +435,147 @@ def spontaneous_non_fatiguing(score: int) -> int:
     return round_down(score / 5)
 
 
+def _how_cast(
+    magus: Character, spontaneous: bool, ritual: bool, ceremonial: bool
+) -> tuple[bool, bool]:
+    """(ritual, ceremonial) as the magus's Flaws make them: Ceremonial
+    Spontaneous Magic casts Spontaneous spells only ceremonially (DE p.
+    122); Unstructured Caster casts Formulaic spells as Rituals, with their
+    vis (DE p. 149)."""
+    held = {vf.vf_id for vf in magus.virtues_flaws}
+    if spontaneous and CEREMONIAL_SPONTANEOUS in held:
+        ceremonial = True
+    if not spontaneous and not ritual and UNSTRUCTURED_CASTER in held:
+        ritual = True
+    return ritual, ceremonial
+
+
+def spontaneous_mode(magus: Character) -> str:
+    """Which divisions a magus's Spontaneous magic may use: Weak
+    Spontaneous Magic only / 5, never exerting (DE p. 153); Difficult only
+    exerting, / 2 (p. 126); both, none at all; Diedne Magic / 5 or / 2 on a
+    stress die without Fatigue, and the lowest Art doubled exerting (p. 76)."""
+    held = {vf.vf_id for vf in magus.virtues_flaws}
+    weak, difficult = WEAK_SPONTANEOUS in held, DIFFICULT_SPONTANEOUS in held
+    if weak and difficult:
+        return NO_SPONTANEOUS
+    if weak:
+        return WEAK
+    if difficult:
+        return DIFFICULT
+    return DIEDNE if DIEDNE_MAGIC in held else NORMAL
+
+
+def non_fatiguing_level(magus: Character, score: Breakdown) -> int | None:
+    """The level a Spontaneous spell reaches without Fatigue, before any
+    die: score / 5, or score / 2 (plus a stress die) with Diedne Magic;
+    None when the magus can't cast without exerting himself."""
+    mode = spontaneous_mode(magus)
+    if mode in (DIFFICULT, NO_SPONTANEOUS):
+        return None
+    total: float = score.total
+    for line in score.lines:
+        if line.multiplier is not None:
+            total *= line.multiplier
+    return round_down(total / (2 if mode == DIEDNE else 5))
+
+
+def spontaneous_total(score: Breakdown, die: int | None = None) -> int:
+    """A Spontaneous Casting Total from the spontaneous Casting Score
+    (casting_score(..., spontaneous=True)): its total / 5 without a die
+    (no Fatigue), (total + stress die) / 2 with one (a Fatigue level), with
+    any multiplier the score carries (a Deficiency halves it), rounded down
+    once."""
+    total: float = score.total + (die or 0)
+    for line in score.lines:
+        if line.multiplier is not None:
+            total *= line.multiplier
+    return round_down(total / (5 if die is None else 2))
+
+
+def can_ceremonial(magus: Character) -> bool:
+    """Ceremonial casting needs experience in Artes Liberales or
+    Philosophiae (DE p. 218)."""
+    return any(
+        a.name in ("Artes Liberales", "Philosophiae") and a.xp > 0
+        for a in magus.abilities
+    )
+
+
+def vis_limit_problem(
+    magus: Character, art: str, pawns: int, *, other_art: str = "", other: int = 0
+) -> str:
+    """Why `pawns` of `art` vis (and `other` of `other_art`) is more than
+    the magus can use in one casting: each Art's pawns at most its score
+    (DE p. 216). "" when it isn't."""
+    for name, count in ((art, pawns), (other_art, other)):
+        if name and count > art_score(magus, name)[0]:
+            return (
+                f"{count} pawns of {name} vis: {magus.name} can use at most "
+                f"{art_score(magus, name)[0]} (the {name} score)."
+            )
+    return ""
+
+
+def mastery_counts(abilities: Sequence[Any]) -> dict[str, int]:
+    """A spell's Mastery special abilities by name (lower case), each the
+    times it was taken (Quiet Casting may be taken twice)."""
+    found: dict[str, int] = {}
+    for ability in abilities:
+        name = str(getattr(ability, "name", "")).strip().casefold()
+        if name:
+            found[name] = found.get(name, 0) + 1
+    return found
+
+
+def fast_casting_speed(magus: Character, quick: int = 0) -> int:
+    """Fast Casting Speed before the stress die: Quickness + Finesse, +1
+    for each Quick Casting on a mastered spell (DE pp. 217, 226); each
+    spell after the first that round takes -6 more."""
+    return (
+        magus.characteristics.quickness + sum(ability_score(magus, "Finesse")) + quick
+    )
+
+
+def concentration_base(magus: Character, imperturbable: int = 0) -> int:
+    """A Concentration roll before the stress die: Stamina +
+    Concentration, + the Mastery score with Imperturbable Casting (DE pp.
+    215, 225)."""
+    return (
+        magus.characteristics.stamina
+        + sum(ability_score(magus, "Concentration"))
+        + imperturbable
+    )
+
+
+def aiming_base(magus: Character, precise: int = 0) -> int:
+    """An aiming roll before the die: Perception + Finesse, +1 for each
+    Precise Casting; +6 for each size step past a basic Individual, -1 for
+    each target of a Multiple Casting (DE pp. 223, 226)."""
+    return (
+        magus.characteristics.perception
+        + sum(ability_score(magus, "Finesse"))
+        + precise
+    )
+
+
+def botch_warping(zeros: int) -> tuple[int, bool]:
+    """A spell botch's Warping Points (one for each zero on the botch
+    dice) and whether they risk Wizard's Twilight (two or more) (DE p.
+    227)."""
+    return max(0, zeros), zeros >= 2
+
+
+def ritual_fatigue(levels_left: int, lost: int) -> tuple[int, str | None]:
+    """A Ritual's long-term Fatigue: the levels the magus can lose (down
+    to unconscious) and the wound the rest becomes, if any (DE p. 213)."""
+    taken = max(0, min(lost, levels_left))
+    more = lost - taken
+    if more <= 0:
+        return taken, None
+    return taken, RITUAL_WOUNDS[min(more, len(RITUAL_WOUNDS)) - 1]
+
+
 def botch_dice(
     *,
     vis_pawns: int = 0,
@@ -346,6 +583,7 @@ def botch_dice(
     aura: int = 0,
     in_regio: bool = False,
     fast: bool = False,
+    distracted: bool = False,
     mastery: int = 0,
     golden_cord: int = 0,
     infernal_vis_pawns: int = 0,
@@ -360,8 +598,9 @@ def botch_dice(
     to it (Faerie Magic). The caster's
     Virtues and Flaws (Cautious Sorcerer, Careless Sorcerer, Deaf...) count
     before the Golden Cord and Mastery reduce them; spells are
-    cast with words and gestures."""
-    dice = 1 + vis_pawns + (2 if fast else 0)
+    cast with words and gestures. A failed Concentration roll
+    (`distracted`) adds one (DE p. 215)."""
+    dice = 1 + vis_pawns + (FAST_BOTCH_DICE if fast else 0) + (1 if distracted else 0)
     if infernal_vis_pawns:
         if options.is_on(saga, "harsher_infernal_vis"):
             dice += 2 * infernal_vis_pawns  # +3 per pawn, 1 of it counted above
@@ -380,3 +619,25 @@ def botch_dice(
     if golden_cord:
         dice = max(1, dice - golden_cord)  # the cord can't take it to 0
     return max(0, dice - mastery)  # Mastery can
+
+
+def golden_cord(saga: Saga | None, magus: Character) -> int:
+    """The Golden Cord of the magus's bound familiar (0 without one): it
+    takes that many botch dice off his spellcasting (DE pp. 227, 267)."""
+    if saga is None:
+        return 0
+    familiar = saga.familiar_of(magus.id)
+    return familiar.golden_cord if familiar is not None else 0
+
+
+def talisman_attunements(saga: Saga | None, magus: Character) -> list[tuple[int, str]]:
+    """The attunements of the magus's talisman, best first, as (bonus,
+    what it applies to): while touching it, the best that applies adds to
+    his Casting Scores (DE p. 260)."""
+    if saga is None:
+        return []
+    device = enchantment.talisman_of(saga, magus)
+    if device is None:
+        return []
+    found = [(a.bonus, a.applies_to or a.shape) for a in device.attunements if a.bonus]
+    return sorted(found, key=lambda pair: -pair[0])

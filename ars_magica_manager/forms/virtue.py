@@ -91,6 +91,10 @@ BLOOD_NAMES: tuple[str, ...] = (
 
 #: Parameters that may be left blank: (label, placeholder).
 OPTIONAL_PARAMS: dict[str, tuple[str, str]] = {
+    "since": (
+        "Ages twice as fast since (year)",
+        "blank: since birth",
+    ),
     "favored": (
         "Favoured Craft or Profession",
         "Dwarf or Brownie Blood only, e.g. Craft: Smith",
@@ -275,7 +279,7 @@ def lab_param_fields(
 def lab_params_from(entry: LabVirtueFlawDef, values: dict[str, Any]) -> dict[str, str]:
     """The new instance's params from lab_param_fields' values: the chosen
     Specialization, the grog's id, the typed Intelligence; blanks left out."""
-    params = {param: values[param] for param in entry.choices}
+    params = {param: values[param] for param in entry.choices if values.get(param)}
     if values.get("servant"):
         params["servant"] = str(values["servant"])
     elif values.get("intelligence") is not None and "intelligence" in entry.parameters:
@@ -303,27 +307,69 @@ def _int_or_none(text: str | None) -> int | None:
         return None
 
 
+#: A laboratory Virtue or Flaw's choice: its label, whether it may be left
+#: blank, and its hint ({name}: the entry's name).
+LAB_CHOICES: dict[str, tuple[str, bool, str]] = {
+    "specialization": (
+        "Specialization",
+        False,
+        "{name} grants its points to the one you choose.",
+    ),
+    "art": (
+        "Technique or Form",
+        False,
+        "Lab Totals with it are halved (DE p. 294).",
+    ),
+    "second_form": (
+        "Second Form",
+        True,
+        "With two Forms instead of a Technique: Lab Totals with either are halved.",
+    ),
+    "activity": (
+        "Activity",
+        False,
+        "Missing Equipment: no lab work of this kind; Elementary: only this kind "
+        "(DE p. 295).",
+    ),
+    "second_activity": (
+        "Second activity",
+        True,
+        "Unless the first is Items, Spells or Texts, Missing Equipment names two.",
+    ),
+    "forbidden": (
+        "Activity it forbids",
+        True,
+        "Or leave it blank: tiresome rituals instead, -1 General Quality or +2 "
+        "Upkeep (DE p. 296).",
+    ),
+}
+
+
 def lab_choice_fields(
     entry: LabVirtueFlawDef, current: dict[str, str] | None = None
 ) -> list[DialogField]:
-    """Choose the Specialization a laboratory Virtue or Flaw grants points
-    to, from the ones its catalog entry allows (`current`: the one chosen
-    now)."""
+    """What a laboratory Virtue or Flaw's choices ask: the Specialization it
+    grants points to, the Arts Missing Ingredients halves, the activities
+    Missing Equipment, Elementary or Restriction concern (`current`: what is
+    chosen now)."""
     current = current or {}
-    return [
-        DialogField(
-            param,
-            "Specialization",
-            "select",
-            current.get(param) or None,
-            options=pairs(options),
-            required=True,
-            allow_blank=True,
-            placeholder="(choose one)",
-            hint=f"{entry.name} grants its points to the one you choose.",
+    fields = []
+    for param, options in entry.choices.items():
+        label, optional, hint = LAB_CHOICES.get(param, LAB_CHOICES["specialization"])
+        fields.append(
+            DialogField(
+                param,
+                label,
+                "select",
+                current.get(param) or None,
+                options=pairs(options),
+                required=not optional,
+                allow_blank=True,
+                placeholder="(none)" if optional else "(choose one)",
+                hint=hint.format(name=entry.name),
+            )
         )
-        for param, options in entry.choices.items()
-    ]
+    return fields
 
 
 # -- which instances a side lists --
@@ -587,18 +633,15 @@ def remove_virtue_flaw(saga: Saga, owner: Owner, index: int) -> Confirm:
     if isinstance(owner, Laboratory):
         return _remove_lab(saga, owner, index, name)
     if isinstance(owner, Character):
-        change = cch.removal_change(saga, owner, instance)
-        if change is not None:
-            characteristic, before, after = change
+        changes = cch.removal_changes(saga, owner, instance)
+        if changes:
 
             def stepped() -> None:
                 cch.unapply_virtue(saga, owner, instance)
                 del owner.virtues_flaws[index]
 
             return Confirm(
-                f"Delete {escape(name)}? {characteristic} goes from {before:+d} "
-                f"to {after:+d}.",
-                stepped,
+                f"Delete {escape(name)}? {cch.moves_text(changes)}.", stepped
             )
 
     def apply() -> None:

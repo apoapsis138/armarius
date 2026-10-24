@@ -13,10 +13,8 @@ from ..models import Character, Creature, Familiar, VirtueFlawDef
 from . import animal_grogs, creation_access
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Virtues and "
-    "Flaws Rules and Guidelines (https://www.redcap.org/page/Ars_Magica_"
-    "Definitive_Edition,_Chapter_Four:_Virtues_and_Flaws#Virtues_and_Flaws_"
-    "Rules_and_Guidelines)"
+    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Virtues and Flaws "
+    "Rules and Guidelines, p. 63"
 )
 
 #: Each audience as named in an "only for ..." note.

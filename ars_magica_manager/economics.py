@@ -34,9 +34,8 @@ from .world import takes_part_in_play
 # --------------------------------------------------------------- the rules
 
 SOURCE = (
-    "Covenants, Chapter Five: Wealth & Poverty "
-    "(https://www.redcap.org/page/Covenants_Chapter_Five:_Wealth_%26_Poverty); "
-    "fractions round away from zero (covenant finances)"
+    "Covenants, Chapter Five: Wealth & Poverty, pp. 56-71; fractions round away from "
+    "zero (covenant finances)"
 )
 
 #: Points of one laboratory by its Upkeep score, from -5 to +5.
@@ -272,7 +271,11 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         "consumables": people * 2 / 10,
         "laboratories": labs / 10,
         "provisions": people * 5 / 10,
-        "wages": people * 2 / 10 * wage_multiplier,
+        # A pound for each penny paid daily to professional soldiers, and
+        # half Wages (1 point of covenfolk) for each pensioner.
+        "wages": people * 2 / 10 * wage_multiplier
+        + eco.soldier_pay
+        + (covenant.loyalty.pensioners * 2 / 10 / 2 if covenant.loyalty.pension else 0),
         "weapons": gear / 320,
         "writing": float(writers),
     }
@@ -306,7 +309,13 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         "laboratories": f"{labs} pts of laboratories / 10",
         "provisions": f"{people} pts of inhabitants x 5 / 10",
         "wages": f"{people} pts of inhabitants x 2 / 10 x {wage_multiplier:g} "
-        f"({covenant.loyalty.money}, from Loyalty)",
+        f"({covenant.loyalty.money}, from Loyalty)"
+        + (f" + {eco.soldier_pay} for soldiers' daily pence" if eco.soldier_pay else "")
+        + (
+            f" + {covenant.loyalty.pensioners} pensioner(s) at half Wages"
+            if covenant.loyalty.pension and covenant.loyalty.pensioners
+            else ""
+        ),
         "weapons": f"{gear} pts of weapons and armor / 320",
         "writing": f"{magi} magi + {writers - magi} book craftspeople",
     }
@@ -425,13 +434,22 @@ def draw_from_wealth(covenant: Covenant, amount: int) -> None:
 
 def close_year(saga: Saga, covenant: Covenant) -> int:
     """The end of the year (Winter -> Spring): add the year's surplus to
-    Wealth, and start the new year's Emergency Savings at 0 (it covered last
-    year's deficit). A deficit leaves Wealth alone: covering it is the
-    Emergency Savings draw. Returns the amount added."""
-    surplus = max(0, summarize(saga, covenant).surplus_deficit)
-    covenant.economics.wealth += surplus
-    covenant.economics.emergency_savings = 0
-    return surplus
+    Wealth, or take a deficit the Emergency Savings didn't cover from it
+    (DE p. 189: "subtract it from the covenant's stores"; letting Wealth
+    fall below 0, the covenant broke, is a house rule); grow
+    inflation by a pound per hundred of the year's expenditure, unless
+    spending fell (DE p. 193); start the new year's Emergency Savings at 0.
+    Returns the change to Wealth."""
+    summary = summarize(saga, covenant)
+    eco = covenant.economics
+    change = summary.surplus_deficit
+    eco.wealth += change
+    spent = summary.total_expenditure
+    if eco.last_expenditure is not None and spent >= eco.last_expenditure:
+        eco.inflation += round_down(spent / INFLATION_PER)
+    eco.last_expenditure = spent
+    eco.emergency_savings = 0
+    return change
 
 
 # --------------------------------------------------------------------- text
@@ -632,8 +650,13 @@ def covenants_in_deficit(saga: Saga) -> list[tuple[str, int]]:
     return [(name, d) for name, d in results if d < 0]
 
 
+#: Inflation grows a pound for each this many pounds spent in a year.
+INFLATION_PER = 100
+
+
 def close_all_years(saga: Saga) -> list[tuple[str, int]]:
-    """Close the year for every covenant (see close_year): (name, added)."""
+    """Close the year for every covenant (see close_year): (name, the
+    change to its Wealth)."""
     return [
         (c.name, close_year(saga, c))
         for c in filter(takes_part_in_play, saga.covenants)

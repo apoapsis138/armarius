@@ -447,18 +447,33 @@ def loyalty_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             loyalty.pension,
         ),
         DialogField(
+            "pensioners",
+            "  Pensioners (each costs half Wages)",
+            "int",
+            loyalty.pensioners,
+            show_if=lambda v: bool(v.get("pension")),
+        ),
+        DialogField(
             "_sp",
             "Specialists (Presence + Ability of Steward/Chamberlain/Turb "
             "Captain/Autocrat)",
             "info",
             inh.specialists_loyalty(saga, covenant),
         ),
-        DialogField("familiarity", "Familiarity", "int", loyalty.familiarity),
+        DialogField(
+            "familiarity",
+            "Familiarity adjustment",
+            "int",
+            loyalty.familiarity,
+            hint=f"Worked out: {inh.familiarity(saga, covenant) - loyalty.familiarity} "
+            "(2 a year since the covenant's founding, at most what the Gift "
+            "takes, DE p. 186); this adjusts it, e.g. for new covenfolk.",
+        ),
         DialogField(
             "_rp",
             "Reputation (-5 per point of a known bad Reputation)",
             "info",
-            inh.reputation_loyalty_penalty(covenant),
+            inh.reputation_loyalty(covenant),
         ),
         DialogField(
             "actions_and_events",

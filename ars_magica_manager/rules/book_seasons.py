@@ -45,33 +45,27 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import library, options
+from . import effects, library, options
 from .rounding import round_down, round_up
-from .scores import ability_level
+from .scores import ability_level, character_source
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Writing Books "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Writing_Books)"
+    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Writing Books, pp. "
+    "379-380"
 )
 COPY_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Copying Books "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Copying_Books)"
+    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Copying Books, p. 380"
 )
 TRANSLATE_SOURCE = (
-    "Art & Academe, Chapter One, Translation "
-    "(https://www.redcap.org/page/Art_%26_Academe_Open_Content#Translation)"
+    "Art & Academe, Chapter Six: Institutional Education, Translation, p. 87"
 )
 LAB_TEXT_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Using Laboratory "
-    "Texts (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory#Using_Laboratory_Texts)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Using Laboratory Texts, p. "
+    "262"
 )
 DECODE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Translating "
-    "Laboratory Texts (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory#Translating_Laboratory_Texts)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Translating Laboratory "
+    "Texts, p. 263"
 )
 
 WRITE_SUMMA = "write_summa"
@@ -138,6 +132,42 @@ class BookWork:
 
 
 # -- scores -----------------------------------------------------------------------
+
+
+#: Covenants' extended rules: books off the Arts and Arcane Abilities are
+#: easier to make (Covenants p. 88).
+MUNDANE_SUBJECT_BONUS = 3
+
+
+def magical_subject(subject: str) -> bool:
+    """Whether a book's subject is an Art or an Arcane Ability (the
+    extended rules' magical subjects, Covenants p. 88)."""
+    kind, _, name = subject.partition(":")
+    if kind == "art":
+        return True
+    base = name.split(":")[0].split(" (")[0].strip()
+    return any(
+        d.category == "Arcane" and d.name.split(":")[0].split(" (")[0] == base
+        for d in catalog.load_ability_catalog()
+    )
+
+
+def quality_bonus(character: Character) -> int:
+    """What the author's Virtues add to the Quality of his books (Good
+    Teacher +3, DE p. 83)."""
+    return int(
+        effects.amount_total(
+            effects.collect([character_source(character.virtues_flaws)], "book_quality")
+        )
+    )
+
+
+def written_by(book: Book, character: Character) -> bool:
+    """Whether `character` wrote `book` (his id, or his name on a book
+    with none)."""
+    if book.author_id:
+        return book.author_id == character.id
+    return bool(book.author) and book.author == character.name
 
 
 def language_score(character: Character, language: str) -> int:
@@ -335,20 +365,29 @@ def _write(
         return [f"Writing in {language} needs it at 5."], None
     # Covenants' extended rules: the author gives Communication + 3, the
     # scribe, binder and illuminator the rest (the book form records them).
-    base = com + (
-        book_kinds.EXTENDED_AUTHOR_BASE
-        if options.is_on(saga, options.EXTENDED_BOOK_QUALITY)
-        else 6
-    )
+    extended = options.is_on(saga, options.EXTENDED_BOOK_QUALITY)
+    # Good Teacher's +3 is part of the base the summa's bonus is capped at
+    # (DE pp. 83, 380). The extended rules give the author Communication +
+    # 3 on a summa and nothing on a tractatus, +3 more off the magical
+    # subjects (Covenants p. 88).
+    base = com + quality_bonus(character)
+    if not extended:
+        base += 6
+    elif plan.activity != WRITE_TRACTATUS:
+        base += book_kinds.EXTENDED_AUTHOR_BASE
+    if extended and not magical_subject(subject):
+        base += MUNDANE_SUBJECT_BONUS
     kind = ("Art " if is_art else "Ability ") + "Summa"
     if plan.activity == WRITE_TRACTATUS:
         limit = round_up(score / 5) if is_art else round_up(score / 2)
+        # Only his own originals count, not copies or translations of them.
         written = sum(
             1
             for b in saga.books
             if b.type == "Tractatus"
             and b.opus != book_kinds.LECTURE_COMMENTARY
-            and b.author == character.name
+            and b.copy_of is None
+            and written_by(b, character)
             and book_subject(b) == subject
         )
         if written >= limit:
@@ -394,6 +433,7 @@ def _new_book(
         type=kind,
         language=plan.language or "Latin",
         author=character.name,
+        author_id=character.id,
         owner_kind="character",
         owner_id=character.id,
         year_published=plan.year,
@@ -493,6 +533,7 @@ def _copy_of(
         spell_id=book.spell_id,
         raw=book.raw,
         author_id=book.author_id,
+        copy_of=book.copy_of or book.id,
         text_kind=book.text_kind,
         technique=book.technique,
         form=book.form,

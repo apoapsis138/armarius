@@ -687,10 +687,23 @@ def test_the_year_end_adds_the_surplus_to_wealth_and_resets_emergency_savings():
     assert cov.economics.wealth == 5 + surplus
     assert cov.economics.emergency_savings == 0
 
-    # A deficit doesn't take from Wealth by itself: that's the draw's job.
+    # A deficit the Emergency Savings didn't cover comes from Wealth (DE p.
+    # 189), even below 0.
     saga, cov = _with_deficit(20, wealth=50)
-    assert eco.close_year(saga, cov) == 0
-    assert cov.economics.wealth == 50
+    assert eco.close_year(saga, cov) == -20
+    assert cov.economics.wealth == 30
+    saga, cov = _with_deficit(20, wealth=5)
+    eco.close_year(saga, cov)
+    assert cov.economics.wealth == -15
+
+
+def test_inflation_grows_with_the_years_spending():
+    saga, cov = _with_deficit(20, wealth=50)
+    spent = eco.summarize(saga, cov).total_expenditure
+    eco.close_year(saga, cov)  # the first year: nothing to compare with
+    assert cov.economics.inflation == 0
+    eco.close_year(saga, cov)
+    assert cov.economics.inflation == spent // 100
 
 
 def test_add_income_source_gives_it_a_unique_id():
@@ -722,9 +735,12 @@ def test_covenants_in_deficit_and_closing_every_year():
     other_surplus = eco.summarize(saga, other).surplus_deficit
     assert other_surplus > 0
     assert eco.covenants_in_deficit(saga) == [(cov.name, -36)]
-    # A deficit adds nothing to Wealth; a surplus is added (see close_year).
-    assert eco.close_all_years(saga) == [(cov.name, 0), (other.name, other_surplus)]
-    assert cov.economics.wealth == 100
+    # A deficit is taken from Wealth; a surplus is added (see close_year).
+    assert eco.close_all_years(saga) == [
+        (cov.name, -36),
+        (other.name, other_surplus),
+    ]
+    assert cov.economics.wealth == 100 - 36
 
 
 def test_row_problem_requires_at_least_one_pound_of_sundries():

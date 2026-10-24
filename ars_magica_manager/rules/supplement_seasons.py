@@ -16,12 +16,8 @@ from dataclasses import dataclass
 from . import activity_groups as groups
 
 _CH = "(https://www.redcap.org/page/{})"
-SOURCE = "Ars Magica Definitive Edition, Chapter 10: Long-Term Events " + _CH.format(
-    "Ars_Magica_Definitive_Edition,_Chapter_Ten:_Long-Term_Events"
-)
-COVENANTS = "Covenants, Chapter Seven: Libraries " + _CH.format(
-    "Covenants_Chapter_Seven:_Libraries"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, pp. 373-392"
+COVENANTS = "Covenants, Chapter Seven: Library, pp. 84-102"
 CHURCH = "The Church " + _CH.format("The_Church")
 CITY_GUILD = "City & Guild " + _CH.format("City_%26_Guild")
 ACADEME = "Art & Academe " + _CH.format("Art_%26_Academe_Open_Content")
@@ -33,17 +29,12 @@ SOCIETATES = "Houses of Hermes: Societates " + _CH.format(
 )
 LORDS = "Lords of Men " + _CH.format("Lords_of_Men")
 DE_INITIATION = (
-    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Mystery "
-    "Initiation "
-    + _CH.format(
-        "Ars_Magica_Definitive_Edition,_Chapter_Ten:_Long-Term_Events"
-        "#Mystery_Initiation"
-    )
+    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Mystery Initiation, "
+    "pp. 387-389"
 )
 DE_TAMING = (
-    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Taming "
-    "Animals "
-    + _CH.format("Ars_Magica_Definitive_Edition,_Chapter_Ten:_Long-Term_Events")
+    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Taming Animals "
+    "(Training Creatures), pp. 384-386"
 )
 
 
@@ -250,8 +241,34 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
     ),
     SimpleActivity(
         "make_excellent_item",
-        "Make an excellent or wondrous item",
-        "Workshop Total - Craft Level accumulated each season. Exposure 2.",
+        "Make an excellent item",
+        "One season, if the Workshop Total reaches the Craft Level (15): +1 "
+        "to a feature for every 3 points over it, at most Craft / 3 rounded "
+        "up. Exposure 2.",
+        CITY_GUILD,
+        "919",
+        who=_C,
+        group=groups.WORK,
+    ),
+    SimpleActivity(
+        "improve_station",
+        "Improve wealth or status",
+        "A season and Labor Points: Poor to average 120, average to Wealthy "
+        "360, Wealthy to Poor in the next social class 1,080. No production.",
+        CITY_GUILD,
+        "919",
+        who=_C,
+        group=groups.WORK,
+    ),
+    SimpleActivity(
+        "make_wondrous_item",
+        "Make a wondrous item",
+        "Touched by (Realm): the Workshop Total must beat the Craft Level (12 "
+        "+ the effect's magnitude + its uses a day); the excess accumulates "
+        "each season until the points equal the Craft Level, with no other "
+        "workshop work. One effect: Range Personal or Touch, Duration up to "
+        "Sun, Target Individual, of the two Forms chosen at creation; one "
+        "assistant at most (City & Guild pp. 70-72). Exposure 2.",
         CITY_GUILD,
         "919",
         who=_C,
@@ -447,9 +464,11 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
     SimpleActivity(
         "tame_animal",
         "Tame and train an animal",
-        "Intelligence + Animal Handling points a season until they reach the "
-        "animal's Might (or its training's level). Exposure 2 in Animal "
-        "Handling.",
+        "Intelligence + Animal Handling + Animal Ken - its Might (less the "
+        "Gift's 3, 6 Blatant, none Gentle) points a season until they reach "
+        "its Might; a mundane beast's is 1 + 2 x its Confidence. The points "
+        "last only over consecutive seasons. Tamed, a creature of the saga "
+        "gains Loyal +0 to its tamer. Exposure 2 in Animal Handling.",
         DE_TAMING,
         "922",
         group=groups.WORK,

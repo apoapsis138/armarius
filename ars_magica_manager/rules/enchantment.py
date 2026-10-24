@@ -25,9 +25,7 @@ from ..models import (
 from .rounding import round_down, round_up
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Enchantments "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Enchantments)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Enchantments, pp. 252-260"
 )
 
 

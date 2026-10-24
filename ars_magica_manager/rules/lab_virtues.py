@@ -39,11 +39,7 @@ from ..models import Book, Character, SeasonPlan
 from .breakdown import Line
 from .rounding import round_down, round_up
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Four:"
-    "_Virtues_and_Flaws)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 59-154"
 MYSTERIES_SOURCE = "The Mysteries Revised Edition, Chapter 6: Hermetic Astrology"
 ALCHEMY_SOURCE = "The Mysteries Revised Edition, Chapter 3: Hermetic Alchemy"
 HUBRIS_SOURCE = "Houses of Hermes: Mystery Cults, House Verditius, Hubris"

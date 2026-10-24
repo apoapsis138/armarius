@@ -302,3 +302,13 @@ def test_an_ex_miscellanea_magus_keeps_twilight():
     magus = _member("m", "trad_columbae")
     text = tradition_text.warping_text(magus, by_id["trad_columbae"])
     assert "Twilight as for any magus" in text
+
+
+def test_the_amazons_open_at_twice_and_keep_at_four_times():
+    # Rival Magic p. 30.
+    rule = catalog.load_tradition_catalog_by_id()["trad_amazon_sorceresses"].opening
+    assert rule is not None and rule.loses_other_arts
+    assert ts.opening_result(19, 10, rule) == ts.FAILS
+    assert ts.opening_result(20, 10, rule) == ts.LOSES
+    assert ts.opening_result(39, 10, rule) == ts.LOSES
+    assert ts.opening_result(40, 10, rule) == ts.KEEPS

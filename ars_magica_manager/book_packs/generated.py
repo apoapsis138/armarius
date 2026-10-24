@@ -32,7 +32,8 @@ from ..arts import ART_ABBREVIATIONS, ART_LOOKUP, ARTS, FORMS, TECHNIQUES
 from ..models import FULL, Character, Spell
 from ..packs import INFERRED
 from ..rules import creation_access, creation_virtues, warping
-from ..rules.creation_later import CHILDHOOD_ENDS, XP_A_YEAR
+from ..rules.creation_character import CHILDHOOD_ENDS
+from ..rules.creation_later import XP_A_YEAR
 from ..rules.creation_magus import (
     APPRENTICESHIP_LEVELS,
     APPRENTICESHIP_XP,

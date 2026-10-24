@@ -45,7 +45,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 - **Dates where the book gives two**, the pack takes: Merinita's disappearance 792, not 785 (Ch. 10, Appendix B); Dankmar founded 1052, not 1053 (Ch. 6, Appendix B); Rethra abolished 1207, not 1202 (Ch. 3, Ch. 9); Oakdell founded 934, not 931 (Ch. 3, Ch. 12); Grand Silesia destroyed 1008, not 1009 (Ch. 3, Appendix B). Each Diary entry gives the other date too. Ulm's freeing keeps both 1155 and 1164 in the text (Ch. 6).
 - **Felicia**: Dorana's apprentice is spelled as her stat block's heading has it; the book also writes Felecia (Ch. 3, Ch. 8).
 - **The Oak Gild**: Murion leads it. Only her raven Kolkrabus believes Stentorius has usurped her place, and Stentorius's record says so (Ch. 3, Ch. 8).
-- **Rhine customs over the core rules**: the pack keeps the book's year of notice for a case (the core rules say a season) and its proxy sigils (the core rules give each magus one vote). Its rule that the higher rank wins a dispute certamen would settle is recorded as a ruling only (Ch. 3).
+- **Rhine customs over the core rules**: the pack keeps the book's year of notice for a case (the core rules say a season) and its proxy sigils (the core rules give each magus one vote): a master holds one retired magus's sigil and an archmage two, by their rank Virtues. A meeting that would fall in a Grand Tribunal's year (every 33 years, 1228 and 1261) is held a year earlier, so the meeting after 1221 is in 1227 (pp. 140, 143). Journeyman, Master and Archmage each stand for Hermetic Magus (p. 20). Its rule that the higher rank wins a dispute certamen would settle is recorded as a ruling only (Ch. 3).
 
 ### For every magus
 <!-- help: pack-assumptions-rhine-shared -->

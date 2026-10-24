@@ -22,6 +22,7 @@ from .models import (
     Saga,
     character_age,
 )
+from .rules import reputations
 from .rules.animal_grogs import describe as describe_animal
 from .rules.covenfolk import (
     AUTO_KINDS,
@@ -36,16 +37,11 @@ from .rules.covenfolk import (
 )
 from .rules.rounding import round_away_from_zero
 
-_COVENANTS = "https://www.redcap.org/page/Covenants_Chapter_{}"
 INHABITANTS_SOURCE = (
-    "Covenants, Chapter Five: Wealth & Poverty, Points of Inhabitants ("
-    + _COVENANTS.format("Five:_Wealth_%26_Poverty#Points_of_Inhabitants")
-    + ")"
+    "Covenants, Chapter Five: Wealth & Poverty, Points of Inhabitants, p. 63"
 )
 LOYALTY_SOURCE = (
-    "Covenants, Chapter Three: Governance, Calculating Prevailing Loyalty ("
-    + _COVENANTS.format("Three:_Governance#Calculating_Prevailing_Loyalty")
-    + ")"
+    "Covenants, Chapter Three: Governance, Calculating Prevailing Loyalty, p. 36"
 )
 #: Section titles on the tab.
 KIND_TITLES: dict[str, str] = {
@@ -223,6 +219,21 @@ def governance_names(covenant: Covenant) -> list[str]:
 # ----------------------------------------------------------------- loyalty
 
 
+#: Familiarity's Loyalty points for each year the covenant has stood.
+FAMILIARITY_PER_YEAR = 2
+
+
+def familiarity(saga: Saga, covenant: Covenant) -> int:
+    """Familiarity: 2 Loyalty points for each year since the covenant was
+    founded, at most what the magi's Gift takes off (Base Loyalty), plus
+    the typed adjustment (DE p. 186)."""
+    grown = 0
+    if covenant.year_founded is not None:
+        years = max(0, saga.current_year - covenant.year_founded)
+        grown = min(FAMILIARITY_PER_YEAR * years, max(0, -base_loyalty(saga, covenant)))
+    return grown + covenant.loyalty.familiarity
+
+
 def base_loyalty(saga: Saga, covenant: Covenant) -> int:
     """Base Loyalty: the average, across the covenant's magi, of each one's
     Gift modifier. 0 with no magi. An unset manual Gift is assumed to be the
@@ -250,13 +261,10 @@ def specialists_loyalty(saga: Saga, covenant: Covenant) -> int:
     )
 
 
-def reputation_loyalty_penalty(covenant: Covenant) -> int:
-    """-5 Loyalty per point of every bad Reputation the covenant is aware of.
-    A Reputation the covenant doesn't know about, or a good one, costs
-    nothing."""
-    return -5 * sum(
-        abs(r.score) for r in covenant.reputations if r.score < 0 and r.known
-    )
+def reputation_loyalty(covenant: Covenant) -> int:
+    """-5 Loyalty per point of every bad Reputation the covenfolk know of,
+    +5 per point of every good local one (Covenants p. 40)."""
+    return reputations.loyalty_points(covenant.reputations)
 
 
 def living_conditions_loyalty(covenant: Covenant) -> int:
@@ -285,8 +293,8 @@ def total_modifiers(saga: Saga, covenant: Covenant) -> int:
         + equipment_loyalty(covenant)
         + money_loyalty(covenant)
         + specialists_loyalty(saga, covenant)
-        + loyalty.familiarity
-        + reputation_loyalty_penalty(covenant)
+        + familiarity(saga, covenant)
+        + reputation_loyalty(covenant)
         + covenant_diary.actions_and_events(covenant)
         + loyalty.magical_influence
     )
@@ -485,8 +493,18 @@ def loyalty_right_text(saga: Saga, covenant: Covenant) -> str:
             ),
             ("Money", money),
             ("Specialists", str(specialists_loyalty(saga, covenant))),
-            ("Familiarity", str(loyalty.familiarity)),
-            ("Reputation", str(reputation_loyalty_penalty(covenant))),
+            (
+                "Familiarity",
+                f"{familiarity(saga, covenant)} (2 a year since founding, at most "
+                f"what the Gift takes"
+                + (
+                    f", {loyalty.familiarity:+d} adjusted"
+                    if loyalty.familiarity
+                    else ""
+                )
+                + ")",
+            ),
+            ("Reputation", str(reputation_loyalty(covenant))),
             ("Actions and events", _actions_and_events_text(covenant)),
             ("Magical Influence", str(loyalty.magical_influence)),
         ]

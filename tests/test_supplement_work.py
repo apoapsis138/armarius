@@ -13,6 +13,7 @@ from ars_magica_manager.models import (
     Character,
     Characteristics,
     Ordeal,
+    Progress,
     Saga,
     ScoredTrait,
     SeasonPlan,
@@ -489,11 +490,36 @@ def test_a_craft_manual_needs_artes_liberales():
 def test_excellent_items_ventures_remedies_and_medicine():
     saga = _saga()
     item = _work(saga, _plan("make_excellent_item", title="Sword"))
-    assert item.progress == [("item", "Sword", 15, 0)]
+    # Below the Craft Level 15: no excellent item this season.
+    assert item.progress == [] and "below the Craft Level 15" in item.notes[0]
+    made = _work(saga, _plan("make_excellent_item", title="Sword", book_level=3))
+    assert made.progress == [("item", "Sword", 1, 1)]
+    # 9 over the level: +3, but at most Craft 5 / 3 rounded up = 2.
+    assert sw.excellent_bonus(24, 15, 5) == 2
+    assert sw.excellent_bonus(20, 15, 9) == 1
+    assert sw.excellent_bonus(14, 15, 9) is None
+    # A wondrous item needs Touched by (Realm), and builds up over seasons.
+    ring = _plan("make_wondrous_item", title="Ring", book_level=3)
+    assert "Touched by (Realm)" in sw.problems(saga, saga.character("c"), ring)[0]
+    touched = _with(virtues_flaws=[VirtueFlawInstance("vf_touched_by_realm")])
+    wondrous = _work(touched, ring)
+    assert wondrous.progress[0][:3] == ("item", "Ring", 3)
     assert _work(saga, _plan("merchant_venture", other_modifier=12)).labor_points == 12
     remedies = _work(saga, _plan("produce_remedies", book_level=12, extra_vis=3))
     assert remedies.labor_points == -8  # 12 x 3 / 5 = 7.2, rounded up
     assert "Can care for 0 patients" in _work(saga, _plan("medical_season")).notes[0]
+
+
+def test_moving_up_in_wealth_costs_labor_points():
+    poor = [VirtueFlawInstance("vf_poor")]
+    plan = _plan("improve_station")
+    short = _with(labor_points=100, virtues_flaws=poor)
+    assert "costs 120 Labor Points" in sw.problems(short, short.character("c"), plan)[0]
+    work = _work(_with(labor_points=130, virtues_flaws=poor), plan)
+    assert work.labor_points == -120
+    assert [vf.vf_id for vf in work.remove_vfs] == ["vf_poor"]
+    up = _work(_with(labor_points=400), plan)
+    assert (up.labor_points, [vf.vf_id for vf in up.add_vfs]) == (-360, ["vf_wealthy"])
 
 
 def test_improving_raw_materials():
@@ -522,7 +548,31 @@ def test_a_formula_researched_with_the_storyguides_quality():
 
 
 def test_university_exams():
-    saga = _with(reputations=[ScoredTrait("Academic", 2)])
+    # Art & Academe p. 100: years at university and a net Good Academic
+    # Reputation before each exam; a Bad Academic Reputation is taken off.
+    early = _with(reputations=[ScoredTrait("Good Academic Reputation", 1)])
+    baccalaureus = _plan("attend_university", title="Baccalaureus")
+    assert (
+        "needs 12 seasons" in sw.problems(early, early.character("c"), baccalaureus)[0]
+    )
+    years = [Progress("university", "University", points=39)]
+    magister = [VirtueFlawInstance(sw.MAGISTER)]
+    doctorate = _plan("attend_university", "ability:Theology", title="Doctor")
+    unlettered = _with(progress=years, reputations=[ScoredTrait("Academic", 3)])
+    refused = sw.problems(unlettered, unlettered.character("c"), doctorate)
+    assert "needs a magister first" in refused[0]  # DE p. 76
+    marked = _with(
+        progress=years,
+        virtues_flaws=magister,
+        reputations=[
+            ScoredTrait("Good Academic Reputation", 3),
+            ScoredTrait("Plagiarist", -1, type="Academic"),
+        ],
+    )
+    assert "has 2" in sw.problems(marked, marked.character("c"), doctorate)[0]
+    saga = _with(
+        progress=years, virtues_flaws=magister, reputations=[ScoredTrait("Academic", 3)]
+    )
     assert _work(saga, _plan("attend_university")).notes == []
     pending = _work(saga, _plan("attend_university", title="Baccalaureus"))
     assert pending.notes == [
@@ -534,7 +584,7 @@ def test_university_exams():
         random.Random(4),
     )
     assert doctor.notes == [
-        "The doctor exam: 6 against 12: failed (another year first)."
+        "The doctor exam: 7 against 12: failed (another year first)."
     ]
 
 
@@ -655,6 +705,22 @@ def test_a_medium_ordeal_raises_a_minor_flaw_to_the_major_one():
     assert wulf.ordeals == [Ordeal("Medium", 0)]
 
 
+def test_varying_the_script():
+    # DE pp. 388-389: stress die + Intelligence + Lore against 9 to add a
+    # component; failing fails the Initiation.
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.abilities.append(Ability("Mercere Lore", xp=ability_xp(3)))
+    plan = _ordeal_plan(script_variation="add", variation_bonus=3)
+    assert "rolled when the season is played" in _work(saga, plan).notes[0]
+    rolled = [_work(saga, plan, random.Random(seed)) for seed in range(12)]
+    passed = [w for w in rolled if "Script bonus is now 15" in w.notes[0]]
+    failed = [w for w in rolled if "Initiation fails" in w.notes[0]]
+    assert passed and failed
+    assert all(not w.add_vfs for w in failed)
+
+
 def test_a_failed_initiation_costs_nothing():
     saga = _saga()
     wulf = saga.character("c")
@@ -707,3 +773,27 @@ def test_what_an_ordeal_can_cost(held, kw, problem):
 def test_binding_a_catalog():
     saga = _with(raw_vis={"vim": 2})
     assert "Arcane Connection" in _work(saga, _plan("bind_catalog")).notes[0]
+
+
+def test_distractions_can_fail_an_initiation_but_not_spare_the_ordeal():
+    # TMRE p. 12: each month lost takes a third of the total, rounded up.
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.characteristics.presence = 3
+    wulf.abilities.append(Ability("Mithraic Lore", xp=ability_xp(5)))
+    plan = _plan(
+        "undergo_initiation",
+        effect_id="vf_puissant_ability",
+        effect_params={"ability": "Penetration"},
+        teacher_id="c",
+        title="Mithraic Lore",
+        other_modifier=12,
+        device_id="vf_deficient_technique",
+        ordeal_params={"technique": "Creo"},
+        research_kind="Medium",
+        months_lost=1,
+    )
+    done = _work(saga, plan)  # 20, less 7, against 18
+    assert [vf.vf_id for vf in done.add_vfs] == ["vf_deficient_technique"]
+    assert "the Ordeal is still suffered" in done.notes[-1]

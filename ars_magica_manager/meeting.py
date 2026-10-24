@@ -160,8 +160,21 @@ def absent(saga: Saga, meeting: Meeting, covenant: Covenant) -> int:
 
 def officers(tribunal: Tribunal) -> set[str]:
     """The Praeco and the Presiding Quaesitor: in the hall, neither votes
-    (the Praeco only breaks a tie)."""
-    return {i for i in (tribunal.praeco_id, tribunal.quaesitor_id) if i}
+    (the Praeco only breaks a tie), unless the Tribunal's customs let the
+    Praeco vote."""
+    praeco = None if tribunal_packages.of(tribunal).praeco_votes else tribunal.praeco_id
+    return {i for i in (praeco, tribunal.quaesitor_id) if i}
+
+
+def _silent(saga: Saga, tribunal: Tribunal, magus: Character) -> bool:
+    """Whether a magus present casts no vote: an officer, or a Redcap where
+    the customs say Redcaps don't vote."""
+    if magus.id in officers(tribunal):
+        return True
+    return (
+        not tribunal_packages.of(tribunal).redcaps_vote
+        and magus.hermetic.house == REDCAP_HOUSE
+    )
 
 
 def magi_present(
@@ -179,6 +192,7 @@ def magi_present(
 #: The quorum: magi in person, from covenants, and a Quaesitor (DE,
 #: Tribunals).
 QUORUM_MAGI, QUORUM_COVENANTS = 12, 4
+REDCAP_HOUSE = "house_mercere"
 
 
 def quorum(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
@@ -201,13 +215,17 @@ def quorum(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
         f"{magi} {'magus' if magi == 1 else 'magi'} from {covenants} "
         f"covenant{'' if covenants == 1 else 's'}"
     )
-    words += ", and a Quaesitor" if quaesitor is not None else ", and no Quaesitor"
+    if quaesitor is not None:
+        words += ", and a Quaesitor"
+    elif tribunal_packages.of(tribunal).quorum_needs_quaesitor:
+        words += ", and no Quaesitor"
     lacking = []
     if magi < QUORUM_MAGI:
         lacking.append(f"{QUORUM_MAGI} magi")
     if covenants < QUORUM_COVENANTS:
         lacking.append(f"{QUORUM_COVENANTS} covenants")
-    if quaesitor is None:
+    needs_quaesitor = tribunal_packages.of(tribunal).quorum_needs_quaesitor
+    if quaesitor is None and needs_quaesitor:
         lacking.append("a Quaesitor")
     if lacking:
         return f"{words}: not quorate (it needs {' and '.join(lacking)})"
@@ -248,9 +266,8 @@ def present(
     show what its Tribunal's customs ask (its cathach)."""
     if not shows(saga, tribunal, meeting, covenant):
         return 0, 0
-    silent = officers(tribunal)
     magi = in_person(saga, meeting, covenant) - sum(
-        m.id in silent for m in named_present(saga, meeting, covenant)
+        _silent(saga, tribunal, m) for m in named_present(saga, meeting, covenant)
     )
     proxies = carried(tribunal, meeting, covenant)
     allowed = proxies if ruling(meeting, covenant) == ALLOWED else 0
@@ -2087,8 +2104,24 @@ class Closing(Step):
         )
 
 
+#: The Grand Tribunal meets every 33 years, in 1228 and 1261 (Guardians of
+#: the Forests p. 140).
+GRAND_TRIBUNAL_EVERY, GRAND_TRIBUNAL_YEAR = 33, 1228
+
+
+def grand_tribunal_year(year: int) -> bool:
+    return (year - GRAND_TRIBUNAL_YEAR) % GRAND_TRIBUNAL_EVERY == 0
+
+
 def _next(tribunal: Tribunal, meeting: Meeting) -> int:
-    return int(meeting.get("year") or 0) + max(1, tribunal.meets_every)
+    """The next meeting's year: its interval on, a year earlier if that is
+    a Grand Tribunal's year and the Tribunal's customs say so."""
+    year = int(meeting.get("year") or 0) + max(1, tribunal.meets_every)
+    if tribunal_packages.of(tribunal).skips_grand_tribunal and grand_tribunal_year(
+        year
+    ):
+        return year - 1
+    return year
 
 
 def closing_text(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:

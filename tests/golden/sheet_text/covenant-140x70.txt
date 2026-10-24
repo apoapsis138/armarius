@@ -88,11 +88,12 @@
 
       Type of Governance:       (not set)               Situational Modifiers for:
       Base Loyalty Points:      -30                     Living Conditions:  +0  (+0)
-      Total modifiers:          0                       Equipment:          Standard  (+0)
-      Current Loyalty Points:   -30                     Money:              Standard salary  (+0)
-      Prevailing Loyalty Score: -3                      Specialists:        0
-                                                        Familiarity:        0
-                                                        Reputation:         0
+      Total modifiers:          10                      Equipment:          Standard  (+0)
+      Current Loyalty Points:   -20                     Money:              Standard salary  (+0)
+      Prevailing Loyalty Score: -2                      Specialists:        0
+                                                        Familiarity:        0 (2 a year since
+                                                        founding, at most what the Gift takes)
+                                                        Reputation:         10
                                                         Actions and events: 0
                                                         Magical Influence:  0
 
@@ -106,8 +107,8 @@
       Total Inhabitants:            8
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Miscellaneous
-                                                                                                      ▄▄
+    ▼ Miscellaneous                                                                                   ▇▇
+
       Aging for Magi:    0                              Magic Servants:  0
       Aging for Mundane: 0                              Magic Teamsters: 0
       Magic Laborers:    0                              Magic Turbula:   0
@@ -127,7 +128,6 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Specialists (1)
 
-        Name                Responsibility    Role           Year Born
 
   ▌
   ▌  Select an inhabitant to see its details.

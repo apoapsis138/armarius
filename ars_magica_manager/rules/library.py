@@ -13,11 +13,7 @@ from ..models import Book, Character, Codex, Covenant, Saga, Spell
 from . import options
 from .rounding import round_up
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Six: Covenants, Library "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter"
-    "_Six:_Covenants#Library)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter Six: Covenants, Library, p. 179"
 
 
 #: Book types whose subject is an Art / an Ability (a Tractatus depends on its
@@ -262,3 +258,39 @@ def subject(book: Book, saga: Saga | None = None) -> str:
     if is_ability_book(book.type, book.subject_kind):
         return book.ability
     return ""
+
+
+def quality_limit(book_type: str, level: int) -> int | None:
+    """The highest quality allowed at covenant creation, or None if there's no
+    limit for this type (DE p. 179)."""
+    if book_type == "Art Summa":
+        return min(22, 11 + (20 - level))
+    if book_type == "Ability Summa":
+        return min(22, 11 + 3 * (8 - level))
+    if book_type == "Tractatus":
+        return 11
+    return None
+
+
+#: The highest summa level allowed at covenant creation.
+LEVEL_LIMITS: dict[str, int] = {"Art Summa": 20, "Ability Summa": 8}
+
+
+def limit_warnings(book: Book) -> list[str]:
+    """Covenant-creation limits this book goes over (plain text). Books found in
+    play may exceed them, so these are warnings, never errors. Lab Texts and
+    Casting Tablets aren't checked: their limit comes from a power-level
+    table not yet provided."""
+    warnings: list[str] = []
+    level = book.level or 0
+    level_limit = LEVEL_LIMITS.get(book.type)
+    if level_limit is not None and level > level_limit:
+        warnings.append(
+            f"Level {level} is over the covenant-creation limit of {level_limit}."
+        )
+    limit = quality_limit(book.type, level)
+    if limit is not None and (book.quality or 0) > limit:
+        warnings.append(
+            f"Quality {book.quality} is over the covenant-creation limit of {limit}."
+        )
+    return warnings

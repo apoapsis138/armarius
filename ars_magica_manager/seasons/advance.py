@@ -31,7 +31,13 @@ from ..rules import warping as warping_rules
 from ..tables import Table
 from ..world import takes_part_in_play
 from .animal_aging import season_aging
-from .character_effects import _add_xp, _yearly_warping, age_character, diary_entry
+from .character_effects import (
+    _add_xp,
+    _yearly_warping,
+    age_character,
+    diary_entry,
+    gain_warping,
+)
 from .covenant import covenant_season
 from .defaults import default_text, grog_default, notified
 from .healing import season_healing
@@ -94,6 +100,28 @@ def _record_raised(character: Character, outcome: rules.Outcome) -> None:
         )
 
 
+def _apply_apprentice(saga: Saga, outcome: rules.Outcome) -> None:
+    """An apprentice's Arts opened, or a Hermetic Virtue taught."""
+    work = outcome.apprentice_work
+    student = saga.character(outcome.plan.subject_id)
+    if work is None or student is None:
+        return
+    if outcome.plan.activity == aps.OPEN_ARTS:
+        aps.open_arts(student, work)
+    elif outcome.plan.activity == aps.TEACH_VIRTUE and work.succeeds:
+        student.virtues_flaws.append(VirtueFlawInstance(outcome.plan.effect_id or ""))
+        if work.flaw_id:
+            student.virtues_flaws.append(VirtueFlawInstance(work.flaw_id))
+
+
+def _apply_warping(saga: Saga, character: Character, outcome: rules.Outcome) -> None:
+    """A botch's Warping Points, with the Twilight check at two or more."""
+    if outcome.warping:
+        gain_warping(
+            saga, character, outcome.warping, random.Random(), aura=outcome.warping_aura
+        )
+
+
 def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
     """Apply outcomes worked out by resolve(): add each one's experience and
     write its Diary entry. Outcomes that can't be carried out are skipped.
@@ -119,20 +147,13 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         if outcome.supplement is not None:
             apply_supplement(saga, character, outcome.plan, outcome.supplement)
         _apply_insight(character, outcome)
+        _apply_warping(saga, character, outcome)
         hedge = outcome.tradition_work
         if hedge is not None and outcome.plan.activity == rules.OPEN_TRADITION:
             opened = saga.character(outcome.plan.subject_id)
             if opened is not None:
                 tradition_seasons.apply_opening(opened, hedge)
-        work = outcome.apprentice_work
-        student = saga.character(outcome.plan.subject_id)
-        if work is not None and student is not None:
-            if outcome.plan.activity == aps.OPEN_ARTS:
-                aps.open_arts(student, work)
-            elif outcome.plan.activity == aps.TEACH_VIRTUE and work.succeeds:
-                student.virtues_flaws.append(
-                    VirtueFlawInstance(outcome.plan.effect_id or "")
-                )
+        _apply_apprentice(saga, outcome)
         if outcome.tractatus and outcome.tractatus not in character.tractatus_read:
             character.tractatus_read.append(outcome.tractatus)
         if outcome.summa and outcome.summa not in character.summae_read:
@@ -234,11 +255,20 @@ def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
             continue  # an animal rolls in its kind's seasons (season_aging)
         born = character.background.year_born
         age = None if born is None else saga.current_year - born
-        if age is None or not aging_rules.rolls_this_year(character, age):
+        if age is None:
+            continue
+        real_age = age
+        # Age Quickly and Demonic Blood age by an effective age (DE pp. 76,
+        # 119); a body in Twilight doesn't age at all (DE p. 229).
+        age = aging_rules.effective_age(character, age)
+        if not aging_rules.rolls_this_year(character, age):
             continue
         if work_virtues.forest_replaces_aging(character):
             continue  # its Warping Point stands in for the roll (_yearly_warping)
-        lines.append(age_character(saga, character, age, rng))
+        if warping_rules.in_twilight(saga, character):
+            continue
+        for _ in range(aging_rules.rolls_per_year(character, real_age)):
+            lines.append(age_character(saga, character, age, rng))
     return lines
 
 

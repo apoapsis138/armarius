@@ -374,7 +374,12 @@ def design_text(spell: Spell) -> str:
     if design is None:
         return "non-standard Range, Duration or Target (the troupe sets the level)"
     extra = spell_levels.extra_magnitudes(
-        spell.base_level, spell.range, spell.duration, spell.target, spell.level
+        spell.base_level,
+        spell.range,
+        spell.duration,
+        spell.target,
+        spell.level,
+        ritual=spell.ritual,
     )
     text = design.design_line(spell.base_level)
     if extra and extra > 0 and design.level < spell.level:

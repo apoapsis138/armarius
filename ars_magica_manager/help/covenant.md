@@ -262,8 +262,9 @@ Nothing on the sheet is worked out from it.
 The covenant's Reputations, each with a score from -3 to +3. Each one also
 records whether the covenant knows about it: an unknown one is marked
 "(not known by the covenant)" on its row. Every point of a bad Reputation
-the covenant knows about costs 5 Loyalty points on the Inhabitants tab; good
-Reputations and unknown ones cost nothing. A Reputation may also say its type (Hermetic, Local, Noble, Academic,
+(a negative score) the covenant knows about costs 5 Loyalty points on the
+Inhabitants tab, and every point of a good local one (Local, or no type)
+gains 5; unknown ones count for nothing (Covenants p. 40). A Reputation may also say its type (Hermetic, Local, Noble, Academic,
 Ecclesiastical or Infernal) and how far it reaches, both shown in
 brackets after its score.
 
@@ -352,9 +353,12 @@ Money from the choices you make with
 <!-- gui -->
 **Edit** beside Loyalty
 <!-- /gui -->
-(a Pension adds to Money),
+(a Pension adds to Money, and its **Pensioners** each cost half Wages),
 Specialists (the Presence and Ability of any Steward, Chamberlain, Turb
-Captain or Autocrat), Familiarity, Reputation, Actions and events (the
+Captain or Autocrat), Familiarity (worked out: 2 points for every year
+since the covenant's Year Founded, at most what the magi's Gift takes off,
+DE p. 186; the **Familiarity adjustment** you type changes it, for
+instance when new covenfolk dilute it), Reputation, Actions and events (the
 Diary's Loyalty points plus any you type), and Magical Influence. Current
 Loyalty Points is the sum, and the Prevailing Loyalty Score comes from it
 by the same table as Ability advancement.
@@ -537,8 +541,11 @@ every plan is worked out and applied, and someone with
 nothing planned gains nothing that season. At the end of Winter the year
 closes: before the date moves on, if any covenant spends more than it earns
 the app asks whether to stop and balance the books first; then each
-covenant's surplus is added to its Wealth and its Emergency Savings start
-again at 0. A deficit is never taken from Wealth by itself.
+covenant's surplus is added to its Wealth, any deficit Emergency Savings
+didn't cover is taken from it (DE p. 189; letting Wealth go below 0, the
+covenant broke, is the app's house rule), Inflation grows a pound for every hundred pounds the
+year spent unless spending fell (DE p. 193), and Emergency Savings start
+again at 0.
 
 **See also:** [Planning a season](help:plan-season),
 [A grog's year](help:grog-year), [Advancing a season](help:advance-season),
@@ -664,6 +671,10 @@ can be marked as a Contested Resource (advancing then asks whether it was
 secured once its security lapses, and an unsecured one gives nothing) or as
 a Dwindling Resource, which loses a tenth of the pawns it gave when it
 began dwindling at the end of each year, so it is gone after ten years.
+How many pawns to give one is the troupe's choice: a low-yield source gives
+1, 2 or 4 a year in a low-, moderate- or high-vis saga, a moderate one 2,
+4 or 8, a high-yield one (about a magus's year of vis) 4, 8 or 16
+(Covenants p. 72).
 
 ### Raw Vis Stores
 <!-- help: section-pos-vis_store -->
@@ -745,8 +756,8 @@ character or another covenant ([Give](help:give)).
 <!-- /gui -->
 On the right, Total Income, the
 expenditure before and after cost savings, and the Surplus/Deficit. At the
-end of each year the surplus is added to Wealth; a deficit is not taken
-from it unless you choose to (see Cost Savings).
+end of each year the surplus is added to Wealth, and a deficit that
+Emergency Savings didn't cover is taken from it (see Cost Savings).
 
 ### Sources of Income
 <!-- help: section-eco-income -->
@@ -774,8 +785,9 @@ projected income, and confirm to set the new income and record a note.
 What the covenant spends each year, by category. Buildings, Consumables,
 Laboratories, Provisions, Wages, Weapons and Writing Materials are worked
 out from the points of inhabitants, laboratories and weapons and armour
-(Wages also follows the salary chosen under Loyalty, and building Boons add
-to Buildings);
+(Wages also follows the salary chosen under Loyalty, adds a pound for each
+penny a day paid to professional soldiers, typed on the Wages row, and half
+Wages for each pensioner; building Boons add to Buildings);
 <!-- tui -->
 `e` on those rows edits only their note. Tithes, Inflation
 and Sundry are typed with `e` (Sundry is at least 1 pound a year). The

@@ -34,8 +34,9 @@ from ..commands import (
     Refuse,
     SectionOps,
     notes,
+    picked,
 )
-from ..form_spec import ChoiceReads, DialogField, pairs, read_for_choice
+from ..form_spec import ChoiceReads, DialogField, ListEditor, pairs, read_for_choice
 from ..markup import escape, todo
 from ..models import (
     Book,
@@ -123,7 +124,12 @@ def design_from(spell: Spell) -> SpellDesign:
     extra = 0
     if spell.base_level is not None and spell.level is not None:
         found = spell_levels.extra_magnitudes(
-            spell.base_level, spell.range, spell.duration, spell.target, spell.level
+            spell.base_level,
+            spell.range,
+            spell.duration,
+            spell.target,
+            spell.level,
+            ritual=spell.ritual,
         )
         extra = found or 0
     return SpellDesign(
@@ -457,10 +463,81 @@ class LabPlanForm:
         level = "Gen" if source.level is None else source.level
         return f"Started from {source.name} {spl.shorthand(source)} (level {level})."
 
+    def _book_name(self, book_id: str) -> str:
+        book = next((b for b in self.saga.books if b.id == book_id), None)
+        return book.name if book else "(gone)"
+
+    def _choose_text(self, current: str | None = None) -> Form:
+        """One more Lab Text to learn from in the season."""
+        options = [
+            (escape(b.name), b.id)
+            for b in lab_seasons.lab_texts_at_hand(self.saga, self.magus)
+        ]
+        return Form(
+            "Another Lab Text",
+            lambda: [
+                DialogField(
+                    "book",
+                    "Lab Text",
+                    "select",
+                    _kept(current, options),
+                    options=options,
+                    required=True,
+                )
+            ],
+            picked(lambda v: v["book"]),
+            save_label="Add" if current is None else "Save",
+        )
+
+    def _spell_name(self, spell_id: str) -> str:
+        spell = catalog.find_spell(self.saga, spell_id)
+        return f"{spell.name} ({spl.shorthand(spell)})" if spell else "(gone)"
+
+    def teachers(self) -> list[tuple[str, str]]:
+        """Who could teach spells: any other magus who knows some."""
+        return [
+            (escape(c.name), c.id)
+            for c in self.saga.characters
+            if c is not self.magus and c.type == "magus" and c.spells_known
+        ]
+
+    def _taught_options(self) -> list[tuple[str, str]]:
+        """Every spell another magus knows and this one doesn't."""
+        known = {k.spell_id for k in self.magus.spells_known}
+        found: dict[str, str] = {}
+        for teacher in self.saga.characters:
+            if teacher is self.magus:
+                continue
+            for k in teacher.spells_known:
+                spell = catalog.find_spell(self.saga, k.spell_id)
+                if spell is not None and spell.id not in known:
+                    found.setdefault(spell.id, escape(self._spell_name(spell.id)))
+        return sorted(((label, i) for i, label in found.items()), key=lambda o: o[0])
+
+    def _choose_taught(self, current: str | None = None) -> Form:
+        """A spell to be taught."""
+        options = self._taught_options()
+        return Form(
+            "A spell to be taught",
+            lambda: [
+                DialogField(
+                    "spell",
+                    "Spell",
+                    "select",
+                    _kept(current, options),
+                    options=options,
+                    required=True,
+                )
+            ],
+            picked(lambda v: v["spell"]),
+            save_label="Add" if current is None else "Save",
+        )
+
     def _text_fields(self) -> list[DialogField]:
         """The Lab Text to invent from, and the raw text to decode."""
         plan = self.existing
         undecoded = self.undecoded()
+        taught = plan if plan and plan.activity == lab_seasons.TAUGHT_SPELLS else None
         return [
             DialogField(
                 "lab_text",
@@ -476,6 +553,53 @@ class LabPlanForm:
                 allow_blank=True,
                 placeholder="(choose the Lab Text)",
                 show_if=_doing(lab_seasons.LAB_TEXT),
+            ),
+            DialogField(
+                "more_texts",
+                "More Lab Texts",
+                "picker",
+                list(plan.more_book_ids)
+                if plan and plan.activity == lab_seasons.LAB_TEXT
+                else [],
+                display=lambda chosen: (
+                    "; ".join(self._book_name(b) for b in chosen) or "(none)"
+                ),
+                items=ListEditor(self._book_name, self._choose_text, "More Lab Texts"),
+                show_if=_doing(lab_seasons.LAB_TEXT),
+                hint=(
+                    "Spells of the same Technique and Form learned the same "
+                    "season, if their levels together are within the lowest "
+                    "Lab Total (DE pp. 262, 264)."
+                ),
+            ),
+            DialogField(
+                "teacher",
+                "Teacher",
+                "select",
+                _kept(taught.teacher_id if taught else None, self.teachers()),
+                options=self.teachers(),
+                allow_blank=True,
+                placeholder="(choose the magus who teaches)",
+                show_if=_doing(lab_seasons.TAUGHT_SPELLS),
+                hint="Their season is planned as Teach.",
+            ),
+            DialogField(
+                "taught_spells",
+                "Spells taught",
+                "picker",
+                list(taught.taught_spell_ids) if taught else [],
+                display=lambda chosen: (
+                    "; ".join(self._spell_name(s) for s in chosen) or "(none)"
+                ),
+                items=ListEditor(
+                    self._spell_name, self._choose_taught, "Spells taught"
+                ),
+                show_if=_doing(lab_seasons.TAUGHT_SPELLS),
+                hint=(
+                    "Any Techniques and Forms: at most the teacher's highest Lab "
+                    "Total in levels, his Lab Total in each Technique and Form, "
+                    "and no spell above your Lab Total for it (DE p. 251)."
+                ),
             ),
             DialogField(
                 "decode",
@@ -796,7 +920,15 @@ class LabPlanForm:
                 options=known,
                 allow_blank=True,
                 placeholder="(none)",
-                show_if=_doing(lab_seasons.INVENT),
+                hint="Adds its magnitude: inventing, instilling an effect, and "
+                "empowering a familiar's bond (DE pp. 251, 258, 267).",
+                show_if=_doing(
+                    lab_seasons.INVENT,
+                    es.INSTIL,
+                    es.LESSER_WORK,
+                    es.CHARGED_WORK,
+                    fs.EMPOWER,
+                ),
             ),
         ]
         if lab_seasons.has_focus(self.magus):
@@ -1203,7 +1335,20 @@ class LabPlanForm:
                     "similar_spell_id": v.get("similar"),
                 },
             ),
-            ((lab_seasons.LAB_TEXT,), lambda v: {"book_id": v.get("lab_text")}),
+            (
+                (lab_seasons.TAUGHT_SPELLS,),
+                lambda v: {
+                    "teacher_id": v.get("teacher"),
+                    "taught_spell_ids": list(v.get("taught_spells") or []),
+                },
+            ),
+            (
+                (lab_seasons.LAB_TEXT,),
+                lambda v: {
+                    "book_id": v.get("lab_text"),
+                    "more_book_ids": list(v.get("more_texts") or []),
+                },
+            ),
             ((bs.DECODE_TEXT,), lambda v: {"book_id": v.get("decode")}),
             (
                 es.EFFECT_ACTIVITIES,
@@ -1407,6 +1552,11 @@ class LabPlanForm:
             return [
                 f"Level {work.level}, Lab Total {lab_total}: learned this season, "
                 f"{season} {year}."
+            ]
+        if plan.activity == lab_seasons.TAUGHT_SPELLS:
+            return [
+                f"{work.level} levels of spells, lowest Lab Total {lab_total}: "
+                f"taught this season, {season} {year}."
             ]
         if (
             plan.activity in (*es.ACTIVITIES, *ls.ACTIVITIES)

@@ -265,10 +265,15 @@ def warnings(saga: Saga, device: EnchantedDevice) -> list[str]:
                 f"Its Lab Total ({device.lab_total}) is below its effect's level "
                 f"({level}): it can't be made."
             )
-        elif device.charges_made is not None and device.charges_made > most:
+        # Made from a Lab Text, a fifth of the whole Lab Total (DE p. 262).
+        from_text = round_up(device.lab_total / 5)
+        if device.lab_total >= level and (
+            device.charges_made is not None
+            and device.charges_made > max(most, from_text)
+        ):
             lines.append(
                 f"{_plural(device.charges_made, 'charge')} made, but its Lab Total "
-                f"gives at most {most}."
+                f"gives at most {most} ({from_text} from a Lab Text)."
             )
     return lines
 
@@ -472,6 +477,9 @@ def device_info_text(saga: Saga, device: EnchantedDevice) -> str:
     if device.bonuses:
         lines.append("[b]Shape & Material bonuses:[/]")
         lines += [f"  {escape(bonus_text(b))}" for b in device.bonuses]
+    if device.verditius_runes:
+        crafted = escape(device.verditius_craft) or "shaped by magic"
+        lines.append(f"[b]Verditius Runes:[/] crafted by its maker ({crafted})")
     if is_talisman(device):
         lines.append(f"[b]Attunements:[/] {len(device.attunements) or 'none'}")
         lines += [f"  {escape(bonus_text(a, when=True))}" for a in device.attunements]

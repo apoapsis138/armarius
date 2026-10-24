@@ -895,8 +895,9 @@ async def test_advance_anyway_advances_the_year_regardless():
 
     saga = storage.load_saga("test_saga")
     assert saga.current_year == 1221
-    # The deficit isn't taken from Wealth by itself.
-    assert saga.covenants[0].economics.wealth == 100
+    # A deficit the Emergency Savings didn't cover comes out of Wealth
+    # (DE p. 189).
+    assert saga.covenants[0].economics.wealth == 64
 
 
 async def test_no_deficit_prompt_without_a_deficit_or_outside_winter():

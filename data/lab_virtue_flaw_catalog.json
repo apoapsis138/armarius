@@ -1752,11 +1752,25 @@
     "repeatable": true,
     "modifiers": [
       {
+        "applies_to": "lab_total",
+        "target": "{art}",
+        "multiplier": 0.5
+      },
+      {
+        "applies_to": "lab_total",
+        "target": "{second_form}",
+        "multiplier": 0.5
+      },
+      {
         "applies_to": "lab_characteristic",
         "target": "upkeep",
         "amount": -1
       }
     ],
+    "choices": {
+      "art": ["Creo", "Intellego", "Muto", "Perdo", "Rego", "Animal", "Aquam", "Auram", "Corpus", "Herbam", "Ignem", "Imaginem", "Mentem", "Terram", "Vim"],
+      "second_form": ["Animal", "Aquam", "Auram", "Corpus", "Herbam", "Ignem", "Imaginem", "Mentem", "Terram", "Vim"]
+    },
     "description": "Due to a lack of certain ingredients, lab work involving one specific Technique or two specific Forms is severely hampered -- relevant Lab Totals are halved. Doesn't take a season to remove if sufficient funds are available to increase Upkeep."
   },
   {
@@ -1878,6 +1892,10 @@
         "amount": -1
       }
     ],
+    "choices": {
+      "activity": ["Experimentation", "Familiar", "Items", "Longevity Rituals", "Spells", "Teaching", "Texts", "Vis Extraction"],
+      "second_activity": ["Experimentation", "Familiar", "Items", "Longevity Rituals", "Spells", "Teaching", "Texts", "Vis Extraction"]
+    },
     "description": "Due to a lack of certain equipment, lab work in one or two types of activity is totally impossible -- for example, no desk, parchment, or inks means no work with texts. Cannot be taken more than twice."
   },
   {
@@ -1924,6 +1942,9 @@
         "amount": -3
       }
     ],
+    "choices": {
+      "activity": ["Experimentation", "Familiar", "Items", "Longevity Rituals", "Spells", "Teaching", "Texts", "Vis Extraction"]
+    },
     "description": "A cut-down version of a Hermetic laboratory, with an extremely limited selection of equipment installed, so only one category of lab activity is possible at all -- fixed at construction. Cheaper to maintain and takes only one season to build; some covenants build these in powerful auras for vis extraction."
   },
   {
@@ -2921,6 +2942,9 @@
     "category": "Supernatural",
     "tier": "Free",
     "cost": 0,
+    "choices": {
+      "forbidden": ["Experimentation", "Familiar", "Items", "Longevity Rituals", "Spells", "Teaching", "Texts", "Vis Extraction"]
+    },
     "description": "The lab forbids certain activities (one category of lab activity cannot be performed), or otherwise tiresome or expensive rituals/practices are required for lab work. Either -1 General Quality or +2 Upkeep, as appropriate (player's/storyguide's choice)."
   },
   {

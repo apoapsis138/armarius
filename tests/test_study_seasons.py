@@ -20,14 +20,17 @@ from ars_magica_manager.models import (
     XpAllocation,
 )
 from ars_magica_manager.rules import activities as rules
-from ars_magica_manager.rules import library
+from ars_magica_manager.rules import library, warping
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 
 def _saga() -> Saga:
     covenant = Covenant(id="cov", saga_id="s", name="Keep")
     student = Character(id="tib", name="Tiberius", type="magus", covenant_id="cov")
-    student.abilities = [Ability("Latin", xp=ability_xp(4))]
+    student.abilities = [
+        Ability("Latin", xp=ability_xp(4)),
+        Ability("Artes Liberales", xp=ability_xp(1)),
+    ]
     student.arts = {"creo": ArtScore(xp=art_xp(4)), "ignem": ArtScore()}
     student.raw_vis = {"creo": 3}
     student.assigned_lab_id = "lab"
@@ -289,3 +292,73 @@ def test_the_book_panel_lists_only_those_who_may_read_it():
     saga = _saga()
     lines = strip_markup("\n".join(books._study_lines(saga, saga.books[1])))
     assert "Tiberius" in lines and "Oda" not in lines
+
+
+class _Zeros(random.Random):
+    """Every die shows 0."""
+
+    def randrange(self, *args, **kwargs):
+        return 0
+
+
+def test_a_vis_study_botch_warps_and_a_double_one_brings_twilight():
+    saga = _saga()
+    student = saga.characters[0]
+    student.arts["creo"] = ArtScore(xp=art_xp(10))  # 2 pawns: 2 botch dice
+    plan = _plan("tib", rules.VIS_STUDY, "art:Creo", die=0, vis_from="character")
+    worked = _outcome(saga, plan, _Zeros())
+    assert worked.warping == 2
+    seasons.set_plan(saga, plan)
+    seasons.apply(saga, seasons.resolve(saga, _Zeros()))
+    assert warping.total_points(student) >= 2
+    assert any(e.name in ("Warping +2", "Wizard's Twilight") for e in student.diary)
+
+
+def test_nobody_studies_his_own_tractatus_or_a_book_he_cant_read():
+    saga = _saga()
+    tract = next(b for b in saga.books if b.id == "tract")
+    tract.author, tract.author_id = "Tiberius", "tib"
+    worked = _outcome(saga, _plan("tib", rules.READ, book_id="tract"))
+    assert any("a tractatus of his own" in p for p in worked.problems)
+    tract.author_id = None
+    tract.author = "Someone"
+    student = saga.characters[0]
+    student.abilities = [Ability("Latin", xp=ability_xp(3))]
+    worked = _outcome(saga, _plan("tib", rules.READ, book_id="tract"))
+    assert any("needs Latin at 4" in p for p in worked.problems)
+    assert any("Artes Liberales" in p for p in worked.problems)
+
+
+def test_a_teachers_students_count_across_subjects():
+    saga = _saga()
+    alys = saga.character("alys")
+    alys.abilities = [Ability("Latin", xp=ability_xp(4))]
+    one = _plan("tib", rules.TAUGHT, "art:Ignem", teacher_id="oda")
+    two = _plan("alys", rules.TAUGHT, "ability:Latin", teacher_id="oda")
+    teach = _plan("oda", rules.TEACH, "ability:Teaching")
+    for plan in (one, two, teach):
+        seasons.set_plan(saga, plan)
+    worked = _outcome(saga, one)
+    assert any("one student at a time" in p for p in worked.problems)
+
+
+def test_a_first_season_in_a_supernatural_ability():
+    saga = _saga()
+    teacher = saga.character("oda")
+    teacher.abilities.append(Ability("Second Sight", "Supernatural", xp=ability_xp(4)))
+    plan = _plan("alys", rules.TAUGHT, "ability:Second Sight", teacher_id="oda")
+    seasons.set_plan(saga, plan)
+    seasons.set_plan(saga, _plan("oda", rules.TEACH, "ability:Teaching"))
+    worked = _outcome(saga, plan)
+    assert worked.problems == [
+        "Only the Gifted learn a Supernatural Ability of Magic like Second Sight "
+        "(DE p. 383)."
+    ]
+    # A magus: 15 off for his opened Arts (Creo 4 and Ignem 0 are less).
+    tib = _plan("tib", rules.TAUGHT, "ability:Second Sight", teacher_id="oda")
+    seasons.set_plan(saga, tib)
+    saga.season_plans.remove(plan)
+    worked = _outcome(saga, tib)
+    # Communication 2 + Teaching 2 + 3 + 6 = 13, less 15: nothing learned.
+    assert any("-15 for the student's" in n for n in worked.notes)
+    assert _xp(worked) == [("ability:Second Sight", 0)]

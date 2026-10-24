@@ -26,25 +26,20 @@ from ..models import (
     SeasonPlan,
 )
 from . import lab
+from .breakdown import Line
 from .rounding import round_up
 
 if TYPE_CHECKING:
     from .lab_seasons import LabWork
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Familiars "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Familiars)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter 8: Laboratory, Familiars, pp. 265-268"
 BIND_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, The Initial Bond "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#The_Initial_Bond)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, The Initial Bond, pp. "
+    "266-267"
 )
 EMPOWER_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Bond Qualities "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Bond_Qualities)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Empowering the Bond, pp. "
+    "267-268"
 )
 
 BIND = "bind_familiar"
@@ -165,7 +160,25 @@ def work(
         activity="bind_familiar",
         days_missed=max(0, plan.days_away),
         experimenting=plan.experimenting,
+        similar_spell_level=lab.similar_spell_level(saga, magus, plan.similar_spell_id),
     )
+    # Sharing the Arts the bond was made with: +5 for one, +10 for both
+    # (DE pp. 267-268), in place of an invested device's shared-Arts bonus.
+    shared = (power.technique == familiar.binding_technique) + (
+        power.form == familiar.binding_form
+    )
+    if shared:
+        total = lab.with_lines(
+            total,
+            [
+                Line(
+                    "Shares the binding's "
+                    + ("Technique and Form" if shared == 2 else "Technique or Form"),
+                    amount=5 * shared,
+                    source=EMPOWER_SOURCE,
+                )
+            ],
+        )
     total = options(magus, plan, power.technique, power.form, total)
     lab_total = int(total.total)
     if lab_total <= power.level:

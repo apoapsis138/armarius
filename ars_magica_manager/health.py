@@ -12,7 +12,7 @@ from .commands import Command, Confirm, Form, Refuse
 from .form_spec import DialogField, pairs
 from .markup import escape
 from .models import Character, DiaryEntry, Saga
-from .rules import harm, recovery
+from .rules import disease, harm, living, recovery
 
 HARM_TITLE = "Take Harm"
 RECOVERY_TITLE = "Recovery Roll"
@@ -40,12 +40,10 @@ def _kind_is(*kinds: str):
 def harm_fields(saga: Saga) -> list[DialogField]:
     """What Take Harm asks: the kind, then that kind's own fields."""
     kinds = harm.kinds(saga)
-    injury, poison, disease = (
-        _kind_is(harm.INJURY, harm.BRUISE),
-        _kind_is(harm.POISON),
-        _kind_is(harm.DISEASE),
-    )
-    agents = _kind_is(harm.POISON, harm.DISEASE)
+    academe = disease.on(saga)
+    injury, poison = _kind_is(harm.INJURY, harm.BRUISE), _kind_is(harm.POISON)
+    sickness = _kind_is() if academe else _kind_is(harm.DISEASE)
+    agents = _kind_is(harm.POISON) if academe else _kind_is(harm.POISON, harm.DISEASE)
     heat = [(f"{name} (+{bonus})", str(bonus)) for name, bonus in harm.HEAT]
     impact = [(f"{name} (+{bonus})", str(bonus)) for name, bonus in harm.IMPACT]
     return [
@@ -103,8 +101,9 @@ def harm_fields(saga: Saga) -> list[DialogField]:
             options=[(f"{n} (Ease Factor {e}, {w})", n) for n, e, w in harm.DISEASES],
             allow_blank=True,
             placeholder="(type it below)",
-            show_if=disease,
+            show_if=sickness,
         ),
+        *(academe_fields() if academe else []),
         DialogField(
             "ease",
             "Ease Factor of the Stamina check",
@@ -140,6 +139,66 @@ def harm_fields(saga: Saga) -> list[DialogField]:
     ]
 
 
+def academe_fields() -> list[DialogField]:
+    """Take Harm's disease, with Art & Academe's medicine: one of the
+    book's, or one the troupe makes from its parts."""
+    sick = _kind_is(harm.DISEASE)
+
+    def typed(values: dict[str, Any]) -> bool:
+        return sick(values) and not values.get("aa_disease")
+
+    return [
+        DialogField(
+            "aa_disease",
+            "Disease",
+            "select",
+            None,
+            options=[
+                (f"{d.name} ({d.level}, Severity {d.severity})", d.name)
+                for d in disease.CATALOG
+            ],
+            allow_blank=True,
+            placeholder="(make one below)",
+            hint="Art & Academe pp. 47-51. The Disease Avoidance roll is made "
+            "against its Stable Ease Factor.",
+            show_if=sick,
+        ),
+        DialogField("name", "Its name", "text", "", show_if=typed),
+        DialogField(
+            "level",
+            "Stage",
+            "select",
+            "Minor",
+            options=pairs(disease.LEVELS),
+            show_if=typed,
+        ),
+        DialogField(
+            "interval",
+            "Interval",
+            "select",
+            "week",
+            options=pairs(disease.INTERVALS),
+            show_if=typed,
+        ),
+        DialogField(
+            "stable",
+            "Stable Ease Factor",
+            "select",
+            "6",
+            options=[(str(n), str(n)) for n in disease.STABLE_MOD],
+            show_if=typed,
+        ),
+        DialogField(
+            "improve",
+            "Improvement Ease Factor",
+            "select",
+            "12",
+            options=[(str(n), str(n)) for n in disease.IMPROVE_MOD],
+            show_if=typed,
+        ),
+    ]
+
+
 def _values(values: dict[str, Any]) -> dict[str, Any]:
     """The form's values as the rule takes them: a preset fills its own."""
     found = dict(values)
@@ -153,6 +212,9 @@ def _values(values: dict[str, Any]) -> dict[str, Any]:
             found["ease"], found["wound"] = entry[1], entry[2]
     if kind == harm.DEPRIVATION:
         found["kind"] = found.get("deprived") or "food"
+    for key in ("stable", "improve"):
+        if isinstance(found.get(key), str) and found[key]:
+            found[key] = int(found[key])
     return found
 
 
@@ -235,7 +297,7 @@ def recovery_form(
     when the character does more than the wounds allow."""
     if character is None:
         return Refuse(RECOVERY_TITLE, "Choose a character first.")
-    if not recovery.states(character.wounds):
+    if not recovery.states(character.wounds) and not character.wounds.diseases:
         return Refuse(RECOVERY_TITLE, f"{character.name} has no wounds.")
     dice = rng or random.Random()
 
@@ -244,6 +306,8 @@ def recovery_form(
         character.wounds.aid = int(values.get("aid") or 0)
         lines = recovery.roll_now(
             saga, character, dice, worst_only=values.get("which") == "worst"
+        ) + disease.roll_now(
+            saga, character, living.living_conditions(saga, character), dice
         )
         after, character.wounds = character.wounds, before
 

@@ -45,6 +45,7 @@ from .models import (
 )
 from .rules import animal_grogs as ag
 from .rules import creation_access as access
+from .rules import creation_character
 from .rules import creation_characteristics as cch
 from .rules import creation_finish as finish
 from .rules import creation_later as later
@@ -52,10 +53,7 @@ from .rules import creation_virtues as cv
 from .rules import creation_xp as cx
 from .rules.xp import ability_xp
 
-SOURCE = (
-    "Grogs, Chapter 7: Grog Templates (https://www.redcap.org/page/"
-    "Grogs_Chapter_Seven:_Grog_Templates)"
-)
+SOURCE = "Grogs, Chapter 7: Grog Templates, pp. 87-143"
 BOOK = "Grogs"
 
 
@@ -184,7 +182,7 @@ def age_xp(age: int) -> int:
     """A grog's starting xp at `age`: the Native Language and Early
     Childhood, then 15 a year."""
     childhood = cx.NATIVE_XP + cx.CHILDHOOD_XP
-    years = max(0, age - later.CHILDHOOD_ENDS)
+    years = max(0, age - creation_character.CHILDHOOD_ENDS)
     return childhood + years * later.XP_A_YEAR
 
 

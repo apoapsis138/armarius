@@ -13,6 +13,7 @@ from ars_magica_manager.models import (
     Saga,
     SeasonPlan,
     Spell,
+    VirtueFlawInstance,
     XpAllocation,
 )
 from ars_magica_manager.rules import book_seasons as bs
@@ -210,3 +211,33 @@ def test_under_the_extended_rules_an_author_gives_communication_plus_3():
     plan = _plan(bs.WRITE_SUMMA, allocations=[XpAllocation("art:Creo")])
     _, work = _work(saga, plan)
     assert (work.made.level, work.made.quality) == (5, 5)  # 2 + 3
+
+
+def test_good_teacher_adds_three_to_the_books_he_writes():
+    saga = _saga()
+    saga.character("m").virtues_flaws = [VirtueFlawInstance("vf_good_teacher")]
+    _, work = _work(
+        saga, _plan(bs.WRITE_TRACTATUS, allocations=[XpAllocation("art:Creo")])
+    )
+    assert work.made.quality == 8 + 3  # Communication 2 + 6 + 3 (DE p. 83)
+    # The summa's bonus for a lower Level is capped at the larger base.
+    _, low = _work(
+        saga,
+        _plan(bs.WRITE_SUMMA, allocations=[XpAllocation("art:Creo")], book_level=1),
+    )
+    assert low.made.quality == 11 + 4  # 4 Levels below the most (5): +4
+
+
+def test_copies_of_his_own_tractatus_dont_use_up_his_allowance():
+    saga = _saga()
+    plan = _plan(bs.WRITE_TRACTATUS, allocations=[XpAllocation("art:Creo")])
+    # Creo 10: two tractatus (a fifth, rounded up).
+    seasons.set_plan(saga, plan)
+    _run(saga)
+    first = saga.books[-1]
+    assert first.author_id == "m"
+    seasons.set_plan(saga, _plan(bs.COPY_BOOK, book_id=first.id))
+    _run(saga)
+    assert saga.books[-1].copy_of == first.id
+    found, _ = _work(saga, plan)
+    assert found == []

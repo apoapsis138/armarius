@@ -9,30 +9,32 @@ from __future__ import annotations
 
 from .. import catalog
 from ..models import Character, Saga, character_age
-from . import aging, animal_aging
+from . import aging, animal_aging, animal_grogs
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 
-DE_CH3 = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters)"
-)
+DE_CH3 = "Ars Magica Definitive Edition, Chapter Three: Characters, pp. 25-58"
 SOURCE = DE_CH3
 MYTHIC_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Mythic "
-    "Companions (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Mythic_Companions_2)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Mythic Companions, p. 55"
 )
 AGE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Starting "
-    "Character Age (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Starting_Character_Age)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Starting Character Age, "
+    "p. 43"
 )
 
 THE_GIFT = "vf_the_gift"
 HERMETIC_MAGUS = "vf_hermetic_magus"
 #: What choosing the type adds: the Virtues every magus takes.
 MAGUS_VIRTUES: tuple[str, ...] = (THE_GIFT, HERMETIC_MAGUS)
+#: Virtues that stand for Hermetic Magus: the Rhine Tribunal's ranks
+#: (Guardians of the Forests p. 20).
+STANDS_FOR: dict[str, tuple[str, ...]] = {
+    HERMETIC_MAGUS: (
+        "vf_journeyman_rhine_tribunal",
+        "vf_master_rhine_tribunal",
+        "vf_archmage_rhine_tribunal",
+    ),
+}
 
 #: The DE sample Mythic Companions' packages: (Virtue/Flaw ids, one of which
 #: is needed, label) per status Virtue. Substitutes are allowed by the book,
@@ -90,8 +92,36 @@ def house_name(house_id: str) -> str:
     return house.name if house is not None else house_id
 
 
+#: Childhood's end, when Later Life starts.
+CHILDHOOD_ENDS = 5
+#: When a magus's apprenticeship starts if the sheet doesn't say.
+DEFAULT_APPRENTICESHIP_AGE = 10
+
+
 def age(saga: Saga, character: Character) -> int | None:
     return character_age(character.background.year_born, saga.current_year)
+
+
+def later_life_ends(saga: Saga, character: Character) -> int | None:
+    """The age Later Life runs to: the character's age, or a magus's start
+    of apprenticeship."""
+    if character.type == "magus":
+        start = character.hermetic.age_of_apprenticeship
+        return start if start is not None else DEFAULT_APPRENTICESHIP_AGE
+    return age(saga, character)
+
+
+def later_life_starts(character: Character) -> int:
+    """The age Later Life starts at: 5, or the age an animal's kind is
+    grown."""
+    grown = animal_grogs.grown(character)
+    return CHILDHOOD_ENDS if grown is None else grown
+
+
+def later_life_years(saga: Saga, character: Character) -> int:
+    ends = later_life_ends(saga, character)
+    start = later_life_starts(character)
+    return max(0, ends - start) if ends is not None else 0
 
 
 def pre_play_aging_rolls(saga: Saga, character: Character) -> int:
@@ -215,4 +245,8 @@ def missing_type_virtues(character: Character) -> list[str]:
     if character.type != "magus":
         return []
     ids = _ids(character)
-    return [vf_id for vf_id in MAGUS_VIRTUES if vf_id not in ids]
+    return [
+        vf_id
+        for vf_id in MAGUS_VIRTUES
+        if vf_id not in ids and not set(ids) & set(STANDS_FOR.get(vf_id, ()))
+    ]

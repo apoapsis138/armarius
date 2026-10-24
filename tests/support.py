@@ -54,6 +54,15 @@ from ars_magica_manager.models import (
 from ars_magica_manager.rules.xp import ability_xp
 
 
+def literate() -> list[Ability]:
+    """Latin 5 and Artes Liberales 1: what reading a Latin book needs (DE
+    p. 378)."""
+    return [
+        Ability("Latin", xp=ability_xp(5)),
+        Ability("Artes Liberales", xp=ability_xp(1)),
+    ]
+
+
 def picker_rows(picker) -> list[tuple[str | None, str]]:
     """A searchable picker's rows, in order: each one's item id (None for a
     message row) and its label as shown."""

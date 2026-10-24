@@ -470,7 +470,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: End of Session: Leandro",
         "slash": "(disabled)"
       }
     },
@@ -490,7 +490,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Aging & Warping",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "notice: No Aging Points are due.",
         "slash": "(disabled)"
       }
     },

@@ -349,9 +349,20 @@ def _longevity_subject(saga: Saga, character: Character, plan: SeasonPlan) -> st
 
 def _spell_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     """The spell invented, or learned from a Lab Text: "Pilum of Fire (CrIg 20)"."""
+    if plan.activity == lab_seasons.TAUGHT_SPELLS:
+        taught = [catalog.find_spell(saga, i) for i in plan.taught_spell_ids]
+        teacher = lab_seasons.teacher_of(saga, plan)
+        names = ", ".join(s.name for s in taught if s)
+        return f"{names} from {teacher.name}" if names and teacher else names
     if plan.activity == lab_seasons.LAB_TEXT:
         text = lab_seasons.lab_text_of(saga, plan)
         spell = catalog.find_spell(saga, text.spell_id) if text else None
+        more = len(plan.more_book_ids)
+        if spell and more:
+            return (
+                f"{spell.name} ({spl.shorthand(spell)}) and {more} more "
+                f"{'text' if more == 1 else 'texts'}"
+            )
     else:
         spell = (
             lab_seasons.design_spell(plan.design)
@@ -804,6 +815,9 @@ _WORK_TEXT: dict[str, Callable[[lab_seasons.LabWork, SeasonPlan], str]] = {
     lab_seasons.LAB_TEXT: lambda work, plan: (
         f"{_against_level(work)}: learned this season"
     ),
+    lab_seasons.TAUGHT_SPELLS: lambda work, plan: (
+        f"{work.level} levels of spells taught this season"
+    ),
 }
 
 
@@ -817,7 +831,8 @@ def livelihood_text(character: Character) -> str:
         or (character.workshop_raw_materials)
     ):
         lines.append(
-            f"Labor Points {character.labor_points} ({sw.wealth(character)}); "
+            f"Labor Points {character.labor_points} ({sw.wealth(character)}; "
+            f"moving up costs {sw.STATION_COST[sw.wealth(character)]}); "
             f"workshop Innovation {character.workshop_innovation}, Raw Materials "
             f"{character.workshop_raw_materials}"
         )

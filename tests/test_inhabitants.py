@@ -705,14 +705,16 @@ def test_living_conditions_loyalty_follows_the_covenants_mundane_field():
     assert inh.living_conditions_loyalty(cov) == -20
 
 
-def test_reputation_penalty_only_counts_known_bad_reputations():
+def test_reputations_the_covenfolk_know_of_move_loyalty():
+    # Covenants p. 40: -5 a point of a bad one, +5 a point of a good local one.
     _, cov = _saga()
     cov.reputations = [
-        ScoredTrait(name="Feared", score=2, known=True),  # good: no penalty
+        ScoredTrait(name="Generous", score=2, known=True),
+        ScoredTrait(name="Wise", score=1, known=True, type="Hermetic"),  # not local
         ScoredTrait(name="Litigious", score=-2, known=True),
         ScoredTrait(name="Secret Cult", score=-3, known=False),  # not known yet
     ]
-    assert inh.reputation_loyalty_penalty(cov) == -10  # only the known -2
+    assert inh.reputation_loyalty(cov) == 10 - 10
 
 
 def test_prevailing_loyalty_score_is_symmetric_and_clamps_beyond_the_table():

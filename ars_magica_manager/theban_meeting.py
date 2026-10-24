@@ -32,8 +32,9 @@ from .tribunal_packages.theban import (
     phylai,
 )
 
-#: The tokens paid at the end of a term, by the office's first word.
-TERM_TOKENS = {"archon": 3, "polemarch": 5, "arche": 2, "tamias": 2}
+#: The tokens paid at the end of a term, by the office's first word. The
+#: tamias is one of the Treasury Council's archai and is paid as one.
+TERM_TOKENS = {"archon": 3, "polemarch": 5, "arche": 2}
 
 #: How many archai each phyle sends to the Council.
 ARCHAI_PER_PHYLE = 4
@@ -208,6 +209,15 @@ class Assembly(core.Step):
                 )
             )
         citizens = _options(politai(saga, tribunal, year))
+        # A decree against a magus who isn't present isn't voted on: the
+        # Conciliatory Board takes it after the Tribunal (p. 32). With no
+        # names taken at the roll, everyone is offered.
+        here = {m.id for m, _ in core.magi_present(saga, tribunal, meeting)}
+        accusable = (
+            _options([m for m in politai(saga, tribunal, year) if m.id in here])
+            if here
+            else citizens
+        )
         defamation = held.get("defamation") or {}
         found += [
             DialogField(
@@ -215,10 +225,12 @@ class Assembly(core.Step):
                 "Defamation: the accused",
                 "select",
                 defamation.get("accused"),
-                options=citizens,
+                options=accusable,
                 allow_blank=True,
                 placeholder="(no decree of defamation)",
-                hint="A polites said to have acted against the unity of the polity.",
+                hint="A polites present, said to have acted against the unity of "
+                "the polity; against one who is absent, the Conciliatory Board "
+                "decides after the Tribunal (The Sundered Eagle p. 32).",
             ),
             DialogField(
                 "accuser",
@@ -575,10 +587,17 @@ def is_arche(office: dict[str, Any]) -> bool:
     return office.get("office", "").startswith(ARCHE + " ")
 
 
-def sortition_pool(saga: Saga, tribunal: Tribunal, year: int, phyle: str) -> list[str]:
+def sortition_pool(
+    saga: Saga,
+    tribunal: Tribunal,
+    year: int,
+    phyle: str,
+    made: set[str] | frozenset[str] = frozenset(),
+) -> list[str]:
     """The phyle's candidate list: its politai, but those serving as
-    archai now (no one serves two terms running) and the Redcaps, who
-    are not drawn."""
+    archai now (no one serves two terms running), the Redcaps, who are not
+    drawn, and those `made` politai at this meeting (The Sundered Eagle
+    p. 32)."""
     serving = {o.get("holder_id") for o in archai(tribunal) if is_arche(o)}
     covenants = {c.id for c in tribunals.covenants_of(saga, tribunal)}
     return [
@@ -587,6 +606,7 @@ def sortition_pool(saga: Saga, tribunal: Tribunal, year: int, phyle: str) -> lis
         if m.covenant_id in covenants
         and phylai(tribunal).get(m.covenant_id or "") == phyle
         and m.id not in serving
+        and m.id not in made
         and m.hermetic.house != "house_mercere"
     ]
 
@@ -614,8 +634,9 @@ class Sortition(core.Step):
         if "draw" not in record:
             year = _year(saga, meeting)
             record["draw"] = {}
+            made = set((record.get("assembly") or {}).get("citizens", []))
             for phyle in self._order(tribunal, meeting):
-                pool = sortition_pool(saga, tribunal, year, phyle)
+                pool = sortition_pool(saga, tribunal, year, phyle, made)
                 count = min(len(pool), ARCHAI_PER_PHYLE + 1)
                 record["draw"][phyle] = core.rng().sample(pool, count)
         return record["draw"]

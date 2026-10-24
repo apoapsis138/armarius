@@ -128,6 +128,13 @@ class Aging:
     #: Wizard's Twilight: the last season it takes ("Winter
     #: 1224"); no activity can be planned until after it.
     twilight_until: str = ""
+    #: Aging Points still to be placed in a Characteristic of the
+    #: storyguide's choice, each with what brought it ("Survived the Ague's
+    #: Crisis", Art & Academe p. 47).
+    aging_due: list[str] = field(default_factory=list)
+    #: How much of their time they spend in the aura where they live
+    #: (rules.warping.AURA_TIMES: "always", "half", "frequent", "away").
+    aura_time: str = "always"
     #: A physician's regimen (Art & Academe): its bonus to Living
     #: Conditions (0: none), the physician (a character's id) and the
     #: year it began.
@@ -139,6 +146,10 @@ class Aging:
     def from_dict(cls, data: dict[str, Any]) -> Aging:
         aging = cls(**known_fields(cls, data))
         aging.longevity_effects = experimental_effects(aging.longevity_effects)
+        if aging.longevity_modifier < 0:
+            # The Levant pack once stored the ritual's bonus negated: it is
+            # always a bonus, taken off the aging roll.
+            aging.longevity_modifier = -aging.longevity_modifier
         if aging.decrepitude and "decrepitude_points" not in data:
             # A typed Decrepitude score: the points that give it.
             thresholds = (0, 5, 15, 30, 50, 75)
@@ -177,6 +188,33 @@ class WoundState:
 
 
 @dataclass
+class Disease:
+    """A disease the character has, with Art & Academe's medicine on (pp.
+    45-51): its stage now and the one it began at, its Severity at that
+    first stage, its Ease Factors (None: none, as for a lifelong one) and
+    the time between its Recovery rolls ("week", "month", "season",
+    "lifelong"); whether it gives a Disease Penalty (False: Flaws instead),
+    the +3s its stable rolls have built up and, in a Crisis, the
+    cumulative -1 of its rolls so far."""
+
+    name: str
+    level: str = "Minor"
+    first_level: str = "Minor"
+    severity: int = 6
+    stable: int | None = 6
+    improve: int | None = 12
+    interval: str = "week"
+    penalty: bool = True
+    bonus: int = 0
+    crisis: int = 0
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Disease:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Wounds:
     """Per-severity counts -- the boxes on the paper sheet -- with, for each
     wound, its source and stable-roll bonus in `states` (lined up with the
@@ -201,6 +239,11 @@ class Wounds:
     #: Bruises by severity (Lords of Men's option): they heal within hours
     #: and leave a residual wound.
     bruises: dict[str, int] = field(default_factory=dict)
+    #: Diseases as their own records (Art & Academe's medicine), and the
+    #: conditions the patient heals in (rules.disease.CONDITIONS keys),
+    #: each a Recovery Modifier with its extra botch die.
+    diseases: list[Disease] = field(default_factory=list)
+    conditions: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Wounds:
@@ -209,6 +252,8 @@ class Wounds:
         d["bruises"] = {
             k: int(v) for k, v in (d.get("bruises") or {}).items() if int(v) > 0
         }
+        d["diseases"] = [Disease.from_dict(x) for x in d.get("diseases") or []]
+        d["conditions"] = [str(x) for x in d.get("conditions") or []]
         return cls(**known_fields(cls, d))
 
     def with_counts(self, **counts: Any) -> Wounds:
@@ -220,6 +265,8 @@ class Wounds:
             aid=self.aid,
             crisis=self.crisis,
             bruises=dict(self.bruises),
+            diseases=list(self.diseases),
+            conditions=list(self.conditions),
         )
 
 
@@ -232,13 +279,16 @@ class ScoredTrait:
     score: int
     #: Covenant Reputations only: whether the covenant is aware of this
     #: reputation (an unknown bad Reputation can't yet hurt Loyalty -- see
-    #: inhabitants.reputation_loyalty_penalty). Always True and never edited
+    #: inhabitants.reputation_loyalty). Always True and never edited
     #: for a Character's own Personality Traits/Reputations.
     known: bool = True
     #: Reputations only: the kind of reputation (REPUTATION_TYPES, or "")
     #: and how far it reaches ("the Rhine", "the parish"), both optional.
     type: str = ""
     reach: str = ""
+    #: Reputations only: noteworthy deeds counted toward the next level,
+    #: each an experience point (rules.confidence.add_deeds).
+    deeds: int = 0
 
 
 @dataclass
@@ -286,6 +336,10 @@ class Progress:
     target: int = 0
     points: int = 0
     done: bool = False
+    #: The last season worked on it ("" and None: not recorded), for work
+    #: whose points last only over consecutive seasons (taming).
+    last_season: str = ""
+    last_year: int | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Progress:

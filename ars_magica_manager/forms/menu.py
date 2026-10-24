@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any, NamedTuple
 
 from .. import (
+    aging_due,
     arms,
     creation,
     creatures,
@@ -35,6 +36,7 @@ from .. import (
     places,
     ruins,
     seasons,
+    session_end,
     storage,
     threats,
     traditions,
@@ -430,6 +432,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # Beside Health's Edit buttons.
     "take_harm": ((NodeKind.CHARACTER, "Health"),),
     "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
+    "end_session": ((NodeKind.CHARACTER, "Reputations"),),
+    "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
@@ -1351,6 +1355,8 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "disputatio": _needs(_character, disputations.disputatio_form),
     "take_harm": _needs(_character, health.take_harm_form),
     "recovery_roll": _needs(_character, health.recovery_form),
+    "end_session": _needs(_character, session_end.end_session_form),
+    "place_aging_points": _needs(_character, aging_due.character_form),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,

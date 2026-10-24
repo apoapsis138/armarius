@@ -33,7 +33,7 @@ from dataclasses import dataclass, field
 
 from .. import catalog
 from ..models import Character, Saga, Wounds, WoundState
-from . import dice, effects, lab_stats, realms
+from . import derived, dice, disease, effects, lab_stats, realms
 from .breakdown import Breakdown, Line
 from .lab import ability_score
 from .scores import character_source
@@ -172,6 +172,16 @@ def total(saga: Saga | None, character: Character, state: WoundState) -> Breakdo
     infernal = _infernal_aura(saga, character)
     if infernal:
         lines.append(Line("Infernal aura", amount=-infernal, source=INFERNAL_SOURCE))
+    # Art & Academe's medicine: a disease's penalty slows a wound's healing,
+    # and the patient's surroundings are Recovery Modifiers (pp. 46, 54).
+    if sick := derived.disease_penalty(character.wounds):
+        lines.append(Line("Disease Penalty", amount=sick, source=disease.SOURCE))
+    lines += [
+        line
+        for line in disease.condition_lines(saga, character)
+        if ability == "Medicine"
+        or line.label != disease.CONDITIONS[disease.NO_HERBS][0]
+    ]
     return Breakdown(total=sum(line.amount or 0 for line in lines), lines=lines)
 
 
@@ -206,13 +216,13 @@ def roll_wound(
     `state` (its severity and bonus). `can_improve` False is the roll for
     doing more than the wounds allow: it can only stay or worsen."""
     base = int(total(saga, character, state).total)
-    die = dice.stress_die(rng, saga=saga)
+    die = dice.stress_die(rng, disease.botch_dice(character), saga=saga)
     value = 0 if die.botched else die.value
     result = base + value
     _, stable, improve = TABLE[state.severity]
     before = state.severity
-    disease = state.source != INJURY and _infernal_aura(saga, character) > 0
-    if result >= improve and can_improve and not disease:
+    stalled = state.source != INJURY and _infernal_aura(saga, character) > 0
+    if result >= improve and can_improve and not stalled:
         state.bonus = 0
         state.severity = (
             "healed" if before == "light" else SEVERITIES[SEVERITIES.index(before) - 1]
@@ -237,7 +247,7 @@ def roll_incapacitated(
     """One of the twice-daily rolls for an Incapacitating wound, with the
     cumulative -1 kept on the character's wounds."""
     base = int(total(saga, character, state).total) - character.wounds.crisis
-    die = dice.stress_die(rng, saga=saga)
+    die = dice.stress_die(rng, disease.botch_dice(character), saga=saga)
     result = base + (0 if die.botched else die.value)
     if result <= INCAPACITATED_DIES:
         character.wounds.dead = True

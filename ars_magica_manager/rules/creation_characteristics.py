@@ -32,24 +32,16 @@ from .creation_character import age
 from .derived import size
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Characteristics "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Characteristics_2)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Characteristics, p. 48"
 )
 GREAT_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Great "
-    "(Characteristic) (https://www.redcap.org/page/Ars_Magica_Definitive_"
-    "Edition,_Chapter_Four:_Virtues_and_Flaws#Great_(Characteristic))"
+    "(Characteristic), p. 83"
 )
 CHILD_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Child "
-    "Characters (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Child_Characters)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Child Characters, p. 44"
 )
-GROGS_SOURCE = (
-    "Grogs, Chapter 5, Starting Characteristics (https://www.redcap.org/page/"
-    "Grogs_Chapter_Five:_Creating_%26_Maintaining_Grogs#Starting_Characteristics)"
-)
+GROGS_SOURCE = "Grogs, Chapter 5, Starting Characteristics, p. 65"
 
 CHARACTERISTICS: tuple[tuple[str, str], ...] = (
     ("intelligence", "Intelligence"),
@@ -94,20 +86,25 @@ BLOOD_CHARACTERISTICS: dict[str, str] = {
 }
 FAERIE_BLOODS = ("vf_faerie_blood", "vf_strong_faerie_blood")
 BLOODCAP = "vf_faerie_blood_bloodcap"
+#: Giant Blood: +1 Strength and +1 Stamina, which may reach +6 (DE p. 83).
+GIANT_BLOOD = "vf_giant_blood"
+GIANT_CAP = 6
 #: Faerie Legacy lets a heritage point take the score one higher.
 FAERIE_LEGACY = "vf_faerie_legacy"
 HERITAGE_CAP = 3
 UNINSPIRATIONAL = "vf_uninspirational"
 
 
-def heritage(instance: VirtueFlawInstance) -> Heritage | None:
-    """The free Characteristic point this Virtue adds, if any."""
+def heritages(instance: VirtueFlawInstance) -> list[Heritage]:
+    """The free Characteristic points this Virtue adds."""
     if instance.vf_id == BLOODCAP:
-        return Heritage("strength", 1, HERITAGE_CAP)
+        return [Heritage("strength", 1, HERITAGE_CAP)]
+    if instance.vf_id == GIANT_BLOOD:
+        return [Heritage("strength", 1, GIANT_CAP), Heritage("stamina", 1, GIANT_CAP)]
     if instance.vf_id in FAERIE_BLOODS:
         key = BLOOD_CHARACTERISTICS.get(instance.params.get("blood", "").casefold())
-        return Heritage(key, 1, HERITAGE_CAP) if key else None
-    return None
+        return [Heritage(key, 1, HERITAGE_CAP)] if key else []
+    return []
 
 
 def heritage_cap(character: Character, found: Heritage) -> int:
@@ -204,18 +201,19 @@ def lines(
             for vf in character.virtues_flaws
             if vf.vf_id == POOR and vf.params.get("characteristic") == key
         )
-        heritages = [
+        given = [
             found
             for vf in character.virtues_flaws
-            if (found := heritage(vf)) is not None and found.key == key
+            for found in heritages(vf)
+            if found.key == key
         ]
         virtue = great - poor
         sized = size_adjustment(character, key)
         base = score - modifier - sized
         # A heritage's free point is counted as given whenever the score
         # allows it (at its cap it may instead have been bought).
-        cap = max((heritage_cap(character, h) for h in heritages), default=0)
-        free = sum(h.step for h in heritages) if -BOUGHT_LIMIT <= base <= cap else 0
+        cap = max((heritage_cap(character, h) for h in given), default=0)
+        free = sum(h.step for h in given) if -BOUGHT_LIMIT <= base <= cap else 0
         base -= free
         # Great/Poor count only past +3/-3: a Great copy on a score not yet
         # at +3 is bought points still to find.
@@ -289,10 +287,11 @@ def apply_virtue(
 ) -> None:
     """Move the Characteristic a newly taken Great or Poor copy names, or
     add a heritage's free point (not past its cap)."""
-    if (free := heritage(instance)) is not None:
-        score = getattr(character.characteristics, free.key)
-        if score - age_modifier(saga, character) < heritage_cap(character, free):
-            setattr(character.characteristics, free.key, score + free.step)
+    if free_points := heritages(instance):
+        for free in free_points:
+            score = getattr(character.characteristics, free.key)
+            if score - age_modifier(saga, character) < heritage_cap(character, free):
+                setattr(character.characteristics, free.key, score + free.step)
         return
     found = _stepped(saga, character, instance)
     if found is not None:
@@ -301,26 +300,43 @@ def apply_virtue(
         setattr(character.characteristics, key, score + step)
 
 
-def removal_change(
+def removal_changes(
     saga: Saga, character: Character, instance: VirtueFlawInstance
-) -> tuple[str, int, int] | None:
-    """(name, before, after) of the Characteristic removing this Great or
-    Poor copy moves back, or None when it moves nothing: a score not past
-    +3 or -3 never had the copy's point added. A heritage's free point
-    comes back off while the score is at its cap or below."""
-    if (free := heritage(instance)) is not None:
-        score = getattr(character.characteristics, free.key)
-        if score - age_modifier(saga, character) > heritage_cap(character, free):
-            return None
-        return dict(CHARACTERISTICS)[free.key], score, score - free.step
+) -> list[tuple[str, str, int, int]]:
+    """(key, name, before, after) of each Characteristic removing this Great
+    or Poor copy or heritage moves back; none when it moves nothing: a score
+    not past +3 or -3 never had a copy's point added, and a heritage's free
+    point comes back off while the score is at its cap or below."""
+    if free_points := heritages(instance):
+        changes = []
+        for free in free_points:
+            score = getattr(character.characteristics, free.key)
+            if score - age_modifier(saga, character) <= heritage_cap(character, free):
+                changes.append(
+                    (
+                        free.key,
+                        dict(CHARACTERISTICS)[free.key],
+                        score,
+                        score - free.step,
+                    )
+                )
+        return changes
     found = _stepped(saga, character, instance)
     if found is None:
-        return None
+        return []
     key, name, step, base = found
     if (step > 0 and base <= BOUGHT_LIMIT) or (step < 0 and base >= -BOUGHT_LIMIT):
-        return None
+        return []
     score = getattr(character.characteristics, key)
-    return name, score, score - step
+    return [(key, name, score, score - step)]
+
+
+def moves_text(changes: list[tuple[str, str, int, int]]) -> str:
+    """ "Strength goes from +4 to +3 and Stamina from +2 to +1"."""
+    return " and ".join(
+        f"{name} goes from {before:+d} to {after:+d}"
+        for _, name, before, after in changes
+    )
 
 
 def unapply_virtue(
@@ -328,15 +344,8 @@ def unapply_virtue(
 ) -> None:
     """Take back the point of a Great or Poor copy, or a heritage's free
     point, being removed."""
-    change = removal_change(saga, character, instance)
-    free = heritage(instance)
-    key = (
-        free.key
-        if free is not None
-        else (_stepped(saga, character, instance) or ("",))[0]
-    )
-    if change is not None and key:
-        setattr(character.characteristics, key, change[2])
+    for key, _, _, after in removal_changes(saga, character, instance):
+        setattr(character.characteristics, key, after)
 
 
 def budget(character: Character) -> int:

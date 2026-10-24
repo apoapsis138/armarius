@@ -159,7 +159,7 @@ The Initiation is the Initiate's season, planned like any other.
 <!-- /gui -->
 2. In **Activity**, choose **Undergo an Initiation**.
 3. In **Teacher / master**, choose the Mystagogue. Leave it blank for a self-initiation.
-4. Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is in the Mystagogue's Abilities.
+4. Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is in the Mystagogue's Abilities. To vary the Script, choose the change in **Vary the Script** (see below).
 <!-- tui -->
 5. Choose **Virtue initiated**. It opens the Virtues & Flaws picker on Virtues: search, filter by type or tier, and press Enter.
 <!-- /tui -->
@@ -194,14 +194,18 @@ For a successful Initiation, the app adds the Virtue (with what it names) to the
 ### Past Ordeals make later Initiations easier
 <!-- help: guide-initiation-ordeals -->
 
-An Ordeal lowers the Target Level of the Initiate's next three Initiations, never below 9: by 3, 3 and 1 after a Minor Ordeal, 6, 4 and 2 after a Medium one, and 9, 6 and 3 after a Major one. It doesn't help the Initiation it was suffered in. When the Initiate has suffered several, only the one that lowers the Target most counts: a Major Ordeal followed by a Minor one still takes 6 off the next Initiation. The app keeps every Ordeal and counts each one down, and the Initiate's [This Season](help:section-char-season) section lists the past Ordeals still counting and what they take off the next Target. Flaws taken at character creation don't count as Ordeals.
+An Ordeal lowers the Target Level of the Initiate's next three Initiations, never below 9 (DE p. 388): by 3, 2 and 1 after a Minor Ordeal, 6, 4 and 2 after a Medium one, and 9, 6 and 3 after a Major one. It doesn't help the Initiation it was suffered in. When the Initiate has suffered several, only the one that lowers the Target most counts: a Major Ordeal followed by a Minor one still takes 6 off the next Initiation. The app keeps every Ordeal and counts each one down, and the Initiate's [This Season](help:section-char-season) section lists the past Ordeals still counting and what they take off the next Target. Flaws taken at character creation don't count as Ordeals.
 
 ### What the app works out, and what it doesn't
 <!-- help: guide-initiation-limits -->
 
 **The app works out:** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, the largest reduction among past Ordeals, the checks on the Lore and the Ordeal, the Ordeal's size, and the Virtues and Flaws added or taken away on success.
 
-**You type:** the Script bonus, as the storyguide agrees it. Varying a Script or experimenting with a new one is rolled at the table; type the Script bonus that results. Which Major Flaw a Minor Flaw is related to is the troupe's call: the app checks only that it is a Major Flaw. Months lost to distraction during the Initiation are not counted.
+**Varying the Script:** the Mystagogue may make one change in an Initiation. Choose it in **Vary the Script** (add a component, Ease 9; change one, 12; remove one, 15) and type in **The change adds** what it does to the Script bonus (negative when removing). When the season is applied the app rolls a stress die + the Mystagogue's Intelligence + Lore: success adds the change to the Script bonus, and failure fails the Initiation, with no Virtue and no Ordeal, though the Script as it was may be tried another season (DE pp. 388-389). The Mysteries Revised Edition (p. 17) says instead that the original Script still works; the Definitive Edition wins, so this isn't a bug. Removing a component (Ease 15) is The Mysteries Revised's own addition, and it doesn't let a Minor Virtue's Script become a Major one.
+
+**Distractions:** **Months lost** on the plan takes a third of the Initiation Total a month, rounded up. If that makes the Initiation fail, the Ordeal is still suffered and the Initiation must be repeated (The Mysteries Revised Edition p. 12).
+
+**You type:** the Script bonus, as the storyguide agrees it. Experimenting with a new Script is rolled at the table; type the Script bonus that results. Which Major Flaw a Minor Flaw is related to is the troupe's call: the app checks only that it is a Major Flaw.
 
 A Mystagogue who spends a whole season on the Script (teaching a Supernatural Ability, say) plans **Act as Mystagogue**, and a season spent on a Quest is **Serve a Mystagogue / Quest season**; both need The Mysteries Revised Edition in play.
 

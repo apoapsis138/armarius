@@ -40,6 +40,7 @@ from ..rules import (
     experiment,
     laboratory_seasons,
     library,
+    mysteries,
     study_virtues,
     supplement_seasons,
 )
@@ -216,11 +217,17 @@ _SEASON_READS: ChoiceReads = (
     (
         (
             book_seasons.TEACH_ABBREVIATIONS,
-            apprentice_seasons.OPEN_ARTS,
             apprentice_seasons.TEACH_VIRTUE,
             season_rules.OPEN_TRADITION,
         ),
         lambda v: {"subject_id": v.get("student_id")},
+    ),
+    (
+        (apprentice_seasons.OPEN_ARTS,),
+        lambda v: {
+            "subject_id": v.get("student_id"),
+            "keep_supernatural": bool(v.get("keep_supernatural")),
+        },
     ),
     (
         (season_rules.TEACH,),
@@ -234,7 +241,10 @@ _SEASON_READS: ChoiceReads = (
     ((experiment.INTEGRATE,), lambda v: {"research": v.get("research") or ""}),
     (
         (apprentice_seasons.TEACH_VIRTUE,),
-        lambda v: {"effect_id": v.get("virtue_id")},
+        lambda v: {
+            "effect_id": v.get("virtue_id"),
+            "taught_flaw_id": v.get("taught_flaw") or None,
+        },
     ),
     (
         ("undergo_initiation",),
@@ -284,6 +294,7 @@ _LP_ACTIVITIES = (
     "working_season",
     "workshop_production",
     "make_excellent_item",
+    "make_wondrous_item",
     "tournament",
     "apothecary",
     "create_art",
@@ -315,7 +326,7 @@ _THEMES = (
 
 #: Plan field -> (dialog key, activities) for the supplements' extra values.
 _LEVEL_KEYS = {
-    "craft_level": ("workshop_production", "make_excellent_item"),
+    "craft_level": ("workshop_production", "make_excellent_item", "make_wondrous_item"),
     "might": ("tame_animal",),
     "target_level": ("pilgrimage",),
     "product_level": ("produce_remedies",),
@@ -324,7 +335,12 @@ _LEVEL_KEYS = {
 
 
 _BONUS_KEYS = {
-    "workshop_bonus": ("workshop_production", "make_excellent_item", "create_art"),
+    "workshop_bonus": (
+        "workshop_production",
+        "make_excellent_item",
+        "make_wondrous_item",
+        "create_art",
+    ),
     "venture_lp": ("merchant_venture",),
     "elements": ("pilgrimage",),
     "script_bonus": ("undergo_initiation",),
@@ -338,6 +354,7 @@ _TITLE_KEYS = {
         "create_art",
         "research_formula",
         "make_excellent_item",
+        "make_wondrous_item",
         "record_lectures",
     ),
     "improve": ("improve_workshop",),
@@ -400,6 +417,10 @@ def _supplement_plan_values(
         )
         found["ordeal_lost_id"] = lost.vf_id if lost else None
         found["ordeal_lost_params"] = dict(lost.params) if lost else {}
+        found["script_variation"] = values.get("script_variation") or ""
+        found["variation_bonus"] = (
+            values.get("variation_bonus") or 0 if found["script_variation"] else 0
+        )
     if activity == "inspeximus":
         found["book_id"] = values.get("summa_id")
     return found
@@ -742,6 +763,29 @@ def _initiation_fields(
             allow_blank=True,
             placeholder="(none)",
             show_if=activity_is("undergo_initiation"),
+        ),
+        DialogField(
+            "script_variation",
+            "Vary the Script",
+            "select",
+            (plan.script_variation if plan else "") or None,
+            options=[(label, kind) for kind, label in mysteries.VARY_LABELS.items()],
+            allow_blank=True,
+            placeholder="(no change)",
+            show_if=activity_is("undergo_initiation"),
+            hint="One change an Initiation: stress die + Intelligence + Lore "
+            "against the Ease Factor; failing fails the Initiation.",
+        ),
+        DialogField(
+            "variation_bonus",
+            "The change adds",
+            "int",
+            plan.variation_bonus if plan else 0,
+            show_if=lambda values: (
+                activity_is("undergo_initiation")(values)
+                and bool(values.get("script_variation"))
+            ),
+            hint="To the Script bonus; negative when removing a component.",
         ),
     ]
 
@@ -1294,6 +1338,18 @@ def _student_and_research_fields(
             hint="Teaching: the student's Be taught is planned with it.",
         ),
         DialogField(
+            "keep_supernatural",
+            "Keep Supernatural Abilities",
+            "check",
+            attr(existing, "keep_supernatural", False),
+            show_if=_activity_is(apprentice_seasons.OPEN_ARTS),
+            hint=(
+                "Only if the Intellego Vim Lab Total is at least double what "
+                "the apprentice's Supernatural Abilities need; otherwise they "
+                "are lost (DE p. 271)."
+            ),
+        ),
+        DialogField(
             "student_subject",
             "Teaching them",
             "select",
@@ -1358,6 +1414,18 @@ def _closing_fields(
             show_if=_activity_is(apprentice_seasons.TEACH_VIRTUE),
         ),
         DialogField(
+            "taught_flaw",
+            "With a Hermetic Flaw",
+            "select",
+            attr(existing, "taught_flaw_id", None),
+            options=apprentice_seasons.teachable_virtues(character, flaws=True),
+            allow_blank=True,
+            placeholder="(none)",
+            show_if=_activity_is(apprentice_seasons.TEACH_VIRTUE),
+            hint="One of the teacher's own: +3 (Minor) or +9 (Major) to the "
+            "Source Quality, and the student gains it too (DE p. 271).",
+        ),
+        DialogField(
             "vis_from",
             "Vis from",
             "select",
@@ -1394,6 +1462,7 @@ def _closing_fields(
                 season_rules.TAUGHT,
                 season_rules.TRAINED,
                 season_rules.VIS_STUDY,
+                "undergo_initiation",
             ),
             hint="Each full month lost to distractions cuts the total by a third.",
         ),

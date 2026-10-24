@@ -35,6 +35,7 @@ Rules: reference/rules-engine-reference.md §18, Hybrid magic.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from functools import cache
 
@@ -43,27 +44,19 @@ from ..models import Character
 from . import realms, scores
 from .rounding import round_down
 
+FAERIE = "Faerie"
+#: A Faerie Virtue or Flaw, by its catalog id (Faerie Blood, Faerie Sight,
+#: Familiarity with the Fae...).
+_FAERIE = re.compile(r"faerie|_fae$|_fae_")
+
 SOURCE = (
-    "Realms of Power: The Divine, Holy Magic; Realms of Power: The Infernal, "
-    "Chthonic and Goetic Magic; Realms of Power: Faerie, Hermetic Rites "
-    "(https://www.redcap.org/page/Realms_of_Power:_The_Divine_Open_Content"
-    "#Holy_Magic_2)"
+    "Realms of Power: The Divine, Holy Magic, pp. 66-70; Realms of Power: The Infernal, "
+    "Chthonic and Goetic Magic, pp. 123-124; Realms of Power: Faerie, Hermetic Rites, "
+    "p. 121"
 )
-HOLY_SOURCE = (
-    "Realms of Power: The Divine, Holy Magic "
-    "(https://www.redcap.org/page/Realms_of_Power:_The_Divine_Open_Content"
-    "#Holy_Magic_2)"
-)
-CHTHONIC_SOURCE = (
-    "Realms of Power: The Infernal, Chthonic Magic "
-    "(https://www.redcap.org/page/Realms_of_Power:_The_Infernal_Chapter_Twelve:"
-    "_Black_Magic#Chthonic_Magic)"
-)
-GOETIC_SOURCE = (
-    "Realms of Power: The Infernal, Goetic Magic "
-    "(https://www.redcap.org/page/Realms_of_Power:_The_Infernal_Chapter_Twelve:"
-    "_Black_Magic#Goetic_Magic)"
-)
+HOLY_SOURCE = "Realms of Power: The Divine, Holy Magic, pp. 66-70"
+CHTHONIC_SOURCE = "Realms of Power: The Infernal, Chthonic Magic, pp. 123-124"
+GOETIC_SOURCE = "Realms of Power: The Infernal, Goetic Magic, p. 124"
 FAERIE_MAGIC_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Merinita "
     "— Faerie Magic, p. 236"
@@ -72,11 +65,7 @@ ATTUNED_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Ten: Long-Term Events, Living in "
     "Strong Auras, p. 390"
 )
-RITES_SOURCE = (
-    "Realms of Power: Faerie, Hermetic Rites "
-    "(https://www.redcap.org/page/Realms_of_Power:_Faerie_Chapter_Six:"
-    "_Faerie_Wizardry#Hermetic_Rites)"
-)
+RITES_SOURCE = "Realms of Power: Faerie, Hermetic Rites, p. 121"
 
 #: The Goetic Arts Rego may stand in for.
 GOETIC_ARTS = ("Summoning", "Ablating", "Binding", "Commanding")
@@ -284,6 +273,10 @@ def attuned(character: Character) -> frozenset[str]:
         tradition = traditions.get(tradition_id)
         if tradition is not None and tradition.realm:
             found.add(tradition.realm)
+    # A Faerie Virtue or Flaw: no Warping from a Faerie aura (Realms of
+    # Power: Faerie p. 111), read from the Virtue's own name.
+    if any(_FAERIE.search(vf.vf_id) for vf in character.virtues_flaws):
+        found.add(FAERIE)
     return frozenset(found)
 
 

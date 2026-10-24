@@ -7,7 +7,7 @@
 - A library's research bonus per subject ("Use: Research"): a level the
   troupe sets for the covenant from the book's descriptions, and each
   encyclopedia's own bonus, +1 per tractatus on the subject (Art &
-  Academe, Chapter One, "Encyclopedias").
+  Academe, "Encyclopedias", p. 26).
 
 Everything here is worked out from the books, except the research levels
 the troupe chooses (Covenant.library_research).
@@ -22,16 +22,10 @@ from .models import SUPERNATURAL_CATEGORIES, Book, Covenant, Saga
 from .rules import library
 from .rules.rounding import round_up
 
-SOURCE = (
-    "Covenants, Chapter Seven: Library "
-    "(https://www.redcap.org/page/Covenants_Chapter_Seven:_Library)"
-)
+SOURCE = "Covenants, Chapter Seven: Library, pp. 84-102"
 #: The book research values come from.
 SOURCE_BOOK = "Covenants"
-ENCYCLOPEDIA_SOURCE = (
-    "Art & Academe, Chapter One, Encyclopedias "
-    "(https://www.redcap.org/page/Art_%26_Academe_Open_Content)"
-)
+ENCYCLOPEDIA_SOURCE = "Art & Academe, Chapter Three: Philosophiae, Encyclopedias, p. 26"
 
 EXCELLENT, SOUND, VAIN, DISCARDED = "Excellent", "Sound", "Vain", "Discarded"
 

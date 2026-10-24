@@ -211,6 +211,11 @@ class EnchantedDevice:
     charges_made: int | None = None
     charges_left: int | None = None
     objects: int = 1
+    #: Verditius Magic: its maker crafted it from raw materials in its
+    #: first season (Verditius Runes), with this Craft Ability ("" when he
+    #: shaped it by magic alone).
+    verditius_runes: bool = False
+    verditius_craft: str = ""
     #: Talismans: the attunements gained, each with its year and season.
     attunements: list[ShapeMaterialBonus] = field(default_factory=list)
     effects: list[InstilledEffect] = field(default_factory=list)

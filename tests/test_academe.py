@@ -5,7 +5,7 @@ regimen."""
 
 import random
 
-from ars_magica_manager import disputations
+from ars_magica_manager import disputations, seasons
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.models import (
     Ability,
@@ -15,8 +15,9 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
-from ars_magica_manager.rules import disputatio
+from ars_magica_manager.rules import disputatio, medicine
 from ars_magica_manager.rules.xp import ability_xp
+from ars_magica_manager.sheets import character as cs
 
 
 def _scholar(id_: str, name: str, *virtues: str, artes=4) -> Character:
@@ -124,12 +125,10 @@ def test_more_s_disputatio_keeps_it_in_both_diaries():
 
 
 def test_a_physician_s_regimen_raises_living_conditions_after_a_year():
-    from ars_magica_manager import seasons
-    from ars_magica_manager.rules import medicine
-    from ars_magica_manager.sheets import character as cs
 
     doctor = _scholar("d", "Galen")
     doctor.abilities.append(Ability("Medicine", xp=ability_xp(5)))
+    doctor.abilities.append(Ability("Chirurgy", xp=ability_xp(3)))
     patient = _scholar("p", "Odo")
     saga = Saga(id="s", name="S", characters=[doctor, patient])
     saga.current_year = 1221
@@ -142,4 +141,25 @@ def test_a_physician_s_regimen_raises_living_conditions_after_a_year():
     assert seasons.living_conditions(saga, patient) == 2
     assert "Medicine 5 keeps +2 at most (+3 needs 7)" in cs.aging_text(patient, saga)
     assert medicine.regimen_level(0, 3) == 0
-    assert medicine.regimen_bonus(None, 1, 1200, 1221) == 0
+    patient.aging.regimen_by = "gone"
+    assert medicine.regimen_bonus(saga, patient) == 0
+
+
+def test_a_physician_keeps_one_regimen_for_so_many_clients_with_a_chirurgeon():
+    # A&A p. 59: +3 for a single client; a chirurgeon with Chirurgy 3.
+    doctor = _scholar("d", "Galen")
+    doctor.abilities.append(Ability("Medicine", xp=ability_xp(7)))
+    first, second = _scholar("a", "Ada"), _scholar("b", "Bede")
+    saga = Saga(id="s", name="S", characters=[doctor, first, second])
+    saga.current_year = 1221
+    for patient in (first, second):
+        patient.aging.regimen, patient.aging.regimen_by = 3, "d"
+        patient.aging.regimen_since = 1200
+    assert "no chirurgeon" in medicine.regimen_problems(saga, first)[0]
+    doctor.abilities.append(Ability("Chirurgy", xp=ability_xp(3)))
+    assert medicine.regimen_bonus(saga, first) == 3
+    assert medicine.regimen_problems(saga, second) == [
+        "a +3 regimen keeps only 1 client(s)"
+    ]
+    second.aging.regimen = 1
+    assert "keeps a single regimen, +3" in medicine.regimen_problems(saga, second)[0]

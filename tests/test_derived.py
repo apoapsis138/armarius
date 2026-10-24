@@ -92,7 +92,8 @@ def test_soak_from_stamina_armour_virtues_and_the_adjustment():
     soak = derived.soak(character)
     assert soak.total == 2 + 6 + 3 - 1
     assert derived.terms(soak) == "Stamina +2, Chain +6, Tough +3, Adjustment -1"
-    assert derived.carried_load(character.inventory) == 2 + 6 + 2
+    # Only the armour worn (the Chain) and the weapons carried (DE p. 403).
+    assert derived.carried_load(character.inventory) == 6 + 2
 
 
 def test_frail_and_nephilim():

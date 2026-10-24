@@ -28,8 +28,8 @@ from ..models import BoundBeing, Character, TraditionDef
 from . import hedge_casting as hc
 
 SOURCE = (
-    "Hedge Magic, Revised Edition "
-    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content)"
+    "Hedge Magic, Revised Edition, Chapter One: Introduction, Warping, p. 10; each "
+    "tradition's chapter, pp. 17-141"
 )
 
 #: The Social Status of a tradition whose members are Hermetic magi (an

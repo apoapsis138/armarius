@@ -11,10 +11,8 @@ from ..models import Character, Familiar, VirtueFlawInstance
 from . import effects
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Advancement Table "
-    "(X+Y(Z): Y is a fixed bonus, usually Puissant, not part of the xp score) "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Advancement_Table)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Advancement Table, p. 49 "
+    "(X+Y(Z): Y is a fixed bonus, usually Puissant, not part of the xp score)"
 )
 
 

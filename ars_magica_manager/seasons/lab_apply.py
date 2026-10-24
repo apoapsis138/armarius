@@ -28,6 +28,7 @@ from ..models import (
     Progress,
     ResearchAttempt,
     Saga,
+    ScoredTrait,
     SeasonPlan,
     SeasonRecordLine,
     VirtueFlawInstance,
@@ -246,7 +247,7 @@ def _apply_enchanting(
     if plan.activity in making and not device.maker_id and not device.maker_name:
         device.maker_id = magus.id
     if plan.activity == es.OPEN:
-        device.pawns_opened += work.vis_cost.get("Vim", 0)
+        device.pawns_opened += work.pawns_opened or work.vis_cost.get("Vim", 0)
     elif plan.activity == es.ATTUNE:
         device.talisman = True
     elif plan.activity == es.INVESTIGATE:
@@ -255,7 +256,9 @@ def _apply_enchanting(
                 found.known = True
     elif plan.activity == es.CHARGED_WORK:
         device.lab_total = int(work.lab_total.total)
-        device.charges_made = None
+        # The season's charges: from a Lab Text, a fifth of the whole Lab
+        # Total (DE p. 262), which the excess rule alone wouldn't give.
+        device.charges_made = work.charges or None
         device.charges_left = None
     elif effect is not None and plan.activity == es.LESSER_WORK:
         effect.instilling_progress = None
@@ -345,12 +348,15 @@ def apply_supplement(
         if record is None or record.done:
             record = Progress(kind, name, target)
             character.progress.append(record)
-        record.points += points
+        record.points = sw.kept_points(record, plan.season, plan.year) + points
+        record.last_season, record.last_year = plan.season, plan.year
         record.target = target or record.target
         if record.target and record.points >= record.target and not record.done:
             record.done = True
             if kind == "formula":
                 character.formulas.append(name)
+            if kind == "taming":
+                _loyal(saga, character, name)
             character.diary.append(
                 DiaryEntry(
                     year=plan.year,
@@ -403,6 +409,23 @@ def apply_supplement(
         born = character.background.year_born
         if born is not None:
             age_character(saga, character, saga.current_year - born, random.Random())
+
+
+def _loyal(saga: Saga, tamer: Character, name: str) -> None:
+    """A tamed creature that is a character of the saga gains Loyal +0
+    to its tamer, or its Loyal trait turns to him (DE p. 385)."""
+    creature = next(
+        (c for c in saga.characters if c.name == name and c is not tamer), None
+    )
+    if creature is None:
+        return
+    trait = next(
+        (t for t in creature.personality_traits if t.name.startswith("Loyal")), None
+    )
+    if trait is None:
+        creature.personality_traits.append(ScoredTrait(f"Loyal ({tamer.name})", 0))
+    else:
+        trait.name = f"Loyal ({tamer.name})"
 
 
 #: What finishing each kind of progress means.
@@ -503,8 +526,10 @@ def _apply_taming(
         record = Progress("taming", name, work.level)
         magus.progress.append(record)
     record.points = work.points_after
+    record.last_season, record.last_year = plan.season, plan.year
     if work.finished:
         record.done = True
+        _loyal(saga, magus, name)
         saga.books.append(
             Book(
                 id=f"taming_{magus.id}_{new_instance_id()}",
@@ -1171,8 +1196,9 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
             spell = _invented_spell(saga, magus, plan.design)
         if carried:
             spell = _with_effects(saga, magus, spell, carried)
-        if not any(k.spell_id == spell.id for k in magus.spells_known):
-            magus.spells_known.append(KnownSpell(spell_id=spell.id))
+        for learned in (spell, *work.more_spells):
+            if not any(k.spell_id == learned.id for k in magus.spells_known):
+                magus.spells_known.append(KnownSpell(spell_id=learned.id))
         if plan.activity == lab_seasons.INVENT:
             saga.books.append(_lab_text_book(saga, magus, lab, spell))
         # Plans made to continue it are no longer needed.
@@ -1197,7 +1223,9 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
         DiaryEntry(
             year=plan.year,
             season=plan.season,
-            name=f"{spell.name} ({spl.shorthand(spell)})",
+            name=", ".join(
+                f"{s.name} ({spl.shorthand(s)})" for s in (spell, *work.more_spells)
+            ),
             details=f"{magus.name}: {work_text(work, plan)}."
             + (
                 " A Lab Text was written."

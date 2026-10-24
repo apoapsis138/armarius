@@ -329,4 +329,5 @@ async def test_possession_forms_fit_a_small_terminal_and_hug_content_on_a_tall_o
         await pilot.pause()
         # The weapon form: its fields, Description, the book line and buttons
         # -- not the whole 70 rows.
-        assert app.screen.query_one("#fields-dialog").region.height < 36
+        # (Made and Carried took it from 34 rows to 38.)
+        assert app.screen.query_one("#fields-dialog").region.height < 40

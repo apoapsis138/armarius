@@ -31,16 +31,19 @@ from ..models import (
     Saga,
     SeasonPlan,
     VirtueFlawInstance,
+    next_season,
 )
-from . import dice, work_virtues
+from . import dice, mysteries, reputations, work_virtues
 from .rounding import round_down, round_up
 from .scores import ability_level
 
-SOURCE = (
-    "City & Guild, Chapter Two: Labor and Livelihood "
-    "(https://www.redcap.org/page/City_%26_Guild_Chapter_Two:_Labor_and_Livelihood)"
-)
+SOURCE = "City & Guild, Chapter Two: Labor and Livelihood, pp. 37-40"
 WEALTH_MULTIPLIER = {"poor": 2, "average": 3, "wealthy": 6}
+#: Craft Levels: an excellent item's at the basic level, and a wondrous
+#: item's base before its magnitude and uses (City & Guild pp. 67, 72).
+EXCELLENT_LEVEL = 15
+WONDROUS_BASE = 12
+TOUCHED_BY_REALM = "vf_touched_by_realm"
 BUSINESS_UPKEEP = 36
 RAW_MATERIALS_UPKEEP = 5
 #: Workshop improvement costs in Labor Points, by the score it reaches.
@@ -61,23 +64,14 @@ EXERTION = (
     (9, "invention: a simple die of Labor Points toward Innovation"),
     (11, "increased Reputation: a simple die of xp in the Craft Reputation"),
 )
-_ACADEME = "https://www.redcap.org/page/Art_%26_Academe_Open_Content#{}"
-MANUAL_SOURCE = (
-    "City & Guild, Chapter Four: Crafts, Craftsman Manuals "
-    "(https://www.redcap.org/page/City_and_Guild_Chapter_Four:_Crafts"
-    "#Craftsman_Manuals)"
-)
+MANUAL_SOURCE = "City & Guild, Chapter Four: Crafts, Craftsman Manuals, p. 73"
 #: A craft manual's score: the author's Craft / MANUAL_DIVISOR, rounded up.
 MANUAL_DIVISOR = 3
-REMEDIES_SOURCE = "Art & Academe, Chapter Five: Experimental Philosophy (" + (
-    _ACADEME.format("Chapter_Five:_Experimental_Philosophy") + ")"
-)
+REMEDIES_SOURCE = "Art & Academe, Chapter Five: Experimental Philosophy, pp. 67-78"
 #: Theriacs and reagents cost level x doses / REMEDY_LEVELS_PER_POINT
 #: apothecary Labor Points, rounded up.
 REMEDY_LEVELS_PER_POINT = 5
-ARTWORK_SOURCE = "Art & Academe, Chapter Eight: Artists, Time Spent Creating (" + (
-    _ACADEME.format("Time_Spent_Creating") + ")"
-)
+ARTWORK_SOURCE = "Art & Academe, Chapter Eight: Artists, Time Spent Creating, p. 124"
 #: Seasons to make a work of art: Aesthetic Quality / ARTWORK_QUALITY_PER_SEASON,
 #: rounded up (at least one).
 ARTWORK_QUALITY_PER_SEASON = 10
@@ -86,32 +80,25 @@ ARTWORK_QUALITY_PER_SEASON = 10
 #: (source to confirm).
 ARTWORK_VIRTUE_BONUS = 3
 FORMULA_SOURCE = (
-    "Art & Academe, Chapter Five: Experimental Philosophy, Researching "
-    "Formulae (" + _ACADEME.format("Researching_Formulae") + ")"
+    "Art & Academe, Chapter Five: Experimental Philosophy, Researching Formulae, p. 70"
 )
 #: Experience that makes one formula, and a season of research's default.
 FORMULA_XP = 5
 LECTURES_SOURCE = (
-    "Art & Academe, Chapter Seven: Universities, Lecture Commentaries ("
-    + (_ACADEME.format("Lecture_Commentaries") + ")")
+    "Art & Academe, Chapter Seven: Universities, Lecture Commentaries, p. 102"
 )
 #: A recorded lecture's Quality: the teacher's Communication + the scribe's
 #: Profession: Scribe / LECTURES_SCRIBE_DIVISOR (no rounding stated: down).
 LECTURES_SCRIBE_DIVISOR = 2
-#: Initiation Target Levels: (Virtue tier, the Mystagogue has it).
-INITIATION_TARGET = {
-    ("Minor", True): 15,
-    ("Minor", False): 18,
-    ("Major", True): 21,
-    ("Major", False): 30,
-}
-#: A past Ordeal's reduction to the next three Initiations, by size.
-ORDEAL_REDUCTION = {
-    "Minor": (3, 3, 1),
-    "Medium": (6, 4, 2),
-    "Major": (9, 6, 3),
-}
+INITIATION_TARGET = mysteries.TARGET_LEVELS
+ORDEAL_REDUCTION = mysteries.ORDEAL_REDUCTIONS
 EXAMS = {"baccalaureus": 6, "magister": 12, "doctor": 12}
+#: Before each exam: the seasons at university in all (3 years; 5 more;
+#: 10 in all) and the net Good Academic Reputation (Art & Academe p. 100).
+EXAM_SEASONS = {"baccalaureus": 12, "magister": 32, "doctor": 40}
+EXAM_REPUTATION = {"baccalaureus": 1, "magister": 2, "doctor": 3}
+#: A doctor must already hold the magister (DE p. 76).
+MAGISTER = "vf_magister_in_artibus"
 PILGRIMAGE_SEASON = 3
 
 
@@ -136,6 +123,11 @@ class SupplementWork:
     ordeal: str = ""
     #: A summa's new Level (inspeximus): (book id, level).
     summa_level: tuple[str, int] | None = None
+
+
+#: Labor Points to move up a step: Poor to average, average to Wealthy,
+#: Wealthy to Poor in the next social class (City & Guild p. 38).
+STATION_COST = {"poor": 120, "average": 360, "wealthy": 1080}
 
 
 def wealth(character: Character) -> str:
@@ -168,6 +160,42 @@ def progress_of(character: Character, kind: str, name: str) -> Progress | None:
     )
 
 
+#: Taming's points last only over consecutive seasons (DE p. 384).
+CONSECUTIVE_KINDS = ("taming",)
+TAMING_SOURCE = "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Training Creatures, pp. 384-386"
+#: The Gift's penalty to taming a mundane beast, a social activity (DE pp.
+#: 204, 384): none with the Gentle Gift, 6 with the Blatant Gift.
+GIFT_TAMING = {"vf_gentle_gift": 0, "vf_blatant_gift": 6}
+
+
+def kept_points(record: Progress | None, season: str, year: int) -> int:
+    """The points a record still holds for a season's work: all of them,
+    unless it is taming and the last season on it wasn't the one before."""
+    if record is None or record.done:
+        return 0
+    if record.kind not in CONSECUTIVE_KINDS or record.last_year is None:
+        return record.points
+    if next_season(record.last_season, record.last_year) != (season, year):
+        return 0
+    return record.points
+
+
+def gift_penalty(character: Character) -> int:
+    """What The Gift takes off taming a mundane beast (3; 0 Gentle, 6
+    Blatant)."""
+    ids = {vf.vf_id for vf in character.virtues_flaws}
+    for vf_id, penalty in GIFT_TAMING.items():
+        if vf_id in ids:
+            return penalty
+    return 3 if ids & set(catalog.GIFT_IDS) else 0
+
+
+def beast_might(confidence: int) -> int:
+    """A mundane beast's effective Might for taming: 1 + 2 x its
+    Confidence Score (DE p. 384)."""
+    return 1 + 2 * max(0, confidence)
+
+
 def workshop_total(character: Character, plan: SeasonPlan, craft: str) -> int:
     return (
         _characteristic(character, plan, "dexterity")
@@ -191,7 +219,7 @@ def initiation_target(saga: Saga, character: Character, plan: SeasonPlan) -> int
     mystagogue = saga.character(plan.teacher_id) or character
     has_it = _initiated(plan) in mystagogue.virtues_flaws
     target = INITIATION_TARGET[(tier if tier == "Major" else "Minor", has_it)]
-    return max(9, target - ordeal_reduction(character))
+    return max(mysteries.MINIMUM_TARGET, target - ordeal_reduction(character))
 
 
 def ordeal_reduction(character: Character) -> int:
@@ -380,6 +408,46 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
         return ["Name it (the pilgrimage, the animal, the work, the formula)."]
     if key == "tame_animal" and plan.book_level is None:
         return ["Type the animal's Might."]
+    if key == "attend_university" and plan.title.strip().lower() in EXAMS:
+        exam = plan.title.strip().lower()
+        studied = 1 + sum(
+            r.points for r in character.progress if r.kind == "university"
+        )
+        if studied < EXAM_SEASONS[exam]:
+            return [
+                f"The {exam} exam needs {EXAM_SEASONS[exam]} seasons at "
+                f"university; with this one {character.name} has {studied} "
+                "(Art & Academe p. 100)."
+            ]
+        if exam == "doctor" and not any(
+            vf.vf_id == MAGISTER for vf in character.virtues_flaws
+        ):
+            return [
+                f"The doctor exam needs a magister first: {character.name} "
+                "hasn't the Magister in Artibus Virtue (DE p. 76)."
+            ]
+        net = reputations.net_academic(character.reputations)
+        if net < EXAM_REPUTATION[exam]:
+            return [
+                f"The {exam} exam needs a Good Academic Reputation of "
+                f"{EXAM_REPUTATION[exam]} (less any Bad one); {character.name} "
+                f"has {net} (Art & Academe p. 100)."
+            ]
+    if key == "improve_station":
+        cost = STATION_COST[wealth(character)]
+        if character.labor_points < cost:
+            return [
+                f"Moving up from {wealth(character)} costs {cost} Labor Points "
+                f"(City & Guild p. 38); {character.name} has "
+                f"{character.labor_points}."
+            ]
+    if key == "make_wondrous_item" and not any(
+        vf.vf_id == TOUCHED_BY_REALM for vf in character.virtues_flaws
+    ):
+        return [
+            f"Only a craftsman Touched by (Realm) makes wondrous items "
+            f"(City & Guild p. 70); {character.name} isn't."
+        ]
     if key == "record_lectures":
         teacher = saga.character(plan.teacher_id)
         if teacher is None:
@@ -506,6 +574,15 @@ def _workshop_production(
             )
 
 
+def excellent_bonus(total: int, level: int, craft: int) -> int | None:
+    """An excellent item's bonus: +1 for every 3 points the Workshop Total
+    is over its Craft Level, at most the Craft / 3, rounded up (City &
+    Guild p. 69); None when the total falls short."""
+    if total < level:
+        return None
+    return min((total - level) // 3, round_up(craft / 3))
+
+
 def _make_excellent_item(
     saga: Saga,
     character: Character,
@@ -513,12 +590,71 @@ def _make_excellent_item(
     rng: random.Random | None,
     result: SupplementWork,
 ) -> None:
-    name = plan.title.strip()
+    """An excellent item: made in the one season if the Workshop Total
+    reaches its Craft Level (15 at the basic level)."""
+    name = plan.title.strip() or "an excellent item"
     craft = _subject_ability(plan)
-    level = plan.book_level if plan.book_level is not None else 15
+    level = plan.book_level if plan.book_level is not None else EXCELLENT_LEVEL
+    total = workshop_total(character, plan, craft)
+    bonus = excellent_bonus(total, level, ability_level(character, craft))
+    if bonus is None:
+        result.notes.append(
+            f"Workshop Total {total} is below the Craft Level {level}: no "
+            "excellent item this season."
+        )
+        return
+    result.progress.append(("item", name, 1, 1))
+    result.notes.append(
+        f"Workshop Total {total} against Craft Level {level}: {name} is made, "
+        f"+{bonus} to a feature (City & Guild p. 69)."
+    )
+
+
+def _improve_station(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
+) -> None:
+    """A season moving up: Poor to average (120 Labor Points), average to
+    Wealthy (360); from Wealthy (1,080) to Poor in the next social class,
+    whose Social Status the troupe changes by hand."""
+    now = wealth(character)
+    cost = STATION_COST[now]
+    result.labor_points = -cost
+    if now == "poor":
+        result.remove_vfs.append(VirtueFlawInstance("vf_poor"))
+        result.notes.append(f"Poor to average, for {cost} Labor Points.")
+    elif now == "average":
+        result.add_vfs.append(VirtueFlawInstance("vf_wealthy"))
+        result.notes.append(f"Average to Wealthy, for {cost} Labor Points.")
+    else:
+        result.remove_vfs.append(VirtueFlawInstance("vf_wealthy"))
+        result.add_vfs.append(VirtueFlawInstance("vf_poor"))
+        result.notes.append(
+            f"Wealthy to Poor in the next social class, for {cost} Labor "
+            "Points: change the Social Status Virtue on the Virtues tab."
+        )
+
+
+def _make_wondrous_item(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
+) -> None:
+    """A wondrous item: each season the Workshop Total is over its Craft
+    Level (12 + the effect's magnitude + its uses a day) adds the difference
+    toward it, until the points equal the Craft Level (City & Guild pp.
+    71-72)."""
+    name = plan.title.strip() or "a wondrous item"
+    craft = _subject_ability(plan)
+    level = plan.book_level if plan.book_level is not None else WONDROUS_BASE
     total = workshop_total(character, plan, craft)
     gained = max(0, total - level)
-    result.progress.append(("item", name or "an excellent item", level, gained))
+    result.progress.append(("item", name, level, gained))
     result.notes.append(
         f"Workshop Total {total} - Craft Level {level} = {gained} toward it."
     )
@@ -634,9 +770,7 @@ def _attend_university(
     if exam in EXAMS and rng is None:
         result.notes.append(f"The {exam} exam is rolled when the season is played.")
     elif exam in EXAMS and rng is not None:
-        reps = sum(
-            t.score for t in character.reputations if "academic" in t.name.lower()
-        )
+        reps = reputations.net_academic(character.reputations)
         subject = "Artes Liberales" if exam != "doctor" else craft or "Theology"
         die = dice.stress_die(rng, 1, saga=saga)
         total = (
@@ -698,9 +832,7 @@ def _tame_animal(
 ) -> None:
     name = plan.title.strip()
     might = plan.book_level or 0
-    gift = (
-        3 if any(vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws) else 0
-    )
+    gift = gift_penalty(character)
     points = max(
         0,
         character.characteristics.intelligence
@@ -709,10 +841,20 @@ def _tame_animal(
         - might
         - gift,
     )
+    record = progress_of(character, "taming", name)
+    if (
+        record is not None
+        and record.points
+        and not kept_points(record, plan.season, plan.year)
+    ):
+        result.notes.append(
+            f"The {record.points} points toward taming {name} are lost: the "
+            "seasons weren't consecutive (DE p. 384)."
+        )
     result.progress.append(("taming", name, max(1, might), points))
     result.notes.append(
         f"Int + Animal Handling + Animal Ken - Might {might}"
-        + (" - the Gift 3" if gift else "")
+        + (f" - the Gift {gift}" if gift else "")
         + f" = {points} toward taming {name}."
     )
 
@@ -751,25 +893,65 @@ def _undergo_initiation(
 ) -> None:
     name = plan.title.strip()
     mystagogue = saga.character(plan.teacher_id) or character
-    total = (
-        mystagogue.characteristics.presence
-        + ability_level(mystagogue, name)
-        + plan.other_modifier
-    )
+    script = plan.other_modifier
     target = initiation_target(saga, character, plan)
     size = ordeal_size(plan)
-    if total >= target:
+    if plan.script_variation in mysteries.VARY_EASE:
+        ease = mysteries.VARY_EASE[plan.script_variation]
+        if rng is None:
+            result.notes.append(
+                f"Varying the Script ({plan.script_variation}) is rolled when the "
+                "season is played."
+            )
+            return
+        die = dice.stress_die(rng, 1, saga=saga)
+        vary = (
+            die.value
+            + mystagogue.characteristics.intelligence
+            + ability_level(mystagogue, name)
+        )
+        if die.botched or vary < ease:
+            result.notes.append(
+                f"Varying the Script: {vary} against {ease}: failed, so the "
+                "Initiation fails; the Script as it was may be tried another "
+                "season (DE p. 389)."
+            )
+            return
+        script += plan.variation_bonus
+        result.notes.append(
+            f"Varying the Script: {vary} against {ease}: the Script bonus is "
+            f"now {script}."
+        )
+    full = (
+        mystagogue.characteristics.presence + ability_level(mystagogue, name) + script
+    )
+    # Each month lost takes a third of the original total, rounded up; an
+    # Initiation it makes fail still costs the Ordeal (TMRE p. 12).
+    months = max(0, min(plan.months_lost, 3))
+    total = max(0, full - months * round_up(full / 3))
+    distracted = months > 0 and full >= target > total
+    initiated = total >= target
+    if initiated:
         result.add_vfs.append(_initiated(plan))
+    if initiated or distracted:
         if gained := _ordeal_gained(plan):
             result.add_vfs.append(gained)
         if lost := _ordeal_lost(plan):
             result.remove_vfs.append(lost)
         result.ordeal = size
-    ordeal = f" {size} Ordeal." if size and total >= target else ""
+    ordeal = f" {size} Ordeal." if size and (initiated or distracted) else ""
+    lost_text = f", {months} month(s) lost from {full}" if months else ""
     result.notes.append(
-        f"Initiation Total {total} (Presence + {name} + Script {plan.other_modifier}) "
-        f"against {target}: "
-        + ("initiated." if total >= target else "not initiated.")
+        f"Initiation Total {total} (Presence + {name} + Script {script}"
+        f"{lost_text}) against {target}: "
+        + (
+            "initiated."
+            if initiated
+            else "not initiated; the distractions failed it, so the Ordeal is "
+            "still suffered and the Initiation must be repeated (TMRE p. 12)."
+            if distracted
+            else "not initiated."
+        )
         + ordeal
     )
 
@@ -890,6 +1072,8 @@ _WORK: dict[str, Callable[[Saga, Character, SeasonPlan, Any, SupplementWork], No
     "apothecary": _working_season,
     "workshop_production": _workshop_production,
     "make_excellent_item": _make_excellent_item,
+    "make_wondrous_item": _make_wondrous_item,
+    "improve_station": _improve_station,
     "merchant_venture": _merchant_venture,
     "improve_workshop": _improve_workshop,
     "produce_remedies": _produce_remedies,

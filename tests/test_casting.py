@@ -154,7 +154,7 @@ def test_the_spell_details_say_what_the_die_must_reach():
     )
     lines = known_spell_casting_lines(saga, magus, KnownSpell(spell_id="p"), pilum)
     assert lines[0].startswith("[b]Casting Score:[/] 23")
-    assert "always cast without Fatigue" in lines[1]
+    assert "cast without Fatigue on any die, unless a stressed die botches" in lines[1]
     ritual = Spell(
         id="r", name="Ward", technique="Rego", form="Ignem", level=30, ritual=True
     )
@@ -162,16 +162,21 @@ def test_the_spell_details_say_what_the_die_must_reach():
     # Rego 4 + Ignem 8 + Sta 2 + aura 3 + AL 2 + Phil 1 = 20: 10 short
     assert lines[1] == (
         "Ritual, stress die: 10+ for 1, 5+ for 2, 0+ for 3 long-term Fatigue "
-        "levels; 6 pawn(s) of vis; 7 botch dice."
+        "levels; 6 pawn(s) of vis; 7 botch dice. Fatigue past unconsciousness "
+        "becomes a wound."
     )
     # Mercurian Magic halves the vis; Waster of Vis wastes a quarter of
     # those used (and they count as botch dice); Rigid Magic casts none.
     magus.virtues_flaws = [VirtueFlawInstance("vf_mercurian_magic")]
     lines = known_spell_casting_lines(saga, magus, KnownSpell(spell_id="r"), ritual)
-    assert lines[1].endswith("3 pawn(s) of vis; 4 botch dice.")
+    assert lines[1].endswith(
+        "3 pawn(s) of vis; 4 botch dice. Fatigue past unconsciousness becomes a wound."
+    )
     magus.virtues_flaws = [VirtueFlawInstance("vf_waster_of_vis")]
     lines = known_spell_casting_lines(saga, magus, KnownSpell(spell_id="r"), ritual)
-    assert lines[1].endswith("8 pawn(s) of vis; 9 botch dice.")
+    assert lines[1].endswith(
+        "8 pawn(s) of vis; 9 botch dice. Fatigue past unconsciousness becomes a wound."
+    )
     magus.virtues_flaws = [VirtueFlawInstance("vf_rigid_magic")]
     lines = known_spell_casting_lines(saga, magus, KnownSpell(spell_id="r"), ritual)
     assert lines[1] == "Rigid Magic: no vis in casting, so no Ritual."

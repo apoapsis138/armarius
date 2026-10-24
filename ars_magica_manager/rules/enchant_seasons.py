@@ -42,27 +42,34 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import book_seasons, enchantment, experiment, lab, lab_virtues, library
+from . import (
+    book_seasons,
+    enchantment,
+    experiment,
+    lab,
+    lab_virtues,
+    library,
+    verditius,
+)
 from .breakdown import Line
 from .rounding import round_up
 
 if TYPE_CHECKING:
     from .lab_seasons import LabWork
 
-_CH8 = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, {} "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#{})"
-)
-SOURCE = _CH8.format("Enchantments", "Enchantments")
-OPEN_SOURCE = _CH8.format("Preparation for Enchantment", "Preparation_for_Enchantment")
-INSTIL_SOURCE = _CH8.format("Instilling the Effect", "Instilling_the_Effect")
-LESSER_SOURCE = _CH8.format("Lesser Enchantments", "Lesser_Enchantments")
-CHARGED_SOURCE = _CH8.format("Charged Items", "Charged_Items")
-ATTUNE_SOURCE = _CH8.format("Talisman Attunement", "Talisman_Attunement")
-INVESTIGATE_SOURCE = _CH8.format(
-    "Investigating Enchantments", "Investigating_Enchantments"
-)
+_CH8 = "Ars Magica Definitive Edition, Chapter 8: Laboratory, {}, {}"
+SOURCE = _CH8.format("Enchantments", "pp. 252-260")
+OPEN_SOURCE = _CH8.format("Preparation for Enchantment", "p. 254")
+INSTIL_SOURCE = _CH8.format("Instilling the Effect", "p. 258")
+LESSER_SOURCE = _CH8.format("Lesser Enchantments", "p. 253")
+CHARGED_SOURCE = _CH8.format("Charged Items", "p. 253")
+ATTUNE_SOURCE = _CH8.format("Talisman Attunement", "p. 259")
+INVESTIGATE_SOURCE = _CH8.format("Investigating Enchantments", "p. 260")
+
+#: Effect Expiry: an effect that lasts only 1, 7 or 70 years from its first
+#: use multiplies the season's excess by 10, 5 or 2; it still needs a Lab
+#: Total above its level (DE p. 257).
+EXPIRY_SPEED: dict[str, int] = {"1 year": 10, "7 years": 5, "70 years": 2}
 
 OPEN = "open_item"
 INSTIL = "instil_effect"
@@ -190,8 +197,12 @@ def _effect_total(
 ) -> lab.LabTotal:
     """The Lab Total for instilling `effect`: its Technique + Form with the
     Items Specialization (and Texts, working from a Lab Text), shape and
-    material bonuses, and in an invested device, the talisman and
+    material bonuses (with Verditius Runes, up to Magic Theory), the
+    Verditius maker's Craft, and in an invested device, the talisman and
     shared-Arts bonuses."""
+    shape = max(0, plan.shape_bonus)
+    if shape:
+        shape += verditius.rune_bonus(saga, magus, device)
     total = lab.lab_total(
         saga,
         magus,
@@ -201,11 +212,15 @@ def _effect_total(
         activity="enchant_items",
         days_missed=max(0, plan.days_away),
         experimenting=plan.experimenting,
-        shape_material=max(0, plan.shape_bonus),
+        shape_material=shape,
+        similar_spell_level=lab.similar_spell_level(saga, magus, plan.similar_spell_id),
         from_lab_text=text is not None,
         others_text=text is not None and text.author_id != magus.id,
     )
     extra: list[Line] = []
+    craft = verditius.craft_line(saga, magus, device)
+    if craft is not None:
+        extra.append(craft)
     if device.type == INVESTED:
         if device.talisman and enchantment.talisman_magus_id(device) == magus.id:
             extra.append(
@@ -228,13 +243,7 @@ def _effect_total(
                     source=INSTIL_SOURCE,
                 )
             )
-    if not extra:
-        return total
-    return replace(
-        total,
-        total=total.total + sum(line.amount or 0 for line in extra),
-        lines=[*total.lines, *extra],
-    )
+    return lab.with_lines(total, extra)
 
 
 def _open_device(
@@ -259,17 +268,32 @@ def _open_device(
     left = room - device.pawns_opened
     if left <= 0:
         return [f"{device.name} is already opened."], None
-    pawns = min(left, limit) if device.talisman else left
+    # Verditius Magic: the maker pays his Craft score fewer pawns, at
+    # least one, for the whole of what it opens.
+    discount = verditius.opening_discount(saga, magus, device)
+    opened = min(left, limit + discount) if device.talisman else left
+    pawns = max(1, opened - discount) if discount else opened
     if pawns > limit:
         return [
             f"Opening {device.name} takes {pawns} pawns of Vim vis; "
             f"{magus.name} can handle {limit} in a season (twice Magic Theory)."
         ], None
-    if pawns <= 0:
+    if limit <= 0:
         return [f"{magus.name} can't handle any vis (no Magic Theory)."], None
-    return [], LabWork(
-        None, empty, 0, finished=True, vis_cost={"Vim": pawns}, device=device
+    work_ = LabWork(
+        None,
+        empty,
+        0,
+        finished=True,
+        vis_cost={"Vim": pawns},
+        device=device,
+        pawns_opened=opened,
     )
+    if pawns < opened:
+        work_.notes.append(
+            f"Verditius Magic: {pawns} pawns open it for {opened} ({verditius.SOURCE})."
+        )
+    return [], work_
 
 
 def _attune(
@@ -499,6 +523,7 @@ def _effect_work(
         else 0
         if why
         else lab.points_per_season(lab_total, level)
+        * EXPIRY_SPEED.get(effect.expiry, 1)
     )
     return [], LabWork(
         None,

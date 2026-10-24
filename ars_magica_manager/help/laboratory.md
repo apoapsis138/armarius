@@ -294,6 +294,13 @@ The laboratory's Flaws, with the points they come to in the title. They work
 like the Virtues: picked from the catalog, deleted rather than edited. A
 laboratory may have only one Focus Flaw.
 
+A few Flaws ask what they apply to when added: **Missing Ingredients** an
+Art (and a second Form), whose Lab Totals it halves; **Missing Equipment**
+one or two kinds of activity the laboratory can't be used for;
+**Elementary** the one kind it can be used for; **Restriction** the
+activity it forbids (DE pp. 295-296). Lab work they rule out is refused
+when it is planned.
+
 ## Attributes tab
 <!-- help: tab-lab-attributes -->
 
@@ -478,6 +485,11 @@ Charged Item.
 effects. **Instill** adds an effect to a device that can take another, and
 **Use Charge** uses up a charge of a Charged Item.
 <!-- /gui -->
+A device whose Verditius maker crafted it in its first season has
+**Verditius Runes** ticked, and **Crafted with** names the Craft Ability
+used (blank when he shaped it by magic). A Charged Item warns when more
+charges are recorded than its Lab Total gives: by the excess, or a fifth of
+the whole Lab Total when it was made from a Lab Text.
 What a device's effects give the laboratory itself, a Virtue or
 Specialization and Characteristic points, is set under
 [Magic Items](help:section-lab-magic-items) on the Attributes tab.
@@ -544,7 +556,7 @@ Longevity Ritual is performed again from its text.
 The screen where a season of the laboratory owner's lab work is planned,
 opened from the [Planning tab](help:tab-lab-planning). Despite its name it
 plans every kind of lab work: inventing a spell from a design, inventing one
-from a Lab Text, extracting vis, fixing an Arcane Connection, a Longevity
+from a Lab Text, learning spells from a teacher, extracting vis, fixing an Arcane Connection, a Longevity
 Ritual, the enchantment activities (opening an item, instilling an effect, a
 lesser enchantment, a charged item, attuning a talisman, investigating an
 enchanted item), decoding another magus's Lab Texts, taming a magical beast,
@@ -586,6 +598,21 @@ from, a connection to fix, a device and effect to enchant, a subject and vis
 for a Longevity Ritual, and so on. Where the work pays or gains vis, you
 choose whose: the laboratory's raw vis, the magus's own, or the covenant's
 vis stores.
+
+- **More Lab Texts** (inventing from a Lab Text) adds further texts to learn
+  the same season. Every spell must be of the first one's Technique and
+  Form, and their levels together must be within the lowest of their Lab
+  Totals (DE pp. 262, 264). The book allows several activities of any one
+  type and Technique and Form in a season, such as inventing several
+  spells or instilling several effects. The app offers it only for Lab
+  Texts; plan the others one at a time.
+- **Learn spells from a teacher** asks for the **Teacher**, any other magus
+  who knows spells, and the **Spells taught**, of any Techniques and Forms.
+  Scheduling plans the teacher's season as Teach. The levels taught are at
+  most the teacher's highest Lab Total among them, those of one Technique
+  and Form at most the teacher's Lab Total there, and no spell above the
+  student's own Lab Total for it. The Spells Specialization counts for the
+  student (DE p. 251). Every spell is learned in the one season.
 
 ### Spell design
 <!-- help: invent-spell-design -->
@@ -668,10 +695,35 @@ brackets.
 For a spell it uses the lower of each Art and the requisites of the same kind, and
 adds the laboratory's terms from the [Lab Totals tab](help:tab-lab-totals).
 The Lab work fields below the design add their own terms: the magnitude of a
-similar spell the magus knows, a Magical Focus (the lower Art counted again)
+similar spell the magus knows (when inventing, instilling an effect, making
+a lesser enchantment or charged item, or empowering a familiar's bond), a
+Magical Focus (the lower Art counted again)
 and a Magic Theory specialty, if the magus has them, days away from the
 laboratory (up to 10 cost nothing, 11 to 20 lower the total, more rule lab
 work out), and any other modifier the troupe allows.
+
+The total is built in a fixed order: the Arts and the laboratory's terms,
+then the options and anyone helping, and last of all any halving (a lab
+Flaw, Environmental Magic Condition, Short-Ranged Magic), so a halving
+halves everything, once, rounded down.
+
+Enchanting adds its own terms: **Shape & material** (capped by Magic
+Theory), +5 in the magus's own talisman, +1 for each effect already in the
+device sharing its Technique or Form, and for a device with Verditius
+Runes, the Philosophiae of its maker (or of a later Verditius enchanter
+with more) added to the Shape & material bonus, still capped, and for the
+maker only, his current Craft score (Verditius Magic, DE pp. 240-241). The
+runes add Philosophiae to each existing Shape and Material bonus. The app
+adds it once, so when two bonuses apply, add the second Philosophiae to
+Shape & material yourself. They count for enchanting only: a talisman's
+casting bonuses use the plain bonus. Empowering a familiar's bond adds +5 when it shares the
+binding's Technique or Form, +10 when it shares both.
+
+Some laboratory Flaws stop work or halve it: **Missing Ingredients**
+halves totals with its Art (and second Form); **Missing Equipment** and
+**Restriction** refuse the activities they name, and **Elementary** all
+but the one it names (Spells, Items, Familiar, Texts, Experimentation and
+so on), with a message saying which Flaw does it.
 
 Some Virtues and Flaws add a field of their own, shown only to a magus who
 has them:
@@ -729,7 +781,10 @@ step, and kept with the creation (see
 Scheduling plans their season as Assist in a laboratory with this magus,
 for each season the work is planned, and the Lab Total then includes their
 Intelligence and Magic Theory, for as many helpers as the magus's
-Leadership allows (at least one). If the helper already has a different
+Leadership allows (at least one). Each helper's own Virtues and Flaws count
+too, as the magus's do: an assistant's Inventive Genius adds its +3 (DE p.
+264). A familiar bound to the magus with Magic Theory helps the same way,
+except with binding or empowering itself. If the helper already has a different
 plan for the season, Schedule refuses and says so. More helpers are
 planned on their own sheets, with Assist in a laboratory for the same
 season. Clearing the lab work clears the assistant's season too; clearing
@@ -751,6 +806,18 @@ so far and the season the spell is projected to be invented. Other work says
 what it will produce this season, such as pawns extracted or the aging-roll
 modifier. Every lab season also gives 2 experience points of Exposure in
 Magic Theory.
+
+- **Effect Expiry**: an effect that lasts 1, 7 or 70 years from its first
+  use gains 10, 5 or 2 times the season's excess, but still needs a Lab
+  Total above its level (DE p. 257).
+- **A charged item from a Lab Text** gets a charge for every 5 points of
+  the whole Lab Total, rounded up (DE p. 262), and the device keeps that
+  number.
+- **Vis**: everything a season uses, an experiment's or a stabilization's
+  vis and Waster of Vis's waste included, must be within twice the magus's
+  Magic Theory (DE p. 250). A Verditius who crafted the item opens it for
+  his Craft score fewer pawns (his Finesse when he shaped it by magic), at
+  least one, and it still counts as opened in full.
 
 ### Scheduling
 <!-- help: invent-spell-schedule -->

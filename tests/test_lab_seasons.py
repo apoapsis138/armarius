@@ -2,6 +2,8 @@
 Lab Text on the laboratory's Planning tab, points over several seasons, and
 what finishing gives."""
 
+import random
+
 from support import strip_markup, wait_until
 from textual.widgets import Button, Input, Select, Static, Tree
 
@@ -24,6 +26,7 @@ from ars_magica_manager.models import (
 from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import lab_seasons
 from ars_magica_manager.rules.xp import ability_xp, art_xp
+from ars_magica_manager.seasons import pairs
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens.invent_spell import OTHER, InventSpellScreen
 
@@ -430,3 +433,137 @@ async def test_the_invent_spell_screen_offers_parameters_from_virtues():
         for selector in ("#inv-dialog", "#inv-buttons"):
             region = screen.query_one(selector).region
             assert region.right <= 120 and region.bottom <= 45, selector
+
+
+def _texts(saga, *spell_ids):
+    for spell_id in spell_ids:
+        saga.books.append(
+            Book(
+                f"text-{spell_id}",
+                f"Lab Text: {spell_id}",
+                "Lab Text",
+                owner_kind="covenant",
+                owner_id="cov",
+                spell_id=spell_id,
+            )
+        )
+
+
+def test_several_lab_texts_share_a_season_within_the_lab_total():
+    saga = _saga()
+    _texts(saga, "spark", "bolt")
+    plan = _plan(
+        activity=lab_seasons.LAB_TEXT, book_id="text", more_book_ids=["text-spark"]
+    )
+    found, _ = _work(saga, plan)
+    # Warm Hands 15 + Spark 5 = 20 against Lab Total 15 (DE p. 262).
+    assert found == [
+        "Lab Total 15 (the lowest) is below the 2 spells' levels together, 20."
+    ]
+    saga.character("m").arts["creo"] = ArtScore(xp=art_xp(10))
+    found, work = _work(saga, plan)
+    assert found == [] and work.level == 20 and work.finished
+    seasons.set_plan(saga, plan)
+    worked = seasons.resolve(saga, random.Random(1))
+    seasons.apply(saga, worked)
+    known = {k.spell_id for k in saga.character("m").spells_known}
+    assert {"text-spell", "spark"} <= known
+
+
+def test_every_lab_text_of_the_season_is_of_one_technique_and_form():
+    saga = _saga()
+    saga.spells.append(Spell("lift", "Lift", "Rego", "Terram", level=5))
+    _texts(saga, "lift")
+    plan = _plan(
+        activity=lab_seasons.LAB_TEXT, book_id="text", more_book_ids=["text-lift"]
+    )
+    found, _ = _work(saga, plan)
+    assert found == [
+        "Lift is Rego Terram: every spell learned this season must be Creo Ignem."
+    ]
+
+
+def _teacher(saga):
+    """Valeria: Creo 10, Ignem 10, Int 2, Magic Theory 3 -- CrIg Lab Total
+    25 in the Tower; she knows Bolt, Warm Hands and Spark."""
+    teacher = Character(id="t", name="Valeria", type="magus", covenant_id="cov")
+    teacher.characteristics = Characteristics(intelligence=2)
+    teacher.abilities = [Ability("Magic Theory", xp=ability_xp(3))]
+    teacher.arts = {"creo": ArtScore(xp=art_xp(10)), "ignem": ArtScore(xp=art_xp(10))}
+    teacher.spells_known = [KnownSpell(s) for s in ("bolt", "text-spell", "spark")]
+    saga.characters.append(teacher)
+    return teacher
+
+
+def test_learning_spells_from_a_teacher():
+    saga = _saga()
+    _teacher(saga)
+    plan = _plan(
+        activity=lab_seasons.TAUGHT_SPELLS,
+        teacher_id="t",
+        taught_spell_ids=["bolt", "spark"],
+    )
+    found, _ = _work(saga, plan)
+    assert found == [
+        "Valeria hasn't planned to Teach this season (teaching takes the "
+        "teacher's season too)."
+    ]
+    seasons.set_plan(saga, plan)
+    pairs.make_pairs(saga, saga.character("m"), plan)  # plans her Teach
+    teach = next(p for p in saga.season_plans if p.character_id == "t")
+    assert teach.activity == rules.TEACH
+    found, work = _work(saga, plan)
+    # Bolt 10 + Spark 5 = 15 levels, within her Lab Total 25; each within
+    # his own 15.
+    assert found == [] and work.level == 15 and work.finished
+    seasons.apply(saga, seasons.resolve(saga, random.Random(1)))
+    known = {k.spell_id for k in saga.character("m").spells_known}
+    assert {"bolt", "spark"} <= known
+
+
+def test_a_taught_spell_is_within_both_lab_totals():
+    saga = _saga()
+    _teacher(saga)
+    saga.spells.append(Spell("blaze", "Blaze", "Creo", "Ignem", level=20))
+    saga.character("t").spells_known.append(KnownSpell("blaze"))
+    plan = _plan(
+        activity=lab_seasons.TAUGHT_SPELLS,
+        teacher_id="t",
+        taught_spell_ids=["blaze", "bolt"],
+    )
+    seasons.set_plan(saga, plan)
+    pairs.make_pairs(saga, saga.character("m"), plan)
+    found, _ = _work(saga, plan)
+    assert found == [
+        "Blaze is level 20: above Tiberius's Lab Total 15 for it.",
+        "30 levels of Creo Ignem: Valeria's Lab Total there is 25.",
+        "30 levels in all: Valeria's highest Lab Total among them is 25.",
+    ]
+
+
+async def test_the_lab_work_screen_plans_spells_from_a_teacher():
+    saga = _saga()
+    _teacher(saga)
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        _, screen = await _open_invent(pilot, app, key="a")
+        screen.set_activity(lab_seasons.TAUGHT_SPELLS)
+        await pilot.pause()
+        assert screen.query_one("#inv-taught-row").display
+        assert not screen.query_one("#inv-more-texts-row").display
+        screen.query_one("#inv-teacher", Select).value = "t"
+        screen.query_one("#inv-taught", Button).press()
+        # The list screen opens; its entries are added through the entry
+        # form, which this test skips by setting the list as it would.
+        assert await wait_until(pilot, lambda: app.screen is not screen)
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is screen)
+        screen._lists["taught_spells"] = ["bolt"]
+        screen._refresh()
+        plan = screen.current_plan()
+        assert (plan.teacher_id, plan.taught_spell_ids) == ("t", ["bolt"])
+        region = screen.query_one("#inv-taught-row").region
+        assert region.right <= 120

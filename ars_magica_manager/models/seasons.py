@@ -99,8 +99,19 @@ class SeasonPlan:
     details: str = ""
     #: Reading: the book studied.
     book_id: str | None = None
+    #: Working from Lab Texts: the further texts, of the same Technique and
+    #: Form, learned in the same season.
+    more_book_ids: list[str] = field(default_factory=list)
     #: Being taught / trained: the teacher or master.
     teacher_id: str | None = None
+    #: Opening the Arts: keep the apprentice's Supernatural Abilities (an
+    #: Intellego Vim Lab Total of at least double their level allows it).
+    keep_supernatural: bool = False
+    #: Teaching a Hermetic Virtue: a Hermetic Flaw of the teacher's taught
+    #: with it (DE p. 271).
+    taught_flaw_id: str | None = None
+    #: Learning spells from a teacher: the spells taught.
+    taught_spell_ids: list[str] = field(default_factory=list)
     #: Vis study: whose raw vis is used ("character" or "laboratory").
     vis_from: str = ""
     #: Vis study: the stress die as rolled at the table (None: the app
@@ -204,6 +215,11 @@ class SeasonPlan:
     ordeal_kind: str = ""
     ordeal_lost_id: str | None = None
     ordeal_lost_params: dict[str, str] = field(default_factory=dict)
+    #: Varying the Script this Initiation (rules.mysteries.VARY_EASE: "add",
+    #: "change", "remove"; "" for none) and what the change does to its
+    #: bonus.
+    script_variation: str = ""
+    variation_bonus: int = 0
     #: A plan saved for several seasons: what ties its seasons together
     #: ("" for a single season, and for lab work, which its project ties),
     #: whether it runs until its work is done (its seasons are worked out

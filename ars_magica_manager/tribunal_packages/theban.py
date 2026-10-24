@@ -386,6 +386,9 @@ THEBAN = TribunalPackage(
     "Theban",
     customs="The Polity",
     book="TSE",
+    quorum_needs_quaesitor=False,
+    redcaps_vote=False,
+    praeco_votes=True,
     columns=(RosterColumn("Phyle", phyle_of, 10, phyle_field, save_phyle),),
     tabs=(
         PackageTab(

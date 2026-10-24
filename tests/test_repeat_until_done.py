@@ -8,6 +8,7 @@ from __future__ import annotations
 import random
 
 from screen_helpers import _sample_saga_with_covenant
+from support import literate
 from test_lab_seasons import _plan as _lab_plan
 from test_lab_seasons import _saga as _lab_saga
 
@@ -29,7 +30,9 @@ READ_UNTIL_DONE = {
 
 def _reader():
     saga = _sample_saga_with_covenant()
-    return saga, saga.characters[0]  # Leandro, Magic Theory 5 (75 xp)
+    reader = saga.characters[0]  # Leandro, Magic Theory 5 (75 xp)
+    reader.abilities += literate()
+    return saga, reader
 
 
 def _when(plans: list[SeasonPlan]) -> list[str]:

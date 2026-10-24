@@ -48,6 +48,7 @@ from .rules.library import (
     is_ability_book,
     is_art_book,
     level_of,
+    limit_warnings,
     numbers_to_set,
     owner_record,
     pool,
@@ -125,42 +126,6 @@ def cost_formula(book: Book, saga: Saga | None = None) -> str:
             f"{POOL_POINTS[book.type]} per {POOL_LEVELS} levels of the pool"
         )
     return "Other books cost nothing"
-
-
-def quality_limit(book_type: str, level: int) -> int | None:
-    """The highest quality allowed at covenant creation, or None if there's no
-    limit for this type."""
-    if book_type == "Art Summa":
-        return min(22, 11 + (20 - level))
-    if book_type == "Ability Summa":
-        return min(22, 11 + 3 * (8 - level))
-    if book_type == "Tractatus":
-        return 11
-    return None
-
-
-#: The highest summa level allowed at covenant creation.
-LEVEL_LIMITS: dict[str, int] = {"Art Summa": 20, "Ability Summa": 8}
-
-
-def limit_warnings(book: Book) -> list[str]:
-    """Covenant-creation limits this book goes over (plain text). Books found in
-    play may exceed them, so these are warnings, never errors. Lab Texts and
-    Casting Tablets aren't checked: their limit comes from a power-level
-    table not yet provided."""
-    warnings: list[str] = []
-    level = book.level or 0
-    level_limit = LEVEL_LIMITS.get(book.type)
-    if level_limit is not None and level > level_limit:
-        warnings.append(
-            f"Level {level} is over the covenant-creation limit of {level_limit}."
-        )
-    limit = quality_limit(book.type, level)
-    if limit is not None and (book.quality or 0) > limit:
-        warnings.append(
-            f"Quality {book.quality} is over the covenant-creation limit of {limit}."
-        )
-    return warnings
 
 
 # ---------------------------------------------------------------- abilities

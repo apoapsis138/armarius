@@ -58,6 +58,7 @@ from ...rules import experiment as ex
 from ...rules import familiar_seasons as fs
 from ...rules import laboratory_seasons as ls
 from .fields import ModalDialog
+from .prompts import terminal_fields
 from .steps import run_steps
 
 #: The Exposure line, as the When column wraps it.
@@ -87,6 +88,9 @@ _WIDGET_OF: dict[str, str] = {
     "extra_magnitudes": "inv-extra",
     "base_effect": "inv-base-effect",
     "lab_text": "inv-lab-text",
+    "more_texts": "inv-more-texts",
+    "teacher": "inv-teacher",
+    "taught_spells": "inv-taught",
     "decode": "inv-decode",
     "connection": "inv-connection",
     "subject": "inv-subject",
@@ -147,6 +151,17 @@ def _art_select(arts: Sequence[str], value: str | None, widget_id: str) -> Selec
     )
 
 
+#: Lab work a similar spell helps (DE pp. 251, 258, 267).
+_SIMILAR = (
+    lab_seasons.INVENT,
+    es.INSTIL,
+    es.LESSER_WORK,
+    es.CHARGED_WORK,
+    fs.EMPOWER,
+)
+#: The fields holding a list, edited on a list screen of their own.
+_LISTS = ("more_texts", "taught_spells")
+
 #: Lab work whose vis is of the work's Technique or Form, as chosen.
 _BY_ART = (es.INSTIL, es.LESSER_WORK, fs.BIND, fs.EMPOWER)
 
@@ -156,6 +171,8 @@ _ROWS_SHOWN: dict[str, Callable[[str], bool]] = {
     "inv-common": bool,
     "inv-design": lambda a: a == lab_seasons.INVENT,
     "inv-labtext": lambda a: a == lab_seasons.LAB_TEXT,
+    "inv-more-texts-row": lambda a: a == lab_seasons.LAB_TEXT,
+    "inv-taught-row": lambda a: a == lab_seasons.TAUGHT_SPELLS,
     "inv-decode-row": lambda a: a == bs.DECODE_TEXT,
     "inv-work": lambda a: (
         bool(a) and a not in (*lab_seasons.SPELL_ACTIVITIES, bs.DECODE_TEXT)
@@ -388,6 +405,12 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.parameter_options = self.form.parameter_options
         #: The core form's fields, each drawn by its widget (_WIDGET_OF).
         self._fields = self.form.fields()
+        #: The list fields' entries as they stand.
+        self._lists: dict[str, list[str]] = {
+            spec.key: list(spec.value) if isinstance(spec.value, list) else []
+            for spec in self._fields
+            if spec.key in _LISTS
+        }
         self._ready = False
 
     # -- layout --------------------------------------------------------------
@@ -519,6 +542,31 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 prompt="(choose the Lab Text)",
                 id="inv-lab-text",
                 compact=True,
+            )
+        with Horizontal(classes="inv-row", id="inv-more-texts-row"):
+            yield Label("More Lab Texts")
+            yield Button(
+                self._list_label("more_texts"), id="inv-more-texts", compact=True
+            )
+        with Horizontal(classes="inv-row", id="inv-taught-row"):
+            yield Label("Teacher")
+            teachers = self.form.teachers()
+            yield Select(
+                teachers,
+                value=(
+                    plan.teacher_id
+                    if plan
+                    and plan.activity == lab_seasons.TAUGHT_SPELLS
+                    and plan.teacher_id in [v for _, v in teachers]
+                    else Select.NULL
+                ),
+                prompt="(choose the magus who teaches)",
+                id="inv-teacher",
+                compact=True,
+            )
+            yield Label(" Spells taught")
+            yield Button(
+                self._list_label("taught_spells"), id="inv-taught", compact=True
             )
         with Horizontal(classes="inv-row", id="inv-decode-row"):
             yield Label("Lab Text")
@@ -841,6 +889,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         """What the widget for one of the core form's fields holds."""
         if spec.key == "activity":
             return self.activity
+        if spec.key in self._lists:
+            return list(self._lists[spec.key])
         if spec.key == "start_from":
             design = self.form.design
             return design.source_spell_id if design else None
@@ -977,7 +1027,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.query_one("#inv-vis-from-label", Label).update(
             "Vis goes to" if plan.activity == lab_seasons.EXTRACT else "Vis from"
         )
-        self.query_one("#inv-similar").disabled = not inventing
+        self.query_one("#inv-similar").disabled = plan.activity not in _SIMILAR
         self.query_one("#inv-other-row").display = inventing and any(
             self._select(f"#inv-{kind}") == OTHER for kind in KINDS
         )
@@ -1099,6 +1149,10 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             self._fill(None, None)
         elif button == "inv-start":
             self._choose_start()
+        elif button in ("inv-more-texts", "inv-taught"):
+            self._edit_list(
+                "more_texts" if button == "inv-more-texts" else "taught_spells"
+            )
         elif button == "btn-save":
             try:
                 values = form_spec.result(self._fields, self._read)
@@ -1110,6 +1164,27 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 self.query_one("#inv-error", Static).update(escape(problem))
                 return
             self.dismiss(self.form.plan_of(values))
+
+    def _list_label(self, key: str) -> str:
+        spec = next(s for s in self._fields if s.key == key)
+        assert spec.display is not None
+        return escape(spec.display(self._lists.get(key, [])))
+
+    def _edit_list(self, key: str) -> None:
+        """Edit a list field on its own screen (prompts.terminal_fields)."""
+        spec = next(s for s in self._fields if s.key == key)
+        [screen_spec] = terminal_fields([spec])
+        assert screen_spec.picker is not None
+
+        def done(chosen: Any) -> None:
+            if chosen is None:
+                return
+            self._lists[key] = list(chosen)
+            widget = "#inv-more-texts" if key == "more_texts" else "#inv-taught"
+            self.query_one(widget, Button).label = self._list_label(key)
+            self._refresh()
+
+        self.app.push_screen(screen_spec.picker(self._lists.get(key, [])), done)
 
     def _choose_start(self) -> None:
         """Choose the spell the design starts from (any spell, the magus's

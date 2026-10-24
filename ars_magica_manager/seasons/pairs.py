@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 from ..models import Character, Saga, SeasonPlan, XpAllocation
 from ..rules import activities as rules
+from ..rules import lab_seasons
 from ..rules import laboratory_seasons as ls
 from .plans import plan_for, plan_summary, set_plan
 
@@ -125,7 +126,10 @@ PARTNERS: dict[str, Partner] = {
 def partners(saga: Saga, character: Character, plan: SeasonPlan) -> list[Pair]:
     """The other people's plans `plan` takes."""
     if plan.lab_id:
-        return _assistants(saga, character, plan)
+        found = _assistants(saga, character, plan)
+        if plan.activity == lab_seasons.TAUGHT_SPELLS:
+            found += _teacher(saga, character, plan)
+        return found
     partner = PARTNERS.get(plan.activity)
     return [] if partner is None else partner(saga, character, plan)
 

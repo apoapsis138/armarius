@@ -33,10 +33,7 @@ from dataclasses import dataclass
 
 from .rounding import round_down, round_up
 
-SOURCE = (
-    "Lords of Men, Chapter Eight: Massed Combat "
-    "(https://www.redcap.org/page/Lords_of_Men)"
-)
+SOURCE = "Lords of Men, Chapter Eight: Massed Combat, pp. 102-116"
 
 #: The stages of a battle and their Battle Ease Factors.
 STAGES: tuple[tuple[str, int], ...] = (

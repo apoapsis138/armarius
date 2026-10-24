@@ -23,21 +23,17 @@ from ..models import Character, Laboratory, Saga, Spell
 from . import animal_aging, lab
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
-from .creation_character import age, aging_age
-from .creation_later import DEFAULT_APPRENTICESHIP_AGE
+from .creation_character import DEFAULT_APPRENTICESHIP_AGE, age, aging_age
 from .creation_xp import entries, is_art, spent
 from .scores import ability_level
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Magus Only -- "
-    "Apprenticeship (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Magus_Only_%E2%80%94_Apprenticeship)"
+    "Apprenticeship, p. 49"
 )
 MINIMUMS_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Hermetic Magi "
-    "Recommended Minimum Abilities (https://www.redcap.org/page/Ars_Magica_"
-    "Definitive_Edition,_Chapter_Three:_Characters#Hermetic_Magi_Recommended_"
-    "Minimum_Abilities)"
+    "Recommended Minimum Abilities, p. 50"
 )
 
 APPRENTICESHIP_XP = 240
@@ -245,14 +241,12 @@ def apprenticeship_checks(saga: Saga, record: Record) -> list[Check]:
 # -- Years past Gauntlet and pre-play aging --
 
 GAUNTLET_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Magus Only -- "
-    "After Apprenticeship (https://www.redcap.org/page/Ars_Magica_Definitive_"
-    "Edition,_Chapter_Three:_Characters#Magus_Only_%E2%80%94_After_Apprenticeship)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Magus Only -- After "
+    "Apprenticeship, pp. 50-51"
 )
 AGING_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Starting "
-    "Character Age (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Starting_Character_Age)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Starting Character Age, "
+    "p. 43"
 )
 APPRENTICESHIP_YEARS = 15
 POINTS_A_YEAR = 30

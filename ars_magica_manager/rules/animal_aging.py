@@ -36,11 +36,7 @@ from fractions import Fraction
 from ..models import SEASONS, Character
 from .rounding import round_up
 
-SOURCE = (
-    "Grogs, Chapter 7: Grog Templates, Horses & Hounds, Animal Aging "
-    "(https://www.redcap.org/page/Grogs_Chapter_Seven:_Grog_Templates"
-    "#Animal_Aging)"
-)
+SOURCE = "Grogs, Chapter 7: Grog Templates, Horses & Hounds, Animal Aging, p. 138"
 
 
 @dataclass(frozen=True)

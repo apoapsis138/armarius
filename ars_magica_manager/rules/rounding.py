@@ -11,11 +11,7 @@ from __future__ import annotations
 
 import math
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter One: Introduction, Rounding "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_One:"
-    "_Introduction#Rounding)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter One: Introduction, Rounding, p. 6"
 
 
 def round_down(value: float) -> int:

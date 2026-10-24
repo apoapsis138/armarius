@@ -124,6 +124,17 @@ class TribunalPackage:
     #: Those who vote at the meeting beside the covenants, a vote each
     #: (Hibernia's confirmed ambassadors).
     envoys: Callable[[Saga, Tribunal, Meeting], list[Envoy]] | None = None
+    #: A meeting that would fall in a Grand Tribunal's year is held a year
+    #: earlier (the Rhine's of 1227, Guardians of the Forests p. 143).
+    skips_grand_tribunal: bool = False
+    #: Whether a quorum needs a Quaesitor present (Thebes has no
+    #: Presiding Quaesitor, The Sundered Eagle p. 25).
+    quorum_needs_quaesitor: bool = True
+    #: Whether Redcaps present vote (in Thebes "by tradition" they don't,
+    #: The Sundered Eagle p. 26), and whether the Praeco votes (the archon
+    #: announces the result but votes as any magus present, p. 32).
+    redcaps_vote: bool = True
+    praeco_votes: bool = False
 
     @property
     def lists(self) -> tuple[PackageList, ...]:

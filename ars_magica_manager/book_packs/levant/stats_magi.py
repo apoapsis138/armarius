@@ -1407,7 +1407,7 @@ def _longevity(levant: Levant, key: str, character: Character) -> None:
         + aura
         + lab_mod
     )
-    character.aging.longevity_modifier = -math.ceil(max(total, 0) / 5)
+    character.aging.longevity_modifier = lab.longevity_modifier(max(total, 0))
     character.aging.longevity_by = maker.name
 
 

@@ -21,10 +21,8 @@ from . import effects, scores
 from .rounding import round_away_from_zero
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Six: Covenants, Points for "
-    "Inhabitants of a Typical Covenant (https://www.redcap.org/page/Ars_Magica"
-    "_Definitive_Edition,_Chapter_Six:_Covenants#Points_for_Inhabitants_of_a"
-    "_Typical_Covenant)"
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Points for Inhabitants of a "
+    "Typical Covenant, p. 190"
 )
 
 

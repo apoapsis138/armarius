@@ -55,7 +55,9 @@ def test_two_copies_take_three_to_five_and_back():
         cch.apply_virtue(saga, corvinus, _great())
         corvinus.virtues_flaws.append(_great())
         assert corvinus.characteristics.intelligence == expected
-    assert cch.removal_change(saga, corvinus, _great()) == ("Intelligence", 5, 4)
+    assert cch.removal_changes(saga, corvinus, _great()) == [
+        ("intelligence", "Intelligence", 5, 4)
+    ]
     cch.unapply_virtue(saga, corvinus, _great())
     assert corvinus.characteristics.intelligence == 4
 
@@ -63,7 +65,7 @@ def test_two_copies_take_three_to_five_and_back():
 def test_removing_great_from_a_score_it_never_raised_moves_nothing():
     # A save from before Great raised the score: Int +3 with two copies.
     saga, corvinus = _magus(intelligence=3)
-    assert cch.removal_change(saga, corvinus, _great()) is None
+    assert cch.removal_changes(saga, corvinus, _great()) == []
     cch.unapply_virtue(saga, corvinus, _great())
     assert corvinus.characteristics.intelligence == 3
 
@@ -75,7 +77,9 @@ def test_poor_mirrors_great():
     assert cch.virtue_refusal(saga, character, _poor()) == ""
     cch.apply_virtue(saga, character, _poor())
     assert character.characteristics.presence == -4
-    assert cch.removal_change(saga, character, _poor()) == ("Presence", -4, -3)
+    assert cch.removal_changes(saga, character, _poor()) == [
+        ("presence", "Presence", -4, -3)
+    ]
 
 
 def test_great_on_a_child_counts_from_the_score_before_the_age_modifier():

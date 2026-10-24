@@ -41,9 +41,7 @@ from . import xp as xp_rules
 from .rounding import round_up
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Experimentation "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Experimentation)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Experimentation, pp. 274-276"
 )
 LAB_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Laboratory "

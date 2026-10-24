@@ -539,6 +539,16 @@ def economics_row_fields(
             DialogField("_c", f"{first} (calculated)", "info", eco.money(row.first)),
             DialogField("_s", "Savings (calculated)", "info", eco.money(row.savings)),
         ]
+    if row.key == "wages":
+        fields.append(
+            DialogField(
+                "soldier_pay",
+                "Pence a day to professional soldiers",
+                "int",
+                economics.soldier_pay,
+                hint="Each adds a pound of Wages a year (DE p. 193).",
+            )
+        )
     fields.append(
         DialogField("notes", "Notes", "text", economics.notes.get(row.key, ""))
     )

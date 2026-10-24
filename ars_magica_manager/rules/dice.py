@@ -25,10 +25,8 @@ from ..models import Saga
 from . import options
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter One: Introduction, Simple Die, "
-    "Stress Die and Botch Dice "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_One:"
-    "_Introduction#Stress_Die)"
+    "Ars Magica Definitive Edition, Chapter One: Introduction, Simple Die, Stress Die "
+    "and Botch Dice, pp. 7-8"
 )
 
 #: The Ease Factor labels (DE Chapter One, Ease Factors).

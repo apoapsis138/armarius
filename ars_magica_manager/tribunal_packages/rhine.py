@@ -195,6 +195,7 @@ RHINE = TribunalPackage(
     "Rhine",
     customs="Gilds",
     book="GotF",
+    skips_grand_tribunal=True,
     columns=(
         RosterColumn(
             "Gild",

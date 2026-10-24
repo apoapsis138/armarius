@@ -21,13 +21,11 @@ from .. import catalog, sourcebooks
 from ..models import Character, Saga
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_character import later_life_years
 from .creation_xp import entries
 from .rounding import round_up
 
-SOURCE = (
-    "Grogs, Chapter 5, Training Packages (https://www.redcap.org/page/Grogs_"
-    "Chapter_Five:_Creating_%26_Maintaining_Grogs#Training_Packages)"
-)
+SOURCE = "Grogs, Chapter 5, Training Packages, p. 67"
 
 MAX_YEARS_IN_ONE = 15
 _LATIN = "Dead Language: Latin"
@@ -536,8 +534,6 @@ def package_checks(saga: Saga, record: Record) -> list[Check]:
     found_taken = taken(character)
     if not found_taken:
         return []
-    from .creation_later import later_life_years
-
     years = later_life_years(saga, character)
     used = years_used(character)
     found = [

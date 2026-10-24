@@ -744,7 +744,7 @@ PANELS[("character", "youth")] = Panel(
 def _later_life_budget(saga: Saga, record: Record) -> str:
     character = _character(record)
     years = later.bought_years(saga, character)
-    ends = later.later_life_ends(saga, character)
+    ends = cc.later_life_ends(saga, character)
     until = "apprenticeship" if character.type == "magus" else "now"
     budget = later.later_life_budget(saga, character)
     spent = cx.spent(character, "later_life")
@@ -752,13 +752,13 @@ def _later_life_budget(saga: Saga, record: Record) -> str:
     # look short of the age span.
     in_packages = packages.years_used(character)
     span = (
-        f"{later.later_life_years(saga, character)} years: {in_packages} in "
+        f"{cc.later_life_years(saga, character)} years: {in_packages} in "
         f"training packages, {years}"
         if in_packages
         else f"{years}"
     )
     lines = [
-        f"Later Life: age {later.later_life_starts(character)} to "
+        f"Later Life: age {cc.later_life_starts(character)} to "
         f"{ends if ends is not None else '?'} ({until}), "
         f"{span} years at {later.xp_a_year(character)} xp = {budget} xp, "
         f"[b]{spent} spent, {budget - spent} left[/]"

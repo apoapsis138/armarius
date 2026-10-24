@@ -60,9 +60,8 @@ from .rules.vf_eligibility import VirtueFlawChooser
 from .rules.xp import ability_xp
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Quick and Easy "
-    "Virtues and Flaws (https://redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Quick and Easy Virtues "
+    "and Flaws, p. 47"
 )
 CATALOG_PATH = DATA_DIR / "choice_template_catalog.json"
 COVENFOLK = "vf_covenfolk"

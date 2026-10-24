@@ -849,7 +849,7 @@ class CovenantSheetView(SheetView):
     def _reputation_rows(self) -> list[tuple[int, str]]:
         """The covenant's Reputations as (index, label) rows. A bad Reputation
         the covenant doesn't know about is marked -- it doesn't count against
-        Loyalty until it's known (see inhabitants.reputation_loyalty_penalty)."""
+        Loyalty until it's known (see inhabitants.reputation_loyalty)."""
         return [
             (
                 index,

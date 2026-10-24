@@ -131,6 +131,8 @@ class Book:
     opus: str = ""
     #: A commentary's summa (a book id), when it is in the saga.
     commentary_on: str | None = None
+    #: A copy or translation: the original it was made from (a book id).
+    copy_of: str | None = None
     #: How the copy is made (book_kinds.PHYSICAL_FORMS: "Exemplar",
     #: "Flap-bound"...), or "" for an ordinary bound book.
     physical_form: str = ""

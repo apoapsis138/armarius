@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ...models import Character
 from ...tribunal_packages.rhine import KEY
 from ..builder import paragraphs
 
@@ -416,6 +417,22 @@ def sigils_by_rank(summary: str) -> int:
     return 1 if first == "Master" else 0
 
 
+#: The rank Virtues and the retired sigils each holds (Guardians of the
+#: Forests p. 20).
+RANK_SIGILS = {"vf_archmage_rhine_tribunal": 2, "vf_master_rhine_tribunal": 1}
+
+
+def rank_sigils(character: Character) -> int:
+    """The proxies a magus wields: by his rank Virtue, else by the rank his
+    summary opens with."""
+    held = [
+        RANK_SIGILS[vf.vf_id]
+        for vf in character.virtues_flaws
+        if vf.vf_id in RANK_SIGILS
+    ]
+    return max(held) if held else sigils_by_rank(character.summary)
+
+
 def _proxies(rhine: Rhine) -> None:
     """The proxies each covenant carries to the meeting of 1221: its
     masters' and archmagi's retired sigils, and the Tremere sigils its
@@ -424,7 +441,7 @@ def _proxies(rhine: Rhine) -> None:
     assert tribunal is not None
     for key, covenant in rhine.covenants.items():
         held = sum(
-            sigils_by_rank(c.summary)
+            rank_sigils(c)
             for c in rhine.b.saga.characters
             if c.covenant_id == covenant.id and c.type == "magus"
         ) + TREMERE_SIGILS.get(key, 0)

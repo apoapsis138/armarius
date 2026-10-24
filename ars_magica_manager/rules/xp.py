@@ -14,9 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Advancement Table "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Advancement_Table)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Advancement Table, p. 49"
 )
 
 #: xp per score step: an Art's step to score n costs n, an Ability's 5n.

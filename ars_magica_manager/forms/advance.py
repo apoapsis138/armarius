@@ -21,8 +21,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 from typing import Any
 
+from .. import aging_due, seasons, tribunal_terms, world_turns
 from .. import economics as eco
-from .. import seasons, tribunal_terms, world_turns
 from ..commands import Command, Confirm, Form
 from ..form_spec import DialogField
 from ..markup import escape
@@ -77,8 +77,10 @@ def advance_text(saga: Saga) -> AdvanceText:
     return AdvanceText(
         f"Advance the saga from {season} {year} to {new_season} {new_year}?",
         plans,
-        "A new year: each covenant's surplus is added to its Wealth, "
-        "and Emergency Savings start again at 0."
+        "A new year: each covenant's surplus is added to its Wealth (a "
+        "deficit Emergency Savings didn't cover is taken from it), inflation "
+        "grows a pound per hundred spent, and Emergency Savings start again "
+        "at 0."
         if new
         else "",
         "[dim]Advanced by mistake? Set Date (More on the saga) puts the date back"
@@ -109,8 +111,9 @@ def deficit_question(in_deficit: list[tuple[str, int]]) -> str:
     return (
         "The year ends with a covenant in deficit:\n\n"
         f"{lines}\n\n"
-        "Balance its books first (the date stays), or advance anyway? The "
-        "deficit isn't taken from its Wealth by itself."
+        "Balance its books first (the date stays), or advance anyway? "
+        "Advancing takes what Emergency Savings didn't cover from its Wealth "
+        "(DE p. 189)."
     )
 
 
@@ -119,6 +122,17 @@ def play_season(
 ) -> Command | Played:
     """Advance Season once its question is answered Yes: at the year's
     end with a covenant in deficit, ask whether to advance anyway."""
+    owed = aging_due.due(saga)
+    if owed:
+        # Aging Points a disease Crisis left are placed before the next
+        # season is played; cancelling leaves the date as it is.
+        return aging_due.place_form(saga, owed, lambda: _after_due(saga, backup, rng))
+    return _after_due(saga, backup, rng)
+
+
+def _after_due(
+    saga: Saga, backup: Backup, rng: Callable[[], random.Random]
+) -> Command | Played:
     in_deficit = (
         eco.covenants_in_deficit(saga) if saga.current_season == SEASONS[-1] else []
     )
@@ -569,13 +583,18 @@ def _finish(
             message += f" {magus.name} finishes {lab.name} this season (planned)."
     if done.added:
         message += (
-            " Added to Wealth: "
-            + ", ".join(f"{name} {amount}" for name, amount in done.added)
+            " Wealth: "
+            + ", ".join(f"{name} {amount:+d}" for name, amount in done.added)
             + "."
         )
     due = tribunal_terms.come_due(saga)
     if due:
         message += " " + " ".join(due)
+    for character in aging_due.due(saga):
+        message += (
+            f" {character.name} survived a disease Crisis: place the Aging "
+            "Point (More on Aging & Warping, or asked before the next season)."
+        )
     return Played(done, escape(message), bool(worked or done.year_end))
 
 

@@ -39,9 +39,8 @@ from .rules import creation_xp as cx
 from .rules.xp import ability_xp, art_xp
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Character "
-    "Templates (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Character_Templates)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Character Templates, pp. "
+    "30-43"
 )
 
 

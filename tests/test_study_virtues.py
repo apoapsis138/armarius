@@ -32,6 +32,7 @@ def _magus(*virtues: VirtueFlawInstance, type: str = "magus") -> Character:
     magus = Character(id="tib", name="Tiberius", type=type, covenant_id="cov")
     magus.abilities = [
         Ability("Latin", xp=ability_xp(4)),
+        Ability("Artes Liberales", xp=ability_xp(1)),
         Ability("Living Language: French", xp=ability_xp(5)),
         Ability("Magic Lore", xp=ability_xp(1)),
         Ability("Ride", xp=ability_xp(2)),

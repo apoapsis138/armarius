@@ -22,6 +22,7 @@ from ars_magica_manager.models import (
     Saga,
     SeasonPlan,
     VirtueFlawInstance,
+    Wounds,
     XpAllocation,
 )
 from ars_magica_manager.rules import activities as rules
@@ -826,3 +827,34 @@ def test_a_family_that_works_from_the_saga_says_so_without_one():
     assert rules.problems(magus, plan) == [rules.NEEDS_SAGA]
     lab = _plan(magus, ls.ASSIST)  # assisting: not lab work itself
     assert rules.problems(magus, lab) == [rules.NEEDS_SAGA]
+
+
+def test_independent_study_adds_to_the_adventure_before_its_split():
+    magus = _magus()
+    magus.virtues_flaws = [VirtueFlawInstance("vf_independent_study")]
+    # 8 + 3 = 11 to split, at most 5 a subject (DE pp. 86, 377).
+    split = _plan(
+        magus,
+        rules.ADVENTURE,
+        ("ability:Latin", 5),
+        ("art:Creo", 5),
+        ("ability:Magic Theory", 1),
+        source_quality=8,
+    )
+    assert rules.problems(magus, split) == []
+    assert sum(xp for _, xp in _xp(rules.outcome(magus, split))) == 11
+    short = _plan(
+        magus, rules.ADVENTURE, ("ability:Latin", 5), ("art:Creo", 3), source_quality=8
+    )
+    assert any("Split all 11" in p for p in rules.problems(magus, short))
+
+
+def test_wounds_halve_the_advancement_total_before_affinity():
+    magus = _magus()
+    magus.wounds = Wounds(heavy=1)  # -5
+    magus.virtues_flaws = [
+        VirtueFlawInstance("vf_affinity_with_ability", params={"ability": "Latin"})
+    ]
+    plan = _plan(magus, rules.PRACTICE, "ability:Latin", source_quality=4)
+    # 4 halved to 2, then Affinity's x1.5 rounded up: 3.
+    assert _xp(rules.outcome(magus, plan)) == [("ability:Latin", 3)]

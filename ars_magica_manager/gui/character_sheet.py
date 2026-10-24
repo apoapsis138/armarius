@@ -1158,7 +1158,11 @@ class CharacterSheet(QWidget):
                 f"{technique} {form}",
                 f"{ART_ABBREVIATIONS[technique]}{ART_ABBREVIATIONS[form]}"
                 " Casting Score",
-                cs.casting_cell_text(scores[technique, form]),
+                cs.casting_cell_text(
+                    scores[technique, form],
+                    cs.spontaneous_score(self.saga, self.character, technique, form),
+                    self.character,
+                ),
                 artwork.art_symbol(form),
             )
 

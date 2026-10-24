@@ -223,6 +223,12 @@ The character's Personality Traits, each a name and a score that you type
 adds a Loyal (Partner) +3 trait to the magus, which you can then change or
 delete like any other.
 
+When a trait is rolled, it is a stress die + the trait alone: against 3 for
+what average people usually do, 6 for what they do half the time, 9 for
+what they usually don't, and 12 for what even people known for the trait
+rarely manage. A player changes the scores only between sessions, after
+striking rolls or events (DE p. 28).
+
 ### Reputations
 <!-- help: section-reputations -->
 
@@ -230,6 +236,23 @@ The character's Reputations, each a name and a score that you type
 (Ars Magica Definitive Edition, Chapter 3: Characters). A Reputation may also say its type (Hermetic, Local, Noble, Academic,
 Ecclesiastical or Infernal) and how far it reaches, both shown in
 brackets after its score.
+
+Someone has heard of the character when a stress die + the score reaches
+0 in the same village, parish or covenant, 6 in the same town, diocese or
+Tribunal, 9 in the county, province or whole Order, and 12 in the country
+or the whole Church (DE pp. 28-29). A noteworthy deed before witnesses who
+talk starts a Reputation at 1, and each later one is an experience point
+in it, as for an Ability: ten deeds take it from 1 to 2 (DE p. 386). Type
+the new score when it rises.
+
+Whether a Reputation is good or bad is yours to say, by its sign: type a
+bad one with a negative score (Drunkard -2) and a good one with a
+positive score. A university exam adds the Good Academic Reputations and
+takes off the Bad ones (only academic ones count), and needs a net 1, 2
+or 3 for the baccalaureus, magister or doctor, after 3 years, 8 and 10 at
+university, counting the exam season (Art & Academe p. 100). The doctor
+exam needs the Magister in Artibus Virtue already (DE p. 76) and uses the
+faculty's Ability. Disputatio and debate count the highest good one.
 
 ### Aging & Warping
 <!-- help: section-aging -->
@@ -245,11 +268,22 @@ show as dials in the header.
 <!-- /gui -->
 The same form has Gain Warping Points now, for points gained from
 one event; two or more at once take a magus to the edge of Wizard's
-Twilight, which the app rolls straight away. When Winter is applied, the app
+Twilight, which the app rolls straight away, against the **Aura where it
+happened** (blank: where the character lives). **Enter Twilight
+willingly** skips the roll to avoid it (DE p. 228). When Winter is applied, the app
 makes the yearly aging roll and adds the apparent age, Aging Points,
 Decrepitude points and any Longevity Ritual here, and adds the year's
 Warping Points from a Longevity Ritual or a strong aura of another realm
-(Ars Magica Definitive Edition, Chapter 10: Long-Term Events).
+(Ars Magica Definitive Edition, Chapter 10: Long-Term Events). **Time in
+their home aura** sets how much of it they gain: always (living, working
+and sleeping there), half the time (sleeping there but working elsewhere,
+or two weeks in and two out), frequent visits (about a quarter of their
+time), or living elsewhere, by DE p. 390's table: a level 9 aura gives 4
+points a year always, 2 half the time and 1 on frequent visits; one point
+every second year comes in even years. A botched Twilight comprehension
+adds a step on the time table for each zero, and the steps can reach the
+table's row 10, Final Twilight: a magus at Warping 8 who botches with two
+zeros is lost (DE p. 228).
 
 With Art & Academe in play, the form also takes a physician's
 **Regimen**: its bonus to the Living Conditions the aging roll uses, the
@@ -257,11 +291,13 @@ physician (a character with Medicine) and the year it began. It helps
 once the character has lived under it a year: +1 from a physician with
 Medicine 1, who can keep up to five times his Medicine in clients on it;
 +2 from Medicine 4, for up to his Medicine in clients; +3 from Medicine
-7, for one client. A physician keeps a single regimen, and it needs
-bloodletting from someone with Chirurgy 3. The section says when the
-physician's Medicine is too low for the bonus chosen. A month away, a
-neglected diet, broken sleep, a disease or a Twilight loses it: set the
-year it began again (Art & Academe, Chapter Three: Medicine).
+7, for one client. A physician keeps a single regimen (its level is his
+first client's, in the saga's order), only as many clients as it allows
+(the first ones), and it needs bloodletting from someone with Chirurgy 3:
+the physician, or someone at his covenant. The section says when the
+physician's Medicine is too low for the bonus chosen, or why the regimen
+gives nothing. A month away, a neglected diet, broken sleep, a disease or
+a Twilight loses it: set the year it began again (Art & Academe p. 59).
 
 ### Health
 <!-- help: section-char-health -->
@@ -269,7 +305,15 @@ year it began again (Art & Academe, Chapter Three: Medicine).
 <!-- tui -->
 The left column shows Soak, Encumbrance and the Wound Penalty, worked out
 from Stamina, armour, Virtues and the load of the character's Personal Gear,
-then the wounds as typed.
+how far the character moves in a combat round (10 + Quickness -
+Encumbrance paces at a walk, twice that hurrying, four times running, DE
+p. 395) and what they can carry, lift and drag (a Burden of Strength + 5,
++ 7 and + 12; a Load point is about 7 pounds; a four-footed beast's (clawed or hoofed, not a bird or fish)
+Strength counts half again, Grogs pp. 47-48) and how far they can push
+themselves in a day on good roads (15 + 2 x Athletics miles on foot, with
+Encumbrance taken off Athletics; 30 + 2 x Ride riding, or 20 without
+Ride; it costs two Long-Term Fatigue levels, Grogs pp. 51-52), then the
+wounds as typed.
 <!-- /tui -->
 <!-- gui -->
 The wounds as typed, on the Damage Table for the character's Size, then the
@@ -346,7 +390,14 @@ choose Keep:
   Ease Factor, from the Poison table (p. 406), City & Guild's urban
   diseases (pp. 27-28), or typed. Failing it gives the wound named, which
   heals with Medicine. A disease spirit's attack must first pass Magic
-  Resistance.
+  Resistance. With the **Art & Academe medicine** rule option a disease is
+  instead its own record (see [Art & Academe's diseases](help:aa-diseases)):
+  choose one of the book's (pp. 47-51) or make one from its stage,
+  Interval and Ease Factors, and the Disease Avoidance roll (Stamina +
+  Living Conditions + Corpus / 5 for a magus + the Wound Penalty + stress
+  die) must reach its Stable Ease Factor (the Definitive Edition's
+  equals-or-exceeds, DE p. 7: Art & Academe's "exceed" on p. 46 disagrees
+  with its own other rolls); a botch catches it a stage worse.
 - **Deprivation** of air, water or food for a number of periods (30
   seconds, a day, three days): a Stamina check each period against 3, 1
   more each period; each failure a Fatigue level (long-term for water and
@@ -373,7 +424,92 @@ p. 405). The rolls go into the Diary.
 (the roll for doing more than the wounds allow, which can only hold or
 worsen), and sets the **magical aid** every Recovery roll adds: a
 Zenodochium's +9 (Against the Dark p. 98) or a Purification of the
-Festering Wound. Keep applies the rolls.
+Festering Wound. It rolls each disease once too. Keep applies the rolls.
+
+## End of Session
+<!-- help: end-of-session -->
+
+<!-- tui -->
+More (`m`) on [Reputations](help:section-reputations) offers **End of
+Session**:
+<!-- /tui -->
+<!-- gui -->
+**End of Session**, beside Reputations' buttons, opens a form for
+<!-- /gui -->
+what a session of play gave the character. If they were played for a good
+part of it and contributed, each award ticked is a Confidence Point:
+achieving a personal goal, contributing to a group goal, success in a
+difficult task (once a session), entertaining roleplaying, and a bonus the
+storyguide thinks deserved (once a session). Two or three a session is
+typical. The Confidence Score itself rises only after years-long events,
+so type that by hand (DE p. 29).
+
+Each Reputation has a box for the noteworthy deeds done before witnesses
+who will talk. Each deed is an experience point in it, as for an Ability:
+ten deeds take a Reputation from 1 to 2, and a bad one grows in the same
+way. A new Reputation starts at 1 with Add on Reputations. A bad
+Reputation is replaced only by starting a new one (DE p. 386). The Diary
+records the session.
+
+## Place Aging Points
+<!-- help: aging-due -->
+
+A character who survives a disease's Crisis gains an Aging Point in a
+fitting Characteristic, the storyguide's choice (Art & Academe p. 47).
+Until it is placed, the Aging section lists it. Advance Season asks for
+each one before it plays the next season (Cancel leaves the date where it
+is). It is also on the Aging section:
+<!-- tui -->
+More (`m`), **Place Aging Points**.
+<!-- /tui -->
+<!-- gui -->
+**Place Aging Points** beside its Edit.
+<!-- /gui -->
+Each point counts toward Decrepitude, and once a Characteristic's Aging
+Points pass its score it falls by one, as for an aging roll.
+
+## Art & Academe's diseases
+<!-- help: aa-diseases -->
+
+With the **Art & Academe medicine** rule option (Saga Settings, with Art
+& Academe in play) a disease is not a wound but its own record, listed
+under the wounds in Health with its stage, Severity, penalty, Interval and
+Ease Factors (Art & Academe pp. 45-51):
+
+- **Stages** Minor, Serious, Major and Critical give -1, -3, -5 and no
+  action at all; a disease that gives Flaws instead (the falling evil,
+  phthisis, suffusio, worms) has no penalty. The penalty adds to the Wound
+  Penalty everywhere but the disease's own rolls. Each stage moves its
+  Severity 3.
+- **Recovery** at the end of each Interval, played out when the season is
+  advanced: Stamina + the physician's Medicine + Corpus / 5 (a magus) +
+  the Wound Penalty + Recovery Modifiers + magical aid + the +3s of stable
+  rolls + stress die. Below the Stable Ease Factor it worsens a stage; at
+  or over it, +3 to the next roll; at or over the Improvement Ease Factor
+  it improves a stage, and a Minor one is cured. A lifelong one never
+  changes.
+- **Crisis**: a Critical disease rolls twice a day; 0 or less dies, at or
+  over the Stable Ease Factor it eases to Major, anything else -1 to later
+  rolls (p. 47). The survivor gains an Aging Point in a Characteristic the
+  storyguide chooses: it waits on the Aging section until placed (see
+  [Place Aging Points](help:aging-due)).
+- **Special diseases** carry their effects as notes (the falling evil's
+  convulsions, gangrene's wound that can't heal, the consumptive tumor's new
+  tumors, suffusio's blindness, leprosy's Flaw, phthisis' Enfeebled,
+  pneumonia's Winded, quinsy's Afflicted Tongue and Mute, scrofula's
+  Disfigured, worms, smallpox, phimosis and Saint Anthony's fire): the
+  Flaws and choices they bring are yours to add.
+- **The physician** is the covenant-mate with the most Medicine. His
+  Medicine counts only when his Prognosis Total (Intelligence + Medicine +
+  the patient's Living Conditions + an apothecary's Profession:
+  Apothecary and a chirurgeon's Chirurgy, at most 3 each) is over the
+  Severity (p. 58).
+- **Recovery Modifiers** are ticked on Edit Wounds: poor or wealthy
+  living, a peasant's or a noble's diet, being routinely active, and no
+  medicinal herbs (-3, less an apothecary's Profession: Apothecary). Each
+  one also adds a botch die, to wound rolls too, and a disease's penalty
+  slows a wound's healing (p. 54). Edit Wounds also clears a disease cured
+  by magic, a saint or a surgeon.
 
 ## Abilities tab
 <!-- help: tab-abilities -->
@@ -830,7 +966,56 @@ and Spell Improvisation (a similar spell's magnitude). Diedne Magic's
 Spontaneous casting gets a line of its own. A Ritual's vis on the Known
 Spells lines counts Mercurian Magic (half, at least one pawn) and Waster of
 Vis (a third more); with Rigid Magic it says no Ritual can be cast (Ars
-Magica Definitive Edition, Chapter Four: Virtues and Flaws).
+Magica Definitive Edition, Chapter Four: Virtues and Flaws). Magical
+Focus, Deleterious Circumstances and Mystical Choreography are named there
+too.
+
+**Spontaneous levels.** A Spontaneous spell uses its own Casting Score,
+without the Virtues that count only for Formulaic spells (Method Caster's
++3, Poor Formulaic Magic's -5), and a Deficiency halves the total. When
+that makes the levels differ from the grid's score / 5, a second grid gives
+the level each pair reaches without Fatigue (DE pp. 98, 125, 141, 214).
+Method Caster's +3 is lost with anything but firm words and bold gestures,
+and a Deficiency counts when its Art is a requisite (DE pp. 98, 312).
+These change it too, and the second grid's heading says how:
+**Ceremonial Spontaneous Magic** casts Spontaneous spells only
+ceremonially, adding Artes Liberales + Philosophiae, a magnitude a quarter
+of an hour (p. 122); **Unstructured Caster** casts Formulaic spells as
+Rituals, with Artes Liberales + Philosophiae and their vis (p. 149);
+**Weak Spontaneous Magic** always divides by 5 and can't exert (p. 153);
+**Difficult Spontaneous Magic** only exerts, dividing by 2 for a Fatigue
+level, so the grid shows a dash (p. 126), and the two together allow no
+Spontaneous magic; **Diedne Magic** may divide by 2 with a stress die
+without Fatigue, or exert with the lowest Art doubled (p. 76). Spell
+Improvisation depends on the spell, so it stays a reminder.
+
+**Casting options** (DE pp. 215-218, 223, 260), each a line under the
+scores with the magus's own figures: fast casting (speed Quickness +
+Finesse + stress die against the foe's Initiative, -6 for each spell after
+the first; the score -10, +2 botch dice, no vis); ceremonial casting (+
+Artes Liberales + Philosophiae and props +1 to +5 instead of words and
+gestures, 15 minutes a magnitude, 3 in a laboratory; it needs experience in
+one of the two); Concentration (Stamina + Concentration; a failure ends the
+spell and adds a botch die); aiming (Perception + Finesse, +6 for each size
+step past a basic Individual); and a talisman's attunements, best first,
+of which the best that applies adds to the score while he touches it.
+
+**A known spell's lines** count the Golden Cord of the magus's bound
+familiar, which takes its score off the botch dice but never below one
+(DE pp. 227, 267), and say that a mastered spell has no botch dice when
+calm. Extra pawns of vis on a Ritual still add +2 each, and each Art's
+pawns are limited to its score (DE p. 216). A Ritual's Fatigue past
+unconsciousness becomes a wound: one level more is Light, two Medium, three
+Heavy, four Incapacitating (DE p. 213). The spell's **Mastery** special
+abilities, typed on its Mastery as Quiet Casting, Still Casting, Fast
+Casting, Ceremonial Casting, Penetration, Magic Resistance, Imperturbable
+Casting, Multiple Casting, Precise Casting or Quick Casting, are counted:
+Quiet and Still Casting in the score, the rest in a Mastery line (DE pp.
+225-226).
+
+**Certamen.** A Tremere's Minor Magical Focus in certamen doubles the
+lower of the two Arts (DE p. 233), and a Deficient Art halves the total it
+is in.
 
 **Hybrid magic.** A magus whose magic is also non-Hermetic has it counted
 too, and a line for each kind closes the section:
@@ -1035,6 +1220,42 @@ character (Ars Magica Definitive Edition, Chapter 11: Obstacles). A weapon
 typed in by hand rather than chosen from the catalog counts no Combat
 Ability.
 
+A one-handed weapon is fought with the best shield the character
+carries, and the two add together (DE p. 393); the totals name the
+shield. Every weapon takes one but a Great Weapon (two-handed) and a bow
+(it needs both hands), which is the app's reading: the book doesn't list
+them. The weapon's and the shield's minimum Strength are checked
+separately (DE p. 400). **Defence against missiles** counts the Combat Ability and the
+carried shield only, not the weapon (DE p. 395). On foot a lance's totals
+are a Long Spear's, with Great Weapon (DE pp. 400-401). A weapon or shield
+whose minimum Strength is above the character's is flagged (DE p. 400), a
+weapon whose Combat Ability the character lacks is used untrained with
+three more botch dice, and a crossbow's Damage adds no Strength (Lords of
+Men p. 138). When a botch or an odd use may break the weapon, the totals
+give its stress check: a stress die + its Combat Ability and how well it
+is made (-1 Shoddy, +1 Superior, +3 Excellent) against 15 (City & Guild p.
+77). The optional Clash of Weapons, when an Attack Total exactly equals a
+Defence Total, is a lower check: stress die + the Combat Ability against 9,
+or 15 for an improvised weapon (Lords of Men p. 138). The totals also give
+the weapon's damage types (crushing, piercing, slashing) and damage levels
+from Lords of Men's tables (pp. 137-138): 2 for most, 1 for the bludgeon,
+club, spear, lance, round shield, whip, farm implement, long spear and
+sling, one fewer for Shoddy and one or two more for Superior or Excellent,
+as City & Guild's base levels move. Each failure costs a level, a botch one
+more per botch, and with none left it is broken; a standard item is mended in a season, a Superior
+or Excellent one by a craftsman with Craft twice its bonus, for a Labor
+Point a level (City & Guild pp. 77-79).
+
+**Made** on a weapon or armour: a Shoddy item is destroyed the first time
+it fails a stress check; a Superior weapon has +1 Attack, a Superior shield
++1 Defence and Superior armour +1 Protection; an Excellent item has its
+**Excellent bonus** (+2 or more), on a weapon to Attack and Defence both
+(City & Guild pp. 67-69, as Lords of Men p. 136 sums them up). A weapon not
+**Carried** is kept elsewhere: its Load doesn't count and a shield left
+behind isn't fought with. Only the armour worn counts toward Load. An
+Other Item can name an Ability it **Helps** and how much: minor help takes
+1 off the Ease Factor, major help 3, one item a roll (Grogs p. 47).
+
 A specialty in the Combat Ability that names the weapon ("pole axe" for a
 Pole Axe, the weapon's own name or its catalog name) adds 1 to Attack and
 Defence. Virtues and Flaws count too, and a **Counted** line names each:
@@ -1048,11 +1269,15 @@ count for the weapon named when they are taken; Improved Damage takes the
 bonus nominated for the fight.
 
 A character with Ride also gets a **Mounted** line: on a trained
-warhorse, Ride (at most +3) adds to Attack and Defence, and a charge
+warhorse, Ride (at most +3) adds to Attack and Defence with a melee
+weapon, and to Defence alone with a missile weapon (DE p. 397, which
+Lords of Men pp. 126-127 expands: the Attack bonus is for melee only).
+Shooting from a moving horse costs -1 at a walk or trot, -3 at a canter
+and -6 at a gallop, and an untrained mount gives no bonus at all; those
+are the storyguide's to apply. A charge
 with a melee weapon adds the Combat Ability to the Attack again, at the
 cost of a Fatigue level the horse spends. A lance says that it breaks
-on a charge that hits. An untrained mount, or a horse at the gallop,
-is left to the storyguide (Lords of Men).
+on a charge that hits.
 
 The title also shows the character's silver, in pounds, when they have
 any; type it in the character's details (Silver).
@@ -1123,7 +1348,9 @@ it after asking.
 <!-- /gui -->
 Some results, such as a die roll, are only settled when the
 season is applied. Below the plan it lists what the character carries
-from season to season: Labor Points, works in progress, formulas and the
+from season to season: Labor Points (and what the Improve wealth or status
+season costs to move up a step: 120 from Poor, 360 from average, 1,080 from
+Wealthy, City & Guild p. 38), works in progress, formulas and the
 past Ordeals still lowering an Initiation's Target (see
 [How to initiate a character into a Mystery](help:guide-initiation)). For
 <!-- tui -->

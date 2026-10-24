@@ -310,6 +310,8 @@ def device_from_values(
         "charges_left",
         "objects",
         "attunements",
+        "verditius_runes",
+        "verditius_craft",
         "description",
     ):
         if key in values:
@@ -540,6 +542,29 @@ def _device_bonus_fields(
                 values.get("type") == INVESTED and bool(values.get("talisman"))
             ),
             hint="One each time it is opened or given an effect.",
+        ),
+        DialogField(
+            "verditius_runes",
+            "Verditius Runes",
+            "check",
+            base.verditius_runes,
+            hint=(
+                "Its Verditius maker crafted it in its first season (Verditius "
+                "Magic, DE pp. 240-241): his Philosophiae adds to its Shape & "
+                "Material bonuses."
+            ),
+        ),
+        DialogField(
+            "verditius_craft",
+            "Crafted with",
+            "text",
+            base.verditius_craft,
+            show_if=lambda values: bool(values.get("verditius_runes")),
+            hint=(
+                "The Craft Ability, e.g. Craft: Jeweler (blank: shaped by "
+                "magic). The maker adds it to his Lab Totals for the item and "
+                "opens it for that many fewer pawns."
+            ),
         ),
     ]
 

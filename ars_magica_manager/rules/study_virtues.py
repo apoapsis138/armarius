@@ -45,11 +45,7 @@ from .animal_grogs import restricted_choices
 from .breakdown import Line
 from .rounding import round_down, round_up
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Four:"
-    "_Virtues_and_Flaws)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 59-154"
 SORCERY_SOURCE = "Realms of Power: The Infernal, Chapter 8: Goetic Sorcery"
 
 SECONDARY_INSIGHT = "vf_secondary_insight"

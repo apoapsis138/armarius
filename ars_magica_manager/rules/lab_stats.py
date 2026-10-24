@@ -6,7 +6,7 @@ Laboratory sheet's lists and text are laboratories.py's."""
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass
 
 from .. import catalog
@@ -23,9 +23,8 @@ from . import effects, lab_items
 from .rounding import round_down
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Creating a "
-    "Laboratory (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory#Creating_a_Laboratory)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Creating a Laboratory, p. "
+    "250"
 )
 
 
@@ -250,3 +249,28 @@ def specialization_scores(saga: Saga, lab: Laboratory) -> list[SpecializationSco
         for name in LAB_SPECIALIZATIONS
         if name in sources
     ]
+
+
+#: The lab Flaws that limit what kind of work a laboratory can do.
+MISSING_EQUIPMENT = "labvf_missing_equipment"
+ELEMENTARY = "labvf_elementary"
+RESTRICTION = "labvf_restriction"
+
+
+def forbidden(lab: Laboratory, categories: Collection[str]) -> str | None:
+    """Why lab work of these activity categories (Spells, Items, Texts...)
+    can't be done in `lab`: Missing Equipment names it, Restriction forbids
+    it, or Elementary allows only another (DE pp. 295-296); None if it can."""
+    if not categories:
+        return None
+    for vf in lab.virtues_flaws:
+        chosen = {
+            v for k, v in vf.params.items() if k in ("activity", "second_activity")
+        }
+        if vf.vf_id == MISSING_EQUIPMENT and chosen & set(categories):
+            return f"{lab.name} has Missing Equipment: no {', '.join(sorted(chosen & set(categories)))} work."
+        if vf.vf_id == RESTRICTION and vf.params.get("forbidden") in categories:
+            return f"{lab.name}'s Restriction forbids {vf.params['forbidden']} work."
+        if vf.vf_id == ELEMENTARY and chosen and not chosen & set(categories):
+            return f"{lab.name} is Elementary: only {', '.join(sorted(chosen))} work."
+    return None

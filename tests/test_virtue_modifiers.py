@@ -21,6 +21,7 @@ from ars_magica_manager.rules import (
     scores,
 )
 from ars_magica_manager.rules import creation_characteristics as cch
+from ars_magica_manager.rules import creation_virtues as cv
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 from ars_magica_manager.tui.screens.prompts import param_choices
 
@@ -85,7 +86,7 @@ def test_sidhe_blood_adds_a_free_presence_point_up_to_three():
     assert aine.characteristics.presence == 3
     line = next(x for x in cch.lines(saga, aine) if x.key == "presence")
     assert (line.bought, line.free, line.cost) == (2, 1, 3)
-    assert cch.removal_change(saga, aine, sidhe) == ("Presence", 3, 2)
+    assert cch.removal_changes(saga, aine, sidhe) == [("presence", "Presence", 3, 2)]
     cch.unapply_virtue(saga, aine, sidhe)
     assert aine.characteristics.presence == 2
     # Already at +3: no point past the cap.
@@ -325,3 +326,34 @@ def test_a_merinita_untouched_by_the_fay_starts_with_a_warping_point():
     assert not any(
         "Warping Point" in c.label for c in creation_finish.finish_checks(saga, magus)
     )
+
+
+def test_giant_blood_adds_free_strength_and_stamina_up_to_six():
+    # DE p. 83: +1 Strength and +1 Stamina, as high as +6.
+    giant = V("vf_giant_blood")
+    saga, grog = _person(strength=3, stamina=3)
+    grog.virtues_flaws.append(giant)
+    cch.apply_virtue(saga, grog, giant)
+    assert (grog.characteristics.strength, grog.characteristics.stamina) == (4, 4)
+    line = next(x for x in cch.lines(saga, grog) if x.key == "strength")
+    assert (line.bought, line.free) == (3, 1)
+    assert len(cch.removal_changes(saga, grog, giant)) == 2
+
+
+def test_faerie_blood_may_learn_faerie_lore():
+    # DE p. 79.
+    assert "vf_faerie_blood" in creation_access.OPENS_ABILITY
+
+
+def test_demonic_blood_cannot_be_taken_with_unaging():
+    # DE p. 76.
+    from_checks = cv.virtue_flaw_checks(
+        Saga(id="s", name="S"),
+        Character(
+            id="c",
+            name="C",
+            type="companion",
+            virtues_flaws=[V("vf_demonic_blood"), V("vf_unaging")],
+        ),
+    )
+    assert any("can't be taken with Unaging" in c.label for c in from_checks)

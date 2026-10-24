@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 
-from support import strip_markup
+from support import literate, strip_markup
 from test_lab_seasons import _plan as _lab_plan
 from test_lab_seasons import _saga as _lab_saga
 
@@ -21,6 +21,7 @@ from ars_magica_manager.seasons import projection as ahead
 
 def _saga():
     saga = _lab_saga()
+    saga.characters[0].abilities += literate()
     saga.books.append(
         Book(
             "summa",

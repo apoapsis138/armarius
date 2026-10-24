@@ -26,14 +26,10 @@ from .breakdown import Breakdown
 from .rounding import round_down
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Twelve: Realms, Realm Interaction "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Twelve:"
-    "_Realms#Realm_Interaction)"
+    "Ars Magica Definitive Edition, Chapter Twelve: Realms, Realm Interaction, pp. "
+    "410-411"
 )
-COVENANT_AURA_SOURCE = (
-    "Covenants, Chapter Two: Boons & Hooks, Aura "
-    "(https://www.redcap.org/page/Covenants_Chapter_Two:_Boons_%26_Hooks)"
-)
+COVENANT_AURA_SOURCE = "Covenants, Chapter Two: Boons & Hooks, Aura, p. 8"
 
 #: Hermetic magic's realm.
 HERMETIC = "Magic"

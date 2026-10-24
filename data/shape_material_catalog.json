@@ -67,6 +67,26 @@
       "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
     },
     {
+      "id": "sm_alexandrite",
+      "name": "Alexandrite",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "regeneration"
+        },
+        {
+          "bonus": 3,
+          "effect": "long life"
+        },
+        {
+          "bonus": 5,
+          "effect": "horses"
+        }
+      ],
+      "source": "HoH:MC",
+      "citation": "Houses of Hermes: Mystery Cults, Appendix: Expanded Form & Material Bonuses, p. 137"
+    },
+    {
       "id": "sm_almond_wood",
       "name": "Almond Wood",
       "bonuses": [
@@ -1775,6 +1795,22 @@
       "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
     },
     {
+      "id": "sm_hickory_wood",
+      "name": "Hickory Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "majesty"
+        },
+        {
+          "bonus": 4,
+          "effect": "Ignem"
+        }
+      ],
+      "source": "HoH:MC",
+      "citation": "Houses of Hermes: Mystery Cults, Appendix: Expanded Form & Material Bonuses, p. 137"
+    },
+    {
       "id": "sm_hippogriff_liver",
       "name": "Hippogriff Liver",
       "bonuses": [
@@ -2705,6 +2741,18 @@
       ],
       "source": "DE",
       "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_platinum",
+      "name": "Platinum",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "air"
+        }
+      ],
+      "source": "HoH:MC",
+      "citation": "Houses of Hermes: Mystery Cults, Appendix: Expanded Form & Material Bonuses, p. 137"
     },
     {
       "id": "sm_plum_wood",

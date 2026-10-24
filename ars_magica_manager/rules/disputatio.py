@@ -35,14 +35,11 @@ import random
 from dataclasses import dataclass, field
 
 from ..models import Character
-from . import debate, dice, work_virtues
+from . import debate, dice, reputations, work_virtues
 from .lab import ability_score
 from .rounding import round_up
 
-SOURCE = (
-    "Art & Academe, Chapter Eight: Universities, Disputatio "
-    "(https://www.redcap.org/page/Art_%26_Academe)"
-)
+SOURCE = "Art & Academe, Chapter Seven: Universities, Disputatio, pp. 103-105"
 
 SUBJECTS = (
     "Artes Liberales",
@@ -98,8 +95,10 @@ class Disputer:
 
 
 def academic_reputation(character: Character) -> int:
-    """The character's highest positive Academic Reputation (0 for none)."""
-    return max([0, *(r.score for r in character.reputations if r.type == "Academic")])
+    """The character's highest Good Academic Reputation (0 for none)."""
+    return reputations.highest_good(
+        r for r in character.reputations if reputations.is_academic(r)
+    )
 
 
 def subject_score(character: Character, subject: str) -> int:

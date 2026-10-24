@@ -44,9 +44,8 @@ from . import effects, enchantment
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Magic Items for "
-    "Laboratories (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory); Covenants, Chapter 9: Laboratory, Magic "
-    "Items for Laboratories"
+    "Laboratories, p. 298; Covenants, Chapter 9: Laboratory, Magic Items for "
+    "Laboratories, p. 121"
 )
 
 MAGIC_ITEM = "labvf_magic_item"

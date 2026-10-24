@@ -656,3 +656,28 @@ def test_an_accident_in_an_unsafe_lab_spoils_plain_lab_work():
     assert magus.spells_known == []
     assert saga.laboratories[0].diary[-1].name == "Laboratory Mishap"
     assert warping.total_points(magus) >= 2
+
+
+def test_stabilizing_keeps_to_the_seasons_vis_limit():
+    saga = _saga()
+    magus = saga.character("m")
+    magus.raw_vis = {"creo": 30}
+    limit = lab_rules.vis_limit(magus)
+    magus.breakthroughs = [
+        Breakthrough(
+            "Ignem",
+            pending_magnitude=2,
+            discovery_seasons=1,
+            discovery_lab_total=30,
+            discovery_vis=limit + 1,
+            discovery_vis_art="Creo",
+        )
+    ]
+    plan = SeasonPlan(
+        "m", 1220, "Spring", experiment.STABILIZE, lab_id="lab", research="Ignem"
+    )
+    found, _ = lab_seasons.work(saga, magus, plan)
+    assert found == [
+        f"The season uses {limit + 1} pawns of vis; {magus.name} can handle "
+        f"{limit} in a season (twice Magic Theory)."
+    ]

@@ -28,11 +28,7 @@ from ..models import Character
 from . import lab_virtues
 from .rounding import round_down
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Four:"
-    "_Virtues_and_Flaws)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, pp. 91-152"
 
 DIEDNE = "vf_diedne_magic"
 SPELL_IMPROVISATION = "vf_spell_improvisation"
@@ -44,6 +40,14 @@ CORRUPTED_SPELLS = "vf_corrupted_spells"
 BLOOD_HAZE = "vf_blood_haze"
 MERCURIAN = "vf_mercurian_magic"
 RIGID = "vf_rigid_magic"
+FOCI = (
+    "vf_major_magical_focus",
+    "vf_major_magical_focus_sign_planet",
+    "vf_minor_magical_focus",
+    "vf_minor_magical_focus_house",
+)
+DELETERIOUS = "vf_deleterious_circumstances"
+CHOREOGRAPHY = "vf_mystical_choreography"
 
 LIFE_BOOST_PER_LEVEL = 5
 
@@ -136,6 +140,30 @@ def reminders(magus: Character) -> list[str]:
         found.append(
             "Spell Improvisation: a Spontaneous spell like a Formulaic one known "
             "adds that spell's magnitude."
+        )
+    foci = [
+        str(vf.params.get("focus") or vf.params.get("house") or "")
+        for vf in magus.virtues_flaws
+        if vf.vf_id in FOCI
+    ]
+    if foci:
+        found.append(
+            _named("Magical Focus", [f for f in foci if f])
+            + ": the lower Art counts twice for a spell in its field (DE p. 94)."
+        )
+    if has(magus, DELETERIOUS):
+        found.append(
+            _named(
+                "Deleterious Circumstances",
+                _params(magus, DELETERIOUS, "circumstance"),
+            )
+            + ": every magic total but Magic Resistance halved while they hold "
+            "(DE p. 125)."
+        )
+    if has(magus, CHOREOGRAPHY):
+        found.append(
+            "Mystical Choreography: ceremonial casting takes a minute a "
+            "magnitude, wherever it is done (DE p. 99)."
         )
     return found
 

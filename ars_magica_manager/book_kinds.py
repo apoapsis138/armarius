@@ -23,10 +23,7 @@ from dataclasses import dataclass
 
 from . import sourcebooks
 
-SOURCE = (
-    "Covenants, Chapter Seven: Library "
-    "(https://www.redcap.org/page/Covenants_Chapter_Seven:_Library)"
-)
+SOURCE = "Covenants, Chapter Seven: Library, pp. 84-102"
 
 
 @dataclass(frozen=True)

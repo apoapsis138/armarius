@@ -23,11 +23,11 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Nine: Spells, Changing Ranges, "
-    "Durations, and Targets "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Nine:"
-    "_Spells#Changing_Ranges,_Durations,_and_Targets)"
+    "Ars Magica Definitive Edition, Chapter 9: Spells, Changing Ranges, "
+    "Durations, and Targets, pp. 303, 311"
 )
+#: Targets that contain things: never with Personal Range (DE p. 303).
+CONTAINER_TARGETS = ("Circle", "Room", "Structure", "Boundary")
 
 RANGE_STEPS: dict[str, int] = {
     "Personal": 0,
@@ -266,18 +266,31 @@ def spell_level(
     if (ritual or design.ritual_required) and level < RITUAL_MINIMUM:
         design.level = RITUAL_MINIMUM
         design.notes.append(f"A Ritual is at least level {RITUAL_MINIMUM}.")
+    if range_ == "Personal" and target in CONTAINER_TARGETS:
+        design.notes.append(
+            f"A Personal Range spell can't have a {target} Target (DE p. 303)."
+        )
     return design
 
 
 def extra_magnitudes(
-    base: int, range_: str, duration: str, target: str, level: int
+    base: int,
+    range_: str,
+    duration: str,
+    target: str,
+    level: int,
+    *,
+    ritual: bool = False,
 ) -> int | None:
     """How many magnitudes of size, requisites or troupe ruling a listed
     level carries beyond its base and Range/Duration/Target (None when a
-    parameter isn't standard)."""
+    parameter isn't standard). A Ritual listed at its level-20 floor
+    carries none (DE p. 311)."""
     design = spell_level(base, range_, duration, target)
     if design is None:
         return None
+    if ritual and design.level < RITUAL_MINIMUM and level <= RITUAL_MINIMUM:
+        return 0
     count = 0
     probe = design.level
     if level >= probe:

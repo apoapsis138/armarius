@@ -20,7 +20,7 @@ they are the rules for screens still to come, and only the tests call them.
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 
 from .. import catalog
 from ..models import (
@@ -33,7 +33,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import effects, realms, scores, sites
+from . import effects, lab_virtues, realms, scores, sites
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .lab_stats import (
@@ -46,17 +46,14 @@ from .lab_stats import (
 from .realms import covenant_effective_aura
 from .rounding import round_down, round_up
 
+HELP_SOURCE = "Ars Magica Definitive Edition, Help in the Laboratory, pp. 264-265"
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Basic Laboratory "
-    "Activities, Help in the Laboratory, Distractions from Lab Work "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Basic_Laboratory_Activities)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Basic Laboratory Activities, "
+    "Help in the Laboratory, Distractions from Lab Work, pp. 249, 264-265"
 )
 QUALITY_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, General Quality and "
-    "Laboratory Specializations "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Laboratory_Specializations)"
+    "Laboratory Specializations, pp. 288-291"
 )
 
 #: The activity Specialization that adds to each Lab Total activity.
@@ -78,10 +75,8 @@ NOT_FROM_A_TEXT: frozenset[str] = frozenset(
     {"vf_inventive_genius", "vf_creative_block"}
 )
 ACTIVITY_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Inventing Spells, "
-    "Laboratory Texts, Longevity Rituals, Vis Extraction, Shape and Material "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Inventing_Spells)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Inventing Spells, Laboratory "
+    "Texts, Longevity Rituals, Vis Extraction, Shape and Material, pp. 250-263, 282-285"
 )
 
 
@@ -121,9 +116,50 @@ def distraction_penalty(days_missed: int) -> int | None:
 
 @dataclass
 class LabTotal(Breakdown):
-    """A Lab Total's breakdown, plus anything that stops or limits it."""
+    """A Lab Total's breakdown, plus anything that stops or limits it.
+    `flat` is the sum before any halving, and `multipliers` the halvings
+    (a Deficiency, Weak Enchanter...), kept apart so that whatever is
+    added to the total later is halved with the rest (with_lines)."""
 
     notes: list[str] | None = None
+    flat: float | None = None
+    multipliers: list[Line] = field(default_factory=list)
+
+
+def _halved(flat: float, multipliers: Sequence[Line]) -> int:
+    """The flat sum with every halving applied, rounded down once."""
+    total = flat
+    for line in multipliers:
+        if line.multiplier is not None:
+            total *= line.multiplier
+    return round_down(total)
+
+
+def with_lines(
+    total: LabTotal,
+    extra: Sequence[Line] = (),
+    halvings: Sequence[Line] = (),
+    notes: Sequence[str] = (),
+) -> LabTotal:
+    """`total` with more terms: `extra` added to its flat sum and `halvings`
+    to its multipliers, so every halving -- a Deficiency, Weak Enchanter,
+    Environmental Magic Condition -- applies to the whole Lab Total, last
+    (DE pp. 125, 152)."""
+    if not extra and not halvings and not notes:
+        return total
+    flat = (total.flat if total.flat is not None else total.total) + sum(
+        line.amount or 0 for line in extra
+    )
+    multipliers = [*total.multipliers, *halvings]
+    plain = [line for line in total.lines if line.multiplier is None]
+    return replace(
+        total,
+        total=_halved(flat, multipliers),
+        lines=[*plain, *extra, *multipliers],
+        notes=[*(total.notes or []), *notes] or None,
+        flat=flat,
+        multipliers=multipliers,
+    )
 
 
 def _art_line(magus: Character, art: str) -> Line:
@@ -192,8 +228,20 @@ def lab_total(
         from_lab_text=from_lab_text,
         others_text=others_text,
     )
-    combined = effects.combine(base, found, rounding=round_down)
-    return LabTotal(total=combined.total, lines=lines + combined.lines[1:], notes=notes)
+    flat_effects = [e for e in found if e.amount is not None]
+    combined = effects.combine(base, flat_effects)
+    multipliers = [
+        Line(e.entry.name, multiplier=e.modifier.multiplier, source=e.kind)
+        for e in found
+        if e.modifier.multiplier is not None
+    ]
+    return LabTotal(
+        total=_halved(combined.total, multipliers),
+        lines=lines + combined.lines[1:] + multipliers,
+        notes=notes,
+        flat=combined.total,
+        multipliers=multipliers,
+    )
 
 
 def _magus_lines(magus: Character, technique: str, form: str) -> list[Line]:
@@ -325,7 +373,11 @@ def _activity_lines(
     """Inventing's and enchanting's similar spell, and enchanting's shape
     and material bonus, capped at Magic Theory."""
     lines: list[Line] = []
-    if similar_spell_level and activity in ("invent_spells", "enchant_items"):
+    if similar_spell_level and activity in (
+        "invent_spells",
+        "enchant_items",
+        "bind_familiar",
+    ):
         lines.append(
             Line(
                 f"Similar spell (level {similar_spell_level})",
@@ -393,6 +445,59 @@ def _virtue_effects(
             if e.modifier.activity == TEXT_ACTIVITY
         ]
     return found
+
+
+def similar_spell_level(
+    saga: Saga | None, magus: Character, spell_id: str | None
+) -> int | None:
+    """The level of the similar spell a plan names, if the magus knows it
+    and Disjointed Magic doesn't take the bonus away (DE pp. 126, 260)."""
+    if saga is None or not spell_id:
+        return None
+    spell = catalog.find_spell(saga, spell_id)
+    if spell is None or spell.level is None:
+        return None
+    if not any(k.spell_id == spell.id for k in magus.spells_known):
+        return None
+    if lab_virtues.has(magus, lab_virtues.DISJOINTED):
+        return None
+    return spell.level
+
+
+def helper_lines(
+    helper: Character | Familiar,
+    technique: str,
+    form: str,
+    activity: str | None,
+    *,
+    experimenting: bool = False,
+    label: str = "assistant",
+) -> list[Line]:
+    """What one helper adds: Intelligence + Magic Theory, then each of their
+    Virtues and Flaws that change this Lab Total, as the primary magus's
+    would (DE p. 264: Inventive Genius is the book's example). Only the
+    amounts count, not a helper's halvings."""
+    score, bonus = ability_score(helper, "Magic Theory")
+    lines = [
+        Line(
+            f"{helper.name} ({label})",
+            amount=helper.characteristics.intelligence + score + bonus,
+            source=HELP_SOURCE,
+        )
+    ]
+    found = _pair_effects(
+        [scores.character_source(helper.virtues_flaws)],
+        technique,
+        form,
+        activity,
+        experimenting,
+    )
+    for effect in found:
+        if effect.amount:
+            lines.append(
+                Line(f"{helper.name}: {effect.entry.name}", amount=effect.amount)
+            )
+    return lines
 
 
 def _pair_effects(

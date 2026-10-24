@@ -7429,7 +7429,10 @@
           "Amazonian Spellcraft"
         ],
         "aura": true,
-        "notes": "The mistress's Alala Zoi Temple Total, a season's work; the apprentice gets all eight Arts at 0. Twice the Opening EF Opens her, but her Supernatural Abilities are lost unless the total is four times the EF; Arts of any other tradition are always lost. Between those bands the book is silent (assume Opened, Abilities lost)."
+        "opens_at": 2,
+        "keeps_at": 4,
+        "loses_other_arts": true,
+        "notes": "The mistress's Alala Zoi Temple Total, a season's work; the apprentice gets all eight Arts at 0. Twice the Opening EF Opens her, losing her Supernatural Abilities; four times or more keeps them. Arts of any other tradition are always lost (Rival Magic p. 30)."
       },
       "initiation": {
         "characteristic": "Presence",
@@ -8495,6 +8498,7 @@
           "characteristic": "Intelligence",
           "die": "none",
           "divisor": 3,
+          "rounds_up": true,
           "against": "level",
           "lab": true,
           "vis_cap": "none",

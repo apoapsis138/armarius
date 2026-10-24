@@ -27,14 +27,10 @@ from .creation_character import THE_GIFT
 from .rounding import round_up
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Five: Abilities, Ability Types "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Five:"
-    "_Abilities#Ability_Types)"
+    "Ars Magica Definitive Edition, Chapter Five: Abilities, Ability Types, pp. 158-159"
 )
 CAP_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Abilities "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Abilities_2)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Abilities, p. 48"
 )
 
 ACADEMIC, ARCANE, MARTIAL, SUPERNATURAL = (
@@ -118,6 +114,8 @@ OPENS: dict[str, tuple[str, ...]] = {
 OPENS_ABILITY: dict[str, tuple[str, ...]] = {
     "vf_diabolic_past": ("Infernal Lore",),
     "vf_familiarity_with_the_fae": ("Faerie Lore",),
+    "vf_faerie_blood": ("Faerie Lore",),
+    "vf_strong_faerie_blood": ("Faerie Lore",),
     "vf_student_of_realm": (
         "Dominion Lore",
         "Faerie Lore",
@@ -280,10 +278,18 @@ VIRTUE_XP: dict[str, VirtueXp] = {
     ),
     "vf_forge_companion": VirtueXp(50, prefixes=("Craft: ",)),
     "vf_herbalism": VirtueXp(50, names=("Herbalism", "Profession: Apothecary")),
+    # Guardians of the Forests p. 20: 30 xp on Order of Hermes Lore,
+    # Intrigue and Durenmar Lore, and 60 on the gild's General or Arcane
+    # Abilities, Arts and spells; one pool here, with Abilities only.
     "vf_gild_trained": VirtueXp(
         90,
         types=("General", ARCANE),
-        names=("Organization Lore: Order of Hermes", "Intrigue", "Durenmar Lore"),
+        names=(
+            "Organization Lore: Order of Hermes",
+            "Intrigue",
+            "Durenmar Lore",
+            "Organization Lore: Durenmar",
+        ),
     ),
     "vf_improved_abilities": VirtueXp(50),
 }

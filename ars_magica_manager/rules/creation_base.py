@@ -22,10 +22,8 @@ from ..models import FULL, Character, Covenant, Laboratory, Saga
 from . import options
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Detailed "
-    "Character Creation Summary (https://www.redcap.org/page/Ars_Magica_"
-    "Definitive_Edition,_Chapter_Three:_Characters#Detailed_Character_"
-    "Creation_Summary)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Detailed Character "
+    "Creation Summary, p. 44"
 )
 
 Status = Literal["pass", "warn", "advice"]

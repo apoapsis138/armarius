@@ -71,6 +71,8 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         + _levels(casting.fatigue_levels(1, magus.virtues_flaws, "spontaneous"))
         + ".",
     ]
+    lines += _spontaneous_lines(magus, aura, realm)
+    lines += option_lines(saga, magus)
     lines += casting_virtue_lines(magus)
     resistances = [
         f"{ART_ABBREVIATIONS[form]} "
@@ -101,6 +103,11 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         f"Certamen: Initiative {duel.initiative:+d}, Attack Presence {c.presence:+d} "
         f"+ Art, Defence Perception {c.perception:+d} + the other Art, Weakening "
         f"{duel.weakening_base:+d} + advantage, Resistance {duel.resistance:+d}."
+        + (
+            " Tremere Focus: the lower of the two Arts counts double."
+            if certamen.certamen_focus(magus)
+            else ""
+        )
     )
     multipliers = [line for line in sample.lines if line.multiplier is not None]
     halved = sorted({line.label for line in multipliers})
@@ -108,6 +115,85 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         lines.append(f"Halved totals for: {escape(', '.join(halved))}.")
     lines += [escape(line) for line in hybrid.summary(magus)]
     return "\n".join(lines)
+
+
+def _spontaneous_lines(magus: Character, aura: int, realm: str) -> list[str]:
+    """The Spontaneous levels without Fatigue, Technique by Technique,
+    when they aren't the Formulaic grid's / 5: a Virtue that counts only
+    for Formulaic spells (Method Caster, Poor Formulaic Magic, Unstructured
+    Caster), one that changes the Spontaneous score (Ceremonial
+    Spontaneous Magic) or its division (Weak and Difficult Spontaneous
+    Magic, Diedne Magic), or a Deficiency, which halves the total (DE pp.
+    76, 98, 122, 125, 126, 141, 149, 153, 214)."""
+    rows: list[str] = []
+    mode = casting.spontaneous_mode(magus)
+    differs = mode != casting.NORMAL
+    for technique in TECHNIQUES:
+        cells = []
+        for form in FORMS:
+            formulaic = casting.casting_score(
+                magus, technique, form, aura=aura, aura_realm=realm
+            )
+            own = casting.casting_score(
+                magus, technique, form, aura=aura, aura_realm=realm, spontaneous=True
+            )
+            level = casting.non_fatiguing_level(magus, own)
+            differs = differs or level != int(formulaic.total) // 5
+            cells.append(f"{'-' if level is None else level:>5}")
+        rows.append(f"{technique:<12}" + "".join(cells))
+    if not differs:
+        return []
+    return ["", SPONTANEOUS_HEADINGS[mode], *rows]
+
+
+#: The second grid's heading, by how the magus casts Spontaneous spells.
+SPONTANEOUS_HEADINGS = {
+    casting.NORMAL: "Spontaneous levels without Fatigue (own score / 5):",
+    casting.WEAK: "Spontaneous levels (Weak Spontaneous Magic: always score / 5, "
+    "never exerting; DE p. 153):",
+    casting.DIFFICULT: "Spontaneous magic only exerting (Difficult Spontaneous "
+    "Magic, DE p. 126): (score + stress die) / 2, a Fatigue level:",
+    casting.NO_SPONTANEOUS: "No Spontaneous magic (Weak and Difficult "
+    "Spontaneous Magic together):",
+    casting.DIEDNE: "Spontaneous levels without Fatigue (Diedne Magic: score / 2 "
+    "+ a stress die / 2, or score / 5; exerting, the lowest Art doubled; DE p. 76):",
+}
+
+
+def option_lines(saga: Saga, magus: Character) -> list[str]:
+    """The spellcasting options' figures for this magus: fast and
+    ceremonial casting, Concentration, aiming and a talisman (DE pp.
+    215-218, 223, 260)."""
+    lines = [
+        f"Fast casting (Spontaneous): speed Quickness + Finesse "
+        f"{casting.fast_casting_speed(magus):+d} + stress die against the foe's "
+        f"Initiative, -6 for each spell after the first; score "
+        f"{casting.FAST_PENALTY}, +{casting.FAST_BOTCH_DICE} botch dice, no vis.",
+    ]
+    if casting.can_ceremonial(magus):
+        learned = sum(lab_rules.ability_score(magus, "Artes Liberales")) + sum(
+            lab_rules.ability_score(magus, "Philosophiae")
+        )
+        lines.append(
+            f"Ceremonial casting (Spontaneous): + Artes Liberales + Philosophiae "
+            f"{learned:+d} and props +1 to +5, in place of words and gestures; "
+            "15 minutes a magnitude (3 in a laboratory), and no more magnitudes "
+            "than quarter-hours spent."
+        )
+    lines.append(
+        f"Concentration: Stamina + Concentration {casting.concentration_base(magus):+d}"
+        " + stress die; a failure ends the spell and adds a botch die. "
+        f"Aiming: Perception + Finesse {casting.aiming_base(magus):+d} + die, +6 "
+        "for each size step past a basic Individual."
+    )
+    attuned = casting.talisman_attunements(saga, magus)
+    if attuned:
+        lines.append(
+            "Talisman, while touching it (the best that applies): "
+            + ", ".join(f"+{bonus} {escape(what)}" for bonus, what in attuned)
+            + "."
+        )
+    return lines
 
 
 #: What a reader needs to cast from a Casting Tablet (DE: an apprentice
@@ -156,8 +242,14 @@ def known_spell_casting_lines(
 ) -> list[str]:
     """The details panel's casting lines for a known spell."""
     aura, realm = home_aura(saga, magus)
+    abilities = casting.mastery_counts(known.mastery_abilities)
     score = casting.spell_casting_score(
-        magus, spell, aura=aura, aura_realm=realm, mastery=known.mastery_score
+        magus,
+        spell,
+        aura=aura,
+        aura_realm=realm,
+        mastery=known.mastery_score,
+        mastery_abilities=abilities,
     )
     total = int(score.total)
     terms = ", ".join(
@@ -181,9 +273,11 @@ def known_spell_casting_lines(
         aura=aura,
         in_regio=home_in_regio(saga, magus),
         mastery=known.mastery_score,
+        golden_cord=casting.golden_cord(saga, magus),
         virtues_flaws=magus.virtues_flaws,
         magus=magus,
     )
+    calm = " (none when calm)" if known.mastery_score else ""
     need = spell.level - total
     if spell.ritual:
         # Cast while up to 10 short: 1, 2 or 3 levels as the total falls.
@@ -197,10 +291,14 @@ def known_spell_casting_lines(
             "Ritual, stress die: "
             + ", ".join(steps)
             + f" long-term Fatigue levels; {vis} pawn(s) of vis; {botch} botch "
-            + ("die." if botch == 1 else "dice.")
+            + ("die" if botch == 1 else "dice")
+            + f"{calm}. Fatigue past unconsciousness becomes a wound."
         )
     elif need <= 0:
-        lines.append("Formulaic: always cast without Fatigue, even on a die of 0.")
+        lines.append(
+            "Formulaic: cast without Fatigue on any die, unless a stressed die "
+            f"botches ({botch} botch {'die' if botch == 1 else 'dice'}{calm})."
+        )
     else:
         short = _levels(casting.fatigue_levels(1, magus.virtues_flaws, "formulaic"))
         lines.append(
@@ -208,6 +306,41 @@ def known_spell_casting_lines(
             f"for {short}."
             if need > 10
             else f"Formulaic: a die of {need}+ casts it without Fatigue; "
-            f"anything less still casts it for {short}."
+            f"less still casts it for {short}, unless a stressed die botches."
         )
+    lines += _mastery_lines(magus, known, spell, abilities)
     return lines
+
+
+def _mastery_lines(
+    magus: Character, known: KnownSpell, spell: Spell, abilities: dict[str, int]
+) -> list[str]:
+    """What the spell's Mastery special abilities do (DE pp. 225-226)."""
+    score = known.mastery_score
+    if not score or not abilities:
+        return []
+    found: list[str] = []
+    if abilities.get(casting.FAST_CASTING) and not spell.ritual:
+        speed = casting.fast_casting_speed(
+            magus, abilities.get(casting.QUICK_CASTING, 0)
+        )
+        found.append(
+            f"fast-cast at {casting.FAST_PENALTY} (speed {speed:+d} + stress die)"
+        )
+    if abilities.get(casting.CEREMONIAL_CASTING) and not spell.ritual:
+        found.append("cast ceremonially (+ Artes Liberales + Philosophiae)")
+    if abilities.get(casting.PENETRATION_MASTERY):
+        found.append(f"+{score} to Penetration")
+    if abilities.get(casting.RESISTANCE_MASTERY):
+        found.append("Magic Resistance doubled against it and similar spells")
+    if abilities.get(casting.IMPERTURBABLE):
+        found.append(f"+{score} to its Concentration rolls")
+    if abilities.get(casting.MULTIPLE_CASTING):
+        found.append(f"up to {score} more copies at once")
+    if abilities.get(casting.PRECISE_CASTING):
+        found.append(f"+{abilities[casting.PRECISE_CASTING]} to its Finesse rolls")
+    if abilities.get(casting.QUICK_CASTING) and not spell.ritual:
+        found.append(f"+{abilities[casting.QUICK_CASTING]} Initiative")
+    if not found:
+        return []
+    return ["[b]Mastery:[/] " + escape("; ".join(found)) + "."]

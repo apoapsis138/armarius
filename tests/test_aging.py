@@ -9,8 +9,9 @@ from ars_magica_manager.models import (
     Characteristics,
     Covenant,
     Saga,
+    VirtueFlawInstance,
 )
-from ars_magica_manager.rules import aging
+from ars_magica_manager.rules import aging, hybrid_magic, warping
 
 
 class _Dice(random.Random):
@@ -96,3 +97,73 @@ def test_a_crisis_ends_the_longevity_ritual_and_takes_the_next_season():
     assert magus.aging.longevity_modifier == 0
     assert magus.aging.recovering == "Spring 1221"
     assert "Longevity Ritual sees the character through" in magus.diary[-1].details
+
+
+def test_age_quickly_ages_by_an_effective_age_with_two_rolls():
+    saga = _saga(age=20)  # effective age 40: past 35
+    magus = saga.characters[0]
+    assert seasons.year_end_aging(saga, _Dice(9)) == []
+    magus.virtues_flaws = [VirtueFlawInstance("vf_age_quickly")]
+    assert aging.effective_age(magus, 20) == 40
+    assert len(seasons.year_end_aging(saga, _Dice(0, 0))) == 2
+
+
+def test_no_aging_in_twilight():
+    saga = _saga(age=50, twilight_until="Spring 1221")
+    assert seasons.year_end_aging(saga, _Dice(9)) == []
+
+
+def test_a_longevity_ritual_stored_negated_loads_as_its_bonus():
+    assert Aging.from_dict({"longevity_modifier": -8}).longevity_modifier == 8
+
+
+def test_time_in_the_aura_sets_its_yearly_warping():
+    # DE p. 390: half the time, frequent visits, or away.
+    assert warping.aura_points(9) == 4
+    assert warping.aura_points(9, warping.HALF) == 2
+    assert warping.aura_points(9, warping.FREQUENT) == 1
+    assert warping.aura_points(7, warping.HALF, 1222) == 1
+    assert warping.aura_points(7, warping.HALF, 1223) == 0
+    assert warping.aura_points(10, warping.AWAY) == 0
+
+
+def test_age_quickly_from_the_year_it_began():
+    # DE p. 119: two years a year, from the curse rather than from birth.
+    cursed = Character(
+        id="c",
+        name="C",
+        type="companion",
+        virtues_flaws=[VirtueFlawInstance("vf_age_quickly", {"since": "1210"})],
+    )
+    cursed.background.year_born = 1180  # 30 when it began
+    assert aging.effective_age(cursed, 40) == 50
+    assert aging.effective_age(cursed, 25) == 25
+    assert aging.rolls_per_year(cursed, 28) == 1
+    assert aging.rolls_per_year(cursed, 40) == 2
+    cursed.virtues_flaws = [VirtueFlawInstance("vf_age_quickly")]
+    assert aging.effective_age(cursed, 40) == 80  # from birth
+
+
+def test_a_botch_can_step_into_final_twilight():
+    # DE p. 228: Warping 8 and two zeros land on row 10.
+    time, _ = warping._twilight_time(10, 8, random.Random(1), None)
+    assert "Final Twilight" in time
+
+
+def test_might_virtues_are_immune_and_faerie_virtues_at_home_in_faerie_auras():
+    # DE pp. 109-110, 389; RoP: Faerie p. 111.
+    angel = Character(
+        id="a",
+        name="A",
+        type="companion",
+        virtues_flaws=[VirtueFlawInstance("vf_strong_angelic_heritage")],
+    )
+    assert warping.immune(angel)
+    fey = Character(
+        id="f",
+        name="F",
+        type="companion",
+        virtues_flaws=[VirtueFlawInstance("vf_faerie_blood")],
+    )
+    assert not hybrid_magic.warps_from_aura(fey, "Faerie")
+    assert hybrid_magic.warps_from_aura(fey, "Infernal")

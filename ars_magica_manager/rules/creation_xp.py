@@ -24,19 +24,14 @@ from ..models import Character, CreationXp, Saga
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Early Childhood "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Early_Childhood)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Early Childhood, p. 48"
 )
 FERAL_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, Feral "
-    "Upbringing (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Four:_Virtues_and_Flaws#Feral_Upbringing)"
+    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, Feral Upbringing, "
+    "p. 129"
 )
 SAMPLE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Sample "
-    "Childhoods (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Sample_Childhoods)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Sample Childhoods, p. 48"
 )
 
 NATIVE = "native"

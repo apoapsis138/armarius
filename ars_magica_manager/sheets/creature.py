@@ -12,7 +12,7 @@ from ..grids import Grid
 from ..markup import escape
 from ..models import REALMS, Creature, Saga
 from ..references import Fact
-from ..rules import sites
+from ..rules import creature_build, sites
 from . import character as cs
 
 #: The Characteristics as a stat block abbreviates them, in its order.
@@ -107,6 +107,7 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
     return [
         Fact("Might", creatures.might_text(c)),
         *pool,
+        *build_facts(c),
         *infernal_facts(c),
         Fact("Size", _signed(c.size)),
         Fact("Season", c.season),
@@ -123,6 +124,27 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
         *connections.rules_facts(saga, c),
         *connections.links_back(saga, c),
     ]
+
+
+def build_facts(creature: Creature) -> list[Fact]:
+    """A magic creature's Quality points, and what doesn't fit the
+    creature rules."""
+    found: list[Fact] = []
+    budget = creature_build.quality_budget(creature)
+    if budget is not None:
+        over = f", {-budget.left} over" if budget.left < 0 else ""
+        found.append(
+            Fact(
+                "Qualities",
+                f"{budget.spent} of {budget.from_might + budget.from_inferiorities} "
+                f"points (Might {budget.from_might} + Inferiorities "
+                f"{budget.from_inferiorities}{over})",
+            )
+        )
+    problems = creature_build.problems(creature)
+    if problems:
+        found.append(Fact("Check", " ".join(problems)))
+    return found
 
 
 def infernal_facts(creature: Creature) -> list[Fact]:

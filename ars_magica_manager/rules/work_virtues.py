@@ -24,15 +24,8 @@ from __future__ import annotations
 from ..models import Character, Saga
 from . import realms
 
-SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Four:"
-    "_Virtues_and_Flaws)"
-)
-ACADEME_SOURCE = (
-    "Art & Academe, Chapter Two: The Liberal Arts "
-    "(https://www.redcap.org/page/Art_%26_Academe_Open_Content)"
-)
+SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 59-154"
+ACADEME_SOURCE = "Art & Academe, Chapter Two: Artes Liberales, pp. 12-19"
 
 PERFECT_EYE = "vf_perfect_eye_for_commodity"
 BIGAMIST = "vf_bigamist"

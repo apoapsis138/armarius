@@ -1380,6 +1380,14 @@
         {
           "applies_to": "unaging",
           "amount": 1
+        },
+        {
+          "applies_to": "aging_rate",
+          "amount": 2
+        },
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
         }
       ],
       "extra_categories": [
@@ -2977,7 +2985,13 @@
       ],
       "source": "RoP:F",
       "summary": "Has an animal-form faerie body with all faerie-body advantages; animal-form limits (no hands, no speech) cannot be taken as Flaws.",
-      "description": "The character appears to be an animal. It has all of the advantages of being a faerie, and having a faerie body. The innate limitations of an animal form, such as having no hands and being unable to pronounce human words, may not be taken as Flaws. Faerie beasts that wish to speak like humans may take Language Pretenses, or the Faerie Speech Virtue."
+      "description": "The character appears to be an animal. It has all of the advantages of being a faerie, and having a faerie body. The innate limitations of an animal form, such as having no hands and being unable to pronounce human words, may not be taken as Flaws. Faerie beasts that wish to speak like humans may take Language Pretenses, or the Faerie Speech Virtue.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_faerie_blood",
@@ -3954,6 +3968,10 @@
       "cost": 1,
       "modifiers": [
         {
+          "applies_to": "book_quality",
+          "amount": 3
+        },
+        {
           "applies_to": "teaching_source_quality",
           "amount": 5
         }
@@ -4561,7 +4579,13 @@
       ],
       "source": "RoP:F",
       "summary": "Material body of roughly human shape with all faerie-body advantages (no aging or fatigue, regeneration, encumbrance-free props).",
-      "description": "The character has a material body of roughly human shape. It has all of the advantages of being a faerie, and of having a faerie body."
+      "description": "The character has a material body of roughly human shape. It has all of the advantages of being a faerie, and of having a faerie body.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_hybrid_form",
@@ -5726,7 +5750,13 @@
       ],
       "source": "RoP:M",
       "summary": "Character is a magical animal (Beast of Virtue or similar) with Magic Might, built via Magic Character Creation; Might reduced by Size.",
-      "description": "The character is a magical animal, either a perfect example of its species that is generally known as a Beast of Virtue, or else some other sort of magical being born in an animal shape. It is designed using the Magical Animal rules for Magic Character Creation, above, which gives it a Magic Might Score and other advantages over mundane creatures. It must also deal with the innate limitations of an animal form, such as having no hands. Subtract the character's natural Size from its starting Might Score."
+      "description": "The character is a magical animal, either a perfect example of its species that is generally known as a Beast of Virtue, or else some other sort of magical being born in an animal shape. It is designed using the Magical Animal rules for Magic Character Creation, above, which gives it a Magic Might Score and other advantages over mundane creatures. It must also deal with the innate limitations of an animal form, such as having no hands. Subtract the character's natural Size from its starting Might Score.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_magic_human",
@@ -5740,7 +5770,13 @@
       ],
       "source": "RoP:M",
       "summary": "Character is a magical human with Magic Might and the Monstrous Appearance Inferiority (no benefit), built via Magic Character Creation.",
-      "description": "The character is a magical human, maybe descended from an ancient race of magical beings or somehow blessed with magic in his blood, born with a Magic Might Score and the Monstrous Appearance Inferiority (though he is not necessarily ugly). He should be designed using the Magic Human rules for Magic Character Creation, above."
+      "description": "The character is a magical human, maybe descended from an ancient race of magical beings or somehow blessed with magic in his blood, born with a Magic Might Score and the Monstrous Appearance Inferiority (though he is not necessarily ugly). He should be designed using the Magic Human rules for Magic Character Creation, above.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_magic_items",
@@ -5777,7 +5813,13 @@
       ],
       "source": "RoP:M",
       "summary": "Insubstantial magical mind, memory or idea with Magic Might; always has Magical Air (Blatant if Gifted); only Gentle Air lessens it.",
-      "description": "The character is a mind, memory, image or idea somehow brought to life by the power of Magic. It is designed with a Magic Might Score according to the Magical Spirit rules for Magic Character Creation, above. Such characters are insubstantial and always have the Magical Air Flaw, as if they possessed The Gift, and only a Gentle Air can lessen this effect. If the character has the Gifted Quality, this gives the character a Blatant Magical Air instead."
+      "description": "The character is a mind, memory, image or idea somehow brought to life by the power of Magic. It is designed with a Magic Might Score according to the Magical Spirit rules for Magic Character Creation, above. Such characters are insubstantial and always have the Magical Air Flaw, as if they possessed The Gift, and only a Gentle Air can lessen this effect. If the character has the Gifted Quality, this gives the character a Blatant Magical Air instead.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_magic_thing",
@@ -5791,7 +5833,13 @@
       ],
       "source": "RoP:M",
       "summary": "Animated magical thing with Magic Might; always has Temporary Might Inferiority and gets No Fatigue Quality free.",
-      "description": "The character is a magical thing made up of elemental atoms or possessed by the raw power of nature, something that gives it a semblance of life and provides it with a Magic Might Score. Magical beings of this sort always have the Magic Inferiority of Temporary Might, which means that it takes them a very long time to recover their spent Might Points, and whenever they are injured, some of their Might is separated from their physical bodies as vis. They also receive the No Fatigue Quality at no cost. They should be designed according to the Magic Thing rules for Magic Character Creation."
+      "description": "The character is a magical thing made up of elemental atoms or possessed by the raw power of nature, something that gives it a semblance of life and provides it with a Magic Might Score. Magical beings of this sort always have the Magic Inferiority of Temporary Might, which means that it takes them a very long time to recover their spent Might Points, and whenever they are injured, some of their Might is separated from their physical bodies as vis. They also receive the No Fatigue Quality at no cost. They should be designed according to the Magic Thing rules for Magic Character Creation.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_magical_blood",
@@ -6486,7 +6534,13 @@
       ],
       "source": "DE",
       "summary": "Makes you one of the Nephilim, a Mythic Companion; grants Strong Angelic Heritage free.",
-      "description": "You are one of the Nephilim, and a Mythic Companion (page 63). You receive the Strong Angelic Heritage Virtue free."
+      "description": "You are one of the Nephilim, and a Mythic Companion (page 63). You receive the Strong Angelic Heritage Virtue free.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_notary",
@@ -8008,7 +8062,13 @@
       "repeatable": true,
       "source": "DE",
       "summary": "Divine Might (Corpus) = age/20, Corpus vis, immune to Warping; 30 levels of holy powers costing Might (magnitude/2).",
-      "description": "Your angelic heritage is purer, granting you a Divine Might score and supernatural powers. This Virtue may only be taken if you have the Major Virtue Blood of the Nephilim. You are a divine being and possess a Divine Might (Corpus) score equal to your age divided by 20, which increases as you grow older. This grants you a Magic Resistance score. You contain a number of pawns of Corpus vis equal to your Divine Might divided by 10 (rounded down, but always at least one pawn) that can only be extracted if you are dead. You are immune to Warping of any sort, and may not have any supernatural powers that derive from a realm other than the Divine. You have up to thirty levels of holy powers that may be invoked by spending Might points. Design the powers' effects using the Hermetic spell guidelines (or the guidelines for Holy Powers in Realms of Power: The Divine, from page 46). The Might cost for each power is equal to its magnitude divided by two (rounded down, but always at least one point). The Initiative score of the power is your Quickness. You may take this Virtue multiple times. Each additional time you take it increases by thirty the number of levels of holy powers you may invoke, but has no other effect; in particular, it does not increase your Divine Might."
+      "description": "Your angelic heritage is purer, granting you a Divine Might score and supernatural powers. This Virtue may only be taken if you have the Major Virtue Blood of the Nephilim. You are a divine being and possess a Divine Might (Corpus) score equal to your age divided by 20, which increases as you grow older. This grants you a Magic Resistance score. You contain a number of pawns of Corpus vis equal to your Divine Might divided by 10 (rounded down, but always at least one pawn) that can only be extracted if you are dead. You are immune to Warping of any sort, and may not have any supernatural powers that derive from a realm other than the Divine. You have up to thirty levels of holy powers that may be invoked by spending Might points. Design the powers' effects using the Hermetic spell guidelines (or the guidelines for Holy Powers in Realms of Power: The Divine, from page 46). The Might cost for each power is equal to its magnitude divided by two (rounded down, but always at least one point). The Initiative score of the power is your Quickness. You may take this Virtue multiple times. Each additional time you take it increases by thirty the number of levels of holy powers you may invoke, but has no other effect; in particular, it does not increase your Divine Might.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_strong_faerie_blood",
@@ -8515,7 +8575,13 @@
       ],
       "source": "RoP:M",
       "summary": "Becomes a Magic being: Might 0, may take Inferiorities up to Flaw allowance for equal Qualities, gains a +3 Essential Trait.",
-      "description": "The character has been transformed by the power of Magic, losing his mundane nature and changing into a supernatural being -- see the Special Virtues Magic Animal, Magic Human, Magic Spirit, or Magic Thing, above, for examples of how Magic changes a character. Initially the character has a Might Score of 0 and no Magic Qualities, though the player may take a number of Magic Inferiorities equal to his maximum allotment of Flaws during this transformation -- three points for a grog character, and ten for a magus or companion -- and gaining a corresponding number of Magic Qualities. The magic character also gains an Essential Trait at +3 that describes the character's origin or true form, what the character is at a fundamental level. This should be related to the Form of the_ character's Might in some way. _ Characters with a Might Score associated with any realm of power other than Magic cannot take this Virtue. If the character has Supernatural Virtues or Flaws associated with other realms, these are also affected by the transformation. Generally, divine powers are lost, faerie powers become magic ones, and infernal powers become magic but tainted with evil (see Realms of Power: The Infernal for more information about tainted powers). For example, a character's Strong Faerie Blood might become a Greater Power, infernal Entrancement would become magical but would be infernally tainted, and True Faith would be gone forever."
+      "description": "The character has been transformed by the power of Magic, losing his mundane nature and changing into a supernatural being -- see the Special Virtues Magic Animal, Magic Human, Magic Spirit, or Magic Thing, above, for examples of how Magic changes a character. Initially the character has a Might Score of 0 and no Magic Qualities, though the player may take a number of Magic Inferiorities equal to his maximum allotment of Flaws during this transformation -- three points for a grog character, and ten for a magus or companion -- and gaining a corresponding number of Magic Qualities. The magic character also gains an Essential Trait at +3 that describes the character's origin or true form, what the character is at a fundamental level. This should be related to the Form of the_ character's Might in some way. _ Characters with a Might Score associated with any realm of power other than Magic cannot take this Virtue. If the character has Supernatural Virtues or Flaws associated with other realms, these are also affected by the transformation. Generally, divine powers are lost, faerie powers become magic ones, and infernal powers become magic but tainted with evil (see Realms of Power: The Infernal for more information about tainted powers). For example, a character's Strong Faerie Blood might become a Greater Power, infernal Entrancement would become magical but would be infernally tainted, and True Faith would be gone forever.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_troubadour_trobairitz",
@@ -9031,6 +9097,15 @@
       "tier": "Major",
       "cost": -3,
       "source": "DE",
+      "parameters": [
+        "since"
+      ],
+      "modifiers": [
+        {
+          "applies_to": "aging_rate",
+          "amount": 2
+        }
+      ],
       "summary": "Ages twice as fast: effective age rises 2 per year and two aging rolls each year; Longevity Rituals use effective age.",
       "description": "Probably due to a curse or a magical disaster, you age twice as fast as normal people. Your effective age (which applies as if it were your actual age when creating a Longevity Ritual, and when making rolls on the aging table) increases two years for every year that passes, and you make two aging rolls each year. It is possible to halt or slow the decline by supernatural means, such as Longevity Rituals, but they must deal with your effective age, not your chronological age."
     },
@@ -16245,7 +16320,7 @@
       "tier": "Minor",
       "cost": 1,
       "source": "LotN",
-      "summary": "Faerie Blood of Egypt's old gods: Sympathy Trait +1, Warping limit raised by 1.",
+      "summary": "Faerie Blood of Egypt's old gods: a Sympathy Trait may reach Warping Score +1, and botches with Sympathy Traits give a Warping Point for each zero (Lands of the Nile p. 36).",
       "description": "A Faerie Blood variant descended from the old gods of Egypt. The character has a Sympathy Trait of +1 and can take one more Warping before its limit, but his botches cause Warping."
     },
     {
@@ -16256,7 +16331,7 @@
       "tier": "Major",
       "cost": 3,
       "source": "LotN",
-      "summary": "Strong blood of Egypt's old gods: Sympathy Trait +1, Warping limit raised by 2.",
+      "summary": "A variety of Strong Faerie Blood, of Egypt's old gods: a Sympathy Trait may reach Warping Score +2, and botches with Sympathy Traits give a Warping Point for each zero (Lands of the Nile p. 36).",
       "description": "The Major form of Blood of the Old Gods: as the Minor, but the Warping limit rises by 2."
     },
     {
@@ -16312,7 +16387,13 @@
       "cost": 3,
       "source": "LotN",
       "summary": "Becomes a Magic Human of Corpus with Might bought from his Court; no aging or Warping.",
-      "description": "The Undying One's gift. He becomes a Magic Human of Form Corpus, buying Might as if it were an Art with his Court's strength as xp, after which it is fixed. He is immune to deprivation, Warping and aging, has a monstrous look, and counts as dead: an aura aligned to the dead adds twice its strength to his Magic Resistance, and Kassalan exorcism works on him."
+      "description": "The Undying One's gift. He becomes a Magic Human of Form Corpus, buying Might as if it were an Art with his Court's strength as xp, after which it is fixed. He is immune to deprivation, Warping and aging, has a monstrous look, and counts as dead: an aura aligned to the dead adds twice its strength to his Magic Resistance, and Kassalan exorcism works on him.",
+      "modifiers": [
+        {
+          "applies_to": "warping_immune",
+          "amount": 1
+        }
+      ]
     },
     {
       "id": "vf_disjunction",

@@ -9,8 +9,10 @@
 A hit needs the Attack Total to beat the Defence Total (a tie goes to the
 defender), and costs ceil((Weakening - Resistance) / 5) Fatigue levels when
 positive. Each pawn of vis matching the Art adds +2 to Attack or Defence for
-a round, up to the score in that Art. Fatigue penalties apply to Attack and
-Defence.
+a round, up to the score in that Art. Wound and Fatigue penalties apply to
+Attack and Defence, and a Deficient Art halves the total it is in (DE pp.
+125, 404). Every Tremere has a Minor Magical Focus in certamen: the lower
+of the two Arts counts double, and no other Focus applies (DE p. 233).
 
 No screen uses attack_advantage(), fatigue_lost(), max_vis() yet: they are
 the rules for screens still to come, and only the tests call them.
@@ -21,15 +23,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from ..models import Character
+from . import effects, scores
 from .derived import fatigue_penalty, wound_penalty
 from .lab import ability_score, art_score
-from .rounding import round_up
+from .rounding import round_down, round_up
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Certamen "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Seven:"
-    "_Hermetic_Magic#Certamen)"
+    "Ars Magica Definitive Edition, Chapter 7: Hermetic Magic, Certamen, pp. 231-233"
 )
+TREMERE = "house_tremere"
+FOCUS = "vf_minor_magical_focus"
 
 
 @dataclass(frozen=True)
@@ -49,6 +52,31 @@ def _art(magus: Character, art: str) -> int:
     return sum(art_score(magus, art))
 
 
+def certamen_focus(magus: Character) -> bool:
+    """Whether the magus has the Tremere Focus in certamen: a member of
+    House Tremere, or a Minor Magical Focus named for certamen."""
+    return magus.hermetic.house == TREMERE or any(
+        vf.vf_id == FOCUS and "certamen" in str(vf.params.get("focus", "")).casefold()
+        for vf in magus.virtues_flaws
+    )
+
+
+def _halving(magus: Character, art: str) -> float:
+    """What a Deficiency in `art` does to a certamen total using it."""
+    found = effects.collect(
+        [scores.character_source(magus.virtues_flaws)], "casting_total"
+    )
+    factor = 1.0
+    for e in found:
+        if (
+            e.modifier.multiplier is not None
+            and e.target is not None
+            and e.target.casefold() == art.casefold()
+        ):
+            factor *= e.modifier.multiplier
+    return factor
+
+
 def certamen_totals(magus: Character, technique: str, form: str) -> CertamenTotals:
     c = magus.characteristics
     # Wounds and Fatigue take from every roll (DE pp. 403-404).
@@ -56,12 +84,21 @@ def certamen_totals(magus: Character, technique: str, form: str) -> CertamenTota
         magus.wounds, magus.virtues_flaws
     )
     tech, frm = _art(magus, technique), _art(magus, form)
+    if certamen_focus(magus):
+        if tech <= frm:
+            tech *= 2
+        else:
+            frm *= 2
+
+    def total(base: int, art: int, name: str) -> int:
+        return round_down((base + art + penalty) * _halving(magus, name))
+
     return CertamenTotals(
         initiative=c.quickness + sum(ability_score(magus, "Finesse")),
-        attack_technique=c.presence + tech + penalty,
-        defence_form=c.perception + frm + penalty,
-        attack_form=c.presence + frm + penalty,
-        defence_technique=c.perception + tech + penalty,
+        attack_technique=total(c.presence, tech, technique),
+        defence_form=total(c.perception, frm, form),
+        attack_form=total(c.presence, frm, form),
+        defence_technique=total(c.perception, tech, technique),
         weakening_base=c.intelligence + sum(ability_score(magus, "Penetration")),
         resistance=c.stamina + sum(ability_score(magus, "Parma Magica")),
     )

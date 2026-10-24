@@ -191,7 +191,7 @@ Advancing Winter also closes the year:
 1. If any covenant spends more than it earns, the app asks whether to advance anyway. No leaves the date alone: balance the books in the covenant's [Treasury](help:tab-cov-economics) chapter, then advance again. Advance anyway rolls the year over.
 <!-- /gui -->
 2. Each grog's yearly update is applied, yearly Warping Points are added where they are due, and aging rolls are made for those who need them. The updates and aging rolls appear in the Season Summary and in each Diary.
-3. Each covenant's surplus is added to its Wealth, and its Emergency Savings start again at 0. A deficit is never taken from Wealth by itself.
+3. Each covenant's surplus is added to its Wealth, and a deficit Emergency Savings didn't cover is taken from it (DE p. 189; letting Wealth fall below 0, the covenant broke, is the app's house rule). Inflation grows a pound for every hundred pounds spent, unless spending fell (DE p. 193), and Emergency Savings start again at 0.
 
 ### Undoing a mistake
 <!-- help: guide-seasons-undo -->
@@ -237,7 +237,7 @@ The [Inhabitants tab](help:tab-cov-inhabitants) (`2`) lists who lives at the cov
 4. **Everyone else** goes on [Other Covenfolk](help:section-inh-inhabitant), each with a Covenant Role and a Quantity; [Horses](help:section-inh-horse) and [Livestock](help:section-inh-livestock) have lists of their own.
 5. When someone leaves, `d` on a listed magus or companion marks them departed rather than deleting them. More's **Restore** brings them back.
 
-[Loyalty](help:section-inh-loyalty) is at the top of the tab. Press `e` there to choose the Equipment, Money, Pension and other modifiers; the app works out the rest from the magi's Gifts, Living Conditions, specialists' roles, known bad Reputations and the Diary. The [Inhabitants](help:section-inh-population) section shows whether there are enough Teamsters and Servants.
+[Loyalty](help:section-inh-loyalty) is at the top of the tab. Press `e` there to choose the Equipment, Money, Pension and other modifiers; the app works out the rest from the magi's Gifts, Living Conditions, specialists' roles, known Reputations (bad ones cost, good local ones gain) and the Diary. The [Inhabitants](help:section-inh-population) section shows whether there are enough Teamsters and Servants.
 <!-- /tui -->
 <!-- gui -->
 The **People** chapter shows the covenant's characters as cards; the [Covenfolk](help:tab-cov-inhabitants) chapter lists everyone who lives there.
@@ -248,7 +248,7 @@ The **People** chapter shows the covenant's characters as cards; the [Covenfolk]
 4. **Everyone else** goes on [Other Covenfolk](help:section-inh-inhabitant), each with a Covenant Role and a Quantity; [Horses](help:section-inh-horse) and [Livestock](help:section-inh-livestock) have lists of their own.
 5. When someone leaves, **Delete** on a listed magus or companion marks them departed rather than deleting them. **Add** on the same list offers them again, marked "(taken off the list)", to bring them back.
 
-[Loyalty](help:section-inh-loyalty) is at the top of the chapter. Click its **Edit** to choose the Equipment, Money, Pension and other modifiers; the app works out the rest from the magi's Gifts, Living Conditions, specialists' roles, known bad Reputations and the Diary. [The Household](help:section-inh-population) shows whether there are enough Teamsters and Servants.
+[Loyalty](help:section-inh-loyalty) is at the top of the chapter. Click its **Edit** to choose the Equipment, Money, Pension and other modifiers; the app works out the rest from the magi's Gifts, Living Conditions, specialists' roles, known Reputations (bad ones cost, good local ones gain) and the Diary. [The Household](help:section-inh-population) shows whether there are enough Teamsters and Servants.
 <!-- /gui -->
 
 ### Resources
@@ -299,10 +299,10 @@ The [Treasury](help:tab-cov-economics) chapter shows a year's finances: the year
 **At the end of each year,** when Winter is advanced, the surplus is added to Wealth and Emergency Savings start again at 0.
 
 <!-- tui -->
-**With a deficit,** the app asks before closing the year whether to advance anyway. To cover it from Wealth, choose **Emergency Savings** on Cost Savings and press `e`: the app offers to draw the deficit, or as much as Wealth holds, from Wealth. A covenant with no Wealth to draw is broke. A deficit is never taken from Wealth unless you choose to.
+**With a deficit,** the app asks before closing the year whether to advance anyway. To cover it from Wealth, choose **Emergency Savings** on Cost Savings and press `e`: the app offers to draw the deficit, or as much as Wealth holds, from Wealth. A covenant with no Wealth to draw is broke. Advancing anyway takes what is left of the deficit from Wealth.
 <!-- /tui -->
 <!-- gui -->
-**With a deficit,** the app asks before closing the year whether to advance anyway. To cover it from Wealth, click **Emergency Savings** on Cost Savings and then **Edit**: the app offers to draw the deficit, or as much as Wealth holds, from Wealth. A covenant with no Wealth to draw is broke. A deficit is never taken from Wealth unless you choose to.
+**With a deficit,** the app asks before closing the year whether to advance anyway. To cover it from Wealth, click **Emergency Savings** on Cost Savings and then **Edit**: the app offers to draw the deficit, or as much as Wealth holds, from Wealth. A covenant with no Wealth to draw is broke. Advancing anyway takes what is left of the deficit from Wealth.
 <!-- /gui -->
 
 ### Books

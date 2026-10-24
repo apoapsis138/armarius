@@ -54,3 +54,10 @@ def test_a_once_only_component_twice_invalidates_the_script():
     service = _component("Sacrifice of time serving the cult")
     with pytest.raises(ValueError, match="only once"):
         m.script_bonus([service, service])
+
+
+def test_a_minor_ordeal_lowers_the_next_three_by_3_2_1():
+    # DE p. 388.
+    for since, cut in ((1, 3), (2, 2), (3, 1)):
+        target = m.target_level("Minor", True, [("Minor", since)])
+        assert target.total == 15 - cut

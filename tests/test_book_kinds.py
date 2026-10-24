@@ -1,6 +1,8 @@
 """Opus types, physical forms and collections (Covenants, Chapter Seven:
 Library; Houses of Hermes: True Lineages, Folios)."""
 
+from support import literate
+
 from ars_magica_manager import book_kinds as kinds
 from ars_magica_manager import books as bk
 from ars_magica_manager.models import Book, Character, Codex, Covenant, Saga, SeasonPlan
@@ -161,7 +163,7 @@ def test_useful_correspondence_adds_one_xp_to_the_season():
 
     saga = _saga()
     ana = saga.characters[0]
-    ana.abilities = [Ability("Philosophiae")]
+    ana.abilities = [Ability("Philosophiae"), *literate()]
     plan = _read(saga, "physics")
     plan.correspondence = "ability:Medicine"
     outcome = activities.outcome(ana, plan, saga)
@@ -200,7 +202,7 @@ def test_glossing_while_reading():
     assert any("half Physics's Level" in p for p in found)
     from ars_magica_manager.rules.xp import ability_xp
 
-    ana.abilities = [Ability("Philosophiae", xp=ability_xp(3))]
+    ana.abilities = [Ability("Philosophiae", xp=ability_xp(3)), *literate()]
     assert activities.problems(ana, plan, saga) == []
     outcome = activities.outcome(ana, plan, saga)
     advance.apply(saga, [outcome])

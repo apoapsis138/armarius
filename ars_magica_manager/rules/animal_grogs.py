@@ -39,20 +39,14 @@ from ..models import AnimalForm, Character, Saga, VirtueFlawDef, character_age
 from . import animal_aging
 from .rounding import round_down
 
-SOURCE = (
-    "Grogs, Chapter 7: Grog Templates, Horses & Hounds, pages 133-137 "
-    "(https://www.redcap.org/page/Grogs_Chapter_Seven:_Grog_Templates"
-    "#Horses_.26_Hounds)"
-)
+SOURCE = "Grogs, Chapter 7: Grog Templates, Horses & Hounds, pp. 136-139"
 SIZE_SOURCE = (
-    "Grogs, Chapter 7: Grog Templates, Horses & Hounds, Characteristics and "
-    "Size (https://www.redcap.org/page/Grogs_Chapter_Seven:_Grog_Templates"
-    "#Characteristics_and_Size)"
+    "Grogs, Chapter 7: Grog Templates, Horses & Hounds, Characteristics and Size, pp. "
+    "138-139"
 )
 LANGUAGE_SOURCE = (
-    "Grogs, Chapter 7: Grog Templates, Horses & Hounds, Lack of Language "
-    "Abilities (https://www.redcap.org/page/Grogs_Chapter_Seven:_Grog_"
-    "Templates#Lack_of_Language_Abilities)"
+    "Grogs, Chapter 7: Grog Templates, Horses & Hounds, Lack of Language Abilities, p. "
+    "137"
 )
 
 

@@ -56,6 +56,8 @@ MODIFIER_TYPES: dict[str, str] = {
     "working_seasons": "Working seasons a year",
     "teaching_source_quality": "Source Quality of those this character teaches",
     "aging_roll": "Aging roll",
+    # Added to the Quality of the books the character writes (Good Teacher).
+    "book_quality": "Quality of the books this character writes",
     # Warping Points each season spent somewhere (a place's effect).
     "warping_per_season": "Warping Points a season",
     # Replaces the aura (a place's effect: the amount is the new aura, the
@@ -69,6 +71,10 @@ MODIFIER_TYPES: dict[str, str] = {
     "crisis_survival": "Rolls to survive an Aging Crisis",
     # Aging Points never lower a Characteristic (Unaging).
     "unaging": "Aging Points don't lower Characteristics",
+    # Years of effective age a year adds (Age Quickly, Demonic Blood: 2).
+    "aging_rate": "Years of effective age each year",
+    # Nothing warps the character (a Might score).
+    "warping_immune": "Immune to Warping",
     "art_xp_gain": "Experience gained toward a specific Art",
     "art_score_effective": "Flat bonus to an Art's effective score, without spending xp",
     "ability_xp_gain": "Experience gained toward a specific Ability",

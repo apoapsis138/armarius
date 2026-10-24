@@ -555,7 +555,9 @@ def load_shape_material_catalog(
     path: Path = SHAPE_MATERIAL_CATALOG_PATH,
 ) -> list[ShapeMaterialDef]:
     """DE's Shape and Material Bonuses Table, row for row in its order
-    (built by tools/build_shape_material_catalog.py). Cached."""
+    (built by tools/build_shape_material_catalog.py), with the supplements'
+    rows it lacks (Covenants, Against the Dark, Mystery Cults) in
+    alphabetical place. Cached."""
     return list(_shape_material_catalog(path))
 
 

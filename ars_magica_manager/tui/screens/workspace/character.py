@@ -9,11 +9,13 @@ from functools import partial
 from typing import Any
 
 from .... import (
+    aging_due,
     catalog,
     creation,
     disputations,
     health,
     seasons,
+    session_end,
     sourcebooks,
     storage,
     traditions,
@@ -43,6 +45,7 @@ from ....models import (
     replace_raw_vis,
 )
 from ....rules import activities as season_rules
+from ....rules import disease
 from ....sections import CHAR_AHEAD_SECTION
 from ..fields import (
     FieldsDialog,
@@ -136,6 +139,30 @@ class CharacterActions(WorkspaceBase):
             self.app,
             health.take_harm_form(self.saga, character),
             lambda _end: self._commit("section-char-health"),
+        )
+
+    def action_place_aging_points(self) -> None:
+        """More's Place Aging Points on Aging & Warping: those a disease
+        Crisis left, each in a Characteristic chosen."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            aging_due.character_form(self.saga, character),
+            lambda _end: self._commit("section-aging", "section-char-characteristics"),
+        )
+
+    def action_end_session(self) -> None:
+        """More's End of Session on Reputations: Confidence Points and
+        Reputation deeds, kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            session_end.end_session_form(self.saga, character),
+            lambda _end: self._commit("section-reputations", "section-char-info"),
         )
 
     def action_recovery_roll(self) -> None:
@@ -428,12 +455,16 @@ class CharacterActions(WorkspaceBase):
 
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is not None:
-                character.wounds = character.wounds.with_counts(**result)
+                character.wounds = character_forms.apply_wounds(
+                    character.wounds, result
+                )
                 self._commit("section-char-health")
 
+        academe = disease.on(self.saga) or bool(character.wounds.diseases)
         self.app.push_screen(
             FieldsDialog(
-                "Edit Wounds", character_forms.wounds_fields(character.wounds)
+                "Edit Wounds",
+                character_forms.wounds_fields(character.wounds, academe=academe),
             ),
             handle_result,
         )

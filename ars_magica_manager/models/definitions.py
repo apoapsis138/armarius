@@ -544,6 +544,9 @@ class CastingRule:
     best_of: list[str] = field(default_factory=list)
     die: str = "stress"
     divisor: int = 1
+    #: The division rounds up instead of down (storm wizards' ice
+    #: harvesting, Against the Dark p. 130).
+    rounds_up: bool = False
     #: How far short a total may fall and still work, at a Fatigue cost;
     #: 0 when it must reach the level or Ease Factor.
     failure_margin: int = 0
@@ -655,6 +658,14 @@ class OpeningRule:
     #: that names the Art; "" when the troupe picks the Flaw.
     flaw: str = ""
     flaw_param: str = ""
+    #: The Opening Total's bands, as multiples of the Opening Ease Factor:
+    #: at least `opens_at` Opens the student; more than `keeps_over` keeps
+    #: their Supernatural Abilities, or (when set) at least `keeps_at`.
+    opens_at: int = 1
+    keeps_over: int = 2
+    keeps_at: int | None = None
+    #: The Opening loses the Arts of any other tradition the student had.
+    loses_other_arts: bool = False
     notes: str = ""
 
     @classmethod

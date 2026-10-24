@@ -48,10 +48,10 @@
       Handedness: right
       Physical Description: (not set)
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▃▃
     ▼ Personality Traits (1)                           ▼ Reputations (1)
 
-      ○ Brave: +2                                        ○ Wise: +1                                   ▅▅
+      ○ Brave: +2                                        ○ Wise: +1
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Connections
@@ -255,15 +255,15 @@
       Every score adds: Stamina +0, Aura (Magic 1) +1 (firm words, bold gestures).
       Formulaic: score + die >= level casts it; up to 10 short costs a Fatigue level.
       Spontaneous: score / 5 without Fatigue; (score + stress die) / 2 for a Fatigue level.
+      Fast casting (Spontaneous): speed Quickness + Finesse +0 + stress die against the foe's         ▄▄
+      Initiative, -6 for each spell after the first; score -10, +2 botch dice, no vis.
+      Concentration: Stamina + Concentration +0 + stress die; a failure ends the spell and adds a
+      botch die. Aiming: Perception + Finesse +0 + die, +6 for each size step past a basic Individual.
       Magic Resistance (Form + Parma 0 x 5 + aura): An 1, Aq 1, Au 1, Co 1, He 1, Ig 1, Im 1, Me 1, Te
       1, Vi 1
       Penetration: Casting Total - spell level +0 (Penetration), multiplied by Arcane Connections.
-      Certamen: Initiative +0, Attack Presence +0 + Art, Defence Perception +0 + the other Art,       ▇▇
+      Certamen: Initiative +0, Attack Presence +0 + Art, Defence Perception +0 + the other Art,
       Weakening +0 + advantage, Resistance +0.
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Raw Vis
-
 
   ▌
   ▌  Select an Art or a Known Spell to see its details.

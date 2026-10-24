@@ -17,9 +17,7 @@ from .. import sourcebooks
 from ..models import Saga
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Sixteen: Sagas, Rules Questions "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Sixteen:"
-    "_Sagas#Rules_Questions)"
+    "Ars Magica Definitive Edition, Chapter Sixteen: Sagas, Rules Questions, p. 524"
 )
 
 
@@ -72,8 +70,7 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         source=(
             "Realms of Power: The Infernal, Chapter One: The Infernal Realm, "
-            "Infernal Vis (https://www.redcap.org/page/Realms_of_Power:_The_Infernal"
-            "_Chapter_One:_The_Infernal_Realm#Infernal_Vis)"
+            "Infernal Vis, pp. 18-19"
         ),
         book="RoP:I",
     ),
@@ -87,8 +84,7 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         source=(
             "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenant "
-            "Finances, Baseline (https://www.redcap.org/page/Ars_Magica_"
-            "Definitive_Edition,_Chapter_Six:_Covenants#Baseline_2)"
+            "Finances, Baseline, p. 188"
         ),
     ),
     RuleOption(
@@ -101,9 +97,7 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         source=(
             "Ars Magica Definitive Edition, Chapter Three: Characters, "
-            "Detailed Character Creation Summary (https://www.redcap.org/page/"
-            "Ars_Magica_Definitive_Edition,_Chapter_Three:_Characters"
-            "#Detailed_Character_Creation_Summary)"
+            "Detailed Character Creation Summary, p. 44"
         ),
     ),
     RuleOption(
@@ -116,9 +110,7 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         source=(
             "Ars Magica Definitive Edition, Chapter Nine: Spells, Changing "
-            "Ranges, Durations, and Targets (https://www.redcap.org/page/Ars_"
-            "Magica_Definitive_Edition,_Chapter_Nine:_Spells#Changing_Ranges,"
-            "_Durations,_and_Targets)"
+            "Ranges, Durations, and Targets, p. 302"
         ),
     ),
     RuleOption(
@@ -132,8 +124,7 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         source=(
             "Covenants, Chapter Seven: Library, Extended Suggestions on the "
-            "Quality of Books (https://www.redcap.org/page/Covenants_Chapter"
-            "_Seven:_Library)"
+            "Quality of Books, pp. 87-90"
         ),
         book="Covenants",
     ),
@@ -149,6 +140,21 @@ OPTIONS: tuple[RuleOption, ...] = (
         book="LoM",
     ),
     RuleOption(
+        key="art_academe_medicine",
+        label="Art & Academe medicine",
+        effect=(
+            "A disease is its own record instead of a wound: it has a stage "
+            "(Minor, Serious, Major, Critical), a Severity and its own Ease "
+            "Factors, its Disease Penalty adds to the Wound Penalty, and it "
+            "rolls to recover at its interval, twice a day in a Crisis. A "
+            "physician's Medicine helps only when his Prognosis Total beats "
+            "the Severity, and the patient's surroundings are Recovery "
+            "Modifiers."
+        ),
+        source="Art & Academe, Chapter Three: Medicine, pp. 45-58",
+        book="A&A",
+    ),
+    RuleOption(
         key="dominion_growth",
         label="Dominion growth",
         effect=(
@@ -158,8 +164,7 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         source=(
             "Realms of Power: The Divine, Chapter Two: Heaven and Earth, "
-            "Creating a Dominion Aura (https://www.redcap.org/page/Realms_of"
-            "_Power:_The_Divine_Open_Content#The_Dominion)"
+            "Creating a Dominion Aura, pp. 11-12"
         ),
         book="RoP:D",
     ),

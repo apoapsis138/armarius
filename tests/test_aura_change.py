@@ -131,9 +131,9 @@ def test_twilight_is_rolled_against_the_aura_where_it_happened(monkeypatch):
     seen = []
     real = warping.twilight
 
-    def spy(character, gained, aura, rng, saga_=None):
+    def spy(character, gained, aura, rng, saga_=None, **kw):
         seen.append(aura)
-        return real(character, gained, aura, rng, saga_)
+        return real(character, gained, aura, rng, saga_, **kw)
 
     monkeypatch.setattr(character_effects.warping_rules, "twilight", spy)
     character_effects.gain_warping(saga, magus, 2, random.Random(1), aura=9)

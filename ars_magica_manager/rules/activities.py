@@ -86,53 +86,34 @@ from . import (
 from . import hybrid_magic as hybrid
 from . import lab as lab_rules
 from .breakdown import Line
-from .rounding import round_down
+from .scores import ability_level
 from .study import StudyResult, season_of_study
 
 ASSIGNING_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Assigning "
-    "Seasons (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Ten:_Long-Term_Events#Assigning_Seasons)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Assigning Seasons, p. "
+    "376"
 )
 EXPOSURE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Exposure "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Exposure)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Exposure, p. 376"
 )
 PRACTICE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Practice "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Practice)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Practice, p. 377"
 )
 ADVENTURE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Adventure "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Adventure)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Adventure, p. 376"
 )
 BOOKS_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Books "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Books)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Books, pp. 378-379"
 )
 TEACHING_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Teaching "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Teaching)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Teaching, p. 378"
 )
 TRAINING_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Training "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Training)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Training, p. 377"
 )
-VIS_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Vis "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Vis)"
-)
+VIS_SOURCE = "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Vis, p. 378"
 DISTRACTION_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Distractions "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Distractions)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Distractions, p. 379"
 )
 
 #: The rule behind seasons as a whole (every rules module cites one).
@@ -294,6 +275,18 @@ ACTIVITIES: dict[str, Activity] = {
             group=groups.INVENTING,
         ),
         Activity(
+            lab_seasons.TAUGHT_SPELLS,
+            "Learn spells from a teacher",
+            "A season learning spells from a magus who knows them and spends "
+            "the season teaching: at most his highest Lab Total in levels, his "
+            "Lab Total in each Technique and Form, and no spell above your own "
+            "Lab Total for it.",
+            lab_seasons.spell_teaching.SOURCE,
+            who=("magus",),
+            lab=True,
+            group=groups.INVENTING,
+        ),
+        Activity(
             lab_seasons.EXTRACT,
             "Extract vis",
             "Extracting vis from the aura: Creo Vim Lab Total / 10 pawns of "
@@ -398,8 +391,11 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.TAMING,
             "Tame a magical beast",
             "Hermetic taming: Rego + the creature's Form Lab Total (+ Animal "
-            "Handling + Animal Ken) - its Might each season, until the points "
-            "reach its Might; a Lab Text of it.",
+            "Handling + Animal Ken, + 1 for every 5 levels of the best taming "
+            "Lab Text of its Form at hand) - its Might each season, until the "
+            "points reach its Might; they last only over consecutive seasons "
+            "(DE p. 384). Tamed, a creature of the saga gains Loyal +0 to the "
+            "magus; a Lab Text of it.",
             lab_seasons.TAMING_SOURCE,
             who=("magus",),
             lab=True,
@@ -676,10 +672,7 @@ ACTIVITIES.update(
     }
 )
 OPEN_TRADITION = tradition_seasons.OPEN
-HEDGE_SOURCE = (
-    "Hedge Magic, Revised Edition "
-    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content)"
-)
+HEDGE_SOURCE = "Hedge Magic, Revised Edition, Chapters Two to Seven, pp. 17-141"
 ACTIVITIES[tradition_seasons.OPEN] = Activity(
     tradition_seasons.OPEN,
     "Open a student's Gift to a tradition",
@@ -922,15 +915,37 @@ def plans_this_season(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
 
 
 def students_of(saga: Saga, plan: SeasonPlan) -> int:
-    """How many are being taught this subject by this teacher this season."""
-    subject = next((a.subject for a in plan.allocations if a.subject), "")
+    """How many this teacher teaches this season, whatever the subject:
+    the +6 and +3 for one or two students, and the Arts' one-on-one rule,
+    count them all (DE p. 378)."""
     return sum(
         1
         for p in plans_this_season(saga, plan)
-        if p.activity == TAUGHT
-        and p.teacher_id == plan.teacher_id
-        and any(a.subject == subject for a in p.allocations)
+        if p.activity == TAUGHT and p.teacher_id == plan.teacher_id
     )
+
+
+#: A language at this score reads a book or teaches in it (DE p. 378).
+READING_LANGUAGE = 4
+
+
+def shared_language(teacher: Character, student: Character) -> bool:
+    """Whether teacher and student share a language at 4 or more, or
+    either has none recorded (the troupe hasn't typed them)."""
+
+    def spoken(person: Character) -> set[str]:
+        return {
+            a.name.partition(": ")[2] or a.name
+            for a in person.abilities
+            if (
+                a.name.startswith(("Living Language:", "Dead Language:"))
+                or a.name == "Latin"
+            )
+            and a.level >= READING_LANGUAGE
+        }
+
+    mine, theirs = spoken(student), spoken(teacher)
+    return not mine or not theirs or bool(mine & theirs)
 
 
 def vis_pool(
@@ -1053,6 +1068,25 @@ def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> lis
     found: list[str] = []
     if _split(subject)[0] == "art" and character.type != "magus":
         found.append("Only the Gifted study the Arts.")
+    if book.type == "Tractatus" and book_seasons.written_by(book, character):
+        found.append(
+            f"{character.name} wrote {book.name}: nobody gains from studying "
+            "a tractatus of his own (DE p. 378)."
+        )
+    language = book.language or "Latin"
+    # A character with no Abilities typed (a stat-less NPC) isn't checked.
+    typed = bool(character.abilities)
+    if typed and book_seasons.language_score(character, language) < READING_LANGUAGE:
+        found.append(
+            f"Studying {book.name} needs {language} at {READING_LANGUAGE} "
+            f"(DE p. 378); {character.name} has "
+            f"{book_seasons.language_score(character, language)}."
+        )
+    if typed and ability_level(character, "Artes Liberales") < 1:
+        found.append(
+            f"{character.name} can't read: studying a book needs a score in "
+            "Artes Liberales (DE p. 378)."
+        )
     if book.type == "Tractatus" and book.id in character.tractatus_read:
         found.append(
             f"{character.name} has already studied {book.name}: a tractatus "
@@ -1084,6 +1118,17 @@ def _taught_problems(
         return [f"Choose the {role}."]
     if teacher.id == character.id:
         return [f"Nobody can be their own {role}."]
+    kind, name = _split(subject)
+    if (
+        kind == "ability"
+        and study.learning_supernatural(character, name)
+        and hybrid.ABILITY_REALMS.get(name, realms.HERMETIC) == realms.HERMETIC
+        and not study.gifted(character)
+    ):
+        return [
+            f"Only the Gifted learn a Supernatural Ability of Magic like {name} "
+            "(DE p. 383)."
+        ]
     if plan.activity == TRAINED:
         return _trained_problems(character, teacher, subject)
     return _teacher_problems(saga, character, plan, teacher, subject)
@@ -1131,9 +1176,17 @@ def _teacher_problems(
             f"the student's: {teacher.name} has {theirs}, "
             f"{character.name} {mine}."
         )
+    if not shared_language(teacher, character):
+        found.append(
+            f"{teacher.name} and {character.name} share no language at "
+            f"{READING_LANGUAGE} (DE p. 378)."
+        )
     students = students_of(saga, plan)
     if kind == "art" and students > 1:
-        found.append("The Arts are taught one student at a time.")
+        found.append(
+            "The Arts are taught one student at a time, and "
+            f"{teacher.name} has {students} this season."
+        )
     elif students > study.max_students(teacher):
         found.append(
             f"{teacher.name} can teach {study.max_students(teacher)} "
@@ -1258,6 +1311,10 @@ class Outcome:
     supplement: supplement_work.SupplementWork | None = None
     #: Setting up a new laboratory: its id, once the season is applied.
     new_lab_id: str | None = None
+    #: A botch's Warping Points (one per zero) and the aura it happened in,
+    #: given when the season is applied (and Twilight checked at 2+).
+    warping: int = 0
+    warping_aura: int = 0
 
     @property
     def ok(self) -> bool:
@@ -1471,13 +1528,14 @@ def outcome(
         )
     if (
         not result.problems
-        and derived.wound_penalty(character.wounds, character.virtues_flaws) <= -3
+        and result.gains
+        and derived.wound_penalty(character.wounds, character.virtues_flaws)
+        <= study.WOUNDED_STUDY
     ):
-        # Study at -3 to -5 is halved (DE Ch. 11, Activities While Injured).
-        for gain in result.gains:
-            gain.result.xp = round_down(gain.result.xp / 2)
-        if result.gains:
-            result.notes.append("Wounded (-3 to -5): the season's xp is halved.")
+        # The halving is in each gain's Advancement Total (rules.study).
+        result.notes.append(
+            "Wounded (-3 to -5): the season's Advancement Total is halved."
+        )
     return result
 
 
@@ -1486,6 +1544,7 @@ _CRAFT = (
     "working_season",
     "workshop_production",
     "make_excellent_item",
+    "make_wondrous_item",
     "repair_item",
     "improve_workshop",
     "produce_remedies",
@@ -2131,16 +2190,33 @@ def _study_outcome(
             quality = study.teaching_quality(teacher, students_of(saga, plan))
         else:
             quality = score(teacher, subject) + 3
-        result.gains.append(
-            _gain(
-                character,
-                subject,
-                quality,
-                kind,
-                months,
-                gain_limit=score(teacher, subject),
-            )
+        name = _split(subject)[1]
+        first = _split(subject)[0] == "ability" and study.learning_supernatural(
+            character, name
         )
+        if first:
+            penalty = study.supernatural_penalty(character, name)
+            if penalty:
+                quality -= penalty
+                result.notes.append(
+                    f"A first season in {name}: -{penalty} for the student's "
+                    "other Supernatural Abilities and opened Arts (DE p. 383)."
+                )
+        gain = _gain(
+            character,
+            subject,
+            max(0, quality),
+            kind,
+            months,
+            gain_limit=score(teacher, subject),
+        )
+        if first and gain.result.xp < study.SUPERNATURAL_FIRST_XP:
+            result.notes.append(
+                f"{gain.result.xp} xp is short of the {study.SUPERNATURAL_FIRST_XP} "
+                f"a first season in {name} must give: nothing is learned."
+            )
+            gain.result.xp = 0
+        result.gains.append(gain)
         return
     if plan.activity == VIS_STUDY:
         _vis_study_outcome(saga, character, plan, rng, result, kind, months)
@@ -2194,10 +2270,14 @@ def _vis_study_outcome(
             die_value, botches = die.value, die.botches
         result.notes.append(f"Die rolled: {die_value}.")
     if botches:
+        # A Warping Point for each zero, as for any supernatural botch (DE
+        # p. 390); two or more bring the Twilight check (DE pp. 228, 378).
+        result.warping, result.warping_aura = botches, aura
         result.notes.append(
-            f"Botch: {botches} zero(s) on the botch dice"
+            f"Botch: {botches} zero(s) on the botch dice: {botches} Warping "
+            "Point(s)"
             + (
-                "; a double botch may bring on Wizard's Twilight (DE Ch. 10, Vis)."
+                "; a double botch may bring on Wizard's Twilight."
                 if botches >= 2
                 else "."
             )
@@ -2257,10 +2337,18 @@ def _plain_problems(
                 f"An Adventure's Source Quality is {ADVENTURE_MIN} to "
                 f"{ADVENTURE_MAX} (the storyguide's choice)."
             )
-        elif sum(a.points for a in chosen) != quality:
+        elif sum(a.points for a in chosen) != quality + study.season_bonus(
+            character, "adventure"
+        ):
+            whole = quality + study.season_bonus(character, "adventure")
             found.append(
-                f"Split all {quality} points of Source Quality: "
-                f"{sum(a.points for a in chosen)} are split."
+                f"Split all {whole} points of Source Quality"
+                + (
+                    f" ({quality} + {whole - quality} from Independent Study)"
+                    if whole != quality
+                    else ""
+                )
+                + f": {sum(a.points for a in chosen)} are split."
             )
         if any(not 1 <= a.points <= ADVENTURE_PER_SUBJECT for a in chosen):
             found.append(
@@ -2279,6 +2367,9 @@ def _plain_outcome(
 ) -> None:
     months = _months(plan)
     kind = _STUDY_KIND[plan.activity]
+    if plan.activity == ADVENTURE:
+        # Its Virtues add to the season's Source Quality, already split.
+        kind = study.SPLIT_ADVENTURE
     for allocation in allocations(plan):
         result.gains.append(
             _gain(character, allocation.subject, allocation.points, kind, months)

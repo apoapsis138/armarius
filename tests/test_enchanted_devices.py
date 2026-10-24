@@ -289,9 +289,12 @@ def test_warns_of_a_lab_total_below_the_level_and_too_many_charges():
     effect = _effect(level=20)
     low = _device(type=CHARGED, lab_total=15, effects=[effect])
     assert "below its effect's level (20)" in ed.warnings(_saga(low), low)[0]
-    many = _device(type=CHARGED, lab_total=30, charges_made=5, effects=[effect])
+    # From a Lab Text a fifth of the whole Lab Total, 6, is allowed too.
+    text = _device(type=CHARGED, lab_total=30, charges_made=6, effects=[effect])
+    assert ed.warnings(_saga(text), text) == []
+    many = _device(type=CHARGED, lab_total=30, charges_made=7, effects=[effect])
     assert ed.warnings(_saga(many), many) == [
-        "5 charges made, but its Lab Total gives at most 2."
+        "7 charges made, but its Lab Total gives at most 2 (6 from a Lab Text)."
     ]
 
 
@@ -389,9 +392,10 @@ def test_a_deleted_covenants_devices_go_with_it():
 
 def test_catalog_is_the_books_table_row_for_row():
     rows = catalog.load_shape_material_catalog()
-    # The book's table, the Book shape from Covenants (an epitome), and
-    # black hawthorn from Against the Dark.
-    assert len(rows) == 243
+    # The book's table, the Book shape from Covenants (an epitome), black
+    # hawthorn from Against the Dark, and the three rows of Mystery Cults'
+    # expanded table (p. 137) the Definitive Edition doesn't have.
+    assert len(rows) == 246
     assert rows[0].name == "Adze" and rows[-1].name == "Yoke"
     agate = next(r for r in rows if r.name == "Agate")
     assert agate.bonuses == (
@@ -399,10 +403,14 @@ def test_catalog_is_the_books_table_row_for_row():
         (5, "protection from storms"),
         (7, "protection from venom"),
     )
-    assert all(r.citation.startswith("https://") for r in rows)
+    # A web page, or a book's printed page.
+    assert all(r.citation.startswith("https://") or ", p. " in r.citation for r in rows)
     assert {r.name: r.source for r in rows if r.source != "DE"} == {
         "Book": "Covenants",
         "Black Hawthorn": "AtD",
+        "Alexandrite": "HoH:MC",
+        "Hickory Wood": "HoH:MC",
+        "Platinum": "HoH:MC",
     }
     hawthorn = next(r for r in rows if r.name == "Black Hawthorn")
     assert hawthorn.bonuses == (

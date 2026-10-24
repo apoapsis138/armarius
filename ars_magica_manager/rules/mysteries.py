@@ -4,10 +4,17 @@
                        + Script bonus (the sum of its components)
 
 No die: the Initiation succeeds when the total at least equals the Target
-Level (decision 18): a Minor Virtue 15, a Major 21, or 18 / 30 when the
-Mystagogue lacks the Virtue. An Ordeal suffered in an earlier Initiation
-lowers the Target of the next three (only the best one counts), never below
-9; it doesn't help the Initiation it was suffered in (decision 79).
+Level: a Minor Virtue 15, a Major 21, or 18 / 30 when the Mystagogue lacks
+the Virtue (DE pp. 387-388). An Ordeal suffered in an earlier Initiation
+lowers the Target of the next three, by 3/2/1 (Minor), 6/4/2 (Medium) or
+9/6/3 (Major); only the best one counts, never below 9, and it doesn't help
+the Initiation it was suffered in.
+
+Varying a Script (DE pp. 388-389): the Mystagogue may make one change in an
+Initiation, a stress die + Intelligence + the Lore against 9 to add a
+component or 12 to change one (The Mysteries Revised Edition p. 17 adds 15
+to remove one). If the test fails, the Initiation fails; the Script as it
+was may be tried another season.
 """
 
 from __future__ import annotations
@@ -20,10 +27,8 @@ from .breakdown import Breakdown, Line
 from .lab import ability_score
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Mystery "
-    "Initiation "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Mystery_Initiation)"
+    "Ars Magica Definitive Edition, Mystery Initiation, pp. 387-389; The "
+    "Mysteries Revised Edition, Varying a Script, p. 17"
 )
 
 #: (tier, Mystagogue has the Virtue) -> Target Level.
@@ -34,11 +39,19 @@ TARGET_LEVELS: dict[tuple[str, bool], int] = {
     ("Major", False): 30,
 }
 MINIMUM_TARGET = 9
+ADD, CHANGE, REMOVE = "add", "change", "remove"
+#: Varying a Script: the Ease Factor of each kind of change.
+VARY_EASE: dict[str, int] = {ADD: 9, CHANGE: 12, REMOVE: 15}
+VARY_LABELS: dict[str, str] = {
+    ADD: "Add a component (9)",
+    CHANGE: "Change a component (12)",
+    REMOVE: "Remove a component (15)",
+}
 
 #: Ordeal size -> the Target reduction for the 1st, 2nd and 3rd later
 #: Initiation (the Definitive Edition's table).
 ORDEAL_REDUCTIONS: dict[str, tuple[int, int, int]] = {
-    "Minor": (3, 3, 1),
+    "Minor": (3, 2, 1),
     "Medium": (6, 4, 2),
     "Major": (9, 6, 3),
 }

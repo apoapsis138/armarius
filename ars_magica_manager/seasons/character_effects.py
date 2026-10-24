@@ -17,12 +17,12 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
-from ..rules import effects, medicine, sites, work_virtues
 from ..rules import hybrid_magic as hybrid
+from ..rules import living as living_rules
+from ..rules import sites, work_virtues
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.realms import home_aura
-from ..rules.rounding import round_down
 from .plans import _cite, _gain_line, book_text, plan_subject, spell_names, work_text
 
 
@@ -87,56 +87,9 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
     )
 
 
-#: A laboratory's Health / LAB_HEALTH_DIVISOR, rounded down, adds to its
-#: magus's Living Conditions.
-LAB_HEALTH_DIVISOR = 2
-
-
-LAB_HEALTH_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Health "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Health)"
-)
-
-
-def _living_conditions(saga: Saga, character: Character) -> int:
-    """The Living Conditions modifier: the covenant's for magi or mundanes,
-    plus half the Health of a magus's laboratory, rounded down (negative
-    Health too: -3 gives -2), per LAB_HEALTH_SOURCE, plus a physician's
-    regimen (rules.medicine)."""
-    covenant = saga.covenant(character.covenant_id)
-    living = 0
-    if covenant is not None:
-        living = (
-            covenant.living_conditions_magi
-            if character.type == "magus"
-            else covenant.living_conditions_mundane
-        )
-    lab = saga.laboratory(character.assigned_lab_id)
-    if lab is not None and character.type == "magus":
-        from .. import catalog
-        from ..rules.lab_stats import lab_characteristic_total
-
-        health = lab_characteristic_total(
-            lab, catalog.load_lab_virtue_flaw_catalog_by_id(), "health", saga
-        )[3]
-        living += round_down(health / LAB_HEALTH_DIVISOR)
-    here = sites.character_effects(saga, character, "living_conditions")
-    return (
-        living
-        + int(effects.amount_total(here))
-        + medicine.regimen_bonus(
-            saga.character(character.aging.regimen_by),
-            character.aging.regimen,
-            character.aging.regimen_since,
-            saga.current_year,
-        )
-    )
-
-
 #: The Living Conditions modifier aging uses, for the rules outside a
 #: season's aging (pre-play aging from the Grogs Aging Chart).
-living_conditions = _living_conditions
+living_conditions = living_rules.living_conditions
 
 
 def _warped_this_year(saga: Saga, character: Character) -> bool:
@@ -158,12 +111,22 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
     added ("" for nothing)."""
     gained: list[str] = []
     points = 0
+    if warping_rules.immune(character):
+        return ""
     if character.aging.longevity_modifier:
         points += 1
         gained.append("Longevity Ritual 1")
     aura, realm = home_aura(saga, character)
-    if hybrid.warps_from_aura(character, realm):
-        from_aura = warping_rules.aura_points(aura)
+    # A non-magus's Virtue at Warping Score 5 stops points from auras of its
+    # kind, taken to be the aura they live in.
+    attuned = (
+        not warping_rules.opened_to_arts(character)
+        and character.aging.warping_score >= warping_rules.ATTUNED_SCORE
+    )
+    if hybrid.warps_from_aura(character, realm) and not attuned:
+        from_aura = warping_rules.aura_points(
+            aura, character.aging.aura_time, saga.current_year
+        )
         if from_aura:
             points += from_aura
             gained.append(f"{realm} aura {aura}: {from_aura}")
@@ -183,8 +146,18 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
         gained.append("Susceptibility to Warping 1")
     if not points:
         return ""
+    before = character.aging.warping_score
     warping_rules.set_total(character, warping_rules.total_points(character) + points)
-    return f"Warping Points +{points} ({', '.join(gained)}); Warping Score now {character.aging.warping_score}."
+    text = f"Warping Points +{points} ({', '.join(gained)}); Warping Score now {character.aging.warping_score}."
+    return " ".join([text, *_warped_effects(character, before)])
+
+
+def _warped_effects(character: Character, before: int) -> list[str]:
+    """What a non-magus's higher Warping Score brings, for the Diary (a
+    magus's Warping means Twilight instead: DE p. 391)."""
+    if warping_rules.opened_to_arts(character) or character.traditions:
+        return []
+    return warping_rules.mundane_effects(before, character.aging.warping_score)
 
 
 def gain_warping(
@@ -195,15 +168,21 @@ def gain_warping(
     *,
     opened: bool = False,
     aura: int | None = None,
+    enter: bool = False,
 ) -> list[str]:
     """Add Warping Points from one event; 2 or more take a
     magus (with `opened`, anyone whose Arts are opened) to the edge of
     Wizard's Twilight, rolled against the aura where it happened (`aura`;
-    where they live when not given). Writes a Diary entry and returns its
-    lines."""
+    where they live when not given), or entered at once (`enter`). Writes
+    a Diary entry and returns its lines. A character with a Might score
+    (Demonic Blood) is immune."""
+    if warping_rules.immune(character):
+        return [f"{character.name} is immune to Warping (a Might score)."]
+    before = character.aging.warping_score
     warping_rules.set_total(character, warping_rules.total_points(character) + points)
     notes = [
-        f"+{points} Warping Points; Warping Score {character.aging.warping_score}."
+        f"+{points} Warping Points; Warping Score {character.aging.warping_score}.",
+        *_warped_effects(character, before),
     ]
     name = f"Warping +{points}"
     at_risk = (
@@ -212,7 +191,7 @@ def gain_warping(
     if at_risk and points >= 2:
         if aura is None:
             aura, _ = home_aura(saga, character)
-        result = warping_rules.twilight(character, points, aura, rng, saga)
+        result = warping_rules.twilight(character, points, aura, rng, saga, enter=enter)
         notes += result.notes
         if result.entered:
             name = "Wizard's Twilight"
@@ -258,7 +237,7 @@ def age_character(
     familiar = saga.familiar_of(character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
     if living is None:
-        living = _living_conditions(saga, character)
+        living = living_rules.living_conditions(saga, character)
     season, year = (
         when if when is not None else (saga.current_season, saga.current_year)
     )
@@ -272,13 +251,7 @@ def age_character(
         aging.apparent_age = age - 1
     notes = list(result.notes)
     for name, points in result.points.items():
-        aging.aging_points[name] = aging.aging_points.get(name, 0) + points
-        aging.decrepitude_points += points
-        score = getattr(character.characteristics, name)
-        if aging.aging_points[name] > abs(score) and not aging_rules.unaging(character):
-            setattr(character.characteristics, name, score - 1)
-            aging.aging_points[name] = 0
-            notes.append(f"{name.title()} falls to {score - 1:+d}.")
+        notes += aging_rules.add_points(character, name, points)
     if result.points:
         gained = ", ".join(f"{n.title()} {p}" for n, p in result.points.items())
         notes.append(f"Aging Points: {gained}.")

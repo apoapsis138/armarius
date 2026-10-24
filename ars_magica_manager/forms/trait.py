@@ -46,7 +46,7 @@ def scored_trait_fields(
     """A Personality Trait or Reputation: a name and a score, optionally
     bounded (covenant Reputations are -3..+3); for a Reputation, its kind
     and reach (`include_reach`) and, for a covenant's, whether the
-    covenant knows of it (see inhabitants.reputation_loyalty_penalty())."""
+    covenant knows of it (see inhabitants.reputation_loyalty())."""
     fields = [
         DialogField(
             "name",

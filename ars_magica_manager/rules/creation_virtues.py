@@ -20,31 +20,24 @@ from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import THE_GIFT
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Virtues and "
-    "Flaws Rules and Guidelines (https://www.redcap.org/page/Ars_Magica_"
-    "Definitive_Edition,_Chapter_Four:_Virtues_and_Flaws#Virtues_and_Flaws_"
-    "Rules_and_Guidelines)"
+    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Virtues and Flaws "
+    "Rules and Guidelines, p. 63"
 )
 BUDGET_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Detailed "
-    "Character Creation Summary (https://www.redcap.org/page/Ars_Magica_"
-    "Definitive_Edition,_Chapter_Three:_Characters#Detailed_Character_"
-    "Creation_Summary)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Detailed Character "
+    "Creation Summary, p. 44"
 )
 TAINTED_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Types of "
-    "Virtue and Flaw (https://www.redcap.org/page/Ars_Magica_Definitive_"
-    "Edition,_Chapter_Four:_Virtues_and_Flaws#Types_of_Virtue_and_Flaw)"
+    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Types of Virtue and "
+    "Flaw, p. 63"
 )
 
 HOUSE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Hermetic Houses "
-    "Summary (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Three:_Characters#Hermetic_Houses_Summary)"
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Hermetic Houses Summary, "
+    "p. 46"
 )
 TRADITION_SOURCE = (
-    "Hedge Magic, Revised Edition, each tradition's Character Creation "
-    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content)"
+    "Hedge Magic, Revised Edition, each tradition's Character Creation, pp. 17-141"
 )
 
 MAX_FLAW_POINTS = 10
@@ -421,7 +414,44 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:
         *_gift_checks(record, t),
         *_personality_and_taint_checks(record, t),
         *_advice_checks(record, t),
+        *_exclusion_checks(record),
     ]
+
+
+#: Virtues that can't be taken with others, as their descriptions say.
+EXCLUDES: dict[str, tuple[tuple[str, ...], str]] = {
+    "vf_demonic_blood": (
+        ("vf_unaging", "vf_age_quickly"),
+        "Ars Magica Definitive Edition, Demonic Blood, p. 76",
+    ),
+    "vf_giant_blood": (
+        ("vf_large", "vf_small_frame", "vf_dwarf"),
+        "Ars Magica Definitive Edition, Giant Blood, p. 83",
+    ),
+}
+
+
+def _exclusion_checks(character: Character) -> list[Check]:
+    """A failed check for each pair the descriptions forbid (none when
+    there is no such pair)."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    ids = {vf.vf_id for vf in character.virtues_flaws}
+    found = []
+    for vf_id, (others, source) in EXCLUDES.items():
+        clash = [
+            by_id[o].name for o in others if vf_id in ids and o in ids and o in by_id
+        ]
+        if clash:
+            name = by_id[vf_id].name if vf_id in by_id else vf_id
+            found.append(
+                _check(
+                    f"{name} can't be taken with {', '.join(clash)}",
+                    False,
+                    "both taken",
+                    source,
+                )
+            )
+    return found
 
 
 def _budget_checks(character: Character, t: VirtueFlawTally) -> list[Check]:

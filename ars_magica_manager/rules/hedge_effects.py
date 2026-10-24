@@ -28,10 +28,7 @@ from ..models import CastingRule, Character, TraditionDef, TraditionEffect
 from . import hedge_casting as hc
 from . import realms
 
-SOURCE = (
-    "Hedge Magic, Revised Edition "
-    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content)"
-)
+SOURCE = "Hedge Magic, Revised Edition, Chapters Two to Seven, pp. 17-141"
 
 
 def of_tradition(

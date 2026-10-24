@@ -52,15 +52,9 @@ from .lab import ability_score
 from .rounding import round_down, round_up
 
 SOURCE = (
-    "Hedge Magic, Revised Edition, Chapter One: Introduction "
-    "(https://www.redcap.org/page/Hedge_Magic_Revised_Edition_Open_Content"
-    "#Magic_Defenses)"
+    "Hedge Magic, Revised Edition, Chapter One: Introduction, Magic Defenses, p. 10"
 )
-CEREMONY_SOURCE = (
-    "Realms of Power: The Divine, Ceremony "
-    "(https://www.redcap.org/page/Realms_of_Power:_The_Divine_Open_Content"
-    "#CEREMONY*)"
-)
+CEREMONY_SOURCE = "Realms of Power: The Divine, Ceremony, pp. 36-37"
 
 GREATER_DEFENSES = "vf_greater_magical_defenses"
 NO_DEFENSES = "vf_no_magical_defenses"
@@ -271,11 +265,12 @@ def _used(character: Character, name: str) -> Line:
 
 
 def casting_total(rule: CastingRule, casting_score: int, die: int = 0) -> int:
-    """(Casting Score + die) / divisor, rounded down; a lab rule adds no
-    die."""
+    """(Casting Score + die) / divisor, rounded down unless the rule rounds
+    up; a lab rule adds no die."""
     if rule.lab or rule.die == "none":
         die = 0
-    return round_down((casting_score + die) / rule.divisor)
+    divided = (casting_score + die) / rule.divisor
+    return round_up(divided) if rule.rounds_up else round_down(divided)
 
 
 @dataclass(frozen=True)

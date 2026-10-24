@@ -136,7 +136,7 @@ def _storm_wizards(transylvania: Transylvania) -> None:
             "and Penetration. Once raised a storm is natural, so it "
             "needs no Penetration and crosses an Aegis. In a season "
             "of ice harvesting a wizard gathers (Int + Organization "
-            "Lore + aura) / 3 pawns of Auram vis as ice that never "
+            "Lore + aura) / 3, rounded up, pawns of Auram vis as ice that never "
             "melts, at sites he keeps secret. A wizard who takes two "
             "or more Warping Points at once, or reaches a new Warping "
             "Score, may become a storm for a Moon (Strength + stress "
@@ -727,7 +727,7 @@ THIETMAR: StatBlock = {
         "sees from or travels to any point of a storm he can see; Storm "
         "Fighting attacks anyone within it with buffets, deluge, hail, "
         "erosion or lightning. Each season of ice harvesting yields "
-        "(Int + Organization Lore + aura) / 3 pawns of Auram vis. He "
+        "(Int + Organization Lore + aura) / 3, rounded up, pawns of Auram vis. He "
         "risks the storm trance when he gains Warping (see the Storm "
         "Wizards faction).",
     ),

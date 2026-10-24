@@ -109,6 +109,81 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.9.0 — 2026-10-24
+
+### Computus
+
+- **The rules checked against the books.** Every system was read again
+  in the Definitive Edition and its supplements, with the printed pages
+  cited in the code; where they disagree, the Definitive Edition wins.
+- **Laboratory.** Verditius Runes add Philosophiae to a Shape and
+  Material bonus; learning a spell from a teacher has the book's caps;
+  Opening the Arts loses, keeps or converts a student's Abilities by the
+  book; Mystery Cults' Alexandrite, Hickory Wood and Platinum join the
+  Shape and Material tables.
+- **Casting.** The Casting Scores now show fast casting, ceremonial
+  casting, Concentration, aiming and a talisman's attunements. Mastery
+  abilities count by name; the Golden Cord lowers spellcasting botch
+  dice. A Spontaneous grid appears beside the Formulaic one whenever its
+  levels differ: for Method Caster, Poor Formulaic Magic, a Deficiency,
+  Diedne Magic, Weak, Difficult or Ceremonial Spontaneous Magic, or
+  Unstructured Caster. A Ritual's Fatigue past unconsciousness becomes
+  wounds, and a casting botch can bring Warping and Twilight.
+- **Warping, Twilight and aging.** A botched comprehension can reach
+  Final Twilight; Age Quickly takes the year it began; Demonic Blood ages
+  twice as fast without losing Characteristics; time spent in the aura
+  where a character lives sets their Warping from it; the Blood Virtues
+  that give Might, and Faerie Virtues in a Faerie aura, protect from
+  Warping.
+- **Combat and equipment.** Any one-handed weapon is fought with the best
+  shield carried; only a shield's Defence counts against missiles; the
+  mounted Attack bonus is for melee; weapons' damage levels and types
+  come from Lords of Men; Grogs' equipment bonuses and four-footed beasts'
+  burdens follow that book.
+- **Reputations.** A Reputation is good or bad by its score's sign;
+  covenant Loyalty, university exams and disputatio read them as the
+  books say. **End of Session**, on More on Reputations, gives the
+  session's Confidence Points and counts noteworthy deeds toward a
+  Reputation.
+- **Medicine**, Art & Academe's, as a saga option: diseases as records
+  of their own, with stages, Crises, prognoses and the covenant's
+  physician. A Crisis survived asks where its Aging Point goes before
+  the next season is played (Place Aging Points, on More on Aging).
+- **Creatures.** A creature's build is checked against the rules the
+  Definitive Edition states, with its Quality points counted; a power can
+  take its cost and Initiative from the Quality that gives it.
+
+### Book of Hours
+
+- **Teaching and books.** Reading and writing need their language and
+  Artes Liberales; a teacher can take several students; copies don't use
+  up the tractatus allowance; wounds slow or stop study; a Supernatural
+  Ability's first season follows the book.
+- **Mysteries.** Ordeals lower later Initiations by the Definitive
+  Edition's table; varying a Script is rolled, and a failure fails the
+  Initiation; distractions cost the Initiation Total; a Gift a hedge
+  tradition opened needs 30 more to open the Arts.
+- **The covenant's year.** A deficit comes out of Wealth; inflation,
+  Familiarity, pensions and soldiers' pay follow the books; excellent and
+  wondrous items, moving up a social class and pushed travel are worked
+  out; a vis source's yield is hinted from the saga's vis level.
+
+### Concilium
+
+- **Thebes.** Redcaps don't vote, the archon does, and a defamation
+  decree names only a magus who is present. The Rhine skips its Grand
+  Tribunal year. Each is a Tribunal custom, so other Tribunals keep the
+  core rules.
+
+### Peregrinatio
+
+- **The Sundered Eagle, Against the Dark and Guardians of the Forests**
+  read page by page against their packs, and the mistakes found fixed.
+
+### Glossa
+
+- Help and the how-to guides follow every change above.
+
 ## 3.8.0 — 2026-10-24
 
 ### Computus

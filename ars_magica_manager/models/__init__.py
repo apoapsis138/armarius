@@ -36,6 +36,7 @@ from .character import Character as Character
 from .character import CreationConditions as CreationConditions
 from .character import CreationXp as CreationXp
 from .character import Description as Description
+from .character import Disease as Disease
 from .character import GrogYear as GrogYear
 from .character import HermeticBackground as HermeticBackground
 from .character import LabTextAccess as LabTextAccess

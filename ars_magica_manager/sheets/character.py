@@ -38,6 +38,7 @@ from ..rules import (
     aging,
     casting,
     derived,
+    equipment,
     experiment,
     medicine,
     penetration,
@@ -46,6 +47,7 @@ from ..rules import (
 )
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
+from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.breakdown import Breakdown
 from ..rules.realms import home_aura
@@ -176,23 +178,28 @@ def aging_text(character: Character, saga: Saga | None = None) -> str:
             a.longevity_effects, "The ritual's experimental effects"
         )
     if a.regimen and saga is not None:
-        lines.append(
-            medicine.regimen_text(
-                saga.character(a.regimen_by),
-                a.regimen,
-                a.regimen_since,
-                saga.current_year,
-            )
-        )
+        lines.append(medicine.regimen_text(saga, character))
     if a.recovering:
         lines.append(f"Recovering from an Aging Crisis: {a.recovering}")
+    if a.aging_due:
+        lines.append(
+            "Aging Points to place: "
+            + "; ".join(a.aging_due)
+            + " (More: Place Aging Points)"
+        )
     return "\n".join(
         [
             *lines,
             "Effects of Aging:",
             markdown_text(a.effects) or "(none recorded)",
             "",
-            f"Warping: {a.warping_score}/{a.warping_points}",
+            f"Warping: {a.warping_score}/{a.warping_points}"
+            + (
+                f" ({warping_rules.AURA_TIMES[a.aura_time].lower()} in their aura)"
+                if a.aura_time in warping_rules.AURA_TIMES
+                and a.aura_time != warping_rules.ALWAYS
+                else ""
+            ),
         ]
     )
 
@@ -636,8 +643,24 @@ def casting_grid(saga: Saga, character: Character) -> dict[tuple[str, str], Brea
     }
 
 
-def casting_cell_text(score: Breakdown) -> str:
-    """One Casting Score's terms and what it casts."""
+def spontaneous_score(
+    saga: Saga, character: Character, technique: str, form: str
+) -> Breakdown:
+    """A Technique and Form's Spontaneous Casting Score in the home aura."""
+    aura, realm = home_aura(saga, character)
+    return casting.casting_score(
+        character, technique, form, aura=aura, aura_realm=realm, spontaneous=True
+    )
+
+
+def casting_cell_text(
+    score: Breakdown,
+    spontaneous: Breakdown | None = None,
+    magus: Character | None = None,
+) -> str:
+    """One Casting Score's terms and what it casts. `spontaneous` is the
+    pair's Spontaneous score, which leaves out Formulaic-only Virtues; a
+    Deficiency halves either total (DE pp. 125, 214)."""
     lines = []
     for line in score.lines:
         if line.amount is not None:
@@ -653,9 +676,32 @@ def casting_cell_text(score: Breakdown) -> str:
             "",
             "Formulaic: score + die >= level casts it; up to 10 short costs a "
             "Fatigue level.",
-            f"Spontaneous: level {total // 5} without Fatigue, "
-            "(score + stress die) / 2 with it.",
+            spontaneous_cell_line(spontaneous or score, magus),
         ]
+    )
+
+
+def spontaneous_cell_line(score: Breakdown, magus: Character | None) -> str:
+    """What a Spontaneous casting reaches, as the magus's Flaws allow."""
+    mode = casting.spontaneous_mode(magus) if magus is not None else casting.NORMAL
+    if mode == casting.NO_SPONTANEOUS:
+        return "Spontaneous: none (Weak and Difficult Spontaneous Magic)."
+    if mode == casting.DIFFICULT:
+        return (
+            "Spontaneous: only exerting, (score + stress die) / 2 and a Fatigue level."
+        )
+    level = casting.non_fatiguing_level(magus, score) if magus is not None else None
+    if level is None:
+        level = casting.spontaneous_total(score)
+    if mode == casting.WEAK:
+        return f"Spontaneous: level {level}, always score / 5; never exerting."
+    if mode == casting.DIEDNE:
+        return (
+            f"Spontaneous: level {level} + a stress die / 2 without Fatigue (or "
+            "score / 5); exerting, the lowest Art doubled, / 2."
+        )
+    return (
+        f"Spontaneous: level {level} without Fatigue, (score + stress die) / 2 with it."
     )
 
 
@@ -864,6 +910,8 @@ def health_facts(character: Character, saga: Saga | None = None) -> list[Fact]:
     return [
         _fact("Soak", int(soak.total)),
         _fact("Encumbrance", encumbrance),
+        _fact("Walks", f"{derived.walking_pace(character)} paces a round"),
+        _fact("Carries", f"Load {equipment.carrying(character)[0]}"),
         _fact("Wound Penalty", f"{wounds:+d}"),
         _fact("Total Penalty", f"{wounds + fatigue:+d}"),
         *(

@@ -44,12 +44,14 @@ from ..models import (
 from ..rules import aging as aging_rules
 from ..rules import (
     creation_characteristics,
+    disease,
     experiment,
     integrations,
     medicine,
     research,
     scores,
 )
+from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from . import possession as possession_forms
 
@@ -161,12 +163,36 @@ def aging_fields(aging: Aging, saga: Saga | None = None) -> list[DialogField]:
         DialogField("warping_score", "Warping Score", "int", aging.warping_score),
         DialogField("warping_points", "Warping Points", "int", aging.warping_points),
         DialogField(
+            "aura_time",
+            "Time in their home aura",
+            "select",
+            aging.aura_time or warping_rules.ALWAYS,
+            options=[(label, key) for key, label in warping_rules.AURA_TIMES.items()],
+            hint="Sets the yearly Warping from a strong aura (DE p. 390).",
+        ),
+        DialogField(
             "gain_warping",
             "Gain Warping Points now",
             "int",
             0,
             hint="From one event (a powerful effect, a botch...): 2 or more "
             "take a magus to the edge of Wizard's Twilight, rolled at once.",
+        ),
+        DialogField(
+            "warping_aura",
+            "Aura where it happened",
+            "optint",
+            None,
+            show_if=lambda v: (v.get("gain_warping") or 0) >= 2,
+            hint="Blank: the aura where they live (DE p. 228).",
+        ),
+        DialogField(
+            "enter_twilight",
+            "Enter Twilight willingly",
+            "check",
+            False,
+            show_if=lambda v: (v.get("gain_warping") or 0) >= 2,
+            hint="No roll to avoid it (DE p. 228).",
         ),
         *_regimen_fields(aging, saga),
     ]
@@ -215,6 +241,8 @@ def apply_aging(
     (a Twilight episode rolled at once)."""
     result = dict(result)
     gained = result.pop("gain_warping", 0) or 0
+    aura = result.pop("warping_aura", None)
+    enter = bool(result.pop("enter_twilight", False))
     if "regimen" in result:
         result["regimen"] = int(result["regimen"] or 0)
         result["regimen_by"] = result.get("regimen_by") or ""
@@ -225,13 +253,19 @@ def apply_aging(
     for key, value in result.items():
         setattr(aging, key, value)
     if gained > 0:
-        return seasons.gain_warping(saga, character, gained, rng or random.Random())
+        return seasons.gain_warping(
+            saga, character, gained, rng or random.Random(), aura=aura, enter=enter
+        )
     return []
 
 
-def wounds_fields(wounds: Wounds, *, soak: bool = True) -> list[DialogField]:
+def wounds_fields(
+    wounds: Wounds, *, soak: bool = True, academe: bool = False
+) -> list[DialogField]:
     """Wound counts and Incapacitated/Dead; a character's Soak too (a
-    Familiar's lives with its Characteristics instead)."""
+    Familiar's lives with its Characteristics instead); with Art & Academe's
+    medicine, the Recovery Modifiers of where the patient heals and a
+    disease cured by other means."""
     fields = (
         [
             DialogField(
@@ -251,7 +285,46 @@ def wounds_fields(wounds: Wounds, *, soak: bool = True) -> list[DialogField]:
         DialogField("heavy", "Heavy Wounds (-5 each)", "int", wounds.heavy),
         DialogField("incapacitated", "Incapacitated", "check", wounds.incapacitated),
         DialogField("dead", "Dead", "check", wounds.dead),
+        *(academe_fields(wounds) if academe else []),
     ]
+
+
+def academe_fields(wounds: Wounds) -> list[DialogField]:
+    return [
+        *(
+            DialogField(
+                f"condition_{key}",
+                f"{label} ({amount:+d})",
+                "check",
+                key in wounds.conditions,
+            )
+            for key, (label, amount) in disease.CONDITIONS.items()
+        ),
+        *(
+            DialogField(
+                f"cured_{index}",
+                f"{escape(d.name)} cured",
+                "check",
+                False,
+                hint="By magic, a saint or a surgeon: it goes.",
+            )
+            for index, d in enumerate(wounds.diseases)
+        ),
+    ]
+
+
+def apply_wounds(wounds: Wounds, result: dict[str, Any]) -> Wounds:
+    """Wounds as the Edit Wounds form leaves them."""
+    found = dict(result)
+    conditions = [
+        key for key in disease.CONDITIONS if found.pop(f"condition_{key}", False)
+    ]
+    cured = {i for i in range(len(wounds.diseases)) if found.pop(f"cured_{i}", False)}
+    updated = wounds.with_counts(**found)
+    if any(f"condition_{key}" in result for key in disease.CONDITIONS):
+        updated.conditions = conditions
+        updated.diseases = [d for i, d in enumerate(wounds.diseases) if i not in cured]
+    return updated
 
 
 def fatigue_fields(level: str) -> list[DialogField]:
@@ -304,7 +377,7 @@ def description_edits(
     c = character
 
     def set_wounds(result: dict[str, Any]) -> None:
-        c.wounds = c.wounds.with_counts(**result)
+        c.wounds = apply_wounds(c.wounds, result)
 
     def set_fatigue(result: dict[str, Any]) -> None:
         c.fatigue_level = result["level"]
@@ -320,7 +393,13 @@ def description_edits(
             ),
             lambda result: apply_biographical(c, result),
         ),
-        "Wounds": Form("Edit Wounds", lambda: wounds_fields(c.wounds), set_wounds),
+        "Wounds": Form(
+            "Edit Wounds",
+            lambda: wounds_fields(
+                c.wounds, academe=disease.on(saga) or bool(c.wounds.diseases)
+            ),
+            set_wounds,
+        ),
         "Fatigue": Form(
             "Edit Fatigue Level",
             lambda: fatigue_fields(c.fatigue_level),

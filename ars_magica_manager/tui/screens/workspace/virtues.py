@@ -165,9 +165,9 @@ class VirtueFlawActions(CreationActions):
                 return
             if isinstance(target, Character):
                 instance = target.virtues_flaws[index]
-                change = cch.removal_change(self.saga, target, instance)
-                if change is not None:
-                    self._confirm_delete_stepped(target, index, name, change)
+                changes = cch.removal_changes(self.saga, target, instance)
+                if changes:
+                    self._confirm_delete_stepped(target, index, name, changes)
                     return
             self._confirm_delete(target.virtues_flaws, index, name, section)
 
@@ -183,15 +183,11 @@ class VirtueFlawActions(CreationActions):
         character: Character,
         index: int,
         name: str,
-        change: tuple[str, int, int],
+        changes: list[tuple[str, str, int, int]],
     ) -> None:
-        """Delete a Great or Poor (Characteristic) after confirming,
-        moving its Characteristic back the point it added."""
-        characteristic, before, after = change
-        message = (
-            f"Delete {escape(name)}? {characteristic} goes from {before:+d} "
-            f"to {after:+d}."
-        )
+        """Delete a Great or Poor (Characteristic) or a heritage after
+        confirming, moving its Characteristics back the points it added."""
+        message = f"Delete {escape(name)}? {cch.moves_text(changes)}."
 
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:

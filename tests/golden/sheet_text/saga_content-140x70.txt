@@ -80,7 +80,7 @@
       ○ Boons & Hooks                yes           217        0
       ○ Abilities                    yes           259        0
       ○ Spells                       yes          1315        0
-      ○ Shapes & Materials           yes           243        0
+      ○ Shapes & Materials           yes           246        0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Hidden Entries (0)

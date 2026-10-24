@@ -35,15 +35,10 @@ from .rounding import round_down
 from .scores import character_source
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Penetration, "
-    "Arcane Connections and Magic Resistance "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Seven:"
-    "_Hermetic_Magic#Penetration)"
+    "Ars Magica Definitive Edition, Chapter 7: Hermetic Magic, Penetration, "
+    "Arcane Connections and Magic Resistance, pp. 215, 219-221"
 )
-FAITH_SOURCE = (
-    "Realms of Power: The Divine, True Faith "
-    "(https://www.redcap.org/page/Realms_of_Power:_The_Divine_Open_Content)"
-)
+FAITH_SOURCE = "Realms of Power: The Divine, True Faith, pp. 56-61"
 
 #: How long an Arcane Connection lasts -> what it adds to the multiplier.
 ARCANE_CONNECTIONS: dict[str, int] = {

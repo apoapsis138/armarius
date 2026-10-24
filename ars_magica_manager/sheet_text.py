@@ -11,7 +11,7 @@ from collections.abc import Collection, Sequence
 from . import books as bk
 from . import catalog, sourcebooks
 from . import spells as spl
-from .markup import escape
+from .markup import escape, problem
 from .models import (
     ABILITY_CATEGORIES,
     Ability,
@@ -28,7 +28,18 @@ from .models import (
     Wounds,
     WoundState,
 )
-from .rules import combat, derived, penetration, recovery, research, scores, senses
+from .rules import (
+    combat,
+    derived,
+    disease,
+    equipment,
+    penetration,
+    recovery,
+    research,
+    scores,
+    senses,
+    travel,
+)
 from .rules import xp as xp_rules
 from .rules.breakdown import Breakdown
 from .totals import describe_modifier
@@ -397,12 +408,57 @@ def combat_text(character: Character, weapon: Possession) -> str:
             return "n/a"
         return f"{int(breakdown.total):+d}"
 
+    with_shield = (
+        f" (with {escape(totals.shield.name)})" if totals.shield is not None else ""
+    )
     lines = [
-        "[b]Combat totals[/] (add a stress die):",
+        f"[b]Combat totals[/]{with_shield} (add a stress die):",
         f"Initiative {show(totals.initiative)}   Attack {show(totals.attack)}   "
         f"Defence {show(totals.defence)}   Damage {show(totals.damage)}",
-        f"Soak {int(derived.soak(character).total):+d}",
+        f"Soak {int(derived.soak(character).total):+d}   Defence against missiles "
+        f"{show(totals.missile_defence)} (only a shield counts)",
     ]
+    least = combat.minimum_strength(weapon)
+    strength = character.characteristics.strength
+    for item, need in (
+        (weapon, least),
+        *(
+            ((totals.shield, combat.minimum_strength(totals.shield)),)
+            if totals.shield is not None
+            else ()
+        ),
+    ):
+        if need is not None and strength < need:
+            lines.append(
+                problem(
+                    f"{escape(item.name)} needs Strength {need:+d}; "
+                    f"{escape(character.name)} has {strength:+d} (DE p. 400)."
+                )
+            )
+    if totals.ability is not None and not any(
+        a.name == totals.ability and a.xp > 0 for a in character.abilities
+    ):
+        lines.append(
+            f"[dim]No score in {escape(totals.ability)}: used untrained, with "
+            "three more botch dice"
+            + (" (not for a crossbow)" if totals.ability == combat.CROSSBOW else "")
+            + ".[/]"
+        )
+    skill = scores.ability_level(character, totals.ability) if totals.ability else 0
+    types = equipment.damage_types(weapon)
+    lines.append(
+        f"[dim]{equipment.damage_levels(weapon)} damage level(s)"
+        + (f", damage {types}" if types else "")
+        + ". If a botch or an odd use may break it: stress die "
+        f"{equipment.stress_check_bonus(weapon, skill):+d} against "
+        f"{equipment.STRESS_EASE} (City & Guild p. 77); in the optional Clash "
+        f"of Weapons, stress die {skill:+d} against "
+        f"{equipment.breakage_ease(weapon)} (Lords of Men p. 138).[/]"
+    )
+    if weapon.make == equipment.SHODDY:
+        lines.append(
+            "[dim]Shoddy: destroyed the first time it fails a stress check.[/]"
+        )
     riding = combat.mounted(character, weapon)
     if riding is not None:
         charge = (
@@ -418,7 +474,8 @@ def combat_text(character: Character, weapon: Possession) -> str:
         )
     if weapon.gear_id == combat.LANCE:
         lines.append(
-            "[dim]A lance is wielded from horseback; on foot it is a Long Spear.[/]"
+            "[dim]A lance is wielded from horseback: on foot these totals are a "
+            "Long Spear's.[/]"
         )
     counted = combat.counted_text(totals)
     if counted:
@@ -475,6 +532,13 @@ def recovery_lines(saga: Saga | None, character: Character) -> list[str]:
         lines.append(
             "Bruises: " + ", ".join(f"{n} {k.title()}" for k, n in bruises.items() if n)
         )
+    lines += [disease.describe(d) for d in character.wounds.diseases]
+    modifiers = disease.condition_lines(saga, character)
+    if modifiers:
+        lines.append(
+            "Recovery Modifiers: "
+            + ", ".join(f"{line.label} {line.amount:+g}" for line in modifiers)
+        )
     if not found:
         return lines
     sources = {s.source == recovery.INJURY for s in found}
@@ -498,11 +562,18 @@ def character_wounds_text(character: Character, saga: Saga | None = None) -> str
     strength = character.characteristics.strength
     encumbrance = derived.encumbrance(load, strength)
     enc_terms = f"Load {load}, Burden {burden}"
+    walk = derived.walking_pace(character)
+    carry, lift, drag = equipment.carrying(character)
     if strength > 0 and burden:
         enc_terms += f", Str {strength:+d}"
     lines = [
         f"Soak: {int(soak.total)} ({derived.terms(soak)})",
         f"Encumbrance: {encumbrance} ({enc_terms})",
+        f"Moves: {walk} paces a round walking, {2 * walk} hurrying, {4 * walk} running",
+        f"Carries: Load {carry} (about {carry * equipment.POUNDS_PER_LOAD} lb); "
+        f"lifts {lift}, drags {drag}",
+        f"Pushing hard: {travel.forced_march(character)} miles a day on foot, "
+        f"{travel.forced_ride(character)} riding (Grogs p. 51)",
         "Wound Penalty: "
         f"{derived.wound_penalty(character.wounds, character.virtues_flaws):+d}",
         "",

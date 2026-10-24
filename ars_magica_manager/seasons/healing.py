@@ -8,7 +8,8 @@ import random
 
 from ..health import season_text
 from ..models import DiaryEntry, Saga, SeasonRecordLine
-from ..rules import harm, recovery
+from ..rules import disease, harm, recovery
+from ..rules import living as living_rules
 from ..world import takes_part_in_play
 
 
@@ -21,18 +22,34 @@ def season_healing(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
             continue
         bruised = harm.heal_bruises(character)
         had = bool(recovery.states(character.wounds))
-        played = recovery.season(saga, character, rng)
-        if not had and not bruised:
+        sick = bool(character.wounds.diseases)
+        living = living_rules.living_conditions(saga, character) if sick else 0
+        illness = disease.season(saga, character, living, rng) if sick else []
+        died_of_disease = character.wounds.dead
+        played = (
+            recovery.Season(died=True)
+            if died_of_disease
+            else recovery.season(saga, character, rng)
+        )
+        if not had and not bruised and not sick:
             continue
-        details = "\n".join([*bruised, season_text(character, played)]).strip()
+        tail = [] if died_of_disease else [season_text(character, played)]
+        details = "\n".join([*bruised, *illness, *tail]).strip()
         left = recovery.states(character.wounds)
         summary = (
-            "died of their wounds"
+            "died of disease"
+            if died_of_disease
+            else "died of their wounds"
             if played.died
             else ", ".join(
-                f"{sum(s.severity == sev for s in left)} {sev.title()}"
-                for sev in recovery.SEVERITIES
-                if any(s.severity == sev for s in left)
+                [
+                    *(
+                        f"{sum(s.severity == sev for s in left)} {sev.title()}"
+                        for sev in recovery.SEVERITIES
+                        if any(s.severity == sev for s in left)
+                    ),
+                    *(f"{d.name} ({d.level})" for d in character.wounds.diseases),
+                ]
             )
             or "healed"
         )
@@ -41,7 +58,8 @@ def season_healing(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
                 year=saga.current_year,
                 season=saga.current_season,
                 name=f"Recovery: {summary}",
-                details=f"{details}\nRule: {recovery.SOURCE}",
+                details=f"{details}\nRule: {recovery.SOURCE}"
+                + (f"; {disease.SOURCE}" if sick else ""),
                 activity="Recovery",
             )
         )

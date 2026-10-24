@@ -298,7 +298,9 @@ def _initiation_lines(character: Character, tradition: TraditionDef) -> list[str
         f"[b]Initiation[/] Total: {rule.characteristic} + {escape(lore)} + the "
         f"Script's bonus, against its Ease Factor"
         + ("" if rule.self_initiation else "; no self-initiation")
-        + ". As Mystagogue:"
+        + ". A Mystagogue who doesn't have the power adds 3 to the Ease Factor "
+        "for a Minor Virtue, 9 for a Major (Hedge Magic Revised Edition p. 13). "
+        "As Mystagogue:"
     ]
     for script in rule.scripts:
         total = ts.initiation_total(character, tradition, script.bonus)

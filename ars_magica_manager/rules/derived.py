@@ -24,22 +24,17 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from ..models import Character, Possession, VirtueFlawInstance, Wounds
-from . import effects
+from . import effects, equipment
 from .breakdown import Breakdown, Line
+from .rounding import round_up
 from .scores import character_source
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Combat Scores, "
-    "Damage Table, Wounds, Fatigue and Encumbrance "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eleven:"
-    "_Obstacles#Combat_Scores)"
+    "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Combat Scores, Damage "
+    "Table, Wounds, Fatigue and Encumbrance, pp. 393, 403-406"
 )
 ANIMAL_SOURCE = "Grogs, Chapter Seven: Horses & Hounds, p. 137"
-SIZE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Three: Characters, Size "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Three:"
-    "_Characters#Size)"
-)
+SIZE_SOURCE = "Ars Magica Definitive Edition, Chapter Three: Characters, Size, p. 26"
 
 WOUND_PENALTIES: dict[str, int] = {"light": -1, "medium": -3, "heavy": -5}
 FATIGUE_PENALTIES: dict[str, int] = {
@@ -96,16 +91,33 @@ def _adjusted(
     return min(0, penalty + int(effects.amount_total(found)))
 
 
+#: A disease's Disease Penalty by its stage (Art & Academe p. 46); a
+#: Critical one allows no action at all.
+DISEASE_PENALTIES = {"Minor": -1, "Serious": -3, "Major": -5, "Critical": -5}
+
+
+def disease_penalty(wounds: Wounds) -> int:
+    """The diseases' Disease Penalties together (none for one that gives
+    Flaws instead)."""
+    return sum(DISEASE_PENALTIES.get(d.level, 0) for d in wounds.diseases if d.penalty)
+
+
 def wound_penalty(
-    wounds: Wounds, virtues_flaws: Sequence[VirtueFlawInstance] = ()
+    wounds: Wounds,
+    virtues_flaws: Sequence[VirtueFlawInstance] = (),
+    *,
+    diseases: bool = True,
 ) -> int:
+    """The Wound Penalty, with bruises' and (unless `diseases` is False)
+    Disease Penalties, which work as a wound's (Lords of Men p. 132; Art &
+    Academe p. 46)."""
     bruises = wounds.bruises
     return _adjusted(
         wounds.light * WOUND_PENALTIES["light"]
         + wounds.medium * WOUND_PENALTIES["medium"]
         + wounds.heavy * WOUND_PENALTIES["heavy"]
-        # Bruises' penalties work as wounds' (Lords of Men p. 132).
-        + sum(bruises.get(k, 0) * p for k, p in WOUND_PENALTIES.items()),
+        + sum(bruises.get(k, 0) * p for k, p in WOUND_PENALTIES.items())
+        + (disease_penalty(wounds) if diseases else 0),
         virtues_flaws,
         "wound_penalty",
     )
@@ -131,13 +143,23 @@ def encumbrance(load: int, strength: int) -> int:
 
 
 def carried_load(inventory: Sequence[Possession]) -> int:
-    """The Load of the weapons and armour the character has, times how many
-    of each (everything on a character's sheet counts as carried)."""
+    """The Load the character carries: the armour worn and the weapons
+    carried, times how many of each (DE p. 403). Other suits of armour,
+    and weapons not carried, are kept elsewhere."""
+    worn = worn_armour(inventory)
     return sum(
         item.load * max(item.quantity, 1)
         for item in inventory
-        if item.kind in ("weapon", "armor")
+        if (item.kind == "weapon" and item.carried) or item is worn
     )
+
+
+def walking_pace(character: Character) -> int:
+    """Paces a combat round at a walk: 10 + Quickness - Encumbrance (a
+    hurry twice that, a run four times) (DE p. 395)."""
+    load = carried_load(character.inventory)
+    enc = encumbrance(load, character.characteristics.strength)
+    return max(0, 10 + character.characteristics.quickness - enc)
 
 
 def worn_armour(inventory: Sequence[Possession]) -> Possession | None:
@@ -175,6 +197,16 @@ def soak(character: Character) -> Breakdown:
     if armour is not None and armour.armor_protection:
         lines.append(Line(armour.name, amount=armour.armor_protection, source=SOURCE))
         total += armour.armor_protection
+        made = equipment.quality_bonus(armour)
+        if made:
+            lines.append(
+                Line(
+                    f"{armour.make} armour",
+                    amount=made,
+                    source=equipment.QUALITY_SOURCE,
+                )
+            )
+            total += made
         if primitive_armour(character, armour):
             lines.append(
                 Line("Primitive Equipment (armour)", amount=-1, source="character")
@@ -200,3 +232,11 @@ def terms(breakdown: Breakdown, *, skip_first_zero: bool = False) -> str:
             continue
         parts.append(f"{line.label} {line.amount:+g}")
     return ", ".join(parts)
+
+
+def form_bonus(character: Character, form: str) -> int:
+    """A magus's Form Bonus: the Form's score / 5, rounded up (DE p. 206).
+    It adds to Soak against harm of that Form and, for Vim, to avoiding
+    Twilight."""
+    art = character.arts.get(form.lower())
+    return round_up(art.level / 5) if art is not None and art.level > 0 else 0

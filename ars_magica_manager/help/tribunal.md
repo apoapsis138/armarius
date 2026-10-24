@@ -36,8 +36,11 @@ what the old ones recorded, hidden, and switching back shows it again.
   decrees and ostrakismos on the first day, the Law Council's motions
   and the People's Court's cases, and on the last day the Council of
   Archai pays the outgoing magistrates, draws the new archai by
-  sortition and elects the archon and polemarch (see [Hold
-  Tribunal](help:hold-tribunal)). The sheet gains a Polity tab.
+  sortition (never a magus made a citizen at this meeting) and elects
+  the archon and polemarch (see [Hold Tribunal](help:hold-tribunal)).
+  Thebes has no Presiding Quaesitor, so its quorum needs none, and the
+  tamias is paid at the end of the term as the arche he is (The Sundered
+  Eagle pp. 25, 32). The sheet gains a Polity tab.
   The book's Tribunal of 1220 ships as a content pack: see [How to start a
   saga from a Tribunal book](help:guide-book-packs).
 - **Normandy: Vis tenure** (The Lion and the Lily): every vis source is

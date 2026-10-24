@@ -75,6 +75,16 @@ Score** and Points, if it has any; where it is **found** (a place in the
 Region, and a level of it); how much detail its record has; and the
 book it comes from.
 
+A creature with Magic Might that has Magic Qualities or Inferiorities
+shows its **Qualities**: the points its Qualities spend (1 a Minor, 3 a
+Major) against its Might (a magic animal's with its Size added back) plus
+its Inferiorities (1 a Minor, 3 a Major) (Realms of Power: Magic pp.
+30-36). A creature made for a story needn't balance, so an overspend is
+only reported. **Check** lists what doesn't fit the Definitive Edition's
+rules: The Gift on a creature whose Might isn't Magic, a power that costs
+more than the Might (it could never be used, since the Pool refills only
+to the Score) and a Might Pool above the Might (DE pp. 425-426).
+
 An Infernal creature also has the facts Realms of Power: The Infernal
 gives a demon: its **Order**, its **Hierarchy** score (the highest of
 its Infernal Reputations, or of its rank) and its **Weakness**.
@@ -165,6 +175,18 @@ aura's modifier is added in play. A Penetration of zero or less still
 affects what has no Magic Resistance, but nothing that has any. Choose
 a power to read what it does. A power's level, when the book gives one, is the level of the
 effect it matches.
+
+**From Quality** (optional; Typed is the default) names the Magic Quality
+a power comes from, and suggests its cost and Initiative from the effect
+level's magnitude (Realms of Power: Magic p. 36): a Focus or Lesser Power
+costs the magnitude, a Greater or Personal Power half of it, rounded down;
+Initiative is Quickness less the magnitude (Focus), twice it (Lesser,
+Ritual) or half it (Greater, Personal). A new power with its cost and
+Initiative left at 0 takes them, and you can change them; typed figures
+that differ show as a Check on the creature's facts, never refused, since
+mastery points and constant powers change them and the DE lets a power's
+numbers break the rules (p. 428). A Ritual Power is at least level 20,
+and a power of level 50 or more must be one.
 
 ### Vis in its body
 <!-- help: section-cr-vis -->

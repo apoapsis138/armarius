@@ -19,9 +19,8 @@ from . import enchantment
 from . import library as book_rules
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Six: Covenants, Base Covenant "
-    "Resources (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Six:_Covenants#Base_Covenant_Resources)"
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Base Covenant Resources, p. "
+    "178"
 )
 
 

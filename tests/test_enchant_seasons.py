@@ -20,9 +20,11 @@ from ars_magica_manager.models import (
     EnchantedDevice,
     ExperimentalEffect,
     InstilledEffect,
+    KnownSpell,
     Laboratory,
     Saga,
     SeasonPlan,
+    Spell,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import activities as rules
@@ -467,3 +469,95 @@ async def test_the_lab_work_screen_offers_an_effects_lab_texts():
         assert plan.book_id == text.id
         found, work = lab_seasons.work(saga, saga.character("m"), plan)
         assert found == [] and work.charges == 5
+
+
+# -- Effect Expiry, similar spells and Verditius Magic --
+
+
+def test_effect_expiry_multiplies_the_seasons_points():
+    saga = _saga()
+    _device(saga, "staff").pawns_opened = 6
+    effect = _device(saga, "staff").effects[0]
+    effect.expiry = "7 years"
+    plan = _plan(es.INSTIL, device_id="staff", effect_id="fire", vis_art="Creo")
+    _, work = _work(saga, plan)
+    level = enchantment.modified_level(_device(saga, "staff"), effect)
+    # Lab Total 25 against the level, the excess times 5 (DE p. 257).
+    assert work.points_gained == (25 - level) * 5
+
+
+def test_a_similar_spell_helps_enchanting():
+    saga = _saga()
+    saga.spells.append(
+        Spell(id="pilum", name="Pilum", technique="Creo", form="Ignem", level=20)
+    )
+    saga.character("m").spells_known = [KnownSpell("pilum")]
+    plan = _plan(
+        es.CHARGED_WORK, device_id="wand", effect_id="bolt", similar_spell_id="pilum"
+    )
+    _, work = _work(saga, plan)
+    assert int(work.lab_total.total) == 29  # 25 + magnitude 4
+
+
+def _verditius(saga, craft="Craft: Jeweler"):
+    magus = saga.character("m")
+    magus.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_verditius_magic"))
+    magus.abilities += [
+        Ability("Philosophiae", xp=ability_xp(2)),
+        Ability("Craft: Jeweler", xp=ability_xp(3)),
+        Ability("Finesse", xp=ability_xp(1)),
+    ]
+    staff = _device(saga, "staff")
+    staff.verditius_runes = True
+    staff.verditius_craft = craft
+    return magus, staff
+
+
+def test_verditius_magic_opens_the_item_for_his_craft_fewer_pawns():
+    saga = _saga()
+    _verditius(saga)
+    found, work = _work(saga, _plan(es.OPEN, device_id="staff"))
+    # 6 pawns less Craft 3: 3 paid, and it counts as opened in full.
+    assert found == [] and work.vis_cost == {"Vim": 3}
+    seasons.plan_lab_work(saga, _plan(es.OPEN, device_id="staff"))
+    _run(saga)
+    assert _device(saga, "staff").pawns_opened == 6
+    assert saga.character("m").raw_vis["vim"] == 9
+
+
+def test_shaped_by_magic_the_saving_is_his_finesse():
+    saga = _saga()
+    _verditius(saga, craft="")
+    _, work = _work(saga, _plan(es.OPEN, device_id="staff"))
+    assert work.vis_cost == {"Vim": 5}
+
+
+def test_the_runes_and_the_makers_craft_add_to_enchanting():
+    saga = _saga()
+    _, staff = _verditius(saga)
+    staff.pawns_opened, staff.maker_id = 6, "m"
+    plan = _plan(
+        es.INSTIL, device_id="staff", effect_id="fire", vis_art="Creo", shape_bonus=2
+    )
+    _, work = _work(saga, plan)
+    labels = [line.label for line in work.lab_total.lines]
+    # 25 + Shape & Material 2 + runes 2 (Philosophiae) + Craft 3.
+    assert int(work.lab_total.total) == 32
+    assert "Craft: Jeweler (Verditius Magic)" in labels
+
+
+def test_another_magus_gets_the_runes_but_not_the_craft():
+    saga = _saga()
+    _, staff = _verditius(saga)
+    maker = Character(id="v", name="Valens", type="magus")
+    maker.virtues_flaws = [VirtueFlawInstance(vf_id="vf_verditius_magic")]
+    maker.abilities = [Ability("Philosophiae", xp=ability_xp(4))]
+    saga.characters.append(maker)
+    saga.character("m").virtues_flaws = []
+    staff.pawns_opened, staff.maker_id = 6, "v"
+    plan = _plan(
+        es.INSTIL, device_id="staff", effect_id="fire", vis_art="Creo", shape_bonus=1
+    )
+    _, work = _work(saga, plan)
+    # 25 + 1 + the maker's Philosophiae 4 = 30, and no Craft.
+    assert int(work.lab_total.total) == 30

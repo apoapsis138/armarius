@@ -42,24 +42,18 @@ if TYPE_CHECKING:
     from .lab_seasons import LabWork
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Setting Up a "
-    "Laboratory (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory#Setting_Up_a_Laboratory)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Setting Up a Laboratory, p. "
+    "250"
 )
 REFINE_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Refinement "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
-    "_Laboratory#Refinement)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Refinement, p. 287"
 )
 TAKE_OVER_SOURCE = (
-    "Covenants, Chapter Nine: Laboratories, Taking Over a Laboratory "
-    "(https://www.redcap.org/page/Covenants_Chapter_Nine:_Laboratories"
-    "#Taking_Over_a_Laboratory)"
+    "Covenants, Chapter Nine: Laboratories, Taking Over a Laboratory, p. 118"
 )
 ASSIST_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Help in the "
-    "Laboratory (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
-    "_Chapter_Eight:_Laboratory#Help_in_the_Laboratory)"
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Help in the Laboratory, p. "
+    "264"
 )
 
 BUILD = "set_up_lab"
@@ -77,11 +71,7 @@ ROLLED: tuple[str, ...] = (REFINE, TAKE_OVER, MOVE)
 #: Moving by mundane means: pack (a season), then reassemble (two).
 MOVE_SEASONS = 3
 DISORGANIZED = "labvf_disorganized"
-MOVE_SOURCE = (
-    "Covenants, Chapter Nine: Laboratories, Moving a Laboratory "
-    "(https://www.redcap.org/page/Covenants_Chapter_Nine:_Laboratories"
-    "#Moving_a_Laboratory)"
-)
+MOVE_SOURCE = "Covenants, Chapter Nine: Laboratories, Moving a Laboratory, p. 119"
 
 BASIC = "labvf_basic"
 HIGHLY_ORGANIZED = "labvf_highly_organized"

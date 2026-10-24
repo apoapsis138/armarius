@@ -31,14 +31,12 @@ import random
 from dataclasses import dataclass, field
 
 from ..models import Character
-from . import dice, work_virtues
+from . import dice, reputations, work_virtues
 from .lab import ability_score
 from .rounding import round_nearest, round_up
 
 SOURCE = (
-    "Houses of Hermes: Societates, House Tytalus, The Fine Arts of Debate "
-    "(https://redcap.org/page/Houses_of_Hermes:_Societates_Chapter_Four:"
-    "_House_Tytalus)"
+    "Houses of Hermes: Societates, House Tytalus, The Fine Art of Debate, pp. 90-92"
 )
 
 ATTACKS = ("Folk Ken", "Intrigue", "Artes Liberales")
@@ -172,7 +170,7 @@ def debater(name: str, character: Character | None, skill: str = MIDDLING) -> De
     if character is None or not has_scores(character):
         return skilled(name, skill)
     c = character.characteristics
-    reputation = max([0, *(r.score for r in character.reputations if r.score > 0)])
+    reputation = reputations.highest_good(character.reputations)
     names = {vf.vf_id for vf in character.virtues_flaws}
     strong = 3 if "vf_strong_willed" in names else 0
     return Debater(

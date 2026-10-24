@@ -23,27 +23,98 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 
+from .. import catalog
 from ..models import Book, Character
 from . import animal_grogs, effects, lab_virtues, scores, xp
 from . import creation_access as access
 from .breakdown import Line
+from .derived import wound_penalty
 from .lab import ability_score
 from .rounding import round_down, round_up
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Advancement "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Advancement)"
+    "Ars Magica Definitive Edition, Chapter 10: Long Term Events, Advancement, pp. "
+    "375-379"
 )
 AFFINITY_SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, Affinity "
-    "with Art (x1.5, round up) "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Four:"
-    "_Virtues_and_Flaws#Affinity_with_Art)"
+    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, Affinity with Art "
+    "(x1.5, round up), p. 69"
 )
 
 EXPOSURE = 2
 PRACTICE = 4
+#: The Wound Penalty at which a season's study is halved (DE p. 405).
+WOUNDED_STUDY = -3
+WOUND_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 11: Combat and Injuries, Activities "
+    "While Injured, p. 405"
+)
+#: The study kind of one subject's share of an Adventure, whose Virtues
+#: (Independent Study's +3) were added to the season's Source Quality before
+#: it was split (DE pp. 86, 377).
+SPLIT_ADVENTURE = "adventure_share"
+
+
+SUPERNATURAL_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Learning "
+    "Supernatural Abilities, p. 383"
+)
+#: The experience a first season in a Supernatural Ability must give (a
+#: score of 1).
+SUPERNATURAL_FIRST_XP = 5
+#: What opened Arts take off at least (or the Arts' scores, if more).
+OPENED_ARTS_PENALTY = 15
+
+
+def supernatural_ability(name: str) -> bool:
+    return any(
+        a.category == "Supernatural" and a.name == name
+        for a in catalog.load_ability_catalog()
+    )
+
+
+def learning_supernatural(student: Character, name: str) -> bool:
+    """Whether `name` is a Supernatural Ability the student is learning
+    for the first time (no experience in it yet)."""
+    return supernatural_ability(name) and not any(
+        a.name == name and a.xp > 0 for a in student.abilities
+    )
+
+
+def gifted(character: Character) -> bool:
+    return character.type == "magus" or any(
+        vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws
+    )
+
+
+def supernatural_penalty(student: Character, name: str) -> int:
+    """What a first season learning a Supernatural Ability takes off the
+    Source Quality: the student's scores in his other Supernatural
+    Abilities, and with his Arts opened, 15 or the sum of his Arts if more
+    (DE p. 383)."""
+    others = sum(
+        a.level
+        for a in student.abilities
+        if a.name != name and supernatural_ability(a.name)
+    )
+    if student.type == "magus" or student.arts:
+        arts = sum(art.level for art in student.arts.values())
+        others += max(OPENED_ARTS_PENALTY, arts)
+    return others
+
+
+def season_bonus(student: Character, activity: str) -> int:
+    """What the student's Virtues add to a season's Source Quality for
+    `activity` (Independent Study: +3 to an Adventure)."""
+    return int(
+        effects.amount_total(
+            effects.collect(
+                [scores.character_source(student.virtues_flaws)],
+                "study_total",
+                activity=activity,
+            )
+        )
+    )
 
 
 def training_quality(master: Character, ability: str) -> int:
@@ -162,6 +233,14 @@ def season_of_study(
             Line(f"{months_lost} month(s) lost", amount=reduced - total, source=SOURCE)
         )
         total = reduced
+    if wound_penalty(student.wounds, student.virtues_flaws) <= WOUNDED_STUDY:
+        # Wounded at -3 to -5: the Advancement Total halved, before
+        # Affinity and the Gain Limit (DE p. 405).
+        halved = round_down(total / 2)
+        lines.append(
+            Line("Wounded (-3 to -5)", amount=halved - total, source=WOUND_SOURCE)
+        )
+        total = halved
     total = _multiplied(
         source, total, lines, f"Mastery: {subject}" if mastery else subject
     )

@@ -29,6 +29,14 @@ from ..models import (
     Covenant,
     Saga,
 )
+from ..rules import equipment
+
+#: A year's pawns from a source, by its yield and the saga's vis level
+#: (Covenants p. 72).
+VIS_YIELD_HINT = (
+    "A year's pawns (Covenants p. 72): a low-yield source 1, 2 or 4 in a "
+    "low-, moderate- or high-vis saga; moderate 2, 4 or 8; high 4, 8 or 16."
+)
 
 
 def possession_fields(
@@ -265,6 +273,54 @@ def _quantity_possession_fields(
         )
     if kind in GEAR_TYPES_BY_KIND and not natural:
         fields.append(DialogField("load", "Load", "int", attr(entry, "load", 0)))
+        fields += [
+            DialogField(
+                "make",
+                "Made",
+                "select",
+                attr(entry, "make", ""),
+                options=[("Standard", "")] + [(m, m) for m in equipment.MAKES if m],
+                hint="Superior +1, Excellent +2 or more; Shoddy breaks easily.",
+            ),
+            DialogField(
+                "make_bonus",
+                "Excellent bonus",
+                "int",
+                attr(entry, "make_bonus", 0) or equipment.EXCELLENT_LEAST,
+                show_if=lambda v: v.get("make") == equipment.EXCELLENT,
+            ),
+        ]
+    if kind == "weapon" and not natural:
+        fields.append(
+            DialogField(
+                "carried",
+                "Carried",
+                "check",
+                attr(entry, "carried", True),
+            )
+        )
+    if kind == "item":
+        fields += [
+            DialogField(
+                "assists",
+                "Helps (Ability, specialty)",
+                "text",
+                attr(entry, "assists", ""),
+                placeholder="e.g. Athletics (climbing)",
+            ),
+            DialogField(
+                "assistance",
+                "How much",
+                "select",
+                attr(entry, "assistance", ""),
+                options=[
+                    ("(none)", ""),
+                    ("Minor: -1 Ease Factor", "Minor"),
+                    ("Major: -3 Ease Factor", "Major"),
+                ],
+                hint="Equipment that isn't essential to the task (Grogs p. 47).",
+            ),
+        ]
     return fields
 
 
@@ -303,7 +359,15 @@ def _vis_possession_fields(
         )
         # The Hooks are on the record: a PossessionEntry has no such fields.
         fields += contested_fields(entry.record if entry is not None else None)
-    fields.append(DialogField("pawns", "Pawns", "int", attr(entry, "pawns", 1) or 1))
+    fields.append(
+        DialogField(
+            "pawns",
+            "Pawns",
+            "int",
+            attr(entry, "pawns", 1) or 1,
+            hint=VIS_YIELD_HINT if kind == "vis_source" else "",
+        )
+    )
     if kind == "vis_store" and places:
         fields.append(
             DialogField(

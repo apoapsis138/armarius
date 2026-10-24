@@ -16,6 +16,9 @@
   point: 5 = 1, 15 = 2, 30 = 3, 50 = 4, 75 = 5.
 - An animal grog's kind has its own start and age modifier, and rolls
   in other seasons too (rules.animal_aging).
+- Age Quickly and Demonic Blood: the effective age is twice the real age
+  (used for the roll and a Longevity Ritual's vis), with two rolls a year.
+- Nobody in Twilight ages (DE p. 229).
 - A Crisis: a simple die + age / 10 + Decrepitude on the Crisis table; a
   Longevity Ritual guarantees survival, then ends. The survivor spends the
   next season recovering.
@@ -31,9 +34,7 @@ from . import animal_aging, dice, effects, sites
 from .scores import character_source
 
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging "
-    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Ten:"
-    "_Long-Term_Events#Aging)"
+    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging, pp. 391-393"
 )
 
 START_AGE = 35
@@ -105,6 +106,69 @@ def living_conditions(character: Character, living: int) -> int:
     """The Living Conditions modifier with the character's Virtues and
     Flaws (Mild Aging +1, Poor Living Conditions -1)."""
     return living + _amount(character, "living_conditions")
+
+
+def aging_rate(character: Character) -> int:
+    """How many years of effective age each year adds: 2 with Age Quickly
+    or Demonic Blood (DE pp. 76, 119), else 1."""
+    found = [int(e.amount or 1) for e in _effects(character, "aging_rate")]
+    return max([1, *found])
+
+
+def add_points(character: Character, name: str, points: int) -> list[str]:
+    """Add Aging Points to a Characteristic: they count toward
+    Decrepitude, and once more than its score (ignoring the sign) it falls
+    by one and they start again, unless the character's Aging Points never
+    lower Characteristics. Returns what changed."""
+    aging = character.aging
+    aging.aging_points[name] = aging.aging_points.get(name, 0) + points
+    aging.decrepitude_points += points
+    aging.decrepitude = decrepitude_score(aging.decrepitude_points)
+    score = getattr(character.characteristics, name)
+    if aging.aging_points[name] > abs(score) and not unaging(character):
+        setattr(character.characteristics, name, score - 1)
+        aging.aging_points[name] = 0
+        return [f"{name.title()} falls to {score - 1:+d}."]
+    return []
+
+
+AGE_QUICKLY = "vf_age_quickly"
+
+
+def quick_since(character: Character) -> int | None:
+    """The year Age Quickly began, when the Flaw names one (a curse or a
+    magical disaster later in life, DE p. 119); None: from birth."""
+    for vf in character.virtues_flaws:
+        if vf.vf_id == AGE_QUICKLY:
+            since = vf.params.get("since", "").strip()
+            return int(since) if since.isdigit() else None
+    return None
+
+
+def _quick_from(character: Character) -> int | None:
+    """The real age at which the faster aging began (None: from birth)."""
+    since, born = quick_since(character), character.background.year_born
+    return None if since is None or born is None else max(0, since - born)
+
+
+def effective_age(character: Character, age: int) -> int:
+    """The age the aging table and a Longevity Ritual use: the real age,
+    or for one who ages twice as fast, twice it from birth (Demonic Blood,
+    DE p. 76) or from the year Age Quickly began."""
+    rate = aging_rate(character)
+    start = _quick_from(character)
+    if rate == 1 or start is None:
+        return age * rate
+    return age if age <= start else start + (age - start) * rate
+
+
+def rolls_per_year(character: Character, age: int | None = None) -> int:
+    """Aging rolls each Winter: two for one who ages twice as fast, once
+    the faster aging has begun."""
+    start = _quick_from(character)
+    if start is not None and age is not None and age <= start:
+        return 1
+    return aging_rate(character)
 
 
 def rolls_this_year(character: Character, age: int | None) -> bool:

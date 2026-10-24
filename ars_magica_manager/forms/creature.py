@@ -27,6 +27,7 @@ from ..models import (
     CreaturePower,
     Saga,
 )
+from ..rules import creature_build
 from ..sections import (
     BESTIARY_SECTION,
     CREATURE_ABILITIES_SECTION,
@@ -487,6 +488,16 @@ def power_fields(power: CreaturePower | None) -> list[DialogField]:
             attr(power, "level", None),
         ),
         DialogField(
+            "quality",
+            "From Quality",
+            "select",
+            attr(power, "quality", "") or "",
+            options=[("Typed", ""), *((q, q) for q in creature_build.POWERS)],
+            hint="Suggests the cost and Initiative from the effect level (RoP: "
+            "Magic p. 36): a new power's are filled in, and typed ones that "
+            "differ are checked, never refused.",
+        ),
+        DialogField(
             "penetration_bonus",
             "Penetration bonus",
             "int",
@@ -500,7 +511,20 @@ def power_fields(power: CreaturePower | None) -> list[DialogField]:
 
 
 def _power_values(values: dict[str, Any]) -> dict[str, Any]:
-    return {**values, "form": values.get("form") or ""}
+    return {
+        **values,
+        "form": values.get("form") or "",
+        "quality": values.get("quality") or "",
+    }
+
+
+def fill_suggested(creature: Creature, power: CreaturePower) -> CreaturePower:
+    """A power from a Quality with its cost and Initiative still blank (0)
+    takes the Quality's figures, which stay editable."""
+    figures = creature_build.suggested(creature, power)
+    if figures is not None and power.might_cost == 0 and power.init == 0:
+        power.might_cost, power.init = figures
+    return power
 
 
 def vis_fields(vis: BodyVis | None) -> list[DialogField]:
@@ -561,7 +585,7 @@ def creature_ops(saga: Saga, creature: Creature) -> dict[str, SectionOps]:
             creature.powers,
             "a Power",
             power_fields,
-            lambda values: CreaturePower(**values),
+            lambda values: fill_suggested(creature, CreaturePower(**values)),
             lambda p: p.name or "(unnamed)",
             prepare=_power_values,
         ),

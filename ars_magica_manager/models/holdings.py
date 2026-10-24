@@ -215,6 +215,17 @@ class Possession:
     weapon_defense: int = 0  # weapon only
     weapon_damage: int | None = 0  # weapon only; None = n/a
     armor_protection: int = 0  # armor only
+    #: Weapons and armour: how well made (rules.equipment.MAKES: "" for
+    #: standard, "Shoddy", "Superior", "Excellent"), and an Excellent
+    #: item's bonus (+2 or more).
+    make: str = ""
+    make_bonus: int = 0
+    #: Weapons: carried, so its Load counts (a spare left at home doesn't).
+    carried: bool = True
+    #: Gear: the Ability (and specialty) it helps, and how much ("Minor" or
+    #: "Major": 1 or 3 off the Ease Factor).
+    assists: str = ""
+    assistance: str = ""
     art: str = ""
     pawns: int = 0
     season: str = ""  # one of SEASONS
@@ -317,6 +328,11 @@ class Loyalty:
     #: The covenant provides a pension (half Wages until death) to retirees:
     #: +10 Loyalty points on top of the Money selection's own points.
     pension: bool = False
+    #: Retirees the pension keeps: half Wages each (DE p. 186).
+    pensioners: int = 0
+    #: Familiarity is worked out from the years since the covenant's
+    #: founding (inhabitants.familiarity); this adjusts it (new covenfolk
+    #: dilute it, Covenants p. 40).
     familiarity: int = 0
     actions_and_events: int = 0
     magical_influence: int = 0
@@ -397,6 +413,12 @@ class Economics:
     #: figure out and types the pounds saved directly.
     magic_savings: int = 0
     emergency_savings: int = 0
+    #: Pennies paid daily to professional soldiers: a pound of Wages each
+    #: (DE p. 193).
+    soldier_pay: int = 0
+    #: Last year's total expenditure, for inflation's growth (None: not
+    #: recorded yet).
+    last_expenditure: int | None = None
     #: Free-text notes by row key ("buildings", "laborers"...).
     notes: dict[str, str] = field(default_factory=dict)
 

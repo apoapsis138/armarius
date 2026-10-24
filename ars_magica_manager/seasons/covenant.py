@@ -34,9 +34,8 @@ from .plans import (
 )
 
 DWINDLING_SOURCE = (
-    "Covenants, Chapter Two: Boons & Hooks, Minor Resources Hooks, Dwindling "
-    "Resource (https://www.redcap.org/page/Covenants_Chapter_Two:_Boons_%26_Hooks"
-    "#Minor_Resources_Hooks)"
+    "Covenants, Chapter Two: Boons & Hooks, Minor Resources Hooks, Dwindling Resource, "
+    "p. 16"
 )
 
 
