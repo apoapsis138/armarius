@@ -87,6 +87,8 @@ The app also works out Occupied Size (Virtue points less
 Flaw points less Refinement), Free Virtues (Size plus Refinement less the
 Virtue points net of Flaws) and Base Safety (Refinement less any positive
 Occupied Size), following Ars Magica Fifth Edition: Covenants, Chapter 9.
+The laboratory's rolls use its Base Safety plus the Safety total, and its
+Warping total: see [Safety and Warping](help:guide-lab-safety-warping).
 
 ## Planning tab
 <!-- help: tab-lab-planning -->

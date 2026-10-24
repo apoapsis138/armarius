@@ -109,6 +109,33 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.6.0 — 2026-10-24
+
+### Book of Hours
+
+- **A laboratory's Safety and Warping matter.** Safety now takes dice off
+  the botch roll of all lab work, experiments included, and Cautious
+  Sorcerer's reduction comes first. A lab with negative Safety risks an
+  accident each season: a simple die at or under its Safety means a botch
+  roll on the Disaster table. A lab with positive Warping may warp what is
+  made in it: a simple die at or under its Warping gives the season's
+  product a side effect on an odd die or a modified effect on an even one,
+  which you describe in Experiment Results. A season that was not an
+  experiment shows these rolls there too, and writes a Laboratory Mishap
+  entry in the lab's Diary. These are core rules (Definitive Edition pp.
+  288-289), so they apply whether or not Covenants is in play.
+- **Experiments follow the book more closely.** Botch dice count the
+  laboratory's own aura, as its Lab Total does, and the research odds use
+  the same count. A wasted experiment spends its vis. No Benefit drops only
+  the experiment's die and risk, so Inventive Genius and an
+  Experimentation Specialization still count; and if what is left is too
+  low, the project is abandoned with its progress. Stabilizing a discovery
+  can botch on a 12+'s extra rolls, two-dice Virtues get their second die
+  there, and a run of 12+ is no longer cut off at three. An item being
+  investigated resists harmful side effects when its protection holds, and
+  a Disaster's Twilight comes to anyone opened to the Hermetic Arts, not
+  only magi.
+
 ## 3.5.0 — 2026-10-23
 
 ### Glossa

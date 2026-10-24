@@ -160,8 +160,10 @@ def _roll_fields(
                 "own protects it",
                 "check",
                 False,
-                hint="This result destroys the item investigated, unless one of "
-                f"its effects protects it with a level above the Lab Total "
+                hint="This result destroys or changes the item investigated, "
+                "unless one of its effects protects it with a level above the "
+                "Lab Total (it then resists everything but a side benefit or an "
+                "increase) "
                 f"({int(outcome.lab_work.lab_total.total) if outcome.lab_work else 0}).",
                 show_if=shown,
             )

@@ -4,7 +4,7 @@ supplement activities, book work, taming, experiments and Discoveries."""
 from __future__ import annotations
 
 import random
-from collections.abc import Sequence
+from collections.abc import MutableMapping, Sequence
 from dataclasses import replace
 
 from .. import book_kinds, research_text, spell_parameters, storage
@@ -77,6 +77,20 @@ _LAB_DIARY_ACTIVITY = {
 }
 
 
+def _pay_vis(
+    saga: Saga, magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
+) -> MutableMapping[str, int]:
+    """The season's vis (and any a Waster of Vis wastes) taken from the
+    pool it is paid from; the pool."""
+    pool = lab_seasons.vis_pool(saga, magus, plan)
+    for art, pawns in lab_seasons.vis_spent(work).items():
+        key = art.lower()
+        pool[key] = max(0, pool.get(key, 0) - pawns)
+        if not pool[key]:
+            del pool[key]
+    return pool
+
+
 def _apply_one_season_work(
     saga: Saga,
     magus: Character,
@@ -87,12 +101,7 @@ def _apply_one_season_work(
     """Extracting vis, fixing an Arcane Connection or a Longevity Ritual:
     vis paid or gained, the subject's Longevity modifier, the lab's Diary."""
     plan = outcome.plan
-    pool = lab_seasons.vis_pool(saga, magus, plan)
-    for art, pawns in lab_seasons.vis_spent(work).items():
-        key = art.lower()
-        pool[key] = max(0, pool.get(key, 0) - pawns)
-        if not pool[key]:
-            del pool[key]
+    pool = _pay_vis(saga, magus, plan, work)
     if work.vis_gained:
         key = work.vis_gained_art.lower()
         pool[key] = pool.get(key, 0) + work.vis_gained
@@ -593,6 +602,23 @@ def _apply_experiment(
     elif chart.zeroes >= 2 or (chart.failure and chart.failure_die == 0 and creation):
         lines.append(_destroy(saga, magus, plan, work, whole=chart.zeroes < 2))
     elif chart.effects and not chart.wasted:
+        if investigating and chart.protected:
+            # The item's protection resists the effects that would harm it.
+            kept = [
+                (effect, target)
+                for effect, target in zip(
+                    chart.effects,
+                    chart.targets + [""] * len(chart.effects),
+                    strict=False,
+                )
+                if not ex.harmful(effect)
+            ]
+            if len(kept) < len(chart.effects):
+                lines.append(
+                    "An effect of the item's own protects it from the harmful results."
+                )
+            chart.effects = [effect for effect, _ in kept]
+            chart.targets = [target for _, target in kept]
         _keep_effects(saga, magus, plan, work, chart)
     # A goal named on the plan and not yet on the sheet is made, of the
     # kind the plan chose.
@@ -601,6 +627,16 @@ def _apply_experiment(
         if plan.research.strip()
         else None
     )
+    if chart.wasted and plan.activity != ex.STABILIZE:
+        # The vis put into a wasted season is lost with it.
+        _pay_vis(saga, magus, plan, work)
+    if chart.abandoned:
+        _drop_project(saga, magus, plan, work)
+        _lose_progress(magus, plan, work)
+        lines.append(
+            "Without the experiment's die and risk the Lab Total is too low: "
+            "the project is abandoned."
+        )
     stop = chart.wasted
     points = goal.points if goal is not None else 0
     kind = "seek"
@@ -616,16 +652,22 @@ def _apply_experiment(
     if goal is not None:
         _log_attempt(plan, lab, work, goal, kind, goal.points - points)
         lines += _goal_reached(magus, goal)
+    title = LAB_HAZARD if chart.lab_only else "Arcane Experimentation"
     lab.diary.append(
         DiaryEntry(
             year=plan.year,
             season=plan.season,
-            name="Arcane Experimentation",
+            name=title,
             details=f"{magus.name}: " + " ".join(lines),
-            activity="Arcane Experimentation",
+            activity=title,
         )
     )
     return stop
+
+
+#: The lab Diary's name for what an unsafe or Warping laboratory did to a
+#: season's work that wasn't an experiment.
+LAB_HAZARD = "Laboratory Mishap"
 
 
 def _log_attempt(
@@ -688,7 +730,7 @@ def _disaster(
     everyone = [magus, *ls.assistants(saga, magus, plan)]
     if chart.zeroes:
         for person in everyone:
-            gain_warping(saga, person, chart.zeroes, random.Random())
+            gain_warping(saga, person, chart.zeroes, random.Random(), opened=True)
     if chart.lab_flaw:
         ls.add_vf(lab, chart.lab_flaw)
     if chart.zeroes >= 4:
@@ -887,6 +929,33 @@ def _destroy(
     """A creation destroyed: an invention's or instilling's progress lost
     (Disaster), or with `whole` (a Complete Failure's 0) the item or the
     familiar itself."""
+    _drop_project(saga, magus, plan, work)
+    device, effect = work.device, work.effect
+    if device is not None and (
+        whole or plan.activity in (es.LESSER_WORK, es.CHARGED_WORK)
+    ):
+        if device in saga.enchanted_devices:
+            saga.enchanted_devices.remove(device)
+            lab_items.forget_device(saga, device.id)
+        return f"{device.name} is destroyed."
+    if device is not None and effect is not None:
+        if effect in device.effects:
+            device.effects.remove(effect)
+            lab_items.forget_device(saga, device.id, effect.id)
+        return f"{enchantment.effect_name(effect)} is lost from {device.name}."
+    familiar = work.familiar
+    if familiar is not None and whole and plan.activity in (fs.BIND, fs.EMPOWER):
+        if familiar in saga.familiars:
+            saga.familiars.remove(familiar)
+        return f"{familiar.name} is destroyed."
+    return _lose_progress(magus, plan, work)
+
+
+def _drop_project(
+    saga: Saga, magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
+) -> None:
+    """The project's points so far, and the plans made to continue it, are
+    gone."""
     key = project_key(plan)
     saga.lab_projects = [
         p
@@ -907,24 +976,13 @@ def _destroy(
             > (plan.year, SEASONS.index(plan.season))
         )
     ]
-    device, effect = work.device, work.effect
-    if device is not None and (
-        whole or plan.activity in (es.LESSER_WORK, es.CHARGED_WORK)
-    ):
-        if device in saga.enchanted_devices:
-            saga.enchanted_devices.remove(device)
-            lab_items.forget_device(saga, device.id)
-        return f"{device.name} is destroyed."
-    if device is not None and effect is not None:
-        if effect in device.effects:
-            device.effects.remove(effect)
-            lab_items.forget_device(saga, device.id, effect.id)
-        return f"{enchantment.effect_name(effect)} is lost from {device.name}."
-    familiar = work.familiar
-    if familiar is not None and whole and plan.activity in (fs.BIND, fs.EMPOWER):
-        if familiar in saga.familiars:
-            saga.familiars.remove(familiar)
-        return f"{familiar.name} is destroyed."
+
+
+def _lose_progress(
+    magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
+) -> str:
+    """Progress kept outside the lab projects (a bond power's, a taming's)
+    lost, and the Diary's words for it."""
     if work.power is not None:
         work.power.instilling_progress = 0
         return f"{work.power.name}'s progress is lost."

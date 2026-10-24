@@ -73,6 +73,15 @@ def set_total(character: Character, total: int) -> None:
     a.warping_points = max(0, total) - points_for(a.warping_score)
 
 
+def opened_to_arts(character: Character) -> bool:
+    """A magus, or anyone else whose Hermetic Arts are opened (any Art with
+    experience): who a laboratory Disaster's Warping takes to the edge of
+    Twilight."""
+    return character.type == "magus" or any(
+        art.xp > 0 for art in character.arts.values()
+    )
+
+
 def aura_points(aura: int) -> int:
     """Warping Points a year from living within an aura of this strength."""
     if aura < 6:

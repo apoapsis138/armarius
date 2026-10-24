@@ -13,7 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
-from ..models import Breakthrough, ResearchAttempt
+from ..models import Breakthrough, Character, ResearchAttempt
 from . import experiment
 
 SOURCE = experiment.SOURCE
@@ -152,10 +152,21 @@ def stabilizing_odds(
     return Odds(risk, botch_dice, 1 - harmful - disaster, harmful, disaster)
 
 
-def risk_table(magic_theory: int, aura: int, *, simple: bool = False) -> list[Odds]:
-    """Seeking a Discovery's odds at each risk Magic Theory allows."""
+def risk_table(
+    magic_theory: int,
+    aura: int,
+    *,
+    character: Character | None = None,
+    safety: int = 0,
+    simple: bool = False,
+) -> list[Odds]:
+    """Seeking a Discovery's odds at each risk Magic Theory allows, with the
+    botch dice the chart would roll (the lab's aura and Safety, the
+    character's Virtues and Flaws)."""
     return [
-        seeking_odds(risk, 1 + risk + max(0, aura), simple=simple)
+        seeking_odds(
+            risk, experiment.botch_dice(character, risk, aura, safety), simple=simple
+        )
         for risk in range(1, experiment.max_risk(magic_theory) + 1)
     ]
 

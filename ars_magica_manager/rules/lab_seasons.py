@@ -1127,9 +1127,13 @@ def _with_options(
         die = plan.experiment_die
         # Seeking a Discovery, the risk goes on the chart roll only.
         risk = 0 if seeking(plan) else plan.risk
+        # A die of 0 (a simple die never shows one) is No Benefit's: the
+        # die and the risk lost.
         extra.append(
             Line(
-                f"Experimentation (simple die {die if die is not None else '?'}"
+                "Experimentation (No Benefit: die and risk lost)"
+                if die == 0
+                else f"Experimentation (simple die {die if die is not None else '?'}"
                 + (f" + risk {risk})" if risk else ")"),
                 amount=(die or 0) + risk,
                 source=experiment.SOURCE,

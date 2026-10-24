@@ -20,6 +20,7 @@ from ..models import (
     VirtueFlawInstance,
 )
 from . import effects, lab_items
+from .rounding import round_down
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Creating a "
@@ -117,6 +118,18 @@ def lab_characteristic_total(
     virtue_sum = int(effects.amount_total(e for e in found if not e.is_negative_side))
     flaw_sum = int(effects.amount_total(e for e in found if e.is_negative_side))
     return manual, virtue_sum, flaw_sum, manual + virtue_sum + flaw_sum
+
+
+def lab_safety(
+    lab: Laboratory,
+    catalog_by_id: Mapping[str, LabVirtueFlawDef],
+    saga: Saga | None,
+) -> int:
+    """The lab's Safety, as its botch dice read it: the Base Safety
+    (Refinement - occupied Size, rounded down) plus the Characteristic's
+    typed, Virtue and Flaw parts."""
+    base = round_down(lab_base_safety(lab, catalog_by_id))
+    return base + lab_characteristic_total(lab, catalog_by_id, "safety", saga)[3]
 
 
 def characteristic_effects(

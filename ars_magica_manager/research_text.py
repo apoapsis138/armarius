@@ -16,8 +16,7 @@ from .models import Breakthrough, Character, Laboratory, ResearchAttempt, Saga
 from .models.common import SEASONS
 from .rules import experiment, research
 from .rules.experiment import Extraordinary
-from .rules.lab import ability_score
-from .rules.realms import home_aura
+from .rules.lab import ability_score, botch_conditions
 from .tables import Table
 
 #: The Research Log's columns, as its header shows them.
@@ -205,7 +204,7 @@ def _pct(chance: float) -> str:
 
 def odds_lines(saga: Saga, character: Character, goal: Breakthrough) -> list[str]:
     """The chances of the goal's next season at the chart."""
-    aura, _ = home_aura(saga, character)
+    aura, safety = botch_conditions(saga, character)
     if research.stage(goal) in (
         research.Stage.DISCOVERY,
         research.Stage.STABILIZING,
@@ -213,7 +212,9 @@ def odds_lines(saga: Saga, character: Character, goal: Breakthrough) -> list[str
     ):
         risk = goal.discovery_risk
         odds = research.stabilizing_odds(
-            risk, goal.discovery_shift, experiment.botch_dice(character, risk, aura)
+            risk,
+            goal.discovery_shift,
+            experiment.botch_dice(character, risk, aura, safety),
         )
         return [
             f"[b]Odds of stabilizing[/] (risk +{risk}, move "
@@ -228,7 +229,9 @@ def odds_lines(saga: Saga, character: Character, goal: Breakthrough) -> list[str
         f"[b]Odds of a Discovery[/] by risk (Magic Theory {score + bonus}, "
         f"aura {aura}):"
     ]
-    for odds in research.risk_table(score + bonus, aura):
+    for odds in research.risk_table(
+        score + bonus, aura, character=character, safety=safety
+    ):
         lines.append(
             f"  +{odds.risk}: Discovery {_pct(odds.success)} · harmful "
             f"{_pct(odds.harmful)} · disaster {_pct(odds.disaster)}"
@@ -298,9 +301,9 @@ def move_card(
     shift = chart.discovery_shift or 0
     roll = chart.die + risk
     band = research.band_of(roll)
-    aura, _ = home_aura(saga, character)
+    aura, safety = botch_conditions(saga, character)
     odds = research.stabilizing_odds(
-        risk, shift, experiment.botch_dice(character, risk, aura)
+        risk, shift, experiment.botch_dice(character, risk, aura, safety)
     )
     return "\n".join(
         [

@@ -89,6 +89,7 @@ LAB_ACTIVITIES: tuple[str, ...] = (
     "Translate Lab Text",
     "Arcane Experimentation",
     "Arcane Discovery",
+    "Laboratory Mishap",
     "Study",
     "Refine Laboratory",
     "Build/Modify Laboratory",

@@ -61,8 +61,7 @@ from ..rules import (
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import laboratory_seasons as ls
-from ..rules.lab import ability_score
-from ..rules.realms import home_aura
+from ..rules.lab import ability_score, botch_conditions
 from ..seasons import pairs as paired_plans
 from ..seasons.projection import as_then
 from . import activity as activity_forms
@@ -1171,9 +1170,11 @@ class LabPlanForm:
 
     def risk_hint(self) -> str:
         """The chance of a Discovery at each risk the magus may take."""
-        aura, _ = home_aura(self.saga, self.magus)
+        aura, safety = botch_conditions(self.saga, self.magus)
         score, bonus = ability_score(self.magus, "Magic Theory")
-        odds = research.risk_table(score + bonus, aura)
+        odds = research.risk_table(
+            score + bonus, aura, character=self.magus, safety=safety
+        )
         if not odds:
             return "Magic Theory allows no risk."
         chances = ", ".join(f"+{o.risk} {o.success * 100:.0f}%" for o in odds)
@@ -1339,7 +1340,7 @@ class LabPlanForm:
         goal = next((g for g in magus.breakthroughs if g.name == plan.research), None)
         if goal is None:
             return ""
-        aura, _ = home_aura(saga, magus)
+        aura, safety = botch_conditions(saga, magus, saga.laboratory(plan.lab_id))
 
         def pct(chance: float) -> str:
             return (
@@ -1349,7 +1350,7 @@ class LabPlanForm:
         if plan.activity == ex.STABILIZE:
             risk = goal.discovery_risk
             odds = research.stabilizing_odds(
-                risk, goal.discovery_shift, ex.botch_dice(magus, risk, aura)
+                risk, goal.discovery_shift, ex.botch_dice(magus, risk, aura, safety)
             )
             return (
                 f"[b]Odds[/] stabilized {pct(odds.success)} · harmful "
@@ -1358,7 +1359,9 @@ class LabPlanForm:
             )
         if not plan.experimenting:
             return ""
-        odds = research.seeking_odds(plan.risk, ex.botch_dice(magus, plan.risk, aura))
+        odds = research.seeking_odds(
+            plan.risk, ex.botch_dice(magus, plan.risk, aura, safety)
+        )
         return (
             f"[b]Odds[/] Discovery {pct(odds.success)} · harmful "
             f"{pct(odds.harmful)} · disaster {pct(odds.disaster)}  "

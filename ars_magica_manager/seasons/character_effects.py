@@ -188,17 +188,25 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
 
 
 def gain_warping(
-    saga: Saga, character: Character, points: int, rng: random.Random
+    saga: Saga,
+    character: Character,
+    points: int,
+    rng: random.Random,
+    *,
+    opened: bool = False,
 ) -> list[str]:
     """Add Warping Points from one event; 2 or more take a
-    magus to the edge of Wizard's Twilight. Writes a Diary entry and returns
-    its lines."""
+    magus (with `opened`, anyone whose Arts are opened) to the edge of
+    Wizard's Twilight. Writes a Diary entry and returns its lines."""
     warping_rules.set_total(character, warping_rules.total_points(character) + points)
     notes = [
         f"+{points} Warping Points; Warping Score {character.aging.warping_score}."
     ]
     name = f"Warping +{points}"
-    if character.type == "magus" and points >= 2:
+    at_risk = (
+        warping_rules.opened_to_arts(character) if opened else character.type == "magus"
+    )
+    if at_risk and points >= 2:
         aura, _ = home_aura(saga, character)
         result = warping_rules.twilight(character, points, aura, rng, saga)
         notes += result.notes

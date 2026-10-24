@@ -39,6 +39,7 @@ from .breakdown import Breakdown, Line
 from .lab_stats import (
     lab_aura_total,
     lab_characteristic_total,
+    lab_safety,
     laboratory_source,
     specialization_scores,
 )
@@ -213,16 +214,47 @@ def _aura_line(
     covenant: Covenant | None,
     boons: Mapping[str, CovenantBoonHookDef],
 ) -> Line:
-    """The aura the lab sits in: its own place's, else its covenant's."""
+    """The aura the lab sits in, as a Lab Total line."""
+    aura, realm = _place_aura(saga, lab, covenant, boons)
+    label, amount = hybrid.aura_label(magus, realm, aura)
+    return Line(label, amount=amount, source=realms.SOURCE)
+
+
+def _place_aura(
+    saga: Saga,
+    lab: Laboratory,
+    covenant: Covenant | None,
+    boons: Mapping[str, CovenantBoonHookDef],
+) -> tuple[int, str]:
+    """The aura the lab sits in (score, realm): its own place's, else its
+    covenant's, with the lab's own modifier."""
     covenant_aura = covenant_effective_aura(covenant, boons) if covenant else 0
     realm = covenant.aura_realm if covenant else realms.HERMETIC
-
     own = sites.lab_aura(saga, lab)
     if own is not None:
         covenant_aura, realm = own
-    aura = lab_aura_total(lab, covenant_aura)
-    label, amount = hybrid.aura_label(magus, realm, aura)
-    return Line(label, amount=amount, source=realms.SOURCE)
+    return lab_aura_total(lab, covenant_aura), realm
+
+
+def lab_aura(saga: Saga, lab: Laboratory) -> tuple[int, str]:
+    """The aura (score, realm) `lab` sits in, the one its Lab Totals use."""
+    boons = catalog.load_covenant_boon_hook_catalog_by_id()
+    return _place_aura(saga, lab, saga.covenant(lab.covenant_id), boons)
+
+
+def botch_conditions(
+    saga: Saga, character: Character, lab: Laboratory | None = None
+) -> tuple[int, int]:
+    """The aura and Safety a lab roll's botch dice count: those of `lab`,
+    else of the character's own laboratory; with none, the covenant's aura
+    and Safety 0."""
+    lab = lab or saga.laboratory(character.assigned_lab_id)
+    if lab is None:
+        aura, _ = realms.home_aura(saga, character)
+        return aura, 0
+    aura, _ = lab_aura(saga, lab)
+    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    return aura, lab_safety(lab, by_id, saga)
 
 
 def _quality_lines(

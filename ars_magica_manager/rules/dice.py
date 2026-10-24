@@ -102,6 +102,15 @@ def stress_die(
     return DieResult(value=last * multiplier, faces=tuple(faces))
 
 
+def botch_roll(rng: random.Random, botch_dice: int, *, saga: Saga | None = None) -> int:
+    """A roll of `botch_dice` botch dice on their own (an unsafe
+    laboratory's): the zeroes showing. None when the saga rolls simple
+    dice only."""
+    if options.is_on(saga, "simple_dice_only"):
+        return 0
+    return sum(_d10(rng) == 0 for _ in range(max(botch_dice, 0)))
+
+
 def simple_roll(rng: random.Random) -> DieResult:
     value = simple_die(rng)
     return DieResult(value=value, faces=(value % 10,), stress=False)

@@ -139,10 +139,10 @@ When Winter is advanced, the app also does the following, each written in the ch
 <!-- /gui -->
 
 <!-- tui -->
-**Wizard's Twilight**: gaining 2 or more Warping Points from one event takes a magus to the edge of Twilight, which the app rolls at once. It does this for the Warping of an experiment's disaster, and for points typed in **Gain Warping Points now** on the Aging & Warping form.
+**Wizard's Twilight**: gaining 2 or more Warping Points from one event takes a magus to the edge of Twilight, which the app rolls at once. It does this for the Warping of a laboratory Disaster (for anyone in the laboratory whose Arts are opened, an apprentice too), and for points typed in **Gain Warping Points now** on the Aging & Warping form.
 <!-- /tui -->
 <!-- gui -->
-**Wizard's Twilight**: gaining 2 or more Warping Points from one event takes a magus to the edge of Twilight, which the app rolls at once. It does this for the Warping of an experiment's disaster, and for points typed in **Gain Warping Points now** on the Aging section's form.
+**Wizard's Twilight**: gaining 2 or more Warping Points from one event takes a magus to the edge of Twilight, which the app rolls at once. It does this for the Warping of a laboratory Disaster (for anyone in the laboratory whose Arts are opened, an apprentice too), and for points typed in **Gain Warping Points now** on the Aging section's form.
 <!-- /gui -->
 If the magus enters Twilight, the Diary records how long it lasts and the extra Warping Points; if it lasts a season or more, no season can be planned for them until it ends. The storyguide chooses its effects. A double botch studying vis is only noted in the Diary: add its Warping with Gain Warping Points now.
 
@@ -316,14 +316,26 @@ A second helper is planned on their own sheet: Plan Season, **Assist in a labora
 
 Work that can be done [experimentally](help:invent-spell-experiment) shows an **Experiment** box, **Risk +** and an optional **Research goal**. Inventing from a Lab Text can't be done experimentally. A magus who is Averse to Risk can't experiment, and one who is Prone to Chance must.
 
-- Experimenting adds a simple die and the risk (0 to +3) to the Lab Total. The die is rolled when the season is advanced. Work whose Lab Total is too low without the die can still be planned experimentally, and the plan says so: if the die doesn't lift it, the season goes ahead all the same, the Extraordinary Results chart is still rolled, any vis paid is lost, and the work makes no progress.
+- Experimenting adds a simple die and the risk (0 to +3) to the Lab Total. The die is rolled when the season is advanced. Work whose Lab Total is too low without the die can still be planned experimentally, and the plan says so: if the die doesn't lift it, the season goes ahead all the same, the Extraordinary Results chart is still rolled, any vis paid is lost, and the work makes no progress. A season the chart wastes (a Disaster or a Complete Failure) loses its vis too.
 - The Extraordinary Results chart is then rolled. Whatever needs the storyguide's word (which of two rolls stands, what a side or modified effect is, what a special result becomes, a Disaster of 5 or more) is asked in Advance Season's [Experiment Results](help:advance-experiment-results) step; the rest is applied by the app and noted in the Diary: Discovery xp, a Disaster's Warping, wounds and laboratory Flaws, a creation destroyed, and the effects the creation keeps (see [Living with an experiment](help:guide-lab-planning-living)).
 - With a **Research goal**, the experiment seeks a Discovery (Definitive Edition, Chapter 8, Arcane Discovery; Houses of Hermes: True Lineages calls it original research): the risk goes on the chart roll, not the Lab Total, and is at most +1 for every 5 points of Magic Theory. A Discovery toward the research gives no experience. The goal is chosen from the magus's own goals not yet reached, so add it on their [Research tab](help:tab-research) first. **Risk +** names the chance of a Discovery at each risk the magus may take, and the line above Schedule gives the season's odds as you change it: a Discovery, a harmful result (No Benefit or Complete Failure) and a Disaster. For **Stabilize a Discovery** it gives the chance of stabilizing it instead, at the risk and move of the experiment that made it.
+- **No Benefit** loses the die and the risk. If the Lab Total is then too low for the work, the project is abandoned: the season is wasted, the points put into it so far are lost, and the plans made to continue it are cleared.
 - When the roll is within the risk of 10, Advance Season asks whether to move it there. Taking the move gives a Discovery *as well as* the roll's own result (a side effect or modified effect still stands), unless that result wastes the season. The same move is then made in every later season of that project, and when stabilizing.
 - Each spell or enchantment gives one Discovery at most: seeking another with it is refused.
 - **Stabilize a Discovery** repeats the experiment: its Lab Total, seasons, vis, risk and move. Any result but a Disaster, No Benefit or Complete Failure stabilizes it, and its magnitude is added to the goal's points; a Discovery rolled then gives nothing. Each attempt gives Warping Points: the magnitude less a simple die. A failed attempt must be tried again the very next season, or the Discovery is lost.
 - **Seek an insight** (a season studying a text, relic or teacher) rolls Intelligence + Magic Theory + a stress die against 18, +3 for Inventive Genius. Its research goal is chosen from the magus's goals too.
 - Every season spent on a goal goes in its Research Log, with the roll and what came of it: see the magus's [Research tab](help:tab-research), and the laboratory's while the research is under way.
+
+### Safety and Warping
+<!-- help: guide-lab-safety-warping -->
+
+A laboratory's [Characteristics](help:section-lab-characteristics) change every season of work in it (Ars Magica Definitive Edition, Chapter 8: Laboratory, Laboratory Personalization Rules, pp. 288-289):
+
+- **Safety** is the Base Safety (Refinement less any positive Occupied Size) plus the Safety Characteristic's total. It is taken from the botch dice of every lab roll, an experiment's included; a negative Safety adds dice.
+- **An unsafe laboratory** (negative Safety): each season of lab work, a simple die at or under the Safety's size risks an accident. The season's botch dice are rolled (an experiment's, or one per point of negative Safety, at least one), and any zero is a Disaster, as on the Extraordinary Results chart: Warping, the season wasted, and worse with more zeroes. It is written in the laboratory's Diary as a Laboratory Mishap.
+- **A Warping laboratory** (positive Warping): each season, a simple die at or under the Warping warps the work: a side effect on an odd die, a modified effect on an even one, which the storyguide describes in [Experiment Results](help:advance-experiment-results) and the creation keeps.
+
+Ars Magica Fifth Edition: Covenants also adds the Safety's size to the risk modifier for an accident; the Definitive Edition leaves that out, and so does the app.
 
 ### Living with an experiment
 <!-- help: guide-lab-planning-living -->
@@ -333,7 +345,7 @@ An experiment's results stay with what it made, "warts and all" (Ars Magica Defi
 - **Side effects and modified effects** are kept as the creation's **experimental effects**: on an invented spell (and on anyone's copy learned from it or its Lab Text), on an instilled effect (and on the Lab Text written of it, which reproduces them), on a familiar's bond power or the binding itself, and on a Longevity Ritual. Each shows where the creation's details are shown, with the season it came from; a fatal flaw is marked.
 - A side effect's description can be left blank in [Experiment Results](help:advance-experiment-results) and filled in later. Edit a known spell (its Mastery form), an item's effect or a bond power and use **Experimental effects** to add, change or remove one. A new Range, Duration or Target given there changes the creation when the form is saved. The level never changes, and no requisite is added.
 - **A special result** becomes what the storyguide makes of it: a story event goes into the laboratory's and the covenant's Diaries as an open Story Event; a spell created as well is learned, with its Lab Text; extra vis is paid from the season's vis.
-- **Investigating an item** by experiment: changes reach the power the storyguide names, and a result that would destroy the creation destroys the item, unless one of its own effects protects it with a level above the Lab Total.
+- **Investigating an item** by experiment: changes reach the power the storyguide names, and a result that would destroy the creation destroys the item, unless one of its own effects protects it with a level above the Lab Total. A protected item also resists the side and modified effects that would harm it; a side benefit or an increase still reaches it.
 
 **The app's assumptions.** The rules don't size a change of potency. The app takes one step of potency as 5 points of the Lab Total behind the creation, which is 1 point of a Longevity Ritual's modifier: a ritual reduced by a step protects one point less on every aging roll. Where nothing is worked out from the Lab Total (a spell's or an item's power), the change is only recorded and described for the storyguide.
 

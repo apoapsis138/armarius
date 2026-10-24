@@ -1,8 +1,9 @@
 """Arcane experimentation and Arcane Discovery."""
 
 import random
+from dataclasses import replace
 
-from ars_magica_manager import seasons
+from ars_magica_manager import catalog, seasons
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -10,15 +11,19 @@ from ars_magica_manager.models import (
     Character,
     Characteristics,
     Covenant,
+    ExperimentalEffect,
     Laboratory,
+    LabProject,
     Saga,
     SeasonPlan,
     Spell,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import activities as rules
-from ars_magica_manager.rules import experiment, lab_seasons
+from ars_magica_manager.rules import experiment, lab_seasons, lab_stats, warping
+from ars_magica_manager.rules import lab as lab_rules
 from ars_magica_manager.rules.xp import ability_xp, art_xp
+from ars_magica_manager.seasons import lab_apply
 
 
 class _Dice(random.Random):
@@ -522,3 +527,132 @@ def test_inventive_genius_helps_an_insight():
         True,
         "18 against 18: an insight.",
     )  # Int 2 + MT 6 + 7 + 3
+
+
+# -- the laboratory's part: its aura, Safety and Warping --------------------
+
+
+def test_the_lab_s_safety_changes_the_botch_dice():
+    magus = _saga().character("m")
+    assert experiment.botch_dice(magus, 2, 3, safety=2) == 4
+    assert experiment.botch_dice(magus, 2, 3, safety=-2) == 8
+    # Cautious Sorcerer comes first (never below one by itself), then Safety.
+    magus.virtues_flaws = [VirtueFlawInstance(experiment.CAUTIOUS)]
+    assert experiment.botch_dice(magus, 2, 3, safety=2) == 1
+    assert experiment.botch_dice(magus, 0, 0, safety=1) == 0
+
+
+def test_the_lab_s_safety_counts_its_base_safety():
+    saga = _saga()
+    lab = saga.laboratories[0]
+    lab.characteristics.refinement = 2
+    lab.characteristics.safety = -1
+    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    assert lab_stats.lab_safety(lab, by_id, saga) == 2 - 1
+
+
+def test_botch_dice_count_the_lab_s_own_aura():
+    saga = _saga()
+    saga.covenants[0].aura = 3
+    saga.laboratories[0].aura_modifier = 2
+    saga.laboratories[0].characteristics.safety = -1
+    assert lab_rules.botch_conditions(saga, saga.character("m")) == (5, -1)
+    saga.character("m").assigned_lab_id = None
+    assert lab_rules.botch_conditions(saga, saga.character("m")) == (3, 0)
+
+
+def test_stabilizing_s_extra_rolls_can_botch():
+    magus = _saga().character("m")
+    # Stress die 1, doubled on a 6: 12 + 1 = 13, roll twice more; the first
+    # is a 0 with a zero among its two botch dice (1 + risk 1).
+    chart = experiment.chart(
+        _Dice(1, 6, 0, 0, 5, 3), 1, 0, "Ignem", character=magus, stabilizing=True
+    )
+    assert (chart.zeroes, chart.wasted) == (1, True)
+
+
+def test_long_chains_of_twelves_are_left_to_the_storyguide():
+    result = experiment.Extraordinary()
+    experiment._apply(result, 12, _Dice(*[9] * 5000), 3, "Ignem", None, 0, dice_count=1)
+    assert any("the storyguide rolls the rest" in r for r in result.results)
+
+
+def test_a_wasted_experiment_spends_its_vis():
+    saga = _saga()
+    magus = saga.character("m")
+    lab = saga.laboratories[0]
+    lab.raw_vis = {"creo": 5}
+    plan = _plan(vis_from="laboratory")
+    _, work = lab_seasons.work(saga, magus, replace(plan, experiment_die=4))
+    assert work is not None
+    work.vis_cost = {"Creo": 2}
+    work.experiment = experiment.Extraordinary(wasted=True, failure=True)
+    lab_apply._apply_experiment(saga, magus, lab, plan, work)
+    assert lab.raw_vis == {"creo": 3}
+
+
+def test_no_benefit_too_low_abandons_the_project():
+    saga = _saga()
+    saga.spells[0].level = 30  # 28 alone; 28 + die 5 + risk 1 = 34
+    saga.lab_projects = [LabProject("m", "bolt", 12)]
+    seasons.set_plan(saga, _plan())
+    # Die 5; chart 6 + 1 = 7: No Benefit, and 28 can't invent a level 30.
+    seasons.apply(saga, seasons.resolve(saga, _Dice(5, 6)))
+    assert saga.lab_projects == []
+    assert "abandoned" in saga.laboratories[0].diary[-1].details
+
+
+def test_only_harmful_effects_are_resisted_by_an_item_s_protection():
+    flaw = ExperimentalEffect("side", "minor flaw")
+    benefit = ExperimentalEffect("side", experiment.SIDE_EFFECTS[9])
+    assert experiment.harmful(flaw) and not experiment.harmful(benefit)
+    assert experiment.harms_item(experiment.Extraordinary(effects=[benefit]))
+    assert not experiment.harms_item(experiment.Extraordinary())
+
+
+def test_anyone_opened_to_the_arts_risks_twilight_from_a_disaster():
+    apprentice = Character(id="a", name="Pia", type="companion")
+    assert not warping.opened_to_arts(apprentice)
+    apprentice.arts = {"creo": ArtScore(xp=1)}
+    assert warping.opened_to_arts(apprentice)
+    assert warping.opened_to_arts(_saga().character("m"))
+
+
+def test_an_unsafe_lab_risks_an_accident():
+    # A simple die of 1, under Safety -2: two botch dice, one of them a 0.
+    found = experiment.lab_hazards(_Dice(1, 0, 4), None, -2, 0)
+    assert found is not None
+    assert (found.zeroes, found.wasted, found.botch_dice) == (1, True, 2)
+    assert found.results[0] == "The laboratory is unsafe (Safety -2): an accident."
+    # A die over the Safety's size, or no zero: nothing happens.
+    assert experiment.lab_hazards(_Dice(3), None, -2, 0) is None
+    assert experiment.lab_hazards(_Dice(1, 4, 4), None, -2, 0) is None
+    magus = _saga().character("m")
+    magus.virtues_flaws = [VirtueFlawInstance(experiment.CAUTIOUS)]
+    assert experiment.accident_dice(magus, -2) == 1
+
+
+def test_a_warping_lab_warps_the_work():
+    # Odd die under Warping 2: a side effect (simple die 4).
+    found = experiment.lab_hazards(_Dice(1, 4), None, 0, 2)
+    assert found is not None
+    assert [e.result for e in found.effects] == ["minor side effect"]
+    # Even: a modified effect (simple die 5: increased).
+    found = experiment.lab_hazards(_Dice(2, 5), None, 0, 2)
+    assert found is not None
+    assert [e.result for e in found.effects] == [experiment.INCREASED]
+    assert experiment.lab_hazards(_Dice(3), None, 0, 2) is None
+
+
+def test_an_accident_in_an_unsafe_lab_spoils_plain_lab_work():
+    saga = _saga()
+    saga.laboratories[0].characteristics.safety = -3
+    seasons.set_plan(saga, _plan(experimenting=False, risk=0))
+    # Simple die 1 (under 3): three botch dice, two of them zeroes.
+    worked = seasons.resolve(saga, _Dice(1, 0, 0, 5))
+    assert worked[0].notes[-1].startswith("Laboratory: The laboratory is unsafe")
+    seasons.apply(saga, worked)
+    magus = saga.character("m")
+    assert magus.spells_known == []
+    assert saga.laboratories[0].diary[-1].name == "Laboratory Mishap"
+    assert warping.total_points(magus) >= 2

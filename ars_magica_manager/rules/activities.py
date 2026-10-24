@@ -67,6 +67,7 @@ from . import (
     experiment,
     familiar_seasons,
     lab_seasons,
+    lab_stats,
     lab_virtues,
     laboratory_seasons,
     library,
@@ -82,6 +83,7 @@ from . import (
 from . import (
     creation_access as access,
 )
+from . import lab as lab_rules
 from .breakdown import Line
 from .rounding import round_down
 from .study import StudyResult, season_of_study
@@ -1321,7 +1323,9 @@ def _experiment(
     work = result.lab_work
     if work is None:
         return
-    aura, _ = realms.home_aura(saga, character)
+    aura, safety = lab_rules.botch_conditions(
+        saga, character, saga.laboratory(plan.lab_id)
+    )
     art, _ = lab_seasons.made_arts(work, plan)
     goal = experiment.find_goal(character, plan.research) if plan.research else None
     # With an insight waiting, the experiment invents it (integration);
@@ -1345,6 +1349,7 @@ def _experiment(
         seeking=seeks,
         shift=shift,
         stabilizing=stabilizing,
+        safety=safety,
     )
     work.experiment = chart
     settle_chart(result, character, saga)
@@ -1353,6 +1358,53 @@ def _experiment(
         result.lab_work.research_warping = max(
             0, result.lab_work.research_magnitude - dice.simple_die(roll_rng)
         )
+
+
+def _lab_hazards(
+    result: Outcome, character: Character, saga: Saga, rng: random.Random
+) -> None:
+    """An unsafe or Warping laboratory's rolls on the season's work: added
+    to the experiment's chart, or standing alone (`lab_only`) for the
+    storyguide's Experiment results step."""
+    work = result.lab_work
+    lab = saga.laboratory(result.plan.lab_id)
+    if work is None or lab is None:
+        return
+    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    safety = lab_stats.lab_safety(lab, by_id, saga)
+    warping = max(0, lab_stats.lab_characteristic_total(lab, by_id, "warping", saga)[3])
+    chart = work.experiment
+    hazards = experiment.lab_hazards(
+        rng,
+        character,
+        safety,
+        warping,
+        saga=saga,
+        botch_count=chart.botch_dice if chart is not None else None,
+    )
+    if hazards is None:
+        return
+    if chart is not None:
+        experiment.add_hazards(chart, hazards)
+    else:
+        hazards.lab_only = True
+        work.experiment = chart = hazards
+    chart.item_at_risk = result.plan.activity == enchant_seasons.INVESTIGATE and (
+        experiment.harms_item(chart)
+    )
+    _note_chart(result, chart)
+
+
+_CHART_NOTES = ("Extraordinary Results: ", "Laboratory: ")
+
+
+def _note_chart(result: Outcome, chart: experiment.Extraordinary) -> None:
+    """The season's note of its chart roll (or its laboratory's rolls),
+    replacing any made before."""
+    label = _CHART_NOTES[1] if chart.lab_only else _CHART_NOTES[0]
+    result.notes = [n for n in result.notes if not n.startswith(_CHART_NOTES)] + [
+        label + " ".join(chart.results)
+    ]
 
 
 def settle_chart(result: Outcome, character: Character, saga: Saga) -> None:
@@ -1365,20 +1417,22 @@ def settle_chart(result: Outcome, character: Character, saga: Saga) -> None:
     chart = work.experiment
     plan = result.plan
     if chart.no_benefit and plan.activity != experiment.STABILIZE:
-        _, plain = lab_seasons.work(saga, character, replace(plan, experimenting=False))
-        if plain is None:
-            chart.wasted = True
+        # Only the die and the risk are lost: the work is still an
+        # experiment (Inventive Genius, an Experimentation Specialization).
+        _, plain = lab_seasons.work(
+            saga, character, replace(plan, experiment_die=0, risk=0)
+        )
+        if plain is None or plain.too_low:
+            chart.wasted = chart.abandoned = True
             chart.discovery = False
             chart.discovery_shift = None
         else:
             plain.experiment = chart
             result.lab_work = plain
     chart.item_at_risk = (
-        plan.activity == enchant_seasons.INVESTIGATE and experiment.destroys(chart)
+        plan.activity == enchant_seasons.INVESTIGATE and experiment.harms_item(chart)
     )
-    result.notes = [
-        n for n in result.notes if not n.startswith("Extraordinary Results: ")
-    ] + ["Extraordinary Results: " + " ".join(chart.results)]
+    _note_chart(result, chart)
 
 
 def outcome(
@@ -1671,6 +1725,8 @@ def _lab_outcome(
         plan.experimenting or plan.activity == experiment.STABILIZE
     ):
         _experiment(result, character, saga, rng)
+    if result.lab_work is not None and rng is not None:
+        _lab_hazards(result, character, saga, rng)
     if result.lab_work is not None and result.lab_work.too_low:
         result.notes.append(result.lab_work.too_low)
     rolled = plan.activity in laboratory_seasons.ROLLED and (

@@ -45,6 +45,10 @@ SOURCE = (
     "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
     "_Laboratory#Experimentation)"
 )
+LAB_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Laboratory "
+    "Personalization Rules, Safety and Warping (pp. 288-289)"
+)
 RESEARCH_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Arcane Discovery "
     "(pp. 277-281); Houses of Hermes: True Lineages, Chapter One: House "
@@ -110,6 +114,9 @@ class Extraordinary:
     wasted: bool = False
     #: The experimentation bonus is lost (No Benefit).
     no_benefit: bool = False
+    #: No Benefit left the Lab Total too low for the work: the project is
+    #: abandoned (its progress lost), and the season with it.
+    abandoned: bool = False
     #: A Complete Failure (for a familiar or an item, a simple die of 0
     #: destroys it: `failure_die`).
     failure: bool = False
@@ -153,14 +160,18 @@ class Extraordinary:
     #: laboratory destroyed, the default).
     disaster_choice: str = ""
     #: Investigating an item, a result that destroys it (a Disaster of two
-    #: zeroes or more, or a Complete Failure's 0): `item_at_risk`; and
-    #: `protected` when one of its effects protects it with a level above
-    #: the Lab Total (the storyguide's word), so it survives.
+    #: zeroes or more, or a Complete Failure's 0) or changes it (a side or
+    #: modified effect): `item_at_risk`; and `protected` when one of its
+    #: effects protects it with a level above the Lab Total (the
+    #: storyguide's word), so it survives and resists the harmful effects.
     item_at_risk: bool = False
     protected: bool = False
     #: With two dice on the chart (Exciting Experimentation, Creative
     #: Block), the other roll, whole, for the storyguide to choose.
     other: Extraordinary | None = None
+    #: No experiment: only what an unsafe or Warping laboratory did to the
+    #: season's work (lab_hazards).
+    lab_only: bool = False
 
     @property
     def second(self) -> list[str]:
@@ -184,16 +195,26 @@ class Extraordinary:
         )
 
 
+#: Rolls of 12+ ("roll twice more") followed in a row before the rest is
+#: left to the storyguide, a bound the dice almost never reach.
+MAX_DEPTH = 10
+
 #: A Disaster with this many zeroes or more is the storyguide's choice:
 #: a story threatening the covenant, or the laboratory destroyed.
 DISASTER_CHOICE = 5
 
 
-def botch_dice(character: Character, risk: int, aura: int) -> int:
-    """1 + risk + the aura, with the Virtues and Flaws that change lab botch
-    dice (Cautious Sorcerer takes 3 off, never below 1)."""
-    change, _ = scores.botch_dice_change(character.virtues_flaws, ("laboratory",))
-    return scores.with_botch_change(1 + risk + max(0, aura), change)
+def botch_dice(
+    character: Character | None, risk: int, aura: int, safety: int = 0
+) -> int:
+    """1 + risk + the lab's aura, with the Virtues and Flaws that change lab
+    botch dice (Cautious Sorcerer takes 3 off, never below 1 by itself),
+    then less the lab's Safety (a negative Safety adds dice)."""
+    count = 1 + risk + max(0, aura)
+    if character is not None:
+        change, _ = scores.botch_dice_change(character.virtues_flaws, ("laboratory",))
+        count = scores.with_botch_change(count, change)
+    return max(0, count - safety)
 
 
 def too_low(why: str) -> str:
@@ -225,7 +246,7 @@ def chart(
     seeking: bool = False,
     shift: int | None = None,
     stabilizing: bool = False,
-    depth: int = 0,
+    safety: int = 0,
 ) -> Extraordinary:
     """Roll the Extraordinary Results chart. Seeking a Discovery, a roll the
     risk modifier can move onto 10 records the move (`discovery_shift`) to
@@ -233,8 +254,8 @@ def chart(
     makes that same move. Stabilizing, the roll is moved by `shift` and
     read there. With two dice (Exciting Experimentation, Creative Block)
     the other roll is made the same way and kept whole (`other`), for the
-    storyguide to choose."""
-    dice_count = botch_dice(character, risk, aura) if character else 1 + risk + aura
+    storyguide to choose. `aura` and `safety` are the lab's."""
+    dice_count = botch_dice(character, risk, aura, safety)
     result = Extraordinary(art=art)
     _roll_once(
         result,
@@ -339,6 +360,19 @@ def destroys(result: Extraordinary) -> bool:
     return result.zeroes >= 2 or (result.failure and result.failure_die == 0)
 
 
+def harmful(effect: ExperimentalEffect) -> bool:
+    """Whether an experimental effect damages or changes its creation for
+    the worse: all but a side benefit and an increased parameter."""
+    return effect.result not in BENEFICIAL
+
+
+def harms_item(result: Extraordinary) -> bool:
+    """Whether the roll would destroy or change an item investigated (its
+    protection may resist it): a destroying result or a side or modified
+    effect."""
+    return destroys(result) or bool(result.effects)
+
+
 def settle(
     result: Extraordinary, settlement: Settlement, character: Character | None
 ) -> None:
@@ -423,7 +457,18 @@ def _roll_once(
             )
             roll += shift
             result.move = shift
-        _apply(result, roll, rng, risk, art, saga, 0, research=True)
+        _apply(
+            result,
+            roll,
+            rng,
+            risk,
+            art,
+            saga,
+            0,
+            research=True,
+            character=character,
+            dice_count=dice_count,
+        )
         return
     _apply(
         result,
@@ -479,6 +524,78 @@ def _disaster(result: Extraordinary, zeroes: int) -> None:
         result.lab_flaw = "labvf_wrecked"
     elif zeroes == 3:
         result.lab_flaw = "labvf_damaged"
+
+
+def accident_dice(character: Character | None, safety: int) -> int:
+    """An unsafe lab's botch dice for work that rolls none of its own: one
+    per point of negative Safety, with the Virtues and Flaws that change lab
+    botch dice, and always at least one."""
+    count = max(0, -safety)
+    if character is not None:
+        change, _ = scores.botch_dice_change(character.virtues_flaws, ("laboratory",))
+        count = scores.with_botch_change(count, change)
+    return max(1, count)
+
+
+def lab_hazards(
+    rng: random.Random,
+    character: Character | None,
+    safety: int,
+    warping: int,
+    *,
+    saga: Saga | None = None,
+    botch_count: int | None = None,
+) -> Extraordinary | None:
+    """What an unsafe or a Warping laboratory does to a season's work, or
+    None when nothing happens. With negative Safety a simple die at or
+    under its size risks an accident: the season's botch dice
+    (`botch_count`, an experiment's, else `accident_dice`), and any zero is
+    a Disaster. With positive Warping a simple die at or under it warps the
+    product: a side effect on an odd die, a modified effect on an even one
+    (LAB_SOURCE)."""
+    found = Extraordinary()
+    if safety < 0 and dice.simple_die(rng) <= -safety:
+        count = max(
+            1, accident_dice(character, safety) if botch_count is None else botch_count
+        )
+        zeroes = dice.botch_roll(rng, count, saga=saga)
+        found.botch_dice = count
+        if zeroes:
+            found.results.append(
+                f"The laboratory is unsafe (Safety {safety:+d}): an accident."
+            )
+            _disaster(found, zeroes)
+    if warping > 0:
+        die = dice.simple_die(rng)
+        if die <= warping:
+            if die % 2:
+                options = [SIDE_EFFECTS[dice.simple_die(rng)]]
+                found.effects.append(
+                    ExperimentalEffect(
+                        "side", options[0], fatal=options[0] == FATAL_FLAW
+                    )
+                )
+                what = "a side effect"
+            else:
+                options = [modified_result(dice.simple_die(rng))]
+                found.effects.append(ExperimentalEffect("modified", options[0]))
+                what = "a modified effect"
+            found.effect_options.append(options)
+            found.results.append(
+                f"The laboratory's Warping ({warping:+d}) warps the work: {what} "
+                f"({options[0]})."
+            )
+    return found if found.results else None
+
+
+def add_hazards(chart: Extraordinary, hazards: Extraordinary) -> None:
+    """A season's experiment takes what the laboratory did to it as well."""
+    chart.results += hazards.results
+    if hazards.zeroes:
+        _disaster(chart, hazards.zeroes)
+        chart.results.pop()
+    chart.effects += hazards.effects
+    chart.effect_options += hazards.effect_options
 
 
 def describe(effect: ExperimentalEffect) -> str:
@@ -562,6 +679,8 @@ CHANGED_COMPLETELY = (
 #: and which way.
 REDUCED, INCREASED = MODIFIED[0][1], MODIFIED[1][1]
 FATAL_FLAW = SIDE_EFFECTS[10]
+#: The effects that leave a creation better off.
+BENEFICIAL = (SIDE_EFFECTS[6], SIDE_EFFECTS[9], INCREASED)
 
 
 def _apply(
@@ -621,7 +740,12 @@ def _apply(
         result.effect_options.append(options)
     else:
         result.results.append(f"{roll}: roll twice more.")
-        if depth < 3:
+        if depth >= MAX_DEPTH:
+            result.results.append(
+                f"(After {MAX_DEPTH} rolls of 12+ in a row, the storyguide rolls "
+                "the rest.)"
+            )
+        else:
             for _ in range(2):
                 die = dice.stress_die(rng, dice_count, saga=saga)
                 if die.botched:
