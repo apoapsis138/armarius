@@ -41,6 +41,7 @@ from .... import (
     creatures,
     deletion,
     giving,
+    help_text,
     hosting,
     neighbours,
     presence,
@@ -388,6 +389,11 @@ def _deletion_of(
     )
 
 
+def _section_named(view: Widget, section_id: str) -> Collapsible | None:
+    """The section of `view` with id `section_id`, if it is built."""
+    return next(view.query(f"#{section_id}").results(Collapsible), None)
+
+
 def _tree_node_with_data(tree: Tree, data: tuple) -> TreeNode | None:
     """The first node of `tree` whose `.data` is `data`, or None."""
     pending = [tree.root]
@@ -605,6 +611,9 @@ class WorkspaceBase(Screen[None]):
         #: _in_pass() has computed so far: every binding asks where focus
         #: is, and that answer is the same for all of them.
         self._pass: dict[str, Any] | None = None
+        #: The section Help's Go there asked for, focused once its tab is
+        #: shown (instead of the tab's first section).
+        self._go_section: str | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -1264,8 +1273,59 @@ class WorkspaceBase(Screen[None]):
             # would clear the focus _show_*_detail() just set.
             initial = not view.initial_tab_seen
             view.initial_tab_seen = True
-        self._focus_first_section(initial=initial)
+        if not self._focus_go_section():
+            self._focus_first_section(initial=initial)
         self.refresh_bindings()
+
+    def go_to(self, place: str) -> bool:
+        """Help's Go there: open `place` (a tab's or section's id, as the
+        help names them) on the sheet on show, once Help has closed, and
+        move into it; False when the sheet has no such place."""
+        view = self._current_sheet_view()
+        if view is None:
+            return False
+        if place in view.tab_ids:
+            tab, section = place, None
+        else:
+            found = _section_named(view, place)
+            if found is not None:
+                pane = next(
+                    (w for w in found.ancestors if isinstance(w, TabPane)), None
+                )
+                tab = pane.id if pane is not None else None
+            else:
+                # In a tab not built yet: the help says which tab it's on.
+                topic = help_text.book(help_text.TUI).topics.get(place)
+                if topic is None or topic.page not in view.tab_ids:
+                    return False
+                tab = topic.page
+            section = place
+        self.call_after_refresh(self._go_there, tab, section)
+        return True
+
+    def _go_there(self, tab: str | None, section: str | None) -> None:
+        view = self._current_sheet_view()
+        if view is None:
+            return
+        self._go_section = section
+        tabbed = view.query_one(TabbedContent)
+        if tab is not None and tabbed.active != tab:
+            tabbed.active = tab  # TabActivated focuses the section
+        elif not self._focus_go_section():
+            self._focus_first_section()
+
+    def _focus_go_section(self) -> bool:
+        """Focus the section Go there asked for, if there is one and the
+        sheet has it."""
+        section_id, self._go_section = self._go_section, None
+        view = self._current_sheet_view()
+        if section_id is None or view is None:
+            return False
+        found = _section_named(view, section_id)
+        if found is None:
+            return False
+        section_stop(found).focus()
+        return True
 
     def _focus_first_section(self, *, initial: bool = False) -> None:
         """Give the sheet a focused section, so a / e / d work straight away.
@@ -1397,7 +1457,7 @@ class WorkspaceBase(Screen[None]):
             where = self.query_one(BottomBar).where
         except NoMatches:
             where = ""
-        return HelpContext(ids, where, keys)
+        return HelpContext(ids, where, keys, self.go_to)
 
     def on_descendant_blur(self, event: DescendantBlur) -> None:
         self.refresh_bindings()

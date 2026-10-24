@@ -4,6 +4,7 @@ with ? (or F1) on the help for whatever has focus."""
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import ClassVar
 
@@ -30,11 +31,15 @@ _PREFIX = {"here": _HERE, "guide": _GUIDE, "ref": _REF, "all": _ALL, "found": _F
 @dataclass
 class HelpContext:
     """What Help opens on: the topic ids for where focus is (most specific
-    first), where that is in words, and the keys that work there."""
+    first), where that is in words, and the keys that work there; and, from
+    a screen with places to go to, what opens one (Go there): it takes a
+    tab's or section's id, opens it once Help has closed, and says whether
+    the screen has it."""
 
     ids: list[str] = field(default_factory=list)
     where: str = ""
     keys: list[str] = field(default_factory=list)
+    go_to: Callable[[str], bool] | None = None
 
 
 def shown_keys(screen: Screen, leave_out: tuple[str, ...] = ()) -> list[str]:
@@ -59,6 +64,10 @@ def help_context(stack: list[Screen]) -> HelpContext:
         if callable(provider):
             context = provider()
             if isinstance(context, HelpContext):
+                if screen is not stack[-1]:
+                    # Go there opens a place on the screen below Help, not
+                    # behind a dialog.
+                    context.go_to = None
                 return context
     return HelpContext()
 
@@ -70,6 +79,7 @@ class HelpScreen(ModalDialog[None]):
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "cancel", "Close"),
         Binding("slash", "filter", "Filter", show=False),
+        Binding("g", "go_there", "Go there", show=False),
     ]
 
     DEFAULT_CSS = """
@@ -149,9 +159,7 @@ class HelpScreen(ModalDialog[None]):
                     yield Static("", id="help-keys")
                     with VerticalScroll(id="help-scroll"):
                         yield Markdown("", id="help-page", open_links=False)
-            yield Static(
-                "↑↓ Choose topic   Tab Page   / Filter   esc Close", id="help-hint"
-            )
+            yield Static(_hint(), id="help-hint")
 
     def on_mount(self) -> None:
         topics = self.query_one("#help-topics", OptionList)
@@ -227,6 +235,7 @@ class HelpScreen(ModalDialog[None]):
             return
         page_id, text = found
         self.topic_id = topic_id
+        self.query_one("#help-hint", Static).update(_hint(self._can_go(topic_id)))
         keys = self.query_one("#help-keys", Static)
         if here and self.context.keys:
             keys.update("Keys here:  " + "   ".join(self.context.keys))
@@ -277,9 +286,35 @@ class HelpScreen(ModalDialog[None]):
                 scroll.scroll_to_widget(heading, top=True, animate=False)
                 return
 
+    # -- Go there --
+
+    def _can_go(self, topic_id: str) -> bool:
+        """Whether Go there is offered for `topic_id`: a tab or section,
+        with Help opened from a screen that has places."""
+        return self.context.go_to is not None and self.book.is_place(topic_id)
+
+    def action_go_there(self) -> None:
+        """g: close Help and open the tab or section the topic on show
+        describes."""
+        if self.topic_id is not None and self._can_go(self.topic_id):
+            self.go_there(self.topic_id)
+
+    def go_there(self, place: str) -> None:
+        """Close Help and open `place` on the screen it was opened from, or
+        say why it can't be."""
+        if self.context.go_to is None:
+            self.notify("Go there works from a sheet.", severity="warning")
+        elif self.context.go_to(place):
+            self.dismiss(None)
+        else:
+            self.notify(self.book.not_here(place), severity="warning")
+
     def on_markdown_link_clicked(self, event: Markdown.LinkClicked) -> None:
         href = event.href
-        if href.startswith("help:"):
+        if href.startswith(ht.GO):
+            event.prevent_default()
+            self.go_there(href.removeprefix(ht.GO))
+        elif href.startswith("help:"):
             event.prevent_default()
             topic_id = href.removeprefix("help:")
             option = (_GUIDE if ht.is_guide(topic_id) else _ALL) + topic_id
@@ -304,6 +339,12 @@ def page_chunks(text: str, lines: int = 60) -> list[str]:
         current.append(line)
     chunks.append("".join(current))
     return chunks
+
+
+def _hint(go_there: bool = False) -> str:
+    """The keys line under Help: g Go there while it is offered."""
+    go = "   g Go there" if go_there else ""
+    return f"↑↓ Choose topic   Tab Page   / Filter{go}   esc Close"
 
 
 def _heading(text: str) -> Option:

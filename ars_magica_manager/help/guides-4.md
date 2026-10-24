@@ -36,17 +36,17 @@ Type in the creature's statistics as the rules or your storyguide give them.
 
 <!-- tui -->
 1. On the [Familiar Info](help:section-fam-info) panel at the top, press `e` and fill in its Species / Description, Magic Might Score, Current Might Pool, Size and Wound Multiplier. The binding below needs the Might and Size.
-2. On the [Characteristics tab](help:tab-fam-characteristics) (`2`), press `e` to type the eight Characteristics, Base Soak and Magic Resistance.
-3. On the [Combat & Health tab](help:tab-fam-combat) (`3`), add its natural weapons with `a` in [Natural Weapons & Attacks](help:section-fam-natural-weapons).
-4. On the [Abilities tab](help:tab-fam-abilities) (`4`), add its Abilities with `a`. It shares its magus's Language scores, so there is no need to add those.
+2. On the [Characteristics tab](help:tab-fam-characteristics) (`2`), press `e` to type the eight Characteristics, Base Soak and Magic Resistance. [Go there](go:tab-fam-characteristics)
+3. On the [Combat & Health tab](help:tab-fam-combat) (`3`), add its natural weapons with `a` in [Natural Weapons & Attacks](help:section-fam-natural-weapons). [Go there](go:tab-fam-combat)
+4. On the [Abilities tab](help:tab-fam-abilities) (`4`), add its Abilities with `a`. It shares its magus's Language scores, so there is no need to add those. [Go there](go:tab-fam-abilities)
 5. Back on the Identity & Cords tab, add its Virtues and Flaws with `a` in [Virtues](help:section-fam-vf-virtues) and [Flaws](help:section-fam-vf-flaws), and any [Personality Traits](help:section-fam-personality-traits) and [Reputations](help:section-fam-reputations).
 <!-- /tui -->
 <!-- gui -->
 1. Click **Edit** in the familiar's header to fill in its [Familiar Info](help:section-fam-info): Species / Description, Magic Might Score, Current Might Pool, Size and Wound Multiplier. The binding below needs the Might and Size.
 2. Click **Characteristics** in the header to type the eight [Characteristics](help:tab-fam-characteristics), Base Soak and Magic Resistance.
-3. In the [Combat & Health chapter](help:tab-fam-combat), add its natural weapons with **Add** in [Natural Weapons & Attacks](help:section-fam-natural-weapons).
-4. In the [Abilities chapter](help:tab-fam-abilities), add its Abilities with **Add**. It shares its magus's Language scores, so there is no need to add those.
-5. In the [Virtues & Flaws chapter](help:tab-fam-vf), add its Virtues and Flaws with **Add** under each, and in the Identity & Cords chapter any [Personality Traits](help:section-fam-personality-traits) and [Reputations](help:section-fam-reputations).
+3. In the [Combat & Health chapter](help:tab-fam-combat), add its natural weapons with **Add** in [Natural Weapons & Attacks](help:section-fam-natural-weapons). [Go there](go:tab-fam-combat)
+4. In the [Abilities chapter](help:tab-fam-abilities), add its Abilities with **Add**. It shares its magus's Language scores, so there is no need to add those. [Go there](go:tab-fam-abilities)
+5. In the [Virtues & Flaws chapter](help:tab-fam-vf), add its Virtues and Flaws with **Add** under each, and in the Identity & Cords chapter any [Personality Traits](help:section-fam-personality-traits) and [Reputations](help:section-fam-reputations). [Go there](go:tab-fam-vf)
 <!-- /gui -->
 
 ### Binding it in the laboratory
@@ -55,7 +55,7 @@ Type in the creature's statistics as the rules or your storyguide give them.
 Binding the familiar is a season of lab work, planned in the magus's laboratory. The laboratory must have the magus as its owner.
 
 <!-- tui -->
-1. Select the laboratory in the tree and open its [Planning tab](help:tab-lab-planning) (`1`).
+1. Select the laboratory in the tree and open its [Planning tab](help:tab-lab-planning) (`1`). [Go there](go:tab-lab-planning)
 2. Choose the season and press `e`. The [Invent Spell screen](help:invent-spell) opens.
 <!-- /tui -->
 <!-- gui -->
@@ -97,11 +97,11 @@ A familiar bound before play starts can skip the lab work: in the Identity & Cor
 Bond powers are instilled much like an effect in an enchanted device, and can take several seasons.
 
 <!-- tui -->
-1. On the familiar's [Bond Powers tab](help:tab-fam-powers) (`5`), press `a`. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0.
+1. On the familiar's [Bond Powers tab](help:tab-fam-powers) (`5`), press `a`. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0. [Go there](go:tab-fam-powers)
 2. In the laboratory's Planning tab, choose a season and press `e`.
 <!-- /tui -->
 <!-- gui -->
-1. In the familiar's [Bond Powers chapter](help:tab-fam-powers), click **Add**. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0.
+1. In the familiar's [Bond Powers chapter](help:tab-fam-powers), click **Add**. Type the Power Name, Level, Technique, Form and the rest, and set **Instilling (blank = finished)** to 0. [Go there](go:tab-fam-powers)
 2. In the laboratory's Seasons chapter, click a season in Planning, then **Plan**.
 <!-- /gui -->
 In **Lab work**, choose **Empower the familiar's bond**, then choose the power in **Bond power** and the vis Art.
@@ -139,10 +139,10 @@ An Initiation needs three things, settled at the table first:
 
 - **A Mystagogue** who knows the cult's Lore (House Bjornaer Lore, Mithraic Lore and so on). A character can be their own Mystagogue: a self-initiation uses the Initiate's own scores.
 <!-- tui -->
-- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it is the Lore of their own House. Add it on the [Abilities tab](help:tab-abilities) (`2`) once they have learnt it, for example with a season of Be taught.
+- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it is the Lore of their own House. Add it on the [Abilities tab](help:tab-abilities) (`2`) once they have learnt it, for example with a season of Be taught. [Go there](go:tab-abilities)
 <!-- /tui -->
 <!-- gui -->
-- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it is the Lore of their own House. Add it in the [Abilities chapter](help:tab-abilities) once they have learnt it, for example with a season of Be taught.
+- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it is the Lore of their own House. Add it in the [Abilities chapter](help:tab-abilities) once they have learnt it, for example with a season of Be taught. [Go there](go:tab-abilities)
 <!-- /gui -->
 - **A Script**, written like a Lab Text. Its bonus is the sum of its components, as the storyguide agrees them: +3 for a special place at a special time, +3 for each Quest, +1 for serving the cult (once), +1 for a sacrifice of wealth, +3 to +6 for a sacrifice of something of great value, and the Ordeal's +3 (a Minor Flaw, or losing a Minor Virtue), +6 (raising a Minor Flaw to Major) or +9 (a Major Flaw, or losing a Major Virtue). Quests and other sacrifices are played out in their own seasons or stories.
 
@@ -274,7 +274,7 @@ The preview lists what will be added, the links kept and the links dropped. [Imp
 1. Make a CSV file with a header row. The columns are listed under [What can be imported](help:import-data-kinds); **name** and **type** are needed. The cost of each book is worked out by the app, so an owner or cost column is ignored.
 <!-- tui -->
 2. To import books with no owner, select the saga, press `m` (More), choose **Import**, then **Books**. They land in [Unassigned Books](help:unassigned-books), where you can mark several and give them an owner with `e`.
-3. To import books straight into a covenant's library, open the covenant's [Library tab](help:tab-cov-library) (`6`) instead, and press `m` (More) and choose **Import** there.
+3. To import books straight into a covenant's library, open the covenant's [Library tab](help:tab-cov-library) (`6`) instead, and press `m` (More) and choose **Import** there. [Go there](go:tab-cov-library)
 4. Choose the file. This picker starts in the folder the app was started from.
 <!-- /tui -->
 <!-- gui -->
@@ -511,20 +511,20 @@ The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks.
 Work down the stat block, a heading at a time:
 
 <!-- tui -->
-1. **Characteristics, Soak, Fatigue levels and Encumbrance:** on the [Traits tab](help:tab-cr-traits) (`1`), press `e` in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither.
+1. **Characteristics, Soak, Fatigue levels and Encumbrance:** on the [Traits tab](help:tab-cr-traits) (`1`), press `e` in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither. [Go there](go:tab-cr-traits)
 2. **Virtues and Flaws, Qualities and Inferiorities:** add each with `a` in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
-3. **Combat:** on the [Combat tab](help:tab-cr-combat) (`2`), add each natural weapon with `a` in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's.
-4. **Powers:** on the [Powers & Vis tab](help:tab-cr-powers) (`3`), add each with `a` in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus.
+3. **Combat:** on the [Combat tab](help:tab-cr-combat) (`2`), add each natural weapon with `a` in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's. [Go there](go:tab-cr-combat)
+4. **Powers:** on the [Powers & Vis tab](help:tab-cr-powers) (`3`), add each with `a` in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus. [Go there](go:tab-cr-powers)
 5. **Vis:** add the pawns in its body with `a` in [Vis in its body](help:section-cr-vis).
-6. **Appearance:** on the [Description tab](help:tab-cr-description) (`4`), press `e` in [Description](help:section-cr-description) for its appearance, equipment and notes.
+6. **Appearance:** on the [Description tab](help:tab-cr-description) (`4`), press `e` in [Description](help:section-cr-description) for its appearance, equipment and notes. [Go there](go:tab-cr-description)
 <!-- /tui -->
 <!-- gui -->
-1. **Characteristics, Soak, Fatigue levels and Encumbrance:** in the [Traits chapter](help:tab-cr-traits), click **Edit** in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither.
+1. **Characteristics, Soak, Fatigue levels and Encumbrance:** in the [Traits chapter](help:tab-cr-traits), click **Edit** in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither. [Go there](go:tab-cr-traits)
 2. **Virtues and Flaws, Qualities and Inferiorities:** add each with **Add** in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
-3. **Combat:** in the [Combat chapter](help:tab-cr-combat), add each natural weapon with **Add** in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's.
-4. **Powers:** in the [Powers & Vis chapter](help:tab-cr-powers), add each with **Add** in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus.
+3. **Combat:** in the [Combat chapter](help:tab-cr-combat), add each natural weapon with **Add** in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's. [Go there](go:tab-cr-combat)
+4. **Powers:** in the [Powers & Vis chapter](help:tab-cr-powers), add each with **Add** in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus. [Go there](go:tab-cr-powers)
 5. **Vis:** add the pawns in its body with **Add** in [Vis in its body](help:section-cr-vis).
-6. **Appearance:** in the [Description chapter](help:tab-cr-description), click **Edit** in [Description](help:section-cr-description) for its appearance, equipment and notes.
+6. **Appearance:** in the [Description chapter](help:tab-cr-description), click **Edit** in [Description](help:section-cr-description) for its appearance, equipment and notes. [Go there](go:tab-cr-description)
 <!-- /gui -->
 
 ### Tying it into the saga

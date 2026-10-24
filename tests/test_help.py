@@ -78,6 +78,22 @@ def test_help_files_load_and_every_link_leads_somewhere(book):
 
 
 @pytest.mark.parametrize("book", [BOOK, GUI_BOOK], ids=ht.FRONT_ENDS)
+def test_every_go_there_link_opens_a_tab_or_section(book):
+    for page, targets in book.go_links().items():
+        wrong = {t for t in targets if not book.is_place(t)}
+        assert not wrong, f"{page}'s Go there links to {wrong}"
+
+
+def test_go_there_says_where_a_place_is():
+    assert BOOK.not_here("section-arts") == (
+        "The Magical Arts isn't on what Help was opened from. "
+        "It is on the Character sheet."
+    )
+    assert BOOK.not_here("section-cr-powers").endswith("It is on a creature.")
+    assert BOOK.not_here("keys") == "There's no place to go to for this topic."
+
+
+@pytest.mark.parametrize("book", [BOOK, GUI_BOOK], ids=ht.FRONT_ENDS)
 def test_headings_on_a_page_are_unique(book):
     """Help scrolls to a topic by its heading, so none may repeat on a
     page."""
@@ -315,6 +331,53 @@ async def test_question_mark_opens_help_on_the_focused_section():
         assert await wait_until(pilot, lambda: app.screen is workspace)
 
 
+async def test_go_there_opens_the_topic_on_the_sheet_or_says_where_it_is():
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        workspace = await _workspace(pilot, app)
+        tree = workspace.query_one("#nav-tree", Tree)
+        tree.select_node(_node(tree, NODES["character"]))
+        assert await wait_until(pilot, lambda: workspace._character_sheet_view)
+        view = workspace._character_sheet_view
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+
+        # A section in a tab not built yet: g opens the tab and focuses it.
+        await pilot.press("question_mark")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
+        help_screen = app.screen
+        help_screen.show_topic("section-arts")
+        assert "g Go there" in str(help_screen.query_one("#help-hint").render())
+        await pilot.press("g")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        assert await wait_until(
+            pilot, lambda: workspace._active_section() == "section-arts"
+        )
+        assert view.query_one(TabbedContent).active == "tab-hermetic"
+
+        # A tab on another kind of sheet: Help stays and says where it is.
+        await pilot.press("question_mark")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
+        help_screen = app.screen
+        help_screen.show_topic("tab-lab-totals")
+        await pilot.press("g")
+        await pilot.pause()
+        assert app.screen is help_screen
+        assert [n.message for n in app._notifications] == [
+            "The Lab Totals tab isn't on what Help was opened from. "
+            "It is on the Laboratory sheet."
+        ]
+
+        # A guide's go: link opens a tab.
+        help_screen.post_message(
+            Markdown.LinkClicked(help_screen.query_one(Markdown), "go:tab-vf")
+        )
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        assert await wait_until(
+            pilot, lambda: view.query_one(TabbedContent).active == "tab-vf"
+        )
+
+
 async def test_f1_in_a_form_opens_its_page_and_question_mark_is_typed():
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
@@ -339,6 +402,9 @@ async def test_f1_in_a_form_opens_its_page_and_question_mark_is_typed():
         await pilot.press("f1")  # never Help on Help
         await pilot.pause()
         assert len([s for s in app.screen_stack if isinstance(s, HelpScreen)]) == 1
+        # No Go there from a form's page, or through the form to the sheet.
+        assert app.screen.context.go_to is None
+        assert "Go there" not in str(app.screen.query_one("#help-hint").render())
 
 
 async def test_a_form_without_a_page_shows_the_section_help():

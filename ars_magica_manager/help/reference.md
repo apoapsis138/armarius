@@ -36,7 +36,8 @@ the keys that always work.
 - `q` Quit, and `Ctrl+P` the command palette (themes and more).
 
 In Help itself, the arrow keys choose a topic, `/` filters the topics,
-`Tab` moves between the topic list and the page, and `esc` closes it.
+`Tab` moves between the topic list and the page, `g` (Go there) closes it
+and opens the tab or section the topic is about, and `esc` closes it.
 
 # Keys
 <!-- help: keys; gui -->
@@ -64,6 +65,6 @@ The desktop version is used with the mouse: every action is a button on the page
 <!-- help: keys-elsewhere; gui -->
 
 - On the title page, `Enter` takes the first way on (Open Saga, or All Sagas), `?` opens Help and `q` quits.
-- In Help, type in the filter box to narrow the topics, and click a topic to show it. A link in the page shows its topic; `Esc`, or the trail, leads back to the page Help was opened from.
+- In Help, type in the filter box to narrow the topics, and click a topic to show it. A link in the page shows its topic; **Go there** (under the list, or a Go there link in a guide) goes back to the page Help was opened from at the chapter the topic is about; `Esc`, or the trail, leads back to that page as it was.
 
 See [The window](help:workspace) for what the buttons act on.

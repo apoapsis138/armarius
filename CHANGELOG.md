@@ -109,6 +109,20 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.5.0 — 2026-10-23
+
+### Glossa
+
+- **Go there.** Help can now take you to what it describes. On a topic
+  about a tab or section of a sheet, press `g` in the terminal's Help, or
+  click **Go there** under the desktop's topic list: Help closes and that
+  tab (on the desktop, that chapter) opens on the record you were looking
+  at, with the section focused. Steps in the guides for familiars,
+  creatures, a covenant's library, a Mystery's Lore and lab planning end
+  with a **Go there** link that does the same. When the record you were
+  looking at has no such tab, Help stays open and says which sheet it is
+  on.
+
 ## 3.4.1 — 2026-10-23
 
 ### Fundamenta
