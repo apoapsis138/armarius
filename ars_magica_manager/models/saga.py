@@ -10,6 +10,7 @@ from typing import Any
 from .books import Book, Codex
 from .character import Character, LabTextAccess
 from .common import known_fields
+from .conflicts import Battle, Fight, Siege, battle_from_lord
 from .covenant import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
@@ -126,6 +127,13 @@ class Saga:
     ahead_show: str = "Everything"
     #: The storyguide's own entries in the saga's calendar, for Ahead.
     calendar: list[CalendarEntry] = field(default_factory=list)
+    #: The saga's battles, fights and sieges, its Conflicts (battles.py,
+    #: fights.py, sieges.py).
+    battles: list[Battle] = field(default_factory=list)
+    fights: list[Fight] = field(default_factory=list)
+    sieges: list[Siege] = field(default_factory=list)
+    #: The set of season medallions the desktop draws (medallions.SETS).
+    medallions: str = "stained_glass"
     #: Each yearly step's entry (world_turns.py), oldest first.
     world_turns: list[WorldTurn] = field(default_factory=list)
     #: The outcomes a Tribunal's rulings are written from, each
@@ -208,6 +216,14 @@ class Saga:
             SeasonRecord.from_dict(r) for r in d.get("season_records", [])
         ]
         d["calendar"] = [CalendarEntry.from_dict(e) for e in d.get("calendar", [])]
+        d["fights"] = [Fight.from_dict(f) for f in d.get("fights", [])]
+        d["battles"] = [Battle.from_dict(b) for b in d.get("battles", [])]
+        # Older saves kept each battle in its lord's details.
+        for neighbour in d["neighbours"]:
+            old = neighbour.details.pop("battles", None) or []
+            for index, entry in enumerate(old):
+                d["battles"].append(battle_from_lord(neighbour.id, index, entry))
+        d["sieges"] = [Siege.from_dict(s) for s in d.get("sieges", [])]
         d["world_turns"] = [WorldTurn.from_dict(t) for t in d.get("world_turns", [])]
         d["lab_projects"] = [LabProject.from_dict(p) for p in d.get("lab_projects", [])]
         d["custom_virtues_flaws"] = [

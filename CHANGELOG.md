@@ -109,6 +109,49 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.10.0 — 2026-10-24
+
+### Orbis
+
+- **Conflicts**, a new place in the saga beside Seasons and the Bestiary:
+  its battles, fights and sieges.
+- **Battles between two armies.** A battle is kept once, between two
+  armies: each a lord, town or other power of the Region, a covenant, or
+  just a name. It shows on the Fief tab of each lord it names, so lords
+  can fight one another. A lord's combat groups fill in from his title's
+  army, Battle Event asks which army its character fights for, and each
+  event is written in both armies' Diaries. Older saves' battles move
+  into Conflicts by themselves.
+- **Fights, blow by blow** (Definitive Edition pp. 394-398): two sides
+  of characters (with their weapons, their wounds going onto their
+  sheets), Bestiary creatures (as many as you like) or typed fighters, in
+  combat groups with a vanguard and a leader. Initiative is rolled once;
+  Next Blow plays each turn (attack, Exertion, a scuffle, disarm or trip,
+  disengage), Next Round the rest of the round. A fight's end is written
+  in its fighters' Diaries.
+- **Sieges, event by event** (Lords of Men pp. 111-116): a castle's
+  Garrison, Defenses, Supplies and four walls against the besiegers'
+  miners, engines and soldiers. Next Siege Event undermines, bombards,
+  scales a wall or sends the garrison sallying out, at the castle's own
+  pace, and the stockade's supplies rolls come due by themselves. A
+  siege can link the lords on each side, whose armies fill in its
+  numbers, and it shows on both their Fief tabs.
+- **A lord's Diary**, as places and factions have, after his Standing.
+
+### Illuminatio
+
+- The fight and siege pages drawn as manuscript leaves: the order of
+  blows on a red ribbon, each side under its arms, the blow worked out;
+  the castle's plan, cord-bound gauges and the seasons the siege has run
+  as medallions.
+- **Season medallions**, six sets to choose from on Edit Saga: stained
+  glass, an illuminated letter's adornment, a wax seal, Limoges enamel, a
+  Book of Hours roundel, and pen and wash.
+
+### Glossa
+
+- Help for Conflicts, a fight and a siege, and how-tos for running each.
+
 ## 3.9.0 — 2026-10-24
 
 ### Computus

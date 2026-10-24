@@ -7,7 +7,7 @@ import pytest
 from dialog_contract_support import Contract, all_sagas, run_contract
 from textual.widgets import Select
 
-from ars_magica_manager import catalog
+from ars_magica_manager import armies, catalog
 from ars_magica_manager import players as pl
 
 CONTRACTS: dict[str, Contract] = {
@@ -81,6 +81,107 @@ CONTRACTS: dict[str, Contract] = {
         ],
         expected=[("Boglin", "Faerie", 5, "Aquam", -2)],
         invalid=[{"Name": ""}, {"Size": "big"}],
+    ),
+    "add battle (conflicts)": Contract(
+        prefill={"Battle": "", "Season": "Autumn", "First army": ""},
+        edits={
+            "Battle": "Lippe",
+            "First army": "neighbour:gottfried",
+            "Second army": "neighbour:mark",
+        },
+        saved=lambda s: [
+            (
+                b.sides[0].neighbour_id,
+                b.sides[1].neighbour_id,
+                b.sides[0].groups == armies.army_groups(s.neighbour("gottfried")),
+            )
+            for b in s.battles
+            if b.name == "Lippe"
+        ],
+        expected=[("gottfried", "mark", True)],
+        invalid=[{"Battle": ""}, {"Second army": "neighbour:gottfried"}],
+        shown={"#conflict-battles-list": "Lippe", "#section-conflict-battles": "(2)"},
+    ),
+    "edit battle (conflicts)": Contract(
+        prefill={"Battle": "The ford at Werl", "First army": "neighbour:gottfried"},
+        edits={"Where": "by the Lippe"},
+        saved=lambda s: s.battles[0].place,
+        expected="by the Lippe",
+        invalid={"Battle": ""},
+    ),
+    "battle event (conflicts)": Contract(
+        prefill={"Maneuver": "Defend", "Fighting for": "0", "How it went": "won"},
+        edits={"Leading the event": "comp1", "Size": "Outnumbered"},
+        saved=lambda s: (s.battles[0].sides[1].groups, len(s.battles[0].events)),
+        expected=(16, 2),
+        shown={"#conflict-battles-list": "2 won, 0 lost"},
+    ),
+    "add fight": Contract(
+        prefill={"Fight": "", "Season": "Autumn", "Year": "1220"},
+        edits={"Fight": "Skirmish", "First side": "Us", "Second side": "Them"},
+        saved=lambda s: [
+            (f.name, [side.name for side in f.sides])
+            for f in s.fights
+            if f.name == "Skirmish"
+        ],
+        expected=[("Skirmish", ["Us", "Them"])],
+        invalid=[{"Fight": ""}, {"Year": "soon"}],
+        shown={"#fights-list": "Skirmish", "#section-fights": "(2)"},
+    ),
+    "edit fight": Contract(
+        prefill={"Fight": "The Fray at the Ford", "Where": "below the mill"},
+        edits={"Where": "at the bridge"},
+        saved=lambda s: s.fights[0].place,
+        expected="at the bridge",
+        invalid={"Fight": ""},
+        shown={"#conflicts-info-panel": "at the bridge"},
+    ),
+    "add siege": Contract(
+        prefill={"Siege": "", "Garrison (combat groups)": "", "Defenses": "Standard"},
+        edits={
+            "Siege": "Siege of Burg B",
+            "Castle": "Burg B",
+            "Garrison (combat groups)": "25",
+        },
+        saved=lambda s: [
+            (x.name, x.castle, x.garrison) for x in s.sieges if x.castle == "Burg B"
+        ],
+        expected=[("Siege of Burg B", "Burg B", 25)],
+        invalid=[{"Siege": ""}, {"Garrison (combat groups)": "-1"}],
+        shown={"#sieges-list": "Burg B"},
+    ),
+    "edit siege": Contract(
+        prefill={"Siege": "The Siege of Falkenstein", "Castle": "Burg Falkenstein"},
+        edits={"Supplies": "Superior"},
+        saved=lambda s: s.sieges[0].supplies,
+        expected="Superior",
+        invalid={"Siege": ""},
+        shown={"#sieges-list": "Superior"},
+    ),
+    "add combatant": Contract(
+        prefill={"Side": "0", "Drawn from": "character"},
+        edits={"Character and weapon": "mag2|"},
+        saved=lambda s: [c.name for c in s.fights[0].sides[0].combatants],
+        expected=["Leandro", "Brother Oda"],
+    ),
+    "form a group": Contract(
+        prefill={"Side": "0"},
+        edits={"Side": "1", "Group": "Bandits", "Bandit 1": True, "Bandit 2": True},
+        saved=lambda s: [(g.name, g.members) for g in s.fights[0].sides[1].groups],
+        expected=[("Bandits", ["c-bandit1", "c-bandit2"])],
+        invalid={"Side": "1"},
+    ),
+    "next blow": Contract(
+        prefill={"Action": "Attack"},
+        edits={"Action": "Wait"},
+        saved=lambda s: (s.fights[0].round, len(s.fights[0].log)),
+        expected=(1, 2),
+    ),
+    "next siege event": Contract(
+        prefill={"Event": "Bombard a wall"},
+        edits={"Event": "Keep the stockade"},
+        saved=lambda s: (s.sieges[0].days, [e.text for e in s.sieges[0].events]),
+        expected=(1, ["The stockade holds."]),
     ),
     "edit creature": Contract(
         prefill={"Name": "Aeolus", "Realm": "Magic", "Might Score": "8", "Size": "2"},

@@ -56,11 +56,13 @@ from .sections import (
     CASES_SECTION,
     CATALOGS_SECTION,
     CHAR_AHEAD_SECTION,
+    CONFLICT_BATTLES_SECTION,
     CONNECTIONS_SECTION,
     CORE_SECTIONS,
     CREATURE_INFO_SECTION,
     DEVICE_SECTIONS,
     FAIRS_SECTION,
+    FIGHTS_SECTION,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     LAB_TEXTS_SECTION,
@@ -68,6 +70,7 @@ from .sections import (
     LIBRARY_SECTIONS,
     NEIGHBOUR_INFO_SECTION,
     PLAYERS_SECTION,
+    SIEGES_SECTION,
     SILVER_SECTIONS,
     SOURCES_SECTION,
     SPELL_SECTION,
@@ -101,6 +104,7 @@ class NodeKind(StrEnum):
     NEIGHBOUR = "neighbour"
     BESTIARY = "bestiary"
     CREATURE = "creature"
+    CONFLICTS = "conflicts"
 
 
 # -- the section verbs: a / d / e, and More's Restore --
@@ -280,6 +284,16 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("r", "roll_fair", "Roll Income"),
     MenuItem("r", "roll_table", "Roll"),
     MenuItem("b", "battle_event", "Battle Event"),
+    MenuItem("b", "conflict_battle_event", "Battle Event"),
+    MenuItem("n", "next_blow", "Next Blow"),
+    MenuItem("r", "next_round", "Next Round"),
+    MenuItem("a", "add_combatant", "Add Combatant"),
+    MenuItem("e", "edit_combatant", "Edit Combatant"),
+    MenuItem("v", "remove_combatant", "Remove Combatant"),
+    MenuItem("g", "form_group", "Form a Group"),
+    MenuItem("u", "break_group", "Break up a Group"),
+    MenuItem("t", "restart_fight", "Restart the Fight"),
+    MenuItem("n", "next_siege_event", "Next Siege Event"),
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
     MenuItem("b", "begin_story", "Begin This Story"),
     MenuItem("g", "go_to", "Go To"),
@@ -298,6 +312,16 @@ MORE_SECTIONS: dict[str, str] = {
     "roll_fair": FAIRS_SECTION,
     "roll_table": TABLES_SECTION,
     "battle_event": BATTLES_SECTION,
+    "conflict_battle_event": CONFLICT_BATTLES_SECTION,
+    "next_blow": FIGHTS_SECTION,
+    "next_round": FIGHTS_SECTION,
+    "add_combatant": FIGHTS_SECTION,
+    "edit_combatant": FIGHTS_SECTION,
+    "remove_combatant": FIGHTS_SECTION,
+    "form_group": FIGHTS_SECTION,
+    "break_group": FIGHTS_SECTION,
+    "restart_fight": FIGHTS_SECTION,
+    "next_siege_event": SIEGES_SECTION,
 }
 
 #: Where in the navigation each record can be created: the saga, and

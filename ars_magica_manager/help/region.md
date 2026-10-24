@@ -274,20 +274,40 @@ held of the king. Add, edit or delete one.
 ## Battles
 <!-- help: section-nb-battles -->
 
-The battles his army fights, played as Lords of Men plays them: a few
-heroic events, each with a player character at its heart, rather than
-every blow. Each line shows the two armies in combat groups of five
-men, his **Ground** (Territorial Advantage: his commander's Deployment
-Total less the enemy's) and his **Numbers** (Weight of Numbers: +1 when
-he has half as many groups again as the enemy, +2 for twice as many, +3
-for three times, +4 for four times or more; as much below 0 when
-outnumbered), and the events won and lost so far. Add, edit or delete
-one: a new battle starts with the groups his title's army raises, to
-which you add his allies and mercenaries.
+The battles he fights, on either side, played as Lords of Men plays
+them: a few heroic events, each with a player character at its heart,
+rather than every blow. A battle is kept once, in the saga's
+[Conflicts](help:conflicts), between two armies: each a lord, town or
+other power of the Region, or a covenant, or just a name. So a battle
+between two lords shows on both their Fief tabs.
+
+Each line shows the two armies in combat groups of five men, the first
+army's **Ground** (Territorial Advantage: its commander's Deployment
+Total less the other's) and its **Numbers** (Weight of Numbers: +1 with
+half as many groups again as the other, +2 for twice as many, +3 for
+three times, +4 for four times or more; as much below 0 when
+outnumbered), and the events it has won and lost so far. Add, edit or
+delete one. Added here, a battle's first army is this lord. An army's
+groups left blank are filled in from a lord's title (his knights,
+serjeants, infantry and levies, in groups of five), to which you add
+his allies and mercenaries; blank baggage is as much as the army
+needs.
 
 A Deployment Total is Intelligence + Area Lore + a stress die, the
 commander's own or a lieutenant's, plus the magnitude of any spell that
 shapes the field in his favour.
+
+## Sieges
+<!-- help: section-nb-sieges -->
+
+The sieges he lays, or holds out in, kept in the saga's
+[Conflicts](help:conflicts): each a siege whose besieging lord, or whose
+castle in the Region, is this lord. Each line shows the castle and its
+besieger, the Garrison, Defenses and Supplies, and how long it has run.
+Add, edit or delete one. Added here, he is the besieging lord: link the
+castle to the lord, town or place he besieges. A garrison or besiegers'
+soldiers left blank are filled in from the linked lords' armies. Play
+it from Conflicts with Next Siege Event; see [A siege](help:sieges).
 
 ## Battle Event
 <!-- help: battle-event -->
@@ -298,14 +318,15 @@ More (`m`) > **Battle Event** plays the chosen battle's next event.
 <!-- gui -->
 **Battle Event** plays the chosen battle's next event.
 <!-- /gui -->
-Choose the character **Leading the event**, then its **Maneuver**
+Choose the character **Leading the event** and the army they are
+**Fighting for**, then its **Maneuver**
 (Defend +0, Attack +1, Run the Gauntlet +2, Take +3, a Heroic Gesture
 +4), its **Enemy** (Inexpensive troops such as levies +0, Standard +1,
 Expensive such as knights +2, Special +3, the Baggage +4) and its
 **Size** (Lesser +0, Even +1, Outnumbered +2, Overwhelmed +3, I Stand
 Alone +4). The line above Record shows the Event Total: the character's
-Stamina + Leadership + Ground + Numbers + those three, +1 for giving up
-the initiative. It must reach the stage's Ease Factor to be won at all:
+Stamina + Leadership + their army's Ground and Numbers + those three,
++1 for giving up the initiative. It must reach the stage's Ease Factor to be won at all:
 9 for the first event (Engaged), 12 for the second (Advantage or
 Setback), 15 for the third and any after (Imminent Victory or Defeat).
 
@@ -314,7 +335,9 @@ side that lost it loses combat groups equal to its Size times the
 winner's Numbers, when the winner has the greater army, and the next
 event's Numbers are worked out from what is left. Morale rolls (6 to
 hold, 9 to rally) and the troops lost in the fight itself are left to
-the troupe; edit the battle to change its groups.
+the troupe; edit the battle to change its groups. Each event recorded is
+written as a line in the Diary of each army's lord or covenant (see
+[A lord's Diary](help:tab-nb-lord-diary)) and of the leading character.
 
 When the lord raises his army, his allies add a share of his own forces
 for a Presence + Leadership + Affinity roll (6 half, 12 as many again,
@@ -450,6 +473,14 @@ What the faction has done, season by season: its schemes, its quarrels,
 who joined or left. A place's Diary works the same way (see
 [Diary](help:section-nb-place-diary)); a faction's is written only by
 hand. Add, edit or delete an entry.
+
+# A lord's Diary
+<!-- help: tab-nb-lord-diary -->
+
+What befell the lord and his lands, season by season: each Battle Event
+his army fights, a siege he is linked to as the castle or the besieger
+when it ends, and anything the storyguide writes. It works as a place's
+[Diary](help:section-nb-place-diary): add, edit or delete an entry.
 
 # A threat
 <!-- help: tab-nb-threat -->

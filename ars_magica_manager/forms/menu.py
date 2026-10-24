@@ -116,6 +116,16 @@ NOT_ON_PAGES = frozenset(
         "roll_fair",
         "roll_table",
         "battle_event",
+        "conflict_battle_event",
+        "next_blow",
+        "next_round",
+        "add_combatant",
+        "edit_combatant",
+        "remove_combatant",
+        "form_group",
+        "break_group",
+        "restart_fight",
+        "next_siege_event",
         # The desktop draws the names a page holds as links instead.
         "go_to",
     }

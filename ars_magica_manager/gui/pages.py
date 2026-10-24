@@ -22,10 +22,24 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, creatures, neighbour_filter, neighbours, troupe, world
+from .. import (
+    artwork,
+    battles,
+    conflicts,
+    creatures,
+    fights,
+    neighbour_filter,
+    neighbours,
+    sieges,
+    troupe,
+    world,
+)
 from .. import saga_overview as ov
+from ..commands import Command
 from ..forms import menu as menu_forms
 from ..models import Character, Creature, Neighbour, Saga, Tribunal
+from ..references import Fact
+from ..sections import CONFLICT_BATTLES_SECTION, FIGHTS_SECTION, SIEGES_SECTION
 from ..sheets import character as cs
 from ..sheets import creature as crs
 from ..sheets import familiar as fs
@@ -38,6 +52,7 @@ from .menus import Placer
 from .ornaments import FleuronButton, ShortRule
 from .themes import Palette
 from .widgets import (
+    Card,
     ClickableCard,
     Codex,
     chapter_title,
@@ -497,6 +512,136 @@ def bestiary_chapter(
     )
 
 
+def battle_card(
+    saga: Saga, index: int, p: Palette, run: Callable[[Command], None]
+) -> QWidget:
+    """A battle as a card: its armies, their groups and how its events
+    went, with Battle Event, Edit and Delete (a battle has no page of its
+    own: Battle Event plays it)."""
+    entry = saga.battles[index]
+    row = battles.grid(saga).rows[index]
+    card = Card(p, pad=16)
+    top = QHBoxLayout()
+    top.setSpacing(10)
+    top.addWidget(symbol_label(artwork.icon("lord"), p), 0, Qt.AlignmentFlag.AlignTop)
+    names = QVBoxLayout()
+    names.setSpacing(0)
+    names.addWidget(text(entry.name, p["foreground"], serif(16, bold=True), wrap=True))
+    when = f"{entry.season} {entry.year}" + (f", {entry.place}" if entry.place else "")
+    names.addWidget(text(when, p["label"], serif(11.5, italic=True), wrap=True))
+    top.addLayout(names, 1)
+    card.column.addLayout(top)
+    facts = [
+        Fact("Armies", row[1]),
+        Fact("Combat groups", row[2]),
+        Fact("Ground and numbers", f"{row[3]}, {row[4]}"),
+        Fact("Events", row[5]),
+    ]
+    card.column.addWidget(fact_grid(facts, p, 1))
+    ops = conflicts.ops(saga)[CONFLICT_BATTLES_SECTION]
+    line = QHBoxLayout()
+    line.setSpacing(6)
+    line.addWidget(
+        edit_button(
+            "Battle Event",
+            p,
+            lambda: run(conflicts.command(saga, "conflict_battle_event", index)),
+            "combat",
+        )
+    )
+    if ops.edit is not None:
+        edit = ops.edit
+        line.addWidget(edit_button("Edit", p, lambda: run(edit(index))))
+    if ops.remove is not None:
+        remove = ops.remove
+        line.addWidget(edit_button("Delete", p, lambda: run(remove(index)), "delete"))
+    line.addStretch(1)
+    card.column.addLayout(line)
+    return card
+
+
+def fight_card(saga: Saga, index: int, p: Palette, open_fight: Open) -> ClickableCard:
+    """A fight as a card that opens its page: when and where, its sides,
+    who still stands and how it goes."""
+    fight = saga.fights[index]
+    row = fights.grid(saga).rows[index]
+    card = ClickableCard(p, pad=16)
+    card_title(card, fight.name, row[4], p, symbol_label(artwork.icon("combat"), p))
+    facts = [Fact("When", row[1]), Fact("Sides", row[2]), Fact("Standing", row[3])]
+    card.column.addWidget(fact_grid(facts, p, 1))
+    card.clicked = lambda: open_fight(fight.id)
+    return card
+
+
+def siege_card(saga: Saga, index: int, p: Palette, open_siege: Open) -> ClickableCard:
+    """A siege as a card that opens its page: the castle, the besieger,
+    the castle's figures and how long it has run."""
+    siege = saga.sieges[index]
+    row = sieges.grid(saga).rows[index]
+    card = ClickableCard(p, pad=16)
+    card_title(card, siege.name, row[6], p, symbol_label(artwork.icon("covenant"), p))
+    facts = [
+        Fact("Castle", row[1]),
+        Fact("Besieger", row[2]),
+        Fact("Garrison", row[3]),
+        Fact("Defenses", row[4]),
+        Fact("Supplies", row[5]),
+    ]
+    card.column.addWidget(fact_grid(facts, p, 2))
+    card.clicked = lambda: open_siege(siege.id)
+    return card
+
+
+def conflicts_chapter(
+    saga: Saga,
+    p: Palette,
+    run: Callable[[Command], None],
+    open_fight: Open,
+    open_siege: Open,
+) -> QWidget:
+    """Conflicts: its facts, then the battles, the fights and the sieges
+    as cards, each list with its Add."""
+    ops = conflicts.ops(saga)
+    parts: list[QWidget] = [
+        chapter_title("Conflicts", p),
+        fact_grid(conflicts.header_facts(saga), p, 5),
+    ]
+    for title, section, cards in (
+        (
+            battles.title(saga),
+            CONFLICT_BATTLES_SECTION,
+            [battle_card(saga, i, p, run) for i in range(len(saga.battles))],
+        ),
+        (
+            fights.title(saga),
+            FIGHTS_SECTION,
+            [fight_card(saga, i, p, open_fight) for i in range(len(saga.fights))],
+        ),
+        (
+            sieges.title(saga),
+            SIEGES_SECTION,
+            [siege_card(saga, i, p, open_siege) for i in range(len(saga.sieges))],
+        ),
+    ):
+        add = ops[section].add
+        head = QWidget()
+        line = QHBoxLayout(head)
+        line.setContentsMargins(0, 8, 0, 0)
+        line.addWidget(text(title, p["heading"], serif(16, bold=True)))
+        line.addStretch(1)
+        if add is not None:
+            line.addWidget(
+                edit_button("Add", p, lambda add=add: run(add()), "add"),
+            )
+        parts.append(head)
+        parts.append(
+            card_grid(cards)
+            if cards
+            else text("None yet.", p["dim"], serif(12.5, italic=True))
+        )
+    return scrolling_page(p, *parts)
+
+
 def covenant_card(
     figures: ov.CovenantCard, p: Palette, open_covenant: Callable[[str | None], None]
 ) -> ClickableCard:
@@ -612,7 +757,7 @@ class SagaPage(QWidget):
     covenants and what the reader has bookmarked), The World (its covenants,
     and the characters and laboratories that belong to none, each list
     ending in a New card), The Region (its neighbours), The Bestiary (its
-    creatures), its Seasons, its Rules and Content, and Saga Management."""
+    creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, and Saga Management."""
 
     def __init__(
         self,
@@ -628,6 +773,9 @@ class SagaPage(QWidget):
         open_neighbour: Open = lambda _id: None,
         open_creature: Open = lambda _id: None,
         open_familiar: Open = lambda _id: None,
+        run: Callable[[Command], None] = lambda _command: None,
+        open_fight: Open = lambda _id: None,
+        open_siege: Open = lambda _id: None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
@@ -670,6 +818,11 @@ class SagaPage(QWidget):
             "The Bestiary",
             "familiar",
             lambda: bestiary_chapter(saga, p, open_creature, self._new("Creatures")),
+        )
+        self.codex.add(
+            "Conflicts",
+            "combat",
+            lambda: conflicts_chapter(saga, p, run, open_fight, open_siege),
         )
         self.codex.add("Seasons", "season", self._seasons(open_seasons))
         self.codex.add(

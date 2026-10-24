@@ -17,6 +17,7 @@ from .. import (
     character_templates,
     choice_templates,
     creation,
+    medallions,
     packs,
     ruling_templates,
     storage,
@@ -142,6 +143,18 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 ),
             )
         ]
+        fields.append(
+            DialogField(
+                "medallions",
+                "Season medallions",
+                "select",
+                medallions.chosen(saga),
+                options=medallions.options(),
+                hint="How the desktop draws the seasons (on a siege's season "
+                "track): stained glass, an illuminated letter's adornment, a wax "
+                "seal, Limoges enamel, a Book of Hours roundel, or pen and wash.",
+            )
+        )
         fields.append(
             DialogField(
                 "notify_npc_unplanned",

@@ -85,6 +85,8 @@ DIALOG_CONTRACT_TESTS = (
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
     "ars_magica_manager/gui/choices.py": ("test_gui_sheet.py",),
+    "ars_magica_manager/gui/medallions.py": ("test_gui_conflicts.py",),
+    "ars_magica_manager/medallions.py": ("test_gui_conflicts.py",),
     "ars_magica_manager/actions.py": ("test_dispatch_matrix.py", "test_keyboard.py"),
     "ars_magica_manager/sections.py": ("test_dispatch_matrix.py", "test_sheet_text.py"),
     "ars_magica_manager/form_spec.py": (
@@ -97,6 +99,26 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_sheet_text.py",
     ),
     "ars_magica_manager/disputations.py": ("test_screens_academe.py",),
+    "ars_magica_manager/conflicts.py": (
+        "test_list_flows.py",
+        "test_dialog_contracts_saga.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/fights.py": (
+        "test_list_flows.py",
+        "test_dialog_contracts_saga.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/sieges.py": (
+        "test_list_flows.py",
+        "test_dialog_contracts_saga.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/tui/screens/sheets/conflicts.py": (
+        "test_list_flows.py",
+        "test_dialog_contracts_saga.py",
+        "test_sheet_text.py",
+    ),
     "ars_magica_manager/research_text.py": (
         "test_sheet_text.py",
         "test_research.py",

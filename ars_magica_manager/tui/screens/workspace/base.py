@@ -87,11 +87,15 @@ from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
 from ....sections import (
     BESTIARY_INFO_SECTION,
+    CONFLICT_BATTLES_SECTION,
+    CONFLICTS_INFO_SECTION,
     CORE_SECTIONS,
     CREATURE_INFO_SECTION,
+    FIGHTS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
     SEASONS_INFO_SECTION,
+    SIEGES_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
 from ..creation_worksheet import CreationWorksheetScreen
@@ -117,6 +121,7 @@ from ..sheets import (
     TAB_SECTIONS,
     BestiarySheetView,
     CharacterSheetView,
+    ConflictsSheetView,
     CovenantSheetView,
     CreatureSheetView,
     FamiliarSheetView,
@@ -252,6 +257,7 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.NEIGHBOUR: "neighbour",
     NodeKind.BESTIARY: "bestiary",
     NodeKind.CREATURE: "creature",
+    NodeKind.CONFLICTS: "conflicts",
 }
 
 #: How often, in seconds, a hosted saga's copies look for each other's saves
@@ -271,6 +277,16 @@ _STORYGUIDE_ACTIONS = frozenset(
         "roll_fair",
         "roll_table",
         "battle_event",
+        "conflict_battle_event",
+        "next_blow",
+        "next_round",
+        "add_combatant",
+        "edit_combatant",
+        "remove_combatant",
+        "form_group",
+        "break_group",
+        "restart_fight",
+        "next_siege_event",
         "found_covenant",
         "begin_story",
         "create_character",
@@ -562,6 +578,7 @@ class WorkspaceBase(Screen[None]):
         NodeKind.NEIGHBOUR: (set(), NEIGHBOUR_INFO_SECTION),
         NodeKind.BESTIARY: (set(), BESTIARY_INFO_SECTION),
         NodeKind.CREATURE: (set(), CREATURE_INFO_SECTION),
+        NodeKind.CONFLICTS: (set(), CONFLICTS_INFO_SECTION),
         NodeKind.SEASONS: (set(), SEASONS_INFO_SECTION),
     }
 
@@ -604,6 +621,7 @@ class WorkspaceBase(Screen[None]):
         self._neighbour_sheet_view: NeighbourSheetView | None = None
         self._bestiary_view: BestiarySheetView | None = None
         self._creature_sheet_view: CreatureSheetView | None = None
+        self._conflicts_view: ConflictsSheetView | None = None
         self._seasons_view: SeasonsSheetView | None = None
         #: One detail-pane swap at a time (see _set_detail).
         self._detail_lock = asyncio.Lock()
@@ -803,6 +821,10 @@ class WorkspaceBase(Screen[None]):
                 self._add_covenant_node(tree.root, covenant, expand=True)
         self._add_region(tree.root)
         self._add_bestiary(tree.root)
+        tree.root.add_leaf(
+            f"Conflicts ({len(self.saga.battles) + len(self.saga.fights) + len(self.saga.sieges)})",
+            data=(NodeKind.CONFLICTS,),
+        )
 
         # Characters and labs with no (or a no-longer-existing) covenant live
         # directly under the saga -- assigning to a covenant is optional, and
@@ -1400,6 +1422,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.REGION: "The Region",
             NodeKind.NEIGHBOUR_GROUP: "The Region",
             NodeKind.BESTIARY: "The Bestiary",
+            NodeKind.CONFLICTS: "Conflicts",
         }.get(self.selected_kind, "")
 
     def _update_where(self) -> None:
@@ -1541,6 +1564,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.NEIGHBOUR: self._neighbour_sheet_view,
             NodeKind.BESTIARY: self._bestiary_view,
             NodeKind.CREATURE: self._creature_sheet_view,
+            NodeKind.CONFLICTS: self._conflicts_view,
             NodeKind.SEASONS: self._seasons_view,
         }.get(self.selected_kind)
 
@@ -1847,6 +1871,10 @@ class WorkspaceBase(Screen[None]):
             TRIBUNAL_INFO_SECTION,
             NEIGHBOUR_INFO_SECTION,
             *(g.section_id for g in neighbours.GROUPS),
+            # Conflicts' count in the tree.
+            CONFLICT_BATTLES_SECTION,
+            FIGHTS_SECTION,
+            SIEGES_SECTION,
         }
     )
 

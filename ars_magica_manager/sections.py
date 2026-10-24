@@ -149,6 +149,8 @@ NEIGHBOUR_INFO_SECTION = "section-nb-info"
 CASTLES_SECTION = "section-nb-castles"
 GRATITUDE_SECTION = "section-nb-gratitude"
 BATTLES_SECTION = "section-nb-battles"
+#: The sieges a lord holds out in or lays.
+LORD_SIEGES_SECTION = "section-nb-sieges"
 GUILDS_SECTION = "section-nb-guilds"
 FAIRS_SECTION = "section-nb-fairs"
 #: A church's relics; a university's faculties and masters.
@@ -164,6 +166,11 @@ EFFECTS_SECTION = "section-nb-effects"
 TRIGGERS_SECTION = "section-nb-triggers"
 TABLES_SECTION = "section-nb-tables"
 DIARY_SECTION = "section-nb-place-diary"
+#: The saga's Conflicts: its fights and its sieges.
+CONFLICTS_INFO_SECTION = "section-conflicts-info"
+FIGHTS_SECTION = "section-fights"
+CONFLICT_BATTLES_SECTION = "section-conflict-battles"
+SIEGES_SECTION = "section-sieges"
 #: The Bestiary's list of creatures, and a creature's sheet: its top
 #: panel, Characteristics, description, Virtues and Flaws (Qualities and
 #: Inferiorities among them), traits, combat, health, Abilities, powers
@@ -244,6 +251,10 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     TABLES_SECTION: frozenset({"add", "edit", "remove"}),
     DIARY_SECTION: frozenset({"add", "edit", "remove"}),
     BESTIARY_SECTION: frozenset({"add", "edit", "remove"}),
+    FIGHTS_SECTION: frozenset({"add", "edit", "remove"}),
+    CONFLICT_BATTLES_SECTION: frozenset({"add", "edit", "remove"}),
+    LORD_SIEGES_SECTION: frozenset({"add", "edit", "remove"}),
+    SIEGES_SECTION: frozenset({"add", "edit", "remove"}),
     CREATURE_INFO_SECTION: frozenset({"edit"}),
     CREATURE_CHARACTERISTICS_SECTION: frozenset({"edit"}),
     CREATURE_DESCRIPTION_SECTION: frozenset({"edit"}),

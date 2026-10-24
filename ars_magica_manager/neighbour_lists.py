@@ -43,6 +43,8 @@ class KindTab:
     title: str
     tab_id: str
     lists: tuple[KindList, ...]
+    #: Shown after the Standing tab rather than before it (a lord's Diary).
+    after_standing: bool = False
 
 
 def list_ops[E: Mapping[str, object]](

@@ -36,6 +36,7 @@ The saga is saved as soon as it is made, and every change after that is saved as
 <!-- /gui -->
 4. It lists the optional rules, each off until you tick it: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Any spell parameter and Extended book Quality. The line under each says what it does.
 5. **Keep season records** keeps a record of each season under Seasons. Leave it on unless you only want the characters' Diaries to keep them.
+   **Season medallions** chooses how the desktop draws the seasons on a siege's page: stained glass (the default), an illuminated letter's adornment, a wax seal, Limoges enamel, a Book of Hours roundel, or pen and wash.
    **Magi / Companions / Grogs with nothing planned** say what a season left unplanned gives when it is advanced: Work / Exposure (the default) or Nothing. **Be notified when and which non-player characters do not have seasonal activity** (off by default) makes Advance Season name non-player characters with nothing planned too. See [Unplanned seasons](help:advance-unplanned).
 6. Save. The saga's summary now lists your books and the optional rules turned on.
 

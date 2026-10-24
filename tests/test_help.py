@@ -67,6 +67,7 @@ SHEETS = {
     "seasons": "_seasons_view",
     "bestiary": "_bestiary_view",
     "creature": "_creature_sheet_view",
+    "conflicts": "_conflicts_view",
 }
 
 
@@ -447,6 +448,8 @@ GUIDES = [
     "guide-bestiary",
     "guide-faction",
     "guide-battle",
+    "guide-fights",
+    "guide-sieges",
     "guide-hedge-magic",
     "guide-tribunal",
     "guide-formatting",

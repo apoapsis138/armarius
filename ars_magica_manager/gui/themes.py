@@ -10,6 +10,7 @@ one app; a palette is a dict of the same names the app's markup uses
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from .. import settings
 
@@ -218,6 +219,74 @@ PIGMENTS = {
     "gold-dark": "#7A5212",
     "garnet-light": "#F08A80",
     "glow": "#F2C94C",
+}
+
+#: The pigments of things drawn on a fight's and a siege's page and on the
+#: season medallions (gui/conflicts.py, gui/medallions.py): stone, timber,
+#: steel, water, wax and glass are their own colours in either theme.
+DRAWN = {
+    "lead": "#2A2420",
+    "copper": "#5E4410",
+    "glass-gold": "#F2C230",
+    "turquoise": "#3FA7A0",
+    "enamel-white": "#F4F1E8",
+    "engraving": "#7A5A14",
+    "timber": "#4A3324",
+    "snow": "#FFFFFF",
+    "stone": "#CDBFA6",
+    "stone-dark": "#8C7B62",
+    "stone-light": "#E6DAC2",
+    "seal-ink": "#3B2414",
+    "seal-gold-light": "#F2E3B6",
+    "seal-gold": "#C9A55A",
+    "seal-grey-light": "#E8DCCB",
+    "seal-grey": "#8C7E6E",
+    "medium-wound": "#A35A1A",
+    "steel-light": "#E9E7E1",
+    "steel": "#8C939B",
+    "river": "#6E8FB0",
+    "river-light": "#A9C1D6",
+}
+
+#: Each season's pigments in each set of medallions, by set.
+SEASON_PIGMENTS: dict[str, dict[str, Any]] = {
+    "glass": {
+        "Spring": ("#8FC27A", "#5E9A4C", "#E2C04A", "#D9718C"),
+        "Summer": ("#4F86C6", "#2E5E9E", "#C8352B", "#F2C230"),
+        "Autumn": ("#D99A45", "#A8642A", "#7A2A22", "#6B3A86"),
+        "Winter": ("#3E62A3", "#26437A", "#D9E3EE", "#EEF4FA"),
+    },
+    "wax": {
+        "Spring": "#3F7A3A",
+        "Summer": "#B0281E",
+        "Autumn": "#8A4A1C",
+        "Winter": "#2B4C7E",
+    },
+    "enamel": {
+        "Spring": "#2E7D5B",
+        "Summer": "#1F4E9C",
+        "Autumn": "#7A2E1E",
+        "Winter": "#1B2F66",
+    },
+    "sky": {
+        "Spring": ("#9CC3E0", "#E8F0E0", "#7FA857"),
+        "Summer": ("#3F7EC2", "#BFD8EE", "#C9A949"),
+        "Autumn": ("#B9A27A", "#EAD9B6", "#8E6A2E"),
+        "Winter": ("#7A8FA8", "#D9DFE6", "#F2F2F0"),
+    },
+    "crowns": {"Spring": "#9CCB6B", "Summer": "#3F7A3A", "Autumn": "#B5652A"},
+    "scene": {
+        "Spring": "#D9718C",
+        "Summer": "#F2C230",
+        "Autumn": "#6B3A86",
+        "Winter": "#FFFFFF",
+    },
+    "wash": {
+        "Spring": "#7FA857",
+        "Summer": "#D9A62E",
+        "Autumn": "#B5652A",
+        "Winter": "#6F8FB4",
+    },
 }
 
 #: Burnished gold along a gradient, (stop, colour): dark ochre, bright

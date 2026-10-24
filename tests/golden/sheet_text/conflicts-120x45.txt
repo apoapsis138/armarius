@@ -1,0 +1,43 @@
+===== tab-conflicts
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Conflicts
+
+      Battles:         1                       Sieges:          1
+      Fights:          1                       Sieges going on: 1
+      Fights going on: 1
+
+   1 Fights and Sieges
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Battles (1)
+
+        Battle            Armies                          Groups   Ground  Numbers
+      Events
+      ○ The ford at Werl  Gottfried of Arnsberg v the C…  40 v 20  +2      +2
+      1 won, 0 lost
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Fights (1)
+
+        Fight                 When         Sides                    Standing  State
+      ○ The Fray at the Ford  Spring 1220  The Covenant v Brigands  1 v 2     Not
+      begun
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Sieges (1)
+
+        Siege               Castle          Besieger        Garrison   Defenses
+      Supplies  State
+      ○ The Siege of Falk…  Burg Falkenst…  the Baron of …  10 groups  Standard
+      Standard  just begun
+
+
+
+
+  ▌
+  ▌  Choose a battle, fight or siege to see it in full.
+  ▌
+
+

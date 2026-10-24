@@ -178,7 +178,7 @@ def test_the_desktop_lists_neighbours_and_opens_one():
     gottfried = saga.neighbour("gottfried")
     assert gottfried is not None
     page = NeighbourPage(saga, gottfried, PALETTES[0])
-    assert page.chapters() == ["Fief", "Standing", "Secrets"]
+    assert page.chapters() == ["Fief", "Standing", "Diary", "Secrets"]
     words = [label.text() for label in page.findChildren(QLabel)]
     assert any("Archbishop of Cologne" in w for w in words)
     assert any("owes the Archbishop" in w for w in words)

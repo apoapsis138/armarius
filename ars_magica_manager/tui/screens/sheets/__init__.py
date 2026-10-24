@@ -22,6 +22,7 @@ from .base import SheetView as SheetView
 from .bestiary import BestiarySheetView as BestiarySheetView
 from .bestiary import CreatureSheetView as CreatureSheetView
 from .character import CharacterSheetView as CharacterSheetView
+from .conflicts import ConflictsSheetView as ConflictsSheetView
 from .covenant import CovenantSheetView as CovenantSheetView
 from .familiar import FamiliarSheetView as FamiliarSheetView
 from .laboratory import _LAB_CHARACTERISTICS_SECTIONS as _LAB_CHARACTERISTICS_SECTIONS

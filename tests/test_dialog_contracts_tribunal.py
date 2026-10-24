@@ -80,20 +80,35 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#nb-gratitude-list": "A manor; 20 for a barony"},
     ),
     "add battle": Contract(
-        prefill={"Battle": "", "The enemy's combat groups": "0"},
-        edits={"Battle": "Siege of Soest", "The enemy's combat groups": "30"},
-        saved=lambda s: s.neighbours[0].details["battles"][-1]["theirs"],
-        expected=30,
-        invalid=[{"Battle": ""}, {"The enemy's combat groups": "-1"}],
+        prefill={"Battle": "", "First army": "neighbour:gottfried"},
+        edits={
+            "Battle": "Siege of Soest",
+            "Second army": "neighbour:mark",
+            "Second army's combat groups": "30",
+        },
+        saved=lambda s: [
+            (b.sides[0].neighbour_id, b.sides[1].neighbour_id, b.sides[1].groups)
+            for b in s.battles
+            if b.name == "Siege of Soest"
+        ],
+        expected=[("gottfried", "mark", 30)],
+        invalid=[
+            {"Battle": ""},
+            {"Second army's combat groups": "-1"},
+            {"Second army": "neighbour:gottfried"},
+        ],
         shown={"#nb-battles-list": "Siege of Soest", "#section-nb-battles": "(2)"},
     ),
     "battle event": Contract(
         prefill={"Maneuver": "Defend", "Size": "Even", "How it went": "won"},
         edits={"Leading the event": "comp1", "Size": "Outnumbered"},
-        saved=lambda s: s.neighbours[0].details["battles"][0]["theirs"],
-        expected=16,
-        shown={"#nb-battles-list": "1 won, 0 lost"},
-        live={"#fields-live": "Engaged, Ease Factor 9"},
+        saved=lambda s: (
+            s.battles[0].sides[1].groups,
+            s.neighbour("gottfried").details["diary"][-1]["text"][:13],
+        ),
+        expected=(16, "The ford at W"),
+        shown={"#nb-battles-list": "2 won, 0 lost"},
+        live={"#fields-live": "Advantage or Setback, Ease Factor 12"},
     ),
     "edit guild": Contract(
         prefill={"Trade": "Weavers", "Dean": "Heinrich", "Masters": "9"},

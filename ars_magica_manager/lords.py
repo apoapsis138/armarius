@@ -13,10 +13,10 @@ Kept in Neighbour.details: "title", "wealth", "manors", "seat",
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
-from . import battles, references
+from . import battles, place_events, references, sieges
+from .armies import TITLES, WEALTH, army_of, title, wealth
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -24,17 +24,13 @@ from .markup import escape
 from .models import Neighbour, Saga, details_list
 from .neighbour_lists import KindList, KindTab, list_ops
 from .references import Fact
-from .sections import BATTLES_SECTION, CASTLES_SECTION, GRATITUDE_SECTION
-
-#: The titles a lord may hold, from least to greatest.
-TITLES: dict[str, str] = {
-    "landed": "Landed noble",
-    "baron": "Baron",
-    "count": "Count or earl",
-    "duke": "Duke",
-}
-
-WEALTH: tuple[str, ...] = ("Poor", "Average", "Wealthy")
+from .sections import (
+    BATTLES_SECTION,
+    CASTLES_SECTION,
+    DIARY_SECTION,
+    GRATITUDE_SECTION,
+    LORD_SIEGES_SECTION,
+)
 
 #: A manor's yearly income to its lord, in pounds.
 MANOR_INCOME = 20
@@ -58,34 +54,6 @@ SURPLUS: dict[str, dict[str, int]] = {
 FREE_SEASONS: dict[str, int] = {"Poor": 1, "Average": 2, "Wealthy": 3}
 
 
-@dataclass(frozen=True)
-class Army:
-    """The men a lord's title raises: knights, serjeants, infantry and
-    archers, and the levies he can call on at home."""
-
-    knights: int
-    serjeants: int
-    infantry: int
-    levies: int
-
-    def text(self) -> str:
-        return (
-            f"{self.knights} knights, {self.serjeants} serjeants, "
-            f"{self.infantry} infantry; {self.levies} levies at home"
-        )
-
-
-def army_of(title: str, wealth: str) -> Army:
-    """The army a lord of `title` and `wealth` raises."""
-    if title == "landed":
-        return Army(5, 5, 50, 50) if wealth == "Wealthy" else Army(0, 5, 10, 10)
-    return {
-        "baron": Army(20, 20, 200, 200),
-        "count": Army(50, 50, 500, 500),
-        "duke": Army(75, 75, 750, 750),
-    }.get(title, Army(0, 5, 10, 10))
-
-
 #: Gratitude: what each total earns from the lord, from Lords of Men's
 #: advancement table.
 GRATITUDE_STEPS: tuple[tuple[int, str], ...] = (
@@ -96,16 +64,6 @@ GRATITUDE_STEPS: tuple[tuple[int, str], ...] = (
 
 
 # -- the record --
-
-
-def title(neighbour: Neighbour) -> str:
-    found = neighbour.details.get("title")
-    return found if found in TITLES else "landed"
-
-
-def wealth(neighbour: Neighbour) -> str:
-    found = neighbour.details.get("wealth")
-    return found if found in WEALTH else "Average"
 
 
 def manors(neighbour: Neighbour) -> int:
@@ -401,7 +359,39 @@ TAB = KindTab(
         KindList(CASTLES_SECTION, castles_title, castles_grid, castle_ops),
         KindList(GRATITUDE_SECTION, gratitude_title, gratitude_grid, gratitude_ops),
         KindList(
-            BATTLES_SECTION, battles.title, battles.grid, battles.ops, battles.info
+            BATTLES_SECTION,
+            battles.LORD_TITLE,
+            battles.LORD_GRID,
+            battles.LORD_OPS,
+            battles.info_for,
+        ),
+        KindList(
+            LORD_SIEGES_SECTION,
+            sieges.title,
+            sieges.grid,
+            sieges.ops,
+            sieges.info_for,
         ),
     ),
+)
+
+
+def diary_grid(_saga: Saga, lord: Neighbour) -> Grid:
+    return place_events.diary_rows(
+        lord,
+        "Nothing written yet: each Battle Event, and each fight or siege he is "
+        "linked to, is written here.",
+    )
+
+
+#: His Diary: what befell him and his lands, kept as a place's is.
+DIARY_TAB = KindTab(
+    "Diary",
+    "tab-nb-lord-diary",
+    (
+        KindList(
+            DIARY_SECTION, place_events.diary_title, diary_grid, place_events.diary_ops
+        ),
+    ),
+    after_standing=True,
 )

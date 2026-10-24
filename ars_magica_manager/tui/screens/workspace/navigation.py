@@ -20,6 +20,7 @@ from ....actions import (
 from ..sheets import (
     BestiarySheetView,
     BookListView,
+    ConflictsSheetView,
     CreatureSheetView,
     RegionSheetView,
     SagaContentSheetView,
@@ -50,6 +51,7 @@ class NavigationActions(WorkspaceBase):
         self._neighbour_sheet_view = None
         self._bestiary_view = None
         self._creature_sheet_view = None
+        self._conflicts_view = None
         self._seasons_view = None
 
         handler = self._NODE_SELECTED.get(kind)
@@ -167,6 +169,13 @@ class NavigationActions(WorkspaceBase):
         self._bestiary_view = view
         self._focus_first_section(initial=True)
 
+    async def _select_conflicts(self, _ident: str | None) -> None:
+        self.selected_covenant = None
+        view = ConflictsSheetView(self.saga)
+        await self._set_detail(view)
+        self._conflicts_view = view
+        self._focus_first_section(initial=True)
+
     async def _select_creature(self, ident: str | None) -> None:
         creature = self.saga.creature(ident)
         if creature is None:
@@ -217,4 +226,5 @@ class NavigationActions(WorkspaceBase):
         NodeKind.NEIGHBOUR: WorkspaceBase._select_neighbour,
         NodeKind.BESTIARY: _select_bestiary,
         NodeKind.CREATURE: _select_creature,
+        NodeKind.CONFLICTS: _select_conflicts,
     }

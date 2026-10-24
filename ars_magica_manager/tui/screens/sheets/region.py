@@ -195,7 +195,7 @@ class NeighbourSheetView(SheetView):
             tab = self.kind.tab
             if tab is not None:
                 yield self._tab(tab.title, tab.tab_id, partial(self._kind_tab, tab))
-            for more in self.kind.more:
+            for more in (m for m in self.kind.more if not m.after_standing):
                 yield self._tab(
                     more.title, more.tab_id, partial(self._kind_tab, more, facts=False)
                 )
@@ -204,6 +204,10 @@ class NeighbourSheetView(SheetView):
                 "tab-nb-standing",
                 self._standing_tab,
             )
+            for more in (m for m in self.kind.more if m.after_standing):
+                yield self._tab(
+                    more.title, more.tab_id, partial(self._kind_tab, more, facts=False)
+                )
             yield from self._secrets_tab(self.neighbour)
 
     def stale(self) -> bool:

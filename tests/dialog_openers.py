@@ -31,6 +31,7 @@ from ars_magica_manager.models import (
     Ability,
     Book,
     Character,
+    Neighbour,
     Saga,
     SagaSource,
     VirtueFlawInstance,
@@ -78,6 +79,8 @@ def contract_saga() -> Saga:
     grog = Character(id="grog9", name="Hugo", type="grog", covenant_id="cov1")
     grog.abilities = [Ability("Single Weapon"), Ability("Brawl"), Ability("Awareness")]
     saga.characters.append(grog)
+    # A second lord, for battles between two of them.
+    saga.neighbours.append(Neighbour(id="mark", name="Count of Mark", kind="lord"))
     return saga
 
 
@@ -369,6 +372,42 @@ OPENERS: dict[str, Opener] = {
     ),
     "add creature vis": Opener(
         "creature", lambda ws: ws._core_verb("section-cr-vis", "add")
+    ),
+    "add battle (conflicts)": Opener(
+        "conflicts", lambda ws: ws._core_verb("section-conflict-battles", "add")
+    ),
+    "edit battle (conflicts)": Opener(
+        "conflicts",
+        _pick(
+            lambda ws: ws._core_verb("section-conflict-battles", "edit"),
+            "conflict-battles-list",
+        ),
+    ),
+    "battle event (conflicts)": Opener(
+        "conflicts",
+        _pick(lambda ws: ws.action_conflict_battle_event(), "conflict-battles-list"),
+    ),
+    "add fight": Opener("conflicts", lambda ws: ws._core_verb("section-fights", "add")),
+    "edit fight": Opener(
+        "conflicts",
+        _pick(lambda ws: ws._core_verb("section-fights", "edit"), "fights-list"),
+    ),
+    "add siege": Opener("conflicts", lambda ws: ws._core_verb("section-sieges", "add")),
+    "edit siege": Opener(
+        "conflicts",
+        _pick(lambda ws: ws._core_verb("section-sieges", "edit"), "sieges-list"),
+    ),
+    "add combatant": Opener(
+        "conflicts", _pick(lambda ws: ws.action_add_combatant(), "fights-list")
+    ),
+    "form a group": Opener(
+        "conflicts", _pick(lambda ws: ws.action_form_group(), "fights-list")
+    ),
+    "next blow": Opener(
+        "conflicts", _pick(lambda ws: ws.action_next_blow(), "fights-list")
+    ),
+    "next siege event": Opener(
+        "conflicts", _pick(lambda ws: ws.action_next_siege_event(), "sieges-list")
     ),
     "edit secrets": Opener("neighbour", _open_secrets),
     "edit neighbour": Opener(

@@ -269,7 +269,7 @@ async def run_contract(name: str, contract: Contract) -> None:
             label: field_value(field_widget(dialog, label, contract.aliases))
             for label in contract.prefill
         }
-        assert prefilled == contract.prefill
+        assert prefilled == contract.prefill, prefilled
 
         await _fill(pilot, dialog, contract, contract.edits)
         await _close(pilot, app, dialog, cancel_button(dialog))

@@ -33,7 +33,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "transylvania_tribunal": 42,
     "hibernia_tribunal": 42,
     "region": 50,
-    "neighbour": 40,
+    "neighbour": 42,  # a lord's Fief tab lists his sieges too
     "town": 40,
     "church": 40,
     "university": 40,

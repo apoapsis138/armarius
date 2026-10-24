@@ -10,8 +10,10 @@ import pytest
 from support import build_all_tabs, wait_until
 from textual.widgets import Input, Select, TabPane, Tree
 
-from ars_magica_manager import storage
+from ars_magica_manager import battles, place_events, sieges, storage
 from ars_magica_manager.models import (
+    Battle,
+    BattleSide,
     BondPower,
     BoundBeing,
     Breakthrough,
@@ -23,6 +25,8 @@ from ars_magica_manager.models import (
     DiaryEntry,
     EnchantedDevice,
     Familiar,
+    Fight,
+    FightSide,
     IncomeSource,
     Inhabitant,
     InstilledEffect,
@@ -30,10 +34,12 @@ from ars_magica_manager.models import (
     Laboratory,
     LabSpecialtyGrant,
     NamedDescription,
+    Neighbour,
     Possession,
     Saga,
     SagaSource,
     ScoredTrait,
+    Siege,
     TraditionEffect,
     VirtueFlawInstance,
 )
@@ -44,6 +50,7 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.prompts import MenuScreen
 from ars_magica_manager.tui.screens.widgets import SheetSection, section_stop
 from ars_magica_manager.tui.screens.workspace.base import CHOOSE_FIRST
 
@@ -123,7 +130,7 @@ def _saga() -> Saga:
 
 @dataclass(frozen=True)
 class ListCase:
-    node: tuple[str, str]
+    node: tuple[str, ...]
     section: str
     list_id: str
     entries: Any  # saved Saga -> the list
@@ -187,6 +194,8 @@ _SHEET_VIEW_ATTR = {
     "laboratory": "_laboratory_sheet_view",
     "saga_content": "_saga_content_view",
     "creature": "_creature_sheet_view",
+    "conflicts": "_conflicts_view",
+    "neighbour": "_neighbour_sheet_view",
 }
 
 
@@ -691,3 +700,157 @@ async def test_lab_magic_items_edit_and_delete_act_on_the_chosen_row():
         assert [b.id for b in saved.laboratories[0].item_benefits] == ["b1"]
         assert [vf.id for vf in saved.laboratories[0].virtues_flaws] == ["host"]
         assert [e.id for e in saved.enchanted_devices[0].effects] == ["e1", "e2"]
+
+
+# -- Conflicts: fights and sieges --
+
+
+def _conflicts_saga() -> Saga:
+    saga = _saga()
+    saga.fights = [
+        Fight("Fray [ford]", sides=[FightSide("Ours"), FightSide("Theirs")]),
+        Fight("Ambush", sides=[FightSide("Ours"), FightSide("Theirs")]),
+    ]
+    saga.sieges = [
+        Siege("Siege [north]", castle="Burg A", besieger_walls=[1, 1, 1, 0]),
+        Siege("Blockade", castle="Burg B"),
+    ]
+    saga.neighbours = [
+        Neighbour(id="gottfried", name="Count Gottfried", kind="lord"),
+        Neighbour(id="mark", name="Count of Mark", kind="lord"),
+    ]
+    saga.battles = [
+        Battle(
+            "Werl [ford]",
+            sides=[
+                BattleSide(neighbour_id="gottfried", groups=20),
+                BattleSide(neighbour_id="mark", groups=10),
+            ],
+        ),
+        Battle("Unna", sides=[BattleSide("Ours", groups=5), BattleSide("Theirs")]),
+    ]
+    return saga
+
+
+CONFLICT_LISTS: dict[str, tuple[ListCase, str]] = {
+    "battles": (
+        ListCase(
+            ("conflicts",),
+            "section-conflict-battles",
+            "conflict-battles-list",
+            lambda s: s.battles,
+        ),
+        "Delete the battle Unna?",
+    ),
+    "fights": (
+        ListCase(("conflicts",), "section-fights", "fights-list", lambda s: s.fights),
+        "Delete the fight Ambush? Wounds it dealt stay on the characters' sheets.",
+    ),
+    "sieges": (
+        ListCase(("conflicts",), "section-sieges", "sieges-list", lambda s: s.sieges),
+        "Delete the siege Blockade?",
+    ),
+}
+
+
+@pytest.mark.parametrize("name", list(CONFLICT_LISTS))
+async def test_conflict_lists_act_on_the_chosen_row(name):
+    """In one session: e edits the chosen battle, fight or siege, More
+    plays the chosen one (Battle Event on a battle, Add Combatant on a
+    fight, Next Siege Event on a siege), and d asks about the chosen one
+    before deleting it."""
+    case, message = CONFLICT_LISTS[name]
+    storage.save_saga(_conflicts_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        await _save_name(pilot, app, "Renamed")
+        assert await wait_until(pilot, lambda: _saved(case)[1].name == "Renamed")
+        assert _saved(case)[0].name.endswith("]")
+
+        await _choose_row(pilot, view, case, 0)
+        if name == "fights":
+            await _press(pilot, app, "m", MenuScreen)
+            await _press(pilot, app, "a", FieldsDialog)
+            dialog = app.screen
+            dialog.query_one("#fld-character", Select).value = "mag1|"
+            await pilot.pause()
+        else:  # its one More command runs straight away
+            await _press(pilot, app, "m", FieldsDialog)
+            dialog = app.screen
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        saved = storage.load_saga("test_saga")
+        if name == "fights":
+            assert [c.name for c in saved.fights[0].sides[0].combatants] == ["Leandro"]
+            assert saved.fights[1].sides[0].combatants == []
+        elif name == "battles":
+            assert len(saved.battles[0].events) == 1
+            assert saved.battles[1].events == []
+        else:
+            assert len(saved.sieges[0].events) == 1
+            assert saved.sieges[1].events == []
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        old = {"fights": "Ambush", "sieges": "Blockade", "battles": "Unna"}[name]
+        assert _confirm_message(app) == message.replace(old, "Renamed")
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+
+
+LORD_BATTLES = ListCase(
+    ("neighbour", "gottfried"),
+    "section-nb-battles",
+    "nb-battles-list",
+    lambda s: battles.involving(s, s.neighbour("gottfried")),
+)
+LORD_SIEGES = ListCase(
+    ("neighbour", "gottfried"),
+    "section-nb-sieges",
+    "nb-sieges-list",
+    lambda s: sieges.involving(s, s.neighbour("gottfried")),
+)
+
+
+async def test_a_lords_fief_plays_his_battles_and_edits_his_sieges():
+    """On a lord's Fief tab: Battle Event plays the chosen battle naming
+    him (writing both lords' Diaries), and his Sieges list edits and
+    deletes the chosen siege he lays or holds out in."""
+    saga = _conflicts_saga()
+    saga.sieges[0].besieger_id = "gottfried"
+    saga.sieges[1].castle_id = "gottfried"
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, LORD_BATTLES)
+        assert [b.name for b in _saved(LORD_BATTLES)] == ["Werl [ford]"]
+        await pilot.press("m")
+        if await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen)):
+            await _press(pilot, app, "b", FieldsDialog)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        saved = storage.load_saga("test_saga")
+        assert len(saved.battles[0].events) == 1
+        for lord in ("gottfried", "mark"):
+            assert place_events.diary(saved.neighbour(lord))[-1]["text"].startswith(
+                "Werl [ford]:"
+            )
+
+        section_stop(view.query_one("#section-nb-sieges")).focus()
+        assert await wait_until(
+            pilot, lambda: workspace._active_section() == "section-nb-sieges"
+        )
+        await _choose_row(pilot, view, LORD_SIEGES, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        await _save_name(pilot, app, "Held out")
+        assert await wait_until(
+            pilot, lambda: [s.name for s in _saved(LORD_SIEGES)][1] == "Held out"
+        )
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete the siege Held out?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(LORD_SIEGES)) == 1)

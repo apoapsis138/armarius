@@ -22,6 +22,7 @@ from ars_magica_manager.models import (
     Character,
     Characteristics,
     Codex,
+    Combatant,
     Covenant,
     CovenantBoonHookDef,
     CovenantDiaryEntry,
@@ -37,6 +38,10 @@ from ars_magica_manager.models import (
     ExperimentalEffect,
     Familiar,
     Favour,
+    Fight,
+    FightEntry,
+    FightGroup,
+    FightSide,
     GrogYear,
     HermeticBackground,
     InstilledEffect,
@@ -67,6 +72,8 @@ from ars_magica_manager.models import (
     SeasonRecord,
     SeasonRecordLine,
     ShapeMaterialBonus,
+    Siege,
+    SiegeEvent,
     Spell,
     SpellDesign,
     TraditionEffect,
@@ -452,6 +459,23 @@ def _saga_with_every_record() -> Saga:
             powers=[CreaturePower("Vanish")],
             vis=[BodyVis(1, "Herbam", "in its heart")],
         )
+    )
+    saga.fights.append(
+        Fight(
+            "A fray",
+            sides=[
+                FightSide(
+                    "Ours",
+                    combatants=[Combatant("Grog", id="g1"), Combatant("Grog", id="g2")],
+                    groups=[FightGroup("Turb", ["g1", "g2"])],
+                ),
+                FightSide("Theirs"),
+            ],
+            log=[FightEntry(1, "A blow.", ["Attack 12"])],
+        )
+    )
+    saga.sieges.append(
+        Siege("A siege", events=[SiegeEvent(7, "Keep the stockade", "It holds.")])
     )
     return saga
 

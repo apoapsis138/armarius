@@ -65,6 +65,7 @@ _SHEET_VIEW_ATTR = {
     "seasons": "_seasons_view",
     "bestiary": "_bestiary_view",
     "creature": "_creature_sheet_view",
+    "conflicts": "_conflicts_view",
 }
 
 

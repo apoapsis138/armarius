@@ -1854,6 +1854,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-nb-sieges": {
+      "active": "section-nb-sieges",
+      "keys": {
+        "a": "FieldsDialog: Add a Siege",
+        "e": "FieldsDialog: Edit a Siege",
+        "d": "ConfirmScreen",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-attitudes": {
       "active": "section-attitudes",
       "keys": {
@@ -1878,6 +1888,16 @@
       "active": "section-links",
       "keys": {
         "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-place-diary": {
+      "active": "section-nb-place-diary",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "ChooseScreen: Go To",
@@ -2813,6 +2833,48 @@
         "e": "FieldsDialog: Secrets of Hibernia",
         "d": "(disabled)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "conflicts": {
+    "PinnedCollapsible#section-conflicts-info": {
+      "active": "section-conflicts-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-conflict-battles": {
+      "active": "section-conflict-battles",
+      "keys": {
+        "a": "FieldsDialog: Add a Battle",
+        "e": "FieldsDialog: Edit a Battle",
+        "d": "ConfirmScreen",
+        "m": "FieldsDialog: Battle Event 2: The ford at Werl",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-fights": {
+      "active": "section-fights",
+      "keys": {
+        "a": "FieldsDialog: Add a Fight",
+        "e": "FieldsDialog: Edit a Fight",
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Next Blow, Next Round, Add Combatant, Edit Combatant, Remove Combatant, Form a Group, Break up a Group, Restart the Fight",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-sieges": {
+      "active": "section-sieges",
+      "keys": {
+        "a": "FieldsDialog: Add a Siege",
+        "e": "FieldsDialog: Edit a Siege",
+        "d": "ConfirmScreen",
+        "m": "FieldsDialog: Next Siege Event: The Siege of Falkenstein",
         "slash": "(disabled)"
       }
     }

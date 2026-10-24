@@ -111,6 +111,7 @@ for _kind in (
         lords.problem,
         lords.facts,
         lords.TAB,
+        (lords.DIARY_TAB,),
     ),
     NeighbourKind(
         "town",

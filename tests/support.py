@@ -11,6 +11,9 @@ from ars_magica_manager.models import (
     SKETCH,
     Ability,
     Attitude,
+    Battle,
+    BattleEvent,
+    BattleSide,
     BodyVis,
     BondPower,
     Book,
@@ -19,6 +22,7 @@ from ars_magica_manager.models import (
     Case,
     Character,
     Characteristics,
+    Combatant,
     Covenant,
     Creature,
     CreatureAttack,
@@ -28,6 +32,8 @@ from ars_magica_manager.models import (
     EnchantedDevice,
     Familiar,
     Favour,
+    Fight,
+    FightSide,
     IncomeSource,
     Inhabitant,
     InstilledEffect,
@@ -45,6 +51,7 @@ from ars_magica_manager.models import (
     Ruling,
     Saga,
     ScoredTrait,
+    Siege,
     Spell,
     TreasuryEntry,
     Tribunal,
@@ -189,6 +196,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "seasons": ("seasons",),
     "bestiary": ("bestiary",),
     "creature": ("creature", "aeolus"),
+    "conflicts": ("conflicts",),
 }
 
 
@@ -598,18 +606,6 @@ def everything_saga() -> Saga:
                     "gratitude": [
                         {"who": "comp1", "points": 6, "why": "Drove off the wolves"}
                     ],
-                    "battles": [
-                        {
-                            "name": "The ford at Werl",
-                            "enemy": "the Count of Mark",
-                            "ours": 40,
-                            "theirs": 20,
-                            "our_deployment": 12,
-                            "their_deployment": 10,
-                            "baggage": 4,
-                            "events": [],
-                        }
-                    ],
                 },
             ),
             Neighbour(
@@ -748,6 +744,21 @@ def everything_saga() -> Saga:
             ),
         ],
         creatures=[aeolus()],
+        battles=[
+            Battle(
+                "The ford at Werl",
+                sides=[
+                    BattleSide(
+                        neighbour_id="gottfried", groups=40, deployment=12, baggage=4
+                    ),
+                    BattleSide("the Count of Mark", groups=20, deployment=10),
+                ],
+                events=[BattleEvent("mag1", total=9, won=True, losses=2)],
+                id="werl",
+            )
+        ],
+        fights=[fray()],
+        sieges=[falkenstein()],
         characters=[magus, companion, rival],
         laboratories=[lab],
         familiars=[familiar],
@@ -756,6 +767,59 @@ def everything_saga() -> Saga:
         spells=[
             Spell(id="own1", name="Own Spell", technique="Creo", form="Ignem", level=5)
         ],
+    )
+
+
+def fray() -> Fight:
+    """A fight not yet begun: the magus against two typed bandits."""
+    return Fight(
+        "The Fray at the Ford",
+        place="below the mill",
+        year=1220,
+        sides=[
+            FightSide(
+                "The Covenant",
+                combatants=[Combatant("Leandro", "character", "mag1", id="c-mag1")],
+            ),
+            FightSide(
+                "Brigands",
+                combatants=[
+                    Combatant(
+                        f"Bandit {n}",
+                        init=1,
+                        attack=7,
+                        defence=5,
+                        damage=5,
+                        soak=3,
+                        ability=3,
+                        id=f"c-bandit{n}",
+                    )
+                    for n in (1, 2)
+                ],
+            ),
+        ],
+        id="fray",
+    )
+
+
+def falkenstein() -> Siege:
+    """A siege just begun, in stockade, with miners and trebuchets."""
+    return Siege(
+        "The Siege of Falkenstein",
+        castle="Burg Falkenstein",
+        holder="Sir Konrad",
+        besieger="the Baron of Urach",
+        besieger_id="gottfried",
+        miners=1,
+        engines={"Trebuchet": 2},
+        soldiers=4,
+        besieger_walls=[1, 1, 1, 0],
+        garrison_walls=[2, 2, 2, 2],
+        sapper=6,
+        gunner=5,
+        counter_sapper=5,
+        engineer=4,
+        id="falkenstein",
     )
 
 

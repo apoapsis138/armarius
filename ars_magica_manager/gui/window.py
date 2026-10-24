@@ -70,6 +70,7 @@ from ..sheets import laboratory as ls
 from . import choices, gilding, pictures, print_sheet, printing, snapping, sounds
 from .bestiary import CreaturePage
 from .character_sheet import CharacterSheet
+from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .editing import InPlace, place_for, scroll_area_of
 from .familiar import FamiliarPage
@@ -113,6 +114,8 @@ from .worksheet import WorksheetPage
     TRIBUNAL,
     NEIGHBOUR,
     CREATURE,
+    FIGHT,
+    SIEGE,
 ) = (
     "shelf",
     "saga",
@@ -127,6 +130,8 @@ from .worksheet import WorksheetPage
     "tribunal",
     "neighbour",
     "creature",
+    "fight",
+    "siege",
 )
 
 #: Each page's help topic (help_text: a page's id), most specific first.
@@ -143,6 +148,8 @@ _HELP_IDS = {
     TRIBUNAL: ["tribunal"],
     NEIGHBOUR: ["neighbour"],
     CREATURE: ["creature"],
+    FIGHT: ["fights", "conflicts"],
+    SIEGE: ["sieges", "conflicts"],
 }
 
 #: The prefix of each page's tab topics; a character's are the plain
@@ -560,6 +567,12 @@ class MainWindow(QMainWindow):
 
     def open_creature(self, creature_id: str) -> None:
         self.go([*self._up_to(SAGA), Place(CREATURE, creature_id)])
+
+    def open_fight(self, fight_id: str) -> None:
+        self.go([*self._up_to(SAGA), Place(FIGHT, fight_id)])
+
+    def open_siege(self, siege_id: str) -> None:
+        self.go([*self._up_to(SAGA), Place(SIEGE, siege_id)])
 
     def show_character(self, character_id: str) -> None:
         """Open a character's sheet, below their covenant."""
@@ -998,7 +1011,20 @@ class MainWindow(QMainWindow):
                 self.open_neighbour,
                 self.open_creature,
                 self.open_familiar,
+                self.run,
+                self.open_fight,
+                self.open_siege,
             )
+        if place.kind == FIGHT:
+            fight = next((f for f in saga.fights if f.id == place.id), None)
+            if fight is None:
+                return QLabel("No fight chosen.")
+            return FightPage(saga, fight, p, self.run)
+        if place.kind == SIEGE:
+            siege = next((s for s in saga.sieges if s.id == place.id), None)
+            if siege is None:
+                return QLabel("No siege chosen.")
+            return SiegePage(saga, siege, p, self.run)
         if place.kind == CONTENT:
             return SagaContentPage(saga, p, self.run)
         if place.kind == TRIBUNAL:
@@ -1203,6 +1229,12 @@ class MainWindow(QMainWindow):
         if place.kind == CREATURE:
             creature = saga.creature(place.id)
             return creature.name if creature else ""
+        if place.kind == FIGHT:
+            fight = next((f for f in saga.fights if f.id == place.id), None)
+            return fight.name if fight else ""
+        if place.kind == SIEGE:
+            siege = next((s for s in saga.sieges if s.id == place.id), None)
+            return siege.name if siege else ""
         character = saga.character(place.id)
         return character.name if character else ""
 
@@ -1242,6 +1274,8 @@ class MainWindow(QMainWindow):
                 WORKSHEET,
                 SEASONS,
                 HELP,
+                FIGHT,
+                SIEGE,
             )
         ):
             return None

@@ -68,11 +68,13 @@ class NeighbourPage(QWidget):
         kind = neighbours.kind_of(neighbour)
         if kind.tab is not None:
             self.codex.add(kind.tab.title, kind.key, self._kind_chapter(kind.tab))
-        for more in kind.more:
+        for more in (m for m in kind.more if not m.after_standing):
             self.codex.add(more.title, kind.key, self._kind_chapter(more, facts=False))
         self.codex.add(
             "Standing" if kind.attitude else "Found Here", "region", self._standing()
         )
+        for more in (m for m in kind.more if m.after_standing):
+            self.codex.add(more.title, kind.key, self._kind_chapter(more, facts=False))
         self.codex.add("Secrets", "secrets", secrets_chapter(neighbour, p, run))
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))
@@ -129,7 +131,7 @@ class NeighbourPage(QWidget):
                     (
                         "Battle Event",
                         "more",
-                        lambda row: battles.event_form(saga, n, row),
+                        lambda row: battles.event_for(saga, n, row),
                         lambda _row: True,
                     )
                 )

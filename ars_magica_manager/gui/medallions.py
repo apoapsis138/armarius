@@ -1,0 +1,636 @@
+"""The season medallions, drawn: six sets of roundels (medallions.SETS),
+each a painter keyed by its set (a Strategy), all drawn in code.
+
+The glass, enamel, wax and illumination keep their own pigments on either
+theme, as the illuminated initial does; only the rings and ink of the
+quieter sets, and the present season's glow, follow the theme.
+"""
+
+from __future__ import annotations
+
+import math
+import random
+from collections.abc import Callable
+
+from PySide6.QtCore import QPointF, QRectF, Qt
+from PySide6.QtGui import (
+    QBrush,
+    QColor,
+    QFont,
+    QLinearGradient,
+    QPainter,
+    QPainterPath,
+    QPainterPathStroker,
+    QPaintEvent,
+    QPen,
+    QRadialGradient,
+    QTransform,
+)
+from PySide6.QtWidgets import QWidget
+
+from .. import medallions
+from .illumination import gold
+from .paper import shade
+from .pictures import SERIF
+from .themes import DRAWN, PIGMENTS, SEASON_PIGMENTS, Palette
+
+LEAD = QColor(DRAWN["lead"])
+INK = QColor(PIGMENTS["ink"])
+WHITE = QColor(PIGMENTS["lead-white"])
+LAPIS, LAPIS_DEEP = QColor(PIGMENTS["lapis"]), QColor(PIGMENTS["lapis-deep"])
+VERMILION = QColor(PIGMENTS["vermilion"])
+VERMILION_DEEP = QColor(PIGMENTS["vermilion-deep"])
+VERDIGRIS = QColor(PIGMENTS["verdigris"])
+GOLD, GOLD_LIGHT, GOLD_DARK = (
+    QColor(PIGMENTS["gold"]),
+    QColor(PIGMENTS["gold-light"]),
+    QColor(PIGMENTS["gold-dark"]),
+)
+COPPER = QColor(DRAWN["copper"])
+
+
+def _font(size: float, *, bold: bool = False) -> QFont:
+    f = QFont(SERIF)
+    f.setPointSizeF(size)
+    f.setBold(bold)
+    return f
+
+
+# -- the four emblems, as paths in a unit circle --
+
+
+def _stroke(path: QPainterPath, width: float) -> QPainterPath:
+    s = QPainterPathStroker()
+    s.setWidth(width)
+    s.setCapStyle(Qt.PenCapStyle.RoundCap)
+    s.setJoinStyle(Qt.PenJoinStyle.RoundJoin)
+    return s.createStroke(path)
+
+
+def _spring() -> QPainterPath:
+    """A five-petalled flower on a stem with two leaves."""
+    path = QPainterPath()
+    for i in range(5):
+        a = math.radians(i * 72 - 90)
+        petal = QPainterPath()
+        petal.addEllipse(
+            QPointF(0.26 * math.cos(a), -0.22 + 0.26 * math.sin(a)), 0.2, 0.2
+        )
+        path = path.united(petal)
+    stem = QPainterPath(QPointF(0, -0.05))
+    stem.cubicTo(0.05, 0.25, -0.05, 0.45, 0, 0.75)
+    path = path.united(_stroke(stem, 0.08))
+    for sign in (-1, 1):
+        leaf = QPainterPath(QPointF(0, 0.5))
+        leaf.cubicTo(sign * 0.2, 0.25, sign * 0.5, 0.3, sign * 0.55, 0.38)
+        leaf.cubicTo(sign * 0.45, 0.55, sign * 0.2, 0.6, 0, 0.5)
+        path = path.united(leaf)
+    return path.simplified()
+
+
+def _summer() -> QPainterPath:
+    """The sun with sixteen rays, long and short by turns."""
+    path = QPainterPath()
+    path.addEllipse(QPointF(0, 0), 0.38, 0.38)
+    for i in range(16):
+        a = math.radians(i * 22.5)
+        ray = QPainterPath()
+        r0, r1, w = 0.42, (0.85 if i % 2 == 0 else 0.68), 0.09
+        ray.moveTo(r0 * math.cos(a - w), r0 * math.sin(a - w))
+        ray.lineTo(r1 * math.cos(a), r1 * math.sin(a))
+        ray.lineTo(r0 * math.cos(a + w), r0 * math.sin(a + w))
+        ray.closeSubpath()
+        path = path.united(ray)
+    return path.simplified()
+
+
+def _autumn() -> QPainterPath:
+    """A bunch of grapes under a vine leaf."""
+    path = QPainterPath()
+    for y, n in ((-0.05, 3), (0.22, 3), (0.46, 2), (0.66, 1)):
+        for k in range(n):
+            berry = QPainterPath()
+            berry.addEllipse(QPointF((k - (n - 1) / 2) * 0.27, y), 0.14, 0.14)
+            path = path.united(berry)
+    leaf = QPainterPath()
+    leaf.moveTo(0.02, -0.18)
+    leaf.cubicTo(0.2, -0.3, 0.45, -0.3, 0.6, -0.55)
+    leaf.cubicTo(0.45, -0.58, 0.4, -0.7, 0.3, -0.8)
+    leaf.cubicTo(0.2, -0.65, 0.1, -0.72, 0.05, -0.62)
+    leaf.cubicTo(0.0, -0.45, 0.02, -0.3, 0.02, -0.18)
+    path = path.united(leaf)
+    stem = QPainterPath(QPointF(0, -0.15))
+    stem.quadTo(-0.15, -0.45, -0.3, -0.6)
+    return path.united(_stroke(stem, 0.07)).simplified()
+
+
+def _winter() -> QPainterPath:
+    """A six-armed snow-star, each arm branched."""
+    lines = QPainterPath()
+    for i in range(6):
+        a = math.radians(i * 60 - 90)
+        ca, sa = math.cos(a), math.sin(a)
+        lines.moveTo(0, 0)
+        lines.lineTo(0.82 * ca, 0.82 * sa)
+        for r, length in ((0.42, 0.2), (0.62, 0.14)):
+            for side in (-1, 1):
+                b = a + side * math.radians(45)
+                lines.moveTo(r * ca, r * sa)
+                lines.lineTo(
+                    r * ca + length * math.cos(b), r * sa + length * math.sin(b)
+                )
+    hub = QPainterPath()
+    hub.addEllipse(QPointF(0, 0), 0.14, 0.14)
+    return _stroke(lines, 0.09).united(hub).simplified()
+
+
+_EMBLEMS: dict[str, QPainterPath] = {}
+_MAKERS: dict[str, Callable[[], QPainterPath]] = {
+    "Spring": _spring,
+    "Summer": _summer,
+    "Autumn": _autumn,
+    "Winter": _winter,
+}
+
+
+def emblem(season: str) -> QPainterPath:
+    """The season's emblem in a unit circle (Spring for an unknown one)."""
+    key = season if season in _MAKERS else "Spring"
+    if key not in _EMBLEMS:
+        _EMBLEMS[key] = _MAKERS[key]()
+    return _EMBLEMS[key]
+
+
+def _placed(path: QPainterPath, c: QPointF, r: float) -> QPainterPath:
+    return QTransform().translate(c.x(), c.y()).scale(r, r).map(path)
+
+
+def _circle(c: QPointF, r: float) -> QPainterPath:
+    path = QPainterPath()
+    path.addEllipse(c, r, r)
+    return path
+
+
+def _flower_heart(season: str, c: QPointF, r: float) -> QPointF:
+    """Where the Spring flower's heart sits in an emblem of radius `r`."""
+    return c + QPointF(0, -0.22 * r) if season == "Spring" else c
+
+
+# -- 1. stained glass --
+
+GLASS = SEASON_PIGMENTS["glass"]
+
+
+def _glass(colour: str, c: QPointF, r: float, rng: random.Random) -> QBrush:
+    base = QColor(colour)
+    k = rng.uniform(-18, 18)
+    base = base.lighter(int(100 + k)) if k > 0 else base.darker(int(100 - k))
+    grad = QRadialGradient(c + QPointF(-r * 0.3, -r * 0.3), r * 1.6)
+    grad.setColorAt(0, base.lighter(150))
+    grad.setColorAt(0.5, base)
+    grad.setColorAt(1, base.darker(135))
+    return QBrush(grad)
+
+
+def stained_glass(
+    g: QPainter, c: QPointF, r: float, season: str, _year: int, _p: Palette
+) -> None:
+    """Leaded panes, a ring and a field, the emblem in its own glass."""
+    rng = random.Random(season)
+    field, field2, ring, emb = GLASS.get(season, GLASS["Spring"])
+    width = max(1.2, r * 0.06)
+    lead = QPen(
+        LEAD,
+        width,
+        Qt.PenStyle.SolidLine,
+        Qt.PenCapStyle.RoundCap,
+        Qt.PenJoinStyle.RoundJoin,
+    )
+    outer = QRectF(c.x() - r, c.y() - r, 2 * r, 2 * r)
+    ri = r * 0.8
+    inner = QRectF(c.x() - ri, c.y() - ri, 2 * ri, 2 * ri)
+    for i in range(12):
+        a0, a1 = i * 30, (i + 1) * 30
+        pane = QPainterPath()
+        pane.arcMoveTo(outer, a0)
+        pane.arcTo(outer, a0, a1 - a0)
+        pane.arcTo(inner, a1, a0 - a1)
+        pane.closeSubpath()
+        g.setBrush(_glass(ring if i % 2 == 0 else field2, c, r, rng))
+        g.setPen(lead)
+        g.drawPath(pane)
+    angles = sorted(rng.uniform(0, 360) for _ in range(7))
+    for i, a0 in enumerate(angles):
+        a1 = angles[(i + 1) % len(angles)] + (360 if i == len(angles) - 1 else 0)
+        pane = QPainterPath(c)
+        pane.arcTo(inner, a0, a1 - a0)
+        pane.closeSubpath()
+        g.setBrush(_glass(field, c, ri, rng))
+        g.drawPath(pane)
+    e = _placed(emblem(season), c, ri * 0.82)
+    g.setBrush(_glass(emb, c, ri * 0.7, rng))
+    g.setPen(QPen(LEAD, width * 0.8))
+    g.drawPath(e)
+    if season == "Spring":
+        g.setBrush(_glass(DRAWN["glass-gold"], c, 10, rng))
+        g.drawEllipse(_flower_heart(season, c, ri * 0.82), ri * 0.1, ri * 0.1)
+    g.save()
+    g.setClipPath(_circle(c, r))
+    for k in range(3):
+        sheen = QLinearGradient(
+            c + QPointF(-r, -r + k * r * 0.75), c + QPointF(r, r + k * r * 0.75)
+        )
+        sheen.setColorAt(0.45, QColor(255, 255, 255, 0))
+        sheen.setColorAt(0.5, QColor(255, 255, 255, 38))
+        sheen.setColorAt(0.55, QColor(255, 255, 255, 0))
+        g.fillRect(outer, QBrush(sheen))
+    g.restore()
+    g.setBrush(Qt.BrushStyle.NoBrush)
+    g.setPen(QPen(LEAD, width * 1.5))
+    g.drawEllipse(c, r, r)
+
+
+# -- 2. as an illuminated letter is adorned --
+
+
+def _strand(g: QPainter, path: QPainterPath, width: float) -> None:
+    """A gold strand of knotwork: an ink edge, gold, a lighter middle."""
+    for colour, w in ((INK, width + 2.2), (GOLD, width), (GOLD_LIGHT, width * 0.45)):
+        g.setPen(QPen(colour, w, Qt.PenStyle.SolidLine, Qt.PenCapStyle.FlatCap))
+        g.setBrush(Qt.BrushStyle.NoBrush)
+        g.drawPath(path)
+
+
+def _leaf(g: QPainter, at: QPointF, length: float, angle: float) -> None:
+    """An ivy leaf in verdigris with an ink edge."""
+    g.save()
+    g.translate(at)
+    g.rotate(angle)
+    leaf = QPainterPath(QPointF(0, 0))
+    leaf.cubicTo(length * 0.3, -length * 0.45, length * 0.8, -length * 0.35, length, 0)
+    leaf.cubicTo(length * 0.8, length * 0.35, length * 0.3, length * 0.45, 0, 0)
+    g.setPen(QPen(INK, 0.8))
+    g.setBrush(VERDIGRIS)
+    g.drawPath(leaf)
+    g.restore()
+
+
+def _penwork(g: QPainter, c: QPointF, r: float, rng: random.Random) -> None:
+    """White pen-work on the ground: little curls and trefoils of dots."""
+    g.setPen(QPen(WHITE, max(0.6, r * 0.012)))
+    g.setBrush(Qt.BrushStyle.NoBrush)
+    for _ in range(10):
+        at = c + QPointF(rng.uniform(-r, r), rng.uniform(-r, r))
+        size = rng.uniform(0.05, 0.09) * r
+        g.drawArc(QRectF(at.x() - size, at.y() - size, 2 * size, 2 * size), 0, 270 * 16)
+    g.setPen(Qt.PenStyle.NoPen)
+    g.setBrush(WHITE)
+    dot = max(0.6, r * 0.015)
+    for _ in range(26):
+        at = c + QPointF(rng.uniform(-r, r), rng.uniform(-r, r))
+        for degrees in (-90, 30, 150):
+            a = math.radians(degrees)
+            g.drawEllipse(at + QPointF(dot * math.cos(a), dot * math.sin(a)), dot, dot)
+
+
+def illuminated(
+    g: QPainter, c: QPointF, r: float, season: str, _year: int, _p: Palette
+) -> None:
+    """The initial's quartered lapis and vermilion with white pen-work, the
+    emblem in burnished gold, a plaited band and ivy sprays."""
+    rng = random.Random(season + "i")
+    for ang in (-30, 30, 150, 210):
+        a = math.radians(ang)
+        base = c + QPointF(r * 0.95 * math.cos(a), r * 0.95 * math.sin(a))
+        tip = c + QPointF(r * 1.45 * math.cos(a), r * 1.45 * math.sin(a))
+        bend = c + QPointF(r * 1.25 * math.cos(a + 0.25), r * 1.25 * math.sin(a + 0.25))
+        vine = QPainterPath(base)
+        vine.quadTo(bend, tip)
+        g.setPen(QPen(INK, 1.2))
+        g.setBrush(Qt.BrushStyle.NoBrush)
+        g.drawPath(vine)
+        _leaf(g, tip, r * 0.22, ang + 20)
+        berry = c + QPointF(
+            r * 1.22 * math.cos(a + 0.12), r * 1.22 * math.sin(a + 0.12)
+        )
+        g.setPen(QPen(INK, 0.6))
+        g.setBrush(gold(QRectF(berry.x() - 4, berry.y() - 4, 8, 8)))
+        g.drawEllipse(berry, r * 0.06, r * 0.06)
+    ri = r * 0.8
+    g.save()
+    g.setClipPath(_circle(c, ri))
+    quarters = ((LAPIS, LAPIS_DEEP), (VERMILION, VERMILION_DEEP))
+    for (x, y), which in zip(
+        ((0, 0), (1, 0), (0, 1), (1, 1)), (0, 1, 1, 0), strict=True
+    ):
+        light, deep = quarters[which]
+        grad = QRadialGradient(c, ri)
+        grad.setColorAt(0, light)
+        grad.setColorAt(1, deep)
+        g.fillRect(
+            QRectF(c.x() - ri + x * ri, c.y() - ri + y * ri, ri, ri), QBrush(grad)
+        )
+    _penwork(g, c, ri, rng)
+    g.restore()
+    e = _placed(emblem(season), c, ri * 0.8)
+    g.setPen(QPen(INK, 1.3))
+    g.setBrush(gold(e.boundingRect()))
+    g.drawPath(e)
+    width = max(1.2, r * 0.05)
+    for sign in (-1, 1):
+        band = QPainterPath()
+        for k in range(181):
+            t = k / 180 * 2 * math.pi
+            rr = r * 0.9 + sign * r * 0.06 * math.sin(t * 9)
+            pt = c + QPointF(rr * math.cos(t), rr * math.sin(t))
+            if k:
+                band.lineTo(pt)
+            else:
+                band.moveTo(pt)
+        band.closeSubpath()
+        _strand(g, band, width)
+    g.setPen(QPen(INK, 1.1))
+    g.setBrush(Qt.BrushStyle.NoBrush)
+    g.drawEllipse(c, ri, ri)
+    g.drawEllipse(c, r, r)
+
+
+# -- 3. a wax seal --
+
+WAX = SEASON_PIGMENTS["wax"]
+
+
+def wax_seal(
+    g: QPainter, c: QPointF, r: float, season: str, year: int, _p: Palette
+) -> None:
+    """The season pressed in coloured wax, its Latin name and the year in
+    Roman numerals round the rim."""
+    rng = random.Random(season + "w")
+    colour = QColor(WAX.get(season, WAX["Spring"]))
+    blob = QPainterPath()
+    wobble = rng.uniform(0, 1)
+    for k in range(73):
+        t = k / 72 * 2 * math.pi
+        rr = r * (1.0 + 0.05 * math.sin(t * 5 + wobble) + 0.03 * math.sin(t * 11))
+        pt = c + QPointF(rr * math.cos(t), rr * math.sin(t))
+        if k:
+            blob.lineTo(pt)
+        else:
+            blob.moveTo(pt)
+    blob.closeSubpath()
+    g.fillPath(blob.translated(r * 0.05, r * 0.07), QBrush(QColor(60, 40, 20, 70)))
+    grad = QRadialGradient(c + QPointF(-r * 0.3, -r * 0.35), r * 1.4)
+    grad.setColorAt(0, colour.lighter(150))
+    grad.setColorAt(0.6, colour)
+    grad.setColorAt(1, colour.darker(160))
+    g.fillPath(blob, QBrush(grad))
+    for rr, w in ((r * 0.82, 2.0), (r * 0.6, 1.6)):
+        g.setPen(QPen(colour.darker(170), w))
+        g.setBrush(Qt.BrushStyle.NoBrush)
+        g.drawEllipse(c, rr, rr)
+        g.setPen(QPen(colour.lighter(140), 1))
+        g.drawEllipse(c + QPointF(1, 1), rr, rr)
+    legend = f"+ {medallions.LATIN.get(season, '')} · {medallions.roman(year)} ·"
+    g.setFont(_font(max(5.0, r * 0.18), bold=True))
+    step = 300 / max(1, len(legend))
+    box = r * 0.12
+    for i, ch in enumerate(legend):
+        a = math.radians(-90 - 150 + i * step)
+        g.save()
+        g.translate(c + QPointF(r * 0.71 * math.cos(a), r * 0.71 * math.sin(a)))
+        g.rotate(math.degrees(a) + 90)
+        cell = QRectF(-box, -box, 2 * box, 2 * box)
+        g.setPen(colour.lighter(140))
+        g.drawText(cell.translated(0.8, 0.8), Qt.AlignmentFlag.AlignCenter, ch)
+        g.setPen(colour.darker(190))
+        g.drawText(cell, Qt.AlignmentFlag.AlignCenter, ch)
+        g.restore()
+    e = _placed(emblem(season), c, r * 0.48)
+    g.fillPath(e.translated(1.2, 1.2), QBrush(colour.lighter(150)))
+    g.fillPath(e, QBrush(colour.darker(175)))
+
+
+# -- 4. Limoges enamel --
+
+ENAMEL = SEASON_PIGMENTS["enamel"]
+
+
+def enamel(
+    g: QPainter, c: QPointF, r: float, season: str, _year: int, _p: Palette
+) -> None:
+    """Gilt copper with a jewelled ring and an enamel field, the emblem
+    left in gold."""
+    g.setPen(QPen(COPPER, 1.4))
+    g.setBrush(gold(QRectF(c.x() - r, c.y() - r, 2 * r, 2 * r)))
+    g.drawEllipse(c, r, r)
+    jewel = max(1.5, r * 0.07)
+    for k in range(24):
+        a = math.radians(k * 15)
+        g.setPen(QPen(COPPER, 0.8))
+        g.setBrush(
+            QBrush(QColor(DRAWN["turquoise"] if k % 2 else DRAWN["enamel-white"]))
+        )
+        g.drawEllipse(
+            c + QPointF(r * 0.88 * math.cos(a), r * 0.88 * math.sin(a)), jewel, jewel
+        )
+    ri = r * 0.76
+    base = QColor(ENAMEL.get(season, ENAMEL["Spring"]))
+    grad = QRadialGradient(c + QPointF(-ri * 0.3, -ri * 0.3), ri * 1.5)
+    grad.setColorAt(0, base.lighter(140))
+    grad.setColorAt(1, base.darker(130))
+    g.setPen(QPen(COPPER, 1.6))
+    g.setBrush(QBrush(grad))
+    g.drawEllipse(c, ri, ri)
+    for k in range(6):
+        a = math.radians(k * 60 + 30)
+        at = c + QPointF(ri * 0.82 * math.cos(a), ri * 0.82 * math.sin(a))
+        g.setBrush(gold(QRectF(at.x() - 3, at.y() - 3, 6, 6)))
+        g.setPen(Qt.PenStyle.NoPen)
+        g.drawEllipse(at, jewel * 0.7, jewel * 0.7)
+    e = _placed(emblem(season), c, ri * 0.72)
+    g.setPen(QPen(COPPER, 1.4))
+    g.setBrush(gold(e.boundingRect()))
+    g.drawPath(e)
+    g.setPen(QPen(QColor(DRAWN["engraving"]), 0.7))
+    g.setBrush(QBrush(VERMILION))
+    g.drawEllipse(_flower_heart(season, c, ri * 0.72), jewel, jewel)
+
+
+# -- 5. a Book of Hours calendar roundel --
+
+SKY = SEASON_PIGMENTS["sky"]
+_CROWNS = SEASON_PIGMENTS["crowns"]
+_SCENE = SEASON_PIGMENTS["scene"]
+
+
+def book_of_hours(
+    g: QPainter, c: QPointF, r: float, season: str, _year: int, p: Palette
+) -> None:
+    """A calendar page's little landscape: the season's sky, a hill and a
+    tree (bare in Winter), framed in red and gold."""
+    top, low, ground = SKY.get(season, SKY["Spring"])
+    g.save()
+    g.setClipPath(_circle(c, r * 0.86))
+    sky = QLinearGradient(c + QPointF(0, -r), c + QPointF(0, r * 0.3))
+    sky.setColorAt(0, QColor(top))
+    sky.setColorAt(1, QColor(low))
+    g.fillRect(QRectF(c.x() - r, c.y() - r, 2 * r, 2 * r), QBrush(sky))
+    hill = QPainterPath(c + QPointF(-r, r * 0.3))
+    hill.cubicTo(
+        c + QPointF(-r * 0.4, r * 0.05),
+        c + QPointF(r * 0.3, r * 0.45),
+        c + QPointF(r, r * 0.2),
+    )
+    hill.lineTo(c + QPointF(r, r))
+    hill.lineTo(c + QPointF(-r, r))
+    hill.closeSubpath()
+    g.setPen(QPen(INK, 1))
+    g.setBrush(QBrush(QColor(ground)))
+    g.drawPath(hill)
+    tx, ty = c.x() + r * 0.45, c.y() + r * 0.25
+    g.setPen(QPen(QColor(DRAWN["timber"]), max(1.0, r * 0.04)))
+    g.drawLine(QPointF(tx, ty), QPointF(tx, ty - r * 0.35))
+    if season in _CROWNS:
+        g.setPen(QPen(INK, 0.8))
+        g.setBrush(QBrush(QColor(_CROWNS[season])))
+        g.drawEllipse(QPointF(tx, ty - r * 0.45), r * 0.2, r * 0.17)
+    else:
+        for s in (-1, 1):
+            g.drawLine(
+                QPointF(tx, ty - r * 0.25), QPointF(tx + s * r * 0.15, ty - r * 0.45)
+            )
+    e = _placed(emblem(season), c + QPointF(-r * 0.25, -r * 0.25), r * 0.38)
+    g.setPen(QPen(INK, 0.9))
+    g.setBrush(QBrush(QColor(_SCENE.get(season, DRAWN["snow"]))))
+    g.drawPath(e)
+    g.restore()
+    g.setBrush(Qt.BrushStyle.NoBrush)
+    g.setPen(QPen(QColor(p["heading"]), max(1.2, r * 0.045)))
+    g.drawEllipse(c, r * 0.86, r * 0.86)
+    g.setPen(QPen(QColor(p["foreground"]), 1))
+    g.drawEllipse(c, r * 0.94, r * 0.94)
+    g.setPen(QPen(QColor(p["accent"]), max(1.0, r * 0.035)))
+    g.drawEllipse(c, r * 0.9, r * 0.9)
+
+
+# -- 6. pen and wash --
+
+WASH = SEASON_PIGMENTS["wash"]
+
+
+def pen_and_wash(
+    g: QPainter, c: QPointF, r: float, season: str, _year: int, p: Palette
+) -> None:
+    """The quietest: inked and hatched over a pale wash, ringed in red."""
+    wash = WASH.get(season, WASH["Spring"])
+    ink = QColor(p["foreground"])
+    red = QColor(p["heading"])
+    g.setBrush(QBrush(shade(wash, 55)))
+    g.setPen(Qt.PenStyle.NoPen)
+    g.drawEllipse(c, r * 0.8, r * 0.8)
+    e = _placed(emblem(season), c, r * 0.62)
+    g.setBrush(QBrush(shade(wash, 140)))
+    g.setPen(QPen(ink, 1.3))
+    g.drawPath(e)
+    g.save()
+    g.setClipPath(e.intersected(_circle(c + QPointF(r * 0.5, r * 0.5), r * 0.8)))
+    g.setPen(QPen(ink, 0.7))
+    k = -r
+    while k < r:
+        g.drawLine(c + QPointF(k - r, -r), c + QPointF(k + r, r))
+        k += max(2.5, r * 0.08)
+    g.restore()
+    g.setBrush(Qt.BrushStyle.NoBrush)
+    g.setPen(QPen(red, 1.5))
+    g.drawEllipse(c, r * 0.86, r * 0.86)
+    g.drawEllipse(c, r * 0.94, r * 0.94)
+    g.setPen(QPen(red, 0.9))
+    for k in range(16):
+        a = math.radians(k * 22.5)
+        g.drawEllipse(
+            c + QPointF(r * 0.9 * math.cos(a), r * 0.9 * math.sin(a)), 1.3, 1.3
+        )
+
+
+Painter = Callable[[QPainter, QPointF, float, str, int, Palette], None]
+
+#: Each set's painter, by medallions.KEYS.
+PAINTERS: dict[str, Painter] = {
+    "stained_glass": stained_glass,
+    "illuminated": illuminated,
+    "wax_seal": wax_seal,
+    "enamel": enamel,
+    "book_of_hours": book_of_hours,
+    "pen_and_wash": pen_and_wash,
+}
+
+
+def paint(
+    painter: QPainter,
+    key: str,
+    centre: QPointF,
+    radius: float,
+    season: str,
+    year: int,
+    p: Palette,
+    *,
+    now: bool = False,
+) -> None:
+    """Draw the season's medallion of set `key` (stained glass for an
+    unknown one); the present season glows behind it in the theme's gilt."""
+    painter.save()
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    if now:
+        glow = QRadialGradient(centre, radius * 1.6)
+        glow.setColorAt(0.55, shade(p["accent"], 120))
+        glow.setColorAt(1, shade(p["accent"], 0))
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QBrush(glow))
+        painter.drawEllipse(centre, radius * 1.6, radius * 1.6)
+    PAINTERS.get(key, stained_glass)(painter, centre, radius, season, year, p)
+    painter.restore()
+
+
+class Medallion(QWidget):
+    """One season's medallion with its name under it, in the saga's set."""
+
+    def __init__(
+        self,
+        key: str,
+        season: str,
+        year: int,
+        p: Palette,
+        *,
+        now: bool = False,
+        size: int = 104,
+    ) -> None:
+        super().__init__()
+        self.key, self.season, self.year, self.p, self.now = key, season, year, p, now
+        self.setFixedSize(size, size + 20)
+        self.setToolTip(f"{season} {year}")
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        side = self.width()
+        radius = side * 0.3
+        paint(
+            painter,
+            self.key,
+            QPointF(side / 2, side / 2),
+            radius,
+            self.season,
+            self.year,
+            self.p,
+            now=self.now,
+        )
+        painter.setPen(QColor(self.p["heading"] if self.now else self.p["label"]))
+        f = _font(10, bold=self.now)
+        f.setCapitalization(QFont.Capitalization.SmallCaps)
+        painter.setFont(f)
+        painter.drawText(
+            QRectF(0, side - 4, side, 22),
+            Qt.AlignmentFlag.AlignCenter,
+            f"{self.season} {self.year}",
+        )
+        painter.end()

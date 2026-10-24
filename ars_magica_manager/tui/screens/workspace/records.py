@@ -13,6 +13,7 @@ from .... import (
     battles,
     character_templates,
     choice_templates,
+    conflicts,
     creation,
     grog_templates,
     place_events,
@@ -185,9 +186,63 @@ class RecordActions(WorkspaceBase):
             return
         run_steps(
             self.app,
-            battles.event_form(self.saga, view.neighbour, row),
+            battles.event_for(self.saga, view.neighbour, row),
             lambda _end: self._commit(BATTLES_SECTION),
         )
+
+    def _conflict_command(self, action: str) -> None:
+        """A More command on Conflicts' chosen fight or siege (conflicts.COMMANDS),
+        then save and redraw its list and the panel showing it."""
+        view = self._conflicts_view
+        section = conflicts.SECTION_OF[action]
+        row = view.section_row(section) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            conflicts.command(self.saga, action, row),
+            lambda _end: self._commit(section),
+        )
+
+    def action_conflict_battle_event(self) -> None:
+        """More's Battle Event on Conflicts' chosen battle."""
+        self._conflict_command("conflict_battle_event")
+
+    def action_next_blow(self) -> None:
+        """More's Next Blow on the chosen fight."""
+        self._conflict_command("next_blow")
+
+    def action_next_round(self) -> None:
+        """More's Next Round on the chosen fight."""
+        self._conflict_command("next_round")
+
+    def action_add_combatant(self) -> None:
+        """More's Add Combatant on the chosen fight."""
+        self._conflict_command("add_combatant")
+
+    def action_edit_combatant(self) -> None:
+        """More's Edit Combatant on the chosen fight."""
+        self._conflict_command("edit_combatant")
+
+    def action_remove_combatant(self) -> None:
+        """More's Remove Combatant on the chosen fight."""
+        self._conflict_command("remove_combatant")
+
+    def action_form_group(self) -> None:
+        """More's Form a Group on the chosen fight."""
+        self._conflict_command("form_group")
+
+    def action_break_group(self) -> None:
+        """More's Break up a Group on the chosen fight."""
+        self._conflict_command("break_group")
+
+    def action_restart_fight(self) -> None:
+        """More's Restart the Fight on the chosen fight."""
+        self._conflict_command("restart_fight")
+
+    def action_next_siege_event(self) -> None:
+        """More's Next Siege Event on the chosen siege."""
+        self._conflict_command("next_siege_event")
 
     def action_roll_table(self) -> None:
         """More's Roll on a place's chosen roll table."""

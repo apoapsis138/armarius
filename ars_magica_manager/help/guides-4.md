@@ -585,21 +585,22 @@ What the faction does over the saga goes in its **Diary** tab, a line a season, 
 # How to fight a battle
 <!-- help: guide-battle -->
 
-Lords of Men plays a battle as a few events, each a fight with a player character at its heart, rather than every blow. The app keeps the battle on the lord's sheet and works out each event's total.
+Lords of Men plays a battle as a few events, each a fight with a player character at its heart, rather than every blow. The app keeps the battle in the saga's Conflicts, between two armies, and shows it on the Fief tab of each lord it names; it works out each event's total.
 
 ### Before the battle
 <!-- help: guide-battle-setup -->
 
-1. Open the lord's sheet (a neighbour of the lord kind) and go to its **Fief** tab.
+1. Open the lord's sheet (a neighbour of the lord kind) and go to its **Fief** tab, or open **Conflicts**.
 <!-- tui -->
 2. In [Battles](help:section-nb-battles), press `a`.
 <!-- /tui -->
 <!-- gui -->
 2. Under [Battles](help:section-nb-battles), click **Add**.
 <!-- /gui -->
-3. Name the battle and the enemy. **His combat groups** starts at the groups of five his title's army raises: add his allies (a Presence + Leadership + Affinity roll: 6 adds half his forces, 12 as many again, 18 double, 24 treble) and the mercenaries he hires. Type the enemy's groups too.
-4. Each commander rolls Intelligence + Area Lore + a stress die for a **Deployment Total**; type both. The difference is the lord's **Ground** in every event.
-5. Check **His baggage groups**: one for every ten combat groups. Save.
+3. Name the battle and choose its two armies: each a lord, town or other power of the Region, a covenant, or just a name. Added from a lord's Fief tab, the first army is his. To pit two lords against each other, choose both.
+4. Leave an army's **combat groups** blank and a lord's title fills them in (the groups of five his knights, serjeants, infantry and levies make); then add his allies (a Presence + Leadership + Affinity roll: 6 adds half his forces, 12 as many again, 18 double, 24 treble) and the mercenaries he hires. Type a covenant's or a named army's groups.
+5. Each commander rolls Intelligence + Area Lore + a stress die for a **Deployment Total**; type both. The difference is the first army's **Ground** in every event, and the second's as much below 0.
+6. Leave **baggage groups** blank for as many as each army needs (one for every ten combat groups), or type fewer. Save.
 
 ### Each event
 <!-- help: guide-battle-events -->
@@ -610,13 +611,47 @@ Lords of Men plays a battle as a few events, each a fight with a player characte
 <!-- gui -->
 1. Choose the battle and click **Battle Event**.
 <!-- /gui -->
-2. Choose the character at the heart of the event and its Maneuver, Enemy and Size. The line above Record shows the Event Total and whether it reaches this stage's Ease Factor (9, then 12, then 15). A total too low can't win, so pick a smaller task or give up the initiative for +1.
+2. Choose the character at the heart of the event, the army they fight for, and its Maneuver, Enemy and Size. The line above Record shows the Event Total and whether it reaches this stage's Ease Factor (9, then 12, then 15). A total too low can't win, so pick a smaller task or give up the initiative for +1.
 3. Play the event out as an ordinary fight with the character and the enemies it names.
 4. Back in the form, say who won and click **Record**. The losing side loses combat groups, and the battle's line shows the new numbers for the next event.
 
-Most battles take three events. When one side has won enough of them, or its commander fails a Morale roll, the battle is over; note how it ended in the lord's Diary. See [Battle Event](help:battle-event).
+Most battles take three events. When one side has won enough of them, or its commander fails a Morale roll, the battle is over. Each event is already written in each army's lord's or covenant's Diary; add a line there saying how the battle ended. See [Battle Event](help:battle-event).
 
 **See also:** [Battles](help:section-nb-battles), [A lord](help:tab-nb-fief)
+
+
+# How to run a fight
+<!-- help: guide-fights -->
+
+<!-- tui -->
+1. Select **Conflicts** in the tree. In the Fights list press `a`, name the fight and its two sides, and save.
+2. With the fight chosen, press `m` and choose **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
+3. To make grogs fight together, press `m` > **Form a Group**, tick its members, and choose the vanguard (and, for a trained group, the leader).
+4. Press `m` > **Next Blow**. The first one rolls Initiative. Choose an action and a target, then **Strike**: the panel shows the blow worked out and the chronicle.
+5. **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
+<!-- /tui -->
+<!-- gui -->
+1. On the saga's page, open the **Conflicts** chapter and click **Add** on Fights. Name the fight and its two sides, and save; then open the fight.
+2. Click **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
+3. To make grogs fight together, click **Form a Group**, tick its members, and choose the vanguard (and, for a trained group, the leader).
+4. Click **Next Blow**. The first one rolls Initiative; the ribbon at the top then shows the order of blows. Choose an action and a target, then **Strike**: The Blow shows the working, and the chronicle below grows a line.
+5. **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
+<!-- /gui -->
+
+Wounds the characters take go straight onto their sheets, so after the
+fight, recover from them as usual (Health's Recovery Roll).
+
+**See also:** [A fight](help:fights), [Conflicts](help:conflicts)
+
+# How to run a siege
+<!-- help: guide-sieges -->
+
+1. Add a siege to the Sieges list in Conflicts, or on the besieging lord's Fief tab. Give the castle's Size, Garrison, Defenses and Supplies (the form's hints give each step's interval and bonus), the besiegers' miners, engines and soldiers, where each side stands at the four walls, and the experts' totals. For one lord besieging another, link **The castle in the Region** to the lord holding it and **The besieging lord** to the attacker: leave the Garrison and the soldiers blank and their armies fill them in, and the siege shows on both lords' Fief tabs.
+2. Play it with **Next Siege Event**. Each time, choose the besiegers' move (or the garrison's sally), and for an escalade or a sally play the battlefield event out and say who won.
+3. The siege moves on by the castle's interval each time, and any supplies rolls that come due are made for you. Each line of the chronicle gives the day of the siege it came on.
+4. When the castle surrenders or is breached, the siege says so. If the besiegers give up, edit it and set Ended to Raised.
+
+**See also:** [A siege](help:sieges), [How to fight a battle](help:guide-battle-events)
 
 
 # How to play a hedge wizard
