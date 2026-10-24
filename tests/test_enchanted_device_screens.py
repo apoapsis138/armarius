@@ -243,6 +243,25 @@ async def test_use_a_charge_and_nothing_at_zero():
     assert _device(_saved(), "dev-cov").charges_left == 0
 
 
+async def test_use_an_effect_shows_its_initiative_and_counts_the_use():
+    app = _new_app()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, "laboratory")
+        await _choose(pilot, view, "laboratory", 0)  # the device row
+        assert not workspace.check_action("use_effect", ())
+        await _choose(pilot, view, "laboratory", 1)  # the Pilum effect row
+        assert workspace.check_action("use_effect", ())
+        await menu(pilot, app, "m", "Use an Effect")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        confirm = app.screen
+        assert "Use Pilum (Wand)?" in confirm.message
+        assert "Quickness + a stress die" in confirm.message  # a lab holds it
+        await pilot.press("y")
+        assert await wait_until(
+            pilot, lambda: _device(_saved(), "dev-lab").effects[0].uses_today == 1
+        )
+
+
 async def test_i_and_u_only_in_a_devices_section():
     app = _new_app()
     async with app.run_test(size=(140, 70)) as pilot:

@@ -20,6 +20,13 @@ and, with the Lords of Men option, bruises.
   excess read on the Damage Table as a bruise, which heals within hours and
   leaves a residual wound when it first improves (Heavy: Light;
   Incapacitating: Medium; Fatal: Incapacitating).
+- **Form Bonuses** (DE pp. 206-209): a magus's Form score / 5, rounded up,
+  adds to Soak or to the roll resisting harm of that Form: Ignem fire and
+  cold, Animal animals' attacks and venoms, Corpus a human's unarmed blow
+  and disease, Herbam wooden weapons, herbal poisons and starvation, Terram
+  metal or stone weapons and mineral poisons, Aquam water and thirst, Auram
+  weather, lightning and suffocation (drowning too), Vim one's own
+  spell-casting. They don't stack: where two apply, only the higher counts.
 
 Pattern: each kind is a Strategy, a function kept in HARMS by its name.
 """
@@ -109,6 +116,55 @@ RESIDUAL: dict[str, str | None] = {
     "incapacitating": "medium",
     "fatal": "incapacitating",
 }
+FORM_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Form "
+    "Bonuses, pp. 206-209"
+)
+#: What a blow or burn comes from -> (its label, the Forms whose bonus adds
+#: to Soak against it) (DE pp. 208-209).
+INJURY_SOURCES: dict[str, tuple[str, tuple[str, ...]]] = {
+    "fire": ("Fire or heat", ("Ignem",)),
+    "cold": ("Cold or ice", ("Ignem",)),
+    "animal": ("An animal's claws, teeth or horns", ("Animal",)),
+    "unarmed": ("A human's unarmed blow", ("Corpus",)),
+    "wood": ("A wooden weapon or timber", ("Herbam",)),
+    "metal_stone": ("A metal or stone weapon, or stone", ("Terram",)),
+    "water": ("A jet or wave of water", ("Aquam",)),
+    "weather": ("Lightning or other weather", ("Auram",)),
+    "own_casting": ("One's own spell-casting gone wrong", ("Vim",)),
+}
+#: A poison's kind -> (its label, the Forms whose bonus adds to resisting it).
+POISON_SOURCES: dict[str, tuple[str, tuple[str, ...]]] = {
+    "animal": ("An animal's venom", ("Animal",)),
+    "herbal": ("A herbal poison", ("Herbam",)),
+    "mineral": ("A mineral poison", ("Terram",)),
+}
+#: What each table entry comes from (none for corrosion or a clay jug).
+PRESET_SOURCES: dict[str, str] = {
+    "Wood fire": "fire",
+    "Boiling water": "fire",
+    "Boiling oil": "fire",
+    "Molten lead": "fire",
+    "Molten iron": "fire",
+    "Ice": "cold",
+    "Inside a collapsing wooden house": "wood",
+    "Mature tree felled onto the character": "wood",
+    "Inside a collapsing stone building": "metal_stone",
+    "Adder bite": "animal",
+    "Asp bite": "animal",
+    "Monkshood": "herbal",
+    "Arsenic": "mineral",
+}
+#: Deprivation's Forms: suffocation Auram, thirst Aquam, starvation Herbam,
+#: drowning Auram or Aquam, the higher.
+DEPRIVATION_FORMS: dict[str, tuple[str, ...]] = {
+    "air": ("Auram",),
+    "water": ("Aquam",),
+    "food": ("Herbam",),
+    "drowning": ("Auram", "Aquam"),
+}
+#: Corpus resists disease, though not aging (DE p. 209).
+DISEASE_FORMS: tuple[str, ...] = ("Corpus",)
 SEVERITY_OF_BAND = {
     "Light": "light",
     "Medium": "medium",
@@ -126,11 +182,42 @@ class Harmed:
     wounds: list[str] = field(default_factory=list)
 
 
+def resisting_form(
+    character: Character, forms: tuple[str, ...]
+) -> tuple[str, int] | None:
+    """The Form whose bonus resists this harm, and the bonus: the highest of
+    `forms`, as they don't stack (DE p. 207); None when none helps."""
+    bonuses = [(form, derived.form_bonus(character, form)) for form in forms]
+    best = max(bonuses, key=lambda pair: pair[1], default=None)
+    return best if best is not None and best[1] > 0 else None
+
+
+def _resisting(character: Character, forms: tuple[str, ...]) -> tuple[int, str]:
+    """The Form Bonus and the words naming it (" (Ignem Form Bonus +2)")."""
+    found = resisting_form(character, forms)
+    if found is None:
+        return 0, ""
+    return found[1], f" ({found[0]} Form Bonus +{found[1]})"
+
+
+def _sources(
+    table: dict[str, tuple[str, tuple[str, ...]]], key: object
+) -> tuple[str, ...]:
+    entry = table.get(str(key or ""))
+    return entry[1] if entry is not None else ()
+
+
 def _stamina_check(
-    character: Character, ease: int, rng: random.Random, saga: Saga | None
+    character: Character,
+    ease: int,
+    rng: random.Random,
+    saga: Saga | None,
+    bonus: int = 0,
 ) -> tuple[int, bool]:
     die = dice.stress_die(rng, saga=saga)
-    result = character.characteristics.stamina + (0 if die.botched else die.value)
+    result = (
+        character.characteristics.stamina + bonus + (0 if die.botched else die.value)
+    )
     return result, not die.botched and result >= ease
 
 
@@ -141,14 +228,16 @@ def damage(
     saga: Saga | None = None,
     *,
     armour: bool = True,
+    form_bonus: int = 0,
 ) -> tuple[int, int, str | None]:
     """A non-combat blow: (damage total, soak total, the wound it deals or
-    None). `armour` False leaves the armour out of Soak (boiling water)."""
+    None). `armour` False leaves the armour out of Soak (boiling water);
+    `form_bonus` is the Form Bonus that adds to Soak against it."""
     die = dice.stress_die(rng, saga=saga)
     hit = 0 if die.botched else bonus + die.value
     soak = derived.soak(character)
     worn = derived.worn_armour(character.inventory)
-    base = int(soak.total)
+    base = int(soak.total) + form_bonus
     if not armour and worn is not None:
         base -= worn.armor_protection
     guard = dice.stress_die(rng, 0, saga=saga)
@@ -162,10 +251,18 @@ def injury(
     saga: Saga | None, character: Character, values: dict[str, Any], rng: random.Random
 ) -> Harmed:
     bonus = int(values.get("bonus") or 0) * int(values.get("coverage") or 1)
-    hit, soaked, wound = damage(
-        character, bonus, rng, saga, armour=bool(values.get("armour", True))
+    resist, named = _resisting(
+        character, _sources(INJURY_SOURCES, values.get("harm_from"))
     )
-    done = Harmed([f"Damage {hit} against Soak {soaked}"])
+    hit, soaked, wound = damage(
+        character,
+        bonus,
+        rng,
+        saga,
+        armour=bool(values.get("armour", True)),
+        form_bonus=resist,
+    )
+    done = Harmed([f"Damage {hit} against Soak {soaked}{named}"])
     if wound is None:
         done.lines.append("No wound.")
         return done
@@ -186,8 +283,14 @@ def _debilitation(source: str) -> Callable[..., Harmed]:
     ) -> Harmed:
         ease = int(values.get("ease") or 0)
         wound = str(values.get("wound") or "light")
-        result, resisted = _stamina_check(character, ease, rng, saga)
-        done = Harmed([f"Stamina check {result} against {ease}"])
+        forms = (
+            DISEASE_FORMS
+            if source == DISEASE
+            else _sources(POISON_SOURCES, values.get("poison_kind"))
+        )
+        resist, named = _resisting(character, forms)
+        result, resisted = _stamina_check(character, ease, rng, saga, resist)
+        done = Harmed([f"Stamina check {result} against {ease}{named}"])
         if resisted:
             done.lines.append("Resisted: nothing more than discomfort.")
             return done
@@ -219,11 +322,15 @@ def deprivation(
     kind = str(values.get("kind") or "food")
     periods = max(1, int(values.get("periods") or 1))
     long_term = kind != "air"
-    done = Harmed()
+    drowning = kind == "air" and bool(values.get("drowning"))
+    resist, named = _resisting(
+        character, DEPRIVATION_FORMS.get("drowning" if drowning else kind, ())
+    )
+    done = Harmed([f"Each check{named}."] if named else [])
     worsening = "light"
     for period in range(1, periods + 1):
         ease = 3 + period - 1
-        result, resisted = _stamina_check(character, ease, rng, saga)
+        result, resisted = _stamina_check(character, ease, rng, saga, resist)
         if resisted:
             done.lines.append(f"Period {period}: {result} against {ease}, holds out.")
             continue
@@ -250,8 +357,11 @@ def bruise(
     saga: Saga | None, character: Character, values: dict[str, Any], rng: random.Random
 ) -> Harmed:
     bonus = int(values.get("bonus") or 0)
-    hit, soaked, wound = damage(character, bonus, rng, saga)
-    done = Harmed([f"Damage {hit} against Soak {soaked}"])
+    resist, named = _resisting(
+        character, _sources(INJURY_SOURCES, values.get("harm_from"))
+    )
+    hit, soaked, wound = damage(character, bonus, rng, saga, form_bonus=resist)
+    done = Harmed([f"Damage {hit} against Soak {soaked}{named}"])
     if wound is None:
         done.lines.append("No bruise.")
         return done

@@ -479,14 +479,34 @@ charges, from what you type (Ars Magica Definitive Edition, Chapter 8:
 Laboratory).
 <!-- tui -->
 `e` and `d` act on the chosen device or effect. More (`m`) offers Instill
-an Effect on a device that can take another effect, and Use a Charge on a
-Charged Item.
+an Effect on a device that can take another effect, Use a Charge on a
+Charged Item, and Use an Effect on a finished effect of an invested device
+or lesser enchantment.
 <!-- /tui -->
 <!-- gui -->
 **Edit** and **Delete** act on the row last clicked, a device or one of its
-effects. **Instill** adds an effect to a device that can take another, and
-**Use Charge** uses up a charge of a Charged Item.
+effects. **Instill** adds an effect to a device that can take another,
+**Use Charge** uses up a charge of a Charged Item, and **Use** uses a
+finished effect of an invested device or lesser enchantment once.
 <!-- /gui -->
+Using an effect shows what it does at the table (DE p. 259): it goes off
+at Initiative Quickness (the holder's, when a character holds it) + a
+stress die, +3 with a Fast Trigger (p. 257); its Penetration is 0 unless
+levels were added for it; no Fatigue is rolled. Each use counts against its
+uses per day, shown as "Today" in its details. When they are all spent, it
+asks whether a new day has begun: yes gives every device's effects their
+uses again and counts this as the first. A Charged Item's effect is used a
+charge at a time instead.
+
+Not tracked, so noted here: moving raw vis into another object (Vis
+Transfer, DE p. 250) takes a day in a laboratory, alongside other work, up
+to the object's Material and Size capacity, and doesn't change the vis's
+Art; an item opened for enchantment can't also hold raw vis. The app keeps
+raw vis as pawns of each Art, not what holds them, so a transfer changes
+nothing on the Raw Vis list. An item larger than huge (DE p.
+255) has a size multiplier one higher for each tenfold step past huge (a
+castle keep, a hundred times a small room, is x7) and must be inside the
+laboratory to be opened: type its capacity in **Capacity**.
 A device whose Verditius maker crafted it in its first season has
 **Verditius Runes** ticked, and **Crafted with** names the Craft Ability
 used (blank when he shaped it by magic). A Charged Item warns when more
@@ -601,6 +621,18 @@ for a Longevity Ritual, and so on. Where the work pays or gains vis, you
 choose whose: the laboratory's raw vis, the magus's own, or the covenant's
 vis stores.
 
+- **Vis of** and **Pawns of the other Art** (instilling an effect, a
+  lesser enchantment, binding or empowering a familiar): each pawn may be
+  of the work's Technique or its Form, in any mix (DE pp. 258, 266-268).
+  **Vis of** names one; **Pawns of the other Art** says how many are of
+  the other, and the rest are of the one named. Each Art's pawns must be
+  in the store chosen.
+- **Attune a Talisman** refuses an item another magus prepared (its Maker
+  typed as a name, or another character), and one with an effect another
+  magus instilled; the app records who instilled each effect when the
+  season is applied (an assistant's help doesn't count against it). A
+  magus has one talisman at a time (DE p. 259), and gains one new
+  attunement a season (DE p. 260), which the device warns about.
 - **More Lab Texts** (inventing from a Lab Text) adds further texts to learn
   the same season. Every spell must be of the first one's Technique and
   Form, and their levels together must be within the lowest of their Lab

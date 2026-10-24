@@ -109,6 +109,57 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.11.0 — 2026-10-24
+
+### Orbis
+
+- **Fights in full** (Definitive Edition pp. 394-398). A fighter can be
+  **mounted** (Ride, at most +3, on Attack and Defence) or **defend**
+  another, as shield grogs defend a magus: nobody may strike the one
+  defended while a defender stands, and only a defender's botch lets a
+  blow through. Edit Fight sets the **range** between the sides (only
+  missiles strike at range, -3 an increment past the first) and the
+  **Magic aura** where they fight.
+- New actions on Next Blow: **Grapple** (the Advantage becomes the Grapple
+  Strength), **Break free**, **Split the group** (in half, or thirds),
+  **Cast a spell** (a known spell or spontaneous magic: Casting Total,
+  Penetration against Magic Resistance, and damage) and **Use a device**.
+  Only the actions a fighter can take are offered.
+- A magus's **Form Bonus** adds to Soak against harm of its Form: teeth
+  and claws, bare hands, wooden or metal weapons, and spells.
+
+### Illuminatio
+
+- **The Blow to Come**: Next Blow, Add and Edit Combatant show an
+  inspector at their foot, boxed like a gloss, saying what the choice will
+  do and the totals it rolls, or why it can't be done. The terminal shows
+  it in a bordered box.
+- The fight page reads as a book: the order of blows is a row of
+  medallions in the saga's set, each carrying its Initiative, and the
+  fighters are entries ruled off on the page. Titles gild only their
+  capitalised words.
+
+### Book of Hours
+
+- **The Gift** costs a season of teaching or training 3 (6 for the
+  Blatant Gift) when the other side isn't protected by a Parma Magica and
+  isn't one of the magus's own covenfolk (DE pp. 169, 186, 204); two
+  unprotected Gifted characters both pay.
+- Vis for instilling an effect, binding or empowering a familiar can be
+  paid in either the Technique or the Form (DE pp. 258, 266-268).
+- Bond powers can work out their modified level from uses a day,
+  Penetration and the other modifications (DE pp. 267-268).
+
+### Pagina
+
+- **Use an Effect** uses a device's finished effect: its Initiative,
+  Penetration and how many of its uses a day are spent (DE pp. 257, 259).
+- Attuning a talisman is refused when another magus made the item or
+  instilled one of its effects (DE pp. 259-260).
+- **Take Harm** asks what the harm comes from (fire, claws, a weapon of
+  wood or metal, a poison's kind, drowning) and adds the highest Form
+  Bonus that resists it (DE pp. 206-209).
+
 ## 3.10.1 — 2026-10-24
 
 ### Computus

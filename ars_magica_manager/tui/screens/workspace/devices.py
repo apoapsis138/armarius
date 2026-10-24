@@ -1,8 +1,10 @@
 """WorkspaceScreen's actions for enchanted devices, on every
 sheet's Enchanted Devices section: a adds a device, e edits the chosen
 device or effect and A removes it (after confirming), falling back to a
-picker when none is chosen; i instils an effect in the chosen device and u
-uses a charge of the chosen Charged Item, each shown only where it can act."""
+picker when none is chosen; More's Instill an Effect instils one in the
+chosen device, Use a Charge uses a charge of the chosen Charged Item and
+Use an Effect uses the chosen effect once (the core's steps), each shown
+only where it can act."""
 
 from __future__ import annotations
 
@@ -15,6 +17,7 @@ from ....models import CHARGED, EnchantedDevice, InstilledEffect
 from ..forms import _enchanted_device_dialog, _instilled_effect_dialog
 from ..prompts import ConfirmScreen
 from ..sheets import DEVICE_SECTIONS
+from ..steps import run_steps
 from .base import (
     WorkspaceBase,
     _SectionOps,
@@ -147,14 +150,17 @@ class DeviceActions(WorkspaceBase):
         return targets[chosen]
 
     def _device_action_enabled(self, action: str) -> bool:
-        """i shows only on a row whose device can take another effect, u
-        only on a Charged Item (so the footer stays short)."""
+        """Instill shows only on a row whose device can take another
+        effect, Use a Charge only on a Charged Item and Use an Effect only
+        on an effect that can be used (so the menu stays short)."""
         target = self._chosen_target()
         if target is None:
             return False
         device, effect = target
         if action == "instill_effect":
             return device_forms.can_take_effect(device)
+        if action == "use_effect":
+            return ed.can_use(device, effect)
         return effect is None and device.type == CHARGED
 
     def action_instill_effect(self) -> None:
@@ -191,6 +197,27 @@ class DeviceActions(WorkspaceBase):
         left = ed.charges_left(device)
         self.notify(
             f"{escape(device.name)}: {left} charge{'' if left == 1 else 's'} left."
+        )
+
+    def action_use_effect(self) -> None:
+        """Use the chosen effect once (its Initiative, Penetration and uses
+        today shown first)."""
+        holder = self._device_holder()
+        view = self._current_sheet_view()
+        if holder is None or view is None:
+            return
+        section, kind, holder_id = holder
+        row = view.selected_device_row(section)
+        if row is None or row >= len(ed.device_targets(self.saga, kind, holder_id)):
+            return
+
+        def done(end: object) -> None:
+            self._commit_devices()
+            if isinstance(end, list) and end:
+                self.notify(escape("\n".join(str(line) for line in end)))
+
+        run_steps(
+            self.app, device_forms.use_effect(self.saga, kind, holder_id, row), done
         )
 
     def _device_section_ops(self) -> dict[str, _SectionOps]:

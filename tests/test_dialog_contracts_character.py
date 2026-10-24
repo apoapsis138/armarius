@@ -580,13 +580,15 @@ CONTRACTS: dict[str, Contract] = {
             "Level": "15",
             "Technique": "Intellego",
             "Form": "Mentem",
+            "Work out the modified level": True,
+            "Maintains concentration (+5)": True,
         },
         saved=lambda s: [
-            (p.level, p.technique, p.form)
+            (p.level, p.technique, p.form, p.worked_out, p.maintains_concentration)
             for p in familiar(s).bond_powers
             if p.name == "Mind link"
         ],
-        expected=[(15, "Intellego", "Mentem")],
+        expected=[(15, "Intellego", "Mentem", True, True)],
         invalid={"Level": "lots"},
         shown={"#fam-bond-powers-list": "Mind link"},
     ),

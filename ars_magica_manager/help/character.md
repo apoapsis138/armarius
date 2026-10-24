@@ -408,6 +408,24 @@ choose Keep:
   as a wound's; it heals within hours, and a Heavy, Incapacitating or
   Fatal one leaves a Light, Medium or Incapacitating wound.
 
+A magus's **Form Bonus** (the Form's score / 5, rounded up) adds to Soak
+or to the roll resisting harm of its Form (Definitive Edition pp.
+206-209). For an injury or a bruise, choose **What it comes from**: fire
+or heat and cold or ice (Ignem), an animal's claws, teeth or horns
+(Animal), a human's unarmed blow (Corpus), a wooden weapon or timber
+(Herbam), a metal or stone weapon or stone (Terram), a jet or wave of
+water (Aquam), lightning or other weather (Auram), or one's own
+spell-casting gone wrong (Vim); the tables' entries choose their own
+unless you choose otherwise (corrosion and the jug have none). For a
+poison, the **Kind of poison**: an animal's venom (Animal), a herbal
+poison (Herbam) or a mineral one (Terram); the Poison table's choose
+theirs. A disease's Stamina check adds Corpus (never to aging),
+deprivation of air Auram, of water Aquam and of food Herbam; tick
+**Drowning** for air lost under water, where Auram or Aquam counts. The
+bonuses never stack: where two apply, only the higher counts, and the
+result names the one used. Vim's bonus to avoiding Twilight is part of
+the Twilight roll.
+
 ## Recovery Roll
 <!-- help: recovery-roll -->
 
@@ -1304,13 +1322,20 @@ gives pounds from the purse.
 The enchanted devices the character holds, each followed by its effects;
 <!-- tui -->
 the magus's Talisman is one of them. More (`m`) offers Instill an Effect on
-a device that can take another effect, and Use a Charge on a Charged Item.
+a device that can take another effect, Use a Charge on a Charged Item, and
+Use an Effect on a finished effect of an invested device or lesser
+enchantment.
 <!-- /tui -->
 <!-- gui -->
 the magus's Talisman is one of them. Beside Add, Edit and Delete, the
 **Instill** button instills an effect in the chosen device when it can
-take another, and **Use Charge** uses a charge of a Charged Item.
+take another, **Use Charge** uses a charge of a Charged Item, and **Use**
+uses a finished effect once.
 <!-- /gui -->
+Using an effect shows its Initiative (Quickness + stress die, +3 with a
+Fast Trigger), its Penetration (0 unless enchanted with more) and how many
+of its uses a day are spent (DE pp. 257, 259); in a fight, Next Blow's **Use
+a device** plays it.
 
 ### Books
 <!-- help: section-books -->

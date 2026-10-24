@@ -172,6 +172,12 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         margin-top: 1;
     }
 
+    #fields-live.inspector {
+        border: round $primary-darken-1;
+        border-title-color: $text-muted;
+        padding: 0 1;
+    }
+
     #fields-error {
         color: $error;
         height: auto;
@@ -199,6 +205,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         save_label: str = "Save",
         build: None = None,
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
+        inspector: str = "",
     ) -> None: ...
 
     @overload
@@ -212,6 +219,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         save_label: str = "Save",
         build: Callable[[dict[str, Any]], ResultT],
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
+        inspector: str = "",
     ) -> None: ...
 
     def __init__(
@@ -224,6 +232,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         save_label: str = "Save",
         build: Callable[[dict[str, Any]], ResultT] | None = None,
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
+        inspector: str = "",
     ) -> None:
         super().__init__()
         self.title_text = title
@@ -233,6 +242,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self.save_label = save_label
         self.build = build
         self.confirm = confirm
+        self.inspector = inspector
         self._picked: dict[str, Any] = {}  # "picker" fields' current values
         # The value each `fills` field last filled from (or opened with).
         self._filled_from: dict[str, Any] = {}
@@ -248,7 +258,11 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                     with Vertical(classes="fd-field", id=f"fdw-{spec.key}"):
                         yield from self._widgets(spec)
             if self.live is not None:
-                yield Static("", id="fields-live")
+                live = Static("", id="fields-live")
+                if self.inspector:
+                    live.add_class("inspector")
+                    live.border_title = self.inspector
+                yield live
             yield Static("", id="fields-error")
             with Horizontal(id="fields-buttons"):
                 yield Button(self.save_label, id="btn-save", variant="success")
@@ -334,7 +348,8 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         the buttons always stay on screen, however short the terminal is."""
         reserved = 11
         if self.live is not None:
-            # Its margin, and however many rows it wraps to.
+            # Its margin, and however many rows it wraps to (its border
+            # included, as an inspector).
             live = self.query_one("#fields-live")
             reserved += 1 + max(1, live.outer_size.height)
         self.query_one("#fields-scroll").styles.max_height = max(

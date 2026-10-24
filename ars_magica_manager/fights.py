@@ -156,6 +156,22 @@ def fields(saga: Saga, fight: Fight | None) -> list[DialogField]:
             second.covenant_id,
             options=covenants,
         ),
+        DialogField(
+            "range",
+            "Range increments",
+            "int",
+            f.range if f else 0,
+            hint="0: hand to hand. Missiles take -3 for each range increment "
+            "past the first, and fighters without them can't strike at range "
+            "(DE p. 395).",
+        ),
+        DialogField(
+            "aura",
+            "Magic aura",
+            "int",
+            f.aura if f else 0,
+            hint="Added to the Casting Totals of spells cast in the fight (DE p. 214).",
+        ),
     ]
 
 
@@ -164,6 +180,8 @@ def _write(fight: Fight, values: dict[str, Any]) -> None:
     fight.place = values.get("place") or ""
     fight.season = values.get("season") or fight.season
     fight.year = int(values.get("year") or fight.year)
+    fight.range = max(0, int(values.get("range") or 0))
+    fight.aura = int(values.get("aura") or 0)
     first, second = sides(fight)[:2]
     first.name, first.covenant_id = (
         values.get("first") or "",
@@ -274,6 +292,71 @@ def _figure_fields(c: Combatant | None, shown: Any) -> list[DialogField]:
     ]
 
 
+def _defend_options(saga: Saga, fight: Fight, own: str = "") -> list[tuple[str, str]]:
+    return [
+        ("No one", ""),
+        *(
+            (
+                f"{escape(rules.Fighter(saga, c).name)} "
+                f"({escape(rules.side_name(fight, i))})",
+                c.id,
+            )
+            for i, c in _every_combatant(fight)
+            if c.id != own
+        ),
+    ]
+
+
+def _stance_fields(
+    saga: Saga, fight: Fight, c: Combatant | None, from_sheet: Any
+) -> list[DialogField]:
+    """Mounted, Ride, Magic Resistance and whom it defends: what a
+    combatant brings beyond its figures (DE pp. 396-397)."""
+    v = c or Combatant()
+    typed = lambda values: not from_sheet(values)
+    return [
+        DialogField(
+            "mounted",
+            "Mounted",
+            "check",
+            v.mounted,
+            hint="Adds Ride, at most +3, to Attack and Defence (DE p. 397). A "
+            "Gifted rider needs magic to stay in the saddle (p. 205).",
+        ),
+        DialogField(
+            "ride",
+            "Ride",
+            "int",
+            v.ride,
+            show_if=lambda values: bool(values.get("mounted")) and typed(values),
+        ),
+        DialogField(
+            "resistance",
+            "Magic Resistance",
+            "int",
+            v.resistance,
+            show_if=typed,
+            hint="Against spells and devices; a creature's is its Might.",
+        ),
+        DialogField(
+            "defends",
+            "Defends",
+            "select",
+            v.defends,
+            options=_defend_options(saga, fight, v.id if c else ""),
+            hint="A shield grog: while it stands, the one it defends can't be "
+            "struck (DE p. 397).",
+        ),
+    ]
+
+
+def _write_stance(combatant: Combatant, values: dict[str, Any]) -> None:
+    combatant.mounted = bool(values.get("mounted"))
+    combatant.ride = max(0, int(values.get("ride") or 0))
+    combatant.resistance = max(0, int(values.get("resistance") or 0))
+    combatant.defends = values.get("defends") or ""
+
+
 def combatant_fields(saga: Saga, fight: Fight) -> list[DialogField]:
     names = [rules.side_name(fight, i) for i in range(len(sides(fight)))]
     typed = lambda v: v.get("kind") == TYPED_FIGHTER
@@ -322,6 +405,9 @@ def combatant_fields(saga: Saga, fight: Fight) -> list[DialogField]:
             hint=f"Up to {MOST_AT_ONCE}, numbered (Bandit 1, Bandit 2...).",
         ),
         *_figure_fields(None, typed),
+        *_stance_fields(
+            saga, fight, None, lambda v: v.get("kind") == CHARACTER_FIGHTER
+        ),
     ]
 
 
@@ -394,6 +480,8 @@ def add_combatant(saga: Saga, fight: Fight | None) -> Command:
     def apply(values: dict[str, Any]) -> list[str]:
         side = sides(fight)[int(values.get("side") or 0)]
         made = _made(saga, values)
+        for combatant in made:
+            _write_stance(combatant, values)
         side.combatants += made
         if fight.round:
             # A newcomer acts at the end of the order this fight.
@@ -407,8 +495,10 @@ def add_combatant(saga: Saga, fight: Fight | None) -> Command:
         lambda: combatant_fields(saga, fight),
         apply,
         validate=lambda v: _combatant_problem(saga, v),
+        live=lambda v: combatant_live(saga, fight, v),
         save_label="Add",
         help_id="fights",
+        inspector="The Fighter",
     )
 
 
@@ -446,6 +536,7 @@ def edit_combatant(saga: Saga, fight: Fight | None) -> Command:
             def apply_weapon(values: dict[str, Any]) -> None:
                 combatant.weapon_id = values.get("weapon") or ""
                 combatant.out = values.get("out") or ""
+                _write_stance(combatant, values)
 
             return Form(
                 f"Edit {escape(combatant.name)}",
@@ -457,10 +548,17 @@ def edit_combatant(saga: Saga, fight: Fight | None) -> Command:
                         combatant.weapon_id or (weapons[0].id if weapons else None),
                         options=[(escape(w.name), w.id) for w in weapons],
                     ),
+                    *_stance_fields(saga, fight, combatant, lambda _v: True),
                     _out_field(combatant),
                 ],
                 apply_weapon,
+                live=lambda v: combatant_live(
+                    saga,
+                    fight,
+                    {**v, "kind": CHARACTER_FIGHTER, "character": combatant.ref_id},
+                ),
                 help_id="fights",
+                inspector="The Fighter",
             )
 
         def apply(values: dict[str, Any]) -> None:
@@ -475,12 +573,19 @@ def edit_combatant(saga: Saga, fight: Fight | None) -> Command:
             for key in ("init", "defence", "soak", "size", "ability", "leadership"):
                 setattr(combatant, key, int(values.get(key) or 0))
             combatant.out = values.get("out") or ""
+            _write_stance(combatant, values)
 
         return Form(
             f"Edit {escape(combatant.name)}",
-            lambda: [*_figure_fields(combatant, None), _out_field(combatant)],
+            lambda: [
+                *_figure_fields(combatant, None),
+                *_stance_fields(saga, fight, combatant, lambda _v: False),
+                _out_field(combatant),
+            ],
             apply,
+            live=lambda v: combatant_live(saga, fight, {**v, "kind": TYPED_FIGHTER}),
             help_id="fights",
+            inspector="The Fighter",
         )
 
     return Choose(
@@ -748,11 +853,8 @@ def blow_fields(saga: Saga, fight: Fight) -> list[DialogField]:
             "Action",
             "select",
             rules.ATTACK,
-            options=pairs(rules.ACTIONS),
-            hint="Exertion spends a Fatigue level for the Combat Ability; a "
-            "scuffle knocks out rather than kills; a special effect needs its "
-            "Attack Advantage (disarm 9, trip 3, grab a worn item 6, take the "
-            "weapon in use 12).",
+            options=pairs(rules.actions_for(saga, fight, who)),
+            hint="The inspector below says what it does and what it rolls.",
         ),
         DialogField(
             "target",
@@ -760,21 +862,281 @@ def blow_fields(saga: Saga, fight: Fight) -> list[DialogField]:
             "select",
             default.id if default else None,
             options=[(escape(u.name), u.id) for u in enemies],
-            show_if=lambda v: v.get("action") not in (rules.DISENGAGE, rules.WAIT),
+            show_if=lambda v: (
+                v.get("action") not in (rules.DISENGAGE, rules.WAIT, rules.BREAK_FREE)
+            ),
+        ),
+        *_magic_fields(saga, who),
+    ]
+
+
+def _magic_fields(saga: Saga, who: rules.Unit | None) -> list[DialogField]:
+    """What Cast a Spell and Use a Device ask: the spell (or the Arts and
+    level of a spontaneous one) or the device's effect, and the damage it
+    does."""
+    character = who.vanguard.character if who is not None else None
+    spells = rules.spells_of(saga, character)
+    effects = rules.device_effects(saga, character)
+    casting = lambda v: v.get("action") == rules.CAST
+    spontaneous = lambda v: casting(v) and v.get("spell") == rules.SPONTANEOUS
+    return [
+        DialogField(
+            "spell",
+            "Spell",
+            "select",
+            spells[0][1] if spells else rules.SPONTANEOUS,
+            options=[*spells, ("Spontaneous magic", rules.SPONTANEOUS)],
+            show_if=casting,
+            hint="Cast at the magus's place in the order (DE p. 397).",
+        ),
+        DialogField(
+            "arts",
+            "Arts",
+            "select",
+            "Creo Ignem",
+            options=pairs(rules.ART_PAIRS),
+            show_if=spontaneous,
+        ),
+        DialogField("level", "Level", "int", 10, show_if=spontaneous),
+        DialogField(
+            "fatiguing",
+            "Fatiguing",
+            "check",
+            True,
+            show_if=spontaneous,
+            hint="Spend a Fatigue level for the stress die; otherwise the "
+            "Casting Score alone, divided by five (DE p. 214).",
+        ),
+        # Only a fighter holding a device is asked which: an empty list
+        # can't be drawn.
+        *(
+            [
+                DialogField(
+                    "effect",
+                    "Device and effect",
+                    "select",
+                    effects[0][1],
+                    options=effects,
+                    show_if=lambda v: v.get("action") == rules.DEVICE,
+                    hint="Used at Quickness + stress die, Penetration as "
+                    "enchanted (DE p. 259).",
+                )
+            ]
+            if effects
+            else []
+        ),
+        DialogField(
+            "spell_damage",
+            "Damage",
+            "optint",
+            None,
+            show_if=lambda v: v.get("action") in (rules.CAST, rules.DEVICE),
+            hint="A damaging effect's +X: stress die + X against Soak + stress "
+            "die, with the right Form Bonus (DE p. 394). Blank: no damage.",
         ),
     ]
 
 
+def _terms(terms: list[rules.Term]) -> str:
+    """ "+11 (Attack +9, Mounted +2)": a total and, when it has more than
+    its base, what makes it."""
+    total = sum(t.amount for t in terms)
+    parts = ", ".join(f"{t.label} {t.amount:+d}" for t in terms)
+    return f"{total:+d}" + (f" ({parts})" if len(terms) > 1 else "")
+
+
+#: What each action does, as the inspector says it (DE pp. 394-398).
+ACTION_WORDS: dict[str, str] = {
+    rules.ATTACK: "A hit by any margin does Damage plus the Attack Advantage, "
+    "less Soak.",
+    rules.EXERTION: "Spends a Fatigue level (each member's, in a group) for "
+    "the Combat Ability on the Attack.",
+    rules.SCUFFLE: "Knocks out rather than kills: the wound is read as "
+    "Fatigue on the Scuffle Effects table.",
+    rules.GRAPPLE: "Brawl, with free hands: any Advantage above 0 becomes the "
+    "Grapple Strength, and the one held may only try to break free.",
+    rules.BREAK_FREE: "An attack on the one holding you: its Advantage comes "
+    "off the Grapple Strength, and at 0 you are free and the one holding "
+    "you takes a Light Wound.",
+    rules.SPLIT: "An Advantage of 0 or more splits the group rather than "
+    "wounding it: in half, or in thirds when three press it.",
+    rules.CAST: "Cast at the magus's place in the order; a Casting Total "
+    "short of the level by 10 or less still casts it, for a Fatigue level.",
+    rules.DEVICE: "Used at Quickness + stress die, with no Fatigue; its "
+    "Penetration is what it was enchanted with.",
+    rules.DISENGAGE: "A Defence Total against each foe who struck it last "
+    "round; +3 for each try after the first.",
+    rules.WAIT: "Holds its action this turn.",
+}
+
+
 def blow_live(saga: Saga, fight: Fight, values: dict[str, Any]) -> str:
+    """The inspector under Next Blow: who acts, against whom, what the
+    action does and the totals it rolls against."""
     if fight.round == 0:
         return "Initiative is rolled first; the highest acts first."
     who = rules.actor(saga, fight)
     if who is None:
         return "A new round begins."
+    action = values.get("action") or rules.ATTACK
     every = rules.units(saga, fight)
     target = every.get(values.get("target") or "")
-    against = f" against {target.name} ({unit_line(saga, target)})" if target else ""
-    return f"Round {fight.round}: {who.name} acts ({unit_line(saga, who)}){against}."
+    grip = rules.grip_on(fight, who.id)
+    if action == rules.BREAK_FREE and grip is not None:
+        target = every.get(grip.by)
+    lines = [f"[b]{escape(who.name)}[/]  [$label]{escape(unit_line(saga, who))}[/]"]
+    if target is not None and action not in (rules.DISENGAGE, rules.WAIT):
+        lines.append(
+            f"[$label]against[/] [b]{escape(target.name)}[/]  "
+            f"[$label]{escape(unit_line(saga, target))}[/]"
+        )
+    lines.append(f"[i]{ACTION_WORDS.get(action, '')}[/]")
+    if target is None or action in (rules.DISENGAGE, rules.WAIT):
+        return "\n".join(lines)
+    if action in (rules.CAST, rules.DEVICE):
+        lines += _magic_lines(saga, fight, who, target, action, values)
+        return "\n".join(lines)
+    chances = rules.odds(saga, fight, who, target, action)
+    if chances.blocked:
+        lines.append(f"[$text-error]{escape(chances.blocked)}[/]")
+        return "\n".join(lines)
+    lines.append(
+        f"Attack {_terms(chances.attack)} + stress die against Defence "
+        f"{_terms(chances.defence)} + stress die."
+    )
+    if action == rules.BREAK_FREE and grip is not None:
+        lines.append(
+            f"The grip is {grip.strength}: an Advantage of {grip.strength} or more "
+            "frees you; less loosens it."
+        )
+    elif action == rules.GRAPPLE:
+        lines.append("Any Advantage above 0 takes hold, with that strength.")
+    if action in combat_groups.SPECIAL_EFFECTS or action == rules.SPLIT:
+        lines.append(f"It needs an Attack Advantage of {chances.need} or more.")
+    elif action not in (rules.GRAPPLE, rules.BREAK_FREE):
+        lines.append(
+            f"On a hit: Damage {_terms(chances.damage)} + the Advantage against "
+            f"Soak {_terms(chances.soak)}."
+        )
+    return "\n".join(lines)
+
+
+def blow_of(values: dict[str, Any]) -> rules.Blow:
+    """The blow Next Blow's values describe."""
+    damage = values.get("spell_damage")
+    return rules.Blow(
+        values.get("action") or rules.ATTACK,
+        values.get("target") or "",
+        spell=values.get("spell") or "",
+        arts=values.get("arts") or "",
+        level=int(values.get("level") or 0),
+        fatiguing=bool(values.get("fatiguing", True)),
+        effect=values.get("effect") or "",
+        damage=None if damage is None else int(damage),
+    )
+
+
+def _magic_lines(
+    saga: Saga,
+    fight: Fight,
+    who: rules.Unit,
+    target: rules.Unit,
+    action: str,
+    values: dict[str, Any],
+) -> list[str]:
+    """The inspector's lines for a spell or a device: what it casts, the
+    total it needs, its Penetration against the target's Magic Resistance,
+    and any damage."""
+    blow = blow_of(values)
+    odds = (
+        rules.spell_odds(saga, fight, who, target, blow)
+        if action == rules.CAST
+        else rules.device_odds(saga, target, blow)
+    )
+    if odds is None:
+        return ["[$text-error]Choose what to cast or use.[/]"]
+    lines = [
+        f"[b]{escape(odds.name)}[/]: {odds.technique} {odds.form}, level {odds.level}."
+    ]
+    if odds.score is not None:
+        if odds.spontaneous:
+            lines.append(
+                f"Casting Score {odds.score:+d}: with Fatigue, (score + stress die) "
+                f"/ 2 must reach {odds.level}; without, {odds.score // 5}."
+            )
+        else:
+            lines.append(
+                f"Casting Score {odds.score:+d} (aura included) + stress die "
+                f"against level {odds.level}."
+            )
+        lines.append(
+            f"Penetration: Casting Total - {odds.level} + {odds.penetration} "
+            f"against Magic Resistance {odds.resistance}."
+        )
+    else:
+        lines.append(
+            f"Penetration {odds.penetration} against Magic Resistance "
+            f"{odds.resistance}: "
+            + (
+                "it takes effect."
+                if odds.penetration > odds.resistance
+                else "resisted."
+            )
+        )
+    damage = values.get("spell_damage")
+    if damage is not None:
+        soak = target.vanguard.figures().soak
+        lines.append(
+            f"Damage +{damage} + stress die against Soak {soak:+d} + stress die."
+        )
+    return lines
+
+
+def combatant_live(saga: Saga, fight: Fight, values: dict[str, Any]) -> str:
+    """The inspector under Add and Edit Combatant: the fighter as the
+    fight will see it."""
+    kind = values.get("kind") or CHARACTER_FIGHTER
+    lines: list[str] = []
+    if kind == CHARACTER_FIGHTER:
+        ref, _, _weapon = str(values.get("character") or "").partition("|")
+        character = saga.character(ref)
+        if character is None:
+            return "Choose the character."
+        lines.append(f"[b]{escape(character.name)}[/]: figures from the sheet.")
+        if values.get("mounted") and rules.unsettles_horses(character):
+            lines.append(
+                "[$text-error]Gifted: a horse throws the rider without magic to "
+                "calm it (DE p. 205).[/]"
+            )
+    else:
+        name = values.get("name") or "The fighter"
+        attack = values.get("attack")
+        lines.append(
+            f"[b]{escape(str(name))}[/]  Init {int(values.get('init') or 0):+d}   "
+            f"Atk {'n/a' if attack is None else f'{int(attack):+d}'}   "
+            f"Dfn {int(values.get('defence') or 0):+d}   "
+            f"Soak {int(values.get('soak') or 0):+d}"
+        )
+        if int(values.get("resistance") or 0):
+            lines.append(f"Magic Resistance {int(values.get('resistance') or 0)}.")
+    if values.get("mounted"):
+        ride = min(rules.MOST_RIDE, int(values.get("ride") or 0))
+        lines.append(
+            "Mounted: Ride adds "
+            + (f"+{ride}" if kind != CHARACTER_FIGHTER else "up to +3")
+            + " to Attack and Defence."
+        )
+    defended = values.get("defends") or ""
+    if defended:
+        guarded = next(
+            (c for _, c in _every_combatant(fight) if c.id == defended), None
+        )
+        if guarded is not None:
+            lines.append(
+                f"Defends {escape(rules.Fighter(saga, guarded).name)}: nobody may "
+                "strike them while this fighter stands."
+            )
+    return "\n".join(lines)
 
 
 def next_blow(
@@ -798,9 +1160,7 @@ def next_blow(
         played = rules.play(
             saga,
             fight,
-            rules.Blow(
-                values.get("action") or rules.ATTACK, values.get("target") or ""
-            ),
+            blow_of(values),
             dice,
         )
         return notes(played.text, *played.lines, *record_ending(saga, fight))
@@ -812,6 +1172,7 @@ def next_blow(
         live=lambda v: blow_live(saga, fight, v),
         save_label="Strike",
         help_id="fights",
+        inspector="The Blow to Come",
     )
 
 
@@ -928,6 +1289,8 @@ def info(saga: Saga, fight: Fight) -> str:
         f"[b]{escape(fight.name)}[/]  [dim]{fight.season} {fight.year}"
         + (f", {escape(fight.place)}" if fight.place else "")
         + f"[/]  {escape(state_text(fight))}",
+        f"[$label]Where:[/] {rules.range_text(fight)}"
+        + (f", aura {fight.aura:+d}" if fight.aura else ""),
         f"[$label]Order of blows:[/] {order_text(saga, fight)}",
     ]
     every = rules.units(saga, fight).values()
@@ -942,6 +1305,9 @@ def info(saga: Saga, fight: Fight) -> str:
                     + ")[/]"
                 )
             lines.append(f"  {head}: {unit_line(saga, unit)}")
+            tags = rules.tags(saga, fight, unit)
+            if tags:
+                lines.append(f"    [i $label]{escape('  ·  '.join(tags))}[/]")
             for fighter in unit.fighters:
                 lines.append(
                     f"    {escape(fighter.name)}: {escape(wounds_text(fighter))}"

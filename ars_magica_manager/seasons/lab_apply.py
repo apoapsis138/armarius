@@ -246,6 +246,9 @@ def _apply_enchanting(
     making = (es.OPEN, es.LESSER_WORK, es.CHARGED_WORK, es.ATTUNE)
     if plan.activity in making and not device.maker_id and not device.maker_name:
         device.maker_id = magus.id
+    if effect is not None and plan.activity in instilling:
+        # Who instilled it: a talisman's effects must all be its magus's.
+        effect.instilled_by = magus.id
     if plan.activity == es.OPEN:
         device.pawns_opened += work.pawns_opened or work.vis_cost.get("Vim", 0)
     elif plan.activity == es.ATTUNE:

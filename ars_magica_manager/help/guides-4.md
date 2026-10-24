@@ -627,16 +627,21 @@ Most battles take three events. When one side has won enough of them, or its com
 1. Select **Conflicts** in the tree. In the Fights list press `a`, name the fight and its two sides, and save.
 2. With the fight chosen, press `m` and choose **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
 3. To make grogs fight together, press `m` > **Form a Group**, tick its members, and choose the vanguard (and, for a trained group, the leader).
-4. Press `m` > **Next Blow**. The first one rolls Initiative. Choose an action and a target, then **Strike**: the panel shows the blow worked out and the chronicle.
+4. Press `m` > **Next Blow**. The first one rolls Initiative. Choose an action and a target; **The Blow to Come** box under the fields says what it will roll. Then **Strike**: the panel shows the blow worked out and the chronicle. A magus can **Cast a spell** there, and anyone holding a device can **Use a device**.
 5. **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
 <!-- /tui -->
 <!-- gui -->
 1. On the saga's page, open the **Conflicts** chapter and click **Add** on Fights. Name the fight and its two sides, and save; then open the fight.
 2. Click **Add Combatant** for each fighter: the player characters with their weapons, Bestiary creatures (as many as you like at once), or a typed stat block.
 3. To make grogs fight together, click **Form a Group**, tick its members, and choose the vanguard (and, for a trained group, the leader).
-4. Click **Next Blow**. The first one rolls Initiative; the ribbon at the top then shows the order of blows. Choose an action and a target, then **Strike**: The Blow shows the working, and the chronicle below grows a line.
+4. Click **Next Blow**. The first one rolls Initiative; the ribbon at the top then shows the order of blows, as medallions in the saga's set. Choose an action and a target; **The Blow to Come** at the foot of the form says what it will roll. Then **Strike**: The Blow shows the working, and the chronicle below grows a line. A magus can **Cast a spell** there, and anyone holding a device can **Use a device**.
 5. **Next Round** plays the rest of a round for you. Keep going until one side has nobody standing.
 <!-- /gui -->
+
+For a knight on horseback, tick **Mounted** when you add him; for shield
+grogs, set **Defends** to the magus on each grog. If the sides start apart,
+set **Range increments** on Edit Fight: only missiles strike until you set
+it back to 0 as they close.
 
 Wounds the characters take go straight onto their sheets, so after the
 fight, recover from them as usual (Health's Recovery Roll).

@@ -2,7 +2,7 @@
 device form (its components, Shape & Material bonuses and a talisman's
 attunements are list fields), the instilled effect form, and an
 Enchanted Devices list's Add, Edit and Delete (commands.SectionOps),
-Instill an Effect and Use a Charge.
+Instill an Effect, Use a Charge and Use an Effect.
 
 A device list's rows are each device followed by its effects
 (enchanted_devices.device_targets): Edit and Delete act on whichever the
@@ -1073,4 +1073,47 @@ def use_charge(saga: Saga, kind: str, holder_id: str, row: int) -> Command:
         f"Use a charge of {escape(device.name)}? It has {left} left.",
         apply,
         yes_label="Use a Charge",
+    )
+
+
+def use_effect(saga: Saga, kind: str, holder_id: str, row: int) -> Command:
+    """Use the row's effect once, after showing its Initiative and
+    Penetration (DE p. 259): one more of its uses today. With its uses
+    spent, asks whether a new day has begun, which gives every device's
+    effects their uses again."""
+    device, effect = ed.device_targets(saga, kind, holder_id)[row]
+    if effect is None or not ed.can_use(device, effect):
+        return Refuse(
+            "Use an Effect",
+            "Choose a finished effect of an invested device or lesser "
+            "enchantment (a Charged Item is used a charge at a time).",
+        )
+    name = escape(enchantment.effect_name(effect))
+    lines = "\n".join(escape(line) for line in ed.use_lines(saga, device, effect))
+
+    def apply() -> list[str]:
+        ed.use_effect(effect)
+        return notes(
+            f"{enchantment.effect_name(effect)}: {ed.uses_today_text(effect)}."
+        )
+
+    if enchantment.uses_left_today(effect) == 0:
+
+        def new_day() -> list[str]:
+            ed.new_day(saga)
+            return apply()
+
+        return Confirm(
+            f"{name} has used all {effect.uses_per_day} of its uses today. Has a "
+            f"new day begun? Every device's effects then have their uses again, "
+            f"and this is the first of {name}'s.\n\n{lines}",
+            new_day,
+            yes_label="New Day",
+            title="Use an Effect",
+        )
+    return Confirm(
+        f"Use {name} ({escape(device.name)})?\n\n{lines}",
+        apply,
+        yes_label="Use",
+        title="Use an Effect",
     )

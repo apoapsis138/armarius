@@ -14,6 +14,13 @@ score); a summa its Quality (limit: its Level); a tractatus its Quality;
 raw vis a stress die + the aura's modifier, using ceil(Art / 5) pawns.
 Each full month lost cuts the total by a third, the rest rounded up.
 
+The Gift (DE pp. 204-205) takes 3 (6 for the Blatant Gift, none for the
+Gentle Gift) off the Source Quality of a season being taught or trained,
+whichever side is Gifted, when the other side is bothered by it: not when
+the other has a Parma Magica, nor when the other is an unGifted
+covenant-mate of a magus of the home covenant, whom covenfolk grow used to
+(DE p. 186). Where both sides' Gifts bother the other, the larger counts.
+
 No screen uses training_quality() yet: it is a rule for a screen still to
 come, and only the tests call it.
 """
@@ -85,6 +92,65 @@ def gifted(character: Character) -> bool:
     return character.type == "magus" or any(
         vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws
     )
+
+
+GIFT_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, The Gift, "
+    "pp. 204-205; Parma Magica, p. 169; Familiarity, p. 186"
+)
+GENTLE_GIFT = "vf_gentle_gift"
+BLATANT_GIFT = "vf_blatant_gift"
+PARMA_MAGICA = "Parma Magica"
+
+
+def gift_social_penalty(character: Character) -> int:
+    """What the character's Gift takes off social rolls and totals: 3, 6
+    for the Blatant Gift, none for the Gentle Gift or no Gift (DE p. 204)."""
+    ids = {vf.vf_id for vf in character.virtues_flaws}
+    if GENTLE_GIFT in ids:
+        return 0
+    if BLATANT_GIFT in ids:
+        return 6
+    return 3 if gifted(character) else 0
+
+
+def has_parma(character: Character) -> bool:
+    """Whether a Parma Magica keeps others' Gifts from bothering the
+    character: any character it protects is unaffected by the social
+    penalties of other people's Gifts (DE p. 169)."""
+    return ability_score(character, PARMA_MAGICA)[0] > 0
+
+
+def gift_bothers(gifted_one: Character, other: Character) -> int:
+    """What `gifted_one`'s Gift costs a season with `other`: none if the
+    other has a Parma Magica (DE p. 169) or is an unGifted covenant-mate
+    of a magus (covenfolk grow used to their own magi, DE p. 186). A
+    protected Gifted character's Gift still bothers the unprotected."""
+    penalty = gift_social_penalty(gifted_one)
+    if not penalty or other.id == gifted_one.id or has_parma(other):
+        return 0
+    familiar = (
+        gifted_one.type == "magus"
+        and gifted_one.covenant_id is not None
+        and other.covenant_id == gifted_one.covenant_id
+        and not gifted(other)
+    )
+    return 0 if familiar else penalty
+
+
+def gift_lines(teacher: Character, student: Character) -> list[Line]:
+    """The Gift's lines on a season being taught or trained, as Source
+    Quality adjustments: each side's Gift that bothers the other, so two
+    unprotected Gifted characters both pay (DE pp. 169, 204)."""
+    lines: list[Line] = []
+    for whose, other in ((teacher, student), (student, teacher)):
+        amount = gift_bothers(whose, other)
+        if amount:
+            gift = "Blatant Gift" if amount == 6 else "The Gift"
+            lines.append(
+                Line(f"{gift} ({whose.name})", amount=-amount, source=GIFT_SOURCE)
+            )
+    return lines
 
 
 def supernatural_penalty(student: Character, name: str) -> int:
@@ -233,7 +299,7 @@ def season_of_study(
                 source="character",
             )
         )
-    total = int(sum(line.amount or 0 for line in lines))
+    total = max(0, int(sum(line.amount or 0 for line in lines)))
     if activity in ("teaching", "reading"):
         total = max(total, 1)  # Poor Student can't take it below 1
     notes: list[str] = []

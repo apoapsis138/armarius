@@ -6,7 +6,7 @@ forms and text are enchanted_devices.py's."""
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
 from ..arts import FORMS, TECHNIQUES
 from ..models import (
@@ -16,6 +16,7 @@ from ..models import (
     ENCHANT_SIZES,
     INVESTED,
     PAY_HIGHEST,
+    BondPower,
     Character,
     DeviceComponent,
     EnchantedDevice,
@@ -144,27 +145,133 @@ def is_opened(saga: Saga, device: EnchantedDevice) -> bool:
     return total is not None and device.pawns_opened >= total
 
 
+def _level_parts(
+    level: int,
+    uses_per_day: str | None,
+    penetration: int,
+    modifications: Sequence[tuple[str, int]],
+) -> list[tuple[str, int]]:
+    """The effect level, the uses-per-day addition (None: none, as on a
+    Charged Item), Penetration (a level per 2 points, rounded up) and each
+    modification's levels (DE pp. 256-258)."""
+    parts = [("level", level)]
+    if uses_per_day is not None:
+        uses = EFFECT_FREQUENCIES.get(uses_per_day, 0)
+        if uses:
+            parts.append((f"{uses_text(uses_per_day)}", uses))
+    if penetration > 0:
+        # Each added level gives +2 Penetration, so an odd score takes the
+        # next level up (DE p. 257).
+        parts.append((f"Pen {penetration}", round_up(penetration / 2)))
+    return parts + list(modifications)
+
+
 def level_breakdown(
     device: EnchantedDevice, effect: InstilledEffect
 ) -> list[tuple[str, int]]:
     """What makes up the modified level (DE ch. 8, Designing the Effect):
     the effect level, the uses-per-day addition (not on a Charged Item),
     Penetration (a level per 2 points, rounded up) and each modification."""
-    parts = [("level", effect.level)]
-    if device.type != CHARGED:
-        uses = EFFECT_FREQUENCIES.get(effect.uses_per_day, 0)
-        if uses:
-            parts.append((f"{uses_text(effect.uses_per_day)}", uses))
-    if effect.penetration > 0:
-        # Each added level gives +2 Penetration, so an odd score takes the
-        # next level up (DE p. 257).
-        parts.append((f"Pen {effect.penetration}", round_up(effect.penetration / 2)))
-    parts += [
-        (label, levels)
-        for flag, label, levels in MODIFICATIONS
-        if getattr(effect, flag)
-    ]
-    return parts
+    return _level_parts(
+        effect.level,
+        None if device.type == CHARGED else effect.uses_per_day,
+        effect.penetration,
+        [
+            (label, levels)
+            for flag, label, levels in MODIFICATIONS
+            if getattr(effect, flag)
+        ],
+    )
+
+
+#: The modifications a familiar's bond power can take: its powers target
+#: only the magus and familiar, who control each other's, so a restriction
+#: on who may use it has no meaning (DE pp. 267-268).
+BOND_MODIFICATIONS: tuple[tuple[str, str, int], ...] = tuple(
+    m for m in MODIFICATIONS if m[0] != "restricted_use"
+)
+
+
+def frequency_of(uses: int) -> str:
+    """The Effect Frequency row a bond power's count of uses a day is
+    priced at: the row at or above it, and 0 (or more than 50) unlimited
+    (DE p. 256)."""
+    counts = sorted(int(k) for k in EFFECT_FREQUENCIES if k.isdigit())
+    return next((str(c) for c in counts if uses > 0 and c >= uses), "Unlimited")
+
+
+def bond_power_breakdown(power: BondPower) -> list[tuple[str, int]]:
+    """What makes up a bond power's modified level. Investing a power in
+    the bond follows the rules for an invested device's effect (DE pp.
+    267-268), so a worked-out power adds its uses per day, Penetration and
+    modifications to its effect level; otherwise its Level is the modified
+    level as typed."""
+    if not power.worked_out:
+        return [("level", power.level)]
+    return _level_parts(
+        power.level,
+        frequency_of(power.uses_per_day),
+        power.penetration,
+        [
+            (label, levels)
+            for flag, label, levels in BOND_MODIFICATIONS
+            if getattr(power, flag)
+        ],
+    )
+
+
+def bond_power_level(power: BondPower) -> int:
+    """The modified level a bond power is instilled at: what the Lab Total
+    must exceed, the points it needs and its vis (a pawn per 10 levels)."""
+    return sum(levels for _, levels in bond_power_breakdown(power))
+
+
+def split_vis(
+    arts: Sequence[str], chosen: str, other: int, pawns: int
+) -> dict[str, int]:
+    """The pawns of each Art an effect, a bond power or a familiar's
+    binding is paid with: each pawn may be of the work's Technique or its
+    Form, in any mix (DE pp. 258, 266-268). `other` of the Art that isn't
+    `chosen` (at most `pawns`), the rest of `chosen`; Arts paying none are
+    left out."""
+    second = next((a for a in arts if a and a != chosen), "")
+    of_other = min(max(0, other), pawns) if second else 0
+    cost = {chosen: pawns - of_other, second: of_other}
+    return {art: n for art, n in cost.items() if art and n}
+
+
+def vis_shortfall(split: Mapping[str, int], pool: Mapping[str, int], whose: str) -> str:
+    """What raw vis `split` (pawns of each Art) is short of in `pool`
+    (keyed by lower-case Art), said of `whose` ("Lucia's"), or ""."""
+    for art, needed in split.items():
+        held = pool.get(art.lower(), 0)
+        if held < needed:
+            return f"It takes {needed} pawns of {art} vis; {whose} raw vis has {held}."
+    return ""
+
+
+# -- using a device (DE p. 259, Using Enchanted Devices) --
+
+USE_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Using Enchanted "
+    "Devices, p. 259; Fast Trigger, p. 257"
+)
+#: A Fast Trigger's Initiative bonus (DE p. 257).
+FAST_TRIGGER_INITIATIVE = 3
+
+
+def use_initiative(effect: InstilledEffect, quickness: int) -> int:
+    """What a device's effect goes off at before the stress die: the
+    wielder's Quickness, +3 with a Fast Trigger. No Fatigue is rolled."""
+    return quickness + (FAST_TRIGGER_INITIATIVE if effect.fast_trigger else 0)
+
+
+def uses_left_today(effect: InstilledEffect) -> int | None:
+    """How many more times the effect can be used today (None:
+    unlimited)."""
+    if not effect.uses_per_day.isdigit():
+        return None
+    return max(0, int(effect.uses_per_day) - effect.uses_today)
 
 
 def computed_modified_level(device: EnchantedDevice, effect: InstilledEffect) -> int:

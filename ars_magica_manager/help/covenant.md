@@ -709,12 +709,16 @@ not add up, following Ars Magica Definitive Edition, Chapter 8: Laboratory.
 <!-- tui -->
 More's **Instill an Effect** adds an effect to the chosen device (an
 invested device takes any number, others only one), and **Use a Charge**
-takes a charge off the chosen Charged Item.
+takes a charge off the chosen Charged Item, and **Use an Effect** uses the
+chosen effect of an invested device or lesser enchantment once (see
+[Enchanted Devices](help:section-lab-devices) for what it shows).
 <!-- /tui -->
 <!-- gui -->
 **Instill**, beside the section's title, adds an effect to the device last
-clicked (an invested device takes any number, others only one), and **Use
-Charge** takes a charge off the Charged Item last clicked.
+clicked (an invested device takes any number, others only one), **Use
+Charge** takes a charge off the Charged Item last clicked, and **Use** uses
+the effect last clicked once (see
+[Enchanted Devices](help:section-lab-devices) for what it shows).
 <!-- /gui -->
 
 ## Economics tab

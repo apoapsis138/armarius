@@ -225,3 +225,95 @@ def corner_flourishes(painter: QPainter, rect: QRectF, p: Palette, arm: float) -
         painter.setBrush(gilt)
         painter.drawEllipse(QPointF(x + sx * (arm + 2), y), 1.2, 1.2)
         painter.drawEllipse(QPointF(x, y + sy * (arm + 2)), 1.2, 1.2)
+
+
+def gloss_box(painter: QPainter, rect: QRectF, p: Palette, heading: str) -> float:
+    """A note boxed as a scribe boxes a gloss: a deeper leaf of parchment
+    inside a double gilt rule, a flourish in each corner, a red margin rule
+    down its left, and the heading in red small capitals between two hedera
+    leaves. Returns where the text under the heading may begin."""
+    painter.save()
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    r = rect.adjusted(1, 1, -1, -1)
+    leaf = QLinearGradient(0, r.top(), 0, r.bottom())
+    leaf.setColorAt(0, QColor(p["surface"]))
+    leaf.setColorAt(1, QColor(p["panel"]))
+    painter.setBrush(QBrush(leaf))
+    painter.setPen(QPen(QColor(p["accent"]), 1.3))
+    painter.drawRect(r)
+    painter.setBrush(Qt.BrushStyle.NoBrush)
+    painter.setPen(QPen(_alpha(p["accent"], 170), 0.6))
+    painter.drawRect(r.adjusted(4, 4, -4, -4))
+    corner_flourishes(painter, r.adjusted(4, 4, -4, -4), p, 14)
+    painter.setPen(QPen(_alpha(p["heading"], 150), 0.9))
+    x = r.left() + InspectorFrame.MARGIN - 8
+    painter.drawLine(QPointF(x, r.top() + 44), QPointF(x, r.bottom() - 14))
+    cy = r.top() + 22
+    font = QFont(pictures.SERIF)
+    font.setPointSizeF(16)
+    font.setBold(True)
+    font.setCapitalization(QFont.Capitalization.SmallCaps)
+    painter.setFont(font)
+    width = painter.fontMetrics().horizontalAdvance(heading)
+    cx = r.center().x()
+    painter.setPen(QColor(p["heading"]))
+    painter.drawText(
+        QRectF(cx - width / 2 - 4, cy - 14, width + 8, 28),
+        Qt.AlignmentFlag.AlignCenter,
+        heading,
+    )
+    gilt = p["accent"]
+    _leaf(painter, cx - width / 2 - 18, cy, HEDERA_LEFT, 14, gilt)
+    _leaf(painter, cx + width / 2 + 18, cy, HEDERA_RIGHT, 14, gilt)
+    for side in (-1, 1):
+        near = cx + side * (width / 2 + 34)
+        far = cx + side * (r.width() / 2 - 22)
+        painter.setPen(_fading(gilt, near, far, 0.9))
+        painter.drawLine(QPointF(near, cy), QPointF(far, cy))
+    painter.restore()
+    return r.top() + 44
+
+
+def ledger_entry(
+    painter: QPainter, rect: QRectF, p: Palette, *, marked: bool = False
+) -> None:
+    """An entry ruled off on the page, as in a muster roll: no box, a
+    rubric's red rule down its left, a hairline under it, and, for the one
+    whose turn it is, a gilt double bracket."""
+    painter.save()
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.setPen(
+        QPen(_alpha(p["heading"], 200 if marked else 120), 1.6 if marked else 1)
+    )
+    painter.drawLine(rect.topLeft() + QPointF(0, 4), rect.bottomLeft() - QPointF(0, 4))
+    painter.setPen(QPen(_alpha(p["rule"], 200), 0.8))
+    painter.drawLine(rect.bottomLeft() + QPointF(8, 0), rect.bottomRight())
+    if marked:
+        gilt = QColor(p["accent"])
+        for inset in (-6, -10):
+            painter.setPen(QPen(gilt, 1.2 if inset == -6 else 0.6))
+            x = rect.left() + inset
+            bracket = QPainterPath(QPointF(x + 8, rect.top()))
+            bracket.lineTo(x, rect.top())
+            bracket.lineTo(x, rect.bottom())
+            bracket.lineTo(x + 8, rect.bottom())
+            painter.drawPath(bracket)
+    painter.restore()
+
+
+class InspectorFrame(QWidget):
+    """A note boxed at the foot of a form, as a scribe boxes a gloss: a
+    deeper leaf of parchment inside a double gilt rule, a flourish in each
+    corner, a red margin rule down its left, and its heading between two
+    hedera leaves."""
+
+    MARGIN = 24
+
+    def __init__(self, heading: str, p: Palette) -> None:
+        super().__init__()
+        self.heading, self.p = heading, p
+
+    def paintEvent(self, _event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        gloss_box(painter, QRectF(self.rect()), self.p, self.heading)
+        painter.end()

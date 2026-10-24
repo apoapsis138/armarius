@@ -9,15 +9,15 @@ Inventory tab (its components, effects and levels are entered there).
   Lab Total (+ shape and material bonuses up to Magic Theory, +5 in one's
   own talisman, +1 for each effect already in it sharing its Technique or
   Form) must be above its modified level; each season adds Lab Total -
-  level points until they reach it. Its vis (modified level / 10, of the
-  Technique or Form) is spent in the first season, and must fit in what
-  was opened.
+  level points until they reach it. Its vis (modified level / 10, each
+  pawn of the Technique or Form, in any mix) is spent in the first season,
+  and must fit in what was opened.
 - A lesser enchantment: one season, Lab Total at least twice the level;
   the same vis, within the object's capacity.
 - A charged item: one season, Lab Total at least the level, no vis;
   (Lab Total - level) / 5 charges, at least 1.
-- Attuning a talisman: a season, an invested device the magus opened; one
-  talisman at a time.
+- Attuning a talisman: a season, an invested device the magus opened and
+  whose effects he instilled himself; one talisman at a time.
 - Investigating an item: Intellego Vim Lab Total + a stress die against the
   weakest power not yet found; each success reveals it and rolls again,
   the first failure ends the season.
@@ -312,6 +312,25 @@ def _attune(
         return [f"{device.name} has to be opened first."], None
     if device.maker_id and device.maker_id != magus.id:
         return [f"Only the magus who opened {device.name} can attune it."], None
+    if not device.maker_id and device.maker_name:
+        return [
+            f"{device.name} was made by {device.maker_name}: only the magus who "
+            "prepared it for enchantment can attune it."
+        ], None
+    others = sorted(
+        {
+            e.instilled_by
+            for e in device.effects
+            if e.instilled_by and e.instilled_by != magus.id
+        }
+    )
+    if others:
+        who = ", ".join(_name_of(saga, i) for i in others)
+        return [
+            f"{who} instilled effects in {device.name}: an item worked on by "
+            "more than one magus can't be a talisman (an assistant's help "
+            "aside)."
+        ], None
     if device.talisman:
         return [f"{device.name} is already a talisman."], None
     current = enchantment.talisman_of(saga, magus)
@@ -321,6 +340,11 @@ def _attune(
             "one must be destroyed first."
         ], None
     return [], LabWork(None, empty, 0, finished=True, device=device)
+
+
+def _name_of(saga: Saga, character_id: str) -> str:
+    found = saga.character(character_id)
+    return found.name if found is not None else "another magus"
 
 
 def _investigate(
@@ -458,6 +482,7 @@ def _effect_work(
     pawns = enchantment.vis_cost(device, effect)
     arts = (effect.technique, effect.form)
     art = plan.vis_art if plan.vis_art in arts else ""
+    split = enchantment.split_vis(arts, art, plan.other_vis, pawns) if art else {}
     if plan.activity == LESSER_WORK:
         why = ""
         if text is None and lab_total < 2 * level:
@@ -472,7 +497,7 @@ def _effect_work(
             return [
                 f"{name} takes {pawns} pawns of vis; {device.name} holds {room}."
             ], None
-        found = _vis_problem(saga, magus, plan, art, arts, pawns, limit)
+        found = _vis_problem(saga, magus, plan, arts, split, pawns, limit)
         if found:
             return [found], None
         return [], LabWork(
@@ -481,7 +506,7 @@ def _effect_work(
             level,
             points_gained=0 if why else level,
             finished=not why,
-            vis_cost={art: pawns},
+            vis_cost=split,
             device=device,
             effect=effect,
             too_low=experiment.too_low(why) if why else "",
@@ -513,10 +538,10 @@ def _effect_work(
     before = effect.instilling_progress
     cost: dict[str, int] = {}
     if before == 0:
-        found = _vis_problem(saga, magus, plan, art, arts, pawns, limit)
+        found = _vis_problem(saga, magus, plan, arts, split, pawns, limit)
         if found:
             return [found], None
-        cost = {art: pawns}
+        cost = split
     gained = (
         max(0, level - before)
         if text is not None
@@ -543,27 +568,23 @@ def _vis_problem(
     saga: Saga,
     magus: Character,
     plan: SeasonPlan,
-    art: str,
     arts: tuple[str, str],
+    split: dict[str, int],
     pawns: int,
     limit: int,
 ) -> str:
     from .lab_seasons import vis_pool, whose_vis
 
-    if not art:
+    if pawns and not split:
         return f"Choose the vis to pay with: {arts[0]} or {arts[1]}."
     if pawns > limit:
         return (
             f"It takes {pawns} pawns of vis; {magus.name} can handle {limit} in "
             "a season (twice Magic Theory)."
         )
-    held = vis_pool(saga, magus, plan).get(art.lower(), 0)
-    if held < pawns:
-        return (
-            f"It takes {pawns} pawns of {art} vis; {whose_vis(magus, plan)} raw "
-            f"vis has {held}."
-        )
-    return ""
+    return enchantment.vis_shortfall(
+        split, vis_pool(saga, magus, plan), whose_vis(magus, plan)
+    )
 
 
 def hidden_powers(device: EnchantedDevice) -> list[tuple[int, str]]:

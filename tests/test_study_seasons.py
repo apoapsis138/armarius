@@ -30,6 +30,7 @@ def _saga() -> Saga:
     student.abilities = [
         Ability("Latin", xp=ability_xp(4)),
         Ability("Artes Liberales", xp=ability_xp(1)),
+        Ability("Parma Magica", xp=ability_xp(1)),
     ]
     student.arts = {"creo": ArtScore(xp=art_xp(4)), "ignem": ArtScore()}
     student.raw_vis = {"creo": 3}
@@ -39,6 +40,7 @@ def _saga() -> Saga:
     teacher.abilities = [
         Ability("Latin", xp=ability_xp(5)),
         Ability("Teaching", xp=ability_xp(2)),
+        Ability("Parma Magica", xp=ability_xp(1)),
     ]
     teacher.arts = {"ignem": ArtScore(xp=art_xp(8))}
     companion = Character(id="alys", name="Alys", type="companion", covenant_id="cov")

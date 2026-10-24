@@ -62,7 +62,7 @@ from ..commands import (
 from ..form_spec import DialogField, FieldError, ListEditor
 from . import heraldry, sounds
 from .markup_html import plain, to_html
-from .ornaments import FleuronRule, corner_flourishes
+from .ornaments import FleuronRule, InspectorFrame, corner_flourishes
 from .paper import Paper
 from .themes import Palette
 from .widgets import filter_choice, serif, text
@@ -171,6 +171,7 @@ class FieldsDialog(_Sheet):
         inline: bool = False,
         ask: Ask | None = None,
         picture: Callable[[dict[str, Any]], Any] | None = None,
+        inspector: str = "",
     ) -> None:
         super().__init__(title, p, save_label, parent, inline=inline)
         self.picture = picture
@@ -205,7 +206,10 @@ class FieldsDialog(_Sheet):
         under = QHBoxLayout()
         under.setSpacing(16)
         under.addWidget(self.picture_label)
-        under.addWidget(self.live_line, 1)
+        if inspector:
+            under.addWidget(self._inspector(inspector), 1)
+        else:
+            under.addWidget(self.live_line, 1)
         self.column.addLayout(under)
         self.save.clicked.connect(self.try_save)
         self.finish()
@@ -218,6 +222,16 @@ class FieldsDialog(_Sheet):
         else:
             pictured = 140 if picture is not None else 0
             self.resize(700, min(820, 170 + 44 * len(fields) + pictured))
+
+    def _inspector(self, heading: str) -> InspectorFrame:
+        """The live text boxed as a gloss at the foot of the page, under
+        its heading."""
+        panel = InspectorFrame(heading, self.p)
+        box = QVBoxLayout(panel)
+        box.setContentsMargins(InspectorFrame.MARGIN, 44, 20, 16)
+        self.live_line.setFont(serif(13))
+        box.addWidget(self.live_line)
+        return panel
 
     # Drawing the fields
 
@@ -838,6 +852,7 @@ def step_dialog(
             inline=inline,
             ask=ask,
             picture=step.picture,
+            inspector=step.inspector,
         )
     if isinstance(step, Choose):
         choices = step.choices()

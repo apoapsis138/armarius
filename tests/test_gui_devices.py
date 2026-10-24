@@ -65,9 +65,11 @@ def test_a_magus_adds_a_device_with_a_component_then_instills_an_effect(app):
         "Delete",
         "Instill",
         "Use Charge",
+        "Use",
         "Give",
     ]
     assert not buttons["Instill"].isEnabled()  # no row yet
+    assert not buttons["Use"].isEnabled()
     asked = answering(
         window,
         {"name": "Wand of Flames", "type": "Invested Device", "components": list_add},

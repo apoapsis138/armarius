@@ -23,9 +23,11 @@ CORD_SCORE_COSTS: dict[int, int] = {0: 0, 1: 5, 2: 15, 3: 30, 4: 50, 5: 75}
 
 @dataclass
 class BondPower:
-    """One Empowered Bond Power (invested effect) on a Familiar -- typed in,
-    no Lab Total formula computed (see DESIGN.md's "tracker, not rules
-    engine" stance)."""
+    """One Empowered Bond Power (invested effect) on a Familiar. Its Level
+    is the modified level as typed, unless `worked_out`: then Level is the
+    effect level, and the modified level adds its uses per day, Penetration
+    and modifications as an invested device's effect does
+    (rules.enchantment.bond_power_level)."""
 
     id: str
     name: str = ""
@@ -34,8 +36,17 @@ class BondPower:
     form: str = ""  # one of FORMS, or ""
     #: e.g. "Magus (controlled by Familiar)" -- free text, not a fixed enum.
     target_controller: str = ""
+    #: Uses a day; with `worked_out`, 0 is unlimited and any other count
+    #: is priced as the Effect Frequency row at or above it.
     uses_per_day: int = 0
     penetration: int = 0
+    #: False (older saves, and by default): Level is already the modified
+    #: level. True: it is worked out from the parts below.
+    worked_out: bool = False
+    maintains_concentration: bool = False
+    environmental_trigger: bool = False
+    fast_trigger: bool = False
+    linked_trigger: bool = False
     vis_spent: int = 0
     cosmetic_trait: str = ""
     #: Points instilled so far while it is being instilled as lab work;

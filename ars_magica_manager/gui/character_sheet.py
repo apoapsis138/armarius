@@ -408,7 +408,8 @@ def device_section(
 ) -> QWidget:
     """The Enchanted Devices a character, laboratory or covenant holds:
     each device and its effects, with Add, Edit and Delete for the row
-    clicked, and Instill an Effect and Use a Charge where they can act
+    clicked, and Instill an Effect, Use a Charge and Use (an effect) where
+    they can act
     (device_forms)."""
     chooser = Chooser()
     ops = device_forms.device_ops(saga, kind, holder_id)
@@ -432,6 +433,12 @@ def device_section(
             "enchanted_item",
             lambda row: device_forms.use_charge(saga, kind, holder_id, row),
             lambda row: targets[row][1] is None and targets[row][0].type == CHARGED,
+        ),
+        (
+            "Use",
+            "magic",
+            lambda row: device_forms.use_effect(saga, kind, holder_id, row),
+            lambda row: ed.can_use(*targets[row]),
         ),
     ]
     holder = vis.find_holder(saga, kind, holder_id)

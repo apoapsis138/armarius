@@ -34,6 +34,7 @@ from .models import (
     ShapeMaterialBonus,
 )
 from .rules.enchantment import (
+    FAST_TRIGGER_INITIATIVE,
     MODIFICATIONS,
     capacity,
     component_capacity,
@@ -48,6 +49,8 @@ from .rules.enchantment import (
     pawns_used,
     talisman_magus_id,
     talisman_of,
+    use_initiative,
+    uses_left_today,
     uses_text,
     vis_cost,
 )
@@ -227,6 +230,89 @@ def use_charge(device: EnchantedDevice) -> bool:
     return True
 
 
+# ------------------------------------------------------------- using effects
+
+
+def can_use(device: EnchantedDevice, effect: InstilledEffect | None) -> bool:
+    """Whether Use an Effect applies: a finished effect of an invested
+    device or lesser enchantment (a Charged Item's is used a charge at a
+    time). An item part filled can be used (DE p. 259)."""
+    return (
+        effect is not None
+        and device.type != CHARGED
+        and effect.instilling_progress is None
+    )
+
+
+def use_effect(effect: InstilledEffect) -> bool:
+    """Count one use of `effect` today; False (nothing changes) when its
+    uses per day are spent."""
+    left = uses_left_today(effect)
+    if left is not None and left <= 0:
+        return False
+    effect.uses_today += 1
+    return True
+
+
+def new_day(saga: Saga) -> None:
+    """A new day: every device's effects have all their uses again."""
+    for device in saga.enchanted_devices:
+        for effect in device.effects:
+            effect.uses_today = 0
+
+
+def wielder_quickness(saga: Saga, device: EnchantedDevice) -> int | None:
+    """The Quickness of the character holding `device` (None when no
+    character holds it)."""
+    if device.holder_kind != "character":
+        return None
+    holder = saga.character(device.holder_id)
+    return holder.characteristics.quickness if holder is not None else None
+
+
+def initiative_text(
+    saga: Saga, device: EnchantedDevice, effect: InstilledEffect
+) -> str:
+    """ "Quickness +1 + Fast Trigger +3 = +4, + a stress die": when the
+    effect goes off (DE p. 259). No Fatigue roll."""
+    quickness = wielder_quickness(saga, device)
+    parts = [f"Quickness {quickness:+d}" if quickness is not None else "Quickness"]
+    if effect.fast_trigger:
+        parts.append(f"Fast Trigger +{FAST_TRIGGER_INITIATIVE}")
+    if quickness is None:
+        return " + ".join(parts) + " + a stress die"
+    total = use_initiative(effect, quickness)
+    shown = " + ".join(parts)
+    return (
+        f"{shown} = {total:+d}, + a stress die"
+        if len(parts) > 1
+        else f"{shown} + a stress die"
+    )
+
+
+def uses_today_text(effect: InstilledEffect) -> str:
+    """ "2 of 6 used today", or "3 used today (unlimited)"."""
+    left = uses_left_today(effect)
+    if left is None:
+        return f"{effect.uses_today} used today (unlimited)"
+    return f"{effect.uses_today} of {effect.uses_per_day} used today"
+
+
+def use_lines(
+    saga: Saga, device: EnchantedDevice, effect: InstilledEffect
+) -> list[str]:
+    """What using `effect` means at the table: its Initiative, its
+    Penetration and its uses today (plain text)."""
+    return [
+        f"Initiative: {initiative_text(saga, device, effect)}.",
+        f"Penetration: {effect.penetration}"
+        + ("" if effect.penetration else " (an enchanted device's, unless raised)")
+        + ".",
+        "No Fatigue roll.",
+        f"Uses: {uses_today_text(effect)}.",
+    ]
+
+
 # ------------------------------------------------------------------ warnings
 
 
@@ -295,6 +381,11 @@ def _talisman_warnings(saga: Saga, device: EnchantedDevice) -> list[str]:
         lines.append("A talisman needs its magus as its Maker.")
     elif device.holder_kind != "character" or device.holder_id != device.maker_id:
         lines.append("A talisman is held by the magus who made it.")
+    if any(e.instilled_by and e.instilled_by != magus_id for e in device.effects):
+        lines.append(
+            "Another magus instilled one of its effects: a talisman's effects "
+            "are all its magus's own (DE p. 259)."
+        )
     per_season = Counter(
         (a.year, a.season) for a in device.attunements if a.year is not None
     )
@@ -509,9 +600,12 @@ def _charges_lines(device: EnchantedDevice) -> list[str]:
     return lines
 
 
-def effect_info_text(device: EnchantedDevice, effect: InstilledEffect) -> str:
+def effect_info_text(
+    device: EnchantedDevice, effect: InstilledEffect, saga: Saga | None = None
+) -> str:
     """The details panel for an effect: every field, its modified level with
-    the breakdown, its vis and its expiry."""
+    the breakdown, its vis and its expiry (and, given the saga, who
+    instilled it)."""
     arts = " / ".join(a for a in (effect.technique, effect.form) if a) or "(none)"
     rdt = " / ".join(
         escape(part) or "-" for part in (effect.range, effect.duration, effect.target)
@@ -537,6 +631,8 @@ def effect_info_text(device: EnchantedDevice, effect: InstilledEffect) -> str:
             f"[b]Vis:[/] {_plural(vis, 'pawn')}{typed} of {arts.replace(' / ', ' or ')}"
         )
         lines.append(f"[b]Uses per day:[/] {uses_text(effect.uses_per_day)}")
+        if effect.uses_today:
+            lines.append(f"[b]Today:[/] {uses_today_text(effect)}")
     lines.append(f"[b]Penetration:[/] {effect.penetration}")
     mods = [
         f"{label} (+{levels})"
@@ -557,6 +653,9 @@ def effect_info_text(device: EnchantedDevice, effect: InstilledEffect) -> str:
         )
     if effect.trigger:
         lines.append(f"[b]Trigger:[/] {escape(effect.trigger)}")
+    instiller = saga.character(effect.instilled_by) if saga is not None else None
+    if instiller is not None:
+        lines.append(f"[b]Instilled by:[/] {escape(instiller.name)}")
     if device.type == INVESTED:
         lines.append(f"[b]Effect Expiry:[/] {_expiry_text(effect)}")
         lines.append(
@@ -602,7 +701,7 @@ def target_info_text(
     device, effect = target
     if effect is None:
         return device_info_text(saga, device)
-    return effect_info_text(device, effect)
+    return effect_info_text(device, effect, saga)
 
 
 def talisman_line(saga: Saga, character: Character) -> str:

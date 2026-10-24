@@ -783,6 +783,16 @@ class LabPlanForm:
                 hint="The Art whose vis is spent: the effect's or power's "
                 "Technique or Form.",
             ),
+            DialogField(
+                "other_vis",
+                "Pawns of the other Art",
+                "int",
+                plan.other_vis if plan else 0,
+                show_if=_doing(es.INSTIL, es.LESSER_WORK, fs.BIND, fs.EMPOWER),
+                hint="Each pawn may be of the Technique or the Form: this many "
+                "are of the Art not chosen above, the rest of that one (DE pp. "
+                "258, 266-268).",
+            ),
         ]
 
     def _taming_and_moving_fields(self) -> list[DialogField]:
@@ -1089,7 +1099,11 @@ class LabPlanForm:
         if familiar is None:
             return []
         return [
-            (f"{escape(p.name) or '(unnamed)'} (level {p.level})", p.id)
+            (
+                f"{escape(p.name) or '(unnamed)'} "
+                f"(level {enchantment.bond_power_level(p)})",
+                p.id,
+            )
             for p in familiar.bond_powers
         ]
 
@@ -1292,6 +1306,7 @@ class LabPlanForm:
             arts = self.work_arts(plan)
             chosen = values.get("effect_vis")
             plan.vis_art = chosen if chosen in arts else (arts[0] if arts else "")
+            plan.other_vis = max(0, values.get("other_vis") or 0)
         return plan
 
     def _goal_kind(self, name: str) -> str:

@@ -157,6 +157,13 @@ class InstilledEffect:
     known: bool = True
     #: Invested devices: points accumulated so far; None when finished.
     instilling_progress: int | None = None
+    #: The character who instilled it, as lab work recorded it ("": not
+    #: known -- typed in, or from an older save). A talisman's effects must
+    #: all be its magus's own.
+    instilled_by: str = ""
+    #: Uses of it since the day began (Use an Effect counts them against
+    #: its uses per day; a new day sets them back to 0).
+    uses_today: int = 0
     #: Typed figures replacing the worked-out ones (None: worked out).
     modified_level_override: int | None = None
     vis_override: int | None = None

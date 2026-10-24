@@ -102,7 +102,10 @@ does. You type all of these with the **Edit** button beside The Bond;
 <!-- /gui -->
 the app works out each Cord's point
 cost from its score (Ars Magica Definitive Edition, Chapter 8: Laboratory,
-Familiars).
+Familiars). The Bronze Cord is added to aging and recovery rolls and the
+Golden Cord to botch dice. The Silver Cord's bonus to Personality Trait
+rolls and to resisting mental influence (DE p. 267) is added at the table:
+the app makes neither roll.
 
 ### Virtues
 <!-- help: section-fam-vf-virtues; tui -->
@@ -279,6 +282,15 @@ inspector.
 
 **You type:** each power's name, level, Technique and Form, target and
 controller, uses per day, Penetration, vis spent and any cosmetic trait.
+
+**The app works out:** with **Work out the modified level** ticked, Level
+is the effect level, and the modified level adds its uses per day (priced
+at the Effect Frequency row at or above the count; 0 is unlimited, +10),
+a level per 2 points of Penetration and the modifications ticked, as for
+an invested device's effect (DE pp. 256-258, 267-268). Empowering the bond
+then needs a Lab Total above that level, gains points against it, and
+spends a pawn per 10 levels of it. Unticked, Level is taken as the
+modified level already, as in older saves.
 
 **The app works out:** nothing; a Bond Power's figures are typed in.
 

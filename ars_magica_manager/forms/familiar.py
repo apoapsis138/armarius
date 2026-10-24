@@ -466,8 +466,18 @@ def ability_ops(saga: Saga, familiar: Familiar | Creature) -> SectionOps:
 
 
 def bond_power_fields(power: BondPower | None) -> list[DialogField]:
-    """The add/edit form for one Empowered Bond Power -- all typed-in, no
-    Lab Total formula computed (see BondPower's docstring)."""
+    """The add/edit form for one Empowered Bond Power: its Level is the
+    modified level as typed, or with "Work out the modified level" the
+    effect level, to which its uses per day, Penetration and the
+    modifications ticked are added (see BondPower's docstring)."""
+
+    def worked(values: dict[str, Any]) -> bool:
+        return bool(values.get("worked_out"))
+
+    def mod(key: str, label: str) -> DialogField:
+        return DialogField(
+            key, label, "check", bool(attr(power, key, False)), show_if=worked
+        )
 
     return [
         DialogField(
@@ -499,8 +509,34 @@ def bond_power_fields(power: BondPower | None) -> list[DialogField]:
             attr(power, "target_controller", ""),
             placeholder="e.g. Magus (controlled by Familiar)",
         ),
-        DialogField("uses_per_day", "Uses/Day", "int", attr(power, "uses_per_day", 0)),
-        DialogField("penetration", "Penetration", "int", attr(power, "penetration", 0)),
+        DialogField(
+            "uses_per_day",
+            "Uses/Day",
+            "int",
+            attr(power, "uses_per_day", 0),
+            hint="Worked out: 0 is unlimited; a count is priced at the "
+            "Effect Frequency row at or above it.",
+        ),
+        DialogField(
+            "penetration",
+            "Penetration",
+            "int",
+            attr(power, "penetration", 0),
+            hint="Worked out: +1 level per 2 points.",
+        ),
+        DialogField(
+            "worked_out",
+            "Work out the modified level",
+            "check",
+            bool(attr(power, "worked_out", False)),
+            hint="Unticked, Level is the modified level as typed; ticked, it "
+            "is the effect level and uses, Penetration and the ticks below "
+            "are added (DE pp. 256-258, 267-268).",
+        ),
+        mod("maintains_concentration", "Maintains concentration (+5)"),
+        mod("environmental_trigger", "Environmental trigger (+3)"),
+        mod("fast_trigger", "Fast trigger (+5)"),
+        mod("linked_trigger", "Linked trigger (+3)"),
         DialogField("vis_spent", "Vis Spent", "int", attr(power, "vis_spent", 0)),
         DialogField(
             "cosmetic_trait",

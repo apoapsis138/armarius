@@ -23,8 +23,8 @@
 
       Golden Cord: +0 (0 pts) -- Subtracts score from Magic & Lab Botch Dice (min 1 botch die
       remaining).
-      Silver Cord: +0 (0 pts) -- Bonus to Personality Trait rolls & Mental Resistance. Mind-Freeing
-      Roll: Stress Die + Score >= 9.
+      Silver Cord: +0 (0 pts) -- Bonus to Personality Trait rolls & Mental Resistance (add it at the
+      table: the app rolls neither). Mind-Freeing Roll: Stress Die + Score >= 9.
       Bronze Cord: +0 (0 pts) -- Bonus to Base Soak, Healing rolls, Deprivation rolls, and Aging rolls.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

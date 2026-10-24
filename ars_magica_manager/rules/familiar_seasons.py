@@ -5,15 +5,18 @@ on his sheet (its Might and Size) before the season.
 - Binding: any appropriate Technique + Form Lab Total (Familiar
   Specialization) must reach 25 + Might + 5 x Size; one season. The Lab
   Total buys the three cords (0, 5, 15, 30, 50, 75 points for 0-5). Vis:
-  Lab Total / 5 pawns (rounded up) of the Technique or Form, less what an
-  earlier binding spent when strengthening it.
+  Lab Total / 5 pawns (rounded up), each of the Technique or Form in any
+  mix, less what an earlier binding spent when strengthening it.
 - A bond power is instilled like an effect in an invested device: Lab
-  Total above its level, Lab Total - level points a season, its vis
-  (level / 10) in the first season.
+  Total above its modified level (worked out from its uses per day,
+  Penetration and modifications, or typed), Lab Total - level points a
+  season, its vis (level / 10, of its Technique or Form in any mix) in the
+  first season.
 """
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
 from ..models import (
@@ -25,7 +28,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import lab
+from . import enchantment, lab
 from .breakdown import Line
 from .rounding import round_up
 
@@ -86,7 +89,6 @@ def work(
             f"{plan.days_away} days away from the laboratory: no lab work is "
             "possible this season (more than 20)."
         ], None
-    limit = lab.vis_limit(magus)
     pool = vis_pool(saga, magus, plan)
 
     if plan.activity == BIND:
@@ -131,28 +133,23 @@ def work(
                 f"The cords cost {cord_points} points; the Lab Total is {lab_total}."
             ], None
         pawns = max(0, round_up(lab_total / 5) - familiar.vis_spent_binding)
-        art = plan.vis_art if plan.vis_art in (plan.technique, plan.form) else ""
-        if pawns and not art:
-            return [
-                f"Choose the vis to pay with: {plan.technique} or {plan.form}."
-            ], None
-        if pawns > limit:
-            return [
-                f"The bond takes {pawns} pawns of vis; {magus.name} can handle "
-                f"{limit} in a season (twice Magic Theory)."
-            ], None
-        held = pool.get(art.lower(), 0) if art else 0
-        if held < pawns:
-            return [
-                f"The bond takes {pawns} pawns of {art} vis; "
-                f"{whose_vis(magus, plan)} raw vis has {held}."
-            ], None
+        short, split = _payment(
+            magus,
+            plan,
+            (plan.technique, plan.form),
+            pawns,
+            pool,
+            whose_vis(magus, plan),
+            what="The bond takes",
+        )
+        if short:
+            return [short], None
         return [], LabWork(
             None,
             total,
             level,
             finished=True,
-            vis_cost={art: pawns} if pawns else {},
+            vis_cost=split,
             familiar=familiar,
         )
 
@@ -167,6 +164,7 @@ def work(
         return [f"{power.name} is already instilled."], None
     if not power.technique or not power.form or power.level <= 0:
         return [f"Give {power.name} its Technique, Form and level."], None
+    level = enchantment.bond_power_level(power)
     total = lab.lab_total(
         saga,
         magus,
@@ -197,44 +195,64 @@ def work(
         )
     total = options(magus, plan, power.technique, power.form, total)
     lab_total = int(total.total)
-    if lab_total <= power.level:
+    if lab_total <= level:
         return [
             f"Lab Total {lab_total} isn't above {power.name}'s level "
-            f"{power.level}: it can't be instilled yet."
+            f"{level}: it can't be instilled yet."
         ], None
     cost: dict[str, int] = {}
     if power.instilling_progress == 0:
-        pawns = round_up(power.level / 10)
-        art = plan.vis_art if plan.vis_art in (power.technique, power.form) else ""
-        if not art:
-            return [
-                f"Choose the vis to pay with: {power.technique} or {power.form}."
-            ], None
-        if pawns > limit:
-            return [
-                f"It takes {pawns} pawns of vis; {magus.name} can handle {limit} "
-                "in a season (twice Magic Theory)."
-            ], None
-        held = pool.get(art.lower(), 0)
-        if held < pawns:
-            return [
-                f"It takes {pawns} pawns of {art} vis; {whose_vis(magus, plan)} "
-                f"raw vis has {held}."
-            ], None
-        cost = {art: pawns}
-    gained = lab.points_per_season(lab_total, power.level)
+        short, cost = _payment(
+            magus,
+            plan,
+            (power.technique, power.form),
+            round_up(level / 10),
+            pool,
+            whose_vis(magus, plan),
+            what="It takes",
+        )
+        if short:
+            return [short], None
+    gained = lab.points_per_season(lab_total, level)
     before = power.instilling_progress
     return [], LabWork(
         None,
         total,
-        power.level,
+        level,
         points_before=before,
         points_gained=gained,
-        finished=before + gained >= power.level,
+        finished=before + gained >= level,
         vis_cost=cost,
         familiar=familiar,
         power=power,
     )
+
+
+def _payment(
+    magus: Character,
+    plan: SeasonPlan,
+    arts: tuple[str, str],
+    pawns: int,
+    pool: Mapping[str, int],
+    whose: str,
+    *,
+    what: str,
+) -> tuple[str, dict[str, int]]:
+    """What's wrong with paying `pawns` of vis for the work (or ""), and
+    the pawns of each Art paid: of the plan's chosen Art, with its pawns of
+    the other Art, at most twice Magic Theory, from `pool`."""
+    art = plan.vis_art if plan.vis_art in arts else ""
+    if pawns and not art:
+        return f"Choose the vis to pay with: {arts[0]} or {arts[1]}.", {}
+    limit = lab.vis_limit(magus)
+    if pawns > limit:
+        return (
+            f"{what} {pawns} pawns of vis; {magus.name} can handle {limit} in a "
+            "season (twice Magic Theory).",
+            {},
+        )
+    split = enchantment.split_vis(arts, art, plan.other_vis, pawns) if art else {}
+    return enchantment.vis_shortfall(split, pool, whose), split
 
 
 def cord_cost(score: int) -> int:

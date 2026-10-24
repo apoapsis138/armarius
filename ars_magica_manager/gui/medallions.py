@@ -591,6 +591,59 @@ def paint(
     painter.restore()
 
 
+#: The roundel a numbered medallion carries, for each set: the first
+#: side's ground, the second side's, the rim, and the number's ink.
+ROUNDELS: dict[str, tuple[QColor, QColor, QColor, QColor]] = {
+    "stained_glass": (QColor(DRAWN["glass-gold"]), LAPIS.lighter(210), LEAD, INK),
+    "illuminated": (VERMILION, LAPIS, GOLD_DARK, WHITE),
+    "wax_seal": (VERMILION_DEEP, LAPIS_DEEP, VERMILION_DEEP.darker(140), WHITE),
+    "enamel": (LAPIS, VERMILION, COPPER, WHITE),
+    "book_of_hours": (LAPIS, VERMILION, GOLD_DARK, WHITE),
+    "pen_and_wash": (WHITE, WHITE, INK, INK),
+}
+
+
+def numbered(
+    painter: QPainter,
+    key: str,
+    centre: QPointF,
+    radius: float,
+    number: int,
+    side: int,
+    season: str,
+    year: int,
+    p: Palette,
+    *,
+    now: bool = False,
+) -> None:
+    """A medallion of set `key` for the season, with a roundel over its
+    heart carrying `number`: an Initiative in a fight's order of blows.
+    The roundel's ground tells the two sides apart (the second side's
+    number is in vermilion where the set has one ground)."""
+    paint(painter, key, centre, radius, season, year, p, now=now)
+    first, second, rim, ink = ROUNDELS.get(key, ROUNDELS["stained_glass"])
+    ground = first if side == 0 else second
+    if key == "pen_and_wash" and side:
+        ink = VERMILION
+    painter.save()
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    r = radius * 0.6
+    shine = QRadialGradient(centre - QPointF(r * 0.3, r * 0.3), r * 1.4)
+    shine.setColorAt(0, ground.lighter(125))
+    shine.setColorAt(1, ground)
+    painter.setBrush(QBrush(shine))
+    painter.setPen(QPen(rim, max(1.0, radius * 0.07)))
+    painter.drawEllipse(centre, r, r)
+    painter.setPen(ink)
+    painter.setFont(_font(max(8.0, radius * 0.5), bold=True))
+    painter.drawText(
+        QRectF(centre.x() - r, centre.y() - r, 2 * r, 2 * r),
+        Qt.AlignmentFlag.AlignCenter,
+        str(number),
+    )
+    painter.restore()
+
+
 class Medallion(QWidget):
     """One season's medallion with its name under it, in the saga's set."""
 

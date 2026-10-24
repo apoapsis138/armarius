@@ -14,7 +14,7 @@ from .. import possessions as pos
 from .. import sheet_text as st
 from ..models import Familiar, Saga
 from ..references import Fact
-from ..rules import derived, familiar_seasons
+from ..rules import derived, enchantment, familiar_seasons
 from . import character as cs
 from . import covenant as cvs
 
@@ -154,7 +154,7 @@ def bond_power_cards(familiar: Familiar) -> list[BondPowerCard]:
         BondPowerCard(
             index,
             power.name or "(unnamed)",
-            power.level,
+            enchantment.bond_power_level(power),
             power.technique,
             power.form,
             power.uses_per_day,

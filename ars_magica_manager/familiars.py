@@ -12,12 +12,14 @@ from . import sheet_text as st
 from .markup import escape
 from .models import (
     FULL,
+    BondPower,
     Character,
     Familiar,
     Saga,
     ScoredTrait,
     VirtueFlawInstance,
 )
+from .rules.enchantment import bond_power_breakdown, bond_power_level
 from .rules.familiar_seasons import HEARTBEAST, cord_cost
 
 
@@ -115,7 +117,8 @@ CORDS: tuple[tuple[str, str, str], ...] = (
     (
         "silver_cord",
         "Silver Cord",
-        "Bonus to Personality Trait rolls & Mental Resistance. "
+        "Bonus to Personality Trait rolls & Mental Resistance (add it at the "
+        "table: the app rolls neither). "
         "Mind-Freeing Roll: Stress Die + Score >= 9.",
     ),
     (
@@ -198,6 +201,17 @@ def bond_power_rows(familiar: Familiar) -> list[tuple[int, str]]:
     ]
 
 
+def _bond_level_text(power: BondPower) -> str:
+    """ "20" as typed, or "25 = 10 + 10 (Concentration...)" worked out."""
+    parts = bond_power_breakdown(power)
+    if len(parts) == 1:
+        return str(power.level)
+    breakdown = " + ".join(
+        [str(parts[0][1]), *(f"{levels} ({label})" for label, levels in parts[1:])]
+    )
+    return f"{bond_power_level(power)} = {breakdown}"
+
+
 def bond_power_info_text(familiar: Familiar, index: int | None) -> str:
     if index is None:
         return "[dim]Select a Bond Power to see its details.[/]"
@@ -205,7 +219,7 @@ def bond_power_info_text(familiar: Familiar, index: int | None) -> str:
     tech_form = " / ".join(t for t in (power.technique, power.form) if t) or "(none)"
     lines = [
         f"[b]Name:[/] {escape(power.name) or '(unnamed)'}",
-        f"[b]Level:[/] {power.level}",
+        f"[b]Level:[/] {_bond_level_text(power)}",
         f"[b]Technique / Form:[/] {escape(tech_form)}",
         f"[b]Target & Controller:[/] {escape(power.target_controller) or '(not set)'}",
         f"[b]Uses/Day:[/] {power.uses_per_day}",

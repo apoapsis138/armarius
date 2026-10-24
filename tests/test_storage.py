@@ -42,6 +42,7 @@ from ars_magica_manager.models import (
     FightEntry,
     FightGroup,
     FightSide,
+    Grip,
     GrogYear,
     HermeticBackground,
     InstilledEffect,
@@ -472,6 +473,7 @@ def _saga_with_every_record() -> Saga:
                 FightSide("Theirs"),
             ],
             log=[FightEntry(1, "A blow.", ["Attack 12"])],
+            grips=[Grip("g2", "g1", 3)],
         )
     )
     saga.sieges.append(

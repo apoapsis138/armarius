@@ -471,6 +471,59 @@ async def test_the_lab_work_screen_offers_an_effects_lab_texts():
         assert found == [] and work.charges == 5
 
 
+async def test_the_lab_work_screen_takes_pawns_of_the_other_art():
+    from support import wait_until
+    from textual.widgets import Input, Select, Tree
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.invent_spell import InventSpellScreen
+
+    storage.save_saga(_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        ws = app.screen
+        tree = ws.query_one("#nav-tree", Tree)
+
+        def node():
+            pending = [tree.root]
+            while pending:
+                found = pending.pop()
+                if found.data == ("laboratory", "lab"):
+                    return found
+                pending.extend(found.children)
+            return None
+
+        assert await wait_until(pilot, lambda: node() is not None)
+        tree.select_node(node())
+        await wait_until(pilot, lambda: ws._laboratory_sheet_view is not None)
+        view = ws._laboratory_sheet_view
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(pilot, lambda: ws._active_section() == "tab-lab-planning")
+        await pilot.press("e")
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, InventSpellScreen)
+        )
+        screen = app.screen
+        await wait_until(pilot, lambda: bool(screen.query("#inv-activity")))
+        screen.set_activity(es.INSTIL)
+        await pilot.pause()
+        screen.query_one("#inv-device", Select).value = "staff"
+        await pilot.pause()
+        screen.query_one("#inv-effect", Select).value = "fire"
+        await pilot.pause()
+        other = screen.query_one("#inv-other-vis", Input)
+        assert await wait_until(pilot, lambda: other.display)
+        other.value = "1"
+        await pilot.pause()
+        plan = screen.current_plan()
+        assert (plan.vis_art, plan.other_vis) == ("Creo", 1)
+        # The box fits on the dialog's row at 120 columns.
+        assert other.region.right <= 120 and other.region.width > 0
+
+
 # -- Effect Expiry, similar spells and Verditius Magic --
 
 

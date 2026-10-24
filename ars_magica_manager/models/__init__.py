@@ -88,6 +88,7 @@ from .conflicts import Fight as Fight
 from .conflicts import FightEntry as FightEntry
 from .conflicts import FightGroup as FightGroup
 from .conflicts import FightSide as FightSide
+from .conflicts import Grip as Grip
 from .conflicts import Siege as Siege
 from .conflicts import SiegeEvent as SiegeEvent
 from .covenant import BOON_HOOK_DESCRIPTION as BOON_HOOK_DESCRIPTION

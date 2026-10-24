@@ -44,8 +44,8 @@ def harm_fields(saga: Saga) -> list[DialogField]:
     injury, poison = _kind_is(harm.INJURY, harm.BRUISE), _kind_is(harm.POISON)
     sickness = _kind_is() if academe else _kind_is(harm.DISEASE)
     agents = _kind_is(harm.POISON) if academe else _kind_is(harm.POISON, harm.DISEASE)
-    heat = [(f"{name} (+{bonus})", str(bonus)) for name, bonus in harm.HEAT]
-    impact = [(f"{name} (+{bonus})", str(bonus)) for name, bonus in harm.IMPACT]
+    heat = [(f"{name} (+{bonus})", name) for name, bonus in harm.HEAT]
+    impact = [(f"{name} (+{bonus})", name) for name, bonus in harm.IMPACT]
     return [
         DialogField(
             "kind",
@@ -67,6 +67,21 @@ def harm_fields(saga: Saga) -> list[DialogField]:
             show_if=injury,
         ),
         DialogField("bonus", "Damage bonus", "int", 0, show_if=injury),
+        DialogField(
+            "harm_from",
+            "What it comes from",
+            "select",
+            None,
+            options=[
+                (f"{label} ({'/'.join(forms)})", key)
+                for key, (label, forms) in harm.INJURY_SOURCES.items()
+            ],
+            allow_blank=True,
+            placeholder="(the table's, or nothing a Form resists)",
+            hint="A magus's Form Bonus for it (Form / 5, rounded up) adds to "
+            "Soak (DE pp. 206-209).",
+            show_if=injury,
+        ),
         DialogField(
             "coverage",
             "How much it covers (heat and corrosion)",
@@ -91,6 +106,21 @@ def harm_fields(saga: Saga) -> list[DialogField]:
             options=[(f"{n} (Ease Factor {e}, {w})", n) for n, e, w in harm.POISONS],
             allow_blank=True,
             placeholder="(type it below)",
+            show_if=poison,
+        ),
+        DialogField(
+            "poison_kind",
+            "Kind of poison",
+            "select",
+            None,
+            options=[
+                (f"{label} ({'/'.join(forms)})", key)
+                for key, (label, forms) in harm.POISON_SOURCES.items()
+            ],
+            allow_blank=True,
+            placeholder="(the table's, or another kind)",
+            hint="A magus's Form Bonus for it adds to the Stamina check "
+            "(DE pp. 208-209).",
             show_if=poison,
         ),
         DialogField(
@@ -128,6 +158,18 @@ def harm_fields(saga: Saga) -> list[DialogField]:
                 (f"{k.title()} (a check every {p})", k) for k, p in harm.DEPRIVATIONS
             ],
             show_if=_kind_is(harm.DEPRIVATION),
+        ),
+        DialogField(
+            "drowning",
+            "Drowning",
+            "check",
+            False,
+            hint="Under water: Auram or Aquam's Form Bonus, the higher, adds "
+            "to each check (DE pp. 208-209).",
+            show_if=lambda values: (
+                values.get("kind") == harm.DEPRIVATION
+                and values.get("deprived") == "air"
+            ),
         ),
         DialogField(
             "periods",
@@ -203,13 +245,19 @@ def _values(values: dict[str, Any]) -> dict[str, Any]:
     """The form's values as the rule takes them: a preset fills its own."""
     found = dict(values)
     kind = found.get("kind")
-    if kind in (harm.INJURY, harm.BRUISE) and found.get("preset"):
-        found["bonus"] = int(found["preset"])
+    preset = found.get("preset")
+    if kind in (harm.INJURY, harm.BRUISE) and preset:
+        found["bonus"] = dict(harm.HEAT + harm.IMPACT)[preset]
+        found["harm_from"] = found.get("harm_from") or harm.PRESET_SOURCES.get(preset)
     for key, table in (("poison", harm.POISONS), ("disease", harm.DISEASES)):
         name = found.get(key)
         if kind == key and name:
             entry = next(e for e in table if e[0] == name)
             found["ease"], found["wound"] = entry[1], entry[2]
+    if kind == harm.POISON and found.get("poison"):
+        found["poison_kind"] = found.get("poison_kind") or harm.PRESET_SOURCES.get(
+            found["poison"]
+        )
     if kind == harm.DEPRIVATION:
         found["kind"] = found.get("deprived") or "food"
     for key in ("stable", "improve"):

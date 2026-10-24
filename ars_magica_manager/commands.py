@@ -48,6 +48,10 @@ class Form:
     picture: Callable[[dict[str, Any]], Any] | None = None
     #: The form's own help page (help/*.md), if it has one.
     help_id: str = ""
+    #: When set, the live text is an inspector: a framed panel at the
+    #: form's foot under this heading, saying what the choices so far will
+    #: do, rather than a bare line.
+    inspector: str = ""
 
 
 @dataclass(frozen=True)

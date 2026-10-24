@@ -101,9 +101,9 @@ Record = Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | C
 DELETE_RECORD = "delete_record"
 
 #: The More commands a page offers nowhere: the desktop shows them as the
-#: section's own button (Fatigue beside Wounds in Health; Instill and Use
-#: a Charge beside Enchanted Devices). The Creation Worksheet is offered,
-#: but opens a page rather than running a command.
+#: section's own button (Fatigue beside Wounds in Health; Instill, Use a
+#: Charge and Use an Effect beside Enchanted Devices). The Creation
+#: Worksheet is offered, but opens a page rather than running a command.
 NOT_ON_PAGES = frozenset(
     {
         "edit_arms",
@@ -111,6 +111,7 @@ NOT_ON_PAGES = frozenset(
         "edit_familiar_fatigue",
         "instill_effect",
         "use_charge",
+        "use_effect",
         "give",
         "withdraw_case",
         "roll_fair",

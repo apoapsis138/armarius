@@ -209,6 +209,7 @@ def run_steps(
             terminal_fields(form.fields()),
             validate=form.validate,
             live=_with_picture(form),
+            inspector=form.inspector,
             save_label=form.save_label,
         )
         dialog.help_id = form.help_id or None

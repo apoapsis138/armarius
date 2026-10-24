@@ -155,6 +155,10 @@ class SeasonPlan:
     subject_id: str | None = None
     vis_art: str = ""
     extra_vis: int = 0
+    #: Enchanting and familiar work: pawns paid in the work's other Art
+    #: (its Form when `vis_art` is its Technique, and the other way round);
+    #: the rest are of `vis_art`.
+    other_vis: int = 0
     #: Fixing an Arcane Connection: the laboratory's connection fixed.
     connection_id: str | None = None
     #: Enchanting: the enchanted device worked on, the effect

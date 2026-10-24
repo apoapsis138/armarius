@@ -45,6 +45,17 @@ class Combatant:
     #: The Combat Ability, for Exertion and a trained group's bonus.
     ability: int = 0
     leadership: int = 0
+    #: Fighting from horseback; a typed fighter's or creature's Ride score
+    #: (a character's comes from its sheet).
+    mounted: bool = False
+    ride: int = 0
+    #: The id of a combatant on its side it defends, as a shield grog
+    #: defends a magus; "" for none.
+    defends: str = ""
+    #: A typed fighter's or creature's Magic Resistance (a creature's
+    #: Might), against spells and devices; a character's comes from its
+    #: sheet.
+    resistance: int = 0
     wounds: Wounds = field(default_factory=Wounds)
     fatigue_level: FatigueLevel = "fresh"
     #: Why it no longer fights ("Disengaged", "Fled"); "" while it does.
@@ -112,6 +123,23 @@ class FightEntry:
 
 
 @dataclass
+class Grip:
+    """A grapple: `held` is held by `by` with Grapple Strength `strength`
+    (both units' ids)."""
+
+    held: str
+    by: str
+    strength: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Grip:
+        d = dict(data)
+        if "held" not in d or "by" not in d:
+            raise ValueError(f"A grapple needs who is held and by whom: {d!r}")
+        return cls(str(d["held"]), str(d["by"]), int(d.get("strength") or 0))
+
+
+@dataclass
 class Fight:
     """A fight in the saga. `round` is 0 until initiative is rolled; then
     `order` lists who acts (a group's or a lone combatant's id), highest
@@ -131,6 +159,13 @@ class Fight:
     attacked_by: dict[str, list[str]] = field(default_factory=dict)
     attacked_last: dict[str, list[str]] = field(default_factory=dict)
     disengage_tries: dict[str, int] = field(default_factory=dict)
+    #: Range increments between the sides: 0 hand to hand.
+    range: int = 0
+    #: The Magic aura where they fight, for the spells cast in it.
+    aura: int = 0
+    grips: list[Grip] = field(default_factory=list)
+    #: Each group's successful splits this round, by its unit id.
+    splits: dict[str, int] = field(default_factory=dict)
     log: list[FightEntry] = field(default_factory=list)
     #: How it ended ("The Covenant win the fight"); "" while it goes on.
     over: str = ""
@@ -143,6 +178,8 @@ class Fight:
         d = dict(data)
         d["sides"] = [FightSide.from_dict(s) for s in d.get("sides") or []]
         d["log"] = [FightEntry.from_dict(e) for e in d.get("log") or []]
+        d["grips"] = [Grip.from_dict(g) for g in d.get("grips") or []]
+        d["splits"] = {str(k): int(v) for k, v in (d.get("splits") or {}).items()}
         d["order"] = [str(x) for x in d.get("order") or []]
         d["initiative"] = {
             str(k): int(v) for k, v in (d.get("initiative") or {}).items()

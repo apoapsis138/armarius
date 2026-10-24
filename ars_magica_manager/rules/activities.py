@@ -2221,6 +2221,7 @@ def _study_outcome(
             kind,
             months,
             gain_limit=score(teacher, subject),
+            bonuses=study.gift_lines(teacher, character),
         )
         if first and gain.result.xp < study.SUPERNATURAL_FIRST_XP:
             result.notes.append(

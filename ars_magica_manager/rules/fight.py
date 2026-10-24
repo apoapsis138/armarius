@@ -37,8 +37,10 @@ import random
 from dataclasses import dataclass, field
 
 from .. import catalog
+from ..arts import FORMS, TECHNIQUES
 from ..models import (
     CHARACTER_FIGHTER,
+    CREATURE_FIGHTER,
     FATIGUE_LEVELS,
     Character,
     Combatant,
@@ -46,12 +48,15 @@ from ..models import (
     FightEntry,
     FightGroup,
     FightSide,
+    Grip,
     Possession,
     Saga,
     Wounds,
 )
-from . import combat, combat_groups, derived, dice, recovery
+from . import casting, combat, combat_groups, derived, dice, penetration, recovery
+from .apprentice_seasons import gifted
 from .breakdown import Breakdown
+from .disputatio import GENTLE_GIFT
 from .lab import ability_score
 
 SOURCE = "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Combat, pp. 394-398"
@@ -64,14 +69,29 @@ ATTACK, EXERTION, SCUFFLE, DISENGAGE, WAIT = (
     "Disengage",
     "Wait",
 )
+GRAPPLE, BREAK_FREE, SPLIT, CAST, DEVICE = (
+    "Grapple",
+    "Break free",
+    "Split the group",
+    "Cast a spell",
+    "Use a device",
+)
 ACTIONS: tuple[str, ...] = (
     ATTACK,
     EXERTION,
     SCUFFLE,
+    GRAPPLE,
+    BREAK_FREE,
     *combat_groups.SPECIAL_EFFECTS,
+    SPLIT,
+    CAST,
+    DEVICE,
     DISENGAGE,
     WAIT,
 )
+#: The value of Spontaneous magic among a magus's spells.
+SPONTANEOUS = "spontaneous"
+ART_PAIRS: tuple[str, ...] = tuple(f"{t} {f}" for t in TECHNIQUES for f in FORMS)
 SCUFFLE_PENALTY = combat_groups.SCUFFLE_WEAPON_PENALTY
 DOWN = "Out of the fight"
 
@@ -142,9 +162,15 @@ class Fighter:
             return self.character.name
         return self.combatant.name or "A fighter"
 
-    def figures(self) -> Figures:
+    def figures(self, *, bare: bool = False) -> Figures:
+        """Its figures with its weapon, or with bare hands (`bare`, for a
+        grapple, which needs Brawl and free hands)."""
         c = self.character
-        weapon = _weapon(c, self.combatant.weapon_id) if c is not None else None
+        weapon = (
+            (bare_hands() if bare else _weapon(c, self.combatant.weapon_id))
+            if c is not None
+            else None
+        )
         if c is not None and weapon is not None:
             totals = combat.combat_totals(c, weapon)
 
@@ -317,6 +343,15 @@ class Blow:
 
     action: str = ATTACK
     target: str = ""
+    #: Cast a Spell: the spell's id, or SPONTANEOUS with its Arts ("Creo
+    #: Ignem"), level and whether it is fatiguing; Use a Device: the
+    #: effect ("<device id>|<effect id>"). The damage either does, if any.
+    spell: str = ""
+    arts: str = ""
+    level: int = 0
+    fatiguing: bool = True
+    effect: str = ""
+    damage: int | None = None
 
 
 @dataclass
@@ -343,13 +378,23 @@ def default_target(saga: Saga, fight: Fight, actor: Unit) -> Unit | None:
     """Who the actor strikes when nobody is chosen: whoever attacked it
     last, else the first enemy still standing in the order."""
     every = units(saga, fight)
+    grip = grip_on(fight, actor.id)
+    if grip is not None and grip.by in every:
+        return every[grip.by]
+
+    def open_(found: Unit | None) -> bool:
+        return (
+            found is not None
+            and found.side != actor.side
+            and not found.down()
+            and not defenders_of(saga, fight, found)
+        )
+
     for unit_id in reversed(fight.attacked_by.get(actor.id, [])):
-        found = every.get(unit_id)
-        if found is not None and not found.down() and found.side != actor.side:
+        if open_(found := every.get(unit_id)):
             return found
-    for unit_id in fight.order:
-        found = every.get(unit_id)
-        if found is not None and found.side != actor.side and not found.down():
+    for unit_id in [*fight.order, *every]:
+        if open_(found := every.get(unit_id)):
             return found
     return next(
         (u for u in every.values() if u.side != actor.side and not u.down()), None
@@ -367,6 +412,161 @@ def actor(saga: Saga, fight: Fight) -> Unit | None:
     return None
 
 
+@dataclass
+class Term:
+    """One part of a total: its amount, and the chronicle's line for it
+    ("" for the base figure, which the roll's own line shows)."""
+
+    label: str
+    amount: int
+    line: str = ""
+
+
+@dataclass
+class Odds:
+    """A blow worked out before the dice: the terms of its Attack,
+    Defence, Damage (before the Advantage) and Soak, the Advantage it
+    needs, and why it can't be struck at all ("" when it can). The
+    inspector shows it; the blow rolls it."""
+
+    attack: list[Term] = field(default_factory=list)
+    defence: list[Term] = field(default_factory=list)
+    damage: list[Term] = field(default_factory=list)
+    soak: list[Term] = field(default_factory=list)
+    #: The least Attack Advantage that does what the action wants: 1 to
+    #: hit, a special effect's own, 0 to split a group.
+    need: int = 1
+    blocked: str = ""
+
+    def total(self, part: str) -> int:
+        terms: list[Term] = getattr(self, part)
+        return sum(t.amount for t in terms)
+
+
+#: Wooden weapons, whose blows a Herbam Form Bonus soaks; other weapons
+#: are metal or stone (Terram), bare hands human (Corpus), and a
+#: creature's teeth and claws an animal's (Animal) (DE pp. 208-209).
+WOODEN_WEAPONS = frozenset(
+    {"weapon_club", "weapon_cudgel", "weapon_staff", "weapon_bludgeon"}
+)
+UNARMED = frozenset({"weapon_fist", "weapon_kick", "natural_grapple"})
+
+
+def harm_form(attacker: Fighter) -> str:
+    """The Form whose Bonus soaks the attacker's blows."""
+    if attacker.combatant.kind == CREATURE_FIGHTER:
+        return "Animal"
+    if attacker.character is None:
+        return ""
+    weapon = _weapon(attacker.character, attacker.combatant.weapon_id)
+    gear = weapon.gear_id or ""
+    if gear in UNARMED:
+        return "Corpus"
+    return "Herbam" if gear in WOODEN_WEAPONS else "Terram"
+
+
+def range_penalty(fight: Fight) -> int:
+    """A missile's penalty: -3 for each range increment past the first
+    (DE p. 395)."""
+    return -3 * max(0, fight.range - 1)
+
+
+def defenders_of(saga: Saga, fight: Fight, unit: Unit) -> list[Fighter]:
+    """The fighters still standing who defend one of `unit`'s."""
+    mine = {f.id for f in unit.fighters}
+    return [
+        f
+        for u in units(saga, fight).values()
+        for f in u.standing()
+        if f.combatant.defends in mine
+    ]
+
+
+def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds:
+    """`who`'s blow at `target` with `action`, before the dice."""
+    mine = who.vanguard.figures(bare=action == GRAPPLE)
+    theirs = target.vanguard.figures()
+    if mine.attack is None:
+        return Odds(blocked=f"{who.name} has no attack and waits.")
+    guards = defenders_of(saga, fight, target)
+    if guards and action not in (SPLIT, BREAK_FREE):
+        names = ", ".join(f.name for f in guards)
+        return Odds(
+            blocked=f"{target.name} is defended by {names}: strike them first "
+            "(DE p. 397)."
+        )
+    if fight.range > 0 and not mine.missile:
+        return Odds(blocked=f"{who.name} can't reach {target.name} at range.")
+    chances = Odds(attack=[Term("Attack", mine.attack)])
+    bonus = who.bonus()
+    if who.group is not None and who.group.bonus_to == "attack" and bonus:
+        chances.attack.append(
+            Term("Group bonus", bonus, f"Group bonus +{bonus} to Attack")
+        )
+    ride = ride_bonus(who.vanguard)
+    if ride:
+        chances.attack.append(Term("Mounted", ride, f"Mounted: +{ride} to Attack"))
+    if mine.missile and range_penalty(fight):
+        penalty = range_penalty(fight)
+        chances.attack.append(
+            Term("Range", penalty, f"{fight.range} range increments: {penalty}")
+        )
+    if action == EXERTION:
+        chances.attack.append(
+            Term(
+                "Exertion",
+                mine.ability,
+                f"Exertion: +{mine.ability} (a Fatigue level spent)",
+            )
+        )
+    if action == SCUFFLE and mine.damage != mine.bare_damage:
+        chances.attack.append(
+            Term(
+                "Scuffling with a weapon",
+                SCUFFLE_PENALTY,
+                f"Scuffling with a weapon: {SCUFFLE_PENALTY}",
+            )
+        )
+    chances.defence = [
+        Term("Defence", theirs.missile_defence if mine.missile else theirs.defence)
+    ]
+    their_bonus = target.bonus()
+    if target.group is not None and target.group.bonus_to == "defence" and their_bonus:
+        chances.defence.append(
+            Term(
+                "Group bonus",
+                their_bonus,
+                f"{target.name}'s group bonus +{their_bonus} to Defence",
+            )
+        )
+    their_ride = ride_bonus(target.vanguard)
+    if their_ride:
+        chances.defence.append(
+            Term("Mounted", their_ride, f"{target.name} mounted: +{their_ride}")
+        )
+    damage = mine.bare_damage if action in (SCUFFLE, GRAPPLE) else mine.damage or 0
+    chances.damage = [Term("Damage", damage)]
+    chances.soak = [Term("Soak", theirs.soak)]
+    form = harm_form(who.vanguard)
+    shield = target.vanguard.character
+    form_bonus = derived.form_bonus(shield, form) if shield and form else 0
+    if form_bonus:
+        chances.soak.append(
+            Term(f"{form} Form Bonus", form_bonus, f"{form} Form Bonus +{form_bonus}")
+        )
+    if action in combat_groups.SPECIAL_EFFECTS:
+        chances.need = combat_groups.SPECIAL_EFFECTS[action]
+    elif action == SPLIT:
+        chances.need = 0
+        if target.group is None or len(target.standing()) < 2:
+            chances.blocked = f"{target.name} is no group to split."
+    elif action == GRAPPLE:
+        held = grip_on(fight, target.id)
+        if held is not None and held.by != who.id:
+            chances.blocked = f"{target.name} is already held."
+    return chances
+
+
 def _strike(
     saga: Saga,
     fight: Fight,
@@ -375,30 +575,15 @@ def _strike(
     action: str,
     rng: random.Random,
 ) -> Played:
-    lines: list[str] = []
-    mine, theirs = who.vanguard.figures(), target.vanguard.figures()
-    if mine.attack is None:
-        return Played(f"{who.name} has no attack and waits.")
-    bonus = who.bonus()
-    attack = mine.attack
-    if who.group is not None and who.group.bonus_to == "attack" and bonus:
-        attack += bonus
-        lines.append(f"Group bonus +{bonus} to Attack")
+    chances = odds(saga, fight, who, target, action)
+    if chances.blocked:
+        return Played(chances.blocked)
+    lines = [term.line for term in chances.attack + chances.defence if term.line]
     if action == EXERTION:
-        attack += mine.ability
         for f in who.standing():
             f.tire()
-        lines.append(f"Exertion: +{mine.ability} (a Fatigue level spent)")
-    if action == SCUFFLE and mine.damage != mine.bare_damage:
-        attack += SCUFFLE_PENALTY
-        lines.append(f"Scuffling with a weapon: {SCUFFLE_PENALTY}")
-    defence = theirs.missile_defence if mine.missile else theirs.defence
-    their_bonus = target.bonus()
-    if target.group is not None and target.group.bonus_to == "defence" and their_bonus:
-        defence += their_bonus
-        lines.append(f"{target.name}'s group bonus +{their_bonus} to Defence")
-    hit_total, botched = _roll(rng, saga, "Attack", attack, lines)
-    guard, guard_botched = _roll(rng, saga, "Defence", defence, lines)
+    hit_total, botched = _roll(rng, saga, "Attack", chances.total("attack"), lines)
+    guard, guard_botched = _roll(rng, saga, "Defence", chances.total("defence"), lines)
     if guard_botched:
         lines.append(f"{target.name} botches the defence.")
     fight.attacked_by.setdefault(target.id, []).append(who.id)
@@ -409,10 +594,16 @@ def _strike(
             "what goes wrong.",
             lines,
         )
+    if action == SPLIT:
+        return _split_by(saga, fight, who, target, hit_total - guard, lines)
     if hit_total <= guard:
         return Played(f"{who.name} strikes at {target.name} and misses.", lines)
     advantage = hit_total - guard
     lines.append(f"Attack Advantage {advantage}")
+    if action == GRAPPLE:
+        return _take_hold(fight, who, target, advantage, lines)
+    if action == BREAK_FREE:
+        return _break_free(fight, who, target, advantage, lines)
     if action in combat_groups.SPECIAL_EFFECTS:
         need = combat_groups.SPECIAL_EFFECTS[action]
         done = advantage >= need
@@ -421,14 +612,22 @@ def _strike(
             + ("done." if done else f"fails (needs an Advantage of {need})."),
             lines,
         )
-    damage = (mine.bare_damage if action == SCUFFLE else mine.damage or 0) + advantage
-    excess = damage - theirs.soak
-    lines.append(
-        f"Damage {damage} against Soak {theirs.soak}: {max(0, excess)} through"
-    )
+    damage = chances.total("damage") + advantage
+    soak = chances.total("soak")
+    lines += [term.line for term in chances.soak if term.line]
+    excess = damage - soak
+    lines.append(f"Damage {damage} against Soak {soak}: {max(0, excess)} through")
     if excess <= 0:
         return Played(f"{who.name} hits {target.name}, but the blow is soaked.", lines)
     victims = target.standing()
+    exposed = _exposed(saga, fight, target) if guard_botched else []
+    if exposed:
+        lines.append(
+            f"{target.name} botched defending: the blow reaches "
+            + ", ".join(f.name for f in exposed)
+            + " (DE p. 397)."
+        )
+        victims = exposed
     told = _land(victims, len(who.standing()), excess, scuffle=action == SCUFFLE)
     lines += told
     fallen = [f.name for f in victims if f.down()]
@@ -555,21 +754,31 @@ def play(saga: Saga, fight: Fight, blow: Blow, rng: random.Random) -> Played:
         who = actor(saga, fight)
     if who is None:
         return Played("Nobody is left to act.")
-    if blow.action == WAIT:
+    action = blow.action
+    grip = grip_on(fight, who.id)
+    if grip is not None and action not in (BREAK_FREE, CAST, DEVICE, WAIT):
+        action = BREAK_FREE
+    if action == WAIT:
         played = Played(f"{who.name} waits.")
-    elif blow.action == DISENGAGE:
+    elif action == DISENGAGE:
         played = _disengage(saga, fight, who, rng)
+    elif action == BREAK_FREE and grip is None:
+        played = Played(f"{who.name} is held by nobody.")
     else:
         every = units(saga, fight)
         target = every.get(blow.target) if blow.target else None
+        if action == BREAK_FREE and grip is not None:
+            target = every.get(grip.by)
         if target is None or target.down() or target.side == who.side:
             target = default_target(saga, fight, who)
-        played = (
-            Played(f"{who.name} finds nobody to strike.")
-            if target is None
-            else _strike(saga, fight, who, target, blow.action, rng)
-        )
+        if target is None:
+            played = Played(f"{who.name} finds nobody to strike.")
+        elif action in (CAST, DEVICE):
+            played = _magic(saga, fight, who, target, action, blow, rng)
+        else:
+            played = _strike(saga, fight, who, target, action, rng)
     played.lines += _split(saga, fight)
+    played.lines += _loosen(saga, fight)
     fight.log.append(FightEntry(fight.round, played.text, played.lines))
     fight.turn += 1
     side = winner(saga, fight)
@@ -585,6 +794,7 @@ def _next_round(fight: Fight) -> None:
     fight.round += 1
     fight.turn = 0
     fight.attacked_last, fight.attacked_by = fight.attacked_by, {}
+    fight.splits = {}
 
 
 def play_round(saga: Saga, fight: Fight, rng: random.Random) -> list[Played]:
@@ -605,6 +815,449 @@ def restart(fight: Fight) -> None:
     fight.round, fight.turn, fight.order, fight.initiative = 0, 0, [], {}
     fight.attacked_by, fight.attacked_last, fight.disengage_tries = {}, {}, {}
     fight.log, fight.over, fight.recorded = [], "", False
+    fight.grips, fight.splits = [], {}
     for side in fight.sides:
         for combatant in side.combatants:
             combatant.out = ""
+
+
+# -- spells and devices --
+
+
+def spells_of(saga: Saga, character: Character | None) -> list[tuple[str, str]]:
+    """The spells a character knows, as Cast a Spell offers them: (name
+    and level, spell id)."""
+    if character is None:
+        return []
+    found: list[tuple[str, str]] = []
+    for known in character.spells_known:
+        spell = catalog.find_spell(saga, known.spell_id)
+        if spell is not None:
+            found.append((f"{spell.name} ({spell.level})", spell.id))
+    return found
+
+
+def device_effects(saga: Saga, character: Character | None) -> list[tuple[str, str]]:
+    """The effects of the devices a character holds, as Use a Device
+    offers them: (device: effect, "<device id>|<effect id>")."""
+    if character is None:
+        return []
+    return [
+        (f"{d.name}: {e.name or 'effect'}", f"{d.id}|{e.id}")
+        for d in saga.enchanted_devices
+        if d.holder_kind == "character" and d.holder_id == character.id
+        for e in d.effects
+        if e.known
+    ]
+
+
+# -- what a unit may do --
+
+
+def grip_on(fight: Fight, unit_id: str) -> Grip | None:
+    """The grapple holding `unit_id`, if one does."""
+    return next((g for g in fight.grips if g.held == unit_id), None)
+
+
+def grips_by(fight: Fight, unit_id: str) -> list[Grip]:
+    """The grapples `unit_id` holds."""
+    return [g for g in fight.grips if g.by == unit_id]
+
+
+def actions_for(saga: Saga, fight: Fight, who: Unit | None) -> tuple[str, ...]:
+    """The actions open to `who` on its turn. One held in a grapple may
+    only try to break free, or do what needs no moving about (DE p. 398);
+    at range, only missiles strike (p. 395); a spell or a device is one
+    fighter's, not a group's; splitting needs an enemy group and a second
+    unit on one's own side to press it (p. 398)."""
+    if who is None:
+        return ACTIONS
+    alone = who.group is None
+    character = who.vanguard.character
+    magic = tuple(
+        a
+        for a, open_ in (
+            (CAST, alone and character is not None and bool(character.arts)),
+            (DEVICE, alone and bool(device_effects(saga, character))),
+        )
+        if open_
+    )
+    if grip_on(fight, who.id) is not None:
+        return (BREAK_FREE, *magic, WAIT)
+    if fight.range > 0 and not who.vanguard.figures().missile:
+        return (*magic, DISENGAGE, WAIT)
+    every = units(saga, fight)
+    allies = [u for u in every.values() if u.side == who.side and not u.down()]
+    enemy_groups = [
+        u
+        for u in every.values()
+        if u.side != who.side and u.group is not None and len(u.standing()) > 1
+    ]
+    blows = tuple(
+        a
+        for a in ACTIONS
+        if a not in (BREAK_FREE, CAST, DEVICE, DISENGAGE, WAIT)
+        and (a != GRAPPLE or alone)
+        and (a != SPLIT or (bool(enemy_groups) and len(allies) > 1))
+    )
+    return (*blows, *magic, DISENGAGE, WAIT)
+
+
+#: The most Ride adds to a mounted fighter's Attack and Defence (DE p. 397).
+MOST_RIDE = 3
+
+
+def ride_bonus(fighter: Fighter) -> int:
+    """What riding adds to Attack and Defence: Ride, at most +3; none on
+    foot (DE p. 397)."""
+    if not fighter.combatant.mounted:
+        return 0
+    c = fighter.character
+    ride = sum(ability_score(c, "Ride")) if c is not None else fighter.combatant.ride
+    return max(0, min(MOST_RIDE, ride))
+
+
+def tags(saga: Saga, fight: Fight, unit: Unit) -> list[str]:
+    """What a unit's card says besides its figures: riding, whom it
+    defends, and the grapples it is in."""
+    every = units(saga, fight)
+    named = {f.id: f.name for u in every.values() for f in u.fighters}
+    named.update({u.id: u.name for u in every.values()})
+    found: list[str] = []
+    for f in unit.fighters:
+        if f.combatant.mounted:
+            found.append(f"Mounted, Ride {ride_bonus(f):+d}")
+        if f.combatant.defends:
+            found.append(f"Defends {named.get(f.combatant.defends, '(gone)')}")
+    grip = grip_on(fight, unit.id)
+    if grip is not None:
+        found.append(f"Held by {named.get(grip.by, '(gone)')} (grip {grip.strength})")
+    for g in grips_by(fight, unit.id):
+        found.append(f"Holding {named.get(g.held, '(gone)')} (grip {g.strength})")
+    return list(dict.fromkeys(found))
+
+
+def range_text(fight: Fight) -> str:
+    """ "Hand to hand", or the range increments between the sides."""
+    if fight.range <= 0:
+        return "Hand to hand"
+    return f"{fight.range} range increment{'' if fight.range == 1 else 's'} apart"
+
+
+def unsettles_horses(character: Character) -> bool:
+    """Whether a horse will throw this rider: the Gift, unless it is the
+    Gentle Gift (DE pp. 82, 205)."""
+    return gifted(character) and not any(
+        vf.vf_id == GENTLE_GIFT for vf in character.virtues_flaws
+    )
+
+
+# -- the magic a fighter brings --
+
+
+@dataclass
+class MagicOdds:
+    """A spell or a device's effect before the dice: what it is, its
+    Arts, level and Casting Score (none for a device), its Penetration
+    bonus (a device's own Penetration), and the target's Magic
+    Resistance against its Form."""
+
+    name: str
+    technique: str
+    form: str
+    level: int
+    score: int | None
+    penetration: int
+    resistance: int
+    spontaneous: bool = False
+    #: A spell's Casting Score in full, for a spontaneous spell's total.
+    breakdown: Breakdown | None = None
+
+
+def resistance_of(fighter: Fighter, form: str) -> int:
+    """A fighter's Magic Resistance against `form`: a magus's Form and
+    Parma, else the combatant's own (a creature's Might)."""
+    c = fighter.character
+    if c is not None and c.arts:
+        return int(penetration.magic_resistance(c, form).total)
+    return fighter.combatant.resistance
+
+
+def spell_odds(
+    saga: Saga, fight: Fight, who: Unit, target: Unit, blow: Blow
+) -> MagicOdds | None:
+    """The spell Cast a Spell would cast: its Casting Score in the fight's
+    aura (DE p. 214), Penetration bonus, and the target's Magic
+    Resistance."""
+    magus = who.vanguard.character
+    if magus is None:
+        return None
+    if blow.spell == SPONTANEOUS:
+        technique, _, form = (blow.arts or "Creo Ignem").partition(" ")
+        level = blow.level
+        score = casting.casting_score(
+            magus, technique, form, aura=fight.aura, spontaneous=True
+        )
+        name = f"A spontaneous {technique} {form} spell"
+    else:
+        spell = catalog.find_spell(saga, blow.spell)
+        if spell is None:
+            return None
+        technique, form, level = spell.technique, spell.form, spell.level or 0
+        score = casting.spell_casting_score(magus, spell, aura=fight.aura)
+        name = spell.name
+    return MagicOdds(
+        name,
+        technique,
+        form,
+        level,
+        int(score.total),
+        int(penetration.penetration_bonus(magus).total),
+        resistance_of(target.vanguard, form),
+        spontaneous=blow.spell == SPONTANEOUS,
+        breakdown=score,
+    )
+
+
+def device_odds(saga: Saga, target: Unit, blow: Blow) -> MagicOdds | None:
+    """The effect Use a Device would use: its Penetration as enchanted
+    (DE p. 259) against the target's Magic Resistance."""
+    device_id, _, effect_id = blow.effect.partition("|")
+    device = next((d for d in saga.enchanted_devices if d.id == device_id), None)
+    effect = (
+        next((e for e in device.effects if e.id == effect_id), None) if device else None
+    )
+    if device is None or effect is None:
+        return None
+    return MagicOdds(
+        f"{device.name}: {effect.name or 'its effect'}",
+        effect.technique,
+        effect.form,
+        effect.level,
+        None,
+        effect.penetration,
+        resistance_of(target.vanguard, effect.form),
+    )
+
+
+# -- grappling, splitting and shield grogs --
+
+
+def _take_hold(
+    fight: Fight, who: Unit, target: Unit, advantage: int, lines: list[str]
+) -> Played:
+    """A grapple's Advantage becomes, or adds to, its Grapple Strength
+    (DE p. 398)."""
+    grip = grip_on(fight, target.id)
+    if grip is None:
+        grip = Grip(target.id, who.id, 0)
+        fight.grips.append(grip)
+    grip.strength += advantage
+    lines.append(f"Grapple Strength {grip.strength}")
+    return Played(f"{who.name} grapples {target.name} (grip {grip.strength}).", lines)
+
+
+def _break_free(
+    fight: Fight, who: Unit, holder: Unit, advantage: int, lines: list[str]
+) -> Played:
+    """An escape's Advantage comes off the Grapple Strength; at 0 or less
+    the held one is free and the holder takes a Light Wound (DE p. 398)."""
+    grip = grip_on(fight, who.id)
+    if grip is None:
+        return Played(f"{who.name} is held by nobody.", lines)
+    grip.strength -= advantage
+    if grip.strength > 0:
+        lines.append(f"Grapple Strength {grip.strength}")
+        return Played(
+            f"{who.name} loosens {holder.name}'s grip (now {grip.strength}).", lines
+        )
+    fight.grips.remove(grip)
+    holder.vanguard.wound("light")
+    return Played(
+        f"{who.name} breaks free of {holder.name}, who takes a Light Wound.", lines
+    )
+
+
+def _loosen(saga: Saga, fight: Fight) -> list[str]:
+    """Let go every grapple whose holder or held one is down or gone."""
+    every = units(saga, fight)
+    told: list[str] = []
+    for grip in list(fight.grips):
+        held, by = every.get(grip.held), every.get(grip.by)
+        if held is None or by is None or held.down() or by.down():
+            fight.grips.remove(grip)
+            if held is not None and by is not None:
+                told.append(f"{by.name} lets go of {held.name}.")
+    return told
+
+
+def _exposed(saga: Saga, fight: Fight, unit: Unit) -> list[Fighter]:
+    """Whom `unit`'s fighters defend: they are struck when their
+    defenders botch (DE p. 397)."""
+    guarded = {f.combatant.defends for f in unit.fighters if f.combatant.defends}
+    return [
+        f for u in units(saga, fight).values() for f in u.standing() if f.id in guarded
+    ]
+
+
+def _split_by(
+    saga: Saga, fight: Fight, who: Unit, target: Unit, advantage: int, lines: list[str]
+) -> Played:
+    """An Advantage of 0 or more splits the group: in half, or in thirds
+    when three or more press it and a second split succeeds this round
+    (DE p. 398)."""
+    lines.append(f"Attack Advantage {advantage}")
+    group = target.group
+    if advantage < 0 or group is None:
+        return Played(f"{who.name} presses {target.name} but can't split it.", lines)
+    fight.splits[target.id] = fight.splits.get(target.id, 0) + 1
+    pressing = len(set(fight.attacked_by.get(target.id, [])))
+    parts = 3 if fight.splits[target.id] >= 2 and pressing >= 3 else 2
+    names = split_group(saga, fight, target, parts)
+    return Played(f"{who.name} splits {target.name}: " + ", ".join(names) + ".", lines)
+
+
+def split_group(saga: Saga, fight: Fight, unit: Unit, parts: int) -> list[str]:
+    """Divide a group's standing members as evenly as can be into `parts`
+    (the first keeps the group, its vanguard first); a part of one fights
+    alone. Each new part acts at the group's place in the order. Returns
+    the parts' names."""
+    group = unit.group
+    if group is None:
+        return [unit.name]
+    side = fight.sides[unit.side]
+    standing = [f.id for f in unit.standing()]
+    parts = max(1, min(parts, len(standing)))
+    size, extra = divmod(len(standing), parts)
+    chunks: list[list[str]] = []
+    at = 0
+    for k in range(parts):
+        n = size + (1 if k < extra else 0)
+        chunks.append(standing[at : at + n])
+        at += n
+    group.members = chunks[0]
+    made: list[str] = []
+    for k, chunk in enumerate(chunks[1:], start=2):
+        if len(chunk) == 1:
+            made.append(chunk[0])
+        else:
+            new = FightGroup(f"{group.name or unit.name} ({k})", chunk)
+            side.groups.append(new)
+            made.append(new.id)
+    if group.id in fight.order:
+        at = fight.order.index(group.id) + 1
+        fight.order[at:at] = made
+        for ident in made:
+            fight.initiative[ident] = fight.initiative.get(group.id, 0)
+        if at <= fight.turn:
+            fight.turn += len(made)
+    every = units(saga, fight)
+    return [every[i].name for i in [group.id, *made] if i in every]
+
+
+# -- casting and devices in the fight --
+
+
+def _magic(
+    saga: Saga,
+    fight: Fight,
+    who: Unit,
+    target: Unit,
+    action: str,
+    blow: Blow,
+    rng: random.Random,
+) -> Played:
+    """A spell cast or a device used on `target`: the Casting Total
+    against the level (a spell), then Penetration against its Magic
+    Resistance, then any damage: stress die + X against Soak (with the
+    Form's Bonus) + stress die (DE pp. 214, 259, 394)."""
+    lines: list[str] = []
+    odds_ = (
+        spell_odds(saga, fight, who, target, blow)
+        if action == CAST
+        else device_odds(saga, target, blow)
+    )
+    if odds_ is None:
+        return Played(f"{who.name} has nothing to cast or use.", lines)
+    if action == CAST:
+        total = _casting_total(saga, who, odds_, blow, rng, lines)
+        if total is None:
+            return Played(
+                f"{who.name} botches {odds_.name}: the storyguide says what goes "
+                "wrong.",
+                lines,
+            )
+        outcome = casting.formulaic_outcome(total, odds_.level)
+        if not outcome.cast:
+            return Played(f"{who.name} fails to cast {odds_.name}.", lines)
+        if outcome.fatigue and not odds_.spontaneous:
+            who.vanguard.tire(outcome.fatigue)
+            lines.append("Short of the level: a Fatigue level spent.")
+        pierce = total - odds_.level + odds_.penetration
+    else:
+        pierce = odds_.penetration
+    fight.attacked_by.setdefault(target.id, []).append(who.id)
+    lines.append(f"Penetration {pierce} against Magic Resistance {odds_.resistance}")
+    if not penetration.penetrates(pierce, odds_.resistance or None):
+        return Played(f"{target.name} resists {odds_.name}.", lines)
+    if blow.damage is None:
+        return Played(f"{odds_.name} takes {target.name}.", lines)
+    victim = target.vanguard
+    damage, _ = _roll(rng, saga, "Damage", blow.damage, lines)
+    shield = victim.character
+    form_bonus = derived.form_bonus(shield, odds_.form) if shield else 0
+    soak_base = victim.figures().soak + form_bonus
+    if form_bonus:
+        lines.append(f"{odds_.form} Form Bonus +{form_bonus}")
+    soak, _ = _roll(rng, saga, "Soak", soak_base, lines)
+    excess = damage - soak
+    lines.append(f"Damage {damage} against Soak {soak}: {max(0, excess)} through")
+    if excess <= 0:
+        return Played(f"{odds_.name} strikes {target.name}, who shrugs it off.", lines)
+    told = _land([victim], 1, excess, scuffle=False)
+    lines += told
+    return Played(
+        f"{odds_.name} strikes {target.name}: " + "; ".join(told) + ".", lines
+    )
+
+
+def _casting_total(
+    saga: Saga,
+    who: Unit,
+    odds_: MagicOdds,
+    blow: Blow,
+    rng: random.Random,
+    lines: list[str],
+) -> int | None:
+    """The Casting Total: Casting Score + stress die for a Formulaic
+    spell; (score + stress die) / 2 for a fatiguing spontaneous one, which
+    costs a Fatigue level, and score / 5 for a non-fatiguing one (DE pp.
+    214-215). None on a botch."""
+    score = odds_.score or 0
+    if odds_.spontaneous and not blow.fatiguing:
+        total = (
+            casting.spontaneous_total(odds_.breakdown)
+            if odds_.breakdown is not None
+            else score // 5
+        )
+        lines.append(f"Casting Total {score} / 5 = {total}")
+        return total
+    die = dice.stress_die(rng, saga=saga)
+    if die.botched:
+        lines.append(f"Casting: a botch ({die.botches} on the botch dice)")
+        return None
+    if odds_.spontaneous:
+        who.vanguard.tire(1)
+        total = (
+            casting.spontaneous_total(odds_.breakdown, die.value)
+            if odds_.breakdown is not None
+            else (score + die.value) // 2
+        )
+        lines.append(
+            f"Casting Total ({score} + stress die {die.value}) / 2 = {total}; "
+            "a Fatigue level spent"
+        )
+        return total
+    total = score + die.value
+    lines.append(f"Casting Total {score} + stress die {die.value} = {total}")
+    return total

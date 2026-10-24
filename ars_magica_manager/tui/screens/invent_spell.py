@@ -107,6 +107,7 @@ _WIDGET_OF: dict[str, str] = {
     "bronze_cord": "inv-bronze",
     "power": "inv-power",
     "effect_vis": "inv-effect-vis",
+    "other_vis": "inv-other-vis",
     "creature": "inv-creature",
     "creature_form": "inv-creature-form",
     "might": "inv-creature-might",
@@ -184,6 +185,8 @@ _ROWS_SHOWN: dict[str, Callable[[str], bool]] = {
     "inv-effect-text-row": lambda a: a in es.EFFECT_ACTIVITIES,
     "inv-effect-vis": lambda a: a in _BY_ART,
     "inv-effect-vis-label": lambda a: a in _BY_ART,
+    "inv-other-vis": lambda a: a in _BY_ART,
+    "inv-other-vis-label": lambda a: a in _BY_ART,
     "inv-bind-row": lambda a: a == fs.BIND,
     "inv-move-row": lambda a: a == ls.MOVE,
     "inv-taming-row": lambda a: a == lab_seasons.TAMING,
@@ -734,6 +737,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 id="inv-effect-vis",
                 compact=True,
             )
+            yield Label(" Of the other Art", id="inv-other-vis-label")
+            yield _number(str(plan.other_vis) if plan else "0", "inv-other-vis")
 
     def _compose_common(self, plan: SeasonPlan | None) -> ComposeResult:
         """What every kind of lab work shares: experimenting, a similar spell,
@@ -1290,6 +1295,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         )
         self.query_one("#inv-extra-vis", Input).value = (
             str(plan.extra_vis) if plan else "0"
+        )
+        self.query_one("#inv-other-vis", Input).value = (
+            str(plan.other_vis) if plan else "0"
         )
         self.query_one("#inv-vis-from", Select).value = (
             plan.vis_from if plan and plan.vis_from else "laboratory"

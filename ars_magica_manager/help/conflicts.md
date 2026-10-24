@@ -88,17 +88,29 @@ names its target, and Disengage is how a fighter leaves.
   - A creature of the Bestiary with one of its attacks. Its figures are copied, and you can add several at once (Wolf 1, Wolf 2...), each with its own wounds.
   - A fighter with figures typed in, such as Init, Attack, Defence, Damage, Soak, Size, Combat Ability and Leadership.
 
-  A character with no weapon fights with the book's Fist.
+  A character with no weapon fights with the book's Fist. Any of them may also be:
+  - **Mounted**: Ride, at most +3, adds to its Attack and Defence (DE p. 397). A character's Ride comes from the sheet; a typed fighter's is typed. A Gifted rider (not the Gentle Gift) is warned that a horse throws them without magic (DE pp. 82, 205).
+  - **Defending** another on its side, as a shield grog defends a magus: while a defender stands, nobody may strike the one it defends, and only a defender's botched Defence lets a blow through to them (DE p. 397).
+  - Given a **Magic Resistance** (a creature's Might), against spells and devices; a magus's comes from Parma and Form.
+
+  The panel at the foot of the form, **The Fighter**, shows the fighter as the fight will see it.
+- **Edit Fight** also sets the **Range increments** between the sides (0: hand to hand) and the **Magic aura** where they fight. At range only missiles strike, at -3 for each increment past the first (DE p. 395); the aura adds to every Casting Total.
 - **Form a Group** joins one to six fighters of a side, with a vanguard. A trained group (one that spent a season improving combat skills together) also has a leader. The group fights with the vanguard's figures. A trained group's other members add their Combat Abilities, at most three times the leader's Leadership, to its Attack or its Defence. A note says when the members' totals run more than five points apart, which a group's shouldn't when it forms (DE pp. 395-396).
-- **Next Blow** plays the turn of whoever acts now. The first Next Blow rolls everyone's Initiative (Init + stress die, once for the whole fight); then each acts in order, highest first. Choose the action and who it strikes:
+- **Next Blow** plays the turn of whoever acts now. The first Next Blow rolls everyone's Initiative (Init + stress die, once for the whole fight); then each acts in order, highest first. Choose the action and who it strikes. Only the actions the fighter can take are offered, and the panel at the foot of the form, **The Blow to Come**, says what the action does and the totals it rolls (riding, range, group bonus and Form Bonus included), or why it can't be done:
   - **Attack**: Attack + stress die against Defence + stress die. A hit adds the Attack Advantage to Damage; what passes Soak is read on the Damage Table for the defender's Size. Against a missile weapon only a shield's Defence counts.
   - **Attack with Exertion**: spends a Fatigue level (each member's, in a group) for +the Combat Ability.
   - **Scuffle**: knocks out rather than kills. The wound becomes Fatigue by the Scuffle Effects table, at -3 to Attack and without the weapon's Damage when fighting with a real weapon.
   - **Disarm, Trip, Grab worn item, Take the weapon your opponent is using**: succeed with an Attack Advantage of 9, 3, 6 or 12, and deal no damage.
+  - **Grapple**: with bare hands and Brawl. Any Attack Advantage above 0 takes hold, and becomes (or adds to) the Grapple Strength; the card says who holds whom (DE p. 398).
+  - **Break free**: offered to one held, who may otherwise only cast, use a device or wait. An attack on the one holding them: its Advantage comes off the Grapple Strength, and at 0 they are free and the holder takes a Light Wound. A grip lets go when either falls.
+  - **Split the group**: against an enemy group while another unit of your side presses it. An Advantage of 0 or more splits it rather than wounding it: in half, or in thirds when three or more press it and a second split succeeds that round; a part of one fights alone (DE p. 398).
+  - **Cast a spell**: a magus casts one of the spells they know, or spontaneous magic (its Arts and level, fatiguing or not), at their place in the order. Formulaic: Casting Score + stress die, cast if no more than 10 short of the level (a Fatigue level when short). Spontaneous: (score + stress die) / 2 for a Fatigue level, or score / 5. Then Penetration (Casting Total - level + Penetration) against the target's Magic Resistance, and any damage: stress die + X against Soak (with the Form's Bonus) + stress die (DE pp. 214-215, 394, 397).
+  - **Use a device**: one effect of a device the character holds, with no Fatigue; its Penetration is what it was enchanted with (0 unless more), against Magic Resistance, and any damage as for a spell (DE p. 259).
   - **Disengage**: a Defence Total against every attacker of the last round, +3 for each try after the first. Unattacked since its last turn, a fighter leaves freely.
   - **Wait**: passes the turn.
 - A group's hit lands once for each of its fighters, spread over the defending group with its vanguard taking the most. When a group's vanguard or leader falls, the group splits into individuals.
-- **Next Round** plays every turn left in the round, each fighter striking whoever attacked it last, or the first enemy in the order.
+- A magus's **Form Bonus** (the Form / 5, rounded up) adds to Soak against harm of its Form: Animal against teeth and claws, Corpus against bare hands, Herbam against wooden weapons, Terram against metal and stone ones, and against a spell, its own Form (DE pp. 206-209).
+- **Next Round** plays every turn left in the round, each fighter striking whoever attacked it last, or the first enemy in the order it may strike (a held fighter tries to break free).
 - **Restart the Fight** clears the order and the chronicle. Wounds already written onto sheets stay.
 
 A side with nobody standing loses. The fight then ends and its line says

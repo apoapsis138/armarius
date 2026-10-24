@@ -42,6 +42,7 @@ from ..rules import siege as siege_rules
 from . import gilding, heraldry, illumination, pictures
 from . import medallions as drawn
 from .illumination import gold
+from .ornaments import gloss_box, ledger_entry
 from .paper import shade
 from .themes import DRAWN, PIGMENTS, Palette
 from .widgets import edit_button, scrolling_page
@@ -122,8 +123,9 @@ def _elided(words: str, f: QFont, width: float) -> str:
 def title_words(
     g: QPainter, words: str, f: QFont, at: QPointF, p: Palette, *, skip_first: bool
 ) -> None:
-    """A title: each word's first letter gilt, the rest in the rubric's red;
-    `skip_first` when the first word continues an illuminated initial."""
+    """A title: each capital gilt, as a word's first letter, and the rest
+    in the rubric's red, so "on" and "the" stay plain; `skip_first` when
+    the first word continues an illuminated initial."""
     metrics = QFontMetricsF(f)
     x = at.x()
     for i, word in enumerate(words.split(" ")):
@@ -132,7 +134,7 @@ def title_words(
         if not word:
             continue
         rest = word
-        if not (skip_first and i == 0):
+        if not (skip_first and i == 0) and word[0].isupper():
             gilding.gilt_letter(g, word[0], f, QPointF(x, at.y()), p)
             x += metrics.horizontalAdvance(word[0])
             rest = word[1:]
@@ -185,7 +187,7 @@ def buttons(rows: list[tuple[str, str, Callable[[], None]]], p: Palette) -> QWid
 class FightHeader(QWidget):
     """The fight's title and its order of blows, as a ribbon of seals."""
 
-    HEIGHT = 210
+    HEIGHT = 236
 
     def __init__(self, saga: Saga, fight: Fight, p: Palette) -> None:
         super().__init__()
@@ -203,11 +205,12 @@ class FightHeader(QWidget):
         illuminated_title(
             g,
             fight.name,
-            f"{fights.state_text(fight)}  ·  {fight.season} {fight.year}{where}",
+            f"{fights.state_text(fight)}  ·  {fight_rules.range_text(fight)}  ·  "
+            f"{fight.season} {fight.year}{where}",
             w,
             p,
         )
-        self._ribbon(g, QRectF(60, 140, w - 120, 52))
+        self._ribbon(g, QRectF(60, 142, w - 120, 76))
         g.end()
 
     def _ribbon(self, g: QPainter, rib: QRectF) -> None:
@@ -224,10 +227,18 @@ class FightHeader(QWidget):
         path.lineTo(rib.left() - 24, rib.bottom() - 7)
         path.lineTo(rib.left() - 12, rib.center().y())
         path.closeSubpath()
-        g.fillPath(path, QBrush(shade(p["heading"], 38)))
-        g.setPen(QPen(QColor(p["heading"]), 1.5))
+        g.fillPath(path, QBrush(shade(p["panel"], 150)))
+        g.setPen(QPen(QColor(p["heading"]), 1.4))
         g.setBrush(Qt.BrushStyle.NoBrush)
         g.drawPath(path)
+        g.setPen(QPen(shade(p["accent"], 200), 0.7))
+        g.drawLine(
+            QPointF(rib.left(), rib.top() + 4), QPointF(rib.right(), rib.top() + 4)
+        )
+        g.drawLine(
+            QPointF(rib.left(), rib.bottom() - 4),
+            QPointF(rib.right(), rib.bottom() - 4),
+        )
         _text(
             g,
             QPointF(rib.left() - 4, rib.top() - 7),
@@ -252,30 +263,28 @@ class FightHeader(QWidget):
             return
         acting = fight_rules.actor(self.saga, fight) if not fight.over else None
         step = rib.width() / len(order)
-        ink = DRAWN["seal-ink"]
+        key = medallions.chosen(self.saga)
         for i, unit_id in enumerate(order):
             unit = every[unit_id]
             cx = rib.left() + step * (i + 0.5)
-            r = min(20.0, step * 0.18)
-            seal = QRectF(cx - step / 2 + 6, rib.center().y() - r, 2 * r, 2 * r)
-            fill = QRadialGradient(seal.center(), r * 1.2)
-            light, deep = (
-                (DRAWN["seal-gold-light"], DRAWN["seal-gold"])
-                if unit.side == 0
-                else (DRAWN["seal-grey-light"], DRAWN["seal-grey"])
-            )
-            fill.setColorAt(0, QColor(light))
-            fill.setColorAt(1, QColor(deep))
-            g.setBrush(QBrush(fill))
-            g.setPen(QPen(QColor(ink), 1.1))
-            g.drawEllipse(seal)
-            _boxed(
-                g, seal, str(fight.initiative.get(unit_id, 0)), font(12, bold=True), ink
-            )
+            r = min(28.0, step * 0.2)
+            seal = QRectF(cx - step / 2 + 10, rib.center().y() - r, 2 * r, 2 * r)
             now = acting is not None and unit.id == acting.id
+            drawn.numbered(
+                g,
+                key,
+                seal.center(),
+                r,
+                fight.initiative.get(unit_id, 0),
+                unit.side,
+                fight.season,
+                fight.year,
+                p,
+                now=now,
+            )
             down = unit.down()
             name_box = QRectF(
-                seal.right() + 4, rib.top(), step - 2 * r - 14, rib.height()
+                seal.right() + 8, rib.top(), step - 2 * r - 22, rib.height()
             )
             f = font(11.5, bold=now)
             colour = p["heading"] if now else (p["dim"] if down else p["foreground"])
@@ -288,9 +297,6 @@ class FightHeader(QWidget):
                 Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
             )
             if now:
-                g.setPen(QPen(QColor(p["accent"]), 2.4))
-                g.setBrush(Qt.BrushStyle.NoBrush)
-                g.drawEllipse(seal.adjusted(-4, -4, 4, 4))
                 tip = QPainterPath()
                 tip.moveTo(seal.center().x() - 7, rib.bottom() + 4)
                 tip.lineTo(seal.center().x() + 7, rib.bottom() + 4)
@@ -301,8 +307,9 @@ class FightHeader(QWidget):
                 )
 
 
-#: A unit card's height before its fighters, and each fighter's row.
-CARD_TOP, FIGHTER_ROW = 56, 26
+#: A unit card's height before its fighters, each fighter's row, and the
+#: line of tags (riding, defending, grappling) when it has one.
+CARD_TOP, FIGHTER_ROW, TAG_ROW = 56, 26, 24
 
 
 class FightBody(QWidget):
@@ -321,10 +328,12 @@ class FightBody(QWidget):
             if u.side == side
         ]
 
+    def _card_height(self, unit: fight_rules.Unit) -> float:
+        tagged = bool(fight_rules.tags(self.saga, self.fight, unit))
+        return CARD_TOP + (TAG_ROW if tagged else 0) + FIGHTER_ROW * len(unit.fighters)
+
     def _column_height(self, side: int) -> float:
-        return 100 + sum(
-            CARD_TOP + FIGHTER_ROW * len(u.fighters) + 12 for u in self._units(side)
-        )
+        return 100 + sum(self._card_height(u) + 12 for u in self._units(side))
 
     def _blow_lines(self) -> list[str]:
         return self.fight.log[-1].lines[-9:] if self.fight.log else []
@@ -387,7 +396,7 @@ class FightBody(QWidget):
             else None
         )
         for unit in self._units(side):
-            height = CARD_TOP + FIGHTER_ROW * len(unit.fighters)
+            height = self._card_height(unit)
             self._card(g, unit, QRectF(area.left(), y, area.width(), height), acting)
             y += height + 12
         if not self._units(side):
@@ -410,23 +419,18 @@ class FightBody(QWidget):
     ) -> None:
         p = self.p
         now = acting is not None and acting.id == unit.id
-        back = QLinearGradient(0, rect.top(), 0, rect.bottom())
-        back.setColorAt(0, shade(p["surface"], 235))
-        back.setColorAt(1, shade(p["panel"], 200))
-        g.setBrush(QBrush(back))
-        g.setPen(QPen(QColor(p["accent"] if now else p["rule"]), 2.2 if now else 1))
-        g.drawRoundedRect(rect, 6, 6)
-        if now:
-            g.setPen(QPen(shade(p["accent"], 110), 6))
-            g.setBrush(Qt.BrushStyle.NoBrush)
-            g.drawRoundedRect(rect.adjusted(-3, -3, 3, 3), 8, 8)
+        ledger_entry(g, rect, p, marked=now)
         down = unit.down()
-        title = unit.name
         f = font(15, bold=True)
+        x = rect.left() + 12
+        if now:
+            paraph = font(17, bold=True)
+            _text(g, QPointF(x, rect.top() + 25), "¶", paraph, p["text-error"])
+            x += QFontMetricsF(paraph).horizontalAdvance("¶ ")
         _text(
             g,
-            QPointF(rect.left() + 12, rect.top() + 24),
-            _elided(title, f, rect.width() - 120),
+            QPointF(x, rect.top() + 24),
+            _elided(unit.name, f, rect.width() - 120),
             f,
             p["dim"] if down else p["heading"],
         )
@@ -460,6 +464,17 @@ class FightBody(QWidget):
         if group is not None:
             self._pennant(g, QPointF(rect.right() - 20, rect.top() + 28))
         y = rect.top() + CARD_TOP
+        tags = fight_rules.tags(self.saga, self.fight, unit)
+        if tags:
+            f = font(11, italic=True)
+            _text(
+                g,
+                QPointF(rect.left() + 12, y + 8),
+                _elided("  ·  ".join(tags), f, rect.width() - 24),
+                f,
+                p["text-accent"],
+            )
+            y += TAG_ROW
         for i, fighter in enumerate(unit.fighters):
             self._fighter(
                 g,
@@ -571,16 +586,7 @@ class FightBody(QWidget):
         lines = self._blow_lines()
         height = 170 + 22 * len(lines) + 40
         rect.setHeight(height)
-        g.setPen(QPen(QColor(p["rule"]), 1))
-        g.setBrush(QBrush(shade(p["surface"], 200)))
-        g.drawRoundedRect(rect, 10, 10)
-        _boxed(
-            g,
-            QRectF(rect.left(), rect.top() + 8, rect.width(), 24),
-            "THE BLOW",
-            font(10, bold=True),
-            p["label"],
-        )
+        gloss_box(g, rect, p, "The Blow")
         last = (
             fight.log[-1].text
             if fight.log
@@ -589,19 +595,19 @@ class FightBody(QWidget):
         g.setFont(font(13.5, bold=True))
         g.setPen(QColor(p["heading"]))
         g.drawText(
-            QRectF(rect.left() + 14, rect.top() + 32, rect.width() - 28, 52),
+            QRectF(rect.left() + 26, rect.top() + 44, rect.width() - 44, 52),
             int(Qt.AlignmentFlag.AlignHCenter | Qt.TextFlag.TextWordWrap),
             last,
         )
-        self._swords(g, QPointF(rect.center().x(), rect.top() + 140), 0.55)
-        y = rect.top() + 192
+        self._swords(g, QPointF(rect.center().x(), rect.top() + 146), 0.55)
+        y = rect.top() + 198
         for line in lines:
             g.setFont(font(11.5))
             g.setPen(QColor(p["foreground"]))
             g.drawText(
-                QRectF(rect.left() + 16, y - 15, rect.width() - 32, 20),
+                QRectF(rect.left() + 26, y - 15, rect.width() - 44, 20),
                 int(Qt.AlignmentFlag.AlignLeft),
-                _elided(line, font(11.5), rect.width() - 32),
+                _elided(line, font(11.5), rect.width() - 44),
             )
             y += 22
 
