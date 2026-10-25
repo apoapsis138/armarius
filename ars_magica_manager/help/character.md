@@ -68,6 +68,16 @@ for a magus the Assigned Laboratory; the True Faith Score and Faith Points
 show only for a character who can have them. The Age, Covenant, Laboratory,
 Type and Size are listed under At a Glance at the top of the Description
 chapter.
+
+**Office, crown and relic.** Edit also sets the Church office or crown the
+Divine protects (Pope 25, a cardinal or legatus a latere 20, a legatus
+missus 15, an archbishop, a crowned king or his queen 10) and the Faith of
+the one relic the character relies on (10 x its Faith). They give Magic
+Resistance, the relic's added to the office's, and the office a fifth of
+it to Soak (DE pp. 419-420). Resistances from other sources don't add: the
+character has the highest of True Faith's, the office and relic's, and
+Strong Angelic Heritage's Divine Might (age / 20, DE p. 109). The sheet
+says which it is.
 <!-- /gui -->
 The app works out the Age from Year Born (in
 Biographical Detail) and the saga's current year, and shows the current year
@@ -909,6 +919,43 @@ Dexterity).
 The
 section title shows the points the Flaws come to.
 
+### Powers
+<!-- help: section-char-powers -->
+
+The supernatural powers the character's Virtues grant, under the Virtues
+and Flaws. Each is like a Hermetic spell of its level, with Penetration
+bought level for level (DE pp. 81-106):
+
+- **Greater Power** (Major): 50 levels a Virtue, one power each;
+  Initiative Quickness - magnitude / 2; a Fatigue level up to level 50,
+  two to 100.
+- **Lesser Power** (Minor): 25 levels a Virtue, shared among powers;
+  Initiative Quickness - 2 x magnitude; a Fatigue level for each 25
+  levels.
+- **Personal Power** (Minor): 25 levels a Virtue, for a power of Range
+  Personal or a constant one; Initiative as a Greater Power.
+- **Ritual Power** (Major): 25 levels a Virtue; Initiative as a Lesser
+  Power, its Fatigue too, and a Confidence Point a magnitude.
+- **Focus Power** (Major): 25 points a Virtue, 2 a level of its greatest
+  effect and 1 a point of Penetration, for any effect in its narrow field;
+  Initiative Quickness - that magnitude; a Fatigue level for each 25
+  levels.
+
+Each row shows the power's Initiative, Fatigue and Penetration. Under the
+list, each Virtue's levels used of those it gives, and in red what breaks
+its rules: levels beyond them, a power with no Virtue for it, more Greater
+Powers than Greater Power Virtues, a Personal Power neither Personal nor
+constant. Adding or editing a power, **The Power** at the foot of the
+form says what it costs and what its Virtue has left.
+<!-- tui -->
+`a` adds a power, `e` edits the chosen one and `d` deletes it; choosing
+one shows it in the panel below.
+<!-- /tui -->
+<!-- gui -->
+**Add**, **Edit** and **Delete** act on the powers; click one to read it
+in full.
+<!-- /gui -->
+
 ## Hermetic Magic tab
 <!-- help: tab-hermetic -->
 
@@ -990,6 +1037,18 @@ Magica Definitive Edition, Chapter Four: Virtues and Flaws). Magical
 Focus, Deleterious Circumstances and Mystical Choreography are named there
 too, as are a Heartbeast's -15 in animal form and Verditius Magic's casting
 tools.
+
+The other casting Virtues and Flaws get a line each there too, with their
+page (DE pp. 70-145): Boosted Magic, Flexible Formulaic Magic, Atlantean
+Magic's Water-way, Storm and Body-of-water, Enduring and Short-Lived Magic's
+durations, Exotic Casting, Faerie-Raised Magic (which includes Spell
+Improvisation), Harnessed and Tethered Magic, Life-Linked Spontaneous Magic,
+Imbued with the Spirit of (Form), Painful Magic and Slow Caster. Clumsy
+Magic and Inconstant Magic each take 3 off the Aiming line's Finesse; and
+with Incompatible Arts (its Arts typed as "Intellego Herbam, InAn"), a
+known spell using a pair it rules out, even as a requisite, says it can't
+be cast. In a fight, Cast a Spell applies Incompatible Arts, Painful
+Magic's level of pain and Life-Linked Spontaneous Magic's extra Fatigue.
 
 **Spontaneous levels.** A Spontaneous spell uses its own Casting Score,
 without the Virtues that count only for Formulaic spells (Method Caster's
@@ -1336,6 +1395,13 @@ Using an effect shows its Initiative (Quickness + stress die, +3 with a
 Fast Trigger), its Penetration (0 unless enchanted with more) and how many
 of its uses a day are spent (DE pp. 257, 259); in a fight, Next Blow's **Use
 a device** plays it.
+
+A device the character has by a Virtue says so in its **Had by a Virtue**:
+Minor Enchantments (25 levels a Virtue, no power over level 30), a
+magus's Masterpiece (one lesser enchantment, made within his Lab Totals,
+its vis his parens's) or a Redcap's devices (50 levels at Gauntlet,
+uses a day included) (DE pp. 97-98, 105). The Powers section and the
+creation review say in red when they go past these.
 
 ### Books
 <!-- help: section-books -->

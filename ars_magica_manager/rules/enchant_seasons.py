@@ -54,6 +54,9 @@ from . import (
 from .breakdown import Line
 from .rounding import round_up
 
+#: Halves what added levels give an effect's Penetration (DE p. 152).
+WEAK_MAGIC = "vf_weak_magic"
+
 if TYPE_CHECKING:
     from .lab_seasons import LabWork
 
@@ -409,6 +412,16 @@ def work(
     return _effect_work(saga, magus, plan, lab_, options, device)
 
 
+def _instilled_by(
+    magus: Character, effect: InstilledEffect | None
+) -> InstilledEffect | None:
+    """The effect `magus` is instilling, marked for his Weak Magic, which
+    buys its Penetration a level a point (DE p. 152)."""
+    if effect is not None:
+        effect.weak_penetration = lab_virtues.has(magus, WEAK_MAGIC)
+    return effect
+
+
 def _effect_work(
     saga: Saga,
     magus: Character,
@@ -421,7 +434,7 @@ def _effect_work(
     from .lab_seasons import LabWork
 
     limit = lab.vis_limit(magus)
-    effect = effect_of(device, plan)
+    effect = _instilled_by(magus, effect_of(device, plan))
     if effect is None:
         return ["Choose the effect (add it to the device on its Inventory tab)."], None
     if not effect.technique or not effect.form:

@@ -149,13 +149,14 @@ def forest_replaces_aging(character: Character) -> bool:
     return has(character, FOREST)
 
 
-def yearly_warping(character: Character) -> list[tuple[str, int]]:
-    """The Warping Points the character's Virtues and Flaws give every year."""
-    found: list[tuple[str, int]] = []
+def yearly_warping(character: Character) -> list[tuple[str, int, str]]:
+    """The Warping Points the character's Virtues and Flaws give every
+    year, each with its Virtue's realm (DE p. 64)."""
+    found: list[tuple[str, int, str]] = []
     if has(character, RAISED):
-        found.append(("Raised from the Dead", 1))
+        found.append(("Raised from the Dead", 1, realms.virtue_realm(RAISED)))
     if has(character, FOREST):
-        found.append(("Immortality of the Forest", 1))
+        found.append(("Immortality of the Forest", 1, realms.virtue_realm(FOREST)))
     return found
 
 

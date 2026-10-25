@@ -188,8 +188,10 @@ def feral(character: Character) -> bool:
 
 
 def childhood_xp(character: Character) -> int:
-    """The childhood xp besides the Native Language: Feral's 120 has none."""
-    return FERAL_CHILDHOOD_XP if feral(character) else CHILDHOOD_XP
+    """The childhood xp besides the Native Language: Feral's 120 has none;
+    a savant has half (DE p. 143)."""
+    xp = FERAL_CHILDHOOD_XP if feral(character) else CHILDHOOD_XP
+    return xp // 2 if _held(character, SAVANTISM) else xp
 
 
 def childhood_label(childhood: Childhood) -> str:
@@ -272,13 +274,25 @@ def is_art(target: str) -> bool:
     return target in ARTS
 
 
+#: All a feral child's first five years buy (DE p. 130).
+FERAL_ABILITIES = frozenset(
+    {
+        "Animal Handling",
+        "Athletics",
+        "Awareness",
+        "Brawl",
+        "Hunt",
+        "Stealth",
+        "Survival",
+        "Swim",
+    }
+)
+SAVANTISM = "vf_savantism"
+
+
 def childhood_allows(target: str, character: Character | None = None) -> bool:
-    if (
-        character is not None
-        and feral(character)
-        and target.startswith(LIVING_LANGUAGE)
-    ):
-        return False
+    if character is not None and feral(character):
+        return target in FERAL_ABILITIES or target.startswith(AREA_LORE)
     return (
         target in CHILDHOOD_ABILITIES
         or target in _upbringing_abilities(character)

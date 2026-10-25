@@ -367,6 +367,9 @@ def free_benefit(character: Character) -> HouseBenefit:
     return tradition_benefit(character)
 
 
+DEVIL_CHILD, DEVIL_CHILD_POINTS = "vf_devil_child", 3
+
+
 def virtue_allowance(character: Character, flaw_points: int) -> tuple[int, int]:
     """The (fewest, most) Virtue points the character's Flaw points allow:
     equal for most; a magus adds the free House Virtue held (and Ex
@@ -378,7 +381,12 @@ def virtue_allowance(character: Character, flaw_points: int) -> tuple[int, int]:
         points = flaw_points - house.flaw_points + house.virtue_points
         return points, points
     if character.type == "mythic companion":
-        return 0, min(2 * flaw_points + 1, MYTHIC_MAX_VIRTUE_POINTS)
+        # A Devil Child takes three more Virtue points free, to balance
+        # Tragic Life (DE p. 56).
+        devil = DEVIL_CHILD_POINTS * any(
+            vf.vf_id == DEVIL_CHILD for vf in character.virtues_flaws
+        )
+        return 0, min(2 * flaw_points + 1, MYTHIC_MAX_VIRTUE_POINTS) + devil
     points = flaw_points + tradition_benefit(character).virtue_points
     return points, points
 

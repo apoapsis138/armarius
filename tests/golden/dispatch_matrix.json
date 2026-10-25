@@ -534,6 +534,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-char-powers": {
+      "active": "section-char-powers",
+      "keys": {
+        "a": "FieldsDialog: Add a Power",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-arts": {
       "active": "section-arts",
       "keys": {

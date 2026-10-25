@@ -139,6 +139,9 @@ class InstilledEffect:
     #: A key of EFFECT_FREQUENCIES (not used on a Charged Item).
     uses_per_day: str = "1"
     penetration: int = 0
+    #: Instilled by a magus with Weak Magic: each added level gives only +1
+    #: Penetration, not +2 (DE p. 152).
+    weak_penetration: bool = False
     maintains_concentration: bool = False
     restricted_use: bool = False
     restricted_to: str = ""
@@ -204,6 +207,9 @@ class EnchantedDevice:
     holder_id: str | None = None
     maker_id: str | None = None
     maker_name: str = ""
+    #: The Virtue its holder has it by ("Minor Enchantments", "Masterpiece",
+    #: "Redcap"), or "" (DE pp. 97-98, 105; rules.powers.item_checks).
+    granted_by: str = ""
     components: list[DeviceComponent] = field(default_factory=list)
     #: A compound invested item's one-time choice (DEVICE_PAYMENTS).
     payment: str = PAY_SUM

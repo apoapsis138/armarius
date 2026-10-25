@@ -8,6 +8,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
 from .. import economics as eco
+from ..enchanted_devices import new_day
 from ..markup import escape, problem, todo
 from ..models import (
     SEASONS,
@@ -359,6 +360,8 @@ def finish_season(
     saga.current_season, saga.current_year = next_season(
         saga.current_season, saga.current_year
     )
+    # A new season brings new days: every device's uses come back.
+    new_day(saga)
     return Advanced(record, applied, year_end, added, forecast)
 
 

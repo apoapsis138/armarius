@@ -109,6 +109,58 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.12.0 — 2026-10-25
+
+### Pagina
+
+- **Powers**, a new section under the Virtues and Flaws: the powers
+  Greater, Lesser, Personal, Ritual and Focus Power grant, each with its
+  Initiative, Fatigue and Penetration, and each Virtue's levels used
+  against those it gives; **The Power** at the foot of its form works them
+  out as you type (DE pp. 81-106).
+- A device can say it is **had by a Virtue**: Minor Enchantments (25
+  levels a Virtue, no power over 30), a Masterpiece (one lesser
+  enchantment) or a Redcap's 50 levels (DE pp. 97-98, 105).
+- **Magic Resistance** from a Church office or crown (with a fifth of it
+  to Soak), the relic relied on (added to the office's), Strong Angelic
+  Heritage's Divine Might and a Guardian Angel (added to True Faith's);
+  the sheet says where it comes from (DE pp. 84, 109, 419-420).
+- Device uses come back each season as well as each new day.
+
+### Computus
+
+- The casting Virtues and Flaws the Casting Score can't hold get a
+  reminder each with its page (DE pp. 70-145); Clumsy and Inconstant Magic
+  take 3 off aiming; Incompatible Arts forbids a spell using its pair.
+- Susceptibility to Faerie or Infernal Power halves Magic Resistance
+  against that realm; a creature's Magic Resistance and Penetration take
+  the aura's modifier for its realm (DE pp. 146, 412).
+- Weak Magic buys an item's Penetration a level a point (DE p. 152).
+- Susceptibility to Warping gives a point for each realm that gave
+  Warping that year: a Virtue counts as its own realm, an event as the
+  realm recorded with it (Gain Warping Points asks it) (DE pp. 64, 146).
+
+### Orbis
+
+- In a fight, Cast a Spell applies Incompatible Arts, Painful Magic's
+  pain and Life-Linked Spontaneous Magic's Fatigue; a spontaneous spell
+  short of its level fails.
+
+### Gauntlet
+
+- Creation follows more Virtues and Flaws: Feral, Sheltered and Foreign
+  Upbringing, Savantism's halved xp and caps, Student of (Realm)'s one
+  Lore, a Redcap's 300 xp, Warped by Magic's Magic Lore, a Devil Child's
+  three free points; the review advises Warped by Magic's Warping, a
+  written language for Academic Abilities, Mastered Spells' 50 xp, the
+  Nephilim's Great Characteristics, and the Gifted non-magus's Hermetic
+  Virtues of intrinsic ability only (DE pp. 56-158).
+
+### Book of Hours
+
+- Fluctuating Fortune alternates Wealthy and Poor years, the troupe
+  choosing which years are the Wealthy ones (DE p. 130).
+
 ## 3.11.0 — 2026-10-24
 
 ### Orbis

@@ -288,7 +288,10 @@ def test_a_device_without_penetration_is_resisted():
     fight = fight_of([typed("Holder")], [typed("Spirit", resistance=10)])
     saga = saga_with(fight)
     every = rules.units(saga, fight)
-    assert rules.device_odds(saga, every["spirit"], rules.Blow(rules.DEVICE)) is None
+    assert (
+        rules.device_odds(saga, fight, every["spirit"], rules.Blow(rules.DEVICE))
+        is None
+    )
 
 
 def test_a_spontaneous_spell_casts_penetrates_and_burns():

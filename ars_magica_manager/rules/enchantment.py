@@ -150,6 +150,8 @@ def _level_parts(
     uses_per_day: str | None,
     penetration: int,
     modifications: Sequence[tuple[str, int]],
+    *,
+    weak: bool = False,
 ) -> list[tuple[str, int]]:
     """The effect level, the uses-per-day addition (None: none, as on a
     Charged Item), Penetration (a level per 2 points, rounded up) and each
@@ -159,7 +161,10 @@ def _level_parts(
         uses = EFFECT_FREQUENCIES.get(uses_per_day, 0)
         if uses:
             parts.append((f"{uses_text(uses_per_day)}", uses))
-    if penetration > 0:
+    if penetration > 0 and weak:
+        # Weak Magic gives half the benefit: +1 a level (DE p. 152).
+        parts.append((f"Pen {penetration} (Weak Magic)", penetration))
+    elif penetration > 0:
         # Each added level gives +2 Penetration, so an odd score takes the
         # next level up (DE p. 257).
         parts.append((f"Pen {penetration}", round_up(penetration / 2)))
@@ -181,6 +186,7 @@ def level_breakdown(
             for flag, label, levels in MODIFICATIONS
             if getattr(effect, flag)
         ],
+        weak=effect.weak_penetration,
     )
 
 

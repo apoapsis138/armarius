@@ -53,7 +53,17 @@ from ..models import (
     Saga,
     Wounds,
 )
-from . import casting, combat, combat_groups, derived, dice, penetration, recovery
+from . import (
+    casting,
+    casting_virtues,
+    combat,
+    combat_groups,
+    derived,
+    dice,
+    penetration,
+    realms,
+    recovery,
+)
 from .apprentice_seasons import gifted
 from .breakdown import Breakdown
 from .disputatio import GENTLE_GIFT
@@ -972,14 +982,33 @@ class MagicOdds:
     spontaneous: bool = False
     #: A spell's Casting Score in full, for a spontaneous spell's total.
     breakdown: Breakdown | None = None
+    requisites: tuple[str, ...] = ()
 
 
-def resistance_of(fighter: Fighter, form: str) -> int:
-    """A fighter's Magic Resistance against `form`: a magus's Form and
-    Parma, else the combatant's own (a creature's Might)."""
+def resistance_of(saga: Saga, fight: Fight, fighter: Fighter, form: str) -> int:
+    """A fighter's Magic Resistance against `form`, the highest it has
+    (resistances don't add): a magus's Form and Parma in the fight's aura;
+    a character's True Faith, office and relic, or Angelic Might; a
+    creature's Might + the aura's modifier for its realm (DE pp. 412,
+    419-420); else what was typed for it."""
     c = fighter.character
-    if c is not None and c.arts:
-        return int(penetration.magic_resistance(c, form).total)
+    if c is not None:
+        parma = (
+            int(
+                penetration.magic_resistance(
+                    c, form, aura=fight.aura, aura_realm=realms.HERMETIC
+                ).total
+            )
+            if c.arts
+            else 0
+        )
+        return max(parma, penetration.faith_magic_resistance(c, saga))
+    if fighter.combatant.kind == CREATURE_FIGHTER:
+        creature = saga.creature(fighter.combatant.ref_id)
+        if creature is not None and creature.realm:
+            return penetration.creature_resistance(
+                creature.might, creature.realm, realms.HERMETIC, fight.aura
+            )
     return fighter.combatant.resistance
 
 
@@ -992,6 +1021,7 @@ def spell_odds(
     magus = who.vanguard.character
     if magus is None:
         return None
+    requisites: tuple[str, ...] = ()
     if blow.spell == SPONTANEOUS:
         technique, _, form = (blow.arts or "Creo Ignem").partition(" ")
         level = blow.level
@@ -1006,6 +1036,7 @@ def spell_odds(
         technique, form, level = spell.technique, spell.form, spell.level or 0
         score = casting.spell_casting_score(magus, spell, aura=fight.aura)
         name = spell.name
+        requisites = tuple(spell.requisites)
     return MagicOdds(
         name,
         technique,
@@ -1013,13 +1044,14 @@ def spell_odds(
         level,
         int(score.total),
         int(penetration.penetration_bonus(magus).total),
-        resistance_of(target.vanguard, form),
+        resistance_of(saga, fight, target.vanguard, form),
         spontaneous=blow.spell == SPONTANEOUS,
         breakdown=score,
+        requisites=requisites,
     )
 
 
-def device_odds(saga: Saga, target: Unit, blow: Blow) -> MagicOdds | None:
+def device_odds(saga: Saga, fight: Fight, target: Unit, blow: Blow) -> MagicOdds | None:
     """The effect Use a Device would use: its Penetration as enchanted
     (DE p. 259) against the target's Magic Resistance."""
     device_id, _, effect_id = blow.effect.partition("|")
@@ -1036,7 +1068,7 @@ def device_odds(saga: Saga, target: Unit, blow: Blow) -> MagicOdds | None:
         effect.level,
         None,
         effect.penetration,
-        resistance_of(target.vanguard, effect.form),
+        resistance_of(saga, fight, target.vanguard, effect.form),
     )
 
 
@@ -1175,11 +1207,19 @@ def _magic(
     odds_ = (
         spell_odds(saga, fight, who, target, blow)
         if action == CAST
-        else device_odds(saga, target, blow)
+        else device_odds(saga, fight, target, blow)
     )
     if odds_ is None:
         return Played(f"{who.name} has nothing to cast or use.", lines)
     if action == CAST:
+        magus = who.vanguard.character
+        if magus is not None and casting_virtues.incompatible(
+            magus, odds_.technique, odds_.form, odds_.requisites
+        ):
+            return Played(
+                f"{who.name} can't cast {odds_.name}: Incompatible Arts (DE p. 134).",
+                lines,
+            )
         total = _casting_total(saga, who, odds_, blow, rng, lines)
         if total is None:
             return Played(
@@ -1187,12 +1227,20 @@ def _magic(
                 "wrong.",
                 lines,
             )
-        outcome = casting.formulaic_outcome(total, odds_.level)
-        if not outcome.cast:
-            return Played(f"{who.name} fails to cast {odds_.name}.", lines)
-        if outcome.fatigue and not odds_.spontaneous:
-            who.vanguard.tire(outcome.fatigue)
-            lines.append("Short of the level: a Fatigue level spent.")
+        if magus is not None and casting_virtues.painful(magus):
+            who.vanguard.tire(1)
+            lines.append("Painful Magic: a level of pain (DE p. 140).")
+        if odds_.spontaneous:
+            short = _spontaneous_short(who, odds_, blow, total, lines)
+            if short is not None:
+                return Played(short, lines)
+        else:
+            outcome = casting.formulaic_outcome(total, odds_.level)
+            if not outcome.cast:
+                return Played(f"{who.name} fails to cast {odds_.name}.", lines)
+            if outcome.fatigue:
+                who.vanguard.tire(outcome.fatigue)
+                lines.append("Short of the level: a Fatigue level spent.")
         pierce = total - odds_.level + odds_.penetration
     else:
         pierce = odds_.penetration
@@ -1219,6 +1267,35 @@ def _magic(
     return Played(
         f"{odds_.name} strikes {target.name}: " + "; ".join(told) + ".", lines
     )
+
+
+def _spontaneous_short(
+    who: Unit, odds_: MagicOdds, blow: Blow, total: int, lines: list[str]
+) -> str | None:
+    """A spontaneous spell reaches the level declared only if its total
+    does (DE p. 214), else it fails; with Life-Linked Spontaneous Magic, a
+    fatiguing one still takes effect for a Fatigue level more for each 5
+    short, and past the last level a wound of the levels still owed (DE p.
+    91). Returns why it failed, or None when it takes effect."""
+    if total >= odds_.level:
+        return None
+    magus = who.vanguard.character
+    if magus is None or not blow.fatiguing or not casting_virtues.life_linked(magus):
+        return f"{who.name}'s spell falls short of level {odds_.level} ({total})."
+    owed = casting_virtues.life_linked_cost(odds_.level, total)
+    fighter = who.vanguard
+    left = len(FATIGUE_LEVELS) - 1 - FATIGUE_LEVELS.index(magus.fatigue_level)
+    spent = min(owed, left)
+    fighter.tire(spent)
+    lines.append(f"Life-Linked: {spent} more Fatigue level(s)")
+    if owed > spent:
+        band = derived.wound_for(owed - spent, fighter.figures().size)
+        if band is not None:
+            fighter.wound(band.lower())
+            lines.append(
+                f"Life-Linked: {owed - spent} levels still owed, a {band} Wound"
+            )
+    return None
 
 
 def _casting_total(

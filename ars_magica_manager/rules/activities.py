@@ -722,14 +722,26 @@ ACTIVITIES.update(
 ACTIVITIES[OTHER] = _OTHER_ACTIVITY
 
 
-def working_seasons(character: Character) -> int:
+#: Fluctuating Fortune: Wealthy one year, Poor the next (DE p. 130);
+#: which years are the Wealthy ones is the character's own (Background
+#: fortune_wealthy_in, even by default).
+FLUCTUATING_FORTUNE = "vf_fluctuating_fortune"
+
+
+def working_seasons(character: Character, year: int | None = None) -> int:
     """The working seasons a companion owes each year: two, one fewer with
     Wealthy or License of Absence, one more if Poor (DE Ch. 4), between
-    none and all four."""
+    none and all four; with Fluctuating Fortune, one fewer in a Wealthy
+    `year` and one more in a Poor one."""
     found = effects.collect(
         [scores.character_source(character.virtues_flaws)], "working_seasons"
     )
     owed = WORKING_SEASONS_PER_YEAR + int(effects.amount_total(found))
+    if year is not None and any(
+        vf.vf_id == FLUCTUATING_FORTUNE for vf in character.virtues_flaws
+    ):
+        wealthy = (year % 2 == 0) == (character.background.fortune_wealthy_in != "odd")
+        owed += -1 if wealthy else 1
     return max(0, min(len(SEASONS), owed))
 
 

@@ -25,6 +25,7 @@ from .... import saga_overview as ov
 from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
+from ....forms import power as power_forms
 from ....forms import tradition as tradition_forms
 from ....forms.secrets import secrets_ops
 from ....markup import escape
@@ -39,6 +40,7 @@ from ....rules import creation_virtues as cv
 from ....rules import library
 from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
 from ....sections import CHAR_CALENDAR_SECTION as CALENDAR_SECTION
+from ....sections import POWERS_SECTION
 from ....sheets import character as cs
 from ....traditions import tradition_list, tradition_section, tradition_tab
 from ..widgets import (
@@ -555,31 +557,49 @@ class CharacterSheetView(SheetView):
         """The Virtue and Flaw lists side by side, and the details panel."""
         vf_sections = ("section-vf-virtues", "section-vf-flaws")
         with Vertical(classes="panel-body"):
-            with VerticalScroll(), TwoColumns(id="vf-row"):
+            with VerticalScroll():
+                with TwoColumns(id="vf-row"):
+                    with SheetSection(
+                        title=self._titled(
+                            vf_sections,
+                            "section-vf-virtues",
+                            lambda: self._vf_title("Virtue"),
+                        ),
+                        id="section-vf-virtues",
+                    ):
+                        yield self._list(
+                            vf_sections,
+                            lambda: self._vf_rows("Virtue"),
+                            id="vf-virtues-list",
+                            group="vf",
+                        )
+                    with SheetSection(
+                        title=self._titled(
+                            vf_sections,
+                            "section-vf-flaws",
+                            lambda: self._vf_title("Flaw"),
+                        ),
+                        id="section-vf-flaws",
+                    ):
+                        yield self._list(
+                            vf_sections,
+                            lambda: self._vf_rows("Flaw"),
+                            id="vf-flaws-list",
+                            group="vf",
+                        )
+                self.core_ops[POWERS_SECTION] = power_forms.ops(self.character)
                 with SheetSection(
                     title=self._titled(
-                        vf_sections,
-                        "section-vf-virtues",
-                        lambda: self._vf_title("Virtue"),
+                        POWERS_SECTION,
+                        POWERS_SECTION,
+                        lambda: power_forms.title(self.character),
                     ),
-                    id="section-vf-virtues",
+                    id=POWERS_SECTION,
                 ):
                     yield self._list(
-                        vf_sections,
-                        lambda: self._vf_rows("Virtue"),
-                        id="vf-virtues-list",
-                        group="vf",
-                    )
-                with SheetSection(
-                    title=self._titled(
-                        vf_sections, "section-vf-flaws", lambda: self._vf_title("Flaw")
-                    ),
-                    id="section-vf-flaws",
-                ):
-                    yield self._list(
-                        vf_sections,
-                        lambda: self._vf_rows("Flaw"),
-                        id="vf-flaws-list",
+                        POWERS_SECTION,
+                        lambda: power_forms.rows(self.character),
+                        id="char-powers-list",
                         group="vf",
                     )
             yield self._panel(
@@ -871,6 +891,12 @@ class CharacterSheetView(SheetView):
         if list_id in ("research-goals-list", "research-log-list"):
             event.stop()
             self._refresh_research_info()
+            return
+        if list_id == "char-powers-list":
+            event.stop()
+            self.query_one("#vf-info", Static).update(
+                power_forms.info(self.character, event.data_index, self.saga)
+            )
             return
         if list_id not in ("vf-virtues-list", "vf-flaws-list"):
             return

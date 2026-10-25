@@ -92,29 +92,50 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
 living_conditions = living_rules.living_conditions
 
 
-def _warped_this_year(saga: Saga, character: Character) -> bool:
-    """Whether an event gave the character Warping Points this year (each
-    is written in the Diary by gain_warping)."""
-    return any(
-        entry.year == saga.current_year
-        and (entry.name.startswith("Warping +") or entry.name == "Wizard's Twilight")
-        for entry in character.diary
-    )
+#: How gain_warping writes the realm a Warping Point came from.
+REALM_LINE = "Realm: "
+
+
+def _warped_this_year(saga: Saga, character: Character) -> set[str]:
+    """The realms events gave the character Warping Points from this year
+    (gain_warping writes each in the Diary with its realm; an older entry
+    without one counts as Magic)."""
+    found: set[str] = set()
+    for entry in character.diary:
+        if entry.year != saga.current_year or not (
+            entry.name.startswith("Warping +") or entry.name == "Wizard's Twilight"
+        ):
+            continue
+        realm = next(
+            (
+                line.removeprefix(REALM_LINE).strip()
+                for line in entry.details.splitlines()
+                if line.startswith(REALM_LINE)
+            ),
+            "Magic",
+        )
+        found.add(realm or "Magic")
+    return found
 
 
 def _yearly_warping(saga: Saga, character: Character) -> str:
     """A year's automatic Warping Points: +1 for a Longevity
     Ritual, and living in a strong aura of another realm (a magus gains none
     from a Magic aura, a holy or chthonic magus none from his other realm's),
-    the Virtues and Flaws that give one a year, and one more with
-    Susceptibility to Warping in a year that gave any. Returns what was
-    added ("" for nothing)."""
+    the Virtues and Flaws that give one a year, and with Susceptibility to
+    Warping one more for each realm that gave any this year (DE p. 146: a
+    Longevity Ritual's count as Magic, an aura's or a place's as its
+    realm, a Virtue's as its own realm, and an event's as the realm
+    recorded with it). Returns what was added ("" for nothing)."""
     gained: list[str] = []
     points = 0
+    # The realms that gave Warping this year, for Susceptibility to Warping.
+    realms_: set[str] = set()
     if warping_rules.immune(character):
         return ""
     if character.aging.longevity_modifier:
         points += 1
+        realms_.add("Magic")
         gained.append("Longevity Ritual 1")
     aura, realm = home_aura(saga, character)
     # A non-magus's Virtue at Warping Score 5 stops points from auras of its
@@ -129,21 +150,23 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
         )
         if from_aura:
             points += from_aura
+            realms_.add(realm)
             gained.append(f"{realm} aura {aura}: {from_aura}")
     from_place = sites.warping_per_year(saga, character)
     if from_place:
         points += from_place
+        realms_.add(realm)
         where = sites.character_place(saga, character)
         name = where[0].name if where is not None else "Where they live"
         gained.append(f"{name}: {from_place}")
-    for name, each in work_virtues.yearly_warping(character):
+    for name, each, realm_of in work_virtues.yearly_warping(character):
         points += each
+        realms_.add(realm_of)
         gained.append(f"{name} {each}")
-    if work_virtues.susceptible(character) and (
-        points or _warped_this_year(saga, character)
-    ):
-        points += 1
-        gained.append("Susceptibility to Warping 1")
+    realms_ |= _warped_this_year(saga, character)
+    if work_virtues.susceptible(character) and realms_:
+        points += len(realms_)
+        gained.append(f"Susceptibility to Warping {len(realms_)}")
     if not points:
         return ""
     before = character.aging.warping_score
@@ -169,6 +192,7 @@ def gain_warping(
     opened: bool = False,
     aura: int | None = None,
     enter: bool = False,
+    realm: str = "Magic",
 ) -> list[str]:
     """Add Warping Points from one event; 2 or more take a
     magus (with `opened`, anyone whose Arts are opened) to the edge of
@@ -213,6 +237,7 @@ def gain_warping(
             season=saga.current_season,
             name=name,
             details="\n".join(notes)
+            + f"\n{REALM_LINE}{realm}"
             + f"\nRule: {_cite(warping_rules.TWILIGHT_SOURCE)}",
             activity="Aging",
         )

@@ -52,8 +52,20 @@ def bought_years(saga: Saga, character: Character) -> int:
     return max(0, later_life_years(saga, character) - packages.years_used(character))
 
 
+#: A Redcap's fifteen years of apprenticeship gave 300 xp (DE p. 105);
+#: a savant has half the xp at creation (DE p. 143).
+REDCAP, REDCAP_YEARS, REDCAP_XP = "vf_redcap", 15, 300
+
+
 def later_life_budget(saga: Saga, character: Character) -> int:
-    return bought_years(saga, character) * xp_a_year(character)
+    years, each = bought_years(saga, character), xp_a_year(character)
+    ids = {vf.vf_id for vf in character.virtues_flaws}
+    if REDCAP in ids:
+        apprenticed = min(years, REDCAP_YEARS)
+        budget = (years - apprenticed) * each + apprenticed * REDCAP_XP // REDCAP_YEARS
+    else:
+        budget = years * each
+    return budget // 2 if access.SAVANTISM in ids else budget
 
 
 def later_life_targets(character: Character) -> list[str]:

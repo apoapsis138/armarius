@@ -18,6 +18,7 @@ from ars_magica_manager.models import (
     BoundBeing,
     Breakthrough,
     Character,
+    CharacterPower,
     Covenant,
     Creature,
     CreatureAttack,
@@ -89,6 +90,10 @@ def _saga() -> Saga:
     magus.tradition_effects = [
         TraditionEffect("Rune [wealth]", tradition="trad_vitkir"),
         TraditionEffect("Ward", tradition="trad_vitkir"),
+    ]
+    magus.powers = [
+        CharacterPower("Owl [grey]", "Greater Power"),
+        CharacterPower("Warmth", "Lesser Power"),
     ]
     magus.bound_beings = [
         BoundBeing("Huginn [raven]", tradition="trad_vitkir"),
@@ -429,6 +434,12 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-teff-trad_vitkir",
         "trad-trad_vitkir-effects",
         lambda s: s.characters[0].tradition_effects,
+    ),
+    "character-powers": ListCase(
+        ("character", "mag1"),
+        "section-char-powers",
+        "char-powers-list",
+        lambda s: s.characters[0].powers,
     ),
     "tradition-bonds": ListCase(
         ("character", "mag1"),

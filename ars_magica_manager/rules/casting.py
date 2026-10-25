@@ -59,7 +59,7 @@ from typing import Any
 
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Saga, Spell, VirtueFlawInstance
-from . import effects, enchantment, options, realms, scores
+from . import casting_virtues, effects, enchantment, options, realms, scores
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .derived import carried_load, encumbrance, fatigue_penalty, wound_penalty
@@ -591,7 +591,8 @@ def concentration_base(magus: Character, imperturbable: int = 0) -> int:
 
 def aiming_base(magus: Character, precise: int = 0) -> int:
     """An aiming roll before the die: Perception + Finesse, +1 for each
-    Precise Casting, less the Wound and Fatigue penalties; +6 for each
+    Precise Casting, less the Wound and Fatigue penalties and -3 for each
+    of Clumsy and Inconstant Magic (DE pp. 122, 134); +6 for each
     size step past a basic Individual, -1 for each target of a Multiple
     Casting (DE pp. 223, 226, 404)."""
     return (
@@ -600,6 +601,7 @@ def aiming_base(magus: Character, precise: int = 0) -> int:
         + precise
         + _wounds(magus)
         + _fatigue(magus)
+        + casting_virtues.finesse_penalty(magus)
     )
 
 

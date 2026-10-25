@@ -29,6 +29,21 @@ from .breakdown import Breakdown, Line
 from .rounding import round_up
 from .scores import character_source
 
+#: The Magic Resistance the Divine gives the ordained and anointed, by
+#: office; their wives share their husbands' (DE p. 420; Commanding Aura,
+#: p. 74). Soak gains a fifth of it.
+OFFICE_RESISTANCE: dict[str, int] = {
+    "Archbishop": 10,
+    "King (crowned)": 10,
+    "Queen (a crowned king's wife)": 10,
+    "Legatus missus": 15,
+    "Cardinal or legatus a latere": 20,
+    "Pope": 25,
+}
+OFFICE_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 12: Church Officers and Sovereigns, p. 420"
+)
+
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Combat Scores, Damage "
     "Table, Wounds, Fatigue and Encumbrance, pp. 393, 403-406"
@@ -216,6 +231,16 @@ def soak(character: Character) -> Breakdown:
         amount = effect.amount or 0
         lines.append(Line(effect.entry.name, amount=amount, source="character"))
         total += amount
+    if any(vf.vf_id == "vf_guardian_angel" for vf in character.virtues_flaws):
+        # The angel's +5, while the character does God's will (DE p. 84).
+        lines.append(Line("Guardian Angel", amount=5, source=SOURCE))
+        total += 5
+    office = OFFICE_RESISTANCE.get(character.background.church_rank, 0) // 5
+    if office:
+        lines.append(
+            Line(character.background.church_rank, amount=office, source=OFFICE_SOURCE)
+        )
+        total += office
     if character.wounds.soak:
         lines.append(Line("Adjustment", amount=character.wounds.soak))
         total += character.wounds.soak

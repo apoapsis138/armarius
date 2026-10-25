@@ -299,3 +299,17 @@ def test_the_silver_cord_says_it_is_added_at_the_table():
     saga = _familiar_saga()
     text = familiars.cords_text(saga.familiars[0])
     assert "add it at the table: the app rolls neither" in text
+
+
+def test_advancing_the_season_gives_every_device_its_uses_again():
+    import random
+
+    from ars_magica_manager import seasons
+    from ars_magica_manager.models import EnchantedDevice, InstilledEffect, Saga
+
+    effect = InstilledEffect("e1", "Light", uses_per_day="6")
+    effect.uses_today = 4
+    saga = Saga(id="s", name="S")
+    saga.enchanted_devices.append(EnchantedDevice("d1", "Lamp", effects=[effect]))
+    seasons.finish_season(saga, [], {}, random.Random(1))
+    assert effect.uses_today == 0

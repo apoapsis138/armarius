@@ -26,10 +26,11 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from ..models import Character, Saga, VirtueFlawInstance
+from ..models import Character, Saga, VirtueFlawInstance, character_age
 from . import effects, options, realms, senses
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
+from .derived import OFFICE_RESISTANCE
 from .lab import ability_score, art_score
 from .rounding import round_down
 from .scores import character_source
@@ -159,10 +160,12 @@ def magic_resistance(
     aura: int = 0,
     aura_realm: str = realms.HERMETIC,
     sharing: bool = False,
+    effect_realm: str = realms.HERMETIC,
 ) -> Breakdown:
     """A Hermetic magus's Magic Resistance against a spell of `form`: the
     Form, 5 x Parma Magica while raised (Parma less 3 while shared), and the
-    aura's modifier; never below 0."""
+    aura's modifier; never below 0. Susceptibility to Faerie or Infernal
+    Power halves it against `effect_realm`'s effects (DE p. 146)."""
     score, bonus = art_score(magus, form)
     form_part, limited = _resistance_multiplier(magus, "form_resistance", form)
     lines = [
@@ -190,6 +193,14 @@ def magic_resistance(
     label, modifier = hybrid.aura_label(magus, aura_realm, aura)
     if modifier:
         lines.append(Line(label, amount=modifier, source=realms.SOURCE))
+    if effect_realm in SUSCEPTIBILITIES and _has(magus, SUSCEPTIBILITIES[effect_realm]):
+        lines.append(
+            Line(
+                f"Susceptibility to {effect_realm} Power",
+                multiplier=0.5,
+                source=SUSCEPTIBILITY_SOURCE,
+            )
+        )
     sensitivity, sensitivity_bonus = ability_score(magus, senses.MAGIC_SENSITIVITY)
     if sensitivity + sensitivity_bonus > 0:
         lines.append(
@@ -199,7 +210,10 @@ def magic_resistance(
                 source=senses.SOURCE,
             )
         )
-    return Breakdown(total=max(0, sum(line.amount or 0 for line in lines)), lines=lines)
+    total = sum(line.amount or 0 for line in lines)
+    if any(line.multiplier for line in lines):
+        total = round_down(total / 2)
+    return Breakdown(total=max(0, total), lines=lines)
 
 
 #: Words in a character's religion that make them one of the faithful the
@@ -220,10 +234,20 @@ def faith_magic_resistance(
     *,
     dominion_aura: int | None = None,
 ) -> int:
-    """True Faith's Magic Resistance (Score x 10); with the saga's optional
-    Dominion rule, at least 5 x the Dominion aura for the faithful. The aura
-    is where the character lives unless `dominion_aura` says otherwise."""
-    resistance = 10 * character.background.true_faith_score
+    """The Magic Resistance a character has without Parma: the highest of
+    True Faith's (Score x 10, DE p. 419), a Church office's or crown's
+    with the relic they rely on added to it (DE pp. 419-420), and Strong
+    Angelic Heritage's Divine Might (DE p. 109). With the saga's optional
+    Dominion rule, at least 5 x the Dominion aura for the faithful; the
+    aura is where the character lives unless `dominion_aura` says
+    otherwise. (Resistances from different sources don't add, but a
+    relic's adds to an office's, DE p. 420.)"""
+    resistance = max(
+        10 * character.background.true_faith_score
+        + (GUARDIAN_ANGEL_MR if _has(character, GUARDIAN_ANGEL) else 0),
+        office_resistance(character) + relic_resistance(character),
+        angelic_might(character, saga),
+    )
     if saga is not None and options.is_on(saga, "dominion_magic_resistance"):
         if dominion_aura is None:
             aura, realm = realms.home_aura(saga, character)
@@ -237,3 +261,76 @@ def aegis_penalty(aegis_level: int) -> int:
     """What the Aegis of the Hearth takes from the Casting Total of a
     foreign spell cast inside it: half its level, rounded down."""
     return -round_down(aegis_level / 2)
+
+
+# -- resistance by office, relic, heritage and realm --
+
+SUSCEPTIBILITY_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 4: Susceptibility, p. 146"
+)
+SUSCEPTIBILITIES = {
+    "Faerie": "vf_susceptibility_to_faerie_power",
+    "Infernal": "vf_susceptibility_to_infernal_power",
+}
+OFFICES = OFFICE_RESISTANCE
+STRONG_ANGELIC_HERITAGE = "vf_strong_angelic_heritage"
+#: A Guardian Angel's Magic Resistance, which adds to True Faith's but to
+#: nothing else (DE p. 84).
+GUARDIAN_ANGEL, GUARDIAN_ANGEL_MR = "vf_guardian_angel", 15
+ANGELIC_YEARS = 20
+
+
+def _has(character: Character, vf_id: str) -> bool:
+    return any(vf.vf_id == vf_id for vf in character.virtues_flaws)
+
+
+def office_resistance(character: Character) -> int:
+    return OFFICES.get(character.background.church_rank, 0)
+
+
+def office_soak(character: Character) -> int:
+    """An office's Soak bonus: its Magic Resistance / 5 (a relic's adds
+    nothing to Soak) (DE p. 420)."""
+    return office_resistance(character) // 5
+
+
+def relic_resistance(character: Character) -> int:
+    """Ten times the Faith of the one relic the character relies on (DE p.
+    419)."""
+    return 10 * max(0, character.background.relic_faith)
+
+
+def angelic_might(character: Character, saga: Saga | None) -> int:
+    """Strong Angelic Heritage's Divine Might, age / 20 (rounded down),
+    which is Magic Resistance (DE p. 109); 0 without the Virtue or an age."""
+    if saga is None or not _has(character, STRONG_ANGELIC_HERITAGE):
+        return 0
+    age = character_age(character.background.year_born, saga.current_year)
+    return max(0, (age or 0) // ANGELIC_YEARS)
+
+
+def creature_resistance(might: int, realm: str, aura_realm: str, aura: int) -> int:
+    """A creature's Magic Resistance: its Might + the aura's modifier for
+    its realm (DE p. 412)."""
+    return max(0, might + realms.aura_modifier(realm, aura_realm, aura))
+
+
+def resistance_from(character: Character, saga: Saga | None = None) -> str:
+    """Where faith_magic_resistance comes from, in words: "Archbishop 10 +
+    relic 20", "Strong Angelic Heritage", "True Faith", or "the Dominion"."""
+    office, relic = office_resistance(character), relic_resistance(character)
+    total = faith_magic_resistance(character, saga)
+    if office or relic:
+        parts = [f"{character.background.church_rank} {office}"] if office else []
+        parts += [f"relic {relic}"] if relic else []
+        if office + relic == total:
+            return " + ".join(parts)
+    if angelic_might(character, saga) == total and total:
+        return "Strong Angelic Heritage"
+    angel = GUARDIAN_ANGEL_MR if _has(character, GUARDIAN_ANGEL) else 0
+    faith = 10 * character.background.true_faith_score
+    if faith + angel == total and total:
+        return " + ".join(
+            [*(["True Faith"] if faith else []), *(["Guardian Angel"] if angel else [])]
+        )
+    return "the Dominion"

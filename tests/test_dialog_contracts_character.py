@@ -374,6 +374,21 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Name": ""}, {"Name": "X", "Level": "-5"}],
         shown={"#trad-trad_vitkir-effects": "Wealth Rune (rune script, level 10)"},
     ),
+    "add power": Contract(
+        prefill={"Name": "", "Granted by": "Lesser Power", "Level": "0"},
+        edits={
+            "Name": "Wings of the Owl",
+            "Granted by": "Greater Power",
+            "Level": "30",
+            "Penetration": "10",
+        },
+        saved=lambda s: [
+            (p.name, p.virtue, p.level, p.penetration) for p in character(s).powers
+        ],
+        expected=[("Wings of the Owl", "Greater Power", 30, 10)],
+        invalid=[{"Name": ""}, {"Name": "X", "Level": "lots"}],
+        shown={"#char-powers-list": "Wings of the Owl"},
+    ),
     "add bound being": Contract(
         prefill={"Name": "", "Bonus": "0", "Bonus adds to": "none"},
         edits={"Name": "Huginn", "Bonus": "2", "Bonus adds to": "lab"},

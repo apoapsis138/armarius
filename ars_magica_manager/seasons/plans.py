@@ -195,7 +195,7 @@ def working_seasons_note(character: Character, plan: SeasonPlan) -> str | None:
     if activity is None or activity.working:
         return None
     done = working_seasons_done(character, plan.year, plan.season)
-    working = rules.working_seasons(character)
+    working = rules.working_seasons(character, plan.year)
     owed = working - done
     left = len(SEASONS) - SEASONS.index(plan.season) - 1
     if owed <= left:

@@ -33,6 +33,7 @@ from .character import Background as Background
 from .character import BoundBeing as BoundBeing
 from .character import Breakthrough as Breakthrough
 from .character import Character as Character
+from .character import CharacterPower as CharacterPower
 from .character import CreationConditions as CreationConditions
 from .character import CreationXp as CreationXp
 from .character import Description as Description

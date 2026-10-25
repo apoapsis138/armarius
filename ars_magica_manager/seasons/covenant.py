@@ -252,7 +252,7 @@ def _worked(saga: Saga, character: Character) -> str:
         activity = rules.ACTIVITIES.get(plan.activity) if plan else None
         if activity is not None and activity.working:
             done += 1
-    return f"{done} of {rules.working_seasons(character)}"
+    return f"{done} of {rules.working_seasons(character, year)}"
 
 
 def season_board(saga: Saga, covenant: Covenant, kind: str) -> Grid:

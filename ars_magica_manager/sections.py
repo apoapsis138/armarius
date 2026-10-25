@@ -207,7 +207,11 @@ VOTE_SECTION = "section-meeting-vote"
 #: A record's Secrets chapter (forms/secrets.py): the same section on a
 #: covenant's, character's, Tribunal's, neighbour's and creature's sheet.
 SECRETS_SECTION = "section-secrets"
+#: A character's supernatural powers (forms.power).
+POWERS_SECTION = "section-char-powers"
+
 CORE_SECTIONS: dict[str, frozenset[str]] = {
+    POWERS_SECTION: frozenset({"add", "edit", "remove"}),
     LAB_ITEMS_SECTION: frozenset({"add", "edit", "remove"}),
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),

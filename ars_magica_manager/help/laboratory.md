@@ -495,8 +495,15 @@ stress die, +3 with a Fast Trigger (p. 257); its Penetration is 0 unless
 levels were added for it; no Fatigue is rolled. Each use counts against its
 uses per day, shown as "Today" in its details. When they are all spent, it
 asks whether a new day has begun: yes gives every device's effects their
-uses again and counts this as the first. A Charged Item's effect is used a
+uses again and counts this as the first. Advancing the season gives them
+all their uses again too. A Charged Item's effect is used a
 charge at a time instead.
+
+**Weak Magic** gives only half the benefit of Penetration put into an
+item: an effect its enchanter instils buys Penetration a level a point,
+not two (DE p. 152). **Infernal vis** doubles botch dice in casting and
+needs a roll on the experimental results for an enchanted item (DE p.
+422); the app doesn't mark vis by its realm, so add these at the table.
 
 Not tracked, so noted here: moving raw vis into another object (Vis
 Transfer, DE p. 250) takes a day in a laboratory, alongside other work, up

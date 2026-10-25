@@ -119,12 +119,8 @@ OPENS_ABILITY: dict[str, tuple[str, ...]] = {
     "vf_familiarity_with_the_fae": ("Faerie Lore",),
     "vf_faerie_blood": ("Faerie Lore",),
     "vf_strong_faerie_blood": ("Faerie Lore",),
-    "vf_student_of_realm": (
-        "Dominion Lore",
-        "Faerie Lore",
-        "Infernal Lore",
-        "Magic Lore",
-    ),
+    # Warped by Magic's encounters open Magic Lore (DE p. 151).
+    "vf_warped_by_magic": ("Magic Lore",),
     "vf_senior_bard": ("Dominion Lore", "Faerie Lore", "Infernal Lore", "Magic Lore"),
     # DE pp. 93, 96, 128, 133, 136, 138, 140.
     "vf_faerie_upbringing": ("Faerie Lore",),
@@ -384,11 +380,42 @@ def may_learn(character: Character, name: str, *, apprenticed: bool = False) -> 
     category = ability_category(name)
     if category in SUPERNATURAL_CATEGORIES:
         return name in granted_supernatural(character) | tradition_opened(character)
-    if name in {n for vf in _ids(character) for n in OPENS_ABILITY.get(vf, ())}:
+    if name in SHELTERED_ABILITIES and SHELTERED in _ids(character):
+        return False
+    if name in opened_by_virtues(character):
         return True
     if name == PENETRATION and granted_supernatural(character):
         return True
     return category in opened_types(character, apprenticed=apprenticed)
+
+
+#: Sheltered Upbringing: none of these at creation, though they may be
+#: learned in play (DE p. 144).
+SHELTERED = "vf_sheltered_upbringing"
+SHELTERED_ABILITIES = frozenset(
+    {"Bargain", "Charm", "Etiquette", "Folk Ken", "Guile", "Intrigue", "Leadership"}
+)
+STUDENT_OF_REALM = "vf_student_of_realm"
+REALM_LORES = {
+    "Divine": "Dominion Lore",
+    "Dominion": "Dominion Lore",
+    "Faerie": "Faerie Lore",
+    "Infernal": "Infernal Lore",
+    "Magic": "Magic Lore",
+}
+
+
+def opened_by_virtues(character: Character) -> set[str]:
+    """The Arcane Abilities the character's Virtues and Flaws open by name;
+    Student of (Realm) opens only the Lore of the realm it names (DE p.
+    110)."""
+    named = {n for vf in _ids(character) for n in OPENS_ABILITY.get(vf, ())}
+    for vf in character.virtues_flaws:
+        if vf.vf_id == STUDENT_OF_REALM:
+            realm = str(vf.params.get("realm") or "").strip().title()
+            lore = REALM_LORES.get(realm)
+            named |= {lore} if lore else set(REALM_LORES.values())
+    return named
 
 
 def gifted_non_magus(character: Character) -> bool:
@@ -404,7 +431,7 @@ def learnable_abilities(
     and the character's own Abilities that it may buy at this step."""
     types = opened_types(character, apprenticed=apprenticed)
     granted = granted_supernatural(character) | tradition_opened(character)
-    named = {n for vf in _ids(character) for n in OPENS_ABILITY.get(vf, ())}
+    named = opened_by_virtues(character)
     gifted = gifted_non_magus(character)
     names = set()
     for entry in catalog.load_ability_catalog():
@@ -528,4 +555,38 @@ def ability_cap_for(character: Character, age: int | None, ability: str) -> int 
     cap = character_ability_cap(character, age)
     if affinity_multiplier(character.virtues_flaws, ability) > 1:
         cap += AFFINITY_CAP_BONUS
+    if ability and FOREIGN in _ids(character) and local_ability(ability):
+        cap = round_up(cap / 2)
+    favoured = savant_ability(character)
+    if favoured is not None:
+        cap = min(cap, SAVANT_FAVOURED_CAP if ability == favoured else SAVANT_CAP)
     return cap
+
+
+#: Foreign Upbringing halves (rounding up) the creation caps of Abilities
+#: that depend on the locality: Language, Area Lore, Organization Lore and
+#: the social ones (DE p. 131).
+FOREIGN = "vf_foreign_upbringing"
+_LOCAL_PREFIXES = ("Living Language: ", "Area Lore: ", "Organization Lore: ")
+_LOCAL_SOCIAL = frozenset(
+    {"Charm", "Etiquette", "Folk Ken", "Guile", "Intrigue", "Leadership"}
+)
+
+
+def local_ability(name: str) -> bool:
+    return name.startswith(_LOCAL_PREFIXES) or name in _LOCAL_SOCIAL
+
+
+#: Savantism: no Ability above 3 at creation but the favoured one, up to 6
+#: (DE p. 143).
+SAVANTISM = "vf_savantism"
+SAVANT_CAP, SAVANT_FAVOURED_CAP = 3, 6
+
+
+def savant_ability(character: Character) -> str | None:
+    """A savant's favoured Ability ("" if not yet named), None for anyone
+    else."""
+    for vf in character.virtues_flaws:
+        if vf.vf_id == SAVANTISM:
+            return str(vf.params.get("ability") or "")
+    return None

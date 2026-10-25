@@ -136,3 +136,34 @@ def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
         return 0, HERMETIC
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
     return covenant_effective_aura(covenant, boons), covenant.aura_realm
+
+
+#: The realm of a Supernatural Virtue or Flaw whose name doesn't say it
+#: (DE p. 64: every one has a realm, Magic unless it says otherwise).
+VIRTUE_REALMS: dict[str, str] = {
+    # Resurrected by a miracle (DE p. 142).
+    "vf_raised_from_the_dead": "Divine",
+}
+_REALM_WORDS = (
+    ("Faerie", "Faerie"),
+    ("Fae", "Faerie"),
+    ("Infernal", "Infernal"),
+    ("Demonic", "Infernal"),
+    ("Divine", "Divine"),
+    ("Angelic", "Divine"),
+    ("Holy", "Divine"),
+)
+
+
+def virtue_realm(vf_id: str, name: str = "", *, tainted: bool = False) -> str:
+    """A Virtue or Flaw's realm: its own where the table names one, a
+    Tainted one's Infernal, a name's realm word (Faerie Blood: Faerie),
+    else Magic (DE p. 64)."""
+    if vf_id in VIRTUE_REALMS:
+        return VIRTUE_REALMS[vf_id]
+    if tainted:
+        return "Infernal"
+    for word, realm in _REALM_WORDS:
+        if word in name or word.casefold() in vf_id:
+            return realm
+    return HERMETIC

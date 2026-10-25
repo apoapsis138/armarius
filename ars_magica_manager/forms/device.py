@@ -52,6 +52,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import enchantment, lab_items
+from ..rules.powers import ITEM_VIRTUES
 from . import experimental_effects
 
 #: The Maker select's value for a maker who isn't one of the saga's
@@ -313,6 +314,7 @@ def device_from_values(
         "verditius_runes",
         "verditius_craft",
         "description",
+        "granted_by",
     ):
         if key in values:
             setattr(copy, key, values[key])
@@ -463,6 +465,16 @@ def _device_holder_fields(
             "text",
             base.maker_name,
             show_if=lambda values: values.get("maker") == OTHER_MAKER,
+        ),
+        DialogField(
+            "granted_by",
+            "Had by a Virtue",
+            "select",
+            base.granted_by,
+            options=[("No", ""), *pairs(ITEM_VIRTUES)],
+            hint="Minor Enchantments (25 levels a Virtue, no power over 30), a "
+            "magus's Masterpiece (one lesser enchantment) or a Redcap's 50 "
+            "levels (DE pp. 97-98, 105).",
         ),
     ]
 

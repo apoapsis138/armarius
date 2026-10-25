@@ -19,12 +19,19 @@ from .. import possessions as pos
 from .. import sheet_text as st
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..commands import Choice, Choose, Form, SectionOps, delete, names
-from ..form_spec import EMPHASIS_HINT, DialogField, covenant_options, year_born_field
+from ..form_spec import (
+    EMPHASIS_HINT,
+    DialogField,
+    covenant_options,
+    pairs,
+    year_born_field,
+)
 from ..markup import escape, problem
 from ..models import (
     COMPANION_TYPES,
     FATIGUE_LEVELS,
     FULL,
+    REALMS,
     Aging,
     ArtScore,
     Background,
@@ -53,6 +60,8 @@ from ..rules import (
 )
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
+from ..rules.activities import FLUCTUATING_FORTUNE
+from ..rules.derived import OFFICE_RESISTANCE
 from . import possession as possession_forms
 
 HANDEDNESS_OPTIONS: list[tuple[str, str]] = [
@@ -179,6 +188,16 @@ def aging_fields(aging: Aging, saga: Saga | None = None) -> list[DialogField]:
             "take a magus to the edge of Wizard's Twilight, rolled at once.",
         ),
         DialogField(
+            "warping_realm",
+            "Its realm",
+            "select",
+            "Magic",
+            options=pairs(REALMS),
+            show_if=lambda v: (v.get("gain_warping") or 0) > 0,
+            hint="For Susceptibility to Warping, which gives a point more for "
+            "each realm a year's Warping came from (DE p. 146).",
+        ),
+        DialogField(
             "warping_aura",
             "Aura where it happened",
             "optint",
@@ -242,6 +261,7 @@ def apply_aging(
     result = dict(result)
     gained = result.pop("gain_warping", 0) or 0
     aura = result.pop("warping_aura", None)
+    realm = result.pop("warping_realm", None) or "Magic"
     enter = bool(result.pop("enter_twilight", False))
     if "regimen" in result:
         result["regimen"] = int(result["regimen"] or 0)
@@ -254,7 +274,13 @@ def apply_aging(
         setattr(aging, key, value)
     if gained > 0:
         return seasons.gain_warping(
-            saga, character, gained, rng or random.Random(), aura=aura, enter=enter
+            saga,
+            character,
+            gained,
+            rng or random.Random(),
+            aura=aura,
+            enter=enter,
+            realm=realm,
         )
     return []
 
@@ -542,7 +568,40 @@ def character_info_fields(saga: Saga, character: Character) -> list[DialogField]
             hint="Only with the True Faith Virtue; 2+ is a Mythic Companion.",
         ),
         DialogField("faith_points", "Faith Points", "int", b.faith_points),
+        DialogField(
+            "church_rank",
+            "Office or crown",
+            "select",
+            b.church_rank,
+            options=[("None", ""), *pairs(tuple(OFFICE_RESISTANCE))],
+            hint="The Divine's protection: Magic Resistance (Pope 25 ... "
+            "Archbishop or crowned King 10) and a fifth of it to Soak (DE p. "
+            "420).",
+        ),
+        DialogField(
+            "relic_faith",
+            "Relic relied on (Faith)",
+            "int",
+            b.relic_faith,
+            hint="Its bearer gains 10 x its Faith as Magic Resistance; only "
+            "one relic at a time (DE p. 419).",
+        ),
         DialogField("size", "Size", "int", b.size),
+        *(
+            [
+                DialogField(
+                    "fortune_wealthy_in",
+                    "Fluctuating Fortune: Wealthy in",
+                    "select",
+                    b.fortune_wealthy_in,
+                    options=[("Even years", "even"), ("Odd years", "odd")],
+                    hint="Poor in the others: one working season, then three "
+                    "(DE p. 130).",
+                )
+            ]
+            if any(vf.vf_id == FLUCTUATING_FORTUNE for vf in character.virtues_flaws)
+            else []
+        ),
         DialogField(
             "silver",
             "Silver (pounds)",
@@ -586,6 +645,10 @@ def apply_character_info(
         "size",
     ):
         setattr(background, key, result[key])
+    background.church_rank = result.get("church_rank") or ""
+    if result.get("fortune_wealthy_in") in ("even", "odd"):
+        background.fortune_wealthy_in = result["fortune_wealthy_in"]
+    background.relic_faith = max(0, int(result.get("relic_faith") or 0))
     character.silver = max(0, result.get("silver", character.silver) or 0)
 
 

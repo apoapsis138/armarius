@@ -39,7 +39,7 @@ from .models import (
     FightSide,
     Saga,
 )
-from .rules import combat_groups, derived
+from .rules import casting_virtues, combat_groups, derived
 from .rules import fight as rules
 
 SOURCE = rules.SOURCE
@@ -437,6 +437,7 @@ def _made(saga: Saga, values: dict[str, Any]) -> list[Combatant]:
             damage=attack.damage if attack else None,
             soak=creature.soak,
             size=creature.size,
+            resistance=creature.might,
         )
     else:
         base = Combatant(
@@ -1051,13 +1052,36 @@ def _magic_lines(
     odds = (
         rules.spell_odds(saga, fight, who, target, blow)
         if action == rules.CAST
-        else rules.device_odds(saga, target, blow)
+        else rules.device_odds(saga, fight, target, blow)
     )
     if odds is None:
         return ["[$text-error]Choose what to cast or use.[/]"]
     lines = [
         f"[b]{escape(odds.name)}[/]: {odds.technique} {odds.form}, level {odds.level}."
     ]
+    magus = who.vanguard.character
+    if magus is not None and action == rules.CAST:
+        if casting_virtues.incompatible(
+            magus, odds.technique, odds.form, odds.requisites
+        ):
+            lines.append(
+                "[$text-error]Incompatible Arts: these Arts can't be used together "
+                "(DE p. 134).[/]"
+            )
+            return lines
+        lines += [
+            f"[i]{note}[/]"
+            for vf_id, note in (
+                (casting_virtues.SLOW_CASTER, "Slow Caster: two rounds to cast."),
+                (casting_virtues.PAINFUL, "Painful Magic: a level of pain after."),
+                (
+                    casting_virtues.LIFE_LINKED,
+                    "Life-Linked: short of the level, a Fatigue level more for "
+                    "each 5 (fatiguing spontaneous).",
+                ),
+            )
+            if any(vf.vf_id == vf_id for vf in magus.virtues_flaws)
+        ]
     if odds.score is not None:
         if odds.spontaneous:
             lines.append(

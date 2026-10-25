@@ -99,7 +99,12 @@ def info_right_text(saga: Saga, character: Character) -> str:
             ("Faith Points", str(b.faith_points)),
         ]
     elif resistance := penetration.faith_magic_resistance(character, saga):
-        rows.append(("Magic Resistance", f"{resistance} (the Dominion)"))
+        rows.append(
+            (
+                "Magic Resistance",
+                f"{resistance} ({penetration.resistance_from(character, saga)})",
+            )
+        )
     rows.append(("Size", st.size_text(character)))
     return aligned(rows)
 
@@ -752,7 +757,12 @@ def glance_facts(saga: Saga, character: Character) -> list[Fact]:
     if faith.shows_faith(character):
         facts.append(_fact("True Faith", st.faith_score_text(character, saga)))
     elif resistance := penetration.faith_magic_resistance(character, saga):
-        facts.append(_fact("Magic Resistance", f"{resistance} (the Dominion)"))
+        facts.append(
+            _fact(
+                "Magic Resistance",
+                f"{resistance} ({penetration.resistance_from(character, saga)})",
+            )
+        )
     return facts
 
 

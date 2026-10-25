@@ -75,6 +75,7 @@ from ..forms import character as cf
 from ..forms import device as device_forms
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
+from ..forms import power as power_forms
 from ..forms import season as season_forms
 from ..forms import spell as spell_forms
 from ..forms import tradition as tradition_forms
@@ -1043,7 +1044,38 @@ class CharacterSheet(QWidget):
             )
             stack.addStretch(1)
             columns.append(column)
-        return scrolling_page(p, side_by_side(*columns, spacing=18))
+        return scrolling_page(p, side_by_side(*columns, spacing=18), self._powers())
+
+    def _powers(self) -> QWidget:
+        """The powers the character's Virtues grant, with their Initiative,
+        Fatigue and Penetration, and what each Virtue has left."""
+        p, c = self.p, self.character
+        chooser = Chooser()
+        rows = power_forms.table(c)
+        chooser.listeners.append(
+            lambda index: (
+                self.inspect(
+                    c.powers[index].name or "A power",
+                    c.powers[index].virtue,
+                    power_forms.info(c, index, self.saga),
+                )
+                if index is not None and index < len(c.powers)
+                else None
+            )
+        )
+        return section(
+            power_forms.title(c),
+            p,
+            table_view(rows, p, chooser.choose)
+            if rows.rows
+            else TextBlock(
+                "[dim]No powers: a Greater, Lesser, Personal, Ritual or Focus Power "
+                "Virtue grants them.[/]",
+                p,
+            ),
+            TextBlock("\n".join(power_forms.budget_lines(c, self.saga)), p),
+            buttons=verb_buttons(power_forms.ops(c), chooser, self.run, p),
+        )
 
     def _vf_card(self, card: cs.VirtueFlawCard, colour: str) -> ClickableCard:
         c = self.character

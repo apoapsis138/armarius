@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from . import spells as spl
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from .markup import escape
+from .markup import escape, problem
 from .models import Character, KnownSpell, Saga, Spell
 from .rules import casting, casting_virtues, certamen, penetration
 from .rules import hybrid_magic as hybrid
@@ -260,6 +260,13 @@ def known_spell_casting_lines(
         if line.amount is not None
     )
     lines = [f"[b]Casting Score:[/] {total} ({terms})"]
+    if casting_virtues.incompatible(
+        magus, spell.technique, spell.form, tuple(spell.requisites)
+    ):
+        lines.append(
+            problem("Incompatible Arts: these Arts can't be used together (DE p. 134).")
+        )
+        return lines
     if spell.level is None:
         return lines
     vis = spl.vis_cost(spell) or 0

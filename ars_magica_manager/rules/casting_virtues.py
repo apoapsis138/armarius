@@ -24,6 +24,10 @@ and the vis a Ritual takes:
 
 from __future__ import annotations
 
+import re
+from collections.abc import Callable
+
+from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..models import Character
 from . import lab_virtues
 from .rounding import round_down
@@ -140,7 +144,7 @@ def reminders(magus: Character) -> list[str]:
             "Total for each extra Fatigue level spent (past the last, Soak 5 a "
             "level + stress die)."
         )
-    if has(magus, SPELL_IMPROVISATION):
+    if has(magus, SPELL_IMPROVISATION) or has(magus, FAERIE_RAISED):
         found.append(
             "Spell Improvisation: a Spontaneous spell like a Formulaic one known "
             "adds that spell's magnitude."
@@ -179,6 +183,7 @@ def reminders(magus: Character) -> list[str]:
             "Verditius Magic: Formulaic and Ritual spells need his casting "
             "tools; Spontaneous spells don't (DE p. 241)."
         )
+    found += [note(magus) for vf_id, note in NOTES.items() if has(magus, vf_id)]
     return found
 
 
@@ -197,3 +202,186 @@ def ritual_vis(magus: Character, magnitude_pawns: int) -> int | None:
     if lab_virtues.has(magus, lab_virtues.WASTER):
         pawns = lab_virtues.with_waste(pawns)
     return pawns
+
+
+# -- the rest of the casting Virtues and Flaws (DE pp. 70-145) --
+
+BOOSTED = "vf_boosted_magic"
+FLEXIBLE = "vf_flexible_formulaic_magic"
+ATLANTEAN = "vf_atlantean_magic"
+ENDURING = "vf_enduring_magic"
+EXOTIC = "vf_exotic_casting"
+FAERIE_RAISED = "vf_faerie_raised_magic"
+HARNESSED = "vf_harnessed_magic"
+TETHERED = "vf_tethered_magic"
+LIFE_LINKED = "vf_life_linked_spontaneous_magic"
+IMBUED = "vf_imbued_with_the_spirit_of_form"
+PAINFUL = "vf_painful_magic"
+SLOW_CASTER = "vf_slow_caster"
+SHORT_LIVED = "vf_short_lived_magic"
+INCOMPATIBLE = "vf_incompatible_arts"
+CLUMSY_MAGIC = "vf_clumsy_magic"
+INCONSTANT = "vf_inconstant_magic"
+#: The Flaws that take 3 off every Finesse roll, aiming included (DE pp.
+#: 122, 134).
+FINESSE_FLAWS = (CLUMSY_MAGIC, INCONSTANT)
+FINESSE_PENALTY = -3
+
+
+def finesse_penalty(magus: Character) -> int:
+    """What Clumsy Magic and Inconstant Magic take off a Finesse roll, -3
+    each (DE pp. 122, 134)."""
+    return FINESSE_PENALTY * sum(
+        1 for vf in magus.virtues_flaws if vf.vf_id in FINESSE_FLAWS
+    )
+
+
+_ART_WORDS = {
+    **{a.casefold(): a for a in (*TECHNIQUES, *FORMS)},
+    **{abbr.casefold(): art for art, abbr in ART_ABBREVIATIONS.items()},
+}
+
+
+def incompatible_pairs(magus: Character) -> set[frozenset[str]]:
+    """The Technique and Form pairs Incompatible Arts rules out, read from
+    each instance's Arts ("Intellego Herbam, Intellego Animal", or "InHe,
+    InAn")."""
+    pairs: set[frozenset[str]] = set()
+    for text in _params(magus, INCOMPATIBLE, "arts"):
+        for chunk in re.split(r"[,;/]| and ", text):
+            words = re.findall(r"[A-Za-z]+", chunk)
+            arts = [
+                _ART_WORDS[w.casefold()] for w in words if w.casefold() in _ART_WORDS
+            ]
+            if not arts and len(chunk.strip()) == 4:
+                arts = [
+                    _ART_WORDS.get(chunk.strip()[:2].casefold(), ""),
+                    _ART_WORDS.get(chunk.strip()[2:].casefold(), ""),
+                ]
+            techniques = [a for a in arts if a in TECHNIQUES]
+            forms = [a for a in arts if a in FORMS]
+            if techniques and forms:
+                pairs.add(frozenset((techniques[0], forms[0])))
+    return pairs
+
+
+def incompatible(
+    magus: Character, technique: str, form: str, requisites: tuple[str, ...] = ()
+) -> bool:
+    """Whether Incompatible Arts forbids a spell of these Arts: the pair may
+    not be used together even as requisites (DE p. 134)."""
+    pairs = incompatible_pairs(magus)
+    if not pairs:
+        return False
+    arts = {technique, form, *requisites}
+    return any(pair <= arts for pair in pairs)
+
+
+def life_linked(magus: Character) -> bool:
+    return lab_virtues.has(magus, LIFE_LINKED)
+
+
+def painful(magus: Character) -> bool:
+    return lab_virtues.has(magus, PAINFUL)
+
+
+def slow_caster(magus: Character) -> bool:
+    return lab_virtues.has(magus, SLOW_CASTER)
+
+
+def life_linked_cost(level: int, total: int) -> int:
+    """The Fatigue levels a Life-Linked Spontaneous spell costs past the
+    usual one: one for each five points, or part, it falls short of the
+    level declared (DE p. 91)."""
+    short = level - total
+    return 0 if short <= 0 else -(-short // 5)
+
+
+def _imbued(magus: Character) -> str:
+    forms = _params(magus, IMBUED, "form")
+    return _named("Imbued with the Spirit of (Form)", forms) + (
+        ": Long-Term Fatigue levels may stand in for that Form's vis, one a "
+        "pawn, in casting and in the lab (not in study) (DE p. 85)."
+    )
+
+
+def _incompatible(magus: Character) -> str:
+    pairs = sorted(
+        " ".join(sorted(p, key=lambda a: a in FORMS)) for p in incompatible_pairs(magus)
+    )
+    return _named("Incompatible Arts", pairs) + (
+        ": those Arts can't be used together, even as requisites (DE p. 134)."
+    )
+
+
+#: The casting reminder for each Virtue and Flaw that changes a cast in a
+#: way the Casting Score can't hold (Strategy: one entry each, read by
+#: reminders()).
+NOTES: dict[str, Callable[[Character], str]] = {
+    BOOSTED: lambda _m: (
+        "Boosted Magic: a pawn of vis per magnitude raises a Formulaic spell's "
+        "Range, Duration, Target or size one step, each adding a botch die; "
+        "the casting is reckoned at the spell's own level (DE pp. 72-73)."
+    ),
+    FLEXIBLE: lambda _m: (
+        "Flexible Formulaic Magic: raise or lower one of Range, Duration, "
+        "Target or size one step, the casting level a magnitude with it, or "
+        "swap one for another at the same level; success, Fatigue and "
+        "Penetration use the new level (not Rituals) (DE p. 81)."
+    ),
+    ATLANTEAN: lambda _m: (
+        "Atlantean Magic: Range Water-way (as Sight), Duration Storm (as "
+        "Concentration) and Target Body-of-water (as Structure) (DE pp. 70-71)."
+    ),
+    ENDURING: lambda _m: (
+        "Enduring Magic: the storyguide multiplies a spell's duration by a "
+        "simple die (not Concentration, Momentary, Ring or Rituals) (DE p. 78)."
+    ),
+    EXOTIC: lambda _m: (
+        "Exotic Casting: others tell his spell's Form only against an Ease "
+        "Factor of 15, the magnitude not subtracted (DE p. 78)."
+    ),
+    FAERIE_RAISED: lambda _m: (
+        "Faerie-Raised Magic: xp from Exposure, Adventure and Practice may "
+        "invent a spell he saw mimicked (Technique + Form + Int + Magic Theory "
+        "at least level - 10; magnitude + 4 xp, a third less for a similar "
+        "spell) (DE pp. 79-80)."
+    ),
+    HARNESSED: lambda _m: (
+        "Harnessed Magic: he may end any of his spells or items by "
+        "concentrating, at any distance; they all end when he dies (DE p. 85)."
+    ),
+    TETHERED: lambda _m: (
+        "Tethered Magic: control of a non-Ritual spell may pass to another or "
+        "to an object; his spells and items' effects are Arcane Connections "
+        "to him (DE p. 113)."
+    ),
+    LIFE_LINKED: lambda _m: (
+        "Life-Linked Spontaneous Magic: declare the level (Penetration "
+        "included) and cast fatiguing; a Fatigue level more for each 5 short, "
+        "and past the last, a wound (DE p. 91)."
+    ),
+    IMBUED: _imbued,
+    PAINFUL: lambda _m: (
+        "Painful Magic: each spell cast brings a level of pain, a Fatigue "
+        "penalty recovered as Fatigue (DE p. 140)."
+    ),
+    SLOW_CASTER: lambda _m: (
+        "Slow Caster: Formulaic and Spontaneous spells take two rounds, a "
+        "fast-cast one (or a Mastered spell fast-cast) one (DE p. 145)."
+    ),
+    SHORT_LIVED: lambda _m: (
+        "Short-Lived Magic: Year lasts a Moon, Moon to the next sunrise or "
+        "sunset, Sun only Diameter (DE p. 144)."
+    ),
+    INCOMPATIBLE: _incompatible,
+    CLUMSY_MAGIC: lambda _m: (
+        "Clumsy Magic: -3 to Finesse rolls, and an aiming roll of 0 is a "
+        "botch (DE p. 122)."
+    ),
+    INCONSTANT: lambda _m: (
+        "Inconstant Magic: -3 to Finesse rolls; concentration and aimed "
+        "spells answer slowly, triggered ones take two minutes, and his "
+        "constant items lapse at sunrise and sunset (DE p. 134)."
+    ),
+}

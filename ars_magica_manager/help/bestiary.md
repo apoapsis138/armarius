@@ -171,7 +171,9 @@ Target, and its **Penetration**, which is worked out as its Might less
 five times the power's Might cost, plus its Penetration Ability (as for
 a magus: its score, any Puissant bonus, and 1 more when its specialty
 is the power or its Form), plus any other bonus the power has. The
-aura's modifier is added in play. A Penetration of zero or less still
+aura's modifier for its realm is added where it is used, to its
+Penetration and to its Magic Resistance (Might + the aura's modifier, DE
+p. 412); a fight adds its Magic aura. A Penetration of zero or less still
 affects what has no Magic Resistance, but nothing that has any. Choose
 a power to read what it does. A power's level, when the book gives one, is the level of the
 effect it matches.

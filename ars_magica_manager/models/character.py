@@ -17,7 +17,14 @@ from .common import (
 )
 from .holdings import Possession
 from .laboratory import DiaryEntry
-from .traits import Ability, Characteristics, KnownSpell, Spell, VirtueFlawInstance
+from .traits import (
+    Ability,
+    Characteristics,
+    KnownSpell,
+    Spell,
+    VirtueFlawInstance,
+    new_instance_id,
+)
 from .world import FULL, Link
 
 
@@ -66,6 +73,15 @@ class Background:
     #: anyone may hold Faith Points.
     true_faith_score: int = 0
     faith_points: int = 0
+    #: The Church office or crown the Divine protects ("Pope", "King"...,
+    #: penetration.OFFICES), or "" (DE p. 420; Commanding Aura, p. 74).
+    church_rank: str = ""
+    #: Fluctuating Fortune: whether the character is Wealthy in "even" or
+    #: "odd" years (Poor in the others); the book doesn't say (DE p. 130).
+    fortune_wealthy_in: str = "even"
+    #: The Faith score of the one relic the character relies on (0: none);
+    #: its bearer gains ten times it as Magic Resistance (DE p. 419).
+    relic_faith: int = 0
     birth_name: str = ""
     year_born: int | None = None
     race_nationality: str = ""
@@ -418,6 +434,34 @@ class TraditionEffect:
         return cls(**known_fields(cls, d))
 
 
+@dataclass
+class CharacterPower:
+    """A supernatural power a Virtue grants (rules.powers): the Virtue
+    ("Greater Power", "Lesser Power", "Personal Power", "Ritual Power",
+    "Focus Power"), its Arts, its level (a Focus Power's greatest effect)
+    and the Penetration bought for it, its Range, Duration and Target, and
+    whether it is constant (a Personal Power must be that or Range
+    Personal)."""
+
+    name: str = ""
+    virtue: str = "Lesser Power"
+    technique: str = ""
+    form: str = ""
+    level: int = 0
+    penetration: int = 0
+    range: str = ""
+    duration: str = ""
+    target: str = ""
+    constant: bool = False
+    #: A Focus Power's field, or what the power does.
+    description: str = ""
+    id: str = field(default_factory=new_instance_id)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> CharacterPower:
+        return cls(**known_fields(cls, d))
+
+
 #: What a bound being's bond adds to: the master's casting totals, his
 #: Lab Totals, or nothing the app works out.
 BOND_APPLIES: tuple[str, ...] = ("casting", "lab", "")
@@ -636,6 +680,8 @@ class Character:
     traditions: list[str] = field(default_factory=list)
     #: What the character knows or made of their traditions' magic.
     tradition_effects: list[TraditionEffect] = field(default_factory=list)
+    #: The supernatural powers its Virtues grant (rules.powers).
+    powers: list[CharacterPower] = field(default_factory=list)
     #: Beings bound to the character by a tradition, and the points in
     #: each of their traditions' pools ("<tradition id>:<pool name>").
     bound_beings: list[BoundBeing] = field(default_factory=list)
@@ -769,6 +815,7 @@ class Character:
         d["breakthroughs"] = [
             Breakthrough.from_dict(b) for b in d.get("breakthroughs", [])
         ]
+        d["powers"] = [CharacterPower.from_dict(x) for x in d.get("powers", [])]
         d["tradition_effects"] = [
             TraditionEffect.from_dict(e) for e in d.get("tradition_effects", [])
         ]

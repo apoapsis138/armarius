@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from . import references, storage, world
 from .models import BodyVis, Creature, CreaturePower, Saga
-from .rules import derived, scores
+from .rules import derived, realms, scores
 
 #: What the Bestiary calls a creature with no realm.
 MUNDANE = "Mundane"
@@ -69,16 +69,26 @@ def penetration_ability(creature: Creature, power: CreaturePower) -> int:
     return ability.level + bonus + (1 if matches else 0)
 
 
-def penetration(creature: Creature, power: CreaturePower) -> int:
+def penetration(
+    creature: Creature, power: CreaturePower, *, aura: int = 0, aura_realm: str = ""
+) -> int:
     """The power's Penetration: the creature's Might Score less five times
     the power's Might Point cost, plus its Penetration Ability and any
-    other bonus the power has. It may be zero or less, when the power
-    affects only what has no Magic Resistance."""
+    other bonus the power has, and the aura's modifier for its realm where
+    it is used (no roll is made, so it applies directly; DE p. 412). It
+    may be zero or less, when the power affects only what has no Magic
+    Resistance. The Bestiary shows it without an aura."""
+    modifier = (
+        realms.aura_modifier(creature.realm, aura_realm, aura)
+        if aura and aura_realm and has_might(creature)
+        else 0
+    )
     return (
         creature.might
         - 5 * power.might_cost
         + penetration_ability(creature, power)
         + power.penetration_bonus
+        + modifier
     )
 
 

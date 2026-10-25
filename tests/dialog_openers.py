@@ -265,6 +265,13 @@ async def _open_tradition_effect(ws) -> None:
     ws._core_verb("section-teff-trad_vitkir", "add")
 
 
+async def _open_power(ws) -> None:
+    """Add a power on Leandro's Virtues & Flaws tab."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._core_verb("section-char-powers", "add")
+
+
 async def _open_bound_being(ws) -> None:
     """Add a being bound in Leandro's vitki chapter."""
     view = ws._current_sheet_view()
@@ -726,6 +733,7 @@ OPENERS: dict[str, Opener] = {
     "add integration goal": Opener("character", lambda ws: ws._add_research_goal()),
     "add secret research goal": Opener("character", lambda ws: ws._add_research_goal()),
     "add tradition effect": Opener("character", _open_tradition_effect),
+    "add power": Opener("character", _open_power),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),
     "virtue ability choice": Opener(
