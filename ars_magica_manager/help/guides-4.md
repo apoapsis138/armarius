@@ -489,7 +489,7 @@ The packs follow the Definitive Edition where a book's numbers differ from it; t
 # How to add a creature from a book
 <!-- help: guide-bestiary -->
 
-The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks. A Tribunal book's pack brings the creatures it describes; this guide is for one you copy from a book yourself, such as a beast from Realms of Power: Magic.
+The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks. A Tribunal book's pack brings the creatures it describes, and the Definitive Edition's own are offered by **Start from the book** in New Creature; this guide is for one you copy from another book yourself, such as a beast from Realms of Power: Magic.
 
 ### Making the record
 <!-- help: guide-bestiary-record -->

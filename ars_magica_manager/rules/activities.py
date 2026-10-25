@@ -78,6 +78,7 @@ from . import (
     study_virtues,
     supplement_seasons,
     supplement_work,
+    tamed,
     tradition_seasons,
     xp,
 )
@@ -1165,6 +1166,14 @@ def _trained_problems(
 ) -> list[str]:
     if _split(subject)[0] != "ability":
         return ["Only Abilities can be trained (DE Ch. 10, Training)."]
+    if (
+        character.animal is not None
+        and score(master, ability_subject("Animal Handling")) < 1
+    ):
+        return [
+            f"Training an animal needs Animal Handling: {master.name} has none "
+            "(DE p. 385)."
+        ]
     theirs, mine = score(master, subject), score(character, subject)
     if theirs < 2 or theirs <= mine:
         return [
@@ -2287,12 +2296,53 @@ def _study_outcome(
                 f"a first season in {name} must give: nothing is learned."
             )
             gain.result.xp = 0
+        if (
+            plan.activity == TRAINED
+            and character.animal is not None
+            and not score(character, subject)
+            and not _animal_learns(saga, character, name, rng, result)
+        ):
+            gain.result.xp = 0
         result.gains.append(gain)
         return
     if plan.activity == VIS_STUDY:
         _vis_study_outcome(saga, character, plan, rng, result, kind, months)
         return
     _plain_outcome(saga, character, plan, rng, result)
+
+
+#: A tamed animal trained in an Ability it lacks makes a Loyalty test
+#: against this at the season's end; failing, it learns nothing (DE p.
+#: 385).
+NEW_ABILITY_LOYALTY = 6
+
+
+def _animal_learns(
+    saga: Saga | None,
+    animal: Character,
+    ability: str,
+    rng: random.Random | None,
+    result: Outcome,
+) -> bool:
+    """A tamed animal's Loyalty test for a new Ability: Loyal + stress
+    die against 6 (DE p. 385); a preview says it will be rolled."""
+    if rng is None:
+        result.notes.append(
+            f"{ability} is new to {animal.name}: a Loyalty test (Loyal "
+            f"{tamed.loyalty(animal):+d} + stress die) against {NEW_ABILITY_LOYALTY} "
+            "at the season's end, or the season is wasted (DE p. 385)."
+        )
+        return True
+    die = dice.stress_die(rng, 1, saga=saga)
+    total = tamed.loyalty(animal) + die.value
+    passed = not die.botched and total >= NEW_ABILITY_LOYALTY
+    result.notes.append(
+        f"Loyalty test for {ability}: Loyal {tamed.loyalty(animal):+d} + die "
+        f"{die.value} = {total} against {NEW_ABILITY_LOYALTY}: "
+        + ("it learns." if passed else "the season is wasted.")
+        + " (DE p. 385)"
+    )
+    return passed
 
 
 def _vis_study_outcome(

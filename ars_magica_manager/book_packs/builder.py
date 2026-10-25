@@ -1120,3 +1120,9 @@ def _virtue_flaw(entry: str | tuple[str, dict[str, str]]) -> VirtueFlawInstance:
     if vf_id is None:
         raise KeyError(f"No Virtue or Flaw named {name!r} in the catalog")
     return VirtueFlawInstance(vf_id, params=dict(params))
+
+
+#: The block notation's readers, for stat blocks kept as data (the
+#: Bestiary's catalog of the book's creatures).
+ability_from_block = _ability
+virtue_flaw_from_block = _virtue_flaw

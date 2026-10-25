@@ -22,8 +22,14 @@ On the saga's page, the Bestiary chapter shows each creature as a card
 that opens its own page, and a New card that adds one.
 <!-- /gui -->
 
-A Tribunal book's pack brings the creatures its stat blocks describe;
-see [How to add a creature from a book](help:guide-bestiary).
+**New Creature** can start from the book: **Start from the book** lists
+the Definitive Edition's 62 creatures (DE pp. 428-492), from the bear and
+the wolf to the elementals, the faerie knight, Baal-Peor and the angel
+Gabriel. The chosen one's whole stat block is copied into the saga under
+the name you give (blank: the book's), to change as you like; only its
+name and where it is found are asked. A Tribunal book's pack brings the
+creatures its stat blocks describe; see [How to add a creature from a
+book](help:guide-bestiary).
 
 **See also:** [A creature](help:creature), [The Region](help:region)
 
@@ -84,6 +90,19 @@ only reported. **Check** lists what doesn't fit the Definitive Edition's
 rules: The Gift on a creature whose Might isn't Magic, a power that costs
 more than the Might (it could never be used, since the Pool refills only
 to the Score) and a Might Pool above the Might (DE pp. 425-426).
+
+A faerie built by Realms of Power: Faerie (one with Humanoid Faerie,
+Faerie Beast or Hybrid Form, or Increased or Decreased Might) shows a
+**Faerie design** fact: the Might its Virtues give it (5, +5 for each
+Minor Increased Faerie Might, +15 for each Major; 1 with Decreased Might)
+when its own differs; the choices every faerie makes that it lacks (a
+physical form, a cognizance, a Social Interaction Virtue or Flaw, a
+taboo); and what a faerie can't have (The Gift, Hermetic or Social Status
+Virtues, a Confidence Score, more than three Minor or one Major
+Personality Flaws). Time or Place of Power's +10 is noted. A faerie's
+power Virtues give their powers' cost and Initiative as a magic
+creature's do (RoP: Faerie pp. 45-64). The Definitive Edition's own
+faeries are written another way and aren't checked.
 
 An Infernal creature also has the facts Realms of Power: The Infernal
 gives a demon: its **Order**, its **Hierarchy** score (the highest of

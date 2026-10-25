@@ -12,7 +12,7 @@ from ..grids import Grid
 from ..markup import escape
 from ..models import REALMS, Creature, Saga
 from ..references import Fact
-from ..rules import creature_build, sites
+from ..rules import creature_build, faerie_build, sites
 from . import character as cs
 
 #: The Characteristics as a stat block abbreviates them, in its order.
@@ -144,6 +144,9 @@ def build_facts(creature: Creature) -> list[Fact]:
     problems = creature_build.problems(creature)
     if problems:
         found.append(Fact("Check", " ".join(problems)))
+    faerie = faerie_build.problems(creature)
+    if faerie:
+        found.append(Fact("Faerie design", " ".join(faerie)))
     return found
 
 

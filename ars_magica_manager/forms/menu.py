@@ -85,6 +85,7 @@ from ..rules import covenfolk, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
 from ..sections import LAB_TEXTS_SECTION
+from . import beast as beast_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
 from . import hosting as hosting_forms
@@ -444,6 +445,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "take_harm": ((NodeKind.CHARACTER, "Health"),),
     "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
     "end_session": ((NodeKind.CHARACTER, "Reputations"),),
+    "command_beast": ((NodeKind.CHARACTER, "Personality Traits"),),
     "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
@@ -1367,6 +1369,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "take_harm": _needs(_character, health.take_harm_form),
     "recovery_roll": _needs(_character, health.recovery_form),
     "end_session": _needs(_character, session_end.end_session_form),
+    "command_beast": _needs(_character, beast_forms.command_form),
     "place_aging_points": _needs(_character, aging_due.character_form),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),

@@ -25,6 +25,7 @@ from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
 from ....arts import ARTS
+from ....forms import beast as beast_forms
 from ....forms import character as character_forms
 from ....forms import experimental_effects
 from ....forms import menu as menu_forms
@@ -167,6 +168,18 @@ class CharacterActions(WorkspaceBase):
             self.app,
             session_end.end_session_form(self.saga, character),
             lambda _end: self._commit("section-reputations", "section-char-info"),
+        )
+
+    def action_command_beast(self) -> None:
+        """More's Command the Beast on a tamed animal's Personality Traits:
+        the command's roll and any Loyalty test."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            beast_forms.command_form(self.saga, character),
+            lambda _end: self._commit("section-personality-traits"),
         )
 
     def action_recovery_roll(self) -> None:

@@ -1,0 +1,7505 @@
+{
+  "attribution": "Creatures from Ars Magica Fifth Edition, Definitive Edition, Chapter 13 (pp. 428-492): stat blocks as printed, descriptions paraphrased. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "entries": [
+    {
+      "key": "bear",
+      "name": "Bear",
+      "group": "Mundane Beasts",
+      "page": 429,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          1,
+          0,
+          0,
+          -5,
+          6,
+          4,
+          2,
+          0
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Tough",
+          "Greedy (Minor)",
+          "Reclusive",
+          "Aggressive",
+          "Extra Natural Weapons",
+          "Fast Runner",
+          "Grapple",
+          "Hardy",
+          "Imposing Appearance",
+          "Large Claws",
+          "Pursuit Predator",
+          "Tough Hide"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "sprinting"
+          ],
+          [
+            "Awareness",
+            3,
+            "prey"
+          ],
+          [
+            "Brawl",
+            5,
+            "claws"
+          ],
+          [
+            "Hunt",
+            4,
+            "deer"
+          ],
+          [
+            "Survival",
+            5,
+            "foraging"
+          ],
+          [
+            "Swim",
+            3,
+            "against the current"
+          ]
+        ],
+        "traits": {
+          "Brave": 3,
+          "Slothful": 3,
+          "Aggressive": 2
+        },
+        "reputations": {
+          "Ferocious (local)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Claws",
+          0,
+          13,
+          9,
+          10
+        ],
+        [
+          "Teeth",
+          0,
+          11,
+          7,
+          7
+        ],
+        [
+          "Grapple",
+          0,
+          7,
+          5,
+          null
+        ]
+      ],
+      "soak": 10,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A great shaggy brown beast of up to fifty stone, over seven feet tall when it rears, with big claws and a bellowing roar; coat from light brown or yellowish to black.",
+      "notes": "Ferocity when injured; the Extra Natural Weapons are claws. Large claws Init 0, Atk +5, Def +3, Dam +4; teeth Init 0, Atk +3, Def +1, Dam +1; hide and fur give Protection +3. Runs fast (+3 to running rolls), climbs and swims; rears to strike a rider. Found in forests, mountains and tundra across Mythic Europe; mostly forages, but kills up to red deer."
+    },
+    {
+      "key": "adder",
+      "name": "Adder",
+      "group": "Mundane Beasts",
+      "page": 429,
+      "size": -4,
+      "cunning": true,
+      "confidence": [
+        0,
+        0
+      ],
+      "block": {
+        "characteristics": [
+          -1,
+          -2,
+          -6,
+          -6,
+          -8,
+          2,
+          2,
+          3
+        ],
+        "virtues_flaws": [
+          "Lightning Reflexes",
+          "Infamous",
+          "Ambush Predator",
+          "Loathsome Appearance",
+          "Slippery",
+          "Venomous"
+        ],
+        "abilities": [
+          [
+            "Awareness",
+            2,
+            "prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "fangs"
+          ],
+          [
+            "Hunt",
+            4,
+            "rodents"
+          ],
+          [
+            "Stealth",
+            4,
+            "stalking prey"
+          ],
+          [
+            "Survival",
+            3,
+            "grassy areas"
+          ]
+        ],
+        "traits": {
+          "Hostile": 2
+        },
+        "reputations": {
+          "Venomous (local)": 4
+        }
+      },
+      "attacks": [
+        [
+          "Fangs",
+          3,
+          8,
+          7,
+          -7
+        ]
+      ],
+      "soak": 2,
+      "fatigue_levels": "OK, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Venomous Bite",
+          "might_cost": 0,
+          "init": 0,
+          "form": "",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "If its Attack Advantage beats the victim's armor Protection (not Soak), the victim suffers adder venom (Poison Table, p. 406) whether or not a wound results; the storyguide may adjust for things like high boots."
+        }
+      ],
+      "vis": [],
+      "appearance": "A small snake about eighteen inches long with a triangular head, pale grey, yellow or red with dark diamond markings down the back; some are wholly black.",
+      "notes": "Fangs Init 0, Atk +3, Def +1, Dam +1. Defense +6 more against grapple attacks (Slippery). Found all over Mythic Europe except Ireland; hibernates, ambushes rodents, lizards and frogs, and strikes by reflex when disturbed. Its venom sickens but rarely kills a man."
+    },
+    {
+      "key": "wild_boar",
+      "name": "Boar, Wild",
+      "group": "Mundane Beasts",
+      "page": 430,
+      "size": 0,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          0,
+          0,
+          -4,
+          -5,
+          2,
+          2,
+          0,
+          1
+        ],
+        "virtues_flaws": [
+          "Berserk",
+          "Enduring Constitution",
+          "Ferocity",
+          "Tough",
+          "Greedy (Minor)",
+          "Wrathful (Minor)",
+          "Aggressive",
+          "Hardy",
+          "Herd Animal",
+          "Tireless",
+          "Tough Hide"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            "sprinting"
+          ],
+          [
+            "Awareness",
+            3,
+            "foraging"
+          ],
+          [
+            "Brawl",
+            5,
+            "tusks"
+          ],
+          [
+            "Survival",
+            5,
+            "forests"
+          ]
+        ],
+        "traits": {
+          "Brave": 4,
+          "Angry": 3
+        },
+        "reputations": {
+          "Ill-tempered (local)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Tusks",
+          1,
+          10,
+          9,
+          7
+        ],
+        [
+          "Tusks (berserk)",
+          1,
+          12,
+          7,
+          7
+        ]
+      ],
+      "soak": 7,
+      "fatigue_levels": "OK, 0/0, 0/0, -2/-2, -4, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A bristly grey, black or brown swine with big tusks, a hairy crest down its spine and longer legs than a farm pig; it sprints well over short distances.",
+      "notes": "Ferocity when cornered. Tusks Init 0, Atk +4, Def +2, Dam +5; hide gives Protection +2. Forest dweller that forages at night, often in sounders of twenty or more; a favourite noble quarry, known for its foul temper. Weighs eight to thirty stone; the largest are Size +1."
+    },
+    {
+      "key": "bull",
+      "name": "Bull",
+      "group": "Mundane Beasts",
+      "page": 431,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          -4,
+          -4,
+          5,
+          3,
+          0,
+          -1
+        ],
+        "virtues_flaws": [
+          [
+            "Affinity with {ability}",
+            {
+              "ability": "Brawl"
+            }
+          ],
+          "Ferocity",
+          "Tough",
+          "Oversensitive (Minor)",
+          "Aggressive",
+          "Domesticated",
+          "Tough Hide"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            "charging"
+          ],
+          [
+            "Awareness",
+            3,
+            "predators"
+          ],
+          [
+            "Brawl",
+            5,
+            "horns"
+          ]
+        ],
+        "traits": {
+          "Aggressive": 2
+        },
+        "reputations": {
+          "Strong (local)": 4
+        }
+      },
+      "attacks": [
+        [
+          "Horns",
+          0,
+          8,
+          3,
+          7
+        ]
+      ],
+      "soak": 8,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A black Spanish-type bull of about eighty stone, with a hump and sharp horns curving inward; other breeds are mostly short, broad and long-horned, in many colours.",
+      "notes": "Ferocity when charging; Oversensitive to provocation (tier not printed). Large horns Init +2, Atk +3, Def +2, Dam +3; hide gives Protection +2. Easily provoked; a charge lets it exert itself and spend Confidence together. Learns to fight fast, hence its Affinity with Brawl. Baited and fought for sport."
+    },
+    {
+      "key": "cat",
+      "name": "Cat",
+      "group": "Mundane Beasts",
+      "page": 431,
+      "size": -3,
+      "cunning": true,
+      "confidence": [
+        0,
+        0
+      ],
+      "block": {
+        "characteristics": [
+          0,
+          1,
+          -2,
+          -4,
+          -7,
+          0,
+          3,
+          4
+        ],
+        "virtues_flaws": [
+          "Perfect Balance",
+          [
+            "Puissant {ability}",
+            {
+              "ability": "Awareness"
+            }
+          ],
+          "Sharp Ears (Minor)",
+          "Nocturnal",
+          "Ambush Predator",
+          "Crafty",
+          "Good Jumper",
+          "Skilled Climber",
+          "Thick Fur/Thick Scales"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "jumping"
+          ],
+          [
+            "Awareness",
+            4,
+            "at night"
+          ],
+          [
+            "Brawl",
+            2,
+            "claws"
+          ],
+          [
+            "Hunt",
+            4,
+            "mice"
+          ],
+          [
+            "Stealth",
+            4,
+            "stalking"
+          ]
+        ],
+        "traits": {
+          "Curious": 4,
+          "Timid": 2
+        },
+        "reputations": {
+          "Evil (local)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Claws",
+          3,
+          8,
+          10,
+          -5
+        ],
+        [
+          "Teeth",
+          4,
+          8,
+          7,
+          -6
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "Short-haired domestic cats, usually grey or ginger with darker stripes, sometimes black, white or calico; the wildcat is bigger and shaggier, grey-brown and striped with a bushy tail.",
+      "notes": "Awareness printed 4+2 (Puissant). Claws Init -1, Atk +2, Def +3, Dam +2; teeth Init 0, Atk +3, Def +1, Dam +1; fur gives Protection +1. +3 to climbing and jumping. Flees anything bigger. Its evil Reputation is strongest in Celtic lands and unknown in England."
+    },
+    {
+      "key": "falcon",
+      "name": "Falcon",
+      "group": "Mundane Beasts",
+      "page": 432,
+      "size": -3,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          -1,
+          -2,
+          -6,
+          2,
+          1,
+          6
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Keen Vision",
+          "Fragile Constitution",
+          "Accomplished Flyer",
+          "Extra Natural Weapons",
+          "Fast Flyer",
+          "Keen Eyesight",
+          "Pursuit Predator"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "swift flight"
+          ],
+          [
+            "Awareness",
+            4,
+            "spotting prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "talons"
+          ],
+          [
+            "Hunt",
+            4,
+            "game birds"
+          ],
+          [
+            "Survival",
+            3,
+            "cold climates"
+          ]
+        ],
+        "traits": {
+          "Fierce": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Talons",
+          5,
+          6,
+          12,
+          -4
+        ],
+        [
+          "Beak",
+          6,
+          6,
+          9,
+          -5
+        ]
+      ],
+      "soak": -2,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A gyrfalcon, the biggest and most prized falcon, with a wingspan past four feet, a short hooked beak, dark eyes and banded white, grey or dark brown plumage.",
+      "notes": "Ferocity in a swooping attack. Talons Init -1, Atk +2, Def +3, Dam +2; beak Init 0, Atk +3, Def +1, Dam +1. +3 to rolls for speed. Hunts birds and rodents in the cold north (Scandinavia, Iceland, Russia); flown by nobles at partridge. Smaller falcons are Size -4."
+    },
+    {
+      "key": "horse_courser",
+      "name": "Horse, Courser",
+      "group": "Mundane Beasts",
+      "page": 432,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        0,
+        0
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          0,
+          -4,
+          4,
+          3,
+          -2,
+          2
+        ],
+        "virtues_flaws": [
+          "Long-Winded",
+          "Improved Characteristics",
+          "Fear",
+          "Noncombatant",
+          "Domesticated",
+          "Fast Runner",
+          "Good Jumper",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            "long-distance running"
+          ],
+          [
+            "Awareness",
+            3,
+            "noises"
+          ]
+        ],
+        "traits": {
+          "Skittish": 3,
+          "Brave": -2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Hooves",
+          4,
+          0,
+          4,
+          5
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A swift, athletic mid-sized horse such as the Andalusian: about eighty stone and fifteen hands, curved neck, broad chest, flowing mane and tail; grey, black, chestnut or roan.",
+      "notes": "Fear of loud noises. Kick Init +2, Atk +2, Def +2, Dam +1. Used for hunting, travel and messages; untrained for war and quick to panic. Charger: swap Noncombatant for Proud (minor), Brave 0, Brawl 2 (hooves). Palfrey: Qik -2, Dex +2 over the courser, keeps Noncombatant. All light horses +3 to running and jumping. Wound range printed '-5 (16-21)'."
+    },
+    {
+      "key": "horse_destrier",
+      "name": "Horse, Destrier",
+      "group": "Mundane Beasts",
+      "page": 433,
+      "size": 3,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          0,
+          -4,
+          6,
+          3,
+          1,
+          -1
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Improved Characteristics",
+          "Long-Winded",
+          "Proud (Minor)",
+          "Domesticated",
+          "Fast Runner",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "balancing"
+          ],
+          [
+            "Brawl",
+            3,
+            "hooves"
+          ]
+        ],
+        "traits": {
+          "Loyal": 2,
+          "Brave": 1
+        },
+        "reputations": {
+          "Aggressive (local)": 1
+        }
+      },
+      "attacks": [
+        [
+          "Hooves",
+          1,
+          7,
+          5,
+          7
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A heavy warhorse such as the Percheron: over 140 stone and sixteen hands, with a thick curved neck, deep chest and stocky legs; grey or black.",
+      "notes": "Ferocity when ridden in battle. Kick Init +2, Atk +2, Def +2, Dam +1. Almost always a stallion, trained to charge fearlessly, rear and strike, balance on its hind legs for rounds, and fight on alone to guard a fallen rider. +3 to speed rolls; too heavy to jump well."
+    },
+    {
+      "key": "hound",
+      "name": "Hound",
+      "group": "Mundane Beasts",
+      "page": 433,
+      "size": 0,
+      "cunning": true,
+      "confidence": [
+        0,
+        0
+      ],
+      "block": {
+        "characteristics": [
+          0,
+          2,
+          -4,
+          0,
+          0,
+          2,
+          1,
+          2
+        ],
+        "virtues_flaws": [
+          "Improved Characteristics",
+          "Long-Winded",
+          "Sharp Ears (Minor)",
+          "Reckless (Minor)",
+          "Domesticated",
+          "Keen Sense of Smell (Minor)",
+          "Pack Animal",
+          "Pursuit Predator",
+          "Vocal"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "distance running"
+          ],
+          [
+            "Awareness",
+            3,
+            "keeping watch"
+          ],
+          [
+            "Brawl",
+            3,
+            "bite"
+          ],
+          [
+            "Hunt",
+            4,
+            "track by scent"
+          ]
+        ],
+        "traits": {
+          "Loyal": 3,
+          "Reckless": 3,
+          "Brave": 2
+        },
+        "reputations": {
+          "Loyal (local)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Bite",
+          2,
+          8,
+          7,
+          1
+        ]
+      ],
+      "soak": 2,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A large hound such as the bloodhound: a little over two feet at the shoulder and up to nine stone, heavy jowls, long ears, short tan, red or liver coat.",
+      "notes": "Bite Init 0, Atk +3, Def +1, Dam +1. +3 to smell rolls and to endurance rolls. Smaller breeds: greyhounds and the like Size -1, spaniels and terriers Size -2, lap-dogs Size -3. A Master of the Pack leads a trained group, using Animal Handling in place of Leadership. Reckless tier not printed."
+    },
+    {
+      "key": "lion",
+      "name": "Lion",
+      "group": "Mundane Beasts",
+      "page": 434,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        2,
+        6
+      ],
+      "block": {
+        "characteristics": [
+          2,
+          0,
+          0,
+          0,
+          6,
+          3,
+          2,
+          1
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          [
+            "Puissant {ability}",
+            {
+              "ability": "Brawl"
+            }
+          ],
+          "Self-Confident",
+          "Tough",
+          "Proud (Minor)",
+          "Weakness (Minor)",
+          "Aggressive",
+          "Ambush Predator",
+          "Crafty",
+          "Good Jumper",
+          "Hardy",
+          "Imposing Appearance",
+          "Large Claws",
+          "Large Teeth",
+          "Tough Hide",
+          "Vocal"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "pouncing"
+          ],
+          [
+            "Awareness",
+            2,
+            "smell"
+          ],
+          [
+            "Brawl",
+            5,
+            "claws"
+          ],
+          [
+            "Hunt",
+            4,
+            "deer"
+          ],
+          [
+            "Stealth",
+            4,
+            "stalking"
+          ],
+          [
+            "Survival",
+            5,
+            "arid climates"
+          ]
+        ],
+        "traits": {
+          "Brave": 5,
+          "Fierce": 5
+        },
+        "reputations": {
+          "Fierce (local)": 4
+        }
+      },
+      "attacks": [
+        [
+          "Claws",
+          1,
+          15,
+          12,
+          10
+        ],
+        [
+          "Bite",
+          1,
+          13,
+          9,
+          9
+        ]
+      ],
+      "soak": 8,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A tawny beast up to 35 stone and over ten feet long, broad-muzzled with powerful jaws; the male has a dark shaggy mane, and its roar carries far.",
+      "notes": "Ferocity in self-defence; Weakness for submission (it spares a man who lies prostrate). Brawl printed 5+2 (Puissant). Large claws Init 0, Atk +5, Def +3, Dam +4; large teeth Init 0, Atk +4, Def +1, Dam +3; hide Protection +2. +3 to jumping; leaps at riders. These are the bold, long-maned kind; found in Greece, Syria, North Africa."
+    },
+    {
+      "key": "stag",
+      "name": "Stag",
+      "group": "Mundane Beasts",
+      "page": 435,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        0,
+        0
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          2,
+          0,
+          -5,
+          2,
+          2,
+          0,
+          2
+        ],
+        "virtues_flaws": [
+          "Higher Purpose (Minor)",
+          "Improved Characteristics",
+          "Defensive Fighter",
+          "Extra Natural Weapons",
+          "Fast Runner",
+          "Good Jumper",
+          "Large Horns/Antlers",
+          "Sharp Ears (Minor)"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            "sprinting"
+          ],
+          [
+            "Awareness",
+            3,
+            "predators"
+          ],
+          [
+            "Brawl",
+            4,
+            "dodge"
+          ],
+          [
+            "Survival",
+            3,
+            "woodlands"
+          ]
+        ],
+        "traits": {
+          "Brave": 1
+        },
+        "reputations": {
+          "Noble (local)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Antlers",
+          4,
+          7,
+          8,
+          5
+        ],
+        [
+          "Hooves",
+          4,
+          6,
+          8,
+          3
+        ],
+        [
+          "Dodge",
+          2,
+          null,
+          7,
+          null
+        ]
+      ],
+      "soak": 2,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A red deer stag of 40 to 50 stone and up to fifteen hands, reddish-brown in winter and tan in summer, with a dark shaggy mane and antlers over four feet across; it bellows in the autumn rut.",
+      "notes": "Higher Purpose: protect the herd (tier not printed). Antlers (autumn and winter) Init +2, Atk +3, Def +2, Dam +3; after shedding them in spring, hooves Init +2, Atk +2, Def +2, Dam +1. Usually flees to lead foes from the herd. +3 to running and jumping. Size +1 where grazing is poor; does are smaller with no antlers."
+    },
+    {
+      "key": "wolf",
+      "name": "Wolf",
+      "group": "Mundane Beasts",
+      "page": 435,
+      "size": -1,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          2,
+          0,
+          -2,
+          0,
+          -1,
+          3,
+          2,
+          2
+        ],
+        "virtues_flaws": [
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Ferocity",
+          "Long-Winded",
+          "Sharp Ears (Minor)",
+          "Compulsion (Minor)",
+          "Infamous",
+          "Aggressive",
+          "Hardy",
+          "Keen Sense of Smell (Minor)",
+          "Pack Animal",
+          "Pursuit Predator",
+          "Sharp Ears (Free)",
+          "Thick Fur/Thick Scales",
+          "Vocal"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "distance running"
+          ],
+          [
+            "Awareness",
+            3,
+            "smell"
+          ],
+          [
+            "Brawl",
+            5,
+            "teeth"
+          ],
+          [
+            "Hunt",
+            4,
+            "track by smell"
+          ],
+          [
+            "Survival",
+            3,
+            "winter"
+          ]
+        ],
+        "traits": {
+          "Brave": 3,
+          "Cowardly": 3
+        },
+        "reputations": {
+          "Bloodthirsty (local)": 4
+        }
+      },
+      "attacks": [
+        [
+          "Teeth",
+          2,
+          11,
+          9,
+          0
+        ]
+      ],
+      "soak": 4,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "Shaggy grey to dark brown, often paler about the face, with upright triangular ears, a narrow muzzle and steady yellowish eyes; known for its piercing howl.",
+      "notes": "Ferocity when hungry; Compulsion to kill (an Animal Companion may swap another Personality Flaw). Teeth Init 0, Atk +3, Def +1, Dam +1; fur Protection +1. Printed as Pack Animal/Pack Leader: a pack's leader adds Leadership 5 (wolves) and lets the pack fight as a trained group. Found across Mythic Europe, the Middle East and North Africa."
+    },
+    {
+      "key": "baghl",
+      "name": "Baghl, an Earth Jinni",
+      "group": "Magic",
+      "page": 442,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Terram",
+      "size": 2,
+      "confidence": [
+        1,
+        3
+      ],
+      "tires": false,
+      "block": {
+        "characteristics": [
+          -2,
+          2,
+          1,
+          -1,
+          3,
+          3,
+          1,
+          -1
+        ],
+        "virtues_flaws": [
+          "Jinni",
+          [
+            "Greater Immunity",
+            {
+              "hazard": "fire"
+            }
+          ],
+          [
+            "Ways of the {land}",
+            {
+              "land": "Mountains"
+            }
+          ],
+          "Second Sight",
+          "Skinchanger",
+          "Strong-Willed",
+          "Tough",
+          "Greater Malediction",
+          "Magical Air",
+          [
+            "Vulnerable Magic",
+            {
+              "condition": "mua'addhin's call"
+            }
+          ],
+          "Reclusive"
+        ],
+        "abilities": [
+          [
+            "Living Language: Arabic",
+            5,
+            "stone"
+          ],
+          [
+            "Athletics",
+            3,
+            "climbing"
+          ],
+          [
+            "Great Weapon",
+            4,
+            "maul"
+          ],
+          [
+            "Profession: Miner",
+            3,
+            "gemstones"
+          ],
+          [
+            "Second Sight",
+            4,
+            "jinn"
+          ],
+          [
+            "Theology: Islam",
+            3,
+            "jinn"
+          ]
+        ],
+        "traits": {
+          "Reclusive": 5,
+          "Immutable": 3,
+          "Proud": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Maul (warhammer)",
+          -1,
+          11,
+          3,
+          15
+        ]
+      ],
+      "soak": 10,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Flesh to Stone",
+          "might_cost": 2,
+          "init": -4,
+          "form": "Terram",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Turns a human he touches to stone until sunrise or the morning call to prayer (Base 20, +1 Touch, +2 Sun)."
+        },
+        {
+          "name": "Ruler of Earth",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Terram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "Copies any non-Ritual Perdo or Rego Terram spell of level 15 or less, for 1 Might point per magnitude (1-3 points)."
+        },
+        {
+          "name": "Incorporeal",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Mentem",
+          "range": "",
+          "duration": "Constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Constant (Init Constant): naturally invisible and intangible, untouched by the physical world; magic can target him only if the caster can sense him. His physical scores apply only against other incorporeal beings."
+        },
+        {
+          "name": "Donning the Corporeal Veil",
+          "might_cost": 2,
+          "init": 1,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Forms his physical body, with its arms and armor, taking the size, combat scores and Wound levels above; it never tires and lasts as long as he wishes. Killing it does not kill him."
+        },
+        {
+          "name": "Presence",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Mentem",
+          "range": "",
+          "duration": "Constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Constant: he knows all that happens in his haunt, though he must Penetrate to perceive beings with Magic Resistance."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Terram",
+          "body, if slain in physical form"
+        ]
+      ],
+      "appearance": "A fat man with a mule's head, eyes of pupilless jet and quartz-veined limbs, carrying an oversized maul; in physical form he can also become a big black mule.",
+      "notes": "Jinn of a dark former quarry cave in the Elbruz mountains, who drove the miners out; best appeased by being left alone with his cave formations, though he will talk with theologians. Greater Malediction: honor bargains made. His haunt yields 1 pawn of Terram vis a year (a quartz-crusted stalactite). No Fatigue levels printed; he cannot be fatigued."
+    },
+    {
+      "key": "caladrius",
+      "name": "Caladrius",
+      "group": "Magic",
+      "page": 443,
+      "realm": "Magic",
+      "might": 14,
+      "form": "Animal",
+      "size": -2,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          -1,
+          2,
+          1,
+          -2,
+          -4,
+          3,
+          1,
+          2
+        ],
+        "virtues_flaws": [
+          [
+            "Lesser Immunity",
+            {
+              "hazard": "non-lethal diseases"
+            }
+          ],
+          "Unaffected by The Gift",
+          "Compassionate (Minor)",
+          "Noncombatant"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "flying"
+          ],
+          [
+            "Awareness",
+            4,
+            "food"
+          ],
+          [
+            "Brawl",
+            2,
+            "dodging"
+          ],
+          [
+            "Survival",
+            3,
+            "wetlands"
+          ]
+        ],
+        "traits": {
+          "Ibis*": 3,
+          "Magnificent Appearance (Presence)*": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Dodge",
+          2,
+          null,
+          5,
+          null
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Healing Gaze",
+          "might_cost": 4,
+          "init": -14,
+          "form": "Corpus",
+          "range": "Eye",
+          "duration": "Mom",
+          "target": "Ind",
+          "level": 40,
+          "penetration_bonus": 0,
+          "does": "Draws a non-fatal disease of up to Incapacitating strength, or a non-terminal aging crisis, out of a patient into itself; it must then fly up to the sun or the illness returns. CrCo 40."
+        },
+        {
+          "name": "Perceive the Afflictions of Mortal Flesh",
+          "might_cost": 0,
+          "init": 1,
+          "form": "Corpus",
+          "range": "Per",
+          "duration": "Mom",
+          "target": "Sight",
+          "level": 25,
+          "penetration_bonus": 0,
+          "does": "By looking at a person, knows what diseases they have and how grave each is. InCo 25."
+        }
+      ],
+      "vis": [
+        [
+          1,
+          "Corpus",
+          "left eye"
+        ],
+        [
+          1,
+          "Corpus",
+          "right eye"
+        ],
+        [
+          1,
+          "Corpus",
+          "wings"
+        ]
+      ],
+      "appearance": "A splendid all-white bird rather like a heron, with shorter legs, a long graceful neck and a short, slightly down-curved beak.",
+      "notes": "Ibis and Magnificent Appearance (Presence) are Essential Traits (marked *). Also has Ignem Resistance 4 (solar heat), not in the ability catalog. Turns away from a patient who will die; heals only illness, never poison, combat wounds or Decrepitude. Prized by kings and magi. No Confidence printed."
+    },
+    {
+      "key": "aneirin_the_bard",
+      "name": "Aneirin the Bard",
+      "group": "Magic",
+      "page": 445,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Imaginem",
+      "block": {
+        "characteristics": [
+          3,
+          3,
+          2,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Area Lore: Stonehenge Tribunal",
+            10,
+            ""
+          ],
+          [
+            "Magic Lore",
+            8,
+            ""
+          ],
+          [
+            "Music",
+            12,
+            ""
+          ],
+          [
+            "Teaching",
+            5,
+            ""
+          ]
+        ],
+        "traits": {
+          "Careful": 3,
+          "Observant": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [],
+      "soak": 0,
+      "fatigue_levels": "",
+      "can_be_wounded": false,
+      "powers": [
+        {
+          "name": "Discorporate",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Never takes bodily form beyond a shadow and a voice; only magic can harm him."
+        },
+        {
+          "name": "Names of Power",
+          "might_cost": 0,
+          "init": 0,
+          "form": "",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Knows the names of many lesser spirits and teaches them to those who make a pact with him."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Imaginem",
+          "his spirit, if bottled rather than banished"
+        ]
+      ],
+      "appearance": "Seen only as a shadow and heard as a tuneful voice; the Daimon of a famed early Welsh poet.",
+      "notes": "Str, Sta, Dex, Qik and Size n/a (recorded as 0); no combat. Wanders the Cambrian Mountains aiding those who share his ideals and punishing those who oppose them, strongest inside his lost tomb."
+    },
+    {
+      "key": "chnoubis_the_serpent",
+      "name": "Chnoubis the Serpent",
+      "group": "Magic",
+      "page": 446,
+      "realm": "Magic",
+      "might": 30,
+      "form": "Mentem",
+      "size": -1,
+      "block": {
+        "characteristics": [
+          3,
+          6,
+          0,
+          2,
+          0,
+          3,
+          3,
+          5
+        ],
+        "virtues_flaws": [],
+        "abilities": [],
+        "traits": {
+          "Curious": 4,
+          "Diplomatic": 3,
+          "Proud": 2,
+          "Noble": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          5,
+          8,
+          8,
+          5
+        ]
+      ],
+      "soak": 9,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Augury",
+          "might_cost": 0,
+          "init": 5,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Performs auguries as Divination & Augury, ten levels of success per Might point; without that book, mimics any Intellego spell at 1 point per ten levels. Cost varies."
+        },
+        {
+          "name": "Aura of Rightful Authority",
+          "might_cost": 4,
+          "init": 5,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": 20,
+          "penetration_bonus": 0,
+          "does": "As the Hermetic spell of that name."
+        },
+        {
+          "name": "Discorporation",
+          "might_cost": 1,
+          "init": 7,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Becomes an unseen spirit moving as fast as lightning, visible only to Intellego Vim or Second Sight."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Intellego",
+          "scales"
+        ],
+        [
+          2,
+          "Mentem",
+          "scales"
+        ]
+      ],
+      "appearance": "A serpent with a lion's head, said to hail from the Nile; summoned by theurgists across Europe to scry and uncover secrets.",
+      "notes": "Bite venom: Fatigue test vs 9 each round or lose a level, until three successes in a row or unconscious; meanwhile the victim cannot lie (Pen 25, Mentem) and babbles. Afterwards a Stamina (+Art of Memory) roll vs 6 to remember. Wounds -1 (1-4), -3 (5-8), -5 (9-12), banished 13+."
+    },
+    {
+      "key": "dietrich_von_bern",
+      "name": "Dietrich von Bern",
+      "group": "Magic",
+      "page": 446,
+      "realm": "Magic",
+      "might": 35,
+      "form": "Corpus",
+      "size": 2,
+      "block": {
+        "characteristics": [
+          2,
+          3,
+          5,
+          3,
+          5,
+          5,
+          5,
+          3
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Athletics",
+            6,
+            ""
+          ],
+          [
+            "Great Weapon",
+            10,
+            ""
+          ],
+          [
+            "Intrigue",
+            6,
+            ""
+          ],
+          [
+            "Leadership",
+            8,
+            ""
+          ]
+        ],
+        "traits": {
+          "Proud": 3,
+          "Barbarous": 2,
+          "Crafty": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Greatsword",
+          5,
+          19,
+          17,
+          15
+        ]
+      ],
+      "soak": 22,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Sacred Kingship",
+          "might_cost": 10,
+          "init": 3,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "With a touch, permanently raises a person's Perception, Presence or Communication by 1, once per person and to at most +3."
+        }
+      ],
+      "vis": [
+        [
+          7,
+          "Rego",
+          "corpse (unspecified)"
+        ]
+      ],
+      "appearance": "The Daimon of the Gothic hero-king animates his huge corpse in a tomb in the Lessini Mountains, armed and armored with gear steeped in dragon's blood.",
+      "notes": "Sword dipped in dragon's blood: spells of level 40 or less cannot affect it, and a wound burns for +5 a round (unsoaked by armor) until treated. Soak includes dragon-blooded full chain. Advises the worthy, fights the power-hungry. Wounds -1 (1-7), -3 (8-14), -5 (15-21), banished 22+."
+    },
+    {
+      "key": "gydryty_kom_the_giant",
+      "name": "Gydryty-kom the Giant",
+      "group": "Magic",
+      "page": 447,
+      "realm": "Magic",
+      "might": 40,
+      "form": "Auram",
+      "size": 3,
+      "block": {
+        "characteristics": [
+          0,
+          1,
+          0,
+          -2,
+          8,
+          6,
+          3,
+          3
+        ],
+        "virtues_flaws": [],
+        "abilities": [],
+        "traits": {
+          "Hates Being Interrupted": 4,
+          "Determined": 3,
+          "Protective": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Brawl",
+          3,
+          10,
+          10,
+          8
+        ]
+      ],
+      "soak": 20,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Auram Magic",
+          "might_cost": 0,
+          "init": 3,
+          "form": "Auram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any Auram effect for 1 point per magnitude (hail effects 1 point per three magnitudes); Auram Rituals work like Formulaic spells with no vis or extra time. Cost varies."
+        },
+        {
+          "name": "Swallow Spells",
+          "might_cost": 5,
+          "init": 3,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Swallows and wholly dispels any spell or magical effect of level 50 or lower."
+        }
+      ],
+      "vis": [
+        [
+          8,
+          "Auram",
+          "tongue"
+        ]
+      ],
+      "appearance": "A hail-giant whose mouth gapes from earth to sky, swallowing storms and lightning; once honored among the Albanians.",
+      "notes": "Angry when summoned, since it pulls him from his endless fight with a fog-serpent Daimon that would devour the world. Wounds -1 (1-8), -3 (9-16), -5 (17-24), banished 25+."
+    },
+    {
+      "key": "hipta_the_nurse",
+      "name": "Hipta the Nurse",
+      "group": "Magic",
+      "page": 447,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Animal",
+      "block": {
+        "characteristics": [
+          3,
+          1,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        "virtues_flaws": [],
+        "abilities": [],
+        "traits": {
+          "Calm": 4,
+          "Protective": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [],
+      "soak": 0,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Shapechange",
+          "might_cost": 1,
+          "init": 5,
+          "form": "Animal",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Instantly takes the shape of any natural or fantastic beast of Size -5 to +2, and can speak in any of them."
+        },
+        {
+          "name": "Dispel",
+          "might_cost": 0,
+          "init": 5,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any Perdo Vim effect at 1 Might per magnitude, counting as familiar with every magical tradition, with Penetration 30. Cost varies."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Animal",
+          "a white feather left when banished"
+        ]
+      ],
+      "appearance": "Nurse of Dionysus, usually seen as a lovely dove; named in several ancient texts.",
+      "notes": "Str, Sta, Dex, Qik, Size, combat and Soak vary with her form (recorded as 0); wound penalties follow the form, with banishment in place of incapacitation. Invoked to lift curses and magical harm."
+    },
+    {
+      "key": "honos",
+      "name": "Honos",
+      "group": "Magic",
+      "page": 448,
+      "realm": "Magic",
+      "might": 30,
+      "form": "Corpus",
+      "size": 0,
+      "block": {
+        "characteristics": [
+          0,
+          1,
+          2,
+          1,
+          3,
+          5,
+          4,
+          4
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            ""
+          ],
+          [
+            "Great Weapon",
+            6,
+            "long spear"
+          ],
+          [
+            "Leadership",
+            6,
+            ""
+          ],
+          [
+            "Teaching",
+            3,
+            "leadership"
+          ]
+        ],
+        "traits": {
+          "Honorable": 6,
+          "Authoritarian": 3,
+          "Disciplined": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Long Spear",
+          7,
+          14,
+          12,
+          10
+        ]
+      ],
+      "soak": 14,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Instill Leadership",
+          "might_cost": 5,
+          "init": 4,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "A touch of his spear grants 17 xp in Leadership (to score 6 at most), which the recipient must spend a season reflecting on to gain."
+        },
+        {
+          "name": "Centurions' Feast",
+          "might_cost": 30,
+          "init": 4,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Creates a feast for a hundred lasting an hour; diners with Dutybound are healed of Light and Medium Wounds and get +10 on their next recovery rolls."
+        }
+      ],
+      "vis": [
+        [
+          6,
+          "Corpus",
+          "armor"
+        ]
+      ],
+      "appearance": "A young warrior in ancient armor bearing a lance and a horn of plenty; the Roman Daimon of virtue and soldierly honor.",
+      "notes": "Soak includes a silver cuirass. His Roman temples are lost to the Dominion; the Legion of Mithras may know a surviving shrine. Wounds -1 (1-5), -3 (6-10), -5 (11-20), incapacitated (21-25), banished 26+."
+    },
+    {
+      "key": "portunes",
+      "name": "Portunes, Spirit of Safe Harbor",
+      "group": "Magic",
+      "page": 448,
+      "realm": "Magic",
+      "might": 25,
+      "form": "Auram",
+      "block": {
+        "characteristics": [
+          1,
+          3,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "virtues_flaws": [],
+        "abilities": [],
+        "traits": {
+          "Watchful": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [],
+      "soak": 0,
+      "fatigue_levels": "",
+      "can_be_wounded": false,
+      "powers": [
+        {
+          "name": "Safe Harbor",
+          "might_cost": 12,
+          "init": 0,
+          "form": "Auram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Keeps a port's harbor calm for a whole season, resisting spells that would disturb it with Magic Resistance 60."
+        },
+        {
+          "name": "Opening Enchanted Locks",
+          "might_cost": 8,
+          "init": 0,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Dispels any magical lock below level 40."
+        }
+      ],
+      "vis": [],
+      "appearance": "A ghostly serpent or the shadowy face of a bearded man in a leather apron; never solid.",
+      "notes": "Size n/a; never materializes, vanishes if attacked, harmed only by Perdo Vim. Spirit of ports, keys, locks and livestock (Palaemon to the Greeks); summoned by casting keys into a fire. Feast day 17 August. No vis."
+    },
+    {
+      "key": "pukis",
+      "name": "Pukis, Dragon of the Hearth",
+      "group": "Magic",
+      "page": 449,
+      "realm": "Magic",
+      "might": 10,
+      "form": "Ignem",
+      "size": -2,
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          0,
+          0,
+          -1,
+          4,
+          3,
+          6
+        ],
+        "virtues_flaws": [],
+        "abilities": [],
+        "traits": {
+          "Mischievous": 3,
+          "Loyal": 3,
+          "Fickle": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          5,
+          6,
+          9,
+          3
+        ],
+        [
+          "Lashing tail",
+          6,
+          10,
+          13,
+          0
+        ]
+      ],
+      "soak": 8,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Invisibility",
+          "might_cost": 3,
+          "init": 6,
+          "form": "Imaginem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Becomes unseen and unheard as long as it likes, or until it touches a person or animal."
+        },
+        {
+          "name": "Mischievous Flame",
+          "might_cost": 2,
+          "init": 6,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Sets anything slightly flammable alight with a look."
+        },
+        {
+          "name": "Sneak Thief",
+          "might_cost": 5,
+          "init": 6,
+          "form": "Terram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Teleports an object under 3 pounds that it touches to the edge of its master's hearth."
+        },
+        {
+          "name": "Sacred Fire",
+          "might_cost": 0,
+          "init": 6,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "While it lives in a hearth kept hot all year, the ashes yield 1 pawn of Ignem vis a season."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Ignem",
+          "body"
+        ],
+        [
+          1,
+          "Rego",
+          "body"
+        ]
+      ],
+      "appearance": "A small, long, snake-bodied fire dragon that curls up under the burning logs of a hearth.",
+      "notes": "Can fight two foes at once without penalty (jaws and tail); its heat ignites flammable things it touches. Soak from leathery hide. Brings gifts, often stolen, to its master, attacks destructive strangers, and makes mischief then leaves if mistreated. A Baltic Daimon; a Novgorod theurgist wrote a ritual to summon it. Wounds -1 (1-3), -3 (4-6), -5 (7-9), banished 10+."
+    },
+    {
+      "key": "earth_elemental",
+      "name": "An Earth Elemental",
+      "group": "Magic",
+      "page": 452,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Terram",
+      "size": 0,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          0,
+          1,
+          -2,
+          -4,
+          3,
+          6,
+          2,
+          0
+        ],
+        "virtues_flaws": [
+          "Berserk",
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "stamina"
+            }
+          ],
+          "Tough",
+          [
+            "Ways of the {land}",
+            {
+              "land": "Cavern"
+            }
+          ],
+          "Poor Memory",
+          "Short Attention Span",
+          "Simple-Minded"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "pursuit"
+          ],
+          [
+            "Awareness",
+            2,
+            "interlopers"
+          ],
+          [
+            "Brawl",
+            3,
+            "bludgeon"
+          ],
+          [
+            "Penetration",
+            3,
+            "Slake Thirst Power"
+          ],
+          [
+            "Stealth",
+            2,
+            "keeping still"
+          ]
+        ],
+        "traits": {
+          "Cave": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bludgeon",
+          3,
+          11,
+          7,
+          9
+        ],
+        [
+          "Bludgeon when Berserk",
+          3,
+          13,
+          -5,
+          9
+        ]
+      ],
+      "soak": 9,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Crush",
+          "might_cost": 0,
+          "init": -2,
+          "form": "Terram",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 30,
+          "penetration_bonus": 0,
+          "does": "Clubs a foe with a normal Bludgeon attack; against a foe no larger, it pins him, adding Might/5 to its Grapple Strength, and damages, breaks or destroys what he carries."
+        },
+        {
+          "name": "Slake Thirst",
+          "might_cost": 1,
+          "init": 4,
+          "form": "Aquam",
+          "range": "Touch",
+          "duration": "Mom",
+          "target": "Part",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "Its touch draws out water: a Fatigue level per touch, then Light, Medium, Heavy Wounds once fatigue is gone; drinking water restores the fatigue."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Terram",
+          "body"
+        ]
+      ],
+      "appearance": "Looks like ordinary earth or rock but built of sharp-cornered cubes that slide endlessly; this one was rarefied in a cave with a Magic aura.",
+      "notes": "Attacks include Ways of the Cavern; Soak +2 more when Berserk. Only bludgeoning weapons, picks and spades hurt it. Wounds also drain Might: Light 1, Medium 3, Heavy and Incapacitating 5, Dead all (wound ranges 1-5, 6-10, 11-15, 16-20, 21+). Guards its cavern's vis source fiercely. Sample power: The Red Touch (1 pt, Init Qik+5, PeTe 10) rusts metal it hits or is hit by."
+    },
+    {
+      "key": "water_elemental",
+      "name": "A Water Elemental",
+      "group": "Magic",
+      "page": 454,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Aquam",
+      "size": 0,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          4,
+          -2,
+          0,
+          0,
+          3,
+          3,
+          1,
+          -4
+        ],
+        "virtues_flaws": [
+          [
+            "Puissant {ability}",
+            {
+              "ability": "Hunt"
+            }
+          ],
+          "Tough",
+          [
+            "Ways of the {land}",
+            {
+              "land": "River"
+            }
+          ],
+          "Poor Memory",
+          "Short Attention Span",
+          "Simple-Minded"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            2,
+            "when hunting"
+          ],
+          [
+            "Brawl",
+            3,
+            "bludgeon"
+          ],
+          [
+            "Hunt",
+            3,
+            "river banks"
+          ],
+          [
+            "Penetration",
+            2,
+            "Chill Touch power"
+          ],
+          [
+            "Swim",
+            3,
+            "speed"
+          ]
+        ],
+        "traits": {
+          "River": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bludgeon",
+          -4,
+          8,
+          3,
+          6
+        ],
+        [
+          "Bludgeon (Ways of the River)",
+          -1,
+          11,
+          6,
+          6
+        ]
+      ],
+      "soak": 6,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Drown",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Aquam",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 30,
+          "penetration_bonus": 0,
+          "does": "After a hit, engulfs a smaller foe, who must roll against deprivation each round and may try to break free by grappling."
+        },
+        {
+          "name": "Chill Touch",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Ignem",
+          "range": "Touch",
+          "duration": "Mom",
+          "target": "Ind",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "Its touch draws out heat for +10 damage, soaked without armor."
+        },
+        {
+          "name": "Crafter of Water",
+          "might_cost": 1,
+          "init": -4,
+          "form": "Aquam",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Mimics any Creo or Rego Aquam spell of level 15 or less at 1 Might per magnitude (1-3 points; Init -4 minus the cost)."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Aquam",
+          "body"
+        ]
+      ],
+      "appearance": "A puddle or film of utterly pure water that rises into faceted, symmetrical humps; this one haunts river banks.",
+      "notes": "Hunt is printed 3+3 (Puissant). Blades pass through it; only bludgeons harm it, and fire weaker than its Might goes out. Its blows do Scuffle damage; it likes to trip, disarm and snatch, and hoards odd collections. Slow, half speed uphill. Wounds also drain Might: Light 1, Medium 3, Heavy and Incapacitating 5, Dead all (wound ranges 1-5, 6-10, 11-15, 16-20, 21+). Sample power: Sight of the River (2 pts, InIm 20)."
+    },
+    {
+      "key": "air_elemental",
+      "name": "An Air Elemental",
+      "group": "Magic",
+      "page": 455,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Auram",
+      "size": 0,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          1,
+          2,
+          0,
+          0,
+          3,
+          -4,
+          -2,
+          4
+        ],
+        "virtues_flaws": [
+          "Keen Vision",
+          "Shapeshifter",
+          [
+            "Ways of the {land}",
+            {
+              "land": "Storm"
+            }
+          ],
+          "Poor Memory",
+          "Short Attention Span",
+          "Simple-Minded"
+        ],
+        "abilities": [
+          [
+            "Area Lore: Home Range",
+            3,
+            "high points"
+          ],
+          [
+            "Athletics",
+            3,
+            "storm force winds"
+          ],
+          [
+            "Awareness",
+            3,
+            "metal objects"
+          ],
+          [
+            "Brawl",
+            3,
+            "Jupiter's Touch Power"
+          ],
+          [
+            "Penetration",
+            2,
+            "Jupiter's Touch Power"
+          ],
+          [
+            "Shapeshifter",
+            4,
+            "birds"
+          ]
+        ],
+        "traits": {
+          "Storm": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Jupiter's Touch Power",
+          5,
+          5,
+          null,
+          30
+        ]
+      ],
+      "soak": 0,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Suffocate",
+          "might_cost": 0,
+          "init": 2,
+          "form": "Auram",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 30,
+          "penetration_bonus": 0,
+          "does": "Fills a foe's lungs, forcing deprivation rolls; to escape, the victim must outpace it (Qik + Athletics, the elemental using Might/5) and roll Fatigue."
+        },
+        {
+          "name": "Jupiter's Touch",
+          "might_cost": 1,
+          "init": 3,
+          "form": "Auram",
+          "range": "Touch",
+          "duration": "Mom",
+          "target": "Ind",
+          "level": 30,
+          "penetration_bonus": 0,
+          "does": "Its touch looses a flash of lightning for +30 damage."
+        },
+        {
+          "name": "Charge of the Angry Winds",
+          "might_cost": 1,
+          "init": 5,
+          "form": "Auram",
+          "range": "Voice",
+          "duration": "Conc",
+          "target": "",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "As the spell; add its Strength to every Ease Factor for acting in the wind."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Auram",
+          "body"
+        ]
+      ],
+      "appearance": "A storm-born being of linked chains of air; it can take the shapes of a raven, an eagle, a hound and a bull it has seen.",
+      "notes": "The printed area of its Area Lore is unnamed. Attack includes Ways of the Storm. Weapons pass through it, it slips through any gap, never stays still and cannot be surprised; it has no natural attack. Wounds also drain Might: Light 1, Medium 3, Heavy and Incapacitating 5, Dead all (wound ranges 1-5, 6-10, 11-15, 16-20, 21+). Sample power: Dissolution (3 pts, MuTe 25)."
+    },
+    {
+      "key": "fire_elemental",
+      "name": "A Fire Elemental",
+      "group": "Magic",
+      "page": 456,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Ignem",
+      "size": 0,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          0,
+          -2,
+          3,
+          1,
+          -4,
+          0,
+          5,
+          2
+        ],
+        "virtues_flaws": [
+          "Lightning Reflexes",
+          [
+            "Ways of the {land}",
+            {
+              "land": "Forest Fire"
+            }
+          ],
+          "Poor Memory",
+          "Short Attention Span",
+          "Simple-Minded"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "leaping between fuel sources"
+          ],
+          [
+            "Brawl",
+            3,
+            "Burn Power"
+          ],
+          [
+            "Charm",
+            3,
+            "small animals"
+          ],
+          [
+            "Penetration",
+            3,
+            "Fascination Power"
+          ]
+        ],
+        "traits": {
+          "Forest Fire": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Burn Power",
+          3,
+          12,
+          null,
+          null
+        ]
+      ],
+      "soak": 4,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Burn",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Ignem",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 30,
+          "penetration_bonus": 0,
+          "does": "Touching it deals a stress die plus its current Might Pool; flammables catch fire (burning clothes +10 a round) and metal held to it heats as Heat of the Searing Forge."
+        },
+        {
+          "name": "Fascination",
+          "might_cost": 3,
+          "init": 6,
+          "form": "Mentem",
+          "range": "Eye",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "Its swirling colors entrance onlookers who fail an Intelligence roll vs 9, rerolled each round."
+        },
+        {
+          "name": "Enliven the Gross Fire",
+          "might_cost": 6,
+          "init": -10,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Rarefies a new fire elemental of lower Might from raw fire, under its control; can also seize other fire elementals if it penetrates their Might."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Ignem",
+          "body"
+        ]
+      ],
+      "appearance": "A cluster of tetrahedral flames moving against nature; born when lightning struck a magically tainted tree.",
+      "notes": "Burn attack's Damage is its Might Pool plus a stress die (stored as n/a); includes Ways of the Forest Fire. Regains Might in three weeks, not a season. Weapons pass through it; water hurts it as fire would. Spawns more elementals if fought with water. Wounds also drain Might: Light 1, Medium 3, Heavy and Incapacitating 5, Dead all (wound ranges 1-5, 6-10, 11-15, 16-20, 21+). Sample power: Heat of the Searing Forge (1 pt, CrIg 10)."
+    },
+    {
+      "key": "ghostly_warder",
+      "name": "Ghostly Warder",
+      "group": "Magic",
+      "page": 457,
+      "realm": "Magic",
+      "might": 10,
+      "form": "Mentem",
+      "size": 0,
+      "age": "n/a (40)",
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          2,
+          0,
+          0
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Area Lore: Home Area",
+            5,
+            "places children get lost"
+          ],
+          [
+            "Awareness",
+            5,
+            "where her children are"
+          ],
+          [
+            "Organization Lore: Church",
+            1,
+            "funerals"
+          ],
+          [
+            "Dominion Lore",
+            1,
+            "after death"
+          ],
+          [
+            "Folk Ken",
+            4,
+            "people lying to her children"
+          ],
+          [
+            "Living Language: Native Tongue",
+            5,
+            "scolding"
+          ],
+          [
+            "Magic Lore",
+            2,
+            "ghosts"
+          ],
+          [
+            "Profession: Housewife",
+            5,
+            "cleaning"
+          ]
+        ],
+        "traits": {
+          "Protective": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [],
+      "soak": 0,
+      "fatigue_levels": "",
+      "can_be_wounded": false,
+      "equipment": "Ghostly clothes, tools and pots that are part of her",
+      "powers": [
+        {
+          "name": "Kinesis",
+          "might_cost": 5,
+          "init": 0,
+          "form": "Terram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Moves one object as if she were there, until she sets it down; she cannot fight with it."
+        }
+      ],
+      "vis": [],
+      "appearance": "A gaunt older peasant woman in plain, well-mended clothes, carrying a distaff, pot or broom that changes now and then; unseen without a suitable Virtue.",
+      "notes": "The spirit behind the Magical Warder Virtue (p. 93): a dead mother, aunt or grandmother who still gives childhood advice but reads people and events shrewdly. Non-physical, so no combat. Printed 'Church Lore' and 'Divine Lore' recorded as Organization Lore: Church and Dominion Lore. Two more traits of the player's choice; may take grog Virtues. No vis."
+    },
+    {
+      "key": "typical_giant",
+      "name": "A Typical Giant",
+      "group": "Magic",
+      "page": 457,
+      "realm": "Magic",
+      "might": 12,
+      "form": "Corpus",
+      "size": 5,
+      "confidence": [
+        1,
+        3
+      ],
+      "encumbrance": "0",
+      "equipment": "Cudgel, partial fur armor",
+      "block": {
+        "characteristics": [
+          -3,
+          1,
+          0,
+          -3,
+          12,
+          3,
+          2,
+          -2
+        ],
+        "virtues_flaws": [
+          "Tough",
+          "Warrior",
+          "Wrathful (Minor)",
+          "Weak-Willed"
+        ],
+        "abilities": [
+          [
+            "Brawl",
+            4,
+            "kick"
+          ],
+          [
+            "Great Weapon",
+            5,
+            "cudgel"
+          ],
+          [
+            "Living Language: Native Tongue",
+            4,
+            "coarse expressions"
+          ],
+          [
+            "Thrown Weapon",
+            3,
+            "stone"
+          ]
+        ],
+        "traits": {
+          "Oafish": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Cudgel",
+          -2,
+          12,
+          5,
+          19
+        ],
+        [
+          "Kick",
+          -3,
+          6,
+          1,
+          15
+        ],
+        [
+          "Stone",
+          -3,
+          7,
+          2,
+          14
+        ]
+      ],
+      "soak": 9,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [
+        [
+          3,
+          "Corpus",
+          "skull"
+        ]
+      ],
+      "appearance": "A huge ugly man some twenty feet tall, with bulging eyes, a blocky head, a slash of a mouth full of crooked teeth, and a crude bearskin garment.",
+      "notes": "Typical of the giants of the British Isles; sometimes allied to hedge wizards or faeries. Unlike most magic beings they eat, drink, breathe, age and die. Wrathful is the Minor Flaw. Wounds -1 (1-10), -3 (11-20), -5 (21-30), incapacitated (31-40), dead 41+."
+    },
+    {
+      "key": "sir_giles",
+      "name": "Sir Giles, a Ghostly Knight",
+      "group": "Magic",
+      "page": 458,
+      "realm": "Magic",
+      "might": 16,
+      "form": "Mentem",
+      "size": 0,
+      "age": "n/a (30)",
+      "confidence": [
+        2,
+        6
+      ],
+      "encumbrance": "2 (4)",
+      "equipment": "Full chain mail, lance, heater shield, long sword, black destrier",
+      "block": {
+        "characteristics": [
+          -1,
+          -1,
+          1,
+          0,
+          2,
+          1,
+          2,
+          2
+        ],
+        "virtues_flaws": [
+          "Knight",
+          [
+            "Puissant {ability}",
+            {
+              "ability": "Single Weapon"
+            }
+          ],
+          "Self-Confident",
+          "Proud",
+          [
+            "Baneful Circumstances",
+            {
+              "circumstance": "during the day"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Area Lore: Home Area",
+            3,
+            "nobles"
+          ],
+          [
+            "Animal Handling",
+            3,
+            "horses"
+          ],
+          [
+            "Athletics",
+            2,
+            "running"
+          ],
+          [
+            "Awareness",
+            3,
+            "in battle"
+          ],
+          [
+            "Brawl",
+            2,
+            "fist"
+          ],
+          [
+            "Concentration",
+            1,
+            "remaining invisible"
+          ],
+          [
+            "Charm",
+            1,
+            "ladies"
+          ],
+          [
+            "Etiquette",
+            3,
+            "nobles"
+          ],
+          [
+            "Great Weapon",
+            3,
+            "long spear"
+          ],
+          [
+            "Hunt",
+            2,
+            "deer"
+          ],
+          [
+            "Intrigue",
+            1,
+            "noble courts"
+          ],
+          [
+            "Leadership",
+            3,
+            "soldiers"
+          ],
+          [
+            "Ride",
+            5,
+            "in battle"
+          ],
+          [
+            "Single Weapon",
+            5,
+            "heater shield"
+          ]
+        ],
+        "traits": {
+          "Proud": 6,
+          "Belligerent": 2,
+          "Brave": 2
+        },
+        "reputations": {
+          "Proud (local)": 3
+        }
+      },
+      "attacks": [
+        [
+          "Lance & Heater, mounted",
+          2,
+          17,
+          16,
+          7
+        ],
+        [
+          "Lance, dismounted",
+          3,
+          9,
+          7,
+          9
+        ],
+        [
+          "Long Sword & Heater, mounted",
+          2,
+          17,
+          17,
+          8
+        ],
+        [
+          "Long Sword & Heater",
+          2,
+          14,
+          14,
+          8
+        ],
+        [
+          "Long Sword only",
+          2,
+          13,
+          10,
+          8
+        ]
+      ],
+      "soak": 10,
+      "fatigue_levels": "OK, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Donning the Corporeal Veil",
+          "might_cost": 5,
+          "init": -1,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Takes on a material body."
+        },
+        {
+          "name": "Riding the Phantom Steed",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Animal",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 40,
+          "penetration_bonus": 0,
+          "does": "When solid, also materializes his warhorse (a destrier), which he can dismiss at will."
+        },
+        {
+          "name": "Invisibility",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Imaginem",
+          "range": "Touch",
+          "duration": "Conc",
+          "target": "Group",
+          "level": 20,
+          "penetration_bonus": 0,
+          "does": "He and his horse turn invisible at will, even when solid; Second Sight still sees them."
+        },
+        {
+          "name": "Ride in Dreams",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Mentem",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "As a spirit, haunts the dreams of a sleeper whose name he knows; the victim rolls Stamina vs his Presence + Leadership or loses a Long-Term Fatigue level."
+        }
+      ],
+      "vis": [
+        [
+          4,
+          "Mentem",
+          "lance"
+        ]
+      ],
+      "appearance": "A phantom knight in black mail on a fearsome black destrier, plain black shield and surcoat, a cockerel crest; helm off, a handsome, groomed face full of fierce pride.",
+      "notes": "Single Weapon is printed 5+2 (Puissant). Proud is the Major Flaw. Haunts his old lands believing a tournament killing keeps him in Purgatory; his true sin is pride, and only facing it lets him pass on. Wounds -1 (1-5), -3 (6-10), -5 (11-15), incapacitated 16+."
+    },
+    {
+      "key": "magical_wolf",
+      "name": "A Magical Wolf",
+      "group": "Magic",
+      "page": 459,
+      "realm": "Magic",
+      "might": 20,
+      "form": "Animal",
+      "size": -1,
+      "age": "n/a",
+      "encumbrance": "0 (0)",
+      "block": {
+        "characteristics": [
+          0,
+          3,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Area Lore: Home Range",
+            6,
+            "game trails"
+          ],
+          [
+            "Brawl",
+            6,
+            "biting"
+          ],
+          [
+            "Hunt",
+            7,
+            "in a pack"
+          ],
+          [
+            "Living Language: Native Tongue",
+            5,
+            "hunting terminology"
+          ],
+          [
+            "Survival",
+            6,
+            "forests"
+          ]
+        ],
+        "traits": {
+          "Leader": 3,
+          "Loyal": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          12,
+          10,
+          14,
+          9
+        ]
+      ],
+      "soak": 7,
+      "fatigue_levels": "n/a",
+      "tires": false,
+      "powers": [
+        {
+          "name": "Pack of One",
+          "might_cost": 2,
+          "init": 10,
+          "form": "Animal",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Makes five copies of itself that fight as a trained group (Leadership 5, full +15 bonus) until the foe falls or it breaks off; it dies only if every copy dies."
+        },
+        {
+          "name": "Terrifying Howl",
+          "might_cost": 4,
+          "init": 0,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Hearers fear the wolf and the wilds: Brave roll vs 12 to shake it off, vs 6 to act sensibly, else they flee in panic."
+        },
+        {
+          "name": "Wolf Lord",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Animal",
+          "range": "",
+          "duration": "Constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any wolf it strikes in a deadly fight dies at once, and ordinary wolves follow its simple orders even in its absence."
+        }
+      ],
+      "vis": [
+        [
+          4,
+          "Animal",
+          "head"
+        ]
+      ],
+      "appearance": "A gray male wolf, a little larger than usual and radiantly healthy, with unnaturally bright eyes.",
+      "notes": "Nameless and indifferent to people; it tends every wolf in its range, culling the weak when needed, and may bargain with or drive out a village. Reacts to The Gift as a mundane animal does. Tireless. Wounds -1 (1-4), -3 (5-8), -5 (9-12), incapacitated (13-16)."
+    },
+    {
+      "key": "adranus",
+      "name": "Adranus, the Spirit of Mount Etna",
+      "group": "Magic",
+      "page": 460,
+      "realm": "Magic",
+      "might": 50,
+      "form": "Ignem",
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          3,
+          3,
+          2,
+          2,
+          3,
+          2,
+          -1,
+          -2
+        ],
+        "virtues_flaws": [
+          [
+            "Ways of the {land}",
+            {
+              "land": "Mountains"
+            }
+          ],
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Fury",
+          "Wrathful"
+        ],
+        "abilities": [
+          [
+            "Area Lore: Sicily",
+            6,
+            "mountains"
+          ],
+          [
+            "Magic Lore",
+            8,
+            "underworld"
+          ]
+        ],
+        "traits": {
+          "Wrathful": 6,
+          "Slumbering": 3
+        },
+        "reputations": {
+          "Bringer of Death and Destruction (local)": 5
+        }
+      },
+      "attacks": [],
+      "soak": 0,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Crafter of Fire",
+          "might_cost": 0,
+          "init": -2,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any non-Ritual Creo or Rego Ignem effect up to level 50 at 1 Might per magnitude (Init -2 minus the cost)."
+        },
+        {
+          "name": "Crafter of Earth",
+          "might_cost": 0,
+          "init": -2,
+          "form": "Terram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any non-Ritual Creo or Rego Terram effect up to level 50 at 1 Might per magnitude (Init -2 minus the cost)."
+        },
+        {
+          "name": "Grant Visions",
+          "might_cost": 5,
+          "init": -12,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Gives the target the Visions Flaw; temporarily (Might held until withdrawn) or permanently (Might Score -5)."
+        },
+        {
+          "name": "Grant Simple-Minded",
+          "might_cost": 5,
+          "init": -12,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Gives the target the Simple-Minded Flaw, temporarily or permanently as Grant Visions."
+        },
+        {
+          "name": "Grant Wrathful",
+          "might_cost": 5,
+          "init": -12,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Gives the target the Wrathful Flaw, temporarily or permanently as Grant Visions."
+        },
+        {
+          "name": "Hibernation",
+          "might_cost": 15,
+          "init": -32,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Lies dormant a year and banks the 15 points into the next waking year, so its Pool can exceed 50 after long sleeps."
+        },
+        {
+          "name": "Manifestation",
+          "might_cost": 4,
+          "init": 0,
+          "form": "Animal",
+          "range": "Touch",
+          "duration": "Conc",
+          "target": "Ind or Group",
+          "level": 20,
+          "penetration_bonus": 0,
+          "does": "Possesses animals or plants it touches (anything on the mountain), giving them Might equal to the points spent: 4 for a plant, 5 for a Size +1 beast, +2 for ten creatures and x10 per further 2; no more than 10 points, never people. Init is Qik minus the cost."
+        },
+        {
+          "name": "Master of Earth",
+          "might_cost": 0,
+          "init": -2,
+          "form": "Terram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any non-Ritual Muto or Perdo Terram effect up to level 50 at 1 Might per magnitude (Init -2 minus the cost)."
+        },
+        {
+          "name": "Presence",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Imaginem",
+          "range": "Arc",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 30,
+          "penetration_bonus": 0,
+          "does": "Is everywhere on Mount Etna at once and aware of all that happens there; the mountain yields 5 pawns of Ignem vis a year without eroding its Might."
+        },
+        {
+          "name": "Regio",
+          "might_cost": 15,
+          "init": -32,
+          "form": "Vim",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Spends Might permanently to add levels to the regio about the crater."
+        },
+        {
+          "name": "Ruler of Lava",
+          "might_cost": 0,
+          "init": -2,
+          "form": "Terram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any non-Ritual lava effect up to level 50 at 1 Might per magnitude (Init -2 minus the cost)."
+        },
+        {
+          "name": "Ruler of Smoke",
+          "might_cost": 0,
+          "init": -2,
+          "form": "Auram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any non-Ritual smoke effect up to level 50 at 1 Might per magnitude (Init -2 minus the cost)."
+        }
+      ],
+      "vis": [
+        [
+          10,
+          "Ignem",
+          "the spirit (plus 5 pawns a year from the summit crater)"
+        ]
+      ],
+      "appearance": "The spirit is the mountain itself: a scorched cone rising ten thousand feet over eastern Sicily; it often acts through possessed Sicilian eagles.",
+      "notes": "No Size or combat stats. A fallen fire god, angry that Sicilians stopped worshiping it; when disrespected its rage builds into eruption (last 1194, next 1222 in real history). Visitors to its slopes may go mad. Costs marked variable are recorded as 0; Manifestation is 4 or more (ReHe 20 / ReAn 25 or more)."
+    },
+    {
+      "key": "revenant_corpse",
+      "name": "Revenant, Corpse-Like Form",
+      "group": "Magic",
+      "page": 462,
+      "realm": "Magic",
+      "might": 9,
+      "form": "Corpus",
+      "size": 0,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          -2,
+          0,
+          -2,
+          3,
+          3,
+          1,
+          0
+        ],
+        "virtues_flaws": [
+          [
+            "Baneful Circumstances",
+            {
+              "circumstance": "in daylight"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Brawl",
+            3,
+            "fist"
+          ]
+        ],
+        "traits": {
+          "Vengeful": 6
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Fist",
+          0,
+          7,
+          4,
+          5
+        ]
+      ],
+      "soak": 11,
+      "fatigue_levels": "",
+      "equipment": "Tattered burial shroud",
+      "powers": [
+        {
+          "name": "Breath of Corruption",
+          "might_cost": 1,
+          "init": 2,
+          "form": "Auram",
+          "range": "Special",
+          "duration": "Mom",
+          "target": "Ind",
+          "level": 20,
+          "penetration_bonus": 0,
+          "does": "Breathes out foul humours that give one person within 2 paces a disease (Ease Factor 9, acts as a Medium wound)."
+        },
+        {
+          "name": "Rise from the Grave",
+          "might_cost": 1,
+          "init": -1,
+          "form": "Terram",
+          "range": "Touch",
+          "duration": "Diameter",
+          "target": "Part",
+          "level": 5,
+          "penetration_bonus": 0,
+          "does": "Opens the earth over its grave so it can climb in or out; the ground closes afterwards without a trace."
+        }
+      ],
+      "vis": [
+        [
+          1,
+          "Corpus",
+          "left eye"
+        ],
+        [
+          1,
+          "Corpus",
+          "right eye"
+        ]
+      ],
+      "appearance": "A withered, leathery corpse whose eyes burn with unnatural rage.",
+      "notes": "Its dead fist strikes like a bludgeon. Cannot be Incapacitated: such wounds count as Heavy. Wounds: -1 (1-5), -3 (6-10), -5 (11-15), -5 (16-20), Destroyed (21+). Optionally +10 Soak against piercing weapons. Spell-animated corpses use these statistics with no Might, Confidence or powers, never tire, Brawl 3."
+    },
+    {
+      "key": "revenant_skeleton",
+      "name": "Revenant, Skeletal Form",
+      "group": "Magic",
+      "page": 463,
+      "realm": "Magic",
+      "might": 6,
+      "form": "Corpus",
+      "size": -2,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          -2,
+          -2,
+          0,
+          -2,
+          0,
+          3,
+          2,
+          1
+        ],
+        "virtues_flaws": [
+          [
+            "Baneful Circumstances",
+            {
+              "circumstance": "in daylight"
+            }
+          ],
+          "Weak Characteristics",
+          "Weak Characteristics"
+        ],
+        "abilities": [
+          [
+            "Brawl",
+            3,
+            "claws"
+          ]
+        ],
+        "traits": {
+          "Vengeful": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bony Claws",
+          2,
+          8,
+          8,
+          2
+        ]
+      ],
+      "soak": 9,
+      "fatigue_levels": "",
+      "equipment": "Tattered burial shroud",
+      "powers": [
+        {
+          "name": "Rise from the Grave",
+          "might_cost": 2,
+          "init": 2,
+          "form": "Terram",
+          "range": "Touch",
+          "duration": "Diameter",
+          "target": "Part",
+          "level": 10,
+          "penetration_bonus": 0,
+          "does": "Opens the earth over its grave so it can climb in or out; the ground closes afterwards without a trace."
+        }
+      ],
+      "vis": [
+        [
+          1,
+          "Corpus",
+          "skull"
+        ]
+      ],
+      "appearance": "A grinning skeleton with finger bones as sharp as claws.",
+      "notes": "Size -2 because a skeleton weighs far less than a living body. Cannot be Incapacitated: such wounds count as Heavy. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), -5 (10-12), Destroyed (13+)."
+    },
+    {
+      "key": "scitalis",
+      "name": "Scitalis",
+      "group": "Magic",
+      "page": 463,
+      "realm": "Magic",
+      "might": 5,
+      "form": "Animal",
+      "size": -2,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          1,
+          2,
+          4,
+          -3,
+          -2,
+          2,
+          0,
+          -2
+        ],
+        "virtues_flaws": [
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "presence"
+            }
+          ],
+          [
+            "Poor {characteristic}",
+            {
+              "characteristic": "quickness"
+            }
+          ],
+          "Weak Characteristics"
+        ],
+        "abilities": [
+          [
+            "Brawl",
+            3,
+            "fangs"
+          ],
+          [
+            "Survival",
+            2,
+            "winter"
+          ]
+        ],
+        "traits": {
+          "Lethargic": 2,
+          "Territorial": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Fangs",
+          -2,
+          7,
+          3,
+          -1
+        ]
+      ],
+      "soak": 4,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Dazzling Appearance",
+          "might_cost": 0,
+          "init": -3,
+          "form": "Mentem",
+          "range": "Per",
+          "duration": "Conc",
+          "target": "Spectacle",
+          "level": 45,
+          "penetration_bonus": 0,
+          "does": "Its brilliant colours leave onlookers frozen in wonder, unable to move or act while it concentrates; it catches prey this way. Form Mentem or Animal."
+        },
+        {
+          "name": "Venom",
+          "might_cost": 0,
+          "init": null,
+          "form": "Aquam",
+          "range": "Touch",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 30,
+          "penetration_bonus": 0,
+          "does": "A bite that penetrates inflicts a Medium wound unless the victim passes a Stamina roll against 9."
+        }
+      ],
+      "vis": [
+        [
+          1,
+          "Imaginem",
+          "skin"
+        ]
+      ],
+      "appearance": "A six-foot serpent as thick as a man's arm, its scales in a riot of brilliant colours.",
+      "notes": "Not in the catalog: Ignem Resistance 3 (cold). Slow; lurks by water or game trails and eats small animals, attacking people only when threatened. Its warm blood keeps it active through winter. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), Incapacitated (10-12), Dead (13+)."
+    },
+    {
+      "key": "stag_of_virtue",
+      "name": "Stag of Virtue",
+      "group": "Magic",
+      "page": 464,
+      "realm": "Magic",
+      "might": 17,
+      "form": "Animal",
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          2,
+          2,
+          -3,
+          4,
+          3,
+          1,
+          2
+        ],
+        "virtues_flaws": [
+          [
+            "Ways of the {land}",
+            {
+              "land": "Forest"
+            }
+          ],
+          [
+            "Essential Virtue (Minor)",
+            {
+              "trait": "healthy"
+            }
+          ],
+          "Ferocity",
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "quickness"
+            }
+          ],
+          [
+            "Lesser Immunity",
+            {
+              "hazard": "fevers"
+            }
+          ],
+          "Long-Winded",
+          [
+            "Puissant {ability}",
+            {
+              "ability": "Athletics"
+            }
+          ],
+          "Hatred (Major)",
+          "Higher Purpose (Minor)",
+          [
+            "Restricted Power",
+            {
+              "power": "Healing (must eat dittany)"
+            }
+          ],
+          [
+            "Restricted Power",
+            {
+              "power": "Alleviate the Serpent's Bite (must drink water)"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            8,
+            "sprinting"
+          ],
+          [
+            "Awareness",
+            5,
+            "hunters"
+          ],
+          [
+            "Brawl",
+            5,
+            "antlers"
+          ],
+          [
+            "Stealth",
+            3,
+            "hiding in undergrowth"
+          ],
+          [
+            "Survival",
+            4,
+            "forests"
+          ]
+        ],
+        "traits": {
+          "Stag": 3,
+          "Noble": 3,
+          "Healthy (Stamina)": 3,
+          "Brave": 2
+        },
+        "reputations": {
+          "Noble (local)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Antlers",
+          4,
+          10,
+          10,
+          7
+        ],
+        [
+          "Hooves",
+          4,
+          8,
+          9,
+          5
+        ]
+      ],
+      "soak": 7,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Healing",
+          "might_cost": 3,
+          "init": -8,
+          "form": "Animal",
+          "range": "Per",
+          "duration": "Mom",
+          "target": "Ind",
+          "level": 25,
+          "penetration_bonus": 0,
+          "does": "Heals one of its own wounds of Heavy or less; only after eating dittany."
+        },
+        {
+          "name": "Delay the Serpent's Venom",
+          "might_cost": 0,
+          "init": null,
+          "form": "Aquam",
+          "range": "Per",
+          "duration": "Sun",
+          "target": "Ind",
+          "level": 20,
+          "penetration_bonus": 0,
+          "does": "Any poison in its body has no effect until the next sunrise or sunset; triggers by itself when poisoned."
+        },
+        {
+          "name": "Alleviate the Serpent's Bite",
+          "might_cost": 1,
+          "init": 1,
+          "form": "Aquam",
+          "range": "Per",
+          "duration": "Mom",
+          "target": "Ind",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "Destroys a poison already in its body for good; only after drinking water."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Creo",
+          "right antler"
+        ]
+      ],
+      "appearance": "A great, healthy stag with noble bearing; its right antler carries healing virtue.",
+      "notes": "Athletics printed 8+2 (Puissant). Essential Virtue Healthy; Ferocity when at bay; Hatred of serpents; Higher Purpose to guard its herd. Drowns serpents out of holes and tramples them; renews its youth by eating magical serpents, then sheds and buries its antlers. Eating its flesh grants immunity to fevers for a Moon. Wounds: -1 (1-7), -3 (8-14), -5 (15-21), Inc (22-28), Dead (29+)."
+    },
+    {
+      "key": "stellatus",
+      "name": "Stellatus, the Dragon",
+      "group": "Magic",
+      "page": 465,
+      "realm": "Magic",
+      "might": 50,
+      "form": "Ignem",
+      "size": 8,
+      "age": "n/a",
+      "confidence": [
+        3,
+        12
+      ],
+      "encumbrance": "0 (0)",
+      "block": {
+        "characteristics": [
+          4,
+          4,
+          7,
+          2,
+          8,
+          8,
+          3,
+          0
+        ],
+        "virtues_flaws": [
+          "Second Sight"
+        ],
+        "abilities": [
+          [
+            "Area Lore: (local area)",
+            5,
+            "history"
+          ],
+          [
+            "Awareness",
+            8,
+            "human beings"
+          ],
+          [
+            "Brawl",
+            7,
+            "claws"
+          ],
+          [
+            "Dominion Lore",
+            1,
+            "saints"
+          ],
+          [
+            "Faerie Lore",
+            2,
+            "knights"
+          ],
+          [
+            "Folk Ken",
+            2,
+            "scholars"
+          ],
+          [
+            "Guile",
+            4,
+            "keeping secrets"
+          ],
+          [
+            "Infernal Lore",
+            0,
+            "undead"
+          ],
+          [
+            "Magic Lore",
+            8,
+            "dragons"
+          ],
+          [
+            "Organization Lore: Order of Hermes",
+            1,
+            "Tytalus"
+          ],
+          [
+            "Second Sight",
+            8,
+            "magical invisibility"
+          ]
+        ],
+        "traits": {
+          "Proud": 3
+        },
+        "reputations": {
+          "The Powerful Dragon who Lives in the Mountains (local)": 5
+        }
+      },
+      "attacks": [
+        [
+          "Claws",
+          3,
+          22,
+          18,
+          20
+        ]
+      ],
+      "soak": 20,
+      "fatigue_levels": "OK, 0/0/0/0/0, -1, -3, -5, Unconscious",
+      "equipment": "An ancient treasure hoard piled in his lair",
+      "powers": [
+        {
+          "name": "Human Form",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Takes one fixed human shape, a dark-haired man in his prime, until he eats, drinks or changes back; keeps his powers but fights far worse."
+        },
+        {
+          "name": "Instill Loyalty",
+          "might_cost": 5,
+          "init": 0,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Makes one person he can see wholly loyal to him for as long as he lives, without taking away free will."
+        },
+        {
+          "name": "Fiery Breath",
+          "might_cost": 1,
+          "init": 5,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "A 20-pace cone of fire. Qik + Athletics vs 9 to dodge: fail +45 damage; beat 9 +30; beat 12 +15; beat 15 unharmed."
+        },
+        {
+          "name": "Master of Fire",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Copies any Rego Ignem spell up to 4th magnitude for 1 point, one magnitude higher per extra point spent."
+        }
+      ],
+      "vis": [
+        [
+          5,
+          "Ignem",
+          "left eye"
+        ],
+        [
+          5,
+          "Ignem",
+          "right eye"
+        ]
+      ],
+      "appearance": "A huge winged lizard with scales of near-black red and eyes glowing orange from within; small for a dragon, yet bigger than most houses.",
+      "notes": "Infernal Lore printed 0 (1). Decrepitude n/a. Lairs under a mountain range for centuries, often roaming in human form. Curious about The Gift; thinks himself immune to Hermetic magic. Wounds: -1 (1-13), -3 (14-26), -5 (27-39), Incapacitated (40-52)."
+    },
+    {
+      "key": "zwergenstimme",
+      "name": "Zwergenstimme",
+      "group": "Magic",
+      "page": 466,
+      "realm": "Magic",
+      "might": 15,
+      "form": "Imaginem",
+      "block": {
+        "characteristics": [
+          0,
+          0,
+          -1,
+          4,
+          0,
+          -1,
+          0,
+          3
+        ],
+        "virtues_flaws": [
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "communication"
+            }
+          ],
+          "Improved Characteristics",
+          "Sharp Ears (Minor)"
+        ],
+        "abilities": [
+          [
+            "Awareness",
+            4,
+            "sounds"
+          ],
+          [
+            "Folk Ken",
+            1,
+            "fear"
+          ],
+          [
+            "Guile",
+            1,
+            "mimicry"
+          ],
+          [
+            "Music",
+            2,
+            "echoes"
+          ],
+          [
+            "Thrown Weapon",
+            4,
+            "rocks"
+          ]
+        ],
+        "traits": {
+          "Mischievous": 3,
+          "Echo": 3
+        },
+        "reputations": {
+          "Murderous (local)": 1
+        }
+      },
+      "attacks": [
+        [
+          "Thrown Rock",
+          3,
+          4,
+          null,
+          5
+        ]
+      ],
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Master of Sound",
+          "might_cost": 0,
+          "init": 5,
+          "form": "Imaginem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": 15,
+          "penetration_bonus": 0,
+          "does": "Copies any non-Ritual sound spell up to level 15 for 1 Might per magnitude; Init is +5 minus the Might spent."
+        },
+        {
+          "name": "Bring Down the Roof",
+          "might_cost": 2,
+          "init": 3,
+          "form": "Terram",
+          "range": "Touch",
+          "duration": "",
+          "target": "Room",
+          "level": 20,
+          "penetration_bonus": 0,
+          "does": "Collapses a cave roof for +20 damage to those inside and blocks the way out."
+        },
+        {
+          "name": "Presence",
+          "might_cost": 0,
+          "init": null,
+          "form": "Imaginem",
+          "range": "",
+          "duration": "constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Is present throughout and aware of all within its chosen domain, such as a cave system; the area yields 2 pawns of fitting vis a year."
+        },
+        {
+          "name": "Ghost Touch",
+          "might_cost": 1,
+          "init": 2,
+          "form": "Terram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Hurls rocks using its Thrown Rock scores, at 1 Might per throw."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Imaginem",
+          "an immaterial echo"
+        ]
+      ],
+      "appearance": "Only an echo; those with Second Sight perceive it as sound.",
+      "notes": "Size and Soak not printed. An echo spirit of caves and ravines whose name means 'dwarf voice'; it toys with lost travellers without understanding harm."
+    },
+    {
+      "key": "faerie_hounds",
+      "name": "Faerie Hounds",
+      "group": "Faerie",
+      "page": 467,
+      "realm": "Faerie",
+      "might": 5,
+      "form": "Animal",
+      "size": 1,
+      "cunning": true,
+      "tires": false,
+      "block": {
+        "characteristics": [
+          0,
+          2,
+          -4,
+          0,
+          0,
+          2,
+          1,
+          2
+        ],
+        "virtues_flaws": [
+          "Faerie Sight",
+          "Improved Characteristics",
+          "Sharp Ears (Minor)",
+          "Large",
+          "Incognizant",
+          "Reckless (Minor)",
+          [
+            "Traditional Ward",
+            {
+              "ward": "varies"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "distance running"
+          ],
+          [
+            "Awareness",
+            6,
+            "keeping watch"
+          ],
+          [
+            "Brawl",
+            5,
+            "bite"
+          ],
+          [
+            "Hunt",
+            6,
+            "track by scent"
+          ]
+        ],
+        "traits": {
+          "Loyal": 3,
+          "Reckless": 3,
+          "Brave": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          2,
+          10,
+          9,
+          1
+        ]
+      ],
+      "soak": 2,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Damaging Effect",
+          "might_cost": 2,
+          "init": 0,
+          "form": "",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "For two minutes its glamour weapons turn deadlier in the style of its motif, +5 Damage."
+        },
+        {
+          "name": "Enthralling Sound",
+          "might_cost": 3,
+          "init": -2,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "A howl that spreads terror or heightens an existing emotion; a fitting Personality stress roll vs 9 resists."
+        },
+        {
+          "name": "Enthrallment",
+          "might_cost": 4,
+          "init": -2,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Through eye contact, controls one person's mind fully for a day."
+        },
+        {
+          "name": "Fearful Flaming Eyes",
+          "might_cost": 2,
+          "init": -2,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Paralyses a person who meets its gaze."
+        },
+        {
+          "name": "Hound",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Senses the direction and distance of its human quarry."
+        },
+        {
+          "name": "Flight",
+          "might_cost": 0,
+          "init": 2,
+          "form": "Animal",
+          "range": "",
+          "duration": "constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Can fly, using Athletics for hard manoeuvres; no fighting at top speed, nor flying heavily laden."
+        }
+      ],
+      "vis": [
+        [
+          1,
+          "Animal",
+          "dog corpse"
+        ]
+      ],
+      "appearance": "Thickset hunting dogs, often with glowing eyes and black, white or green coats; courtly hounds may be white with red ears and blue eyes.",
+      "notes": "Most hounds have no more than two of the listed powers. With Damaging Effect the bite does +6. Haunt roads and terrorise travellers. Variants: a goat in parts of France; the German Aufhocker clings on (+6 Load); the Belgian Kludie shapeshifts, bounds on backs and drowns riders. Faeries never tire. Wounds: -1 (1-6), -3 (7-12), -5 (13-18), Inc (19-24), Dead (25+)."
+    },
+    {
+      "key": "faerie_knight",
+      "name": "Faerie Knight",
+      "group": "Faerie",
+      "page": 468,
+      "realm": "Faerie",
+      "might": 10,
+      "form": "Corpus",
+      "size": 1,
+      "tires": false,
+      "block": {
+        "characteristics": [
+          0,
+          0,
+          -2,
+          -2,
+          3,
+          2,
+          2,
+          1
+        ],
+        "virtues_flaws": [
+          "Faerie Sight",
+          "Faerie Speech",
+          "Large",
+          "Narrowly Cognizant",
+          "Observant",
+          [
+            "Sovereign Ward",
+            {
+              "ward": "varies"
+            }
+          ],
+          "Vow (Minor)",
+          "Oath of Fealty",
+          "Overconfident (Minor)"
+        ],
+        "abilities": [
+          [
+            "Awareness",
+            1,
+            "enemies"
+          ],
+          [
+            "Brawl",
+            3,
+            "knights"
+          ],
+          [
+            "Carouse",
+            3,
+            "feasts"
+          ],
+          [
+            "Charm",
+            1,
+            "ladies"
+          ],
+          [
+            "Etiquette",
+            3,
+            "chivalrous combat"
+          ],
+          [
+            "Hunt",
+            2,
+            "humans"
+          ],
+          [
+            "Leadership",
+            2,
+            "guards"
+          ],
+          [
+            "Ride",
+            3,
+            "horses"
+          ],
+          [
+            "Single Weapon",
+            4,
+            "varies"
+          ]
+        ],
+        "traits": {
+          "Arrogant": 3,
+          "Courteous": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Brawl (gauntlet)",
+          1,
+          6,
+          6,
+          5
+        ],
+        [
+          "Long Sword and Heater Shield",
+          3,
+          10,
+          9,
+          9
+        ],
+        [
+          "Mace and Heater Shield",
+          2,
+          9,
+          8,
+          11
+        ],
+        [
+          "Lance and Heater Shield (mounted)",
+          3,
+          10,
+          8,
+          8
+        ]
+      ],
+      "soak": 9,
+      "fatigue_levels": "",
+      "equipment": "Arms and armour; a faerie horse made of its own glamour",
+      "powers": [
+        {
+          "name": "Damaging Effect",
+          "might_cost": 1,
+          "init": -4,
+          "form": "",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "For two minutes its glamour weapons turn deadlier in the style of its court's motif, +5 Damage; not used on worthy foes."
+        },
+        {
+          "name": "Flight",
+          "might_cost": 2,
+          "init": null,
+          "form": "Corpus",
+          "range": "",
+          "duration": "constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Can fly, using Athletics for hard manoeuvres; no fighting at top speed, nor flying heavily laden."
+        },
+        {
+          "name": "Shift Human Shapes",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Takes its glamour armour off, or on, by thought alone."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "",
+          "rusty pieces of armour holding its glamour"
+        ]
+      ],
+      "appearance": "A knight in armour of silvery metal leaves on a fine steed, bearing its court's device on surcoat, shield and pavilion.",
+      "notes": "Might Form Corpus or Terram; Vow of chivalrous conduct. Attacks mounted gain +3 Attack and Defense (not included). Soak from glamour scale armour. Many knights have far higher Pretenses; these suit one that seeks defeat to learn from its foe. Haunts lonely roads and bridges; its horse flies with it. Faeries never tire. Wounds: -1 (1-6), -3 (7-12), -5 (13-18), Inc (19-25), Dead (26+)."
+    },
+    {
+      "key": "poludnica",
+      "name": "Południca",
+      "group": "Faerie",
+      "page": 469,
+      "realm": "Faerie",
+      "might": 10,
+      "form": "Auram",
+      "size": 0,
+      "tires": false,
+      "block": {
+        "characteristics": [
+          1,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "virtues_flaws": [
+          "Faerie Sight",
+          "Faerie Speech",
+          "Incognizant",
+          [
+            "Sovereign Ward",
+            {
+              "ward": "running water"
+            }
+          ],
+          [
+            "Traditional Ward",
+            {
+              "ward": "questions"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Awareness",
+            3,
+            "laziness"
+          ],
+          [
+            "Charm",
+            2,
+            "rural people"
+          ],
+          [
+            "Area Lore: (local farms)",
+            6,
+            "stewardship"
+          ],
+          [
+            "Profession: Farmer",
+            6,
+            "stewardship"
+          ],
+          [
+            "Single Weapon",
+            3,
+            "rural people"
+          ]
+        ],
+        "traits": {
+          "Curious": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Scythe",
+          1,
+          6,
+          4,
+          5
+        ]
+      ],
+      "soak": 0,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Cause Fatigue",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Heatstroke costs the victim a long-term Fatigue level."
+        },
+        {
+          "name": "Shift Human Shapes",
+          "might_cost": 1,
+          "init": -1,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Changes between beautiful and hideous, Presence anywhere from +3 to -3."
+        },
+        {
+          "name": "Transform Into Whirlwind",
+          "might_cost": 3,
+          "init": 2,
+          "form": "Auram",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Becomes a whirling dust devil."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Ignem",
+          "scythe"
+        ]
+      ],
+      "appearance": "A lovely maiden, a crone or a young girl in a white dress, holding a scythe or shears; may travel as a dust devil.",
+      "notes": "Presence printed +3/-3 (by shape). Faerie Speech 5 (rural people) as a Pretense. Appears at noon on hot days to question farmhands; failing her questions or changing the subject brings heatstroke, madness or death. Cannot spend Might in winter. Faeries never tire. Wounds: -1 (1-5), -3 (6-10), -5 (11-15), Inc (16-20), Dead (21+)."
+    },
+    {
+      "key": "mateos_faerie_butler",
+      "name": "Mateos, the Faerie Butler",
+      "group": "Faerie",
+      "page": 469,
+      "realm": "Faerie",
+      "might": 10,
+      "form": "Herbam",
+      "size": -2,
+      "age": "n/a (40)",
+      "encumbrance": "3 (3)",
+      "tires": false,
+      "block": {
+        "characteristics": [
+          -1,
+          0,
+          -1,
+          3,
+          -2,
+          2,
+          0,
+          -3
+        ],
+        "virtues_flaws": [
+          "Narrowly Cognizant"
+        ],
+        "abilities": [
+          [
+            "Carouse",
+            9,
+            "drinking"
+          ],
+          [
+            "Charm",
+            4,
+            "drunk people"
+          ],
+          [
+            "Etiquette",
+            2,
+            "parties"
+          ],
+          [
+            "Faerie Lore",
+            3,
+            "drinks"
+          ],
+          [
+            "Folk Ken",
+            3,
+            "drunk people"
+          ],
+          [
+            "Guile",
+            9,
+            "convincing people to drink more"
+          ],
+          [
+            "Living Language: (local)",
+            5,
+            "metaphors for drinking and getting drunk"
+          ],
+          [
+            "Music",
+            1,
+            "drinking songs"
+          ],
+          [
+            "Single Weapon",
+            1,
+            "club"
+          ]
+        ],
+        "traits": {
+          "Convivial": 3,
+          "Generous": 2,
+          "Careful": -2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Club",
+          -2,
+          4,
+          0,
+          1
+        ]
+      ],
+      "soak": 2,
+      "fatigue_levels": "",
+      "equipment": "A barrel of alcoholic drink",
+      "powers": [
+        {
+          "name": "Heady Brew",
+          "might_cost": 0,
+          "init": -10,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 10,
+          "does": "Drinks he serves are three times as intoxicating, and soft drinks as strong as ale, with no change in taste; resistible, Penetration 10."
+        },
+        {
+          "name": "Unending Drinks",
+          "might_cost": 1,
+          "init": -10,
+          "form": "Aquam",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "His barrel never empties while he is serving one chosen drinker; once that person stops, it starts to run dry."
+        }
+      ],
+      "vis": [
+        [
+          1,
+          "Herbam",
+          "left hand"
+        ],
+        [
+          1,
+          "Herbam",
+          "right hand"
+        ]
+      ],
+      "appearance": "A child-sized, pot-bellied fellow with a greying beard and a grubby apron, always grinning and offering a drink from his barrel.",
+      "notes": "Lives for drunken parties and starts one wherever he goes, coaxing guests into foolish but rarely deadly antics. Sees the Gifted as killjoys to be hurried off. Faeries never tire. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), Incapacitated (10-12)."
+    },
+    {
+      "key": "jumayl_jinni_guide",
+      "name": "Jumayl, A Jinni Guide",
+      "group": "Faerie",
+      "page": 470,
+      "realm": "Faerie",
+      "might": 15,
+      "form": "Vim",
+      "size": 0,
+      "age": "appears 25",
+      "confidence": [
+        1,
+        3
+      ],
+      "tires": false,
+      "block": {
+        "characteristics": [
+          -1,
+          2,
+          0,
+          0,
+          2,
+          0,
+          2,
+          3
+        ],
+        "virtues_flaws": [
+          "Jinni",
+          "Faerie Speech",
+          "Highly Cognizant",
+          "Improved Characteristics",
+          "Second Sight",
+          "Skinchanger",
+          "Warrior",
+          "Well-Traveled",
+          "Wilderness Sense",
+          "Greater Malediction",
+          "Carefree",
+          "Dutybound",
+          [
+            "Traditional Ward",
+            {
+              "ward": "Bismillah Invocation"
+            }
+          ],
+          "Vulnerable to Folk Tradition"
+        ],
+        "abilities": [
+          [
+            "Animal Handling",
+            3,
+            "camels"
+          ],
+          [
+            "Athletics",
+            3,
+            "running"
+          ],
+          [
+            "Area Lore: Mythic Middle East",
+            4,
+            "trade routes"
+          ],
+          [
+            "Awareness",
+            3,
+            "alertness"
+          ],
+          [
+            "Brawl",
+            3,
+            "dagger"
+          ],
+          [
+            "Bows",
+            5,
+            "short bow"
+          ],
+          [
+            "Carouse",
+            2,
+            "power drinking"
+          ],
+          [
+            "Area Lore: al-Mushaqqar",
+            2,
+            "drinking establishments"
+          ],
+          [
+            "Faerie Lore",
+            3,
+            "jinn"
+          ],
+          [
+            "Folk Ken",
+            4,
+            "mercenaries"
+          ],
+          [
+            "Leadership",
+            4,
+            "battle"
+          ],
+          [
+            "Ride",
+            3,
+            "camels"
+          ],
+          [
+            "Second Sight",
+            3,
+            "jinn"
+          ],
+          [
+            "Single Weapon",
+            7,
+            "long sword"
+          ],
+          [
+            "Survival",
+            2,
+            "deserts"
+          ],
+          [
+            "Theology: Islam",
+            1,
+            "jinn"
+          ],
+          [
+            "Wilderness Sense",
+            3,
+            "find water"
+          ]
+        ],
+        "traits": {
+          "Impulsive": 3,
+          "Cheerful": 3,
+          "Impious": -1
+        },
+        "reputations": {
+          "Skilled Caravan Guard (Mythic Middle East)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Long Sword",
+          5,
+          14,
+          9,
+          8
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "",
+      "equipment": "Fine damascene long sword, leather scale armour, showy jewellery",
+      "powers": [
+        {
+          "name": "Cuirass of the Zephyr",
+          "might_cost": 1,
+          "init": 3,
+          "form": "Auram",
+          "range": "",
+          "duration": "Recitation",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Works as Circling Winds of Protection, lasting while he keeps reciting Qur'anic verses (like Concentration)."
+        },
+        {
+          "name": "Blinding Light of the Pious",
+          "might_cost": 1,
+          "init": 3,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Works as Flash of the Scarlet Flames."
+        },
+        {
+          "name": "Tay al-Ard (Travel)",
+          "might_cost": 4,
+          "init": 1,
+          "form": "Corpus",
+          "range": "Touch",
+          "duration": "",
+          "target": "Group",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "As Leap of Homecoming: carries him and two people holding his hands at once to a place he has visited or holds an Arcane Connection to."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Vim",
+          "camel's tooth"
+        ]
+      ],
+      "appearance": "A handsome, lithe man of uncertain Eastern looks with pale skin, white hair, one green and one blue eye, deep-blue robes over light armour and gold jewellery.",
+      "notes": "Greater Malediction: must keep any bargain; Dutybound to the Bedouin honour code. A jann exiled as a caravan guide; takes the form of a white Bactrian camel (Skinchanger). Faerie Speech 5 as a Pretense. Weak to mundane alcohol; regains Might only after a night's rest and a shared meal among human travellers. Wounds: -1 (1-5), -3 (6-10), -5 (11-15), Inc (16-20), Dead (21+)."
+    },
+    {
+      "key": "tarlan_the_wolf",
+      "name": "Tarlan the Wolf",
+      "group": "Faerie",
+      "page": 471,
+      "realm": "Faerie",
+      "might": 20,
+      "form": "Animal",
+      "size": -1,
+      "age": "n/a",
+      "confidence": [
+        1,
+        3
+      ],
+      "encumbrance": "0 (0)",
+      "tires": false,
+      "block": {
+        "characteristics": [
+          -2,
+          5,
+          0,
+          -3,
+          3,
+          3,
+          2,
+          3
+        ],
+        "virtues_flaws": [
+          "Incognizant"
+        ],
+        "abilities": [
+          [
+            "Area Lore: (local area)",
+            6,
+            "hunting tracks"
+          ],
+          [
+            "Athletics",
+            5,
+            "running"
+          ],
+          [
+            "Awareness",
+            8,
+            "spotting quarry"
+          ],
+          [
+            "Brawl",
+            3,
+            "bite"
+          ],
+          [
+            "Hunt",
+            10,
+            "human beings"
+          ],
+          [
+            "Living Language: (local)",
+            2,
+            "threats"
+          ],
+          [
+            "Stealth",
+            9,
+            "hunting"
+          ],
+          [
+            "Survival",
+            7,
+            "forests"
+          ]
+        ],
+        "traits": {
+          "Relentless": 3,
+          "Cheerful": -3
+        },
+        "reputations": {
+          "Soul-eating demon (local)": 1
+        }
+      },
+      "attacks": [
+        [
+          "Bite",
+          9,
+          10,
+          10,
+          6
+        ]
+      ],
+      "soak": 7,
+      "fatigue_levels": "",
+      "powers": [
+        {
+          "name": "Marked Quarry",
+          "might_cost": 1,
+          "init": 5,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Marks one person who can see him as quarry; they are seized with fear of him (Brave vs 9 to master it) and inclined to flee."
+        },
+        {
+          "name": "Prey's Vigor",
+          "might_cost": 1,
+          "init": 8,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "His breath on a tired adult restores all lost Fatigue levels, but ages them a year."
+        },
+        {
+          "name": "Silent Running",
+          "might_cost": 0,
+          "init": null,
+          "form": "Imaginem",
+          "range": "",
+          "duration": "constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Makes no sound unless he chooses to."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Intellego",
+          "nose"
+        ],
+        [
+          1,
+          "Intellego",
+          "left ear"
+        ],
+        [
+          1,
+          "Intellego",
+          "right ear"
+        ]
+      ],
+      "appearance": "A big jet-black wolf whose eyes gleam even in darkness, moving without a sound.",
+      "notes": "Hunts lone travellers in the wild, chasing them to exhaustion and renewing their strength to prolong the chase, often striking just before dawn. Cannot enter holy ground; never hunts children or the Gifted, whom he respects. Faeries never tire. Wounds: -1 (1-4), -3 (5-8), -5 (9-12), Incapacitated (13-16)."
+    },
+    {
+      "key": "valkyrie",
+      "name": "Valkyrie",
+      "group": "Faerie",
+      "page": 472,
+      "realm": "Faerie",
+      "might": 20,
+      "size": 0,
+      "tires": false,
+      "block": {
+        "characteristics": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          1
+        ],
+        "virtues_flaws": [
+          "Faerie Sight",
+          "Faerie Speech",
+          "Incognizant",
+          "Visions"
+        ],
+        "abilities": [
+          [
+            "Awareness",
+            9,
+            "battlefields"
+          ],
+          [
+            "Brawl",
+            9,
+            "einherjar"
+          ],
+          [
+            "Ride",
+            5,
+            "wolf"
+          ],
+          [
+            "Single Weapon",
+            9,
+            "giants"
+          ]
+        ],
+        "traits": {
+          "Brave": 5,
+          "Judgmental": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Axe and Round Shield (unmounted)",
+          2,
+          16,
+          12,
+          6
+        ],
+        [
+          "Axe and Round Shield (mounted)",
+          2,
+          19,
+          15,
+          6
+        ]
+      ],
+      "soak": 9,
+      "fatigue_levels": "",
+      "equipment": "Arms, armour, a wolf mount and endless wine",
+      "powers": [
+        {
+          "name": "Fly",
+          "might_cost": 0,
+          "init": null,
+          "form": "Corpus",
+          "range": "",
+          "duration": "constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Can fly, using Athletics for hard manoeuvres; no fighting at top speed, nor flying heavily laden. Sometimes Animal rather than Corpus."
+        }
+      ],
+      "vis": [
+        [
+          4,
+          "Corpus",
+          "a dead vulture"
+        ]
+      ],
+      "appearance": "Shield maidens or crones riding wolves over battlefields to choose the worthy dead, superbly armed and trained.",
+      "notes": "Might printed without a Form. Visions: they know where and when worthy men will die. Minor Norse goddesses, no longer worshipped, met in Elysium and old Scandinavian places of power; they ride the sky unseen and serve in Valhalla. Faeries never tire. Wounds: -1 (1-5), -3 (6-10), -5 (11-15), Inc (16-20), Dead (21+)."
+    },
+    {
+      "key": "valkyrie_wolf_mount",
+      "name": "Wolf Mount",
+      "group": "Faerie",
+      "page": 472,
+      "realm": "Faerie",
+      "might": 20,
+      "size": 3,
+      "cunning": true,
+      "tires": false,
+      "block": {
+        "characteristics": [
+          2,
+          0,
+          -2,
+          0,
+          2,
+          3,
+          2,
+          -4
+        ],
+        "virtues_flaws": [
+          "Faerie Sight",
+          "Ferocity",
+          "Sharp Ears (Minor)"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "distance running"
+          ],
+          [
+            "Awareness",
+            3,
+            "smell"
+          ],
+          [
+            "Brawl",
+            5,
+            "teeth"
+          ],
+          [
+            "Hunt",
+            4,
+            "track by smell"
+          ],
+          [
+            "Survival",
+            3,
+            "winter"
+          ]
+        ],
+        "traits": {
+          "Brave": 3,
+          "Cowardly": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Teeth",
+          -2,
+          12,
+          6,
+          3
+        ]
+      ],
+      "soak": 7,
+      "fatigue_levels": "",
+      "powers": [],
+      "vis": [],
+      "appearance": "A horse-sized wolf in saddle and harness, wearing leather covers as partial barding.",
+      "notes": "Made of its valkyrie's glamour and shares her Might pool; flies when she uses Fly, and lets her carry a passenger. No vis of its own. Ferocity when hungry. Thick fur gives Protection 1. Wounds: -1 (1-8), -3 (8-16), -5 (17-24), Inc (25-32), Dead (33+)."
+    },
+    {
+      "key": "great_lezi",
+      "name": "Great Lezi",
+      "group": "Faerie",
+      "page": 473,
+      "realm": "Faerie",
+      "might": 40,
+      "form": "Herbam",
+      "size": 0,
+      "tires": false,
+      "block": {
+        "characteristics": [
+          3,
+          3,
+          -2,
+          0,
+          6,
+          3,
+          0,
+          0
+        ],
+        "virtues_flaws": [
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "unspecified"
+            }
+          ],
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "unspecified"
+            }
+          ],
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "unspecified"
+            }
+          ],
+          "Faerie Sight",
+          "Faerie Speech",
+          "Highly Cognizant",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          [
+            "Sovereign Ward",
+            {
+              "ward": "may not leave forest"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Animal Handling",
+            9,
+            "woodland creatures"
+          ],
+          [
+            "Athletics",
+            3,
+            "striding"
+          ],
+          [
+            "Awareness",
+            9,
+            "damage to forest"
+          ],
+          [
+            "Bargain",
+            3,
+            "from position of strength"
+          ],
+          [
+            "Brawl",
+            6,
+            "human interlopers"
+          ],
+          [
+            "Carouse",
+            3,
+            "wine"
+          ],
+          [
+            "Charm",
+            2,
+            "forest folk"
+          ],
+          [
+            "Folk Ken",
+            3,
+            "forest folk"
+          ],
+          [
+            "Forest Lore",
+            9,
+            "locations"
+          ],
+          [
+            "Guile",
+            2,
+            "about woodland dangers"
+          ],
+          [
+            "Leadership",
+            9,
+            "woodland creatures"
+          ],
+          [
+            "Swim",
+            3,
+            "streams"
+          ]
+        ],
+        "traits": {
+          "Loves Forest": 5
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Brawl (wooden arm, club)",
+          1,
+          8,
+          7,
+          9
+        ]
+      ],
+      "soak": 15,
+      "fatigue_levels": "",
+      "equipment": "Can make endless goods from the woodland",
+      "powers": [
+        {
+          "name": "Extended Glamour",
+          "might_cost": 0,
+          "init": null,
+          "form": "Mentem",
+          "range": "",
+          "duration": "constant",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Is present throughout its forest and aware of everything that happens there."
+        },
+        {
+          "name": "Focus Power (Manifestation)",
+          "might_cost": 5,
+          "init": -5,
+          "form": "Herbam",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": 25,
+          "penetration_bonus": 0,
+          "does": "Takes over the beasts and plants its glamour touches, copying any CrAn, ReAn, CrHe or ReHe effect up to level 25 that fits its motif. Form Animal or Herbam."
+        },
+        {
+          "name": "Focus Power (Woodland Change)",
+          "might_cost": 5,
+          "init": -5,
+          "form": "Herbam",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Muto and Intellego effects on plants and animals. Form Animal or Herbam."
+        },
+        {
+          "name": "Focus Power (Size Reduction)",
+          "might_cost": 5,
+          "init": -5,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Naturally Size +7, it lives at any smaller Size it likes. Form Corpus or Animal."
+        },
+        {
+          "name": "Transform Into Animal",
+          "might_cost": 3,
+          "init": -3,
+          "form": "Animal",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Becomes any land animal of its woods, still able to speak."
+        },
+        {
+          "name": "Transform Into Bird or Fish",
+          "might_cost": 3,
+          "init": -3,
+          "form": "Animal",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Becomes any bird or fish of its woods, still able to speak."
+        },
+        {
+          "name": "Transform into Human",
+          "might_cost": 0,
+          "init": null,
+          "form": "",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Returns to human shape at the cost of the change it is leaving."
+        },
+        {
+          "name": "Transform Into Object (Plant)",
+          "might_cost": 4,
+          "init": -4,
+          "form": "Herbam",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Becomes any plant of its woods, able to speak and move a little."
+        }
+      ],
+      "vis": [
+        [
+          8,
+          "unspecified",
+          "external, a club"
+        ]
+      ],
+      "appearance": "The Slavic Forest Lord: usually a tall, pale, bearded man with emerald eyes, often with backward feet or faun-like, who may be any plant or beast and any height from grass blade to tall tree.",
+      "notes": "Stats at Size 0; per +1 Size add +2 Str and -1 Qik (reverse for smaller), Size -10 to +7. Two club-like wooden-arm attacks: Init 1-Size, Def 7-Size, Dam +9+2xSize. Power Inits add the Qik modifier. Some cannot harm someone wearing all clothes backwards. Faerie Speech 5 as a Pretense. Commands woodland beasts, especially wolves. Variant: the red-furred giant Basque fauns (Basajauns)."
+    },
+    {
+      "key": "lord_marsyne",
+      "name": "Lord Marsyne",
+      "group": "Faerie",
+      "page": 474,
+      "realm": "Faerie",
+      "might": 50,
+      "form": "Aquam",
+      "size": 0,
+      "age": "n/a (40)",
+      "confidence": [
+        2,
+        6
+      ],
+      "encumbrance": "0 (0)",
+      "tires": false,
+      "block": {
+        "characteristics": [
+          2,
+          1,
+          4,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "virtues_flaws": [
+          [
+            "Great {characteristic}",
+            {
+              "characteristic": "presence"
+            }
+          ],
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Narrowly Cognizant"
+        ],
+        "abilities": [
+          [
+            "Area Lore: (local area)",
+            5,
+            "nobility"
+          ],
+          [
+            "Awareness",
+            3,
+            "in his castle"
+          ],
+          [
+            "Charm",
+            8,
+            "human women"
+          ],
+          [
+            "Etiquette",
+            10,
+            "courtly"
+          ],
+          [
+            "Faerie Lore",
+            6,
+            "cold faeries"
+          ],
+          [
+            "Folk Ken",
+            5,
+            "people making requests"
+          ],
+          [
+            "Guile",
+            5,
+            "pretending to grant requests"
+          ],
+          [
+            "Intrigue",
+            4,
+            "court politics"
+          ],
+          [
+            "Leadership",
+            7,
+            "servants"
+          ],
+          [
+            "Living Language: (all)",
+            5,
+            "commands"
+          ],
+          [
+            "Magic Lore",
+            2,
+            "Hermetic magic"
+          ],
+          [
+            "Organization Lore: Order of Hermes",
+            1,
+            "Merinita"
+          ]
+        ],
+        "traits": {
+          "Proud": 3,
+          "Just": 1,
+          "Forgiving": -3
+        },
+        "reputations": {
+          "Grants eternal youth (local)": 2
+        }
+      },
+      "attacks": [
+        [
+          "Dodge",
+          0,
+          null,
+          0,
+          null
+        ]
+      ],
+      "soak": 25,
+      "fatigue_levels": "",
+      "equipment": "Whatever he wants; elaborate things got quickly are glamour",
+      "powers": [
+        {
+          "name": "Commanding Presence",
+          "might_cost": 1,
+          "init": 10,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "All who see him gain Respectful to Lord Marsyne +3: disagreeing needs a roll vs 6, contradicting 9, attacking 15. Not obedience, only enforced tact."
+        },
+        {
+          "name": "Entomb",
+          "might_cost": 10,
+          "init": -10,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Seals one person in ice, suspended without need or thought though still ageing, until he releases them or it is dispelled."
+        },
+        {
+          "name": "Gift of Youth",
+          "might_cost": 10,
+          "init": -10,
+          "form": "Corpus",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "A human woman stops ageing while in his castle; away from it she ages as with Unaging, and once ageing resumes it does not stop again."
+        },
+        {
+          "name": "Inner Warmth",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Ignem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Protects from mundane cold until the recipient enters a Magic, Infernal or Divine aura; no help against magical cold."
+        },
+        {
+          "name": "Lord of Ice",
+          "might_cost": 1,
+          "init": 8,
+          "form": "Aquam",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Any ice effect, even ritual-level: three magnitudes per point spent, up to 5 points (15th magnitude)."
+        },
+        {
+          "name": "Lord of the Castle",
+          "might_cost": 0,
+          "init": 15,
+          "form": "Mentem",
+          "range": "",
+          "duration": "",
+          "target": "",
+          "level": null,
+          "penetration_bonus": 0,
+          "does": "Irresistibly commands, or moves like a puppet, one servant at a time who freely agreed to serve him. Form Mentem or Corpus."
+        }
+      ],
+      "vis": [
+        [
+          10,
+          "Aquam",
+          "blood"
+        ]
+      ],
+      "appearance": "Tall, handsome and pale with ice-grey eyes and blond hair, dressed in white and blue under a diamond crown; ice water with crystals runs in his veins.",
+      "notes": "Which characteristic is Great is not printed (Presence assumed). Soak only +5 against iron or steel. Rules an ice castle court in the far north or high mountains; always keeps a mortal wife, entombing any who break the court's rules. Drawn to Gifted women. Wounds: -1 (1-5), -3 (6-10), -5 (11-15), Inc (16-20)."
+    },
+    {
+      "key": "baal_peor",
+      "name": "Baal-Peor, Lord of Filth",
+      "group": "Infernal",
+      "page": 479,
+      "realm": "Infernal",
+      "might": 30,
+      "form": "Corpus",
+      "size": 2,
+      "confidence": [
+        3,
+        9
+      ],
+      "weakness": "Running water",
+      "block": {
+        "characteristics": [
+          1,
+          2,
+          -5,
+          1,
+          4,
+          5,
+          1,
+          1
+        ],
+        "virtues_flaws": [
+          "Oversensitive (Minor)",
+          "Obese"
+        ],
+        "abilities": [
+          [
+            "Artes Liberales",
+            4,
+            "arithmetic"
+          ],
+          [
+            "Brawl",
+            4,
+            "claws"
+          ],
+          [
+            "Civil and Canon Law",
+            4,
+            "trade"
+          ],
+          [
+            "Folk Ken",
+            6,
+            "fornication"
+          ],
+          [
+            "Infernal Lore",
+            5,
+            "wealth"
+          ],
+          [
+            "Intrigue",
+            7,
+            "envy"
+          ],
+          [
+            "Medicine",
+            4,
+            "poisons"
+          ],
+          [
+            "Profession: Merchant",
+            7,
+            "unfair deals"
+          ]
+        ],
+        "traits": {
+          "Proud": 6,
+          "Hungry": 3,
+          "Shame": -3
+        },
+        "reputations": {
+          "Treasurer of Hell (Infernal)": 6,
+          "Demon of Filth (Infernal)": 5
+        }
+      },
+      "attacks": [
+        [
+          "Noxious Vomit",
+          9,
+          12,
+          null,
+          12
+        ],
+        [
+          "Claws",
+          4,
+          5,
+          6,
+          6
+        ]
+      ],
+      "soak": 8,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Form of Woman",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Corpus",
+          "level": null,
+          "does": "Takes the shape of a woman the intended audience will find beautiful, though never a copy of a particular woman."
+        },
+        {
+          "name": "Noxious Vomit",
+          "might_cost": 1,
+          "init": 9,
+          "form": "Corpus",
+          "level": null,
+          "does": "Sprays corrosive filth over an area for the attack's damage (not against True Faith); a victim rolls Str + Size vs 9 or is knocked back, and takes +3 more each round until washed (does not stack)."
+        },
+        {
+          "name": "Swallow Assault",
+          "might_cost": 5,
+          "init": 3,
+          "form": "Terram",
+          "level": null,
+          "does": "Gapes his mouth wide so a mundane attack slides harmlessly down his throat."
+        },
+        {
+          "name": "Coagulation",
+          "might_cost": 3,
+          "init": -1,
+          "form": "Corpus",
+          "level": null,
+          "does": "Takes on a physical body."
+        },
+        {
+          "name": "Obsession",
+          "might_cost": 1,
+          "init": -5,
+          "form": "Vim",
+          "level": null,
+          "does": "1 to 3 points: urges a victim toward Shamelessness or Gluttony."
+        },
+        {
+          "name": "Shroud the Stench of the Pit",
+          "might_cost": 0,
+          "init": 3,
+          "form": "Vim",
+          "level": null,
+          "does": "Variable cost: disguises another power's Infernal nature as magic or faerie, or hides a subtle power as wholly mundane; costs as much as the masked power (or its magnitude) and lasts as long."
+        },
+        {
+          "name": "The Wealth of Nations",
+          "might_cost": 3,
+          "init": 0,
+          "form": "Terram",
+          "level": null,
+          "does": "Summons valuables from elsewhere of his choosing, worth up to a pound of gold per point of his Might."
+        },
+        {
+          "name": "His Master's Voice",
+          "might_cost": 0,
+          "init": 1,
+          "form": "Vim",
+          "level": null,
+          "does": "Variable cost: calls another demon or corrupt beast to him for 1 point per point of its Might; it is not under his control."
+        }
+      ],
+      "vis": [
+        [
+          6,
+          "Perdo",
+          "tongue"
+        ]
+      ],
+      "appearance": "A grossly fat, hairless naked man with a snakelike tongue and a living serpent worn as a belt, its head over his shoulder. Can appear as a beautiful woman.",
+      "notes": "Also called Belphegor; a demon of wealth who sows strife by shifting riches. Claw wounds are filthy: they fester unless carefully cleaned (Improvement on Recovery means stable, Stable means worse) and once infected only Divine healing helps. Oversensitive is to coitus; the book does not print its tier."
+    },
+    {
+      "key": "bartholomew",
+      "name": "Bartholomew",
+      "group": "Infernal",
+      "page": 480,
+      "realm": "Infernal",
+      "might": 50,
+      "form": "Mentem",
+      "size": 0,
+      "age": "n/a (50)",
+      "confidence": [
+        2,
+        9
+      ],
+      "encumbrance": "0 (0)",
+      "equipment": "Fine clothes, a nice house, trade goods",
+      "weakness": "Ordering",
+      "block": {
+        "characteristics": [
+          3,
+          2,
+          3,
+          5,
+          -1,
+          0,
+          -1,
+          -1
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Area Lore: Home City",
+            6,
+            "trade routes"
+          ],
+          [
+            "Area Lore: Home Region",
+            6,
+            "trade routes"
+          ],
+          [
+            "Area Lore: Europe",
+            6,
+            "trade routes"
+          ],
+          [
+            "Artes Liberales",
+            2,
+            "arithmetic"
+          ],
+          [
+            "Bargain",
+            10,
+            "trade goods"
+          ],
+          [
+            "Charm",
+            5,
+            "merchants"
+          ],
+          [
+            "Etiquette",
+            4,
+            "merchants"
+          ],
+          [
+            "Folk Ken",
+            8,
+            "merchants"
+          ],
+          [
+            "Guile",
+            10,
+            "trading"
+          ],
+          [
+            "Intrigue",
+            5,
+            "market politics"
+          ],
+          [
+            "Living Language: Native",
+            6,
+            "trade talk"
+          ],
+          [
+            "Dead Language: Latin",
+            6,
+            "ecclesiastical"
+          ],
+          [
+            "Profession: Merchant",
+            10,
+            "cloth"
+          ]
+        ],
+        "traits": {
+          "Slothful": 3,
+          "Gregarious": 2,
+          "Retiring": -2
+        },
+        "reputations": {
+          "Excellent adviser on money matters (local)": 5
+        }
+      },
+      "attacks": [
+        [
+          "Fist",
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      ],
+      "soak": 8,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Merchant's Blessing",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Mentem",
+          "level": null,
+          "does": "For a week the target seems an honest, shrewd trader to others and has +3 on social rolls about trade."
+        },
+        {
+          "name": "Merchant's Curse",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Mentem",
+          "level": null,
+          "does": "For a week the target seems a cheat selling shoddy goods and has -3 on social rolls about trade."
+        },
+        {
+          "name": "Merchant's Knowledge",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Mentem",
+          "level": null,
+          "does": "Automatic: he knows the business doings of anyone under his blessings or curses."
+        },
+        {
+          "name": "Project Blessing",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Vim",
+          "level": null,
+          "does": "For one day (renewable daily) chance favours one trading venture."
+        },
+        {
+          "name": "Project Curse",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Vim",
+          "level": null,
+          "does": "For one day (renewable daily) everything that can go wrong with a venture does; a month of it ruins a man."
+        },
+        {
+          "name": "Coagulation",
+          "might_cost": 3,
+          "init": -1,
+          "form": "Corpus",
+          "level": null,
+          "does": "Takes on a physical body."
+        },
+        {
+          "name": "Obsession",
+          "might_cost": 1,
+          "init": -5,
+          "form": "Vim",
+          "level": null,
+          "does": "1 to 3 points: urges a victim toward Avarice."
+        }
+      ],
+      "vis": [
+        [
+          10,
+          "Mentem",
+          "fingers, one pawn in each (Infernally tainted)"
+        ]
+      ],
+      "appearance": "A plump, well-dressed older merchant, never jolly but never short-tempered with his fellow traders.",
+      "notes": "Lives as a respected merchant in a trading city, giving advice backed by his blessings and punishing those who ignore it; his counsel subtly keeps merchants from church and makes their alms worthless. The book gives three Area Lores (his city, its region, Europe) without names; the names here and his Language are placeholders."
+    },
+    {
+      "key": "bomburkhan",
+      "name": "Bomburkhan",
+      "group": "Infernal",
+      "page": 481,
+      "realm": "Infernal",
+      "might": 5,
+      "form": "Vim",
+      "size": -9,
+      "weakness": "Vulnerability (salt)",
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          0,
+          0,
+          -9,
+          1,
+          6,
+          7
+        ],
+        "virtues_flaws": [
+          "Weak-Willed",
+          "Short Attention Span"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "flying"
+          ],
+          [
+            "Brawl",
+            6,
+            "dodge"
+          ],
+          [
+            "Guile",
+            6,
+            "boasts"
+          ]
+        ],
+        "traits": {
+          "Resentment of Being Controlled": 5,
+          "Selfish": 5,
+          "Brave": -6
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Dodge",
+          7,
+          null,
+          14,
+          null
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Make a Liar of the Boastful",
+          "might_cost": 5,
+          "init": 0,
+          "form": "Vim",
+          "level": null,
+          "does": "On hearing a boast and spending all his Might, gives someone nearby an Ability or power that disproves it, used at once; must penetrate, lasts a simple die of rounds (a bodily change lasts while the two can see each other)."
+        },
+        {
+          "name": "Insignificance",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Vim",
+          "level": null,
+          "does": "No Magic, Infernal or Faerie power can force him to use his powers."
+        },
+        {
+          "name": "Misfortune",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Vim",
+          "level": null,
+          "does": "His target loses at games of chance and has -2 on luck-driven rolls until he tires or is driven away."
+        },
+        {
+          "name": "Coagulation",
+          "might_cost": 1,
+          "init": -1,
+          "form": "Corpus",
+          "level": null,
+          "does": "Takes on a physical body."
+        },
+        {
+          "name": "Obsession",
+          "might_cost": 1,
+          "init": -5,
+          "form": "Vim",
+          "level": null,
+          "does": "1 to 3 points: urges a victim toward boastfulness."
+        }
+      ],
+      "vis": [
+        [
+          1,
+          "Vim",
+          "wings"
+        ]
+      ],
+      "appearance": "A hand-sized black bat with a pinched, twisted human face in its fur.",
+      "notes": "An imp loosed after a Crusader's empty bravado; it delights in humbling the proud, then wanders off bored once its one big trick has drained its Might."
+    },
+    {
+      "key": "bordelon",
+      "name": "Bordelon, a Personal Tormentor",
+      "group": "Infernal",
+      "page": 482,
+      "realm": "Infernal",
+      "might": 15,
+      "form": "Corpus",
+      "size": 0,
+      "confidence": [
+        1,
+        3
+      ],
+      "weakness": "Protected Group (red-haired women)",
+      "block": {
+        "characteristics": [
+          2,
+          1,
+          0,
+          2,
+          -1,
+          0,
+          3,
+          4
+        ],
+        "virtues_flaws": [
+          "Piercing Gaze",
+          [
+            "Puissant {ability}",
+            {
+              "ability": "Leadership"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Leadership",
+            6,
+            "children"
+          ],
+          [
+            "Single Weapon",
+            5,
+            "switch"
+          ]
+        ],
+        "traits": {
+          "Cruel": 6,
+          "Stern": 5,
+          "Implacable": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Switch",
+          6,
+          11,
+          10,
+          4
+        ]
+      ],
+      "soak": 2,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Crushing the Will",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Mentem",
+          "level": null,
+          "does": "Leaves the target listless: -3 to Personality Trait rolls and no spending Confidence, until he has slept six hours."
+        },
+        {
+          "name": "Chastise the Disobedient",
+          "might_cost": 0,
+          "init": 3,
+          "form": "Corpus",
+          "level": null,
+          "does": "Her switch's wound penalties are doubled; the extra penalty fades after an hour."
+        },
+        {
+          "name": "Coagulation",
+          "might_cost": 2,
+          "init": -1,
+          "form": "Corpus",
+          "level": null,
+          "does": "Takes on a physical body."
+        },
+        {
+          "name": "Obsession",
+          "might_cost": 1,
+          "init": -5,
+          "form": "Vim",
+          "level": null,
+          "does": "1 to 3 points: urges a victim toward Shame."
+        },
+        {
+          "name": "Betrayal of the Heart",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Mentem",
+          "level": null,
+          "does": "Learns one secret fear or sin the target would never admit; the truly holy with no secrets may be immune."
+        },
+        {
+          "name": "Whispers Behind the Back",
+          "might_cost": 2,
+          "init": 0,
+          "form": "Mentem",
+          "level": null,
+          "does": "As Pains of the Perpetual Worry: a month of anxious dread that one's secret sins are known."
+        }
+      ],
+      "vis": [
+        [
+          3,
+          "Mentem",
+          "hair"
+        ]
+      ],
+      "appearance": "A stern old governess with a face-stretching bun hiding small horns, liver-spotted skin, and an austere gown over cloven hooves and a forked tail; she carries a leather-bound willow switch.",
+      "notes": "Leadership is 6+2 with the Puissant bonus. She torments one child from early life (the Plagued by a Demon Story Flaw), visiting to punish every attempt to stand out, until the victim grows meek and unambitious."
+    },
+    {
+      "key": "buran_of_yenghissar",
+      "name": "The Buran of Yenghissar",
+      "group": "Infernal",
+      "page": 483,
+      "realm": "Infernal",
+      "might": 25,
+      "form": "Auram",
+      "size": 4,
+      "confidence": [
+        1,
+        3
+      ],
+      "weakness": "Protected Group (those who invoke the Bismillah)",
+      "can_be_wounded": false,
+      "block": {
+        "characteristics": [
+          -5,
+          0,
+          3,
+          -2,
+          0,
+          0,
+          3,
+          6
+        ],
+        "virtues_flaws": [
+          "Jinni",
+          "Berserk",
+          "Strong-Willed",
+          "Wilderness Sense",
+          "Fury",
+          "Greater Malediction",
+          "Mute"
+        ],
+        "abilities": [
+          [
+            "Living Language: Arabic",
+            5,
+            "understanding"
+          ],
+          [
+            "Folk Ken",
+            3,
+            "travelers"
+          ],
+          [
+            "Theology: Islam",
+            3,
+            "jinn"
+          ],
+          [
+            "Survival",
+            5,
+            "desert"
+          ],
+          [
+            "Area Lore: Taklamakan",
+            5,
+            "legends"
+          ],
+          [
+            "Wilderness Sense",
+            2,
+            "weather"
+          ]
+        ],
+        "traits": {
+          "Untamable": 5
+        },
+        "reputations": {
+          "Scourge of Yenghissar (local)": 2
+        }
+      },
+      "attacks": [],
+      "powers": [
+        {
+          "name": "Delusion of the Desert",
+          "might_cost": 1,
+          "init": 3,
+          "form": "Imaginem",
+          "level": null,
+          "does": "Illusions of lost companions, an oasis, or itself as a fiery-eyed sandstorm man: 1 point for an Individual image, 5 for a room-sized one; each has some flaw."
+        },
+        {
+          "name": "Elemental Control of Wind",
+          "might_cost": 0,
+          "init": 1,
+          "form": "Auram",
+          "level": null,
+          "does": "Variable cost: any Creo, Muto or Rego Auram effect at 1 Might per magnitude, no higher than its Might and never Ritual."
+        },
+        {
+          "name": "Recalcitrance",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Vim",
+          "level": null,
+          "does": "Constant: powers that would control it treat its Might as half again higher (or their Ease Factor rises by half)."
+        }
+      ],
+      "vis": [
+        [
+          5,
+          "Auram",
+          "black sand left when dispersed (vis prava)"
+        ]
+      ],
+      "appearance": "A vast whirling column of black sand; Second Sight shows a giant human shadow inside.",
+      "notes": "Str and Sta n/a (insubstantial: no combat, Soak or wounds); its Arabic shows understanding only, being Mute. Fury is when summoned; Greater Malediction binds it by bargains. Lacks Coagulation and Obsession. Bound into a sahir's ancestral sword by Goetic Binding; Delusion costs 1 or 5 points."
+    },
+    {
+      "key": "fimus_warrior_demon",
+      "name": "Fimus, Warrior Demon",
+      "group": "Infernal",
+      "page": 484,
+      "realm": "Infernal",
+      "might": 10,
+      "form": "Terram",
+      "size": 2,
+      "weakness": "Abhorrent Material (cinnamon)",
+      "block": {
+        "characteristics": [
+          -2,
+          2,
+          -2,
+          2,
+          4,
+          4,
+          0,
+          -4
+        ],
+        "virtues_flaws": [
+          [
+            "Puissant {ability}",
+            {
+              "ability": "Great Weapon"
+            }
+          ],
+          "Poor Eyesight",
+          "Simple-Minded"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "pursuit"
+          ],
+          [
+            "Awareness",
+            4,
+            "foes"
+          ],
+          [
+            "Brawl",
+            5,
+            "fist"
+          ],
+          [
+            "Great Weapon",
+            6,
+            "cudgel"
+          ]
+        ],
+        "traits": {
+          "Untamable": 5,
+          "Intimidating": 3
+        },
+        "reputations": {
+          "Champion of Hell (Infernal)": 1
+        }
+      },
+      "attacks": [
+        [
+          "Cudgel",
+          -3,
+          13,
+          6,
+          11
+        ],
+        [
+          "Fist",
+          -4,
+          6,
+          2,
+          4
+        ]
+      ],
+      "soak": 15,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Elemental Control of Earth",
+          "might_cost": 0,
+          "init": 1,
+          "form": "Terram",
+          "level": null,
+          "does": "Variable cost: any Creo, Muto or Rego Terram effect at 1 Might per magnitude, no higher than his Might and never Ritual."
+        },
+        {
+          "name": "Born of Rock",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Terram",
+          "level": null,
+          "does": "His stone body is enormously heavy and nearly proof against mundane harm."
+        },
+        {
+          "name": "Death's Vengeance",
+          "might_cost": 0,
+          "init": 10,
+          "form": "Terram",
+          "level": null,
+          "does": "On death his body bursts, flinging debris 20 paces: Attack +12, Damage +15 against everyone in range, dodgeable only."
+        },
+        {
+          "name": "Coagulation",
+          "might_cost": 1,
+          "init": -1,
+          "form": "Corpus",
+          "level": null,
+          "does": "Takes on a physical body."
+        },
+        {
+          "name": "Obsession",
+          "might_cost": 1,
+          "init": -5,
+          "form": "Vim",
+          "level": null,
+          "does": "1 to 3 points: urges a victim toward Cowardice."
+        },
+        {
+          "name": "Recalcitrance",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Vim",
+          "level": null,
+          "does": "Constant: powers that would control him treat his Might as half again higher (or their Ease Factor rises by half)."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Terram",
+          "eye"
+        ]
+      ],
+      "appearance": "A huge one-eyed man built of boulders, swinging a stalagmite cudgel.",
+      "notes": "Great Weapon is 6+2 with Puissant. One of countless identical brothers, all named Fimus, used as dim shock troops by other demons; each brother has a different Abhorrent Material. Favours effects like Wielding the Invisible Sling and Rusted Decay of Ten-Score Years."
+    },
+    {
+      "key": "michael_demon",
+      "name": "Michael",
+      "group": "Infernal",
+      "page": 485,
+      "realm": "Infernal",
+      "might": 10,
+      "form": "Corpus",
+      "size": 0,
+      "age": "n/a (varies)",
+      "encumbrance": "Varies",
+      "equipment": "Whatever suits his current role",
+      "weakness": "Abhorrent Material (salt)",
+      "block": {
+        "characteristics": [
+          2,
+          2,
+          -2,
+          -2,
+          0,
+          0,
+          1,
+          1
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "running away"
+          ],
+          [
+            "Awareness",
+            4,
+            "victims"
+          ],
+          [
+            "Craft: Practical Jokes",
+            8,
+            "painful and humiliating ones"
+          ],
+          [
+            "Folk Ken",
+            5,
+            "figuring out what will make someone most angry"
+          ],
+          [
+            "Guile",
+            10,
+            "pretending to be someone else"
+          ],
+          [
+            "Intrigue",
+            3,
+            "maneuvering people into his plots"
+          ]
+        ],
+        "traits": {
+          "Cruel": 3,
+          "Wrathful": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [],
+      "soak": 0,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Change Form",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Corpus",
+          "level": null,
+          "does": "Looks like any human being, clothes and gear included."
+        },
+        {
+          "name": "Coagulation",
+          "might_cost": 3,
+          "init": -1,
+          "form": "Corpus",
+          "level": null,
+          "does": "Takes on a physical body."
+        },
+        {
+          "name": "Obsession",
+          "might_cost": 1,
+          "init": -5,
+          "form": "Vim",
+          "level": null,
+          "does": "1 to 3 points: urges a victim toward Sensitivity to Mockery."
+        },
+        {
+          "name": "Working Material",
+          "might_cost": 1,
+          "init": 0,
+          "form": "Terram",
+          "level": null,
+          "does": "Makes whatever props a practical joke needs."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Muto",
+          "heart (Infernally tainted)"
+        ]
+      ],
+      "appearance": "Whatever his current role needs; he has no natural form of his own.",
+      "notes": "Size varies from -2 to +1 with his disguise, but he always takes wounds as Size 0. Rarely fights, using his disguise's weapons; Soak 0 unless armoured. Stages cruel jokes while disguised as the victim's friend to breed lasting wrath, never killing."
+    },
+    {
+      "key": "polandrus",
+      "name": "Polandrus",
+      "group": "Infernal",
+      "page": 485,
+      "realm": "Infernal",
+      "might": 20,
+      "form": "Animal",
+      "size": 0,
+      "age": "n/a",
+      "confidence": [
+        1,
+        3
+      ],
+      "encumbrance": "0 (0)",
+      "equipment": "None",
+      "weakness": "Vulnerability (holly)",
+      "block": {
+        "characteristics": [
+          1,
+          2,
+          0,
+          2,
+          2,
+          2,
+          2,
+          3
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Area Lore: Home Area",
+            3,
+            "livestock"
+          ],
+          [
+            "Bargain",
+            7,
+            "for sins"
+          ],
+          [
+            "Brawl",
+            5,
+            "bite"
+          ],
+          [
+            "Charm",
+            4,
+            "frightened people"
+          ],
+          [
+            "Folk Ken",
+            3,
+            "peasants"
+          ],
+          [
+            "Guile",
+            8,
+            "when making deals"
+          ],
+          [
+            "Hunt",
+            6,
+            "livestock"
+          ],
+          [
+            "Living Language: Native",
+            6,
+            "making deals"
+          ],
+          [
+            "Leadership",
+            4,
+            "wolves"
+          ],
+          [
+            "Survival",
+            5,
+            "woods"
+          ]
+        ],
+        "traits": {
+          "Envious": 3,
+          "Proud": 2,
+          "Calculating": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          18,
+          11,
+          9,
+          8
+        ]
+      ],
+      "soak": 6,
+      "fatigue_levels": "OK, 0, -1/-1/-1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Calm Person",
+          "might_cost": 1,
+          "init": 18,
+          "form": "Mentem",
+          "level": null,
+          "does": "Makes a person calm enough to talk with a huge wolf; their fear stays, but not the urge to act on it."
+        },
+        {
+          "name": "Dominate Wolves",
+          "might_cost": 0,
+          "init": 18,
+          "form": "Animal",
+          "level": null,
+          "does": "Takes total control of any wolf, including magical wolves and natural wolf-shapechangers (not spell-changed magi), until he releases it, it enters a Dominion aura of 3+, or it is dispelled."
+        },
+        {
+          "name": "Coagulation",
+          "might_cost": 3,
+          "init": -1,
+          "form": "Animal",
+          "level": null,
+          "does": "Takes on a physical body."
+        },
+        {
+          "name": "Obsession",
+          "might_cost": 1,
+          "init": -5,
+          "form": "Vim",
+          "level": null,
+          "does": "1 to 3 points: urges a victim toward Secrecy."
+        }
+      ],
+      "vis": [
+        [
+          4,
+          "Animal",
+          "four large canine teeth, one each (Infernally tainted)"
+        ]
+      ],
+      "appearance": "A very large jet-black wolf with red eyes.",
+      "notes": "Blackmails livestock farmers: his wolves kill stock, then he offers protection for ever more sinful favours. Unnaturally quick in combat but attacks only when attacked. The book's Area Lore and Language are unnamed; the names here are placeholders."
+    },
+    {
+      "key": "demonic_steed",
+      "name": "Demonic Steed",
+      "group": "Infernal",
+      "page": 487,
+      "realm": "Infernal",
+      "might": 7,
+      "form": "Animal",
+      "size": 3,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          -6,
+          -4,
+          4,
+          4,
+          1,
+          1
+        ],
+        "virtues_flaws": [
+          "Enduring Constitution",
+          "Improved Characteristics",
+          [
+            "Lesser Infernal Power",
+            {
+              "power": "The Unimpeded Traveler"
+            }
+          ],
+          "Long-Winded",
+          "Proud (Major)",
+          "Corrupted Beast"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "long-distance running"
+          ],
+          [
+            "Brawl",
+            3,
+            "hooves"
+          ]
+        ],
+        "traits": {
+          "Vain": 6,
+          "Brave": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Kick",
+          3,
+          7,
+          7,
+          5
+        ]
+      ],
+      "soak": 4,
+      "fatigue_levels": "OK, 0/0, 0/0, -2, -4, Unconscious",
+      "powers": [
+        {
+          "name": "The Unimpeded Traveler",
+          "might_cost": 0,
+          "init": 1,
+          "form": "Animal",
+          "level": null,
+          "does": "Ignores bad terrain, covering 30 miles a day on the worst roads; can trot across water and chasms with nothing beneath it."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Animal",
+          "hooves"
+        ]
+      ],
+      "appearance": "A black stallion with bloodshot eyes, fangs and iron hooves.",
+      "notes": "A corrupted beast; one of three made by an Infernalist magus with a tainted Steed of Vengeance, so other magi take them for ordinary spell-steeds. The book prints the fatigue levels as 'OK, 0/0, /0/0, -2, -4' (a misprint, read here as 0/0)."
+    },
+    {
+      "key": "two_headed_hound",
+      "name": "Two-Headed Hound",
+      "group": "Infernal",
+      "page": 488,
+      "realm": "Infernal",
+      "might": 10,
+      "form": "Animal",
+      "size": 0,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          0,
+          2,
+          -6,
+          0,
+          0,
+          2,
+          1,
+          2
+        ],
+        "virtues_flaws": [
+          [
+            "Greater Infernal Power",
+            {
+              "power": "Spit Fire"
+            }
+          ],
+          "Ferocity",
+          "Improved Characteristics",
+          "Long-Winded",
+          "Sharp Ears",
+          [
+            "Horrifying Appearance",
+            {
+              "deformity": "two hateful heads"
+            }
+          ],
+          "Reckless (Major)",
+          "Corrupted Beast"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            "pursuit"
+          ],
+          [
+            "Awareness",
+            4,
+            "keeping watch"
+          ],
+          [
+            "Brawl",
+            6,
+            "bite"
+          ],
+          [
+            "Hunt",
+            4,
+            "track by scent"
+          ]
+        ],
+        "traits": {
+          "Hatred of Owner": 6,
+          "Hatred of Humans": 5,
+          "Hatred of Self": 3,
+          "Reckless": 3,
+          "Vigilant": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          2,
+          11,
+          10,
+          1
+        ]
+      ],
+      "soak": 2,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Spit Fire",
+          "might_cost": 4,
+          "init": 6,
+          "form": "Ignem",
+          "level": null,
+          "does": "Spits a fire bolt for +15 damage at one target; it can bite one foe and spit at another in the same round."
+        }
+      ],
+      "vis": [
+        [
+          2,
+          "Vim",
+          "heads, one pawn in each"
+        ]
+      ],
+      "appearance": "A huge mangy grey dog with two slavering heads on massive shoulders, each hating the other; mange leaves patches of raw, weeping flesh.",
+      "notes": "Ferocity Score 1 (3 points), against intruders. A corrupted beast made by a diabolist to guard his sanctum and held by an Infernal charm; it loathes its master. Reckless is read as Major from its place among the Flaws."
+    },
+    {
+      "key": "gabriel",
+      "name": "Gabriel, the Archangel of Prophecy",
+      "group": "Divine",
+      "page": 489,
+      "realm": "Divine",
+      "might": 100,
+      "form": "Mentem",
+      "size": 0,
+      "age": "n/a",
+      "confidence": [
+        7,
+        50
+      ],
+      "encumbrance": "0 (0)",
+      "equipment": "Robes",
+      "block": {
+        "characteristics": [
+          10,
+          10,
+          10,
+          10,
+          8,
+          8,
+          8,
+          8
+        ],
+        "virtues_flaws": [
+          "Good Teacher",
+          "Inspirational"
+        ],
+        "abilities": [
+          [
+            "Awareness",
+            10,
+            "the uneducated"
+          ],
+          [
+            "Charm",
+            10,
+            "pupils"
+          ],
+          [
+            "Brawl",
+            10,
+            "fist"
+          ],
+          [
+            "Leadership",
+            10,
+            "calling attention"
+          ],
+          [
+            "Teaching",
+            15,
+            "Theology"
+          ]
+        ],
+        "traits": {
+          "Compassionate": 3,
+          "Intellectual": 3,
+          "Just": 3,
+          "Love of God": 5,
+          "Patient": 3
+        },
+        "reputations": {
+          "Messenger of God (Jews, Christians and Muslims)": 5
+        }
+      },
+      "attacks": [
+        [
+          "Fist",
+          8,
+          19,
+          19,
+          8
+        ]
+      ],
+      "soak": 8,
+      "fatigue_levels": "OK, 0/0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Enlighten",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Mentem",
+          "level": null,
+          "does": "Variable cost: puts any Knowledge into a mind at 1 Might per experience point, never past a score of 15."
+        },
+        {
+          "name": "Spirit Form",
+          "might_cost": 0,
+          "init": 30,
+          "form": "Vim",
+          "level": null,
+          "does": "Becomes pure spirit at will, neither touching nor touched by the physical."
+        },
+        {
+          "name": "Subtle Form",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Corpus",
+          "level": null,
+          "does": "Looks like any human being; his scores stay the same."
+        }
+      ],
+      "vis": [
+        [
+          20,
+          "Mentem",
+          "head"
+        ]
+      ],
+      "appearance": "Usually a gentle, compassionate man, sometimes winged at the shoulders or arms; his true form is a six-hundred-winged giant spanning the horizon.",
+      "notes": "Also has every Knowledge at 15 (not listed). Jibril in Islam; God's chief messenger, found by those seeking religious wisdom. Has the angelic powers common to all angels (Angelic Mantle, Enfolding, Envisioning, p. 489)."
+    },
+    {
+      "key": "kolazonta",
+      "name": "Kolazonta, the Chastiser",
+      "group": "Divine",
+      "page": 490,
+      "realm": "Divine",
+      "might": 30,
+      "form": "Ignem",
+      "size": 0,
+      "confidence": [
+        2,
+        15
+      ],
+      "encumbrance": "0 (0)",
+      "equipment": "None",
+      "block": {
+        "characteristics": [
+          3,
+          3,
+          3,
+          3,
+          2,
+          5,
+          1,
+          1
+        ],
+        "virtues_flaws": [
+          [
+            "Greater Immunity",
+            {
+              "hazard": "Fire"
+            }
+          ]
+        ],
+        "abilities": [
+          [
+            "Brawl",
+            4,
+            "fists"
+          ],
+          [
+            "Dominion Lore",
+            6,
+            "angels"
+          ],
+          [
+            "Theology: Judaism",
+            6,
+            "sin"
+          ]
+        ],
+        "traits": {
+          "Love of God": 5,
+          "Grim": 4,
+          "Remorseless": 3
+        },
+        "reputations": {
+          "Scourge of the Impious (Jews)": 3
+        }
+      },
+      "attacks": [
+        [
+          "Flaming Fist",
+          1,
+          6,
+          6,
+          7
+        ]
+      ],
+      "soak": 5,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Chastise the Sinful",
+          "might_cost": 5,
+          "init": 1,
+          "form": "Corpus",
+          "level": null,
+          "does": "As the spell Curse of the Unportended Plague."
+        },
+        {
+          "name": "Cloud Form",
+          "might_cost": 0,
+          "init": 30,
+          "form": "Auram",
+          "level": null,
+          "does": "Becomes a cloud at will, immune to physical attack though open to Auram spells."
+        },
+        {
+          "name": "Fiery Form",
+          "might_cost": 0,
+          "init": 30,
+          "form": "Ignem",
+          "level": null,
+          "does": "Becomes a man of fire at will, dealing +5 damage to anyone within 5 feet."
+        }
+      ],
+      "vis": [
+        [
+          4,
+          "Corpus",
+          "throughout body"
+        ],
+        [
+          2,
+          "Ignem",
+          "veins"
+        ]
+      ],
+      "appearance": "Usually a dark, threatening cloud; rarely a man of white fire with flaming veins and lightning eyes.",
+      "notes": "His fist's fire is natural: it ignores Magic Resistance but not Soak from Arts. A servant of Uriel who brought the plague on the rebel Israelites; waits among armies and besieged cities for the command to strike. The book prints plain Theology; Judaism is a reading."
+    },
+    {
+      "key": "lupersus",
+      "name": "Lupersus",
+      "group": "Divine",
+      "page": 491,
+      "realm": "Divine",
+      "might": 20,
+      "form": "Animal",
+      "size": -1,
+      "age": "n/a",
+      "confidence": [
+        1,
+        6
+      ],
+      "encumbrance": "0 (0)",
+      "equipment": "None",
+      "block": {
+        "characteristics": [
+          0,
+          3,
+          3,
+          -2,
+          2,
+          3,
+          1,
+          2
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Area Lore: Home Hills",
+            5,
+            "food sources"
+          ],
+          [
+            "Awareness",
+            5,
+            "threats to his charge"
+          ],
+          [
+            "Brawl",
+            4,
+            "bite"
+          ],
+          [
+            "Dominion Lore",
+            5,
+            "saints"
+          ],
+          [
+            "Hunt",
+            8,
+            "rabbits"
+          ],
+          [
+            "Stealth",
+            8,
+            "hiding from humans"
+          ],
+          [
+            "Survival",
+            8,
+            "hills"
+          ]
+        ],
+        "traits": {
+          "Loyal": 3,
+          "Patient": 2,
+          "Helpful": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          8,
+          11,
+          16,
+          8
+        ]
+      ],
+      "soak": 7,
+      "fatigue_levels": "OK, 0/0/0/0/0/0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Perfect Defender",
+          "might_cost": 1,
+          "init": 20,
+          "form": "Animal",
+          "level": null,
+          "does": "While defending another in combat, +10 Defense until he disengages."
+        }
+      ],
+      "vis": [
+        [
+          4,
+          "Animal",
+          "whole body"
+        ]
+      ],
+      "appearance": "A noble silver-grey wolf who never gets dirty whatever the ground.",
+      "notes": "A divine creature, not an angel, so lacks the angelic powers. Guards and feeds a holy hermit and guides seekers to him; mute by choice, he helps travellers in trouble, chasing them to safety if they won't follow a wolf. The book prints Divine Lore (here Dominion Lore) and an unnamed Area Lore."
+    },
+    {
+      "key": "nasir",
+      "name": "Nasir, the Helper",
+      "group": "Divine",
+      "page": 491,
+      "realm": "Divine",
+      "might": 25,
+      "form": "Corpus",
+      "size": 0,
+      "age": "n/a (33)",
+      "confidence": [
+        2,
+        10
+      ],
+      "encumbrance": "0 (0)",
+      "equipment": "Travelling clothes",
+      "block": {
+        "characteristics": [
+          2,
+          2,
+          2,
+          2,
+          0,
+          1,
+          2,
+          2
+        ],
+        "virtues_flaws": [
+          [
+            "Ways of the {land}",
+            {
+              "land": "Local Environment"
+            }
+          ],
+          "Animal Ken",
+          "Wilderness Sense"
+        ],
+        "abilities": [
+          [
+            "Animal Handling",
+            8,
+            "horses"
+          ],
+          [
+            "Animal Ken",
+            8,
+            "horses"
+          ],
+          [
+            "Athletics",
+            8,
+            "climbing"
+          ],
+          [
+            "Awareness",
+            8,
+            "natural hazards"
+          ],
+          [
+            "Brawl",
+            5,
+            "fist"
+          ],
+          [
+            "Chirurgy",
+            8,
+            "bind wound"
+          ],
+          [
+            "Dominion Lore",
+            8,
+            "angels"
+          ],
+          [
+            "Swim",
+            8,
+            "rough water"
+          ],
+          [
+            "Theology: Islam",
+            8,
+            "angelology"
+          ],
+          [
+            "Wilderness Sense",
+            8,
+            "local environment"
+          ]
+        ],
+        "traits": {
+          "Compassionate": 3,
+          "Just": 3,
+          "Love of God": 5
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Fist",
+          2,
+          8,
+          8,
+          0
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Calming Touch",
+          "might_cost": 3,
+          "init": 0,
+          "form": "Animal/Mentem",
+          "level": null,
+          "does": "His touch soothes fear of dangerous ground."
+        },
+        {
+          "name": "Spirit Form",
+          "might_cost": 0,
+          "init": 30,
+          "form": "Vim",
+          "level": null,
+          "does": "Becomes pure spirit at will, neither touching nor touched by the physical."
+        },
+        {
+          "name": "Steadying Hand",
+          "might_cost": 5,
+          "init": 30,
+          "form": "Animal/Corpus",
+          "level": null,
+          "does": "While he keeps hold of someone, they cannot slip or fall on any terrain."
+        },
+        {
+          "name": "Subtle Form",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Corpus",
+          "level": null,
+          "does": "Looks like any human being; his scores stay the same."
+        }
+      ],
+      "vis": [
+        [
+          4,
+          "Terram",
+          "feet"
+        ]
+      ],
+      "appearance": "A plain man in well-worn travelling clothes.",
+      "notes": "A minor angel guarding pious travellers: he seems to arrive by ordinary means, helps, and leaves before awkward questions. The book prints plain Theology; Islam is a reading from his name and the quoted tale."
+    },
+    {
+      "key": "seferiel",
+      "name": "Seferiel",
+      "group": "Divine",
+      "page": 492,
+      "realm": "Divine",
+      "might": 50,
+      "form": "Corpus",
+      "size": 1,
+      "age": "n/a (30)",
+      "confidence": [
+        3,
+        18
+      ],
+      "encumbrance": "0 (0)",
+      "equipment": "Shining white robes, flaming greatsword",
+      "block": {
+        "characteristics": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "virtues_flaws": [],
+        "abilities": [
+          [
+            "Awareness",
+            5,
+            "casting magic"
+          ],
+          [
+            "Charm",
+            3,
+            "magi"
+          ],
+          [
+            "Dominion Lore",
+            10,
+            "angels"
+          ],
+          [
+            "Great Weapon",
+            7,
+            "greatsword"
+          ],
+          [
+            "Leadership",
+            7,
+            "magi"
+          ],
+          [
+            "Magic Theory",
+            10,
+            "theological implications"
+          ],
+          [
+            "Organization Lore: Order of Hermes",
+            10,
+            "interactions with the Church"
+          ],
+          [
+            "Theology: Christian",
+            10,
+            "angelology"
+          ]
+        ],
+        "traits": {
+          "Just": 3,
+          "Love of God": 5,
+          "Curious": 2,
+          "Merciful": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Flaming Greatsword",
+          18,
+          21,
+          18,
+          25
+        ]
+      ],
+      "soak": 20,
+      "fatigue_levels": "OK, 0/0/0/0/0/0, -1, -3, -5, Unconscious",
+      "powers": [
+        {
+          "name": "Magic",
+          "might_cost": 1,
+          "init": 18,
+          "form": "By effect",
+          "level": null,
+          "does": "1 or more points: duplicates any Hermetic effect, Rituals included without vis or long casting, at 1 Might per two magnitudes, as much as his Might Pool allows."
+        },
+        {
+          "name": "Spirit Form",
+          "might_cost": 0,
+          "init": 30,
+          "form": "Vim",
+          "level": null,
+          "does": "Becomes pure spirit at will, neither touching nor touched by the physical."
+        },
+        {
+          "name": "Subtle Form",
+          "might_cost": 0,
+          "init": 0,
+          "form": "Corpus",
+          "level": null,
+          "does": "Looks like any human being; his scores stay the same."
+        }
+      ],
+      "vis": [
+        [
+          10,
+          "Ignem",
+          "sword"
+        ]
+      ],
+      "appearance": "A large golden-skinned man with blazing hair and a starlike white robe, bearing a burning greatsword.",
+      "notes": "Sword and flames are natural, so not magically resisted. An angel charged with Hermetic magi: he draws them toward God or punishes the wicked, often posing as a magus; suits the Plagued by Angel Story Flaw. The book prints Divine Lore, Order of Hermes Lore and plain Theology; mapped here."
+    }
+  ]
+}

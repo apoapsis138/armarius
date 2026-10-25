@@ -109,6 +109,39 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.14.0 — 2026-10-25
+
+### Florilegium
+
+- **Start from the book** in New Creature: the Definitive Edition's 62
+  creatures (DE pp. 428-492), from the bear and the wolf to the
+  elementals, the faerie knight, Baal-Peor and the angel Gabriel, each
+  copied whole into the saga to change as you like.
+
+### Book of Hours
+
+- A **Master of (Form) Creatures** tames with Magic Lore in place of
+  Intelligence, and a taming season with points enough for one says how
+  many more of the same kind they would tame (DE pp. 384-385).
+- A tamed animal is **trained** by someone with Animal Handling; an
+  Ability new to it asks a Loyalty test against 6 at the season's end
+  (DE p. 385).
+
+### Pagina
+
+- **Command the Beast**, in More on a tamed animal's Personality Traits:
+  Presence + Animal Handling (Ride, Magic Lore) + stress die against the
+  task's Ease Factor, with the Loyalty tests a feared or suicidal task
+  asks (DE p. 386).
+- A faerie built by Realms of Power: Faerie shows a **Faerie design**
+  fact: the Might its Virtues give it, the choices every faerie makes
+  that it lacks, and what a faerie can't have (RoP: Faerie pp. 45-64).
+
+### Orbis
+
+- In a fight, a group of tamed animals is led by its leader's **Animal
+  Handling**, not his Leadership (DE p. 385).
+
 ## 3.13.0 — 2026-10-25
 
 ### Book of Hours

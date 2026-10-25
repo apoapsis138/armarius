@@ -83,7 +83,8 @@ def quality_budget(creature: Creature) -> QualityBudget | None:
 
 #: The Magic Qualities that give a power, each a Strategy as two small
 #: functions: (Might cost from magnitude, Initiative from Quickness and
-#: magnitude), and the spell levels it grants (RoP: Magic p. 36). Halves
+#: magnitude), and the spell levels it grants (RoP: Magic p. 36; a
+#: faerie's power Virtues are the same, RoP: Faerie p. 55). Halves
 #: round down (DE p. 6).
 POWERS: dict[str, tuple[Callable[[int], int], Callable[[int, int], int], int]] = {
     "Focus Power": (lambda m: m, lambda q, m: q - m, 25),
@@ -127,8 +128,13 @@ def power_notes(creature: Creature, power: CreaturePower) -> list[str]:
     if figures is not None and figures != (power.might_cost, power.init):
         found.append(
             f"{power.name}: as a {power.quality}, cost {figures[0]} and Init "
-            f"{figures[1]:+d} (typed {power.might_cost}, {power.init:+d}; RoP: "
-            "Magic p. 36)."
+            f"{figures[1]:+d} (typed {power.might_cost}, {power.init:+d}; "
+            + (
+                "RoP: Faerie p. 55"
+                if creature.realm == "Faerie"
+                else "RoP: Magic p. 36"
+            )
+            + ")."
         )
     if power.quality and power.level is not None:
         if power.level >= 50 and power.quality != "Ritual Power":

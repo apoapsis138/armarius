@@ -34,6 +34,7 @@ the same face, so the fight loop never asks which it has.
 from __future__ import annotations
 
 import random
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 
 from .. import catalog
@@ -172,6 +173,22 @@ class Fighter:
             return self.character.name
         return self.combatant.name or "A fighter"
 
+    def is_animal(self) -> bool:
+        """A beast: an animal grog, or a creature with an animal mind."""
+        if self.character is not None:
+            return self.character.animal is not None
+        if self.combatant.kind == CREATURE_FIGHTER:
+            creature = self.saga.creature(self.combatant.ref_id)
+            return creature is not None and creature.cunning
+        return False
+
+    def handling(self) -> int:
+        """Its Animal Handling, which leads a group of tamed animals in
+        place of Leadership (DE p. 385)."""
+        if self.character is None:
+            return 0
+        return sum(ability_score(self.character, "Animal Handling"))
+
     def figures(self, *, bare: bool = False) -> Figures:
         """Its figures with its weapon, or with bare hands (`bare`, for a
         grapple, which needs Brawl and free hands)."""
@@ -288,11 +305,20 @@ class Unit:
         leader = next((f for f in self.fighters if f.id == group.leader), None)
         if leader is None:
             return 0
-        lead = leader.figures().leadership
+        lead = leads_with(self.fighters, leader)
         if len(self.fighters) > lead:
             return 0
         others = sum(f.figures().ability for f in self.standing()[1:])
         return min(others, combat_groups.BONUS_PER_LEADERSHIP * lead)
+
+
+def leads_with(fighters: Sequence[Fighter], leader: Fighter) -> int:
+    """How many the leader can coordinate: his Leadership, or for a group
+    of tamed animals his Animal Handling (DE p. 385)."""
+    others = [f for f in fighters if f is not leader]
+    if others and all(f.is_animal() for f in others):
+        return leader.handling()
+    return leader.figures().leadership
 
 
 def units(saga: Saga, fight: Fight) -> dict[str, Unit]:

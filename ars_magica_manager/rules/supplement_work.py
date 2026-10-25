@@ -190,6 +190,27 @@ def gift_penalty(character: Character) -> int:
     return 3 if ids & set(catalog.GIFT_IDS) else 0
 
 
+MASTER_OF_CREATURES = "vf_master_of_form_creatures"
+
+
+def master_of_creatures(character: Character) -> str | None:
+    """The Form a Master of (Form) Creatures tames, or None."""
+    for vf in character.virtues_flaws:
+        if vf.vf_id == MASTER_OF_CREATURES:
+            return str(vf.params.get("form") or "").title() or "?"
+    return None
+
+
+def more_tamed(points: int, might: int, handling: int) -> int:
+    """How many more creatures of the same species a season's points tame
+    beside the first, when they are enough for one in a season: shared out,
+    at most the tamer's Animal Handling more (DE p. 384)."""
+    need = max(1, might)
+    if points < need:
+        return 0
+    return min(handling, points // need - 1)
+
+
 def beast_might(confidence: int) -> int:
     """A mundane beast's effective Might for taming: 1 + 2 x its
     Confidence Score (DE p. 384)."""
@@ -833,14 +854,22 @@ def _tame_animal(
     name = plan.title.strip()
     might = plan.book_level or 0
     gift = gift_penalty(character)
-    points = max(
-        0,
-        character.characteristics.intelligence
-        + ability_level(character, "Animal Handling")
-        + ability_level(character, "Animal Ken")
-        - might
-        - gift,
-    )
+    handling = ability_level(character, "Animal Handling")
+    ken = ability_level(character, "Animal Ken")
+    master = master_of_creatures(character)
+    if master is not None:
+        # A Master of (Form) Creatures tames with his Magic Lore in place of
+        # Might (DE p. 385).
+        base, label = ability_level(character, "Magic Lore"), "Magic Lore"
+        creature = next((c for c in saga.creatures if c.name == name), None)
+        if creature is not None and creature.might_form not in ("", master):
+            result.notes.append(
+                f"A Master of {master} Creatures tames only creatures of {master}: "
+                f"{name} is of {creature.might_form}."
+            )
+    else:
+        base, label = character.characteristics.intelligence, "Int"
+    points = max(0, base + handling + ken - might - gift)
     record = progress_of(character, "taming", name)
     if (
         record is not None
@@ -853,10 +882,16 @@ def _tame_animal(
         )
     result.progress.append(("taming", name, max(1, might), points))
     result.notes.append(
-        f"Int + Animal Handling + Animal Ken - Might {might}"
+        f"{label} + Animal Handling + Animal Ken - Might {might}"
         + (f" - the Gift {gift}" if gift else "")
         + f" = {points} toward taming {name}."
     )
+    more = more_tamed(points, might, handling)
+    if more:
+        result.notes.append(
+            f"Enough to tame {more} more of the same kind this season, sharing "
+            "the points (at most Animal Handling more, DE p. 384)."
+        )
 
 
 def _search_lacuna(

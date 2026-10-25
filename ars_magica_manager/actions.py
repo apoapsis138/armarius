@@ -265,6 +265,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("h", "take_harm", "Take Harm"),
     MenuItem("y", "recovery_roll", "Recovery Roll"),
     MenuItem("e", "end_session", "End of Session"),
+    MenuItem("c", "command_beast", "Command the Beast"),
     MenuItem("a", "place_aging_points", "Place Aging Points"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue"),
     MenuItem("i", "import_data", "Import"),
@@ -307,6 +308,7 @@ MORE_SECTIONS: dict[str, str] = {
     "take_harm": "section-char-health",
     "recovery_roll": "section-char-health",
     "end_session": "section-reputations",
+    "command_beast": "section-personality-traits",
     "place_aging_points": "section-aging",
     "edit_familiar_fatigue": "section-fam-health",
     "withdraw_case": CASES_SECTION,
@@ -508,6 +510,16 @@ def _changes_detail(facts: ActionFacts, *, up: bool) -> bool:
     return step(record.detail) is not None
 
 
+def _commands_beast(facts: ActionFacts) -> bool:
+    """Command the Beast: on a tamed animal's Personality Traits."""
+    record = facts.creation_record()
+    return (
+        isinstance(record, Character)
+        and record.animal is not None
+        and facts.active_section() in (None, "section-personality-traits")
+    )
+
+
 def _gives(facts: ActionFacts) -> bool:
     found = facts.to_give()
     return found is not None and giving.blocked(facts.saga, *found) is None
@@ -612,6 +624,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "promote": partial(_changes_detail, up=True),
     "demote": partial(_changes_detail, up=False),
     "give": _gives,
+    "command_beast": _commands_beast,
     "edit_traditions": _joins_traditions,
     "disputatio": _disputes,
     "give_silver": _gives_silver,

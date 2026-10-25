@@ -1237,7 +1237,7 @@ def _taming(
     )
     # Only consecutive seasons keep the points (DE p. 384).
     before = supplement_work.kept_points(record, plan.season, plan.year)
-    return [], LabWork(
+    result = LabWork(
         None,
         total,
         might,
@@ -1245,6 +1245,15 @@ def _taming(
         points_gained=gained,
         finished=before + gained >= might,
     )
+    more = supplement_work.more_tamed(
+        gained, might, sum(lab.ability_score(magus, "Animal Handling"))
+    )
+    if more:
+        result.notes.append(
+            f"Enough to tame {more} more of the same kind this season, sharing "
+            "the points (at most Animal Handling more, DE p. 384)."
+        )
+    return [], result
 
 
 def decode_key(magus: Character, author: str) -> str:

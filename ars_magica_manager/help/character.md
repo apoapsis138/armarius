@@ -479,6 +479,33 @@ way. A new Reputation starts at 1 with Add on Reputations. A bad
 Reputation is replaced only by starting a new one (DE p. 386). The Diary
 records the session.
 
+## Command the Beast
+<!-- help: command-beast -->
+
+On a tamed animal's sheet,
+<!-- tui -->
+More (`m`) on its Personality Traits
+<!-- /tui -->
+<!-- gui -->
+**Command the Beast** beside its Personality Traits
+<!-- /gui -->
+rolls a command: who gives it, with Animal Handling (Ride for a mount,
+Magic Lore for a tamed elemental), and the task. The roll is Presence +
+that Ability + a stress die against the task's Ease Factor: none for
+something it has done many times, 6 for an unusual or stressful one, 9
+for a long or new one, 12 for one it fears, 15 for a suicidal one. A
+feared task also asks a Loyalty test (its Loyal trait + a stress die)
+against 6 when it has no Confidence Score, and a suicidal one against 9
+always. A botch may make it flee, do the wrong thing or turn on its
+master (DE p. 386).
+
+A tamed animal played season by season (an animal grog has its yearly
+update instead) learns Abilities from anyone with Animal Handling, by Be
+trained: one it doesn't have yet asks a Loyalty test against 6 at the
+season's end, or the season is wasted (DE p. 385). In a fight, a group of
+tamed animals is led by its leader's Animal Handling, not his Leadership
+(DE p. 385).
+
 ## Constant Effects
 <!-- help: section-char-constant-effects -->
 

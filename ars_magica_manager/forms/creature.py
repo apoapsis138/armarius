@@ -10,9 +10,10 @@ Virtues and Flaws and traits reuse the familiar's and character's ops."""
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import replace
 from typing import Any
 
-from .. import creatures, places
+from .. import bestiary_book, creatures, places, storage
 from ..arts import ARTS, FORMS
 from ..commands import Confirm, Form, SectionOps, delete
 from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
@@ -254,14 +255,70 @@ def apply_info(saga: Saga, creature: Creature, values: dict[str, Any]) -> None:
     places.sync(saga)
 
 
+def _from_book(values: dict[str, Any]) -> bool:
+    return bool(values.get("from_book"))
+
+
+def new_creature_fields(saga: Saga) -> list[DialogField]:
+    """A new creature: one of the book's stat blocks to start from (then
+    only its name and where it is found are asked), or a blank one."""
+    fields = info_fields(saga, None)
+    for n, spec in enumerate(fields):
+        if spec.key == "name":
+            fields[n] = replace(
+                spec,
+                required=False,
+                hint="Blank: the book's name, for one started from the book.",
+            )
+        elif spec.key != "where":
+            shown = spec.show_if
+            fields[n] = replace(
+                spec,
+                show_if=lambda v, shown=shown: (
+                    not _from_book(v) and (shown is None or shown(v))
+                ),
+            )
+    return [
+        DialogField(
+            "from_book",
+            "Start from the book",
+            "select",
+            None,
+            options=bestiary_book.options(),
+            allow_blank=True,
+            placeholder="(a blank creature)",
+            hint="One of the Definitive Edition's creatures, copied into the "
+            "saga to change as you like (DE pp. 428-492).",
+        ),
+        *fields,
+    ]
+
+
 def new_creature_form(saga: Saga) -> Form:
     def apply(values: dict[str, Any]) -> None:
-        apply_info(saga, creatures.add(saga, values["name"]), values)
+        book = bestiary_book.by_key(values.get("from_book") or "")
+        if book is None:
+            apply_info(saga, creatures.add(saga, values["name"]), values)
+            return
+        creature = bestiary_book.build(book)
+        creature.name = values.get("name") or book.name
+        creature.id = storage.generate_unique_id(
+            creature.name, [c.id for c in saga.creatures]
+        )
+        saga.creatures.append(creature)
+        places.put(creature, values.get("where"))
+        places.sync(saga)
+
+    def validate(values: dict[str, Any]) -> str | None:
+        if not values.get("name") and not _from_book(values):
+            return "Give it a name, or start from one of the book's creatures."
+        return None
 
     return Form(
         "New Creature",
-        lambda: info_fields(saga, None),
+        lambda: new_creature_fields(saga),
         apply,
+        validate=validate,
         save_label="Create",
         help_id="bestiary",
     )

@@ -468,8 +468,11 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "Intelligence + Animal Handling + Animal Ken - its Might (less the "
         "Gift's 3, 6 Blatant, none Gentle) points a season until they reach "
         "its Might; a mundane beast's is 1 + 2 x its Confidence. The points "
-        "last only over consecutive seasons. Tamed, a creature of the saga "
-        "gains Loyal +0 to its tamer. Exposure 2 in Animal Handling.",
+        "last only over consecutive seasons. A Master of (Form) Creatures "
+        "uses Magic Lore in place of Intelligence. Points enough for one in a "
+        "season may be shared among more of the same kind, at most Animal "
+        "Handling more (DE pp. 384-385). Tamed, a creature of the saga gains "
+        "Loyal +0 to its tamer. Exposure 2 in Animal Handling.",
         DE_TAMING,
         "922",
         group=groups.WORK,
