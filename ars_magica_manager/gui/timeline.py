@@ -9,7 +9,15 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRectF, QSize, Qt
+from PySide6.QtCore import (
+    QModelIndex,
+    QPersistentModelIndex,
+    QPointF,
+    QRect,
+    QRectF,
+    QSize,
+    Qt,
+)
 from PySide6.QtGui import (
     QColor,
     QFont,
@@ -35,8 +43,9 @@ from PySide6.QtWidgets import (
 
 from .. import saga_overview as ov
 from ..markup import markdown_text
-from ..models import SEASONS
+from ..models import SEASONS, Saga
 from . import pictures
+from .medallions import paint_season
 from .themes import Palette
 from .widgets import serif, text
 
@@ -258,9 +267,10 @@ class Calendar(QWidget):
         on_choose: Choose,
         *,
         who: str,
-        current: tuple[str, int],
+        saga: Saga,
     ) -> None:
         super().__init__()
+        current = (saga.current_season, saga.current_year)
         column = QVBoxLayout(self)
         column.setContentsMargins(0, 0, 0, 0)
         model = QStandardItemModel(len(rows), len(SEASONS))
@@ -281,6 +291,7 @@ class Calendar(QWidget):
                     )
                 model.setItem(row, i, cell)
         view = QTableView()
+        view.setHorizontalHeader(SeasonHeader(saga, p))
         view.setModel(model)
         years = [year for year, _ in rows]
         now = years.index(current[1]) if current[1] in years else -1
@@ -312,6 +323,51 @@ class Calendar(QWidget):
         view.selectionModel().currentChanged.connect(chosen)
         self.view = view
         column.addWidget(view)
+
+
+class SeasonHeader(QHeaderView):
+    """A calendar's column heads: each season's name with its medallion
+    (this year's, in the saga's set) before it, the present one glowing."""
+
+    RADIUS = 16
+
+    def __init__(self, saga: Saga, p: Palette) -> None:
+        super().__init__(Qt.Orientation.Horizontal)
+        self.saga, self.p = saga, p
+
+    def sizeHint(self) -> QSize:
+        return QSize(super().sizeHint().width(), 2 * self.RADIUS + 26)
+
+    def paintSection(self, painter: QPainter, rect: QRect, logicalIndex: int) -> None:
+        if not rect.isValid() or not 0 <= logicalIndex < len(SEASONS):
+            return
+        p, saga, r = self.p, self.saga, self.RADIUS
+        season = SEASONS[logicalIndex]
+        now = season == saga.current_season
+        painter.save()
+        painter.fillRect(rect, QColor(p["surface"]))
+        painter.setPen(QColor(p["rule"]))
+        painter.drawLine(rect.bottomLeft(), rect.bottomRight())
+        painter.setFont(serif(12, caps=True, bold=now))
+        words = painter.fontMetrics().horizontalAdvance(season)
+        left = rect.center().x() - (2 * r + 10 + words) / 2
+        paint_season(
+            painter,
+            saga,
+            QPointF(left + r, rect.center().y()),
+            r,
+            season,
+            saga.current_year,
+            p,
+            now=now,
+        )
+        painter.setPen(QColor(p["heading"] if now else p["label"]))
+        painter.drawText(
+            QRectF(left + 2 * r + 10, rect.top(), words + 4, rect.height()),
+            Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
+            season,
+        )
+        painter.restore()
 
 
 class _CalendarDelegate(SeasonDelegate):

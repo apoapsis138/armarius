@@ -12,6 +12,7 @@ from textual.widgets import Input, Select, TabPane, Tree
 
 from ars_magica_manager import battles, place_events, sieges, storage
 from ars_magica_manager.models import (
+    Agent,
     Battle,
     BattleSide,
     BondPower,
@@ -95,6 +96,10 @@ def _saga() -> Saga:
     magus.powers = [
         CharacterPower("Owl [grey]", "Greater Power"),
         CharacterPower("Warmth", "Lesser Power"),
+    ]
+    magus.agents = [
+        Agent("Udo [miller]", resistance=0, impressed=True, bond=1),
+        Agent("Father Bertolf", status="minor_virtue"),
     ]
     magus.constant_effects = [
         ConstantEffect("Ring [of flight]", powerful=True),
@@ -452,6 +457,12 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-char-constant-effects",
         "char-constant-effects-list",
         lambda s: s.characters[0].constant_effects,
+    ),
+    "character-agents": ListCase(
+        ("character", "mag1"),
+        "section-char-agents",
+        "char-agents-list",
+        lambda s: s.characters[0].agents,
     ),
     "character-powers": ListCase(
         ("character", "mag1"),

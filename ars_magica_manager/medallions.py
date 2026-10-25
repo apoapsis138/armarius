@@ -2,7 +2,7 @@
 flower for Spring, the sun for Summer, grapes for Autumn, a snow-star for
 Winter), each drawn in its own manner. The saga chooses its set
 (Saga.medallions); the desktop draws them (gui/medallions.py), and the
-terminal keeps to words. Only the siege's season track shows them yet.
+terminal keeps to words.
 """
 
 from __future__ import annotations

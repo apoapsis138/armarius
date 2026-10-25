@@ -190,7 +190,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Virtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Plann
+   Virtues & Flaws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Agent
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -233,7 +233,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  aws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary
+  aws  4 Hermetic Magic  5 Research  6 Rune Magic  7 Inventory  8 Agents  9 Planning
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -276,7 +276,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  etic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
+  c Magic  5 Research  6 Rune Magic  7 Inventory  8 Agents  9 Planning  0 Diary  Sec
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -296,6 +296,49 @@
 
   ▌
   ▌  Select an item, an enchanted device or a book to see its details.
+  ▌
+
+
+===== tab-agents
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:        (not set)                Covenant:            Keep
+      Age:            (unknown -- set Year     Assigned Laboratory: Tower
+      Born)                                    Type:                magus
+      Current Year:   1220                     Confidence Score:    0
+      Current Season: Spring                   Confidence Points:   0
+                                               Size:                0
+          Edit (e)          In Play
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+      Int:  0   Per:  0   Str:  0   Sta:  0
+      Pre:  0   Com:  0   Dex:  0   Qik:  0
+          Edit (e)
+
+  ic  5 Research  6 Rune Magic  7 Inventory  8 Agents  9 Planning  0 Diary  Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Agents (0)
+
+      Agents: 0 of 1 (2 x (Presence 0 + Intrigue or Leadership 0 - Gift 0), at least
+      1; LoM p. 22)
+      Agency experience: 0 unspent
+        Name                   Status        Bond                     Resistance
+      Resources
+      None: people won over through a personal bond (LoM p. 22). Add one with a.
+
+
+
+
+
+
+  ▌
+  ▌  Choose an agent to see how he was won and what he can be asked.
   ▌
 
 
@@ -319,7 +362,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  etic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
+  ic  5 Research  6 Rune Magic  7 Inventory  8 Agents  9 Planning  0 Diary  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -362,7 +405,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  etic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
+  ic  5 Research  6 Rune Magic  7 Inventory  8 Agents  9 Planning  0 Diary  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -405,7 +448,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  etic Magic  5 Research  6 Rune Magic  7 Inventory  8 Planning  9 Diary  0 Secrets
+  ic  5 Research  6 Rune Magic  7 Inventory  8 Agents  9 Planning  0 Diary  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

@@ -23,6 +23,7 @@ from ..models import (
     next_season,
 )
 from ..rules import activities as rules
+from ..rules import agents as agent_rules
 from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
@@ -130,6 +131,32 @@ def _apply_warping(saga: Saga, character: Character, outcome: rules.Outcome) -> 
         )
 
 
+def _apply_agency(character: Character, outcome: rules.Outcome) -> None:
+    """An Adventure season's experience brings as much Agency experience
+    (Lords of Men pp. 24-25); no other season does. The season's own
+    experience counts, not what a Virtue shares from it."""
+    if outcome.plan.activity != rules.ADVENTURE:
+        return
+    gained = agent_rules.adventure_agency(
+        sum(g.result.xp for g in outcome.gains if not g.via)
+    )
+    if not gained:
+        return
+    character.agency_xp += gained
+    if character.agents:
+        outcome.notes.append(
+            f"Agency experience +{gained} (now {character.agency_xp} unspent)."
+        )
+
+
+def _apply_warping_and_agency(
+    saga: Saga, character: Character, outcome: rules.Outcome
+) -> None:
+    """A botch's Warping, and an Adventure's Agency experience."""
+    _apply_warping(saga, character, outcome)
+    _apply_agency(character, outcome)
+
+
 def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
     """Apply outcomes worked out by resolve(): add each one's experience and
     write its Diary entry. Outcomes that can't be carried out are skipped.
@@ -155,7 +182,7 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         if outcome.supplement is not None:
             apply_supplement(saga, character, outcome.plan, outcome.supplement)
         _apply_insight(character, outcome)
-        _apply_warping(saga, character, outcome)
+        _apply_warping_and_agency(saga, character, outcome)
         hedge = outcome.tradition_work
         if hedge is not None and outcome.plan.activity == rules.OPEN_TRADITION:
             opened = saga.character(outcome.plan.subject_id)

@@ -810,7 +810,7 @@ class LaboratoryPage(QWidget):
             p,
             lambda who, when, season: self.inspect(who, when, season_text(season)),
             who=lab.name,
-            current=(saga.current_season, saga.current_year),
+            saga=saga,
         )
         entries = []
         for index, entry in enumerate(lab.diary):

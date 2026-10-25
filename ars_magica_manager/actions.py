@@ -39,6 +39,7 @@ from .models import (
     LINE,
     POSSESSION_KINDS,
     TEXT_LONGEVITY,
+    Agent,
     Character,
     Covenant,
     Creature,
@@ -48,8 +49,10 @@ from .models import (
     Saga,
     Tribunal,
 )
+from .rules import agents as agent_rules
 from .rules import covenfolk
 from .sections import (
+    AGENTS_SECTION,
     BATTLES_SECTION,
     BOOK_SECTIONS,
     BOOKS_SECTION,
@@ -305,6 +308,9 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
     MenuItem("b", "begin_story", "Begin This Story"),
     MenuItem("g", "go_to", "Go To"),
+    MenuItem("i", "impress_agent", "Impress"),
+    MenuItem("x", "spend_agency_xp", "Spend Agency Experience"),
+    MenuItem("t", "set_agent_task", "Set a Task"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -444,6 +450,11 @@ class ActionFacts(Protocol):
 
     def can_send_files(self) -> bool:
         """Whether an exported file has somewhere to go (not over SSH)."""
+        ...
+
+    def chosen_row(self, section: str) -> int | None:
+        """The row chosen in `section`'s list (its index in the list the
+        section shows), or None with none chosen or no such list."""
         ...
 
 
@@ -728,6 +739,26 @@ def _research_bonuses(facts: ActionFacts, section: str) -> bool:
     )
 
 
+def _acts_on_agent(
+    test: Callable[[Character, Agent], bool],
+) -> Callable[[ActionFacts, str], bool]:
+    """A More command on the Agents list, offered only for a chosen agent
+    it can act on (Impress only one not yet impressed)."""
+
+    def rule(facts: ActionFacts, section: str) -> bool:
+        character = facts.selected_character
+        if section != AGENTS_SECTION or character is None:
+            return False
+        row = facts.chosen_row(section)
+        return (
+            row is not None
+            and 0 <= row < len(character.agents)
+            and test(character, character.agents[row])
+        )
+
+    return rule
+
+
 def _imports(facts: ActionFacts, section: str) -> bool:
     return facts.selected_kind == NodeKind.SAGA or section in LIBRARY_SECTIONS
 
@@ -748,5 +779,8 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "perform_ritual": _performs_ritual,
     "research_bonuses": _research_bonuses,
     "import_data": _imports,
+    "impress_agent": _acts_on_agent(lambda _c, agent: agent_rules.can_impress(agent)),
+    "spend_agency_xp": _acts_on_agent(agent_rules.can_spend),
+    "set_agent_task": _acts_on_agent(lambda _c, agent: agent_rules.may_be_asked(agent)),
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
 }

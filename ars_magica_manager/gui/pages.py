@@ -97,15 +97,22 @@ def card_grid(cards: Sequence[QWidget], across: int = CARDS_ACROSS) -> QWidget:
 
 
 def page_header(
-    title: str, subtitle: str, p: Palette, concept: str | None = None
+    title: str,
+    subtitle: str,
+    p: Palette,
+    concept: str | None = None,
+    emblem: QWidget | None = None,
 ) -> QWidget:
-    """A page's title: an icon, the name with a rubricated initial and the
-    line under it, as the Character sheet opens."""
+    """A page's title: an icon (or `emblem` in its place), the name with a
+    rubricated initial and the line under it, as the Character sheet
+    opens."""
     box = QWidget()
     row = QHBoxLayout(box)
     row.setContentsMargins(0, 0, 0, 0)
     row.setSpacing(14)
-    if concept is not None:
+    if emblem is not None:
+        row.addWidget(emblem, 0, Qt.AlignmentFlag.AlignTop)
+    elif concept is not None:
         symbol = QLabel()
         symbol.setPixmap(pictures.pixmap(artwork.icon(concept), p["heading"], 48, 2.0))
         row.addWidget(symbol, 0, Qt.AlignmentFlag.AlignTop)

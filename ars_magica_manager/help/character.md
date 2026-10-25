@@ -1812,6 +1812,104 @@ creation review say in red when they go past these.
 The books the character owns. Choosing a Lab Text shows how it stands for
 this character, for example whether they can read it.
 
+## Agents tab
+<!-- help: tab-agents -->
+
+The people the character controls through personal bonds: Lords of Men's
+agents (Chapter Two: Politics, pp. 22-25). Every character has the tab,
+after Inventory.
+
+**You type:** each agent or would-be agent: his Social Status, what makes
+him harder to win, what he brings you, whether he is impressed, and once he
+is yours his Bond.
+
+**The app works out:** how many agents you can keep, each one's resistance
+from the Agent Recruitment Table, the Agency experience it takes to win
+him, and the rolls to impress him and to set him a task.
+
+**See also:** [Inventory tab](help:tab-inventory),
+[Planning tab](help:tab-planning)
+
+### Agents
+<!-- help: section-char-agents -->
+
+**The limit.** A character can keep 2 x (Presence + the higher of
+Intrigue or Leadership - the Gift's social penalty) agents, at least 1
+(p. 22). Only recruited agents count against it (their resistance is worn
+to nothing); the people still being won show as a separate number beside
+it. The count turns red past the limit. Beside it is the **Agency
+experience** not yet spent: its own pool, apart from any Ability's.
+
+**Who is not an agent** (p. 22): Hermetic magi, people with no political
+role, an agent's own people, hirelings (who serve for pay and change
+sides when the odds are poor), and other players' characters. Leave them
+off the list.
+
+**The list** shows each one's name, his Social Status Virtue or Flaw, his
+Bond (the Personality Trait that ties him to you, and its score), his
+resistance (a number, "impressed" once the first roll is made, and
+"agent" once he is yours), and his resources.
+<!-- tui -->
+The details panel shows the chosen one in full.
+<!-- /tui -->
+<!-- gui -->
+Clicking a row shows the chosen one in full in the inspector.
+<!-- /gui -->
+It lists the Agent Recruitment Table lines that set his starting
+resistance (p. 23): his Social Status (a Major Social Virtue 3, a Minor 1,
+a Free one 0, a Minor Social Flaw -1, a Major -3), less 3 or 1 for a Flaw
+that would trouble you and 6 for one you use to dominate him, plus each
+resource he will use in your service, 6 more for over three resources and
+9 for over six; never below 1. Then what winning him needs, and for an
+agent his Bond, his persuasion total and the **Tasks for Agents** table
+(p. 24): the Ease Factor of each task and the die he needs.
+
+**Coerced.** An agent who thinks you his social inferior is held only by
+coercion: you have Difficult Underlings for him, and he has a Story Flaw
+such as Blackmail or Dark Secret (pp. 22-23). One you dominate through a
+Flaw hates you, with the same Difficult Underlings (p. 23). The form
+and the panel say so.
+
+**Winning him.** First you **impress** him: a stress die + Presence +
+Leadership - the Gift's penalty against 6 (p. 24); a failure waits for
+another story. Then each point of resistance falls for as many Agency
+experience points as it now stands at, so a resistance of 3 takes 3 + 2 +
+1 = 6 (p. 24). At 0 he is your agent, with a Bond of 0.
+
+**Agency experience** comes from adventuring: when an **Adventure**
+season is applied, the character gains as much Agency experience as the
+season's Adventure experience (pp. 24-25). Exposure, Practice and teaching
+bring none.
+
+**His Bond** rises as an Ability does (5 x the new score), from Agency
+experience, or from money at 5 points a pound, which fails for an agent
+already prosperous or one who thinks taking money for service a crime or
+sin (p. 25). Paying comes out of the silver the character carries.
+
+**Setting a task** needs an agent with a Bond of +1 or more: a stress die
++ Communication + Charm, Intrigue or Leadership, as suits the request, +
+Bond - the Gift's penalty, against the task's Ease Factor: 3, 6 or 9,
+with +1 for within a few days and +3 for within a day, and +1, +3 or +6
+for the risk to him (1, 3 or 5 botch dice; with no risk, a simple die).
+Gathering news he hears anyway needs no roll (p. 24).
+
+<!-- tui -->
+`a` adds an agent, `e` edits the chosen one and `d` deletes him. More
+(`m`) offers **Impress** (only for one not yet impressed), **Spend Agency
+Experience** (for an impressed one while there is experience to spend, or
+an agent's Bond) and **Set a Task** (only for an agent with a Bond of +1).
+<!-- /tui -->
+<!-- gui -->
+**Add**, **Edit** and **Delete** act on the agents. **Impress**, **Spend
+Agency Experience** and **Set a Task** act on the chosen one, and are
+greyed out where they can't: Impress only for one not yet impressed,
+Spend for an impressed one while there is experience to spend (or an
+agent's Bond), Set a Task only for an agent with a Bond of +1.
+<!-- /gui -->
+The agent form's **The Agent** shows the resistance your choices give
+him, and Set a Task's **The Task** the Ease Factor, the persuasion total
+and the botch dice before you roll.
+
 ## Planning tab
 <!-- help: tab-planning -->
 

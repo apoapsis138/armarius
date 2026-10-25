@@ -23,6 +23,7 @@ from ..forms import ahead as ahead_forms
 from ..models import SEASONS, Covenant, Saga, season_order
 from .character_sheet import section
 from .editing import Chooser, Run, verb_buttons
+from .medallions import Medallion, beside
 from .themes import Palette
 from .widgets import ClickableCard, serif, text
 
@@ -104,10 +105,14 @@ def ahead_section(
         cell_column.setSpacing(6)
         now = season_order(season=season, year=year) == ahead.now(saga)
         cell_column.addWidget(
-            text(
-                ahead.season_text(saga, year, season),
-                p["heading"] if now else p["label"],
-                serif(12, bold=now),
+            beside(
+                Medallion(saga, season, year, p, radius=16, now=now),
+                text(
+                    ahead.season_text(saga, year, season),
+                    p["heading"] if now else p["label"],
+                    serif(12, bold=now),
+                ),
+                gap=4,
             )
         )
         for entry in entries:

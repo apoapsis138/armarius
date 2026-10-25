@@ -257,12 +257,12 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         )
         await pilot.press("3")
         assert await wait_until(pilot, lambda: app.focused is virtues)
-        # The tenth tab, Secrets, is opened by 0; a number past the last
-        # tab does nothing.
-        assert view.tab_ids[-1] == "tab-secrets" and len(view.tab_ids) == 10
-        assert not workspace.check_action("show_tab", (11,))
+        # The tenth tab, the Diary, is opened by 0; the eleventh (Secrets)
+        # has no number, and a number past the last tab does nothing.
+        assert view.tab_ids[9] == "tab-diary" and len(view.tab_ids) == 11
+        assert not workspace.check_action("show_tab", (12,))
         await pilot.press("0")
-        assert await wait_until(pilot, lambda: tabbed.active == "tab-secrets")
+        assert await wait_until(pilot, lambda: tabbed.active == "tab-diary")
 
 
 async def test_escape_steps_out_from_the_sheet_to_the_tree_to_the_saga_picker():

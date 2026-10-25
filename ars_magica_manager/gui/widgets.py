@@ -109,9 +109,12 @@ def mix(a: str, b: str, t: float) -> QColor:
     )
 
 
-def chapter_title(words: str, p: Palette, *, rule: bool = True) -> QWidget:
+def chapter_title(
+    words: str, p: Palette, *, rule: bool = True, emblem: QWidget | None = None
+) -> QWidget:
     """A heading in small-caps serif over a rule that opens with a hedera
-    leaf and fades out (the rule left to the caller when not `rule`)."""
+    leaf and fades out (the rule left to the caller when not `rule`), with
+    `emblem` (a season's medallion) before the words."""
     box = QWidget()
     column = QVBoxLayout(box)
     column.setContentsMargins(0, 6, 0, 2 if rule else 0)
@@ -119,7 +122,14 @@ def chapter_title(words: str, p: Palette, *, rule: bool = True) -> QWidget:
     # Beside buttons (no rule of its own), a long title wraps rather than
     # push them off the page.
     title = text(words, p["foreground"], serif(15, caps=True, bold=True), wrap=not rule)
-    column.addWidget(title)
+    if emblem is None:
+        column.addWidget(title)
+    else:
+        line = QHBoxLayout()
+        line.setSpacing(8)
+        line.addWidget(emblem, 0, Qt.AlignmentFlag.AlignVCenter)
+        line.addWidget(title, 1, Qt.AlignmentFlag.AlignVCenter)
+        column.addLayout(line)
     if rule:
         column.addWidget(FleuronRule(p))
     return box

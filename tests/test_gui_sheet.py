@@ -92,6 +92,7 @@ def test_the_window_shows_the_first_characters_sheet_with_every_chapter(app):
         "Hermetic Magic",
         "Research",
         "Inventory",
+        "Agents",
         "Planning",
         "Diary",
         "Secrets",

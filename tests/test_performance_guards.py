@@ -20,7 +20,7 @@ from ars_magica_manager.tui.screens.widgets import SelectableList
 #: Tabs were once all built up front: character 149, covenant 195,
 #: familiar 83, laboratory 101. Raise a budget only deliberately.
 SHEET_OPEN_WIDGET_BUDGET = {
-    "character": 90,
+    "character": 91,  # the Agents tab adds its (unbuilt) pane
     "covenant": 65,
     "familiar": 65,
     "laboratory": 50,

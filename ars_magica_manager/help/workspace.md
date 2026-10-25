@@ -180,6 +180,8 @@ The Inspector, on the right of a record's page, shows whatever you last clicked 
 
 The button beside Help switches between the two themes, Scriptorum (aged parchment and iron gall ink) and Scriptorum Dark (vellum by candlelight); it names the one it switches to. The desktop remembers your choice on this computer and opens in it next time.
 
+While a saga is open, the headpiece band under the top bar carries the present season's medallion at its centre, drawn in the set the saga chooses (Edit Saga, Season medallions). The same medallions mark the seasons elsewhere: the Seasons page's title and each past season's heading, each season's column in Ahead (on the Seasons page and a covenant's Seasons chapter), a covenant's header (its own Covenant Season, beside its Magic Aura and Loyalty, with no words), the title of a covenant's Seasons chapter, a character's This Season, the column heads of a character's and a laboratory's calendar, and a siege's track. The present season's medallion glows. They change with the season when it is advanced, and with the set when Edit Saga changes it.
+
 The speaker beside the theme turns the sounds on or off, and the app remembers which. Sounds are kept for moments that mean something: a page turning when you open a chapter (a longer one for a record or page), a quill when a form is saved, coins in a Treasury, a chest for the Inventory, a wax seal when the season advances, and a dull knock when an entry is refused. Plain button presses stay silent. The sounds play on Windows only.
 
 **See also:** [The saga](help:saga), [Saga Content](help:saga-content), [Seasons](help:seasons), [Getting started](help:guide-getting-started)
@@ -467,7 +469,7 @@ The saga's record of past seasons: what everyone did each season and what it gav
 **The app works out:** what is coming ([Looking Ahead](help:section-ahead)), then one row per season recorded, newest first ("Spring 1220 (3 people)"), and below the list the chosen season's record, grouped by covenant.
 <!-- /tui -->
 <!-- gui -->
-**The app works out:** the Seasons page, opened from the saga's Seasons chapter (The Seasons Played), starts with what is coming ([Ahead](help:section-ahead)), then lists the seasons in its rail, newest first, and shows the chosen season's record, grouped by covenant, a row a person. Just after Advance Season, the season just played out is first.
+**The app works out:** the Seasons page, opened from the saga's Seasons chapter (The Seasons Played), starts with what is coming ([Ahead](help:section-ahead)), then lists the seasons in its rail, newest first, and shows the chosen season's record, grouped by covenant, a row a person. Just after Advance Season, the season just played out is first. The page's title carries the present season's medallion, and each season's heading its own, in the saga's set of medallions.
 <!-- /gui -->
 Each person's line gives the activity, what it was on and its result. A plan that could not be carried out says why, and a magus or companion with nothing planned is shown as "nothing planned". Winter's lines also include aging rolls, grogs' yearly updates, business upkeep and vis harvests.
 

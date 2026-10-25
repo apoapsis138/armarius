@@ -22,6 +22,7 @@ from ars_magica_manager import (
     vis,
 )
 from ars_magica_manager import economics as eco
+from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
@@ -29,6 +30,7 @@ from ars_magica_manager.forms import lab_item
 from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import (
     Ability,
+    Agent,
     Book,
     Character,
     Neighbour,
@@ -270,6 +272,51 @@ async def _open_power(ws) -> None:
     view = ws._current_sheet_view()
     await view.build_all_tabs()
     ws._core_verb("section-char-powers", "add")
+
+
+async def _open_agent(ws) -> None:
+    """Add an agent on Leandro's Agents tab."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._core_verb("section-char-agents", "add")
+
+
+def _with_agents(ws) -> Character:
+    """Leandro with an agent of Bond +1 and an impressed potential agent
+    of resistance 3, and 10 Agency experience (once, however often the
+    form is opened)."""
+    character = ws.selected_character
+    if not character.agents:
+        character.agents = [
+            Agent(
+                "Sir Konrad",
+                resistance=0,
+                impressed=True,
+                bond_trait="Owes his life",
+                bond=1,
+            ),
+            Agent(
+                "Father Bertolf", status="minor_virtue", impressed=True, resistance=3
+            ),
+        ]
+        character.agency_xp = 10
+    return character
+
+
+async def _open_agent_task(ws) -> None:
+    """More's Set a Task for Leandro's first agent."""
+    character = _with_agents(ws)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._run_steps(agent_forms.set_task(ws.saga, character, 0))
+
+
+async def _open_agency_spend(ws) -> None:
+    """More's Spend Agency Experience on Leandro's potential agent."""
+    character = _with_agents(ws)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._run_steps(agent_forms.spend(character, 1))
 
 
 async def _open_constant_effect(ws) -> None:
@@ -748,6 +795,9 @@ OPENERS: dict[str, Opener] = {
     "add secret research goal": Opener("character", lambda ws: ws._add_research_goal()),
     "add tradition effect": Opener("character", _open_tradition_effect),
     "add power": Opener("character", _open_power),
+    "add agent": Opener("character", _open_agent),
+    "set agent task": Opener("character", _open_agent_task),
+    "spend agency xp": Opener("character", _open_agency_spend),
     "add constant effect": Opener("character", _open_constant_effect),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),

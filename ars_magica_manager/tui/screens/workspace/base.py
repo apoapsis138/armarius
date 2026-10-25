@@ -86,6 +86,7 @@ from ....rules import creation as creation_rules
 from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
 from ....sections import (
+    AGENTS_SECTION,
     BESTIARY_INFO_SECTION,
     CONFLICT_BATTLES_SECTION,
     CONFLICTS_INFO_SECTION,
@@ -426,6 +427,8 @@ _SEASON_SECTIONS: tuple[str, ...] = (
     "section-known-spells",
     "section-char-season",
     "tab-diary",
+    # An Adventure season brings Agency experience.
+    AGENTS_SECTION,
 )
 
 
@@ -494,6 +497,10 @@ class _ScreenFacts:
     def can_send_files(self) -> bool:
         # Over SSH there is nowhere to send the file.
         return hosting.transport() != "ssh"
+
+    def chosen_row(self, section: str) -> int | None:
+        view = self._screen._current_sheet_view()
+        return view.section_row(section) if view is not None else None
 
 
 class WorkspaceBase(Screen[None]):

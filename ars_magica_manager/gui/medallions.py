@@ -4,6 +4,11 @@ each a painter keyed by its set (a Strategy), all drawn in code.
 The glass, enamel, wax and illumination keep their own pigments on either
 theme, as the illuminated initial does; only the rings and ink of the
 quieter sets, and the present season's glow, follow the theme.
+
+Screens draw a season through paint_season or the Medallion widget, which
+take the saga and look up its set; they rest in the window's headpiece,
+the Seasons page, Ahead, the covenant's header and Seasons chapter, a
+character's This Season, the calendars and a siege's track.
 """
 
 from __future__ import annotations
@@ -26,10 +31,12 @@ from PySide6.QtGui import (
     QRadialGradient,
     QTransform,
 )
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QHBoxLayout, QWidget
 
 from .. import medallions
+from ..models import Saga
 from .illumination import gold
+from .ornaments import Headpiece
 from .paper import shade
 from .pictures import SERIF
 from .themes import DRAWN, PIGMENTS, SEASON_PIGMENTS, Palette
@@ -644,46 +651,117 @@ def numbered(
     painter.restore()
 
 
+def paint_season(
+    painter: QPainter,
+    saga: Saga,
+    centre: QPointF,
+    radius: float,
+    season: str,
+    year: int,
+    p: Palette,
+    *,
+    now: bool = False,
+) -> None:
+    """Draw the season's medallion in the saga's set. Every screen draws
+    them through this (or Medallion, which calls it), so none picks a set
+    itself, and each is drawn in the set the saga has when it is painted."""
+    paint(painter, medallions.chosen(saga), centre, radius, season, year, p, now=now)
+
+
+#: The room a medallion needs, in radii across: the illuminated set's ivy
+#: reaches 1.47 r from the centre and the present season's glow 1.53 r.
+ROOM = 3.35
+
+
 class Medallion(QWidget):
-    """One season's medallion with its name under it, in the saga's set."""
+    """One season's medallion in the saga's set, `radius` across with
+    room round it for any set's ivy and the present season's glow; with
+    its name under it when `caption`."""
 
     def __init__(
         self,
-        key: str,
+        saga: Saga,
         season: str,
         year: int,
         p: Palette,
         *,
+        radius: float = 31,
         now: bool = False,
-        size: int = 104,
+        caption: bool = False,
     ) -> None:
         super().__init__()
-        self.key, self.season, self.year, self.p, self.now = key, season, year, p, now
-        self.setFixedSize(size, size + 20)
-        self.setToolTip(f"{season} {year}")
+        self.saga, self.season, self.year, self.p = saga, season, year, p
+        self.radius, self.now, self.caption = radius, now, caption
+        side = math.ceil(radius * ROOM)
+        self.setFixedSize(side, side + 20 if caption else side)
+        self.setToolTip(f"{season} {year}" + (" (now)" if now else ""))
 
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         side = self.width()
-        radius = side * 0.3
-        paint(
+        paint_season(
             painter,
-            self.key,
+            self.saga,
             QPointF(side / 2, side / 2),
-            radius,
+            self.radius,
             self.season,
             self.year,
             self.p,
             now=self.now,
         )
-        painter.setPen(QColor(self.p["heading"] if self.now else self.p["label"]))
-        f = _font(10, bold=self.now)
-        f.setCapitalization(QFont.Capitalization.SmallCaps)
-        painter.setFont(f)
-        painter.drawText(
-            QRectF(0, side - 4, side, 22),
-            Qt.AlignmentFlag.AlignCenter,
-            f"{self.season} {self.year}",
-        )
+        if self.caption:
+            painter.setPen(QColor(self.p["heading"] if self.now else self.p["label"]))
+            f = _font(10, bold=self.now)
+            f.setCapitalization(QFont.Capitalization.SmallCaps)
+            painter.setFont(f)
+            painter.drawText(
+                QRectF(0, side - 4, side, 22),
+                Qt.AlignmentFlag.AlignCenter,
+                f"{self.season} {self.year}",
+            )
         painter.end()
+
+
+def beside(medallion: QWidget, widget: QWidget, *, gap: int = 8) -> QWidget:
+    """A row: `medallion`, then `widget` (a heading), centred on each other."""
+    box = QWidget()
+    row = QHBoxLayout(box)
+    row.setContentsMargins(0, 0, 0, 0)
+    row.setSpacing(gap)
+    row.addWidget(medallion, 0, Qt.AlignmentFlag.AlignVCenter)
+    row.addWidget(widget, 1, Qt.AlignmentFlag.AlignVCenter)
+    return box
+
+
+class SeasonHeadpiece(Headpiece):
+    """The window's headpiece band, with the saga's present season at its
+    centre in place of the hedera (the plain band while no saga is open).
+    The band is tall enough that no set's medallion is clipped: without
+    the glow, every set stays within 1.06 r of its centre up and down, and
+    the illuminated set's ivy within 1.47 r to the sides, inside the dots."""
+
+    HEIGHT = 46
+    RADIUS = 17.0
+    #: How far out from the centre the dots sit beside the medallion.
+    INNER = math.ceil(RADIUS * 1.47) + 8
+
+    def __init__(self, p: Palette) -> None:
+        super().__init__(p)
+        self.saga: Saga | None = None
+
+    def draw(self, painter: QPainter, width: float, cy: float) -> None:
+        saga = self.saga
+        if saga is None:
+            super().draw(painter, width, cy)
+            return
+        paint_season(
+            painter,
+            saga,
+            QPointF(width / 2, cy),
+            self.RADIUS,
+            saga.current_season,
+            saga.current_year,
+            self.p,
+        )
+        self.band(painter, width, cy, self.INNER)

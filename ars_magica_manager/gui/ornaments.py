@@ -115,11 +115,18 @@ class Headpiece(_Ornament):
         _leaf(painter, cx, cy, HEDERA, 24, gilt)
         _leaf(painter, cx - 30, cy, HEDERA_LEFT, 16, gilt)
         _leaf(painter, cx + 30, cy, HEDERA_RIGHT, 16, gilt)
+        self.band(painter, width, cy, 50)
+
+    def band(self, painter: QPainter, width: float, cy: float, inner: float) -> None:
+        """The dots `inner` out from the centre, and past them the double
+        rule set with lozenges, running out to each side and fading."""
+        gilt = self.p["accent"]
+        cx = width / 2
         for side in (-1, 1):
             painter.setPen(Qt.PenStyle.NoPen)
             painter.setBrush(QColor(gilt))
-            painter.drawEllipse(QPointF(cx + side * 50, cy), 2.2, 2.2)
-            near, far = cx + side * 60, cx + side * (width / 2 - 6)
+            painter.drawEllipse(QPointF(cx + side * inner, cy), 2.2, 2.2)
+            near, far = cx + side * (inner + 10), cx + side * (width / 2 - 6)
             painter.setPen(_fading(gilt, near, far, 1.3))
             for dy in (-4, 4):
                 painter.drawLine(QPointF(near, cy + dy), QPointF(far, cy + dy))

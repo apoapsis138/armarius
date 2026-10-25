@@ -109,6 +109,42 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.17.0 — 2026-10-25
+
+### Illuminatio
+
+- The season medallions now mark the seasons across the desktop, in the
+  saga's chosen set: the present season at the centre of the band under
+  the title bar, the Seasons page's title and each past season's heading,
+  each season in Ahead, the title of a covenant's Seasons chapter, a
+  character's This Season, and the column heads of a character's and a
+  laboratory's calendar. The present season glows.
+- A covenant's header shows its own Covenant Season as a medallion beside
+  its Magic Aura and Loyalty, with no words, and Edit Covenant is now the
+  header's Edit button.
+
+### Pagina
+
+- Every character has an Agents tab, after Inventory: the people they
+  control through personal bonds (Lords of Men pp. 22-25). It shows how
+  many agents they can keep (twice Presence plus the higher of Intrigue or
+  Leadership, less the Gift's penalty, at least one), counting only those
+  won, with those still being won and the unspent Agency experience beside
+  it.
+- Each agent shows his social status, Bond, resistance ("agent" once won)
+  and what he brings; choosing one shows how his resistance was set and,
+  for an agent, the Tasks for Agents table. An agent held by coercion is
+  marked.
+- New actions on an agent: Impress, Spend Agency Experience (wearing his
+  resistance down, or raising his Bond with experience or with money at 5
+  points a pound) and Set a Task (choose Charm, Intrigue or Leadership; the
+  form shows the Ease Factor, persuasion total and botch dice).
+
+### Book of Hours
+
+- An Adventure season also gives as much Agency experience as the
+  Adventure experience it gave.
+
 ## 3.16.0 — 2026-10-25
 
 ### Computus

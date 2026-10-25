@@ -80,8 +80,8 @@ from .help import HelpPage
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls, fade_from
 from .markup_html import plain
+from .medallions import SeasonHeadpiece
 from .menus import Placer
-from .ornaments import Headpiece
 from .pages import SagaPage, SagaShelf
 from .paper import Paper
 from .region import NeighbourPage
@@ -274,7 +274,7 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(body)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(bar)
-        self.headpiece = Headpiece(self.palette_)
+        self.headpiece = SeasonHeadpiece(self.palette_)
         layout.addWidget(self.headpiece)
         layout.addWidget(self.sheet_area, 1)
         #: The pages, and over them the title page while it is on show.
@@ -1306,6 +1306,9 @@ class MainWindow(QMainWindow):
         saga = self.saga
         shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
         self.advance.setVisible(shown)
+        # The headpiece carries the present season while a saga's page is on show.
+        self.headpiece.saga = saga if shown else None
+        self.headpiece.update()
         if saga is not None:
             self.advance.setText(
                 f"  {saga.current_season} {saga.current_year} · Advance Season"

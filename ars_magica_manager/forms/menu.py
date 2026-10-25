@@ -132,6 +132,10 @@ NOT_ON_PAGES = frozenset(
         "break_group",
         "restart_fight",
         "next_siege_event",
+        # The desktop draws them as the Agents list's own buttons.
+        "impress_agent",
+        "spend_agency_xp",
+        "set_agent_task",
         # The desktop draws the names a page holds as links instead.
         "go_to",
     }
@@ -246,6 +250,10 @@ class Page:
 
     def can_send_files(self) -> bool:
         return True
+
+    def chosen_row(self, section: str) -> int | None:
+        # The desktop's row buttons act on their own list's chosen row.
+        return None
 
 
 def page_for(

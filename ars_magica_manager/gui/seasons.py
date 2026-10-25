@@ -18,6 +18,7 @@ from ..models import Saga, SeasonRecord
 from .ahead import ahead_section
 from .character_sheet import TextBlock
 from .editing import Run
+from .medallions import Medallion, beside
 from .pages import page_header
 from .themes import Palette
 from .widgets import Codex, scrolling_page, serif, table_view, text
@@ -54,6 +55,9 @@ class SeasonsPage(QWidget):
                 f"{len(records)} season(s) recorded",
                 p,
                 "season",
+                emblem=Medallion(
+                    saga, saga.current_season, saga.current_year, p, radius=24, now=True
+                ),
             )
         )
         self.codex = Codex(p)
@@ -121,7 +125,12 @@ class SeasonsPage(QWidget):
         if message:
             parts.append(TextBlock(message, p))
         parts.append(
-            text(f"{record.season} {record.year}", p["heading"], serif(15, bold=True))
+            beside(
+                Medallion(self.saga, record.season, record.year, p, radius=20),
+                text(
+                    f"{record.season} {record.year}", p["heading"], serif(15, bold=True)
+                ),
+            )
         )
         if record.lines:
             parts.append(

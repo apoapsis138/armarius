@@ -25,6 +25,7 @@ from .... import saga_overview as ov
 from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
+from ....forms import agents as agent_forms
 from ....forms import constant_effect as constant_forms
 from ....forms import power as power_forms
 from ....forms import tradition as tradition_forms
@@ -39,9 +40,9 @@ from ....models import (
 from ....rules import activities as season_rules
 from ....rules import creation_virtues as cv
 from ....rules import library
+from ....sections import AGENTS_SECTION, CONSTANT_EFFECTS_SECTION, POWERS_SECTION
 from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
 from ....sections import CHAR_CALENDAR_SECTION as CALENDAR_SECTION
-from ....sections import CONSTANT_EFFECTS_SECTION, POWERS_SECTION
 from ....sheets import character as cs
 from ....traditions import tradition_list, tradition_section, tradition_tab
 from ..widgets import (
@@ -58,6 +59,20 @@ from .lists import BookListView
 #: What the Research Log is read from: the goals, and the log itself.
 RESEARCH_SECTIONS = ("section-research-goals", "section-research-log")
 
+#: The Agents list and its details panel.
+AGENTS_LIST = "char-agents-list"
+AGENTS_INFO = "char-agents-info"
+#: What the Agents header reads besides the agents: the limit's
+#: Presence, Intrigue, Leadership and the Gift, and the Agency
+#: experience a season brings.
+AGENTS_SOURCES = (
+    AGENTS_SECTION,
+    "section-char-characteristics",
+    "tab-abilities",
+    "section-vf-virtues",
+    "section-vf-flaws",
+)
+
 #: The Seasons Ahead list and the chosen season's plan under it.
 AHEAD_LIST = "char-ahead-list"
 AHEAD_INFO = "char-ahead-info"
@@ -71,7 +86,7 @@ class CharacterSheetView(SheetView):
     CovenantSheetView/LaboratorySheetView) above the tabbed body. Tab
     order: Description, Abilities,
     Virtues & Flaws, Hermetic Magic and Research (magi only), Inventory,
-    Planning, Diary.
+    Agents, Planning, Diary.
     (A magus's Lab Totals are on their laboratory's sheet.)
 
     - Description (tab, id "tab-description"): Hermetic Background (magi
@@ -104,6 +119,8 @@ class CharacterSheetView(SheetView):
       of the two duplicated instances -- see Hermetic Magic above),
       Personal Gear (renamed from "Inventory", same character.inventory
       data), Books.
+    - Agents (tab, id "tab-agents"): the limit, the people won and being
+      won, and the chosen one's details panel (forms/agents.py).
     - Planning (tab, id "tab-planning", every character type): This Season,
       the season's plan and what it will give; a grog's
       says grogs are updated yearly. Then the Seasons Ahead and the
@@ -167,6 +184,7 @@ class CharacterSheetView(SheetView):
                     )
             if not sketch:
                 yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
+                yield self._tab("Agents", "tab-agents", self._agents_tab)
                 yield self._tab(
                     "Planning", "tab-planning", self._scrolling(self._planning_tab)
                 )
@@ -821,6 +839,42 @@ class CharacterSheetView(SheetView):
             self._refresh_inventory_info,
         )
 
+    def _agents_tab(self) -> ComposeResult:
+        """The agents he controls through personal bonds: the limit and
+        the Agency experience, the list, and the chosen agent's details."""
+        character = self.character
+        self.core_ops[AGENTS_SECTION] = agent_forms.ops(character)
+        with Vertical(classes="panel-body"):
+            with (
+                VerticalScroll(),
+                SheetSection(
+                    title=self._titled(
+                        AGENTS_SECTION,
+                        AGENTS_SECTION,
+                        lambda: agent_forms.title(self.character),
+                    ),
+                    id=AGENTS_SECTION,
+                ),
+            ):
+                yield self._static(
+                    AGENTS_SOURCES,
+                    lambda: agent_forms.header(self.character, two_lines=True),
+                    id="char-agents-header",
+                )
+                yield TableHeader(agent_forms.table_header())
+                yield self._list(
+                    AGENTS_SECTION,
+                    lambda: agent_forms.rows(self.character),
+                    id=AGENTS_LIST,
+                )
+            yield self._panel(
+                AGENTS_SOURCES,
+                lambda: agent_forms.info(
+                    self.character, self.section_row(AGENTS_SECTION), wide=True
+                ),
+                id=AGENTS_INFO,
+            )
+
     def selected_personality_trait(self) -> int | None:
         """Index into character.personality_traits of the chosen row, or None."""
         return self.query_one(
@@ -871,6 +925,12 @@ class CharacterSheetView(SheetView):
             event.stop()
             self.query_one(f"#{AHEAD_INFO}", Static).update(
                 seasons.ahead_info(self.saga, self.character, event.data_index)
+            )
+            return
+        if list_id == AGENTS_LIST:
+            event.stop()
+            self.query_one(f"#{AGENTS_INFO}", Static).update(
+                agent_forms.info(self.character, event.data_index, wide=True)
             )
             return
         if list_id == "char-diary-list":

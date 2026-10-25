@@ -201,3 +201,62 @@ def persuasion_total(communication: int, ability: int, bond: int, gift: int) -> 
 def may_be_asked(agent: Agent) -> bool:
     """Whether he can be set a task: recruited, with a Bond of +1."""
     return agent.resistance == 0 and agent.bond >= 1
+
+
+def recruited(agent: Agent) -> bool:
+    """Whether his resistance is worn to nothing: he is an agent."""
+    return agent.resistance == 0
+
+
+def kept(character: Character) -> int:
+    """The agents counted against his limit: the recruited ones only."""
+    return sum(1 for agent in character.agents if recruited(agent))
+
+
+def pending(character: Character) -> int:
+    """The people still being won over, not yet counted against the limit."""
+    return len(character.agents) - kept(character)
+
+
+def starting_resistance(agent: Agent) -> int:
+    """His resistance from the Agent Recruitment Table."""
+    return resistance(agent.status, agent.modifiers)
+
+
+def current_resistance(agent: Agent) -> int:
+    """What is left of his resistance (the table's figure until worn)."""
+    if agent.resistance is None:
+        return starting_resistance(agent)
+    return agent.resistance
+
+
+def xp_to_recruit(now: int) -> int:
+    """The Agency experience that wears a resistance of `now` to nothing:
+    now + (now - 1) + ... + 1."""
+    return max(0, now) * (max(0, now) + 1) // 2
+
+
+def hates_principal(agent: Agent) -> bool:
+    """Held by coercion, or through a Flaw used to dominate him: the
+    principal has Difficult Underlings for this agent (pp. 22-23)."""
+    return agent.coerced or "dominated" in agent.modifiers
+
+
+def can_impress(agent: Agent) -> bool:
+    """Whether the impressing roll is still to make for him."""
+    return not agent.impressed and not recruited(agent)
+
+
+def can_spend(character: Character, agent: Agent) -> bool:
+    """Whether Agency experience can go on him: an impressed potential
+    agent while there is experience to spend, or a recruited agent's Bond
+    (which money can also buy)."""
+    if recruited(agent):
+        return True
+    return agent.impressed and character.agency_xp > 0
+
+
+def adventure_agency(xp: int) -> int:
+    """The Agency experience a season's Adventure experience brings: as
+    much again (pp. 24-25)."""
+    return max(0, xp)

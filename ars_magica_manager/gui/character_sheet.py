@@ -71,6 +71,7 @@ from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import Command, SectionOps
 from ..forms import ability as ability_forms
+from ..forms import agents as agent_forms
 from ..forms import character as cf
 from ..forms import constant_effect as constant_forms
 from ..forms import device as device_forms
@@ -88,6 +89,7 @@ from ..markup import escape
 from ..models import (
     CHARGED,
     LINE,
+    Agent,
     Character,
     Characteristics,
     Saga,
@@ -95,6 +97,7 @@ from ..models import (
     TraditionDef,
 )
 from ..rules import activities as season_rules
+from ..rules import agents as agent_rules
 from ..rules import enchantment, hybrid_magic, library, sigils
 from ..sheets import character as cs
 from ..sheets import familiar as fs
@@ -103,6 +106,7 @@ from . import marks, pictures
 from .bookmark import with_bookmark
 from .editing import (
     Chooser,
+    RowVerb,
     Section,
     choose_cards,
     choose_rows,
@@ -120,6 +124,7 @@ from .figures import (
 )
 from .manage import RecordControls
 from .markup_html import to_html
+from .medallions import Medallion
 from .menus import Placer
 from .ornaments import FleuronRule
 from .pages import card_grid, familiar_card
@@ -171,6 +176,7 @@ CHAPTERS = (
     ("Hermetic Magic", "enchanted_item"),
     ("Research", "lab_text"),
     ("Inventory", "combat"),
+    ("Agents", "faction"),
     ("Planning", "season"),
     ("Diary", "year"),
     ("Secrets", "secrets"),
@@ -296,12 +302,14 @@ def section(
     *widgets: QWidget,
     edits: dict[str, Callable[[], None]] | None = None,
     buttons: Sequence[QWidget] = (),
+    emblem: QWidget | None = None,
 ) -> Section:
     """A titled part of a chapter; `edits` (label -> what clicking it
     does) and `buttons` sit beside the title, and their steps open in
     place, under it (editing.place_for). Past SIDE_BUTTONS of them, the
     rest go on a row of their own under the title, so a narrow window
-    never scrolls sideways."""
+    never scrolls sideways. `emblem` (a season's medallion) goes before
+    the title, and the buttons then stay level with the title's words."""
     box = Section()
     column = box.column
     box.body = list(widgets)
@@ -327,9 +335,14 @@ def section(
         head.setSpacing(1)
         row = QHBoxLayout()
         row.setSpacing(2)
-        row.addWidget(chapter_title(title, p, rule=False), 1)
+        row.addWidget(chapter_title(title, p, rule=False, emblem=emblem), 1)
+        level = (
+            Qt.AlignmentFlag.AlignBottom
+            if emblem is None
+            else Qt.AlignmentFlag.AlignVCenter
+        )
         for control in beside:
-            row.addWidget(control, 0, Qt.AlignmentFlag.AlignBottom)
+            row.addWidget(control, 0, level)
         head.addLayout(row)
         if under:
             more = QHBoxLayout()
@@ -341,7 +354,7 @@ def section(
         head.addWidget(FleuronRule(p))
         column.addLayout(head)
     else:
-        column.addWidget(chapter_title(title, p))
+        column.addWidget(chapter_title(title, p, emblem=emblem))
     for widget in widgets:
         column.addWidget(widget)
     return box
@@ -607,6 +620,7 @@ class CharacterSheet(QWidget):
             "Hermetic Magic": self._hermetic,
             "Research": self._research,
             "Inventory": self._inventory,
+            "Agents": self._agents,
             "Planning": self._planning,
             "Diary": self._diary,
             "Secrets": lambda: secrets_chapter(character, palette, run),
@@ -1373,6 +1387,62 @@ class CharacterSheet(QWidget):
         )
         return scrolling_page(p, *parts)
 
+    def _agents(self) -> QWidget:
+        """The people he controls through personal bonds: the limit and
+        the Agency experience, the ledger, Add, Edit and Delete, and
+        Impress, Spend Agency Experience and Set a Task on the chosen
+        agent, who shows in full in the inspector."""
+        saga, p, c = self.saga, self.p, self.character
+        chooser = Chooser()
+
+        def show(index: int) -> None:
+            chooser.choose(index)
+            name, subtitle = agent_forms.inspector_title(c, index)
+            self.inspect(name, subtitle, agent_forms.info(c, index, wide=False))
+
+        def offered(test: Callable[[Agent], bool]) -> Callable[[int], bool]:
+            return lambda row: row < len(c.agents) and test(c.agents[row])
+
+        more: list[RowVerb] = [
+            (
+                "Impress",
+                "character",
+                lambda row: agent_forms.impress(saga, c, row),
+                offered(agent_rules.can_impress),
+            ),
+            (
+                "Spend Agency Experience",
+                "season",
+                lambda row: agent_forms.spend(c, row),
+                offered(lambda found: agent_rules.can_spend(c, found)),
+            ),
+            (
+                "Set a Task",
+                "faction",
+                lambda row: agent_forms.set_task(saga, c, row),
+                offered(agent_rules.may_be_asked),
+            ),
+        ]
+        return scrolling_page(
+            p,
+            section(
+                agent_forms.title(c),
+                p,
+                TextBlock(agent_forms.header(c), p),
+                table_view(agent_forms.table(c), p, show)
+                if c.agents
+                else TextBlock(
+                    "[dim]None yet: people won over through a personal bond "
+                    "(LoM p. 22).[/]",
+                    p,
+                ),
+                TextBlock(f"[dim]{escape(agent_forms.NOT_AGENTS)}[/]", p),
+                buttons=verb_buttons(
+                    agent_forms.ops(c), chooser, self.run, p, more=more
+                ),
+            ),
+        )
+
     def _raw_vis(self) -> QWidget:
         """The magus's raw vis, by Art, with Add, Edit and Delete, and Give
         while there is someone to give it to."""
@@ -1410,6 +1480,9 @@ class CharacterSheet(QWidget):
             p,
             TextBlock(seasons.plan_text(saga, c, "Click Plan to plan the season."), p),
             buttons=buttons,
+            emblem=Medallion(
+                saga, saga.current_season, saga.current_year, p, radius=20, now=True
+            ),
         )
         if not season_rules.is_planned(c):
             return scrolling_page(p, this_season)
@@ -1444,7 +1517,7 @@ class CharacterSheet(QWidget):
             p,
             lambda who, when, season: self.inspect(who, when, season_text(season)),
             who=c.name,
-            current=(saga.current_season, saga.current_year),
+            saga=saga,
         )
         entries = Chooser()
 
@@ -1476,13 +1549,13 @@ class CharacterSheet(QWidget):
 def _left_out(character: Character) -> set[str]:
     """The chapters the character's sheet doesn't have: Hermetic Magic but
     for a magus, the Statblock but for a Line or Sketch character, and
-    what only play needs (Inventory, Planning, Research) for those. A Line character
+    what only play needs (Inventory, Agents, Planning, Research) for those. A Line character
     has no scores either."""
     left = set()
     if character.type != "magus":
         left |= {"Hermetic Magic", "Research"}
     if cs.has_statblock(character):
-        left |= {"Inventory", "Planning", "Research"}
+        left |= {"Inventory", "Agents", "Planning", "Research"}
     else:
         left.add("Statblock")
     if character.detail == LINE:

@@ -389,6 +389,51 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Name": ""}, {"Name": "X", "Level": "lots"}],
         shown={"#char-powers-list": "Wings of the Owl"},
     ),
+    "add agent": Contract(
+        prefill={"Name": "", "Social Status": "free", "Impressed": False},
+        edits={
+            "Name": "Udo the Miller",
+            "Social Status": "minor_virtue",
+            "Serves a rival (+9)": True,
+            "Resources": "the mill and its gossip",
+        },
+        saved=lambda s: [
+            (a.name, a.status, a.modifiers, a.resistance, a.resources)
+            for a in character(s).agents
+        ],
+        expected=[
+            (
+                "Udo the Miller",
+                "minor_virtue",
+                ["rival"],
+                None,
+                "the mill and its gossip",
+            )
+        ],
+        invalid=[{"Name": ""}, {"Name": "X", "Bond score": "lots"}],
+        live={"#fields-live": "Resistance 10 on the Agent Recruitment Table"},
+        shown={
+            "#char-agents-list": "Udo the Miller",
+            "#char-agents-header": "Agents: 0 of",
+        },
+    ),
+    "set agent task": Contract(
+        prefill={"Task": "common", "Done": "weeks", "Risk to him": "none"},
+        edits={"Task": "sensitive", "Done": "days", "Risk to him": "injury"},
+        saved=lambda s: [a.name for a in character(s).agents],
+        expected=["Sir Konrad", "Father Bertolf"],
+        live={"#fields-live": "Ease Factor 10 (task 6 + haste 1 + risk 3"},
+        shown={"#char-agents-list": "Sir Konrad"},
+    ),
+    "spend agency xp": Contract(
+        prefill={"Spend on": "resistance", "Agency experience": "6"},
+        edits={"Agency experience": "3"},
+        saved=lambda s: (character(s).agents[1].resistance, character(s).agency_xp),
+        expected=(2, 7),
+        invalid=[{"Agency experience": "0"}, {"Agency experience": "2"}],
+        live={"#fields-live": "Resistance 3 to 2, for 3 Agency experience"},
+        shown={"#char-agents-list": "2, impressed"},
+    ),
     "add constant effect": Contract(
         prefill={"Effect": "", "Realm": "Magic"},
         edits={"Effect": "Ring of Flight", "Realm": "Faerie"},

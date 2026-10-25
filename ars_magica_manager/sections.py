@@ -214,10 +214,14 @@ POWERS_SECTION = "section-char-powers"
 #: The supernatural effects on a character all the time
 #: (forms.constant_effect).
 CONSTANT_EFFECTS_SECTION = "section-char-constant-effects"
+#: A character's agents (forms.agents): the people he controls through
+#: personal bonds, on their own tab.
+AGENTS_SECTION = "section-char-agents"
 
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     POWERS_SECTION: frozenset({"add", "edit", "remove"}),
     CONSTANT_EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),
+    AGENTS_SECTION: frozenset({"add", "edit", "remove"}),
     LAB_TRAITS_SECTION: frozenset({"add", "edit", "remove"}),
     LAB_ITEMS_SECTION: frozenset({"add", "edit", "remove"}),
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),

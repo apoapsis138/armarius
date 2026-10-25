@@ -232,6 +232,7 @@ async def test_the_terminal_opens_a_sketch_on_its_statblock_and_promotes_it():
                 "Hermetic Magic",
                 "Research",
                 "Inventory",
+                "Agents",
                 "Planning",
                 "Diary",
                 "Secrets",

@@ -13,7 +13,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QPushButton
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import storage
@@ -57,9 +57,15 @@ def _saved(window: MainWindow):
 def test_edit_covenant_and_its_description(app):
     window = _window()
     asked = answering(window, {"name": "Fengheld"}, {"notes": "Windswept."})
-    controls = section_buttons(_page(window), "The Covenant")
-    controls["Edit Covenant"].click()
+    # Edit Covenant is the header's Edit, beside the covenant's season.
+    header_edit = next(
+        b
+        for b in _page(window).findChildren(QPushButton)
+        if b.toolTip() == "Edit Covenant"
+    )
+    header_edit.click()
     assert asked[0].windowTitle() == "Edit Covenant"
+    assert "Edit Covenant" not in section_buttons(_page(window), "The Covenant")
     assert _saved(window).name == "Fengheld"
     section_buttons(_page(window), "The Covenant")["Edit Description"].click()
     assert _saved(window).notes == "Windswept."

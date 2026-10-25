@@ -26,6 +26,7 @@ from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
 from ....arts import ARTS
+from ....forms import agents as agent_forms
 from ....forms import beast as beast_forms
 from ....forms import character as character_forms
 from ....forms import experimental_effects
@@ -49,6 +50,7 @@ from ....models import (
 from ....rules import activities as season_rules
 from ....rules import disease
 from ....sections import (
+    AGENTS_SECTION,
     CHAR_AHEAD_SECTION,
     CONSTANT_EFFECTS_SECTION,
     POWERS_SECTION,
@@ -134,6 +136,32 @@ class CharacterActions(WorkspaceBase):
             self.call_later(self._show_character, character)
 
         run_steps(self.app, menu_forms.character_traditions(self.saga, character), done)
+
+    def _agent_step(self, build: Callable[[Character, int], Any]) -> None:
+        """Run a More command on the Agents list's chosen agent, then save
+        and redraw the list."""
+        character = self.selected_character
+        view = self._current_sheet_view()
+        row = view.section_row(AGENTS_SECTION) if view is not None else None
+        if character is None or row is None:
+            return
+        run_steps(
+            self.app,
+            build(character, row),
+            lambda _end: self._commit(AGENTS_SECTION),
+        )
+
+    def action_impress_agent(self) -> None:
+        """More's Impress on the chosen potential agent."""
+        self._agent_step(partial(agent_forms.impress, self.saga))
+
+    def action_spend_agency_xp(self) -> None:
+        """More's Spend Agency Experience on the chosen agent."""
+        self._agent_step(agent_forms.spend)
+
+    def action_set_agent_task(self) -> None:
+        """More's Set a Task for the chosen agent."""
+        self._agent_step(partial(agent_forms.set_task, self.saga))
 
     def action_take_harm(self) -> None:
         """More's Take Harm on Health: an injury, poison, disease or

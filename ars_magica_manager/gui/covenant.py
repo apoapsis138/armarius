@@ -17,7 +17,14 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QTableView, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QTableView,
+    QVBoxLayout,
+    QWidget,
+)
 
 from .. import artwork, boon_hook_text, catalog, giving, seasons, vis, world
 from .. import books as bk
@@ -27,7 +34,7 @@ from .. import inhabitants as inh
 from .. import possessions as pos
 from .. import saga_overview as ov
 from ..actions import NodeKind
-from ..commands import SectionOps
+from ..commands import Form, SectionOps
 from ..covenants import boon_hook_problems
 from ..forms import covenant as covenant_forms
 from ..forms import creation as creation_forms
@@ -61,6 +68,7 @@ from .editing import Chooser, RowVerb, Run, choose_cards, give_verb, verb_button
 from .figures import Seal, attitude_seal, aura_seal, fact_grid, prose, shelf
 from .heraldry import arms_section, neighbours_arms
 from .manage import RecordControls
+from .medallions import Medallion
 from .menus import Placer
 from .pages import (
     Open,
@@ -238,6 +246,13 @@ class CovenantPage(QWidget):
                 seal = attitude_seal(world.attitude_toward(covenant, target.id), p)
                 seal.setToolTip(f"Toward {target.name}: {seal.toolTip()}")
                 row.addWidget(seal)
+            row.addWidget(
+                self._edit_button(
+                    lambda: world_forms.sketch_covenant_form(saga, covenant)
+                ),
+                0,
+                Qt.AlignmentFlag.AlignTop,
+            )
             return box
         row.addWidget(fact_grid(cvs.charter_facts(saga, covenant), p, 2))
         row.addSpacing(10)
@@ -260,10 +275,31 @@ class CovenantPage(QWidget):
                 p,
             )
         )
+        row.addWidget(self._season_badge(covenant))
         mode = self.controls.mode(p) if self.controls is not None else None
         if mode is not None:
             row.addWidget(mode, 0, Qt.AlignmentFlag.AlignTop)
+        row.addWidget(
+            self._edit_button(lambda: covenant_forms.covenant_form(saga, covenant)),
+            0,
+            Qt.AlignmentFlag.AlignTop,
+        )
         return box
+
+    def _season_badge(self, covenant: Covenant) -> Medallion:
+        """The covenant's own season (its Covenant Season, not the saga's
+        present one) as a medallion, with no words: the subtitle says it."""
+        badge = Medallion(
+            self.saga, covenant.covenant_season, self.saga.current_year, self.p
+        )
+        badge.setToolTip(f"{covenant.covenant_season} covenant")
+        return badge
+
+    def _edit_button(self, form: Callable[[], Form]) -> QPushButton:
+        """The header's Edit, opening Edit Covenant."""
+        button = edit_button("Edit", self.p, lambda: self.run(form()))
+        button.setToolTip("Edit Covenant")
+        return button
 
     # Chapters
 
@@ -319,9 +355,6 @@ class CovenantPage(QWidget):
                 p,
                 prose(covenant.notes.strip(), p),
                 edits={
-                    "Edit Covenant": lambda: self.run(
-                        covenant_forms.covenant_form(self.saga, covenant)
-                    ),
                     "Edit Description": lambda: self.run(
                         covenant_forms.description_form(covenant)
                     ),
@@ -361,11 +394,6 @@ class CovenantPage(QWidget):
                 prose(summary, p)
                 if summary
                 else _none("Not written yet: edit the covenant to say.", p),
-                edits={
-                    "Edit Covenant": lambda: self.run(
-                        world_forms.sketch_covenant_form(self.saga, covenant)
-                    )
-                },
             ),
         ]
         if covenant.detail != LINE:
@@ -810,7 +838,11 @@ class CovenantPage(QWidget):
             p,
             *ahead,
             chapter_title(
-                f"Seasons  ·  now {saga.current_season} {saga.current_year}", p
+                f"Seasons  ·  now {saga.current_season} {saga.current_year}",
+                p,
+                emblem=Medallion(
+                    saga, saga.current_season, saga.current_year, p, radius=20, now=True
+                ),
             ),
             *plans,
             legend(p),

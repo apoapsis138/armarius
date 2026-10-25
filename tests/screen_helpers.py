@@ -216,6 +216,7 @@ _SECTION_TAB: dict[str, str] = {
     "section-char-health": "tab-description",
     "section-inventory": "tab-inventory",
     "section-raw-vis-inventory": "tab-inventory",
+    "section-char-agents": "tab-agents",
     "section-arts": "tab-hermetic",
     "section-raw-vis-hermetic": "tab-hermetic",
     "section-known-spells": "tab-hermetic",

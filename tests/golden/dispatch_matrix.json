@@ -724,6 +724,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-char-agents": {
+      "active": "section-char-agents",
+      "keys": {
+        "a": "FieldsDialog: Add an Agent",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-char-season": {
       "active": "section-char-season",
       "keys": {
