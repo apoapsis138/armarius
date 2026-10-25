@@ -16,6 +16,7 @@ Creation Ability cap by age; Ability types and who may learn them.
 from __future__ import annotations
 
 from .. import catalog
+from ..arts import ARTS
 from ..models import Character, Saga
 from . import animal_grogs
 from . import creation_access as access
@@ -87,8 +88,9 @@ def virtue_targets(character: Character, vf_id: str) -> list[str]:
         # A family is checked by its prefix ("Area Lore: ").
         and access.virtue_xp_allows(rule, entry.name.split("{", 1)[0])
     }
-    # Names from a family ("Dead Language: Latin") the Virtue names itself.
-    return sorted(found | set(rule.names))
+    # Names from a family ("Dead Language: Latin") the Virtue names itself,
+    # and the Arts when it may buy them.
+    return sorted(found | set(rule.names)) + (list(ARTS) if rule.arts else [])
 
 
 def free_score_abilities(character: Character) -> set[str]:
@@ -173,9 +175,8 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
                 access.SOURCE,
             )
         )
-    by_id = catalog.load_virtue_flaw_catalog_by_id()
     for vf_id, rule in access.virtue_xp(character).items():
-        name = by_id[vf_id].name
+        name = access.pool_name(vf_id)
         own = [x for x in entries(character, "virtue") if x.note == vf_id]
         total = sum(x.xp for x in own)
         found.append(

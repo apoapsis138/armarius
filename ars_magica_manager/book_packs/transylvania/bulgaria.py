@@ -1306,6 +1306,96 @@ def _tablinum_site(transylvania: Transylvania) -> Neighbour:
     )
 
 
+#: The Chronicle's years, from the Order's founding, fifty to a set.
+CHRONICLE_FROM, CHRONICLE_TO, CHRONICLE_SPAN = 767, 1217, 50
+
+#: Tablinum's laboratories as the book prints them (Against the Dark pp.
+#: 62-63): its owner's key ("" for a shared one), the Characteristics,
+#: the Specializations and the Virtues and Flaws.
+TABLINUM_LABS: tuple[tuple[str, str, dict[str, int], dict[str, int], str], ...] = (
+    (
+        "Nestor's Laboratory",
+        "nestor",
+        {
+            "size": 3,
+            "refinement": 3,
+            "general_quality": 1,
+            "upkeep": 4,
+            "safety": 1,
+            "warping": 2,
+            "health": 2,
+            "aesthetics": 4,
+        },
+        {"Experimentation": 1, "Teaching": 2, "Rego": 2, "Vim": 3},
+        "Greater Feature (orrery), Palatial, Extensive Stores, Specimens, "
+        "Missing Sanctum Marker, Regio, Impregnable, Predecessor",
+    ),
+    (
+        "Demetrius's Laboratory",
+        "demetrius",
+        {"refinement": 3, "general_quality": -1, "safety": 1, "aesthetics": 4},
+        {"Texts": 4, "Aquam": 1},
+        "Greater Feature (desk), Specimens (Aquam), Studio, Cramped",
+    ),
+    (
+        "Theodora's Laboratory",
+        "theodora",
+        {
+            "refinement": 2,
+            "general_quality": 1,
+            "upkeep": -1,
+            "safety": -1,
+            "warping": 2,
+            "health": -1,
+            "aesthetics": -1,
+        },
+        {"Experimentation": 6, "Muto": 2, "Perdo": 1, "Terram": 1},
+        "Greater Feature (cauldron), Faerie Ingredients (Terram), Dirty, "
+        "Disorganized, Chaotic",
+    ),
+    (
+        "Theodore's Laboratory",
+        "theodore",
+        {
+            "refinement": 3,
+            "general_quality": 3,
+            "upkeep": 2,
+            "safety": 3,
+            "health": 2,
+            "aesthetics": 6,
+        },
+        {"Vis Extraction": 1, "Creo": 1, "Intellego": 2, "Ignem": 1},
+        "Greater Feature (pool), Superior Heating, Flawless Equipment, "
+        "Grand Entranceway, Guard, Highly Organized, Spotless, Undecorated",
+    ),
+    (
+        "The Vim Distillery",
+        "",
+        {"upkeep": -3, "safety": -1, "aesthetics": 1},
+        {"Vis Extraction": 10},
+        "Greater Feature (vis still), Lesser Feature (vis balance), Missing "
+        "Ingredients (Intellego, Muto, Perdo and Rego Lab Totals halved), "
+        "Missing Sanctum Marker, Superior Equipment, Cramped, Greater Focus "
+        "(vis still)",
+    ),
+    (
+        "The Empty Laboratory",
+        "",
+        {"upkeep": -1, "safety": -3, "warping": 2, "health": -1, "aesthetics": -3},
+        {"Perdo": 1, "Mentem": 3},
+        "Vis Source (2 pawns of Mentem a season, frost on the void "
+        "window's sill), Empty, Undecorated, Abyss, Haunted",
+    ),
+    (
+        "The Guest Laboratory in the Scriptorium",
+        "",
+        {"upkeep": -1, "safety": -1},
+        {"Teaching": 1},
+        "Gallery, No Stores, Undecorated",
+    ),
+)
+
+
 def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> None:
     site = _tablinum_site(transylvania)
     summary = paragraphs(
@@ -1431,22 +1521,27 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "full fifty years one can consult that bear on the question (+9 "
         "for the whole). The scribes in the Scriptorium copy it."
     )
-    b.book(
-        tablinum,
-        "The Transylvania Chronicle (Order of Hermes Lore)",
-        "Tractatus",
-        ability="Organization Lore: Order of Hermes",
-        quality=6,
-        description=chronicle,
-    )
-    b.book(
-        tablinum,
-        "The Transylvania Chronicle (Code of Hermes)",
-        "Tractatus",
-        ability="Code of Hermes",
-        quality=6,
-        description=chronicle,
-    )
+    # Each fifty years, ten volumes, is a tractatus on each subject:
+    # nine of each from 767 to 1216, bound as one encyclopedia (Against
+    # the Dark p. 63).
+    volumes = []
+    for start in range(CHRONICLE_FROM, CHRONICLE_TO, CHRONICLE_SPAN):
+        years = f"{start}-{start + CHRONICLE_SPAN - 1}"
+        for subject, ability in (
+            ("Order of Hermes Lore", "Organization Lore: Order of Hermes"),
+            ("Code of Hermes", "Code of Hermes"),
+        ):
+            volumes.append(
+                b.book(
+                    tablinum,
+                    f"The Transylvania Chronicle, {years} ({subject})",
+                    "Tractatus",
+                    ability=ability,
+                    quality=6,
+                    description=chronicle,
+                )
+            )
+    b.codex("The Transylvania Chronicle", volumes, encyclopedia=True)
     b.book(
         tablinum,
         "The Spell Hall",
@@ -1572,6 +1667,16 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
     privileges["theodora"] = ("cives", "")
     privileges["theodore"] = ("cives", "")
     transylvania.aediles["tablinum"] = ["demetrius"]
+    for name, owner, traits, specializations, vfs in TABLINUM_LABS:
+        b.laboratory(
+            tablinum,
+            name,
+            owner=m[owner] if owner else None,
+            characteristics=traits,
+            specializations=specializations,
+            source="Against the Dark pp. 62-63",
+            rooms={"Virtues and Flaws": vfs},
+        )
 
 
 # ------------------------------------------------------- the mundane world

@@ -4401,6 +4401,53 @@
       }
     },
     {
+      "id": "trad_nemthengacha",
+      "name": "Nemthengacha",
+      "source": "DE",
+      "realm": "Magic",
+      "description": "Celtic and Scandinavian magi Ex Miscellanea, the 'poison-tongues', who turn a listener against a friend, kinsman or lord with a few words of conversation.",
+      "chapter": "Embitterment",
+      "abilities": [
+        "Embitterment"
+      ],
+      "favored": [
+        "Embitterment"
+      ],
+      "virtues": [
+        "vf_embitterment",
+        "vf_subtle_magic",
+        "vf_deficient_technique"
+      ],
+      "social_status": "vf_hermetic_magus",
+      "hermetic": "house",
+      "notes": "Package (DE p. 244): Embitterment (Major non-Hermetic), Subtle Magic (Minor Hermetic, free), Deficient Technique in Rego (Major Hermetic Flaw). Unlike other hostility, the embittered can't disobey: no Loyalty roll or Personality Trait resists it. Perdo Vim cancels it; Rego Mentem can replace it with loyalty, Creo Mentem create a stronger loyalty, Perdo Mentem erase the animosity; the effect's level for those spells is 5 x Embitterment.",
+      "training": {
+        "gift": "required",
+        "notes": "A Hermetic magus of House Ex Miscellanea, with the tradition's free Virtues and compulsory Flaw. UnGifted Nemthengacha survive in the hinterlands outside the Order."
+      },
+      "casting": [
+        {
+          "name": "Embitterment",
+          "kind": "ability",
+          "scores": [
+            "Embitterment"
+          ],
+          "characteristic": "Communication",
+          "die": "stress",
+          "against": "Ease Factor",
+          "magnitude_is_score": true,
+          "vis_per_pawn": 1,
+          "vis_cap": "none",
+          "vis": "",
+          "notes": "Ease Factor by whom he turns against whom (DE p. 245): 6 a neighbour, business partner or co-worker; 9 a wife, friend or cousin; 12 close kin; 15 his lord; 18 his king. Dislike (slander, no help) at the base; hatred (harm short of killing) +3; loathing (trying to kill) +6. Voice range, Individual target, Sun Duration, or Moon at +3. The speaker states exactly how the victim will act; the victim must understand his language. A Magic power for its dealings with the other realms."
+        }
+      ],
+      "advancement": {
+        "practice_arts": true,
+        "notes": "Embitterment is a Major Supernatural Ability (the Virtue gives it at 1)."
+      }
+    },
+    {
       "id": "trad_scinnfolk",
       "name": "Scinnfolk",
       "source": "HoH:S",

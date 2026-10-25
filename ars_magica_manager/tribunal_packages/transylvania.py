@@ -51,8 +51,8 @@ class Privilege:
         return f"{self.name} ({self.covenant})"
 
 
-#: The privileges, in the book's order of rank, each with the legal
-#: covenant it belongs to and what it allows.
+#: The privileges, cives first (the book ranks them no further), each
+#: with the legal covenant it belongs to and what it allows.
 PRIVILEGES: dict[str, Privilege] = {
     "cives": Privilege(
         "Cives", "Coeris", "any office, Praeco too; apprentices; chooses an aedile"
@@ -160,8 +160,11 @@ def aedile_fields(
     magi = residents(saga, covenant) if covenant is not None else []
     chosen = aediles(_tribunal).get(covenant.id, []) if covenant is not None else []
     options = [(escape(c.name), c.id) for c in magi]
+    needed = aediles_needed(saga, _tribunal, covenant) if covenant is not None else None
+    due = f"; it should have {needed}." if needed is not None else "."
     hint = (
-        "One of the magi who live here."
+        "One of the magi who live here, from the group that isn't dominant "
+        "(cives against the rest)" + due
         if magi
         else "Its magi choose the aediles: give it magi first."
     )
@@ -198,6 +201,118 @@ def aedile_of(saga: Saga, tribunal: Tribunal, character_id: str) -> Covenant | N
         if character_id in chosen:
             return saga.covenant(covenant_id)
     return None
+
+
+# -- offices and oppida, by privilege --
+
+#: The offices the package knows by name.
+PRAECO, AEDILE, CURATOR = "Praeco", "Aedile", "Curator of Tablinum"
+
+
+def office_rule(privilege: str, office: str) -> tuple[str, bool]:
+    """What a privilege says of holding `office`: the words, and whether
+    they forbid it (False: it needs the Praeco's leave, or is allowed
+    with "" for words). Only a cives may be Praeco, a socius may hold
+    any office but Praeco, a colona none but aedile, a hospes must seek
+    leave, and a foederatus may stand for any (Against the Dark pp.
+    15-18); the Curator of Tablinum must be a cives and a master when
+    appointed (p. 58)."""
+    office_key = office.strip().casefold()
+    if office_key == CURATOR.casefold() and privilege != "cives":
+        return "The Curator of Tablinum must be a cives (Against the Dark p. 58).", True
+    if privilege == "coloniae" and office_key != AEDILE.casefold():
+        return f"A colona may hold no office but aedile, not {office}.", True
+    if privilege == "socii" and office_key == PRAECO.casefold():
+        return "Only a cives may be Praeco: a socius may hold any office but it.", True
+    # An aedile is chosen by the oppidum's dominant group, not sought.
+    if privilege == "hospites" and office_key and office_key != AEDILE.casefold():
+        return (
+            f"{office}: a hospes holds office only by the Praeco's leave "
+            "(Against the Dark p. 16).",
+            False,
+        )
+    return "", False
+
+
+def magus_office_problem(
+    saga: Saga, tribunal: Tribunal, character_id: str, office: str
+) -> str:
+    """Why the magus's privilege forbids `office` ("": it doesn't, or no
+    privilege is entered)."""
+    entry = entry_of(saga, tribunal, character_id)
+    privilege = (entry or {}).get("privilege", "")
+    if not privilege:
+        return ""
+    words, refuses = office_rule(privilege, office)
+    return f"{_name(saga, character_id)}: {words}" if refuses else ""
+
+
+def office_notes(saga: Saga, tribunal: Tribunal, entry: dict[str, Any]) -> list[str]:
+    """What the magus's privilege says of each office he holds: those it
+    forbids, and those he holds by leave."""
+    privilege = entry.get("privilege", "")
+    if not privilege:
+        return []
+    found = []
+    for office in [o.strip() for o in offices(saga, tribunal, entry).split(",")]:
+        if office and office != "Presiding Quaesitor":
+            words, _refuses = office_rule(privilege, office)
+            if words:
+                found.append(words)
+    return found
+
+
+def _privileges_of(saga: Saga, tribunal: Tribunal, magi: list[Character]) -> list[str]:
+    return [(entry_of(saga, tribunal, m.id) or {}).get("privilege", "") for m in magi]
+
+
+def aediles_needed(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> int | None:
+    """How many aediles the oppidum should have: two where its cives and
+    its other magi are as many, else one (Against the Dark p. 15, whose
+    "even numbers" is read as equal ones); None while a resident's
+    privilege isn't entered."""
+    privileges = _privileges_of(saga, tribunal, residents(saga, covenant))
+    if not privileges or not all(privileges) or covenant.unnamed_magi:
+        return None
+    cives = privileges.count("cives")
+    return 2 if cives * 2 == len(privileges) else 1
+
+
+def oppidum_problems(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> list[str]:
+    """Where the oppidum breaks the Tribunal's rulings on oppida: at least
+    two members, at least one cives, not all of one House (Against the
+    Dark p. 15), and its aediles from the group that isn't dominant,
+    cives against the rest (p. 16)."""
+    magi = residents(saga, covenant)
+    found: list[str] = []
+    if not magi:
+        return found
+    if len(magi) + covenant.unnamed_magi < 2:
+        found.append("fewer than two members")
+    privileges = _privileges_of(saga, tribunal, magi)
+    known = all(privileges) and not covenant.unnamed_magi
+    if known and len(magi) >= 2 and len({m.hermetic.house for m in magi}) == 1:
+        found.append("all of one House")
+    if known and "cives" not in privileges:
+        found.append("no cives")
+    needed = aediles_needed(saga, tribunal, covenant)
+    chosen = aediles_of(saga, tribunal, covenant)
+    if needed is not None and chosen and len(chosen) != needed:
+        found.append(f"{needed} aedile{'s' if needed > 1 else ''} due")
+    if known and needed == 1:
+        dominant_cives = privileges.count("cives") * 2 > len(privileges)
+        for aedile in chosen:
+            entry = entry_of(saga, tribunal, aedile.id) or {}
+            if (entry.get("privilege") == "cives") == dominant_cives:
+                found.append(f"{aedile.name} is of the dominant group")
+    return found
+
+
+def oppidum_status(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
+    """ "lawful", what the oppidum lacks, or "" with no magi named."""
+    if not residents(saga, covenant):
+        return ""
+    return "; ".join(oppidum_problems(saga, tribunal, covenant)) or "lawful"
 
 
 # -- the five covenants --
@@ -324,6 +439,16 @@ def member_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
             if other is not None and other is not entry:
                 name = _name(saga, values.get("character_id"))
                 return f"{name} already has a privilege: edit theirs instead."
+            privilege, office = values.get("privilege"), values.get("office")
+            if privilege and office:
+                words, refuses = office_rule(privilege, office)
+                if refuses:
+                    return words
+            ident = values.get("character_id")
+            if privilege and ident and ident == tribunal.praeco_id:
+                words, refuses = office_rule(privilege, PRAECO)
+                if refuses:
+                    return f"{_name(saga, ident)} is Praeco: {words}"
             return None
 
         def apply(values: dict[str, Any]) -> None:
@@ -365,8 +490,10 @@ def magus_facts(
     saga: Saga, tribunal: Tribunal, character: Character
 ) -> list[tuple[str, str]]:
     """A Transylvanian magus's privilege, for their sheet."""
-    label = privilege_label(entry_of(saga, tribunal, character.id))
-    return [("Privilege", label or "(not entered)")]
+    entry = entry_of(saga, tribunal, character.id)
+    found = [("Privilege", privilege_label(entry) or "(not entered)")]
+    found += [("Office", words) for words in office_notes(saga, tribunal, entry or {})]
+    return found
 
 
 TRANSYLVANIA = TribunalPackage(
@@ -376,7 +503,10 @@ TRANSYLVANIA = TribunalPackage(
     book="AtD",
     place="oppidum",
     places="oppida",
-    columns=(RosterColumn("Aediles", aediles_text, 18),),
+    columns=(
+        RosterColumn("Aediles", aediles_text, 18),
+        RosterColumn("Oppidum", oppidum_status, 18),
+    ),
     tabs=(
         PackageTab(
             "The Five Covenants",
@@ -390,6 +520,7 @@ TRANSYLVANIA = TribunalPackage(
     covenant_fields=aedile_fields,
     save_covenant=save_aediles,
     magus_facts=magus_facts,
+    office_problem=magus_office_problem,
 )
 
 register(TRANSYLVANIA)

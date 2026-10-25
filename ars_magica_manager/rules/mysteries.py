@@ -39,6 +39,11 @@ TARGET_LEVELS: dict[tuple[str, bool], int] = {
     ("Major", False): 30,
 }
 MINIMUM_TARGET = 9
+#: Mysteries with a rule of their own about who may be Initiated (rules.
+#: supplement_work): Secret Name fails with a talisman or a familiar (DE p.
+#: 235); Faerie Magic needs one touched by the fay (DE p. 236).
+SECRET_NAME = "vf_secret_name"
+FAERIE_MAGIC = "vf_faerie_magic"
 ADD, CHANGE, REMOVE = "add", "change", "remove"
 #: Varying a Script: the Ease Factor of each kind of change.
 VARY_EASE: dict[str, int] = {ADD: 9, CHANGE: 12, REMOVE: 15}

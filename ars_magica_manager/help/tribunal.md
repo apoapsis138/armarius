@@ -17,8 +17,8 @@ what the old ones recorded, hidden, and switching back shows it again.
 
 - **Core rules**: the Definitive Edition's Tribunal; notice of a case is
   due a season before the meeting.
-- **Rhine: Gilds** (Guardians of the Forests): the Rhine's covenants band
-  together in gilds, each with its dues; the sheet gains a Gilds list and
+- **Rhine: Gilds** (Guardians of the Forests): the Rhine's magi band
+  together in gilds, each with its leaders and agenda; the sheet gains a Gilds list and
   the roster a Gild column. Notice is due a season before the meeting,
   as under the core rules.
   The book's Tribunal of 1220 ships as a content pack: see [How to start a
@@ -156,6 +156,16 @@ says there are more covenants than are recorded, a last row counts them
 and the magi they hold.
 A Tribunal whose book has its own word for a covenant uses it: a
 Transylvanian Tribunal's list is headed Oppida.
+
+A Transylvanian roster has an **Oppidum** column: "lawful", or what the
+oppidum breaks of the Tribunal's rulings: fewer than two members, all of
+one House, no cives, the wrong number of aediles (two where its cives
+and its other magi are as many, else one: the book's "even numbers" is
+read as equal ones), or an aedile from the dominant group, cives against
+the rest (Against the Dark pp. 15-16). An oppidum with no named magi
+shows nothing; while a resident's privilege isn't entered, or the
+oppidum has unnamed magi, the counts that need them aren't checked. The
+aedile fields on the oppidum's own form say how many it should have.
 
 A covenant has one vote for each of its magi, and one for each proxy it
 carries: the sigil of an absent magus, given for one meeting. An unGifted
@@ -341,6 +351,10 @@ Quaesitor allowed them. Proxies set aside are shown but not counted.
 Under Hibernia's customs a covenant that doesn't show its cathach has
 no votes, and says so. The roll call ticks who is present, magus by
 magus or a whole covenant at once; only they can speak at a hearing.
+In the Rhine, a Tremere whose sigil the House's exarch casts (Stentorius
+or Severicus) has no vote of his own: the exarch's covenant carries it as
+a proxy, and his own covenant doesn't count him (Guardians of the Forests
+pp. 84, 109). His sheet says who casts it.
 
 <!-- tui -->
 `e` holds the roll call again.
@@ -389,21 +403,27 @@ the loans still out and the fines still unpaid.
 ## Gilds tab
 <!-- help: tab-trib-gilds -->
 
-A Rhine Tribunal's gilds: the bands its covenants join, each with its
-dues. Only a Tribunal following the Rhine's customs has this tab.
+A Rhine Tribunal's gilds: political factions of magi that cut across
+House and covenant (Guardians of the Forests pp. 27-29). Only a
+Tribunal following the Rhine's customs has this tab. A magus belongs to
+one gild at most and may not join one he has the (Gild) Enmity Flaw for
+(p. 22); the book gives the gilds no dues.
 
-A covenant's own form shows the same choice from its side: while its
-Tribunal follows the Rhine's customs, Edit Covenant and New Covenant
-have a tick for each gild, and ticking one makes the covenant a member.
-Choose another Tribunal and the ticks disappear.
+A covenant's own form shows its side: while its Tribunal follows the
+Rhine's customs, Edit Covenant and New Covenant have a tick for each
+gild most of its magi belong to, and Edit Covenant a gild for each of its
+magi (one at most, never one he has the Enmity Flaw for). Choose another
+Tribunal and the ticks disappear. A magus's sheet shows his gild.
 
 ### Gilds
 <!-- help: section-trib-gilds -->
 
-Each gild with its member covenants and its dues. Add a gild, edit it
-(its name, its dues, and a tick for each covenant of the Tribunal that
-belongs to it) or delete it. The roster's Gild column shows the gilds
-each covenant belongs to.
+Each gild with who leads it, its members (its magi, then the covenants
+most of whose magi belong to it) and its agenda. Add a gild, edit it (its
+name, its agenda, up to three leaders, as the Apple Gild's triumvirate,
+and a tick for each covenant most of whose magi belong to it) or delete
+it. The roster's Gild column shows the gilds of each covenant and of its
+magi. A gild an older save gave dues keeps them as its agenda.
 <!-- gui -->
 
 A gild named for one of the Rhine's six trees (Oak, Hawthorn, Ash,
@@ -431,9 +451,26 @@ them, each for an act against the Tribunal's unity; the services they
 have done; and their standing: an office they hold, or that they are
 ostracised and until when. Tokens are not votes: every magus present
 votes once. A metoikos holds no tokens or shards, so the form refuses
-them. A token and a shard can be surrendered together for a season's
-service (neutralization), and any polites with a shard may be
-ostracised. Add a magus, edit their entry or delete it.
+them. Any polites with a shard may be ostracised. Add a magus, edit
+their entry or delete it.
+
+<!-- tui -->
+Two commands in More (`m`) work on this list.
+<!-- /tui -->
+<!-- gui -->
+Two buttons beside the list work on it.
+<!-- /gui -->
+**Neutralize** (on the chosen magus, who must hold a shard): another
+polites spends a token, and the chosen magus serves him a season, with
+the service named; the Redcap who witnesses it takes a token and a
+shard. A magus can't neutralize his own shards, nor those of a magus of
+his own covenant, and the one with the shard may always refuse (The
+Sundered Eagle pp. 28-29). **Longevity Ritual**: the Ritual the Tribunal
+sponsors once a year. The applicants are the politai with no shard and
+no Longevity Ritual in force; the one with the most tokens wins (the
+elder on a tie) and gives up all his tokens; whoever crafts it earns a
+token, two for a Ritual of the tenth magnitude or more. Each year's
+award is kept, and a second the same year is refused (pp. 28, 30).
 
 ### The Council of Magistrates
 <!-- help: section-trib-archai -->
@@ -474,6 +511,16 @@ The Office column shows Praeco and Presiding Quaesitor from the
 Tribunal, Aedile from the oppidum's own form, and any other office
 entered (the Curantis, say). Add a magus, edit their entry or delete it;
 a magus has one entry, so adding a second for them is refused.
+
+The book ranks the five no further than cives first; they are listed in
+this order. What a privilege says of office is checked: only a cives (or
+a foederatus, who may stand for any office) may be Praeco, so Edit
+Tribunal refuses a socius or colona there (a hospes needs leave); a
+colona may hold no office but aedile and the Curator of Tablinum must be
+a cives (Against the Dark pp. 15-18, 58), so this form refuses those
+offices. A hospes holds office only by the Praeco's leave: his sheet's
+Office line says so (an aedile is chosen, not sought, so no leave is
+noted for that).
 
 ## Tenure tab
 <!-- help: tab-trib-tenure -->

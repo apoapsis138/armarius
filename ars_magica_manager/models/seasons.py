@@ -66,6 +66,9 @@ class SpellDesign:
     #: Size, complexity and requisite magnitudes on top.
     extra_magnitudes: int = 0
     ritual: bool = False
+    #: Spell Timing: how often the spell recurs (a
+    #: rules.spell_levels.RECURRING key; "" for a spell that doesn't).
+    recurring: str = ""
     description: str = ""
     base_effect: str = ""
     #: The spell it was started from, if any.

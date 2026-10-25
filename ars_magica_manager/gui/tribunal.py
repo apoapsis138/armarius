@@ -92,6 +92,7 @@ class TribunalPage(QWidget):
                             entry.section_title(saga, tribunal),
                             entry.grid(saga, tribunal),
                             entry.section_id,
+                            more=self._package_more(entry),
                         )
                         for entry in extra.lists
                     ),
@@ -108,6 +109,19 @@ class TribunalPage(QWidget):
 
     def _edit(self) -> None:
         self.run(tribunal_forms.edit_tribunal_form(self.saga, self.tribunal))
+
+    def _package_more(self, entry: tribunal_packages.PackageList) -> list[RowVerb]:
+        """A package list's More commands, as buttons on its chosen row."""
+        saga, tribunal = self.saga, self.tribunal
+        return [
+            (
+                verb.label,
+                "edit",
+                lambda row, build=verb.build: build(saga, tribunal, row),
+                lambda _row: True,
+            )
+            for verb in entry.more
+        ]
 
     def _grid(
         self,

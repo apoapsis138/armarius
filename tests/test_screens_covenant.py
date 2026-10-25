@@ -1318,7 +1318,7 @@ async def test_reputation_keys_work_from_the_list_without_a_picker():
         await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
-        assert [f.label for f in app.screen.fields][1] == "Score (-3 to +3)"
+        assert [f.label for f in app.screen.fields][1] == "Score"
         await pilot.press("escape")
         await pilot.pause()
 

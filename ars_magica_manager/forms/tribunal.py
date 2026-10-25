@@ -218,11 +218,19 @@ def new_tribunal_form(saga: Saga) -> Form:
 
 
 def edit_tribunal_form(saga: Saga, tribunal: Tribunal) -> Form:
+    def problem(values: dict[str, Any]) -> str | None:
+        return tribunal_problem(values) or (
+            tribunal_packages.office_problem(
+                saga, tribunal, values.get("praeco_id") or "", "Praeco"
+            )
+            or None
+        )
+
     return Form(
         "Edit Tribunal",
         lambda: tribunal_fields(saga, tribunal),
         lambda values: _apply(tribunal, values),
-        validate=tribunal_problem,
+        validate=problem,
     )
 
 

@@ -25,16 +25,25 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .. import book_value, catalog, sourcebooks
+from ..arts import ARTS
 from ..covenants import (
     MAJOR_POVERTY,
     MINOR_POVERTY,
     boon_hook_problems,
     covenant_boon_points,
     covenant_hook_points,
+    prestige_shortfall,
     unlinked_resource_hooks,
 )
-from ..models import INCOME_TYPE_DEFAULTS, Covenant, Laboratory, Saga
-from . import base_covenants, covenfolk, enchantment, realms
+from ..models import (
+    INCOME_TYPE_DEFAULTS,
+    Covenant,
+    Inhabitant,
+    Laboratory,
+    Saga,
+    character_age,
+)
+from . import base_covenants, covenfolk, creation_access, enchantment, realms
 from . import library as book_rules
 from . import options as rule_options
 from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
@@ -344,14 +353,19 @@ def remaining(saga: Saga, covenant: Covenant) -> int:
 
 def leftover_note(saga: Saga, covenant: Covenant) -> str:
     """What moving to In Play does with unspent Build Points, for the
-    confirmation ("" with none left)."""
+    confirmation ("" with none left). The books don't say what becomes of
+    them (a covenant otherwise starts with no significant cash, Covenants
+    p. 56): turning them into money is the app's rule, at the rate
+    Covenants gives for buying a starting reserve."""
     left = remaining(saga, covenant)
     if not left:
         return ""
     return (
         f"It has {left} Build Points left. Moving it to In Play turns them into "
         f"{left * MONEY_POUNDS} Mythic Pounds, added to its Wealth (one Build "
-        f"Point buys {MONEY_POUNDS} pounds)."
+        f"Point buys {MONEY_POUNDS} pounds). The books don't say what unspent "
+        "points become: this is the app's rule (go back and spend them to "
+        "keep the covenant poor)."
     )
 
 
@@ -416,14 +430,22 @@ AURA_SOURCE = "Covenants, Chapter Two: Boons and Hooks, Faerie Aura"
 AURA_BOON = "covbh_boon_minor_aura"
 MOST_AURA_BOONS, MOST_AURA = 7, 10
 AURA_BOON_SOURCE = "Ars Magica Definitive Edition, Minor Boons, Aura, p. 183"
+PRESTIGE_SOURCE = (
+    "Ars Magica Definitive Edition, Boons, Prestige, pp. 183 (Minor) and 184 (Major)"
+)
 MINOR_WEALTH = "covbh_boon_minor_wealth"
 MAJOR_WEALTH = "covbh_boon_major_wealth"
 SECONDARY_INCOME = "covbh_boon_minor_secondary_income"
 FAERIE_AURA = "covbh_hook_minor_faerie_aura"
-#: The starting income assumes six magi; with the optional rule a source
-#: gains or loses this much a year per magus over or under six.
+#: The starting income assumes six magi; with the optional rule the
+#: covenant's income gains or loses 15 pounds a year per magus over or
+#: under six, only 6 when its one source is Lesser (DE p. 189). The
+#: adjustment is made once, to the covenant's main source: a Secondary
+#: Income Boon's extra source isn't adjusted, and two Lesser sources share
+#: the 15 between them (the book doesn't say; this is the app's reading).
 INCOME_MAGI = 6
-INCOME_PER_MAGUS: dict[str, int] = {"Typical": 15, "Lesser": 6}
+INCOME_PER_MAGUS = 15
+LONE_LESSER_PER_MAGUS = 6
 
 
 @dataclass(frozen=True)
@@ -435,11 +457,20 @@ class IncomeChoice:
     sources: tuple[tuple[str, int], ...]
 
 
-def _income_amount(saga: Saga, covenant: Covenant, kind: str) -> int:
-    amount = INCOME_TYPE_DEFAULTS[kind]
-    if kind in INCOME_PER_MAGUS and rule_options.is_on(saga, "income_per_magus"):
-        amount += INCOME_PER_MAGUS[kind] * (_magi(saga, covenant) - INCOME_MAGI)
-    return max(amount, 0)
+def magi_adjustment(
+    saga: Saga, covenant: Covenant, *, lone_lesser: bool = False
+) -> int:
+    """What the optional rule adds to (or takes from) the covenant's
+    starting income for its magi over (under) six: 15 a magus, 6 for a
+    covenant with one Lesser source; 0 with the rule off."""
+    if not rule_options.is_on(saga, "income_per_magus"):
+        return 0
+    per = LONE_LESSER_PER_MAGUS if lone_lesser else INCOME_PER_MAGUS
+    return per * (_magi(saga, covenant) - INCOME_MAGI)
+
+
+def _income_amount(kind: str, adjustment: int = 0) -> int:
+    return max(INCOME_TYPE_DEFAULTS[kind] + adjustment, 0)
 
 
 def income_choices(saga: Saga, covenant: Covenant) -> list[IncomeChoice]:
@@ -447,33 +478,44 @@ def income_choices(saga: Saga, covenant: Covenant) -> list[IncomeChoice]:
     Lesser for the sake of diversity; a Wealth Boon upgrades the Typical
     source (Greater, Legendary), each Secondary Income Boon adds another
     Typical source, and a Poverty Hook allows one Lesser source (Minor) or
-    none (Major)."""
+    none (Major). The optional per-magus adjustment goes to the main
+    source (magi_adjustment)."""
     held = {bh.vf_id for bh in covenant.boons_hooks}
     if MAJOR_POVERTY in held:
         return [IncomeChoice("No source of income (Poverty, Major Hook)", ())]
-    lesser = ("Lesser", _income_amount(saga, covenant, "Lesser"))
     if MINOR_POVERTY in held:
-        return [IncomeChoice(f"One Lesser source ({lesser[1]} pounds)", (lesser,))]
-    typical = ("Typical", _income_amount(saga, covenant, "Typical"))
+        lone = (
+            "Lesser",
+            _income_amount("Lesser", magi_adjustment(saga, covenant, lone_lesser=True)),
+        )
+        return [IncomeChoice(f"One Lesser source ({lone[1]} pounds)", (lone,))]
+    adjustment = magi_adjustment(saga, covenant)
     extra = sum(bh.vf_id == SECONDARY_INCOME for bh in covenant.boons_hooks)
-    also = (typical,) * extra
-    plus = f", plus {extra} Typical ({typical[1]} pounds)" if extra else ""
+    secondary = ("Typical", _income_amount("Typical"))
+    also = (secondary,) * extra
+    plus = f", plus {extra} Typical ({secondary[1]} pounds)" if extra else ""
     if MAJOR_WEALTH in held or MINOR_WEALTH in held:
         kind = "Legendary" if MAJOR_WEALTH in held else "Greater"
-        amount = _income_amount(saga, covenant, kind)
+        amount = _income_amount(kind, adjustment)
         return [
             IncomeChoice(
                 f"One {kind} source ({amount} pounds){plus}", ((kind, amount), *also)
             )
         ]
+    typical = ("Typical", _income_amount("Typical", adjustment))
+    # Two Lesser sources share the adjustment, the first taking any odd pound.
+    first = ("Lesser", _income_amount("Lesser", adjustment - adjustment // 2))
+    second = ("Lesser", _income_amount("Lesser", adjustment // 2))
+    each = (
+        f"{first[1]} pounds each"
+        if first[1] == second[1]
+        else f"{first[1]} and {second[1]} pounds"
+    )
     return [
         IncomeChoice(
             f"One Typical source ({typical[1]} pounds){plus}", (typical, *also)
         ),
-        IncomeChoice(
-            f"Two Lesser sources ({lesser[1]} pounds each){plus}",
-            (lesser, lesser, *also),
-        ),
+        IncomeChoice(f"Two Lesser sources ({each}){plus}", (first, second, *also)),
     ]
 
 
@@ -583,6 +625,7 @@ def build_point_checks(saga: Saga, record: Record) -> list[Check]:
             "; ".join(over_limits) or "all within",
         )
     )
+    found += specialist_checks(saga, covenant)
     if power.max_level is not None:
         over = over_level(saga, covenant, power.max_level)
         found.append(
@@ -591,6 +634,81 @@ def build_point_checks(saga: Saga, record: Record) -> list[Check]:
                 f"No text or effect above level {power.max_level}",
                 not over,
                 ", ".join(over) or "none above",
+            )
+        )
+    return found
+
+
+SPECIALIST_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Specialists, pp. "
+    "180-181; age caps, p. 48"
+)
+
+
+def bought_people(covenant: Covenant) -> list[Inhabitant]:
+    """The covenant's specialists bought with Build Points (still there)."""
+    return [
+        p
+        for p in covenant.inhabitants
+        if p.specialist_score is not None and not p.departed
+    ]
+
+
+def specialist_over_cap(saga: Saga, person: Inhabitant) -> str:
+    """What of a bought specialist's scores is over the age cap for new
+    characters ("" when none): the Ability they serve with and, for a
+    teacher, Teaching. Without a Year Born they are taken as under 30."""
+    age = character_age(person.year_born, saga.current_year)
+    cap = creation_access.ability_cap(age)
+    scores = [(person.linked_ability or "its Ability", person.specialist_score or 0)]
+    if person.teacher_teaching is not None:
+        scores.append(("Teaching", person.teacher_teaching))
+    over = [f"{name} {score}" for name, score in scores if score > cap]
+    if not over:
+        return ""
+    at = f"age {age}" if age is not None else "no Year Born, so under 30"
+    return f"{person.name}: {', '.join(over)} over {cap} ({at})"
+
+
+def teacher_gifted(saga: Saga, person: Inhabitant) -> bool:
+    """Whether a bought teacher would need The Gift: one who teaches a
+    Hermetic Art, or is tied to a sheet with The Gift."""
+    if person.teacher_teaching is None:
+        return False
+    if person.linked_ability in ARTS:
+        return True
+    character = saga.character(person.character_id)
+    return character is not None and any(
+        vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws
+    )
+
+
+def specialist_checks(saga: Saga, covenant: Covenant) -> list[Check]:
+    """Bought specialists' scores within the age cap, and no Gifted
+    teacher (DE pp. 180-181)."""
+    bought = bought_people(covenant)
+    if not bought:
+        return []
+    over = [line for p in bought if (line := specialist_over_cap(saga, p))]
+    found = [
+        _c(
+            "build_points",
+            "Bought specialists' scores within the age cap",
+            not over,
+            "; ".join(over) or "all within",
+            SPECIALIST_SOURCE,
+        )
+    ]
+    teachers = [p for p in bought if p.teacher_teaching is not None]
+    if teachers:
+        gifted = [p.name for p in teachers if teacher_gifted(saga, p)]
+        found.append(
+            _c(
+                "build_points",
+                "Bought teachers have no Gift (so teach no Hermetic Art)",
+                not gifted,
+                ", ".join(gifted) or f"{len(teachers)} teacher(s), none Gifted",
+                SPECIALIST_SOURCE,
             )
         )
     return found
@@ -708,6 +826,18 @@ def boon_hook_checks(saga: Saga, record: Record) -> list[Check]:
                 False,
                 ", ".join(unlinked) + " (e on its row, once the source exists)",
                 BOON_SOURCE,
+                advice=True,
+            )
+        )
+    missing = prestige_shortfall(covenant, boons_catalog)
+    if missing is not None:
+        found.append(
+            _c(
+                "boons_hooks",
+                "Each Prestige Boon has its Reputation (Minor 3, Major 9)",
+                not missing,
+                "; ".join(missing) or "on the Reputations list",
+                PRESTIGE_SOURCE,
                 advice=True,
             )
         )

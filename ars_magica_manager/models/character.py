@@ -193,11 +193,14 @@ BRUISE_SEVERITIES: tuple[str, ...] = (
 @dataclass
 class WoundState:
     """What one wound carries beyond its severity: where it came from, and
-    the +3s its stable Recovery rolls have built up (DE p. 405)."""
+    the +3s its stable Recovery rolls have built up (DE p. 405), and the
+    Chirurgy of whoever gave it first aid (Art & Academe's medicine; 0:
+    none)."""
 
     severity: str = "light"
     source: str = "injury"
     bonus: int = 0
+    first_aid: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> WoundState:
@@ -212,7 +215,8 @@ class Disease:
     the time between its Recovery rolls ("week", "month", "season",
     "lifelong"); whether it gives a Disease Penalty (False: Flaws instead),
     the +3s its stable rolls have built up and, in a Crisis, the
-    cumulative -1 of its rolls so far."""
+    cumulative -1 of its rolls so far, and a successful surgery's +3 to
+    its next Recovery roll."""
 
     name: str
     level: str = "Minor"
@@ -225,6 +229,7 @@ class Disease:
     bonus: int = 0
     crisis: int = 0
     notes: str = ""
+    surgery: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Disease:
@@ -287,6 +292,9 @@ class Wounds:
         )
 
 
+MERCURIAN_MAGIC = "vf_mercurian_magic"
+
+
 @dataclass
 class HermeticBackground:
     """Magus-only Hermetic lineage block. `house` is a house_catalog.json id;
@@ -301,6 +309,12 @@ class HermeticBackground:
     #: Blank/unset means unknown, same convention as Background.year_born.
     age_of_apprenticeship: int | None = None
     wizards_sigil: str = ""
+    #: House Tremere: the magus holds his own voting sigil (won from his
+    #: parens in certamen); otherwise a parens holds it (rules.sigils).
+    holds_own_sigil: bool = False
+    #: A Mercurian magus has learned Road Magic's Ranges and Targets, a
+    #: season's teaching with no further Virtue (TMRE p. 116).
+    road_magic: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HermeticBackground:
@@ -798,6 +812,12 @@ class Character:
             for t in d.get("reputations", [])
         ]
         d["hermetic"] = HermeticBackground.from_dict(d.get("hermetic") or {})
+        if "road_magic" not in (data.get("hermetic") or {}) and any(
+            vf.get("vf_id") == MERCURIAN_MAGIC for vf in data.get("virtues_flaws", [])
+        ):
+            # Saves from before Road Magic needed learning: a Mercurian
+            # magus keeps the Road Ranges and Targets he had.
+            d["hermetic"].road_magic = True
         d["invented_spells"] = [
             Spell.from_dict(sp) for sp in d.get("invented_spells", [])
         ]

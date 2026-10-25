@@ -11,8 +11,9 @@ from typing import Any
 from .commands import Command, Confirm, Form, Refuse
 from .form_spec import DialogField, pairs
 from .markup import escape
-from .models import Character, DiaryEntry, Saga
-from .rules import disease, harm, living, recovery
+from .models import Character, DiaryEntry, Disease, Saga, character_age
+from .rules import chirurgy, disease, harm, living, recovery
+from .seasons.character_effects import age_character
 
 HARM_TITLE = "Take Harm"
 RECOVERY_TITLE = "Recovery Roll"
@@ -316,17 +317,118 @@ def take_harm_form(
     )
 
 
-def recovery_fields(character: Character) -> list[DialogField]:
-    return [
+FIRST_AID = "first aid"
+SURGERY = "surgery"
+ROLLS = ("all", "worst")
+LOCATION_OPTIONS = [
+    ("The head", "head"),
+    ("The torso", "torso"),
+    ("A limb", "limbs"),
+]
+
+
+def _rolling(values: dict[str, Any]) -> bool:
+    return (values.get("which") or "all") in ROLLS
+
+
+def _needs_chirurgeon(values: dict[str, Any]) -> bool:
+    return not _rolling(values) or bool(values.get("intervene"))
+
+
+def recovery_fields(
+    character: Character, saga: Saga | None = None
+) -> list[DialogField]:
+    """What Recovery Roll asks: which rolls, and with Art & Academe's
+    medicine, first aid, surgery on a disease, or a chirurgeon standing by
+    to intervene when a roll fails."""
+    academe = saga is not None and chirurgy.on(saga)
+    which = list(pairs(ROLLS))
+    chirurgeons: list[Character] = []
+    if academe and saga is not None:
+        if any(s.source == recovery.INJURY for s in recovery.states(character.wounds)):
+            which.append((FIRST_AID, FIRST_AID))
+        if character.wounds.diseases:
+            which.append((SURGERY, SURGERY))
+        chirurgeons = chirurgy.chirurgeons(saga, character)
+    fields = [
         DialogField(
             "which",
             "Roll for",
             "select",
             "all",
-            options=pairs(("all", "worst")),
+            options=which,
             hint="all: one roll for each wound now; worst: the roll for doing "
-            "more than the wounds allow (it can only hold or worsen).",
+            "more than the wounds allow (it can only hold or worsen)."
+            + (
+                " first aid: within a day of the wounds (A&A p. 61); surgery: "
+                "on a disease (A&A p. 61)."
+                if len(which) > len(ROLLS)
+                else ""
+            ),
         ),
+    ]
+    if academe:
+        fields += [
+            DialogField(
+                "intervene",
+                "Surgical intervention when a roll fails",
+                "check",
+                False,
+                hint="Surgery against 9: it holds the wound, but leaves a lasting "
+                "consequence (A&A p. 62).",
+                show_if=_rolling,
+            ),
+            DialogField(
+                "location",
+                "Where the wounds are",
+                "select",
+                "torso",
+                options=LOCATION_OPTIONS,
+                show_if=lambda values: (
+                    _rolling(values) and bool(values.get("intervene"))
+                ),
+            ),
+            DialogField(
+                "chirurgeon",
+                "Chirurgeon",
+                "select",
+                next(
+                    (c.id for c in chirurgeons if c.id != character.id),
+                    chirurgeons[0].id if chirurgeons else None,
+                ),
+                options=[
+                    (f"{escape(c.name)} (Chirurgy {chirurgy.chirurgy(c)})", c.id)
+                    for c in chirurgeons
+                ],
+                allow_blank=True,
+                placeholder="(no one with Chirurgy)",
+                show_if=_needs_chirurgeon,
+            ),
+            DialogField(
+                "disease",
+                "Disease",
+                "select",
+                character.wounds.diseases[0].name
+                if character.wounds.diseases
+                else None,
+                options=pairs(d.name for d in character.wounds.diseases),
+                show_if=lambda values: values.get("which") == SURGERY,
+            ),
+            DialogField(
+                "procedure",
+                "Procedure",
+                "select",
+                chirurgy.PROCEDURES[0][0],
+                options=[
+                    (f"{name} (Ease Factor {ease}, {_wound_label(wound)})", name)
+                    for name, ease, wound in chirurgy.PROCEDURES
+                ],
+                hint="Phlebotomy, cautery and cupping help only a disease of "
+                "Severity 5 or less (A&A p. 61).",
+                show_if=lambda values: values.get("which") == SURGERY,
+            ),
+        ]
+    fields.append(
         DialogField(
             "aid",
             "Magical aid to every Recovery roll",
@@ -334,15 +436,75 @@ def recovery_fields(character: Character) -> list[DialogField]:
             character.wounds.aid,
             hint="A Zenodochium's +9, Purification of the Festering Wound; kept "
             "until changed.",
-        ),
-    ]
+        )
+    )
+    return fields
+
+
+def _wound_label(wound: str) -> str:
+    return "a Fatigue level" if wound == "fatigue" else f"a {wound.title()} Wound"
+
+
+def _record(character: Character, name: str) -> Disease | None:
+    return next((d for d in character.wounds.diseases if d.name == name), None)
+
+
+def recovery_problem(
+    saga: Saga, character: Character, values: dict[str, Any]
+) -> str | None:
+    """Why the Recovery Roll can't go ahead as chosen, or None."""
+    if not chirurgy.on(saga) or not _needs_chirurgeon(values):
+        return None
+    if saga.character(values.get("chirurgeon")) is None:
+        return "Choose a chirurgeon."
+    if values.get("which") == SURGERY:
+        record = _record(character, str(values.get("disease") or ""))
+        if record is None:
+            return "Choose the disease."
+        return chirurgy.surgery_problem(record, str(values.get("procedure") or ""))
+    return None
+
+
+def _first_aid(
+    saga: Saga, character: Character, chirurgeon: Character, dice: random.Random
+) -> list[str]:
+    found = recovery.states(character.wounds)
+    worst = found[-1].severity if found else ""
+    ease = recovery.TABLE[worst][2] if worst in recovery.TABLE else None
+    rolled, lines = chirurgy.first_aid(saga, character, chirurgeon, ease, found, dice)
+    recovery.set_states(character.wounds, found)
+    if rolled is not None and rolled.botched:
+        lines += recovery.roll_now(saga, character, dice, worst_only=True)
+    return lines
+
+
+def _surgery(
+    saga: Saga,
+    character: Character,
+    chirurgeon: Character,
+    values: dict[str, Any],
+    dice: random.Random,
+) -> list[str]:
+    record = _record(character, str(values.get("disease") or ""))
+    if record is None:
+        return []
+    done = chirurgy.surgery(
+        saga, character, chirurgeon, record, str(values.get("procedure")), dice
+    )
+    if done.wound == "fatigue":
+        harm.lose_fatigue(character, long_term=False)
+    else:
+        recovery.add_wound(character.wounds, done.wound)
+    return done.lines
 
 
 def recovery_form(
     saga: Saga, character: Character | None, rng: random.Random | None = None
 ) -> Command:
     """More's Recovery Roll: a roll for each wound now, or for the worst one
-    when the character does more than the wounds allow."""
+    when the character does more than the wounds allow; with Art & Academe's
+    medicine, first aid or surgery instead, or a surgical intervention on
+    each roll that fails."""
     if character is None:
         return Refuse(RECOVERY_TITLE, "Choose a character first.")
     if not recovery.states(character.wounds) and not character.wounds.diseases:
@@ -350,23 +512,45 @@ def recovery_form(
     dice = rng or random.Random()
 
     def apply(values: dict[str, Any]) -> Command:
-        before = copy.deepcopy(character.wounds)
-        character.wounds.aid = int(values.get("aid") or 0)
-        lines = recovery.roll_now(
-            saga, character, dice, worst_only=values.get("which") == "worst"
-        ) + disease.roll_now(
-            saga, character, living.living_conditions(saga, character), dice
+        before = (
+            copy.deepcopy(character.wounds),
+            character.fatigue_level,
+            character.long_term_fatigue,
         )
-        after, character.wounds = character.wounds, before
+        character.wounds.aid = int(values.get("aid") or 0)
+        which = values.get("which") or "all"
+        chirurgeon = saga.character(values.get("chirurgeon"))
+        surgeon = None
+        if which == FIRST_AID and chirurgeon is not None:
+            title = "First aid"
+            lines = _first_aid(saga, character, chirurgeon, dice)
+        elif which == SURGERY and chirurgeon is not None:
+            title = "Surgery"
+            lines = _surgery(saga, character, chirurgeon, values, dice)
+        else:
+            title = "Recovery rolls"
+            if values.get("intervene") and chirurgeon is not None:
+                surgeon = chirurgy.Surgeon(
+                    chirurgeon, str(values.get("location") or "torso")
+                )
+            lines = recovery.roll_now(
+                saga, character, dice, worst_only=which == "worst", surgeon=surgeon
+            ) + disease.roll_now(
+                saga, character, living.living_conditions(saga, character), dice
+            )
+        after = (character.wounds, character.fatigue_level, character.long_term_fatigue)
+        character.wounds, character.fatigue_level, character.long_term_fatigue = before
 
         def keep() -> None:
-            character.wounds = after
+            character.wounds, character.fatigue_level, character.long_term_fatigue = (
+                after
+            )
+            kept = list(lines)
+            if surgeon is not None:
+                kept += _consequences(saga, character, surgeon, dice)
             character.diary.append(
                 DiaryEntry(
-                    saga.current_year,
-                    saga.current_season,
-                    "Recovery rolls",
-                    "\n".join(lines),
+                    saga.current_year, saga.current_season, title, "\n".join(kept)
                 )
             )
 
@@ -379,15 +563,32 @@ def recovery_form(
 
     return Form(
         f"{RECOVERY_TITLE}: {escape(character.name)}",
-        lambda: recovery_fields(character),
+        lambda: recovery_fields(character, saga),
         apply,
+        validate=lambda values: recovery_problem(saga, character, values),
         save_label="Roll",
         help_id="recovery-roll",
     )
 
 
-def season_text(character: Character, played: recovery.Season) -> str:
-    """A season's recovery for the Diary."""
-    if played.died:
-        return f"{character.name} died of their wounds.\n" + "\n".join(played.rolls)
-    return "\n".join(played.rolls)
+def _consequences(
+    saga: Saga, character: Character, surgeon: chirurgy.Surgeon, dice: random.Random
+) -> list[str]:
+    """What the surgical interventions leave, once kept: the Aging Points
+    due and the immediate Aging rolls (each written in the Diary)."""
+    lines = chirurgy.aging_due_lines(
+        character,
+        surgeon.consequences,
+        f"{saga.current_season} {saga.current_year}",
+    )
+    rolls = chirurgy.aging_rolls(surgeon.consequences)
+    age = character_age(character.background.year_born, saga.current_year)
+    for _ in range(rolls):
+        if character.wounds.dead:
+            break
+        if age is None:
+            lines.append("An Aging roll is due: the character has no birth year.")
+            continue
+        age_character(saga, character, age, dice, label="Aging (surgery)")
+        lines.append("An Aging roll for the surgery, in the Diary.")
+    return lines

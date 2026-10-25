@@ -15,8 +15,8 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 - **The Tribunal**: 130 magi, from "approximately 130"; the next meeting is spring 1221, at Walpurgis Night (Ch. 1, Ch. 3).
 - **Peripheral Code years**: the book dates rulings Anno Aegis; the pack gives them in AD, 139 years earlier. "A season at Durenmar" and "Ranks" have no year, as the book gives none (Ch. 3).
 - **Diary years for loosely dated events**: Terschelling turns to piracy 1200 ("about twenty years ago"), Oculus settles in Lübeck 1160 ("around 1160"), Durenmar's lean years 1100 ("about 1100 to 1150"), the God of Truth is preached 1210 ("over the last ten years"), and five things that happened "lately" 1220: the Lusatia chapter, the theft of the Nebelkönigin, Caprea blinding Carolus's familiar, Fengheld's new masters and journeymen, and the Gorge ban running out (Ch. 2, Ch. 3, Appendix B).
-- **Proxy sigils**: every master holds one retired magus's sigil and every archmage two, as the book's rule says, though it names only a few. Stentorius also votes Triamore's two Tremere sigils and Severicus votes Hygwald Veritas's. Covenant totals: Durenmar 12, Fengheld 12, Crintera 7, Irencillia 5, Roznov 4, Dankmar 3, Oculus 3, Triamore 2, Heorot 1 (Ch. 3, Ch. 8, Ch. 10).
-- **Gild members the book points to**: the Elder Gild has Irencillia and Dankmar, whose magi are "virtually all" members; the Apple Gild has Oculus Septentrionalis, Triamore and Fengheld, its "substantial support" (Ch. 3).
+- **Proxy sigils**: every master holds one retired magus's sigil and every archmage two, as the book's rule says, though it names only a few. Daria la Gris and Sicero of Triamore have their sigils cast by Stentorius, Hygwald Veritas his by Severicus (pp. 84, 109). Covenant totals: Durenmar 12, Fengheld 12, Crintera 7, Irencillia 5, Roznov 4, Dankmar 3, Oculus 3, Triamore 2, Heorot 1 (Ch. 3, Ch. 8, Ch. 10).
+- **Gild members the book points to**: the gilds' magi are those the book places: each gild's leaders, the magi with a (Gild) Trained Virtue, and every named magus of Irencillia and Dankmar in the Elder Gild ("virtually all", p. 28); the rest are left to the storyguide. The Apple Gild has Oculus Septentrionalis, Triamore and Fengheld, its "substantial support" (Ch. 3).
 - **Town populations**: Cologne 20,000 ("more than 20,000"), Frankfurt 10,000 ("about 10,000"), Prague 3,000 ("about three thousand") (Ch. 5, Ch. 8, Ch. 10).
 
 ### Judgement calls
@@ -27,7 +27,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 - **Triamore**: a Summer covenant, the app's default, as the book gives no season (Ch. 5).
 - **Crintera**: at the surface of the Stubnitz regio, so it shows an aura of 0. The book doesn't say which of the regio's four levels (auras 1, 3, 5 and 8) is its home (Ch. 9).
 - **Other gild members**: the book names each gild's leader and the Houses it draws, not its covenants. The pack puts Durenmar and Fengheld in the Oak Gild, Crintera in the Hawthorn Gild, Fengheld in the Linden Gild, and no covenant in the Ash Gild; Roznov and Waddenzee are in none (Ch. 3).
-- **Gild dues**: the book gives none, so each gild's Dues read "None: a member owes the gild their vote and reasonable aid" (Ch. 3).
+- **Gild dues**: the book gives none (a member owes the gild their vote and reasonable aid), so each gild has its agenda instead (Ch. 3).
 - **The docket**: the nine quarrels the book leaves open in 1220 are cases for 1221, each filed in spring 1220. The pack chose whether each is a charge or a motion and who brings it, and only Heorot's application and the Lusatia border dispute have had notice given (Ch. 3, Ch. 7 to 10, Ch. 12).
 - **Lords' titles**: the app's highest title is Duke, so the Emperor, King Valdemar II, King Otakar, the Landgrave of Thuringia and the Margraves of Brandenburg and Meissen are Dukes; the Count Palatine and the Princes of Mecklenburg are Counts; the Lords of Cleves are Barons.
 - **Lords' wealth**: the book rates none. Wealthy: the Emperor, the Welfs, the Count Palatine, Brabant, the Zähringens, the Hohenstaufens, Valdemar II, the Landgrave of Thuringia, Otakar and Henry the Rich of Nassau. Poor: the Princes of Mecklenburg. Every other lord is Average.
@@ -43,6 +43,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 
 - **Durenmar**: founded 767, when the Order was founded there; Bonisagus had settled there about 754 (Ch. 3, Ch. 6).
 - **Dates where the book gives two**, the pack takes: Merinita's disappearance 792, not 785 (Ch. 10, Appendix B); Dankmar founded 1052, not 1053 (Ch. 6, Appendix B); Rethra abolished 1207, not 1202 (Ch. 3, Ch. 9); Oakdell founded 934, not 931 (Ch. 3, Ch. 12); Grand Silesia destroyed 1008, not 1009 (Ch. 3, Appendix B). Each Diary entry gives the other date too. Ulm's freeing keeps both 1155 and 1164 in the text (Ch. 6).
+- **King Fir**: Might 60. The book prints 90 (p. 50); Atlas Games' published errata reduce it to 60.
 - **Felicia**: Dorana's apprentice is spelled as her stat block's heading has it; the book also writes Felecia (Ch. 3, Ch. 8).
 - **The Oak Gild**: Murion leads it. Only her raven Kolkrabus believes Stentorius has usurped her place, and Stentorius's record says so (Ch. 3, Ch. 8).
 - **Rhine customs over the core rules**: the pack keeps the book's year of notice for a case (the core rules say a season) and its proxy sigils (the core rules give each magus one vote): a master holds one retired magus's sigil and an archmage two, by their rank Virtues. A meeting that would fall in a Grand Tribunal's year (every 33 years, 1228 and 1261) is held a year earlier, so the meeting after 1221 is in 1227 (pp. 140, 143). Journeyman, Master and Archmage each stand for Hermetic Magus (p. 20). Its rule that the higher rank wins a dispute certamen would settle is recorded as a ruling only (Ch. 3).
@@ -169,6 +170,10 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 - **Seasons**: Michael's Tabula Spring, a young covenant (Ch. 7); Moero's Garden Autumn, living on dwindling means (Ch. 8).
 - **The Sibyl**: Magic Might 25, the book's "25+" at its floor (Ch. 9).
 - **Creatures with only a Might score** (the Gorgona, Talos, Klymene, Belisarius of the Serpent Column, Akgah and the Druj of Xerxes's Hill): no stat block is made up; their powers are in the notes, from the book's text.
+- **Boons and Hooks**: every covenant's are taken from its "Boon:" and "Hook:" lines where the catalog has the name; a name the catalog has at both tiers (Regio, Aura, Poverty) is taken only when the line says which, and otherwise stays as words.
+- **Patrons**: each patron named in a Powerful or Local Ally line is recorded for the Ceremony of Propitiation, with no Might (the book gives few; enter them at the first ceremony).
+- **Apparent ages**: the book's are on every magus it gives one for (pp. 63-102).
+- **Shared laboratories**: Ingasia's Forge of Hephaistos (+8 Rego, +5 enchanting, p. 86) and Epidauros' Hall of Repose (+6 to a Longevity Ritual made there, p. 63) are shared laboratories with those Specializations and no other Characteristics.
 
 ### Judgement calls
 <!-- help: pack-assumptions-theban-judgement -->
@@ -223,7 +228,9 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise:
 - **Roughly dated history** takes a round year, and each entry quotes the book: the skirmish at the Shipka Pass 780, Tremere in the Roman dragon's shape 810, Akilina finds Tablinum's site 850, the zenodochia devised 1005, Coloman's law on witches 1100, the Fectores and Laniena founded 1120, the Roman dragon last seen 1165, the Teutonic Order founded 1190, Simium's letters to Polyaigos 1210.
 - **Laniena**: two aediles, Lexander and Murat the Younger, by the rule that an oppidum with equal numbers of cives and others has two (Ch. 2, Ch. 3).
 - **The Tribunal**: 82 magi, the sum of the oppida's counts; 42 are named.
-- **The Transylvania Chronicle**: two Book records, quality 6 tractatus on Order of Hermes Lore and on the Code, from the book's rule that every fifty years of it counts as one of each; its nine sets and 90 volumes are in the notes (Ch. 4).
+- **The Transylvania Chronicle**: nine tractatus on Order of Hermes Lore and nine on Code of Hermes, one each for every fifty years from 767 to 1216, Quality 6, bound as one encyclopedia (p. 63); the exhibit hall's three copies are kept as one (Ch. 4).
+- **Tablinum's seven laboratories** carry the book's Characteristics and Specializations as entered values, with their Virtues and Flaws named in words (pp. 62-63), so nothing counts twice.
+- **The Zenodochia** hold the seven enchanted items (the Hippocratic Staff's two effects, CrCo 34 each) and the three Casting Tablets (pp. 98-99).
 
 ### Judgement calls
 <!-- help: pack-assumptions-transylvania-judgement -->

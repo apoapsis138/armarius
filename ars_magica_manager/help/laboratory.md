@@ -748,12 +748,47 @@ the line under the list says what opened each:
 - **A spell they know** that uses a breakthrough's parameter: a Minor
   Breakthrough is learned with the Lab Text of a spell that uses it.
 
+The Mysteries open these (Ars Magica Definitive Edition pp. 236-240; Houses
+of Hermes: Mystery Cults p. 28; The Mysteries Revised Edition p. 116):
+
+- **Faerie Magic**: Range **Road** (as Voice); Durations **Bargain** (the
+  Duration of what it does once the bargain is broken, + 3 magnitudes, for at
+  most a Year; listed as Bargain (Mom) to Bargain (Year)), **Fire** (as Moon;
+  it is cast on a fire, so the spell must be Ignem or Imaginem, and the level
+  line warns otherwise), **Until (Condition)** and **Year + 1** (as Year, both
+  Rituals); Target **Bloodline** (as Structure). DE pp. 237-238.
+- **Spell Timing**: Held and While (Condition) (as Concentration),
+  Midday/Midnight and Not (Condition) (as Sun), Season (as Moon, a Ritual),
+  and **If (Condition)**: the Duration of what it does when triggered + 4
+  magnitudes, always a Ritual, listed as If (Mom) to If (Year). DE pp.
+  239-240.
+- **Sensory Magic**: Targets Flavor, Texture, Scent, Sound and **Spectacle**
+  (as Individual, Part, Group, Structure and Boundary). Spectacle isn't said
+  to need a Ritual, so it doesn't here. HoH:MC p. 28.
+- **Road Magic**: Range and Target Road and Road Network. A magus with
+  Mercurian Magic has them once he has learned Road Magic, a season's
+  teaching with no further Virtue: tick **Has learned Road Magic** in his
+  Hermetic Background (a starting magus whose parens has Mercurian Magic
+  may have it; every Mercurian magus of an older save has it ticked). Any
+  other magus needs the Road Magic Virtue, Initiated. TMRE p. 116.
+
+Only a magus with Faerie Magic, Spell Timing or Sensory Magic may learn a
+spell with that Mystery's parameters: inventing it, learning it from a Lab
+Text or being taught it says so and stops (DE pp. 236, 239; HoH:MC p. 28).
+
 **Size / extra magnitudes** holds the magnitudes added for size and for
 requisites that add an effect. Under the level, a line says what the Target
 reaches if they are all spent on size: each multiplies it by ten, from the
 Form's base Individual (a pony-sized animal for Animal, a cubic pace of
 stone for Terram, and so on); size doesn't matter to Intellego spells, a
 Circle, or a Mentem or Vim Individual (DE pp. 310-311, 546).
+
+**Recurs each** (a magus with Spell Timing only) makes the spell recur:
+each minute +5 magnitudes, each day +4, each month +3, each year +2, each
+decade +1. Pick the row at or more often than the spell really recurs (every
+ten minutes is +5). A recurring spell must be a Ritual, and a spell that
+needs a Ritual for what it does (not for its level or parameters) can't
+recur (DE p. 240).
 
 A spell started from one with a parameter the magus can't use takes the
 standard one it costs as. With the optional rule **Any spell parameter**
@@ -819,6 +854,15 @@ adds it once, so when two bonuses apply, add the second Philosophiae to
 Shape & material yourself. They count for enchanting only: a talisman's
 casting bonuses use the plain bonus. Empowering a familiar's bond adds +5 when it shares the
 binding's Technique or Form, +10 when it shares both.
+
+With **Faerie Magic**, experimenting or inventing a spell with the
+Mystery's own parameters uses its score in place of Magic Theory when it
+is the higher (the Lab Total shows the difference), and rolls that many
+more botch dice: two of their botches make one, each 0 is a Warping Point,
+and they never call for a Twilight check. With faerie vis only, a season may
+use (Magic Theory + Faerie Magic) x 2 pawns; the app can't tell faerie vis
+from other vis, so the vis-limit message gives that figure for you to judge
+(DE p. 238).
 
 Some laboratory Flaws stop work or halve it: **Missing Ingredients**
 halves totals with its Art (and second Form); **Missing Equipment** and

@@ -23,12 +23,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from ...models import InstilledEffect
 from ...models.world import FULL
 from ..builder import joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
-    from ...models import Neighbour, Tribunal
+    from ...models import Covenant, Neighbour, Tribunal
     from ..builder import Builder
     from . import Transylvania
 
@@ -543,8 +544,9 @@ def _zenodochia(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> N
     )
     notes = paragraphs(
         "Items. The Hippocratic Staff, of twisted hyacinth round an amber, "
-        "hangs above the hall's inner lintel and gives everyone inside +9 "
-        "to Recovery rolls (CrCo 34, constant). The Bowl of the Honest "
+        "hangs above the hall's inner lintel with two constant effects, "
+        "+9 to Wound Recovery rolls and +9 to Disease Recovery rolls for "
+        "everyone inside (CrCo 34 each). The Bowl of the Honest "
         "Traveler, a beggar's bowl on a shelf, inclines all inside to "
         "honesty (ReMe 29, no Penetration): a would-be thief must fail a "
         "Personality roll against 12 to steal. The Chest of Good Food "
@@ -591,6 +593,175 @@ def _zenodochia(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> N
         season="Summer",
     )
     transylvania.covenants["zenodochia"] = zenodochia
+    _zenodochium_items(b, zenodochia)
+
+
+def _constant(
+    name: str,
+    arts: str,
+    level: int,
+    target: str,
+    description: str,
+    *,
+    penetration: int = 0,
+    requisites: str = "",
+) -> InstilledEffect:
+    """A constant effect as Against the Dark prints it: Touch and Sun,
+    two uses a day with an environmental trigger (DE p. 258); `level` is
+    the effect's own, before those and the Penetration are added."""
+    technique, form = ART_PAIRS[arts]
+    return InstilledEffect(
+        id="",
+        name=name,
+        technique=technique,
+        form=form,
+        requisites=requisites,
+        range="Touch",
+        duration="Sun",
+        target=target,
+        level=level,
+        description=description,
+        uses_per_day="2",
+        environmental_trigger=True,
+        trigger="sunrise and sunset",
+        penetration=penetration,
+    )
+
+
+ART_PAIRS = {
+    "CrAn": ("Creo", "Animal"),
+    "ReAn": ("Rego", "Animal"),
+    "CrCo": ("Creo", "Corpus"),
+    "ReMe": ("Rego", "Mentem"),
+    "ReVi": ("Rego", "Vim"),
+}
+
+
+def _zenodochium_items(b: Builder, zenodochia: Covenant) -> None:
+    """The enchanted items and Casting Tablets every zenodochium keeps
+    (Against the Dark pp. 98-99), held by the network as one covenant."""
+    items = (
+        (
+            "The Hippocratic Staff",
+            "A staff of twisted hyacinth round an amber, hung above the "
+            "hall's inner lintel. A magus must lower his Parma to benefit.",
+            [
+                _constant(
+                    "Wound Recovery Effect",
+                    "CrCo",
+                    30,
+                    "Structure",
+                    "+9 to Wound Recovery rolls within.",
+                ),
+                _constant(
+                    "Disease Recovery Effect",
+                    "CrCo",
+                    30,
+                    "Structure",
+                    "+9 to Disease Recovery rolls within.",
+                ),
+            ],
+        ),
+        (
+            "The Chest of Good Food",
+            "A chest carved with feasting; holds a man-month of food, "
+            "which those who eat from it should replace.",
+            [
+                _constant(
+                    "Preserve the Food",
+                    "CrAn",
+                    20,
+                    "Group",
+                    "Food of animal or plant stuff in the chest does not spoil.",
+                    requisites="He",
+                )
+            ],
+        ),
+        (
+            "The Vermin Ward",
+            "A carved statue of a mutilated rat.",
+            [
+                _constant(
+                    "Ward Against Vermin",
+                    "ReAn",
+                    20,
+                    "Structure",
+                    "Animals without Magic Resistance cannot enter.",
+                )
+            ],
+        ),
+        (
+            "The Ankh of Moving Forward",
+            "A silver ankh. Worn, it heals every wound and Wound Penalty, "
+            "but only holds the healing back: they return when it comes off.",
+            [
+                _constant(
+                    "Suspend the Wounds",
+                    "CrCo",
+                    50,
+                    "Individual",
+                    "All wounds healed and no Wound Penalties while worn.",
+                    penetration=12,
+                )
+            ],
+        ),
+        (
+            "The Bowl of the Honest Traveler",
+            "A pauper's bowl on a shelf; a would-be thief resists with a "
+            "Personality roll against 12. No Penetration, so Magic "
+            "Resistance ignores it.",
+            [
+                _constant(
+                    "Incline to Honesty",
+                    "ReMe",
+                    25,
+                    "Structure",
+                    "Everyone within is inclined to scrupulous honesty.",
+                )
+            ],
+        ),
+        (
+            "Ward Against the Infernal Agents of Disease",
+            "An enchanted cross over the entrance.",
+            [
+                _constant(
+                    "Bar the Demons",
+                    "ReVi",
+                    25,
+                    "Structure",
+                    "Demons of Might 10 or less cannot enter.",
+                    penetration=12,
+                )
+            ],
+        ),
+        (
+            "Ward Against Mad Dreams",
+            "An iron horseshoe over the entrance.",
+            [
+                _constant(
+                    "Bar the Faeries",
+                    "ReVi",
+                    25,
+                    "Structure",
+                    "Faeries of Might 10 or less cannot enter.",
+                    penetration=12,
+                )
+            ],
+        ),
+    )
+    for name, description, effects in items:
+        b.device(zenodochia, name, description=description, effects=effects)
+    for spell_id, words in (
+        (
+            "spell_arms_of_the_salamander",
+            "Restores the most recently lost limb; 6 pawns of vis.",
+        ),
+        ("spell_the_rite_of_healing", "Heals all Wounds of a group; a rook of vis."),
+        ("spell_universal_poultice", "Cures a group of every disease; a rook of vis."),
+    ):
+        b.tablet(
+            zenodochia, spell_id, description=f"{words} (Against the Dark pp. 98-99)"
+        )
 
 
 def _leviathan(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> None:

@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from . import catalog, creation
+from . import creation
 from .arts import ARTS
 from .forms.worksheet import Record
 from .markup import escape
@@ -83,10 +83,13 @@ def _later_life(saga: Saga, character: Character) -> list[Meter]:
             later.later_life_budget(saga, character),
         )
     ]
-    by_id = catalog.load_virtue_flaw_catalog_by_id()
     for vf_id, rule in access.virtue_xp(character).items():
         meters.append(
-            Meter(by_id[vf_id].name, cx.spent(character, "virtue", note=vf_id), rule.xp)
+            Meter(
+                access.pool_name(vf_id),
+                cx.spent(character, "virtue", note=vf_id),
+                rule.xp,
+            )
         )
     return meters
 

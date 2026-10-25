@@ -144,9 +144,6 @@ from ..widgets import (
     sheet_focus_chain,
 )
 
-#: Covenant Reputations run from -3 to +3.
-_COVENANT_REPUTATION_RANGE = (-3, 3)
-
 
 def _creating(record: Character | Covenant | Laboratory) -> str:
     """The navigation tree's mark on a record still In Creation."""
@@ -227,8 +224,6 @@ _COVENANT_REPUTATIONS = _TraitList(
     "e.g. Feared by the local nobility",
     "_selected_reputation",
     prompt_options={
-        "min_score": _COVENANT_REPUTATION_RANGE[0],
-        "max_score": _COVENANT_REPUTATION_RANGE[1],
         "include_known": True,
         "include_reach": True,
     },

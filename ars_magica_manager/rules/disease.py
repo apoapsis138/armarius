@@ -51,6 +51,7 @@ from .lab import ability_score
 SOURCE = "Art & Academe, Chapter Three: Medicine, Disease, pp. 45-51"
 PROGNOSIS_SOURCE = "Art & Academe, Diagnosis and Prognosis, p. 58"
 MODIFIERS_SOURCE = "Art & Academe, Recovery Modifiers, p. 54"
+SURGERY_SOURCE = "Art & Academe, Chapter Three: Medicine, Surgery, p. 61"
 OPTION = "art_academe_medicine"
 
 LEVELS: tuple[str, ...] = ("Minor", "Serious", "Major", "Critical")
@@ -418,6 +419,8 @@ def recovery_total(
         lines.append(Line("Stable rolls", amount=disease.bonus, source=SOURCE))
     if disease.crisis:
         lines.append(Line("In Crisis", amount=-disease.crisis, source=SOURCE))
+    if disease.surgery:
+        lines.append(Line("Surgery", amount=disease.surgery, source=SURGERY_SOURCE))
     return Breakdown(total=sum(line.amount or 0 for line in lines), lines=lines)
 
 
@@ -442,6 +445,7 @@ def roll(
     if disease.interval == LIFELONG:
         return f"{disease.name} is lifelong: no Recovery roll."
     base = int(recovery_total(saga, character, disease, living).total)
+    disease.surgery = 0  # it helps the next roll only
     die = dice.stress_die(rng, botch_dice(character), saga=saga)
     total = base + (0 if die.botched else die.value)
     stable = disease.stable if disease.stable is not None else 0

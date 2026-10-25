@@ -18,7 +18,7 @@ from ..builder import paragraphs
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
-    from ...models import Character, Covenant
+    from ...models import Character, Covenant, Saga, Tribunal
     from . import Theban
 
 NAME = "The Theban Tribunal"
@@ -981,6 +981,45 @@ HOLDINGS: dict[str, tuple[int, int, int, str]] = {
     ),
 }
 
+#: The apparent ages the book prints beside each magus's age (The
+#: Sundered Eagle pp. 63-102); Anatolia's magi have theirs in
+#: anatolia.APPARENT_AGES.
+APPARENT_AGES: dict[str, int] = {
+    "xenias": 107,  # p. 63
+    "galla": 52,  # p. 64
+    "destasia": 37,  # p. 65
+    "boustaphan": 64,
+    "monorchis": 42,  # p. 66
+    "allectores": 33,
+    "ausculator": 88,  # p. 68
+    "aiakia": 53,
+    "tisiphon": 51,
+    "celaenea": 44,
+    "anna": 62,  # p. 70
+    "theocharista": 63,
+    "nereida": 22,
+    "nonna": 31,
+    "lucian": 65,  # p. 83
+    "leukothea": 25,
+    "delfini": 43,
+    "krum": 40,
+    "memnos": 58,  # p. 85
+    "verecunda": 38,
+    "aeliophanes": 19,
+    "stouritus": 93,  # p. 87
+    "eudoxia": 42,
+    "gemma": 35,
+    "bobila": 35,
+    "maria_laskarina": 58,  # p. 89
+    "gerasimos": 44,
+    "ioannes": 41,  # p. 90
+    "caterina": 53,
+    "petros": 11,  # p. 100
+    "wilrich": 43,
+    "artoud": 71,  # p. 102
+    "theoderet": 43,
+}
+
 #: Magi from other Tribunals, who are metoikoi.
 METOIKOI: dict[str, str] = {
     "caterina": "Gauntleted in the Roman Tribunal; newly arrived from Venice.",
@@ -1023,6 +1062,67 @@ def _magus(theban: Theban, slug: str, role: str) -> Character | None:
     if found is None:
         MISSING.append(f"{slug} ({role})")
     return found
+
+
+def _patrons(saga: Saga, tribunal: Tribunal) -> None:
+    """Each covenant's patron, named in its Powerful or Local Ally line
+    (The Sundered Eagle p. 30), for the Ceremony of Propitiation."""
+    patrons = package.data(tribunal, package.KEY).setdefault("patrons", {})
+    for covenant in saga.covenants:
+        for line in covenant.what_matters.splitlines():
+            for ally in ("Boon: Powerful Ally (", "Boon: Local Ally ("):
+                if line.startswith(ally) and "patron" in line:
+                    name = line.removeprefix(ally).split(",")[0].strip()
+                    patrons[covenant.id] = {"name": name}
+
+
+def _apparent_ages(theban: Theban) -> None:
+    for slug, apparent in APPARENT_AGES.items():
+        magus = theban.magi.get(slug)
+        if magus is None:
+            MISSING.append(f"{slug} (apparent age)")
+        else:
+            magus.aging.apparent_age = apparent
+
+
+#: The covenants' shared laboratories the book gives bonuses for: the
+#: covenant, its name, its Specializations and what the book says.
+SHARED_LABS: tuple[tuple[str, str, dict[str, int], str], ...] = (
+    (
+        "Ingasia",
+        "The Forge of Hephaistos",
+        {"Rego": 8, "Items": 5},
+        "The Sundered Eagle p. 86: the ancient forge at the volcano's heart, "
+        "made a Hermetic laboratory shared by the magi, +8 to Rego and +5 "
+        "to making enchanted items",
+    ),
+    (
+        "Epidauros",
+        "The Hall of Repose (Enkoimeteria)",
+        {"Longevity Rituals": 6},
+        "The Sundered Eagle p. 63: the shared laboratory specialized in "
+        "longevity and healing; +6 to a Longevity Ritual's Lab Total for "
+        "one who sleeps here, who also gains +12 to the next Wound "
+        "Recovery roll",
+    ),
+)
+
+
+def _shared_labs(theban: Theban) -> None:
+    for covenant_name, name, specializations, says in SHARED_LABS:
+        try:
+            covenant = theban.covenant_named(covenant_name)
+        except KeyError:
+            MISSING.append(f"covenant {covenant_name} (laboratory)")
+            continue
+        theban.b.laboratory(
+            covenant,
+            name,
+            characteristics={},
+            specializations=specializations,
+            source=says.split(":")[0],
+            rooms={"As the book describes it": says},
+        )
 
 
 def finish(theban: Theban) -> None:
@@ -1069,6 +1169,7 @@ def finish(theban: Theban) -> None:
         ),
     ]
 
+    _patrons(saga, tribunal)
     phylai = package.phylai(tribunal)
     phylai.clear()
     covenants: dict[str, Covenant] = {}
@@ -1078,6 +1179,8 @@ def finish(theban: Theban) -> None:
             phylai[covenant.id] = phyle
             covenants[slug] = covenant
 
+    _apparent_ages(theban)
+    _shared_labs(theban)
     entries = package.magi(tribunal)
     entries.clear()
     seen: set[str] = set()

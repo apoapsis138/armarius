@@ -186,14 +186,14 @@
   2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Gilds  8 Diary  9
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Rhine: Gilds. Its covenants band together in gilds, with dues.
+  Rhine: Gilds. Its magi band together in gilds, political factions across House and
+  covenant, one gild to a magus.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Peripheral Code (1)
 
         Ruling           Year  Says                           Case
       ○ Gild membership  1214  Any covenant may join a gild.
-
 
 
 
@@ -275,8 +275,8 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Gilds (1)
 
-        Gild      Members         Dues
-      ○ Hermetic  Keep, Fengheld  2 pawns a year
+        Gild      Led by  Members                 Agenda
+      ○ Hermetic          most of Keep, Fengheld  2 pawns a year
 
 
 

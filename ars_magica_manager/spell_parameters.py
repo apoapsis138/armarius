@@ -90,7 +90,10 @@ def _known_spells(saga: Saga, magus: Character):
 def opened(saga: Saga, magus: Character) -> list[Opened]:
     """Every extra parameter open to the magus, the first reason found for
     each."""
-    vf_ids = {vf.vf_id for vf in magus.virtues_flaws}
+    vf_ids = spell_levels.opening_ids(
+        {vf.vf_id for vf in magus.virtues_flaws},
+        learned_road=magus.hermetic.road_magic,
+    )
     found: dict[tuple[str, str], Opened] = {}
 
     def add(parameter: ExtraParameter, why: str) -> None:

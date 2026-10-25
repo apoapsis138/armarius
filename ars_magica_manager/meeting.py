@@ -174,6 +174,11 @@ def _silent(saga: Saga, tribunal: Tribunal, magus: Character) -> bool:
     magus's sigil still casts that vote, as his covenant's proxy."""
     if magus.id in officers(tribunal):
         return True
+    package = tribunal_packages.of(tribunal)
+    if package.casts_no_vote is not None and package.casts_no_vote(
+        saga, tribunal, magus
+    ):
+        return True
     if magus.hermetic.house != REDCAP_HOUSE:
         return False
     return not tribunal_packages.of(tribunal).redcaps_vote or not gifted(magus)

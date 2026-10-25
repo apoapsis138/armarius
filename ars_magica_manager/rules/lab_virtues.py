@@ -20,8 +20,14 @@ lab_seasons adds their lines to the Lab Total in `_with_options`):
 - Magical Memory: the magus's own Lab Texts serve wherever they are kept.
   (Having once followed another's text isn't recorded, so that part is
   the troupe's.)
-- Hubris (Houses of Hermes: Mystery Cults): its score added to a talisman's
-  instilling and to binding a familiar.
+- Hubris (DE p. 241): its score added to a talisman's instilling and to
+  binding a familiar.
+- Faerie Magic (DE p. 238): its score stands in for Magic Theory when
+  experimenting or designing a spell with the Mystery's own parameters
+  (when it is the higher), adding that many botch dice, each two only a
+  botch's worth, each 0 a Warping Point but no Twilight check; and with
+  faerie vis only, the season's vis limit is (Magic Theory + Faerie Magic)
+  x 2. The app doesn't know which vis is faerie, so that limit is a note.
 - Waster of Vis: a quarter of the pawns used are wasted, so a third more
   are needed; the wasted pawns count toward the season's limit.
 - Hermetic Alchemy (The Mysteries): Shape and Material bonuses (up to
@@ -36,6 +42,7 @@ from __future__ import annotations
 
 from ..arts import FORMS
 from ..models import Book, Character, SeasonPlan
+from . import hybrid_magic as hybrid
 from .breakdown import Line
 from .rounding import round_down, round_up
 
@@ -43,6 +50,10 @@ SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 59
 MYSTERIES_SOURCE = "The Mysteries Revised Edition, Chapter 6: Hermetic Astrology"
 ALCHEMY_SOURCE = "The Mysteries Revised Edition, Chapter 3: Hermetic Alchemy"
 HUBRIS_SOURCE = "Ars Magica Definitive Edition, House Verditius, Hubris, pp. 241-242"
+FAERIE_MAGIC_SOURCE = (
+    "Ars Magica Definitive Edition, Merinita, the Faerie Magic Ability, p. 238"
+)
+FAERIE_MAGIC = "vf_faerie_magic"
 
 POTENT = ("vf_potent_magic", "vf_potent_magic_house")
 POTENT_MAJOR = ("vf_potent_magic_major", "vf_potent_magic_sign_planet")
@@ -126,12 +137,18 @@ def option_lines(
     talisman: bool,
     binding: bool,
     horoscope_score: int,
+    faerie_work: bool = False,
 ) -> tuple[list[Line], list[str]]:
     """The flat lines the plan's options and the magus's Virtues add to the
     Lab Total, and notes; `horoscope_score` is Intelligence + the
-    horoscope's Ability."""
+    horoscope's Ability. `faerie_work`: the season experiments or designs a
+    spell with Faerie Magic's parameters (faerie_lines)."""
     lines: list[Line] = []
     notes: list[str] = []
+    if faerie_work:
+        more, why = faerie_lines(magus)
+        lines += more
+        notes += why
     if plan.potent and potent_bonus(magus):
         lines.append(Line("Potent Magic", amount=potent_bonus(magus), source=SOURCE))
     if plan.cycle_bonus and has(magus, CYCLIC_POSITIVE):
@@ -169,6 +186,59 @@ def option_lines(
                 f"{horoscope_score} is below {needed}."
             )
     return lines, notes
+
+
+def faerie_magic(magus: Character) -> int:
+    """The magus's Faerie Magic score with its fixed bonus (0 without the
+    Mystery)."""
+    if not has(magus, FAERIE_MAGIC) and not any(
+        a.name == "Faerie Magic" for a in magus.abilities
+    ):
+        return 0
+    return hybrid.ability(magus, "Faerie Magic")
+
+
+def faerie_lines(magus: Character) -> tuple[list[Line], list[str]]:
+    """Faerie Magic in lab work that draws on it: its score in place of
+    Magic Theory when it is the higher, and its extra botch dice (DE p.
+    238)."""
+    score = faerie_magic(magus)
+    if not score:
+        return [], []
+    lines: list[Line] = []
+    theory = hybrid.theory(magus)[1]
+    if score > theory:
+        lines.append(
+            Line(
+                "Faerie Magic in place of Magic Theory",
+                amount=score - theory,
+                source=FAERIE_MAGIC_SOURCE,
+            )
+        )
+    notes = [
+        f"Faerie Magic: {score} more botch dice on this work; two of their "
+        "botches make one, and each 0 is a Warping Point without a Twilight "
+        "check (DE p. 238)."
+    ]
+    return lines, notes
+
+
+def faerie_vis_limit(magus: Character) -> int:
+    """The most faerie vis the magus can use in a season with Faerie Magic:
+    (Magic Theory + Faerie Magic) x 2, when all of it is faerie vis (0
+    without the Mystery)."""
+    score = faerie_magic(magus)
+    if not score:
+        return 0
+    return 2 * (hybrid.theory(magus)[1] + score)
+
+
+def faerie_vis_note(magus: Character) -> str:
+    """The vis limit's note for a magus with Faerie Magic ("" without)."""
+    limit = faerie_vis_limit(magus)
+    if not limit:
+        return ""
+    return f" With Faerie Magic, {limit} if all of it is faerie vis (DE p. 238)."
 
 
 def halving_lines(

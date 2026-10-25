@@ -627,7 +627,10 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(
             FieldsDialog(
                 "Edit Hermetic Background",
-                character_forms.hermetic_fields(character.hermetic),
+                character_forms.hermetic_fields(
+                    character.hermetic,
+                    mercurian=character_forms.is_mercurian(character),
+                ),
             ),
             handle_result,
         )

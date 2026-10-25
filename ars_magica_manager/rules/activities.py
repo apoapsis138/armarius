@@ -71,6 +71,7 @@ from . import (
     lab_stats,
     lab_virtues,
     laboratory_seasons,
+    languages,
     library,
     realms,
     scores,
@@ -1103,11 +1104,16 @@ def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> lis
     language = book.language or "Latin"
     # A character with no Abilities typed (a stat-less NPC) isn't checked.
     typed = bool(character.abilities)
-    if typed and book_seasons.language_score(character, language) < READING_LANGUAGE:
+    # A related language reads at its penalty (Romaic Greek reads
+    # Classical Greek at -2, rules.languages).
+    reads = max(
+        book_seasons.language_score(character, language),
+        languages.understanding_score(character, language),
+    )
+    if typed and reads < READING_LANGUAGE:
         found.append(
             f"Studying {book.name} needs {language} at {READING_LANGUAGE} "
-            f"(DE p. 378); {character.name} has "
-            f"{book_seasons.language_score(character, language)}."
+            f"(DE p. 378); {character.name} has {reads}."
         )
     if typed and ability_level(character, "Artes Liberales") < 1:
         found.append(

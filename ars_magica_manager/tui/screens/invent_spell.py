@@ -86,6 +86,7 @@ _WIDGET_OF: dict[str, str] = {
     **{f"{kind}_name": f"inv-{kind}-name" for kind in KINDS},
     **{f"{kind}_steps": f"inv-{kind}-steps" for kind in KINDS},
     "extra_magnitudes": "inv-extra",
+    "recurring": "inv-recurring",
     "base_effect": "inv-base-effect",
     "lab_text": "inv-lab-text",
     "more_texts": "inv-more-texts",
@@ -531,6 +532,17 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 id="inv-base-effect",
                 compact=True,
             )
+            recurring = next((f for f in self._fields if f.key == "recurring"), None)
+            if recurring is not None:
+                yield Label(" Recurs each")
+                yield Select(
+                    recurring.options,
+                    value=recurring.value or Select.NULL,
+                    prompt=recurring.placeholder,
+                    id="inv-recurring",
+                    compact=True,
+                    tooltip=recurring.hint or None,
+                )
         yield Static("", id="inv-level")
 
     def _compose_lab_texts(self, plan: SeasonPlan | None) -> ComposeResult:
@@ -1264,6 +1276,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.query_one("#inv-base-effect", Input).value = (
             design.base_effect if design else ""
         )
+        for recurs in self.query("#inv-recurring").results(Select):
+            recurs.value = (design.recurring if design else "") or Select.NULL
         if not keep_lab_options:
             self.query_one("#inv-days", Input).value = (
                 str(plan.days_away) if plan else "0"

@@ -15,6 +15,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from .. import catalog
+from ..arts import ARTS
 from ..models import (
     SUPERNATURAL_CATEGORIES,
     AbilityDef,
@@ -144,6 +145,12 @@ class VirtueXp:
     types: tuple[str, ...] = ()
     names: tuple[str, ...] = ()
     prefixes: tuple[str, ...] = ()
+    #: Whether it may buy the Arts too (one xp an xp).
+    arts: bool = False
+    #: The Virtue a second pool of its xp belongs to, when the pool's key
+    #: isn't the Virtue's id; and the pool's name after the Virtue's.
+    virtue: str = ""
+    label: str = ""
 
 
 _SOCIAL = ("Charm", "Etiquette", "Folk Ken", "Guile", "Intrigue", "Leadership")
@@ -156,7 +163,12 @@ _BARDIC = (
     "Magic Lore",
 )
 
-#: The Virtues that give xp at creation (their catalog summaries).
+#: (Gild) Trained's second pool of xp, on the gild's own learning.
+GILD_POOL = "vf_gild_trained:gild"
+
+#: The Virtues that give xp at creation (their catalog summaries), by
+#: the pool's key: the Virtue's id, or another for a Virtue's second
+#: pool (VirtueXp.virtue).
 VIRTUE_XP: dict[str, VirtueXp] = {
     "vf_educated": VirtueXp(50, names=("Dead Language: Latin", "Artes Liberales")),
     "vf_arcane_lore": VirtueXp(50, types=(ARCANE,)),
@@ -287,17 +299,24 @@ VIRTUE_XP: dict[str, VirtueXp] = {
     "vf_forge_companion": VirtueXp(50, prefixes=("Craft: ",)),
     "vf_herbalism": VirtueXp(50, names=("Herbalism", "Profession: Apothecary")),
     # Guardians of the Forests p. 20: 30 xp on Order of Hermes Lore,
-    # Intrigue and Durenmar Lore, and 60 on the gild's General or Arcane
-    # Abilities, Arts and spells; one pool here, with Abilities only.
+    # Intrigue and Durenmar Lore, and 60 more on General or Arcane
+    # Abilities, Arts and spells suited to the gild. Spell levels aren't
+    # bought with pooled xp here, so the 60 go on Abilities and Arts.
     "vf_gild_trained": VirtueXp(
-        90,
-        types=("General", ARCANE),
+        30,
         names=(
             "Organization Lore: Order of Hermes",
             "Intrigue",
             "Durenmar Lore",
             "Organization Lore: Durenmar",
         ),
+    ),
+    GILD_POOL: VirtueXp(
+        60,
+        types=("General", ARCANE),
+        arts=True,
+        virtue="vf_gild_trained",
+        label="the gild's Abilities and Arts",
     ),
     "vf_improved_abilities": VirtueXp(50),
 }
@@ -451,6 +470,8 @@ def learnable_abilities(
 
 
 def virtue_xp_allows(rule: VirtueXp, name: str) -> bool:
+    if name in ARTS:
+        return rule.arts
     if not (rule.types or rule.names or rule.prefixes):
         return True
     return (
@@ -461,8 +482,19 @@ def virtue_xp_allows(rule: VirtueXp, name: str) -> bool:
 
 
 def virtue_xp(character: Character) -> dict[str, VirtueXp]:
-    """The character's Virtues that give xp at creation."""
-    return {vf_id: VIRTUE_XP[vf_id] for vf_id in _ids(character) if vf_id in VIRTUE_XP}
+    """The pools of xp the character's Virtues give at creation, by key."""
+    held = set(_ids(character))
+    return {
+        key: rule for key, rule in VIRTUE_XP.items() if (rule.virtue or key) in held
+    }
+
+
+def pool_name(key: str) -> str:
+    """A pool's name: its Virtue's, and what a second pool is for."""
+    rule = VIRTUE_XP[key]
+    entry = catalog.load_virtue_flaw_catalog_by_id().get(rule.virtue or key)
+    name = entry.name if entry is not None else key
+    return f"{name}: {rule.label}" if rule.label else name
 
 
 def xp_multiplier(character: Character, target: str) -> float:

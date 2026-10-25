@@ -95,7 +95,7 @@ from ..models import (
     TraditionDef,
 )
 from ..rules import activities as season_rules
-from ..rules import enchantment, hybrid_magic, library
+from ..rules import enchantment, hybrid_magic, library, sigils
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
@@ -782,6 +782,9 @@ class CharacterSheet(QWidget):
             lineage: list[QWidget] = [fact_grid(cs.hermetic_facts(c), p)]
             if sigil:
                 lineage.append(_sigil(sigil, p))
+            voting = sigils.sigil_text(saga, c)
+            if voting:
+                lineage.append(TextBlock(escape(voting), p))
             lineage.append(TextBlock(lt.access_text(saga, c), p))
             parts.append(
                 section(

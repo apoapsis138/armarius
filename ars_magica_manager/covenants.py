@@ -100,6 +100,48 @@ def covenant_modifiers(
 
 MINOR_POVERTY = "covbh_hook_minor_poverty"
 MAJOR_POVERTY = "covbh_hook_major_poverty"
+#: The Unknown Hook as its own Major entry: the same Hook as a Minor Hook
+#: marked Unknown (DE p. 182), so the two shouldn't both be taken.
+UNKNOWN_HOOK = "covbh_hook_major_unknown"
+#: The Prestige Boons and the Reputation each gives the covenant (DE pp.
+#: 183-184), for the group it names.
+PRESTIGE_REPUTATION: dict[str, int] = {
+    "covbh_boon_minor_prestige": 3,
+    "covbh_boon_major_prestige": 9,
+}
+
+
+def prestige_shortfall(
+    covenant: Covenant, catalog_by_id: Mapping[str, CovenantBoonHookDef]
+) -> list[str] | None:
+    """The Prestige Boons whose Reputation isn't on the covenant's list,
+    each as "Prestige (Major Boon) - group: a Reputation of 9"; None
+    without a Prestige Boon. Each Boon needs its own good Reputation of at
+    least its score, the highest Boons matched first."""
+    boons = sorted(
+        (bh for bh in covenant.boons_hooks if bh.vf_id in PRESTIGE_REPUTATION),
+        key=lambda bh: -PRESTIGE_REPUTATION[bh.vf_id],
+    )
+    if not boons:
+        return None
+    left = sorted((r.score for r in covenant.reputations if r.score > 0), reverse=True)
+    missing: list[str] = []
+    for bh in boons:
+        need = PRESTIGE_REPUTATION[bh.vf_id]
+        if left and left[0] >= need:
+            left.pop(0)
+            continue
+        definition = catalog_by_id.get(bh.vf_id)
+        name = (
+            f"{definition.name} ({definition.tier} Boon)"
+            if definition is not None
+            else bh.vf_id
+        )
+        detail = bh.params.get(BOON_HOOK_DETAIL)
+        missing.append(
+            f"{name}{f' - {detail}' if detail else ''}: a Reputation of {need}"
+        )
+    return missing
 
 
 def situation_instances(situation: CovenantSituationDef) -> list[VirtueFlawInstance]:
@@ -180,6 +222,19 @@ def boon_hook_problems(
                 seen.add(pair)
                 seen.add((other, vf_id))
                 problems.append(f"{label(vf_id)} can't be taken with {label(other)}.")
+    unknown_entry = held.count(UNKNOWN_HOOK)
+    marked = [
+        label(bh.vf_id)
+        for bh in covenant.boons_hooks
+        if bh.vf_id in catalog_by_id
+        and boon_hook_is_unknown(bh, catalog_by_id[bh.vf_id])
+    ]
+    if unknown_entry and marked:
+        problems.append(
+            f"The Unknown Hook is counted twice: {label(UNKNOWN_HOOK)} and "
+            f"{', '.join(marked)} marked Unknown are the same Hook (a Minor Hook "
+            "chosen to be Unknown counts as Major); keep one."
+        )
     sources = covenant.economics.income_sources
     if MAJOR_POVERTY in held and sources:
         problems.append(

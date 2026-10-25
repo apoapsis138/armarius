@@ -43,6 +43,7 @@ from ..rules import (
     medicine,
     penetration,
     scores,
+    sigils,
     warping,
 )
 from ..rules import aging as aging_rules
@@ -259,9 +260,11 @@ def hermetic_background_right_text(saga: Saga, character: Character) -> str:
     """Hermetic Background's second column: the Wizard's Sigil, and whose
     raw Lab Texts the magus reads."""
     sigil = character.hermetic.wizards_sigil
+    voting = sigils.sigil_text(saga, character)
     return (
         f"Wizard's Sigil: {escape(sigil) or '(not set)'}\n"
-        f"{lt.access_text(saga, character)}"
+        + (f"{escape(voting)}\n" if voting else "")
+        + lt.access_text(saga, character)
     )
 
 

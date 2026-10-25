@@ -15,13 +15,16 @@ what was done."""
 
 from __future__ import annotations
 
+import random
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from . import meeting as core
 from . import tribunals, world
 from .form_spec import DialogField
 from .markup import escape
-from .models import Character, Meeting, Saga, Tribunal
+from .models import Case, Character, Meeting, Saga, TreasuryEntry, Tribunal
+from .sheets import tribunal as tribunal_sheet
 from .tribunal_packages import data
 from .tribunal_packages.theban import (
     KEY,
@@ -44,6 +47,23 @@ OSTRACISM_YEARS = 7
 
 #: The office the sortition fills, "Arche (Ionian)".
 ARCHE = "Arche"
+
+#: Why a drawn magus is set aside: refusing to stand costs a shard (The
+#: Sundered Eagle p. 32).
+REFUSED = "refused"
+
+#: The three boards of magistrates, three archai each; the rest of the
+#: archai form the Treasury Council (The Sundered Eagle pp. 27-28, 35).
+BOARDS: tuple[str, ...] = ("Judicial Board", "Legislative Board", "Conciliatory Board")
+BOARD_SEATS = 3
+TREASURY_COUNCIL = "Treasury Council"
+#: The Treasury Council's duties: one tamias by lot, four gathering vis
+#: and Gifted children (one from each phyle where they can), the rest
+#: tutors (p. 28).
+TAMIAS_DUTY = "Treasury Council: tamias (treasurer)"
+COLLECTOR_DUTY = "Treasury Council: gathers vis and Gifted children"
+TUTOR_DUTY = "Treasury Council: tutor of the Gifted children"
+COLLECTORS = 4
 
 
 def _record(meeting: Meeting) -> dict[str, Any]:
@@ -611,13 +631,85 @@ def sortition_pool(
     ]
 
 
+def boards_served(tribunal: Tribunal) -> dict[str, list[str]]:
+    """The boards each magus has sat on, by character id: no arche sits
+    on the same board twice (The Sundered Eagle p. 27)."""
+    found = data(tribunal, KEY).setdefault("boards_served", {})
+    if not isinstance(found, dict):
+        raise ValueError(f"The boards served should be a mapping, not {found!r}.")
+    return found
+
+
+def assign_boards(
+    archai_ids: list[str],
+    served: Mapping[str, Sequence[str]],
+    phyle_of: Mapping[str, str],
+    dice: random.Random,
+) -> tuple[dict[str, str], dict[str, int]]:
+    """Each new arche's duty, and the board seats left for Redcaps.
+
+    Those who have been archai before are placed first, each on a board
+    he has not sat on, by lot where there is a choice; then the rest by
+    lot until each board has three; the remaining archai form the
+    Treasury Council, where one is drawn as tamias, four gather vis and
+    Gifted children (one from each phyle where possible) and the rest
+    are tutors (The Sundered Eagle pp. 27-28, 35)."""
+    seats = dict.fromkeys(BOARDS, BOARD_SEATS)
+    duties: dict[str, str] = {}
+    veterans = [i for i in archai_ids if served.get(i)]
+    newcomers = [i for i in archai_ids if not served.get(i)]
+    dice.shuffle(veterans)
+    dice.shuffle(newcomers)
+    for ident in veterans + newcomers:
+        open_boards = [b for b in BOARDS if seats[b] and b not in served.get(ident, ())]
+        if open_boards:
+            board = dice.choice(open_boards)
+            seats[board] -= 1
+            duties[ident] = board
+    treasury = [i for i in archai_ids if i not in duties]
+    dice.shuffle(treasury)
+    if treasury:
+        duties[treasury.pop(0)] = TAMIAS_DUTY
+    phylai_seen: set[str] = set()
+    collectors: list[str] = []
+    for ident in list(treasury):
+        phyle = phyle_of.get(ident, "")
+        if len(collectors) < COLLECTORS and phyle not in phylai_seen:
+            phylai_seen.add(phyle)
+            collectors.append(ident)
+    for ident in treasury:
+        if len(collectors) < COLLECTORS and ident not in collectors:
+            collectors.append(ident)
+    for ident in treasury:
+        duties[ident] = COLLECTOR_DUTY if ident in collectors else TUTOR_DUTY
+    return duties, {b: n for b, n in seats.items() if n}
+
+
+def board_members(tribunal: Tribunal) -> dict[str, list[str]]:
+    """The archai on each board and the Treasury Council, as the
+    sortition assigned them."""
+    found: dict[str, list[str]] = {b: [] for b in (*BOARDS, TREASURY_COUNCIL)}
+    for office in archai(tribunal):
+        duty = office.get("duties", "")
+        holder = office.get("holder_id")
+        if not is_arche(office) or not holder:
+            continue
+        if duty in BOARDS:
+            found[duty].append(holder)
+        elif duty.startswith(TREASURY_COUNCIL):
+            found[TREASURY_COUNCIL].append(holder)
+    return found
+
+
 class Sortition(core.Step):
     """The new archai drawn by lot, four from each phyle, the principal
     phyle first, each serving until the next meeting. The draw is made
     once and kept, with one name more from each phyle, so the
     storyguide may set one drawn magus aside and the next drawn takes
-    the seat. A phyle with too few politai leaves seats for the
-    logothete to fill with Redcaps."""
+    the seat; one who refused to stand is given a shard. A phyle with too
+    few politai leaves seats for the logothete to fill with Redcaps. The
+    archai are then assigned to the boards and the Treasury Council, and
+    the tamias drawn (assign_boards)."""
 
     def _order(self, tribunal: Tribunal, meeting: Meeting) -> list[str]:
         principal = (_record(meeting).get("assembly") or {}).get(
@@ -691,6 +783,20 @@ class Sortition(core.Step):
                 hint="One magus drawn may be set aside; the next name drawn "
                 "from the same phyle takes the seat.",
             ),
+            DialogField(
+                "why",
+                "Why set aside",
+                "select",
+                (_record(meeting).get("sortition") or {}).get("why", REFUSED),
+                options=[
+                    ("Refused to stand: a shard", REFUSED),
+                    ("Some other cause: no shard", "other"),
+                ],
+                show_if=lambda values: bool(values.get("set_aside")),
+                hint="A polites eligible for the list who refuses consent is "
+                "given a shard (The Sundered Eagle p. 32); one unable to "
+                "attend stays on the list.",
+            ),
             core._note_field(meeting, self.key),
         ]
         return found
@@ -711,27 +817,87 @@ class Sortition(core.Step):
                 return "No one is left in the phyle to take the seat."
         return ""
 
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
+        held = _record(meeting).get("sortition") or {}
+        if held.get("shard_to"):
+            _adjust(tribunal, held["shard_to"], "shards", -1)
+        served = boards_served(tribunal)
+        for ident, board in (held.get("boards_added") or {}).items():
+            past = served.get(ident, [])
+            if board in past:
+                past.remove(board)
+            if not past:
+                served.pop(ident, None)
+
+    def _duties(
+        self,
+        tribunal: Tribunal,
+        meeting: Meeting,
+        seated: dict[str, list[str]],
+    ) -> dict[str, Any]:
+        """The boards drawn for the seated archai, drawn once for a set
+        of archai and kept, so holding the step again gives the same."""
+        record = _record(meeting)
+        ids = sorted(i for names in seated.values() for i in names)
+        kept = record.get("boards_draw") or {}
+        if kept.get("for") != ids:
+            phyle_of = {i: phyle for phyle, names in seated.items() for i in names}
+            duties, redcaps = assign_boards(
+                [i for phyle in seated for i in seated[phyle]],
+                boards_served(tribunal),
+                phyle_of,
+                core.rng(),
+            )
+            kept = {"for": ids, "duties": duties, "redcap_seats": redcaps}
+            record["boards_draw"] = kept
+        return kept
+
     def apply(
         self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
     ):
+        self._undo(tribunal, meeting)
         draw = self._draw(saga, tribunal, meeting)
-        seated = self._seated(draw, values.get("set_aside"))
+        set_aside = values.get("set_aside")
+        seated = self._seated(draw, set_aside)
         ends = core._next(tribunal, meeting)
+        drawn = self._duties(tribunal, meeting, seated)
+        duties: dict[str, str] = drawn["duties"]
         archai(tribunal)[:] = [o for o in archai(tribunal) if not is_arche(o)]
+        tamias = None
         for phyle in self._order(tribunal, meeting):
             for ident in seated.get(phyle, []):
+                duty = duties.get(ident, "")
+                if duty == TAMIAS_DUTY:
+                    tamias = ident
                 archai(tribunal).append(
                     {
                         "office": f"{ARCHE} ({phyle})",
                         "holder_id": ident,
                         "term_ends": ends,
-                        "duties": "",
+                        "duties": duty,
                     }
                 )
-        _record(meeting)["sortition"] = {
-            "set_aside": values.get("set_aside"),
+        if any(o.get("office", "").casefold() == "tamias" for o in archai(tribunal)):
+            _office(tribunal, "Tamias").update(holder_id=tamias, term_ends=ends)
+        served = boards_served(tribunal)
+        added: dict[str, str] = {}
+        for ident, duty in duties.items():
+            if duty in BOARDS:
+                served.setdefault(ident, []).append(duty)
+                added[ident] = duty
+        held: dict[str, Any] = {
+            "set_aside": set_aside,
+            "why": values.get("why") or REFUSED,
             "seated": seated,
+            "boards_added": added,
+            "redcap_seats": drawn.get("redcap_seats", {}),
         }
+        if set_aside and held["why"] == REFUSED:
+            entry = entry_of(tribunal, set_aside, create=True)
+            if entry is not None and not is_metoikos(entry):
+                _adjust(tribunal, set_aside, "shards", 1)
+                held["shard_to"] = set_aside
+        _record(meeting)["sortition"] = held
         core._keep_note(meeting, self.key, values)
 
     def save_label(self):
@@ -751,7 +917,29 @@ class Sortition(core.Step):
         words = "By sortition the new archai were drawn: " + "; ".join(parts) + "."
         aside = saga.character(held.get("set_aside"))
         if aside is not None:
-            words += f" {aside.name} was set aside."
+            refused = held.get("why", REFUSED) == REFUSED
+            words += (
+                f" {aside.name} refused to stand and was given a shard."
+                if refused
+                else f" {aside.name} was set aside."
+            )
+        boards = [
+            f"{board}: {_names(saga, ids)}"
+            for board, ids in board_members(tribunal).items()
+            if ids
+        ]
+        if boards:
+            words += " The archai were assigned: " + "; ".join(boards) + "."
+        redcaps = {b: n for b, n in (held.get("redcap_seats") or {}).items() if n}
+        if redcaps:
+            words += (
+                " The logothete fills with Redcaps "
+                + ", ".join(
+                    f"{n} seat{'' if n == 1 else 's'} on the {b}"
+                    for b, n in redcaps.items()
+                )
+                + "."
+            )
         count = sum(len(ids) for ids in held["seated"].values())
         return words, f"{count} archai"
 
@@ -857,10 +1045,357 @@ class ArchonAndPolemarch(core.Step):
         return " and ".join(parts) + f", until {ends}.", "Archon"
 
 
+# -- the execution of sentences --
+
+#: The shards a conviction carries, by the kind of crime, and the tokens
+#: the magus who brought the case earns: one, or three if the guilty is
+#: Marched; a case the People's Court defeats costs its bringer a shard
+#: (The Sundered Eagle pp. 28, 35).
+CRIME_SHARDS = {"high": 3, "low": 1}
+CONVICTION_TOKENS, MARCH_TOKENS = 1, 3
+DEFEATED_SHARDS = 1
+
+CONVICTED, EXONERATED, NO_VERDICT = "convicted", "exonerated", "none"
+
+
+def verdict_of(meeting: Meeting, case: Case) -> str:
+    """How the People's Court found: a charge carried is a conviction, one
+    that failed an exoneration; one settled or not voted, no verdict."""
+    kept = meeting.get("votes", {}).get(case.id)
+    if core.settled(meeting, case) or kept is None:
+        return NO_VERDICT
+    carried = core.passes(core.kept_votes(kept), kept.get("tie", ""))
+    if carried is None:
+        return NO_VERDICT
+    return CONVICTED if carried else EXONERATED
+
+
+def _crime_of(case: Case) -> str:
+    words = f"{case.charge} {case.penalty}".casefold()
+    return "high" if "high crime" in words or "march" in words else "low"
+
+
+def sentence_changes(
+    verdict: str, crime: str, marched: bool, guilty: str | None, accuser: str | None
+) -> list[tuple[str, str, int]]:
+    """What a case's outcome gives, as (character id, "tokens" or
+    "shards", how many)."""
+    found: list[tuple[str, str, int]] = []
+    if verdict == CONVICTED:
+        if guilty:
+            found.append((guilty, "shards", CRIME_SHARDS.get(crime, 1)))
+        if accuser:
+            tokens = MARCH_TOKENS if marched else CONVICTION_TOKENS
+            found.append((accuser, "tokens", tokens))
+    elif verdict == EXONERATED and accuser:
+        found.append((accuser, "shards", DEFEATED_SHARDS))
+    return found
+
+
+class Sentences(core.Step):
+    """The first business of the Council of Archai: each charge the
+    People's Court heard. A conviction carries three shards for a High
+    Crime or one for a Low Crime, beside its punishment, and the magus
+    who brought the case earns a token, three if the guilty is Marched;
+    one whose case was defeated is given a shard. A metoikos holds no
+    tokens or shards, so is given none. No March is held on Delos."""
+
+    def _cases(self, tribunal: Tribunal) -> list[Case]:
+        return [c for c in tribunal_sheet.open_cases(tribunal) if c.kind == "charge"]
+
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
+        for ident, key, by in _record(meeting).pop("sentences", []):
+            _adjust(tribunal, ident, key, -by)
+
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        cases = self._cases(tribunal)
+        if not cases:
+            return [
+                DialogField("none", "", "info", "No charge was heard at this meeting."),
+                core._note_field(meeting, self.key),
+            ]
+        kept = _record(meeting).get("sentence_choices") or {}
+        people = _options(tribunal_magi(saga, tribunal))
+        found: list[DialogField] = []
+        for case in cases:
+            mine = kept.get(case.id) or {}
+            short = escape(
+                case.title if len(case.title) <= 30 else case.title[:29] + "…"
+            )
+            guilty = core._magus_named(saga, case.against)
+            accuser = core._magus_named(saga, case.brought_by)
+            found += [
+                DialogField(
+                    f"verdict_{case.id}",
+                    f"{short}: the verdict",
+                    "select",
+                    mine.get("verdict") or verdict_of(meeting, case),
+                    options=[
+                        ("Convicted", CONVICTED),
+                        ("Exonerated: a shard to the accuser", EXONERATED),
+                        ("No verdict (settled or withdrawn)", NO_VERDICT),
+                    ],
+                ),
+                DialogField(
+                    f"crime_{case.id}",
+                    f"{short}: the crime",
+                    "select",
+                    mine.get("crime") or _crime_of(case),
+                    options=[
+                        ("A High Crime: three shards", "high"),
+                        ("A Low Crime: one shard", "low"),
+                    ],
+                    show_if=lambda v, cid=case.id: v.get(f"verdict_{cid}") == CONVICTED,
+                ),
+                DialogField(
+                    f"marched_{case.id}",
+                    f"{short}: Wizard's March",
+                    "check",
+                    bool(mine.get("marched")),
+                    hint="Held off Delos, where no death may happen (p. 35).",
+                    show_if=lambda v, cid=case.id: v.get(f"verdict_{cid}") == CONVICTED,
+                ),
+                DialogField(
+                    f"guilty_{case.id}",
+                    f"{short}: the accused",
+                    "select",
+                    mine.get("guilty") or (guilty.id if guilty else None),
+                    options=people,
+                    allow_blank=True,
+                    placeholder="(not a Theban magus)",
+                ),
+                DialogField(
+                    f"accuser_{case.id}",
+                    f"{short}: brought by",
+                    "select",
+                    mine.get("accuser") or (accuser.id if accuser else None),
+                    options=people,
+                    allow_blank=True,
+                    placeholder="(not a Theban magus)",
+                ),
+            ]
+        found.append(core._note_field(meeting, self.key))
+        return found
+
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        self._undo(tribunal, meeting)
+        done: list[tuple[str, str, int]] = []
+        choices: dict[str, dict[str, Any]] = {}
+        for case in self._cases(tribunal):
+            mine = {
+                "verdict": values.get(f"verdict_{case.id}") or NO_VERDICT,
+                "crime": values.get(f"crime_{case.id}") or "low",
+                "marched": bool(values.get(f"marched_{case.id}")),
+                "guilty": values.get(f"guilty_{case.id}") or None,
+                "accuser": values.get(f"accuser_{case.id}") or None,
+            }
+            choices[case.id] = mine
+            for ident, key, by in sentence_changes(
+                mine["verdict"],
+                mine["crime"],
+                mine["marched"],
+                mine["guilty"],
+                mine["accuser"],
+            ):
+                entry = entry_of(tribunal, ident, create=True)
+                if entry is None or is_metoikos(entry):
+                    continue
+                _adjust(tribunal, ident, key, by)
+                done.append((ident, key, by))
+        _record(meeting)["sentences"] = done
+        _record(meeting)["sentence_choices"] = choices
+        core._keep_note(meeting, self.key, values)
+
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        return (
+            "Each charge's verdict, from how its vote went.",
+            "A conviction gives the guilty three shards for a High Crime or one "
+            "for a Low, and the accuser a token (three if the guilty is "
+            "Marched); a defeated case gives the accuser a shard.",
+        )
+
+    def save_label(self):
+        return "Sentence"
+
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        done = _record(meeting).get("sentences", [])
+        if not done:
+            return "", ""
+        parts = []
+        for ident, key, by in done:
+            magus = saga.character(ident)
+            if magus is not None:
+                noun = key[:-1] if by == 1 else key
+                parts.append(f"{magus.name} {by} {noun}")
+        return (
+            "With the sentences, the tokens and shards were given: "
+            + ", ".join(parts)
+            + ".",
+            "",
+        )
+
+
+# -- the Ceremony of Propitiation --
+
+#: The archon's Ritual at the lake costs eight pawns of Creo or Vim from
+#: the Tribunal's coffers; a propitiated patron gains 25 xp, less its
+#: Might, but each pawn offered takes two from that penalty (The Sundered
+#: Eagle p. 31).
+CEREMONY_PAWNS = 8
+PATRON_XP = 25
+PAWN_OFFSET = 2
+
+
+def patron_xp(might: int, pawns: int) -> int:
+    """The xp a patron of `might` gains from `pawns` offered: 25 less its
+    Might, the Might's penalty cut by two a pawn (a Might 25 patron
+    offered 10 pawns gains 20)."""
+    if pawns <= 0:
+        return 0
+    return max(0, PATRON_XP - max(0, might - PAWN_OFFSET * pawns))
+
+
+def patrons(tribunal: Tribunal) -> dict[str, dict[str, Any]]:
+    """Each covenant's patron, by covenant id: {"name", "might"}."""
+    found = data(tribunal, KEY).setdefault("patrons", {})
+    if not isinstance(found, dict):
+        raise ValueError(f"The patrons should be a mapping, not {found!r}.")
+    return found
+
+
+class Propitiation(core.Step):
+    """The closing rite at the sacred lake on Delos: the archon casts the
+    ancient Ritual from its Casting Tablet, at eight pawns of Creo or
+    Vim from the Tribunal's coffers, and each covenant offers to its
+    patron, most often vis. Each patron gains 25 xp less its Might, its
+    Might's penalty cut by two for each pawn offered. The League Against
+    Idolatry boycotts the rite."""
+
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
+        held = _record(meeting).pop("propitiation", None)
+        if not held:
+            return
+        ident = held.get("treasury_id")
+        tribunal.treasury[:] = [e for e in tribunal.treasury if e.id != ident]
+
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        held = _record(meeting).get("propitiation") or {}
+        offered = held.get("offerings") or {}
+        found = [
+            DialogField(
+                "art",
+                "The archon's Ritual: 8 pawns of",
+                "select",
+                held.get("art", "Vim"),
+                options=[("Creo", "Creo"), ("Vim", "Vim"), ("Not cast", "")],
+                hint="From the Tribunal's coffers (The Sundered Eagle p. 31).",
+            )
+        ]
+        for covenant in tribunals.covenants_of(saga, tribunal):
+            patron = patrons(tribunal).get(covenant.id) or {}
+            mine = offered.get(covenant.id) or {}
+            name = escape(covenant.name)
+            found += [
+                DialogField(
+                    f"pawns_{covenant.id}",
+                    f"{name}: pawns offered",
+                    "int",
+                    int(mine.get("pawns", 0)),
+                    hint=f"To {escape(patron['name'])}." if patron.get("name") else "",
+                ),
+                DialogField(
+                    f"might_{covenant.id}",
+                    f"{name}: the patron's Might",
+                    "optint",
+                    mine.get("might", patron.get("might")),
+                    show_if=lambda v, cid=covenant.id: bool(v.get(f"pawns_{cid}")),
+                ),
+            ]
+        found.append(core._note_field(meeting, self.key))
+        return found
+
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
+        for key, value in values.items():
+            if key.startswith(("pawns_", "might_")) and (value or 0) < 0:
+                return "Pawns and Might can't be fewer than none."
+        return None
+
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        total = sum(v or 0 for k, v in values.items() if k.startswith("pawns_"))
+        return f"{total} pawns offered at the lake." if total else ""
+
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        self._undo(tribunal, meeting)
+        held: dict[str, Any] = {"art": values.get("art") or "", "offerings": {}}
+        if held["art"]:
+            entry = TreasuryEntry(
+                "vis",
+                -CEREMONY_PAWNS,
+                art=held["art"],
+                who="the archon",
+                note=f"The Ceremony of Propitiation, {_year(saga, meeting)}",
+            )
+            tribunal.treasury.append(entry)
+            held["treasury_id"] = entry.id
+        for covenant in tribunals.covenants_of(saga, tribunal):
+            pawns = int(values.get(f"pawns_{covenant.id}") or 0)
+            might = values.get(f"might_{covenant.id}")
+            if not pawns:
+                continue
+            offering: dict[str, Any] = {"pawns": pawns, "might": might}
+            if might is not None:
+                patrons(tribunal).setdefault(covenant.id, {})["might"] = might
+                offering["xp"] = patron_xp(int(might), pawns)
+            held["offerings"][covenant.id] = offering
+        _record(meeting)["propitiation"] = held
+        core._keep_note(meeting, self.key, values)
+
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        return (
+            "The archon's Ritual, and each covenant's offering to its patron.",
+            "The Ritual's 8 pawns come out of the treasury; each patron's xp "
+            "is 25 less its Might, the Might cut by two a pawn offered.",
+        )
+
+    def save_label(self):
+        return "Offer"
+
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        held = _record(meeting).get("propitiation")
+        if not held:
+            return "", ""
+        parts = []
+        for ident, offering in held.get("offerings", {}).items():
+            covenant = saga.covenant(ident)
+            if covenant is None:
+                continue
+            xp = offering.get("xp")
+            gain = f", its patron gaining {xp} xp" if xp is not None else ""
+            parts.append(f"{covenant.name} {offering['pawns']} pawns{gain}")
+        words = "At the lake on Delos the Ceremony of Propitiation was held"
+        if held.get("art"):
+            words += (
+                f", the archon's Ritual costing {CEREMONY_PAWNS} pawns of {held['art']}"
+            )
+        words += "." + (" Offered: " + "; ".join(parts) + "." if parts else "")
+        total = sum(o["pawns"] for o in held.get("offerings", {}).values())
+        return words, f"{total} pawns offered"
+
+
 core.register_step("assembly", "The Assembly's decrees", Assembly, "opening")
 core.register_step("ostrakismos", "The ostrakismos", Ostrakismos, "opening")
+core.register_step("sentences", "The execution of sentences", Sentences, "end")
 core.register_step("end_of_term", "The outgoing magistrates' tokens", EndOfTerm, "end")
 core.register_step("sortition", "The sortition", Sortition, "end")
 core.register_step(
     "archon_polemarch", "Archon and polemarch", ArchonAndPolemarch, "end"
+)
+core.register_step(
+    "propitiation", "The Ceremony of Propitiation", Propitiation, "closing"
 )

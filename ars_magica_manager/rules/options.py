@@ -78,13 +78,13 @@ OPTIONS: tuple[RuleOption, ...] = (
         key="income_per_magus",
         label="Starting income by number of magi",
         effect=(
-            "A new covenant's starting income assumes six magi: a Typical "
+            "A new covenant's starting income assumes six magi: its main "
             "source gains or loses 15 pounds a year for each magus over or "
-            "under six, a Lesser source 6."
+            "under six, only 6 when its one source is Lesser."
         ),
         source=(
             "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenant "
-            "Finances, Baseline, p. 188"
+            "Finances, Baseline, p. 189"
         ),
     ),
     RuleOption(
@@ -149,9 +149,13 @@ OPTIONS: tuple[RuleOption, ...] = (
             "rolls to recover at its interval, twice a day in a Crisis. A "
             "physician's Medicine helps only when his Prognosis Total beats "
             "the Severity, and the patient's surroundings are Recovery "
-            "Modifiers."
+            "Modifiers. An injury heals with first aid and palliative care "
+            "(half a chirurgeon's Chirurgy each, together at most the "
+            "nurse's Chirurgy) instead of the medic's whole Chirurgy, and a "
+            "chirurgeon can operate on a disease or intervene when a wound "
+            "worsens, at a lasting cost."
         ),
-        source="Art & Academe, Chapter Three: Medicine, pp. 45-58",
+        source="Art & Academe, Chapter Three: Medicine, pp. 45-62",
         book="A&A",
     ),
     RuleOption(

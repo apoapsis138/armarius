@@ -15,7 +15,8 @@ Total is greater (a target with none is always affected).
 The optional Dominion rule gives the faithful 5 x the Dominion aura.
 Virtues and Flaws can take the Form's part away against one Form (Limited
 Magic Resistance), halve Parma's part against one (Flawed Parma Magica), or
-halve the Penetration Total (Weak Magic).
+halve the Penetration Total (Weak Magic). Against a target with Secret
+Name no sympathetic connection works (DE p. 235).
 
 No screen uses aegis_penalty() yet: it is a rule for a screen still to come,
 and only the tests call it.
@@ -69,6 +70,8 @@ SYMPATHIES: tuple[Sympathy, ...] = (
     Sympathy("Symbolic representation", 2),
 )
 MAX_SYMPATHY = 2
+SECRET_NAME = "vf_secret_name"
+SECRET_NAME_SOURCE = "Ars Magica Definitive Edition, Secret Name, p. 235"
 
 
 def penetration_bonus(
@@ -78,8 +81,11 @@ def penetration_bonus(
     sympathies: Sequence[Sympathy] = (),
     mastery: int = 0,
     specialty: bool = False,
+    target: Character | None = None,
 ) -> Breakdown:
-    """(Penetration + specialty + Penetration Mastery) x the multiplier."""
+    """(Penetration + specialty + Penetration Mastery) x the multiplier.
+    The sympathetic connections count for nothing against a `target` with
+    Secret Name."""
     score, bonus = ability_score(magus, "Penetration")
     lines = [Line("Penetration", amount=score + bonus, source=SOURCE)]
     if specialty:
@@ -97,7 +103,18 @@ def penetration_bonus(
                 source=SOURCE,
             )
         )
-        for sympathy in sympathies:
+        nameless = target is not None and any(
+            vf.vf_id == SECRET_NAME for vf in target.virtues_flaws
+        )
+        if nameless and sympathies:
+            lines.append(
+                Line(
+                    "Secret Name: no sympathetic connection works",
+                    amount=0,
+                    source=SECRET_NAME_SOURCE,
+                )
+            )
+        for sympathy in () if nameless else sympathies:
             add = min(sympathy.bonus, MAX_SYMPATHY)
             multiplier += add
             lines.append(Line(sympathy.name, multiplier=add, source=SOURCE))

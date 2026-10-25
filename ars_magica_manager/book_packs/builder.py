@@ -32,14 +32,21 @@ from ..models import (
     CalendarEntry,
     Case,
     Character,
+    Codex,
     Covenant,
     CovenantDiaryEntry,
     Creature,
     CreatureAttack,
     CreaturePower,
+    EnchantedDevice,
+    InstilledEffect,
     KnownSpell,
+    LabCharacteristics,
+    Laboratory,
+    LabSpecialtyEntry,
     Link,
     MasteryAbility,
+    NamedDescription,
     Neighbour,
     Ruling,
     Saga,
@@ -110,6 +117,57 @@ def vf_great(characteristic: str) -> tuple[str, dict[str, str]]:
 
 def vf_ward(ward: str) -> tuple[str, dict[str, str]]:
     return ("Traditional Ward", {"ward": ward})
+
+
+def _top_level_items(text: str) -> list[str]:
+    """`text` split at the semicolons outside parentheses."""
+    items, depth, start = [], 0, 0
+    for at, char in enumerate(text):
+        depth += {"(": 1, ")": -1}.get(char, 0)
+        if char == ";" and depth == 0:
+            items.append(text[start:at].strip())
+            start = at + 1
+    items.append(text[start:].strip())
+    return [item for item in items if item]
+
+
+def boons_hooks_from(what_matters: str) -> list[VirtueFlawInstance]:
+    """The catalog Boons and Hooks a covenant's "Boon: ..." and "Hook:
+    ..." lines name, each with the words in its brackets as its detail.
+    A name the catalog has at both tiers is taken only when the line says
+    which ("Poverty (Minor)"); one it lacks, or leaves in doubt, stays as
+    words only."""
+    by_name: dict[tuple[str, str], list[Any]] = {}
+    for entry in catalog.load_covenant_boon_hook_catalog():
+        by_name.setdefault((entry.type, entry.name.casefold()), []).append(entry)
+    found: list[VirtueFlawInstance] = []
+    for line in what_matters.splitlines():
+        kind, _, rest = line.partition(": ")
+        if kind not in ("Boon", "Hook"):
+            continue
+        for item in _top_level_items(rest):
+            name, _, detail = item.partition(" (")
+            detail = detail.rsplit(")", 1)[0] if detail else ""
+            tier = ""
+            if detail.split(")")[0] in ("Minor", "Major"):
+                tier = detail.split(")")[0]
+                detail = detail.partition("(")[2]
+            entries = by_name.get((kind, name.strip().casefold()), [])
+            if tier:
+                entries = [e for e in entries if e.tier == tier]
+            if len(entries) != 1:
+                continue
+            params = {"detail": detail.strip()} if detail.strip() else {}
+            found.append(VirtueFlawInstance(entries[0].id, params=params))
+    return found
+
+
+def fill_boons_hooks(saga: Saga) -> None:
+    """Each covenant with no Boons or Hooks recorded takes those its
+    "Boon:" and "Hook:" lines name (boons_hooks_from)."""
+    for covenant in saga.covenants:
+        if not covenant.boons_hooks:
+            covenant.boons_hooks = boons_hooks_from(covenant.what_matters)
 
 
 def characteristics(
@@ -223,12 +281,28 @@ class Builder:
         return tribunal
 
     def gild(
-        self, tribunal: Tribunal, name: str, dues: str, members: list[Covenant]
+        self,
+        tribunal: Tribunal,
+        name: str,
+        agenda: str,
+        members: list[Covenant],
+        *,
+        leaders: list[Character],
+        magi: list[Character],
     ) -> dict[str, Any]:
-        """A Rhine gild: its member covenants are the ones whose magi
-        mostly belong to it, as the gilds are kept by covenant."""
-        gild = {"name": name, "members": [c.id for c in members], "dues": dues}
+        """A Rhine gild: its agenda, its leaders, the magi the book says
+        belong to it (each in one gild only), and the covenants most of
+        whose magi belong to it."""
+        gild: dict[str, Any] = {
+            "name": name,
+            "agenda": agenda,
+            "leader_ids": [c.id for c in leaders],
+            "magi": [],
+            "members": [c.id for c in members],
+        }
         rhine_package.gilds(tribunal).append(gild)
+        for magus in magi:
+            rhine_package.join(tribunal, magus.id, gild)
         return gild
 
     def ruling(
@@ -457,6 +531,87 @@ class Builder:
         )
         self.saga.books.append(book)
         return book
+
+    def codex(
+        self, name: str, books: list[Book], *, encyclopedia: bool = False
+    ) -> Codex:
+        """`books` bound into one tome; an encyclopedia also aids research
+        like a library of its own (Art & Academe)."""
+        codex = Codex(
+            id=storage.generate_unique_id(name, [c.id for c in self.saga.codices]),
+            name=name,
+            encyclopedia=encyclopedia,
+        )
+        self.saga.codices.append(codex)
+        for book in books:
+            book.codex_id = codex.id
+        return codex
+
+    def device(
+        self,
+        holder: Covenant,
+        name: str,
+        *,
+        description: str,
+        effects: list[InstilledEffect],
+    ) -> EnchantedDevice:
+        """An invested device a covenant holds, with the effects the book
+        prints (each effect's level before the item's modifications)."""
+        device = EnchantedDevice(
+            id=storage.generate_unique_id(
+                name, [d.id for d in self.saga.enchanted_devices]
+            ),
+            name=name,
+            description=description,
+            holder_kind="covenant",
+            holder_id=holder.id,
+        )
+        for number, effect in enumerate(effects, 1):
+            effect.id = f"{device.id}-{number}"
+            device.effects.append(effect)
+        self.saga.enchanted_devices.append(device)
+        return device
+
+    def tablet(self, owner: Covenant, spell_id: str, *, description: str) -> Book:
+        """A Casting Tablet of a catalog spell, kept in a covenant's
+        library (Covenants pp. 89-90)."""
+        spell = catalog.load_spell_catalog_by_id()[spell_id]
+        book = self.book(owner, spell.name, "Casting Tablet", description=description)
+        book.spell_id, book.spell_name, book.level = spell.id, spell.name, spell.level
+        return book
+
+    def laboratory(
+        self,
+        covenant: Covenant,
+        name: str,
+        *,
+        owner: Character | None = None,
+        characteristics: dict[str, int],
+        specializations: dict[str, int],
+        source: str,
+        rooms: dict[str, str] | None = None,
+    ) -> Laboratory:
+        """A laboratory of `covenant` as the book prints it: its
+        Characteristics and Specializations at the book's totals, kept as
+        entered values, with its Virtues and Flaws named only in words (a
+        room of the laboratory, as `rooms` gives them), so nothing is
+        counted twice."""
+        lab = Laboratory(
+            id=storage.generate_unique_id(name, [x.id for x in self.saga.laboratories]),
+            covenant_id=covenant.id,
+            name=name,
+            owner_id=owner.id if owner is not None else None,
+            characteristics=LabCharacteristics(**characteristics),
+            specialties=[
+                LabSpecialtyEntry(specialization, points, source)
+                for specialization, points in specializations.items()
+            ],
+            rooms=[
+                NamedDescription(room, words) for room, words in (rooms or {}).items()
+            ],
+        )
+        self.saga.laboratories.append(lab)
+        return lab
 
     # -- the world --
 

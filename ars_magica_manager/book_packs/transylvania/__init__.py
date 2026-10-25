@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 
 from ...models import Character, Covenant, Neighbour, Saga, Tribunal
 from .. import BookPack, register
-from ..builder import Builder
+from ..builder import Builder, fill_boons_hooks
 
 NAME = "Against the Dark: the Transylvanian Tribunal"
 SOURCE = (
@@ -85,6 +85,7 @@ def assemble() -> Builder:
         if finish is not None:
             finish(transylvania)
     _covenant_auras(transylvania)
+    fill_boons_hooks(transylvania.b.saga)
     for part in parts:
         stats = getattr(part, "stats", None)
         if stats is not None:

@@ -416,6 +416,27 @@ class LabPlanForm:
                 design.extra_magnitudes if design else 0,
                 show_if=inventing,
             ),
+        ]
+        if lab_virtues.has(self.magus, spell_levels.SPELL_TIMING):
+            found.append(
+                DialogField(
+                    "recurring",
+                    "Recurs each",
+                    "select",
+                    (design.recurring if design else "") or None,
+                    options=[
+                        (f"{often} (+{n})", often)
+                        for often, n in spell_levels.RECURRING.items()
+                    ],
+                    allow_blank=True,
+                    placeholder="(doesn't recur)",
+                    show_if=inventing,
+                    hint="Spell Timing: a recurring spell is a Ritual, and an "
+                    "effect that needs a Ritual for what it does can't recur "
+                    "(DE p. 240).",
+                )
+            )
+        found += [
             DialogField(
                 "base_effect",
                 "Base effect",
@@ -443,6 +464,8 @@ class LabPlanForm:
             "extra_magnitudes": design.extra_magnitudes if design else 0,
             "base_effect": "",
         }
+        if lab_virtues.has(self.magus, spell_levels.SPELL_TIMING):
+            found["recurring"] = None
         for kind in KINDS:
             current = getattr(design, kind) if design else FIRST_STEPS[kind]
             found[kind], found[f"{kind}_name"] = self.parameter_choice(kind, current)
@@ -1176,6 +1199,7 @@ class LabPlanForm:
             custom_steps=custom,
             extra_magnitudes=values.get("extra_magnitudes") or 0,
             ritual=bool(values.get("ritual")),
+            recurring=values.get("recurring") or "",
             description=values.get("description") or "",
             base_effect=values.get("base_effect") or "",
             source_spell_id=design.source_spell_id if design else None,
@@ -1647,6 +1671,8 @@ def level_text(design: SpellDesign) -> str:
         ritual=design.ritual,
         custom_steps=design.custom_steps,
         technique=design.technique,
+        form=design.form,
+        recurring=design.recurring,
     )
     if worked is None:
         return todo(

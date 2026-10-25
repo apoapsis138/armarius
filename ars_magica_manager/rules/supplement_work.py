@@ -33,7 +33,8 @@ from ..models import (
     VirtueFlawInstance,
     next_season,
 )
-from . import dice, mysteries, reputations, work_virtues
+from . import dice, enchantment, mysteries, reputations, work_virtues
+from .creation_finish import touched_by_the_fay
 from .rounding import round_down, round_up
 from .scores import ability_level
 
@@ -328,7 +329,39 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
         return f"{mystagogue.name} doesn't know {lore}."
     if ability_level(character, lore) < 1 and not _house_lore(character, lore):
         return f"{character.name} needs {lore} 1 to be Initiated."
-    return _ordeal_problem(character, plan)
+    return _mystery_problem(saga, character, virtue.id) or _ordeal_problem(
+        character, plan
+    )
+
+
+def _mystery_problem(saga: Saga, character: Character, vf_id: str) -> str:
+    """What a Mystery's own rule says stops its Initiation ("" if nothing):
+    Secret Name fails for one with a talisman or a familiar (DE p. 235);
+    Faerie Magic needs one touched by the fay, by a fay Virtue or Flaw or
+    a Warping Point from a faerie (DE p. 236; the app can't tell where
+    Warping came from, so any counts)."""
+    if vf_id == mysteries.SECRET_NAME:
+        if enchantment.talisman_of(saga, character) is not None:
+            return (
+                f"{character.name} has a talisman: Secret Name's Initiation "
+                "fails (DE p. 235)."
+            )
+        if saga.familiar_of(character.id) is not None:
+            return (
+                f"{character.name} has a familiar: Secret Name's Initiation "
+                "fails (DE p. 235)."
+            )
+    if vf_id == mysteries.FAERIE_MAGIC and not (
+        touched_by_the_fay(character)
+        or character.aging.warping_points
+        or character.aging.warping_score
+    ):
+        return (
+            f"{character.name} hasn't been touched by the fay (a fay Virtue or "
+            "Flaw, or a Warping Point from a faerie): Faerie Magic can't be "
+            "Initiated (DE p. 236)."
+        )
+    return ""
 
 
 def _ordeal_problem(character: Character, plan: SeasonPlan) -> str:

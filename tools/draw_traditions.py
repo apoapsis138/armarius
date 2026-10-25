@@ -739,6 +739,14 @@ def tempestaria() -> QPainterPath:
     return union(cord, knots.subtracted(holes))
 
 
+def nemthengacha() -> QPainterPath:
+    """A forked tongue, for the poison-tongues who turn friend against
+    friend."""
+    tongue = stroke(curve((50, 4), (26, 18), (44, 34), (66, 50), (50, 68)), 13)
+    fork = poly((42, 64), (58, 64), (74, 96), (60, 92), (50, 78), (40, 92), (26, 96))
+    return union(tongue, fork)
+
+
 def scinnfolk() -> QPainterPath:
     """A hooded shade, a face of darkness under its cowl."""
     cloak = QPainterPath()
@@ -1354,6 +1362,7 @@ FIGURES: dict[str, Callable[[], QPainterPath]] = {
     "trad_paulicians": paulicians,
     "trad_beast_masters": beast_masters,
     "trad_tempestaria": tempestaria,
+    "trad_nemthengacha": nemthengacha,
     "trad_scinnfolk": scinnfolk,
     "trad_columbae": columbae,
     "trad_donatores_requietis_aeternae": donatores_requietis_aeternae,

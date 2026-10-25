@@ -8,6 +8,7 @@ rows and the details panel.
 
 from __future__ import annotations
 
+from itertools import combinations
 from typing import Any
 
 from . import catalog, covenant_diary, storage
@@ -22,11 +23,12 @@ from .models import (
     Saga,
     character_age,
 )
-from .rules import reputations
+from .rules import reputations, xp
 from .rules.animal_grogs import describe as describe_animal
 from .rules.covenfolk import (
     AUTO_KINDS,
     GIFT_LOYALTY_MODIFIERS,
+    ROLE_TASKS,
     InhabitantEntry,
     character_kind,
     entries_for_kind,
@@ -98,18 +100,13 @@ EQUIPMENT_LOYALTY_POINTS: dict[str, int] = dict(
 MONEY_LOYALTY_POINTS: dict[str, int] = dict(zip(LOYALTY_MONEY, (-20, -10, 0, 10, 20)))
 PENSION_LOYALTY_POINTS = 10
 
-#: Loyalty Points Total -> Prevailing Loyalty Score, the cumulative
-#: thresholds from the same table used for Ability Advancement (symmetric
-#: for a negative total -- see prevailing_loyalty_score()). The doc doesn't
-#: extend the table past +/-105, so anything beyond that clamps to +/-6.
-PREVAILING_LOYALTY_TABLE: tuple[tuple[int, int], ...] = (
-    (0, 0),
-    (5, 1),
-    (15, 2),
-    (30, 3),
-    (50, 4),
-    (75, 5),
-    (105, 6),
+#: Loyalty points become a Prevailing Loyalty Score by the Ability
+#: Advancement Table, negative points to a negative score (DE p. 186;
+#: Covenants p. 36); the table goes on past 105 (7 at 140, 8 at 180).
+#: At -6 the covenant's productivity is halved, at +6 raised (DE p. 185).
+PRODUCTIVITY_LOYALTY = 6
+PRODUCTIVITY_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Prevailing Loyalty, p. 185"
 )
 
 
@@ -249,15 +246,54 @@ def base_loyalty(saga: Saga, covenant: Covenant) -> int:
     return round_away_from_zero(total / len(magi))
 
 
-def specialists_loyalty(saga: Saga, covenant: Covenant) -> int:
-    """The Specialists Loyalty bonus: every Companion/Specialist entry's
-    role_bonus (Presence + the role's Ability, or Abilities for Autocrat),
-    summed."""
-    return sum(
-        entry.role_bonus or 0
+def _role_holders(saga: Saga, covenant: Covenant) -> list[InhabitantEntry]:
+    """Every Companion or Specialist whose role earns a Loyalty bonus."""
+    return [
+        entry
         for kind in ("companion", "specialist")
         for entry in entries_for_kind(saga, covenant, kind)
         if entry.role_bonus is not None
+    ]
+
+
+def counted_role_holders(saga: Saga, covenant: Covenant) -> list[InhabitantEntry]:
+    """The role-holders whose Loyalty bonus counts: at most one for each of
+    the three tasks (turb captain, steward, chamberlain; an autocrat does
+    two), so at most three specialists (ROLES_SOURCE). When more hold a
+    task, the choice covering the most tasks, then the highest total,
+    counts."""
+    holders = _role_holders(saga, covenant)
+    best: tuple[int, int] = (0, 0)
+    chosen: tuple[InhabitantEntry, ...] = ()
+    for size in range(1, len(ROLE_TASKS) + 1):
+        for group in combinations(holders, size):
+            tasks = [ROLE_TASKS[e.role] for e in group]
+            covered = frozenset().union(*tasks)
+            if len(covered) != sum(len(t) for t in tasks):
+                continue  # two of them doing the same task
+            key = (len(covered), sum(e.role_bonus or 0 for e in group))
+            if key > best:
+                best, chosen = key, group
+    return list(chosen)
+
+
+def specialists_loyalty(saga: Saga, covenant: Covenant) -> int:
+    """The Specialists Loyalty bonus: the counted role-holders' role_bonus
+    (Presence + the role's Ability for each task), summed."""
+    return sum(e.role_bonus or 0 for e in counted_role_holders(saga, covenant))
+
+
+def uncounted_role_holders(saga: Saga, covenant: Covenant) -> list[InhabitantEntry]:
+    """Role-holders left out because another already does their task."""
+    counted = {_holder_key(e) for e in counted_role_holders(saga, covenant)}
+    return [e for e in _role_holders(saga, covenant) if _holder_key(e) not in counted]
+
+
+def _holder_key(entry: InhabitantEntry) -> tuple[str, str, str]:
+    return (
+        entry.kind,
+        entry.record.id if entry.record is not None else "",
+        entry.character.id if entry.character is not None else "",
     )
 
 
@@ -301,14 +337,34 @@ def total_modifiers(saga: Saga, covenant: Covenant) -> int:
 
 
 def prevailing_loyalty_score(points: int) -> int:
-    """Loyalty Points Total -> Prevailing Loyalty Score, via the fixed
-    cumulative table (symmetric for a negative total)."""
-    magnitude = abs(points)
-    score = 0
-    for threshold, table_score in PREVAILING_LOYALTY_TABLE:
-        if magnitude >= threshold:
-            score = table_score
+    """Loyalty Points Total -> Prevailing Loyalty Score by the Ability
+    Advancement Table, symmetric for a negative total."""
+    score = xp.score_from_xp(abs(points), xp.ABILITY_FACTOR)
     return -score if points < 0 else score
+
+
+def prevailing_loyalty(saga: Saga, covenant: Covenant) -> int:
+    """The covenant's Prevailing Loyalty Score."""
+    return prevailing_loyalty_score(
+        base_loyalty(saga, covenant) + total_modifiers(saga, covenant)
+    )
+
+
+def productivity_note(score: int) -> str:
+    """What a Prevailing Loyalty of +-6 or beyond does to the covenant's
+    productivity ("" otherwise): halved at -6 (cost savings and income
+    that rely on covenfolk), raised at +6 (the book gives no figure)."""
+    if score <= -PRODUCTIVITY_LOYALTY:
+        return (
+            f"Prevailing Loyalty {score}: productivity halved (laborers' and "
+            "craftspeople's savings, and income that relies on covenfolk)"
+        )
+    if score >= PRODUCTIVITY_LOYALTY:
+        return (
+            f"Prevailing Loyalty {score:+d}: productivity raised (the book gives "
+            "no figure; the troupe decides)"
+        )
+    return ""
 
 
 # ------------------------------------------------------------------- text
@@ -421,7 +477,9 @@ def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
         if entry.role_bonus is not None:
             lines.append(
                 f"[b]Loyalty Bonus:[/] {entry.role_bonus} "
-                f"(Presence {entry.role_presence:+d}, Ability {entry.role_ability_total})"
+                f"(Presence {entry.role_presence:+d}"
+                + (" twice" if len(ROLE_TASKS[entry.role]) > 1 else "")
+                + f", Ability {entry.role_ability_total})"
             )
     if kind == "craftsperson":
         lines.append(f"[b]Field of Work:[/] {escape(entry.field_of_work)}")
@@ -492,7 +550,7 @@ def loyalty_right_text(saga: Saga, covenant: Covenant) -> str:
                 f"{escape(loyalty.equipment)}  ({equipment_loyalty(covenant):+d})",
             ),
             ("Money", money),
-            ("Specialists", str(specialists_loyalty(saga, covenant))),
+            ("Specialists", _specialists_text(saga, covenant)),
             (
                 "Familiarity",
                 f"{familiarity(saga, covenant)} (2 a year since founding, at most "
@@ -510,6 +568,16 @@ def loyalty_right_text(saga: Saga, covenant: Covenant) -> str:
         ]
     )
     return f"[b]Situational Modifiers for:[/]\n{body}"
+
+
+def _specialists_text(saga: Saga, covenant: Covenant) -> str:
+    """The total, and how many role-holders it leaves out (one for each
+    task)."""
+    total = str(specialists_loyalty(saga, covenant))
+    left_out = uncounted_role_holders(saga, covenant)
+    if not left_out:
+        return total
+    return f"{total}  [dim]({len(left_out)} not counted: one for each task)[/]"
 
 
 def _actions_and_events_text(covenant: Covenant) -> str:

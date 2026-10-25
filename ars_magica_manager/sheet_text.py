@@ -521,9 +521,10 @@ def recovery_lines(saga: Saga | None, character: Character) -> list[str]:
         f"{s.severity.title()}"
         + (f" ({s.source}" if s.source != recovery.INJURY else " (")
         + (f", +{s.bonus}" if s.bonus else "")
+        + (", first aid" if s.first_aid else "")
         + ")"
         for s in found
-        if s.source != recovery.INJURY or s.bonus
+        if s.source != recovery.INJURY or s.bonus or s.first_aid
     ]
     if marked:
         lines.append("Wounds: " + ", ".join(m.replace("(, ", "(") for m in marked))

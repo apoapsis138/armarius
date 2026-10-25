@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .. import sourcebooks
-from ..commands import SectionOps
+from ..commands import Command, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
 from ..models import CORE_PACKAGE, Character, Covenant, Meeting, Saga, Tribunal
@@ -40,14 +40,26 @@ class RosterColumn:
 
 
 @dataclass(frozen=True)
+class PackageVerb:
+    """A More command a package's list offers (actions.MORE_MENU names
+    it): the action, its label, and the first step it runs on the
+    chosen row."""
+
+    action: str
+    label: str
+    build: Callable[[Saga, Tribunal, int], Command]
+
+
+@dataclass(frozen=True)
 class PackageList:
     """A list a package adds to the sheet: its section's id and title, its
-    rows and its Add, Edit and Delete."""
+    rows and its Add, Edit and Delete, and its More commands."""
 
     section_id: str
     section_title: Callable[[Saga, Tribunal], str]
     grid: Callable[[Saga, Tribunal], Grid]
     ops: Callable[[Saga, Tribunal], SectionOps]
+    more: tuple[PackageVerb, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -135,6 +147,13 @@ class TribunalPackage:
     #: announces the result but votes as any magus present, p. 32).
     redcaps_vote: bool = True
     praeco_votes: bool = False
+    #: Why its customs refuse a magus an office of the Tribunal (the
+    #: office's name, "Praeco"), "" when they allow it (Transylvania's
+    #: privileges).
+    office_problem: Callable[[Saga, Tribunal, str, str], str] | None = None
+    #: Whether a magus present casts no vote of his own (the Rhine's
+    #: Tremere, whose sigils their exarchs cast).
+    casts_no_vote: Callable[[Saga, Tribunal, Character], bool] | None = None
 
     @property
     def lists(self) -> tuple[PackageList, ...]:
@@ -199,6 +218,17 @@ def magus_facts(saga: Saga, character: Character) -> list[tuple[str, str]]:
     return package.magus_facts(saga, tribunal, character)
 
 
+def office_problem(
+    saga: Saga, tribunal: Tribunal, character_id: str, office: str
+) -> str:
+    """Why the Tribunal's customs refuse the magus `office` ("": they
+    allow it, or say nothing)."""
+    package = of(tribunal)
+    if package.office_problem is None or not character_id:
+        return ""
+    return package.office_problem(saga, tribunal, character_id, office)
+
+
 def envoys(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> list[Envoy]:
     """Who votes at `meeting` beside the covenants, as its customs say."""
     package = of(tribunal)
@@ -213,6 +243,15 @@ def lacks_credential(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
     if not package.credential or package.lacks_credential is None:
         return ""
     return package.lacks_credential(saga, tribunal, covenant)
+
+
+def package_verb(tribunal: Tribunal, action: str) -> PackageVerb | None:
+    """The More command `action` of one of the Tribunal's package lists."""
+    for entry in of(tribunal).lists:
+        for verb in entry.more:
+            if verb.action == action:
+                return verb
+    return None
 
 
 def data(tribunal: Tribunal, key: str) -> dict[str, Any]:

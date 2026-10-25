@@ -302,7 +302,7 @@ def _debilitation(source: str) -> Callable[..., Harmed]:
     return apply
 
 
-def _lose_fatigue(character: Character, long_term: bool) -> bool:
+def lose_fatigue(character: Character, long_term: bool) -> bool:
     """One Fatigue level more; whether the character was already
     unconscious."""
     at = FATIGUE_LEVELS.index(character.fatigue_level)
@@ -334,7 +334,7 @@ def deprivation(
         if resisted:
             done.lines.append(f"Period {period}: {result} against {ease}, holds out.")
             continue
-        if _lose_fatigue(character, long_term):
+        if lose_fatigue(character, long_term):
             recovery.add_wound(character.wounds, worsening, "deprivation")
             done.wounds.append(worsening)
             done.lines.append(

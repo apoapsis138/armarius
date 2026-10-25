@@ -20,9 +20,11 @@
 - **Fatigue** is rested away within hours (short-term) or a night a level
   (long-term), so a season clears it.
 
-Where Art & Academe disagrees (its first aid and palliative care in place
-of the medic's Chirurgy, its own disease system), the Definitive Edition's
-rule is used.
+With the Art & Academe medicine option, an injury's medic's Chirurgy is
+instead first aid and palliative care, half the Chirurgy of each (pp.
+61-62), and a chirurgeon may try a surgical intervention when a roll fails
+(p. 62; rules.chirurgy). Without it the Definitive Edition's rule is used:
+the medic's whole Chirurgy, and no intervention.
 """
 
 from __future__ import annotations
@@ -33,7 +35,7 @@ from dataclasses import dataclass, field
 
 from .. import catalog
 from ..models import Character, Saga, Wounds, WoundState
-from . import derived, dice, disease, effects, lab_stats, realms
+from . import chirurgy, derived, dice, disease, effects, lab_stats, realms
 from .breakdown import Breakdown, Line
 from .lab import ability_score
 from .scores import character_source
@@ -133,6 +135,24 @@ def medic(saga: Saga | None, character: Character, ability: str) -> tuple[str, i
     return best
 
 
+def _nurse(saga: Saga | None, character: Character) -> Character | None:
+    """Who gives an injured character palliative care: the covenant-mate
+    with the most Chirurgy, his palliative care specialty counted."""
+    if saga is None or character.covenant_id is None:
+        return None
+    found = [
+        other
+        for other in saga.characters
+        if other.id != character.id
+        and other.covenant_id == character.covenant_id
+        and not other.wounds.dead
+        and chirurgy.chirurgy(other, chirurgy.PALLIATIVE) > 0
+    ]
+    return max(
+        found, key=lambda c: chirurgy.chirurgy(c, chirurgy.PALLIATIVE), default=None
+    )
+
+
 def _infernal_aura(saga: Saga | None, character: Character) -> int:
     if saga is None:
         return 0
@@ -145,7 +165,14 @@ def total(saga: Saga | None, character: Character, state: WoundState) -> Breakdo
     lines = [Line("Stamina", amount=character.characteristics.stamina, source=SOURCE)]
     ability = medic_ability(state.source)
     name, score = medic(saga, character, ability)
-    if score:
+    if ability == chirurgy.ABILITY and chirurgy.on(saga):
+        nurse = _nurse(saga, character)
+        lines += chirurgy.care_lines(
+            state.first_aid,
+            nurse.name if nurse else "",
+            chirurgy.chirurgy(nurse, chirurgy.PALLIATIVE) if nurse else 0,
+        )
+    elif score:
         lines.append(Line(f"{ability} ({name})", amount=score, source=SOURCE))
     if state.bonus:
         lines.append(Line("Stable rolls", amount=state.bonus, source=SOURCE))
@@ -269,6 +296,13 @@ class Season:
     died: bool = False
 
 
+def season_text(character: Character, played: Season) -> str:
+    """A season's recovery for the Diary."""
+    if played.died:
+        return f"{character.name} died of their wounds.\n" + "\n".join(played.rolls)
+    return "\n".join(played.rolls)
+
+
 def season(saga: Saga | None, character: Character, rng: random.Random) -> Season:
     """Play out a season's Recovery rolls for every wound (DE p. 405), and
     rest away the Fatigue."""
@@ -314,22 +348,85 @@ def roll_now(
     rng: random.Random,
     *,
     worst_only: bool = False,
+    surgeon: chirurgy.Surgeon | None = None,
 ) -> list[str]:
     """One Recovery roll for each wound now (a story's moment), or, with
     `worst_only`, for the most serious one only: the roll for doing more
-    than the wounds allow, which can't improve it (DE p. 405)."""
+    than the wounds allow, which can't improve it (DE p. 405). A `surgeon`
+    tries a surgical intervention on each roll that fails (Art & Academe
+    p. 62), keeping its consequences."""
     wounds = character.wounds
     found = states(wounds)
     chosen = found[-1:] if worst_only else list(found)
     lines: list[str] = []
     for state in chosen:
+        bonus, crisis = state.bonus, wounds.crisis
         if state.severity == "incapacitating":
-            lines.append(roll_incapacitated(saga, character, state, rng).text)
+            rolled = roll_incapacitated(saga, character, state, rng)
         else:
             rolled = roll_wound(saga, character, state, rng, can_improve=not worst_only)
-            lines.append(rolled.text)
+        lines.append(rolled.text)
+        if surgeon is not None and _failed(rolled):
+            lines.append(
+                _intervene(
+                    saga,
+                    character,
+                    surgeon,
+                    state,
+                    rolled,
+                    bonus,
+                    crisis,
+                    rng,
+                    can_improve=not worst_only,
+                )
+            )
     kept = [s for s in found if s.severity != "healed"]
     if wounds.dead:
         kept = [s for s in kept if s.severity != "incapacitating"]
     set_states(wounds, kept)
     return lines
+
+
+def _failed(rolled: Roll) -> bool:
+    """Whether a Recovery roll failed: the wound worsened, or an
+    Incapacitated character grew worse or died."""
+    if rolled.before == "incapacitating":
+        return rolled.after != "heavy"
+    return rolled.after != "healed" and (
+        rolled.after not in SEVERITIES
+        or SEVERITIES.index(rolled.after) > SEVERITIES.index(rolled.before)
+    )
+
+
+def _intervene(
+    saga: Saga | None,
+    character: Character,
+    surgeon: chirurgy.Surgeon,
+    state: WoundState,
+    rolled: Roll,
+    bonus: int,
+    crisis: int,
+    rng: random.Random,
+    *,
+    can_improve: bool,
+) -> str:
+    """A surgical intervention on a failed roll, applied to the wound: a
+    success holds it as a stable result, a botch worsens it two steps from
+    where it was (Art & Academe p. 62)."""
+    outcome, text = chirurgy.intervene(saga, character, surgeon, rolled.before, rng)
+    wounds = character.wounds
+    if outcome == "success":
+        state.severity = rolled.before
+        if rolled.before == "incapacitating":
+            wounds.dead, wounds.crisis = False, crisis
+        else:
+            state.bonus = bonus + (STABLE_BONUS if can_improve else 0)
+    elif outcome == "botch":
+        index = SEVERITIES.index(rolled.before) + 2
+        if index >= len(SEVERITIES):
+            state.severity = "incapacitating"
+            wounds.dead = True
+        else:
+            state.severity = SEVERITIES[index]
+            state.bonus = 0
+    return text

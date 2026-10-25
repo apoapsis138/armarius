@@ -172,8 +172,9 @@ def _covenant_role_fields(entry: covenfolk.InhabitantEntry | None) -> list[Dialo
                 "_rb",
                 "Loyalty Bonus",
                 "info",
-                f"{entry.role_bonus} (Presence {entry.role_presence:+d}, "
-                f"{ability_label} {entry.role_ability_total}, from the "
+                f"{entry.role_bonus} (Presence {entry.role_presence:+d}"
+                + (" twice" if len(covenfolk.ROLE_TASKS[entry.role]) > 1 else "")
+                + f", {ability_label} {entry.role_ability_total}, from the "
                 "character sheet)",
             )
         )

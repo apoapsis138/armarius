@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ... import world
 from ...models import Character
+from ...tribunal_packages import rhine as rhine_package
 from ...tribunal_packages.rhine import KEY
 from ..builder import paragraphs
 
@@ -78,55 +80,89 @@ def build(rhine: Rhine) -> None:
     )
 
 
-#: Each gild: its name, what it wants (its dues line, as the book gives
-#: no dues), and the keys of the covenants whose magi mostly belong to it.
-GILDS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
+#: Each gild (Guardians of the Forests pp. 27-29): its name, its agenda
+#: (the book gives no dues: a member owes the gild his vote and
+#: reasonable aid), the keys of its leaders, of the magi the book puts in
+#: it, and of the covenants most of whose magi belong to it.
+GILDS: tuple[
+    tuple[str, str, tuple[str, ...], tuple[str, ...], tuple[str, ...]], ...
+] = (
     (
         "Oak Gild (Eichengilde)",
-        "None: a member owes the gild their vote and reasonable aid. The "
-        "oldest and largest gild, a quarter of the Tribunal: tradition, "
-        "respect for elders and the Founders, the Rhine's old glory. Led by "
-        "Murion of Durenmar; Bonisagus, Guernicus and Tremere favour it.",
+        "The oldest and largest gild, a quarter of the Tribunal: tradition, "
+        "respect for elders and the Founders, the Rhine's old glory. "
+        "Bonisagus, Guernicus and Tremere favour it.",
+        ("murion",),
+        ("murion",),
         ("durenmar", "fengheld"),
     ),
     (
         "Hawthorn Gild (Weissdorngilde)",
-        "None: a member owes the gild their vote and reasonable aid. The smallest: protects the wild places and beasts "
-        "from mundanes and shuns contact with them. Led by Urgen of "
-        "Crintera; mostly Wilderist Bjornaer.",
+        "The smallest: protects the wild places and beasts from mundanes "
+        "and shuns contact with them; mostly Wilderist Bjornaer.",
+        ("urgen",),
+        ("urgen",),
         ("crintera",),
     ),
     (
         "Ash Gild (Eschengilde)",
-        "None: a member owes the gild their vote and reasonable aid. Dominion over the land, a forthright Order, and "
-        "(unspoken) war on the Order of Odin. Led by Philippus Niger of "
-        "Durenmar; Flambeau, Tremere and Tytalus.",
+        "Dominion over the land, a forthright Order, and (unspoken) war on "
+        "the Order of Odin; Flambeau, Tremere and Tytalus.",
+        ("philippus_niger",),
+        ("philippus_niger",),
         (),
     ),
     (
         "Elder Gild (Holundergilde)",
-        "None: a member owes the gild their vote and reasonable aid. Split from the Hawthorn: the fae and friendship with "
-        "them above all. Led by Iacob of Irencillia; nearly all of "
-        "Irencillia and Dankmar, with a few Harmonist Bjornaer.",
+        "Split from the Hawthorn: the fae and friendship with them above "
+        "all; nearly all of Irencillia and Dankmar, with a few Harmonist "
+        "Bjornaer.",
+        ("iacob",),
+        ("iacob", "ioannes_acer"),
         ("irencillia", "dankmar"),
     ),
     (
         "Linden Gild (Lindengilde)",
-        "None: a member owes the gild their vote and reasonable aid. Founded after the Schism War by former Fengheld "
-        "magi: co-operation, peace and an end to apathy; nearly a fifth of "
-        "the Tribunal, the go-between. Led by Occultes of Durenmar; Mercere, "
-        "Jerbiton, Verditius, Tremere and Trianoma's Bonisagus.",
+        "Founded after the Schism War by former Fengheld magi: co-operation, "
+        "peace and an end to apathy; nearly a fifth of the Tribunal, the "
+        "go-between. Mercere, Jerbiton, Verditius, Tremere and Trianoma's "
+        "Bonisagus.",
+        ("occultes",),
+        ("occultes", "falke", "felicia"),
         ("fengheld",),
     ),
     (
         "Apple Gild (Apfelgilde)",
-        "None: a member owes the gild their vote and reasonable aid. The newest and weakest: friendship with mundanes, "
-        "acceptance, humility before God. Led by Henri de Tours of Oculus "
-        "Septentrionalis, Wilhelm Weiss of Fengheld and Daria la Gris of "
-        "Triamore.",
+        "The newest and weakest: friendship with mundanes, acceptance, "
+        "humility before God; led by a triumvirate.",
+        ("henri_de_tours", "wilhelm_weiss", "daria_la_gris"),
+        (
+            "henri_de_tours",
+            "wilhelm_weiss",
+            "daria_la_gris",
+            "gunhilda_henrasdottir",
+            "estrid_danesson",
+            "marcus_navicularius",
+            "imanitos_mendax",
+            "carolus",
+            "garrinchus",
+        ),
         ("oculus", "triamore", "fengheld"),
     ),
 )
+
+#: The covenants whose every named magus the book puts in a gild:
+#: "virtually all" of Irencillia and Dankmar are of the Elder Gild (p. 28).
+WHOLE_COVENANTS = {"irencillia": "Elder Gild", "dankmar": "Elder Gild"}
+
+#: The Tremere whose sigils the House's exarchs cast, by the exarch:
+#: Stentorius holds Triamore's two, Severicus Hygwald Veritas's (pp. 84,
+#: 109).
+SIGILS_HELD = {
+    "daria_la_gris": "stentorius",
+    "sicero": "stentorius",
+    "hygwald_veritas": "severicus",
+}
 
 
 #: The Peripheral Code: (year AD or None, title, what it says).
@@ -145,7 +181,10 @@ RULINGS: tuple[tuple[int | None, str, str], ...] = (
         "publish its conditions; a guest who accepts them is guaranteed at "
         "least three and at most seven years, pays at least three pawns of "
         "vis a year, and the conditions are the same for every guest in "
-        "residence and change only when there are none.",
+        "residence and change only when there are none. A later ruling "
+        "lets a season's service stand for the vis, and once a guest is "
+        "accepted the host may not ask him to leave for three whole years "
+        "while he keeps the conditions (Guardians of the Forests p. 20).",
     ),
     (
         878,
@@ -153,7 +192,10 @@ RULINGS: tuple[tuple[int | None, str, str], ...] = (
         "Firm rules on the voting of retired magi, ending twenty years of "
         "dispute: a master is entrusted with one retired magus's sigil, an "
         "archmage with a second, cast in the retired magus's name and, by "
-        "custom, by his likely wishes.",
+        "custom, by his likely wishes. A magus no one has seen for two "
+        "Tribunals or more counts as retired; his sigil stays valid until "
+        "his death is shown, and the Redcaps report who has been seen and "
+        "who has died (Guardians of the Forests p. 16).",
     ),
     (
         None,
@@ -168,16 +210,26 @@ RULINGS: tuple[tuple[int | None, str, str], ...] = (
         885,
         "Founding a covenant (1024 AA)",
         "A new covenant needs a sponsoring magus from every existing covenant "
-        "of the Tribunal. Arae Flaviae and Schwarzburg abolished the same "
-        "year. Chapter houses need no such leave, which is how Fengheld "
-        "grows.",
+        "of the Tribunal; one sponsor speaks for a covenant, and none may "
+        "be one of the founders (the Waldherz ruling). Refused, the founders "
+        "may try again in seven years; until recognised their covenant has "
+        "no communal rights or legal recourse, though its magi keep theirs "
+        "as individuals. Once it is recognised every other covenant gives "
+        "it a gift. Arae Flaviae and Schwarzburg abolished the same year. "
+        "Chapter houses need no such leave, which is how Fengheld grows "
+        "(Guardians of the Forests pp. 16-17).",
     ),
     (
         1053,
         "Guardians of the Forests (1192 AA)",
-        "Magi may actively defend the wilderness against those who would "
-        "destroy it. In 1194 Caecilius ruled that the Danish occupation of "
-        "Rügen is no such destruction, as no wilderness was invaded.",
+        "Magi have a duty to preserve the forests and magical sites, "
+        "defend their vis and slow mundane intrusion. A clause House "
+        "Guernicus had added binds them never to act so as to bring the "
+        "mundanes' wrath, on pain of the Oath. The ruling has no way of its "
+        "own to be enforced and its precedents contradict each other. In "
+        "1194 Caecilius ruled that the Danish occupation of Rügen is no "
+        "such destruction, as no wilderness was invaded (Guardians of the "
+        "Forests p. 18).",
     ),
     (
         1109,
@@ -353,9 +405,6 @@ def finish(rhine: Rhine) -> None:
         region = rhine.places.get(key)
         if region is not None:
             region.summary = paragraphs(region.summary, history)
-    for name, dues, keys in GILDS:
-        members = [rhine.covenants[k] for k in keys if k in rhine.covenants]
-        b.gild(tribunal, name, dues, members)
     praeco = rhine.magi.get("murion")
     quaesitor = rhine.magi.get("caecilius")
     tribunal.praeco_id = praeco.id if praeco else None
@@ -392,6 +441,7 @@ def finish(rhine: Rhine) -> None:
             "offers her as a player character; it spells her name Felecia "
             "too.",
         )
+    _gilds(rhine)
     _proxies(rhine)
     for year, title, says in RULINGS:
         b.ruling(tribunal, title, year, says)
@@ -399,6 +449,33 @@ def finish(rhine: Rhine) -> None:
     tribunal.covenants_total = len(
         [c for c in rhine.b.saga.covenants if c.tribunal_id == tribunal.id]
     )
+
+
+def _gilds(rhine: Rhine) -> None:
+    b, tribunal = rhine.b, rhine.tribunal
+    assert tribunal is not None
+    for name, agenda, leader_keys, magus_keys, keys in GILDS:
+        whole = [k for k, gild in WHOLE_COVENANTS.items() if name.startswith(gild)]
+        magi = [rhine.magi[k] for k in magus_keys if k in rhine.magi]
+        magi += [
+            m
+            for k in whole
+            if k in rhine.covenants
+            for m in world.covenant_magi(b.saga, rhine.covenants[k])
+            if m not in magi
+        ]
+        b.gild(
+            tribunal,
+            name,
+            agenda,
+            [rhine.covenants[k] for k in keys if k in rhine.covenants],
+            leaders=[rhine.magi[k] for k in leader_keys if k in rhine.magi],
+            magi=magi,
+        )
+    held = rhine_package.sigil_held_by(tribunal)
+    for owner, holder in SIGILS_HELD.items():
+        if owner in rhine.magi and holder in rhine.magi:
+            held[rhine.magi[owner].id] = rhine.magi[holder].id
 
 
 #: Sigils of living Tremere magi their exarchs vote with, beyond those of

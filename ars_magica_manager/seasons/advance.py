@@ -26,8 +26,14 @@ from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
+from ..rules import (
+    house_virtue,
+    research,
+    study_virtues,
+    tradition_seasons,
+    work_virtues,
+)
 from ..rules import laboratory_seasons as ls
-from ..rules import research, study_virtues, tradition_seasons, work_virtues
 from ..rules import warping as warping_rules
 from ..tables import Table
 from ..world import takes_part_in_play
@@ -172,6 +178,7 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
                 del pool[key]
         character.diary.append(diary_entry(saga, character, outcome))
         applied.append(character)
+    house_virtue.count_seasons(saga, [o.plan for o in worked if o.ok])
     now = (saga.current_year, SEASONS.index(saga.current_season))
     saga.season_plans = [
         p for p in saga.season_plans if (p.year, SEASONS.index(p.season)) > now

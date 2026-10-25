@@ -92,6 +92,7 @@ The Activity list offers what this character may do. Activities marked "magi" ar
 - **Study and experience:** Work / Exposure, Practice, Read a book, Be taught, Teach, Be trained, Study from vis (magi) and Adventure.
 - **Books:** Write a summa, Write a tractatus (on an Art, an Ability or a spell's Mastery, DE p. 379; at most half the Ability or a fifth of the Art, rounded up, of the author's own originals: copies and translations of them don't count), Copy a book (a book on the Arts or Parma Magica needs Magic Theory 1, one on a Supernatural Ability that Ability or a Realm Lore at 1, or the copy is corrupt, DE p. 381), Translate a book, Copy Lab Texts (or Casting Tablets), Edit a florilegium (binds the tractatus on one subject you can get at, as many as you could write on it, from a collection twice that size: +1 Quality each, +2 for an authority -- Ability 10 or Art 35 -- from one five times the size; Ability 6 or Art 20 to edit at all), Write Casting Tablets (magi: of a spell they have mastered, Latin x 20 levels a season, as many tablets as that holds), Rewrite Lab Texts for general use (magi) and Teach Lab Text abbreviations (magi).
 - **Apprentices and research (magi):** Search for an apprentice, Open an apprentice's Arts, Teach a Hermetic Virtue (with the teacher's teaching Virtues, such as Good Teacher; **With a Hermetic Flaw** of his own adds +3 for a Minor Flaw or +9 for a Major, and the student gains the Flaw too, DE p. 271) and Seek an insight. Opening the Arts of a child with Supernatural Abilities needs the master's Intellego Vim Lab Total, in his laboratory, to reach 5 x each Ability (at least 10 for a Minor Virtue's, 30 for a Major's; 10 or 30 for a power with no Ability), all added together. Reaching it, the Abilities and their Virtues are lost when the season is applied. Only at double it or more may the master choose to keep them (**Keep Supernatural Abilities**) or convert them, by hand on the Virtues tab: each becomes a Virtue he has and can perform, Major for a Major Ability and Minor for a Minor; the troupe decides only whether a Virtue he lacks is similar enough to convert into (DE p. 271). An inborn Ex Miscellanea tradition Virtue needs no Lab Total (DE p. 270): leave it out of the child's Virtues until the Arts are open.
+- **The free House Virtue** (DE p. 272): in Houses Bonisagus, Guernicus, Mercere, Tremere, Flambeau, Jerbiton and Tytalus an apprentice takes on his parens's House Virtue after 10 seasons of one-to-one work with him. An apprentice is a character not yet a magus whose Parens (Hermetic Background) names a magus of the saga. Each season counts once when it is applied: being taught an Art or an Arcane Ability by the parens, learning spells from him, assisting in his laboratory, or the parens opening his Arts or teaching him a Hermetic Virtue. At the tenth the Virtue is added, when the parens has just one of the House's, with a Diary entry; when he has both of a House's choices (Puissant Perdo and Ignem), or for Jerbiton, the Diary says to add the one he chooses on the Virtues tab. The Mystery Cult Houses Initiate their Virtue instead, and an Ex Miscellanea apprentice's package is the troupe's to decide.
 - **Assist in a laboratory:** helping a magus with the lab work they have planned.
 - **Set up a new laboratory (magi):** for a magus with no laboratory yet, under Order & covenant. **Laboratory's name** names it (blank: "(name)'s laboratory"). It needs Magic Theory 3 and a covenant: when the season is applied the laboratory is made in the magus's covenant, theirs, with the Basic Flaw (-3 General Quality), and Advance Season asks whether they would like to spend the next season finishing it (see [A new laboratory](help:advance-new-lab)). Exposure in Magic Theory.
 - **Take over the laboratory (magi; Covenants):** under Order & covenant, for a laboratory with no owner, chosen in **Laboratory** (those in the magus's covenant first). It is lab work in that laboratory, rolled like refining: when the season is applied the laboratory becomes the magus's (any laboratory they had is left without an owner), its Refinement drops to at most their Magic Theory - 3, and a Perception + Magic Theory roll against 3 x the old Refinement decides whether the Predecessor's arrangements remain (Covenants, Chapter Nine: Laboratories, Taking Over a Laboratory). A laboratory with an owner can't be chosen. Exposure in Magic Theory.
@@ -391,6 +392,17 @@ The steps run in a fixed order:
   customs: with no Praeco, the eldest magus of the Tribunal (by Year
   Born) is offered; set them aside by choosing the next eldest. The one
   named becomes Praeco, and the minutes say who was passed over.
+- **The execution of sentences**, on the last day under the Theban
+  customs, before the outgoing magistrates are paid: each charge the
+  People's Court heard, its verdict taken from how its vote went
+  (carried: convicted; failed: exonerated; settled or not voted: no
+  verdict). A conviction gives the guilty three shards for a High Crime
+  or one for a Low Crime, beside its punishment, and the magus who
+  brought the case a token, three if the guilty was Marched; a case the
+  Court defeated gives its bringer a shard. Choose the accused and the
+  accuser from the Tribunal's magi (the step guesses them from the
+  case's names). A metoikos is given no tokens or shards. No March is
+  held on Delos (The Sundered Eagle pp. 28, 35).
 - **The Council of Archai**, on the last day under the Theban customs,
   in three steps. **The outgoing magistrates' tokens**: each outgoing magistrate is
   paid in tokens, 2 for an arche, 3 for the archon and 5 for the
@@ -400,7 +412,19 @@ The steps run in a fixed order:
   kept, so holding the step again draws no one new, and one magus drawn
   may be set aside for the next drawn from the same phyle. A phyle with
   fewer than four politai leaves its other seats for the logothete to
-  fill with Redcaps. The new archai serve until the next meeting.
+  fill with Redcaps. A drawn magus set aside because he refused to
+  stand is given a shard (choose "Refused to stand"); one set aside for
+  any other cause is not (The Sundered Eagle p. 32). The new archai are then placed on the
+  boards: those who have been archai before first, each on a board he
+  has not sat on, by lot where he has a choice; then the rest by lot
+  until each of the Judicial, Legislative and Conciliatory Boards has
+  three; the others form the Treasury Council, where one is drawn
+  tamias, four gather vis and Gifted children (one from each phyle where
+  they can) and the rest are tutors. A board no arche can fill is left
+  to the logothete's Redcaps, and the minutes say how many seats. Each
+  arche's Duties say where he sits, the Tamias office takes the one
+  drawn, and the Tribunal remembers who has sat on which board (pp.
+  27-28, 35). The new archai serve until the next meeting.
   **Archon and polemarch**: the new archai elect the archon from among
   themselves (the eldest is offered) and the polemarch from every
   polites; the archon becomes the Tribunal's Praeco.
@@ -445,6 +469,15 @@ The steps run in a fixed order:
   parens, and the minutes list where every child went. Once given,
   holding this step again changes only its note. A magus has an
   apprentice when someone not yet a magus names them as parens.
+- **The Ceremony of Propitiation**, under the Theban customs, before
+  the closing: the archon casts the ancient Ritual from its Casting
+  Tablet at eight pawns of Creo or Vim, taken from the treasury; then
+  each covenant offers to its patron. Enter the pawns each covenant
+  offers and its patron's Might (remembered for next time); each patron
+  gains 25 xp less its Might, the Might cut by two for every pawn
+  offered, so a Might 25 patron offered 10 pawns gains 20 xp. The League
+  Against Idolatry boycotts the rite (The Sundered Eagle p. 31). The
+  pawns offered are not yet taken from the covenants' own stores.
 - **Closing**: each case with a ruling is decided and what its ruling
   says is written: the fine, owed to the Tribunal's treasury; the
   ruling, into the Peripheral Code; the attitude's move, as a reason
@@ -627,6 +660,10 @@ Each budget is also a bar that fills as it is spent: gold while some is left, re
 
 The Ability cap at creation goes by age (5 under 30); an Affinity with the Ability raises it by 2 for that Ability, and Mentored by Demons lifts it. An Ability that advances as an Art (a hedge Art, a vitki's runes) has no age cap, only its tradition's (a vitki's runes, 10).
 
+On Later Life, (Gild) Trained gives two pools: 30 xp on Order of Hermes Lore, Intrigue and Durenmar Lore, and 60 more on General or Arcane Abilities and the Arts suited to the gild (Guardians of the Forests p. 20). The book lets the 60 buy spells too, a point a level; the worksheet doesn't spend pooled xp on spells yet, so give those levels by hand.
+
+Specialists bought with Build Points are checked too. Each one's score in the Ability they serve with, and a teacher's Teaching, may be no higher than a new character of their age could have: 5 under 30, 6 to 35, 7 to 40, 8 to 45, 9 after that (DE pp. 180-181, p. 48). One with no Year Born is taken as under 30. A bought teacher can't have The Gift, so can't teach a Hermetic Art; they teach as the magi direct two seasons a year (DE p. 180). The form for buying a teacher says so.
+
 A hedge wizard picks their tradition on Concept with **Choose tradition** (once the saga offers one: see [How to play a hedge wizard](help:guide-hedge-magic)), which also adds the Virtues the tradition requires. A magus may choose a Hermetic society there, and a magus of House Ex Miscellanea one of the House's traditions, whose Virtues become his free House Virtues. The tradition's free Virtues, such as a learned magician's Entreat the Powers or a vitki's Minor Virtue from the master, are outside the Virtue and Flaw balance, as a House's are. **Tradition Training** then spends the apprenticeship the book gives (a vitki's 290 xp counting the minimums, a folk witch's 200, a gruagach's 160, or 64 unGifted), changed by Well-Trained and Poorly Trained; **Open the Arts** gives a Gifted member the tradition's Arts and Abilities at 0; and its checks ask for the minimum scores and any share the Arts must have. The spell levels it gives are shown but not yet learned there. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
 
 ### The Grogs Aging Chart
@@ -649,7 +686,7 @@ It is written in the Diary as one entry and can't be undone.
 ### Moving to In Play
 <!-- help: creation-worksheet-play -->
 
-The last step has **Move to In Play**. It lists every check that doesn't pass and asks before moving the record. A covenant with Build Points left over is told how many: moving it to In Play turns them into Mythic Pounds in its Wealth, 10 pounds for each Build Point (the rate money is bought at).
+The last step has **Move to In Play**. It lists every check that doesn't pass and asks before moving the record. A covenant with Build Points left over is told how many: moving it to In Play turns them into Mythic Pounds in its Wealth, 10 pounds for each Build Point (the rate money is bought at). The books don't say what becomes of unspent Build Points (without bought money a covenant starts with no significant cash, Covenants p. 56), so turning them into money is the app's own rule, at the rate Covenants gives for buying a starting reserve. To keep the covenant poor, go back and spend them first.
 
 Checks never stop an edit. If the saga has **Enforce creation rules strictly** turned on (Edit Saga), a record that breaks a rule it must follow stays In Creation until that is fixed. Advice never stops it.
 

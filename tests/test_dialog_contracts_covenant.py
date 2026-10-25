@@ -540,11 +540,12 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "edit covenant reputation": Contract(
         prefill={"Name": "Fair dealing", "Score": "2"},
-        edits={"Score": "3"},
+        # No cap: a Major Prestige Boon's Reputation is 9 (DE p. 184).
+        edits={"Score": "9"},
         saved=lambda s: covenant(s).reputations[0].score,
-        expected=3,
-        invalid=[{"Score": "4"}, {"Score": "-4"}],
-        shown={"#cov-reputations-list": "Fair dealing: +3"},
+        expected=9,
+        invalid=[{"Score": "lots"}],
+        shown={"#cov-reputations-list": "Fair dealing: +9"},
     ),
     "add boon": Contract(
         prefill={"Detail": "", "Description": ""},

@@ -15,9 +15,6 @@ from ..models import ScoredTrait
 from ..sections import LAB_TRAITS_SECTION
 from ..world import REPUTATION_TYPES
 
-#: A covenant Reputation's least and greatest score.
-COVENANT_REPUTATION_RANGE = (-3, 3)
-
 #: Each trait list's noun and its name's example, by its section id.
 NOUNS: dict[str, tuple[str, str]] = {
     "section-personality-traits": ("Personality Trait", "e.g. Brave"),
@@ -129,8 +126,9 @@ def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
     noun, example = NOUNS[section]
     bounds: dict[str, Any] = {}
     if section == "section-cov-reputations":
-        low, high = COVENANT_REPUTATION_RANGE
-        bounds = {"min_score": low, "max_score": high, "include_known": True}
+        # Reputations have no cap (DE p. 28): a Major Prestige Boon's is 9
+        # (p. 184).
+        bounds = {"include_known": True}
     if section in REPUTATION_SECTIONS:
         bounds["include_reach"] = True
 

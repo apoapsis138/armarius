@@ -156,6 +156,7 @@ TRADITION_SYMBOLS: dict[str, Path] = {
         "baal_ov",
         "beast_masters",
         "tempestaria",
+        "nemthengacha",
         "scinnfolk",
         "columbae",
         "donatores_requietis_aeternae",

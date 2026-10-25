@@ -48,6 +48,7 @@ from ..models import (
     assign_laboratory,
     known_fields,
 )
+from ..models.character import MERCURIAN_MAGIC
 from ..rules import aging as aging_rules
 from ..rules import (
     creation_characteristics,
@@ -57,6 +58,7 @@ from ..rules import (
     medicine,
     research,
     scores,
+    sigils,
 )
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
@@ -365,7 +367,15 @@ def fatigue_fields(level: str) -> list[DialogField]:
     ]
 
 
-def hermetic_fields(hermetic: HermeticBackground) -> list[DialogField]:
+def is_mercurian(character: Character) -> bool:
+    return any(vf.vf_id == MERCURIAN_MAGIC for vf in character.virtues_flaws)
+
+
+def hermetic_fields(
+    hermetic: HermeticBackground, *, mercurian: bool = False
+) -> list[DialogField]:
+    """The Hermetic Background form; `mercurian` adds whether a Mercurian
+    magus has learned Road Magic."""
     h = hermetic
     return [
         DialogField(
@@ -393,6 +403,30 @@ def hermetic_fields(hermetic: HermeticBackground) -> list[DialogField]:
             h.age_of_apprenticeship,
         ),
         DialogField("wizards_sigil", "Wizard's Sigil", "area", h.wizards_sigil),
+        DialogField(
+            "holds_own_sigil",
+            "Holds own voting sigil",
+            "check",
+            h.holds_own_sigil,
+            show_if=lambda values: values.get("house") == sigils.TREMERE,
+            hint="House Tremere: a parens holds his filius's sigil until the "
+            "filius beats him in certamen or the parens dies (DE p. 16).",
+        ),
+        *(
+            [
+                DialogField(
+                    "road_magic",
+                    "Has learned Road Magic",
+                    "check",
+                    h.road_magic,
+                    hint="Mercurian Magic: Road and Road Network after a season's "
+                    "teaching; a starting magus whose parens has Mercurian Magic "
+                    "may have learned it (TMRE p. 116).",
+                )
+            ]
+            if mercurian
+            else []
+        ),
     ]
 
 
@@ -440,7 +474,7 @@ def description_edits(
     if c.type == "magus":
         edits["Hermetic Background"] = Form(
             "Edit Hermetic Background",
-            lambda: hermetic_fields(c.hermetic),
+            lambda: hermetic_fields(c.hermetic, mercurian=is_mercurian(c)),
             set_hermetic,
         )
     return edits

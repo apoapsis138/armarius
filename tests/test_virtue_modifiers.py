@@ -264,7 +264,7 @@ def test_creation_confidence_and_parens_virtues():
         ("vf_senior_bard", 90, "Area Lore: Connacht"),
         ("vf_forge_companion", 50, "Craft: Smith"),
         ("vf_herbalism", 50, "Herbalism"),
-        ("vf_gild_trained", 90, "Intrigue"),
+        ("vf_gild_trained", 30, "Intrigue"),  # and 60 more on other Abilities and Arts
     ],
 )
 def test_more_virtues_give_creation_xp(vf_id, xp, ability):

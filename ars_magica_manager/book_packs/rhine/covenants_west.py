@@ -129,6 +129,7 @@ def _durenmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Portal to Harco.",
     )
     what_matters = joined_lines(
+        "Portals: masters, archmagi and Redcaps use Durenmar's Mercere Portals free; anyone else pays two pawns of vis each, a few retainers going free (Guardians of the Forests p. 26)",
         "Vis: Intellego from the golden-green sap of the great vine on the Tower of Bonisagus (amount not given)",
         "Vis: Perdo from the pine cones of the Black Fir, gathered yearly (amount not given)",
         "Vis: Vim from Petrus Virilis's seed",

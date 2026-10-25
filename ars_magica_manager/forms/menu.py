@@ -115,6 +115,8 @@ NOT_ON_PAGES = frozenset(
         "use_effect",
         "give",
         "withdraw_case",
+        "neutralize_shard",
+        "tribunal_longevity",
         "roll_fair",
         "roll_table",
         "battle_event",

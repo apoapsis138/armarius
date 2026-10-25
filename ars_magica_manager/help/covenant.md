@@ -259,7 +259,8 @@ Nothing on the sheet is worked out from it.
 ### Reputations
 <!-- help: section-cov-reputations -->
 
-The covenant's Reputations, each with a score from -3 to +3. Each one also
+The covenant's Reputations, each with a score (no cap: a Major Prestige
+Boon's is 9, DE p. 184). Each one also
 records whether the covenant knows about it: an unknown one is marked
 "(not known by the covenant)" on its row. Every point of a bad Reputation
 (a negative score) the covenant knows about costs 5 Loyalty points on the
@@ -296,6 +297,10 @@ its details list the Story Events that unlocked them (see the
 [Diary tab](help:tab-cov-diary)). Its description is the place to note
 what the resources are, decided ahead or later.
 
+A Prestige Boon gives the covenant a Reputation among the group it names:
+3 for the Minor Boon, 9 for the Major (DE pp. 183-184). Add it under
+Reputations; the checks advise while a Prestige Boon has none.
+
 ### Hooks
 <!-- help: section-cov-hooks -->
 
@@ -316,6 +321,11 @@ stories have been told against that Hook so far. An Illusory Resources Hook
 stands for 250 Build Points of improvements that don't really exist: its
 row shows how many have been found out ("60/250 BP"), and its details list
 the Story Events that revealed them.
+
+An Unknown Hook is a Minor Hook a player chooses and keeps secret, counted
+as Major for balancing Boons (DE p. 182). Take it either as the Unknown
+entry or by marking a Minor Hook Unknown, not both: with both, the checks
+say it is counted twice.
 
 ## Inhabitants tab
 <!-- help: tab-cov-inhabitants -->
@@ -355,14 +365,22 @@ Money from the choices you make with
 **Edit** beside Loyalty
 <!-- /gui -->
 (a Pension adds to Money, and its **Pensioners** each cost half Wages),
-Specialists (the Presence and Ability of any Steward, Chamberlain, Turb
-Captain or Autocrat), Familiarity (worked out: 2 points for every year
+Specialists (below), Familiarity (worked out: 2 points for every year
 since the covenant's Year Founded, at most what the magi's Gift takes off,
 DE p. 186; the **Familiarity adjustment** you type changes it, for
 instance when new covenfolk dilute it), Reputation, Actions and events (the
-Diary's Loyalty points plus any you type), and Magical Influence. Current
-Loyalty Points is the sum, and the Prevailing Loyalty Score comes from it
-by the same table as Ability advancement.
+Diary's Loyalty points plus any you type), and Magical Influence.
+
+Specialists: the Presence and Ability of the covenant's Turb Captain,
+Steward and Chamberlain. An Autocrat does a Steward's and a Chamberlain's
+job and adds the points of both roles, so Presence counts twice. At most
+one person counts for each of the three tasks, so at most three
+specialists (DE p. 186; Covenants p. 37); when more hold a task, the ones
+covering the most tasks with the highest total count, and the row says how
+many are left out. Current Loyalty Points is the sum, and the Prevailing
+Loyalty Score comes from it by the Ability Advancement Table, negative
+points giving a negative score; the table goes on past 6 (7 at 140
+points, 8 at 180).
 
 ### Inhabitants
 <!-- help: section-inh-population -->
@@ -804,6 +822,11 @@ are typed with **Edit** (Sundry is at least 1 pound a year). The inspector
 shows how the row clicked was worked out.
 <!-- /gui -->
 
+Writing Materials cost a pound a year for every magus, scribe, bookbinder
+and illuminator (DE p. 194): magi, craftspeople working on Books, and
+specialists whose Ability or responsibility names a scribe, bookbinder,
+illuminator or copyist (a scribe is a specialist, DE p. 190).
+
 ### Cost Savings
 <!-- help: section-eco-savings -->
 
@@ -823,6 +846,12 @@ when Wealth cannot cover it), and
 on it first offers to draw the
 deficit, or as much as Wealth holds, from Wealth. Emergency Savings start
 again at 0 each year.
+
+At a Prevailing Loyalty of -6 the covenfolk's productivity is halved (DE
+p. 185): the Laborers' and Craftspeople's savings are halved, and their
+rows say why. Income that relies on covenfolk is halved too, but the app
+can't tell which sources do: lower those by hand. At +6 productivity
+rises, but the book gives no figure, so the rows only note it.
 
 ## Library tab
 <!-- help: tab-cov-library -->

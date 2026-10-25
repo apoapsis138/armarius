@@ -203,6 +203,8 @@ An Ordeal lowers the Target Level of the Initiate's next three Initiations, neve
 
 **Varying the Script:** the Mystagogue may make one change in an Initiation. Choose it in **Vary the Script** (add a component, Ease 9; change one, 12; remove one, 15) and type in **The change adds** what it does to the Script bonus (negative when removing). When the season is applied the app rolls a stress die + the Mystagogue's Intelligence + Lore: success adds the change to the Script bonus, and failure fails the Initiation, with no Virtue and no Ordeal, though the Script as it was may be tried another season (DE pp. 388-389). The Mysteries Revised Edition (p. 17) says instead that the original Script still works; the Definitive Edition wins, so this isn't a bug. Removing a component (Ease 15) is The Mysteries Revised's own addition, and it doesn't let a Minor Virtue's Script become a Major one.
 
+**Who may be Initiated:** two Mysteries check it. **Secret Name** fails for a magus with a talisman or a familiar (DE p. 235), and **Faerie Magic** needs one touched by the fay, by a fay Virtue or Flaw or a Warping Point from a faerie (DE p. 236). The app can't tell where Warping came from, so any Warping Point counts.
+
 **Distractions:** **Months lost** on the plan takes a third of the Initiation Total a month, rounded up. If that makes the Initiation fail, the Ordeal is still suffered and the Initiation must be repeated (The Mysteries Revised Edition p. 12).
 
 **You type:** the Script bonus, as the storyguide agrees it. Experimenting with a new Script is rolled at the table; type the Script bonus that results. Which Major Flaw a Minor Flaw is related to is the troupe's call: the app checks only that it is a Major Flaw.

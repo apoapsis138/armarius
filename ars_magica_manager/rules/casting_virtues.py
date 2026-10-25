@@ -222,6 +222,9 @@ SHORT_LIVED = "vf_short_lived_magic"
 INCOMPATIBLE = "vf_incompatible_arts"
 CLUMSY_MAGIC = "vf_clumsy_magic"
 INCONSTANT = "vf_inconstant_magic"
+FAERIE_MAGIC = "vf_faerie_magic"
+SPELL_TIMING = "vf_spell_timing"
+SECRET_NAME = "vf_secret_name"
 #: The Flaws that take 3 off every Finesse roll, aiming included (DE pp.
 #: 122, 134).
 FINESSE_FLAWS = (CLUMSY_MAGIC, INCONSTANT)
@@ -375,6 +378,24 @@ NOTES: dict[str, Callable[[Character], str]] = {
         "sunset, Sun only Diameter (DE p. 144)."
     ),
     INCOMPATIBLE: _incompatible,
+    FAERIE_MAGIC: lambda _m: (
+        "Faerie Magic: a Bargain spell is cast on one who has just made a "
+        "bargain with him, its Penetration Total doubled, and takes effect "
+        "when the bargain is broken; Until (Condition) ends with its condition, "
+        "his Twilight, or his or the target's death (DE p. 237)."
+    ),
+    SPELL_TIMING: lambda _m: (
+        "Spell Timing: a Held, Midday/Midnight or Season spell's effect and "
+        "Penetration are worked out when it is released; an If (Condition) "
+        "spell lapses untriggered after a year, or with his Twilight or death; "
+        "a recurring spell ends before it starts again (DE pp. 239-240)."
+    ),
+    SECRET_NAME: lambda _m: (
+        "Secret Name: no sympathetic connection works against him, and his "
+        "Arcane Connections from before the Initiation have expired; one who "
+        "knows the secret name doesn't subtract the spell's level from the "
+        "Penetration Total against him (DE p. 235)."
+    ),
     CLUMSY_MAGIC: lambda _m: (
         "Clumsy Magic: -3 to Finesse rolls, and an aiming roll of 0 is a "
         "botch (DE p. 122)."

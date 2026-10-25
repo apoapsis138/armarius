@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 
 from ...models import Character, Covenant, Neighbour, Saga, Tribunal
 from .. import BookPack, register
-from ..builder import Builder
+from ..builder import Builder, fill_boons_hooks
 
 NAME = "The Sundered Eagle: the Theban Tribunal"
 SOURCE = (
@@ -69,6 +69,7 @@ def assemble() -> Builder:
         if finish is not None:
             finish(theban)
     _covenant_auras(theban)
+    fill_boons_hooks(theban.b.saga)
     for part in parts:
         stats = getattr(part, "stats", None)
         if stats is not None:

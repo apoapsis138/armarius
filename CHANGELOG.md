@@ -109,6 +109,90 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.15.0 — 2026-10-25
+
+### Computus
+
+- Merinita's **Faerie Magic** opens its own Range, Durations and Target when
+  inventing a spell: Road, Bargain, Fire, Until (Condition), Year + 1 and
+  Bloodline; **Spell Timing** adds If (Condition) and recurring spells (a
+  new "Recurs each" choice, +1 to +5 magnitudes and a Ritual); Sensory
+  Magic adds Spectacle (DE pp. 236-240; HoH:MC p. 28).
+- A spell with a Mystery's own Range, Duration or Target is learned only by
+  a magus with that Mystery. A Mercurian magus has Road and Road Network
+  once he has learned Road Magic (**Has learned Road Magic** in his
+  Hermetic Background; every Mercurian of an older save has it) (TMRE p.
+  116).
+- Casting reminders for Faerie Magic, Spell Timing and Secret Name; against
+  a magus with Secret Name, sympathetic connections add nothing to
+  Penetration (DE p. 235).
+- A related language reads at the books' penalty: Classical Greek through
+  Romaic Greek at -2, and the other Tribunal books' tables.
+
+### Book of Hours
+
+- Faerie Magic stands in for Magic Theory when experimenting or inventing a
+  faerie-parameter spell (DE p. 238).
+- The **free House Virtue**: ten seasons of one-to-one work with the parens
+  give an apprentice his House Virtue (DE p. 272).
+- Initiation checks: Secret Name fails for a magus with a talisman or a
+  familiar; Faerie Magic needs one touched by the fay.
+- With the Art & Academe medicine option, an injury heals with **first aid**
+  and **palliative care**, half a chirurgeon's Chirurgy each (together at
+  most the nurse's); Recovery Roll gives first aid, operates on a disease
+  (nine procedures, each leaving its wound), and can have a chirurgeon try
+  a **surgical intervention** when a wound's roll fails, with its lasting
+  cost (Art & Academe pp. 59-62).
+
+### Pagina
+
+- **Tremere voting sigils**: the Hermetic Background says who holds a
+  Tremere magus's sigil, and "Holds own voting sigil" records winning it
+  (DE p. 16).
+- Prevailing **Loyalty** follows the advancement table past 6; an Autocrat
+  adds the points of both roles; only one person counts for each of the
+  three tasks; at -6 the laborers' and craftspeople's savings are halved
+  (DE pp. 185-186; Covenants pp. 36-38).
+- Scribes kept as specialists count for Writing Materials (DE p. 190).
+- Covenant **Reputations** have no cap: a Major Prestige Boon's is 9 (DE
+  pp. 28, 184).
+
+### Gauntlet
+
+- Bought specialists are held to the age cap, and a bought teacher can't
+  be Gifted or teach a Hermetic Art; the Unknown Hook can't be counted
+  twice; a Prestige Boon asks for its Reputation; "Starting income by
+  number of magi" adjusts the main source once, 15 a magus (DE pp.
+  179-189).
+
+### Florilegium
+
+- The **Nemthengacha** join House Ex Miscellanea's traditions, with a
+  symbol of their own (DE p. 244).
+
+### Concilium
+
+- A Theban meeting executes its sentences (shards and tokens), gives a
+  shard to one who refused the sortition, places the new archai on the
+  Boards and the Treasury Council and draws the tamias, and closes with the
+  Ceremony of Propitiation; the Tokens list gains Neutralize and the
+  Tribunal's yearly Longevity Ritual (The Sundered Eagle pp. 27-35).
+- Transylvania checks offices against privileges, and the roster's
+  Oppidum column says whether each oppidum keeps the Tribunal's rulings
+  (Against the Dark pp. 15-18).
+- Rhine gilds are factions of magi, with leaders and an agenda; a Tremere
+  whose sigil his exarch casts no longer votes twice (Guardians of the
+  Forests pp. 22-29, 84, 109).
+
+### Peregrinatio
+
+- The Theban pack gives its magi the book's apparent ages, its covenants
+  their Boons and Hooks and patrons, and two shared laboratories; the
+  Transylvania pack's Chronicle is an encyclopedia of eighteen tractatus,
+  and Tablinum's laboratories and the zenodochium's items are records; the
+  Rhine pack seats its gilds' magi, fills in its rulings, and (Gild)
+  Trained gives 30 + 60 xp as two pools.
+
 ## 3.14.0 — 2026-10-25
 
 ### Florilegium

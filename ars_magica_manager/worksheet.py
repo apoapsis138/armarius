@@ -763,10 +763,9 @@ def _later_life_budget(saga: Saga, record: Record) -> str:
         f"{span} years at {later.xp_a_year(character)} xp = {budget} xp, "
         f"[b]{spent} spent, {budget - spent} left[/]"
     ]
-    by_id = catalog.load_virtue_flaw_catalog_by_id()
     for vf_id, rule in access.virtue_xp(character).items():
         own = sum(x.xp for x in cx.entries(character, "virtue") if x.note == vf_id)
-        lines.append(f"{escape(by_id[vf_id].name)}: {rule.xp} xp, {own} spent")
+        lines.append(f"{escape(access.pool_name(vf_id))}: {rule.xp} xp, {own} spent")
     cap = access.character_ability_cap(character, ag.cap_age(saga, character))
     moved = aging_chart.cap_text(character.creation_conditions.aging_chart_cap)
     lines.append(
@@ -800,11 +799,10 @@ def _later_life_rows(saga: Saga, record: Record) -> list[Row]:
                 row = xp_row(saga, character, entry, None)
                 row.delete = lambda note=taken.note: wf.drop_package(character, note)
                 rows.append(row)
-    by_id = catalog.load_virtue_flaw_catalog_by_id()
     for vf_id in access.virtue_xp(character):
         own = [x for x in cx.entries(character, "virtue") if x.note == vf_id]
         if own:
-            heading = f"{escape(by_id[vf_id].name)} xp"
+            heading = f"{escape(access.pool_name(vf_id))} xp"
             rows.append(Row(heading, heading=True, cells=[heading]))
             targets = later.virtue_targets(character, vf_id)
             rows += [xp_row(saga, character, x, targets) for x in own]
@@ -818,7 +816,7 @@ def _later_life_rows(saga: Saga, record: Record) -> list[Row]:
 
 
 def _virtue_xp_action(saga: Saga, character: Character, vf_id: str) -> Action:
-    name = catalog.load_virtue_flaw_catalog_by_id()[vf_id].name
+    name = access.pool_name(vf_id)
     return Action(
         f"Spend {name} xp",
         lambda: wf.spend_xp(

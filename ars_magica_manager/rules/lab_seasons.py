@@ -283,6 +283,7 @@ def design_level(design: SpellDesign) -> int | None:
             extra_magnitudes=design.extra_magnitudes,
             ritual=design.ritual,
             custom_steps=design.custom_steps,
+            recurring=design.recurring,
         )
         return worked.level if worked is not None else None
     return design.printed_level
@@ -538,6 +539,8 @@ def _spell_work(
         return found, None
     if any(k.spell_id == spell.id for k in magus.spells_known):
         return [f"{magus.name} already knows {spell.name}."], None
+    if needed := _mystery_needed(magus, spell):
+        return [needed], None
     source = catalog.find_spell(
         saga, plan.design.source_spell_id if plan.design else None
     )
@@ -625,6 +628,23 @@ def _spell_work(
     return [], result
 
 
+def _mystery_needed(magus: Character, spell: Spell) -> str:
+    """Why the magus can't learn a spell with a Mystery's own parameter
+    (Faerie Magic, Spell Timing, Sensory Magic) he lacks; "" when he can."""
+    needed = spell_levels.virtue_needed(
+        spell_levels.opening_ids(
+            {vf.vf_id for vf in magus.virtues_flaws},
+            learned_road=magus.hermetic.road_magic,
+        ),
+        spell.range,
+        spell.duration,
+        spell.target,
+    )
+    if not needed:
+        return ""
+    return f"{magus.name} can't learn {spell.name}: " + " ".join(needed)
+
+
 def teacher_of(saga: Saga, plan: SeasonPlan) -> Character | None:
     return saga.character(plan.teacher_id) if plan.teacher_id else None
 
@@ -668,6 +688,8 @@ def _taught(
             return [f"{magus.name} already knows {spell.name}."], None
         if not any(k.spell_id == spell.id for k in teacher.spells_known):
             return [f"{teacher.name} doesn't know {spell.name}."], None
+        if needed := _mystery_needed(magus, spell):
+            return [needed], None
         technique, form = requisite_arts(magus, spell)
         mine = lab.lab_total(
             saga,
@@ -717,7 +739,7 @@ def _over_limit(magus: Character, made: LabWork) -> str:
         return ""
     return (
         f"The season uses {used} pawns of vis; {magus.name} can handle {limit} "
-        "in a season (twice Magic Theory)."
+        "in a season (twice Magic Theory)." + lab_virtues.faerie_vis_note(magus)
     )
 
 
@@ -1413,6 +1435,7 @@ def _with_options(
         talisman=_in_own_talisman(saga, magus, plan),
         binding=plan.activity == familiar_seasons.BIND,
         horoscope_score=lab_virtues.horoscope_score(magus),
+        faerie_work=_faerie_work(saga, plan),
     )
     extra += virtues
     halvings = lab_virtues.halving_lines(magus, plan, _design_range(saga, plan))
@@ -1437,6 +1460,21 @@ def _in_own_talisman(saga: Saga | None, magus: Character, plan: SeasonPlan) -> b
         and device.talisman
         and enchantment.talisman_magus_id(device) == magus.id
     )
+
+
+def _faerie_work(saga: Saga | None, plan: SeasonPlan) -> bool:
+    """Whether the season draws on Faerie Magic: experimenting, or
+    inventing a spell with the Mystery's own parameters (DE p. 238)."""
+    if plan.experimenting and plan.activity in EXPERIMENTAL:
+        return True
+    if plan.activity != INVENT:
+        return False
+    spell = plan.design or (the_spell(saga, plan) if saga is not None else None)
+    return spell is not None and spell_levels.FAERIE_MAGIC in {
+        v
+        for e in spell_levels.parameters_of(spell.range, spell.duration, spell.target)
+        for v in e.granted_by
+    }
 
 
 def _design_range(saga: Saga | None, plan: SeasonPlan) -> str | None:

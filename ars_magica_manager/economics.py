@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import catalog, storage
+from . import inhabitants as inh
 from . import possessions as pos
 from .covenants import covenant_modifiers
 from .markup import aligned, escape, markdown_text, problem
@@ -80,6 +81,25 @@ CRAFT_SAVINGS: dict[str, tuple[str, float]] = {
 
 #: Laborers may save at most half of the Provisions cost.
 LABORER_LIMIT = 0.5
+#: At a Prevailing Loyalty of -6 the covenfolk's productivity is halved
+#: (inhabitants.PRODUCTIVITY_SOURCE).
+PRODUCTIVITY_HALVED = 0.5
+#: Writing materials: a pound a year for every magus, scribe, bookbinder or
+#: illuminator (DE p. 194). Binders and illuminators are craftspeople
+#: working on Books; a scribe is a specialist (DE p. 190), known by the
+#: Ability they serve with or their responsibility.
+WRITING_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Writing Materials, "
+    "p. 194; Covenfolk Categories, p. 190"
+)
+_BOOK_WORDS = ("scribe", "binder", "illuminat", "copyist")
+
+
+def is_book_specialist(entry: covenfolk.InhabitantEntry) -> bool:
+    """A specialist who writes or makes books: Profession: Scribe (or a
+    bookbinding or illumination Ability), or a responsibility naming it."""
+    text = f"{entry.linked_ability} {entry.responsibility}".casefold()
+    return any(word in text for word in _BOOK_WORDS)
 
 
 def upkeep_points(score: int) -> int:
@@ -187,7 +207,7 @@ _CALCULATED_ROWS: tuple[tuple[str, str, str], ...] = (
     (
         "writing",
         "Writing Materials",
-        "1 pound per Magus and book specialist (50% per craft)",
+        "1 pound per Magus, scribe, bookbinder or illuminator (50% per craft)",
     ),
 )
 
@@ -269,7 +289,13 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     wage_multiplier = WAGE_MULTIPLIERS.get(covenant.loyalty.money, 1.0)
     magi = covenfolk.headcount(covenfolk.entries_for_kind(saga, covenant, "magus"))
     craftspeople = covenfolk.entries_for_kind(saga, covenant, "craftsperson")
-    writers = magi + sum(e.quantity for e in craftspeople if e.field_of_work == "Books")
+    book_crafts = sum(e.quantity for e in craftspeople if e.field_of_work == "Books")
+    scribes = sum(
+        e.quantity
+        for e in covenfolk.entries_for_kind(saga, covenant, "specialist")
+        if is_book_specialist(e)
+    )
+    writers = magi + book_crafts + scribes
 
     # Boons that add to the size, magnificence or quantity of the covenant's
     # buildings or fortifications: +2 per Minor, +5 per Major, carried on the
@@ -297,6 +323,13 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     laborers, laborer_savings, craftsmen, craft_savings = _labor_savings(
         saga, covenant, craftspeople, costs
     )
+    # At a Prevailing Loyalty of -6 the savings that rely on covenfolk are
+    # halved; at +6 productivity rises by no set amount (only noted).
+    loyalty = inh.prevailing_loyalty(saga, covenant)
+    productivity = inh.productivity_note(loyalty)
+    if loyalty <= -inh.PRODUCTIVITY_LOYALTY:
+        laborer_savings *= PRODUCTIVITY_HALVED
+        craft_savings = {k: v * PRODUCTIVITY_HALVED for k, v in craft_savings.items()}
     row_savings = {
         key: craft_savings[key] + (laborer_savings if key == "provisions" else 0.0)
         for key in costs
@@ -332,7 +365,8 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             else ""
         ),
         "weapons": f"{gear} pts of weapons and armor / 320",
-        "writing": f"{magi} magi + {writers - magi} book craftspeople",
+        "writing": f"{magi} magi + {book_crafts} book craftspeople"
+        + (f" + {scribes} scribe specialist(s)" if scribes else ""),
     }
     expenditure = [
         Row(
@@ -356,7 +390,8 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             laborers,
             round_away_from_zero(laborer_savings),
             eco.notes.get("laborers", ""),
-            "Laborer-tagged entries on the Other Covenfolk list",
+            "Laborer-tagged entries on the Other Covenfolk list"
+            + (f"; {productivity}" if productivity else ""),
         ),
         Row(
             "craftspeople",
@@ -366,7 +401,8 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             craftsmen,
             round_away_from_zero(sum(craft_savings.values())),
             eco.notes.get("craftspeople", ""),
-            "Craftspeople with a field of work (Books saves nothing)",
+            "Craftspeople with a field of work (Books saves nothing)"
+            + (f"; {productivity}" if productivity else ""),
         ),
         _typed_row(
             eco,

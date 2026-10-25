@@ -88,15 +88,31 @@ _GIFT_DISPLAY: dict[str, str] = {
 }
 
 
-#: A Covenant Role's Loyalty bonus is Presence plus these Abilities' Levels,
-#: summed (Autocrat, doing both a Steward's and a Chamberlain's job, gets
-#: both Profession abilities).
+#: A Covenant Role's Loyalty bonus is Presence plus the role's Ability,
+#: once for each task it covers: an Autocrat does a Steward's and a
+#: Chamberlain's job and adds the points of both roles (DE p. 186;
+#: Covenants p. 37), so Presence counts twice. Covenants' example (a turb
+#: captain 6, an autocrat 12) doesn't settle whether Presence counts once
+#: or twice; this is the app's reading of "add loyalty points for both
+#: roles".
 ROLE_ABILITY_MAP: dict[str, tuple[str, ...]] = {
     "Turb Captain": ("Leadership",),
     "Steward": ("Profession: Steward",),
     "Chamberlain": ("Profession: Chamberlain",),
     "Autocrat": ("Profession: Chamberlain", "Profession: Steward"),
 }
+#: The three tasks a covenant may hand to specialists, and which each role
+#: covers: at most one specialist counts for each task (DE p. 186).
+ROLE_TASKS: dict[str, frozenset[str]] = {
+    "Turb Captain": frozenset({"Turb Captain"}),
+    "Steward": frozenset({"Steward"}),
+    "Chamberlain": frozenset({"Chamberlain"}),
+    "Autocrat": frozenset({"Steward", "Chamberlain"}),
+}
+ROLES_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Modifying Loyalty Due "
+    "to Covenant Situation, p. 186; Covenants, p. 37"
+)
 
 
 @dataclass
@@ -224,12 +240,19 @@ class InhabitantEntry:
         return self._own("skill_value", 0)
 
     @property
+    def role_presence_total(self) -> int:
+        """Presence once for each task the role covers (twice for an
+        Autocrat)."""
+        return self.role_presence * len(ROLE_TASKS.get(self.role, ()))
+
+    @property
     def role_bonus(self) -> int | None:
-        """The covenant Role's Loyalty bonus (Presence + Ability), or None
-        when the role isn't one of the four the book gives a bonus for."""
+        """The covenant Role's Loyalty bonus (Presence + Ability for each
+        task it covers), or None when the role isn't one of the four the
+        book gives a bonus for."""
         if self.role not in ROLE_ABILITY_MAP:
             return None
-        return self.role_presence + self.role_ability_total
+        return self.role_presence_total + self.role_ability_total
 
     @property
     def description(self) -> str:

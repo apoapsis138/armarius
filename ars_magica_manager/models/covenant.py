@@ -102,8 +102,7 @@ class Covenant:
     #: An optional free-text descriptor lives in `params["detail"]` (which
     #: Edifice, which resource...), blank by default -- see BOON_HOOK_DETAIL.
     boons_hooks: list[VirtueFlawInstance] = field(default_factory=list)
-    #: Covenant Reputations: a name and a score from -3 to +3 (the range is
-    #: enforced by the edit dialog, not here).
+    #: Covenant Reputations: a name and a score, with no cap (DE p. 28).
     reputations: list[ScoredTrait] = field(default_factory=list)
     #: The Inhabitants tab (see Inhabitant, Loyalty and Population).
     inhabitants: list[Inhabitant] = field(default_factory=list)

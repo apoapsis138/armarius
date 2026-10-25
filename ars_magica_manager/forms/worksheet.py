@@ -1154,11 +1154,18 @@ def specialist_cost(values: dict[str, Any]) -> int:
 
 
 def specialist_live(values: dict[str, Any]) -> str:
+    # A bought teacher teaches as the magi direct two seasons a year, has
+    # no Gift and so teaches no Hermetic Art (DE p. 180).
+    teaches = (
+        ". Teaches two seasons a year; no Gift, so no Hermetic Arts"
+        if values.get("teacher")
+        else ""
+    )
     if not values.get("linked_ability"):
-        return f"Costs {specialist_cost(values)} Build Points"
+        return f"Costs {specialist_cost(values)} Build Points{teaches}"
     return (
         f"Joins the {inh.KIND_TITLES[specialist_kind(values)]}. "
-        f"Costs {specialist_cost(values)} Build Points"
+        f"Costs {specialist_cost(values)} Build Points{teaches}"
     )
 
 

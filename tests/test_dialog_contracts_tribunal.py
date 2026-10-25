@@ -471,10 +471,16 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#trib-treasury": "repaid", "#trib-balance": "Silver in hand: 40"},
     ),
     "add gild": Contract(
-        prefill={"Gild": "", "Dues": "", "Keep": False, "Fengheld": False},
+        prefill={"Gild": "", "Agenda": "", "Keep": False, "Fengheld": False},
         edits={"Gild": "Mercantile", "Fengheld": True},
         saved=lambda s: s.tribunals[0].package_data["rhine"]["gilds"][-1],
-        expected={"name": "Mercantile", "dues": "", "members": ["cov_sketch"]},
+        expected={
+            "name": "Mercantile",
+            "agenda": "",
+            "leader_ids": [],
+            "magi": [],
+            "members": ["cov_sketch"],
+        },
         invalid={"Gild": ""},
         shown={"#trib-gilds-list": "Mercantile", "#trib-roster": "Hermetic, Mercan"},
     ),

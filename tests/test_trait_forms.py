@@ -40,7 +40,7 @@ def test_add_edit_and_delete_a_trait():
     assert traits == []
 
 
-def test_a_covenant_reputation_is_bounded_and_may_be_unknown():
+def test_a_covenant_reputation_has_no_cap_and_may_be_unknown():
     traits: list[ScoredTrait] = []
     ops = trait_forms.trait_ops(traits, "section-cov-reputations")
     assert ops.add is not None
@@ -48,8 +48,9 @@ def test_a_covenant_reputation_is_bounded_and_may_be_unknown():
     assert isinstance(form, commands.Form)
     keys = [f.key for f in form.fields()]
     assert keys == ["name", "score", "type", "reach", "known"]
-    _values, problem = _answer(form, {"name": "Feared", "score": "5"})
-    assert problem == "Score must be between -3 and +3."
+    # No cap: a Major Prestige Boon's Reputation is 9 (DE p. 184).
+    _values, problem = _answer(form, {"name": "Famed", "score": "9"})
+    assert problem is None
     values, problem = _answer(form, {"name": "Feared", "score": "-2", "known": False})
     assert problem is None
     form.apply(values)

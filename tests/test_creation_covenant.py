@@ -674,7 +674,7 @@ def test_starting_income_follows_poverty_wealth_and_the_magi_rule():
     saga.rule_options["income_per_magus"] = True
     assert labels() == [
         "One Typical source (40 pounds)",
-        "Two Lesser sources (16 pounds each)",
+        "Two Lesser sources (10 pounds each)",
     ]
     saga.rule_options = {}
     covenant.boons_hooks = [VirtueFlawInstance("covbh_boon_minor_wealth")]
@@ -910,7 +910,9 @@ def test_build_points_left_become_pounds_in_its_wealth_on_moving_to_play():
     assert cov.remaining(saga, covenant) == 280
     assert cov.leftover_note(saga, covenant) == (
         "It has 280 Build Points left. Moving it to In Play turns them into "
-        "2800 Mythic Pounds, added to its Wealth (one Build Point buys 10 pounds)."
+        "2800 Mythic Pounds, added to its Wealth (one Build Point buys 10 pounds). "
+        "The books don't say what unspent points become: this is the app's rule "
+        "(go back and spend them to keep the covenant poor)."
     )
     creation.set_in_creation(saga, covenant, False)
     assert covenant.economics.wealth == 2800

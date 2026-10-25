@@ -218,13 +218,25 @@ def test_the_rhine_adds_gilds_and_a_gild_column():
     form = ops["section-trib-gilds"].add()
     assert isinstance(form, Form)
     labels = [f.label for f in form.fields()]
-    assert labels == ["Gild", "Dues", "Keep", "Fengheld"]
-    form.apply({"name": "Mercantile", "dues": "", "member_cov_sketch": True})
+    assert labels == [
+        "Gild",
+        "Agenda",
+        "Led by",
+        "And by",
+        "And by",
+        "Keep",
+        "Fengheld",
+    ]
+    form.apply({"name": "Mercantile", "agenda": "", "member_cov_sketch": True})
     assert rhine_gilds(rhine)[-1] == {
         "name": "Mercantile",
-        "dues": "",
+        "agenda": "",
+        "leader_ids": [],
+        "magi": [],
         "members": ["cov_sketch"],
     }
+    # An older save's dues are read as the agenda.
+    assert rhine_gilds(rhine)[0]["agenda"] == "2 pawns a year"
     assert tribunal_sheet.roster_grid(saga, rhine).rows[2][5] == "Hermetic, Mercantile"
 
 
@@ -254,9 +266,11 @@ def test_a_theban_tribunal_votes_by_magi_present_and_marks_the_ostracised():
     assert package.meeting_steps == (
         "assembly",
         "ostrakismos",
+        "sentences",
         "end_of_term",
         "sortition",
         "archon_polemarch",
+        "propitiation",
     )
     tokens = package.tabs[0].lists[0].grid(saga, thebes)
     assert tokens.columns[2] == "Status"

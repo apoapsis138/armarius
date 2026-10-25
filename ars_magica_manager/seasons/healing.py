@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import random
 
-from ..health import season_text
 from ..models import DiaryEntry, Saga, SeasonRecordLine
 from ..rules import disease, harm, recovery
 from ..rules import living as living_rules
@@ -33,7 +32,7 @@ def season_healing(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
         )
         if not had and not bruised and not sick:
             continue
-        tail = [] if died_of_disease else [season_text(character, played)]
+        tail = [] if died_of_disease else [recovery.season_text(character, played)]
         details = "\n".join([*bruised, *illness, *tail]).strip()
         left = recovery.states(character.wounds)
         summary = (

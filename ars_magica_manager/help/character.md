@@ -205,6 +205,17 @@ familiar, a blank **Bind Familiar** card stands under the section, where
 the familiar would be.
 <!-- /gui -->
 
+For a magus of House Tremere, **Holds own voting sigil** records that he
+has beaten his parens in certamen for his sigil. Until then the sheet says
+who holds it: his parens, or, when the parens doesn't hold his own, the
+first magus up the line of parentes who does; a parens of the saga's who
+has died no longer holds it (DE p. 16).
+
+For a magus with Mercurian Magic, **Has learned Road Magic** opens the Road
+and Road Network Ranges and Targets for his spells: a season's teaching by
+one who knows it, with no further Virtue; a starting magus whose parens has
+Mercurian Magic may be assumed to have learned it (TMRE p. 116).
+
 ### Biographical Detail
 <!-- help: section-char-biographical -->
 
@@ -362,6 +373,17 @@ Infernal p. 12). Each season the wounds heal on their own (see
 levels are long-term: those come back a night's rest each, the rest in
 minutes; a season clears both.
 
+With the **Art & Academe medicine** rule option, an injury's Recovery
+counts **first aid** and **palliative care** in place of the medic's whole
+Chirurgy: first aid given within a day of the wounds adds half the
+first-aider's Chirurgy, rounded up, and palliative care, the nursing
+afterwards, adds half the Chirurgy of the covenant-mate who nurses best
+(a palliative care specialty counts). The two together never come to more
+than the nurse's Chirurgy: a medicus with Chirurgy 5 who gives both gives
++5, not +6 (Art & Academe pp. 61-62). A wound that has had first aid is
+marked "first aid" in the list. A disease, poison or deprivation still
+takes the physician's Medicine.
+
 **Activities while injured** (DE p. 405): a Wound Penalty of -1 or -2
 allows travel and study but nothing strenuous, such as spells that cost
 Fatigue; -3 to -5 halves travel and halves study for a month or more of
@@ -373,6 +395,13 @@ can't keep pace with an army (Lords of Men p. 108). **First aid** (Grogs
 p. 59): within a day, Dexterity + Chirurgy + stress die against the
 Improvement Ease Factor of the worst wound lets the wounded act one
 category better for a day; a botch means an immediate Recovery roll.
+With Art & Academe's medicine, first aid is rolled from
+[Recovery Roll](help:recovery-roll): Dexterity + Chirurgy + Recovery
+Modifiers + magical aid + stress die against the Improvement Ease Factor
+of the worst wound; success lets the wounded act a category less injured
+for a day (still taking the Wound Penalty), and a botch gives no first-aid
+bonus and an immediate Recovery roll for the worst wound (Art & Academe
+p. 61).
 
 <!-- tui -->
 More (`m`) on Health offers [Take Harm](help:take-harm) and a
@@ -453,6 +482,46 @@ p. 405). The rolls go into the Diary.
 worsen), and sets the **magical aid** every Recovery roll adds: a
 Zenodochium's +9 (Against the Dark p. 98) or a Purification of the
 Festering Wound. It rolls each disease once too. Keep applies the rolls.
+
+With the **Art & Academe medicine** rule option, Recovery Roll also
+offers:
+
+- **first aid**: a chirurgeon (anyone in the saga with Chirurgy, the
+  patient too) tends the injuries. Each injury without first aid keeps
+  half his Chirurgy, rounded up, as a bonus to its Recovery rolls, and the
+  First Aid roll (Dexterity + Chirurgy + Recovery Modifiers + magical aid
+  + stress die against the worst wound's Improvement Ease Factor) says
+  whether the patient may act a category less injured for a day. A botch
+  gives no bonus and makes an immediate Recovery roll, which can only hold
+  or worsen (Art & Academe p. 61). Use it within a day of the wounds.
+- **surgery** on a disease: choose the disease and the procedure. The
+  Surgery roll is Dexterity + Chirurgy + Recovery Modifiers + stress die
+  against the procedure's Ease Factor: phlebotomy 3 and cautery or
+  cupping 4 (both a Fatigue level, and only for a disease of Severity 5 or
+  less), a rotten tooth 6, quinsy or a cataract 9, trepanation 12 (each a
+  Light Wound), a gall stone or fistula 9, a cold or hot tumor 12, a
+  consumptive tumor 15 (each a Medium Wound). The wound comes whatever the
+  roll; a botch makes it a step worse and leaves the disease be. A success
+  returns the disease to the stage it began at and gives +3 to its next
+  Recovery roll (Art & Academe p. 61). Whether surgery can help a disease
+  at all is in its description.
+- **Surgical intervention when a roll fails**: tick it, choose the
+  chirurgeon and where the wounds are (the head, the torso, a limb), then
+  roll. Each Recovery roll that fails gets a Surgery roll against 9: a
+  success holds the wound as a stable result, with its +3; a failure lets
+  it worsen; a botch worsens it two steps (a Light wound to Heavy, a Medium
+  to Incapacitating, anything worse to death). Whatever the roll, the
+  patient keeps a consequence by the wound's severity: a Light wound an
+  immediate Aging roll (made when you Keep, in the Diary), a Medium two
+  Aging Points in a Characteristic of that place (Intelligence,
+  Perception, Communication or Presence for the head; Stamina or Strength
+  for the torso; Dexterity or Quickness for a limb), placed with Place
+  Aging Points, a Heavy a Minor Flaw and an Incapacitating a Major Flaw of
+  that place (Blind, Deaf or Mute; Disfigured, Missing Eye or Missing Ear
+  for the head; Crippled or Enfeebled, Disfigured or Fragile Constitution
+  for the torso; Crippled or No Hands, Disfigured, Lame, Missing Hand or
+  Palsied Hands for a limb), which you add on Virtues & Flaws (Art &
+  Academe p. 62). The season's own healing rolls never intervene.
 
 ## End of Session
 <!-- help: end-of-session -->
@@ -583,6 +652,9 @@ Ease Factors (Art & Academe pp. 45-51):
   or over it, +3 to the next roll; at or over the Improvement Ease Factor
   it improves a stage, and a Minor one is cured. A lifelong one never
   changes.
+- **Surgery** (Recovery Roll, surgery) can return a disease to the stage
+  it began at, with +3 to its next Recovery roll, at the cost of a wound
+  (Art & Academe p. 61).
 - **Crisis**: a Critical disease rolls twice a day; 0 or less dies, at or
   over the Stable Ease Factor it eases to Major, anything else -1 to later
   rolls (p. 47). The survivor gains an Aging Point in a Characteristic the
@@ -749,6 +821,13 @@ House's magi, whose free House Virtues are then the tradition's own: its
 Major non-Hermetic Virtue, its Minor Hermetic Virtue and its Major
 Hermetic Flaw (Houses of Hermes: Societates, Chapter 5: House Ex
 Miscellanea). Its chapter shows beside Hermetic Magic.
+
+**Nemthengacha** (DE p. 244): Celtic and Scandinavian magi Ex Miscellanea
+whose Embitterment (Communication + Embitterment + stress die against 6 to
+18 by how close the victim and his friend are, +3 for hatred, +6 for
+murderous loathing) turns a listener against a friend, kinsman or lord.
+Their package: Embitterment, Subtle Magic, and Deficient Technique in Rego
+(DE pp. 244-245).
 
 Leaving a tradition keeps its Arts and Abilities: they move back to the
 Abilities chapter. **The app works out:** each score from its XP, on the
@@ -1102,8 +1181,17 @@ Spells lines counts Mercurian Magic (half, at least one pawn) and Waster of
 Vis (a third more); with Rigid Magic it says no Ritual can be cast (Ars
 Magica Definitive Edition, Chapter Four: Virtues and Flaws). Magical
 Focus, Deleterious Circumstances and Mystical Choreography are named there
-too, as are a Heartbeast's -15 in animal form and Verditius Magic's casting
-tools.
+too, as are a Heartbeast's -15 in animal form and Verditius Magic's
+reminder that Formulaic and Ritual spells need his casting tools (DE
+p. 241).
+
+Faerie Magic, Spell Timing and Secret Name add reminders: a Bargain spell's
+Penetration Total is doubled and takes effect when the bargain is broken;
+a held or If (Condition) spell is worked out, Penetration too, when it is
+released or triggered, and an If spell lapses after a year; no sympathetic
+connection works against a magus with Secret Name, and one who knows the
+secret name doesn't subtract the spell's level from his Penetration Total
+(DE pp. 235, 237, 239-240).
 
 The other casting Virtues and Flaws get a line each there too, with their
 page (DE pp. 70-145): Boosted Magic, Flexible Formulaic Magic, Atlantean

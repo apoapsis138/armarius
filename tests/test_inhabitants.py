@@ -640,7 +640,7 @@ def test_autocrat_sums_both_profession_abilities():
     )
     entry = covenfolk.entries_for_kind(saga, cov, "specialist")[0]
     assert entry.role_ability_total == 7  # 3 + 4
-    assert entry.role_bonus == 8  # + Presence 1
+    assert entry.role_bonus == 9  # + Presence 1 for each of its two roles
 
 
 def test_role_bonus_is_manual_without_a_sheet_and_none_for_other_roles():
@@ -717,8 +717,9 @@ def test_reputations_the_covenfolk_know_of_move_loyalty():
     assert inh.reputation_loyalty(cov) == 10 - 10
 
 
-def test_prevailing_loyalty_score_is_symmetric_and_clamps_beyond_the_table():
-    for points, score in ((0, 0), (5, 1), (104, 5), (105, 6), (500, 6)):
+def test_prevailing_loyalty_score_is_symmetric_and_follows_the_table_past_six():
+    # The Ability Advancement Table goes on: 7 at 140, 8 at 180 (DE p. 186).
+    for points, score in ((0, 0), (5, 1), (104, 5), (105, 6), (140, 7), (500, 13)):
         assert inh.prevailing_loyalty_score(points) == score
         assert inh.prevailing_loyalty_score(-points) == -score
 

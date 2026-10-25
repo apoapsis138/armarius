@@ -22,6 +22,7 @@ from .... import (
     storage,
     threats,
     towns,
+    tribunal_packages,
 )
 from .... import familiars as fam
 from ....actions import (
@@ -49,6 +50,7 @@ from ....sections import (
     NEIGHBOUR_INFO_SECTION,
     STAGES_SECTION,
     TABLES_SECTION,
+    TOKENS_SECTION,
 )
 from ..fields import (
     FieldsDialog,
@@ -165,6 +167,29 @@ class RecordActions(WorkspaceBase):
             tribunal_forms.withdraw_case(view.tribunal, row),
             lambda _end: self._commit(CASES_SECTION),
         )
+
+    def _package_verb(self, action: str, section: str) -> None:
+        """A Tribunal package's More command on its list's chosen row."""
+        view = self._tribunal_sheet_view
+        row = view.section_row(section) if view is not None else None
+        if view is None or row is None:
+            return
+        verb = tribunal_packages.package_verb(view.tribunal, action)
+        if verb is None:
+            return
+        run_steps(
+            self.app,
+            verb.build(self.saga, view.tribunal, row),
+            lambda _end: self._commit(section),
+        )
+
+    def action_neutralize_shard(self) -> None:
+        """More's Neutralize a Shard on the Theban tokens' chosen magus."""
+        self._package_verb("neutralize_shard", TOKENS_SECTION)
+
+    def action_tribunal_longevity(self) -> None:
+        """More's Longevity Ritual on the Theban tokens."""
+        self._package_verb("tribunal_longevity", TOKENS_SECTION)
 
     def action_roll_fair(self) -> None:
         """More's Roll Income on a town's chosen fair."""
