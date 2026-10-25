@@ -30,7 +30,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from ..models import SEASONS, Character, Saga
+from ..models import SEASONS, Character, ConstantEffect, Saga
 from . import dice, effects
 from .derived import form_bonus
 from .scores import ability_level, character_source
@@ -290,3 +290,27 @@ def _effects_note(understood: bool, points: int) -> str:
         f"Scar, and {xp} xp lost from an Art, Magic Theory or Enigmatic Wisdom, "
         f"{flaw}, or spells of {points} magnitudes lost."
     )
+
+
+CONSTANT_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 10: Warping, Constant "
+    "Supernatural Effects, pp. 390-391"
+)
+#: A season's point for a powerful effect not made for the subject, on top
+#: of the year's.
+SEASONS_A_YEAR = 4
+
+
+def constant_points(effect: ConstantEffect) -> int:
+    """The Warping Points a constant effect gives each year: 1, and for a
+    powerful one neither cast by nor designed for the subject 1 a season
+    more (DE p. 391)."""
+    if effect.powerful and not effect.designed_for:
+        return 1 + SEASONS_A_YEAR
+    return 1
+
+
+def first_point(effect: ConstantEffect) -> int:
+    """The Warping Point a powerful effect not made for the subject gives
+    when it begins (DE p. 390)."""
+    return 1 if effect.powerful and not effect.designed_for else 0

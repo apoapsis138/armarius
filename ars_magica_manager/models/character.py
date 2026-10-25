@@ -21,6 +21,7 @@ from .traits import (
     Ability,
     Characteristics,
     KnownSpell,
+    ScoredTrait,
     Spell,
     VirtueFlawInstance,
     new_instance_id,
@@ -287,27 +288,6 @@ class Wounds:
 
 
 @dataclass
-class ScoredTrait:
-    """A name + integer score. Shared shape for Personality Traits and
-    Reputations -- both are just a label and a score on the character sheet."""
-
-    name: str
-    score: int
-    #: Covenant Reputations only: whether the covenant is aware of this
-    #: reputation (an unknown bad Reputation can't yet hurt Loyalty -- see
-    #: inhabitants.reputation_loyalty). Always True and never edited
-    #: for a Character's own Personality Traits/Reputations.
-    known: bool = True
-    #: Reputations only: the kind of reputation (REPUTATION_TYPES, or "")
-    #: and how far it reaches ("the Rhine", "the parish"), both optional.
-    type: str = ""
-    reach: str = ""
-    #: Reputations only: noteworthy deeds counted toward the next level,
-    #: each an experience point (rules.confidence.add_deeds).
-    deeds: int = 0
-
-
-@dataclass
 class HermeticBackground:
     """Magus-only Hermetic lineage block. `house` is a house_catalog.json id;
     no mechanical bonus is modeled for it yet, same as an unencoded
@@ -459,6 +439,27 @@ class CharacterPower:
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> CharacterPower:
+        return cls(**known_fields(cls, d))
+
+
+@dataclass
+class ConstantEffect:
+    """A supernatural effect the character is under all the time (or at
+    least half of it), which warps them each year (DE pp. 390-391): its
+    realm, whether it is powerful (sixth magnitude or more) and whether it
+    was cast by them or designed for them. A Longevity Ritual, Parma
+    Magica, the Aegis and a familiar's bond aren't listed: the app counts
+    the ritual itself, and the others don't warp."""
+
+    name: str = ""
+    realm: str = "Magic"
+    powerful: bool = False
+    designed_for: bool = False
+    description: str = ""
+    id: str = field(default_factory=new_instance_id)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> ConstantEffect:
         return cls(**known_fields(cls, d))
 
 
@@ -659,7 +660,7 @@ class AnimalForm:
 class LabTextAccess:
     """How far a magus can read one author's raw Lab Texts: up to `level`, and how that
     was gained -- "decoded", "taught" (the author's abbreviations) or "" (not
-    recorded)."""
+    recorded); "assisted": helped make the text (DE p. 263)."""
 
     level: int = 0
     via: str = ""
@@ -682,6 +683,9 @@ class Character:
     tradition_effects: list[TraditionEffect] = field(default_factory=list)
     #: The supernatural powers its Virtues grant (rules.powers).
     powers: list[CharacterPower] = field(default_factory=list)
+    #: Supernatural effects on the character all the time (Warping each
+    #: year).
+    constant_effects: list[ConstantEffect] = field(default_factory=list)
     #: Beings bound to the character by a tradition, and the points in
     #: each of their traditions' pools ("<tradition id>:<pool name>").
     bound_beings: list[BoundBeing] = field(default_factory=list)
@@ -816,6 +820,9 @@ class Character:
             Breakthrough.from_dict(b) for b in d.get("breakthroughs", [])
         ]
         d["powers"] = [CharacterPower.from_dict(x) for x in d.get("powers", [])]
+        d["constant_effects"] = [
+            ConstantEffect.from_dict(x) for x in d.get("constant_effects", [])
+        ]
         d["tradition_effects"] = [
             TraditionEffect.from_dict(e) for e in d.get("tradition_effects", [])
         ]

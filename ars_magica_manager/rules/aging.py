@@ -121,9 +121,24 @@ def add_points(character: Character, name: str, points: int) -> list[str]:
     by one and they start again, unless the character's Aging Points never
     lower Characteristics. Returns what changed."""
     aging = character.aging
-    aging.aging_points[name] = aging.aging_points.get(name, 0) + points
     aging.decrepitude_points += points
     aging.decrepitude = decrepitude_score(aging.decrepitude_points)
+    return place_points(character, name, points)
+
+
+#: How an aging roll's "any Characteristic" point is written in the
+#: Aging Points due: its Decrepitude is already counted (DE p. 392: the
+#: Crisis rolls with it), so placing it adds only to the Characteristic.
+ANY_POINT = "Aging roll"
+
+
+def place_points(character: Character, name: str, points: int) -> list[str]:
+    """Put Aging Points whose Decrepitude is counted into a
+    Characteristic: once more than its score (ignoring the sign) it falls
+    by one and they start again, unless Aging Points never lower the
+    character's Characteristics. Returns what changed."""
+    aging = character.aging
+    aging.aging_points[name] = aging.aging_points.get(name, 0) + points
     score = getattr(character.characteristics, name)
     if aging.aging_points[name] > abs(score) and not unaging(character):
         setattr(character.characteristics, name, score - 1)
@@ -186,6 +201,11 @@ class AgingResult:
     die: int
     apparent: bool = False
     points: dict[str, int] = field(default_factory=dict)
+    #: Aging Points "in any Characteristic": how many, the player choosing
+    #: where (DE p. 392); `suggested` is where they would fall, highest
+    #: Characteristic first, as the form's default.
+    any_points: int = 0
+    suggested: list[str] = field(default_factory=list)
     crisis: bool = False
     crisis_text: str = ""
     #: Whether the Longevity Ritual ends (it saw the character through a
@@ -236,21 +256,61 @@ def roll(
         result.apparent = True
     stats = character.characteristics
     if 10 <= total <= 12:
-        best = max(CHARACTERISTICS, key=lambda c: getattr(stats, c))
-        result.points = {best: 1}
+        result.any_points = 1
+        result.suggested = [max(CHARACTERISTICS, key=lambda c: getattr(stats, c))]
     elif total in _TABLE:
         result.points = {name: 1 for name in _TABLE[total]}
     elif total == 13 or total >= 22:
         score = decrepitude_score(character.aging.decrepitude_points)
         needed = points_for_score(score + 1) - character.aging.decrepitude_points
         needed = max(1, needed)
-        # Spread over the Characteristics, highest first.
+        # Suggested over the Characteristics, highest first.
         order = sorted(CHARACTERISTICS, key=lambda c: -getattr(stats, c))
-        for i in range(needed):
-            name = order[i % len(order)]
-            result.points[name] = result.points.get(name, 0) + 1
+        result.any_points = needed
+        result.suggested = [order[i % len(order)] for i in range(needed)]
         result.crisis = True
     return result
+
+
+#: What Decrepitude 4 and 5 mean (DE p. 392; Unaging, p. 114).
+FRAIL, DYING = 4, 5
+
+
+def frailty(character: Character) -> str:
+    """What the character's Decrepitude means once it reaches 4: frail,
+    rolling on the Crisis Table for stressful activity (not for the
+    Unaging), or at 5 bedridden and dying; "" below 4."""
+    score = character.aging.decrepitude
+    if score >= DYING:
+        return (
+            "Decrepitude 5: bedridden, dying within a few months; no mortal "
+            "help can save them (DE p. 392)."
+        )
+    if score >= FRAIL and not unaging(character):
+        return (
+            "Decrepitude 4: extremely frail; a long journey, a fight or other "
+            "stressful activity means a roll on the Crisis Table (DE p. 392)."
+        )
+    return ""
+
+
+LEPROSY = "vf_leprosy"
+
+
+def leper(character: Character) -> bool:
+    """Leprosy: a Heavy Wound at every Aging Crisis (DE p. 135)."""
+    return any(vf.vf_id == LEPROSY for vf in character.virtues_flaws)
+
+
+#: The Crisis results that can kill: an illness with a survival roll, or
+#: worse (DE p. 392).
+_HARMLESS_CRISES = tuple(label for _, label, against in CRISIS if against is None)
+
+
+def fatal_crisis(text: str) -> bool:
+    """Whether a Crisis (as crisis() wrote it) is potentially fatal: not
+    only bedridden for a week or a month."""
+    return not any(f": {label}." in text for label in _HARMLESS_CRISES)
 
 
 #: Medical attention through a crisis (DE p. 392).

@@ -479,12 +479,45 @@ way. A new Reputation starts at 1 with Add on Reputations. A bad
 Reputation is replaced only by starting a new one (DE p. 386). The Diary
 records the session.
 
+## Constant Effects
+<!-- help: section-char-constant-effects -->
+
+The supernatural effects the character is under all the time, or at least
+half of it: a spell kept up on them, an enchanted ring that lets them fly.
+Each gives a Warping Point a year, whatever its power or caster, and a
+powerful one (sixth magnitude or more) neither cast by them nor designed
+for them gives one more each season, and one when it begins: adding such
+an effect adds that first point at once. The app adds the year's points
+each Winter with the rest of their Warping, each counting as its realm for
+Susceptibility to Warping (DE pp. 390-391).
+
+Don't list a Longevity Ritual (the app counts it already), Parma Magica,
+the Aegis of the Hearth or a familiar's bond (they don't warp), or an
+effect on something they live in rather than on them, such as a flying
+castle.
+<!-- tui -->
+`a` adds one, `e` edits the chosen one and `d` deletes it.
+<!-- /tui -->
+<!-- gui -->
+**Add**, **Edit** and **Delete** act on the row last clicked.
+<!-- /gui -->
+**The Effect** at the foot of its form says what it will give.
+
 ## Place Aging Points
 <!-- help: aging-due -->
 
-A character who survives a disease's Crisis gains an Aging Point in a
-fitting Characteristic, the storyguide's choice (Art & Academe p. 47).
-Until it is placed, the Aging section lists it. Advance Season asks for
+An aging roll of 10-12 gives an Aging Point in any Characteristic, and
+13 or 22+ enough to reach the next Decrepitude in any Characteristics: the
+player chooses where they go (DE p. 392). Their Decrepitude counts at once
+(the Crisis is rolled with it), and each is offered first in the
+Characteristic the roll suggests, the highest, with a choice for each
+point, so several can be spread over different Characteristics. A Crisis
+is rolled with the Decrepitude the points bring, whichever Characteristics
+take them; place them before the survival roll, since one in Stamina may
+lower it. A character who survives a
+disease's Crisis gains an Aging Point in a fitting Characteristic, the
+storyguide's choice (Art & Academe p. 47).
+Until they are placed, the Aging section lists them. Advance Season asks for
 each one before it plays the next season (Cancel leaves the date where it
 is). It is also on the Aging section:
 <!-- tui -->
@@ -495,6 +528,13 @@ More (`m`), **Place Aging Points**.
 <!-- /gui -->
 Each point counts toward Decrepitude, and once a Characteristic's Aging
 Points pass its score it falls by one, as for an aging roll.
+
+An Aging Crisis takes the following season to recover from, except for an
+Unaging character, whom a Crisis that can't kill doesn't harm (DE p. 114);
+a leper also takes a Heavy Wound with every Crisis (DE p. 135). The Aging
+section warns at Decrepitude 4 (extremely frail: a long journey, a fight
+or other stressful activity means a roll on the Crisis Table; not for the
+Unaging) and 5 (bedridden and dying, DE p. 392).
 
 ## Art & Academe's diseases
 <!-- help: aa-diseases -->

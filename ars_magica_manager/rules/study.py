@@ -30,7 +30,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 
-from .. import catalog
+from .. import book_kinds, catalog
 from ..models import Book, Character
 from . import animal_grogs, effects, lab_virtues, scores, xp
 from . import creation_access as access
@@ -252,6 +252,26 @@ class StudyResult:
     notes: list[str] = field(default_factory=list)
 
 
+NEPHILIM = "vf_blood_of_the_nephilim"
+NEPHILIM_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Four: Blood of the Nephilim, p. 72"
+)
+#: The least a season's Advancement Total falls to for Blood of the
+#: Nephilim.
+NEPHILIM_FLOOR = 1
+
+
+def nephilim_penalty(student: Character, age: int | None) -> int:
+    """What Blood of the Nephilim takes from every Advancement Total once
+    the character has a Decrepitude Point: age / 10, rounded down (DE p.
+    72); 0 for anyone else, or with the age unknown."""
+    if age is None or student.aging.decrepitude_points <= 0:
+        return 0
+    if not any(vf.vf_id == NEPHILIM for vf in student.virtues_flaws):
+        return 0
+    return round_down(age / 10)
+
+
 def season_of_study(
     student: Character,
     subject: str,
@@ -263,11 +283,13 @@ def season_of_study(
     months_lost: int = 0,
     mastery: bool = False,
     bonuses: Sequence[Line] = (),
+    age: int | None = None,
 ) -> StudyResult:
     """One season studying `subject` (an Art or Ability name, or a spell's
     id for its Mastery, `mastery`) from a source of `source_quality`, for
     `activity` (a study_total activity); `bonuses` add to the Source
-    Quality (Study Bonus's +2). An animal grog learns a human Language at
+    Quality (Study Bonus's +2); `age`, when known, is read by Blood of the
+    Nephilim. An animal grog learns a human Language at
     its own Source Quality, and never raises its kind's Language
     (rules.animal_grogs)."""
     if not is_art and animal_grogs.own_language(student, subject):
@@ -302,6 +324,17 @@ def season_of_study(
     total = max(0, int(sum(line.amount or 0 for line in lines)))
     if activity in ("teaching", "reading"):
         total = max(total, 1)  # Poor Student can't take it below 1
+    slowed = nephilim_penalty(student, age)
+    if slowed and total > NEPHILIM_FLOOR:
+        lowered = max(NEPHILIM_FLOOR, total - slowed)
+        lines.append(
+            Line(
+                "Blood of the Nephilim (age / 10)",
+                amount=lowered - total,
+                source=NEPHILIM_SOURCE,
+            )
+        )
+        total = lowered
     notes: list[str] = []
     if months_lost:
         reduced = after_distraction(total, months_lost)
@@ -396,6 +429,8 @@ def reading(
         book.type == "Tractatus" and book.subject_kind == "Art"
     )
     subject = book.art.title() if is_art else book.ability
+    if book.ability.startswith(book_kinds.MASTERY_PREFIX):
+        return None  # a spell's Mastery: the reading season works it out
     if not subject or (is_art and student.type != "magus"):
         return None  # only the Gifted study the Arts
     limit = book.level if book.type.endswith("Summa") else None

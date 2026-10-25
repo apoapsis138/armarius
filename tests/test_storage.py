@@ -24,6 +24,7 @@ from ars_magica_manager.models import (
     CharacterPower,
     Codex,
     Combatant,
+    ConstantEffect,
     Covenant,
     CovenantBoonHookDef,
     CovenantDiaryEntry,
@@ -393,6 +394,7 @@ def _saga_with_every_record() -> Saga:
         TraditionEffect("Fetch", tradition="trad_gruagachan", uses=["Gruagach Give"])
     )
     magus.powers.append(CharacterPower("Owl", "Greater Power", level=30))
+    magus.constant_effects.append(ConstantEffect("Ring of Flight", powerful=True))
     magus.progress.append(Progress("vis", "Study"))
     magus.ordeals.append(Ordeal("Minor"))
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))

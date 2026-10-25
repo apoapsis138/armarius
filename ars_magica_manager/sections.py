@@ -57,6 +57,8 @@ BOOK_SECTIONS: frozenset[str] = frozenset(
 #: The lab's Virtues and Flaws sections: either refreshes both lists and
 #: their shared details panel.
 LAB_VF_SECTIONS = ("section-lab-vf-virtues", "section-lab-vf-flaws")
+#: A Warping laboratory's Personality Traits (forms/trait.py).
+LAB_TRAITS_SECTION = "section-lab-personality-traits"
 #: What a laboratory's magic items give it (forms/lab_item.py).
 LAB_ITEMS_SECTION = "section-lab-magic-items"
 
@@ -209,9 +211,14 @@ VOTE_SECTION = "section-meeting-vote"
 SECRETS_SECTION = "section-secrets"
 #: A character's supernatural powers (forms.power).
 POWERS_SECTION = "section-char-powers"
+#: The supernatural effects on a character all the time
+#: (forms.constant_effect).
+CONSTANT_EFFECTS_SECTION = "section-char-constant-effects"
 
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     POWERS_SECTION: frozenset({"add", "edit", "remove"}),
+    CONSTANT_EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),
+    LAB_TRAITS_SECTION: frozenset({"add", "edit", "remove"}),
     LAB_ITEMS_SECTION: frozenset({"add", "edit", "remove"}),
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),

@@ -232,6 +232,8 @@ async def test_advance_season_moves_the_whole_saga_forward():
 async def test_advancing_past_winter_rolls_the_year_and_cancel_changes_nothing():
     saga = quiet(_saga_with_configured_covenant())
     saga.current_season = "Winter"
+    # Wealth to cover the deficit: a broke covenant's labs go unmaintained.
+    saga.covenants[0].economics.wealth = 100
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()

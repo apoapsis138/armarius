@@ -920,6 +920,10 @@ terminal version. **Import**, a button on the Library, reads books from a CSV fi
 into this covenant's library, showing a preview before anything is added.
 <!-- /gui -->
 
+A book on a spell's Mastery is an Ability summa or tractatus whose Ability
+is **Mastery: {spell}**, the spell's name typed in the detail: it is read
+into that spell's Mastery (DE pp. 378-379).
+
 A **codex** is one tome binding several books together, such as a summa and
 a tractatus on related subjects. Choose it in a book's **Codex** field (or a
 new one).

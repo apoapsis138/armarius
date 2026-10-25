@@ -24,6 +24,7 @@ from .models import (
     Covenant,
     Economics,
     IncomeSource,
+    Laboratory,
     Saga,
 )
 from .rules import covenfolk
@@ -104,6 +105,20 @@ def laboratory_points(saga: Saga, covenant: Covenant) -> int:
             score = entry.upkeep or 0
         total += upkeep_points(score) * USAGE_MULTIPLIERS.get(entry.usage, 1.0)
     return round_away_from_zero(total)
+
+
+def neglected_laboratories(saga: Saga, covenant: Covenant) -> list[Laboratory]:
+    """The covenant's laboratories left unmaintained when it closes a year
+    broke (Wealth below 0): after two seasons of neglect each gains a Flaw,
+    or loses a Virtue, that lowers its Upkeep (DE p. 288). Which one is the
+    troupe's choice, so they are named, not changed."""
+    if covenant.economics.wealth >= 0:
+        return []
+    return [
+        entry.lab
+        for entry in pos.entries_for_kind(saga, covenant, "sanctum")
+        if entry.lab is not None
+    ]
 
 
 def craft_saving_each(entry: covenfolk.InhabitantEntry) -> int:

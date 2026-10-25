@@ -25,7 +25,7 @@
     ▼ Hermetic Background
 
       House: (not set)                        Wizard's Sigil: (not set)
-      Domus Magna: (not set)                  Reads Lab Texts of: (no one else's) ▁▁
+      Domus Magna: (not set)                  Reads Lab Texts of: (no one else's) ▄▄
       Primus: (not set)                        Lab Texts Read
       Parens: (not set)
       Covenant of Apprenticeship: (not

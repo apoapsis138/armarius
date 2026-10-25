@@ -357,12 +357,38 @@ def finish_season(
     if saga.keep_season_records and (worked or year_end):
         saga.season_records.append(record)
     added = eco.close_all_years(saga) if new_year else []
+    if new_year:
+        neglect = neglected_upkeep(saga)
+        record.lines += neglect
+        year_end += neglect
     saga.current_season, saga.current_year = next_season(
         saga.current_season, saga.current_year
     )
     # A new season brings new days: every device's uses come back.
     new_day(saga)
     return Advanced(record, applied, year_end, added, forecast)
+
+
+def neglected_upkeep(saga: Saga) -> list[SeasonRecordLine]:
+    """A line for each laboratory of a covenant that closed the year broke:
+    its Upkeep went unpaid, so it gains a Flaw (or loses a Virtue) that
+    lowers it (DE p. 288)."""
+    lines: list[SeasonRecordLine] = []
+    for covenant in filter(takes_part_in_play, saga.covenants):
+        for lab in eco.neglected_laboratories(saga, covenant):
+            owner = saga.character(lab.owner_id)
+            lines.append(
+                SeasonRecordLine(
+                    owner.id if owner is not None else "",
+                    lab.name,
+                    covenant.id,
+                    "Upkeep unpaid",
+                    "",
+                    "Give it a Flaw, or take a Virtue away, that lowers its "
+                    "Upkeep (DE p. 288).",
+                )
+            )
+    return lines
 
 
 def make_record(saga: Saga, worked: Sequence[rules.Outcome]) -> SeasonRecord:

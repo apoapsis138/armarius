@@ -6,9 +6,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from .character import ScoredTrait, Wounds
+from .character import Wounds
 from .common import FatigueLevel, known_fields, move_secrets
-from .traits import Ability, Characteristics, VirtueFlawInstance, new_instance_id
+from .traits import (
+    Ability,
+    Characteristics,
+    ScoredTrait,
+    VirtueFlawInstance,
+    new_instance_id,
+)
 from .world import SKETCH, Link
 
 

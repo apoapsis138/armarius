@@ -155,6 +155,7 @@ def _art_select(arts: Sequence[str], value: str | None, widget_id: str) -> Selec
 #: Lab work a similar spell helps (DE pp. 251, 258, 267).
 _SIMILAR = (
     lab_seasons.INVENT,
+    lab_seasons.LAB_TEXT,
     es.INSTIL,
     es.LESSER_WORK,
     es.CHARGED_WORK,

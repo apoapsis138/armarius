@@ -362,6 +362,9 @@ class Blow:
     fatiguing: bool = True
     effect: str = ""
     damage: int | None = None
+    #: Cast a Spell: the Arts chosen as casting requisites for what it is
+    #: used on (DE p. 312).
+    casting_requisites: tuple[str, ...] = ()
 
 
 @dataclass
@@ -1026,17 +1029,25 @@ def spell_odds(
         technique, _, form = (blow.arts or "Creo Ignem").partition(" ")
         level = blow.level
         score = casting.casting_score(
-            magus, technique, form, aura=fight.aura, spontaneous=True
+            magus,
+            technique,
+            form,
+            aura=fight.aura,
+            spontaneous=True,
+            requisites=blow.casting_requisites,
         )
         name = f"A spontaneous {technique} {form} spell"
+        requisites = blow.casting_requisites
     else:
         spell = catalog.find_spell(saga, blow.spell)
         if spell is None:
             return None
         technique, form, level = spell.technique, spell.form, spell.level or 0
-        score = casting.spell_casting_score(magus, spell, aura=fight.aura)
+        score = casting.spell_casting_score(
+            magus, spell, aura=fight.aura, casting_requisites=blow.casting_requisites
+        )
         name = spell.name
-        requisites = tuple(spell.requisites)
+        requisites = (*spell.requisites, *blow.casting_requisites)
     return MagicOdds(
         name,
         technique,

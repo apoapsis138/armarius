@@ -19,6 +19,7 @@ from ars_magica_manager.models import (
     Breakthrough,
     Character,
     CharacterPower,
+    ConstantEffect,
     Covenant,
     Creature,
     CreatureAttack,
@@ -95,6 +96,10 @@ def _saga() -> Saga:
         CharacterPower("Owl [grey]", "Greater Power"),
         CharacterPower("Warmth", "Lesser Power"),
     ]
+    magus.constant_effects = [
+        ConstantEffect("Ring [of flight]", powerful=True),
+        ConstantEffect("Ward"),
+    ]
     magus.bound_beings = [
         BoundBeing("Huginn [raven]", tradition="trad_vitkir"),
         BoundBeing("Muninn", tradition="trad_vitkir"),
@@ -112,6 +117,7 @@ def _saga() -> Saga:
     ]
     lab = Laboratory(id="lab1", covenant_id="cov1", name="Tower", owner_id="mag1")
     lab.rooms = [NamedDescription("Study [east]"), NamedDescription("Vault")]
+    lab.personality_traits = two()
     lab.inventory_items = [NamedDescription("Alembic [glass]"), NamedDescription("Jar")]
     lab.diary = [
         DiaryEntry(1220, "Spring", "Built [first]"),
@@ -147,6 +153,12 @@ TRAIT_LISTS: dict[str, ListCase] = {
         "section-cov-reputations",
         "cov-reputations-list",
         lambda s: s.covenants[0].reputations,
+    ),
+    "lab-traits": ListCase(
+        ("laboratory", "lab1"),
+        "section-lab-personality-traits",
+        "lab-traits-list",
+        lambda s: s.laboratories[0].personality_traits,
     ),
     "character-traits": ListCase(
         ("character", "mag1"),
@@ -434,6 +446,12 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-teff-trad_vitkir",
         "trad-trad_vitkir-effects",
         lambda s: s.characters[0].tradition_effects,
+    ),
+    "character-constant-effects": ListCase(
+        ("character", "mag1"),
+        "section-char-constant-effects",
+        "char-constant-effects-list",
+        lambda s: s.characters[0].constant_effects,
     ),
     "character-powers": ListCase(
         ("character", "mag1"),

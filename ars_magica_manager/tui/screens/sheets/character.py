@@ -25,6 +25,7 @@ from .... import saga_overview as ov
 from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
+from ....forms import constant_effect as constant_forms
 from ....forms import power as power_forms
 from ....forms import tradition as tradition_forms
 from ....forms.secrets import secrets_ops
@@ -40,7 +41,7 @@ from ....rules import creation_virtues as cv
 from ....rules import library
 from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
 from ....sections import CHAR_CALENDAR_SECTION as CALENDAR_SECTION
-from ....sections import POWERS_SECTION
+from ....sections import CONSTANT_EFFECTS_SECTION, POWERS_SECTION
 from ....sheets import character as cs
 from ....traditions import tradition_list, tradition_section, tradition_tab
 from ..widgets import (
@@ -528,7 +529,25 @@ class CharacterSheetView(SheetView):
             yield from self._connections(character)
             with SheetSection(title="Aging & Warping", id="section-aging"):
                 yield self._static(
-                    "section-aging", self._aging_text, id="aging-content"
+                    ("section-aging", CONSTANT_EFFECTS_SECTION),
+                    self._aging_text,
+                    id="aging-content",
+                )
+            self.core_ops[CONSTANT_EFFECTS_SECTION] = constant_forms.ops(
+                self.saga, self.character
+            )
+            with SheetSection(
+                title=self._titled(
+                    CONSTANT_EFFECTS_SECTION,
+                    CONSTANT_EFFECTS_SECTION,
+                    lambda: constant_forms.title(self.character),
+                ),
+                id=CONSTANT_EFFECTS_SECTION,
+            ):
+                yield self._list(
+                    (CONSTANT_EFFECTS_SECTION, "section-aging"),
+                    lambda: constant_forms.rows(self.character),
+                    id="char-constant-effects-list",
                 )
             with (
                 SheetSection(title="Health", id="section-char-health"),

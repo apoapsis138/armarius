@@ -95,6 +95,10 @@ class SeasonPlan:
     source_quality: int | None = None
     #: Full months of the season lost to distractions (0-3).
     months_lost: int = 0
+    #: Teaching, training, writing and copying: whether the season is
+    #: spent in the laboratory, where its Teaching and Texts
+    #: Specializations help (DE p. 291).
+    in_lab: bool = True
     #: Free text: what "Other" was, or notes kept with the Diary entry.
     details: str = ""
     #: Reading: the book studied.

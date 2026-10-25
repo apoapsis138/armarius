@@ -273,7 +273,48 @@ def lab_param_fields(
                 show_if=(lambda values: not values.get("servant")) if grogs else None,
             )
         )
+    if "cost" in entry.parameters:
+        fields.append(
+            DialogField(
+                "cost",
+                "What it costs",
+                "select",
+                current.get("cost") or None,
+                options=[("+1 Upkeep", "Upkeep"), ("-1 Health", "Health")],
+                required=True,
+                allow_blank=True,
+                placeholder="(choose)",
+            )
+        )
+    if "illusory" in entry.parameters:
+        fields.append(
+            DialogField(
+                "illusory",
+                "The Virtue that is only an illusion",
+                "select",
+                current.get("illusory") or None,
+                options=illusion_options(lab),
+                allow_blank=True,
+                placeholder="(not yet chosen)",
+                hint="It has no effect (DE p. 296).",
+            )
+        )
     return fields
+
+
+def illusion_options(lab: Laboratory | None) -> list[tuple[str, str]]:
+    """The lab's Virtues by name, for the one an Illusion makes illusory."""
+    if lab is None:
+        return []
+    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    names = sorted(
+        {
+            by_id[vf.vf_id].name
+            for vf in lab.virtues_flaws
+            if vf.vf_id in by_id and by_id[vf.vf_id].type == "Virtue"
+        }
+    )
+    return [(name, name) for name in names]
 
 
 def lab_params_from(entry: LabVirtueFlawDef, values: dict[str, Any]) -> dict[str, str]:
@@ -284,6 +325,9 @@ def lab_params_from(entry: LabVirtueFlawDef, values: dict[str, Any]) -> dict[str
         params["servant"] = str(values["servant"])
     elif values.get("intelligence") is not None and "intelligence" in entry.parameters:
         params["intelligence"] = str(values["intelligence"])
+    for param in ("illusory", "cost"):
+        if values.get(param) and param in entry.parameters:
+            params[param] = str(values[param])
     return params
 
 

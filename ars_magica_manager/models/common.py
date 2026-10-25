@@ -176,7 +176,7 @@ LAB_CHARACTERISTICS: tuple[str, ...] = (
 #: What a laboratory Virtue or Flaw may ask for as it is added: a whole
 #: number its effect is read from ("intelligence"), and a grog standing in
 #: for it ("servant": the grog's id; the grog's Intelligence is used).
-LAB_VF_PARAMETERS: tuple[str, ...] = ("servant", "intelligence")
+LAB_VF_PARAMETERS: tuple[str, ...] = ("servant", "intelligence", "illusory", "cost")
 ABILITY_CATEGORIES: tuple[str, ...] = (
     "General",
     "Academic",

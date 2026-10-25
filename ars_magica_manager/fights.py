@@ -14,6 +14,7 @@ import random
 from typing import Any
 
 from . import diaries
+from .arts import FORMS, TECHNIQUES
 from .commands import (
     Act,
     Choice,
@@ -900,6 +901,28 @@ def _magic_fields(saga: Saga, who: rules.Unit | None) -> list[DialogField]:
         ),
         DialogField("level", "Level", "int", 10, show_if=spontaneous),
         DialogField(
+            "requisite_technique",
+            "Casting requisite (Technique)",
+            "select",
+            None,
+            options=pairs(TECHNIQUES),
+            allow_blank=True,
+            placeholder="(none)",
+            show_if=casting,
+            hint="For what it is used on this time: the lowest Technique and "
+            "Form among the spell's Arts and these count (DE p. 312).",
+        ),
+        DialogField(
+            "requisite_form",
+            "Casting requisite (Form)",
+            "select",
+            None,
+            options=pairs(FORMS),
+            allow_blank=True,
+            placeholder="(none)",
+            show_if=casting,
+        ),
+        DialogField(
             "fatiguing",
             "Fatiguing",
             "check",
@@ -1034,6 +1057,11 @@ def blow_of(values: dict[str, Any]) -> rules.Blow:
         fatiguing=bool(values.get("fatiguing", True)),
         effect=values.get("effect") or "",
         damage=None if damage is None else int(damage),
+        casting_requisites=tuple(
+            art
+            for art in (values.get("requisite_technique"), values.get("requisite_form"))
+            if art
+        ),
     )
 
 

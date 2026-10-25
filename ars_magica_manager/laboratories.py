@@ -35,6 +35,8 @@ from .models import (
 )
 from .rules import effects, enchantment, lab_items
 from .rules.lab_stats import (
+    ILLUSIONS,
+    lab_characteristic_total,
     lab_free_virtues,
     servant,
     specialization_scores,
@@ -846,8 +848,9 @@ def vf_warnings(lab: Laboratory, saga: Saga | None = None) -> str:
     """What's wrong with the lab's Virtues & Flaws as a whole, one line
     each in the theme's error colour -- or "" when nothing is: more Virtue
     points (net of Flaws) than Size + Refinement allow, more than one
-    Focus, a Specialization not chosen, or a Virtue whose Safety is read
-    from an Intelligence with none entered or its grog gone."""
+    Focus, a Specialization not chosen, a Virtue whose Safety is read
+    from an Intelligence with none entered or its grog gone, or an Illusion
+    whose illusory Virtue isn't chosen."""
     lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
     lines = []
     free = lab_free_virtues(lab, lab_catalog)
@@ -869,7 +872,34 @@ def vf_warnings(lab: Laboratory, saga: Saga | None = None) -> str:
             )
         if definition is not None and definition.characteristic_readings:
             lines += _reading_warnings(saga, vf, definition)
+        if vf.vf_id in ILLUSIONS and not vf.params.get("illusory"):
+            assert definition is not None
+            lines.append(
+                f"{definition.name}: the Virtue that is only an illusion isn't "
+                "chosen (remove it and add it again to choose)."
+            )
+    traits = traits_warning(lab, lab_catalog, saga)
+    if traits:
+        lines.append(traits)
     return "\n".join(problem(line) for line in lines)
+
+
+def traits_warning(
+    lab: Laboratory,
+    lab_catalog: Mapping[str, LabVirtueFlawDef],
+    saga: Saga | None,
+) -> str:
+    """Why the lab's Personality Traits don't fit its Warping: a lab with
+    Warping +N has traits whose scores add up to N (DE p. 289); "" when
+    they do, or it has no Warping."""
+    warping = lab_characteristic_total(lab, lab_catalog, "warping", saga)[3]
+    total = sum(t.score for t in lab.personality_traits)
+    if warping <= 0 or total == warping:
+        return ""
+    return (
+        f"Warping {warping:+d}: its Personality Traits should add up to "
+        f"{warping:+d} ({total:+d} now; DE p. 289)."
+    )
 
 
 def _reading_warnings(
@@ -919,6 +949,9 @@ def connection_state(connection: ArcaneConnection) -> str:
     """ "fixed", or how long it lasts ("temporary" when not typed)."""
     if connection.fixed:
         return "fixed"
+    if connection.lasts_year is not None:
+        season = f"{connection.lasts_season} " if connection.lasts_season else ""
+        return f"active until {season}{connection.lasts_year}"
     return f"lasts {connection.lasts}" if connection.lasts else "temporary"
 
 

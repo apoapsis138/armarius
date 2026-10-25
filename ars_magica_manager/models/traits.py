@@ -177,3 +177,24 @@ class KnownSpell:
             MasteryAbility.from_dict(m) for m in d.get("mastery_abilities", [])
         ]
         return cls(**known_fields(cls, d))
+
+
+@dataclass
+class ScoredTrait:
+    """A name + integer score. Shared shape for Personality Traits and
+    Reputations -- both are just a label and a score on the character sheet."""
+
+    name: str
+    score: int
+    #: Covenant Reputations only: whether the covenant is aware of this
+    #: reputation (an unknown bad Reputation can't yet hurt Loyalty -- see
+    #: inhabitants.reputation_loyalty). Always True and never edited
+    #: for a Character's own Personality Traits/Reputations.
+    known: bool = True
+    #: Reputations only: the kind of reputation (REPUTATION_TYPES, or "")
+    #: and how far it reaches ("the Rhine", "the parish"), both optional.
+    type: str = ""
+    reach: str = ""
+    #: Reputations only: noteworthy deeds counted toward the next level,
+    #: each an experience point (rules.confidence.add_deeds).
+    deeds: int = 0

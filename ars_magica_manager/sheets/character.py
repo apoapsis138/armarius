@@ -45,6 +45,7 @@ from ..rules import (
     scores,
     warping,
 )
+from ..rules import aging as aging_rules
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
 from ..rules import warping as warping_rules
@@ -172,6 +173,9 @@ def aging_text(character: Character, saga: Saga | None = None) -> str:
     # The yearly aging roll's figures, once there are any.
     if a.decrepitude_points:
         lines[0] += f" ({a.decrepitude_points} points)"
+    frailty = aging_rules.frailty(character)
+    if frailty:
+        lines.append(frailty)
     if a.apparent_age is not None:
         lines.append(f"Apparent age: {a.apparent_age}")
     points = [f"{n.title()} {p}" for n, p in a.aging_points.items() if p]

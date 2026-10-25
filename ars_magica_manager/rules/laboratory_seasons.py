@@ -35,8 +35,8 @@ from ..models import (
     VirtueFlawInstance,
     new_instance_id,
 )
-from . import lab
-from .lab_stats import lab_characteristic_total
+from . import dice, lab
+from .lab_stats import lab_characteristic_total, lab_free_virtues
 
 if TYPE_CHECKING:
     from .lab_seasons import LabWork
@@ -76,6 +76,11 @@ MOVE_SOURCE = "Covenants, Chapter Nine: Laboratories, Moving a Laboratory, p. 11
 BASIC = "labvf_basic"
 HIGHLY_ORGANIZED = "labvf_highly_organized"
 HIDDEN_DEFECT = "labvf_hidden_defect"
+SPOTLESS = "labvf_spotless"
+#: A Refinement season's Tidy roll (or another fitting Personality Trait)
+#: against 9 gains Spotless (DE p. 288).
+TIDY_TRAITS = ("Tidy", "Neat", "Orderly", "Fastidious")
+SPOTLESS_AT = 9
 PREDECESSOR = "labvf_predecessor"
 ORGANIZED_AT = 12
 DEFECT_FOUND_AT = 15
@@ -91,12 +96,20 @@ def has_vf(lab_: Laboratory, vf_id: str) -> bool:
 
 
 def add_vf(lab_: Laboratory, vf_id: str) -> None:
-    if not has_vf(lab_, vf_id):
+    """Give the lab the Virtue or Flaw: again if the book lets a lab have
+    it more than once (Hidden Defect, DE p. 294), else only if it hasn't."""
+    entry = catalog.load_lab_virtue_flaw_catalog_by_id().get(vf_id)
+    if not has_vf(lab_, vf_id) or (entry is not None and entry.repeatable):
         lab_.virtues_flaws.append(VirtueFlawInstance(vf_id, id=new_instance_id()))
 
 
 def remove_vf(lab_: Laboratory, vf_id: str) -> None:
-    lab_.virtues_flaws = [vf for vf in lab_.virtues_flaws if vf.vf_id != vf_id]
+    """Take one of the Virtue or Flaw away (one Hidden Defect found is one
+    corrected)."""
+    for i, vf in enumerate(lab_.virtues_flaws):
+        if vf.vf_id == vf_id:
+            del lab_.virtues_flaws[i]
+            return
 
 
 def new_lab_name(magus: Character, plan: SeasonPlan) -> str:
@@ -174,12 +187,29 @@ def work(
                 f"No higher Refinement: {current + 1} needs Magic Theory "
                 f"{current + 4} ({theory})."
             )
+        if current > 0:
+            result.notes.append(
+                f"Refining needs familiarity: as a rule of thumb, {current} "
+                f"year{'s' if current != 1 else ''} worked in this laboratory "
+                "(DE p. 287)."
+            )
         return [], result
     # Taking over.
     new = min(current, theory - 3)
-    return [], LabWork(
+    result = LabWork(
         None, empty, 0, finished=True, refinement=new, old_refinement=current
     )
+    over = -(
+        lab_free_virtues(lab_, catalog.load_lab_virtue_flaw_catalog_by_id())
+        - (current - new)
+    )
+    if new < current and over > 0:
+        result.notes.append(
+            f"At Refinement {new} the laboratory has {over:g} point"
+            f"{'s' if over != 1 else ''} of Virtues more than its Size and "
+            "Refinement hold: Virtues are lost until it fits (Covenants p. 118)."
+        )
+    return [], result
 
 
 def roll(
@@ -188,8 +218,6 @@ def roll(
     """The season's stress die + Intelligence + Magic Theory (and for a
     take-over, the Perception + Magic Theory roll against 3 x the old
     Refinement). A die typed on the plan is used for the first roll."""
-    from . import dice
-
     if plan.activity == MOVE:
         if not plan.by_spell:
             return []
@@ -216,6 +244,8 @@ def roll(
             + ("; any Hidden Defect is found" if total >= DEFECT_FOUND_AT else "")
             + "."
         )
+    if plan.activity == REFINE and not has_vf_id(work_, SPOTLESS):
+        notes += _tidy_roll(work_, magus, rng, saga)
     if plan.activity == TAKE_OVER and work_.old_refinement > 0:
         against = 3 * work_.old_refinement
         check = dice.stress_die(rng, 1, saga=saga)
@@ -234,6 +264,38 @@ def roll(
     return notes
 
 
+def has_vf_id(work_: LabWork, vf_id: str) -> bool:
+    return vf_id in work_.gains_vf
+
+
+def tidy_trait(magus: Character) -> tuple[str, int] | None:
+    """The magus's best Personality Trait for keeping a laboratory clean
+    (Tidy or the like), if any."""
+    found = [
+        (t.name, t.score)
+        for t in magus.personality_traits
+        if any(word.casefold() in t.name.casefold() for word in TIDY_TRAITS)
+    ]
+    return max(found, key=lambda f: f[1]) if found else None
+
+
+def _tidy_roll(
+    work_: LabWork, magus: Character, rng: random.Random, saga: Saga
+) -> list[str]:
+    """A Refinement season's optional Tidy roll against 9 for Spotless (DE
+    p. 288): made when the magus has such a Personality Trait."""
+    trait = tidy_trait(magus)
+    if trait is None:
+        return []
+    name, score = trait
+    die = dice.stress_die(rng, 1, saga=saga)
+    total = score + die.value
+    if die.botched or total < SPOTLESS_AT:
+        return [f"{name} {score} + die {die.value} = {total}: not Spotless (needs 9)."]
+    work_.gains_vf.append(SPOTLESS)
+    return [f"{name} {score} + die {die.value} = {total}: the laboratory is Spotless."]
+
+
 def _move_by_spell(
     work_: LabWork, magus: Character, plan: SeasonPlan, rng: random.Random, saga: Saga
 ):
@@ -241,8 +303,6 @@ def _move_by_spell(
     Refinement (+3 if Highly Organized, -3 if Disorganized, + the room's
     difference typed as the plan's Other modifier). Failure: Disorganized, or
     Highly Organized lost; a botch: a Hidden Defect instead."""
-    from . import dice
-
     finesse = next((a.level for a in magus.abilities if a.name == "Finesse"), 0)
     base = magus.characteristics.perception + finesse
     ease = 9 + 3 * work_.refinement + plan.other_modifier

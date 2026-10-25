@@ -150,6 +150,7 @@ def season_plan_from(
         allocations=allocations,
         source_quality=values.get("source_quality"),
         months_lost=values.get("months_lost") or 0,
+        in_lab=bool(values.get("in_lab", True)),
         details=values.get("details") or "",
         correspondence=values.get("correspondence") or "",
         research_kind=next(
@@ -1102,9 +1103,11 @@ def _subject_fields(
                 *season_rules.TRADITION_ACTIVITIES,
             )
         elif n == 2:
-            shown = _activity_is(season_rules.EXPOSURE, season_rules.ADVENTURE)
+            shown = _activity_is(
+                season_rules.EXPOSURE, season_rules.PRACTICE, season_rules.ADVENTURE
+            )
         else:
-            shown = _activity_is(season_rules.ADVENTURE)
+            shown = _activity_is(season_rules.PRACTICE, season_rules.ADVENTURE)
         fields.append(
             DialogField(
                 f"subject_{n}",
@@ -1118,7 +1121,8 @@ def _subject_fields(
                     "What the season's experience goes into (Teach: Teaching "
                     "or the language used)."
                     if n == 1
-                    else "Exposure: 1 xp each in two. Adventure: at most 5 "
+                    else "Exposure: 1 xp each in two. Practice: split its "
+                    "Source Quality, the lowest of theirs. Adventure: at most 5 "
                     "points of Source Quality to each."
                     if n == 2
                     else ""
@@ -1131,7 +1135,10 @@ def _subject_fields(
                 f"Source Quality to ({n})",
                 "optint",
                 allocation.points if allocation and allocation.points else None,
-                show_if=_activity_is(season_rules.ADVENTURE),
+                show_if=_activity_is(season_rules.PRACTICE, season_rules.ADVENTURE),
+                hint="Practice in one subject: leave blank, it takes it all."
+                if n == 1
+                else "",
             )
         )
     return fields
@@ -1465,6 +1472,23 @@ def _closing_fields(
                 "undergo_initiation",
             ),
             hint="Each full month lost to distractions cuts the total by a third.",
+        ),
+        DialogField(
+            "in_lab",
+            "In the laboratory",
+            "check",
+            attr(existing, "in_lab", True),
+            show_if=_activity_is(
+                season_rules.TAUGHT,
+                season_rules.TRAINED,
+                book_seasons.WRITE_SUMMA,
+                book_seasons.COPY_BOOK,
+                book_seasons.COPY_TEXTS,
+                book_seasons.REWRITE_TEXTS,
+            ),
+            hint="Done in the teacher's or writer's laboratory: its Teaching "
+            "Specialization (at most +3) or Texts Specialization helps (DE "
+            "p. 291).",
         ),
         DialogField(
             "details",

@@ -21,6 +21,7 @@ from .... import research_text as rt
 from .... import sheet_text as st
 from ....boon_hook_text import counted, points_title
 from ....forms import lab_item as item_forms
+from ....forms import trait as trait_forms
 from ....markup import aligned, escape
 from ....models import (
     LAB_CHARACTERISTICS,
@@ -37,7 +38,12 @@ from ....rules.lab_stats import (
     lab_occupied_size,
 )
 from ....rules.realms import covenant_effective_aura
-from ....sections import LAB_ITEMS_SECTION, LAB_TEXTS_SECTION, LAB_VF_SECTIONS
+from ....sections import (
+    LAB_ITEMS_SECTION,
+    LAB_TEXTS_SECTION,
+    LAB_TRAITS_SECTION,
+    LAB_VF_SECTIONS,
+)
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -311,7 +317,11 @@ class LaboratorySheetView(SheetView):
         with Vertical(classes="panel-body"):
             with VerticalScroll():
                 warnings = self._static(
-                    (*_LAB_VF_REFRESH, "section-lab-characteristics"),
+                    (
+                        *_LAB_VF_REFRESH,
+                        "section-lab-characteristics",
+                        LAB_TRAITS_SECTION,
+                    ),
                     lambda: lab_text.vf_warnings(self.laboratory, self.saga),
                     id="lab-vf-warnings",
                 )
@@ -320,7 +330,11 @@ class LaboratorySheetView(SheetView):
                 )
                 yield warnings
                 self._on_refresh(
-                    (*_LAB_VF_REFRESH, "section-lab-characteristics"),
+                    (
+                        *_LAB_VF_REFRESH,
+                        "section-lab-characteristics",
+                        LAB_TRAITS_SECTION,
+                    ),
                     self._show_vf_warnings_if_any,
                 )
                 with TwoColumns(id="lab-vf-row"):
@@ -356,6 +370,31 @@ class LaboratorySheetView(SheetView):
                             id="lab-vf-flaws-list",
                             group="lab-vf",
                         )
+                traits = self.laboratory.personality_traits
+                self.core_ops[LAB_TRAITS_SECTION] = trait_forms.trait_ops(
+                    traits, LAB_TRAITS_SECTION
+                )
+                with SheetSection(
+                    title=self._titled(
+                        LAB_TRAITS_SECTION,
+                        LAB_TRAITS_SECTION,
+                        lambda: counted("Personality Traits", len(traits)),
+                    ),
+                    id=LAB_TRAITS_SECTION,
+                ):
+                    yield self._list(
+                        LAB_TRAITS_SECTION,
+                        lambda: (
+                            st.trait_rows(traits)
+                            or [
+                                (
+                                    None,
+                                    "[dim]None: a laboratory with Warping has traits adding up to it (DE p. 289).[/]",
+                                )
+                            ]
+                        ),
+                        id="lab-traits-list",
+                    )
             yield self._panel(
                 _LAB_VF_REFRESH,
                 lambda: lab_text.vf_info_text(self.laboratory, None, self.saga),

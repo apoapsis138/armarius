@@ -2,7 +2,7 @@
 
 import random
 
-from ars_magica_manager import seasons
+from ars_magica_manager import aging_due, seasons
 from ars_magica_manager.models import (
     Aging,
     Character,
@@ -64,12 +64,19 @@ def test_no_roll_before_35_without_a_ritual():
 
 def test_the_table_gives_aging_points_and_lowers_characteristics():
     saga = _saga(age=50)
-    # Die 8 + 5 (age / 10) - 1 (Living Conditions) = 12: 1 Aging Point, on
-    # the highest Characteristic.
+    # Die 8 + 5 (age / 10) - 1 (Living Conditions) = 12: 1 Aging Point in
+    # any Characteristic, for the player to place (the highest suggested);
+    # its Decrepitude counts at once.
     lines = seasons.year_end_aging(saga, _Dice(8))
     magus = saga.character("m")
-    assert magus.aging.aging_points == {"intelligence": 1}
+    assert magus.aging.aging_points == {}
     assert magus.aging.decrepitude_points == 1
+    assert magus.aging.aging_due == [
+        "Aging roll, Winter 1220: any Characteristic (suggested: Intelligence)"
+    ]
+    aging_due.place(saga, [magus], {})
+    assert magus.aging.aging_points == {"intelligence": 1}
+    assert magus.aging.decrepitude_points == 1 and magus.aging.aging_due == []
     assert magus.aging.apparent_age == 50
     assert lines[0].result == "apparent age +1, 1 Aging Point(s)"
     assert magus.diary[-1].activity == "Aging"

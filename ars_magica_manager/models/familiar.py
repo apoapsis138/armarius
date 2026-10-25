@@ -6,7 +6,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from .character import ScoredTrait, Wounds
+from .character import Wounds
 from .common import (
     ExperimentalEffect,
     FatigueLevel,
@@ -14,7 +14,7 @@ from .common import (
     known_fields,
 )
 from .holdings import Possession
-from .traits import Ability, Characteristics, VirtueFlawInstance
+from .traits import Ability, Characteristics, ScoredTrait, VirtueFlawInstance
 
 #: A Cord's score (0-5) -> its point cost from the binding Lab Total, per the
 #: Familiar rules (see familiars.py). An exact table, not a formula.

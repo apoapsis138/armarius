@@ -389,6 +389,16 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Name": ""}, {"Name": "X", "Level": "lots"}],
         shown={"#char-powers-list": "Wings of the Owl"},
     ),
+    "add constant effect": Contract(
+        prefill={"Effect": "", "Realm": "Magic"},
+        edits={"Effect": "Ring of Flight", "Realm": "Faerie"},
+        saved=lambda s: [
+            (e.name, e.realm, e.powerful) for e in character(s).constant_effects
+        ],
+        expected=[("Ring of Flight", "Faerie", False)],
+        invalid=[{"Effect": ""}],
+        shown={"#char-constant-effects-list": "Ring of Flight"},
+    ),
     "add bound being": Contract(
         prefill={"Name": "", "Bonus": "0", "Bonus adds to": "none"},
         edits={"Name": "Huginn", "Bonus": "2", "Bonus adds to": "lab"},

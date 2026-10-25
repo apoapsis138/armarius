@@ -36,7 +36,7 @@ from ..models import (
     SeasonPlan,
     VirtueFlawInstance,
 )
-from . import lab, study
+from . import lab, lab_stats, study
 from .creation_access import traditions_of
 from .scores import ability_level
 
@@ -152,7 +152,11 @@ def work(
         return [f"{student.name} needs Magic Theory."], None
     minor, major = _hermetic(student)
     target = (21 if virtue.tier == "Major" else 15) + 3 * minor + 9 * major
-    quality = study.teaching_quality(magus, 1)
+    # Teaching a Virtue is lab work, so the lab's Teaching Specialization
+    # counts (DE p. 291).
+    quality = study.teaching_quality(magus, 1) + lab_stats.teaching_bonus(
+        saga, saga.laboratory(magus.assigned_lab_id)
+    )
     work_ = ApprenticeWork(quality=quality, target=target)
     flaw = by_id.get(plan.taught_flaw_id or "")
     if flaw is not None:

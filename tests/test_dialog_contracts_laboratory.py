@@ -244,6 +244,14 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#lab-rooms-list": "Library"},
     ),
+    "add lab trait": Contract(
+        prefill={"Name": "", "Score": "0"},
+        edits={"Name": "Whimsical", "Score": "1"},
+        saved=lambda s: [(t.name, t.score) for t in laboratory(s).personality_traits],
+        expected=[("Whimsical", 1)],
+        invalid=[{"Name": ""}, {"Name": "X", "Score": "lots"}],
+        shown={"#lab-traits-list": "Whimsical: +1"},
+    ),
 }
 
 

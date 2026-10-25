@@ -140,7 +140,9 @@ class LabVirtueFlawDef:
 
     `parameters` are what the owner enters as the Virtue is added, from
     LAB_VF_PARAMETERS: "intelligence" (a whole number) and "servant" (a
-    grog's id, whose Intelligence is used instead). A modifier reads one
+    grog's id, whose Intelligence is used instead) and "illusory" (the
+    name of the lab's Virtue an Illusion negates) and "cost" (what an Empty
+    lab pays, Upkeep or Health). A modifier reads one
     with `amount_param` (Servant: Safety +half the servant's Intelligence).
     """
 

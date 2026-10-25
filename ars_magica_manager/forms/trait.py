@@ -12,6 +12,7 @@ from .. import sheet_text as st
 from ..commands import Form, SectionOps, delete
 from ..form_spec import DialogField, attr
 from ..models import ScoredTrait
+from ..sections import LAB_TRAITS_SECTION
 from ..world import REPUTATION_TYPES
 
 #: A covenant Reputation's least and greatest score.
@@ -26,6 +27,7 @@ NOUNS: dict[str, tuple[str, str]] = {
     "section-cov-reputations": ("Reputation", "e.g. Feared by the local nobility"),
     "section-cr-personality-traits": ("Personality Trait", "e.g. Vain"),
     "section-cr-reputations": ("Reputation", "e.g. Haunts the ford"),
+    LAB_TRAITS_SECTION: ("Personality Trait", "e.g. Whimsical"),
 }
 
 #: The sections whose traits are Reputations.

@@ -58,6 +58,7 @@ from ..rules import (
     library,
     research,
     spell_levels,
+    target_sizes,
 )
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
@@ -930,10 +931,12 @@ class LabPlanForm:
                 options=known,
                 allow_blank=True,
                 placeholder="(none)",
-                hint="Adds its magnitude: inventing, instilling an effect, and "
-                "empowering a familiar's bond (DE pp. 251, 258, 267).",
+                hint="Adds its magnitude: inventing (from a Lab Text too), instilling "
+                "an effect, and empowering a familiar's bond (DE pp. 251, 258, 262, "
+                "267).",
                 show_if=_doing(
                     lab_seasons.INVENT,
+                    lab_seasons.LAB_TEXT,
                     es.INSTIL,
                     es.LESSER_WORK,
                     es.CHARGED_WORK,
@@ -1362,6 +1365,7 @@ class LabPlanForm:
                 lambda v: {
                     "book_id": v.get("lab_text"),
                     "more_book_ids": list(v.get("more_texts") or []),
+                    "similar_spell_id": v.get("similar"),
                 },
             ),
             ((bs.DECODE_TEXT,), lambda v: {"book_id": v.get("decode")}),
@@ -1649,9 +1653,13 @@ def level_text(design: SpellDesign) -> str:
             "An Other parameter needs its magnitudes typed (+n) to work out the level."
         )
     found = "".join(f"  {todo(escape(n))}" for n in worked.notes)
+    size = target_sizes.size_text(
+        design.technique, design.form, design.target, design.extra_magnitudes
+    )
     return (
         f"[b]Level {worked.level}[/]  {escape(worked.design_line(design.base_level))}"
         + found
+        + (f"\n[dim]{escape(size)}[/]" if size else "")
     )
 
 

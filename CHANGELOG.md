@@ -109,6 +109,66 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.13.0 — 2026-10-25
+
+### Book of Hours
+
+- A season working from a **Lab Text** counts the Spells Specialization and
+  a similar spell known, as inventing does; anyone who assisted, and a
+  Longevity Ritual's subject, can read the texts the season writes (DE pp.
+  262-263).
+- The laboratory's **Teaching Specialization** adds up to +3 to teaching and
+  training, and its **Texts Specialization** a point for every 3 to copying
+  and writing, when the season is spent in the laboratory: **In the
+  laboratory** on the season, ticked unless you untick it (DE p. 291).
+- **Refining** a laboratory reminds you of the familiarity it needs, and a
+  magus with a Tidy trait rolls for Spotless; a Hidden Defect can be found
+  one at a time, or gained again; a take-over that lowers Refinement says
+  when the Virtues no longer fit (DE pp. 287-288; Covenants p. 118).
+- A covenant that ends the year broke gets an **Upkeep unpaid** line for
+  each of its laboratories, to give each a Flaw that lowers it (DE p. 288).
+- An Arcane Connection keeps its **last active season**, and fixing one
+  that has lapsed is refused (DE p. 250).
+- **Practice** can be split between up to three Abilities at the lowest of
+  their qualities, and a language practised among native speakers is worth
+  8 only below a score of 5 (DE p. 377).
+- Books can be written on a **spell's Mastery** and read into it (DE pp.
+  378-379).
+- **Blood of the Nephilim** slows every season's learning by age / 10 once
+  Decrepitude starts, never below 1 (DE p. 72).
+- An aging roll's points **in any Characteristic** are the player's to
+  place, one choice a point (Place Aging Points), with the highest offered
+  first; the Crisis rolls with the Decrepitude they bring (DE p. 392).
+- A Crisis that can't kill doesn't harm the **Unaging**, and a **leper**
+  takes a Heavy Wound with each one (DE pp. 114, 135).
+
+### Pagina
+
+- **Constant Effects**, a new section under Aging: the spells and items on
+  a character all the time, each giving its Warping every Winter (1 a
+  year, and 1 a season for a powerful one not made for them), with **The
+  Effect** at the foot of its form (DE pp. 390-391).
+- A laboratory's **Personality Traits**, under its Virtues and Flaws, with
+  a warning when they don't add up to its Warping (DE p. 289).
+- The Aging section warns at **Decrepitude 4 and 5** (DE p. 392).
+
+### Computus
+
+- The lab Virtues and Flaws that lacked them now have their modifiers:
+  Cramped's and Empty's choices, the Specialization points of Natural
+  Environment, Greater Guardian, Greater Horde and Sacrifices, Faerie
+  Ingredients' lower Upkeep, Lightless, Invisible and Shrouded on
+  Aesthetics, and an Illusion's balancing Virtue having no effect (DE pp.
+  293-296; Covenants pp. 118-119).
+- Under a new spell's level, a line says how far its **Target** reaches
+  with its extra magnitudes, from the Form's base Individual (DE pp.
+  310-311, 546).
+
+### Orbis
+
+- **Cast a Spell** in a fight asks for casting requisites, and the lowest
+  Technique and Form among them count (DE p. 312).
+
 ## 3.12.0 — 2026-10-25
 
 ### Pagina

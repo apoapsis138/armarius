@@ -139,7 +139,10 @@ def _apply_one_season_work(
         work.subject.aging.longevity_effects = list(work.carried_effects)
         work.subject.aging.longevity_year = plan.year
         work.subject.aging.longevity_by = magus.name
-        saga.books.append(
+        _write_text(
+            saga,
+            magus,
+            plan,
             _longevity_text(
                 saga,
                 magus,
@@ -147,7 +150,8 @@ def _apply_one_season_work(
                 work.subject,
                 int(work.lab_total.total),
                 plan.extra_vis,
-            )
+            ),
+            subject=work.subject,
         )
     activity = rules.ACTIVITIES[plan.activity]
     subject = plan_subject(saga, magus, plan)
@@ -242,7 +246,7 @@ def _apply_enchanting(
                 replace(e) for e in text.experimental_effects
             ]
             ex.apply_changes(effect, effect.experimental_effects)
-        saga.books.append(_effect_text(saga, magus, lab, device, effect))
+        _write_text(saga, magus, plan, _effect_text(saga, magus, lab, device, effect))
     making = (es.OPEN, es.LESSER_WORK, es.CHARGED_WORK, es.ATTUNE)
     if plan.activity in making and not device.maker_id and not device.maker_name:
         device.maker_id = magus.id
@@ -1163,6 +1167,26 @@ def plan_lab_finish(saga: Saga, outcome: rules.Outcome) -> SeasonPlan | None:
     return plan
 
 
+def _write_text(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    book: Book,
+    *,
+    subject: Character | None = None,
+) -> None:
+    """Put the Lab Text `magus` wrote in the library, understood by each
+    who assisted, and by a magus who was the subject of the Longevity
+    Ritual, without decoding it (DE p. 263)."""
+    saga.books.append(book)
+    level = bs.text_level(book, saga)
+    readers = ls.assistants(saga, magus, plan)
+    if subject is not None and subject.id != magus.id and subject.type == "magus":
+        readers.append(subject)
+    for reader in readers:
+        bs.grant_access(reader, bs.author_key(book), level, "assisted")
+
+
 def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None:
     """A season of lab work: the invention's points, and when it's done, the
     spell known, a Lab Text in the laboratory and the lab's Diary entry."""
@@ -1202,8 +1226,10 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
         for learned in (spell, *work.more_spells):
             if not any(k.spell_id == learned.id for k in magus.spells_known):
                 magus.spells_known.append(KnownSpell(spell_id=learned.id))
-        if plan.activity == lab_seasons.INVENT:
-            saga.books.append(_lab_text_book(saga, magus, lab, spell))
+        # One Lab Text for every effect created, from a Lab Text too (DE p.
+        # 262).
+        if plan.activity in (lab_seasons.INVENT, lab_seasons.LAB_TEXT):
+            _write_text(saga, magus, plan, _lab_text_book(saga, magus, lab, spell))
         # Plans made to continue it are no longer needed.
         saga.season_plans = [
             p

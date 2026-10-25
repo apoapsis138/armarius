@@ -43,6 +43,10 @@ NEW_CODEX = "__new__"
 NEW_EPITOME = "__new_epitome__"
 
 
+#: A book on a spell's Mastery: the spell's name goes in the detail.
+MASTERY_TEMPLATE = book_kinds.MASTERY_PREFIX + "{spell}"
+
+
 def _ability_template_prefix(name: str) -> str | None:
     """ "Area Lore: " for a templated catalog name like "Area Lore: {region}"."""
     return name.split("{", 1)[0] if "{" in name else None
@@ -146,6 +150,7 @@ def _book_subject_fields(
     ability, ability_detail = _book_ability_choice(
         attr(book, "ability", ""), ability_names
     )
+    ability_names.append(MASTERY_TEMPLATE)
     ability_options = pairs(ability_names)
     if ability and ability not in ability_names:
         ability_options.insert(0, (ability, ability))
@@ -760,6 +765,13 @@ def book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     book.spell_id = values.get("spell_id") if of_spell else None
     if not of_spell:
         book.spell_name = ""
+    if ability.startswith(book_kinds.MASTERY_PREFIX):
+        # A book on a spell's Mastery links the spell its name gives.
+        spell = catalog.find_spell_by_name(
+            saga, ability.removeprefix(book_kinds.MASTERY_PREFIX).strip()
+        )
+        book.spell_id = spell.id if spell is not None else None
+        book.spell_name = spell.name if spell is not None else ""
     book.technique = values.get("technique") or ""
     book.form = values.get("form") or ""
     if book.text_kind == TEXT_LONGEVITY:

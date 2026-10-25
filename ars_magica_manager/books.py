@@ -163,6 +163,7 @@ def status_problems(book: Book, saga: Saga | None = None) -> list[str]:
         is_ability_book(book.type, book.subject_kind)
         and book.ability
         and canonical_ability(book.ability) is None
+        and not book.ability.startswith(book_kinds.MASTERY_PREFIX)
     ):
         return [
             f"Unknown ability: {book.ability!r} isn't in the ability list; "

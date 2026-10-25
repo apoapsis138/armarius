@@ -90,6 +90,16 @@ Occupied Size), following Ars Magica Fifth Edition: Covenants, Chapter 9.
 The laboratory's rolls use its Base Safety plus the Safety total, and its
 Warping total: see [Safety and Warping](help:guide-lab-safety-warping).
 
+Aesthetics is halved, after everything else, when the laboratory is
+Invisible or Shrouded, and is at most -1 when it is Lightless (DE p. 296;
+Covenants pp. 118-119). Each point of Aesthetics, good or bad, is worth 5 xp
+in a fitting Reputation for its owner, perhaps over time (DE p. 290): add it
+to the owner's Reputations as it comes.
+
+A covenant that closes the year broke can't pay its laboratories' Upkeep:
+the season record names each of them, and the troupe gives each a Flaw, or
+takes a Virtue away, that lowers its Upkeep (DE p. 288).
+
 ## Planning tab
 <!-- help: tab-lab-planning -->
 
@@ -279,6 +289,11 @@ Definitive Edition, Chapter 8):
 - **Greater Guardian** and **Greater Horde** ask for the creature's
   Intelligence and add all of it to Safety.
 
+**Natural Environment**, **Greater Guardian**, **Greater Horde** and the
+Flaw **Sacrifices** put their Specialization points (3, 3, 2 and 2) in the
+Art chosen; to split them among several, type the others under
+Specializations: Other.
+
 The Virtue's details, and its card, say whose Intelligence it is and what it
 comes to: "Safety +2 (Kurt's Intelligence +3, halved, rounded up)". A Feature Virtue is usually added along with its Feature on the
 Attributes tab.
@@ -296,12 +311,36 @@ The laboratory's Flaws, with the points they come to in the title. They work
 like the Virtues: picked from the catalog, deleted rather than edited. A
 laboratory may have only one Focus Flaw.
 
+**Empty** asks whether it costs +1 Upkeep or -1 Health, and **Cramped** for
+the one activity it doesn't hamper, which takes a Specialization point.
+**Lesser** and **Greater Illusion** ask which of the laboratory's Virtues is
+only an illusion: that Virtue then has no effect at all (DE p. 296). A
+Hidden Defect may be had more than once.
+
 A few Flaws ask what they apply to when added: **Missing Ingredients** an
 Art (and a second Form), whose Lab Totals it halves; **Missing Equipment**
 one or two kinds of activity the laboratory can't be used for;
 **Elementary** the one kind it can be used for; **Restriction** the
 activity it forbids (DE pp. 295-296). Lab work they rule out is refused
 when it is planned.
+
+### Personality Traits
+<!-- help: section-lab-personality-traits -->
+
+A laboratory with a Warping score has Personality Traits whose scores add
+up to it, such as Whimsical +1 from faerie ingredients: they colour the
+experience of its owner and anyone living there, suggest the Warping its
+work and its inhabitants suffer, and the storyguide may add one to a Lab
+Total for an effect that matches it, or take it off for an opposite one
+(DE p. 289).
+<!-- tui -->
+`a` adds one, `e` edits the chosen one and `d` deletes it.
+<!-- /tui -->
+<!-- gui -->
+**Add**, **Edit** and **Delete** act on the trait last clicked.
+<!-- /gui -->
+The warning line above the lists says when they don't add up to the
+laboratory's Warping.
 
 ## Attributes tab
 <!-- help: tab-lab-attributes -->
@@ -350,6 +389,18 @@ Flaws and the sources typed below.
 <!-- /gui -->
 the app refuses to turn one on that would break a cap, and a newly gained
 one that would break a cap arrives turned off.
+
+Besides Lab Totals, two Activity Specializations count outside them when
+the season is spent in the owner's laboratory (DE p. 291): **Teaching** adds
+its points, at most +3, to the Source Quality of teaching and training, and
+of teaching a Hermetic Virtue; **Texts** adds a point for every full 3 to
+Profession: Scribe when copying books and Lab Texts, and to the language
+when writing summae or rewriting Lab Texts. A season of teaching, training,
+writing or copying has **In the laboratory** ticked unless you untick it
+(taught away from the lab, or written abroad): then neither counts.
+Teaching a spell is a Lab Total, so the Spells Specialization helps it
+instead, and Texts adds to the Lab Total of working from or decoding a Lab
+Text.
 
 ### Specializations: Other
 <!-- help: section-lab-specialties -->
@@ -466,9 +517,11 @@ type. The app works nothing out from them.
 <!-- help: section-lab-connections -->
 
 The Arcane Connections kept here. You type what each connects to, whether it
-is fixed, how long it lasts if not, where it came from and a description.
-Fixing one is a season of lab work planned on the Planning tab; when that
-season is advanced, the connection is marked fixed.
+is fixed, and if not its last active season and year (and any notes on how
+long it lasts), where it came from and a description. Fixing one is a
+season of lab work planned on the Planning tab; it must still be active as
+the season starts (DE p. 250), so the app refuses one whose last season has
+passed. When that season is advanced, the connection is marked fixed.
 
 ### Enchanted Devices
 <!-- help: section-lab-devices -->
@@ -694,6 +747,13 @@ the line under the list says what opened each:
   own, such as Range: Horizon (as Sight).
 - **A spell they know** that uses a breakthrough's parameter: a Minor
   Breakthrough is learned with the Lab Text of a spell that uses it.
+
+**Size / extra magnitudes** holds the magnitudes added for size and for
+requisites that add an effect. Under the level, a line says what the Target
+reaches if they are all spent on size: each multiplies it by ten, from the
+Form's base Individual (a pony-sized animal for Animal, a cubic pace of
+stone for Terram, and so on); size doesn't matter to Intellego spells, a
+Circle, or a Mentem or Vim Individual (DE pp. 310-311, 546).
 
 A spell started from one with a parameter the magus can't use takes the
 standard one it costs as. With the optional rule **Any spell parameter**

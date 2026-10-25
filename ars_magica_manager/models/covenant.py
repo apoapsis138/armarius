@@ -6,10 +6,9 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..arts import ART_BY_NAME
-from .character import ScoredTrait
 from .common import known_fields, move_secrets
 from .holdings import Economics, Inhabitant, Loyalty, Population, Possession
-from .traits import VirtueFlawInstance
+from .traits import ScoredTrait, VirtueFlawInstance
 from .world import FULL, Attitude, Favour, Link
 
 #: A Covenant Diary entry's categories, in the spec's order.

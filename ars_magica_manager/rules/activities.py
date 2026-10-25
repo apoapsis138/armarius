@@ -53,6 +53,7 @@ from ..models import (
     SeasonPlan,
     TraditionDef,
     XpAllocation,
+    character_age,
 )
 from . import activity_groups as groups
 from . import (
@@ -879,7 +880,12 @@ def source_quality(plan: SeasonPlan) -> int | None:
     if plan.activity in (EXPOSURE, TEACH):
         return EXPOSURE_QUALITY
     if plan.activity == PRACTICE:
-        mastery = any(_split(a.subject)[0] == "mastery" for a in plan.allocations)
+        # Split between subjects, it is the lowest of their qualities (DE p.
+        # 377): 5 only if every one is a spell's Mastery.
+        chosen = [a for a in plan.allocations if a.subject]
+        mastery = bool(chosen) and all(
+            _split(a.subject)[0] == "mastery" for a in chosen
+        )
         return MASTERY_PRACTICE_QUALITY if mastery else PRACTICE_QUALITY
     return None
 
@@ -887,13 +893,15 @@ def source_quality(plan: SeasonPlan) -> int | None:
 def allocations(plan: SeasonPlan) -> list[XpAllocation]:
     """The plan's subjects with the Source Quality each gets where that's
     known from the plan alone: Exposure's 2 points go to one subject, or 1
-    each to two; Practice's and Teaching's to their one subject; Adventure's
-    are as typed. Study from a teacher, a master or vis names one subject
+    each to two; Teaching's to its one subject; Practice's to its one
+    subject, or as typed when split; Adventure's are as typed. Study from a teacher, a master or vis names one subject
     (its Source Quality is worked out in outcome())."""
     chosen = [a for a in plan.allocations if a.subject]
     if plan.activity == EXPOSURE:
         each = EXPOSURE_QUALITY // max(1, len(chosen[:2]))
         return [XpAllocation(a.subject, each) for a in chosen[:2]]
+    if plan.activity == PRACTICE and len(chosen) > 1:
+        return chosen
     if plan.activity in (PRACTICE, TEACH):
         quality = source_quality(plan) or 0
         return [XpAllocation(a.subject, quality) for a in chosen[:1]]
@@ -914,6 +922,9 @@ def book_subject(book: Book) -> str | None:
     )
     if is_art:
         return art_subject(book.art) if book.art else None
+    mastery = book_kinds.mastery_subject(book.ability, book.spell_id)
+    if mastery is not None:
+        return mastery
     return ability_subject(book.ability) if book.ability else None
 
 
@@ -1344,7 +1355,10 @@ def _gain(
     months: int,
     gain_limit: int | None = None,
     bonuses: Sequence[Line] = (),
+    year: int | None = None,
 ) -> XpGain:
+    """The xp a season gives in `subject`; `year`, the season's, gives the
+    student's age for the Virtues that read it."""
     kind, name = _split(subject)
     result = season_of_study(
         character,
@@ -1356,8 +1370,27 @@ def _gain(
         months_lost=months,
         mastery=kind == "mastery",
         bonuses=bonuses,
+        age=None
+        if year is None
+        else character_age(character.background.year_born, year),
     )
     return XpGain(subject, result, subject_xp(character, subject))
+
+
+def _lab_teaching(saga: Saga, teacher: Character) -> list[Line]:
+    """The teacher's laboratory's Teaching Specialization, for teaching or
+    training done there (DE p. 291; the plan's `in_lab`). Teaching a spell
+    is a Lab Total, which the Spells Specialization helps instead."""
+    bonus = lab_stats.teaching_bonus(saga, saga.laboratory(teacher.assigned_lab_id))
+    if not bonus:
+        return []
+    return [
+        Line(
+            "Teaching Specialization (in the laboratory)",
+            amount=bonus,
+            source=lab_stats.SPECIALIZATION_SOURCE,
+        )
+    ]
 
 
 #: The study_total activity (rules.study's Virtue lookups) of each activity.
@@ -1754,9 +1787,11 @@ def _pending(plan: SeasonPlan, rng: random.Random | None) -> bool:
     return plan.die is None and rng is None
 
 
-def _exposure(character: Character, ability: str) -> XpGain:
+def _exposure(character: Character, ability: str, year: int | None = None) -> XpGain:
     """Exposure in `ability` (DE Ch. 10, Exposure)."""
-    return _gain(character, ability_subject(ability), EXPOSURE_QUALITY, "exposure", 0)
+    return _gain(
+        character, ability_subject(ability), EXPOSURE_QUALITY, "exposure", 0, year=year
+    )
 
 
 # Lab work: its own rules module, and Exposure in Magic
@@ -1815,7 +1850,7 @@ def _lab_outcome(
             result.notes += laboratory_seasons.roll(
                 result.lab_work, character, plan, rng or random.Random(), saga
             )
-    result.gains.append(_exposure(character, "Magic Theory"))
+    result.gains.append(_exposure(character, "Magic Theory", year=plan.year))
 
 
 def _horoscope_botched(
@@ -1867,7 +1902,9 @@ def _book_outcome(
 ) -> None:
     _, result.book_work = book_seasons.work(saga, character, plan)
     result.gains.append(
-        _exposure(character, book_seasons.exposure_ability(character, plan))
+        _exposure(
+            character, book_seasons.exposure_ability(character, plan), year=plan.year
+        )
     )
 
 
@@ -1900,7 +1937,7 @@ def _tradition_outcome(
 ) -> None:
     if plan.activity == tradition_seasons.OPEN:
         _, work = tradition_seasons.open_work(saga, character, plan)
-        result.gains.append(_exposure(character, "Teaching"))
+        result.gains.append(_exposure(character, "Teaching", year=plan.year))
     else:
         chosen = next(a for a in plan.allocations if a.subject)
         name = _split(chosen.subject)[1]
@@ -1912,6 +1949,7 @@ def _tradition_outcome(
                 EXPOSURE_QUALITY,
                 "exposure",
                 _months(plan),
+                year=plan.year,
             )
         )
     result.tradition_work = work
@@ -1947,7 +1985,7 @@ def _apprentice_outcome(
                 + ("taught." if work.succeeds else "not learned.")
             )
     if plan.activity != apprentice_seasons.SEARCH:
-        result.gains.append(_exposure(character, "Teaching"))
+        result.gains.append(_exposure(character, "Teaching", year=plan.year))
         return
     if _pending(plan, rng):
         result.pending_roll = True
@@ -2035,7 +2073,9 @@ def _supplement_outcome(
     quality = plan.source_quality if plan.source_quality is not None else simple.quality
     subject = allocations(plan)[0].subject
     kind = "exposure" if quality == EXPOSURE_QUALITY else "practice"
-    result.gains.append(_gain(character, subject, quality or 0, kind, 0))
+    result.gains.append(
+        _gain(character, subject, quality or 0, kind, 0, year=plan.year)
+    )
     result.faith = simple.faith
     result.supplement = supplement_work.work(saga, character, plan, rng)
     result.notes += result.supplement.notes
@@ -2055,7 +2095,7 @@ def _assist_outcome(
     rng: random.Random | None,
     result: Outcome,
 ) -> None:
-    result.gains.append(_exposure(character, "Magic Theory"))
+    result.gains.append(_exposure(character, "Magic Theory", year=plan.year))
 
 
 # Setting up a new laboratory: Exposure in Magic Theory.
@@ -2076,7 +2116,7 @@ def _new_lab_outcome(
         f"{laboratory_seasons.new_lab_name(character, plan)} is made, with the "
         "Basic Flaw until a second season's work in it."
     )
-    result.gains.append(_exposure(character, "Magic Theory"))
+    result.gains.append(_exposure(character, "Magic Theory", year=plan.year))
 
 
 # Study from books, teachers, training and vis (DE Ch. 10).
@@ -2176,6 +2216,7 @@ def _study_outcome(
                 months,
                 gain_limit=limit,
                 bonuses=bonuses,
+                year=plan.year,
             )
         )
         if book.type == "Tractatus":
@@ -2203,6 +2244,7 @@ def _study_outcome(
                     book_kinds.FOLIO_LORE_XP,
                     "exposure",
                     0,
+                    year=plan.year,
                 )
             )
         return
@@ -2233,7 +2275,11 @@ def _study_outcome(
             kind,
             months,
             gain_limit=score(teacher, subject),
-            bonuses=study.gift_lines(teacher, character),
+            bonuses=[
+                *study.gift_lines(teacher, character),
+                *(_lab_teaching(saga, teacher) if plan.in_lab else []),
+            ],
+            year=plan.year,
         )
         if first and gain.result.xp < study.SUPERNATURAL_FIRST_XP:
             result.notes.append(
@@ -2310,7 +2356,9 @@ def _vis_study_outcome(
     quality = max(0, die_value + aura_mod)
     bonuses = study_virtues.presence_lines(character, kind, True, plan.art_present)
     result.gains.append(
-        _gain(character, subject, quality, kind, months, bonuses=bonuses)
+        _gain(
+            character, subject, quality, kind, months, bonuses=bonuses, year=plan.year
+        )
     )
 
 
@@ -2336,8 +2384,7 @@ def _plain_problems(
     if plan.activity == EXPOSURE and len(chosen) > 2:
         found.append("Exposure goes into one subject, or is split between two.")
     if plan.activity == PRACTICE:
-        if len(chosen) > 1:
-            found.append("Practice improves one subject.")
+        found += _practice_split_problems(character, plan, chosen)
         if any(_split(a.subject)[0] == "art" for a in chosen):
             found.append(
                 "Arts can't be practised: study them from vis or books "
@@ -2383,6 +2430,45 @@ def _plain_problems(
     return found
 
 
+#: Practice among native speakers is worth this until the language reaches
+#: NATIVE_PRACTICE_UNTIL (DE p. 377).
+NATIVE_PRACTICE_QUALITY, NATIVE_PRACTICE_UNTIL = 8, 5
+
+
+def _practice_split_problems(
+    character: Character, plan: SeasonPlan, chosen: Sequence[XpAllocation]
+) -> list[str]:
+    """Practice split between Abilities shares one Source Quality, the
+    lowest of theirs; a language's 8 among native speakers lasts only
+    until its score is 5 (DE p. 377)."""
+    found: list[str] = []
+    quality = source_quality(plan)
+    if quality == NATIVE_PRACTICE_QUALITY:
+        fluent = [
+            name
+            for kind, name in (_split(a.subject) for a in chosen)
+            if kind == "ability"
+            and "Language" in name
+            and ability_level(character, name) >= NATIVE_PRACTICE_UNTIL
+        ]
+        if fluent:
+            found.append(
+                f"{', '.join(fluent)} is already {NATIVE_PRACTICE_UNTIL} or more: "
+                f"practice among native speakers is worth {NATIVE_PRACTICE_QUALITY} "
+                f"only below it, and {PRACTICE_QUALITY} after (DE p. 377)."
+            )
+    if len(chosen) > 1 and quality is not None:
+        split = sum(a.points for a in chosen)
+        if any(a.points < 1 for a in chosen):
+            found.append("Give each subject at least 1 point of the Source Quality.")
+        elif split != quality:
+            found.append(
+                f"Split all {quality} points of Source Quality (the lowest of the "
+                f"subjects'): {split} are split (DE p. 377)."
+            )
+    return found
+
+
 def _plain_outcome(
     saga: Saga | None,
     character: Character,
@@ -2397,7 +2483,14 @@ def _plain_outcome(
         kind = study.SPLIT_ADVENTURE
     for allocation in allocations(plan):
         result.gains.append(
-            _gain(character, allocation.subject, allocation.points, kind, months)
+            _gain(
+                character,
+                allocation.subject,
+                allocation.points,
+                kind,
+                months,
+                year=plan.year,
+            )
         )
 
 

@@ -45,7 +45,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import effects, library, options
+from . import effects, lab_stats, library, options
 from .rounding import round_down, round_up
 from .scores import ability_level, character_source
 from .study import after_distraction, supernatural_ability
@@ -171,6 +171,15 @@ def written_by(book: Book, character: Character) -> bool:
     return bool(book.author) and book.author == character.name
 
 
+def texts_bonus(saga: Saga, character: Character, plan: SeasonPlan) -> int:
+    """What the character's laboratory's Texts Specialization adds to
+    Profession: Scribe when copying and to the Language when writing (DE
+    p. 291), when the season is spent there (the plan's `in_lab`)."""
+    if not plan.in_lab:
+        return 0
+    return lab_stats.texts_bonus(saga, saga.laboratory(character.assigned_lab_id))
+
+
 def language_score(character: Character, language: str) -> int:
     """The character's score in `language` (a Living or Dead Language
     Ability named for it, or an Ability of that name)."""
@@ -185,12 +194,25 @@ def language_score(character: Character, language: str) -> int:
     )
 
 
+def subject_name(saga: Saga, subject: str) -> str:
+    """A subject's name to show: the Art or Ability, or "Mastery: <spell>"."""
+    kind, _, name = subject.partition(":")
+    if kind != "mastery":
+        return name
+    spell = catalog.find_spell(saga, name)
+    return book_kinds.MASTERY_PREFIX + (spell.name if spell else name)
+
+
 def subject_score(character: Character, subject: str) -> tuple[bool, int]:
-    """(is an Art, score) for "art:Creo" / "ability:Latin"."""
+    """(is an Art, score) for "art:Creo" / "ability:Latin" / a spell's
+    "mastery:<id>"."""
     kind, _, name = subject.partition(":")
     if kind == "art":
         art = character.arts.get(name.lower())
         return True, art.level if art else 0
+    if kind == "mastery":
+        known = next((k for k in character.spells_known if k.spell_id == name), None)
+        return False, known.mastery_score if known else 0
     return False, ability_level(character, name)
 
 
@@ -198,6 +220,9 @@ def book_subject(book: Book) -> str:
     """The "art:X" / "ability:Y" a summa or tractatus is on ("" if none)."""
     if book.art:
         return f"art:{ART_BY_NAME.get(book.art.lower(), book.art)}"
+    mastery = book_kinds.mastery_subject(book.ability, book.spell_id)
+    if mastery is not None:
+        return mastery
     return f"ability:{book.ability}" if book.ability else ""
 
 
@@ -362,10 +387,10 @@ def _write(
     saga: Saga, character: Character, plan: SeasonPlan, com: int
 ) -> tuple[list[str], BookWork | None]:
     subject = plan.allocations[0].subject if plan.allocations else ""
-    if not subject or subject.startswith("mastery:"):
+    if not subject:
         return ["Choose the Art or Ability the book is on."], None
     is_art, score = subject_score(character, subject)
-    name = subject.partition(":")[2]
+    name = subject_name(saga, subject)
     if score < (5 if is_art else 2):
         return [
             f"Writing on {name} needs a score of {5 if is_art else 2} "
@@ -415,7 +440,10 @@ def _write(
     bonus = min(base, (most - level) * (1 if is_art else 3))
     quality = base + bonus
     needed = level if is_art else 5 * level
-    gained = max(0, com + language_score(character, language))
+    gained = max(
+        0,
+        com + language_score(character, language) + texts_bonus(saga, character, plan),
+    )
     if gained <= 0:
         return ["Communication + the language is 0: no progress is possible."], None
     made = _new_book(saga, character, plan, kind, subject, level, quality)
@@ -437,6 +465,10 @@ def _new_book(
     quality: int,
 ) -> Book:
     sort, _, name = subject.partition(":")
+    mastery = sort == "mastery"
+    spell = catalog.find_spell(saga, name) if mastery else None
+    if mastery:
+        name = book_kinds.MASTERY_PREFIX + (spell.name if spell else name)
     title = plan.title.strip() or f"{kind} on {name}"
     return Book(
         id=_book_id(saga, title),
@@ -449,7 +481,9 @@ def _new_book(
         owner_id=character.id,
         year_published=plan.year,
         art=name if sort == "art" else "",
-        ability=name if sort == "ability" else "",
+        ability=name if sort in ("ability", "mastery") else "",
+        spell_id=spell.id if spell else None,
+        spell_name=spell.name if spell else "",
         subject_kind="Art"
         if sort == "art" and kind == "Tractatus"
         else ("Ability" if kind == "Tractatus" else ""),
@@ -497,7 +531,9 @@ def _copy(
             return [
                 f"Copying a book on {book.ability} needs it, or a Realm Lore, at 1."
             ], None
-        scribe = ability_level(character, "Profession: Scribe")
+        scribe = ability_level(character, "Profession: Scribe") + texts_bonus(
+            saga, character, plan
+        )
         quick = plan.quick
         quality = (book.quality or 0) - (1 if quick else 0)
         copy = _copy_of(saga, character, book, quality, book.language)
@@ -623,7 +659,7 @@ def _write_tablet(
 def _lab_texts(
     saga: Saga, character: Character, plan: SeasonPlan
 ) -> tuple[list[str], BookWork | None]:
-    latin = language_score(character, "Latin")
+    latin = language_score(character, "Latin") + texts_bonus(saga, character, plan)
     if plan.activity == REWRITE_TEXTS:
         mine = [
             b
@@ -662,7 +698,9 @@ def _lab_texts(
                 f"{character.name} must decode it first (or have it rewritten "
                 "for general use)."
             ], None
-        scribe = ability_level(character, "Profession: Scribe")
+        scribe = ability_level(character, "Profession: Scribe") + texts_bonus(
+            saga, character, plan
+        )
         level = max(1, text_level(book, saga))
         copies = round_down(60 * scribe / level)
         if copies <= 0:

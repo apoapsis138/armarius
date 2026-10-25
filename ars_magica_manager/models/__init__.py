@@ -34,6 +34,7 @@ from .character import BoundBeing as BoundBeing
 from .character import Breakthrough as Breakthrough
 from .character import Character as Character
 from .character import CharacterPower as CharacterPower
+from .character import ConstantEffect as ConstantEffect
 from .character import CreationConditions as CreationConditions
 from .character import CreationXp as CreationXp
 from .character import Description as Description
@@ -44,7 +45,6 @@ from .character import LabTextAccess as LabTextAccess
 from .character import Ordeal as Ordeal
 from .character import Progress as Progress
 from .character import ResearchAttempt as ResearchAttempt
-from .character import ScoredTrait as ScoredTrait
 from .character import TraditionEffect as TraditionEffect
 from .character import Wounds as Wounds
 from .character import WoundState as WoundState
@@ -237,6 +237,7 @@ from .traits import Ability as Ability
 from .traits import Characteristics as Characteristics
 from .traits import KnownSpell as KnownSpell
 from .traits import MasteryAbility as MasteryAbility
+from .traits import ScoredTrait as ScoredTrait
 from .traits import Spell as Spell
 from .traits import VirtueFlawInstance as VirtueFlawInstance
 from .traits import new_instance_id as new_instance_id

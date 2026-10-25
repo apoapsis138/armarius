@@ -116,7 +116,35 @@ def lab_characteristic_total(
     found = characteristic_effects(lab, catalog_by_id, characteristic, saga)
     virtue_sum = int(effects.amount_total(e for e in found if not e.is_negative_side))
     flaw_sum = int(effects.amount_total(e for e in found if e.is_negative_side))
-    return manual, virtue_sum, flaw_sum, manual + virtue_sum + flaw_sum
+    total = manual + virtue_sum + flaw_sum
+    if characteristic == "aesthetics":
+        # The change counts with the side that made it, so the parts still
+        # add up to the total.
+        change = aesthetics_after(lab, total) - total
+        if change > 0:
+            virtue_sum += change
+        else:
+            flaw_sum += change
+        total += change
+    return manual, virtue_sum, flaw_sum, total
+
+
+#: Aesthetics halved after everything else (Covenants pp. 118-119), then
+#: held to -1 at most in a lab with no light (DE p. 296).
+HALVES_AESTHETICS = ("labvf_invisible", "labvf_shrouded")
+LIGHTLESS = "labvf_lightless"
+LIGHTLESS_AESTHETICS = -1
+
+
+def aesthetics_after(lab: Laboratory, total: int) -> int:
+    """The lab's Aesthetics once Invisible or Shrouded halves it (rounded
+    down) and Lightless holds it to -1."""
+    ids = {vf.vf_id for vf in lab.virtues_flaws}
+    if ids & set(HALVES_AESTHETICS):
+        total = round_down(total / 2)
+    if LIGHTLESS in ids:
+        total = min(total, LIGHTLESS_AESTHETICS)
+    return total
 
 
 def lab_safety(
@@ -158,13 +186,47 @@ def laboratory_source(
     counts only while the item's device is kept in the lab."""
     if catalog_by_id is None:
         catalog_by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    real = [vf for vf in lab.virtues_flaws if vf.id not in illusory(lab, catalog_by_id)]
     if saga is None:
-        return effects.EffectSource("laboratory", lab.virtues_flaws, catalog_by_id)
+        return effects.EffectSource("laboratory", real, catalog_by_id)
     away = lab_items.away_grants(saga, lab)
-    instances = [vf for vf in lab.virtues_flaws if vf.id not in away]
+    instances = [vf for vf in real if vf.id not in away]
     return effects.EffectSource(
         "laboratory", instances, catalog_by_id, lambda vf: vf_params(saga, vf)
     )
+
+
+#: The Flaws whose balancing Virtue is only an illusion (DE p. 296).
+ILLUSIONS = ("labvf_lesser_illusion", "labvf_greater_illusion")
+
+
+def illusory(
+    lab: Laboratory, catalog_by_id: Mapping[str, LabVirtueFlawDef]
+) -> set[str]:
+    """The ids of the lab's Virtues that a Lesser or Greater Illusion names
+    as its illusory one: they have no effect (DE p. 296). Each Illusion
+    negates one Virtue of the name it gives."""
+    wanted = [
+        vf.params.get("illusory", "").strip().casefold()
+        for vf in lab.virtues_flaws
+        if vf.vf_id in ILLUSIONS
+    ]
+    found: set[str] = set()
+    for name in filter(None, wanted):
+        match = next(
+            (
+                vf.id
+                for vf in lab.virtues_flaws
+                if vf.id not in found
+                and vf.vf_id in catalog_by_id
+                and catalog_by_id[vf.vf_id].type == "Virtue"
+                and catalog_by_id[vf.vf_id].name.casefold() == name
+            ),
+            None,
+        )
+        if match is not None:
+            found.add(match)
+    return found
 
 
 def servant(saga: Saga, instance: VirtueFlawInstance) -> Character | None:
@@ -274,3 +336,42 @@ def forbidden(lab: Laboratory, categories: Collection[str]) -> str | None:
         if vf.vf_id == ELEMENTARY and chosen and not chosen & set(categories):
             return f"{lab.name} is Elementary: only {', '.join(sorted(chosen))} work."
     return None
+
+
+#: Where the Teaching and Texts Specializations are described (DE pp.
+#: 290-291).
+SPECIALIZATION_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 11: The Laboratory, "
+    "Specializations, pp. 290-291"
+)
+#: The Teaching Specialization adds at most this much (DE p. 291).
+TEACHING_CAP = 3
+
+
+def specialty_points(saga: Saga, lab: Laboratory | None, name: str) -> int:
+    """The points `lab` has in the Specialization `name`, if it counts (0
+    for no lab)."""
+    if lab is None:
+        return 0
+    return next(
+        (
+            s.points
+            for s in specialization_scores(saga, lab)
+            if s.name == name and s.counts
+        ),
+        0,
+    )
+
+
+def teaching_bonus(saga: Saga, lab: Laboratory | None) -> int:
+    """What the Teaching Specialization adds to a Training or Teaching
+    Source Quality when the season is spent in the lab: its points, at
+    most +3 (DE p. 291)."""
+    return min(TEACHING_CAP, specialty_points(saga, lab, "Teaching"))
+
+
+def texts_bonus(saga: Saga, lab: Laboratory | None) -> int:
+    """What the Texts Specialization adds to Profession: Scribe when
+    copying and to the Language when writing: +1 for each full 3 points
+    (DE p. 291)."""
+    return specialty_points(saga, lab, "Texts") // 3

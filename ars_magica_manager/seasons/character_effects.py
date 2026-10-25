@@ -122,7 +122,8 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
     """A year's automatic Warping Points: +1 for a Longevity
     Ritual, and living in a strong aura of another realm (a magus gains none
     from a Magic aura, a holy or chthonic magus none from his other realm's),
-    the Virtues and Flaws that give one a year, and with Susceptibility to
+    the Virtues and Flaws that give one a year, each constant effect on the
+    character (DE p. 391), and with Susceptibility to
     Warping one more for each realm that gave any this year (DE p. 146: a
     Longevity Ritual's count as Magic, an aura's or a place's as its
     realm, a Virtue's as its own realm, and an event's as the realm
@@ -163,6 +164,11 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
         points += each
         realms_.add(realm_of)
         gained.append(f"{name} {each}")
+    for effect in character.constant_effects:
+        each = warping_rules.constant_points(effect)
+        points += each
+        realms_.add(effect.realm or "Magic")
+        gained.append(f"{effect.name or 'A constant effect'} {each}")
     realms_ |= _warped_this_year(saga, character)
     if work_virtues.susceptible(character) and realms_:
         points += len(realms_)
@@ -280,19 +286,51 @@ def age_character(
     if result.points:
         gained = ", ".join(f"{n.title()} {p}" for n, p in result.points.items())
         notes.append(f"Aging Points: {gained}.")
+    if result.any_points:
+        # The player chooses where they go; their Decrepitude counts now,
+        # before any Crisis (DE p. 392).
+        aging.decrepitude_points += result.any_points
+        aging.aging_due += [
+            f"{aging_rules.ANY_POINT}, {season} {year}: any Characteristic "
+            f"(suggested: {name.title()})"
+            for name in result.suggested
+        ]
+        notes.append(
+            f"{result.any_points} Aging Point(s) in any Characteristic: the "
+            "player places them (Place Aging Points)."
+        )
     aging.decrepitude = aging_rules.decrepitude_score(aging.decrepitude_points)
     if result.crisis:
         text, ends = aging_rules.crisis(character, age, aging.decrepitude, rng, saga)
         notes.append(text)
+        if result.any_points and aging_rules.fatal_crisis(text):
+            # The Crisis is rolled with the raised Decrepitude, whichever
+            # Characteristics take the points; the survival roll is the
+            # table's, after they are placed.
+            notes.append(
+                "Place the Aging Points before the survival roll: one in "
+                "Stamina may lower it."
+            )
         if ends:
             aging.longevity_modifier = 0
-        after, after_year = next_season(season, year)
-        aging.recovering = f"{after} {after_year}"
+        harmless = aging_rules.unaging(character) and not aging_rules.fatal_crisis(text)
+        if harmless:
+            notes.append("Unaging: a Crisis that can't kill does no harm (DE p. 114).")
+        else:
+            after, after_year = next_season(season, year)
+            aging.recovering = f"{after} {after_year}"
+        if aging_rules.leper(character):
+            character.wounds.heavy += 1
+            notes.append("Leprosy: a Heavy Wound with the Crisis (DE p. 135).")
     summary = (
         "no apparent aging"
         if not result.apparent
         else "apparent age +1"
-        + (f", {sum(result.points.values())} Aging Point(s)" if result.points else "")
+        + (
+            f", {sum(result.points.values()) + result.any_points} Aging Point(s)"
+            if result.points or result.any_points
+            else ""
+        )
         + (", an Aging Crisis" if result.crisis else "")
     )
     character.diary.append(

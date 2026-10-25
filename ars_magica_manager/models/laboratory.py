@@ -9,7 +9,7 @@ from typing import Any
 
 from ..arts import ARTS, TECHNIQUES
 from .common import known_fields
-from .traits import VirtueFlawInstance, new_instance_id
+from .traits import ScoredTrait, VirtueFlawInstance, new_instance_id
 
 
 @dataclass
@@ -57,6 +57,10 @@ class ArcaneConnection:
     fixed: bool = False
     #: A temporary one: how long it lasts, as typed ("until Summer 1222").
     lasts: str = ""
+    #: A temporary one: the last season it is active, when known (fixing
+    #: needs it active as the season starts, DE p. 250).
+    lasts_season: str = ""
+    lasts_year: int | None = None
     #: Where it came from.
     source: str = ""
     description: str = ""
@@ -352,6 +356,9 @@ class Laboratory:
     #: Specializations the user turned off (or that arrived over a cap);
     #: they keep their points but don't count.
     dropped_specializations: list[str] = field(default_factory=list)
+    #: Personality Traits a Warping laboratory has, their scores adding up
+    #: to its Warping (DE p. 289).
+    personality_traits: list[ScoredTrait] = field(default_factory=list)
     #: Whether the sanctum's boundary is marked (Code of Hermes).
     sanctum_marked: bool = False
     rooms: list[NamedDescription] = field(default_factory=list)
@@ -397,6 +404,10 @@ class Laboratory:
             ArcaneConnection.from_dict(c) for c in d.get("arcane_connections", [])
         ]
         d["diary"] = [DiaryEntry.from_dict(entry) for entry in d.get("diary", [])]
+        d["personality_traits"] = [
+            ScoredTrait(**known_fields(ScoredTrait, t))
+            for t in d.get("personality_traits", [])
+        ]
         d["virtues_flaws"] = [
             VirtueFlawInstance(**known_fields(VirtueFlawInstance, vf))
             for vf in d.get("virtues_flaws", [])

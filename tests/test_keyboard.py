@@ -101,7 +101,7 @@ async def test_tab_stops_once_per_section_and_never_on_a_button():
             for stop in stops
         ]
         # One stop each: the top panel's two sections, the Description tab's
-        # eight, and the tree. (It was 19 stops before.)
+        # nine, and the tree. (It was 19 stops before.)
         assert sections == [
             "section-char-characteristics",
             "section-hermetic-background",
@@ -110,6 +110,7 @@ async def test_tab_stops_once_per_section_and_never_on_a_button():
             "section-reputations",
             "section-connections",
             "section-aging",
+            "section-char-constant-effects",
             "section-char-health",
             "nav-tree",
             "section-char-info",

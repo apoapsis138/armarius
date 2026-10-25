@@ -494,6 +494,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-char-constant-effects": {
+      "active": "section-char-constant-effects",
+      "keys": {
+        "a": "FieldsDialog: Add a Constant Effect",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-char-health": {
       "active": "section-char-health",
       "keys": {
@@ -862,6 +872,16 @@
         "a": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
         "e": "notice: Greater Focus names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-personality-traits": {
+      "active": "section-lab-personality-traits",
+      "keys": {
+        "a": "FieldsDialog: Add a Personality Trait",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

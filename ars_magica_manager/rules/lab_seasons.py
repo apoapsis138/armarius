@@ -31,6 +31,7 @@ from dataclasses import dataclass, field
 
 from .. import catalog, vis
 from ..models import (
+    SEASONS,
     SUPERNATURAL_CATEGORIES,
     TEXT_LONGEVITY,
     ArcaneConnection,
@@ -550,6 +551,10 @@ def _spell_work(
             "to invent a variant of it."
         ], None
     similar = lab.similar_spell_level(saga, magus, plan.similar_spell_id)
+    # Working from a Lab Text is inventing the spell from it, its Lab Total
+    # "calculated in exactly the same way" (DE p. 262): the Spells
+    # Specialization and a similar spell count, with Texts besides.
+    text = lab_text_of(saga, plan) if plan.activity == LAB_TEXT else None
 
     def spell_total(learned: Spell) -> lab.LabTotal:
         technique, form = requisite_arts(magus, learned)
@@ -559,10 +564,14 @@ def _spell_work(
             technique,
             form,
             lab_,
-            activity=_TOTAL_ACTIVITY[plan.activity],
+            activity=_TOTAL_ACTIVITY[INVENT]
+            if plan.activity == LAB_TEXT
+            else _TOTAL_ACTIVITY[plan.activity],
             days_missed=max(0, plan.days_away),
             experimenting=plan.experimenting,
-            similar_spell_level=(similar if plan.activity == INVENT else None),
+            similar_spell_level=similar,
+            from_lab_text=plan.activity == LAB_TEXT,
+            others_text=text is not None and text.author_id != magus.id,
         )
         return _with_options(magus, plan, technique, form, total, saga)
 
@@ -771,6 +780,21 @@ def whose_vis(magus: Character, plan: SeasonPlan) -> str:
     return "the laboratory's" if plan.vis_from == "laboratory" else f"{magus.name}'s"
 
 
+def lapsed(connection: ArcaneConnection, season: str, year: int) -> bool:
+    """Whether a temporary connection is no longer active in that season:
+    its last season, when recorded, is before it (a year alone lasts to
+    its Winter)."""
+    if connection.fixed or connection.lasts_year is None:
+        return False
+    last = (
+        SEASONS.index(connection.lasts_season)
+        if connection.lasts_season in SEASONS
+        else len(SEASONS) - 1
+    )
+    now = SEASONS.index(season) if season in SEASONS else 0
+    return (year, now) > (connection.lasts_year, last)
+
+
 def connection_of(saga: Saga, plan: SeasonPlan) -> ArcaneConnection | None:
     """The laboratory's Arcane Connection a plan fixes."""
     lab_ = saga.laboratory(plan.lab_id) if plan.lab_id else None
@@ -881,6 +905,12 @@ def _one_season_work(
             ], None
         if connection.fixed:
             return [f"The Arcane Connection to {connection.to} is already fixed."], None
+        if lapsed(connection, plan.season, plan.year):
+            return [
+                f"The Arcane Connection to {connection.to} is no longer active "
+                f"by {plan.season} {plan.year}: fixing needs it active as the "
+                "season starts (DE p. 250)."
+            ], None
         if pool.get("vim", 0) < 1:
             return [
                 f"Fixing an Arcane Connection takes 1 pawn of Vim vis; "

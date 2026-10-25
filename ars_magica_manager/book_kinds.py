@@ -259,3 +259,17 @@ class Adjustment:
     amount: int
     #: Counts toward the Build Point cost.
     priced: bool = True
+
+
+#: A book on a spell's Mastery Ability names it "Mastery: <spell>" and links
+#: the spell by its id (DE pp. 378-379: books may be written on any Ability,
+#: a spell's Mastery included).
+MASTERY_PREFIX = "Mastery: "
+
+
+def mastery_subject(ability: str, spell_id: str | None) -> str | None:
+    """The "mastery:<spell id>" a book on a spell's Mastery teaches, or None
+    for any other book."""
+    if ability.startswith(MASTERY_PREFIX) and spell_id:
+        return f"mastery:{spell_id}"
+    return None

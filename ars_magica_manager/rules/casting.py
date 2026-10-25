@@ -343,15 +343,18 @@ def spell_casting_score(
     aura: int = 0,
     aura_realm: str = realms.HERMETIC,
     mastery: int = 0,
+    casting_requisites: Sequence[str] = (),
     **kwargs: Any,
 ) -> Breakdown:
+    """The spell's Casting Score: its own requisites and any casting
+    requisites chosen for this casting count (DE p. 312)."""
     return casting_score(
         magus,
         spell.technique,
         spell.form,
         aura=aura,
         aura_realm=aura_realm,
-        requisites=spell.requisites,
+        requisites=[*spell.requisites, *casting_requisites],
         mastery=mastery,
         ritual=spell.ritual,
         **kwargs,

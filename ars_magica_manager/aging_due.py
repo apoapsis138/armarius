@@ -1,5 +1,7 @@
-"""Aging Points still to place: a disease Crisis survived leaves one in a
-Characteristic the storyguide chooses (Art & Academe p. 47). The form
+"""Aging Points still to place: an aging roll's points "in any
+Characteristic", which the player chooses (DE p. 392), and a disease
+Crisis survived, which leaves one in a Characteristic the storyguide
+chooses (Art & Academe p. 47). The form
 asks for each; Advance Season asks for them before it plays the next
 season, and More on Aging & Warping places them at any time -- no UI in
 here."""
@@ -43,18 +45,30 @@ def fields(people: list[Character]) -> list[DialogField]:
     found: list[DialogField] = []
     for character in people:
         for index, why in enumerate(character.aging.aging_due):
+            rolled = why.startswith(aging_rules.ANY_POINT)
             found.append(
                 DialogField(
                     _key(character, index),
                     f"{escape(character.name)}: {escape(why)}",
                     "select",
-                    "stamina",
+                    _suggested(why),
                     options=[(name.title(), name) for name in CHARACTERISTICS],
-                    hint="One Aging Point in a fitting Characteristic, the "
+                    hint="One Aging Point in any Characteristic, the player's "
+                    "choice (DE p. 392)."
+                    if rolled
+                    else "One Aging Point in a fitting Characteristic, the "
                     "storyguide's choice (Art & Academe p. 47).",
                 )
             )
     return found
+
+
+def _suggested(why: str) -> str:
+    """The Characteristic an Aging Point due is offered in first: the one
+    its roll suggested, else Stamina."""
+    _, found, rest = why.partition("(suggested: ")
+    name = rest.rstrip(")").strip().lower() if found else ""
+    return name if name in CHARACTERISTICS else "stamina"
 
 
 def place(saga: Saga, people: list[Character], values: dict[str, Any]) -> list[str]:
@@ -62,14 +76,24 @@ def place(saga: Saga, people: list[Character], values: dict[str, Any]) -> list[s
     lines: list[str] = []
     for character in people:
         for index, why in enumerate(character.aging.aging_due):
-            name = str(values.get(_key(character, index)) or "stamina")
-            changed = aging_rules.add_points(character, name, 1)
+            name = str(values.get(_key(character, index)) or _suggested(why))
+            if why.startswith(aging_rules.ANY_POINT):
+                # Its Decrepitude was counted with the roll.
+                changed = aging_rules.place_points(character, name, 1)
+            else:
+                changed = aging_rules.add_points(character, name, 1)
             text = f"{why}: an Aging Point in {name.title()}." + (
                 f" {' '.join(changed)}" if changed else ""
             )
             lines.append(f"{character.name}: {text}")
             character.diary.append(
-                DiaryEntry(saga.current_year, saga.current_season, "Aging Point", text)
+                DiaryEntry(
+                    saga.current_year,
+                    saga.current_season,
+                    "Aging Point",
+                    text,
+                    activity="Aging",
+                )
             )
         character.aging.aging_due = []
     return notes(*lines)

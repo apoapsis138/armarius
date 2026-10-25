@@ -272,6 +272,20 @@ async def _open_power(ws) -> None:
     ws._core_verb("section-char-powers", "add")
 
 
+async def _open_constant_effect(ws) -> None:
+    """Add a constant effect under Leandro's Aging & Warping."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._core_verb("section-char-constant-effects", "add")
+
+
+async def _open_lab_trait(ws) -> None:
+    """Add a Personality Trait on the lab's Virtues & Flaws tab."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._core_verb("section-lab-personality-traits", "add")
+
+
 async def _open_bound_being(ws) -> None:
     """Add a being bound in Leandro's vitki chapter."""
     view = ws._current_sheet_view()
@@ -734,6 +748,7 @@ OPENERS: dict[str, Opener] = {
     "add secret research goal": Opener("character", lambda ws: ws._add_research_goal()),
     "add tradition effect": Opener("character", _open_tradition_effect),
     "add power": Opener("character", _open_power),
+    "add constant effect": Opener("character", _open_constant_effect),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),
     "virtue ability choice": Opener(
@@ -757,6 +772,7 @@ OPENERS: dict[str, Opener] = {
     ),
     # Laboratory
     "edit lab identity": Opener("laboratory", lambda ws: ws._edit_lab_identity()),
+    "add lab trait": Opener("laboratory", _open_lab_trait),
     "lab virtue choice": Opener("laboratory", _open_lab_choice_prompt),
     "change lab virtue choice": Opener("laboratory", _open_lab_virtue_change),
     "lab servant": Opener(

@@ -46,7 +46,11 @@ from ....models import (
 )
 from ....rules import activities as season_rules
 from ....rules import disease
-from ....sections import CHAR_AHEAD_SECTION, POWERS_SECTION
+from ....sections import (
+    CHAR_AHEAD_SECTION,
+    CONSTANT_EFFECTS_SECTION,
+    POWERS_SECTION,
+)
 from ..fields import (
     FieldsDialog,
 )
@@ -1110,6 +1114,11 @@ class CharacterActions(WorkspaceBase):
                 partial(self._core_verb, POWERS_SECTION, "add"),
                 partial(self._core_verb, POWERS_SECTION, "remove"),
                 partial(self._core_verb, POWERS_SECTION, "edit"),
+            ),
+            CONSTANT_EFFECTS_SECTION: _SectionOps(
+                partial(self._core_verb, CONSTANT_EFFECTS_SECTION, "add"),
+                partial(self._core_verb, CONSTANT_EFFECTS_SECTION, "remove"),
+                partial(self._core_verb, CONSTANT_EFFECTS_SECTION, "edit"),
             ),
             "section-aging": _SectionOps(edit=self._edit_aging),
             # Health has two dialogs behind two Edit buttons (Wounds and

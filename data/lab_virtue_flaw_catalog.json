@@ -30,9 +30,17 @@
         "applies_to": "lab_characteristic",
         "target": "aesthetics",
         "amount": 2
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "{specialization}",
+        "amount": 3
       }
     ],
-    "description": "A swathe of natural scenery -- forest, desert, a river -- is located in the lab, or the lab is built in or around it. Grants 3 points among Specializations in Creo, Animal, Aquam, Auram, Herbam, Ignem, or Terram, depending on the terrain."
+    "description": "A swathe of natural scenery -- forest, desert, a river -- is located in the lab, or the lab is built in or around it. Grants 3 points among Specializations in Creo, Animal, Aquam, Auram, Herbam, Ignem, or Terram, depending on the terrain. The points go to the Specialization chosen; to split them, type the others in the laboratory's Specializations.",
+    "choices": {
+      "specialization": ["Creo", "Animal", "Aquam", "Auram", "Herbam", "Ignem", "Terram"]
+    }
   },
   {
     "id": "labvf_auspicious_shape",
@@ -394,11 +402,28 @@
     "tier": "Free",
     "cost": 0,
     "repeatable": true,
+    "parameters": ["cost"],
     "modifiers": [
       {
         "applies_to": "lab_characteristic",
         "target": "aesthetics",
         "amount": -1
+      },
+      {
+        "applies_to": "lab_characteristic",
+        "target": "upkeep",
+        "amount": 1,
+        "when": {
+          "cost": "Upkeep"
+        }
+      },
+      {
+        "applies_to": "lab_characteristic",
+        "target": "health",
+        "amount": -1,
+        "when": {
+          "cost": "Health"
+        }
       }
     ],
     "description": "The lab has a large amount of empty, unused space, costing more to heat, light, and clean, or gathering dirt and cobwebs if neglected. Taken once for every full two points by which the lab's Size exceeds its occupied Size; lost once the empty space is filled. Also either +1 Upkeep or -1 Health (player's choice)."
@@ -646,9 +671,17 @@
         "applies_to": "lab_characteristic",
         "target": "aesthetics",
         "amount": -1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "{specialization}",
+        "amount": 1
       }
     ],
-    "description": "The lab equipment is packed too close together for comfort due to lack of space, slightly hampering all but one type of lab activity (taken as a Specialization). Can be reconfigured to change that Specialization with a season of work."
+    "description": "The lab equipment is packed too close together for comfort due to lack of space, slightly hampering all but one type of lab activity (taken as a Specialization). Can be reconfigured to change that Specialization with a season of work.",
+    "choices": {
+      "specialization": ["Experimentation", "Familiar", "Items", "Longevity Rituals", "Spells", "Teaching", "Texts", "Vis Extraction"]
+    }
   },
   {
     "id": "labvf_diminutive",
@@ -2006,9 +2039,17 @@
         "applies_to": "lab_characteristic",
         "target": "aesthetics",
         "amount": 1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "{specialization}",
+        "amount": 3
       }
     ],
-    "description": "A powerful supernatural creature (Might 20 or higher), not the owner's familiar, resides in the lab and acts as its protector, well-disposed to the owner. Grants Safety equal to the creature's Intelligence and 3 points on appropriate Art Specialization(s)."
+    "description": "A powerful supernatural creature (Might 20 or higher), not the owner's familiar, resides in the lab and acts as its protector, well-disposed to the owner. Grants Safety equal to the creature's Intelligence and 3 points on appropriate Art Specialization(s). The points go to the Specialization chosen; to split them, type the others in the laboratory's Specializations.",
+    "choices": {
+      "specialization": ["Creo", "Intellego", "Muto", "Perdo", "Rego", "Animal", "Aquam", "Auram", "Corpus", "Herbam", "Ignem", "Imaginem", "Mentem", "Terram", "Vim"]
+    }
   },
   {
     "id": "labvf_greater_horde",
@@ -2038,9 +2079,17 @@
         "applies_to": "lab_characteristic",
         "target": "aesthetics",
         "amount": 2
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "{specialization}",
+        "amount": 2
       }
     ],
-    "description": "A large community of resident minor supernatural creatures is at the owner's command, intelligent enough to protect the lab and help with simple lab tasks. Grants Safety equal to the creatures' Intelligence and 2 points on Rego or other appropriate Art Specialization(s)."
+    "description": "A large community of resident minor supernatural creatures is at the owner's command, intelligent enough to protect the lab and help with simple lab tasks. Grants Safety equal to the creatures' Intelligence and 2 points on Rego or other appropriate Art Specialization(s). The points go to the Specialization chosen; to split them, type the others in the laboratory's Specializations.",
+    "choices": {
+      "specialization": ["Creo", "Intellego", "Muto", "Perdo", "Rego", "Animal", "Aquam", "Auram", "Corpus", "Herbam", "Ignem", "Imaginem", "Mentem", "Terram", "Vim"]
+    }
   },
   {
     "id": "labvf_familiar",
@@ -2261,7 +2310,7 @@
       {
         "applies_to": "lab_characteristic",
         "target": "upkeep",
-        "amount": 1
+        "amount": -1
       },
       {
         "applies_to": "lab_characteristic",
@@ -2410,7 +2459,7 @@
         "amount": 2
       }
     ],
-    "description": "The lab's interior and outfittings are invisible, so the owner needs some magical means of seeing them. Halve the Aesthetics score after all other modifications (not applied automatically). Grants +2 to an Imaginem Specialization."
+    "description": "The lab's interior and outfittings are invisible, so the owner needs some magical means of seeing them. Halve the Aesthetics score after all other modifications. Grants +2 to an Imaginem Specialization."
   },
   {
     "id": "labvf_magic_item",
@@ -2554,7 +2603,7 @@
         "amount": 1
       }
     ],
-    "description": "The lab is hidden or protected by a supernatural effect such as The Shrouded Glen. Halve the Aesthetics score after all other modifications (not applied automatically)."
+    "description": "The lab is hidden or protected by a supernatural effect such as The Shrouded Glen. Halve the Aesthetics score after all other modifications."
   },
   {
     "id": "labvf_site_of_legend",
@@ -2979,9 +3028,17 @@
         "applies_to": "lab_characteristic",
         "target": "aesthetics",
         "amount": -3
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "{specialization}",
+        "amount": 2
       }
     ],
-    "description": "Animal sacrifices are needed for the lab to function. Grants 2 points on any Technique or Animal Specialization, as appropriate."
+    "description": "Animal sacrifices are needed for the lab to function. Grants 2 points on any Technique or Animal Specialization, as appropriate. The points go to the Specialization chosen; to split them, type the others in the laboratory's Specializations.",
+    "choices": {
+      "specialization": ["Creo", "Intellego", "Muto", "Perdo", "Rego", "Animal"]
+    }
   },
   {
     "id": "labvf_thoroughfare",
@@ -3043,6 +3100,7 @@
     "tier": "Minor",
     "cost": -1,
     "repeatable": true,
+    "parameters": ["illusory"],
     "modifiers": [
       {
         "applies_to": "lab_characteristic",
@@ -3089,7 +3147,7 @@
     "choices": {
       "specialization": ["Perdo", "Imaginem"]
     },
-    "description": "The lab is totally dark and its contents can't be seen; the owner needs some other means of spatial perception to work normally. The Aesthetics score cannot exceed -1 (not applied automatically). Grants +1 to a Perdo or Imaginem Specialization."
+    "description": "The lab is totally dark and its contents can't be seen; the owner needs some other means of spatial perception to work normally. The Aesthetics score cannot exceed -1. Grants +1 to a Perdo or Imaginem Specialization."
   },
   {
     "id": "labvf_living",
@@ -3120,6 +3178,7 @@
     "tier": "Major",
     "cost": -3,
     "repeatable": true,
+    "parameters": ["illusory"],
     "modifiers": [
       {
         "applies_to": "lab_characteristic",

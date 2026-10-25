@@ -44,6 +44,7 @@ from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
 from ..markup import escape, markdown_text
 from ..models import LAB_TEXT_KINDS, Book, Laboratory, Saga
+from ..sections import LAB_TRAITS_SECTION
 from ..sheets import laboratory as ls
 from . import pictures
 from .bookmark import with_bookmark
@@ -54,6 +55,7 @@ from .character_sheet import (
     device_section,
     section,
     side_by_side,
+    trait_section,
 )
 from .editing import Chooser, Run, choose_cards, give_verb, verb_buttons
 from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
@@ -408,6 +410,15 @@ class LaboratoryPage(QWidget):
             p,
             *([TextBlock(warnings, p)] if warnings else []),
             side_by_side(*columns, spacing=18),
+            # A Warping laboratory's traits, adding up to its Warping (DE p.
+            # 289).
+            trait_section(
+                "Personality Traits",
+                lab.personality_traits,
+                LAB_TRAITS_SECTION,
+                p,
+                self.run,
+            ),
         )
 
     def _vf_card(self, card: ls.VirtueFlawCard, colour: str) -> ClickableCard:

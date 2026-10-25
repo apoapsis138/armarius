@@ -72,6 +72,7 @@ from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import Command, SectionOps
 from ..forms import ability as ability_forms
 from ..forms import character as cf
+from ..forms import constant_effect as constant_forms
 from ..forms import device as device_forms
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
@@ -855,7 +856,38 @@ class CharacterSheet(QWidget):
                 edits=edits("Aging"),
             )
         )
+        parts.append(self._constant_effects())
         return scrolling_page(p, *parts)
+
+    def _constant_effects(self) -> QWidget:
+        """The supernatural effects on the character all the time, and the
+        Warping each gives a year (DE pp. 390-391)."""
+        p, c = self.p, self.character
+        chooser = Chooser()
+        rows = constant_forms.table(c)
+        chooser.listeners.append(
+            lambda index: (
+                self.inspect(
+                    c.constant_effects[index].name or "A constant effect",
+                    c.constant_effects[index].realm,
+                    constant_forms.info(c, index),
+                )
+                if index is not None and index < len(c.constant_effects)
+                else None
+            )
+        )
+        total = constant_forms.total_line(c)
+        return section(
+            constant_forms.title(c),
+            p,
+            table_view(rows, p, chooser.choose)
+            if rows.rows
+            else TextBlock(constant_forms.EMPTY, p),
+            *([TextBlock(total, p)] if total else []),
+            buttons=verb_buttons(
+                constant_forms.ops(self.saga, c), chooser, self.run, p
+            ),
+        )
 
     def _abilities(self) -> QWidget:
         p, c = self.p, self.character
