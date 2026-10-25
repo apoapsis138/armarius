@@ -145,7 +145,7 @@ def _culture(theban: Theban) -> None:
     b = theban.b
     _MADE["baskanos"] = b.creature(
         "Baskanos",
-        page="ch. 4",
+        page="p. 47",
         realm="Infernal",
         might=5,
         form="Vim",
@@ -334,7 +334,7 @@ def _delos(theban: Theban) -> None:
     for name, (art, power) in own.items():
         _MADE[name.casefold()] = b.creature(
             f"{name}, Nymph of Delos",
-            page="ch. 6",
+            page="p. 75",
             realm="Magic",
             might=30,
             form="Corpus",
@@ -385,7 +385,7 @@ def _anatolia(theban: Theban) -> None:
     b = theban.b
     _MADE["demon_of_nicaea"] = b.creature(
         "Demon of Nicaea",
-        page="ch. 8",
+        page="p. 105",
         realm="Infernal",
         might=20,
         form="Animal",
@@ -456,7 +456,7 @@ def _anatolia(theban: Theban) -> None:
     )
     _MADE["anima"] = b.creature(
         "Anima, the Glass Submarine",
-        page="ch. 8",
+        page="p. 115",
         realm="Magic",
         might=12,
         form="Terram",
@@ -545,7 +545,7 @@ def _realms(theban: Theban) -> None:
     b = theban.b
     _MADE["sibyl"] = b.creature(
         "A Sibyl",
-        page="ch. 9",
+        page="p. 121",
         realm="Magic",
         might=25,
         form="Mentem",
@@ -636,7 +636,7 @@ def _realms(theban: Theban) -> None:
     )
     _MADE["stoicheion"] = b.creature(
         "A Stoicheion",
-        page="ch. 10",
+        page="p. 129",
         realm="Faerie",
         might=10,
         form="Animal",
@@ -767,7 +767,7 @@ def _infernal(theban: Theban) -> None:
     b = theban.b
     _MADE["vrykolakas"] = b.creature(
         "Vrykolakas",
-        page="ch. 12",
+        page="p. 141",
         realm="Infernal",
         might=20,
         form="Corpus",
@@ -871,7 +871,7 @@ def _infernal(theban: Theban) -> None:
     )
     _MADE["smerdaki"] = b.creature(
         "Smerdaki",
-        page="ch. 12",
+        page="p. 142",
         realm="Infernal",
         might=10,
         form="Animal",
@@ -954,7 +954,7 @@ def _might_only(theban: Theban) -> None:
     b = theban.b
     _MADE["gorgona"] = b.creature(
         "The Gorgona",
-        page="ch. 5",
+        page="p. 54",
         realm="Faerie",
         might=40,
         appearance=(
@@ -973,7 +973,7 @@ def _might_only(theban: Theban) -> None:
     )
     _MADE["talos"] = b.creature(
         "Talos, the Protector of Candia",
-        page="ch. 6",
+        page="p. 81",
         realm="Magic",
         might=35,
         size=3,
@@ -997,7 +997,7 @@ def _might_only(theban: Theban) -> None:
     )
     _MADE["klymene"] = b.creature(
         "Klymene",
-        page="ch. 8",
+        page="p. 106",
         realm="Magic",
         might=50,
         appearance="A titan-goddess, the titan of fame.",
@@ -1021,7 +1021,7 @@ def _might_only(theban: Theban) -> None:
     )
     _MADE["belisarius"] = b.creature(
         "Belisarius of the Serpent Column",
-        page="ch. 7",
+        page="p. 95",
         realm="Faerie",
         might=10,
         appearance=(
@@ -1044,7 +1044,7 @@ def _might_only(theban: Theban) -> None:
     )
     _MADE["akgah"] = b.creature(
         "Akgah, the Demon of the Fourth Crusade",
-        page="ch. 12",
+        page="p. 139",
         realm="Infernal",
         might=50,
         size=0,
@@ -1071,7 +1071,7 @@ def _might_only(theban: Theban) -> None:
     )
     _MADE["druj"] = b.creature(
         "The Druj of Xerxes's Hill",
-        page="ch. 8",
+        page="p. 106",
         realm="Infernal",
         might=30,
         appearance="Unseen, bound beneath the hill.",

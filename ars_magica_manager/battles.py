@@ -71,6 +71,30 @@ def baggage_short(entry: Battle, side: int = 0) -> int:
     return max(0, battle.baggage_needed(mine.groups) - mine.baggage)
 
 
+def routed(entry: Battle) -> int | None:
+    """The side whose army routed, which ends the battle (None: none has)."""
+    for event in entry.events:
+        if battle.morale_result(event.morale, event.rally) == battle.ROUTS:
+            return 1 - event.side if event.won else event.side
+    return None
+
+
+def morale_text(event: BattleEvent) -> str:
+    """The losing commander's Morale after an event ("" when not rolled)."""
+    result = battle.morale_result(event.morale, event.rally)
+    if not result:
+        return ""
+    words = {
+        battle.HOLDS: f"Morale {event.morale} holds",
+        battle.WAVERS: f"Morale {event.morale} fails: a rally at the next event "
+        f"(against {battle.RALLY_EASE})",
+        battle.RALLIES: f"Morale {event.morale} fails; rallied ({event.rally})",
+        battle.ROUTS: f"Morale {event.morale} fails; the rally ({event.rally}) "
+        "fails too: the army routs, and the battle is over",
+    }
+    return words[result]
+
+
 def record_text(entry: Battle) -> str:
     """Events the first side won and lost ("2 won, 1 lost"; "none yet")."""
     if not entry.events:
@@ -175,12 +199,20 @@ def fields(
                 placeholder="Blank: the linked record's name",
             ),
             DialogField(
+                f"home_{index}",
+                f"{label} fights on its home ground",
+                "check",
+                side.at_home,
+                hint="Only on home ground does a lord raise his levies (Lords "
+                "of Men pp. 31, 102).",
+            ),
+            DialogField(
                 f"groups_{index}",
                 f"{label}'s combat groups",
                 "optint",
                 side.groups if entry is not None else None,
                 hint="Groups of five men. Blank, a lord's title's army fills it "
-                "in; add his allies and mercenaries.",
+                "in, his levies only at home; add his allies and mercenaries.",
             ),
             DialogField(
                 f"deployment_{index}",
@@ -218,10 +250,15 @@ def _write(saga: Saga, entry: Battle, values: dict[str, Any]) -> None:
             linked.removeprefix(COVENANT) if linked.startswith(COVENANT) else ""
         )
         side.name = values.get(f"name_{index}") or ""
+        side.at_home = bool(values.get(f"home_{index}"))
         groups = values.get(f"groups_{index}")
         if groups is None:
             lord = saga.neighbour(side.neighbour_id)
-            groups = armies.army_groups(lord) if lord and lord.kind == "lord" else 0
+            groups = (
+                armies.army_groups(lord, at_home=side.at_home)
+                if lord and lord.kind == "lord"
+                else 0
+            )
         side.groups = int(groups)
         side.deployment = int(values.get(f"deployment_{index}") or 0)
         baggage = values.get(f"baggage_{index}")
@@ -306,6 +343,7 @@ def info(saga: Saga, entry: Battle) -> str:
             f"{event.enemy} {event.size}, Event Total {event.total}: "
             f"{'won' if event.won else 'lost'}"
             + (f", {event.losses} groups lost" if event.losses else "")
+            + (f"; {escape(morale_text(event))}" if morale_text(event) else "")
             + "."
         )
     lines.append(f"[dim]{battle.SOURCE}.[/]")
@@ -412,6 +450,23 @@ def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             required=True,
             hint="Play the event out as a combat; then say who won it.",
         ),
+        DialogField(
+            "morale",
+            "The losing commander's Morale",
+            "optint",
+            None,
+            hint=f"Presence + Leadership + stress die, against "
+            f"{battle.MORALE_EASE} (Lords of Men p. 106). Blank: not rolled.",
+        ),
+        DialogField(
+            "rally",
+            "His rally, if the Morale failed",
+            "optint",
+            None,
+            hint=f"Presence + Leadership + stress die at the next event's "
+            f"start, against {battle.RALLY_EASE}; failing it, the army routs "
+            "and the battle ends.",
+        ),
     ]
 
 
@@ -422,6 +477,13 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
     written in each side's Diary and the character's."""
     if entry is None:
         return Refuse("Battle Event", "Choose a battle first.")
+    fled = routed(entry)
+    if fled is not None:
+        return Refuse(
+            "Battle Event",
+            f"{escape(side_name(saga, entry, fled))}'s army routed: the battle "
+            "is over (Lords of Men p. 106).",
+        )
     stage = len(entry.events)
 
     def apply(values: dict[str, Any]) -> None:
@@ -436,6 +498,20 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
         loser.groups = max(0, loser.groups - lost)
         who = saga.character(values["who"])
         name = who.name if who else "someone"
+        record = BattleEvent(
+            values["who"],
+            side,
+            event.maneuver,
+            event.enemy,
+            event.size,
+            event.gave_up_initiative,
+            event.total,
+            won,
+            lost,
+            values.get("morale"),
+            values.get("rally"),
+        )
+        spirit = morale_text(record)
         diaries.write(
             saga.current_year,
             saga.current_season,
@@ -448,6 +524,7 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
                 if lost
                 else ""
             )
+            + (f"; {side_name(saga, entry, losing)}: {spirit}" if spirit else "")
             + ".",
             characters=[who] if who else [],
             neighbours=[
@@ -455,19 +532,7 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
             ],
             covenants=[c for s in sides(entry) if (c := saga.covenant(s.covenant_id))],
         )
-        entry.events.append(
-            BattleEvent(
-                values["who"],
-                side,
-                event.maneuver,
-                event.enemy,
-                event.size,
-                event.gave_up_initiative,
-                event.total,
-                won,
-                lost,
-            )
-        )
+        entry.events.append(record)
 
     return Form(
         f"Battle Event {stage + 1}: {escape(entry.name)}",

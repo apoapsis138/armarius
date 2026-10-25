@@ -92,20 +92,22 @@ def day_name(day: int) -> str:
 
 def _begin(saga: Saga, tribunal: Tribunal) -> Meeting:
     """A new meeting record: when the Tribunal is due to meet (or now),
-    where, and its cases spread over the days but the last."""
+    where, and its cases spread over the days but the last, as many as
+    its customs give (meeting_days), else DEFAULT_DAYS."""
+    length = tribunal_packages.of(tribunal).meeting_days or DEFAULT_DAYS
     meeting: Meeting = {
         "year": tribunal.next_year
         if tribunal.next_year is not None
         else saga.current_year,
         "season": tribunal.next_season or saga.current_season,
         "place": tribunal.meeting_place.strip(),
-        "days": DEFAULT_DAYS,
+        "days": length,
         "done": [],
         "day_of": {},
         "attendance": {},
         "notes": {},
     }
-    meeting["day_of"] = _spread(tribunal_sheet.open_cases(tribunal), DEFAULT_DAYS)
+    meeting["day_of"] = _spread(tribunal_sheet.open_cases(tribunal), length)
     return meeting
 
 

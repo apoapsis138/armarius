@@ -8,10 +8,12 @@ church 4, a large church, a monastery or a cathedral 5. With the Dominion
 growth option (Realms of Power: The Divine) the aura grows with the years
 of worship instead: 3 when the site is consecrated, 4 after a year, and 5
 after a decade, never above its kind's; once worship stops it fades to
-nothing over as long as the site was in use; and a relic of more than 5
-Faith Points raises it by 1 for each point above 5.
+nothing over as long as the site was in use. Whether or not the option
+is on, a relic with a Faith score above 5 raises it by 1 for each point
+above 5 (RoP: The Divine p. 12).
 
-A relic's Divine Might is 10 for each Faith Point, and its bearer gains
+A relic has a Faith score, and as many Faith Points; its Divine Might is
+10 for each point of it, and its bearer gains
 as much Magic Resistance; touching it is worth +1 to an invocation of its
 saint (Realms of Power: The Divine).
 
@@ -55,7 +57,7 @@ def church_kind(neighbour: Neighbour) -> str:
 
 
 class Relic(TypedDict, total=False):
-    """A relic the church holds: its name, its saint and its Faith Points."""
+    """A relic the church holds: its name, its saint and its Faith score."""
 
     name: Required[str]
     saint: str
@@ -78,11 +80,21 @@ def grown(base: int, years: int) -> int:
     return min(base, 3 if years < 1 else 4 if years < 10 else 5)
 
 
+def relic_bonus(saga: Saga, neighbour: Neighbour) -> int:
+    """What its holiest relic adds to its aura: 1 for each point of Faith
+    score above 5 (RoP: The Divine p. 12), with or without the growth
+    option."""
+    if not sourcebooks.in_play("RoP:D", sourcebooks.saga_books(saga)):
+        return 0
+    strongest = max((_faith(r) for r in relics(neighbour)), default=0)
+    return max(0, strongest - 5)
+
+
 def aura(saga: Saga, neighbour: Neighbour) -> int:
     """Its Dominion aura this year."""
     base = CHURCH_KINDS[church_kind(neighbour)]
     if not options.is_on(saga, GROWTH):
-        return base
+        return base + relic_bonus(saga, neighbour)
     founded = neighbour.details.get("founded")
     if founded is None:
         rating = base
@@ -94,8 +106,7 @@ def aura(saga: Saga, neighbour: Neighbour) -> int:
             span = max(1, ended - founded)
             faded = rating * (saga.current_year - ended) // span
             return max(0, rating - faded)
-    strongest = max((_faith(r) for r in relics(neighbour)), default=0)
-    return rating + max(0, strongest - 5)
+    return rating + relic_bonus(saga, neighbour)
 
 
 def aura_text(saga: Saga, neighbour: Neighbour) -> str:
@@ -220,17 +231,18 @@ def relic_fields(
         DialogField("saint", "Saint", "text", r.get("saint", "")),
         DialogField(
             "faith",
-            "Faith Points",
+            "Faith score",
             "int",
             r.get("faith", 1),
-            hint="Most relics have 1 or 2; the greatest 5 or more.",
+            hint="As many Faith Points; Might is 10 times it. Most relics "
+            "have 1 or 2, the greatest 5 or more (RoP: The Divine p. 45).",
         ),
     ]
 
 
 def _faith_problem(values: dict[str, Any]) -> str | None:
     if (values.get("faith") or 0) < 0:
-        return "Faith Points can't be fewer than none."
+        return "A Faith score can't be below 0."
     return None
 
 

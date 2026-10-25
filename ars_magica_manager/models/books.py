@@ -147,6 +147,13 @@ class Book:
     #: Secondary Functions) -- the EnchantedDevice it is, held where the
     #: book is kept.
     device_id: str | None = None
+    #: Written in holy magic, not Hermetic magic: a holy magus learns from
+    #: it at the full total. A text by a holy magus of the saga is holy
+    #: without the flag (rules.hybrid_magic.hermetic_source).
+    holy: bool = False
+    #: A realia that is an exhibit of hundreds of objects, which stands in
+    #: for a lab's Study Requirement or Bonus up to an Art of 15.
+    exhibit: bool = False
 
     @classmethod
     def from_dict(

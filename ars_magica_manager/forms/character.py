@@ -599,7 +599,8 @@ def character_info_fields(saga: Saga, character: Character) -> list[DialogField]
             "True Faith Score",
             "int",
             b.true_faith_score,
-            hint="Only with the True Faith Virtue; 2+ is a Mythic Companion.",
+            hint="Only with the True Faith Virtue; made with 2+, it's a Mythic "
+            "Companion.",
         ),
         DialogField("faith_points", "Faith Points", "int", b.faith_points),
         DialogField(
@@ -614,11 +615,11 @@ def character_info_fields(saga: Saga, character: Character) -> list[DialogField]
         ),
         DialogField(
             "relic_faith",
-            "Relic relied on (Faith)",
+            "Relic relied on (Faith score)",
             "int",
             b.relic_faith,
-            hint="Its bearer gains 10 x its Faith as Magic Resistance; only "
-            "one relic at a time (DE p. 419).",
+            hint="Its bearer gains 10 x its Faith score as Magic Resistance; "
+            "only one relic at a time (DE p. 419).",
         ),
         DialogField("size", "Size", "int", b.size),
         *(
@@ -670,6 +671,13 @@ def apply_character_info(
     if character.type == "magus":
         assign_laboratory(saga, character, result["laboratory_id"])
     background = character.background
+    if not character.in_creation:
+        faith.gain_in_play(
+            saga,
+            character,
+            int(result.get("true_faith_score") or 0),
+            int(result.get("faith_points") or 0),
+        )
     for key in (
         "setting",
         "confidence_score",

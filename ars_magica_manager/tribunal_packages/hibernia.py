@@ -382,6 +382,7 @@ HIBERNIA = TribunalPackage(
     "Hibernia",
     customs="Cathaigh and ambassadors",
     book="TCI",
+    meeting_days=7,
     columns=(RosterColumn("Cathach", cathach_text, 24),),
     tabs=(
         PackageTab(

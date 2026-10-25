@@ -7,6 +7,7 @@ One module per kind of record, re-exported here so
 `from .models import X` and `models.X` keep working.
 """
 
+from .agents import Agent as Agent
 from .books import BOOK_OWNER_KINDS as BOOK_OWNER_KINDS
 from .books import BOOK_TYPES as BOOK_TYPES
 from .books import LAB_TEXT_KINDS as LAB_TEXT_KINDS
@@ -106,10 +107,13 @@ from .creature import BodyVis as BodyVis
 from .creature import Creature as Creature
 from .creature import CreatureAttack as CreatureAttack
 from .creature import CreaturePower as CreaturePower
+from .definitions import BOTCH_RULES as BOTCH_RULES
 from .definitions import CASTING_DICE as CASTING_DICE
 from .definitions import CASTING_KINDS as CASTING_KINDS
 from .definitions import COVENANT_BOON_HOOK_CATEGORIES as COVENANT_BOON_HOOK_CATEGORIES
 from .definitions import DEFENSE_KINDS as DEFENSE_KINDS
+from .definitions import EFFECT_PARAMETER_KINDS as EFFECT_PARAMETER_KINDS
+from .definitions import LEVEL_STEPS as LEVEL_STEPS
 from .definitions import TRADITION_GIFT as TRADITION_GIFT
 from .definitions import TRADITION_REALMS as TRADITION_REALMS
 from .definitions import VIS_CAPS as VIS_CAPS
@@ -124,8 +128,10 @@ from .definitions import CharacterTemplateDef as CharacterTemplateDef
 from .definitions import CovenantBoonHookDef as CovenantBoonHookDef
 from .definitions import CovenantSituationDef as CovenantSituationDef
 from .definitions import DispelRule as DispelRule
+from .definitions import EffectParameter as EffectParameter
 from .definitions import GrogTemplateDef as GrogTemplateDef
 from .definitions import GroupCasting as GroupCasting
+from .definitions import Guideline as Guideline
 from .definitions import HouseDef as HouseDef
 from .definitions import InitiationRule as InitiationRule
 from .definitions import InitiationScript as InitiationScript

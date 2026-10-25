@@ -181,8 +181,8 @@ EVENTS: tuple[tuple[int, str, str, str], ...] = (
         865,
         "Sixth Grand Tribunal",
         "The borders of the Tribunals are fixed along the lines of the Frankish partition and "
-        "named: Rhine, Normandy, Provencal, Britannian, Roman, Theban, Eastern and Greater "
-        "Alps.",
+        "named: Rhine, the Tribunal of the West Franks (later Normandy), the Lotharingian "
+        "Tribunal (later Provencal), Britannian, Roman, Theban, Eastern and Greater Alps.",
         "",
     ),
     (
@@ -509,14 +509,6 @@ EVENTS: tuple[tuple[int, str, str, str], ...] = (
         "Agnes claims to have seen Merinita",
         "Agnes of Irencillia tells the Tribunal she has seen the Founder Merinita in "
         "Bohemia; few believe her.",
-        "",
-    ),
-    (
-        1158,
-        "Hildegard of Bingen a Larta of Jerbiton",
-        "Hildegard of Bingen is said to have been taken into House Jerbiton about this year "
-        "as an unGifted maga under its protection and tutelage; she never attends a "
-        "Tribunal and meets few magi, and the tale is unconfirmed.",
         "",
     ),
     (

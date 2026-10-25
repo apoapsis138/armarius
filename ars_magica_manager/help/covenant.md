@@ -711,6 +711,15 @@ clicked to another covenant, laboratory or magus ([Give](help:give)), and
 both sides' Diaries record it.
 <!-- /gui -->
 
+Tick **Infernal vis** on a store that Hell has tainted (from a demon's
+corpse or an Infernal aura). A Ritual drawing on vis of its Arts then
+shows what Infernal vis would do: twice the botch dice (DE p. 422), or
+with the **Harsher Infernal vis** option +5 a pawn to the Casting Total,
+3 more botch dice a pawn, and never fewer botch dice than pawns, whatever
+Mastery or a Virtue takes off (Realms of Power: The Infernal p. 19). A
+chthonic magus uses Infernal vis without its peril (p. 123). Moving vis
+to another store doesn't carry the mark.
+
 ### Items
 <!-- help: section-pos-item -->
 
@@ -767,7 +776,11 @@ from the Covenants supplement.
 <!-- help: section-eco-wealth -->
 
 The totals. On the left, the points of inhabitants, laboratories and
-weapons and armour that the costs are worked out from, and Wealth, the
+weapons and armour that the costs are worked out from (characters under
+a physician's regimen cost more points of inhabitants: theirs are
+multiplied for each step the regimen raises their Living Conditions to,
+to +1 x1.5, to +2 x2, to +3 or more x2.5, rounded up, so two companions
+raised from 0 to +2 cost 18, not 6; Art & Academe p. 58), and Wealth, the
 pounds in store, which you type with
 <!-- tui -->
 `e`. **Give Silver** (More, `m`) gives pounds to a character or another
@@ -970,6 +983,40 @@ Quality (+2 when edited by an authority from a peerless collection); a
 **Folio** binds a society's best Lab Texts and tractatus, and reading one
 of its books also gives 1 xp in Order of Hermes Lore.
 
+A folio's details give its size: its Lab Texts' magnitudes and its
+tractatus' Qualities added up. Its Colentes' Magic Theory scores, summed,
+must be at least that. A scribe copies a whole folio the way a summa is
+copied: carefully at 6 + Profession: Scribe points a season, or quickly at
+18 + 3 x Profession: Scribe (its tractatus then 1 Quality lower, and
+reading them no longer teaches Order of Hermes Lore), until the points
+reach the Colentes' Magic Theory (Houses of Hermes: True Lineages pp.
+22-23). Copying a folio is still planned book by book in the app.
+
+A tractatus can be a **Realia**: a collection of objects studied as a
+tractatus (Covenants p. 102). Its Quality comes from its unique pieces: 1
+for one, and 1 more each time they double (2 for two, 3 for four ... 6 for
+32, as Atlas Games' errata count it). It costs the Art column of the
+Advancement Table at covenant creation (1, 3, 6, 10, 15 and 21 Build
+Points). Each reader may study it as many times as its Quality, and
+several readers may share it in one season at a lower Quality: -1 for two,
+-2 for up to four, -3 for up to eight (Against the Dark p. 59). A realia
+ticked **An exhibit (hundreds of objects)** on an Art counts as the Art's
+presence for Study Requirement and Study Bonus until the reader's score in
+it reaches 15 (Against the Dark p. 61); a smaller collection doesn't, since
+the objects needed grow with the Art (DE p. 145). It adds
+up to 1 to its library's research bonus on its subject (Covenants p.
+102), and a long expert correspondence, 120 letters or more from each of
+two experts, raises it one level (p. 90). The book doesn't say whether the
+two stack: together they add one, unless the troupe turns on **Research
+aids stack** among the saga's rule options.
+
+When a magus of the saga practises Holy Magic, the form has **Holy (not
+Hermetic)**: a holy magus's season reading a Hermetic book on an Art or an
+Arcane Ability is halved, as his Lab Total is from a Hermetic Lab Text
+(Realms of Power: The Divine p. 67). A book or text is holy when it is
+ticked, or when its author is a holy magus of the saga; one holy magus
+learns from another's at the full total.
+
 A summa or tractatus can be **Glossed** (+1 Quality, once): annotated
 by a reader at least half as skilled as its Level with better
 Communication than its author -- tick it, or plan a Read season with
@@ -1023,7 +1070,11 @@ tractatus about 13 and up, 9 to 12, 4 to 8). After it, a guide to its price:
 in vis for a book on an Art, an Arcane Ability or a supernatural power (a
 sound summa about its Level in pawns, a vain one half that, a sound
 tractatus 2 or 3 pawns, an excellent book only given as a gift), and about
-a pound from a stationer for any other book.
+a pound from a stationer for any other book. The book gives its value
+bands for summae only as "Quality around (31 - Level)" and so on, for a
+summa on an Art (Covenants p. 94). Counting an Ability summa's Level
+three times, as its Build Point cost does, and the exact boundaries
+between the bands, are this app's reading.
 
 ## Diary tab
 <!-- help: tab-cov-diary -->

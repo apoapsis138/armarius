@@ -109,7 +109,7 @@ def _dragons(transylvania: Transylvania) -> None:
     b = transylvania.b
     _MADE["upokorituma"] = b.creature(
         "Upokorituma",
-        page="ch. 8",
+        page="p. 105",
         realm="Infernal",
         might=17,
         form="Vim",
@@ -194,7 +194,7 @@ def _dragons(transylvania: Transylvania) -> None:
     )
     _MADE["danaslepih"] = b.creature(
         "Danaslepih",
-        page="ch. 8",
+        page="p. 107",
         realm="Magic",
         might=25,
         form="Animal",
@@ -308,7 +308,7 @@ def _giants(transylvania: Transylvania) -> None:
     b = transylvania.b
     _MADE["giant_brothers"] = b.creature(
         "Georghe and Ladislau",
-        page="ch. 8",
+        page="p. 112",
         realm="Faerie",
         might=15,
         form="Corpus",
@@ -378,7 +378,7 @@ def _giants(transylvania: Transylvania) -> None:
     )
     _MADE["costache"] = b.creature(
         "Costache",
-        page="ch. 8",
+        page="p. 113",
         realm="Faerie",
         might=20,
         form="Mentem",
@@ -456,7 +456,7 @@ def _giants(transylvania: Transylvania) -> None:
     )
     _MADE["nicoleta"] = b.creature(
         "Nicoleta, a Giant's Mother",
-        page="ch. 8",
+        page="p. 112",
         realm="Faerie",
         might=30,
         form="Ignem",
@@ -539,7 +539,7 @@ def _giants(transylvania: Transylvania) -> None:
     )
     _MADE["fet_frumos"] = b.creature(
         "Fet-Frumos, a Faerie Horse",
-        page="ch. 8",
+        page="p. 113",
         realm="Faerie",
         might=10,
         form="Auram",
@@ -632,7 +632,7 @@ def _vampires(transylvania: Transylvania) -> None:
 
     _MADE["vampire_human"] = b.creature(
         "Human-like Vampire",
-        page="ch. 8",
+        page="p. 118",
         realm="Faerie",
         might=15,
         form="Corpus",
@@ -687,7 +687,7 @@ def _vampires(transylvania: Transylvania) -> None:
     )
     _MADE["vampire_bestial"] = b.creature(
         "Bestial Vampire",
-        page="ch. 8",
+        page="p. 118",
         realm="Faerie",
         might=20,
         form="Animal",
@@ -755,7 +755,7 @@ def _vampires(transylvania: Transylvania) -> None:
     )
     _MADE["vampire_incorporeal"] = b.creature(
         "Incorporeal Vampire",
-        page="ch. 8",
+        page="p. 119",
         realm="Faerie",
         might=5,
         form="Ignem",
@@ -834,7 +834,7 @@ def _vampires(transylvania: Transylvania) -> None:
     )
     _MADE["gadja"] = b.creature(
         "Gadja",
-        page="ch. 8",
+        page="p. 119",
         realm="Faerie",
         might=10,
         form="Corpus",
@@ -892,7 +892,7 @@ def _vampires(transylvania: Transylvania) -> None:
     )
     _MADE["vampire_snake"] = b.creature(
         "Vampire Snake",
-        page="ch. 8",
+        page="p. 119",
         realm="Faerie",
         might=5,
         form="Animal",
@@ -936,7 +936,7 @@ def _vampires(transylvania: Transylvania) -> None:
     )
     _MADE["vampire_tree"] = b.creature(
         "Vampire Tree",
-        page="ch. 8",
+        page="p. 120",
         realm="Faerie",
         might=10,
         form="Herbam",
@@ -997,7 +997,7 @@ def _vampires(transylvania: Transylvania) -> None:
     )
     _MADE["broukolak"] = b.creature(
         "Broukolak",
-        page="ch. 8",
+        page="p. 121",
         realm="Infernal",
         might=20,
         form="Corpus",
@@ -1096,7 +1096,7 @@ def _vila(transylvania: Transylvania) -> None:
     b = transylvania.b
     _MADE["vila"] = b.creature(
         "Minor Vila",
-        page="ch. 8",
+        page="p. 122",
         realm="Faerie",
         might=5,
         form="Corpus",
@@ -1172,7 +1172,7 @@ def _elsewhere(transylvania: Transylvania) -> None:
     b = transylvania.b
     _MADE["silexa"] = b.creature(
         "Silexa",
-        page="ch. 2",
+        page="p. 32",
         realm="Magic",
         might=10,
         form="Animal",
@@ -1222,7 +1222,7 @@ def _elsewhere(transylvania: Transylvania) -> None:
     )
     _MADE["zuban"] = b.creature(
         "Zuban, a Four-Eyed Dog",
-        page="ch. 9",
+        page="p. 131",
         realm="Magic",
         might=5,
         form="Animal",
@@ -1293,7 +1293,7 @@ def _elsewhere(transylvania: Transylvania) -> None:
     )
     _MADE["ivan_rilski"] = b.creature(
         "Saint Ivan Rilski",
-        page="ch. 4",
+        page="p. 47",
         realm="Divine",
         might=50,
         powers=[

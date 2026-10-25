@@ -323,7 +323,7 @@ def test_a_lord_works_out_his_fief_from_the_lower_figures():
     assert gottfried is not None
     facts = {f.label: f.value for f in lords.facts(saga, gottfried)}
     assert facts["Income"] == "1000 pounds a year"
-    assert facts["To spend"] == "100 pounds a year"
+    assert facts["Mercenary budget"] == "100 pounds a year"
     assert facts["Owes"] == (
         "Archbishop of Cologne: 50 knights for 40 days, or 100 pounds scutage"
     )
@@ -331,13 +331,13 @@ def test_a_lord_works_out_his_fief_from_the_lower_figures():
     assert lords.army_of("duke", "Wealthy").knights == 75
     landed = Neighbour("k", "Sir Konrad", kind="lord", details={"manors": 1})
     facts = {f.label: f.value for f in lords.facts(saga, landed)}
-    assert facts["To spend"] == "2 pounds a year"
-    assert facts["Free time"] == "2 seasons"
+    assert facts["Mercenary budget"] == "2 pounds a year"
+    assert facts["Free time"].startswith("2 seasons (Lords of Men p. 31")
     assert "Owes" not in facts
     assert lords.relief(landed) == 5
     assert lords.earns(4) == "5 for knighthood or freedom"
     assert lords.earns(6) == "Knighthood or freedom; 10 for a manor"
-    assert lords.earns(25) == "A barony"
+    assert lords.earns(25) == "Baron of the king"
 
 
 def test_new_lord_keeps_its_title_in_its_details():
@@ -427,7 +427,8 @@ def test_a_church_grows_its_dominion_as_a_rule_option():
     saga = everything_saga()
     cologne = saga.neighbour("cologne")
     assert cologne is not None
-    assert churches.aura_text(saga, cologne) == "Dominion 5"
+    # Its relic of Faith score 7 counts with or without the growth option.
+    assert churches.aura_text(saga, cologne) == "Dominion 7"
     saga.rule_options["dominion_growth"] = True
     assert churches.aura(saga, cologne) == 7  # a relic of 7 Faith Points
     cologne.details["relics"] = []

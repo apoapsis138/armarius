@@ -154,7 +154,7 @@ def test_every_traditions_chapter_works_out_for_a_new_member():
             tradition_text.casting_text(saga, c, tradition),
             tradition_text.defenses_text(c, tradition),
             tradition_text.seasons_text(saga, c, tradition),
-            tradition_text.warping_text(c, tradition),
+            tradition_text.warping_text(saga, c, tradition),
             tradition_text.bonds_text(tradition),
             tradition_text.pools_text(c, tradition),
         ]

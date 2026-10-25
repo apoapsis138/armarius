@@ -33,7 +33,7 @@ Rules: reference/rules-engine-reference.md §18 (Generic Supernatural
 Ability casting, Limits of Magic and Magical Defenses, each tradition's
 Casting), §3 (Ceremony).
 
-No screen uses best_defense(), ability_effect_level(), group_bonus(),
+No screen uses best_defense(), ability_effect_level(),
 leaderless_modifier() yet: they are the rules for screens still to come, and
 only the tests call them.
 """
@@ -47,6 +47,7 @@ from ..models import CastingRule, Character, DispelRule, GroupCasting, Tradition
 from . import hybrid_magic as hybrid
 from . import penetration, realms
 from .breakdown import Breakdown, Line
+from .casting import magnitude
 from .creation_access import ability_def
 from .lab import ability_score
 from .rounding import round_down, round_up
@@ -105,11 +106,16 @@ def _role(tradition: TraditionDef, role: str) -> list[str]:
 
 
 def techniques(tradition: TraditionDef, rule: CastingRule) -> list[str]:
-    return rule.techniques or _role(tradition, "Technique")
+    """The rule's Techniques: a hunter's Practice Arts stand as Techniques
+    (Against the Dark p. 132)."""
+    return (
+        rule.techniques or _role(tradition, "Technique") or _role(tradition, "Practice")
+    )
 
 
 def forms(tradition: TraditionDef, rule: CastingRule) -> list[str]:
-    return rule.forms or _role(tradition, "Form")
+    """The rule's Forms: a hunter's Foe Arts stand as Forms."""
+    return rule.forms or _role(tradition, "Form") or _role(tradition, "Foe")
 
 
 def rule_scores(tradition: TraditionDef, rule: CastingRule) -> list[str]:
@@ -137,14 +143,31 @@ class Casting:
 def _art_pairs(
     character: Character, tradition: TraditionDef, rule: CastingRule
 ) -> list[Casting]:
-    """Every Technique + Form pair whose two Arts the character has."""
+    """Every Technique + Form pair whose two Arts the character has. A
+    Form of a family ("Foe: Vampire") brings every Form of that family the
+    character holds: any Foe Art pairs with any Practice Art (Against the
+    Dark p. 132)."""
     return [
         Casting(f"{short_name(t)} {short_name(f)}", (t, f))
         for t in techniques(tradition, rule)
         if holds(character, t)
-        for f in forms(tradition, rule)
-        if holds(character, f)
+        for f in held_forms(character, tradition, rule)
     ]
+
+
+def held_forms(
+    character: Character, tradition: TraditionDef, rule: CastingRule
+) -> list[str]:
+    """The rule's Forms the character has, and the other members he has of
+    a Form's family (the part before ": ")."""
+    named = forms(tradition, rule)
+    families = {f.split(": ", 1)[0] for f in named if ": " in f}
+    found = [f for f in named if holds(character, f)]
+    for ability in character.abilities:
+        family = ability.name.split(": ", 1)[0]
+        if ": " in ability.name and family in families and ability.name not in found:
+            found.append(ability.name)
+    return found
 
 
 def _abilities(
@@ -329,6 +352,38 @@ def penetration_total(
     )
 
 
+def botch_dice(
+    tradition: TraditionDef,
+    rule: CastingRule,
+    *,
+    level: int = 0,
+    vis_pawns: int = 0,
+    aura: int = 0,
+    aura_realm: str = realms.HERMETIC,
+    in_regio: bool = False,
+) -> int:
+    """How many botch dice a stressed casting with the rule rolls when its
+    die shows 0: none for a lab total or a rule without a stress die. Most
+    traditions botch as Hermetic magi do (Hedge Magic RE pp. 71, 85, 126;
+    Rival Magic pp. 25, 65, 115): one die, one a pawn of vis, and a point
+    a point of another realm's aura, twice that in a regio (DE p. 227). An
+    Amazon rite rolls its magnitude + the aura (Rival Magic p. 25). The
+    rule's own extra dice add to either (Wildfire's two, Rival Magic p. 104)."""
+    if rule.lab or rule.die != "stress" or rule.botch == "none":
+        return 0
+    if rule.botch == "magnitude":
+        dice = magnitude(level) + max(aura, 0)
+    else:
+        dice = (
+            1
+            + vis_pawns
+            + realms.extra_botch_dice(
+                tradition.realm, aura_realm, aura, in_regio=in_regio
+            )
+        )
+    return dice + rule.botch_extra
+
+
 # ---------------------------------------------------------------------------
 # Magical Defenses
 
@@ -399,12 +454,17 @@ def ability_effect_level(ability_score: int) -> int:
 
 
 def most_helpers(
-    group: GroupCasting, *, aura: int = 0, leader_ceremony: int = 0
+    group: GroupCasting,
+    *,
+    aura: int = 0,
+    aura_realm: str = realms.HERMETIC,
+    leader_ceremony: int = 0,
 ) -> int:
     """How many helpers count: the aura's strength, the leader's Ceremony,
-    or a fixed number."""
+    or a fixed number. A sabbat's cap is the Magic aura at its site, so
+    another realm's aura lets no one help (Hedge Magic RE pp. 45-46)."""
     if group.most == "aura":
-        return max(aura, 0)
+        return max(aura, 0) if aura_realm == realms.HERMETIC else 0
     if group.most == "Ceremony":
         return max(leader_ceremony, 0)
     return int(group.most)
@@ -415,13 +475,16 @@ def group_bonus(
     helpers: Sequence[int],
     *,
     aura: int = 0,
+    aura_realm: str = realms.HERMETIC,
     leader_ceremony: int = 0,
 ) -> int:
     """What the helpers add to the focus's total. With Ceremony each
     counted helper adds their own Characteristic + score (`helpers`, best
     first); with a number, each adds that number."""
     counted = sorted(helpers, reverse=True)[
-        : most_helpers(group, aura=aura, leader_ceremony=leader_ceremony)
+        : most_helpers(
+            group, aura=aura, aura_realm=aura_realm, leader_ceremony=leader_ceremony
+        )
     ]
     if group.helper == "Ceremony":
         return sum(counted)

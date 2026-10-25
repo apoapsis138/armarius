@@ -272,6 +272,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "roll_fair",
         "roll_table",
         "battle_event",
+        "redeem_gratitude",
         "conflict_battle_event",
         "next_blow",
         "next_round",

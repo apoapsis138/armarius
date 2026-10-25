@@ -40,7 +40,7 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The Courts of the Seasons",
         page="p. 34",
         realm="Faerie",
-        might=40,
+        might=30,
         block={
             "traits": {
                 "Compassionate (Alder Prince)": 3,
@@ -61,12 +61,13 @@ def _forest_spirits(rhine: Rhine) -> None:
             "his northern holly grove."
         ),
         notes=(
-            "The book prints Faerie Might 20-50 by the time of year. Each "
-            "ruler keeps a Might score of 40 for Magic Resistance and "
-            "Penetration all year, but the Might Pool swings: 50 (and an aura "
-            "of 3 across the wood) in the month of its own solstice or equinox, "
-            "losing 5 a month to the next court down to 20 at the opposite "
-            "season, then gaining 5 a month back.\n"
+            "Faerie Might 15-35 by the time of year: the book prints 20-50, "
+            "which its errata reduce (20 to 15, 30 to 20, 35 to 25, 40 to 30, "
+            "50 to 35). Each ruler keeps a Might score of 30 for Magic "
+            "Resistance and Penetration all year, but the Might Pool swings: "
+            "35 (and an aura of 3 across the wood) in the month of its own "
+            "solstice or equinox, losing about 5 a month to the next court "
+            "down to 15 at the opposite season, then gaining it back.\n"
             "Special Powers: Alder Prince: Shroud, Grant Virtue (Rapid "
             "Convalescence). King Oak: Guide, Grant Virtue (Inspirational). "
             "Willow Maiden: Guide, Grant Flaw (Weak-Willed). King Holly: "
@@ -117,7 +118,7 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The Glade of the Seven Waterfalls",
         page="p. 51",
         realm="Magic",
-        might=80,
+        might=50,
         block={"traits": {"Enigmatic": 4, "Wise": 3}},
         appearance=(
             "A stream falling over seven waterfalls down a steep valley of "
@@ -125,6 +126,7 @@ def _forest_spirits(rhine: Rhine) -> None:
             "the glade is peaceful and is spoken of as she."
         ),
         notes=(
+            "Magic Might 50: the book prints 80, which its errata reduce.\n"
             "Special Powers: Grant Virtue (Clear Thinker), Guide, "
             "Oath-Swearing, Regio, Shroud.\n"
             "What remains of the Black Forest's original genius locus, bound "
@@ -142,12 +144,13 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The Ash of Nortorf",
         page="p. 69",
         realm="Infernal",
-        might=15,
+        might=10,
         block={"traits": {"Ambitious": 2}},
         appearance=("A small ash seedling in the churchyard of Nortorf in Holstein."),
         notes=(
-            "Infernal Might 15, with the potential to reach 60 once the ash is "
-            "grown.\n"
+            "Infernal Might 10, with the potential to reach 40 once the ash is "
+            "grown: the book prints 15 and 60, which its errata reduce to a "
+            "range of 10-40.\n"
             "Special Powers: Grant Victory, Grant Virtue (Entrancement), Grant "
             "Virtue (Inspirational), Grant Virtue (Tough).\n"
             "Every New Year's Night a white horseman cuts the shoot down while "
@@ -164,13 +167,14 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The Teutoburger Forest",
         page="p. 77",
         realm="Magic",
-        might=50,
+        might=40,
         block={"traits": {"Patient": 3, "Unforgiving": 1}},
         appearance=(
             "A ring of ancient trees of different kinds round a great clearing "
             "at the forest's heart, which guard the wood together."
         ),
         notes=(
+            "Magic Might 40: the book prints 50, which its errata reduce.\n"
             "Special Powers: Grant Flaw (Simple-Minded), Grant Victory, Regio, "
             "Shroud, Stasis.\n"
             "In the top level of its regio the Roman legionaries who fled into "
@@ -186,13 +190,14 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The Apple of the Kyffhäuser",
         page="p. 86",
         realm="Magic",
-        might=70,
+        might=45,
         block={"traits": {"Regal": 4, "Peaceful": -1}},
         appearance=(
             "A withered apple tree at the foot of the Kyffhäuser's tallest "
             "peak, guarded by men-at-arms."
         ),
         notes=(
+            "Magic Might 45: the book prints 70, which its errata reduce.\n"
             "Special Powers: Grant Victory (to whoever hangs a shield on the "
             "tree), Grant Virtue (Unaging, to keep its men-at-arms in their "
             "prime), Heal Wounds, Possession (of any who fail to beat the "
@@ -231,7 +236,7 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The Linden of Neustadt",
         page="p. 88",
         realm="Magic",
-        might=30,
+        might=25,
         block={"traits": {"Protective": 6}},
         appearance=(
             "A great spreading lime tree whose broken boughs are held up by "
@@ -239,6 +244,7 @@ def _forest_spirits(rhine: Rhine) -> None:
             "defended the town."
         ),
         notes=(
+            "Magic Might 25: the book prints 30, which its errata reduce.\n"
             "Special Powers: Grant Victory, Grant Virtue (Berserk), Grant "
             "Virtue (Tough), given to the town's defenders.\n"
             "Alone among the forest spirits it has taken a town's people into "
@@ -275,14 +281,15 @@ def _forest_spirits(rhine: Rhine) -> None:
         "The Holm Oak of Romowe",
         page="p. 99",
         realm="Magic",
-        might=45,
+        might=35,
         block={"traits": {"Domineering": 3, "Cruel": 1}},
         appearance=(
             "A massive evergreen oak in the sacred grove of Romowe, hung with "
             "ribbons and talismans, a fire kept burning under its boughs."
         ),
         notes=(
-            "Magic Might 45, currently 30 while it is trapped.\n"
+            "Magic Might 35, currently 20 while it is trapped: the book "
+            "prints 45 and 30, which its errata reduce.\n"
             "Special Powers: Grant Flaw (Depression, on anyone who breaks a "
             "branch or kills a beast in the grove), Possession (of anyone who "
             "takes a branch).\n"
@@ -292,7 +299,7 @@ def _forest_spirits(rhine: Rhine) -> None:
         ),
         place=places["romowe"],
     )
-    holm_oak.might_pool = 30
+    holm_oak.might_pool = 20
 
 
 def _faeries(rhine: Rhine) -> None:
@@ -594,7 +601,7 @@ def _magical_beasts(rhine: Rhine) -> None:
                 ("Hunt", 4, "lying in wait"),
                 ("Dead Language: Latin", 5, "whispers"),
                 ("Magic Lore", 2, "beasts"),
-                ("Living Language: West Norse", 3, "threats"),
+                ("Living Language: East Norse", 3, "threats"),
             ],
             "traits": {"Disdainful": 3, "Lazy": 3, "Indifferent": 1},
         },

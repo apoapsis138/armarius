@@ -106,7 +106,7 @@ def build(rhine: Rhine) -> None:
                 ("Single Weapon", 3, "long sword"),
                 ("Teaching", 4, "Arts"),
                 ("Theology: Christian", 3, "souls"),
-                ("Living Language: West Norse", 2, "threats"),
+                ("Living Language: East Norse", 2, "threats"),
             ],
             "arts": {
                 "Creo": 10,
@@ -129,7 +129,7 @@ def build(rhine: Rhine) -> None:
                 ("Agony of the Beast", "PeAn", 15, 0),
                 ("Cripple the Howling Wolf", "PeAn", 25, 1),
                 ("Curse of the Desert", "PeAq", 25, 0),
-                ("Chaos of the Angry Waves", "ReAq", 20, 0),
+                ("Chaos of the Angry Waves", "ReAq", 30, 0),
                 ("Sight of the True Form", "InCo", 15, 0),
                 ("The Wound That Weeps", "PeCo", 15, 0),
                 ("Bane of the Decrepit Body", "PeCo", 25, 0),
@@ -147,17 +147,18 @@ def build(rhine: Rhine) -> None:
                 ("Scent of Peaceful Slumber", "ReMe", 20, 0),
                 ("Pit of the Gaping Earth", "PeTe", 15, 0),
                 ("End of the Mighty Castle", "PeTe", 25, 0),
-                ("Flaws of the Weaponsmith", "PeTe", 25, 1),
+                ("Flaws of the Weaponsmith", "PeTe", 30, 1),
                 ("Demon's Eternal Oblivion", "PeVi", 50, 2),
                 ("The Heathen Witch Reborn", "PeVi", 25, 0),
                 ("Wind of Mundane Silence", "PeVi", 50, 3),
                 ("Dreadful Bane of the Fae", "PeVi", 50, 1),
                 ("Sap the Griffon's Strength", "PeVi", 50, 1),
-                ("Shattering the Malicious Rune", "PeVi", 50, 1),
+                ("Shattering the Malicious Thurisaz", "PeVi", 30, 1),
+                ("Shattering the Malicious Kauno", "PeVi", 50, 1),
             ],
             "notes": (
                 "Equipment: clothes, a dagger and a long sword; "
-                "Encumbrance 3 (3). Talisman: the Knife of Human Bone; he "
+                "Encumbrance 1 (1). Talisman: the Knife of Human Bone; he "
                 "also owns the Wizard's Bridle and the Subtle Chain. "
                 "Familiar: Sordus, a basilisk. Twilight Scars: he seems to "
                 "swell when angry, his shadow sometimes moves of itself, he "
@@ -168,10 +169,14 @@ def build(rhine: Rhine) -> None:
                 "with his Mythic Blood, whose feat lets him smell magic. "
                 "Chaos of the Angry Waves came from a Twilight. He knows "
                 "Demon's Eternal Oblivion and Wind of Mundane Silence at "
-                "levels 25 and 50, and Dreadful Bane of the Fae, Sap the "
-                "Griffon's Strength and Shattering the Malicious Rune at "
-                "30 and 50. From forty years past his Gauntlet he learned "
-                "his spells as laboratory projects."
+                "levels 25 and 50, and Dreadful Bane of the Fae and Sap the "
+                "Griffon's Strength at 30 and 50. His two Shattering spells "
+                "are versions of Shattering the Malicious (Rune), each "
+                "aimed at one rune. From forty years past his Gauntlet he "
+                "learned his spells as laboratory projects. The book prints "
+                "Encumbrance 3 (3), Chaos of the Angry Waves 20, Flaws of "
+                "the Weaponsmith 25 and one Shattering the Malicious Rune "
+                "(30 and 50); the errata correct them."
             ),
         },
         masteries={
@@ -185,7 +190,8 @@ def build(rhine: Rhine) -> None:
             "Wind of Mundane Silence": (PENETRATION, FAST, STILL),
             "Dreadful Bane of the Fae": (PENETRATION,),
             "Sap the Griffon's Strength": (PENETRATION,),
-            "Shattering the Malicious Rune": (FAST,),
+            "Shattering the Malicious Thurisaz": (FAST,),
+            "Shattering the Malicious Kauno": (FAST,),
         },
     )
     _stats(
@@ -296,7 +302,7 @@ def build(rhine: Rhine) -> None:
                 ("Perception of the Conflicting Motives", "InMe", 15, 0),
                 ("Frosty Breath of the Spoken Lie", "InMe", 20, 0),
                 ("Posing the Silent Question", "InMe", 20, 1),
-                ("Recollection of Memories Never Quite Lived", "MuMe", 5, 0),
+                ("Recollection of Memories Never Quite Lived", "MuMe", 4, 0),
                 ("Seed of Betrayal", "MuMe", 15, 0),
                 ("The Blinded Sentry", "PeMe", 5, 0),
                 ("Trust of Childlike Faith", "PeMe", 10, 0),
@@ -388,7 +394,7 @@ def build(rhine: Rhine) -> None:
                 ("Swim", 2, "lakes"),
                 ("Teaching", 1, "Magic Theory"),
                 ("Theology: Christian", 1, "debate"),
-                ("Living Language: West Norse", 2, "Danish"),
+                ("Living Language: East Norse", 2, "Danish"),
                 ("Living Language: West Slavonic", 2, "Sorbian"),
             ],
             "arts": {
@@ -412,12 +418,12 @@ def build(rhine: Rhine) -> None:
                 ("Mighty Torrent of Water", "CrAq", 20, 0),
                 ("Voice of the Lake", "InAq", 25, 0),
                 ("Sculpt the Living Water", "MuAq", 20, 0),
-                ("Neptune's Imprisoning Arms", "MuAq", 25, 0),
-                ("Appease the Queen of Winter", "MuAq", 60, 0),
+                ("Neptune's Imprisoning Arms", "MuAq", 30, 0),
+                ("Appease the Queen of Winter", "MuAq", 65, 0),
                 ("Break the Oncoming Wave", "ReAq", 10, 0),
                 ("Breath of Winter", "ReAq", 15, 0),
                 ("Still the Raging Waters", "ReAq", 15, 0),
-                ("Chaos of the Angry Waves", "ReAq", 20, 0),
+                ("Chaos of the Angry Waves", "ReAq", 30, 0),
                 ("Parting of the Waves", "ReAq", 30, 0),
                 ("Broom of the Winds", "CrAu", 15, 0),
                 ("In Christ's Footsteps", "ReCo", 5, 0),
@@ -507,17 +513,17 @@ def build(rhine: Rhine) -> None:
                 ("Bind Wound", "CrCo", 10, 1),
                 ("Bridge of Wood", "CrHe", 20, 1),
                 ("Transformation of the Thorny Staff", "MuHe", 10, 1),
-                ("Piercing Shaft of Wood", "MuHe(Re)", 15, 1),
+                ("Piercing Shaft of Wood", "MuHe(Re)", 10, 1),
                 ("Repel the Wooden Shafts", "ReHe", 10, 1),
                 ("Strike of the Angered Branch", "ReHe", 15, 1),
-                ("The Treacherous Spear", "ReHe", 15, 1),
+                ("The Treacherous Spear", "ReHe", 25, 1),
                 ("Coils of the Entangling Plants", "ReHe", 20, 1),
                 ("Eyes of the Treacherous Terrain", "InTe", 15, 1),
                 ("Wielding the Invisible Sling", "ReTe", 10, 1),
             ],
             "notes": (
                 "Equipment: bronze half scale mail, a great sword and a "
-                "lance; Encumbrance 3 (4). No Twilight Scars. Also: the "
+                "lance; Encumbrance 2 (3). No Twilight Scars. Also: the "
                 "Flaw Magical Animal Companion, Kervus, the great faerie "
                 "stag who is his caricature and steed. A faerie court, not "
                 "a mundane lord, knighted him, and his Vow is to chivalry."
@@ -629,8 +635,8 @@ def peregrinatores(rhine: Rhine) -> None:
                 ("Sight of the Transparent Motive", "InMe", 10, 1),
                 ("Frosty Breath of the Spoken Lie", "InMe", 20, 1),
                 ("Perceive the Eyes of Knives", "InMe", 20, 0),
-                ("Trust of Childlike Faith", "ReMe", 10, 0),
-                ("Eyes of the Eons", "InTe", 5, 0),
+                ("Trust of Childlike Faith", "PeMe", 10, 0),
+                ("Eyes of the Eons", "InTe", 10, 0),
                 ("Tracks of the Faerie Glow", "InTe", 25, 0),
                 ("The Invisible Eye Revealed", "InVi", 20, 0),
                 ("Reveal the Magical Deception", "InVi", 25, 0),
@@ -699,7 +705,7 @@ def peregrinatores(rhine: Rhine) -> None:
                 ("Faerie Lore", 1, "weather spirits"),
                 ("Finesse", 1, "Auram"),
                 ("Folk Ken", 3, "travelers"),
-                ("Guile", 2, "as a man"),
+                ("Guile", 2, "disguise as a man"),
                 ("Area Lore: Harz Mountains", 2, "sites to study"),
                 ("Living Language: High German", 5, "disguising accent"),
                 ("Hunt", 1, "small game"),
@@ -729,7 +735,7 @@ def peregrinatores(rhine: Rhine) -> None:
             },
             "spells": [
                 ("Ward Against Faeries of the Waters", "ReAq", 15, 0),
-                ("Chaos of the Angry Waves", "ReAq", 20, 0),
+                ("Chaos of the Angry Waves", "ReAq", 30, 0),
                 ("Jupiter's Resounding Blow", "CrAu", 10, 0),
                 ("Stench of the Twenty Corpses", "CrAu", 10, 0),
                 ("Broom of the Winds", "CrAu", 15, 0),

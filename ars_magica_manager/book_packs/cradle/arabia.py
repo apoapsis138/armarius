@@ -41,7 +41,7 @@ Cult of the Daughters of Allah at Ta'if, its three members in the
 summary: no characters), ["witches_of_nizwa"] (no tradition record)
 and ["jurhumites"] (the jann-blooded tribe that once held Mecca).
 
-Beings named without stats (al-Khalil, the marid of Zamzam, Lukman's
+Beings named without stats (al-Khali, the marid of Zamzam, Lukman's
 falcons, the Jadis and Tasm, the pagan gods) are sentences in their
 places; creatures with stats (the zawba'a, the nisnas, the giant of
 'Ad, the flying serpent) are bestiary.py's. Vis (C17): Zamzam's water
@@ -272,7 +272,7 @@ def _regions(cradle: Cradle) -> None:
             "of 'Ad fell in the third century and its frankincense trade "
             "with it, and even the Bedouin keep to its edges. Some miles "
             "past the last settlements the dunes rise a thousand feet, "
-            "and beyond them the traveller is in the realm of al-Khalil, "
+            "and beyond them the traveller is in the realm of al-Khali, "
             "'the Empty One', a mighty elemental jinni, a Magic daimon "
             "and genius loci, said to guard the lost lands of the times "
             "before Islam.",
@@ -285,7 +285,7 @@ def _regions(cradle: Cradle) -> None:
             "provinces of Auram, Imaginem or Terram; some tell of the "
             "ghosts of old cities or wandering tribes, or of provinces "
             "of other Forms. Some old magical disaster, and a power of "
-            "ritual strength of al-Khalil's, seem to have made the way "
+            "ritual strength of al-Khali's, seem to have made the way "
             "so easy, and the empty land echoes the emptiness of the "
             "Void.",
             "Local sahirs, and the few magi who know of it, call it the "

@@ -7,6 +7,7 @@ from support import everything_saga
 from ars_magica_manager import models, seasons, settings, storage
 from ars_magica_manager.models import (
     Ability,
+    Agent,
     Aging,
     AnimalForm,
     ArcaneConnection,
@@ -397,6 +398,7 @@ def _saga_with_every_record() -> Saga:
     magus.constant_effects.append(ConstantEffect("Ring of Flight", powerful=True))
     magus.progress.append(Progress("vis", "Study"))
     magus.ordeals.append(Ordeal("Minor"))
+    magus.agents.append(Agent("Bishop Benedict", bond_trait="Thankful", bond=1))
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
     magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
     magus.grog_year = GrogYear()
@@ -532,7 +534,7 @@ def test_the_stale_key_fixture_holds_every_saved_record():
         "TraditionTraining", "WeaponDef", "CastingRule", "MagicalDefense",
         "DispelRule", "GroupCasting", "OpeningRule", "InitiationRule",
         "InitiationScript", "Advancement", "TraditionActivity", "BondRule",
-        "PoolDef", "WarpingRule",
+        "PoolDef", "WarpingRule", "Guideline", "EffectParameter",
     }  # fmt: skip
     every = {
         cls.__name__

@@ -163,6 +163,8 @@ def test_the_chart_is_offered_to_an_older_grog_while_grogs_is_in_play():
     assert not aging_chart.offered(_saga(_grog(35)), _grog(35))
     companion = _grog()
     companion.type = "companion"
+    assert aging_chart.offered(_saga(companion), companion)
+    companion.type = "magus"
     assert not aging_chart.offered(_saga(companion), companion)
     horse = _grog()
     horse.animal = AnimalForm(kind="hoofed", species="Horse", language="Horse")

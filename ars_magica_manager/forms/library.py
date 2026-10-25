@@ -34,6 +34,7 @@ from ..models import (
     Covenant,
     Saga,
 )
+from ..rules import hybrid_magic as hybrid
 from ..rules import library
 from . import spell as spell_forms
 
@@ -378,6 +379,18 @@ def _book_kind_fields(
             show_if=lambda v: library.has_quality(shows.book_type(v)),
         ),
         DialogField(
+            "exhibit",
+            "An exhibit (hundreds of objects)",
+            "check",
+            bool(attr(book, "exhibit", False)),
+            hint="A realia exhibit of hundreds of objects counts as a lab's "
+            "Study Requirement or Bonus for a reader whose Art is under 15 "
+            "(Against the Dark p. 61); a smaller realia doesn't.",
+            show_if=lambda v: (
+                shows.book_type(v) == "Tractatus" and v.get("opus") == book_kinds.REALIA
+            ),
+        ),
+        DialogField(
             "physical_form",
             "Physical form",
             "select",
@@ -536,6 +549,21 @@ def _book_authorship_fields(
             hint="Only the author, and whoever has decoded his texts, can use "
             "it until he rewrites it.",
             show_if=shows.lab_text,
+        ),
+        *(
+            [
+                DialogField(
+                    "holy",
+                    "Holy (not Hermetic)",
+                    "check",
+                    bool(attr(book, "holy", False)),
+                    hint="Written in holy magic: a holy magus learns from it "
+                    "at the full total, not halved (RoP: The Divine p. 67). A "
+                    "text by a holy magus of the saga is holy anyway.",
+                )
+            ]
+            if attr(book, "holy", False) or hybrid.any_holy_magus(saga)
+            else []
         ),
         DialogField(
             "year_published",
@@ -784,6 +812,7 @@ def book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     book.ritual_extra_vis = max(0, values.get("ritual_extra_vis") or 0)
     book.author_id = (values.get("author_id") or None) if lab_text else None
     book.raw = bool(values.get("raw")) if lab_text else False
+    book.holy = bool(values.get("holy"))
     author = saga.character(book.author_id)
     if author is not None and not book.author:
         book.author = author.name
@@ -806,6 +835,7 @@ def _kinds_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     book.commentary_on = (values.get("commentary_on") or None) if commentary else None
     book.physical_form = values.get("physical_form") or ""
     book.glossed = bool(values.get("glossed")) and library.has_quality(book.type)
+    book.exhibit = bool(values.get("exhibit")) and book.opus == book_kinds.REALIA
     epitome = values.get("epitome") or None
     if epitome == NEW_EPITOME:
         bk.enchant_as_epitome(saga, book)

@@ -171,6 +171,24 @@ class Event:
         return self.total >= ease_factor(stage)
 
 
+HOLDS, WAVERS, RALLIES, ROUTS = "holds", "wavers", "rallies", "routs"
+
+
+def morale_result(morale: int | None, rally: int | None) -> str:
+    """After a lost event the losing commander rolls Morale (Presence +
+    Leadership + stress die) against MORALE_EASE; failing, he tries to rally
+    at the start of the next event against RALLY_EASE, and failing that
+    his army is disordered or routed (Lords of Men p. 106): HOLDS, WAVERS
+    (the rally still to roll), RALLIES or ROUTS; "" with no roll."""
+    if morale is None:
+        return ""
+    if morale >= MORALE_EASE:
+        return HOLDS
+    if rally is None:
+        return WAVERS
+    return RALLIES if rally >= RALLY_EASE else ROUTS
+
+
 def losses(size: str, winner_weight: int) -> int:
     """The combat groups the side that lost an event loses besides those
     lost in the fight itself: its Size times the winner's Weight of

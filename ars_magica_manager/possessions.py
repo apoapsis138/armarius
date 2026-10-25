@@ -63,6 +63,14 @@ NATURAL_WEAPON_TABLES: tuple[str, ...] = ("natural",)
 FULL_ARMOR = GEAR_TYPES_BY_KIND["armor"][1]
 
 
+#: What a Raw Vis Store marked Infernal does in casting (rules.casting).
+INFERNAL_VIS_NOTE = (
+    "twice the botch dice in casting; with the Harsher Infernal vis option "
+    "+5 a pawn and 3 more botch dice a pawn, never fewer than its pawns "
+    "(DE p. 422; RoP: The Infernal p. 19)"
+)
+
+
 @dataclass
 class PossessionEntry:
     """One row of a list, whatever it was built from.
@@ -157,6 +165,10 @@ class PossessionEntry:
     @property
     def physical_form(self) -> str:
         return self._own("physical_form", "")
+
+    @property
+    def infernal(self) -> bool:
+        return bool(self._own("infernal", False))
 
     @property
     def description(self) -> str:
@@ -492,8 +504,8 @@ def detail_text(entry: PossessionEntry | None) -> str:
         optional("Location", entry.location)
         optional("Physical Form", entry.physical_form)
     else:  # vis_store
-        lines.append(_line("Art", entry.art))
-        lines.append(_line("Pawns", entry.pawns))
+        lines += [_line("Art", entry.art), _line("Pawns", entry.pawns)]
+        optional("Infernal vis", INFERNAL_VIS_NOTE if entry.infernal else "")
         optional("Kept at", entry.place)
         optional("Location", entry.location)
         optional("Physical Form", entry.physical_form)

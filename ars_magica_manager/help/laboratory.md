@@ -893,6 +893,9 @@ has them:
   pawn for every 20 points, the Form's Extractor a pawn for every 10. With
   Hermetic Alchemy, **Shape & material** adds the vessel's bonuses, up to
   Magic Theory.
+- **A dark or sinister effect** (Chthonic Magic): tick it for such work;
+  his Chthonic Magic then stands in for Magic Theory (Realms of Power: The
+  Infernal p. 123).
 
 Others apply by themselves: **Short-Ranged Magic** halves the total when
 the spell or effect designed has a Range beyond Touch; **Disjointed Magic**
@@ -901,7 +904,14 @@ sharing its Technique or Form; **Hubris** adds its Personality score to
 instilling the magus's own talisman and to binding a familiar; **Waster of
 Vis** needs a third more pawns (a quarter of those used is wasted), which
 count toward the season's limit; **Magical Memory** lets the magus work from
-their own Lab Texts wherever they are kept.
+their own Lab Texts wherever they are kept. A holy magus (**Holy Magic**)
+halves his Lab Total when he works from another's Lab Text, a Hermetic
+source (Realms of Power: The Divine p. 67); the halving shows in the
+total. **Vulgar Alchemy** (The Mysteries Revised Edition pp. 32-35), when
+experimenting while enchanting, adds Magic Lore to the Lab Total, and the
+plan notes how to test the components (up to Magic Theory of them, simple
+die + Perception + Magic Lore against 3 + 3 x the bonus proposed). Use it
+for charged or lesser devices only.
 
 ### Experimenting
 <!-- help: invent-spell-experiment -->

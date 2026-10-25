@@ -58,7 +58,9 @@ def wealth(neighbour: Neighbour) -> str:
     return found if found in WEALTH else "Average"
 
 
-def army_groups(neighbour: Neighbour) -> int:
-    """The combat groups of five his title raises, his levies included."""
+def army_groups(neighbour: Neighbour, *, at_home: bool = True) -> int:
+    """The combat groups of five his title raises; his levies only on his
+    home ground (Lords of Men pp. 31, 102)."""
     army = army_of(title(neighbour), wealth(neighbour))
-    return (army.knights + army.serjeants + army.infantry + army.levies) // GROUP_SIZE
+    levies = army.levies if at_home else 0
+    return (army.knights + army.serjeants + army.infantry + levies) // GROUP_SIZE

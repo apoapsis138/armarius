@@ -96,6 +96,11 @@ class DiseaseDef:
     interval: str
     penalty: bool = True
     note: str = ""
+    #: Caught only by a Disease Avoidance roll failed; False for one a
+    #: power inflicts (its Penetration decides, not the roll).
+    avoidable: bool = True
+    #: Long-term Fatigue levels it takes, not regained until it abates.
+    fatigue: int = 0
 
 
 #: Art & Academe's common diseases (pp. 47-51).
@@ -244,6 +249,23 @@ CATALOG: tuple[DiseaseDef, ...] = (
         note="No penalty at first; worsening after a season makes it Serious.",
     ),
 )
+#: A vampire's Sap the Life (Against the Dark p. 115): the Lesser Power
+#: inflicts a Serious disease of Severity 15, rolled weekly against 12 to
+#: stay stable and 18 to improve, and two Fatigue levels that come back
+#: only when it abates; Faerie Lore treats it as well as Medicine.
+SAP_THE_LIFE = DiseaseDef(
+    "Sap the Life",
+    "Serious",
+    15,
+    12,
+    18,
+    "week",
+    note="A vampire's power: Faerie Lore treats it as Medicine does "
+    "(Against the Dark p. 115).",
+    avoidable=False,
+    fatigue=2,
+)
+CATALOG = (*CATALOG, SAP_THE_LIFE)
 CATALOG_BY_NAME = {d.name: d for d in CATALOG}
 
 

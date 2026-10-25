@@ -77,7 +77,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: s.neighbours[0].details["gratitude"][-1]["points"],
         expected=10,
         invalid={"Points": "-2"},
-        shown={"#nb-gratitude-list": "A manor; 20 for a barony"},
+        shown={"#nb-gratitude-list": "A manor; 20 for baron of the king"},
     ),
     "add battle": Contract(
         prefill={"Battle": "", "First army": "neighbour:gottfried"},
@@ -139,11 +139,11 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#nb-kind-facts": "Monastery or nunnery"},
     ),
     "add relic": Contract(
-        prefill={"Relic": "", "Faith Points": "1"},
-        edits={"Relic": "A finger of St. Ursula", "Faith Points": "2"},
+        prefill={"Relic": "", "Faith score": "1"},
+        edits={"Relic": "A finger of St. Ursula", "Faith score": "2"},
         saved=lambda s: s.neighbour("cologne").details["relics"][-1]["faith"],
         expected=2,
-        invalid=[{"Relic": ""}, {"Faith Points": "-1"}],
+        invalid=[{"Relic": ""}, {"Faith score": "-1"}],
         shown={"#nb-relics-list": "A finger of St. Ursula"},
     ),
     "add faculty": Contract(

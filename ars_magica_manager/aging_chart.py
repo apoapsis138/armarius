@@ -1,6 +1,6 @@
-"""A grog's pre-play aging from the Grogs Aging Chart (rules/grog_aging.py),
-applied to the character: the decades the pre-play aging rolls cover,
-their Aging Points on the Characteristics, Decrepitude, apparent age, a
+"""A grog's or companion's pre-play aging from the Grogs Aging Chart
+(rules/grog_aging.py), applied to the character: the decades the
+pre-play aging rolls cover, their Aging Points on the Characteristics, Decrepitude, apparent age, a
 Diary entry, and the choice and its Ability cap noted on the Creation
 Worksheet. Like the yearly rolls it stands in for, it can't be taken
 back."""
@@ -24,12 +24,19 @@ def cite(source: str) -> str:
     return re.sub(r"\s*\(https?://[^)]*\)\s*$", "", source)
 
 
+#: Who the chart is offered to: any old character made for play but a magus
+#: (Grogs p. 65: it stands in for an old character's rolls at creation), a
+#: grog promoted from a Line or Sketch included. A magus's Longevity Ritual
+#: and Twilight make his rolls his own.
+CHART_TYPES: tuple[str, ...] = ("grog", "companion", "mythic companion")
+
+
 def offered(saga: Saga, character: Character) -> bool:
-    """Whether the worksheet offers the chart: a grog (not an animal, whose
-    kind ages by its own table) with pre-play aging still to make, while
-    the Grogs book is in play."""
+    """Whether the worksheet offers the chart: a grog or companion (not an
+    animal, whose kind ages by its own table) with pre-play aging still to
+    make, while the Grogs book is in play."""
     return (
-        character.type == "grog"
+        character.type in CHART_TYPES
         and character.animal is None
         and sourcebooks.in_play(BOOK, sourcebooks.saga_books(saga))
         and magus.aging_due(saga, character) > 0

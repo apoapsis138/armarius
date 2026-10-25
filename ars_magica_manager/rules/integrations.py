@@ -20,7 +20,7 @@ from dataclasses import dataclass
 SOURCE = (
     "Ancient Magic, Introduction, The Breakthrough (p. 7); Hedge Magic, Revised "
     "Edition, The Integration Process (p. 14); Houses of Hermes: True Lineages, "
-    "Bonisagus, Example Discoveries (p. 30)"
+    "Bonisagus, Example Discoveries (pp. 30-34)"
 )
 AM = "Ancient Magic"
 HMRE = "Hedge Magic, Revised Edition"
@@ -37,6 +37,9 @@ class Integration:
     #: What reaching it grants (Breakthrough.grant_kind and grant).
     grant_kind: str = ""
     grant: str = ""
+    #: What the magus can then do, where the app works it out
+    #: (rules.house_discoveries, casting_virtues' reminders).
+    learned: str = ""
 
     @property
     def label(self) -> str:
@@ -194,6 +197,15 @@ INTEGRATIONS: tuple[Integration, ...] = (
         "vf_hermetic_rune_magic",
     ),
     Integration(
+        "Aetheric Magic",
+        "Hermetic",
+        100,
+        "The Major Hermetic Virtue Aetheric Magic and the Art Aether at 13 "
+        "(9 xp toward 14); at least 20 of the points must come from each "
+        "Technique's projects (Dies Irae pp. 38-39).",
+        "Dies Irae",
+    ),
+    Integration(
         "Subtle Opening",
         "Major",
         30,
@@ -217,6 +229,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         45,
         "A fold of the Parma Magica: Double Parma Magica, worn down by each Penetration it stops.",
         TL,
+        learned="Double Parma, worn down by each Penetration it stops; one of as many folds as Parma Magica.",
     ),
     Integration(
         "Arma Magica: Parma Absorbea",
@@ -224,6 +237,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         45,
         "A fold of the Parma Magica: Half Parma Magica; a resisted spell's Penetration feeds the next spell.",
         TL,
+        learned="Half Parma; a stopped spell's Penetration may feed the next spell; one of as many folds as Parma Magica.",
     ),
     Integration(
         "Arma Magica: Parma Condensa",
@@ -231,6 +245,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         45,
         "A fold of the Parma Magica: Double Parma Magica against one Form, half against the rest.",
         TL,
+        learned="Double Parma against one Form, half against the rest; one of as many folds as Parma Magica.",
     ),
     Integration(
         "Arma Magica: Parma Custodia",
@@ -238,6 +253,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         45,
         "A fold of the Parma Magica: Twice Parma Magica added to Defense, no Magic Resistance.",
         TL,
+        learned="Twice Parma added to Defense, no Parma resistance; one of as many folds as Parma Magica.",
     ),
     Integration(
         "Arma Magica: Parma Repercussa",
@@ -245,6 +261,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         45,
         "A fold of the Parma Magica: Half Parma Magica; a spell it stops is reflected at a target.",
         TL,
+        learned="Half Parma; a stopped spell is turned at a target; one of as many folds as Parma Magica.",
     ),
     Integration(
         "Arma Magica: Parma Restricta",
@@ -252,6 +269,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         45,
         "A fold of the Parma Magica: Parma Magica - 3, wrapped around another to hold their magic in.",
         TL,
+        learned="Parma - 3 wrapped round someone touched, holding their magic in; one of as many folds as Parma Magica.",
     ),
     Integration(
         "Parmulae",
@@ -259,6 +277,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         30,
         "Lesser enchanted 'little shields' giving Magic Resistance 30 for a year.",
         TL,
+        learned="Parmulae: a level 44 lesser device, Magic Resistance 30 for a year, 5 pawns.",
     ),
     Integration(
         "Figurine Magic",
@@ -276,6 +295,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         30,
         "Spells untouched by the aura of the Realm they are aligned to.",
         TL,
+        learned="Realm-aligned spells: invented with Magic Theory capped by the Realm Lore; the casting notes give the aligned table.",
     ),
     Integration(
         "Realm-aligned mastery",
@@ -283,6 +303,7 @@ INTEGRATIONS: tuple[Integration, ...] = (
         30,
         "Realm alignment as a special ability of a mastered spell.",
         TL,
+        learned="Realm alignment as a Mastery special ability.",
     ),
 )
 

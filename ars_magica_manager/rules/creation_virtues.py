@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 from .. import catalog
 from ..models import Character, Saga, TraditionDef, VirtueFlawDef
-from . import animal_grogs
+from . import animal_grogs, realms
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import THE_GIFT
@@ -423,6 +423,83 @@ def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:
         *_personality_and_taint_checks(record, t),
         *_advice_checks(record, t),
         *_exclusion_checks(record),
+        *_requirement_checks(record),
+        *_realm_checks(record),
+    ]
+
+
+#: Virtues that need one of these others, as their descriptions say.
+NEEDS_ONE_OF: dict[str, tuple[tuple[str, ...], str]] = {
+    "vf_r_astradh": (
+        ("vf_fury", "vf_wrathful_major"),
+        "The Contested Isle, Ríastradh, p. 120",
+    ),
+}
+
+
+def _requirement_checks(character: Character) -> list[Check]:
+    """A failed check for each Virtue taken without one it needs."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    ids = {vf.vf_id for vf in character.virtues_flaws}
+    found = []
+    for vf_id, (needs, source) in NEEDS_ONE_OF.items():
+        if vf_id in ids and not ids & set(needs):
+            name = by_id[vf_id].name if vf_id in by_id else vf_id
+            wanted = " or ".join(by_id[n].name if n in by_id else n for n in needs)
+            found.append(
+                _check(f"{name} needs {wanted}", False, "neither taken", source)
+            )
+    return found
+
+
+#: Virtues that give a character a Might score, and its realm: such a
+#: character is a member of that realm and takes no Virtue that affiliates
+#: them with another (RoP: The Infernal p. 84).
+MIGHT_VIRTUES: dict[str, str] = {"vf_demonic_blood": "Infernal"}
+#: Virtues that affiliate a character with a realm whatever their category.
+AFFILIATING: dict[str, str] = {
+    THE_GIFT: "Magic",
+    "vf_true_faith": "Divine",
+    "vf_blood_of_the_nephilim": "Divine",
+}
+MIGHT_SOURCE = "Realms of Power: The Infernal, Characters with Might Scores, p. 84"
+
+
+def _realm_checks(character: Character) -> list[Check]:
+    """A character with a Might score takes no Virtue of another realm:
+    The Gift, True Faith, Faerie Blood, or a Supernatural Virtue of
+    another realm, one that names none being Magic (DE p. 64; none when
+    no Virtue gives a Might)."""
+    ids = [vf.vf_id for vf in character.virtues_flaws]
+    realm = next((MIGHT_VIRTUES[v] for v in ids if v in MIGHT_VIRTUES), "")
+    if not realm:
+        return []
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    clash: list[str] = []
+    for vf_id in dict.fromkeys(ids):
+        entry = by_id.get(vf_id)
+        if entry is None or vf_id in MIGHT_VIRTUES:
+            continue
+        if vf_id in AFFILIATING:
+            other = AFFILIATING[vf_id]
+        elif entry.type == "Virtue" and "Supernatural" in (
+            entry.category,
+            *entry.extra_categories,
+        ):
+            other = realms.virtue_realm(
+                vf_id, entry.name, tainted="Tainted" in entry.extra_categories
+            )
+        else:
+            continue
+        if other != realm:
+            clash.append(f"{entry.name} ({other})")
+    return [
+        _check(
+            f"With {realm} Might, no Virtue of another realm",
+            not clash,
+            ", ".join(clash) or "none",
+            MIGHT_SOURCE,
+        )
     ]
 
 

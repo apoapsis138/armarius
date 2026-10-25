@@ -16,6 +16,7 @@ from .... import (
     conflicts,
     creation,
     grog_templates,
+    lords,
     place_events,
     places,
     ruins,
@@ -47,6 +48,7 @@ from ....sections import (
     CASES_SECTION,
     DIARY_SECTION,
     FAIRS_SECTION,
+    GRATITUDE_SECTION,
     NEIGHBOUR_INFO_SECTION,
     STAGES_SECTION,
     TABLES_SECTION,
@@ -201,6 +203,18 @@ class RecordActions(WorkspaceBase):
             self.app,
             towns.roll_fair(self.saga, view.neighbour, row),
             lambda _end: self._commit(FAIRS_SECTION),
+        )
+
+    def action_redeem_gratitude(self) -> None:
+        """More's Redeem Gratitude on a lord's chosen debt."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(GRATITUDE_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            lords.redeem_form(self.saga, view.neighbour, row),
+            lambda _end: self._commit(GRATITUDE_SECTION, DIARY_SECTION),
         )
 
     def action_battle_event(self) -> None:

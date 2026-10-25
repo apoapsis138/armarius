@@ -470,7 +470,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: End of Session: Leandro",
+        "m": "MenuScreen: End of Session, Tournament",
         "slash": "(disabled)"
       }
     },
@@ -1870,7 +1870,7 @@
         "a": "FieldsDialog: Add a Debt of Gratitude",
         "e": "FieldsDialog: Edit a Debt of Gratitude",
         "d": "ConfirmScreen",
-        "m": "ChooseScreen: Go To",
+        "m": "MenuScreen: Redeem Gratitude, Go To",
         "slash": "(disabled)"
       }
     },

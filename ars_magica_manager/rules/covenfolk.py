@@ -17,8 +17,8 @@ from ..models import (
     Inhabitant,
     Saga,
 )
-from . import effects, scores
-from .rounding import round_away_from_zero
+from . import effects, living, medicine, scores
+from .rounding import round_away_from_zero, round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Six: Covenants, Points for Inhabitants of a "
@@ -332,7 +332,47 @@ def inhabitant_points(
     total += covenant.population.other_people * _season_column(
         OTHER_COVENFOLK_POINTS, covenant
     )
+    if not exclude_roles:
+        total += regimen_points(saga, covenant)
     return total
+
+
+def regimen_points(saga: Saga, covenant: Covenant) -> int:
+    """The Inhabitant points regimens add (Art & Academe p. 58): the points
+    of the characters under one regimen, by where their Living Conditions
+    start, multiplied for each step it raises them (to +1 x1.5, to +2 x2,
+    to +3 or more x2.5, fractions rounded up), less what they cost
+    without it. None while the covenant spends Emergency Savings, when no
+    regimen can be kept."""
+    if covenant.economics.emergency_savings > 0:
+        return 0
+    groups: dict[tuple[str, int, int], int] = {}
+    for kind in INHABITANT_KINDS:
+        for entry in entries_for_kind(saga, covenant, kind):
+            character = entry.character
+            if character is None or not character.aging.regimen:
+                continue
+            physician = saga.character(character.aging.regimen_by)
+            if physician is None:
+                continue
+            level = medicine.regimen_level(
+                medicine.medicine(physician), character.aging.regimen
+            )
+            if not level:
+                continue
+            start = living.living_conditions(saga, character) - medicine.regimen_bonus(
+                saga, character
+            )
+            key = (physician.id, start, level)
+            points = entry.quantity * _season_column(INHABITANT_POINTS[kind], covenant)
+            groups[key] = groups.get(key, 0) + points
+    extra = 0
+    for (_, start, level), points in groups.items():
+        cost = points
+        for step in range(start + 1, start + level + 1):
+            cost = round_up(cost * medicine.regimen_multiplier(step))
+        extra += cost - points
+    return extra
 
 
 def other_covenfolk_count(saga: Saga, covenant: Covenant, role: str) -> int:

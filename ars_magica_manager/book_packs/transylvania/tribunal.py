@@ -252,9 +252,9 @@ RULINGS: tuple[tuple[int | None, str, str], ...] = (
     (
         None,
         "Decorations",
-        "The Tribunal honours service with five crowns, worn as jewellery "
-        "or embroidery on a magus's robes, never awarded twice to the same "
-        "magus; a higher one replaces a lower. The Laurel goes to the magus "
+        "The Tribunal honours service with five Decorations, worn as "
+        "jewellery or embroidery on a magus's robes, never awarded twice to "
+        "the same magus; a higher one replaces a lower. The Laurel goes to the magus "
         "who leads a campaign against a foe that could destroy the Order "
         "(no one now wears it); the Myrtle to the general of a lesser "
         "campaign of more than one magical battle; the Oak to one who plans "

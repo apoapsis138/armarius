@@ -24,7 +24,11 @@ from ..models import (
 )
 from . import effects as fx
 
-SOURCE = "Ars Magica Definitive Edition, Chapter Twelve: Realms, Regiones, pp. 420-422"
+SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Twelve: Realms, Regiones, pp. "
+    "420-422; Realms of Power: The Divine pp. 13-15; Realms of Power: The "
+    "Infernal pp. 16-17"
+)
 
 #: The kind of neighbour a place is.
 PLACE = "place"
@@ -67,15 +71,76 @@ def place(saga: Saga, place_id: str | None) -> Neighbour | None:
 
 
 class RegioLevel(TypedDict, total=False):
-    """A level of a regio: its realm and aura, and what it takes to see
-    and to enter it."""
+    """A level of a regio: its realm and aura, its kind (REGIO_KINDS), and
+    what it takes to see and to enter it."""
 
     name: str
     realm: str
     aura: int
+    kind: str
     see: str
     enter: str
     notes: str
+
+
+#: The kinds of regio a realm's books describe: the Divine's terrestrial
+#: and celestial regiones (RoP: The Divine pp. 13-15), the Infernal's
+#: Tartaran and Abyssal ones (RoP: The Infernal pp. 16-17).
+REGIO_KINDS: dict[str, tuple[str, ...]] = {
+    "Divine": ("Terrestrial", "Celestial"),
+    "Infernal": ("Tartaran", "Abyssal"),
+}
+REGIO_KIND_SOURCE = (
+    "Realms of Power: The Divine, Divine Regiones, pp. 13-15; Realms of "
+    "Power: The Infernal, Infernal Regiones, pp. 16-17"
+)
+
+
+def regio_kind(entry: RegioLevel) -> str:
+    """The level's kind, when its realm has one by that name ("" if not)."""
+    kind = str(entry.get("kind") or "")
+    return kind if kind in REGIO_KINDS.get(realm_of(entry.get("realm")), ()) else ""
+
+
+def celestial_ease(aura: int) -> int:
+    """The Ease Factor of a Stamina + Dominion Lore (or Parma Magica, if
+    better) roll to act normally in a celestial regio: three times its
+    rating; failing, every roll there takes as much as a penalty, and a
+    Faith Point spent ignores it (RoP: The Divine pp. 14-15)."""
+    return 3 * max(0, aura)
+
+
+def kind_effects(entry: RegioLevel) -> str:
+    """What a regio level does to visitors by its realm and kind, as the
+    books give it ("" for one with no rule of its own). Every Infernal
+    regio suspends Divine powers; Tartaran and Abyssal ones add their own."""
+    aura = max(0, whole_number(entry.get("aura")))
+    realm, kind = realm_of(entry.get("realm")), regio_kind(entry)
+    if kind == "Celestial":
+        ease = celestial_ease(aura)
+        return (
+            f"to act there, Sta + Dominion Lore (or Parma) against {ease}, or "
+            f"-{ease} to every roll (a Faith Point ignores it); after Sta + "
+            f"Parma + 3 hours, a Fatigue level an hour, then {aura} Warping "
+            "an hour (days, not hours, with True Faith)"
+        )
+    if realm != "Infernal":
+        return ""
+    found = (
+        "no invoking God, Intercession or Holy Influence; Holy Powers and "
+        f"Holy Magic at -{aura}"
+    )
+    if kind == "Tartaran":
+        found += (
+            "; all Fatigue is long-term until they leave; hell-fire does +5 "
+            "to +35, more by the sum of the victim's sinful traits"
+        )
+    elif kind == "Abyssal":
+        found += (
+            f"; every Characteristic -{aura} while there; each day an Int "
+            f"roll against {aura} or a madness Flaw"
+        )
+    return found
 
 
 def levels(place: Neighbour) -> list[RegioLevel]:

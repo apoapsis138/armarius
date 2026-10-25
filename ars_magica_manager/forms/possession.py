@@ -390,6 +390,18 @@ def _vis_possession_fields(
             attr(entry, "physical_form", ""),
         ),
     ]
+    if kind == "vis_store":
+        fields.append(
+            DialogField(
+                "infernal",
+                "Infernal vis",
+                "check",
+                bool(attr(entry, "infernal", False)),
+                hint="Tainted by Hell: from a demon or an Infernal aura (RoP: "
+                "The Infernal p. 18). Its casting lines count the extra botch "
+                "dice.",
+            )
+        )
     return fields
 
 

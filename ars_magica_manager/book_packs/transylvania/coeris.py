@@ -666,7 +666,7 @@ MONICA: StatBlock = {
         ("Earth Shock", "ReTe", 30, 0),
         ("The Earth Split Asunder", "ReTe", 30, 0),
         ("Creeping Chasm", "ReTe", 35, 0),
-        ("Sudden Well", "PeTe", 30, 0),
+        ("Sudden Well", "PeTe", 25, 0),
         ("The Field of Millstones", "ReTe", 40, 0),
         ("Diverting the River", "ReTe", 50, 0),
         ("Gather the Essence of the Beast", "ReVi", 15, 0),
@@ -699,8 +699,9 @@ MONICA: StatBlock = {
         "carries hundreds. The book lists no Flaw beyond Deficient Technique "
         "(Muto) and does not name her rank's Virtue.",
         "Spells as the book lists them: Sudden Well appears there as ReTe "
-        "35 but is written up as PeTe 30, which the catalog holds; Creeping "
-        "Chasm is listed at 35; Gathering of the Stormy Might and Earth "
+        "35 but is written up as PeTe 30, which the errata lower to PeTe "
+        "25, as the catalog holds; Diverting the River is a Ritual by the "
+        "errata; Creeping Chasm is listed at 35; Gathering of the Stormy Might and Earth "
         "Shock are favourites to follow Sudden Well or Creeping Chasm. "
         "Necessary Monolith dams a river so that Diverting the River has "
         "water to turn; the chasm it cuts can also ring a camp in defensive "

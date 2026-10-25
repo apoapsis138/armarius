@@ -16,8 +16,11 @@ from dataclasses import dataclass
 from .. import sourcebooks
 from ..models import Saga
 
+#: Where the core book suggests house rules: the two options citing it are
+#: house rules it offers as examples, not rules of the game.
 SOURCE = (
-    "Ars Magica Definitive Edition, Chapter Sixteen: Sagas, Rules Questions, p. 524"
+    "Ars Magica Definitive Edition, Chapter Sixteen: Sagas, Rules Questions "
+    "(house rules), p. 524"
 )
 
 
@@ -27,6 +30,10 @@ ANY_SPELL_PARAMETER = "any_spell_parameter"
 
 #: Covenants' extended rules for the Quality of books (book_kinds.CRAFT).
 EXTENDED_BOOK_QUALITY = "extended_book_quality"
+
+#: A realia collection's +1 and an expert correspondence's level both
+#: raise a library's research on one subject (the book doesn't say).
+RESEARCH_AIDS_STACK = "research_aids_stack"
 
 
 @dataclass(frozen=True)
@@ -125,6 +132,20 @@ OPTIONS: tuple[RuleOption, ...] = (
         source=(
             "Covenants, Chapter Seven: Library, Extended Suggestions on the "
             "Quality of Books, pp. 87-90"
+        ),
+        book="Covenants",
+    ),
+    RuleOption(
+        key=RESEARCH_AIDS_STACK,
+        label="Research aids stack",
+        effect=(
+            "A realia collection's +1 and an expert correspondence's level "
+            "both add to a library's research on the same subject; off, the "
+            "two together add one."
+        ),
+        source=(
+            "Covenants, Chapter Seven: Library, Other Opus Types, p. 90, and "
+            "Realia, p. 102 (a house rule: the book doesn't say)"
         ),
         book="Covenants",
     ),

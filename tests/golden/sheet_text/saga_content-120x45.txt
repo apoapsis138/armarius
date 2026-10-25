@@ -29,12 +29,12 @@
       (none recorded)                                                             ▅▅
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Traditions Offered (1 of 82)
+    ▼ Traditions Offered (1 of 87)
 
         On       Book       Tradition
       ○ no       HMRE       Elementalists
       ○ no       HMRE       Folk Witches
-      ○ no       HMRE       Gruagachan                                          ▄▄
+      ○ no       HMRE       Gruagachan                                          ▅▅
 
   ▌
   ▌  Choose a book or source for its details; e picks the books.
@@ -54,7 +54,7 @@
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           217        0
       ○ Abilities                    yes           259        0
-      ○ Spells                       yes          1315        0
+      ○ Spells                       yes          1316        0
       ○ Shapes & Materials           yes           246        0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -137,7 +137,7 @@
     Technique: (any) ▼   Form: (any)      ▼   Ritual: any      ▼  Level  from    to
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Spells (1316 of 1316)
+    ▼ Spells (1317 of 1317)
 
         Name                           Arts            Level  Range/Duration/Target
       Ritual Source

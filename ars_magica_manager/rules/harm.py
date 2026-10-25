@@ -39,7 +39,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..models import FATIGUE_LEVELS, Character, Saga
-from . import derived, dice, disease, living, options, recovery
+from . import derived, dice, disease, living, medicine, options, recovery
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Other Perils, "
@@ -400,19 +400,36 @@ def catch_disease(
     total = int(disease.avoidance_total(character, living_now).total)
     die = dice.stress_die(rng, saga=saga)
     rolled = total + (0 if die.botched else die.value)
-    caught = disease.from_def(found, worse=die.botched)
-    if found.stable is None:
+    caught = disease.from_def(found, worse=die.botched and found.avoidable)
+    if not found.avoidable:
+        done = Harmed(
+            [
+                f"{found.name} is a power's: no Disease Avoidance, its Penetration decides."
+            ]
+        )
+    elif found.stable is None:
         done = Harmed([f"{found.name} can't be avoided."])
     else:
         done = Harmed([f"Disease Avoidance {rolled} against {found.stable}"])
         if disease.avoids(rolled, caught):
             done.lines.append("Avoided.")
             return done
-    if die.botched:
+    if die.botched and found.avoidable:
         done.lines.append("Botched: caught a stage worse.")
+    for _ in range(found.fatigue):
+        lose_fatigue(character, long_term=True)
+    if found.fatigue:
+        done.lines.append(
+            f"{found.fatigue} long-term Fatigue levels lost, regained only when "
+            f"{found.name} abates."
+        )
     character.wounds.diseases.append(caught)
     done.wounds.append(caught.level.lower())
     done.lines.append(disease.describe(caught))
+    if saga is not None and (
+        lost := medicine.lose_eucrasia(character, saga.current_year, found.name)
+    ):
+        done.lines.append(lost)
     return done
 
 

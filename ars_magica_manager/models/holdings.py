@@ -180,7 +180,8 @@ class Possession:
     * item: name, quantity, description.
     * vis_source: name, art, pawns, season (when it is harvested), location,
       physical_form, description.
-    * vis_store (Raw Vis Stores): name, art, pawns, physical_form, where it
+    * vis_store (Raw Vis Stores): name, art, pawns, physical_form, infernal
+      (Infernal vis), where it
       is kept -- location_kind/location_id: the covenant, one of its
       laboratories or one of its characters (none set means the
       covenant) -- and location, a free-text note on where exactly.
@@ -230,6 +231,9 @@ class Possession:
     pawns: int = 0
     season: str = ""  # one of SEASONS
     physical_form: str = ""
+    #: vis_store / vis_source: Infernal vis, tainted by Hell (RoP: The
+    #: Infernal pp. 18-19): more botch dice in casting (rules.casting).
+    infernal: bool = False
     #: vis_source: covered by a Contested (or Indiscreet)
     #: Resource Hook, secured through this year (one story secures it for
     #: five); and by a Dwindling Resource Hook (-10% of its first value a year).

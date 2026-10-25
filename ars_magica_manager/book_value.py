@@ -19,7 +19,7 @@ from dataclasses import dataclass
 
 from . import book_kinds
 from .models import SUPERNATURAL_CATEGORIES, Book, Covenant, Saga
-from .rules import library
+from .rules import library, options
 from .rules.rounding import round_up
 
 SOURCE = "Covenants, Chapter Seven: Library, pp. 84-102"
@@ -212,15 +212,20 @@ def research_level(
     saga: Saga, covenant: Covenant, subject: str, chosen: int, pictorial: bool
 ) -> int:
     """The research bonus on `subject` the `chosen` level would give, with
-    pictorial works or not: one more for them and for a long expert
-    correspondence in the library, at most +5."""
+    pictorial works or not: one more for them; one more for a long expert
+    correspondence (a level up, Covenants p. 90) or a realia collection (up
+    to +1, p. 102) in the library, each kind once, and both only when the
+    troupe's house rule lets them stack (the book doesn't say); at most +5."""
     level = chosen + (1 if pictorial else 0)
-    for book in library_subjects(saga, covenant).get(subject, []):
-        kind = book_kinds.OPUS_TYPES.get(book.opus)
-        if kind is not None and kind.research_level:
-            level += kind.research_level
-            break
-    return min(RESEARCH_MOST, level)
+    kinds = {
+        book.opus
+        for book in library_subjects(saga, covenant).get(subject, [])
+        if book.opus in book_kinds.OPUS_TYPES
+    }
+    aids = sum(book_kinds.OPUS_TYPES[k].research_level for k in kinds)
+    if not options.is_on(saga, options.RESEARCH_AIDS_STACK):
+        aids = min(aids, 1)
+    return min(RESEARCH_MOST, level + aids)
 
 
 def subject_research_text(saga: Saga, covenant: Covenant, subject: str) -> str:

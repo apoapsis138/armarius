@@ -1037,6 +1037,8 @@ def _codex_reader_problems(
     form = book_kinds.PHYSICAL_FORMS.get(book.physical_form)
     if form is not None and form.many_readers:
         return []
+    if book.opus == book_kinds.REALIA:
+        return []  # shared, at a lower Quality (_realia_readers)
     for other in plans_this_season(saga, plan):
         if other.character_id == character.id or other.activity != READ:
             continue
@@ -1120,7 +1122,15 @@ def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> lis
             f"{character.name} can't read: studying a book needs a score in "
             "Artes Liberales (DE p. 378)."
         )
-    if book.type == "Tractatus" and book.id in character.tractatus_read:
+    if book.opus == book_kinds.REALIA and book.type == "Tractatus":
+        studied = character.tractatus_read.count(book.id)
+        if studied >= book.quality:
+            found.append(
+                f"{character.name} has studied {book.name} {studied} "
+                f"time{'s' if studied != 1 else ''}: a realia teaches each "
+                "reader as many times as its Quality (Covenants p. 102)."
+            )
+    elif book.type == "Tractatus" and book.id in character.tractatus_read:
         found.append(
             f"{character.name} has already studied {book.name}: a tractatus "
             "teaches each reader once (DE Ch. 10, Studying Tractatus)."
@@ -1329,6 +1339,9 @@ class Outcome:
     vis_spent: tuple[str, str, int] | None = None
     #: Reading a tractatus: its id, to mark it read.
     tractatus: str | None = None
+    #: That tractatus is a realia: each season studying it is recorded
+    #: (it may be studied as many times as its Quality).
+    realia: bool = False
     #: Reading a summa: its id, to record it was studied (a commentary on
     #: it can then be read).
     summa: str | None = None
@@ -1371,9 +1384,11 @@ def _gain(
     gain_limit: int | None = None,
     bonuses: Sequence[Line] = (),
     year: int | None = None,
+    hermetic_halved: bool = False,
 ) -> XpGain:
     """The xp a season gives in `subject`; `year`, the season's, gives the
-    student's age for the Virtues that read it."""
+    student's age for the Virtues that read it; `hermetic_halved`, a holy
+    magus reading a Hermetic book."""
     kind, name = _split(subject)
     result = season_of_study(
         character,
@@ -1388,6 +1403,7 @@ def _gain(
         age=None
         if year is None
         else character_age(character.background.year_born, year),
+        hermetic_halved=hermetic_halved,
     )
     return XpGain(subject, result, subject_xp(character, subject))
 
@@ -1716,18 +1732,31 @@ def _share(character: Character, plan: SeasonPlan, result: Outcome) -> None:
             )
 
 
+def _fixed_gain(
+    character: Character, subject: str, amount: int, via: str, source: str
+) -> XpGain:
+    """Experience a rule grants as a set number of points, not an Advancement
+    Total: Affinity, Savantism, wounds, a Gain Limit and Master of None leave
+    it alone, and no Virtue shares it (`via` names the rule)."""
+    line = Line(via, amount=amount, source=source)
+    return XpGain(
+        subject,
+        StudyResult(0, amount, [line], []),
+        subject_xp(character, subject),
+        via=via,
+    )
+
+
 def _correspondence(character: Character, subject: str) -> XpGain:
     """A season of useful correspondence: book_kinds.CORRESPONDENCE_XP in
-    its subject, with no Virtue changing it."""
-    kind, name = _split(subject)
-    result = study.season_of_study(
+    its subject, a fixed gain (Covenants p. 90)."""
+    return _fixed_gain(
         character,
-        name,
+        subject,
         book_kinds.CORRESPONDENCE_XP,
-        activity="correspondence",
-        is_art=kind == "art",
+        "Useful correspondence",
+        book_kinds.CORRESPONDENCE_SOURCE,
     )
-    return XpGain(subject, result, subject_xp(character, subject))
 
 
 def _outcome(
@@ -2172,10 +2201,74 @@ def _virtue_problems(
     abilities = [_split(s)[1] for s in subjects if _split(s)[0] == "ability"]
     found = study_virtues.learning_problems(character, abilities, kind)
     if any(_split(s)[0] == "art" for s in subjects):
-        found += study_virtues.presence_problems(
-            character, kind, True, plan.art_present
+        present = plan.art_present or (
+            saga is not None and _realia_present(saga, character, plan)
         )
+        found += study_virtues.presence_problems(character, kind, True, present)
     return found
+
+
+def _realia_present(saga: Saga, character: Character, plan: SeasonPlan) -> bool:
+    """Reading a realia exhibit of hundreds of objects on an Art is studying
+    in the Art's presence, for Study Requirement and Study Bonus, until the
+    reader's score in it reaches book_kinds.REALIA_PRESENCE_ART (Against
+    the Dark p. 61); a smaller realia isn't, since the objects needed grow
+    with the Art (DE p. 145)."""
+    if plan.activity != READ:
+        return False
+    book = next((b for b in saga.books if b.id == plan.book_id), None)
+    if book is None or book.opus != book_kinds.REALIA or not book.exhibit:
+        return False
+    subject = book_subject(book)
+    if subject is None or _split(subject)[0] != "art":
+        return False
+    return score(character, subject) < book_kinds.REALIA_PRESENCE_ART
+
+
+def _reading_lines(
+    saga: Saga, character: Character, plan: SeasonPlan, book: Book, quality: int
+) -> list[Line]:
+    """What adds to a book's Quality as read this season: Study Bonus with
+    the Art present (a realia on it counts), less a shared realia's split."""
+    subject = book_subject(book) or ""
+    present = plan.art_present or _realia_present(saga, character, plan)
+    found = study_virtues.presence_lines(
+        character, _STUDY_KIND[plan.activity], _split(subject)[0] == "art", present
+    )
+    if book.opus == book_kinds.REALIA:
+        found += _realia_shared(saga, plan, book, quality)
+    return found
+
+
+def _realia_shared(
+    saga: Saga, plan: SeasonPlan, book: Book, quality: int
+) -> list[Line]:
+    """What sharing the realia `book` this season takes from its Quality
+    (none when the reader has it alone)."""
+    readers = _realia_readers(saga, plan, book)
+    penalty = book_kinds.realia_sharing_penalty(readers)
+    if not penalty:
+        return []
+    return [
+        Line(
+            f"Realia shared by {readers} readers",
+            amount=-min(penalty, quality),
+            source=book_kinds.SHARED_REALIA_SOURCE,
+        )
+    ]
+
+
+def _realia_readers(saga: Saga, plan: SeasonPlan, book: Book) -> int:
+    """How many study the realia `book` this season, this plan's reader
+    included (Against the Dark p. 59)."""
+    others = {
+        p.character_id
+        for p in plans_this_season(saga, plan)
+        if p.activity == READ
+        and p.book_id == book.id
+        and p.character_id != plan.character_id
+    }
+    return 1 + len(others)
 
 
 def _months(plan: SeasonPlan) -> int:
@@ -2219,9 +2312,8 @@ def _study_outcome(
         quality = library.effective_quality(saga, book)
         assert subject is not None and quality is not None
         limit = book.level if book.type != "Tractatus" else None
-        bonuses = study_virtues.presence_lines(
-            character, kind, _split(subject)[0] == "art", plan.art_present
-        )
+        bonuses = _reading_lines(saga, character, plan, book, quality)
+        result.realia = book.opus == book_kinds.REALIA
         result.gains.append(
             _gain(
                 character,
@@ -2232,6 +2324,9 @@ def _study_outcome(
                 gain_limit=limit,
                 bonuses=bonuses,
                 year=plan.year,
+                hermetic_halved=hybrid.halves_study(
+                    character, book, hybrid.hermetic_source(saga, book)
+                ),
             )
         )
         if book.type == "Tractatus":
@@ -2253,13 +2348,12 @@ def _study_outcome(
         codex = library.codex_of(saga, book)
         if codex is not None and codex.collection == book_kinds.FOLIO:
             result.gains.append(
-                _gain(
+                _fixed_gain(
                     character,
                     ability_subject(book_kinds.FOLIO_LORE),
                     book_kinds.FOLIO_LORE_XP,
-                    "exposure",
-                    0,
-                    year=plan.year,
+                    "A folio's notes on its author",
+                    book_kinds.FOLIO_SOURCE,
                 )
             )
         return

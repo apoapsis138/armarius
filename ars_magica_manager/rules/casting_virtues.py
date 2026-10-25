@@ -29,7 +29,7 @@ from collections.abc import Callable
 
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..models import Character
-from . import lab_virtues
+from . import common_magics, fenicil, house_discoveries, lab_virtues
 from .rounding import round_down
 
 SOURCE = "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, pp. 91-152"
@@ -184,6 +184,9 @@ def reminders(magus: Character) -> list[str]:
             "tools; Spontaneous spells don't (DE p. 241)."
         )
     found += [note(magus) for vf_id, note in NOTES.items() if has(magus, vf_id)]
+    found += common_magics.reminders(magus)
+    found += house_discoveries.reminders(magus)
+    found += fenicil.reminders(magus)
     return found
 
 

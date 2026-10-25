@@ -195,6 +195,11 @@ TRADITION_SYMBOLS: dict[str, Path] = {
         "storm_wizards",
         "hunters",
         "fectores",
+        "franciscans",
+        "cult_of_mercury",
+        "legion_of_mithras",
+        "knights_of_the_green_stone",
+        "matres_et_matrones",
     )
 }
 

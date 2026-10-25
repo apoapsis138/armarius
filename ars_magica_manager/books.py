@@ -30,6 +30,8 @@ from .models import (
     Saga,
     Spell,
 )
+from .rules import hybrid_magic as hybrid
+from .rules import study
 from .rules.library import (
     POOL_LEVELS,
     POOL_POINTS,
@@ -56,6 +58,7 @@ from .rules.library import (
     quality_adjustments,
     subject,
 )
+from .rules.rounding import round_up
 from .tables import Table
 
 
@@ -532,10 +535,29 @@ def _codex_lines(saga: Saga, book: Book) -> list[str]:
     if codex is None:
         return []
     count = len(codex_books(saga, book))
-    return [
+    lines = [
         f"[b]Codex:[/] {escape(codex_label(saga, book))} [dim]({count} books, "
         "one reader a season)[/]"
     ]
+    if codex.collection == book_kinds.FOLIO:
+        lines.append(f"[dim]{escape(folio_text(saga, book))}[/]")
+    return lines
+
+
+def folio_text(saga: Saga, book: Book) -> str:
+    """A folio's size and how it is copied whole (HoH: True Lineages p. 23)."""
+    bound = codex_books(saga, book)
+    size = book_kinds.folio_size(
+        [round_up((level_of(b, saga) or 0) / 5) for b in bound if b.type == "Lab Text"],
+        [b.quality or 0 for b in bound if b.type == "Tractatus"],
+    )
+    return (
+        f"Folio of {size} (Lab Text magnitudes and tractatus Qualities): its "
+        f"Colentes' Magic Theory summed at least {size}. Copied whole at 6 + "
+        "Profession: Scribe points a season (quickly 18 + 3 x, its tractatus "
+        "1 Quality lower and no Order of Hermes Lore) until the points reach "
+        "that Magic Theory."
+    )
 
 
 def _level_text(saga: Saga, book: Book) -> str:
@@ -746,10 +768,9 @@ def _study_lines(saga: Saga, book: Book) -> list[str]:
     """What a season reading the book gives each magus and companion of
     its covenant (rules.study): nothing for a book that isn't a
     summa or tractatus."""
-    from .rules import study
-
+    hermetic = hybrid.hermetic_source(saga, book)
     results = [
-        (c, study.reading(c, book, effective_quality(saga, book)))
+        (c, study.reading(c, book, effective_quality(saga, book), hermetic))
         for c in readers(saga, book)
     ]
     results = [(c, r) for c, r in results if r is not None]

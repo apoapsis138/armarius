@@ -53,6 +53,53 @@ DEFAULTS: tuple[dict[str, str], ...] = (
         "name": "Ruled",
         "text": "The Tribunal rules: {ruling}.",
     },
+    # The Code's penalties (HoH: True Lineages pp. 59-61), paid by the
+    # next Tribunal.
+    {
+        "name": "Damages",
+        "text": "{party} pays {victim} damages of {damages} in vis or "
+        "enchanted devices by the next Tribunal.",
+    },
+    {
+        "name": "Fined (shared)",
+        "text": "{party} pays a fine of {amount} by the next Tribunal: a "
+        "third to {prosecutor}, two thirds to the Tribunal's coffers.",
+    },
+    {
+        "name": "Seasons of service",
+        "text": "{party} serves {seasons} seasons for House Mercere or "
+        "Guernicus: {service}.",
+    },
+    {
+        "name": "Investing items",
+        "text": "{party} invests {items} and delivers them to {recipient} by "
+        "the next Tribunal.",
+    },
+    {
+        "name": "Loss of an apprentice",
+        "text": "{party} surrenders the apprentice {apprentice} at once; "
+        "{prosecutor} has first claim.",
+    },
+    {
+        "name": "Banished",
+        "text": "{party} is banished from the Tribunal and must find another "
+        "Tribunal of residence.",
+    },
+    {
+        "name": "Loss of a familiar",
+        "text": "{party}'s cords to the familiar {familiar} are cut before the "
+        "next Tribunal.",
+    },
+    {
+        "name": "Death of a familiar",
+        "text": "{party}'s familiar {familiar} is put to death before the next "
+        "Tribunal.",
+    },
+    {
+        "name": "Cast out",
+        "text": "{party} is cast out of the Order: {victim} takes a quarter of "
+        "the estate, {prosecutor} a quarter, and the heir the rest.",
+    },
 )
 
 
@@ -109,11 +156,12 @@ def fill(text: str, values: dict[str, Any]) -> str:
 
 def suggested(case: Case, blank: str, term: int | None) -> str:
     """What a blank starts as, from the case: the accused for {party},
-    who brought it for {whom} and {prosecutor}, the term for {years}."""
+    who brought it for {whom}, {prosecutor} and {victim}, the term for
+    {years}."""
     plain = blank.casefold()
     if plain in ("party", "accused", "defendant"):
         return case.against
-    if plain in ("whom", "prosecutor", "plaintiff", "brought by"):
+    if plain in ("whom", "prosecutor", "plaintiff", "brought by", "victim"):
         return case.brought_by
     if plain == YEARS:
         return str(term) if term else ""

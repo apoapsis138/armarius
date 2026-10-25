@@ -198,3 +198,6 @@ class ScoredTrait:
     #: Reputations only: noteworthy deeds counted toward the next level,
     #: each an experience point (rules.confidence.add_deeds).
     deeds: int = 0
+    #: Reputations only: the bad Reputation this new one is replacing, by
+    #: name ("" for none; rules.confidence.count_replacing).
+    replaces: str = ""

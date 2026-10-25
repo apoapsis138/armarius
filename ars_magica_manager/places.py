@@ -23,8 +23,8 @@ A place may be marked a ruined covenant (a fallen covenant's site,
 ruins.py): it shows a ruin, and can be founded anew.
 
 Kept in Neighbour.details: "ruined", "aura", "tethers", "status", "known",
-"claimed_by", "levels" (each {"name", "realm", "aura", "see", "enter",
-"notes"}, the first being Level 1, just above the surface) and "effects"
+"claimed_by", "levels" (each {"name", "realm", "aura", "kind", "see",
+"enter", "notes"}, the first being Level 1, just above the surface) and "effects"
 (each {"what", "amount", "target", "where", "note"}). Where a record is:
 its place_id and place_level (0 for the surface).
 
@@ -56,15 +56,18 @@ from .rules import senses
 from .rules.sites import (
     EFFECT_TYPES,
     PLACE,
+    REGIO_KINDS,
     AuraEffect,
     RegioLevel,
     all_places,
     aura_at,
     effects,
     is_place,
+    kind_effects,
     levels,
     place,
     realm_of,
+    regio_kind,
     whole_number,
 )
 from .sections import EFFECTS_SECTION, LEVELS_SECTION
@@ -351,10 +354,16 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
         for index, entry in enumerate(shown, start=1)
         if parse_roll(entry.get("see", "")) is not None
     ]
+    hazards = [
+        f"Level {index}: {text}"
+        for index, entry in enumerate(shown, start=1)
+        if (text := kind_effects(entry))
+    ]
     return [
         Fact("Aura", aura_text(place)),
         Fact("Regio", regio),
         *([Fact("Can see", "; ".join(seen))] if seen else []),
+        *([Fact("Within", "; ".join(hazards))] if hazards else []),
         Fact("Gazetteer", status),
         Fact(
             "Claimed by",
@@ -450,10 +459,13 @@ def levels_grid(saga: Saga, place: Neighbour) -> Grid:
     keys: list[int | None] = []  # deepest first, so each row's own index
     for index in reversed(range(len(shown))):
         entry = shown[index]
+        kind = regio_kind(entry)
         rows.append(
             [
                 f"Level {index + 1}",
-                entry.get("name", ""),
+                f"{entry.get('name', '')} ({kind.lower()})"
+                if kind
+                else entry.get("name", ""),
                 aura_text(place, index + 1),
                 see_in_text(place, index + 1),
                 entry.get("enter", ""),
@@ -501,6 +513,21 @@ def level_fields(
             "Aura",
             "int",
             e.get("aura", whole_number(place.details.get("aura")) + 1),
+        ),
+        DialogField(
+            "kind",
+            "Kind",
+            "select",
+            e.get("kind", ""),
+            options=[("None", "")]
+            + [
+                (f"{kind} ({realm})", kind)
+                for realm, kinds in REGIO_KINDS.items()
+                for kind in kinds
+            ],
+            hint="A Divine regio is terrestrial or celestial (RoP: The Divine "
+            "p. 13), an Infernal one Tartaran or Abyssal (RoP: The Infernal "
+            "p. 16); a kind not of its realm is ignored.",
         ),
         DialogField(
             "see",

@@ -314,8 +314,8 @@ def test_romaic_greek_reads_classical_greek_at_minus_two():
     )
     assert languages.penalty("Living Language: Vlach", "Dead Language: Latin") == 3
     assert languages.penalty("Living Language: High German", "Low German") == 2
-    assert languages.penalty("Living Language: Low German", "West Norse", "Saxon") == 2
-    assert languages.penalty("Living Language: Low German", "West Norse") == 3
+    assert languages.penalty("Living Language: Low German", "East Norse", "Saxon") == 2
+    assert languages.penalty("Living Language: Low German", "East Norse") == 3
     assert languages.penalty("Living Language: Magyar", "Latin") is None
 
 
@@ -446,7 +446,8 @@ def test_the_transylvania_pack_builds_the_chronicle_labs_and_zenodochium():
         d.name: [enchantment.modified_level(d, e) for e in d.effects]
         for d in saga.enchanted_devices
     }
-    assert levels["The Hippocratic Staff"] == [34, 34]
+    # One Recovery effect: the errata to pp. 98-99 cut the Disease one.
+    assert levels["The Hippocratic Staff"] == [34]
     assert levels["The Ankh of Moving Forward"] == [60]
     assert levels["The Bowl of the Honest Traveler"] == [29]
     tablets = {b.name: b.level for b in saga.books if b.type == "Casting Tablet"}

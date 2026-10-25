@@ -23,6 +23,7 @@ from ..commands import Command, Confirm, Form, Picked, Refuse, SectionOps
 from ..form_spec import EMPHASIS_HINT, ChoiceReads, DialogField, attr, read_for_choice
 from ..markup import escape
 from ..models import (
+    REALMS,
     SEASONS,
     Character,
     Covenant,
@@ -45,6 +46,7 @@ from ..rules import (
     supplement_seasons,
 )
 from ..rules import supplement_work as sw
+from ..rules import tradition_seasons as ts
 from ..seasons import pairs, repeat
 from ..seasons import plans as season_plans_text
 from ..seasons.projection import as_then
@@ -258,6 +260,7 @@ _SEASON_READS: ChoiceReads = (
             laboratory_seasons.ASSIST,
             "undergo_initiation",
             "record_lectures",
+            "make_wondrous_item",
         ),
         lambda v: {"teacher_id": v.get("teacher_id")},
     ),
@@ -345,6 +348,7 @@ _BONUS_KEYS = {
     "venture_lp": ("merchant_venture",),
     "elements": ("pilgrimage",),
     "script_bonus": ("undergo_initiation",),
+    "sabbat_helpers": ("open_tradition_gift",),
 }
 
 
@@ -422,8 +426,21 @@ def _supplement_plan_values(
         found["variation_bonus"] = (
             values.get("variation_bonus") or 0 if found["script_variation"] else 0
         )
+        found["hedge_script"] = values.get("hedge_script") or ""
+        found["knows_power"] = bool(values.get("knows_power"))
+        experimental = bool(values.get("experimental_script"))
+        found["experimental_script"] = experimental
+        found["risk"] = values.get("script_risk") or 0 if experimental else 0
+        found["script_sympathy"] = (
+            values.get("script_sympathy") or 0 if experimental else 0
+        )
     if activity == "inspeximus":
         found["book_id"] = values.get("summa_id")
+    if activity == "open_tradition_gift":
+        found["site_aura"] = values.get("sabbat_aura")
+    if activity == "make_wondrous_item":
+        found["site_aura"] = values.get("workshop_aura")
+        found["site_realm"] = values.get("workshop_realm") or ""
     return found
 
 
@@ -676,6 +693,44 @@ def _supplement_bonus_fields(
             "int",
             bonus,
             show_if=activity_is("undergo_initiation"),
+            hint="At a folk witches' sabbat, add +1 for each helping witch with "
+            "the Ability granted, at most the Magic aura (Hedge Magic RE p. 46).",
+        ),
+        DialogField(
+            "sabbat_helpers",
+            "Sabbat helpers",
+            "int",
+            bonus,
+            show_if=activity_is("open_tradition_gift"),
+            hint="Folk witches: Gifted witches helping at a sabbat, +1 each, at "
+            "most the Magic aura at the sabbat's site (Hedge Magic RE p. 46).",
+        ),
+        DialogField(
+            "sabbat_aura",
+            "Sabbat aura (Magic)",
+            "optint",
+            plan.site_aura if plan else None,
+            show_if=activity_is("open_tradition_gift"),
+            hint="The Magic aura where the sabbat is held: no more helpers "
+            "count than its strength (Hedge Magic RE pp. 45-46).",
+        ),
+        DialogField(
+            "workshop_aura",
+            "Aura where he works",
+            "optint",
+            plan.site_aura if plan else None,
+            show_if=activity_is("make_wondrous_item"),
+            hint="The aura of the workshop where the item is made, which "
+            "adds by the Realm Interaction table (City & Guild p. 72); blank "
+            "for none.",
+        ),
+        DialogField(
+            "workshop_realm",
+            "Its realm",
+            "select",
+            (plan.site_realm or "Magic") if plan else "Magic",
+            options=[(r, r) for r in REALMS],
+            show_if=activity_is("make_wondrous_item"),
         ),
     ]
 
@@ -730,6 +785,7 @@ def _supplement_title_fields(
             title,
             placeholder="e.g. Mercere Lore",
             show_if=activity_is("undergo_initiation"),
+            hint="Not needed with a hedge Script: its tradition's Lore is used.",
         ),
     ]
 
@@ -787,6 +843,69 @@ def _initiation_fields(
                 and bool(values.get("script_variation"))
             ),
             hint="To the Script bonus; negative when removing a component.",
+        ),
+        *_script_fields(saga, character, plan, activity_is),
+    ]
+
+
+def _script_fields(
+    saga: Saga, character: Character, plan: SeasonPlan | None, activity_is: ActivityIs
+) -> list[DialogField]:
+    """An Initiation's Script: a hedge tradition's, whether the Mystagogue
+    knows the power, and an experimental Script's risk and sympathy."""
+    initiation = activity_is("undergo_initiation")
+
+    def experimental(values: dict[str, Any]) -> bool:
+        return initiation(values) and bool(values.get("experimental_script"))
+
+    return [
+        DialogField(
+            "hedge_script",
+            "Hedge Script",
+            "select",
+            (plan.hedge_script if plan else "") or None,
+            options=ts.script_options(saga, character),
+            allow_blank=True,
+            placeholder="(none: a Hermetic Mystery)",
+            show_if=initiation,
+            hint="A hedge tradition's Script: its Ease Factor, Characteristic "
+            "and Lore are used, and the Script bonus above is added to its own.",
+        ),
+        DialogField(
+            "knows_power",
+            "Mystagogue knows the power",
+            "check",
+            bool(plan and plan.knows_power),
+            show_if=initiation,
+            hint="Counted anyway when he has the Virtue initiated; otherwise "
+            "the Target rises (18 / 30, or a hedge Script's +3 / +9).",
+        ),
+        DialogField(
+            "experimental_script",
+            "Experimental Script",
+            "check",
+            bool(plan and plan.experimental_script),
+            show_if=initiation,
+            hint="No Script, or one that falls short: the Script bonus above is "
+            "the proposed rite's; rolls the Extraordinary Results chart and "
+            "the rite's validity.",
+        ),
+        DialogField(
+            "script_risk",
+            "Risk (0-3)",
+            "int",
+            plan.risk if plan and plan.experimental_script else 0,
+            show_if=experimental,
+            hint="Added to the chart roll, the validity roll and the total.",
+        ),
+        DialogField(
+            "script_sympathy",
+            "Sympathy bonus",
+            "int",
+            plan.script_sympathy if plan else 0,
+            show_if=experimental,
+            hint="The storyguide's, for how well the rite fits the Virtue "
+            "(-5 to +5); it doesn't raise the validity roll's Ease Factor.",
         ),
     ]
 
@@ -1068,10 +1187,12 @@ def study_fields(
                 laboratory_seasons.ASSIST,
                 "undergo_initiation",
                 "record_lectures",
+                "make_wondrous_item",
             ),
             hint="A teacher plans Teach for the same season; the magus you "
             "assist plans lab work. An Initiation's Mystagogue: none for a "
-            "self-initiation.",
+            "self-initiation. A wondrous item's one assistant (half their "
+            "Craft).",
         ),
     ]
     return [f for f in fields if f.key not in hidden]

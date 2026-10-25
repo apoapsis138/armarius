@@ -351,7 +351,7 @@ PROFILES: dict[str, Profile] = {
     ),
     "eric_ribecus": P(
         strong="pre com str",
-        native="West Norse",
+        native="East Norse",
         arts={"Aq": 4, "Au": 4, "Im": 3, "Cr": 2, "Re": 2},
         abilities={
             "Single Weapon": (3, "sword"),
@@ -430,7 +430,7 @@ PROFILES: dict[str, Profile] = {
     ),
     "estrid_danesson": P(
         strong="pre sta com",
-        native="West Norse",
+        native="East Norse",
         arts={"Au": 5, "Aq": 5, "Re": 3, "In": 2},
         abilities={
             "Profession: Sailor": (4, "the Baltic"),
@@ -753,7 +753,7 @@ PROFILES: dict[str, Profile] = {
     # -- Heorot --
     "signum_irruptus": P(
         strong="int sta",
-        native="West Norse",
+        native="East Norse",
         arts={"In": 4, "An": 4, "Co": 3, "Te": 3, "Vi": 2},
         abilities={
             "Magic Lore": (3, "trolls"),
@@ -770,7 +770,7 @@ PROFILES: dict[str, Profile] = {
             "Artes Liberales": (2, "history"),
             "Infernal Lore": 1,
             "Dominion Lore": 1,
-            "Living Language: West Norse": 2,
+            "Living Language: East Norse": 2,
         },
         virtues=["Corpse Magic", "Obsessed (Minor)", "Dutybound", "Weak Parens"],
     ),
@@ -779,7 +779,7 @@ PROFILES: dict[str, Profile] = {
         arts={"Vi": 4, "In": 3, "Re": 3, "Me": 2},
         abilities={
             "Magic Lore": (3, "Norse wizards"),
-            "Living Language: West Norse": 2,
+            "Living Language: East Norse": 2,
         },
         virtues=["Skilled Parens", "Mentor", "Ambitious (Minor)", "Fear"],
     ),
@@ -803,7 +803,7 @@ PROFILES: dict[str, Profile] = {
     ),
     "jon_arnsson": P(
         strong="sta int",
-        native="West Norse",
+        native="East Norse",
         arts={"An": 5, "Co": 4, "Re": 4, "Vi": 3, "Te": 2},
         abilities={
             "Heartbeast": (5, "the lion"),

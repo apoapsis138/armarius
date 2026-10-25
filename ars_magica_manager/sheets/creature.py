@@ -12,7 +12,14 @@ from ..grids import Grid
 from ..markup import escape
 from ..models import REALMS, Creature, Saga
 from ..references import Fact
-from ..rules import creature_build, faerie_build, sites
+from ..rules import (
+    creature_build,
+    faerie_build,
+    infernal_build,
+    jinn_build,
+    sites,
+    spirit_build,
+)
 from . import character as cs
 
 #: The Characteristics as a stat block abbreviates them, in its order.
@@ -147,6 +154,24 @@ def build_facts(creature: Creature) -> list[Fact]:
     faerie = faerie_build.problems(creature)
     if faerie:
         found.append(Fact("Faerie design", " ".join(faerie)))
+    infernal = infernal_build.problems(creature)
+    if infernal:
+        found.append(Fact("Infernal design", " ".join(infernal)))
+    if infernal_build.order_of(creature) is not None:
+        demon = infernal_build.notes(creature)
+        found.append(Fact("As a demon", "; ".join(demon) + "."))
+    spirit = spirit_build.problems(creature)
+    if spirit:
+        found.append(Fact("Spirit design", " ".join(spirit)))
+    spirit_notes = spirit_build.notes(creature)
+    if spirit_notes:
+        found.append(Fact("As a spirit", "; ".join(spirit_notes) + "."))
+    jinni = jinn_build.problems(creature)
+    if jinni:
+        found.append(Fact("Jinni design", " ".join(jinni)))
+    jinni_notes = jinn_build.notes(creature)
+    if jinni_notes:
+        found.append(Fact("As a jinni", "; ".join(jinni_notes) + "."))
     return found
 
 

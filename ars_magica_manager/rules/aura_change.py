@@ -23,6 +23,14 @@ change" option on: one strategy for each realm that has a rule.
   against 3 + the stronger aura keeps it; against 6 + that aura raises it
   by 1.
 
+- **Faerie** (Realms of Power: Faerie pp. 14-16). The aura is the
+  glamour of the faerie that claims the place: its Faerie Might / 5; 2 +
+  the higher Might / 5 (at most 9) while a second faerie contests it; a
+  steward's Might / 5 while the presiding faerie is away. Each season of
+  vis extraction the faerie can't prevent (no bargain with it) lowers it
+  by 1 until the faerie gets redress. A traveling faerie takes its aura
+  with it.
+
 Each strategy answers `year(saga, place, year, rng)` with an AuraYear (or
 None): the year's reckoning, the place's details to set, and a line for
 the place's Diary. The Winter world turn asks it and the storyguide ticks
@@ -36,7 +44,9 @@ it), "aura_adjust" (this
 year's botches and anything else, typed), "aura_latent" (+3 or -3 carried
 from a 9), "aura_botch_dice"; for an Infernal aura "around" and
 "around_realm" (the stronger aura it sits in), "maintained" and
-"eroding_since" (the year its erosion clock started). Older saves' "raising"
+"eroding_since" (the year its erosion clock started); for a Faerie aura
+"presiding", "contesting" and "steward" (creature ids), "presiding_away",
+"vis_bargain" and "glamour_lost" (the points extraction has cost it). Older saves' "raising"
 reads as the typed adjustment and "focus_gone" as the erosion clock.
 
 Pattern: Strategy, one per realm, kept in a dict the way the activity
@@ -50,14 +60,16 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Protocol, TypedDict
 
-from ..models import Neighbour, Saga
+from ..models import Creature, Neighbour, Saga
 from . import activities, dice, lab_seasons, options, sites, study
+from .rounding import round_down
 
 MAGIC_SOURCE = "Realms of Power: Magic, Chapter Two: Magic Auras, pp. 7-12"
 INFERNAL_SOURCE = (
     "Realms of Power: The Infernal, Chapter One: Infernal Auras in Play, pp. 10-12"
 )
-SOURCE = f"{MAGIC_SOURCE}; {INFERNAL_SOURCE}"
+FAERIE_SOURCE = "Realms of Power: Faerie, Chapter One: Faerie Auras, pp. 14-16"
+SOURCE = f"{MAGIC_SOURCE}; {INFERNAL_SOURCE}; {FAERIE_SOURCE}"
 
 #: The saga option that turns this on (rules.options).
 OPTION = "aura_change"
@@ -441,7 +453,93 @@ class InfernalAura:
         )
 
 
-STRATEGIES: dict[str, Strategy] = {"Magic": MagicAura(), "Infernal": InfernalAura()}
+# -- Faerie --
+
+#: A faerie aura where two faeries' glamours clash: 2 + the higher Might
+#: / 5, at most 9 (RoP: Faerie p. 14).
+CLASH_BONUS, CLASH_LIMIT = 2, 9
+
+
+def _faerie(saga: Saga, place: Neighbour, key: str) -> Creature | None:
+    found = saga.creature(place.details.get(key))
+    return found if found is not None and found.realm == "Faerie" else None
+
+
+def glamour_aura(
+    saga: Saga, place: Neighbour, lost: int | None = None
+) -> tuple[int, str] | None:
+    """The aura the faeries' glamour gives the place, and why: the
+    presiding faerie's Might / 5; 2 + the higher Might / 5 (at most 9)
+    while another contests it; the steward's Might / 5 while the presiding
+    faerie is away; less 1 for each extraction of vis it couldn't prevent,
+    until it gets redress (RoP: Faerie pp. 14-16). None when no faerie
+    presides."""
+    presiding = _faerie(saga, place, "presiding")
+    if presiding is None:
+        return None
+    rival = _faerie(saga, place, "contesting")
+    steward = _faerie(saga, place, "steward")
+    if steward is not None and place.details.get("presiding_away"):
+        aura, why = round_down(steward.might / 5), f"{steward.name}, its steward"
+    elif rival is not None:
+        top = max(presiding.might, rival.might)
+        aura = min(CLASH_LIMIT, CLASH_BONUS + round_down(top / 5))
+        why = f"{presiding.name} and {rival.name} contesting it"
+    else:
+        aura, why = round_down(presiding.might / 5), presiding.name
+    if lost is None:
+        lost = number(place.details.get("glamour_lost"))
+    if lost:
+        why += f", {lost} lost to vis taken"
+    return max(0, aura - lost), why
+
+
+class FaerieAura:
+    """Realms of Power: Faerie's aura, which follows the glamour of the
+    faerie that claims the place (pp. 14-16)."""
+
+    def year(
+        self, saga: Saga, place: Neighbour, year: int, rng: random.Random
+    ) -> AuraYear | None:
+        if glamour_aura(saga, place) is None:
+            return None
+        sets: list[tuple[list[Any], Any]] = []
+        lines: list[str] = []
+        _, extracted = _season_counts(saga, place, year)
+        if extracted and not place.details.get("vis_bargain"):
+            lost = number(place.details.get("glamour_lost")) + extracted
+            sets.append((["glamour_lost"], lost))
+            lines.append(
+                f"{extracted} season(s) of vis extraction the faerie couldn't "
+                "prevent: the aura falls by 1 each, until it gets redress (p. 15)."
+            )
+            found = glamour_aura(saga, place, lost)
+        else:
+            found = glamour_aura(saga, place)
+        if found is None:
+            return None
+        aura, why = found
+        current, path = _top(place)
+        if aura == current and not sets:
+            return None
+        lines.insert(0, f"Its glamour: {why}, aura {aura}.")
+        if aura != current:
+            sets.append((path, aura))
+        return AuraYear(
+            f"{place.name}: Faerie aura {current} → {aura}"
+            if aura != current
+            else f"{place.name}: Faerie aura {aura}",
+            lines,
+            sets,
+            f"The faerie aura follows its glamour: {aura} ({why}).",
+        )
+
+
+STRATEGIES: dict[str, Strategy] = {
+    "Magic": MagicAura(),
+    "Infernal": InfernalAura(),
+    "Faerie": FaerieAura(),
+}
 
 
 def summary(saga: Saga, place: Neighbour) -> str:
@@ -478,6 +576,18 @@ def summary(saga: Saga, place: Neighbour) -> str:
         else:
             state = "Dominant: it doesn't erode"
         return f"{state}; a corruption roll keeps it at {keep}, raises it at {rise}"
+    if realm == "Faerie":
+        found = glamour_aura(saga, place)
+        if found is None:
+            return (
+                "No faerie presides: a faerie's glamour gives an aura of its "
+                "Might / 5 (RoP: Faerie p. 14)"
+            )
+        aura, why = found
+        return (
+            f"Its glamour gives {aura} ({why}); a faerie that travels takes its "
+            "aura with it (p. 15)"
+        )
     return ""
 
 

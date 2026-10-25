@@ -96,7 +96,7 @@ The Activity list offers what this character may do. Activities marked "magi" ar
 - **Assist in a laboratory:** helping a magus with the lab work they have planned.
 - **Set up a new laboratory (magi):** for a magus with no laboratory yet, under Order & covenant. **Laboratory's name** names it (blank: "(name)'s laboratory"). It needs Magic Theory 3 and a covenant: when the season is applied the laboratory is made in the magus's covenant, theirs, with the Basic Flaw (-3 General Quality), and Advance Season asks whether they would like to spend the next season finishing it (see [A new laboratory](help:advance-new-lab)). Exposure in Magic Theory.
 - **Take over the laboratory (magi; Covenants):** under Order & covenant, for a laboratory with no owner, chosen in **Laboratory** (those in the magus's covenant first). It is lab work in that laboratory, rolled like refining: when the season is applied the laboratory becomes the magus's (any laboratory they had is left without an owner), its Refinement drops to at most their Magic Theory - 3, and a Perception + Magic Theory roll against 3 x the old Refinement decides whether the Predecessor's arrangements remain (Covenants, Chapter Nine: Laboratories, Taking Over a Laboratory). A laboratory with an owner can't be chosen. Exposure in Magic Theory.
-- **A hedge tradition's seasons (its members only):** Open a student's Gift to a tradition, and the tradition's own work (Refining, brewing a potion or making a fetish, binding a familiar, inventing a gruagach spell or enchanting a tattoo, inventing a charm or making an amulet, inventing rune scripts). Opening needs a Gifted master Opened to the tradition and a Gifted **Student**: the master's Opening Total is set against twice the student's Supernatural Abilities and Arts (+12 if his Gift was Opened before); with none it always works, up to twice that the student is Opened but loses his old powers (noted in the Diary, for you to remove), and beyond it he keeps them (Hedge Magic Revised Edition p. 8). An Amazon needs twice the Ease Factor to Open her apprentice and four times to keep her powers, and the Arts of any other tradition are always lost (Rival Magic p. 30); between twice and four times the app has her powers lost, as Rival Magic's own band reads, not the general rule's "more than twice keeps". Opening a Hermetic apprentice's Arts when a non-Hermetic tradition already Opened the Gift needs 30 more on the Intellego Vim Lab Total (Rival Magic p. 6). A hedge Initiation's Ease Factor rises by 3 for a Minor Virtue, 9 for a Major, when the Mystagogue doesn't have the power (Hedge Magic Revised Edition p. 13). When the season is applied the student joins the tradition with its Arts at 0, the Virtues the Opening gives, and, where the master is below 2 in one of its Arts, the tradition's Flaw for it (the vitkir's Minor Magical Deficiency; for the others the Diary names the Arts and the troupe picks the Flaws). A tradition's own work gives Exposure in the Art or Ability chosen in **Experience in**, and the Diary notes its Lab Total; it counts as a companion's working season. The tradition's Arts can't be practised where its book says so (the gruagachan, learned magicians, elementalists and vitkir). See [A tradition's Seasons](help:tradition-seasons).
+- **A hedge tradition's seasons (its members only):** Open a student's Gift to a tradition, and the tradition's own work (Refining, brewing a potion or making a fetish, binding a familiar, inventing a gruagach spell or enchanting a tattoo, inventing a charm or making an amulet, inventing rune scripts). Opening needs a Gifted master Opened to the tradition and a Gifted **Student**: the master's Opening Total is set against twice the student's Supernatural Abilities and Arts (+12 if his Gift was Opened before); with none it always works, up to twice that the student is Opened but loses his old powers (noted in the Diary, for you to remove), and beyond it he keeps them (Hedge Magic Revised Edition p. 8). An Amazon needs twice the Ease Factor to Open her apprentice and four times to keep her powers, and the Arts of any other tradition are always lost (Rival Magic p. 30); between twice and four times the app has her powers lost, as Rival Magic's own band reads, not the general rule's "more than twice keeps". Opening a Hermetic apprentice's Arts when a non-Hermetic tradition already Opened the Gift needs 30 more on the Intellego Vim Lab Total (Rival Magic p. 6). A hedge Initiation's Ease Factor rises by 3 for a Minor Virtue, 9 for a Major, when the Mystagogue doesn't have the power (Hedge Magic Revised Edition p. 13). Plan it as Undergo an Initiation with the Hedge Script chosen; tick Mystagogue knows the power when he has it as an Ability rather than a Virtue. An unGifted Initiate needs an Ordeal and gains nothing from past Ordeals, and an unGifted Mystagogue must know the power (p. 14). When the season is applied the student joins the tradition with its Arts at 0, the Virtues the Opening gives, and, where the master is below 2 in one of its Arts, the tradition's Flaw for it (the vitkir's Minor Magical Deficiency; for the others the Diary names the Arts and the troupe picks the Flaws). A tradition's own work gives Exposure in the Art or Ability chosen in **Experience in**, and the Diary notes its Lab Total; it counts as a companion's working season. The tradition's Arts can't be practised where its book says so (the gruagachan, learned magicians, elementalists and vitkir). See [A tradition's Seasons](help:tradition-seasons).
 - **Undergo an Initiation:** the Initiate's season of a Mystery Initiation. **Teacher / master** is the Mystagogue (none for a self-initiation); give the Mystagogue's Lore and the Script bonus (every component, the Ordeal's +3, +6 or +9 included), and any variation of the Script. **Virtue initiated** opens
 <!-- tui -->
 the Virtues & Flaws picker, which asks for anything the entry names (an Affinity's Art); Delete clears a choice.
@@ -106,6 +106,9 @@ a list of Virtues to choose from, which asks for anything the entry names (an Af
 <!-- /gui -->
 **Ordeal** says what the Ordeal costs, if anything: a Flaw gained (chosen in the picker), one of the Initiate's Minor or Major Virtues lost, or one of their Minor Flaws raised to a related Major Flaw. Its size follows: a Minor Flaw or Virtue is a Minor Ordeal, a Major one a Major Ordeal, a raised Flaw a Medium one. The Initiation succeeds when the Mystagogue's Presence + Lore + Script bonus reaches 15 for a Minor Virtue or 21 for a Major (18 or 30 when the Mystagogue lacks it), less the largest reduction among the Initiate's past Ordeals; the Initiate needs the Lore at 1 unless it is their own House's. See [How to initiate a character into a Mystery](help:guide-initiation).
 - **Activities from the supplements**, such as Study a significato, Library research or Act as Mystagogue. Library research shows the roll's total before the die: Intelligence + the Ability + the better of the covenant library's research bonus for it and its best encyclopedia's.
+- **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs). Care of Souls stays a priest's (p. 28).
+- **Set points:** Useful correspondence's 1 xp, and the 1 xp in Organization Lore: Order of Hermes for each book read from a folio, are set points (Covenants p. 90; Houses of Hermes: True Lineages p. 23): no Affinity, Savantism or wound halves or multiplies them, and Master of None and Secondary Insight ignore them. **Study a realia collection** is for one outside the library, such as an exhibit at Tablinum; one the covenant owns is a book of the Realia kind (see [Books](help:section-lib-books)). **Study another artist's work**: Source Quality is half the work's Aesthetic Quality, and each work is studied once, like a tractatus (Art & Academe p. 126, with Atlas Games' errata).
+- **Make a wondrous item:** the Workshop Total adds the aura's modifier: the aura where the craftsman works (enter it, and its realm, in **Aura where he works**; blank counts none), by the Realm Interaction table for the realm his Touched by (Realm) names (Faerie in a Magic aura adds half, Divine nothing; City & Guild p. 72, DE pp. 410-411). The Virtue must name Magic, Faerie, Divine or Infernal (p. 71), or the season says so. Choose the one assistant in the Teacher / master field: half their Craft is added (City & Guild p. 72); count no other help in Other. A Mythic Farrier (Grogs p. 76) makes wondrous horseshoes the same way, with Intelligence or Dexterity + Craft: Farrier, in one Form, their power on the horse or the ground it treads; name his realm on the Virtue (most likely Magic or Faerie, Infernal possible).
 - **Other:** anything else. It is written in the Diary with your notes, and no experience is worked out for it; say in Notes what the season is spent on.
 
 The rules are those of Ars Magica Definitive Edition, Chapter 10: Long-Term Events (Exposure, Practice, Adventure, Books, Teaching, Training, Vis and Distractions); each activity's rule is cited under the plan in the character's This Season.
@@ -328,14 +331,19 @@ The steps run in a fixed order:
   magi ticked present can speak at a hearing: a proxy carries a vote,
   never a voice. Saving it opens the meeting; cancelling holds none.
 - **Opening and the oaths**: where it is held, how many days it lasts
-  (3 unless you say otherwise) and the day each case and motion is
-  heard.
+  and the day each case and motion is heard. A meeting lasts as many
+  days as its Tribunal's customs give: Hibernia's seven (The Contested
+  Isle p. 32), three elsewhere; **Days** on the Opening changes it.
 - **The Hermetic Assembly**, on the first day under the Theban customs,
   in two steps. **The Assembly's decrees**: the principal phyle governing the meeting
   (the next in turn, Ionian, Aegean, Kretan, Propontian, unless you
   choose another); a decree of citizenship for each metoikos, making
   them a polites; a decree of contrition for each polites with a shard,
-  taking one away; and a decree of defamation against a polites, which
+  taking one away (it asks the reparation: what the magus offers, and
+  its vis in pawns of an Art, which leave his own vis for the Tribunal's
+  treasury, as many as he has, when the decree is accepted; The Sundered
+  Eagle p. 33; holding the step again gives them back first, and the
+  minutes name each reparation); and a decree of defamation against a polites, which
   if upheld gives the accused a shard and if rejected gives the one who
   brought it a shard. **The ostrakismos**: the logothete reads every
   polites holding a shard, and the one on the most sherds (or no one)
@@ -442,7 +450,13 @@ The steps run in a fixed order:
   until it is debated again". A {years} blank sets the term. The
   templates are the saga's own, kept on Edit Saga ([the
   saga](help:saga), Ruling templates), where you can add, change and remove them; a blank
-  is any word in braces.
+  is any word in braces. They include the Code's penalties (Houses of
+  Hermes: True Lineages pp. 59-61): Damages, a fine shared a third to
+  the prosecutor and two thirds to the Tribunal's coffers, Seasons of
+  service, Investing items, Loss of an apprentice, Banished, Loss of a
+  familiar, Death of a familiar, and Cast out (the estate a quarter to
+  the victim, a quarter to the prosecutor, the rest to the heir). The
+  Wizard's March itself, the hunt, is not worked out.
 - **Treasury and vis**: the treasury as it stands and the loans that
   fall due this year.
 - **The next host, by lot**, under Normandy's customs: a covenant of
@@ -468,7 +482,12 @@ The steps run in a fixed order:
   Sketch character at their master's covenant, with their master as
   parens, and the minutes list where every child went. Once given,
   holding this step again changes only its note. A magus has an
-  apprentice when someone not yet a magus names them as parens.
+  apprentice when someone not yet a magus names them as parens. The book
+  says only that the Coill Trí owe seven Gifted children and that a
+  child offered is sometimes turned away (The Contested Isle pp.
+  113-114): the three each túath offers, the odds of each Gift (14, 3
+  and 3 in twenty, one in twenty no true Gift) and the bidding are this
+  app's own.
 - **The Ceremony of Propitiation**, under the Theban customs, before
   the closing: the archon casts the ancient Ritual from its Casting
   Tablet at eight pawns of Creo or Vim, taken from the treasury; then
@@ -669,7 +688,7 @@ A hedge wizard picks their tradition on Concept with **Choose tradition** (once 
 ### The Grogs Aging Chart
 <!-- help: creation-worksheet-aging-chart -->
 
-A character older than 35 makes an aging roll for each year from 35 before play: **Roll pre-play aging** makes them all, each written in the Diary. While the Grogs book is in play, a grog can instead **Use the Grogs Aging Chart**, on the Finishing Touches step: the expected Aging Points for each decade, from the chart in Grogs, Chapter 5 (Aging, the Easy Way, pp. 65-66).
+A character older than 35 makes an aging roll for each year from 35 before play: **Roll pre-play aging** makes them all, each written in the Diary. While the Grogs book is in play, a grog can instead **Use the Grogs Aging Chart** (a companion too, and a grog promoted from a Line or Sketch, not only a new grog; Grogs p. 65), on the Finishing Touches step: the expected Aging Points for each decade, from the chart in Grogs, Chapter 5 (Aging, the Easy Way, pp. 65-66).
 
 **You type:** the kind of aging, Mild, Average or Harsh (a grog with Mild Aging can only take mild aging, one with Poor Living Conditions only harsh); whether to take the chart's crises (off at first: the book suggests ignoring them for a new character); and, for harsh or mild aging, whether it moves the Ability cap. The line under the form shows each decade and the total as you choose.
 

@@ -34,6 +34,7 @@ from .. import book_kinds, catalog
 from ..models import Book, Character
 from . import animal_grogs, effects, lab_virtues, scores, xp
 from . import creation_access as access
+from . import hybrid_magic as hybrid
 from .breakdown import Line
 from .derived import wound_penalty
 from .lab import ability_score
@@ -284,12 +285,14 @@ def season_of_study(
     mastery: bool = False,
     bonuses: Sequence[Line] = (),
     age: int | None = None,
+    hermetic_halved: bool = False,
 ) -> StudyResult:
     """One season studying `subject` (an Art or Ability name, or a spell's
     id for its Mastery, `mastery`) from a source of `source_quality`, for
     `activity` (a study_total activity); `bonuses` add to the Source
     Quality (Study Bonus's +2); `age`, when known, is read by Blood of the
-    Nephilim. An animal grog learns a human Language at
+    Nephilim; `hermetic_halved`: a holy magus reading a Hermetic book,
+    whose total is halved (hybrid_magic.halves_study). An animal grog learns a human Language at
     its own Source Quality, and never raises its kind's Language
     (rules.animal_grogs)."""
     if not is_art and animal_grogs.own_language(student, subject):
@@ -348,6 +351,16 @@ def season_of_study(
         halved = round_down(total / 2)
         lines.append(
             Line("Wounded (-3 to -5)", amount=halved - total, source=WOUND_SOURCE)
+        )
+        total = halved
+    if hermetic_halved:
+        halved = round_down(total / 2)
+        lines.append(
+            Line(
+                "Holy Magic, from a Hermetic book",
+                amount=halved - total,
+                source=hybrid.HOLY_SOURCE,
+            )
         )
         total = halved
     total = _multiplied(
@@ -411,12 +424,16 @@ def _current_xp(student: Character, subject: str, is_art: bool) -> int:
 
 
 def reading(
-    student: Character, book: Book, quality: int | None = None
+    student: Character,
+    book: Book,
+    quality: int | None = None,
+    hermetic: bool = True,
 ) -> StudyResult | None:
     """A season reading a summa or tractatus (None for other books, or one
     without a Quality). A summa can't take the reader past its Level.
     `quality`, when given, is what the book is read at instead of its own
-    (a palimpsest's text, see library.effective_quality)."""
+    (a palimpsest's text, see library.effective_quality); `hermetic`, whether
+    it is a Hermetic book (hybrid_magic.hermetic_source)."""
     if book.quality is None or book.type not in (
         "Art Summa",
         "Ability Summa",
@@ -441,4 +458,5 @@ def reading(
         activity="reading",
         is_art=is_art,
         gain_limit=limit,
+        hermetic_halved=hybrid.halves_study(student, book, hermetic),
     )

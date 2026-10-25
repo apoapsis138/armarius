@@ -27,6 +27,19 @@ REGIMENS: dict[int, tuple[int, int]] = {1: (1, 5), 2: (4, 1), 3: (7, 0)}
 CHIRURGY_NEEDED = 3
 #: Years under the regimen before it helps.
 YEARS_TO_TAKE = 1
+#: The Inhabitant points of those under a regimen are multiplied for each
+#: step it raises their Living Conditions to (Art & Academe p. 58); the
+#: table starts at +1, so a step to 0 or below costs nothing more.
+STEP_MULTIPLIERS: dict[int, float] = {1: 1.5, 2: 2.0, 3: 2.5}
+COST_SOURCE = "Art & Academe, Chapter Three: Regimens and Covenants, p. 58"
+
+
+def regimen_multiplier(step: int) -> float:
+    """The multiple of Inhabitant points for raising Living Conditions to
+    `step` (x2.5 for +3 or more)."""
+    if step <= 0:
+        return 1.0
+    return STEP_MULTIPLIERS[min(step, 3)]
 
 
 def medicine(physician: Character) -> int:
@@ -82,6 +95,12 @@ def regimen_problems(saga: Saga, character: Character) -> list[str]:
     if physician is None or not character.aging.regimen:
         return []
     found = []
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is not None and covenant.economics.emergency_savings > 0:
+        found.append(
+            f"{covenant.name} is spending Emergency Savings on its food, and a "
+            "regimen can't be kept then (A&A p. 58)"
+        )
     mine = clients(saga, physician)
     level = character.aging.regimen
     if mine and mine[0].aging.regimen != level:
@@ -139,3 +158,27 @@ def regimen_text(saga: Saga, character: Character) -> str:
     if year - since < YEARS_TO_TAKE:
         return line + f", from {since + YEARS_TO_TAKE}"
     return line
+
+
+#: What the app records that loses eucrasia: a season convalescing or
+#: travelling (a month and more of changed exercise), a disease caught, a
+#: Wizard's Twilight. The other causes (a month away, a neglected diet,
+#: broken sleep, a day under a Corpus spell) are the troupe's: retype the
+#: regimen's "Begun in" year.
+EUCRASIA_SEASONS: dict[str, str] = {
+    "convalesce": "a season convalescing",
+    "travel": "a season travelling",
+}
+
+
+def lose_eucrasia(character: Character, year: int, why: str) -> str:
+    """Eucrasia lost (`why`): the regimen starts its year again from `year`
+    (A&A p. 59). Returns the note to record, "" without a regimen."""
+    aging = character.aging
+    if not aging.regimen:
+        return ""
+    aging.regimen_since = year
+    return (
+        f"Eucrasia lost ({why}): {character.name}'s regimen helps again from "
+        f"{year + YEARS_TO_TAKE} (A&A p. 59)."
+    )

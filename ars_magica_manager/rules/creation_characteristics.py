@@ -81,6 +81,7 @@ class Heritage:
 BLOOD_CHARACTERISTICS: dict[str, str] = {
     "bloodcap": "strength",
     "ettin": "stamina",
+    "jann": "presence",
     "nymph": "communication",
     "padfoot": "perception",
     "sidhe": "presence",

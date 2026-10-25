@@ -511,6 +511,8 @@ CASTING_DICE: tuple[str, ...] = ("stress", "simple", "none")
 #: How many pawns of vis a casting may use: each Art's score (the Hermetic
 #: rule), the Ability or rune used, or the sum of the tradition's Forms.
 VIS_CAPS: tuple[str, ...] = ("arts", "score", "forms", "none")
+#: How a casting's botch dice are counted (CastingRule.botch).
+BOTCH_RULES: tuple[str, ...] = ("hermetic", "magnitude", "none")
 #: Hedge Magic's Magical Defenses (Hedge Magic RE, Ch. 1).
 DEFENSE_KINDS: tuple[str, ...] = (
     "Accelerated Expiry",
@@ -568,6 +570,14 @@ class CastingRule:
     penetrates: bool = True
     #: A roll the target makes even after Penetration (Poetic Justice).
     resistance: str = ""
+    #: How many botch dice a stressed casting rolls (BOTCH_RULES):
+    #: "hermetic", one, one a pawn of vis and a foreign aura's points;
+    #: "magnitude", the effect's magnitude + the aura (an Amazon rite);
+    #: "none". `botch_extra` adds to them (Wildfire's two), and
+    #: `botch_notes` says what else does, as the book words it.
+    botch: str = "hermetic"
+    botch_extra: int = 0
+    botch_notes: str = ""
     notes: str = ""
 
     def __post_init__(self) -> None:
@@ -575,6 +585,7 @@ class CastingRule:
             (self.kind, CASTING_KINDS, "casting kind"),
             (self.die, CASTING_DICE, "die"),
             (self.vis_cap, VIS_CAPS, "vis cap"),
+            (self.botch, BOTCH_RULES, "botch rule"),
         ):
             if value not in allowed:
                 raise ValueError(f"Unknown {what} {value!r}; must be one of {allowed}")
@@ -688,10 +699,21 @@ class InitiationScript:
     #: "gifted", "ungifted" or "" (either).
     who: str = ""
     notes: str = ""
+    #: The Initiate's least scores, by Ability, below which the Script
+    #: always fails (an Ability named without its subject, "Theology",
+    #: counts the best of its kind).
+    requires: tuple[tuple[str, int], ...] = ()
+    #: The harder Ease Factor of a self-initiation, when the book gives
+    #: one (the gruagachan's 18 and 30, HMRE p. 61); 0: the same.
+    self_ease_factor: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> InitiationScript:
-        return cls(**known_fields(cls, data))
+        d = known_fields(cls, data)
+        d["requires"] = tuple(
+            (str(k), int(v)) for k, v in dict(d.get("requires") or {}).items()
+        )
+        return cls(**d)
 
 
 @dataclass(frozen=True)
@@ -805,6 +827,68 @@ class BondRule:
         return cls(**known_fields(cls, data))
 
 
+#: How a guideline's base level grows with the magnitudes an effect adds
+#: (rules.hedge_effects): "hermetic", 5 levels a magnitude and 1 below
+#: level 5; "three", 3 levels a magnitude (Soqotran levels, the Augustan
+#: and utiseta Ease Factors); "none", the guideline's level is the
+#: effect's (a rune's level, an Ease Factor table's row).
+LEVEL_STEPS: tuple[str, ...] = ("hermetic", "three", "none")
+#: The parameters an effect names.
+EFFECT_PARAMETER_KINDS: tuple[str, ...] = ("range", "duration", "target")
+
+
+@dataclass(frozen=True)
+class Guideline:
+    """One of a tradition's guidelines: the Art pair, Ability, rune or
+    incense it is for, its base level (or Ease Factor; 0 for a General
+    guideline, whose level the effect sets), a short label and a one-line
+    summary in the app's words, and its printed page."""
+
+    name: str
+    arts: list[str] = field(default_factory=list)
+    level: int = 0
+    summary: str = ""
+    page: int = 0
+
+    @property
+    def general(self) -> bool:
+        return self.level == 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Guideline:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass(frozen=True)
+class EffectParameter:
+    """A Range, Duration or Target an effect of the tradition may have,
+    and the magnitudes it adds. `arts`: only for effects using one of
+    these Arts (a gruagach's Conversation costs nothing for Blessing and
+    Curse, a magnitude for Shape and Vision); `items`: "items" or
+    "effects" when it is only for one of them (a learned magician's
+    amulets and charms), "" for both."""
+
+    kind: str
+    name: str
+    magnitudes: int = 0
+    arts: list[str] = field(default_factory=list)
+    items: str = ""
+    note: str = ""
+
+    def __post_init__(self) -> None:
+        if self.kind not in EFFECT_PARAMETER_KINDS:
+            raise ValueError(
+                f"Unknown parameter kind {self.kind!r}; must be one of "
+                f"{EFFECT_PARAMETER_KINDS}"
+            )
+        if self.items not in ("", "items", "effects"):
+            raise ValueError(f"Unknown items {self.items!r}")
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> EffectParameter:
+        return cls(**known_fields(cls, data))
+
+
 @dataclass(frozen=True)
 class TraditionDef:
     """A catalog entry for a non-Hermetic magical tradition (shared
@@ -861,8 +945,26 @@ class TraditionDef:
     bonds: list[BondRule] = field(default_factory=list)
     pools: list[PoolDef] = field(default_factory=list)
     warping: WarpingRule | None = None
+    #: Its guideline table, the Ranges, Durations and Targets its effects
+    #: may have (none listed: the Hermetic ones), the parameters an Art's
+    #: guidelines already include (Art -> kind -> name: a utiseta's base
+    #: Range, an Amazon Consonant's), so only the steps from them cost;
+    #: `bases_either_way` when a step down costs as a step up does (the
+    #: Amazons'), how magnitudes add to a level (LEVEL_STEPS), and the book
+    #: and pages of the table.
+    guidelines: list[Guideline] = field(default_factory=list)
+    effect_parameters: list[EffectParameter] = field(default_factory=list)
+    parameter_bases: dict[str, dict[str, str]] = field(default_factory=dict)
+    bases_either_way: bool = False
+    level_steps: str = "hermetic"
+    guideline_source: str = ""
 
     def __post_init__(self) -> None:
+        if self.level_steps not in LEVEL_STEPS:
+            raise ValueError(
+                f"Unknown level steps {self.level_steps!r}; must be one of "
+                f"{LEVEL_STEPS}"
+            )
         if self.realm not in TRADITION_REALMS:
             raise ValueError(
                 f"Unknown realm {self.realm!r}; must be one of {TRADITION_REALMS}"
@@ -896,6 +998,10 @@ class TraditionDef:
         d["pools"] = [PoolDef.from_dict(v) for v in d.get("pools") or []]
         if d.get("warping") is not None:
             d["warping"] = WarpingRule.from_dict(d["warping"])
+        d["guidelines"] = [Guideline.from_dict(v) for v in d.get("guidelines") or []]
+        d["effect_parameters"] = [
+            EffectParameter.from_dict(v) for v in d.get("effect_parameters") or []
+        ]
         return cls(**d)
 
 

@@ -131,7 +131,7 @@ def _regions(normandy: Normandy) -> None:
             "The Tribunal counts Aquitaine north of the Dordogne as its own, "
             "though the southern folk speak Dordonha, a tongue of Oc. Nidi "
             "is the only covenant down there, and it is older than the Grand "
-            "Tribunal's ruling of 1103; any covenant founded that far south "
+            "Tribunal's ruling of 1102; any covenant founded that far south "
             "now would belong to Provence.",
             "In the cemeteries of Berry, Limousin and the Dordogne stand "
             "lanterns of the dead, slender stone towers six or eight times as "
@@ -1700,7 +1700,7 @@ def _nidi(normandy: Normandy, tribunal: Tribunal) -> None:
         "of the Merinita members left for wilder places, and the two who "
         "stayed, Regulus of Merinita and Micropedus of Bjornaer, chose to "
         "embrace the towns. Luna of Bjornaer joined lately. It lies south "
-        "of the Dordogne line but is older than the 1103 ruling, so it "
+        "of the Dordogne line but is older than the 1102 ruling, so it "
         "belongs to Normandy.",
         "The magi live and hold council in Lord Henri's small castle, which "
         "was once the covenant's main building. When clearing made "
@@ -2094,9 +2094,9 @@ def _stats_baudouin(b: Builder, baudouin: Any) -> None:
                 ("Bows", 5, "crossbow"),
                 ("Carouse", 1, "dice"),
                 ("Concentration", 1, "ambush"),
+                ("Craft: Carpenter", 2, "wagons"),
                 ("Living Language: French", 5, "Walloon"),
                 ("Hunt", 3, "rabbits"),
-                ("Profession: Carpenter", 2, "wagons"),
                 ("Ride", 4, "long distance"),
                 ("Single Weapon", 6, "axe"),
                 ("Stealth", 3, "ambush"),

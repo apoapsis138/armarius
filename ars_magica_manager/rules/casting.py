@@ -157,12 +157,15 @@ def casting_score(
     props: int = 0,
     talisman: int = 0,
     mastery_abilities: dict[str, int] | None = None,
+    sordida_pawns: int = 0,
 ) -> Breakdown:
     """The Casting Score, with its terms. A Ritual or ceremonial casting
     uses loud words and exaggerated gestures at some point, so `words` and
     `gestures` don't apply to it. A Ritual's `vis_pawns` are those beyond
     what it needs, each +2; fast casting allows none. `mastery_abilities`
-    are the spell's Mastery special abilities (mastery_counts)."""
+    are the spell's Mastery special abilities (mastery_counts).
+    `sordida_pawns` of them are Infernal vis under the Harsher Infernal
+    vis option: +5 each instead of +2 (RoP: The Infernal p. 19)."""
     abilities = mastery_abilities or {}
     ritual, ceremonial = _how_cast(magus, spontaneous, ritual, ceremonial)
     lines: list[Line] = []
@@ -182,7 +185,7 @@ def casting_score(
     tired = fatigue_penalty(magus.fatigue_level, magus.virtues_flaws)
     if tired:
         lines.append(Line("Fatigue", amount=tired, source=SOURCE))
-    label, amount = hybrid.aura_label(magus, aura_realm, aura)
+    label, amount = hybrid.aura_label(magus, aura_realm, aura, ritual=ritual)
     lines.append(Line(label, amount=amount, source=realms.SOURCE))
     whole = ritual or ceremonial
     relief = {
@@ -213,8 +216,7 @@ def casting_score(
     if fast:
         lines.append(Line("Fast casting", amount=FAST_PENALTY, source=SOURCE))
     elif vis_pawns:
-        label = "extra pawns of vis" if ritual else "pawns of vis"
-        lines.append(Line(f"{vis_pawns} {label}", amount=2 * vis_pawns, source=SOURCE))
+        lines += _vis_lines(vis_pawns, sordida_pawns, ritual=ritual)
     if ritual or ceremonial:
         lines += _ritual_lines(magus)
     if ceremonial and props:
@@ -608,6 +610,45 @@ def aiming_base(magus: Character, precise: int = 0) -> int:
     )
 
 
+#: What a pawn of Infernal vis adds to a Casting Total under the Harsher
+#: Infernal vis option (vis sordida), instead of standard vis's +2.
+INFERNAL_VIS_BONUS = 5
+INFERNAL_VIS_SOURCE = "Realms of Power: The Infernal, Infernal Vis, p. 19"
+
+
+def _vis_lines(pawns: int, sordida: int, *, ritual: bool) -> list[Line]:
+    """Vis spent in casting: +2 a pawn, or +5 for a pawn of Infernal vis
+    under the Harsher Infernal vis option."""
+    label = "extra pawns of vis" if ritual else "pawns of vis"
+    sordida = max(0, min(sordida, pawns))
+    found = []
+    if pawns > sordida:
+        plain = pawns - sordida
+        found.append(Line(f"{plain} {label}", amount=2 * plain, source=SOURCE))
+    if sordida:
+        found.append(
+            Line(
+                f"{sordida} {label}, Infernal",
+                amount=INFERNAL_VIS_BONUS * sordida,
+                source=INFERNAL_VIS_SOURCE,
+            )
+        )
+    return found
+
+
+def infernal_vis_text(saga: Saga | None, pawns: int, **dice: Any) -> str:
+    """What `pawns` of Infernal vis do to a casting: its botch dice (with
+    `dice`, botch_dice's other terms), and under the harsher option its +5
+    a pawn."""
+    found = botch_dice(vis_pawns=pawns, infernal_vis_pawns=pawns, saga=saga, **dice)
+    if options.is_on(saga, "harsher_infernal_vis"):
+        return (
+            f"+{INFERNAL_VIS_BONUS * pawns} to the total ({INFERNAL_VIS_BONUS} "
+            f"a pawn); {found} botch dice, never fewer than {pawns}"
+        )
+    return f"{found} botch dice (doubled)"
+
+
 def botch_warping(zeros: int, *, prone: bool = False) -> tuple[int, bool]:
     """A spell botch's Warping Points (one for each zero on the botch
     dice) and whether they risk Wizard's Twilight: two or more, or one for
@@ -645,8 +686,10 @@ def botch_dice(
     magus: Character | None = None,
 ) -> int:
     """How many botch dice a stressed casting roll that shows 0 rolls.
-    Infernal vis (counted in `vis_pawns` too) doubles them; with the saga's
-    harsher option, each pawn adds 3 instead (vis sordida). A foreign aura
+    Infernal vis (counted in `vis_pawns` too) doubles them (DE p. 422); with
+    the saga's harsher option, each pawn adds 3 instead (vis sordida), and
+    no Virtue, Golden Cord or Mastery takes them below its pawns (RoP: The
+    Infernal p. 19). A foreign aura
     adds its points, twice that in a regio level, unless `magus` is attuned
     to it (Faerie Magic). The caster's
     Virtues and Flaws (Cautious Sorcerer, Careless Sorcerer, Deaf...) count
@@ -654,6 +697,8 @@ def botch_dice(
     cast with words and gestures. A failed Concentration roll
     (`distracted`) adds one (DE p. 215)."""
     dice = 1 + vis_pawns + (FAST_BOTCH_DICE if fast else 0) + (1 if distracted else 0)
+    if hybrid.ignores_infernal_vis(magus):
+        infernal_vis_pawns = 0  # Chthonic Magic: no ill effects
     if infernal_vis_pawns:
         if options.is_on(saga, "harsher_infernal_vis"):
             dice += 2 * infernal_vis_pawns  # +3 per pawn, 1 of it counted above
@@ -671,7 +716,11 @@ def botch_dice(
     dice = scores.with_botch_change(dice, change)
     if golden_cord:
         dice = max(1, dice - golden_cord)  # the cord can't take it to 0
-    return max(0, dice - mastery)  # Mastery can
+    dice = max(0, dice - mastery)  # Mastery can
+    if infernal_vis_pawns and options.is_on(saga, "harsher_infernal_vis"):
+        # Nothing takes vis sordida's botch dice below its pawns.
+        dice = max(dice, infernal_vis_pawns)
+    return dice
 
 
 def golden_cord(saga: Saga | None, magus: Character) -> int:

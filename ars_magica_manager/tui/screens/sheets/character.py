@@ -296,7 +296,9 @@ class CharacterSheetView(SheetView):
                 ):
                     yield self._static(
                         (*sources, "section-aging"),
-                        lambda: tradition_text.warping_text(self.character, tradition),
+                        lambda: tradition_text.warping_text(
+                            self.saga, self.character, tradition
+                        ),
                         id=f"trad-{tradition.id}-warping",
                     )
                 if tradition.pools:

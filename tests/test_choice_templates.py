@@ -57,7 +57,7 @@ def _problem(template_id, **values):
 
 def test_the_templates_name_only_what_the_catalogs_hold():
     templates = ct.load_catalog()
-    quick = [t for t in templates if t.kind == "quick"]
+    quick = [t for t in templates if t.kind == "quick" and t.book == "DE"]
     assert [t.id for t in quick] == list(PICKS)
     assert all(t.book == "DE" and t.page == 46 for t in quick)
     abilities = {a.name for a in catalog.load_ability_catalog()}

@@ -18,6 +18,7 @@ from .... import (
     session_end,
     sourcebooks,
     storage,
+    tourney_season,
     traditions,
     world,
 )
@@ -168,6 +169,18 @@ class CharacterActions(WorkspaceBase):
             self.app,
             session_end.end_session_form(self.saga, character),
             lambda _end: self._commit("section-reputations", "section-char-info"),
+        )
+
+    def action_tourney_season(self) -> None:
+        """More's Tournament on Reputations: a season on the tourney circuit
+        counted toward his Prudhomme Reputation, kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            tourney_season.tourney_form(self.saga, character),
+            lambda _end: self._commit("section-reputations", "tab-diary"),
         )
 
     def action_command_beast(self) -> None:

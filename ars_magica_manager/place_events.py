@@ -13,9 +13,10 @@ and its rows, one a line: "1-3: Nothing stirs", "4: The stag", "9+: The
 Hall opens"; a stress die's botch reads a "botch" row.
 
 With the aura change option on, a Magic aura varies each year as
-Realms of Power: Magic says, and an Infernal aura inside a stronger one
-erodes as Realms of Power: The Infernal says (rules.aura_change); this
-module adds their fields to a place's form.
+Realms of Power: Magic says, an Infernal aura inside a stronger one
+erodes as Realms of Power: The Infernal says, and a Faerie aura follows
+the glamour of the faerie that claims it as Realms of Power: Faerie says
+(rules.aura_change); this module adds their fields to a place's form.
 
 Kept in Neighbour.details: "triggers" (each {"name", "when", "season",
 "year", "every", "what"}), "tables" (each {"name", "die", "rows",
@@ -595,7 +596,70 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
             show_if=infernal,
         ),
     ]
-    return found
+    return found + faerie_fields(saga, place)
+
+
+def faerie_fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
+    """What the aura change option asks of a Faerie place: whose glamour
+    claims it (RoP: Faerie pp. 14-16)."""
+    d = place.details if place is not None else {}
+    faerie = _realm_is("Faerie")
+    faeries = [(escape(c.name), c.id) for c in saga.creatures if c.realm == "Faerie"]
+
+    def pick(key: str, label: str, hint: str) -> DialogField:
+        return DialogField(
+            key,
+            label,
+            "select",
+            d.get(key) or None,
+            options=faeries,
+            allow_blank=True,
+            placeholder="(none)",
+            hint=hint,
+            show_if=faerie,
+        )
+
+    return [
+        pick(
+            "presiding",
+            "Glamour of (presiding faerie)",
+            "Its aura is this faerie's Might / 5 (RoP: Faerie p. 14).",
+        ),
+        pick(
+            "contesting",
+            "Contested by",
+            "While two faeries clash over it: 2 + the higher Might / 5, at most 9.",
+        ),
+        pick(
+            "steward",
+            "Steward",
+            "While the presiding faerie is away, the steward's Might / 5 (p. 16).",
+        ),
+        DialogField(
+            "presiding_away",
+            "The presiding faerie is away",
+            "check",
+            bool(d.get("presiding_away")),
+            show_if=faerie,
+        ),
+        DialogField(
+            "vis_bargain",
+            "A bargain lets the magi take its vis",
+            "check",
+            bool(d.get("vis_bargain")),
+            hint="Without one, each season of vis extraction there lowers the "
+            "aura by 1 until the faerie gets redress (p. 15).",
+            show_if=faerie,
+        ),
+        DialogField(
+            "glamour_lost",
+            "Aura lost to vis taken",
+            "int",
+            d.get("glamour_lost", 0),
+            hint="Set it back to 0 once the faerie has had redress.",
+            show_if=faerie,
+        ),
+    ]
 
 
 #: The corrupted auras of Realms of Power: The Infernal pp. 14-15.

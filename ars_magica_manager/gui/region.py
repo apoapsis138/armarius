@@ -10,11 +10,16 @@ from collections.abc import Sequence
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import arms, battles, neighbours, place_events, towns
+from .. import arms, battles, lords, neighbours, place_events, towns
 from ..forms import neighbour as neighbour_forms
 from ..models import Neighbour, Saga
 from ..neighbour_lists import KindList, KindTab
-from ..sections import BATTLES_SECTION, FAIRS_SECTION, TABLES_SECTION
+from ..sections import (
+    BATTLES_SECTION,
+    FAIRS_SECTION,
+    GRATITUDE_SECTION,
+    TABLES_SECTION,
+)
 from ..sheets import region as region_sheet
 from .bookmark import with_bookmark
 from .character_sheet import secrets_chapter, section
@@ -123,6 +128,15 @@ class NeighbourPage(QWidget):
                         "Roll Income",
                         "income",
                         lambda row: towns.roll_fair(saga, n, row),
+                        lambda _row: True,
+                    )
+                )
+            if entry.section_id == GRATITUDE_SECTION:
+                more.append(
+                    (
+                        "Redeem Gratitude",
+                        "more",
+                        lambda row: lords.redeem_form(saga, n, row),
                         lambda _row: True,
                     )
                 )

@@ -12,33 +12,33 @@
    1 Fief  2 Standing  3 Diary  4 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Title:    Count or earl, average
-  Seat:     Arnsberg
-  Manors:   50
-  Income:   1000 pounds a year
-  To spend: 100 pounds a year
-  Army:     50 knights, 50 serjeants, 500 infantry; 500 levies at home
-  Owes:     Archbishop of Cologne: 50 knights for 40 days, or 100 pounds scutage
-  Aids:     50 pounds; relief 100 pounds
+  Title:            Count or earl, average
+  Seat:             Arnsberg
+  Manors:           50
+  Income:           1000 pounds a year
+  Mercenary budget: 100 pounds a year
+  Army:             50 knights, 50 serjeants, 500 infantry; 500 levies at home
+  Affinity:         +5 to social rolls among the region's nobles, for mustering
+  the local minor nobility, settling their disputes, swaying their advice, their
+  attitude to the Church, and refereeing a tournament; less if he neglects his
+  affinity's offices and largesse (LoM p. 22)
+  Owes:             Archbishop of Cologne: 50 knights for 40 days, or 100 pounds
+  scutage
+  Aids:             50 pounds; relief 100 pounds
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Castles (1)
 
         Castle    Garrison   Defences    Supplies
-      ○ Arnsberg  6 knights  stone keep
+      ○ Arnsberg  6 knights  stone keep                                           ▅▅
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Gratitude (1)
 
         Owed to  Points  Earns                                  For
       ○ Alys     6       Knighthood or freedom; 10 for a manor  Drove off the
-      wolves                                                                      ▂▂
+      wolves
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Battles (1)
-
-        Battle            Armies                          Groups   Ground  Numbers
-      Events
-      ○ The ford at Werl  Gottfried of Arnsberg v the C…  40 v 20  +2      +2
 
 
 ===== tab-nb-standing

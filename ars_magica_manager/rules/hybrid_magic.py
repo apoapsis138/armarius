@@ -10,7 +10,8 @@ Hermetic formulas ask this module what changes:
 - Chthonic Magic (the Virtue, or its Ability): Magic and Infernal auras
   both add; no Warping from living in either.
 - Hermetic rites (a Faerie Method and Power): rituals from the faerie
-  rite guidelines.
+  rite guidelines; a Ritual's aura may count from the Faerie column of
+  the realm table when that is better than the Magic one.
 - Faerie Magic (House Merinita's Virtue, or its Ability): attuned to
   Magic and Faerie auras, so the full aura adds in both, neither gives
   Warping, and neither adds botch dice (DE p. 236).
@@ -26,8 +27,13 @@ of the two is used, since the Method has to be performed. A magus holding
 a Goetic Art may use Rego in its place and Vim in place of the target's
 Realm Lore, when they are better.
 
-What the formulas can't apply (Holy Magic's halved Lab Totals from
-Hermetic texts and its words and gestures, Chthonic Magic's sinful acts,
+A holy magus's Lab Total is halved when he works from a Hermetic Lab
+Text, and his study total when he reads a Hermetic book on an Art or an
+Arcane Ability (halves_hermetic_texts, hermetic_source, halves_study), as
+a halving line in the total. A text is holy when its author is a holy
+magus of the saga, or when it is marked so.
+
+What the formulas can't apply (Holy Magic's words and gestures, Chthonic Magic's sinful acts,
 the faerie rite parameters) is shown as the books word it.
 
 Rules: reference/rules-engine-reference.md §18, Hybrid magic.
@@ -40,7 +46,8 @@ from dataclasses import dataclass
 from functools import cache
 
 from .. import catalog
-from ..models import Character
+from ..models import Book, Character, Saga
+from . import creation_access as access
 from . import realms, scores
 from .rounding import round_down
 
@@ -226,6 +233,59 @@ def styles(character: Character) -> list[Style]:
 # What changes in the Hermetic formulas
 
 
+def halves_hermetic_texts(magus: Character) -> bool:
+    """Whether his Lab Totals are halved when he learns from a Hermetic
+    Lab Text: a holy magus's are, always (RoP: The Divine p. 67)."""
+    return HOLY in styles(magus)
+
+
+def any_holy_magus(saga: Saga) -> bool:
+    """Whether any magus of the saga practises Holy Magic."""
+    return any(HOLY in styles(c) for c in saga.characters if c.type == "magus")
+
+
+def hermetic_source(saga: Saga, book: Book) -> bool:
+    """Whether a book or Lab Text is Hermetic, which halves what a holy
+    magus learns from it (RoP: The Divine p. 67): it is, unless it is
+    marked holy or its author is a holy magus of the saga."""
+    if book.holy:
+        return False
+    author = saga.character(book.author_id)
+    return author is None or HOLY not in styles(author)
+
+
+def halves_study(magus: Character, book: Book | None, hermetic: bool) -> bool:
+    """Whether a season reading `book` is halved: a holy magus learning
+    magic (an Art, or an Arcane Ability) from a Hermetic book (RoP: The
+    Divine p. 67, "Hermetic study totals halved")."""
+    if book is None or not hermetic or not halves_hermetic_texts(magus):
+        return False
+    if book.type == "Art Summa" or book.subject_kind == "Art":
+        return True
+    return bool(book.ability) and access.ability_category(book.ability) == "Arcane"
+
+
+def chthonic_theory(magus: Character) -> int:
+    """How much more a chthonic magus's Chthonic Magic is than his Magic
+    Theory, when it stands in for it in lab work on a dark or sinister
+    effect (RoP: The Infernal p. 123); 0 for anyone else."""
+    if CHTHONIC not in styles(magus):
+        return 0
+    return max(0, ability(magus, "Chthonic Magic") - ability(magus, "Magic Theory"))
+
+
+def infernal_vis_limit(magus: Character) -> int:
+    """What a chthonic magus adds, as Chthonic Magic, to the pawns of
+    Infernal vis he may use at once (RoP: The Infernal p. 123)."""
+    return ability(magus, "Chthonic Magic") if CHTHONIC in styles(magus) else 0
+
+
+def ignores_infernal_vis(magus: Character | None) -> bool:
+    """Whether Infernal vis carries no extra peril for him: a chthonic
+    magus uses it without its ill effects (RoP: The Infernal p. 123)."""
+    return magus is not None and CHTHONIC in styles(magus)
+
+
 def theory(magus: Character) -> tuple[str, int]:
     """The Ability his lab work uses for Magic Theory, and its score."""
     for style in styles(magus):
@@ -259,9 +319,18 @@ def divine_susceptible(magus: Character) -> bool:
     return any(vf.vf_id == DIVINE_SUSCEPTIBILITY for vf in magus.virtues_flaws)
 
 
-def aura_label(magus: Character, aura_realm: str, aura: int) -> tuple[str, int]:
-    """The aura line of a Casting Score or Lab Total: its label and amount."""
+def aura_label(
+    magus: Character, aura_realm: str, aura: int, *, ritual: bool = False
+) -> tuple[str, int]:
+    """The aura line of a Casting Score or Lab Total: its label and amount.
+    A Ritual of a magus who works Hermetic rites may count the aura from the
+    Faerie column instead of the Magic one, when that is better (RoP:
+    Faerie p. 121)."""
     amount, why = aura_modifier(magus, aura_realm, aura)
+    if ritual and RITES in styles(magus):
+        faerie = realms.aura_modifier(FAERIE, aura_realm, aura)
+        if faerie > amount:
+            amount, why = faerie, "Hermetic rites, the Faerie column"
     label = f"Aura ({aura_realm} {aura})"
     return (f"{label}, {why}" if why else label), amount
 

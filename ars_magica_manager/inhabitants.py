@@ -23,7 +23,7 @@ from .models import (
     Saga,
     character_age,
 )
-from .rules import reputations, xp
+from .rules import reputations, study, xp
 from .rules.animal_grogs import describe as describe_animal
 from .rules.covenfolk import (
     AUTO_KINDS,
@@ -726,3 +726,64 @@ def bought_kind(ability: str, category: str, *, teacher: bool = False) -> str:
     if category == "Martial":
         return "turb"
     return "specialist"
+
+
+# ------------------------------------------------- growing used to the Gifted
+
+#: A grog's Loyal trait begins at most this far from the turb's Prevailing
+#: Loyalty (Grogs p. 56).
+LOYAL_SPREAD = 3
+GIFTED_SOURCE = "Grogs, Chapter 4, Growing Used to The Gifted, p. 56"
+
+
+def _loyal(character: Character, name: str) -> int | None:
+    return next(
+        (
+            t.score
+            for t in character.personality_traits
+            if t.name.strip().casefold() == name.casefold()
+        ),
+        None,
+    )
+
+
+def loyal_toward(character: Character, magus: Character) -> tuple[int, str]:
+    """A covenfolk's Loyal toward one magus, and how: his own Loyal to that
+    magus where he has grown used to him (a trait "Loyal to <name>"), else
+    his Loyal to Covenant (or plain Loyal), with the magus's Gift penalty
+    either way (Grogs p. 56: Loyal to Covenant +2 and Loyal to Tillitus +3
+    give 0 with Tillitus and -1 with the other magi)."""
+    penalty = study.gift_social_penalty(magus)
+    own = _loyal(character, f"Loyal to {magus.name}")
+    if own is not None:
+        why = f"Loyal to {magus.name} {own:+d}"
+        base = own
+    else:
+        base = _loyal(character, "Loyal to Covenant")
+        if base is None:
+            base = _loyal(character, "Loyal") or 0
+        why = f"Loyal {base:+d}"
+    if penalty:
+        why += f", the Gift -{penalty}"
+    return base - penalty, why
+
+
+def loyal_spread_problem(saga: Saga, character: Character) -> str:
+    """A grog's Loyal more than LOYAL_SPREAD from his covenant's Prevailing
+    Loyalty, which he begins within ("" when it fits, or he has none)."""
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is None or character.type != "grog":
+        return ""
+    own = _loyal(character, "Loyal to Covenant")
+    if own is None:
+        own = _loyal(character, "Loyal")
+    if own is None:
+        return ""
+    prevailing = prevailing_loyalty(saga, covenant)
+    if abs(own - prevailing) <= LOYAL_SPREAD:
+        return ""
+    return (
+        f"{character.name}'s Loyal {own:+d} is more than {LOYAL_SPREAD} from "
+        f"{covenant.name}'s Prevailing Loyalty {prevailing:+d}: a grog begins "
+        "within 3 of it (Grogs p. 56)."
+    )

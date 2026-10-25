@@ -380,14 +380,16 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Casting
-
-      Rune script                                                                                     ▃▃
+                                                                                                      ▇▇
+      Rune script
       Fehu        4
       Each adds: Stamina +0, aura (Magic 1) +1.
       Total: Casting Score + a stress die, against the level; up to 10 short it still works, for a
       Fatigue level, and further short it fails.
       Vis: +2 a pawn, up to the score used; a Technique or Form fitting the effect or target.
       Penetration: Total +0 (Penetration) - the level.
+      Botch dice: 1, +1 a pawn of vis, +1 a point of another realm's aura; Mastered Rune: 3 fewer (at
+      least 1) with that rune in the script (HMRE p. 121).
       A script uses the lowest of its runes. Hidden name -2, no name -5, hidden description -5, no
       description -10, extra effort +1, emphasis +1.
 
@@ -398,8 +400,6 @@
       Needs no laboratory. A season's invention gives spell levels equal to the Lab Total, split among
       scripts of those runes.
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Magical Defenses
 
   ▌
   ▌  Select an Ability to see its details.

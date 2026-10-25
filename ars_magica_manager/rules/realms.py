@@ -143,6 +143,8 @@ def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
 VIRTUE_REALMS: dict[str, str] = {
     # Resurrected by a miracle (DE p. 142).
     "vf_raised_from_the_dead": "Divine",
+    # "Most often associated with the Infernal realm" (DE p. 85).
+    "vf_hex": "Infernal",
 }
 _REALM_WORDS = (
     ("Faerie", "Faerie"),

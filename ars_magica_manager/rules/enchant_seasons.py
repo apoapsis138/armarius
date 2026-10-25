@@ -51,6 +51,7 @@ from . import (
     library,
     verditius,
 )
+from . import hybrid_magic as hybrid
 from .breakdown import Line
 from .rounding import round_up
 
@@ -219,6 +220,7 @@ def _effect_total(
         similar_spell_level=lab.similar_spell_level(saga, magus, plan.similar_spell_id),
         from_lab_text=text is not None,
         others_text=text is not None and text.author_id != magus.id,
+        hermetic_text=text is not None and hybrid.hermetic_source(saga, text),
     )
     extra: list[Line] = []
     craft = verditius.craft_line(saga, magus, device)

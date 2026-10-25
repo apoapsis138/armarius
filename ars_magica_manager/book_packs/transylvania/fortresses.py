@@ -544,9 +544,9 @@ def _zenodochia(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> N
     )
     notes = paragraphs(
         "Items. The Hippocratic Staff, of twisted hyacinth round an amber, "
-        "hangs above the hall's inner lintel with two constant effects, "
-        "+9 to Wound Recovery rolls and +9 to Disease Recovery rolls for "
-        "everyone inside (CrCo 34 each). The Bowl of the Honest "
+        "hangs above the hall's inner lintel with a constant effect, "
+        "+9 to Recovery rolls for everyone inside (CrCo 34; the book's "
+        "separate Disease Recovery effect is cut by its errata). The Bowl of the Honest "
         "Traveler, a beggar's bowl on a shelf, inclines all inside to "
         "honesty (ReMe 29, no Penetration): a would-be thief must fail a "
         "Personality roll against 12 to steal. The Chest of Good Food "
@@ -647,18 +647,11 @@ def _zenodochium_items(b: Builder, zenodochia: Covenant) -> None:
             "hall's inner lintel. A magus must lower his Parma to benefit.",
             [
                 _constant(
-                    "Wound Recovery Effect",
+                    "Recovery Effect",
                     "CrCo",
                     30,
                     "Structure",
-                    "+9 to Wound Recovery rolls within.",
-                ),
-                _constant(
-                    "Disease Recovery Effect",
-                    "CrCo",
-                    30,
-                    "Structure",
-                    "+9 to Disease Recovery rolls within.",
+                    "+9 to Recovery rolls within.",
                 ),
             ],
         ),

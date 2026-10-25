@@ -19,6 +19,8 @@ from ars_magica_manager.rules import casting, hedge_casting, lab, warping
 from ars_magica_manager.rules import hybrid_magic as hybrid
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
+_NO_SAGA = Saga(id="s", name="S")
+
 
 def _magus(*abilities: tuple[str, int], vf_ids=(), kind="magus") -> Character:
     return Character(
@@ -178,7 +180,7 @@ def test_a_magus_in_a_hedge_tradition_keeps_twilight():
     from ars_magica_manager import tradition_text
 
     sol = catalog.load_tradition_catalog_by_id()["trad_sol_invictus"]
-    text = tradition_text.warping_text(_magus(), sol)
+    text = tradition_text.warping_text(_NO_SAGA, _magus(), sol)
     assert "Warping and Twilight as for any magus" in text
 
 

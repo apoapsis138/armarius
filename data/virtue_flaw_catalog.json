@@ -3431,8 +3431,8 @@
       "tier": "Minor",
       "cost": 1,
       "source": "F&F",
-      "summary": "Feminine Sympathy Trait +1 (Major: +3), added like a specialty to mundane Ability rolls that act directly on a woman; a faerie power using stress dice.",
-      "description": "Initiated by the second level of the Matres and Matrones. The character gains a Sympathy Trait, Feminine Sympathy, at +1 for the Minor Virtue or +3 for the Major. Following the Sympathy rules of Realms of Power: The Faerie, she may add it in place of a specialty to a roll of a non-Supernatural Ability whenever she is acting directly on another woman, for instance to recall what she knows of a fellow maga. Each such roll counts as a faerie power: it is subject to aura and realm modifiers, always uses a stress die, and a botch brings one Warping Point per zero. The Trait improves with experience as an Ability does, never above her Warping Score, and also rises by one when the stress roll comes up 1; it falls by one when a botch check comes up 0."
+      "summary": "Feminine Sympathy Trait +1 (Major: +3), added like a specialty to mundane Ability rolls that act directly on a woman; such rolls use stress dice.",
+      "description": "Initiated by the second level of the Matres and Matrones. The character gains a Sympathy Trait, Feminine Sympathy, at +1 for the Minor Virtue or +3 for the Major. Following the Sympathy rules of Realms of Power: The Faerie, she may add it in place of a specialty to a roll of a non-Supernatural Ability whenever she is acting directly on another woman, for instance to recall what she knows of a fellow maga. All rolls using this Trait must use stress dice. The Trait improves with experience as an Ability does, but cannot exceed her Warping Score +1 (Minor Virtue) or +3 (Major), and also rises by one when the stress roll comes up 1; it falls by one when a botch check comes up 0."
     },
     {
       "id": "vf_feminine_sympathy_major",
@@ -3442,8 +3442,8 @@
       "tier": "Major",
       "cost": 3,
       "source": "F&F",
-      "summary": "Feminine Sympathy Trait +1 (Major: +3), added like a specialty to mundane Ability rolls that act directly on a woman; a faerie power using stress dice.",
-      "description": "Initiated by the second level of the Matres and Matrones. The character gains a Sympathy Trait, Feminine Sympathy, at +1 for the Minor Virtue or +3 for the Major. Following the Sympathy rules of Realms of Power: The Faerie, she may add it in place of a specialty to a roll of a non-Supernatural Ability whenever she is acting directly on another woman, for instance to recall what she knows of a fellow maga. Each such roll counts as a faerie power: it is subject to aura and realm modifiers, always uses a stress die, and a botch brings one Warping Point per zero. The Trait improves with experience as an Ability does, never above her Warping Score, and also rises by one when the stress roll comes up 1; it falls by one when a botch check comes up 0."
+      "summary": "Feminine Sympathy Trait +1 (Major: +3), added like a specialty to mundane Ability rolls that act directly on a woman; such rolls use stress dice.",
+      "description": "Initiated by the second level of the Matres and Matrones. The character gains a Sympathy Trait, Feminine Sympathy, at +1 for the Minor Virtue or +3 for the Major. Following the Sympathy rules of Realms of Power: The Faerie, she may add it in place of a specialty to a roll of a non-Supernatural Ability whenever she is acting directly on another woman, for instance to recall what she knows of a fellow maga. All rolls using this Trait must use stress dice. The Trait improves with experience as an Ability does, but cannot exceed her Warping Score +1 (Minor Virtue) or +3 (Major), and also rises by one when the stress roll comes up 1; it falls by one when a botch check comes up 0."
     },
     {
       "id": "vf_ferocity",
@@ -4630,7 +4630,7 @@
       "id": "vf_immortality_of_the_forest",
       "name": "Immortality of the Forest",
       "type": "Virtue",
-      "category": "General",
+      "category": "Supernatural",
       "tier": "Major",
       "cost": 3,
       "source": "GotF",
@@ -17271,6 +17271,9 @@
       "category": "Supernatural",
       "tier": "Minor",
       "cost": 1,
+      "parameters": [
+        "realm"
+      ],
       "source": "Grogs",
       "summary": "Crafts horseshoes with magical effects in one Hermetic Form (Touched by Realm, limited); powers affect only the horse or its immediate surroundings.",
       "description": "The character may use the Touched by (Realm) Virtue (City & Guild) to a limited extent. He may craft horseshoes with magical effects, using Hermetic guidelines for a single Hermetic Form chosen at character creation (Animal is a popular choice). The horseshoes' powers can only affect the horse itself or its immediate environment: a Terram effect making the ground the horse touches stable is allowed, an Auram power to change the weather is not. The Craft Total is the Craft: Farrier Ability plus Intelligence or Dexterity, a permanent choice made at character creation. Most likely aligned with the Magic or Faerie realm, though an Infernal farrier is possible. May be taken twice, but no more: the second time adds either a second Form or a second Ability, not both. For variations, rename it Mythic (Professional) and replace Craft: Farrier with another Craft Ability, keeping the limit of one Ability and one Form."

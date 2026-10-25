@@ -135,9 +135,10 @@ class BookWork:
 # -- scores -----------------------------------------------------------------------
 
 
-#: Covenants' extended rules: books off the Arts and Arcane Abilities are
-#: easier to make (Covenants p. 88).
-MUNDANE_SUBJECT_BONUS = 3
+#: Covenants' extended rules printed +3 Quality for books off the Arts and
+#: Arcane Abilities; Atlas Games' errata to Covenants p. 88 delete it, so
+#: the bonus is 0.
+MUNDANE_SUBJECT_BONUS = 0
 
 
 def magical_subject(subject: str) -> bool:
@@ -404,12 +405,13 @@ def _write(
     extended = options.is_on(saga, options.EXTENDED_BOOK_QUALITY)
     # Good Teacher's +3 is part of the base the summa's bonus is capped at
     # (DE pp. 83, 380). The extended rules give the author Communication +
-    # 3 on a summa and nothing on a tractatus, +3 more off the magical
-    # subjects (Covenants p. 88).
+    # 3 on a summa or a tractatus, whatever the subject (Covenants p. 88,
+    # as its errata correct it: the tractatus gains the +3 and the +3
+    # for non-magical subjects is gone).
     base = com + quality_bonus(character)
     if not extended:
         base += 6
-    elif plan.activity != WRITE_TRACTATUS:
+    else:
         base += book_kinds.EXTENDED_AUTHOR_BASE
     if extended and not magical_subject(subject):
         base += MUNDANE_SUBJECT_BONUS

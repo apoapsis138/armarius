@@ -1030,7 +1030,7 @@ class CharacterSheet(QWidget):
             section(
                 "Warping",
                 p,
-                TextBlock(tradition_text.warping_text(c, tradition), p),
+                TextBlock(tradition_text.warping_text(self.saga, c, tradition), p),
             ),
             *(
                 [

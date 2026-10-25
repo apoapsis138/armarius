@@ -93,7 +93,8 @@ CONTRACTS: dict[str, Contract] = {
             (
                 b.sides[0].neighbour_id,
                 b.sides[1].neighbour_id,
-                b.sides[0].groups == armies.army_groups(s.neighbour("gottfried")),
+                b.sides[0].groups
+                == armies.army_groups(s.neighbour("gottfried"), at_home=False),
             )
             for b in s.battles
             if b.name == "Lippe"

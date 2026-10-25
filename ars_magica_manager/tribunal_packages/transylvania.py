@@ -23,6 +23,7 @@ from ..form_spec import DialogField
 from ..grids import Grid
 from ..markup import escape
 from ..models import Character, Covenant, Saga, Tribunal
+from ..rules import enchantment
 from ..sections import PRIVILEGES_SECTION
 from . import (
     PackageList,
@@ -77,6 +78,74 @@ PRIVILEGES: dict[str, Privilege] = {
 
 #: An oppidum has at most this many aediles.
 AEDILES = 2
+
+#: Each privilege's other terms (Against the Dark pp. 15-18): what it may
+#: not do, and what it does only by the Praeco's leave. Office is
+#: office_rule's.
+FORBIDS: dict[str, tuple[str, ...]] = {
+    "coloniae": (
+        "the title archmagus",
+        "inviting magi to the Tribunal (save Quaesitores, Redcaps and hoplites)",
+        "choosing their aedile",
+    ),
+}
+BY_LEAVE: dict[str, tuple[str, ...]] = {
+    "coloniae": ("taking apprentices",),
+    "socii": ("founding oppida",),
+    "hospites": (
+        "taking an apprentice",
+        "binding a familiar",
+        "making a talisman",
+        "founding or changing oppida",
+        "their vote for aedile",
+    ),
+    "foederati": (
+        "the title archmagus",
+        "founding oppida",
+        "inviting magi to the Tribunal",
+        "trading vis, or selling magic items, to outsiders",
+        "choosing their aedile",
+    ),
+}
+
+#: The Tribunal's Decorations, highest first (Against the Dark p. 17): a
+#: magus wears one, never the same twice, and a higher replaces a lower.
+DECORATIONS: tuple[str, ...] = ("Laurel", "Myrtle", "Oak", "Grass", "Parsley")
+#: Who may wear what looks like a Decoration without being given one.
+DECORATION_LOOKALIKES = {
+    "socii": "may wear designs that look like Decorations",
+    "foederati": "may wear lookalike designs from their own tradition",
+}
+
+
+def decoration_problem(held: str, chosen: str) -> str | None:
+    """Why `chosen` can't take the place of the Decoration `held`: a lower
+    one never replaces a higher (None: it may)."""
+    if not held or not chosen or held not in DECORATIONS or chosen == held:
+        return None
+    if DECORATIONS.index(chosen) > DECORATIONS.index(held):
+        return (
+            f"A {chosen} doesn't replace the higher {held}: Decorations "
+            "are not repeated, and only a higher one replaces a lower "
+            "(Against the Dark p. 17)."
+        )
+    return None
+
+
+def terms_notes(saga: Saga, character: Character, privilege: str) -> list[str]:
+    """The privilege's other terms, and those the magus's record already
+    touches: a hospes's familiar or talisman needed the Praeco's leave."""
+    found = []
+    if privilege in FORBIDS:
+        found.append("May not: " + "; ".join(FORBIDS[privilege]) + ".")
+    if privilege in BY_LEAVE:
+        found.append("By the Praeco's leave: " + "; ".join(BY_LEAVE[privilege]) + ".")
+    if privilege == "hospites":
+        if saga.familiar_of(character.id) is not None:
+            found.append("Has a familiar: bound by leave, as a hospes.")
+        if enchantment.talisman_of(saga, character) is not None:
+            found.append("Has a talisman: made by leave, as a hospes.")
+    return found
 
 
 def _privilege_key(value: str) -> str:
@@ -220,6 +289,13 @@ def office_rule(privilege: str, office: str) -> tuple[str, bool]:
     office_key = office.strip().casefold()
     if office_key == CURATOR.casefold() and privilege != "cives":
         return "The Curator of Tablinum must be a cives (Against the Dark p. 58).", True
+    if office_key == CURATOR.casefold():
+        return (
+            "The Curator of Tablinum is chosen by a vote of the Tribunal, "
+            "and must be held a master when chosen; usually for life "
+            "(Against the Dark p. 58).",
+            False,
+        )
     if privilege == "coloniae" and office_key != AEDILE.casefold():
         return f"A colona may hold no office but aedile, not {office}.", True
     if privilege == "socii" and office_key == PRAECO.casefold():
@@ -429,6 +505,17 @@ def member_fields(saga: Saga, entry: dict[str, Any] | None) -> list[DialogField]
             placeholder="e.g. Curantis",
             hint="Praeco, Presiding Quaesitor and aedile show by themselves.",
         ),
+        DialogField(
+            "decoration",
+            "Decoration",
+            "select",
+            e.get("decoration") or None,
+            options=[(name, name) for name in DECORATIONS],
+            allow_blank=True,
+            placeholder="(none)",
+            hint="One at most, never the same twice; a higher one replaces a "
+            "lower: Laurel, Myrtle, Oak, Grass, Parsley (Against the Dark p. 17).",
+        ),
     ]
 
 
@@ -439,6 +526,10 @@ def member_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
             if other is not None and other is not entry:
                 name = _name(saga, values.get("character_id"))
                 return f"{name} already has a privilege: edit theirs instead."
+            held = (entry or {}).get("decoration", "")
+            lowered = decoration_problem(held, values.get("decoration") or "")
+            if lowered:
+                return lowered
             privilege, office = values.get("privilege"), values.get("office")
             if privilege and office:
                 words, refuses = office_rule(privilege, office)
@@ -454,8 +545,9 @@ def member_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
         def apply(values: dict[str, Any]) -> None:
             target = entry if entry is not None else {}
             target.update(values)
-            if not target.get("privilege"):
-                target.pop("privilege", None)
+            for key in ("privilege", "decoration"):
+                if not target.get(key):
+                    target.pop(key, None)
             if entry is None:
                 members(saga, tribunal).append(target)
 
@@ -493,6 +585,13 @@ def magus_facts(
     entry = entry_of(saga, tribunal, character.id)
     found = [("Privilege", privilege_label(entry) or "(not entered)")]
     found += [("Office", words) for words in office_notes(saga, tribunal, entry or {})]
+    privilege = (entry or {}).get("privilege", "")
+    found += [("Terms", words) for words in terms_notes(saga, character, privilege)]
+    decoration = (entry or {}).get("decoration", "")
+    if decoration:
+        found.append(("Decoration", decoration))
+    elif privilege in DECORATION_LOOKALIKES:
+        found.append(("Decorations", DECORATION_LOOKALIKES[privilege]))
     return found
 
 

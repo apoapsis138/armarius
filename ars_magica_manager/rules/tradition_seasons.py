@@ -21,8 +21,11 @@ Opened to the tradition.
   Deficiency for that rune), or one the troupe picks.
 
 Initiation Total = the Mystagogue's Characteristic (Presence) + the
-tradition's Lore + the Script's bonus, against the Script's Ease Factor
-(rules/supplement_seasons' undergo_initiation carries the season out).
+tradition's Lore + the Script's bonus, against the Script's Ease Factor,
++ 3 (Minor) or + 9 (Major) when the Mystagogue doesn't know the power
+(Hedge Magic Revised Edition p. 13). The undergo_initiation season
+(rules/supplement_work) carries it out when the plan names the Script,
+with the unGifted rules of p. 14 (rules/mysteries).
 
 A tradition's own seasons (TraditionDef.activities) give Exposure in
 the Art or Ability worked, and name the Lab Total of the work.
@@ -39,6 +42,8 @@ from .. import catalog
 from ..models import (
     SUPERNATURAL_CATEGORIES,
     Character,
+    GroupCasting,
+    InitiationScript,
     OpeningRule,
     Saga,
     SeasonPlan,
@@ -47,10 +52,11 @@ from ..models import (
     VirtueFlawInstance,
 )
 from . import hedge_casting as hc
-from . import realms
+from . import realms, tradition_totals
 from .breakdown import Breakdown, Line
 from .creation_access import ability_def, ability_xp_table, traditions_of
 from .creation_tradition import opened_ability
+from .warping import opened_to_arts
 
 SOURCE = (
     "Hedge Magic, Revised Edition, Chapter One: Introduction, Opening The Gift, pp. 7-8"
@@ -127,7 +133,8 @@ def _virtue_tiers(character: Character) -> dict[str, str]:
 def supernatural_scores(character: Character) -> list[tuple[str, int]]:
     """Each Supernatural Ability and hedge Art the character has, with the
     score the Opening counts (at least 2 from a Minor Virtue, 6 from a
-    Major one)."""
+    Major one), and each Hermetic Art he has opened (xp above 0): the
+    Opening Ease Factor counts every Art score (Hedge Magic RE p. 8)."""
     tiers = _virtue_tiers(character)
     found = []
     for ability in character.abilities:
@@ -139,17 +146,44 @@ def supernatural_scores(character: Character) -> list[tuple[str, int]]:
             tiers.get(ability.name, ""), 0
         )
         found.append((ability.name, max(hc.score(character, ability.name), floor)))
+    for art, value in character.arts.items():
+        if value.xp > 0:
+            found.append((art, value.level))
     return found
 
 
 def already_opened(character: Character, tradition: TraditionDef) -> bool:
     """Whether the student's Gift was Opened before: to another
-    tradition, or his Hermetic Arts."""
-    if any(score is not None for score in character.arts.values()):
+    tradition, or his Hermetic Arts (a magus, or any Art with xp, as
+    warping.opened_to_arts counts them)."""
+    if opened_to_arts(character):
         return True
     return any(
         t.id != tradition.id and t.opening is not None for t in openable(character)
     )
+
+
+def sabbat_group(tradition: TraditionDef, total: str) -> GroupCasting | None:
+    """The tradition's gathering that helps with `total` (the folk
+    witches' sabbat: "Opening Total", "Initiation Total", "Brew Potency")."""
+    return next((g for g in tradition.groups if total in g.applies_to), None)
+
+
+def _group_name(tradition: TraditionDef, total: str) -> str:
+    group = sabbat_group(tradition, total)
+    return group.name if group is not None else "gathering"
+
+
+def sabbat_bonus(
+    tradition: TraditionDef, total: str, helpers: int, aura: int, aura_realm: str
+) -> int:
+    """What `helpers` witches assisting at a sabbat add to `total`: +1
+    each, up to the Magic aura's strength at the site (Hedge Magic RE
+    pp. 45-46); 0 for a tradition with no such gathering."""
+    group = sabbat_group(tradition, total)
+    if group is None or helpers <= 0:
+        return 0
+    return hc.group_bonus(group, [0] * helpers, aura=aura, aura_realm=aura_realm)
 
 
 def opening_ease(student: Character, tradition: TraditionDef) -> int:
@@ -216,6 +250,20 @@ def open_work(
         return [f"{student.name} is already Opened to {tradition.name}."], None
     aura, realm = realms.home_aura(saga, master)
     total = int(opening_total(master, tradition, aura, realm).total)
+    gathering = plan.other_modifier and sabbat_group(tradition, "Opening Total")
+    if gathering and plan.site_aura is None:
+        return [
+            "Enter the Magic aura at the sabbat's site: it caps the witches "
+            "who may help (Hedge Magic RE pp. 45-46)."
+        ], None
+    helped = sabbat_bonus(
+        tradition,
+        "Opening Total",
+        plan.other_modifier,
+        plan.site_aura or 0,
+        realms.HERMETIC,
+    )
+    total += helped
     ease = opening_ease(student, tradition)
     work = TraditionWork(
         tradition.id,
@@ -227,6 +275,12 @@ def open_work(
         a for a in tradition.training.opening if hc.score(master, a) < COMPETENT
     ]
     work.notes.append(_opening_note(student, tradition, work))
+    if plan.other_modifier and sabbat_group(tradition, "Opening Total") is not None:
+        work.notes.append(
+            f"{helped:+d} from {plan.other_modifier} helpers at the "
+            f"{_group_name(tradition, 'Opening Total')} (at most the Magic aura "
+            f"at its site, {plan.site_aura}, count)."
+        )
     return [], work
 
 
@@ -300,6 +354,52 @@ def initiation_total(mystagogue: Character, tradition: TraditionDef, bonus: int)
     assert rule is not None
     value = getattr(mystagogue.characteristics, rule.characteristic.lower(), 0)
     return value + lore_score(mystagogue, rule.lore) + bonus
+
+
+def script_key(tradition: TraditionDef, script: InitiationScript) -> str:
+    """How a season plan names a hedge Script (SeasonPlan.hedge_script)."""
+    return f"{tradition.id}/{script.name}"
+
+
+def hedge_script(key: str) -> tuple[TraditionDef, InitiationScript] | None:
+    """The tradition and Script a plan's `hedge_script` names (None for
+    none, or one no longer in the catalog)."""
+    tradition_id, _, name = key.partition("/")
+    tradition = catalog.load_tradition_catalog_by_id().get(tradition_id)
+    if tradition is None or tradition.initiation is None:
+        return None
+    script = next((s for s in tradition.initiation.scripts if s.name == name), None)
+    return (tradition, script) if script is not None else None
+
+
+def script_options(saga: Saga, initiate: Character) -> list[tuple[str, str]]:
+    """The hedge Scripts an Initiation season may follow: those of the
+    traditions the Initiate or anyone in the saga belongs to (the
+    Mystagogue must be one of them), save the Forest Paths' kind, which
+    has no Initiation Total."""
+    held = set(initiate.traditions)
+    for person in saga.characters:
+        held.update(person.traditions)
+    found: list[tuple[str, str]] = []
+    for tradition in catalog.load_tradition_catalog():
+        rule = tradition.initiation
+        if tradition.id not in held or rule is None or rule.roll_less:
+            continue
+        for script in rule.scripts:
+            found.append(
+                (
+                    f"{tradition.name}: {script.name} (Ease {script.ease_factor}, "
+                    f"+{script.bonus})",
+                    script_key(tradition, script),
+                )
+            )
+    return found
+
+
+def hedge_lore(tradition: TraditionDef) -> str:
+    """The Lore a tradition's Initiation Total uses, for the season's notes."""
+    rule = tradition.initiation
+    return (rule.lore if rule is not None else "") or "Lore"
 
 
 def lore_score(character: Character, lore: str) -> int:
@@ -380,6 +480,9 @@ def work(
             label, value = total
             result.total = value
             result.notes.append(f"{chosen.lab_rule} ({label}): {value}.")
+            result.notes += tradition_totals.season_notes(
+                saga, character, chosen.key, value
+            )
     return [], result
 
 

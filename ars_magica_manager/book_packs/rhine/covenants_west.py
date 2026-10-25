@@ -155,7 +155,7 @@ def _durenmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Vis donations are quietly accepted in place of a contribution to the library and prop up the dwindling vis income; this is never admitted.",
         "Occultes knows the restricted texts and has copied or moved the most interesting into his own sanctum, passing them to allies whose research they suit.",
         "Petrus Virilis means to invent a longevity ritual that would probably leave him infertile; Murion would be furious.",
-        "The Fane of the Founders is an artifact into which the Cult of Mercury bound much of the Black Forest's original magical essence (treated as Magic Might 60); if Durenmar fell and the rite lapsed, the King of the Black Mountain hopes to seize that spirit.",
+        "The Fane of the Founders is an artifact into which the Cult of Mercury bound much of the Black Forest's original magical essence (treated as Magic Might 40); if Durenmar fell and the rite lapsed, the King of the Black Mountain hopes to seize that spirit.",
     )
     durenmar = b.covenant(
         "Durenmar",
@@ -1203,7 +1203,8 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         age=55,
         summary="Master of House Jerbiton, lately so by the approval of three "
         "Fengheld magi, Apple Gild trained, Gauntleted at twenty-two "
-        "after an apprenticeship at Doissetep in Provence. Tall, lean "
+        "after an apprenticeship at a powerful covenant of the "
+        "Provençal Tribunal. Tall, lean "
         "and handsome, black-haired and blue-eyed, in fashionable blue "
         "or black, with a serpent-and-ruby ring he means for his "
         "talisman; a vanity longevity ritual keeps him looking "
@@ -1434,9 +1435,9 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
             "large grey cat in a jewelled gold pendant holding several uses "
             "of Aura of Rightful Authority among other effects, who believes "
             "he rules Fengheld if not the Tribunal. At Durenmar the cat is "
-            "taunted by Murion's raven Kolkrabus, who believes Stentorius "
-            "has usurped Murion's rightful place at the head of the Oak "
-            "Gild; Murion still leads it."
+            "taunted by Murion's raven Kolkrabus; Oswald believes Murion "
+            "has usurped his master's rightful place at the head of the Oak "
+            "Gild, which she still leads."
         ),
         traits={"Proud": 3, "Stickler for Rules": 2, "Forgiving": -3},
     )

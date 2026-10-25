@@ -33,7 +33,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import effects, lab_virtues, realms, scores, sites
+from . import effects, house_mastery, lab_virtues, realms, scores, sites
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .lab_stats import (
@@ -184,6 +184,7 @@ def lab_total(
     shape_material: int = 0,
     from_lab_text: bool = False,
     others_text: bool = False,
+    hermetic_text: bool = True,
 ) -> LabTotal:
     """The Lab Total for `technique` + `form` in `lab`, for an `activity`
     (a totals.ACTIVITIES_BY_TYPE["lab_total"] key) or none. Experimenting
@@ -192,7 +193,8 @@ def lab_total(
     and drops the Virtues and Flaws that only count "when not using a Lab
     Text" (NOT_FROM_A_TEXT); from `others_text` -- a text someone else
     wrote -- it also takes the ones for working from others' Lab Texts
-    (Adept Laboratory Student, Weak Scholar);
+    (Adept Laboratory Student, Weak Scholar), and a holy magus's total is
+    halved when it is a `hermetic_text` (RoP: The Divine p. 67);
     inventing or enchanting adds the magnitude of the highest similar spell
     known (`similar_spell_level`); enchanting adds shape and material
     bonuses, capped at Magic Theory."""
@@ -235,6 +237,14 @@ def lab_total(
         for e in found
         if e.modifier.multiplier is not None
     ]
+    if others_text and hermetic_text and hybrid.halves_hermetic_texts(magus):
+        multipliers.append(
+            Line(
+                "Holy Magic, from a Hermetic Lab Text",
+                multiplier=0.5,
+                source=hybrid.HOLY_SOURCE,
+            )
+        )
     return LabTotal(
         total=_halved(combined.total, multipliers),
         lines=lines + combined.lines[1:] + multipliers,
@@ -462,6 +472,27 @@ def similar_spell_level(
     if lab_virtues.has(magus, lab_virtues.DISJOINTED):
         return None
     return spell.level
+
+
+def lab_mastery_lines(
+    saga: Saga | None, magus: Character, spell_id: str | None
+) -> list[Line]:
+    """Lab Mastery on the similar spell the plan names: its Mastery score
+    on top of the similar spell's bonus (Houses of Hermes: True Lineages
+    p. 100)."""
+    if similar_spell_level(saga, magus, spell_id) is None:
+        return []
+    known = next((k for k in magus.spells_known if k.spell_id == spell_id), None)
+    if known is None or not known.mastery_score:
+        return []
+    if not any(
+        a.name.strip().casefold() == house_mastery.LAB_MASTERY
+        for a in known.mastery_abilities
+    ):
+        return []
+    return [
+        Line("Lab Mastery", amount=known.mastery_score, source=house_mastery.SOURCE)
+    ]
 
 
 def helper_lines(

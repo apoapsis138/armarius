@@ -148,13 +148,13 @@
   Held at: the Hill of Tara
   Now:     Not yet opened: Edit (e) calls the roll and opens it
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Order of Business (3 days)
+    ▼ Order of Business (7 days)
 
         Step                          Day
       ○ The roll call and proxies     The First Day
       ○ Opening and the oaths
       ○ The Sacred Council
-      ○ Rulings and fines             The Third Day
+      ○ Rulings and fines             The Seventh Day
       ○ Treasury and vis
       ○ The tithe of Gifted children
       ○ Closing

@@ -109,6 +109,114 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.16.0 — 2026-10-25
+
+### Computus
+
+- **Holy Magic** halves the Lab Total from a Hermetic Lab Text, and a season
+  reading a Hermetic book on an Art or an Arcane Ability; a book can be
+  marked **Holy (not Hermetic)**, and a holy magus's own texts are holy
+  (Realms of Power: The Divine p. 67). Chthonic Magic stands in for Magic
+  Theory on a dark or sinister lab plan.
+- A Raw Vis Store can be marked Infernal, and a Ritual shows what its vis
+  would do; a Hermetic rite may take the Faerie column for its aura.
+- The Arma Magica folds, Parmulae and realm-aligned spells say what they
+  give; Lab Mastery adds the similar spell's Mastery; Fenicil's rituals,
+  Vulgar Alchemy, Performance Magic and Spell Binding are worked out or
+  noted.
+- Covenants' extended book Quality follows the errata (a tractatus author
+  gives Communication + 3; no +3 for mundane subjects).
+- A realia and an expert correspondence add one to a library's research
+  between them, unless the new **Research aids stack** rule option is on
+  (Covenants pp. 90, 102).
+- Useful correspondence's and a folio's 1 xp are set points.
+- A demon-blooded character is warned against Virtues of another realm (a
+  Supernatural Virtue that names none is Magic, Hex Infernal; DE pp. 64,
+  85).
+
+### Book of Hours
+
+- Hedge Initiations follow a tradition's own Script: its Ease Factor,
+  Characteristic, Lore and bonus, +3 or +9 when the Mystagogue doesn't know
+  the power, the Initiate's required scores (the elementalists' minimums,
+  the learned magicians' tests), and a gruagach's harder Ease when he
+  initiates himself (Hedge Magic RE pp. 13-14, 30-31, 61, 88-89).
+- UnGifted Initiates must suffer an Ordeal and gain nothing from past ones;
+  a failed Initiation spends no step of a past Ordeal's help.
+- Experimental Initiation Scripts roll the Extraordinary Results chart and
+  the rite's validity; an overlapping Script's component can be replaced
+  (Ease 15).
+- Magi can spend a season on Good Works (The Church).
+- A realia **exhibit** of hundreds of objects counts as an Art's presence
+  for Study Requirement and Study Bonus; a smaller collection doesn't
+  (Against the Dark p. 61). Studying another artist's work gives half its
+  Aesthetic Quality, once per work.
+- A wondrous item takes the aura where the craftsman works and its one
+  assistant's help; Touched by (Realm) and Mythic Farrier must name their
+  realm (City & Guild pp. 71-72; Grogs p. 76).
+- A regimen raises its patients' Inhabitant points; eucrasia is lost to
+  convalescence, travel, disease or Twilight.
+
+### Hedge Magic
+
+- A tradition's effects can be built on its book's guideline table, with
+  its own Ranges, Durations and Targets: the gruagachan, the learned
+  magicians and imhergi, the vitkir, the folk witches, the Amazons, the
+  Augustans, the Muspelli, Soqotra, the Solomonic arts, the Ex Miscellanea
+  traditions, the hunters and the Nemthengacha.
+- Hedge castings show their botch dice; the Opening Ease Factor counts
+  Hermetic Arts; a folk witches' sabbat Opening asks the Magic aura at its
+  site, which caps its helpers.
+- Elementalist Refining shows what its total makes, rounding down where the
+  book gives no rounding.
+- The lector priests' transitory items, the hunters' Foe Arts, the
+  gruagach's flexible casting and the Muspelli etin-mod follow their books.
+- The Franciscans and four Mystery Cults join the traditions; an infernal
+  tradition's Vituperation is worked out, with the local aura.
+
+### Florilegium
+
+- Spells, Virtues and labs corrected by Atlas Games' errata (Sight of the
+  Lazy Parens keeps its invented-spell clause); Replenishing the Fount of
+  the Magus added.
+- Demons, magic spirits, ghosts and jinni are checked against their books.
+
+### Pagina
+
+- A Faerie Blood's details give its variety, Legacy and Sympathies; the
+  charm Flaws, the Ríastradh and the hero's light explain themselves.
+- Faith won in play is written in the Diary and brings True Faith.
+- A Reputation can replace a bad one, its deeds counted the book's way, and
+  editing it keeps its deeds; the Grogs Aging Chart is offered to
+  companions.
+- **Tournament** (More on Reputations) counts a season on the tourney
+  circuit toward Prudhomme, which starts at 1 only as his first Noble
+  Reputation (Lords of Men pp. 25, 64-69).
+
+### Orbis
+
+- A lord's Gratitude can be redeemed for a reward; his Fief shows his
+  Affinity (a baron +2 unless chosen higher; Lords of Men p. 21) and his
+  Mercenary Budget.
+- Regio levels can be terrestrial, celestial, Tartaran or Abyssal; a relic's
+  Faith raises its church's Dominion; with Auras change on, a faerie aura
+  follows its faerie's glamour.
+- Battles ask whether each army fights at home, and the losing commander's
+  Morale; a vampire's Sap the Life is a disease.
+
+### Concilium
+
+- Charges say whether they are high crimes; new ruling templates for the
+  Code's penalties; Theban contrition, Transylvanian Decorations, the
+  Normandy Tourney's points and seven-day Hibernian meetings.
+
+### Peregrinatio
+
+- The packs take the errata (the Rhine's forest spirits' Might, stat block
+  spell levels, smaller fixes in Normandy, the Cradle, Thebes and
+  Transylvania); Lycaneon's oppidum is at aura 5 below the mountain's 9,
+  and Hedyosmos's aura follows the Aura Boon (DE p. 184).
+
 ## 3.15.0 — 2026-10-25
 
 ### Computus

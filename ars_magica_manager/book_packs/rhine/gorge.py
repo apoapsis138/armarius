@@ -1143,11 +1143,8 @@ def _churches(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
             "physician, mystic, diplomat, poet and politician, and most "
             "famous for music that seemed close to miraculous; she never "
             "quite mastered Latin and wrote through a scribe to emperors, "
-            "popes and archbishops, and to several magi. It is said, though "
-            "never confirmed, that House Jerbiton took her in around 1158 as "
-            "a Larta, an unGifted maga under its protection and teaching; she "
-            "never came to Tribunal and met few magi. She had Communication "
-            "+4 and was a Good Teacher.",
+            "popes and archbishops, and to several Hermetic magi. She had "
+            "Communication +4 and was a Good Teacher.",
             "Her works in the original are all of Quality 13 (copies may be "
             "poorer): Scivias, a tractatus on Theology; Liber Vitae Meritorum, "
             "a tractatus on moral Philosophiae and Theology; Liber Divinorum "
@@ -1159,9 +1156,6 @@ def _churches(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
             "and Symphonia Armoniae Celestium Revelationum, a tractatus on the "
             "astronomy and music of Artes Liberales.",
         ),
-        secrets="In the Divine reading of the curse Hildegard is the pattern of the "
-        "humble, pious wizard whom God lets prosper where the Order fails; "
-        "seeking out her writings may show the way.",
         church="Monastery or nunnery",
         order="Benedictine",
         place=rhine.places["rupertsberg"],
@@ -1241,9 +1235,8 @@ def _threat(rhine: Rhine, gorge: Neighbour) -> None:
             "Grail, rose by God's plan and fell within seven decades to "
             "corruption and infighting; God blessed the Carolingians and "
             "cursed every wizard's work in the region to fail in the same "
-            "span, the Order's included, and only humble pious wizards such "
-            "as Hildegard prosper. Her writings and the counsel of Albertus "
-            "Magnus may show the path. If history holds, the Rhine League of "
+            "span, the Order's included, and only humble pious wizards "
+            "prosper. The counsel of Albertus Magnus may show the path. If history holds, the Rhine League of "
             "the 1250s is a further threat to any covenant taking tolls.",
         ),
         antagonist="The curse of the Gorge, whichever realm the storyguide gives it",
@@ -1424,7 +1417,7 @@ def _threat(rhine: Rhine, gorge: Neighbour) -> None:
                     "down robber castles. The chosen cause shows its hand: the "
                     "river spirit stirring, the Courts clearing their board, the "
                     "devil of Rudiaria calling in its debt, or the Order's works "
-                    "withering where Hildegard's prospered."
+                    "withering where humble, pious wizards prosper."
                 ),
                 ignored="The covenant falls within seventy-seven years, like the four before it.",
                 stopped=(
@@ -1855,8 +1848,8 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
             "after Myanar's death and keep a Hermetic-like tradition cut off "
             "from modern Magic Theory. All have Weird Magic; all know Parma "
             "Magica but imperfectly (Flawed Parma Magica); most have studied "
-            "from vis all their lives, so Poor Reader is common; the line "
-            "bears Faerie Enmity from Quendalon's curse; many have Mythic "
+            "from vis all their lives, so Poor Student is common; the line "
+            "bears Supernatural Nuisance (Faeries) from Quendalon's curse; many have Mythic "
             "Blood from Merinita or from powerful magical spirits, and Ways "
             "of the Forest, Free Study and Study Bonus are common. Heirs of "
             "Merinita's nature magic, many have walked the Paths through the "

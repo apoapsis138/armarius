@@ -83,6 +83,15 @@ The app works out the Age from Year Born (in
 Biographical Detail) and the saga's current year, and shows the current year
 and season dimmed because they belong to the saga. Size includes any Virtue
 that changes it (Ars Magica Definitive Edition, Chapter 3: Characters).
+
+Only a character with the True Faith Virtue has a True Faith Score. A
+character made with a Score of 2 or more is a Mythic Companion, and the form
+warns only while the character is In Creation (Realms of Power: The Divine
+p. 57). Faith can also be won in play, as the climax of a quest, a
+pilgrimage or a test of faith (p. 58): raise the Score or the Faith Points
+on Edit while the character is In Play, and the app writes "Faith won in
+play" in the Diary, adding the True Faith Virtue if the character had none.
+Miracles are not worked out.
 <!-- tui -->
 With
 the top panel focused, `d` deletes the character after saying what happens
@@ -258,6 +267,16 @@ The character's Reputations, each a name and a score that you type
 Ecclesiastical or Infernal) and how far it reaches, both shown in
 brackets after its score.
 
+A **Noble** Reputation is known among the landed class: everyone who holds
+land or a great lord's office, or may inherit them (Lords of Men p. 25).
+Entering feudal life, by birth or by becoming a vassal, starts one at 1;
+each season of great deeds noted by other nobles is an experience point in
+it (hosting a tournament, making war, leading pilgrims), and some events
+give more: a season at war in a distant land 1 more, knighting a squire he
+trained 1, gaining a noble liege 3, a royal liege 6, study under a
+supernatural creature its Might / 5 (p. 26). A knight's prize Reputation is
+**Prudhomme**: tournaments read it.
+
 Someone has heard of the character when a stress die + the score reaches
 0 in the same village, parish or covenant, 6 in the same town, diocese or
 Tribunal, 9 in the county, province or whole Order, and 12 in the country
@@ -274,6 +293,16 @@ or 3 for the baccalaureus, magister or doctor, after 3 years, 8 and 10 at
 university, counting the exam season (Art & Academe p. 100). The doctor
 exam needs the Magister in Artibus Virtue already (DE p. 76) and uses the
 faculty's Ability. Disputatio and debate count the highest good one.
+
+A bad Reputation can be **replaced** (DE pp. 386-387). Start the new one,
+at 1, with a deed spectacular enough to begin a Reputation, and on its form
+choose the bad one it **Replaces**. End of Session then asks, for the new
+one, the deeds that support it (they count toward it alone) and the other
+noteworthy deeds, which still count toward the old one until the new one's
+score passes it, and toward the new one after. Once it is ahead, each time
+it gathers the experience to rise you may lower the old one by a point
+instead (ticked by default). An old Reputation lowered to 0 is gone. The
+Reputations list marks a new one "replacing" the old.
 
 ### Aging & Warping
 <!-- help: section-aging -->
@@ -317,8 +346,13 @@ first client's, in the saga's order), only as many clients as it allows
 (the first ones), and it needs bloodletting from someone with Chirurgy 3:
 the physician, or someone at his covenant. The section says when the
 physician's Medicine is too low for the bonus chosen, or why the regimen
-gives nothing. A month away, a neglected diet, broken sleep, a disease or
-a Twilight loses it: set the year it began again (Art & Academe p. 59).
+gives nothing. A covenant drawing on Emergency Savings can keep no
+regimen: its bonus stops (Art & Academe p. 58). Eucrasia is lost, and the
+regimen starts its year again, when the patient plays a season
+convalescing or travelling, catches a disease, or enters Wizard's
+Twilight (p. 59); the Diary says so. For the other causes (a month away,
+a neglected diet, broken sleep, a day under a Corpus spell) retype the
+regimen's year it began on Edit.
 
 ### Health
 <!-- help: section-char-health -->
@@ -545,8 +579,31 @@ Each Reputation has a box for the noteworthy deeds done before witnesses
 who will talk. Each deed is an experience point in it, as for an Ability:
 ten deeds take a Reputation from 1 to 2, and a bad one grows in the same
 way. A new Reputation starts at 1 with Add on Reputations. A bad
-Reputation is replaced only by starting a new one (DE p. 386). The Diary
-records the session.
+Reputation is replaced only by starting a new one (DE p. 386): for one
+that **Replaces** another, the form asks the deeds that support it and
+the other noteworthy deeds apart (see
+[Reputations](help:section-reputations)). The Diary records the session.
+
+<!-- tui -->
+**Tournament** (More, `m`, on Reputations) counts a season on the tourney
+circuit (Lords of Men pp. 64-69). Choose his Prudhomme Reputation (or start
+one: a Noble Reputation, at 1 when it is his first, the 1 a man gains
+entering feudal life, Lords of Men p. 25, else at 0) and tick what he did as a knight: riding at
+the head of a company, ransoming a well-matched opponent, a feat of daring
+or of unquestionable honour are 1 experience point each, ransoming a
+stronger opponent or winning a prize 2; only the highest counts (p. 68).
+As patron, hosting one or more tournaments that season is 1 point, a lavish
+one 2, and an artist's record of aesthetic quality at least his Prudhomme 1
+more; patrons hosting together share the points equally, rounded down
+(p. 69). Each ransom he didn't pay is an experience point toward a fitting
+bad Reputation (p. 67): add that Reputation first, then choose it. The
+result says what a tournament he hosts should cost (10 pounds a point of
+his Prudhomme), what a prize for him is worth (a pound a point), and, from
+his Dexterity + Single or Great Weapon x his Wealth Multiplier, the Labor
+Points a season on the circuit makes him and how many seasons a year keep
+an errant knight (36 Labor Points a year, p. 69). It is written in his
+Diary.
+<!-- /tui -->
 
 ## Command the Beast
 <!-- help: command-beast -->
@@ -666,6 +723,12 @@ Ease Factors (Art & Academe pp. 45-51):
   pneumonia's Winded, quinsy's Afflicted Tongue and Mute, scrofula's
   Disfigured, worms, smallpox, phimosis and Saint Anthony's fire): the
   Flaws and choices they bring are yours to add.
+- **Sap the Life** is in the disease list: a vampire's power (Against the
+  Dark p. 115) that inflicts a Serious disease of Severity 15, rolled
+  weekly against 12 and 18, with no Disease Avoidance roll (its
+  Penetration decides) and two long-term Fatigue levels that come back
+  only when it abates. Faerie Lore may treat it as Medicine does: the
+  app's Prognosis counts only Medicine.
 - **The physician** is the covenant-mate with the most Medicine. His
   Medicine counts only when his Prognosis Total (Intelligence + Medicine +
   the patient's Living Conditions + an apothecary's Profession:
@@ -860,8 +923,32 @@ An item also keeps its charges or doses left, which you count down.
 **The app works out:** each one's Casting Score in the covenant's aura and
 the die it needs to reach its level ((Casting Score + die) / divisor at
 least the level), and the die for a Fatigue level where the tradition
-casts up to 10 short; a power whose magnitude is its Ability needs no die;
-an item made by a Lab Total shows that Lab Total.
+casts up to 10 short. A power whose magnitude is its Ability (a folk
+witch's) needs no die for a level, but cast against an Ease Factor it
+shows the die that Ease Factor needs and the level the power counts as
+(5 x the Ability; Hedge Magic RE p. 36). A stressed casting shows its
+botch dice. An item made by a Lab Total shows that Lab Total.
+
+**Built from a guideline:** when the tradition has a guideline table
+(see [Casting](help:tradition-casting)), choose the effect's **Guideline**
+and its **Range**, **Duration** and **Target**, and any **Further
+magnitudes** (size, complexity, hatred for an Embitterment): the level is
+worked out for you instead of typed, as a Hermetic spell's is. Each
+magnitude adds 5 levels (1 below level 5), or 3 for the traditions whose
+levels or Ease Factors step by 3 (Soqotran spells, Rival Magic p. 124;
+Augustan rites, p. 57; a Muspelli utiseta, p. 90; an Embitterment, Tales
+of Mythic Europe p. 35). The Ranges, Durations and Targets offered are the
+tradition's own (a gruagach's Conversation, Geas and Limit, HMRE pp. 60-63;
+an Amazon's Sister, Cousin, Exchange and Hour, Rival Magic p. 23; a learned
+magician's charms and amulets each their own, HMRE pp. 85-86), or the
+Hermetic ones for a tradition that lists none. Some cost by the Art used:
+a gruagach's Conversation is free for Blessing and Curse but a magnitude
+for Shape and Vision; an Amazon Consonant has a base Range and Duration,
+each step from it either way a magnitude (Rival Magic pp. 23-25); a
+utiseta counts only the steps from its Ability's own base (Rival Magic
+p. 95). A vitki's rune, a Columban ward or a folk witch's curse is its
+guideline's level as printed. A General guideline, or no guideline, keeps
+the level you type.
 
 **Not yet:** a season of work making the item or inventing the effect
 for you (add it here when the season is done), and the catalogs of each
@@ -890,6 +977,37 @@ spell of 5 x its score. Penetration is the total + the Penetration bonus
 - the level, as for a magus. A Lab Total (Refining, a vitki's) adds no
 die. The dispellings a tradition knows and its group castings (the folk
 witches' sabbats) are listed below.
+
+**Botch dice:** a stressed casting botches as a Hermetic magus's does
+(Definitive Edition p. 227): one die, one more a pawn of vis, and one a
+point of another realm's aura (twice that in a regio); a Divine power
+takes none for the aura. The books give this for the gruagachan, the
+learned magicians and the vitkir (HMRE pp. 71, 85, 126) and the rival
+traditions (Rival Magic pp. 25, 65, 115). An Amazon rite rolls its
+magnitude + the aura (Rival Magic p. 25). A tradition's own extras are
+noted under its rule: Wildfire's two (Rival Magic p. 104), a vitki's
+Mastered Rune taking three off (HMRE p. 121), the learned magicians' dice
+for each realm entreated and for a weak Language (HMRE pp. 85, 88), a
+sahir's extra summoning time (The Cradle and the Crescent p. 46). A Lab
+Total, a simple die or a rule with no die rolls none.
+
+**Guidelines:** a tradition with a guideline table lists how many it has
+and from which pages: the gruagachan (HMRE pp. 66-70), the learned
+magicians and the imhergi who cast with their Arts (pp. 89-94), the
+vitkir's runes (pp. 128-139), the folk witches' Ease Factors (pp. 37-42),
+the Amazons (Rival Magic pp. 32-43), the Augustan schools and the Sortes
+Virgilianae (pp. 53-60), the Muspelli's Abilities and their utiseta bases
+(pp. 95-105), the Soqotran incenses (pp. 127-132), the five Solomonic arts
+(The Cradle and the Crescent pp. 48-58), the Columbae's wards and the other
+Ex Miscellanea Ease Factor tables (Houses of Hermes: Societates
+pp. 105-128), a hunter's Scry (Against the Dark p. 134) and the
+Nemthengacha's Embitterment (Tales of Mythic Europe p. 35). Choose one on
+an effect in [Effects and Items](help:tradition-effects) and its level is
+worked out.
+
+**Hunters:** any Foe Art pairs with any Practice Art (Against the Dark
+p. 132): the grid shows every Foe Art the character holds, the ones
+listed or another the troupe names.
 
 **Not yet:** rolling a casting and the summoning chart. Each charm,
 spell or script the character knows is in
@@ -927,7 +1045,66 @@ Initiation Totals (Presence + the tradition's Lore + the Script's bonus;
 an elementalist's best Organization Lore), and the Lab Totals. The seasons
 themselves are planned on This Season (see [Activities
 offered](help:plan-season-activities)); an initiation uses Undergo an
-Initiation with the Script's bonus.
+Initiation with the Script's bonus. A hedge Initiation is planned as an
+**Undergo an Initiation** season with the **Hedge Script** chosen; see
+[How to initiate a character into a Mystery](help:guide-initiation).
+
+The **Opening Ease Factor** is twice the student's Supernatural Ability
+and Art scores, his Hermetic Arts with experience among them, + 12 if his
+Gift was Opened before, by another tradition or as a magus (any Hermetic
+Art with experience, or a magus; HMRE p. 8). At a folk witches' sabbat,
+helping Gifted witches add +1 each to the Opening Total, but no more of
+them than the Magic aura at the sabbat's site, so another realm's aura
+lets none help (HMRE pp. 45-46): enter them as **Sabbat helpers** on the
+Open a Student's Gift season, with the **Sabbat aura (Magic)** where it
+is held. For a sabbat Initiation, add the helpers to the
+**Script bonus** yourself, with the same cap (p. 46). An elementalist's
+**Refining** season shows what its Refining Total makes (HMRE pp. 26-27):
+a longevity potion of Total / 5 for age / 5 pawns, and by his Refining
+types a Characteristic potion (Total / 5, to at most half the Form), vis
+from an aura (Total / 10) or vis moved (Total / 5 pawns), or a being's
+Might restored or drained by the Total less its Might. The divisions
+round down, as the book's do when it says nothing (DE p. 6); only the
+potion's vis, age / 5, rounds up.
+
+A hedge Script may need scores of the Initiate: every Ikhwan as-Safa'
+Script fails without Artes Liberales, Philosophiae and Theology (Islam)
+4 and Arabic 5, the Tulab Ibn Sina's without Medicine and Chirurgy 3, 4
+or 5 by Script (HMRE pp. 30-31), and a learned magician's master tests
+an Ability at 2 (pp. 88-89); the season says when the Initiate falls
+short. A gruagach initiating himself uses his own scores and the harder
+Ease Factor, 18 or 30 (p. 61).
+
+The **lector priests** have a season to make a transitory item or
+statue: a temporary amulet, a seal or a potion poured over a cippus
+statue, each holding one Until effect for one use, or a faerie persuaded
+into a statue (Lands of the Nile pp. 51-54). The book gives no total for
+them; a new statue's consecration is Com + Folk Ken + a die against 18
+(p. 53).
+
+**Franciscans** (The Church pp. 137-139) are a Holy Tradition in the
+traditions list, open only to a friar or a Poor Sister (Monastic Vows is
+required). Their four Scripts, each needing a Mystagogue who knows the
+Virtue (Target 21): Meditation (+15, Driven), Understanding (+7, Visions),
+Intervention (+9) and Purity (+9, Fragile Constitution). The book prints
+each Script's total after Meditation's Major Ordeal (Understanding's
+Target 12, Intervention's 15, Purity's 18); the app takes those
+past-Ordeal reductions off by itself.
+
+**Hermetic Mystery Cults** are in the traditions list as societates any
+magus may join: the Cult of Mercury (Faith & Flame p. 28: the
+Consecration of Priamitus, Target 21, +18, gives Mercurian Magic and the
+Pagan Story Flaw), the Legion of Mithras (The Mysteries Revised Edition
+p. 121: the Raven's Strong-Willed Script, Target 15, +5), the Knights of
+the Green Stone (p. 132: the Page's Free Expression Script, Target 15, +7,
+Dutybound) and the Matres et Matrones (Faith & Flame p. 30: no printed
+Scripts; their three levels and what each needs are in the cult's notes).
+Add a member with Traditions, then plan Undergo an Initiation with the
+cult's Script chosen in Hedge Script. Each cult's Lore is "Mystery Cult
+Lore: (cult)" (the Matres' is "Organization Lore: Matres and Matrones",
+as the book names it). The Green Stone's Page Script says its own Ordeal
+lowers that Initiation's Target to 12; the Definitive Edition lowers only
+the next three Initiations (DE p. 388), so the app keeps it at 15.
 
 **Not yet:** what a season of work makes (a potion, a charm, a script)
 isn't added for you: add it to [Effects and Items](help:tradition-effects)
@@ -979,6 +1156,14 @@ any magus.
 Elementalist Form he holds: the Warping Score + the Form / 5 (rounded up).
 From +3 a Trait acts as a Minor Personality Flaw, from +6 a Major one, and
 at +10 the storyguide takes over.
+
+An infernalist's **Vituperation** is worked out on his tradition's
+Warping: on 2 or more Warping Points at once, Stamina + Concentration +
+Confidence against Warping Score + the points + Hierarchy + the aura; his
+Hierarchy is his highest Infernal Reputation. Sacrifice adds +2 (an
+effigy) to +10 (an innocent) to an effect, and profaning a holy thing
+makes a pawn of Infernal vis for a Confidence Point (Realms of Power: The
+Infernal pp. 94-96).
 
 **Not yet:** rolling the avoidance and its effects.
 
@@ -1048,6 +1233,23 @@ nothing has nothing to change.
 
 A magus's House Virtue is marked Free and counts no points
 (Ars Magica Definitive Edition, Chapter 3: Characters, Hermetic Houses).
+
+A character with a Might score from a Virtue (Demonic Blood) takes no
+Virtue of another realm: not The Gift, True Faith, Faerie Blood or the
+Blood of the Nephilim (Realms of Power: The Infernal p. 84), nor a
+Supernatural Virtue of another realm. One whose description names no realm
+is Magic (DE p. 64); Hex is taken as Infernal, the realm the book says it
+is most often tied to (DE p. 85). The Ríastradh
+needs the Fury or the Major Wrathful Flaw (The Contested Isle p. 120).
+
+A Faerie Blood's details say what its variety gives, the stronger Legacy
+benefit with Faerie Legacy, and its Sympathies: bloodcap, brownie, dwarf,
+ettin, faerie god, ghul, goblin, huldra, nymph, padfoot, satyr, selkie,
+sidhe and undine (Realms of Power: Faerie pp. 106-110), and the jinni
+bloods 'afrit, ghula and jann (The Cradle and the Crescent pp. 77-78). A
+Lesser or Greater Charm's details give the charm rules (Realms of Power:
+Faerie p. 104); the Ríastradh's and the Lúan láith's say how they work in
+play (The Contested Isle pp. 120-121).
 
 ### Flaws
 <!-- help: section-vf-flaws -->
@@ -1247,9 +1449,27 @@ unconsciousness becomes a wound: one level more is Light, two Medium, three
 Heavy, four Incapacitating (DE p. 213). The spell's **Mastery** special
 abilities, typed on its Mastery as Quiet Casting, Still Casting, Fast
 Casting, Ceremonial Casting, Penetration, Magic Resistance, Imperturbable
-Casting, Multiple Casting, Precise Casting or Quick Casting, are counted:
-Quiet and Still Casting in the score, the rest in a Mastery line (DE pp.
-225-226).
+Casting, Multiple Casting, Obfuscated Casting, Precise Casting or Quick
+Casting, are counted: Quiet and Still Casting in the score, the rest in a
+Mastery line (DE pp. 225-226). House Mercere's are read too (Houses of
+Hermes: True Lineages pp. 99-100): Adaptive Casting (General spells only),
+Boosted, Disguised, Harnessed, Stalwart and Tethered Casting (not for a
+Ritual), Lab Mastery and Learn From Mistakes, each on the spell's casting
+lines. Lab Mastery on the similar spell a lab plan names adds its Mastery
+score to the Lab Total, on top of the similar spell's bonus. Societates
+(p. 33) reprints these, and its Fast Trigger for items is the DE's
+(p. 257), already on the device forms.
+
+**Fenicil's rituals** (True Lineages pp. 76-77): a magus who has one of
+the rituals as an Ability (Wisdom of Athena, Sight of Alatheia, Veil All
+Eyes, The Oath of Truth, The Will of Alatheia, or the greater Curse of
+Thoth, Curse of Mars, Call for Justice) sees its Ease Factor, the Wizard's
+Communion it needs, its vis and casting time. The leader rolls Stamina +
+everyone's score in the ritual + aura + die; the excess over the Ease
+Factor is its Penetration; no botch unless stressed. An Unstructured
+Caster can't cast them. Performance Magic (DE p. 101) and Spell Binding
+(The Mysteries Revised Edition pp. 27-28) are noted when a magus has
+them.
 
 **Certamen.** A Tremere's Minor Magical Focus in certamen doubles the
 lower of the two Arts (DE p. 233), and a Deficient Art halves the total it
@@ -1272,15 +1492,22 @@ too, and a line for each kind closes the section:
   Finishing Touches checks that a Merinita with no faerie Virtue or Flaw
   starts with the Warping Point his parens gave him.
 - **Hermetic rites** (a Faerie Method and Power): rituals from the faerie
-  rite guidelines (Realms of Power: Faerie, Hermetic Rites).
+  rite guidelines (Realms of Power: Faerie, Hermetic Rites). He may count
+  a Ritual's aura from the Faerie column of the realm table when it is
+  better than the Magic one (p. 121).
 - A Ritual adds his best **Method + Power** of the style's realm instead of
   Artes Liberales + Philosophiae, when that is more.
 - **Goetic Arts**: in a Goetic Art's total a magus may use Rego for the Art
   and Vim for the Realm Lore, when they are higher (Realms of Power: The
   Infernal, Goetic Magic).
 
-What can't be worked out (Holy Magic's halved totals from Hermetic texts,
-Chthonic Magic's sinful acts, the faerie rite parameters) is written in
+Holy Magic's halved Lab Total from a Hermetic Lab Text (and halved
+reading from a Hermetic book on an Art or an Arcane Ability: a text by a
+holy magus, or one ticked Holy on its form, isn't halved), and Chthonic
+Magic standing in for Magic Theory on a dark or sinister effect, are
+counted on a lab plan (see [Lab Total](help:invent-spell-total)). What
+can't be worked out (Chthonic Magic's sinful acts, the faerie rite
+parameters) is written in
 that closing line as the books word it.
 
 ### Raw Vis
@@ -1387,6 +1614,27 @@ discoveries of House Bonisagus (the six Parma Magica folds of the Arma
 Magica, Parmulae, Figurine Magic and Realm-aligned spells). Choosing one
 fills in its name, kind, points and what it grants, which you can still
 change (Ancient Magic, Introduction, The Breakthrough).
+
+House Bonisagus's example discoveries (True Lineages pp. 30-34) say what
+they give once reached: the six Parma Magica folds, Parmulae and
+realm-aligned spells. A magus counts as knowing one when one of his
+research goals of that name is reached, whether he made it or was taught
+it; record a taught fold as a reached goal. He may know as many folds as
+his Parma Magica score. The notes under his
+[Casting Scores](help:section-casting) then give each fold's
+resistance (Ablativa doubles Parma, worn down by each Penetration it
+stops; Absorbea, Repercussa and Condensa against other Forms halve it,
+rounded up; Condensa doubles it against its chosen Form; Custodia gives
+no Parma resistance but adds twice Parma to Defense; Restricta is Parma -
+3), the Parmula (a level 44 lesser device giving Magic Resistance 30 for
+a year, 5 pawns, Rego Vim Lab Total 88), and the realm-aligned table
+(p. 34). Figurine Magic's Ease Factors show for anyone with the Virtue.
+
+**Aetheric Magic** is a Hermetic breakthrough of 100 points, at least 20
+of them from each Technique's projects; it gives the Major Hermetic
+Virtue Aetheric Magic and the Art Aether at 13 (Dies Irae pp. 38-39).
+The Virtue and the Art aren't in the catalogs yet, so reaching it grants
+nothing for you; the 20-a-Technique minimum is the troupe's to check.
 
 A goal that grants **a new Range, Duration or Target** names it as
 "Range: Horizon (as Sight)": its kind, its name, and the standard one it

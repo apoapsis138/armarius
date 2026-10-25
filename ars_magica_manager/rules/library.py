@@ -107,6 +107,8 @@ def cost(book: Book, saga: Saga | None = None) -> int:
         return level + quality
     if book.type == "Ability Summa":
         return quality + 3 * level
+    if book.type == "Tractatus" and book.opus == book_kinds.REALIA:
+        return book_kinds.realia_cost(quality)
     if book.type == "Tractatus":
         return quality
     return 0

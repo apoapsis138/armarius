@@ -2415,9 +2415,9 @@
       }
     ],
     "choices": {
-      "specialization": ["Rego", "Terram"]
+      "specialization": ["Rego", "Aquam"]
     },
-    "description": "The lab is built of ice that never melts, in the far north, high up a mountain, or kept frozen by magic. The -2 Health doesn't apply to an owner immune to the cold. Grants +2 to a Rego or Terram Specialization."
+    "description": "The lab is built of ice that never melts, in the far north, high up a mountain, or kept frozen by magic. The -2 Health doesn't apply to an owner immune to the cold. Grants +2 to a Rego or Aquam Specialization."
   },
   {
     "id": "labvf_inexhaustible_supplies",

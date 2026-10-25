@@ -32,7 +32,7 @@ DIALECT_PENALTY = 1
 class Related:
     """Two related languages, the penalty to understand one through the
     other, and a dialect of `first` that halves the gap (Low German's
-    Saxon with West Norse), with its smaller penalty."""
+    Saxon with East Norse), with its smaller penalty."""
 
     first: str
     second: str
@@ -70,13 +70,13 @@ RELATED: tuple[Related, ...] = (
     ),
     Related(
         "low german",
-        "west norse",
+        "east norse",
         3,
         "Guardians of the Forests p. 138",
         dialect="saxon",
         dialect_penalty=2,
     ),
-    Related("high german", "west norse", 4, "Guardians of the Forests p. 138"),
+    Related("high german", "east norse", 4, "Guardians of the Forests p. 138"),
     Related("high german", "english", 4, "Guardians of the Forests p. 138"),
 )
 

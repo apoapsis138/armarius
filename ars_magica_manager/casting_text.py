@@ -8,10 +8,11 @@ styles (Holy or Chthonic Magic, Goetic Arts, Hermetic rites) close it."""
 from __future__ import annotations
 
 from . import spells as spl
+from . import vis as vis_stores
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .markup import escape, problem
 from .models import Character, KnownSpell, Saga, Spell
-from .rules import casting, casting_virtues, certamen, penetration
+from .rules import casting, casting_virtues, certamen, house_mastery, penetration
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
 from .rules.realms import home_aura, home_in_regio
@@ -303,6 +304,27 @@ def known_spell_casting_lines(
             + ("die" if botch == 1 else "dice")
             + f"{calm}. Fatigue past unconsciousness becomes a wound."
         )
+        tainted = vis_stores.infernal_stores(saga, magus, (spell.technique, spell.form))
+        if tainted and vis:
+            text = casting.infernal_vis_text(
+                saga,
+                vis,
+                aura_realm=realm,
+                aura=aura,
+                in_regio=home_in_regio(saga, magus),
+                mastery=known.mastery_score,
+                golden_cord=casting.golden_cord(saga, magus),
+                virtues_flaws=magus.virtues_flaws,
+                magus=magus,
+            )
+            lines.append(
+                problem(
+                    escape(
+                        f"With Infernal vis ({', '.join(p.name or p.art for p in tainted)}): "
+                        f"{text} (RoP: The Infernal p. 19)."
+                    )
+                )
+            )
     elif need <= 0:
         lines.append(
             "Formulaic: cast without Fatigue on any die, unless a stressed die "
@@ -345,11 +367,19 @@ def _mastery_lines(
     if abilities.get(casting.IMPERTURBABLE):
         found.append(f"+{score} to its Concentration rolls")
     if abilities.get(casting.MULTIPLE_CASTING):
-        found.append(f"up to {score} more copies at once")
+        # DE pp. 225-226: additional copies up to the Mastery Score, cast
+        # together; a Ritual spends its vis again for each copy.
+        copies = f"{score} more cop{'y' if score == 1 else 'ies'} at most, cast at once"
+        if spell.ritual:
+            copies += ", each with its own vis (a pawn per magnitude)"
+        found.append(copies)
     if abilities.get(casting.PRECISE_CASTING):
         found.append(f"+{abilities[casting.PRECISE_CASTING]} to its Finesse rolls")
     if abilities.get(casting.QUICK_CASTING) and not spell.ritual:
         found.append(f"+{abilities[casting.QUICK_CASTING]} Initiative")
+    found += house_mastery.notes(
+        abilities, score, ritual=spell.ritual, general=spell.level is None
+    )
     if not found:
         return []
     return ["[b]Mastery:[/] " + escape("; ".join(found)) + "."]

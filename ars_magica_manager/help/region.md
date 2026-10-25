@@ -238,11 +238,15 @@ duke), a wealth (poor, average, wealthy), a number of manors and a
 seat, entered on New Lord or Edit. His Fief tab works out the rest:
 
 - **Income**: 20 pounds a year for each manor.
-- **To spend**: what is left after his household and his knights: 0
-  if poor; a landed noble 2 (5 if wealthy), a baron 40 (100), a count
-  100 (250), a duke 250 (500).
-- **Free time**: a landed noble's free seasons a year: 1 if poor, 2,
-  or 3 if wealthy.
+- **Mercenary budget**: what he may spend on mercenaries a year, once
+  his household and his knights are paid (Lords of Men p. 103): 0 if
+  poor; a landed noble 2 (5 if wealthy), a baron 40 (100), a count 100
+  (250), a duke 250 (500 or more). It is not the 10 or 20 pounds a
+  landed noble has for largesse and war together (p. 31).
+- **Free time**: a landed noble's free seasons a year, as Lords of Men
+  gives them: 1 if poor, 2, or 3 if wealthy (p. 31). The Definitive
+  Edition's Landed Noble has no free time beyond the usual, and a poor
+  one none (DE p. 89).
 - **Army**: the knights, serjeants, infantry and levies his title
   raises.
 - **Owes** and **Aids**: when he answers to another neighbour, what he
@@ -253,6 +257,20 @@ seat, entered on New Lord or Edit. His Fief tab works out the rest:
 
 Where Lords of Men gives two figures for the same thing, the lower is
 used: a landed noble's spending money, a duke's knights and scutage.
+
+**Affinity** is the lord's bonus to social rolls among his region's nobles,
+land-holding churchmen and the councils of towns without a royal charter:
+mustering the local knights, settling their disputes, swaying their advice,
+refereeing a tournament (Lords of Men pp. 21-22). It is +1 for a
+landholding noble of banneret stature, +2 an officer or baron of a minor
+lord, +3 an officer or minor baron of the king, +4 a greater baron, +5 the
+senior noble under the king in the region, and half that, rounded down,
+where two warring affinities divide his country. Left blank on the lord's
+form it follows his title (a landed noble of five manors or more +1, a
+baron +2, the lowest of the barons' standings, since the title doesn't say
+whose baron he is; a count or duke +5); choose a standing to set it, and tick
+**divided** to halve it. A lord who neglects his affinity loses some of
+it: lower the standing.
 
 **See also:** [A neighbour](help:neighbour)
 
@@ -268,8 +286,27 @@ or delete one.
 The Gratitude he owes each character who has served him: a story that
 serves his interest earns 1 point (2 if it was the story's aim), a
 renowned feat 5. Each line says what its points are enough for: 5 for
-freedom or knighthood, 10 for a manor of one's own, 20 for a barony
-held of the king. Add, edit or delete one.
+freedom or knighthood, 10 for a manor of one's own, 20 to become a
+baron of the king. Add, edit or delete one.
+
+<!-- tui -->
+**Redeem Gratitude** (More, `m`, on the chosen debt)
+<!-- /tui -->
+<!-- gui -->
+**Redeem Gratitude** (the row's Redeem Gratitude button)
+<!-- /gui -->
+spends the points the lord owes for a reward
+from Lords of Men's Advancement Requirements Table (p. 8): serf to freeman,
+warrior to knight, knight to bacheler or bacheler to carissimus for 5;
+a manor, added manors, banneret to baron of a minor lord, appointment as
+baron, or an officer's post under a greater baron for 10; minor baron to
+baron of the king for 20; or money and goods for whatever the troupe
+agrees. Most steps also ask a story event, a Reputation for loyalty or an
+office's Abilities, which the form names but leaves to the troupe. The
+points come off the debt, the reward is written in the lord's Diary and
+the character's, and a step that brings a Social Status Virtue (Knight,
+Landed Noble, Great Noble, Temporal Influence) says so: add it to the
+character's Virtues yourself (Lords of Men p. 7).
 
 ## Battles
 <!-- help: section-nb-battles -->
@@ -291,7 +328,8 @@ delete one. Added here, a battle's first army is this lord. An army's
 groups left blank are filled in from a lord's title (his knights,
 serjeants, infantry and levies, in groups of five), to which you add
 his allies and mercenaries; blank baggage is as much as the army
-needs.
+needs. The form asks whether each army fights on its home ground: only
+then does a lord's title raise his levies (Lords of Men pp. 31, 102).
 
 A Deployment Total is Intelligence + Area Lore + a stress die, the
 commander's own or a lieutenant's, plus the magnitude of any spell that
@@ -333,9 +371,13 @@ Setback), 15 for the third and any after (Imminent Victory or Defeat).
 Play the event out as a fight, then say how it went and **Record**. The
 side that lost it loses combat groups equal to its Size times the
 winner's Numbers, when the winner has the greater army, and the next
-event's Numbers are worked out from what is left. Morale rolls (6 to
-hold, 9 to rally) and the troops lost in the fight itself are left to
-the troupe; edit the battle to change its groups. Each event recorded is
+event's Numbers are worked out from what is left. After an event, type
+the losing commander's **Morale** roll (Presence + Leadership + a stress
+die, against 6) and, if it fails, his **rally** at the next event
+(against 9); a failed rally routs his army and ends the battle, and
+Battle Event then refuses (Lords of Men p. 106). The troops lost in the
+fight itself are left to the troupe; edit the battle to change its
+groups. Each event recorded is
 written as a line in the Diary of each army's lord or covenant (see
 [A lord's Diary](help:tab-nb-lord-diary)) and of the leading character.
 
@@ -397,16 +439,19 @@ year worship began there, and the year it was abandoned. With the
 **Dominion growth** Rule Option on (Saga Content), its aura grows with
 the years of worship instead: 3 when consecrated, 4 after a year, 5
 after a decade, never above its kind's; once worship stops it fades to
-nothing over as long as the site was in use; and its greatest relic
-raises it by 1 for each Faith Point above 5.
+nothing over as long as the site was in use. Otherwise a church's aura
+comes from its kind (DE p. 419). Either way, with Realms of Power: The
+Divine in play, a relic with a Faith score above 5 raises the church's
+Dominion by 1 for each point above 5 (Realms of Power: The Divine p. 12).
 
 **See also:** [A neighbour](help:neighbour)
 
 ## Relics
 <!-- help: section-nb-relics -->
 
-The church's relics, each with its saint and its Faith Points. A
-relic's Divine Might is 10 for each Faith Point, and whoever bears it
+The church's relics, each with its saint and its Faith score. A relic's
+Faith score gives it as many Faith Points and a Divine Might of 10 times
+it, and whoever bears it
 gains as much Magic Resistance. With Realms of Power: The Divine in
 play, touching a relic is worth +1 to an invocation of its saint (its
 Touched column). Add, edit or delete one.
@@ -594,6 +639,13 @@ Infernal, in Saga Content), auras move each winter as those books say:
   corruption roll that keeps it starts its clock again (**Eroding
   since**). Its Regio tab shows the corruption roll's Ease Factors: to
   keep it, 3 + the strongest aura there; to raise it, 6 + that aura.
+- **A Faerie aura** follows the glamour of the faerie that claims it: the
+  presiding faerie's Might / 5; 2 + the higher Might / 5 (at most 9)
+  while another faerie contests it; a steward's Might / 5 while the
+  presiding faerie is away. Each season the magi extract vis there
+  without a bargain with the faerie lowers it by 1, until the faerie has
+  had redress (set **Aura lost to vis taken** back to 0). A faerie that
+  travels takes its aura with it (Realms of Power: Faerie pp. 14-16).
 
 Any Infernal place's Edit asks what it is **Tarnished with** (a sinful
 Personality Trait, which everyone in the aura acts as if moved by its
@@ -621,6 +673,19 @@ DE): 5 + 2 x the difference in aura, or 5 + 2 x the two auras added when
 the level below is of another realm (p. 421). Second Sight or Magic
 Sensitivity sees into any level, Sense Holiness and Unholiness into a
 Divine or Infernal one.
+
+A regio level may have a kind. A Divine regio is terrestrial (tied to a
+place on earth) or celestial (an angels' home, reached by invitation): in
+a celestial level a mortal acts normally only on Stamina + Dominion Lore
+(or Parma, if better) against 3 times its rating, else takes as much from
+every roll, and after Stamina + Parma + 3 hours loses a Fatigue level an
+hour, then gains Warping (Realms of Power: The Divine pp. 13-15). Every
+Infernal regio suspends Divine powers (no invoking God, Intercession or
+Holy Influence; Holy Powers and Holy Magic at minus its aura); a Tartaran
+one makes all Fatigue long-term and burns with hell-fire, an Abyssal one
+lowers every Characteristic by its aura and asks a daily Intelligence
+roll against the madness Flaws (Realms of Power: The Infernal pp. 16-17).
+The place's facts say what each level does ("Within").
 
 ## Effects
 <!-- help: section-nb-effects -->

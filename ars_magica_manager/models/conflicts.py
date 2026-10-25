@@ -291,6 +291,9 @@ class BattleSide:
     groups: int = 0
     deployment: int = 0
     baggage: int = 0
+    #: Fighting on its home ground: only then does a lord's title raise
+    #: his levies (Lords of Men pp. 31, 102).
+    at_home: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> BattleSide:
@@ -313,6 +316,10 @@ class BattleEvent:
     total: int = 0
     won: bool = False
     losses: int = 0
+    #: The losing commander's Morale roll after it, and his rally at the
+    #: next event's start when that failed (None: not rolled).
+    morale: int | None = None
+    rally: int | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> BattleEvent:

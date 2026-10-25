@@ -10,7 +10,7 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 - **Gudrun Tigurina and Xavier**: Masters. The book says Durenmar has three masters from other Houses and names these two among them (Ch. 6).
 - **Unnamed magi**: Durenmar 4 (three more Bonisagus and the unnamed third master), Fengheld 7 (the book's 23 magi less the 16 it names), Irencillia 3, as the book says; Roznov 5, its three Ex Miscellanea, three Tremere and a Tytalus less Igor Rastvan and Severicus (Ch. 6, Ch. 8, Ch. 10).
 - **Sites with several auras** take one figure: the Brocken Faerie 4 at the summit (the slopes are 2) (Ch. 8); the Rhinefalls Magic 2 on the island (the summit is 4) (Ch. 5); the Source of the Danube Faerie 3 round the pool (5 in the water) (Ch. 6); the woods of Irencillia Faerie 1, the lowest within the wall, with the sancta's stronger patches as a regio level (Ch. 10).
-- **The Four Seasonal Courts**: aura Faerie 3, Might 40. Each court's aura peaks at 3 in its own season and its Might runs from 20 to 50 through the year; the pack takes the peak aura and 40 for the rulers (Ch. 4).
+- **The Four Seasonal Courts**: aura Faerie 3, Might 30. Each court's aura peaks at 3 in its own season and its Might Pool runs from 15 to 35 through the year; the pack takes the peak aura and 30 for the rulers' Might score (Ch. 4, with Atlas Games' errata to p. 34).
 - **Heorot**: a Spring covenant, as it was founded only in 1215 (Ch. 9).
 - **The Tribunal**: 130 magi, from "approximately 130"; the next meeting is spring 1221, at Walpurgis Night (Ch. 1, Ch. 3).
 - **Peripheral Code years**: the book dates rulings Anno Aegis; the pack gives them in AD, 139 years earlier. "A season at Durenmar" and "Ranks" have no year, as the book gives none (Ch. 3).
@@ -43,9 +43,12 @@ The Rhine pack follows the book wherever this page doesn't say otherwise: its fo
 
 - **Durenmar**: founded 767, when the Order was founded there; Bonisagus had settled there about 754 (Ch. 3, Ch. 6).
 - **Dates where the book gives two**, the pack takes: Merinita's disappearance 792, not 785 (Ch. 10, Appendix B); Dankmar founded 1052, not 1053 (Ch. 6, Appendix B); Rethra abolished 1207, not 1202 (Ch. 3, Ch. 9); Oakdell founded 934, not 931 (Ch. 3, Ch. 12); Grand Silesia destroyed 1008, not 1009 (Ch. 3, Appendix B). Each Diary entry gives the other date too. Ulm's freeing keeps both 1155 and 1164 in the text (Ch. 6).
-- **King Fir**: Might 60. The book prints 90 (p. 50); Atlas Games' published errata reduce it to 60.
-- **Felicia**: Dorana's apprentice is spelled as her stat block's heading has it; the book also writes Felecia (Ch. 3, Ch. 8).
-- **The Oak Gild**: Murion leads it. Only her raven Kolkrabus believes Stentorius has usurped her place, and Stentorius's record says so (Ch. 3, Ch. 8).
+- **Might scores Atlas Games' published errata reduce**: the King Fir 60 (the book prints 90, p. 50), the Glade of the Seven Waterfalls 50 (80, p. 51), the Fane of the Founders 40 (60, p. 61), the Ash of Nortorf 10, potentially 40 (15 and 60, p. 68), the Teutoburger Forest 40 (50, p. 77), the Apple of the Kyffhäuser 45 (70, p. 85), the Linden of Neustadt 25 (30, p. 88), the Holm Oak of Romowe 35, 20 while trapped (45 and 30, p. 99), and the Courts of the Seasons 15 to 35 (20 to 50, p. 34).
+- **Stat blocks the errata correct**: Felicia has Guile 2 (disguise as a man) and Chaos of the Angry Waves 30 (p. 23); Tabanus's Trust of Childlike Faith is PeMe and Eyes of the Eons level 10 (p. 21); Philippus Niger has Encumbrance 1 (1), Chaos of the Angry Waves 30, Flaws of the Weaponsmith 30, and Shattering the Malicious Thurisaz (PeVi 30) and Kauno (PeVi 50) in place of one Shattering the Malicious Rune (pp. 59-60); Imanitos Mendax's Recollection of Memories Never Quite Lived is level 4 (p. 73); Falke has Neptune's Imprisoning Arms 30, Appease the Queen of Winter 65 and Chaos of the Angry Waves 30 (p. 96); Ioannes Acer has Encumbrance 2 (3), Piercing Shaft of Wood 10 and The Treacherous Spear 25 (p. 106); Hilda's short bow is Init -3 and her grapple does no damage (p. 117); Byrek has Fist Defence +6, Encumbrance 3 (3) and each Initiative 1 lower (p. 119).
+- **Felicia**: always spelled so; the errata correct the book's "Felecia".
+- **The Oak Gild**: Murion leads it. Stentorius's familiar Oswald believes Murion has usurped his master's rightful place, as the errata to p. 84 say (the book printed it the other way round) (Ch. 3, Ch. 8).
+- **Danish is East Norse**: the book's West Norse is East Norse throughout, and the language table of p. 138 relates Low and High German to East Norse.
+- **Text the errata remove**: Hildegard of Bingen is no longer said to be a Larta of Jerbiton (p. 121) and has no part in the Divine reading of the Gorge's curse (p. 137); Imanitos was apprenticed at "a powerful covenant of the Provençal Tribunal" (p. 72), not at Doissetep; the Exsules of Fenistal have Poor Student and Supernatural Nuisance (Faeries) (p. 114); the Partitioning of 865 names the Tribunal of the West Franks and the Lotharingian Tribunal (pp. 15-16, 140).
 - **Rhine customs over the core rules**: the pack keeps the book's year of notice for a case (the core rules say a season) and its proxy sigils (the core rules give each magus one vote): a master holds one retired magus's sigil and an archmage two, by their rank Virtues. A meeting that would fall in a Grand Tribunal's year (every 33 years, 1228 and 1261) is held a year earlier, so the meeting after 1221 is in 1227 (pp. 140, 143). Journeyman, Master and Archmage each stand for Hermetic Magus (p. 20). Its rule that the higher rank wins a dispute certamen would settle is recorded as a ruling only (Ch. 3).
 
 ### For every magus
@@ -95,6 +98,7 @@ The Normandy pack follows the book wherever this page doesn't say otherwise, inc
 - **Florum's move**: 1117, the timeline's date; Chapter 8 says the tenth century, and the record notes the clash.
 - **The Spider's Palace**: the book puts it both "two days north of Ghent" and "between Bruges and Ghent"; the record notes both (Ch. 8).
 - **Slips kept, with a note on the record**: Mnemon's age of 97 fits his history badly, and Skuld is "resident at Atramentum" before 1178, though Atramentum was founded in 1200.
+- **Atlas Games' errata**: the Tribunal's ruling on the Dordogne border is of 1102, not 1103 (p. 26); Baudouin's Profession: Carpenter is Craft: Carpenter (p. 78).
 
 ### For every magus
 <!-- help: pack-assumptions-normandy-shared -->
@@ -174,6 +178,9 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 - **Patrons**: each patron named in a Powerful or Local Ally line is recorded for the Ceremony of Propitiation, with no Might (the book gives few; enter them at the first ceremony).
 - **Apparent ages**: the book's are on every magus it gives one for (pp. 63-102).
 - **Shared laboratories**: Ingasia's Forge of Hephaistos (+8 Rego, +5 enchanting, p. 86) and Epidauros' Hall of Repose (+6 to a Longevity Ritual made there, p. 63) are shared laboratories with those Specializations and no other Characteristics.
+- **Hedyosmos**: Magic 5 in the covenant and 6 at the mouth of the labyrinth below it. The book says only that the labyrinth's aura is aligned with Terram and grows stronger deeper in (p. 67); the Definitive Edition's Aura Boon gives Hedyosmos as its example, worth taking only when the whole covenant is already at 5 (DE p. 184).
+- **Caterina da Vigonovo**: a metoikos, with her motion for citizenship on the docket. The book has her gathering tokens (p. 90), which only a polites holds; she came from the Roman Tribunal, so the pack keeps her a metoikos until her decree.
+- **The bestiary**: its creatures cite their printed pages.
 
 ### Judgement calls
 <!-- help: pack-assumptions-theban-judgement -->
@@ -200,6 +207,7 @@ The Theban pack follows the book wherever this page doesn't say otherwise: every
 - **History**: Robert Guiscard was a duke, not a king; Antioch fell in 1098, not 1095; the Second Crusade has its historical dates, not 1143 to 1149. Each entry mentions the book's version. The Latin throne, which the book leaves empty, has history's regents noted in the text.
 - **Alexandria's patron**: Fides, as the covenant's own section says, not the grove of myrrh trees of Chapter 3 (Ch. 3, Ch. 8).
 - **Rules**: page references are to the Definitive Edition; the book's two new Virtues, Elysian Ecstasy and Olympian Pact, are added in the pack's own words.
+- **Atlas Games' errata**: Proximios's tip about planting an infernalist among the Children of Olympos comes from "other infernalists", not from Moreto (p. 140).
 
 ### For every magus
 <!-- help: pack-assumptions-theban-shared -->
@@ -217,7 +225,7 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise:
 ### Inferred from the text
 <!-- help: pack-assumptions-transylvania-inferred -->
 
-- **Lycaneon**: Magic 6 on the mountain and the oppidum. The book calls the aura "exceptionally high (9)" only in some places, which warp and stand empty, and gives none for the rest, so the pack takes a strong 6 for the oppidum (Ch. 6).
+- **Lycaneon**: the Mountain of Lycaneon keeps the book's 9, its strongest places (p. 87); the oppidum takes 5, since its magi work in the safer areas and the places that warp stand empty, and an aura warps from 6 (DE p. 390).
 - **Evredika**: Magic 4, the aura of the Devil's Throat, where its Tremere aedile lives; the oppidum is spread over many sites and the book gives it no single aura (Perperikon is 3) (Ch. 4).
 - **Tablinum's Empty Halls**: Magic 3, from "Magic auras of 3 or 4" (Ch. 4). Tablinum itself stands on its Curator's Sanctum level (Magic 5), where the residents live.
 - **The forts of Kezdö Válasz**: every fort is built in a Magic aura, with no strength given (Ch. 7). The permanent fort at Sarmizegethusa, on the old Dacian capital, is Magic 5, and so is Kezdö Válasz; Leona's Prokletije Fort is 4; the abandoned forts are 3, though some have turned Faerie or Infernal.
@@ -230,7 +238,7 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise:
 - **The Tribunal**: 82 magi, the sum of the oppida's counts; 42 are named.
 - **The Transylvania Chronicle**: nine tractatus on Order of Hermes Lore and nine on Code of Hermes, one each for every fifty years from 767 to 1216, Quality 6, bound as one encyclopedia (p. 63); the exhibit hall's three copies are kept as one (Ch. 4).
 - **Tablinum's seven laboratories** carry the book's Characteristics and Specializations as entered values, with their Virtues and Flaws named in words (pp. 62-63), so nothing counts twice.
-- **The Zenodochia** hold the seven enchanted items (the Hippocratic Staff's two effects, CrCo 34 each) and the three Casting Tablets (pp. 98-99).
+- **The Zenodochia** hold the seven enchanted items (the Hippocratic Staff with its one effect, as the errata leave it) and the three Casting Tablets (pp. 98-99).
 
 ### Judgement calls
 <!-- help: pack-assumptions-transylvania-judgement -->
@@ -252,11 +260,12 @@ The Transylvania pack follows the book wherever this page doesn't say otherwise:
 ### Corrections to the book
 <!-- help: pack-assumptions-transylvania-corrections -->
 
-- **Sudden Well**, in Monica Ierne's spells, is PeTe 30 as written up, not ReTe 35 as listed; her Hermes Lore 3 is Organization Lore: Order of Hermes (Ch. 2).
+- **Monica Ierne's spells**: her Hermes Lore 3 is Organization Lore: Order of Hermes (Ch. 2). By Atlas Games' errata, Sudden Well is PeTe 25 (+3 size), not the ReTe 35 her list gives, and Diverting the River a Ritual (p. 31).
 - **The Definitive Edition's rules govern** the zenodochia's Warping (6 points a season inside) where they give a different count (Ch. 7), and certamen in place of Wizard's War is kept as a Code ruling (Ch. 2).
 - **Creature Virtues**: the Vampire Tree's Passes for Plant is the catalog's Passes for Human, the Minor Vila's Human Form is Humanoid Faerie, and Silexa's Magical Creature is left out, as it adds nothing to Magic Animal (Ch. 2, Ch. 8).
 - **Names and dates**: Pope Honorius III, not II, sends the legate about Bosnia (Ch. 5); Andrew II comes home from crusade in 1218, not 1222 (Ch. 6); the Landgrave, not Margrave, of Thuringia holds the Wartburg contest of 1207 (Ch. 1); the Teutonic Knights' invitation of 1211 leaves out the book's King Bela and puts Hermann von Salza's name right (Ch. 6); Albertus is "he" throughout (Ch. 6); Esztergom and Oradea are spelt so (Ch. 3).
 - **Small contradictions**: Nicoleta's horse farm is on the Madara Plateau in Chapter 4, where the book's pointer says Chapter 3 (Ch. 8); Neculai is a socius of Domostron, as his own entry says (Ch. 7); Dominic of Tytalus stays a hospes while Coeris's aedile (Ch. 2).
+- **Atlas Games' errata**: the zenodochia's Hippocratic Staff has one effect, +9 to Recovery rolls; its Disease Recovery effect is cut (pp. 98-99).
 
 ### For every magus
 <!-- help: pack-assumptions-transylvania-shared -->
@@ -412,6 +421,7 @@ The Cradle and the Crescent pack is built from *The Cradle and the Crescent*, a 
 - **Kharrat's Envisioning** costs 1 point for a dream and 5 for a waking vision; his text's "1 or 2" is noted on the power.
 - **The racehorse** is Bali' al-Ard: "Hesaan" in the text only means horse.
 - **Page numbers** on creatures are read from the extracted text's page markers, so one may be a page off.
+- **Atlas Games' errata**: the faerie ghula and the Infernal ghul have Might of Form Corpus (pp. 72-73); the Empty Quarter's spirit is al-Khali, "the Empty One", not al-Khalil, a title of Abraham (p. 109).
 
 ### Shared with other packs
 <!-- help: pack-assumptions-cradle-shared -->

@@ -57,11 +57,11 @@ def build(rhine: Rhine) -> None:
                 "raised at a covenant, who leads its grogs and drills them.\n"
                 "Mace and heater shield: Init -1, Atk +13, Def +10, Dam +12. "
                 "Mace: Init -1, Atk +12, Def +6, Dam +12. "
-                "Short bow: Init -4, Atk +7, Def +1, Dam +10. "
+                "Short bow: Init -3, Atk +7, Def +1, Dam +10. "
                 "Pole axe: Init -1, Atk +9, Def +1, Dam +15. "
                 "Dagger: Init -2, Atk +7, Def +2, Dam +7. "
                 "Fist: Init -2, Atk +5, Def +2, Dam +4. "
-                "Grapple: Init -2, Atk +6, Def +3, Dam +4. "
+                "Grapple: Init -2, Atk +6, Def +3, Dam n/a. "
                 "Soak +9; Encumbrance 0 (4). Wounds: -1 (1-6), -3 (7-12), "
                 "-5 (13-18), Incapacitated (19-24).\n"
                 "Equipment: full metal scale armour, mace, heater shield, "
@@ -109,7 +109,7 @@ def build(rhine: Rhine) -> None:
                 ("Ride", 3, "at speed"),
                 ("Single Weapon", 2, "axe and round shield"),
                 ("Survival", 3, "heathland"),
-                ("Living Language: West Norse", 2, "Danish curses"),
+                ("Living Language: East Norse", 2, "Danish curses"),
                 ("Living Language: West Slavonic", 5, "Sorbian"),
             ],
             "traits": {"Demoralized": 3, "Morose": 2},
@@ -120,11 +120,11 @@ def build(rhine: Rhine) -> None:
                 "stamina; his Affinity with Athletics, Enduring Constitution "
                 "and Long-Winded may come from it. He feels rejected and "
                 "gloomy until given a real job.\n"
-                "Long spear: Init +6, Atk +10, Def +10, Dam +7. "
-                "Axe and round shield: Init +4, Atk +8, Def +8, Dam +6. "
-                "Axe: Init +4, Atk +7, Def +5, Dam +6. "
-                "Fist: Init +3, Atk +4, Def +7, Dam 0. "
-                "Soak +4; Encumbrance 2 (2); Fatigue OK, 0, 0, -2, -4, "
+                "Long spear: Init +5, Atk +10, Def +10, Dam +7. "
+                "Axe and round shield: Init +3, Atk +8, Def +8, Dam +6. "
+                "Axe: Init +3, Atk +7, Def +5, Dam +6. "
+                "Fist: Init +2, Atk +4, Def +6, Dam 0. "
+                "Soak +4; Encumbrance 3 (3); Fatigue OK, 0, 0, -2, -4, "
                 "Unconscious.\n"
                 "Equipment: long spear, axe, round shield, heavy leather "
                 "hauberk (taken off to run)."

@@ -418,7 +418,7 @@ def _infernal_jinn(cradle: Cradle) -> None:
         page="p. 73",
         realm="Infernal",
         might=20,
-        form="Vim",
+        form="Corpus",
         order="Furies",
         how_many=(
             "solitary, in graveyards, refuse pits and slums; Might usually "
@@ -495,7 +495,7 @@ def _infernal_jinn(cradle: Cradle) -> None:
             "illusions, possession or human magics, and the most feared "
             "summon other jinn by Sihr, the Arts Fabulosa or the Goetic "
             "Arts. It is not the female faerie ghula, whatever the two "
-            "share. Its Form (Vim) is the pack's choice.",
+            "share. Its Form, Corpus, is from the book's errata.",
         ),
     )
     _MADE["qareen"] = b.creature(
@@ -1076,7 +1076,7 @@ def _faerie_jinn(cradle: Cradle) -> None:
         page="p. 72",
         realm="Faerie",
         might=20,
-        form="Imaginem",
+        form="Corpus",
         how_many="in the cities and deserts, each in her chosen household",
         tires=False,
         block={
@@ -1172,8 +1172,8 @@ def _faerie_jinn(cradle: Cradle) -> None:
             "Restricted in daylight; locked into a body though a spirit; not "
             "meant as a player's character. First given in Realms of Power: "
             "Faerie p. 72; this one is the Arab jinniyya, not the European "
-            "lamia. The book gives her Might no Form: the pack takes "
-            "Imaginem, her vis. " + PRETENSES,
+            "lamia. The book prints her Might with no Form; its errata "
+            "give Corpus. " + PRETENSES,
         ),
     )
 

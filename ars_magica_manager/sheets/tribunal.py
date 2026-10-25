@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import re
 
-from .. import threats, tribunal_packages, tribunals, world
+from .. import code_of_hermes, threats, tribunal_packages, tribunals, world
 from ..grids import Grid
 from ..markup import escape
 from ..models import (
@@ -473,6 +473,8 @@ def case_text(saga: Saga, tribunal: Tribunal, case: Case | None) -> str:
             lines.append(f"[$label]{label}:[/] {escape(words.strip())}")
 
     line("Charge", case.charge)
+    if case.kind == "charge":
+        line("Under the Code", code_of_hermes.crime_note(case.charge))
     line("Brought by", case.brought_by)
     line("Against", case.against)
     line("Prosecutor", case.prosecutor)

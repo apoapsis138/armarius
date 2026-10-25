@@ -44,6 +44,12 @@ def _plan(activity, subject="ability:Craft: Smith", **kw):
     )
 
 
+def _gifted(saga):
+    """Wulf as a magus: Gifted, so the unGifted Initiation rules (tested in
+    test_initiation_scripts) don't apply."""
+    saga.character("c").type = "magus"
+
+
 def _run(saga, plan, rng=None):
     seasons.set_plan(saga, plan)
     seasons.apply(saga, seasons.resolve(saga, rng or random.Random(1)))
@@ -134,6 +140,7 @@ def test_a_formula_needs_five_xp():
 
 def test_an_initiation_gives_the_virtue_and_counts_the_ordeal():
     saga = _saga()
+    _gifted(saga)
     plan = _plan(
         "undergo_initiation",
         subject="",
@@ -176,6 +183,7 @@ def test_a_mystagogue_has_the_virtue_only_with_what_it_names():
 
 def test_the_initiate_needs_the_lore_unless_it_is_their_house_s():
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     mira = Character(id="m", name="Mira", type="magus")
@@ -197,6 +205,7 @@ def test_the_initiate_needs_the_lore_unless_it_is_their_house_s():
 
 def test_no_mystagogue_is_a_self_initiation():
     saga = _saga()
+    _gifted(saga)
     plan = _plan(
         "undergo_initiation",
         subject="",
@@ -215,6 +224,7 @@ def test_no_mystagogue_is_a_self_initiation():
 
 def test_the_past_ordeal_that_lowers_the_target_most_counts():
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     plan = _plan("undergo_initiation", subject="", effect_id="vf_puissant_ability")
@@ -227,6 +237,7 @@ def test_the_past_ordeal_that_lowers_the_target_most_counts():
 
 def test_each_initiation_counts_down_every_past_ordeal():
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     wulf.ordeals = [Ordeal("Major", 2), Ordeal("Medium", 0)]
@@ -501,7 +512,11 @@ def test_excellent_items_ventures_remedies_and_medicine():
     # A wondrous item needs Touched by (Realm), and builds up over seasons.
     ring = _plan("make_wondrous_item", title="Ring", book_level=3)
     assert "Touched by (Realm)" in sw.problems(saga, saga.character("c"), ring)[0]
-    touched = _with(virtues_flaws=[VirtueFlawInstance("vf_touched_by_realm")])
+    touched = _with(
+        virtues_flaws=[
+            VirtueFlawInstance("vf_touched_by_realm", params={"realm": "Magic"})
+        ]
+    )
     wondrous = _work(touched, ring)
     assert wondrous.progress[0][:3] == ("item", "Ring", 3)
     assert _work(saga, _plan("merchant_venture", other_modifier=12)).labor_points == 12
@@ -618,6 +633,7 @@ def test_searching_for_lacunae():
 
 def test_initiation_against_the_target_less_a_past_ordeal():
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     wulf.characteristics.presence = 3
@@ -662,6 +678,7 @@ def _ordeal_plan(**kw):
 
 def test_an_ordeal_can_take_away_a_virtue():
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     wulf.characteristics.presence = 4
@@ -692,6 +709,7 @@ def test_losing_a_major_virtue_is_a_major_ordeal():
 
 def test_a_medium_ordeal_raises_a_minor_flaw_to_the_major_one():
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     wulf.virtues_flaws = [VirtueFlawInstance("vf_poor_hearing")]
@@ -709,6 +727,7 @@ def test_varying_the_script():
     # DE pp. 388-389: stress die + Intelligence + Lore against 9 to add a
     # component; failing fails the Initiation.
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     wulf.abilities.append(Ability("Mercere Lore", xp=ability_xp(3)))
@@ -723,6 +742,7 @@ def test_varying_the_script():
 
 def test_a_failed_initiation_costs_nothing():
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     wulf.virtues_flaws = [VirtueFlawInstance("vf_wealthy")]
@@ -778,6 +798,7 @@ def test_binding_a_catalog():
 def test_distractions_can_fail_an_initiation_but_not_spare_the_ordeal():
     # TMRE p. 12: each month lost takes a third of the total, rounded up.
     saga = _saga()
+    _gifted(saga)
     wulf = saga.character("c")
     assert wulf is not None
     wulf.characteristics.presence = 3

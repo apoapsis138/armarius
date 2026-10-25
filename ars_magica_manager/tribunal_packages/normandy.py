@@ -5,11 +5,13 @@ teams contest the Hermetic Tourney, whose ranks win prize pawns.
 
 Kept in the package's data: "tenures", each {"source", "holder_id" (a
 covenant, or None for the Tribunal), "tenure", "until", "notes"}, and
-"tourney", each team's result {"year", "team", "points"}. A Tourney's
-ranks and prize pawns are worked out from its points."""
+"tourney", each team's result {"year", "team", "points", "events"}
+("points" its own tally, "events" {event key: placing}). A Tourney's
+ranks and prize pawns are worked out from its total points."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from .. import tribunals
@@ -57,6 +59,63 @@ PRIZE_PAWNS: dict[int, int] = {
     20: 1,
     21: 6,
 }
+
+ENTERED = "entered"
+
+
+#: The Tourney's six events (The Lion and the Lily p. 31): each placing's
+#: points, and the point every team that enters gains besides (none in
+#: the melee).
+@dataclass(frozen=True)
+class TourneyEvent:
+    label: str
+    placings: dict[str, int]
+    entering: int = 1
+
+
+TOURNEY_EVENTS: dict[str, TourneyEvent] = {
+    "hastiludium": TourneyEvent(
+        "The hastiludium", {"winner": 20, "finalist": 10, "semifinalist": 5}
+    ),
+    "certamen": TourneyEvent(
+        "The certamen tournament", {"winner": 25, "finalist": 15, "semifinalist": 8}
+    ),
+    "dimicatio": TourneyEvent(
+        "The dimicatio", {"winner": 23, "finalist": 12, "semifinalist": 6}
+    ),
+    "melee": TourneyEvent(
+        "The melee",
+        {"first": 6, "second to fourth": 2, "fifth": 1},
+        entering=0,
+    ),
+    "host": TourneyEvent(
+        "The hosting covenant's choice",
+        {"first": 12, "second": 8, "third or fourth": 3},
+    ),
+    "joust": TourneyEvent(
+        "The joust", {"first": 20, "second": 8, "third or fourth": 3}
+    ),
+}
+
+
+def event_points(event: str, placing: str) -> int:
+    """What a team's placing in one event earns: the placing's points and
+    the point for entering ("" did not enter; ENTERED placed nowhere)."""
+    found = TOURNEY_EVENTS.get(event)
+    if found is None or not placing:
+        return 0
+    return found.placings.get(placing, 0) + found.entering
+
+
+def total_points(result: dict[str, Any]) -> int:
+    """A team's tally: its own points (its starting tally, the number of
+    its covenant's members, and any the book's events don't give) and
+    each event's."""
+    events = result.get("events") or {}
+    return int(result.get("points", 0)) + sum(
+        event_points(event, placing) for event, placing in events.items()
+    )
+
 
 #: The named ranks, each a Hermetic Reputation of 2 for seven years.
 SIEGES: dict[int, str] = {
@@ -214,7 +273,7 @@ def ranked(tribunal: Tribunal) -> list[tuple[int, int]]:
     results = tourney(tribunal)
     order = sorted(
         range(len(results)),
-        key=lambda i: (-results[i].get("year", 0), -results[i].get("points", 0), i),
+        key=lambda i: (-results[i].get("year", 0), -total_points(results[i]), i),
     )
     out: list[tuple[int, int]] = []
     rank, year = 0, None
@@ -254,7 +313,7 @@ def tourney_grid(_saga: Saga, tribunal: Tribunal) -> Grid:
                 str(result.get("year", "")),
                 str(rank),
                 result["team"],
-                str(result.get("points", 0)),
+                str(total_points(result)),
                 prize(rank),
                 SIEGES.get(rank, ""),
             ]
@@ -292,9 +351,38 @@ def tourney_fields(
             "Points",
             "int",
             r.get("points", 0),
-            hint="Its starting tally and every event's points.",
+            hint="Its starting tally (a point for each member of its covenant, "
+            "one for a visiting team or a coenobium's member) and any points "
+            "the events below don't give (The Lion and the Lily p. 31).",
         ),
+    ] + [
+        DialogField(
+            f"event_{key}",
+            event.label,
+            "select",
+            (r.get("events") or {}).get(key) or None,
+            options=[
+                (f"Entered, unplaced (+{event.entering})", ENTERED),
+                *[
+                    (f"{placing.capitalize()} (+{points + event.entering})", placing)
+                    for placing, points in event.placings.items()
+                ],
+            ],
+            allow_blank=True,
+            placeholder="(did not enter)",
+        )
+        for key, event in TOURNEY_EVENTS.items()
     ]
+
+
+def _tourney_live(values: dict[str, Any]) -> str:
+    events = {
+        key.removeprefix("event_"): value
+        for key, value in values.items()
+        if key.startswith("event_") and value
+    }
+    total = total_points({"points": values.get("points") or 0, "events": events})
+    return f"Tally: {total} points." if events else ""
 
 
 def _tourney_problem(values: dict[str, Any]) -> str | None:
@@ -307,7 +395,18 @@ def tourney_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
     def form(result: dict[str, Any] | None) -> Form:
         def apply(values: dict[str, Any]) -> None:
             target = result if result is not None else {}
-            target.update(values)
+            events = {
+                key.removeprefix("event_"): value
+                for key, value in values.items()
+                if key.startswith("event_") and value
+            }
+            target.update(
+                {k: v for k, v in values.items() if not k.startswith("event_")}
+            )
+            if events:
+                target["events"] = events
+            else:
+                target.pop("events", None)
             if result is None:
                 tourney(tribunal).append(target)
 
@@ -316,6 +415,7 @@ def tourney_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
             lambda: tourney_fields(saga, tribunal, result),
             apply,
             validate=_tourney_problem,
+            live=_tourney_live,
             save_label="Add" if result is None else "Save",
         )
 

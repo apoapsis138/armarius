@@ -36,6 +36,9 @@ def mastery_ability_fields(existing: MasteryAbility | None) -> list[DialogField]
             attr(existing, "name", ""),
             required=True,
             placeholder="e.g. Fast Casting",
+            hint="The book's (DE pp. 225-226), or a lineage's: Adaptive, "
+            "Boosted, Disguised, Harnessed, Stalwart or Tethered Casting, Lab "
+            "Mastery, Learn From Mistakes (HoH: True Lineages p. 99).",
         ),
         DialogField("level", "Level", "int", attr(existing, "level", 0)),
         DialogField("xp", "XP", "int", attr(existing, "xp", 0)),

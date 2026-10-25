@@ -21,6 +21,7 @@ from typing import Any
 
 from . import meeting as core
 from . import tribunals, world
+from .arts import ARTS
 from .form_spec import DialogField
 from .markup import escape
 from .models import Case, Character, Meeting, Saga, TreasuryEntry, Tribunal
@@ -228,6 +229,7 @@ class Assembly(core.Step):
                     hint="The reparation offered is accepted and a shard removed.",
                 )
             )
+            found += _reparation_fields(magus, held)
         citizens = _options(politai(saga, tribunal, year))
         # A decree against a magus who isn't present isn't voted on: the
         # Conciliatory Board takes it after the Tribunal (p. 32). With no
@@ -291,12 +293,14 @@ class Assembly(core.Step):
     def apply(
         self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
     ):
+        _return_reparations(saga, tribunal, _record(meeting).get("assembly") or {})
         self._undo(tribunal, meeting)
         held: dict[str, Any] = {
             "principal": values.get("principal") or next_principal(tribunal),
             "principal_before": data(tribunal, KEY).get("principal_phyle"),
             "citizens": [],
             "contrition": [],
+            "reparations": {},
         }
         data(tribunal, KEY)["principal_phyle"] = held["principal"]
         for key, ticked in values.items():
@@ -314,6 +318,7 @@ class Assembly(core.Step):
                 if entry is not None and int(entry.get("shards") or 0) > 0:
                     _adjust(tribunal, ident, "shards", -1)
                     held["contrition"].append(ident)
+                    _take_reparation(saga, tribunal, meeting, ident, values, held)
         if values.get("accused"):
             verdict = values.get("verdict") or "upheld"
             shard_to = (
@@ -354,6 +359,10 @@ class Assembly(core.Step):
                 f"By decree of contrition a shard was taken from "
                 f"{_names(saga, held['contrition'])}."
             )
+        for ident, paid in (held.get("reparations") or {}).items():
+            magus = saga.character(ident)
+            if magus is not None:
+                parts.append(f"{magus.name}'s reparation: {reparation_text(paid)}.")
         defamation = held.get("defamation") or {}
         accused = saga.character(defamation.get("accused"))
         if accused is not None:
@@ -369,6 +378,112 @@ class Assembly(core.Step):
                     f"A decree of defamation against {accused.name} was rejected{by}."
                 )
         return " ".join(parts), ""
+
+
+# -- a contrition's reparation (The Sundered Eagle p. 33) --
+
+
+def _reparation_fields(magus: Character, held: dict[str, Any]) -> list[DialogField]:
+    """What a contrite magus offers the Tribunal, shown once his decree is
+    ticked: its words, and the vis it takes from him."""
+    paid = (held.get("reparations") or {}).get(magus.id) or {}
+    ticked = f"contrition_{magus.id}"
+    pawns_key = f"reparation_pawns_{magus.id}"
+    return [
+        DialogField(
+            f"reparation_{magus.id}",
+            "  The reparation",
+            "text",
+            paid.get("what", ""),
+            placeholder="e.g. a summa on Corpus, an invested item",
+            hint="The magus sets it himself (The Sundered Eagle p. 33): seven "
+            "or more pawns, a summa or an invested item from one with many "
+            "enemies or who defied the Tribunal.",
+            show_if=lambda values: bool(values.get(ticked)),
+        ),
+        DialogField(
+            pawns_key,
+            "  Its vis, in pawns",
+            "optint",
+            paid.get("wanted", paid.get("pawns")),
+            hint="Taken from the magus's own vis into the Tribunal's treasury.",
+            show_if=lambda values: bool(values.get(ticked)),
+        ),
+        DialogField(
+            f"reparation_art_{magus.id}",
+            "  Of the Art",
+            "select",
+            paid.get("art", "Vim"),
+            options=[(art, art) for art in ARTS],
+            show_if=lambda values: bool(values.get(ticked) and values.get(pawns_key)),
+        ),
+    ]
+
+
+def _take_reparation(
+    saga: Saga,
+    tribunal: Tribunal,
+    meeting: Meeting,
+    ident: str,
+    values: dict[str, Any],
+    held: dict[str, Any],
+) -> None:
+    """Record the reparation; its pawns leave the magus's vis (as many as
+    he has) for the Tribunal's treasury."""
+    what = str(values.get(f"reparation_{ident}") or "").strip()
+    wanted = max(0, int(values.get(f"reparation_pawns_{ident}") or 0))
+    art = str(values.get(f"reparation_art_{ident}") or "Vim")
+    if not what and not wanted:
+        return
+    paid: dict[str, Any] = {"what": what}
+    magus = saga.character(ident)
+    if wanted and magus is not None:
+        key = art.lower()
+        pawns = min(wanted, int(magus.raw_vis.get(key, 0)))
+        if pawns:
+            magus.raw_vis[key] = magus.raw_vis.get(key, 0) - pawns
+            if not magus.raw_vis[key]:
+                del magus.raw_vis[key]
+            entry = TreasuryEntry(
+                "vis",
+                pawns,
+                art=art,
+                who=magus.name,
+                note=f"Reparation for a shard, {_year(saga, meeting)}",
+            )
+            tribunal.treasury.append(entry)
+            paid["treasury_id"] = entry.id
+        paid.update(pawns=pawns, art=art, wanted=wanted)
+    held["reparations"][ident] = paid
+
+
+def _return_reparations(saga: Saga, tribunal: Tribunal, held: dict[str, Any]) -> None:
+    """Undo the reparations an earlier holding took: the pawns back to each
+    magus, their treasury lines removed."""
+    for ident, paid in (held.get("reparations") or {}).items():
+        pawns = int(paid.get("pawns") or 0)
+        magus = saga.character(ident)
+        if pawns and magus is not None:
+            key = str(paid.get("art") or "Vim").lower()
+            magus.raw_vis[key] = magus.raw_vis.get(key, 0) + pawns
+        if paid.get("treasury_id"):
+            tribunal.treasury = [
+                t for t in tribunal.treasury if t.id != paid["treasury_id"]
+            ]
+
+
+def reparation_text(paid: Mapping[str, Any]) -> str:
+    """A reparation as the minutes give it: "a summa on Corpus and 7 pawns
+    of Vim", and how many pawns offered he lacked."""
+    parts = [str(paid["what"])] if paid.get("what") else []
+    pawns = int(paid.get("pawns") or 0)
+    if pawns:
+        parts.append(f"{pawns} pawns of {paid.get('art', 'Vim')}")
+    short = int(paid.get("wanted") or 0) - pawns
+    words = " and ".join(parts) or "nothing recorded"
+    if short > 0:
+        words += f" ({short} of the pawns offered he hadn't)"
+    return words
 
 
 def ostracism_candidates(

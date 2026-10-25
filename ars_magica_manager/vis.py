@@ -63,6 +63,22 @@ def _title(art: str) -> str:
     return next((a for a in ARTS if a.lower() == art.lower()), art.title())
 
 
+def infernal_stores(
+    saga: Saga, character: Character, arts: tuple[str, ...]
+) -> list[Possession]:
+    """The Raw Vis Stores of `character`'s covenant of any of `arts` that
+    are marked Infernal vis (RoP: The Infernal pp. 18-19)."""
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is None:
+        return []
+    wanted = {a.lower() for a in arts}
+    return [
+        p
+        for p in covenant.possessions
+        if p.kind == STORE and p.infernal and p.art.lower() in wanted and p.pawns > 0
+    ]
+
+
 # ------------------------------------------------------------- what's held
 
 

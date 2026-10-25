@@ -52,6 +52,7 @@ COMMENTARY = "Commentary"
 CORRESPONDENCE = "Correspondence"
 EXPERT_CORRESPONDENCE = "Expert correspondence"
 LECTURE_COMMENTARY = "Lecture commentary"
+REALIA = "Realia"
 
 #: What kind of work the book is, beyond summa and tractatus.
 OPUS_TYPES: dict[str, Kind] = {
@@ -81,12 +82,54 @@ OPUS_TYPES: dict[str, Kind] = {
         "against the tractatus the teacher may write.",
         book="A&A",
     ),
+    REALIA: Kind(
+        REALIA,
+        research_level=1,
+        many_readers=True,
+        summary="A collection of objects studied as a tractatus: Quality 1 "
+        "for one quintessential piece, 1 more each time the pieces double "
+        "(6 for 32); each reader studies it as many times as its Quality; "
+        "readers sharing it in a season split it (-1 Quality for two, -2 up "
+        "to four, -3 up to eight); +1 to its library's research on the "
+        "subject.",
+    ),
 }
+
+#: Realia (Covenants p. 102; Against the Dark p. 59): Quality from its
+#: pieces, studied up to Quality times by each reader, split among readers
+#: sharing it in one season. Bought at covenant creation at the Art
+#: column's cost for its Quality (1, 3, 6, 10, 15, 21). A realia on an Art
+#: is the Art's presence for Study Requirement and Study Bonus while the
+#: reader's score is under REALIA_PRESENCE_ART (Against the Dark p. 61).
+REALIA_SOURCE = "Covenants, Chapter Seven: Library, Realia, p. 102"
+SHARED_REALIA_SOURCE = "Against the Dark, Tablinum, Studying from Exhibits, p. 59"
+REALIA_PRESENCE_SOURCE = "Against the Dark, Tablinum, The Art Exhibits, p. 61"
+REALIA_PRESENCE_ART = 15
+
+
+def realia_quality(pieces: int) -> int:
+    """A realia collection's Quality from its unique, highly informative
+    pieces: 1 for one, 2 for two, 3 for four... (0 for none)."""
+    return max(0, pieces).bit_length()
+
+
+def realia_sharing_penalty(readers: int) -> int:
+    """What sharing a realia in one season takes from its Quality: 1 for two
+    readers, 2 for up to four, 3 for up to eight..."""
+    return max(0, readers - 1).bit_length()
+
+
+def realia_cost(quality: int) -> int:
+    """Build Points for a realia of `quality`: the Art column of the
+    Advancement Table (1, 3, 6, 10, 15, 21)."""
+    return max(0, quality) * (max(0, quality) + 1) // 2
+
 
 #: Experience a season of useful correspondence adds (one correspondence's
 #: a season, on a theme of the magus's research or reading, with at least
 #: one letter received).
 CORRESPONDENCE_XP = 1
+CORRESPONDENCE_SOURCE = "Covenants, Chapter Seven: Library, Other Opus Types, p. 90"
 
 #: How the copy is made. Those that change Quality by a set amount do so
 #: here; for the others (a damaged book, an edition de luxe) enter the
@@ -181,6 +224,35 @@ EPITOME_MATERIAL, EPITOME_SIZE, EPITOME_SHAPE = "leather", "large", "Book"
 #: one of its books gives in it.
 FOLIO_LORE = "Organization Lore: Order of Hermes"
 FOLIO_LORE_XP = 1
+
+#: Writing and copying a folio (Houses of Hermes: True Lineages p. 23):
+#: what it holds is the sum of its Lab Texts' magnitudes and its tractatus'
+#: Qualities, at most the Colentes' combined Magic Theory; a Colens copies
+#: 12 magnitudes of Lab Texts into it a season for each point of
+#: Profession: Scribe. A scribe copies a whole folio as a summa, carefully at
+#: 6 + Scribe points a season or quickly at 18 + 3 x Scribe (its tractatus
+#: 1 Quality lower and no Order of Hermes Lore), until the points reach
+#: the Colentes' combined Magic Theory.
+FOLIO_SOURCE = "Houses of Hermes: True Lineages, Bonisagus, Folios, pp. 22-23"
+FOLIO_TEXT_MAGNITUDES = 12
+
+
+def folio_size(
+    text_magnitudes: Collection[int], tractatus_qualities: Collection[int]
+) -> int:
+    """What a folio holds: its Lab Texts' magnitudes and its tractatus'
+    Qualities, summed."""
+    return sum(text_magnitudes) + sum(tractatus_qualities)
+
+
+def folio_capacity(magic_theory_scores: Collection[int]) -> int:
+    """The most a folio may hold: its Colentes' Magic Theory, summed."""
+    return sum(max(0, s) for s in magic_theory_scores)
+
+
+def folio_copy_points(scribe: int, *, quick: bool = False) -> int:
+    """A season's points copying a folio whole."""
+    return 18 + 3 * scribe if quick else 6 + scribe
 
 
 #: Craftsmanship under Covenants' extended Quality rules (the

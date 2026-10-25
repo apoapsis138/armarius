@@ -142,6 +142,9 @@ class SeasonPlan:
     focus: bool = False
     theory_specialty: bool = False
     other_modifier: int = 0
+    #: Lab work on a dark or sinister effect: a chthonic magus's Chthonic
+    #: Magic stands in for Magic Theory (RoP: The Infernal p. 123).
+    chthonic: bool = False
     #: Lab work's Virtue options (rules.lab_virtues): Potent Magic's field,
     #: Cyclic Magic's good time covering the season or its bad time
     #: touching it, Environmental Magic Condition holding; a Laboratory
@@ -231,6 +234,20 @@ class SeasonPlan:
     #: bonus.
     script_variation: str = ""
     variation_bonus: int = 0
+    #: An Initiation by a hedge tradition's Script ("tradition id/Script
+    #: name"; "" for a Hermetic Mystery), whether the Mystagogue is known to
+    #: have the power (besides holding the Virtue initiated), and an
+    #: experimental Script: its sympathy bonus (its risk is `risk`).
+    hedge_script: str = ""
+    knows_power: bool = False
+    experimental_script: bool = False
+    script_sympathy: int = 0
+    #: The aura where the work is done, when it isn't the character's
+    #: home: a folk witches' sabbat's site (always Magic: it caps the
+    #: witches who may help), a wondrous item's workshop, with its realm
+    #: (`site_realm`, "" for Magic). None: not entered.
+    site_aura: int | None = None
+    site_realm: str = ""
     #: A plan saved for several seasons: what ties its seasons together
     #: ("" for a single season, and for lab work, which its project ties),
     #: whether it runs until its work is done (its seasons are worked out

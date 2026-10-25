@@ -51,6 +51,7 @@ from ..models import (
 from . import (
     aging,
     book_seasons,
+    common_magics,
     enchant_seasons,
     enchantment,
     experiment,
@@ -65,6 +66,7 @@ from . import (
     supplement_work,
     warping,
 )
+from . import hybrid_magic as hybrid
 from .breakdown import Line
 from .casting import _lowest
 from .rounding import round_up
@@ -575,6 +577,7 @@ def _spell_work(
             similar_spell_level=similar,
             from_lab_text=plan.activity == LAB_TEXT,
             others_text=text is not None and text.author_id != magus.id,
+            hermetic_text=text is not None and hybrid.hermetic_source(saga, text),
         )
         return _with_options(magus, plan, technique, form, total, saga)
 
@@ -1384,8 +1387,17 @@ def _with_options(
                 source=lab.SOURCE,
             )
         )
+    if plan.chthonic and (more := hybrid.chthonic_theory(magus)):
+        extra.append(
+            Line(
+                "Chthonic Magic for Magic Theory",
+                amount=more,
+                source=hybrid.CHTHONIC_SOURCE,
+            )
+        )
     if plan.other_modifier:
         extra.append(Line("Other", amount=plan.other_modifier, source=""))
+    extra += lab.lab_mastery_lines(saga, magus, plan.similar_spell_id)
     if plan.experimenting and plan.activity in EXPERIMENTAL:
         die = plan.experiment_die
         # Seeking a Discovery, the risk goes on the chart roll only.
@@ -1438,6 +1450,13 @@ def _with_options(
         faerie_work=_faerie_work(saga, plan),
     )
     extra += virtues
+    alchemy, why = common_magics.lab_lines(
+        magus,
+        enchanting=plan.activity in _ENCHANTING,
+        experimenting=plan.experimenting and plan.activity in EXPERIMENTAL,
+    )
+    extra += alchemy
+    notes += why
     halvings = lab_virtues.halving_lines(magus, plan, _design_range(saga, plan))
     return lab.with_lines(total, extra, halvings, notes)
 

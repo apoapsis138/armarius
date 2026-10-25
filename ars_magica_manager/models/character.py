@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..rules import xp as xp_rules
+from .agents import Agent
 from .common import (
     CharacterType,
     ExperimentalEffect,
@@ -413,6 +414,17 @@ class TraditionEffect:
     #: An item's charges or doses left (0: none counted).
     charges: int = 0
     notes: str = ""
+    #: The tradition's guideline it is built on (TraditionDef.guidelines,
+    #: by name), its Range, Duration and Target (one of the tradition's
+    #: EffectParameters, by name), and further magnitudes (size,
+    #: complexity): with a guideline the level is worked out from them
+    #: (rules.hedge_effects.effect_level), and `level` is kept for an
+    #: effect that names none.
+    guideline: str = ""
+    range: str = ""
+    duration: str = ""
+    target: str = ""
+    magnitudes: int = 0
 
     def __post_init__(self) -> None:
         kinds = TRADITION_EFFECT_KINDS + TRADITION_ITEM_KINDS
@@ -785,6 +797,10 @@ class Character:
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""
     links: list[Link] = field(default_factory=list)
+    #: The people he controls through personal bonds, and the Agency
+    #: experience not yet spent on them (Lords of Men pp. 22-25).
+    agents: list[Agent] = field(default_factory=list)
+    agency_xp: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -853,6 +869,7 @@ class Character:
             d["animal"] = AnimalForm.from_dict(d["animal"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
+        d["agents"] = [Agent.from_dict(a) for a in d.get("agents", [])]
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
         # Older saves kept only the last Ordeal.
         if d.get("ordeal"):

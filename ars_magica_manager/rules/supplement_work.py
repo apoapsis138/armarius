@@ -27,13 +27,17 @@ from .. import book_kinds, book_value, catalog
 from ..models import (
     Book,
     Character,
+    InitiationScript,
     Progress,
     Saga,
     SeasonPlan,
+    TraditionDef,
     VirtueFlawInstance,
     next_season,
 )
-from . import dice, enchantment, mysteries, reputations, work_virtues
+from . import dice, enchantment, mysteries, realms, reputations, work_virtues
+from . import tradition_seasons as ts
+from .apprentice_seasons import gifted
 from .creation_finish import touched_by_the_fay
 from .rounding import round_down, round_up
 from .scores import ability_level
@@ -45,6 +49,11 @@ WEALTH_MULTIPLIER = {"poor": 2, "average": 3, "wealthy": 6}
 EXCELLENT_LEVEL = 15
 WONDROUS_BASE = 12
 TOUCHED_BY_REALM = "vf_touched_by_realm"
+#: Touched by (Realm) for horseshoes alone (Grogs p. 76): one Form, powers
+#: on the horse or the ground it treads, Craft: Farrier with Intelligence
+#: or Dexterity.
+MYTHIC_FARRIER = "vf_mythic_farrier"
+FARRIER_CHARACTERISTICS = ("intelligence", "dexterity")
 BUSINESS_UPKEEP = 36
 RAW_MATERIALS_UPKEEP = 5
 #: Workshop improvement costs in Labor Points, by the score it reaches.
@@ -122,6 +131,9 @@ class SupplementWork:
     aging_roll: bool = False
     #: The Ordeal an Initiation inflicted ("Minor"/"Medium"/"Major").
     ordeal: str = ""
+    #: An Initiation gave its Virtue (only that spends a step of each past
+    #: Ordeal's reduction).
+    initiated: bool = False
     #: A summa's new Level (inspeximus): (book id, level).
     summa_level: tuple[str, int] | None = None
 
@@ -236,17 +248,47 @@ def quality_for(total: int, craft_level: int) -> str:
 
 
 def initiation_target(saga: Saga, character: Character, plan: SeasonPlan) -> int:
+    """The Initiation's Target: the Hermetic Target Level by the Virtue's
+    tier and whether the Mystagogue knows it, or a hedge Script's own Ease
+    Factor (+ 3 / + 9 when he doesn't know the power), less a past
+    Ordeal's reduction."""
     virtue = catalog.load_virtue_flaw_catalog_by_id().get(plan.effect_id or "")
-    tier = virtue.tier if virtue is not None else "Minor"
     mystagogue = saga.character(plan.teacher_id) or character
-    has_it = _initiated(plan) in mystagogue.virtues_flaws
-    target = INITIATION_TARGET[(tier if tier == "Major" else "Minor", has_it)]
+    knows = knows_power(mystagogue, plan)
+    hedge = ts.hedge_script(plan.hedge_script)
+    if hedge is not None:
+        _, script = hedge
+        tier = (
+            virtue.tier
+            if virtue is not None and virtue.tier in mysteries.UNKNOWN_POWER
+            else mysteries.script_tier(script.ease_factor, script.gains)
+        )
+        ease = script.ease_factor
+        if mystagogue is character and script.self_ease_factor:
+            ease = script.self_ease_factor
+        return int(
+            mysteries.hedge_target(ease, tier, knows, ordeal_reduction(character)).total
+        )
+    tier = virtue.tier if virtue is not None else "Minor"
+    target = INITIATION_TARGET[(tier if tier == "Major" else "Minor", knows)]
     return max(mysteries.MINIMUM_TARGET, target - ordeal_reduction(character))
+
+
+def knows_power(mystagogue: Character, plan: SeasonPlan) -> bool:
+    """Whether the Mystagogue knows the power initiated: he holds the
+    Virtue, with what it names, or the plan says he knows it (a hedge
+    power that is an Ability, say)."""
+    return plan.knows_power or (
+        bool(plan.effect_id) and _initiated(plan) in mystagogue.virtues_flaws
+    )
 
 
 def ordeal_reduction(character: Character) -> int:
     """How much the character's past Ordeals lower their next Initiation's
-    Target: only the one that lowers it most counts."""
+    Target: only the one that lowers it most counts, and none for an
+    unGifted Initiate."""
+    if not mysteries.ordeals_count(character):
+        return 0
     return max(
         (
             ORDEAL_REDUCTION[o.size][o.initiations_since]
@@ -316,22 +358,87 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
     is a self-initiation. The Initiate needs the Lore at 1 unless it is the
     Lore of their own House; the Mystagogue must know it."""
     by_id = catalog.load_virtue_flaw_catalog_by_id()
+    hedge = ts.hedge_script(plan.hedge_script)
+    if plan.hedge_script and hedge is None:
+        return "That hedge Script is no longer in the catalog: choose another."
     virtue = by_id.get(plan.effect_id or "")
-    if virtue is None:
+    if virtue is None and hedge is None:
         return "Choose the Mystery Virtue initiated."
-    if virtue.side != "Virtue":
+    if virtue is not None and virtue.side != "Virtue":
         return f"{virtue.name} is not a Virtue: choose the Virtue initiated."
-    lore = plan.title.strip()
-    if not lore:
-        return "Name the Mystagogue's (Mystery Cult) Lore."
     mystagogue = saga.character(plan.teacher_id) or character
-    if ability_level(mystagogue, lore) < 1:
-        return f"{mystagogue.name} doesn't know {lore}."
-    if ability_level(character, lore) < 1 and not _house_lore(character, lore):
-        return f"{character.name} needs {lore} 1 to be Initiated."
-    return _mystery_problem(saga, character, virtue.id) or _ordeal_problem(
-        character, plan
+    if hedge is not None:
+        found = _hedge_problem(character, mystagogue, *hedge)
+        if found:
+            return found
+    else:
+        lore = plan.title.strip()
+        if not lore:
+            return "Name the Mystagogue's (Mystery Cult) Lore."
+        if ability_level(mystagogue, lore) < 1:
+            return f"{mystagogue.name} doesn't know {lore}."
+        if ability_level(character, lore) < 1 and not _house_lore(character, lore):
+            return f"{character.name} needs {lore} 1 to be Initiated."
+    return (
+        _script_problem(plan)
+        or (_mystery_problem(saga, character, virtue.id) if virtue else "")
+        or _ordeal_problem(character, plan)
+        or mysteries.ungifted_problem(
+            character,
+            mystagogue,
+            knows_power(mystagogue, plan),
+            bool(ordeal_kind(plan)),
+        )
     )
+
+
+def _hedge_problem(
+    initiate: Character,
+    mystagogue: Character,
+    tradition: TraditionDef,
+    script: InitiationScript,
+) -> str:
+    """What stops an Initiation by a hedge tradition's Script ("" if
+    nothing): the Mystagogue must belong to the tradition and know its
+    Lore, a tradition without self-initiation can't Initiate itself, a
+    Script for the Gifted needs a Gifted Initiate, and one that requires
+    scores (the elementalists' minimums, HMRE pp. 30-31; the learned
+    magicians' master's test, pp. 88-89) fails an Initiate without them."""
+    rule = tradition.initiation
+    assert rule is not None  # ts.hedge_script finds Scripts only in a rule
+    if tradition.id not in mystagogue.traditions:
+        return (
+            f"{mystagogue.name} isn't one of the {tradition.name}: the "
+            "Mystagogue must be."
+        )
+    if mystagogue is initiate and not rule.self_initiation:
+        return f"The {tradition.name} can't Initiate themselves: choose a Mystagogue."
+    if rule.lore and ts.lore_score(mystagogue, rule.lore) < 1:
+        return f"{mystagogue.name} doesn't know {rule.lore}."
+    if script.who == "gifted" and not gifted(initiate):
+        return f"{script.name} is for the Gifted, and {initiate.name} is unGifted."
+    short = [
+        f"{ability} {least}"
+        for ability, least in script.requires
+        if ts.lore_score(initiate, ability) < least
+    ]
+    if short:
+        return (
+            f"{script.name} always fails for an Initiate without "
+            f"{', '.join(short)}: {initiate.name} is short of it."
+        )
+    return ""
+
+
+def _script_problem(plan: SeasonPlan) -> str:
+    """An experimental Script is neither varied nor beyond +3 risk."""
+    if not plan.experimental_script:
+        return ""
+    if plan.script_variation:
+        return "An experimental Script isn't also varied: choose one or the other."
+    if not 0 <= plan.risk <= mysteries.MAX_SCRIPT_RISK:
+        return f"An experimental Script's risk is 0 to +{mysteries.MAX_SCRIPT_RISK}."
+    return ""
 
 
 def _mystery_problem(saga: Saga, character: Character, vf_id: str) -> str:
@@ -495,13 +602,30 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
                 f"(City & Guild p. 38); {character.name} has "
                 f"{character.labor_points}."
             ]
-    if key == "make_wondrous_item" and not any(
-        vf.vf_id == TOUCHED_BY_REALM for vf in character.virtues_flaws
-    ):
+    held = {vf.vf_id for vf in character.virtues_flaws}
+    if key == "make_wondrous_item" and not held & {TOUCHED_BY_REALM, MYTHIC_FARRIER}:
         return [
             f"Only a craftsman Touched by (Realm) makes wondrous items "
             f"(City & Guild p. 70); {character.name} isn't."
         ]
+    if (
+        key == "make_wondrous_item"
+        and TOUCHED_BY_REALM not in held
+        and (plan.characteristic or "dexterity") not in FARRIER_CHARACTERISTICS
+    ):
+        return [
+            "A Mythic Farrier's Craft Total is Intelligence or Dexterity + "
+            "Craft: Farrier (Grogs p. 76)."
+        ]
+    if key == "make_wondrous_item" and not touched_realm(character):
+        return [
+            "Name the realm of his Touched by (Realm) or Mythic Farrier "
+            "Virtue: Magic, Faerie, Divine or Infernal (City & Guild p. 71; "
+            "a farrier most likely Magic or Faerie, Infernal possible, Grogs "
+            "p. 76)."
+        ]
+    if key == "make_wondrous_item" and plan.teacher_id == character.id:
+        return ["The assistant is someone other than the craftsman."]
     if key == "record_lectures":
         teacher = saga.character(plan.teacher_id)
         if teacher is None:
@@ -707,11 +831,56 @@ def _make_wondrous_item(
     craft = _subject_ability(plan)
     level = plan.book_level if plan.book_level is not None else WONDROUS_BASE
     total = workshop_total(character, plan, craft)
+    parts: list[str] = []
+    aura = wondrous_aura(character, plan)
+    if aura:
+        total += aura
+        parts.append(f"aura {aura:+d}")
+    if plan.site_aura is None:
+        result.notes.append(
+            "No aura entered where he works: none counted (City & Guild p. 72)."
+        )
+    helper = saga.character(plan.teacher_id) if plan.teacher_id else None
+    if helper is not None:
+        helped = round_down(ability_level(helper, craft) / 2)
+        total += helped
+        parts.append(f"{helper.name}'s help +{helped}")
     gained = max(0, total - level)
     result.progress.append(("item", name, level, gained))
+    why = f" ({', '.join(parts)})" if parts else ""
     result.notes.append(
-        f"Workshop Total {total} - Craft Level {level} = {gained} toward it."
+        f"Workshop Total {total}{why} - Craft Level {level} = {gained} toward it. "
+        "One assistant at most (City & Guild p. 72): count no other in Other."
     )
+    if not any(vf.vf_id == TOUCHED_BY_REALM for vf in character.virtues_flaws):
+        result.notes.append(
+            "Mythic Farrier: horseshoes only, in the one Form chosen, their "
+            "power on the horse or the ground it treads (Grogs p. 76)."
+        )
+
+
+def touched_realm(character: Character) -> str:
+    """The realm a wondrous craftsman's power comes from, as his Touched by
+    (Realm) or Mythic Farrier names it: one of the four realms (City &
+    Guild p. 71; a farrier most likely Magic or Faerie, Grogs p. 76); ""
+    when it names none of them."""
+    for vf in character.virtues_flaws:
+        if vf.vf_id in (TOUCHED_BY_REALM, MYTHIC_FARRIER):
+            named = str(vf.params.get("realm", "")).strip().title()
+            named = {"Magical": realms.HERMETIC}.get(named, named)
+            return named if named in realms.REALMS else ""
+    return ""
+
+
+def wondrous_aura(character: Character, plan: SeasonPlan) -> int:
+    """The aura's modifier to a wondrous item's Workshop Total: the aura the
+    craftsman works in (the plan's), by the Realm Interaction table for
+    his power's realm (City & Guild p. 72; DE pp. 410-411)."""
+    aura, aura_realm = plan.site_aura or 0, plan.site_realm or realms.HERMETIC
+    realm = touched_realm(character)
+    if aura <= 0 or aura_realm not in realms.REALMS or not realm:
+        return 0
+    return realms.aura_modifier(realm, aura_realm, aura)
 
 
 def _merchant_venture(
@@ -959,69 +1128,156 @@ def _undergo_initiation(
     rng: random.Random | None,
     result: SupplementWork,
 ) -> None:
-    name = plan.title.strip()
     mystagogue = saga.character(plan.teacher_id) or character
-    script = plan.other_modifier
+    trait, name, lore, script = _initiation_terms(mystagogue, plan)
     target = initiation_target(saga, character, plan)
     size = ordeal_size(plan)
-    if plan.script_variation in mysteries.VARY_EASE:
-        ease = mysteries.VARY_EASE[plan.script_variation]
+    risk = 0
+    rite_failed = False
+    if plan.experimental_script:
+        if rng is None:
+            result.notes.append(
+                "An experimental Script's dice are rolled when the season is played."
+            )
+            return
+        rite_failed, risk = _experiment_with_script(
+            saga, character, mystagogue, plan, rng, lore, script, result
+        )
+        script += plan.script_sympathy
+    elif plan.script_variation in mysteries.VARY_EASE:
         if rng is None:
             result.notes.append(
                 f"Varying the Script ({plan.script_variation}) is rolled when the "
                 "season is played."
             )
             return
-        die = dice.stress_die(rng, 1, saga=saga)
-        vary = (
-            die.value
-            + mystagogue.characteristics.intelligence
-            + ability_level(mystagogue, name)
-        )
-        if die.botched or vary < ease:
-            result.notes.append(
-                f"Varying the Script: {vary} against {ease}: failed, so the "
-                "Initiation fails; the Script as it was may be tried another "
-                "season (DE p. 389)."
-            )
+        varied = _vary_script(saga, mystagogue, plan, rng, lore, script, result)
+        if varied is None:
             return
-        script += plan.variation_bonus
-        result.notes.append(
-            f"Varying the Script: {vary} against {ease}: the Script bonus is "
-            f"now {script}."
-        )
-    full = (
-        mystagogue.characteristics.presence + ability_level(mystagogue, name) + script
-    )
+        script = varied
+    value = getattr(mystagogue.characteristics, trait.lower(), 0)
+    full = value + lore + script + risk
     # Each month lost takes a third of the original total, rounded up; an
     # Initiation it makes fail still costs the Ordeal (TMRE p. 12).
     months = max(0, min(plan.months_lost, 3))
     total = max(0, full - months * round_up(full / 3))
-    distracted = months > 0 and full >= target > total
-    initiated = total >= target
+    distracted = months > 0 and full >= target > total and not rite_failed
+    initiated = total >= target and not rite_failed
+    # An experimental rite is carried out, Ordeals and all, before it is
+    # checked, so a failed one still costs its Ordeal (TMRE p. 18).
+    suffered = initiated or distracted or rite_failed
     if initiated:
-        result.add_vfs.append(_initiated(plan))
-    if initiated or distracted:
+        result.initiated = True
+        if plan.effect_id:
+            result.add_vfs.append(_initiated(plan))
+    if suffered:
         if gained := _ordeal_gained(plan):
             result.add_vfs.append(gained)
         if lost := _ordeal_lost(plan):
             result.remove_vfs.append(lost)
         result.ordeal = size
-    ordeal = f" {size} Ordeal." if size and (initiated or distracted) else ""
+    ordeal = f" {size} Ordeal." if size and suffered else ""
     lost_text = f", {months} month(s) lost from {full}" if months else ""
+    risk_text = f" + risk {risk}" if risk else ""
+    hedge = ts.hedge_script(plan.hedge_script)
+    gains = (
+        f" Add what it gives by hand: {hedge[1].gains}."
+        if initiated and hedge is not None and not plan.effect_id and hedge[1].gains
+        else ""
+    )
     result.notes.append(
-        f"Initiation Total {total} (Presence + {name} + Script {script}"
+        f"Initiation Total {total} ({trait} + {name} + Script {script}{risk_text}"
         f"{lost_text}) against {target}: "
         + (
             "initiated."
             if initiated
+            else "not initiated; the rite failed, but its Ordeal is still "
+            "suffered (TMRE p. 18)."
+            if rite_failed
             else "not initiated; the distractions failed it, so the Ordeal is "
             "still suffered and the Initiation must be repeated (TMRE p. 12)."
             if distracted
             else "not initiated."
         )
         + ordeal
+        + gains
     )
+
+
+def _initiation_terms(
+    mystagogue: Character, plan: SeasonPlan
+) -> tuple[str, str, int, int]:
+    """The Initiation Total's terms: the Characteristic, the Lore's name
+    and the Mystagogue's score in it, and the Script's bonus (a hedge
+    Script's own, plus what the plan adds)."""
+    hedge = ts.hedge_script(plan.hedge_script)
+    if hedge is None:
+        name = plan.title.strip()
+        return "Presence", name, ability_level(mystagogue, name), plan.other_modifier
+    tradition, script = hedge
+    rule = tradition.initiation
+    assert rule is not None  # ts.hedge_script finds Scripts only in a rule
+    return (
+        rule.characteristic,
+        ts.hedge_lore(tradition),
+        ts.lore_score(mystagogue, rule.lore),
+        script.bonus + plan.other_modifier,
+    )
+
+
+def _vary_script(
+    saga: Saga,
+    mystagogue: Character,
+    plan: SeasonPlan,
+    rng: random.Random,
+    lore: int,
+    script: int,
+    result: SupplementWork,
+) -> int | None:
+    """Roll the one change to the Script: its new bonus, or None when the
+    change fails and so the Initiation does (DE p. 389)."""
+    ease = mysteries.VARY_EASE[plan.script_variation]
+    die = dice.stress_die(rng, 1, saga=saga)
+    vary = die.value + mystagogue.characteristics.intelligence + lore
+    if die.botched or vary < ease:
+        result.notes.append(
+            f"Varying the Script: {vary} against {ease}: failed, so the "
+            "Initiation fails; the Script as it was may be tried another "
+            "season (DE p. 389)."
+        )
+        return None
+    script += plan.variation_bonus
+    result.notes.append(
+        f"Varying the Script: {vary} against {ease}: the Script bonus is now {script}."
+    )
+    return script
+
+
+def _experiment_with_script(
+    saga: Saga,
+    initiate: Character,
+    mystagogue: Character,
+    plan: SeasonPlan,
+    rng: random.Random,
+    lore: int,
+    proposed: int,
+    result: SupplementWork,
+) -> tuple[bool, int]:
+    """An experimental Script's two rolls: the Extraordinary Results chart,
+    then the rite's validity against 9 (15 on another Initiate) + the
+    proposed bonus. Whether the rite failed, and the risk the Initiation
+    Total adds (TMRE p. 18)."""
+    rite = mysteries.experimental_rite(rng, plan.risk, saga)
+    result.notes += rite.notes
+    ease = mysteries.validity_ease(proposed, mystagogue is initiate)
+    die = dice.simple_die(rng)
+    valid = die + plan.risk + mystagogue.characteristics.intelligence + lore
+    result.notes.append(
+        f"The rite's validity: die {die} + risk {plan.risk} + Intelligence + Lore "
+        f"= {valid} against {ease}: "
+        + ("valid." if valid >= ease else "invalid, so no Virtue is gained.")
+    )
+    return rite.no_virtue or valid < ease, plan.risk if rite.risk_counts else 0
 
 
 def _record_lectures(

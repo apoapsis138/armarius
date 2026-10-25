@@ -19,7 +19,7 @@ from ..rules import aging as aging_rules
 from ..rules import creation_access as access
 from ..rules import hybrid_magic as hybrid
 from ..rules import living as living_rules
-from ..rules import sites, work_virtues
+from ..rules import medicine, sites, work_virtues
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.realms import home_aura
@@ -225,6 +225,10 @@ def gain_warping(
         notes += result.notes
         if result.entered:
             name = "Wizard's Twilight"
+            if lost := medicine.lose_eucrasia(
+                character, saga.current_year, "Wizard's Twilight"
+            ):
+                notes.append(lost)
             warping_rules.set_total(
                 character, warping_rules.total_points(character) + result.extra_points
             )

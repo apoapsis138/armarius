@@ -31,20 +31,32 @@ def test_the_sheet_shows_faith_for_the_virtue_or_any_points():
 
 def test_warnings():
     believer = _believer()
+    believer.in_creation = True
     assert faith.faith_warnings(believer, 1, "companion") == []
     assert faith.faith_warnings(believer, 2, "companion") == [
         "A True Faith Score of 2 or more is for a Mythic Companion."
     ]
     assert faith.faith_warnings(believer, 3, "mythic companion") == []
-    grog = Character(id="g", name="Hugo", type="grog")
+    grog = Character(id="g", name="Hugo", type="grog", in_creation=True)
     assert faith.faith_warnings(grog, 1, "grog") == [
         "Only a character with the True Faith Virtue has a Score."
     ]
     assert faith.faith_warnings(grog, 0, "grog") == []
 
 
+def test_in_play_a_higher_score_is_no_mythic_companion_warning():
+    believer = _believer()  # In Play
+    assert faith.faith_warnings(believer, 3, "companion") == []
+    grog = Character(id="g", name="Hugo", type="grog")
+    assert (
+        "saving adds the True Faith Virtue" in faith.faith_warnings(grog, 1, "grog")[0]
+    )
+
+
 async def test_edit_warns_but_saves_and_the_sheet_shows_it():
-    saga = Saga(id="s", name="S", characters=[_believer(true_faith_score=1)])
+    believer = _believer(true_faith_score=1)
+    believer.in_creation = True
+    saga = Saga(id="s", name="S", characters=[believer])
     storage.save_saga(saga)
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:

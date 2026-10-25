@@ -385,11 +385,15 @@ def apply_supplement(
             character.virtues_flaws.append(instance)
             cch.apply_virtue(saga, character, instance)
     if plan.activity == "undergo_initiation":
-        # This Initiation used up a step of each past Ordeal's reduction;
-        # one past its third Initiation lowers nothing more.
-        for ordeal in character.ordeals:
-            ordeal.initiations_since += 1
-        character.ordeals = [o for o in character.ordeals if o.initiations_since < 3]
+        # An Initiation that gave its Virtue used up a step of each past
+        # Ordeal's reduction (a failed one spends none); one past its third
+        # Initiation lowers nothing more.
+        if work.initiated:
+            for ordeal in character.ordeals:
+                ordeal.initiations_since += 1
+            character.ordeals = [
+                o for o in character.ordeals if o.initiations_since < 3
+            ]
         if work.ordeal:
             character.ordeals.append(Ordeal(work.ordeal))
     if work.summa_level is not None:

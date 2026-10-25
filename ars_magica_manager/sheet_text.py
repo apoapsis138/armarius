@@ -29,10 +29,13 @@ from .models import (
     WoundState,
 )
 from .rules import (
+    battle_transformation,
     combat,
     derived,
     disease,
     equipment,
+    faerie_blood,
+    integrations,
     penetration,
     recovery,
     research,
@@ -351,6 +354,14 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
     if repeat := vf_repeat_text(definition):
         lines.append(f"[dim]{repeat}[/]")
     lines += effect_lines(definition.modifiers)
+    if blood := faerie_blood.blood_text(instances, instance):
+        lines.append(f"[b]Its blood:[/] {escape(blood)}")
+    if instance.vf_id in faerie_blood.CHARMS:
+        lines.append(f"[b]Charm:[/] {escape(faerie_blood.CHARM_RULE)}")
+    if instance.vf_id == battle_transformation.RIASTRADH:
+        lines.append(f"[b]In play:[/] {escape(battle_transformation.RIASTRADH_TEXT)}")
+    if instance.vf_id == battle_transformation.LUAN_LAITH:
+        lines.append(f"[b]In play:[/] {escape(battle_transformation.LUAN_TEXT)}")
     lines += ["", "[b]Rules:[/]", escape(definition.description)]
     if definition.source:
         lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
@@ -366,6 +377,8 @@ def trait_rows(traits: Sequence[ScoredTrait]) -> list[tuple[int | None, str]]:
         where = ", ".join(x for x in (t.type, t.reach) if x)
         if where:
             row += f" [$label]({escape(where)})[/]"
+        if t.replaces:
+            row += f" [$label]replacing {escape(t.replaces)}[/]"
         rows.append((index, row))
     return rows
 
@@ -649,6 +662,9 @@ def goal_text(goal: Breakthrough) -> str:
         f"Stage: {research.stage(goal).value}.",
         f"Reaching it grants {escape(grants)}.",
     ]
+    known = integrations.BY_NAME.get(goal.name)
+    if known is not None and known.learned:
+        lines.append(f"Once learned: {escape(known.learned)}")
     if goal.pending_magnitude:
         lines.append(
             f"A Discovery (magnitude {goal.pending_magnitude}) waits to be "

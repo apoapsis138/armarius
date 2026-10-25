@@ -62,6 +62,7 @@ from ..rules import (
 )
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
+from ..rules import hybrid_magic as hybrid
 from ..rules import laboratory_seasons as ls
 from ..rules.lab import ability_score, botch_conditions
 from ..seasons import pairs as paired_plans
@@ -988,6 +989,19 @@ class LabPlanForm:
                     show_if=_chosen,
                 )
             )
+        if hybrid.CHTHONIC in hybrid.styles(self.magus):
+            found.append(
+                DialogField(
+                    "chthonic",
+                    "A dark or sinister effect (Chthonic Magic for Magic Theory)",
+                    "check",
+                    bool(plan and plan.chthonic),
+                    show_if=_chosen,
+                    hint="Chthonic Magic stands in for Magic Theory, and adds to "
+                    "the pawns of Infernal vis he may use (RoP: The Infernal "
+                    "p. 123).",
+                )
+            )
         found += self.virtue_fields(plan)
         found += [
             DialogField(
@@ -1311,6 +1325,7 @@ class LabPlanForm:
             days_away=values.get("days_away") or 0,
             focus=bool(values.get("focus")),
             theory_specialty=bool(values.get("specialty")),
+            chthonic=bool(values.get("chthonic")),
             other_modifier=values.get("other_modifier") or 0,
             potent=bool(values.get("potent")),
             cycle_bonus=bool(values.get("cycle_bonus")),

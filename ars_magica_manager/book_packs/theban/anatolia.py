@@ -1104,8 +1104,8 @@ def _alexandria_magi(theban: Theban, b: Builder, home: Covenant) -> None:
             "order an attack. He would turn Aiakia, or more easily "
             "the hotter Tisiphon, against Gigas by blaming its Tremere "
             "for Constantinople's fall, and set Celaenea, who adores "
-            "Hermes, against Lucian's Children of Olympos; the demon "
-            "Moreto has told him an infernalist planted in that league "
+            "Hermes, against Lucian's Children of Olympos; other "
+            "infernalists have told him an infernalist planted in that league "
             "could make it raise a False God in place of a faerie.",
             "In 1220 these plans are only forming. He will take the "
             "logothete's post, seeming reluctant so the blame falls "

@@ -1424,7 +1424,7 @@ def _threats(rhine: Rhine) -> None:
             "rider wins, the shoot grows into a tree, and when a horse can be tied "
             "beneath it a king comes with a great army; while his horse stays under "
             "the tree he cannot be beaten and gains fell powers. The tree spirit is "
-            "Infernal, of Might 15 now and potentially 60, ambitious, and able to "
+            "Infernal, of Might 10 now and potentially 40, ambitious, and able to "
             "grant victory and the gifts of entrancement, inspiration and "
             "toughness; the white rider is Divine, the black an agent of Hell."
         ),
@@ -1638,7 +1638,7 @@ def _threats(rhine: Rhine) -> None:
         place=central,
         summary=(
             "At the foot of the tallest peak of the Kyffhäuser stands a withered "
-            "apple tree of Might 70, guarded by the unaging men-at-arms who failed "
+            "apple tree of Might 45, guarded by the unaging men-at-arms who failed "
             "to hang their shields on it. Whichever prince hangs his shield there "
             "rules all the West; Clovis, Charlemagne and Barbarossa each did and cut "
             "it down, and it regrows and withers with their fortunes. When it next "

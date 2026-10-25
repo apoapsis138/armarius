@@ -14,6 +14,7 @@ from .models import CastingRule, Character, Saga, TraditionDef
 from .rules import hedge_casting as hc
 from .rules import hedge_effects as he
 from .rules import hedge_warping as hw
+from .rules import infernalists
 from .rules import tradition_seasons as ts
 from .rules.realms import home_aura
 from .tables import Table
@@ -53,6 +54,37 @@ def total_words(rule: CastingRule) -> str:
             "Fatigue level, and further short it fails"
         )
     return words + "."
+
+
+def botch_words(rule: CastingRule) -> str:
+    """How many botch dice a stressed casting rolls; "" for none."""
+    if rule.lab or rule.die != "stress" or rule.botch == "none":
+        return ""
+    if rule.botch == "magnitude":
+        words = "the effect's magnitude + the aura"
+    else:
+        words = "1, +1 a pawn of vis, +1 a point of another realm's aura"
+    if rule.botch_extra:
+        words += f", {rule.botch_extra:+d}"
+    if rule.botch_notes:
+        words += f"; {rule.botch_notes}"
+    return words
+
+
+def guideline_words(tradition: TraditionDef) -> str:
+    """A line on the tradition's guideline table; "" without one."""
+    if not tradition.guidelines:
+        return ""
+    steps = {
+        "hermetic": "each magnitude adds 5 levels (1 below level 5)",
+        "three": "each magnitude adds 3",
+        "none": "the guideline's level is the effect's",
+    }[tradition.level_steps]
+    source = f" ({tradition.guideline_source})" if tradition.guideline_source else ""
+    return (
+        f"{len(tradition.guidelines)} guidelines{source}: an effect built on one "
+        f"has its level worked out; {steps}."
+    )
 
 
 def vis_words(rule: CastingRule) -> str:
@@ -195,6 +227,9 @@ def rule_part(
         lines.append(f"Penetration: Total {bonus:+d} (Penetration) - the {against}.")
     if rule.resistance:
         lines.append(f"Resisted: {escape(rule.resistance)}.")
+    botch = botch_words(rule)
+    if botch:
+        lines.append(f"Botch dice: {escape(botch)}.")
     if rule.notes:
         lines.append(f"[dim]{escape(rule.notes)}[/]")
     return CastingPart(escape(rule.name), "\n".join(table), "\n".join(lines))
@@ -220,6 +255,9 @@ def casting_parts(
         )
     for group in tradition.groups:
         parts.append(CastingPart(escape(group.name), "", escape(group.notes)))
+    guidelines = guideline_words(tradition)
+    if guidelines:
+        parts.append(CastingPart("Guidelines", "", escape(guidelines)))
     return parts
 
 
@@ -376,11 +414,12 @@ def _effect_cells(
     rows = []
     for _, effect in he.of_tradition(character, tradition.id):
         found = he.effect_total(character, tradition, effect, aura, realm)
+        level = he.effect_level(tradition, effect)
         rows.append(
             [
                 escape(effect.name),
                 effect.kind,
-                str(effect.level) if effect.level else "",
+                str(level) if level else "",
                 escape(" + ".join(hc.short_name(u) for u in effect.uses)),
                 escape(he.total_words(found, effect)),
             ]
@@ -468,7 +507,7 @@ def bonds_text(tradition: TraditionDef) -> str:
     return "\n".join(lines)
 
 
-def warping_text(character: Character, tradition: TraditionDef) -> str:
+def warping_text(saga: Saga, character: Character, tradition: TraditionDef) -> str:
     """The tradition's own Warping, with the character's Warping Score
     and, for an elementalist, his elemental Personality Traits. A magus
     in a tradition keeps Wizard's Twilight, with the tradition's own
@@ -501,6 +540,10 @@ def warping_text(character: Character, tradition: TraditionDef) -> str:
                 f"  {trait.trait} {trait.value:+d} ({escape(trait.form)} "
                 f"{trait.form_score}){effect}."
             )
+    if rule.name == infernalists.VITUPERATION:
+        aura, _ = home_aura(saga, character)
+        lines.append(escape(infernalists.vituperation_text(character, aura)))
+        lines.append(escape(infernalists.sacrifice_text()))
     if rule.notes:
         lines.append(f"[dim]{escape(rule.notes)}[/]")
     return "\n".join(lines)

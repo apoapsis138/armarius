@@ -18,6 +18,7 @@ from ..models import SEASONS, Character, Saga, SeasonPlan, new_instance_id, next
 from ..rules import activities as rules
 from ..rules import book_seasons as bs
 from ..rules import creation_access as access
+from ..rules import hybrid_magic as hybrid
 from ..rules import lab_seasons, library, study
 from ..rules import xp as xp_rules
 from ..rules.rounding import round_up
@@ -81,7 +82,14 @@ def _reading_needed(saga: Saga, character: Character, plan: SeasonPlan) -> int |
     if rules.problems(character, plan, saga):
         return None
     each = study.season_of_study(
-        character, name, quality, activity="reading", is_art=is_art
+        character,
+        name,
+        quality,
+        activity="reading",
+        is_art=is_art,
+        hermetic_halved=hybrid.halves_study(
+            character, book, hybrid.hermetic_source(saga, book)
+        ),
     ).xp
     return round_up(room / each) if each > 0 else None
 

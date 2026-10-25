@@ -108,6 +108,22 @@ An Infernal creature also has the facts Realms of Power: The Infernal
 gives a demon: its **Order**, its **Hierarchy** score (the highest of
 its Infernal Reputations, or of its rank) and its **Weakness**.
 
+A demon whose Order names one of the nine orders (Tempters, Accusers,
+Furies, Aerial Powers, Deluders, Avengers of Evil, Vessels of Iniquity,
+Spirits of Deceit, False Gods) and perhaps a rank (Master, Lord, Duke,
+Prince) is checked against Realms of Power: The Infernal (pp. 28-44): the
+most Might its order and rank allow, its Hierarchy (the higher of its
+rank's and its Infernal Reputations), its sin's Personality Trait and its
+order's traits, the Powers every demon has (Coagulation, Obsession,
+Envisioning) and its order's, a weakness, and its Characteristic points.
+"As a demon" says what its weakness, True Name, Second Sight, recovery
+and corpse come to. A spirit with the Magic Spirit Virtue is checked
+against Realms of Power: Magic (pp. 100-117): the Magical Air Flaw, a
+ghost's Social Status and worldly tie, the common spirit Powers' cost and
+Initiative, and what its Presence and vis come to. A jinni (the Jinni
+Virtue) is checked against The Cradle and the Crescent (pp. 62-63). All
+of these are advice: the books' own creatures needn't balance.
+
 When it rules or leads a neighbour (a faerie court's queen, a dragon
 lording it over a valley), its facts say so under **Rules**. The place
 it is found at and each neighbour it rules are links that open them:

@@ -106,6 +106,9 @@ class TribunalPackage:
     your_votes: Callable[[Saga, Tribunal], str] | None = None
     #: The steps it adds to holding a meeting ("elections"), by name.
     meeting_steps: tuple[str, ...] = ()
+    #: How many days its meetings last (None: the core's
+    #: meeting.DEFAULT_DAYS); Hibernia's seven (The Contested Isle p. 32).
+    meeting_days: int | None = None
     #: A sentence on what the package adds, for the form and help.
     about: str = ""
     #: The fields it adds to a covenant's own forms (its gilds), for a

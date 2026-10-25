@@ -102,7 +102,7 @@ def _enemy_within(theban: Theban) -> None:
             "look like diabolists and are not, send its members out to "
             "investigate without going himself, and once they are in "
             "the field a demon wearing Hydatius's face will order the "
-            "attack. Moreto, one of his Infernal informants, has told "
+            "attack. Other infernalists have told "
             "him that an infernalist planted among Lucian's Children "
             "of Olympos would probably raise a False God for them to "
             "bind instead of a faerie; finding such a magus is the "

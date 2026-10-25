@@ -46,6 +46,9 @@ class Package:
     virtue: str = ""
     #: What the 5- and 3-year packages give besides xp, for the label.
     extra: tuple[str, str] = ("", "")
+    #: Virtues that stand in for the one opening `needs` (Jurist opens an
+    #: Advocate's key Abilities to a layman, Grogs p. 68).
+    waived_by: tuple[str, ...] = ()
 
 
 #: The Grogs book's career and background packages. Where the book offers
@@ -66,6 +69,7 @@ PACKAGES: tuple[Package, ...] = (
             ("Artes Liberales", 5),
             (_LATIN, 5),
         ),
+        waived_by=("vf_jurist",),
     ),
     Package(
         "Animal Trainer",
@@ -568,12 +572,26 @@ def package_checks(saga: Saga, record: Record) -> list[Check]:
                 )
             )
         if package is not None and package.needs:
-            ok = package.needs in access.opened_types(character)
+            waived = next(
+                (
+                    vf.vf_id
+                    for vf in character.virtues_flaws
+                    if vf.vf_id in package.waived_by
+                ),
+                None,
+            )
+            ok = waived is not None or package.needs in access.opened_types(character)
+            detail = "opened" if ok else "not opened"
+            if waived is not None:
+                detail = (
+                    f"{catalog.load_virtue_flaw_catalog_by_id()[waived].name} "
+                    "stands in (Grogs p. 68)"
+                )
             found.append(
                 _check(
                     f"{name} needs a Virtue opening {package.needs} Abilities",
                     ok,
-                    "opened" if ok else "not opened",
+                    detail,
                 )
             )
     return found

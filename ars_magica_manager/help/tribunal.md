@@ -245,6 +245,16 @@ What a case records:
   and what was decided. A decided or withdrawn case moves to the Rulings
   of Past Tribunals.
 
+A charge's details say whether the Code of Hermes makes it a high crime
+(Houses of Hermes: True Lineages p. 46): depriving a magus of magic,
+slaying a magus, defying the Tribunal, abusing votes, endangering the
+Order, meddling with mundanes, dealing with devils, molesting the fay,
+scrying on magi, failing a parens's duty, Bonisagus's rights and duty to
+share, attacking the Order's allies or aiding its enemies. Only a high
+crime lets the prosecution call for a Wizard's March. The app reads the
+charge's words, so it can be wrong: the Presiding Quaesitor's word is the
+rule.
+
 <!-- tui -->
 `a` adds a case, `e` edits the chosen one and `d` deletes it. More (`m`)
 offers **Withdraw**, which takes it off the docket and keeps it among
@@ -522,6 +532,17 @@ offices. A hospes holds office only by the Praeco's leave: his sheet's
 Office line says so (an aedile is chosen, not sought, so no leave is
 noted for that).
 
+Each magus may wear one **Decoration** (Laurel, Myrtle, Oak, Grass,
+Parsley, highest first): a higher replaces a lower, and a lower never
+replaces a higher (Against the Dark p. 17). A magus's sheet lists his
+privilege's other terms: what it forbids (a colona the title archmagus,
+inviting magi, choosing his aedile) and what needs the Praeco's leave (a
+hospes's apprentice, familiar, talisman, oppida and aedile vote; a
+foederatus's archmagus title, oppida, invitations and vis or item sales
+to outsiders); a hospes's familiar or talisman is noted as held by leave
+(pp. 15-18). The Curator of Tablinum is chosen by the Tribunal's vote,
+and must be held a master when chosen (p. 58).
+
 ## Tenure tab
 <!-- help: tab-trib-tenure -->
 
@@ -557,8 +578,15 @@ Tribunal following the Normandy customs has this tab.
 ### The Tourney
 <!-- help: section-trib-tourney -->
 
-Each team's result at each Tourney, the latest first. Enter a team's
-points (its starting tally and every event's); its rank, its prize pawns
+Each team's result at each Tourney, the latest first. A result's
+**Points** is the team's own tally: a point for each member of its
+covenant (one for a visiting team or a coenobium's member) and any points
+the events don't give. Choose its placing in each of the six events and
+their points are added (The Lion and the Lily p. 31): the hastiludium 20,
+10 and 5 for the semifinalists; the certamen 25, 15, 8; the dimicatio
+23, 12, 6; the hosting covenant's choice 12, 8, 3 and 3; the joust 20, 8,
+3 and 3; each with a point for entering; the melee 6, 2 for second to
+fourth and 1 for fifth, with nothing for entering. Its rank, its prize pawns
 and any named rank (the Sieges of Normandy, Valor, Notatus, Shame and
 Alms, each a Hermetic Reputation of 2 for seven years) are worked out.
 Teams level on points keep the order they were entered, since the book

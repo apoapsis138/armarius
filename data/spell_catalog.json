@@ -754,16 +754,16 @@
       "name": "Gift of Man's Fortitude",
       "technique": "Muto",
       "form": "Animal",
-      "level": 15,
+      "level": 25,
       "requisites": [],
       "range": "Personal",
       "duration": "Sun",
       "target": "Individual",
       "ritual": false,
-      "base_level": 5,
+      "base_level": 15,
       "source": "Cal",
       "page": "61",
-      "description": "As Gift of the Bear's Fortitude, but for animals.\n\n(Base 5, +2 Sun)"
+      "description": "As Gift of the Bear's Fortitude, but for animals.\n\n(Base 15, +2 Sun)"
     },
     {
       "id": "spell_growth_of_the_creeping_things",
@@ -1143,7 +1143,7 @@
       "base_level": 2,
       "source": "Covenants",
       "page": "97",
-      "description": "This spell creates a palimpsest (a book that has had its writing scraped away so that it can be reused) from an existing book. It does this by flaking away a thin layer from both sides of each page.\n\nAn Intelligence + Finesse roll determines the skill with which the previous writing has been removed.\n\n(Base 2, +1 Touch)"
+      "description": "This spell creates a palimpsest (a book that has had its writing scraped away so that it can be reused) from an existing book. It does this by flaking away a thin layer from both sides of each page.\n\nA Perception + Finesse roll determines the skill with which the previous writing has been removed.\n\n(Base 2, +1 Touch)"
     },
     {
       "id": "spell_the_curse_of_diana",
@@ -1470,7 +1470,7 @@
       "base_level": 1,
       "source": "Covenants",
       "page": "97",
-      "description": "This spell binds up to 1,000 prepared bifolds into books. Usually these bifolds have already been written upon, but magi may use this spell to create blank books if they wish. The spell fails if any of the necessary pieces of a codex are missing. Codices created with this spell are usually flap-books, since they lack wooden boards within their covers. Binding mundane materials into the book which are not derived from animals, like cover boards or registers, requires a spell with the appropriate requisite and an Intelligence + Finesse roll against an Ease Factor of 12. Some magi mold animal bones into plates, to serve instead of wood. This spell allows readers of the book to claim the +1 quality bonus for sound binding.\n\n(Base 1, +1 Touch, +2 Group)"
+      "description": "This spell binds up to 1,000 prepared bifolds into books. Usually these bifolds have already been written upon, but magi may use this spell to create blank books if they wish. The spell fails if any of the necessary pieces of a codex are missing. Codices created with this spell are usually flap-books, since they lack wooden boards within their covers. Binding mundane materials into the book which are not derived from animals, like cover boards or registers, requires a spell with the appropriate requisite and a Perception + Finesse roll against an Ease Factor of 12. Some magi mold animal bones into plates, to serve instead of wood. This spell allows readers of the book to claim the +1 quality bonus for sound binding.\n\n(Base 1, +1 Touch, +2 Group)"
     },
     {
       "id": "spell_securing_the_harvest",
@@ -1765,7 +1765,7 @@
       "base_level": 1,
       "source": "Covenants",
       "page": "97",
-      "description": "A variant of Binding the Mundane Codex, this spell allows magi to incorporate resonant materials into their bindings. Binding a book with resonant materials is extremely difficult and requires an Intelligence + Finesse roll against an Ease Factor of 12 + 3 per resonant material, to a maximum of three materials. This spell allows readers of the book to claim the +1 quality bonus for sound binding.\n\n(Base 1, +1 Touch, +2 Group, +3 complexity)"
+      "description": "A variant of Binding the Mundane Codex, this spell allows magi to incorporate resonant materials into their bindings. Binding a book with resonant materials is extremely difficult and requires a Perception + Finesse roll against an Ease Factor of 12 + 3 per resonant material, to a maximum of three materials. This spell allows readers of the book to claim the +1 quality bonus for sound binding.\n\n(Base 1, +1 Touch, +2 Group, +3 complexity)"
     },
     {
       "id": "spell_panic_of_the_elephant_s_mouse",
@@ -2228,18 +2228,18 @@
       "name": "Lungs of Drowning",
       "technique": "Creo",
       "form": "Aquam",
-      "level": 20,
+      "level": 15,
       "requisites": [
         "Corpus"
       ],
       "range": "Touch",
       "duration": "Diameter",
-      "target": "Part",
+      "target": "Individual",
       "ritual": false,
       "base_level": 4,
       "source": "HP",
       "page": "86",
-      "description": "This spell fills the target's lungs with water, causing him to experience the sensation of drowning. The character begins to suffer deprivation due to lack of air (see Ars Magica Fifth Edition, page 180), but as the spell only lasts for Diameter duration (two minutes), the character is unlikely to die unless the spell is repeatedly cast on him.\n\n(Base 4, +1 Touch, +1 Diameter, +1 Part, +1 Corpus requisite)"
+      "description": "This spell fills the target's lungs with water, causing him to experience the sensation of drowning. The character begins to suffer deprivation due to lack of air (see Ars Magica Fifth Edition, page 180), but as the spell only lasts for Diameter duration (two minutes), the character is unlikely to die unless the spell is repeatedly cast on him.\n\n(Base 4, +1 Touch, +1 Diameter, +1 Corpus requisite)"
     },
     {
       "id": "spell_mighty_torrent_of_water",
@@ -2422,7 +2422,7 @@
       "name": "Eyes of Danibus",
       "technique": "Intellego",
       "form": "Aquam",
-      "level": 20,
+      "level": 25,
       "requisites": [
         "Imaginem"
       ],
@@ -2896,16 +2896,16 @@
       "name": "Thought Distinctly Burned",
       "technique": "Rego",
       "form": "Aquam",
-      "level": 10,
+      "level": 15,
       "requisites": [],
       "range": "Voice",
       "duration": "Ring",
-      "target": "Individual",
+      "target": "Group",
       "ritual": false,
       "base_level": 1,
       "source": "Covenants",
       "page": "97",
-      "description": "This spell controls ink so that it makes patterns on the pages that correspond to the magus's words. This spell does not allow a magus to write faster than the core rules permit, but does allow impaired magi to write when they would otherwise require a notary. A Finesse roll makes the writing particularly precise and neat, which is usually unimportant.\n\n(Base 1, +2 Voice, +2 Ring, +1 to allow many colors of ink)"
+      "description": "This spell controls ink so that it makes patterns on the pages that correspond to the magus's words. This spell does not allow a magus to write faster than the core rules permit, but does allow impaired magi to write when they would otherwise require a notary. A Finesse roll makes the writing particularly precise and neat, which is usually unimportant.\n\n(Base 1, +2 Voice, +2 Ring, +2 Group)"
     },
     {
       "id": "spell_breath_of_winter",
@@ -4371,7 +4371,7 @@
       "base_level": 10,
       "source": "DI",
       "page": "95",
-      "description": "This spell grants a sick person a +15 bonus to Disease Recovery rolls. It must be in effect throughout the entire recovery period, but can be reapplied every sunrise and sunset to continue its effectiveness. Son of the mythical healer Asclepius, Telesphorus was the Greek god of recuperation.\n\n(Base 10, +1 Touch, +1 Sun)"
+      "description": "This spell grants a sick person a +15 bonus to Recovery rolls. It must be in effect throughout the entire recovery period, but can be reapplied every sunrise and sunset to continue its effectiveness. Son of the mythical healer Asclepius, Telesphorus was the Greek god of recuperation.\n\n(Base 10, +1 Touch, +1 Sun)"
     },
     {
       "id": "spell_touch_of_the_blessed_virgin",
@@ -4795,6 +4795,26 @@
       "source": "DE",
       "page": "332",
       "description": "Brings the semblance of life to a corpse. During the ritual, healing spells work on the corpse, which is important because the body must be physically whole or else it simply dies again once it is brought back to life. For each day that the person has been dead, roll for aging. When the ritual is complete, roll a simple die to determine the success of the attempt:\n\nBody dissolves Body possessed by a demon, faerie, or other supernatural entity Mindless, useless living corpse Automaton with no Abilities over 3 Automaton, but Abilities as a normal person's Person with self direction but no personality, and somehow dangerously demented Person with will, but no personality. In any case, the revived person is not truly alive and is unable to gain experience points. Also, the person must make an aging roll at the beginning of each year of its existence, regardless of age. This is the closest that the Order has gotten to raising a person from the dead.\n\n(Base 70, +1 Touch, no addition for requisite)"
+    },
+    {
+      "id": "spell_replenishing_the_fount_of_the_magus",
+      "name": "Replenishing the Fount of the Magus",
+      "technique": "Creo",
+      "form": "Corpus",
+      "level": 30,
+      "requisites": [
+        "Muto",
+        "Herbam",
+        "Vim"
+      ],
+      "range": "Touch",
+      "duration": "Momentary",
+      "target": "Individual",
+      "ritual": false,
+      "base_level": null,
+      "source": "GotF",
+      "page": "39",
+      "description": "Terious of Flambeau's spell of the forest's Path of Energy: each casting gives back one lost Fatigue level drawn from the forest. The caster must be touching the forest, have Forest Lore 4 or more, and take the energy in some ceremonial form, such as drinking from a forest spring or eating its herbs. It lies in the Great Library of Durenmar, but no one has yet cast it, and many think it a hoax. The book gives no breakdown of its level."
     },
     {
       "id": "spell_sight_of_the_true_form",
@@ -6829,16 +6849,16 @@
       "name": "Curse of the Baby's Bladder",
       "technique": "Rego",
       "form": "Corpus",
-      "level": 5,
+      "level": 4,
       "requisites": [],
       "range": "Voice",
       "duration": "Momentary",
-      "target": "Part",
+      "target": "Individual",
       "ritual": false,
       "base_level": 2,
       "source": "App",
       "page": "46",
-      "description": "By manipulating the target's stomach and groin muscles, this spell causes the target to release his water, resulting in a (usually) embarrassing situation. This spell does not target or create urine, so if the target has recently urinated, the spell has no effect. This cantation is unfortunately popular with many apprentices.\n\n(Base 2, + 2 Voice, +1 Part)"
+      "description": "By manipulating the target's stomach and groin muscles, this spell causes the target to release his water, resulting in a (usually) embarrassing situation. This spell does not target or create urine, so if the target has recently urinated, the spell has no effect. This cantation is unfortunately popular with many apprentices.\n\n(Base 2, +2 Voice)"
     },
     {
       "id": "spell_curse_of_the_unruly_tongue",
@@ -7117,16 +7137,16 @@
       "name": "Arachne's Tuition",
       "technique": "Rego",
       "form": "Corpus",
-      "level": 20,
+      "level": 25,
       "requisites": [],
-      "range": "Eye",
+      "range": "Touch",
       "duration": "Sun",
       "target": "Individual",
       "ritual": false,
-      "base_level": 4,
+      "base_level": 10,
       "source": "MoH",
       "page": "101",
-      "description": "Cast by a master on his apprentice, this spell allows the master to control the apprentice's movements for a day.\n\nThe caster can suspend the spell, allowing the apprentice to continue with a task or exercise, and then resume control in order to help the apprentice through a particularly complex task or to correct his student and show how something should be done. The apprentice learns at a much deeper level by having his own actions controlled from within, rather than simply being guided from without.\n\nThis spell is designed to assist with the training of physical skills, notably craft skills. Each season a master uses this spell to instruct an apprentice, he can add 1 to his Training Source Quality (see Ars Magica Fifth Edition, page 164).\n\nThis version was developed generations ago within Petallichus' line of Verditius weavers, though others certainly exist elsewhere within House Verditius and perhaps also in other Houses.\n\nTwo seasons of using this spell on an apprentice counts as one year of being under a constant magical effect as per Ars Magica Fifth Edition, page 168, and inflicts 1 Warping point in that year.\n\n(Base 4, +1 Eye, +2 Sun, +1 control over fine movements)"
+      "description": "Cast by a master on his apprentice, this spell allows the master to control the apprentice's movements for a day.\n\nThe caster can suspend the spell, allowing the apprentice to continue with a task or exercise, and then resume control in order to help the apprentice through a particularly complex task or to correct his student and show how something should be done. The apprentice learns at a much deeper level by having his own actions controlled from within, rather than simply being guided from without.\n\nThis spell is designed to assist with the training of physical skills, notably craft skills. Each season a master uses this spell to instruct an apprentice, he can add 1 to his Training Source Quality (see Ars Magica Fifth Edition, page 164).\n\nThis version was developed generations ago within Petallichus' line of Verditius weavers, though others certainly exist elsewhere within House Verditius and perhaps also in other Houses.\n\nTwo seasons of using this spell on an apprentice counts as one year of being under a constant magical effect as per Ars Magica Fifth Edition, page 168, and inflicts 1 Warping point in that year.\n\n(Base 10, +1 Touch, +2 Sun)"
     },
     {
       "id": "spell_it_will_be_health_to_your_flesh_and_strength_to_you_bones",
@@ -9473,7 +9493,9 @@
       "technique": "Rego",
       "form": "Herbam",
       "level": 20,
-      "requisites": [],
+      "requisites": [
+        "Aquam"
+      ],
       "range": "Touch",
       "duration": "Momentary",
       "target": "Group",
@@ -9709,7 +9731,7 @@
       "base_level": 3,
       "source": "TME",
       "page": "112",
-      "description": "Imbues a small boat such as a coracle with the power of flight. The boat and all its contents are lifted into the air, and the caster may make Intelligence + Finesse rolls to change direction or speed. For typical Ease Factors, see The Woolen Steed of Araby, earlier. The maximum speed is forty miles an hour.\n\nThe rigid nature of wood allows the boat to carry a substantial burden; in addition to being lifted itself, the boat can contain a Load of 50. Note that an average person has a Load of 21, so the boat can carry perhaps two people and their equipment. Adding a Size modifier to this spell lifts a larger boat: each additional Size modifier multiplies the maximum additional Load by a factor of 10.\n\nA boat made of metal (or other metal object) could be made to fly using the Rego Terram base guideline of 2, +2 to affect metal. Metal is even more rigid than wood, and can bear an extra 75 points of Load in addition to itself. As before, Size modifiers lift ten times as much metal and thus ten times as much Load. The extra magnitudes have been added to this spell by analogy with the Rego Corpus guidelines.\n\n(Base 3, + 1 Touch, +2 Sun, +1 Size, +1 unsupported surface, +1 for any direction, +1 for increased speed)"
+      "description": "Imbues a small boat such as a coracle with the power of flight. The boat and all its contents are lifted into the air, and the caster may make Intelligence + Finesse rolls to change direction or speed. For typical Ease Factors, see The Woolen Steed of Araby, earlier. The maximum speed is forty miles an hour.\n\nThe rigid nature of wood allows the boat to carry a substantial burden; in addition to being lifted itself, the boat can contain a Load of 50. Note that an average person has a Load of 21, so the boat can carry perhaps two people and their equipment. Adding a Size modifier to this spell lifts a larger boat: each additional Size modifier multiplies the maximum additional Load by a factor of 10.\n\nA boat made of metal (or other metal object) could be made to fly using the Rego Terram base guideline of 2. Metal is even more rigid than wood, and can bear an extra 75 points of Load in addition to itself. As before, Size modifiers lift ten times as much metal and thus ten times as much Load. The extra magnitudes have been added to this spell by analogy with the Rego Corpus guidelines.\n\n(Base 3, +1 Touch, +2 Sun, +1 unsupported surface, +1 for any direction, +2 for increased speed)"
     },
     {
       "id": "spell_ward_against_woodland_spirits",
@@ -10425,7 +10447,7 @@
       "base_level": 5,
       "source": "HP",
       "page": "25",
-      "description": "The caster detects whether creatures he can see have an Ignem Form Might (of any supernatural Realm). This is a magical property of a creature made of flame. It has no effect on creatures that are not made of Ignem, regardless of whether they have a Might or not. Creatures apparently made of flame (creatures of another Form, illusions, or the effects of Hermetic Rego Ignem magic) who do not have an Ignem Form Might are also not detected by this effect. Obviously, this spell needs to Penetrate the Magic Resistance of the detected creatures.\n\n(Base 5, +2 Sun, +4 Vision)"
+      "description": "The caster detects whether creatures he can see have an Ignem Form Might (of any supernatural Realm). This is a magical property of a creature made of flame. It has no effect on creatures that are not made of Ignem, regardless of whether they have a Might or not. Creatures apparently made of flame (creatures of another Form, illusions, or the effects of Hermetic Rego Ignem magic) who do not have an Ignem Form Might are also not detected by this effect. Obviously, this spell needs to Penetrate the Magic Resistance of the detected creatures.\n\n(Base 5, +1 Concentration, +4 Vision)"
     },
     {
       "id": "spell_eyes_of_the_flame",
@@ -11177,7 +11199,7 @@
       "base_level": 4,
       "source": "HoH:S",
       "page": "37",
-      "description": "Control the rate and direction in which a fire spreads. The caster may make the fire spread across combustible surfaces as fast as a man walks. It can leap most gaps as much as one pace across but cannot cross even the tiniest trickle of water. The caster can prevent the fire from spreading in certain directions but cannot actually keep it from burning things it touches. He could, for instance, make a fire spread into the shape of a circle and then expand outward, or keep the fire away from himself while it follows his enemies around the room. If the fire surrounds a person, its heat is nonmagical and so bypasses Magic Resistance. An aiming roll is required to get the fire close enough to do damage. If the fire grows larger than a basic Room Target, the caster loses control of it entirely.\n\n(Base 4, +2 Voice, +1 Concentration, +1 Size)"
+      "description": "Control the rate and direction in which a fire spreads. The caster may make the fire spread across combustible surfaces as fast as a man walks. It can leap most gaps as much as one pace across but cannot cross even the tiniest trickle of water. The caster can prevent the fire from spreading in certain directions but cannot actually keep it from burning things it touches. He could, for instance, make a fire spread into the shape of a circle and then expand outward, or keep the fire away from himself while it follows his enemies around the room. If the fire surrounds a person, its heat is nonmagical and so bypasses Magic Resistance. An aiming roll is required to get the fire close enough to do damage.\n\n(Base 4, +2 Voice, +1 Concentration, +1 Size)"
     },
     {
       "id": "spell_burst_of_the_sweeping_flames",
@@ -12469,16 +12491,16 @@
       "name": "Sight of the Warm Surface",
       "technique": "Muto",
       "form": "Imaginem",
-      "level": 15,
+      "level": 20,
       "requisites": [],
-      "range": "Touch",
+      "range": "Sight",
       "duration": "Concentration",
-      "target": "Vision",
+      "target": "Group",
       "ritual": false,
       "base_level": 2,
       "source": "HoH:S",
       "page": "65",
-      "description": "Although Imaginem magic cannot create heat, warm surfaces emit species, which humans can sense through touch. This spell transforms those into species that the eye responds to. How the warmth is seen varies by magus.\n\n(Base 2, +1 Touch, +1 Concentration, +4 Vision)"
+      "description": "Although Imaginem magic cannot create heat, warm surfaces emit species, which humans can sense through touch. This spell transforms those into species that the eye responds to. How the warmth is seen varies by magus.\n\n(Base 2, +3 Sight, +1 Concentration, +2 Group)"
     },
     {
       "id": "spell_the_petrine_deception",
@@ -13669,18 +13691,18 @@
     {
       "id": "spell_the_ob_of_mot",
       "name": "The Ob of Mot",
-      "technique": "Creo",
+      "technique": "Rego",
       "form": "Mentem",
       "level": 25,
       "requisites": [],
       "range": "Veil",
       "duration": "Concentration",
-      "target": "Group",
+      "target": "Individual",
       "ritual": false,
-      "base_level": 3,
+      "base_level": 5,
       "source": "AM",
       "page": "32",
-      "description": "Special: Requires Canaanite Magic Virtue\n\nThis spell allows those about the caster to speak with a specific person in the world of the dead — to them it appears that the caster is speaking with the voice of the dead person. The caster is effectively acting as a temporary container or vessel for the dead spirit, and botches of this spell might cause the caster to become possessed by a malevolent spirit.\n\nThe caster must either have an Arcane Connection to, or otherwise be able to sense, the target, and the target must be in the world of the dead; that is, neither alive nor in Heaven. The dead person is compelled neither to speak nor be truthful. The caster is aware of the conversation, but cannot participate without making an Intelligence + Concentration roll against an Ease Factor of 12.\n\n(Base 3, +3 Veil, +1 Concentration, + Group)"
+      "description": "Special: Requires Canaanite Magic Virtue\n\nThis spell allows those about the caster to speak with a specific person in the world of the dead — to them it appears that the caster is speaking with the voice of the dead person. The caster is effectively acting as a temporary container or vessel for the dead spirit, and botches of this spell might cause the caster to become possessed by a malevolent spirit.\n\nThe caster must either have an Arcane Connection to, or otherwise be able to sense, the target, and the target must be in the world of the dead; that is, neither alive nor in Heaven. The dead person is compelled neither to speak nor be truthful. The caster is aware of the conversation, but cannot participate without making an Intelligence + Concentration roll against an Ease Factor of 12.\n\n(Base 5, +3 Veil, +1 Conc)"
     },
     {
       "id": "spell_to_sing_of_good_meat_and_drink",
@@ -13990,16 +14012,16 @@
       "name": "Reveal the Lingering Spirit",
       "technique": "Intellego",
       "form": "Mentem",
-      "level": 20,
+      "level": 30,
       "requisites": [],
       "range": "Personal",
       "duration": "Concentration",
       "target": "Vision",
       "ritual": false,
-      "base_level": 3,
+      "base_level": 5,
       "source": "HoH:TL",
       "page": "14",
-      "description": "This spell allows you to see invisible ghosts. If the spell penetrates the ghost's magic resistance, you can see it. This spell does not force the ghost to become visible to others.\n\n(Base 3, +1 Concentration, +4 Vision)"
+      "description": "This spell allows you to see invisible ghosts. If the spell penetrates the ghost's magic resistance, you can see it. This spell does not force the ghost to become visible to others.\n\n(Base 5, +1 Concentration, +4 Vision)"
     },
     {
       "id": "spell_the_factor_s_roll_call",
@@ -14118,16 +14140,16 @@
       "name": "Familial Secrets",
       "technique": "Intellego",
       "form": "Mentem",
-      "level": 30,
+      "level": 35,
       "requisites": [],
-      "range": "Personal",
+      "range": "Touch",
       "duration": "Momentary",
       "target": "Bloodline",
       "ritual": false,
       "base_level": 15,
       "source": "MoH",
       "page": "66",
-      "description": "By casting this spell, the magus learns what all of his descendants believe to be the answer to a question chosen by the magus at the time of casting. This spell functions in a manner similar to the spell Posing the Silent Question (Ars Magica Fifth Edition page 149). It is not always obvious to the caster which answer came from which descendant. To be certain which descendant a particular answer came from, the caster must typically make a Perception + Awareness roll against an Ease Factor of 3 plus the number of descendants that are affected by the spell (this Ease Factor can be higher if the caster is unfamiliar with some of his or her descendants). The caster does not need to possess Arcane Connections to his descendants for this spell to function. This spell works through the connection of blood. Lambert specifically designed Familial Secrets to not Warp members of his bloodline (Ars Magica Fifth Edition page 92).\n\n(Base 15, +3 Bloodline)"
+      "description": "By casting this spell, the magus learns what all of his descendants believe to be the answer to a question chosen by the magus at the time of casting. This spell functions in a manner similar to the spell Posing the Silent Question (Ars Magica Fifth Edition page 149). It is not always obvious to the caster which answer came from which descendant. To be certain which descendant a particular answer came from, the caster must typically make a Perception + Awareness roll against an Ease Factor of 3 plus the number of descendants that are affected by the spell (this Ease Factor can be higher if the caster is unfamiliar with some of his or her descendants). The caster does not need to possess Arcane Connections to his descendants for this spell to function. This spell works through the connection of blood. Lambert specifically designed Familial Secrets to not Warp members of his bloodline (Ars Magica Fifth Edition page 92).\n\n(Base 15, +1 Touch, +3 Bloodline)"
     },
     {
       "id": "spell_funding_the_blackmailer_s_purse",
@@ -14670,18 +14692,18 @@
       "name": "Family Gathering",
       "technique": "Muto",
       "form": "Mentem",
-      "level": 40,
+      "level": 45,
       "requisites": [
         "Intellego"
       ],
-      "range": "Personal",
+      "range": "Touch",
       "duration": "Concentration",
       "target": "Bloodline",
       "ritual": false,
       "base_level": 15,
       "source": "MoH",
       "page": "67",
-      "description": "This spell alters the perceptions of the caster and all of those people who are descended from him or her. The affected people think themselves to be in a large, comfortable, well-lit room sitting around a table sufficiently large to seat every member of the bloodline, rather than at their actual locations. Those affected by the spell perceive their relatives to be with them in this room. The room itself is heavily influenced by the caster's wizard's sigil.\n\nThe members of the bloodline are able to speak to one another as if they were in the same room. If a member of the bloodline is asleep when Family Gathering is cast, the spell will not wake that family member; instead that person will experience the spell as a dream and he will have no easier of a time remembering the meeting than he would have remembering any other dream. The words and actions of a dreaming person are often, but not always, sufficiently odd to alert other participants to his or her state.\n\nDuring the spell's duration, none of the family are able to receive information from their normal senses. (In terms of the mind as explained in Art and Academe, the forms and images collected by the target's senses are overwritten in the target's common sense by the Family Gathering spell). The targets of this spell are still able to move and control their bodies, but their inability to perceive their actual surroundings makes this a dangerous proposition.\n\nPrior to inventing this spell, Lambert on occasion spontaneously cast a Range: Personal, Target: Bloodline version of Words of the Unbroken Silence and used Familial Secrets to communicate with his children, but he found such communication to be very taxing. Lambert created Family Gathering to facilitate clear communication. This spell is specifically designed to not Warp members of Lambert's bloodline.\n\n(Base 15, +1 Concentration, +3 Bloodline, +1 Intellego requisite)"
+      "description": "This spell alters the perceptions of the caster and all of those people who are descended from him or her. The affected people think themselves to be in a large, comfortable, well-lit room sitting around a table sufficiently large to seat every member of the bloodline, rather than at their actual locations. Those affected by the spell perceive their relatives to be with them in this room. The room itself is heavily influenced by the caster's wizard's sigil.\n\nThe members of the bloodline are able to speak to one another as if they were in the same room. If a member of the bloodline is asleep when Family Gathering is cast, the spell will not wake that family member; instead that person will experience the spell as a dream and he will have no easier of a time remembering the meeting than he would have remembering any other dream. The words and actions of a dreaming person are often, but not always, sufficiently odd to alert other participants to his or her state.\n\nDuring the spell's duration, none of the family are able to receive information from their normal senses. (In terms of the mind as explained in Art and Academe, the forms and images collected by the target's senses are overwritten in the target's common sense by the Family Gathering spell). The targets of this spell are still able to move and control their bodies, but their inability to perceive their actual surroundings makes this a dangerous proposition.\n\nPrior to inventing this spell, Lambert on occasion spontaneously cast a Range: Personal, Target: Bloodline version of Words of the Unbroken Silence and used Familial Secrets to communicate with his children, but he found such communication to be very taxing. Lambert created Family Gathering to facilitate clear communication. This spell is specifically designed to not Warp members of Lambert's bloodline.\n\n(Base 15, +1 Touch, +1 Concentration, +3 Bloodline, +1 Intellego requisite)"
     },
     {
       "id": "spell_inmost_companion",
@@ -15988,16 +16010,16 @@
       "name": "Voices From Hollow Spaces",
       "technique": "Rego",
       "form": "Mentem",
-      "level": 35,
+      "level": 25,
       "requisites": [],
       "range": "Voice",
       "duration": "Ring",
       "target": "Individual",
       "ritual": false,
-      "base_level": 15,
+      "base_level": 5,
       "source": "HoH:TL",
       "page": "140",
-      "description": "This spell binds ghosts to objects or places. Traditional sites include mirrors, skulls and graves. It does not compel trapped ghosts to serve willingly, but members of House Tremere threaten or bribe their ghosts into compliance.\n\n(Base 15, +2 Voice, +2 Ring)"
+      "description": "This spell binds ghosts to objects or places. Traditional sites include mirrors, skulls and graves. It does not compel trapped ghosts to serve willingly, but members of House Tremere threaten or bribe their ghosts into compliance.\n\n(Base 5, +2 Voice, +2 Ring)"
     },
     {
       "id": "spell_enslave_the_mortal_mind",
@@ -16545,7 +16567,7 @@
       "base_level": 5,
       "source": "HoH:S",
       "page": "37",
-      "description": "Conjure a suit of full chain mail armor. The Animal requisite is required to create the armor's leather straps, woolen padding, and gambeson — without these elements, the armor would not be effective. The styling of the armor, including any crest that appears on the helmet, depends on your Wizard's Sigil. The armor is magical, so its wearer cannot punch or grapple a magic-resistant creature while wearing the gauntlets. The armor has the same Load as nonmagical armor, and it takes just as long to put on (several minutes at least). An Intelligence + Finesse roll against an Ease Factor of 9 is required to make armor of average quality; a failed roll may result in reduced Protection and/or increased Load, at the storyguide's discretion.\n\n(Base 5, +1 Touch, +2 Sun, +2 very elaborate shape)"
+      "description": "Conjure a suit of full chain mail armor. The Animal requisite is required to create the armor's leather straps, woolen padding, and gambeson — without these elements, the armor would not be effective. The styling of the armor, including any crest that appears on the helmet, depends on your Wizard's Sigil. The armor is magical, so its wearer cannot punch or grapple a magic-resistant creature while wearing the gauntlets. The armor has the same Load as nonmagical armor, and it takes just as long to put on (several minutes at least).\n\n(Base 5, +1 Touch, +2 Sun, +2 very elaborate shape)"
     },
     {
       "id": "spell_the_wealth_of_croesus",
@@ -16616,36 +16638,34 @@
       "name": "Craft the Mechanism",
       "technique": "Creo",
       "form": "Terram",
-      "level": 35,
-      "requisites": [
-        "Intellego"
-      ],
+      "level": 20,
+      "requisites": [],
       "range": "Touch",
       "duration": "Momentary",
-      "target": "Group",
+      "target": "Individual",
       "ritual": true,
       "base_level": 5,
       "source": "TMRE",
       "page": "52",
-      "description": "To make an armillary sphere with Craft the Mechanism, the magus must design the device with an Intelligence + Astronomy or appropriate Craft Ability roll:\n\nStress Die + Intelligence + Astronomy\n\nor Craft (Mechanisms or Clocks) vs. an Ease Factor of 18\n\nand then must guide the magic to the correct crafted form: Stress Die + Perception + Finesse vs. an Ease Factor of 18\n\nIf either roll fails, then mechanism is flawed and imprecise; if either roll botches, then the flaw is subtle and overlooked until used in a non-test situation, when it introduces a botch into an important calculation made with the device.\n\n(Base 5 create metal, +1 Touch, +2 Group, +2 for finesse, +1 for Intellego requisite)\n\nNote: The text in The Mysteries says this spell is without an Intellego requisite but the level remains 35."
+      "description": "To make an armillary sphere with Craft the Mechanism, the magus must design the device with an Intelligence + Astronomy or appropriate Craft Ability roll:\n\nStress Die + Intelligence + Astronomy\n\nor Craft (Mechanisms or Clocks) vs. an Ease Factor of 18\n\nand then must guide the magic to the correct crafted form: Stress Die + Perception + Finesse vs. an Ease Factor of 18\n\nIf either roll fails, then mechanism is flawed and imprecise; if either roll botches, then the flaw is subtle and overlooked until used in a non-test situation, when it introduces a botch into an important calculation made with the device.\n\n(Base 5 create metal, +1 Touch, +2 for finesse)"
     },
     {
       "id": "spell_duplicate_the_mechanism",
       "name": "Duplicate the Mechanism",
       "technique": "Creo",
       "form": "Terram",
-      "level": 35,
+      "level": 25,
       "requisites": [
         "Intellego"
       ],
       "range": "Touch",
       "duration": "Momentary",
-      "target": "Group",
+      "target": "Individual",
       "ritual": true,
       "base_level": 5,
       "source": "TMRE",
       "page": "52",
-      "description": "This spell creates an exact duplicate of an existing mechanism. An armillary sphere itself is complex and fiddly, but nonmagical. The precision of the mechanism is limited by the precision of the duplicated source.\n\nStatus-conscious magi may prefer the alternative Level 45 ritual Duplicate the Noble Mechanism, which creates a precious metal (silver or gold, or both) mechanism.\n\n(Base 5 create metal, +1 Touch, +2 Group, +2 for finesse, +1 for Intellego requisite)"
+      "description": "This spell creates an exact duplicate of an existing mechanism. An armillary sphere itself is complex and fiddly, but nonmagical. The precision of the mechanism is limited by the precision of the duplicated source.\n\nStatus-conscious magi may prefer the alternative Level 45 ritual Duplicate the Noble Mechanism, which creates a precious metal (silver or gold, or both) mechanism.\n\n(Base 5 create metal, +1 Touch, +2 for finesse, +1 for Intellego requisite)"
     },
     {
       "id": "spell_necessary_monolith",
@@ -16894,7 +16914,7 @@
       "name": "Links of Stone",
       "technique": "Intellego",
       "form": "Terram",
-      "level": 25,
+      "level": 20,
       "requisites": [],
       "range": "Arcane Connection",
       "duration": "Momentary",
@@ -16903,7 +16923,7 @@
       "base_level": 4,
       "source": "AM",
       "page": "36",
-      "description": "The caster holds a piece of stone in her hands and receives a brief mental image of the surroundings of the object that this stone is an Arcane Connection to. This spell could be used to find the statue that a fragment came from, or the quarry that the blocks of a castle were chiseled from. If the stone is an Arcane Connection to several things, then the newest Arcane Connection, or the closest, is revealed.\n\n(Base 4, + 5 Arc)"
+      "description": "The caster holds a piece of stone in her hands and receives a brief mental image of the surroundings of the object that this stone is an Arcane Connection to. This spell could be used to find the statue that a fragment came from, or the quarry that the blocks of a castle were chiseled from. If the stone is an Arcane Connection to several things, then the newest Arcane Connection, or the closest, is revealed.\n\n(Base 4, +4 Arc)"
     },
     {
       "id": "spell_the_wisdom_of_sleep",
@@ -17106,16 +17126,16 @@
       "name": "A Window of Singular Direction",
       "technique": "Muto",
       "form": "Terram",
-      "level": 10,
+      "level": 15,
       "requisites": [],
       "range": "Touch",
       "duration": "Ring",
-      "target": "Individual",
+      "target": "Part",
       "ritual": false,
       "base_level": 3,
       "source": "HoH:TL",
       "page": "141",
-      "description": "This spell, created by the Architects of Tremere, makes a circle of wall transparent, from one side only. It was developed in the early years of the Order, to allow magi protected by temporary fortifications to target their foes.\n\n(Base 3, +1 Touch, +2 Ring)\n\nNote: A level 15 version can affect stone walls."
+      "description": "This spell, created by the Architects of Tremere, makes a circle of wall transparent, from one side only. It was developed in the early years of the Order, to allow magi protected by temporary fortifications to target their foes.\n\n(Base 3, +1 Touch, +2 Ring, +1 Part)\n\nNote: This version affects only dirt walls; one of Base 4 and level 20 affects stone walls."
     },
     {
       "id": "spell_blunting_the_iron_s_bite",
@@ -17699,7 +17719,7 @@
       "name": "Sudden Well",
       "technique": "Perdo",
       "form": "Terram",
-      "level": 30,
+      "level": 25,
       "requisites": [],
       "range": "Voice",
       "duration": "Momentary",
@@ -17708,7 +17728,7 @@
       "base_level": 3,
       "source": "AtD",
       "page": "31",
-      "description": "This spell creates a shaft 10 feet square and 100 feet deep. The shaft is not reinforced, so it collapses swiftly after it is created.\n\n(Base 3, +2 Voice, +1 Part, +4 size)"
+      "description": "This spell creates a shaft 10 feet square and 100 feet deep. The shaft is not reinforced, so it collapses swiftly after it is created.\n\n(Base 3, +2 Voice, +1 Part, +3 size)"
     },
     {
       "id": "spell_cascade_of_rocks",
@@ -17731,8 +17751,10 @@
       "name": "The Hidden Warren",
       "technique": "Perdo",
       "form": "Terram",
-      "level": 40,
-      "requisites": [],
+      "level": 45,
+      "requisites": [
+        "Rego"
+      ],
       "range": "Touch",
       "duration": "Momentary",
       "target": "Part",
@@ -17740,7 +17762,7 @@
       "base_level": 3,
       "source": "DI",
       "page": "69",
-      "description": "This spell carves out 2,500 linear paces of passageway that is two paces by two paces, for a total of 10,000 cubic paces of stone or mixed stone and dirt destroyed. This space may be adjusted to create doorways, rooms, and stairs with a Finesse roll against an Ease Factor of 12. An Ease Factor of 15 allows for more intricate details like chairs, tables, and shelves. This spell carves through dirt and stone alike, but a structure cut primarily out of dirt requires wooden supports added afterwards. This spell easily creates a space 6 paces underground, with twenty 5-by-5-by-3 pace rooms joined to a 2-by- 2-by-60 paces corridor, for approximately 1,775 cubic paces, and allows for 5 such levels, each joined by a 2-by-2 pace stairwell 6 paces deep. The form of the excavation can be modified by the caster, however.\n\n(Base 3, +1 Touch, +1 Part, +4 Size, +1 for Stone, +2 for complexity)"
+      "description": "This spell carves out 2,500 linear paces of passageway that is two paces by two paces, for a total of 10,000 cubic paces of stone or mixed stone and dirt destroyed. This space may be adjusted to create doorways, rooms, and stairs with a Finesse roll against an Ease Factor of 12. An Ease Factor of 15 allows for more intricate details like chairs, tables, and shelves. This spell carves through dirt and stone alike, but a structure cut primarily out of dirt requires wooden supports added afterwards. This spell easily creates a space 6 paces underground, with twenty 5-by-5-by-3 pace rooms joined to a 2-by- 2-by-60 paces corridor, for approximately 1,775 cubic paces, and allows for 5 such levels, each joined by a 2-by-2 pace stairwell 6 paces deep. The form of the excavation can be modified by the caster, however.\n\n(Base 3, +1 Touch, +1 Part, +4 Size, +1 for Stone, +2 for complexity, +1 Rego requisite)"
     },
     {
       "id": "spell_the_fate_of_carthage",
@@ -17878,14 +17900,14 @@
       "form": "Terram",
       "level": 5,
       "requisites": [],
-      "range": "Touch",
+      "range": "Voice",
       "duration": "Momentary",
       "target": "Individual",
       "ritual": false,
       "base_level": 2,
       "source": "MoH",
       "page": "50",
-      "description": "The caster deflects one blow from a melee weapon of which he is aware. Since the magus actually touches the weapon, any additional effects of the blade — for example, a coating of poison, or a Blade of Virulent Flame — still affect him. A casting requisite of Herbam is needed if the weapon is primarily wooden, such as a spear or staff. Hugh has mastered this spell, and uses it as a fast-cast defense.\n\n(Base 2, +1 Touch, +2 affect metal)"
+      "description": "The caster deflects one blow from a melee weapon of which he is aware. The weapon is kept entirely away from his body, so he is completely unaffected by it. Hugh designed it for use while wielding weapons and armour, so it needs no gestures: there is no penalty for casting it without them, though words are needed as normal, and to secure a useful Voice range. Hugh has mastered this spell, and uses it as a fast-cast defense.\n\n(Base 2, +2 Voice, +1 no gestures)"
     },
     {
       "id": "spell_unseen_arm",
@@ -17956,7 +17978,7 @@
       "name": "The Key of Theodorus",
       "technique": "Rego",
       "form": "Terram",
-      "level": 10,
+      "level": 5,
       "requisites": [],
       "range": "Touch",
       "duration": "Momentary",
@@ -17965,7 +17987,7 @@
       "base_level": 1,
       "source": "C&G",
       "page": "78",
-      "description": "This spell magically opens any single lock. Regardless of the lock's complexity or quality, it falls open at the end of this spell. Since the locking mechanism is designed to naturally move in a single direction to lock and unlock it, this is a base 1 effect. The sixth century Greek inventor, Theodorus of Samos, is credited with creating the first locks in Mythic Europe.\n\n(Base 1, +1 Touch, +2 Part, +2 for metal)"
+      "description": "This spell magically opens any single lock. Regardless of the lock's complexity or quality, it falls open at the end of this spell. Since the locking mechanism is designed to naturally move in a single direction to lock and unlock it, this is a base 1 effect. The sixth century Greek inventor, Theodorus of Samos, is credited with creating the first locks in Mythic Europe.\n\n(Base 1, +1 Touch, +1 Part, +2 for metal)"
     },
     {
       "id": "spell_the_swordsmith_s_art",
@@ -18531,7 +18553,7 @@
       "name": "The Heart That Could Move Stone",
       "technique": "Rego",
       "form": "Terram",
-      "level": 25,
+      "level": 20,
       "requisites": [],
       "range": "Touch",
       "duration": "Diameter",
@@ -18540,14 +18562,14 @@
       "base_level": 3,
       "source": "HP",
       "page": "18",
-      "description": "The caster can move stone buildings with incredible force. This usually causes the stone building to collapse, as it is torn from its foundations. Anyone inside takes +10 damage from the falling structure. However, if the building is floating (through the Repulsion of Earth effect, for example), then the character can push the building to a new location. Characters inside the building when it is being moved must make Dexterity rolls against an Ease Factor of 6, each round, or lose their footing. Unless special precautions are taken, laboratories inside the building are disrupted by the movement, which ruins any laboratory activities being conducted that season. It takes a season to reorganize a laboratory disrupted in this way.\n\n(Base 3, +1 Touch, +1 Diameter, +3 Structure, +1 affect stone)"
+      "description": "The caster can move stone buildings with incredible force. This usually causes the stone building to collapse, as it is torn from its foundations. Anyone inside takes +10 damage from the falling structure. However, if the building is floating (through the Repulsion of Earth effect, for example), then the character can push the building to a new location. Characters inside the building when it is being moved must make Dexterity rolls against an Ease Factor of 6, each round, or lose their footing. Unless special precautions are taken, laboratories inside the building are disrupted by the movement, which ruins any laboratory activities being conducted that season. It takes a season to reorganize a laboratory disrupted in this way.\n\n(Base 3, +1 Touch, +1 Diameter, +3 Structure)"
     },
     {
       "id": "spell_the_prodigal_returns",
       "name": "The Prodigal Returns",
       "technique": "Rego",
       "form": "Terram",
-      "level": 25,
+      "level": 15,
       "requisites": [],
       "range": "Sight",
       "duration": "Concentration",
@@ -18556,7 +18578,7 @@
       "base_level": 3,
       "source": "HP",
       "page": "90",
-      "description": "This spell causes a metal weapon (such as a sword or dagger) to fly through the air, safely returning to the outstretched hand of the caster.\n\n(Base 3, +3 Sight, +1 Concentration +2 affect metal)"
+      "description": "This spell causes a metal weapon (such as a sword or dagger) to fly through the air, safely returning to the outstretched hand of the caster.\n\n(Base 3, +3 Sight, +1 Concentration)"
     },
     {
       "id": "spell_circular_wall_of_shields",
@@ -18860,11 +18882,11 @@
       "range": "Voice",
       "duration": "Diameter",
       "target": "Part",
-      "ritual": false,
+      "ritual": true,
       "base_level": 3,
       "source": "AtD",
       "page": "31",
-      "description": "This spell creates a chasm 30 feet wide, 30 to 40 feet deep, and 10,000 paces long (which is just over 5.5 miles). Monica can use this spell to divert rivers with the aid of her Necessary Monolith spell, which dams the original watercourse. She can also create defensive circles, up to a mile and three quarters across, with each casting of the spell. The channel is not stable, and begins to collapse over the next few days, but if has been used to divert a river, the scouring action of the water may keep it clear.\n\n(Base 3, +2 voice, +1 Diameter, +1 part, +7 size)"
+      "description": "This spell creates a chasm 30 feet wide, 30 to 40 feet deep, and 10,000 paces long (which is just over 5.5 miles). Monica can use this spell to divert rivers with the aid of her Necessary Monolith spell, which dams the original watercourse. She can also create defensive circles, up to a mile and three quarters across, with each casting of the spell. The channel is not stable, and begins to collapse over the next few days, but if has been used to divert a river, the scouring action of the water may keep it clear.\n\n(Base 3, +2 voice, +1 Diameter, +1 part, +7 size; Ritual for its very large effect)"
     },
     {
       "id": "spell_pitsdim_s_downfall",
@@ -19423,7 +19445,7 @@
       "base_level": 10,
       "source": "AM",
       "page": "91",
-      "description": "Special: Requires Celestial Magic\n\nThis spell charts the course of the light emanating from the fixed stars. It then compares the angles between these lines, to provide a unique pair of numbers, representing the array. This is the Ptolemaic coordinate for the caster's position, provided that the caster knows the array at origin. A magus is unable to hold coordinates in her mind with sufficient precision to represent a circle less than 1000 paces across. Notebooks or devices with coordinates in them allow greater precision.\n\n(Base 10 given in The Mysteries Revised Edition, +3 Sight)"
+      "description": "Special: Requires Celestial Magic\n\nThis spell charts the course of the light emanating from the fixed stars. It then compares the angles between these lines, to provide a unique pair of numbers, representing the array. This is the Ptolemaic coordinate for the caster's position, provided that the caster knows the array at origin. A magus is unable to hold coordinates in her mind with sufficient precision to represent a circle less than 1000 paces across. Notebooks or devices with coordinates in them allow greater precision.\n\n(Base 10 given in The Mysteries Revised Edition, +1 Touch)"
     },
     {
       "id": "spell_bitter_taste_of_betrayal",
@@ -19675,7 +19697,7 @@
     },
     {
       "id": "spell_reveal_the_magical_deception",
-      "name": "Reveal the magical Deception",
+      "name": "Reveal the Magical Deception",
       "technique": "Intellego",
       "form": "Vim",
       "level": 25,
@@ -19687,7 +19709,7 @@
       "base_level": 4,
       "source": "GotF",
       "page": "21",
-      "description": "This spell is specifically designed to overcome spells used to hide the traces of magic, such as Masking the Odor of Magic. Such magics of concealment are detected if the Penetration total matches the level of the deceptive spell divided by two.\n\n(Base 4, +1 Concentration, +2 to determine Technique or Form, +1 complexity)"
+      "description": "This spell is specifically designed to overcome spells used to hide the traces of magic, such as Masking the Odor of Magic. Such magics of concealment are detected if the Penetration total matches the level of the deceptive spell divided by two.\n\n(Base 4, +1 Concentration, +1 Touch, +2 to determine Technique and Form, +1 complexity)"
     },
     {
       "id": "spell_scent_of_the_gift",
@@ -20758,7 +20780,7 @@
       "name": "Adjuration of the Hell-Sworn Spirit",
       "technique": "Rego",
       "form": "Vim",
-      "level": null,
+      "level": 35,
       "requisites": [],
       "range": "Arcane Connection",
       "duration": "Momentary",
@@ -20766,7 +20788,7 @@
       "ritual": false,
       "source": "RoP:I",
       "page": "122",
-      "description": "This spell summons a demon with Might no greater than the spell's level. It creates a magical conduit between the magus and the demon using the demon's True Name (which is essential for this spell), and the demon is compelled to travel almost instantly to the magus's location through that conduit. If the magus has prepared an arcane circle, such as in the spell Ward Against Demons, he can force the demon to appear within it.\n\n(Base effect, +4 Arcane Connection)"
+      "description": "This spell summons a demon with Might no greater than the spell's level. It creates a magical conduit between the magus and the demon using the demon's True Name (which is essential for this spell), and the demon is compelled to travel almost instantly to the magus's location through that conduit. If the magus has prepared an arcane circle, such as in the spell Ward Against Demons, he can force the demon to appear within it.\n\n(Base 15, +4 Arcane Connection)"
     },
     {
       "id": "spell_aegis_of_the_hearth",
@@ -20811,7 +20833,7 @@
       "ritual": false,
       "source": "HP",
       "page": "81",
-      "description": "This spell suppresses a magical tunnel created by Hermetic Vim magic, if the level of the magical tunnel creating spell is less than or equal to half the level of this spell + 1 magnitude. For the duration of this spell, spells can no longer be cast through the tunnel, in either direction. When this spell expires, or it is ended some other way, the tunnel may be used again (if it has not expired in the meantime).\n\nIt is a good idea to master this spell taking the Fast Casting mastery (Ars Magica Fifth Edition, page 87). This spell can be cast at either end of the magical tunnel. However, note that, without the aid of magical senses, only the original caster of the magical tunnel can target it. Of course, the Break the Siege effect is a spell, and can be dispelled itself. However, the Break the Siege spell is only present at the end which it was cast at. There is nothing to dispel at the other end. (Base effect, +2 Voice, +2 Sun)"
+      "description": "This spell suppresses a magical tunnel created by Hermetic Vim magic, if the level of the magical tunnel creating spell is less than the level of this spell + 2 magnitudes. For the duration of this spell, spells can no longer be cast through the tunnel, in either direction. When this spell expires, or it is ended some other way, the tunnel may be used again (if it has not expired in the meantime).\n\nIt is a good idea to master this spell taking the Fast Casting mastery (Ars Magica Fifth Edition, page 87). This spell can be cast at either end of the magical tunnel. However, note that, without the aid of magical senses, only the original caster of the magical tunnel can target it. Of course, the Break the Siege effect is a spell, and can be dispelled itself. However, the Break the Siege spell is only present at the end which it was cast at. There is nothing to dispel at the other end. (Base effect, +2 Voice, +2 Sun)"
     },
     {
       "id": "spell_circular_ward_against_demons",

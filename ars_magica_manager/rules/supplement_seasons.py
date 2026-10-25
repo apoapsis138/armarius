@@ -103,7 +103,11 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
     SimpleActivity(
         "study_realia",
         "Study a realia collection",
-        "Read like a tractatus: its Quality.",
+        "A collection outside the library (another covenant's exhibit): "
+        "read like a tractatus at its Quality, less 1 for two readers "
+        "sharing it, 2 up to four...; studied at most Quality times. One the "
+        "covenant owns is a library record (a tractatus of the Realia kind), "
+        "read with Read a book.",
         COVENANTS,
         "913",
         None,
@@ -390,11 +394,14 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
     SimpleActivity(
         "study_artwork",
         "Study another artist's work",
-        "Advancement Total = the work's Aesthetic Quality / 2.",
+        "A season observing a work made with the same Craft or Profession, "
+        "not your own: Source Quality = its Aesthetic Quality / 2; each work "
+        "is studied once, like a tractatus (Art & Academe p. 126, with Atlas "
+        "Games' errata).",
         ACADEME,
         "920",
         None,
-        "half the work's Aesthetic Quality",
+        "half the work's Aesthetic Quality, a work not studied before",
         _C,
         group=groups.STUDY,
     ),
@@ -418,7 +425,9 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "Source Quality 2, and 1 Faith Point.",
         CHURCH,
         "921",
-        who=_C,
+        # Any Christian, a magus too; a cleric's may be a working season
+        # (The Church p. 27).
+        who=(*_M, *_C),
         faith=1,
         group=groups.FAITH,
     ),
@@ -439,7 +448,8 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "921",
         None,
         "the sermons' Aesthetic Quality",
-        _C,
+        # Any character's free season (The Church p. 130).
+        (*_M, *_C),
         group=groups.FAITH,
     ),
     SimpleActivity(
@@ -449,7 +459,8 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "major). Exposure 2.",
         CHURCH,
         "921",
-        who=_C,
+        # Any pilgrim, magi and grogs included (The Church p. 16).
+        who=(*_M, *_C),
         group=groups.ADVENTURE,
     ),
     SimpleActivity(
@@ -458,7 +469,8 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "Exposure 2; the penance served.",
         CHURCH,
         "921",
-        who=_C,
+        # Any penitent (The Church pp. 12, 16).
+        who=(*_M, *_C),
         group=groups.FAITH,
     ),
     # Animals.

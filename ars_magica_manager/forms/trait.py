@@ -11,6 +11,7 @@ from typing import Any
 from .. import sheet_text as st
 from ..commands import Form, SectionOps, delete
 from ..form_spec import DialogField, attr
+from ..markup import escape
 from ..models import ScoredTrait
 from ..sections import LAB_TRAITS_SECTION
 from ..world import REPUTATION_TYPES
@@ -41,11 +42,14 @@ def scored_trait_fields(
     max_score: int | None = None,
     include_known: bool = False,
     include_reach: bool = False,
+    replaceable: list[str] | None = None,
 ) -> list[DialogField]:
     """A Personality Trait or Reputation: a name and a score, optionally
     bounded (covenant Reputations are -3..+3); for a Reputation, its kind
     and reach (`include_reach`) and, for a covenant's, whether the
-    covenant knows of it (see inhabitants.reputation_loyalty())."""
+    covenant knows of it (see inhabitants.reputation_loyalty()); and,
+    given the `replaceable` bad Reputations' names, which one it replaces
+    (DE pp. 386-387)."""
     fields = [
         DialogField(
             "name",
@@ -80,6 +84,21 @@ def scored_trait_fields(
                 placeholder="e.g. the Rhine Tribunal",
             ),
         ]
+    if replaceable:
+        fields.append(
+            DialogField(
+                "replaces",
+                "Replaces",
+                "select",
+                attr(existing, "replaces", "") or None,
+                options=[(escape(name), name) for name in replaceable],
+                allow_blank=True,
+                placeholder="(no bad Reputation)",
+                hint="A new Reputation started by a spectacular deed can "
+                "replace a bad one: deeds that support it count toward it "
+                "(DE pp. 386-387).",
+            )
+        )
     if include_known:
         fields.append(
             DialogField(
@@ -110,13 +129,19 @@ def score_problem(
     return None
 
 
-def trait_from(values: dict[str, Any]) -> ScoredTrait:
+def trait_from(
+    values: dict[str, Any], existing: ScoredTrait | None = None
+) -> ScoredTrait:
+    """The trait the form's values describe; an edited one keeps the deeds
+    it has counted toward its next level."""
     return ScoredTrait(
         name=values["name"],
         score=values["score"],
         known=values.get("known", True),
         type=values.get("type") or "",
         reach=values.get("reach", ""),
+        deeds=existing.deeds if existing is not None else 0,
+        replaces=values.get("replaces") or "",
     )
 
 
@@ -139,11 +164,18 @@ def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
             if index is None:
                 traits.append(trait_from(values))
             else:
-                traits[index] = trait_from(values)
+                traits[index] = trait_from(values, existing)
 
+        replaceable = (
+            [t.name for t in traits if t is not existing and t.score < 0]
+            if section == "section-reputations"
+            else None
+        )
         return Form(
             title,
-            lambda: scored_trait_fields(example, existing, **bounds),
+            lambda: scored_trait_fields(
+                example, existing, replaceable=replaceable, **bounds
+            ),
             apply,
             validate=lambda values: score_problem(
                 values, bounds.get("min_score"), bounds.get("max_score")

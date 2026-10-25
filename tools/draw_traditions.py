@@ -1287,6 +1287,78 @@ def fectores() -> QPainterPath:
     return union(shackle, chain)
 
 
+def franciscans() -> QPainterPath:
+    """Francis's tau cross, and the knotted cord of the friars' habit."""
+    tau = union(rect(26, 14, 60, 14), rect(49, 14, 14, 76))
+    cord = stroke(curve((30, 30), (20, 58), (30, 90)), 3)
+    knots = union_of(
+        circle(*_bez([(30, 30), (20, 58), (30, 90)], t), 4.5) for t in (0.45, 0.7, 0.95)
+    )
+    return union(tau, cord, knots)
+
+
+def cult_of_mercury() -> QPainterPath:
+    """The caduceus: Mercury's winged staff with its two serpents."""
+    staff = union(rect(47, 18, 6, 76), circle(50, 14, 6))
+    wing = union_of(
+        rotate(rrect(54, 20 + 6 * i, 30 - 6 * i, 5, 2.5), -20, 54, 24) for i in range(3)
+    )
+    snakes = []
+    for sign in (1, -1):
+        points = [
+            (50 + sign * 15 * math.sin(math.pi * (i / 20) * 3), 40 + 2.4 * i)
+            for i in range(21)
+        ]
+        path = QPainterPath()
+        path.moveTo(*points[0])
+        for point in points[1:]:
+            path.lineTo(*point)
+        snakes.append(stroke(path, 4.5))
+    heads = union(circle(50, 38, 4), circle(50, 37, 4))
+    return union(staff, wing, mirror(wing), *snakes, heads)
+
+
+def legion_of_mithras() -> QPainterPath:
+    """The Phrygian cap Mithras wears, its tip curled forward."""
+    cap = QPainterPath()
+    cap.moveTo(26, 80)
+    cap.cubicTo(18, 44, 36, 14, 68, 18)
+    cap.cubicTo(84, 20, 84, 40, 66, 38)
+    cap.cubicTo(62, 52, 72, 66, 74, 80)
+    cap.closeSubpath()
+    band = rrect(20, 76, 60, 12, 3)
+    return union(cap.subtracted(rect(20, 72, 60, 4)), band)
+
+
+def knights_of_the_green_stone() -> QPainterPath:
+    """The Stone of Creation: a cut gem, its facets catching the light."""
+    outer = [
+        (50 + 40 * math.cos(math.radians(22.5 + 45 * i)),
+         50 + 40 * math.sin(math.radians(22.5 + 45 * i)))
+        for i in range(8)
+    ]  # fmt: skip
+    inner = [(50 + 0.55 * (x - 50), 50 + 0.55 * (y - 50)) for x, y in outer]
+    facets = union(
+        stroke(_path(*inner, closed=True), 2.6),
+        union_of(bar(*a, *b, 2.6) for a, b in zip(inner, outer, strict=True)),
+    )
+    return poly(*outer).subtracted(facets)
+
+
+def matres_et_matrones() -> QPainterPath:
+    """The three Mothers, veiled, side by side."""
+
+    def mother(x: float, top: float, k: float) -> QPainterPath:
+        head = circle(x, top, 7 * k)
+        veil = poly(
+            (x, top - 6 * k), (x - 13 * k, top + 56 * k), (x + 13 * k, top + 56 * k)
+        )
+        return union(head, veil)
+
+    sides = union(mother(24, 34, 0.9), mother(76, 34, 0.9))
+    return over(mother(50, 26, 1.05), sides)
+
+
 def _bez(points: Sequence[Point], t: float) -> Point:
     """A point along the smooth curve the points outline (de Casteljau)."""
     pts = list(points)
@@ -1401,6 +1473,11 @@ FIGURES: dict[str, Callable[[], QPainterPath]] = {
     "trad_storm_wizards": storm_wizards,
     "trad_hunters": hunters,
     "trad_fectores": fectores,
+    "trad_franciscans": franciscans,
+    "trad_cult_of_mercury": cult_of_mercury,
+    "trad_legion_of_mithras": legion_of_mithras,
+    "trad_knights_of_the_green_stone": knights_of_the_green_stone,
+    "trad_matres_et_matrones": matres_et_matrones,
 }
 
 

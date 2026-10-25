@@ -28,6 +28,7 @@ from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
 from ..rules import (
     house_virtue,
+    medicine,
     research,
     study_virtues,
     tradition_seasons,
@@ -161,7 +162,9 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
             if opened is not None:
                 tradition_seasons.apply_opening(opened, hedge)
         _apply_apprentice(saga, outcome)
-        if outcome.tractatus and outcome.tractatus not in character.tractatus_read:
+        if outcome.tractatus and (
+            outcome.realia or outcome.tractatus not in character.tractatus_read
+        ):
             character.tractatus_read.append(outcome.tractatus)
         if outcome.summa and outcome.summa not in character.summae_read:
             character.summae_read.append(outcome.summa)
@@ -176,6 +179,14 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
             pool[key] = max(0, pool.get(key, 0) - pawns)
             if not pool[key]:
                 del pool[key]
+        if outcome.plan.activity in medicine.EUCRASIA_SEASONS:
+            lost = medicine.lose_eucrasia(
+                character,
+                outcome.plan.year,
+                medicine.EUCRASIA_SEASONS[outcome.plan.activity],
+            )
+            if lost:
+                outcome.notes.append(lost)
         character.diary.append(diary_entry(saga, character, outcome))
         applied.append(character)
     house_virtue.count_seasons(saga, [o.plan for o in worked if o.ok])

@@ -19,6 +19,7 @@ from ..models import (
     TraditionDef,
     TraditionEffect,
 )
+from ..rules import hedge_casting as hc
 from ..rules import hedge_effects as he
 from ..rules import hedge_warping as hw
 
@@ -76,13 +77,22 @@ def effect_fields(
                 else "",
             )
         )
+    fields += guideline_fields(tradition, existing)
     fields += [
-        DialogField("level", "Level", "int", existing.level if existing else 0),
+        DialogField(
+            "level",
+            "Level",
+            "int",
+            existing.level if existing else 0,
+            show_if=lambda values: not _built(tradition, values),
+            hint="Or its Ease Factor; worked out instead from a guideline.",
+        ),
         DialogField(
             "parameters",
-            "Range, Duration, Target",
+            "What it does",
             "text",
             existing.parameters if existing else "",
+            hint="Range, Duration and Target in the book's words, or what it does.",
         ),
         DialogField(
             "charges",
@@ -93,6 +103,75 @@ def effect_fields(
         ),
         DialogField("notes", "Notes", "area", existing.notes if existing else ""),
     ]
+    return fields
+
+
+#: The parameters an effect built on a guideline names.
+_KINDS = (("range", "Range"), ("duration", "Duration"), ("target", "Target"))
+
+
+def _built(tradition: TraditionDef, values: dict[str, Any]) -> bool:
+    """Whether the form's guideline sets the level (one with a base)."""
+    key = values.get("guideline")
+    return any(
+        he.guideline_key(g) == key and not g.general for g in tradition.guidelines
+    )
+
+
+def guideline_fields(
+    tradition: TraditionDef, existing: TraditionEffect | None
+) -> list[DialogField]:
+    """The guideline an effect is built on, its Range, Duration and Target
+    (the tradition's own, or the Hermetic ones), and further magnitudes:
+    none for a tradition with no guideline table."""
+    if not tradition.guidelines:
+        return []
+    chosen = he.guideline_of(tradition, existing) if existing else None
+    fields = [
+        DialogField(
+            "guideline",
+            "Guideline",
+            "select",
+            he.guideline_key(chosen) if chosen else None,
+            options=[
+                (
+                    escape(
+                        f"{' '.join(hc.short_name(a) for a in g.arts)} "
+                        f"{'General' if g.general else g.level}: {g.name}"
+                    ),
+                    he.guideline_key(g),
+                )
+                for g in tradition.guidelines
+            ],
+            allow_blank=True,
+            hint="Its level is the guideline's, plus its parameters' magnitudes.",
+        )
+    ]
+    for kind, label in _KINDS:
+        names = he.parameter_names(tradition, kind)
+        if not names:
+            continue
+        fields.append(
+            DialogField(
+                kind,
+                label,
+                "select",
+                (getattr(existing, kind) if existing else "") or None,
+                options=[(escape(n), n) for n in names],
+                allow_blank=True,
+                show_if=lambda values: _built(tradition, values),
+            )
+        )
+    fields.append(
+        DialogField(
+            "magnitudes",
+            "Further magnitudes",
+            "int",
+            existing.magnitudes if existing else 0,
+            show_if=lambda values: _built(tradition, values),
+            hint="Size, complexity, or a modifier the guideline names.",
+        )
+    )
     return fields
 
 
@@ -113,6 +192,15 @@ def effect_from(
         (values.get("charges") or 0) if made.kind in TRADITION_ITEM_KINDS else 0
     )
     made.notes = values.get("notes") or ""
+    made.guideline = values.get("guideline") or ""
+    built = _built(tradition, values)
+    made.range = (values.get("range") or "") if built else ""
+    made.duration = (values.get("duration") or "") if built else ""
+    made.target = (values.get("target") or "") if built else ""
+    made.magnitudes = (values.get("magnitudes") or 0) if built else 0
+    design = he.effect_design(tradition, made)
+    if design is not None:
+        made.level = design.level
     return made
 
 
@@ -126,6 +214,25 @@ def effect_problem(values: dict[str, Any]) -> str | None:
     if len(set(chosen)) < len(chosen):
         return "The same Art is named twice."
     return None
+
+
+def design_problem(tradition: TraditionDef, values: dict[str, Any]) -> str | None:
+    """A guideline the Arts chosen don't use, or a parameter the
+    tradition doesn't allow the effect."""
+    if not _built(tradition, values):
+        return effect_problem(values)
+    made = effect_from(tradition, None, {"name": "", **values})
+    guideline = he.guideline_of(tradition, made)
+    if (
+        guideline is not None
+        and made.uses
+        and not set(guideline.arts) <= set(made.uses)
+    ):
+        return f"The guideline is for {' and '.join(guideline.arts)}."
+    design = he.effect_design(tradition, made)
+    if design is not None and design.problems:
+        return design.problems[0]
+    return effect_problem(values)
 
 
 def effect_ops(character: Character, tradition: TraditionDef) -> SectionOps:
@@ -151,7 +258,7 @@ def effect_ops(character: Character, tradition: TraditionDef) -> SectionOps:
             "Add Effect or Item" if index is None else "Edit Effect or Item",
             lambda: effect_fields(tradition, existing),
             apply,
-            validate=effect_problem,
+            validate=lambda values: design_problem(tradition, values),
             save_label="Add" if index is None else "Save",
         )
 

@@ -16,6 +16,8 @@ from ars_magica_manager.rules import creation_tradition as ct
 from ars_magica_manager.rules import tradition_seasons as ts
 from ars_magica_manager.rules.xp import xp_for_score
 
+_NO_SAGA = Saga(id="s", name="S")
+
 
 def _member(cid: str, tradition_id: str, gifted: bool = True) -> Character:
     character = Character(id=cid, name=cid.title(), type="companion")
@@ -123,6 +125,20 @@ def test_who_can_open():
     assert found == ["Sarah doesn't have The Gift."]
 
 
+def test_a_sabbat_opening_needs_its_site_aura():
+    # The helpers count up to the Magic aura at the sabbat's site (HMRE p. 46).
+    witch = _member("m", "trad_folk_witches")
+    child = _student()
+    saga = Saga(id="x", name="X", characters=[witch, child])
+    plan = _plan(ts.OPEN, subject_id="s", other_modifier=4)
+    found, _ = ts.open_work(saga, witch, plan)
+    assert "Magic aura at the sabbat's site" in found[0]
+    plan.site_aura = 2
+    found, work = ts.open_work(saga, witch, plan)
+    assert found == [] and work is not None
+    assert any("+2 from 4 helpers" in n for n in work.notes)
+
+
 def test_a_traditions_own_work_gives_exposure_and_its_lab_total():
     vitki = _member("m", "trad_vitkir")
     vitki.characteristics = Characteristics(intelligence=3)
@@ -195,9 +211,10 @@ def test_an_effects_casting_score_and_the_die_it_needs():
     )
     found = he.effect_total(gruagach, by_id["trad_gruagachan"], spell)
     # 6 + 4 + 2 = 12: a die of 8 reaches 20; up to 10 short, for Fatigue.
-    assert found == he.EffectTotal(12, False, 8, -2)
+    assert found == he.EffectTotal(12, False, 8, -2, level=20, botch_dice=1)
     assert he.total_words(found, spell) == (
-        "Casting Score 12, needs a die of 8 (1 for a Fatigue level)"
+        "Casting Score 12, needs a die of 8 (1 for a Fatigue level); "
+        "1 botch die if stressed"
     )
     charm = TraditionEffect(
         "Amulet", tradition="trad_gruagachan", kind="amulet", charges=3
@@ -232,14 +249,18 @@ def test_elemental_warping_traits():
     # The book's example: Choleric +3, Phlegmatic +2, Sanguine +2.
     traits = {t.trait: t.value for t in hw.elemental_traits(elementalist)}
     assert traits == {"Choleric": 3, "Phlegmatic": 2, "Sanguine": 2}
-    text = tradition_text.warping_text(elementalist, by_id["trad_elementalists"])
+    text = tradition_text.warping_text(
+        _NO_SAGA, elementalist, by_id["trad_elementalists"]
+    )
     assert "Elemental Warping[/] in place of Twilight" in text
     assert "Choleric +3 (Elementalist Fire 6): acts as a Minor Personality Flaw" in text
     vitki = _member("v", "trad_vitkir")
-    assert "Nátt-thel" in tradition_text.warping_text(vitki, by_id["trad_vitkir"])
+    assert "Nátt-thel" in tradition_text.warping_text(
+        _NO_SAGA, vitki, by_id["trad_vitkir"]
+    )
     night = _member("n", "trad_nightwalkers")
     assert "no response of its own" in tradition_text.warping_text(
-        night, by_id["trad_nightwalkers"]
+        _NO_SAGA, night, by_id["trad_nightwalkers"]
     )
 
 
@@ -300,7 +321,7 @@ def test_a_traditions_pools():
 def test_an_ex_miscellanea_magus_keeps_twilight():
     by_id = catalog.load_tradition_catalog_by_id()
     magus = _member("m", "trad_columbae")
-    text = tradition_text.warping_text(magus, by_id["trad_columbae"])
+    text = tradition_text.warping_text(_NO_SAGA, magus, by_id["trad_columbae"])
     assert "Twilight as for any magus" in text
 
 

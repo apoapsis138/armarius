@@ -18,7 +18,10 @@ PLACES: dict[str, tuple[int, str]] = {
     "Sarmizegethusa Fort": (5, "Magic"),
     "The Prokletije Fort": (4, "Magic"),
     "Leviathan's Cache": (3, "Magic"),
-    "The Mountain of Lycaneon": (6, "Magic"),
+    # The book prints 9 for its strongest places (Against the Dark p. 87);
+    # the oppidum below works in the safer areas, which don't warp, so 5
+    # at most (Warping starts at 6, DE p. 390).
+    "The Mountain of Lycaneon": (9, "Magic"),
     "The Rock Womb": (6, "Magic"),
     "Dobsinska Cave": (3, "Magic"),
     "Ochtinska Cave": (3, "Magic"),
@@ -83,7 +86,7 @@ LEVELS: dict[tuple[str, str], int] = {
 OPPIDA: dict[str, int] = {
     "Coeris": 6,
     "Kezdö Válasz": 5,
-    "Lycaneon": 6,
+    "Lycaneon": 5,
     "The Zenodochia": 3,
     "Leviathan": 3,
 }

@@ -337,6 +337,8 @@ def case_fields(saga: Saga, case: Case | None) -> list[DialogField]:
             "area",
             attr(case, "charge", ""),
             placeholder="e.g. Depriving a magus of magical power (the Code)",
+            hint="Its details say whether the Code makes it a high crime, "
+            "which may lead to a Wizard's March.",
         ),
         DialogField(
             "filed_year",

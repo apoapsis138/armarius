@@ -1633,15 +1633,19 @@ def _hedyosmos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "hedyosmos_caves",
         "The Nekyomanteion of Mount Minthe",
         inside=morea,
+        realm="Magic",
+        aura=5,
         levels=[
             Builder.level(
                 "The labyrinth",
-                0,
+                6,
                 notes=(
                     "Beneath the covenant's levels, a maze of passages and "
                     "caverns whose Magic aura is aligned with Terram and "
                     "grows stronger the further in one goes (the book "
-                    "gives no numbers). Somewhere in it a way into the "
+                    "gives no numbers: this pack assumes 6 at its mouth, "
+                    "more deeper in, with the covenant at 5, as the Aura "
+                    "Boon's example of Hedyosmos suggests, DE p. 184). Somewhere in it a way into the "
                     "Magic Realm is thought to open, onto the Underworld "
                     "prison of the titans; Minthe guards a gate into "
                     "Tartaros. The covenant warns people off, but uses "
@@ -1661,7 +1665,7 @@ def _hedyosmos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "silver for a moment at the touch of anyone with Magic "
             "Resistance, so no one trespasses by mistake. The book gives "
             "no strength for the Magic aura, which is aligned with Terram "
-            "and deepens below.",
+            "and deepens below: this pack assumes 5 in the covenant.",
         ),
         **KNOWN_TRIBUNAL,
     )
