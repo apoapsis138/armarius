@@ -6,6 +6,7 @@ contract and the driver, dialog_openers.py how each form is reached."""
 
 import pytest
 from dialog_contract_support import Contract, run_contract
+from dialog_openers import contract_saga
 from textual.widgets import Select
 
 from ars_magica_manager import neighbour_filter
@@ -125,6 +126,134 @@ CONTRACTS: dict[str, Contract] = {
         expected="Typical",
         invalid=[{"Name": ""}, {"Income (pounds a year)": "-5"}],
         shown={"#nb-fairs-list": "100 pounds"},
+    ),
+    "add charter lord": Contract(
+        prefill={"Lord": "", "Kind": "Noble", "Holds it": "Sole"},
+        edits={"Lord": "Archbishop of Cologne", "Kind": "Church"},
+        saved=lambda s: s.neighbour("soest").details["charter_lords"][-1]["kind"],
+        expected="Church",
+        invalid=[{"Lord": ""}, {"Since (year)": "soon"}],
+        shown={
+            "#nb-charter-lords-list": "Archbishop of Cologne",
+            "#nb-charter-gives-text": "4 within the walls",
+        },
+    ),
+    "edit charter terms": Contract(
+        prefill={"Charter family": "", "Granted (year)": ""},
+        edits={"Charter family": "Soest", "Granted (year)": "1120", "Salvage": True},
+        saved=lambda s: s.neighbour("soest").details["charter_terms"]["family"],
+        expected="Soest",
+        invalid={"Granted (year)": "long ago"},
+        shown={"#nb-charter-terms-facts": "Soest"},
+    ),
+    "edit charter gives": Contract(
+        prefill={"Pawns of vis in it": ""},
+        edits={"Pawns of vis in it": "2"},
+        saved=lambda s: s.neighbour("soest").details["charter_terms"]["pawns"],
+        expected=2,
+        invalid={"Pawns of vis in it": "-1"},
+        shown={"#nb-charter-gives-text": "2 pawns of Rego vis"},
+    ),
+    "add citizen": Contract(
+        prefill={"Came to live here (season)": "Autumn"},
+        edits={"Character": "comp1", "Came to live here (year)": "1218"},
+        saved=lambda s: s.neighbour("soest").details["citizens"][-1]["character_id"],
+        expected="comp1",
+        invalid={"Came to live here (year)": "once"},
+        shown={"#nb-citizens-list": "+1 multiplier"},
+    ),
+    "edit town people": Contract(
+        prefill={"Population": "5000", "Council (seats)": "12"},
+        edits={"Burgesses": "300", "A city by right": True},
+        saved=lambda s: s.neighbour("soest").details["burgesses"],
+        expected=300,
+        invalid={"Burgesses": "-1"},
+        shown={"#nb-town-people-facts": "5,000 (city)"},
+    ),
+    "add guild member": Contract(
+        prefill={"Guild": "Weavers", "Rank": "apprentice"},
+        edits={"Character": "comp1", "Rank": "master"},
+        saved=lambda s: s.neighbour("soest").details["guild_members"][-1]["rank"],
+        expected="master",
+        shown={"#nb-guild-members-list": "Master"},
+    ),
+    "add court case": Contract(
+        prefill={"Accused": "", "Court": "Town"},
+        edits={"Accused": "Hartmut", "Charge": "Theft", "Verdict": "Guilty"},
+        saved=lambda s: s.neighbour("soest").details["court_cases"][-1]["accused"],
+        expected="Hartmut",
+        invalid={"Accused": ""},
+        shown={"#nb-court-cases-list": "Guilty"},
+    ),
+    "court roll": Contract(
+        prefill={"Law argued": "civil"},
+        edits={"Who pleads": "comp1", "He truly is innocent": True},
+        saved=lambda s: bool(s.neighbour("soest").details["court_cases"][0]["verdict"]),
+        expected=True,
+        live={"#fields-live": "Against 3 = 6 -3 truly innocent"},
+        shown={"#nb-court-cases-list": "Hartmut"},
+    ),
+    "add manor": Contract(
+        prefill={"Name": "", "Acres": "600", "Farmed as": "Large fields"},
+        edits={"Name": "Hagen", "Demesne (acres)": "200", "A mill by custom": True},
+        saved=lambda s: s.neighbour("gottfried").details["manor_list"][-1]["demesne"],
+        expected=200,
+        invalid=[{"Name": ""}, {"Demesne (acres)": "900"}],
+        shown={"#manors-list": "Hagen", "#section-manors": "(1)"},
+    ),
+    "add establishment": Contract(
+        prefill={"Kind": "Stables", "Quality": "Standard"},
+        edits={"Kind": "Mews", "Quality": "Superior", "Animals": "7"},
+        saved=lambda s: s.neighbour("gottfried").details["establishments"][-1][
+            "animals"
+        ],
+        expected=7,
+        invalid={"Animals": "-1"},
+        shown={"#establishments-list": "Mews"},
+    ),
+    "edit household": Contract(
+        prefill={"Household (people)": "", "Mesnie": ""},
+        edits={"Household (people)": "28", "Mesnie": "6 knights"},
+        saved=lambda s: s.neighbour("gottfried").details["household"]["retinue"],
+        expected=28,
+        invalid={"Household (people)": "-3"},
+        shown={"#household-facts": "28: 6 knights"},
+    ),
+    "buy manor": Contract(
+        prefill={"Name": "", "Price (pounds)": "800"},
+        edits={"Name": "Hagen", "Price (pounds)": "700"},
+        saved=lambda s: s.neighbour("gottfried").details["manor_list"][-1]["name"],
+        expected="Hagen",
+        invalid=[{"Name": ""}, {"Price (pounds)": "0"}],
+        live={"#fields-live": "35 times"},
+        shown={"#manors-list": "Hagen"},
+    ),
+    "assart": Contract(
+        prefill={"Laborers": "1", "Months": "1"},
+        edits={"Laborers": "4", "Months": "6"},
+        saved=lambda s: s.neighbour("gottfried").details["manor_list"][0]["waste"],
+        expected=36,
+        invalid={"Laborers": "100"},
+        live={"#fields-live": "24 acres"},
+        shown={"#manors-list": "224"},
+    ),
+    "winter roll": Contract(
+        prefill={"With": "profession"},
+        edits={"Who rolls": "comp1"},
+        saved=lambda s: (
+            "die" in s.neighbour("gottfried").details["establishments"][0]["roll"]
+        ),
+        expected=True,
+        live={"#fields-live": "against 9"},
+        shown={"#establishments-list": "Stables"},
+    ),
+    "settle inheritance": Contract(
+        prefill={"Heir": "", "By": "Primogeniture"},
+        edits={"Heir": "Heinrich"},
+        saved=lambda s: s.neighbour("gottfried").ruler,
+        expected="Heinrich",
+        invalid={"Heir": ""},
+        shown={"#nb-info-left": "Heinrich"},
     ),
     "edit church": Contract(
         prefill={
@@ -271,6 +400,48 @@ CONTRACTS: dict[str, Contract] = {
         expected=("Vis lease ends", 1221),
         invalid=[{"What": ""}, {"Comes": "Every N years"}],
         shown={"#ahead-list": "Vis lease ends"},
+    ),
+    # Close (the cancel) records nothing; Set Out writes the traveller's
+    # Diary and the arrival on Ahead.
+    "travel set out": Contract(
+        prefill={"Measured": "direct", "By": "foot", "Travellers": "0", "Who goes": []},
+        edits={
+            "Who goes": ["mag1"],
+            "Miles": "180",
+            "By": "barge_down",
+            "Cargo, in tons": "2",
+        },
+        saved=lambda s: (
+            s.calendar[-1].title,
+            s.character("mag1").diary[-1].name,
+            len(s.calendar) - len(contract_saga().calendar),
+        ),
+        expected=("Leandro arrives", "Travel", 1),
+        invalid=[
+            {"Miles": "-5", "Who goes": ["mag1"]},
+            {"Travellers": "many"},
+            {"Miles": "180"},
+        ],
+        live={"#fields-live": "Days: 23"},
+        shown={"#ahead-list": "Leandro arrives"},
+    ),
+    # Closing a forced march records nothing either; set out, it costs
+    # Leandro a Long-Term Fatigue level a day.
+    "travel close": Contract(
+        prefill={"Measured": "direct", "Travel quickly": False},
+        edits={
+            "Who goes": ["mag1"],
+            "Measured": "route",
+            "Miles": "40",
+            "By": "foot",
+            "Travel quickly": True,
+        },
+        saved=lambda s: (
+            s.character("mag1").long_term_fatigue,
+            s.character("mag1").fatigue_level,
+        ),
+        expected=(2, "weary"),
+        live={"#fields-live": "Forced march"},
     ),
     "edit roll table": Contract(
         prefill={"Table": "Who walks the Mist Wood", "Die": "Simple die"},

@@ -56,6 +56,17 @@ SURPLUS: dict[str, dict[str, int]] = {
     "duke": {"Poor": 0, "Average": 250, "Wealthy": 500},
 }
 
+#: What a lord has left over each year, in pounds, by title and wealth
+#: (Lords of Men Chapter Three: a landed noble 0, 10 or 20, p. 31; a baron
+#: 0, 40 or 100, a count 100 or 250, p. 32). The book gives no figure for a
+#: poor count or for a duke (None).
+SURPLUS_INCOME: dict[str, dict[str, int | None]] = {
+    "landed": {"Poor": 0, "Average": 10, "Wealthy": 20},
+    "baron": {"Poor": 0, "Average": 40, "Wealthy": 100},
+    "count": {"Poor": None, "Average": 100, "Wealthy": 250},
+    "duke": {"Poor": None, "Average": None, "Wealthy": None},
+}
+
 #: A landed noble's free seasons a year, by wealth: Lords of Men's (p.
 #: 31). The Definitive Edition's Landed Noble has no free time beyond the
 #: usual, and a Poor one spends every season on his fief (DE p. 89).
@@ -76,7 +87,19 @@ GRATITUDE_STEPS: tuple[tuple[int, str], ...] = (
 
 
 def manors(neighbour: Neighbour) -> int:
+    """How many manors he holds: his Manors tab's rows, or the count typed
+    on his form while it lists none."""
+    rows = neighbour.details.get("manor_list")
+    if isinstance(rows, list) and rows:
+        return len(rows)
     return max(0, int(neighbour.details.get("manors") or 0))
+
+
+def manors_text(neighbour: Neighbour) -> str:
+    rows = neighbour.details.get("manor_list")
+    if isinstance(rows, list) and rows:
+        return f"{len(rows)} (from his Manors tab)"
+    return f"{manors(neighbour)} (as entered; list them on his Manors tab)"
 
 
 class Castle(TypedDict, total=False):
@@ -127,6 +150,20 @@ def budget_text(neighbour: Neighbour) -> str:
     return f"{surplus(neighbour)}{plus} pounds a year"
 
 
+def surplus_text(neighbour: Neighbour) -> str:
+    """What he has left over each year, Chapter Three's figure: its own
+    figure, not the manors' 20 pounds less his costs."""
+    t, w = title(neighbour), wealth(neighbour)
+    found = SURPLUS_INCOME[t][w]
+    page = "p. 31" if t == "landed" else "p. 32"
+    if found is None:
+        return f"no figure in the book (LoM {page})"
+    words = "none" if found == 0 else f"{found} pounds a year"
+    if t == "baron":
+        words += "; a greater baron's expenses are 400 or more, about 20 manors"
+    return f"{words} (LoM {page})"
+
+
 def relief(neighbour: Neighbour) -> int:
     """What his heir pays his liege to inherit: a year's income, at most 5
     pounds a manor, and at most 100 for a baron or greater."""
@@ -172,8 +209,12 @@ def facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     found = [
         Fact("Title", f"{TITLES[t]}, {w.lower()}"),
         Fact("Seat", neighbour.details.get("seat", "")),
-        Fact("Manors", str(manors(neighbour))),
-        Fact("Income", f"{income(neighbour)} pounds a year"),
+        Fact("Manors", manors_text(neighbour)),
+        Fact(
+            "Income",
+            f"{income(neighbour)} pounds a year ({MANOR_INCOME} a manor, LoM p. 72)",
+        ),
+        Fact("Surplus", surplus_text(neighbour)),
         Fact("Mercenary budget", budget_text(neighbour)),
     ]
     if t == "landed":
@@ -272,7 +313,8 @@ def fields(_saga: Saga, neighbour: Neighbour | None) -> list[DialogField]:
             "Manors",
             "int",
             d.get("manors", 1),
-            hint="A baron holds about 20, a count 50.",
+            hint="A baron holds about 20, a count 50. Used while his Manors "
+            "tab lists none.",
         ),
         DialogField(
             "seat", "Seat", "text", d.get("seat", ""), placeholder="e.g. Arnsberg"

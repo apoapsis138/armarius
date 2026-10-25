@@ -178,7 +178,7 @@ def test_the_desktop_lists_neighbours_and_opens_one():
     gottfried = saga.neighbour("gottfried")
     assert gottfried is not None
     page = NeighbourPage(saga, gottfried, PALETTES[0])
-    assert page.chapters() == ["Fief", "Standing", "Diary", "Secrets"]
+    assert page.chapters() == ["Fief", "Manors", "Standing", "Diary", "Secrets"]
     words = [label.text() for label in page.findChildren(QLabel)]
     assert any("Archbishop of Cologne" in w for w in words)
     assert any("owes the Archbishop" in w for w in words)
@@ -322,7 +322,7 @@ def test_a_lord_works_out_his_fief_from_the_lower_figures():
     gottfried = saga.neighbour("gottfried")
     assert gottfried is not None
     facts = {f.label: f.value for f in lords.facts(saga, gottfried)}
-    assert facts["Income"] == "1000 pounds a year"
+    assert facts["Income"] == "1000 pounds a year (20 a manor, LoM p. 72)"
     assert facts["Mercenary budget"] == "100 pounds a year"
     assert facts["Owes"] == (
         "Archbishop of Cologne: 50 knights for 40 days, or 100 pounds scutage"

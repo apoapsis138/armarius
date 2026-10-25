@@ -17,6 +17,7 @@ from .form_spec import DialogField
 from .grids import Grid
 from .markup import escape
 from .models import Neighbour, Saga, details_list
+from .references import Fact
 
 Entry = dict[str, Any]
 
@@ -33,18 +34,79 @@ class KindList:
     grid: Callable[[Saga, Neighbour], Grid]
     ops: Callable[[Saga, Neighbour], SectionOps]
     info: Callable[[Saga, Neighbour, int], str] | None = None
+    #: A line shown above the list (what a town its size is expected to
+    #: have), as markup; "" for none.
+    header: Callable[[Saga, Neighbour], str] | None = None
+
+
+@dataclass(frozen=True)
+class KindBlock:
+    """A section of worked-out text a kind's tab shows between its lists
+    (a town charter's terms, what the charter gives): its `facts` (a grid
+    of them on the desktop), its `text` as markup, then `columns`, side by
+    side, each a column of markup; `edit` is the section's one Edit, named
+    `edit_label` on the desktop. It follows the list whose section is
+    `after` ("" puts it first)."""
+
+    section_id: str
+    title: str
+    text: Callable[[Saga, Neighbour], str] | None = None
+    edit: Callable[[Saga, Neighbour], Command] | None = None
+    edit_label: str = "Edit"
+    after: str = ""
+    columns: Callable[[Saga, Neighbour], list[str]] | None = None
+    facts: Callable[[Saga, Neighbour], list[Fact]] | None = None
+    #: Drawn as a gloss box on the desktop (a check shown beside the
+    #: figures it checks), not as a section.
+    gloss: bool = False
 
 
 @dataclass(frozen=True)
 class KindTab:
     """The tab (a chapter, on the desktop) a kind adds to its neighbours'
-    sheets: what is worked out for it, then its lists."""
+    sheets: what is worked out for it, then its lists, with any blocks of
+    worked-out text between them."""
 
     title: str
     tab_id: str
     lists: tuple[KindList, ...]
     #: Shown after the Standing tab rather than before it (a lord's Diary).
     after_standing: bool = False
+    blocks: tuple[KindBlock, ...] = ()
+    #: The desktop chapter's icon (an artwork concept); "" for the kind's.
+    icon: str = ""
+    #: What the terminal's details panel says before a row is chosen; ""
+    #: for a tab without one (the panel shows a chosen row's `info`).
+    panel: str = ""
+
+    def parts(self) -> list[KindList | KindBlock]:
+        """The tab's lists and blocks in the order shown."""
+        shown: list[KindList | KindBlock] = [b for b in self.blocks if not b.after]
+        for entry in self.lists:
+            shown.append(entry)
+            shown += [b for b in self.blocks if b.after == entry.section_id]
+        return shown
+
+
+def tab_ops(saga: Saga, neighbour: Neighbour, tab: KindTab) -> dict[str, SectionOps]:
+    """The operations of a tab's lists and its blocks with an Edit, by
+    section."""
+    return {
+        **{entry.section_id: entry.ops(saga, neighbour) for entry in tab.lists},
+        **{
+            block.section_id: block_ops(saga, neighbour, block)
+            for block in tab.blocks
+            if block.edit is not None
+        },
+    }
+
+
+def block_ops(saga: Saga, neighbour: Neighbour, block: KindBlock) -> SectionOps:
+    """A block's one Edit, as its section's operations."""
+    edit = block.edit
+    if edit is None:
+        return SectionOps()
+    return SectionOps(edit=lambda _row: edit(saga, neighbour))
 
 
 def list_ops[E: Mapping[str, object]](

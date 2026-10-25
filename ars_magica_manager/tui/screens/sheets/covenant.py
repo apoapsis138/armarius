@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from functools import partial
 from typing import ClassVar
 
 from textual.app import ComposeResult
@@ -19,7 +20,9 @@ from .... import (
     arms,
     book_value,
     catalog,
+    manors,
     seasons,
+    town_charter,
     tribunal_packages,
     tribunals,
     vassals,
@@ -48,11 +51,20 @@ from ....models import (
     POSSESSION_KINDS,
     Character,
     Covenant,
+    Neighbour,
     Saga,
 )
+from ....neighbour_lists import KindTab
 from ....rules import covenfolk, library, realms
 from ....rules.realms import covenant_effective_aura
-from ....sections import COV_AHEAD_SECTION, MAGI_SECTION, WHAT_MATTERS_SECTION
+from ....sections import (
+    CHARTERED_TOWNS_SECTION,
+    COV_AHEAD_SECTION,
+    COV_CHARTER_LORDS_SECTION,
+    COV_CHARTER_TERMS_SECTION,
+    MAGI_SECTION,
+    WHAT_MATTERS_SECTION,
+)
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -60,11 +72,13 @@ from ..widgets import (
     SheetSection,
     TableHeader,
     TwoColumns,
+    fact_markup,
 )
 from .base import SheetView
+from .kind_tabs import KindTabsView
 
 
-class CovenantSheetView(SheetView):
+class CovenantSheetView(KindTabsView):
     """The covenant sheet mounted into WorkspaceScreen's detail pane.
 
     A permanent info panel (not inside any tab) above eight tabs mirroring
@@ -92,6 +106,8 @@ class CovenantSheetView(SheetView):
             self.core_ops = {
                 **self.core_ops,
                 COV_AHEAD_SECTION: ahead_forms.ahead_ops(saga, covenant),
+                **town_charter.covenant_charter_ops(saga, covenant),
+                **manors.covenant_ops(saga, covenant),
             }
         self.core_ops.update(secrets_ops(covenant))
         self._register_refreshers()
@@ -161,6 +177,8 @@ class CovenantSheetView(SheetView):
         return self.covenant
 
     INITIAL_TAB = "tab-cov-attributes"
+    #: The Manors tab's check follows the covenant's sources of income.
+    KIND_WATCHED = ("section-eco-income",)
 
     def compose(self) -> ComposeResult:
         with PinnedCollapsible(title=escape(self.covenant.name), id="section-cov-info"):
@@ -186,6 +204,11 @@ class CovenantSheetView(SheetView):
             yield self._tab("Seasons", "tab-cov-seasons", self._seasons_tab)
             yield self._tab("Possessions", "tab-cov-possessions", self._possessions_tab)
             yield self._tab("Economics", "tab-cov-economics", self._economics_tab)
+            yield self._tab(
+                "Manors",
+                manors.COVENANT_TAB.tab_id,
+                partial(self._kind_tab, manors.COVENANT_TAB),
+            )
             yield self._tab("Library", "tab-cov-library", self._library_tab)
             yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
             yield self._tab("Build", "tab-cov-build", self._scrolling(self._build_tab))
@@ -299,7 +322,85 @@ class CovenantSheetView(SheetView):
                             id="cov-hooks-list",
                             group="bh",
                         )
+                yield from self._charter_sections()
             yield DetailsPanel(self._bh_info_text(None), id="cov-bh-info")
+
+    def _charter_sections(self) -> ComposeResult:
+        """The covenant's own charter (the Chartered Town Boon): its lords
+        and terms, as a town's Charter tab shows them; and the towns it
+        charters (the Charter Lord Hook). Each shows only while the
+        covenant has its Boon or Hook."""
+        saga, covenant = self.saga, self.covenant
+        boons = ("section-cov-boons", "section-cov-hooks")
+        lords = (*boons, COV_CHARTER_LORDS_SECTION)
+        terms = (*boons, COV_CHARTER_TERMS_SECTION)
+
+        def charter() -> Neighbour:
+            return town_charter.charter_of(covenant)
+
+        shown = {
+            COV_CHARTER_LORDS_SECTION: town_charter.CHARTERED_TOWN,
+            COV_CHARTER_TERMS_SECTION: town_charter.CHARTERED_TOWN,
+            CHARTERED_TOWNS_SECTION: town_charter.CHARTER_LORD,
+        }
+
+        def show() -> None:
+            for section_id, vf_id in shown.items():
+                self.query_one(f"#{section_id}").display = town_charter.has_boon_hook(
+                    covenant, vf_id
+                )
+
+        with SheetSection(
+            title=self._titled(
+                lords,
+                COV_CHARTER_LORDS_SECTION,
+                lambda: "Charter " + town_charter.lords_title(saga, charter()),
+            ),
+            id=COV_CHARTER_LORDS_SECTION,
+        ) as section:
+            section.display = town_charter.has_boon_hook(
+                covenant, town_charter.CHARTERED_TOWN
+            )
+            yield self._list(
+                lords,
+                lambda: town_charter.lords_grid(saga, charter()).lines(),
+                id="cov-charter-lords-list",
+            )
+        with SheetSection(
+            title="Charter Terms", id=COV_CHARTER_TERMS_SECTION
+        ) as section:
+            section.display = town_charter.has_boon_hook(
+                covenant, town_charter.CHARTERED_TOWN
+            )
+            yield self._static(
+                terms,
+                lambda: aligned(
+                    [
+                        (f.label, fact_markup(f) or "[$label]—[/]")
+                        for f in town_charter.terms_facts(saga, charter())
+                    ]
+                ),
+                id="cov-charter-terms-facts",
+            )
+            with TwoColumns(id="cov-charter-terms-columns", text=True):
+                for index in (0, 1):
+                    yield self._static(
+                        terms,
+                        lambda i=index: town_charter.terms_columns(saga, charter())[i],
+                        id=f"cov-charter-terms-column-{index}",
+                    )
+        with SheetSection(
+            title="Towns It Charters", id=CHARTERED_TOWNS_SECTION
+        ) as section:
+            section.display = town_charter.has_boon_hook(
+                covenant, town_charter.CHARTER_LORD
+            )
+            yield self._static(
+                boons,
+                lambda: town_charter.chartered_towns_text(saga, covenant),
+                id="cov-chartered-towns-text",
+            )
+        self._on_refresh(boons, show)
 
     def _seasons_tab(self) -> ComposeResult:
         """Who is in the covenant and what each has planned for the current
@@ -676,9 +777,17 @@ class CovenantSheetView(SheetView):
         """Index into covenant.diary of the chosen row, or None."""
         return self.query_one("#cov-diary-list", SelectableList).selected_data_index
 
+    def kind_holder(self) -> Neighbour:
+        return manors.manors_of(self.covenant)
+
+    def kind_tabs(self) -> list[KindTab]:
+        return [] if self.sketch else [manors.COVENANT_TAB]
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A Boon or Hook row was chosen: fill the details panel. (Reputations
         have no panel -- a name and a score have nothing more to show.)"""
+        if self._kind_row_chosen(event):
+            return
         list_id = event.selectable_list.id or ""
         if list_id.startswith("cov-seasons-"):
             event.stop()

@@ -72,6 +72,36 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-cov-charter-lords": {
+      "active": "section-cov-charter-lords",
+      "keys": {
+        "a": "FieldsDialog: Add a Charter Lord",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-charter-terms": {
+      "active": "section-cov-charter-terms",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit the Charter's Terms",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-chartered-towns": {
+      "active": "section-cov-chartered-towns",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-inh-loyalty": {
       "active": "section-inh-loyalty",
       "keys": {
@@ -198,7 +228,7 @@
         "a": "FieldsDialog: Add a Calendar Entry",
         "e": "FieldsDialog: Edit a Calendar Entry",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Travel",
         "slash": "(disabled)"
       }
     },
@@ -349,6 +379,36 @@
         "e": "FieldsDialog: Edit Laborers",
         "d": "(disabled)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-manor-check": {
+      "active": "section-manor-check",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: The Manors beside the Income",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-manors": {
+      "active": "section-manors",
+      "keys": {
+        "a": "FieldsDialog: Add a Manor",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Buy a Manor, Assart",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-establishments": {
+      "active": "section-establishments",
+      "keys": {
+        "a": "FieldsDialog: Add an Establishment",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
         "slash": "(disabled)"
       }
     },
@@ -1202,6 +1262,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-content-goods": {
+      "active": "section-content-goods",
+      "keys": {
+        "a": "FieldsDialog: Add a Good",
+        "e": "notice: Alum is from City & Guild's prices, so it's read-only. To price it your own way, add a good of the saga's own (and hide this one with d).",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-house-rules": {
       "active": "section-house-rules",
       "keys": {
@@ -1904,6 +1974,36 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-manors": {
+      "active": "section-manors",
+      "keys": {
+        "a": "FieldsDialog: Add a Manor",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Buy a Manor, Assart, Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-establishments": {
+      "active": "section-establishments",
+      "keys": {
+        "a": "FieldsDialog: Add an Establishment",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Winter Roll, Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-household": {
+      "active": "section-household",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit the Household",
+        "d": "(disabled)",
+        "m": "MenuScreen: Settle an Inheritance, Go To",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-attitudes": {
       "active": "section-attitudes",
       "keys": {
@@ -1966,6 +2066,66 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-nb-fairs": {
+      "active": "section-nb-fairs",
+      "keys": {
+        "a": "FieldsDialog: Add a Fair or Market",
+        "e": "FieldsDialog: Edit a Fair or Market",
+        "d": "ConfirmScreen",
+        "m": "ConfirmScreen",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-charter-lords": {
+      "active": "section-nb-charter-lords",
+      "keys": {
+        "a": "FieldsDialog: Add a Charter Lord",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-charter-terms": {
+      "active": "section-nb-charter-terms",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit the Charter's Terms",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-charter-gives": {
+      "active": "section-nb-charter-gives",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit What the Charter Gives",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-citizens": {
+      "active": "section-nb-citizens",
+      "keys": {
+        "a": "FieldsDialog: Add a Citizen",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-town-people": {
+      "active": "section-nb-town-people",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit the Town's Size and People",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-nb-guilds": {
       "active": "section-nb-guilds",
       "keys": {
@@ -1976,13 +2136,33 @@
         "slash": "(disabled)"
       }
     },
-    "SheetSection#section-nb-fairs": {
-      "active": "section-nb-fairs",
+    "SheetSection#section-nb-guild-members": {
+      "active": "section-nb-guild-members",
       "keys": {
-        "a": "FieldsDialog: Add a Fair or Market",
-        "e": "FieldsDialog: Edit a Fair or Market",
-        "d": "ConfirmScreen",
-        "m": "ConfirmScreen",
+        "a": "FieldsDialog: Add a Member",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-court-cases": {
+      "active": "section-nb-court-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-sentences": {
+      "active": "section-nb-sentences",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },
@@ -2404,7 +2584,7 @@
         "a": "FieldsDialog: Add a Calendar Entry",
         "e": "FieldsDialog: Edit a Calendar Entry",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Travel",
         "slash": "(disabled)"
       }
     },

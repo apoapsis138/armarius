@@ -24,7 +24,7 @@ from ..commands import (
 from ..form_spec import EMPHASIS_HINT, DialogField, pairs
 from ..markup import escape
 from ..models import DETAIL_LEVELS, REALMS, Neighbour, Saga
-from ..neighbour_lists import KindList
+from ..neighbour_lists import KindBlock, KindList, block_ops
 from ..rules import sites
 from ..sections import NEIGHBOUR_INFO_SECTION
 from . import world as world_forms
@@ -390,6 +390,11 @@ def neighbour_ops(saga: Saga, neighbour: Neighbour) -> dict[str, SectionOps]:
             entry.section_id: entry.ops(saga, neighbour)
             for entry in tab_lists(neighbour)
         },
+        **{
+            block.section_id: block_ops(saga, neighbour, block)
+            for block in tab_blocks(neighbour)
+            if block.edit is not None
+        },
     }
 
 
@@ -398,3 +403,10 @@ def tab_lists(neighbour: Neighbour) -> tuple[KindList, ...]:
     kind = neighbours.kind_of(neighbour)
     tabs = ([kind.tab] if kind.tab is not None else []) + list(kind.more)
     return tuple(entry for tab in tabs for entry in tab.lists)
+
+
+def tab_blocks(neighbour: Neighbour) -> tuple[KindBlock, ...]:
+    """The blocks of worked-out text the neighbour's kind adds."""
+    kind = neighbours.kind_of(neighbour)
+    tabs = ([kind.tab] if kind.tab is not None else []) + list(kind.more)
+    return tuple(block for tab in tabs for block in tab.blocks)

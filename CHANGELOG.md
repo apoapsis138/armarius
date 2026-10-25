@@ -109,6 +109,56 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.18.0 — 2026-10-25
+
+### Florilegium
+
+- A **Goods** catalog: every good in City & Guild's Prices of Goods table,
+  with its class, how it is sold, its four prices as printed (none to be
+  had, priced by purity, blank where the book is blank), where it is bought
+  in bulk and the book's notes; and the Price List of common goods, each
+  quality's price worked out (C&G pp. 134-144). Silver keeps the book's
+  2,420 a ton, with the errata's 2,240-pound ton noted; goods priced by
+  purity price a lesser purity by its metal content; gemstones and pearls
+  show their price an ounce. A saga can switch it off or hide single goods.
+
+### Pagina
+
+- A **Goods** tab in Saga Content: the goods by class, the chosen good's
+  details, Add, Edit and Hide, and Add a Purity.
+
+### Orbis
+
+- A town has three new tabs. **Charter**: its lords (noble, Church, faerie
+  or demon, holding it alone, shared by paragium, as a rival claim or as a
+  secret parallel charter), its terms and privileges, what it gives (the
+  walls' Divine aura: a town's or city's 3, one higher under the Church,
+  1 under a faerie lord; a demon's Might and services; the pawn of vis in
+  the charter), its citizens after a year and a day, and its size,
+  occupations and officials (C&G pp. 8-24; DE p. 418). **Guilds**: its
+  guilds, now with their kind, Craft, hall and officials, and the saga's
+  characters in them by rank (C&G pp. 41-50). **Court**: its cases,
+  verdicts and sentences, and a Court Roll with a live inspector (C&G pp.
+  28-30).
+- A covenant with the Chartered Town Boon shows its own charter; one with
+  the Charter Lord Hook lists the towns it charters (C&G p. 11).
+- A lord and a covenant have a **Manors** tab: manors with their land,
+  peasants, flock, crops, customary mill or bakery (inside its 20 pounds)
+  and manor-court dues as ticks and notes; kennels, mews and stables with
+  the book's capacity, upkeep, staff and the Winter Roll; household,
+  heirs and hunting rights; Buy a Manor, Assart and Settle an Inheritance
+  (Lords of Men pp. 9-12, 48, 58-61, 71-87; errata p. 74). Unpaid
+  establishments fall a class and lose 15% of their animals a season.
+- A lord's Fief counts his manors from the Manors tab and shows his
+  surplus (LoM pp. 31-32). A covenant's manors are shown beside its
+  Agriculture (and Livestock) income as a check, never added to it.
+- **Travel**, on Ahead: a journey's days (from the distance as the crow
+  flies or along the route, or between named ports), what passage costs
+  and the Long-Term Fatigue of travelling quickly, with the Definitive
+  Edition's rough guide (C&G pp. 80-90, errata p. 57; DE pp. 404, 408).
+  Close leaves it a what-if; Set Out writes it in each traveller's Diary,
+  takes the forced march's Fatigue and puts the arrival on Ahead.
+
 ## 3.17.0 — 2026-10-25
 
 ### Illuminatio

@@ -21,6 +21,7 @@ from .models import (
     CharacterTemplateDef,
     CovenantBoonHookDef,
     CovenantSituationDef,
+    GoodDef,
     GrogTemplateDef,
     HouseDef,
     LabFeatureDef,
@@ -48,6 +49,7 @@ SHAPE_MATERIAL_CATALOG_PATH = DATA_DIR / "shape_material_catalog.json"
 CHARACTER_TEMPLATE_CATALOG_PATH = DATA_DIR / "character_template_catalog.json"
 GROG_TEMPLATE_CATALOG_PATH = DATA_DIR / "grog_template_catalog.json"
 ANIMAL_TEMPLATE_CATALOG_PATH = DATA_DIR / "animal_template_catalog.json"
+GOODS_CATALOG_PATH = DATA_DIR / "goods_catalog.json"
 
 
 def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
@@ -105,7 +107,12 @@ def _cached_by_id(
 
 #: The user-made entries of the saga in use, by the kind of
 #: catalog they join: set by use_saga(), read by the three loaders below.
-_SAGA_ENTRIES: dict[str, tuple[Any, ...]] = {"character": (), "lab": (), "covenant": ()}
+_SAGA_ENTRIES: dict[str, tuple[Any, ...]] = {
+    "character": (),
+    "lab": (),
+    "covenant": (),
+    "goods": (),
+}
 #: Each catalog with the saga's entries merged in, by (kind, path): built on
 #: first use and dropped whenever use_saga() changes the entries.
 _MERGED_BY_ID: dict[tuple[str, Path], Mapping[str, Any]] = {}
@@ -121,6 +128,7 @@ def use_saga(saga: Saga | None) -> None:
     _SAGA_ENTRIES["character"] = tuple(saga.custom_virtues_flaws) if saga else ()
     _SAGA_ENTRIES["lab"] = tuple(saga.custom_lab_virtues_flaws) if saga else ()
     _SAGA_ENTRIES["covenant"] = tuple(saga.custom_boons_hooks) if saga else ()
+    _SAGA_ENTRIES["goods"] = tuple(saga.custom_goods) if saga else ()
     _MERGED_BY_ID.clear()
     _HIDDEN.clear()
     if saga is None:
@@ -137,6 +145,7 @@ def use_saga(saga: Saga | None) -> None:
             *saga.custom_virtues_flaws,
             *saga.custom_lab_virtues_flaws,
             *saga.custom_boons_hooks,
+            *saga.custom_goods,
             *saga.spells,
         )
     )
@@ -153,6 +162,7 @@ SAGA_CATALOG_KINDS: dict[str, type] = {
     "abilities": AbilityDef,
     "spells": Spell,
     "shapes_materials": ShapeMaterialDef,
+    "goods": GoodDef,
 }
 
 #: The saga in use's hidden catalogs: entry kind -> (the whole catalog is
@@ -468,6 +478,13 @@ def load_covenant_situation_catalog(
 ) -> list[CovenantSituationDef]:
     """The books' Covenant Situations: ready-made sets of Boons and Hooks."""
     return list(_cached_entries(path, CovenantSituationDef.from_dict))
+
+
+def load_goods_catalog(path: Path = GOODS_CATALOG_PATH) -> list[GoodDef]:
+    """The Goods catalog (City & Guild's Prices of Goods table and Price
+    List), with the saga in use's own goods after it (use_saga). The
+    shared entries must not be changed."""
+    return _with_saga_entries("goods", _cached_entries(path, GoodDef.from_dict))
 
 
 def describe_boon_hook(

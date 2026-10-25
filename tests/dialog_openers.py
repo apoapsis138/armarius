@@ -22,6 +22,7 @@ from ars_magica_manager import (
     vis,
 )
 from ars_magica_manager import economics as eco
+from ars_magica_manager import goods as gd
 from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
@@ -106,6 +107,68 @@ class Opener:
     node: str | None
     #: Opens the dialog, given the workspace (or saga picker) screen.
     open: Callable[[object], object]
+
+
+def _built(open_editor):
+    """Open a dialog from a section on a tab not built yet: build the
+    sheet's tabs first."""
+
+    async def opener(ws) -> None:
+        await ws._current_sheet_view().build_all_tabs()
+        open_editor(ws)
+
+    return opener
+
+
+async def _on_lords_row(ws, section_id: str, key: str, rows: list, action) -> None:
+    """A More command on Gottfried's Manors tab, on the first of `rows`
+    put under `key` in memory (saved only with the form)."""
+    ws.saga.neighbour("gottfried").details[key] = rows
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    view.refresh_section(section_id)
+    listed = view.query_one(
+        f"#{section_id.removeprefix('section-')}-list", scr.SelectableList
+    )
+    listed.select_data_index(0)
+    await until(lambda: listed.selected_data_index == 0)
+    action(ws)
+
+
+async def _assart(ws) -> None:
+    """Assart on a manor with 60 acres of waste."""
+    await _on_lords_row(
+        ws,
+        "section-manors",
+        "manor_list",
+        [{"name": "Hagen", "acres": 600, "demesne": 200, "waste": 60}],
+        lambda ws: ws.action_assart(),
+    )
+
+
+async def _winter_roll(ws) -> None:
+    """The Winter Roll on Excellent stables."""
+    await _on_lords_row(
+        ws,
+        "section-establishments",
+        "establishments",
+        [{"kind": "Stables", "quality": "Excellent", "animals": 20}],
+        lambda ws: ws.action_winter_roll(),
+    )
+
+
+async def _court_roll(ws) -> None:
+    """The Court Roll on a case put before Soest's court in memory (saved
+    only with the form)."""
+    soest = ws.saga.neighbour("soest")
+    soest.details["court_cases"] = [{"accused": "Hartmut", "charge": "Theft"}]
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    view.refresh_section("section-nb-court-cases")
+    rows = view.query_one("#nb-court-cases-list", scr.SelectableList)
+    rows.select_data_index(0)
+    await until(lambda: rows.selected_data_index == 0)
+    ws.action_court_roll()
 
 
 def _grogs_aging_chart(ws) -> None:
@@ -279,6 +342,26 @@ async def _open_agent(ws) -> None:
     view = ws._current_sheet_view()
     await view.build_all_tabs()
     ws._core_verb("section-char-agents", "add")
+
+
+async def _open_good(ws) -> None:
+    """Add a good of the saga's own on Saga Content's Goods tab."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._core_verb("section-content-goods", "add")
+
+
+async def _open_purity(ws) -> None:
+    """More's Add a Purity on silver, chosen on the Goods tab."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    index = [g.name for g in gd.listed(ws.saga)].index("Silver")
+    rows = view.query_one("#content-goods-list", scr.SelectableList)
+    # Focused, as the user leaves it: saving keeps the row chosen.
+    rows.focus()
+    rows.select_data_index(index)
+    await until(lambda: rows.selected_data_index == index)
+    ws.action_add_purity()
 
 
 def _with_agents(ws) -> Character:
@@ -502,6 +585,43 @@ OPENERS: dict[str, Opener] = {
         "town",
         _pick(lambda ws: ws._core_verb("section-nb-fairs", "edit"), "nb-fairs-list"),
     ),
+    "add charter lord": Opener(
+        "town", _built(lambda ws: ws._core_verb("section-nb-charter-lords", "add"))
+    ),
+    "edit charter terms": Opener(
+        "town", _built(lambda ws: ws._core_verb("section-nb-charter-terms", "edit"))
+    ),
+    "edit charter gives": Opener(
+        "town", _built(lambda ws: ws._core_verb("section-nb-charter-gives", "edit"))
+    ),
+    "add citizen": Opener(
+        "town", _built(lambda ws: ws._core_verb("section-nb-citizens", "add"))
+    ),
+    "edit town people": Opener(
+        "town", _built(lambda ws: ws._core_verb("section-nb-town-people", "edit"))
+    ),
+    "add guild member": Opener(
+        "town", _built(lambda ws: ws._core_verb("section-nb-guild-members", "add"))
+    ),
+    "add court case": Opener(
+        "town", _built(lambda ws: ws._core_verb("section-nb-court-cases", "add"))
+    ),
+    "court roll": Opener("town", _court_roll),
+    "add manor": Opener(
+        "neighbour", _built(lambda ws: ws._core_verb("section-manors", "add"))
+    ),
+    "add establishment": Opener(
+        "neighbour", _built(lambda ws: ws._core_verb("section-establishments", "add"))
+    ),
+    "edit household": Opener(
+        "neighbour", _built(lambda ws: ws._core_verb("section-household", "edit"))
+    ),
+    "buy manor": Opener("neighbour", _built(lambda ws: ws.action_buy_manor())),
+    "assart": Opener("neighbour", _assart),
+    "winter roll": Opener("neighbour", _winter_roll),
+    "settle inheritance": Opener(
+        "neighbour", _built(lambda ws: ws.action_settle_inheritance())
+    ),
     "edit church": Opener(
         "church", lambda ws: ws._core_verb("section-nb-info", "edit")
     ),
@@ -545,6 +665,8 @@ OPENERS: dict[str, Opener] = {
     "add calendar entry": Opener(
         "seasons", lambda ws: ws._core_verb("section-ahead", "add")
     ),
+    "travel set out": Opener("seasons", lambda ws: ws.action_plan_journey()),
+    "travel close": Opener("seasons", lambda ws: ws.action_plan_journey()),
     "edit roll table": Opener(
         "place",
         _pick(lambda ws: ws._core_verb("section-nb-tables", "edit"), "nb-tables-list"),
@@ -915,6 +1037,12 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit wealth": Opener("covenant", lambda ws: ws._edit_wealth()),
     "add income source": Opener("covenant", lambda ws: ws._income_form(None)),
+    "add covenant manor": Opener(
+        "covenant", _built(lambda ws: ws._core_verb("section-manors", "add"))
+    ),
+    "edit manor check": Opener(
+        "covenant", _built(lambda ws: ws._core_verb("section-manor-check", "edit"))
+    ),
     "edit income source": Opener(
         "covenant", _pick(lambda ws: ws._edit_income_source(), "eco-income-list")
     ),
@@ -965,6 +1093,8 @@ OPENERS: dict[str, Opener] = {
     "edit saga source": Opener("saga_content", _open_saga_source),
     "edit catalog": Opener("saga_content", lambda ws: ws._catalog_form("spells")),
     "hide catalog entry": Opener("saga_content", lambda ws: ws._hide_catalog_entry()),
+    "add good": Opener("saga_content", _open_good),
+    "add purity": Opener("saga_content", _open_purity),
     "add ability": Opener("character", _open_ability_details),
     "edit arts": Opener("character", lambda ws: ws._edit_arts()),
     "edit familiar fatigue": Opener("familiar", lambda ws: ws._edit_familiar_fatigue()),

@@ -12,7 +12,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Se
+   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 B
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -80,7 +80,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Se
+   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 B
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -148,7 +148,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Se
+   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 B
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -216,7 +216,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Se
+   1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 B
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -284,7 +284,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-  ributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
+  es  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 Build  0 Sec
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -338,6 +338,74 @@
   ▌
 
 
+===== tab-cov-manors
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix                   Tribunal:                    Rhine
+      Storyguide:               (not set)                Current Season:              Spring
+      Year Founded:             (not set)                Current Year:                1220
+      Aegis of the Hearth:      0                        Aegis' Penetration:          0
+      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
+                                                         Aura Realm:                  Magic
+          Edit (e)          In Play
+
+   Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 Build  0 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Beside the Income
+
+      Choose the source of income these manors describe (Edit): its Agriculture source, and its
+      Livestock source for manors turned over to sheep.
+      Shown beside the source as a check, never added: the covenant's income is its sources' surplus
+      after their operating costs (Covenants pp. 56-58).
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Manors (0)
+
+
+      No manors listed: a manor is about 600 acres and yields its lord 20 pounds a year (LoM p. 72).
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Establishments (0)
+
+      No kennels, mews or stables. Every noble keeps Standard stables as part of his estate; kennels and
+      mews must be built (LoM p. 58).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a manor or an establishment to see it in full.
+  ▌
+
+
 ===== tab-cov-library
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -352,7 +420,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-  ributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
+   Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 Build  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -420,7 +488,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-  ributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
+   Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 Build  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -488,7 +556,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-  ributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
+   Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 Build  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -556,7 +624,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-  ributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build  9 Secrets
+   Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Manors  7 Library  8 Diary  9 Build  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

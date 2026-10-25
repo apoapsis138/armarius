@@ -14,10 +14,12 @@ from textual.widgets import Static, TabbedContent, TabPane
 from .... import saga_content as sc
 from .... import traditions
 from ....boon_hook_text import counted
+from ....forms import goods as goods_forms
 from ....models import Saga, SagaSource
 from ....sections import (
     BOOKS_SECTION,
     CATALOGS_SECTION,
+    GOODS_SECTION,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     PLAYERS_SECTION,
@@ -34,10 +36,15 @@ from .lists import HouseRulesView, PlayersView, SpellListView
 TAB_SECTIONS: dict[str, str] = {
     "tab-content-books": BOOKS_SECTION,
     "tab-content-catalogs": CATALOGS_SECTION,
+    "tab-content-goods": GOODS_SECTION,
     "tab-content-house-rules": HOUSE_RULES_SECTION,
     "tab-content-spells": SPELL_SECTION,
     "tab-content-players": PLAYERS_SECTION,
 }
+
+#: The Goods tab's list and its details panel.
+GOODS_LIST = "content-goods-list"
+GOODS_INFO = "content-goods-info"
 
 
 class SagaContentSheetView(SheetView):
@@ -58,6 +65,7 @@ class SagaContentSheetView(SheetView):
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Books", "tab-content-books", self._books_tab)
             yield self._tab("Catalogs", "tab-content-catalogs", self._catalogs_tab)
+            yield self._tab("Goods", "tab-content-goods", self._goods_tab)
             yield self._tab(
                 "House Rules",
                 "tab-content-house-rules",
@@ -186,7 +194,7 @@ class SagaContentSheetView(SheetView):
                 ):
                     yield TableHeader(sc.catalogs_header())
                     yield self._list(
-                        (CATALOGS_SECTION, HIDDEN_SECTION),
+                        (CATALOGS_SECTION, HIDDEN_SECTION, GOODS_SECTION),
                         lambda: [
                             (i, sc.catalog_row(saga, key))
                             for i, key in enumerate(sc.CATALOGS)
@@ -196,7 +204,7 @@ class SagaContentSheetView(SheetView):
                     )
                 with SheetSection(
                     title=self._titled(
-                        HIDDEN_SECTION,
+                        (HIDDEN_SECTION, GOODS_SECTION),
                         HIDDEN_SECTION,
                         lambda: counted("Hidden Entries", len(sc.hidden_entries(saga))),
                     ),
@@ -204,7 +212,7 @@ class SagaContentSheetView(SheetView):
                 ):
                     yield TableHeader(sc.hidden_header())
                     yield self._list(
-                        HIDDEN_SECTION,
+                        (HIDDEN_SECTION, GOODS_SECTION),
                         lambda: [
                             (i, sc.hidden_row(key, entry))
                             for i, (key, entry) in enumerate(sc.hidden_entries(saga))
@@ -228,9 +236,50 @@ class SagaContentSheetView(SheetView):
         hidden = sc.hidden_entries(self.saga)
         return hidden[index] if index is not None and index < len(hidden) else None
 
+    # -- Goods --
+
+    def _goods_tab(self) -> ComposeResult:
+        """The Goods catalog and the saga's own goods, with the chosen
+        good's details under them."""
+        saga = self.saga
+        self.core_ops[GOODS_SECTION] = goods_forms.ops(saga)
+        #: What the list follows: its own changes, and a good hidden,
+        #: offered again or the whole catalog switched off on Catalogs.
+        follows = (GOODS_SECTION, CATALOGS_SECTION, HIDDEN_SECTION)
+        with Vertical(classes="panel-body"):
+            with (
+                VerticalScroll(),
+                SheetSection(
+                    title=self._titled(
+                        follows, GOODS_SECTION, lambda: goods_forms.title(saga)
+                    ),
+                    id=GOODS_SECTION,
+                ),
+            ):
+                yield self._static(
+                    follows,
+                    lambda: goods_forms.header(saga, two_lines=True),
+                    id="content-goods-header",
+                )
+                yield TableHeader(goods_forms.table_header())
+                yield self._list(follows, lambda: goods_forms.rows(saga), id=GOODS_LIST)
+            yield self._panel(
+                follows,
+                lambda: goods_forms.info(
+                    saga, self.section_row(GOODS_SECTION), wide=True
+                ),
+                id=GOODS_INFO,
+            )
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A row was chosen: fill its tab's details panel."""
         list_id = event.selectable_list.id or ""
+        if list_id == GOODS_LIST:
+            event.stop()
+            self.query_one(f"#{GOODS_INFO}", Static).update(
+                goods_forms.info(self.saga, event.data_index, wide=True)
+            )
+            return
         texts = {
             "content-books-list": (
                 "#content-books-info",

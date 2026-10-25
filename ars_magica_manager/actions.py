@@ -30,6 +30,7 @@ from . import (
 )
 from . import book_value as bv
 from . import familiars as fam
+from . import goods as gd
 from . import inhabitants as inh
 from . import lab_texts as lt
 from . import spells as spl
@@ -53,6 +54,7 @@ from .rules import agents as agent_rules
 from .rules import covenfolk
 from .sections import (
     AGENTS_SECTION,
+    AHEAD_SECTION,
     BATTLES_SECTION,
     BOOK_SECTIONS,
     BOOKS_SECTION,
@@ -62,16 +64,22 @@ from .sections import (
     CONFLICT_BATTLES_SECTION,
     CONNECTIONS_SECTION,
     CORE_SECTIONS,
+    COURT_CASES_SECTION,
+    COV_AHEAD_SECTION,
     CREATURE_INFO_SECTION,
     DEVICE_SECTIONS,
+    ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
     FIGHTS_SECTION,
+    GOODS_SECTION,
     GRATITUDE_SECTION,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
+    HOUSEHOLD_SECTION,
     LAB_TEXTS_SECTION,
     LAB_VF_SECTIONS,
     LIBRARY_SECTIONS,
+    MANORS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     PLAYERS_SECTION,
     SIEGES_SECTION,
@@ -292,9 +300,14 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("n", "neutralize_shard", "Neutralize a Shard"),
     MenuItem("l", "tribunal_longevity", "The Tribunal's Longevity Ritual"),
     MenuItem("r", "roll_fair", "Roll Income"),
+    MenuItem("r", "court_roll", "Court Roll"),
     MenuItem("r", "roll_table", "Roll"),
     MenuItem("b", "battle_event", "Battle Event"),
     MenuItem("r", "redeem_gratitude", "Redeem Gratitude"),
+    MenuItem("b", "buy_manor", "Buy a Manor"),
+    MenuItem("s", "assart", "Assart"),
+    MenuItem("w", "winter_roll", "Winter Roll"),
+    MenuItem("i", "settle_inheritance", "Settle an Inheritance"),
     MenuItem("b", "conflict_battle_event", "Battle Event"),
     MenuItem("n", "next_blow", "Next Blow"),
     MenuItem("r", "next_round", "Next Round"),
@@ -311,6 +324,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("i", "impress_agent", "Impress"),
     MenuItem("x", "spend_agency_xp", "Spend Agency Experience"),
     MenuItem("t", "set_agent_task", "Set a Task"),
+    MenuItem("p", "add_purity", "Add a Purity"),
+    MenuItem("j", "plan_journey", "Travel"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -328,9 +343,14 @@ MORE_SECTIONS: dict[str, str] = {
     "neutralize_shard": TOKENS_SECTION,
     "tribunal_longevity": TOKENS_SECTION,
     "roll_fair": FAIRS_SECTION,
+    "court_roll": COURT_CASES_SECTION,
     "roll_table": TABLES_SECTION,
     "battle_event": BATTLES_SECTION,
     "redeem_gratitude": GRATITUDE_SECTION,
+    "buy_manor": MANORS_SECTION,
+    "assart": MANORS_SECTION,
+    "winter_roll": ESTABLISHMENTS_SECTION,
+    "settle_inheritance": HOUSEHOLD_SECTION,
     "conflict_battle_event": CONFLICT_BATTLES_SECTION,
     "next_blow": FIGHTS_SECTION,
     "next_round": FIGHTS_SECTION,
@@ -759,6 +779,22 @@ def _acts_on_agent(
     return rule
 
 
+def _adds_purity(facts: ActionFacts, section: str) -> bool:
+    """Add a Purity, offered on the Goods list for a chosen good priced by
+    purity that has a pure price."""
+    if section != GOODS_SECTION:
+        return False
+    row = facts.chosen_row(section)
+    listed = gd.listed(facts.saga)
+    return row is not None and 0 <= row < len(listed) and gd.takes_purities(listed[row])
+
+
+def _plans_journey(_facts: ActionFacts, section: str) -> bool:
+    """Travel, the calculator: on Ahead, the Seasons page's or a
+    covenant's."""
+    return section in (AHEAD_SECTION, COV_AHEAD_SECTION)
+
+
 def _imports(facts: ActionFacts, section: str) -> bool:
     return facts.selected_kind == NodeKind.SAGA or section in LIBRARY_SECTIONS
 
@@ -782,5 +818,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "impress_agent": _acts_on_agent(lambda _c, agent: agent_rules.can_impress(agent)),
     "spend_agency_xp": _acts_on_agent(agent_rules.can_spend),
     "set_agent_task": _acts_on_agent(lambda _c, agent: agent_rules.may_be_asked(agent)),
+    "add_purity": _adds_purity,
+    "plan_journey": _plans_journey,
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
 }

@@ -528,6 +528,74 @@ The chips under the title narrow the cards to one kind of entry; click a
 card to read it in the inspector.
 <!-- /gui -->
 
+More (`m`) > **Travel** (on the desktop, the **Travel** button) works out
+a journey's days, cost and Fatigue, and can set the travellers out: see
+[Travel](help:travel).
+
+## Travel
+<!-- help: travel -->
+
+<!-- tui -->
+On Ahead (the Seasons page's or a covenant's), More (`m`) > **Travel**
+works out a journey.
+<!-- /tui -->
+<!-- gui -->
+On Ahead (the Seasons page's or a covenant's), **Travel** works out a
+journey.
+<!-- /gui -->
+Choose **From** and **To** (the saga's covenants, towns and places: they
+only name the journey), then how the distance is **Measured**:
+
+- **Direct distance, as the crow flies**, as you would measure it on a
+  map: road travel takes the miles / 12 days, a barge / 8 with the
+  current and / 6 against it, a ship / 60 (City & Guild p. 89, the river
+  figures as the errata corrects them, p. 57). These already allow 20%
+  for winding roads and rivers. A route that is mostly road or mostly
+  river counts as all one; otherwise work out each leg on its own and add
+  them. On foot or on your own horses the 20% is added to the miles first.
+- **Route length, along the road or river**, at each way's miles a day
+  (City & Guild p. 85): barges 8 to 10 (10 with the current, 8 against),
+  carts 15 to 25, packhorses about 24, coaches 18 to 24, a courier about
+  30, a rider with remounts up to 90. City & Guild gives no walking
+  speed: on foot is the Definitive Edition's 20 miles a day (p. 408).
+- **Between named ports**: the Naval Trade Tables (City & Guild
+  pp. 89-90) give the days directly, through the junctions between
+  Europe's regions, inland travel to the named city included.
+
+Name **Who goes** (the saga's characters); **Travellers** counts them and
+any others you add to it. Add the **Cargo, in tons**, tick **A known magus
+travels** and, on land, **Travel quickly**.
+
+**The Journey** shows the days, how they were worked out, City & Guild's
+words for the way you travel and the Definitive Edition's figure as a
+rough guide (p. 408: ships about 30 miles a day, good ones three or four
+times that; a cart 20; a courier 30, 50 if urgent). Where the two books
+differ the days are City & Guild's.
+
+The cost is passage with a merchant or a captain (City & Guild
+pp. 85-86): a pound a fortnight by sea for a party of eight in about a
+ton of space with their food (half a ton hugging the coast), counted by
+the day, with the cargo's own tons; river travel twice that, road travel
+8 to 20 times. A known magus pays double aboard a ship or barge, if a
+captain will take him at all (p. 85). On foot or on your own horses the
+book has no figure: food, tools and lodging have no rate (p. 86).
+
+Travelling quickly costs one Long-Term Fatigue level for each day on the
+road (Definitive Edition p. 408); delays for terrain and weather still
+cost it, waiting on toll collectors doesn't. A forced march of five days
+leaves the travellers Unconscious. The app's reading: the nights of the
+march restore nothing, and each night's rest without hurrying afterwards
+restores one level (p. 404). A courier who hurries rides at the urgent
+50 miles a day; a rider with remounts is always hurrying.
+
+**Close** leaves it as a what-if: nothing is recorded. **Set Out** makes
+the journey in one click: a Travel line in each traveller's Diary (from,
+to, how, the days and the cost), the forced march's Long-Term Fatigue on
+each of them if Travel quickly is ticked, and their arrival in the saga's
+calendar, so it shows on Ahead (a season is taken as 13 weeks: a journey
+of 91 days or more arrives a season later). Set Out needs someone named
+in Who goes and a journey it can work out.
+
 ## The World Turned
 <!-- help: section-world-turns -->
 
@@ -635,10 +703,10 @@ The shared catalogs the pickers draw on, and what this saga leaves out of them.
 <!-- help: section-catalogs -->
 
 <!-- tui -->
-The Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities, Spells, and Shapes & Materials catalogs. `e` offers a whole catalog or not. A catalog not offered leaves its pickers with only the saga's own entries (its House Rules or own spells).
+The Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities, Spells, Shapes & Materials and Goods catalogs. `e` offers a whole catalog or not. A catalog not offered leaves its pickers with only the saga's own entries (its House Rules or own spells).
 <!-- /tui -->
 <!-- gui -->
-The Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities, Spells, and Shapes & Materials catalogs. **Edit** offers a whole catalog or not. A catalog not offered leaves its pickers with only the saga's own entries (its House Rules or own spells).
+The Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities, Spells, Shapes & Materials and Goods catalogs. **Edit** offers a whole catalog or not. A catalog not offered leaves its pickers with only the saga's own entries (its House Rules or own spells).
 <!-- /gui -->
 
 ### Hidden Entries
@@ -649,6 +717,35 @@ Single entries this saga's pickers leave out, as if their book were out of play.
 <!-- /tui -->
 <!-- gui -->
 Single entries this saga's pickers leave out, as if their book were out of play. **Add** asks which catalog, then which entry to hide; **Delete** offers the entry last clicked again, after a confirmation.
+<!-- /gui -->
+
+## Goods tab
+<!-- help: tab-content-goods -->
+
+What goods cost in Mythic Europe: every row of City & Guild's Prices of Goods table (pp. 141-142) and its Price List of common goods (p. 144), and any goods of the saga's own.
+
+**You type:** goods of the saga's own, and purities of the goods priced by purity.
+
+**The app works out:** a common good's price at each quality, a purity's price from its metal content, and what a gemstone or pearl costs an ounce.
+
+### Goods
+<!-- help: section-content-goods -->
+
+The commodities come first, by class: bulk, manufactured and luxury goods (C&G p. 134). Their four prices, Shoddy, Standard, Superior and Expensive, are Mythic pounds a tun or ton, as the book prints them: `#` none to be had at that quality, `*` priced by purity, `250*` one purity's price, `n/a` as printed, and a blank where the book has none (Dye's Superior). There is no Excellent column. Goods the book doesn't sell by the ton are still priced by the ton for comparison; Sold by says how they are sold (wine by the tun, gemstones and pearls by the ounce, gold by the pound, silk by the roll, horses and slaves by the head).
+
+The common goods follow, at their standard price each (C&G p. 144). Their details give the other qualities by the book's multipliers: Shoddy x0.5, Superior x2, Excellent x5, Wondrous x5 or more. The book means these prices for story flavour, not for merchants' or crafters' incomes (p. 143); selling finished items is a separate roll (Presence + Bargain, Chapter IV).
+
+A good's details show its class and page, its prices, how it is sold, its purities, where it is bought in bulk (the commercial sources, pp. 138-140) and the book's note on it. The weights are 16 ounces to the pound and 2,240 pounds to the ton, as the errata corrects p. 140 (errata p. 57).
+
+- **Silver** stays 2,420 a ton as printed: the table is built on it (gold's 24,200 is ten times silver, p. 141). Its 250*, 1,650* and 2,200* are prices at lesser purities: about 10%, 68% and 91% silver.
+- **Priced by purity** (alum, copper, gold, iron, lead, saffron, salt, silver, tin): a lesser purity's price is the pure price times its metal content (p. 140). Alum's three prices are its three kinds instead, salt-adulterated, European and Asian, with no Expensive (p. 134).
+- **Gemstones and pearls** show their price an ounce by column: the table's price over the 2,420-pound ton it is built on, which matches the book's 2 and 2 1/2 pounds an ounce for average and fine gems; pearls are 2 an ounce from rivers, 3 from the sea (p. 141).
+
+<!-- tui -->
+`a` adds a good of the saga's own: a commodity, priced a tun or ton by quality (its class, how it is sold, its four prices and, if it is priced by purity, its pure price), or a common good, priced each in pence (12 to the shilling, 240 to the pound, p. 143), with where it is bought and a description. `e` edits one of the saga's own goods; a catalog good is read-only. `d` deletes one of the saga's own goods, or hides a catalog good after a confirmation: the Catalogs tab's Hidden Entries offers it again, and Catalogs can switch the whole Goods catalog off. More's **Add a Purity** (`m`, then `p`, for a good priced by purity) adds a purity by its name and metal content, its price worked out as you type, and removes one the saga added.
+<!-- /tui -->
+<!-- gui -->
+**Add** adds a good of the saga's own: a commodity, priced a tun or ton by quality (its class, how it is sold, its four prices and, if it is priced by purity, its pure price), or a common good, priced each in pence (12 to the shilling, 240 to the pound, p. 143), with where it is bought and a description. **Edit** edits one of the saga's own goods; a catalog good is read-only. **Hide** deletes one of the saga's own goods, or hides a catalog good after a confirmation: the Catalogs chapter's Hidden Entries offers it again, and Catalogs can switch the whole Goods catalog off. **Add a Purity** (for a good priced by purity) adds a purity by its name and metal content, its price worked out as you type, and removes one the saga added.
 <!-- /gui -->
 
 ## House Rules tab

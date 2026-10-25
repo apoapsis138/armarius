@@ -21,6 +21,7 @@ from .creature import Creature
 from .definitions import CovenantBoonHookDef, LabVirtueFlawDef, VirtueFlawDef
 from .devices import EnchantedDevice
 from .familiar import Familiar
+from .goods import GoodDef, GoodPurity
 from .laboratory import Laboratory
 from .seasons import CalendarEntry, LabProject, SeasonPlan, SeasonRecord, WorldTurn
 from .traits import Spell
@@ -149,6 +150,10 @@ class Saga:
     custom_virtues_flaws: list[VirtueFlawDef] = field(default_factory=list)
     custom_lab_virtues_flaws: list[LabVirtueFlawDef] = field(default_factory=list)
     custom_boons_hooks: list[CovenantBoonHookDef] = field(default_factory=list)
+    #: The saga's own goods, beside the Goods catalog's (goods.py), and the
+    #: purities it adds to goods priced by purity.
+    custom_goods: list[GoodDef] = field(default_factory=list)
+    good_purities: list[GoodPurity] = field(default_factory=list)
     #: Who can sign in to the saga from a browser when it is hosted;
     #: the storyguide's own window needs no sign-in.
     players: list[Player] = field(default_factory=list)
@@ -234,6 +239,10 @@ class Saga:
         ]
         d["custom_boons_hooks"] = [
             CovenantBoonHookDef.from_dict(e) for e in d.get("custom_boons_hooks", [])
+        ]
+        d["custom_goods"] = [GoodDef.from_dict(g) for g in d.get("custom_goods", [])]
+        d["good_purities"] = [
+            GoodPurity.from_dict(p) for p in d.get("good_purities", [])
         ]
         d["players"] = [Player.from_dict(p) for p in d.get("players", [])]
         d["sources"] = [SagaSource.from_dict(s) for s in d.get("sources", [])]

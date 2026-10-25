@@ -211,6 +211,7 @@ def run_steps(
             live=_with_picture(form),
             inspector=form.inspector,
             save_label=form.save_label,
+            cancel_label=form.cancel_label,
         )
         dialog.help_id = form.help_id or None
         app.push_screen(dialog, handle_values)

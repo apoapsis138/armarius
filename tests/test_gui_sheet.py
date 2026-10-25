@@ -409,6 +409,7 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
         "Laboratories",
         "Possessions",
         "Treasury",
+        "Manors",
         "Library",
         "Seasons",
         "Diary",
@@ -651,6 +652,7 @@ def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
     assert page.chapters() == [
         "Books",
         "Catalogs",
+        "Goods",
         "House Rules",
         "Spells",
         "Players",

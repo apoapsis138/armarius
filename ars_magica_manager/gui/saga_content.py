@@ -31,11 +31,12 @@ from .. import players as pl
 from .. import saga_content as sc
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
+from ..forms import goods as goods_forms
 from ..forms import saga_content as scf
 from ..models import Saga, Spell
 from ..sheets import saga_content as scs
 from . import pictures
-from .character_sheet import section
+from .character_sheet import TextBlock, section
 from .editing import Chooser, Run, choose_cards, choose_rows, verb_buttons
 from .figures import fact_grid
 from .pages import card_grid, page_header
@@ -55,12 +56,14 @@ from .widgets import (
     scrolling_page,
     serif,
     table_style,
+    table_view,
     text,
 )
 
 CHAPTERS = (
     ("Books", "library"),
     ("Catalogs", "lab_text"),
+    ("Goods", "silver"),
     ("House Rules", "magic"),
     ("Spells", "enchanted_item"),
     ("Players", "players"),
@@ -108,12 +111,15 @@ class SagaContentPage(QWidget):
         builders = {
             "Books": self._books,
             "Catalogs": self._catalogs,
+            "Goods": self._goods,
             "House Rules": self._house_rules,
             "Spells": self._spells,
             "Players": self._players,
         }
         for name, concept in CHAPTERS:
-            self.codex.add(name, concept, builders[name]())
+            # The Goods ledger is long: drawn when first turned to.
+            build = builders[name]
+            self.codex.add(name, concept, build if name == "Goods" else build())
         outer.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:
@@ -270,6 +276,59 @@ class SagaContentPage(QWidget):
                     self.run,
                     p,
                     nouns=("Hide", "Edit", "Offer again"),
+                ),
+            ),
+        )
+
+    def _goods(self) -> QWidget:
+        """The Goods catalog and the saga's own goods as a ledger, a
+        heading over each group; Add, Edit, Hide and Add a Purity act on
+        the chosen good."""
+        p, saga = self.p, self.saga
+        table = goods_forms.table(saga)
+
+        def show(index: int) -> None:
+            name, subtitle = goods_forms.inspector_title(saga, index)
+            self.inspect(name, subtitle, goods_forms.info(saga, index, wide=False))
+
+        view = table_view(table, p, show)
+        # The prices are words as printed ("1,650*", "#"), so table_view
+        # doesn't take them for numbers: centre them as it does numbers.
+        model = view.model()
+        prices = range(len(goods_forms.COLUMNS) - 4, len(goods_forms.COLUMNS))
+        if isinstance(model, QStandardItemModel):
+            for column in prices:
+                head = model.horizontalHeaderItem(column)
+                if head is not None:
+                    head.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                for row in range(model.rowCount()):
+                    item = model.item(row, column)
+                    if item is not None and table.key(row) is not None:
+                        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        chooser = Chooser()
+        choose_rows(view, chooser, table.key)
+        more = [
+            (
+                "Add a Purity",
+                "silver",
+                lambda row: goods_forms.add_purity(saga, row),
+                lambda row: goods_forms.offers_purity(saga, row),
+            )
+        ]
+        return scrolling_page(
+            p,
+            section(
+                goods_forms.title(saga),
+                p,
+                TextBlock(goods_forms.header(saga, two_lines=True), p),
+                view,
+                buttons=verb_buttons(
+                    goods_forms.ops(saga),
+                    chooser,
+                    self.run,
+                    p,
+                    nouns=("Add", "Edit", "Hide"),
+                    more=more,
                 ),
             ),
         )

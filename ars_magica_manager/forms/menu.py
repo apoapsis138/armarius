@@ -119,9 +119,14 @@ NOT_ON_PAGES = frozenset(
         "neutralize_shard",
         "tribunal_longevity",
         "roll_fair",
+        "court_roll",
         "roll_table",
         "battle_event",
         "redeem_gratitude",
+        "buy_manor",
+        "assart",
+        "winter_roll",
+        "settle_inheritance",
         "conflict_battle_event",
         "next_blow",
         "next_round",
@@ -136,6 +141,10 @@ NOT_ON_PAGES = frozenset(
         "impress_agent",
         "spend_agency_xp",
         "set_agent_task",
+        # The desktop draws it as the Goods list's own button.
+        "add_purity",
+        # The desktop draws it as Ahead's own button.
+        "plan_journey",
         # The desktop draws the names a page holds as links instead.
         "go_to",
     }

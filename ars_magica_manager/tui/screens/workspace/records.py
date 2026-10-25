@@ -17,11 +17,13 @@ from .... import (
     creation,
     grog_templates,
     lords,
+    manors,
     place_events,
     places,
     ruins,
     storage,
     threats,
+    town_court,
     towns,
     tribunal_packages,
 )
@@ -46,9 +48,13 @@ from ....models import (
 from ....sections import (
     BATTLES_SECTION,
     CASES_SECTION,
+    COURT_CASES_SECTION,
     DIARY_SECTION,
+    ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
     GRATITUDE_SECTION,
+    HOUSEHOLD_SECTION,
+    MANORS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     STAGES_SECTION,
     TABLES_SECTION,
@@ -64,6 +70,7 @@ from ..forms import (
     _laboratory_create_fields,
     template_key,
 )
+from ..sheets.base import SheetView
 from ..steps import run_steps
 from .base import (
     WorkspaceBase,
@@ -205,6 +212,18 @@ class RecordActions(WorkspaceBase):
             lambda _end: self._commit(FAIRS_SECTION),
         )
 
+    def action_court_roll(self) -> None:
+        """More's Court Roll on a town's chosen case."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(COURT_CASES_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            town_court.court_roll(self.saga, view.neighbour, row),
+            lambda _end: self._commit(COURT_CASES_SECTION),
+        )
+
     def action_redeem_gratitude(self) -> None:
         """More's Redeem Gratitude on a lord's chosen debt."""
         view = self._neighbour_sheet_view
@@ -215,6 +234,67 @@ class RecordActions(WorkspaceBase):
             self.app,
             lords.redeem_form(self.saga, view.neighbour, row),
             lambda _end: self._commit(GRATITUDE_SECTION, DIARY_SECTION),
+        )
+
+    def _manors_holder(self) -> tuple[SheetView, Neighbour] | None:
+        """The sheet on show with a Manors tab, and the record whose manors
+        it shows: a lord, or a full covenant's manors."""
+        view = self._neighbour_sheet_view
+        if view is not None:
+            return view, view.neighbour
+        covenant_view = self._covenant_sheet_view
+        if covenant_view is not None and not covenant_view.sketch:
+            return covenant_view, manors.manors_of(covenant_view.covenant)
+        return None
+
+    def action_buy_manor(self) -> None:
+        """More's Buy a Manor on a lord's or a covenant's Manors."""
+        found = self._manors_holder()
+        if found is None:
+            return
+        run_steps(
+            self.app,
+            manors.buy_form(self.saga, found[1]),
+            lambda _end: self._commit(MANORS_SECTION, DIARY_SECTION),
+        )
+
+    def action_assart(self) -> None:
+        """More's Assart on the chosen manor."""
+        found = self._manors_holder()
+        row = found[0].section_row(MANORS_SECTION) if found is not None else None
+        if found is None or row is None:
+            return
+        run_steps(
+            self.app,
+            manors.assart_form(self.saga, found[1], row),
+            lambda _end: self._commit(MANORS_SECTION, DIARY_SECTION),
+        )
+
+    def action_winter_roll(self) -> None:
+        """More's Winter Roll on the chosen kennels, mews or stables."""
+        found = self._manors_holder()
+        row = (
+            found[0].section_row(ESTABLISHMENTS_SECTION) if found is not None else None
+        )
+        if found is None or row is None:
+            return
+        run_steps(
+            self.app,
+            manors.winter_roll(self.saga, found[1], row),
+            lambda _end: self._commit(ESTABLISHMENTS_SECTION),
+        )
+
+    def action_settle_inheritance(self) -> None:
+        """More's Settle an Inheritance on a lord's Household."""
+        view = self._neighbour_sheet_view
+        if view is None:
+            return
+        run_steps(
+            self.app,
+            manors.settle_form(self.saga, view.neighbour),
+            lambda _end: self._commit(
+                HOUSEHOLD_SECTION, NEIGHBOUR_INFO_SECTION, DIARY_SECTION
+            ),
         )
 
     def action_battle_event(self) -> None:

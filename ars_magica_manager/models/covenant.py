@@ -161,6 +161,14 @@ class Covenant:
     what_matters: str = ""
     #: Its arms (arms.Arms.to_dict); empty for none.
     arms: dict[str, str] = field(default_factory=dict)
+    #: Its own town charter, for the Chartered Town Boon: its lords and
+    #: terms, kept as a town neighbour keeps them (town_charter.py); empty
+    #: for none.
+    charter: dict[str, Any] = field(default_factory=dict)
+    #: Its manors, kennels, mews and stables, and which sources of income
+    #: they describe, kept as a lord neighbour keeps them (manors.py);
+    #: empty for none.
+    manors: dict[str, Any] = field(default_factory=dict)
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""
@@ -189,6 +197,16 @@ class Covenant:
         d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes", [])]
         d["favours"] = [Favour(**known_fields(Favour, f)) for f in d.get("favours", [])]
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
+        charter = d.get("charter") or {}
+        if not isinstance(charter, dict):
+            raise ValueError(
+                f"A covenant's charter should be a mapping, not {charter!r}."
+            )
+        d["charter"] = dict(charter)
+        held = d.get("manors") or {}
+        if not isinstance(held, dict):
+            raise ValueError(f"A covenant's manors should be a mapping, not {held!r}.")
+        d["manors"] = dict(held)
         d["inhabitants"] = [
             Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
         ]

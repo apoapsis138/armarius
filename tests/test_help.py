@@ -42,6 +42,7 @@ DIALOG_PAGES = {
     "import-pack",
     "battle-event",
     "disputatio",
+    "travel",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

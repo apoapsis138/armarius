@@ -338,6 +338,40 @@ CONTRACTS: dict[str, Contract] = {
         ],
         shown={"#section-saga-sources": "Saga Sources (1)"},
     ),
+    "add good": Contract(
+        prefill={"Name": "", "Priced": "commodity", "Class": "bulk", "Sold by": "ton"},
+        edits={
+            "Name": "Amber",
+            "Class": "luxury",
+            "Standard": "500",
+            "Superior": "1,000",
+            "Bought in bulk at": "the Baltic; Hungary",
+        },
+        saved=lambda s: [
+            (g.id, g.commodity_class, g.prices, g.sources) for g in s.custom_goods
+        ],
+        expected=[
+            (
+                "custom_good_amber",
+                "luxury",
+                ("", "500", "1,000", ""),
+                ("the Baltic", "Hungary"),
+            )
+        ],
+        invalid=[{"Name": ""}, {"Name": "Amber", "Standard": "lots"}],
+        shown={"#section-content-goods": "Goods (78)"},
+    ),
+    "add purity": Contract(
+        prefill={"Purity": "", "Metal content, %": ""},
+        edits={"Purity": "Coin", "Metal content, %": "50"},
+        saved=lambda s: [(p.good_id, p.label, p.percent) for p in s.good_purities],
+        expected=[("good_silver", "Coin", 50.0)],
+        invalid=[
+            {"Purity": "Coin", "Metal content, %": "150"},
+            {"Purity": "", "Metal content, %": "50"},
+        ],
+        shown={"#content-goods-info": "Coin, 50% 1,210"},
+    ),
     "edit saga source": Contract(
         prefill={"Abbreviation": "HR", "Title": "House rules"},
         edits={"Abbreviation": "OHR", "Title": "Our house rules"},

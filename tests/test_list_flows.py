@@ -3,6 +3,7 @@ WorkspaceScreen: a adds, e edits and d deletes the chosen row. A list that
 takes focus always has one (the first, until another is chosen), so nothing
 asks "which one?". Every delete asks first."""
 
+import copy
 from dataclasses import dataclass
 from typing import Any
 
@@ -11,6 +12,7 @@ from support import build_all_tabs, wait_until
 from textual.widgets import Input, Select, TabPane, Tree
 
 from ars_magica_manager import battles, place_events, sieges, storage
+from ars_magica_manager import goods as gd
 from ars_magica_manager.models import (
     Agent,
     Battle,
@@ -30,6 +32,7 @@ from ars_magica_manager.models import (
     Familiar,
     Fight,
     FightSide,
+    GoodDef,
     IncomeSource,
     Inhabitant,
     InstilledEffect,
@@ -673,6 +676,54 @@ async def test_saga_content_delete_uses_the_chosen_row_after_asking(name):
         assert await wait_until(pilot, lambda: _saved(case) == left)
 
 
+# -- Saga Content's Goods --
+
+
+async def test_goods_edit_and_delete_act_on_the_chosen_row():
+    """In one session: e opens the chosen good of the saga's own, d deletes
+    it after asking; on a catalog good d hides it instead, after asking."""
+    saga = _saga()
+    saga.custom_goods = [
+        GoodDef(id="custom_good_amber", name="Amber [Baltic]"),
+        GoodDef(id="custom_good_jet", name="Jet"),
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("saga_content",),
+        "section-content-goods",
+        "content-goods-list",
+        lambda s: [g.name for g in s.custom_goods],
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        listed = [g.name for g in gd.listed(workspace.saga)]
+        amber = listed.index("Amber [Baltic]")
+        await _choose_row(pilot, view, case, amber)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-name", Input).value == "Amber [Baltic]"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Amber [Baltic]?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: _saved(case) == ["Jet"])
+
+        await _choose_row(pilot, view, case, listed.index("Brassware"))
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app).startswith("Hide Brassware?")
+        await pilot.press("y")
+        assert await wait_until(
+            pilot,
+            lambda: (
+                storage.load_saga("test_saga").hidden_entries.get("goods")
+                == ["good_brassware"]
+            ),
+        )
+        rows = view.query_one(f"#{case.list_id}", SelectableList)
+        assert await wait_until(pilot, lambda: "Brassware" not in str(rows._rows))
+
+
 # -- A laboratory's Magic Items --
 
 
@@ -894,3 +945,237 @@ async def test_a_lords_fief_plays_his_battles_and_edits_his_sieges():
         assert _confirm_message(app) == "Delete the siege Held out?"
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(LORD_SIEGES)) == 1)
+
+
+# -- A town's Charter, Guilds and Court --
+
+
+def _town_saga() -> Saga:
+    saga = _saga()
+    companion = Character(id="comp1", name="Alys", type="companion")
+    saga.characters.append(companion)
+    saga.neighbours = [
+        Neighbour(
+            id="worms",
+            name="Worms",
+            kind="town",
+            details={
+                "charter_lords": [
+                    {"lord": "Bishop [of Worms]", "kind": "Church"},
+                    {"lord": "Count Palatine", "kind": "Noble"},
+                ],
+                "citizens": [
+                    {"character_id": "mag1", "since_year": 1210},
+                    {"character_id": "comp1", "since_year": 1219},
+                ],
+                "guilds": [{"trade": "Weavers"}],
+                "guild_members": [
+                    {"character_id": "mag1", "guild": "Weavers", "rank": "master"},
+                    {"character_id": "comp1", "guild": "Weavers"},
+                ],
+                "court_cases": [
+                    {"accused": "Hartmut [the Tanner]", "charge": "Theft"},
+                    {"accused": "Agnes", "charge": "Slander"},
+                ],
+            },
+        )
+    ]
+    return saga
+
+
+#: Each town list: its case, the field e changes and the value typed, the
+#: key it is saved under, and what d asks about the second row.
+TOWN_LISTS: dict[str, tuple[ListCase, str, str, str, str]] = {
+    "charter-lords": (
+        ListCase(
+            ("neighbour", "worms"),
+            "section-nb-charter-lords",
+            "nb-charter-lords-list",
+            lambda s: s.neighbour("worms").details["charter_lords"],
+        ),
+        "lord",
+        "Count of Leiningen",
+        "lord",
+        "Delete Count of Leiningen?",
+    ),
+    "citizens": (
+        ListCase(
+            ("neighbour", "worms"),
+            "section-nb-citizens",
+            "nb-citizens-list",
+            lambda s: s.neighbour("worms").details["citizens"],
+        ),
+        "note",
+        "Swore the oath",
+        "note",
+        "Delete Alys?",
+    ),
+    "guild-members": (
+        ListCase(
+            ("neighbour", "worms"),
+            "section-nb-guild-members",
+            "nb-guild-members-list",
+            lambda s: s.neighbour("worms").details["guild_members"],
+        ),
+        "note",
+        "His father's trade",
+        "note",
+        "Delete Alys?",
+    ),
+    "court-cases": (
+        ListCase(
+            ("neighbour", "worms"),
+            "section-nb-court-cases",
+            "nb-court-cases-list",
+            lambda s: s.neighbour("worms").details["court_cases"],
+        ),
+        "charge",
+        "Slander of an alderman",
+        "charge",
+        "Delete Agnes?",
+    ),
+}
+
+
+@pytest.mark.parametrize("name", list(TOWN_LISTS))
+async def test_a_towns_lists_act_on_the_chosen_row(name):
+    """In one session on a town's tab: e edits the chosen row, d asks
+    about the chosen row before deleting it; on the Court tab More's Court
+    Roll decides the chosen case."""
+    case, field, typed, key, message = TOWN_LISTS[name]
+    storage.save_saga(_town_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one(f"#fld-{field}", Input).value = typed
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case)[1].get(key) == typed)
+        assert _saved(case)[0].get(key) != typed
+
+        if name == "court-cases":
+            await _choose_row(pilot, view, case, 0)
+            await _press(pilot, app, "m", FieldsDialog)  # its one More command
+            app.screen.query_one("#btn-save").press()
+            assert await wait_until(pilot, lambda: bool(_saved(case)[0].get("verdict")))
+            assert not _saved(case)[1].get("verdict")
+            while app.screen is not workspace:  # the roll's notes
+                await pilot.press("escape")
+                await pilot.pause()
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == message
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+
+
+# -- The Manors tab of a lord and of a covenant --
+
+
+def _manors_saga() -> Saga:
+    saga = _saga()
+    held = {
+        "manor_list": [
+            {"name": "Katzenelnbogen [castle]", "acres": 640, "waste": 60},
+            {"name": "Hohenstein", "acres": 480, "waste": 80},
+        ],
+        "establishments": [
+            {"kind": "Stables", "quality": "Excellent", "animals": 26},
+            {"kind": "Mews", "quality": "Superior", "animals": 7},
+        ],
+    }
+    saga.neighbours = [
+        Neighbour(
+            id="dieter",
+            name="Count Dieter",
+            kind="lord",
+            details={"title": "count", **copy.deepcopy(held)},
+        )
+    ]
+    saga.covenants[0].manors = copy.deepcopy(held)
+    return saga
+
+
+#: Each Manors list: its case, the field e changes and the value typed,
+#: the More command (its letter) on the first row and what it changes,
+#: and what d asks about the second row.
+MANOR_LISTS: dict[str, tuple[ListCase, str, str, str, Any, str]] = {
+    "lord-manors": (
+        ListCase(
+            ("neighbour", "dieter"),
+            "section-manors",
+            "manors-list",
+            lambda s: s.neighbour("dieter").details["manor_list"],
+        ),
+        "note",
+        "The castle's own manor",
+        "s",
+        lambda rows: rows[0]["waste"] == 59,
+        "Delete Hohenstein?",
+    ),
+    "lord-establishments": (
+        ListCase(
+            ("neighbour", "dieter"),
+            "section-establishments",
+            "establishments-list",
+            lambda s: s.neighbour("dieter").details["establishments"],
+        ),
+        "note",
+        "Ulrich's",
+        "w",
+        lambda rows: "die" in rows[0].get("roll", "") and not rows[1].get("roll"),
+        "Delete Mews?",
+    ),
+    "covenant-manors": (
+        ListCase(
+            ("covenant", "cov1"),
+            "section-manors",
+            "manors-list",
+            lambda s: s.covenants[0].manors["manor_list"],
+        ),
+        "note",
+        "An allod",
+        "s",
+        lambda rows: rows[0]["waste"] == 59,
+        "Delete Hohenstein?",
+    ),
+}
+
+
+@pytest.mark.parametrize("name", list(MANOR_LISTS))
+async def test_the_manors_lists_act_on_the_chosen_row(name):
+    """In one session on a Manors tab: e edits the chosen row, More's
+    Assart or Winter Roll acts on the chosen row, and d asks about the
+    chosen row before deleting it."""
+    case, field, typed, letter, changed, message = MANOR_LISTS[name]
+    storage.save_saga(_manors_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one(f"#fld-{field}", Input).value = typed
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case)[1].get(field) == typed)
+        assert _saved(case)[0].get(field) != typed
+
+        await _choose_row(pilot, view, case, 0)
+        await pilot.press("m")  # a menu, or its one More command at once
+        if await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen)):
+            await _press(pilot, app, letter, FieldsDialog)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: changed(_saved(case)))
+        while app.screen is not workspace:  # the command's notes
+            await pilot.press("escape")
+            await pilot.pause()
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == message
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)

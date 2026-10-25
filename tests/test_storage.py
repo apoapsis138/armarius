@@ -45,6 +45,8 @@ from ars_magica_manager.models import (
     FightEntry,
     FightGroup,
     FightSide,
+    GoodDef,
+    GoodPurity,
     Grip,
     GrogYear,
     HermeticBackground,
@@ -66,6 +68,8 @@ from ars_magica_manager.models import (
     Player,
     Possession,
     Progress,
+    Purity,
+    PurityExample,
     Reason,
     ResearchAttempt,
     Ruling,
@@ -450,6 +454,15 @@ def _saga_with_every_record() -> Saga:
         LabVirtueFlawDef("lvf", "LVF", "Virtue", "Structure", "Minor", 1)
     )
     saga.custom_boons_hooks.append(CovenantBoonHookDef("bh", "BH", "Boon", "Minor", 1))
+    saga.custom_goods.append(
+        GoodDef(
+            "custom_good_amber",
+            "Amber",
+            prices=("#", "500*", "1,000", ""),
+            purity=Purity(1000, "By content.", (PurityExample("Standard", "500*"),)),
+        )
+    )
+    saga.good_purities.append(GoodPurity("purity_1", "custom_good_amber", "Dull", 40))
     saga.players.append(Player("ana", "Ana", "player", "scrypt$00$00"))
     saga.sources.append(SagaSource("HR", "House rules"))
     saga.codices.append(Codex("codex", "Bound together", palimpsest=True))

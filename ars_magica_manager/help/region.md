@@ -272,7 +272,124 @@ whose baron he is; a count or duke +5); choose a standing to set it, and tick
 **divided** to halve it. A lord who neglects his affinity loses some of
 it: lower the standing.
 
+His manors are the rows on his Manors tab, or, while it lists none, the
+count on his form; his income is 20 pounds a manor (LoM p. 72). His
+surplus is Chapter Three's own figure, not his income less his costs: a
+landed noble none, 10 or 20 pounds a year by his wealth (p. 31); a baron
+none, 40 or 100; a count 100 or 250 (p. 32); the book gives none for a
+poor count or for a duke. A greater baron's expenses are 400 pounds or
+more a year, about 20 manors (p. 32).
+
 **See also:** [A neighbour](help:neighbour)
+
+## Manors tab
+<!-- help: tab-nb-manors -->
+
+A lord's manors, his kennels, mews and stables, and his household (Lords
+of Men, Chapter Six, pp. 71-87; Chapter Five, pp. 58-61; Chapter Two, pp.
+9-12). His Fief tab counts the manors listed here, 20 pounds a year each;
+the count on his form is used only while none is listed.
+<!-- tui -->
+Choose a manor or an establishment to see it in full in the details panel.
+<!-- /tui -->
+<!-- gui -->
+Choose a manor or an establishment to see it in full in the inspector.
+<!-- /gui -->
+
+### Manors
+<!-- help: section-manors -->
+
+Each manor: its acres (about 600, a third more or less without being
+unusual, LoM p. 72), how it is farmed (large fields, turned over to
+sheep, or another way, pp. 72-73), its land by use (demesne, rented,
+villeins, glebe and waste, p. 75), and whether it is an allod, held with
+no lord above it (p. 85). Every manor yields its lord 20 pounds a year; a
+mill or bakery it holds by custom is already inside that figure, so its
+tick adds nothing (p. 85). The panel shows its peasant land: hides
+(120-144 acres, 4 pounds to the lord), virgates (24-32 acres, a family
+worth about a pound a year), bovates (half a virgate) and cottars (ten
+acres or less), with the usual spread of 20% virgaters, 30% bovaters and
+50% cottars (p. 72); its demesne flock, 600 sheep, over 1,000 on
+marshland and 300 in wooded land, two-thirds of the manor's sheep, and
+the swineherd's pigs, a quarter of the flock; and its crops, a winter
+crop sown at 2 bushels an acre reaping 8, a spring crop 4 reaping 16 (p.
+76). The manor court's fines and dues (entry fine, heriot, mortuary,
+tallage, merchet, leywrite, childwrite, fines for celibacy and for being
+fined elsewhere, pp. 79-82) are ticks and a line of notes: the book gives
+no sums, and tallage may be as high as the lord wishes. Add, edit or
+delete a manor.
+<!-- tui -->
+More (`m`) on the Manors list:
+<!-- /tui -->
+<!-- gui -->
+The Manors list's own buttons:
+<!-- /gui -->
+**Buy a Manor** adds one at its price: 30 to 50 times its 20 pounds a
+year, 600 to 1,000 pounds, less if the seller keeps some of its rights or
+you take on its dues, better for coin in hand, more when his lord takes a
+cut (p. 85); a covenant may pay it from its Wealth. **Assart** clears the
+chosen manor's waste: a strong laborer with proper tools clears an acre
+of lightly wooded land a month doing nothing else (p. 84, errata p. 74);
+villeins clearing between their duties are much slower, and land cleared
+by magic overnight alarms the neighbouring lords, so type the acres
+cleared for either.
+
+### Establishments
+<!-- help: section-establishments -->
+
+Kennels, mews and stables (LoM pp. 58-61). Each quality has its capacity,
+maintenance, staff and Living Conditions for the animals (p. 60; the
+Excellent stables as the errata moves the row: 40 horses, 3 pounds a
+horse, 12 staff, +2, errata p. 74), and up to a third again of the
+capacity may be young and breeding stock (p. 58). A stable that befits
+its owner costs nothing: a knight's Standard, an earl's Excellent; the
+app takes a landed noble's to be Superior and a baron's, count's or
+duke's Excellent, and a covenant pays for anything better than Standard.
+Kennels and mews always pay (p. 59). Superior and better need a
+specialist (a marshal, falconer or master of kennels), and a positive
+Living Conditions needs one with the Profession at twice it, or someone
+with Animal Handling three times it giving the establishment a season a
+year (pp. 59-60). Marking a year's upkeep unpaid drops the establishment
+a class at once, and each season it stays unpaid it loses 15% of its
+animals, rounded up, as the season ends (p. 59). A covenant's upkeep is
+not counted in its Treasury: enter it with the covenant's expenditure if
+it pays it.
+<!-- tui -->
+More (`m`) > **Winter Roll**
+<!-- /tui -->
+<!-- gui -->
+**Winter Roll**
+<!-- /gui -->
+on the chosen establishment, once a year in winter: a stress die +
+Intelligence + Animal Handling, or + Profession: Marshal, Falconer or
+Master of Kennels, against 9. A failure drops it a class until a success
+in a later year brings it back one; its maintenance stays as it was. A
+botch is a catastrophe: a fire, disease among the animals, theft, or a
+story to resolve (pp. 60-61). Add, edit or delete an establishment.
+
+### Household
+<!-- help: section-household -->
+
+His household (LoM pp. 9-12): its size (loosely, a lord of the manor
+about 10, a landed knight 16, a banneret 24, a baron 40, an earl 140,
+his mesnie's knights counted in it), his mesnie of household knights (a
+wealthy lord keeps eight to ten), his heirs, the custom his lands pass by
+(to the heir he names, or the eldest, or the strongest his liege
+chooses; or divided between his sons; with no son, between his daughters,
+p. 10), the relief his heir owes his liege, and his hunting rights:
+warrens, chases and parks are his alone, forests the king's (pp. 48, 79).
+Edit Household changes them.
+<!-- tui -->
+More (`m`) > **Settle an Inheritance**
+<!-- /tui -->
+<!-- gui -->
+**Settle an Inheritance**
+<!-- /gui -->
+passes the lands to his heir: the heir becomes the record's ruler, the
+relief owed his liege is noted, divided lands are shared out among the
+heirs (give each heir's manors a record of their own), a widow keeps a
+third of the estate for her support, likely lost if she remarries (p.
+11), and his Diary keeps it.
 
 ## Castles
 <!-- help: section-nb-castles -->
@@ -395,15 +512,170 @@ A town (City & Guild) has a charter (granted by a noble lord, the
 Church, or held by its townsmen as a commune; or a faerie's or a
 demon's), a council and a population, entered on New Town or Edit. Its
 Town tab shows them with its size (a small, medium or large town, or a
-city) and how many guilds a town its size has in the saga's year.
+city) and how many guilds a town its size has in the saga's year (C&G
+p. 54), then its fairs and markets. Its charter in full, its guilds and
+its court have tabs of their own: [Charter](help:tab-nb-charter),
+[Guilds](help:tab-nb-guilds) and [Court](help:tab-nb-court).
 
 **See also:** [A neighbour](help:neighbour)
 
-## Guilds
+## Charter tab
+<!-- help: tab-nb-charter -->
+
+The town's charter (City & Guild, Town Charters, pp. 8-14): who granted
+it and how they hold it, its terms, what it gives, the saga's characters
+who are its citizens, and the town's size and people.
+<!-- tui -->
+Choose a lord or a citizen to see him in full in the details panel.
+<!-- /tui -->
+<!-- gui -->
+Choose a lord or a citizen to see him in full in the inspector.
+<!-- /gui -->
+
+### Lords
+<!-- help: section-nb-charter-lords -->
+
+Each lord of the charter: a noble, the Church, a faerie or a demon, how
+he holds it, his share of the revenue (in words) and since when. **Sole**:
+he holds it alone. **Shared (paragium)**: lords granting in partnership,
+splitting the revenue by an agreement older than the charter (p. 10).
+**Rival**: a contested claim, or a faerie lord's rival charter (pp. 9-10).
+**Parallel**: a secret demonic charter beside a mundane one (p. 11). A
+demon's entry also ticks the services it offers. Add, edit or delete a
+lord.
+
+### Terms
+<!-- help: section-nb-charter-terms -->
+
+The charter's family (the law it shares with other towns: Lorris,
+Breteuil, Freiburg, Lübeck, Cuenca), the year it was granted, the
+burgesses, and its privileges, each held or not, some with a word on
+what exactly: the annual tax (40 pounds for a town of several hundred
+burgesses, p. 12), its own courts, ordeal and combat limited, a cap on
+fines (Breteuil's is 12 pence), monopolies, toll exemptions, a market or
+fair, salvage, choosing its officials, selling land (pp. 12-13), and
+militia duty (p. 10). Edit Terms changes them.
+
+### What it gives
+<!-- help: section-nb-charter-gives -->
+
+The Divine aura within the walls: a town's or city's normal 3 (Definitive
+Edition p. 418, which wins over Realms of Power: The Divine's town 2);
+one higher, 4, under a charter the Church holds (C&G p. 10: "one higher
+than would be normally expected"), 1 under a faerie one, which a stronger Faerie aura may swamp (p.
+11). A shared charter keeps the normal aura unless **The Church holds the
+charter** is ticked; a rival claim or a secret parallel charter changes
+nothing. Churches inside keep their own aura. A demon's charter: its
+Infernal Might 15 (Mentem) and the services it gives, relief from
+disease (+2 Living Conditions), help for merchants (+3 to Bargain and
+Profession: Merchant) and dangerous labor (p. 11). The signed charter
+holds a pawn of Rego vis tainted by the Divine (very large towns more);
+taking it destroys the charter's sympathetic connections (p. 9). Edit
+changes the Church's tick, the pawns and whether the vis was taken.
+
+### Citizens
+<!-- help: section-nb-citizens -->
+
+The saga's characters who live in the town, from the season they came.
+A year and a day of residence makes a townsman (p. 9), shown as the
+season a year later. A citizen has a sympathetic connection to everyone
+under the same charter, its family's other towns too: +1 to the
+Penetration multiplier of a spell against them, until the charter's vis
+is taken. Becoming a citizen of another town ends the old connection, so
+adding him here takes him off any other town's list (the form says so
+first). Clerics are rarely citizens (pp. 9-10): the panel warns. Add,
+edit or delete a citizen.
+
+### Size and people
+<!-- help: section-nb-town-people -->
+
+The population and its size (a small, medium or large town, or a city:
+a city by right, or one of 20,000 or more), the burgesses, the council
+and the magistrates (an average town has up to six, p. 29). Occupations
+share the people by size (p. 24): a small town half farmers, half
+craftsmen; a medium town 10% farmers, 50% craftsmen, 30% in service, 10%
+traders; a large town or a city 10%, 30%, 30%, 30%. The officials are a
+line each, Title: who (aldermen, bailiffs, consuls, coroners,
+councilors, magistrates, mayors, ministerials, portmen, rectors, reeves;
+pp. 13-14). Edit changes them.
+
+## Guilds tab
+<!-- help: tab-nb-guilds -->
+
+The town's guilds and the saga's characters in
+them (City & Guild, Chapter III, pp. 41-50).
+
+### Guilds
 <!-- help: section-nb-guilds -->
 
-The town's guilds: each one's trade, its dean, and how many masters,
-journeymen and apprentices it has. Add, edit or delete one.
+Each guild: its trade, kind (craft,
+service or merchant, p. 41), the Craft its members practise, its hall,
+its dean, its officials (most guilds six, chosen from the senior masters
+for six months, pp. 49-50) and its members by rank: senior masters,
+masters, journeymen, apprentices. The line above the list says how many
+guilds a town its size has in the saga's year (p. 54). Choosing a guild
+shows its ranks, the saga's characters in it, and how members rise: an
+apprentice piece after seven years, a stress die + a Characteristic +
+Craft against 9 (p. 45); 12 to join another town's guild (p. 47); a
+master pays about a year's income and needs the senior masters' vote
+(p. 47). Renaming a guild keeps its members; deleting it takes them out.
+
+### Members from the saga
+<!-- help: section-nb-guild-members -->
+
+The saga's characters in the town's guilds, each with his guild and
+rank. The list shows his Craft (the guild's Craft, as Craft: or
+Profession:) and Guild Lore, and whether he has what the rank needs
+(pp. 43-50): Guild Lore 1 a journeyman, 2 a master, 3 a senior master or
+dean; Craft 5 a journeyman or master, 7 a senior master; Leadership half
+the Craft score and Artes Liberales for a master or above; and the
+rank's Social Status Virtue (Guild Apprentice, Journeyman, Guild Master,
+Senior Master, Guild Dean). Choosing one shows the rough guide for his
+rank by age (p. 42) and what he lacks. Add one once the guild is listed.
+
+## Court tab
+<!-- help: tab-nb-court -->
+
+The cases before the town's courts and the sentences they pass (City &
+Guild, Crime, pp. 28-30).
+
+### Cases
+<!-- help: section-nb-court-cases -->
+
+Each case: the accused, the charge, the accuser (a kinsman accuses for
+the dead), the court (churchmen, commercial law and heresy go to the
+Church's courts, p. 29), the verdict and, if guilty, the sentence and
+its detail; a fine left unpaid makes him an outlaw (p. 30).
+<!-- tui -->
+More (`m`) > **Court Roll** decides the chosen case:
+<!-- /tui -->
+<!-- gui -->
+**Court Roll** decides the chosen case:
+<!-- /gui -->
+a stress die + Communication + Civil and Canon Law (Common Law in
+England) against 6, for the defendant or his proxy; success finds him
+innocent (p. 29). It is a social roll, so the arguer's Gift counts (3, a
+Blatant Gift 6; an unGifted proxy avoids it, DE p. 204), with any other
+social Virtues and Flaws entered as a + or -. The Ease Factor is 3 lower
+if he truly is innocent, 3 higher for a bad name in that court, 3 higher
+if most credible witnesses call him guilty. Under Civil Law, Artes
+Liberales (logic) can shake a witness's credit: the inspector shows the
+arguer's score, and untick the witnesses if the storyguide allows it.
+The inspector, The Verdict, shows the total and the die needed as you
+choose; Roll keeps the verdict and the roll on the case, then Edit
+passes sentence. Add, edit or delete a case.
+
+### Sentences
+<!-- help: section-nb-sentences -->
+
+What a guilty man faces (p. 30): death for thievery, robbery,
+house-breaking, arson, premeditated murder and treason; a fine, a few
+pence to 50-60 pounds, for murder, accidental death, rape, assault,
+petty thievery and failing the charter's duties, unpaid making him an
+outlaw; mutilation (an eye, ear or hand) or branding instead of a fine
+or beside it; shaming in the stocks or pillory for minor crimes. A
+defendant who insists he is innocent may choose a trial by ordeal, which
+many charters limit or ban.
 
 ## Fairs and markets
 <!-- help: section-nb-fairs -->

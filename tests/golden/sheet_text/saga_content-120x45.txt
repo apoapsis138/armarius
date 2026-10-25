@@ -1,6 +1,6 @@
 ===== tab-content-books
 
-   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -43,19 +43,20 @@
 
 ===== tab-content-catalogs
 
-   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Catalogs (6)
+    ▼ Catalogs (7)
 
         Catalog                      Offered   Entries   Hidden
       ○ Virtues & Flaws              yes          1356        0
       ○ Laboratory Virtues & Flaws   yes           128        0
-      ○ Boons & Hooks                yes           217        0
+      ○ Boons & Hooks                yes           219        0
       ○ Abilities                    yes           259        0
       ○ Spells                       yes          1316        0
       ○ Shapes & Materials           yes           246        0
+      ○ Goods                        yes            77        0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Hidden Entries (0)
@@ -78,15 +79,57 @@
 
 
 
-
   ▌
   ▌  Choose a catalog or entry for its details; e offers a catalog.
   ▌
 
 
+===== tab-content-goods
+
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Goods (77)
+
+      Mythic pounds a tun or ton, by quality (C&G pp. 140-142)  ·  common goods each
+      (p. 144)
+      # none to be had at that quality  ·  * priced by purity  ·  no Excellent
+      column
+        Good                   Sold by      Shoddy  Standard  Superior Expensive
+      Bulk goods  (C&G pp. 134-137)
+      ○ Alum                   ton               *       200       400         #
+      ○ Brassware              ton             150       300       600      1500  ▄▄
+      ○ Copper                 ton               *         *         *       200
+      ○ Cotton, Raw            ton              40        50       100       250
+      ○ Fuel                   ton               1         2         3       n/a
+      ○ Fish                   ton              50        75       100         #
+      ○ Flax                   ton              20        45        90       250
+      ○ Fur and Hides          ton               1        50       100       250
+      ○ Foodstuffs             ton               1        10        20        50
+      ○ Grain                  ton               1         5        10        25
+      ○ Hemp Cloth             ton              45        60       100         #
+      ○ Hemp, Raw              ton              15        20        25         #
+      ○ Iron                   ton               *         *         *       120
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a good to see its prices, purities and where it is bought.
+  ▌
+
+
 ===== tab-content-house-rules
 
-   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -129,7 +172,7 @@
 
 ===== tab-content-spells
 
-   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Search spell names and descriptions...                     Source: any      ▼
@@ -172,7 +215,7 @@
 
 ===== tab-content-players
 
-   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

@@ -9,13 +9,14 @@
       Count of Arnsberg. Wants the mill rent.
           Edit (e)
 
-   1 Fief  2 Standing  3 Diary  4 Secrets
+   1 Fief  2 Manors  3 Standing  4 Diary  5 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Title:            Count or earl, average
   Seat:             Arnsberg
-  Manors:           50
-  Income:           1000 pounds a year
+  Manors:           50 (as entered; list them on his Manors tab)
+  Income:           1000 pounds a year (20 a manor, LoM p. 72)
+  Surplus:          100 pounds a year (LoM p. 32)
   Mercenary budget: 100 pounds a year
   Army:             50 knights, 50 serjeants, 500 infantry; 500 levies at home
   Affinity:         +5 to social rolls among the region's nobles, for mustering the local minor
@@ -65,6 +66,73 @@
 
 
 
+===== tab-nb-manors
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Gottfried of Arnsberg
+
+      Kind:            Lord                              Answers to: Archbishop of Cologne
+      Detail:          Sketch                            Realm:      none
+      Ruler or leader: Count Gottfried                   Book:       LoM
+      Count of Arnsberg. Wants the mill rent.
+          Edit (e)
+
+   1 Fief  2 Manors  3 Standing  4 Diary  5 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Manors (0)
+
+
+      No manors listed: a manor is about 600 acres and yields its lord 20 pounds a year (LoM p. 72).
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Establishments (0)
+
+      No kennels, mews or stables. Every noble keeps Standard stables as part of his estate; kennels and
+      mews must be built (LoM p. 58).
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Household
+
+      Retinue:     —
+      Heirs:       —
+      Inheritance: relief 100 pounds to Archbishop of Cologne
+      Hunting:     —
+      Households run a lord of the manor about 10, a landed knight 16, a banneret 24, a baron 40, an
+      earl 140 (LoM p. 9); his knights of the mesnie are counted in it (p. 11).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a manor or an establishment to see it in full.
+  ▌
+
 
 ===== tab-nb-standing
 
@@ -77,7 +145,7 @@
       Count of Arnsberg. Wants the mill rent.
           Edit (e)
 
-   1 Fief  2 Standing  3 Diary  4 Secrets
+   1 Fief  2 Manors  3 Standing  4 Diary  5 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -145,7 +213,7 @@
       Count of Arnsberg. Wants the mill rent.
           Edit (e)
 
-   1 Fief  2 Standing  3 Diary  4 Secrets
+   1 Fief  2 Manors  3 Standing  4 Diary  5 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -213,7 +281,7 @@
       Count of Arnsberg. Wants the mill rent.
           Edit (e)
 
-   1 Fief  2 Standing  3 Diary  4 Secrets
+   1 Fief  2 Manors  3 Standing  4 Diary  5 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

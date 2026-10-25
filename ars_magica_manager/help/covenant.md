@@ -327,6 +327,30 @@ as Major for balancing Boons (DE p. 182). Take it either as the Unknown
 entry or by marking a Minor Hook Unknown, not both: with both, the checks
 say it is counted twice.
 
+### Charter lords
+<!-- help: section-cov-charter-lords -->
+
+Shown while the covenant has the Chartered Town Boon (City & Guild p.
+11): the covenant is itself a town, chartered by its lord, and free of
+feudal duties except what the charter asks; the charter can't make the
+magi serve him. Its lords, as a town's [Lords](help:section-nb-charter-lords)
+are kept. Add, edit or delete a lord.
+
+### Charter terms
+<!-- help: section-cov-charter-terms -->
+
+The covenant's charter's family, year and privileges, as a town's
+[Terms](help:section-nb-charter-terms). Edit Terms changes them.
+
+### Towns it charters
+<!-- help: section-cov-chartered-towns -->
+
+Shown while the covenant has the Charter Lord Hook (City & Guild p.
+11): the towns that list the covenant, by its name, among their charter
+lords, and how it holds each. Granting charters is interference in the
+mundane: neighbouring lords, petitions and revolts, and the Quaesitores
+follow.
+
 ## Inhabitants tab
 <!-- help: tab-cov-inhabitants -->
 
@@ -865,6 +889,28 @@ p. 185): the Laborers' and Craftspeople's savings are halved, and their
 rows say why. Income that relies on covenfolk is halved too, but the app
 can't tell which sources do: lower those by hand. At +6 productivity
 rises, but the book gives no figure, so the rows only note it.
+
+## Manors tab
+<!-- help: tab-cov-manors -->
+
+A covenant that holds land keeps the same Manors tab as a lord: its
+[manors](help:section-manors) and its [kennels, mews and
+stables](help:section-establishments), with Buy a Manor and Assart; each
+troupe may farm its land any way it likes (Lords of Men p. 73), and the
+oldest covenants hold allods (p. 85).
+
+### Beside the Income
+<!-- help: section-manor-check -->
+
+A covenant's income is its sources' (Covenants pp. 56-58): each source is
+the surplus left after its operating costs, so its manors are not added
+to it. Here the manors' 20 pounds each (LoM p. 72) are shown beside the
+source they describe, as a check against the source's income this year,
+after its Income Modification (x0.5 in a slump to x1.5 in a boom,
+Covenants p. 57): its farmed manors beside its Agriculture source, and
+manors turned over to sheep beside its Livestock source, a separate
+source (p. 60). A Typical source (100 pounds) is about five manors.
+Choose the Sources picks them.
 
 ## Library tab
 <!-- help: tab-cov-library -->

@@ -271,9 +271,14 @@ _STORYGUIDE_ACTIONS = frozenset(
         "create_neighbour",
         "create_creature",
         "roll_fair",
+        "court_roll",
         "roll_table",
         "battle_event",
         "redeem_gratitude",
+        "buy_manor",
+        "assart",
+        "winter_roll",
+        "settle_inheritance",
         "conflict_battle_event",
         "next_blow",
         "next_round",
@@ -316,6 +321,8 @@ _LOOKING_ACTIONS = frozenset(
         "more",
         "export_record",
         "go_to",
+        # A calculator: it records nothing.
+        "plan_journey",
     }
 )
 

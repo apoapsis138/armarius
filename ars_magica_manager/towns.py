@@ -10,9 +10,9 @@ Each year its income changes by the book's Income Modification: a
 stress die picks the effect, and the effect's multiplier is applied.
 
 Kept in Neighbour.details: "charter", "council", "population", "guilds"
-(each {"trade", "dean", "masters", "journeymen", "apprentices"}) and
-"fairs" (each {"name", "kind", "season", "band", "income", "covenant_id",
-"last"})."""
+(each a Guild; its list is town_guilds.py's) and "fairs" (each {"name",
+"kind", "season", "band", "income", "covenant_id", "last"}). The charter
+in full is town_charter.py's, the court town_court.py's."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ from .models import INCOME_TYPE_DEFAULTS, SEASONS, Neighbour, Saga, details_list
 from .neighbour_lists import KindList, KindTab, list_ops
 from .references import Fact
 from .rules import dice
-from .sections import FAIRS_SECTION, GUILDS_SECTION
+from .sections import FAIRS_SECTION
 
 #: Who holds a town's charter.
 CHARTERS: tuple[str, ...] = ("Noble lord", "Church", "Commune", "Faerie", "Infernal")
@@ -39,9 +39,9 @@ FAIR_BANDS: tuple[str, ...] = ("Lesser", "Typical", "Greater")
 FAIR_KINDS: tuple[str, ...] = ("Fair", "Market")
 
 #: How many guilds a town of each size has (up to that population), in
-#: 1220, 1250 and 1300.
+#: 1220, 1250 and 1300 (City & Guild p. 54).
 GUILD_COUNTS: tuple[tuple[int, tuple[str, str, str]], ...] = (
-    (1000, ("0 to 1", "0 to 2", "0 to 3")),
+    (1000, ("0 to 1", "0 to 2", "1 to 3")),
     (10000, ("0 to 3", "3 to 5", "5 to 10")),
     (20000, ("5 to 10", "50 to 200", "100 to 300")),
     (50000, ("5 to 20", "50 to 300", "100 to 500")),
@@ -57,10 +57,17 @@ def population(neighbour: Neighbour) -> int | None:
 
 
 class Guild(TypedDict, total=False):
-    """A guild of the town: its trade, its dean and its members."""
+    """A guild of the town (town_guilds.py): its trade, its kind (craft,
+    service or merchant), the Craft its members practise, its hall, its
+    dean and officials, and its members by rank."""
 
     trade: Required[str]
+    kind: str
+    craft: str
+    hall: str
     dean: str
+    officials: int | None
+    senior: int | None
     masters: int | None
     journeymen: int | None
     apprentices: int | None
@@ -170,80 +177,6 @@ def problem(values: dict[str, Any]) -> str | None:
         if (values.get(key) or 0) < 0:
             return f"{label} can't be fewer than none."
     return None
-
-
-# -- guilds --
-
-
-def guilds_title(_saga: Saga, neighbour: Neighbour) -> str:
-    return f"Guilds ({len(guilds(neighbour))})"
-
-
-def _count(value: Any) -> str:
-    return "" if value is None else str(value)
-
-
-def guilds_grid(_saga: Saga, neighbour: Neighbour) -> Grid:
-    rows = [
-        [
-            g["trade"],
-            g.get("dean", ""),
-            _count(g.get("masters")),
-            _count(g.get("journeymen")),
-            _count(g.get("apprentices")),
-        ]
-        for g in guilds(neighbour)
-    ]
-    return Grid(
-        ["Trade", "Dean", "Masters", "Journeymen", "Apprentices"],
-        rows,
-        list(range(len(rows))),
-        "No guilds recorded: a town's first is usually its merchants'.",
-        caps=[22, 20, 7, 10, 0],
-    )
-
-
-def guild_fields(
-    _saga: Saga, _neighbour: Neighbour, guild: Guild | None
-) -> list[DialogField]:
-    g = guild or {}
-    return [
-        DialogField(
-            "trade",
-            "Trade",
-            "text",
-            g.get("trade", ""),
-            required=True,
-            placeholder="e.g. Weavers",
-        ),
-        DialogField("dean", "Dean", "text", g.get("dean", "")),
-        DialogField("masters", "Masters", "optint", g.get("masters")),
-        DialogField("journeymen", "Journeymen", "optint", g.get("journeymen")),
-        DialogField("apprentices", "Apprentices", "optint", g.get("apprentices")),
-    ]
-
-
-def _members_problem(values: dict[str, Any]) -> str | None:
-    for key in ("masters", "journeymen", "apprentices"):
-        if (values.get(key) or 0) < 0:
-            return f"{key.capitalize()} can't be fewer than none."
-    return None
-
-
-def guild_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
-    return list_ops(
-        saga,
-        neighbour,
-        "guilds",
-        "Guild",
-        guild_fields,
-        lambda g: (
-            f"the {g['trade']}' guild"
-            if g["trade"].endswith("s")
-            else f"the {g['trade']} guild"
-        ),
-        validate=_members_problem,
-    )
 
 
 # -- fairs and markets --
@@ -423,11 +356,10 @@ def roll_fair(
     )
 
 
+#: The Town tab: what is worked out, then its fairs and markets. The
+#: guilds have a tab of their own (town_guilds.GUILDS_TAB).
 TAB = KindTab(
     "Town",
     "tab-nb-town",
-    (
-        KindList(GUILDS_SECTION, guilds_title, guilds_grid, guild_ops),
-        KindList(FAIRS_SECTION, fairs_title, fairs_grid, fair_ops),
-    ),
+    (KindList(FAIRS_SECTION, fairs_title, fairs_grid, fair_ops),),
 )

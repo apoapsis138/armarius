@@ -10,6 +10,8 @@ from ....actions import (
     NodeKind,
 )
 from ....forms import advance as advance_forms
+from ....forms import travel as travel_forms
+from ....sections import AHEAD_SECTION, COV_AHEAD_SECTION
 from ..fields import (
     FieldsDialog,
 )
@@ -82,6 +84,20 @@ class SeasonActions(WorkspaceBase):
         if played.results:
             self.app.push_screen(SeasonSummaryScreen(saga, played.advanced.record))
         self.notify(played.message)
+
+    def action_plan_journey(self) -> None:
+        """More's Travel on Ahead: the calculator, from the covenant on
+        show. Close records nothing; Set Out writes the travellers' Diaries
+        and Fatigue and the arrival on Ahead."""
+        on_covenant = self._active_section() == COV_AHEAD_SECTION
+        covenant = self.selected_covenant if on_covenant else None
+
+        def done(end: object) -> None:
+            self._commit(AHEAD_SECTION, COV_AHEAD_SECTION)
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, travel_forms.travel(self.saga, covenant), done)
 
     def action_set_date(self) -> None:
         saga = self.saga

@@ -26,7 +26,17 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, boon_hook_text, catalog, giving, seasons, vis, world
+from .. import (
+    artwork,
+    boon_hook_text,
+    catalog,
+    giving,
+    manors,
+    seasons,
+    town_charter,
+    vis,
+    world,
+)
 from .. import books as bk
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
@@ -48,6 +58,7 @@ from ..forms import world as world_forms
 from ..models import FULL, INHABITANT_KINDS, LINE, POSSESSION_KINDS, Covenant, Saga
 from ..references import Fact
 from ..rules import library
+from ..sections import COV_CHARTER_LORDS_SECTION, COV_CHARTER_TERMS_SECTION
 from ..sheets import character as cs
 from ..sheets import covenant as cvs
 from ..sheets import familiar as fs
@@ -79,6 +90,7 @@ from .pages import (
     symbol_label,
     with_new,
 )
+from .region import KindChapters
 from .themes import Palette
 from .timeline import SeasonTimeline, legend, season_text
 from .widgets import (
@@ -183,6 +195,7 @@ class CovenantPage(QWidget):
             chapters += [
                 ("Possessions", "vis", lambda: self._possessions(covenant)),
                 ("Treasury", "income", lambda: self._treasury(covenant)),
+                ("Manors", "place", lambda: self._manors(covenant)),
                 ("Library", "library", lambda: self._library(covenant)),
             ]
         if full:
@@ -377,7 +390,70 @@ class CovenantPage(QWidget):
         for problem in problems:
             parts.append(text(problem, p["text-error"], wrap=True))
         parts.append(side_by_side(*columns, spacing=18))
+        parts += self._own_charter(covenant)
         return scrolling_page(p, *parts)
+
+    def _own_charter(self, covenant: Covenant) -> list[QWidget]:
+        """The covenant's own charter, for the Chartered Town Boon: its
+        lords and terms, as a town's Charter chapter shows them; and the
+        towns it charters, for the Charter Lord Hook."""
+        p, saga = self.p, self.saga
+        found: list[QWidget] = []
+        if town_charter.has_boon_hook(covenant, town_charter.CHARTERED_TOWN):
+            charter = town_charter.charter_of(covenant)
+            ops = town_charter.covenant_charter_ops(saga, covenant)
+            grid = town_charter.lords_grid(saga, charter)
+            chooser = Chooser()
+
+            def choose(row: int) -> None:
+                chooser.choose(row)
+                if row in grid.keys:
+                    self.inspect(
+                        grid.rows[grid.keys.index(row)][0],
+                        "Charter lord",
+                        town_charter.lord_info(saga, charter, row),
+                    )
+
+            found.append(
+                section(
+                    "Charter " + town_charter.lords_title(saga, charter),
+                    p,
+                    table_view(grid.table(), p, choose)
+                    if grid.rows
+                    else _none(grid.empty, p),
+                    buttons=verb_buttons(
+                        ops[COV_CHARTER_LORDS_SECTION], chooser, self.run, p
+                    ),
+                )
+            )
+            ticks = []
+            for column in town_charter.terms_columns(saga, charter):
+                block = TextBlock(column, p)
+                block.setFont(serif(12.5))
+                ticks.append(block)
+            terms = ops[COV_CHARTER_TERMS_SECTION].edit
+            found.append(
+                section(
+                    "Charter Terms",
+                    p,
+                    fact_grid(town_charter.terms_facts(saga, charter), p, 3),
+                    side_by_side(*ticks),
+                    edits=(
+                        {"Edit Terms": lambda: self.run(terms(0))}
+                        if terms is not None
+                        else None
+                    ),
+                )
+            )
+        if town_charter.has_boon_hook(covenant, town_charter.CHARTER_LORD):
+            found.append(
+                section(
+                    "Towns It Charters",
+                    p,
+                    TextBlock(town_charter.chartered_towns_text(saga, covenant), p),
+                )
+            )
+        return found
 
     def _sketch(self, covenant: Covenant) -> QWidget:
         """A Line or Sketch covenant: who it is, its magi and their votes,
@@ -736,6 +812,19 @@ class CovenantPage(QWidget):
 
         parts += self._groups(figures.groups, ops, more)
         return scrolling_page(p, *parts)
+
+    def _manors(self, covenant: Covenant) -> QWidget:
+        """The covenant's manors, kennels, mews and stables, under their
+        check beside its income, as a lord's Manors chapter shows them."""
+        saga = self.saga
+        return KindChapters(
+            saga,
+            manors.manors_of(covenant),
+            self.p,
+            self.run,
+            manors.covenant_ops(saga, covenant),
+            self.codex,
+        ).chapter(manors.COVENANT_TAB)
 
     def _library(self, covenant: Covenant) -> QWidget:
         """The books on their shelves, a summa as tall as its level."""

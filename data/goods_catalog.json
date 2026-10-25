@@ -1,0 +1,1697 @@
+{
+  "attribution": "Prices of goods from Ars Magica 5th Edition, City & Guild, Chapter VIII: The Goods of Europe (pp. 134-142) and the Appendix's Price List (pp. 143-144), with the Errata (p. 57); the notes summarize the book. Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "notes": "Commodities (kind \"commodity\"): every row of the Prices of Goods table, in its order, prices in Mythic pounds a tun or ton as printed (Shoddy, Standard, Superior, Expensive; \"#\" none to be had, \"*\" priced by purity, \"n/a\" as printed, \"\" where the book is blank). Common goods (kind \"common\"): the Price List's standard price each, as printed and in pence.",
+  "entries": [
+    {
+      "id": "good_alum",
+      "name": "Alum",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "134",
+      "sold_by": "ton",
+      "prices": [
+        "*",
+        "200",
+        "400",
+        "#"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "A fixative for dye, vital to the cloth trades; Venice's monopoly on it is worth a war (p. 134).",
+      "sources": [
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre)",
+        "the East Adriatic coast (Ragusa, Spalato, Venice, Zara)"
+      ],
+      "purity": {
+        "pure_price": null,
+        "note": "The three prices are for alum adulterated with salt, European alum and Asian alum; there is no Expensive alum (p. 134).",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_brassware",
+      "name": "Brassware",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "134",
+      "sold_by": "ton",
+      "prices": [
+        "150",
+        "300",
+        "600",
+        "1500"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Brass and bronze for doors, bells and statues; the finest is crafted in Belgium (p. 134).",
+      "sources": [
+        "England (Bristol, London, Scarborough, Southampton): brass",
+        "northern Germany (Cologne, Hamburg): brass and brassware",
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht): brass (Liege)"
+      ]
+    },
+    {
+      "id": "good_copper",
+      "name": "Copper",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "*",
+        "*",
+        "*",
+        "200"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Chiefly used to debase silver into bullion (p. 135).",
+      "sources": [
+        "Sweden (Abo, Stockholm)",
+        "Bohemia (Prague)",
+        "central Germany (Frankfurt, Nuremberg, Regensburg, Salzburg)",
+        "the southern Alpine towns",
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht)",
+        "Hungary (Zagreb, Pecs, Buda...)"
+      ],
+      "purity": {
+        "pure_price": 200,
+        "note": "",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_cotton_cloth",
+      "name": "Cotton Cloth",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "100",
+        "200",
+        "400",
+        "10,000"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Fine cotton is rare, and a silk substitute (p. 141); the industry is centred in northern Italy (p. 137).",
+      "sources": [
+        "the East Adriatic coast (Ragusa, Spalato, Venice, Zara): cloth of all types",
+        "Italy's northern industrial area (Milan, Florence, Siena): cheap cloth of all types"
+      ]
+    },
+    {
+      "id": "good_cotton_raw",
+      "name": "Cotton, Raw",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "40",
+        "50",
+        "100",
+        "250"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Harvested for about six weeks from October (p. 135).",
+      "sources": [
+        "Trebizond",
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre)",
+        "Iberia's Muslim south and Aragon (Barcelona, Cartagena...)",
+        "Italy's islands: small quantities"
+      ]
+    },
+    {
+      "id": "good_dye",
+      "name": "Dye",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "bottle",
+      "prices": [
+        "10",
+        "50",
+        "",
+        "20,000"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sale": "Sold in bottles of varying sizes (p. 141).",
+      "note": "The book leaves Superior blank (p. 141); the dearest dye is a shellfish's purple (p. 138).",
+      "sources": [
+        "Africa's principal ports (Alexandria, Tunis, Algiers): dyes",
+        "northern France (Calais, Rouen, Paris, Rheims, Troyes): madder, woad",
+        "southern France (Marseilles, Narbonne, Salins-les-Bains, Toulouse)",
+        "Germany, all areas",
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre): indigo and others",
+        "Iberia, all but Mallorca: woad, crimson",
+        "Italy's northern industrial area (Milan, Florence, Siena)",
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht): woad, madder",
+        "India: brazilwood and others"
+      ]
+    },
+    {
+      "id": "good_fuel",
+      "name": "Fuel",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "134",
+      "sold_by": "ton",
+      "prices": [
+        "1",
+        "2",
+        "3",
+        "n/a"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "The three prices are wood, charcoal and sea coal (p. 134).",
+      "sources": [
+        "England (Bristol, London, Scarborough, Southampton): coal",
+        "Germany, all areas: coal",
+        "the Baltic, all areas: wood",
+        "Norway (Oslo, Bergen): wood",
+        "Russia (Kiev): wood"
+      ]
+    },
+    {
+      "id": "good_fish",
+      "name": "Fish",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "50",
+        "75",
+        "100",
+        "#"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "The most expensive fish, whales and sturgeons, usually belong to the king by right (p. 141); any coastal town can supply fish for export (p. 139).",
+      "sources": [
+        "Russia (Novgorod, Pskov): sturgeon",
+        "the Baltic's southern coast (Danzig, Lubeck, Reval, Riga): herring",
+        "Scotland (Edinburgh, Aberdeen): cod",
+        "the East Adriatic coast (Ragusa, Spalato, Venice, Zara)",
+        "Russia (Kiev): sturgeon"
+      ]
+    },
+    {
+      "id": "good_flax",
+      "name": "Flax",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "20",
+        "45",
+        "90",
+        "250"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Makes linen and linseed oil; most available in the last month of autumn (p. 135).",
+      "sources": [
+        "Ireland (Cork, Dublin)",
+        "France's Atlantic coast (Nantes, Bayonne, Bordeaux)",
+        "southern Germany",
+        "Iberia's Muslim south and Aragon (Barcelona, Cartagena...)"
+      ]
+    },
+    {
+      "id": "good_fur_and_hides",
+      "name": "Fur and Hides",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "1",
+        "50",
+        "100",
+        "250"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Cheap furs and skins are bulk goods (pp. 135-136); expensive furs come in through the Black Sea as luxuries (p. 138).",
+      "sources": [
+        "Russia (Novgorod, Pskov): cheap furs",
+        "Norway (Oslo, Bergen): skins",
+        "Crimea (Kaffa): furs",
+        "Ireland (Cork, Dublin): furs",
+        "Russia (Kiev): furs"
+      ]
+    },
+    {
+      "id": "good_foodstuffs",
+      "name": "Foodstuffs",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "1",
+        "10",
+        "20",
+        "50"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Anything nutritious; most are seasonal (p. 135).",
+      "sources": [
+        "Denmark (Copenhagen, Aarhus): cattle",
+        "Norway (Oslo, Bergen): butter",
+        "the British Isles, all areas: cheese",
+        "Hungary (Zagreb, Pecs, Buda...): cattle"
+      ]
+    },
+    {
+      "id": "good_gemstones",
+      "name": "Gemstones",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "ounce",
+      "prices": [
+        "2,000 (fake)",
+        "10,000",
+        "80,000",
+        "100,000"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sale": "Sold in ounces: 2 1/2 pounds an ounce for fine, 2 for average (p. 141).",
+      "note": "Shoddy is fake gems; cheap ones are semiprecious stones (p. 138).",
+      "sources": [
+        "everywhere, the kind varying by place",
+        "India: diamonds",
+        "the Persian Gulf: gems"
+      ],
+      "per_ounce": [
+        "",
+        "0.26",
+        "2.07",
+        "2.58"
+      ],
+      "per_ounce_note": "Over the 2,420-pound ton the table is built on: Superior and Expensive match the book's 2 and 2 1/2 an ounce, Standard Ink's pound for four ounces."
+    },
+    {
+      "id": "good_glassware",
+      "name": "Glassware",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "#",
+        "1,500",
+        "2,000",
+        "2,500"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "The best glass is imported from the Orient; Constantinople and Venice make cheaper, less clear glass (p. 137).",
+      "sources": [
+        "Bohemia (Prague): cheap glassware",
+        "the East Adriatic coast (Ragusa, Spalato, Venice, Zara): glass"
+      ]
+    },
+    {
+      "id": "good_gold",
+      "name": "Gold",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "pound",
+      "prices": [
+        "*",
+        "*",
+        "*",
+        "24,200"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sale": "Sold by the pound, at about ten pounds of silver per pound of gold (p. 141).",
+      "note": "Mined erratically in the Rhineland, Hungary and Transylvania; most comes from deepest Africa (p. 138).",
+      "sources": [
+        "Africa's principal ports (Alexandria, Tunis, Algiers)",
+        "Bulgaria (Trnovo, Varna)",
+        "Hungary (Zagreb, Pecs, Buda...): small quantities"
+      ],
+      "purity": {
+        "pure_price": 24200,
+        "note": "",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_grain",
+      "name": "Grain",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "1",
+        "5",
+        "10",
+        "25"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sale": "Retails by the bushel, 1/640 of a ton (p. 140).",
+      "note": "Peak season September and October (p. 135).",
+      "sources": [
+        "the Baltic, all areas",
+        "the Baltic's southern coast (Danzig, Lubeck, Reval, Riga)",
+        "the Black Sea, all areas",
+        "Bulgaria (Trnovo, Varna)",
+        "the British Isles, all areas",
+        "northern France (Calais, Rouen, Paris, Rheims, Troyes)"
+      ]
+    },
+    {
+      "id": "good_hemp_cloth",
+      "name": "Hemp Cloth",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "45",
+        "60",
+        "100",
+        "#"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Canvas is the average hemp cloth (p. 135)."
+    },
+    {
+      "id": "good_hemp_raw",
+      "name": "Hemp, Raw",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "15",
+        "20",
+        "25",
+        "#"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Grown from Norway to Italy for rope and canvas; peak season October (p. 135)."
+    },
+    {
+      "id": "good_horses",
+      "name": "Horses",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "head",
+      "prices": [
+        "2",
+        "4",
+        "8",
+        "64"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sale": "Two horses to the ton (p. 141).",
+      "note": "Fine warhorses are extremely expensive (p. 138).",
+      "sources": [
+        "Denmark (Copenhagen, Aarhus)",
+        "Italy's northern industrial area (Milan, Florence, Siena): warhorses"
+      ]
+    },
+    {
+      "id": "good_ink",
+      "name": "Ink",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "ounce",
+      "prices": [
+        "10",
+        "25",
+        "50",
+        "10,000"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sale": "Ground semiprecious stones, sold at one pound per four ounces, dry weight (p. 141).",
+      "sources": [
+        "Africa's principal ports (Alexandria, Tunis, Algiers): inks"
+      ]
+    },
+    {
+      "id": "good_iron",
+      "name": "Iron",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "*",
+        "*",
+        "*",
+        "120"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Mined only near water transport and fuel for smelting (p. 135).",
+      "sources": [
+        "Norway (Oslo, Bergen)",
+        "Sweden (Abo, Stockholm)",
+        "Germany, all areas",
+        "Iberia, all but Mallorca",
+        "the East Adriatic coast (Ragusa, Spalato, Venice, Zara)",
+        "the southern Alpine towns"
+      ],
+      "purity": {
+        "pure_price": 120,
+        "note": "",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_ironware_and_weapons",
+      "name": "Ironware and Weapons",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "125",
+        "250",
+        "500",
+        "2,500"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Ironware is fireproof tools (p. 137); weapons are listed with the luxuries, Milan's the most famous (p. 138).",
+      "sources": [
+        "northern Germany (Cologne, Hamburg): cheap weapons",
+        "Iberia's north and centre (Lisbon, Oporto, Corunna, Salamanca, Toledo): weapons",
+        "Italy's northern industrial area (Milan, Florence, Siena): weapons"
+      ]
+    },
+    {
+      "id": "good_lead",
+      "name": "Lead",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "135",
+      "sold_by": "ton",
+      "prices": [
+        "*",
+        "*",
+        "*",
+        "60"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Pliable and insidiously poisonous; its deposits often hold traces of silver (pp. 135-136).",
+      "sources": [
+        "England (Bristol, London, Scarborough, Southampton)",
+        "central Germany (Frankfurt, Nuremberg, Regensburg, Salzburg)",
+        "the southern Alpine towns"
+      ],
+      "purity": {
+        "pure_price": 60,
+        "note": "",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_leather",
+      "name": "Leather",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "150",
+        "250",
+        "500",
+        "2,500"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Tanned skins; parchment is made from hides that would otherwise become leather (p. 137).",
+      "sources": [
+        "Denmark (Copenhagen, Aarhus)",
+        "Norway (Oslo, Bergen)",
+        "the British Isles, all areas",
+        "Hungary (Zagreb, Pecs, Buda...)"
+      ]
+    },
+    {
+      "id": "good_linen_cloth",
+      "name": "Linen Cloth",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "125",
+        "175",
+        "350",
+        "1,750"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sources": [
+        "northern France (Calais, Rouen, Paris, Rheims, Troyes)",
+        "Iberia's Muslim south and Aragon (Barcelona, Cartagena...)",
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht)"
+      ]
+    },
+    {
+      "id": "good_oil",
+      "name": "Oil",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "136",
+      "sold_by": "ton",
+      "prices": [
+        "2",
+        "10",
+        "20",
+        "100"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "note": "Tallow is the cheapest, olive oil the Mediterranean's cooking oil, whale oil the dearest (p. 136).",
+      "sources": [
+        "Iberia, all but Mallorca: olive oil",
+        "southern Italy (Naples, Rome): olive oil",
+        "Romania (Constantinople): olive oil"
+      ]
+    },
+    {
+      "id": "good_paper",
+      "name": "Paper",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "75",
+        "150",
+        "300",
+        "#"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sources": [
+        "Iberia, all but Mallorca",
+        "Italy's northern industrial area (Milan, Florence, Siena)"
+      ]
+    },
+    {
+      "id": "good_pearls",
+      "name": "Pearls",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "ounce",
+      "prices": [
+        "5 (fake)",
+        "80,000",
+        "120,000",
+        "n/a"
+      ],
+      "page": 141,
+      "source": "C&G",
+      "sale": "Sold in ounces: 2 pounds an ounce for river pearls, 3 for sea pearls (p. 141).",
+      "note": "There are no cheap pearls: Shoddy is fakes; average pearls are river pearls or poor Arabian ones (p. 138).",
+      "sources": [
+        "Scotland (Edinburgh, Aberdeen): standard pearls (Tay)",
+        "Russia (Kiev): average pearls",
+        "the Persian Gulf"
+      ],
+      "per_ounce": [
+        "",
+        "2",
+        "3",
+        ""
+      ],
+      "per_ounce_note": "The book's own figures: river pearls (Standard) 2 pounds an ounce, sea pearls (Superior) 3 (p. 141)."
+    },
+    {
+      "id": "good_pewterware",
+      "name": "Pewterware",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "375",
+        "750",
+        "1,500",
+        "#"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Expensive pewterware is unknown: who could afford it buys silverware (p. 142).",
+      "sources": [
+        "Bohemia (Prague): pewter"
+      ]
+    },
+    {
+      "id": "good_pitch",
+      "name": "Pitch",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "136",
+      "sold_by": "ton",
+      "prices": [
+        "1",
+        "2",
+        "4",
+        "20"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sources": [
+        "the Baltic, all areas",
+        "the Baltic's southern coast (Danzig, Lubeck, Reval, Riga)",
+        "Germany, all areas"
+      ]
+    },
+    {
+      "id": "good_potash",
+      "name": "Potash",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "136",
+      "sold_by": "ton",
+      "prices": [
+        "20",
+        "#",
+        "#",
+        "400"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Only cheap and expensive forms (p. 142): cheap European potash from trees, fine Eastern potash for glass and soap (p. 136).",
+      "sources": [
+        "Africa's principal ports (Alexandria, Tunis, Algiers): cheap",
+        "Denmark (Copenhagen, Aarhus): cheap",
+        "Russia (Novgorod, Pskov): cheap",
+        "Germany, all areas: cheap",
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre)",
+        "Russia (Kiev): cheap"
+      ]
+    },
+    {
+      "id": "good_pottery",
+      "name": "Pottery",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "20",
+        "70",
+        "140",
+        "700"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sources": [
+        "the Kingdom of Mallorca",
+        "Italy's northern industrial area (Milan, Florence, Siena)"
+      ]
+    },
+    {
+      "id": "good_saffron",
+      "name": "Saffron",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "ton",
+      "prices": [
+        "*",
+        "*",
+        "*",
+        "25,000"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sale": "Sold by the ton only rarely (p. 142).",
+      "note": "Often adulterated with the flower's other parts or turmeric (p. 138).",
+      "sources": [
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre)",
+        "Crete: small quantities",
+        "the Persian Gulf"
+      ],
+      "purity": {
+        "pure_price": 25000,
+        "note": "Adulterated saffron sells too (p. 138).",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_salt",
+      "name": "Salt",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "136",
+      "sold_by": "ton",
+      "prices": [
+        "*",
+        "*",
+        "*",
+        "120"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Desired in every town, and never rots (p. 136).",
+      "sources": [
+        "the Black Sea, all areas",
+        "France's Atlantic coast (Nantes, Bayonne, Bordeaux)",
+        "southern France (Marseilles, Narbonne, Salins-les-Bains, Toulouse)",
+        "central Germany (Frankfurt, Nuremberg, Regensburg, Salzburg)",
+        "northern Germany (Cologne, Hamburg)",
+        "the Kingdom of Mallorca",
+        "the East Adriatic coast (Ragusa, Spalato, Venice, Zara)",
+        "Italy's islands",
+        "Romania (Constantinople)"
+      ],
+      "purity": {
+        "pure_price": 120,
+        "note": "",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_silk_cloth",
+      "name": "Silk Cloth",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "roll",
+      "prices": [
+        "12,500",
+        "25,000",
+        "50,000",
+        "#"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sale": "Sold by the roll (p. 142); damask, the finest, by the piece (p. 138).",
+      "note": "Cheap silk is grown in Europe, average comes from Asia (p. 138).",
+      "sources": [
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht): cheap silk cloth",
+        "Romania (Constantinople): cheap silk cloth",
+        "Iberia's Muslim south and Aragon (Barcelona, Cartagena...): cheap silk",
+        "Italy's islands: cheap silk",
+        "southern Italy (Naples, Rome): cheap silk",
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre): fine silk",
+        "Trebizond: silk",
+        "the Persian Gulf: silk",
+        "Serica: silk"
+      ]
+    },
+    {
+      "id": "good_silk_raw",
+      "name": "Silk, Raw",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "136",
+      "sold_by": "ton",
+      "prices": [
+        "300",
+        "500",
+        "600",
+        "#"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Farmed wherever mulberry leaves grow (p. 136).",
+      "sources": [
+        "Romania (Constantinople): raw silk",
+        "Trebizond: silk",
+        "the Persian Gulf: silk",
+        "Serica: silk"
+      ]
+    },
+    {
+      "id": "good_silver",
+      "name": "Silver",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "ton",
+      "prices": [
+        "250*",
+        "1,650*",
+        "2,200*",
+        "2,420"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "2,420 as printed (gold is ten times it, p. 141); a ton weighs 2,240 pounds (errata p. 57).",
+      "sources": [
+        "England (Bristol, London, Scarborough, Southampton): the wool trade oversupplies it",
+        "Bohemia (Prague): Jihlava after 1222",
+        "central Germany (Frankfurt, Nuremberg, Regensburg, Salzburg): Freiberg, Goslar"
+      ],
+      "purity": {
+        "pure_price": 2420,
+        "note": "Usually sold as bullion, at best 10% copper; coins may be up to 90% copper (pp. 135, 138, 140).",
+        "examples": [
+          {
+            "label": "Shoddy",
+            "price": "250*"
+          },
+          {
+            "label": "Standard",
+            "price": "1,650*"
+          },
+          {
+            "label": "Superior",
+            "price": "2,200*"
+          }
+        ]
+      }
+    },
+    {
+      "id": "good_slaves",
+      "name": "Slaves",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "head",
+      "prices": [
+        "1",
+        "2",
+        "4",
+        "#"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sale": "Slaves cost between 5 and 10 pounds each (p. 142).",
+      "note": "Their food and water take extraordinary tonnage (p. 138).",
+      "sources": [
+        "Denmark (Copenhagen, Aarhus)",
+        "the Black Sea, all areas",
+        "Crimea (Kaffa)",
+        "southern France (Marseilles, Narbonne, Salins-les-Bains, Toulouse)",
+        "Iberia's Muslim south and Aragon (Barcelona, Cartagena...)",
+        "Romania (Constantinople)",
+        "the Persian Gulf"
+      ]
+    },
+    {
+      "id": "good_soap",
+      "name": "Soap",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "ton",
+      "prices": [
+        "0.5",
+        "1",
+        "5",
+        "10"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "The cheapest luxury shipped across Europe; poorer people use Germany's black soap (p. 138).",
+      "sources": [
+        "Iberia's north and centre (Lisbon, Oporto, Corunna, Salamanca, Toledo)"
+      ]
+    },
+    {
+      "id": "good_spices",
+      "name": "Spices",
+      "kind": "commodity",
+      "commodity_class": "luxury",
+      "class_page": "138",
+      "sold_by": "ton",
+      "prices": [
+        "5",
+        "50",
+        "1,500",
+        "2,000"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Dried fruit, almonds and rice are the cheapest, pepper and sugar average, aromatic spices the dearest (p. 138).",
+      "sources": [
+        "Africa's principal ports (Alexandria, Tunis, Algiers): cheap spices",
+        "Trebizond",
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre): sugar, particularly Cyprus",
+        "Iberia's Muslim south and Aragon (Barcelona, Cartagena...): cheap spices, rice, sugar",
+        "Romania (Constantinople)",
+        "India: pepper, other spices",
+        "Serica"
+      ]
+    },
+    {
+      "id": "good_tapestries",
+      "name": "Tapestries",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "100",
+        "3,000",
+        "6,000",
+        "#"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Tapestries from the Levant and Africa; England is famous for embroidery (p. 137).",
+      "sources": [
+        "the Holy Land's ports (Beirut, Smyrna, Rhodes, Nicosia, Tyre)",
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht): tapestry",
+        "England (Bristol, London, Scarborough, Southampton): embroidery"
+      ]
+    },
+    {
+      "id": "good_timber",
+      "name": "Timber",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "136",
+      "sold_by": "ton",
+      "prices": [
+        "2.5",
+        "5",
+        "10",
+        "25"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Expensive timbers are rare woods for panelling and carving (p. 136).",
+      "sources": [
+        "the Baltic, all areas",
+        "Norway (Oslo, Bergen)",
+        "Germany, all areas",
+        "southern Germany",
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht)",
+        "Russia (Kiev)"
+      ]
+    },
+    {
+      "id": "good_tin",
+      "name": "Tin",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "136",
+      "sold_by": "ton",
+      "prices": [
+        "*",
+        "*",
+        "*",
+        "250"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "Mined in Cornwall and the Rhineland (p. 136).",
+      "sources": [
+        "England (Bristol, London, Scarborough, Southampton)",
+        "the southern Alpine towns: small quantities"
+      ],
+      "purity": {
+        "pure_price": 250,
+        "note": "",
+        "examples": []
+      }
+    },
+    {
+      "id": "good_wax",
+      "name": "Wax",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "2",
+        "5",
+        "10",
+        "#"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "note": "The cheap \"wax\" is tallow (p. 137).",
+      "sources": [
+        "Africa's principal ports (Alexandria, Tunis, Algiers)",
+        "Russia (Novgorod, Pskov)",
+        "the Baltic's southern coast (Danzig, Lubeck, Reval, Riga)",
+        "Crimea (Kaffa)",
+        "Bohemia (Prague)",
+        "Iberia, all but Mallorca",
+        "Romania (Constantinople)"
+      ]
+    },
+    {
+      "id": "good_wine",
+      "name": "Wine",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "137",
+      "sold_by": "tun",
+      "prices": [
+        "5",
+        "10",
+        "20",
+        "50"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sale": "Shipped in tuns: a tun weighs a ton, about 240 gallons (p. 140).",
+      "sources": [
+        "France's Atlantic coast (Nantes, Bayonne, Bordeaux): cheap wine",
+        "southern France (Marseilles, Narbonne, Salins-les-Bains, Toulouse)",
+        "central Germany (Frankfurt, Nuremberg, Regensburg, Salzburg)",
+        "southern Germany",
+        "Iberia's Muslim south and Aragon (Barcelona, Cartagena...)",
+        "Italy's islands",
+        "southern Italy (Naples, Rome)",
+        "Romania (Constantinople)",
+        "Crete"
+      ]
+    },
+    {
+      "id": "good_wool_cloth",
+      "name": "Wool Cloth",
+      "kind": "commodity",
+      "commodity_class": "manufactured",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "50",
+        "150",
+        "300",
+        "3,000"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sale": "Retails by the yard or ell (p. 140).",
+      "sources": [
+        "northern France (Calais, Rouen, Paris, Rheims, Troyes)",
+        "the Low Countries (Arras, Brussels, Bruges, Ghent, Liege, Utrecht): trousers from Bruges",
+        "the East Adriatic coast (Ragusa, Spalato, Venice, Zara): cloth of all types",
+        "Italy's northern industrial area (Milan, Florence, Siena): cheap cloth of all types"
+      ]
+    },
+    {
+      "id": "good_wool_raw",
+      "name": "Wool, Raw",
+      "kind": "commodity",
+      "commodity_class": "bulk",
+      "class_page": "137",
+      "sold_by": "ton",
+      "prices": [
+        "25",
+        "50",
+        "100",
+        "500"
+      ],
+      "page": 142,
+      "source": "C&G",
+      "sale": "Measured by the sack, each made to fill a wagon (p. 140).",
+      "note": "The most valuable comes from England, Iberia's almost as fine (p. 137).",
+      "sources": [
+        "Africa's principal ports (Alexandria, Tunis, Algiers)",
+        "Scotland (Edinburgh, Aberdeen)",
+        "England (Bristol, London, Scarborough, Southampton): fine raw wool",
+        "northern France (Calais, Rouen, Paris, Rheims, Troyes): raw wool",
+        "Iberia, all but Mallorca",
+        "Poland (Poznan, Wroclaw, Cracow)"
+      ]
+    },
+    {
+      "id": "good_longbow",
+      "name": "Longbow",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "15 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        180,
+        180
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_cart",
+      "name": "Cart",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "10 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        10,
+        10
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_chainmail_full",
+      "name": "Chainmail, full",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "2 pounds",
+        "",
+        ""
+      ],
+      "pence": [
+        480,
+        480
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_chainmail_partial",
+      "name": "Chainmail, partial",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "1 pound",
+        "",
+        ""
+      ],
+      "pence": [
+        240,
+        240
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_chair",
+      "name": "Chair",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "8 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        8,
+        8
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_chamber_pot",
+      "name": "Chamber pot",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "20 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        20,
+        20
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_chest_with_lock",
+      "name": "Chest with lock",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "2 and 1/2 pounds",
+        "",
+        ""
+      ],
+      "pence": [
+        600,
+        600
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_dagger",
+      "name": "Dagger",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "6 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        6,
+        6
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_gallon_of_ale",
+      "name": "Gallon of ale",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "half a penny",
+        "",
+        ""
+      ],
+      "pence": [
+        0.5,
+        0.5
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_great_sword",
+      "name": "Great sword",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "13 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        156,
+        156
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_heavy_leather_full",
+      "name": "Heavy Leather, full",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "2 and 1/2 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        30,
+        30
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_heavy_leather_partial",
+      "name": "Heavy Leather, partial",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "15 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        15,
+        15
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_house_luxurious",
+      "name": "House, luxurious",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "50 pounds",
+        "",
+        ""
+      ],
+      "pence": [
+        12000,
+        12000
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_house_peasant",
+      "name": "House, peasant",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "2 pounds",
+        "",
+        ""
+      ],
+      "pence": [
+        480,
+        480
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_house_urban",
+      "name": "House, urban",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "5 pounds",
+        "",
+        ""
+      ],
+      "pence": [
+        1200,
+        1200
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_leather_scale_full",
+      "name": "Leather Scale, full",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "10 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        120,
+        120
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_leather_scale_partial",
+      "name": "Leather Scale, partial",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "5 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        60,
+        60
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_loaf_of_bread",
+      "name": "Loaf of bread",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "half a penny",
+        "",
+        ""
+      ],
+      "pence": [
+        0.5,
+        0.5
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_long_sword",
+      "name": "Long sword",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "10 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        120,
+        120
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_non_hermetic_books",
+      "name": "Non-Hermetic books",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "11 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        132,
+        132
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_pair_of_shoes",
+      "name": "Pair of shoes",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "6 – 16 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        6,
+        16
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_shield_buckler",
+      "name": "Shield, buckler",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "3 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        36,
+        36
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_shield_heater",
+      "name": "Shield, heater",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "8 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        96,
+        96
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_shield_round",
+      "name": "Shield, round",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "8 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        8,
+        8
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_short_sword",
+      "name": "Short sword",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "3 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        36,
+        36
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_shovel",
+      "name": "Shovel",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "4 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        4,
+        4
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_tunic_dyed",
+      "name": "Tunic, dyed",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "8 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        96,
+        96
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_tunic_fur_lined",
+      "name": "Tunic, fur lined",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "13 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        156,
+        156
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_tunic_peasant",
+      "name": "Tunic, peasant",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "16 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        16,
+        16
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_tunic_wool",
+      "name": "Tunic, wool",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "5 shillings",
+        "",
+        ""
+      ],
+      "pence": [
+        60,
+        60
+      ],
+      "page": 144,
+      "source": "C&G"
+    },
+    {
+      "id": "good_wagon",
+      "name": "Wagon",
+      "kind": "common",
+      "sold_by": "each",
+      "prices": [
+        "",
+        "20 pennies",
+        "",
+        ""
+      ],
+      "pence": [
+        20,
+        20
+      ],
+      "page": 144,
+      "source": "C&G"
+    }
+  ]
+}

@@ -23,6 +23,8 @@ CATALOGS_SECTION = "section-catalogs"
 HIDDEN_SECTION = "section-hidden-entries"
 #: The non-Hermetic traditions the saga offers (Books tab).
 TRADITIONS_SECTION = "section-traditions"
+#: The Goods catalog and the saga's own goods (Goods tab; forms/goods.py).
+GOODS_SECTION = "section-content-goods"
 
 #: The covenant Library tab's sections, where More's Import puts books into the
 #: covenant's library.
@@ -155,6 +157,29 @@ BATTLES_SECTION = "section-nb-battles"
 LORD_SIEGES_SECTION = "section-nb-sieges"
 GUILDS_SECTION = "section-nb-guilds"
 FAIRS_SECTION = "section-nb-fairs"
+#: A town's Charter tab (its lords, terms, what the charter gives, its
+#: citizens, and its size and people), its Guilds tab (the guilds and the
+#: saga's characters in them) and its Court tab (cases and sentences).
+CHARTER_LORDS_SECTION = "section-nb-charter-lords"
+CHARTER_TERMS_SECTION = "section-nb-charter-terms"
+CHARTER_GIVES_SECTION = "section-nb-charter-gives"
+CITIZENS_SECTION = "section-nb-citizens"
+TOWN_PEOPLE_SECTION = "section-nb-town-people"
+GUILD_MEMBERS_SECTION = "section-nb-guild-members"
+COURT_CASES_SECTION = "section-nb-court-cases"
+SENTENCES_SECTION = "section-nb-sentences"
+#: A covenant's own charter (the Chartered Town Boon) and the towns it
+#: charters (the Charter Lord Hook), on its Attributes tab.
+COV_CHARTER_LORDS_SECTION = "section-cov-charter-lords"
+COV_CHARTER_TERMS_SECTION = "section-cov-charter-terms"
+CHARTERED_TOWNS_SECTION = "section-cov-chartered-towns"
+#: The Manors tab of a lord or a covenant (manors.py): its manors, its
+#: kennels, mews and stables, a lord's household, and a covenant's check
+#: of its manors beside its income.
+MANORS_SECTION = "section-manors"
+ESTABLISHMENTS_SECTION = "section-establishments"
+HOUSEHOLD_SECTION = "section-household"
+MANOR_CHECK_SECTION = "section-manor-check"
 #: A church's relics; a university's faculties and masters.
 RELICS_SECTION = "section-nb-relics"
 FACULTIES_SECTION = "section-nb-faculties"
@@ -256,6 +281,19 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     BATTLES_SECTION: frozenset({"add", "edit", "remove"}),
     GUILDS_SECTION: frozenset({"add", "edit", "remove"}),
     FAIRS_SECTION: frozenset({"add", "edit", "remove"}),
+    CHARTER_LORDS_SECTION: frozenset({"add", "edit", "remove"}),
+    CHARTER_TERMS_SECTION: frozenset({"edit"}),
+    CHARTER_GIVES_SECTION: frozenset({"edit"}),
+    CITIZENS_SECTION: frozenset({"add", "edit", "remove"}),
+    TOWN_PEOPLE_SECTION: frozenset({"edit"}),
+    GUILD_MEMBERS_SECTION: frozenset({"add", "edit", "remove"}),
+    COURT_CASES_SECTION: frozenset({"add", "edit", "remove"}),
+    COV_CHARTER_LORDS_SECTION: frozenset({"add", "edit", "remove"}),
+    COV_CHARTER_TERMS_SECTION: frozenset({"edit"}),
+    MANORS_SECTION: frozenset({"add", "edit", "remove"}),
+    ESTABLISHMENTS_SECTION: frozenset({"add", "edit", "remove"}),
+    HOUSEHOLD_SECTION: frozenset({"edit"}),
+    MANOR_CHECK_SECTION: frozenset({"edit"}),
     RELICS_SECTION: frozenset({"add", "edit", "remove"}),
     FACULTIES_SECTION: frozenset({"add", "edit", "remove"}),
     MASTERS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -289,4 +327,5 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTENDANCE_SECTION: frozenset({"edit"}),
     VOTE_SECTION: frozenset({"edit"}),
     SECRETS_SECTION: frozenset({"edit"}),
+    GOODS_SECTION: frozenset({"add", "edit", "remove"}),
 }

@@ -9,7 +9,7 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Town  2 Standing  3 Secrets
+   1 Town  2 Charter  3 Guilds  4 Court  5 Standing  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Charter:    Commune
@@ -17,12 +17,6 @@
   Population: 5,000 (large town)
   Guilds:     1 recorded; a town its size has 0 to 3 in 1220
   Taxes:      A commune keeps its own
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Guilds (1)
-
-        Trade    Dean      Masters  Journeymen  Apprentices
-      ○ Weavers  Heinrich  9
-
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Fairs and Markets (1)
 
@@ -66,6 +60,216 @@
 
 
 
+
+
+
+
+
+
+===== tab-nb-charter
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Soest
+
+      Kind:            Town                              Answers to: no one
+      Detail:          Sketch                            Realm:      none
+      Ruler or leader: (not named)                       Book:       C&G
+      Summary: not written yet. Edit the neighbour to say.
+          Edit (e)
+
+   1 Town  2 Charter  3 Guilds  4 Court  5 Standing  6 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Lords (0)
+
+      No charter lord listed: whoever claims the land grants it (p. 9).
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Terms
+
+      Charter family: —
+      Granted:        —
+      Burgesses:      —
+      – Annual tax                                       – A market or fair
+      – Its own courts                                   – Salvage
+      – Ordeal and combat limited                        – Chooses its officials
+      – A cap on fines                                   – Land may be sold
+      – Monopolies                                       – Militia duty
+      – Toll exemptions
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ What It Gives
+
+      Divine aura:     3 within the walls: a city's normal aura (Definitive Edition p. 418); churches
+      keep their own (C&G pp. 10-11)
+      Demon's charter: none: one would have Might 15 and offer relief from disease, help for merchants
+      or dangerous labor (C&G p. 11)
+      Pawn:            1 pawn of Rego vis, Divine-tainted, in the signed charter (C&G p. 9)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Citizens (0)
+
+      None of the saga's characters lives here.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Size and People
+
+      Population:  5,000 (large town)
+      Burgesses:   —
+      Council:     12 seats
+      Magistrates: —
+      Occupations (C&G p. 24)                            Officials (C&G pp. 13-14)
+      Agriculture: 500 (10%)                             None recorded: aldermen, bailiffs, consuls,
+      Craft:       1,500 (30%)                           coroners, councilors, magistrates, mayors,
+      Service:     1,500 (30%)                           ministerials, portmen, rectors, reeves (p. 13).
+      Trade:       1,500 (30%)
+
+
+
+
+
+  ▌
+  ▌  Choose a lord or a citizen to see his hold or his link.
+  ▌
+
+
+===== tab-nb-guilds
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Soest
+
+      Kind:            Town                              Answers to: no one
+      Detail:          Sketch                            Realm:      none
+      Ruler or leader: (not named)                       Book:       C&G
+      Summary: not written yet. Edit the neighbour to say.
+          Edit (e)
+
+   1 Town  2 Charter  3 Guilds  4 Court  5 Standing  6 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Guilds (1)
+
+      A town of 5,000 has 0 to 3 guilds in 1220; its first is usually its merchants' (C&G p. 54)
+        Trade    Kind   Craft  Dean      Masters  Journeymen  Apprentices  Members
+      ○ Weavers  Craft         Heinrich  9                                 9
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Members from the Saga (0)
+
+      None of the saga's characters belongs to a guild here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a guild to see its ranks, or a member his standing.
+  ▌
+
+
+===== tab-nb-court
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Soest
+
+      Kind:            Town                              Answers to: no one
+      Detail:          Sketch                            Realm:      none
+      Ruler or leader: (not named)                       Book:       C&G
+      Summary: not written yet. Edit the neighbour to say.
+          Edit (e)
+
+   1 Town  2 Charter  3 Guilds  4 Court  5 Standing  6 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Cases (0)
+
+      No cases before the town's courts.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Sentences
+
+      Death:      Hanged, or beheaded, drowned or burned, in public; he may wait in prison for the next
+      market day. For thievery, robbery, house-breaking, arson, premeditated murder and treason.
+      Fine:       From a few pence to 50-60 pounds, a burgess's lifetime; part goes to the victim.
+      Unpaid, he is declared an outlaw anyone may kill. For murder, accidental death, rape, assault,
+      petty thievery and failing the charter's duties.
+      Mutilation: The loss of an eye, an ear or a hand. Instead of a fine or beside it; for a violent
+      crime, picked to match it.
+      Branding:   A mark burned into him, borne for life. Instead of a fine or beside it.
+      Shaming:    The stocks or the pillory, for a time, in a public place. For minor crimes:
+      prostitution, begging, petty thievery.
+      A defendant who insists he is innocent may choose a trial by ordeal, which many charters limit or
+      ban (C&G p. 30).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a case to see its verdict.
+  ▌
+
+
 ===== tab-nb-standing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -77,7 +281,7 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Town  2 Standing  3 Secrets
+   1 Town  2 Charter  3 Guilds  4 Court  5 Standing  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -145,7 +349,7 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Town  2 Standing  3 Secrets
+   1 Town  2 Charter  3 Guilds  4 Court  5 Standing  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

@@ -172,8 +172,10 @@ class FieldsDialog(_Sheet):
         ask: Ask | None = None,
         picture: Callable[[dict[str, Any]], Any] | None = None,
         inspector: str = "",
+        cancel_label: str = "Cancel",
     ) -> None:
         super().__init__(title, p, save_label, parent, inline=inline)
+        self.cancel.setText(cancel_label)
         self.picture = picture
         self.fields = fields
         self.ask: Ask = ask or (lambda dialog: dialog.exec())
@@ -853,6 +855,7 @@ def step_dialog(
             ask=ask,
             picture=step.picture,
             inspector=step.inspector,
+            cancel_label=step.cancel_label,
         )
     if isinstance(step, Choose):
         choices = step.choices()

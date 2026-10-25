@@ -166,6 +166,13 @@ from .devices import ShapeMaterialDef as ShapeMaterialDef
 from .familiar import CORD_SCORE_COSTS as CORD_SCORE_COSTS
 from .familiar import BondPower as BondPower
 from .familiar import Familiar as Familiar
+from .goods import COMMODITY as COMMODITY
+from .goods import COMMON as COMMON
+from .goods import GOOD_KINDS as GOOD_KINDS
+from .goods import GoodDef as GoodDef
+from .goods import GoodPurity as GoodPurity
+from .goods import Purity as Purity
+from .goods import PurityExample as PurityExample
 from .holdings import COVENANT_ROLES as COVENANT_ROLES
 from .holdings import CRAFT_FIELDS as CRAFT_FIELDS
 from .holdings import GEAR_POINTS as GEAR_POINTS

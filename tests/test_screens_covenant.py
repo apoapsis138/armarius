@@ -68,6 +68,7 @@ _COVENANT_TABS = (
     "tab-cov-seasons",
     "tab-cov-possessions",
     "tab-cov-economics",
+    "tab-cov-manors",
     "tab-cov-library",
     "tab-cov-diary",
     "tab-cov-build",

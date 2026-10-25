@@ -16,6 +16,7 @@ from .... import saga_content as sc
 from .... import seasons, storage
 from .... import spells as spl
 from ....form_spec import DialogField
+from ....forms import goods as goods_forms
 from ....forms import importing as import_forms
 from ....forms import saga_content as content_forms
 from ....markup import escape
@@ -26,6 +27,7 @@ from ....models import (
     SagaSource,
     Spell,
 )
+from ....sections import GOODS_SECTION
 from ..fields import FieldsDialog
 from ..forms import (
     _book_fields,
@@ -442,6 +444,17 @@ class LibraryActions(WorkspaceBase):
         self.app.push_screen(
             _hide_entry_dialog(chosen[0] if chosen is not None else None),
             handle_catalog,
+        )
+
+    def action_add_purity(self) -> None:
+        """More's Add a Purity on the Goods list's chosen good."""
+        view = self._saga_content_view
+        if view is None:
+            return
+        run_steps(
+            self.app,
+            goods_forms.add_purity(self.saga, view.section_row(GOODS_SECTION)),
+            lambda _end: self._commit(GOODS_SECTION),
         )
 
     def _show_catalog_entry(self) -> None:

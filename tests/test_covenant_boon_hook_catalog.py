@@ -25,14 +25,15 @@ def test_catalog_counts_by_tier_after_merging_the_covenants_book():
     # 37 entries from the core chapter + 179 from Covenants Chapter Two
     # (checked entry by entry against
     # reference/covenants-boons-and-hooks-ref.md), + 1 Minor Hook from
-    # Against the Dark (Zenodochium).
+    # Against the Dark (Zenodochium), + City & Guild's Chartered Town Boon
+    # and Charter Lord Hook (p. 11).
     entries = catalog.load_covenant_boon_hook_catalog()
-    assert len(entries) == 217
+    assert len(entries) == 219
     counts = Counter((entry.type, entry.tier) for entry in entries)
     assert counts == {
         ("Hook", "Minor"): 88,
-        ("Hook", "Major"): 41,
-        ("Boon", "Minor"): 46,
+        ("Hook", "Major"): 42,
+        ("Boon", "Minor"): 47,
         ("Boon", "Major"): 24,
         ("Boon", "Free"): 18,  # the book's cost-free "Free Choices"
     }
@@ -62,7 +63,7 @@ def test_the_entries_story_705_found_missing_are_present():
 
 def test_every_entry_names_its_source_book():
     for entry in catalog.load_covenant_boon_hook_catalog():
-        assert entry.source in ("ArM5; Covenants", "Covenants", "AtD"), entry.id
+        assert entry.source in ("ArM5; Covenants", "Covenants", "AtD", "C&G"), entry.id
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
     assert by_id["covbh_boon_minor_aura"].source == "ArM5; Covenants"
     assert by_id["covbh_hook_minor_haunted"].source == "Covenants"

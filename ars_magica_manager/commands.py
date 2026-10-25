@@ -43,6 +43,8 @@ class Form:
     validate: Callable[[dict[str, Any]], str | None] | None = None
     live: Callable[[dict[str, Any]], str] | None = None
     save_label: str = "Save"
+    #: The button that leaves without saving (Close for a calculator).
+    cancel_label: str = "Cancel"
     #: A picture drawn beside the live line from the values, by each
     #: front-end its own way: an arms.Arms (or None for none).
     picture: Callable[[dict[str, Any]], Any] | None = None

@@ -658,6 +658,21 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#eco-income-list": "Toll bridge"},
     ),
+    "add covenant manor": Contract(
+        prefill={"Name": "", "Acres": "600"},
+        edits={"Name": "Kohlergrund", "Held as an allod": True},
+        saved=lambda s: covenant(s).manors["manor_list"][-1]["allod"],
+        expected=True,
+        invalid={"Name": ""},
+        shown={"#manors-list": "Kohlergrund"},
+    ),
+    "edit manor check": Contract(
+        prefill={"Agriculture source": Select.NULL, "Livestock source": Select.NULL},
+        edits={"Agriculture source": "inc1"},
+        saved=lambda s: covenant(s).manors["agriculture_source"],
+        expected="inc1",
+        shown={"#manor-check-text": "Mill"},
+    ),
     "edit income source": Contract(
         prefill={"Name": "Mill", "Type": "Typical", "Current Income": ""},
         edits={"Current Income": "55"},

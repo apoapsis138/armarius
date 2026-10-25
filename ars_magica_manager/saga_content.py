@@ -67,6 +67,7 @@ CATALOGS: dict[str, SagaCatalog] = {
             "Shapes & Materials",
             catalog.load_shape_material_catalog,
         ),
+        SagaCatalog("goods", "Goods", _shared(catalog.load_goods_catalog)),
     )
 }
 assert CATALOGS.keys() == catalog.SAGA_CATALOG_KINDS.keys()

@@ -206,6 +206,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         build: None = None,
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
         inspector: str = "",
+        cancel_label: str = "Cancel",
     ) -> None: ...
 
     @overload
@@ -220,6 +221,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         build: Callable[[dict[str, Any]], ResultT],
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
         inspector: str = "",
+        cancel_label: str = "Cancel",
     ) -> None: ...
 
     def __init__(
@@ -233,6 +235,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         build: Callable[[dict[str, Any]], ResultT] | None = None,
         confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
         inspector: str = "",
+        cancel_label: str = "Cancel",
     ) -> None:
         super().__init__()
         self.title_text = title
@@ -243,6 +246,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self.build = build
         self.confirm = confirm
         self.inspector = inspector
+        self.cancel_label = cancel_label
         self._picked: dict[str, Any] = {}  # "picker" fields' current values
         # The value each `fills` field last filled from (or opened with).
         self._filled_from: dict[str, Any] = {}
@@ -266,7 +270,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             yield Static("", id="fields-error")
             with Horizontal(id="fields-buttons"):
                 yield Button(self.save_label, id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
+                yield Button(self.cancel_label, id="btn-cancel")
 
     def _widgets(self, spec: DialogField) -> ComposeResult:
         widget_id = f"fld-{spec.key}"

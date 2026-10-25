@@ -20,12 +20,13 @@ from PySide6.QtWidgets import (
 from .. import ahead
 from ..commands import Act
 from ..forms import ahead as ahead_forms
+from ..forms import travel as travel_forms
 from ..models import SEASONS, Covenant, Saga, season_order
 from .character_sheet import section
 from .editing import Chooser, Run, verb_buttons
 from .medallions import Medallion, beside
 from .themes import Palette
-from .widgets import ClickableCard, serif, text
+from .widgets import ClickableCard, edit_button, serif, text
 
 #: Seasons shown across: a year to a row.
 ACROSS = len(SEASONS)
@@ -156,6 +157,12 @@ def ahead_section(
             )
         )
     buttons = verb_buttons(ahead_forms.ahead_ops(saga, covenant), chooser, run, p)
+    # Travel, the calculator: it records nothing.
+    buttons.append(
+        edit_button(
+            "Travel", p, lambda: run(travel_forms.travel(saga, covenant)), "more"
+        )
+    )
     return section(
         ahead.title(saga, covenant),
         p,

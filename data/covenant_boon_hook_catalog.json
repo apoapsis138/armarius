@@ -1,5 +1,5 @@
 {
-  "attribution": "Covenant Boons and Hooks from Ars Magica Fifth Edition (core rules), Covenants and Against the Dark: The Transylvanian Tribunal; each entry's source names its book. Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "attribution": "Covenant Boons and Hooks from Ars Magica Fifth Edition (core rules), Covenants, City & Guild and Against the Dark: The Transylvanian Tribunal; each entry's source names its book. Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
   "entries": [
   {
     "id": "covbh_hook_minor_contested_resource",
@@ -3829,6 +3829,43 @@
     "unknown": false,
     "source": "AtD",
     "description": "One of the Transylvanian Tribunal's hidden hospitals for magi stands less than a day's journey off. The covenant may use it as it likes, so long as it puts back any vis or goods it takes. The Curantis looks it over every few years and, should it be harmed, asks the covenant first; and wounded magi recovering there may drop in, curious or in need of help against whatever hurt them."
+  },
+  {
+    "id": "covbh_boon_minor_chartered_town",
+    "name": "Chartered Town",
+    "type": "Boon",
+    "tier": "Minor",
+    "cost": 1,
+    "category": "External Relations",
+    "repeatable": false,
+    "max_count": null,
+    "requires": [],
+    "requires_any": [],
+    "modifiers": [],
+    "unknown": false,
+    "source": "C&G",
+    "excludes": [
+      "covbh_hook_minor_urban",
+      "covbh_hook_major_urban"
+    ],
+    "description": "The covenant is itself a town, granted a generous charter by the local lord: it is free of feudal duties and taxes on its land except what the charter asks, and has urban amenities to hand. The covenfolk expect their rights under the charter; the charter cannot make the magi serve the lord (the Code forbids court wizards), though he may ask. Incompatible with the Urban Hook; it cannot be Unknown (City & Guild p. 11)."
+  },
+  {
+    "id": "covbh_hook_major_charter_lord",
+    "name": "Charter Lord",
+    "type": "Hook",
+    "tier": "Major",
+    "cost": -3,
+    "category": "External Relations",
+    "repeatable": false,
+    "max_count": null,
+    "requires": [],
+    "requires_any": [],
+    "modifiers": [],
+    "unknown": false,
+    "source": "C&G",
+    "excludes": [],
+    "description": "The covenant, perhaps through a tame noble, has granted charters to towns on its land. Neighbouring lords take notice, the townsfolk petition or revolt, and the Quaesitores watch for interference that could bring ruin on the Order. Only a covenant that is a large landowner may take it, and it cannot be Unknown (City & Guild p. 11)."
   }
 ]
 }

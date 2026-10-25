@@ -36,13 +36,14 @@ from ..widgets import (
     fact_markup,
 )
 from .base import SheetView
+from .kind_tabs import KindTabsView, list_id
 
 #: Every list of neighbours the Region can show.
 _GROUP_SECTIONS = tuple(g.section_id for g in neighbours.GROUPS)
 
 
 def _list_id(section_id: str) -> str:
-    return f"{section_id.removeprefix('section-')}-list"
+    return list_id(section_id)
 
 
 def _facts_text(facts: list[Fact], column: int) -> str:
@@ -150,7 +151,7 @@ class RegionSheetView(SheetView):
         self.query_one("#region-info-panel", Static).update(self._details())
 
 
-class NeighbourSheetView(SheetView):
+class NeighbourSheetView(KindTabsView):
     """A neighbour: its facts and summary, then its standing with the
     troupe."""
 
@@ -162,6 +163,7 @@ class NeighbourSheetView(SheetView):
     """
 
     INITIAL_TAB = "tab-nb-standing"
+    KIND_WATCHED = (NEIGHBOUR_INFO_SECTION,)
 
     def __init__(self, saga: Saga, neighbour: Neighbour) -> None:
         super().__init__(saga)
@@ -194,20 +196,18 @@ class NeighbourSheetView(SheetView):
         with TabbedContent(initial=self.INITIAL_TAB):
             tab = self.kind.tab
             if tab is not None:
-                yield self._tab(tab.title, tab.tab_id, partial(self._kind_tab, tab))
-            for more in (m for m in self.kind.more if not m.after_standing):
                 yield self._tab(
-                    more.title, more.tab_id, partial(self._kind_tab, more, facts=False)
+                    tab.title, tab.tab_id, partial(self._kind_tab, tab, facts=True)
                 )
+            for more in (m for m in self.kind.more if not m.after_standing):
+                yield self._tab(more.title, more.tab_id, partial(self._kind_tab, more))
             yield self._tab(
                 "Standing" if self.kind.attitude else "Found Here",
                 "tab-nb-standing",
                 self._standing_tab,
             )
             for more in (m for m in self.kind.more if m.after_standing):
-                yield self._tab(
-                    more.title, more.tab_id, partial(self._kind_tab, more, facts=False)
-                )
+                yield self._tab(more.title, more.tab_id, partial(self._kind_tab, more))
             yield from self._secrets_tab(self.neighbour)
 
     def stale(self) -> bool:
@@ -215,25 +215,17 @@ class NeighbourSheetView(SheetView):
         so its tab is no longer theirs."""
         return neighbours.kind_of(self.neighbour) is not self.kind
 
-    def _kind_tab(self, tab: KindTab, facts: bool = True) -> ComposeResult:
-        """What the kind works out (on its first tab), then its lists."""
-        saga, n = self.saga, self.neighbour
-        watched = (NEIGHBOUR_INFO_SECTION, *(e.section_id for e in tab.lists))
-        with VerticalScroll():
-            if facts:
-                yield self._static(watched, self._kind_facts, id="nb-kind-facts")
-            for entry in tab.lists:
-                with SheetSection(
-                    title=self._titled(
-                        watched, entry.section_id, lambda e=entry: e.title(saga, n)
-                    ),
-                    id=entry.section_id,
-                ):
-                    yield self._list(
-                        watched,
-                        lambda e=entry: e.grid(saga, n).lines(),
-                        id=_list_id(entry.section_id),
-                    )
+    def kind_holder(self) -> Neighbour:
+        return self.neighbour
+
+    def kind_tabs(self) -> list[KindTab]:
+        tab = self.kind.tab
+        return ([tab] if tab is not None else []) + list(self.kind.more)
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        """A row of a kind's list was chosen: show it in its tab's details
+        panel, when the tab has one."""
+        self._kind_row_chosen(event)
 
     def _kind_facts(self) -> str:
         facts = self.kind.facts

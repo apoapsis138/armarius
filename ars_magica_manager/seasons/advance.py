@@ -8,6 +8,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
 from .. import economics as eco
+from .. import manors
 from ..enchanted_devices import new_day
 from ..markup import escape, problem, todo
 from ..models import (
@@ -398,6 +399,7 @@ def finish_season(
     year_end += season_aging(saga, rng)
     year_end += season_healing(saga, rng)
     year_end += covenant_season(saga, secured)
+    year_end += manors.season_losses(saga)
     record.lines += year_end
     if saga.keep_season_records and (worked or year_end):
         saga.season_records.append(record)
