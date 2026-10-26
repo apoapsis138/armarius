@@ -123,7 +123,14 @@ class CovenantActions(WorkspaceBase):
             if place not in [value for _, value in places]:
                 place = places[0][1]  # whoever kept it has left the covenant
         self.app.push_screen(
-            _possession_dialog(title, kind, entry, places=places, place=place),
+            _possession_dialog(
+                title,
+                kind,
+                entry,
+                places=places,
+                place=place,
+                books=sourcebooks.saga_books(self.saga),
+            ),
             handle_result,
         )
 

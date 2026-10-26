@@ -22,6 +22,7 @@ from ..models import (
     VirtueFlawInstance,
     details_list,
 )
+from . import aura_kinds
 from . import effects as fx
 
 SOURCE = (
@@ -81,6 +82,10 @@ class RegioLevel(TypedDict, total=False):
     see: str
     enter: str
     notes: str
+    #: The aura's own kind, by its realm (aura_kinds.KIND_KEYS).
+    alignment: str
+    tints: str
+    divine_kind: str
 
 
 #: The kinds of regio a realm's books describe: the Divine's terrestrial
@@ -204,6 +209,22 @@ def aura_at(place: Neighbour, level: int = 0) -> tuple[int, str]:
                 realm_of(effect.get("target"), realm),
             )
     return aura, realm
+
+
+def aura_kind_at(place: Neighbour, level: int = 0) -> str:
+    """The kind of the aura at `level` of `place` (its alignment, tints or
+    Divine kind, aura_kinds.KIND_KEYS), read by the realm the aura has
+    there; "" for none."""
+    _, realm = aura_at(place, level)
+    shown = levels(place)
+    details = shown[level - 1] if 0 < level <= len(shown) else place.details
+    return aura_kinds.kind_of(cast(dict[str, Any], details), realm)
+
+
+def kind_where(where: tuple[Neighbour, int] | None) -> str:
+    """The aura's kind at a place and level (from lab_place,
+    character_place...); "" for nowhere."""
+    return aura_kind_at(*where) if where is not None else ""
 
 
 def lab_place(saga: Saga, lab: Laboratory) -> tuple[Neighbour, int] | None:

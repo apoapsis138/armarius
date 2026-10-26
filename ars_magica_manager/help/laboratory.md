@@ -569,7 +569,22 @@ castle keep, a hundred times a small room, is x7) and must be inside the
 laboratory to be opened: type its capacity in **Capacity**.
 A device whose Verditius maker crafted it in its first season has
 **Verditius Runes** ticked, and **Crafted with** names the Craft Ability
-used (blank when he shaped it by magic). A Charged Item warns when more
+used (blank when he shaped it by magic).
+With **Verditius Runes** ticked, an invested device shows three more fields for
+the House's Inner Mysteries (Houses of Hermes: Mystery Cults pp. 127-135).
+**Elder rune (Technique)** and **Elder rune (Form)** are the elder runes
+inscribed when it was opened, at most one of each, and only for the twelve Arts
+that have runes (none for Muto, Imaginem or Terram). Opening it then takes a
+pawn of each rune's Art besides its Vim, and the magus must know Verditius
+Elder Runes; each rune adds 5 to the level of every effect instilled in it, and
+its pawn counts toward what the device holds (p. 127). **Verditius item** marks
+an attuned item (Item Attunement: it holds its maker's highest Technique +
+highest Form + Philosophiae + the Craft he made it with, whatever its material
+and size, p. 135) or an automaton (Automata: type its Magic Might, 10 + Size +
+the material's base points, as its **Capacity**; it can't be a talisman, and
+its powers can't maintain concentration, pp. 129-130). Making either needs its
+Mystery.
+A Charged Item warns when more
 charges are recorded than its Lab Total gives: by the excess, or a fifth of
 the whole Lab Total when it was made from a Lab Text.
 What a device's effects give the laboratory itself, a Virtue or
@@ -855,6 +870,16 @@ Shape & material yourself. They count for enchanting only: a talisman's
 casting bonuses use the plain bonus. Empowering a familiar's bond adds +5 when it shares the
 binding's Technique or Form, +10 when it shares both.
 
+With **Verditius Elder Runes**, each rune on the device of the effect's
+Technique or Form adds that Art again (doubling it, as a Magical Focus does;
+with a Focus as well it triples), and a rune on a device of its own tree's wood
+(birch for Creo, yew Intellego, pine Perdo, alder Rego, elder Animal, willow
+Aquam, ash Auram, holly Corpus, apple Herbam, juniper Ignem, oak Mentem,
+hawthorn Vim; the app looks for the word in the device's name, description or
+components) adds +2 (Houses of Hermes: Mystery Cults pp. 127-128). The maker
+of an attuned item or an automaton adds his **Hubris** to every Lab Total for
+enchanting it (pp. 129, 135; DE p. 241).
+
 With **Faerie Magic**, experimenting or inventing a spell with the
 Mystery's own parameters uses its score in place of Magic Theory when it
 is the higher (the Lab Total shows the difference), and rolls that many
@@ -970,7 +995,9 @@ Magic Theory.
   number.
 - **Vis**: everything a season uses, an experiment's or a stabilization's
   vis and Waster of Vis's waste included, must be within twice the magus's
-  Magic Theory (DE p. 250). A Verditius who crafted the item opens it for
+  Magic Theory (DE p. 250). With Verditius Elder Runes, enchanting a device
+  uses Magic Theory x Philosophiae in its place, even when that is less, as
+  smelting does (Houses of Hermes: Mystery Cults pp. 126, 128). A Verditius who crafted the item opens it for
   his Craft score fewer pawns (his Finesse when he shaped it by magic), at
   least one, and it still counts as opened in full.
 

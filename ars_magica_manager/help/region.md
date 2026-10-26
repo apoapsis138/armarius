@@ -716,6 +716,15 @@ comes from its kind (DE p. 419). Either way, with Realms of Power: The
 Divine in play, a relic with a Faith score above 5 raises the church's
 Dominion by 1 for each point above 5 (Realms of Power: The Divine p. 12).
 
+With The Sundered Eagle in play, a church's Relics also hold its icons
+(The Sundered Eagle pp. 133-135): choose the Kind. An eikon has no Faith
+or Might; give its Aesthetic Quality, and the Touched column shows what
+venerating it adds to invoking its saint (Aesthetic Quality / 5, rounded
+up). An acheiropoieton, an icon not made by hand, is a powerful relic
+with a Faith score like any other. A character's More, Paint an Icon,
+adds an eikon here.
+
+
 **See also:** [A neighbour](help:neighbour)
 
 ## Relics
@@ -925,6 +934,64 @@ strength) and whether it is **Corrupted** (Debauched, Malevolent or
 Perfidious; only an aura of 3 or more, with its features written in its
 Notes) (Realms of Power: The Infernal pp. 13-15).
 
+An aura may have a kind of its own, which Edit asks by the place's realm
+(and Add or edit asks of each regio level by the level's):
+
+- **Alignment**, for a Magic aura (Realms of Power: Magic pp. 15-16). An
+  aura has at most one. Aligned with an **Art**, its strength counts again
+  in the Casting Score of any spell using that Art (as its Technique, Form
+  or a requisite) and in a Lab Total of that Art, both shown as "Aura
+  aligned with ..." in the working; a creature whose Might is of that Form
+  pays a Might Point less for any power that costs one; the opposed Art
+  takes no penalty. **Healing** adds half the aura, rounded up, to the
+  Recovery Totals of those who live there; **Luck** gives +1 (+2 from 5 to
+  8, +3 above) to rolls where luck matters, for everyone; **Distracting**
+  calls for Concentration rolls more often, their Ease Factors 3 higher
+  from aura 5. Any other word is a feeling (Aggressive, Carefree,
+  Communicative, Respectful, Fearful...): after a few minutes there,
+  those without The Gift or another Magic power take it as a temporary
+  Personality Trait of +1 (aura 1-3), +2 (4-6) or +3 (7-10), never
+  changing an Essential Trait. An aligned aura above 5 slowly warps those
+  who live in it without a Magic power. Intellego Vim at level 4 discerns
+  an alignment; a covenant may take it as the Fine Aura (Major) or
+  Favorable Aura (Minor) Boon, or the Troublesome Aura Hook (p. 16).
+- **Tints**, for a Faerie aura (Realms of Power: Faerie p. 104), written
+  "Drawn to Children +3; Light +2": everyone in the aura takes each as a
+  temporary Personality Trait while they stay, no stronger than the aura.
+  Tinting takes a ceremony (the tint fades a point a day) or a season's
+  influence (a point a season): stress die + Presence + Concentration
+  against 3 times the Trait's value, never above the tinter's Sympathy
+  Trait. Several tints pull people several ways at once; some auras are
+  tinted for good.
+- **Divine aura**, for a Divine aura: the **Dominion** or an
+  **Empyreal** aura. Both are one weaker at night and one stronger on
+  Sundays and holy days (Realms of Power: The Divine pp. 7, 10; DE
+  p. 418), and both hold sway over another realm's aura of the same
+  strength (p. 11). The Dominion comes from worship; an Empyreal aura
+  comes from no congregation: from a person or relic of 5 or more Faith
+  Points, from a miracle (1 at level 50, a point more each five levels
+  above, while its effect lasts), or from a holy creature's home (a point
+  each season it dwells there, up to its Might / 10; pp. 12-13). In play
+  the two are the same (p. 12): the realm table applies to both, and
+  mundane folk are moved alike, the pious to love and awe, the sinful to
+  guilt and fear, while the Gifted feel their Gift falter (pp. 8-9).
+
+The place's facts say what its aura's kind does ("Aura kind"), and each
+level's ("Within").
+
+Conciatta's guidelines for auras (Legends of Hermes p. 17), which any
+magus who has studied one of her unpublished works may use: Intellego Vim
+detects a supernatural tether of strength 5 or more at level 1, 4 or more
+(and a subsumed aura, one a stronger aura overpowers) at level 2, 3 or
+more at level 3, a natural or supernatural tether of 2 or more at level
+4, and any tether at level 5; a Rego Vim Ritual suppresses an aura no
+stronger than its magnitude for its duration (only the mundane level;
+broken if the aura grows past it), and Dominance Over the Infernal holds
+an Infernal aura of (magnitude - 9) at bay for a year. Her words for
+auras: diffuse (no fixed source) or tethered; stable, waning or waxing;
+existential (Faerie and Magic) or moral (Divine and Infernal); apparent
+(the strongest present) or subsumed (p. 15).
+
 **See also:** [A neighbour](help:neighbour)
 
 ## Regio Levels
@@ -958,6 +1025,10 @@ one makes all Fatigue long-term and burns with hell-fire, an Abyssal one
 lowers every Characteristic by its aura and asks a daily Intelligence
 roll against the madness Flaws (Realms of Power: The Infernal pp. 16-17).
 The place's facts say what each level does ("Within").
+
+Each level may also have its aura's own kind (an alignment, tints, or
+Dominion or Empyreal), asked by the level's realm as the place's is.
+
 
 ## Effects
 <!-- help: section-nb-effects -->

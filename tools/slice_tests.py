@@ -239,6 +239,15 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "ars_magica_manager/coinage.py": ("test_sheet_text.py",),
     # A craftsman's sale of his finished goods.
     "ars_magica_manager/selling.py": ("test_dialog_contracts_character.py",),
+    # The Theban Tribunal's Byzantine customs, and the icons on Relics.
+    "ars_magica_manager/theban_customs.py": (
+        "test_dialog_contracts_character.py",
+        "test_keyboard.py",
+    ),
+    "ars_magica_manager/churches.py": ("test_dialog_contracts_tribunal.py",),
+    # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
+    "ars_magica_manager/forms/sin.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/goetic.py": ("test_dialog_contracts_character.py",),
 }
 
 

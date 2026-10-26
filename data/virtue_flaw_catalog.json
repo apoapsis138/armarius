@@ -6444,6 +6444,17 @@
       "description": "Zmey are a variety of dragon native to the Transylvania Tribunal. Each village has a zmey, which rouses itself to fight evil spirits that attempt to enter its territory to cause hail or drought. This creates storms. Zmey have many powers. They fly by controlling the wind. Their natural form glows when they fly, but they can become invisible at will. They can change shape, into dogs or humans, but can also impersonate manufactured objects, like necklaces and garlands of flowers. Some play enchanting music on shepherd's pipes. Female zmey, zmeyitsas, can take ursine form. Zmey often charm young women, which usually leads to their death. Sometimes the zmey leaves, and the woman pines away. Local herbalists have a concoction that sometimes restores the desire to live. The zmey often asks the woman to elope, taking her away to his chthonic home. Occasionally, women survive relationships with zmey, and bear children. The children of zmey look human, except for small membranous wings that connect their torso and underarms. These wings are useless vestiges. A human who eats the heart of a zmey gains many of its powers, including supernatural strength. Humans can become zmey through spells or herbal preparations. Descent from a zmey grants a Minor Magical Focus with Storms, and the Minor Personality Flaw tends to be one of Lecherous, Meddler, or Proud. The granted power may be invisibility (as Veil of Invisibility (ArM5 page 146), but with Personal Range and no Penetration, castable without words or gestures), the ability to fly on the wind (as Wings of the Soaring Wind (ArM5 page 126), requires words and gestures), or the ability to turn into a dog or bear (like Shape of the Woodland Prowler (ArM5 page 131), but with Personal Range, and requiring only a gesture)."
     },
     {
+      "id": "vf_mythic_blood_gigantes",
+      "name": "Mythic Blood (Gigantes)",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Major",
+      "cost": 3,
+      "source": "TSE",
+      "summary": "Mythic Blood of the serpent-tailed Greek giants: free Minor Focus in strength or Terram, Rebellious Flaw; Giant Blood, Large, Snake Legs and touching the ground are common.",
+      "description": "The Mythic Blood of the Greek giants, the gigantes, whose great size came with serpent tails in place of feet. Its free Minor Magical Focus is usually connected with strength or with the Form of Terram, and its hereditary Minor Personality Flaw is Rebellious. Virtues and Flaws often taken with it are Giant Blood, Large, Horrifying Appearance - Snake Legs, and a Necessary Condition of touching the ground. Otherwise it follows the Mythic Blood Virtue."
+    },
+    {
       "id": "vf_mythic_characteristic",
       "name": "Mythic {characteristic}",
       "type": "Virtue",
@@ -9673,6 +9684,9 @@
       "tier": "Minor",
       "cost": -1,
       "source": "DE",
+      "parameters": [
+        "detail"
+      ],
       "summary": "An urge you struggle to resist, such as drinking, gambling, bragging or perfectionism.",
       "description": "You have an unfortunate urge that you have trouble resisting. Examples include drinking, sex, perfection, bragging, or gambling."
     },
@@ -9684,6 +9698,9 @@
       "tier": "Major",
       "cost": -3,
       "source": "DE",
+      "parameters": [
+        "detail"
+      ],
       "summary": "An urge you struggle to resist, such as drinking, gambling, bragging or perfectionism.",
       "description": "You have an unfortunate urge that you have trouble resisting. Examples include drinking, sex, perfection, bragging, or gambling."
     },
@@ -10061,6 +10078,9 @@
       "tier": "Minor",
       "cost": -1,
       "source": "DE",
+      "parameters": [
+        "detail"
+      ],
       "summary": "Believes wholeheartedly in something untrue.",
       "description": "You believe wholeheartedly in something that just isn't so. Examples include that you are a magus (if you are not), that you are the Pope's child, or that your imaginary friend is real."
     },
@@ -11027,6 +11047,39 @@
       "description": "You have been cursed by some supernatural power, in a way that greatly hinders you. The effects of the curse should be comparable to those of other Major Flaws. Indeed, almost any Flaw could be the result of a curse."
     },
     {
+      "id": "vf_greater_malediction_toad_of_lies",
+      "name": "Greater Malediction: Toad of Lies",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "TSE",
+      "summary": "An oath-breaker's curse: a toad appears in your mouth every time you tell a lie.",
+      "description": "Every time you tell a lie, a toad appears in your mouth. A punishment a spirit or saint lays on a notorious oath-breaker, heard through an Oath Invocation roll; it usually lasts a fixed time set by the oath's severity, or until the oath-breaker atones. Only an entity of Might 40 or more lays a Major Flaw."
+    },
+    {
+      "id": "vf_greater_malediction_opening_wounds",
+      "name": "Greater Malediction: Opening Wounds",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "TSE",
+      "summary": "An oath-breaker's curse: whenever you lose a Fatigue level from exertion, you also take a Light Wound.",
+      "description": "Wounds open of themselves when you exert yourself: whenever you lose a Fatigue level, you also take a Light Wound. A punishment a spirit or saint lays on a notorious oath-breaker, heard through an Oath Invocation roll; it usually lasts a fixed time set by the oath's severity, or until the oath-breaker atones. Only an entity of Might 40 or more lays a Major Flaw."
+    },
+    {
+      "id": "vf_greater_malediction_breaking_tools",
+      "name": "Greater Malediction: Breaking Tools",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "source": "TSE",
+      "summary": "An oath-breaker's curse: each time you use a tool or weapon, a simple die of 1 or 2 breaks it.",
+      "description": "Whenever you use a tool or a weapon, roll a simple die: on a 1 or 2 it breaks. A punishment a spirit or saint lays on a notorious oath-breaker, heard through an Oath Invocation roll; it usually lasts a fixed time set by the oath's severity, or until the oath-breaker atones. Only an entity of Might 40 or more lays a Major Flaw."
+    },
+    {
       "id": "vf_greedy",
       "name": "Greedy",
       "type": "Flaw",
@@ -11724,6 +11777,53 @@
       "description": "To possess this Flaw, the character must be male, and a true-born Érainn (see Chapter 9). Whenever the character's home (village, parish, or province) is threatened, the character is afflicted by the stabbing pains of childbirth for nine half-days (five days and four nights). This pain is equivalent to a Medium wound: it is cumulative with other wound penalties and has a chance of worsening if the character indulges in activities while this wound persists (ArM5, pages 178-179), although he cannot die from this wound worsening. Chirurgy cannot assist any Wound Recovery rolls for this wound, because the pain is entirely phantom."
     },
     {
+      "id": "vf_lesser_malediction_ashen_food",
+      "name": "Lesser Malediction: Ashen Food",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "TSE",
+      "summary": "An oath-breaker's curse: food turns to ashes in your mouth, though it still nourishes.",
+      "description": "Food turns to ashes in your mouth as you eat, though it still nourishes you. A punishment a spirit or saint lays on a notorious oath-breaker, heard through an Oath Invocation roll; it usually lasts a fixed time set by the oath's severity, or until the oath-breaker atones."
+    },
+    {
+      "id": "vf_lesser_malediction_mephitic_odor",
+      "name": "Lesser Malediction: Mephitic Odor",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "TSE",
+      "summary": "An oath-breaker's curse: your body gives off a foul, mephitic stench.",
+      "description": "Your body gives off a foul, mephitic stench. A punishment a spirit or saint lays on a notorious oath-breaker, heard through an Oath Invocation roll; it usually lasts a fixed time set by the oath's severity, or until the oath-breaker atones."
+    },
+    {
+      "id": "vf_lesser_malediction_rotting_clothes",
+      "name": "Lesser Malediction: Rotting Clothes",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "TSE",
+      "summary": "An oath-breaker's curse: any clothes you wear rot after a day.",
+      "description": "Any clothes you wear rot away after a day of being worn. A punishment a spirit or saint lays on a notorious oath-breaker, heard through an Oath Invocation roll; it usually lasts a fixed time set by the oath's severity, or until the oath-breaker atones."
+    },
+    {
+      "id": "vf_lesser_malediction_mothers_curse",
+      "name": "Lesser Malediction: A Mother's Curse",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": -1,
+      "parameters": [
+        "expertise"
+      ],
+      "source": "TSE",
+      "summary": "Your mother's curse: -3 to all rolls in one area of your expertise (military, academic or professional) until you do what she demands.",
+      "description": "Your mother has cursed you, as any mother of the Mediterranean lands may, with the Divine behind her and no power of her own needed. She chose an area of your expertise, military, academic or professional, and you suffer -3 on every roll in it. A curse needs a good reason, and most demand that you set a family matter right: rescue a captured sister, restore the family's honor, defend a weak sibling, provide for destitute kin. It is lifted only by completing that task, or by divine intervention, which a saint may still refuse."
+    },
+    {
       "id": "vf_limited_magic_resistance",
       "name": "Limited Magic Resistance",
       "type": "Flaw",
@@ -12318,6 +12418,9 @@
       "tier": "Minor",
       "cost": -1,
       "source": "DE",
+      "parameters": [
+        "detail"
+      ],
       "summary": "Fixated on an object, action or ideal, interfering with immediate tasks; Major or Minor by intensity.",
       "description": "You are fixated on some prized object, action, or ideal. This interferes with your accomplishment of more immediate tasks. Examples might include obsessive protection of magi to the point that you attack those who insult them, or obsessive neatness where you keep yourself spotless and deride those who do not."
     },
@@ -12329,6 +12432,9 @@
       "tier": "Major",
       "cost": -3,
       "source": "DE",
+      "parameters": [
+        "detail"
+      ],
       "summary": "Fixated on an object, action or ideal, interfering with immediate tasks; Major or Minor by intensity.",
       "description": "You are fixated on some prized object, action, or ideal. This interferes with your accomplishment of more immediate tasks. Examples might include obsessive protection of magi to the point that you attack those who insult them, or obsessive neatness where you keep yourself spotless and deride those who do not."
     },
@@ -14267,6 +14373,9 @@
       "tier": "Minor",
       "cost": -1,
       "source": "DE",
+      "parameters": [
+        "detail"
+      ],
       "summary": "Looks to others rather than self for guidance; needs someone to trust.",
       "description": "You look to others for guidance rather than to yourself. What you need more than anything else is to find someone you can trust."
     },
@@ -17343,6 +17452,39 @@
       "source": "SiS",
       "summary": "Trained only in the Levant, where faeries are scarce: a Faerie aura is subtracted from your magic rolls instead of helping them.",
       "description": "You learnt your magic in the Levant and nowhere else, and the fay are so rare there that you have almost never met them. Within a Faerie aura, its strength counts against your spellcasting and other magic rolls, instead of the usual effect a Faerie aura has on Hermetic magic. Any Hermetic magus may take this Flaw, not only one of the Islamic Tradition. A magus who lives in a Faerie aura for some years may grow used to it, and the storyguide may then let the Flaw lapse."
+    },
+    {
+      "id": "vf_confluence_of_the_realms",
+      "name": "Confluence of the Realms",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "LoH",
+      "summary": "A lab text's realm may be changed when it is used again, and vis may be extracted in an aura of any realm.",
+      "description": "Conciatta's first breakthrough, gained by original research or integration (30 points). When you use a laboratory text, you may change the realm it names, so that a spell or enchantment meant for one realm (a ward, a spell against demons, one that senses or works on an aura) becomes a variant for another, with the same Range, Duration, Target and effect. This is done only in the laboratory, never in the field. You can also extract vis in an aura of any of the four realms: the extraction total takes the usual aura modifier, and the vis is that aura's, with whatever side effects it usually has (Legends of Hermes pp. 14-15)."
+    },
+    {
+      "id": "vf_insight_of_the_realms",
+      "name": "Insight of the Realms",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "LoH",
+      "summary": "A realm's Lore stands in for Artes Liberales or Philosophiae in Rituals and ceremonial casting there, and sees through its regio boundaries.",
+      "description": "Conciatta's second breakthrough, gained by original research or integration (30 points). In a Ritual or ceremonial casting within (or about) a realm, you may use that realm's Lore (Dominion, Faerie, Infernal or Magic Lore) in place of either Artes Liberales or Philosophiae. You may also use a realm's Lore to find and see through a regio boundary of that realm, in place of Second Sight or Sense Holiness and Unholiness; it counts as aligned to the aura it is used in, and takes its modifier (Legends of Hermes p. 15)."
+    },
+    {
+      "id": "vf_true_understanding_of_the_realms",
+      "name": "True Understanding of the Realms",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LoH",
+      "summary": "A foreign aura counts less by your Lore of its realm, for its penalty and its botch dice; a bonus it gives stays.",
+      "description": "Conciatta's last breakthrough, gained by original research or integration (45 points, or 30 once Confluence or Insight of the Realms is integrated). In an aura of another realm, its strength counts less by your score in that realm's Lore, never below 0, for its penalty and its extra botch dice; where the aura gives a bonus, as a Faerie aura does to Hermetic magic, you keep the bonus and lose only the botch dice. The aura's other effects fall by it too, such as the feeling an aligned Magic aura brings or an Abyssal regio's loss of Characteristics. It is part of your Gift, like your sigil, and cannot be suspended: a device keeps, for its Penetration, the Lore you had when you instilled each effect, and your talisman uses your Lore now (Legends of Hermes pp. 15-16)."
     }
   ]
 }

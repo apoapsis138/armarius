@@ -10,7 +10,7 @@ A commands.Form bundles the two as the step a sheet's Edit button runs.
 from __future__ import annotations
 
 import random
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import replace
 from typing import Any
 
@@ -1164,10 +1164,13 @@ INVENTORY_KINDS: list[tuple[str, str]] = [
 ]
 
 
-def inventory_ops(character: Character) -> SectionOps:
+def inventory_ops(
+    character: Character, books: Collection[str] | None = None
+) -> SectionOps:
     """Add (which kind first: the section is one combined list, unlike
     the covenant's per-kind sections), Edit and Delete for Personal
-    Gear."""
+    Gear; a weapon is chosen from the `books` in play
+    (sourcebooks.saga_books; None: every book)."""
     inventory = character.inventory
 
     def form(kind: str, index: int | None) -> Form:
@@ -1194,7 +1197,7 @@ def inventory_ops(character: Character) -> SectionOps:
                 )
             )
 
-        return possession_forms.possession_form(title, kind, entry, apply)
+        return possession_forms.possession_form(title, kind, entry, apply, books=books)
 
     return SectionOps(
         add=lambda: Choose(

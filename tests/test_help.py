@@ -50,6 +50,12 @@ DIALOG_PAGES = {
     "craft-magic",
     "agent-task-resolve",
     "sell-finished-goods",
+    "ligature",
+    "apothecary-store",
+    "theban-customs",
+    "confidence-through-sin",
+    "infernal-influence",
+    "ars-goetia",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

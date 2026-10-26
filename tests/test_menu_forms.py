@@ -73,6 +73,11 @@ def test_each_page_offers_what_applies_there():
         "In Creation / In Play",
         "Demote",
         "Craft by Magic",
+        # The Byzantine customs, with every book in play.
+        "Hermetic Letter",
+        "Invoke a Broken Oath",
+        "Make Greek Fire",
+        "A Mother's Curse",
     ]
     assert _labels(menu_forms.new_items(page)) == ["New Character", "Bind Familiar"]
     deleted = menu_forms.deletes(page)

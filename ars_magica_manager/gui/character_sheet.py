@@ -292,8 +292,33 @@ def side_by_side(*widgets: QWidget, spacing: int = 24) -> QWidget:
     return box
 
 
-#: How many buttons sit beside a section's title.
+#: How many buttons sit beside a section's title, and how wide they and
+#: each row under it may be: a chapter at its narrowest, beside the
+#: inspector in a 1280-wide window, is about 720 pixels.
 SIDE_BUTTONS = 6
+SIDE_WIDTH = 440
+ROW_WIDTH = 680
+
+
+def _button_rows(controls: list[QWidget], shown: set[int]) -> list[list[QWidget]]:
+    """`controls` in rows: the first beside the title (at most SIDE_BUTTONS
+    of those shown, SIDE_WIDTH wide), the rest under it, each ROW_WIDTH
+    wide, so a chapter never scrolls sideways. A hidden control keeps its
+    place and takes no room."""
+    rows: list[list[QWidget]] = [[]]
+    count = width = 0
+    for control in controls:
+        if id(control) in shown:
+            size = control.sizeHint().width()
+            limit = SIDE_WIDTH if len(rows) == 1 else ROW_WIDTH
+            full = len(rows) == 1 and count == SIDE_BUTTONS
+            if count and (full or width + size > limit):
+                rows.append([])
+                count = width = 0
+            count += 1
+            width += size
+        rows[-1].append(control)
+    return rows
 
 
 def section(
@@ -329,8 +354,8 @@ def section(
                 and c.isHidden()
             )
         ]
-        cut = controls.index(shown[SIDE_BUTTONS]) if len(shown) > SIDE_BUTTONS else None
-        beside, under = controls[:cut], controls[cut:] if cut is not None else []
+        rows = _button_rows(controls, set(map(id, shown)))
+        beside, under = rows[0], rows[1:]
         head = QVBoxLayout()
         head.setSpacing(1)
         row = QHBoxLayout()
@@ -344,11 +369,11 @@ def section(
         for control in beside:
             row.addWidget(control, 0, level)
         head.addLayout(row)
-        if under:
+        for line in under:
             more = QHBoxLayout()
             more.setSpacing(2)
             more.addStretch(1)
-            for control in under:
+            for control in line:
                 more.addWidget(control)
             head.addLayout(more)
         head.addWidget(FleuronRule(p))
@@ -1357,7 +1382,7 @@ class CharacterSheet(QWidget):
                 *(tables or [TextBlock("[dim]None recorded.[/]", p)]),
                 buttons=[
                     *verb_buttons(
-                        cf.inventory_ops(c),
+                        cf.inventory_ops(c, sourcebooks.saga_books(saga)),
                         gear,
                         self.run,
                         p,

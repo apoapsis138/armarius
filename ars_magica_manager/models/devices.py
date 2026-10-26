@@ -229,6 +229,12 @@ class EnchantedDevice:
     #: shaped it by magic alone).
     verditius_runes: bool = False
     verditius_craft: str = ""
+    #: Verditius Elder Runes: the Arts of the elder runes inscribed when it
+    #: was opened, at most a Technique and a Form (rules.verditius).
+    elder_runes: list[str] = field(default_factory=list)
+    #: A Verditius Major Mystery's kind of item: "attuned" (Item
+    #: Attunement) or "automaton" (Automata); "" for neither.
+    verditius_item: str = ""
     #: Talismans: the attunements gained, each with its year and season.
     attunements: list[ShapeMaterialBonus] = field(default_factory=list)
     effects: list[InstilledEffect] = field(default_factory=list)

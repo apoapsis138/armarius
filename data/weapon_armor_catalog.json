@@ -73,6 +73,8 @@
       "description": "The famous English longbow, which equally famously required years of training and physical conditioning to use. Requires two free hands to load and fire; its Load includes its arrows." },
     { "id": "weapon_short_bow", "name": "Short Bow", "table": "missile", "ability": "Bows", "init": -1, "attack": 3, "defense": 0, "damage": 6, "strength": -1, "load": 2, "cost": "Standard", "range": 15, "source": "DE",
       "description": "Weaker than the long bow, but still powerful enough to use on the battlefield or to hunt large game. Requires two free hands to load and fire; its Load includes its arrows." },
+    { "id": "weapon_greek_fire_siphon", "name": "Greek Fire Siphon", "table": "missile", "ability": "Profession: Naffatun", "init": -2, "attack": 4, "defense": 0, "damage": 10, "strength": 2, "load": 3, "cost": "Expensive", "range": 5, "source": "TSE",
+      "description": "A hand-held siphon squirting Greek Fire, worked by the Byzantine naffatun with Profession: Naffatun instead of a Martial Ability. Shields don't defend against it in the usual way, for the liquid fire splashes round them: a shield's Defence adds to its bearer's Soak instead. One dose of Greek Fire is good for 10 sprays (The Sundered Eagle p. 47)." },
 
     { "id": "natural_grapple", "name": "Grapple", "table": "natural", "ability": "Brawl", "init": 0, "attack": 0, "defense": 0, "damage": null, "strength": null, "load": null, "cost": null, "range": null, "source": "DE",
       "description": "A grapple attack instead of a normal attack, against an opponent no larger than the creature's Size + 1 (the Grapple Quality). Also the creature's Defense against anyone outside the grapple." },

@@ -37,18 +37,20 @@ from ..models import (
     next_season,
 )
 from ..rules import activities as rules
-from ..rules import book_seasons as bs
-from ..rules import creation_access as access
-from ..rules import creation_characteristics as cch
-from ..rules import enchant_seasons as es
 from ..rules import (
+    apothecary,
     enchantment,
     lab_items,
     lab_seasons,
     merchants,
+    philosophy,
     research,
     work_virtues,
 )
+from ..rules import book_seasons as bs
+from ..rules import creation_access as access
+from ..rules import creation_characteristics as cch
+from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import lab as lab_rules
@@ -384,6 +386,9 @@ def apply_supplement(
             )
     for book in work.books:
         saga.books.append(_copy_book(saga, book))
+    philosophy.record_work(
+        character, work.formula_designs, work.lab_texts, work.products
+    )
     for instance in work.remove_vfs:
         if instance in character.virtues_flaws:
             cch.unapply_virtue(saga, character, instance)
@@ -465,6 +470,8 @@ _FINISHED = {
     "taming": "the animal is tamed.",
     "artwork": "the work of art is finished.",
     "formula": "the formula is known.",
+    # Experimental philosophy's first concoction of a formula.
+    "concoction": "the formula is concocted and its Laboratory Text written.",
 }
 
 
@@ -473,15 +480,19 @@ def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
     and 5 for each point of Raw Materials."""
     lines: list[SeasonRecordLine] = []
     for character in saga.characters:
+        # An apothecary's store also pays for the regimens it supplies.
+        regimens = apothecary.regimen_drain(saga, character)
         if not takes_part_in_play(character) or (
             not character.labor_points
             and not character.workshop_raw_materials
             and not character.investments
+            and not regimens
         ):
             continue
         cost = (
             sw.BUSINESS_UPKEEP
             + sw.RAW_MATERIALS_UPKEEP * character.workshop_raw_materials
+            + regimens
         )
         # A merchant's investments pay back with the year's upkeep.
         virtues = work_virtues.yearly_labor(
@@ -490,6 +501,8 @@ def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
         cost -= sum(points for _, points in virtues)
         character.labor_points -= cost
         named = "".join(f"; {name} {points:+d}" for name, points in virtues)
+        if regimens:
+            named += f"; regimens supplied {-regimens:+d} (Art & Academe p. 65)"
         character.diary.append(
             DiaryEntry(
                 year=saga.current_year,

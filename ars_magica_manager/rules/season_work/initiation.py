@@ -21,7 +21,7 @@ from ...models import (
     VirtueFlawInstance,
 )
 from .. import activity_groups as groups
-from .. import dice, enchantment, mysteries
+from .. import dice, enchantment, mysteries, verditius
 from .. import tradition_seasons as ts
 from ..apprentice_seasons import gifted
 from ..creation_finish import touched_by_the_fay
@@ -186,6 +186,7 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
         _script_problem(plan)
         or (_mystery_problem(saga, character, virtue.id) if virtue else "")
         or _ordeal_problem(character, plan)
+        or _house_ordeal_problem(character, plan)
         or mysteries.ungifted_problem(
             character,
             mystagogue,
@@ -209,7 +210,7 @@ def _hedge_problem(
     magicians' master's test, pp. 88-89) fails an Initiate without them."""
     rule = tradition.initiation
     assert rule is not None  # ts.hedge_script finds Scripts only in a rule
-    if tradition.id not in mystagogue.traditions:
+    if not ts.belongs(mystagogue, tradition.id):
         return (
             f"{mystagogue.name} isn't one of the {tradition.name}: the "
             "Mystagogue must be."
@@ -261,6 +262,9 @@ def _mystery_problem(saga: Saga, character: Character, vf_id: str) -> str:
                 f"{character.name} has a familiar: Secret Name's Initiation "
                 "fails (DE p. 235)."
             )
+    found = verditius.inner_mystery_problem(character, vf_id)
+    if found:
+        return found
     if vf_id == mysteries.FAERIE_MAGIC and not (
         touched_by_the_fay(character)
         or character.aging.warping_points
@@ -272,6 +276,13 @@ def _mystery_problem(saga: Saga, character: Character, vf_id: str) -> str:
             "Initiated (DE p. 236)."
         )
     return ""
+
+
+def _house_ordeal_problem(character: Character, plan: SeasonPlan) -> str:
+    """What House Verditius's rules forbid of the Ordeal's Flaw (Houses of
+    Hermes: Mystery Cults pp. 120-121)."""
+    gained = _ordeal_gained(plan)
+    return verditius.ordeal_problem(character, gained.vf_id) if gained else ""
 
 
 def _ordeal_problem(character: Character, plan: SeasonPlan) -> str:
@@ -376,6 +387,8 @@ def _undergo_initiation(
         if lost := _ordeal_lost(plan):
             result.remove_vfs.append(lost)
         result.ordeal = size
+    if initiated and plan.effect_id:
+        _house_hubris(character, plan.effect_id, result)
     ordeal = f" {size} Ordeal." if size and suffered else ""
     lost_text = f", {months} month(s) lost from {full}" if months else ""
     risk_text = f" + risk {risk}" if risk else ""
@@ -402,6 +415,18 @@ def _undergo_initiation(
         + ordeal
         + gains
     )
+
+
+def _house_hubris(character: Character, vf_id: str, result: SupplementWork) -> None:
+    """The first Inner Mystery of House Verditius always brings the Flaw
+    Hubris, a Minor Ordeal, and each one Hubris experience (Houses of
+    Hermes: Mystery Cults p. 118; DE p. 241)."""
+    result.notes += verditius.initiation_notes(character, vf_id)
+    if not verditius.gives_hubris(character, vf_id):
+        return
+    if all(vf.vf_id != verditius.HUBRIS_FLAW for vf in result.add_vfs):
+        result.add_vfs.append(VirtueFlawInstance(verditius.HUBRIS_FLAW))
+    result.ordeal = result.ordeal or "Minor"
 
 
 def _initiation_terms(

@@ -335,6 +335,8 @@ _LEVEL_KEYS = {
     "target_level": ("pilgrimage",),
     "product_level": ("produce_remedies",),
     "score_written": ("inspeximus",),
+    # Experimental philosophy: the level of a formula researched.
+    "formula_level": ("research_formula",),
 }
 
 
@@ -349,6 +351,8 @@ _BONUS_KEYS = {
     "elements": ("pilgrimage",),
     "script_bonus": ("undergo_initiation",),
     "sabbat_helpers": ("open_tradition_gift",),
+    # Experimental philosophy: a concoction's Philosophic Bonuses.
+    "philosophic_bonus": ("produce_remedies",),
 }
 
 
@@ -366,6 +370,8 @@ _TITLE_KEYS = {
     "exam": ("attend_university",),
     "theme": ("care_of_souls",),
     "lore": ("undergo_initiation",),
+    # Experimental philosophy: the formula concocted.
+    "formula_name": ("produce_remedies",),
 }
 
 
@@ -402,7 +408,7 @@ def _supplement_plan_values(
     if activity in _EXERTED:
         found["experimenting"] = bool(values.get("exert"))
     if activity == "produce_remedies":
-        found["extra_vis"] = values.get("doses") or 1
+        found["extra_vis"] = values.get("doses") or 0
     if activity == "undergo_initiation":
         virtue = values.get("mystery_virtue")
         found["effect_params"] = dict(virtue.params) if virtue else {}
@@ -611,14 +617,17 @@ def _supplement_total_fields(
             "Product level",
             "optint",
             level,
+            placeholder="(the formula's)",
             show_if=activity_is("produce_remedies"),
         ),
         DialogField(
             "doses",
             "Doses",
-            "int",
-            (plan.extra_vis if plan else 0) or 1,
+            "optint",
+            (plan.extra_vis if plan else 0) or None,
+            placeholder="(as many as the Lab Total makes)",
             show_if=activity_is("produce_remedies"),
+            hint="With a Laboratory Text, Lab Total / 5 doses at most (A&A p. 71).",
         ),
     ]
 
@@ -991,6 +1000,46 @@ def _workshop_production_fields(
     ]
 
 
+def _philosophy_fields(
+    character: Character, plan: SeasonPlan | None, activity_is: ActivityIs
+) -> list[DialogField]:
+    """Experimental philosophy's: the level of a formula researched, and
+    the formula concocted with its Philosophic Bonuses (A&A pp. 70-71)."""
+    level = plan.book_level if plan else None
+    title = (plan.title if plan else "") or None
+    return [
+        DialogField(
+            "formula_level",
+            "Formula's level",
+            "optint",
+            level,
+            placeholder="(set later)",
+            show_if=activity_is("research_formula"),
+            hint="Its guideline's base + magnitudes for its Detail, Alteration "
+            "or Potency, as a spell's (A&A pp. 71-78).",
+        ),
+        DialogField(
+            "formula_name",
+            "Formula",
+            "select",
+            title if title in character.formulas else None,
+            options=[(escape(name), name) for name in character.formulas],
+            allow_blank=True,
+            placeholder="(none learned: type the product's level)",
+            show_if=activity_is("produce_remedies"),
+        ),
+        DialogField(
+            "philosophic_bonus",
+            "Philosophic Bonuses",
+            "int",
+            plan.other_modifier if plan else 0,
+            show_if=activity_is("produce_remedies"),
+            hint="Shape and Material, an experiment's Risk Modifier, the "
+            "laboratory's: no more than the Ability counts (A&A p. 71).",
+        ),
+    ]
+
+
 def _supplement_fields(
     saga: Saga,
     character: Character,
@@ -1008,6 +1057,7 @@ def _supplement_fields(
         *_initiation_fields(saga, character, plan, activity_is, vf_picker),
         *_ordeal_fields(saga, character, plan, activity_is, vf_picker),
         *_workshop_production_fields(plan, activity_is),
+        *_philosophy_fields(character, plan, activity_is),
     ]
 
 

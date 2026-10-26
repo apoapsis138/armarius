@@ -35,6 +35,10 @@ EXTENDED_BOOK_QUALITY = "extended_book_quality"
 #: raise a library's research on one subject (the book doesn't say).
 RESEARCH_AIDS_STACK = "research_aids_stack"
 
+#: A magus still in apprenticeship has the Apprentices' year-by-year
+#: model's xp and spell levels for the years so far.
+STANDARD_APPRENTICESHIP = "standard_apprenticeship"
+
 
 @dataclass(frozen=True)
 class RuleOption:
@@ -209,6 +213,24 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Play, pp. 10-12"
         ),
         book="RoP:M",
+    ),
+    # Young characters (Apprentices).
+    RuleOption(
+        key=STANDARD_APPRENTICESHIP,
+        label="Standard apprenticeship model",
+        effect=(
+            "A magus created part way through his apprenticeship has, for "
+            "each year of it so far, 19 xp for the first 12 years and 6 xp "
+            "and 40 spell levels for each of the last 3 (a Skilled Parens 5 "
+            "xp and 10 levels more, a Weak one as much less), either "
+            "spendable on the other, instead of the full 240 xp and 120 "
+            "levels; a finished magus keeps the 240."
+        ),
+        source=(
+            "Apprentices, Chapter Two: Creating Young Characters, Abilities, "
+            "p. 14, and A Standard Apprenticeship, pp. 15-16"
+        ),
+        book="App",
     ),
 )
 

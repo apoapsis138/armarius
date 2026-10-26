@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import random
 import re
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
@@ -515,10 +514,7 @@ def changes(saga: Saga) -> bool:
     return aura_change.is_on(saga)
 
 
-def _realm_is(realm: str) -> Callable[[dict[str, Any]], bool]:
-    """A show_if for fields of one realm's rule, read from the form's Realm
-    (the place's realm while the form has none)."""
-    return lambda values: (values.get("realm") or "Magic") == realm
+_realm_is = places.realm_is
 
 
 def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:

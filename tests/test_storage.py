@@ -49,6 +49,7 @@ from ars_magica_manager.models import (
     FightEntry,
     FightGroup,
     FightSide,
+    Formula,
     GoodDef,
     GoodPurity,
     Grip,
@@ -391,6 +392,11 @@ def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
     )
 
 
+def _add_animal_and_formula(magus: Character) -> None:
+    magus.animal = AnimalForm("hoofed", "Horse", "Horse", lifespan=30)
+    magus.formula_designs.append(Formula("Theriac of Vipers", level=10))
+
+
 def _saga_with_every_record() -> Saga:
     """everything_saga() plus one of each saved record it lacks, so every
     dataclass a saga file holds appears at least once."""
@@ -427,7 +433,7 @@ def _saga_with_every_record() -> Saga:
         diseases=[Disease("Coryza")],
         conditions=["noble_diet"],
     )
-    magus.animal = AnimalForm("hoofed", "Horse", "Horse", lifespan=30)
+    _add_animal_and_formula(magus)
     saga.laboratories[0].arcane_connections.append(ArcaneConnection("ac", "a tree"))
     saga.laboratories[0].item_benefits.append(
         LabItemBenefit(

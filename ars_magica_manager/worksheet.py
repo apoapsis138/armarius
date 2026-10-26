@@ -56,7 +56,7 @@ from .models import (
     Possession,
     Saga,
 )
-from .rules import animal_aging, base_covenants, covenfolk, realms, scores
+from .rules import animal_aging, base_covenants, childhood, covenfolk, realms, scores
 from .rules import animal_grogs as ag
 from .rules import creation as rules
 from .rules import creation_access as access
@@ -846,6 +846,10 @@ def _later_life_actions(saga: Saga, record: Record) -> list[Action]:
         actions.append(
             Action("Take a training package", lambda: wf.training_package(character))
         )
+    if childhood.vocation_offered(saga, character):
+        actions.append(
+            Action("Parent's vocation", lambda: wf.parent_vocation(character))
+        )
     return actions
 
 
@@ -976,10 +980,22 @@ PANELS[("character", ct.STEP)] = Panel(
 
 def _apprenticeship_budget(saga: Saga, record: Record) -> str:
     character = _character(record)
-    budget = magus.xp_budget(character)
+    budget = magus.xp_budget(character, saga)
     spent = cx.spent(character, "apprenticeship")
-    levels = magus.level_budget(character)
+    levels = magus.level_budget(character, saga)
     learned = cx.spent(character, magus.SPELLS_STEP)
+    model = magus.standard_model(saga, character)
+    if model is not None:
+        left = model.points - spent - learned
+        return "\n".join(
+            [
+                f"Standard apprenticeship (Apprentices p. 14): {model.years} of "
+                f"{childhood.MODEL_YEARS} years, {model.xp} xp for Arts and "
+                f"Abilities and {model.levels} spell levels; either may buy the "
+                "other, 1 for 1",
+                f"[b]{spent} xp and {learned} levels spent, {left} left[/]",
+            ]
+        )
     return "\n".join(
         [
             f"Apprenticeship: {budget} xp for Arts and Abilities, "

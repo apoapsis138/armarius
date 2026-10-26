@@ -17,7 +17,7 @@ from ..rules import activities as rules
 from ..rules import apprentice_seasons as aps
 from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
-from ..rules import enchantment, lab_seasons, merchants, study
+from ..rules import enchantment, lab_seasons, merchants, philosophy, study
 from ..rules import familiar_seasons as fs
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
@@ -853,7 +853,12 @@ def livelihood_text(character: Character, year: int | None = None) -> str:
     if years:
         lines.append(f"University: {years} season(s) studied")
     if character.formulas:
-        lines.append("Formulas: " + ", ".join(character.formulas))
+        lines.append(
+            "Formulas: "
+            + ", ".join(
+                philosophy.formula_label(character, f) for f in character.formulas
+            )
+        )
     if character.ordeals:
         ordeals = ", ".join(
             f"{o.size} ({o.initiations_since} Initiation(s) since)"

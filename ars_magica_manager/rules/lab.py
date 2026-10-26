@@ -33,7 +33,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import effects, house_mastery, lab_virtues, realms, scores, sites
+from . import aura_kinds, effects, house_mastery, lab_virtues, realms, scores, sites
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .lab_stats import (
@@ -210,6 +210,7 @@ def lab_total(
     lines = [
         *_magus_lines(magus, technique, form),
         _aura_line(saga, magus, lab, covenant, boons),
+        *_aligned_lines(saga, lab, covenant, boons, technique, form),
         *_quality_lines(saga, lab, lab_catalog, applies),
         *_helper_lines(magus, assistants, familiar, notes),
         *_activity_lines(magus, activity, similar_spell_level, shape_material),
@@ -276,6 +277,23 @@ def _aura_line(
     aura, realm = _place_aura(saga, lab, covenant, boons)
     label, amount = hybrid.aura_label(magus, realm, aura)
     return Line(label, amount=amount, source=realms.SOURCE)
+
+
+def _aligned_lines(
+    saga: Saga,
+    lab: Laboratory,
+    covenant: Covenant | None,
+    boons: Mapping[str, CovenantBoonHookDef],
+    technique: str,
+    form: str,
+) -> list[Line]:
+    """The aura again, when the lab's Magic aura is aligned with the
+    total's Technique or Form (RoP: Magic p. 16)."""
+    kind = sites.kind_where(sites.lab_place(saga, lab))
+    if not kind:
+        return []
+    aura, realm = _place_aura(saga, lab, covenant, boons)
+    return aura_kinds.aligned_lines(kind, realm, aura, (technique, form))
 
 
 def _place_aura(

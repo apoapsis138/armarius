@@ -6,6 +6,7 @@ with every step's checks registered. Import this, not the step modules.
 from __future__ import annotations
 
 from . import (  # noqa: F401 -- each registers its step's checks
+    childhood,
     creation_animal,
     creation_character,
     creation_characteristics,

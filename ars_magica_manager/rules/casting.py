@@ -61,7 +61,16 @@ from typing import Any
 
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Saga, Spell, VirtueFlawInstance
-from . import casting_virtues, effects, enchantment, options, realms, scores
+from . import (
+    aura_kinds,
+    casting_virtues,
+    effects,
+    enchantment,
+    options,
+    realm_insight,
+    realms,
+    scores,
+)
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .derived import carried_load, encumbrance, fatigue_penalty, wound_penalty
@@ -161,8 +170,11 @@ def casting_score(
     mastery_abilities: dict[str, int] | None = None,
     sordida_pawns: int = 0,
     dedicated_pawns: int = 0,
+    aura_kind: str = "",
 ) -> Breakdown:
-    """The Casting Score, with its terms. A Ritual or ceremonial casting
+    """The Casting Score, with its terms. `aura_kind` is the aura's kind
+    (rules.aura_kinds): a Magic aura aligned with one of the spell's Arts
+    counts again (RoP: Magic p. 16). A Ritual or ceremonial casting
     uses loud words and exaggerated gestures at some point, so `words` and
     `gestures` don't apply to it. A Ritual's `vis_pawns` are those beyond
     what it needs, each +2; fast casting allows none. `mastery_abilities`
@@ -192,6 +204,9 @@ def casting_score(
         lines.append(Line("Fatigue", amount=tired, source=SOURCE))
     label, amount = hybrid.aura_label(magus, aura_realm, aura, ritual=ritual)
     lines.append(Line(label, amount=amount, source=realms.SOURCE))
+    lines += aura_kinds.aligned_lines(
+        aura_kind, aura_realm, aura, (technique, form, *requisites)
+    )
     whole = ritual or ceremonial
     relief = {
         "casting_words": 5 * abilities.get(QUIET_CASTING, 0),
@@ -225,7 +240,7 @@ def casting_score(
             vis_pawns, sordida_pawns, ritual=ritual, dedicated=dedicated_pawns
         )
     if ritual or ceremonial:
-        lines += _ritual_lines(magus)
+        lines += _ritual_lines(magus, aura_realm, aura)
     if ceremonial and props:
         lines.append(
             Line(
@@ -270,13 +285,25 @@ def casting_score(
     )
 
 
-def _ritual_lines(magus: Character) -> list[Line]:
-    """Artes Liberales + Philosophiae, or a hybrid magus's Method +
+def _ritual_lines(
+    magus: Character, aura_realm: str = realms.HERMETIC, aura: int = 0
+) -> list[Line]:
+    """Artes Liberales + Philosophiae (one of them the aura's realm's Lore
+    under Insight of the Realms, when better), or a hybrid magus's Method +
     Power when better."""
+    found = {
+        ability: sum(ability_score(magus, ability))
+        for ability in realm_insight.LEARNING
+    }
+    chosen = realm_insight.learning_scores(found, magus, aura_realm, aura)
     learned = [
-        Line(ability, amount=score, source=SOURCE)
-        for ability in ("Artes Liberales", "Philosophiae")
-        if (score := sum(ability_score(magus, ability)))
+        Line(
+            label,
+            amount=score,
+            source=SOURCE if label in found else realm_insight.SOURCE,
+        )
+        for label, score in chosen.items()
+        if score
     ]
     # (Ceremonial casting needs experience in one of them: can_ceremonial.)
     pair = hybrid.ritual_pair(magus)

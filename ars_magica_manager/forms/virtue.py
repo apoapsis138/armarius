@@ -115,6 +115,10 @@ OPTIONAL_PARAMS: dict[str, tuple[str, str]] = {
         "Posing as of lower status",
         "lower, to halve the second household's cost",
     ),
+    "detail": (
+        "What it is (a sin in brackets counts toward it)",
+        "e.g. Gold (Greedy)",
+    ),
 }
 
 #: An Add list's title, by the side it lists (None: both).

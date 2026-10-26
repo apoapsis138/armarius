@@ -109,6 +109,113 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.21.0 — 2026-10-26
+
+### Gauntlet
+
+- Young characters, with Apprentices in play: the worksheet shows the Aging
+  Chart's Characteristic Modifier and the Size a child should have for his
+  age, with Grows Quickly, Late Bloomer and Deft (Characteristic) moving
+  them (Apprentices pp. 7-12).
+- Child Virtues and Flaws are checked against the character's age (20 and
+  younger), Inherited ones are for magi and companions and must have
+  manifested by 21, Virtues that grant xp are barred under 14, and
+  Turbulence Prone needs The Gift (pp. 10-12; Errata p. 82).
+- A young character may learn his parent's vocation from 6 to 14, but only
+  to half the parent's score (p. 14).
+
+### Computus
+
+- New saga option, **Standard apprenticeship model** (Apprentices p. 14),
+  off by default: an apprentice part way through has 19 xp a year for
+  twelve years, then 6 xp and 40 spell levels a year, either spendable on
+  the other, instead of the full 240 xp and 120 levels.
+- **Aura kinds**: a Magic aura may be aligned, adding the aura again to
+  the Casting Scores and Lab Totals of its Art, or half of it to Recovery
+  Totals for Healing (RoP: Magic pp. 13-16); a Faerie aura may be tinted
+  (RoP: Faerie p. 104); a Divine aura is the Dominion or Empyreal, both 1
+  weaker at night and 1 stronger on Sundays and holy days (RoP: The
+  Divine pp. 7-12). True Understanding and Insight of the Realms work on
+  foreign auras and Rituals (Legends of Hermes pp. 14-16).
+- **Sin**: Personality Traits and Personality Flaws are read against the
+  seven deadly sins and their virtues; Confidence through sin, infernal
+  influence, tarnish and what redemption costs (RoP: The Infernal pp.
+  17-24, 89, 124).
+- **The Goetic Arts'** own totals and targets: Summoning, Scouring,
+  Ablating, Binding and Commanding, with Hierarchy on both sides against
+  demons (pp. 114-119); the demon-hunter's spells show what they do at
+  their level, with Apotropaic and Goetic Mastery (pp. 120-124, with the
+  Errata's corrections).
+- **The Theban customs** (The Sundered Eagle): the Hermetic letter's
+  composing and reading rolls, the Oath Invocation roll with its
+  maledictions, Greek Fire's dangerous batch, painting (by ordained clergy)
+  and venerating icons, and a mother's curse (pp. 44-48, 133-136).
+- **House Verditius's Inner Mysteries** in the laboratory: elder runes
+  double their Art, raise each effect's level, take their pawn of vis and
+  make the season's vis limit Magic Theory x Philosophiae; an attuned
+  item's capacity; Hubris on an attuned item's and an automaton's Lab
+  Totals; the rules for Items of Quality, reforging, automata and binding
+  creatures and curses, ready for the season notes (HoH: Mystery Cults pp.
+  123-135).
+- **Art & Academe's apothecary**: medicinal degrees and simple poisons,
+  the store's drains, searching for and preserving ingredients, formula
+  levels and Lab Totals, ligatures and nativities (A&A pp. 63-78; Errata
+  p. 61).
+- **The Greek Fire siphon** joins the weapons, with The Sundered Eagle in
+  play: used with Profession: Naffatun, and a shield's Defense goes to
+  Soak against it in a fight (p. 47).
+
+### Book of Hours
+
+- At the year's end, a character turning 8, 15 or 21 is told of his
+  transition of maturation, and what must change at 21.
+- Initiations into House Verditius's Mysteries follow the House's rules:
+  Cult Lore 3 for a Minor Inner Mystery and 5 for a Major, Hubris as the
+  first one's Ordeal, the Hubris experience each earns, and each of the
+  House's Ordeals suffered once (HoH: Mystery Cults pp. 116-121).
+- Researching a philosophy formula records its kind and level, and its
+  experience goes into the formula only; producing reagents, theriacs or
+  inceptions works the season out, from a first concoction's points to
+  doses by the Lab Total in his Personal Gear; a store pays 3 Labor Points
+  a year for each physician whose regimens it supplies.
+
+### Pagina
+
+- A place's and a regio level's Edit asks for its aura's kind by its
+  realm, and its facts say what each does.
+- More on Personality Traits offers **Confidence through Sin** and
+  **Infernal Influence**; More offers **Ars Goetia**, a calculator and roll
+  of a Goetic Art.
+- More offers the Byzantine customs (Hermetic Letter, Invoke a Broken
+  Oath, Make Greek Fire, Paint an Icon, Venerate an Icon, A Mother's
+  Curse), **Make a Ligature** and, on This Season, **Apothecary's Store**.
+- Delusion, Obsessed, Compulsion and Weak-Willed take a detail naming the
+  sin they lean to.
+- An invested device a Verditius crafted records its elder runes and
+  whether it is an attuned item or an automaton.
+- The Plan Season form asks for a formula's level and Philosophic
+  Bonuses; the Planning tab lists each formula with its kind, level and
+  Laboratory Text.
+- On the desktop, a chapter's buttons wrap by width, so none scrolls
+  sideways.
+
+### Florilegium
+
+- Legends of Hermes's three realm-insight Virtues; RoP: Magic's Fine Aura
+  and Favorable Aura Boons and Troublesome Aura Hook; Mythic Blood
+  (Gigantes), The Sundered Eagle's six maledictions and a mother's curse;
+  the House Verditius Mystery Cult and its sample Scripts.
+
+### Orbis
+
+- A church's Relics can hold its icons: an eikon's Aesthetic Quality and
+  what venerating it adds to invoking its saint.
+
+### Hedge Magic
+
+- The five Goetic traditions list their Arts' effects as guidelines, and
+  their Goetic Art notes give each Art's target correctly.
+
 ## 3.20.0 — 2026-10-26
 
 ### Pagina

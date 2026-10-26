@@ -13,6 +13,10 @@ id, its level); the spell itself is on the Known Spells list.
 Rules: reference/rules-engine-reference.md §4 Apprenticeship budget;
 Maximum level of a spell learned at creation; Required and recommended
 Abilities at Gauntlet.
+
+With the saga's standard apprenticeship option (Apprentices p. 14), a
+magus still in apprenticeship has the model's xp and spell levels for the
+years so far instead (rules.childhood.model_budget).
 """
 
 from __future__ import annotations
@@ -20,7 +24,7 @@ from __future__ import annotations
 from .. import catalog
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Laboratory, Saga, Spell
-from . import animal_aging, lab
+from . import animal_aging, childhood, lab, options
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import DEFAULT_APPRENTICESHIP_AGE, age, aging_age
@@ -63,11 +67,42 @@ def _parens(character: Character) -> int:
     return ("vf_skilled_parens" in ids) - ("vf_weak_parens" in ids)
 
 
-def xp_budget(character: Character) -> int:
+def years_apprenticed(saga: Saga, character: Character) -> int | None:
+    """The years of apprenticeship the magus has served while still in it
+    (None once past Gauntlet, or with no age)."""
+    years = age(saga, character)
+    if years is None:
+        return None
+    start = character.hermetic.age_of_apprenticeship
+    start = start if start is not None else DEFAULT_APPRENTICESHIP_AGE
+    served = max(0, years - start)
+    return served if served < APPRENTICESHIP_YEARS else None
+
+
+def standard_model(
+    saga: Saga | None, character: Character
+) -> childhood.ModelBudget | None:
+    """The standard apprenticeship model's budget, when the saga uses it
+    and the magus is still an apprentice (Apprentices p. 14)."""
+    if saga is None or not options.is_on(saga, options.STANDARD_APPRENTICESHIP):
+        return None
+    served = years_apprenticed(saga, character)
+    if served is None:
+        return None
+    return childhood.model_budget(served, _parens(character))
+
+
+def xp_budget(character: Character, saga: Saga | None = None) -> int:
+    """The apprenticeship's xp: 240 (Skilled Parens 60 more, Weak 60
+    less), or the standard model's so far for an apprentice."""
+    if (model := standard_model(saga, character)) is not None:
+        return model.xp
     return APPRENTICESHIP_XP + SKILLED_PARENS_XP * _parens(character)
 
 
-def level_budget(character: Character) -> int:
+def level_budget(character: Character, saga: Saga | None = None) -> int:
+    if (model := standard_model(saga, character)) is not None:
+        return model.levels
     return APPRENTICESHIP_LEVELS + SKILLED_PARENS_LEVELS * _parens(character)
 
 
@@ -155,6 +190,9 @@ def spell_checks(saga: Saga, character: Character, step: str) -> list[Check]:
 def apprenticeship_checks(saga: Saga, record: Record) -> list[Check]:
     assert isinstance(record, Character)
     character = record
+    model = standard_model(saga, character)
+    if model is not None:
+        return _model_checks(saga, character, model)
     budget = xp_budget(character)
     used = spent(character, "apprenticeship")
     found = [
@@ -173,19 +211,7 @@ def apprenticeship_checks(saga: Saga, record: Record) -> list[Check]:
                 advice=True,
             )
         )
-    wrong = sorted(
-        {
-            x.target
-            for x in entries(character, "apprenticeship")
-            if not allowed(character, x.target)
-        }
-    )
-    if wrong:
-        found.append(
-            _check(
-                "Only Arts and Abilities open to an apprentice", False, ", ".join(wrong)
-            )
-        )
+    found += _wrong_targets(character)
     levels = level_budget(character)
     used_levels = spent(character, SPELLS_STEP)
     found.append(
@@ -206,6 +232,71 @@ def apprenticeship_checks(saga: Saga, record: Record) -> list[Check]:
             )
         )
     found += spell_checks(saga, character, SPELLS_STEP)
+    found += _gauntlet_minimums(character)
+    return found
+
+
+def _wrong_targets(character: Character) -> list[Check]:
+    wrong = sorted(
+        {
+            x.target
+            for x in entries(character, "apprenticeship")
+            if not allowed(character, x.target)
+        }
+    )
+    if not wrong:
+        return []
+    return [
+        _check("Only Arts and Abilities open to an apprentice", False, ", ".join(wrong))
+    ]
+
+
+def _model_checks(
+    saga: Saga, character: Character, model: childhood.ModelBudget
+) -> list[Check]:
+    """An apprentice's checks under the standard model: the xp and spell
+    levels together within the years so far (either may buy the other),
+    and the minimums at Gauntlet only as advice, being still to come."""
+    used, learned = spent(character, "apprenticeship"), spent(character, SPELLS_STEP)
+    total = used + learned
+    found = [
+        _check(
+            f"Standard apprenticeship, {model.years} years: {model.xp} xp and "
+            f"{model.levels} spell levels",
+            total <= model.points,
+            f"{used} xp and {learned} levels, {total} of {model.points}"
+            + (f", {total - model.points} too many" if total > model.points else ""),
+            childhood.MODEL_SOURCE,
+        )
+    ]
+    if total < model.points:
+        found.append(
+            _check(
+                "Apprenticeship xp and spell levels spent",
+                False,
+                f"{model.points - total} unspent",
+                childhood.MODEL_SOURCE,
+                advice=True,
+            )
+        )
+    found += _wrong_targets(character)
+    found += spell_checks(saga, character, SPELLS_STEP)
+    found += [
+        _check(
+            f"{name.removeprefix('Dead Language: ')} at least {least} by Gauntlet",
+            ability_level(character, name) >= least,
+            f"{ability_level(character, name)}",
+            MINIMUMS_SOURCE,
+            advice=True,
+        )
+        for name, least in REQUIRED
+    ]
+    return found
+
+
+def _gauntlet_minimums(character: Character) -> list[Check]:
+    """The Abilities a magus must have at Gauntlet, and those advised."""
+    found: list[Check] = []
     for name, least in REQUIRED:
         level = ability_level(character, name)
         found.append(

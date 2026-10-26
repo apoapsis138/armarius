@@ -9,16 +9,20 @@ import random
 from ars_magica_manager import fights
 from ars_magica_manager.models import (
     CREATURE_FIGHTER,
+    Ability,
     ArtScore,
     Character,
+    Characteristics,
     Combatant,
     Covenant,
     Fight,
     FightGroup,
     FightSide,
+    Possession,
     Saga,
 )
 from ars_magica_manager.rules import fight as rules
+from ars_magica_manager.rules.xp import ability_xp
 
 
 class Scripted(random.Random):
@@ -317,3 +321,51 @@ def test_a_spontaneous_spell_casts_penetrates_and_burns():
     assert "strikes Brigand" in played.text
     assert any("Penetration" in line for line in played.lines)
     assert magus.fatigue_level != "fresh"
+
+
+def test_greek_fire_splashes_round_a_shield_into_soak():
+    """The Sundered Eagle p. 47: a hand-held siphon is a missile weapon
+    worked with Profession: Naffatun, and a shield's Defence adds to Soak
+    against it instead of to Defence."""
+    naffatun = Character(
+        id="n",
+        name="Naffatun",
+        type="grog",
+        characteristics=Characteristics(dexterity=1),
+        abilities=[Ability("Profession: Naffatun", xp=ability_xp(3))],
+        inventory=[
+            Possession(
+                id="siphon",
+                kind="weapon",
+                name="Siphon",
+                gear_id="weapon_greek_fire_siphon",
+                weapon_init=-2,
+                weapon_attack=4,
+                weapon_defense=0,
+                weapon_damage=10,
+            )
+        ],
+    )
+    shield = Possession(
+        id="shield",
+        kind="weapon",
+        name="Round Shield",
+        gear_id="weapon_round_shield",
+        weapon_defense=2,
+    )
+    sailor = Character(id="t", name="Sailor", type="grog", inventory=[shield])
+    fight = fight_of(
+        [Combatant("Naffatun", "character", "n", id="naffatun")],
+        [Combatant("Sailor", "character", "t", id="sailor")],
+    )
+    saga = saga_with(fight, characters=[naffatun, sailor])
+    every = rules.units(saga, fight)
+    assert every["naffatun"].vanguard.figures().missile
+    chances = rules.odds(saga, fight, every["naffatun"], every["sailor"], rules.ATTACK)
+    assert chances.total("attack") == 1 + 3 + 4
+    assert chances.total("defence") == 0  # the shield's +2 taken off
+    assert [t.amount for t in chances.soak] == [0, 2]
+    # Against an ordinary missile the shield defends as usual.
+    naffatun.inventory[0].gear_id = "weapon_long_bow"
+    chances = rules.odds(saga, fight, every["naffatun"], every["sailor"], rules.ATTACK)
+    assert (chances.total("defence"), len(chances.soak)) == (2, 1)

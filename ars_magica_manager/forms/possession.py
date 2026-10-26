@@ -10,10 +10,10 @@ Edit and Delete.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from typing import Any
 
-from .. import catalog, vis
+from .. import catalog, sourcebooks, vis
 from .. import possessions as pos
 from ..arts import ARTS
 from ..commands import Confirm, Form, Refuse, SectionOps
@@ -47,6 +47,7 @@ def possession_fields(
     places: Sequence[tuple[str, str]] = (),
     place: str = "",
     vis_kind_options: Sequence[tuple[str, str]] | None = None,
+    books: Collection[str] | None = None,
 ) -> list[DialogField]:
     """The add/edit form for one kind of possession. For a laboratory listed as
     a sanctum, name/owner/location/build points are shown read-only (edit them
@@ -54,7 +55,9 @@ def possession_fields(
     `natural`: a familiar's Natural Weapons. A Raw Vis Store's asks where it
     is kept: one of `places` (vis.location_options), `place` to start with.
     A vis source or store offers `vis_kind_options` as its kind of vis
-    (vis_kinds.kind_options; None: every kind)."""
+    (vis_kinds.kind_options; None: every kind). A weapon's book entries
+    are those of the `books` in play (sourcebooks.saga_books; None: every
+    book), and the one it was filled from."""
     auto = entry is not None and entry.auto
     fields = (
         _sanctum_from_lab_fields(kind, entry)
@@ -68,7 +71,7 @@ def possession_fields(
     elif kind == "sanctum":
         fields += _sanctum_fields(entry, auto)
     elif kind in pos.QUANTITY_KINDS:
-        fields += _quantity_possession_fields(kind, entry, natural=natural)
+        fields += _quantity_possession_fields(kind, entry, natural=natural, books=books)
     elif kind in ("vis_source", "vis_store"):
         fields += _vis_possession_fields(kind, entry, places, place)
         fields += vis_kind_fields(
@@ -97,6 +100,7 @@ def possession_form(
     places: Sequence[tuple[str, str]] = (),
     place: str = "",
     vis_kind_options: Sequence[tuple[str, str]] | None = None,
+    books: Collection[str] | None = None,
 ) -> Form:
     """The possession form as a step: `apply` gets its values."""
     return Form(
@@ -108,6 +112,7 @@ def possession_form(
             places=places,
             place=place,
             vis_kind_options=vis_kind_options,
+            books=books,
         ),
         apply,
         validate=pos.form_problem,
@@ -182,13 +187,23 @@ def _sanctum_fields(entry: pos.PossessionEntry | None, auto: bool) -> list[Dialo
 
 
 def _gear_book_field(
-    kind: str, entry: pos.PossessionEntry | None, natural: bool
+    kind: str,
+    entry: pos.PossessionEntry | None,
+    natural: bool,
+    books: Collection[str] | None = None,
 ) -> DialogField:
     """The weapon's or armor Material's book entry: choosing one fills in
-    the book's figures (see possessions.weapon_fills/armor_fills)."""
+    the book's figures (see possessions.weapon_fills/armor_fills). A
+    supplement's weapon is offered with its book in play (`books`), or when
+    it is the one the entry was filled from."""
     if kind == "weapon":
         tables = pos.NATURAL_WEAPON_TABLES if natural else pos.GEAR_WEAPON_TABLES
-        weapons = {w.id: w for w in catalog.load_weapon_catalog(tables=tables)}
+        keep = attr(entry, "gear_id", None)
+        weapons = {
+            w.id: w
+            for w in catalog.load_weapon_catalog(tables=tables)
+            if w.id == keep or sourcebooks.in_play(w.source, books)
+        }
         options = [
             (escape(w.name if natural else f"{w.name} ({w.ability})"), w.id)
             for w in weapons.values()
@@ -225,14 +240,18 @@ def _gear_book_field(
 
 
 def _quantity_possession_fields(
-    kind: str, entry: pos.PossessionEntry | None, *, natural: bool = False
+    kind: str,
+    entry: pos.PossessionEntry | None,
+    *,
+    natural: bool = False,
+    books: Collection[str] | None = None,
 ) -> list[DialogField]:
     """The book entry, Type and Quality (gear kinds), Quantity, and a
     weapon's or armor's combat figures."""
     fields: list[DialogField] = []
     if kind in GEAR_TYPES_BY_KIND:
         types = GEAR_TYPES_BY_KIND[kind]
-        book = _gear_book_field(kind, entry, natural)
+        book = _gear_book_field(kind, entry, natural, books)
         fields += [
             book,
             DialogField(
@@ -552,6 +571,7 @@ def covenant_possession_form(
         places=places,
         place=place,
         vis_kind_options=vis_kinds.kind_options(saga, keep),
+        books=sourcebooks.saga_books(saga),
     )
 
 

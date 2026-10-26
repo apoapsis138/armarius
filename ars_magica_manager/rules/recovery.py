@@ -4,9 +4,11 @@
   Medicine (for a disease, poison or deprivation) + magical aid + stress
   die (DE p. 405). The app adds what the books add to it: the stable rolls'
   +3s, the laboratory's Health for those who live in it (p. 289), a
-  familiar's Bronze Cord (p. 267), Virtues such as Rapid Convalescence, and
-  minus an Infernal aura's strength where they live (Realms of Power: The
-  Infernal p. 12, where a disease never improves). Recovery rolls don't take
+  familiar's Bronze Cord (p. 267), Virtues such as Rapid Convalescence,
+  half a Healing-aligned Magic aura's strength, rounded up (Realms of
+  Power: Magic p. 16), and minus an Infernal aura's strength where they
+  live (Realms of Power: The Infernal p. 12, where a disease never
+  improves). Recovery rolls don't take
   the Wound Penalty.
 - **Intervals and Ease Factors**: Light weekly, Stable 4, Improvement 10;
   Medium monthly, 6 and 12; Heavy once a season, 9 and 15. At or over
@@ -35,7 +37,7 @@ from dataclasses import dataclass, field
 
 from .. import catalog
 from ..models import Character, Saga, Wounds, WoundState
-from . import chirurgy, derived, dice, disease, effects, lab_stats, realms
+from . import aura_kinds, chirurgy, derived, dice, disease, effects, lab_stats, realms
 from .breakdown import Breakdown, Line
 from .lab import ability_score
 from .scores import character_source
@@ -196,6 +198,13 @@ def total(saga: Saga | None, character: Character, state: WoundState) -> Breakdo
     for effect in found:
         if effect.modifier.amount:
             lines.append(Line(effect.entry.name, amount=effect.modifier.amount))
+    if saga is not None:
+        aura, realm = realms.home_aura(saga, character)
+        healing = aura_kinds.healing_line(
+            realms.home_aura_kind(saga, character), realm, aura
+        )
+        if healing is not None:
+            lines.append(healing)
     infernal = _infernal_aura(saga, character)
     if infernal:
         lines.append(Line("Infernal aura", amount=-infernal, source=INFERNAL_SOURCE))

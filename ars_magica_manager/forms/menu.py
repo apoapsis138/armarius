@@ -52,6 +52,7 @@ from .. import familiars as fam
 from .. import inhabitants as inh
 from .. import lab_texts as lt
 from .. import spells as spl
+from .. import theban_customs as byzantine
 from ..actions import (
     MORE_MENU,
     NEW_MENU,
@@ -88,15 +89,18 @@ from ..rules import covenfolk, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
 from ..sections import LAB_TEXTS_SECTION
+from . import apothecary as apothecary_forms
 from . import beast as beast_forms
 from . import craft_magic as craft_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
+from . import goetic as goetic_forms
 from . import grogs as grog_forms
 from . import hosting as hosting_forms
 from . import importing as import_forms
 from . import library as library_forms
 from . import neighbour as neighbour_forms
+from . import sin as sin_forms
 from . import tribunal as tribunal_forms
 
 #: The record a page shows, as deletion and actions take it.
@@ -499,6 +503,22 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "research_bonuses": ((NodeKind.COVENANT, "Library"),),
     # A craftsman's sale of his finished goods, beside This Season's Plan.
     "sell_goods": ((NodeKind.CHARACTER, "This Season"),),
+    # Art & Academe: a ligature beside Disputatio, the apothecary's
+    # store beside This Season's Plan.
+    "make_ligature": ((NodeKind.CHARACTER, "Abilities"),),
+    "apothecary_store": ((NodeKind.CHARACTER, "This Season"),),
+    # The Theban Tribunal's Byzantine customs, beside Disputatio.
+    "theban_letter": ((NodeKind.CHARACTER, "Abilities"),),
+    "invoke_oath": ((NodeKind.CHARACTER, "Abilities"),),
+    "make_greek_fire": ((NodeKind.CHARACTER, "Abilities"),),
+    "paint_icon": ((NodeKind.CHARACTER, "Abilities"),),
+    "venerate_icon": ((NodeKind.CHARACTER, "Abilities"),),
+    "mothers_curse": ((NodeKind.CHARACTER, "Abilities"),),
+    # Sin, tarnish and the Goetic Arts (RoP: The Infernal): beside the
+    # Personality Traits' buttons, and the Abilities chapter's.
+    "indulge_sin": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "infernal_influence": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "ars_goetia": ((NodeKind.CHARACTER, "Abilities"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -563,6 +583,10 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
     # A craftsman's sale of his finished goods.
     "sell_goods": lambda page: available(
         "sell_goods", replace(page, section="section-char-season")
+    ),
+    # An apothecary's searching and preserving.
+    "apothecary_store": lambda page: available(
+        "apothecary_store", replace(page, section="section-char-season")
     ),
 }
 
@@ -1519,4 +1543,18 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     ),
     # A craftsman's sale of his finished goods.
     "sell_goods": _needs(_character, selling.sell_form),
+    # Art & Academe's ligatures and the apothecary's store.
+    "make_ligature": _needs(_character, apothecary_forms.ligature_form),
+    "apothecary_store": _needs(_character, apothecary_forms.store_form),
+    # The Theban Tribunal's Byzantine customs.
+    "theban_letter": _needs(_character, byzantine.letter_form),
+    "invoke_oath": _needs(_character, byzantine.oath_form),
+    "make_greek_fire": _needs(_character, byzantine.greek_fire_form),
+    "paint_icon": _needs(_character, byzantine.icon_form),
+    "venerate_icon": _needs(_character, byzantine.venerate_form),
+    "mothers_curse": _needs(_character, byzantine.curse_form),
+    # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
+    "indulge_sin": _needs(_character, sin_forms.sin_form),
+    "infernal_influence": _needs(_character, sin_forms.influence_form),
+    "ars_goetia": _needs(_character, goetic_forms.goetic_form),
 }

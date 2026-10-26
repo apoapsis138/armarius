@@ -7,7 +7,9 @@
   Defence + stress die; a hit beats it, by the Attack Advantage. The
   Damage Total (Damage + the Advantage) less the defender's Soak is read
   on the Damage Table for his Size (p. 394). Against missiles only a
-  shield's Defence counts, with the Combat Ability (p. 395).
+  shield's Defence counts, with the Combat Ability (p. 395). A Greek
+  Fire siphon's fire splashes round a shield: its Defence comes off the
+  target's Defence and adds to his Soak (The Sundered Eagle p. 47).
 - **Groups** act as one, with the vanguard's figures; a trained group's
   other members add their Combat Abilities (at most 3 x the leader's
   Leadership) to its Attack or its Defence. A group's hit lands once for
@@ -124,6 +126,10 @@ class Figures:
     #: Damage with no weapon in it, for a scuffle.
     bare_damage: int
     missile: bool = False
+    #: The Defence its carried shield adds (in missile_defence).
+    shield_defence: int = 0
+    #: Its weapon is a Greek Fire siphon, whose fire splashes round shields.
+    splashes: bool = False
 
 
 FIST = "weapon_fist"
@@ -222,7 +228,9 @@ class Fighter:
                 ability=skill,
                 leadership=sum(ability_score(c, "Leadership")),
                 bare_damage=c.characteristics.strength,
-                missile=ability in MISSILE_ABILITIES,
+                missile=ability in MISSILE_ABILITIES or combat.is_missile(weapon),
+                shield_defence=combat.shield_defence(c),
+                splashes=weapon.gear_id == combat.GREEK_FIRE_SIPHON,
             )
         typed = self.combatant
         wounds = c.wounds if c is not None else typed.wounds
@@ -526,6 +534,24 @@ def defenders_of(saga: Saga, fight: Fight, unit: Unit) -> list[Fighter]:
     ]
 
 
+def _splash(chances: Odds, mine: Figures, theirs: Figures) -> None:
+    """Greek Fire splashes round a shield: the shield's Defence comes off
+    the target's Defence and adds to his Soak (The Sundered Eagle p. 47)."""
+    splash = theirs.shield_defence if mine.splashes and mine.missile else 0
+    if not splash:
+        return
+    chances.defence.append(
+        Term("Shield", -splash, f"Greek Fire splashes round the shield: -{splash}")
+    )
+    chances.soak.append(
+        Term(
+            "Shield",
+            splash,
+            f"The shield's Defence to Soak against Greek Fire: +{splash}",
+        )
+    )
+
+
 def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds:
     """`who`'s blow at `target` with `action`, before the dice."""
     mine = who.vanguard.figures(bare=action == GRAPPLE)
@@ -591,6 +617,7 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
     damage = mine.bare_damage if action in (SCUFFLE, GRAPPLE) else mine.damage or 0
     chances.damage = [Term("Damage", damage)]
     chances.soak = [Term("Soak", theirs.soak)]
+    _splash(chances, mine, theirs)
     form = harm_form(who.vanguard)
     shield = target.vanguard.character
     form_bonus = derived.form_bonus(shield, form) if shield and form else 0

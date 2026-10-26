@@ -232,6 +232,8 @@ from .laboratory import NamedDescription as NamedDescription
 from .laboratory import _feature_from_old_text as _feature_from_old_text
 from .laboratory import _parse_old_specialty as _parse_old_specialty
 from .laboratory import link_unlinked_features as link_unlinked_features
+from .philosophy import FORMULA_KINDS as FORMULA_KINDS
+from .philosophy import Formula as Formula
 from .saga import Player as Player
 from .saga import Saga as Saga
 from .saga import SagaSource as SagaSource

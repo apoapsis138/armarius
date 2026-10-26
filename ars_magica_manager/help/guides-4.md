@@ -180,6 +180,8 @@ It shows the Initiation Total (the Mystagogue's Presence + Lore + Script bonus) 
 
 There is no die: the Initiation succeeds when the total reaches the Target Level. The Target is 15 for a Minor Virtue and 21 for a Major one, or 18 and 30 when the Mystagogue doesn't have the Virtue (always so for a self-initiation into a Virtue the character lacks).
 
+**House Verditius.** Every magus with Verditius Magic can follow the House's sample Scripts, listed under House Verditius (Mystery Cult) on the Initiation's Script field: one for each of the eight Inner Mysteries, the Outer Mystery and four confraternities' (Houses of Hermes: Mystery Cults pp. 118-135). The Lore is Mystery Cult Lore: Verditius (the book's Verditius Cult Lore). The Initiate needs it at 3 for a Minor Inner Mystery and 5 for a Major (p. 118). The first Inner Mystery always brings the Flaw Hubris as a Minor Ordeal: the season adds the Flaw and says what to set the Hubris trait to (1, +1 with Proud, +3 with Proud as a Major Flaw), and each Inner Mystery's note gives the Hubris experience it earns (1 Minor, 3 Major; DE p. 242). The House's own Ordeals may each be suffered once; Prone to Chance and Averse to Risk exclude each other, and no one in the Primus's line may Sever the Ties that Bind (pp. 120-121).
+
 ### When the season is advanced
 <!-- help: guide-initiation-advance -->
 

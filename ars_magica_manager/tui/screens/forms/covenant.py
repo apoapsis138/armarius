@@ -6,7 +6,7 @@ here under the names the terminal uses."""
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from typing import Any
 
 from .... import economics as eco
@@ -40,15 +40,19 @@ def _possession_dialog(
     natural: bool = False,
     places: Sequence[tuple[str, str]] = (),
     place: str = "",
+    books: Collection[str] | None = None,
 ) -> FieldsDialog[dict[str, Any]]:
     """The add/edit form for one kind of possession (a covenant's, a
     character's Personal Gear, or -- `natural` -- a familiar's Natural
     Weapons). A weapon or armor form shows the chosen book entry in its live
     line. A Raw Vis Store's asks where it is kept: one of `places`
-    (vis.location_options), `place` to start with."""
+    (vis.location_options), `place` to start with. A weapon is chosen
+    from the `books` in play (sourcebooks.saga_books; None: every book)."""
     return FieldsDialog(
         title,
-        _possession_fields(kind, entry, natural=natural, places=places, place=place),
+        _possession_fields(
+            kind, entry, natural=natural, places=places, place=place, books=books
+        ),
         validate=pos.form_problem,
         live=possession_live(kind),
     )

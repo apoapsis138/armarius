@@ -292,6 +292,17 @@ beside the Personality Traits' Add, Edit and Delete.
 A grog's Loyal to Covenant begins within 3 of the covenant's Prevailing
 Loyalty (DE p. 185).
 
+<!-- tui -->
+On a character with a sinful trait, More (`m`) here offers
+[Confidence through Sin](help:confidence-through-sin); on a sinner or one
+who knows Infernal Lore, [Infernal Influence](help:infernal-influence).
+<!-- /tui -->
+<!-- gui -->
+**Confidence through Sin** and **Infernal Influence**, beside Personality
+Traits' buttons, are there for a sinner (or one who knows Infernal Lore).
+<!-- /gui -->
+
+
 ### Reputations
 <!-- help: section-reputations -->
 
@@ -749,6 +760,216 @@ standard price for them. The sale is written in the Diary; the purse on
 Personal Gear is not changed. This is apart from the Goods catalog's
 commodity prices.
 
+## Make a Ligature
+<!-- help: ligature -->
+
+A ligature is a small charm, a sack of parchment, stones or herbs with
+an Arcane or Sympathetic Connection to its target, that helps one roll
+(Art & Academe pp. 68-69). Anyone with Artes Liberales, Philosophiae or
+Medicine can make one, tied to an Ability he has at 1 or more; it takes
+a few hours and helps within a six-hour window on the day it is made
+for, up to a year ahead.
+
+- The roll: Intelligence + the Ability + a stress die. 9 gives +1, 15
+  +2, 24 +3 (the most).
+- A botch works against the action: -2 and two more botch dice, and the
+  maker doesn't know it.
+- One ligature at a time helps a person. None helps a season's work
+  (study, a Lab Total), and a medical one no Recovery roll.
+- Each takes 1 Labor Point from an apothecary's store: tick "From his
+  own store" when it is his, and the point comes off his Labor Points.
+
+The roll and its result go in his Diary.
+
+## Apothecary's Store
+<!-- help: apothecary-store -->
+
+An apothecary (Profession: Apothecary) keeps a store of medicinals
+(Art & Academe pp. 63-66). A season keeping it ("Keep an apothecary's
+store") earns (Intelligence + Profession: Apothecary) x the Wealth
+Multiplier Labor Points; each Winter the business loses 36, and 3 more
+for each physician whose regimens it supplies (a physician who keeps
+his own store supplies himself; otherwise the best apothecary at his
+covenant does). Each theriac or reagent made from it costs 1 Labor
+Point per 5 levels (the level times the doses), and each ligature 1.
+
+More's Apothecary's Store rolls one of two things, written in his Diary:
+
+- **Search for an ingredient**, instead of drawing on the store:
+  Perception + Profession + a stress die against 9, a month's search.
+  Area Lore where he searches lowers it, and so does each assistant (no
+  more than his Leadership, each with Profession: Apothecary 1 or Area
+  Lore 2); inhospitable ground +1, barren +3, winter +2, a finding spell
+  such as Hunt for the Wild Herb -3. Success finds a Labor Point's
+  worth, each point over another (or halves the time); a botch finds
+  nothing. What is found pays for that need only: it never adds to the
+  store's Labor Points.
+- **Preserve an ingredient**: Dexterity + Profession + a simple die
+  against how long it must keep: weeks 3, months 6, seasons 9, years
+  12, decades 15, indefinitely 18. A plant or animal Arcane Connection
+  kept longer than it lasts lasts a category longer.
+
+Medicinals come in four degrees; the fourth destroys tissue and is a
+poison. Only a simple poison (a Light Wound, resisted at 6 or less) is
+made without its formula; stronger ones are theriacs (below).
+
+Magic can help: a Ritual Creo spell adds 1 Labor Point for each variety
+it creates; a Rego Craft spell prepares a week's ingredients at
+Intelligence + Finesse against the Ease Factor + 6.
+
+## Byzantine Customs
+<!-- help: theban-customs -->
+
+<!-- tui -->
+With The Sundered Eagle in play, More (`m`) on a person's record offers the
+Theban Tribunal's customs:
+<!-- /tui -->
+<!-- gui -->
+With The Sundered Eagle in play, beside the Abilities chapter's buttons are
+the Theban Tribunal's customs:
+<!-- /gui -->
+
+- **Hermetic Letter**: a letter in the Theban magi's rhetorical style, a
+  far-fetched tale of the writer's patron standing for his covenant and
+  the letter's purpose (The Sundered Eagle p. 44). Composing one takes a
+  day: Communication + a Lore + a simple die against 6 for a plain
+  message, more for a subtler one. Reading its purpose is Intelligence +
+  a Lore against the same. Nothing is kept.
+- **Invoke a Broken Oath**: made by the injured party, back where the oath
+  was sworn (p. 48): Communication + Charm + a simple die, +6 if Styx was
+  named in the oath, against 15 + a simple die. Heard, the spirit that
+  witnessed the oath punishes the oath-breaker with a Flaw: a Minor one,
+  or a Major one from an entity of Might 40 or more. Choose the
+  oath-breaker and a malediction, and a heard oath lays it on his sheet;
+  leave it blank and the storyguide decides. The book's maledictions are
+  in the catalog: Ashen Food, Mephitic Odor and Rotting Clothes (Lesser),
+  Toad of Lies, Opening Wounds and Breaking Tools (Greater). Both Diaries
+  record it.
+- **Make Greek Fire**: a season making Greek Fire, an alchemical reagent
+  of level 15 (p. 47; Art & Academe p. 76). A stress die that matters only
+  if it botches, with a botch die for each dose being made, less the
+  laboratory's Safety (prefilled from his own laboratory); a botch is an
+  explosion. The form shows the hand-held siphon's figures. The Diary
+  records the batch.
+- **Paint an Icon**: someone in Holy Orders (Priest, Eastern Priest,
+  Brother-Priest or Senior Clergy) with Theology: Christian 3 or more
+  paints an eikon (pp. 133-134). Holy Orders are the ordained male clergy,
+  sub-deacon and up (DE pp. 74, 500), so a monk counts only when he is
+  also a priest, and a nun never. Its Aesthetic Quality is
+  Dexterity + Craft: Painting, +1 for each season of Standard gilding or
+  bejewelling, +3 for each Excellent result, + his Pious trait if the
+  saint is his patron, + other bonuses (Art & Academe p. 124). It goes on
+  the chosen church's Relics, and the painter's Diary. Plan the painting
+  itself as a season's Create a work of art.
+- **Venerate an Icon**: an eikon venerated adds its Aesthetic Quality / 5
+  (rounded up) to invoking its saint (Communication + Charm + modifiers +
+  a simple die against 15 + a simple die, p. 136), or God's aid for an
+  icon of Christ. It takes an hour of contemplation, or in an emergency a
+  Fatigue level and Presence + Concentration + a stress die against 15.
+  The saint's miracle comes when the saint decides.
+- **A Mother's Curse**: any Mediterranean mother may curse her child, for
+  a good reason (p. 136): the Lesser Malediction: A Mother's Curse, -3 to
+  every roll in one area of his expertise (military, academic or
+  professional). The Diary records her and the task that lifts it; only
+  that task done, or divine intervention, lifts it, so remove the Flaw
+  then.
+
+## Confidence through Sin
+<!-- help: confidence-through-sin -->
+
+Sin feeds the sinner's resolve (Realms of Power: The Infernal, Gaining
+Confidence through Sin, p. 24). Choose a Personality Trait or Personality
+Flaw with a penchant for one of the seven deadly sins, and how he sins:
+
+- **A season indulging it** at every chance, alongside his other work: a
+  Confidence Point at the season's end.
+- **A short ceremony** of a ritualized sin: a Confidence Point and an
+  Infernal Warping Point.
+
+**Save** adds the point (and a ceremony's Warping Point, counted as
+Infernal) and writes it in the Diary.
+
+A trait counts toward a sin by the table on p. 21: each sin, its opposing
+virtue, and five traits on either side (Proud/Loyal, Wrathful/Calm,
+Envious/Kind, Slothful/Brave, Lustful/Wise, Greedy/Strong,
+Avaricious/Just). Name the sin in brackets to say which a trait serves:
+"Cruel (Envious)", or "Dedicated (Loyal)", which counts as Proud at minus
+its score. A Minor Personality Flaw counts as a +3 trait, a Major one as
++6 (p. 24), when its name is on the table or among p. 17's sinful Flaws:
+Hatred counts as Wrathful, and Delusion, Obsessed, Compulsion and
+Weak-Willed count only when the detail typed for the Flaw names a sin or
+its trait, alone or in brackets ("Gold (Greedy)"). Which sin those
+Flaws serve is the app's reading: p. 17 names them without one. A trait of +3 or less is fed by venial sins; above that the
+act must usually be a mortal sin.
+
+One with no Confidence Score still gains the points: he may spend them on
+influence or tarnish, or with the storyguide's leave +1 a point on a
+fitting roll, no more on one roll than the trait's score.
+
+The inspector also says what redemption would cost him: repentance removes
+the mark of sin at any time (confession and penance, or a fast of
+atonement, p. 22), but absolution takes a False Power Flaw with the Virtue
+it changes (p. 89), and the False Gift with every Supernatural Ability
+learned through it, the Hermetic Arts included (p. 124).
+
+## Infernal Influence
+<!-- help: infernal-influence -->
+
+Leading others into temptation, or tarnishing an Infernal aura (Realms of
+Power: The Infernal, Infernal Influence and Tarnish, pp. 23-24).
+
+- **A person** who follows his lead: a simple die + Presence + Leadership.
+  9 gives the new trait +1, 12 +2, 15 +3, 18 +4, 21 +5, 24 +6. Only the
+  willing are touched; strangers only by one with Inspirational (or within
+  his Temporal Influence). A trait from personal influence lingers up to a
+  year, from a ceremony about a week.
+- **An Infernal aura**: the same total on a stress die gives the aura a
+  tarnish. It is added to similar traits of everyone inside, taken from
+  opposing ones, and gained as a trait by anyone with neither. Only the
+  strongest tarnish counts; a ceremonial one falls by 1 each morning, a
+  personal one at each season's end. A botch brings Warping Points or
+  Fatigue.
+
+**Personal** influence is a season in company; **ceremonial** is a short
+ceremony that needs Infernal Lore 1 and spends a Confidence Point. **Roll**
+rolls it, spends a ceremony's point and writes the result in the Diary.
+
+## Ars Goetia
+<!-- help: ars-goetia -->
+
+The total of a Goetic Art against a spirit's Might (Realms of Power: The
+Infernal, Chapter Eleven: Ars Goetia, pp. 114-119). **Close** keeps
+nothing; **Roll** rolls it once and says what it did, keeping nothing
+either: apply what it gives by hand.
+
+Every total is a stress die + a Characteristic + the Art + the Lore of the
+spirit's realm + the aura + Penetration x its multiplier (a demon's True
+Name is an indefinite Arcane Connection), so it is its own Penetration.
+Against a demon he adds his own Hierarchy x 5 (his highest Infernal
+Reputation) to the total, and the target adds the demon's Hierarchy x 5
+(p. 114). A sacrifice adds +2 to +10.
+
+- **Summoning** (Presence): twice the spirit's Might holds it in his
+  circle until he dismisses it, or the next midday or midnight; its Might
+  alone calls it only while he concentrates. Always a Fatigue level.
+- **Scouring** (Summoning at large): Area Lore, Penetration not
+  multiplied; whatever answers has about half the total's Might.
+- **Ablating** (Stamina): must exceed the spirit's Might (twice outside a
+  circle). The margin comes off its Might, no more than all of it; a
+  fifth, rounded down, are Ablation Points for Confidence, Characteristics,
+  healing, a Longevity bonus, insight, experience, Infernal Might, a Power
+  or Infernal vis. He also gains as much Infernal Reputation experience and
+  a Warping Point.
+- **Binding** (Intelligence) and **Commanding** (Communication): exceed
+  its Might in a circle, twice outside one; a spirit that agrees needs only
+  no botch (outside a circle, only its Might exceeded). A bound spirit
+  lends its Might as Magic Resistance and holds Might x 5 spell levels; a
+  command lasts until midday or midnight.
+
+A magus who holds a Goetic Art may use Rego for it and Vim for the Lore
+(p. 124); the total uses whichever is higher. Summoning may work as a
+Magic or Faerie Power for the aura; the other Arts are always Infernal.
+
 ## Invest Time or Money
 <!-- help: merchant-investment -->
 
@@ -1079,6 +1300,16 @@ it.
 With Art & Academe in play, a character can dispute with another
 (see [Disputatio](help:disputatio)).
 
+<!-- tui -->
+On one who holds a Goetic Art, More (`m`) offers [Ars Goetia](help:ars-goetia)
+from his record or his tradition's chapter.
+<!-- /tui -->
+<!-- gui -->
+**Ars Goetia**, beside the Abilities chapter's buttons, works out a Goetic
+Art's total for one who holds one.
+<!-- /gui -->
+
+
 **See also:** [Virtues & Flaws tab](help:tab-vf),
 [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
 
@@ -1182,6 +1413,12 @@ totals, the [Magical Defenses](help:tradition-defenses), the character's
 [Bound Beings](help:tradition-bonds), the tradition's
 [Warping](help:tradition-warping) and [Pools](help:tradition-pools), and
 its [Seasons](help:tradition-seasons).
+
+The Goetic traditions (Witch-Hammers, Dread Host, Mulhidun, Witches of
+Thessaly, Ba'al Ov) list their Arts' effects as General guidelines: the
+summoning, scouring, ablating, binding and commanding targets, the uses
+of Ablation Points and the common commands (RoP: The Infernal pp. 114-118).
+An effect built on one keeps the level you type.
 
 ## A tradition's Effects and Items
 <!-- help: tradition-effects -->
@@ -1660,6 +1897,19 @@ one shows it in the panel below.
 in full.
 <!-- /gui -->
 
+Conciatta's breakthroughs (Legends of Hermes pp. 14-16) are Hermetic
+Virtues gained by research or integration. **True Understanding of the
+Realms** (Major): an aura of another realm counts less by the magus's
+score in its Lore (Dominion, Faerie or Infernal Lore), never below 0, for
+its penalty and its extra botch dice, shown on the Casting Score's and
+Lab Total's aura line; a bonus it gives (a Faerie aura's +half) is kept
+whole. **Insight of the Realms** (Minor): in a Ritual or ceremonial
+casting in an aura, that realm's Lore stands in for the lower of Artes
+Liberales and Philosophiae when it is higher, shown in the working; and
+it sees through that realm's regio boundaries in place of Second Sight.
+**Confluence of the Realms** (Minor): a lab text's realm may be changed
+when used again, and vis may be extracted in an aura of any realm.
+
 ## Hermetic Magic tab
 <!-- help: tab-hermetic -->
 
@@ -1937,6 +2187,17 @@ play (**Show everything** lists the rest);
 a spell already known from a book that goes out
 of play stays, marked "(not in play)".
 
+A demon-hunter's spells say what they do at their level: Demon's Eternal
+Oblivion, Fanning the Infernal Flames, The Wicked Jar, Bind the Devil's
+Hands, Early Punishment for the Sinful Witch, Exorcise the Filthy Spirit,
+Lash of the Chastened Servant, Adjuration of the Hell-Sworn Spirit,
+Cleanse the Verminous Vis and Command the Vile Spirit (Realms of Power:
+The Infernal pp. 121-122, with the Errata's levels). Two Mastery abilities
+are read by name: **Apotropaic Mastery** adds Mastery Score x Hierarchy
+to the level of effect of a spell on Infernal Might (pp. 122-123), and
+**Goetic Mastery** adds the fitting Goetic Art to a spirit spell's Casting
+Total and Hierarchy x 5 to its Penetration against a demon (p. 124).
+
 <!-- tui -->
 More (`m`) here offers [Craft by Magic](help:craft-magic).
 <!-- /tui -->
@@ -2133,7 +2394,13 @@ are a Long Spear's, with Great Weapon (DE pp. 400-401). A weapon or shield
 whose minimum Strength is above the character's is flagged (DE p. 400), a
 weapon whose Combat Ability the character lacks is used untrained with
 three more botch dice, and a crossbow's Damage adds no Strength (Lords of
-Men p. 138). When a botch or an odd use may break the weapon, the totals
+Men p. 138). With The Sundered Eagle in play the catalog also has the
+hand-held **Greek Fire Siphon**, a missile weapon fought with Profession:
+Naffatun instead of a Martial Ability (a character needs that Ability by
+that name). A shield doesn't defend against its fire: in a fight its
+Defence adds to the target's Soak instead. One dose of Greek Fire is good
+for 10 sprays, which the app doesn't count (The Sundered Eagle p. 47).
+When a botch or an odd use may break the weapon, the totals
 give its stress check: a stress die + its Combat Ability and how well it
 is made (-1 Shoddy, +1 Superior, +3 Excellent) against 15 (City & Guild p.
 77). The optional Clash of Weapons, when an Attack Total exactly equals a

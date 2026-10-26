@@ -99,12 +99,12 @@ def _apprenticeship(saga: Saga, character: Character) -> list[Meter]:
         Meter(
             "Arts and Abilities",
             cx.spent(character, "apprenticeship"),
-            magus.xp_budget(character),
+            magus.xp_budget(character, saga),
         ),
         Meter(
             "Spell levels",
             cx.spent(character, magus.SPELLS_STEP),
-            magus.level_budget(character),
+            magus.level_budget(character, saga),
             "levels",
         ),
     ]

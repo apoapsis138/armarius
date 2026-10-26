@@ -24,10 +24,24 @@ from ..models import (
     Saga,
 )
 from .rounding import round_up
+from .scores import ability_level
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Enchantments, pp. 252-260"
 )
+#: Verditius Elder Runes: each rune inscribed on an invested device adds 5
+#: to the level of every effect instilled in it, and takes a pawn of its
+#: Art's vis, which counts toward what the device holds (Houses of Hermes:
+#: Mystery Cults pp. 127-128).
+ELDER_RUNE_LEVELS = 5
+ELDER_RUNES_SOURCE = (
+    "Houses of Hermes: Mystery Cults, Verditius Elder Runes, pp. 127-128"
+)
+#: Item Attunement: an attuned item holds its maker's highest Technique +
+#: highest Form + Philosophiae (+ the Craft he made it with), whatever its
+#: material and size (Houses of Hermes: Mystery Cults p. 135).
+ATTUNED = "attuned"
+AUTOMATON = "automaton"
 
 
 #: Level additions for the effect modifications (DE ch. 8, Effect
@@ -111,6 +125,31 @@ def talisman_capacity(saga: Saga, device: EnchantedDevice) -> int | None:
     return highest(TECHNIQUES) + highest(FORMS)
 
 
+def attuned_capacity(saga: Saga, device: EnchantedDevice) -> int | None:
+    """An attuned item's capacity: its maker's highest Technique + highest
+    Form + Philosophiae + the Craft he made it with, or None with no maker
+    in the saga."""
+    maker = saga.character(device.maker_id)
+    if maker is None:
+        return None
+
+    def highest(arts: Sequence[str]) -> int:
+        return max(
+            (maker.arts[a.lower()].level for a in arts if a.lower() in maker.arts),
+            default=0,
+        )
+
+    craft = (
+        ability_level(maker, device.verditius_craft) if device.verditius_craft else 0
+    )
+    return (
+        highest(TECHNIQUES)
+        + highest(FORMS)
+        + ability_level(maker, "Philosophiae")
+        + craft
+    )
+
+
 def material_capacity(device: EnchantedDevice) -> int | None:
     """What the components' Material and Size give: their sum, or the highest
     one for a compound invested item paid that way (DE ch. 8, Preparation
@@ -130,6 +169,8 @@ def computed_capacity(saga: Saga, device: EnchantedDevice) -> int | None:
         return None
     if is_talisman(device):
         return talisman_capacity(saga, device)
+    if device.type == INVESTED and device.verditius_item == ATTUNED:
+        return attuned_capacity(saga, device)
     return material_capacity(device)
 
 
@@ -182,12 +223,24 @@ def level_breakdown(
         None if device.type == CHARGED else effect.uses_per_day,
         effect.penetration,
         [
-            (label, levels)
-            for flag, label, levels in MODIFICATIONS
-            if getattr(effect, flag)
+            *(
+                (label, levels)
+                for flag, label, levels in MODIFICATIONS
+                if getattr(effect, flag)
+            ),
+            *(
+                (f"Elder rune ({art})", ELDER_RUNE_LEVELS)
+                for art in elder_runes(device)
+            ),
         ],
         weak=effect.weak_penetration,
     )
+
+
+def elder_runes(device: EnchantedDevice) -> list[str]:
+    """The elder runes inscribed on the device: only an invested device
+    (greater, attuned or a talisman) can bear them."""
+    return list(device.elder_runes) if device.type == INVESTED else []
 
 
 #: The modifications a familiar's bond power can take: its powers target
@@ -309,8 +362,9 @@ def pawns_used(device: EnchantedDevice, starting: InstilledEffect | None = None)
     """The capacity the effects take: the vis of every effect instilled or
     begun (an effect's vis is spent in its first season), unknown ones
     included, and of `starting`, the one about to be begun. An effect
-    planned but not begun takes none yet (DE p. 258)."""
-    return sum(
+    planned but not begun takes none yet (DE p. 258). Each elder rune's
+    pawn counts too (ELDER_RUNE_LEVELS)."""
+    return len(elder_runes(device)) + sum(
         vis_cost(device, effect)
         for effect in device.effects
         if effect is starting

@@ -2117,9 +2117,10 @@ def _supplement_outcome(
     quality = plan.source_quality if plan.source_quality is not None else simple.quality
     subject = allocations(plan)[0].subject
     kind = "exposure" if quality == EXPOSURE_QUALITY else "practice"
-    result.gains.append(
-        _gain(character, subject, quality or 0, kind, 0, year=plan.year)
-    )
+    if not simple.xp_to_work:
+        result.gains.append(
+            _gain(character, subject, quality or 0, kind, 0, year=plan.year)
+        )
     result.faith = simple.faith
     result.supplement = supplement_work.work(saga, character, plan, rng)
     result.notes += result.supplement.notes

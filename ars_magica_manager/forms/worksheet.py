@@ -684,6 +684,55 @@ def gauntlet_conditions(character: Character) -> Form:
     )
 
 
+def parent_vocation_fields(conditions: CreationConditions) -> list[DialogField]:
+    return [
+        DialogField(
+            "vocation",
+            "Parent's vocation",
+            "text",
+            conditions.vocation,
+            hint="The Ability the same-sex parent earns a living by, as the "
+            "sheet names it (Craft: Smith, Profession: Fisher, Ride); blank "
+            "for none.",
+        ),
+        DialogField(
+            "vocation_score",
+            "Parent's score",
+            "int",
+            conditions.vocation_score,
+            hint="To age 14 the child's score in it is at most half this "
+            "(Apprentices p. 14).",
+        ),
+    ]
+
+
+def parent_vocation_problem(values: dict[str, Any]) -> str | None:
+    if values["vocation_score"] < 0:
+        return "The parent's score can't be negative."
+    if values["vocation_score"] and not values["vocation"].strip():
+        return "Name the parent's vocation, or leave the score at 0."
+    return None
+
+
+def parent_vocation(character: Character) -> Form:
+    """A young character's parent's vocation, which he may learn from 6 to
+    14, to half the parent's score (Apprentices p. 14)."""
+    conditions = character.creation_conditions
+
+    def apply(values: dict[str, Any]) -> None:
+        conditions.vocation = values["vocation"].strip()
+        conditions.vocation_score = (
+            values["vocation_score"] if conditions.vocation else 0
+        )
+
+    return Form(
+        "Parent's vocation",
+        lambda: parent_vocation_fields(conditions),
+        apply,
+        validate=parent_vocation_problem,
+    )
+
+
 def roll_pre_play_aging(saga: Saga, character: Character) -> Command:
     """The aging rolls a character older than 35 makes before play, after
     asking (they can't be taken back)."""

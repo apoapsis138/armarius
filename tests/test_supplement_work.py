@@ -523,7 +523,10 @@ def test_excellent_items_ventures_remedies_and_medicine():
     assert wondrous.progress[0][:3] == ("item", "Ring", 3)
     assert _work(saga, _plan("merchant_venture", other_modifier=12)).labor_points == 12
     remedies = _work(saga, _plan("produce_remedies", book_level=12, extra_vis=3))
-    assert remedies.labor_points == -8  # 12 x 3 / 5 = 7.2, rounded up
+    # 12 x 3 / 5 = 7.2, rounded up; Wulf keeps no store, so an apothecary's
+    # pays (A&A p. 77).
+    assert remedies.labor_points == 0
+    assert "8 Labor Points of ingredients" in remedies.notes[0]
     assert "Can care for 0 patients" in _work(saga, _plan("medical_season")).notes[0]
 
 
@@ -560,7 +563,15 @@ def test_a_work_of_art_takes_a_season_per_ten_aesthetic_quality():
 
 
 def test_a_formula_researched_with_the_storyguides_quality():
-    work = _work(_saga(), _plan("research_formula", title="Theriac", source_quality=3))
+    work = _work(
+        _saga(),
+        _plan(
+            "research_formula",
+            "ability:Artes Liberales",
+            title="Theriac",
+            source_quality=3,
+        ),
+    )
     assert work.progress == [("formula", "Theriac", 5, 3)]
 
 

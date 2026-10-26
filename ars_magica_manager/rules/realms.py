@@ -21,7 +21,7 @@ from typing import Any
 
 from .. import catalog
 from ..models import REALMS, Character, Covenant, CovenantBoonHookDef, Saga
-from . import effects
+from . import effects, sites
 from .breakdown import Breakdown
 from .rounding import round_down
 
@@ -136,6 +136,13 @@ def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
         return 0, HERMETIC
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
     return covenant_effective_aura(covenant, boons), covenant.aura_realm
+
+
+def home_aura_kind(saga: Saga, character: Character) -> str:
+    """The kind of the aura a character lives in (rules.aura_kinds: a
+    Magic aura's alignment, a Faerie one's tints, a Divine one's source),
+    read from their covenant's place; "" when it isn't placed."""
+    return sites.kind_where(sites.character_place(saga, character))
 
 
 #: The realm of a Supernatural Virtue or Flaw whose name doesn't say it

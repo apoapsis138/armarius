@@ -18,6 +18,7 @@ from .common import (
 )
 from .holdings import Possession
 from .laboratory import DiaryEntry
+from .philosophy import Formula
 from .traits import (
     Ability,
     Characteristics,
@@ -765,6 +766,11 @@ class CreationConditions:
     aged_to: int | None = None
     aging_chart: str = ""
     aging_chart_cap: int = 0
+    #: A young character's parent's vocation: the Ability the same-sex
+    #: parent earns a living by ("Craft: Smith"; "" for none given) and
+    #: the parent's score in it, which caps the child's to age 14 at half.
+    vocation: str = ""
+    vocation_score: int = 0
 
 
 @dataclass
@@ -883,6 +889,9 @@ class Character:
     workshop_raw_materials: int = 0
     progress: list[Progress] = field(default_factory=list)
     formulas: list[str] = field(default_factory=list)
+    #: Experimental philosophy: each formula's kind, level and Laboratory
+    #: Text (older saves load with none).
+    formula_designs: list[Formula] = field(default_factory=list)
     ordeals: list[Ordeal] = field(default_factory=list)
     #: Master of None: each subject ("art:Ignem") an Advancement Total
     #: raised, and the last year it did.
@@ -986,6 +995,9 @@ class Character:
         d["agents"] = [Agent.from_dict(a) for a in d.get("agents", [])]
         d["discipline"] = [Discipline.from_dict(x) for x in d.get("discipline", [])]
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
+        d["formula_designs"] = [
+            Formula.from_dict(f) for f in d.get("formula_designs", [])
+        ]
         # Older saves kept only the last Ordeal.
         if d.get("ordeal"):
             d["ordeals"].append(

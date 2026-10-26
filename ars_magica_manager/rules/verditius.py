@@ -33,14 +33,44 @@ magnitude + a Craft that makes the tools; it must be at least twice the
 effect level: the spell's level plus each property's increase
 (CASTING_TOOL_EFFECTS). It takes a pawn of the Technique's or Form's vis
 per 10 levels of that, rounded up.
+
+The Mystery Cult (Houses of Hermes: Mystery Cults pp. 116-123): the
+Initiation Total is Presence + Verditius Cult Lore + the Script, with the
+House's own Script components (VERDITIUS_COMPONENTS). The Outer Mystery is
+given as the apprentice's Arts are opened (Target 15, Script +12, a
+Mystagogue with Presence + Lore 3). An Initiate needs the Lore at 3 for a
+Minor Inner Mystery and 5 for a Major one; the first Inner Mystery always
+brings Hubris. The House's Ordeals may each be suffered once; Prone to
+Chance and Averse to Risk exclude each other, and no one in the Primus's
+line may Sever the Ties that Bind. The sample Scripts are the tradition
+catalog's "trad_verditius_mysteries".
+
+The Inner Mysteries' laboratory rules (pp. 123-135): Elder Runes (a
+Technique's and a Form's rune doubles that Art enchanting the item, +5 to
+each effect's level, +2 on the rune's own wood, a pawn of the Art's vis
+each; the season's vis limit becomes Magic Theory x Philosophiae), Items of
+Quality, Reforging, Automata, Bind Curse, Bind Magical Creatures and Item
+Attunement (its capacity and Hubris on its Lab Totals). The Definitive
+Edition (pp. 240-243) reprints Verditius Magic, Hubris and Enchant Casting
+Tools; where they differ it wins (Enchant Casting Tools' Ordeal is Hubris
+when it is the first Inner Mystery, DE p. 243).
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
-from ..models import Character, EnchantedDevice, Laboratory, Saga, Spell
-from . import lab, lab_virtues, xp
+from ..arts import FORMS, TECHNIQUES
+from ..models import (
+    INVESTED,
+    Character,
+    EnchantedDevice,
+    InstilledEffect,
+    Laboratory,
+    Saga,
+    Spell,
+)
+from . import enchantment, lab, lab_virtues, mysteries, xp
 from .breakdown import Breakdown, Line
 from .casting import magnitude
 from .rounding import round_up
@@ -108,6 +138,7 @@ def opening_discount(saga: Saga, magus: Character, device: EnchantedDevice) -> i
 
 HUBRIS_SOURCE = lab_virtues.HUBRIS_SOURCE
 HUBRIS = "Hubris"
+HUBRIS_FLAW = lab_virtues.HUBRIS
 PROUD_BONUS = {"vf_proud": 1, "vf_proud_major": 3}
 #: Experience Points toward Hubris for each behaviour (DE p. 242). Selling
 #: an automaton gives one a magnitude of its Might (AUTOMATON).
@@ -265,3 +296,647 @@ def properties_text(properties: Sequence[tuple[str, int]]) -> str:
         for name, times in properties
         if times
     )
+
+
+# -- The Mystery Cult: Initiation (HoH:MC pp. 116-121) -------------------------
+
+MC = "Houses of Hermes: Mystery Cults"
+INITIATION_SOURCE = f"{MC}, Initiation into the Mysteries of Verditius, pp. 117-118"
+ORDEALS_SOURCE = f"{MC}, Ordeals, pp. 120-121"
+#: The cult's Lore, as the Ability catalog names it; the book's own name
+#: and the older "House Verditius Lore" count too.
+CULT_LORE = "Mystery Cult Lore: Verditius"
+LORE_NAMES = (CULT_LORE, "Verditius Cult Lore", "House Verditius Lore")
+#: The tradition catalog entry holding the House's sample Scripts.
+CULT_TRADITION = "trad_verditius_mysteries"
+
+#: The House's Script components and their bonuses (p. 117).
+VERDITIUS_COMPONENTS: tuple[mysteries.Component, ...] = (
+    mysteries.Component(
+        "Travel to a Forge of Hephaestus, or a special place at a special time", 3
+    ),
+    mysteries.Component("A specific Quest (a lost Verditius item)", 3),
+    mysteries.Component("A unique Quest (a legendary item lost since antiquity)", 6),
+    mysteries.Component("Minor Ordeal", 3),
+    mysteries.Component("Major Ordeal", 9),
+    mysteries.Component("The Initiate sacrifices time serving the House", 1, once=True),
+    mysteries.Component(
+        "The Initiate sacrifices a lesser enchanted item (4th magnitude or more)", 3
+    ),
+    mysteries.Component(
+        "The Initiate sacrifices a greater enchanted item (7th magnitude or more) "
+        "or his talisman",
+        6,
+    ),
+    mysteries.Component("The Mystagogue sacrifices time (teaching or training)", 3),
+    mysteries.Component(
+        "The Mystagogue sacrifices wealth (a Mythic Pound per point of Hubris)",
+        1,
+        once=True,
+    ),
+    mysteries.Component("The Outer Mystery taught as the Arts are opened", 6),
+)
+
+#: The Outer Mystery's Initiation (p. 118): its Target, its Script's bonus
+#: (special place, both sacrifices of time, wealth, Arts opened at once)
+#: and the Mystagogue's least Presence + Lore.
+OUTER_TARGET = 15
+OUTER_SCRIPT_BONUS = 12
+OUTER_MYSTAGOGUE_LEAST = 3
+#: The Lore a Mystagogue needs to open an apprentice's Arts as he
+#: initiates him, and an Initiate's to be Initiated into a Minor or a Major
+#: Inner Mystery (p. 118).
+LORE_TO_OPEN_ARTS = 2
+LORE_FOR_INNER: dict[str, int] = {"Minor": 3, "Major": 5}
+#: The House's Inner Mysteries and their tiers (p. 123).
+INNER_MYSTERIES: dict[str, str] = {
+    ENCHANT_CASTING_TOOLS: "Minor",
+    "vf_items_of_quality": "Minor",
+    "vf_reforging_enchanted_items": "Minor",
+    "vf_verditius_elder_runes": "Minor",
+    "vf_automata": "Major",
+    "vf_bind_curse": "Major",
+    "vf_bind_magical_creatures": "Major",
+    "vf_item_attunement": "Major",
+}
+#: Experience toward Hubris for learning an Inner Mystery, by tier.
+INNER_HUBRIS_XP: dict[str, int] = {
+    "Minor": HUBRIS_XP["Learning a new minor House Inner Mystery"],
+    "Major": HUBRIS_XP["Learning a new major House Inner Mystery"],
+}
+#: The House's Ordeals (pp. 120-121), as the Flaws they give.
+PRONE_TO_CHANCE = "vf_prone_to_chance"
+AVERSE_TO_RISK = "vf_averse_to_risk"
+SEVER_THE_TIES = ("vf_sever_the_ties_that_bind", "vf_sever_the_ties_that_bind_major")
+SELF_MUTILATION = ("vf_lame", "vf_hobbled", "vf_crippled")
+INCREASED_HUBRIS = "vf_increased_hubris"
+ORDEALS: tuple[str, ...] = (
+    *SEVER_THE_TIES,
+    *SELF_MUTILATION,
+    PRONE_TO_CHANCE,
+    AVERSE_TO_RISK,
+    INCREASED_HUBRIS,
+)
+PRIMOGENITURE = "vf_primogeniture_lineage"
+
+
+def cult_lore(magus: Character) -> int:
+    """The magus's Verditius Cult Lore (the best of its names)."""
+    return max((_score(magus, name) for name in LORE_NAMES), default=0)
+
+
+def outer_mystery_problem(mystagogue: Character, opens_arts: bool = True) -> str:
+    """What stops a master giving the Outer Mystery ("" if nothing): he
+    needs Presence + Verditius Cult Lore 3, and the Lore at 2 to open the
+    apprentice's Arts in the same season (pp. 117-118)."""
+    lore = cult_lore(mystagogue)
+    if mystagogue.characteristics.presence + lore < OUTER_MYSTAGOGUE_LEAST:
+        return (
+            f"{mystagogue.name}'s Presence + Verditius Cult Lore is below "
+            f"{OUTER_MYSTAGOGUE_LEAST}: he can't give the Outer Mystery "
+            f"({INITIATION_SOURCE})."
+        )
+    if opens_arts and lore < LORE_TO_OPEN_ARTS:
+        return (
+            f"{mystagogue.name} needs Verditius Cult Lore {LORE_TO_OPEN_ARTS} to "
+            f"open an apprentice's Arts as he initiates him ({INITIATION_SOURCE})."
+        )
+    return ""
+
+
+def outer_initiation_total(mystagogue: Character) -> Breakdown:
+    """The Outer Mystery's Initiation Total: Presence + Lore + its Script's
+    +12, against OUTER_TARGET."""
+    lines = [
+        Line(
+            "Presence",
+            amount=mystagogue.characteristics.presence,
+            source=INITIATION_SOURCE,
+        ),
+        Line(
+            "Verditius Cult Lore",
+            amount=cult_lore(mystagogue),
+            source=INITIATION_SOURCE,
+        ),
+        Line(
+            "Script (special place, sacrifices, Arts opened)",
+            amount=OUTER_SCRIPT_BONUS,
+            source=INITIATION_SOURCE,
+        ),
+    ]
+    return Breakdown(total=sum(line.amount or 0 for line in lines), lines=lines)
+
+
+def inner_mystery_problem(initiate: Character, vf_id: str) -> str:
+    """What stops an Initiation into one of the House's Inner Mysteries
+    ("" if nothing, or for any other Virtue): the Initiate must be a
+    Verditius, with the Lore at 3 for a Minor one and 5 for a Major."""
+    tier = INNER_MYSTERIES.get(vf_id)
+    if tier is None:
+        return ""
+    if not is_verditius(initiate):
+        return (
+            f"{initiate.name} hasn't the Outer Mystery (Verditius Magic): only a "
+            f"Verditius learns the House's Inner Mysteries ({INITIATION_SOURCE})."
+        )
+    needed = LORE_FOR_INNER[tier]
+    if cult_lore(initiate) < needed:
+        return (
+            f"{initiate.name} needs Verditius Cult Lore {needed} to be Initiated "
+            f"into a {tier} Inner Mystery ({INITIATION_SOURCE})."
+        )
+    return ""
+
+
+def gives_hubris(initiate: Character, vf_id: str) -> bool:
+    """Whether this Initiation is the magus's first into an Inner Mystery,
+    whose Ordeal always gives the Minor Flaw Hubris (p. 118; DE p. 241)."""
+    return vf_id in INNER_MYSTERIES and not lab_virtues.has(initiate, HUBRIS_FLAW)
+
+
+def initiation_notes(initiate: Character, vf_id: str) -> list[str]:
+    """What an Inner Mystery's Initiation adds besides its Virtue: Hubris
+    with the first, and Hubris experience for every one."""
+    tier = INNER_MYSTERIES.get(vf_id)
+    if tier is None:
+        return []
+    notes: list[str] = []
+    if gives_hubris(initiate, vf_id):
+        notes.append(
+            "The first Inner Mystery's Ordeal gives the Flaw Hubris: set the "
+            f"Hubris Personality Trait to {starting_hubris(initiate)} "
+            f"({HUBRIS_SOURCE})."
+        )
+    notes.append(
+        f"Learning a {tier} Inner Mystery: {INNER_HUBRIS_XP[tier]} experience "
+        f"toward Hubris ({HUBRIS_SOURCE})."
+    )
+    return notes
+
+
+def ordeal_problem(initiate: Character, flaw_id: str) -> str:
+    """What the House's rules forbid of an Ordeal ("" if nothing): each
+    may be suffered once, Prone to Chance and Averse to Risk exclude each
+    other, and one in the Primus's line may not Sever the Ties that Bind."""
+    if flaw_id not in ORDEALS:
+        return ""
+    held = {vf.vf_id for vf in initiate.virtues_flaws}
+    if flaw_id in held or (flaw_id in SEVER_THE_TIES and held & set(SEVER_THE_TIES)):
+        return (
+            f"{initiate.name} has suffered that Ordeal already: each may be "
+            f"suffered once ({ORDEALS_SOURCE})."
+        )
+    if {flaw_id, *held} >= {PRONE_TO_CHANCE, AVERSE_TO_RISK}:
+        return (
+            "Prone to Chance and Averse to Risk can't both be suffered "
+            f"({ORDEALS_SOURCE})."
+        )
+    if flaw_id in SEVER_THE_TIES and PRIMOGENITURE in held:
+        return (
+            f"{initiate.name} is in the Primus's line and may not Sever the Ties "
+            f"that Bind ({ORDEALS_SOURCE})."
+        )
+    return ""
+
+
+# -- Verditius Elder Runes (pp. 127-128) ---------------------------------------
+
+ELDER_RUNES_SOURCE = enchantment.ELDER_RUNES_SOURCE
+ELDER_RUNES = "vf_verditius_elder_runes"
+#: Art -> (the rune's meaning, its tree). Only twelve Arts have runes.
+ELDER_RUNE_TABLE: dict[str, tuple[str, str]] = {
+    "Creo": ("Health", "birch"),
+    "Intellego": ("Sight", "yew"),
+    "Perdo": ("Pain", "pine"),
+    "Rego": ("Ice", "alder"),
+    "Animal": ("Cattle", "elder"),
+    "Aquam": ("Water", "willow"),
+    "Auram": ("Hail", "ash"),
+    "Corpus": ("Man", "holly"),
+    "Herbam": ("Harvest", "apple"),
+    "Ignem": ("Sun", "juniper"),
+    "Mentem": ("Loyalty", "oak"),
+    "Vim": ("Ogre", "hawthorn"),
+}
+#: The Lab Total bonus for a rune on its own tree's wood.
+TREE_BONUS = 2
+
+
+def elder_rune_problems(magus: Character, device: EnchantedDevice) -> list[str]:
+    """What is wrong with the elder runes on `device` as `magus` opens it:
+    he must know the Mystery; only an invested device takes them, at most
+    one Technique's and one Form's, each an Art that has a rune."""
+    runes = list(device.elder_runes)
+    if not runes:
+        return []
+    found: list[str] = []
+    if not lab_virtues.has(magus, ELDER_RUNES):
+        found.append(f"{magus.name} hasn't been Initiated into Verditius Elder Runes.")
+    if device.type != INVESTED:
+        found.append(
+            "Elder runes are inscribed as a device is opened: only a greater "
+            "enchanted item, an attuned item or a talisman bears them."
+        )
+    unknown = [art for art in runes if art not in ELDER_RUNE_TABLE]
+    if unknown:
+        found.append(f"No elder rune is adapted to {', '.join(unknown)}.")
+    if (
+        len(runes) > 2
+        or sum(art in TECHNIQUES for art in runes) > 1
+        or sum(art in FORMS for art in runes) > 1
+    ):
+        found.append(
+            "A device takes at most two elder runes: a Technique's and a Form's."
+        )
+    return found
+
+
+def rune_vis(device: EnchantedDevice) -> dict[str, int]:
+    """The vis inscribing the runes takes: a pawn of each rune's Art."""
+    cost: dict[str, int] = {}
+    for art in enchantment.elder_runes(device):
+        cost[art] = cost.get(art, 0) + 1
+    return cost
+
+
+def _on_its_tree(device: EnchantedDevice, tree: str) -> bool:
+    words = " ".join(
+        [device.name, device.description, *(c.description for c in device.components)]
+    ).lower()
+    return tree in words.replace(",", " ").split()
+
+
+def elder_rune_lines(
+    magus: Character, device: EnchantedDevice, effect: InstilledEffect
+) -> list[Line]:
+    """The runes on a Lab Total for instilling `effect`: each rune of the
+    effect's Technique or Form adds that Art again (doubling it, like a
+    Magical Focus), and +2 when the device is of the rune's tree, for a
+    magus who knows the Mystery."""
+    if not lab_virtues.has(magus, ELDER_RUNES):
+        return []
+    lines: list[Line] = []
+    for art in enchantment.elder_runes(device):
+        if art in (effect.technique, effect.form):
+            lines.append(
+                Line(
+                    f"Elder rune doubles {art}",
+                    amount=sum(lab.art_score(magus, art)),
+                    source=ELDER_RUNES_SOURCE,
+                )
+            )
+        tree = ELDER_RUNE_TABLE.get(art, ("", ""))[1]
+        if tree and _on_its_tree(device, tree):
+            lines.append(
+                Line(
+                    f"Elder rune on {tree} wood",
+                    amount=TREE_BONUS,
+                    source=ELDER_RUNES_SOURCE,
+                )
+            )
+    return lines
+
+
+def enchanting_vis_limit(magus: Character) -> int:
+    """The most vis the magus may use in a season enchanting a device:
+    twice Magic Theory, or with Elder Runes Magic Theory x Philosophiae in
+    its place, even when that is less (HoH:MC pp. 126, 128: the limit
+    "becomes" it)."""
+    usual = lab.vis_limit(magus)
+    if not lab_virtues.has(magus, ELDER_RUNES):
+        return usual
+    return (usual // 2) * _score(magus, PHILOSOPHIAE)
+
+
+def vis_limit_text(magus: Character) -> str:
+    """How the season's vis limit was reached, for a message."""
+    if lab_virtues.has(magus, ELDER_RUNES):
+        return "Magic Theory x Philosophiae, with Elder Runes"
+    return "twice Magic Theory"
+
+
+# -- Items of the Major Mysteries: Hubris on their Lab Totals -------------------
+
+ATTUNEMENT_SOURCE = f"{MC}, Item Attunement, p. 135"
+AUTOMATA_SOURCE = f"{MC}, Automata, pp. 128-131"
+ITEM_ATTUNEMENT = "vf_item_attunement"
+AUTOMATA = "vf_automata"
+#: The Mystery each kind of item needs.
+ITEM_MYSTERY = {enchantment.ATTUNED: ITEM_ATTUNEMENT, enchantment.AUTOMATON: AUTOMATA}
+
+
+def hubris_item_line(magus: Character, device: EnchantedDevice) -> Line | None:
+    """Hubris on every Lab Total for enchanting an attuned item or an
+    automaton, for its Verditius maker (pp. 129, 135; DE p. 241)."""
+    if device.verditius_item not in ITEM_MYSTERY or device.maker_id not in (
+        None,
+        magus.id,
+    ):
+        return None
+    hubris = hubris_of(magus)
+    if not hubris or not lab_virtues.has(magus, lab_virtues.HUBRIS):
+        return None
+    source = (
+        ATTUNEMENT_SOURCE
+        if device.verditius_item == enchantment.ATTUNED
+        else AUTOMATA_SOURCE
+    )
+    return Line(HUBRIS, amount=hubris, source=source)
+
+
+def mystery_lines(
+    magus: Character, device: EnchantedDevice, effect: InstilledEffect
+) -> list[Line]:
+    """Every Verditius Inner Mystery line on a Lab Total for instilling
+    `effect` in `device`."""
+    lines = elder_rune_lines(magus, device, effect)
+    hubris = hubris_item_line(magus, device)
+    if hubris is not None:
+        lines.append(hubris)
+    return lines
+
+
+def item_problems(
+    magus: Character, device: EnchantedDevice, effect: InstilledEffect | None = None
+) -> list[str]:
+    """What the Major Mysteries' items forbid: the maker must know the
+    Mystery; an automaton is never a talisman nor holds a power that
+    maintains concentration (pp. 129-130)."""
+    kind = device.verditius_item
+    if kind not in ITEM_MYSTERY:
+        return []
+    found: list[str] = []
+    if device.type != INVESTED:
+        found.append(f"An {kind} item is a greater enchanted item (invested).")
+    if device.maker_id in (None, magus.id) and not lab_virtues.has(
+        magus, ITEM_MYSTERY[kind]
+    ):
+        mystery = "Item Attunement" if kind == enchantment.ATTUNED else "Automata"
+        found.append(f"{magus.name} hasn't been Initiated into {mystery}.")
+    if kind == enchantment.AUTOMATON:
+        if device.talisman:
+            found.append("An automaton can't be a talisman.")
+        if effect is not None and effect.maintains_concentration:
+            found.append(
+                "An automaton can't maintain concentration: its powers can't "
+                "have that modification."
+            )
+    return found
+
+
+# -- Items of Quality (pp. 124-125) --------------------------------------------
+
+QUALITY_SOURCE = f"{MC}, Items of Quality, pp. 124-125"
+ITEMS_OF_QUALITY = "vf_items_of_quality"
+#: A season and a pawn of Vim vis make one, whatever the Lab Total; its
+#: magic shows to an investigation as a Lab Total of 10.
+QUALITY_VIS = 1
+QUALITY_INVESTIGATION = 10
+
+
+def item_of_quality_bonus(magus: Character, shape_material_bonus: int) -> int:
+    """The bonus an item of quality gives its user's rolls: the one Shape
+    and Material bonus drawn out, at most the maker's Philosophiae."""
+    return max(0, min(shape_material_bonus, _score(magus, PHILOSOPHIAE)))
+
+
+# -- Reforging Enchanted Items (pp. 125-127) -----------------------------------
+
+REFORGING_SOURCE = f"{MC}, Reforging Enchanted Items, pp. 125-127"
+#: An investigation told the item's true properties adds 20.
+TOLD_PROPERTIES = 20
+REFORGED, UNCHANGED, FLAWED, DESTROYED = "reforged", "unchanged", "flawed", "destroyed"
+
+
+def repair_ease(creator_philosophiae: int = 0) -> int:
+    """The Dexterity + Craft Ease Factor to mend an item physically: 9, +
+    its Verditius maker's Philosophiae when he made it."""
+    return 9 + max(0, creator_philosophiae)
+
+
+def reforge_result(roll: int, levels: Sequence[int], botched: bool = False) -> str:
+    """Reforging a finished device: a Rego Vim Lab Total + stress die
+    (`roll`) against each power's level, weakest first. At or above them
+    all it is reforged; short of one, unchanged, or flawed (losing its
+    strongest enchantment) when short by more than ten; a botch destroys
+    it."""
+    if botched:
+        return DESTROYED
+    for level in sorted(levels):
+        if roll < level:
+            return FLAWED if level - roll > 10 else UNCHANGED
+    return REFORGED
+
+
+def reforged(philosophiae: int) -> tuple[int, int, int]:
+    """What a reforging takes and gives: (pawns of Vim vis, more pawns the
+    device holds, the levels each power counts for at the next reforging),
+    all from the reforger's Philosophiae."""
+    return philosophiae, philosophiae, 5 * philosophiae
+
+
+def reforge_opened_target(pawns_to_open: int) -> int:
+    """Reforging a device opened but not yet enchanted: five times the
+    pawns it took to open."""
+    return 5 * pawns_to_open
+
+
+def smelting_limit(magus: Character) -> int:
+    """The most pawns smelting can draw from an item: Magic Theory x 2, or
+    x Philosophiae with Elder Runes."""
+    theory = _score(magus, "Magic Theory")
+    if lab_virtues.has(magus, ELDER_RUNES):
+        return theory * _score(magus, PHILOSOPHIAE)
+    return theory * 2
+
+
+def smelted(magus: Character, pawns: int) -> int:
+    """The pawns smelting gives of the `pawns` used to instil an item's
+    powers: one in ten is lost (at least one), and no more than the limit."""
+    if pawns <= 0:
+        return 0
+    lost = max(1, round_up(pawns / 10))
+    return max(0, min(smelting_limit(magus), pawns - lost))
+
+
+# -- Automata (pp. 128-131) ----------------------------------------------------
+
+CRAFT_AUTOMATA = "Craft Automata"
+#: "Cease", the command that stops a power, adds 3 to its level; an
+#: Ability instilled is base 25 for a score of 1, a magnitude per point
+#: more; Tie the Threads that Bind must be at least the Might + 15.
+CEASE_LEVELS = 3
+ABILITY_POWER_BASE = 25
+TIE_THE_THREADS_MARGIN = 15
+
+
+def automaton_might(size: int, material_base_points: int) -> int:
+    """An automaton's Magic Might (and Magic Resistance, the pawns that
+    prepare it and the most it holds): 10 + Size + the material's base
+    points."""
+    return 10 + size + material_base_points
+
+
+def construct_total(magus: Character, failed_seasons: int = 0) -> Breakdown:
+    """Building the figure: Intelligence + Craft Automata (+ Philosophiae
+    for a Verditius's runes) + a season's +1 for each failure, before the
+    stress die, against the automaton's Might."""
+    lines = [
+        Line(
+            "Intelligence",
+            amount=magus.characteristics.intelligence,
+            source=AUTOMATA_SOURCE,
+        ),
+        Line(
+            CRAFT_AUTOMATA,
+            amount=_score(magus, CRAFT_AUTOMATA),
+            source=AUTOMATA_SOURCE,
+        ),
+    ]
+    if is_verditius(magus) and _score(magus, PHILOSOPHIAE):
+        lines.append(
+            Line(
+                "Verditius runes (Philosophiae)",
+                amount=_score(magus, PHILOSOPHIAE),
+                source=AUTOMATA_SOURCE,
+            )
+        )
+    if failed_seasons > 0:
+        lines.append(
+            Line("Seasons failed", amount=failed_seasons, source=AUTOMATA_SOURCE)
+        )
+    return Breakdown(total=sum(line.amount or 0 for line in lines), lines=lines)
+
+
+def construct_cost(might: int, pawn_price: int, failed_seasons: int = 0) -> int:
+    """The Mythic Pounds the figure costs: the price of a pawn of vis x its
+    Might, and a pawn's price more for each attempt after a failure."""
+    return pawn_price * (might + max(0, failed_seasons))
+
+
+def ability_power_level(score: int) -> int:
+    """The level of a power giving an automaton an Ability at `score`."""
+    return ABILITY_POWER_BASE + 5 * max(0, score - 1)
+
+
+def tie_the_threads_level(might: int) -> int:
+    """The least level of the Tie the Threads that Bind that completes it."""
+    return might + TIE_THE_THREADS_MARGIN
+
+
+def maintenance(might: int, die: int, botches: int = 0) -> int:
+    """The automaton's Might after the yearly stress die: unchanged at or
+    above it, 1 less below it, 5 less for each botch."""
+    if botches:
+        return max(0, might - 5 * botches)
+    return might if die >= might else max(0, might - 1)
+
+
+def wear_penalty(original_might: int, might: int) -> int:
+    """Its Ability rolls' penalty: -1 for every 2 points of Might lost."""
+    return -(max(0, original_might - might) // 2)
+
+
+def spot_repair_ease(original_might: int) -> int:
+    """Intelligence + Craft Automata + stress die against 6 + the magnitude
+    of its original Might; a success restores a point, in that many days."""
+    return 6 + round_up(original_might / 5)
+
+
+def season_repair_needed(might: int, powers: int) -> int:
+    """The least Lab Total (Rego + its Form, Mentem requisite) that mends
+    all its damage in a season: above Might + the powers instilled."""
+    return might + powers + 1
+
+
+# -- Item Attunement (p. 135) --------------------------------------------------
+
+
+def sever_ease(capacity: int) -> int:
+    """Severing the attuned item from its maker: his Perdo Vim Lab Total +
+    a stress die against 10 + the pawns it holds."""
+    return 10 + capacity
+
+
+def covet_device(seasons_held: int, device_covet: int) -> int:
+    """The bearer's Covet Device Personality Trait: an experience point a
+    season, growing like an Ability, at most the device's own (its maker's
+    Hubris at its creation)."""
+    return min(device_covet, xp.score_from_xp(seasons_held, xp.ABILITY_FACTOR))
+
+
+# -- Bind Magical Creatures (pp. 134-135) --------------------------------------
+
+BINDING_SOURCE = f"{MC}, Bind Magical Creatures, pp. 134-135"
+BIND_MAGICAL_CREATURES = "vf_bind_magical_creatures"
+
+
+def binding_total(saga: Saga, magus: Character, laboratory: Laboratory) -> Breakdown:
+    """The Rego Vim Lab Total + Hubris that drains or binds a magical
+    creature (the creature's own Art is its requisite, the troupe's to
+    apply: the lower of it and the total's Arts)."""
+    total = lab.lab_total(saga, magus, "Rego", "Vim", laboratory)
+    added: list[Line] = []
+    hubris = hubris_of(magus)
+    if hubris:
+        added.append(Line(HUBRIS, amount=hubris, source=BINDING_SOURCE))
+    return Breakdown(
+        total=int(total.total) + sum(line.amount or 0 for line in added),
+        lines=[*total.lines, *added],
+    )
+
+
+def drained_pawns(total: int, might: int) -> int:
+    """The pawns drained from a creature to enchant with: a point of the
+    total above its Might each, at most its Might."""
+    return max(0, min(might, total - might))
+
+
+def bind_power(total: int, might: int, penetration: int = 0) -> list[str]:
+    """Binding one of a creature's powers to the Gift: what the total
+    allows ([] if it falls short of twice the Might): fewer words or
+    gestures at twice Might + 5 and + 10, Penetration at twice Might +
+    it."""
+    if total < 2 * might:
+        return []
+    allowed = ["The power is bound."]
+    if total >= 2 * (might + 10):
+        allowed.append("It needs neither words nor gestures.")
+    elif total >= 2 * (might + 5):
+        allowed.append("It needs words or gestures, not both.")
+    if penetration and total >= 2 * (might + penetration):
+        allowed.append(f"It has Penetration {penetration}.")
+    return allowed
+
+
+def bind_power_vis(might: int) -> int:
+    """Pawns of the creature's Art's vis to bind a power: half its Might."""
+    return round_up(might / 2)
+
+
+# -- Bind Curse (pp. 131-133) ----------------------------------------------------
+
+CURSE_SOURCE = f"{MC}, Bind Curse, pp. 131-133"
+BIND_CURSE = "vf_bind_curse"
+CURSE_BASE: dict[str, int] = {"Minor": 25, "Major": 50}
+#: A trigger on a magical event adds 3; one after so many uses of another
+#: power, 6.
+CONDITIONAL_TRIGGER, COUNTED_TRIGGER = 3, 6
+
+
+def curse_level(tier: str, magnitudes: int = 0, trigger: str = "") -> int:
+    """A Curse's level: its base, + 5 a magnitude of Range or Target, + its
+    trigger ("conditional" or "counted")."""
+    level = CURSE_BASE[tier] + 5 * max(0, magnitudes)
+    if trigger == "conditional":
+        level += CONDITIONAL_TRIGGER
+    elif trigger == "counted":
+        level += COUNTED_TRIGGER
+    return level
+
+
+def curse_duration(tier: str, magic_theory: int) -> str:
+    """How long a Curse lasts: its maker's Magic Theory, in seasons for a
+    Minor one and years for a Major."""
+    unit = "seasons" if tier == "Minor" else "years"
+    return f"{magic_theory} {unit}"

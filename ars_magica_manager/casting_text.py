@@ -13,16 +13,20 @@ from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .markup import escape, problem
 from .models import Character, KnownSpell, Saga, Spell
 from .rules import (
+    apotropaic,
+    aura_kinds,
     casting,
     casting_virtues,
     certamen,
     craft_magic,
+    goetic,
     house_mastery,
     penetration,
 )
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
-from .rules.realms import home_aura, home_in_regio
+from .rules.infernalists import hierarchy
+from .rules.realms import home_aura, home_aura_kind, home_in_regio
 
 
 def _levels(count: int) -> str:
@@ -48,8 +52,21 @@ def casting_virtue_lines(magus: Character) -> list[str]:
     return lines
 
 
+def _aligned_lines(kind: str, realm: str, aura: int) -> list[str]:
+    """A note of the Art an aligned aura favours, which the grid's scores
+    already count."""
+    art = aura_kinds.aligned_art(kind) if realm == "Magic" else ""
+    if not art or aura <= 0:
+        return []
+    return [
+        f"The aura is aligned with {art}: spells using it add +{aura} more "
+        "(counted above; RoP: Magic p. 16)."
+    ]
+
+
 def casting_scores_text(saga: Saga, magus: Character) -> str:
     aura, realm = home_aura(saga, magus)
+    kind = home_aura_kind(saga, magus)
     header = " " * 12 + "".join(f"{ART_ABBREVIATIONS[f]:>5}" for f in FORMS)
     rows = [header]
     sample = None
@@ -57,7 +74,7 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         cells = []
         for form in FORMS:
             score = casting.casting_score(
-                magus, technique, form, aura=aura, aura_realm=realm
+                magus, technique, form, aura=aura, aura_realm=realm, aura_kind=kind
             )
             sample = sample or score
             cells.append(f"{int(score.total):>5}")
@@ -66,12 +83,13 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
     shared = [
         f"{escape(line.label)} {line.amount:+g}"
         for line in sample.lines[2:]
-        if line.amount is not None
+        if line.amount is not None and line.source != aura_kinds.ALIGNED_SOURCE
     ]
     lines = [
         *rows,
         "",
         "Every score adds: " + ", ".join(shared) + " (firm words, bold gestures).",
+        *_aligned_lines(kind, realm, aura),
         "Formulaic: score + die >= level casts it; up to 10 short costs "
         + _levels(casting.fatigue_levels(1, magus.virtues_flaws, "formulaic"))
         + ".",
@@ -262,6 +280,7 @@ def known_spell_casting_lines(
         spell,
         aura=aura,
         aura_realm=realm,
+        aura_kind=home_aura_kind(saga, magus),
         mastery=known.mastery_score,
         mastery_abilities=abilities,
     )
@@ -272,6 +291,15 @@ def known_spell_casting_lines(
         if line.amount is not None
     )
     lines = [f"[b]Casting Score:[/] {total} ({terms})"]
+    demon_work = apotropaic.effect_line(
+        spell.name,
+        spell.level,
+        mastery_score=known.mastery_score,
+        apotropaic_mastery=bool(abilities.get(apotropaic.APOTROPAIC_MASTERY)),
+        hierarchy_score=hierarchy(magus),
+    )
+    if demon_work:
+        lines.append(escape(demon_work))
     if casting_virtues.incompatible(
         magus, spell.technique, spell.form, tuple(spell.requisites)
     ):
@@ -396,6 +424,13 @@ def _mastery_lines(
     found += house_mastery.notes(
         abilities, score, ritual=spell.ritual, general=spell.level is None
     )
+    # The Infernal's own Masteries (RoP: The Infernal pp. 122-124).
+    found += goetic.mastery_notes(magus, abilities, score)
+    if abilities.get(apotropaic.APOTROPAIC_MASTERY):
+        found.append(
+            f"Apotropaic Mastery: +{apotropaic.mastery_bonus(score, hierarchy(magus))} "
+            "to its level of effect on Infernal Might (Mastery x Hierarchy)"
+        )
     if not found:
         return []
     return ["[b]Mastery:[/] " + escape("; ".join(found)) + "."]

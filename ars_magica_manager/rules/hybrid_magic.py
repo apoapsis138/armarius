@@ -48,7 +48,7 @@ from functools import cache
 from .. import catalog
 from ..models import Book, Character, Saga
 from . import creation_access as access
-from . import realms, scores
+from . import realm_insight, realms, scores
 from .rounding import round_down
 
 FAERIE = "Faerie"
@@ -296,7 +296,20 @@ def theory(magus: Character) -> tuple[str, int]:
 
 def aura_modifier(magus: Character, aura_realm: str, aura: int) -> tuple[int, str]:
     """What an aura adds to his Hermetic magic, and the style that changes
-    it ("" when none does). With several, the best applies."""
+    it ("" when none does). With several, the best applies. Under True
+    Understanding of the Realms a penalty is worked from the aura less his
+    Lore of its realm; a bonus keeps the whole aura (Legends of Hermes p.
+    15)."""
+    best, why = _aura_modifier(magus, aura_realm, aura)
+    lessened = realm_insight.effective_aura(magus, aura_realm, aura)
+    if best < 0 and lessened < aura:
+        found, _ = _aura_modifier(magus, aura_realm, lessened)
+        if found > best:
+            best, why = found, "True Understanding of the Realms"
+    return best, why
+
+
+def _aura_modifier(magus: Character, aura_realm: str, aura: int) -> tuple[int, str]:
     best = realms.aura_modifier(realms.HERMETIC, aura_realm, aura)
     why = ""
     for style in styles(magus):
@@ -383,9 +396,11 @@ def foreign_botch_dice(
 ) -> int:
     """The extra botch dice an aura adds to his Hermetic magic: one a point
     of a foreign aura, two in a foreign regio level (DE p. 411); none in an
-    aura a style attunes him to."""
+    aura a style attunes him to; fewer by his Lore of its realm under True
+    Understanding of the Realms (Legends of Hermes p. 15)."""
     if any(aura_realm in s.no_botch for s in styles(magus)):
         return 0
+    aura = realm_insight.effective_aura(magus, aura_realm, aura)
     dice = realms.extra_botch_dice(realms.HERMETIC, aura_realm, aura, in_regio=in_regio)
     # Susceptibility to Divine Power doubles them in a Divine aura (DE p. 146).
     return 2 * dice if aura_realm == DIVINE and divine_susceptible(magus) else dice

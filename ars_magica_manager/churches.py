@@ -17,8 +17,15 @@ A relic has a Faith score, and as many Faith Points; its Divine Might is
 as much Magic Resistance; touching it is worth +1 to an invocation of its
 saint (Realms of Power: The Divine).
 
+Its icons go on the same list (The Sundered Eagle pp. 133-135). An eikon
+has no Faith or Might: venerated, it adds its Aesthetic Quality / 5
+(rounded up) to invoking its saint, or God's aid for an icon of Christ.
+An acheiropoieton, an icon not made by hand, is a powerful relic.
+
 Kept in Neighbour.details: "church", "order", "founded", "abandoned" and
-"relics" (each {"name", "saint", "faith"})."""
+"relics" (each {"name", "saint", "faith"}, and for an icon "kind" (a
+rules.theban_customs.RELIC_KINDS key; none is a relic), "quality", the
+eikon's Aesthetic Quality, "painter" and "of_christ")."""
 
 from __future__ import annotations
 
@@ -32,6 +39,7 @@ from .models import Neighbour, Saga, details_list
 from .neighbour_lists import KindList, KindTab, list_ops
 from .references import Fact
 from .rules import options
+from .rules import theban_customs as customs
 from .sections import RELICS_SECTION
 
 #: The kinds of church, and each one's Dominion aura.
@@ -57,18 +65,41 @@ def church_kind(neighbour: Neighbour) -> str:
 
 
 class Relic(TypedDict, total=False):
-    """A relic the church holds: its name, its saint and its Faith score."""
+    """A relic the church holds: its name, its saint and its Faith score;
+    or an icon, with its kind, an eikon's Aesthetic Quality and painter,
+    and whether it is of Christ."""
 
     name: Required[str]
     saint: str
     faith: int
+    kind: str
+    quality: int
+    painter: str
+    of_christ: bool
 
 
 def relics(neighbour: Neighbour) -> list[Relic]:
     return cast(list[Relic], details_list(neighbour, "relics"))
 
 
+def is_eikon(relic: Relic) -> bool:
+    return relic.get("kind") == customs.EIKON
+
+
+def eikons(neighbour: Neighbour) -> list[Relic]:
+    """The church's eikons, in the order of its list."""
+    return [r for r in relics(neighbour) if is_eikon(r)]
+
+
+def eikon_bonus(relic: Relic) -> int:
+    """What venerating an eikon adds to invoking its saint (TSE p. 133)."""
+    return customs.invocation_bonus(int(relic.get("quality") or 0))
+
+
 def _faith(relic: Relic) -> int:
+    """Its Faith score: none for an eikon (TSE p. 134)."""
+    if is_eikon(relic):
+        return 0
     return max(0, int(relic.get("faith") or 0))
 
 
@@ -196,6 +227,18 @@ def relics_grid(saga: Saga, neighbour: Neighbour) -> Grid:
     rows = []
     for relic in relics(neighbour):
         faith = _faith(relic)
+        if is_eikon(relic):
+            rows.append(
+                [
+                    relic["name"],
+                    relic.get("saint", ""),
+                    "",
+                    "",
+                    "",
+                    f"+{eikon_bonus(relic)}",
+                ]
+            )
+            continue
         rows.append(
             [
                 relic["name"],
@@ -216,10 +259,17 @@ def relics_grid(saga: Saga, neighbour: Neighbour) -> Grid:
 
 
 def relic_fields(
-    _saga: Saga, _neighbour: Neighbour, relic: Relic | None
+    saga: Saga, _neighbour: Neighbour, relic: Relic | None
 ) -> list[DialogField]:
     r = relic or {}
-    return [
+
+    def eikon(values: dict[str, Any]) -> bool:
+        return values.get("kind") == customs.EIKON
+
+    def not_eikon(values: dict[str, Any]) -> bool:
+        return not eikon(values)
+
+    found = [
         DialogField(
             "name",
             "Relic",
@@ -236,6 +286,38 @@ def relic_fields(
             r.get("faith", 1),
             hint="As many Faith Points; Might is 10 times it. Most relics "
             "have 1 or 2, the greatest 5 or more (RoP: The Divine p. 45).",
+            show_if=not_eikon,
+        ),
+    ]
+    if not sourcebooks.in_play(customs.TSE, sourcebooks.saga_books(saga)):
+        return found
+    return [
+        *found,
+        DialogField(
+            "kind",
+            "Kind",
+            "select",
+            r.get("kind") or customs.RELIC,
+            options=[(label, key) for key, label in customs.RELIC_KINDS.items()],
+            required=True,
+            hint="An eikon has no Might: venerated, it adds its Aesthetic "
+            "Quality / 5 to invoking its saint (The Sundered Eagle p. 133).",
+        ),
+        DialogField(
+            "quality",
+            "Aesthetic Quality",
+            "int",
+            r.get("quality", 0),
+            show_if=eikon,
+        ),
+        DialogField("painter", "Painter", "text", r.get("painter", ""), show_if=eikon),
+        DialogField(
+            "of_christ",
+            "An icon of Christ",
+            "check",
+            bool(r.get("of_christ")),
+            hint="Adds to invoking God's aid instead (RoP: The Divine p. 41).",
+            show_if=eikon,
         ),
     ]
 
@@ -243,6 +325,8 @@ def relic_fields(
 def _faith_problem(values: dict[str, Any]) -> str | None:
     if (values.get("faith") or 0) < 0:
         return "A Faith score can't be below 0."
+    if (values.get("quality") or 0) < 0:
+        return "An Aesthetic Quality can't be below 0."
     return None
 
 

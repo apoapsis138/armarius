@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from ...models import (
     Book,
     Character,
+    Formula,
     Progress,
     Saga,
     SeasonPlan,
@@ -64,6 +65,9 @@ class SimpleActivity:
     retired: bool = False
     #: What the season is for (activity_groups), as the picker groups it.
     group: str = ""
+    #: The season's experience goes into its work (a formula researched),
+    #: not into the subject's score.
+    xp_to_work: bool = False
 
     @property
     def book(self) -> str:
@@ -104,6 +108,12 @@ class SupplementWork:
     initiated: bool = False
     #: A summa's new Level (inspeximus): (book id, level).
     summa_level: tuple[str, int] | None = None
+    #: Experimental philosophy: formulae designed (researched), the
+    #: formulae whose Laboratory Text a first concoction wrote, and doses
+    #: made (gear name, doses).
+    formula_designs: list[Formula] = field(default_factory=list)
+    lab_texts: list[str] = field(default_factory=list)
+    products: list[tuple[str, int]] = field(default_factory=list)
 
 
 #: What a season does beyond experience, written into `result` (rolls made

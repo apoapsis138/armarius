@@ -64,6 +64,7 @@ from . import (
     spell_levels,
     spell_teaching,
     supplement_work,
+    verditius,
     warping,
 )
 from . import hybrid_magic as hybrid
@@ -737,12 +738,17 @@ def _over_limit(magus: Character, made: LabWork) -> str:
     """Why the season's vis is more than the magus can use in a season
     (twice Magic Theory, DE p. 250), whatever the work; "" when it isn't."""
     used = sum(vis_spent(made).values())
-    limit = lab.vis_limit(magus)
+    # Verditius Elder Runes set the limit for enchanting a device.
+    enchanting = made.device is not None
+    limit = (
+        verditius.enchanting_vis_limit(magus) if enchanting else lab.vis_limit(magus)
+    )
     if used <= limit:
         return ""
+    why = verditius.vis_limit_text(magus) if enchanting else "twice Magic Theory"
     return (
         f"The season uses {used} pawns of vis; {magus.name} can handle {limit} "
-        "in a season (twice Magic Theory)." + lab_virtues.faerie_vis_note(magus)
+        f"in a season ({why})." + lab_virtues.faerie_vis_note(magus)
     )
 
 

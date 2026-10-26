@@ -1,11 +1,22 @@
 """The Weapons & Armor catalog: the Definitive Edition's
 Armor, Melee and Missile tables (Chapter 11) and Natural Weapons table
-(Chapter 13), row for row."""
+(Chapter 13), row for row, plus the supplements' weapons, each flagged
+with its book and offered only with that book in play."""
 
 import pytest
 
 from ars_magica_manager import catalog
-from ars_magica_manager.models import GEAR_QUALITIES, WEAPON_TABLES, WeaponDef
+from ars_magica_manager import possessions as pos
+from ars_magica_manager.forms.possession import possession_fields
+from ars_magica_manager.models import (
+    GEAR_QUALITIES,
+    WEAPON_TABLES,
+    Possession,
+    WeaponDef,
+)
+
+#: The supplements' weapons, after the DE's rows of their table: id -> book.
+SUPPLEMENT_WEAPONS = {"weapon_greek_fire_siphon": "TSE"}
 
 
 def _table(table: str) -> list[WeaponDef]:
@@ -51,6 +62,7 @@ def test_every_row_of_the_books_tables_is_there_in_its_order():
         "Stone",
         "Long Bow",
         "Short Bow",
+        "Greek Fire Siphon",  # The Sundered Eagle p. 47
     ]
     assert [w.name for w in _table("natural")] == [
         "Grapple",
@@ -72,7 +84,7 @@ def test_every_row_of_the_books_tables_is_there_in_its_order():
         "Metal Scale",
         "Chain Mail",
     ]
-    assert len(catalog.load_weapon_catalog()) == 45
+    assert len(catalog.load_weapon_catalog()) == 45 + len(SUPPLEMENT_WEAPONS)
 
 
 # (id, Init, Atk, Dfn, Dam, Str, Load, Cost, Range) as the DE prints them.
@@ -91,6 +103,8 @@ def test_every_row_of_the_books_tables_is_there_in_its_order():
         ("weapon_sling", -3, 1, 0, 4, -3, 0, "Inexpensive", 20),
         ("weapon_throwing_knife", 0, 1, 0, 2, -2, 0, "Inexpensive", 5),
         ("weapon_long_bow", -2, 4, 0, 8, 2, 2, "Expensive", 30),
+        # The Sundered Eagle p. 47.
+        ("weapon_greek_fire_siphon", -2, 4, 0, 10, 2, 3, "Expensive", 5),
         ("natural_grapple", 0, 0, 0, None, None, None, None, None),
         ("natural_claw", -1, 2, 3, 2, None, None, None, None),
         ("natural_large_horns", 2, 3, 2, 3, None, None, None, None),
@@ -129,11 +143,15 @@ def test_armor_figures_match_the_book():
 
 def test_weapons_use_the_books_abilities_and_costs():
     abilities = {a.name for a in catalog.load_ability_catalog()}
+    # A parameterized Ability ("Profession: {profession}") by its prefix.
+    prefixes = tuple(name.split("{")[0] for name in abilities if "{" in name)
     for weapon in catalog.load_weapon_catalog():
         assert weapon.table in WEAPON_TABLES
-        assert weapon.ability in abilities, weapon.id
+        assert weapon.ability in abilities or weapon.ability.startswith(prefixes), (
+            weapon.id
+        )
         assert weapon.cost is None or weapon.cost in GEAR_QUALITIES
-        assert weapon.source == "DE"
+        assert weapon.source == SUPPLEMENT_WEAPONS.get(weapon.id, "DE"), weapon.id
     # Missile weapons, and only they, have a range.
     assert all(w.range for w in _table("missile"))
     assert not any(w.range for w in _table("melee") + _table("natural"))
@@ -150,3 +168,23 @@ def test_an_unknown_cost_or_table_is_refused():
         WeaponDef("w", "W", "melee", "Brawl", 0, 0, 0, 0, cost="Cheap")
     with pytest.raises(ValueError, match="table"):
         WeaponDef("w", "W", "siege", "Brawl", 0, 0, 0, 0)
+
+
+def _weapon_choices(
+    books: set[str] | None, entry: pos.PossessionEntry | None = None
+) -> list[str]:
+    [book] = [
+        f for f in possession_fields("weapon", entry, books=books) if f.key == "gear_id"
+    ]
+    return [value for _, value in book.options]
+
+
+def test_a_supplements_weapon_is_offered_only_with_its_book_in_play():
+    siphon = "weapon_greek_fire_siphon"
+    assert siphon in _weapon_choices(None)  # every book
+    assert siphon in _weapon_choices({"DE", "TSE"})
+    assert siphon not in _weapon_choices({"DE"})
+    assert "weapon_long_bow" in _weapon_choices({"DE"})
+    # One already filled from it keeps its entry with the book set aside.
+    held = Possession(id="s", kind="weapon", name="Siphon", gear_id=siphon)
+    assert siphon in _weapon_choices({"DE"}, pos.PossessionEntry("weapon", held))

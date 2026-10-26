@@ -18,7 +18,7 @@ from __future__ import annotations
 from .. import catalog
 from ..arts import ARTS
 from ..models import Character, Saga
-from . import animal_grogs
+from . import animal_grogs, childhood
 from . import creation_access as access
 from . import creation_packages as packages
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
@@ -149,6 +149,8 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
             x.target
             for x in entries(character, "later_life")
             if not access.may_learn(character, x.target)
+            # A child may learn his parent's vocation (Apprentices p. 14).
+            and not childhood.vocational(saga, character, x.target)
         }
     )
     if wrong:

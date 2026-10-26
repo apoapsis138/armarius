@@ -40,6 +40,7 @@ from ars_magica_manager.models import (
     Neighbour,
     Saga,
     SagaSource,
+    ScoredTrait,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
@@ -477,6 +478,19 @@ async def _open_sell_goods(ws) -> None:
     if not any(a.name == "Craft: Smith" for a in character.abilities):
         character.abilities.append(Ability("Craft: Smith", xp=75))
     ws.action_sell_goods()
+
+
+async def _open_apothecary(ws, which: str) -> None:
+    """More's Make a Ligature or Apothecary's Store on Leandro, given
+    Medicine and Profession: Apothecary."""
+    character = ws.selected_character
+    for name in ("Medicine", "Profession: Apothecary"):
+        if not any(a.name == name for a in character.abilities):
+            character.abilities.append(Ability(name, xp=15))
+    if which == "ligature":
+        ws.action_make_ligature()
+    else:
+        ws.action_apothecary_store()
 
 
 async def _open_constant_effect(ws) -> None:
@@ -1338,6 +1352,25 @@ OPENERS: dict[str, Opener] = {
     "mark of approval": Opener("tribunal", _open_rhine_verb("rhine_mark")),
     "archmage's challenge": Opener("tribunal", _open_rhine_verb("rhine_challenge")),
     "rhine rite": Opener("tribunal", _open_rhine_rite),
+    # A young character's parent's vocation (Apprentices).
+    "parent vocation": Opener(
+        "character",
+        lambda ws: ws._run_steps(wf.parent_vocation(ws.selected_character)),
+    ),
+    # Art & Academe's ligatures and the apothecary's store.
+    "make a ligature": Opener("character", lambda ws: _open_apothecary(ws, "ligature")),
+    "apothecary's store": Opener("character", lambda ws: _open_apothecary(ws, "store")),
+    # The Theban Tribunal's Byzantine customs (The Sundered Eagle).
+    "hermetic letter": Opener("character", lambda ws: _open_byzantine(ws, "letter")),
+    "invoke a broken oath": Opener("character", lambda ws: _open_byzantine(ws, "oath")),
+    "make greek fire": Opener("character", lambda ws: _open_byzantine(ws, "fire")),
+    "paint an icon": Opener("character", lambda ws: _open_byzantine(ws, "paint")),
+    "venerate an icon": Opener("character", lambda ws: _open_byzantine(ws, "venerate")),
+    "a mother's curse": Opener("character", lambda ws: _open_byzantine(ws, "curse")),
+    # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
+    "confidence through sin": Opener("character", lambda ws: _open_sin(ws, "sin")),
+    "infernal influence": Opener("character", lambda ws: _open_sin(ws, "influence")),
+    "ars goetia": Opener("character", lambda ws: _open_sin(ws, "goetia")),
 }
 
 
@@ -1445,3 +1478,46 @@ def new_app(saga: Saga | None = None) -> ArsMagicaManagerApp:
 
 
 Opens = Callable[..., Awaitable[tuple[object, object]]]
+
+
+def _open_byzantine(ws, which: str) -> None:
+    """A Byzantine custom's More command on Leandro: painting needs him a
+    priest with Theology 3, venerating an icon on Cologne's Relics."""
+    character = ws.selected_character
+    if which == "paint":
+        character.virtues_flaws.append(VirtueFlawInstance("vf_eastern_priest"))
+        character.abilities.append(Ability("Theology: Christian", xp=30))
+    if which == "venerate":
+        church = ws.saga.neighbour("cologne")
+        church.details.setdefault("relics", []).append(
+            {
+                "name": "The Hodegetria",
+                "saint": "the Theotokos",
+                "kind": "eikon",
+                "quality": 12,
+            }
+        )
+    {
+        "letter": ws.action_theban_letter,
+        "oath": ws.action_invoke_oath,
+        "fire": ws.action_make_greek_fire,
+        "paint": ws.action_paint_icon,
+        "venerate": ws.action_venerate_icon,
+        "curse": ws.action_mothers_curse,
+    }[which]()
+
+
+def _open_sin(ws, which: str) -> None:
+    """More's Confidence through Sin, Infernal Influence or Ars Goetia on
+    Leandro, given a cruel streak and the Summoning Art."""
+    character = ws.selected_character
+    if not any(t.name == "Cruel (Envious)" for t in character.personality_traits):
+        character.personality_traits.append(ScoredTrait("Cruel (Envious)", 3))
+    if not any(a.name == "Summoning" for a in character.abilities):
+        character.abilities.append(Ability("Summoning", xp=55, xp_table="art"))
+    if which == "sin":
+        ws.action_indulge_sin()
+    elif which == "influence":
+        ws.action_infernal_influence()
+    else:
+        ws.action_ars_goetia()

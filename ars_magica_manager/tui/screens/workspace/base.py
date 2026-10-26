@@ -305,6 +305,9 @@ _STORYGUIDE_ACTIONS = frozenset(
         "export_pack",
         "host_saga",
         "stop_hosting",
+        # The Byzantine customs that lay a curse on a sheet.
+        "invoke_oath",
+        "mothers_curse",
     }
 )
 

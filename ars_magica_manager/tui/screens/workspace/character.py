@@ -27,14 +27,18 @@ from .... import (
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
+from .... import theban_customs as byzantine
 from ....arts import ARTS
 from ....forms import agents as agent_forms
+from ....forms import apothecary as apothecary_forms
 from ....forms import beast as beast_forms
 from ....forms import character as character_forms
 from ....forms import craft_magic as craft_forms
 from ....forms import experimental_effects
+from ....forms import goetic as goetic_forms
 from ....forms import grogs as grog_forms
 from ....forms import menu as menu_forms
+from ....forms import sin as sin_forms
 from ....forms import spell as spell_forms
 from ....markup import escape
 from ....models import (
@@ -267,6 +271,28 @@ class CharacterActions(WorkspaceBase):
 
         run_steps(self.app, selling.sell_form(self.saga, character), done)
 
+    def action_make_ligature(self) -> None:
+        """More's Make a Ligature beside Abilities: a scholar's ligature
+        roll, kept in the Diary."""
+        self._apothecary_step(apothecary_forms.ligature_form, "section-char-season")
+
+    def action_apothecary_store(self) -> None:
+        """More's Apothecary's Store on This Season: a search for an
+        ingredient or preserving one, kept in the Diary."""
+        self._apothecary_step(apothecary_forms.store_form, "section-char-season")
+
+    def _apothecary_step(self, form: Callable[..., Any], section: str) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            self._commit(section, "tab-diary")
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, form(self.saga, character), done)
+
     def action_command_beast(self) -> None:
         """More's Command the Beast on a tamed animal's Personality Traits:
         the command's roll and any Loyalty test."""
@@ -319,6 +345,47 @@ class CharacterActions(WorkspaceBase):
                 self.notify("\n".join(str(line) for line in end))
 
         run_steps(self.app, craft_forms.craft_form(self.saga, character), done)
+
+    def action_indulge_sin(self) -> None:
+        """More's Confidence through Sin on Personality Traits: the point
+        kept, and a ceremony's Warping Point."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            self._commit("section-char-info", "section-aging", "tab-diary")
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, sin_forms.sin_form(self.saga, character), done)
+
+    def action_infernal_influence(self) -> None:
+        """More's Infernal Influence on Personality Traits: the roll, kept
+        in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            self._commit("section-char-info", "tab-diary")
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, sin_forms.influence_form(self.saga, character), done)
+
+    def action_ars_goetia(self) -> None:
+        """More's Ars Goetia: a Goetic Art's total and a roll of it; nothing
+        is kept."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, goetic_forms.goetic_form(self.saga, character), done)
 
     def action_recovery_roll(self) -> None:
         """More's Recovery Roll on Health: a roll for each wound now."""
@@ -1052,7 +1119,12 @@ class CharacterActions(WorkspaceBase):
                 )
             self._commit("section-inventory")
 
-        self.app.push_screen(_possession_dialog(title, kind, entry), handle_result)
+        self.app.push_screen(
+            _possession_dialog(
+                title, kind, entry, books=sourcebooks.saga_books(self.saga)
+            ),
+            handle_result,
+        )
 
     def _edit_item(self) -> None:
         """Edit the chosen item."""
@@ -1315,3 +1387,49 @@ class CharacterActions(WorkspaceBase):
                 self._edit_character_diary_entry,
             ),
         }
+
+    # -- the Theban Tribunal's Byzantine customs --
+
+    def _byzantine_step(self, build: Callable[..., Any], *sections: str) -> None:
+        """Run a Byzantine custom's More command on the character on show,
+        then save, redraw and say what it did."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            self._commit(*sections, "tab-diary")
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, build(self.saga, character), done)
+
+    def action_theban_letter(self) -> None:
+        """More's Hermetic Letter: composing or reading a rhetorical letter."""
+        self._byzantine_step(byzantine.letter_form)
+
+    def action_invoke_oath(self) -> None:
+        """More's Invoke a Broken Oath: the Oath Invocation roll, and the
+        malediction it lays."""
+        self._byzantine_step(
+            byzantine.oath_form, "section-vf-virtues", "section-vf-flaws"
+        )
+
+    def action_make_greek_fire(self) -> None:
+        """More's Make Greek Fire: a season's botch roll."""
+        self._byzantine_step(byzantine.greek_fire_form)
+
+    def action_paint_icon(self) -> None:
+        """More's Paint an Icon: an eikon for a church's Relics."""
+        self._byzantine_step(byzantine.icon_form)
+
+    def action_venerate_icon(self) -> None:
+        """More's Venerate an Icon: its bonus, and in an emergency a roll
+        and a Fatigue level."""
+        self._byzantine_step(byzantine.venerate_form, "section-char-health")
+
+    def action_mothers_curse(self) -> None:
+        """More's A Mother's Curse: a Lesser Malediction on the sheet."""
+        self._byzantine_step(
+            byzantine.curse_form, "section-vf-virtues", "section-vf-flaws"
+        )

@@ -27,8 +27,8 @@ from ..rules import activities as rules
 from ..rules import agents as agent_rules
 from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
-from ..rules import experiment as ex
 from ..rules import (
+    childhood,
     house_virtue,
     medicine,
     research,
@@ -36,6 +36,7 @@ from ..rules import (
     tradition_seasons,
     work_virtues,
 )
+from ..rules import experiment as ex
 from ..rules import laboratory_seasons as ls
 from ..rules import warping as warping_rules
 from ..tables import Table
@@ -396,6 +397,10 @@ def finish_season(
         if new_year
         else []
     )
+    if new_year:
+        # Next year's transitions of maturation (Apprentices pp. 14-15).
+        players = [c for c in saga.characters if takes_part_in_play(c)]
+        year_end += childhood.year_end_transitions(saga, players)
     year_end += season_aging(saga, rng)
     year_end += season_healing(saga, rng)
     year_end += covenant_season(saga, secured)

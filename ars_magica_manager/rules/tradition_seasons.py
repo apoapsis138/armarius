@@ -356,6 +356,21 @@ def initiation_total(mystagogue: Character, tradition: TraditionDef, bonus: int)
     return value + lore_score(mystagogue, rule.lore) + bonus
 
 
+#: Hermetic Mystery Cults whose members are known by a Virtue, not by
+#: naming the tradition: House Verditius's, by its Outer Mystery (Houses of
+#: Hermes: Mystery Cults p. 117).
+VIRTUE_MEMBERS: dict[str, str] = {"trad_verditius_mysteries": "vf_verditius_magic"}
+
+
+def belongs(character: Character, tradition_id: str) -> bool:
+    """Whether `character` is one of the tradition: named on the sheet, or
+    holding the Virtue that makes him one (VIRTUE_MEMBERS)."""
+    virtue = VIRTUE_MEMBERS.get(tradition_id)
+    return tradition_id in character.traditions or (
+        virtue is not None and any(vf.vf_id == virtue for vf in character.virtues_flaws)
+    )
+
+
 def script_key(tradition: TraditionDef, script: InitiationScript) -> str:
     """How a season plan names a hedge Script (SeasonPlan.hedge_script)."""
     return f"{tradition.id}/{script.name}"
@@ -377,9 +392,12 @@ def script_options(saga: Saga, initiate: Character) -> list[tuple[str, str]]:
     traditions the Initiate or anyone in the saga belongs to (the
     Mystagogue must be one of them), save the Forest Paths' kind, which
     has no Initiation Total."""
-    held = set(initiate.traditions)
-    for person in saga.characters:
-        held.update(person.traditions)
+    held = {
+        tradition_id
+        for person in (initiate, *saga.characters)
+        for tradition_id in (*person.traditions, *VIRTUE_MEMBERS)
+        if belongs(person, tradition_id)
+    }
     found: list[tuple[str, str]] = []
     for tradition in catalog.load_tradition_catalog():
         rule = tradition.initiation

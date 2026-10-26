@@ -25,6 +25,7 @@ from . import (
     seasons,
     selling,
     sourcebooks,
+    theban_customs,
     threats,
     traditions,
     world,
@@ -53,7 +54,10 @@ from .models import (
     Tribunal,
 )
 from .rules import agents as agent_rules
-from .rules import covenfolk, merchants
+from .rules import apothecary, covenfolk, merchants, philosophy
+from .rules import goetic as goetic_rules
+from .rules import sin as sin_rules
+from .rules import theban_customs as byzantine
 from .sections import (
     AGENTS_SECTION,
     AHEAD_SECTION,
@@ -347,6 +351,20 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("c", "rhine_challenge", "Archmage's Challenge"),
     # A craftsman's sale of his finished goods (City & Guild).
     MenuItem("s", "sell_goods", "Sell Finished Goods"),
+    # Art & Academe's ligatures and the apothecary's store.
+    MenuItem("l", "make_ligature", "Make a Ligature"),
+    MenuItem("o", "apothecary_store", "Apothecary's Store"),
+    # The Theban Tribunal's Byzantine customs (The Sundered Eagle).
+    MenuItem("e", "theban_letter", "Hermetic Letter"),
+    MenuItem("s", "invoke_oath", "Invoke a Broken Oath"),
+    MenuItem("f", "make_greek_fire", "Make Greek Fire"),
+    MenuItem("i", "paint_icon", "Paint an Icon"),
+    MenuItem("v", "venerate_icon", "Venerate an Icon"),
+    MenuItem("a", "mothers_curse", "A Mother's Curse"),
+    # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
+    MenuItem("n", "indulge_sin", "Confidence through Sin"),
+    MenuItem("u", "infernal_influence", "Infernal Influence"),
+    MenuItem("g", "ars_goetia", "Ars Goetia"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -650,6 +668,39 @@ def _disputes(facts: ActionFacts) -> bool:
     )
 
 
+def _makes_ligature(facts: ActionFacts) -> bool:
+    """A character with Artes Liberales, Philosophiae or Medicine, when Art
+    & Academe is in play."""
+    character = facts.selected_character
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and facts.on_record()
+        and character is not None
+        and bool(philosophy.ligature_abilities(character))
+        and sourcebooks.in_play("A&A", sourcebooks.saga_books(facts.saga))
+    )
+
+
+def _keeps_byzantine_custom(
+    test: Callable[[Saga, Character], bool],
+) -> Callable[[ActionFacts], bool]:
+    """A Byzantine custom's More command: on a person's record (not an
+    animal's), with The Sundered Eagle in play, when `test` allows it."""
+
+    def rule(facts: ActionFacts) -> bool:
+        character = facts.selected_character
+        return (
+            facts.selected_kind == NodeKind.CHARACTER
+            and facts.on_record()
+            and character is not None
+            and character.animal is None
+            and theban_customs.in_play(facts.saga)
+            and test(facts.saga, character)
+        )
+
+    return rule
+
+
 def _joins_traditions(facts: ActionFacts) -> bool:
     """A full or sketched character, with a tradition the saga offers or
     one they belong to."""
@@ -697,6 +748,54 @@ def _goes_to(facts: ActionFacts) -> bool:
 
 #: When each action that acts on the record on show (or the saga) is
 #: offered, one rule per action (Strategy, as a table).
+
+# Sin, tarnish and the Goetic Arts (RoP: The Infernal).
+
+
+def _on_traits(facts: ActionFacts) -> Character | None:
+    """The character on show, from his record or his Personality Traits."""
+    character = facts.selected_character
+    if (
+        facts.selected_kind != NodeKind.CHARACTER
+        or character is None
+        or facts.active_section()
+        not in (None, RECORD_SECTION[NodeKind.CHARACTER], "section-personality-traits")
+    ):
+        return None
+    return character
+
+
+def _sins(facts: ActionFacts) -> bool:
+    """Confidence through Sin: a trait or Flaw with a penchant for a sin."""
+    character = _on_traits(facts)
+    return character is not None and bool(sin_rules.sinful_traits(character))
+
+
+def _influences(facts: ActionFacts) -> bool:
+    """Infernal Influence: a sinner, or one who knows Infernal Lore."""
+    character = _on_traits(facts)
+    return character is not None and (
+        bool(sin_rules.sinful_traits(character))
+        or any(a.name == "Infernal Lore" for a in character.abilities)
+    )
+
+
+def _works_goetia(facts: ActionFacts) -> bool:
+    """Ars Goetia: one who holds a Goetic Art, from his record or a
+    tradition's chapter."""
+    character = facts.selected_character
+    section = facts.active_section() or ""
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and character is not None
+        and goetic_rules.holds_goetic_art(character)
+        and (
+            section in ("", RECORD_SECTION[NodeKind.CHARACTER])
+            or section.startswith(traditions.SECTION_PREFIX)
+        )
+    )
+
+
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
@@ -722,6 +821,25 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "found_covenant": _on_ruin,
     "begin_story": _on_dormant_threat,
     "go_to": _goes_to,
+    # A scholar's ligature (Art & Academe).
+    "make_ligature": _makes_ligature,
+    # The Theban Tribunal's Byzantine customs (The Sundered Eagle).
+    "theban_letter": _keeps_byzantine_custom(lambda _s, _c: True),
+    "invoke_oath": _keeps_byzantine_custom(lambda _s, _c: True),
+    "make_greek_fire": _keeps_byzantine_custom(lambda _s, _c: True),
+    "paint_icon": _keeps_byzantine_custom(
+        lambda saga, c: (
+            byzantine.icon_problem(c) is None and bool(theban_customs.church_list(saga))
+        )
+    ),
+    "venerate_icon": _keeps_byzantine_custom(
+        lambda saga, _c: bool(theban_customs.icon_choices(saga))
+    ),
+    "mothers_curse": _keeps_byzantine_custom(lambda _s, _c: True),
+    # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
+    "indulge_sin": _sins,
+    "infernal_influence": _influences,
+    "ars_goetia": _works_goetia,
 }
 
 
@@ -904,4 +1022,6 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     # A craftsman's sale of his finished goods, on This Season.
     "sell_goods": _works_for_labor(lambda c: bool(selling.crafts(c))),
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
+    # An apothecary's searching and preserving, on This Season.
+    "apothecary_store": _works_for_labor(apothecary.keeps_store),
 }

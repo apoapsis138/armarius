@@ -226,6 +226,7 @@ def _effect_total(
     craft = verditius.craft_line(saga, magus, device)
     if craft is not None:
         extra.append(craft)
+    extra += verditius.mystery_lines(magus, device, effect)
     if device.type == INVESTED:
         if device.talisman and enchantment.talisman_magus_id(device) == magus.id:
             extra.append(
@@ -259,10 +260,11 @@ def _open_device(
     options: lab.LabOptions,
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
-    """Opening a device for enchantment: its Vim vis."""
+    """Opening a device for enchantment: its Vim vis, and a pawn of each
+    elder rune's Art when they are inscribed (its first season)."""
     from .lab_seasons import LabWork
 
-    limit = lab.vis_limit(magus)
+    limit = verditius.enchanting_vis_limit(magus)
     empty = lab.LabTotal(total=0, lines=[])
     room = enchantment.capacity(saga, device)
     if room is None:
@@ -273,15 +275,22 @@ def _open_device(
     left = room - device.pawns_opened
     if left <= 0:
         return [f"{device.name} is already opened."], None
+    first = not device.pawns_opened
+    found = verditius.elder_rune_problems(magus, device) if first else []
+    if found:
+        return found, None
+    runes = verditius.rune_vis(device) if first else {}
     # Verditius Magic: the maker pays his Craft score fewer pawns, at
     # least one, for the whole of what it opens.
     discount = verditius.opening_discount(saga, magus, device)
     opened = min(left, limit + discount) if device.talisman else left
     pawns = max(1, opened - discount) if discount else opened
-    if pawns > limit:
+    if pawns + sum(runes.values()) > limit:
+        kind = "" if runes else "Vim "
         return [
-            f"Opening {device.name} takes {pawns} pawns of Vim vis; "
-            f"{magus.name} can handle {limit} in a season (twice Magic Theory)."
+            f"Opening {device.name} takes {pawns + sum(runes.values())} pawns of "
+            f"{kind}vis; {magus.name} can handle {limit} in a season "
+            f"({verditius.vis_limit_text(magus)})."
         ], None
     if limit <= 0:
         return [f"{magus.name} can't handle any vis (no Magic Theory)."], None
@@ -290,13 +299,19 @@ def _open_device(
         empty,
         0,
         finished=True,
-        vis_cost={"Vim": pawns},
+        vis_cost={"Vim": pawns + runes.pop("Vim", 0), **runes},
         device=device,
         pawns_opened=opened,
     )
     if pawns < opened:
         work_.notes.append(
             f"Verditius Magic: {pawns} pawns open it for {opened} ({verditius.SOURCE})."
+        )
+    if device.elder_runes and first:
+        work_.notes.append(
+            f"Elder runes ({', '.join(device.elder_runes)}): a pawn of each Art's "
+            f"vis, which the device holds besides its effects "
+            f"({verditius.ELDER_RUNES_SOURCE})."
         )
     return [], work_
 
@@ -338,6 +353,11 @@ def _attune(
         ], None
     if device.talisman:
         return [f"{device.name} is already a talisman."], None
+    if device.verditius_item:
+        return [
+            f"{device.name} is an {device.verditius_item} item: it can't also be a "
+            "talisman."
+        ], None
     current = enchantment.talisman_of(saga, magus)
     if current is not None:
         return [
@@ -408,6 +428,16 @@ def work(
             f"{plan.days_away} days away from the laboratory: no lab work is "
             "possible this season (more than 20)."
         ], None
+    # An attuned item or an automaton is made only by a magus with its
+    # Mystery (investigating one asks nothing of him).
+    if plan.activity != INVESTIGATE:
+        found = verditius.item_problems(
+            magus,
+            device,
+            effect_of(device, plan) if plan.activity in EFFECT_ACTIVITIES else None,
+        )
+        if found:
+            return found, None
     special = _DEVICE_WORK.get(plan.activity)
     if special is not None:
         return special(saga, magus, plan, lab_, options, device)
@@ -435,7 +465,7 @@ def _effect_work(
     """Instilling, a lesser enchantment or a charged item: one effect."""
     from .lab_seasons import LabWork
 
-    limit = lab.vis_limit(magus)
+    limit = verditius.enchanting_vis_limit(magus)
     effect = _instilled_by(magus, effect_of(device, plan))
     if effect is None:
         return ["Choose the effect (add it to the device on its Inventory tab)."], None
@@ -595,7 +625,7 @@ def _vis_problem(
     if pawns > limit:
         return (
             f"It takes {pawns} pawns of vis; {magus.name} can handle {limit} in "
-            "a season (twice Magic Theory)."
+            f"a season ({verditius.vis_limit_text(magus)})."
         )
     return enchantment.vis_shortfall(
         split, vis_pool(saga, magus, plan), whose_vis(magus, plan)

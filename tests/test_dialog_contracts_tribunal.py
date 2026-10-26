@@ -327,11 +327,19 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "edit place": Contract(
         prefill={"Name": "The Drachenfels", "Aura": "5", "Inside": "siebengebirge"},
-        edits={"Aura": "6", "Status": "Claimed", "Tethers": "A dragon's skull"},
-        saved=lambda s: s.neighbour("drachenfels").details["aura"],
-        expected=6,
+        edits={
+            "Aura": "6",
+            "Status": "Claimed",
+            "Tethers": "A dragon's skull",
+            "Alignment": "Ignem",
+        },
+        saved=lambda s: (
+            s.neighbour("drachenfels").details["aura"],
+            s.neighbour("drachenfels").details["alignment"],
+        ),
+        expected=(6, "Ignem"),
         invalid=[{"Name": ""}, {"Aura": "-1"}],
-        shown={"#nb-kind-facts": "Magic 6"},
+        shown={"#nb-kind-facts": "aligned with Ignem"},
     ),
     "found covenant": Contract(
         prefill={
@@ -358,10 +366,14 @@ CONTRACTS: dict[str, Contract] = {
         edits={
             "Name": "The Hall of Stones",
             "Aura": "8",
+            "Alignment": "Healing",
             "To enter it": "Pre + Music against 9",
         },
-        saved=lambda s: s.neighbour("drachenfels").details["levels"][-1]["aura"],
-        expected=8,
+        saved=lambda s: (
+            s.neighbour("drachenfels").details["levels"][-1]["aura"],
+            s.neighbour("drachenfels").details["levels"][-1]["alignment"],
+        ),
+        expected=(8, "Healing"),
         invalid=[{"Name": ""}, {"Aura": "-2"}],
         shown={"#nb-levels-list": "The Hall of Stones"},
     ),

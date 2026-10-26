@@ -51,7 +51,7 @@ from ..models import (
     ShapeMaterialDef,
     new_instance_id,
 )
-from ..rules import enchantment, lab_items
+from ..rules import enchantment, lab_items, verditius
 from ..rules.powers import ITEM_VIRTUES
 from . import experimental_effects
 
@@ -313,11 +313,21 @@ def device_from_values(
         "attunements",
         "verditius_runes",
         "verditius_craft",
+        "verditius_item",
         "description",
         "granted_by",
     ):
         if key in values:
             setattr(copy, key, values[key])
+    if "elder_rune_technique" in values or "elder_rune_form" in values:
+        copy.elder_runes = [
+            art
+            for art in (
+                values.get("elder_rune_technique") or "",
+                values.get("elder_rune_form") or "",
+            )
+            if art
+        ]
     if copy.components is None:
         copy.components = []
     return copy
@@ -576,6 +586,63 @@ def _device_bonus_fields(
                 "The Craft Ability, e.g. Craft: Jeweler (blank: shaped by "
                 "magic). The maker adds it to his Lab Totals for the item and "
                 "opens it for that many fewer pawns."
+            ),
+        ),
+        *_verditius_mystery_fields(base),
+    ]
+
+
+def _verditius_invested(values: dict[str, Any]) -> bool:
+    """The Verditius Inner Mysteries' fields show for an invested device
+    its Verditius maker crafted."""
+    return values.get("type") == INVESTED and bool(values.get("verditius_runes"))
+
+
+def _rune_options(arts: tuple[str, ...]) -> list[tuple[str, str]]:
+    return [("(none)", ""), *pairs(a for a in arts if a in verditius.ELDER_RUNE_TABLE)]
+
+
+def _verditius_mystery_fields(base: EnchantedDevice) -> list[DialogField]:
+    """Elder runes inscribed as it was opened, and an attuned item or an
+    automaton (Houses of Hermes: Mystery Cults pp. 127-135)."""
+    technique = next((a for a in base.elder_runes if a in TECHNIQUES), "")
+    form = next((a for a in base.elder_runes if a in FORMS), "")
+    return [
+        DialogField(
+            "elder_rune_technique",
+            "Elder rune (Technique)",
+            "select",
+            technique,
+            options=_rune_options(TECHNIQUES),
+            show_if=_verditius_invested,
+            hint=(
+                "Verditius Elder Runes: doubles that Art for its effects, +5 to "
+                "each effect's level, a pawn of the Art's vis (HoH:MC p. 127)."
+            ),
+        ),
+        DialogField(
+            "elder_rune_form",
+            "Elder rune (Form)",
+            "select",
+            form,
+            options=_rune_options(FORMS),
+            show_if=_verditius_invested,
+        ),
+        DialogField(
+            "verditius_item",
+            "Verditius item",
+            "select",
+            base.verditius_item,
+            options=[
+                ("(neither)", ""),
+                ("Attuned item", enchantment.ATTUNED),
+                ("Automaton", enchantment.AUTOMATON),
+            ],
+            show_if=_verditius_invested,
+            hint=(
+                "Attuned: holds the maker's highest Technique + Form + "
+                "Philosophiae + Craft. Automaton: its Capacity is its Magic "
+                "Might. Both add the maker's Hubris (HoH:MC pp. 128-135)."
             ),
         ),
     ]

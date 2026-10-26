@@ -45,11 +45,12 @@ def test_catalog_counts_after_adding_the_supplements():
     # integration Virtues, plus the 3 Grogs entries the DE doesn't have,
     # plus Realms of Power: The Divine's Perfectus Mythic Companion Virtue,
     # plus Secrets in Sand's 2 Virtues and 2 Flaws, plus The Cradle and the
-    # Crescent's Jinni.
+    # Crescent's Jinni, plus Legends of Hermes's 3 realm-insight Virtues,
+    # plus The Sundered Eagle's Mythic Blood (Gigantes) and 7 Maledictions.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1356
+    assert len(entries) == 1367
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 798, "Flaw": 471, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 802, "Flaw": 478, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

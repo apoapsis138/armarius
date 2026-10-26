@@ -6693,7 +6693,7 @@
           "fatigue": "Summoning always costs a Fatigue level",
           "vis_cap": "none",
           "penetrates": false,
-          "notes": "Characteristic + the Art + the Lore of the target's realm (Area Lore when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon. Target level: the spirit's Might in a circle, twice its Might outside one, + the demon's Hierarchy x 5. Summoning needs the total to reach twice Might to hold the spirit in the circle; between Might and twice Might it stays only while he concentrates. Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
+          "notes": "Characteristic + the Art + the Lore of the spirit's realm (Area Lore and Penetration unmultiplied when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon (and the demon's Hierarchy x 5 on its target). Summoning: a total of twice the spirit's Might holds it in the circle; its Might alone, only while he concentrates. Ablating, Binding and Commanding must exceed its Might in a circle, twice its Might outside one (Binding and Commanding: only no botch for a spirit that allows it in a circle, its Might outside one). Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
         }
       ],
       "advancement": {
@@ -6707,7 +6707,118 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Summon a named spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Against twice its Might (+ a demon's Hierarchy x 5); its Might alone holds it only while he concentrates",
+          "page": 114
+        },
+        {
+          "name": "Scour for a spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Area Lore, Penetration unmultiplied; draws a nearby spirit of about half the total's Might",
+          "page": 115
+        },
+        {
+          "name": "Ablate a spirit",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might (twice outside a circle); the margin off its Might, a fifth of it Ablation Points",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Confidence",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "As many Confidence Points (no more than Confidence Score x 5), or experience in the Confidence Score",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Capability",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "Points on Characteristics, as at creation, no higher than the spirit's",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Health",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "5 heals a Heavy Wound, 3 a Medium, 1 a Light or a long-term Fatigue level",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Immortality",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "A Longevity bonus to Aging rolls until his next crisis",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Insight",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "The spirit's thoughts and memories",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Knowledge",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "5 xp a point in a fitting Art or Ability, to the spirit's score; it takes the season's study",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Might",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "Infernal Might, no more than the spirit's old Might or Confidence Score x 5",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Power",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "One of the spirit's Powers (a Virtue or Flaw without Might)",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Vis",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "A pawn of Infernal vis a point (vis sordida or prava)",
+          "page": 116
+        }
+      ],
+      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118"
     },
     {
       "id": "trad_dark_gnostics",
@@ -6845,7 +6956,7 @@
           "fatigue": "Summoning always costs a Fatigue level",
           "vis_cap": "none",
           "penetrates": false,
-          "notes": "Characteristic + the Art + the Lore of the target's realm (Area Lore when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon. Target level: the spirit's Might in a circle, twice its Might outside one, + the demon's Hierarchy x 5. Summoning needs the total to reach twice Might to hold the spirit in the circle; between Might and twice Might it stays only while he concentrates. Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
+          "notes": "Characteristic + the Art + the Lore of the spirit's realm (Area Lore and Penetration unmultiplied when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon (and the demon's Hierarchy x 5 on its target). Summoning: a total of twice the spirit's Might holds it in the circle; its Might alone, only while he concentrates. Ablating, Binding and Commanding must exceed its Might in a circle, twice its Might outside one (Binding and Commanding: only no botch for a spirit that allows it in a circle, its Might outside one). Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
         }
       ],
       "advancement": {
@@ -6874,7 +6985,37 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Summon a named spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Against twice its Might (+ a demon's Hierarchy x 5); its Might alone holds it only while he concentrates",
+          "page": 114
+        },
+        {
+          "name": "Scour for a spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Area Lore, Penetration unmultiplied; draws a nearby spirit of about half the total's Might",
+          "page": 115
+        },
+        {
+          "name": "Bind a spirit",
+          "arts": [
+            "Binding"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might in a circle (twice outside); lends its Might as Magic Resistance, holds Might x 5 spell levels",
+          "page": 117
+        }
+      ],
+      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118"
     },
     {
       "id": "trad_mulhidun",
@@ -6933,7 +7074,7 @@
           "fatigue": "Summoning always costs a Fatigue level",
           "vis_cap": "none",
           "penetrates": false,
-          "notes": "Characteristic + the Art + the Lore of the target's realm (Area Lore when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon. Target level: the spirit's Might in a circle, twice its Might outside one, + the demon's Hierarchy x 5. Summoning needs the total to reach twice Might to hold the spirit in the circle; between Might and twice Might it stays only while he concentrates. Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
+          "notes": "Characteristic + the Art + the Lore of the spirit's realm (Area Lore and Penetration unmultiplied when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon (and the demon's Hierarchy x 5 on its target). Summoning: a total of twice the spirit's Might holds it in the circle; its Might alone, only while he concentrates. Ablating, Binding and Commanding must exceed its Might in a circle, twice its Might outside one (Binding and Commanding: only no botch for a spirit that allows it in a circle, its Might outside one). Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
         }
       ],
       "advancement": {
@@ -6962,7 +7103,244 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Summon a named spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Against twice its Might (+ a demon's Hierarchy x 5); its Might alone holds it only while he concentrates",
+          "page": 114
+        },
+        {
+          "name": "Scour for a spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Area Lore, Penetration unmultiplied; draws a nearby spirit of about half the total's Might",
+          "page": 115
+        },
+        {
+          "name": "Ablate a spirit",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might (twice outside a circle); the margin off its Might, a fifth of it Ablation Points",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Confidence",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "As many Confidence Points (no more than Confidence Score x 5), or experience in the Confidence Score",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Capability",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "Points on Characteristics, as at creation, no higher than the spirit's",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Health",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "5 heals a Heavy Wound, 3 a Medium, 1 a Light or a long-term Fatigue level",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Immortality",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "A Longevity bonus to Aging rolls until his next crisis",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Insight",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "The spirit's thoughts and memories",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Knowledge",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "5 xp a point in a fitting Art or Ability, to the spirit's score; it takes the season's study",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Might",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "Infernal Might, no more than the spirit's old Might or Confidence Score x 5",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Power",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "One of the spirit's Powers (a Virtue or Flaw without Might)",
+          "page": 116
+        },
+        {
+          "name": "Ablation: Vis",
+          "arts": [
+            "Ablating"
+          ],
+          "level": 0,
+          "summary": "A pawn of Infernal vis a point (vis sordida or prava)",
+          "page": 116
+        },
+        {
+          "name": "Bind a spirit",
+          "arts": [
+            "Binding"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might in a circle (twice outside); lends its Might as Magic Resistance, holds Might x 5 spell levels",
+          "page": 117
+        },
+        {
+          "name": "Command a spirit",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might in a circle (twice outside); holds until the next midday or midnight",
+          "page": 117
+        },
+        {
+          "name": "\"Follow me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Travels behind him until discharged; no renewing",
+          "page": 118
+        },
+        {
+          "name": "\"Advise me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Answers truly, though it may mislead; then released",
+          "page": 118
+        },
+        {
+          "name": "\"Aid me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Raises one Characteristic, Ability or Art to its score",
+          "page": 118
+        },
+        {
+          "name": "\"Begone\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Returns, and cannot take a physical form meanwhile",
+          "page": 118
+        },
+        {
+          "name": "\"Commune with me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Shares its memories and imagined futures",
+          "page": 118
+        },
+        {
+          "name": "\"Glorify me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "An Infernal Reputation of its Hierarchy for the command",
+          "page": 118
+        },
+        {
+          "name": "\"Heal me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Patches one wound until the command ends",
+          "page": 118
+        },
+        {
+          "name": "\"Journey\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Travels where he names, if it can",
+          "page": 118
+        },
+        {
+          "name": "\"Perform for me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Uses its Powers or Abilities as directed",
+          "page": 118
+        },
+        {
+          "name": "\"Protect me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Its Might as his Magic Resistance, renewed twice a day",
+          "page": 118
+        },
+        {
+          "name": "\"Return peacefully\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Returns, and cannot harm him unless summoned again",
+          "page": 118
+        },
+        {
+          "name": "\"Teach me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Teaches an Ability (a season of renewals: Teaching)",
+          "page": 118
+        }
+      ],
+      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118"
     },
     {
       "id": "trad_damhadh_duidsan",
@@ -7192,7 +7570,7 @@
           "fatigue": "Summoning always costs a Fatigue level",
           "vis_cap": "none",
           "penetrates": false,
-          "notes": "Characteristic + the Art + the Lore of the target's realm (Area Lore when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon. Target level: the spirit's Might in a circle, twice its Might outside one, + the demon's Hierarchy x 5. Summoning needs the total to reach twice Might to hold the spirit in the circle; between Might and twice Might it stays only while he concentrates. Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
+          "notes": "Characteristic + the Art + the Lore of the spirit's realm (Area Lore and Penetration unmultiplied when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon (and the demon's Hierarchy x 5 on its target). Summoning: a total of twice the spirit's Might holds it in the circle; its Might alone, only while he concentrates. Ablating, Binding and Commanding must exceed its Might in a circle, twice its Might outside one (Binding and Commanding: only no botch for a spirit that allows it in a circle, its Might outside one). Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
         }
       ],
       "advancement": {
@@ -7206,7 +7584,145 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Summon a named spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Against twice its Might (+ a demon's Hierarchy x 5); its Might alone holds it only while he concentrates",
+          "page": 114
+        },
+        {
+          "name": "Scour for a spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Area Lore, Penetration unmultiplied; draws a nearby spirit of about half the total's Might",
+          "page": 115
+        },
+        {
+          "name": "Command a spirit",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might in a circle (twice outside); holds until the next midday or midnight",
+          "page": 117
+        },
+        {
+          "name": "\"Follow me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Travels behind him until discharged; no renewing",
+          "page": 118
+        },
+        {
+          "name": "\"Advise me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Answers truly, though it may mislead; then released",
+          "page": 118
+        },
+        {
+          "name": "\"Aid me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Raises one Characteristic, Ability or Art to its score",
+          "page": 118
+        },
+        {
+          "name": "\"Begone\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Returns, and cannot take a physical form meanwhile",
+          "page": 118
+        },
+        {
+          "name": "\"Commune with me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Shares its memories and imagined futures",
+          "page": 118
+        },
+        {
+          "name": "\"Glorify me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "An Infernal Reputation of its Hierarchy for the command",
+          "page": 118
+        },
+        {
+          "name": "\"Heal me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Patches one wound until the command ends",
+          "page": 118
+        },
+        {
+          "name": "\"Journey\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Travels where he names, if it can",
+          "page": 118
+        },
+        {
+          "name": "\"Perform for me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Uses its Powers or Abilities as directed",
+          "page": 118
+        },
+        {
+          "name": "\"Protect me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Its Might as his Magic Resistance, renewed twice a day",
+          "page": 118
+        },
+        {
+          "name": "\"Return peacefully\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Returns, and cannot harm him unless summoned again",
+          "page": 118
+        },
+        {
+          "name": "\"Teach me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Teaches an Ability (a season of renewals: Teaching)",
+          "page": 118
+        }
+      ],
+      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118"
     },
     {
       "id": "trad_cailleach_phiseogach",
@@ -7540,7 +8056,7 @@
           "fatigue": "Summoning always costs a Fatigue level",
           "vis_cap": "none",
           "penetrates": false,
-          "notes": "Characteristic + the Art + the Lore of the target's realm (Area Lore when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon. Target level: the spirit's Might in a circle, twice its Might outside one, + the demon's Hierarchy x 5. Summoning needs the total to reach twice Might to hold the spirit in the circle; between Might and twice Might it stays only while he concentrates. Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
+          "notes": "Characteristic + the Art + the Lore of the spirit's realm (Area Lore and Penetration unmultiplied when Scouring) + aura + Penetration x its Arcane Connection multiplier, + the caster's Hierarchy x 5 against a demon (and the demon's Hierarchy x 5 on its target). Summoning: a total of twice the spirit's Might holds it in the circle; its Might alone, only while he concentrates. Ablating, Binding and Commanding must exceed its Might in a circle, twice its Might outside one (Binding and Commanding: only no botch for a spirit that allows it in a circle, its Might outside one). Sacrifice adds. Penetration is already inside the total. Ablating, Binding and Commanding are always Infernal; Summoning may count as Magic or Faerie."
         }
       ],
       "advancement": {
@@ -7569,7 +8085,154 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Summon a named spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Against twice its Might (+ a demon's Hierarchy x 5); its Might alone holds it only while he concentrates",
+          "page": 114
+        },
+        {
+          "name": "Scour for a spirit",
+          "arts": [
+            "Summoning"
+          ],
+          "level": 0,
+          "summary": "Area Lore, Penetration unmultiplied; draws a nearby spirit of about half the total's Might",
+          "page": 115
+        },
+        {
+          "name": "Bind a spirit",
+          "arts": [
+            "Binding"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might in a circle (twice outside); lends its Might as Magic Resistance, holds Might x 5 spell levels",
+          "page": 117
+        },
+        {
+          "name": "Command a spirit",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Exceed its Might in a circle (twice outside); holds until the next midday or midnight",
+          "page": 117
+        },
+        {
+          "name": "\"Follow me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Travels behind him until discharged; no renewing",
+          "page": 118
+        },
+        {
+          "name": "\"Advise me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Answers truly, though it may mislead; then released",
+          "page": 118
+        },
+        {
+          "name": "\"Aid me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Raises one Characteristic, Ability or Art to its score",
+          "page": 118
+        },
+        {
+          "name": "\"Begone\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Returns, and cannot take a physical form meanwhile",
+          "page": 118
+        },
+        {
+          "name": "\"Commune with me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Shares its memories and imagined futures",
+          "page": 118
+        },
+        {
+          "name": "\"Glorify me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "An Infernal Reputation of its Hierarchy for the command",
+          "page": 118
+        },
+        {
+          "name": "\"Heal me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Patches one wound until the command ends",
+          "page": 118
+        },
+        {
+          "name": "\"Journey\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Travels where he names, if it can",
+          "page": 118
+        },
+        {
+          "name": "\"Perform for me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Uses its Powers or Abilities as directed",
+          "page": 118
+        },
+        {
+          "name": "\"Protect me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Its Might as his Magic Resistance, renewed twice a day",
+          "page": 118
+        },
+        {
+          "name": "\"Return peacefully\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Returns, and cannot harm him unless summoned again",
+          "page": 118
+        },
+        {
+          "name": "\"Teach me\"",
+          "arts": [
+            "Commanding"
+          ],
+          "level": 0,
+          "summary": "Teaches an Ability (a season of renewals: Teaching)",
+          "page": 118
+        }
+      ],
+      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118"
     },
     {
       "id": "trad_beast_masters",
@@ -19006,6 +19669,187 @@
         "self_initiation": true,
         "notes": "Faith & Flame p. 30: each level's prerequisites are in the notes.",
         "scripts": []
+      }
+    },
+    {
+      "id": "trad_verditius_mysteries",
+      "name": "House Verditius (Mystery Cult)",
+      "source": "HoH:MC; DE",
+      "realm": "Magic",
+      "description": "The Mystery Cult of House Verditius: four Minor and four Major Inner Mysteries, learned in any order from a fellow of the House, each Script sacrificing items and time, and Hubris growing with every one.",
+      "abilities": [
+        "Mystery Cult Lore: Verditius"
+      ],
+      "favored": [],
+      "virtues": [
+        "vf_verditius_magic"
+      ],
+      "hermetic": "",
+      "notes": "Every magus with Verditius Magic is a member. The House's Script components (Houses of Hermes: Mystery Cults p. 117): a Forge of Hephaestus or special place and time +3; a specific Quest for a lost Verditius item +3, a unique Quest for a legendary one +6; a Minor Ordeal +3, a Major +9; the Initiate's time serving the House +1 (once); sacrificing a lesser enchanted item of the 4th magnitude +3, a greater of the 7th or his talisman +6; the Mystagogue's time +3; the Mystagogue's wealth, a Mythic Pound per point of the Initiate's Hubris, +1 (once); the Outer Mystery given as the Arts are opened +6. The Initiate needs the Lore 3 for a Minor Inner Mystery and 5 for a Major (p. 118); the first always brings Hubris. Its Ordeals, each once (pp. 120-121): Sever the Ties that Bind (not for the Primus's line), self-mutilation (Lame, Hobbled or Crippled), Prone to Chance or Averse to Risk (not both), Increased Hubris. A magus who never acts as Mystagogue gets the House Reputation Selfish 4. Confraternities (pp. 121-123) follow set paths of Mysteries.",
+      "training": {
+        "gift": "required",
+        "minimums": {},
+        "notes": "The Outer Mystery, Verditius Magic, is given as the apprentice's Arts are opened, by a master with Presence + the Lore 3 (and the Lore 2 to open Arts at once): no Lore is needed of the apprentice (p. 118)."
+      },
+      "advancement": {
+        "practice_arts": true,
+        "vis_study": false,
+        "notes": "Members advance as magi; Verditius Cult Lore is an Arcane Ability, most often trained by a fellow with it at 2 or more (p. 117)."
+      },
+      "initiation": {
+        "characteristic": "Presence",
+        "lore": "Mystery Cult Lore: Verditius",
+        "self_initiation": true,
+        "notes": "Houses of Hermes: Mystery Cults pp. 117-135; the Definitive Edition pp. 240-243 reprints the Outer Mystery, Hubris and Enchant Casting Tools and wins where they differ. The sample Scripts use the usual Targets, lower after an Ordeal.",
+        "scripts": [
+          {
+            "name": "Outer Mystery: Verditius Magic",
+            "ease_factor": 15,
+            "bonus": 12,
+            "gains": "Verditius Magic (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "A season of slavish service as the apprentice's Arts are opened, then a journey to a Forge of Hephaestus (Verdi, Lemnos or Mount Olympus), where the master casts money and jewels into the forge: special place, the Initiate's and the Mystagogue's time, wealth, Arts opened at once (+12). The Mystagogue needs Presence + Lore 3 (p. 118)."
+          },
+          {
+            "name": "Enchant Casting Tools",
+            "ease_factor": 15,
+            "bonus": 9,
+            "gains": "Enchant Casting Tools (Minor)",
+            "ordeal": "Hubris if it is the first Inner Mystery, else Limited Magic Resistance (Vim) (Minor)",
+            "who": "gifted",
+            "notes": "The Mystagogue spends a season with the Initiate making casting tools (+3); on an anniversary of the Outer Mystery the Initiate buries all her casting tools in a Magic regio (+3); the Ordeal (+3). DE p. 243 (HoH:MC p. 124 gives Limited Magic Resistance either way; the DE wins).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 3
+            }
+          },
+          {
+            "name": "Items of Quality",
+            "ease_factor": 15,
+            "bonus": 9,
+            "gains": "Items of Quality (Minor)",
+            "ordeal": "Increased Hubris (Minor Ordeal)",
+            "who": "gifted",
+            "notes": "A season enchanting a magic item and making a mundane twin, then both sacrificed at a Forge of Hephaestus (+3, +3); the Ordeal (+3) (p. 125).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 3
+            }
+          },
+          {
+            "name": "Reforging Enchanted Items",
+            "ease_factor": 15,
+            "bonus": 7,
+            "gains": "Reforging Enchanted Items (Minor)",
+            "ordeal": "Averse to Risk (Minor Ordeal)",
+            "who": "gifted",
+            "notes": "A season making as many identical items as the Craft allows (+1), burned by the Mystagogue, who sacrifices the season assisting (+3); the Ordeal (+3) (p. 127).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 3
+            }
+          },
+          {
+            "name": "Verditius Elder Runes",
+            "ease_factor": 15,
+            "bonus": 9,
+            "gains": "Verditius Elder Runes (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "A season's journey to Durenmar (+3); on the winter solstice the Initiate burns a greater enchanted item in Verditius's forge (+6) and eats a crow roasted over it (p. 128).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 3
+            }
+          },
+          {
+            "name": "Automata",
+            "ease_factor": 21,
+            "bonus": 13,
+            "gains": "Automata (Major): Craft Automata 1",
+            "ordeal": "Necessary Condition: near an open flame to work magic (Major Ordeal)",
+            "who": "gifted",
+            "notes": "A season studying one of Hephaestus's automata (+1); a brand stolen from the lighthouse of Alexandria and kept lit to the Mystagogue (+3); the Ordeal (+9) (p. 131).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 5
+            }
+          },
+          {
+            "name": "Bind Curse",
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "Bind Curse (Major)",
+            "ordeal": "Hatred for Seekers (Minor Ordeal)",
+            "who": "gifted",
+            "notes": "A unique item made by Hephaestus or another pagan god's smith found (+6) and investigated with the Mystagogue (+3); the Ordeal (+3) (pp. 133-134).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 5
+            }
+          },
+          {
+            "name": "Bind Magical Creatures",
+            "ease_factor": 21,
+            "bonus": 8,
+            "gains": "Bind Magical Creatures (Major)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "A magical creature's body found, whose death the Initiate did not cause (+3); a season of Greek funeral rites (+1); an urn of its ashes with powers like its own, sacrificed (+3) with much wealth (+1) (p. 135).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 5
+            }
+          },
+          {
+            "name": "Item Attunement",
+            "ease_factor": 21,
+            "bonus": 10,
+            "gains": "Item Attunement (Major)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Initiate makes a talisman, then initiates another Verditius into a Minor Inner Mystery he knows (+3), serves the Mystagogue a season with the talisman's powers (+1), and sacrifices it on a solstice (+6) (p. 135).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 5
+            }
+          },
+          {
+            "name": "Confraternity of Roland: Minor Magical Focus (Swords)",
+            "ease_factor": 15,
+            "bonus": 12,
+            "gains": "Minor Magical Focus (Swords) (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "Durendal stolen from its keeper (+3); the Creed recited a hundred times in an Infernal regio (+3); an enemy slain in battle bearing it (+3); a catatonic peril at Roncesvals on Roland's anniversary (+3). Its path: Reforging, Items of Quality, Elder Runes, Item Attunement (p. 121)."
+          },
+          {
+            "name": "Confraternity of Balento: Bind Magical Creatures",
+            "ease_factor": 21,
+            "bonus": 15,
+            "gains": "Bind Magical Creatures (Major)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "Ten fish sacrificed on a floating fire on the Tiber at the Vulcanalia (+3), five each from a Magic and a Faerie aura (two Quests, +6); the talisman and a pint of blood sacrificed (+6). Members have Affinity with Ignem and Deficient Form (Aquam) (p. 122).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 5
+            }
+          },
+          {
+            "name": "Confraternity of Irene: Puissant Imaginem or Mentem",
+            "ease_factor": 15,
+            "bonus": 9,
+            "gains": "Puissant Imaginem or Puissant Mentem (Minor)",
+            "ordeal": "Slow Caster (Minor Ordeal)",
+            "who": "gifted",
+            "notes": "Basalt cooled with holy water, or pigments from the Carpathian peaks (+3); a portrait of the patron saint made in darkness in a fume-filled cave off Tunisia (+3); the Ordeal (+3) (p. 122)."
+          },
+          {
+            "name": "Confraternity of Himinis: Bind Curse",
+            "ease_factor": 21,
+            "bonus": 13,
+            "gains": "Bind Curse (Major)",
+            "ordeal": "Sever the Ties that Bind (Major Ordeal)",
+            "who": "gifted",
+            "notes": "A thief's left hand taken alone under a full moon (+3), pickled while the Initiate serves the Mystagogue a season (+1), then burned and its fumes breathed; the Ordeal (+9). Members have Minor Magical Focus (Wooden Wands) and Envious (pp. 122-123).",
+            "requires": {
+              "Mystery Cult Lore: Verditius": 5
+            }
+          }
+        ]
       }
     }
   ]

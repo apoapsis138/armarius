@@ -108,6 +108,32 @@ a list of Virtues to choose from, which asks for anything the entry names (an Af
 - **Activities from the supplements**, such as Study a significato, Library research or Act as Mystagogue. Library research shows the roll's total before the die: Intelligence + the Ability + the better of the covenant library's research bonus for it and its best encyclopedia's.
 - **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs). Care of Souls stays a priest's (p. 28).
 - **Set points:** Useful correspondence's 1 xp, and the 1 xp in Organization Lore: Order of Hermes for each book read from a folio, are set points (Covenants p. 90; Houses of Hermes: True Lineages p. 23): no Affinity, Savantism or wound halves or multiplies them, and Master of None and Secondary Insight ignore them. **Study a realia collection** is for one outside the library, such as an exhibit at Tablinum; one the covenant owns is a book of the Realia kind (see [Books](help:section-lib-books)). **Study another artist's work**: Source Quality is half the work's Aesthetic Quality, and each work is studied once, like a tractatus (Art & Academe p. 126, with Atlas Games' errata).
+
+- **Research a formula** (Art & Academe p. 70): A formula is a recipe for an
+  astrological inception (Artes Liberales), an alchemical reagent
+  (Philosophiae) or a pharmaceutical theriac (Medicine): choose that Ability
+  as the subject. Five xp make it, and a season's research gives five; they go
+  into the formula, not the Ability. Type its level if you know it: its
+  guideline's base raised by magnitudes as a spell's (5 levels each, 1 below
+  5) for its Detail (an inception: Binary to Thorough, +1 for the past or the
+  far future, +2 the near future), its Alteration (a reagent: Slight to Major,
+  + size) or its Potency (a theriac: Weak to Mighty).
+- **Produce reagents, theriacs or inceptions** (pp. 70-71): Choose a formula
+  he knows. His Lab Total is Intelligence + its Ability (+1 for a matching
+  specialty) + Philosophic Bonuses (Shape and Material, an experiment's Risk
+  Modifier, the laboratory's), the bonuses no more than the Ability. It must
+  reach the formula's level. The first time, each season gathers Lab Total -
+  level points; at points equal to the level it is done, a dose is made and
+  its Laboratory Text written (twice the level does it in a season). With the
+  Laboratory Text, a season makes Lab Total / 5 doses (rounded up; fewer if
+  Doses says so). The doses go into his Personal Gear. A reagent's or
+  theriac's ingredients cost 1 Labor Point per 5 levels times the doses: from
+  his own store if he has Profession: Apothecary, otherwise take them off the
+  supplying apothecary's Labor Points. An inception costs none.
+- To use an inception, cast the target's nativity once (a day: Intelligence +
+  Artes Liberales + a die against 9), then a minute per level gives the
+  answer.
+
 - **Make a wondrous item:** the Workshop Total adds the aura's modifier: the aura where the craftsman works (enter it, and its realm, in **Aura where he works**; blank counts none), by the Realm Interaction table for the realm his Touched by (Realm) names (Faerie in a Magic aura adds half, Divine nothing; City & Guild p. 72, DE pp. 410-411). The Virtue must name Magic, Faerie, Divine or Infernal (p. 71), or the season says so. Choose the one assistant in the Teacher / master field: half their Craft is added (City & Guild p. 72); count no other help in Other. A Mythic Farrier (Grogs p. 76) makes wondrous horseshoes the same way, with Intelligence or Dexterity + Craft: Farrier, in one Form, their power on the horse or the ground it treads; name his realm on the Virtue (most likely Magic or Faerie, Infernal possible).
 - **Exertion, a (Craft) Reputation and a laborer's working season** (City & Guild pp. 73-76), in a workshop production, excellent item or wondrous item season. **Exertion** adds a simple die to the Workshop Total, rolls a stress die on the exertion table, and makes an Aging roll whatever his age; under 35 the Aging roll takes a simple die for its stress die and a 13 brings no Crisis (DE p. 392). The table: a botch is a disaster; 4-5 disappointing ramifications; 6-7 no benefit (the simple die isn't added); 8 a story event; 9 invention, a simple die of Labor Points put toward Innovation (shown on This Season and spent by the next Innovation raised); 10-11 a simple die of experience in his (Craft) Reputation; 12+ a simple die of experience in the Craft. A **(Craft) Reputation** (p. 74) is named for the trade (Craft: Smith's is "Smith"), starts at 0 and rises as an Ability: a season whose Workshop Total is 6 or more over the standard goods' Craft Level (6) earns 1 experience, a wondrous item's season included, and the season a wondrous item is finished earns 1 more on top; a season of shoddy goods straight after another takes 1 off, and below 0 he gains a Reputation as a bad craftsman ("Shoddy Smith"), scored like any Reputation, the "bad" being in its name (DE p. 386). A **laborer's working season** (p. 76) with a Profession sets his Labor Total, his primary Characteristic + Profession, against the Profession Level: the Characteristic is the one the season names, Strength if it names none (p. 67), while his Labor Points stay Communication + Profession (p. 38). The Profession Level is 6, raised by 1 where he lives in an Infernal, Faerie or Magic aura, as a Craft Level is (p. 69; not a Divine one). It gives shoddy, standard (at the level) or superior (6 over it) service, never excellent, and his (Profession) Reputation follows the same rules.
 - **Other:** anything else. It is written in the Diary with your notes, and no experience is worked out for it; say in Notes what the season is spent on.
@@ -281,6 +307,9 @@ When Winter is advanced, the year ends:
 - every character aged 35 or more (50 with Strong Faerie Blood or Dhampir), or with a Longevity Ritual, makes an aging roll (Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging), written in their Diary;
 - Dwindling Resources lose a tenth of their value when they began dwindling (gone after ten years), and a contested resource still not secured gives nothing that year;
 - each covenant's surplus is added to its Wealth.
+
+- Transitions of maturation (Apprentices pp. 14-15). At the end of a year, each character turning 8, 15 or 21 next year has a line and a Diary entry: in the first season of that year Virtues and Flaws may be exchanged, Minor for Minor and Major for Major; Child ones must be exchanged by 21 and Inherited ones have manifested.
+
 
 Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary, and every wounded character makes the season's [Recovery rolls](help:recovery-roll) (bruises first leave their residual wounds), written in their Diary; everyone's Fatigue is rested away.
 
@@ -729,6 +758,14 @@ The Ability cap at creation goes by age (5 under 30); an Affinity with the Abili
 On Later Life, (Gild) Trained gives two pools: 30 xp on Order of Hermes Lore, Intrigue and Durenmar Lore, and 60 more on General or Arcane Abilities and the Arts suited to the gild (Guardians of the Forests p. 20). The book lets the 60 buy spells too, a point a level; the worksheet doesn't spend pooled xp on spells yet, so give those levels by hand.
 
 Specialists bought with Build Points are checked too. Each one's score in the Ability they serve with, and a teacher's Teaching, may be no higher than a new character of their age could have: 5 under 30, 6 to 35, 7 to 40, 8 to 45, 9 after that (DE pp. 180-181, p. 48). One with no Year Born is taken as under 30. A bought teacher can't have The Gift, so can't teach a Hermetic Art; they teach as the magi direct two seasons a year (DE p. 180). The form for buying a teacher says so.
+
+**Characteristics:** Young characters (Apprentices, when it is in play). Below 14 the Aging Chart gives every Characteristic a modifier and a smaller Size: under a year -10 and Size -3, down to 12-13 at -1 and Size -1 (Apprentices p. 7). Grows Quickly reads Size one age category higher, Late Bloomer both one lower, and Deft (Characteristic) halves that Characteristic's modifier (pp. 11-12). Size Virtues and Flaws count from the first birthday, and a child is never smaller than Size -3 (p. 10). The worksheet shows the modifier and says what base Size to set; the modifier itself isn't added to the scores.
+
+**Virtues and Flaws:** With Apprentices in play: Child Virtues and Flaws are for characters of 20 and younger (p. 11, Errata p. 82); Inherited ones only for magi and companions, and they must have manifested by 21 (pp. 10-11); no Virtue that grants experience points (Warrior, Educated...) for a character made younger than 14 (p. 10); Turbulence Prone only with The Gift (p. 12).
+
+**Later Life:** Parent's vocation (Apprentices p. 14). From 6 to 14 a child may put xp in the Ability his same-sex parent earns a living by (a Craft or Profession, or a knight's Ride and Single Weapon), even one of a type he couldn't otherwise learn, but his score stays at most half the parent's until 14. "Parent's vocation" on this step names the Ability and the parent's score.
+
+**Apprenticeship:** Standard apprenticeship model (a saga option, with Apprentices in play). A magus still in apprenticeship has, for each year so far, 19 xp for the first 12 years and then 6 xp and 40 spell levels a year for the last 3; xp may buy spell levels and spell levels xp, one for one. A Skilled Parens gives 5 xp and 10 levels a year more, a Weak Parens as much less (Apprentices pp. 10, 14). Parma Magica, Magic Theory and Latin are only advice until Gauntlet. A magus past Gauntlet keeps the Definitive Edition's 240 xp and 120 levels.
 
 A hedge wizard picks their tradition on Concept with **Choose tradition** (once the saga offers one: see [How to play a hedge wizard](help:guide-hedge-magic)), which also adds the Virtues the tradition requires. A magus may choose a Hermetic society there, and a magus of House Ex Miscellanea one of the House's traditions, whose Virtues become his free House Virtues. The tradition's free Virtues, such as a learned magician's Entreat the Powers or a vitki's Minor Virtue from the master, are outside the Virtue and Flaw balance, as a House's are. **Tradition Training** then spends the apprenticeship the book gives (a vitki's 290 xp counting the minimums, a folk witch's 200, a gruagach's 160, or 64 unGifted), changed by Well-Trained and Poorly Trained; **Open the Arts** gives a Gifted member the tradition's Arts and Abilities at 0; and its checks ask for the minimum scores and any share the Arts must have. The spell levels it gives are shown but not yet learned there. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
 

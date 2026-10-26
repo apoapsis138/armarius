@@ -35,6 +35,11 @@ Men limits the Attack bonus to melee); a mounted charge adds his Combat
 Ability to the Attack again, and the horse, not the rider, spends a
 Fatigue level (Lords of Men).
 
+A hand-held Greek Fire siphon (The Sundered Eagle p. 47) is a missile
+weapon worked with Profession: Naffatun, the Ability its catalog entry
+names. Its fire splashes round a shield: against it the shield's Defence
+adds to the target's Soak instead (rules.fight).
+
 No screen uses damage_dealt() yet: it is a rule for a screen still to come,
 and only the tests call it.
 """
@@ -78,6 +83,11 @@ MOUNTED_MAX = 3
 #: A lance is wielded only from horseback; on foot it is a long spear.
 LANCE = "weapon_lance"
 PRIMITIVE = "vf_primitive_equipment"
+#: The hand-held Greek Fire siphon, whose fire a shield doesn't stop.
+GREEK_FIRE_SIPHON = "weapon_greek_fire_siphon"
+GREEK_FIRE_SOURCE = (
+    "The Sundered Eagle: The Theban Tribunal, Chapter Three, Greek Fire, p. 47"
+)
 INEXPENSIVE = "Inexpensive"
 
 
@@ -159,6 +169,18 @@ def _table(weapon: Possession) -> str:
     typed in)."""
     definition = catalog.load_weapon_catalog_by_id().get(weapon.gear_id or "")
     return definition.table if definition else "melee"
+
+
+def is_missile(weapon: Possession) -> bool:
+    """Whether the weapon's catalog entry is on the Missile table."""
+    return _table(weapon) == "missile"
+
+
+def shield_defence(character: Character) -> int:
+    """The Defence the carried shield adds, how well it is made
+    included (0 for none)."""
+    lines = _shield_lines(carried_shield(character)).get("defense", [])
+    return int(sum(line.amount or 0 for line in lines))
 
 
 def _names(weapon: Possession) -> set[str]:

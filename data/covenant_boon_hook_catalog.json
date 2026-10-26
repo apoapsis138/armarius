@@ -3866,6 +3866,57 @@
     "source": "C&G",
     "excludes": [],
     "description": "The covenant, perhaps through a tame noble, has granted charters to towns on its land. Neighbouring lords take notice, the townsfolk petition or revolt, and the Quaesitores watch for interference that could bring ruin on the Order. Only a covenant that is a large landowner may take it, and it cannot be Unknown (City & Guild p. 11)."
+  },
+  {
+    "id": "covbh_boon_major_fine_aura",
+    "name": "Fine Aura",
+    "type": "Boon",
+    "tier": "Major",
+    "cost": 3,
+    "category": "Site",
+    "repeatable": false,
+    "max_count": null,
+    "requires": [],
+    "requires_any": [],
+    "excludes": [],
+    "modifiers": [],
+    "unknown": false,
+    "source": "RoP:M",
+    "description": "The covenant's Magic aura has an alignment that helps most of those in it, such as Luck or Healing. Set the alignment on the covenant's place (Realms of Power: Magic p. 16); an aura has only one alignment, which may bring both a Boon and a Hook."
+  },
+  {
+    "id": "covbh_boon_minor_favorable_aura",
+    "name": "Favorable Aura",
+    "type": "Boon",
+    "tier": "Minor",
+    "cost": 1,
+    "category": "Site",
+    "repeatable": false,
+    "max_count": null,
+    "requires": [],
+    "requires_any": [],
+    "excludes": [],
+    "modifiers": [],
+    "unknown": false,
+    "source": "RoP:M",
+    "description": "The covenant's Magic aura has an alignment that favours one activity: one of the Arts, or a feeling that often helps, such as attentive or respectful. Set the alignment on the covenant's place (Realms of Power: Magic p. 16)."
+  },
+  {
+    "id": "covbh_hook_minor_troublesome_aura",
+    "name": "Troublesome Aura",
+    "type": "Hook",
+    "tier": "Minor",
+    "cost": -1,
+    "category": "Site",
+    "repeatable": false,
+    "max_count": null,
+    "requires": [],
+    "requires_any": [],
+    "excludes": [],
+    "modifiers": [],
+    "unknown": false,
+    "source": "RoP:M",
+    "description": "The covenant's Magic aura has an alignment that sometimes makes simple things much harder, and so brings stories: aligned with Perdo, say, or with rashness or discourtesy. Set the alignment on the covenant's place (Realms of Power: Magic p. 16)."
   }
 ]
 }

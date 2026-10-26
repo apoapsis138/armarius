@@ -8,9 +8,9 @@ from __future__ import annotations
 import random
 
 from ... import book_kinds
-from ...models import Book, Character, Saga, SeasonPlan
+from ...models import Book, Character, Formula, Saga, SeasonPlan
 from .. import activity_groups as groups
-from .. import dice, reputations
+from .. import apothecary, dice, philosophy, reputations
 from ..rounding import round_down, round_up
 from ..scores import ability_level
 from .base import (
@@ -21,6 +21,7 @@ from .base import (
     experience_only,
     needs_name,
     needs_subject,
+    progress_of,
     register,
     source,
     subject_ability,
@@ -31,7 +32,7 @@ ACADEME = source("Art & Academe " + CH.format("Art_%26_Academe_Open_Content"), "
 REMEDIES_SOURCE = "Art & Academe, Chapter Five: Experimental Philosophy, pp. 67-78"
 #: Theriacs and reagents cost level x doses / REMEDY_LEVELS_PER_POINT
 #: apothecary Labor Points, rounded up.
-REMEDY_LEVELS_PER_POINT = 5
+REMEDY_LEVELS_PER_POINT = philosophy.LEVELS_PER_LABOR_POINT
 ARTWORK_SOURCE = "Art & Academe, Chapter Eight: Artists, Time Spent Creating, p. 124"
 #: Seasons to make a work of art: Aesthetic Quality / ARTWORK_QUALITY_PER_SEASON,
 #: rounded up (at least one).
@@ -130,6 +131,38 @@ def _university_problems(
 # -- outcomes ------------------------------------------------------------------
 
 
+def _formula_of(
+    character: Character, plan: SeasonPlan
+) -> tuple[Formula | None, str, int]:
+    """The plan's formula (None when its design isn't recorded), its kind
+    and the level worked at (the plan's, else the formula's)."""
+    known = philosophy.design(character, plan.title.strip())
+    if known is not None:
+        level = known.level if plan.book_level is None else plan.book_level
+        return known, known.kind, level
+    kind = philosophy.kind_of(subject_ability(plan)) or philosophy.THERIAC
+    return None, kind, plan.book_level or 0
+
+
+def _ingredients(
+    character: Character, kind: str, level: int, doses: int, result: SupplementWork
+) -> None:
+    """The ingredients' Labor Points: from his own store when he keeps one,
+    else an apothecary's (A&A pp. 65, 75, 77)."""
+    cost = philosophy.labor_cost(kind, level, doses)
+    made = f"{doses} dose(s) of a level {level} {kind}"
+    if not cost:
+        result.notes.append(f"{made}: no ingredients (parchment and ink).")
+    elif apothecary.keeps_store(character):
+        result.labor_points -= cost
+        result.notes.append(f"{made}: {cost} Labor Points from his own store.")
+    else:
+        result.notes.append(
+            f"{made}: {cost} Labor Points of ingredients from an apothecary's "
+            "store (take them off the apothecary's Labor Points)."
+        )
+
+
 def _produce_remedies(
     saga: Saga,
     character: Character,
@@ -137,13 +170,62 @@ def _produce_remedies(
     rng: random.Random | None,
     result: SupplementWork,
 ) -> None:
-    level = plan.book_level or 0
-    doses = max(1, plan.extra_vis)
-    cost = round_up(level * doses / REMEDY_LEVELS_PER_POINT)
-    result.labor_points = -cost
-    result.notes.append(
-        f"{doses} dose(s) of a level {level} product: {cost} apothecary Labor Points."
-    )
+    known, kind, level = _formula_of(character, plan)
+    name = plan.title.strip()
+    if known is None:
+        # A formula with no design recorded: its typed level and doses.
+        _ingredients(character, kind, level, max(1, plan.extra_vis), result)
+        return
+    total = philosophy.lab_total(character, kind, plan.other_modifier)
+    result.notes.append(f"Lab Total: {total.line()}, against level {level}.")
+    work = philosophy.concoction(total.total, level, known.lab_text)
+    if work.problem:
+        result.notes.append(work.problem)
+        return
+    product = philosophy.product_name(name, kind)
+    if known.lab_text:
+        doses = min(plan.extra_vis, work.doses) if plan.extra_vis > 0 else work.doses
+        result.products.append((product, doses))
+        result.notes.append(
+            f"With its Laboratory Text: {doses} dose(s) of {name} (a Lab Total "
+            f"of {total.total} makes up to {work.doses})."
+        )
+        _ingredients(character, kind, level, doses, result)
+        return
+    record = progress_of(character, "concoction", name)
+    before = record.points if record is not None and not record.done else 0
+    result.progress.append(("concoction", name, level, work.points))
+    if before + work.points < level:
+        result.notes.append(
+            f"{work.points} points toward concocting {name} the first time "
+            f"({before + work.points}/{level})."
+        )
+        return
+    result.lab_texts.append(name)
+    result.products.append((product, 1))
+    result.notes.append(f"{name} concocted: a dose, and its Laboratory Text written.")
+    _ingredients(character, kind, level, 1, result)
+
+
+def _produce_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    """A formula concocted must be learned, have a level and a Lab Total
+    that reaches it (A&A pp. 70-71)."""
+    name = plan.title.strip()
+    known, kind, level = _formula_of(character, plan)
+    if known is None:
+        if plan.book_level is None:
+            return ["Choose the formula, or type the product's level."]
+        return []
+    if name not in character.formulas:
+        return [
+            f"{character.name} hasn't learned the formula {name} yet: research "
+            "it first (A&A p. 70)."
+        ]
+    if level <= 0:
+        return [f"Type the level of {name}."]
+    total = philosophy.lab_total(character, kind, plan.other_modifier).total
+    problem = philosophy.concoction(total, level, known.lab_text).problem
+    return [f"{problem} (A&A p. 71)"] if problem else []
 
 
 def _medical_season(
@@ -193,6 +275,23 @@ def _research_formula(
     xp = plan.source_quality if plan.source_quality is not None else FORMULA_XP
     result.progress.append(("formula", name, FORMULA_XP, xp))
     result.notes.append(f"{xp} xp toward the formula {name} ({FORMULA_XP} make it).")
+    kind = philosophy.kind_of(subject_ability(plan))
+    if kind:
+        result.formula_designs.append(Formula(name, kind, plan.book_level or 0))
+
+
+def _research_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    """A formula is named, and researched in its Academic Ability."""
+    named = needs_name(saga, character, plan)
+    if named:
+        return named
+    ability = subject_ability(plan)
+    if ability and not philosophy.kind_of(ability):
+        return [
+            "A formula is researched in Artes Liberales (an inception), "
+            "Philosophiae (a reagent) or Medicine (a theriac) (A&A p. 70)."
+        ]
+    return []
 
 
 def _attend_university(
@@ -304,15 +403,17 @@ register(
     SimpleActivity(
         "research_formula",
         "Research a formula",
-        "Five xp make one formula (an inception, reagent or theriac).",
+        "Five xp make one formula (an inception, reagent or theriac); "
+        "they go into the formula, not the Ability.",
         ACADEME,
         "920",
         5,
         who=COMPANIONS,
         group=groups.STUDY,
+        xp_to_work=True,
     ),
     _research_formula,
-    needs_name,
+    _research_problems,
 )
 register(
     SimpleActivity(
@@ -331,13 +432,16 @@ register(
     SimpleActivity(
         "produce_remedies",
         "Produce reagents, theriacs or inceptions",
-        "Experimental philosophy items. Exposure 2.",
+        "Concoct a formula in a laboratory: a first concoction gathers Lab "
+        "Total - level points; with its Laboratory Text, Lab Total / 5 "
+        "doses. Exposure 2.",
         ACADEME,
         "920",
         who=COMPANIONS,
         group=groups.WORK,
     ),
     _produce_remedies,
+    _produce_problems,
 )
 register(
     SimpleActivity(

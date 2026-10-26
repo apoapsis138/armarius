@@ -23,8 +23,9 @@ A place may be marked a ruined covenant (a fallen covenant's site,
 ruins.py): it shows a ruin, and can be founded anew.
 
 Kept in Neighbour.details: "ruined", "aura", "tethers", "status", "known",
-"claimed_by", "levels" (each {"name", "realm", "aura", "kind", "see",
-"enter", "notes"}, the first being Level 1, just above the surface) and "effects"
+"claimed_by", the aura's kind by its realm ("alignment", "tints" or
+"divine_kind", rules.aura_kinds), "levels" (each {"name", "realm", "aura",
+"kind", "see", "enter", "notes"} and its aura's kind), the first being Level 1, just above the surface) and "effects"
 (each {"what", "amount", "target", "where", "note"}). Where a record is:
 its place_id and place_level (0 for the surface).
 
@@ -35,7 +36,7 @@ any Virtue's."""
 from __future__ import annotations
 
 import re
-from collections.abc import Collection, Iterator
+from collections.abc import Callable, Collection, Iterator, Mapping
 from dataclasses import dataclass
 from typing import Any
 
@@ -52,7 +53,7 @@ from .models import (
 )
 from .neighbour_lists import KindList, list_ops
 from .references import Fact
-from .rules import senses
+from .rules import aura_kinds, senses
 from .rules.sites import (
     EFFECT_TYPES,
     PLACE,
@@ -61,6 +62,7 @@ from .rules.sites import (
     RegioLevel,
     all_places,
     aura_at,
+    aura_kind_at,
     effects,
     is_place,
     kind_effects,
@@ -357,10 +359,16 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
     hazards = [
         f"Level {index}: {text}"
         for index, entry in enumerate(shown, start=1)
-        if (text := kind_effects(entry))
+        if (
+            text := "; ".join(
+                t for t in (kind_effects(entry), level_kind_text(place, index)) if t
+            )
+        )
     ]
+    kind = level_kind_text(place, 0)
     return [
         Fact("Aura", aura_text(place)),
+        *([Fact("Aura kind", kind)] if kind else []),
         Fact("Regio", regio),
         *([Fact("Can see", "; ".join(seen))] if seen else []),
         *([Fact("Within", "; ".join(hazards))] if hazards else []),
@@ -375,7 +383,64 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
     ]
 
 
+def level_kind_text(place: Neighbour, level: int) -> str:
+    """What the aura's kind does at `level` (0 for the surface), as the
+    facts say it; "" for none."""
+    aura, realm = aura_at(place, level)
+    if not aura_kind_at(place, level):
+        return "" if realm != "Divine" else aura_kinds.divine_effects("", aura)
+    shown = levels(place)
+    details = shown[level - 1] if 0 < level <= len(shown) else place.details
+    return aura_kinds.effects_text(dict(details), realm, aura)
+
+
 # -- the form --
+
+
+def realm_is(realm: str) -> Callable[[dict[str, Any]], bool]:
+    """A show_if for fields of one realm's rule, read from the form's Realm
+    (the place's realm while the form has none)."""
+    return lambda values: (values.get("realm") or "Magic") == realm
+
+
+def kind_fields(d: Mapping[str, Any]) -> list[DialogField]:
+    """An aura's kind, asked by its realm: a Magic aura's alignment, a
+    Faerie one's tints, a Divine one's source (rules.aura_kinds)."""
+    keys = aura_kinds.KIND_KEYS
+    return [
+        DialogField(
+            keys["Magic"],
+            "Alignment",
+            "text",
+            d.get(keys["Magic"], ""),
+            placeholder="e.g. Ignem, Healing, Luck, Fearful",
+            hint="At most one: an Art (its spells and lab work take the aura "
+            "again), Healing, Luck, Distracting, or a feeling those without "
+            "The Gift take on (RoP: Magic pp. 15-16).",
+            show_if=realm_is("Magic"),
+        ),
+        DialogField(
+            keys["Faerie"],
+            "Tints",
+            "text",
+            d.get(keys["Faerie"], ""),
+            placeholder="e.g. Drawn to Children +3; Light +2",
+            hint="Personality Traits everyone here takes, none above the "
+            "aura (RoP: Faerie p. 104).",
+            show_if=realm_is("Faerie"),
+        ),
+        DialogField(
+            keys["Divine"],
+            "Divine aura",
+            "select",
+            d.get(keys["Divine"]) or aura_kinds.DOMINION,
+            options=pairs(aura_kinds.DIVINE_KINDS),
+            hint="The Dominion comes from worship; an Empyreal aura from a "
+            "relic, saint, miracle or holy creature. Both wane at night and "
+            "wax on holy days (RoP: The Divine pp. 7, 12).",
+            show_if=realm_is("Divine"),
+        ),
+    ]
 
 
 def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
@@ -397,6 +462,7 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
             d.get("aura", 0),
             hint="Its surface's aura; its realm is the Realm below.",
         ),
+        *kind_fields(d),
         DialogField(
             "tethers",
             "Tethers",
@@ -439,7 +505,7 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
 def problem(values: dict[str, Any]) -> str | None:
     if (values.get("aura") or 0) < 0:
         return "An aura can't be below 0."
-    return None
+    return aura_kinds.problem(values)
 
 
 # -- regio levels --
@@ -514,6 +580,7 @@ def level_fields(
             "int",
             e.get("aura", whole_number(place.details.get("aura")) + 1),
         ),
+        *kind_fields(e),
         DialogField(
             "kind",
             "Kind",
@@ -551,7 +618,7 @@ def level_fields(
 def _level_problem(values: dict[str, Any]) -> str | None:
     if (values.get("aura") or 0) < 0:
         return "An aura can't be below 0."
-    return None
+    return aura_kinds.problem(values)
 
 
 def level_ops(saga: Saga, place: Neighbour) -> SectionOps:

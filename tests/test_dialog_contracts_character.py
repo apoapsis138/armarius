@@ -783,6 +783,132 @@ CONTRACTS: dict[str, Contract] = {
         expected=("sanguine-melancholic", "phlegmatic"),
         shown={"#char-biographical-left": "Complexion: Sanguine, then melancholic"},
     ),
+    # A young character's parent's vocation (Apprentices).
+    "parent vocation": Contract(
+        prefill={"Parent's vocation": "", "Parent's score": "0"},
+        edits={"Parent's vocation": "Craft: Smith", "Parent's score": "6"},
+        saved=lambda s: (
+            character(s).creation_conditions.vocation,
+            character(s).creation_conditions.vocation_score,
+        ),
+        expected=("Craft: Smith", 6),
+        invalid=[{"Parent's score": "-1"}, {"Parent's score": "x"}],
+    ),
+    # Art & Academe's ligatures and the apothecary's store.
+    "make a ligature": Contract(
+        prefill={"For": "", "Die": ""},
+        edits={"For": "a surgery roll", "Die": "10"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Ligature: a surgery roll",
+        invalid=[{"For": ""}, {"For": "a surgery roll", "Die": "-1"}],
+        live={"#fields-live": "the Ligature Bonus Table"},
+    ),
+    "apothecary's store": Contract(
+        prefill={"Ingredient": "", "Assistants": "0", "Die": ""},
+        edits={"Ingredient": "henbane", "Die": "7"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Searched for: henbane",
+        invalid=[{"Ingredient": ""}, {"Ingredient": "henbane", "Assistants": "9"}],
+        live={"#fields-live": "a month's search"},
+    ),
+    # The Theban Tribunal's Byzantine customs (The Sundered Eagle).
+    "hermetic letter": Contract(
+        prefill={"The letter": "compose", "Lore": "Mercere Lore"},
+        edits={"The letter": "read", "Subtler than plain, by": "2"},
+        saved=lambda s: character(s).diary,
+        expected=[],
+        invalid={"Subtler than plain, by": "x"},
+        live={"#fields-live": "Against 8"},
+    ),
+    "invoke a broken oath": Contract(
+        prefill={"The oath-breaker": Select.NULL, "Styx was named in the oath": False},
+        edits={
+            "The oath-breaker": "grog9",
+            "Styx was named in the oath": True,
+            "The witnessing spirit's Might": "50",
+            "Its punishment, if heard": "vf_greater_malediction_toad_of_lies",
+        },
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Leandro invoked an oath broken by Hugo",
+        invalid=[
+            {"The witnessing spirit's Might": "x"},
+            {
+                "The oath-breaker": "grog9",
+                "Its punishment, if heard": "vf_greater_malediction_toad_of_lies",
+            },
+        ],
+        live={"#fields-live": "a Major Flaw"},
+    ),
+    "make greek fire": Contract(
+        prefill={"Doses being made": "1"},
+        edits={"Doses being made": "2", "The laboratory's Safety": "2"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Made Greek Fire",
+        invalid={"Doses being made": "0"},
+        live={"#fields-live": "a reagent of level 15"},
+    ),
+    "paint an icon": Contract(
+        prefill={"Depicting": "", "Kept at": "cologne"},
+        edits={"Depicting": "St Ursula", "Seasons of Standard decoration": "1"},
+        saved=lambda s: s.neighbour("cologne").details["relics"][-1]["name"],
+        expected="An icon of St Ursula",
+        invalid=[{"Depicting": ""}, {"Seasons of Standard decoration": "-1"}],
+        live={"#fields-live": "Aesthetic Quality"},
+    ),
+    "venerate an icon": Contract(
+        prefill={"In an emergency": False},
+        edits={"In an emergency": True},
+        saved=lambda s: character(s).fatigue_level,
+        expected="winded",
+        live={"#fields-live": "Presence + Concentration"},
+    ),
+    "a mother's curse": Contract(
+        prefill={"His mother": "", "Area of expertise": "military"},
+        edits={
+            "His mother": "Maria",
+            "Area of expertise": "academic",
+            "What lifts it": "restore the family's honor",
+        },
+        saved=lambda s: [
+            vf.params
+            for vf in character(s).virtues_flaws
+            if "mothers_curse" in vf.vf_id
+        ],
+        expected=[{"expertise": "academic"}],
+        invalid={"His mother": ""},
+        live={"#fields-live": "to every academic roll"},
+    ),
+    # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
+    "confidence through sin": Contract(
+        prefill={"The sinful trait": "Cruel (Envious)", "How he sins": "season"},
+        edits={"How he sins": "ceremony"},
+        saved=lambda s: (
+            s.character("mag1").background.confidence_points,
+            s.character("mag1").aging.warping_realms,
+        ),
+        expected=(1, {"Infernal": 1}),
+        live={"#fields-live": "Infernal Warping Point"},
+    ),
+    "infernal influence": Contract(
+        prefill={
+            "Influence": "person",
+            "How": "season",
+            "The trait awakened": "Envious",
+        },
+        edits={"The trait awakened": "Cruel"},
+        saved=lambda s: s.character("mag1").diary[-1].name,
+        expected="Infernal Influence",
+        invalid={"The trait awakened": ""},
+        live={"#fields-live": "Presence + Leadership"},
+    ),
+    "ars goetia": Contract(
+        prefill={"Goetic Art": "Summoning", "The spirit's Might": "10"},
+        edits={"The spirit's Might": "5"},
+        saved=lambda s: s.character("mag1").diary,
+        expected=[],
+        invalid={"The spirit's Might": "x"},
+        live={"#fields-live": "Against 10"},
+    ),
 }
 
 
