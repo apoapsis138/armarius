@@ -96,6 +96,11 @@ class Creature:
     order: str = ""
     hierarchy: int | None = None
     weakness: str = ""
+    #: A faerie's role in the stories it plays (one of rules.faerie_build.
+    #: ROLES, or "") and the story it wants, in a line (Realms of Power:
+    #: Faerie pp. 40, 140-142); only a Faerie creature has them.
+    faerie_role: str = ""
+    faerie_story: str = ""
     characteristics: Characteristics = field(default_factory=Characteristics)
     #: Animal intelligence: its Intelligence is a Cunning score (Cun).
     cunning: bool = False

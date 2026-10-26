@@ -846,6 +846,58 @@ CONTRACTS: dict[str, Contract] = {
         expected=({"mag_sketch": ["Notatus"]}, 2),
         shown={"#meeting-business": "✓ held"},
     ),
+    # Transylvania's promissory notes (Against the Dark p. 19).
+    "add promissory note": Contract(
+        prefill={"Held by": "", "Redeemed": False, "Note": ""},
+        edits={"Held by": "Old Histria", "Amount": "4", "Art": "Vim"},
+        saved=lambda s: [
+            (e.kind, e.who, e.amount, e.art, e.paid)
+            for e in s.tribunal("transylvania").treasury
+        ],
+        expected=[("note", "Old Histria", 4, "Vim", False)],
+        invalid=[{"Held by": ""}, {"Amount": ""}],
+        shown={"#trib-treasury": "outstanding"},
+    ),
+    # The hunt and Area Lore, on a manor and on the road (LoM pp. 48-58,
+    # C&G p. 83): the dice decide the outcome, so the Diary's entry is checked.
+    "hunt on a manor": Contract(
+        prefill={
+            "Hunt": "hounds",
+            "Native to the ground": True,
+            "Lay a relay": True,
+            "Hours of daylight": "11",
+        },
+        edits={"Hunters, who ride": ["comp1"]},
+        saved=lambda s: s.character("comp1").diary[-1].name.startswith("The Hunt"),
+        expected=True,
+        invalid={"Hours of daylight": "0"},
+        live={"#fields-live": "Pursuit"},
+        shown={"#manors-list": "Hagen"},
+    ),
+    "area lore on a manor": Contract(
+        prefill={"Looking for": "free_goods", "He lives": "home"},
+        edits={"Who asks": "comp1", "Looking for": "major_inn"},
+        saved=lambda s: s.character("comp1").diary[-1].name.startswith("Area Lore"),
+        expected=True,
+        invalid={"Looking for": "other", "Ease Factor": "-1"},
+        live={"#fields-live": "Ease Factor 6"},
+        shown={"#manors-list": "Hagen"},
+    ),
+    "hunt on the road": Contract(
+        prefill={"Hunt": "hounds", "In a lord's chase, warren or forest": False},
+        edits={"Hunters, who ride": ["mag1"]},
+        saved=lambda s: s.character("mag1").diary[-1].name.startswith("The Hunt"),
+        expected=True,
+        invalid={"Hours of daylight": "0", "Hunters, who ride": ["mag1"]},
+        live={"#fields-live": "First find a hunting spot"},
+    ),
+    "area lore on the road": Contract(
+        prefill={"Looking for": "free_goods"},
+        edits={"Who asks": "mag1", "Looking for": "route_inns"},
+        saved=lambda s: s.character("mag1").diary[-1].name.startswith("Area Lore"),
+        expected=True,
+        live={"#fields-live": "Ease Factor 12"},
+    ),
 }
 
 

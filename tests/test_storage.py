@@ -12,6 +12,7 @@ from ars_magica_manager.models import (
     AnimalForm,
     ArcaneConnection,
     ArtScore,
+    ArtworkPlan,
     Attitude,
     Background,
     BodyVis,
@@ -460,6 +461,7 @@ def _saga_with_every_record() -> Saga:
             season_rules.EXPOSURE,
             [XpAllocation("ability:Latin")],
             design=SpellDesign("key"),
+            artwork=ArtworkPlan(assistants=1),
         )
     )
     saga.season_records.append(

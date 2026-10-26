@@ -13,6 +13,7 @@ from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .markup import escape, problem
 from .models import Character, KnownSpell, Saga, Spell
 from .rules import (
+    ancient_integrations,
     apotropaic,
     aura_kinds,
     casting,
@@ -49,6 +50,8 @@ def casting_virtue_lines(magus: Character) -> list[str]:
     reminders = casting_virtues.reminders(magus)
     if reminders:
         lines.append("When they apply: " + " ".join(escape(r) for r in reminders))
+    # Ancient Magic: Adamic's Penetration, the Grigori Secrets.
+    lines += [escape(line) for line in ancient_integrations.casting_lines(magus)]
     return lines
 
 

@@ -431,7 +431,8 @@ def trait_section(
     page's own buttons placed there (Reward or Punish on a grog)."""
     chooser = Chooser()
     ops = trait_forms.trait_ops(traits, section_id)
-    rows = [(t.name, t.score) for t in traits]
+    # A Reputation marked bad (an Academic one) keeps a positive score.
+    rows = [(f"{t.name} (bad)" if t.bad else t.name, t.score) for t in traits]
     return section(
         f"{title} ({len(rows)})",
         p,

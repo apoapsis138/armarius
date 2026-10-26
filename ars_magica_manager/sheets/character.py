@@ -41,6 +41,7 @@ from ..rules import (
     derived,
     equipment,
     experiment,
+    faerie_sympathy,
     medicine,
     penetration,
     realm_warping,
@@ -218,8 +219,18 @@ def aging_text(character: Character, saga: Saga | None = None) -> str:
                 else ""
             ),
             *_warping_realms_line(character, saga),
+            *_faerie_rank_line(character),
         ]
     )
+
+
+def _faerie_rank_line(character: Character) -> list[str]:
+    """Faerie Rank, for a character with Sympathy Traits (RoP: Faerie
+    p. 103)."""
+    line = faerie_sympathy.rank_text(
+        character.personality_traits, character.aging.warping_score
+    )
+    return [line] if line else []
 
 
 def _warping_realms_line(character: Character, saga: Saga | None) -> list[str]:

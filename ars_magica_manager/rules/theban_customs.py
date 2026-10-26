@@ -45,7 +45,7 @@ import random
 from dataclasses import dataclass
 
 from ..models import Character, Saga
-from . import dice
+from . import artistry, dice
 from .rounding import round_up
 from .scores import ability_level, botch_dice_change, with_botch_change
 
@@ -284,13 +284,13 @@ def eikon(
     patron: bool = False,
     other: int = 0,
 ) -> Eikon:
-    """Dexterity + Craft: Painting + the decoration's bonuses (+1 each
-    Standard season, +3 each Excellent result) + Pious if the saint is the
-    painter's patron (a positive trait only) + other bonuses."""
-    dex = character.characteristics.dexterity
-    craft = ability_level(character, PAINTING)
-    terms = [f"Dexterity {dex:+d}", f"+ {PAINTING} {craft}"]
-    total = dex + craft
+    """Dexterity + Craft: Painting (with Puissant, Free Expression and
+    Inspirational, as any work of art's, Art & Academe p. 124) + the
+    decoration's bonuses (+1 each Standard season, +3 each Excellent
+    result) + Pious if the saint is the painter's patron (a positive trait
+    only) + other bonuses."""
+    start = artistry.base_quality(character, PAINTING, "dexterity")
+    terms, total = list(start.terms), start.quality
     decoration = STANDARD_DECORATION * max(0, standard) + EXCELLENT_DECORATION * max(
         0, excellent
     )

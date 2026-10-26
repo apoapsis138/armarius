@@ -130,14 +130,15 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "edit personality trait": Contract(
         prefill={"Name": "Brave", "Score": "2"},
-        edits={"Name": "Bold", "Score": "3"},
+        edits={"Name": "Bold", "Score": "3", "Temporary Sympathy Trait?": True},
         saved=lambda s: (
             character(s).personality_traits[0].name,
             character(s).personality_traits[0].score,
+            character(s).personality_traits[0].type,
         ),
-        expected=("Bold", 3),
+        expected=("Bold", 3, "Sympathy, temporary"),
         invalid={"Name": ""},
-        shown={"#personality-traits-list": "Bold: +3"},
+        shown={"#personality-traits-list": "Bold: +3 (Sympathy, temporary)"},
     ),
     # Choosing a book weapon fills in its figures; a typed name stays.
     "add personal weapon": Contract(
@@ -908,6 +909,58 @@ CONTRACTS: dict[str, Contract] = {
         expected=[],
         invalid={"The spirit's Might": "x"},
         live={"#fields-live": "Against 10"},
+    ),
+    # An apprentice's magic and the Gauntlet (Apprentices).
+    "turbulence": Contract(
+        prefill={"Why": "botch", "Aegis of the Hearth he had no part in": "0"},
+        edits={"Sympathetic multiplier": "1"},
+        saved=lambda s: s.character("mag1").diary[-1].name,
+        expected="Turbulence",
+        invalid={"Confidence spent on incurring": "99"},
+        live={"#fields-live": "Incurring"},
+    ),
+    "the gauntlet": Contract(
+        prefill={"How it is decided": "story", "The parens' verdict": "pass"},
+        edits={"The parens' verdict": "fail", "The test": "an owl's egg"},
+        saved=lambda s: s.character("mag1").diary[-1].name,
+        expected="The Gauntlet failed",
+        live={"#fields-live": "Hermetic Magus replaces Apprentice"},
+    ),
+    "lose the gift": Contract(
+        prefill={"The Gift is": "suppressed", "What happened": ""},
+        edits={"What happened": "a laboratory accident"},
+        saved=lambda s: (
+            "vf_suppressed_gift"
+            in {vf.vf_id for vf in s.character("mag1").virtues_flaws}
+        ),
+        expected=True,
+        invalid={"What happened": ""},
+        live={"#fields-live": "Suppressed Gift"},
+    ),
+    "learn a cantation": Contract(
+        prefill={"Times cast spontaneously": "0"},
+        edits={"The spell": "spell_ager_belli", "Times cast spontaneously": "10"},
+        saved=lambda s: s.character("mag1").spells_known[-1].spell_id,
+        expected="spell_ager_belli",
+        invalid={"Times cast spontaneously": "0"},
+        live={"#fields-live": "Ager Belli is level 10"},
+    ),
+    # Art & Academe's artists and scholars, between their seasons.
+    "an artist's career": Contract(
+        prefill={"Sponsor's Reputation": "0"},
+        edits={"What": "deed", "Deed": "benefactor"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Artist's deed: Gained a benefactor",
+        invalid={"Sponsor's Reputation": "-1"},
+        live={"#fields-live": "Gains and losses"},
+    ),
+    "a scholar's career": Contract(
+        prefill={"A wealthy family's gift": "0"},
+        edits={"What": "academic", "Deed": "tractatus"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Academic deed: Wrote a tractatus",
+        invalid={"A wealthy family's gift": "4"},
+        live={"#fields-live": "Hermetic Arts earn none"},
     ),
 }
 

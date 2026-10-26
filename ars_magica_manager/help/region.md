@@ -334,6 +334,59 @@ villeins clearing between their duties are much slower, and land cleared
 by magic overnight alarms the neighbouring lords, so type the acres
 cleared for either.
 
+**The Hunt** (More, on the chosen manor) rolls a day's hunt there.
+
+- *Hunting with hounds* (Lords of Men pp. 51-53). Before dawn each
+  huntsman quests with a lymer: Perception + the lower of his and the
+  lymer's Hunt against 9 to track a fit beast, Presence + Animal
+  Handling against 9 to keep the lymer quiet, Intelligence + Hunt
+  against 9 to judge its age and condition. At the assembly the hunters
+  read the droppings (Perception + Hunt against 12). The book calls none
+  of these stress rolls, so all take a simple die: it names a stress die
+  wherever it wants one. Then the chase, an hour a round: the pack's
+  Pursuit Total (the best dog's Perception + Hunt + its +2 to Hunt rolls
+  + a stress die, less the pack's Fatigue) against the quarry's Evasion
+  Total (Dexterity + Athletics + the Terrain Bonus + a stress die, less
+  its Fatigue). Four rounds won by either side, not necessarily in a row,
+  corner it or lose it; a tie counts for neither, and nightfall ends the
+  chase with the quarry escaping. The book counts Fatigue only as a
+  penalty to each total, so a quarry or pack spent past its last Fatigue
+  level (cornered, or giving up) is the app's gap-fill, and the Diary
+  says so. The hounds and the quarry each lose a Fatigue level an hour
+  unless Stamina + Athletics + a simple die makes 12. Each hunter rolls
+  Dexterity + Ride + a stress die against 6 an hour or falls behind, and
+  Stamina + Ride + a simple die against 9 every three hours or loses a
+  Long-Term Fatigue level (p. 52).
+- *The Terrain Bonus* (p. 53) starts at +6 for a beast on its own ground.
+  The relay's huntsmen roll Intelligence + Hunt + 6 + a stress die
+  against the Evasion Total for fresh dogs, then Intelligence + Area Lore
+  + a stress die to take 1 off it; each hunter still with the pack rolls
+  Perception + Area Lore + a stress die to take 1 more off.
+- *The quarry* (p. 54): the hart (spring and summer), the boar (summer and
+  autumn), the bear (any season but spring) and the wolf, by the
+  Definitive Edition's stat blocks; the hare (p. 58); and any beast of the
+  saga's Bestiary. A dangerous beast's kill is fought out as a melee.
+- *Hawking* (pp. 57-59): the hawker's Presence + Animal Handling + a
+  simple die (the Gift's penalty applies) on the book's table; 7 or more
+  and the bird strikes at the prey (p. 58's table), with a bonus as the
+  roll rises; 0 or less and a Loyalty check (a simple die against 6), or
+  the bird is gone for good. At 21 or more it goes on attacking after the
+  first strike, hit or miss. The book sets no limit: the app stops it on
+  a kill, and after five strikes by its own limit, not the book's. A goshawk
+  or merlin won't stoop at prey too large unless trained to it (p. 59).
+- The inspector shows the holding's kennels or mews (a hunt needs a dozen
+  running dogs and a lymer, p. 60) and a lord's hunting rights. Hunt
+  writes the day in the Diary of each hunter and huntsman named and of the
+  lord or covenant, and takes the Long-Term Fatigue it cost.
+
+**Area Lore** (More, on the chosen manor) rolls Intelligence + Area Lore
+(a simple die) against a line of City & Guild's Area Lore Ease Factors
+(p. 83): from a hunting spot or a major inn at 6 to smugglers and faerie
+trods at 18. One who lives in a town subtracts 3 seeking in the
+hinterland, one who lives in the country 3 in the city (p. 82). Success
+means he knows where it is or whom to ask; Charm or Bargain win it. It is
+written in his Diary.
+
 ### Establishments
 <!-- help: section-establishments -->
 

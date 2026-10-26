@@ -17,6 +17,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .. import catalog
+
 SOURCE = (
     "Ancient Magic, Introduction, The Breakthrough (p. 7); Hedge Magic, Revised "
     "Edition, The Integration Process (p. 14); Houses of Hermes: True Lineages, "
@@ -306,5 +308,31 @@ INTEGRATIONS: tuple[Integration, ...] = (
         learned="Realm alignment as a Mastery special ability.",
     ),
 )
+
+
+# -- Ancient Magic's catalog: the Breakthroughs its chapters add ----------
+
+
+def _from_ancient_magic_catalog() -> tuple[Integration, ...]:
+    """The Breakthroughs ancient_magic_catalog.json describes that the list
+    above doesn't (a note with a kind of its own)."""
+    return tuple(
+        Integration(
+            note.name,
+            note.kind,
+            note.target,
+            note.gives,
+            AM,
+            note.grant_kind,
+            note.grant,
+            note.learned,
+        )
+        for chapter in catalog.load_ancient_magic_catalog()
+        for note in chapter.integrations
+        if note.kind
+    )
+
+
+INTEGRATIONS = (*INTEGRATIONS, *_from_ancient_magic_catalog())
 
 BY_NAME: dict[str, Integration] = {i.name: i for i in INTEGRATIONS}

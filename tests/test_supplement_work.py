@@ -555,7 +555,7 @@ def test_a_work_of_art_takes_a_season_per_ten_aesthetic_quality():
         ("artwork", "Gate", 1, 1)
     ]
     ode = _work(saga, _plan("create_art", "ability:Craft: Poetry", title="Ode"))
-    assert ode.notes == ["Aesthetic Quality 1; 1 season(s) to make it."]  # Com 1
+    assert ode.notes[0].startswith("Aesthetic Quality 1 = Communication +1")
     inspired = _with(virtues_flaws=[VirtueFlawInstance("vf_free_expression")])
     assert _work(inspired, _plan("create_art", title="Gate")).progress == [
         ("artwork", "Gate", 2, 1)  # Dex 2 + Smith 6 + 3 = 11

@@ -173,6 +173,27 @@ Deleting a creature removes the links to it from other records, and a
 neighbour it ruled keeps its name as a name typed; nothing else
 changes.
 
+**Role.** A faerie plays a part in the stories it takes part in, and wants a story to play it
+in. Its Edit form (for a Faerie creature) asks its **Role in its stories**, one of the
+dramatis personae: the Hero, the Villain, the Donor (who grants the hero a magical gift, not
+always willingly), the Helper, the Princess (the object of the quest, any person or thing),
+the Task-Setter or the False Hero; and **The story it wants**, in a line. The sheet shows them
+as its **Role**, and reminds you of them for a faerie built by Realms of Power: Faerie
+(Realms of Power: Faerie pp. 40, 140-142). Building a faerie story from story elements,
+Arcadia, Elysium and Eudokia (pp. 31-44) is the storyguide's:
+
+- *Arcadia* (the Path of Chance): pick a story element (an actor, a prop, a piece of scenery)
+  for each story experience point to be handed out, give each a role or an act, link each to
+  one to three others, and choose where the characters start; the players may describe what
+  they meet, the storyguide decides its role (pp. 31-34).
+- *Elysium* (the Path of Destiny): the characters re-enact a known story, one of them declaring
+  himself its hero (a Confidence Point, and his first fable point); the fable points the hero
+  earns measure the reward: 0-3 failure, 4-6 mediocre, 7-9 accomplished, 10+ unmitigated
+  (pp. 34-38).
+- *Eudokia* (the Forking Path): a dilemma for a character at a turning point of his life, its
+  theme set by the Threshold; more right choices than wrong bring a Charmed Virtue (Major if
+  all were right), more wrong a Flaw that fades (pp. 38-39).
+
 ## Traits tab
 <!-- help: tab-cr-traits -->
 

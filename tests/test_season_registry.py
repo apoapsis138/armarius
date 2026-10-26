@@ -41,6 +41,11 @@ WITH_OUTCOMES = {
     "inspeximus",
     "bind_catalog",
     "library_research",
+    # Ancient Magic: Ptolemy's measuring of the fixed stars.
+    "measure_fixed_stars",
+    # Art & Academe's scholars: editing lectures, seeking a post.
+    "edit_lectures",
+    "seek_post",
 }
 
 
@@ -49,7 +54,7 @@ def test_every_activity_is_registered_once() -> None:
     doubled = sorted({k for k in keys if keys.count(k) > 1})
     assert not doubled, f"registered more than once: {doubled}"
     assert set(keys) == set(REGISTRY) == set(BY_KEY)
-    assert len(keys) == 41
+    assert len(keys) == 44  # with the scholars' two
 
 
 def test_registering_a_key_twice_fails() -> None:

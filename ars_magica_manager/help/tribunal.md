@@ -419,6 +419,13 @@ made from the Polity tab's Lend Vis, and its common vis comes in at each meeting
 treasury itself lies under a leaden trapdoor on Delos, opened only with the archon's iron
 key, and holds several hundred pawns (p. 77).
 
+In Transylvania (Against the Dark p. 19) Add also offers **A levy**, owed
+to the treasury by an oppidum for the Praeco's projects and counted once
+paid, and **A promissory note**, which the Praeco issued against the
+treasury's income: it's owed to its holder, and its pawns leave the
+treasury when it is redeemed. The balance then shows the levies unpaid and
+the notes outstanding.
+
 ## Gilds tab
 <!-- help: tab-trib-gilds -->
 

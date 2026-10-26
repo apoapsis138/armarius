@@ -4508,7 +4508,683 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points at once, for a character with a Faerie Rank.",
         "notes": "To act during it: Perception + Awareness + stress die vs 3 x (Warping Score + Warping Points gained). To resolve it: Perception + Concentration + stress die vs 3 x (Warping Score - Faerie Rank); above it, a new +1 Trait or +1 to a Trait, otherwise a new -1 Trait or -1 to a Trait. Faerie Rank 10+ on a positive result, or -10 or lower on a negative one, and he becomes a faerie for good. His rites of level 30+ Warp their target, and each 0 on a botch die with a Faerie power gives him a Warping Point."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Minor change to a memory",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 1,
+          "summary": "A minor change to the target's memory of an event",
+          "page": 125
+        },
+        {
+          "name": "Major change to a memory",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 2,
+          "summary": "A major change to the target's memory of an event",
+          "page": 125
+        },
+        {
+          "name": "Minor change to perceptions",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 2,
+          "summary": "A minor change to the target's perceptions",
+          "page": 125
+        },
+        {
+          "name": "Plant a suggestion",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 2,
+          "summary": "Plant a single suggestion in the target's mind",
+          "page": 125
+        },
+        {
+          "name": "Major change to memories of events",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 3,
+          "summary": "A major change to the target's memory of a series of events",
+          "page": 125
+        },
+        {
+          "name": "Major change to perceptions or emotions",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 3,
+          "summary": "A major change to the target's perceptions or emotions",
+          "page": 125
+        },
+        {
+          "name": "Change memories of a long time",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 4,
+          "summary": "Major changes to the target's memory of a long period",
+          "page": 125
+        },
+        {
+          "name": "Control mental state",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 4,
+          "summary": "Awake, asleep, confused or lucid",
+          "page": 125
+        },
+        {
+          "name": "Wholly change perceptions or emotions",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 4,
+          "summary": "Completely change the target's perceptions or emotions",
+          "page": 125
+        },
+        {
+          "name": "Behaviour by a natural emotion",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 5,
+          "summary": "Control the target's behaviour through a natural emotion",
+          "page": 125
+        },
+        {
+          "name": "Paralyse with emotion",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 5,
+          "summary": "Paralyse the target with emotion",
+          "page": 125
+        },
+        {
+          "name": "Wholly change memories",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 10,
+          "summary": "Completely change the target's memories",
+          "page": 125
+        },
+        {
+          "name": "Behaviour by an unnatural emotion",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 10,
+          "summary": "Control the target's behaviour through an unnatural emotion",
+          "page": 125
+        },
+        {
+          "name": "Imbue every response with an emotion",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 10,
+          "summary": "Every response the target makes carries one emotion",
+          "page": 125
+        },
+        {
+          "name": "Simple command",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 15,
+          "summary": "Give the target a simple command",
+          "page": 125
+        },
+        {
+          "name": "Complex command",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 20,
+          "summary": "Give the target a complex command",
+          "page": 125
+        },
+        {
+          "name": "Complete control",
+          "arts": [
+            "Beguile"
+          ],
+          "level": 25,
+          "summary": "Control the target wholly, its movement and speech too",
+          "page": 125
+        },
+        {
+          "name": "Premonitions",
+          "arts": [
+            "Dream"
+          ],
+          "level": 0,
+          "summary": "The target has Premonitions of (the base level / 5) for the duration",
+          "page": 126
+        },
+        {
+          "name": "One sense at a distance",
+          "arts": [
+            "Dream"
+          ],
+          "level": 1,
+          "summary": "The target uses one sense at a distance",
+          "page": 126
+        },
+        {
+          "name": "Two senses at a distance",
+          "arts": [
+            "Dream"
+          ],
+          "level": 2,
+          "summary": "The target uses two senses at a distance",
+          "page": 126
+        },
+        {
+          "name": "Communicate mentally",
+          "arts": [
+            "Dream"
+          ],
+          "level": 2,
+          "summary": "The target communicates mentally",
+          "page": 126
+        },
+        {
+          "name": "All senses at a distance",
+          "arts": [
+            "Dream"
+          ],
+          "level": 3,
+          "summary": "The target uses all senses at a distance",
+          "page": 126
+        },
+        {
+          "name": "Understand speech",
+          "arts": [
+            "Dream"
+          ],
+          "level": 3,
+          "summary": "The target understands the meaning of spoken sounds",
+          "page": 126
+        },
+        {
+          "name": "Future in the next minute",
+          "arts": [
+            "Dream"
+          ],
+          "level": 4,
+          "summary": "Answer a question about the target's likely future in the next minute",
+          "page": 126
+        },
+        {
+          "name": "Speak the caster's language",
+          "arts": [
+            "Dream"
+          ],
+          "level": 4,
+          "summary": "The target speaks in the caster's native language",
+          "page": 126
+        },
+        {
+          "name": "Future in the next hour",
+          "arts": [
+            "Dream"
+          ],
+          "level": 5,
+          "summary": "Answer a question about the target's likely future in the next hour",
+          "page": 126
+        },
+        {
+          "name": "Read surface thoughts",
+          "arts": [
+            "Dream"
+          ],
+          "level": 5,
+          "summary": "The caster reads the target's surface thoughts",
+          "page": 126
+        },
+        {
+          "name": "Future in the next day",
+          "arts": [
+            "Dream"
+          ],
+          "level": 10,
+          "summary": "Answer a question about the target's likely future in the next day",
+          "page": 126
+        },
+        {
+          "name": "Read the past day's memories",
+          "arts": [
+            "Dream"
+          ],
+          "level": 10,
+          "summary": "The caster reads the target's memories of the past day",
+          "page": 126
+        },
+        {
+          "name": "Future in the next month",
+          "arts": [
+            "Dream"
+          ],
+          "level": 15,
+          "summary": "Answer a question about the target's likely future in the next month",
+          "page": 126
+        },
+        {
+          "name": "Read all memories",
+          "arts": [
+            "Dream"
+          ],
+          "level": 15,
+          "summary": "The caster reads all of the target's memories",
+          "page": 126
+        },
+        {
+          "name": "Future in the next season",
+          "arts": [
+            "Dream"
+          ],
+          "level": 20,
+          "summary": "Answer a question about the target's likely future in the next season (Ritual)",
+          "page": 126
+        },
+        {
+          "name": "Future in the next year",
+          "arts": [
+            "Dream"
+          ],
+          "level": 25,
+          "summary": "Answer a question about the target's likely future in the next year (Ritual)",
+          "page": 126
+        },
+        {
+          "name": "Future in the next decade",
+          "arts": [
+            "Dream"
+          ],
+          "level": 30,
+          "summary": "Answer a question about the target's likely future in the next decade (Ritual)",
+          "page": 126
+        },
+        {
+          "name": "Future in the next century",
+          "arts": [
+            "Dream"
+          ],
+          "level": 35,
+          "summary": "Answer a question about the target's likely future in the next century (Ritual)",
+          "page": 126
+        },
+        {
+          "name": "Into a regio",
+          "arts": [
+            "Portage"
+          ],
+          "level": 0,
+          "summary": "Through a regio boundary into a regio of level up to (the base level + 15) / 5",
+          "page": 128
+        },
+        {
+          "name": "Out of a regio",
+          "arts": [
+            "Portage"
+          ],
+          "level": 0,
+          "summary": "Out of a regio through a boundary up to (the base level + 15) / 5",
+          "page": 128
+        },
+        {
+          "name": "Into the Faerie Realm",
+          "arts": [
+            "Portage"
+          ],
+          "level": 0,
+          "summary": "Into the Faerie Realm through a regio boundary of 13 - (the base level + 15) / 5",
+          "page": 128
+        },
+        {
+          "name": "Out of the Faerie Realm",
+          "arts": [
+            "Portage"
+          ],
+          "level": 0,
+          "summary": "Out of the Faerie Realm into a regio of level up to 13 - (the base level + 15) / 5",
+          "page": 128
+        },
+        {
+          "name": "To a thing of a Sympathy Trait",
+          "arts": [
+            "Portage"
+          ],
+          "level": 5,
+          "summary": "Instantly to anything within range tied to one of the caster's Sympathy Traits",
+          "page": 128
+        },
+        {
+          "name": "Hold within range",
+          "arts": [
+            "Portage"
+          ],
+          "level": 5,
+          "summary": "The target can't travel out of the rite's range as it was cast",
+          "page": 128
+        },
+        {
+          "name": "Anywhere within range",
+          "arts": [
+            "Portage"
+          ],
+          "level": 10,
+          "summary": "Instantly transport the target anywhere within range",
+          "page": 128
+        },
+        {
+          "name": "Travel as faeries do",
+          "arts": [
+            "Portage"
+          ],
+          "level": 10,
+          "summary": "The target ignores Fatigue penalties but can't spend Fatigue levels",
+          "page": 128
+        },
+        {
+          "name": "Double or halve speed",
+          "arts": [
+            "Portage"
+          ],
+          "level": 15,
+          "summary": "Double or halve the target's natural movement",
+          "page": 128
+        }
+      ],
+      "effect_parameters": [
+        {
+          "kind": "range",
+          "name": "Personal",
+          "magnitudes": 0
+        },
+        {
+          "kind": "range",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Eye",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Voice",
+          "magnitudes": 2
+        },
+        {
+          "kind": "range",
+          "name": "Sight",
+          "magnitudes": 3
+        },
+        {
+          "kind": "range",
+          "name": "Arcane Connection",
+          "magnitudes": 4
+        },
+        {
+          "kind": "duration",
+          "name": "Momentary",
+          "magnitudes": 0
+        },
+        {
+          "kind": "duration",
+          "name": "Concentration",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Diameter",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Sun",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Ring",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Moon",
+          "magnitudes": 3
+        },
+        {
+          "kind": "duration",
+          "name": "Year",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Individual",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Circle",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Part",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Group",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Room",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Structure",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Boundary",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Taste",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Smell",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Hearing",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Vision",
+          "magnitudes": 4
+        },
+        {
+          "kind": "range",
+          "name": "Road",
+          "magnitudes": 2,
+          "note": "Faerie Magic: anyone on the same road or path (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Fire",
+          "magnitudes": 3,
+          "note": "Faerie Magic: until the fire goes out (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Until (Condition)",
+          "magnitudes": 4,
+          "note": "Faerie Magic: until a condition is met; Ritual (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Year + 1",
+          "magnitudes": 4,
+          "note": "Faerie Magic: a year and a day; Ritual (DE p. 237)"
+        },
+        {
+          "kind": "target",
+          "name": "Bloodline",
+          "magnitudes": 3,
+          "note": "Faerie Magic: all descended from the target (DE p. 238)"
+        },
+        {
+          "kind": "range",
+          "name": "Crossroads",
+          "magnitudes": 2,
+          "note": "a target on a road crossing the caster's (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Presence",
+          "magnitudes": 2,
+          "note": "as far as the caster's Presence reaches: 100 paces at +4, 50 at +2, 15 at -1, 5 at -3, himself at -4 (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Prop",
+          "magnitudes": 1,
+          "note": "through a thing both touch; too big to carry adds magnitudes (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "a symbol of the target as an Arcane Connection; Ritual; 3 points of fitting Sympathy Traits (p. 122; Errata p. 68)"
+        },
+        {
+          "kind": "duration",
+          "name": "Held",
+          "magnitudes": 1,
+          "note": "delayed while he concentrates, then Momentary (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Focus",
+          "magnitudes": 1,
+          "note": "until he works another supernatural effect; meanwhile he doesn't heal or recover (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "While (Condition)",
+          "magnitudes": 1,
+          "note": "while the target keeps doing something (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Geas (Condition)",
+          "magnitudes": 2,
+          "note": "triggered by an uncommon circumstance: add the triggered Duration's magnitudes as further magnitudes (Geas/Moon is five) (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Hour + 1",
+          "magnitudes": 2,
+          "note": "an hour and a day, about 13 hours (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Midday/Midnight",
+          "magnitudes": 2,
+          "note": "from the next dawn, noon, dusk or midnight to the one after (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Not (Condition)",
+          "magnitudes": 2,
+          "note": "while the target doesn't do something common; a month at most (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Season",
+          "magnitudes": 3,
+          "note": "from the next equinox or solstice to the one after; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Aura",
+          "magnitudes": 4,
+          "note": "while the target stays within a supernatural aura; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Faerie",
+          "magnitudes": 4,
+          "note": "while the target or caster has Faerie Might in Mythic Europe; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Hidden",
+          "magnitudes": 4,
+          "note": "while the caster or target is hidden; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "If (Condition)",
+          "magnitudes": 4,
+          "note": "triggered by a condition, within a year: add the triggered Duration's magnitudes as further magnitudes; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "while a symbol made at the casting lasts; Ritual; 3 points of fitting Sympathy Traits (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Medium",
+          "magnitudes": 1,
+          "note": "held by a medium and passed to a fitting target in range; a Sympathy Trait for the medium too (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Passion",
+          "magnitudes": 2,
+          "note": "those in the area inclined to an emotion: a simple die + fitting Personality Traits of 6 (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "all a symbol represents within range, as Boundary with size modifiers; Ritual; 3 points of fitting Sympathy Traits (p. 123)"
+        }
+      ],
+      "guideline_source": "RoP: Faerie pp. 122-131, errata p. 68 (The Reflecting Pool's Range is Symbol): any Method with any Power; the Hermetic Ranges, Durations and Targets, Merinita's Faerie Magic ones except Bargain, which RoP: Faerie does not have (DE pp. 237-238), and the Faerie ones; Geas and If add the triggered Duration as further magnitudes (Geas: Sun plus the trigger's; If: the trigger's plus four, a ritual)"
     },
     {
       "id": "trad_volkhvy",
@@ -4591,7 +5267,485 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points at once, for a character with a Faerie Rank.",
         "notes": "To act during it: Perception + Awareness + stress die vs 3 x (Warping Score + Warping Points gained). To resolve it: Perception + Concentration + stress die vs 3 x (Warping Score - Faerie Rank); above it, a new +1 Trait or +1 to a Trait, otherwise a new -1 Trait or -1 to a Trait. Faerie Rank 10+ on a positive result, or -10 or lower on a negative one, and he becomes a faerie for good. His rites of level 30+ Warp their target, and each 0 on a botch die with a Faerie power gives him a Warping Point."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Conjure a faerie",
+          "arts": [
+            "Conjure"
+          ],
+          "level": 0,
+          "summary": "A faerie of Faerie Might equal to the base level (Ritual)",
+          "page": 126
+        },
+        {
+          "name": "Conjure a glamour",
+          "arts": [
+            "Conjure"
+          ],
+          "level": 3,
+          "summary": "A glamour: an animate illusion with substance, gone when the rite ends; +1 magnitude intricate, +2 under mental command",
+          "page": 126
+        },
+        {
+          "name": "Change into a glamour",
+          "arts": [
+            "Conjure"
+          ],
+          "level": 3,
+          "summary": "Change the target into a glamour of about its Size (Size modifiers for larger); +2 magnitudes to make an animate thing inanimate",
+          "page": 126
+        },
+        {
+          "name": "Glamour 2 Sizes smaller",
+          "arts": [
+            "Conjure"
+          ],
+          "level": 4,
+          "summary": "Change the target into a glamour up to two Size categories smaller",
+          "page": 126
+        },
+        {
+          "name": "Glamour 5 Sizes smaller",
+          "arts": [
+            "Conjure"
+          ],
+          "level": 5,
+          "summary": "Change the target into a glamour up to five Size categories smaller",
+          "page": 126
+        },
+        {
+          "name": "Glamour 10 Sizes smaller",
+          "arts": [
+            "Conjure"
+          ],
+          "level": 10,
+          "summary": "Change the target into a glamour up to ten Size categories smaller",
+          "page": 126
+        },
+        {
+          "name": "Glamour 15 Sizes smaller",
+          "arts": [
+            "Conjure"
+          ],
+          "level": 15,
+          "summary": "Change the target into a glamour up to fifteen Size categories smaller",
+          "page": 126
+        },
+        {
+          "name": "Restore Faerie Might",
+          "arts": [
+            "Grant"
+          ],
+          "level": 0,
+          "summary": "The target faerie regains (the base level + 5) Might Points for the duration (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Grant a power",
+          "arts": [
+            "Grant"
+          ],
+          "level": 0,
+          "summary": "The target gains as a faerie power a non-ritual effect the caster can cast, of level up to (this level + 15) / 2; it costs its magnitude in Might, Initiative Quickness - this magnitude (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Sympathy Trait of 1",
+          "arts": [
+            "Grant"
+          ],
+          "level": 3,
+          "summary": "The target gains one of the caster's Sympathy Traits, at most +1 or -1, for the duration",
+          "page": 127
+        },
+        {
+          "name": "A Warping Point",
+          "arts": [
+            "Grant"
+          ],
+          "level": 5,
+          "summary": "Grant the target a Warping Point; one more for each further magnitude",
+          "page": 127
+        },
+        {
+          "name": "Sympathy Trait of 2",
+          "arts": [
+            "Grant"
+          ],
+          "level": 5,
+          "summary": "One of the caster's Sympathy Traits, at most +2 or -2",
+          "page": 127
+        },
+        {
+          "name": "Minor Flaw",
+          "arts": [
+            "Grant"
+          ],
+          "level": 10,
+          "summary": "The target gains a Minor Flaw for the duration (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Faerie aura",
+          "arts": [
+            "Grant"
+          ],
+          "level": 10,
+          "summary": "The target Boundary gains a Faerie aura of 1, one more for each further magnitude (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Minor Virtue",
+          "arts": [
+            "Grant"
+          ],
+          "level": 15,
+          "summary": "The target gains a Minor Virtue, a Charmed one, for the duration (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Sympathy Trait of 3",
+          "arts": [
+            "Grant"
+          ],
+          "level": 15,
+          "summary": "One of the caster's Sympathy Traits, at most +3 or -3",
+          "page": 127
+        },
+        {
+          "name": "Sympathy Trait of 4",
+          "arts": [
+            "Grant"
+          ],
+          "level": 25,
+          "summary": "One of the caster's Sympathy Traits, at most +4 or -4",
+          "page": 127
+        },
+        {
+          "name": "Major Flaw",
+          "arts": [
+            "Grant"
+          ],
+          "level": 30,
+          "summary": "The target gains a Major Flaw for the duration (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Faerie regio",
+          "arts": [
+            "Grant"
+          ],
+          "level": 30,
+          "summary": "The target Boundary, within a Faerie aura, becomes a Faerie regio (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Sympathy Trait of 5",
+          "arts": [
+            "Grant"
+          ],
+          "level": 35,
+          "summary": "One of the caster's Sympathy Traits, at most +5 or -5",
+          "page": 127
+        },
+        {
+          "name": "Major Virtue",
+          "arts": [
+            "Grant"
+          ],
+          "level": 45,
+          "summary": "The target gains a Major Virtue, a Charmed one, for the duration (Ritual)",
+          "page": 127
+        },
+        {
+          "name": "Sympathy Trait of 6",
+          "arts": [
+            "Grant"
+          ],
+          "level": 45,
+          "summary": "One of the caster's Sympathy Traits, at most +6 or -6",
+          "page": 127
+        }
+      ],
+      "effect_parameters": [
+        {
+          "kind": "range",
+          "name": "Personal",
+          "magnitudes": 0
+        },
+        {
+          "kind": "range",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Eye",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Voice",
+          "magnitudes": 2
+        },
+        {
+          "kind": "range",
+          "name": "Sight",
+          "magnitudes": 3
+        },
+        {
+          "kind": "range",
+          "name": "Arcane Connection",
+          "magnitudes": 4
+        },
+        {
+          "kind": "duration",
+          "name": "Momentary",
+          "magnitudes": 0
+        },
+        {
+          "kind": "duration",
+          "name": "Concentration",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Diameter",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Sun",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Ring",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Moon",
+          "magnitudes": 3
+        },
+        {
+          "kind": "duration",
+          "name": "Year",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Individual",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Circle",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Part",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Group",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Room",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Structure",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Boundary",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Taste",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Smell",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Hearing",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Vision",
+          "magnitudes": 4
+        },
+        {
+          "kind": "range",
+          "name": "Road",
+          "magnitudes": 2,
+          "note": "Faerie Magic: anyone on the same road or path (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Fire",
+          "magnitudes": 3,
+          "note": "Faerie Magic: until the fire goes out (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Until (Condition)",
+          "magnitudes": 4,
+          "note": "Faerie Magic: until a condition is met; Ritual (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Year + 1",
+          "magnitudes": 4,
+          "note": "Faerie Magic: a year and a day; Ritual (DE p. 237)"
+        },
+        {
+          "kind": "target",
+          "name": "Bloodline",
+          "magnitudes": 3,
+          "note": "Faerie Magic: all descended from the target (DE p. 238)"
+        },
+        {
+          "kind": "range",
+          "name": "Crossroads",
+          "magnitudes": 2,
+          "note": "a target on a road crossing the caster's (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Presence",
+          "magnitudes": 2,
+          "note": "as far as the caster's Presence reaches: 100 paces at +4, 50 at +2, 15 at -1, 5 at -3, himself at -4 (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Prop",
+          "magnitudes": 1,
+          "note": "through a thing both touch; too big to carry adds magnitudes (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "a symbol of the target as an Arcane Connection; Ritual; 3 points of fitting Sympathy Traits (p. 122; Errata p. 68)"
+        },
+        {
+          "kind": "duration",
+          "name": "Held",
+          "magnitudes": 1,
+          "note": "delayed while he concentrates, then Momentary (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Focus",
+          "magnitudes": 1,
+          "note": "until he works another supernatural effect; meanwhile he doesn't heal or recover (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "While (Condition)",
+          "magnitudes": 1,
+          "note": "while the target keeps doing something (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Geas (Condition)",
+          "magnitudes": 2,
+          "note": "triggered by an uncommon circumstance: add the triggered Duration's magnitudes as further magnitudes (Geas/Moon is five) (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Hour + 1",
+          "magnitudes": 2,
+          "note": "an hour and a day, about 13 hours (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Midday/Midnight",
+          "magnitudes": 2,
+          "note": "from the next dawn, noon, dusk or midnight to the one after (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Not (Condition)",
+          "magnitudes": 2,
+          "note": "while the target doesn't do something common; a month at most (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Season",
+          "magnitudes": 3,
+          "note": "from the next equinox or solstice to the one after; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Aura",
+          "magnitudes": 4,
+          "note": "while the target stays within a supernatural aura; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Faerie",
+          "magnitudes": 4,
+          "note": "while the target or caster has Faerie Might in Mythic Europe; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Hidden",
+          "magnitudes": 4,
+          "note": "while the caster or target is hidden; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "If (Condition)",
+          "magnitudes": 4,
+          "note": "triggered by a condition, within a year: add the triggered Duration's magnitudes as further magnitudes; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "while a symbol made at the casting lasts; Ritual; 3 points of fitting Sympathy Traits (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Medium",
+          "magnitudes": 1,
+          "note": "held by a medium and passed to a fitting target in range; a Sympathy Trait for the medium too (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Passion",
+          "magnitudes": 2,
+          "note": "those in the area inclined to an emotion: a simple die + fitting Personality Traits of 6 (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "all a symbol represents within range, as Boundary with size modifiers; Ritual; 3 points of fitting Sympathy Traits (p. 123)"
+        }
+      ],
+      "guideline_source": "RoP: Faerie pp. 122-131, errata p. 68 (The Reflecting Pool's Range is Symbol): any Method with any Power; the Hermetic Ranges, Durations and Targets, Merinita's Faerie Magic ones except Bargain, which RoP: Faerie does not have (DE pp. 237-238), and the Faerie ones; Geas and If add the triggered Duration as further magnitudes (Geas: Sun plus the trigger's; If: the trigger's plus four, a ritual)"
     },
     {
       "id": "trad_wise_folk",
@@ -4674,7 +5828,791 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points at once, for a character with a Faerie Rank.",
         "notes": "To act during it: Perception + Awareness + stress die vs 3 x (Warping Score + Warping Points gained). To resolve it: Perception + Concentration + stress die vs 3 x (Warping Score - Faerie Rank); above it, a new +1 Trait or +1 to a Trait, otherwise a new -1 Trait or -1 to a Trait. Faerie Rank 10+ on a positive result, or -10 or lower on a negative one, and he becomes a faerie for good. His rites of level 30+ Warp their target, and each 0 on a botch die with a Faerie power gives him a Warping Point."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Suppress an effect",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Suppress a supernatural effect of level up to (the base level + 15) on the target; a Longevity Ritual only if half the year (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "Ward: Faerie, a positive Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things of one of the caster's positive Traits, of Faerie Might up to the base level + 20",
+          "page": 129
+        },
+        {
+          "name": "Ward: any Might, a positive Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things of one of the caster's positive Traits, of any Might up to the base level + 15",
+          "page": 129
+        },
+        {
+          "name": "Ward: Faerie, a negative Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things one of the caster's negative Traits opposes, of Faerie Might up to the base level + 5",
+          "page": 129
+        },
+        {
+          "name": "Ward: any Might, a negative Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things one of the caster's negative Traits opposes, of any Might up to the base level",
+          "page": 129
+        },
+        {
+          "name": "Ward: Faerie, any Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things of any of the caster's Traits, of Faerie Might up to the base level",
+          "page": 129
+        },
+        {
+          "name": "Ward: any Might, any Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things of any of the caster's Traits, of any Might up to the base level - 5",
+          "page": 129
+        },
+        {
+          "name": "Ward: Faerie, no Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things of none of the caster's Traits, of Faerie Might up to the base level - 10",
+          "page": 129
+        },
+        {
+          "name": "Ward: any Might, no Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 0,
+          "summary": "Against things of none of the caster's Traits, of any Might up to the base level - 15",
+          "page": 129
+        },
+        {
+          "name": "Ward: mundane, a positive Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 1,
+          "summary": "Against all mundane things of one of the caster's positive Traits",
+          "page": 129
+        },
+        {
+          "name": "Ward: mundane, a negative Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 4,
+          "summary": "Against all mundane things one of the caster's negative Traits opposes",
+          "page": 129
+        },
+        {
+          "name": "+1 Soak",
+          "arts": [
+            "Ware"
+          ],
+          "level": 5,
+          "summary": "+1 Soak for the duration; +1 more for each further magnitude",
+          "page": 129
+        },
+        {
+          "name": "Ward: mundane, any Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 5,
+          "summary": "Against all mundane things of any of the caster's Traits",
+          "page": 129
+        },
+        {
+          "name": "+1 Defense",
+          "arts": [
+            "Ware"
+          ],
+          "level": 10,
+          "summary": "+1 Defense for the duration; +1 more for each further magnitude",
+          "page": 129
+        },
+        {
+          "name": "Ward: mundane, no Trait",
+          "arts": [
+            "Ware"
+          ],
+          "level": 15,
+          "summary": "Against all mundane things of none of the caster's Traits",
+          "page": 129
+        },
+        {
+          "name": "Recovery against Aging",
+          "arts": [
+            "Weal"
+          ],
+          "level": 0,
+          "summary": "+(3 + magnitude) x 3 to Recovery and as much to Aging rolls, or the reverse, if active half the period",
+          "page": 129
+        },
+        {
+          "name": "Recovery or Aging 1",
+          "arts": [
+            "Weal"
+          ],
+          "level": 1,
+          "summary": "+1 to Recovery and +1 to Aging rolls, or -1 to Aging and -1 to Recovery",
+          "page": 129
+        },
+        {
+          "name": "A year younger",
+          "arts": [
+            "Weal"
+          ],
+          "level": 1,
+          "summary": "A mature target seems a year younger; a year more each further magnitude (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "Recovery or Aging 3",
+          "arts": [
+            "Weal"
+          ],
+          "level": 2,
+          "summary": "+3 to Recovery and +3 to Aging rolls, or -3 to Aging and -3 to Recovery",
+          "page": 129
+        },
+        {
+          "name": "Recovery or Aging 6",
+          "arts": [
+            "Weal"
+          ],
+          "level": 3,
+          "summary": "+6 to Recovery and +6 to Aging rolls, or -6 to Aging and -6 to Recovery",
+          "page": 129
+        },
+        {
+          "name": "Recovery or Aging 9",
+          "arts": [
+            "Weal"
+          ],
+          "level": 4,
+          "summary": "+9 to Recovery and +9 to Aging rolls, or -9 to Aging and -9 to Recovery",
+          "page": 129
+        },
+        {
+          "name": "Wounds don't worsen",
+          "arts": [
+            "Weal"
+          ],
+          "level": 4,
+          "summary": "The target's wounds don't worsen for the duration",
+          "page": 129
+        },
+        {
+          "name": "Delay Aging and Recovery",
+          "arts": [
+            "Weal"
+          ],
+          "level": 4,
+          "summary": "Every natural Aging and Recovery roll waits until the rite ends (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "Heal a Light wound",
+          "arts": [
+            "Weal"
+          ],
+          "level": 5,
+          "summary": "Heal a Light wound for the duration",
+          "page": 129
+        },
+        {
+          "name": "Heal a Medium wound",
+          "arts": [
+            "Weal"
+          ],
+          "level": 10,
+          "summary": "Heal a Medium wound for the duration",
+          "page": 129
+        },
+        {
+          "name": "Heal a Heavy wound",
+          "arts": [
+            "Weal"
+          ],
+          "level": 15,
+          "summary": "Heal a Heavy wound for the duration",
+          "page": 129
+        },
+        {
+          "name": "A wound heals a step faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 15,
+          "summary": "One wound heals as a step lighter; a Light or Incapacitating one rolls at once, without worsening (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "Heal an Incapacitating wound",
+          "arts": [
+            "Weal"
+          ],
+          "level": 20,
+          "summary": "Heal an Incapacitating wound for the duration",
+          "page": 129
+        },
+        {
+          "name": "A wound heals two steps faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 20,
+          "summary": "One wound heals two steps faster",
+          "page": 129
+        },
+        {
+          "name": "Heal all wounds",
+          "arts": [
+            "Weal"
+          ],
+          "level": 25,
+          "summary": "Heal all the target's wounds for the duration",
+          "page": 129
+        },
+        {
+          "name": "A wound heals three steps faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 25,
+          "summary": "One wound heals three steps faster",
+          "page": 129
+        },
+        {
+          "name": "Semblance of life",
+          "arts": [
+            "Weal"
+          ],
+          "level": 25,
+          "summary": "Restore the target to the semblance of life (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "A wound heals four steps faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 30,
+          "summary": "One wound heals four steps faster",
+          "page": 129
+        },
+        {
+          "name": "All wounds a step faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 30,
+          "summary": "All the target's wounds heal a step faster (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "All wounds two steps faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 35,
+          "summary": "All the target's wounds heal two steps faster (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "All wounds three steps faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 40,
+          "summary": "All the target's wounds heal three steps faster (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "All wounds four steps faster",
+          "arts": [
+            "Weal"
+          ],
+          "level": 45,
+          "summary": "All the target's wounds heal four steps faster (Ritual)",
+          "page": 129
+        },
+        {
+          "name": "Recovery or Aging penalty",
+          "arts": [
+            "Woe"
+          ],
+          "level": 0,
+          "summary": "A penalty of (3 + magnitude) x 3 to Recovery or Aging rolls",
+          "page": 131
+        },
+        {
+          "name": "Recovery or Aging 1",
+          "arts": [
+            "Woe"
+          ],
+          "level": 1,
+          "summary": "-1 to Recovery rolls or +1 to Aging rolls",
+          "page": 131
+        },
+        {
+          "name": "Lose a Fatigue level",
+          "arts": [
+            "Woe"
+          ],
+          "level": 1,
+          "summary": "The target loses a Fatigue level for the duration",
+          "page": 131
+        },
+        {
+          "name": "A wound heals a step slower",
+          "arts": [
+            "Woe"
+          ],
+          "level": 1,
+          "summary": "One wound heals a step slower; an Incapacitating one doesn't heal, and kills if it lasts half the time",
+          "page": 131
+        },
+        {
+          "name": "Recovery or Aging 3",
+          "arts": [
+            "Woe"
+          ],
+          "level": 2,
+          "summary": "-3 to Recovery rolls or +3 to Aging rolls",
+          "page": 131
+        },
+        {
+          "name": "A Light wound",
+          "arts": [
+            "Woe"
+          ],
+          "level": 2,
+          "summary": "A Light wound for the duration",
+          "page": 131
+        },
+        {
+          "name": "A wound heals two steps slower",
+          "arts": [
+            "Woe"
+          ],
+          "level": 2,
+          "summary": "One wound heals two steps slower",
+          "page": 131
+        },
+        {
+          "name": "Recovery or Aging 6",
+          "arts": [
+            "Woe"
+          ],
+          "level": 3,
+          "summary": "-6 to Recovery rolls or +6 to Aging rolls",
+          "page": 131
+        },
+        {
+          "name": "A Medium wound",
+          "arts": [
+            "Woe"
+          ],
+          "level": 3,
+          "summary": "A Medium wound for the duration",
+          "page": 131
+        },
+        {
+          "name": "A wound heals three steps slower",
+          "arts": [
+            "Woe"
+          ],
+          "level": 3,
+          "summary": "One wound heals three steps slower",
+          "page": 131
+        },
+        {
+          "name": "Force a Recovery roll",
+          "arts": [
+            "Woe"
+          ],
+          "level": 3,
+          "summary": "The target makes a Recovery roll, with no improvement possible",
+          "page": 131
+        },
+        {
+          "name": "Recovery or Aging 9",
+          "arts": [
+            "Woe"
+          ],
+          "level": 4,
+          "summary": "-9 to Recovery rolls or +9 to Aging rolls",
+          "page": 131
+        },
+        {
+          "name": "A Heavy wound",
+          "arts": [
+            "Woe"
+          ],
+          "level": 4,
+          "summary": "A Heavy wound for the duration",
+          "page": 131
+        },
+        {
+          "name": "An Incapacitating wound",
+          "arts": [
+            "Woe"
+          ],
+          "level": 5,
+          "summary": "An Incapacitating wound for the duration",
+          "page": 131
+        },
+        {
+          "name": "All wounds a step slower",
+          "arts": [
+            "Woe"
+          ],
+          "level": 5,
+          "summary": "All the target's wounds heal a step slower (Ritual)",
+          "page": 131
+        },
+        {
+          "name": "A deadly wound",
+          "arts": [
+            "Woe"
+          ],
+          "level": 10,
+          "summary": "A deadly wound for the duration",
+          "page": 131
+        },
+        {
+          "name": "All wounds two steps slower",
+          "arts": [
+            "Woe"
+          ],
+          "level": 10,
+          "summary": "All the target's wounds heal two steps slower (Ritual)",
+          "page": 131
+        },
+        {
+          "name": "Force an Aging roll",
+          "arts": [
+            "Woe"
+          ],
+          "level": 15,
+          "summary": "The target makes an Aging roll",
+          "page": 131
+        },
+        {
+          "name": "All wounds three steps slower",
+          "arts": [
+            "Woe"
+          ],
+          "level": 15,
+          "summary": "All the target's wounds heal three steps slower (Ritual)",
+          "page": 131
+        }
+      ],
+      "effect_parameters": [
+        {
+          "kind": "range",
+          "name": "Personal",
+          "magnitudes": 0
+        },
+        {
+          "kind": "range",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Eye",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Voice",
+          "magnitudes": 2
+        },
+        {
+          "kind": "range",
+          "name": "Sight",
+          "magnitudes": 3
+        },
+        {
+          "kind": "range",
+          "name": "Arcane Connection",
+          "magnitudes": 4
+        },
+        {
+          "kind": "duration",
+          "name": "Momentary",
+          "magnitudes": 0
+        },
+        {
+          "kind": "duration",
+          "name": "Concentration",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Diameter",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Sun",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Ring",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Moon",
+          "magnitudes": 3
+        },
+        {
+          "kind": "duration",
+          "name": "Year",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Individual",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Circle",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Part",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Group",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Room",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Structure",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Boundary",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Taste",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Smell",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Hearing",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Vision",
+          "magnitudes": 4
+        },
+        {
+          "kind": "range",
+          "name": "Road",
+          "magnitudes": 2,
+          "note": "Faerie Magic: anyone on the same road or path (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Fire",
+          "magnitudes": 3,
+          "note": "Faerie Magic: until the fire goes out (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Until (Condition)",
+          "magnitudes": 4,
+          "note": "Faerie Magic: until a condition is met; Ritual (DE p. 237)"
+        },
+        {
+          "kind": "duration",
+          "name": "Year + 1",
+          "magnitudes": 4,
+          "note": "Faerie Magic: a year and a day; Ritual (DE p. 237)"
+        },
+        {
+          "kind": "target",
+          "name": "Bloodline",
+          "magnitudes": 3,
+          "note": "Faerie Magic: all descended from the target (DE p. 238)"
+        },
+        {
+          "kind": "range",
+          "name": "Crossroads",
+          "magnitudes": 2,
+          "note": "a target on a road crossing the caster's (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Presence",
+          "magnitudes": 2,
+          "note": "as far as the caster's Presence reaches: 100 paces at +4, 50 at +2, 15 at -1, 5 at -3, himself at -4 (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Prop",
+          "magnitudes": 1,
+          "note": "through a thing both touch; too big to carry adds magnitudes (p. 122)"
+        },
+        {
+          "kind": "range",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "a symbol of the target as an Arcane Connection; Ritual; 3 points of fitting Sympathy Traits (p. 122; Errata p. 68)"
+        },
+        {
+          "kind": "duration",
+          "name": "Held",
+          "magnitudes": 1,
+          "note": "delayed while he concentrates, then Momentary (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Focus",
+          "magnitudes": 1,
+          "note": "until he works another supernatural effect; meanwhile he doesn't heal or recover (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "While (Condition)",
+          "magnitudes": 1,
+          "note": "while the target keeps doing something (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Geas (Condition)",
+          "magnitudes": 2,
+          "note": "triggered by an uncommon circumstance: add the triggered Duration's magnitudes as further magnitudes (Geas/Moon is five) (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Hour + 1",
+          "magnitudes": 2,
+          "note": "an hour and a day, about 13 hours (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Midday/Midnight",
+          "magnitudes": 2,
+          "note": "from the next dawn, noon, dusk or midnight to the one after (p. 122)"
+        },
+        {
+          "kind": "duration",
+          "name": "Not (Condition)",
+          "magnitudes": 2,
+          "note": "while the target doesn't do something common; a month at most (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Season",
+          "magnitudes": 3,
+          "note": "from the next equinox or solstice to the one after; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Aura",
+          "magnitudes": 4,
+          "note": "while the target stays within a supernatural aura; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Faerie",
+          "magnitudes": 4,
+          "note": "while the target or caster has Faerie Might in Mythic Europe; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Hidden",
+          "magnitudes": 4,
+          "note": "while the caster or target is hidden; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "If (Condition)",
+          "magnitudes": 4,
+          "note": "triggered by a condition, within a year: add the triggered Duration's magnitudes as further magnitudes; Ritual (p. 123)"
+        },
+        {
+          "kind": "duration",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "while a symbol made at the casting lasts; Ritual; 3 points of fitting Sympathy Traits (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Medium",
+          "magnitudes": 1,
+          "note": "held by a medium and passed to a fitting target in range; a Sympathy Trait for the medium too (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Passion",
+          "magnitudes": 2,
+          "note": "those in the area inclined to an emotion: a simple die + fitting Personality Traits of 6 (p. 123)"
+        },
+        {
+          "kind": "target",
+          "name": "Symbol",
+          "magnitudes": 4,
+          "note": "all a symbol represents within range, as Boundary with size modifiers; Ritual; 3 points of fitting Sympathy Traits (p. 123)"
+        }
+      ],
+      "guideline_source": "RoP: Faerie pp. 122-131, errata p. 68 (The Reflecting Pool's Range is Symbol): any Method with any Power; the Hermetic Ranges, Durations and Targets, Merinita's Faerie Magic ones except Bargain, which RoP: Faerie does not have (DE pp. 237-238), and the Faerie ones; Geas and If add the triggered Duration as further magnitudes (Geas: Sun plus the trigger's; If: the trigger's plus four, a ritual)"
     },
     {
       "id": "trad_borrowers",

@@ -34,6 +34,7 @@ from .models import (
     VirtueFlawInstance,
     WeaponDef,
 )
+from .models.ancient_magic import AncientChapter
 
 CATALOG_PATH = DATA_DIR / "virtue_flaw_catalog.json"
 ABILITY_CATALOG_PATH = DATA_DIR / "ability_catalog.json"
@@ -620,3 +621,16 @@ def find_spell_by_name(saga: Saga, name: str) -> Spell | None:
             if name_key(spell.name) == key:
                 return spell
     return None
+
+
+# -- Ancient Magic's chapters: integrations, Insight sources, rolls --------
+
+ANCIENT_MAGIC_CATALOG_PATH = DATA_DIR / "ancient_magic_catalog.json"
+
+
+def load_ancient_magic_catalog(
+    path: Path = ANCIENT_MAGIC_CATALOG_PATH,
+) -> list[AncientChapter]:
+    """Ancient Magic's chapters as data (rules/ancient_integrations.py reads
+    them)."""
+    return list(_cached_entries(path, AncientChapter.from_dict))

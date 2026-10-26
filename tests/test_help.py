@@ -36,6 +36,8 @@ DIALOG_PAGES = {
     ),
     "plan-season",
     "grog-year",
+    "artist-career",
+    "scholar-career",
     # The core's steps that name their page (commands.Form/Choose.help_id).
     "import-data",
     "import-spells",
@@ -56,6 +58,10 @@ DIALOG_PAGES = {
     "confidence-through-sin",
     "infernal-influence",
     "ars-goetia",
+    "turbulence",
+    "gauntlet",
+    "lose-the-gift",
+    "learn-cantation",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

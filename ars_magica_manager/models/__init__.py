@@ -8,6 +8,9 @@ One module per kind of record, re-exported here so
 """
 
 from .agents import Agent as Agent
+from .artwork import ART_WOUNDS as ART_WOUNDS
+from .artwork import ARTWORK_BASES as ARTWORK_BASES
+from .artwork import ArtworkPlan as ArtworkPlan
 from .books import BOOK_OWNER_KINDS as BOOK_OWNER_KINDS
 from .books import BOOK_TYPES as BOOK_TYPES
 from .books import LAB_TEXT_KINDS as LAB_TEXT_KINDS
@@ -258,6 +261,7 @@ from .seasons import WorldTurn as WorldTurn
 from .seasons import XpAllocation as XpAllocation
 from .seasons import next_season as next_season
 from .seasons import season_order as season_order
+from .traits import ACADEMIC_REPUTATION as ACADEMIC_REPUTATION
 from .traits import Ability as Ability
 from .traits import Characteristics as Characteristics
 from .traits import KnownSpell as KnownSpell
@@ -265,7 +269,9 @@ from .traits import MasteryAbility as MasteryAbility
 from .traits import ScoredTrait as ScoredTrait
 from .traits import Spell as Spell
 from .traits import VirtueFlawInstance as VirtueFlawInstance
+from .traits import is_academic_reputation as is_academic_reputation
 from .traits import new_instance_id as new_instance_id
+from .traits import reputation_from_dict as reputation_from_dict
 from .tribunal import CASE_DECIDED as CASE_DECIDED
 from .tribunal import CASE_KINDS as CASE_KINDS
 from .tribunal import CASE_OPEN as CASE_OPEN

@@ -201,3 +201,29 @@ class ScoredTrait:
     #: Reputations only: the bad Reputation this new one is replacing, by
     #: name ("" for none; rules.confidence.count_replacing).
     replaces: str = ""
+    #: Reputations only: a bad Reputation kept with a positive score, as
+    #: Academic Reputations are (Art & Academe p. 103: Good and Bad ones
+    #: are separate entries, each building like an Ability). Any other
+    #: bad Reputation may still be typed with a negative score.
+    bad: bool = False
+
+
+ACADEMIC_REPUTATION = "Academic"
+
+
+def is_academic_reputation(reputation: ScoredTrait) -> bool:
+    """An Academic Reputation, by its type or its name."""
+    return (
+        reputation.type == ACADEMIC_REPUTATION
+        or "academic" in reputation.name.casefold()
+    )
+
+
+def reputation_from_dict(data: dict[str, Any]) -> ScoredTrait:
+    """A saved Reputation. An Academic one saved with a negative score
+    (before Good and Bad Academic Reputations were kept apart) becomes a
+    bad one with that positive score."""
+    found = ScoredTrait(**known_fields(ScoredTrait, data))
+    if found.score < 0 and is_academic_reputation(found):
+        found.score, found.bad = -found.score, True
+    return found

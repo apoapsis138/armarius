@@ -11,10 +11,10 @@ from dataclasses import dataclass
 
 from .markup import escape
 from .models import CastingRule, Character, Saga, TraditionDef
+from .rules import faerie_rites, infernalists
 from .rules import hedge_casting as hc
 from .rules import hedge_effects as he
 from .rules import hedge_warping as hw
-from .rules import infernalists
 from .rules import tradition_seasons as ts
 from .rules import tradition_totals as tt
 from .rules.realms import home_aura
@@ -416,13 +416,19 @@ def _effect_cells(
     for _, effect in he.of_tradition(character, tradition.id):
         found = he.effect_total(character, tradition, effect, aura, realm)
         level = he.effect_level(tradition, effect)
+        total = "; ".join(
+            [
+                he.total_words(found, effect),
+                *faerie_rites.rite_notes(character, tradition, effect),
+            ]
+        )
         rows.append(
             [
                 escape(effect.name),
                 effect.kind,
                 str(level) if level else "",
                 escape(" + ".join(hc.short_name(u) for u in effect.uses)),
-                escape(he.total_words(found, effect)),
+                escape(total),
             ]
         )
     return rows

@@ -160,6 +160,10 @@ class TribunalPackage:
     #: A sum in Mythic pounds told in its region's own coins, which the
     #: treasury's balance shows beside the pounds (Thebes's hyperpyra).
     coins: Callable[[float], str] | None = None
+    #: The kinds of treasury entry its customs add to the core's, which
+    #: the treasury's Add offers (Transylvania's levies and promissory
+    #: notes, treasury.LEVY and treasury.NOTE).
+    treasury_kinds: tuple[str, ...] = ()
 
     @property
     def lists(self) -> tuple[PackageList, ...]:

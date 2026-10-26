@@ -29,6 +29,7 @@ from .models import (
     WoundState,
 )
 from .rules import (
+    ancient_integrations,
     battle_transformation,
     combat,
     derived,
@@ -374,7 +375,7 @@ def trait_rows(traits: Sequence[ScoredTrait]) -> list[tuple[int | None, str]]:
     rows: list[tuple[int | None, str]] = []
     for index, t in enumerate(traits):
         row = f"{escape(t.name)}: {t.score:+d}"
-        where = ", ".join(x for x in (t.type, t.reach) if x)
+        where = ", ".join(x for x in (t.type, t.reach, "bad" if t.bad else "") if x)
         if where:
             row += f" [$label]({escape(where)})[/]"
         if t.replaces:
@@ -665,6 +666,8 @@ def goal_text(goal: Breakthrough) -> str:
     known = integrations.BY_NAME.get(goal.name)
     if known is not None and known.learned:
         lines.append(f"Once learned: {escape(known.learned)}")
+    # Ancient Magic's chapters: where Insight is found, a season's bonus.
+    lines += [escape(line) for line in ancient_integrations.goal_lines(goal)]
     if goal.pending_magnitude:
         lines.append(
             f"A Discovery (magnitude {goal.pending_magnitude}) waits to be "

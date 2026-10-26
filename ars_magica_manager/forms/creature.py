@@ -28,7 +28,7 @@ from ..models import (
     CreaturePower,
     Saga,
 )
-from ..rules import creature_build
+from ..rules import creature_build, faerie_build
 from ..sections import (
     BESTIARY_SECTION,
     CREATURE_ABILITIES_SECTION,
@@ -73,6 +73,14 @@ def _infernal(values: dict[str, Any]) -> bool:
 
 #: What only an Infernal creature has (Realms of Power: The Infernal).
 INFERNAL_FIELDS = {"order": "", "hierarchy": None, "weakness": ""}
+
+
+def _faerie(values: dict[str, Any]) -> bool:
+    return values.get("realm") == faerie_build.FAERIE
+
+
+#: What only a Faerie creature has (Realms of Power: Faerie pp. 140-142).
+FAERIE_FIELDS = {"faerie_role": "", "faerie_story": ""}
 
 
 def _creature_identity_fields(c: Creature | None) -> list[DialogField]:
@@ -169,6 +177,32 @@ def _infernal_fields(c: Creature | None) -> list[DialogField]:
     ]
 
 
+def _faerie_fields(c: Creature | None) -> list[DialogField]:
+    """A faerie's role and the story it wants (FAERIE_FIELDS)."""
+    return [
+        DialogField(
+            "faerie_role",
+            "Role in its stories",
+            "select",
+            attr(c, "faerie_role", "") or None,
+            options=pairs(faerie_build.ROLES),
+            allow_blank=True,
+            placeholder="(not noted)",
+            hint="The part it plays: Hero, Villain, Donor, Helper, Princess, "
+            "Task-Setter or False Hero (RoP: Faerie pp. 140-142).",
+            show_if=_faerie,
+        ),
+        DialogField(
+            "faerie_story",
+            "The story it wants",
+            "text",
+            attr(c, "faerie_story", ""),
+            placeholder="e.g. to be wooed by a mortal knight and spurn him",
+            show_if=_faerie,
+        ),
+    ]
+
+
 def _creature_trait_fields(c: Creature | None) -> list[DialogField]:
     """Its Size, age, Confidence and season."""
     return [
@@ -240,6 +274,7 @@ def info_fields(saga: Saga, creature: Creature | None) -> list[DialogField]:
         *_creature_identity_fields(c),
         *_creature_realm_fields(c),
         *_infernal_fields(c),
+        *_faerie_fields(c),
         *_creature_trait_fields(c),
         *_creature_record_fields(saga, c),
     ]
@@ -256,6 +291,10 @@ def apply_info(saga: Saga, creature: Creature, values: dict[str, Any]) -> None:
         values["warping_score"] = 0
     if values["realm"] != "Infernal":
         values.update(INFERNAL_FIELDS)
+    if values["realm"] != faerie_build.FAERIE:
+        values.update(FAERIE_FIELDS)
+    else:
+        values["faerie_role"] = values.get("faerie_role") or ""
     if values.get("confidence_score") is None:
         values["confidence_points"] = 0
     if not values.get("many"):

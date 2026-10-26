@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from . import (  # noqa: F401  (each registers its activities as it is imported)
     academe,
+    ancient,
     church,
     city_guild,
     covenants,

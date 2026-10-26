@@ -119,6 +119,7 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
         *magic_vis_facts(saga, c),
         *build_facts(c),
         *infernal_facts(c),
+        *faerie_role_facts(c),
         Fact("Size", _signed(c.size)),
         Fact("Season", c.season),
         *([Fact("Warping", str(c.warping_score))] if c.warping_score else []),
@@ -206,6 +207,12 @@ def infernal_facts(creature: Creature) -> list[Fact]:
         ("Weakness", c.weakness),
     ]
     return [Fact(label, value) for label, value in found if value]
+
+
+def faerie_role_facts(creature: Creature) -> list[Fact]:
+    """A faerie's role and the story it wants (RoP: Faerie pp. 140-142)."""
+    text = faerie_build.role_text(creature)
+    return [Fact("Role", text)] if text else []
 
 
 def confidence_text(creature: Creature) -> str:

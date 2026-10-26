@@ -49,6 +49,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import creation_characteristics as cch
+from ..rules import faerie_sympathy
 from ..rules.vf_eligibility import VirtueFlawChooser
 
 Owner = Character | Familiar | Creature | Laboratory
@@ -87,6 +88,8 @@ BLOOD_NAMES: tuple[str, ...] = (
     "Sidhe",
     "Spinnen",
     "Undine",
+    # A Faerie God's blood naming its Olympian (The Sundered Eagle p. 127).
+    *(f"Faerie God: {god}" for god in faerie_sympathy.OLYMPIANS),
 )
 
 #: Parameters that may be left blank: (label, placeholder).

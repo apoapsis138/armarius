@@ -37,6 +37,7 @@ from ..models import (
     next_season,
 )
 from ..rules import activities as rules
+from ..rules import ancient_integrations as ancient
 from ..rules import (
     apothecary,
     enchantment,
@@ -45,6 +46,7 @@ from ..rules import (
     merchants,
     philosophy,
     research,
+    scholarship,
     work_virtues,
 )
 from ..rules import book_seasons as bs
@@ -431,8 +433,7 @@ def apply_supplement(
             )
     for ability, xp in work.ability_xp:
         _add_xp(character, f"ability:{ability}", xp)
-    for trade, xp in work.reputation_xp:
-        cg.add_trade_reputation(character, trade, xp)
+    _apply_reputations(saga, character, work)
     if work.aging_roll:
         born = character.background.year_born
         if born is not None:
@@ -443,6 +444,25 @@ def apply_supplement(
                 random.Random(),
                 young=work.aging_young,
             )
+
+
+def _apply_reputations(
+    saga: Saga, character: Character, work: sw.SupplementWork
+) -> None:
+    """A season's Reputation xp: a craftsman's or artist's in his trade,
+    a scholar's Academic Reputation (his own or a recorded teacher's); and
+    an edited lecture commentary's Quality, once."""
+    for trade, xp in work.reputation_xp:
+        cg.add_trade_reputation(character, trade, xp)
+    for whose, xp in work.academic_xp:
+        scholar = saga.character(whose) if whose else character
+        if scholar is not None:
+            scholarship.add_academic_xp(scholar, xp)
+    for book_id, points in work.book_quality:
+        book = next((b for b in saga.books if b.id == book_id), None)
+        if book is not None and not book.glossed:
+            book.quality = (book.quality or 0) + points
+            book.glossed = True
 
 
 def _loyal(saga: Saga, tamer: Character, name: str) -> None:
@@ -723,7 +743,7 @@ def _apply_experiment(
     elif goal is not None and chart.discovery and not chart.wasted:
         lines.append(_record_discovery(plan, work, goal))
     if goal is not None:
-        _log_attempt(plan, lab, work, goal, kind, goal.points - points)
+        lines += _season_bonus_logged(magus, plan, lab, work, goal, kind, points)
         lines += _goal_reached(magus, goal)
     title = LAB_HAZARD if chart.lab_only else "Arcane Experimentation"
     lab.diary.append(
@@ -741,6 +761,25 @@ def _apply_experiment(
 #: The lab Diary's name for what an unsafe or Warping laboratory did to a
 #: season's work that wasn't an experiment.
 LAB_HAZARD = "Laboratory Mishap"
+
+
+def _season_bonus_logged(
+    magus: Character,
+    plan: SeasonPlan,
+    lab: Laboratory,
+    work: lab_seasons.LabWork,
+    goal: Breakthrough,
+    kind: str,
+    points_before: int,
+) -> list[str]:
+    """A Grigori Secret's extra point for a season of research that wasn't
+    wasted (Ancient Magic p. 67), then the season's line in the goal's
+    Research log with every point it gained."""
+    chart = work.experiment
+    assert chart is not None
+    lines = [] if chart.wasted else ancient.apply_season_bonus(magus, goal)
+    _log_attempt(plan, lab, work, goal, kind, goal.points - points_before)
+    return lines
 
 
 def _log_attempt(

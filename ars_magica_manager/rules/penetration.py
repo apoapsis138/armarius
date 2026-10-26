@@ -28,7 +28,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from ..models import Character, Saga, VirtueFlawInstance, character_age
-from . import effects, options, realms, senses
+from . import effects, gauntlet, options, realms, senses
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .derived import OFFICE_RESISTANCE
@@ -192,7 +192,9 @@ def magic_resistance(
             source=SOURCE,
         )
     ]
-    if parma_raised:
+    # An apprentice can't invoke his Parma Magica before its final key,
+    # given after the Oath (DE p. 169; Apprentices p. 61).
+    if parma_raised and not gauntlet.parma_withheld(magus):
         parma, parma_bonus = ability_score(magus, "Parma Magica")
         parma += parma_bonus
         if sharing:

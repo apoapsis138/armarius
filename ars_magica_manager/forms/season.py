@@ -52,6 +52,7 @@ from ..seasons import plans as season_plans_text
 from ..seasons.projection import as_then
 from . import activity as activity_forms
 from . import character as character_forms
+from . import scholar_seasons
 from . import virtue as virtue_forms
 
 #: A front-end's Virtue/Flaw chooser for the form: (saga, character, side)
@@ -218,6 +219,10 @@ _SEASON_READS: ChoiceReads = (
     ),
     ((book_seasons.COPY_BOOK,), lambda v: {"quick": bool(v.get("quick"))}),
     (
+        (book_seasons.TRANSLATE_BOOK,),
+        lambda v: {"culture_lore": bool(v.get("culture_lore"))},
+    ),
+    (
         (
             book_seasons.TEACH_ABBREVIATIONS,
             apprentice_seasons.TEACH_VIRTUE,
@@ -285,6 +290,9 @@ _SEASON_READS: ChoiceReads = (
         ),
         lambda v: {"die": v.get("die")},
     ),
+    # Art & Academe's artists and scholars: a work of art's choices, the
+    # post sought, the lecture commentary edited.
+    *scholar_seasons.READS,
 )
 
 
@@ -1058,6 +1066,8 @@ def _supplement_fields(
         *_ordeal_fields(saga, character, plan, activity_is, vf_picker),
         *_workshop_production_fields(plan, activity_is),
         *_philosophy_fields(character, plan, activity_is),
+        # Art & Academe's artists and scholars.
+        *scholar_seasons.fields(saga, character, plan, activity_is),
     ]
 
 
@@ -1374,6 +1384,15 @@ def _book_work_fields(
             "check",
             attr(existing, "quick", False),
             show_if=_activity_is(book_seasons.COPY_BOOK),
+        ),
+        DialogField(
+            "culture_lore",
+            "Has Area Lore 3 of the source culture",
+            "check",
+            attr(existing, "culture_lore", False),
+            show_if=_activity_is(book_seasons.TRANSLATE_BOOK),
+            hint="Unticked, the translation loses a Quality point for the culture "
+            "(never for a Hermetic text a magus translates).",
         ),
         DialogField(
             "text_id",

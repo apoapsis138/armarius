@@ -13,6 +13,8 @@ from ..commands import Form, SectionOps, delete
 from ..form_spec import DialogField, attr
 from ..markup import escape
 from ..models import ScoredTrait
+from ..rules import reputations
+from ..rules.faerie_sympathy import SYMPATHY, TEMPORARY
 from ..sections import LAB_TRAITS_SECTION
 from ..world import REPUTATION_TYPES
 
@@ -34,6 +36,10 @@ REPUTATION_SECTIONS = frozenset(
 )
 
 
+#: The sections whose Personality Traits may be faerie Sympathy Traits.
+SYMPATHY_SECTIONS = frozenset({"section-personality-traits"})
+
+
 def scored_trait_fields(
     name_placeholder: str,
     existing: ScoredTrait | None = None,
@@ -43,13 +49,16 @@ def scored_trait_fields(
     include_known: bool = False,
     include_reach: bool = False,
     replaceable: list[str] | None = None,
+    include_sympathy: bool = False,
 ) -> list[DialogField]:
     """A Personality Trait or Reputation: a name and a score, optionally
     bounded (covenant Reputations are -3..+3); for a Reputation, its kind
     and reach (`include_reach`) and, for a covenant's, whether the
     covenant knows of it (see inhabitants.reputation_loyalty()); and,
     given the `replaceable` bad Reputations' names, which one it replaces
-    (DE pp. 386-387)."""
+    (DE pp. 386-387); and for a character's Personality Trait, whether it
+    is a faerie Sympathy Trait and whether a temporary one
+    (`include_sympathy`; RoP: Faerie pp. 102-103, 127)."""
     fields = [
         DialogField(
             "name",
@@ -83,6 +92,16 @@ def scored_trait_fields(
                 attr(existing, "reach", ""),
                 placeholder="e.g. the Rhine Tribunal",
             ),
+            DialogField(
+                "bad",
+                "Bad Reputation?",
+                "check",
+                attr(existing, "bad", False),
+                hint="A bad Reputation with its own positive score, as an "
+                "Academic one is: Good and Bad ones are separate, and a roll "
+                "takes off the highest Bad one (Art & Academe p. 103). Any "
+                "other bad Reputation may instead be typed below 0.",
+            ),
         ]
     if replaceable:
         fields.append(
@@ -99,6 +118,29 @@ def scored_trait_fields(
                 "(DE pp. 386-387).",
             )
         )
+    if include_sympathy:
+        kind = attr(existing, "type", "")
+        fields += [
+            DialogField(
+                "sympathy",
+                "Faerie Sympathy Trait?",
+                "check",
+                kind in (SYMPATHY, TEMPORARY),
+                hint="A bond with the Faerie realm (Winter, Iron): a fitting "
+                "Ability's specialty on a stress die; rises with xp to the "
+                "Warping Score; sets the Faerie Rank (RoP: Faerie pp. 102-103).",
+            ),
+            DialogField(
+                "temporary",
+                "Temporary Sympathy Trait?",
+                "check",
+                kind == TEMPORARY,
+                hint="From sympathetic influence or a Grant rite: works as a "
+                "Sympathy Trait, but xp doesn't raise it and it isn't in the "
+                "Faerie Rank (RoP: Faerie pp. 103-105, 127). A tinted aura's "
+                "Traits are plain Personality Traits.",
+            ),
+        ]
     if include_known:
         fields.append(
             DialogField(
@@ -134,15 +176,29 @@ def trait_from(
 ) -> ScoredTrait:
     """The trait the form's values describe; an edited one keeps the deeds
     it has counted toward its next level."""
+    bad = bool(values.get("bad"))
     return ScoredTrait(
         name=values["name"],
-        score=values["score"],
+        # A Reputation marked bad keeps its score's size, above 0.
+        score=abs(values["score"]) if bad else values["score"],
         known=values.get("known", True),
-        type=values.get("type") or "",
+        type=_kind(values),
         reach=values.get("reach", ""),
         deeds=existing.deeds if existing is not None else 0,
         replaces=values.get("replaces") or "",
+        bad=bad,
     )
+
+
+def _kind(values: dict[str, Any]) -> str:
+    """The trait's kind: a temporary Sympathy Trait when that box is
+    ticked (it is one whether or not the first box is), a lasting one, or
+    the Reputation's type."""
+    if values.get("temporary"):
+        return TEMPORARY
+    if values.get("sympathy"):
+        return SYMPATHY
+    return values.get("type") or ""
 
 
 def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
@@ -156,6 +212,8 @@ def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
         bounds = {"include_known": True}
     if section in REPUTATION_SECTIONS:
         bounds["include_reach"] = True
+    if section in SYMPATHY_SECTIONS:
+        bounds["include_sympathy"] = True
 
     def form(title: str, index: int | None) -> Form:
         existing = traits[index] if index is not None else None
@@ -167,7 +225,7 @@ def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
                 traits[index] = trait_from(values, existing)
 
         replaceable = (
-            [t.name for t in traits if t is not existing and t.score < 0]
+            [t.name for t in traits if t is not existing and reputations.is_bad(t)]
             if section == "section-reputations"
             else None
         )

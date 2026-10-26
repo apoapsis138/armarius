@@ -1,0 +1,261 @@
+{
+  "attribution": "Ancient Magic's lost magics and their integration into Hermetic theory, from Ars Magica 5th Edition, Ancient Magic (The Language of Adam pp. 10-11, Grigori Magic pp. 65-74, Heron of Alexandria's Legacy pp. 75-80, The Hesperides pp. 89-92), with the Errata (p. 58) and the Definitive Edition's Arcane Discovery (pp. 277-281); the notes summarize the books. Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "entries": [
+    {
+      "id": "am_adamic",
+      "name": "The Language of Adam",
+      "pages": "10-11",
+      "summary": "Adamic, the first language, names things truly. A speaker fluent in it (Dead Language: Adamic 5 or more) can give anything within range of his voice a new name, a lasting Arcane Connection to it from then on, and has an Arcane Connection to any mundane thing (no Might Score) whose name he knows, valued as Hours for Penetration though it never fades. Any knowledge of Adamic adds +1 to the Penetration multiplier against a target with Magic Resistance named within Voice range in the casting; below fluency the caster also needs an Arcane Connection, as for any sympathetic bonus. A fluent speaker naming something for the first time shapes its destiny (the storyguide's story).",
+      "notes": "Adamic needs no integration: it works as soon as it is learned. A Gifted child with a positive Intelligence raised without other language may begin with Dead Language: Adamic 2 instead of a Living Language at 5, and cannot raise it past 2 except by instruction; he can teach those basics to others.",
+      "values": {
+        "fluent_score": 5,
+        "penetration_multiplier": 1,
+        "wild_child_score": 2
+      }
+    },
+    {
+      "id": "am_grigori",
+      "name": "Grigori Magic",
+      "pages": "65-74",
+      "errata": "Errata p. 58: Araquiel's Legacy uses Terram, not Herbam, vis (p. 67); Finding the Grigori breaks the Limit of Vis, not of Vim (p. 70).",
+      "summary": "Each chief of the Watchers taught a Secret, a Supernatural Virtue mastering one Technique and two Forms: a holder able to use those Arts may use their vis interchangeably, and a spell in one of them ignores requisites of the other two. Since the Flood the Secrets are tainted: vis used through one in a Divine or Infernal aura rolls double the botch dice, as does a botch of a spell that ignored a requisite this way. Made Hermetic, a Secret is a Legacy, free of the taint; the Hermetic Breakthrough beyond it breaks the Limit of Vis.",
+      "notes": "Library consultation (p. 68, optional): a season answering one fact-based question, consulting up to Intelligence + Artes Liberales books on the Ability; each gives its Quality in temporary experience toward this question only (summa level limits ignored the first season), then Intelligence + the boosted Ability against the question's Ease Factor; a botch gives a wrong answer. The experience lasts while the consulting goes on: four seasons without it, or any other research or lab work, lose it, unless a season's library notes kept it (for the writer alone). Exposure in Artes Liberales or the Ability. The covenant library's Library research season covers the simpler rule (Covenants p. 98).",
+      "integrations": [
+        {
+          "name": "Grigori Legacy",
+          "pages": "66-67",
+          "arts": "Muto Vim",
+          "effect": "A non-Hermetic Muto Vim effect letting Arts be used interchangeably, such as Harnessing the Essential Power (Form).",
+          "bonus_points": 1,
+          "bonus_virtues": [
+            "vf_araqiel_secret",
+            "vf_armaros_secret",
+            "vf_azael_secret",
+            "vf_baraqijal_and_kokabel_secret",
+            "vf_ezeqeel_secret",
+            "vf_sariel_secret",
+            "vf_semyaza_secret",
+            "vf_shamsiel_secret"
+          ]
+        },
+        {
+          "name": "Limit of Vis",
+          "pages": "66-67",
+          "arts": "Muto Vim",
+          "effect": "A non-Hermetic Muto Vim effect letting Arts be used interchangeably, such as Harnessing the Essential Power (Form).",
+          "bonus_points": 1,
+          "bonus_virtues": [
+            "vf_araqiel_secret",
+            "vf_armaros_secret",
+            "vf_azael_secret",
+            "vf_baraqijal_and_kokabel_secret",
+            "vf_ezeqeel_secret",
+            "vf_sariel_secret",
+            "vf_semyaza_secret",
+            "vf_shamsiel_secret",
+            "vf_grigori_legacy"
+          ]
+        }
+      ],
+      "insight_sources": [
+        {
+          "name": "The Enigma of the Sons of God, first book",
+          "kind": "text",
+          "insight": false,
+          "gives": "St. Nerius's Latin case against the Sethite reading: a tractatus on Dominion Lore, Quality 8, common in the Order's libraries. No Insight.",
+          "pages": "68-69"
+        },
+        {
+          "name": "The Enigma of the Sons of God, second book",
+          "kind": "text",
+          "gives": "The only complete Book of the Watchers, with St. Nerius's notes on Grigori magic and the legends of their relics: Insight. Three copies are known, none located; Durenmar's vanished in the mid-twelfth century.",
+          "pages": "69"
+        },
+        {
+          "name": "The Stelae of the Watchers",
+          "kind": "relic",
+          "gives": "Three obelisks in archaic Hebrew in the empty city of the Nephilim near Mount Hermon's summit: a summa on Magic Theory, Level 8, Quality 6, and Insight (a copy of the inscriptions gives Insight too). One with Blood of the Nephilim who studies them a season where they stand gains Baraqijal's Secret.",
+          "pages": "69-70"
+        },
+        {
+          "name": "Shamsiel, Holy Watcher",
+          "kind": "teacher",
+          "gives": "Imprisoned in a Divine regio (aura 5) on Mount Ararat's northern face, reached by calling his True Name at the stone near the summit. A pious magus who spends a year there and is taught gains Insight, Shamsiel's Secret, and the Pious Flaw if he lacks it.",
+          "pages": "71-73"
+        },
+        {
+          "name": "Azael, Fallen Watcher",
+          "kind": "teacher",
+          "insight": false,
+          "gives": "Bound in an Infernal regio (3) at Beth Hadudo, found by driving a goat into the desert from the peak. A magus who spends a year there and promises to spread sin gains Azael's Secret, tied to the Infernal, and the Corrupted Abilities Flaw.",
+          "pages": "73-74"
+        }
+      ],
+      "rolls": [
+        {
+          "what": "That The Enigma of the Sons of God exists",
+          "total": "Intelligence + Order of Hermes Lore",
+          "ease": 12,
+          "pages": "70"
+        },
+        {
+          "what": "Where its second volume is",
+          "total": "Intelligence + Order of Hermes Lore",
+          "ease": 24,
+          "pages": "70"
+        },
+        {
+          "what": "Where the capital of the Nephilim is",
+          "total": "Intelligence + Dominion Lore",
+          "ease": 15,
+          "pages": "70"
+        },
+        {
+          "what": "Where Shamsiel is imprisoned",
+          "total": "Intelligence + Dominion Lore",
+          "ease": 21,
+          "pages": "70"
+        },
+        {
+          "what": "Where Azael is imprisoned",
+          "total": "Intelligence + Dominion Lore",
+          "ease": 15,
+          "pages": "70"
+        }
+      ],
+      "secrets": [
+        {"vf_id": "vf_araqiel_secret", "name": "Araqiel's Secret", "technique": "Creo", "forms": ["Terram", "Corpus"]},
+        {"vf_id": "vf_armaros_secret", "name": "Armaros's Secret", "technique": "Rego", "forms": ["Imaginem", "Vim"]},
+        {"vf_id": "vf_azael_secret", "name": "Azael's Secret", "technique": "Perdo", "forms": ["Terram", "Imaginem"], "realm": "Infernal"},
+        {"vf_id": "vf_baraqijal_and_kokabel_secret", "name": "Baraqijal and Kokabel's Secret", "technique": "Intellego", "forms": ["Mentem", "Imaginem"]},
+        {"vf_id": "vf_ezeqeel_secret", "name": "Ezeqeel's Secret", "technique": "Muto", "forms": ["Aquam", "Auram"]},
+        {"vf_id": "vf_sariel_secret", "name": "Sariel's Secret", "technique": "Perdo", "forms": ["Mentem", "Ignem"]},
+        {"vf_id": "vf_semyaza_secret", "name": "Semyaza's Secret", "technique": "Creo", "forms": ["Corpus", "Herbam"]},
+        {"vf_id": "vf_shamsiel_secret", "name": "Shamsiel's Secret", "technique": "Rego", "forms": ["Ignem", "Vim"]}
+      ],
+      "spells": ["spell_harnessing_the_essential_power_of_form"],
+      "values": {
+        "tainted_botch_multiplier": 2
+      }
+    },
+    {
+      "id": "am_heron",
+      "name": "Heron of Alexandria's Legacy",
+      "pages": "75-80",
+      "errata": "Errata p. 58: the Mechanica Creation Level is 3 x the imbued effect's magnitude + modifiers (p. 77).",
+      "tradition": "trad_heronic_mechanici",
+      "summary": "Integrating Heron's mechanica needs uncorrupted Greek texts and working devices: studying them gives Insight, and a one-time Lab Total bonus to invent a Hermetic device copying one (a device's effect magnitude, or a text's Level or Quality, whichever is lower). Once an Insight Lab Text exists, enchanted items duplicating a mechanica's effects (not necessarily awakened) give the breakthrough points. Two Breakthroughs follow: Mutable Device and Awakened Device; building devices without vis, as the Mechanicians did, breaks the Lesser Limit of Creation.",
+      "notes": "To use a mechanica as well as study it, investigate it a season (DE Investigating Enchantments): a total above its effect's level means it can be worked. A Mutable Device is made like a lesser enchanted device with +10 to its level; a holder of Craft Mutable Device changes its effect in a week of lab work for a pawn of Vim vis, to another of the same Technique and Form whose level (with the +10) is no higher.",
+      "integrations": [
+        {
+          "name": "Mutable Device",
+          "pages": "79",
+          "effect": "Hermetic enchanted items duplicating a mechanica's effects."
+        },
+        {
+          "name": "Awakened Device",
+          "pages": "79-80",
+          "effect": "Hermetic enchanted items duplicating a mechanica's effects."
+        },
+        {
+          "name": "Vis-less devices",
+          "pages": "79",
+          "effect": "Hermetic enchanted items duplicating a mechanica's effects."
+        },
+        {
+          "name": "Awakened Device, after Mutable Device",
+          "pages": "79-80",
+          "effect": "Hermetic enchanted items duplicating a mechanica's effects.",
+          "requires": "Mutable Device",
+          "kind": "Minor",
+          "target": 30,
+          "gives": "Devices awakened as magical beings, building on Mutable Device: a Minor Breakthrough once Mutable Device is reached.",
+          "grant_kind": "Virtue",
+          "grant": "vf_awaken_device"
+        },
+        {
+          "name": "Mutable Device without the Virtue",
+          "pages": "79",
+          "requires": "Mutable Device",
+          "kind": "Major",
+          "target": 45,
+          "gives": "Mutable devices for any magus with a Lab Text, Craft Mutable Device no longer needed (DE p. 281's second Major Breakthrough).",
+          "learned": "Mutable Device is part of Hermetic theory: any magus with a Lab Text of one may make them, and use the property freely after."
+        }
+      ],
+      "insight_sources": [
+        {
+          "name": "Heron's uncorrupted texts",
+          "kind": "text",
+          "gives": "Insight, and a one-time Lab Total bonus equal to the text's Level or Quality, whichever is lower, to invent a Hermetic device it describes. Only Greek copies made by holders of Mechanica of Heron serve; Arabic texts and their Latin translations are corrupt.",
+          "pages": "75-76, 79"
+        },
+        {
+          "name": "A working mechanica",
+          "kind": "relic",
+          "gives": "Insight, and a one-time Lab Total bonus equal to its effect's magnitude to invent a Hermetic device mimicking it. A broken mechanica gives no Insight.",
+          "pages": "76"
+        },
+        {
+          "name": "An anima",
+          "kind": "relic",
+          "gives": "An awakened mechanica: an Insight for each of its effects, or a teacher, as the storyguide decides.",
+          "pages": "76"
+        }
+      ],
+      "rolls": [
+        {
+          "what": "Study a mechanica (with the first season studying it)",
+          "total": "Intellego Vim Lab Total + a stress die",
+          "ease_text": "the device's effect level",
+          "pages": "79"
+        }
+      ],
+      "values": {
+        "mutable_device_levels": 10,
+        "mutable_alter_vis": 1,
+        "minimum_creation_level": 3,
+        "creation_levels_per_pound": 3,
+        "awaken_anima_base": 9
+      }
+    },
+    {
+      "id": "am_hesperides",
+      "name": "The Hesperides",
+      "pages": "89-92",
+      "errata": "Errata p. 58: A Comparison of the Positions of the Fixed Stars is not a Mystery spell; it is Touch, level 15, and holds a circle 1000 paces across (p. 91).",
+      "summary": "Ptolemy's coordinates, two numbers measured from an origin far to the southwest, are Arcane Connections to the places they name. They never fade (they rest on the Law of Names), can be written, carried in mind or designed into items, and given away while kept. They need no new Virtue or Ability: a season learning to measure the array of fixed stars (an apprentice of a master who knows it learns it in training), then calibrating the system at its origin, after which any careful stellar observation gives where the observer stands. Known coordinates are used by day, indoors or underground.",
+      "notes": "The origin can't be visited; it is derived from three readings: two at one longitude a known, large distance apart (for the Equator), and one on the Zero Longitude, whose only land is the Purple Islands; the Garden of the Hesperides on Junonia, Ladon's lair. A system with any other zero mysteriously fails. Ptolemy's own 8,000 coordinates are exact around Alexandria, within a few miles inside the old Western Empire, and poor beyond it.",
+      "rolls": [
+        {
+          "what": "A stellar observation: the coordinates of where the observer stands",
+          "total": "Intelligence + Artes Liberales",
+          "ease": 15,
+          "pages": "90"
+        },
+        {
+          "what": "Classical geography of the Purple Islands",
+          "total": "Intelligence + Artes Liberales",
+          "ease": 6,
+          "pages": "91"
+        },
+        {
+          "what": "The legends of the Hesperides (more at 12 or higher)",
+          "total": "Intelligence + Magic Lore",
+          "ease": 9,
+          "pages": "91-92"
+        }
+      ],
+      "spells": ["spell_a_comparison_of_the_positions_of_the_fixed_stars"],
+      "values": {
+        "observation_hours": 4,
+        "observation_hours_timepiece": 2,
+        "calculation_hours": 4,
+        "calculation_hours_greatest_compilation": 2,
+        "calculation_hours_handy_tables": 1,
+        "handy_tables_bonus": 1,
+        "learning_seasons": 1
+      }
+    }
+  ]
+}

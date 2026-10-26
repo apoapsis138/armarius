@@ -174,6 +174,8 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "troupe",
                 "worksheet",
                 "worksheet_feedback",
+                # Transylvania's meeting steps.
+                "transylvania_meeting",
             }
         ),
     ),

@@ -19445,7 +19445,7 @@
       "base_level": 10,
       "source": "AM",
       "page": "91",
-      "description": "Special: Requires Celestial Magic\n\nThis spell charts the course of the light emanating from the fixed stars. It then compares the angles between these lines, to provide a unique pair of numbers, representing the array. This is the Ptolemaic coordinate for the caster's position, provided that the caster knows the array at origin. A magus is unable to hold coordinates in her mind with sufficient precision to represent a circle less than 1000 paces across. Notebooks or devices with coordinates in them allow greater precision.\n\n(Base 10 given in The Mysteries Revised Edition, +1 Touch)"
+      "description": "This spell charts the course of the light emanating from the fixed stars. It then compares the angles between these lines, to provide a unique pair of numbers, representing the array. This is the Ptolemaic coordinate for the caster's position, provided that the caster knows the array at origin. A magus is unable to hold coordinates in her mind with sufficient precision to represent a circle less than 1000 paces across. Notebooks or devices with coordinates in them allow greater precision.\n\n(Base 10 given in The Mysteries Revised Edition, +1 Touch)"
     },
     {
       "id": "spell_bitter_taste_of_betrayal",

@@ -64,6 +64,7 @@ from . import (
     spell_levels,
     spell_teaching,
     supplement_work,
+    turbulence,
     verditius,
     warping,
 )
@@ -1427,9 +1428,13 @@ def _with_options(
         experimenting = plan.experimenting and plan.activity in EXPERIMENTAL
         helpers = laboratory_seasons.assistants(saga, magus, plan)
         for helper in helpers[: lab.max_assistants(magus)]:
-            extra += lab.helper_lines(
+            aid = lab.helper_lines(
                 helper, technique, form, activity, experimenting=experimenting
             )
+            extra += aid
+            # An apprentice's uncontrolled Turbulence halves his aid
+            # (Apprentices p. 56).
+            extra += turbulence.halved_aid_lines(saga, helper, plan, aid)
         # A bound familiar with Magic Theory helps too, besides the
         # assistants Leadership allows (DE p. 265).
         familiar = saga.familiar_of(magus.id)

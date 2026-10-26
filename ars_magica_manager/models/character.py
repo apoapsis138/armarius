@@ -27,6 +27,7 @@ from .traits import (
     Spell,
     VirtueFlawInstance,
     new_instance_id,
+    reputation_from_dict,
 )
 from .world import FULL, Link
 
@@ -945,10 +946,7 @@ class Character:
             ScoredTrait(**known_fields(ScoredTrait, t))
             for t in d.get("personality_traits", [])
         ]
-        d["reputations"] = [
-            ScoredTrait(**known_fields(ScoredTrait, t))
-            for t in d.get("reputations", [])
-        ]
+        d["reputations"] = [reputation_from_dict(t) for t in d.get("reputations", [])]
         d["hermetic"] = HermeticBackground.from_dict(d.get("hermetic") or {})
         if "road_magic" not in (data.get("hermetic") or {}) and any(
             vf.get("vf_id") == MERCURIAN_MAGIC for vf in data.get("virtues_flaws", [])

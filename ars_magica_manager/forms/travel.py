@@ -74,12 +74,12 @@ def traveller_name(saga: Saga) -> Callable[[str], str]:
     return lambda character_id: _character_name(saga, character_id)
 
 
-def _choose_traveller(saga: Saga) -> Callable[[Any], Choose]:
-    """Who goes's chooser: one of the saga's characters."""
+def choose_traveller(saga: Saga, title: str = "Who Goes") -> Callable[[Any], Choose]:
+    """Who goes's chooser (and The Hunt's): one of the saga's characters."""
 
     def choose(_current: Any = None) -> Choose:
         return Choose(
-            "Who Goes",
+            title,
             lambda: [
                 Choice(escape(c.name), c.id)
                 for c in sorted(saga.characters, key=lambda c: c.name)
@@ -168,7 +168,7 @@ def travel_fields(saga: Saga, start: str | None = None) -> list[DialogField]:
             display=lambda chosen: (
                 "; ".join(name(c) for c in chosen) or "(no one named)"
             ),
-            items=ListEditor(name, _choose_traveller(saga), "Who Goes"),
+            items=ListEditor(name, choose_traveller(saga), "Who Goes"),
             fills=_follows_who(),
             hint="The saga's characters who set out; Travellers counts them.",
         ),

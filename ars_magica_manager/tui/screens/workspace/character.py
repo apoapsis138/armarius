@@ -29,17 +29,21 @@ from .... import possessions as pos
 from .... import spells as spl
 from .... import theban_customs as byzantine
 from ....arts import ARTS
+from ....commands import Command
 from ....forms import agents as agent_forms
 from ....forms import apothecary as apothecary_forms
 from ....forms import beast as beast_forms
+from ....forms import careers as career_forms
 from ....forms import character as character_forms
 from ....forms import craft_magic as craft_forms
 from ....forms import experimental_effects
+from ....forms import gauntlet as gauntlet_forms
 from ....forms import goetic as goetic_forms
 from ....forms import grogs as grog_forms
 from ....forms import menu as menu_forms
 from ....forms import sin as sin_forms
 from ....forms import spell as spell_forms
+from ....forms import turbulence as turbulence_forms
 from ....markup import escape
 from ....models import (
     Ability,
@@ -281,6 +285,16 @@ class CharacterActions(WorkspaceBase):
         ingredient or preserving one, kept in the Diary."""
         self._apothecary_step(apothecary_forms.store_form, "section-char-season")
 
+    def action_artist_career(self) -> None:
+        """More's An Artist's Career beside Abilities: a sponsor sought or
+        kept, a performance, an Artist Reputation deed, kept in the Diary."""
+        self._apothecary_step(career_forms.artist_form, "section-char-season")
+
+    def action_scholar_career(self) -> None:
+        """More's A Scholar's Career beside Abilities: a place at a school
+        sought, or an Academic Reputation deed, kept in the Diary."""
+        self._apothecary_step(career_forms.scholar_form, "section-char-season")
+
     def _apothecary_step(self, form: Callable[..., Any], section: str) -> None:
         character = self.selected_character
         if character is None:
@@ -386,6 +400,65 @@ class CharacterActions(WorkspaceBase):
                 self.notify("\n".join(str(line) for line in end))
 
         run_steps(self.app, goetic_forms.goetic_form(self.saga, character), done)
+
+    # -- an apprentice's magic and the Gauntlet (Apprentices) --
+
+    def _apprentice_step(
+        self, form: Command, *sections: str, tree: bool = False
+    ) -> None:
+        def done(end: object) -> None:
+            self._commit(*sections, "tab-diary", tree=tree)
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, form, done)
+
+    def action_turbulence(self) -> None:
+        """More's Turbulence: the rolls to incur and control one, kept in
+        the Diary (and on a laboratory season's Assist plan)."""
+        character = self.selected_character
+        if character is None:
+            return
+        self._apprentice_step(
+            turbulence_forms.turbulence_form(self.saga, character),
+            "section-char-info",
+            "section-char-season",
+        )
+
+    def action_gauntlet(self) -> None:
+        """More's Gauntlet on an apprentice; passed, he becomes a magus."""
+        character = self.selected_character
+        if character is None:
+            return
+        self._apprentice_step(
+            gauntlet_forms.gauntlet_form(self.saga, character),
+            "section-char-info",
+            "section-vf-virtues",
+            "section-vf-flaws",
+            tree=True,
+        )
+
+    def action_lose_the_gift(self) -> None:
+        """More's Lose the Gift: lost for good, or suppressed."""
+        character = self.selected_character
+        if character is None:
+            return
+        self._apprentice_step(
+            gauntlet_forms.lose_gift_form(self.saga, character),
+            "section-char-info",
+            "section-vf-virtues",
+            "section-vf-flaws",
+        )
+
+    def action_learn_cantation(self) -> None:
+        """More's Learn a Cantation on Known Spells (a saga option)."""
+        character = self.selected_character
+        if character is None:
+            return
+        self._apprentice_step(
+            gauntlet_forms.cantation_form(self.saga, character),
+            "section-known-spells",
+        )
 
     def action_recovery_roll(self) -> None:
         """More's Recovery Roll on Health: a roll for each wound now."""

@@ -182,6 +182,7 @@ _CHARACTER_TRAITS = _TraitList(
     "Personality Trait",
     "e.g. Brave",
     "_selected_personality_trait",
+    prompt_options={"include_sympathy": True},
 )
 
 
@@ -308,6 +309,9 @@ _STORYGUIDE_ACTIONS = frozenset(
         # The Byzantine customs that lay a curse on a sheet.
         "invoke_oath",
         "mothers_curse",
+        # A hunt on a lord's or covenant's manor.
+        "hunt_on_manor",
+        "area_lore_on_manor",
     }
 )
 

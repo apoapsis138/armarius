@@ -126,6 +126,9 @@ class Meeting(TypedDict, total=False):
     #: The Rhine's introduction of new magi and conferral of sigils
     #: (rhine_meeting.py).
     rhine_rite: dict[str, Any]
+    #: Transylvania's Praeco's purse and Curantis, by step key
+    #: (transylvania_meeting.py).
+    transylvania: dict[str, dict[str, Any]]
 
 
 @dataclass

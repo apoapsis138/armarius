@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 from .. import ahead
 from ..commands import Act
 from ..forms import ahead as ahead_forms
+from ..forms import hunting as hunting_forms
 from ..forms import travel as travel_forms
 from ..models import SEASONS, Covenant, Saga, season_order
 from .character_sheet import section
@@ -163,6 +164,21 @@ def ahead_section(
             "Travel", p, lambda: run(travel_forms.travel(saga, covenant)), "more"
         )
     )
+    # The hunt and Area Lore on the road.
+    buttons += [
+        edit_button(
+            hunting_forms.HUNT_TITLE,
+            p,
+            lambda: run(hunting_forms.hunt_on_journey(saga, covenant)),
+            "more",
+        ),
+        edit_button(
+            hunting_forms.AREA_LORE_TITLE,
+            p,
+            lambda: run(hunting_forms.area_lore_on_journey(saga, covenant)),
+            "more",
+        ),
+    ]
     return section(
         ahead.title(saga, covenant),
         p,

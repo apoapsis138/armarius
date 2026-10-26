@@ -31,11 +31,12 @@ from .... import familiars as fam
 from ....actions import (
     NodeKind,
 )
-from ....commands import Go
+from ....commands import Command, Go
 from ....forms import choice_templates as choice_forms
 from ....forms import creation as creation_forms
 from ....forms import creature as creature_forms
 from ....forms import go_to as go_to_forms
+from ....forms import hunting as hunting_forms
 from ....forms import neighbour as neighbour_forms
 from ....forms import tribunal as tribunal_forms
 from ....markup import escape
@@ -633,3 +634,25 @@ class RecordActions(WorkspaceBase):
             threats.begin_command(self.saga, record),
             lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
         )
+
+    # -- the hunt and Area Lore on a manor (Lords of Men, City & Guild) --
+
+    def _on_manor(self, build: Callable[..., Command]) -> None:
+        """Run `build(saga, holder, row)` on the chosen manor."""
+        found = self._manors_holder()
+        row = found[0].section_row(MANORS_SECTION) if found is not None else None
+        if found is None or row is None:
+            return
+        run_steps(
+            self.app,
+            build(self.saga, found[1], row),
+            lambda _end: self._commit(MANORS_SECTION, DIARY_SECTION),
+        )
+
+    def action_hunt_on_manor(self) -> None:
+        """More's The Hunt on the chosen manor."""
+        self._on_manor(hunting_forms.hunt_on_manor)
+
+    def action_area_lore_on_manor(self) -> None:
+        """More's Area Lore in the chosen manor's hinterland."""
+        self._on_manor(hunting_forms.area_lore_on_manor)

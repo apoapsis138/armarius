@@ -47,7 +47,7 @@ def test_a_covenant_reputation_has_no_cap_and_may_be_unknown():
     form = ops.add()
     assert isinstance(form, commands.Form)
     keys = [f.key for f in form.fields()]
-    assert keys == ["name", "score", "type", "reach", "known"]
+    assert keys == ["name", "score", "type", "reach", "bad", "known"]
     # No cap: a Major Prestige Boon's Reputation is 9 (DE p. 184).
     _values, problem = _answer(form, {"name": "Famed", "score": "9"})
     assert problem is None

@@ -7,7 +7,9 @@ Power: Faerie, Chapter Five, pp. 104-111).
   The Cradle and the Crescent pp. 77-78). The Characteristic and Ability bonuses are
   worked out where those scores are (rules.creation_characteristics,
   rules.scores); the rest are situational, and shown in the Virtue's
-  details as the book gives them.
+  details as the book gives them. A Faerie God's blood may name its
+  Olympian ("Faerie God: Zeus"), whose Sympathy Traits it chooses from
+  (The Sundered Eagle p. 127).
 - A Lesser or Greater Charm Flaw ties a Virtue to a secret charm: the
   Virtue can't be a Social Status Virtue or about the character's
   background, can't affect experience points, must change what he can do
@@ -23,9 +25,10 @@ Power: Faerie, Chapter Five, pp. 104-111).
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from ..models import Character, VirtueFlawDef, VirtueFlawInstance
+from . import faerie_sympathy
 from .scores import ability_level
 
 SOURCE = "Realms of Power: Faerie, Chapter Five: Faerie Blood and Charms, pp. 104-111"
@@ -162,13 +165,27 @@ BLOODS: dict[str, Blood] = {
 }
 
 
+#: A Faerie God's blood naming its god: "Faerie God: Zeus".
+GOD_PREFIX = "faerie god:"
+
+
 def blood_of(instance: VirtueFlawInstance) -> Blood | None:
     """The variety a Faerie Blood Virtue names (its "blood"), None if the
-    book has none by that name."""
+    book has none by that name. A Faerie God's blood naming an Olympian
+    has that god's Sympathy Traits (The Sundered Eagle p. 127)."""
     if instance.vf_id not in BLOODS_IDS:
         return None
     name = instance.params.get("blood", "").casefold().removesuffix(" blood")
-    return BLOODS.get(name.strip().replace("'", "").replace(LEFT_QUOTE, ""))
+    name = name.strip().replace("'", "").replace(LEFT_QUOTE, "")
+    if name.startswith(GOD_PREFIX):
+        god = faerie_sympathy.olympian(name.removeprefix(GOD_PREFIX))
+        if god is not None:
+            return replace(
+                BLOODS["faerie god"],
+                sympathies=f"{god.text()} (The Sundered Eagle p. 127)",
+            )
+        name = "faerie god"
+    return BLOODS.get(name)
 
 
 def blood_text(

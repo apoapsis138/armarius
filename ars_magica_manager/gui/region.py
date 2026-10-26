@@ -21,6 +21,7 @@ from .. import (
     towns,
 )
 from ..commands import Command, SectionOps
+from ..forms import hunting as hunting_forms
 from ..forms import neighbour as neighbour_forms
 from ..models import Neighbour, Saga
 from ..neighbour_lists import KindBlock, KindList, KindTab
@@ -274,7 +275,18 @@ class KindChapters:
                 ("Battle Event", "more", lambda row: battles.event_for(saga, n, row))
             ],
             MANORS_SECTION: [
-                ("Assart", "more", lambda row: manors.assart_form(saga, n, row))
+                ("Assart", "more", lambda row: manors.assart_form(saga, n, row)),
+                # The hunt and Area Lore on the chosen manor.
+                (
+                    hunting_forms.HUNT_TITLE,
+                    "more",
+                    lambda row: hunting_forms.hunt_on_manor(saga, n, row),
+                ),
+                (
+                    hunting_forms.AREA_LORE_TITLE,
+                    "more",
+                    lambda row: hunting_forms.area_lore_on_manor(saga, n, row),
+                ),
             ],
             ESTABLISHMENTS_SECTION: [
                 (

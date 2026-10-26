@@ -157,6 +157,7 @@ def _scored_trait_dialog(
     max_score: int | None = None,
     include_known: bool = False,
     include_reach: bool = False,
+    include_sympathy: bool = False,
 ) -> FieldsDialog[ScoredTrait]:
     """A Personality Trait or Reputation (trait_forms.scored_trait_fields)."""
     return FieldsDialog(
@@ -168,6 +169,7 @@ def _scored_trait_dialog(
             max_score=max_score,
             include_known=include_known,
             include_reach=include_reach,
+            include_sympathy=include_sympathy,
         ),
         validate=lambda values: trait_forms.score_problem(values, min_score, max_score),
         build=trait_forms.trait_from,

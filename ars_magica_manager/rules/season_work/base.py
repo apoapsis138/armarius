@@ -114,6 +114,12 @@ class SupplementWork:
     formula_designs: list[Formula] = field(default_factory=list)
     lab_texts: list[str] = field(default_factory=list)
     products: list[tuple[str, int]] = field(default_factory=list)
+    #: Academic Reputation experience (Art & Academe p. 103): (whose: a
+    #: character id, "" for the one planned; xp, negative toward a Bad one).
+    academic_xp: list[tuple[str, int]] = field(default_factory=list)
+    #: A book's Quality raised (an edited lecture commentary): (book id,
+    #: Quality points), the book marked glossed so it is raised once.
+    book_quality: list[tuple[str, int]] = field(default_factory=list)
 
 
 #: What a season does beyond experience, written into `result` (rolls made

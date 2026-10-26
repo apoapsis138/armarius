@@ -248,7 +248,7 @@
         "a": "FieldsDialog: Add a Calendar Entry",
         "e": "FieldsDialog: Edit a Calendar Entry",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Travel",
+        "m": "MenuScreen: Travel, The Hunt, Area Lore",
         "slash": "(disabled)"
       }
     },
@@ -418,7 +418,7 @@
         "a": "FieldsDialog: Add a Manor",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "MenuScreen: Buy a Manor, Assart",
+        "m": "MenuScreen: Buy a Manor, Assart, The Hunt, Area Lore",
         "slash": "(disabled)"
       }
     },
@@ -500,7 +500,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse",
+        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career",
         "slash": "(disabled)"
       }
     },
@@ -820,7 +820,7 @@
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "d": "notice: Nothing is planned for Leandro in Spring 1220.",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Turbulence: Leandro",
         "slash": "(disabled)"
       }
     },
@@ -2020,7 +2020,7 @@
         "a": "FieldsDialog: Add a Manor",
         "e": "(nothing)",
         "d": "(nothing)",
-        "m": "MenuScreen: Buy a Manor, Assart, Go To",
+        "m": "MenuScreen: Buy a Manor, Assart, Go To, The Hunt, Area Lore",
         "slash": "(disabled)"
       }
     },
@@ -2624,7 +2624,7 @@
         "a": "FieldsDialog: Add a Calendar Entry",
         "e": "FieldsDialog: Edit a Calendar Entry",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Travel",
+        "m": "MenuScreen: Travel, The Hunt, Area Lore",
         "slash": "(disabled)"
       }
     },

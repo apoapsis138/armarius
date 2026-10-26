@@ -6,11 +6,20 @@ works of art (progress records carried season to season)."""
 from __future__ import annotations
 
 import random
+from dataclasses import replace
 
-from ... import book_kinds
-from ...models import Book, Character, Formula, Saga, SeasonPlan
+from ... import book_kinds, catalog
+from ...models import ArtworkPlan, Book, Character, Formula, Saga, SeasonPlan
 from .. import activity_groups as groups
-from .. import apothecary, dice, philosophy, reputations
+from .. import (
+    apothecary,
+    artistry,
+    book_seasons,
+    dice,
+    philosophy,
+    reputations,
+    scholarship,
+)
 from ..rounding import round_down, round_up
 from ..scores import ability_level
 from .base import (
@@ -37,10 +46,8 @@ ARTWORK_SOURCE = "Art & Academe, Chapter Eight: Artists, Time Spent Creating, p.
 #: Seasons to make a work of art: Aesthetic Quality / ARTWORK_QUALITY_PER_SEASON,
 #: rounded up (at least one).
 ARTWORK_QUALITY_PER_SEASON = 10
-#: Free Expression's bonus to create a work of art (Ars Magica Definitive
-#: Edition, Chapter Four: Virtues and Flaws); Inspirational's here is
-#: (source to confirm).
-ARTWORK_VIRTUE_BONUS = 3
+#: Free Expression's and Inspirational's bonus to create a work of art.
+ARTWORK_VIRTUE_BONUS = artistry.VIRTUE_BONUS
 FORMULA_SOURCE = (
     "Art & Academe, Chapter Five: Experimental Philosophy, Researching Formulae, p. 70"
 )
@@ -242,6 +249,73 @@ def _medical_season(
     )
 
 
+def _art_of(plan: SeasonPlan) -> ArtworkPlan:
+    return plan.artwork if plan.artwork is not None else ArtworkPlan()
+
+
+def _experiment(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random,
+    result: SupplementWork,
+) -> tuple[artistry.Aesthetic, str]:
+    """The experiment: a simple die / 2 (rounded up) on the Aesthetic
+    Quality, then at once a stress die on the Artist Experimentation
+    Results, both in one step (A&A p. 124). The book gives no season for
+    a piece of several; rolling them in the finishing season is the app's
+    choice, since a plan keeps nothing between seasons. A ruined piece
+    costs Reputation xp equal to its presumed Aesthetic Quality (p. 126),
+    the Quality with the die's bonus."""
+    craft = subject_ability(plan)
+    die = dice.simple_die(rng)
+    found = artistry.aesthetic_quality(
+        character,
+        craft,
+        _art_of(plan),
+        characteristic=plan.characteristic,
+        reputation=artistry.reputation_score(character, craft),
+        other=plan.other_modifier,
+        experiment_die=die,
+    )
+    roll = dice.stress_die(rng, 1, saga=saga)
+    outcome = artistry.experiment_result(roll.value, roll.botched)
+    shown = "a botch" if roll.botched else str(roll.value)
+    result.notes.append(
+        f"Experimenting: simple die {die} (+{round_up(die / 2)}); the stress die "
+        f"{shown}: {artistry.EXPERIMENT_TEXT[outcome]} (A&A p. 124)."
+    )
+    return found, outcome
+
+
+def _experiment_reputation(
+    character: Character,
+    craft: str,
+    quality: int,
+    outcome: str,
+    result: SupplementWork,
+) -> int:
+    """What the experiment's result does to the Artist Reputation; returns
+    the piece's Quality after it (a disparaged piece loses 1)."""
+    name = artistry.trade(craft)
+    found = artistry.artist_reputation(character, craft)
+    rep = found.score if found is not None else 0
+    if outcome == "work_praised":
+        result.reputation_xp.append((name, max(0, quality)))
+    elif outcome == "artist_praised":
+        result.reputation_xp.append((name, artistry.xp_to_next(found)))
+    elif artistry.loses_nothing(rep):
+        if outcome in ("disaster", "ruined", "disparaged"):
+            result.notes.append("Artist Reputation 10: he loses no Reputation xp.")
+    elif outcome in ("disaster", "disparaged"):
+        lost = artistry.xp_of_a_level(found)
+        if lost:
+            result.reputation_xp.append((name, -lost))
+    elif outcome == "ruined":
+        result.reputation_xp.append((name, -max(0, quality)))
+    return quality - 1 if outcome == "disparaged" else quality
+
+
 def _create_art(
     saga: Saga,
     character: Character,
@@ -251,17 +325,114 @@ def _create_art(
 ) -> None:
     name = plan.title.strip()
     craft = subject_ability(plan)
-    if craft.startswith(("Profession", "Craft: Poetry")):
-        base = character.characteristics.communication
-    else:
-        base = character.characteristics.dexterity
+    art = _art_of(plan)
+    rep = artistry.reputation_score(character, craft)
+
+    def quality_of(piece: ArtworkPlan) -> artistry.Aesthetic:
+        return artistry.aesthetic_quality(
+            character,
+            craft,
+            piece,
+            characteristic=plan.characteristic,
+            reputation=rep,
+            other=plan.other_modifier,
+        )
+
+    found = quality_of(art)
+    time = artistry.creation_time(
+        character, art, quality_of(replace(art, rushed=False)).quality
+    )
+    record = progress_of(character, "artwork", name)
+    before = record.points if record is not None and not record.done else 0
+    finishing = before + 1 >= time.seasons
+    result.progress.append(("artwork", name, time.seasons, 1))
+    result.notes.append(
+        f"Aesthetic Quality {found.quality} = {' '.join(found.terms)}; "
+        f"{time.days:g} days ({'; '.join(time.notes)}): {time.seasons} season(s)"
+        " (A&A pp. 123-125)."
+    )
+    quality, outcome = found.quality, ""
+    if finishing and art.experiment:
+        if rng is None:
+            result.notes.append("The experiment is rolled when the season is played.")
+        else:
+            tried, outcome = _experiment(saga, character, plan, rng, result)
+            quality = _experiment_reputation(
+                character, craft, tried.quality, outcome, result
+            )
+    if outcome not in ("disaster", "ruined") and artistry.season_xp(quality, rep):
+        result.reputation_xp.append((artistry.trade(craft), 1))
+        result.notes.append(
+            f"Aesthetic Quality over three times his {artistry.trade(craft)} "
+            f"Reputation {rep}: 1 xp in it (A&A p. 126)."
+        )
+    if art.instill_level:
+        _instill(character, craft, art, name, result)
+    if not finishing:
+        return
+    if outcome in ("disaster", "ruined"):
+        result.notes.append(f"{name} is lost: nothing to show for it.")
+        return
+    pieces = " (two pieces)" if art.base == "pair" else ""
+    result.notes.append(f"{name} finished{pieces}: Aesthetic Quality {quality}.")
+    if art.overtime:
+        result.aging_roll = True
+        result.notes.append("Overtime: an Aging roll now it is done (A&A p. 124).")
+    if art.base not in ("years", "decades"):
+        weeks = max(0.0, time.days / 2 / 7 - art.assistants)
+        result.notes.append(
+            f"An Arcane Connection to him for {weeks:g} weeks (half the time to "
+            "make it, a week less for each assistant; A&A p. 125)."
+        )
+
+
+def _instill(
+    character: Character,
+    craft: str,
+    art: ArtworkPlan,
+    name: str,
+    result: SupplementWork,
+) -> None:
+    """A maestro's spell-like effect instilled as he works (A&A p. 135)."""
+    total = artistry.instill_total(character, craft, art)
+    points = max(0, total - art.instill_level)
+    result.progress.append(("instilling", name, art.instill_level, points))
+    result.notes.append(
+        f"Instilling a level {art.instill_level} effect: total {total}, {points} "
+        f"point(s) toward it; {artistry.instill_fatigue(art.instill_level)} "
+        "Fatigue level(s) lost while he works on it (A&A p. 135)."
+    )
+
+
+def _create_art_problems(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> list[str]:
+    """A work of art is named and made with a Craft or Profession; its
+    assistants, wound and magic must be his to use (A&A pp. 124-135)."""
+    named = needs_name(saga, character, plan)
+    if named:
+        return named
+    craft = subject_ability(plan)
+    if craft and not craft.startswith(("Craft", "Profession")):
+        return ["A work of art is made with a Craft or Profession (A&A p. 123)."]
+    art = _art_of(plan)
+    found: list[str] = []
     ids = {vf.vf_id for vf in character.virtues_flaws}
-    aq = base + ability_level(character, craft) + plan.other_modifier
-    if ids & {"vf_inspirational", "vf_free_expression"}:
-        aq += ARTWORK_VIRTUE_BONUS
-    seasons = max(1, round_up(aq / ARTWORK_QUALITY_PER_SEASON))
-    result.progress.append(("artwork", name, seasons, 1))
-    result.notes.append(f"Aesthetic Quality {aq}; {seasons} season(s) to make it.")
+    if art.assistants and artistry.PROLIFIC in ids:
+        found.append("A Prolific Artist works too fast for assistants (A&A p. 134).")
+    elif art.assistants > artistry.most_assistants(character):
+        found.append(
+            f"{character.name} can use at most {artistry.most_assistants(character)} "
+            "assistants (his Leadership, A&A p. 125)."
+        )
+    if art.wound and artistry.LIFE_LINKED not in ids:
+        found.append("Only Life-Linked Art adds a self-inflicted wound (A&A p. 134).")
+    if art.rushed and art.double_time:
+        found.append("Choose half the time or twice the time, not both.")
+    problem = artistry.instill_problem(character, craft, art)
+    if problem:
+        found.append(problem)
+    return found
 
 
 def _research_formula(
@@ -357,6 +528,7 @@ def _record_lectures(
         )
     )
     result.notes.append(f"A tractatus of the lectures, Quality {quality}.")
+    _lecture_xp(saga, teacher, result)
 
 
 register(
@@ -459,15 +631,16 @@ register(
 register(
     SimpleActivity(
         "create_art",
-        "Create a work of art / seek a sponsor",
-        "The work's Aesthetic Quality; Reputation. Exposure 2.",
+        "Create a work of art",
+        "The work's Aesthetic Quality and the time to make it; Artist "
+        "Reputation xp. Exposure 2.",
         ACADEME,
         "920",
         who=COMPANIONS,
         group=groups.WORK,
     ),
     _create_art,
-    needs_name,
+    _create_art_problems,
 )
 register(
     SimpleActivity(
@@ -485,4 +658,169 @@ register(
         group=groups.STUDY,
     ),
     experience_only,
+)
+
+
+# -- scholars: editing lectures, seeking a post (A&A pp. 89, 102-103) --------
+
+SCHOLAR_SOURCE = (
+    "Art & Academe, Chapter Six, Acquiring a Teaching Position, p. 89; Chapter "
+    "Seven, Lecture Commentaries and Academic Reputations, pp. 102-103"
+)
+SEEK_POST = "seek_post"
+EDIT_LECTURES = "edit_lectures"
+#: An edited lecture commentary's Quality gain, before the writer's Virtues.
+EDIT_QUALITY = 1
+
+
+def _lecture_xp(saga: Saga, teacher: Character, result: SupplementWork) -> None:
+    """Every second lecture commentary of a teacher's earns him an Academic
+    Reputation xp (A&A p. 103)."""
+    made = 1 + sum(
+        1
+        for b in saga.books
+        if b.opus == book_kinds.LECTURE_COMMENTARY and b.author_id == teacher.id
+    )
+    if made % 2 == 0:
+        result.academic_xp.append((teacher.id, 1))
+        result.notes.append(
+            f"{teacher.name}'s lecture commentaries come to {made}: 1 xp toward "
+            "his Good Academic Reputation (A&A p. 103)."
+        )
+
+
+def _own_commentary(saga: Saga, character: Character, plan: SeasonPlan) -> Book | None:
+    book = next((b for b in saga.books if b.id == plan.book_id), None)
+    if book is None or book.opus != book_kinds.LECTURE_COMMENTARY:
+        return None
+    return book if book.author_id == character.id else None
+
+
+def _edit_lectures(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
+) -> None:
+    book = _own_commentary(saga, character, plan)
+    if book is None:
+        return
+    gain = EDIT_QUALITY + book_seasons.quality_bonus(character)
+    result.book_quality.append((book.id, gain))
+    result.notes.append(
+        f"{book.name} edited: Quality {book.quality or 0} + {gain} = "
+        f"{(book.quality or 0) + gain} (A&A p. 102)."
+    )
+
+
+def _edit_lectures_problems(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> list[str]:
+    book = _own_commentary(saga, character, plan)
+    if book is None:
+        return ["Choose a lecture commentary of his own lectures to edit."]
+    if book.glossed:
+        return [f"{book.name} has been edited (or glossed) already."]
+    return []
+
+
+def _status_categories() -> dict[str, tuple[str, str]]:
+    return {
+        vf_id: (entry.category, entry.tier)
+        for vf_id, entry in catalog.load_virtue_flaw_catalog_by_id().items()
+    }
+
+
+def post_ability(character: Character, post: str) -> str:
+    """The Ability a post's roll uses: the best of those that suit it."""
+    _label, _ease, abilities, _needs = scholarship.POSTS[post]
+    return max(abilities, key=lambda a: ability_level(character, a))
+
+
+def post_bonus(character: Character) -> int:
+    return scholarship.status_bonus(character, _status_categories())
+
+
+def _seek_post(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
+) -> None:
+    post = plan.title.strip()
+    if post not in scholarship.POSTS:
+        return
+    label, ease, _abilities, _needs = scholarship.POSTS[post]
+    ability = post_ability(character, post)
+    base = scholarship.post_total(character, ability, post_bonus(character))
+    result.notes.append(
+        f"Seeking {label.lower()}: Presence + {ability} + Academic Reputations + "
+        f"Virtues = {base}, + a stress die against {ease} (A&A p. 89)."
+    )
+    if rng is None:
+        result.notes.append("The roll is made when the season is played.")
+        return
+    die = dice.stress_die(rng, 1, saga=saga)
+    if die.botched:
+        result.notes.append(
+            "A botch: the season is wasted, and the rejection costs a Medium "
+            "Wound or a Bad Reputation (the troupe's choice)."
+        )
+        return
+    total = base + die.value
+    if total < ease:
+        result.notes.append(f"{total} against {ease}: no post; the season is wasted.")
+        return
+    result.notes.append(f"{total} against {ease}: {label.lower()}'s post is his.")
+    result.academic_xp.append(("", 1))
+    result.notes.append("1 xp toward his Good Academic Reputation (A&A p. 103).")
+    if post == "cathedral_teacher":
+        count = scholarship.student_dice(character)
+        students = sum(dice.simple_die(rng) for _ in range(count))
+        result.notes.append(
+            f"{students} students come ({count} simple dice); he can teach "
+            f"{scholarship.students_taught(character)} (A&A p. 84)."
+        )
+
+
+def _seek_post_problems(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> list[str]:
+    post = plan.title.strip()
+    if post not in scholarship.POSTS:
+        return ["Choose the post he seeks."]
+    problem = scholarship.post_problem(character, post)
+    return [problem] if problem else []
+
+
+register(
+    SimpleActivity(
+        EDIT_LECTURES,
+        "Edit a lecture commentary",
+        "A season rewriting a commentary of his own lectures: its Quality + 1 "
+        "and his writing Virtues, once. Exposure 2.",
+        ACADEME,
+        "931",
+        who=COMPANIONS,
+        group=groups.WRITING,
+    ),
+    _edit_lectures,
+    _edit_lectures_problems,
+)
+register(
+    SimpleActivity(
+        SEEK_POST,
+        "Seek a teaching or clerkly post",
+        "A season looking: Presence + the post's Ability + Academic "
+        "Reputations + Virtues + a stress die against 12, 15 or 18.",
+        ACADEME,
+        "931",
+        who=COMPANIONS,
+        no_xp=True,
+        group=groups.WORK,
+    ),
+    _seek_post,
+    _seek_post_problems,
 )

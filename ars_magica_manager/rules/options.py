@@ -232,6 +232,22 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         book="App",
     ),
+    # An apprentice's cantations (Apprentices).
+    RuleOption(
+        key="cantations_in_play",
+        label="Learning cantations in play",
+        effect=(
+            "A spontaneous spell cast in play at least as many times as its "
+            "level may be bought as a formulaic spell with that adventure's "
+            "experience, one point a level (More, Learn a Cantation, on Known "
+            "Spells); for magi as well as apprentices."
+        ),
+        source=(
+            "Apprentices, Chapter Four: Pueritia, Optional Rule: Learning "
+            "Cantations in Play, p. 46"
+        ),
+        book="App",
+    ),
 )
 
 OPTIONS_BY_KEY: dict[str, RuleOption] = {option.key: option for option in OPTIONS}

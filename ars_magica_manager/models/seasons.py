@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from .artwork import ArtworkPlan
 from .common import (
     SEASONS,
     Change,
@@ -190,6 +191,9 @@ class SeasonPlan:
     book_level: int | None = None
     language: str = ""
     quick: bool = False
+    #: Translating: the translator has (Area) Lore 3 of the source text's
+    #: culture, so the translation keeps the culture's Quality point.
+    culture_lore: bool = False
     #: Useful correspondence this season (Covenants, Other Opus Types): the
     #: subject it is on (a rules.activities subject, "ability:Magic
     #: Theory"), worth +1 xp in it; "" for none.
@@ -264,6 +268,13 @@ class SeasonPlan:
     partner_id: str = ""
     #: Planned by the saga's default for a season with nothing planned.
     by_default: bool = False
+    #: Assisting in a stressful laboratory season: the apprentice's
+    #: Turbulence check midway through it (rules.turbulence: "none",
+    #: "controlled", "uncontrolled", which halves his aid; "" unchecked).
+    turbulence: str = ""
+    #: Creating a work of art: the piece's kind, bonuses and risks (None:
+    #: a season's piece with none of them).
+    artwork: ArtworkPlan | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:
@@ -271,6 +282,8 @@ class SeasonPlan:
         d["allocations"] = [XpAllocation.from_dict(a) for a in d.get("allocations", [])]
         if d.get("design") is not None:
             d["design"] = SpellDesign.from_dict(d["design"])
+        if d.get("artwork") is not None:
+            d["artwork"] = ArtworkPlan.from_dict(d["artwork"])
         return cls(**known_fields(cls, d))
 
 

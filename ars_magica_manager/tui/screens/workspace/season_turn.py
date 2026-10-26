@@ -3,13 +3,16 @@ its date."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any
 
 from .... import storage
 from ....actions import (
     NodeKind,
 )
+from ....commands import Command
 from ....forms import advance as advance_forms
+from ....forms import hunting as hunting_forms
 from ....forms import travel as travel_forms
 from ....sections import AHEAD_SECTION, COV_AHEAD_SECTION
 from ..fields import (
@@ -119,3 +122,27 @@ class SeasonActions(WorkspaceBase):
             ),
             handle_result,
         )
+
+    # -- the hunt and Area Lore on the road (Lords of Men, City & Guild) --
+
+    def _on_the_road(self, build: Callable[..., Command]) -> None:
+        """Run `build(saga, covenant)` from Ahead, the covenant on show if
+        it is a covenant's Ahead."""
+        on_covenant = self._active_section() == COV_AHEAD_SECTION
+        covenant = self.selected_covenant if on_covenant else None
+
+        def done(end: object) -> None:
+            self._commit(AHEAD_SECTION, COV_AHEAD_SECTION)
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, build(self.saga, covenant), done)
+
+    def action_hunt_on_journey(self) -> None:
+        """More's The Hunt on Ahead: a hunt on the road."""
+        self._on_the_road(hunting_forms.hunt_on_journey)
+
+    def action_area_lore_on_journey(self) -> None:
+        """More's Area Lore on Ahead: finding the way, an inn, a hunting
+        spot."""
+        self._on_the_road(hunting_forms.area_lore_on_journey)

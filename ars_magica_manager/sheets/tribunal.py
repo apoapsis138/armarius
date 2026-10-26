@@ -28,7 +28,7 @@ from ..models import (
     TribunalDiaryEntry,
 )
 from ..references import Fact
-from ..treasury import amount_text, balance
+from ..treasury import LEVY, NOTE, amount_text, balance
 from ..treasury import pawns as _pawns
 from ..treasury import pounds as _pounds
 from .character import house_name
@@ -583,6 +583,10 @@ def _when_or_case(tribunal: Tribunal, entry: TreasuryEntry) -> str:
         case = _case_title(tribunal, entry.case_id)
         paid = "paid" if entry.paid else "unpaid"
         return f"{case}, {paid}" if case else paid
+    if entry.kind == LEVY:
+        return "paid" if entry.paid else "unpaid"
+    if entry.kind == NOTE:
+        return "redeemed" if entry.paid else "outstanding"
     return ""
 
 
@@ -591,7 +595,7 @@ def treasury_grid(tribunal: Tribunal) -> Grid:
     rows = []
     styles: dict[tuple[int, int], str] = {}
     for index, entry in enumerate(tribunal.treasury):
-        if entry.kind in ("loan", "fine") and not entry.paid:
+        if entry.kind in ("loan", "fine", LEVY, NOTE) and not entry.paid:
             styles[(index, 3)] = "$text-warning"
         rows.append(
             [
@@ -626,7 +630,8 @@ def _owed(tribunal: Tribunal, kind: str) -> list[str]:
 
 def balance_lines(tribunal: Tribunal) -> list[tuple[str, str]]:
     """The balance as (label, words): silver and vis in hand, loans out
-    and fines unpaid."""
+    and fines unpaid, and levies unpaid and promissory notes outstanding
+    where there are any."""
     held = balance(tribunal)
     silver = held.pop("silver", 0)
     vis = ", ".join(
@@ -643,6 +648,12 @@ def balance_lines(tribunal: Tribunal) -> list[tuple[str, str]]:
         ("Vis in hand", f"{vis} (pawns)" if vis else "none"),
         ("Loans out", ", ".join(_owed(tribunal, "loan")) or "none"),
         ("Fines unpaid", ", ".join(_owed(tribunal, "fine")) or "none"),
+        # The kinds a Tribunal's customs add, shown once it has any.
+        *(
+            (label, ", ".join(_owed(tribunal, kind)) or "none")
+            for kind, label in ((LEVY, "Levies unpaid"), (NOTE, "Notes outstanding"))
+            if any(e.kind == kind for e in tribunal.treasury)
+        ),
     ]
 
 

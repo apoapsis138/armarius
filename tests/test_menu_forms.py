@@ -78,6 +78,10 @@ def test_each_page_offers_what_applies_there():
         "Invoke a Broken Oath",
         "Make Greek Fire",
         "A Mother's Curse",
+        # A Gifted character's Turbulence (Apprentices).
+        "Turbulence",
+        # Art & Academe's scholars (anyone may study).
+        "A Scholar's Career",
     ]
     assert _labels(menu_forms.new_items(page)) == ["New Character", "Bind Familiar"]
     deleted = menu_forms.deletes(page)

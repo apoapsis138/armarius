@@ -8,8 +8,10 @@ rule, so the privilege belongs to the magus, not the oppidum. Each
 oppidum has one or two aediles from among its magi.
 
 Kept in the package's data: "members", each {"character_id",
-"privilege" (a key of PRIVILEGES), "office"}; and "aediles", {covenant
-id: [character id, ...]}. Saves made before privileges belonged to the
+"privilege" (a key of PRIVILEGES), "office"}; "aediles", {covenant
+id: [character id, ...]}; "projects", the words for the projects the
+last meeting gave the Praeco; and "curantes", each Curantis appointed,
+{"character_id", "year", "notary_id", "salary", "art", "built"}. Saves made before privileges belonged to the
 magus kept "classes", {covenant id: class}; members() hands each of that
 oppidum's magi its class the first time it is read."""
 
@@ -25,6 +27,7 @@ from ..markup import escape
 from ..models import Character, Covenant, Saga, Tribunal
 from ..rules import enchantment
 from ..sections import PRIVILEGES_SECTION
+from ..treasury import LEVY, NOTE
 from . import (
     PackageList,
     PackageTab,
@@ -331,7 +334,7 @@ def office_notes(saga: Saga, tribunal: Tribunal, entry: dict[str, Any]) -> list[
         return []
     found = []
     for office in [o.strip() for o in offices(saga, tribunal, entry).split(",")]:
-        if office and office != "Presiding Quaesitor":
+        if office and office not in ("Presiding Quaesitor", NOTARY):
             words, _refuses = office_rule(privilege, office)
             if words:
                 found.append(words)
@@ -405,8 +408,15 @@ def offices(saga: Saga, tribunal: Tribunal, entry: dict[str, Any]) -> str:
         found.append("Presiding Quaesitor")
     if aedile_of(saga, tribunal, ident) is not None:
         found.append("Aedile")
-    if entry.get("office"):
-        found.append(entry["office"])
+    held = curantis_entry(tribunal)
+    typed = str(entry.get("office") or "")
+    if ident and held is not None and CURANTIS.casefold() not in typed.casefold():
+        if held.get("character_id") == ident:
+            found.append(CURANTIS)
+        elif held.get("notary_id") == ident:
+            found.append(NOTARY)
+    if typed:
+        found.append(typed)
     return ", ".join(found)
 
 
@@ -595,6 +605,101 @@ def magus_facts(
     return found
 
 
+# -- the Praeco's purse, and the Curantis --
+
+#: Who must give the Praeco's projects reasonable aid: the legal
+#: covenants of the cives, socii and coloniae, and some foederati; the
+#: hospites, hired for their work, are not named (Against the Dark p. 19).
+#: The book lays the duty on those covenants by their status, not on each
+#: magus. The app lays a levy on each oppidum, and reads its residents'
+#: privileges only to say which of those covenants the levy reaches.
+OWE_AID = ("cives", "socii", "coloniae")
+MAY_OWE_AID = ("foederati",)
+
+#: The officer of the zenodochia, appointed at every meeting until the
+#: next, and the magus he takes as his aedile (Against the Dark p. 97).
+CURANTIS, NOTARY = "Curantis", "Curantis's Notary"
+
+
+def aid_owed(
+    saga: Saga, tribunal: Tribunal, covenant: Covenant
+) -> tuple[list[Character], list[Character]]:
+    """The oppidum's magi who belong to a legal covenant that owes the
+    Praeco's projects aid, and its foederati, whose covenant owes it only
+    in some cases."""
+    owe, may = [], []
+    for magus in residents(saga, covenant):
+        privilege = (entry_of(saga, tribunal, magus.id) or {}).get("privilege", "")
+        if privilege in OWE_AID:
+            owe.append(magus)
+        elif privilege in MAY_OWE_AID:
+            may.append(magus)
+    return owe, may
+
+
+def owes_no_aid(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> bool:
+    """Whether every one of the oppidum's magi is known to be a hospes,
+    whose covenant owes no aid, so no levy reaches it."""
+    magi = residents(saga, covenant)
+    privileges = _privileges_of(saga, tribunal, magi)
+    return bool(magi) and not covenant.unnamed_magi and set(privileges) == {"hospites"}
+
+
+def aid_text(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
+    """Through which of its magi's legal covenants the oppidum owes aid
+    to the Praeco's projects, in words."""
+    if owes_no_aid(saga, tribunal, covenant):
+        return "Its magi are all hospites, whose covenant owes the Praeco no aid."
+    owe, may = aid_owed(saga, tribunal, covenant)
+    found = []
+    if owe:
+        found.append(
+            f"{len(owe)} of its magi belong to the cives, socii or coloniae, "
+            "whose covenants owe aid"
+        )
+    if may:
+        found.append(f"{len(may)} to the foederati, which owe it in some cases")
+    if not found:
+        return "No magus here has a privilege entered whose covenant owes aid."
+    return "; ".join(found) + "."
+
+
+def projects(tribunal: Tribunal) -> str:
+    """The projects the last meeting gave the Praeco to fund."""
+    return str(data(tribunal, KEY).get("projects") or "")
+
+
+def curantes(tribunal: Tribunal) -> list[dict[str, Any]]:
+    """Each Curantis appointed, oldest first."""
+    return entries(tribunal, KEY, "curantes")
+
+
+def curantis_entry(
+    tribunal: Tribunal, before: int | None = None
+) -> dict[str, Any] | None:
+    """The Curantis in office: the last appointed (before the year
+    `before`, for the one a meeting that year replaces), or None."""
+    found = [
+        e
+        for e in curantes(tribunal)
+        if before is None or int(e.get("year") or 0) < before
+    ]
+    return found[-1] if found else None
+
+
+def curantis_problem(
+    saga: Saga, tribunal: Tribunal, character_id: str, outgoing: dict[str, Any] | None
+) -> str:
+    """Why the magus may not be appointed Curantis ("": he may): not two
+    terms running (Against the Dark p. 97), nor against his privilege."""
+    if outgoing is not None and outgoing.get("character_id") == character_id:
+        return (
+            f"{_name(saga, character_id)} was the Curantis this term: no one "
+            "serves two terms running (Against the Dark p. 97)."
+        )
+    return magus_office_problem(saga, tribunal, character_id, CURANTIS)
+
+
 TRANSYLVANIA = TribunalPackage(
     KEY,
     "Transylvania",
@@ -620,6 +725,9 @@ TRANSYLVANIA = TribunalPackage(
     save_covenant=save_aediles,
     magus_facts=magus_facts,
     office_problem=magus_office_problem,
+    # The Praeco's purse and the Curantis (transylvania_meeting.py).
+    meeting_steps=("praeco_purse", "curantis"),
+    treasury_kinds=(LEVY, NOTE),
 )
 
 register(TRANSYLVANIA)

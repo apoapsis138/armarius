@@ -91,9 +91,11 @@ from ..rules import creation_covenant as cov_creation
 from ..sections import LAB_TEXTS_SECTION
 from . import apothecary as apothecary_forms
 from . import beast as beast_forms
+from . import careers
 from . import craft_magic as craft_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
+from . import gauntlet as gauntlet_forms
 from . import goetic as goetic_forms
 from . import grogs as grog_forms
 from . import hosting as hosting_forms
@@ -102,6 +104,7 @@ from . import library as library_forms
 from . import neighbour as neighbour_forms
 from . import sin as sin_forms
 from . import tribunal as tribunal_forms
+from . import turbulence as turbulence_forms
 
 #: The record a page shows, as deletion and actions take it.
 Record = Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | Creature
@@ -165,6 +168,11 @@ NOT_ON_PAGES = frozenset(
         # The Rhine's ranks: the Gilds list's own buttons.
         "rhine_mark",
         "rhine_challenge",
+        # The hunt and Area Lore: the Manors list's and Ahead's own buttons.
+        "hunt_on_manor",
+        "area_lore_on_manor",
+        "hunt_on_journey",
+        "area_lore_on_journey",
     }
 )
 
@@ -519,6 +527,18 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "indulge_sin": ((NodeKind.CHARACTER, "Personality Traits"),),
     "infernal_influence": ((NodeKind.CHARACTER, "Personality Traits"),),
     "ars_goetia": ((NodeKind.CHARACTER, "Abilities"),),
+    # An apprentice's magic and the Gauntlet (Apprentices): beside the
+    # Abilities chapter's buttons, This Season's, and Known Spells'.
+    "turbulence": (
+        (NodeKind.CHARACTER, "Abilities"),
+        (NodeKind.CHARACTER, "This Season"),
+    ),
+    "gauntlet": ((NodeKind.CHARACTER, "Abilities"),),
+    "lose_the_gift": ((NodeKind.CHARACTER, "Abilities"),),
+    "learn_cantation": ((NodeKind.CHARACTER, "Known Spells"),),
+    # Art & Academe's artists and scholars, beside Disputatio.
+    "artist_career": ((NodeKind.CHARACTER, "Abilities"),),
+    "scholar_career": ((NodeKind.CHARACTER, "Abilities"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -1557,4 +1577,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "indulge_sin": _needs(_character, sin_forms.sin_form),
     "infernal_influence": _needs(_character, sin_forms.influence_form),
     "ars_goetia": _needs(_character, goetic_forms.goetic_form),
+    # An apprentice's magic and the Gauntlet (Apprentices).
+    "turbulence": _needs(_character, turbulence_forms.turbulence_form),
+    "gauntlet": _needs(_character, gauntlet_forms.gauntlet_form),
+    "lose_the_gift": _needs(_character, gauntlet_forms.lose_gift_form),
+    "learn_cantation": _needs(_character, gauntlet_forms.cantation_form),
+    # Art & Academe's artists and scholars.
+    "artist_career": _needs(_character, careers.artist_form),
+    "scholar_career": _needs(_character, careers.scholar_form),
 }

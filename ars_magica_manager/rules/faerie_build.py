@@ -17,6 +17,13 @@ creature's, and the choices every faerie makes.
   Ostentatious and 10 Aloof, 50 fewer for each Freshly Sprung (pp. 46,
   63-64).
 
+- Every faerie plays a role in the stories it takes part in, and wants a
+  story to play it in: the dramatis personae are the Hero, the Villain,
+  the Donor, the Helper, the Princess, the Task-Setter and the False Hero
+  (Chapter Seven, pp. 140-142; any story element can take one, p. 40). A
+  faerie keeps its role and the story it wants as a note; how faerie
+  stories are built from such elements (pp. 31-44) is the storyguide's.
+
 The book's own faeries, and any a story needs, needn't balance (p. 45), so
 these are advice, never refusals.
 """
@@ -28,7 +35,10 @@ from dataclasses import dataclass
 from .. import catalog
 from ..models import Creature
 
-SOURCE = "Realms of Power: Faerie, Chapter Three: Faerie Characters, pp. 45-64"
+SOURCE = (
+    "Realms of Power: Faerie, Chapter Three: Faerie Characters, pp. 45-64; "
+    "Story Elements p. 40; Dramatis Personae pp. 140-142"
+)
 
 FAERIE = "Faerie"
 BASE_MIGHT = 5
@@ -75,6 +85,19 @@ FRESHLY_SPRUNG, FRESHLY_SPRUNG_POINTS = "vf_freshly_sprung", 50
 PRETENSE_BASE = 120
 
 
+#: The dramatis personae a faerie may play, each in a line (pp. 140-142).
+ROLES: dict[str, str] = {
+    "Hero": "sets off on adventure, seeking a prize or forced to by the villain",
+    "Villain": "opposes the hero again and again, to a struggle or a pursuit",
+    "Donor": "grants the hero a magical gift, not always willingly",
+    "Helper": "always well inclined, helps the hero at the right moment",
+    "Princess": "the object of the quest, or a prize won along the way",
+    "Task-Setter": "sets the hero challenges to win the princess",
+    "False Hero": "claims the hero's deeds, unmasked in the nick of time",
+}
+ROLES_PAGES = "pp. 140-142"
+
+
 @dataclass(frozen=True)
 class FaerieMight:
     """A faerie's Might as its Virtues make it, and how."""
@@ -110,6 +133,29 @@ def pretense_points(creature: Creature, magi_age: int) -> int:
     )
     sprung = ids.count(FRESHLY_SPRUNG) * FRESHLY_SPRUNG_POINTS
     return multiplier * (magi_age - 5) + PRETENSE_BASE - sprung
+
+
+#: What the sheet says of a faerie built by the book with no role noted.
+NO_ROLE = (
+    "not noted: a faerie plays a role (Hero, Villain, Donor, Helper, "
+    "Princess, Task-Setter or False Hero) and wants a story to play it in"
+)
+
+
+def role_text(creature: Creature) -> str:
+    """A faerie's role and the story it wants, as the sheet gives them; a
+    reminder for a faerie built by the book with neither; "" for another
+    faerie with neither, or a creature of another realm."""
+    if not is_faerie(creature):
+        return ""
+    role = creature.faerie_role
+    parts = [f"{role}: {ROLES[role]}" if role in ROLES else role]
+    if creature.faerie_story:
+        parts.append(f"wants {creature.faerie_story}")
+    text = "; ".join(p for p in parts if p)
+    if not text and built_by_the_book(creature):
+        text = NO_ROLE
+    return f"{text} (RoP: Faerie {ROLES_PAGES})" if text else ""
 
 
 def built_by_the_book(creature: Creature) -> bool:

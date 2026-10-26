@@ -121,6 +121,10 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     ),
     "ars_magica_manager/disputations.py": ("test_screens_academe.py",),
     "ars_magica_manager/forms/grogs.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/careers.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/scholar_seasons.py": (
+        "test_dialog_contracts_character.py",
+    ),
     "ars_magica_manager/forms/craft_magic.py": (
         "test_dialog_contracts_character.py",
         "test_gui_edit_character.py",
@@ -248,6 +252,9 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     # Sin, tarnish and the Goetic Arts (RoP: The Infernal).
     "ars_magica_manager/forms/sin.py": ("test_dialog_contracts_character.py",),
     "ars_magica_manager/forms/goetic.py": ("test_dialog_contracts_character.py",),
+    # The hunt and Area Lore, on a manor and on the road.
+    "ars_magica_manager/forms/hunting.py": ("test_dialog_contracts_tribunal.py",),
+    "ars_magica_manager/rules/hunting.py": ("test_dialog_contracts_tribunal.py",),
 }
 
 

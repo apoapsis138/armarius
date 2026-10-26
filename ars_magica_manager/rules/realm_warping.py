@@ -65,8 +65,9 @@ nothing is counted.
     the points); the dream is played out, then Perception + Concentration
     + stress die (with its botch die) against 3 x (Warping Score - Faerie
     Rank): above it a +1
-    Sympathy Trait (or +1 to one), else a -1. The app keeps no Faerie Rank,
-    so it says from which Rank the Calling is a good one.
+    Sympathy Trait (or +1 to one), else a -1. It says from which Faerie
+    Rank the Calling is a good one, and, for one whose Personality Traits
+    hold Sympathy Traits, which his is (rules.faerie_sympathy).
 
 - **Leaving Faerie** (RoP: Faerie pp. 29-30). The final fable score sets
   how long each day in Faerie lasts in the mundane world (0: an hour, 1:
@@ -96,7 +97,7 @@ from dataclasses import dataclass
 
 from .. import catalog
 from ..models import Character, Saga
-from . import dice, hybrid_magic, infernalists
+from . import dice, faerie_sympathy, hybrid_magic, infernalists
 from . import warping as warping_rules
 from .realms import home_aura
 from .scores import ability_level
@@ -568,6 +569,13 @@ def faerie_calling(
         "a bad one (-1). Rank 10 or more on a good one, or -10 or less on a "
         "bad one, and he becomes a faerie for good.",
     ]
+    held = faerie_sympathy.faerie_rank(character.personality_traits)
+    if held is not None:
+        notes.append(
+            f"His Sympathy Traits make his Faerie Rank {held:+d}: a "
+            + ("good" if held >= rank else "bad")
+            + " Calling."
+        )
     return warping_rules.TwilightResult(True, time="a scene", notes=notes)
 
 

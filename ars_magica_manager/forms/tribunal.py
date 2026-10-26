@@ -554,6 +554,9 @@ TREASURY_NOUNS: dict[str, str] = {
     "silver": "Silver",
     "loan": "A loan",
     "fine": "A fine",
+    # The kinds a Tribunal's customs add (Against the Dark p. 19).
+    "levy": "A levy",
+    "note": "A promissory note",
 }
 
 _TREASURY_HELP: dict[str, str] = {
@@ -561,23 +564,35 @@ _TREASURY_HELP: dict[str, str] = {
     "silver": "Pounds of silver in the treasury (or taken out of it).",
     "loan": "Silver or vis lent out of the treasury, owed back.",
     "fine": "A fine owed to the treasury, from a case.",
+    "levy": "A levy owed to the treasury for the Praeco's projects.",
+    "note": "A promissory note the Praeco issued, owed to its holder.",
 }
+
+#: Who an entry names, and what settles it, by kind.
+_TREASURY_WHO = {
+    "loan": "To whom",
+    "fine": "Owed by",
+    "levy": "Owed by",
+    "note": "Held by",
+}
+_TREASURY_SETTLED = {"levy": "Paid", "note": "Redeemed"}
 
 
 def treasury_fields(
     tribunal: Tribunal, kind: str, entry: TreasuryEntry | None
 ) -> list[DialogField]:
-    """A treasury entry of `kind`: vis, silver, a loan or a fine."""
+    """A treasury entry of `kind`: vis, silver, a loan or a fine, or a
+    kind the Tribunal's customs add (a levy, a promissory note)."""
     amount_label = {
         "vis": "Pawns (+ in, − out)",
         "silver": "Pounds (+ in, − out)",
     }.get(kind, "Amount")
     fields = [DialogField("kind", "Entry", "info", TREASURY_NOUNS[kind])]
-    if kind in ("loan", "fine"):
+    if kind in _TREASURY_WHO:
         fields.append(
             DialogField(
                 "who",
-                "To whom" if kind == "loan" else "Owed by",
+                _TREASURY_WHO[kind],
                 "text",
                 attr(entry, "who", ""),
                 required=True,
@@ -620,6 +635,12 @@ def treasury_fields(
             ),
             DialogField("paid", "Paid", "check", attr(entry, "paid", False)),
         ]
+    if kind in _TREASURY_SETTLED:
+        fields.append(
+            DialogField(
+                "paid", _TREASURY_SETTLED[kind], "check", attr(entry, "paid", False)
+            )
+        )
     fields.append(DialogField("note", "Note", "text", attr(entry, "note", "")))
     return fields
 
@@ -662,7 +683,10 @@ def treasury_ops(tribunal: Tribunal) -> SectionOps:
             "Add to the Treasury",
             lambda: [
                 Choice(TREASURY_NOUNS[kind], kind, _TREASURY_HELP[kind])
-                for kind in TREASURY_KINDS
+                for kind in (
+                    *TREASURY_KINDS,
+                    *tribunal_packages.of(tribunal).treasury_kinds,
+                )
             ],
             lambda kind: _treasury_form(tribunal, kind, None),
         )

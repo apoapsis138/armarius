@@ -14,9 +14,13 @@ Books, planned on the character sheet:
   points a season (keeps its Quality); quickly three times as much, the
   copy 1 Quality lower. Needs the language at 3 (Magic Theory 1 for a
   book on an Art).
-- Translating a book: both languages at 5; a tractatus in one season, a
-  summa at Communication + the source language points a season until its
-  Level; the translation 2 Quality lower (1 for an Art).
+- Translating a book: both languages at 5 and Artes Liberales 2 (1 between
+  languages of one alphabet); a tractatus in one season, a summa at
+  Communication + the source language points a season until its Level;
+  the translation 1 Quality lower for the languages (none with both at
+  6) and 1 for the culture, unless the plan says he has the source
+  culture's Area Lore at 3, or the text is Hermetic and he is a magus
+  (A&A p. 87).
 
 Lab Texts:
 
@@ -35,7 +39,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
 
-from .. import book_kinds, catalog
+from .. import book_kinds, book_value, catalog
 from ..arts import ART_BY_NAME
 from ..models import (
     TEXT_LONGEVITY,
@@ -45,7 +49,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import effects, lab_stats, library, options
+from . import effects, lab_stats, library, options, scholarship
 from .rounding import round_down, round_up
 from .scores import ability_level, character_source
 from .study import after_distraction, supernatural_ability
@@ -557,7 +561,23 @@ def _copy(
         return ["Choose the language to translate into."], None
     if source < 5 or language_score(character, target) < 5:
         return [f"Translating needs {book.language} and {target} at 5."], None
-    loss = 1 if is_art else 2
+    artes = scholarship.translation_artes(book.language or "Latin", target)
+    if ability_level(character, "Artes Liberales") < artes:
+        return [
+            f"Translating from {book.language} into {target} needs Artes "
+            f"Liberales {artes} (A&A p. 87)."
+        ], None
+    # The app can't tell which Area Lore is the source culture's, so the
+    # plan says whether he knows it at 3. A Hermetic text (an Art, an
+    # Arcane Ability or a supernatural power) translated by a magus never
+    # loses the culture's point.
+    hermetic = book_value.is_hermetic(book) and character.type == "magus"
+    loss = scholarship.translation_loss(
+        source,
+        language_score(character, target),
+        hermetic,
+        culture_lore=plan.culture_lore,
+    )
     copy = _copy_of(saga, character, book, (book.quality or 0) - loss, target)
     if not is_summa:
         return [], BookWork(points_gained=1, needed=1, made=copy, copies=1)

@@ -30,6 +30,7 @@ from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import lab_item
+from ars_magica_manager.forms import tribunal as tribunal_forms
 from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import (
     Ability,
@@ -1371,6 +1372,27 @@ OPENERS: dict[str, Opener] = {
     "confidence through sin": Opener("character", lambda ws: _open_sin(ws, "sin")),
     "infernal influence": Opener("character", lambda ws: _open_sin(ws, "influence")),
     "ars goetia": Opener("character", lambda ws: _open_sin(ws, "goetia")),
+    # Transylvania's promissory notes (Against the Dark).
+    "add promissory note": Opener(
+        "transylvania_tribunal", lambda ws: _open_treasury_kind(ws, "note")
+    ),
+    # The hunt and Area Lore, on a manor and on the road (LoM, C&G).
+    "hunt on a manor": Opener("neighbour", lambda ws: _on_hagen(ws, "hunt")),
+    "area lore on a manor": Opener("neighbour", lambda ws: _on_hagen(ws, "lore")),
+    "hunt on the road": Opener("seasons", lambda ws: ws.action_hunt_on_journey()),
+    "area lore on the road": Opener(
+        "seasons", lambda ws: ws.action_area_lore_on_journey()
+    ),
+    # An apprentice's magic and the Gauntlet (Apprentices).
+    "turbulence": Opener("character", lambda ws: _open_apprentice(ws, "turbulence")),
+    "the gauntlet": Opener("character", lambda ws: _open_apprentice(ws, "gauntlet")),
+    "lose the gift": Opener("character", lambda ws: _open_apprentice(ws, "lose")),
+    "learn a cantation": Opener(
+        "character", lambda ws: _open_apprentice(ws, "cantation")
+    ),
+    # Art & Academe's artists and scholars, between their seasons.
+    "an artist's career": Opener("character", lambda ws: _open_career(ws, "artist")),
+    "a scholar's career": Opener("character", lambda ws: _open_career(ws, "scholar")),
 }
 
 
@@ -1521,3 +1543,56 @@ def _open_sin(ws, which: str) -> None:
         ws.action_infernal_influence()
     else:
         ws.action_ars_goetia()
+
+
+def _open_treasury_kind(ws, kind: str) -> None:
+    """The treasury's Add on Transylvania, with `kind` chosen."""
+    ops = tribunal_forms.treasury_ops(ws.saga.tribunal("transylvania"))
+    assert ops.add is not None
+    ws._run_steps(ops.add().apply(kind))
+
+
+async def _on_hagen(ws, which: str) -> None:
+    """The Hunt or Area Lore on Gottfried's manor of Hagen."""
+    await _on_lords_row(
+        ws,
+        "section-manors",
+        "manor_list",
+        [{"name": "Hagen", "acres": 600}],
+        lambda ws: (
+            ws.action_hunt_on_manor()
+            if which == "hunt"
+            else ws.action_area_lore_on_manor()
+        ),
+    )
+
+
+def _open_apprentice(ws, which: str) -> None:
+    """Turbulence, the Gauntlet, Lose the Gift or Learn a Cantation on
+    Leandro, made an apprentice (and the cantations option turned on)."""
+    character = ws.selected_character
+    if which in ("gauntlet", "lose") and not any(
+        vf.vf_id == "vf_apprentice" for vf in character.virtues_flaws
+    ):
+        character.virtues_flaws.append(VirtueFlawInstance("vf_apprentice"))
+    if which == "turbulence":
+        ws.action_turbulence()
+    elif which == "gauntlet":
+        ws.action_gauntlet()
+    elif which == "lose":
+        ws.action_lose_the_gift()
+    else:
+        ws.saga.rule_options["cantations_in_play"] = True
+        ws.action_learn_cantation()
+
+
+def _open_career(ws, which: str) -> None:
+    """An Artist's Career (Leandro given Craft: Painting) or A Scholar's
+    Career on Leandro."""
+    character = ws.selected_character
+    if which == "artist":
+        if not any(a.name == "Craft: Painting" for a in character.abilities):
+            character.abilities.append(Ability("Craft: Painting", xp=15))
+        ws.action_artist_career()
+    else:
+        ws.action_scholar_career()

@@ -6,6 +6,13 @@ from __future__ import annotations
 
 from .models import TreasuryEntry, Tribunal
 
+#: Kinds of entry a Tribunal's customs add to the core's (a package's
+#: treasury_kinds): a levy owed to the treasury, counted once paid as a
+#: fine is; and a promissory note the Praeco issued against the
+#: treasury's income, whose pawns leave it once the note is redeemed
+#: (Against the Dark p. 19).
+LEVY, NOTE = "levy", "note"
+
 
 def pounds(amount: float) -> str:
     whole = int(amount) if float(amount).is_integer() else amount
@@ -25,14 +32,17 @@ def amount_text(entry: TreasuryEntry) -> str:
 
 def balance(tribunal: Tribunal) -> dict[str, float]:
     """What the treasury holds, by "silver" and each Art: its silver and
-    vis, with fines paid in and loans not yet repaid out."""
+    vis, with fines and levies paid in, loans not yet repaid out, and
+    promissory notes out once redeemed."""
     held: dict[str, float] = {}
     for entry in tribunal.treasury:
         key = entry.art or "silver"
         if entry.kind in ("vis", "silver"):
             sign = 1
-        elif entry.kind == "fine":
+        elif entry.kind in ("fine", LEVY):
             sign = 1 if entry.paid else 0
+        elif entry.kind == NOTE:
+            sign = -1 if entry.paid else 0
         else:
             sign = 0 if entry.paid else -1
         held[key] = held.get(key, 0) + sign * entry.amount

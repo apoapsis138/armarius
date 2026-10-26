@@ -11,7 +11,10 @@
   386).
 - Good or bad is the troupe's call (the books label Reputations "Good" or
   "Bad", DE p. 28 gives only score, content and type): the app reads a
-  negative score as bad and a positive one as good. A covenant loses five
+  negative score as bad and a positive one as good, except Academic
+  Reputations: a Good and a Bad one are separate entries, each with its
+  own positive score building like an Ability, and a character may hold
+  both (Art & Academe p. 103), so a bad one is marked bad instead. A covenant loses five
   Loyalty points per point of each bad Reputation its covenfolk know of,
   of any type, and gains five per point of a good local one (Covenants p.
   40).
@@ -24,7 +27,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from ..models import ScoredTrait
+from ..models import ACADEMIC_REPUTATION, ScoredTrait, is_academic_reputation
 
 SOURCE = (
     "Ars Magica Definitive Edition, Reputations, pp. 28-29, and Changing "
@@ -32,7 +35,7 @@ SOURCE = (
     "Passing Examinations, p. 100"
 )
 
-ACADEMIC = "Academic"
+ACADEMIC = ACADEMIC_REPUTATION
 LOCAL = "Local"
 #: Ease Factors for a random person to have heard of a Reputation, by how
 #: far away they are: (Local, Ecclesiastical, Hermetic) at each Ease.
@@ -45,13 +48,14 @@ HEARD_EASE: dict[int, tuple[str, str, str]] = {
 
 
 def is_bad(reputation: ScoredTrait) -> bool:
-    """A bad Reputation: one typed with a negative score."""
-    return reputation.score < 0
+    """A bad Reputation: one marked bad (an Academic one, kept with a
+    positive score), or one typed with a negative score."""
+    return reputation.bad or reputation.score < 0
 
 
 def is_academic(reputation: ScoredTrait) -> bool:
     """An Academic Reputation, by its type or its name."""
-    return reputation.type == ACADEMIC or "academic" in reputation.name.casefold()
+    return is_academic_reputation(reputation)
 
 
 def good(reputations: Iterable[ScoredTrait]) -> list[ScoredTrait]:

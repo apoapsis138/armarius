@@ -302,6 +302,23 @@ who knows Infernal Lore, [Infernal Influence](help:infernal-influence).
 Traits' buttons, are there for a sinner (or one who knows Infernal Lore).
 <!-- /gui -->
 
+**Sympathy Traits.** A Personality Trait can be a faerie **Sympathy Trait**: tick *Faerie
+Sympathy Trait?* on its form, and the list shows it as "Winter: +3 (Sympathy)". A Sympathy
+Trait is a bond with a narrow class of things through the Faerie realm (Winter, Iron, Hounds,
+never a whole Form). Where it fits, it can stand as a non-Supernatural Ability's specialty,
+adding its score in place of the +1, but the roll becomes a stress roll and a botch Warps;
+only the best fitting Trait counts. A negative Trait comes off every Ability it fits, and the
+worst one adds its size in botch dice (Realms of Power: Faerie p. 102). Experience raises a
+Trait as an Ability, to no more than the Warping Score, 5 xp a season of practice; a negative
+one rises only while the Warping Score is above its size, 10 xp from -1 to 0, 15 from -2, 20
+from -3, and may go on through 0 (p. 103; Errata p. 68). Traits gained by sympathetic
+influence or granted by a Grant rite are temporary Sympathy Traits: tick *Temporary Sympathy
+Trait?* as well, and the list shows "Oak: +2 (Sympathy, temporary)". They work as Sympathy
+Traits (a specialty, a folk charm, a rite's limit, botch dice), but experience doesn't raise
+them, the Warping Score doesn't limit them, and they don't count toward the Faerie Rank
+(pp. 103-105, 127). The Traits a tinted aura gives everyone in it are plain Personality
+Traits (p. 104).
+
 
 ### Reputations
 <!-- help: section-reputations -->
@@ -331,7 +348,14 @@ the new score when it rises.
 
 Whether a Reputation is good or bad is yours to say, by its sign: type a
 bad one with a negative score (Drunkard -2) and a good one with a
-positive score. A university exam adds the Good Academic Reputations and
+positive score. Academic Reputations are kept apart instead (Art &
+Academe p. 103): a Good and a Bad one are separate entries, each with its
+own positive score that builds like an Ability, and a scholar may hold
+both at once (Good Logician and Bad Argumentative). Tick **Bad
+Reputation?** on a bad one; any Reputation may be marked so. A roll adds
+the highest Good Academic Reputation and takes off the highest Bad one
+(pp. 89, 100). A save that typed a bad Academic Reputation below 0 is
+read as a bad one of that score. A university exam adds the Good Academic Reputations and
 takes off the Bad ones (only academic ones count), and needs a net 1, 2
 or 3 for the baccalaureus, magister or doctor, after 3 years, 8 and 10 at
 university, counting the exam season (Art & Academe p. 100). The doctor
@@ -429,6 +453,20 @@ convalescing or travelling, catches a disease, or enters Wizard's
 Twilight (p. 59); the Diary says so. For the other causes (a month away,
 a neglected diet, broken sleep, a day under a Corpus spell) retype the
 regimen's year it began on Edit.
+
+**Faerie Rank.** A character with Sympathy Traits shows his **Faerie Rank** under his Warping:
+his best positive Sympathy Trait plus his worst negative one (Winter +4 and Summer -2 make
++2; Dancing +1 and Stone -5 make -4), temporary Traits apart (listed after it), the botch dice his worst negative Trait adds, and how far
+experience may raise his Traits (Realms of Power: Faerie p. 103). Faeries like a high Rank and
+dislike a negative one. A Faerie Calling (when a faerie wizard takes Warping) now says whether
+his Rank makes it a good Calling or a bad one (p. 120).
+
+Sympathetic influence, for the storyguide: a ceremony of about ten minutes, led by someone with
+Faerie Lore 1, costing everyone taking part a Confidence Point and lasting a week at most; or
+a season of free time spent with the subject, lasting up to a year. Then a simple die +
+Presence + Leadership: 9 gives a Trait of 1 (or -1), 15 of 2, 24 of 3, the most. The subject
+needs a fitting Personality Trait or Flaw; a fitting Sympathy Trait may be Leadership's
+specialty, on a stress die (pp. 103-104).
 
 ### Health
 <!-- help: section-char-health -->
@@ -816,6 +854,79 @@ made without its formula; stronger ones are theriacs (below).
 Magic can help: a Ritual Creo spell adds 1 Labor Point for each variety
 it creates; a Rego Craft spell prepares a week's ingredients at
 Intelligence + Finesse against the Ease Factor + 6.
+
+## An Artist's Career
+<!-- help: artist-career -->
+
+An artist's Artist Reputation is named for his Craft or Profession (a
+painter's "Painting") and rises as an Ability does, by its own
+experience only (Art & Academe pp. 126-127). The app keeps one
+Reputation per trade: an artist's Artist Reputation and a craftsman's
+(Craft) Reputation (City & Guild p. 74) are the same score, and both
+books' experience feeds it (a piece over three times the Reputation, a
+patron, a muse; a Workshop Total 6 over the Craft Level, a wondrous
+item, shoddy goods). Neither book says they are one Reputation: merging
+them is the app's reading, and it lets workshop seasons raise a score
+that Art & Academe raises by an artist's own deeds only. More's An Artist's Career rolls, or
+records, what happens between his seasons, each written in his Diary:
+
+- **Seek a sponsor** (a season): Communication + Bargain + Artist
+  Reputation + a stress die against 12, -3 for a benefactor's single
+  piece, +3 for his second, +6 past two, +9 to make him a patron; +3 or
+  +6 for the sponsor's Minor or Major Social Virtue, and + his highest
+  business or social Reputation (p. 131). Asking the same man again adds
+  +3; picking him first with Perception + Folk Ken against 12 adds +3,
+  and a botch there picks the wrong man. A new benefactor is 3 xp in the
+  Reputation, a patron 6. At Reputation 4 he needs a sponsor of
+  Reputation 2; at 6 a Minor Social Status Virtue too (or Wealthy, or a
+  Major one); from 8 only a patron with a Major Social Status Virtue and
+  Wealthy or a Reputation of 4. A character sponsoring him pays at least
+  a Mythic Pound per point of his Reputation for a season's piece.
+- **Perform in trying conditions** (before a king, in the rain):
+  Communication or Dexterity + Profession + a stress die against the
+  piece's Aesthetic Quality / 2 (p. 125).
+- **Keep a sponsor** after a season off the piece: a simple die of 6 or
+  more and the sponsor leaves him (p. 131).
+- **A deed**: the gains and losses of p. 126 (a patron lost -12, barred
+  from a society -15, signing without Reputation 8 -10...). From
+  Reputation 10 he loses none.
+
+The inspector shows what his Reputation brings (pp. 126-129): from 6, +1
+per point over 5 to social rolls his renown sways; at 7 a minor muse
+watches him, at 9 a major one; at 8 he signs his work and gains a
+Confidence point; at 10 every piece gains +3 and no xp is lost; at 11 his
+muse takes him, a legendary artist of Might twice his best Craft or
+Profession. A muse's bond gives 1 Warping Point a year (3 a major muse).
+
+## A Scholar's Career
+<!-- help: scholar-career -->
+
+More's A Scholar's Career rolls, or records, a scholar's steps between
+his seasons, each written in his Diary:
+
+- **Seek a place at a school**: the parent's (or his own) Presence +
+  Bargain, Charm or Guile + a stress die, against 6 for a rural parish
+  school, 9 an urban parish or monastic school or a citizen's urban
+  school, 12 a cathedral school or a foreigner's urban school; Intrigue
+  serves too but for a parish school, and those last ones take off his
+  highest Bad Reputation. A wealthy family's gift adds +1 to +3. A
+  failure may try again next year; a botch, never with that teacher
+  (Art & Academe pp. 81-87). The inspector shows what the school teaches
+  and to what score (the Limits of Education, p. 79), and a year's fees.
+  Acceptance is 1 xp toward his Good Academic Reputation.
+- **A deed for the Academic Reputation** (p. 103): each of these earns a
+  Good Academic Reputation 1 xp: a summa at half his score, a tractatus,
+  two lecture commentaries, a translation into Latin, raising Artes
+  Liberales, Philosophiae, Theology or Law, a gloss of a text a school
+  teaches, acceptance as a student, a teaching or church post. A Bad one
+  gains 5 for being forced out of a post, no summa in five years, a
+  benefice lost or immoral deeds, 10 for a clerical position lost, 1 for
+  no tractatus or commentary in two years or a year with no Good xp.
+  Against another faith, the xp is doubled (p. 88). Name the Reputation,
+  or the xp goes to his highest of that side (a new one if he has none);
+  a Good and a Bad one are separate entries, each with its own positive
+  score.
+  Hermetic Arts earn none.
 
 ## Byzantine Customs
 <!-- help: theban-customs -->
@@ -1309,6 +1420,17 @@ from his record or his tradition's chapter.
 Art's total for one who holds one.
 <!-- /gui -->
 
+<!-- tui -->
+With Apprentices in play, on a Gifted character More (`m`) offers
+[Turbulence](help:turbulence); on an apprentice, also
+[The Gauntlet](help:gauntlet) and [Lose the Gift](help:lose-the-gift).
+<!-- /tui -->
+<!-- gui -->
+With Apprentices in play, **Turbulence** sits beside the Abilities chapter's
+buttons for a Gifted character, and **The Gauntlet** and **Lose the Gift**
+for an apprentice.
+<!-- /gui -->
+
 
 **See also:** [Virtues & Flaws tab](help:tab-vf),
 [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
@@ -1478,6 +1600,28 @@ as for an enchanted device (DE pp. 256-258; Ancient Magic pp. 107-118).
 **Not yet:** a season of work making the item or inventing the effect
 for you (add it here when the season is done), and the catalogs of each
 book's printed spells and charms.
+
+**Faerie rites** (the ollamhain, the volkhvy and the wise folk). A rite is built on one of the
+tradition's Faerie Powers' guidelines (Beguile, Dream and Portage for the ollamhain; Conjure
+and Grant for the volkhvy; Ware, Weal and Woe for the wise folk) with any Method, and may take
+the Hermetic Ranges, Durations and Targets, House Merinita's Faerie Magic ones (Road, Fire,
+Until (Condition), Year + 1, Bloodline; DE pp. 237-238; not Bargain, which Realms of Power:
+Faerie doesn't give rites) and the Faerie ones: Crossroads,
+Presence (as far as the caster's Presence reaches: 100 paces at +4, 50 at +2, 15 at -1 to +1,
+5 at -3, himself alone at -4), Prop, Symbol; Held, Focus, While (Condition), Geas (Condition),
+Hour + 1, Midday/Midnight, Not (Condition), Season, Aura, Faerie, Hidden, If (Condition),
+Symbol; Medium, Passion, Symbol (Realms of Power: Faerie pp. 122-123). Geas and If add the
+triggered effect's Duration: type its magnitudes as further magnitudes (a Geas is Sun plus the
+trigger's Duration; If is the trigger's Duration plus four, and a ritual). Each rite's row says
+the Sympathy points it needs (a fifth of its level: a rite reaches at most 5 x the Sympathy
+Traits that apply to its target, negatives counted by their size, and a Conjure change counts
+the Traits of both states; pp. 121, 125). The book's limit is firm, but the app can't tell
+which Traits apply, so it only warns when the rite needs more than all the character's
+Sympathy Traits together, temporary ones included; the 3 points each Symbol needs; the parameters that make it a
+ritual (fifteen minutes a magnitude, no vis); and what its Method asks: Evocation a Warping or
+Confidence Point and vis at +2 a pawn up to Evocation + the Power, Enchantment a performance
+against 3 x the magnitude first, Empathy a Fatigue level and an hour's trance, each further
+Fatigue level adding the limit again (pp. 121-124; Errata p. 68).
 
 ## A tradition's Casting
 <!-- help: tradition-casting -->
@@ -1844,6 +1988,11 @@ Lesser or Greater Charm's details give the charm rules (Realms of Power:
 Faerie p. 104); the Ríastradh's and the Lúan láith's say how they work in
 play (The Contested Isle pp. 120-121).
 
+A Faerie God's blood may name its Olympian: choose "Faerie God: Zeus" (or Hera, Poseidon,
+Demeter, Apollon, Artemis, Athene, Ares, Aphrodite, Hephaistos, Hermes, Dionysos, Hestia), and
+the Virtue's details list that god's Sympathy Traits to choose from (The Sundered Eagle
+p. 127): Zeus, for one, Thunder & Lightning, Kings and Sky, with Fidelity negative.
+
 ### Flaws
 <!-- help: section-vf-flaws -->
 
@@ -2140,6 +2289,16 @@ can't be worked out (Chthonic Magic's sinful acts, the faerie rite
 parameters) is written in
 that closing line as the books word it.
 
+A character with **Dead Language: Adamic** has a note: any Adamic adds +1
+to the Penetration multiplier against a target named within Voice range,
+with an Arcane Connection to it; fluent (5 or more), the named target is
+always a lasting connection (+4), so +5 in all, and a mundane thing whose
+name he knows counts as an Hours connection (Ancient Magic pp. 10-11). A
+holder of a **Secret of the Grigori** has a note of its three Arts: their
+vis may stand for one another and requisites among them are ignored; held
+as the Supernatural Virtue (not a Legacy), vis used so in a Divine or
+Infernal aura rolls double the botch dice (p. 67).
+
 ### Raw Vis
 <!-- help: section-raw-vis-hermetic -->
 
@@ -2205,6 +2364,8 @@ More (`m`) here offers [Craft by Magic](help:craft-magic).
 **Craft by Magic**, beside Known Spells' buttons, works out a craft spell's
 Finesse roll.
 <!-- /gui -->
+
+With the saga option Learning cantations in play, More (`m`) here (on the desktop, a button beside Known Spells) offers [Learn a Cantation](help:learn-cantation).
 
 ## Craft by Magic
 <!-- help: craft-magic -->
@@ -2291,6 +2452,24 @@ discoveries of House Bonisagus (the six Parma Magica folds of the Arma
 Magica, Parmulae, Figurine Magic and Realm-aligned spells). Choosing one
 fills in its name, kind, points and what it grants, which you can still
 change (Ancient Magic, Introduction, The Breakthrough).
+
+Ancient Magic's chapters add what their integrations need. A goal named
+for one (the Grigori Legacy, the Limit of Vis, Mutable Device, Awakened
+Device, the vis-less devices) shows in its details the Arts and kind of
+effect its Insights produce and the texts, relics and teachers that give
+Insight: for the Grigori, the second book of The Enigma of the Sons of
+God, the Stelae of the Watchers on Mount Hermon (also a Magic Theory
+summa, Level 8, Quality 6) and Shamsiel on Mount Ararat (Ancient Magic
+pp. 69-73); for Heron, his uncorrupted Greek texts, a working mechanica
+and an anima (pp. 76, 79). A magus who holds a Secret of the Grigori gains
+one extra breakthrough point each season of research toward the Grigori
+Legacy, and a Secret or a Legacy each season toward the Limit of Vis
+(p. 67); the app adds it when the season is applied and notes it in the
+Diary. Two more choices follow Mutable Device: **Awakened Device, after
+Mutable Device**, a Minor Breakthrough of 30 points once Mutable Device is
+reached, and **Mutable Device without the Virtue**, the second Major
+Breakthrough (45) that lets any magus with a Lab Text make them (p. 79;
+Ars Magica Definitive Edition p. 281).
 
 House Bonisagus's example discoveries (True Lineages pp. 30-34) say what
 they give once reached: the six Parma Magica folds, Parmulae and
@@ -2690,6 +2869,8 @@ anyone with Labor Points, **Invest Time or Money**.
 Edit and Clear.
 <!-- /gui -->
 
+Turbulence is offered here too: an apprentice assisting in a stressful laboratory season checks for one midway through it (Apprentices p. 56).
+
 ### Seasons Ahead
 <!-- help: section-char-ahead -->
 
@@ -2754,3 +2935,91 @@ Warping, and for vis moved, written as they happen.
 
 **See also:** [Planning tab](help:tab-planning),
 [Advancing a season](help:advance-season)
+
+## Turbulence
+<!-- help: turbulence -->
+
+A Gifted child's untrained Gift lashing out (Apprentices pp. 22-24). Choose
+why it is checked:
+
+- **A botched stressful roll that includes magic** (how loosely "includes
+  magic" is read is the troupe's call, p. 22).
+- **A potential botch on magic**, for a character with Turbulence Prone
+  (p. 12): checked whether or not he botched, and he can't control it.
+- **Forced**: a Confidence Point spent to call one up at will (p. 24).
+- **Midway through a stressful laboratory season**, offered while he is
+  planned to Assist and not yet checked this season (p. 56): the parens
+  experimenting, more than 10 pawns of vis, odd hours or a Lab Total barely
+  enough make a season stressful.
+
+The incurring roll is Intelligence + stress die + the aura's modifier for a
+Magic power, less half the level of an Aegis of the Hearth he had no part
+in; it must beat both the storyguide's stress die and his age. Only the
+storyguide's die there is no-botch (p. 22): the player's die, and both
+dice of the control roll, are ordinary stress dice that can botch. A
+botched die counts 0, the inspector and the Diary say which die botched,
+and what else the botch brings is the troupe's call. A child's
+Characteristics take the Aging Chart's modifier. Controlling it is Stamina +
+stress die against Warping Score + stress die (Errata p. 83); half the
+difference is the effect's magnitude (the book gives no rounding for an
+odd difference: the app rounds down, its own gap-fill), any Technique and Form (an Affinity or
+Puissant Art a good choice). Controlled, the player chooses the effect;
+uncontrolled, the storyguide. It has no Penetration unless he has the
+Ability: its score x (1 + a sympathetic multiplier). More Confidence may be
+spent on either roll, +3 a point, at most his Confidence Score on one roll.
+
+In the laboratory an uncontrolled Turbulence halves his aid to the Lab
+Total; for a storyguide character, tick the box to roll for losing the
+Gift as well: on a 0, a botch die for every 10 of the parens' Lab Total, and
+any 0 loses it (p. 59; then use Lose the Gift).
+
+**Roll** rolls it and writes it in the Diary.
+
+## The Gauntlet
+<!-- help: gauntlet -->
+
+The parens' test of his apprentice (Apprentices pp. 59-61), for a character
+with the Apprentice Social Status. Choose how it is decided:
+
+- **Played as a story**: the parens says whether he passed.
+- **Passed without a story**, once he has served his 15 years.
+- **Rolled**: Intelligence + an Ability fitting his House + stress die
+  against 9; a botch means something dire happened.
+
+Failed, he spends another year as an apprentice; after three failures the
+Quaesitores set his Gauntlet. Kept more than 20 years is a low crime in many
+Tribunals: convicted, the parens forgoes the Gauntlet and pays a rook of vis
+(10 pawns) for each year past 15. Passed, Hermetic Magus replaces
+Apprentice, the character becomes a magus, and after the Oath he has Parma
+Magica's final key: until then his Parma Magica gives no Magic Resistance
+(DE p. 169). **Record** writes the result in the Diary.
+
+## Lose the Gift
+<!-- help: lose-the-gift -->
+
+Failing an apprentice (Apprentices pp. 58-59): always the player's choice.
+
+- **Lost for good**: The Gift (and a Gentle or Blatant Gift) is taken away;
+  he casts no spells and works no magic, and his Supernatural Virtues and
+  Abilities stop working. Failed Apprentice replaces Apprentice, and a
+  magus's record becomes a companion's.
+- **Suppressed**: he gains the Major Hermetic Flaw Suppressed Gift; his
+  existing Supernatural Virtues and Abilities still work, but he gains no new
+  Supernatural or Hermetic Virtues while it lasts. How it returns is the
+  troupe's story.
+
+**Save** makes the change and writes the cause in the Diary.
+
+## Learn a Cantation
+<!-- help: learn-cantation -->
+
+An optional rule (Apprentices p. 46), with the saga option Learning
+cantations in play on: a spontaneous spell cast in play at least as many
+times as its level may be bought as a formulaic spell with that adventure's
+experience, one point a level. Choose the spell (any formulaic spell he
+doesn't know: the book sets no level cap, only the times cast; never a
+Ritual spell, whose effects spontaneous magic can never replicate, DE p.
+311) and how often he cast it; **Learn** adds it to his Known Spells. Give
+that much less of the adventure's experience to his Abilities and Arts.
+The rule is for adult magi as well as apprentices (p. 46), so it is
+offered on any character's Known Spells.

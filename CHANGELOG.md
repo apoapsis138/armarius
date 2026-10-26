@@ -109,6 +109,99 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.22.0 — 2026-10-26
+
+### Gauntlet
+
+- **The Gauntlet**, from More on an apprentice: a story's verdict, a pass
+  for one who has served his fifteen years, or the book's roll; three
+  failures bring the Quaesitores, and an apprentice kept over 20 years is
+  told of the low crime and the rook of vis a year past 15. Passing makes
+  him a magus (Apprentices pp. 59-61).
+- **Lose the Gift**: an apprentice's Gift lost for good (Failed Apprentice
+  replaces Apprentice) or suppressed (pp. 58-59).
+- An apprentice's Parma Magica gives no Magic Resistance until he has
+  passed his Gauntlet and been given its final key (DE p. 169).
+
+### Computus
+
+- **Turbulence** (Apprentices pp. 12, 22-24): a Gifted character's Gift
+  lashing out after a botched magical roll: the incurring roll against the
+  storyguide's die and the character's age, the control roll, its
+  magnitude and Penetration, rolled from More.
+- New saga option, **Learning cantations** (Apprentices p. 46), off by
+  default: a spontaneous spell cast as often as its level may be learned
+  as a formulaic one for that many adventure xp, by apprentices and magi.
+- **Faerie Sympathy Traits** (RoP: Faerie pp. 102-105): a Personality
+  Trait can be a Sympathy Trait, or a temporary one; a character shows his
+  Faerie Rank, the botch dice a negative Trait adds and how far experience
+  may raise them, and a Faerie Calling says whether his Rank makes it a
+  good one.
+- **Faerie rites** are built by the book: the ollamhain, volkhvy and wise
+  folk have their Powers' guidelines and the Faerie Ranges, Durations and
+  Targets, so a rite's level is worked out, with the Sympathy it needs
+  (pp. 121-131).
+- **Ancient Magic**: a Grigori Secret's extra breakthrough point each
+  season of research; the Secrets' vis and requisites; Heron's mechanica,
+  animae, and Mutable and Awakened Devices; Adamic's Penetration bonus;
+  Ptolemy's stellar observation (Ancient Magic pp. 10-11, 65-91).
+- **The noble hunt** from Lords of Men: the quest with lymers, the
+  assembly, the chase hour by hour with its relay and Terrain Bonus, and
+  hawking with the book's flight table, hawks and prey (pp. 48-60); Area
+  Lore's Ease Factors (City & Guild pp. 82-83).
+- Translating needs Artes Liberales, loses the culture point only without
+  the source culture's Area Lore 3 and never for a magus's Hermetic text,
+  and loses less Quality with both languages at 6 (A&A p. 87).
+- Good and Bad Academic Reputations are kept apart, each with its own
+  score (A&A p. 103).
+
+### Book of Hours
+
+- **Create a work of art** works out its Aesthetic Quality with every
+  bonus Art & Academe gives, and its time from the kind of piece,
+  assistants and haste; it earns Artist Reputation experience, rolls its
+  experiment, and lets a maestro instill magic as he works (pp. 123-135).
+- New seasons: **Edit a lecture commentary**, **Seek a teaching or
+  clerkly post** (A&A pp. 84, 89, 102) and **Learn to measure the fixed
+  stars** (Ancient Magic p. 90).
+- Recording a teacher's lectures gives him Academic Reputation experience
+  for every second commentary (A&A p. 103).
+- An apprentice assisting in a stressful laboratory season can check for a
+  Turbulence midway through it: uncontrolled, his aid is halved
+  (Apprentices p. 56).
+
+### Pagina
+
+- More offers **An Artist's Career** (a sponsor, trying conditions, a
+  Reputation's deeds) and **A Scholar's Career** (a place at a school, an
+  Academic Reputation's deeds) (A&A pp. 79-89, 103, 125-131).
+- More offers **The Hunt** and **Area Lore** on a manor, and beside
+  Travel on Ahead for a journey, each with an inspector; the outcome goes
+  to the Diaries, with the chase's Long-Term Fatigue.
+- A faerie creature notes its role in its stories and the story it wants
+  (RoP: Faerie pp. 40, 140-142).
+- A research goal's details name where its Insight is found; the Casting
+  Scores notes remind of Adamic and the Grigori Secrets.
+- A Reputation can be marked bad.
+
+### Concilium
+
+- A Transylvanian Tribunal's meeting holds **the Praeco's purse**: the
+  Tribunal's projects for her, a levy on each oppidum the law obliges, her
+  reserved vis source, the stipends and her promissory notes; and appoints
+  **the Curantis** and his Notary, paid from the treasury, never two terms
+  running (Against the Dark pp. 19, 97). The treasury shows levies unpaid
+  and notes outstanding.
+
+### Florilegium
+
+- Ancient Magic's lost magics are catalog data, with two more integration
+  choices on Add Research Goal (Awakened Device after Mutable Device;
+  Mutable Device without the Virtue); errata to the fixed-stars spell and
+  Azael's Secret.
+- A Faerie God's blood can name its Olympian, and lists that god's
+  Sympathy Traits (The Sundered Eagle p. 127).
+
 ## 3.21.0 — 2026-10-26
 
 ### Gauntlet

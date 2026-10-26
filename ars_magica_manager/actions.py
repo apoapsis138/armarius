@@ -36,6 +36,7 @@ from . import goods as gd
 from . import inhabitants as inh
 from . import lab_texts as lt
 from . import spells as spl
+from .forms import careers
 from .forms import charter as charter_forms
 from .models import (
     FULL,
@@ -55,6 +56,7 @@ from .models import (
 )
 from .rules import agents as agent_rules
 from .rules import apothecary, covenfolk, merchants, philosophy
+from .rules import gauntlet as gauntlet_rules
 from .rules import goetic as goetic_rules
 from .rules import sin as sin_rules
 from .rules import theban_customs as byzantine
@@ -365,6 +367,19 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("n", "indulge_sin", "Confidence through Sin"),
     MenuItem("u", "infernal_influence", "Infernal Influence"),
     MenuItem("g", "ars_goetia", "Ars Goetia"),
+    # The hunt and Area Lore, on a manor and on the road (LoM, C&G).
+    MenuItem("h", "hunt_on_manor", "The Hunt"),
+    MenuItem("l", "area_lore_on_manor", "Area Lore"),
+    MenuItem("h", "hunt_on_journey", "The Hunt"),
+    MenuItem("l", "area_lore_on_journey", "Area Lore"),
+    # An apprentice's magic and the Gauntlet (Apprentices).
+    MenuItem("b", "turbulence", "Turbulence"),
+    MenuItem("u", "gauntlet", "The Gauntlet"),
+    MenuItem("z", "lose_the_gift", "Lose the Gift"),
+    MenuItem("c", "learn_cantation", "Learn a Cantation"),
+    # Art & Academe's artists and scholars, between their seasons.
+    MenuItem("t", "artist_career", "An Artist's Career"),
+    MenuItem("k", "scholar_career", "A Scholar's Career"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -408,6 +423,9 @@ MORE_SECTIONS: dict[str, str] = {
     # The Rhine's ranks: masters' marks and archmagi's challenges.
     "rhine_mark": GILDS_SECTION,
     "rhine_challenge": GILDS_SECTION,
+    # The hunt and Area Lore on the chosen manor.
+    "hunt_on_manor": MANORS_SECTION,
+    "area_lore_on_manor": MANORS_SECTION,
 }
 
 #: Where in the navigation each record can be created: the saga, and
@@ -796,6 +814,84 @@ def _works_goetia(facts: ActionFacts) -> bool:
     )
 
 
+# An apprentice's magic and the Gauntlet (Apprentices).
+
+
+def _apprentices_character(facts: ActionFacts, *sections: str) -> Character | None:
+    """The character on show, from his record or one of `sections`,
+    while Apprentices is in play."""
+    character = facts.selected_character
+    section = facts.active_section() or ""
+    if (
+        facts.selected_kind != NodeKind.CHARACTER
+        or character is None
+        or not gauntlet_rules.in_play(facts.saga)
+        or section not in ("", RECORD_SECTION[NodeKind.CHARACTER], *sections)
+    ):
+        return None
+    return character
+
+
+def _turbulent(facts: ActionFacts) -> bool:
+    """Turbulence: a Gifted character, from his record or This Season."""
+    character = _apprentices_character(facts, "section-char-season")
+    return character is not None and gauntlet_rules.gifted(character)
+
+
+def _faces_gauntlet(facts: ActionFacts) -> bool:
+    """The Gauntlet: an apprentice (the Social Status)."""
+    character = _apprentices_character(facts)
+    return character is not None and gauntlet_rules.apprentice(character)
+
+
+def _may_lose_gift(facts: ActionFacts) -> bool:
+    """Lose the Gift: a Gifted apprentice."""
+    character = _apprentices_character(facts)
+    return (
+        character is not None
+        and gauntlet_rules.apprentice(character)
+        and gauntlet_rules.gifted(character)
+    )
+
+
+def _learns_cantation(facts: ActionFacts) -> bool:
+    """Learn a Cantation: on Known Spells, with the saga option on."""
+    character = _apprentices_character(facts, "section-known-spells")
+    return (
+        character is not None
+        and facts.active_section() == "section-known-spells"
+        and gauntlet_rules.cantations_in_play(facts.saga)
+    )
+
+
+# Art & Academe's artists and scholars.
+
+
+def _academe_person(facts: ActionFacts) -> Character | None:
+    """A person's record (not an animal's), with Art & Academe in play."""
+    character = facts.selected_character
+    if (
+        facts.selected_kind != NodeKind.CHARACTER
+        or not facts.on_record()
+        or character is None
+        or character.animal is not None
+        or not sourcebooks.in_play("A&A", sourcebooks.saga_books(facts.saga))
+    ):
+        return None
+    return character
+
+
+def _makes_art(facts: ActionFacts) -> bool:
+    """An Artist's Career: someone with a Craft or Profession."""
+    character = _academe_person(facts)
+    return character is not None and bool(careers.artist_crafts(character))
+
+
+def _studies(facts: ActionFacts) -> bool:
+    """A Scholar's Career: anyone."""
+    return _academe_person(facts) is not None
+
+
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
@@ -840,6 +936,14 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "indulge_sin": _sins,
     "infernal_influence": _influences,
     "ars_goetia": _works_goetia,
+    # An apprentice's magic and the Gauntlet (Apprentices).
+    "turbulence": _turbulent,
+    "gauntlet": _faces_gauntlet,
+    "lose_the_gift": _may_lose_gift,
+    "learn_cantation": _learns_cantation,
+    # Art & Academe's artists and scholars.
+    "artist_career": _makes_art,
+    "scholar_career": _studies,
 }
 
 
@@ -1024,4 +1128,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
     # An apothecary's searching and preserving, on This Season.
     "apothecary_store": _works_for_labor(apothecary.keeps_store),
+    # The hunt and Area Lore on the road, beside Travel on Ahead.
+    "hunt_on_journey": _plans_journey,
+    "area_lore_on_journey": _plans_journey,
 }

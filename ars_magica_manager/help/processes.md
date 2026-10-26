@@ -106,8 +106,65 @@ a list of Virtues to choose from, which asks for anything the entry names (an Af
 <!-- /gui -->
 **Ordeal** says what the Ordeal costs, if anything: a Flaw gained (chosen in the picker), one of the Initiate's Minor or Major Virtues lost, or one of their Minor Flaws raised to a related Major Flaw. Its size follows: a Minor Flaw or Virtue is a Minor Ordeal, a Major one a Major Ordeal, a raised Flaw a Medium one. The Initiation succeeds when the Mystagogue's Presence + Lore + Script bonus reaches 15 for a Minor Virtue or 21 for a Major (18 or 30 when the Mystagogue lacks it), less the largest reduction among the Initiate's past Ordeals; the Initiate needs the Lore at 1 unless it is their own House's. See [How to initiate a character into a Mystery](help:guide-initiation).
 - **Activities from the supplements**, such as Study a significato, Library research or Act as Mystagogue. Library research shows the roll's total before the die: Intelligence + the Ability + the better of the covenant library's research bonus for it and its best encyclopedia's.
+- **Learn to measure the fixed stars** (Ancient Magic, a magus): a season learning Ptolemy's measure of the array of fixed stars, the first stage of his coordinates; no experience. The app records it and won't plan it twice. The second stage, calibrating the system at its origin on the Zero Longitude in the Purple Islands, is a journey for the troupe; after both, a stellar observation (Intelligence + Artes Liberales against 15, four hours of clear stars, two with a supernaturally accurate timepiece, plus the calculations) gives the coordinates of where the magus stands, an Arcane Connection that never fades (Ancient Magic pp. 89-91; Errata p. 58).
 - **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs). Care of Souls stays a priest's (p. 28).
 - **Set points:** Useful correspondence's 1 xp, and the 1 xp in Organization Lore: Order of Hermes for each book read from a folio, are set points (Covenants p. 90; Houses of Hermes: True Lineages p. 23): no Affinity, Savantism or wound halves or multiplies them, and Master of None and Secondary Insight ignore them. **Study a realia collection** is for one outside the library, such as an exhibit at Tablinum; one the covenant owns is a book of the Realia kind (see [Books](help:section-lib-books)). **Study another artist's work**: Source Quality is half the work's Aesthetic Quality, and each work is studied once, like a tractatus (Art & Academe p. 126, with Atlas Games' errata).
+
+**Create a work of art** (Art & Academe pp. 123-135). Its Aesthetic
+Quality is Dexterity + Craft (Communication + Profession for a
+performance, or Craft: Poetry), + Puissant, + 3 for Free Expression and
+3 for Inspirational, + the season form's choices: twice the time +1;
+overtime +1 and an Aging roll when it is done; a liberal art used, +
+Artes Liberales / 3; a muse's sacrificed Might, +1 per 5; Life-Linked
+Art's wound, +1, +3 or +6; a maestro or legendary artist in an aura of
+the realm his nature is aligned with, + aura / 5 rounded up (never the
+aura itself, and nothing for any other artist: Grifo's mural in his
+church's Divine aura 3 comes to 19, where the book's example on p. 134
+leaves the +1 out); Hermetic Inclination's Form Bonus; Artist Reputation 10, +3; half
+the time, the Quality halved. The kind of piece sets its base time (a
+season, two small pieces in a season, a year, a castle or church a year
+per Size point, a cathedral ten years per Size point), times the
+Quality / 10 rounded up; assistants, no more than his Leadership, take
+3.5 days, a week or a month off each, to no less than half; Prolific
+Artist takes a quarter off and allows no assistants. Each season whose
+piece is over three times his Artist Reputation is 1 xp in it.
+Experimenting adds a simple die / 2 (rounded up) to the Aesthetic
+Quality and then at once rolls a stress die on the Artist
+Experimentation Results (p. 124): the two are rolled together, in the
+season the piece is finished. The book gives no season for a piece of
+several; rolling them in the finishing one is the app's choice, since a
+plan keeps nothing from one season to the next. A disaster or a ruined
+piece loses the work (and a whole Reputation point, or Reputation xp
+equal to the piece's presumed Aesthetic Quality, p. 126), a disparaged one loses a Quality point and a whole
+Reputation point, a praised piece gives xp equal to its Quality, a
+praised artist a whole Reputation level. A finished piece is an Arcane
+Connection to him for half the time it took, a week less for each
+assistant (none for a castle, church or cathedral). A maestro with
+Hermetic Inclination may instill a Personal, constant effect of his
+Form as he works: Dexterity + Craft + the Form + the aura's realm
+interaction, the points over the effect's level each season, until they
+reach it, and a Fatigue level per 10 levels lost while he works.
+
+**Edit a lecture commentary** (p. 102): a season rewriting a commentary
+of his own lectures adds 1 Quality and his writing Virtues (Good
+Teacher), once. Every second commentary of a teacher's lectures earns
+him an Academic Reputation xp (p. 103).
+
+**Seek a teaching or clerkly post** (p. 89): a season looking, then
+Presence + the post's Ability + his highest Good Academic Reputation -
+his highest Bad one + 1 for a Minor Social Status Virtue or Educated,
+Privileged Upbringing, Famous or Wealthy (3 for a Major Social Status
+Virtue) + a stress die: 12 a secular jurist or copyist, 15 a municipal,
+royal court or monastic teacher (a monk), 18 a cathedral school teacher
+or a magister's or doctor's chair (the licence). A failure wastes the
+season; a botch also costs a Medium Wound or a Bad Reputation. A post
+won is an Academic Reputation xp; a cathedral teacher's students are a
+simple die for each point of his Presence + Good Academic Reputation,
+and he teaches five times his Teaching.
+
+**Translating** (p. 87) now needs Artes Liberales 2 (1 between
+languages of one alphabet), and a translator with both languages at 6
+loses one Quality point less.
 
 - **Research a formula** (Art & Academe p. 70): A formula is a recipe for an
   astrological inception (Artes Liberales), an alchemical reagent
@@ -602,6 +659,32 @@ reworded by editing it.
 On the desktop, choose the Acta in the Diary and press Print to print it
 to a PDF.
 <!-- /gui -->
+
+**Transylvania's meeting.** Two steps come before the rulings.
+
+*The Praeco's purse* (Against the Dark p. 19). The Tribunal gives the
+Praeco the projects she is to fund until the next meeting, and with them
+the levies she may raise: write the projects, then a levy on each oppidum
+(in pawns of an Art, or in pounds with the Art left blank). The book has
+the legal covenants of the cives, socii and coloniae, and some of the
+foederati, owe the projects reasonable aid, by their status, not each magus
+for himself; the hospites' covenant is not named, so an oppidum of hospites
+can't be levied. The app lays each levy on an oppidum, and its hint says
+which of the oppidum's magi belong to a covenant that owes aid. Each levy goes on the treasury, owed until it is marked
+paid. The pawns from the large vis source set aside for her come into the
+treasury. She collects the Redcaps' and Quaesitores' stipends and Redcaps
+deliver them, so they only go into the minutes. She may redeem promissory
+notes (their pawns leave the treasury) and issue a new one: what it
+borrows comes into the treasury now.
+
+*The Curantis and his Notary* (p. 97). The Curantis keeps the zenodochia,
+the Tribunal's safehouses for travelling magi. He is appointed at every
+meeting for a term to the next, usually unopposed, and no one serves two
+terms running. Say whether the outgoing Curantis built a new zenodochium
+in his term, as he is expected to; choose the new one, the Notary the
+outgoing Curantis selected (often a Redcap, or a magus fresh from his
+Gauntlet), and his salary, which leaves the treasury now. Both then show
+as offices on the Five Covenants list. A colona may not be Curantis.
 
 **See also:** [How to hold a Tribunal](help:guide-tribunal), [Tribunal sheet](help:tribunal), [Meeting tab](help:tab-trib-meeting)
 

@@ -221,7 +221,7 @@ magus or in their laboratory.
 - **Current date**: the season and year the saga is in, under its name. It is also shown on Advance Season, in the top bar of every page.
 <!-- /gui -->
 - **Books in play**: the sourcebooks the troupe uses, and how many of the saga's own sources are in play. They are chosen on [Saga Content](help:section-books-in-play), which says what a book out of play switches off.
-- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described beside it in Edit Saga; Harsher Infernal vis (Realms of Power: The Infernal), Extended book Quality (Covenants), Dominion growth (Realms of Power: The Divine) and Auras change (Realms of Power: Magic) are offered only while their book is in play. With Dominion Magic Resistance on, a Christian, Jew or Muslim (or anyone whose religion is left blank) living in a Dominion aura shows Magic Resistance of 5 x that aura on their sheet. Simple dice only and Dominion Magic Resistance are house rules the Definitive Edition offers as examples (Chapter 16: Sagas, Rules Questions, p. 524), not rules of the game; Extended book Quality comes from Covenants' Library chapter. Standard apprenticeship model (Apprentices) is offered only while that book is in play, off by default: see the Apprenticeship step of [the Creation Worksheet](help:creation-worksheet-steps).
+- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described beside it in Edit Saga; Harsher Infernal vis (Realms of Power: The Infernal), Extended book Quality (Covenants), Dominion growth (Realms of Power: The Divine) and Auras change (Realms of Power: Magic) are offered only while their book is in play. With Dominion Magic Resistance on, a Christian, Jew or Muslim (or anyone whose religion is left blank) living in a Dominion aura shows Magic Resistance of 5 x that aura on their sheet. Simple dice only and Dominion Magic Resistance are house rules the Definitive Edition offers as examples (Chapter 16: Sagas, Rules Questions, p. 524), not rules of the game; Extended book Quality comes from Covenants' Library chapter. Standard apprenticeship model (Apprentices) is offered only while that book is in play, off by default: see the Apprenticeship step of [the Creation Worksheet](help:creation-worksheet-steps). Learning cantations in play (Apprentices) is offered only while that book is in play, off by default: see [Learn a Cantation](help:learn-cantation).
 <!-- tui -->
 - **Keep season records**: when on, each season applied is kept under Seasons in the tree. When off, only the characters' Diaries keep them.
 <!-- /tui -->
@@ -609,6 +609,15 @@ each of them if Travel quickly is ticked, and their arrival in the saga's
 calendar, so it shows on Ahead (a season is taken as 13 weeks: a journey
 of 91 days or more arrives a season later). Set Out needs someone named
 in Who goes and a journey it can work out.
+
+**The Hunt** and **Area Lore** sit beside Travel on Ahead, for the road.
+A hunt on the road first needs a hunting spot: the party's best
+Intelligence + Area Lore against 6 (City & Guild p. 83). With no
+huntsman named, the hunters quest and lay the relay themselves. Game
+in a lord's chase, warren or forest is poached, and fiercely punished
+(Lords of Men pp. 48-49). Otherwise both work as on a manor (see
+Manors): Area Lore finds roads, fords, inns, hazards and people along
+the route by the book's Ease Factors.
 
 ## The World Turned
 <!-- help: section-world-turns -->
