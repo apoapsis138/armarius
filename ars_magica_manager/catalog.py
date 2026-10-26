@@ -18,6 +18,7 @@ from .models import (
     COVENANT_BOON_HOOK_CATEGORIES,
     AbilityDef,
     ArmorDef,
+    ArmorPieceDef,
     CharacterTemplateDef,
     CovenantBoonHookDef,
     CovenantSituationDef,
@@ -372,14 +373,64 @@ def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> Mapping[str, Ho
     return _cached_by_id(path, HouseDef.from_dict)
 
 
+#: The guideline tables several traditions share: the holy Powers' (RoP:
+#: The Divine pp. 48-56) and the maleficia's (RoP: The Infernal pp.
+#: 105-112), each named by a tradition's "guideline_sets".
+POWER_GUIDELINES_PATH = DATA_DIR / "power_guidelines.json"
+
+
+@lru_cache(maxsize=4)
+def _guideline_sets(path: Path) -> Mapping[str, dict[str, Any]]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return MappingProxyType(data["sets"])
+
+
+def with_guideline_sets(
+    entry: dict[str, Any], path: Path = POWER_GUIDELINES_PATH
+) -> dict[str, Any]:
+    """A tradition's entry with the shared tables it names added: the
+    guidelines for the Powers among its Abilities, the set's Ranges,
+    Durations and Targets it doesn't list itself, and the set's source."""
+    names = entry.get("guideline_sets") or []
+    if not names:
+        return entry
+    sets = _guideline_sets(path)
+    held = set(entry.get("abilities") or [])
+    guidelines = list(entry.get("guidelines") or [])
+    parameters = list(entry.get("effect_parameters") or [])
+    sources = [entry["guideline_source"]] if entry.get("guideline_source") else []
+    for name in names:
+        if name not in sets:
+            raise ValueError(f"{entry.get('id')}: no guideline set {name!r}")
+        shared = sets[name]
+        guidelines += [g for g in shared["guidelines"] if set(g["arts"]) <= held]
+        known = {(p["kind"], p["name"]) for p in parameters}
+        parameters += [
+            p
+            for p in shared.get("effect_parameters") or []
+            if (p["kind"], p["name"]) not in known
+        ]
+        sources.append(shared["source"])
+    return {
+        **entry,
+        "guidelines": guidelines,
+        "effect_parameters": parameters,
+        "guideline_source": "; ".join(sources),
+    }
+
+
+def _tradition(entry: dict[str, Any]) -> TraditionDef:
+    return TraditionDef.from_dict(with_guideline_sets(entry))
+
+
 def load_tradition_catalog(path: Path = TRADITION_CATALOG_PATH) -> list[TraditionDef]:
-    return list(_cached_entries(path, TraditionDef.from_dict))
+    return list(_cached_entries(path, _tradition))
 
 
 def load_tradition_catalog_by_id(
     path: Path = TRADITION_CATALOG_PATH,
 ) -> Mapping[str, TraditionDef]:
-    return _cached_by_id(path, TraditionDef.from_dict)
+    return _cached_by_id(path, _tradition)
 
 
 def load_character_template_catalog(
@@ -529,11 +580,12 @@ def boon_hook_sort_key(entry: CovenantBoonHookDef) -> tuple[int, int, str]:
 @lru_cache(maxsize=4)
 def _weapon_armor_catalog(
     path: Path,
-) -> tuple[tuple[WeaponDef, ...], tuple[ArmorDef, ...]]:
+) -> tuple[tuple[WeaponDef, ...], tuple[ArmorDef, ...], tuple[ArmorPieceDef, ...]]:
     data = json.loads(path.read_text(encoding="utf-8"))
     return (
         tuple(WeaponDef.from_dict(entry) for entry in data["weapons"]),
         tuple(ArmorDef.from_dict(entry) for entry in data["armor"]),
+        tuple(ArmorPieceDef.from_dict(e) for e in data.get("armor_pieces", [])),
     )
 
 
@@ -562,6 +614,20 @@ def load_armor_catalog_by_id(
     path: Path = WEAPON_ARMOR_CATALOG_PATH,
 ) -> dict[str, ArmorDef]:
     return {entry.id: entry for entry in _weapon_armor_catalog(path)[1]}
+
+
+def load_armor_piece_catalog(
+    path: Path = WEAPON_ARMOR_CATALOG_PATH,
+) -> list[ArmorPieceDef]:
+    """Lords of Men's armour pieces (Expanded Armor Table, p. 140), in its
+    order: body armours, surcoats and greaves, helmets (cached)."""
+    return list(_weapon_armor_catalog(path)[2])
+
+
+def load_armor_piece_catalog_by_id(
+    path: Path = WEAPON_ARMOR_CATALOG_PATH,
+) -> dict[str, ArmorPieceDef]:
+    return {entry.id: entry for entry in _weapon_armor_catalog(path)[2]}
 
 
 @lru_cache(maxsize=4)

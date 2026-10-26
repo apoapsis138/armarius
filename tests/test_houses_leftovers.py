@@ -10,7 +10,6 @@ from ars_magica_manager import (
     book_kinds,
     books,
     casting_text,
-    code_of_hermes,
     ruling_templates,
     sheet_text,
 )
@@ -30,6 +29,7 @@ from ars_magica_manager.models import (
 )
 from ars_magica_manager.rules import (
     casting_virtues,
+    code_of_hermes,
     common_magics,
     fenicil,
     house_discoveries,

@@ -225,10 +225,18 @@ What a case records:
 - **Kind**: a *charge* accuses someone of breaking the Code; a *motion*
   asks the Tribunal to decide or declare something (a new ruling, a
   boundary, recognising a covenant); an *appeal* asks it to reverse an
-  earlier ruling.
+  earlier ruling. Two more come from Hermetic law: a *Wizard's War* is a
+  declaration of war kept on the docket, and a *Wizard's March* is one a
+  Quaesitor called between meetings, for the next Tribunal to ratify
+  (Houses of Hermes: True Lineages p. 63). Neither needs notice.
 - **Brought by** and **Against**: who brings it and who it is against,
   as names. A covenant or magus of the troupe's named in Against is
   flagged.
+- **Victim**: who the crime was done to, when that is not whoever brought
+  the case (blank: the one who brought it). Victim and prosecutor are
+  separate roles: anyone may bring the case of a slain magus, and a
+  Quaesitor may prosecute a high crime (Houses of Hermes: True Lineages
+  p. 56). Not asked of a Wizard's War.
 - **Charge**: what is alleged or proposed, in a sentence or two.
 - **Filed**: the year and season it was filed.
 - **Notice given**: whether the parties have been told of it in time.
@@ -254,6 +262,76 @@ share, attacking the Order's allies or aiding its enemies. Only a high
 crime lets the prosecution call for a Wizard's March. The app reads the
 charge's words, so it can be wrong: the Presiding Quaesitor's word is the
 rule.
+
+A charge whose words name a low crime of the Peripheral Code says so too
+(Houses of Hermes: True Lineages): reading a text marked with another's
+sanctum or House mark (p. 71), reading Quaesitorial texts (p. 70), not
+helping a Quaesitor's investigation (p. 62), perjury, deceiving a
+Quaesitor, breaking a contract or an assault short of life or magic
+(p. 56), vagrancy (p. 49), keeping a Gifted child as a lab assistant
+(p. 52).
+
+**Wizard's War.** File a declaration as a case of the Wizard's War kind:
+Brought by is the magus who declares it, Against the magus he declares it
+on (one magus: to war on a covenant, declare on each of its magi), Filed
+the season it arrived, and **Arrived at the full moon of month** which of
+the season's three full moons (1 to 3). The war begins at the next full
+moon and lasts until the one after: a month to prepare, then a month of
+war (Ars Magica Definitive Edition p. 21). **Served** says how the
+declaration reached him: by a Redcap, who is its legal witness (HoH: True
+Lineages p. 47); into his hands; nailed to his sanctum door while he was
+at the covenant, which most Tribunals hold duly served; to his
+representative or forwarding address; while he was away and named no
+one, which a Tribunal that asks magi to name a representative treats as
+wilfully ignored; or not delivered, when the messenger tells a Quaesitor,
+who rules whether it stands (HoH: Societates p. 23). A war stays on the
+docket but no meeting hears it, unless **Its service is disputed** is
+ticked or it was not delivered. The same two magi can't be at war again
+until the first war has ended, so a renewed declaration gives a month of
+war, a month of peace (HoH: Societates p. 23); a magus may be at war with
+several others at once. The details say when the war runs, whether it is
+to come, this season or over, and what the Code allows: either may slay
+the other without retribution and neither is charged for declaring it,
+but harm to other magi or to property shared with them, and scrying on or
+attacking those not at war, stay crimes (HoH: Societates pp. 22-23; HoH:
+True Lineages p. 47). A magus who has declared three or more wars in
+seven years is warned of: unjust or constant use can be charged as
+endangering the Order, even Marched (DE p. 21; HoH: True Lineages p. 48).
+The three in seven years is a storyguide's default the app chose, not a
+rule: no book says how often is too often (DE p. 21; HoH: Societates
+p. 24 speaks only of extreme abuse).
+A war being fought shows on both magi's Hermetic Background.
+
+**Spell traces.** A charge (or motion, appeal or March) can record a
+spell trace found as evidence: **Spell trace: the spell's level**, its
+**Duration**, whether it was **a Ritual**, and **months since it ended**
+(blank while the spell is still active). The details give the trace's
+magnitude now: half the spell's magnitude when it ends, less one for each
+of its Durations that passes (a Momentary spell's falls each round), then
+into negative magnitudes a month at a time for a non-Ritual Momentary,
+Concentration or Diameter spell and a year at a time for any other (a
+Moon or Year spell among them), and gone at -10 (HoH: True Lineages
+p. 71; Hooks p. 83). Neither book says how to round the halving: the app
+rounds down, its own assumption, and the details say so. They give the Acute Sense roll too: Perception + Penetration +
+stress die against 6 + the spell's magnitude, to notice deceptive magic
+over it (p. 71).
+
+**Intrigue.** **Intrigue by** names who works on the case before the
+meeting and **Intrigue: to** what he seeks, each with its Ease Factor
+(HoH: True Lineages p. 24): learning an open aim or keeping someone on his
+course (6); learning allies, rousing suspicion, holding someone up or
+bringing him to meet a rival (9); learning a hidden agenda, setting
+wavering allies against each other, changing a course or settling a small
+dispute (12); learning hidden partners, breaking a trusted alliance,
+leading someone against his own good or settling a great dispute (15).
+To sway is Presence + Intrigue, to learn Communication + Intrigue, each
+with a stress die. **Intrigue: both under Parma Magica** (ticked to
+start, as between magi at a Tribunal) means The Gift costs nothing;
+untick it when either party is not under Parma (a mundane, or a magus
+whose Parma is down) and The Gift costs 3, or 6 for a Blatant Gift: tick
+**Intrigue: his Gift is Blatant**, or give him the Blatant Gift Flaw
+(p. 24). Folk Ken rolls through the Tribunal may give -3 to +3 to
+Intelligence + Intrigue at the storyguide's word (p. 25).
 
 <!-- tui -->
 `a` adds a case, `e` edits the chosen one and `d` deletes it. More (`m`)

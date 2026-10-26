@@ -85,6 +85,23 @@ LORDS_OF_MEN_WEAPONS: dict[str, tuple[str, int]] = {
     "weapon_sling": ("P", 1),
     "weapon_long_bow": ("P", 2),
     "weapon_short_bow": ("P", 2),
+    # Lords of Men's own rows, and those it reprints from Ancient Magic and
+    # Guardians of the Forests; a bastard sword is a long or great sword.
+    "weapon_dueling_stick_short": ("C", 2),
+    "weapon_falchion": ("S", 2),
+    "weapon_net": ("S", 2),
+    "weapon_infantry_shield": ("", 2),
+    "weapon_trident": ("P", 2),
+    "weapon_whip": ("C, S", 1),
+    "weapon_halberd": ("S, P", 2),
+    "weapon_bastard_sword_one_handed": ("S, P", 2),
+    "weapon_bastard_sword_two_handed": ("S, P", 2),
+    "weapon_sharpened_rock": ("C, S", 1),
+    "weapon_composite_bow": ("P", 2),
+    "weapon_horse_bow": ("P", 2),
+    "weapon_crossbow": ("P", 2),
+    "weapon_arbalest": ("P", 2),
+    "weapon_heavy_arbalest": ("P", 2),
 }
 STRESS_EASE = 15
 STANDARD_DAMAGE_LEVELS = 2

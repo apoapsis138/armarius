@@ -24,6 +24,7 @@ from .... import (
     traditions,
     world,
 )
+from .... import devotion as devotion_forms
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
@@ -37,10 +38,14 @@ from ....forms import careers as career_forms
 from ....forms import character as character_forms
 from ....forms import craft_magic as craft_forms
 from ....forms import experimental_effects
+from ....forms import faerie_dealings as faerie_forms
 from ....forms import gauntlet as gauntlet_forms
 from ....forms import goetic as goetic_forms
 from ....forms import grogs as grog_forms
+from ....forms import holy_influence as holy_influence_forms
+from ....forms import lacuna as lacuna_forms
 from ....forms import menu as menu_forms
+from ....forms import pilgrimage as pilgrimage_forms
 from ....forms import sin as sin_forms
 from ....forms import spell as spell_forms
 from ....forms import turbulence as turbulence_forms
@@ -1505,4 +1510,87 @@ class CharacterActions(WorkspaceBase):
         """More's A Mother's Curse: a Lesser Malediction on the sheet."""
         self._byzantine_step(
             byzantine.curse_form, "section-vf-virtues", "section-vf-flaws"
+        )
+
+    # -- dealing with faeries (RoP: Faerie) --
+
+    def action_ars_fabulosa(self) -> None:
+        """More's Ars Fabulosa: a bargaining power's roll, kept in the
+        Diary, its Fatigue level and the Traits' experience on the sheet."""
+        self._byzantine_step(
+            faerie_forms.ars_fabulosa_form,
+            "section-char-health",
+            "section-personality-traits",
+        )
+
+    def action_faerie_bargain(self) -> None:
+        """More's A Faerie Bargain: how it ended, kept in the Diary, and
+        the Sympathy Trait it moves or the -3 one it gives."""
+        self._byzantine_step(
+            faerie_forms.faerie_bargain_form, "section-personality-traits"
+        )
+
+    def action_faerie_offer(self) -> None:
+        """More's An Offer to Faerie: the roll, kept in the Diary, and its
+        Long-Term Fatigue level."""
+        self._byzantine_step(faerie_forms.faerie_offer_form, "section-char-health")
+
+    # -- the lacuna and the pilgrim (HoH:S, The Church) --
+
+    def action_cast_in_lacuna(self) -> None:
+        """More's Cast in a Lacuna on Known Spells: the calculator, and a
+        roll of it; nothing is kept."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, lacuna_forms.lacuna_form(self.saga, character), done)
+
+    def action_pilgrimage(self) -> None:
+        """More's Pilgrimage on This Season: a pilgrimage begun, an element
+        overcome or failed, or its aim claimed, kept in the Diary."""
+        self._byzantine_step(
+            pilgrimage_forms.pilgrimage_form,
+            "section-char-season",
+            "section-vf-virtues",
+            "section-vf-flaws",
+            "section-personality-traits",
+        )
+
+    # -- devotion and the saints (The Church, RoP: The Divine) --
+
+    def action_invoke_saint(self) -> None:
+        """More's Invoke a Saint: the roll, kept in the Diary."""
+        self._byzantine_step(devotion_forms.invoke_form)
+
+    def action_threaten_saint(self) -> None:
+        """More's Threaten a Saint: the roll and the Confidence spent."""
+        self._byzantine_step(devotion_forms.threaten_form, "section-personality-traits")
+
+    def action_devotion_points(self) -> None:
+        """More's Devotion Points: a Devotion begun or raised, and the
+        patron saint."""
+        self._byzantine_step(devotion_forms.points_form, "section-char-season")
+
+    def action_act_of_piety(self) -> None:
+        """More's Indulgence, Vigil or Fast: the Faith, Confidence, Piety
+        and Fatigue each brings."""
+        self._byzantine_step(
+            devotion_forms.piety_form,
+            "section-char-health",
+            "section-personality-traits",
+            "section-reputations",
+        )
+
+    # -- holy influence and tempers (RoP: The Divine) --
+
+    def action_holy_influence(self) -> None:
+        """More's Holy Influence on Personality Traits: the roll, kept in
+        the Diary."""
+        self._byzantine_step(
+            holy_influence_forms.holy_influence_form, "section-char-info"
         )

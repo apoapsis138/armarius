@@ -20,16 +20,21 @@ from ..commands import Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, attr, description_field, pairs
 from ..markup import escape
 from ..models import (
+    ARMOR_SLOTS,
     GEAR_QUALITIES,
     GEAR_QUALITY_DEFAULT,
     GEAR_TYPES_BY_KIND,
     SANCTUM_USAGE_DEFAULT,
     SANCTUM_USAGES,
     SEASONS,
+    ArmorPieceDef,
     Covenant,
     Saga,
 )
 from ..rules import equipment, vis_kinds
+
+#: The book whose armour pieces an armor form offers.
+LORDS_OF_MEN = "LoM"
 
 #: A year's pawns from a source, by its yield and the saga's vis level
 #: (Covenants p. 72).
@@ -222,10 +227,14 @@ def _gear_book_field(
             )
             for a in armors.values()
         ]
+        pieces = armor_pieces(entry, books)
+        options += [
+            (escape(f"{p.name} ({p.slot}, LoM)"), p.id) for p in pieces.values()
+        ]
         label = "Material"
 
         def fills(values: dict[str, Any]) -> dict[str, Any]:
-            return pos.armor_fills(values, armors)
+            return pos.armor_fills(values, armors, pieces)
 
     return DialogField(
         "gear_id",
@@ -237,6 +246,40 @@ def _gear_book_field(
         placeholder="(custom)",
         fills=fills,
     )
+
+
+def armor_pieces(
+    entry: pos.PossessionEntry | None, books: Collection[str] | None
+) -> dict[str, ArmorPieceDef]:
+    """Lords of Men's armour pieces an armor form offers: with the book in
+    play (`books`), or the one the entry was filled from."""
+    keep = attr(entry, "gear_id", None)
+    return {
+        p.id: p
+        for p in catalog.load_armor_piece_catalog()
+        if p.id == keep or sourcebooks.in_play(p.source, books)
+    }
+
+
+def _armor_slot_field(
+    entry: pos.PossessionEntry | None, books: Collection[str] | None
+) -> list[DialogField]:
+    """Where a Lords of Men piece is worn ("" a whole suit): offered with
+    the book in play, or for an entry already worn as a piece."""
+    slot = attr(entry, "armor_slot", "")
+    if not slot and not sourcebooks.in_play(LORDS_OF_MEN, books):
+        return []
+    return [
+        DialogField(
+            "armor_slot",
+            "Worn as",
+            "select",
+            slot,
+            options=[("Whole suit", "")] + [(s, s) for s in ARMOR_SLOTS],
+            hint="A piece adds its Protection and Load to the others worn "
+            "(Lords of Men p. 140).",
+        )
+    ]
 
 
 def _quantity_possession_fields(
@@ -302,6 +345,8 @@ def _quantity_possession_fields(
                 attr(entry, "armor_protection", 0),
             )
         )
+        if not natural:
+            fields += _armor_slot_field(entry, books)
     if kind in GEAR_TYPES_BY_KIND and not natural:
         fields.append(DialogField("load", "Load", "int", attr(entry, "load", 0)))
         fields += [

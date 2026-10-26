@@ -331,6 +331,8 @@ _LOOKING_ACTIONS = frozenset(
         # A calculator: it records nothing.
         "plan_journey",
         "craft_by_magic",
+        # A calculator too (HoH:S): casting in a lacuna.
+        "cast_in_lacuna",
     }
 )
 

@@ -548,6 +548,17 @@ def herbalism() -> QPainterPath:
     return union(body.subtracted(leaf), lid)
 
 
+def crossbow() -> QPainterPath:
+    """A crossbow seen from above, pointing up: the stock along the centre
+    line, the bow bent across its head, the string drawn back to the nut
+    and a bolt lying in the groove."""
+    stock = union(bar(50, 30, 50, 90, 7), rrect(43, 74, 14, 16, 3))
+    prod = ring(50, 62, 40, 6).intersected(rect(6, 6, 88, 30))
+    string = union(bar(21, 35, 50, 54, 2.2), bar(79, 35, 50, 54, 2.2))
+    bolt = union(bar(50, 12, 50, 52, 3), poly((50, 4), (44, 14), (56, 14)))
+    return union(stock, prod, string, bolt)
+
+
 # -- Arcane --
 
 
@@ -1913,6 +1924,8 @@ MARKS: dict[str, Charge] = {
     # The supplements' Abilities the census of their Virtues and Flaws added.
     "Siege Weapon": siege_weapon,
     "Herbalism": herbalism,
+    # Lords of Men's crossbows.
+    "Crossbow": crossbow,
 }
 
 #: The mark of each category, for an ability without its own.

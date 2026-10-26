@@ -182,7 +182,7 @@ def opening_card(saga: Saga, tribunal: Tribunal) -> OpeningCard:
     place = record.get("place") or ""
     members = tribunals.covenants_of(saga, tribunal)
     votes, _proxies = meeting.hall(saga, tribunal, record)
-    cases = tribunal_sheet.open_cases(tribunal)
+    cases = tribunal_sheet.heard_cases(tribunal)
     motions = sum(1 for c in cases if c.kind == "motion")
     heard = len(cases) - motions
     numbers = [

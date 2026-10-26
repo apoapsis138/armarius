@@ -47,6 +47,7 @@ from .. import (
     tribunals,
     world,
 )
+from .. import devotion as devotion_forms
 from .. import economics as eco
 from .. import familiars as fam
 from .. import inhabitants as inh
@@ -95,13 +96,17 @@ from . import careers
 from . import craft_magic as craft_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
+from . import faerie_dealings as faerie_forms
 from . import gauntlet as gauntlet_forms
 from . import goetic as goetic_forms
 from . import grogs as grog_forms
+from . import holy_influence as holy_influence_forms
 from . import hosting as hosting_forms
 from . import importing as import_forms
+from . import lacuna as lacuna_forms
 from . import library as library_forms
 from . import neighbour as neighbour_forms
+from . import pilgrimage as pilgrimage_forms
 from . import sin as sin_forms
 from . import tribunal as tribunal_forms
 from . import turbulence as turbulence_forms
@@ -539,6 +544,23 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # Art & Academe's artists and scholars, beside Disputatio.
     "artist_career": ((NodeKind.CHARACTER, "Abilities"),),
     "scholar_career": ((NodeKind.CHARACTER, "Abilities"),),
+    # Dealing with faeries (RoP: Faerie), beside the Abilities chapter's.
+    "ars_fabulosa": ((NodeKind.CHARACTER, "Abilities"),),
+    "faerie_bargain": ((NodeKind.CHARACTER, "Abilities"),),
+    "faerie_offer": ((NodeKind.CHARACTER, "Abilities"),),
+    # The lacuna and the pilgrim (HoH:S, The Church): beside Known Spells'
+    # buttons, and This Season's.
+    "cast_in_lacuna": ((NodeKind.CHARACTER, "Known Spells"),),
+    "pilgrimage": ((NodeKind.CHARACTER, "This Season"),),
+    # Devotion and the saints (The Church, RoP: The Divine): beside the
+    # Personality Traits' buttons, where Pious is.
+    "invoke_saint": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "threaten_saint": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "devotion_points": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "act_of_piety": ((NodeKind.CHARACTER, "Personality Traits"),),
+    # Holy influence and tempers (RoP: The Divine), beside Infernal
+    # Influence.
+    "holy_influence": ((NodeKind.CHARACTER, "Personality Traits"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -607,6 +629,10 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
     # An apothecary's searching and preserving.
     "apothecary_store": lambda page: available(
         "apothecary_store", replace(page, section="section-char-season")
+    ),
+    # The pilgrim's road (The Church).
+    "pilgrimage": lambda page: available(
+        "pilgrimage", replace(page, section="section-char-season")
     ),
 }
 
@@ -1585,4 +1611,18 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     # Art & Academe's artists and scholars.
     "artist_career": _needs(_character, careers.artist_form),
     "scholar_career": _needs(_character, careers.scholar_form),
+    # Dealing with faeries (RoP: Faerie).
+    "ars_fabulosa": _needs(_character, faerie_forms.ars_fabulosa_form),
+    "faerie_bargain": _needs(_character, faerie_forms.faerie_bargain_form),
+    "faerie_offer": _needs(_character, faerie_forms.faerie_offer_form),
+    # The lacuna and the pilgrim (HoH:S, The Church).
+    "cast_in_lacuna": _needs(_character, lacuna_forms.lacuna_form),
+    "pilgrimage": _needs(_character, pilgrimage_forms.pilgrimage_form),
+    # Devotion and the saints (The Church, RoP: The Divine).
+    "invoke_saint": _needs(_character, devotion_forms.invoke_form),
+    "threaten_saint": _needs(_character, devotion_forms.threaten_form),
+    "devotion_points": _needs(_character, devotion_forms.points_form),
+    "act_of_piety": _needs(_character, devotion_forms.piety_form),
+    # Holy influence and tempers (RoP: The Divine).
+    "holy_influence": _needs(_character, holy_influence_forms.holy_influence_form),
 }

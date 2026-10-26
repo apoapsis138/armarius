@@ -570,7 +570,7 @@ def test_the_stale_key_fixture_holds_every_saved_record():
         "TraditionTraining", "WeaponDef", "CastingRule", "MagicalDefense",
         "DispelRule", "GroupCasting", "OpeningRule", "InitiationRule",
         "InitiationScript", "Advancement", "TraditionActivity", "BondRule",
-        "PoolDef", "WarpingRule", "Guideline", "EffectParameter",
+        "PoolDef", "WarpingRule", "Guideline", "EffectParameter", "ArmorPieceDef",
     }  # fmt: skip
     every = {
         cls.__name__

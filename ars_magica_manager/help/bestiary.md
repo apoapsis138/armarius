@@ -194,6 +194,26 @@ Arcadia, Elysium and Eudokia (pp. 31-44) is the storyguide's:
   theme set by the Threshold; more right choices than wrong bring a Charmed Virtue (Major if
   all were right), more wrong a Flaw that fades (pp. 38-39).
 
+An angel's **Order** is its Choir (Realms of Power: The Divine pp. 18-26): Seraphim, Cherubim,
+Thrones, Dominations, Authorities, Potentates, Principalities, Archangels or Angels, or the fallen
+Grigori. An archangel names its own Choir and the Archangels' ("Seraphim and Archangels"), and has
+the traits of both (p. 25). An angel whose Order names a Choir shows a **Divine design** fact:
+the least Divine Might its Choirs allow (Seraphim 35, Cherubim and Thrones 25, Dominations and
+Potentates 10, Authorities and Principalities 5, Archangels 50, Angels 1); Love of God +5 and its
+Choir's two Personality Traits at +4 (Servile -4 for a Domination); the three powers every angel
+has, Angelic Mantle, Enfolding and Envisioning (p. 19; DE p. 489), and its Choir's powers, when
+it lacks one or its cost or Initiative differ from the book's; and its Intelligence, Perception,
+Presence and Communication, +1 for each 10 points of Might or fraction (p. 19). **As an angel**
+says what its Mantle's physical Characteristics cost (the book buys them with 7 points, more for
+a powerful angel); that in spirit form only Mentem and Vim reach it, in its Mantle the Form of its
+Might; that magic can't make it act against its Personality Traits, Might below 0 destroys it,
+and Hermetic magic can't summon or compel it (p. 21); its True Name (an Arcane Connection, +5 to
+the Penetration multiplier, p. 20); the Penetration of its speech, its Penetration Ability
+(p. 20); its Second Sight for finding regiones, Might / 5 (p. 21); and its Choir's own sums
+(Smite Evil's level, Radiant Mirror's Holy Influence Total, the Principalities' costs by area,
+Irresistible Light). Any creature with Divine Might is checked for True Faith, which it can't
+have (DE p. 488). The Definitive Edition's angels name no Choir and aren't checked.
+
 ## Traits tab
 <!-- help: tab-cr-traits -->
 

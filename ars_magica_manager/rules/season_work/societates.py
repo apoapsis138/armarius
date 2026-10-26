@@ -1,5 +1,7 @@
 """Houses of Hermes: Societates' seasons: House work, Tribunal or Redcap
-duties, and searching for a lacuna (Intelligence + Area Lore against 9)."""
+duties, and searching for a lacuna (Intelligence + Area Lore against 9;
+rules.lacunae, HoH:S p. 57): the first success records the city's
+lacunae found, and later seasons there are Area Lore practice."""
 
 from __future__ import annotations
 
@@ -7,7 +9,7 @@ import random
 
 from ...models import Character, Saga, SeasonPlan
 from .. import activity_groups as groups
-from .. import dice
+from .. import dice, lacunae
 from .base import (
     CH,
     MAGI,
@@ -16,6 +18,7 @@ from .base import (
     experience_only,
     register,
     source,
+    subject_ability,
 )
 
 SOCIETATES = source(
@@ -31,6 +34,21 @@ def _search_lacuna(
     rng: random.Random | None,
     result: SupplementWork,
 ) -> None:
+    lore, score = lacunae.search_lore(character, subject_ability(plan))
+    area = lacunae.area_of(lore) if lore else ""
+    known = (
+        f" He knows {lacunae.known_count(score)} small lacunae there "
+        f"({lacunae.PER_LORE} per level of {lore})."
+        if area
+        else ""
+    )
+    if area and lacunae.found_record(character, area) is not None:
+        # Seasons after the first search are Area Lore practice (p. 57).
+        result.notes.append(
+            f"{area}'s obvious lacunae are already found: the season is Area "
+            "Lore practice, and the Area Lore's specialty may become lacunae." + known
+        )
+        return
     if plan.die is not None:
         die = plan.die
     elif rng is not None:
@@ -38,15 +56,21 @@ def _search_lacuna(
     else:
         result.notes.append("The search is rolled when the season is played.")
         return
-    lore = max(
-        (a.level for a in character.abilities if a.name.startswith("Area Lore")),
-        default=0,
-    )
-    total = character.characteristics.intelligence + lore + die
+    total = lacunae.search_base(character, score) + die
+    if total < lacunae.SEARCH_EASE:
+        result.notes.append(
+            f"Int + Area Lore + die = {total} against {lacunae.SEARCH_EASE}: "
+            "none found."
+        )
+        return
     result.notes.append(
-        f"Int + Area Lore + die = {total} against 9: "
-        + ("the obvious lacunae are found." if total >= 9 else "none found.")
+        f"Int + Area Lore + die = {total} against {lacunae.SEARCH_EASE}: the "
+        "obvious lacunae are found." + known
     )
+    if area:
+        result.progress.append(
+            (lacunae.KIND, lacunae.record_name(area), lacunae.SEARCH_EASE, total)
+        )
 
 
 register(

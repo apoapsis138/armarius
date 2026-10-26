@@ -235,6 +235,18 @@ and Road Network Ranges and Targets for his spells: a season's teaching by
 one who knows it, with no further Virtue; a starting magus whose parens has
 Mercurian Magic may be assumed to have learned it (TMRE p. 116).
 
+**Renounced (year)** and **Renounced by** record a magus cast out of the
+Order by a Wizard's March; closing a Tribunal meeting that Marched him
+sets them. The section then says he is renounced: any magus may slay
+him, and by tradition what he has goes to whoever does (Ars Magica
+Definitive Edition p. 18). His parens is expected to strike first, a
+social expectation rather than a legal duty (DE p. 21), so nothing charges
+an heir who fails to; Houses of Hermes: True Lineages p. 53 makes it the
+heir's duty and lets the slayer settle for the heir's inheritance, a
+convention the Tribunal's case shows. A Wizard's War
+he is fighting, or about to, shows here too, with its months (see the
+Tribunal's [Cases](help:section-trib-cases)).
+
 ### Biographical Detail
 <!-- help: section-char-biographical -->
 
@@ -295,11 +307,14 @@ Loyalty (DE p. 185).
 <!-- tui -->
 On a character with a sinful trait, More (`m`) here offers
 [Confidence through Sin](help:confidence-through-sin); on a sinner or one
-who knows Infernal Lore, [Infernal Influence](help:infernal-influence).
+who knows Infernal Lore, [Infernal Influence](help:infernal-influence); on
+one of holy standing (clergy, a monk, True Faith, Temporal Influence,
+Inspirational, or Dominion Lore), [Holy Influence](help:holy-influence).
 <!-- /tui -->
 <!-- gui -->
 **Confidence through Sin** and **Infernal Influence**, beside Personality
 Traits' buttons, are there for a sinner (or one who knows Infernal Lore).
+**Holy Influence**, for one of holy standing.
 <!-- /gui -->
 
 **Sympathy Traits.** A Personality Trait can be a faerie **Sympathy Trait**: tick *Faerie
@@ -985,6 +1000,86 @@ the Theban Tribunal's customs:
   that task done, or divine intervention, lifts it, so remove the Flaw
   then.
 
+## Devotion and the Saints
+<!-- help: devotion -->
+
+<!-- tui -->
+More (`m`) on a person's record offers invoking the saints, and with The
+Church in play, Devotions and acts of piety:
+<!-- /tui -->
+<!-- gui -->
+Beside the Personality Traits' buttons are invoking the saints, and with
+The Church in play, Devotions and acts of piety:
+<!-- /gui -->
+
+- **Invoke a Saint** (with Realms of Power: The Divine, The Church, The
+  Sundered Eagle, The Contested Isle or The Cradle and the Crescent in
+  play): once a day, a heartfelt request for a miracle (RoP: The Divine
+  p. 87). Communication + Charm + the modifiers + a simple die, against
+  15 + the storyguide's simple die. The modifiers: at the saint's tomb
+  +1, a Divine aura its level, his feast day +3, a pilgrimage in his
+  honour within the year +2, a donation now +1 to +3 (none within a year
+  -3), imminent peril +2, True Faith +1 a point of Score, unchristian
+  acts this month -1 to -3, a miracle this month -20, and -15 for a saint
+  who is not his patron. There is no -15 for his patron saint, a saint
+  he has a Devotion Point toward, the Blessed Virgin (anyone may ask
+  her), a saint whose concern is the matter at hand or a sacramental's
+  (The Church p. 13), the saint's own relic held (The Church p. 13), or
+  for one of Irish birth, Saints Patrick, Brigid and Columba (The
+  Contested Isle p. 134). With The Church in play, his Devotion score to
+  the saint is added, and a season's fast +1 (The Church p. 12).
+  Choose a relic: one of the churches' Relics, or his own (the relic he
+  relies on, on Biographical Detail). With The Church in play, the
+  saint's own relic adds +2 for each Faith Point, once a day, for the one
+  who tends or carries it, or a day's veneration at its shrine with the
+  custodians' leave (The Church p. 13); another saint's relic, or any
+  relic without The Church, +1 for touching it (RoP: The Divine p. 87).
+  The relic counts once. With The Sundered Eagle, an eikon of the saint
+  he venerated adds its Aesthetic Quality / 5 (p. 133). The inspector
+  shows the chance, the saint's Might, feast and powers as the books give
+  them, and the miracle asked. Heard, the saint works a miracle;
+  refused, he may ask again tomorrow. The Diary records it.
+  With The Cradle and the Crescent, a Mazdean yazata is invoked the same
+  way, by one ritually pure through the Nahn rite (p. 85).
+- **Threaten a Saint** (RoP: The Divine): after a saint has refused an
+  invocation, the humiliation of a saint (pp. 87-88). Presence +
+  Leadership + the threats (exposing his bones +1, defiling his relics
+  +2, berating him before others +1, barring others from him +3,
+  imminent peril +1; a miracle this month -20; -15 for an unfamiliar
+  saint) + a stress die, against 9 + a fifth of his Divine Might (Mary
+  100, greater saints 75, area saints 50, local saints 25, p. 89). The
+  book's Mights are all multiples of 5; a custom one that isn't is
+  rounded down, which is the app's choice, not the book's.
+  Confidence may be spent (+3 each), Faith Points not. Succeed, and the
+  miracle comes at once; fail, and he hears none of the petitioner's
+  prayers for a month; fail by 10 or more, a minor curse and nothing for
+  a season; botch, the saint's curse. A yazata is never threatened.
+- **Devotion Points** (The Church): a Devotion is a reverence for a saint
+  (or the Virgin) that rises as an Ability does, on Devotion Points
+  alone, never experience, and has no Specialty (p. 12). At creation a
+  character with a positive Pious trait has as many Devotion Points (the
+  Pious Flaw counts 3, its Major form 6), among as many saints; later
+  changes to Pious change nothing (p. 13). In play, Devotion Points come
+  from a season of personal devotion at a shrine (5), endowing a church
+  to the saint (5 to 50), joining his guild (3) and rising in it (2
+  each), visiting his tomb, relic or a site of his miracles (1 to 10),
+  sponsoring art of him (its Aesthetic Quality), a hagiography (Quality /
+  2, a general one 1), furthering his cultus (the Petitioning Ease
+  Factor), witnessing his miracle (5 to 10), his feast's procession (1 to
+  5), a pilgrimage in his honour, or a vision from him (1) (pp. 14-15).
+  Neglecting his feast day loses at least 3 (p. 14). Tick **His patron
+  saint** to make the saint his patron (anyone may have one, Pious or
+  not). The Planning tab lists his patron and his Devotions.
+- **Indulgence, Vigil or Fast** (The Church pp. 11-12): an indulgence
+  shortens a penance, it does not forgive: about 6 pennies a season for
+  the poor, a pound or more for the wealthy; after a season of
+  charitable works, as many experience points in Reputation: Piety as
+  the seasons, and a temporary Faith Point. A vigil, the night before an
+  important event in prayer, costs a Fatigue level until a full night's
+  sleep and gives a Confidence Point to spend the next day on the task
+  named. A season's fast gives +1 to invoking a saint that season (Invoke
+  a Saint ticks it) and a Fatigue level all season.
+
 ## Confidence through Sin
 <!-- help: confidence-through-sin -->
 
@@ -1045,6 +1140,37 @@ Power: The Infernal, Infernal Influence and Tarnish, pp. 23-24).
 ceremony that needs Infernal Lore 1 and spends a Confidence Point. **Roll**
 rolls it, spends a ceremony's point and writes the result in the Diary.
 
+## Holy Influence
+<!-- help: holy-influence -->
+
+Leading others to virtue, or tempering a Divine aura (Realms of Power: The
+Divine, Holy Influence and Tempers, pp. 38-41).
+
+- **Those in his care**: a simple die + Presence + Leadership. 9 gives the
+  new trait +1, 15 +2, 24 +3, the most. He needs spiritual authority over
+  them (a priest's parish, a parent's child, a teacher's pupil, a host's
+  guests), and they must be willing. Temporal Influence serves only
+  personal influence on those under his temporal authority;
+  Inspirational lets him influence anyone willing, by a ceremony. A trait
+  from personal influence lasts up to a year, from a ceremony rarely a
+  week; one set against a Personality Flaw (a Minor counts as +3, a Major
+  as +6) never becomes lasting.
+- **A Divine aura**: the same total on a stress die gives the aura a
+  temper: Loyal (against Pride), Calm (Wrath), Kind (Envy), Brave
+  (Sloth), Wise (Lust), Strong (Greed) or Just (Avarice). It is added to
+  every roll in the aura that suits it and taken from every roll against
+  it, and falls by 1 each day (ceremonial) or each season (personal). He
+  holds one temper at a time; a new one replaces his last. Two leaders'
+  tempers in one aura are schism: an action may take both a bonus and a
+  penalty (p. 41). A botch brings Warping, Fatigue or a bad name.
+
+**Personal** influence is a season among them; **ceremonial** is a short
+ceremony that spends a Faith Point (with True Faith) or a Confidence
+Point, which adds nothing to the roll. A group praying with him adds its
+modifier: everyone's Ceremony less their number, and each one's Presence +
+Leadership (p. 36). **Roll** rolls it, spends a ceremony's point and
+writes the result in the Diary.
+
 ## Ars Goetia
 <!-- help: ars-goetia -->
 
@@ -1080,6 +1206,86 @@ Reputation) to the total, and the target adds the demon's Hierarchy x 5
 A magus who holds a Goetic Art may use Rego for it and Vim for the Lore
 (p. 124); the total uses whichever is higher. Summoning may work as a
 Magic or Faerie Power for the aura; the other Arts are always Infernal.
+
+## Ars Fabulosa
+<!-- help: ars-fabulosa -->
+
+The bargaining powers of a summoner (Realms of Power: Faerie pp. 131-134),
+offered on the record, or a tradition's chapter, of anyone who holds
+(Faerie) Summoning, Bonding, Captivating or Dismissing.
+
+- Each total is the power + its Characteristic (Summoning Presence,
+  Bonding Communication, Captivating Perception, Dismissing Intelligence)
+  + Faerie Rank + the aura (a Faerie power) + a stress die, and costs a
+  Fatigue level.
+- Tick the Sympathy Traits that fit the faerie: together, negatives by
+  their size, they set the most Might (or, for Dismissing, effect level)
+  the power can touch, 5 for each point of all of them added together.
+  Only the single highest adds to Penetration: the book says "highest"
+  without saying how a negative Trait ranks, so the app takes it by its
+  size (its reading, not a printed rule).
+- Summoning holds the faerie only when the total equals or beats its
+  Might, a random faerie called at large too: it must listen, and can't
+  harm him. Only a faerie he has an Arcane Connection to must also be
+  penetrated (p. 132); one called at large needn't be (p. 133). A botch
+  brings a faerie all the same, hostile or unbound.
+- Bonding and Captivating must exceed the faerie's Might and penetrate its
+  Magic Resistance (its Might); a faerie held by his Summoning counts as
+  level 0 for Penetration.
+- Dismissing cancels an effect, ends one on a being, or frees a being from
+  an agreement; several in a round take 6 off each beyond the first, and
+  deflecting a power first needs Quickness + Finesse against its
+  Initiative.
+- A 1 on the die gives each ticked Trait an experience point, each botch
+  die's 0 takes one, beyond the Warping limit; for a negative Trait it is
+  reversed, a botch deepening the penalty and a 1 lessening it (p. 103).
+  Raising a negative Trait costs 10 xp from -1 to 0, 15 from -2, 20 from
+  -3. Losing a point with none banked lowers the Trait a step: the book
+  doesn't say, so that is the app's assumption. The roll goes into the
+  Diary.
+
+## A Faerie Bargain
+<!-- help: faerie-bargain -->
+
+How a bargain made in a summoning ended (RoP: Faerie pp. 132-133).
+
+- A bargain struck gives the fitting Sympathy Trait an experience point,
+  none struck takes one away; the bargain binds the faerie whatever he
+  does.
+- A deadlock may be settled by a contested roll: his Communication +
+  Bargain + Faerie Rank, a fitting Trait as Bargain's specialty if he
+  chooses, against the faerie's. The book gives no rule for a tie: the
+  app's assumption is that a tie strikes no bargain.
+- Working out what an unknown faerie wants first: Intelligence + Faerie
+  Lore against 12 or more, on a simple die.
+- A Sympathy Trait used as a specialty on either roll makes it a stress
+  die that may botch, a botch giving Warping Points, and its 1 or its
+  botch moves the Trait's experience (pp. 102-103).
+- A summoner who breaks a bargain made in a summoning gains a -3 Sympathy
+  Trait fitting the faerie, and may lose Faerie Rank; Dismissing can free
+  the faerie instead (p. 134). Kept in the Diary.
+
+## An Offer to Faerie
+<!-- help: faerie-offer -->
+
+In the Faerie Realm a character with an unspent fable point may bargain
+with the Realm itself to change one element of the story (RoP: Faerie
+pp. 25-29).
+
+- Fable: the first fable point makes a fable score of 1; raising it costs
+  the score + 1 points; a point spent adds the score to one roll. All of
+  it is lost on leaving Faerie, so the form takes the score as it stands.
+- Offer Total: Communication + Charm, a Profession, a Craft or Music + the
+  goods or a Virtue (only the highest: Free Expression +3, a Puissant
+  Ability, goods +1 to +3) + the promise (-6 to +3) + the change (+3 to
+  -6) + a stress die.
+- The Ease Factor is the threat the change overcomes: Trivial 6, Minor 9,
+  Serious 12, Major 15, Overwhelming 18. Elysium takes 6 off the roll,
+  unless the offer puts its story back on track (Ease Factor 3 less).
+- With Art & Academe, artistic Reputation adds 1 a 3 (or part), a Faerie
+  Patron's Might 1 a 5 (or part).
+- It costs a fable point and a Long-Term Fatigue level whether or not it
+  is accepted. Kept in the Diary.
 
 ## Invest Time or Money
 <!-- help: merchant-investment -->
@@ -1622,6 +1828,27 @@ ritual (fifteen minutes a magnitude, no vis); and what its Method asks: Evocatio
 Confidence Point and vis at +2 a pawn up to Evocation + the Power, Enchantment a performance
 against 3 x the magnitude first, Empathy a Fatigue level and an hour's trance, each further
 Fatigue level adding the limit again (pp. 121-124; Errata p. 68).
+
+**Holy Powers and maleficia.** A holy tradition's effects (the Ascetics, Cantores, Sufis and
+the rest) are built on the holy Powers' guidelines (Realms of Power: The Divine pp. 48-56), an
+infernal tradition's on the maleficia's (Realms of Power: The Infernal pp. 105-112), for the
+Powers among the tradition's favored Abilities. Each guideline names the Method it is for:
+"Strike dead (Purity)". The Ranges, Durations and Targets are the Hermetic ones. For a holy
+effect, Year and Boundary cost 4 magnitudes more, as anything a Hermetic ritual would need does
+(type other ritual cases, such as an Arcane Connection summons, as 4 further magnitudes); a holy
+connection stands in for an Arcane Connection (p. 48). A maleficium may also take Crossroads (as
+Voice), Cursed (Condition) (as Sun, with the triggered effect's Duration typed as further
+magnitudes), Forsaken (as Year; repentance ends it, and it can't be dispelled) and Passion (as
+Group) (p. 103). An effect's row warns when its Power doesn't work with its Method (Adjuration and
+Cursing take Invocation or Purity, Blessing Invocation or Meditation, Intervention and
+Transcendence Meditation or Purity, Understanding Meditation alone, Wonders Invocation alone),
+or its guideline is for the other Method. A holy effect's row says that falling short is a
+tragedy of hubris (Minor 1-10 short, Major 11-20, Ultimate 21 or more), with True Faith x 10
+standing in for the total (p. 46). A maleficium's says its Method's cost (Debauchery: a long-term
+Fatigue level or a Light Wound; Incantation: a Confidence Point or a Warping Point for a fitting
+sin, and vis +2 a pawn up to Incantation + the Power), and that each 10 levels short is a botch and
+a Warping Point (Vituperation at 2), with Hierarchy x 10 standing in for the total; a true botch
+owes Hell a soul within a season (pp. 102-104).
 
 ## A tradition's Casting
 <!-- help: tradition-casting -->
@@ -2365,6 +2592,15 @@ More (`m`) here offers [Craft by Magic](help:craft-magic).
 Finesse roll.
 <!-- /gui -->
 
+<!-- tui -->
+With Houses of Hermes: Societates in play, More (`m`) here also offers
+[Cast in a Lacuna](help:cast-in-lacuna).
+<!-- /tui -->
+<!-- gui -->
+**Cast in a Lacuna**, beside Known Spells' buttons, works out a spell cast
+in a city.
+<!-- /gui -->
+
 With the saga option Learning cantations in play, More (`m`) here (on the desktop, a button beside Known Spells) offers [Learn a Cantation](help:learn-cantation).
 
 ## Craft by Magic
@@ -2395,6 +2631,76 @@ still rearranges the materials, into nothing useful; a botch looks right
 but has a hidden, fatal flaw. A failed Creo roll still makes the thing
 without the details; a botch makes something that hinders the caster.
 
+
+## Cast in a Lacuna
+<!-- help: cast-in-lacuna -->
+
+A spell cast in a city, from a lacuna or in the Dominion (Houses of Hermes:
+Societates pp. 57-58; Definitive Edition pp. 217-218). **Close** keeps
+nothing; **Roll** rolls the casting once and says how it went, keeping
+nothing either.
+
+A lacuna is a small patch inside a city where the Dominion doesn't hold:
+most have no aura at all, some a Magic, Faerie or Infernal one. Cast from
+one, a spell meets the lacuna's aura instead of the city's Dominion --
+unless its target is itself within the Dominion, when the Dominion's
+penalty stands. Most cities have a Dominion of 3: -9 to a Hermetic
+Casting Score (p. 58). Subtle gestures and quiet words (-7), or neither
+(-15), keep witnesses from seeing a magus at work.
+
+Cast ceremonially (a Spontaneous spell, or a Formulaic one with the
+Ceremonial Casting Mastery ability, by a magus with Artes Liberales or
+Philosophiae), a spell adds Artes Liberales + Philosophiae and its props'
++1 to +5, in place of words and gestures. The ceremony takes 15 minutes a
+magnitude, 12 in a temporary space, 9 in one naturally suited, 6 in one
+carefully designed, 3 in his laboratory, 1 in a room built for it (DE p.
+218); with Mystical Choreography, 5, or 1 in any prepared space (DE p. 99).
+A spell is no greater than the magnitudes the time spent allows.
+
+The inspector shows the Casting Score in the lacuna and outside it, what
+the die must reach, the ceremony's time, the botch dice, and the cities
+whose lacunae he has found.
+
+## Pilgrimage
+<!-- help: pilgrimage-more -->
+
+A pilgrimage's road (The Church pp. 15-19), each step written in the
+Diary. Its aim sets its Target Level: 18 for a minor pilgrimage (a
+single season and story) to gain a Minor Virtue, lose a Minor Flaw (or
+Virtue), remove a negative Personality Trait or meet a penance; 30 for a
+major one (several seasons) to gain a Major Virtue, lose a Major Flaw,
+ask for a miracle, self-initiate in Holy Magic (with True Faith) or meet
+a penance. The 30 may also gain a Major Supernatural Ability or Divine
+Methods and Powers; the 18 a Minor Supernatural Ability of the Divine.
+No pilgrimage grants or removes Hermetic Virtues and Flaws, or
+background ones such as Privileged Upbringing and Educated (p. 16): the
+app treats every Virtue that gives experience at creation as background.
+A Divine Supernatural Ability gained is added at 1, without the Gift's
+penalty. Every aim needs the troupe to agree it suits the pilgrim.
+
+- **Begin a pilgrimage**: its name and Target Level. Grogs may go too.
+- **An Oppositional Element overcome**: its value goes toward the Target
+  Level -- +3 natural hazards, a temptation he is prone to, another
+  trial; +6 bandits, religious or political enemies, storms; +9 a
+  supernatural encounter, a shipwreck, distractions to abandon it; +12
+  direct demonic opposition (p. 17). Travel in a Christian land outside
+  his homeland (+3) or through non-Christian or heretic lands (+6) counts
+  once, only the higher. Each season on the road (the Pilgrimage season
+  activity) is +3.
+- **An Oppositional Element failed**: the aim fails unless a later element
+  he overcomes remedies it.
+- **Claim the pilgrimage's aim**, once the Target Level is reached and no
+  failure is left unremedied: the Virtue is added, the Flaw or Trait
+  taken away, Holy Magic added. The traits offered for removal are those
+  with a negative score or leaning to a sin (Cruel +3 is Kind -3; The
+  Church p. 20), the book not saying what "negative" means; removing any
+  other is for the troupe to agree and do by hand; a penance met or a miracle asked is
+  written in the Diary for the troupe. He must have avoided mortal sin on
+  the road and confessed his venial sins on arrival (p. 18).
+
+At a saint's shrine, one with a Devotion to the saint gains 10 Devotion
+Points, +5 for each further site of the saint's life, and up to 5 for
+relics seen (p. 19).
 ## Research tab
 <!-- help: tab-research -->
 
@@ -2593,6 +2899,34 @@ as City & Guild's base levels move. Each failure costs a level, a botch one
 more per botch, and with none left it is broken; a standard item is mended in a season, a Superior
 or Excellent one by a craftsman with Craft twice its bonus, for a Labor
 Point a level (City & Guild pp. 77-79).
+
+Lords of Men's weapons. With Lords of Men in play the Weapon list adds the
+falchion, net, infantry shield, trident, whip, halberd, the bastard sword
+(one-handed and two-handed), the sharpened rock, composite and horse bows,
+the crossbow, the arbalest and the heavy arbalest (Lords of Men pp. 137-139;
+the bastard sword's Load is 2, Errata p. 76). Rows the book reprints from
+Ancient Magic or Guardians of the Forests come with either book. Crossbows
+use the Crossbow Ability, and Strength doesn't add to their Damage (p. 138).
+Where Lords of Men's tables differ from the Definitive Edition's (the
+throwing axe, the short bow's Load, the warhammer's cost) the Definitive
+Edition's figures are used.
+
+Armour pieces (Lords of Men). With Lords of Men in play, the armour form's
+Material also lists the book's pieces (Lords of Men p. 140): body armour (a
+cuirass or jerkin, haubergeon, hauberk or full armour of eight materials), a
+surcoat (gambeson, coat of plates), greaves or jambes, and helmets. The coat
+of plates uses the Surcoats table's +2 and Load 2 (p. 140); the book's
+Glossary (p. 141) says to use a metal scale cuirass's figures instead (+3,
+Load 3), a conflict in the book, and the app follows the table. "Worn as"
+says where a piece goes. A character wears one piece of each place, the best
+one; their Protection and Load are added together, fractions kept to the end
+and then rounded up, so a mail cuirass (+3, Load 1.5) and a coif (+0.5) give
+Soak +4 and Load 2. Full body armour already includes greaves. If the
+character also has a whole suit (the Definitive Edition's partial or full
+armour), whichever protects better is the one worn. A Superior or Excellent
+piece adds its bonus, except a helmet's, which counts only against blows to
+the head (Lords of Men p. 136). A helmet's Perception penalty is shown in its
+book line.
 
 **Made** on a weapon or armour: a Shoddy item is destroyed the first time
 it fails a stress check; a Superior weapon has +1 Attack, a Superior shield

@@ -62,6 +62,13 @@ DIALOG_PAGES = {
     "gauntlet",
     "lose-the-gift",
     "learn-cantation",
+    "ars-fabulosa",
+    "faerie-bargain",
+    "faerie-offer",
+    "cast-in-lacuna",
+    "pilgrimage-more",
+    "holy-influence",
+    "devotion",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

@@ -962,6 +962,100 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"A wealthy family's gift": "4"},
         live={"#fields-live": "Hermetic Arts earn none"},
     ),
+    # Dealing with faeries (RoP: Faerie).
+    "ars fabulosa": Contract(
+        prefill={"Power": "(Faerie) Summoning", "The faerie's Might": "10"},
+        edits={"The faerie's Might": "5"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Ars Fabulosa: (Faerie) Summoning",
+        invalid={"The faerie's Might": "11"},
+        live={"#fields-live": "reach Might 10"},
+    ),
+    "a faerie bargain": Contract(
+        prefill={"How it ended": "struck", "The faerie": ""},
+        edits={"The faerie": "the Oak King"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="A Faerie Bargain",
+        invalid={"The faerie": ""},
+        live={"#fields-live": "binds the faerie"},
+    ),
+    "an offer to faerie": Contract(
+        prefill={"His fable score": "1", "The threat it overcomes": "Serious"},
+        edits={"The change he asks for": "a bridge of leaves"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="An Offer to Faerie",
+        invalid={"His fable score": "0"},
+        live={"#fields-live": "Accepted on 12"},
+    ),
+    # The lacuna and the pilgrim (HoH:S, The Church).
+    "cast in a lacuna": Contract(
+        prefill={"The city's Dominion": "3"},
+        edits={"The city's Dominion": "4"},
+        saved=lambda s: character(s).diary,
+        expected=[],
+        invalid={"The city's Dominion": "11"},
+        live={"#fields-live": "Outside the lacuna, in the Dominion"},
+    ),
+    "pilgrimage": Contract(
+        prefill={"Pilgrimage's name": ""},
+        edits={"Pilgrimage's name": "Santiago", "Target Level": "30"},
+        saved=lambda s: [
+            (p.kind, p.name, p.target)
+            for p in character(s).progress
+            if p.kind == "pilgrimage"
+        ],
+        expected=[("pilgrimage", "Santiago", 30)],
+        invalid={"Pilgrimage's name": ""},
+        live={"#fields-live": "Target Level 30"},
+    ),
+    # Devotion and the saints (The Church, RoP: The Divine).
+    "invoke a saint": Contract(
+        prefill={"The saint": "The Magi", "A donation": "0"},
+        edits={"In imminent peril (+2)": True, "Divine aura where he prays": "3"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Invoked The Magi",
+        invalid={"Divine aura where he prays": "x"},
+        live={"#fields-live": "+ peril 2"},
+    ),
+    "threaten a saint": Contract(
+        prefill={"The saint": "The Magi", "The saint's Divine Might": "25"},
+        edits={"Exposing his bones (+1)": True},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Threatened The Magi",
+        invalid={"Confidence Points spent": "99"},
+        live={"#fields-live": "Against 14"},
+    ),
+    "devotion points": Contract(
+        prefill={"How": "season", "Points gained (or lost)": "5"},
+        edits={"The saint": "-another-", "Another saint's name": "Saint Nerius"},
+        saved=lambda s: [
+            (p.name, p.points) for p in character(s).progress if p.kind == "devotion"
+        ],
+        expected=[("Saint Nerius", 5)],
+        invalid={"Points gained (or lost)": "x"},
+        live={"#fields-live": "on Devotion Points alone"},
+    ),
+    "indulgence, vigil or fast": Contract(
+        prefill={"The act": "vigil"},
+        edits={"The virtuous task tomorrow": "the Tribunal's vote"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Kept a vigil",
+        invalid={"The virtuous task tomorrow": ""},
+        live={"#fields-live": "1 Confidence Point"},
+    ),
+    # Holy influence and tempers (RoP: The Divine).
+    "holy influence": Contract(
+        prefill={
+            "Influence": "person",
+            "How": "season",
+            "His authority over them": "spiritual",
+        },
+        edits={"The trait inspired": "Kind"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Holy Influence",
+        invalid={"The trait inspired": ""},
+        live={"#fields-live": "Presence + Leadership"},
+    ),
 }
 
 

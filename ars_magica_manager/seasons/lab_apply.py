@@ -485,13 +485,16 @@ def _loyal(saga: Saga, tamer: Character, name: str) -> None:
 #: What finishing each kind of progress means.
 _FINISHED = {
     "item": "the item is made.",
-    "pilgrimage": "the pilgrimage's aim is achieved; the troupe picks its outcome "
-    "(a Virtue, a Flaw lost, a penance met...).",
+    "pilgrimage": "the pilgrimage's Target Level is reached; its aim (a Virtue, "
+    "a Flaw lost, a penance met...) is claimed with More's Pilgrimage.",
     "taming": "the animal is tamed.",
     "artwork": "the work of art is finished.",
     "formula": "the formula is known.",
     # Experimental philosophy's first concoction of a formula.
     "concoction": "the formula is concocted and its Laboratory Text written.",
+    # A city's obvious lacunae found (HoH:S p. 57).
+    "lacunae": "the city's obvious lacunae are found; later searches are Area "
+    "Lore practice.",
 }
 
 

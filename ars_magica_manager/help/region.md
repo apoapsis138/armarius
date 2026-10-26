@@ -771,7 +771,7 @@ Dominion by 1 for each point above 5 (Realms of Power: The Divine p. 12).
 
 With The Sundered Eagle in play, a church's Relics also hold its icons
 (The Sundered Eagle pp. 133-135): choose the Kind. An eikon has no Faith
-or Might; give its Aesthetic Quality, and the Touched column shows what
+or Might; give its Aesthetic Quality, and the Invoking column shows what
 venerating it adds to invoking its saint (Aesthetic Quality / 5, rounded
 up). An acheiropoieton, an icon not made by hand, is a powerful relic
 with a Faith score like any other. A character's More, Paint an Icon,
@@ -786,9 +786,12 @@ adds an eikon here.
 The church's relics, each with its saint and its Faith score. A relic's
 Faith score gives it as many Faith Points and a Divine Might of 10 times
 it, and whoever bears it
-gains as much Magic Resistance. With Realms of Power: The Divine in
-play, touching a relic is worth +1 to an invocation of its saint (its
-Touched column). Add, edit or delete one.
+gains as much Magic Resistance. Its Invoking column is what the relic adds to invoking its saint: with The
+Church in play, +2 for each Faith Point, once a day, for the one who tends
+or carries it or venerates it a day at its shrine with the custodians'
+leave (The Church p. 13); with only Realms of Power: The Divine, +1 for
+touching it (p. 87). A character's More, Invoke a Saint, chooses it. Add,
+edit or delete one.
 
 # A university
 <!-- help: tab-nb-studium -->

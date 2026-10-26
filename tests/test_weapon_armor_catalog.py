@@ -16,7 +16,25 @@ from ars_magica_manager.models import (
 )
 
 #: The supplements' weapons, after the DE's rows of their table: id -> book.
-SUPPLEMENT_WEAPONS = {"weapon_greek_fire_siphon": "TSE"}
+SUPPLEMENT_WEAPONS = {
+    "weapon_greek_fire_siphon": "TSE",
+    # Lords of Men pp. 137-139, with the books it reprints rows from.
+    "weapon_dueling_stick_short": "LoM; AM",
+    "weapon_falchion": "LoM",
+    "weapon_net": "LoM; GotF",
+    "weapon_infantry_shield": "LoM",
+    "weapon_trident": "LoM; GotF",
+    "weapon_whip": "LoM",
+    "weapon_halberd": "LoM",
+    "weapon_bastard_sword_one_handed": "LoM",
+    "weapon_bastard_sword_two_handed": "LoM",
+    "weapon_sharpened_rock": "LoM; AM",
+    "weapon_composite_bow": "LoM; AM",
+    "weapon_horse_bow": "LoM; AM",
+    "weapon_crossbow": "LoM",
+    "weapon_arbalest": "LoM",
+    "weapon_heavy_arbalest": "LoM",
+}
 
 
 def _table(table: str) -> list[WeaponDef]:
@@ -53,6 +71,16 @@ def test_every_row_of_the_books_tables_is_there_in_its_order():
         "Great Sword",
         "Staff",
         "Warhammer",
+        # Lords of Men p. 137 (and p. 139's bastard sword).
+        "Short Dueling Stick",
+        "Falchion",
+        "Net",
+        "Infantry Shield",
+        "Trident",
+        "Whip",
+        "Halberd",
+        "Bastard Sword (one-handed)",
+        "Bastard Sword (two-handed)",
     ]
     assert [w.name for w in _table("missile")] == [
         "Throwing Axe",
@@ -63,6 +91,13 @@ def test_every_row_of_the_books_tables_is_there_in_its_order():
         "Long Bow",
         "Short Bow",
         "Greek Fire Siphon",  # The Sundered Eagle p. 47
+        # Lords of Men p. 138.
+        "Sharpened Rock",
+        "Composite Bow",
+        "Horse Bow",
+        "Crossbow",
+        "Arbalest",
+        "Heavy Arbalest",
     ]
     assert [w.name for w in _table("natural")] == [
         "Grapple",

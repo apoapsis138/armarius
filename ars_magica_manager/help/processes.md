@@ -107,7 +107,8 @@ a list of Virtues to choose from, which asks for anything the entry names (an Af
 **Ordeal** says what the Ordeal costs, if anything: a Flaw gained (chosen in the picker), one of the Initiate's Minor or Major Virtues lost, or one of their Minor Flaws raised to a related Major Flaw. Its size follows: a Minor Flaw or Virtue is a Minor Ordeal, a Major one a Major Ordeal, a raised Flaw a Medium one. The Initiation succeeds when the Mystagogue's Presence + Lore + Script bonus reaches 15 for a Minor Virtue or 21 for a Major (18 or 30 when the Mystagogue lacks it), less the largest reduction among the Initiate's past Ordeals; the Initiate needs the Lore at 1 unless it is their own House's. See [How to initiate a character into a Mystery](help:guide-initiation).
 - **Activities from the supplements**, such as Study a significato, Library research or Act as Mystagogue. Library research shows the roll's total before the die: Intelligence + the Ability + the better of the covenant library's research bonus for it and its best encyclopedia's.
 - **Learn to measure the fixed stars** (Ancient Magic, a magus): a season learning Ptolemy's measure of the array of fixed stars, the first stage of his coordinates; no experience. The app records it and won't plan it twice. The second stage, calibrating the system at its origin on the Zero Longitude in the Purple Islands, is a journey for the troupe; after both, a stellar observation (Intelligence + Artes Liberales against 15, four hours of clear stars, two with a supernaturally accurate timepiece, plus the calculations) gives the coordinates of where the magus stands, an Arcane Connection that never fades (Ancient Magic pp. 89-91; Errata p. 58).
-- **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs). Care of Souls stays a priest's (p. 28).
+- **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs); More's [Pilgrimage](help:pilgrimage-more) on This Season records a pilgrimage's Oppositional Elements, a grog's too, and claims its aim. Care of Souls stays a priest's (p. 28). Personal devotion is a season of prayer and meditation at a saint's shrine: name the saint, and it earns 5 Devotion Points toward him, beginning a Devotion if he has none, with only exposure experience, in Church Lore or Dominion Lore (The Church p. 14).
+- **Search for a lacuna:** Intelligence + the chosen Area Lore + a stress die against 9 (Houses of Hermes: Societates p. 57). The first success finds the city's obvious lacunae, recorded as 'Lacunae of <city>'; he then knows three small lacunae per level of that Area Lore, which the player names with the troupe. Seasons searching there after it are Area Lore practice, and the Area Lore's specialty may become lacunae. A character raised in the area by a magus knows them already and needs no search. A lacuna that gives more than a place to cast, not bought at creation nor won in a story, carries a limitation (unavailable by day, inhabitants to placate, overuse risking exposure, an Infernal aura). [Cast in a Lacuna](help:cast-in-lacuna) works out a spell cast from one.
 - **Set points:** Useful correspondence's 1 xp, and the 1 xp in Organization Lore: Order of Hermes for each book read from a folio, are set points (Covenants p. 90; Houses of Hermes: True Lineages p. 23): no Affinity, Savantism or wound halves or multiplies them, and Master of None and Secondary Insight ignore them. **Study a realia collection** is for one outside the library, such as an exhibit at Tablinum; one the covenant owns is a book of the Realia kind (see [Books](help:section-lib-books)). **Study another artist's work**: Source Quality is half the work's Aesthetic Quality, and each work is studied once, like a tractatus (Art & Academe p. 126, with Atlas Games' errata).
 
 **Create a work of art** (Art & Academe pp. 123-135). Its Aesthetic
@@ -588,8 +589,21 @@ The steps run in a fixed order:
   the prosecutor and two thirds to the Tribunal's coffers, Seasons of
   service, Investing items, Loss of an apprentice, Banished, Loss of a
   familiar, Death of a familiar, and Cast out (the estate a quarter to
-  the victim, a quarter to the prosecutor, the rest to the heir). The
-  Wizard's March itself, the hunt, is not worked out.
+  the victim, a quarter to the prosecutor, a half to one who is both, the
+  rest to the heir: Houses of Hermes: True Lineages p. 59). A case's
+  details show beside it the established convention that whoever slays
+  the outcast takes the heir's half once the others are paid (p. 53).
+  A case that may March the accused asks **Marched**: a conviction for a
+  high crime when the prosecution called for a March and a simple
+  majority carried it (a tie defeats it), or a Quaesitor's March the
+  Tribunal ratified (Houses of Hermes: True Lineages pp. 58, 63). A charge
+  also asks how many times the convicted magus **refused** a lesser
+  penalty: at three he is Marched whatever the crime (p. 59). Closing the
+  meeting writes the March on the outcast's Hermetic Background (when the
+  case's Against names a character): the year and the Tribunal that
+  renounced him. He is safe until the Tribunal closes, then outside the
+  Code (DE p. 18; p. 60). A declaration of Wizard's War is not heard
+  unless its service is disputed. The hunt itself is not worked out.
 - **Treasury and vis**: the treasury as it stands and the loans that
   fall due this year.
 - **The next host, by lot**, under Normandy's customs: a covenant of

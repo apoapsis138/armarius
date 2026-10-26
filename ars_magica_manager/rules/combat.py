@@ -56,8 +56,7 @@ from .derived import (
     carried_load,
     encumbrance,
     fatigue_penalty,
-    primitive_armour,
-    worn_armour,
+    primitive_outfit,
     wound_penalty,
 )
 from .lab import ability_score
@@ -243,12 +242,7 @@ def virtue_lines(character: Character, weapon: Possession, kind: str) -> list[Li
         lines.append(
             Line("Primitive Equipment (weapon)", amount=-1, source=VIRTUES_SOURCE)
         )
-    armour = worn_armour(character.inventory)
-    if (
-        kind == "initiative"
-        and armour is not None
-        and primitive_armour(character, armour)
-    ):
+    if kind == "initiative" and primitive_outfit(character):
         lines.append(
             Line("Primitive Equipment (armour)", amount=-1, source=VIRTUES_SOURCE)
         )

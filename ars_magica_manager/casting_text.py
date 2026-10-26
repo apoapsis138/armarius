@@ -22,6 +22,7 @@ from .rules import (
     craft_magic,
     goetic,
     house_mastery,
+    lacunae,
     penetration,
 )
 from .rules import hybrid_magic as hybrid
@@ -227,6 +228,14 @@ def option_lines(saga: Saga, magus: Character) -> list[str]:
             "Talisman, while touching it (the best that applies): "
             + ", ".join(f"+{bonus} {escape(what)}" for bonus, what in attuned)
             + "."
+        )
+    # The cities whose lacunae he has found (HoH:S p. 57).
+    found = lacunae.found_areas(magus)
+    if found:
+        lines.append(
+            escape(", ".join(found))
+            + ": cast from a lacuna at a target outside the Dominion, a spell "
+            "meets the lacuna's aura, not the city's (More's Cast in a Lacuna)."
         )
     return lines
 

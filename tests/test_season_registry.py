@@ -46,6 +46,8 @@ WITH_OUTCOMES = {
     # Art & Academe's scholars: editing lectures, seeking a post.
     "edit_lectures",
     "seek_post",
+    # The Church's season of personal devotion.
+    "personal_devotion",
 }
 
 
@@ -54,7 +56,7 @@ def test_every_activity_is_registered_once() -> None:
     doubled = sorted({k for k in keys if keys.count(k) > 1})
     assert not doubled, f"registered more than once: {doubled}"
     assert set(keys) == set(REGISTRY) == set(BY_KEY)
-    assert len(keys) == 44  # with the scholars' two
+    assert len(keys) == 45  # with the scholars' two, and personal devotion
 
 
 def test_registering_a_key_twice_fails() -> None:

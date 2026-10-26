@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import re
 
-from .. import code_of_hermes, threats, tribunal_packages, tribunals, world
+from .. import threats, tribunal_packages, tribunals, world
 from ..grids import Grid
 from ..markup import escape
 from ..models import (
@@ -28,6 +28,7 @@ from ..models import (
     TribunalDiaryEntry,
 )
 from ..references import Fact
+from ..rules import code_of_hermes, hermetic_law
 from ..treasury import LEVY, NOTE, amount_text, balance
 from ..treasury import pawns as _pawns
 from ..treasury import pounds as _pounds
@@ -119,6 +120,12 @@ def _all_votes(saga: Saga, tribunal: Tribunal) -> int:
 def open_cases(tribunal: Tribunal) -> list[Case]:
     """The cases still to be heard, in the order filed on the docket."""
     return [c for c in tribunal.cases if c.status == CASE_OPEN]
+
+
+def heard_cases(tribunal: Tribunal) -> list[Case]:
+    """The open cases a meeting hears: all but a declaration of Wizard's
+    War whose service no one disputes (rules.hermetic_law)."""
+    return [c for c in open_cases(tribunal) if hermetic_law.heard(c)]
 
 
 def closed_cases(tribunal: Tribunal) -> list[Case]:
@@ -413,13 +420,21 @@ def cases_grid(saga: Saga, tribunal: Tribunal) -> Grid:
     rows = []
     styles: dict[tuple[int, int], str] = {}
     for index, case in enumerate(open_cases(tribunal)):
-        notice = due
+        notice = due if hermetic_law.needs_notice(case.kind) else "none due"
         if not case.notice_given:
             notice = "not given"
             styles[(index, 3)] = "$text-warning"
         if against_yours(saga, case):
             styles[(index, 0)] = "$text-error"
-        rows.append([case.title, case.kind.title(), _filed(case), notice, case.penalty])
+        rows.append(
+            [
+                case.title,
+                hermetic_law.kind_label(case.kind, short=True),
+                _filed(case),
+                notice,
+                case.penalty,
+            ]
+        )
     return Grid(
         ["Case", "Kind", "Filed", "Notice due", "Sought"],
         rows,
@@ -448,7 +463,14 @@ def past_grid(tribunal: Tribunal) -> Grid:
     for index, case in enumerate(closed_cases(tribunal)):
         if case.status == CASE_WITHDRAWN:
             styles[(index, 3)] = "$label"
-        rows.append([case.title, case.kind.title(), _filed(case), outcome(case)])
+        rows.append(
+            [
+                case.title,
+                hermetic_law.kind_label(case.kind, short=True),
+                _filed(case),
+                outcome(case),
+            ]
+        )
     return Grid(
         ["Case", "Kind", "Filed", "Outcome"],
         rows,
@@ -463,7 +485,9 @@ def case_text(saga: Saga, tribunal: Tribunal, case: Case | None) -> str:
     """Everything about one case, as markup for a details panel."""
     if case is None:
         return "[$label]Choose a case to read it.[/]"
-    heading = f"[b]{escape(case.title)}[/]  {case.kind.title()}"
+    heading = (
+        f"[b]{escape(case.title)}[/]  {escape(hermetic_law.kind_label(case.kind))}"
+    )
     if case.status == CASE_OPEN:
         if tribunal.next_year is not None:
             heading += f" · to be heard {tribunal.next_season} {tribunal.next_year}"
@@ -480,10 +504,11 @@ def case_text(saga: Saga, tribunal: Tribunal, case: Case | None) -> str:
         line("Under the Code", code_of_hermes.crime_note(case.charge))
     line("Brought by", case.brought_by)
     line("Against", case.against)
+    line("Victim", case.victim)
     line("Prosecutor", case.prosecutor)
     line("Defender", case.defender)
     line("Filed", _filed(case))
-    if case.status == CASE_OPEN:
+    if case.status == CASE_OPEN and hermetic_law.needs_notice(case.kind):
         due = notice_due(tribunal)
         given = "given" if case.notice_given else "not yet given"
         ahead = tribunal_packages.of(tribunal).notice_words
@@ -492,6 +517,8 @@ def case_text(saga: Saga, tribunal: Tribunal, case: Case | None) -> str:
             f"{given}; due {due}, {ahead} before the meeting" if due else given,
         )
     line("Sought", case.penalty)
+    for label, words in hermetic_law.case_lines(saga, case):
+        line(label, words)
     if case.term_ends_year is not None:
         season = case.term_ends_season or "Summer"
         line(

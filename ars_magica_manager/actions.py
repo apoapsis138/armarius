@@ -31,6 +31,7 @@ from . import (
     world,
 )
 from . import book_value as bv
+from . import devotion as devotion_forms
 from . import familiars as fam
 from . import goods as gd
 from . import inhabitants as inh
@@ -56,8 +57,10 @@ from .models import (
 )
 from .rules import agents as agent_rules
 from .rules import apothecary, covenfolk, merchants, philosophy
+from .rules import faerie_dealings as faerie_dealing_rules
 from .rules import gauntlet as gauntlet_rules
 from .rules import goetic as goetic_rules
+from .rules import holy_influence as holy_influence_rules
 from .rules import sin as sin_rules
 from .rules import theban_customs as byzantine
 from .sections import (
@@ -380,6 +383,20 @@ MORE_MENU: tuple[MenuItem, ...] = (
     # Art & Academe's artists and scholars, between their seasons.
     MenuItem("t", "artist_career", "An Artist's Career"),
     MenuItem("k", "scholar_career", "A Scholar's Career"),
+    # Dealing with faeries: the Ars Fabulosa, bargains and offers (RoP: Faerie).
+    MenuItem("y", "ars_fabulosa", "Ars Fabulosa"),
+    MenuItem("q", "faerie_bargain", "A Faerie Bargain"),
+    MenuItem("o", "faerie_offer", "An Offer to Faerie"),
+    # The lacuna and the pilgrim (HoH:S, The Church).
+    MenuItem("m", "cast_in_lacuna", "Cast in a Lacuna"),
+    MenuItem("j", "pilgrimage", "Pilgrimage"),
+    # Devotion and the saints (The Church, RoP: The Divine).
+    MenuItem("w", "invoke_saint", "Invoke a Saint"),
+    MenuItem("x", "threaten_saint", "Threaten a Saint"),
+    MenuItem("d", "devotion_points", "Devotion Points"),
+    MenuItem("g", "act_of_piety", "Indulgence, Vigil or Fast"),
+    # Holy influence and tempers (RoP: The Divine).
+    MenuItem("h", "holy_influence", "Holy Influence"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -892,6 +909,100 @@ def _studies(facts: ActionFacts) -> bool:
     return _academe_person(facts) is not None
 
 
+# Dealing with faeries (RoP: Faerie).
+
+
+def _faerie_dealer(facts: ActionFacts) -> Character | None:
+    """A person on show, from his record or a tradition's chapter, with
+    Realms of Power: Faerie in play."""
+    character = facts.selected_character
+    section = facts.active_section() or ""
+    if (
+        facts.selected_kind != NodeKind.CHARACTER
+        or character is None
+        or character.animal is not None
+        or not sourcebooks.in_play("RoP:F", sourcebooks.saga_books(facts.saga))
+        or not (
+            section in ("", RECORD_SECTION[NodeKind.CHARACTER])
+            or section.startswith(traditions.SECTION_PREFIX)
+        )
+    ):
+        return None
+    return character
+
+
+def _bargains_with_faeries(facts: ActionFacts) -> bool:
+    """Ars Fabulosa and A Faerie Bargain: one who holds a bargaining
+    power."""
+    character = _faerie_dealer(facts)
+    return character is not None and faerie_dealing_rules.bargains(character)
+
+
+def _offers_to_faerie(facts: ActionFacts) -> bool:
+    """An Offer to Faerie: any person."""
+    return _faerie_dealer(facts) is not None
+
+
+# The lacuna and the pilgrim (HoH:S, The Church).
+
+
+def _goes_on_pilgrimage(facts: ActionFacts, section: str) -> bool:
+    """Pilgrimage: on a person's This Season, with The Church in play
+    (any pilgrim, grogs too: The Church p. 16)."""
+    character = facts.selected_character
+    return (
+        section == "section-char-season"
+        and character is not None
+        and character.animal is None
+        and sourcebooks.in_play("TC", sourcebooks.saga_books(facts.saga))
+    )
+
+
+def _casts_in_lacuna(facts: ActionFacts, section: str) -> bool:
+    """Cast in a Lacuna: on a magus's Known Spells, with Houses of Hermes:
+    Societates in play."""
+    character = facts.selected_character
+    return (
+        section == "section-known-spells"
+        and character is not None
+        and character.type == "magus"
+        and sourcebooks.in_play("HoH:S", sourcebooks.saga_books(facts.saga))
+    )
+
+
+def _keeps_devotion(test: Callable[[Saga], bool]) -> Callable[[ActionFacts], bool]:
+    """Devotion and the saints' More commands: on a person's record (not
+    an animal's), when `test` finds the saga's books allow it."""
+
+    def rule(facts: ActionFacts) -> bool:
+        character = facts.selected_character
+        return (
+            facts.selected_kind == NodeKind.CHARACTER
+            and facts.on_record()
+            and character is not None
+            and character.animal is None
+            and test(facts.saga)
+        )
+
+    return rule
+
+
+# Holy influence and tempers (RoP: The Divine).
+
+
+def _influences_holily(facts: ActionFacts) -> bool:
+    """Holy Influence: a person of holy standing (clergy, True Faith,
+    Dominion Lore...) on his Personality Traits, with Realms of Power: The
+    Divine in play."""
+    character = _on_traits(facts)
+    return (
+        character is not None
+        and character.animal is None
+        and holy_influence_rules.has_standing(character)
+        and sourcebooks.in_play("RoP:D", sourcebooks.saga_books(facts.saga))
+    )
+
+
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
@@ -944,6 +1055,17 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     # Art & Academe's artists and scholars.
     "artist_career": _makes_art,
     "scholar_career": _studies,
+    # Dealing with faeries (RoP: Faerie).
+    "ars_fabulosa": _bargains_with_faeries,
+    "faerie_bargain": _bargains_with_faeries,
+    "faerie_offer": _offers_to_faerie,
+    # Devotion and the saints (The Church, RoP: The Divine).
+    "invoke_saint": _keeps_devotion(devotion_forms.invokes),
+    "threaten_saint": _keeps_devotion(devotion_forms.threatens),
+    "devotion_points": _keeps_devotion(devotion_forms.the_church),
+    "act_of_piety": _keeps_devotion(devotion_forms.the_church),
+    # Holy influence and tempers (RoP: The Divine).
+    "holy_influence": _influences_holily,
 }
 
 
@@ -1131,4 +1253,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     # The hunt and Area Lore on the road, beside Travel on Ahead.
     "hunt_on_journey": _plans_journey,
     "area_lore_on_journey": _plans_journey,
+    # The lacuna and the pilgrim (HoH:S, The Church).
+    "cast_in_lacuna": _casts_in_lacuna,
+    "pilgrimage": _goes_on_pilgrimage,
 }

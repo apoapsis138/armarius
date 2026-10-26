@@ -30,6 +30,7 @@ from ..models import (
     CASE_STATUSES,
     CASE_WITHDRAWN,
     SEASONS,
+    SPELL_DURATIONS,
     TREASURY_KINDS,
     Case,
     Covenant,
@@ -39,6 +40,7 @@ from ..models import (
     Tribunal,
     TribunalDiaryEntry,
 )
+from ..rules import hermetic_law
 from ..sections import (
     CASES_SECTION,
     CODE_SECTION,
@@ -321,7 +323,9 @@ def case_fields(saga: Saga, case: Case | None) -> list[DialogField]:
             "Kind",
             "select",
             attr(case, "kind", "charge"),
-            options=[(k.title(), k) for k in CASE_KINDS],
+            options=hermetic_law.kind_options(CASE_KINDS),
+            hint="A Wizard's War is a declaration kept on the docket; a "
+            "Wizard's March one a Quaesitor called, to be ratified.",
         ),
         DialogField("brought_by", "Brought by", "text", attr(case, "brought_by", "")),
         DialogField(
@@ -330,6 +334,15 @@ def case_fields(saga: Saga, case: Case | None) -> list[DialogField]:
             "text",
             attr(case, "against", ""),
             hint="A covenant or a magus; a case naming one of yours is flagged.",
+        ),
+        DialogField(
+            "victim",
+            "Victim",
+            "text",
+            attr(case, "victim", ""),
+            hint="Who the crime was done to; blank: whoever brought it. A "
+            "March gives the victim a quarter of the estate (HoH: TL p. 59).",
+            show_if=lambda values: values.get("kind") != hermetic_law.WAR,
         ),
         DialogField(
             "charge",
@@ -359,7 +372,9 @@ def case_fields(saga: Saga, case: Case | None) -> list[DialogField]:
             "Notice given",
             "check",
             attr(case, "notice_given", False),
+            show_if=lambda values: hermetic_law.needs_notice(values.get("kind") or ""),
         ),
+        *_law_fields(saga, case),
         DialogField(
             "penalty",
             "Sought",
@@ -399,10 +414,133 @@ def case_fields(saga: Saga, case: Case | None) -> list[DialogField]:
     return fields
 
 
+def _law_fields(saga: Saga, case: Case | None) -> list[DialogField]:
+    """What Hermetic law asks of a case (rules.hermetic_law): a Wizard's
+    War's full moon and how it was served, a spell trace found as
+    evidence, and Intrigue worked on the case."""
+
+    def war(values: dict[str, Any]) -> bool:
+        return values.get("kind") == hermetic_law.WAR
+
+    def traced(values: dict[str, Any]) -> bool:
+        return values.get("trace_level") is not None
+
+    return [
+        DialogField(
+            "month",
+            "Arrived at the full moon of month",
+            "optint",
+            attr(case, "month", None),
+            hint="1 to 3 of the season filed: the war begins at the next "
+            "full moon and ends at the one after (DE p. 21).",
+            show_if=war,
+        ),
+        DialogField(
+            "served",
+            "Served",
+            "select",
+            attr(case, "served", "") or "redcap",
+            options=hermetic_law.service_options(),
+            show_if=war,
+        ),
+        DialogField(
+            "contested",
+            "Its service is disputed",
+            "check",
+            attr(case, "contested", False),
+            hint="The next meeting hears it (HoH: Societates p. 23).",
+            show_if=war,
+        ),
+        DialogField(
+            "trace_level",
+            "Spell trace: the spell's level",
+            "optint",
+            attr(case, "trace_level", None),
+            hint="Evidence from a spell's trace (HoH: TL p. 71); blank for none.",
+            show_if=lambda values: not war(values),
+        ),
+        DialogField(
+            "trace_duration",
+            "Spell trace: Duration",
+            "select",
+            attr(case, "trace_duration", "") or SPELL_DURATIONS[0],
+            options=pairs(SPELL_DURATIONS),
+            show_if=traced,
+        ),
+        DialogField(
+            "trace_ritual",
+            "Spell trace: a Ritual",
+            "check",
+            attr(case, "trace_ritual", False),
+            show_if=traced,
+        ),
+        DialogField(
+            "trace_months",
+            "Spell trace: months since it ended",
+            "optint",
+            attr(case, "trace_months", None),
+            hint="Blank: the spell is still active.",
+            show_if=traced,
+        ),
+        DialogField(
+            "intrigue_by",
+            "Intrigue by",
+            "select",
+            attr(case, "intrigue_by", "") or None,
+            options=_character_options(saga),
+            allow_blank=True,
+            placeholder="(no one)",
+            hint="Who works on the case before the meeting (HoH: TL p. 24).",
+        ),
+        DialogField(
+            "intrigue_aim",
+            "Intrigue: to",
+            "select",
+            attr(case, "intrigue_aim", "") or hermetic_law.INTRIGUE_AIMS[0].key,
+            options=hermetic_law.aim_options(),
+            show_if=lambda values: bool(values.get("intrigue_by")),
+        ),
+        DialogField(
+            "intrigue_parma",
+            "Intrigue: both under Parma Magica",
+            "check",
+            attr(case, "intrigue_parma", True),
+            hint="Then The Gift costs nothing; otherwise -3, -6 for a "
+            "Blatant Gift (HoH: TL p. 24).",
+            show_if=lambda values: bool(values.get("intrigue_by")),
+        ),
+        DialogField(
+            "intrigue_blatant",
+            "Intrigue: his Gift is Blatant",
+            "check",
+            attr(case, "intrigue_blatant", False),
+            hint="The Blatant Gift Flaw counts without this.",
+            show_if=lambda values: (
+                bool(values.get("intrigue_by")) and not values.get("intrigue_parma")
+            ),
+        ),
+    ]
+
+
 def _set_case(case: Case, values: dict[str, Any]) -> None:
     for key, value in values.items():
         setattr(case, key, value)
     case.filed_season = case.filed_season or ""
+    case.intrigue_by = case.intrigue_by or ""
+    if not hermetic_law.needs_notice(case.kind):
+        case.notice_given = True
+    if case.kind != hermetic_law.WAR:
+        case.month, case.served, case.contested = None, "", False
+    if case.kind == hermetic_law.WAR:
+        case.trace_level = None
+    if case.trace_level is None:
+        case.trace_duration, case.trace_ritual, case.trace_months = "", False, None
+    if not case.intrigue_by:
+        case.intrigue_aim, case.intrigue_parma = "", True
+    if case.intrigue_parma:
+        case.intrigue_blatant = False
+    if case.kind == hermetic_law.WAR:
+        case.victim = ""
 
 
 def _case_form(saga: Saga, tribunal: Tribunal, case: Case | None) -> Form:
@@ -418,6 +556,9 @@ def _case_form(saga: Saga, tribunal: Tribunal, case: Case | None) -> Form:
         "Add a Case" if case is None else f"Edit {escape(case.title)}",
         lambda: case_fields(saga, case),
         apply,
+        validate=lambda values: hermetic_law.case_problem(
+            saga, case.id if case is not None else "", values
+        ),
         save_label="Add" if case is None else "Save",
     )
 

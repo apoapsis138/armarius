@@ -51,6 +51,9 @@ class Case:
     evidence: str = ""
     prosecutor: str = ""
     defender: str = ""
+    #: Who the crime was done to, when not whoever brought the case ("":
+    #: the one who brought it); a March's estate gives the victim a share.
+    victim: str = ""
     status: str = CASE_OPEN
     outcome: str = ""
     #: When what the ruling settled for a term ends, to be debated again
@@ -59,7 +62,40 @@ class Case:
     term_ends_year: int | None = None
     term_ends_season: str = ""
     term_docketed: bool = False
+    #: Hermetic law (rules.hermetic_law). A Wizard's War: the month of the
+    #: season (1-3) whose full moon the declaration arrived on, how it was
+    #: served, and whether its service is disputed (then a meeting hears it).
+    month: int | None = None
+    served: str = ""
+    contested: bool = False
+    #: Evidence from a spell trace: the spell's level and Duration, whether
+    #: it was a Ritual, and the months since it ended (None: still active).
+    trace_level: int | None = None
+    trace_duration: str = ""
+    trace_ritual: bool = False
+    trace_months: int | None = None
+    #: Intrigue before the meeting: who works on the case (a character id)
+    #: and to what end (rules.hermetic_law.INTRIGUE_AIMS).
+    intrigue_by: str = ""
+    intrigue_aim: str = ""
+    #: Whether both parties to the Intrigue are under Parma Magica (then
+    #: The Gift costs nothing), and whether the intriguer's Gift is Blatant.
+    intrigue_parma: bool = True
+    intrigue_blatant: bool = False
     id: str = field(default_factory=new_instance_id, compare=False)
+
+
+def _checked_case(case: Case) -> Case:
+    """A case as loaded, its Hermetic law numbers checked."""
+    if case.month is not None and (
+        not isinstance(case.month, int) or not 1 <= case.month <= 3
+    ):
+        raise ValueError(f"Case {case.title!r}: month {case.month!r} is not 1 to 3")
+    for name in ("trace_level", "trace_months"):
+        value = getattr(case, name)
+        if value is not None and (not isinstance(value, int) or value < 0):
+            raise ValueError(f"Case {case.title!r}: {name} {value!r} is not a count")
+    return case
 
 
 @dataclass
@@ -192,7 +228,9 @@ class Tribunal:
     def from_dict(cls, data: dict[str, Any]) -> Tribunal:
         # Older saves kept secrets under a heading in the summary or history.
         d = move_secrets(known_fields(cls, data), "summary", "history")
-        d["cases"] = [Case(**known_fields(Case, c)) for c in d.get("cases", [])]
+        d["cases"] = [
+            _checked_case(Case(**known_fields(Case, c))) for c in d.get("cases", [])
+        ]
         d["rulings"] = [Ruling(**known_fields(Ruling, r)) for r in d.get("rulings", [])]
         d["treasury"] = [
             TreasuryEntry(**known_fields(TreasuryEntry, t))

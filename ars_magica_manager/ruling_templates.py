@@ -156,12 +156,14 @@ def fill(text: str, values: dict[str, Any]) -> str:
 
 def suggested(case: Case, blank: str, term: int | None) -> str:
     """What a blank starts as, from the case: the accused for {party},
-    who brought it for {whom}, {prosecutor} and {victim}, the term for
-    {years}."""
+    who brought it for {whom} and {prosecutor}, the case's victim (or who
+    brought it) for {victim}, the term for {years}."""
     plain = blank.casefold()
     if plain in ("party", "accused", "defendant"):
         return case.against
-    if plain in ("whom", "prosecutor", "plaintiff", "brought by", "victim"):
+    if plain == "victim":
+        return case.victim.strip() or case.brought_by
+    if plain in ("whom", "prosecutor", "plaintiff", "brought by"):
         return case.brought_by
     if plain == YEARS:
         return str(term) if term else ""

@@ -42,6 +42,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..models import FATIGUE_LEVELS, Character, Saga
+from . import armour as armour_rules
 from . import (
     complexion,
     derived,
@@ -250,10 +251,9 @@ def damage(
     die = dice.stress_die(rng, saga=saga)
     hit = 0 if die.botched else bonus + die.value
     soak = derived.soak(character)
-    worn = derived.worn_armour(character.inventory)
     base = int(soak.total) + form_bonus
-    if not armour and worn is not None:
-        base -= worn.armor_protection
+    if not armour:
+        base -= armour_rules.protection(character.inventory)
     guard = dice.stress_die(rng, 0, saga=saga)
     soaked = base + guard.value
     size = int(derived.size(character).total)

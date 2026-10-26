@@ -42,6 +42,7 @@ from ..rules import (
     equipment,
     experiment,
     faerie_sympathy,
+    hermetic_law,
     medicine,
     penetration,
     realm_warping,
@@ -293,9 +294,11 @@ def hermetic_background_right_text(saga: Saga, character: Character) -> str:
     raw Lab Texts the magus reads."""
     sigil = character.hermetic.wizards_sigil
     voting = sigils.sigil_text(saga, character)
+    standing = hermetic_law.standing_text(saga, character)
     return (
         f"Wizard's Sigil: {escape(sigil) or '(not set)'}\n"
         + (f"{escape(voting)}\n" if voting else "")
+        + (f"{escape(standing)}\n" if standing else "")
         + lt.access_text(saga, character)
     )
 

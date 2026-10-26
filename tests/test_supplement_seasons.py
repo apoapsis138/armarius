@@ -22,7 +22,18 @@ def _plan(activity, subject="ability:Church Lore", **kw):
 
 def test_every_supplement_story_has_its_activities():
     stories = {a.story for a in sup.ACTIVITIES}
-    assert stories == {"913", "918", "919", "920", "921", "922", "923", "931", "AM-2"}
+    assert stories == {
+        "913",
+        "918",
+        "919",
+        "920",
+        "921",
+        "922",
+        "923",
+        "931",
+        "AM-2",
+        "FAITH-1",
+    }
     assert all(a.key in rules.ACTIVITIES for a in sup.ACTIVITIES)
     assert list(rules.ACTIVITIES)[-1] == rules.OTHER
 

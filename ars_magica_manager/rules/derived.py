@@ -12,7 +12,8 @@ ranges, Wound and Fatigue penalties, Encumbrance and Soak.
 - Encumbrance: Burden is the highest n whose n(n+1)/2 the total Load
   reaches; Encumbrance is Burden less a positive Strength (never below 0).
 - Soak: Stamina + armour Protection (+ Virtues such as Tough), plus the
-  adjustment typed on the sheet. A magus's Form bonus adds only against harm
+  adjustment typed on the sheet. The armour is one whole suit, or Lords of
+  Men's pieces with their Protection and Load summed (rules.armour). A magus's Form bonus adds only against harm
   of that Form, so it is not part of the standing figure.
 
 No screen uses wound_for() yet: it is a rule for a screen still to come, and
@@ -24,7 +25,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from ..models import Character, Possession, VirtueFlawInstance, Wounds
-from . import effects, equipment
+from . import armour as armour_rules
+from . import effects
 from .breakdown import Breakdown, Line
 from .rounding import round_up
 from .scores import character_source
@@ -159,14 +161,15 @@ def encumbrance(load: int, strength: int) -> int:
 
 def carried_load(inventory: Sequence[Possession]) -> int:
     """The Load the character carries: the armour worn and the weapons
-    carried, times how many of each (DE p. 403). Other suits of armour,
+    carried, times how many of each (DE p. 403); an outfit of Lords of
+    Men's pieces adds its pieces' Load, rounded up (p. 140). Other armour,
     and weapons not carried, are kept elsewhere."""
-    worn = worn_armour(inventory)
-    return sum(
+    weapons = sum(
         item.load * max(item.quantity, 1)
         for item in inventory
-        if (item.kind == "weapon" and item.carried) or item is worn
+        if item.kind == "weapon" and item.carried
     )
+    return weapons + armour_rules.load(inventory)
 
 
 def walking_pace(character: Character) -> int:
@@ -178,9 +181,10 @@ def walking_pace(character: Character) -> int:
 
 
 def worn_armour(inventory: Sequence[Possession]) -> Possession | None:
-    """The armour that protects best (a character wears one suit)."""
-    armour = [item for item in inventory if item.kind == "armor"]
-    return max(armour, key=lambda item: item.armor_protection, default=None)
+    """The whole suit worn, or the body armour of an outfit of pieces (see
+    rules.armour.worn for all of them)."""
+    armour = armour_rules.worn(inventory)
+    return armour[0] if armour else None
 
 
 def primitive_armour(character: Character, armour: Possession) -> bool:
@@ -190,9 +194,20 @@ def primitive_armour(character: Character, armour: Possession) -> bool:
         return False
     from .. import catalog
 
-    definition = catalog.load_armor_catalog_by_id().get(armour.gear_id or "")
+    definition = catalog.load_armor_catalog_by_id().get(
+        armour.gear_id or ""
+    ) or catalog.load_armor_piece_catalog_by_id().get(armour.gear_id or "")
     cost = definition.cost if definition is not None else armour.gear_quality
     return cost != "Inexpensive"
+
+
+def primitive_outfit(character: Character) -> bool:
+    """Primitive Equipment and any worn armour, or piece of it, that isn't
+    Inexpensive (-1 once, however many pieces)."""
+    return any(
+        primitive_armour(character, item)
+        for item in armour_rules.worn(character.inventory)
+    )
 
 
 def soak(character: Character) -> Breakdown:
@@ -208,21 +223,11 @@ def soak(character: Character) -> Breakdown:
             )
         )
         total += character.animal.protection
-    armour = worn_armour(character.inventory)
-    if armour is not None and armour.armor_protection:
-        lines.append(Line(armour.name, amount=armour.armor_protection, source=SOURCE))
-        total += armour.armor_protection
-        made = equipment.quality_bonus(armour)
-        if made:
-            lines.append(
-                Line(
-                    f"{armour.make} armour",
-                    amount=made,
-                    source=equipment.QUALITY_SOURCE,
-                )
-            )
-            total += made
-        if primitive_armour(character, armour):
+    armour = armour_rules.soak_lines(character.inventory)
+    if any(line.amount for line in armour):
+        lines += armour
+        total += armour_rules.protection(character.inventory)
+        if primitive_outfit(character):
             lines.append(
                 Line("Primitive Equipment (armour)", amount=-1, source="character")
             )

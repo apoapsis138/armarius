@@ -23,6 +23,7 @@ from . import (  # noqa: F401  (each registers its activities as it is imported)
     city_guild,
     covenants,
     definitive,
+    devotion,
     initiation,
     lords,
     societates,

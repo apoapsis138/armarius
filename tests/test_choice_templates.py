@@ -151,6 +151,7 @@ def test_the_offered_flaws_statuses_and_virtues():
     assert [s.id for s in ct.status_options(None, magus)] == ["vf_hermetic_magus"]
     assert ct.ability_options(ct.slots(martial, 0)[1]) == [
         "Bows",
+        "Crossbow",  # Lords of Men p. 138
         "Great Weapon",
         "Siege Weapon",
         "Single Weapon",

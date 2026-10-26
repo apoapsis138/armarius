@@ -170,8 +170,8 @@ def reminders(magus: Character) -> list[str]:
         )
     if has(magus, CHOREOGRAPHY):
         found.append(
-            "Mystical Choreography: ceremonial casting takes a minute a "
-            "magnitude, wherever it is done (DE p. 99)."
+            "Mystical Choreography: ceremonial casting takes five minutes a "
+            "magnitude, one in any prepared space (DE p. 99)."
         )
     if has(magus, HEARTBEAST):
         found.append(

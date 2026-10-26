@@ -20,8 +20,8 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Relics (1)
 
-        Relic                          Saint     Faith  Might  Bearer's MR  Touched
-      ○ The Shrine of the Three Kings  The Magi  7      70     70           +1
+        Relic                          Saint     Faith  Might  Bearer's MR  Invoking
+      ○ The Shrine of the Three Kings  The Magi  7      70     70           +14
 
 
 

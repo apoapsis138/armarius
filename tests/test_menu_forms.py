@@ -82,6 +82,16 @@ def test_each_page_offers_what_applies_there():
         "Turbulence",
         # Art & Academe's scholars (anyone may study).
         "A Scholar's Career",
+        # Any person may make an offer to Faerie (RoP: Faerie).
+        "An Offer to Faerie",
+        # A magus may cast in a lacuna (HoH: Societates).
+        "Cast in a Lacuna",
+        # Devotion and the saints (The Church, RoP: The Divine), after the
+        # lacuna's Cast in a Lacuna.
+        "Invoke a Saint",
+        "Threaten a Saint",
+        "Devotion Points",
+        "Indulgence, Vigil or Fast",
     ]
     assert _labels(menu_forms.new_items(page)) == ["New Character", "Bind Familiar"]
     deleted = menu_forms.deletes(page)

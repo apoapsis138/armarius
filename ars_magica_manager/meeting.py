@@ -55,7 +55,7 @@ from .models import (
     TribunalDiaryEntry,
 )
 from .references import Fact
-from .rules import debate
+from .rules import debate, hermetic_law
 from .rules.apprentice_seasons import gifted
 from .sections import ATTENDANCE_SECTION, BUSINESS_SECTION, VOTE_SECTION
 from .sheets import tribunal as tribunal_sheet
@@ -107,7 +107,7 @@ def _begin(saga: Saga, tribunal: Tribunal) -> Meeting:
         "attendance": {},
         "notes": {},
     }
-    meeting["day_of"] = _spread(tribunal_sheet.open_cases(tribunal), length)
+    meeting["day_of"] = _spread(tribunal_sheet.heard_cases(tribunal), length)
     return meeting
 
 
@@ -642,7 +642,7 @@ class Opening(Step):
     """The day count, where it is held, and the day each case is heard."""
 
     def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
-        cases = tribunal_sheet.open_cases(tribunal)
+        cases = tribunal_sheet.heard_cases(tribunal)
         found = [
             DialogField(
                 "place",
@@ -1720,7 +1720,7 @@ class Rulings(Step):
     is written when the meeting closes."""
 
     def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
-        cases = tribunal_sheet.open_cases(tribunal)
+        cases = tribunal_sheet.heard_cases(tribunal)
         found: list[DialogField] = []
         offered = ruling_templates.templates(saga)
         termed = {
@@ -1795,6 +1795,7 @@ class Rulings(Step):
                     "ends, and it goes back on the docket.",
                     show_if=lambda v, cid=c.id: v.get(f"template_{cid}") not in termed,
                 ),
+                *_march_fields(c, kept),
             ]
             pair = parties(saga, c)
             if pair is not None:
@@ -1820,6 +1821,10 @@ class Rulings(Step):
                 return "A fine is more than nothing; leave it blank for none."
             if key.startswith("term_") and value is not None and value < 1:
                 return "A term is a year or more; leave it blank for none."
+            if key.startswith("refused_"):
+                problem = hermetic_law.refusals_problem(value)
+                if problem:
+                    return problem
         return None
 
     def apply(
@@ -1827,7 +1832,7 @@ class Rulings(Step):
     ):
         kept = meeting.setdefault("rulings", {})
         asked: list[Case] = []
-        for case in tribunal_sheet.open_cases(tribunal):
+        for case in tribunal_sheet.heard_cases(tribunal):
             if f"template_{case.id}" not in values:
                 continue
             before = kept.get(case.id, {})
@@ -1841,6 +1846,11 @@ class Rulings(Step):
                 "code": bool(values.get(f"code_{case.id}")),
                 "attitude": values.get(f"attitude_{case.id}", "0"),
                 "term": values.get(f"term_{case.id}"),
+                "marched": hermetic_law.marched(
+                    bool(values.get(f"march_{case.id}")),
+                    values.get(f"refused_{case.id}"),
+                ),
+                "refused": values.get(f"refused_{case.id}"),
             }
             if template is None:
                 case.outcome = values.get(f"outcome_{case.id}", "")
@@ -1857,13 +1867,15 @@ class Rulings(Step):
 
     def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = []
-        for c in tribunal_sheet.open_cases(tribunal):
+        for c in tribunal_sheet.heard_cases(tribunal):
             kept = ruling_of(meeting, c)
             line = f"[b]{escape(c.title)}:[/] {escape(c.outcome or '(no ruling yet)')}"
             if kept.get("fine"):
                 line += f" · fine {escape(fine_text(kept))}"
             if kept.get("term"):
                 line += f" · debated again in {kept['term']} years"
+            if kept.get("marched"):
+                line += " · Marched: cast out when the Tribunal closes"
             lines.append(line)
         return _join(*lines, _note_text(meeting, self.key))
 
@@ -1883,7 +1895,7 @@ class Rulings(Step):
     def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         lines = []
         fines = []
-        for c in tribunal_sheet.open_cases(tribunal):
+        for c in tribunal_sheet.heard_cases(tribunal):
             if not c.outcome.strip():
                 continue
             lines.append(f"{c.title}: {c.outcome.rstrip('.')}.")
@@ -1891,6 +1903,37 @@ class Rulings(Step):
             if kept.get("fine"):
                 fines.append(f"fine {fine_text(kept)}")
         return " ".join(lines), "; ".join(fines)
+
+
+def _march_fields(case: Case, kept: dict[str, Any]) -> list[DialogField]:
+    """A conviction's Wizard's March (rules.hermetic_law): called and
+    carried for a high crime, or the lesser penalty refused three times."""
+    short = _short(case.title)
+    found = []
+    if hermetic_law.may_march(case):
+        found.append(
+            DialogField(
+                f"march_{case.id}",
+                f"{short}: Marched",
+                "check",
+                bool(kept.get("marched", case.kind == hermetic_law.MARCH)),
+                hint="The prosecution called for a March and a majority carried "
+                "it (a tie defeats it), or the Tribunal ratified a Quaesitor's "
+                "(HoH: TL pp. 58, 63).",
+            )
+        )
+    if case.kind == "charge":
+        found.append(
+            DialogField(
+                f"refused_{case.id}",
+                f"{short}: penalty refused",
+                "optint",
+                kept.get("refused"),
+                hint=f"Times the convicted magus refused a lesser penalty: at "
+                f"{hermetic_law.REFUSALS} he is Marched (HoH: TL p. 59).",
+            )
+        )
+    return found
 
 
 def _years(blanks: dict[str, str]) -> int | None:
@@ -2135,7 +2178,7 @@ def _next(tribunal: Tribunal, meeting: Meeting) -> int:
 
 def closing_text(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
     """What closing the meeting does."""
-    decided = sum(bool(c.outcome.strip()) for c in tribunal_sheet.open_cases(tribunal))
+    decided = sum(bool(c.outcome.strip()) for c in tribunal_sheet.heard_cases(tribunal))
     words = f"{decided} case{'' if decided == 1 else 's'}"
     return (
         f"Closing ends the meeting: {words} with a ruling are decided (their "
@@ -2179,7 +2222,7 @@ def steps(tribunal: Tribunal, meeting: Meeting) -> list[Step]:
         *added["opening"],
     ]
     cases = sorted(
-        tribunal_sheet.open_cases(tribunal), key=lambda c: day_of(meeting, c)
+        tribunal_sheet.heard_cases(tribunal), key=lambda c: day_of(meeting, c)
     )
     for case in cases:
         found.append(Hearing(case, day_of(meeting, case)))
@@ -2247,7 +2290,7 @@ def _decide(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> None:
     written: the Peripheral Code, the fine owed to the treasury, and the
     party's attitude."""
     year, season = _when(saga, meeting)
-    for case in tribunal_sheet.open_cases(tribunal):
+    for case in tribunal_sheet.heard_cases(tribunal):
         if not case.outcome.strip():
             continue
         case.status = CASE_DECIDED
@@ -2258,6 +2301,8 @@ def _decide(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> None:
             case.term_docketed = False
         if kept.get("code"):
             tribunal.rulings.append(Ruling(case.title, year, case.outcome, case.id))
+        if kept.get("marched"):
+            hermetic_law.renounce(saga, tribunal, case, year)
         if kept.get("fine"):
             art = kept.get("art") or ""
             tribunal.treasury.append(
@@ -2295,7 +2340,7 @@ def acta_text(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
         if sum(present(saga, tribunal, meeting, c)) > 0
     ]
     builder.attendance(attending, present_text(saga, tribunal, meeting))
-    for case in tribunal_sheet.open_cases(tribunal):
+    for case in tribunal_sheet.heard_cases(tribunal):
         if case.outcome.strip():
             kept = ruling_of(meeting, case)
             fine = fine_text(kept) if kept.get("fine") else ""
@@ -2602,7 +2647,7 @@ def vote_case(saga: Saga, tribunal: Tribunal) -> Case | None:
     """The case the Vote section shows: the one in hand (its debate or
     its vote), else the last voted on, else the first to be heard."""
     meeting = record(saga, tribunal)
-    cases = tribunal_sheet.open_cases(tribunal)
+    cases = tribunal_sheet.heard_cases(tribunal)
     if not cases:
         return None
     if tribunal.meeting is not None:

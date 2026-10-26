@@ -21,7 +21,9 @@ def _catalogs() -> dict[str, list]:
         "abilities": catalog.load_ability_catalog(),
         "houses": catalog.load_house_catalog(),
         # One id space: a possession's book entry can be either.
-        "weapons & armor": catalog.load_weapon_catalog() + catalog.load_armor_catalog(),
+        "weapons & armor": catalog.load_weapon_catalog()
+        + catalog.load_armor_catalog()
+        + catalog.load_armor_piece_catalog(),
         "spells": catalog.load_spell_catalog(),
         "shapes & materials": catalog.load_shape_material_catalog(),
     }

@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 from .markup import escape
 from .models import CastingRule, Character, Saga, TraditionDef
-from .rules import faerie_rites, infernalists
+from .rules import faerie_rites, holy_powers, infernalists, maleficia
 from .rules import hedge_casting as hc
 from .rules import hedge_effects as he
 from .rules import hedge_warping as hw
@@ -420,6 +420,8 @@ def _effect_cells(
             [
                 he.total_words(found, effect),
                 *faerie_rites.rite_notes(character, tradition, effect),
+                *holy_powers.effect_notes(character, tradition, effect),
+                *maleficia.effect_notes(character, tradition, effect),
             ]
         )
         rows.append(

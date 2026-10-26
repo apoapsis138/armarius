@@ -8,6 +8,8 @@ One module per kind of record, re-exported here so
 """
 
 from .agents import Agent as Agent
+from .arms import ARMOR_SLOTS as ARMOR_SLOTS
+from .arms import ArmorPieceDef as ArmorPieceDef
 from .artwork import ART_WOUNDS as ART_WOUNDS
 from .artwork import ARTWORK_BASES as ARTWORK_BASES
 from .artwork import ArtworkPlan as ArtworkPlan

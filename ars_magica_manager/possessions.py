@@ -18,6 +18,7 @@ from .models import (
     GEAR_TYPES_BY_KIND,
     SANCTUM_USAGE_DEFAULT,
     ArmorDef,
+    ArmorPieceDef,
     Covenant,
     Laboratory,
     LabVirtueFlawDef,
@@ -27,6 +28,7 @@ from .models import (
 )
 from .rules import vis_kinds
 from .rules.lab_stats import lab_build_points, lab_characteristic_total
+from .rules.rounding import round_up
 from .tables import Table
 
 #: Section titles on the tab.
@@ -216,6 +218,10 @@ class PossessionEntry:
     @property
     def armor_protection(self) -> int:
         return self._own("armor_protection", 0)
+
+    @property
+    def armor_slot(self) -> str:
+        return self._own("armor_slot", "")
 
     @property
     def load(self) -> int:
@@ -442,6 +448,9 @@ def _book_line(entry: PossessionEntry) -> str | None:
         if weapon is None:
             return _line("Weapon", f"{gear_id} (not in the catalog)")
         return _line("Weapon", f"{weapon.name} ({weapon_summary(weapon)})")
+    piece = catalog.load_armor_piece_catalog_by_id().get(gear_id)
+    if piece is not None:
+        return _line("Material", f"{piece.name} ({piece_summary(piece)})")
     armor = catalog.load_armor_catalog_by_id().get(gear_id)
     if armor is None:
         return _line("Material", f"{gear_id} (not in the catalog)")
@@ -504,6 +513,8 @@ def detail_text(entry: PossessionEntry | None) -> str:
         elif kind == "armor":
             lines.append(_line("Protection", signed(entry.armor_protection)))
             lines.append(_line("Load", entry.load))
+            if entry.armor_slot:
+                lines.append(_line("Worn as", f"{entry.armor_slot} (a piece)"))
     elif kind == "vis_source":
         lines.append(_line("Art", entry.art))
         lines.append(_line("Pawns", entry.pawns))
@@ -659,24 +670,69 @@ def weapon_fills(
 
 
 def armor_fills(
-    values: dict[str, Any], armors: Mapping[str, ArmorDef]
+    values: dict[str, Any],
+    armors: Mapping[str, ArmorDef],
+    pieces: Mapping[str, ArmorPieceDef] | None = None,
 ) -> dict[str, Any]:
     """What choosing the book armor Material `values["gear_id"]` (one of
     `armors`), as partial or full armor (`values["gear_type"]`), suggests
     for the rest of an armor form: its Protection and Load (unless it
     doesn't come that way), its cost as the Quality, and its name unless
-    the user has typed their own."""
+    the user has typed their own. A Lords of Men piece (one of `pieces`)
+    fills its figures rounded up (rules.armour keeps the fractions), where
+    it is worn, and Full armor for full body armour, else Partial."""
+    piece = (pieces or {}).get(values.get("gear_id") or "")
+    if piece is not None:
+        return _piece_fills(values, piece, pieces or {}, armors)
     armor = armors.get(values.get("gear_id") or "")
     if armor is None:
         return {}
     filled: dict[str, Any] = {"gear_quality": armor.cost}
+    if values.get("armor_slot"):
+        filled["armor_slot"] = ""  # a whole suit, not a piece
     figures = armor.figures(values.get("gear_type") == FULL_ARMOR)
     if figures is not None:
         filled["armor_protection"], filled["load"] = figures
     names = {a.name for a in armors.values()}
+    names |= {p.name for p in (pieces or {}).values()}
     if _follows_the_book(values.get("name") or "", names):
         filled["name"] = armor.name
     return filled
+
+
+def _piece_fills(
+    values: dict[str, Any],
+    piece: ArmorPieceDef,
+    pieces: Mapping[str, ArmorPieceDef],
+    armors: Mapping[str, ArmorDef],
+) -> dict[str, Any]:
+    filled: dict[str, Any] = {
+        "gear_quality": piece.cost,
+        "armor_protection": round_up(piece.protection),
+        "load": round_up(piece.load),
+        "armor_slot": piece.slot,
+        "gear_type": GEAR_TYPES_BY_KIND["armor"][1 if piece.full else 0],
+    }
+    names = {p.name for p in pieces.values()} | {a.name for a in armors.values()}
+    if _follows_the_book(values.get("name") or "", names):
+        filled["name"] = piece.name
+    return filled
+
+
+def piece_summary(piece: ArmorPieceDef) -> str:
+    """The book's figures for a piece ("Body, +2.5 Load 1.5, Perception
+    -1")."""
+    parts = [
+        piece.slot + (", full" if piece.full else ""),
+        f"+{_number(piece.protection)} Load {_number(piece.load)}",
+    ]
+    if piece.perception:
+        parts.append(f"Perception {piece.perception:+d}")
+    return ", ".join(parts)
+
+
+def _number(value: float) -> str:
+    return str(int(value)) if float(value).is_integer() else str(value)
 
 
 def book_text(kind: str, gear_id: str | None) -> str:
@@ -688,6 +744,9 @@ def book_text(kind: str, gear_id: str | None) -> str:
             return "[dim]Choose a Weapon to fill in the book's figures.[/]"
         summary, description = weapon_summary(weapon), weapon.description
         name = weapon.name
+    elif piece := catalog.load_armor_piece_catalog_by_id().get(gear_id or ""):
+        summary, description = piece_summary(piece), piece.description
+        name = piece.name
     else:
         armor = catalog.load_armor_catalog_by_id().get(gear_id or "")
         if armor is None:

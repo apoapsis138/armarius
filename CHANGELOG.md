@@ -109,6 +109,78 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.23.0 — 2026-10-26
+
+### Computus
+
+- **Dealing with faeries** (RoP: Faerie pp. 25-29, 102-103, 131-134): the
+  Ars Fabulosa's totals (Summoning, Bonding, Captivating, Dismissing), the
+  Might the Sympathy Traits reach, Penetration with the best Trait, and
+  what each power does; Sympathy Traits gain and lose experience from
+  bargains and from a 1 or a botch; an offer to the Faerie Realm with a
+  fable point.
+- **Devotion and the saints**: invoking a saint with every modifier the
+  books give, and threatening one who refused (RoP: The Divine pp. 85-91);
+  Devotions and Devotion Points (The Church pp. 12-15); a relic of the
+  saint invoked adds +2 for each of its Faith Points with The Church in
+  play, another saint's relic +1 (The Church p. 13); indulgences, vigils
+  and fasts (pp. 11-12); the Mazdean yazdan (The Cradle and the Crescent
+  p. 85).
+- **Armour worn as pieces** (Lords of Men pp. 139-143): Protection and Load
+  add together, rounded up at the end, wherever Soak, Load and harm are
+  worked out; complex armour design is in the rules engine.
+- **Lacunae** (HoH: Societates pp. 57-60): searching a city records it and
+  the small lacunae known there; Mystical Choreography's reminder follows
+  the DE (p. 99).
+- **Angels** are checked against their Choir (RoP: The Divine pp. 16-26);
+  a holy tradition's effects and an infernalist's maleficia work their
+  levels out from the books' guidelines, with the Errata's corrections
+  (RoP: The Divine pp. 46-56; RoP: The Infernal pp. 102-113).
+
+### Concilium
+
+- **Hermetic law**: a Tribunal's docket takes a declaration of **Wizard's
+  War**, with its full moon and how it was served, and a **Wizard's
+  March** a Quaesitor called (DE pp. 18-21; HoH: Societates pp. 22-25;
+  HoH: True Lineages pp. 45-60). The Rulings ask whether a conviction
+  Marched the accused; a case's details give the estate's shares (victim,
+  prosecutor, heir) with the slayer's convention beside them, the
+  Peripheral Code's low crimes, a spell trace's fading and the Acute
+  Sense roll (p. 71), and an Intrigue roll with The Gift's penalty where
+  Parma doesn't cover both sides (pp. 24-25).
+
+### Pagina
+
+- More offers **Cast in a Lacuna**, **Pilgrimage** (The Church pp.
+  15-19), **Ars Fabulosa**, **A Faerie Bargain**, **An Offer to Faerie**,
+  **Invoke a Saint**, **Threaten a Saint**, **Devotion Points**,
+  **Indulgence, Vigil or Fast** and **Holy Influence**, each with an
+  inspector, written to the Diary.
+- A magus's Hermetic Background records a renunciation and any Wizard's
+  War he is fighting.
+- The armour form has a "Worn as" field with Lords of Men in play; a
+  church's Relics show what each adds to invoking its saint; the Planning
+  tab lists a patron saint and Devotions.
+
+### Book of Hours
+
+- A season of personal devotion at a saint's shrine earns 5 Devotion
+  Points (The Church p. 14).
+
+### Florilegium
+
+- Lords of Men's weapons and armour pieces join the catalog with the book
+  in play, with a Crossbow Ability (and its mark).
+- The saints of RoP: The Divine, The Sundered Eagle and The Contested
+  Isle, with their Might, feasts and powers.
+- The holy Powers' and the maleficia's guidelines join the holy and
+  infernal traditions.
+
+### Fundamenta
+
+- The Code of Hermes's crimes moved into the rules engine, beside
+  Hermetic law.
+
 ## 3.22.0 — 2026-10-26
 
 ### Gauntlet

@@ -610,19 +610,20 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#meeting-step-info": "fine 3 pawns of Aquam"},
     ),
     "add case": Contract(
-        prefill={"Case": "", "Kind": "charge", "Filed (year)": "1220"},
+        prefill={"Case": "", "Kind": "charge", "Filed (year)": "1220", "Victim": ""},
         edits={
             "Case": "Keep v. Fengheld",
             "Kind": "appeal",
             "Against": "Fengheld",
+            "Victim": "Alys",
             "Notice given": True,
         },
         saved=lambda s: [
-            (c.title, c.kind, c.against, c.notice_given)
+            (c.title, c.kind, c.against, c.victim, c.notice_given)
             for c in s.tribunals[0].cases
             if c.title == "Keep v. Fengheld"
         ],
-        expected=[("Keep v. Fengheld", "appeal", "Fengheld", True)],
+        expected=[("Keep v. Fengheld", "appeal", "Fengheld", "Alys", True)],
         invalid={"Case": ""},
         shown={"#trib-cases": "Keep v. Fengheld", "#section-trib-cases": "(3)"},
     ),
@@ -897,6 +898,25 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: s.character("mag1").diary[-1].name.startswith("Area Lore"),
         expected=True,
         live={"#fields-live": "Ease Factor 12"},
+    ),
+    # Hermetic law on the docket (HoH:S, HoH:TL).
+    "add wizard's war": Contract(
+        prefill={"Case": "", "Kind": "charge"},
+        edits={
+            "Case": "Leandro declares on Severinus",
+            "Kind": "war",
+            "Brought by": "Leandro",
+            "Against": "Severinus",
+            "Arrived at the full moon of month": "2",
+        },
+        saved=lambda s: [
+            (c.kind, c.month, c.served, c.notice_given)
+            for c in s.tribunals[0].cases
+            if c.title == "Leandro declares on Severinus"
+        ],
+        expected=[("war", 2, "redcap", True)],
+        invalid=[{"Kind": "war"}, {"Kind": "war", "Against": "Fengheld"}],
+        shown={"#trib-cases": "Leandro declares"},
     ),
 }
 

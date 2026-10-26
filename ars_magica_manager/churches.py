@@ -14,8 +14,10 @@ above 5 (RoP: The Divine p. 12).
 
 A relic has a Faith score, and as many Faith Points; its Divine Might is
 10 for each point of it, and its bearer gains
-as much Magic Resistance; touching it is worth +1 to an invocation of its
-saint (Realms of Power: The Divine).
+as much Magic Resistance. Invoking its saint, one who tends or carries
+it (or venerates it a day at its shrine) adds +2 a Faith Point, with The
+Church in play (The Church p. 13); without it, touching it is worth +1
+(Realms of Power: The Divine p. 87): rules.devotion.relic_bonus.
 
 Its icons go on the same list (The Sundered Eagle pp. 133-135). An eikon
 has no Faith or Might: venerated, it adds its Aesthetic Quality / 5
@@ -38,7 +40,7 @@ from .grids import Grid
 from .models import Neighbour, Saga, details_list
 from .neighbour_lists import KindList, KindTab, list_ops
 from .references import Fact
-from .rules import options
+from .rules import devotion, options
 from .rules import theban_customs as customs
 from .sections import RELICS_SECTION
 
@@ -222,8 +224,10 @@ def relics_title(_saga: Saga, neighbour: Neighbour) -> str:
 
 def relics_grid(saga: Saga, neighbour: Neighbour) -> Grid:
     """Each relic: its saint, Faith Points, Might, the Magic Resistance it
-    gives its bearer and what touching it adds to invoking its saint."""
-    divine = sourcebooks.in_play("RoP:D", sourcebooks.saga_books(saga))
+    gives its bearer and what it adds to invoking its saint."""
+    books = sourcebooks.saga_books(saga)
+    the_church = sourcebooks.in_play(devotion.TC, books)
+    invoked = the_church or sourcebooks.in_play("RoP:D", books)
     rows = []
     for relic in relics(neighbour):
         faith = _faith(relic)
@@ -246,11 +250,11 @@ def relics_grid(saga: Saga, neighbour: Neighbour) -> Grid:
                 str(faith),
                 str(10 * faith),
                 str(10 * faith),
-                "+1" if divine else "",
+                f"+{devotion.relic_bonus(faith, True, the_church)}" if invoked else "",
             ]
         )
     return Grid(
-        ["Relic", "Saint", "Faith", "Might", "Bearer's MR", "Touched"],
+        ["Relic", "Saint", "Faith", "Might", "Bearer's MR", "Invoking"],
         rows,
         list(range(len(rows))),
         "No relics recorded.",

@@ -500,7 +500,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career",
+        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast",
         "slash": "(disabled)"
       }
     },
@@ -670,7 +670,7 @@
         "a": "SpellChooserScreen: Add a spell Leandro knows",
         "e": "FieldsDialog: Mastery: Boundless Wealth of the Oceans",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Craft by Magic: Leandro",
+        "m": "MenuScreen: Craft by Magic, Cast in a Lacuna",
         "slash": "(disabled)"
       }
     },
@@ -700,7 +700,7 @@
         "a": "AbilityPickerScreen: Add an Ability",
         "e": "FieldsDialog: Fehu",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: An Offer to Faerie: Leandro",
         "slash": "(disabled)"
       }
     },
@@ -820,7 +820,7 @@
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "d": "notice: Nothing is planned for Leandro in Spring 1220.",
-        "m": "FieldsDialog: Turbulence: Leandro",
+        "m": "MenuScreen: Turbulence, Pilgrimage",
         "slash": "(disabled)"
       }
     },

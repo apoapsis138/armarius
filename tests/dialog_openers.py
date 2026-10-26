@@ -1393,6 +1393,27 @@ OPENERS: dict[str, Opener] = {
     # Art & Academe's artists and scholars, between their seasons.
     "an artist's career": Opener("character", lambda ws: _open_career(ws, "artist")),
     "a scholar's career": Opener("character", lambda ws: _open_career(ws, "scholar")),
+    # Dealing with faeries (RoP: Faerie).
+    "ars fabulosa": Opener("character", lambda ws: _open_faerie(ws, "ars")),
+    "a faerie bargain": Opener("character", lambda ws: _open_faerie(ws, "bargain")),
+    "an offer to faerie": Opener("character", lambda ws: _open_faerie(ws, "offer")),
+    # The lacuna and the pilgrim (HoH:S, The Church).
+    "cast in a lacuna": Opener("character", lambda ws: ws.action_cast_in_lacuna()),
+    "pilgrimage": Opener("character", lambda ws: ws.action_pilgrimage()),
+    # Hermetic law on the docket (HoH:S, HoH:TL).
+    "add wizard's war": Opener(
+        "tribunal",
+        _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),
+    ),
+    # Devotion and the saints (The Church, RoP: The Divine).
+    "invoke a saint": Opener("character", lambda ws: ws.action_invoke_saint()),
+    "threaten a saint": Opener("character", lambda ws: ws.action_threaten_saint()),
+    "devotion points": Opener("character", lambda ws: ws.action_devotion_points()),
+    "indulgence, vigil or fast": Opener(
+        "character", lambda ws: ws.action_act_of_piety()
+    ),
+    # Holy influence and tempers (RoP: The Divine).
+    "holy influence": Opener("character", lambda ws: ws.action_holy_influence()),
 }
 
 
@@ -1596,3 +1617,19 @@ def _open_career(ws, which: str) -> None:
         ws.action_artist_career()
     else:
         ws.action_scholar_career()
+
+
+def _open_faerie(ws, which: str) -> None:
+    """Ars Fabulosa, A Faerie Bargain or An Offer to Faerie on Leandro,
+    given (Faerie) Summoning and an Oak +2 Sympathy Trait."""
+    character = ws.selected_character
+    if not any(a.name == "(Faerie) Summoning" for a in character.abilities):
+        character.abilities.append(Ability("(Faerie) Summoning", xp=15, xp_table="art"))
+    if not any(t.name == "Oak" for t in character.personality_traits):
+        character.personality_traits.append(ScoredTrait("Oak", 2, type="Sympathy"))
+    if which == "ars":
+        ws.action_ars_fabulosa()
+    elif which == "bargain":
+        ws.action_faerie_bargain()
+    else:
+        ws.action_faerie_offer()

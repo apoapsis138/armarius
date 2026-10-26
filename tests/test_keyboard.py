@@ -485,6 +485,13 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             # A Gifted character, with Apprentices in play.
             "Turbulence",
             "A Scholar's Career",
+            "An Offer to Faerie",
+            # Devotion and the saints (The Church, RoP: The Divine), after
+            # An Offer to Faerie.
+            "Invoke a Saint",
+            "Threaten a Saint",
+            "Devotion Points",
+            "Indulgence, Vigil or Fast",
         ]
         await menu(pilot, app, "m", "In Creation / In Play")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))

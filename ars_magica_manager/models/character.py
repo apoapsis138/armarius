@@ -376,6 +376,10 @@ class HermeticBackground:
     #: A Mercurian magus has learned Road Magic's Ranges and Targets, a
     #: season's teaching with no further Virtue (TMRE p. 116).
     road_magic: bool = False
+    #: Cast out of the Order by a Wizard's March: the year, and the
+    #: Tribunal (and case) that renounced him (rules.hermetic_law).
+    renounced_year: int | None = None
+    renounced_by: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HermeticBackground:

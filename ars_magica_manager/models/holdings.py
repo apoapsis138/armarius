@@ -235,6 +235,10 @@ class Possession:
     weapon_defense: int = 0  # weapon only
     weapon_damage: int | None = 0  # weapon only; None = n/a
     armor_protection: int = 0  # armor only
+    #: Armour worn as one piece of an outfit (models.arms.ARMOR_SLOTS:
+    #: "Body", "Surcoat", "Greaves", "Helmet"; Lords of Men p. 140), whose
+    #: Protection and Load add to the other pieces'; "" for a whole suit.
+    armor_slot: str = ""
     #: Weapons and armour: how well made (rules.equipment.MAKES: "" for
     #: standard, "Shoddy", "Superior", "Excellent"), and an Excellent
     #: item's bonus (+2 or more).

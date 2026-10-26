@@ -16,8 +16,8 @@ from ..models import SEASONS, Book, Character, Saga, SeasonPlan, next_season
 from ..rules import activities as rules
 from ..rules import apprentice_seasons as aps
 from ..rules import book_seasons as bs
+from ..rules import devotion, enchantment, lab_seasons, merchants, philosophy, study
 from ..rules import enchant_seasons as es
-from ..rules import enchantment, lab_seasons, merchants, philosophy, study
 from ..rules import familiar_seasons as fs
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
@@ -843,7 +843,7 @@ def livelihood_text(character: Character, year: int | None = None) -> str:
     if year is not None:
         lines += merchants.investment_lines(character, year)
     for record in character.progress:
-        if record.done or record.kind == "university":
+        if record.done or record.kind in ("university", *devotion.KINDS):
             continue
         # A record without a target (Labor Points banked toward Innovation)
         # shows its points alone.
@@ -852,6 +852,7 @@ def livelihood_text(character: Character, year: int | None = None) -> str:
     years = sum(r.points for r in character.progress if r.kind == "university")
     if years:
         lines.append(f"University: {years} season(s) studied")
+    lines += devotion.lines(character)
     if character.formulas:
         lines.append(
             "Formulas: "

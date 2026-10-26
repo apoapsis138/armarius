@@ -227,9 +227,21 @@ def test_the_sin_commands_are_offered_on_personality_traits():
     saga = _saga()
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     labels = [item.label for item in menu_forms.placed(page, "Personality Traits")]
-    assert labels == ["Confidence through Sin", "Infernal Influence"]
+    assert labels == [
+        "Confidence through Sin",
+        "Infernal Influence",
+        # Devotion and the saints sit beside them, for any person.
+        "Invoke a Saint",
+        "Threaten a Saint",
+        "Devotion Points",
+        "Indulgence, Vigil or Fast",
+    ]
     plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
-    assert menu_forms.placed(plain, "Personality Traits") == []
+    plain_labels = [
+        item.label for item in menu_forms.placed(plain, "Personality Traits")
+    ]
+    assert "Confidence through Sin" not in plain_labels
+    assert "Infernal Influence" not in plain_labels
     assert not actions.available("ars_goetia", page)
 
 

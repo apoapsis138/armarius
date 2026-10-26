@@ -28,7 +28,7 @@ from ..models import (
     CreaturePower,
     Saga,
 )
-from ..rules import creature_build, faerie_build
+from ..rules import creature_build, divine_build, faerie_build
 from ..sections import (
     BESTIARY_SECTION,
     CREATURE_ABILITIES_SECTION,
@@ -73,6 +73,11 @@ def _infernal(values: dict[str, Any]) -> bool:
 
 #: What only an Infernal creature has (Realms of Power: The Infernal).
 INFERNAL_FIELDS = {"order": "", "hierarchy": None, "weakness": ""}
+
+
+def _has_order(values: dict[str, Any]) -> bool:
+    """A demon's Order, or an angel's Choir (RoP: The Divine pp. 18-26)."""
+    return values.get("realm") in ("Infernal", divine_build.DIVINE)
 
 
 def _faerie(values: dict[str, Any]) -> bool:
@@ -157,7 +162,9 @@ def _infernal_fields(c: Creature | None) -> list[DialogField]:
             "text",
             attr(c, "order", ""),
             placeholder="e.g. Prince of the False Gods",
-            show_if=_infernal,
+            hint="A demon's order and rank, or an angel's Choir (Seraphim, "
+            "Archangels and Angels...; RoP: The Divine pp. 18-26).",
+            show_if=_has_order,
         ),
         DialogField(
             "hierarchy",
@@ -290,7 +297,8 @@ def apply_info(saga: Saga, creature: Creature, values: dict[str, Any]) -> None:
     else:
         values["warping_score"] = 0
     if values["realm"] != "Infernal":
-        values.update(INFERNAL_FIELDS)
+        kept = {"order": values.get("order", "")} if _has_order(values) else {}
+        values.update({**INFERNAL_FIELDS, **kept})
     if values["realm"] != faerie_build.FAERIE:
         values.update(FAERIE_FIELDS)
     else:

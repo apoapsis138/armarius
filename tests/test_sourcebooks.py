@@ -26,6 +26,7 @@ def test_every_book_the_catalogs_cite_is_listed():
         catalog.load_lab_feature_catalog(),
         catalog.load_weapon_catalog(),
         catalog.load_armor_catalog(),
+        catalog.load_armor_piece_catalog(),
         catalog.load_spell_catalog(),
     ):
         for entry in entries:

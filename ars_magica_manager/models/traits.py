@@ -195,8 +195,9 @@ class ScoredTrait:
     #: and how far it reaches ("the Rhine", "the parish"), both optional.
     type: str = ""
     reach: str = ""
-    #: Reputations only: noteworthy deeds counted toward the next level,
-    #: each an experience point (rules.confidence.add_deeds).
+    #: Reputations: noteworthy deeds counted toward the next level, each an
+    #: experience point (rules.confidence.add_deeds). Sympathy Traits: the
+    #: experience points toward the next value (rules.faerie_dealings).
     deeds: int = 0
     #: Reputations only: the bad Reputation this new one is replacing, by
     #: name ("" for none; rules.confidence.count_replacing).

@@ -1,0 +1,2932 @@
+{
+  "attribution": "Summarized from Realms of Power: The Divine (Atlas Games, 2007), Miraculous Effects, pp. 46-56, and Realms of Power: The Infernal (Atlas Games, 2007), The Maleficia, pp. 102-112, with the Ars Magica Errata, pp. 48-49 and 56. Ars Magica is a trademark of Trident, Inc.",
+  "sets": {
+    "holy_powers": {
+      "source": "RoP: The Divine, Holy Powers' guidelines, pp. 48-56; Errata pp. 48-49",
+      "guidelines": [
+        {
+          "name": "Dispel (Purity)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 0,
+          "summary": "Dispel magic, infernal or faerie effects of level less than the effect's level + 10",
+          "page": 48
+        },
+        {
+          "name": "Hold a circle (Purity)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 0,
+          "summary": "A creature of Might less than the level + 10 can't cross a circle or affect those beyond it",
+          "page": 48
+        },
+        {
+          "name": "Protect from creatures (Purity)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 0,
+          "summary": "Protect the target against creatures of Might up to the level + 10 and their powers",
+          "page": 48
+        },
+        {
+          "name": "Bind to a contract (Invocation)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 4,
+          "summary": "Bind a supernatural creature to the terms of a contract",
+          "page": 48
+        },
+        {
+          "name": "Holy connection (Purity)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 4,
+          "summary": "A temporary holy connection to a person or thing in range",
+          "page": 48
+        },
+        {
+          "name": "Compel to manifest (Invocation)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 5,
+          "summary": "Compel a supernatural creature in range to manifest before you",
+          "page": 48
+        },
+        {
+          "name": "Drive away (Purity)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 5,
+          "summary": "Drive away a non-divine creature; it can't return for the duration",
+          "page": 48
+        },
+        {
+          "name": "Compel the truth (Invocation)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 10,
+          "summary": "One question a creature, even a demon, must answer honestly",
+          "page": 48
+        },
+        {
+          "name": "Spiritual portal (Purity)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 10,
+          "summary": "See and hear a supernatural being in range for the duration",
+          "page": 48
+        },
+        {
+          "name": "Compel a creature (Invocation)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 15,
+          "summary": "One command a supernatural creature must follow exactly",
+          "page": 48
+        },
+        {
+          "name": "Ward from non-divine (Purity)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 15,
+          "summary": "Ward the target against all non-divine supernatural creatures",
+          "page": 48
+        },
+        {
+          "name": "Compel a beast (Invocation)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 20,
+          "summary": "One command a mundane creature must follow",
+          "page": 48
+        },
+        {
+          "name": "Compel a person (Invocation)",
+          "arts": [
+            "Adjuration"
+          ],
+          "level": 25,
+          "summary": "One command within the person's nature (his Personality Traits)",
+          "page": 48
+        },
+        {
+          "name": "Magic Resistance (Invocation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 0,
+          "summary": "Magic Resistance of the level + 15, not added to other resistance",
+          "page": 51
+        },
+        {
+          "name": "Virtuous task (Invocation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 0,
+          "summary": "A bonus of the magnitude - 3 (+3 at most) to rolls for a virtuous task",
+          "page": 51
+        },
+        {
+          "name": "Bless a tool (Invocation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 0,
+          "summary": "Its next virtuous use gets a bonus of the magnitude - 3, +3 at most",
+          "page": 51
+        },
+        {
+          "name": "Temper an aura (Invocation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 0,
+          "summary": "Temper a Divine aura by half (the magnitude - 3), +3 at most",
+          "page": 51
+        },
+        {
+          "name": "Recovery bonus (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 0,
+          "summary": "A bonus of (the magnitude + 4) x 3 to Recovery rolls",
+          "page": 51
+        },
+        {
+          "name": "Aging bonus (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 0,
+          "summary": "A bonus of the magnitude to aging rolls; Year Duration only",
+          "page": 51
+        },
+        {
+          "name": "Recovery +3 (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 1,
+          "summary": "A +3 bonus to Recovery rolls",
+          "page": 51
+        },
+        {
+          "name": "Recovery +6 (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 2,
+          "summary": "A +6 bonus to Recovery rolls",
+          "page": 51
+        },
+        {
+          "name": "Recovery +9 (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 3,
+          "summary": "A +9 bonus to Recovery rolls",
+          "page": 51
+        },
+        {
+          "name": "Recovery +12 (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 4,
+          "summary": "A +12 bonus to Recovery rolls",
+          "page": 51
+        },
+        {
+          "name": "Powerful emotion (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 4,
+          "summary": "The target feels a powerful emotion",
+          "page": 51
+        },
+        {
+          "name": "Shift a trait (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 5,
+          "summary": "A Personality Trait up or down a step, to +3 or -3 at most",
+          "page": 51
+        },
+        {
+          "name": "Free Expression (Invocation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 10,
+          "summary": "Free Expression or Inspirational for the duration",
+          "page": 51
+        },
+        {
+          "name": "Give Confidence (Meditation)",
+          "arts": [
+            "Blessing"
+          ],
+          "level": 15,
+          "summary": "Pass a Confidence Point from you to the target",
+          "page": 51
+        },
+        {
+          "name": "Reduce Might (Invocation)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 0,
+          "summary": "Take the level + 10 from a creature's Might, past its resistance",
+          "page": 51
+        },
+        {
+          "name": "Botch dice (Invocation)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 0,
+          "summary": "Half (the magnitude + 3) more botch dice on all stress rolls",
+          "page": 51
+        },
+        {
+          "name": "Penalty to all rolls (Invocation)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 0,
+          "summary": "A penalty of half (the magnitude + 1), rounded up, on all rolls",
+          "page": 51
+        },
+        {
+          "name": "Recovery penalty (Invocation)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 0,
+          "summary": "A penalty of (the magnitude + 3) x 3 on Recovery rolls",
+          "page": 51
+        },
+        {
+          "name": "Aging penalty (Invocation)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 0,
+          "summary": "A penalty of the magnitude + 5 to aging rolls; Year Duration only",
+          "page": 51
+        },
+        {
+          "name": "Destroy an object (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 4,
+          "summary": "Destroy a single non-living object",
+          "page": 51
+        },
+        {
+          "name": "Hamper (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 5,
+          "summary": "Hamper a person without injury: lame him or blur his senses",
+          "page": 51
+        },
+        {
+          "name": "Destroy a plant (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 5,
+          "summary": "Destroy a tree or other living plant",
+          "page": 51
+        },
+        {
+          "name": "Light Wound (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 10,
+          "summary": "Inflict a Light Wound, with great pain",
+          "page": 51
+        },
+        {
+          "name": "Fatigue level (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 10,
+          "summary": "The loss of a Fatigue level",
+          "page": 51
+        },
+        {
+          "name": "Medium Wound (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 15,
+          "summary": "Inflict a Medium Wound, crippling a limb",
+          "page": 51
+        },
+        {
+          "name": "Mind of a child (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 15,
+          "summary": "Reduce a person's mind to a young child's",
+          "page": 51
+        },
+        {
+          "name": "Heavy Wound (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 20,
+          "summary": "Inflict a Heavy Wound, destroying a major sense",
+          "page": 51
+        },
+        {
+          "name": "Major disease (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 20,
+          "summary": "Give a person or animal a major disease",
+          "page": 51
+        },
+        {
+          "name": "Strike dead (Purity)",
+          "arts": [
+            "Cursing"
+          ],
+          "level": 30,
+          "summary": "Strike a person or animal instantly dead",
+          "page": 51
+        },
+        {
+          "name": "Reveal effects (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 0,
+          "summary": "Active supernatural effects up to the level + 25 become apparent to a sense, showing their realm",
+          "page": 52
+        },
+        {
+          "name": "Keep a corpse (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 1,
+          "summary": "Prevent a corpse from decaying",
+          "page": 52
+        },
+        {
+          "name": "Regio boundaries (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 3,
+          "summary": "Perceive a regio's boundaries; with Vision, how to enter or leave",
+          "page": 52
+        },
+        {
+          "name": "Perceive evil (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 4,
+          "summary": "See the evil in a target by how its image deforms",
+          "page": 52
+        },
+        {
+          "name": "Moving image (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 4,
+          "summary": "Create or change an image that moves as you direct; +1 magnitude a sense past the first",
+          "page": 52
+        },
+        {
+          "name": "Translate speech (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 5,
+          "summary": "Unfamiliar words heard in a language you know",
+          "page": 52
+        },
+        {
+          "name": "Transform the nonliving (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 5,
+          "summary": "Change nonliving material into something of similar shape and substance",
+          "page": 52
+        },
+        {
+          "name": "Mend an object (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 10,
+          "summary": "Permanently mend a non-living object (missing pieces not restored)",
+          "page": 52
+        },
+        {
+          "name": "Multiply an object (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 10,
+          "summary": "Permanently make one nonliving thing several like it",
+          "page": 52
+        },
+        {
+          "name": "Read writing (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 15,
+          "summary": "Read unfamiliar writing as an alphabet you know",
+          "page": 52
+        },
+        {
+          "name": "Harry with signs (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 20,
+          "summary": "Harry the target with unsettling images of its sins",
+          "page": 52
+        },
+        {
+          "name": "Transform the living (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 20,
+          "summary": "Change a living target into something of similar shape and substance",
+          "page": 52
+        },
+        {
+          "name": "Sign of God's will (Meditation)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 25,
+          "summary": "A sign of God's will about the target manifests",
+          "page": 52
+        },
+        {
+          "name": "Stone and flesh (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 30,
+          "summary": "Turn living material nonliving or back (docile, no reason)",
+          "page": 52
+        },
+        {
+          "name": "Mend a body (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 30,
+          "summary": "Permanently reattach limbs or restore lost senses",
+          "page": 52
+        },
+        {
+          "name": "Way into Purgatory (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 35,
+          "summary": "A temporary, one-way entrance into Purgatory",
+          "page": 52
+        },
+        {
+          "name": "Heal a Light Wound (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 35,
+          "summary": "Permanently heal a Light Wound",
+          "page": 52
+        },
+        {
+          "name": "Heal a Medium Wound (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 40,
+          "summary": "Permanently heal a Medium Wound",
+          "page": 52
+        },
+        {
+          "name": "Heal a Heavy Wound (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 45,
+          "summary": "Permanently heal a Heavy Wound",
+          "page": 52
+        },
+        {
+          "name": "Terrestrial regio (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 50,
+          "summary": "Create a terrestrial regio of level 1; +5 levels a level or layer",
+          "page": 52
+        },
+        {
+          "name": "Heal an Incapacitating Wound (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 50,
+          "summary": "Permanently heal an Incapacitating Wound",
+          "page": 52
+        },
+        {
+          "name": "Heal all wounds (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 55,
+          "summary": "Permanently heal all wounds",
+          "page": 52
+        },
+        {
+          "name": "Celestial regio (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 60,
+          "summary": "Create a Celestial regio of level 1",
+          "page": 52
+        },
+        {
+          "name": "Raise the dead (Purity)",
+          "arts": [
+            "Intervention"
+          ],
+          "level": 70,
+          "summary": "Return the willing, undecayed dead to life, with Warping Points",
+          "page": 52
+        },
+        {
+          "name": "Untouchable (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 0,
+          "summary": "Spells and powers below the level + 5 can't target you",
+          "page": 53
+        },
+        {
+          "name": "Harden the body (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 0,
+          "summary": "Soak + (the magnitude + 3)",
+          "page": 53
+        },
+        {
+          "name": "See through (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 2,
+          "summary": "See clearly through one material (water, stone, mist)",
+          "page": 53
+        },
+        {
+          "name": "Unharmed by a material (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 4,
+          "summary": "Take no damage from one material",
+          "page": 53
+        },
+        {
+          "name": "Far perception (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 5,
+          "summary": "Perceive events elsewhere within range",
+          "page": 53
+        },
+        {
+          "name": "Walk on water (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 5,
+          "summary": "Walk upon water as if it were solid",
+          "page": 53
+        },
+        {
+          "name": "Ignore Fatigue (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 10,
+          "summary": "Ignore all Fatigue penalties",
+          "page": 53
+        },
+        {
+          "name": "Ignore wounds (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 10,
+          "summary": "Ignore all wound penalties",
+          "page": 53
+        },
+        {
+          "name": "Need nothing (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 10,
+          "summary": "Survive without food, water, air or shelter",
+          "page": 53
+        },
+        {
+          "name": "Postpone a minor crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 10,
+          "summary": "Postpone a minor aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Read thoughts (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 15,
+          "summary": "Read another's thoughts as a book",
+          "page": 53
+        },
+        {
+          "name": "Float (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 15,
+          "summary": "Float through the air at will",
+          "page": 53
+        },
+        {
+          "name": "Postpone a serious crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 15,
+          "summary": "Postpone a serious aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Speak in thought (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 20,
+          "summary": "Speak mind to mind with one you know well or hold a holy connection to",
+          "page": 53
+        },
+        {
+          "name": "Postpone a major crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 20,
+          "summary": "Postpone a major aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Pass through matter (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 25,
+          "summary": "Pass through solid matter as through liquid",
+          "page": 53
+        },
+        {
+          "name": "Restore Fatigue (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 25,
+          "summary": "Restore a Fatigue level",
+          "page": 53
+        },
+        {
+          "name": "Postpone a critical crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 25,
+          "summary": "Postpone a critical aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Restore a mind (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 30,
+          "summary": "Permanently restore a damaged or tampered mind",
+          "page": 53
+        },
+        {
+          "name": "Immune to harm (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 30,
+          "summary": "Immune to all physical damage",
+          "page": 53
+        },
+        {
+          "name": "No sleep (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 30,
+          "summary": "Stay awake for the duration",
+          "page": 53
+        },
+        {
+          "name": "Purge the body (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 30,
+          "summary": "Purge all poisons, diseases and malign influences",
+          "page": 53
+        },
+        {
+          "name": "Postpone a terminal crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 30,
+          "summary": "Postpone a terminal aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Resolve a minor crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 35,
+          "summary": "Resolve a minor aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Travel in a blink (Meditation)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 40,
+          "summary": "Travel anywhere within range in the blink of an eye",
+          "page": 53
+        },
+        {
+          "name": "Resolve a serious crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 40,
+          "summary": "Resolve a serious aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Resolve a major crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 45,
+          "summary": "Resolve a major aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Resolve a critical crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 50,
+          "summary": "Resolve a critical aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Resolve a terminal crisis (Purity)",
+          "arts": [
+            "Transcendence"
+          ],
+          "level": 55,
+          "summary": "Resolve a terminal aging crisis",
+          "page": 53
+        },
+        {
+          "name": "Fewer botch dice (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 0,
+          "summary": "Roll the magnitude fewer botch dice, acting at the best time",
+          "page": 54
+        },
+        {
+          "name": "A day's memory (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 5,
+          "summary": "Enhance a memory of the last day",
+          "page": 54
+        },
+        {
+          "name": "Vision of the situation (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 10,
+          "summary": "A vision summing up your situation",
+          "page": 54
+        },
+        {
+          "name": "A year's memory (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 10,
+          "summary": "Enhance a memory of the last year",
+          "page": 54
+        },
+        {
+          "name": "Simple advice (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 15,
+          "summary": "A vision of simple advice, as Common Sense",
+          "page": 54
+        },
+        {
+          "name": "Revisit a memory (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 15,
+          "summary": "Search an enhanced memory for what you missed",
+          "page": 54
+        },
+        {
+          "name": "Cryptic advice (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 20,
+          "summary": "A vision of cryptic advice from God",
+          "page": 54
+        },
+        {
+          "name": "A specific question (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 25,
+          "summary": "A vision answering a question about your situation",
+          "page": 54
+        },
+        {
+          "name": "Likely outcome (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 30,
+          "summary": "The likely outcome of an action, in a word",
+          "page": 54
+        },
+        {
+          "name": "Prophecy (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 35,
+          "summary": "A prophetic vision of future events",
+          "page": 54
+        },
+        {
+          "name": "God's will (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 35,
+          "summary": "Learn whether God wills a particular action",
+          "page": 54
+        },
+        {
+          "name": "A wider question (Meditation)",
+          "arts": [
+            "Understanding"
+          ],
+          "level": 40,
+          "summary": "A vision on a question beyond your own situation",
+          "page": 54
+        },
+        {
+          "name": "Dangerous substance (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 0,
+          "summary": "Create fire or poison doing + the base level damage on contact",
+          "page": 56
+        },
+        {
+          "name": "Holy bane (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 0,
+          "summary": "A natural substance doing + (base + 5) damage to non-divine creatures",
+          "page": 56
+        },
+        {
+          "name": "Grow a plant (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 2,
+          "summary": "Create a mature plant, or make one grow faster",
+          "page": 56
+        },
+        {
+          "name": "Common force (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 3,
+          "summary": "Create and control a common force of nature (a gust, a burst of flame)",
+          "page": 56
+        },
+        {
+          "name": "Natural object (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 3,
+          "summary": "Create a nonliving natural object (driftwood, a rock)",
+          "page": 56
+        },
+        {
+          "name": "Unusual force (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 5,
+          "summary": "Create and control an unusual force (a storm from a clear sky)",
+          "page": 56
+        },
+        {
+          "name": "Food and drink (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 5,
+          "summary": "Create food or drink to sustain one person",
+          "page": 56
+        },
+        {
+          "name": "Processed object (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 5,
+          "summary": "Create a processed nonliving object (a coat, a lance, a coin)",
+          "page": 56
+        },
+        {
+          "name": "Powerful force (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 15,
+          "summary": "Create and control a powerful force of nature",
+          "page": 56
+        },
+        {
+          "name": "Small creature (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 15,
+          "summary": "Create a living, docile bird, fish, lizard or amphibian",
+          "page": 56
+        },
+        {
+          "name": "Mammal (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 20,
+          "summary": "Create a living, docile mammal",
+          "page": 56
+        },
+        {
+          "name": "Holy beast (Invocation)",
+          "arts": [
+            "Wonders"
+          ],
+          "level": 30,
+          "summary": "Create an animal of Divine Might 5; +10 levels for each 5 Might more",
+          "page": 56
+        }
+      ],
+      "effect_parameters": [
+        {
+          "kind": "range",
+          "name": "Personal",
+          "magnitudes": 0
+        },
+        {
+          "kind": "range",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Eye",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Voice",
+          "magnitudes": 2
+        },
+        {
+          "kind": "range",
+          "name": "Sight",
+          "magnitudes": 3
+        },
+        {
+          "kind": "range",
+          "name": "Arcane Connection",
+          "magnitudes": 4
+        },
+        {
+          "kind": "duration",
+          "name": "Momentary",
+          "magnitudes": 0
+        },
+        {
+          "kind": "duration",
+          "name": "Concentration",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Diameter",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Sun",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Ring",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Moon",
+          "magnitudes": 3
+        },
+        {
+          "kind": "duration",
+          "name": "Year",
+          "magnitudes": 8,
+          "note": "4 magnitudes more for a holy effect, as a Hermetic ritual would need (RoP: The Divine p. 48)"
+        },
+        {
+          "kind": "target",
+          "name": "Individual",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Circle",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Taste",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Part",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Group",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Room",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Smell",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Structure",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Hearing",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Boundary",
+          "magnitudes": 8,
+          "note": "4 magnitudes more for a holy effect, as a Hermetic ritual would need (RoP: The Divine p. 48)"
+        },
+        {
+          "kind": "target",
+          "name": "Vision",
+          "magnitudes": 4
+        }
+      ]
+    },
+    "maleficia": {
+      "source": "RoP: The Infernal, the maleficia's guidelines, pp. 105-112; Errata p. 56",
+      "guidelines": [
+        {
+          "name": "Damage and Soak (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 0,
+          "summary": "Add the magnitude to Damage, Soak and Load",
+          "page": 105
+        },
+        {
+          "name": "Weaken (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 0,
+          "summary": "Take the magnitude from Load, Damage and Soak",
+          "page": 105
+        },
+        {
+          "name": "Speed for stamina (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 0,
+          "summary": "The magnitude added to Init, Attack and Defense, taken from Fatigue rolls",
+          "page": 105
+        },
+        {
+          "name": "Stamina for speed (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 0,
+          "summary": "The magnitude added to Fatigue rolls, taken from Init, Attack and Defense",
+          "page": 105
+        },
+        {
+          "name": "Steal recovery (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 0,
+          "summary": "A target's bonus and a victim's penalty of (the magnitude + 2) x 3 to Recovery rolls",
+          "page": 105
+        },
+        {
+          "name": "Borrow a Characteristic (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 1,
+          "summary": "Temporarily +1 to a Characteristic (to 0), the victim's -1 (to -1); more by magnitudes, +6/-6 at most",
+          "page": 105
+        },
+        {
+          "name": "Recovery +1 (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 2,
+          "summary": "A target's +1 to Recovery rolls, a victim's -1",
+          "page": 105
+        },
+        {
+          "name": "Recovery +3 (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 3,
+          "summary": "A target's +3 to Recovery rolls, a victim's -3",
+          "page": 105
+        },
+        {
+          "name": "Recovery +6 (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 4,
+          "summary": "A target's +6 to Recovery rolls, a victim's -6",
+          "page": 105
+        },
+        {
+          "name": "Steal a Characteristic (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 5,
+          "summary": "Permanently +1 to a Characteristic (to 0), the victim's -1 (to -1); more by magnitudes",
+          "page": 105
+        },
+        {
+          "name": "Transfer pain (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 10,
+          "summary": "Give a victim the target's Fatigue and Wound penalties for a time",
+          "page": 105
+        },
+        {
+          "name": "Exchange Fatigue (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 10,
+          "summary": "Exchange a target's Fatigue levels with a victim's",
+          "page": 105
+        },
+        {
+          "name": "Exchange bodies (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 15,
+          "summary": "A target and a victim exchange bodies for a time",
+          "page": 105
+        },
+        {
+          "name": "Get with child (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 15,
+          "summary": "Make a woman pregnant by a man",
+          "page": 105
+        },
+        {
+          "name": "Ripen a plant (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 15,
+          "summary": "Bring a plant to maturity overnight, withering another",
+          "page": 105
+        },
+        {
+          "name": "Grow a beast (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 20,
+          "summary": "Bring an animal to maturity overnight, aging another as much",
+          "page": 105
+        },
+        {
+          "name": "Grow a person (Debauchery)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 20,
+          "summary": "Bring a person to maturity overnight, aging another as many years",
+          "page": 105
+        },
+        {
+          "name": "Steal an Ability (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 0,
+          "summary": "A target's bonus and a victim's penalty of the magnitude to one Ability",
+          "page": 105
+        },
+        {
+          "name": "Steal youth (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 0,
+          "summary": "A target's bonus and a victim's penalty of the magnitude - 5 to Aging rolls; Year or Forsaken",
+          "page": 105
+        },
+        {
+          "name": "Animate a corpse (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 5,
+          "summary": "Animate a corpse",
+          "page": 105
+        },
+        {
+          "name": "Steal Fatigue (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 5,
+          "summary": "Restore a target's Fatigue level as a victim loses one",
+          "page": 105
+        },
+        {
+          "name": "Pass on a sickness (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 10,
+          "summary": "Permanently move an illness from a target to a victim",
+          "page": 105
+        },
+        {
+          "name": "Steal long-term Fatigue (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 10,
+          "summary": "Restore a long-term Fatigue level as a victim loses one",
+          "page": 105
+        },
+        {
+          "name": "Trade a Light Wound (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 15,
+          "summary": "Heal a target's Light Wound, giving a victim one",
+          "page": 105
+        },
+        {
+          "name": "Pass on a minor crisis (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 15,
+          "summary": "Move a minor aging crisis from a target to a victim",
+          "page": 105
+        },
+        {
+          "name": "Trade a Medium Wound (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 20,
+          "summary": "Heal a target's Medium Wound, giving a victim one",
+          "page": 105
+        },
+        {
+          "name": "Pass on after-effects (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 20,
+          "summary": "Move the lasting harm of a disease, poison or injury to a victim",
+          "page": 105
+        },
+        {
+          "name": "Pass on a serious crisis (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 20,
+          "summary": "Move a serious aging crisis to a victim",
+          "page": 105
+        },
+        {
+          "name": "Trade a Heavy Wound (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 25,
+          "summary": "Heal a target's Heavy Wound, giving a victim one",
+          "page": 105
+        },
+        {
+          "name": "Take a limb (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 25,
+          "summary": "Replace a lost limb or sense with a victim's",
+          "page": 105
+        },
+        {
+          "name": "Pass on a major crisis (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 25,
+          "summary": "Move a major aging crisis to a victim",
+          "page": 105
+        },
+        {
+          "name": "Trade an Incapacitating Wound (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 30,
+          "summary": "Heal a target's Incapacitating Wound, giving a victim one",
+          "page": 105
+        },
+        {
+          "name": "Pass on a critical crisis (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 30,
+          "summary": "Move a critical aging crisis to a victim",
+          "page": 105
+        },
+        {
+          "name": "Take a life (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 35,
+          "summary": "Heal all a target's wounds, killing a victim",
+          "page": 105
+        },
+        {
+          "name": "Pass on a terminal crisis (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 35,
+          "summary": "Move a terminal aging crisis to a victim",
+          "page": 105
+        },
+        {
+          "name": "Pass on Decrepitude (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 40,
+          "summary": "Move a Decrepitude Point from a target to a victim",
+          "page": 105
+        },
+        {
+          "name": "Hide the soul (Incantation)",
+          "arts": [
+            "Consumption"
+          ],
+          "level": 40,
+          "summary": "Move the caster's soul into a prepared object, keeping him from death",
+          "page": 105
+        },
+        {
+          "name": "Dispel (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 0,
+          "summary": "Dispel magic, infernal or faerie effects of level less than the effect's level - 10",
+          "page": 106
+        },
+        {
+          "name": "Hold a circle (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 0,
+          "summary": "A creature of Might less than the level - 10 can't cross a circle or use its Powers past it",
+          "page": 106
+        },
+        {
+          "name": "Protect from creatures (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 0,
+          "summary": "Protect against creatures of Might of the level - 10 and their Powers",
+          "page": 106
+        },
+        {
+          "name": "Borrow its eyes (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 3,
+          "summary": "See through the eyes of a supernatural creature in range",
+          "page": 106
+        },
+        {
+          "name": "Arcane Connection (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 4,
+          "summary": "Make an object a temporary Arcane Connection to someone or something in range, a demon too",
+          "page": 106
+        },
+        {
+          "name": "Perceive the mighty (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 5,
+          "summary": "Perceive every creature with Might in range",
+          "page": 106
+        },
+        {
+          "name": "Spiritual portal (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 10,
+          "summary": "See and hear a supernatural being in range for the duration",
+          "page": 106
+        },
+        {
+          "name": "Free a demon (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 15,
+          "summary": "Free a banished or bound Infernal being for the duration",
+          "page": 106
+        },
+        {
+          "name": "Infernal aura (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 20,
+          "summary": "Create an Infernal aura of 1; +1 a magnitude, 5 at most",
+          "page": 106
+        },
+        {
+          "name": "Infernal regio (Debauchery)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 25,
+          "summary": "Create an Infernal regio of 1; +1 a magnitude, 5 at most",
+          "page": 106
+        },
+        {
+          "name": "Magic Resistance (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 0,
+          "summary": "Magic Resistance of the level + 5, not added to other resistance",
+          "page": 106
+        },
+        {
+          "name": "Feed a demon (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 0,
+          "summary": "Restore a demon's Might Pool by the level + 10, past its Magic Resistance",
+          "page": 106
+        },
+        {
+          "name": "Make visible (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 3,
+          "summary": "Force an invisible supernatural creature to become visible",
+          "page": 106
+        },
+        {
+          "name": "Bind to a contract (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 4,
+          "summary": "Bind a supernatural creature to the terms of a contract",
+          "page": 106
+        },
+        {
+          "name": "Compel to manifest (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 5,
+          "summary": "Compel a supernatural creature in range to manifest",
+          "page": 106
+        },
+        {
+          "name": "Compel an answer (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 10,
+          "summary": "Compel a supernatural creature to answer a question",
+          "page": 106
+        },
+        {
+          "name": "Minor False Power (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 15,
+          "summary": "Gain a False Power duplicating a Minor Virtue",
+          "page": 106
+        },
+        {
+          "name": "Compel a creature (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 15,
+          "summary": "One command a supernatural creature must follow exactly",
+          "page": 106
+        },
+        {
+          "name": "Move vis (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 15,
+          "summary": "Move raw vis from one object to another",
+          "page": 106
+        },
+        {
+          "name": "Dominate (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 20,
+          "summary": "A supernatural creature obeys every command for the duration",
+          "page": 106
+        },
+        {
+          "name": "Vis infesta (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 20,
+          "summary": "Permanently taint vis into vis infesta",
+          "page": 106
+        },
+        {
+          "name": "Vis sordida (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 25,
+          "summary": "Permanently taint vis into vis sordida",
+          "page": 106
+        },
+        {
+          "name": "Vis prava (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 30,
+          "summary": "Permanently taint vis into vis prava",
+          "page": 106
+        },
+        {
+          "name": "Major False Power (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 35,
+          "summary": "Gain a False Power duplicating a Major Virtue",
+          "page": 106
+        },
+        {
+          "name": "The False Gift (Incantation)",
+          "arts": [
+            "Diablerie"
+          ],
+          "level": 35,
+          "summary": "Gain a False Power duplicating The Gift",
+          "page": 106
+        },
+        {
+          "name": "Soften (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 0,
+          "summary": "A penalty of the magnitude to an object's Damage or Protection",
+          "page": 108
+        },
+        {
+          "name": "Fiercer flames (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 0,
+          "summary": "Flames hotter or smoke more corrosive: + the level to Damage",
+          "page": 108
+        },
+        {
+          "name": "Ignite oil (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 1,
+          "summary": "Ignite something extremely flammable",
+          "page": 108
+        },
+        {
+          "name": "Warm (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 1,
+          "summary": "Heat an object warm to the touch",
+          "page": 108
+        },
+        {
+          "name": "Worsen the weather (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 1,
+          "summary": "Make a natural phenomenon more severe (rain to storm)",
+          "page": 108
+        },
+        {
+          "name": "Control minor phenomena (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 2,
+          "summary": "Control mist, moonlight, a breeze, a drizzle",
+          "page": 108
+        },
+        {
+          "name": "Ignite dry leaves (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 2,
+          "summary": "Ignite something very flammable",
+          "page": 108
+        },
+        {
+          "name": "Hot (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 2,
+          "summary": "Heat an object hot to the touch",
+          "page": 108
+        },
+        {
+          "name": "Control normal phenomena (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 3,
+          "summary": "Control wind, rain, smoke or fog",
+          "page": 108
+        },
+        {
+          "name": "Ignite wood (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 3,
+          "summary": "Ignite something flammable",
+          "page": 108
+        },
+        {
+          "name": "Boil water (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 3,
+          "summary": "Heat an object to boil water",
+          "page": 108
+        },
+        {
+          "name": "Control severe phenomena (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 4,
+          "summary": "Control thunder, gales, a monsoon, open flames",
+          "page": 108
+        },
+        {
+          "name": "Dry (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 4,
+          "summary": "Completely dry something wet",
+          "page": 108
+        },
+        {
+          "name": "Red-hot (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 4,
+          "summary": "Heat an object to glow red-hot",
+          "page": 108
+        },
+        {
+          "name": "Control very severe phenomena (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 5,
+          "summary": "Control lightning, an explosion, a hurricane",
+          "page": 108
+        },
+        {
+          "name": "Ignite leather (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 5,
+          "summary": "Ignite something slightly flammable",
+          "page": 108
+        },
+        {
+          "name": "Melt steel (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 5,
+          "summary": "Heat an object to melt steel",
+          "page": 108
+        },
+        {
+          "name": "Ward a phenomenon (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 5,
+          "summary": "Ward a target against one natural phenomenon",
+          "page": 108
+        },
+        {
+          "name": "Ignite flesh (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 10,
+          "summary": "Ignite something barely flammable",
+          "page": 108
+        },
+        {
+          "name": "Ward all phenomena (Debauchery)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 15,
+          "summary": "Ward a target against every natural phenomenon",
+          "page": 108
+        },
+        {
+          "name": "Harden (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 0,
+          "summary": "A bonus of the magnitude to an object's Damage or Protection",
+          "page": 108
+        },
+        {
+          "name": "Hold a maleficium (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 0,
+          "summary": "Prepare an object to hold a maleficium of this level or lower until it is destroyed",
+          "page": 108
+        },
+        {
+          "name": "Hurl (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 0,
+          "summary": "Move an object quickly, for damage equal to the level",
+          "page": 108
+        },
+        {
+          "name": "Calm the weather (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 1,
+          "summary": "Make a natural phenomenon less severe",
+          "page": 108
+        },
+        {
+          "name": "Chill (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 2,
+          "summary": "Chill an object cold to the touch",
+          "page": 108
+        },
+        {
+          "name": "Natural control (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 2,
+          "summary": "Control a substance naturally, or change it to something similar",
+          "page": 108
+        },
+        {
+          "name": "Freeze water (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 3,
+          "summary": "Chill an object to freeze water",
+          "page": 108
+        },
+        {
+          "name": "Slightly unnatural control (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 3,
+          "summary": "Control a substance slightly unnaturally, or change it to something related",
+          "page": 108
+        },
+        {
+          "name": "Slide (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 3,
+          "summary": "Move an object slowly one way, on a supporting surface",
+          "page": 108
+        },
+        {
+          "name": "Quench (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 4,
+          "summary": "Chill an object enough to put out flames",
+          "page": 108
+        },
+        {
+          "name": "Move slowly (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 4,
+          "summary": "Move an object slowly in any direction",
+          "page": 108
+        },
+        {
+          "name": "Very unnatural control (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 4,
+          "summary": "Control a substance very unnaturally, or change it to something very different",
+          "page": 108
+        },
+        {
+          "name": "Frostbite (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 5,
+          "summary": "Chill an object enough to burn flesh",
+          "page": 108
+        },
+        {
+          "name": "Fetch to hand (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 5,
+          "summary": "Transport an object to the caster's touch",
+          "page": 108
+        },
+        {
+          "name": "Ward a material (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 5,
+          "summary": "Ward a target against one non-living material",
+          "page": 108
+        },
+        {
+          "name": "Five paces (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 10,
+          "summary": "Transport an object instantly up to five paces",
+          "page": 108
+        },
+        {
+          "name": "Move quickly (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 15,
+          "summary": "Move an object quickly in any direction",
+          "page": 108
+        },
+        {
+          "name": "Ward all materials (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 15,
+          "summary": "Ward a target against all natural non-living materials",
+          "page": 108
+        },
+        {
+          "name": "Fifty paces (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 15,
+          "summary": "Transport an object instantly up to 50 paces",
+          "page": 108
+        },
+        {
+          "name": "500 paces (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 20,
+          "summary": "Transport an object instantly up to 500 paces",
+          "page": 108
+        },
+        {
+          "name": "A league (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 25,
+          "summary": "Transport an object instantly up to a league",
+          "page": 108
+        },
+        {
+          "name": "Seven leagues (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 30,
+          "summary": "Transport an object instantly up to seven leagues",
+          "page": 108
+        },
+        {
+          "name": "Anywhere (Incantation)",
+          "arts": [
+            "Effusion"
+          ],
+          "level": 35,
+          "summary": "Transport an object anywhere the caster has been, or holds an Arcane Connection to",
+          "page": 108
+        },
+        {
+          "name": "Hamper (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 3,
+          "summary": "Hamper without injury: lame or blur the senses",
+          "page": 109
+        },
+        {
+          "name": "Fatigue level (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 3,
+          "summary": "The loss of a Fatigue level",
+          "page": 109
+        },
+        {
+          "name": "Light Wound (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 4,
+          "summary": "Inflict a Light Wound, with great pain",
+          "page": 109
+        },
+        {
+          "name": "Destroy an object (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 4,
+          "summary": "Destroy a single non-living target",
+          "page": 109
+        },
+        {
+          "name": "Medium Wound (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 5,
+          "summary": "Inflict a Medium Wound, crippling a limb",
+          "page": 109
+        },
+        {
+          "name": "Destroy a plant (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 5,
+          "summary": "Destroy a living but inanimate target",
+          "page": 109
+        },
+        {
+          "name": "Heavy Wound (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 10,
+          "summary": "Inflict a Heavy Wound, destroying a major sense",
+          "page": 109
+        },
+        {
+          "name": "Major disease (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 10,
+          "summary": "Give a person or animal a major disease",
+          "page": 109
+        },
+        {
+          "name": "Incapacitating Wound (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 15,
+          "summary": "Inflict an Incapacitating Wound and a Decrepitude Point",
+          "page": 109
+        },
+        {
+          "name": "Strike dead (Debauchery)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 20,
+          "summary": "Strike a person or animal dead",
+          "page": 109
+        },
+        {
+          "name": "Ill luck (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 0,
+          "summary": "A penalty of the magnitude on all rolls, and as many more botch dice on a 0",
+          "page": 109
+        },
+        {
+          "name": "Curse a kind of roll (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 0,
+          "summary": "Twice the magnitude off one kind of roll, and as many botch dice",
+          "page": 109
+        },
+        {
+          "name": "Curse an object (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 0,
+          "summary": "Its user's penalty and extra botch dice: the magnitude, 3 at most",
+          "page": 109
+        },
+        {
+          "name": "Lower a Characteristic (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 5,
+          "summary": "A Characteristic down 1 (to 0); more steps by magnitudes, to -6",
+          "page": 109
+        },
+        {
+          "name": "Suppress a Minor Virtue (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 10,
+          "summary": "Suppress the effects of a Minor Virtue",
+          "page": 109
+        },
+        {
+          "name": "Minor Flaw (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 15,
+          "summary": "Give a target the effects of a Minor Flaw",
+          "page": 109
+        },
+        {
+          "name": "Suppress a Major Virtue (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 30,
+          "summary": "Suppress the effects of a Major Virtue",
+          "page": 109
+        },
+        {
+          "name": "Major Flaw (Incantation)",
+          "arts": [
+            "Malediction"
+          ],
+          "level": 35,
+          "summary": "Give a target the effects of a Major Flaw",
+          "page": 109
+        },
+        {
+          "name": "Dangerous phantasm (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 0,
+          "summary": "A phantasmal fire or poison doing + the base level damage",
+          "page": 110
+        },
+        {
+          "name": "Minor ability (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 2,
+          "summary": "Give a target a minor ability (claws, cat's eyes)",
+          "page": 110
+        },
+        {
+          "name": "Mask scent (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 2,
+          "summary": "Mask the target's scent or taste",
+          "page": 110
+        },
+        {
+          "name": "Major ability (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 3,
+          "summary": "Give a target a major ability (wings, a limb)",
+          "page": 110
+        },
+        {
+          "name": "Hide sounds (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 3,
+          "summary": "Hide all the sounds the target makes",
+          "page": 110
+        },
+        {
+          "name": "Supernatural ability (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 4,
+          "summary": "Give a target a supernatural ability (flaming breath)",
+          "page": 110
+        },
+        {
+          "name": "Invisible (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 4,
+          "summary": "Make a target completely invisible",
+          "page": 110
+        },
+        {
+          "name": "Phantasm (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 5,
+          "summary": "Create a phantasm, or change a target into one",
+          "page": 110
+        },
+        {
+          "name": "Undetectable (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 5,
+          "summary": "Make a target completely undetectable",
+          "page": 110
+        },
+        {
+          "name": "Phantasm with Might (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 10,
+          "summary": "A phantasm of Infernal Might 5; +1 magnitude for each 5 Might more",
+          "page": 110
+        },
+        {
+          "name": "Waking dream (Debauchery)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 10,
+          "summary": "Separate a target's spirit from his body",
+          "page": 110
+        },
+        {
+          "name": "Smell from afar (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 2,
+          "summary": "Smell or taste at a distance",
+          "page": 110
+        },
+        {
+          "name": "See spirits (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 3,
+          "summary": "Perceive spirits",
+          "page": 110
+        },
+        {
+          "name": "Hear from afar (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 3,
+          "summary": "Hear sounds at a distance",
+          "page": 110
+        },
+        {
+          "name": "See from afar (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 4,
+          "summary": "See at a distance",
+          "page": 110
+        },
+        {
+          "name": "See through illusions (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 5,
+          "summary": "See through Infernal illusions",
+          "page": 110
+        },
+        {
+          "name": "A day's omen (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 20,
+          "summary": "An ominous vision of a day past or to come",
+          "page": 110
+        },
+        {
+          "name": "A week's omen (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 25,
+          "summary": "An ominous vision of a week past or to come",
+          "page": 110
+        },
+        {
+          "name": "A month's omen (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 30,
+          "summary": "An ominous vision of a month past or to come",
+          "page": 110
+        },
+        {
+          "name": "A lifetime's omen (Incantation)",
+          "arts": [
+            "Phantasm"
+          ],
+          "level": 35,
+          "summary": "An ominous vision within the caster's lifetime",
+          "page": 110
+        },
+        {
+          "name": "Tarnish an aura (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 0,
+          "summary": "Tarnish an Infernal aura by the magnitude + 3, +6 at most; the book's example (p. 111) fits reading the magnitude as the base effect's",
+          "page": 112
+        },
+        {
+          "name": "Minor change of heart (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 2,
+          "summary": "A minor change to emotions (sadness to despair)",
+          "page": 112
+        },
+        {
+          "name": "Major change of heart (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 3,
+          "summary": "A major change to emotions (resolve to paranoia)",
+          "page": 112
+        },
+        {
+          "name": "Shift a trait to 3 (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 4,
+          "summary": "A Personality Trait a step up or down, to +3 or -3",
+          "page": 112
+        },
+        {
+          "name": "Turn the heart (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 4,
+          "summary": "Completely change a target's emotions",
+          "page": 112
+        },
+        {
+          "name": "Shift a trait to 4 (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 5,
+          "summary": "A Personality Trait a step up or down, to +4 or -4",
+          "page": 112
+        },
+        {
+          "name": "Trait +1 (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 5,
+          "summary": "A temporary Personality Trait at +1",
+          "page": 112
+        },
+        {
+          "name": "A Warping Point (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 5,
+          "summary": "Give a target a Warping Point",
+          "page": 112
+        },
+        {
+          "name": "Shift a trait to 5 (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 10,
+          "summary": "A Personality Trait a step up or down, to +5 or -5",
+          "page": 112
+        },
+        {
+          "name": "Trait +2 (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 10,
+          "summary": "A temporary Personality Trait at +2",
+          "page": 112
+        },
+        {
+          "name": "Two Warping Points (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 10,
+          "summary": "Give a target 2 Warping Points (Vituperation or Twilight may follow)",
+          "page": 112
+        },
+        {
+          "name": "Madness (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 10,
+          "summary": "Drive a target insane for the duration",
+          "page": 112
+        },
+        {
+          "name": "Shift a trait to 6 (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 15,
+          "summary": "A Personality Trait a step up or down, to +6 or -6",
+          "page": 112
+        },
+        {
+          "name": "Trait +3 (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 15,
+          "summary": "A temporary Personality Trait at +3",
+          "page": 112
+        },
+        {
+          "name": "A Confidence Point (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 15,
+          "summary": "A target gains a Confidence Point, below his Confidence Score x 5",
+          "page": 112
+        },
+        {
+          "name": "Three Warping Points (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 15,
+          "summary": "Give a target 3 Warping Points",
+          "page": 112
+        },
+        {
+          "name": "Four Warping Points (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 20,
+          "summary": "Give a target 4 Warping Points",
+          "page": 112
+        },
+        {
+          "name": "Five Warping Points (Debauchery)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 25,
+          "summary": "Give a target 5 Warping Points",
+          "page": 112
+        },
+        {
+          "name": "Divine or Infernal (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 2,
+          "summary": "Sense that an effect is Divine or Infernal, not which",
+          "page": 112
+        },
+        {
+          "name": "Words in the mind (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 3,
+          "summary": "Form words in a target's mind",
+          "page": 112
+        },
+        {
+          "name": "Sense tarnish (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 3,
+          "summary": "Sense and name an aura's tarnish",
+          "page": 112
+        },
+        {
+          "name": "Put a thought (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 4,
+          "summary": "Put a thought or desire in a target's mind",
+          "page": 112
+        },
+        {
+          "name": "Sense an emotion (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 4,
+          "summary": "Sense a powerful emotion",
+          "page": 112
+        },
+        {
+          "name": "Act on desire (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 5,
+          "summary": "Compel a target to act on his immediate desires",
+          "page": 112
+        },
+        {
+          "name": "Twist the senses (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 5,
+          "summary": "The target perceives only what the caster directs",
+          "page": 112
+        },
+        {
+          "name": "Imbue a desire (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 10,
+          "summary": "Imbue all a target's responses with a desire",
+          "page": 112
+        },
+        {
+          "name": "Believed lie (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 10,
+          "summary": "Compel a target to lie and believe it true",
+          "page": 112
+        },
+        {
+          "name": "Control behaviour (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 15,
+          "summary": "Control a target's behaviour while in range",
+          "page": 112
+        },
+        {
+          "name": "Simple command (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 20,
+          "summary": "A simple command obeyed as best it can",
+          "page": 112
+        },
+        {
+          "name": "Complex command (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 25,
+          "summary": "A complex command obeyed as best it can",
+          "page": 112
+        },
+        {
+          "name": "Mastery of mind (Incantation)",
+          "arts": [
+            "Psychomachia"
+          ],
+          "level": 30,
+          "summary": "Completely control a target's mind and emotions",
+          "page": 112
+        }
+      ],
+      "effect_parameters": [
+        {
+          "kind": "range",
+          "name": "Personal",
+          "magnitudes": 0
+        },
+        {
+          "kind": "range",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Eye",
+          "magnitudes": 1
+        },
+        {
+          "kind": "range",
+          "name": "Voice",
+          "magnitudes": 2
+        },
+        {
+          "kind": "range",
+          "name": "Sight",
+          "magnitudes": 3
+        },
+        {
+          "kind": "range",
+          "name": "Arcane Connection",
+          "magnitudes": 4
+        },
+        {
+          "kind": "range",
+          "name": "Crossroads",
+          "magnitudes": 2,
+          "note": "As Voice: a target on a road crossing the caster's, not his own (RoP: The Infernal p. 103)"
+        },
+        {
+          "kind": "duration",
+          "name": "Momentary",
+          "magnitudes": 0
+        },
+        {
+          "kind": "duration",
+          "name": "Concentration",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Diameter",
+          "magnitudes": 1
+        },
+        {
+          "kind": "duration",
+          "name": "Sun",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Ring",
+          "magnitudes": 2
+        },
+        {
+          "kind": "duration",
+          "name": "Moon",
+          "magnitudes": 3
+        },
+        {
+          "kind": "duration",
+          "name": "Year",
+          "magnitudes": 4
+        },
+        {
+          "kind": "duration",
+          "name": "Cursed (Condition)",
+          "magnitudes": 2,
+          "note": "As Sun, plus the triggered effect's Duration as further magnitudes (p. 103)"
+        },
+        {
+          "kind": "duration",
+          "name": "Forsaken",
+          "magnitudes": 4,
+          "note": "As Year: lasts while the target stays tainted; repentance ends it; can't be dispelled (p. 103)"
+        },
+        {
+          "kind": "target",
+          "name": "Individual",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Circle",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Taste",
+          "magnitudes": 0
+        },
+        {
+          "kind": "target",
+          "name": "Part",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Touch",
+          "magnitudes": 1
+        },
+        {
+          "kind": "target",
+          "name": "Group",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Room",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Smell",
+          "magnitudes": 2
+        },
+        {
+          "kind": "target",
+          "name": "Structure",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Hearing",
+          "magnitudes": 3
+        },
+        {
+          "kind": "target",
+          "name": "Boundary",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Vision",
+          "magnitudes": 4
+        },
+        {
+          "kind": "target",
+          "name": "Passion",
+          "magnitudes": 2,
+          "note": "As Group: those inclined to a virtue or vice, simple die + trait 6+ (p. 103)"
+        }
+      ]
+    }
+  }
+}

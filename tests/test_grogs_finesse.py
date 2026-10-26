@@ -266,11 +266,18 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
     saga = _saga()
     grog = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="g")
     labels = [item.label for item in menu_forms.placed(grog, "Personality Traits")]
-    assert labels == ["Reward or Punish", "Pension"]
+    saints = [
+        "Invoke a Saint",
+        "Threaten a Saint",
+        "Devotion Points",
+        "Indulgence, Vigil or Fast",
+    ]
+    assert labels == ["Reward or Punish", "Pension", *saints]
     magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
-    assert menu_forms.placed(magus, "Personality Traits") == []
+    assert [i.label for i in menu_forms.placed(magus, "Personality Traits")] == saints
     assert [i.label for i in menu_forms.placed(magus, "Known Spells")] == [
-        "Craft by Magic"
+        "Craft by Magic",
+        "Cast in a Lacuna",
     ]
     assert not actions.available("craft_by_magic", grog)
 

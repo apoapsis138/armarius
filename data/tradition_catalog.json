@@ -7015,7 +7015,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_cantores",
@@ -7102,7 +7105,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_sufis",
@@ -7200,7 +7206,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_baal_shem",
@@ -7343,7 +7352,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_kabbalists",
@@ -7523,7 +7535,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_sol_invictus",
@@ -7618,7 +7633,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_priory_of_saint_nerius",
@@ -7705,7 +7723,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_zoroastrians",
@@ -7790,7 +7811,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_karaites",
@@ -7880,7 +7904,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_celi_de",
@@ -7967,7 +7994,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_mobeds",
@@ -8135,7 +8165,10 @@
             "notes": "Married Mazdeans only: a season's meditation, then a night in the wilds after haoma, without magic. The parts printed add to +7 (time +1, sympathetic +3, ordeal +3); the book prints +6."
           }
         ]
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_hesychasts",
@@ -8220,7 +8253,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent. Hesychasts take the Divine Gloom form from their first Ascent: each Warping Point brings an xp for Dominion Lore and holy Abilities and costs one from mundane Abilities."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_society_of_cyprian_and_justina",
@@ -8304,7 +8340,10 @@
         "replaces_twilight": true,
         "trigger": "2 or more Warping Points from one event.",
         "notes": "Avoid it: Presence + Concentration (or Meditation) + stress die against Warping Score + Warping Points gained + True Faith + aura + stress die. A failure adds Warping Points equal to the margin and an Ascent of max(1, Warping Score + points gained - True Faith) days (months from Warping Score 6). At the first Ascent the character picks Divine Gloom, Divine Form or Divine Unity for life. There is no Final Ascent."
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_kassalan_exorcists",
@@ -8453,7 +8492,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_strigae",
@@ -8556,7 +8598,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_witch_hammers",
@@ -8756,7 +8801,10 @@
           "page": 116
         }
       ],
-      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118"
+      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118",
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_dark_gnostics",
@@ -8819,7 +8867,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_dread_host",
@@ -8953,7 +9004,10 @@
           "page": 117
         }
       ],
-      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118"
+      "guideline_source": "RoP: The Infernal, Ars Goetia, pp. 114-118",
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_mulhidun",
@@ -9342,7 +9396,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_ordo_vagorum",
@@ -9450,7 +9507,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_witches_of_thessaly",
@@ -9724,7 +9784,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_stringla",
@@ -9829,7 +9892,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_paulicians",
@@ -9941,7 +10007,10 @@
         "replaces_twilight": false,
         "trigger": "Two or more Warping Points at once from Infernal power (a failed maleficium, a botched Goetic Art).",
         "notes": "The Infernal counterpart of Twilight (RoP: The Infernal); a Gifted member with The False Gift has it in place of Twilight."
-      }
+      },
+      "guideline_sets": [
+        "maleficia"
+      ]
     },
     {
       "id": "trad_baal_ov",
@@ -16500,6 +16569,9 @@
           "summary": "Seasons accumulating the Major amulet total - the effect's level; one Major amulet a season.",
           "lab_rule": "Major amulet"
         }
+      ],
+      "guideline_sets": [
+        "holy_powers"
       ]
     },
     {
@@ -21453,7 +21525,10 @@
             "notes": "A season in Francis' cave in rags on less food than the friars nearby: Quest +3, Minor Ordeal +3, sympathy +3. Printed for a Target of 18; needs Presence + Lore 9."
           }
         ]
-      }
+      },
+      "guideline_sets": [
+        "holy_powers"
+      ]
     },
     {
       "id": "trad_cult_of_mercury",

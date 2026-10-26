@@ -14,6 +14,7 @@ from ..models import REALMS, Creature, Saga
 from ..references import Fact
 from ..rules import (
     creature_build,
+    divine_build,
     faerie_build,
     infernal_build,
     jinn_build,
@@ -195,6 +196,13 @@ def build_facts(creature: Creature) -> list[Fact]:
     magic_notes = magic_build.notes(creature)
     if magic_notes:
         found.append(Fact("Magic being", "; ".join(magic_notes) + "."))
+    # Divine beings and angels (RoP: The Divine pp. 16-26).
+    divine = divine_build.problems(creature)
+    if divine:
+        found.append(Fact("Divine design", " ".join(divine)))
+    angel = divine_build.notes(creature)
+    if angel:
+        found.append(Fact("As an angel", "; ".join(angel) + "."))
     return found
 
 

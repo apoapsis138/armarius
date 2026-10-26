@@ -92,7 +92,8 @@ class Creature:
     might_pool: int | None = None
     #: A demon's Order ("Prince of the False Gods"), its Hierarchy score
     #: (None when not given) and its Weakness, as Realms of Power: The
-    #: Infernal prints them; only an Infernal creature has them.
+    #: Infernal prints them; only an Infernal creature has them, but for
+    #: an angel's Choir in `order` (Realms of Power: The Divine p. 18).
     order: str = ""
     hierarchy: int | None = None
     weakness: str = ""

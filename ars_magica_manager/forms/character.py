@@ -575,6 +575,21 @@ def hermetic_fields(
             if mercurian
             else []
         ),
+        DialogField(
+            "renounced_year",
+            "Renounced (year)",
+            "optint",
+            h.renounced_year,
+            hint="Cast out of the Order by a Wizard's March: closing a meeting "
+            "that Marched him sets it (DE p. 18).",
+        ),
+        DialogField(
+            "renounced_by",
+            "Renounced by",
+            "text",
+            h.renounced_by,
+            show_if=lambda values: values.get("renounced_year") is not None,
+        ),
     ]
 
 

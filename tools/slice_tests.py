@@ -255,6 +255,31 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     # The hunt and Area Lore, on a manor and on the road.
     "ars_magica_manager/forms/hunting.py": ("test_dialog_contracts_tribunal.py",),
     "ars_magica_manager/rules/hunting.py": ("test_dialog_contracts_tribunal.py",),
+    # Dealing with faeries: the Ars Fabulosa, bargains and offers.
+    "ars_magica_manager/forms/faerie_dealings.py": (
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/rules/faerie_dealings.py": (
+        "test_dialog_contracts_character.py",
+    ),
+    # Hermetic law on the docket: Wizard's War, the March, traces, Intrigue.
+    "ars_magica_manager/rules/hermetic_law.py": ("test_dialog_contracts_tribunal.py",),
+    # Angels and demons: divine beings, holy influence, holy powers and the
+    # maleficia (RoP: The Divine, RoP: The Infernal).
+    "ars_magica_manager/forms/holy_influence.py": (
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/rules/divine_build.py": (
+        "test_dialog_contracts_saga.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/rules/holy_powers.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/rules/maleficia.py": ("test_dialog_contracts_character.py",),
+    # The lacuna and the pilgrim: casting in a lacuna, the pilgrim's road.
+    "ars_magica_manager/forms/lacuna.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/pilgrimage.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/rules/lacunae.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/rules/pilgrimage.py": ("test_dialog_contracts_character.py",),
 }
 
 
