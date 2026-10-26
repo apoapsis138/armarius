@@ -12,7 +12,14 @@ from . import vis as vis_stores
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from .markup import escape, problem
 from .models import Character, KnownSpell, Saga, Spell
-from .rules import casting, casting_virtues, certamen, house_mastery, penetration
+from .rules import (
+    casting,
+    casting_virtues,
+    certamen,
+    craft_magic,
+    house_mastery,
+    penetration,
+)
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
 from .rules.realms import home_aura, home_in_regio
@@ -189,6 +196,7 @@ def option_lines(saga: Saga, magus: Character) -> list[str]:
         f"Aiming: Perception + Finesse {casting.aiming_base(magus):+d} + die, +6 "
         "for each size step past a basic Individual."
     )
+    lines.append(escape(craft_magic.summary_line(magus)))
     attuned = casting.talisman_attunements(saga, magus)
     if attuned:
         lines.append(

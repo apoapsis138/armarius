@@ -110,6 +110,12 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_sheet_text.py",
     ),
     "ars_magica_manager/disputations.py": ("test_screens_academe.py",),
+    "ars_magica_manager/forms/grogs.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/craft_magic.py": (
+        "test_dialog_contracts_character.py",
+        "test_gui_edit_character.py",
+    ),
+    "ars_magica_manager/labor.py": ("test_dialog_contracts_character.py",),
     "ars_magica_manager/conflicts.py": (
         "test_list_flows.py",
         "test_dialog_contracts_saga.py",

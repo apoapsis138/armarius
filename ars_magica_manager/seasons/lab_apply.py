@@ -41,7 +41,14 @@ from ..rules import book_seasons as bs
 from ..rules import creation_access as access
 from ..rules import creation_characteristics as cch
 from ..rules import enchant_seasons as es
-from ..rules import enchantment, lab_items, lab_seasons, research, work_virtues
+from ..rules import (
+    enchantment,
+    lab_items,
+    lab_seasons,
+    merchants,
+    research,
+    work_virtues,
+)
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import lab as lab_rules
@@ -456,14 +463,19 @@ def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
     lines: list[SeasonRecordLine] = []
     for character in saga.characters:
         if not takes_part_in_play(character) or (
-            not character.labor_points and not character.workshop_raw_materials
+            not character.labor_points
+            and not character.workshop_raw_materials
+            and not character.investments
         ):
             continue
         cost = (
             sw.BUSINESS_UPKEEP
             + sw.RAW_MATERIALS_UPKEEP * character.workshop_raw_materials
         )
-        virtues = work_virtues.yearly_labor(character, sw.multiplier(character))
+        # A merchant's investments pay back with the year's upkeep.
+        virtues = work_virtues.yearly_labor(
+            character, sw.multiplier(character)
+        ) + merchants.year_returns(character, saga.current_year)
         cost -= sum(points for _, points in virtues)
         character.labor_points -= cost
         named = "".join(f"; {name} {points:+d}" for name, points in virtues)

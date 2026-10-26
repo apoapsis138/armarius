@@ -337,6 +337,31 @@ class Ordeal:
 
 
 @dataclass
+class Investment:
+    """A merchant's investment still open (City & Guild pp. 110-122,
+    rules.merchants): its kind, what it is in, the Labor Points put in
+    and the year, what it pays back (an introduction's, once, in its
+    due year; a smuggling sponsor's, each Winter) and when. A charity
+    keeps the Labor Points given in all, the last gift and its year, the
+    Reputation experience already gained from it, that Reputation, and
+    the kind of merchant giving (rules.merchants.STATUS_MULTIPLIER)."""
+
+    kind: str
+    name: str = ""
+    lp: int = 0
+    year: int = 0
+    returns: int = 0
+    due_year: int | None = None
+    paid: int = 0
+    reputation: str = ""
+    merchant: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Investment:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Progress:
     """Progress carried from season to season on something a character is
     working at: an excellent item, a pilgrimage, taming
@@ -373,6 +398,26 @@ class GrogYear:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GrogYear:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class Discipline:
+    """A reward, punishment or pension given to one of the covenfolk
+    (Grogs pp. 23-26; rules.grog_discipline): when it began, its kind
+    (grog_discipline.KINDS), how many seasons it lasts (0: less than a
+    season, or done at once; None: for good), the rank he holds after a
+    promotion or a reduction in rank, and a note."""
+
+    year: int
+    season: str = "Spring"  # one of SEASONS
+    kind: str = ""
+    seasons: int | None = 0
+    rank: str = ""
+    note: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Discipline:
         return cls(**known_fields(cls, data))
 
 
@@ -768,6 +813,10 @@ class Character:
     #: philosophy formulas known, and the Ordeals still lowering the Target
     #: of a later Initiation.
     labor_points: int = 0
+    #: The band of the business's income (City & Guild p. 37: "trivial"
+    #: ... "legendary"); "" takes it from the Social Status Virtue.
+    income_band: str = ""
+    investments: list[Investment] = field(default_factory=list)
     workshop_innovation: int = 0
     workshop_raw_materials: int = 0
     progress: list[Progress] = field(default_factory=list)
@@ -801,6 +850,8 @@ class Character:
     #: experience not yet spent on them (Lords of Men pp. 22-25).
     agents: list[Agent] = field(default_factory=list)
     agency_xp: int = 0
+    #: The rewards, punishments and pension of one of the covenfolk.
+    discipline: list[Discipline] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -868,8 +919,10 @@ class Character:
         if d.get("animal") is not None:
             d["animal"] = AnimalForm.from_dict(d["animal"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
+        d["investments"] = [Investment.from_dict(i) for i in d.get("investments", [])]
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         d["agents"] = [Agent.from_dict(a) for a in d.get("agents", [])]
+        d["discipline"] = [Discipline.from_dict(x) for x in d.get("discipline", [])]
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
         # Older saves kept only the last Ordeal.
         if d.get("ordeal"):

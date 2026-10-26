@@ -839,6 +839,18 @@ Modification to the source last clicked:
 pick an effect, see the
 projected income, and confirm to set the new income and record a note.
 
+Tick **Improved by magic** when the year's change is the magi's doing
+(Covenants pp. 57-58: the storyguide picks the Effect a magical improvement
+merits; City & Guild p. 130 lists ways magic makes a profit, from gathering
+commodities to ships handled by magic). The form then shows the wealth the
+magic makes a year (the income it adds, unless you type it) against the
+limit several Tribunals have passed: at most 2 pounds of silver, or its
+like, a magus a year (Covenants p. 57, citing Houses of Hermes: True
+Lineages p. 87). Going over it is allowed, since not every Tribunal has the
+rule, but the form warns that Redcaps notice and the Quaesitores, or irate
+merchants and nobles, follow. The note records that the change was by magic.
+Spending such wealth feeds the covenant's Inflation (Covenants p. 65).
+
 ### Yearly Expenditure
 <!-- help: section-eco-expenditure -->
 

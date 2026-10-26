@@ -36,6 +36,7 @@ from ars_magica_manager.models import (
     Description,
     DeviceComponent,
     DiaryEntry,
+    Discipline,
     Disease,
     EnchantedDevice,
     ExperimentalEffect,
@@ -51,6 +52,7 @@ from ars_magica_manager.models import (
     GrogYear,
     HermeticBackground,
     InstilledEffect,
+    Investment,
     LabCharacteristicGrant,
     LabCharacteristics,
     LabItemBenefit,
@@ -405,7 +407,8 @@ def _saga_with_every_record() -> Saga:
     magus.agents.append(Agent("Bishop Benedict", bond_trait="Thankful", bond=1))
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
     magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
-    magus.grog_year = GrogYear()
+    magus.grog_year, magus.investments = GrogYear(), [Investment("speculation")]
+    magus.discipline.append(Discipline(1220, kind="improved_rations", seasons=4))
     magus.wounds = Wounds(
         light=1,
         states=[WoundState("light", "disease", 3)],

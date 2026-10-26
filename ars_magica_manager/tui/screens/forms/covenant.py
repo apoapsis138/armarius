@@ -11,17 +11,14 @@ from typing import Any
 
 from .... import economics as eco
 from .... import possessions as pos
-from ....form_spec import DialogField, pairs
+from ....forms import menu as menu_forms
 from ....forms.covenant import covenant_fields as _covenant_fields
 from ....forms.inhabitant import inhabitant_fields as _inhabitant_fields
 from ....forms.possession import contested_fields as _contested_fields
 from ....forms.possession import possession_fields as _possession_fields
 from ....forms.possession import possession_live
 from ....markup import escape
-from ....models import (
-    INCOME_EFFECTS,
-    IncomeSource,
-)
+from ....models import IncomeSource
 from ..fields import FieldsDialog
 from ..prompts import ConfirmScreen
 
@@ -58,26 +55,28 @@ def _possession_dialog(
 
 
 def _improve_income_dialog(
-    source: IncomeSource, current_year: int
+    source: IncomeSource,
+    current_year: int,
+    magic_limit: tuple[int, int] | None = None,
 ) -> FieldsDialog[tuple[int, str]]:
     """Manually simulates a year's Income Modification (yearly advancement
     isn't automated): choosing an Effect shows the Multiplier and Projected
-    Income live. Commit asks to confirm, then builds (new income, the Note
-    to record)."""
+    Income live, and, improved by magic, the wealth it makes against
+    `magic_limit` (the covenant's limit and its magi). Commit asks to
+    confirm, then builds (new income, the Note to record). The fields and
+    the live line are the core's (forms.menu)."""
     current = source.current_income
-
-    def live(values: dict[str, Any]) -> str:
-        effect = values.get("effect") or "Status Quo"
-        return (
-            f"Income Multiplier {eco.income_multiplier_text(effect)}. "
-            f"Projected Income {eco.projected_income(current, effect)}"
-        )
 
     def build(values: dict[str, Any]) -> tuple[int, str]:
         effect = values["effect"]
         projected = eco.projected_income(current, effect)
         note = eco.improvement_note(
-            current_year, source.name, effect, current, projected
+            current_year,
+            source.name,
+            effect,
+            current,
+            projected,
+            magic=bool(values.get("magic")),
         )
         return projected, note
 
@@ -91,27 +90,8 @@ def _improve_income_dialog(
 
     return FieldsDialog(
         f"Improve {escape(source.name or 'this source of income')}",
-        [
-            DialogField("name", "Name", "info", source.name or "(unnamed)"),
-            DialogField("current", "Current Income", "info", str(current)),
-            DialogField(
-                "effect",
-                "Annual Improvement Effect",
-                "select",
-                "Status Quo",
-                options=pairs(INCOME_EFFECTS),
-                required=True,
-            ),
-            # A Note is a sentence or two: shown under its label, wrapped.
-            DialogField(
-                "note",
-                "Note",
-                "info",
-                "" if source.note.strip() else "(none)",
-                hint=escape(source.note.strip()),
-            ),
-        ],
-        live=live,
+        menu_forms.improve_fields(source),
+        live=menu_forms.improve_live(source, magic_limit),
         save_label="Commit",
         build=build,
         confirm=confirm,

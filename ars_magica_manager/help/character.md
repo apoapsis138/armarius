@@ -259,6 +259,17 @@ what they usually don't, and 12 for what even people known for the trait
 rarely manage. A player changes the scores only between sessions, after
 striking rolls or events (DE p. 28).
 
+<!-- tui -->
+On a grog who serves a covenant, More (`m`) here offers
+[Reward or Punish](help:grog-discipline) and [Pension](help:grog-pension).
+<!-- /tui -->
+<!-- gui -->
+On a grog who serves a covenant, **Reward or Punish** and **Pension** sit
+beside the Personality Traits' Add, Edit and Delete.
+<!-- /gui -->
+A grog's Loyal to Covenant begins within 3 of the covenant's Prevailing
+Loyalty (DE p. 185).
+
 ### Reputations
 <!-- help: section-reputations -->
 
@@ -605,6 +616,100 @@ an errant knight (36 Labor Points a year, p. 69). It is written in his
 Diary.
 <!-- /tui -->
 
+## Labor Points from a Story
+<!-- help: labor-from-story -->
+
+<!-- tui -->
+More (`m`) on [This Season](help:section-char-season) offers **Labor Points
+from a Story**:
+<!-- /tui -->
+<!-- gui -->
+**Labor Points from a Story**, beside This Season's buttons, opens a form
+for
+<!-- /gui -->
+the Labor Points a story gives a craftsman or merchant when its central
+issue is resolved (City & Guild p. 39). Choose the award: the book's guide
+(half a season's worth for a subplot of a story the magi deal with, one for
+severe danger or hardship, one and a half when his part is pivotal to the
+end, two when he is the central character, two and a half when failing
+would bring severe repercussions on his city or covenant), or one of the
+story seeds' own awards. A trader sees the stories for every merchant (pp.
+111-115) and those of his kind and the poorer kinds: local carrier (pp.
+116-118), merchant adventurer (pp. 119-121), factor (pp. 122-128) and capo
+(pp. 129-130); "invested" awards are the smaller ones for a story left
+unplayed as an investment of time (p. 40). Change the seasons' worth where
+the story says so (antique sailing instructions give ½ to 1½). A season's
+worth is what a season's work earns: (Characteristic + the Craft or
+Profession chosen) x the Wealth Multiplier (2 Poor, 3 average, 6 Wealthy); a
+fraction rounds down. The Labor Points are added and the Diary records the
+story. A story is the only way to earn Labor Points and experience other
+than Exposure in the same season, so plan the season as usual. Some awards
+do more, which the result says and you apply by hand: a new product found
+in every fair promotes him to Wealthy (or, Wealthy, to the next Social
+Status), and with the Heir Virtue a benefactor's murder may raise his Social
+Status at once.
+
+## Invest Time or Money
+<!-- help: merchant-investment -->
+
+<!-- tui -->
+More (`m`) on [This Season](help:section-char-season) offers **Invest Time
+or Money**:
+<!-- /tui -->
+<!-- gui -->
+**Invest Time or Money**, beside This Season's buttons, opens a form for
+<!-- /gui -->
+what a character does with surplus Labor Points or money (City & Guild
+Chapter Seven). Anyone who works for Labor Points can **put money into the
+business**: the pounds come from the silver on Personal Gear and buy Labor
+Points at the money table read the other way (9 for a quarter of the year's
+income, p. 40; Errata p. 56). A trader (the Merchant, Merchant Adventurer,
+Factor, Capo, Partner or Redcap Virtue) can also invest (pp. 110-114):
+
+- **Charity**: the Labor Points given are lost; each season's worth given,
+  over the years, is an experience point in the Reputation you name. Having
+  given at least 1 x the Wealth Multiplier in the past year, he can call a
+  crowd of the people it helps: (Communication + Leadership) x that
+  Reputation x 1 for an urban merchant, 2 a local carrier, 3 a merchant
+  adventurer, 4 a factor, 5 a capo; twice as many with a week's notice. This
+  Season shows the crowd.
+- **Commodity speculation**: at least 10 Labor Points stored as goods, kept,
+  and paying 1 a year for every 10, each Winter from the next year, with a
+  guard for each half season's worth invested. **End an investment** takes
+  them back, or loses them to the story events that burned the warehouse.
+- **Drawings**: a sumptuous item of hand-tool size or smaller for each 1 x
+  the Wealth Multiplier.
+- **Introduction agent**: two seasons' worth put in, three back in Winter
+  two years on; the junior merchant owes him a Favor until then. Spend the
+  season introducing them.
+- **Marriage broker**: two seasons' worth lost; an experience point in the
+  Reputation named, Social Contacts in the couple's class for three years
+  (unless he arranges another), and Favors from the couple or their
+  parents.
+- **Legal action** (p. 114): half a season's worth a suit. Type his
+  representative's Intelligence + Civil or Canon Law + die and the
+  opponent's; a true suit adds 3, a false one takes 3, an outlandish one 6.
+  Winning, add or take 1 from one of the loser's Reputations; losing may
+  bring a poor Reputation, and either may bring the Enemy Flaw.
+- **Foreseeing a boom** (pp. 111-112), when the troupe's boom comes:
+  Intelligence + Area Lore + the die typed. 18 or more gives back two
+  seasons' Labor Points for each set aside, 15 to 17 one and a half, 7 to 14
+  nothing gained, 6 or less loses 2 of every 10; a botch destroys the
+  business.
+
+By kind of merchant, each also open to the richer kinds: a local carrier's
+**season smuggling** ((Intelligence + Intrigue) x the Wealth Multiplier, p.
+117) or **sponsoring smugglers** (a season's worth each Winter beside his
+own work); a factor's **change of government** ((Communication + Intrigue)
+x the Wealth Multiplier and a minor political figure's Favor, p. 122) and
+**young talent** ((Communication + Leadership) x the Wealth Multiplier and a
+Favor for each 10, rounded up, p. 128); a capo's **lavish party** (die + a
+Characteristic + the theme's Ability + a point a pound spent, at most his
+Intrigue: a Favor for each 5, rounded up, p. 129; the pounds come from his
+silver). Investments that are time, not points, take a season: plan it as a
+Merchant venture. Each is written in the Diary; an investment costing more
+than his Labor Points is refused.
+
 ## Command the Beast
 <!-- help: command-beast -->
 
@@ -631,6 +736,82 @@ trained: one it doesn't have yet asks a Loyalty test against 6 at the
 season's end, or the season is wasted (DE p. 385). In a fight, a group of
 tamed animals is led by its leader's Animal Handling, not his Leadership
 (DE p. 385).
+
+## Reward or Punish
+<!-- help: grog-discipline -->
+
+Rewards and punishments for one of the covenfolk, as Grogs sets them out
+(pp. 23-25). The inspector, **What It Does**, says what the choice will do
+before you choose **Give**; the grog's Diary keeps it, and a punishment
+also goes in the covenant's Diary.
+
+Rewards, usually set by the turb captain, steward or chamberlain and
+announced before the turb:
+
+- **Improved rations**, for a day to a year: a whole year of them is +1 to
+  his Living Conditions for that year's aging roll.
+- **Pay and a Half**, for a season or more, or for good: half his Wages
+  again on the covenant's Wages while it lasts.
+- **Improved equipment**: his for good, but surrendered if he is demoted.
+  Record the item on his Personal Gear.
+- **Promotion in rank** (grog, custos, sergeant, then captain, chamberlain
+  or steward): type the rank he holds now.
+
+Punishments, in order of severity:
+
+1. **Castigation**: a single blow with the rod.
+2. **Relegation to inferior duties**, done in his free time.
+3. **Reduction of rations**: a season or two of the year on them is -1 to
+   his Living Conditions for aging, three or four -2. A month counts for
+   nothing.
+4. **Flogging**: 1, 5 or 10 blows, 1, 2 or 3 Light Wounds and 1, 3 or 5
+   Long-Term Fatigue levels.
+5. **Reduction in rank**, for good; he surrenders the equipment he was
+   given.
+6. **Whipping**: 10 lashes a Light Wound, 30 a Medium, 50 a Heavy; the
+   short whip two of each. A week to recover (a day for ten lashes or
+   fewer); his pay is docked for longer.
+7. **Dismissal**: tick **He leaves the covenant** to take him off its
+   lists.
+8. **Fustuarium**: beaten to death by the blindfolded turb. Few covenants
+   have the right to order it.
+
+What it costs in Loyalty (Covenants pp. 38-39): a fitting punishment from
+the turb captain, steward or chamberlain costs nothing. One a magus orders
+costs Loyalty points by what it counts as: a minor humiliation -1, a
+public humiliation -3, restraint -6, infliction of pain -9, a brutal
+punishment -12, a brutal one the magus clearly enjoys -15. With a positive
+Prevailing Loyalty only an unjust one costs anything. **Counts as** starts
+at the usual row for the punishment (a blow minor, the shaming ones
+public, reduced rations restraint, a flogging, whipping or fustuarium
+brutal). The victim's **Reputation** among the covenfolk adds to the
+penalty if he is loved and takes from it if he is disliked. A wound the
+magus deals himself costs its own points too (light -3, medium -6, heavy
+-9, death -15), one step worse by magic. The points go into the covenant
+Diary as a Loyalty Event, which Actions and Events adds up.
+
+**His Loyal changes by** moves his Loyal to Covenant (or Loyal) trait; the
+books leave it to the troupe (Grogs p. 24).
+
+Free time, lodging and families (Grogs pp. 23, 25): a grog who doesn't
+sleep in his free time loses a Long-Term Fatigue level until he sleeps two
+watches straight; punishment duties are done in free time. Married
+covenfolk often have a room of their own, and covenants encourage matches
+among their covenfolk.
+
+## Pension
+<!-- help: grog-pension -->
+
+A grog retires on a pension, or pays rent for his lodging instead and is
+fed free (Grogs p. 26). He still counts as one of the covenant for its
+finances; his Wages are halved (his pension) or, paying rent, he draws
+none. Grogs gives a pension of half to three-quarters of his pay; the
+Definitive Edition sets half Wages until death (p. 186), which the app
+uses. **Grants pensions** is the covenant's Loyalty Money modifier: +10
+Loyalty points for granting pensions to all its retirees.
+
+On a grog who has died, Pension gives his widow the pension he would have
+had: one more of the covenant's pensioners, at half Wages a year.
 
 ## Constant Effects
 <!-- help: section-char-constant-effects -->
@@ -1323,6 +1504,11 @@ spells they know and their Mastery.
 every Technique and Form, Magic Resistance, Penetration and the Certamen
 totals.
 
+The casting notes end with **craft magic**: Rego craft (shaping raw
+materials) is Perception + Finesse, Creo craft (making the thing) is
+Intelligence + Finesse, each + a stress die, against the Ease Factors for
+Creating and Crafting Objects (DE pp. 306-308).
+
 **See also:** [Lab Totals tab](help:tab-lab-totals),
 [Inventory tab](help:tab-inventory), [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
 
@@ -1556,6 +1742,42 @@ play (**Show everything** lists the rest);
 <!-- /gui -->
 a spell already known from a book that goes out
 of play stays, marked "(not in play)".
+
+<!-- tui -->
+More (`m`) here offers [Craft by Magic](help:craft-magic).
+<!-- /tui -->
+<!-- gui -->
+**Craft by Magic**, beside Known Spells' buttons, works out a craft spell's
+Finesse roll.
+<!-- /gui -->
+
+## Craft by Magic
+<!-- help: craft-magic -->
+
+The Finesse roll a craft spell needs (Definitive Edition, Magical Craft,
+pp. 306-308). **Close** keeps nothing; **Roll** rolls it once and says how
+it went, keeping nothing either.
+
+- **Rego** shapes raw materials as a craftsman would: Perception + Finesse
+  against the Ease Factor of the hardest task the spell covers.
+- **Creo** makes a working example of the thing with no roll (as a work of
+  craft of Ease Factor 6), its details as chance falls. To fix details:
+  Intelligence + Finesse, one basic property 0, two or three (or one
+  precisely) 3, an elaborate specification or a better-quality item as
+  Rego.
+
+The Ease Factors for Creating and Crafting Objects already hold the +3 for
+magic and a day's work: Trivial 3, Simple 6, Easy 9, Average 12, Hard 15,
+Very Hard 18, Impressive 21, Remarkable 24, Almost Impossible 27. More work
+adds: a month's +3 (or thirty craftsmen for a day), a season's +6, a
+year's +9. With a mundane craftsman's Ease Factor or a City & Guild
+Workshop Total, the app adds the +3.
+
+The roll takes the Wound and Fatigue penalties, -3 for each of Clumsy and
+Inconstant Magic, and the spell's Precise Casting. A failed Rego roll
+still rearranges the materials, into nothing useful; a botch looks right
+but has a hidden, fatal flaw. A failed Creo roll still makes the thing
+without the details; a botch makes something that hinders the caster.
 
 ## Research tab
 <!-- help: tab-research -->
@@ -1956,6 +2178,28 @@ a grog, `e` sets up the yearly update (Grogs, Chapter 5).
 <!-- /tui -->
 <!-- gui -->
 a grog, **Yearly Update** sets up the yearly update (Grogs, Chapter 5).
+<!-- /gui -->
+
+Below the Labor Points line it says what they are worth in money to the
+business: 9 Labor Points are about a quarter of a year's income (City & Guild
+p. 40, as the Errata p. 56 corrects it), so to a Trivial income (10 pounds a
+year) they are worth about 2½ pounds, to a Lesser one (40) about 10, to a
+Greater one (250) about 63, rounded to the nearest pound. The income source
+is the band the Social Status Virtue buys (p. 37: Laborer, Journeyman and
+Craftsman Trivial; Merchant, Guild Master and an expensive Craftsman Minor;
+Senior Master Lesser; Merchant Adventurer, Factor and Guild Dean Typical;
+Capo Greater); where a Virtue buys either of two, the poorer is assumed
+until you choose the other in either form below. A merchant's open
+investments are listed too: a speculation and what it pays a year, an
+introduction and when it pays back, a brokered marriage's Social Contacts, a
+charity and the crowd it can call.
+<!-- tui -->
+More (`m`) here offers **Labor Points from a Story** and, for a trader or
+anyone with Labor Points, **Invest Time or Money**.
+<!-- /tui -->
+<!-- gui -->
+**Labor Points from a Story** and **Invest Time or Money** sit beside Plan,
+Edit and Clear.
 <!-- /gui -->
 
 ### Seasons Ahead

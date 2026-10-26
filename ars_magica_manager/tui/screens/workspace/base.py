@@ -323,6 +323,7 @@ _LOOKING_ACTIONS = frozenset(
         "go_to",
         # A calculator: it records nothing.
         "plan_journey",
+        "craft_by_magic",
     }
 )
 

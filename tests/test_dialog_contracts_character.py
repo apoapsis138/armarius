@@ -19,6 +19,7 @@ from textual.widgets import Select
 
 from ars_magica_manager import catalog
 from ars_magica_manager.models import AnimalForm
+from ars_magica_manager.rules import merchants
 
 CONTRACTS: dict[str, Contract] = {
     # Creation Worksheet
@@ -434,6 +435,33 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "Resistance 3 to 2, for 3 Agency experience"},
         shown={"#char-agents-list": "2, impressed"},
     ),
+    "labor from story": Contract(
+        prefill={"Award": "subplot", "Seasons' worth": Select.NULL},
+        edits={"The story": "The Doge's ring", "Award": "central"},
+        saved=lambda s: (
+            character(s).labor_points
+            - 2
+            * merchants.season_labor(
+                character(s), "Profession: Merchant", "communication"
+            ),
+            character(s).diary[-1].name,
+        ),
+        expected=(40, "Labor Points from a story: The Doge's ring"),
+        live={"#fields-live": "2 seasons' worth of Labor Points"},
+        shown={"#char-season-content": "Labor Points"},
+    ),
+    "invest time or money": Contract(
+        prefill={"Investment": "money", "Pounds spent": "0"},
+        edits={"Investment": "speculation", "In what": "wool", "Labor Points": "20"},
+        saved=lambda s: [(i.kind, i.name, i.lp) for i in character(s).investments],
+        expected=[("speculation", "wool", 20)],
+        invalid=[
+            {"Investment": "speculation", "Labor Points": "5"},
+            {"Investment": "speculation", "Labor Points": "50"},
+        ],
+        live={"#fields-live": "+2 a year"},
+        shown={"#char-season-content": "Speculation (wool): 20 Labor Points"},
+    ),
     "add constant effect": Contract(
         prefill={"Effect": "", "Realm": "Magic"},
         edits={"Effect": "Ring of Flight", "Realm": "Faerie"},
@@ -529,6 +557,48 @@ CONTRACTS: dict[str, Contract] = {
         expected=(2, True),
         invalid={"Light Wounds": "-"},
         shown={"#fam-wounds-content": "Light Wounds:  2"},
+    ),
+    "reward or punish": Contract(
+        prefill={"Reward or punishment": "improved_rations", "For how long": "A month"},
+        edits={
+            "Reward or punishment": "flogging",
+            "Blows": "5",
+            "Ordered by": "magus",
+            "Just and in proportion": False,
+            "Why": "asleep on watch",
+        },
+        saved=lambda s: (
+            s.character("grog9").wounds.light,
+            s.character("grog9").long_term_fatigue,
+            [d.kind for d in s.character("grog9").discipline],
+            [e.loyalty for e in s.covenant("cov1").diary if e.loyalty],
+        ),
+        expected=(2, 3, ["flogging"], [-12]),
+        invalid={"Reward or punishment": "promotion", "His rank now": ""},
+        live={
+            "#fields-live": "5 blows: 2 Light Wounds and 3 Long-Term Fatigue levels."
+        },
+    ),
+    "retire a grog": Contract(
+        prefill={"He retires on": "pension"},
+        edits={"He retires on": "rent", "Note": "keeps the gate"},
+        saved=lambda s: (
+            [(d.kind, d.note) for d in s.character("grog9").discipline],
+            s.character("grog9").diary[-1].name,
+        ),
+        expected=([("retired", "rent")], "Retired, paying rent"),
+    ),
+    "craft by magic": Contract(
+        prefill={
+            "Technique": "Rego",
+            "The work": "Average",
+            "Precise Casting on the spell": "0",
+        },
+        edits={"The work": "Hard", "Work for one craftsman": "A season"},
+        saved=lambda s: s.character("mag1").diary,
+        expected=[],
+        invalid={"Precise Casting on the spell": "x"},
+        live={"#fields-live": "against 21"},
     ),
     "grog yearly update": Contract(
         prefill={"Vocational xp": "7", "Story awards this year": "0"},

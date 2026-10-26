@@ -148,7 +148,7 @@ def test_editing_the_arts_and_a_known_spells_mastery(app):
     assert _saved(saga_id).arts["vim"].xp == 21
     page = _page(window)
     spells = section_buttons(page, "Known Spells")
-    assert set(spells) == {"Add", "Edit", "Delete"}
+    assert set(spells) == {"Add", "Edit", "Delete", "Craft by Magic"}
     if _saved(saga_id).spells_known:
         page.spell_view.selectRow(0)
         source = page.spell_view.model().index(0, 0)

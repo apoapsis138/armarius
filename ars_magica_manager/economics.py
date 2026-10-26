@@ -17,7 +17,7 @@ from . import catalog, storage
 from . import inhabitants as inh
 from . import possessions as pos
 from .covenants import covenant_modifiers
-from .markup import aligned, escape, markdown_text, problem
+from .markup import aligned, escape, markdown_text, problem, todo
 from .models import (
     INCOME_EFFECT_MULTIPLIERS,
     INCOME_TYPE_DEFAULTS,
@@ -28,10 +28,10 @@ from .models import (
     Laboratory,
     Saga,
 )
-from .rules import covenfolk
+from .rules import covenfolk, grog_discipline
 from .rules.lab_stats import lab_characteristic_total
 from .rules.rounding import round_away_from_zero, round_down
-from .world import takes_part_in_play
+from .world import covenant_magi, takes_part_in_play
 
 # --------------------------------------------------------------- the rules
 
@@ -287,6 +287,8 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     labs = laboratory_points(saga, covenant)
     gear = pos.gear_points(saga, covenant)
     wage_multiplier = WAGE_MULTIPLIERS.get(covenant.loyalty.money, 1.0)
+    # Pay and a Half, and retirees' pensions or rent (Grogs pp. 23-26).
+    rewarded_pay = grog_discipline.wage_adjustment(saga, covenant, wage_multiplier)
     magi = covenfolk.headcount(covenfolk.entries_for_kind(saga, covenant, "magus"))
     craftspeople = covenfolk.entries_for_kind(saga, covenant, "craftsperson")
     book_crafts = sum(e.quantity for e in craftspeople if e.field_of_work == "Books")
@@ -316,7 +318,8 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         # half Wages (1 point of covenfolk) for each pensioner.
         "wages": people * 2 / 10 * wage_multiplier
         + eco.soldier_pay
-        + (covenant.loyalty.pensioners * 2 / 10 / 2 if covenant.loyalty.pension else 0),
+        + (covenant.loyalty.pensioners * 2 / 10 / 2 if covenant.loyalty.pension else 0)
+        + rewarded_pay,
         "weapons": gear / 320,
         "writing": float(writers),
     }
@@ -362,6 +365,11 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         + (
             f" + {covenant.loyalty.pensioners} pensioner(s) at half Wages"
             if covenant.loyalty.pension and covenant.loyalty.pensioners
+            else ""
+        )
+        + (
+            f" {rewarded_pay:+.2f} for Pay and a Half and retirees"
+            if rewarded_pay
             else ""
         ),
         "weapons": f"{gear} pts of weapons and armor / 320",
@@ -651,18 +659,68 @@ def projected_income(current_income: int, effect: str) -> int:
 
 
 def improvement_note(
-    current_year: int, name: str, effect: str, previous_income: int, new_income: int
+    current_year: int,
+    name: str,
+    effect: str,
+    previous_income: int,
+    new_income: int,
+    *,
+    magic: bool = False,
 ) -> str:
-    """The Note recorded on a source of income after an "Improve" action."""
+    """The Note recorded on a source of income after an "Improve" action
+    (`magic`: the change was the magi's doing)."""
     name = name or "This source of income"
+    by_magic = " by magic" if magic else ""
     if effect == "Status Quo":
         return (
-            f"{current_year} - {name} experienced no growth or setbacks. "
-            f"{effect} maintained."
+            f"{current_year} - {name} experienced no growth or setbacks"
+            f"{by_magic}. {effect} maintained."
         )
     return (
-        f"{current_year} - {name} experienced {effect} changing Income "
+        f"{current_year} - {name} experienced {effect}{by_magic} changing Income "
         f"from {previous_income} to {new_income}."
+    )
+
+
+#: Wealth made by magic: several Tribunals limit a covenant to 2 pounds of
+#: silver (or its equivalent) a magus a year (Covenants p. 57, citing
+#: Houses of Hermes: True Lineages p. 87); the storyguide picks the
+#: multiplier a magical improvement merits (pp. 57-58).
+MAGIC_SILVER_PER_MAGUS = 2
+MAGIC_SOURCE = (
+    "Covenants, Chapter Five: Wealth & Poverty, Magical Improvement, pp. 57-58, "
+    "and Inflation, p. 65; City & Guild, Creating Wealth Using Magic, p. 130"
+)
+
+
+def magi_count(saga: Saga, covenant: Covenant) -> int:
+    """The covenant's magi, named or not."""
+    return len(covenant_magi(saga, covenant)) + covenant.unnamed_magi
+
+
+def magic_limit(saga: Saga, covenant: Covenant) -> int:
+    """The most a covenant may make by magic a year where its Tribunal
+    has limited it: 2 pounds a magus."""
+    return MAGIC_SILVER_PER_MAGUS * magi_count(saga, covenant)
+
+
+def magic_wealth_text(made: int, limit: int, magi: int) -> str:
+    """What an improvement by magic means (markup): the wealth it makes a
+    year against the Tribunals' limit, and the inflation it feeds."""
+    text = (
+        f"Made by magic: {made} pound(s) a year. Where its Tribunal has passed "
+        f"the limit, a covenant makes at most {MAGIC_SILVER_PER_MAGUS} pounds of "
+        f"silver (or its like) a magus a year: {limit} for {magi} magi "
+        "(Covenants p. 57; Houses of Hermes: True Lineages p. 87)."
+    )
+    if made > limit:
+        text += " " + todo(
+            "Over the limit: expect the Redcaps to notice, and the Quaesitores, "
+            "or irate merchants and nobles, to follow."
+        )
+    return text + (
+        " Spending it feeds the covenant's Inflation (Covenants p. 65; City & "
+        "Guild p. 130)."
     )
 
 

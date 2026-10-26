@@ -43,6 +43,11 @@ DIALOG_PAGES = {
     "battle-event",
     "disputatio",
     "travel",
+    "labor-from-story",
+    "merchant-investment",
+    "grog-discipline",
+    "grog-pension",
+    "craft-magic",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

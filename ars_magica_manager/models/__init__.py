@@ -39,9 +39,11 @@ from .character import ConstantEffect as ConstantEffect
 from .character import CreationConditions as CreationConditions
 from .character import CreationXp as CreationXp
 from .character import Description as Description
+from .character import Discipline as Discipline
 from .character import Disease as Disease
 from .character import GrogYear as GrogYear
 from .character import HermeticBackground as HermeticBackground
+from .character import Investment as Investment
 from .character import LabTextAccess as LabTextAccess
 from .character import Ordeal as Ordeal
 from .character import Progress as Progress

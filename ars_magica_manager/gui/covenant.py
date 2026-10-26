@@ -805,7 +805,7 @@ class CovenantPage(QWidget):
                 (
                     "Improve",
                     "income",
-                    lambda row: menu_forms.improve_form(saga, sources[row]),
+                    lambda row: menu_forms.improve_form(saga, sources[row], covenant),
                     lambda _row: True,
                 )
             ]

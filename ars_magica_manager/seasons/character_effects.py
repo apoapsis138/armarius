@@ -17,9 +17,9 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
+from ..rules import grog_discipline, medicine, sites, work_virtues
 from ..rules import hybrid_magic as hybrid
 from ..rules import living as living_rules
-from ..rules import medicine, sites, work_virtues
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.realms import home_aura
@@ -271,11 +271,15 @@ def age_character(
     the roll belongs to, and a label for the Diary."""
     familiar = saga.familiar_of(character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
-    if living is None:
-        living = living_rules.living_conditions(saga, character)
     season, year = (
         when if when is not None else (saga.current_season, saga.current_year)
     )
+    if living is None:
+        # A grog's year on better or worse rations counts for his aging
+        # roll only (Grogs pp. 23, 25).
+        living = living_rules.living_conditions(
+            saga, character
+        ) + grog_discipline.rations_living(character, year)
     result = aging_rules.roll(character, age, living, bronze, rng, saga)
     aging = character.aging
     if result.apparent:

@@ -27,6 +27,7 @@ from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
+from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import lab_item
 from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import (
@@ -400,6 +401,29 @@ async def _open_agency_spend(ws) -> None:
     view = ws._current_sheet_view()
     await view.build_all_tabs()
     ws._run_steps(agent_forms.spend(character, 1))
+
+
+def _as_merchant(ws) -> Character:
+    """Leandro as a merchant too, with a Profession and 40 Labor Points
+    (in memory, saved only with the form)."""
+    character = ws.selected_character
+    if not any(vf.vf_id == "vf_merchant" for vf in character.virtues_flaws):
+        character.virtues_flaws.append(VirtueFlawInstance("vf_merchant"))
+        character.abilities.append(Ability("Profession: Merchant", xp=75))
+        character.labor_points = 40
+    return character
+
+
+async def _open_labor_story(ws) -> None:
+    """More's Labor Points from a Story on Leandro's This Season."""
+    _as_merchant(ws)
+    ws.action_labor_story()
+
+
+async def _open_invest_labor(ws) -> None:
+    """More's Invest Time or Money on Leandro's This Season."""
+    _as_merchant(ws)
+    ws.action_invest_labor()
 
 
 async def _open_constant_effect(ws) -> None:
@@ -920,6 +944,8 @@ OPENERS: dict[str, Opener] = {
     "add agent": Opener("character", _open_agent),
     "set agent task": Opener("character", _open_agent_task),
     "spend agency xp": Opener("character", _open_agency_spend),
+    "labor from story": Opener("character", _open_labor_story),
+    "invest time or money": Opener("character", _open_invest_labor),
     "add constant effect": Opener("character", _open_constant_effect),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),
@@ -980,6 +1006,19 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "add lab room": Opener("laboratory", lambda ws: ws._add_named("section-lab-rooms")),
+    "reward or punish": Opener(
+        "character",
+        lambda ws: ws._run_steps(
+            grog_forms.discipline_form(ws.saga, ws.saga.character("grog9"))
+        ),
+    ),
+    "retire a grog": Opener(
+        "character",
+        lambda ws: ws._run_steps(
+            grog_forms.pension_form(ws.saga, ws.saga.character("grog9"))
+        ),
+    ),
+    "craft by magic": Opener("character", lambda ws: ws.action_craft_by_magic()),
     "grog yearly update": Opener(
         "character",
         lambda ws: ws._grog_year_for(ws.saga.character("grog9"), "section-char-season"),

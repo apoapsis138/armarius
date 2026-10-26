@@ -17,7 +17,7 @@ from ..rules import activities as rules
 from ..rules import apprentice_seasons as aps
 from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
-from ..rules import enchantment, lab_seasons, study
+from ..rules import enchantment, lab_seasons, merchants, study
 from ..rules import familiar_seasons as fs
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
@@ -587,7 +587,7 @@ def plan_text(
     to plan when nothing is planned yet."""
     if not rules.is_planned(character):
         return grog_year_text(character)
-    extra = livelihood_text(character)
+    extra = livelihood_text(character, saga.current_year)
     text = _plan_text(saga, character, how)
     return f"{text}\n\n{extra}" if extra else text
 
@@ -821,9 +821,11 @@ _WORK_TEXT: dict[str, Callable[[lab_seasons.LabWork, SeasonPlan], str]] = {
 }
 
 
-def livelihood_text(character: Character) -> str:
-    """The Planning tab's lines on Labor Points, a workshop, progress and
-    formulas (empty when there's nothing)."""
+def livelihood_text(character: Character, year: int | None = None) -> str:
+    """The Planning tab's lines on Labor Points (and what they are worth
+    in money), a workshop, a merchant's open investments, progress and
+    formulas (empty when there's nothing). `year` is the saga's, for a
+    charity given to lately."""
     lines: list[str] = []
     if (
         character.labor_points
@@ -836,6 +838,10 @@ def livelihood_text(character: Character) -> str:
             f"workshop Innovation {character.workshop_innovation}, Raw Materials "
             f"{character.workshop_raw_materials}"
         )
+        if worth := merchants.value_line(character):
+            lines.append(worth)
+    if year is not None:
+        lines += merchants.investment_lines(character, year)
     for record in character.progress:
         if record.done or record.kind == "university":
             continue

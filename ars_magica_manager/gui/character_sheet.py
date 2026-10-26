@@ -399,9 +399,11 @@ def trait_section(
     section_id: str,
     p: Palette,
     run: Callable[[Command], None],
+    more: Sequence[QWidget] = (),
 ) -> QWidget:
     """A Personality Traits or Reputations section, with Add, Edit and
-    Delete for the row clicked (trait_forms.trait_ops)."""
+    Delete for the row clicked (trait_forms.trait_ops), and `more`: the
+    page's own buttons placed there (Reward or Punish on a grog)."""
     chooser = Chooser()
     ops = trait_forms.trait_ops(traits, section_id)
     rows = [(t.name, t.score) for t in traits]
@@ -409,7 +411,7 @@ def trait_section(
         f"{title} ({len(rows)})",
         p,
         trait_list(rows, p, chooser.choose),
-        buttons=verb_buttons(ops, chooser, run, p),
+        buttons=[*verb_buttons(ops, chooser, run, p), *more],
     )
 
 
@@ -835,6 +837,7 @@ class CharacterSheet(QWidget):
                 "section-personality-traits",
                 p,
                 self.run,
+                self.placer.buttons("Personality Traits") if self.placer else [],
             )
         )
         parts.append(
@@ -1180,12 +1183,15 @@ class CharacterSheet(QWidget):
                 f"Known Spells ({len(c.spells_known)})",
                 p,
                 self._spells(spells),
-                buttons=verb_buttons(
-                    spell_forms.known_spell_ops(saga, c),
-                    spells,
-                    self.run,
-                    p,
-                ),
+                buttons=[
+                    *verb_buttons(
+                        spell_forms.known_spell_ops(saga, c),
+                        spells,
+                        self.run,
+                        p,
+                    ),
+                    *(self.placer.buttons("Known Spells") if self.placer else []),
+                ],
             ),
             self._raw_vis(),
         ]
@@ -1475,6 +1481,8 @@ class CharacterSheet(QWidget):
             p,
             nouns=season_forms.season_nouns(c),
         )
+        # Labor Points from a Story and Invest Time or Money.
+        buttons += self.placer.buttons("This Season") if self.placer else []
         this_season = section(
             f"This Season ({saga.current_season} {saga.current_year})",
             p,

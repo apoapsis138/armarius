@@ -271,8 +271,15 @@ class CovenantActions(WorkspaceBase):
             source.note = note
             self._commit("section-eco-income")
 
+        covenant = self.selected_covenant
+        limit = (
+            (eco.magic_limit(self.saga, covenant), eco.magi_count(self.saga, covenant))
+            if covenant is not None
+            else None
+        )
         self.app.push_screen(
-            _improve_income_dialog(source, self.saga.current_year), handle_result
+            _improve_income_dialog(source, self.saga.current_year, limit),
+            handle_result,
         )
 
     def _offer_emergency_draw(

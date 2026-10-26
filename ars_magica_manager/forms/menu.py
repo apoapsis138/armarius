@@ -31,6 +31,7 @@ from .. import (
     disputations,
     giving,
     health,
+    labor,
     neighbours,
     packs,
     places,
@@ -87,8 +88,10 @@ from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
 from ..sections import LAB_TEXTS_SECTION
 from . import beast as beast_forms
+from . import craft_magic as craft_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
+from . import grogs as grog_forms
 from . import hosting as hosting_forms
 from . import importing as import_forms
 from . import library as library_forms
@@ -467,7 +470,13 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
     "end_session": ((NodeKind.CHARACTER, "Reputations"),),
     "tourney_season": ((NodeKind.CHARACTER, "Reputations"),),
+    # Beside This Season's Plan, Edit and Clear.
+    "labor_story": ((NodeKind.CHARACTER, "This Season"),),
+    "invest_labor": ((NodeKind.CHARACTER, "This Season"),),
     "command_beast": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "discipline_grog": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "grog_pension": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "craft_by_magic": ((NodeKind.CHARACTER, "Known Spells"),),
     "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
@@ -531,6 +540,13 @@ def familiar_binder(page: Page) -> Character | None:
 _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
     "edit_saga": lambda page: page.kind == NodeKind.SAGA,
     "create_familiar": lambda page: familiar_binder(page) is not None,
+    # The page's sections (PAGE_SECTIONS) leave This Season out.
+    "labor_story": lambda page: available(
+        "labor_story", replace(page, section="section-char-season")
+    ),
+    "invest_labor": lambda page: available(
+        "invest_labor", replace(page, section="section-char-season")
+    ),
 }
 
 
@@ -902,24 +918,75 @@ def improve_fields(source: IncomeSource) -> list[DialogField]:
             "" if source.note.strip() else "(none)",
             hint=escape(source.note.strip()),
         ),
+        *magic_fields(),
     ]
 
 
-def improve_live(source: IncomeSource) -> Callable[[dict[str, Any]], str]:
+def magic_fields() -> list[DialogField]:
+    """Whether the year's change is the magi's doing, and the wealth the
+    magic makes a year (Covenants pp. 57-58)."""
+    return [
+        DialogField(
+            "magic",
+            "Improved by magic",
+            "check",
+            False,
+            hint="The storyguide picks the Effect the magic merits (Covenants "
+            "pp. 57-58; City & Guild p. 130 has ways magic makes a profit).",
+        ),
+        DialogField(
+            "made",
+            "Pounds the magic makes a year",
+            "optint",
+            None,
+            placeholder="(the gain: Projected less Current)",
+            show_if=lambda v: bool(v.get("magic")),
+        ),
+    ]
+
+
+def magic_made(current: int, values: dict[str, Any]) -> int:
+    """The wealth an improvement by magic makes a year: as typed, else the
+    income it adds."""
+    effect = values.get("effect") or "Status Quo"
+    typed = values.get("made")
+    if typed is not None:
+        return max(0, int(typed))
+    return max(0, eco.projected_income(current, effect) - current)
+
+
+def improve_live(
+    source: IncomeSource, magic_limit: tuple[int, int] | None = None
+) -> Callable[[dict[str, Any]], str]:
+    """The Multiplier and Projected Income; with magic ticked, the wealth it
+    makes against `magic_limit` (the covenant's limit and its magi)."""
+
     def live(values: dict[str, Any]) -> str:
         effect = values.get("effect") or "Status Quo"
-        return (
+        text = (
             f"Income Multiplier {eco.income_multiplier_text(effect)}. "
             f"Projected Income {eco.projected_income(source.current_income, effect)}"
         )
+        if values.get("magic") and magic_limit is not None:
+            made = magic_made(source.current_income, values)
+            text += ". " + eco.magic_wealth_text(made, *magic_limit)
+        return text
 
     return live
 
 
-def improve_form(saga: Saga, source: IncomeSource) -> Form:
+def improve_form(
+    saga: Saga, source: IncomeSource, covenant: Covenant | None = None
+) -> Form:
     """Manually simulate a year's Income Modification: choosing an Effect
-    shows the Multiplier and Projected Income; Commit asks to confirm."""
+    shows the Multiplier and Projected Income (and, improved by magic, the
+    Tribunals' limit on wealth made by magic); Commit asks to confirm."""
     name = escape(source.name or "this source of income")
+    limit = (
+        (eco.magic_limit(saga, covenant), eco.magi_count(saga, covenant))
+        if covenant is not None
+        else None
+    )
 
     def apply(values: dict[str, Any]) -> Confirm:
         current = source.current_income
@@ -929,7 +996,12 @@ def improve_form(saga: Saga, source: IncomeSource) -> Form:
         def update() -> None:
             source.income = projected
             source.note = eco.improvement_note(
-                saga.current_year, source.name, effect, current, projected
+                saga.current_year,
+                source.name,
+                effect,
+                current,
+                projected,
+                magic=bool(values.get("magic")),
             )
 
         return Confirm(
@@ -942,7 +1014,7 @@ def improve_form(saga: Saga, source: IncomeSource) -> Form:
         f"Improve {name}",
         lambda: improve_fields(source),
         apply,
-        live=improve_live(source),
+        live=improve_live(source, limit),
         save_label="Commit",
     )
 
@@ -955,7 +1027,7 @@ def improve(saga: Saga, covenant: Covenant) -> Command:
         "Improve which source of income?",
         list(sources),
         lambda s: escape(s.name) or "(unnamed)",
-        lambda s: improve_form(saga, s),
+        lambda s: improve_form(saga, s, covenant),
     )
 
 
@@ -1392,7 +1464,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "recovery_roll": _needs(_character, health.recovery_form),
     "end_session": _needs(_character, session_end.end_session_form),
     "tourney_season": _needs(_character, tourney_season.tourney_form),
+    "labor_story": _needs(_character, labor.story_form),
+    "invest_labor": _needs(_character, labor.invest_form),
     "command_beast": _needs(_character, beast_forms.command_form),
+    "discipline_grog": _needs(_character, grog_forms.discipline_form),
+    "grog_pension": _needs(_character, grog_forms.pension_form),
+    "craft_by_magic": _needs(_character, craft_forms.craft_form),
     "place_aging_points": _needs(_character, aging_due.character_form),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),

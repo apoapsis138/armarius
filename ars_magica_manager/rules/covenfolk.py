@@ -314,6 +314,11 @@ def _season_column(pair: tuple[int, int], covenant: Covenant) -> int:
     return pair[1] if covenant.covenant_season in ("Summer", "Autumn") else pair[0]
 
 
+def kind_points(kind: str, covenant: Covenant) -> int:
+    """The Points of Inhabitants one entry of `kind` counts for here."""
+    return _season_column(INHABITANT_POINTS[kind], covenant)
+
+
 def inhabitant_points(
     saga: Saga, covenant: Covenant, *, exclude_roles: tuple[str, ...] = ()
 ) -> int:

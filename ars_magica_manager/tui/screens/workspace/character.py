@@ -14,6 +14,7 @@ from .... import (
     creation,
     disputations,
     health,
+    labor,
     seasons,
     session_end,
     sourcebooks,
@@ -29,7 +30,9 @@ from ....arts import ARTS
 from ....forms import agents as agent_forms
 from ....forms import beast as beast_forms
 from ....forms import character as character_forms
+from ....forms import craft_magic as craft_forms
 from ....forms import experimental_effects
+from ....forms import grogs as grog_forms
 from ....forms import menu as menu_forms
 from ....forms import spell as spell_forms
 from ....markup import escape
@@ -211,6 +214,35 @@ class CharacterActions(WorkspaceBase):
             lambda _end: self._commit("section-reputations", "tab-diary"),
         )
 
+    def action_labor_story(self) -> None:
+        """More's Labor Points from a Story on This Season: a story's award
+        in seasons' worth of Labor Points, kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            labor.story_form(self.saga, character),
+            lambda _end: self._commit("section-char-season", "tab-diary"),
+        )
+
+    def action_invest_labor(self) -> None:
+        """More's Invest Time or Money on This Season: a merchant's
+        investment of Labor Points or money, kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            labor.invest_form(self.saga, character),
+            lambda _end: self._commit(
+                "section-char-season",
+                "section-reputations",
+                "section-inventory",
+                "tab-diary",
+            ),
+        )
+
     def action_command_beast(self) -> None:
         """More's Command the Beast on a tamed animal's Personality Traits:
         the command's roll and any Loyalty test."""
@@ -222,6 +254,47 @@ class CharacterActions(WorkspaceBase):
             beast_forms.command_form(self.saga, character),
             lambda _end: self._commit("section-personality-traits"),
         )
+
+    def _covenfolk_step(self, build: Callable[..., Any], *sections: str) -> None:
+        """Run a More command on the grog on show, then save, redraw and
+        say what it did."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            self._commit(*sections, tree=True)
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, build(self.saga, character), done)
+
+    def action_discipline_grog(self) -> None:
+        """More's Reward or Punish on a grog: his record and Diary, wounds
+        and Fatigue, and the covenant's Loyalty."""
+        self._covenfolk_step(
+            grog_forms.discipline_form,
+            "section-personality-traits",
+            "section-char-health",
+            "section-char-info",
+        )
+
+    def action_grog_pension(self) -> None:
+        """More's Pension on a grog: he retires, or his widow is pensioned."""
+        self._covenfolk_step(grog_forms.pension_form, "section-char-info")
+
+    def action_craft_by_magic(self) -> None:
+        """More's Craft by Magic on Known Spells: the calculator, and a roll
+        of it; nothing is kept."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, craft_forms.craft_form(self.saga, character), done)
 
     def action_recovery_roll(self) -> None:
         """More's Recovery Roll on Health: a roll for each wound now."""

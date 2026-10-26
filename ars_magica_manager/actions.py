@@ -51,7 +51,7 @@ from .models import (
     Tribunal,
 )
 from .rules import agents as agent_rules
-from .rules import covenfolk
+from .rules import covenfolk, merchants
 from .sections import (
     AGENTS_SECTION,
     AHEAD_SECTION,
@@ -326,6 +326,11 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("t", "set_agent_task", "Set a Task"),
     MenuItem("p", "add_purity", "Add a Purity"),
     MenuItem("j", "plan_journey", "Travel"),
+    MenuItem("l", "labor_story", "Labor Points from a Story"),
+    MenuItem("v", "invest_labor", "Invest Time or Money"),
+    MenuItem("r", "discipline_grog", "Reward or Punish"),
+    MenuItem("n", "grog_pension", "Pension"),
+    MenuItem("f", "craft_by_magic", "Craft by Magic"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -361,6 +366,7 @@ MORE_SECTIONS: dict[str, str] = {
     "break_group": FIGHTS_SECTION,
     "restart_fight": FIGHTS_SECTION,
     "next_siege_event": SIEGES_SECTION,
+    "craft_by_magic": "section-known-spells",
 }
 
 #: Where in the navigation each record can be created: the saga, and
@@ -551,6 +557,20 @@ def _changes_detail(facts: ActionFacts, *, up: bool) -> bool:
     return step(record.detail) is not None
 
 
+def _on_covenfolk(facts: ActionFacts) -> bool:
+    """Reward or Punish and Pension: on a grog who serves a covenant, from
+    his record or his Personality Traits."""
+    record = facts.creation_record()
+    return (
+        isinstance(record, Character)
+        and record.type == "grog"
+        and record.animal is None
+        and facts.saga.covenant(record.covenant_id) is not None
+        and facts.active_section()
+        in (None, RECORD_SECTION[NodeKind.CHARACTER], "section-personality-traits")
+    )
+
+
 def _commands_beast(facts: ActionFacts) -> bool:
     """Command the Beast: on a tamed animal's Personality Traits."""
     record = facts.creation_record()
@@ -666,6 +686,8 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "demote": partial(_changes_detail, up=False),
     "give": _gives,
     "command_beast": _commands_beast,
+    "discipline_grog": _on_covenfolk,
+    "grog_pension": _on_covenfolk,
     "edit_traditions": _joins_traditions,
     "disputatio": _disputes,
     "give_silver": _gives_silver,
@@ -789,6 +811,25 @@ def _adds_purity(facts: ActionFacts, section: str) -> bool:
     return row is not None and 0 <= row < len(listed) and gd.takes_purities(listed[row])
 
 
+def _works_for_labor(
+    test: Callable[[Character], bool],
+) -> Callable[[ActionFacts, str], bool]:
+    """Labor Points from a Story and Invest Time or Money: on This Season,
+    for a character who works for Labor Points (a trader, for most
+    investments)."""
+
+    def rule(facts: ActionFacts, section: str) -> bool:
+        character = facts.selected_character
+        return (
+            section == "section-char-season"
+            and character is not None
+            and character.grog_year is None
+            and test(character)
+        )
+
+    return rule
+
+
 def _plans_journey(_facts: ActionFacts, section: str) -> bool:
     """Travel, the calculator: on Ahead, the Seasons page's or a
     covenant's."""
@@ -820,5 +861,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "set_agent_task": _acts_on_agent(lambda _c, agent: agent_rules.may_be_asked(agent)),
     "add_purity": _adds_purity,
     "plan_journey": _plans_journey,
+    "labor_story": _works_for_labor(lambda c: bool(merchants.work_abilities(c))),
+    "invest_labor": _works_for_labor(merchants.earns_labor),
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
 }

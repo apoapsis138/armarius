@@ -109,6 +109,38 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.19.0 — 2026-10-26
+
+### Computus
+
+- A character's income band comes from their Social Status, and This
+  Season shows what their Labor Points are worth in money: 9 Labor Points
+  are a quarter of a year's income (City & Guild pp. 37-40, errata p. 56).
+- A covenant's income can be improved by magic, with a warning past the
+  Tribunals' limit of 2 pounds of silver a magus a year (Covenants pp.
+  57-58).
+- Craft magic's Finesse Ease Factors and roll (Definitive Edition pp.
+  306-308), shown on the Hermetic Magic tab's casting notes.
+- A year of improved or reduced rations changes a grog's Living
+  Conditions on that year's aging roll (Grogs pp. 23-25).
+
+### Pagina
+
+- **Labor Points from a Story** (More on This Season) awards a craftsman
+  or merchant the book's Labor Points for a story, by kind of merchant
+  (C&G pp. 39, 111-130). **Invest Time or Money** puts money into a
+  business, or makes a merchant's investments (charity, speculation,
+  introductions, marriage brokering, legal action, a boom foreseen,
+  smuggling, a lavish party...), whose returns come in each Winter (C&G
+  pp. 40, 110-130).
+- **Reward or Punish** on a grog: improved rations, Pay and a Half,
+  equipment and promotion; castigation through flogging, whipping,
+  dismissal and the fustuarium, with what each does to him and to the
+  covenant's Loyalty (Grogs pp. 23-25; Covenants pp. 38-39). **Pension**
+  retires a grog on half Wages, or pays a widow (Grogs p. 26; DE p. 186).
+- **Craft by Magic** on a magus's Known Spells works out the Ease Factor
+  and roll for crafting with Rego or Creo.
+
 ## 3.18.0 — 2026-10-25
 
 ### Florilegium
