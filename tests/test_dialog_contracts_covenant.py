@@ -820,6 +820,109 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Quantity": "0"},
         shown={"#inh-horse-list": "Ponies"},
     ),
+    "edit charter": Contract(
+        prefill={"Name": "", "Year": "", "Ratified by a Quaesitor": False},
+        edits={
+            "Name": "The Keep's Accord",
+            "Sworn in": "Summer",
+            "Year": "1190",
+            "Preamble": "We swear to hold the Keep together.",
+            "Ratified by a Quaesitor": True,
+        },
+        saved=lambda s: (
+            covenant(s).charter_of_covenant.name,
+            covenant(s).charter_of_covenant.season,
+            covenant(s).charter_of_covenant.year,
+            covenant(s).charter_of_covenant.preamble,
+            covenant(s).charter_of_covenant.ratified,
+        ),
+        expected=(
+            "The Keep's Accord",
+            "Summer",
+            1190,
+            "We swear to hold the Keep together.",
+            True,
+        ),
+        invalid=[{"Name": ""}, {"Year": "long ago"}],
+        shown={
+            "#section-cov-charter": "The Keep's Accord",
+            "#cov-charter-text": "Low Crime",
+        },
+    ),
+    "add clause": Contract(
+        # A new clause is agreed in the saga's present season and year.
+        prefill={"Number or title": "", "Agreed in": "Autumn", "Year": "1220"},
+        edits={
+            "Number or title": "Apprentices",
+            "Section": "Membership",
+            "Text": "No apprentice without the council's leave.",
+        },
+        saved=lambda s: [
+            (c.number, c.section, c.season, c.year, c.status)
+            for c in covenant(s).charter_of_covenant.clauses
+            if c.number == "Apprentices"
+        ],
+        expected=[("Apprentices", "Membership", "Autumn", 1220, "In force")],
+        invalid=[
+            {"Number or title": "", "Text": "Words."},
+            {"Number or title": "8", "Text": ""},
+        ],
+        shown={
+            "#section-cov-clauses": "Clauses (2 in force of 2)",
+            "#cov-clauses-list": "Membership",
+        },
+        live={"#fields-live": "Apprentices"},
+    ),
+    "edit clause": Contract(
+        prefill={
+            "Number or title": "1",
+            "Text": "All vis is shared.",
+            "Agreed in": "Spring",
+            "Year": "1200",
+            "Status": "In force",
+        },
+        edits={
+            "Status": "Amended",
+            "Since": "Winter",
+            "How": "The Aegis's vis comes first.",
+        },
+        saved=lambda s: [
+            (c.status, c.since_season, c.note)
+            for c in covenant(s).charter_of_covenant.clauses
+        ],
+        expected=[("Amended", "Winter", "The Aegis's vis comes first.")],
+        invalid={"Text": ""},
+        shown={"#cov-clauses-list": "Amended Winter"},
+        live={"#fields-live": "Amended"},
+    ),
+    "break clause": Contract(
+        prefill={"Season": "Autumn", "Year": "1220", "How it was broken": ""},
+        edits={"How it was broken": "Leandro kept the Vim vis."},
+        saved=lambda s: [
+            (c.status, c.since_season, c.since_year, c.note)
+            for c in covenant(s).charter_of_covenant.clauses
+        ],
+        expected=[("Broken", "Autumn", 1220, "Leandro kept the Vim vis.")],
+        invalid=[{"How it was broken": ""}, {"Year": "soon"}],
+        shown={
+            "#section-cov-clauses": "Clauses (0 in force of 1)",
+            "#cov-clauses-list": "Broken Autumn 1220",
+        },
+        # The note typed in the many-line field reaches the inspector.
+        live={"#fields-live": "Leandro kept the Vim vis."},
+    ),
+    "seal charter": Contract(
+        prefill={"Leandro": False, "Brother Oda": False},
+        edits={"Leandro": True, "Sealed in": "Spring", "Year": "1219"},
+        saved=lambda s: [
+            (seal.character_id, seal.season, seal.year)
+            for seal in covenant(s).charter_of_covenant.seals
+        ],
+        expected=[("mag1", "Spring", 1219)],
+        invalid={"Leandro": True, "Year": "soon"},
+        shown={"#cov-charter-text": "Sealed by: Leandro (Spring 1219)"},
+        live={"#fields-live": "Not yet sworn: Brother Oda"},
+    ),
 }
 
 

@@ -34,6 +34,15 @@ siege.
   the units it targets). A stockade's supplies rolls come due at the
   Supplies interval. Time is counted in days: a week 7, a month 30, a
   season 91, a year 364.
+- Each check comes an interval after the last, at the Supplies as they
+  then stand, so a step down brings the next roll sooner but never rolls
+  for days already past; an interval that ends without a stockade passes
+  with no roll (p. 112).
+- A whole wall's damage levels are fixed as the siege's first event is
+  played: a mine lowers the Defense Quality and its Bonus (p. 114), not
+  the walls' measure, and a wall at 0 stays at 0. Seal the Breach (CrTe 20
+  ritual, p. 116; level from the errata, p. 75) restores up to five
+  damage levels, never past that measure.
 """
 
 from __future__ import annotations
@@ -145,14 +154,15 @@ WALL_BREAKERS = ("Mangonel", "Trebuchet")
 #: The Garrison's steps by combat groups: each besiegers' win in an
 #: escalade takes it down to the top of the step below.
 GARRISON_STEPS = (10, 20, 40)
-UNDERMINE, ARTILLERY, ESCALADE, SALLY, WAIT = (
+UNDERMINE, ARTILLERY, ESCALADE, SALLY, SEAL, WAIT = (
     "Undermine a wall",
     "Bombard a wall",
     "Escalade",
     "The garrison sallies out",
+    "The magi seal a breach",
     "Keep the stockade",
 )
-EVENTS = (UNDERMINE, ARTILLERY, ESCALADE, SALLY, WAIT)
+EVENTS = (UNDERMINE, ARTILLERY, ESCALADE, SALLY, SEAL, WAIT)
 SALLY_TARGETS = ("Miners", *WALL_BREAKERS, "Ballista", "Soldiers")
 
 
@@ -176,8 +186,20 @@ def castle_of(siege: Siege) -> Castle:
 
 def full_wall(siege: Siege) -> int:
     """A whole wall's damage levels: the Defense Bonus x 3 (x 4 at Size +9
-    or more)."""
+    or more), as they were set when the siege began. A mine lowers the
+    Defenses, not this measure (pp. 112, 114)."""
+    if siege.wall_max is not None:
+        return siege.wall_max
     return wall_damage_levels(castle_of(siege).defense_bonus(), siege.size)
+
+
+def begin(siege: Siege) -> None:
+    """Fix a whole wall's damage levels, once, as the siege's first event
+    is played; and the walls' levels left, all whole until a blow lands."""
+    if siege.wall_max is None:
+        siege.wall_max = full_wall(siege)
+    if siege.walls is None:
+        siege.walls = [siege.wall_max] * len(WALLS)
 
 
 def walls(siege: Siege) -> list[int]:
@@ -185,6 +207,49 @@ def walls(siege: Siege) -> list[int]:
     if siege.walls is not None:
         return list(siege.walls)
     return [full_wall(siege)] * len(WALLS)
+
+
+def migrate(siege: Siege) -> None:
+    """A siege from a save older than the walls' fixed measure and the
+    supplies roll's day: a whole wall is the larger of what the Defenses
+    give now and the most any wall has left (a mine may have lowered the
+    Defenses since); the next supplies roll is the first interval's end,
+    counted from the rolls made, after today."""
+    started = siege.days > 0 or bool(siege.events) or siege.walls is not None
+    if siege.wall_max is None and started:
+        siege.wall_max = max(
+            wall_damage_levels(castle_of(siege).defense_bonus(), siege.size),
+            *(siege.walls or [0]),
+        )
+    if siege.next_supply_day is None and started:
+        every = supplies_interval(siege)
+        due = (siege.supply_rolls + 1) * every
+        while due <= siege.days:
+            due += every
+        siege.next_supply_day = due
+
+
+SEAL_THE_BREACH = 5
+
+
+def seal_breach(siege: Siege, wall: int) -> Played:
+    """Seal the Breach (CrTe 20 ritual, Lords of Men p. 116; level from the
+    errata, p. 75): a wall gets back up to five damage levels, never more
+    than it had when the siege began."""
+    begin(siege)
+    left = walls(siege)
+    name = WALLS[wall]
+    mended = min(SEAL_THE_BREACH, full_wall(siege) - left[wall])
+    if mended <= 0:
+        return Played(f"The {name} wall stands whole: there is no breach to seal.")
+    left[wall] += mended
+    siege.walls = left
+    plural = "s" if mended > 1 else ""
+    return Played(
+        f"Seal the Breach knits the {name} wall: {mended} damage level{plural} "
+        f"restored, {left[wall]} of {full_wall(siege)}.",
+        [f"Seal the Breach: up to {SEAL_THE_BREACH} damage levels (p. 116)"],
+    )
 
 
 def wall_bonus(siege: Siege, wall: int, *, against_mines: bool = False) -> int:
@@ -244,6 +309,7 @@ def undermine(
     loses the miners' unit."""
     if siege.miners <= 0:
         return Played("The besiegers have no miners to dig with.")
+    begin(siege)
     lines: list[str] = []
     bonus = wall_bonus(siege, wall, against_mines=True)
     attack, botched = _roll(rng, saga, "Mine Attack", siege.sapper, lines)
@@ -279,6 +345,7 @@ def bombard(
     groups = engine_groups(siege)
     if not groups:
         return Played("The besiegers have no mangonel or trebuchet to bombard with.")
+    begin(siege)
     lines: list[str] = []
     left = walls(siege)
     name = WALLS[wall]
@@ -355,29 +422,53 @@ def supplies_rolls(
     failing drops the Supplies a step (and at Shoddy, the castle
     surrenders); a botch (1 + full seasons, botch dice) is disease."""
     told: list[str] = []
-    if not stockaded(siege):
-        return told
+    held = stockaded(siege)
     while not siege.ended:
-        every = INTERVAL_DAYS[SUPPLIES[siege.supplies][0]]
-        if (siege.supply_rolls + 1) * every > siege.days:
+        day = next_supplies_day(siege)
+        if day > siege.days:
             break
-        siege.supply_rolls += 1
-        castle = castle_of(siege)
-        ease = castle.supplies_ease(years_run(siege))
-        die = dice.stress_die(rng, disease_botch_dice(seasons_run(siege)), saga=saga)
-        total = 0 if die.botched else castle.supplies_bonus() + die.value
-        told.append(f"Supplies roll: {total} against {ease}")
-        if die.botched:
-            told.append("Disease breaks out within the castle.")
-        if total >= ease:
-            continue
-        lower = worse(siege.supplies)
-        if lower is None:
-            siege.ended = "Surrendered"
-            told.append("The supplies are gone: the castle surrenders.")
-            break
-        siege.supplies = lower
-        told.append(f"Supplies fall to {lower}.")
+        if held:
+            told += _supplies_roll(siege, day, rng, saga)
+        # The next check is an interval on from this one, at the Supplies
+        # as they now stand: a step down brings it sooner, never earlier
+        # than this day (p. 112).
+        siege.next_supply_day = day + supplies_interval(siege)
+    return told
+
+
+def supplies_interval(siege: Siege) -> int:
+    """Days between supplies rolls, by the Supplies now."""
+    return INTERVAL_DAYS[SUPPLIES[siege.supplies][0]]
+
+
+def next_supplies_day(siege: Siege) -> int:
+    """The day the next supplies roll comes due."""
+    if siege.next_supply_day is not None:
+        return siege.next_supply_day
+    return (siege.supply_rolls + 1) * supplies_interval(siege)
+
+
+def _supplies_roll(
+    siege: Siege, day: int, rng: random.Random, saga: Saga | None
+) -> list[str]:
+    """One supplies roll, on `day` of the siege."""
+    siege.supply_rolls += 1
+    castle = castle_of(siege)
+    ease = castle.supplies_ease(day // DAYS_PER_YEAR)
+    die = dice.stress_die(rng, disease_botch_dice(day // DAYS_PER_SEASON), saga=saga)
+    total = 0 if die.botched else castle.supplies_bonus() + die.value
+    told = [f"Supplies roll: {total} against {ease}"]
+    if die.botched:
+        told.append("Disease breaks out within the castle.")
+    if total >= ease:
+        return told
+    lower = worse(siege.supplies)
+    if lower is None:
+        siege.ended = "Surrendered"
+        told.append("The supplies are gone: the castle surrenders.")
+        return told
+    siege.supplies = lower
+    told.append(f"Supplies fall to {lower}.")
     return told
 
 

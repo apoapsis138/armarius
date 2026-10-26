@@ -36,7 +36,7 @@ class _Dice(random.Random):
 
 def test_every_creature_of_the_book_builds():
     book = bestiary_book.catalog()
-    assert len(book) == 62
+    assert len(book) == 64
     assert {c.group for c in book} == set(bestiary_book.GROUPS)
     for entry in book:
         creature = bestiary_book.build(entry)

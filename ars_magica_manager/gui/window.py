@@ -170,7 +170,6 @@ _OTHER_TABS = tuple(v for k, v in _TAB_PREFIX.items() if k != CHARACTER)
 #: chapter's name (folded): the terminal's tabs are cut differently.
 _CHAPTER_TABS = {
     (COVENANT, "sketch"): "tab-cov-overview",
-    (COVENANT, "charter"): "tab-cov-attributes",
     (COVENANT, "people"): "tab-cov-inhabitants",
     (COVENANT, "covenfolk"): "tab-cov-inhabitants",
     (COVENANT, "treasury"): "tab-cov-economics",
@@ -211,7 +210,7 @@ def _first_input(dialog: QDialog) -> QWidget | None:
 def _title(command: Command) -> str:
     if isinstance(command, Confirm):
         return command.title or command.question
-    return "" if isinstance(command, Act) else command.title
+    return command.title
 
 
 @dataclass(frozen=True)

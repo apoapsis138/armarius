@@ -49,8 +49,8 @@ MUNDANE_EFFECTS: dict[int, str] = {
     5: (
         "a Minor supernatural Virtue attuned to the main source (no more "
         "Warping from living in auras of its kind; the app takes the main "
-        "source to be the aura where they live, so note the Virtue's realm "
-        "if effects were the main source instead)"
+        "source to be the realm most of the counted Warping came from, else "
+        "the aura where they live)"
     ),
     6: "a Major Flaw from the main sources of the Warping",
 }
@@ -259,6 +259,14 @@ def _twilight_time(
         years = 7 + dice.stress_die(rng, 0, saga=saga).value
         return f"{years} years", 4 * years
     return TWILIGHT_TIME[step - 1]
+
+
+def time_for_score(
+    score: int, rng: random.Random, saga: Saga | None
+) -> tuple[str, int]:
+    """The base time of Twilight's table for a Warping Score, and its
+    seasons: what an ordeal that lasts "as long as Twilight would" takes."""
+    return _twilight_time(score, score, rng, saga)
 
 
 def _effects_note(understood: bool, points: int) -> str:

@@ -110,6 +110,14 @@ def _creature_realm_fields(c: Creature | None) -> list[DialogField]:
             placeholder="(none: a mundane beast)",
         ),
         DialogField(
+            "warping_score",
+            "Warping Score",
+            "int",
+            attr(c, "warping_score", 0),
+            hint="A transformed animal's; one with Might has none (RoP: Magic p. 78).",
+            show_if=lambda values: not _has_realm(values),
+        ),
+        DialogField(
             "might", "Might Score", "int", attr(c, "might", 0), show_if=_has_realm
         ),
         DialogField(
@@ -244,6 +252,8 @@ def apply_info(saga: Saga, creature: Creature, values: dict[str, Any]) -> None:
         values[key] = values.get(key) or ""
     if not values["realm"]:
         values.update(might=0, might_form="", might_pool=None)
+    else:
+        values["warping_score"] = 0
     if values["realm"] != "Infernal":
         values.update(INFERNAL_FIELDS)
     if values.get("confidence_score") is None:

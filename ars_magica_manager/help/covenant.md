@@ -32,12 +32,12 @@ there too. A familiar is bound on its magus or in their laboratory.
 <!-- gui -->
 The header, with the covenant's name, its Tribunal and season, the Aegis,
 the Living Conditions, and the Aura and Loyalty as seals, stays in view
-above the chapters. The rail on the left lists the chapters: **Charter**,
-**People**, **Covenfolk**, **Laboratories**, **Possessions**, **Treasury**,
-**Library**, **Seasons**, **Diary**, **Build**, [**Secrets**](help:tab-secrets)
-and **Manage**. The help
-below names three of them as the terminal's tabs: Charter is the Attributes
-tab, Covenfolk the Inhabitants tab and Treasury the Economics tab. Click a row or card and
+above the chapters. The rail on the left lists the chapters: **Attributes**,
+**Charter**, **People**, **Covenfolk**, **Laboratories**, **Possessions**,
+**Treasury**, **Manors**, **Library**, **Seasons**, **Diary**, **Build**,
+[**Secrets**](help:tab-secrets) and **Manage**. The help
+below names two of them as the terminal's tabs: Covenfolk is the
+Inhabitants tab and Treasury the Economics tab. Click a row or card and
 the inspector on the right shows its figures and, where there is one, its
 rules text and where in the books it comes from.
 
@@ -227,10 +227,8 @@ them all to choose from.
 
 What the covenant is like: its description, its
 [Connections](help:section-connections), its Reputations, and its Boons
-and Hooks.
-<!-- gui -->
-On the desktop this is the **Charter** chapter.
-<!-- /gui -->
+and Hooks. The covenant's own charter, and the town charter of a
+Chartered Town Boon, are on the [Charter tab](help:tab-cov-charter).
 
 **You type:** the description, each Reputation and its score, and the
 detail of each Boon or Hook you take from the catalogue.
@@ -327,11 +325,95 @@ as Major for balancing Boons (DE p. 182). Take it either as the Unknown
 entry or by marking a Minor Hook Unknown, not both: with both, the checks
 say it is counted twice.
 
+## Charter tab
+<!-- help: tab-cov-charter -->
+
+The covenant's Charter of Covenant: the written oath its magi swear and
+the bylaws that say what a member is entitled to, what he owes and what
+happens if he fails (Covenants p. 32). Its clauses are listed under the
+charter, and the chosen one shows in full
+<!-- tui -->
+in the details panel.
+<!-- /tui -->
+<!-- gui -->
+in the inspector.
+<!-- /gui -->
+A sketch covenant has this tab too, after its Overview, for the clauses
+that matter in play. Below the charter come the town charter of a
+Chartered Town Boon and the towns the covenant charters as a Charter Lord.
+
+**You type:** the charter's name, preamble and when it was sworn, whether
+a Quaesitor ratified it, who has sealed it and when, and each clause.
+
+**The app works out:** how many clauses are in force and how many broken,
+the members still to seal it, and the grouping of the clauses by the
+charter's sections.
+
+### The charter
+<!-- help: section-cov-charter -->
+
+The charter's name, when it was sworn, whether a Quaesitor ratified it,
+the members' seals and its preamble (the oath, or what the charter is
+for).
+<!-- tui -->
+`e` opens **Edit Charter**. More (`m`) here opens **Seal the Charter**:
+a tick, season and year for each of the covenant's magi. The **Sealed
+by** line lists those who have sealed it and when; the covenant's other
+magi are listed as not yet sworn.
+<!-- /tui -->
+<!-- gui -->
+**Edit Charter** changes its name, preamble, when it was sworn and
+whether it was ratified. **Seal the Charter** sets which of the
+covenant's magi have sealed it and when: each seal is pressed in red wax
+with the magus's House symbol, his name and year beneath, and a magus
+who hasn't sworn yet shows as an empty dashed ring.
+<!-- /gui -->
+
+The charter lists its members, whose seals or signatures are affixed to
+show they agree to it (Covenants p. 33). A charter a Quaesitor ratified
+can become part of the Tribunal's Peripheral Code, and breaking it can
+then be charged as a Low Crime (Covenants pp. 32, 36); where the
+Tribunal asks for it, ratification is obligatory. The Charter of Arae
+Flaviae, if adopted unaltered, is ratified at once (Covenants p. 33; its
+text is in the Appendix, pp. 125-128).
+
+### Clauses
+<!-- help: section-cov-clauses -->
+
+The charter's clauses, each with its number or a title, its words, when
+it was agreed and its status: **In force**, **Amended** (with a note of
+what changed and when; the earlier wording isn't kept) or **Broken**
+(struck through and dimmed, with when and how it was broken).
+<!-- tui -->
+`a` adds a clause, `e` edits the chosen one and `d` deletes it after
+asking. More (`m`) on a clause not yet broken opens **Break a Clause**:
+the season, the year and how it was broken; its inspector shows the
+clause struck through as it will read.
+<!-- /tui -->
+<!-- gui -->
+**Add**, **Edit** and **Delete** act on the chosen clause. **Break a
+Clause**, on a clause not yet broken, asks the season, the year and how
+it was broken; its inspector shows the clause struck through as it will
+read.
+<!-- /gui -->
+A clause broken by mistake is mended with Edit: set its status back.
+
+A clause may name the section of the charter it belongs to: Oath of
+Covenant, Membership, Method of Governance, Covenant Resources, Member
+Rights, Member Obligations or Censure (Covenants pp. 33-35). Once any
+clause has one, the list groups the clauses under small headings in that
+order, with those that name none under **Other**.
+
+Only breaking the charter is censured, by withholding privileges or by
+expulsion (Covenants p. 35). The charter says how it may be altered (p.
+33), but a covenant may not change a member's obligation against his
+will (p. 35).
+
 ### Charter lords
 <!-- help: section-cov-charter-lords -->
 
-Shown while the covenant has the Chartered Town Boon (City & Guild p.
-11): the covenant is itself a town, chartered by its lord, and free of
+Shown on the Charter tab while the covenant has the Chartered Town Boon
+(City & Guild p. 11): the covenant is itself a town, chartered by its lord, and free of
 feudal duties except what the charter asks; the charter can't make the
 magi serve him. Its lords, as a town's [Lords](help:section-nb-charter-lords)
 are kept. Add, edit or delete a lord.
@@ -719,6 +801,13 @@ How many pawns to give one is the troupe's choice: a low-yield source gives
 4 or 8, a high-yield one (about a magus's year of vis) 4, 8 or 16
 (Covenants p. 72).
 
+A source can have a **Kind of vis** too (see Raw Vis Stores): its harvest
+goes into a store of that kind, and on the Build tab a dedicated source
+costs 7.5 Build Points a pawn a year, a lesser enchantment one 5 + 1 a
+magnitude of its power and a spell-like one 5 + 2 a magnitude (the middle
+of the book's ranges), with a stock of such vis a fifth of that for every
+5 pawns (Realms of Power: Magic p. 124).
+
 ### Raw Vis Stores
 <!-- help: section-pos-vis_store -->
 
@@ -743,6 +832,34 @@ with the **Harsher Infernal vis** option +5 a pawn to the Casting Total,
 Mastery or a Virtue takes off (Realms of Power: The Infernal p. 19). A
 chthonic magus uses Infernal vis without its peril (p. 123). Moving vis
 to another store doesn't carry the mark.
+
+**Kind of vis** marks vis that is more than ordinary. With Realms of Power:
+Magic in play: *extraordinary* vis carries a power of the place that made
+it, either like a lesser enchantment that isn't used up or like a spell
+that is used up when its trigger comes (give **Level of its power**: such
+an object usually holds a pawn for every 10 levels); *dedicated* vis is
+one Technique and one Form together (**Dedicated with** names the other
+Art): for that pair it gives +4 a pawn in casting, each pawn counts as two
+toward a Ritual's or an enchantment's pawns and for botch dice, and it
+doubles its form's Shape and Material bonus; *Herbs* and *Objects of
+Virtue* (formed stones are Objects) hold 1 or 2 pawns and, Enriched by
+someone with Magic Lore (a season, Intelligence + Magic Lore + aura of 9),
+give their bearer a Virtue instead of being vis; **Thing of Virtue** picks
+one of the book's (Realms of Power: Magic pp. 119-128). With Realms of
+Power: Faerie in play: *encased*, *anchor* (harvesting it destroys its
+faerie), *accrued*, *sleeping* and *abstract* faerie vis; abstract vis
+holds no real vis, so it can't be spent (pp. 18-19).
+
+The details say what the kind does and, for dedicated or extraordinary
+vis, what a pawn is worth in trade (its Build Points / 5 ordinary pawns,
+p. 124). Season work pays from ordinary stores first, then the special
+ones, never from abstract vis; vis added, harvested or given joins only a
+store of the same kind (and Infernal mark). A Ritual drawing on a special
+store of its Arts says what spending it does. When a rook or more of one
+Art is kept in one place, the details also say what so much vis may do at
+the storyguide's option: spontaneous spells of its Art within Voice range,
+a magnitude for each rook in a low-vis saga (each queen in a high-vis
+one), or a harmless effect of the Art (pp. 123-124).
 
 ### Items
 <!-- help: section-pos-item -->

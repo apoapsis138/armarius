@@ -31,6 +31,7 @@ from collections.abc import Callable
 
 from ..models import Character, Saga
 from . import hedge_casting as hc
+from . import hyperborean
 from .casting import magnitude
 from .rounding import round_down, round_up
 
@@ -140,12 +141,35 @@ def refining_yields(saga: Saga, character: Character, total: int) -> list[str]:
 #: the season's Lab Total makes.
 SEASON_YIELDS: dict[str, Callable[[Saga, Character, int], list[str]]] = {
     "elementalist_refining": refining_yields,
+    # The Hyperborean hymns (Ancient Magic pp. 106-108, 116-117).
+    "hymnist_infuse_power": hyperborean.infuse_yields,
+    "hymnist_enchant_relic": hyperborean.relic_yields,
 }
 
 
 def season_notes(saga: Saga, character: Character, key: str, total: int) -> list[str]:
     found = SEASON_YIELDS.get(key)
     return found(saga, character, total) if found is not None else []
+
+
+#: Worked-out lines under a tradition's pool, by "tradition id:pool name",
+#: and under its Warping, by tradition id (Strategy registries).
+POOL_NOTES: dict[str, Callable[[Character], list[str]]] = {
+    f"{hyperborean.TRADITION_ID}:{hyperborean.POWER_POOL}": hyperborean.levels_lines,
+}
+WARPING_NOTES: dict[str, Callable[[Character, int], list[str]]] = {
+    hyperborean.TRADITION_ID: hyperborean.illumination_lines,
+}
+
+
+def pool_notes(character: Character, tradition_id: str, pool: str) -> list[str]:
+    found = POOL_NOTES.get(f"{tradition_id}:{pool}")
+    return found(character) if found is not None else []
+
+
+def warping_notes(character: Character, tradition_id: str, aura: int) -> list[str]:
+    found = WARPING_NOTES.get(tradition_id)
+    return found(character, aura) if found is not None else []
 
 
 # ---------------------------------------------------------------------------

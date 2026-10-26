@@ -245,7 +245,7 @@ The covenant gets its own copy; the saga's book stays in Unassigned Books. Edit 
 4. **Review.** Lists every step that still has a check open, and the Build Points tally. It also advises when the covenant has fewer servants or teamsters than its inhabitants need (Other Covenfolk among its inhabitants); they cost no Build Points. It also says how many grogs and other covenfolk the baseline gives for free (about one grog and two others per magus), to add to its inhabitants once the covenant is In Play.
 
 <!-- tui -->
-The covenant's [Build tab](help:tab-cov-build) (`8`) shows the same Build Points.
+The covenant's [Build tab](help:tab-cov-build) (`0`) shows the same Build Points.
 <!-- /tui -->
 <!-- gui -->
 The covenant's [Build chapter](help:tab-cov-build) shows the same Build Points.

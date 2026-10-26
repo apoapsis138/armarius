@@ -18,6 +18,7 @@ from . import __version__, catalog, laboratories, paths
 from .files import write_atomic
 from .merge import merge
 from .models import Saga
+from .rules import siege as siege_rules
 
 
 def sagas_dir() -> Path:
@@ -370,6 +371,10 @@ def _from_data(data: dict[str, Any]) -> Saga:
     for lab in saga.laboratories:
         # Specialization grants typed in before the catalog carried them.
         laboratories.migrate_specialty_stand_ins(lab)
+    for siege in saga.sieges:
+        # A whole wall's measure and the next supplies roll's day, for
+        # sieges saved before either was kept.
+        siege_rules.migrate(siege)
     return saga
 
 

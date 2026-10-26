@@ -109,7 +109,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A great shaggy brown beast of up to fifty stone, over seven feet tall when it rears, with big claws and a bellowing roar; coat from light brown or yellowish to black.",
-      "notes": "Ferocity when injured; the Extra Natural Weapons are claws. Large claws Init 0, Atk +5, Def +3, Dam +4; teeth Init 0, Atk +3, Def +1, Dam +1; hide and fur give Protection +3. Runs fast (+3 to running rolls), climbs and swims; rears to strike a rider. Found in forests, mountains and tundra across Mythic Europe; mostly forages, but kills up to red deer."
+      "notes": "Ferocity when injured; the Extra Natural Weapons are claws. Large claws Init 0, Atk +5, Def +3, Dam +4; teeth Init 0, Atk +3, Def +1, Dam +1; hide and fur give Protection +3. Runs fast (+3 to running rolls), climbs and swims; rears to strike a rider. Found in forests, mountains and tundra across Mythic Europe; mostly forages, but kills up to red deer. Also in the Book of Mundane Beasts, RoP:M p. 141."
     },
     {
       "key": "adder",
@@ -202,7 +202,7 @@
       ],
       "vis": [],
       "appearance": "A small snake about eighteen inches long with a triangular head, pale grey, yellow or red with dark diamond markings down the back; some are wholly black.",
-      "notes": "Fangs Init 0, Atk +3, Def +1, Dam +1. Defense +6 more against grapple attacks (Slippery). Found all over Mythic Europe except Ireland; hibernates, ambushes rodents, lizards and frogs, and strikes by reflex when disturbed. Its venom sickens but rarely kills a man."
+      "notes": "Fangs Init 0, Atk +3, Def +1, Dam +1. Defense +6 more against grapple attacks (Slippery). Found all over Mythic Europe except Ireland; hibernates, ambushes rodents, lizards and frogs, and strikes by reflex when disturbed. Its venom sickens but rarely kills a man. Also in the Book of Mundane Beasts, RoP:M p. 141. RoP:M adds that an adder striking a victim unaware of it wins Initiative in the first round and has +3 to Attack that round; the DE leaves this out, so it is a note only."
     },
     {
       "key": "wild_boar",
@@ -290,7 +290,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A bristly grey, black or brown swine with big tusks, a hairy crest down its spine and longer legs than a farm pig; it sprints well over short distances.",
-      "notes": "Ferocity when cornered. Tusks Init 0, Atk +4, Def +2, Dam +5; hide gives Protection +2. Forest dweller that forages at night, often in sounders of twenty or more; a favourite noble quarry, known for its foul temper. Weighs eight to thirty stone; the largest are Size +1."
+      "notes": "Ferocity when cornered. Tusks Init 0, Atk +4, Def +2, Dam +5; hide gives Protection +2. Forest dweller that forages at night, often in sounders of twenty or more; a favourite noble quarry, known for its foul temper. Weighs eight to thirty stone; the largest are Size +1. Also in the Book of Mundane Beasts, RoP:M p. 141-142. RoP:M prints Fatigue Levels OK, 0/0, -2/-2, -4/-4, Unconscious; the DE's (p. 430) are kept."
     },
     {
       "key": "bull",
@@ -366,7 +366,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A black Spanish-type bull of about eighty stone, with a hump and sharp horns curving inward; other breeds are mostly short, broad and long-horned, in many colours.",
-      "notes": "Ferocity when charging; Oversensitive to provocation (tier not printed). Large horns Init +2, Atk +3, Def +2, Dam +3; hide gives Protection +2. Easily provoked; a charge lets it exert itself and spend Confidence together. Learns to fight fast, hence its Affinity with Brawl. Baited and fought for sport."
+      "notes": "Ferocity when charging; Oversensitive to provocation (tier not printed). Large horns Init +2, Atk +3, Def +2, Dam +3; hide gives Protection +2. Easily provoked; a charge lets it exert itself and spend Confidence together. Learns to fight fast, hence its Affinity with Brawl. Baited and fought for sport. Also in the Book of Mundane Beasts, RoP:M p. 142."
     },
     {
       "key": "cat",
@@ -462,7 +462,7 @@
       "powers": [],
       "vis": [],
       "appearance": "Short-haired domestic cats, usually grey or ginger with darker stripes, sometimes black, white or calico; the wildcat is bigger and shaggier, grey-brown and striped with a bushy tail.",
-      "notes": "Awareness printed 4+2 (Puissant). Claws Init -1, Atk +2, Def +3, Dam +2; teeth Init 0, Atk +3, Def +1, Dam +1; fur gives Protection +1. +3 to climbing and jumping. Flees anything bigger. Its evil Reputation is strongest in Celtic lands and unknown in England."
+      "notes": "Awareness printed 4+2 (Puissant). Claws Init -1, Atk +2, Def +3, Dam +2; teeth Init 0, Atk +3, Def +1, Dam +1; fur gives Protection +1. +3 to climbing and jumping. Flees anything bigger. Its evil Reputation is strongest in Celtic lands and unknown in England. Also in the Book of Mundane Beasts, RoP:M p. 142. RoP:M adds that a cat that has crept up on its prey wins Initiative in the first round and has +3 to Attack that round; the DE leaves this out, so it is a note only."
     },
     {
       "key": "falcon",
@@ -549,7 +549,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A gyrfalcon, the biggest and most prized falcon, with a wingspan past four feet, a short hooked beak, dark eyes and banded white, grey or dark brown plumage.",
-      "notes": "Ferocity in a swooping attack. Talons Init -1, Atk +2, Def +3, Dam +2; beak Init 0, Atk +3, Def +1, Dam +1. +3 to rolls for speed. Hunts birds and rodents in the cold north (Scandinavia, Iceland, Russia); flown by nobles at partridge. Smaller falcons are Size -4."
+      "notes": "Ferocity in a swooping attack. Talons Init -1, Atk +2, Def +3, Dam +2; beak Init 0, Atk +3, Def +1, Dam +1. +3 to rolls for speed. Hunts birds and rodents in the cold north (Scandinavia, Iceland, Russia); flown by nobles at partridge. Smaller falcons are Size -4. Also in the Book of Mundane Beasts, RoP:M p. 142. RoP:M prints Com 0; the DE's -2 is kept."
     },
     {
       "key": "horse_courser",
@@ -617,7 +617,148 @@
       "powers": [],
       "vis": [],
       "appearance": "A swift, athletic mid-sized horse such as the Andalusian: about eighty stone and fifteen hands, curved neck, broad chest, flowing mane and tail; grey, black, chestnut or roan.",
-      "notes": "Fear of loud noises. Kick Init +2, Atk +2, Def +2, Dam +1. Used for hunting, travel and messages; untrained for war and quick to panic. Charger: swap Noncombatant for Proud (minor), Brave 0, Brawl 2 (hooves). Palfrey: Qik -2, Dex +2 over the courser, keeps Noncombatant. All light horses +3 to running and jumping. Wound range printed '-5 (16-21)'."
+      "notes": "Fear of loud noises. Kick Init +2, Atk +2, Def +2, Dam +1. Used for hunting, travel and messages; untrained for war and quick to panic. Charger: swap Noncombatant for Proud (minor), Brave 0, Brawl 2 (hooves). Palfrey: Qik -2, Dex +2 over the courser, keeps Noncombatant. All light horses +3 to running and jumping. Wound range printed '-5 (16-21)'. Also in the Book of Mundane Beasts, RoP:M p. 142-143."
+    },
+    {
+      "key": "horse_charger",
+      "name": "Horse, Charger",
+      "group": "Mundane Beasts",
+      "page": 432,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        0,
+        0
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          0,
+          -4,
+          4,
+          3,
+          -2,
+          2
+        ],
+        "virtues_flaws": [
+          "Long-Winded",
+          "Improved Characteristics",
+          "Fear",
+          "Proud (Minor)",
+          "Domesticated",
+          "Fast Runner",
+          "Good Jumper",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            "long-distance running"
+          ],
+          [
+            "Awareness",
+            3,
+            "noises"
+          ],
+          [
+            "Brawl",
+            2,
+            "hooves"
+          ]
+        ],
+        "traits": {
+          "Skittish": 3,
+          "Brave": 0
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Hooves",
+          4,
+          3,
+          7,
+          5
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A light horse of the courser's build, such as the Andalusian, trained for battle.",
+      "notes": "The courser trained for war: Proud (minor) in place of Noncombatant, Brave 0 and Brawl 2 (hooves) (DE p. 432; RoP:M p. 143). Fear of loud noises is kept, as the book changes only the Flaw it names. Kick Init +2, Atk +2, Def +2, Dam +1; with Brawl 2 and +1 for its hooves specialty the hooves are Atk +3, Def +7, as the destrier's printed line counts its specialty (DE p. 433). Like all light horses, +3 to running and jumping."
+    },
+    {
+      "key": "horse_palfrey",
+      "name": "Horse, Palfrey",
+      "group": "Mundane Beasts",
+      "page": 432,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        0,
+        0
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          0,
+          -4,
+          4,
+          3,
+          0,
+          0
+        ],
+        "virtues_flaws": [
+          "Long-Winded",
+          "Improved Characteristics",
+          "Fear",
+          "Noncombatant",
+          "Domesticated",
+          "Fast Runner",
+          "Good Jumper",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            4,
+            "long-distance running"
+          ],
+          [
+            "Awareness",
+            3,
+            "noises"
+          ]
+        ],
+        "traits": {
+          "Skittish": 3,
+          "Brave": -2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Hooves",
+          2,
+          2,
+          2,
+          5
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A light riding horse chosen for its gentle gait, often ridden by ladies and by unpractised riders.",
+      "notes": "The courser with Quickness 2 lower and Dexterity 2 higher; it keeps Noncombatant (DE p. 432; RoP:M p. 143). Kick Init +2, Atk +2, Def +2, Dam +1. Like all light horses, +3 to running and jumping."
     },
     {
       "key": "horse_destrier",
@@ -686,7 +827,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A heavy warhorse such as the Percheron: over 140 stone and sixteen hands, with a thick curved neck, deep chest and stocky legs; grey or black.",
-      "notes": "Ferocity when ridden in battle. Kick Init +2, Atk +2, Def +2, Dam +1. Almost always a stallion, trained to charge fearlessly, rear and strike, balance on its hind legs for rounds, and fight on alone to guard a fallen rider. +3 to speed rolls; too heavy to jump well."
+      "notes": "Ferocity when ridden in battle. Kick Init +2, Atk +2, Def +2, Dam +1. Almost always a stallion, trained to charge fearlessly, rear and strike, balance on its hind legs for rounds, and fight on alone to guard a fallen rider. +3 to speed rolls; too heavy to jump well. Also in the Book of Mundane Beasts, RoP:M p. 143."
     },
     {
       "key": "hound",
@@ -766,7 +907,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A large hound such as the bloodhound: a little over two feet at the shoulder and up to nine stone, heavy jowls, long ears, short tan, red or liver coat.",
-      "notes": "Bite Init 0, Atk +3, Def +1, Dam +1. +3 to smell rolls and to endurance rolls. Smaller breeds: greyhounds and the like Size -1, spaniels and terriers Size -2, lap-dogs Size -3. A Master of the Pack leads a trained group, using Animal Handling in place of Leadership. Reckless tier not printed."
+      "notes": "Bite Init 0, Atk +3, Def +1, Dam +1. +3 to smell rolls and to endurance rolls. Smaller breeds: greyhounds and the like Size -1, spaniels and terriers Size -2, lap-dogs Size -3. A Master of the Pack leads a trained group, using Animal Handling in place of Leadership. Reckless tier not printed. Also in the Book of Mundane Beasts, RoP:M p. 143."
     },
     {
       "key": "lion",
@@ -876,7 +1017,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A tawny beast up to 35 stone and over ten feet long, broad-muzzled with powerful jaws; the male has a dark shaggy mane, and its roar carries far.",
-      "notes": "Ferocity in self-defence; Weakness for submission (it spares a man who lies prostrate). Brawl printed 5+2 (Puissant). Large claws Init 0, Atk +5, Def +3, Dam +4; large teeth Init 0, Atk +4, Def +1, Dam +3; hide Protection +2. +3 to jumping; leaps at riders. These are the bold, long-maned kind; found in Greece, Syria, North Africa."
+      "notes": "Ferocity in self-defence; Weakness for submission (it spares a man who lies prostrate). Brawl printed 5+2 (Puissant). Large claws Init 0, Atk +5, Def +3, Dam +4; large teeth Init 0, Atk +4, Def +1, Dam +3; hide Protection +2. +3 to jumping; leaps at riders. These are the bold, long-maned kind; found in Greece, Syria, North Africa. Also in the Book of Mundane Beasts, RoP:M p. 143-144. RoP:M prints Cun +1; the DE's +2 is kept."
     },
     {
       "key": "stag",
@@ -967,7 +1108,7 @@
       "powers": [],
       "vis": [],
       "appearance": "A red deer stag of 40 to 50 stone and up to fifteen hands, reddish-brown in winter and tan in summer, with a dark shaggy mane and antlers over four feet across; it bellows in the autumn rut.",
-      "notes": "Higher Purpose: protect the herd (tier not printed). Antlers (autumn and winter) Init +2, Atk +3, Def +2, Dam +3; after shedding them in spring, hooves Init +2, Atk +2, Def +2, Dam +1. Usually flees to lead foes from the herd. +3 to running and jumping. Size +1 where grazing is poor; does are smaller with no antlers."
+      "notes": "Higher Purpose: protect the herd (tier not printed). Antlers (autumn and winter) Init +2, Atk +3, Def +2, Dam +3; after shedding them in spring, hooves Init +2, Atk +2, Def +2, Dam +1. Usually flees to lead foes from the herd. +3 to running and jumping. Size +1 where grazing is poor; does are smaller with no antlers. Also in the Book of Mundane Beasts, RoP:M p. 144."
     },
     {
       "key": "wolf",
@@ -1057,7 +1198,7 @@
       "powers": [],
       "vis": [],
       "appearance": "Shaggy grey to dark brown, often paler about the face, with upright triangular ears, a narrow muzzle and steady yellowish eyes; known for its piercing howl.",
-      "notes": "Ferocity when hungry; Compulsion to kill (an Animal Companion may swap another Personality Flaw). Teeth Init 0, Atk +3, Def +1, Dam +1; fur Protection +1. Printed as Pack Animal/Pack Leader: a pack's leader adds Leadership 5 (wolves) and lets the pack fight as a trained group. Found across Mythic Europe, the Middle East and North Africa."
+      "notes": "Ferocity when hungry; Compulsion to kill (an Animal Companion may swap another Personality Flaw). Teeth Init 0, Atk +3, Def +1, Dam +1; fur Protection +1. Printed as Pack Animal/Pack Leader: a pack's leader adds Leadership 5 (wolves) and lets the pack fight as a trained group. Found across Mythic Europe, the Middle East and North Africa. Also in the Book of Mundane Beasts, RoP:M p. 144."
     },
     {
       "key": "baghl",

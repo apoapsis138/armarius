@@ -37,6 +37,7 @@ from .. import (
     places,
     ruins,
     seasons,
+    selling,
     session_end,
     storage,
     threats,
@@ -144,12 +145,22 @@ NOT_ON_PAGES = frozenset(
         "impress_agent",
         "spend_agency_xp",
         "set_agent_task",
+        "resolve_agent_task",
         # The desktop draws it as the Goods list's own button.
         "add_purity",
         # The desktop draws it as Ahead's own button.
         "plan_journey",
+        # The desktop draws them as the Charter's and Clauses' own buttons.
+        "seal_charter",
+        "break_clause",
         # The desktop draws the names a page holds as links instead.
         "go_to",
+        # The Theban treasury's loans: the Tokens list's own buttons.
+        "lend_vis",
+        "repay_vis_loan",
+        # The Rhine's ranks: the Gilds list's own buttons.
+        "rhine_mark",
+        "rhine_challenge",
     }
 )
 
@@ -486,6 +497,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
         (NodeKind.COVENANT, "Wealth"),
     ),
     "research_bonuses": ((NodeKind.COVENANT, "Library"),),
+    # A craftsman's sale of his finished goods, beside This Season's Plan.
+    "sell_goods": ((NodeKind.CHARACTER, "This Season"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -546,6 +559,10 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
     ),
     "invest_labor": lambda page: available(
         "invest_labor", replace(page, section="section-char-season")
+    ),
+    # A craftsman's sale of his finished goods.
+    "sell_goods": lambda page: available(
+        "sell_goods", replace(page, section="section-char-season")
     ),
 }
 
@@ -1500,4 +1517,6 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "create_familiar": lambda page: creation_forms.bind_familiar_form(
         page.saga, _default_magus(page)
     ),
+    # A craftsman's sale of his finished goods.
+    "sell_goods": _needs(_character, selling.sell_form),
 }

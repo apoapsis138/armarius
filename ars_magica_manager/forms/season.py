@@ -399,6 +399,7 @@ def _supplement_plan_values(
     }
     if activity == "workshop_production":
         found["quick"] = bool(values.get("manual"))
+    if activity in _EXERTED:
         found["experimenting"] = bool(values.get("exert"))
     if activity == "produce_remedies":
         found["extra_vis"] = values.get("doses") or 1
@@ -960,10 +961,16 @@ def _ordeal_fields(
     ]
 
 
+#: The workshop seasons a craftsman may exert himself in (City & Guild pp.
+#: 73-74; Klaus exerts on a wondrous item, p. 76).
+_EXERTED = ("workshop_production", "make_excellent_item", "make_wondrous_item")
+
+
 def _workshop_production_fields(
     plan: SeasonPlan | None, activity_is: ActivityIs
 ) -> list[DialogField]:
-    """Workshop production's choices: writing a craft manual, and exerting."""
+    """Workshop production's choices: writing a craft manual, and exerting
+    (in an excellent or wondrous item's season too)."""
     return [
         DialogField(
             "manual",
@@ -978,7 +985,7 @@ def _workshop_production_fields(
             "Exert",
             "check",
             bool(plan and plan.experimenting),
-            show_if=activity_is("workshop_production"),
+            show_if=activity_is(*_EXERTED),
             hint="+ a simple die to the Workshop Total, and an Aging roll.",
         ),
     ]

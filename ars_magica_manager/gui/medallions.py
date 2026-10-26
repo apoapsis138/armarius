@@ -28,6 +28,7 @@ from PySide6.QtGui import (
     QPainterPathStroker,
     QPaintEvent,
     QPen,
+    QPixmap,
     QRadialGradient,
     QTransform,
 )
@@ -367,13 +368,9 @@ def illuminated(
 WAX = SEASON_PIGMENTS["wax"]
 
 
-def wax_seal(
-    g: QPainter, c: QPointF, r: float, season: str, year: int, _p: Palette
-) -> None:
-    """The season pressed in coloured wax, its Latin name and the year in
-    Roman numerals round the rim."""
-    rng = random.Random(season + "w")
-    colour = QColor(WAX.get(season, WAX["Spring"]))
+def _wax(g: QPainter, c: QPointF, r: float, colour: QColor, rng: random.Random) -> None:
+    """A pool of wax, its rim a little uneven, lit from the upper left and
+    casting a soft shadow."""
     blob = QPainterPath()
     wobble = rng.uniform(0, 1)
     for k in range(73):
@@ -391,12 +388,84 @@ def wax_seal(
     grad.setColorAt(0.6, colour)
     grad.setColorAt(1, colour.darker(160))
     g.fillPath(blob, QBrush(grad))
+
+
+def _pressed_ring(
+    g: QPainter, c: QPointF, r: float, width: float, colour: QColor
+) -> None:
+    """A ring the matrix pressed into the wax: dark, with light below it."""
+    g.setBrush(Qt.BrushStyle.NoBrush)
+    g.setPen(QPen(colour.darker(170), width))
+    g.drawEllipse(c, r, r)
+    g.setPen(QPen(colour.lighter(140), 1))
+    g.drawEllipse(c + QPointF(1, 1), r, r)
+
+
+#: The wax a member's seal is pressed in: the red of the summer seal.
+MEMBER_WAX = QColor(WAX["Summer"])
+
+
+def member_seal(
+    g: QPainter, c: QPointF, r: float, mark: QPixmap | None, initial: str
+) -> None:
+    """A magus's seal on a charter, as the wax seal medallions are drawn:
+    a pool of red wax, the matrix's rim pressed into it, and in its heart
+    his House's symbol (`mark`, drawn in a dark tint of the wax at 2r
+    across), or his initial when he has none."""
+    g.save()
+    g.setRenderHint(QPainter.RenderHint.Antialiasing)
+    colour = MEMBER_WAX
+    _wax(g, c, r, colour, random.Random(initial + "seal"))
+    _pressed_ring(g, c, r * 0.8, max(1.0, r * 0.07), colour)
+    if mark is not None:
+        side = mark.width() / mark.devicePixelRatio()
+        corner = c - QPointF(side / 2, side / 2)
+        g.drawPixmap(corner + QPointF(0.8, 0.8), _tinted(mark, colour.lighter(150)))
+        g.drawPixmap(corner, _tinted(mark, colour.darker(185)))
+    else:
+        g.setFont(_font(max(6.0, r * 0.75), bold=True))
+        box = QRectF(c.x() - r, c.y() - r, 2 * r, 2 * r)
+        g.setPen(colour.lighter(150))
+        g.drawText(box.translated(0.8, 0.8), Qt.AlignmentFlag.AlignCenter, initial)
+        g.setPen(colour.darker(185))
+        g.drawText(box, Qt.AlignmentFlag.AlignCenter, initial)
+    g.restore()
+
+
+def _tinted(mark: QPixmap, colour: QColor) -> QPixmap:
+    """`mark` (one colour on clear) in `colour`."""
+    out = QPixmap(mark.size())
+    out.setDevicePixelRatio(mark.devicePixelRatio())
+    out.fill(Qt.GlobalColor.transparent)
+    g = QPainter(out)
+    g.drawPixmap(0, 0, mark)
+    g.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceIn)
+    g.fillRect(out.rect(), colour)
+    g.end()
+    return out
+
+
+def empty_seal(g: QPainter, c: QPointF, r: float, p: Palette) -> None:
+    """Where a member who hasn't sworn yet would seal: a dashed ring."""
+    g.save()
+    g.setRenderHint(QPainter.RenderHint.Antialiasing)
+    pen = QPen(QColor(p["label"]), max(1.0, r * 0.06))
+    pen.setStyle(Qt.PenStyle.DashLine)
+    g.setPen(pen)
+    g.setBrush(Qt.BrushStyle.NoBrush)
+    g.drawEllipse(c, r * 0.92, r * 0.92)
+    g.restore()
+
+
+def wax_seal(
+    g: QPainter, c: QPointF, r: float, season: str, year: int, _p: Palette
+) -> None:
+    """The season pressed in coloured wax, its Latin name and the year in
+    Roman numerals round the rim."""
+    colour = QColor(WAX.get(season, WAX["Spring"]))
+    _wax(g, c, r, colour, random.Random(season + "w"))
     for rr, w in ((r * 0.82, 2.0), (r * 0.6, 1.6)):
-        g.setPen(QPen(colour.darker(170), w))
-        g.setBrush(Qt.BrushStyle.NoBrush)
-        g.drawEllipse(c, rr, rr)
-        g.setPen(QPen(colour.lighter(140), 1))
-        g.drawEllipse(c + QPointF(1, 1), rr, rr)
+        _pressed_ring(g, c, rr, w, colour)
     legend = f"+ {medallions.LATIN.get(season, '')} · {medallions.roman(year)} ·"
     g.setFont(_font(max(5.0, r * 0.18), bold=True))
     step = 300 / max(1, len(legend))

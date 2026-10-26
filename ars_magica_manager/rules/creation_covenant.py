@@ -43,7 +43,7 @@ from ..models import (
     Saga,
     character_age,
 )
-from . import base_covenants, covenfolk, creation_access, enchantment, realms
+from . import base_covenants, covenfolk, creation_access, enchantment, realms, vis_kinds
 from . import library as book_rules
 from . import options as rule_options
 from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
@@ -250,7 +250,9 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
             lines.append(
                 Cost(
                     f"Vis source: {possession.name} ({possession.pawns} a year)",
-                    VIS_SOURCE_BP * possession.pawns,
+                    # Ordinary vis VIS_SOURCE_BP a pawn; special kinds by
+                    # RoP: Magic p. 124 (rules.vis_kinds).
+                    vis_kinds.source_build_points(possession),
                     "Vis sources",
                     possession,
                 )
@@ -259,7 +261,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
             lines.append(
                 Cost(
                     f"Vis stock: {possession.name} ({possession.pawns} pawns)",
-                    round_up(possession.pawns / VIS_STOCK_PAWNS),
+                    vis_kinds.stock_build_points(possession),
                     "Vis stocks",
                     possession,
                 )

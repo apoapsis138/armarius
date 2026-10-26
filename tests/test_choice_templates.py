@@ -152,6 +152,7 @@ def test_the_offered_flaws_statuses_and_virtues():
     assert ct.ability_options(ct.slots(martial, 0)[1]) == [
         "Bows",
         "Great Weapon",
+        "Siege Weapon",
         "Single Weapon",
         "Thrown Weapon",
     ]

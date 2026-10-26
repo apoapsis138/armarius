@@ -426,6 +426,19 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "Ease Factor 10 (task 6 + haste 1 + risk 3"},
         shown={"#char-agents-list": "Sir Konrad"},
     ),
+    "resolve agent task": Contract(
+        prefill={"Task": "easy", "Ease Factor": "6", "Risk to him": "none"},
+        edits={
+            "What he does": "steal the ring",
+            "Characteristic + Ability": "5",
+            "Task": "hard",
+        },
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Sir Konrad's task: steal the ring",
+        invalid=[{"Characteristic + Ability": "lots"}, {"Ease Factor": "-1"}],
+        live={"#fields-live": "Ease Factor 12"},
+        shown={"#char-agents-list": "Sir Konrad"},
+    ),
     "spend agency xp": Contract(
         prefill={"Spend on": "resistance", "Agency experience": "6"},
         edits={"Agency experience": "3"},
@@ -745,6 +758,30 @@ CONTRACTS: dict[str, Contract] = {
         edits={"Vitkir (HMRE)": False},
         saved=lambda s: s.character("mag1").traditions,
         expected=[],
+    ),
+    # A craftsman's sale of his finished goods (City & Guild).
+    "sell finished goods": Contract(
+        prefill={"Customer": "typical", "Standard price (pence)": "0", "Die": ""},
+        edits={
+            "The goods": "8 shortswords",
+            "Standard price (pence)": "200",
+            "Die": "10",
+        },
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Sold: 8 shortswords",
+        invalid=[{"Standard price (pence)": "0"}, {"Die": "11"}],
+        live={"#fields-live": "against Ease Factor 9"},
+    ),
+    # Complexion, with Art & Academe's medicine.
+    "edit biographical detail (complexion)": Contract(
+        prefill={"Player": ""},
+        edits={"Complexion": "sanguine-melancholic", "A touch of": "phlegmatic"},
+        saved=lambda s: (
+            character(s).description.complexion,
+            character(s).description.complexion_minor,
+        ),
+        expected=("sanguine-melancholic", "phlegmatic"),
+        shown={"#char-biographical-left": "Complexion: Sanguine, then melancholic"},
     ),
 }
 

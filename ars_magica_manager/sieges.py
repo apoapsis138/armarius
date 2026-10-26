@@ -360,7 +360,9 @@ def _write(saga: Saga, siege: Siege, values: dict[str, Any]) -> None:
     siege.besieger_walls = _four(values, "besieger_walls")
     siege.garrison_walls = _four(values, "garrison_walls")
     if "walls_0" in values:
-        siege.walls = _four(values, "walls")
+        # No wall holds more than it had when the siege began.
+        whole = rules.full_wall(siege)
+        siege.walls = [min(whole, n) for n in _four(values, "walls")]
     for key in ("covenant_id", "castle_id", "besieger_id"):
         setattr(siege, key, values.get(key) or "")
     garrison, soldiers = values.get("garrison"), values.get("soldiers")
@@ -428,7 +430,12 @@ def ops(saga: Saga, neighbour: Neighbour | None = None) -> SectionOps:
 
 
 def _needs_wall(values: dict[str, Any]) -> bool:
-    return values.get("event") in (rules.UNDERMINE, rules.ARTILLERY, rules.ESCALADE)
+    return values.get("event") in (
+        rules.UNDERMINE,
+        rules.ARTILLERY,
+        rules.ESCALADE,
+        rules.SEAL,
+    )
 
 
 def event_fields(siege: Siege) -> list[DialogField]:
@@ -504,6 +511,13 @@ def event_live(siege: Siege, values: dict[str, Any]) -> str:
             f"{when} A battlefield event at Battle Ease Factor {rules.SALLY_EASE}, "
             "with neither ground nor numbers."
         )
+    if event == rules.SEAL:
+        left, whole = rules.walls(siege)[wall], rules.full_wall(siege)
+        return (
+            f"{when} Seal the Breach (CrTe 20 ritual) restores up to "
+            f"{rules.SEAL_THE_BREACH} damage levels: the {WALLS[wall]} wall has "
+            f"{left} of {whole}."
+        )
     return f"{when} The stockade holds" + (
         "; supplies rolls come due as they fall." if rules.stockaded(siege) else "."
     )
@@ -516,6 +530,7 @@ def play_event(
     event = values.get("event") or rules.WAIT
     wall = int(values.get("wall") or 0)
     won = values.get("result") == "won"
+    rules.begin(siege)
     plays = {
         rules.UNDERMINE: lambda: rules.undermine(siege, wall, rng),
         rules.ARTILLERY: lambda: rules.bombard(siege, wall, rng),
@@ -523,6 +538,7 @@ def play_event(
         rules.SALLY: lambda: rules.sally(
             siege, values.get("target") or "Miners", not won
         ),
+        rules.SEAL: lambda: rules.seal_breach(siege, wall),
         rules.WAIT: lambda: rules.Played("The stockade holds."),
     }
     return plays[event]()
@@ -638,7 +654,15 @@ def info(saga: Saga, siege: Siege) -> str:
         f"{_count(siege.soldiers, 'group')} of soldiers",
     ]
     if siege.events:
-        lines.append("[$label]Chronicle:[/]")
+        hidden = len(siege.events) - 10
+        lines.append(
+            "[$label]Chronicle:[/]"
+            + (
+                f" [dim]({_count(hidden, 'earlier event')} not shown)[/]"
+                if hidden > 0
+                else ""
+            )
+        )
         lines += [
             f"  Day {e.day}: {escape(e.text)}"
             + "".join(f"\n    [dim]{escape(x)}[/]" for x in e.lines)

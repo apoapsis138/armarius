@@ -29,7 +29,7 @@ from ..models import (
     Covenant,
     Saga,
 )
-from ..rules import equipment
+from ..rules import equipment, vis_kinds
 
 #: A year's pawns from a source, by its yield and the saga's vis level
 #: (Covenants p. 72).
@@ -46,12 +46,15 @@ def possession_fields(
     natural: bool = False,
     places: Sequence[tuple[str, str]] = (),
     place: str = "",
+    vis_kind_options: Sequence[tuple[str, str]] | None = None,
 ) -> list[DialogField]:
     """The add/edit form for one kind of possession. For a laboratory listed as
     a sanctum, name/owner/location/build points are shown read-only (edit them
     on the laboratory) and only the covenant-side fields are editable.
     `natural`: a familiar's Natural Weapons. A Raw Vis Store's asks where it
-    is kept: one of `places` (vis.location_options), `place` to start with."""
+    is kept: one of `places` (vis.location_options), `place` to start with.
+    A vis source or store offers `vis_kind_options` as its kind of vis
+    (vis_kinds.kind_options; None: every kind)."""
     auto = entry is not None and entry.auto
     fields = (
         _sanctum_from_lab_fields(kind, entry)
@@ -68,6 +71,9 @@ def possession_fields(
         fields += _quantity_possession_fields(kind, entry, natural=natural)
     elif kind in ("vis_source", "vis_store"):
         fields += _vis_possession_fields(kind, entry, places, place)
+        fields += vis_kind_fields(
+            entry.record if entry is not None else None, vis_kind_options
+        )
 
     if kind != "vis_store":
         fields.append(description_field(attr(entry, "description", "")))
@@ -90,12 +96,18 @@ def possession_form(
     natural: bool = False,
     places: Sequence[tuple[str, str]] = (),
     place: str = "",
+    vis_kind_options: Sequence[tuple[str, str]] | None = None,
 ) -> Form:
     """The possession form as a step: `apply` gets its values."""
     return Form(
         title,
         lambda: possession_fields(
-            kind, entry, natural=natural, places=places, place=place
+            kind,
+            entry,
+            natural=natural,
+            places=places,
+            place=place,
+            vis_kind_options=vis_kind_options,
         ),
         apply,
         validate=pos.form_problem,
@@ -405,6 +417,71 @@ def _vis_possession_fields(
     return fields
 
 
+def _kind_is(*kinds: str) -> Callable[[dict[str, Any]], bool]:
+    return lambda values: (values.get("vis_kind") or "") in kinds
+
+
+def vis_kind_fields(
+    record: Any, options: Sequence[tuple[str, str]] | None = None
+) -> list[DialogField]:
+    """A vis source's or store's kind of vis (blank: ordinary) and what
+    goes with it: a dedicated pawn's other Art, a Thing of Virtue, an
+    extraordinary power's level (rules.vis_kinds)."""
+    kind = attr(record, "vis_kind", "") or ""
+    offered = (
+        list(options) if options is not None else vis_kinds.kind_options(None, kind)
+    )
+    if not offered:
+        return []
+    things = [
+        *vis_kinds.thing_options(vis_kinds.HERB_OF_VIRTUE),
+        *vis_kinds.thing_options(vis_kinds.OBJECT_OF_VIRTUE),
+    ]
+    return [
+        DialogField(
+            "vis_kind",
+            "Kind of vis",
+            "select",
+            kind,
+            options=offered,
+            allow_blank=True,
+            placeholder="Ordinary vis",
+            hint="Extraordinary, dedicated and Things of Virtue: Realms of "
+            "Power: Magic pp. 119-128; faerie vis: Realms of Power: Faerie pp. "
+            "18-19.",
+        ),
+        DialogField(
+            "paired_art",
+            "Dedicated with",
+            "select",
+            attr(record, "paired_art", "") or "",
+            options=pairs(ARTS),
+            allow_blank=True,
+            placeholder="(its other Art)",
+            show_if=_kind_is(vis_kinds.DEDICATED),
+            hint="A dedicated pawn is one Technique and one Form together.",
+        ),
+        DialogField(
+            "virtue_thing",
+            "Thing of Virtue",
+            "select",
+            attr(record, "virtue_thing", "") or "",
+            options=things,
+            allow_blank=True,
+            placeholder="(another, not in the book)",
+            show_if=_kind_is(*vis_kinds.THINGS),
+        ),
+        DialogField(
+            "effect_level",
+            "Level of its power",
+            "optint",
+            attr(record, "effect_level", None),
+            show_if=_kind_is(*vis_kinds.EXTRAORDINARY),
+            hint="Usually a pawn for every 10 levels (RoP: Magic p. 120).",
+        ),
+    ]
+
+
 def contested_fields(entry: Any) -> list[DialogField]:
     """A vis or income source's Contested / Dwindling Resource Hooks."""
     return [
@@ -466,8 +543,15 @@ def covenant_possession_form(
     def apply(values: dict[str, Any]) -> None:
         pos.save_entry(covenant, kind, entry, values)
 
+    keep = entry.record.vis_kind if entry is not None and entry.record else ""
     return possession_form(
-        form_title(kind, entry), kind, entry, apply, places=places, place=place
+        form_title(kind, entry),
+        kind,
+        entry,
+        apply,
+        places=places,
+        place=place,
+        vis_kind_options=vis_kinds.kind_options(saga, keep),
     )
 
 

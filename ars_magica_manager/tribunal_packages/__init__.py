@@ -157,6 +157,9 @@ class TribunalPackage:
     #: Whether a magus present casts no vote of his own (the Rhine's
     #: Tremere, whose sigils their exarchs cast).
     casts_no_vote: Callable[[Saga, Tribunal, Character], bool] | None = None
+    #: A sum in Mythic pounds told in its region's own coins, which the
+    #: treasury's balance shows beside the pounds (Thebes's hyperpyra).
+    coins: Callable[[float], str] | None = None
 
     @property
     def lists(self) -> tuple[PackageList, ...]:

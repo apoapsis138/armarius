@@ -220,6 +220,16 @@ who holds it: his parens, or, when the parens doesn't hold his own, the
 first magus up the line of parentes who does; a parens of the saga's who
 has died no longer holds it (DE p. 16).
 
+For a Tremere whose parens still holds his sigil, **Has challenged for his
+sigil** records that he has made his one challenge for it at a time of his
+choosing. After that he may challenge only at the House's Decennials, every
+ten years (1218, 1228...), and the sheet says when the next falls. Winning
+the certamen gives him his own sigil (Houses of Hermes: True Lineages p. 123).
+
+**School of certamen** records the style he was trained in, or joined by a
+season's study with a member of the school (True Lineages p. 135). The
+Casting Totals section then names it and what its followers can do.
+
 For a magus with Mercurian Magic, **Has learned Road Magic** opens the Road
 and Road Network Ranges and Targets for his spells: a season's teaching by
 one who knows it, with no further Virtue; a starting magus whose parens has
@@ -244,6 +254,18 @@ from.
 Below Personality Traits and Reputations come the character's
 [Connections](help:section-connections): their covenant, the factions they are a member of, what they rule, and any
 other record that links to them.
+
+With Art & Academe's medicine on, Edit Biographical Detail also asks for the
+character's **complexion**, the blend of the four humours (A&A pp. 40-41):
+sanguine (blood: hot and moist, waxing in spring), choleric (choler: hot and
+dry, summer), melancholic (melancholy: cold and dry, autumn) or phlegmatic
+(phlegm: cold and moist, winter). Most people show two, the principal one
+first, and sometimes a touch of a third; the hot or cold quality never
+features twice, so sanguine never mixes with choleric, nor melancholic with
+phlegmatic. The sheet shows the blend, its qualities, the season it waxes
+in, the traits it suggests and the foods that keep it in balance (those of
+the opposite qualities, p. 41). Complexion changes no roll: it is the
+troupe's guide to personality and to which diseases threaten.
 
 ### Personality Traits
 <!-- help: section-personality-traits -->
@@ -345,6 +367,38 @@ every second year comes in even years. A botched Twilight comprehension
 adds a step on the time table for each zero, and the steps can reach the
 table's row 10, Final Twilight: a magus at Warping 8 who botches with two
 zeros is lost (DE p. 228).
+
+**What gave them** says where the points came from. One event (a
+powerful effect, a botch) is the usual; **Taken leaving Faerie** asks for
+the **Days spent in Faerie** and the **Final fable score**, and writes
+into the Diary how long passed in the mundane world: each day there
+lasts an hour at fable score 0, 12 hours at 1, a day at 2, three days at
+3, a week at 4, a month at 5, a season at 6 and a year from 7, and each
+Warping Point taken lowers the score by 1 (a group leaving together
+takes the lowest, the others taking points to match; Realms of Power:
+Faerie p. 30). **Instant transport** is a point a transit: a spell or
+device of level 30 or more that carries someone gives a Warping Point
+each time unless they cast it or it was made for them, and a Hermes' or
+Mercere's Portal gives none (Transforming Mythic Europe pp. 112, 114).
+Neither brings Twilight, however many points: Faerie's never do, and
+each transit is its own event.
+
+The app counts the Warping Points from each realm as they come (an
+event's **Its realm**, an aura's or a place's realm, a Longevity
+Ritual's Magic) and the section shows the count and the main source,
+the realm with the most (a tie, or nothing counted yet, goes to the
+aura where they live). A non-magus's Warping effects follow it: the
+Definitive Edition's own for Magic (DE p. 391); for Faerie a glamour of
+their own may take the first Flaw's place, a Reputation that rises with
+each Score and brings Sympathy Traits later, with Faerie Antipathy or
+Lesser Malediction at 3 (Realms of Power: Faerie p. 119); for the
+Divine, Flaws that punish sin or push piety to extremes (Realms of
+Power: The Divine p. 62); for the Infernal, a sinful Personality Flaw
+at 1, Offensive to Animals or Tainted with Evil at 3, an Infernal Virtue
+at 5 and Age Quickly, Enfeebled or Plagued by a Demon from 6 (Realms of
+Power: The Infernal p. 17, with the Errata naming Aptitude for (Sin)).
+The Virtue at Score 5 stops Warping only from auras of the main
+source's realm (DE p. 391).
 
 With Art & Academe in play, the form also takes a physician's
 **Regimen**: its bonus to the Living Conditions the aging roll uses, the
@@ -491,6 +545,30 @@ choose Keep:
   non-lethal blow read on the Damage Table as a bruise. Its penalty works
   as a wound's; it heals within hours, and a Heavy, Incapacitating or
   Fatal one leaves a Light, Medium or Incapacitating wound.
+
+With Art & Academe's medicine, an **injury** asks where it struck (the head,
+the torso or a limb). An Incapacitating wound it deals calls at once for a
+Stamina roll against 6 (Lasting Consequences of Serious Damage, A&A p. 43);
+a failure leaves a lasting complication, a Minor Flaw fitting the place,
+from those Surgical Intervention lists (p. 62): the head Disfigured, Missing
+Eye or Missing Ear; the torso Disfigured or Fragile Constitution; a limb
+Disfigured, Lame, Missing Hand or Palsied Hands. The storyguide picks it; the
+Diary keeps the roll.
+
+Each of the book's **diseases** is an excess of a humour (pp. 47-51). One of
+the character's own principal humour is ill-suited to the temperament: the
+result says so, as a place that breeds it is worth a roll or two in the first
+season there (p. 46).
+
+The disease list also holds Dies Irae's **Great Pestilence** (pp. 86-98): a
+Critical phlegmatic disease of Severity 21, Stable 12, Improve 18, rolled
+every day once its Crisis passes. *The Great (Form) Pestilence* is a magic
+being's: a Disease Avoidance roll at the Form's new moon and each week it
+stays in a Magic aura (pp. 87-88). *The Great Corpus Pestilence (Corpus
+miasma)* is what a Corpus miasma's Corpus Blight gives every human it
+touches: no Disease Avoidance, but its Penetration is 0, so magi and all others with Magic
+Resistance are immune (pp. 88, 94): a magus's Corpus and Parma, or True Faith, a Church
+office and relic, or Angelic Might.
 
 A magus's **Form Bonus** (the Form's score / 5, rounded up) adds to Soak
 or to the roll resisting harm of its Form (Definitive Edition pp.
@@ -648,6 +726,28 @@ do more, which the result says and you apply by hand: a new product found
 in every fair promotes him to Wealthy (or, Wealthy, to the next Social
 Status), and with the Heir Virtue a benefactor's murder may raise his Social
 Status at once.
+
+## Sell Finished Goods
+<!-- help: sell-finished-goods -->
+
+More's Sell Finished Goods, on a craftsman's This Season, settles a sale
+the story calls for with a roll, rather than leaving it off-stage (City &
+Guild pp. 75-76). Give the goods, the guild's standard price for them in
+pence, and the customer.
+
+- A typical customer: Presence + Bargain + a simple die against 9. Making
+  it sells for 10% over the standard price, and each point over 9 another
+  10%, at most 50% over. Missing it sells at the standard price.
+- An important character or another player: Presence + Bargain + a
+  stress die against his Communication + Bargain + a stress die (type
+  his roll). Each point you win by is 10% more, each you lose by 10%
+  less, at most 50% either way. A botch sells for next to nothing.
+
+Leave the Die blank and the app rolls it; type it to use the table's.
+Superior and excellent goods aren't priced by the guild: give a higher
+standard price for them. The sale is written in the Diary; the purse on
+Personal Gear is not changed. This is apart from the Goods catalog's
+commodity prices.
 
 ## Invest Time or Money
 <!-- help: merchant-investment -->
@@ -1129,7 +1229,14 @@ each step from it either way a magnitude (Rival Magic pp. 23-25); a
 utiseta counts only the steps from its Ability's own base (Rival Magic
 p. 95). A vitki's rune, a Columban ward or a folk witch's curse is its
 guideline's level as printed. A General guideline, or no guideline, keeps
-the level you type.
+the level you type. The Hyperborean hymns' guidelines are General: a
+Power uses the Hermetic guidelines within its hymn's principles. Each
+hymn's principles, the book's sample Powers with their level costs and
+Ease Factors (as corrected by the errata), and Numina of Apollo, a Vim
+Power any hymn can hold (Magic Resistance of the level - 5 against its
+principles; Ancient Magic p. 110) are listed to choose from. The level you
+type is the Power's level cost, with its uses a day and Penetration added
+as for an enchanted device (DE pp. 256-258; Ancient Magic pp. 107-118).
 
 **Not yet:** a season of work making the item or inventing the effect
 for you (add it here when the season is done), and the catalogs of each
@@ -1248,6 +1355,22 @@ Might restored or drained by the Total less its Might. The divisions
 round down, as the book's do when it says nothing (DE p. 6); only the
 potion's vis, age / 5, rounds up.
 
+A Hyperborean hymnist's **Infuse a Power** season shows how many Power
+levels his recitation total reaches. The total is Communication + the
+Hymn + Dead Language: Hyperborean + the aura, and Hyperborean Descent's
++2 or +4 is added in the note. The Ease Factor is the levels / 3, rounded
+up, so a total reaches three times its value in levels (Ancient Magic
+pp. 106-108). The note also lists each hymn's levels: 15 for each point
+of its score (Puissant doesn't count), those already infused, and those
+left. Devotion before the season (+3 a season, at most +9), days without
+reciting (-1 a day, at most -20) and Personality Flaws Apollo favours or
+dislikes (+1/+3, -1/-3) are yours to add (p. 107). An **Enchant a relic**
+season uses Intelligence in place of Communication, with no devotional
+bonus. Its note gives the most levels one Power can have, and the Warping
+it costs: 2 Warping Points for every pawn of vis Hermetic enchanting
+would need, plus 2 a pawn of the item's opening the first time
+(pp. 116-117).
+
 A hedge Script may need scores of the Initiate: every Ikhwan as-Safa'
 Script fails without Artes Liberales, Philosophiae and Theology (Islam)
 4 and Arabic 5, the Tulab Ibn Sina's without Medicine and Chirurgy 3, 4
@@ -1346,7 +1469,53 @@ effigy) to +10 (an innocent) to an effect, and profaning a holy thing
 makes a pawn of Infernal vis for a Confidence Point (Realms of Power: The
 Infernal pp. 94-96).
 
-**Not yet:** rolling the avoidance and its effects.
+Two or more Warping Points at once now roll the tradition's answer
+straight away, as Twilight is rolled for a magus, and write it in the
+Diary. **Divine Ascent**, for a holy tradition's member or anyone with a
+holy Method or Power: Presence + Concentration (or Meditation) + stress
+die against Warping Score + the points + True Faith + the aura + stress
+die (only his own die can botch); failing, he gains the margin in
+Warping Points more and ascends for Warping Score + every point gained -
+True Faith days (at least 1; months from Warping Score 6), and the Diary
+gives what each of the three forms (Gloom, Form, Unity) brings (Realms
+of Power: The Divine pp. 63-65). **Vituperation**, for an infernalist:
+failing, he is torn away as long as Twilight's table gives his Warping
+Score, and the app writes the Aging roll he must make, adding his
+Warping Score. He gains a Confidence Point a Warping Point at once,
+unless he botched the avoidance roll. Once the ordeal is over his
+Confidence Score rises by 1 if it is below his Warping Score or his
+Decrepitude: the Diary says so outright when it is already below his
+Warping Score, and otherwise that it depends on the Aging roll's
+Decrepitude, for you to change on the Character Info form (Realms of
+Power: The Infernal p. 95). **Faerie Calling**, for a
+Faerie tradition's member: the Ease Factor to act while dazed, and the
+roll that resolves it (a stress die that can botch), with the Faerie
+Rank from which it is a good Calling (the app keeps no Faerie Rank;
+Realms of Power: Faerie p. 120). **Enter Twilight willingly** skips the
+roll for an Ascent or a Vituperation too.
+
+A Hermetic magus goes into Twilight, True Faith or not, unless something
+takes its place: the False Gift, or an infernal tradition, brings
+Vituperation (Realms of Power: The Infernal p. 124); a homunculus wizard
+has a Faerie Calling (Realms of Power: Faerie p. 118); and a magus who
+also has Miraculous Abilities has only one form of Warping for life,
+chosen by the troupe: tick **Seeks Divine Ascent instead of Twilight**
+on his Aging & Warping form for the Ascent (Realms of Power: The Divine
+p. 63). The Divine and Infernal answers come before Faerie's.
+
+A Gifted Hyperborean hymnist whose first tradition is the hymns has
+**Illumination** in place of Twilight (Ancient Magic pp. 105-106). The
+section gives his Apollonian Personality Trait (his Warping Score), his
+control total (Stamina + Concentration + his highest Hymn), and the Ease
+Factor's modifiers: -2 or -4 for Hyperborean Descent, and +1 for every
+30 levels of Powers he has infused. It also shows the Bright Lightening,
+failing the roll on purpose: as many more Warping Points, and xp in
+hymns, as his Warping Score after the points just gained + the aura +
+the modifiers, with the number for three points gained (Ancient Magic p.
+106). The +1 a 30 levels counts the Powers of all his hymns together,
+not those in relics. An unGifted hymnist, or a magus, Warps as usual.
+
+Gain Warping Points rolls the response when 2 or more points come at once, as described above.
 
 ## A tradition's Pools
 <!-- help: tradition-pools -->
@@ -1355,6 +1524,12 @@ The points the character keeps in each of the tradition's pools, for a
 tradition whose members store power (its book says what fills the pool,
 what spends it and its cap, shown here). A tradition with no pools has no
 such section.
+
+A Hyperborean hymnist's **Power levels** pool lists each hymn he holds:
+the levels its score holds (15 a point), the levels his infused Powers
+(his effects on the Infuse a Power rule) already use, and the levels
+left. The points you type are kept apart from these, for the extra
+levels bought with vis (a level a pawn; Ancient Magic p. 109).
 
 <!-- tui -->
 **You type:** `e` sets the points in each pool.
@@ -1660,6 +1835,25 @@ them.
 **Certamen.** A Tremere's Minor Magical Focus in certamen doubles the
 lower of the two Arts (DE p. 233), and a Deficient Art halves the total it
 is in.
+
+**Schools of certamen.** At the start of a duel each magus fights either as
+a follower of his school, with its strongest techniques but no change of
+school, or in the style of various schools, with weaker imitations he may
+swap at the start of each round (True Lineages p. 135). The Gladiator
+school is the basic rules. Most other schools trade one total for another,
+up to a multiple of Finesse: the Andabatus Attack for Defence, the
+Hoplomachus Defence for Attack (and more Defence in a round he doesn't
+attack), the Provocator Resistance for Initiative, the Retiarius Initiative
+for later Attack Advantage, the Saggitarius Attack for Defence with a hit
+costing one Fatigue level at most, and the Laquerius Defence for a noose
+(pp. 136-138). Others act when the duelist lands a blow and declines to do
+damage: the Essedarius frightens, the Gladiatrix reads the foe, the
+Pumilius amuses, the Velitus wears down Resistance, and the Scissor's hit
+after a skipped attack cuts deeper. The Bestiarius, for Bjornaer only, uses Heartbeast in place of Finesse in
+a Muto duel and adds twice it to Resistance in Muto Corpus or Muto
+Animal; a Bjornaer fighting in its style adds his Heartbeast to
+Resistance in any duel (True Lineages p. 136). Charon and Bone-biting are tricks with no
+followers today.
 
 **Hybrid magic.** A magus whose magic is also non-Hermetic has it counted
 too, and a line for each kind closes the section:
@@ -2115,22 +2309,49 @@ with +1 for within a few days and +3 for within a day, and +1, +3 or +6
 for the risk to him (1, 3 or 5 botch dice; with no risk, a simple die).
 Gathering news he hears anyway needs no roll (p. 24).
 
+**Resolving the task**: once he takes it on, he rolls with his own
+Characteristic + Ability against the task's Ease Factor (p. 24). **Resolve
+the Task** rolls it and writes the outcome in the character's Diary.
+
 <!-- tui -->
 `a` adds an agent, `e` edits the chosen one and `d` deletes him. More
 (`m`) offers **Impress** (only for one not yet impressed), **Spend Agency
 Experience** (for an impressed one while there is experience to spend, or
-an agent's Bond) and **Set a Task** (only for an agent with a Bond of +1).
+an agent's Bond), **Set a Task** (only for an agent with a Bond of +1)
+and **Resolve the Task** (for any agent).
 <!-- /tui -->
 <!-- gui -->
 **Add**, **Edit** and **Delete** act on the agents. **Impress**, **Spend
-Agency Experience** and **Set a Task** act on the chosen one, and are
-greyed out where they can't: Impress only for one not yet impressed,
-Spend for an impressed one while there is experience to spend (or an
-agent's Bond), Set a Task only for an agent with a Bond of +1.
+Agency Experience**, **Set a Task** and **Resolve the Task** act on the
+chosen one, and are greyed out where they can't: Impress only for one not
+yet impressed, Spend for an impressed one while there is experience to
+spend (or an agent's Bond), Set a Task only for an agent with a Bond of
++1, Resolve the Task for any agent.
 <!-- /gui -->
 The agent form's **The Agent** shows the resistance your choices give
 him, and Set a Task's **The Task** the Ease Factor, the persuasion total
 and the botch dice before you roll.
+
+## Resolve the Task
+<!-- help: agent-task-resolve -->
+
+The agent's own roll, once he has agreed to a task (Lords of Men, Using
+Agents, p. 24): a die + his Characteristic + Ability against the task's
+Ease Factor. **Roll** rolls it once, says how it went and writes it in
+the character's Diary under the agent's name and the task.
+
+- **With** and **Characteristic + Ability**: the scores he uses, added
+  by hand (an agent's resources are free text, so the app can't look
+  them up). His resources are shown above them.
+- **Task**: the band the persuasion was for, which sets the **Ease
+  Factor** to its highest (Easy 6, Hard 12, Impressive 18). Lower it for
+  an easier deed within the band; one above the band is warned of, as
+  his agreement didn't cover it.
+- **Risk to him**: none rolls a simple die; embarrassment or reputation
+  a stress die with 1 botch die, injury or imprisonment 3, death 5.
+
+**His Roll** shows the total, the Ease Factor and the die he needs before
+you roll.
 
 ## Planning tab
 <!-- help: tab-planning -->

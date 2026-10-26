@@ -221,9 +221,13 @@ def roll(
     bronze_cord: int,
     rng: random.Random,
     saga: Saga | None = None,
+    *,
+    young: bool = False,
 ) -> AgingResult:
-    """The year's aging roll for `character` aged `age`."""
-    die = dice.stress_die(rng, 0, saga=saga).value
+    """The year's aging roll for `character` aged `age`. A `young` roll
+    (workshop exertion under 35) takes a simple die for the stress die,
+    and its 13 brings no Crisis (City & Guild p. 74)."""
+    die = dice.simple_die(rng) if young else dice.stress_die(rng, 0, saga=saga).value
     for_age = animal_aging.age_modifier(character, age)
     longevity = character.aging.longevity_modifier
     living = living_conditions(character, living)
@@ -268,7 +272,7 @@ def roll(
         order = sorted(CHARACTERISTICS, key=lambda c: -getattr(stats, c))
         result.any_points = needed
         result.suggested = [order[i % len(order)] for i in range(needed)]
-        result.crisis = True
+        result.crisis = not (young and total == 13)
     return result
 
 

@@ -1,7 +1,8 @@
 """A character's agents (Lords of Men, Control Through Emotional Bonds,
 pp. 22-25; the rules are rules.agents'): the Agents tab's title, header,
 rows and details, the form that adds or edits an agent, and More's
-Impress, Spend Agency Experience and Set a Task. Both front-ends draw
+Impress, Spend Agency Experience, Set a Task and Resolve the Task. Both
+front-ends draw
 them: the terminal's list and details panel, the desktop's ledger and
 inspector.
 """
@@ -12,9 +13,10 @@ import random
 from dataclasses import replace
 from typing import Any
 
+from .. import diaries
 from ..commands import Act, Command, Form, Refuse, SectionOps, delete, notes
 from ..form_spec import DialogField
-from ..markup import BULLET, escape, fit
+from ..markup import BULLET, escape, fit, plural
 from ..models import Agent, Character, Saga
 from ..rules import agents as ag
 from ..rules import dice, scores
@@ -557,7 +559,7 @@ def ops(character: Character) -> SectionOps:
     )
 
 
-# -- More: Impress, Spend Agency Experience, Set a Task --
+# -- More: Impress, Spend Agency Experience, Set a Task, Resolve the Task --
 
 
 def _chosen(character: Character, index: int, what: str) -> Agent | Refuse:
@@ -598,7 +600,7 @@ def impress(
             else "He is not impressed: try again in another story (LoM p. 24).",
         )
 
-    return Act(apply)
+    return Act(apply, title=f"Impress: {escape(agent.name)}")
 
 
 def _spend_fields(character: Character, agent: Agent) -> list[DialogField]:
@@ -618,8 +620,8 @@ def _spend_fields(character: Character, agent: Agent) -> list[DialogField]:
             "unspent",
             "Unspent",
             "info",
-            f"{character.agency_xp} Agency experience; {character.silver} pounds "
-            "of silver carried.",
+            f"{character.agency_xp} Agency experience; "
+            f"{plural(character.silver, 'pound')} of silver carried.",
         ),
         DialogField("how", "Spend on", "select", default, options=how),
         DialogField(
@@ -683,7 +685,8 @@ def spend(character: Character, index: int) -> Command:
                 return "Spend at least a pound."
             if pounds > character.silver:
                 return (
-                    f"{escape(character.name)} carries only {character.silver} pounds."
+                    f"{escape(character.name)} carries only "
+                    f"{plural(character.silver, 'pound')}."
                 )
             return None
         xp = int(values.get("xp") or 0)
@@ -724,7 +727,8 @@ def spend(character: Character, index: int) -> Command:
             character.silver -= pounds
             spent = ag.strengthen(agent, ag.xp_for_pounds(pounds))
             return notes(
-                f"{pounds} pounds for {ag.xp_for_pounds(pounds)} Agency experience: "
+                f"{plural(pounds, 'pound')} for {ag.xp_for_pounds(pounds)} Agency "
+                "experience: "
                 f"{escape(agent.name)}'s Bond is {agent.bond:+d}"
                 + (f" (+{spent.levels})." if spent.levels else ".")
             )
@@ -822,7 +826,7 @@ def task_live(character: Character, agent: Agent) -> Any:
         label, base = ag.TASKS[task]
         risk_label, risk_change, botch = ag.RISK[risk]
         die = "a stress die" if botch is not None else "a simple die"
-        botches = f", {botch} botch {'die' if botch == 1 else 'dice'}" if botch else ""
+        botches = f", {_botch_dice(botch)}" if botch else ""
         return "\n".join(
             [
                 f"[b]{escape(agent.name)}[/]  "
@@ -842,6 +846,26 @@ def task_live(character: Character, agent: Agent) -> Any:
         )
 
     return inspect
+
+
+def _risk_die(saga: Saga, risk: str, source: random.Random) -> dice.DieResult:
+    """The die a task rolls: a simple die with no risk to him, else a
+    stress die with the risk's botch dice (p. 24)."""
+    botch = ag.botch_dice(risk)
+    if botch is None:
+        return dice.simple_roll(source)
+    return dice.stress_die(source, botch, saga=saga)
+
+
+def _die_shown(die: dice.DieResult) -> str:
+    """ "7", or "a botch (2 zeros)"."""
+    if die.botched:
+        return f"a botch ({plural(die.botches, 'zero')})"
+    return str(die.value)
+
+
+def _botch_dice(botch: int) -> str:
+    return f"{botch} botch {'die' if botch == 1 else 'dice'}"
 
 
 def set_task(
@@ -864,19 +888,9 @@ def set_task(
         task, _timeframe, risk, ability, ease, total, _terms = _task_terms(
             character, agent, values
         )
-        botch = ag.RISK[risk][2]
-        source = rng or random.Random()
-        die = (
-            dice.simple_roll(source)
-            if botch is None
-            else dice.stress_die(source, botch, saga=saga)
-        )
+        die = _risk_die(saga, risk, rng or random.Random())
         roll = dice.Roll(total, die, ease)
-        shown = (
-            f"a botch ({die.botches} zero{'s' if die.botches > 1 else ''})"
-            if die.botched
-            else str(die.value)
-        )
+        shown = _die_shown(die)
         what = (values.get("what") or "").strip()
         return notes(
             f"{escape(agent.name)}"
@@ -897,4 +911,193 @@ def set_task(
         save_label="Roll",
         help_id=AGENTS_SECTION,
         inspector="The Task",
+    )
+
+
+# -- Resolve the Task --
+
+#: Resolve the Task's own help page.
+RESOLVE_HELP = "agent-task-resolve"
+
+
+def resolve_fields(agent: Agent) -> list[DialogField]:
+    """Resolve the Task's form: what he does, the Characteristic + Ability
+    he does it with (typed: his resources are free text), the task's band
+    and Ease Factor, and the risk to him."""
+    easy = "easy"
+    return [
+        DialogField(
+            "resources",
+            "His resources",
+            "info",
+            escape(agent.resources) or "None noted on his record.",
+        ),
+        DialogField(
+            "what",
+            "What he does",
+            "text",
+            "",
+            placeholder="e.g. Steal a ring from a lady's finger",
+        ),
+        DialogField(
+            "using",
+            "With",
+            "text",
+            "",
+            placeholder="e.g. Dexterity + Legerdemain",
+        ),
+        DialogField(
+            "total",
+            "Characteristic + Ability",
+            "int",
+            0,
+            hint="His own scores, added: the roll is his, not yours (LoM p. 24).",
+        ),
+        DialogField(
+            "band",
+            "Task",
+            "select",
+            easy,
+            options=[(label, key) for key, (label, _) in ag.TASK_BANDS.items()],
+            fills=lambda v: {"ease": ag.TASK_BANDS[v.get("band") or easy][1]},
+        ),
+        DialogField(
+            "ease",
+            "Ease Factor",
+            "int",
+            ag.TASK_BANDS[easy][1],
+            hint="The band's highest; lower it for an easier deed within it.",
+        ),
+        DialogField(
+            "risk",
+            "Risk to him",
+            "select",
+            "none",
+            options=[(label, key) for key, (label, _, _) in ag.RISK.items()],
+        ),
+    ]
+
+
+def _resolve_terms(values: dict[str, Any]) -> tuple[int, int, str, str]:
+    """The roll's terms as the form stands: his total, the Ease Factor,
+    the band and the risk."""
+    band = values.get("band") or "easy"
+    ease = values.get("ease")
+    if ease is None:
+        ease = ag.TASK_BANDS[band][1]
+    risk = values.get("risk") or "none"
+    return int(values.get("total") or 0), int(ease), band, risk
+
+
+def _with(values: dict[str, Any]) -> str:
+    using = (values.get("using") or "").strip()
+    return escape(using) if using else "his Characteristic + Ability"
+
+
+def resolve_live(agent: Agent) -> Any:
+    """Resolve the Task's inspector: the roll, the die it needs, and the
+    botch dice the risk brings."""
+
+    def inspect(values: dict[str, Any]) -> str:
+        total, ease, band, risk = _resolve_terms(values)
+        risk_label, _change, botch = ag.RISK[risk]
+        die = "a simple die" if botch is None else "a stress die"
+        botches = f", {_botch_dice(botch)}" if botch else ""
+        what = (values.get("what") or "").strip()
+        lines = [
+            f"[b]{escape(agent.name)}[/]  "
+            f"[$label]{escape(agent.bond_trait or 'Bond')} {agent.bond:+d}[/]",
+            f"[i]{escape(what) if what else ag.TASK_BANDS[band][0]}, "
+            + (
+                "at no risk to him"
+                if botch is None
+                else f"risking {risk_label.lower()}"
+            )
+            + ".[/]",
+            f"His roll: {die} + [b]{total}[/] [dim]({_with(values)})[/] against "
+            f"Ease Factor [b]{ease}[/]{botches} [dim](LoM p. 24)[/]",
+            f"He succeeds with a die of [b]{_die_needed(ease, total)}[/].",
+        ]
+        top = ag.TASK_BANDS[band][1]
+        if ease > top:
+            fits = ag.band_of(ease)
+            found = (
+                ag.TASK_BANDS[fits][0].split(" (")[0].lower()
+                if fits
+                else "beyond an impressive task"
+            )
+            lines.append(
+                f"[$text-warning]Ease Factor {ease} is more than this band's "
+                f"{top}: {found}, which his persuasion did not cover.[/]"
+            )
+        return "\n".join(lines)
+
+    return inspect
+
+
+def resolve(
+    saga: Saga, character: Character, index: int, rng: random.Random | None = None
+) -> Command:
+    """Resolve the Task: once he has taken it on, a roll of the agent's
+    own Characteristic + Ability against the task's Ease Factor (p. 24),
+    a simple die with no risk to him, else a stress die with the risk's
+    botch dice. The outcome goes into the principal's Diary."""
+    agent = _chosen(character, index, "Resolve the Task")
+    if isinstance(agent, Refuse):
+        return agent
+    if not ag.recruited(agent):
+        return Refuse(
+            "Resolve the Task",
+            f"{escape(agent.name)} is not yet your agent: win him, then set him "
+            "a task (LoM p. 24).",
+        )
+
+    def validate(values: dict[str, Any]) -> str | None:
+        if int(values.get("ease") or 0) < 0:
+            return "The Ease Factor cannot be below 0."
+        return None
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        total, ease, band, risk = _resolve_terms(values)
+        die = _risk_die(saga, risk, rng or random.Random())
+        roll = dice.Roll(total, die, ease)
+        what = (values.get("what") or "").strip()
+        using = (values.get("using") or "").strip() or "Characteristic + Ability"
+        rolled = (
+            f"The die shows {_die_shown(die)}, + {total} ({using}) = "
+            f"{roll.total} against {ease}."
+        )
+        if roll.succeeded:
+            outcome = "He does it" + (f", by {roll.margin}." if roll.margin else ".")
+        elif die.botched:
+            outcome = (
+                "He botches: it goes badly wrong for him, and he risked "
+                f"{ag.RISK[risk][0].lower()}."
+            )
+        else:
+            outcome = f"He fails, by {-(roll.margin or 0)}."
+        diaries.write(
+            saga.current_year,
+            saga.current_season,
+            f"{agent.name}'s task" + (f": {what}" if what else ""),
+            f"{ag.TASK_BANDS[band][0]}. {rolled} {outcome}",
+            characters=[character],
+        )
+        return notes(
+            escape(agent.name) + (f", to {escape(what)}" if what else "") + ":",
+            # A no-break space keeps the Ease Factor with its word.
+            escape(rolled).replace(" against ", " against\u00a0"),
+            outcome,
+            f"Written in {escape(character.name)}'s Diary.",
+        )
+
+    return Form(
+        f"Resolve the Task: {escape(agent.name)}",
+        lambda: resolve_fields(agent),
+        apply,
+        validate=validate,
+        live=resolve_live(agent),
+        save_label="Roll",
+        help_id=RESOLVE_HELP,
+        inspector="His Roll",
     )

@@ -224,14 +224,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
-        Step                        Day
-      ○ The roll call and proxies   The First Day
+        Step                                  Day
+      ○ The roll call and proxies             The First Day
       ○ Opening and the oaths
+      ○ The new magi and the sigils by proxy
       ○ Fengheld v. Keep
       ○ The vote: Fengheld v. Keep
-      ○ Motion: Gild dues           The Second Day
+      ○ Motion: Gild dues                     The Second Day
       ○ The vote: Gild dues
-      ○ Rulings and fines           The Third Day
+      ○ Rulings and fines                     The Third Day
       ○ Treasury and vis
       ○ Closing
 
@@ -249,7 +250,6 @@
         Covenant  Magi  Absent  Proxies  Votes
       ○ Keep      1                      1
       ○ Fengheld  3             1        3
-
 
 
 

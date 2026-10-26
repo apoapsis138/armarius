@@ -12,6 +12,7 @@ from .... import economics as eco
 from .... import inhabitants as inh
 from .... import possessions as pos
 from ....commands import Form
+from ....forms import charter as charter_forms
 from ....forms import covenant as covenant_forms
 from ....forms import inhabitant as inhabitant_forms
 from ....forms import world as world_forms
@@ -28,6 +29,7 @@ from ....models import (
     new_instance_id,
 )
 from ....rules import covenfolk
+from ....sections import CHARTER_SECTION, CLAUSES_SECTION
 from ..fields import FieldsDialog
 from ..forms import (
     _improve_income_dialog,
@@ -42,6 +44,7 @@ from ..prompts import (
     ConfirmScreen,
     _covenant_diary_entry_dialog,
 )
+from ..steps import run_steps
 from .base import (
     _BOON_HOOK_SECTION,
     WorkspaceBase,
@@ -711,6 +714,33 @@ class CovenantActions(WorkspaceBase):
 
     def action_improve(self) -> None:
         self._improve_income_source()
+
+    # -- Covenant: Charter tab --
+
+    def action_seal_charter(self) -> None:
+        """More's Seal the Charter: which magi have sealed it, and when."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        run_steps(
+            self.app,
+            charter_forms.seal_form(self.saga, covenant),
+            lambda _end: self._commit(CHARTER_SECTION),
+        )
+
+    def action_break_clause(self) -> None:
+        """More's Break a Clause on the chosen clause."""
+        covenant = self.selected_covenant
+        view = self._covenant_sheet_view
+        if covenant is None or view is None:
+            return
+        run_steps(
+            self.app,
+            charter_forms.break_clause(
+                self.saga, covenant, view.section_row(CLAUSES_SECTION)
+            ),
+            lambda _end: self._commit(CLAUSES_SECTION),
+        )
 
     # -- Covenant: Diary --
 

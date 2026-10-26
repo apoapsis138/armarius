@@ -17,8 +17,10 @@ from ..rules import (
     faerie_build,
     infernal_build,
     jinn_build,
+    magic_build,
     sites,
     spirit_build,
+    vis_kinds,
 )
 from . import character as cs
 
@@ -114,10 +116,12 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
     return [
         Fact("Might", creatures.might_text(c)),
         *pool,
+        *magic_vis_facts(saga, c),
         *build_facts(c),
         *infernal_facts(c),
         Fact("Size", _signed(c.size)),
         Fact("Season", c.season),
+        *([Fact("Warping", str(c.warping_score))] if c.warping_score else []),
         *([Fact("Age", c.age)] if c.age else []),
         *([Fact("Confidence", confidence_text(c))] if confidence_text(c) else []),
         Fact("How many", c.how_many if c.many else "One"),
@@ -131,6 +135,18 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
         *connections.rules_facts(saga, c),
         *connections.links_back(saga, c),
     ]
+
+
+def magic_vis_facts(saga: Saga, creature: Creature) -> list[Fact]:
+    """How fast a Magic Might creature regains Might resting in the Magic
+    aura where it is found (RoP: Magic p. 30)."""
+    c = creature
+    place = sites.place(saga, c.place_id)
+    if c.realm != "Magic" or c.might <= 0 or place is None:
+        return []
+    aura, realm = sites.aura_at(place, c.place_level)
+    recovery = vis_kinds.recovery_text(aura, c.might) if realm == "Magic" else ""
+    return [Fact("Might recovery", recovery)] if recovery else []
 
 
 def build_facts(creature: Creature) -> list[Fact]:
@@ -172,6 +188,12 @@ def build_facts(creature: Creature) -> list[Fact]:
     jinni_notes = jinn_build.notes(creature)
     if jinni_notes:
         found.append(Fact("As a jinni", "; ".join(jinni_notes) + "."))
+    magic = magic_build.problems(creature)
+    if magic:
+        found.append(Fact("Magic design", " ".join(magic)))
+    magic_notes = magic_build.notes(creature)
+    if magic_notes:
+        found.append(Fact("Magic being", "; ".join(magic_notes) + "."))
     return found
 
 
@@ -354,6 +376,8 @@ def _stat_block_head(creature: Creature) -> list[tuple[str, str]]:
         lines.append(("Season", c.season))
     if c.age:
         lines.append(("Age", c.age))
+    if c.warping_score:
+        lines.append(("Warping Score", str(c.warping_score)))
     if confidence_text(c):
         lines.append(("Confidence Score", confidence_text(c)))
     return lines

@@ -485,6 +485,8 @@ def test_workshop_exertion_is_rolled_when_played():
         "Exertion: + simple die 5; the exertion roll 2: no special result. An Aging "
         "roll this season.",
         "Workshop Total 13 against Craft Level 6: Superior goods. Labor Points 24.",
+        "6 or more over the standard Level 6: 1 xp in the Smith Reputation (City "
+        "& Guild p. 74).",
     ]
 
 

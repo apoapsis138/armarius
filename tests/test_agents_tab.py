@@ -148,6 +148,7 @@ def test_impress_rolls_and_marks_him_impressed_on_a_success():
     saga = Saga(id="s", name="S", characters=[lord])
     step = agent_forms.impress(saga, lord, 3, random.Random(3))
     assert isinstance(step, Act)
+    assert step.title == "Impress: Magister Hartwig"
     lines = step.apply()
     assert lord.agents[3].impressed == ("is impressed" in "\n".join(lines))
     assert isinstance(agent_forms.impress(saga, lord, 2), Refuse)
@@ -168,8 +169,13 @@ def test_spending_wears_resistance_down_and_raises_a_bond():
     lord.silver = 3
     assert bond.validate is not None
     assert bond.validate({"how": "pounds", "pounds": 4})
-    bond.apply({"how": "pounds", "pounds": 1})  # 5 xp: 9 of 15 to +3
+    said = bond.apply({"how": "pounds", "pounds": 1})  # 5 xp: 9 of 15 to +3
     assert lord.agents[0].bond_xp == 9 and lord.silver == 2
+    assert said[0].startswith("1 pound for 5 Agency experience")
+    assert "carries only 2 pounds" in bond.validate({"how": "pounds", "pounds": 4})
+    lord.silver = 1
+    unspent = agent_forms._spend_fields(lord, lord.agents[0])[0].value
+    assert "1 pound of silver" in str(unspent)
 
 
 def test_a_task_needs_a_bond_and_its_inspector_reads_the_chosen_ability():
@@ -221,13 +227,94 @@ def test_more_offers_each_command_only_for_an_agent_it_can_act_on():
         facts = _Facts(lord, row)
         return [
             action
-            for action in ("impress_agent", "spend_agency_xp", "set_agent_task")
+            for action in (
+                "impress_agent",
+                "spend_agency_xp",
+                "set_agent_task",
+                "resolve_agent_task",
+            )
             if actions.available(action, facts)  # type: ignore[arg-type]
         ]
 
-    assert offered(0) == ["spend_agency_xp", "set_agent_task"]  # Bond +2
-    assert offered(1) == ["spend_agency_xp"]  # Bond 0
+    assert offered(0) == [
+        "spend_agency_xp",
+        "set_agent_task",
+        "resolve_agent_task",
+    ]  # Bond +2
+    assert offered(1) == ["spend_agency_xp", "resolve_agent_task"]  # Bond 0
     assert offered(2) == ["spend_agency_xp"]  # impressed, being won
     assert offered(3) == ["impress_agent"]  # not yet impressed
     lord.agency_xp = 0
     assert offered(2) == []
+
+
+def test_a_task_band_sets_the_ease_factor_and_the_risk_its_botch_dice():
+    assert {key: top for key, (_, top) in ag.TASK_BANDS.items()} == {
+        "easy": 6,
+        "hard": 12,
+        "impressive": 18,
+    }
+    assert [ag.band_of(ease) for ease in (3, 6, 7, 12, 18, 19)] == [
+        "easy",
+        "easy",
+        "hard",
+        "hard",
+        "impressive",
+        None,
+    ]
+    assert [ag.botch_dice(r) for r in ag.RISK] == [None, 1, 3, 5]
+    band = next(f for f in agent_forms.resolve_fields(Agent("A")) if f.key == "band")
+    assert band.fills is not None and band.fills({"band": "hard"}) == {"ease": 12}
+
+
+def test_resolving_needs_an_agent_and_its_inspector_reads_his_roll():
+    lord = _lord()
+    saga = Saga(id="s", name="S", characters=[lord])
+    assert isinstance(agent_forms.resolve(saga, lord, 2), Refuse)  # being won
+    assert isinstance(agent_forms.resolve(saga, lord, 9), Refuse)
+    assert isinstance(agent_forms.resolve(saga, lord, 1), Form)  # Bond 0 too
+    step = agent_forms.resolve(saga, lord, 0)
+    assert isinstance(step, Form) and step.live is not None
+    assert step.help_id == "agent-task-resolve"
+    values = {
+        "using": "Dexterity + Legerdemain",
+        "total": 7,
+        "band": "hard",
+        "ease": 12,
+        "risk": "injury",
+    }
+    text = step.live(values)
+    assert "a stress die + [b]7[/]" in text and "Ease Factor [b]12[/]" in text
+    assert "3 botch dice" in text and "a die of [b]5+[/]" in text
+    assert "text-warning" not in text
+    calm = step.live({**values, "risk": "none", "ease": 15})
+    assert "a simple die" in calm and "botch" not in calm
+    assert "more than this band's 12: an impressive task" in calm
+
+
+def test_resolving_rolls_his_scores_and_writes_the_diary():
+    lord = _lord()
+    saga = Saga(id="s", name="S", characters=[lord])
+    step = agent_forms.resolve(saga, lord, 0, random.Random(1))
+    assert isinstance(step, Form)
+    said = step.apply(
+        {
+            "what": "steal the ring",
+            "using": "Dex + Legerdemain",
+            "total": 20,
+            "band": "easy",
+            "ease": 6,
+            "risk": "none",
+        }
+    )
+    entry = lord.diary[-1]
+    assert entry.name == "Sir Konrad's task: steal the ring"
+    assert "+ 20 (Dex + Legerdemain)" in entry.details
+    assert "He does it, by" in entry.details  # a simple die can't botch
+    assert (entry.year, entry.season) == (saga.current_year, saga.current_season)
+    assert said[-1] == "Written in Lord Robert's Diary."
+    hopeless = agent_forms.resolve(saga, lord, 0, random.Random(1))
+    assert isinstance(hopeless, Form)
+    hopeless.apply({"total": -20, "band": "impressive", "ease": 18, "risk": "none"})
+    assert "He fails, by" in lord.diary[-1].details
+    assert lord.diary[-1].name == "Sir Konrad's task"

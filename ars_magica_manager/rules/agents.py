@@ -25,7 +25,10 @@ of Men, Control Through Emotional Bonds, pp. 22-25).
   Communication + Charm, Intrigue or Leadership + Bond - the Gift's penalty
   against the task's Ease Factor (3, 6 or 9) raised for haste (+1 within
   days, +3 within a day) and risk (+1, +3 or +6; 1, 3 or 5 botch dice).
-  Passive news needs no roll (p. 24). A Minor Flaw that takes his time
+  Passive news needs no roll (p. 24). Once he takes it on, the player
+  rolls with the agent's own Characteristics and Abilities against the
+  task's Ease Factor: an Easy task's is 6 or less, a Hard one's 12 or
+  less, an Impressive one's 18 or less (p. 24). A Minor Flaw that takes his time
   makes him unavailable a quarter of the time, a Major one half (p. 25).
 - Social Contacts, Mercenary Captain, Close Family Ties or Landed Noble
   give 12 points of agents at character creation, each costing at least 1
@@ -102,6 +105,13 @@ RISK: dict[str, tuple[str, int, int | None]] = {
     "embarrassment": ("Embarrassment or his reputation", 1, 1),
     "injury": ("Injury or imprisonment", 3, 3),
     "death": ("Death", 6, 5),
+}
+#: The Tasks for Agents table's deeds (p. 24): the highest Ease Factor of
+#: the task the agent then rolls against.
+TASK_BANDS: dict[str, tuple[str, int]] = {
+    "easy": ("An Easy task (Ease Factor 6 or less)", 6),
+    "hard": ("A Hard task (Ease Factor 12 or less)", 12),
+    "impressive": ("An Impressive task (Ease Factor 18 or less)", 18),
 }
 #: The share of the time a Flaw that takes his time keeps him away (p. 25).
 UNAVAILABLE: dict[str, float] = {"minor": 0.25, "major": 0.5}
@@ -196,6 +206,18 @@ def task_ease(task: str, timeframe: str = "weeks", risk: str = "none") -> int:
 def persuasion_total(communication: int, ability: int, bond: int, gift: int) -> int:
     """What a die adds to, to have the agent take the task on."""
     return communication + ability + bond - gift
+
+
+def band_of(ease: int) -> str | None:
+    """The easiest band of deed a task of Ease Factor `ease` fits (None:
+    beyond an Impressive task)."""
+    return next((key for key, (_, top) in TASK_BANDS.items() if ease <= top), None)
+
+
+def botch_dice(risk: str) -> int | None:
+    """The botch dice a task's risk to the agent gives (None: a simple
+    die, with no risk to him)."""
+    return RISK[risk][2]
 
 
 def may_be_asked(agent: Agent) -> bool:

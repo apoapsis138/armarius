@@ -199,12 +199,17 @@ class Fighter:
             else None
         )
         if c is not None and weapon is not None:
-            totals = combat.combat_totals(c, weapon)
+            # On horseback a lance is a Single Weapon; on foot a long spear
+            # (DE pp. 400-401; Lords of Men p. 126). Ride's bonus is not in
+            # these totals: ride_bonus() adds it to each blow.
+            totals = combat.combat_totals(c, weapon, mounted_=self.combatant.mounted)
 
             def whole(part: Breakdown | None) -> int | None:
                 return None if part is None else int(part.total)
 
-            ability = combat.weapon_ability(weapon)
+            # The Ability the totals were worked with (a lance on foot is
+            # fought with Great Weapon).
+            ability = totals.ability
             skill = sum(ability_score(c, ability)) if ability else 0
             return Figures(
                 init=int(totals.initiative.total),
@@ -699,12 +704,17 @@ def _land(
                     fighter.wound(wound)
                 told.append(
                     f"{fighter.name} loses {levels} Fatigue level(s)"
-                    + (f" and takes a {wound.title()} Wound" if wound else "")
+                    + (f" and takes {_a(wound.title())} Wound" if wound else "")
                 )
             else:
                 fighter.wound(severity)
-                told.append(f"{fighter.name} takes a {band} Wound")
+                told.append(f"{fighter.name} takes {_a(band)} Wound")
     return told
+
+
+def _a(word: str) -> str:
+    """The word with its article: "an Incapacitating", "a Heavy"."""
+    return f"{'an' if word[:1].lower() in 'aeiou' else 'a'} {word}"
 
 
 def _disengage(saga: Saga, fight: Fight, who: Unit, rng: random.Random) -> Played:

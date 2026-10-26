@@ -328,6 +328,15 @@ The Definitive Edition's Quick and Easy Virtues and Flaws (Chapter 3, page 46) a
   - **Magical companion**: one Minor Supernatural Virtue that grants an Ability, such as Second Sight, with Puissant and Affinity in that Ability.
 - **Magus**: a Major Personality or Story Flaw, The Gift and the Hermetic Magus Social Status, Deficient Form in a Form you are not interested in, a Minor Magical Focus that doesn't rely on that Form (typed in, such as Fire), Puissant and Affinity in one Technique that overlaps the Focus, and Puissant in one Form that overlaps it. The House's free Virtue is chosen on the worksheet.
 
+**Templar companion (The Church).** The Social Status is the character's rank
+in the Knights Templar: Brother Knight, Brother Sergeant, Brother-Priest,
+Templar Administrator, Templar Specialist, Templar Commander, or an associate
+(Confrere or Consoeur) or servant (The Church pp. 123-125; the Definitive
+Edition reprints them, pp. 73 and 111-112). "Renowned among the brothers"
+adds Templar Prestige (Reputation 4 among the Templars). An office (Templar
+Office Holder) is a second Social Status, taken on the sheet. A commander
+already has the brother-knight's standing and Temporal Influence free.
+
 **You choose:** where the recipe gives several ways (the grog's Virtue, the Learned companion's), which one; the Abilities, Arts or Virtue each part names; the **Flaw**, from the books in play; and the **Social Status** (Covenfolk to start with; a magus's is Hermetic Magus).
 
 **The app works out:** the line under the form gives the Virtue and Flaw points so far. Use refuses a choice that breaks the type's limits. A grog's are those of [A Grogs template](help:grog-templates). A companion's and a magus's: nothing Hermetic without The Gift, at most one Major Hermetic Virtue, at most ten points of Flaws and five Minor Flaws, no more Virtue points than Flaw points, exactly one Social Status, and the same Ability or Art named twice by the same Virtue. A Social Status that costs a point is refused here, since it leaves the Virtues a point over: take it on the worksheet with another Flaw. Cancelling makes no character.
@@ -362,6 +371,11 @@ The Definitive Edition's Perfectus is a Minor Social Status for an ordinary comp
 <!-- help: companion-sample-templates -->
 
 A companion's Template list also has the ready-made companions the supplements in play print, marked with their book, such as Byzantine Priest (RoP:D), Mystic Nun (TC), Gilpatrick (A&A) or Rothiger (HMRE). Unlike the Definitive Edition's templates, which start In Play, these start **In Creation**, so the worksheet checks them against the rules.
+
+The Church also gives a Templar Commander and a Templar Brother-Priest
+(pp. 126-127), and two of the first Franciscans, Francis of Assisi and
+Brother Elias (pp. 131, 133), historical figures the storyguide may meet
+or play.
 
 **You choose:**
 

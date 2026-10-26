@@ -25,6 +25,7 @@ from .models import (
     Saga,
     WeaponDef,
 )
+from .rules import vis_kinds
 from .rules.lab_stats import lab_build_points, lab_characteristic_total
 from .tables import Table
 
@@ -90,6 +91,9 @@ class PossessionEntry:
     lab_saga: Saga | None = None
     #: A Raw Vis Store: where it is kept, by name (vis.location_label).
     place: str = ""
+    #: A Raw Vis Store: pawns of its Art kept in the same place, its own
+    #: included (vis.kept_together).
+    kept_together: int = 0
 
     def _own(self, attribute: str, default: Any):
         return getattr(self.record, attribute) if self.record is not None else default
@@ -282,7 +286,10 @@ def entries_for_kind(
         place = (
             vis.location_label(saga, covenant, record) if kind == "vis_store" else ""
         )
-        entries.append(PossessionEntry(kind, record, place=place))
+        together = vis.kept_together(covenant, record) if kind == "vis_store" else 0
+        entries.append(
+            PossessionEntry(kind, record, place=place, kept_together=together)
+        )
     return entries
 
 
@@ -503,12 +510,9 @@ def detail_text(entry: PossessionEntry | None) -> str:
         lines.append(_line("Season", entry.season))
         optional("Location", entry.location)
         optional("Physical Form", entry.physical_form)
+        lines += vis_kind_lines(entry.record)
     else:  # vis_store
-        lines += [_line("Art", entry.art), _line("Pawns", entry.pawns)]
-        optional("Infernal vis", INFERNAL_VIS_NOTE if entry.infernal else "")
-        optional("Kept at", entry.place)
-        optional("Location", entry.location)
-        optional("Physical Form", entry.physical_form)
+        lines += _vis_store_lines(entry)
 
     if entry.lab is not None:
         lines.append(
@@ -517,6 +521,45 @@ def detail_text(entry: PossessionEntry | None) -> str:
     if entry.description.strip():
         lines += ["", "[b]Description:[/]", markdown_text(entry.description.strip())]
     return "\n".join(lines)
+
+
+def _vis_store_lines(entry: PossessionEntry) -> list[str]:
+    """A Raw Vis Store's details beyond its name."""
+    lines = [_line("Art", entry.art), _line("Pawns", entry.pawns)]
+    for label, value in (
+        ("Infernal vis", INFERNAL_VIS_NOTE if entry.infernal else ""),
+        ("Kept at", entry.place),
+        ("Location", entry.location),
+        ("Physical Form", entry.physical_form),
+    ):
+        if value:
+            lines.append(_line(label, value))
+    lines += vis_kind_lines(entry.record)
+    stored = vis_kinds.storage_note(entry.art, entry.kept_together)
+    if stored:
+        lines.append(f"[dim]{escape(stored)}[/]")
+    return lines
+
+
+def vis_kind_lines(record: Possession | None) -> list[str]:
+    """A vis source's or store's kind of vis, what it does and what it is
+    worth ([] for ordinary vis)."""
+    if record is None or not record.vis_kind:
+        return []
+    kind = vis_kinds.kind_of(record)
+    lines = [_line("Kind", f"{vis_kinds.label(record)}: {kind.note}")]
+    thing = vis_kinds.THINGS_BY_ID.get(record.virtue_thing)
+    if thing is not None:
+        lines.append(f"[dim]{escape(vis_kinds.thing_text(thing))}[/]")
+    if record.effect_level:
+        lines.append(_line("Power", f"level {record.effect_level}"))
+    worth = vis_kinds.trade_value(record)
+    if worth != 1:
+        lines.append(
+            f"[dim]Worth {worth:g} ordinary pawn(s) a pawn in trade (RoP: Magic "
+            "p. 124).[/]"
+        )
+    return lines
 
 
 def gear_points(saga: Saga, covenant: Covenant) -> int:
@@ -538,7 +581,7 @@ def save_entry(
     or a new record -- for a new entry, or for a laboratory's sanctum edited
     for the first time (linked to that lab). A Raw Vis Store's "place"
     (vis.location_options' "kind:id") becomes its location link."""
-    values = dict(values)
+    values = vis_kinds.clean(dict(values))
     place = values.pop("place", None)
     if place:
         values["location_kind"], _, values["location_id"] = place.partition(":")
@@ -566,6 +609,9 @@ def form_problem(values: dict[str, Any]) -> str | None:
         return "Quantity must be at least 1."
     if values.get("pawns", 1) < 1:
         return "Pawns must be at least 1."
+    kind_problem = vis_kinds.problem(values)
+    if kind_problem:
+        return kind_problem
     if values.get("load", 0) < 0:
         return "Load can't be negative."
     gear_type = values.get("gear_type")

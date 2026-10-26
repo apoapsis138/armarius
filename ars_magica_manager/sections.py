@@ -168,8 +168,13 @@ TOWN_PEOPLE_SECTION = "section-nb-town-people"
 GUILD_MEMBERS_SECTION = "section-nb-guild-members"
 COURT_CASES_SECTION = "section-nb-court-cases"
 SENTENCES_SECTION = "section-nb-sentences"
-#: A covenant's own charter (the Chartered Town Boon) and the towns it
-#: charters (the Charter Lord Hook), on its Attributes tab.
+#: A covenant's Charter of Covenant (covenant_charter.py): the charter
+#: itself (its name, preamble and seals) and its clauses, on its Charter
+#: tab.
+CHARTER_SECTION = "section-cov-charter"
+CLAUSES_SECTION = "section-cov-clauses"
+#: A covenant's own town charter (the Chartered Town Boon) and the towns
+#: it charters (the Charter Lord Hook), on its Charter tab too.
 COV_CHARTER_LORDS_SECTION = "section-cov-charter-lords"
 COV_CHARTER_TERMS_SECTION = "section-cov-charter-terms"
 CHARTERED_TOWNS_SECTION = "section-cov-chartered-towns"
@@ -290,6 +295,8 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     COURT_CASES_SECTION: frozenset({"add", "edit", "remove"}),
     COV_CHARTER_LORDS_SECTION: frozenset({"add", "edit", "remove"}),
     COV_CHARTER_TERMS_SECTION: frozenset({"edit"}),
+    CHARTER_SECTION: frozenset({"edit"}),
+    CLAUSES_SECTION: frozenset({"add", "edit", "remove"}),
     MANORS_SECTION: frozenset({"add", "edit", "remove"}),
     ESTABLISHMENTS_SECTION: frozenset({"add", "edit", "remove"}),
     HOUSEHOLD_SECTION: frozenset({"edit"}),

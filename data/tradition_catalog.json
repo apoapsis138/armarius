@@ -17910,7 +17910,10 @@
           "lab": true,
           "against": "Ease Factor",
           "vis_cap": "none",
-          "notes": "A season of contemplation: Com + Hymn + modifiers + aura must reach EF = (total Power levels + modifiers) / 3, rounded up. Modifiers: devotional behaviour +3 a season (max +9), each day without reciting -1 (max -20), Hyperborean Descent +2 / +4, Dead Language: Hyperborean score, an honourable Personality Flaw +1 / +3, a dishonourable one -1 / -3. Once infused the Power is used at will with no roll. Improving a Power uses the difference in levels."
+          "notes": "A season of contemplation: Com + Hymn + modifiers + aura must reach EF = (total Power levels + modifiers) / 3, rounded up. Modifiers: devotional behaviour +3 a season (max +9), each day without reciting -1 (max -20), Hyperborean Descent +2 / +4, Dead Language: Hyperborean score, an honourable Personality Flaw +1 / +3, a dishonourable one -1 / -3. Once infused the Power is used at will with no roll. Improving a Power uses the difference in levels.",
+          "adds": [
+            "Dead Language: Hyperborean"
+          ]
         },
         {
           "name": "Enchant a relic",
@@ -17921,7 +17924,10 @@
           "against": "Ease Factor",
           "vis_cap": "none",
           "vis": "none: 2 Warping Points per pawn that would be needed, opening included",
-          "notes": "Int + Hymn + modifiers + aura vs (levels + modifiers) / 3, one season per Power. No shape, material or size limits; Rituals allowed. No talismans, charged items, familiars, longevity effects (but Eternal Youth), Lab Texts, experimentation or Powers from two hymns."
+          "notes": "Int + Hymn + modifiers + aura vs (levels + modifiers) / 3, one season per Power. No shape, material or size limits; Rituals allowed. No talismans, charged items, familiars, longevity effects (but Eternal Youth), Lab Texts, experimentation or Powers from two hymns.",
+          "adds": [
+            "Dead Language: Hyperborean"
+          ]
         },
         {
           "name": "Choir",
@@ -17931,7 +17937,10 @@
           "against": "Ease Factor",
           "vis_cap": "none",
           "vis": "pawns equal to the final EF, of a Technique or Form fitting the effect",
-          "notes": "A one-off effect, not infused; at least a day (3 days +1, 7 +2, 14 +3, 21 +4, 28 +5). +5 levels per extra hymn; only the focus needs every hymn used. The book's example adds no die."
+          "notes": "A one-off effect, not infused; at least a day (3 days +1, 7 +2, 14 +3, 21 +4, 28 +5). +5 levels per extra hymn; only the focus needs every hymn used. The book's example adds no die.",
+          "adds": [
+            "Dead Language: Hyperborean"
+          ]
         }
       ],
       "defenses": {
@@ -18008,7 +18017,248 @@
         "replaces_twilight": true,
         "trigger": "More than 2 Warping Points at once (not from enchanting), for a Gifted character whose main tradition is the hymns.",
         "notes": "His Apollonian Personality Trait equals his Warping Score, and he has Dutybound (Minor). Roll Sta + Concentration + highest Hymn + stress die vs updated Warping Score + WP gained + aura + modifiers + stress die (Descent -2 / -4; +1 per 30 Power levels infused). Failure transforms him (crow, swan, bull, or his spirit leaves his body) for hours equal to the WP; to return, the same roll vs Warping Score + aura + modifiers, each failure a day and a cumulative -1. Bright Lightening: he may choose to fail, gaining Score + aura + modifiers extra Warping Points and as many xp in hymns. Not for magi."
-      }
+      },
+      "guidelines": [
+        {
+          "name": "Any Power of its principles",
+          "arts": [
+            "Hymn Azai"
+          ],
+          "summary": "Hermetic guidelines (DE ch. 9) for: Animal birth; Corpus birth, the heart, vitality; Herbam growth; Ignem daytime, light, sunshine; Mentem authority, ghosts, love, respect, spirits; Terram gold; also defense, leadership, understanding",
+          "page": 110
+        },
+        {
+          "name": "Any Power of its principles",
+          "arts": [
+            "Hymn Eloure"
+          ],
+          "summary": "Hermetic guidelines (DE ch. 9) for: Aquam lakes, oceans, rain, rivers; Corpus blood, breasts, fertility, the stomach; Herbam fertility; Mentem emotions, dreams, honesty, maternal urges; Terram amber, silver",
+          "page": 111
+        },
+        {
+          "name": "Any Power of its principles",
+          "arts": [
+            "Hymn Iaó"
+          ],
+          "summary": "Hermetic guidelines (DE ch. 9) for: Aquam cold, damp, the sky; Auram wind, sweet smells; Corpus disease, hearing, hunger, sight, taste, veins; Imaginem hearing, sight; Mentem affection, attraction, creativity, pleasure; Terram copper, emeralds; Vim auras, sensing magic; also cleanliness, harmony",
+          "page": 111
+        },
+        {
+          "name": "Any Power of its principles",
+          "arts": [
+            "Hymn Óai"
+          ],
+          "summary": "Hermetic guidelines (DE ch. 9) for: Animal birds, crows, dolphins, grasshoppers, hawks, mice, snakes, swans, wolves; Mentem imagination, the intellect, speech, spirits; Terram opals; also the spirit world, obscurity, travel, secrecy",
+          "page": 112
+        },
+        {
+          "name": "Any Power of its principles",
+          "arts": [
+            "Hymn Pentiterouni"
+          ],
+          "summary": "Hermetic guidelines (DE ch. 9) for: Animal animal skin; Corpus aging and growth, bones, organs and flesh, skin, trembling; Herbam ash, fermentation, nightshade, yew; Mentem concentration, depression, greed, guilt, seriousness; Terram ash, coal, lead, onyx, sapphires; also authority, caves, contractions, organization",
+          "page": 112
+        },
+        {
+          "name": "Any Power of its principles",
+          "arts": [
+            "Hymn Psyrinpheu"
+          ],
+          "summary": "Hermetic guidelines (DE ch. 9) for: Animal wolves; Corpus fevers, the head, muscles, sexuality, stamina, youth; Herbam chestnut trees, nettles, roses, thorns; Ignem heat; Mentem aggression, conflict, willpower; Terram arsenic, diamond, iron, ruby",
+          "page": 113
+        },
+        {
+          "name": "Any Power of its principles",
+          "arts": [
+            "Hymn Semesilam"
+          ],
+          "summary": "Hermetic guidelines (DE ch. 9) for: Animal swans; Corpus good health, vigor; Imaginem song, music; Herbam fig trees, fruit, oak, palms, vines; Mentem benevolence, justice, morality, optimism; Terram amethyst, marble, tin",
+          "page": 114
+        },
+        {
+          "name": "Apollo's Luminescent Blessing (cost 15, Ease Factor 5)",
+          "arts": [
+            "Hymn Azai"
+          ],
+          "summary": "light: the touched glows like cloudy daylight; Base 4, +1 Touch, +1 Conc, Pen +4, 6/day",
+          "page": 110
+        },
+        {
+          "name": "Sovereignty of Phoebus Apollo (cost 34, Ease Factor 12)",
+          "arts": [
+            "Hymn Azai"
+          ],
+          "summary": "authority: spirits and ghosts respect and tend to obey him; Base 5, +3 Sight, +2 Sun, +4 levels Penetration",
+          "page": 110
+        },
+        {
+          "name": "Defy the Hound Cerebus (cost 45, Ease Factor 15)",
+          "arts": [
+            "Hymn Azai"
+          ],
+          "summary": "ghosts: a summoned ghost possesses a body he commands; Base 15, +4 Arc, +1 Conc, Pen +10",
+          "page": 110
+        },
+        {
+          "name": "The Swan-Drawn Chariot (variable)",
+          "arts": [
+            "Hymn Azai"
+          ],
+          "summary": "authority: seems to spirits to have Magic Might (level - 15) / 2; General, +2 Sun, +4 levels Penetration, 2/day",
+          "page": 110
+        },
+        {
+          "name": "False Dream (cost 22, Ease Factor 8)",
+          "arts": [
+            "Hymn Eloure"
+          ],
+          "summary": "dreams: changes a sleeper's dreams; Base 2, +4 Arc, +2 Sun, Pen +4",
+          "page": 111
+        },
+        {
+          "name": "Demeter's Blessing (cost 35, Ease Factor 12)",
+          "arts": [
+            "Hymn Eloure"
+          ],
+          "summary": "rain: nourishing rain over 6 miles; Base 1, +1 Touch, +4 Year, +4 Bound, +1 size (errata p. 58)",
+          "page": 111
+        },
+        {
+          "name": "Bestow Fecundity (cost 35, Ease Factor 12)",
+          "arts": [
+            "Hymn Eloure"
+          ],
+          "summary": "fertility: a touched person or animal can conceive; Base 30, +1 Touch",
+          "page": 111
+        },
+        {
+          "name": "The Gift of Far-sighted Apollo (cost 25, Ease Factor 9)",
+          "arts": [
+            "Hymn Iaó"
+          ],
+          "summary": "sight: sees far as if near; Base 3, +2 Sun, +4 Vision",
+          "page": 111
+        },
+        {
+          "name": "Opening the Hidden Eyes (cost 40, Ease Factor 14)",
+          "arts": [
+            "Hymn Iaó"
+          ],
+          "summary": "auras: sees vis, auras, regiones and spirits; Base 5, +1 Conc, +4 Vision, +2 detail (errata p. 58)",
+          "page": 111
+        },
+        {
+          "name": "Cleansing Libation of the Sybil of Cumae (cost 55, Ease Factor 19)",
+          "arts": [
+            "Hymn Iaó"
+          ],
+          "summary": "disease: +12 to resist or recover from illness within a boundary; Base 5, +1 Touch, +5 19 Years, +4 Bound (the book prints Ease Factor 18)",
+          "page": 111
+        },
+        {
+          "name": "The Unseen Traveler (cost 15, Ease Factor 5)",
+          "arts": [
+            "Hymn Óai"
+          ],
+          "summary": "secrecy: invisible but to Intellego and Second Sight; Base 4, +2 Sun, +1 changing image",
+          "page": 112
+        },
+        {
+          "name": "Turn to Lofty Heights (cost 35, Ease Factor 12)",
+          "arts": [
+            "Hymn Óai"
+          ],
+          "summary": "intellect, spirits: his spirit leaves his body and travels; non-Hermetic",
+          "page": 112
+        },
+        {
+          "name": "Ride the Arrow of Abaris (cost 50, Ease Factor 17)",
+          "arts": [
+            "Hymn Óai"
+          ],
+          "summary": "travel: instantly to any place he sees; Base 35, +3 Sight",
+          "page": 112
+        },
+        {
+          "name": "Punishment of Marsyas (cost 30, Ease Factor 10)",
+          "arts": [
+            "Hymn Pentiterouni"
+          ],
+          "summary": "skin: flays a touched person, an Incapacitating Wound; Base 20, +1 Touch, +4 levels Penetration, 2/day",
+          "page": 112
+        },
+        {
+          "name": "Radiant Mantle of the Night-Wanderer (cost 45, Ease Factor 15)",
+          "arts": [
+            "Hymn Pentiterouni"
+          ],
+          "summary": "skin, flesh: a travelling spirit takes on pseudo-flesh; non-Hermetic",
+          "page": 112
+        },
+        {
+          "name": "Fortitude of Cadmus (cost 15, Ease Factor 5)",
+          "arts": [
+            "Hymn Psyrinpheu"
+          ],
+          "summary": "stamina: +1 to Soak or to resist Fatigue; Base 5, +2 Sun",
+          "page": 113
+        },
+        {
+          "name": "Victory of the Lapiths (cost 15, Ease Factor 5)",
+          "arts": [
+            "Hymn Psyrinpheu"
+          ],
+          "summary": "stamina, conflict: wounds and Fatigue have no penalty until it ends; Base 10, +1 Diam",
+          "page": 113
+        },
+        {
+          "name": "Courage of the Python Slayer (cost 25, Ease Factor 9)",
+          "arts": [
+            "Hymn Psyrinpheu"
+          ],
+          "summary": "aggression: courage that a weaker fear effect can't break; Base 4, +2 Voice, +2 Sun, Pen +2, 12/day",
+          "page": 114
+        },
+        {
+          "name": "Slaying of Niobe's Children (cost 35, Ease Factor 12)",
+          "arts": [
+            "Hymn Psyrinpheu"
+          ],
+          "summary": "conflict, fever: unseen bolts of a Heavy Wound disease; Base 20, +2 Voice, Pen +4, 6/day",
+          "page": 114
+        },
+        {
+          "name": "Eternal Youth of the Sun (cost 65, Ease Factor 22)",
+          "arts": [
+            "Hymn Psyrinpheu"
+          ],
+          "summary": "youth: ignores aging, crises too, a Warping Point a year; Base 40, +5 19 Years",
+          "page": 114
+        },
+        {
+          "name": "Thalia's Relief (cost 15, Ease Factor 5)",
+          "arts": [
+            "Hymn Semesilam"
+          ],
+          "summary": "optimism: relieves worry and grief; Base 4, +1 Touch, +2 Sun",
+          "page": 114
+        },
+        {
+          "name": "Divination of True Intent (cost 25, Ease Factor 9)",
+          "arts": [
+            "Hymn Semesilam"
+          ],
+          "summary": "justice: the truth of one action or thought; Base 15, +1 Eye, Pen +4, 6/day",
+          "page": 114
+        },
+        {
+          "name": "Numina of Apollo (Magic Resistance)",
+          "arts": [],
+          "summary": "any hymn: a Vim Power (R: Per, D: Sun, T: Ind, Pen +0, 1/day) giving Magic Resistance (level - 5) against effects of its principles; Base General, +1 Sun; a constant one Warps",
+          "page": 110
+        }
+      ],
+      "guideline_source": "Ancient Magic pp. 107-114, errata p. 58: Powers take the Hermetic guidelines within the hymn's principles; the level typed is the Power's level cost"
     },
     {
       "id": "trad_storm_wizards",

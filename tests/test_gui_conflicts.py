@@ -20,11 +20,11 @@ from ars_magica_manager import battles, conflicts, fights, medallions, sieges, s
 from ars_magica_manager.commands import Form
 from ars_magica_manager.gui import medallions as drawn
 from ars_magica_manager.gui import pictures
-from ars_magica_manager.gui.conflicts import FightPage, SiegePage
+from ars_magica_manager.gui.conflicts import FightPage, SiegeBody, SiegePage
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.widgets import ClickableCard
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import SEASONS, Saga
+from ars_magica_manager.models import SEASONS, Saga, Siege, SiegeEvent
 
 
 @pytest.fixture(scope="module")
@@ -232,3 +232,29 @@ def test_a_siege_between_lords_names_and_flies_their_arms(app):
     fief = NeighbourPage(saga, gottfried, PALETTES[0])
     titles = [label.text() for label in fief.findChildren(QLabel)]
     assert any(t.startswith("Sieges (") for t in titles)
+
+
+# -- the siege page's chronicle --
+
+
+def test_the_siege_chronicle_shows_every_event_and_wraps_long_lines(app):
+    siege = Siege(
+        "S",
+        events=[
+            SiegeEvent(7 * n, "Keep the stockade", f"Event {n}") for n in range(12)
+        ],
+    )
+    siege.events.append(
+        SiegeEvent(90, "Escalade", "The besiegers win a foothold " * 20, ["a " * 200])
+    )
+    body = SiegeBody(Saga(id="s", name="S", sieges=[siege]), siege, PALETTES[0])
+    rows = body._chronicle_rows(980)
+    words = [text for _, text, _ in rows]
+    assert words[0] == "Day 0: Event 0" and "Day 77: Event 11" in words
+    assert sum(1 for _, _, opens in rows if opens) == 13
+    assert len(rows) > 13 + 2  # the long event and its working wrap
+    short = body._height(1000)
+    body.resize(1000, short)
+    assert body.minimumHeight() >= short
+    siege.events.append(SiegeEvent(97, "Keep the stockade", "One more"))
+    assert body._height(1000) > short

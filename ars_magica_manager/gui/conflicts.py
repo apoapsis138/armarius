@@ -30,6 +30,7 @@ from PySide6.QtGui import (
     QPaintEvent,
     QPen,
     QRadialGradient,
+    QResizeEvent,
 )
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
@@ -118,6 +119,24 @@ def _boxed(
 
 def _elided(words: str, f: QFont, width: float) -> str:
     return QFontMetricsF(f).elidedText(words, Qt.TextElideMode.ElideRight, width)
+
+
+def _wrapped(words: str, f: QFont, width: float) -> list[str]:
+    """The words in lines no wider than `width`, broken between words (a
+    single word too long for a line is cut short)."""
+    metrics = QFontMetricsF(f)
+    lines: list[str] = []
+    line = ""
+    for word in words.split():
+        trial = f"{line} {word}" if line else word
+        if line and metrics.horizontalAdvance(trial) > width:
+            lines.append(_elided(line, f, width))
+            line = word
+        else:
+            line = trial
+    if line:
+        lines.append(_elided(line, f, width))
+    return lines
 
 
 def title_words(
@@ -822,6 +841,11 @@ QUALITY_TICKS = [(i / 3, q) for i, q in enumerate(siege_rules.QUALITIES)]
 #: The Garrison gauge's reach, in combat groups, and its readings at the
 #: steps where its interval changes.
 GARRISON_TOP = 50
+#: The siege's chronicle runs the page's width under the garrison's three
+#: gauges (its arms, its box of three rows, then the gauges); each line of
+#: it is this tall.
+CHRONICLE_TOP = 10 + 82 + 26 + 46 * 3 + 20 + 3 * GAUGE + 26
+CHRONICLE_LINE = 22
 #: Where each wall's reading sits beside it (North, East, South, West).
 LABEL_OFFSETS = (QPointF(-30, -20), QPointF(18, 4), QPointF(-30, 50), QPointF(-90, 4))
 
@@ -913,18 +937,35 @@ class SiegeBody(QWidget):
         super().__init__()
         self.saga, self.siege, self.p = saga, siege, p
         self.setMinimumWidth(1000)
-        self.setMinimumHeight(self._height())
+        self.setMinimumHeight(self._height(1000))
 
-    def _height(self) -> int:
-        panels = 300 + GAUGE * 4 + 20
-        chronicle = 60 + 22 * self._chronicle_lines()
-        return int(max(panels, 560 + chronicle) + 20)
+    def _height(self, width: float) -> int:
+        rows = len(self._chronicle_rows(width - 20)) or 1
+        return int(CHRONICLE_TOP + 32 + CHRONICLE_LINE * rows + 30)
 
-    def _chronicle_lines(self) -> int:
-        return sum(1 + len(e.lines) for e in self.siege.events[-6:]) or 1
+    def _chronicle_rows(self, width: float) -> list[tuple[float, str, bool]]:
+        """The chronicle's lines, every event's, wrapped to `width`: (how
+        far in, the words, whether it opens an event)."""
+        rows: list[tuple[float, str, bool]] = []
+        for event in self.siege.events:
+            head = _wrapped(f"Day {event.day}: {event.text}", font(12), width - 24)
+            rows += [(18, line, i == 0) for i, line in enumerate(head)]
+            for working in event.lines:
+                rows += [
+                    (34 if i == 0 else 46, line, False)
+                    for i, line in enumerate(
+                        _wrapped(working, font(10.5, italic=True), width - 52)
+                    )
+                ]
+        return rows
 
     def sizeHint(self) -> QSize:
-        return QSize(1000, self._height())
+        return QSize(1000, self._height(max(1000, self.width())))
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        # The chronicle wraps to the page's width, so its height follows it.
+        self.setMinimumHeight(self._height(event.size().width()))
+        super().resizeEvent(event)
 
     def paintEvent(self, event: QPaintEvent) -> None:
         g = QPainter(self)
@@ -935,7 +976,7 @@ class SiegeBody(QWidget):
         self._garrison(g, QRectF(10, 10, side, 0))
         self._plan(g, plan)
         self._besiegers(g, QRectF(w - side - 10, 10, side, 0))
-        self._chronicle(g, QRectF(plan.left(), plan.bottom() + 24, plan.width(), 0))
+        self._chronicle(g, QRectF(10, CHRONICLE_TOP, w - 20, 0))
         g.end()
 
     def _force(
@@ -1357,28 +1398,16 @@ class SiegeBody(QWidget):
                 font(12, italic=True),
                 p["dim"],
             )
-        for event in s.events[-6:]:
-            g.setBrush(QBrush(QColor(p["heading"])))
-            g.setPen(Qt.PenStyle.NoPen)
-            g.drawEllipse(QRectF(area.left() + 4, y - 8, 6, 6))
-            words = f"Day {event.day}: {event.text}"
-            _text(
-                g,
-                QPointF(area.left() + 18, y),
-                _elided(words, font(12), area.width() - 24),
-                font(12),
-                p["foreground"],
-            )
-            y += 22
-            for line in event.lines:
-                _text(
-                    g,
-                    QPointF(area.left() + 34, y),
-                    _elided(line, font(10.5, italic=True), area.width() - 40),
-                    font(10.5, italic=True),
-                    p["label"],
-                )
-                y += 22
+        for indent, words, opens in self._chronicle_rows(area.width()):
+            if opens:
+                g.setBrush(QBrush(QColor(p["heading"])))
+                g.setPen(Qt.PenStyle.NoPen)
+                g.drawEllipse(QRectF(area.left() + 4, y - 8, 6, 6))
+            heading = indent == 18
+            f = font(12) if heading else font(10.5, italic=True)
+            colour = p["foreground"] if heading else p["label"]
+            _text(g, QPointF(area.left() + indent, y), words, f, colour)
+            y += CHRONICLE_LINE
 
 
 class SiegePage(QWidget):

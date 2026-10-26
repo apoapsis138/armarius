@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 
 from ... import world
 from ...models import Character
+from ...rules import rhine_ranks
 from ...tribunal_packages import rhine as rhine_package
 from ...tribunal_packages.rhine import KEY
 from ..builder import paragraphs
@@ -496,7 +497,7 @@ def sigils_by_rank(summary: str) -> int:
 
 #: The rank Virtues and the retired sigils each holds (Guardians of the
 #: Forests p. 20).
-RANK_SIGILS = {"vf_archmage_rhine_tribunal": 2, "vf_master_rhine_tribunal": 1}
+RANK_SIGILS = rhine_ranks.RANK_SIGILS
 
 
 def rank_sigils(character: Character) -> int:

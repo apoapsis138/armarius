@@ -3,41 +3,41 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Aeolus
 
-      Might:    Magic Might 8 (Animal)         Found at:    The Drachenfels
-      Size:     +2                             Detail:      Sketch
-      Season:   Summer                         Source:      Realms of Power: Magic
-      How many: One                            p. 34
-                                               Linked from: The Hollow Crown
-                                               (Carries its messengers)
+      Might:          Magic Might 8            How many:    One
+      (Animal)                                 Found at:    The Drachenfels
+      Might recovery: Resting in its Magic     Detail:      Sketch
+      aura 5: all its Might in 3 hours, a      Source:      Realms of Power: Magic
+      point every 22 minutes (RoP: Magic p.    p. 34
+      30)                                      Linked from: The Hollow Crown
+      Magic being:    each Advancement         (Carries its messengers)
+      Total loses its Might (8), 2 less for
+      each pawn of vis it eats (4 clear it;
+      p. 52); it keeps off Acclimation by
+      living in a Magic aura of 2 (half the
+      time 7, visits 10), or affecting a
+      magical being without Might 4
+      season(s) a year, or eating 4 pawn(s)
+      of vis a year (pp. 53-54); bound as a
+      Hermetic magus's familiar, it learns
+      as a human does, and keeps those
+      Abilities if the bond breaks (Errata
+      p. 63; DE p. 267).
+      Size:           +2
+      Season:         Summer
           Edit (e)
 
    1 Traits  2 Combat  3 Powers & Vis  4 Description  5 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Characteristics
 
       Characteristics: Int 0, Per 0, Pre +2, Com 0, Str +4, Sta 0, Dex 0, Qik +2
-      Soak:            +3
+      Soak:            +3                                                         ▅▅
       Fatigue levels:  OK, 0, -1, -3, -5, Unconscious
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Virtues, Flaws and Qualities (1)
-
-      ○ Magic Animal
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Personality Traits (1)                  ▼ Reputations (1)
-
-      ○ Vain: +3                                ○ Runs with the wind: +1
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Abilities (1)
-
-      General                 Score           XP
-      ○ Athletics (running)       5       75/105
-
-
 
 
 
@@ -46,42 +46,42 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Aeolus
 
-      Might:    Magic Might 8 (Animal)         Found at:    The Drachenfels
-      Size:     +2                             Detail:      Sketch
-      Season:   Summer                         Source:      Realms of Power: Magic
-      How many: One                            p. 34
-                                               Linked from: The Hollow Crown
-                                               (Carries its messengers)
+      Might:          Magic Might 8            How many:    One
+      (Animal)                                 Found at:    The Drachenfels
+      Might recovery: Resting in its Magic     Detail:      Sketch
+      aura 5: all its Might in 3 hours, a      Source:      Realms of Power: Magic
+      point every 22 minutes (RoP: Magic p.    p. 34
+      30)                                      Linked from: The Hollow Crown
+      Magic being:    each Advancement         (Carries its messengers)
+      Total loses its Might (8), 2 less for
+      each pawn of vis it eats (4 clear it;
+      p. 52); it keeps off Acclimation by
+      living in a Magic aura of 2 (half the
+      time 7, visits 10), or affecting a
+      magical being without Might 4
+      season(s) a year, or eating 4 pawn(s)
+      of vis a year (pp. 53-54); bound as a
+      Hermetic magus's familiar, it learns
+      as a human does, and keeps those
+      Abilities if the bond breaks (Errata
+      p. 63; DE p. 267).
+      Size:           +2
+      Season:         Summer
           Edit (e)
 
    1 Traits  2 Combat  3 Powers & Vis  4 Description  5 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Combat (1)
 
         Attack  Init  Atk  Def  Dam
       ○ Kick    +4    +4   +8   +5
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+                                                                                  ▅▅
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Health
 
-      Wound Penalties: -1 (1-7), -3 (8-14), -5 (15-21), Incapacitating (22-28), Dead
-      (29+)
-      Fatigue levels:  OK, 0, -1, -3, -5, Unconscious
-      Light Wounds:  0 (-1 each)
-      Medium Wounds: 0 (-3 each)
-      Heavy Wounds:  0 (-5 each)
-      Incapacitated: no
-      Dead: no
-      Fatigue Level: Fresh
-
-
-
-
-
-
-
+      Wound Penalties: -1 (1-7), -3 (8-14), -5 (15-21), Incapacitating (22-28),
 
 
 ===== tab-cr-powers
@@ -89,37 +89,37 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Aeolus
 
-      Might:    Magic Might 8 (Animal)         Found at:    The Drachenfels
-      Size:     +2                             Detail:      Sketch
-      Season:   Summer                         Source:      Realms of Power: Magic
-      How many: One                            p. 34
-                                               Linked from: The Hollow Crown
-                                               (Carries its messengers)
+      Might:          Magic Might 8            How many:    One
+      (Animal)                                 Found at:    The Drachenfels
+      Might recovery: Resting in its Magic     Detail:      Sketch
+      aura 5: all its Might in 3 hours, a      Source:      Realms of Power: Magic
+      point every 22 minutes (RoP: Magic p.    p. 34
+      30)                                      Linked from: The Hollow Crown
+      Magic being:    each Advancement         (Carries its messengers)
+      Total loses its Might (8), 2 less for
+      each pawn of vis it eats (4 clear it;
+      p. 52); it keeps off Acclimation by
+      living in a Magic aura of 2 (half the
+      time 7, visits 10), or affecting a
+      magical being without Might 4
+      season(s) a year, or eating 4 pawn(s)
+      of vis a year (pp. 53-54); bound as a
+      Hermetic magus's familiar, it learns
+      as a human does, and keeps those
+      Abilities if the bond breaks (Errata
+      p. 63; DE p. 267).
+      Size:           +2
+      Season:         Summer
           Edit (e)
 
    1 Traits  2 Combat  3 Powers & Vis  4 Description  5 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Powers (1)
 
-        Power                Cost   Init  Form    Range, Duration, Target  Pen
+        Power                Cost   Init  Form    Range, Duration, Target  Pen    ▅▅
       ○ From Nag to Charger  0 pts  +0    Animal  R: Per, D: Sun, T: Ind   8
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Vis in its body
-
-      ○ 2 pawns of Animal, in head
-
-
-
-
-
-
-
-
-
-
 
 
   ▌
@@ -132,12 +132,27 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Aeolus
 
-      Might:    Magic Might 8 (Animal)         Found at:    The Drachenfels
-      Size:     +2                             Detail:      Sketch
-      Season:   Summer                         Source:      Realms of Power: Magic
-      How many: One                            p. 34
-                                               Linked from: The Hollow Crown
-                                               (Carries its messengers)
+      Might:          Magic Might 8            How many:    One
+      (Animal)                                 Found at:    The Drachenfels
+      Might recovery: Resting in its Magic     Detail:      Sketch
+      aura 5: all its Might in 3 hours, a      Source:      Realms of Power: Magic
+      point every 22 minutes (RoP: Magic p.    p. 34
+      30)                                      Linked from: The Hollow Crown
+      Magic being:    each Advancement         (Carries its messengers)
+      Total loses its Might (8), 2 less for
+      each pawn of vis it eats (4 clear it;
+      p. 52); it keeps off Acclimation by
+      living in a Magic aura of 2 (half the
+      time 7, visits 10), or affecting a
+      magical being without Might 4
+      season(s) a year, or eating 4 pawn(s)
+      of vis a year (pp. 53-54); bound as a
+      Hermetic magus's familiar, it learns
+      as a human does, and keeps those
+      Abilities if the bond breaks (Errata
+      p. 63; DE p. 267).
+      Size:           +2
+      Season:         Summer
           Edit (e)
 
    1 Traits  2 Combat  3 Powers & Vis  4 Description  5 Secrets
@@ -155,32 +170,32 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ===== tab-secrets
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Aeolus
 
-      Might:    Magic Might 8 (Animal)         Found at:    The Drachenfels
-      Size:     +2                             Detail:      Sketch
-      Season:   Summer                         Source:      Realms of Power: Magic
-      How many: One                            p. 34
-                                               Linked from: The Hollow Crown
-                                               (Carries its messengers)
+      Might:          Magic Might 8            How many:    One
+      (Animal)                                 Found at:    The Drachenfels
+      Might recovery: Resting in its Magic     Detail:      Sketch
+      aura 5: all its Might in 3 hours, a      Source:      Realms of Power: Magic
+      point every 22 minutes (RoP: Magic p.    p. 34
+      30)                                      Linked from: The Hollow Crown
+      Magic being:    each Advancement         (Carries its messengers)
+      Total loses its Might (8), 2 less for
+      each pawn of vis it eats (4 clear it;
+      p. 52); it keeps off Acclimation by
+      living in a Magic aura of 2 (half the
+      time 7, visits 10), or affecting a
+      magical being without Might 4
+      season(s) a year, or eating 4 pawn(s)
+      of vis a year (pp. 53-54); bound as a
+      Hermetic magus's familiar, it learns
+      as a human does, and keeps those
+      Abilities if the bond breaks (Errata
+      p. 63; DE p. 267).
+      Size:           +2
+      Season:         Summer
           Edit (e)
 
    1 Traits  2 Combat  3 Powers & Vis  4 Description  5 Secrets
@@ -190,21 +205,6 @@
     ▼ Secrets
 
       Nothing secret written yet: edit it to add what only you should know.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -51,11 +51,14 @@ from ..models import (
 from ..models.character import MERCURIAN_MAGIC
 from ..rules import aging as aging_rules
 from ..rules import (
+    certamen_styles,
+    complexion,
     creation_characteristics,
     disease,
     experiment,
     integrations,
     medicine,
+    realm_warping,
     research,
     scores,
     sigils,
@@ -123,9 +126,11 @@ def biographical_fields(
     players: Sequence[Player] = (),
     *,
     may_assign: bool = True,
+    academe: bool = False,
 ) -> list[DialogField]:
     """The Background fields not in the top panel, then every Description
-    field."""
+    field; with Art & Academe's medicine (or one already recorded), the
+    complexion."""
     d = description
     return [
         *(
@@ -156,18 +161,62 @@ def biographical_fields(
             d.physical_description,
         ),
         DialogField("biography", "Biography", "area", d.biography, hint=EMPHASIS_HINT),
+        *(complexion_fields(d) if academe or d.complexion else []),
     ]
+
+
+def complexion_fields(description: Description) -> list[DialogField]:
+    """Art & Academe's complexion: the blend, and a touch of a third."""
+    return [
+        DialogField(
+            "complexion",
+            "Complexion",
+            "select",
+            description.complexion or None,
+            options=complexion.options(),
+            allow_blank=True,
+            placeholder="(not recorded)",
+            hint="The principal humour first; sanguine never mixes with "
+            "choleric, nor melancholic with phlegmatic (A&A p. 40).",
+        ),
+        DialogField(
+            "complexion_minor",
+            "A touch of",
+            "select",
+            description.complexion_minor or None,
+            options=[(name.title(), name) for name in complexion.NAMES],
+            allow_blank=True,
+            placeholder="(nothing more)",
+            show_if=lambda v: "-" in str(v.get("complexion") or ""),
+        ),
+    ]
+
+
+def biographical_problem(values: dict[str, Any]) -> str | None:
+    """Why the Biographical Detail can't be saved as typed, or None."""
+    return complexion.problem(
+        str(values.get("complexion") or ""), str(values.get("complexion_minor") or "")
+    )
 
 
 def apply_biographical(character: Character, result: dict[str, Any]) -> None:
     for attribute in known_fields(Background, result):
         setattr(character.background, attribute, result[attribute])
-    character.description = Description(**known_fields(Description, result))
+    old = character.description
+    found = known_fields(Description, result)
+    for key in ("complexion", "complexion_minor"):
+        found[key] = str(found.get(key) or "") if key in found else getattr(old, key)
+    if not complexion.parts(found["complexion"])[1:]:
+        found["complexion_minor"] = ""
+    character.description = Description(**found)
 
 
-def aging_fields(aging: Aging, saga: Saga | None = None) -> list[DialogField]:
+def aging_fields(
+    aging: Aging, saga: Saga | None = None, character: Character | None = None
+) -> list[DialogField]:
     """The Aging & Warping form; with Art & Academe in play, a physician's
-    regimen too."""
+    regimen too, and for a magus with Miraculous Abilities the choice of the
+    Divine Ascent in place of Twilight."""
     return [
         DialogField("decrepitude", "Decrepitude", "int", aging.decrepitude),
         DialogField("effects", "Effects of Aging", "text", aging.effects),
@@ -190,21 +239,54 @@ def aging_fields(aging: Aging, saga: Saga | None = None) -> list[DialogField]:
             "take a magus to the edge of Wizard's Twilight, rolled at once.",
         ),
         DialogField(
+            "warping_cause",
+            "What gave them",
+            "select",
+            ONE_EVENT,
+            options=WARPING_CAUSES,
+            show_if=lambda v: (v.get("gain_warping") or 0) > 0,
+            hint="Points from transits or taken leaving Faerie come apart, "
+            "and bring no Twilight (RoP: Faerie p. 30; TME p. 114).",
+        ),
+        DialogField(
             "warping_realm",
             "Its realm",
             "select",
             "Magic",
             options=pairs(REALMS),
-            show_if=lambda v: (v.get("gain_warping") or 0) > 0,
+            show_if=lambda v: (v.get("gain_warping") or 0) > 0 and _one_event(v),
             hint="For Susceptibility to Warping, which gives a point more for "
-            "each realm a year's Warping came from (DE p. 146).",
+            "each realm a year's Warping came from (DE p. 146), and the main "
+            "source the Warping's effects reflect (DE p. 391).",
+        ),
+        DialogField(
+            "faerie_days",
+            "Days spent in Faerie",
+            "int",
+            0,
+            show_if=lambda v: (
+                (v.get("gain_warping") or 0) > 0
+                and v.get("warping_cause") == LEAVING_FAERIE
+            ),
+        ),
+        DialogField(
+            "fable_score",
+            "Final fable score",
+            "int",
+            0,
+            show_if=lambda v: (
+                (v.get("gain_warping") or 0) > 0
+                and v.get("warping_cause") == LEAVING_FAERIE
+            ),
+            hint="Each point taken lowers it by 1, and with it how long each "
+            "day there lasted (RoP: Faerie p. 30).",
         ),
         DialogField(
             "warping_aura",
             "Aura where it happened",
             "optint",
             None,
-            show_if=lambda v: (v.get("gain_warping") or 0) >= 2,
+            show_if=lambda v: (v.get("gain_warping") or 0) >= 2 and _one_event(v),
             hint="Blank: the aura where they live (DE p. 228).",
         ),
         DialogField(
@@ -212,11 +294,41 @@ def aging_fields(aging: Aging, saga: Saga | None = None) -> list[DialogField]:
             "Enter Twilight willingly",
             "check",
             False,
-            show_if=lambda v: (v.get("gain_warping") or 0) >= 2,
-            hint="No roll to avoid it (DE p. 228).",
+            show_if=lambda v: (v.get("gain_warping") or 0) >= 2 and _one_event(v),
+            hint="No roll to avoid it (DE p. 228); the same for a Divine Ascent "
+            "or Vituperation.",
         ),
+        *_ascent_fields(aging, character),
         *_regimen_fields(aging, saga),
     ]
+
+
+def _ascent_fields(aging: Aging, character: Character | None) -> list[DialogField]:
+    if character is None or not realm_warping.may_seek_ascent(character):
+        return []
+    return [
+        DialogField(
+            "seeks_ascent",
+            "Seeks Divine Ascent instead of Twilight",
+            "check",
+            aging.seeks_ascent,
+            hint="A magus with Miraculous Abilities has one form of Warping "
+            "for life, chosen by the troupe (RoP: The Divine p. 63).",
+        )
+    ]
+
+
+#: What gave Warping Points, on the Aging & Warping form.
+ONE_EVENT, LEAVING_FAERIE, TRANSITS = "event", "faerie", "transits"
+WARPING_CAUSES: list[tuple[str, str]] = [
+    ("One event (a powerful effect, a botch...)", ONE_EVENT),
+    ("Taken leaving Faerie", LEAVING_FAERIE),
+    ("Instant transport, a point a transit", TRANSITS),
+]
+
+
+def _one_event(values: dict[str, Any]) -> bool:
+    return (values.get("warping_cause") or ONE_EVENT) == ONE_EVENT
 
 
 def _regimen_fields(aging: Aging, saga: Saga | None) -> list[DialogField]:
@@ -265,6 +377,9 @@ def apply_aging(
     aura = result.pop("warping_aura", None)
     realm = result.pop("warping_realm", None) or "Magic"
     enter = bool(result.pop("enter_twilight", False))
+    cause = result.pop("warping_cause", None) or ONE_EVENT
+    days = result.pop("faerie_days", 0) or 0
+    fable = result.pop("fable_score", 0) or 0
     if "regimen" in result:
         result["regimen"] = int(result["regimen"] or 0)
         result["regimen_by"] = result.get("regimen_by") or ""
@@ -274,17 +389,28 @@ def apply_aging(
     # Only the fields on the form: the rest (Longevity, Aging Points) stays.
     for key, value in result.items():
         setattr(aging, key, value)
-    if gained > 0:
-        return seasons.gain_warping(
-            saga,
-            character,
-            gained,
-            rng or random.Random(),
-            aura=aura,
-            enter=enter,
-            realm=realm,
-        )
-    return []
+    if gained <= 0:
+        return []
+    lines: list[str] = []
+    if cause == LEAVING_FAERIE:
+        realm = "Faerie"
+        lines.append(realm_warping.leaving_note(days, fable, gained))
+    elif cause == TRANSITS:
+        realm = "Magic"
+        lines.append(realm_warping.transits_note(gained))
+        after = warping_rules.score_for(warping_rules.total_points(character) + gained)
+        lines += realm_warping.travel_effects(character.aging.warping_score, after)
+    return seasons.gain_warping(
+        saga,
+        character,
+        gained,
+        rng or random.Random(),
+        aura=aura,
+        enter=enter,
+        realm=realm,
+        at_once=cause == ONE_EVENT,
+        lines=lines,
+    )
 
 
 def wounds_fields(
@@ -412,6 +538,28 @@ def hermetic_fields(
             hint="House Tremere: a parens holds his filius's sigil until the "
             "filius beats him in certamen or the parens dies (DE p. 16).",
         ),
+        DialogField(
+            "sigil_challenged",
+            "Has challenged for his sigil",
+            "check",
+            h.sigil_challenged,
+            show_if=lambda values: (
+                values.get("house") == sigils.TREMERE
+                and not values.get("holds_own_sigil")
+            ),
+            hint="He may challenge his parens once when he chooses, then at "
+            "each Decennial of the House (HoH: TL p. 123).",
+        ),
+        DialogField(
+            "certamen_school",
+            "School of certamen",
+            "select",
+            h.certamen_school,
+            options=[("(none recorded)", "")]
+            + [(f"{s.name} ({s.school})", s.id) for s in certamen_styles.SCHOOLS],
+            hint="The style he was trained in, or joined by a season's study "
+            "with a member (HoH: TL p. 135).",
+        ),
         *(
             [
                 DialogField(
@@ -449,9 +597,14 @@ def description_edits(
         "Biographical Detail": Form(
             "Edit Biographical Detail",
             lambda: biographical_fields(
-                c.background, c.description, saga.players, may_assign=may_assign
+                c.background,
+                c.description,
+                saga.players,
+                may_assign=may_assign,
+                academe=disease.on(saga),
             ),
             lambda result: apply_biographical(c, result),
+            validate=biographical_problem,
         ),
         "Wounds": Form(
             "Edit Wounds",
@@ -467,7 +620,7 @@ def description_edits(
         ),
         "Aging": Form(
             "Edit Aging & Warping",
-            lambda: aging_fields(c.aging, saga),
+            lambda: aging_fields(c.aging, saga, c),
             lambda result: apply_aging(saga, c, result),
         ),
     }

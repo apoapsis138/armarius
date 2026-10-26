@@ -89,7 +89,7 @@ names its target, and Disengage is how a fighter leaves.
   - A fighter with figures typed in, such as Init, Attack, Defence, Damage, Soak, Size, Combat Ability and Leadership.
 
   A character with no weapon fights with the book's Fist. Any of them may also be:
-  - **Mounted**: Ride, at most +3, adds to its Attack and Defence (DE p. 397). A character's Ride comes from the sheet; a typed fighter's is typed. A Gifted rider (not the Gentle Gift) is warned that a horse throws them without magic (DE pp. 82, 205).
+  - **Mounted**: Ride, at most +3, adds to its Attack and Defence (DE p. 397). A character's Ride comes from the sheet; a typed fighter's is typed. A Gifted rider (not the Gentle Gift) is warned that a horse throws them without magic (DE pp. 82, 205). A mounted character's lance fights as a Single Weapon; on foot it is a long spear, fought with Great Weapon (DE pp. 400-401; Lords of Men p. 126).
   - **Defending** another on its side, as a shield grog defends a magus: while a defender stands, nobody may strike the one it defends, and only a defender's botched Defence lets a blow through to them (DE p. 397).
   - Given a **Magic Resistance** (a creature's Might), against spells and devices; a magus's comes from Parma and Form.
 
@@ -127,7 +127,11 @@ A siege's castle has a Garrison (combat groups), Defenses and Supplies,
 each with an interval. Its events come at the shortest of the three: a
 day, a week, a month or a season (Lords of Men pp. 111-112). Each of the
 castle's four walls has damage levels equal to its Defense Bonus x 3, or
-x 4 for a castle of Size +9 or more. A wall at 0 no longer gives its
+x 4 for a castle of Size +9 or more (p. 112). That measure is fixed
+when the siege's first event is played: a mine that lowers the
+Defenses lowers the Defense Bonus at every wall (p. 114), not the walls'
+damage levels, so a wall's gauge always reads against the whole it had
+when the siege began. A wall at 0 stays at 0 and no longer gives its
 Defense Bonus.
 
 **Next Siege Event** plays one event, then moves the siege on by the
@@ -137,14 +141,19 @@ castle's interval:
 - **Bombard a wall** (mangonels or trebuchets): the engines attack in groups of up to five, each group Intelligence + Siege Weapon + the engine's Attack + stress die against the castle's engineer (Intelligence + Profession: Siege Engineer) + the Defense Bonus + stress die. A hit costs the wall a damage level for each engine in the group.
 - **Escalade**: play a battlefield event as in [Battles](help:section-nb-battles), then say who won. The garrison's Weight of Numbers and the Defense Bonus stand in for numbers and ground. Each besiegers' win takes the Garrison a step down, and a win at a Shoddy or broken wall breaches the castle.
 - **The garrison sallies out**: a battlefield event at Battle Ease Factor 9, against the miners, a group of engines or a group of soldiers. A garrison's win removes them.
+- **The magi seal a breach**: the ritual Seal the Breach (CrTe 20, Lords of Men p. 116; its level from the errata) knits a wall back together, restoring up to five damage levels, never more than the wall had when the siege began.
 - **Keep the stockade**: nothing but time passes.
 
 A castle with besiegers at three walls or more is in stockade. Each time
 its Supplies interval passes it makes a supplies roll: the Siege
 Conditions Bonus + stress die against 3 + the Garrison's Weight of
-Numbers + the years under siege. A failure drops the Supplies a step,
+Numbers + the years under siege (p. 112). A failure drops the Supplies a step,
 and a failure at Shoddy means the castle surrenders. A botch (1 + the
-full seasons besieged, in botch dice) means disease breaks out.
+full seasons besieged, in botch dice) means disease breaks out. The next
+roll comes one interval after the last, at the Supplies as they then stand:
+a failed roll at Standard brings the next a week later, not rolls for the
+weeks already past. An interval that ends with no stockade passes with no
+roll to make up later.
 
 When a siege ends (a surrender or a breach, or Ended set by editing it),
 a line saying how is written in the Diaries of the records it is linked

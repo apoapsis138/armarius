@@ -527,6 +527,27 @@ def thrown_weapon() -> QPainterPath:
     return union(axe, trails)
 
 
+def siege_weapon() -> QPainterPath:
+    """A trebuchet: an A-frame on its beam, the throwing arm pivoted at the
+    top, a counterweight box on the short end and a stone in the sling."""
+    frame = union(rect(12, 84, 76, 6), bar(28, 86, 50, 40, 5), bar(72, 86, 50, 40, 5))
+    arm = union(bar(20, 58, 86, 16, 5), circle(50, 40, 5))
+    weight = union(bar(22, 58, 22, 64, 3), rect(13, 63, 18, 15))
+    sling = union(line((86, 16), (80, 32), w=2.4), circle(79, 36, 5))
+    return union(frame, arm, weight, sling)
+
+
+def herbalism() -> QPainterPath:
+    """An apothecary's jar for theriac: a lidded, waisted albarello with a
+    leaf cut into its side."""
+    body = rrect(31, 34, 38, 54, 6).subtracted(
+        union(ellipse(22, 48, 14, 26), ellipse(64, 48, 14, 26))
+    )
+    leaf = QTransform().translate(50, 62).rotate(-60).map(vesica(0, 0, 24, 11))
+    lid = union(rrect(28, 26, 44, 8, 3), circle(50, 21, 5))
+    return union(body.subtracted(leaf), lid)
+
+
 # -- Arcane --
 
 
@@ -1889,6 +1910,9 @@ MARKS: dict[str, Charge] = {
     "Rune Magic": rune_magic,
     **{name: (lambda name=name: rune(name)) for name in RUNES},
     **BOOK_MARKS,
+    # The supplements' Abilities the census of their Virtues and Flaws added.
+    "Siege Weapon": siege_weapon,
+    "Herbalism": herbalism,
 }
 
 #: The mark of each category, for an ability without its own.
@@ -1916,6 +1940,7 @@ PLAIN = {
     "Music", "Mythic Herbalism", "Persona", "Pictish", "Premonitions", "Sense Holiness and Unholiness",
     "Shapeshifter", "Summon Animals", "Swim", "Thrown Weapon", "Whistle Up The Wind",
     "Chthonic Magic", "Consumption", "Debauchery",
+    "Siege Weapon",
 } | set(RUNES)  # fmt: skip
 
 #: Charges drawn at one shared scale instead of each filling the block,

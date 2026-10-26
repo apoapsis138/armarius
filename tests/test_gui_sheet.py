@@ -403,6 +403,7 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
     page = window.sheet_area.findChild(CovenantPage)
     assert page is not None
     assert page.codex.chapters() == [
+        "Attributes",
         "Charter",
         "People",
         "Covenfolk",
@@ -548,7 +549,7 @@ def test_choosing_a_boon_or_an_inhabitant_shows_it_in_the_inspector(app):
     page = _covenant_page(saga)
     boon = next(
         card
-        for card in _chapter(page, "Charter").findChildren(ClickableCard)
+        for card in _chapter(page, "Attributes").findChildren(ClickableCard)
         if "Wealth" in _texts(card)
     )
     boon.clicked()

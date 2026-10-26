@@ -116,7 +116,10 @@ Phosphor Icons, under the MIT licence (`assets/icons/LICENSE.txt`). **The
 ruin** in `ars_magica_manager/assets/drawn/` is drawn by the app's own
 code (`tools/draw_ruin.py`) after Phosphor's castle turret, its top
 broken off and fallen stones at its foot; as a modified Phosphor icon it
-is under the same MIT licence.
+is under the same MIT licence. **The key and the sealed charter** beside
+it, the icons of a covenant's Attributes and Charter chapters, are drawn
+by the app's own code (`tools/draw_charter_icons.py`) in the manner of
+the Phosphor icons, and are the app's own work under its licence.
 
 **The sounds** in `ars_magica_manager/assets/sounds/` are recordings from
 [Freesound](https://freesound.org), each dedicated to the public domain

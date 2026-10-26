@@ -48,6 +48,8 @@ DIALOG_PAGES = {
     "grog-discipline",
     "grog-pension",
     "craft-magic",
+    "agent-task-resolve",
+    "sell-finished-goods",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

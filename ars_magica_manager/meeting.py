@@ -2773,4 +2773,4 @@ def ops(saga: Saga, tribunal: Tribunal) -> dict[str, SectionOps]:
 
 
 # The packages' own steps register themselves with the meeting.
-from . import hibernia_meeting, theban_meeting  # noqa: F401
+from . import hibernia_meeting, rhine_meeting, theban_meeting  # noqa: F401

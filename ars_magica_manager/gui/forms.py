@@ -123,14 +123,14 @@ class _Sheet(QDialog):
         self.column.setSpacing(8)
         if inline:
             self.column.setContentsMargins(20, 14, 20, 14)
-            self.column.addWidget(
-                text(plain(title), p["heading"], serif(14, bold=True, caps=True))
+            self.heading = text(
+                plain(title), p["heading"], serif(14, bold=True, caps=True)
             )
+            self.column.addWidget(self.heading)
         else:
             self.column.setContentsMargins(26, 20, 26, 18)
-            self.column.addWidget(
-                text(plain(title), p["heading"], serif(17, bold=True))
-            )
+            self.heading = text(plain(title), p["heading"], serif(17, bold=True))
+            self.column.addWidget(self.heading)
             self.column.addWidget(FleuronRule(p))
         self.error = text("", p["text-error"], serif(12, italic=True), wrap=True)
         self.error.hide()
@@ -795,6 +795,22 @@ class ConfirmDialog(_Sheet):
             self.resize(460, 200)
 
 
+#: The longest notice title kept on one line.
+NOTICE_TITLE_WIDTH = 32
+#: The longest line of a notice's title set without wrapping.
+NOTICE_LINE_WIDTH = 40
+
+
+def notice_title(title: str) -> str:
+    """A notice's title as it is set: one longer than NOTICE_TITLE_WIDTH
+    breaks after its action ("Next Siege Event:" over "The Siege of Burg
+    Falkenstein")."""
+    action, colon, rest = title.partition(": ")
+    if not colon or len(title) <= NOTICE_TITLE_WIDTH:
+        return title
+    return f"{action}:\n{rest}"
+
+
 class NoticeDialog(_Sheet):
     """A message on paper with an OK button: what a step refused, or the
     notes after it."""
@@ -807,6 +823,16 @@ class NoticeDialog(_Sheet):
         # dragging the paper.
         self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint)
         self.page.edged = True
+        # A long title ("Spend Agency Experience: Sir Konrad von Elster")
+        # breaks after its action, so the name stays whole on the line
+        # below, and wraps rather than being cut off at the paper's edge.
+        heading = notice_title(plain(title))
+        self.heading.setText(heading)
+        # Wrapping a short title leaves a gap under it, so only a line
+        # still too long after the break wraps.
+        self.heading.setWordWrap(
+            any(len(line) > NOTICE_LINE_WIDTH for line in heading.split("\n"))
+        )
         body = QLabel(to_html(words, p))
         body.setTextFormat(Qt.TextFormat.RichText)
         body.setWordWrap(True)

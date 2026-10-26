@@ -34,6 +34,19 @@ a disease is its own record:
   active -1, no medicinal herbs -3 (less an apothecary's Profession:
   Apothecary); each one that applies is an extra botch die.
 
+- **Humours** (pp. 47-51): each of the book's diseases is an excess of
+  one or two humours (the Ague is phlegmatic, Variola choleric); with
+  rules.complexion, one of the patient's own principal humour is ill-suited
+  to his temperament.
+- **The Great Pestilence** (Dies Irae pp. 86-98): the Great (Form)
+  Pestilence, a Critical phlegmatic disease of Severity 21, Stable 12,
+  Improve 18, rolled every day once its Crisis passes. Magic beings of the
+  Form in a Magic aura roll Disease Avoidance at its new moon and each
+  week they stay (p. 87); a Corpus miasma's Corpus Blight gives it to every
+  human it touches, with no roll, but Penetration 0, so Magic Resistance
+  stops it (p. 94). The book gives it a Disease Penalty of -5 though a
+  Critical disease allows no action at all (A&A p. 46): the app keeps A&A's.
+
 Pattern: the option chooses which Strategy a disease follows, the DE's
 wound or this record.
 """
@@ -41,7 +54,7 @@ wound or this record.
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from ..models import Character, Disease, Saga
 from . import derived, dice, options
@@ -52,6 +65,7 @@ SOURCE = "Art & Academe, Chapter Three: Medicine, Disease, pp. 45-51"
 PROGNOSIS_SOURCE = "Art & Academe, Diagnosis and Prognosis, p. 58"
 MODIFIERS_SOURCE = "Art & Academe, Recovery Modifiers, p. 54"
 SURGERY_SOURCE = "Art & Academe, Chapter Three: Medicine, Surgery, p. 61"
+PESTILENCE_SOURCE = "Dies Irae, The Great Pestilence, pp. 86-98"
 OPTION = "art_academe_medicine"
 
 LEVELS: tuple[str, ...] = ("Minor", "Serious", "Major", "Critical")
@@ -61,7 +75,11 @@ PENALTY = derived.DISEASE_PENALTIES
 SEVERITY_STEP = 3
 INTERVALS: tuple[str, ...] = ("week", "month", "season", "lifelong")
 LIFELONG = "lifelong"
-INTERVAL_MOD = {"week": 0, "month": 1, "season": 3, "lifelong": 10}
+#: Dies Irae's Interval: Day (p. 88), not one of A&A's for a troupe's own
+#: disease; its Severity 21 (15 + 3 + 3) shows it adds nothing.
+DAY = "day"
+DAYS_A_WEEK = 7
+INTERVAL_MOD = {"day": 0, "week": 0, "month": 1, "season": 3, "lifelong": 10}
 STABLE_MOD = {4: -1, 6: 0, 9: 1, 12: 3}
 IMPROVE_MOD = {10: -1, 12: 0, 15: 1, 18: 3}
 STABLE_BONUS = 3
@@ -101,6 +119,12 @@ class DiseaseDef:
     avoidable: bool = True
     #: Long-term Fatigue levels it takes, not regained until it abates.
     fatigue: int = 0
+    #: The humours it is an excess of, as their complexions' names
+    #: ("phlegmatic"), from its heading in the book.
+    humours: tuple[str, ...] = ()
+    #: Given by a miasma's blight, a spell-like effect of Penetration 0:
+    #: anyone with Magic Resistance is immune (Dies Irae p. 94).
+    blight: bool = False
 
 
 #: Art & Academe's common diseases (pp. 47-51).
@@ -265,7 +289,66 @@ SAP_THE_LIFE = DiseaseDef(
     avoidable=False,
     fatigue=2,
 )
-CATALOG = (*CATALOG, SAP_THE_LIFE)
+#: The humours of A&A's diseases, from their headings (pp. 47-51).
+_HUMOURS: dict[str, tuple[str, ...]] = {
+    "The Ague": ("phlegmatic",),
+    "Anal Fistula": ("melancholic",),
+    "Apoplexy": ("sanguine",),
+    "Bloody Flux": ("phlegmatic",),
+    "Chaudepysse": ("choleric",),
+    "Childbed Fever": ("sanguine",),
+    "Childbed Fever, with complications": ("sanguine",),
+    "Coryza": ("phlegmatic",),
+    "Diabetes": ("sanguine",),
+    "Erysipelas": ("choleric",),
+    "The Falling Evil": ("phlegmatic",),
+    "Febris Semitertiana": ("choleric",),
+    "Gangrene": ("sanguine",),
+    "Garotillo": ("choleric",),
+    "Leprosy": ("melancholic",),
+    "Leprosy, Hermetic": ("melancholic",),
+    "Phimosis": ("choleric",),
+    "Phthisis": ("phlegmatic",),
+    "Pneumonia": ("phlegmatic",),
+    "Quinsy": ("phlegmatic",),
+    "Rabies": ("choleric",),
+    "Saint Anthony's Fire": ("sanguine",),
+    "Scrofula": ("melancholic",),
+    "Stones": ("choleric", "phlegmatic"),
+    "Suffusio": ("melancholic",),
+    "Tumor, consumptive": ("sanguine", "melancholic"),
+    "Variola": ("choleric",),
+    "Worms": ("sanguine",),
+}
+CATALOG = tuple(replace(d, humours=_HUMOURS.get(d.name, ())) for d in CATALOG)
+#: The Great Pestilence (Dies Irae pp. 87-88, 94): a magic being's, and a
+#: human's from a Corpus miasma's Corpus Blight.
+FORM_PESTILENCE = DiseaseDef(
+    "The Great (Form) Pestilence",
+    CRITICAL,
+    21,
+    12,
+    18,
+    DAY,
+    note="Magic beings of the Form in a Magic aura: Disease Avoidance at its new "
+    "moon and each week they stay; out of every Magic aura they are safe "
+    "(Dies Irae pp. 87-88).",
+    humours=("phlegmatic",),
+)
+CORPUS_PESTILENCE = DiseaseDef(
+    "The Great Corpus Pestilence (Corpus miasma)",
+    CRITICAL,
+    21,
+    12,
+    18,
+    DAY,
+    note="The Corpus Blight of a Corpus miasma: no Disease Avoidance; Magic "
+    "Resistance protects (Dies Irae p. 94).",
+    avoidable=False,
+    humours=("phlegmatic",),
+    blight=True,
+)
+CATALOG = (*CATALOG, SAP_THE_LIFE, FORM_PESTILENCE, CORPUS_PESTILENCE)
 CATALOG_BY_NAME = {d.name: d for d in CATALOG}
 
 
@@ -504,7 +587,7 @@ def roll(
 
 def _due(disease: Disease, week: int) -> bool:
     return (
-        disease.interval == "week"
+        disease.interval in ("week", DAY)
         or (disease.interval == "month" and week in MONTH_WEEKS)
         or (disease.interval == "season" and week == WEEKS)
     )
@@ -531,7 +614,11 @@ def season(
             return lines
     for week in range(1, WEEKS + 1):
         for disease in wounds.diseases:
-            if disease.level and disease.level != CRITICAL and _due(disease, week):
+            for _ in range(DAYS_A_WEEK if disease.interval == DAY else 1):
+                if not disease.level or disease.level == CRITICAL:
+                    break
+                if not _due(disease, week) or wounds.dead:
+                    break
                 lines.append(
                     f"Week {week}: " + roll(saga, character, disease, living, rng)
                 )
@@ -559,7 +646,12 @@ def describe(disease: Disease) -> str:
     if disease.interval == LIFELONG:
         parts.append("lifelong")
     else:
-        each = {"week": "weekly", "month": "monthly", "season": "each season"}
+        each = {
+            DAY: "daily",
+            "week": "weekly",
+            "month": "monthly",
+            "season": "each season",
+        }
         parts.append(
             f"rolls {each.get(disease.interval, disease.interval)}, Stable "
             f"{disease.stable}, Improve {disease.improve}"

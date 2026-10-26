@@ -102,9 +102,19 @@ def test_help_on_the_saga_shows_the_desktop_workspace(app):
 def test_a_chapter_named_otherwise_opens_help_on_its_tab(app):
     window = _window()
     window.open_covenant(window.saga.covenants[0].id)
-    window.page().codex.rail.setCurrentRow(0)  # Charter
+    window.page().codex.rail.setCurrentRow(2)  # People
     window.help.click()
-    assert _help(window).topic_id == "tab-cov-attributes"
+    assert _help(window).topic_id == "tab-cov-inhabitants"
+
+
+def test_the_covenants_attributes_and_charter_open_help_on_their_tabs(app):
+    window = _window()
+    window.open_covenant(window.saga.covenants[0].id)
+    for row, topic in ((0, "tab-cov-attributes"), (1, "tab-cov-charter")):
+        window.page().codex.rail.setCurrentRow(row)
+        window.help.click()
+        assert _help(window).topic_id == topic
+        window.back()
 
 
 def test_go_there_turns_back_to_the_chapter_the_topic_describes(app):

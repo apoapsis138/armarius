@@ -62,17 +62,21 @@ def test_hold_calls_the_roll_and_each_step_opens_the_next():
     roll = meeting.hold(saga, rhine)
     assert isinstance(roll, Form) and roll.save_label == "Call the roll"
     head = [f.value for f in roll.fields() if f.kind == "info"]
-    assert str(head[0]).startswith("Step 1 of 9. Saving holds it and opens")
+    assert str(head[0]).startswith("Step 1 of 10. Saving holds it and opens")
     assert any("Worked out for you" in str(v) for v in head)
     assert any("What you enter changes" in str(v) for v in head)
     opening = _opening(saga, rhine)
     assert rhine.meeting is not None
     assert opening.save_label == "Open"
-    assert opening.title == "Step 2 of 9: The First Day, Opening and the oaths"
+    assert opening.title == "Step 2 of 10: The First Day, Opening and the oaths"
     labels = [f.label for f in opening.fields()]
     assert "Days" in labels and "Fengheld v. Keep" in labels
     case = rhine.cases[0]
     following = _save(opening, days=2, **{f"day_{case.id}": 1})
+    assert isinstance(following, Then)
+    # The Rhine's customs add their rite after the Opening.
+    assert following.step.title.endswith("The new magi and the sigils by proxy")
+    following = _save(following.step)
     assert isinstance(following, Then)
     assert following.step.title.endswith("Fengheld v. Keep")
     assert rhine.meeting["days"] == 2 and meeting.days(rhine.meeting) == 2
@@ -83,12 +87,12 @@ def test_hold_calls_the_roll_and_each_step_opens_the_next():
     # Holding it again resumes at the step in hand: the first hearing.
     step = meeting.hold(saga, rhine)
     assert isinstance(step, Form) and step.title.endswith("Fengheld v. Keep")
-    assert meeting.business_grid(saga, rhine).rows[2][2] == "▶ in hand"
+    assert meeting.business_grid(saga, rhine).rows[3][2] == "▶ in hand"
     assert meeting.now_text(rhine, rhine.meeting) == (
         "The First Day › Fengheld v. Keep"
     )
     facts = {f.label: f.value for f in meeting.facts(saga, rhine)}
-    assert facts["Now"] == "Step 3 of 9: The First Day › Fengheld v. Keep"
+    assert facts["Now"] == "Step 4 of 10: The First Day › Fengheld v. Keep"
     assert facts["Then"] == "The vote: Fengheld v. Keep"
 
 
@@ -99,7 +103,7 @@ def test_holding_an_earlier_step_again_goes_on_to_the_step_in_hand():
     roll = meeting.step_form(saga, rhine, meeting.steps(rhine, rhine.meeting)[0])
     following = _save(roll)
     assert isinstance(following, Then)
-    assert following.step.title.endswith("Fengheld v. Keep")
+    assert following.step.title.endswith("The new magi and the sigils by proxy")
 
 
 def test_a_day_out_of_range_is_refused():

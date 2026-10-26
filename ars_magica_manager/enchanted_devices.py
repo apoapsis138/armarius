@@ -16,7 +16,7 @@ from collections import Counter
 
 from . import experiment_text
 from .arts import ART_ABBREVIATIONS
-from .markup import PROBLEM_GLYPH, escape, fit, markdown_text, problem
+from .markup import PROBLEM_GLYPH, escape, fit, markdown_text, plural, problem
 from .models import (
     CHARGED,
     EFFECT_EXPIRIES,
@@ -82,10 +82,6 @@ LEVEL_HINT = (
 )
 
 
-def _plural(count: int, noun: str) -> str:
-    return f"{count} {noun}{'' if count == 1 else 's'}"
-
-
 # ------------------------------------------------------------------- lookups
 
 
@@ -136,15 +132,15 @@ def capacity_text(saga: Saga, device: EnchantedDevice) -> str:
     worked = computed_capacity(saga, device)
     if device.capacity_override is not None:
         note = f"worked out: {worked}" if worked is not None else "not worked out"
-        return f"{_plural(value, 'pawn')} (typed; {note})"
+        return f"{plural(value, 'pawn')} (typed; {note})"
     if is_talisman(device):
         magus = saga.character(talisman_magus_id(device))
         whose = f"{magus.name}'s" if magus is not None else "the magus's"
-        return f"{_plural(value, 'pawn')} ({escape(whose)} highest Technique + Form)"
+        return f"{plural(value, 'pawn')} ({escape(whose)} highest Technique + Form)"
     if len(device.components) == 1:
         c = device.components[0]
         return (
-            f"{_plural(value, 'pawn')} ({c.material} x {c.size} = "
+            f"{plural(value, 'pawn')} ({c.material} x {c.size} = "
             f"{ENCHANT_MATERIALS.get(c.material, 0)} x {ENCHANT_SIZES.get(c.size, 0)})"
         )
     how = (
@@ -152,7 +148,7 @@ def capacity_text(saga: Saga, device: EnchantedDevice) -> str:
         if device.type == INVESTED and device.payment == PAY_HIGHEST
         else "the sum of its components"
     )
-    return f"{_plural(value, 'pawn')} ({how})"
+    return f"{plural(value, 'pawn')} ({how})"
 
 
 def opening_text(saga: Saga, device: EnchantedDevice) -> str:
@@ -327,12 +323,12 @@ def warnings(saga: Saga, device: EnchantedDevice) -> list[str]:
         limit = magic_theory(made_by) or 0
         if len(device.components) > limit:
             lines.append(
-                f"{_plural(len(device.components), 'component')}: at most the "
+                f"{plural(len(device.components), 'component')}: at most the "
                 f"maker's Magic Theory ({limit})."
             )
     if device.type == INVESTED and used > device.pawns_opened:
         lines.append(
-            f"Its effects use {_plural(used, 'pawn')}, but only "
+            f"Its effects use {plural(used, 'pawn')}, but only "
             f"{device.pawns_opened} {'was' if device.pawns_opened == 1 else 'were'} "
             "opened."
         )
@@ -358,7 +354,7 @@ def warnings(saga: Saga, device: EnchantedDevice) -> list[str]:
             and device.charges_made > max(most, from_text)
         ):
             lines.append(
-                f"{_plural(device.charges_made, 'charge')} made, but its Lab Total "
+                f"{plural(device.charges_made, 'charge')} made, but its Lab Total "
                 f"gives at most {most} ({from_text} from a Lab Text)."
             )
     return lines
@@ -424,7 +420,7 @@ def device_targets(
 
 def device_status(saga: Saga, device: EnchantedDevice) -> str:
     """The row's summary after the type: opening, charges or effects."""
-    effects = _plural(len(device.effects), "effect")
+    effects = plural(len(device.effects), "effect")
     if device.type == CHARGED:
         left, made = charges_left(device), charges_made(device)
         charges = (
@@ -534,7 +530,7 @@ def component_text(component: DeviceComponent) -> str:
     what = component.description or "(no description)"
     return (
         f"{what}: {component.material}, {component.size} "
-        f"({_plural(component_capacity(component), 'pawn')})"
+        f"({plural(component_capacity(component), 'pawn')})"
     )
 
 
@@ -628,7 +624,7 @@ def effect_info_text(
         vis = vis_cost(device, effect)
         typed = " (typed)" if effect.vis_override is not None else ""
         lines.append(
-            f"[b]Vis:[/] {_plural(vis, 'pawn')}{typed} of {arts.replace(' / ', ' or ')}"
+            f"[b]Vis:[/] {plural(vis, 'pawn')}{typed} of {arts.replace(' / ', ' or ')}"
         )
         lines.append(f"[b]Uses per day:[/] {uses_text(effect.uses_per_day)}")
         if effect.uses_today:
@@ -711,5 +707,5 @@ def talisman_line(saga: Saga, character: Character) -> str:
         return "[b]Talisman:[/] (none)"
     return (
         f"[b]Talisman:[/] {escape(device.name)}  {opening_text(saga, device)}  "
-        f"{_plural(len(device.attunements), 'attunement')}"
+        f"{plural(len(device.attunements), 'attunement')}"
     )

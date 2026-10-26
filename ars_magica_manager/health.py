@@ -99,6 +99,7 @@ def harm_fields(saga: Saga) -> list[DialogField]:
             hint="Untick for boiling water and the like.",
             show_if=_kind_is(harm.INJURY),
         ),
+        *([location_field()] if academe else []),
         DialogField(
             "poison",
             "Poison",
@@ -180,6 +181,21 @@ def harm_fields(saga: Saga) -> list[DialogField]:
             show_if=_kind_is(harm.DEPRIVATION),
         ),
     ]
+
+
+def location_field() -> DialogField:
+    """Where an injury struck, with Art & Academe's medicine: an
+    Incapacitating wound's lasting complication fits the place (A&A p. 43)."""
+    return DialogField(
+        "location",
+        "Where it struck",
+        "select",
+        "torso",
+        options=LOCATION_OPTIONS,
+        hint="An Incapacitating wound calls for a Stamina roll against 6; "
+        "failing leaves a Minor Flaw fitting the place (A&A p. 43).",
+        show_if=_kind_is(harm.INJURY),
+    )
 
 
 def academe_fields() -> list[DialogField]:

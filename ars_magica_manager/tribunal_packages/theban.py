@@ -18,11 +18,13 @@ from __future__ import annotations
 
 from typing import Any
 
+from .. import coinage, treasury
+from ..arts import ARTS
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
 from ..markup import escape
-from ..models import Covenant, Saga, Tribunal
+from ..models import Covenant, Saga, TreasuryEntry, Tribunal
 from ..sections import ARCHAI_SECTION, TOKENS_SECTION
 from . import (
     PackageList,
@@ -534,6 +536,258 @@ def longevity_form(saga: Saga, tribunal: Tribunal) -> Form:
     )
 
 
+# -- loans of vis from the treasury --
+
+#: A loan of more pawns than this, not for an emergency, needs the People's
+#: Assembly's approval (The Sundered Eagle p. 28 says "large" and gives no
+#: number).
+LARGE_LOAN = 10
+
+
+def loan_holders(tribunal: Tribunal) -> dict[str, str]:
+    """The magus each treasury loan made by Lend Vis went to: character
+    id by the loan's treasury id."""
+    found = data(tribunal, KEY).setdefault("loan_holders", {})
+    if not isinstance(found, dict):
+        raise ValueError(f"The loans' holders should be a mapping, not {found!r}.")
+    return found
+
+
+def loans_of(saga: Saga, tribunal: Tribunal, character_id: str) -> list[TreasuryEntry]:
+    """The magus's loans of vis not yet repaid: those lent him by Lend
+    Vis, and any typed in under his name."""
+    holders = loan_holders(tribunal)
+    name = _name(saga, character_id)
+    return [
+        e
+        for e in tribunal.treasury
+        if e.kind == "loan"
+        and not e.paid
+        and e.art
+        and (
+            holders.get(e.id) == character_id or (e.id not in holders and e.who == name)
+        )
+    ]
+
+
+def _vis_in_hand(tribunal: Tribunal, art: str) -> float:
+    return treasury.balance(tribunal).get(art, 0)
+
+
+def lend_problem(values: dict[str, Any]) -> str | None:
+    """Why the loan can't be made as entered (None: it can)."""
+    pawns = values.get("pawns") or 0
+    if pawns < 1:
+        return "Lend at least a pawn."
+    if (
+        pawns > LARGE_LOAN
+        and not values.get("emergency")
+        and not values.get("assembly")
+    ):
+        return (
+            f"A loan of more than {LARGE_LOAN} pawns, not for an emergency, needs "
+            "the People's Assembly's approval."
+        )
+    return None
+
+
+def lend_form(saga: Saga, tribunal: Tribunal, entry: dict[str, Any]) -> Form:
+    """A polites's petition to the tamias for vis from the Tribunal's
+    coffers, repaid by a plan agreed with him and without interest, since
+    usury is a sin; a large loan not for an emergency must be approved by
+    the People's Assembly (The Sundered Eagle pp. 28, 30)."""
+    ident = str(entry.get("character_id"))
+    name = _name(saga, ident)
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                "who",
+                "",
+                "info",
+                f"{escape(name)} petitions the tamias for vis, repaid without interest.",
+            ),
+            DialogField(
+                "art",
+                "Art",
+                "select",
+                "Vim",
+                options=[(art, art) for art in ARTS],
+                required=True,
+            ),
+            DialogField("pawns", "Pawns", "int", 0),
+            DialogField(
+                "due_year",
+                "Repaid by (year)",
+                "optint",
+                tribunal.next_year,
+                hint="The plan's last payment; the next meeting unless agreed otherwise.",
+            ),
+            DialogField(
+                "plan",
+                "Repayment plan",
+                "text",
+                "",
+                placeholder="e.g. two pawns a year from his Creo source",
+            ),
+            DialogField(
+                "emergency",
+                "For an emergency",
+                "check",
+                False,
+                hint="Healing or another need for Ritual magic: no vote is needed.",
+            ),
+            DialogField(
+                "assembly",
+                "Approved by the People's Assembly",
+                "check",
+                False,
+                show_if=lambda v: (
+                    (v.get("pawns") or 0) > LARGE_LOAN and not v.get("emergency")
+                ),
+                hint=f"Needed for a loan of more than {LARGE_LOAN} pawns.",
+            ),
+            DialogField(
+                "into_vis",
+                "Into the magus's own vis",
+                "check",
+                True,
+                hint="The pawns join his vis, for his project.",
+            ),
+        ]
+
+    def live(values: dict[str, Any]) -> str:
+        art = values.get("art") or "Vim"
+        held = _vis_in_hand(tribunal, art)
+        whole = int(held) if float(held).is_integer() else held
+        return (
+            f"The treasury's record holds {whole} pawns of {escape(art)}; the "
+            "vaults on Delos hold several hundred more."
+        )
+
+    def apply(values: dict[str, Any]) -> None:
+        pawns = int(values["pawns"])
+        art = values.get("art") or "Vim"
+        terms = ["interest-free"]
+        if values.get("plan"):
+            terms.append(f"plan: {values['plan']}")
+        if values.get("emergency"):
+            terms.append("for an emergency")
+        elif values.get("assembly"):
+            terms.append("approved by the People's Assembly")
+        loan = TreasuryEntry(
+            "loan",
+            pawns,
+            art=art,
+            who=name,
+            due_year=values.get("due_year"),
+            note=f"Lent {saga.current_year}, " + "; ".join(terms),
+        )
+        tribunal.treasury.append(loan)
+        loan_holders(tribunal)[loan.id] = ident
+        magus = saga.character(ident)
+        if values.get("into_vis") and magus is not None:
+            key = art.lower()
+            magus.raw_vis[key] = magus.raw_vis.get(key, 0) + pawns
+
+    return Form(
+        "Lend Vis from the Treasury",
+        fields,
+        apply,
+        validate=lend_problem,
+        live=live,
+        save_label="Lend",
+    )
+
+
+def lend_step(saga: Saga, tribunal: Tribunal, row: int) -> Command:
+    """More's Lend Vis on the chosen magus: only a polites may borrow."""
+    entry = magi(tribunal)[row]
+    name = escape(_name(saga, entry.get("character_id")))
+    if saga.character(entry.get("character_id")) is None:
+        return Refuse("Lend Vis", f"{name} is no longer in the saga.")
+    if is_metoikos(entry) or ostracised(saga, entry):
+        return Refuse(
+            "Lend Vis",
+            f"{name} is not a polites: only a citizen may petition the "
+            "treasurer for a loan.",
+        )
+    return lend_form(saga, tribunal, entry)
+
+
+def repay_form(saga: Saga, tribunal: Tribunal, character_id: str) -> Form:
+    """A loan repaid: the pawns lent, no more, since the Tribunal takes no
+    interest (The Sundered Eagle p. 28)."""
+    loans = loans_of(saga, tribunal, character_id)
+    magus = saga.character(character_id)
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                "loan",
+                "Loan",
+                "select",
+                loans[0].id,
+                options=[
+                    (
+                        escape(
+                            treasury.amount_text(e)
+                            + (f", due {e.due_year}" if e.due_year else "")
+                        ),
+                        e.id,
+                    )
+                    for e in loans
+                ],
+                required=True,
+                hint="Repaid as lent: the Tribunal takes no interest.",
+            ),
+            DialogField(
+                "from_vis",
+                "From the magus's own vis",
+                "check",
+                True,
+            ),
+        ]
+
+    def chosen(values: dict[str, Any]) -> TreasuryEntry:
+        return next((e for e in loans if e.id == values.get("loan")), loans[0])
+
+    def validate(values: dict[str, Any]) -> str | None:
+        loan = chosen(values)
+        if values.get("from_vis") and magus is not None:
+            has = magus.raw_vis.get(loan.art.lower(), 0)
+            if has < loan.amount:
+                return (
+                    f"{magus.name} has {has} pawns of {loan.art}: the loan is "
+                    f"{treasury.amount_text(loan)}."
+                )
+        return None
+
+    def apply(values: dict[str, Any]) -> None:
+        loan = chosen(values)
+        loan.paid = True
+        loan.note = f"{loan.note}; repaid {saga.current_year}".lstrip("; ")
+        if values.get("from_vis") and magus is not None:
+            key = loan.art.lower()
+            magus.raw_vis[key] = magus.raw_vis.get(key, 0) - int(loan.amount)
+            if not magus.raw_vis[key]:
+                del magus.raw_vis[key]
+
+    return Form(
+        "Repay a Loan of Vis", fields, apply, validate=validate, save_label="Repay"
+    )
+
+
+def repay_step(saga: Saga, tribunal: Tribunal, row: int) -> Command:
+    """More's Repay on the chosen magus: one of his loans of vis."""
+    entry = magi(tribunal)[row]
+    ident = str(entry.get("character_id"))
+    if not loans_of(saga, tribunal, ident):
+        name = escape(_name(saga, ident))
+        return Refuse("Repay a Loan", f"{name} owes the treasury no vis.")
+    return repay_form(saga, tribunal, ident)
+
+
 # -- the Council of Magistrates --
 
 
@@ -659,6 +913,8 @@ THEBAN = TribunalPackage(
                             "Longevity Ritual",
                             lambda saga, tribunal, _row: longevity_form(saga, tribunal),
                         ),
+                        PackageVerb("lend_vis", "Lend Vis", lend_step),
+                        PackageVerb("repay_vis_loan", "Repay a Loan", repay_step),
                     ),
                 ),
                 PackageList(ARCHAI_SECTION, archai_title, archai_grid, archon_ops),
@@ -667,8 +923,11 @@ THEBAN = TribunalPackage(
     ),
     meeting_steps=(
         "assembly",
+        "apprentice_presentation",
         "ostrakismos",
         "sentences",
+        "conduct_of_archai",
+        "common_vis",
         "end_of_term",
         "sortition",
         "archon_polemarch",
@@ -680,6 +939,7 @@ THEBAN = TribunalPackage(
     "meeting.",
     covenant_fields=covenant_phyle_fields,
     save_covenant=save_covenant_phyle,
+    coins=coinage.pounds_in_coins,
 )
 
 register(THEBAN)

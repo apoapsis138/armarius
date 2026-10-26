@@ -15,6 +15,12 @@ its laboratories, or with one of its characters -- a link
 text is matched to a laboratory or character by name when they load
 (models._link_vis_store_locations); unmatched text falls back to the
 covenant and stays as the store's note on where exactly.
+
+A store or source may hold a special kind of vis (`Possession.vis_kind`,
+rules.vis_kinds): vis moved, harvested or added joins only a store of the
+same kind (and Infernal mark), and season work pays from a covenant's
+ordinary stores before its special ones, never from abstract faerie vis,
+which holds no real vis (RoP: Faerie p. 19).
 """
 
 from __future__ import annotations
@@ -33,6 +39,7 @@ from .models import (
     Saga,
     new_instance_id,
 )
+from .rules import vis_kinds
 
 Holder = Character | Laboratory | Covenant
 
@@ -61,6 +68,44 @@ def find_holder(saga: Saga, kind: str, holder_id: str | None) -> Holder | None:
 def _title(art: str) -> str:
     """The Art as the lists print it ("vim" -> "Vim")."""
     return next((a for a in ARTS if a.lower() == art.lower()), art.title())
+
+
+def special_stores(
+    saga: Saga, character: Character, arts: tuple[str, ...]
+) -> list[Possession]:
+    """The Raw Vis Stores of `character`'s covenant of any of `arts` that
+    hold a special kind of vis (rules.vis_kinds), with pawns in them."""
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is None:
+        return []
+    wanted = {a.lower() for a in arts}
+    return [
+        p
+        for p in covenant.possessions
+        if p.kind == STORE and p.vis_kind and p.art.lower() in wanted and p.pawns > 0
+    ]
+
+
+def casting_notes(
+    saga: Saga, magus: Character, technique: str, form: str, cost: int = 0
+) -> list[str]:
+    """What the covenant's special stores of a spell's Arts change in
+    casting it, a Ritual needing `cost` pawns (rules.vis_kinds)."""
+    stores = special_stores(saga, magus, (technique, form))
+    return vis_kinds.casting_notes(stores, technique, form, cost)
+
+
+def kept_together(covenant: Covenant, store: Possession) -> int:
+    """Pawns of the store's Art the covenant keeps in the same place as it
+    (the same keeper and the same note on where exactly)."""
+    where = (store.location_kind, store.location_id, store.location.strip().lower())
+    return sum(
+        p.pawns
+        for p in covenant.possessions
+        if p.kind == STORE
+        and p.art.lower() == store.art.lower()
+        and (p.location_kind, p.location_id, p.location.strip().lower()) == where
+    )
 
 
 def infernal_stores(
@@ -93,9 +138,13 @@ class Held:
 
     @property
     def label(self) -> str:
-        """ "Vim: 3 pawn(s)", with the store's name for a covenant's."""
+        """ "Vim: 3 pawn(s)", with the store's name (and its kind of vis)
+        for a covenant's."""
         text = f"{self.art}: {self.pawns} pawn(s)"
-        return f"{self.store.name} ({text})" if self.store is not None else text
+        if self.store is None:
+            return text
+        kind = vis_kinds.label(self.store)
+        return f"{self.store.name} ({text}{', ' + kind if kind else ''})"
 
 
 def held(holder: Holder) -> list[Held]:
@@ -114,19 +163,33 @@ def held(holder: Holder) -> list[Held]:
 # ------------------------------------------------------------------ moving
 
 
-def _credit(holder: Holder, art: str, pawns: int) -> None:
+def _credit(
+    holder: Holder, art: str, pawns: int, like: Possession | None = None
+) -> None:
+    """Add `pawns` of `art` to the holder: to a covenant's first store of
+    that Art of the same kind of vis as `like` (ordinary when None), or a
+    new one."""
     if isinstance(holder, Covenant):
-        store = next(iter(_stores(holder, art)), None)
+        plain = Possession(id="", kind=STORE)
+        model = like if like is not None else plain
+        store = next(
+            (s for s in _stores(holder, art) if vis_kinds.same_kind(s, model)), None
+        )
         if store is None:
-            name = f"{_title(art)} vis"
-            store = Possession(
-                id=f"vis_{new_instance_id()}",
-                kind=STORE,
-                name=name,
-                art=_title(art),
-                pawns=0,
-                location_kind=COVENANT,
-                location_id=holder.id,
+            special = like is not None and bool(like.vis_kind)
+            name = like.name if special and like is not None else f"{_title(art)} vis"
+            store = vis_kinds.copy_kind(
+                model,
+                Possession(
+                    id=f"vis_{new_instance_id()}",
+                    kind=STORE,
+                    name=name,
+                    art=_title(art),
+                    pawns=0,
+                    location_kind=COVENANT,
+                    location_id=holder.id,
+                    physical_form=like.physical_form if special and like else "",
+                ),
             )
             holder.possessions.append(store)
         store.pawns += pawns
@@ -143,13 +206,21 @@ def _stores(covenant: Covenant, art: str) -> list[Possession]:
     ]
 
 
+def _spendable(covenant: Covenant, art: str) -> list[Possession]:
+    """The stores of `art` season work may pay from: ordinary vis first,
+    then the special kinds, never vis that holds none (abstract)."""
+    stores = [s for s in _stores(covenant, art) if vis_kinds.kind_of(s).usable]
+    return sorted(stores, key=lambda s: vis_kinds.kind_of(s).special)
+
+
 class StorePool(MutableMapping[str, int]):
     """A covenant's Raw Vis Stores seen as a pool, pawns by Art (lower-case
     keys) -- what a character's or laboratory's `raw_vis` is -- so season
     work can pay from them. Lowering an Art takes pawns from its
     stores in order, removing the emptied; raising it adds to the first (a
     new one if there is none). Every change is entered in the covenant's
-    Diary as `who`'s."""
+    Diary as `who`'s. Only vis a magus can spend counts: ordinary stores
+    pay first, then the special kinds; abstract faerie vis never."""
 
     def __init__(self, saga: Saga, covenant: Covenant, who: str) -> None:
         self.saga, self.covenant, self.who = saga, covenant, who
@@ -157,7 +228,7 @@ class StorePool(MutableMapping[str, int]):
     def __getitem__(self, art: str) -> int:
         # 0 for an Art with no store, as the season engine reads a pool
         # back after emptying it.
-        return sum(p.pawns for p in _stores(self.covenant, art))
+        return sum(p.pawns for p in _spendable(self.covenant, art))
 
     def __setitem__(self, art: str, pawns: int) -> None:
         change = pawns - self[art]
@@ -165,7 +236,7 @@ class StorePool(MutableMapping[str, int]):
             _credit(self.covenant, art, change)
         elif change < 0:
             left = -change
-            for store in _stores(self.covenant, art):
+            for store in _spendable(self.covenant, art):
                 taken = min(left, store.pawns)
                 store.pawns -= taken
                 left -= taken
@@ -191,7 +262,11 @@ class StorePool(MutableMapping[str, int]):
     def __iter__(self) -> Iterator[str]:
         seen: list[str] = []
         for p in self.covenant.possessions:
-            if p.kind == STORE and p.art.lower() not in seen:
+            if (
+                p.kind == STORE
+                and vis_kinds.kind_of(p).usable
+                and p.art.lower() not in seen
+            ):
                 seen.append(p.art.lower())
         return iter(seen)
 
@@ -250,8 +325,11 @@ def move(
     """Take `pawns` of `what` from `source` and give them to `destination`,
     writing a Diary entry on both sides."""
     _debit(source, what, pawns)
-    _credit(destination, what.art, pawns)
+    _credit(destination, what.art, pawns, what.store)
     amount = f"{pawns} pawn{'s' if pawns != 1 else ''} of {what.art} vis"
+    kind = vis_kinds.label(what.store) if what.store is not None else ""
+    if kind:
+        amount += f" ({kind})"
     _record(saga, source, f"Moved {amount} to {destination.name}", what.art, -pawns)
     _record(saga, destination, f"Received {amount} from {source.name}", what.art, pawns)
 

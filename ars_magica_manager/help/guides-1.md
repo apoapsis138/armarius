@@ -165,7 +165,7 @@ See [Advance Season](help:advance-season) for how the plans are applied.
 <!-- tui -->
 1. When anything happened, the [Season Summary](help:season-summary) ("The Season's Results") opens: one line per person, grouped by covenant, with the activity and what it gave. A plan that couldn't be carried out says why. Press Enter, Escape or Close to close it.
 2. A message names the new date and whose seasons were applied. The date in the header moves on.
-3. Each character's **Diary** tab (`7`) has an entry for the season, as does the laboratory's Diary tab (`6`) for lab work and the covenant's Diary tab (`7`) for vis harvests.
+3. Each character's **Diary** tab (`7`) has an entry for the season, as does the laboratory's Diary tab (`6`) for lab work and the covenant's Diary tab (`9`) for vis harvests.
 4. With Keep season records on (Edit Saga), the season is also kept under [Seasons](help:seasons) in the tree. Choose it and press Enter to browse past seasons, newest first.
 
 The season's plans are removed once applied, so every This Season section starts empty again. Lab work that takes several seasons stays scheduled on the laboratory's Planning tab.
@@ -229,7 +229,7 @@ Click the covenant's card on the saga's page to open the [Covenant sheet](help:c
 <!-- help: guide-covenant-people -->
 
 <!-- tui -->
-The [Inhabitants tab](help:tab-cov-inhabitants) (`2`) lists who lives at the covenant.
+The [Inhabitants tab](help:tab-cov-inhabitants) (`3`) lists who lives at the covenant.
 
 1. **Magi and companions with a sheet** are listed automatically. To add one, choose the covenant in the tree, press `n` for New and choose **New Character**; the covenant is already chosen. Their row on the [Magi](help:section-inh-magus) or [Companions](help:section-inh-companion) list appears at once.
 2. **People without a sheet** are added with `a` on the Magi or Companions list, typing their details yourself.
@@ -255,7 +255,7 @@ The **People** chapter shows the covenant's characters as cards; the [Covenfolk]
 <!-- help: guide-covenant-resources -->
 
 <!-- tui -->
-The [Possessions tab](help:tab-cov-possessions) (`4`) holds what the covenant owns. Each list adds with `a`, edits with `e` and deletes with `d`.
+The [Possessions tab](help:tab-cov-possessions) (`5`) holds what the covenant owns. Each list adds with `a`, edits with `e` and deletes with `d`.
 <!-- /tui -->
 <!-- gui -->
 The [Possessions](help:tab-cov-possessions) chapter holds what the covenant owns. Each list has **Add**, **Edit** and **Delete**.
@@ -280,7 +280,7 @@ The [Possessions](help:tab-cov-possessions) chapter holds what the covenant owns
 <!-- help: guide-covenant-money -->
 
 <!-- tui -->
-The [Economics tab](help:tab-cov-economics) (`5`) shows a year's finances. Most figures are worked out from the rest of the sheet.
+The [Economics tab](help:tab-cov-economics) (`6`) shows a year's finances. Most figures are worked out from the rest of the sheet.
 
 1. On [Wealth](help:section-eco-wealth), press `e` to type the pounds in store. Its right-hand column shows Total Income, Total Expenditure and the Surplus/Deficit.
 2. On [Sources of Income](help:section-eco-income), `a` adds an enterprise with its Type; leave Current Income blank to use the Type's usual income. To apply a year's Income Modification, choose the source, press `m` and choose **Improve Income**: pick the Annual Improvement Effect, check the Projected Income, and press Commit.
@@ -309,7 +309,7 @@ The [Treasury](help:tab-cov-economics) chapter shows a year's finances: the year
 <!-- help: guide-covenant-books -->
 
 <!-- tui -->
-The [Library tab](help:tab-cov-library) (`6`) lists every book at the covenant, including those owned by its laboratories and characters, with each one's Location.
+The [Library tab](help:tab-cov-library) (`8`) lists every book at the covenant, including those owned by its laboratories and characters, with each one's Location.
 
 1. On [Books](help:section-lib-books), press `a` to add a book; it belongs to the covenant. `e` edits the chosen book.
 2. To bring in many at once, press `m` and choose **Import** to read books from a CSV file into this covenant's library. A preview shows what will be added first. See [Import Data](help:import-data).
@@ -345,7 +345,7 @@ The [Attributes tab](help:tab-cov-attributes) (`1`) holds the covenant's descrip
 3. Some Boons change figures elsewhere, such as the Aura in the top panel or the Buildings cost.
 <!-- /tui -->
 <!-- gui -->
-The [Charter](help:tab-cov-attributes) chapter holds the covenant's description, [Reputations](help:section-cov-reputations), [Boons](help:section-cov-boons) and [Hooks](help:section-cov-hooks).
+The [Attributes](help:tab-cov-attributes) chapter holds the covenant's description, [Reputations](help:section-cov-reputations), [Boons](help:section-cov-boons) and [Hooks](help:section-cov-hooks).
 
 1. Click **Add** on Boons or Hooks to choose one from the catalogue, then click its card and **Edit** to give its detail and description.
 2. Under each title are the points the Boons cost and the Hooks provide; the app warns above them about Boons and Hooks that can't be taken together.
@@ -356,7 +356,7 @@ The [Charter](help:tab-cov-attributes) chapter holds the covenant's description,
 <!-- help: guide-covenant-diary -->
 
 <!-- tui -->
-The [Diary tab](help:tab-cov-diary) (`7`) is the covenant's history.
+The [Diary tab](help:tab-cov-diary) (`9`) is the covenant's history.
 
 1. Press `a` to add an entry with a Year, Season, Category and Name, and any pounds, vis or Loyalty points.
 <!-- /tui -->
@@ -374,7 +374,7 @@ The app adds its own entries for vis harvests, vis moved in or out, and conteste
 <!-- help: guide-covenant-seasons -->
 
 <!-- tui -->
-The [Seasons tab](help:tab-cov-seasons) (`3`) is the covenant's planning board: every magus, companion and grog, with what each has planned this season. Plan anyone's season from here with `e`, and set up a grog's yearly update the same way. See [How to plan and run a season](help:guide-seasons).
+The [Seasons tab](help:tab-cov-seasons) (`4`) is the covenant's planning board: every magus, companion and grog, with what each has planned this season. Plan anyone's season from here with `e`, and set up a grog's yearly update the same way. See [How to plan and run a season](help:guide-seasons).
 <!-- /tui -->
 <!-- gui -->
 The [Seasons](help:tab-cov-seasons) chapter is the covenant's planning board: every magus, companion and grog, with what each has planned this season, over a timeline of their seasons. Click someone and then **Plan** to plan their season from here, and set up a grog's yearly update the same way. See [How to plan and run a season](help:guide-seasons).

@@ -410,6 +410,15 @@ pack, starts with an empty treasury, since the books give no figures.
 The balance above the list adds them up: the silver and vis in hand,
 the loans still out and the fines still unpaid.
 
+A Theban Tribunal's balance also tells its silver in the Byzantine emperors' coins: the
+gold hyperpyron (the Westerners' bezant, a sixth of a pound, 40 pence), the electrum aspron
+(a third of a hyperpyron), the billon (a sixteenth of an aspron, a little under a penny)
+and the copper tetarteron (an eighteenth of a billon); the Venetian grosso the Latins trade
+in is 2 pence, twenty to the bezant (The Sundered Eagle pp. 44-45). Its loans of vis are
+made from the Polity tab's Lend Vis, and its common vis comes in at each meeting. The
+treasury itself lies under a leaden trapdoor on Delos, opened only with the archon's iron
+key, and holds several hundred pawns (p. 77).
+
 ## Gilds tab
 <!-- help: tab-trib-gilds -->
 
@@ -434,6 +443,37 @@ name, its agenda, up to three leaders, as the Apple Gild's triumvirate,
 and a tick for each covenant most of whose magi belong to it) or delete
 it. The roster's Gild column shows the gilds of each covenant and of its
 magi. A gild an older save gave dues keeps them as its agenda.
+
+<!-- tui -->
+More (`m`) on the Gilds list has the Rhine's ranks:
+<!-- /tui -->
+<!-- gui -->
+The Gilds list's own buttons have the Rhine's ranks:
+<!-- /gui -->
+
+- **Mark of Approval**: a master gives a journeyman his token. He must not be of
+  the applicant's covenant or House, and the three marks should come from three
+  different gilds; no master gives one to a magus not famed for his magical
+  prowess (a Redcap: his loyal service), and few are made within twenty years of
+  their Gauntlet (fifteen for a Redcap). The third mark makes him a master: his
+  Journeyman Virtue becomes Master (Rhine Tribunal), with a Hermetic Reputation
+  of 2 (Guardians of the Forests pp. 20, 22-24).
+- **Archmage's Challenge**: a magus challenges an archmage at the archmage's
+  own contest, set the first time he is challenged and kept for life. A Rhine
+  magus must be a master to challenge; a magus of another Tribunal needn't be,
+  as archmagi are found throughout the Order (the form lists him by his
+  Tribunal). Every challenger must have invented a spell of at least 7th
+  magnitude and be famed for a great deed; he never challenges the same
+  archmage twice, and an archmage who has lost seven is challenged no more
+  (six: bad etiquette). One whose parens is an archmage challenges him first,
+  by custom. Winning makes him an archmage, with Hermetic Reputations of 4 as
+  Archmage and for his deed; a Rhine magus also takes the Archmage rank and a
+  second sigil at the next meeting's rite, while a magus of another Tribunal
+  gains only the Reputations (Guardians of the Forests p. 24; Errata p. 42).
+- Only a master takes an apprentice in the Rhine: one a journeyman trains passes
+  his Gauntlet as a recruited hedge wizard, never his filius. A journeyman's
+  sheet says so beside each apprentice who names him parens (p. 24).
+
 <!-- gui -->
 
 A gild named for one of the Rhine's six trees (Oak, Hawthorn, Ash,
@@ -465,10 +505,10 @@ them. Any polites with a shard may be ostracised. Add a magus, edit
 their entry or delete it.
 
 <!-- tui -->
-Two commands in More (`m`) work on this list.
+Four commands in More (`m`) work on this list.
 <!-- /tui -->
 <!-- gui -->
-Two buttons beside the list work on it.
+Four buttons beside the list work on it.
 <!-- /gui -->
 **Neutralize** (on the chosen magus, who must hold a shard): another
 polites spends a token, and the chosen magus serves him a season, with
@@ -481,6 +521,16 @@ no Longevity Ritual in force; the one with the most tokens wins (the
 elder on a tie) and gives up all his tokens; whoever crafts it earns a
 token, two for a Ritual of the tenth magnitude or more. Each year's
 award is kept, and a second the same year is refused (pp. 28, 30).
+
+**Lend Vis** (on the chosen magus, who must be a polites): a loan of vis from the Tribunal's
+coffers, which a polites asks of the tamias. Enter the Art, the pawns, the year the plan
+ends (the next meeting to start with) and the plan agreed. The loan carries no interest,
+since usury is a sin; one of more than ten pawns that is not for an emergency needs the
+People's Assembly's approval (The Sundered Eagle p. 28; the book says only "large", so the
+ten is this app's). The loan becomes a line of the treasury, and the pawns join the magus's
+own vis unless you untick it. **Repay a Loan** (on a magus who owes vis): the loan is marked
+repaid, the pawns lent and no more, taken from his own vis unless you untick it; the form
+refuses if he hasn't them.
 
 ### The Council of Magistrates
 <!-- help: section-trib-archai -->

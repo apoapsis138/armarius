@@ -747,6 +747,93 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Entry": ""},
         shown={"#trib-diary": "12 votes"},
     ),
+    # The Theban treasury's loans of vis.
+    "lend vis": Contract(
+        prefill={
+            "Art": "Vim",
+            "Pawns": "0",
+            "Repaid by (year)": "1225",
+            "Repayment plan": "",
+            "For an emergency": False,
+            "Into the magus's own vis": True,
+        },
+        edits={"Art": "Creo", "Pawns": "4", "Repayment plan": "a pawn a year"},
+        saved=lambda s: (
+            s.tribunal("thebes").treasury[-1].amount,
+            s.tribunal("thebes").treasury[-1].art,
+            s.character("mag1").raw_vis.get("creo", 0),
+        ),
+        expected=(4, "Creo", 7),
+        invalid=[{"Pawns": "0"}, {"Pawns": "11"}],
+        shown={"#trib-treasury": "4 pawns of Creo"},
+    ),
+    # The Rhine's ranks and its meeting's rite.
+    "mark of approval": Contract(
+        prefill={
+            "Applicant": "mag1",
+            "Mark given by": "mag_sketch",
+            "Asked of him": "",
+        },
+        edits={
+            "Applicant": "mag1",
+            "Mark given by": "mag_sketch",
+            "Asked of him": "a tract",
+        },
+        saved=lambda s: s.tribunal("rhine").package_data["rhine"]["marks"]["mag1"][0][
+            "sponsor_id"
+        ],
+        expected="mag_sketch",
+        # Brother Oda is of Severinus's House.
+        invalid={"Applicant": "mag2"},
+        live={"#fields-live": "1 of 3 marks: Severinus"},
+    ),
+    "archmage's challenge": Contract(
+        prefill={
+            "Challenger": "mag_sketch",
+            "Archmage": "arch1",
+            "Contest": "",
+            "Has invented a spell of 7th magnitude": False,
+            "Great deed": "",
+            "Outcome": "Lost",
+        },
+        edits={
+            "Challenger": "mag_sketch",
+            "Archmage": "arch1",
+            "Contest": "defeat him in certamen",
+            "Has invented a spell of 7th magnitude": True,
+            "Great deed": "Bound the wyrm",
+            "Outcome": "Won",
+        },
+        saved=lambda s: (
+            [vf.vf_id for vf in s.character("mag_sketch").virtues_flaws][-1],
+            s.tribunal("rhine").package_data["rhine"]["challenges"]["arch1"]["contest"],
+        ),
+        expected=("vf_archmage_rhine_tribunal", "defeat him in certamen"),
+        invalid=[
+            {
+                "Challenger": "mag_sketch",
+                "Archmage": "arch1",
+                "Contest": "certamen",
+                "Great deed": "Bound the wyrm",
+            },
+            {
+                "Challenger": "mag_sketch",
+                "Archmage": "arch1",
+                "Has invented a spell of 7th magnitude": True,
+                "Great deed": "Bound the wyrm",
+            },
+        ],
+    ),
+    "rhine rite": Contract(
+        prefill={"Confer: Severinus (Master)": True, "Sigil of": ""},
+        edits={"Sigil of": "Notatus"},
+        saved=lambda s: (
+            s.tribunal("rhine").package_data["rhine"]["entrusted"],
+            s.tribunal("rhine").proxies["cov_sketch"],
+        ),
+        expected=({"mag_sketch": ["Notatus"]}, 2),
+        shown={"#meeting-business": "✓ held"},
+    ),
 }
 
 

@@ -273,8 +273,14 @@ ICON_NAMES: dict[str, str] = {
 }
 
 #: An app concept to an icon the app draws itself (drawn/), in place of
-#: a Phosphor one: a ruined covenant's broken turret (tools/draw_ruin.py).
-DRAWN_ICONS: dict[str, Path] = {"ruin": DRAWN / "ruin.svg"}
+#: a Phosphor one: a ruined covenant's broken turret (tools/draw_ruin.py),
+#: and the key of a covenant's Attributes and the sealed charter of its
+#: Charter (tools/draw_charter_icons.py).
+DRAWN_ICONS: dict[str, Path] = {
+    "ruin": DRAWN / "ruin.svg",
+    "key": DRAWN / "key.svg",
+    "charter": DRAWN / "charter.svg",
+}
 
 
 def icon(concept: str) -> Path:

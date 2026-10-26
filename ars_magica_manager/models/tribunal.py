@@ -123,6 +123,9 @@ class Meeting(TypedDict, total=False):
     council: dict[str, Any]
     tithe: dict[str, Any]
     theban: dict[str, Any]
+    #: The Rhine's introduction of new magi and conferral of sigils
+    #: (rhine_meeting.py).
+    rhine_rite: dict[str, Any]
 
 
 @dataclass

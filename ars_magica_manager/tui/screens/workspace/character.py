@@ -16,6 +16,7 @@ from .... import (
     health,
     labor,
     seasons,
+    selling,
     session_end,
     sourcebooks,
     storage,
@@ -140,19 +141,23 @@ class CharacterActions(WorkspaceBase):
 
         run_steps(self.app, menu_forms.character_traditions(self.saga, character), done)
 
-    def _agent_step(self, build: Callable[[Character, int], Any]) -> None:
-        """Run a More command on the Agents list's chosen agent, then save
-        and redraw the list."""
+    def _agent_step(
+        self, build: Callable[[Character, int], Any], *sections: str
+    ) -> None:
+        """Run a More command on the Agents list's chosen agent, then save,
+        redraw the list (and `sections`) and say what it did."""
         character = self.selected_character
         view = self._current_sheet_view()
         row = view.section_row(AGENTS_SECTION) if view is not None else None
         if character is None or row is None:
             return
-        run_steps(
-            self.app,
-            build(character, row),
-            lambda _end: self._commit(AGENTS_SECTION),
-        )
+
+        def done(end: object) -> None:
+            self._commit(AGENTS_SECTION, *sections)
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, build(character, row), done)
 
     def action_impress_agent(self) -> None:
         """More's Impress on the chosen potential agent."""
@@ -165,6 +170,11 @@ class CharacterActions(WorkspaceBase):
     def action_set_agent_task(self) -> None:
         """More's Set a Task for the chosen agent."""
         self._agent_step(partial(agent_forms.set_task, self.saga))
+
+    def action_resolve_agent_task(self) -> None:
+        """More's Resolve the Task for the chosen agent: his own roll, kept
+        in the Diary."""
+        self._agent_step(partial(agent_forms.resolve, self.saga), "tab-diary")
 
     def action_take_harm(self) -> None:
         """More's Take Harm on Health: an injury, poison, disease or
@@ -242,6 +252,20 @@ class CharacterActions(WorkspaceBase):
                 "tab-diary",
             ),
         )
+
+    def action_sell_goods(self) -> None:
+        """More's Sell Finished Goods on This Season: the haggling roll for
+        a craftsman's sale, kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            self._commit("section-char-season", "tab-diary")
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, selling.sell_form(self.saga, character), done)
 
     def action_command_beast(self) -> None:
         """More's Command the Beast on a tamed animal's Personality Traits:
@@ -374,7 +398,9 @@ class CharacterActions(WorkspaceBase):
                     character.description,
                     self.saga.players,
                     may_assign=self._is_storyguide(),
+                    academe=disease.on(self.saga),
                 ),
+                validate=character_forms.biographical_problem,
             ),
             handle_result,
         )
@@ -395,7 +421,7 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(
             FieldsDialog(
                 "Edit Aging & Warping",
-                character_forms.aging_fields(character.aging, self.saga),
+                character_forms.aging_fields(character.aging, self.saga, character),
             ),
             handle_result,
         )

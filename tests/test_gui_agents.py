@@ -21,7 +21,8 @@ from screen_helpers import _sample_saga_with_covenant
 from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
-from ars_magica_manager.gui.forms import FieldsDialog
+from ars_magica_manager.gui.forms import FieldsDialog, NoticeDialog
+from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import Agent
 
@@ -87,6 +88,7 @@ def test_the_agents_chapter_follows_inventory_and_shows_the_limit(app):
         "Impress",
         "Spend Agency Experience",
         "Set a Task",
+        "Resolve the Task",
     ]
     assert not buttons["Set a Task"].isEnabled()  # no row yet
 
@@ -102,6 +104,7 @@ def test_the_row_buttons_follow_the_chosen_agent(app):
     _choose(window, 1)
     assert buttons["Impress"].isEnabled()
     assert not buttons["Set a Task"].isEnabled()
+    assert not buttons["Resolve the Task"].isEnabled()  # not yet an agent
     assert not buttons["Spend Agency Experience"].isEnabled()  # not impressed
 
 
@@ -119,3 +122,36 @@ def test_an_agent_is_added_and_a_task_set(app):
     section_buttons(page, "Agents")["Set a Task"].click()
     assert asked[0].windowTitle() == "Set a Task: Sir Konrad"
     assert any("against 3" in words for _title, words in window.told)
+
+
+@pytest.mark.parametrize(
+    ("title", "shown"),
+    [
+        (
+            "Next Siege Event: The Siege of Burg Falkenstein",
+            "Next Siege Event:\nThe Siege of Burg Falkenstein",
+        ),
+        (
+            "Spend Agency Experience: Sir Konrad von Elster",
+            "Spend Agency Experience:\nSir Konrad von Elster",
+        ),
+        ("Impress: Udo", "Impress: Udo"),
+        (
+            "Set a Task: " + " ".join(["Hildegard"] * 6),
+            "Set a Task:\n" + " ".join(["Hildegard"] * 6),
+        ),
+    ],
+)
+def test_a_long_notice_title_breaks_after_its_action_and_fits(app, title, shown):
+    notice = NoticeDialog(title, "Done.", PALETTES[0])
+    notice.show()
+    app.processEvents()
+    assert notice.heading.text() == shown
+    if notice.heading.wordWrap():  # a name too long for one line wraps
+        assert notice.heading.geometry().right() < notice.width()
+        notice.close()
+        return
+    for line in shown.split("\n"):
+        width = notice.heading.fontMetrics().horizontalAdvance(line)
+        assert width <= notice.heading.width(), line
+    notice.close()

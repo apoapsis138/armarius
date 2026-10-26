@@ -19,6 +19,12 @@ def fit(text: str, width: int) -> str:
     return text.ljust(width)
 
 
+def plural(count: int, noun: str) -> str:
+    """ "1 pound", "3 pounds": `count` and `noun`, an s added unless it is
+    one."""
+    return f"{count} {noun}{'' if count == 1 else 's'}"
+
+
 def aligned(rows: Sequence[tuple[str, object]]) -> str:
     """`label: value` lines with the values lined up in one column. The
     labels are in the theme's $label colour, so the values stand out."""

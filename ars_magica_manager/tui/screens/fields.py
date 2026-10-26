@@ -474,6 +474,11 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     def on_input_changed(self, event: Input.Changed) -> None:
         self._react()
 
+    def on_text_area_changed(self, event: TextArea.Changed) -> None:
+        # A many-line field feeds the live line and inspector as a
+        # one-line field does.
+        self._react()
+
     def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
         self._react()
 

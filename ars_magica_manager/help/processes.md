@@ -109,6 +109,7 @@ a list of Virtues to choose from, which asks for anything the entry names (an Af
 - **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs). Care of Souls stays a priest's (p. 28).
 - **Set points:** Useful correspondence's 1 xp, and the 1 xp in Organization Lore: Order of Hermes for each book read from a folio, are set points (Covenants p. 90; Houses of Hermes: True Lineages p. 23): no Affinity, Savantism or wound halves or multiplies them, and Master of None and Secondary Insight ignore them. **Study a realia collection** is for one outside the library, such as an exhibit at Tablinum; one the covenant owns is a book of the Realia kind (see [Books](help:section-lib-books)). **Study another artist's work**: Source Quality is half the work's Aesthetic Quality, and each work is studied once, like a tractatus (Art & Academe p. 126, with Atlas Games' errata).
 - **Make a wondrous item:** the Workshop Total adds the aura's modifier: the aura where the craftsman works (enter it, and its realm, in **Aura where he works**; blank counts none), by the Realm Interaction table for the realm his Touched by (Realm) names (Faerie in a Magic aura adds half, Divine nothing; City & Guild p. 72, DE pp. 410-411). The Virtue must name Magic, Faerie, Divine or Infernal (p. 71), or the season says so. Choose the one assistant in the Teacher / master field: half their Craft is added (City & Guild p. 72); count no other help in Other. A Mythic Farrier (Grogs p. 76) makes wondrous horseshoes the same way, with Intelligence or Dexterity + Craft: Farrier, in one Form, their power on the horse or the ground it treads; name his realm on the Virtue (most likely Magic or Faerie, Infernal possible).
+- **Exertion, a (Craft) Reputation and a laborer's working season** (City & Guild pp. 73-76), in a workshop production, excellent item or wondrous item season. **Exertion** adds a simple die to the Workshop Total, rolls a stress die on the exertion table, and makes an Aging roll whatever his age; under 35 the Aging roll takes a simple die for its stress die and a 13 brings no Crisis (DE p. 392). The table: a botch is a disaster; 4-5 disappointing ramifications; 6-7 no benefit (the simple die isn't added); 8 a story event; 9 invention, a simple die of Labor Points put toward Innovation (shown on This Season and spent by the next Innovation raised); 10-11 a simple die of experience in his (Craft) Reputation; 12+ a simple die of experience in the Craft. A **(Craft) Reputation** (p. 74) is named for the trade (Craft: Smith's is "Smith"), starts at 0 and rises as an Ability: a season whose Workshop Total is 6 or more over the standard goods' Craft Level (6) earns 1 experience, a wondrous item's season included, and the season a wondrous item is finished earns 1 more on top; a season of shoddy goods straight after another takes 1 off, and below 0 he gains a Reputation as a bad craftsman ("Shoddy Smith"), scored like any Reputation, the "bad" being in its name (DE p. 386). A **laborer's working season** (p. 76) with a Profession sets his Labor Total, his primary Characteristic + Profession, against the Profession Level: the Characteristic is the one the season names, Strength if it names none (p. 67), while his Labor Points stay Communication + Profession (p. 38). The Profession Level is 6, raised by 1 where he lives in an Infernal, Faerie or Magic aura, as a Craft Level is (p. 69; not a Divine one). It gives shoddy, standard (at the level) or superior (6 over it) service, never excellent, and his (Profession) Reputation follows the same rules.
 - **Other:** anything else. It is written in the Diary with your notes, and no experience is worked out for it; say in Notes what the season is spent on.
 
 The rules are those of Ars Magica Definitive Edition, Chapter 10: Long-Term Events (Exposure, Practice, Adventure, Books, Teaching, Training, Vis and Distractions); each activity's rule is cited under the plan in the character's This Season.
@@ -334,6 +335,13 @@ The steps run in a fixed order:
   and the day each case and motion is heard. A meeting lasts as many
   days as its Tribunal's customs give: Hibernia's seven (The Contested
   Isle p. 32), three elsewhere; **Days** on the Opening changes it.
+- **The new magi and the sigils by proxy**, under the Rhine's customs, the first business
+  after the Opening: every magus of its covenants who passed his Gauntlet since the last
+  meeting is introduced (tick each, or name others not in the saga), then the rite confers a
+  retired magus's sigil on each master and archmage made since (by the Mark of Approval or
+  the Archmage's Challenge). Name whose sigil it is: typically his master's, if retired. Each
+  sigil adds a proxy to his covenant's votes, at this meeting and the next. Holding the step
+  again confers afresh, never twice (Guardians of the Forests pp. 24, 26-27).
 - **The Hermetic Assembly**, on the first day under the Theban customs,
   in two steps. **The Assembly's decrees**: the principal phyle governing the meeting
   (the next in turn, Ionian, Aegean, Kretan, Propontian, unless you
@@ -350,6 +358,23 @@ The steps run in a fixed order:
   is ostracised: they become a metoikos, lose their tokens and shards,
   and may not return for seven years. The Theban Law Council and
   People's Court are the meeting's motions and cases, below.
+- **The Apprentice Presentation**, under the Theban customs, between the Assembly's decrees
+  and the ostrakismos: the Gifted children the Treasury Council found, interviewed for two
+  days before the meeting. Enter each child the troupe's magi interviewed (up to five), her
+  age, who delivered her to the Council (a polites who did earns a token, The Sundered Eagle
+  p. 28) and the tokens each magus gave her (up to three magi). Only a polites with no shard
+  may give tokens, or any Bonisagus even with one, since the Code trumps local custom, and
+  no magus may give more tokens than he holds (p. 32). A child given tokens by one magus is
+  his apprentice; one given tokens by several chooses, usually the one who gave the most (the
+  app picks him, the first entered on a tie, unless you choose another of them); a child given
+  none may be claimed by any magus, even one with a shard (pp. 33-34). Any Bonisagus may
+  claim any child outright by the rights the Oath gives his House, whether or not he gave her
+  tokens and whatever his shards: name him under **Claimed by** (shown only when the Tribunal
+  has a Bonisagus), and her choice doesn't override him. By tradition he still gives her a
+  token or two; enter them as his bid and she keeps them (p. 32). Her master's tokens leave him and stay with her,
+  to spend once she is a maga; the others' go back to them. Each child given becomes a
+  Sketch character at her master's covenant, with her master as parens and the tokens she
+  keeps in her summary. Once given, holding the step again changes only its note.
 - **Each case and motion**, on its day: the debate between the
   prosecutor and defender (for a motion, one who speaks for it and one
   against), each chosen from a drop-down of the magi present (shown with
@@ -411,6 +436,28 @@ The steps run in a fixed order:
   accuser from the Tribunal's magi (the step guesses them from the
   case's names). A metoikos is given no tokens or shards. No March is
   held on Delos (The Sundered Eagle pp. 28, 35).
+- **The conduct of archai**, under the Theban customs, after the sentences: any polites may
+  ask that the conduct of an arche (the archon among them, as he is elected from the archai),
+  or of the polemarch, be examined, naming the fault (a case poorly
+  defended or prosecuted, a bribe, indolence) and proposing a fine of one to seven shards.
+  Up to three complaints: for each, the magistrate, who brought it, the fault, the fine and
+  how the votes went. A complaint upheld with its fine gives the magistrate the shards; one
+  rejected, or whose fine is voted down, gives none. Failing to win or stop a conviction is
+  no fault unless the neglect was willful (The Sundered Eagle p. 35). The logothete isn't offered: the book names only an arche or the polemarch (The Sundered
+  Eagle p. 35). Holding the step again
+  undoes the first holding first.
+- **The common vis sources**, under the Theban customs, before the outgoing magistrates'
+  tokens: the vis sources the Peripheral Code holds in common, gathered for the Tribunal by
+  magi the Treasury Council names. For each source, its Art, its gatherer and the pawns
+  brought into the coffers: each gatherer earns a token for the period (one token for each source he
+  gathers: the book's 'one per Tribunal period' could also mean one per magus however many he
+  gathers, so this is the app's reading; give back the extra by editing his tokens if your
+  troupe reads it the other way), and the pawns go
+  into the treasury as vis; a gatherer who forgot to harvest it (tick **Neglected**) is
+  given a shard and brings in nothing (The Sundered Eagle pp. 28-29). The sources and their
+  gatherers are kept, so the next meeting's form starts with them. The whole Tribunal
+  gathers some 50 pawns a year, Creo and Vim the most, about half of it spent on the yearly
+  Longevity Ritual (pp. 29-30).
 - **The Council of Archai**, on the last day under the Theban customs,
   in three steps. **The outgoing magistrates' tokens**: each outgoing magistrate is
   paid in tokens, 2 for an arche, 3 for the archon and 5 for the

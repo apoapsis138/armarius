@@ -21,13 +21,14 @@ from ars_magica_manager.tui.screens.widgets import SelectableList
 #: familiar 83, laboratory 101. Raise a budget only deliberately.
 SHEET_OPEN_WIDGET_BUDGET = {
     "character": 91,  # the Agents tab adds its (unbuilt) pane
-    # The charter sections on Attributes (hidden without the Boon or Hook)
-    # and the Manors pane.
-    "covenant": 78,
+    # The Manors and Charter panes (the town charter's sections moved off
+    # Attributes onto the Charter tab, unbuilt on opening).
+    "covenant": 67,
     "familiar": 65,
     "laboratory": 50,
-    # Its Overview tab's Connections section: 2.
-    "sketch_covenant": 52,
+    # Its Overview tab's Connections section: 2; its Charter tab's
+    # (unbuilt) pane: 2.
+    "sketch_covenant": 54,
     # Each Tribunal's Secrets tab adds its (unbuilt) pane and its tab: 2.
     "tribunal": 42,
     "theban_tribunal": 42,

@@ -16,6 +16,7 @@ from .rules import hedge_effects as he
 from .rules import hedge_warping as hw
 from .rules import infernalists
 from .rules import tradition_seasons as ts
+from .rules import tradition_totals as tt
 from .rules.realms import home_aura
 from .tables import Table
 
@@ -544,6 +545,8 @@ def warping_text(saga: Saga, character: Character, tradition: TraditionDef) -> s
         aura, _ = home_aura(saga, character)
         lines.append(escape(infernalists.vituperation_text(character, aura)))
         lines.append(escape(infernalists.sacrifice_text()))
+    aura, _ = home_aura(saga, character)
+    lines += [escape(line) for line in tt.warping_notes(character, tradition.id, aura)]
     if rule.notes:
         lines.append(f"[dim]{escape(rule.notes)}[/]")
     return "\n".join(lines)
@@ -556,6 +559,10 @@ def pools_text(character: Character, tradition: TraditionDef) -> str:
     for pool in tradition.pools:
         points = hw.pool_points(character, tradition, pool.name)
         lines.append(f"[b]{escape(pool.name)}[/] {points}")
+        lines += [
+            f"  {escape(line)}"
+            for line in tt.pool_notes(character, tradition.id, pool.name)
+        ]
         for label, words in (
             ("Fills", pool.income),
             ("Spent on", pool.costs),

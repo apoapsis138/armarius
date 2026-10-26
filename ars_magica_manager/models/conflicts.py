@@ -238,6 +238,11 @@ class Siege:
     #: Each wall's damage levels left (North, East, South, West); None
     #: until the first blow lands, meaning every wall whole.
     walls: list[int] | None = None
+    #: A whole wall's damage levels, fixed when the siege's first event is
+    #: played (Defense Bonus x the size's modifier, Lords of Men p. 112), so
+    #: a mine that lowers the Defenses leaves the walls' measure alone.
+    #: None until then: worked out from the Defenses and Size as they stand.
+    wall_max: int | None = None
     miners: int = 0
     #: Siege engines by kind (rules.siege.ENGINES keys): how many.
     engines: dict[str, int] = field(default_factory=dict)
@@ -254,6 +259,10 @@ class Siege:
     engineer: int = 0
     days: int = 0
     supply_rolls: int = 0
+    #: The day the next supplies roll comes due: the last one's day plus
+    #: the Supplies interval as it then stood (Lords of Men p. 112). None
+    #: before the first interval is counted: the interval from day 0.
+    next_supply_day: int | None = None
     events: list[SiegeEvent] = field(default_factory=list)
     #: How it ended ("Surrendered", "Breached", "Raised"); "" while it runs.
     ended: str = ""

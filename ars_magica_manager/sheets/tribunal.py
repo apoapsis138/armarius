@@ -28,6 +28,9 @@ from ..models import (
     TribunalDiaryEntry,
 )
 from ..references import Fact
+from ..treasury import amount_text, balance
+from ..treasury import pawns as _pawns
+from ..treasury import pounds as _pounds
 from .character import house_name
 
 # -- In the Saga --
@@ -568,22 +571,6 @@ def ruling_text(tribunal: Tribunal, ruling: Ruling | None) -> str:
 # -- the treasury --
 
 
-def _pounds(amount: float) -> str:
-    whole = int(amount) if float(amount).is_integer() else amount
-    return f"{whole} pound" if whole in (1, -1) else f"{whole} pounds"
-
-
-def _pawns(amount: float, art: str) -> str:
-    whole = int(amount) if float(amount).is_integer() else amount
-    noun = "pawn" if whole in (1, -1) else "pawns"
-    return f"{whole} {noun} of {art}"
-
-
-def amount_text(entry: TreasuryEntry) -> str:
-    """ "12 pounds", or "3 pawns of Vim" for vis."""
-    return _pawns(entry.amount, entry.art) if entry.art else _pounds(entry.amount)
-
-
 def treasury_title(tribunal: Tribunal) -> str:
     return f"Treasury ({len(tribunal.treasury)})"
 
@@ -626,22 +613,6 @@ def treasury_grid(tribunal: Tribunal) -> Grid:
     )
 
 
-def balance(tribunal: Tribunal) -> dict[str, float]:
-    """What the treasury holds, by "silver" and each Art: its silver and
-    vis, with fines paid in and loans not yet repaid out."""
-    held: dict[str, float] = {}
-    for entry in tribunal.treasury:
-        key = entry.art or "silver"
-        if entry.kind in ("vis", "silver"):
-            sign = 1
-        elif entry.kind == "fine":
-            sign = 1 if entry.paid else 0
-        else:
-            sign = 0 if entry.paid else -1
-        held[key] = held.get(key, 0) + sign * entry.amount
-    return held
-
-
 def _owed(tribunal: Tribunal, kind: str) -> list[str]:
     owed: dict[str, float] = {}
     for entry in tribunal.treasury:
@@ -663,8 +634,12 @@ def balance_lines(tribunal: Tribunal) -> list[tuple[str, str]]:
         for art, n in sorted(held.items())
         if n
     )
+    coins = tribunal_packages.of(tribunal).coins
+    in_hand = _pounds(silver)
+    if coins is not None and silver:
+        in_hand += f" ({coins(silver)})"
     return [
-        ("Silver in hand", _pounds(silver)),
+        ("Silver in hand", in_hand),
         ("Vis in hand", f"{vis} (pawns)" if vis else "none"),
         ("Loans out", ", ".join(_owed(tribunal, "loan")) or "none"),
         ("Fines unpaid", ", ".join(_owed(tribunal, "fine")) or "none"),

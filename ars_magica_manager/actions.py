@@ -23,6 +23,7 @@ from . import (
     hosting,
     places,
     seasons,
+    selling,
     sourcebooks,
     threats,
     traditions,
@@ -34,6 +35,7 @@ from . import goods as gd
 from . import inhabitants as inh
 from . import lab_texts as lt
 from . import spells as spl
+from .forms import charter as charter_forms
 from .models import (
     FULL,
     INHABITANT_KINDS,
@@ -61,6 +63,8 @@ from .sections import (
     CASES_SECTION,
     CATALOGS_SECTION,
     CHAR_AHEAD_SECTION,
+    CHARTER_SECTION,
+    CLAUSES_SECTION,
     CONFLICT_BATTLES_SECTION,
     CONNECTIONS_SECTION,
     CORE_SECTIONS,
@@ -71,6 +75,7 @@ from .sections import (
     ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
     FIGHTS_SECTION,
+    GILDS_SECTION,
     GOODS_SECTION,
     GRATITUDE_SECTION,
     HIDDEN_SECTION,
@@ -324,6 +329,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("i", "impress_agent", "Impress"),
     MenuItem("x", "spend_agency_xp", "Spend Agency Experience"),
     MenuItem("t", "set_agent_task", "Set a Task"),
+    MenuItem("r", "resolve_agent_task", "Resolve the Task"),
     MenuItem("p", "add_purity", "Add a Purity"),
     MenuItem("j", "plan_journey", "Travel"),
     MenuItem("l", "labor_story", "Labor Points from a Story"),
@@ -331,6 +337,16 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("r", "discipline_grog", "Reward or Punish"),
     MenuItem("n", "grog_pension", "Pension"),
     MenuItem("f", "craft_by_magic", "Craft by Magic"),
+    MenuItem("s", "seal_charter", "Seal the Charter"),
+    MenuItem("b", "break_clause", "Break a Clause"),
+    # The Theban treasury's loans of vis.
+    MenuItem("v", "lend_vis", "Lend Vis from the Treasury"),
+    MenuItem("p", "repay_vis_loan", "Repay a Loan of Vis"),
+    # The Rhine's ranks: masters' marks and archmagi's challenges.
+    MenuItem("k", "rhine_mark", "Mark of Approval"),
+    MenuItem("c", "rhine_challenge", "Archmage's Challenge"),
+    # A craftsman's sale of his finished goods (City & Guild).
+    MenuItem("s", "sell_goods", "Sell Finished Goods"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -367,6 +383,13 @@ MORE_SECTIONS: dict[str, str] = {
     "restart_fight": FIGHTS_SECTION,
     "next_siege_event": SIEGES_SECTION,
     "craft_by_magic": "section-known-spells",
+    "seal_charter": CHARTER_SECTION,
+    # The Theban treasury's loans of vis.
+    "lend_vis": TOKENS_SECTION,
+    "repay_vis_loan": TOKENS_SECTION,
+    # The Rhine's ranks: masters' marks and archmagi's challenges.
+    "rhine_mark": GILDS_SECTION,
+    "rhine_challenge": GILDS_SECTION,
 }
 
 #: Where in the navigation each record can be created: the saga, and
@@ -830,6 +853,17 @@ def _works_for_labor(
     return rule
 
 
+def _breaks_clause(facts: ActionFacts, section: str) -> bool:
+    """Break a Clause: on the Clauses list, for a chosen clause not yet
+    broken."""
+    covenant = facts.selected_covenant
+    return (
+        section == CLAUSES_SECTION
+        and covenant is not None
+        and charter_forms.can_break(covenant, facts.chosen_row(section))
+    )
+
+
 def _plans_journey(_facts: ActionFacts, section: str) -> bool:
     """Travel, the calculator: on Ahead, the Seasons page's or a
     covenant's."""
@@ -859,9 +893,15 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "impress_agent": _acts_on_agent(lambda _c, agent: agent_rules.can_impress(agent)),
     "spend_agency_xp": _acts_on_agent(agent_rules.can_spend),
     "set_agent_task": _acts_on_agent(lambda _c, agent: agent_rules.may_be_asked(agent)),
+    "resolve_agent_task": _acts_on_agent(
+        lambda _c, agent: agent_rules.recruited(agent)
+    ),
     "add_purity": _adds_purity,
     "plan_journey": _plans_journey,
+    "break_clause": _breaks_clause,
     "labor_story": _works_for_labor(lambda c: bool(merchants.work_abilities(c))),
     "invest_labor": _works_for_labor(merchants.earns_labor),
+    # A craftsman's sale of his finished goods, on This Season.
+    "sell_goods": _works_for_labor(lambda c: bool(selling.crafts(c))),
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
 }

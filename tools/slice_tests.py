@@ -94,6 +94,16 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_gui_medallion_placements.py",
     ),
     "ars_magica_manager/actions.py": ("test_dispatch_matrix.py", "test_keyboard.py"),
+    # A covenant's Charter of Covenant: its clause list's flow, and its
+    # forms' contracts.
+    "ars_magica_manager/covenant_charter.py": (
+        "test_list_flows.py",
+        "test_dialog_contracts_covenant.py",
+    ),
+    "ars_magica_manager/forms/charter.py": (
+        "test_list_flows.py",
+        "test_dialog_contracts_covenant.py",
+    ),
     "ars_magica_manager/sections.py": ("test_dispatch_matrix.py", "test_sheet_text.py"),
     "ars_magica_manager/form_spec.py": (
         *DIALOG_CONTRACT_TESTS,
@@ -221,6 +231,14 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "pyproject.toml": ("test_version.py",),
     "CHANGELOG.md": ("test_version.py", "test_help.py", "test_title_page.py"),
     "ars_magica_manager/changelog.py": ("test_help.py", "test_title_page.py"),
+    # The Theban treasury and its coins.
+    "ars_magica_manager/treasury.py": (
+        "test_dialog_contracts_tribunal.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/coinage.py": ("test_sheet_text.py",),
+    # A craftsman's sale of his finished goods.
+    "ars_magica_manager/selling.py": ("test_dialog_contracts_character.py",),
 }
 
 

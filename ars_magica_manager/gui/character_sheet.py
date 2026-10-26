@@ -1396,8 +1396,8 @@ class CharacterSheet(QWidget):
     def _agents(self) -> QWidget:
         """The people he controls through personal bonds: the limit and
         the Agency experience, the ledger, Add, Edit and Delete, and
-        Impress, Spend Agency Experience and Set a Task on the chosen
-        agent, who shows in full in the inspector."""
+        Impress, Spend Agency Experience, Set a Task and Resolve the Task
+        on the chosen agent, who shows in full in the inspector."""
         saga, p, c = self.saga, self.p, self.character
         chooser = Chooser()
 
@@ -1427,6 +1427,12 @@ class CharacterSheet(QWidget):
                 "faction",
                 lambda row: agent_forms.set_task(saga, c, row),
                 offered(agent_rules.may_be_asked),
+            ),
+            (
+                "Resolve the Task",
+                "in_play",
+                lambda row: agent_forms.resolve(saga, c, row),
+                offered(agent_rules.recruited),
             ),
         ]
         return scrolling_page(

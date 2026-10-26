@@ -37,11 +37,13 @@ from ..references import Fact
 from ..rules import (
     aging,
     casting,
+    complexion,
     derived,
     equipment,
     experiment,
     medicine,
     penetration,
+    realm_warping,
     scores,
     sigils,
     warping,
@@ -157,6 +159,11 @@ def biographical_left_text(saga: Saga, character: Character) -> str:
             f"Eyes: {escape(d.eyes) or '(not set)'}",
             f"Handedness: {d.handedness}",
             f"Physical Description: {markdown_text(d.physical_description) or '(not set)'}",
+            *(
+                [f"Complexion: {escape(line)}"]
+                if (line := complexion.text(d, saga.current_season))
+                else []
+            ),
         ]
     )
 
@@ -210,8 +217,22 @@ def aging_text(character: Character, saga: Saga | None = None) -> str:
                 and a.aura_time != warping_rules.ALWAYS
                 else ""
             ),
+            *_warping_realms_line(character, saga),
         ]
     )
+
+
+def _warping_realms_line(character: Character, saga: Saga | None) -> list[str]:
+    """The Warping counted from each realm, and the main source its
+    effects reflect (none until a point is counted)."""
+    counts = character.aging.warping_realms
+    if not counts or saga is None:
+        return []
+    each = ", ".join(f"{realm} {points}" for realm, points in sorted(counts.items()))
+    return [
+        f"Warping by realm: {each} (main source: "
+        f"{realm_warping.main_realm(saga, character)})"
+    ]
 
 
 def raw_vis_rows(character: Character) -> list[tuple[int | None, str]]:
@@ -807,6 +828,11 @@ def biographical_facts(saga: Saga, character: Character) -> list[Fact]:
         _fact("Hair", d.hair),
         _fact("Eyes", d.eyes),
         _fact("Handedness", d.handedness.title()),
+        *(
+            [_fact("Complexion", complexion.label(d.complexion))]
+            if d.complexion
+            else []
+        ),
     ]
 
 

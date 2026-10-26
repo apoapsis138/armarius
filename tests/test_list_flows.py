@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 from support import build_all_tabs, wait_until
-from textual.widgets import Input, Select, TabPane, Tree
+from textual.widgets import Input, Select, TabPane, TextArea, Tree
 
 from ars_magica_manager import battles, place_events, sieges, storage
 from ars_magica_manager import goods as gd
@@ -22,6 +22,7 @@ from ars_magica_manager.models import (
     Breakthrough,
     Character,
     CharacterPower,
+    CharterClause,
     ConstantEffect,
     Covenant,
     Creature,
@@ -722,6 +723,57 @@ async def test_goods_edit_and_delete_act_on_the_chosen_row():
         )
         rows = view.query_one(f"#{case.list_id}", SelectableList)
         assert await wait_until(pilot, lambda: "Brassware" not in str(rows._rows))
+
+
+# -- A covenant's charter clauses --
+
+
+async def test_clauses_edit_delete_and_break_act_on_the_chosen_row():
+    """In one session, on clauses grouped under their charter sections (so
+    the list's order isn't the charter's): e opens the chosen clause, m
+    breaks it (More has one item there), and d deletes it after asking."""
+    saga = _saga()
+    saga.covenants[0].charter_of_covenant.clauses = [
+        CharterClause("1", "All is shared.", 1200, "Spring", "Oath of Covenant"),
+        CharterClause("Apprentices [old]", "None without leave.", 1201, "Summer"),
+        CharterClause("2", "The council decides.", 1200, "Spring", "Membership"),
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("covenant", "cov1"),
+        "section-cov-clauses",
+        "cov-clauses-list",
+        lambda s: s.covenants[0].charter_of_covenant.clauses,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        rows = view.query_one(f"#{case.list_id}", SelectableList)
+        # Oath of Covenant, Membership, then Other: headings between.
+        assert [index for index, _ in rows._rows] == [None, 0, None, 2, None, 1]
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-number", Input).value == "Apprentices [old]"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await _press(pilot, app, "m", FieldsDialog)
+        assert "Apprentices [old]" in str(
+            app.screen.query_one("#fields-title").render()
+        )
+        dialog = app.screen
+        dialog.query_one("#fld-note", TextArea).text = "Taken in secret."
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case)[1].status == "Broken")
+        assert _saved(case)[1].note == "Taken in secret."
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Apprentices [old]?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 2)
+        assert [c.number for c in _saved(case)] == ["1", "2"]
 
 
 # -- A laboratory's Magic Items --

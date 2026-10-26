@@ -28,6 +28,8 @@
   point of Mastery (Golden Cord too, but never to 0 that way). Each zero
   on them is a Warping Point; two or more from one botch risk Twilight
   (DE p. 227).
+- Dedicated vis of the spell's own Technique and Form adds +4 a pawn, not
+  +2, and its pawns count double for botch dice (RoP: Magic p. 122).
 - Options (DE pp. 216-218): fast casting (Spontaneous, or a spell with the
   Fast Casting Mastery ability) takes 10 off the score, adds 2 botch dice
   and allows no vis; ceremonial casting adds Artes Liberales +
@@ -158,6 +160,7 @@ def casting_score(
     talisman: int = 0,
     mastery_abilities: dict[str, int] | None = None,
     sordida_pawns: int = 0,
+    dedicated_pawns: int = 0,
 ) -> Breakdown:
     """The Casting Score, with its terms. A Ritual or ceremonial casting
     uses loud words and exaggerated gestures at some point, so `words` and
@@ -165,7 +168,9 @@ def casting_score(
     what it needs, each +2; fast casting allows none. `mastery_abilities`
     are the spell's Mastery special abilities (mastery_counts).
     `sordida_pawns` of them are Infernal vis under the Harsher Infernal
-    vis option: +5 each instead of +2 (RoP: The Infernal p. 19)."""
+    vis option: +5 each instead of +2 (RoP: The Infernal p. 19).
+    `dedicated_pawns` of them are dedicated vis of the spell's own
+    Technique and Form: +4 each (RoP: Magic p. 122)."""
     abilities = mastery_abilities or {}
     ritual, ceremonial = _how_cast(magus, spontaneous, ritual, ceremonial)
     lines: list[Line] = []
@@ -216,7 +221,9 @@ def casting_score(
     if fast:
         lines.append(Line("Fast casting", amount=FAST_PENALTY, source=SOURCE))
     elif vis_pawns:
-        lines += _vis_lines(vis_pawns, sordida_pawns, ritual=ritual)
+        lines += _vis_lines(
+            vis_pawns, sordida_pawns, ritual=ritual, dedicated=dedicated_pawns
+        )
     if ritual or ceremonial:
         lines += _ritual_lines(magus)
     if ceremonial and props:
@@ -614,16 +621,31 @@ def aiming_base(magus: Character, precise: int = 0) -> int:
 #: Infernal vis option (vis sordida), instead of standard vis's +2.
 INFERNAL_VIS_BONUS = 5
 INFERNAL_VIS_SOURCE = "Realms of Power: The Infernal, Infernal Vis, p. 19"
+#: A pawn of dedicated vis of the spell's own Technique and Form.
+DEDICATED_VIS_BONUS = 4
+DEDICATED_VIS_SOURCE = "Realms of Power: Magic, Dedicated Vis, p. 122"
 
 
-def _vis_lines(pawns: int, sordida: int, *, ritual: bool) -> list[Line]:
-    """Vis spent in casting: +2 a pawn, or +5 for a pawn of Infernal vis
-    under the Harsher Infernal vis option."""
+def _vis_lines(
+    pawns: int, sordida: int, *, ritual: bool, dedicated: int = 0
+) -> list[Line]:
+    """Vis spent in casting: +2 a pawn, +4 for a pawn of dedicated vis of
+    the spell's own Arts, or +5 for a pawn of Infernal vis under the
+    Harsher Infernal vis option."""
     label = "extra pawns of vis" if ritual else "pawns of vis"
     sordida = max(0, min(sordida, pawns))
+    dedicated = max(0, min(dedicated, pawns - sordida))
     found = []
-    if pawns > sordida:
-        plain = pawns - sordida
+    if dedicated:
+        found.append(
+            Line(
+                f"{dedicated} {label}, dedicated",
+                amount=DEDICATED_VIS_BONUS * dedicated,
+                source=DEDICATED_VIS_SOURCE,
+            )
+        )
+    if pawns > sordida + dedicated:
+        plain = pawns - sordida - dedicated
         found.append(Line(f"{plain} {label}", amount=2 * plain, source=SOURCE))
     if sordida:
         found.append(
@@ -681,6 +703,7 @@ def botch_dice(
     mastery: int = 0,
     golden_cord: int = 0,
     infernal_vis_pawns: int = 0,
+    dedicated_vis_pawns: int = 0,
     saga: Saga | None = None,
     virtues_flaws: Sequence[VirtueFlawInstance] = (),
     magus: Character | None = None,
@@ -695,8 +718,17 @@ def botch_dice(
     Virtues and Flaws (Cautious Sorcerer, Careless Sorcerer, Deaf...) count
     before the Golden Cord and Mastery reduce them; spells are
     cast with words and gestures. A failed Concentration roll
-    (`distracted`) adds one (DE p. 215)."""
-    dice = 1 + vis_pawns + (FAST_BOTCH_DICE if fast else 0) + (1 if distracted else 0)
+    (`distracted`) adds one (DE p. 215). Dedicated vis of the spell's own
+    Arts (counted in `vis_pawns` too) counts double (RoP: Magic p. 122).
+    """
+    dedicated = max(0, min(dedicated_vis_pawns, vis_pawns))
+    dice = (
+        1
+        + vis_pawns
+        + dedicated
+        + (FAST_BOTCH_DICE if fast else 0)
+        + (1 if distracted else 0)
+    )
     if hybrid.ignores_infernal_vis(magus):
         infernal_vis_pawns = 0  # Chthonic Magic: no ill effects
     if infernal_vis_pawns:

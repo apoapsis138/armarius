@@ -845,7 +845,10 @@ def livelihood_text(character: Character, year: int | None = None) -> str:
     for record in character.progress:
         if record.done or record.kind == "university":
             continue
-        lines.append(f"{record.name}: {record.points}/{record.target} ({record.kind})")
+        # A record without a target (Labor Points banked toward Innovation)
+        # shows its points alone.
+        so_far = f"{record.points}/{record.target}" if record.target else record.points
+        lines.append(f"{record.name}: {so_far} ({record.kind})")
     years = sum(r.points for r in character.progress if r.kind == "university")
     if years:
         lines.append(f"University: {years} season(s) studied")

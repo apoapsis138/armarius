@@ -288,7 +288,7 @@ The preview lists what will be added, the links kept and the links dropped. [Imp
 1. Make a CSV file with a header row. The columns are listed under [What can be imported](help:import-data-kinds); **name** and **type** are needed. The cost of each book is worked out by the app, so an owner or cost column is ignored.
 <!-- tui -->
 2. To import books with no owner, select the saga, press `m` (More), choose **Import**, then **Books**. They land in [Unassigned Books](help:unassigned-books), where you can mark several and give them an owner with `e`.
-3. To import books straight into a covenant's library, open the covenant's [Library tab](help:tab-cov-library) (`6`) instead, and press `m` (More) and choose **Import** there. [Go there](go:tab-cov-library)
+3. To import books straight into a covenant's library, open the covenant's [Library tab](help:tab-cov-library) (`8`) instead, and press `m` (More) and choose **Import** there. [Go there](go:tab-cov-library)
 4. Choose the file. This picker starts in the folder the app was started from.
 <!-- /tui -->
 <!-- gui -->
@@ -663,7 +663,7 @@ fight, recover from them as usual (Health's Recovery Roll).
 
 1. Add a siege to the Sieges list in Conflicts, or on the besieging lord's Fief tab. Give the castle's Size, Garrison, Defenses and Supplies (the form's hints give each step's interval and bonus), the besiegers' miners, engines and soldiers, where each side stands at the four walls, and the experts' totals. For one lord besieging another, link **The castle in the Region** to the lord holding it and **The besieging lord** to the attacker: leave the Garrison and the soldiers blank and their armies fill them in, and the siege shows on both lords' Fief tabs.
 2. Play it with **Next Siege Event**. Each time, choose the besiegers' move (or the garrison's sally), and for an escalade or a sally play the battlefield event out and say who won.
-3. The siege moves on by the castle's interval each time, and any supplies rolls that come due are made for you. Each line of the chronicle gives the day of the siege it came on.
+3. The siege moves on by the castle's interval each time, and any supplies roll that comes due is made for you, each an interval after the last. Each line of the chronicle gives the day of the siege it came on; the siege's page shows every event, and the page scrolls.
 4. When the castle surrenders or is breached, the siege says so. If the besiegers give up, edit it and set Ended to Raised.
 
 **See also:** [A siege](help:sieges), [How to fight a battle](help:guide-battle-events)

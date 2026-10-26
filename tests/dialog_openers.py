@@ -25,6 +25,7 @@ from ars_magica_manager import economics as eco
 from ars_magica_manager import goods as gd
 from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
+from ars_magica_manager.forms import charter as charter_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import grogs as grog_forms
@@ -35,12 +36,14 @@ from ars_magica_manager.models import (
     Agent,
     Book,
     Character,
+    CharterClause,
     Neighbour,
     Saga,
     SagaSource,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
+from ars_magica_manager.tribunal_packages import rhine as rhine_package
 from ars_magica_manager.tui import screens as scr
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens.forms import _mastery_dialog
@@ -395,12 +398,54 @@ async def _open_agent_task(ws) -> None:
     ws._run_steps(agent_forms.set_task(ws.saga, character, 0))
 
 
+async def _open_agent_resolve(ws) -> None:
+    """More's Resolve the Task for Leandro's first agent."""
+    character = _with_agents(ws)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._run_steps(agent_forms.resolve(ws.saga, character, 0))
+
+
 async def _open_agency_spend(ws) -> None:
     """More's Spend Agency Experience on Leandro's potential agent."""
     character = _with_agents(ws)
     view = ws._current_sheet_view()
     await view.build_all_tabs()
     ws._run_steps(agent_forms.spend(character, 1))
+
+
+def _with_clause(ws):
+    """The covenant with one clause in its charter (once, however often
+    the form is opened)."""
+    covenant = ws.selected_covenant
+    charter = covenant.charter_of_covenant
+    if not charter.clauses:
+        charter.clauses = [CharterClause("1", "All vis is shared.", 1200, "Spring")]
+    return covenant
+
+
+async def _open_charter_verb(ws, section: str, verb: str) -> None:
+    """The Charter tab's own Edit or Add, as its key runs it."""
+    _with_clause(ws)
+    await ws._current_sheet_view().build_all_tabs()
+    ws._core_verb(section, verb)
+
+
+async def _open_edit_clause(ws) -> None:
+    covenant = _with_clause(ws)
+    await ws._current_sheet_view().build_all_tabs()
+    ws._run_steps(charter_forms.clause_ops(ws.saga, covenant).edit(0))
+
+
+async def _open_break_clause(ws) -> None:
+    covenant = _with_clause(ws)
+    await ws._current_sheet_view().build_all_tabs()
+    ws._run_steps(charter_forms.break_clause(ws.saga, covenant, 0))
+
+
+async def _open_seal_charter(ws) -> None:
+    await ws._current_sheet_view().build_all_tabs()
+    ws.action_seal_charter()
 
 
 def _as_merchant(ws) -> Character:
@@ -424,6 +469,14 @@ async def _open_invest_labor(ws) -> None:
     """More's Invest Time or Money on Leandro's This Season."""
     _as_merchant(ws)
     ws.action_invest_labor()
+
+
+async def _open_sell_goods(ws) -> None:
+    """More's Sell Finished Goods on Leandro's This Season, as a smith."""
+    character = ws.selected_character
+    if not any(a.name == "Craft: Smith" for a in character.abilities):
+        character.abilities.append(Ability("Craft: Smith", xp=75))
+    ws.action_sell_goods()
 
 
 async def _open_constant_effect(ws) -> None:
@@ -467,8 +520,8 @@ async def _open_attendance(ws) -> None:
 
 def _open_meeting_step(row: int, list_id: str):
     """The meeting opened, then Edit on `list_id`'s row `row`: the
-    Order of Business's second row is the Opening, its third the first
-    case's debate."""
+    Order of Business's second row is the Opening, its third the Rhine's
+    rite, its fourth the first case's debate."""
 
     async def opener(ws) -> None:
         tribunal = ws.saga.tribunals[0]
@@ -519,6 +572,55 @@ def _open_book_craft(ws) -> None:
     book = next(b for b in ws.saga.books if b.id == "b-cov")
     book.art, book.level, book.quality = "Ignem", 10, 12
     ws._book_form(book)
+
+
+def _with_rhine_ranks(ws) -> None:
+    """Severinus of Fengheld a master of House Tytalus, as Brother Oda is
+    of it; Stentorius of Fengheld an archmage (once, however often the
+    form is opened)."""
+    saga = ws.saga
+    if any(c.id == "arch1" for c in saga.characters):
+        return
+    severinus = saga.character("mag_sketch")
+    severinus.virtues_flaws.append(VirtueFlawInstance("vf_master_rhine_tribunal"))
+    severinus.hermetic.house = "house_tytalus"
+    saga.character("mag2").hermetic.house = "house_tytalus"
+    saga.characters.append(
+        Character(
+            id="arch1",
+            name="Stentorius",
+            type="magus",
+            covenant_id="cov_sketch",
+            virtues_flaws=[VirtueFlawInstance("vf_archmage_rhine_tribunal")],
+        )
+    )
+
+
+def _open_rhine_verb(action: str):
+    async def opener(ws) -> None:
+        _with_rhine_ranks(ws)
+        await _pick(lambda ws: getattr(ws, f"action_{action}")(), "trib-gilds-list")(ws)
+
+    return opener
+
+
+async def _open_rhine_rite(ws) -> None:
+    """The meeting opened with Severinus made master since the last one:
+    Edit on the Order of Business's third row, the Rhine's rite."""
+    _with_rhine_ranks(ws)
+    tribunal = ws.saga.tribunals[0]
+    if not rhine_package.promotions(tribunal):
+        rhine_package.promotions(tribunal).append(
+            {
+                "character_id": "mag_sketch",
+                "rank": "vf_master_rhine_tribunal",
+                "year": 1220,
+                "sigils": 1,
+                "conferred": None,
+                "names": [],
+            }
+        )
+    await _open_meeting_step(2, "meeting-business")(ws)
 
 
 OPENERS: dict[str, Opener] = {
@@ -719,9 +821,9 @@ OPENERS: dict[str, Opener] = {
     ),
     "open the meeting": Opener("tribunal", _open_meeting_step(1, "meeting-business")),
     "attendance and proxies": Opener("tribunal", _open_attendance),
-    "hold the debate": Opener("tribunal", _open_meeting_step(2, "meeting-business")),
+    "hold the debate": Opener("tribunal", _open_meeting_step(3, "meeting-business")),
     "hold the vote": Opener("tribunal", _open_meeting_step(0, "meeting-vote")),
-    "hold the rulings": Opener("tribunal", _open_meeting_step(6, "meeting-business")),
+    "hold the rulings": Opener("tribunal", _open_meeting_step(7, "meeting-business")),
     "add case": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),
@@ -943,6 +1045,7 @@ OPENERS: dict[str, Opener] = {
     "add power": Opener("character", _open_power),
     "add agent": Opener("character", _open_agent),
     "set agent task": Opener("character", _open_agent_task),
+    "resolve agent task": Opener("character", _open_agent_resolve),
     "spend agency xp": Opener("character", _open_agency_spend),
     "labor from story": Opener("character", _open_labor_story),
     "invest time or money": Opener("character", _open_invest_labor),
@@ -1200,6 +1303,22 @@ OPENERS: dict[str, Opener] = {
         "covenant",
         lambda ws: ws._run_steps(wf.buy_specialist(ws.saga, ws.selected_covenant)),
     ),
+    "edit charter": Opener(
+        "covenant",
+        lambda ws: _open_charter_verb(ws, "section-cov-charter", "edit"),
+    ),
+    "add clause": Opener(
+        "covenant",
+        lambda ws: _open_charter_verb(ws, "section-cov-clauses", "add"),
+    ),
+    "edit clause": Opener("covenant", _open_edit_clause),
+    "break clause": Opener("covenant", _open_break_clause),
+    "seal charter": Opener("covenant", _open_seal_charter),
+    # The Theban treasury's loans of vis.
+    "lend vis": Opener(
+        "theban_tribunal",
+        _pick(lambda ws: ws.action_lend_vis(), "trib-tokens-list"),
+    ),
     "childhood blanks": Opener(
         "character",
         lambda ws: ws._run_steps(
@@ -1209,7 +1328,23 @@ OPENERS: dict[str, Opener] = {
             )
         ),
     ),
+    # A craftsman's sale of his finished goods (City & Guild).
+    "sell finished goods": Opener("character", _open_sell_goods),
+    # Complexion, with Art & Academe's medicine.
+    "edit biographical detail (complexion)": Opener(
+        "character", lambda ws: _open_biographical_academe(ws)
+    ),
+    # The Rhine's ranks and its meeting's rite.
+    "mark of approval": Opener("tribunal", _open_rhine_verb("rhine_mark")),
+    "archmage's challenge": Opener("tribunal", _open_rhine_verb("rhine_challenge")),
+    "rhine rite": Opener("tribunal", _open_rhine_rite),
 }
+
+
+def _open_biographical_academe(ws) -> None:
+    """Edit Biographical Detail with Art & Academe's medicine on."""
+    ws.saga.rule_options = {**ws.saga.rule_options, "art_academe_medicine": True}
+    ws._edit_biographical_detail()
 
 
 def _device(ws, device_id: str):

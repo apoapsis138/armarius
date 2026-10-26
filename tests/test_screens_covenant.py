@@ -64,6 +64,7 @@ from ars_magica_manager.tui.screens import (
 
 _COVENANT_TABS = (
     "tab-cov-attributes",
+    "tab-cov-charter",
     "tab-cov-inhabitants",
     "tab-cov-seasons",
     "tab-cov-possessions",

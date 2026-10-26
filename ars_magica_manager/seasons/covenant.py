@@ -19,6 +19,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import activities as rules
+from ..rules import vis_kinds
 from ..rules.covenfolk import character_kind
 from ..rules.rounding import round_away_from_zero, round_down
 from ..tables import Table
@@ -99,27 +100,33 @@ def lapsed_resources(saga: Saga) -> list[tuple[str, str]]:
     return found
 
 
-def _add_vis(covenant: Covenant, art: str, pawns: int, name: str) -> None:
+def _add_vis(covenant: Covenant, source: Possession) -> None:
+    """The source's harvest into the covenant's first store of its Art and
+    kind of vis (and Infernal mark), or a new one."""
+    art, pawns = source.art, source.pawns
     store = next(
         (
             p
             for p in covenant.possessions
-            if p.kind == "vis_store" and p.art.lower() == art.lower()
+            if p.kind == "vis_store"
+            and p.art.lower() == art.lower()
+            and vis_kinds.same_kind(p, source)
         ),
         None,
     )
     if store is None:
-        covenant.possessions.append(
-            Possession(
-                id=f"vis_{new_instance_id()}",
-                kind="vis_store",
-                name=f"{art} vis",
-                art=art,
-                pawns=pawns,
-                location_kind="covenant",
-                location_id=covenant.id,
-            )
+        special = bool(source.vis_kind)
+        store = Possession(
+            id=f"vis_{new_instance_id()}",
+            kind="vis_store",
+            name=(source.name or f"{art} vis") if special else f"{art} vis",
+            art=art,
+            pawns=pawns,
+            location_kind="covenant",
+            location_id=covenant.id,
+            physical_form=source.physical_form if special else "",
         )
+        covenant.possessions.append(vis_kinds.copy_kind(source, store))
     else:
         store.pawns += pawns
 
@@ -160,7 +167,7 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
                     )
                 )
                 continue
-            _add_vis(covenant, source.art, source.pawns, source.name)
+            _add_vis(covenant, source)
             harvested.append(f"{source.pawns} {source.art}")
             covenant.diary.append(
                 CovenantDiaryEntry(

@@ -161,9 +161,11 @@ class Refuse:
 @dataclass(frozen=True)
 class Act:
     """A step with nothing to ask: `apply` runs at once (a button that
-    just does its work, such as adding the Virtues a magus must have)."""
+    just does its work, such as adding the Virtues a magus must have).
+    `title` heads the notes it ends with, where a front-end titles them."""
 
     apply: Callable[[], Any]
+    title: str = ""
 
 
 @dataclass(frozen=True)

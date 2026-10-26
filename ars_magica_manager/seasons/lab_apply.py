@@ -54,6 +54,7 @@ from ..rules import familiar_seasons as fs
 from ..rules import lab as lab_rules
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
+from ..rules.season_work import city_guild as cg
 from ..world import takes_part_in_play
 from .character_effects import _add_xp, age_character, gain_warping
 from .lab_queue import (
@@ -423,10 +424,20 @@ def apply_supplement(
                     fixed_season=plan.season,
                 )
             )
+    for ability, xp in work.ability_xp:
+        _add_xp(character, f"ability:{ability}", xp)
+    for trade, xp in work.reputation_xp:
+        cg.add_trade_reputation(character, trade, xp)
     if work.aging_roll:
         born = character.background.year_born
         if born is not None:
-            age_character(saga, character, saga.current_year - born, random.Random())
+            age_character(
+                saga,
+                character,
+                saga.current_year - born,
+                random.Random(),
+                young=work.aging_young,
+            )
 
 
 def _loyal(saga: Saga, tamer: Character, name: str) -> None:

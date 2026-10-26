@@ -109,6 +109,81 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.20.0 — 2026-10-26
+
+### Pagina
+
+- A covenant has a true **Charter** chapter (tab 2 in the terminal): its
+  Charter of Covenant with its name, preamble, when sworn and whether a
+  Quaesitor ratified it, the members' wax seals, and its clauses grouped
+  by the charter's sections; **Break a Clause** strikes one through with
+  when and how (Covenants pp. 31-36). The old Charter chapter is now
+  **Attributes**, and the Chartered Town Boon's charter lords and terms
+  move to the new chapter.
+- **Resolve the Task** rolls an agent's own total against the task's Ease
+  Factor, with the risk's botch dice, and writes it in the Diary (Lords of
+  Men p. 24); long notice titles wrap; "1 pound", not "1 pounds".
+- **Sell Finished Goods** on a craftsman's This Season: Presence + Bargain
+  against 9, or opposed against an important customer (City & Guild pp.
+  74-76).
+- A character's complexion, under the Art & Academe medicine option (A&A
+  pp. 37-41), and a Tremere's school of certamen and sigil challenge.
+
+### Computus
+
+- **Warping by realm**: Warping Points are counted by the realm that gave
+  them, and the main source sets what a Warping Score brings (DE p. 391;
+  the Realms of Power). Two or more points at once bring Wizard's
+  Twilight, the **Divine Ascent**, **Vituperation** or **Faerie Calling**,
+  by what the character is; leaving Faerie and instant travel have their
+  own Warping (RoP: Faerie pp. 29-30, 118-120; The Divine pp. 62-65; The
+  Infernal pp. 17, 95, 124; TME pp. 108-115).
+- **Certamen styles**: the fifteen schools of True Lineages (pp. 135-139)
+  and Tremere Promotion by Force (pp. 123-125).
+- **Magic beings** are checked against Realms of Power: Magic:
+  advancement, Beasts of Virtue, transformed animals, awakened trees and
+  elementals (pp. 51-66, 78-80, 128-139; DE pp. 449-451).
+- **Vis kinds**: dedicated, extraordinary and faerie vis, Herbs and
+  Objects of Virtue, vis storage, and a creature's Might recovery in an
+  aura (RoP: Magic pp. 30, 119-128; RoP: Faerie pp. 16-19).
+- An Incapacitating wound may leave a lasting Flaw (A&A p. 43); the Great
+  Pestilence's miasmas, from which Magic Resistance protects (Dies Irae
+  pp. 86-98).
+- Siege fixes: a mounted lance fights as a Single Weapon; supplies rolls
+  no longer backdate after Supplies drop; walls keep the damage levels
+  they began with when mines lower the Defenses; Seal the Breach is
+  capped at a wall's whole (Lords of Men pp. 111-116, 126).
+- Workshop exertion's results, its Aging roll, a craftsman's Reputation
+  (both points for a wondrous item), and a laborer's Labor Total (C&G pp.
+  73-76).
+
+### Hedge Magic
+
+- The **Hyperborean Hymns**: the seven hymns' guidelines and Powers, a
+  Power's level cost and Ease Factor, infusion, relics, choirs and
+  Illumination (Ancient Magic pp. 103-120).
+
+### Concilium
+
+- The Theban meeting's **Apprentice Presentation** (token bids and the
+  Bonisagus claim), the conduct of archai, common vis, and **Lend Vis** /
+  **Repay a Loan**; Byzantine coins on the treasury (The Sundered Eagle
+  pp. 28-35, 44-45, 77).
+- The Rhine's **Mark of Approval**, the **Archmage's Challenge**, the
+  apprentice limit, and the opening step's new magi and sigils by proxy
+  (Guardians of the Forests pp. 22-27).
+
+### Florilegium
+
+- The Book of Mundane Beasts' beasts cite their pages, with the charger
+  and palfrey added (RoP: Magic pp. 140-144); Herbalism and Siege Weapon
+  join the Abilities, and five Church characters the templates.
+
+### Fundamenta
+
+- Season work from the supplements is now a registry, one module per
+  book.
+
 ## 3.19.0 — 2026-10-26
 
 ### Computus

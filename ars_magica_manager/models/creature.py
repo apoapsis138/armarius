@@ -108,6 +108,9 @@ class Creature:
     confidence_points: int = 0
     #: A magical creature's season (one of SEASONS), or "".
     season: str = ""
+    #: A transformed animal's Warping Score: a creature with Might has
+    #: none (Realms of Power: Magic p. 78).
+    warping_score: int = 0
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
     personality_traits: list[ScoredTrait] = field(default_factory=list)
     reputations: list[ScoredTrait] = field(default_factory=list)

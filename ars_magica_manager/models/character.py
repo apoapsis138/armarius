@@ -113,6 +113,11 @@ class Description:
     #: sheet's short free-text box), shown in the Biographical
     #: Detail section.
     biography: str = ""
+    #: Art & Academe's complexion (pp. 40-41): one of the four, or a
+    #: compound "principal-secondary" ("" for none recorded), and a minor
+    #: aspect of a third ("" for none).
+    complexion: str = ""
+    complexion_minor: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Description:
@@ -159,11 +164,19 @@ class Aging:
     regimen: int = 0
     regimen_by: str = ""
     regimen_since: int | None = None
+    #: The Warping Points gained from each realm ("Divine": 7), counted
+    #: as they come; what the Warping's effects reflect (the main source).
+    #: Empty for points gained before they were counted.
+    warping_realms: dict[str, int] = field(default_factory=dict)
+    #: A magus with Miraculous Abilities whose troupe chose the Divine
+    #: Ascent as his one form of Warping in place of Twilight.
+    seeks_ascent: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Aging:
         aging = cls(**known_fields(cls, data))
         aging.longevity_effects = experimental_effects(aging.longevity_effects)
+        aging.warping_realms = _realm_counts(aging.warping_realms)
         if aging.longevity_modifier < 0:
             # The Levant pack once stored the ritual's bonus negated: it is
             # always a bonus, taken off the aging roll.
@@ -173,6 +186,23 @@ class Aging:
             thresholds = (0, 5, 15, 30, 50, 75)
             aging.decrepitude_points = thresholds[max(0, min(aging.decrepitude, 5))]
         return aging
+
+
+def _realm_counts(data: object) -> dict[str, int]:
+    """A saved Warping-by-realm count, checked: each realm's name and a
+    whole number of points."""
+    if not isinstance(data, dict):
+        raise ValueError(f"Warping by realm must be a mapping, not {data!r}")
+    found: dict[str, int] = {}
+    for realm, points in data.items():
+        if not isinstance(realm, str) or isinstance(points, bool):
+            raise ValueError(f"Bad Warping by realm entry {realm!r}: {points!r}")
+        if not isinstance(points, int):
+            raise ValueError(
+                f"Warping Points from {realm} must be a number: {points!r}"
+            )
+        found[realm] = points
+    return found
 
 
 #: Where a wound came from: an injury heals with Chirurgy, the rest with
@@ -296,6 +326,27 @@ class Wounds:
 MERCURIAN_MAGIC = "vf_mercurian_magic"
 
 
+#: The styles of certamen, by id; their rules are rows in
+#: rules.certamen_styles (HoH: True Lineages pp. 135-139).
+CERTAMEN_STYLES: tuple[str, ...] = (
+    "gladiator",
+    "andabatus",
+    "bestiarius",
+    "bone_biting",
+    "charon",
+    "essedarius",
+    "gladiatrix",
+    "hoplomachus",
+    "laquerius",
+    "provocator",
+    "pumilius",
+    "retiarius",
+    "saggitarius",
+    "scissor",
+    "velitus",
+)
+
+
 @dataclass
 class HermeticBackground:
     """Magus-only Hermetic lineage block. `house` is a house_catalog.json id;
@@ -313,13 +364,24 @@ class HermeticBackground:
     #: House Tremere: the magus holds his own voting sigil (won from his
     #: parens in certamen); otherwise a parens holds it (rules.sigils).
     holds_own_sigil: bool = False
+    #: House Tremere: the magus has made his one challenge for his sigil at
+    #: a time of his choosing; later ones wait for the House's Decennials
+    #: (rules.sigils, HoH: TL p. 123).
+    sigil_challenged: bool = False
+    #: The school of certamen he was trained in, one of CERTAMEN_STYLES
+    #: ("" for none recorded; HoH: TL p. 135).
+    certamen_school: str = ""
     #: A Mercurian magus has learned Road Magic's Ranges and Targets, a
     #: season's teaching with no further Virtue (TMRE p. 116).
     road_magic: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HermeticBackground:
-        return cls(**known_fields(cls, data))
+        hermetic = cls(**known_fields(cls, data))
+        school = hermetic.certamen_school
+        if school and school not in CERTAMEN_STYLES:
+            raise ValueError(f"Unknown school of certamen {school!r}")
+        return hermetic
 
 
 @dataclass

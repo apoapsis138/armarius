@@ -5406,6 +5406,789 @@
       ],
       "more_virtues": 3,
       "more_flaws": 3
+    },
+    {
+      "id": "ct_templar_rank",
+      "name": "Templar companion (TC)",
+      "type": "companion",
+      "kind": "quick",
+      "book": "TC",
+      "page": 123,
+      "concept": "A member, associate or servant of the Knights Templar: the Social Status is the rank in the order, with an office or renown among the brothers if wanted.",
+      "statuses": [
+        "vf_brother_knight",
+        "vf_brother_sergeant",
+        "vf_brother_priest",
+        "vf_templar_administrator",
+        "vf_templar_specialist",
+        "vf_templar_commander",
+        "vf_templar_confrere_or_consoeur",
+        "vf_templar_servant"
+      ],
+      "variant_label": "Standing in the order",
+      "variants": [
+        {
+          "name": "A brother of the rank and file",
+          "slots": []
+        },
+        {
+          "name": "Renowned among the brothers",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_templar_prestige"
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3,
+      "notes": "A commander has the Brother-Knight Virtue's effects already, and Temporal Influence with his post. Templars may be Wealthy or Poor: here it measures their time and responsibilities, not their purse. To play stories about the Rule, take a Story Flaw; otherwise it is background.",
+      "fixes": [
+        "The Church pp. 123-125 prints these Virtues; the Definitive Edition pp. 73 and 111-112 reprints them and its wording wins: its Brother Knight and Brother Sergeant are the crusading orders' (The Church's Templar Brother-Knight also bars the Knight, Priest and Landed Noble Virtues, which the catalog does not check), its Commander is Templar Commander, and Templar Prestige gives Reputation 4 (The Church printed 3; the Errata, p. 78, also makes it 4).",
+        "Brother-Priest is The Church's own (p. 123); the Definitive Edition's Brother Chaplain is the generic version.",
+        "Templar Office Holder (an office under the local commander) is not offered: it is a second Social Status taken with the rank, and a companion here takes one; add it on the sheet."
+      ]
+    },
+    {
+      "id": "ct_templar_commander",
+      "name": "Templar Commander",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 126,
+      "concept": "A veteran brother-knight back from the Holy Land who now commands an influential chapterhouse in the West and counsels great nobles, while ambitious brothers under him scheme for advancement.",
+      "age": 44,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": -1,
+        "presence": 0,
+        "communication": 0,
+        "strength": 1,
+        "stamina": 2,
+        "dexterity": 1,
+        "quickness": 1
+      },
+      "statuses": [
+        "vf_templar_commander"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_wealthy",
+          "params": {},
+          "note": "his office's time and authority, not personal riches"
+        },
+        {
+          "vf_id": "vf_difficult_underlings",
+          "params": {},
+          "note": "ambitious Templars seeking their own advancement"
+        },
+        {
+          "vf_id": "vf_greedy_major",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 5,
+          "specialty": "politics"
+        },
+        {
+          "name": "Area Lore: Holy Land",
+          "score": 3,
+          "specialty": "Crusader holdings"
+        },
+        {
+          "name": "Animal Handling",
+          "score": 3,
+          "specialty": "horses"
+        },
+        {
+          "name": "Athletics",
+          "score": 3,
+          "specialty": "running"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "hills"
+        },
+        {
+          "name": "Brawl",
+          "score": 4,
+          "specialty": "with shield"
+        },
+        {
+          "name": "Concentration",
+          "score": 3,
+          "specialty": "sentry"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 2,
+          "specialty": "Church administration"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "the Church"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "Templars"
+        },
+        {
+          "name": "Intrigue",
+          "score": 3,
+          "specialty": "military"
+        },
+        {
+          "name": "Leadership",
+          "score": 5,
+          "specialty": "Templars"
+        },
+        {
+          "name": "Living Language: {second_language}",
+          "score": 5,
+          "specialty": "during battle"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "large organizations"
+        },
+        {
+          "name": "Organization Lore: Knights Templar",
+          "score": 5,
+          "specialty": "tactics"
+        },
+        {
+          "name": "Ride",
+          "score": 6,
+          "specialty": "charging"
+        },
+        {
+          "name": "Single Weapon",
+          "score": 6,
+          "specialty": "mace and shield"
+        },
+        {
+          "name": "Survival",
+          "score": 3,
+          "specialty": "hills"
+        },
+        {
+          "name": "Teaching",
+          "score": 3,
+          "specialty": "riding"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Wrathful",
+          3
+        ],
+        [
+          "Envious",
+          2
+        ],
+        [
+          "Gluttonous",
+          2
+        ]
+      ],
+      "reputations": [
+        [
+          "Influential (Templars)",
+          4
+        ],
+        [
+          "Veteran (Church and Military Orders)",
+          3
+        ]
+      ],
+      "notes": "Printed as the Brother-Knight sample. Commander gives him Temporal Influence free; add it on the sheet. Gear: a Turkish mace and round shield, dagger, Templar mantle, robes of office, a gold crucifix and his commander's seal.",
+      "fixes": [
+        "Brother-Knight is left out of the Social Statuses: Templar Commander includes its effects (Definitive Edition p. 112; The Church p. 125).",
+        "Temporal Influence (free with Commander) is left off the list: a ready-made character's Virtues all count toward its points, and this one costs none.",
+        "Greedy sits in the Major Flaw group with Difficult Underlings, so it is taken as Greedy (Major).",
+        "Commander is the Definitive Edition's Templar Commander (p. 111), which reprints The Church's.",
+        "Local Lore is taken as Area Lore: {area}; Holy Land Lore as Area Lore: Holy Land; Latin as Dead Language: Latin.",
+        "The page gives (Living) Language 5 and Native Language 5 with no languages named: Living Language: {second_language} and Living Language: {language} (native).",
+        "Strength +1 (1): the aging point is not recorded."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_templar_brother_priest",
+      "name": "Templar Brother-Priest",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 127,
+      "concept": "A proud Templar chaplain of aristocratic looks, raised from the dead by a saint's grace and joined to the order after the miracle.",
+      "age": 30,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": -2,
+        "presence": 2,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 0,
+        "quickness": 1
+      },
+      "statuses": [
+        "vf_brother_priest"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_magic_sensitivity",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_student_of_realm",
+          "params": {
+            "realm": "divine"
+          }
+        },
+        {
+          "vf_id": "vf_proud_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_raised_from_the_dead",
+          "params": {},
+          "note": "by the grace of a saint; the source of his Warping"
+        },
+        {
+          "vf_id": "vf_lecherous",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 4,
+          "specialty": "Templar holdings"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "rhetoric"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "noticing disorder"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "escape"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "nuns"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 3,
+          "specialty": "local diocese"
+        },
+        {
+          "name": "Concentration",
+          "score": 3,
+          "specialty": "prayer"
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 2,
+          "specialty": "miracles"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "Templar officials"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "Templars"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 3,
+          "specialty": "reading"
+        },
+        {
+          "name": "Leadership",
+          "score": 4,
+          "specialty": "religious"
+        },
+        {
+          "name": "Magic Sensitivity",
+          "score": 3,
+          "specialty": "auras"
+        },
+        {
+          "name": "Ride",
+          "score": 4,
+          "specialty": "long distance"
+        },
+        {
+          "name": "Living Language: {language}",
+          "score": 5,
+          "specialty": "reading aloud"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 2,
+          "specialty": "the Gospels"
+        }
+      ],
+      "native": "Living Language: {language}",
+      "traits": [
+        [
+          "Loyal",
+          3
+        ],
+        [
+          "Proud",
+          3
+        ]
+      ],
+      "reputations": [],
+      "notes": "Has 4 Warping Points toward his first Warping Score, from being raised from the dead. Gear: a copy of the Book of Matthew and black robes.",
+      "fixes": [
+        "Proud sits in the Major Flaw group with Raised from the Dead, so it is taken as Proud (Major).",
+        "Raised from the Dead is the page's Realms of Power: The Divine (p. 36) Flaw, the catalog's Definitive Edition one.",
+        "Student of the Divine is taken as Student of {realm} with realm 'divine'; Dominion Lore 2 is recorded as printed (the page does not say whether the Virtue's +2 is in it).",
+        "Local Lore is taken as Area Lore: {area}; Church Lore as Organization Lore: Church; Latin as Dead Language: Latin; Theology as Theology: Christian; Native Language 5 as Living Language: {language}.",
+        "Warping Score 0 (4): the 4 points are not recorded."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_brother_elias",
+      "name": "Brother Elias Bonibarone",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 133,
+      "concept": "A mattress-maker's son turned scribe and early follower of Francis, back from leading the friars in Syria to run the Little Brothers as minister general.",
+      "age": 40,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": -1,
+        "presence": 1,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 1,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_mendicant_friar"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_strong_willed",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_enduring_constitution",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_monastic_vows",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: Arabic",
+          "score": 3,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Area Lore: Central Italy",
+          "score": 2,
+          "specialty": "towns"
+        },
+        {
+          "name": "Area Lore: Holy Land",
+          "score": 2,
+          "specialty": "towns"
+        },
+        {
+          "name": "Area Lore: Northern Italy",
+          "score": 4,
+          "specialty": "towns"
+        },
+        {
+          "name": "Area Lore: Southern Italy",
+          "score": 2,
+          "specialty": "towns"
+        },
+        {
+          "name": "Area Lore: Syria",
+          "score": 1,
+          "specialty": "towns"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 4,
+          "specialty": "grammar"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "those troubled in mind"
+        },
+        {
+          "name": "Bargain",
+          "score": 2,
+          "specialty": "selling"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "peasants"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 2,
+          "specialty": "cleaning wounds"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 3,
+          "specialty": "monasticism"
+        },
+        {
+          "name": "Civil and Canon Law",
+          "score": 4,
+          "specialty": "monasticism"
+        },
+        {
+          "name": "Concentration",
+          "score": 3,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Craft: Mattress-making",
+          "score": 2,
+          "specialty": "softness"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "senior clergy"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "friars"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "excuses"
+        },
+        {
+          "name": "Intrigue",
+          "score": 1,
+          "specialty": "negotiating"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 4,
+          "specialty": "legal terms"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "friars"
+        },
+        {
+          "name": "Organization Lore: Franciscans",
+          "score": 3,
+          "specialty": "membership"
+        },
+        {
+          "name": "Philosophiae",
+          "score": 1,
+          "specialty": "moral philosophy"
+        },
+        {
+          "name": "Profession: Scribe",
+          "score": 2,
+          "specialty": "legal documents"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 2,
+          "specialty": "history"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [],
+      "reputations": [],
+      "notes": "A historical figure, born 1180 near Assisi; if the saga follows history he leads the Friars Minor until 1227, upsetting the strict by raising money and land for Francis' memorial.",
+      "fixes": [
+        "Arabic is taken as Living Language: Arabic; Italian as Living Language: Italian (native); Latin as Dead Language: Latin; Church Lore as Organization Lore: Church; Theology as Theology: Christian.",
+        "The page prints no Personality Traits."
+      ],
+      "more_virtues": 3,
+      "more_flaws": 3
+    },
+    {
+      "id": "ct_francis_of_assisi",
+      "name": "Francis of Assisi",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 131,
+      "concept": "The cloth-merchant's son who gave everything away to live like the apostles: a frail, saintly preacher whose True Faith has opened mystical gifts.",
+      "age": 39,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 0,
+        "presence": 4,
+        "communication": 2,
+        "strength": 0,
+        "stamina": -1,
+        "dexterity": -1,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_mendicant_friar"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_true_faith",
+          "params": {},
+          "note": "Faith Score 5, Faith Points 8"
+        },
+        {
+          "vf_id": "vf_animal_ken",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_great_characteristic",
+          "params": {
+            "characteristic": "presence"
+          }
+        },
+        {
+          "vf_id": "vf_inspirational",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_premonitions",
+          "params": {},
+          "note": "Devotion gained with True Faith 2"
+        },
+        {
+          "vf_id": "vf_driven_major",
+          "params": {},
+          "note": "live like the apostles"
+        },
+        {
+          "vf_id": "vf_monastic_vows",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "logic"
+          }
+        },
+        {
+          "vf_id": "vf_compassionate",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_fragile_constitution",
+          "params": {},
+          "note": "from Divine Warping"
+        },
+        {
+          "vf_id": "vf_social_handicap",
+          "params": {},
+          "note": "unworldliness"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Animal Handling",
+          "score": 1,
+          "specialty": "birds"
+        },
+        {
+          "name": "Animal Ken",
+          "score": 3,
+          "specialty": "birds"
+        },
+        {
+          "name": "Area Lore: Northern and Central Italy",
+          "score": 3,
+          "specialty": "towns"
+        },
+        {
+          "name": "Area Lore: Holy Land",
+          "score": 1,
+          "specialty": "towns"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "Bible"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "the sick"
+        },
+        {
+          "name": "Bargain",
+          "score": 2,
+          "specialty": "cloth"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "entertaining"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 3,
+          "specialty": "monks"
+        },
+        {
+          "name": "Concentration",
+          "score": 4,
+          "specialty": "praying"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "the poor"
+        },
+        {
+          "name": "Intervention",
+          "score": 1,
+          "specialty": "healing"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 6,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 2,
+          "specialty": "Bible"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "inspiration"
+        },
+        {
+          "name": "Meditation",
+          "score": 3,
+          "specialty": "silent prayer"
+        },
+        {
+          "name": "Organization Lore: Franciscans",
+          "score": 4,
+          "specialty": "Initiations"
+        },
+        {
+          "name": "Premonitions",
+          "score": 1,
+          "specialty": "danger"
+        },
+        {
+          "name": "Profession: Cloth Merchant",
+          "score": 2,
+          "specialty": "selling"
+        },
+        {
+          "name": "Profession: Preacher",
+          "score": 2,
+          "specialty": "impromptu speaking"
+        },
+        {
+          "name": "Purity",
+          "score": 1,
+          "specialty": "fasting"
+        },
+        {
+          "name": "Teaching",
+          "score": 3,
+          "specialty": "religious"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 2,
+          "specialty": "life of Christ"
+        },
+        {
+          "name": "Understanding",
+          "score": 3,
+          "specialty": "when kneeling"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [
+        [
+          "Compassionate",
+          3
+        ],
+        [
+          "Humble",
+          3
+        ],
+        [
+          "Pious",
+          3
+        ]
+      ],
+      "reputations": [
+        [
+          "Saintly (most of Western Europe and parts of Arab lands)",
+          3
+        ]
+      ],
+      "notes": "A historical saint, printed for the storyguide. His Intervention, Meditation, Purity and Understanding come from Divine Unity (Realms of Power: The Divine pp. 63-65), not from Virtues; with True Faith 5 he also has Hope and Charity (a Divine aura of 1 to Voice range) and Magic Resistance 50. If the saga follows history he receives the stigmata in 1224 and dies in 1226.",
+      "fixes": [
+        "Great Presence is taken as Great (Characteristic) with characteristic 'presence'; Driven sits in the Major Flaw group with Monastic Vows, so it is taken as Driven (Major), as the Meditation Initiation on p. 138 also gives it; Compassionate, in the Minor group, as the Minor Flaw.",
+        "Ability Block: logic is kept as printed, as Ability Block with abilities 'logic'.",
+        "Intervention, Meditation, Purity and Understanding are listed with no Virtue granting them, as on the page.",
+        "Italian is taken as Living Language: Italian (native); Latin as Dead Language: Latin; Church Lore as Organization Lore: Church; Theology as Theology: Christian; Northern and Central Italy Lore as one Area Lore.",
+        "Stamina -1 (1) and Warping Score 1 (0): the aging point and Warping are not recorded."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
     }
   ]
 }

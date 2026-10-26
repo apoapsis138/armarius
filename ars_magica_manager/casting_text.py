@@ -117,6 +117,9 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
             else ""
         )
     )
+    school = certamen.school_text(magus)
+    if school:
+        lines.append(escape(school))
     multipliers = [line for line in sample.lines if line.multiplier is not None]
     halved = sorted({line.label for line in multipliers})
     if halved:
@@ -333,6 +336,11 @@ def known_spell_casting_lines(
                     )
                 )
             )
+        if vis:
+            for note in vis_stores.casting_notes(
+                saga, magus, spell.technique, spell.form, vis
+            ):
+                lines.append(f"[dim]{escape(note)}[/]")
     elif need <= 0:
         lines.append(
             "Formulaic: cast without Fatigue on any die, unless a stressed die "

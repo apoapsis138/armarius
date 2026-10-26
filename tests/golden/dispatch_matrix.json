@@ -72,6 +72,26 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-cov-charter": {
+      "active": "section-cov-charter",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Charter",
+        "d": "(disabled)",
+        "m": "FieldsDialog: Seal the Charter",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-clauses": {
+      "active": "section-cov-clauses",
+      "keys": {
+        "a": "FieldsDialog: Add Clause",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-cov-charter-lords": {
       "active": "section-cov-charter-lords",
       "keys": {
@@ -1374,6 +1394,26 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-cov-charter": {
+      "active": "section-cov-charter",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Charter",
+        "d": "(disabled)",
+        "m": "FieldsDialog: Seal the Charter",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-clauses": {
+      "active": "section-cov-clauses",
+      "keys": {
+        "a": "FieldsDialog: Add Clause",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "TabPane#tab-cov-diary": {
       "active": "tab-cov-diary",
       "keys": {
@@ -1512,7 +1552,7 @@
         "a": "FieldsDialog: Add a Gild",
         "e": "FieldsDialog: Edit a Gild",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "MenuScreen: Mark of Approval, Archmage's Challenge",
         "slash": "(disabled)"
       }
     },
@@ -1654,7 +1694,7 @@
         "a": "FieldsDialog: Add a Magus's Tokens",
         "e": "FieldsDialog: Edit Tokens and Shards",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Neutralize a Shard, The Tribunal's Longevity Ritual",
+        "m": "MenuScreen: Neutralize a Shard, The Tribunal's Longevity Ritual, Lend Vis from the Treasury, Repay a Loan of Vis",
         "slash": "(disabled)"
       }
     },

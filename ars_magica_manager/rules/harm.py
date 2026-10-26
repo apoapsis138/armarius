@@ -27,6 +27,9 @@ and, with the Lords of Men option, bruises.
   metal or stone weapons and mineral poisons, Aquam water and thirst, Auram
   weather, lightning and suffocation (drowning too), Vim one's own
   spell-casting. They don't stack: where two apply, only the higher counts.
+- **Lasting damage** (Art & Academe p. 43, with its medicine option): an
+  Incapacitating wound an injury deals calls for rules.serious_damage's
+  Stamina roll against 6.
 
 Pattern: each kind is a Strategy, a function kept in HARMS by its name.
 """
@@ -39,7 +42,18 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..models import FATIGUE_LEVELS, Character, Saga
-from . import derived, dice, disease, living, medicine, options, recovery
+from . import (
+    complexion,
+    derived,
+    dice,
+    disease,
+    living,
+    medicine,
+    options,
+    penetration,
+    recovery,
+    serious_damage,
+)
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Other Perils, "
@@ -396,6 +410,13 @@ def catch_disease(
             improve,
             interval,
         )
+    if found.blight and _resists_blight(character, saga):
+        return Harmed(
+            [
+                f"{found.name}: {character.name}'s Magic Resistance stops the "
+                "blight (Dies Irae p. 94)."
+            ]
+        )
     living_now = living.living_conditions(saga, character) if saga is not None else 0
     total = int(disease.avoidance_total(character, living_now).total)
     die = dice.stress_die(rng, saga=saga)
@@ -426,11 +447,31 @@ def catch_disease(
     character.wounds.diseases.append(caught)
     done.wounds.append(caught.level.lower())
     done.lines.append(disease.describe(caught))
+    if complexion.ill_suited(character.description, found.humours):
+        done.lines.append(
+            f"A {found.humours[0]} disease, of {character.name}'s own principal "
+            "humour: a place that breeds it is ill-suited to the temperament, "
+            "worth a roll or two in the first season there (A&A p. 46)."
+        )
     if saga is not None and (
         lost := medicine.lose_eucrasia(character, saga.current_year, found.name)
     ):
         done.lines.append(lost)
     return done
+
+
+def _resists_blight(character: Character, saga: Saga | None) -> bool:
+    """Whether the character's Magic Resistance stops a blight of
+    Penetration 0: magi and all others with Magic Resistance are immune
+    (Dies Irae pp. 88, 94). The highest resistance counts, as they don't
+    add: a magus's Corpus and Parma, or True Faith's, an office's and
+    relic's, or Angelic Might's (DE pp. 109, 419-420)."""
+    hermetic = (
+        int(penetration.magic_resistance(character, "Corpus").total)
+        if character.type == "magus" or character.arts
+        else 0
+    )
+    return max(hermetic, penetration.faith_magic_resistance(character, saga)) > 0
 
 
 HARMS: dict[str, Callable[..., Harmed]] = {
@@ -458,7 +499,12 @@ def apply(
     when its option is on."""
     if kind == DISEASE and disease.on(saga):
         return catch_disease(saga, character, values, rng)
-    return HARMS[kind](saga, character, values, rng)
+    done = HARMS[kind](saga, character, values, rng)
+    if kind == INJURY and serious_damage.INCAPACITATING in done.wounds:
+        done.lines += serious_damage.roll(
+            saga, character, str(values.get("location") or "torso"), rng
+        )
+    return done
 
 
 def heal_bruises(character: Character) -> list[str]:

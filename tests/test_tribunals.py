@@ -265,8 +265,11 @@ def test_a_theban_tribunal_votes_by_magi_present_and_marks_the_ostracised():
     package = tribunal_packages.of(thebes)
     assert package.meeting_steps == (
         "assembly",
+        "apprentice_presentation",
         "ostrakismos",
         "sentences",
+        "conduct_of_archai",
+        "common_vis",
         "end_of_term",
         "sortition",
         "archon_polemarch",

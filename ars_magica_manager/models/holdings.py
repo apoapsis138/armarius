@@ -92,6 +92,24 @@ POSSESSION_KINDS: tuple[str, ...] = (
     "item",
 )
 
+#: The kinds of raw vis a Vis Source or Raw Vis Store may hold beyond the
+#: ordinary ("", the default): Realms of Power: Magic's extraordinary and
+#: dedicated vis and Things of Virtue (pp. 119-128), and Realms of Power:
+#: Faerie's faerie vis (pp. 18-19). What each does is rules.vis_kinds'.
+VIS_KINDS: tuple[str, ...] = (
+    "",
+    "lesser_enchantment",
+    "spell_like",
+    "dedicated",
+    "herb_of_virtue",
+    "object_of_virtue",
+    "encased",
+    "anchor",
+    "accrued",
+    "sleeping",
+    "abstract",
+)
+
 #: How heavily a sanctum's laboratory is used (default: Standard).
 SANCTUM_USAGES: tuple[str, ...] = (
     "Light (1 Season or Less)",
@@ -181,7 +199,8 @@ class Possession:
     * vis_source: name, art, pawns, season (when it is harvested), location,
       physical_form, description.
     * vis_store (Raw Vis Stores): name, art, pawns, physical_form, infernal
-      (Infernal vis), where it
+      (Infernal vis), its kind of vis (vis_kind and the fields that go
+      with it; a vis_source has them too), where it
       is kept -- location_kind/location_id: the covenant, one of its
       laboratories or one of its characters (none set means the
       covenant) -- and location, a free-text note on where exactly.
@@ -234,6 +253,15 @@ class Possession:
     #: vis_store / vis_source: Infernal vis, tainted by Hell (RoP: The
     #: Infernal pp. 18-19): more botch dice in casting (rules.casting).
     infernal: bool = False
+    #: vis_store / vis_source: the kind of vis (one of VIS_KINDS; "" is
+    #: ordinary vis); a dedicated pawn's other Art (its Technique or Form
+    #: with `art`); a Thing of Virtue's entry in rules.vis_kinds'
+    #: THINGS_OF_VIRTUE ("" for one not listed); and an extraordinary
+    #: pawn's power's level (None: not known).
+    vis_kind: str = ""
+    paired_art: str = ""
+    virtue_thing: str = ""
+    effect_level: int | None = None
     #: vis_source: covered by a Contested (or Indiscreet)
     #: Resource Hook, secured through this year (one story secures it for
     #: five); and by a Dwindling Resource Hook (-10% of its first value a year).
@@ -249,6 +277,11 @@ class Possession:
         if self.kind not in POSSESSION_KINDS:
             raise ValueError(
                 f"Unknown possession kind {self.kind!r}; must be one of {POSSESSION_KINDS}"
+            )
+        if self.vis_kind not in VIS_KINDS:
+            raise ValueError(
+                f"{self.name or self.id}: unknown kind of vis {self.vis_kind!r}; "
+                f"must be one of {VIS_KINDS}"
             )
 
 

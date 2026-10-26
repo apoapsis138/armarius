@@ -25,15 +25,17 @@ import re
 from typing import Any
 
 from .. import tribunals, world
-from ..commands import Command, Confirm, Form, SectionOps
+from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
 from ..markup import escape
 from ..models import Character, Covenant, Saga, Tribunal
+from ..rules import rhine_ranks as ranks
 from ..sections import GILDS_SECTION
 from . import (
     PackageList,
     PackageTab,
+    PackageVerb,
     RosterColumn,
     TribunalPackage,
     data,
@@ -336,10 +338,424 @@ def gild_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
     )
 
 
+# -- the ranks: marks of approval, the archmage's challenge, the sigils
+# conferred (rules.rhine_ranks) --
+
+
+def _mapping(tribunal: Tribunal, name: str) -> dict[str, Any]:
+    found = data(tribunal, KEY).setdefault(name, {})
+    if not isinstance(found, dict):
+        raise ValueError(f"The Tribunal's {name} should be a mapping, not {found!r}.")
+    return found
+
+
+def marks(tribunal: Tribunal, character_id: str) -> list[dict[str, Any]]:
+    """The marks of approval the magus holds, each {"sponsor_id",
+    "asked", "year"}."""
+    return _mapping(tribunal, "marks").setdefault(character_id, [])
+
+
+def challenge_record(tribunal: Tribunal, archmage_id: str) -> dict[str, Any]:
+    """An archmage's challenge: {"contest", "bouts": [{"challenger_id",
+    "won", "year"}]}."""
+    return _mapping(tribunal, "challenges").setdefault(
+        archmage_id, {"contest": "", "bouts": []}
+    )
+
+
+def bouts(tribunal: Tribunal, archmage_id: str) -> list[ranks.Bout]:
+    found = challenge_record(tribunal, archmage_id).get("bouts", [])
+    return [ranks.Bout(b.get("challenger_id", ""), bool(b.get("won"))) for b in found]
+
+
+def challenged_by(tribunal: Tribunal, challenger_id: str) -> list[str]:
+    """The archmagi the magus has challenged."""
+    return [
+        ident
+        for ident, record in _mapping(tribunal, "challenges").items()
+        if any(b.get("challenger_id") == challenger_id for b in record.get("bouts", []))
+    ]
+
+
+def promotions(tribunal: Tribunal) -> list[dict[str, Any]]:
+    """Each rank won here, whose sigils the next meeting's rite confers:
+    {"character_id", "rank", "year", "sigils", "conferred" (the meeting's
+    year, or None), "names" (the retired magi whose sigils)}."""
+    return entries(tribunal, KEY, "promotions")
+
+
+def entrusted(tribunal: Tribunal) -> dict[str, list[str]]:
+    """The retired magi whose sigils each magus wields by proxy, by his
+    character id, as the rite conferred them."""
+    return _mapping(tribunal, "entrusted")
+
+
+def _promote(
+    saga: Saga, tribunal: Tribunal, magus: Character, to: str, deed: str = ""
+) -> None:
+    ranks.promote(magus, to, deed)
+    promotions(tribunal).append(
+        {
+            "character_id": magus.id,
+            "rank": to,
+            "year": saga.current_year,
+            "sigils": 1,
+            "conferred": None,
+            "names": [],
+        }
+    )
+
+
+def tribunal_magi(saga: Saga, tribunal: Tribunal) -> list[Character]:
+    """The magi of the Tribunal's covenants."""
+    return [
+        m
+        for c in tribunals.covenants_of(saga, tribunal)
+        for m in world.covenant_magi(saga, c)
+    ]
+
+
+def _magus_options(magi: list[Character]) -> list[tuple[str, str]]:
+    return [(escape(f"{m.name} ({ranks.rank_name(m)})"), m.id) for m in magi]
+
+
+def _gild_name(tribunal: Tribunal, magus: Character) -> str:
+    gild = gild_of(tribunal, magus.id)
+    return gild["name"] if gild is not None else ""
+
+
+def enmity_gilds(tribunal: Tribunal, magus: Character) -> list[str]:
+    """The names of the gilds the magus has the Enmity Flaw for."""
+    trees = enmities(magus)
+    return [g["name"] for g in gilds(tribunal) if gild_tree(g["name"]) in trees]
+
+
+def _sponsors(
+    saga: Saga, tribunal: Tribunal, applicant: Character, extra: Character | None
+) -> list[ranks.Sponsor]:
+    found = [saga.character(m.get("sponsor_id")) for m in marks(tribunal, applicant.id)]
+    magi = [m for m in found if m is not None]
+    if extra is not None and extra not in magi:
+        magi.append(extra)
+    return [ranks.Sponsor(m, _gild_name(tribunal, m)) for m in magi]
+
+
+def mark_text(saga: Saga, tribunal: Tribunal, values: dict[str, Any]) -> str:
+    """The form's live line: the marks the applicant would hold, and what
+    custom frowns on in them."""
+    applicant = saga.character(values.get("applicant"))
+    if applicant is None:
+        return ""
+    sponsors = _sponsors(
+        saga, tribunal, applicant, saga.character(values.get("sponsor"))
+    )
+    names = ", ".join(s.magus.name for s in sponsors)
+    count = min(len(sponsors), ranks.MARKS)
+    lines = [
+        f"{count} of {ranks.MARKS} marks"
+        + (f": {names}" if names else "")
+        + (f". {applicant.name} becomes a master." if count == ranks.MARKS else ".")
+    ]
+    lines += ranks.mark_warnings(
+        saga, applicant, sponsors, enmity_gilds(tribunal, applicant)
+    )
+    return "\n".join(escape(line) for line in lines)
+
+
+def mark_form(saga: Saga, tribunal: Tribunal) -> Form:
+    """A master gives a journeyman his mark of approval; the third makes
+    him a master (Guardians of the Forests pp. 22-23)."""
+    magi = tribunal_magi(saga, tribunal)
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                "applicant",
+                "Applicant",
+                "select",
+                None,
+                options=_magus_options([m for m in magi if not ranks.is_master(m)]),
+                required=True,
+                hint="A journeyman famed for his magical prowess (a Redcap: for "
+                "his loyal service).",
+            ),
+            DialogField(
+                "sponsor",
+                "Mark given by",
+                "select",
+                None,
+                options=_magus_options([m for m in magi if ranks.is_master(m)]),
+                required=True,
+                hint="A master not of his covenant or House; the three from "
+                "three different gilds.",
+            ),
+            DialogField(
+                "asked",
+                "Asked of him",
+                "text",
+                "",
+                placeholder="e.g. a summa for the Great Library",
+                hint="What the master asked before giving his token, if anything.",
+            ),
+        ]
+
+    def validate(values: dict[str, Any]) -> str | None:
+        applicant = saga.character(values.get("applicant"))
+        sponsor = saga.character(values.get("sponsor"))
+        if applicant is None or sponsor is None:
+            return None
+        given = [m.get("sponsor_id", "") for m in marks(tribunal, applicant.id)]
+        return ranks.mark_problem(applicant, sponsor, given) or None
+
+    def apply(values: dict[str, Any]) -> None:
+        applicant = saga.character(values["applicant"])
+        assert applicant is not None
+        held = marks(tribunal, applicant.id)
+        held.append(
+            {
+                "sponsor_id": values["sponsor"],
+                "asked": values.get("asked", ""),
+                "year": saga.current_year,
+            }
+        )
+        if len(held) >= ranks.MARKS:
+            _promote(saga, tribunal, applicant, ranks.MASTER)
+
+    return Form(
+        "Mark of Approval",
+        fields,
+        apply,
+        validate=validate,
+        live=lambda values: mark_text(saga, tribunal, values),
+        save_label="Give",
+    )
+
+
+def mark_step(saga: Saga, tribunal: Tribunal, _row: int) -> Command:
+    """More's Mark of Approval (on any gild: the mark is the master's
+    own)."""
+    magi = tribunal_magi(saga, tribunal)
+    if not any(ranks.is_master(m) for m in magi):
+        return Refuse(
+            "Mark of Approval",
+            "No master belongs to the Tribunal's covenants: only masters give "
+            "marks of approval.",
+        )
+    return mark_form(saga, tribunal)
+
+
+WON, LOST = "Won", "Lost"
+
+
+def _archmagi(saga: Saga) -> list[Character]:
+    return [c for c in saga.characters if ranks.is_archmage(c)]
+
+
+def is_rhine_magus(saga: Saga, magus: Character) -> bool:
+    """Whether the magus belongs to a Rhine Tribunal: his covenant's
+    Tribunal keeps the Rhine's customs. One with no covenant, or of a
+    covenant in no Tribunal, is taken as not."""
+    covenant = saga.covenant(magus.covenant_id) if magus.covenant_id else None
+    tribunal = tribunals.of(saga, covenant) if covenant is not None else None
+    return tribunal is not None and tribunal.package == KEY
+
+
+def challengers(saga: Saga, tribunal: Tribunal) -> list[Character]:
+    """Who may challenge an archmage: the Rhine's masters (this
+    Tribunal's first), and any magus of another Tribunal, who needn't be a
+    master since archmagi are found throughout the Order (p. 24; Errata
+    p. 42). None is an archmage already."""
+    found = [m for m in tribunal_magi(saga, tribunal) if ranks.is_master(m)]
+    found += [
+        m
+        for m in saga.characters
+        if m.type == "magus"
+        and m not in found
+        and (ranks.is_master(m) or not is_rhine_magus(saga, m))
+    ]
+    return [m for m in found if not ranks.is_archmage(m)]
+
+
+def _challenger_options(saga: Saga, magi: list[Character]) -> list[tuple[str, str]]:
+    """A Rhine magus by his rank; one of another Tribunal by its name, as
+    the Rhine's ranks aren't his."""
+    found = []
+    for m in magi:
+        if is_rhine_magus(saga, m):
+            label = ranks.rank_name(m)
+        else:
+            covenant = saga.covenant(m.covenant_id) if m.covenant_id else None
+            tribunal = tribunals.of(saga, covenant) if covenant is not None else None
+            label = tribunal.name if tribunal is not None else "no Tribunal"
+        found.append((escape(f"{m.name} ({label})"), m.id))
+    return found
+
+
+def challenge_text(saga: Saga, tribunal: Tribunal, values: dict[str, Any]) -> str:
+    """The form's live line: the archmage's contest and losses, and what
+    custom frowns on."""
+    challenger = saga.character(values.get("challenger"))
+    archmage = saga.character(values.get("archmage"))
+    if challenger is None or archmage is None:
+        return ""
+    fought = bouts(tribunal, archmage.id)
+    lost = ranks.losses(fought)
+    lines = [f"{archmage.name} has lost {lost} of {ranks.LOSSES}."]
+    lines += ranks.challenge_warnings(
+        saga, challenger, archmage, fought, challenged_by(tribunal, challenger.id)
+    )
+    return "\n".join(escape(line) for line in lines)
+
+
+def challenge_form(saga: Saga, tribunal: Tribunal) -> Form:
+    """A master challenges an archmage at the archmage's own contest; the
+    winner is made archmage (Guardians of the Forests p. 24). A magus of
+    another Tribunal may challenge too, master or not."""
+    able = challengers(saga, tribunal)
+
+    def contest_of(values: dict[str, Any]) -> str:
+        ident = values.get("archmage")
+        if not ident:
+            return ""
+        return _mapping(tribunal, "challenges").get(ident, {}).get("contest", "")
+
+    def spell_of(values: dict[str, Any]) -> dict[str, Any]:
+        challenger = saga.character(values.get("challenger"))
+        if challenger is None:
+            return {}
+        has = ranks.invented_magnitude(challenger) >= ranks.ARCHMAGE_MAGNITUDE
+        return {"spell": has}
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                "challenger",
+                "Challenger",
+                "select",
+                None,
+                options=_challenger_options(saga, able),
+                required=True,
+                hint="A Rhine master, or a magus of another Tribunal; never "
+                "twice against the same archmage.",
+                fills=spell_of,
+            ),
+            DialogField(
+                "archmage",
+                "Archmage",
+                "select",
+                None,
+                options=_magus_options(_archmagi(saga)),
+                required=True,
+                hint="Seven losses and he is challenged no more.",
+            ),
+            DialogField(
+                "contest",
+                "Contest",
+                "text",
+                "",
+                placeholder="e.g. to defeat him in certamen",
+                hint="Set by the archmage the first time he is challenged, then "
+                "his for life; it must involve magical powers.",
+                show_if=lambda v: not contest_of(v),
+            ),
+            DialogField(
+                "spell",
+                "Has invented a spell of 7th magnitude",
+                "check",
+                bool(able and spell_of({"challenger": able[0].id}).get("spell")),
+                hint="Ticked for you when one he invented is recorded.",
+            ),
+            DialogField(
+                "deed",
+                "Great deed",
+                "text",
+                "",
+                required=True,
+                placeholder="e.g. the binding of the Black Forest's wyrm",
+                hint="Famed throughout the Order, and of benefit to it.",
+            ),
+            DialogField(
+                "outcome",
+                "Outcome",
+                "select",
+                LOST,
+                options=[(WON, WON), (LOST, LOST)],
+                required=True,
+            ),
+        ]
+
+    def validate(values: dict[str, Any]) -> str | None:
+        challenger = saga.character(values.get("challenger"))
+        archmage = saga.character(values.get("archmage"))
+        if challenger is None or archmage is None:
+            return None
+        problem = ranks.challenge_problem(
+            challenger,
+            archmage,
+            bouts(tribunal, archmage.id),
+            is_rhine_magus(saga, challenger),
+        )
+        if problem:
+            return problem
+        if not values.get("spell"):
+            return (
+                "A challenger must have invented a spell of at least 7th "
+                "magnitude (Guardians of the Forests p. 24)."
+            )
+        if not contest_of(values) and not (values.get("contest") or "").strip():
+            return "Name the archmage's contest: he sets it at his first challenge."
+        return None
+
+    def apply(values: dict[str, Any]) -> None:
+        challenger = saga.character(values["challenger"])
+        assert challenger is not None
+        record = challenge_record(tribunal, values["archmage"])
+        if not record.get("contest"):
+            record["contest"] = (values.get("contest") or "").strip()
+        won = values.get("outcome") == WON
+        record.setdefault("bouts", []).append(
+            {
+                "challenger_id": challenger.id,
+                "won": won,
+                "year": saga.current_year,
+            }
+        )
+        if won and is_rhine_magus(saga, challenger):
+            _promote(saga, tribunal, challenger, ranks.ARCHMAGE, values["deed"])
+        elif won:
+            # A magus of another Tribunal takes no Rhine rank and holds no
+            # proxies at its meetings, so no sigil is owed him at its rite.
+            ranks.acclaim(challenger, values["deed"])
+
+    return Form(
+        "The Archmage's Challenge",
+        fields,
+        apply,
+        validate=validate,
+        live=lambda values: challenge_text(saga, tribunal, values),
+        save_label="Record",
+    )
+
+
+def challenge_step(saga: Saga, tribunal: Tribunal, _row: int) -> Command:
+    """More's Archmage's Challenge."""
+    if not challengers(saga, tribunal):
+        return Refuse(
+            "The Archmage's Challenge",
+            "No magus can challenge: a Rhine magus must be a master first, "
+            "and no magus of another Tribunal is in the saga.",
+        )
+    if not _archmagi(saga):
+        return Refuse("The Archmage's Challenge", "No archmage is in the saga.")
+    return challenge_form(saga, tribunal)
+
+
 def magus_facts(
     saga: Saga, tribunal: Tribunal, character: Character
 ) -> list[tuple[str, str]]:
-    """A Rhine magus's gild, and who casts his sigil when another does."""
+    """A Rhine magus's gild, who casts his sigil when another does, the
+    marks of approval he holds, the retired magi's sigils he wields, and
+    an apprentice a journeyman may not formally take."""
     found = []
     gild = gild_of(tribunal, character.id)
     if gild is not None:
@@ -347,6 +763,21 @@ def magus_facts(
     holder = saga.character(sigil_held_by(tribunal).get(character.id))
     if holder is not None:
         found.append(("Sigil", f"cast by {holder.name}"))
+    held = _mapping(tribunal, "marks").get(character.id, [])
+    if held and not ranks.is_master(character):
+        found.append(("Marks", f"{len(held)} of {ranks.MARKS} toward master"))
+    proxies = entrusted(tribunal).get(character.id, [])
+    if proxies:
+        found.append(("Sigils by proxy", ", ".join(proxies)))
+    if not ranks.is_master(character):
+        for apprentice in ranks.apprentices_of(saga, character):
+            found.append(
+                (
+                    "Apprentice",
+                    f"{apprentice.name}: a journeyman's, so a recruited hedge "
+                    "wizard at his Gauntlet, never his filius (GotF p. 24)",
+                )
+            )
     return found
 
 
@@ -361,9 +792,23 @@ RHINE = TribunalPackage(
         PackageTab(
             "Gilds",
             "tab-trib-gilds",
-            (PackageList(GILDS_SECTION, gilds_title, gilds_grid, gild_ops),),
+            (
+                PackageList(
+                    GILDS_SECTION,
+                    gilds_title,
+                    gilds_grid,
+                    gild_ops,
+                    more=(
+                        PackageVerb("rhine_mark", "Mark of Approval", mark_step),
+                        PackageVerb(
+                            "rhine_challenge", "Archmage's Challenge", challenge_step
+                        ),
+                    ),
+                ),
+            ),
         ),
     ),
+    meeting_steps=("rhine_rite",),
     about="Its magi band together in gilds, political factions across "
     "House and covenant, one gild to a magus.",
     covenant_fields=covenant_gild_fields,

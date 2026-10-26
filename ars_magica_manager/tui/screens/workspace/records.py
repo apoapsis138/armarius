@@ -52,6 +52,7 @@ from ....sections import (
     DIARY_SECTION,
     ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
+    GILDS_SECTION,
     GRATITUDE_SECTION,
     HOUSEHOLD_SECTION,
     MANORS_SECTION,
@@ -59,6 +60,7 @@ from ....sections import (
     STAGES_SECTION,
     TABLES_SECTION,
     TOKENS_SECTION,
+    TREASURY_SECTION,
 )
 from ..fields import (
     FieldsDialog,
@@ -177,8 +179,9 @@ class RecordActions(WorkspaceBase):
             lambda _end: self._commit(CASES_SECTION),
         )
 
-    def _package_verb(self, action: str, section: str) -> None:
-        """A Tribunal package's More command on its list's chosen row."""
+    def _package_verb(self, action: str, section: str, *also: str) -> None:
+        """A Tribunal package's More command on its list's chosen row; the
+        sections `also` changed are refreshed beside its own."""
         view = self._tribunal_sheet_view
         row = view.section_row(section) if view is not None else None
         if view is None or row is None:
@@ -189,7 +192,7 @@ class RecordActions(WorkspaceBase):
         run_steps(
             self.app,
             verb.build(self.saga, view.tribunal, row),
-            lambda _end: self._commit(section),
+            lambda _end: self._commit(section, *also),
         )
 
     def action_neutralize_shard(self) -> None:
@@ -199,6 +202,22 @@ class RecordActions(WorkspaceBase):
     def action_tribunal_longevity(self) -> None:
         """More's Longevity Ritual on the Theban tokens."""
         self._package_verb("tribunal_longevity", TOKENS_SECTION)
+
+    def action_lend_vis(self) -> None:
+        """More's Lend Vis on the Theban tokens' chosen magus."""
+        self._package_verb("lend_vis", TOKENS_SECTION, TREASURY_SECTION)
+
+    def action_repay_vis_loan(self) -> None:
+        """More's Repay a Loan on the Theban tokens' chosen magus."""
+        self._package_verb("repay_vis_loan", TOKENS_SECTION, TREASURY_SECTION)
+
+    def action_rhine_mark(self) -> None:
+        """More's Mark of Approval on the Rhine's Gilds."""
+        self._package_verb("rhine_mark", GILDS_SECTION)
+
+    def action_rhine_challenge(self) -> None:
+        """More's Archmage's Challenge on the Rhine's Gilds."""
+        self._package_verb("rhine_challenge", GILDS_SECTION)
 
     def action_roll_fair(self) -> None:
         """More's Roll Income on a town's chosen fair."""

@@ -23,11 +23,14 @@ from ars_magica_manager.models import (
     Character,
     Characteristics,
     CharacterPower,
+    CharterClause,
+    CharterSeal,
     Codex,
     Combatant,
     ConstantEffect,
     Covenant,
     CovenantBoonHookDef,
+    CovenantCharter,
     CovenantDiaryEntry,
     CreationXp,
     Creature,
@@ -379,6 +382,15 @@ def test_a_save_from_before_a_field_existed_loads_with_its_default(model, minima
 # -- stale keys from older saves ---------------------------------
 
 
+def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
+    """A diary entry, and a charter with a clause and a magus's seal."""
+    covenant.diary.append(CovenantDiaryEntry(1220))
+    covenant.charter_of_covenant = CovenantCharter(
+        clauses=[CharterClause("1", "Share all vis.", 1220, "Spring")],
+        seals=[CharterSeal(magus_id, 1220, "Spring")],
+    )
+
+
 def _saga_with_every_record() -> Saga:
     """everything_saga() plus one of each saved record it lacks, so every
     dataclass a saga file holds appears at least once."""
@@ -426,7 +438,7 @@ def _saga_with_every_record() -> Saga:
             characteristics=[LabCharacteristicGrant("safety", 1)],
         )
     )
-    saga.covenants[0].diary.append(CovenantDiaryEntry(1220))
+    _add_diary_and_charter(saga.covenants[0], magus.id)
     rhine = saga.tribunals[0]
     rhine.cases.append(Case("Interference"))
     rhine.rulings.append(Ruling("No new covenants on the Rhine"))

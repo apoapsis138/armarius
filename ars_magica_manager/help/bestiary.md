@@ -23,13 +23,19 @@ that opens its own page, and a New card that adds one.
 <!-- /gui -->
 
 **New Creature** can start from the book: **Start from the book** lists
-the Definitive Edition's 62 creatures (DE pp. 428-492), from the bear and
+the Definitive Edition's 64 creatures (DE pp. 428-492), from the bear and
 the wolf to the elementals, the faerie knight, Baal-Peor and the angel
 Gabriel. The chosen one's whole stat block is copied into the saga under
 the name you give (blank: the book's), to change as you like; only its
 name and where it is found are asked. A Tribunal book's pack brings the
 creatures its stat blocks describe; see [How to add a creature from a
 book](help:guide-bestiary).
+
+The book's mundane beasts are also the Book of Mundane Beasts in Realms of
+Power: Magic, pp. 140-144; where the two differ (the lion's Cunning, the
+falcon's Communication, the boar's Fatigue Levels) the Definitive Edition's
+figures are used, and the entry's notes say so. The charger and palfrey (DE
+p. 432) are there as their own horses.
 
 **See also:** [A creature](help:creature), [The Region](help:region)
 
@@ -91,6 +97,11 @@ rules: The Gift on a creature whose Might isn't Magic, a power that costs
 more than the Might (it could never be used, since the Pool refills only
 to the Score) and a Might Pool above the Might (DE pp. 425-426).
 
+A creature with Magic Might found at a place with a Magic aura shows its
+**Might recovery** resting there: the time to regain its whole Might Pool,
+by the aura less a fifth of its Might (24 hours at 0 down to 2 minutes at
+9 or more), and so how long a point takes (Realms of Power: Magic p. 30).
+
 A faerie built by Realms of Power: Faerie (one with Humanoid Faerie,
 Faerie Beast or Hybrid Form, or Increased or Decreased Might) shows a
 **Faerie design** fact: the Might its Virtues give it (5, +5 for each
@@ -123,6 +134,35 @@ ghost's Social Status and worldly tie, the common spirit Powers' cost and
 Initiative, and what its Presence and vis come to. A jinni (the Jinni
 Virtue) is checked against The Cradle and the Crescent (pp. 62-63). All
 of these are advice: the books' own creatures needn't balance.
+
+**Magic design** and **Magic being.** A creature of Magic is checked against
+*Realms of Power: Magic*, as advice, never a refusal:
+
+- *Every magic being* (Magic realm, Might above 0) shows how it advances: its Might comes off
+  every Advancement Total, 2 less for each pawn of vis it eats (p. 52) (the book's example, Might 10 and 4 pawns, keeps 13 of 15: Errata p. 63); bound as a Hermetic magus's familiar it learns as a human does instead, and keeps those Abilities if the bond breaks (Errata p. 63; Definitive Edition p. 267); and how it keeps off
+  Acclimation for the year: the Magic aura it must live in (always, half the time, or by
+  frequent visits), the seasons it must affect a magical being without Might, or Might / 2
+  pawns of vis eaten (pp. 53-54).
+- *A Beast of Virtue* (Magic Animal with an Essential Virtue, or "of Virtue" in its name) has
+  an Essential Virtue and no Flaw that makes it a worse example of its kind (Lame, Blind and
+  the like); most have a magical Social Status, their powers are most often Lesser, Personal
+  or Greater, and the corpse holds about a pawn of vis for each 5 Might (pp. 55-56).
+- *A transformed animal* has no realm and a Warping Score (set on the Edit form when the realm
+  is blank). Warping brings a Minor Flaw at 1, another at 3, a Minor Virtue at 5 and a Major
+  Flaw for each Score after; from Magic these are Warped Senses or (Form) Monstrosity, Lesser
+  Power, then Hunger for (Form) Magic or Bound to Magic (pp. 78-79). A creature with Might has
+  no Warping Score.
+- *An awakened tree* (a tree's name: oak, willow, rowan...) has Cunning and no Might, unless a
+  spirit animates it with Manifestation: then its Might is the power's activation cost while it lasts (pp. 128-129). *A Magic Thing* (an awakened item, an
+  elemental) never tires (p. 135).
+- *An elemental* (Magic, aligned to Terram, Aquam, Auram or Ignem, with an elemental's Flaws
+  or "elemental" in its name) is Size -18 at Might 1, 3 more for each magnitude (Might 15 is
+  Size 0; DE p. 450); has Poor Memory, Short Attention Span, Simple-Minded and Ways of the
+  (Land), its element's attack (Crush, Drown, Suffocate or Burn), and Brawl and Athletics
+  (Swim for water) at its Might's magnitude; four of its Characteristics are never negative
+  before Size (RoP: Magic p. 134). The sheet shows its typical Characteristics, how it
+  recovers Might (resting a season in an aura of Might / 5, or eating vis) and what wounds
+  take from its Might Pool (DE pp. 449-451).
 
 When it rules or leads a neighbour (a faerie court's queen, a dragon
 lording it over a valley), its facts say so under **Rules**. The place

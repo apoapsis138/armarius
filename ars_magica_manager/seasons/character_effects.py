@@ -4,6 +4,7 @@ warping and aging."""
 from __future__ import annotations
 
 import random
+from collections.abc import Sequence
 
 from ..models import (
     Ability,
@@ -17,7 +18,7 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
-from ..rules import grog_discipline, medicine, sites, work_virtues
+from ..rules import grog_discipline, medicine, realm_warping, sites, work_virtues
 from ..rules import hybrid_magic as hybrid
 from ..rules import living as living_rules
 from ..rules import warping as warping_rules
@@ -103,7 +104,8 @@ def _warped_this_year(saga: Saga, character: Character) -> set[str]:
     found: set[str] = set()
     for entry in character.diary:
         if entry.year != saga.current_year or not (
-            entry.name.startswith("Warping +") or entry.name == "Wizard's Twilight"
+            entry.name.startswith("Warping +")
+            or entry.name in realm_warping.NAMES.values()
         ):
             continue
         realm = next(
@@ -129,47 +131,50 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
     realm, a Virtue's as its own realm, and an event's as the realm
     recorded with it). Returns what was added ("" for nothing)."""
     gained: list[str] = []
-    points = 0
-    # The realms that gave Warping this year, for Susceptibility to Warping.
-    realms_: set[str] = set()
+    # The points from each realm: for Susceptibility to Warping, and
+    # counted toward the Warping's main source.
+    by_realm: dict[str, int] = {}
+
+    def add(realm_of: str, each: int, what: str) -> None:
+        by_realm[realm_of] = by_realm.get(realm_of, 0) + each
+        gained.append(what)
+
     if warping_rules.immune(character):
         return ""
     if character.aging.longevity_modifier:
-        points += 1
-        realms_.add("Magic")
-        gained.append("Longevity Ritual 1")
+        add("Magic", 1, "Longevity Ritual 1")
     aura, realm = home_aura(saga, character)
     # A non-magus's Virtue at Warping Score 5 stops points from auras of its
-    # kind, taken to be the aura they live in.
+    # kind: the realm most of their Warping came from.
     attuned = (
         not warping_rules.opened_to_arts(character)
         and character.aging.warping_score >= warping_rules.ATTUNED_SCORE
+        and realm == realm_warping.main_realm(saga, character)
     )
     if hybrid.warps_from_aura(character, realm) and not attuned:
         from_aura = warping_rules.aura_points(
             aura, character.aging.aura_time, saga.current_year
         )
         if from_aura:
-            points += from_aura
-            realms_.add(realm)
-            gained.append(f"{realm} aura {aura}: {from_aura}")
+            add(realm, from_aura, f"{realm} aura {aura}: {from_aura}")
     from_place = sites.warping_per_year(saga, character)
     if from_place:
-        points += from_place
-        realms_.add(realm)
         where = sites.character_place(saga, character)
         name = where[0].name if where is not None else "Where they live"
-        gained.append(f"{name}: {from_place}")
+        add(realm, from_place, f"{name}: {from_place}")
     for name, each, realm_of in work_virtues.yearly_warping(character):
-        points += each
-        realms_.add(realm_of)
-        gained.append(f"{name} {each}")
+        add(realm_of, each, f"{name} {each}")
     for effect in character.constant_effects:
         each = warping_rules.constant_points(effect)
-        points += each
-        realms_.add(effect.realm or "Magic")
-        gained.append(f"{effect.name or 'A constant effect'} {each}")
-    realms_ |= _warped_this_year(saga, character)
+        add(
+            effect.realm or "Magic",
+            each,
+            f"{effect.name or 'A constant effect'} {each}",
+        )
+    realms_ = {r for r, each in by_realm.items() if each} | _warped_this_year(
+        saga, character
+    )
+    points = sum(by_realm.values())
     if work_virtues.susceptible(character) and realms_:
         points += len(realms_)
         gained.append(f"Susceptibility to Warping {len(realms_)}")
@@ -177,16 +182,27 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
         return ""
     before = character.aging.warping_score
     warping_rules.set_total(character, warping_rules.total_points(character) + points)
+    for realm_of, each in by_realm.items():
+        realm_warping.record(character, realm_of, each)
     text = f"Warping Points +{points} ({', '.join(gained)}); Warping Score now {character.aging.warping_score}."
-    return " ".join([text, *_warped_effects(character, before)])
+    return " ".join([text, *_warped_effects(saga, character, before)])
 
 
-def _warped_effects(character: Character, before: int) -> list[str]:
-    """What a non-magus's higher Warping Score brings, for the Diary (a
-    magus's Warping means Twilight instead: DE p. 391)."""
-    if warping_rules.opened_to_arts(character) or character.traditions:
+def _warped_effects(saga: Saga, character: Character, before: int) -> list[str]:
+    """What a non-magus's higher Warping Score brings, for the Diary,
+    coloured by the realm most of it came from (a magus's Warping means
+    Twilight instead: DE p. 391; a tradition's members have its own)."""
+    if (
+        warping_rules.opened_to_arts(character)
+        or character.traditions
+        or realm_warping.holy(character)
+    ):
         return []
-    return warping_rules.mundane_effects(before, character.aging.warping_score)
+    return realm_warping.effects(
+        before,
+        character.aging.warping_score,
+        realm_warping.main_realm(saga, character),
+    )
 
 
 def gain_warping(
@@ -199,46 +215,59 @@ def gain_warping(
     aura: int | None = None,
     enter: bool = False,
     realm: str = "Magic",
+    at_once: bool = True,
+    lines: Sequence[str] = (),
 ) -> list[str]:
-    """Add Warping Points from one event; 2 or more take a
-    magus (with `opened`, anyone whose Arts are opened) to the edge of
-    Wizard's Twilight, rolled against the aura where it happened (`aura`;
-    where they live when not given), or entered at once (`enter`). Writes
-    a Diary entry and returns its lines. A character with a Might score
-    (Demonic Blood) is immune."""
+    """Add Warping Points from one event (`realm`'s, counted toward the
+    main source); 2 or more set off the character's answer to them
+    (realm_warping.response_realm): Wizard's Twilight for a magus (with
+    `opened`, anyone whose Arts are opened), the Divine Ascent,
+    Vituperation or a Faerie Calling for a tradition's member, rolled
+    against the aura where it happened (`aura`; where they live when not
+    given), or entered at once (`enter`). Points that come apart
+    (`at_once` False: transits, leaving Faerie) set off nothing. `lines`
+    go first in the Diary entry. Writes a Diary entry and returns its
+    lines. A character with a Might score (Demonic Blood) is immune."""
     if warping_rules.immune(character):
         return [f"{character.name} is immune to Warping (a Might score)."]
     before = character.aging.warping_score
     warping_rules.set_total(character, warping_rules.total_points(character) + points)
+    realm_warping.record(character, realm, points)
     notes = [
+        *lines,
         f"+{points} Warping Points; Warping Score {character.aging.warping_score}.",
-        *_warped_effects(character, before),
+        *_warped_effects(saga, character, before),
     ]
     name = f"Warping +{points}"
-    at_risk = (
-        warping_rules.opened_to_arts(character) if opened else character.type == "magus"
-    )
-    if at_risk and points >= 2:
+    answer = realm_warping.response_realm(character, opened=opened)
+    source = warping_rules.TWILIGHT_SOURCE
+    if answer is not None and at_once and points >= 2:
         if aura is None:
             aura, _ = home_aura(saga, character)
-        result = warping_rules.twilight(character, points, aura, rng, saga, enter=enter)
+        result = realm_warping.respond(
+            answer, character, points, aura, rng, saga, enter=enter
+        )
+        source = realm_warping.SOURCES[answer]
         notes += result.notes
         if result.entered:
-            name = "Wizard's Twilight"
-            if lost := medicine.lose_eucrasia(
-                character, saga.current_year, "Wizard's Twilight"
+            name = realm_warping.NAMES[answer]
+            if answer == realm_warping.MAGIC and (
+                lost := medicine.lose_eucrasia(
+                    character, saga.current_year, "Wizard's Twilight"
+                )
             ):
                 notes.append(lost)
             warping_rules.set_total(
                 character, warping_rules.total_points(character) + result.extra_points
             )
+            realm_warping.record(character, answer, result.extra_points)
             if result.seasons:
                 season, year = saga.current_season, saga.current_year
                 for _ in range(result.seasons - 1):
                     season, year = next_season(season, year)
                 character.aging.twilight_until = f"{season} {year}"
                 notes.append(
-                    f"Lost in Twilight through {season} {year}: no seasons can be "
+                    f"{name} lasts through {season} {year}: no seasons can be "
                     "planned until then."
                 )
     character.diary.append(
@@ -248,7 +277,7 @@ def gain_warping(
             name=name,
             details="\n".join(notes)
             + f"\n{REALM_LINE}{realm}"
-            + f"\nRule: {_cite(warping_rules.TWILIGHT_SOURCE)}",
+            + f"\nRule: {_cite(source)}",
             activity="Aging",
         )
     )
@@ -264,11 +293,13 @@ def age_character(
     living: int | None = None,
     when: tuple[str, int] | None = None,
     label: str = "Aging",
+    young: bool = False,
 ) -> SeasonRecordLine:
     """One character's aging roll: apparent age, Aging Points and
     Characteristics, Decrepitude, a Crisis; written in the Diary. Pre-play
     aging gives its own Living Conditions, the (season, year)
-    the roll belongs to, and a label for the Diary."""
+    the roll belongs to, and a label for the Diary; `young` is a young
+    craftsman's exertion roll (aging_rules.roll)."""
     familiar = saga.familiar_of(character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
     season, year = (
@@ -280,7 +311,7 @@ def age_character(
         living = living_rules.living_conditions(
             saga, character
         ) + grog_discipline.rations_living(character, year)
-    result = aging_rules.roll(character, age, living, bronze, rng, saga)
+    result = aging_rules.roll(character, age, living, bronze, rng, saga, young=young)
     aging = character.aging
     if result.apparent:
         aging.apparent_age = (

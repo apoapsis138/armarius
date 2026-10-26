@@ -19,7 +19,7 @@ from typing import Any
 from .. import inhabitants as inh
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField
-from ..markup import BULLET, escape
+from ..markup import BULLET, escape, plural
 from ..models import (
     Character,
     Covenant,
@@ -271,10 +271,6 @@ def _described(character: Character, record: Discipline, duration: str) -> list[
     return lines
 
 
-def _plural(count: int, noun: str) -> str:
-    return f"{count} {noun}{'' if count == 1 else 's'}"
-
-
 def _harm(done: Outcome, values: dict[str, Any]) -> None:
     """The wounds and Fatigue a flogging or whipping deals, and death."""
     kind = done.record.kind
@@ -286,12 +282,12 @@ def _harm(done: Outcome, values: dict[str, Any]) -> None:
     done.fatigue = gd.fatigue_dealt(kind, blows)
     if kind == gd.FLOGGING:
         done.lines.append(
-            f"{_plural(blows, 'blow')}: {_plural(len(done.wounds), 'Light Wound')} "
-            f"and {_plural(done.fatigue, 'Long-Term Fatigue level')}."
+            f"{plural(blows, 'blow')}: {plural(len(done.wounds), 'Light Wound')} "
+            f"and {plural(done.fatigue, 'Long-Term Fatigue level')}."
         )
     elif kind == gd.WHIPPING:
         hurt = (
-            _plural(len(done.wounds), f"{done.wounds[0].title()} Wound")
+            plural(len(done.wounds), f"{done.wounds[0].title()} Wound")
             if done.wounds
             else "no wound"
         )

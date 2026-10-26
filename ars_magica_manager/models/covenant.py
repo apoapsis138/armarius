@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..arts import ART_BY_NAME
-from .common import known_fields, move_secrets
+from .common import SEASONS, known_fields, move_secrets
 from .holdings import Economics, Inhabitant, Loyalty, Population, Possession
 from .traits import ScoredTrait, VirtueFlawInstance
 from .world import FULL, Attitude, Favour, Link
@@ -59,6 +59,125 @@ class CovenantDiaryEntry:
     boon_hook_id: str | None = None
     revisit_year: int | None = None
     build_points: int | None = None
+
+
+#: A charter clause's status (Covenants p. 35: only breaking the charter
+#: is censured). An amended clause keeps a note of what changed; the
+#: earlier wording is not kept.
+CLAUSE_IN_FORCE, CLAUSE_AMENDED, CLAUSE_BROKEN = "In force", "Amended", "Broken"
+CLAUSE_STATUSES: tuple[str, ...] = (CLAUSE_IN_FORCE, CLAUSE_AMENDED, CLAUSE_BROKEN)
+
+#: The sections of a Charter of Covenant, in the book's order (Covenants
+#: pp. 33-35). A clause may name one; the list groups clauses under them.
+CHARTER_SECTIONS: tuple[str, ...] = (
+    "Oath of Covenant",
+    "Membership",
+    "Method of Governance",
+    "Covenant Resources",
+    "Member Rights",
+    "Member Obligations",
+    "Censure",
+)
+
+
+def _optional_year(value: Any, what: str) -> int | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{what}: the year should be a number, not {value!r}.")
+    return value
+
+
+def _season(value: Any, what: str) -> str:
+    season = str(value or "")
+    if season and season not in SEASONS:
+        raise ValueError(f"{what}: {season!r} is not a season.")
+    return season
+
+
+@dataclass
+class CharterClause:
+    """One clause of a covenant's charter, kept like a diary line: its
+    number or title, its words, when it was agreed, the charter section it
+    sits in ("" for none), and its status, with the season, year and a
+    note for an amended or broken one."""
+
+    number: str
+    text: str = ""
+    year: int | None = None
+    season: str = ""
+    section: str = ""
+    status: str = CLAUSE_IN_FORCE
+    since_year: int | None = None
+    since_season: str = ""
+    note: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CharterClause:
+        d = dict(data)
+        what = f"Charter clause {d.get('number')!r}"
+        status = d.get("status") or CLAUSE_IN_FORCE
+        if status not in CLAUSE_STATUSES:
+            raise ValueError(f"{what}: {status!r} is not a clause's status.")
+        d["status"] = status
+        d["number"] = str(d.get("number") or "")
+        d["year"] = _optional_year(d.get("year"), what)
+        d["since_year"] = _optional_year(d.get("since_year"), what)
+        d["season"] = _season(d.get("season"), what)
+        d["since_season"] = _season(d.get("since_season"), what)
+        return cls(**known_fields(cls, d))
+
+
+@dataclass
+class CharterSeal:
+    """A magus's seal on the charter (Covenants p. 33: the members' seals
+    or signatures affixed to it), and when he sealed it."""
+
+    character_id: str
+    year: int | None = None
+    season: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CharterSeal:
+        d = dict(data)
+        what = "A seal on a covenant's charter"
+        if not d.get("character_id"):
+            raise ValueError(f"{what} names no magus.")
+        d["year"] = _optional_year(d.get("year"), what)
+        d["season"] = _season(d.get("season"), what)
+        return cls(**known_fields(cls, d))
+
+
+@dataclass
+class CovenantCharter:
+    """The covenant's Charter of Covenant (Covenants pp. 32-36): its name,
+    preamble (the oath, or what the charter is for), when it was sworn,
+    whether a Quaesitor ratified it (then breaking it is a Low Crime, p.
+    36), its clauses and the members' seals. Not the Chartered Town
+    Boon's town charter, which is Covenant.charter."""
+
+    name: str = ""
+    preamble: str = ""
+    year: int | None = None
+    season: str = ""
+    ratified: bool = False
+    clauses: list[CharterClause] = field(default_factory=list)
+    seals: list[CharterSeal] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CovenantCharter:
+        if not isinstance(data, dict):
+            raise ValueError(
+                f"A covenant's Charter of Covenant should be a mapping, not {data!r}."
+            )
+        d = dict(data)
+        what = f"The charter {d.get('name')!r}"
+        d["year"] = _optional_year(d.get("year"), what)
+        d["season"] = _season(d.get("season"), what)
+        d["ratified"] = bool(d.get("ratified"))
+        d["clauses"] = [CharterClause.from_dict(c) for c in d.get("clauses") or []]
+        d["seals"] = [CharterSeal.from_dict(s) for s in d.get("seals") or []]
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -169,6 +288,9 @@ class Covenant:
     #: they describe, kept as a lord neighbour keeps them (manors.py);
     #: empty for none.
     manors: dict[str, Any] = field(default_factory=dict)
+    #: Its Charter of Covenant: the magi's oath, clauses and seals
+    #: (covenant_charter.py); empty for none. Older saves load without one.
+    charter_of_covenant: CovenantCharter = field(default_factory=CovenantCharter)
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""
@@ -203,6 +325,9 @@ class Covenant:
                 f"A covenant's charter should be a mapping, not {charter!r}."
             )
         d["charter"] = dict(charter)
+        d["charter_of_covenant"] = CovenantCharter.from_dict(
+            d.get("charter_of_covenant") or {}
+        )
         held = d.get("manors") or {}
         if not isinstance(held, dict):
             raise ValueError(f"A covenant's manors should be a mapping, not {held!r}.")

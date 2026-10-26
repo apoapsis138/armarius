@@ -1,7 +1,8 @@
 """The desktop covenant page, read-only, in the Codex layout: a header
 with the name, its Tribunal and season, the Aegis and living conditions,
-and the aura and Loyalty as seals; then chapters for its charter (the
-description, Boons and Hooks, Reputations), its people, covenfolk,
+and the aura and Loyalty as seals; then chapters for its attributes (the
+description, Boons and Hooks, Reputations), its Charter of Covenant and
+clauses, its people, covenfolk,
 laboratories, possessions, treasury, library, seasons, Diary and Build
 Points, with the inspector beside them.
 
@@ -75,6 +76,7 @@ from .character_sheet import (
     side_by_side,
     trait_section,
 )
+from .charter import charter_section, clauses_section
 from .editing import Chooser, RowVerb, Run, choose_cards, give_verb, verb_buttons
 from .figures import Seal, attitude_seal, aura_seal, fact_grid, prose, shelf
 from .heraldry import arms_section, neighbours_arms
@@ -180,10 +182,14 @@ class CovenantPage(QWidget):
             # saga, and its Diary.
             chapters += [
                 ("Sketch", "covenant", lambda: self._sketch(covenant)),
+                ("Charter", "charter", lambda: self._charter(covenant)),
                 ("Diary", "year", lambda: self._diary(covenant)),
             ]
         elif covenant is not None:
-            chapters.append(("Charter", "lab_text", lambda: self._charter(covenant)))
+            chapters += [
+                ("Attributes", "key", lambda: self._attributes(covenant)),
+                ("Charter", "charter", lambda: self._charter(covenant)),
+            ]
         if covenant is None or covenant.detail == FULL:
             chapters.append(("People", "character", self._people))
         if covenant is not None and covenant.detail == FULL:
@@ -316,8 +322,9 @@ class CovenantPage(QWidget):
 
     # Chapters
 
-    def _charter(self, covenant: Covenant) -> QWidget:
-        """The description, Reputations, and the Boons beside the Hooks."""
+    def _attributes(self, covenant: Covenant) -> QWidget:
+        """Its arms, the description, Reputations, and the Boons beside
+        the Hooks."""
         p = self.p
         boons, hooks = cvs.boon_hook_points(covenant)
         balance = (
@@ -390,7 +397,25 @@ class CovenantPage(QWidget):
         for problem in problems:
             parts.append(text(problem, p["text-error"], wrap=True))
         parts.append(side_by_side(*columns, spacing=18))
-        parts += self._own_charter(covenant)
+        return scrolling_page(p, *parts)
+
+    def _charter(self, covenant: Covenant) -> QWidget:
+        """Its Charter of Covenant and clauses; then, for a full covenant,
+        the town charter of its Chartered Town Boon and the towns it
+        charters as a Charter Lord."""
+        p, saga = self.p, self.saga
+        parts: list[QWidget] = [
+            charter_section(saga, covenant, p, self.run),
+            clauses_section(
+                saga,
+                covenant,
+                p,
+                self.run,
+                lambda title, subtitle, markup: self.inspect(title, subtitle, markup),
+            ),
+        ]
+        if covenant.detail == FULL:
+            parts += self._own_charter(covenant)
         return scrolling_page(p, *parts)
 
     def _own_charter(self, covenant: Covenant) -> list[QWidget]:

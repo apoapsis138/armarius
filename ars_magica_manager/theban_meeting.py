@@ -20,13 +20,23 @@ from collections.abc import Mapping, Sequence
 from typing import Any
 
 from . import meeting as core
-from . import tribunals, world
+from . import storage, tribunals, world
 from .arts import ARTS
 from .form_spec import DialogField
 from .markup import escape
-from .models import Case, Character, Meeting, Saga, TreasuryEntry, Tribunal
+from .models import (
+    Background,
+    Case,
+    Character,
+    HermeticBackground,
+    Meeting,
+    Saga,
+    TreasuryEntry,
+    Tribunal,
+)
+from .models.world import SKETCH
 from .sheets import tribunal as tribunal_sheet
-from .tribunal_packages import data
+from .tribunal_packages import data, entries
 from .tribunal_packages.theban import (
     KEY,
     PHYLAI,
@@ -1352,6 +1362,834 @@ class Sentences(core.Step):
         )
 
 
+# -- the Apprentice Presentation (The Sundered Eagle pp. 28, 32-34) --
+
+#: How many Gifted children the form takes, and how many magi may give
+#: tokens to each. The book has 12 to 20 at the interviews (p. 32); the
+#: form records those the troupe's magi want.
+CHILD_SLOTS = 5
+BID_SLOTS = 3
+
+#: Delivering a Gifted child to the Council of Magistrates for the
+#: presentation earns a token (p. 28).
+DELIVERY_TOKENS = 1
+
+#: A Bonisagus may claim any child presented, by the Oath (p. 32).
+BONISAGUS = "house_bonisagus"
+
+#: What a child given is, on their sheet (as Hibernia's tithe names them).
+APPRENTICE = "Apprentice"
+
+
+def _tokens(entry: dict[str, Any] | None) -> int:
+    return int((entry or {}).get("tokens") or 0)
+
+
+def _shards(entry: dict[str, Any] | None) -> int:
+    return int((entry or {}).get("shards") or 0)
+
+
+def may_bid(saga: Saga, tribunal: Tribunal, magus: Character, year: int) -> bool:
+    """Whether the magus may give tokens to a child at the interviews: a
+    polites with a token and no shard, or a Bonisagus even with a shard,
+    since the Code trumps local custom (p. 32)."""
+    entry = entry_of(tribunal, magus.id)
+    if entry is None or is_metoikos(entry) or _ostracised(entry, year):
+        return False
+    if _tokens(entry) < 1:
+        return False
+    return not _shards(entry) or magus.hermetic.house == BONISAGUS
+
+
+def bidders(saga: Saga, tribunal: Tribunal, year: int) -> list[Character]:
+    return [
+        m for m in tribunal_magi(saga, tribunal) if may_bid(saga, tribunal, m, year)
+    ]
+
+
+def child_bids(values: Mapping[str, Any], index: int) -> list[tuple[str, int]]:
+    """The tokens given to child `index`, as (magus id, tokens), in order."""
+    found = []
+    for j in range(BID_SLOTS):
+        ident = values.get(f"bidder_{index}_{j}")
+        if ident:
+            found.append((str(ident), int(values.get(f"tokens_{index}_{j}") or 0)))
+    return found
+
+
+def claimants(saga: Saga, tribunal: Tribunal) -> list[Character]:
+    """The magi who may claim any child presented outright: every
+    Bonisagus, by the right the Oath of Hermes gives his House, whether or
+    not he gave her tokens and whatever his shards (p. 32)."""
+    return [m for m in tribunal_magi(saga, tribunal) if m.hermetic.house == BONISAGUS]
+
+
+def presented_master(
+    bids: list[tuple[str, int]], chosen: str | None, claimed: str | None = None
+) -> str | None:
+    """Who the child goes to: the Bonisagus who claimed her, whose claim
+    no choice of hers overrides (p. 32); or else the magus she chose; or
+    else the one who gave her the most tokens, the first entered on a tie,
+    since she usually picks the most generous (p. 33)."""
+    if claimed:
+        return claimed
+    if chosen:
+        return chosen
+    if not bids:
+        return None
+    most = max(tokens for _, tokens in bids)
+    return next(ident for ident, tokens in bids if tokens == most)
+
+
+def presentation_problem(
+    saga: Saga, tribunal: Tribunal, values: Mapping[str, Any]
+) -> str | None:
+    """Why the tokens can't be given as entered (None: they can)."""
+    spent: dict[str, int] = {}
+    for index in range(CHILD_SLOTS):
+        if not str(values.get(f"child_{index}") or "").strip():
+            continue
+        bids = child_bids(values, index)
+        idents = [ident for ident, _ in bids]
+        if len(idents) != len(set(idents)):
+            return "A magus gives his tokens to a child once: add them together."
+        for ident, tokens in bids:
+            if tokens < 1:
+                return "Each magus bidding gives a child at least one token."
+            spent[ident] = spent.get(ident, 0) + tokens
+        master = values.get(f"master_{index}")
+        claimed = values.get(f"claim_{index}")
+        if claimed and master and master != claimed:
+            return (
+                "A Bonisagus's claim stands by the Oath: leave her master to "
+                "him, or clear the claim."
+            )
+        if master and bids and master not in idents:
+            return (
+                "A child given tokens chooses among those who gave them; only "
+                "a child with none may be claimed by another magus."
+            )
+    for ident, tokens in spent.items():
+        held = _tokens(entry_of(tribunal, ident))
+        if tokens > held:
+            name = saga.character(ident)
+            return (
+                f"{name.name if name else 'A magus'} gives {tokens} tokens but "
+                f"holds {held}."
+            )
+    return None
+
+
+def _apprentice(
+    saga: Saga, name: str, age: int | None, master: Character, year: int, kept: int
+) -> Character:
+    """The child given, as a sketch character at her master's covenant."""
+    covenant = saga.covenant(master.covenant_id)
+    keeps = (
+        f" She keeps {kept} token{'' if kept == 1 else 's'}, to spend once a maga."
+        if kept
+        else ""
+    )
+    character = Character(
+        id=storage.generate_unique_id(name, [c.id for c in saga.characters]),
+        name=name,
+        type="companion",
+        covenant_id=master.covenant_id,
+        detail=SKETCH,
+        summary=f"A Gifted child, apprenticed to {master.name} at the Apprentice "
+        f"Presentation of {year}.{keeps}",
+        background=Background(
+            year_born=year - age if age is not None else None,
+            title_profession=APPRENTICE,
+        ),
+        hermetic=HermeticBackground(
+            parens=master.name,
+            covenant_of_apprenticeship=covenant.name if covenant else "",
+            age_of_apprenticeship=age,
+        ),
+    )
+    saga.characters.append(character)
+    return character
+
+
+def apprentices(tribunal: Tribunal) -> list[dict[str, Any]]:
+    """Every child given at a presentation: {"year", "name",
+    "character_id", "master_id", "tokens"} (the tokens she keeps)."""
+    return entries(tribunal, KEY, "apprentices")
+
+
+class ApprenticePresentation(core.Step):
+    """The Gifted children the Treasury Council found, interviewed for two
+    days before the meeting and presented at the Assembly. Each magus who
+    may (a polites with no shard, or any Bonisagus) gives tokens to the
+    children he wants; a child given tokens by one magus is his apprentice,
+    one given by several chooses, usually the most generous, and keeps the
+    tokens of her master, to spend once a maga; the others' tokens go back.
+    A child given none may be claimed by any magus present, and any child
+    by a Bonisagus, whose claim her choice doesn't override. Whoever
+    delivered a child earns a token. Once given, holding this again
+    changes only the note."""
+
+    #: The saga and Tribunal the form was last shown for, so `validate`
+    #: (which the core gives only the meeting) can count each bidder's
+    #: tokens.
+    _shown: tuple[Saga, Tribunal] | None = None
+
+    def _given(self, meeting: Meeting) -> list[dict[str, Any]] | None:
+        return _record(meeting).get("presentation")
+
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        self._shown = (saga, tribunal)
+        if self._given(meeting) is not None:
+            return [
+                DialogField(
+                    "given",
+                    "",
+                    "info",
+                    "The children are given: holding this again changes only the note.",
+                ),
+                core._note_field(meeting, self.key),
+            ]
+        year = _year(saga, meeting)
+        everyone = _options(tribunal_magi(saga, tribunal))
+        may = _options(bidders(saga, tribunal, year))
+        bonisagi = _options(claimants(saga, tribunal))
+        found = [
+            DialogField(
+                "intro",
+                "",
+                "info",
+                "Each child the troupe's magi interviewed, the tokens each "
+                "magus gave her, and who delivered her to the Council.",
+            )
+        ]
+        for i in range(CHILD_SLOTS):
+
+            def named(v: Mapping[str, Any], i: int = i) -> bool:
+                return bool(str(v.get(f"child_{i}") or "").strip())
+
+            def shown(v: Mapping[str, Any], i: int = i) -> bool:
+                return i == 0 or bool(str(v.get(f"child_{i - 1}") or "").strip())
+
+            found += [
+                DialogField(
+                    f"child_{i}",
+                    f"Gifted child {i + 1}",
+                    "text",
+                    "",
+                    placeholder="(none)" if i else "e.g. Eirene of Naxos",
+                    show_if=shown,
+                ),
+                DialogField(
+                    f"age_{i}",
+                    "  Age",
+                    "optint",
+                    None,
+                    show_if=named,
+                ),
+                DialogField(
+                    f"found_{i}",
+                    "  Delivered by",
+                    "select",
+                    None,
+                    options=everyone,
+                    allow_blank=True,
+                    placeholder="(the Treasury Council)",
+                    hint="A polites who delivers a Gifted child earns a token.",
+                    show_if=named,
+                ),
+            ]
+            for j in range(BID_SLOTS):
+
+                def bid_shown(v: Mapping[str, Any], i: int = i, j: int = j) -> bool:
+                    return named(v, i) and (
+                        j == 0 or bool(v.get(f"bidder_{i}_{j - 1}"))
+                    )
+
+                def bid_named(v: Mapping[str, Any], i: int = i, j: int = j) -> bool:
+                    return named(v, i) and bool(v.get(f"bidder_{i}_{j}"))
+
+                found += [
+                    DialogField(
+                        f"bidder_{i}_{j}",
+                        f"  Tokens from ({j + 1})",
+                        "select",
+                        None,
+                        options=may,
+                        allow_blank=True,
+                        placeholder="(no one)",
+                        hint="A polites with no shard, or any Bonisagus."
+                        if j == 0
+                        else "",
+                        show_if=bid_shown,
+                    ),
+                    DialogField(
+                        f"tokens_{i}_{j}",
+                        "    Tokens",
+                        "int",
+                        1,
+                        show_if=bid_named,
+                    ),
+                ]
+            if bonisagi:
+                found.append(
+                    DialogField(
+                        f"claim_{i}",
+                        "  Claimed by",
+                        "select",
+                        None,
+                        options=bonisagi,
+                        allow_blank=True,
+                        placeholder="(no Bonisagus)",
+                        hint="A Bonisagus may claim any child by the Oath, "
+                        "bid or no bid; her choice doesn't override him.",
+                        show_if=named,
+                    )
+                )
+            found.append(
+                DialogField(
+                    f"master_{i}",
+                    "  Her master",
+                    "select",
+                    None,
+                    options=everyone,
+                    allow_blank=True,
+                    placeholder="(her choice: the most tokens)",
+                    hint="She chooses among those who gave her tokens; one "
+                    "given none may be claimed by any magus, even one with a shard.",
+                    show_if=named,
+                )
+            )
+        found.append(core._note_field(meeting, self.key))
+        return found
+
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        if self._given(meeting) is not None:
+            return ""
+        lines = []
+        for i in range(CHILD_SLOTS):
+            name = str(values.get(f"child_{i}") or "").strip()
+            if not name:
+                continue
+            bids = child_bids(values, i)
+            master = saga.character(
+                presented_master(
+                    bids, values.get(f"master_{i}"), values.get(f"claim_{i}")
+                )
+            )
+            lines.append(
+                f"{escape(name)}: to {escape(master.name)}"
+                if master is not None
+                else f"{escape(name)}: unclaimed"
+            )
+        return "\n".join(lines)
+
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        core._keep_note(meeting, self.key, values)
+        if self._given(meeting) is not None:
+            return
+        year = _year(saga, meeting)
+        given: list[dict[str, Any]] = []
+        for i in range(CHILD_SLOTS):
+            name = str(values.get(f"child_{i}") or "").strip()
+            if not name:
+                continue
+            bids = child_bids(values, i)
+            kept: dict[str, Any] = {"name": name, "bids": [list(b) for b in bids]}
+            finder = values.get(f"found_{i}")
+            finder_entry = entry_of(tribunal, finder) if finder else None
+            if finder and not (finder_entry is not None and is_metoikos(finder_entry)):
+                _adjust(tribunal, finder, "tokens", DELIVERY_TOKENS)
+                kept["found_by"] = finder
+            master = saga.character(
+                presented_master(
+                    bids, values.get(f"master_{i}"), values.get(f"claim_{i}")
+                )
+            )
+            if master is not None:
+                tokens = dict(bids).get(master.id, 0)
+                if tokens:
+                    _adjust(tribunal, master.id, "tokens", -tokens)
+                apprentice = _apprentice(
+                    saga, name, values.get(f"age_{i}"), master, year, tokens
+                )
+                kept.update(
+                    master_id=master.id, tokens=tokens, character_id=apprentice.id
+                )
+                if values.get(f"claim_{i}") == master.id:
+                    kept["claimed"] = True
+                apprentices(tribunal).append(
+                    {
+                        "year": year,
+                        "name": name,
+                        "character_id": apprentice.id,
+                        "master_id": master.id,
+                        "tokens": tokens,
+                    }
+                )
+            given.append(kept)
+        _record(meeting)["presentation"] = given
+
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
+        for key, value in values.items():
+            if key.startswith("age_") and value is not None and value < 0:
+                return "An age can't be fewer than none."
+        if self._shown is None or self._given(meeting) is not None:
+            return None
+        return presentation_problem(*self._shown, values)
+
+    def _lines(self, saga: Saga, meeting: Meeting) -> list[str]:
+        found = []
+        for kept in self._given(meeting) or []:
+            master = saga.character(kept.get("master_id"))
+            if master is None:
+                found.append(f"{kept['name']}, unclaimed")
+                continue
+            tokens = int(kept.get("tokens") or 0)
+            with_tokens = (
+                f", keeping {tokens} token{'' if tokens == 1 else 's'}"
+                if tokens
+                else ""
+            )
+            claimed = ", claimed by the Oath" if kept.get("claimed") else ""
+            found.append(f"{kept['name']} to {master.name}{claimed}{with_tokens}")
+        return found
+
+    def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        return core._join(
+            *(escape(line) for line in self._lines(saga, meeting)),
+            core._note_text(meeting, self.key),
+        )
+
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        return (
+            "Who each child goes to, from the tokens given at the interviews.",
+            "Her master's tokens leave him and stay with her; the other "
+            "bidders keep theirs. Each child becomes a sketch character at "
+            "her master's covenant, and whoever delivered her earns a token.",
+        )
+
+    def save_label(self):
+        return "Present"
+
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        lines = self._lines(saga, meeting)
+        if not lines:
+            return "", ""
+        taken = sum(1 for g in self._given(meeting) or [] if g.get("master_id"))
+        return (
+            "At the Apprentice Presentation the Gifted children were given: "
+            + "; ".join(lines)
+            + ".",
+            f"{taken} apprentice{'' if taken == 1 else 's'}",
+        )
+
+
+# -- the conduct of archai (The Sundered Eagle p. 35) --
+
+#: How many complaints the form takes, and the fines a polites may propose.
+COMPLAINT_SLOTS = 3
+FINE_LEAST, FINE_MOST = 1, 7
+
+UPHELD, FINE_REJECTED, REJECTED = "upheld", "fine_rejected", "rejected"
+
+
+#: Besides each arche, the offices whose conduct may be examined: the
+#: polemarch, whom p. 35 names, and the archon, elected from among the
+#: archai (p. 35) and so himself an arche. The logothete is not one.
+SCRUTINISED_OFFICES = ("polemarch", "archon")
+
+
+def scrutinised(saga: Saga, tribunal: Tribunal) -> list[Character]:
+    """The magistrates whose conduct may be examined: each arche, the
+    archon (an arche too) and the polemarch (p. 35)."""
+    ids = [
+        o["holder_id"]
+        for o in archai(tribunal)
+        if o.get("holder_id")
+        and (is_arche(o) or o.get("office", "").casefold() in SCRUTINISED_OFFICES)
+    ]
+    return _named(saga, list(dict.fromkeys(ids)))
+
+
+class ConductOfArchai(core.Step):
+    """After the sentences, any polites may ask that an arche's (the
+    archon's among them) or the polemarch's conduct be examined, naming the fault and proposing a fine
+    of one to seven shards. The magistrate answers; one vote judges the
+    complaint, and if it is upheld another whether the fine is fit. Failing
+    to win or stop a conviction is no fault unless the neglect was
+    willful."""
+
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
+        for ident, shards in _record(meeting).pop("conduct", {}).get("fined", []):
+            _adjust(tribunal, ident, "shards", -shards)
+
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        magistrates = _options(scrutinised(saga, tribunal))
+        if not magistrates:
+            return [
+                DialogField(
+                    "none",
+                    "",
+                    "info",
+                    "No arche, archon or polemarch is recorded whose conduct "
+                    "to examine.",
+                ),
+                core._note_field(meeting, self.key),
+            ]
+        kept = (_record(meeting).get("conduct") or {}).get("complaints", [])
+        citizens = _options(politai(saga, tribunal, _year(saga, meeting)))
+        found: list[DialogField] = []
+        for n in range(COMPLAINT_SLOTS):
+            mine = kept[n] if n < len(kept) else {}
+
+            def made(v: Mapping[str, Any], n: int = n) -> bool:
+                return bool(v.get(f"against_{n}"))
+
+            def shown(v: Mapping[str, Any], n: int = n) -> bool:
+                return n == 0 or bool(v.get(f"against_{n - 1}"))
+
+            found += [
+                DialogField(
+                    f"against_{n}",
+                    f"Complaint {n + 1}: against",
+                    "select",
+                    mine.get("against"),
+                    options=magistrates,
+                    allow_blank=True,
+                    placeholder="(no complaint)",
+                    show_if=shown,
+                ),
+                DialogField(
+                    f"by_{n}",
+                    "  Brought by",
+                    "select",
+                    mine.get("by"),
+                    options=citizens,
+                    allow_blank=True,
+                    placeholder="(not recorded)",
+                    show_if=made,
+                ),
+                DialogField(
+                    f"fault_{n}",
+                    "  The fault",
+                    "text",
+                    mine.get("fault", ""),
+                    placeholder="e.g. a case poorly defended, a bribe, indolence",
+                    show_if=made,
+                ),
+                DialogField(
+                    f"fine_{n}",
+                    "  Fine proposed (shards)",
+                    "int",
+                    mine.get("fine", FINE_LEAST),
+                    hint="One to seven shards.",
+                    show_if=made,
+                ),
+                DialogField(
+                    f"outcome_{n}",
+                    "  The vote",
+                    "select",
+                    mine.get("outcome", UPHELD),
+                    options=[
+                        ("Upheld, and the fine: the shards given", UPHELD),
+                        ("Upheld, but the fine voted down: none given", FINE_REJECTED),
+                        ("Rejected", REJECTED),
+                    ],
+                    show_if=made,
+                ),
+            ]
+        found.append(core._note_field(meeting, self.key))
+        return found
+
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
+        for n in range(COMPLAINT_SLOTS):
+            against = values.get(f"against_{n}")
+            if not against:
+                continue
+            fine = values.get(f"fine_{n}") or 0
+            if not FINE_LEAST <= fine <= FINE_MOST:
+                return f"A fine is of {FINE_LEAST} to {FINE_MOST} shards."
+            if values.get(f"by_{n}") == against:
+                return "A magistrate can't bring a complaint against himself."
+        return None
+
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        self._undo(tribunal, meeting)
+        complaints: list[dict[str, Any]] = []
+        fined: list[tuple[str, int]] = []
+        for n in range(COMPLAINT_SLOTS):
+            against = values.get(f"against_{n}")
+            if not against:
+                continue
+            complaint = {
+                "against": against,
+                "by": values.get(f"by_{n}") or None,
+                "fault": values.get(f"fault_{n}", ""),
+                "fine": int(values.get(f"fine_{n}") or FINE_LEAST),
+                "outcome": values.get(f"outcome_{n}") or UPHELD,
+            }
+            complaints.append(complaint)
+            entry = entry_of(tribunal, against, create=True)
+            if complaint["outcome"] == UPHELD and entry and not is_metoikos(entry):
+                _adjust(tribunal, against, "shards", complaint["fine"])
+                fined.append((against, complaint["fine"]))
+        _record(meeting)["conduct"] = {"complaints": complaints, "fined": fined}
+        core._keep_note(meeting, self.key, values)
+
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        return (
+            "The magistrates whose conduct a polites asks to be examined.",
+            "A complaint upheld, with its fine, gives the magistrate the "
+            "shards proposed; one rejected, or whose fine is voted down, "
+            "gives none.",
+        )
+
+    def save_label(self):
+        return "Judge"
+
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        complaints = (_record(meeting).get("conduct") or {}).get("complaints", [])
+        parts = []
+        for complaint in complaints:
+            magus = saga.character(complaint["against"])
+            if magus is None:
+                continue
+            fault = f" ({complaint['fault']})" if complaint.get("fault") else ""
+            fine = complaint["fine"]
+            shards = f"{fine} shard{'' if fine == 1 else 's'}"
+            parts.append(
+                {
+                    UPHELD: f"a complaint against {magus.name}{fault} was upheld, "
+                    f"and {shards} given",
+                    FINE_REJECTED: f"a complaint against {magus.name}{fault} was "
+                    f"upheld, but the fine of {shards} voted down",
+                }.get(
+                    complaint["outcome"],
+                    f"a complaint against {magus.name}{fault} was rejected",
+                )
+            )
+        if not parts:
+            return "", ""
+        words = "On the conduct of the archai, " + "; ".join(parts) + "."
+        total = sum(shards for _, shards in _record(meeting)["conduct"]["fined"])
+        return words, f"{total} shards" if total else ""
+
+
+# -- the common vis sources (The Sundered Eagle pp. 28-30) --
+
+#: A source gathered for the Tribunal earns a token each Tribunal period;
+#: forgetting to harvest one is a shard (p. 28). The book's "one per
+#: Tribunal period" could as well mean one per magus however many sources
+#: he gathers; this app gives one per source, a judgement call.
+GATHER_TOKENS, NEGLECT_SHARDS = 1, 1
+
+#: How many more sources than are already recorded the form offers.
+SPARE_SOURCES = 3
+
+
+def common_sources(tribunal: Tribunal) -> list[dict[str, Any]]:
+    """The vis sources the polity holds in common, as last gathered:
+    {"name", "art", "gatherer_id"}."""
+    return entries(tribunal, KEY, "common_sources")
+
+
+class CommonVis(core.Step):
+    """The vis sources held in common by the Peripheral Code, gathered for
+    the Tribunal by magi the Treasury Council names. Each gatherer earns a
+    token for the period, and the vis goes into the Tribunal's coffers;
+    one who forgot to harvest his source is given a shard. The whole
+    Tribunal gathers some 50 pawns a year, Creo and Vim the most, half of
+    it spent on Longevity Rituals."""
+
+    def _undo(self, tribunal: Tribunal, meeting: Meeting) -> None:
+        held = _record(meeting).pop("common_vis", None)
+        if not held:
+            return
+        for ident, key, by in held.get("changes", []):
+            _adjust(tribunal, ident, key, -by)
+        ids = set(held.get("treasury_ids", []))
+        tribunal.treasury[:] = [e for e in tribunal.treasury if e.id not in ids]
+
+    def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        known = common_sources(tribunal)
+        held = (_record(meeting).get("common_vis") or {}).get("gathered", {})
+        citizens = _options(politai(saga, tribunal, _year(saga, meeting)))
+        found: list[DialogField] = []
+        for n in range(len(known) + SPARE_SOURCES):
+            source = known[n] if n < len(known) else {}
+            mine = held.get(str(n), {})
+
+            def named(v: Mapping[str, Any], n: int = n) -> bool:
+                return bool(str(v.get(f"source_{n}") or "").strip())
+
+            def shown(
+                v: Mapping[str, Any], n: int = n, first: int = len(known)
+            ) -> bool:
+                return n <= first or bool(str(v.get(f"source_{n - 1}") or "").strip())
+
+            found += [
+                DialogField(
+                    f"source_{n}",
+                    f"Common source {n + 1}",
+                    "text",
+                    source.get("name", ""),
+                    placeholder="e.g. the spring at the shrine of Apollon",
+                    show_if=shown,
+                ),
+                DialogField(
+                    f"art_{n}",
+                    "  Its Art",
+                    "select",
+                    source.get("art") or "Creo",
+                    options=[(art, art) for art in ARTS],
+                    show_if=named,
+                ),
+                DialogField(
+                    f"gatherer_{n}",
+                    "  Gathered by",
+                    "select",
+                    source.get("gatherer_id"),
+                    options=citizens,
+                    allow_blank=True,
+                    placeholder="(no one named)",
+                    hint="Named by the Treasury Council: a token for the period."
+                    if n == 0
+                    else "",
+                    show_if=named,
+                ),
+                DialogField(
+                    f"pawns_{n}",
+                    "  Pawns into the coffers",
+                    "optint",
+                    mine.get("pawns"),
+                    show_if=named,
+                ),
+                DialogField(
+                    f"neglected_{n}",
+                    "  Neglected: a shard, no token",
+                    "check",
+                    bool(mine.get("neglected")),
+                    show_if=lambda v, n=n: named(v, n) and bool(v.get(f"gatherer_{n}")),
+                ),
+            ]
+        found.append(core._note_field(meeting, self.key))
+        return found
+
+    def validate(self, meeting: Meeting, values: dict[str, Any]):
+        for key, value in values.items():
+            if key.startswith("pawns_") and value is not None and value < 0:
+                return "Pawns can't be fewer than none."
+        return None
+
+    def live(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        total = sum(
+            values.get(f"pawns_{n}") or 0
+            for n in range(len(common_sources(tribunal)) + SPARE_SOURCES)
+            if str(values.get(f"source_{n}") or "").strip()
+            and not values.get(f"neglected_{n}")
+        )
+        return f"{total} pawns into the Tribunal's coffers." if total else ""
+
+    def apply(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, values: dict[str, Any]
+    ):
+        slots = len(common_sources(tribunal)) + SPARE_SOURCES
+        self._undo(tribunal, meeting)
+        year = _year(saga, meeting)
+        sources: list[dict[str, Any]] = []
+        changes: list[tuple[str, str, int]] = []
+        treasury_ids: list[str] = []
+        gathered: dict[str, dict[str, Any]] = {}
+        for n in range(slots):
+            name = str(values.get(f"source_{n}") or "").strip()
+            if not name:
+                continue
+            art = values.get(f"art_{n}") or "Creo"
+            gatherer = values.get(f"gatherer_{n}") or None
+            neglected = bool(gatherer and values.get(f"neglected_{n}"))
+            entered = int(values.get(f"pawns_{n}") or 0)
+            pawns = 0 if neglected else entered
+            sources.append({"name": name, "art": art, "gatherer_id": gatherer})
+            gathered[str(len(sources) - 1)] = {"pawns": entered, "neglected": neglected}
+            entry = entry_of(tribunal, gatherer, create=True) if gatherer else None
+            if gatherer and entry is not None and not is_metoikos(entry):
+                key, by = (
+                    ("shards", NEGLECT_SHARDS)
+                    if neglected
+                    else ("tokens", GATHER_TOKENS)
+                )
+                _adjust(tribunal, gatherer, key, by)
+                changes.append((gatherer, key, by))
+            if pawns:
+                magus = saga.character(gatherer)
+                row = TreasuryEntry(
+                    "vis",
+                    pawns,
+                    art=art,
+                    who=magus.name if magus is not None else "",
+                    note=f"Common vis from {name}, to {year}",
+                )
+                tribunal.treasury.append(row)
+                treasury_ids.append(row.id)
+        common_sources(tribunal)[:] = sources
+        _record(meeting)["common_vis"] = {
+            "changes": changes,
+            "treasury_ids": treasury_ids,
+            "gathered": gathered,
+        }
+        core._keep_note(meeting, self.key, values)
+
+    def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        return (
+            "Each common source, its gatherer and the vis brought in.",
+            "A gatherer earns a token (a shard if he neglected it), and the "
+            "pawns go into the treasury; the sources are kept for the next "
+            "meeting.",
+        )
+
+    def save_label(self):
+        return "Gather"
+
+    def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
+        held = _record(meeting).get("common_vis")
+        if not held:
+            return "", ""
+        sources = common_sources(tribunal)
+        parts = []
+        for index, source in enumerate(sources):
+            mine = held.get("gathered", {}).get(str(index), {})
+            magus = saga.character(source.get("gatherer_id"))
+            who = f" by {magus.name}" if magus is not None else ""
+            if mine.get("neglected"):
+                parts.append(f"{source['name']} neglected{who}")
+            elif mine.get("pawns"):
+                parts.append(
+                    f"{source['name']}{who}, {mine['pawns']} pawns of {source['art']}"
+                )
+            elif magus is not None:
+                parts.append(f"{source['name']}{who}")
+        if not parts:
+            return "", ""
+        total = sum(
+            g.get("pawns", 0)
+            for g in held.get("gathered", {}).values()
+            if not g.get("neglected")
+        )
+        return (
+            "The common vis sources were gathered: " + "; ".join(parts) + ".",
+            f"{total} pawns" if total else "",
+        )
+
+
 # -- the Ceremony of Propitiation --
 
 #: The archon's Ritual at the lake costs eight pawns of Creo or Vim from
@@ -1514,3 +2352,11 @@ core.register_step(
 core.register_step(
     "propitiation", "The Ceremony of Propitiation", Propitiation, "closing"
 )
+core.register_step(
+    "apprentice_presentation",
+    "The Apprentice Presentation",
+    ApprenticePresentation,
+    "opening",
+)
+core.register_step("conduct_of_archai", "The conduct of archai", ConductOfArchai, "end")
+core.register_step("common_vis", "The common vis sources", CommonVis, "end")

@@ -29,6 +29,7 @@ from .... import (
     world,
 )
 from .... import covenant_build as cov_build
+from .... import covenant_charter as cc
 from .... import covenant_diary as cov_diary
 from .... import economics as eco
 from .... import inhabitants as inh
@@ -41,6 +42,7 @@ from ....boon_hook_text import (
 )
 from ....covenants import boon_hook_problems
 from ....forms import ahead as ahead_forms
+from ....forms import charter as charter_forms
 from ....forms import world as world_forms
 from ....forms.secrets import secrets_ops
 from ....markup import aligned, escape, markdown_text, problem
@@ -58,7 +60,9 @@ from ....neighbour_lists import KindTab
 from ....rules import covenfolk, library, realms
 from ....rules.realms import covenant_effective_aura
 from ....sections import (
+    CHARTER_SECTION,
     CHARTERED_TOWNS_SECTION,
+    CLAUSES_SECTION,
     COV_AHEAD_SECTION,
     COV_CHARTER_LORDS_SECTION,
     COV_CHARTER_TERMS_SECTION,
@@ -81,10 +85,11 @@ from .kind_tabs import KindTabsView
 class CovenantSheetView(KindTabsView):
     """The covenant sheet mounted into WorkspaceScreen's detail pane.
 
-    A permanent info panel (not inside any tab) above eight tabs mirroring
-    the covenant record sheet: Attributes, Inhabitants, Seasons (who has
-    planned what this season), Possessions, Economics, Library,
-    Diary, and Build (what its Build Points went on).
+    A permanent info panel (not inside any tab) above tabs mirroring the
+    covenant record sheet: Attributes, Charter (its Charter of Covenant,
+    and the Chartered Town Boon's town charter), Inhabitants, Seasons (who
+    has planned what this season), Possessions, Economics, Manors,
+    Library, Diary, and Build (what its Build Points went on).
 
     The panel's saga-level values (Saga, Storyguide, Current Season,
     Current Year) are inherited from the Saga and shown dimmed/read-only;
@@ -109,6 +114,7 @@ class CovenantSheetView(KindTabsView):
                 **town_charter.covenant_charter_ops(saga, covenant),
                 **manors.covenant_ops(saga, covenant),
             }
+        self.core_ops.update(charter_forms.charter_ops(saga, covenant))
         self.core_ops.update(secrets_ops(covenant))
         self._register_refreshers()
 
@@ -195,11 +201,13 @@ class CovenantSheetView(KindTabsView):
                 yield self._tab(
                     "Overview", "tab-cov-overview", self._scrolling(self._overview_tab)
                 )
+                yield self._tab("Charter", "tab-cov-charter", self._charter_tab)
                 yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
                 yield from self._secrets_tab(self.covenant)
             return
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Attributes", "tab-cov-attributes", self._attributes_tab)
+            yield self._tab("Charter", "tab-cov-charter", self._charter_tab)
             yield self._tab("Inhabitants", "tab-cov-inhabitants", self._inhabitants_tab)
             yield self._tab("Seasons", "tab-cov-seasons", self._seasons_tab)
             yield self._tab("Possessions", "tab-cov-possessions", self._possessions_tab)
@@ -322,8 +330,62 @@ class CovenantSheetView(KindTabsView):
                             id="cov-hooks-list",
                             group="bh",
                         )
-                yield from self._charter_sections()
             yield DetailsPanel(self._bh_info_text(None), id="cov-bh-info")
+
+    def _charter_tab(self) -> ComposeResult:
+        """The covenant's Charter of Covenant: its name, when sworn, who
+        sealed it and its preamble; its clauses, grouped by the charter's
+        sections; then, for the Chartered Town Boon and the Charter Lord
+        Hook, its town charter; the chosen clause's details below."""
+        saga, covenant = self.saga, self.covenant
+        own = (CHARTER_SECTION, CLAUSES_SECTION)
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with SheetSection(
+                    title=self._titled(
+                        CHARTER_SECTION,
+                        CHARTER_SECTION,
+                        lambda: escape(cc.charter_title(cc.charter_of(covenant))),
+                    ),
+                    id=CHARTER_SECTION,
+                ):
+                    yield self._static(
+                        own,
+                        lambda: cc.charter_text(saga, covenant),
+                        id="cov-charter-text",
+                    )
+                with SheetSection(
+                    title=self._titled(
+                        CLAUSES_SECTION,
+                        CLAUSES_SECTION,
+                        lambda: cc.clauses_title(cc.charter_of(covenant)),
+                    ),
+                    id=CLAUSES_SECTION,
+                ):
+                    yield TableHeader(cc.table_header())
+                    yield self._list(
+                        CLAUSES_SECTION,
+                        lambda: cc.rows(cc.charter_of(covenant)),
+                        id="cov-clauses-list",
+                    )
+                if not self.sketch:
+                    yield from self._charter_sections()
+            yield self._panel(
+                own,
+                lambda: cc.info(
+                    cc.charter_of(covenant),
+                    self.section_row(CLAUSES_SECTION),
+                    wide=True,
+                ),
+                id="cov-charter-info",
+            )
+        # Who may seal it follows the covenant's magi.
+        self._on_refresh_matching(
+            lambda s: s.startswith("section-inh-") or s == "section-cov-info",
+            lambda: self.query_one("#cov-charter-text", Static).update(
+                cc.charter_text(saga, covenant)
+            ),
+        )
 
     def _charter_sections(self) -> ComposeResult:
         """The covenant's own charter (the Chartered Town Boon): its lords
@@ -803,6 +865,12 @@ class CovenantSheetView(KindTabsView):
                 self.query_one("#cov-seasons-info", Static).update(
                     ahead.detail_text(self.saga, found[index])
                 )
+            return
+        if list_id == "cov-clauses-list":
+            event.stop()
+            self.query_one("#cov-charter-info", Static).update(
+                cc.info(cc.charter_of(self.covenant), event.data_index, wide=True)
+            )
             return
         if list_id == "cov-diary-list":
             event.stop()
