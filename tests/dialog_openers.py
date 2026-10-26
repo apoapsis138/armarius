@@ -45,6 +45,8 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
+from ars_magica_manager.rules import divine_state as ds
+from ars_magica_manager.rules import mysticism as my
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
 from ars_magica_manager.tui import screens as scr
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -1414,6 +1416,17 @@ OPENERS: dict[str, Opener] = {
     ),
     # Holy influence and tempers (RoP: The Divine).
     "holy influence": Opener("character", lambda ws: ws.action_holy_influence()),
+    # Mystic paths, God's aid, the Font and the Commanding Aura.
+    "mystic path": Opener("character", lambda ws: _open_mystic(ws, "path")),
+    "spiritual path": Opener("character", lambda ws: _open_mystic(ws, "spiritual")),
+    "monistic revelation": Opener(
+        "character", lambda ws: _open_mystic(ws, "revelation")
+    ),
+    "invoke god's aid": Opener("character", lambda ws: _open_mystic(ws, "aid")),
+    "font of knowledge": Opener("character", lambda ws: _open_mystic(ws, "font")),
+    "commanding aura": Opener("character", lambda ws: _open_mystic(ws, "aura")),
+    # House Verditius's Hubris and vendettas.
+    "hubris": Opener("character", lambda ws: _open_hubris(ws)),
 }
 
 
@@ -1633,3 +1646,53 @@ def _open_faerie(ws, which: str) -> None:
         ws.action_faerie_bargain()
     else:
         ws.action_faerie_offer()
+
+
+def _open_mystic(ws, which: str) -> None:
+    """A holy life's More forms on the magus on show, made Pious +3 with
+    Sense Holiness and Unholiness and Confidence to spend: a contemplative
+    on a path to Premonitions, a monist after an Ascent, the Font of
+    Knowledge, or an archbishop."""
+    character = ws.selected_character
+    if not any(t.name == "Pious" for t in character.personality_traits):
+        character.personality_traits.append(ScoredTrait("Pious", 3))
+    if not any(a.name == "Sense Holiness and Unholiness" for a in character.abilities):
+        character.abilities.append(
+            Ability("Sense Holiness and Unholiness", "Supernatural", xp=5)
+        )
+    character.background.confidence_points = max(
+        3, character.background.confidence_points
+    )
+    if which == "path":
+        ws.action_mystic_path()
+    elif which == "spiritual":
+        ds.set_path(character, my.CONTEMPLATIVE)
+        if my.find_path(character, "Premonitions") is None:
+            my.begin(character, "Premonitions", "minor_holy")
+        ws.action_spiritual_path()
+    elif which == "revelation":
+        ds.set_path(character, my.MONISTIC)
+        if not ds.ascents(character):
+            ds.note_ascent(character)
+        ws.action_monistic_revelation()
+    elif which == "aid":
+        ws.action_gods_aid()
+    elif which == "font":
+        if not any(a.name == "Font of Knowledge" for a in character.abilities):
+            character.abilities.append(
+                Ability("Font of Knowledge", "Supernatural", xp=5)
+            )
+        ws.action_font_of_knowledge()
+    else:
+        character.background.church_rank = "Archbishop"
+        ws.action_commanding_aura()
+
+
+def _open_hubris(ws) -> None:
+    """More's Hubris on the magus on show, given the Flaw and Hubris 1."""
+    character = ws.selected_character
+    if VirtueFlawInstance("vf_hubris") not in character.virtues_flaws:
+        character.virtues_flaws.append(VirtueFlawInstance("vf_hubris"))
+    if not any(t.name == "Hubris" for t in character.personality_traits):
+        character.personality_traits.append(ScoredTrait("Hubris", 1))
+    ws.action_verditius_hubris()

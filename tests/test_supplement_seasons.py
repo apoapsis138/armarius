@@ -33,6 +33,8 @@ def test_every_supplement_story_has_its_activities():
         "931",
         "AM-2",
         "FAITH-1",
+        "FAITH-2",
+        "MOH",
     }
     assert all(a.key in rules.ACTIVITIES for a in sup.ACTIVITIES)
     assert list(rules.ACTIVITIES)[-1] == rules.OTHER

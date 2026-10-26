@@ -395,6 +395,16 @@ def settled(meeting: Meeting, case: Case) -> bool:
     return bool((debate_of(meeting, case) or {}).get("settled"))
 
 
+def certamen_winner(meeting: Meeting, case: Case) -> str | None:
+    """Who won the certamen fought in the place of `case`'s debate (FOR
+    the prosecution, AGAINST the defence), which binds the case with no
+    vote (HoH: Societates p. 92); None when it was not heard so."""
+    held_debate = debate_of(meeting, case) or {}
+    if held_debate.get("heard_by") != debate.BY_CERTAMEN:
+        return None
+    return held_debate.get("certamen") or None
+
+
 def strength(meeting: Meeting, case: Case) -> tuple[str | None, int]:
     """Who won the debate (FOR the prosecution or proposer, AGAINST the
     defence, None for none yet or a tie) and its Argument Strength,
@@ -408,7 +418,9 @@ def strength(meeting: Meeting, case: Case) -> tuple[str | None, int]:
     side = FOR if lost[0] < lost[1] else AGAINST
     margin = abs(lost[0] - lost[1])
     if case.kind == "motion" and side == FOR:
-        margin += debate.PROPOSALS.get(held_debate.get("proposal", ""), 0)
+        margin += debate.proposal_penalty(
+            held_debate.get("proposal", ""), held_debate.get("forum", debate.LOCAL)
+        )
     return (side, margin) if margin > 0 else (None, 0)
 
 
@@ -1033,6 +1045,14 @@ def _skill(value: str) -> str:
     return debate.ABLE if value in (ADVOCATE, QUAESITOR) else debate.MIDDLING
 
 
+def _between_magi(saga: Saga, case: Case) -> bool:
+    """Whether a case is brought by one magus of the saga against another:
+    a personal charge, which certamen may decide (HoH:S p. 92)."""
+    magi = {c.name.strip().casefold() for c in saga.characters if c.type == "magus"}
+    by, on = case.brought_by.strip().casefold(), case.against.strip().casefold()
+    return by in magi and on in magi and by != on
+
+
 class Hearing(Step):
     """A charge or appeal debated between its prosecutor and defender, or
     a motion between one who speaks for it and one against: the speakers
@@ -1047,11 +1067,27 @@ class Hearing(Step):
         title = f"Motion: {case.title}" if motion else case.title
         super().__init__(f"case:{case.id}", title, day)
         self.case = case
+        #: Why certamen can't take the debate's place ("": it may), as the
+        #: form last worked it out.
+        self.certamen_bar = debate.binding_certamen_bar(
+            case.kind, case.charge, between_magi=True
+        )
 
     def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         case = self.case
         motion = case.kind == "motion"
         kept = debate_of(meeting, case) or {}
+        self.certamen_bar = debate.binding_certamen_bar(
+            case.kind, case.charge, between_magi=_between_magi(saga, case)
+        )
+        heard_by = {
+            key: label
+            for key, label in debate.HEARD_BY.items()
+            if key != debate.BY_CERTAMEN or not self.certamen_bar
+        }
+        if kept.get("heard_by") == debate.BY_CERTAMEN:
+            # A hearing already decided by certamen keeps its choice.
+            heard_by[debate.BY_CERTAMEN] = debate.HEARD_BY[debate.BY_CERTAMEN]
         skills = kept.get("skills") or ["", ""]
         found: list[DialogField] = []
         if not motion:
@@ -1066,8 +1102,41 @@ class Hearing(Step):
                 )
             )
 
+        if not motion:
+            found += [
+                DialogField(
+                    "heard_by",
+                    "Heard by",
+                    "select",
+                    kept.get("heard_by") or debate.BY_DEBATE,
+                    options=[(label, key) for key, label in heard_by.items()],
+                    required=True,
+                    hint=(
+                        "Certamen in the debate's place binds a personal charge "
+                        "between two magi, however persuasive the loser"
+                        if not self.certamen_bar
+                        else "Not certamen in its place: " + escape(self.certamen_bar)
+                    )
+                    + " On one point of a case, certamen doesn't win the vote: "
+                    "enter the Fatigue levels each lost.",
+                    show_if=lambda v: not v.get("settled"),
+                ),
+                DialogField(
+                    "certamen",
+                    "Certamen won by",
+                    "select",
+                    kept.get("certamen") or None,
+                    options=[("The prosecution", FOR), ("The defence", AGAINST)],
+                    show_if=lambda v: (
+                        not v.get("settled") and v.get("heard_by") == debate.BY_CERTAMEN
+                    ),
+                ),
+            ]
+
         def debated(values: dict[str, Any]) -> bool:
-            return not values.get("settled")
+            return not values.get("settled") and (
+                values.get("heard_by") != debate.BY_CERTAMEN
+            )
 
         for index, (side, key, label) in enumerate(
             (
@@ -1107,6 +1176,18 @@ class Hearing(Step):
                         debated(v) and v.get(key) in lacking
                     ),
                 ),
+                DialogField(
+                    f"thesis_{key}",
+                    f"{label}: argues",
+                    "select",
+                    (kept.get("theses") or [debate.GOOD_FAITH] * 2)[index]
+                    or debate.GOOD_FAITH,
+                    options=[(words, value) for value, words in debate.THESES.items()],
+                    hint="A flawed or despised thesis starts the debate levels "
+                    "down; one argued knowing it false loses the speaker's "
+                    "Truthful Trait from each Defence Total.",
+                    show_if=debated,
+                ),
             ]
         if motion:
             found.append(
@@ -1119,6 +1200,21 @@ class Hearing(Step):
                     required=True,
                     hint="An Addition costs it 1 Argument Strength, an "
                     "Alteration of the Code 3.",
+                )
+            )
+            found.append(
+                DialogField(
+                    "forum",
+                    "Changes",
+                    "select",
+                    kept.get("forum") or debate.LOCAL,
+                    options=[
+                        (words, value)
+                        for value, words in debate.PROPOSAL_FORUMS.items()
+                    ],
+                    required=True,
+                    hint="A regional Tribunal changes only its Peripheral Code, "
+                    "but may recommend the proposal to the next Grand Tribunal.",
                 )
             )
         entered = kept.get("entered") and not kept.get("settled")
@@ -1148,7 +1244,8 @@ class Hearing(Step):
                 "Levels lost (for)",
                 "optint",
                 kept.get("lost", [None, None])[0] if entered else None,
-                hint="Leave both blank to roll the debate.",
+                hint="Leave both blank to roll the debate; for certamen on "
+                "one point, the Fatigue levels each lost in it.",
                 show_if=debated,
             ),
             DialogField(
@@ -1164,6 +1261,16 @@ class Hearing(Step):
     def validate(self, meeting: Meeting, values: dict[str, Any]):
         if values.get("settled"):
             return None
+        heard_by = values.get("heard_by") or debate.BY_DEBATE
+        if heard_by == debate.BY_CERTAMEN:
+            kept = debate_of(meeting, self.case) or {}
+            if self.certamen_bar and kept.get("heard_by") != debate.BY_CERTAMEN:
+                return self.certamen_bar
+            if values.get("certamen") not in (FOR, AGAINST):
+                return "Say who won the certamen."
+            return None
+        if heard_by == debate.ON_A_POINT and values.get("lost_for") is None:
+            return "Enter the Fatigue levels each side lost in the certamen."
         if not 1 <= (values.get("rounds") or 0) <= debate.MAX_ROUNDS:
             return f"A debate runs 1 to {debate.MAX_ROUNDS} rounds."
         entered = [values.get("lost_for"), values.get("lost_against")]
@@ -1195,9 +1302,24 @@ class Hearing(Step):
             "rounds": values.get("rounds") or debate.DEFAULT_ROUNDS,
             "defence_testimony": defence,
             "proposal": values.get("proposal", ""),
+            "forum": values.get("forum") or debate.LOCAL,
+            "heard_by": values.get("heard_by") or debate.BY_DEBATE,
+            "theses": [
+                values.get("thesis_prosecutor") or debate.GOOD_FAITH,
+                values.get("thesis_defender") or debate.GOOD_FAITH,
+            ],
         }
         if values.get("settled"):
             record |= {"settled": True, "lost": [0, 0], "entered": False, "lines": []}
+            record["heard_by"] = debate.BY_DEBATE
+            meeting.get("votes", {}).pop(case.id, None)
+        elif record["heard_by"] == debate.BY_CERTAMEN:
+            record |= {
+                "certamen": values.get("certamen"),
+                "lost": [0, 0],
+                "entered": False,
+                "lines": [],
+            }
             meeting.get("votes", {}).pop(case.id, None)
         elif values.get("lost_for") is not None:
             record |= {
@@ -1207,17 +1329,54 @@ class Hearing(Step):
             }
         else:
             sides = tuple(
-                debate.debater(speaker_name(saga, value), saga.character(value), skill)
-                for value, skill in zip(speakers, skills, strict=True)
+                debate.arguing(
+                    debate.debater(
+                        speaker_name(saga, value), saga.character(value), skill
+                    ),
+                    thesis,
+                    saga.character(value),
+                )
+                for value, skill, thesis in zip(
+                    speakers, skills, record["theses"], strict=True
+                )
             )
             testimony = (
                 [debate.testimony_bonus(e) for e in _lines(case.evidence)],
                 [debate.testimony_bonus(e) for e in _lines(defence)],
             )
-            held = debate.run((sides[0], sides[1]), testimony, record["rounds"], rng())
+            held = debate.run(
+                (sides[0], sides[1]),
+                testimony,
+                record["rounds"],
+                rng(),
+                panel=self._panel(saga, tribunal, meeting, speakers, skills, record),
+            )
             record |= {"lost": held.lost, "entered": False, "lines": held.lines}
         meeting.setdefault("debates", {})[case.id] = record
         _keep_note(meeting, self.key, values)
+
+    def _panel(
+        self,
+        saga: Saga,
+        tribunal: Tribunal,
+        meeting: Meeting,
+        speakers: list[str],
+        skills: list[str],
+        record: dict[str, Any],
+    ) -> list[debate.Debater] | None:
+        """A motion opposed by the Tribunal itself: the magi present but its
+        proposer, who question it in turn, a different one each round
+        (HoH: Societates p. 92), each with no scores written down at the
+        Tribunal's skill; None for any other hearing, or with no one else
+        present."""
+        if self.case.kind != "motion" or speakers[1] != THE_TRIBUNAL:
+            return None
+        panel = [
+            debate.arguing(debate.debater(m.name, m, skills[1]), record["theses"][1], m)
+            for m, _c in magi_present(saga, tribunal, meeting)
+            if m.id != speakers[0]
+        ]
+        return panel or None
 
     def text(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         # The details panel names the step: the case's own heading goes.
@@ -1230,9 +1389,16 @@ class Hearing(Step):
 
     def guide(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         motion = self.case.kind == "motion"
+        certamen = (
+            ""
+            if motion
+            else " Certamen in the debate's place decides a personal charge "
+            "between two magi with no vote (not an appeal, nor a violation of "
+            "the Code: DE p. 230)."
+        )
         cost = (
             " A motion's proposer loses 1 of it for an Addition to the Code, "
-            "3 for an Alteration."
+            "3 for an Alteration, and 1 more at the Grand Tribunal."
             if motion
             else ""
         )
@@ -1250,11 +1416,13 @@ class Hearing(Step):
             "Evidence backs the prosecution and the Defence testimony the "
             "defence, each used once. The side that loses fewer levels wins, "
             "and the difference is its Argument Strength, which sways the "
-            "undecided votes at the vote." + cost,
+            "undecided votes at the vote. A thesis argued in bad faith or "
+            "despised starts behind, and a motion the Tribunal opposes is "
+            "questioned by a different magus present each round." + cost,
             "The speakers' own scores are rolled; one with none written down "
             "debates at the skill you give (Middling, Able or Formidable). "
             "More rounds give the better speaker more chances. Entering both "
-            "levels lost replaces the roll." + settle,
+            "levels lost replaces the roll." + settle + certamen,
         )
 
     def minutes(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
@@ -1264,6 +1432,15 @@ class Hearing(Step):
                 f"{case.title} was settled before the Presiding Quaesitor at "
                 "the private hearing, and not heard in the hall.",
                 "settled",
+            )
+        won = certamen_winner(meeting, case)
+        if won is not None:
+            winner = case.prosecutor if won == FOR else case.defender
+            winner = winner or ("The prosecution" if won == FOR else "The defence")
+            return (
+                f"{case.title} was decided by certamen in the place of a "
+                f"debate, which {winner} won; its result binds the case.",
+                "by certamen",
             )
         side, margin = strength(meeting, case)
         words = (
@@ -1276,6 +1453,12 @@ class Hearing(Step):
             words += f" {winner} carried the hall ({debate.sway(margin)[0]})."
         else:
             words += " Neither carried the hall."
+        forum = (debate_of(meeting, case) or {}).get("forum")
+        if case.kind == "motion" and forum == debate.RECOMMENDED:
+            words += (
+                " If carried, it is recommended to the Grand Tribunal of "
+                f"{next_grand_tribunal(int(meeting.get('year') or saga.current_year))}."
+            )
         lost = (debate_of(meeting, case) or {}).get("lost", [0, 0])
         return words, f"levels {lost[0]}–{lost[1]}"
 
@@ -1299,6 +1482,14 @@ def debate_text(meeting: Meeting, case: Case) -> str:
     if held_debate.get("settled"):
         return (
             "[$label]Settled at the private hearing:[/] neither debated nor voted on."
+        )
+    won = certamen_winner(meeting, case)
+    if won is not None:
+        winner = case.prosecutor if won == FOR else case.defender
+        winner = winner or ("the prosecution" if won == FOR else "the defence")
+        return (
+            f"[$label]Decided by certamen:[/] {escape(winner)} won; the result "
+            "binds the case, with no vote."
         )
     lost = held_debate.get("lost", [0, 0])
     sides = f"{case.prosecutor or 'For'} lost {lost[0]}, {case.defender or 'against'} {lost[1]}"
@@ -1731,9 +1922,12 @@ class Rulings(Step):
         for c in cases:
             kept = ruling_of(meeting, c)
             short = _short(c.title)
+            won = certamen_winner(meeting, c)
             start = (
                 "Settled at the private hearing."
                 if settled(meeting, c)
+                else f"Decided by certamen for the {'prosecution' if won == FOR else 'defence'}."
+                if won is not None
                 else vote_outcome(meeting, c)
             )
             found += [
@@ -2165,6 +2359,15 @@ def grand_tribunal_year(year: int) -> bool:
     return (year - GRAND_TRIBUNAL_YEAR) % GRAND_TRIBUNAL_EVERY == 0
 
 
+def next_grand_tribunal(year: int) -> int:
+    """The first Grand Tribunal after `year` (the year itself excluded)."""
+    return (
+        year
+        + GRAND_TRIBUNAL_EVERY
+        - (year - GRAND_TRIBUNAL_YEAR) % GRAND_TRIBUNAL_EVERY
+    )
+
+
 def _next(tribunal: Tribunal, meeting: Meeting) -> int:
     """The next meeting's year: its interval on, a year earlier if that is
     a Grand Tribunal's year and the Tribunal's customs say so."""
@@ -2226,7 +2429,7 @@ def steps(tribunal: Tribunal, meeting: Meeting) -> list[Step]:
     )
     for case in cases:
         found.append(Hearing(case, day_of(meeting, case)))
-        if not settled(meeting, case):
+        if not settled(meeting, case) and certamen_winner(meeting, case) is None:
             found.append(Vote(case, day_of(meeting, case)))
     found += [
         *added["end"],
@@ -2820,6 +3023,8 @@ def ops(saga: Saga, tribunal: Tribunal) -> dict[str, SectionOps]:
 # The packages' own steps register themselves with the meeting.
 from . import (  # noqa: F401
     hibernia_meeting,
+    normandy_meeting,
+    provence_meeting,
     rhine_meeting,
     theban_meeting,
     transylvania_meeting,

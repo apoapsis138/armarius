@@ -58,6 +58,13 @@ class Combatant:
     resistance: int = 0
     wounds: Wounds = field(default_factory=Wounds)
     fatigue_level: FatigueLevel = "fresh"
+    #: Invisible: how clear the signs that betray it are (a key of
+    #: rules.magic_combat.CLARITIES); "" when it can be seen.
+    invisible: str = ""
+    #: Invisible: it fights with a non-magical weapon picked up after
+    #: turning invisible, which Magic Resistance doesn't keep out (older
+    #: saves load without one).
+    weapon_after_invisible: bool = False
     #: Why it no longer fights ("Disengaged", "Fled"); "" while it does.
     out: str = ""
     id: str = field(default_factory=new_instance_id)
@@ -166,6 +173,8 @@ class Fight:
     grips: list[Grip] = field(default_factory=list)
     #: Each group's successful splits this round, by its unit id.
     splits: dict[str, int] = field(default_factory=dict)
+    #: The units that have located each invisible combatant, by its id.
+    located: dict[str, list[str]] = field(default_factory=dict)
     log: list[FightEntry] = field(default_factory=list)
     #: How it ended ("The Covenant win the fight"); "" while it goes on.
     over: str = ""
@@ -190,6 +199,9 @@ class Fight:
             }
         d["disengage_tries"] = {
             str(k): int(v) for k, v in (d.get("disengage_tries") or {}).items()
+        }
+        d["located"] = {
+            str(k): [str(x) for x in v] for k, v in (d.get("located") or {}).items()
         }
         return cls(**known_fields(cls, d))
 

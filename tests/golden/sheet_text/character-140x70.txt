@@ -379,8 +379,8 @@
       The tradition's book describes no bond.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Casting
-                                                                                                      ▇▇
+    ▼ Casting                                                                                         ▁▁
+
       Rune script
       Fehu        4
       Each adds: Stamina +0, aura (Magic 1) +1.

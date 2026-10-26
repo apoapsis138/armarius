@@ -40,7 +40,7 @@ from .models import (
     FightSide,
     Saga,
 )
-from .rules import casting_virtues, combat_groups, derived
+from .rules import casting_virtues, combat_groups, derived, magic_combat, penetration
 from .rules import fight as rules
 
 SOURCE = rules.SOURCE
@@ -348,10 +348,37 @@ def _stance_fields(
             hint="A shield grog: while it stands, the one it defends can't be "
             "struck (DE p. 397).",
         ),
+        DialogField(
+            "invisible",
+            "Invisible",
+            "select",
+            v.invisible,
+            options=[
+                ("Visible", ""),
+                *((f"{c.label}: {c.examples}", c.key) for c in magic_combat.CLARITIES),
+            ],
+            hint="How clear the signs that betray it are: they set its bonuses, "
+            "and foes must locate it to strike it (HoH:S pp. 32-33).",
+        ),
+        DialogField(
+            "weapon_after_invisible",
+            "Weapon picked up after turning invisible",
+            "check",
+            v.weapon_after_invisible,
+            show_if=lambda values: bool(values.get("invisible")),
+            hint="A non-magical weapon picked up once invisible gets through "
+            "Magic Resistance; the weapon it turned invisible with, or its "
+            "touch, doesn't (HoH:S p. 32).",
+        ),
     ]
 
 
 def _write_stance(combatant: Combatant, values: dict[str, Any]) -> None:
+    signs = str(values.get("invisible") or "")
+    combatant.invisible = signs if signs in magic_combat.CLARITY_BY_KEY else ""
+    combatant.weapon_after_invisible = bool(
+        combatant.invisible and values.get("weapon_after_invisible")
+    )
     combatant.mounted = bool(values.get("mounted"))
     combatant.ride = max(0, int(values.get("ride") or 0))
     combatant.resistance = max(0, int(values.get("resistance") or 0))
@@ -950,6 +977,55 @@ def _magic_fields(saga: Saga, who: rules.Unit | None) -> list[DialogField]:
             else []
         ),
         DialogField(
+            "indirect",
+            "Indirect (aimed)",
+            "check",
+            False,
+            show_if=lambda v: v.get("action") in (rules.CAST, rules.DEVICE),
+            hint="It moves or makes something mundane that strikes: Magic "
+            "Resistance doesn't stop it, but it is aimed like a missile (DE p. "
+            "223). The spells HoH:S p. 30 names are indirect anyway.",
+        ),
+        DialogField(
+            "aim_steps",
+            "Size steps",
+            "int",
+            0,
+            show_if=lambda v: (
+                v.get("action") in (rules.CAST, rules.DEVICE)
+                and bool(v.get("indirect"))
+            ),
+            hint="+6 to the aim for each step past a basic Individual (DE p. 223).",
+        ),
+        DialogField(
+            "arcane",
+            "Arcane Connection",
+            "select",
+            None,
+            options=pairs(penetration.ARCANE_CONNECTIONS),
+            allow_blank=True,
+            placeholder="(none)",
+            show_if=casting,
+            hint="Adds to the Penetration multiplier by how long it lasts (DE p. 219).",
+        ),
+        DialogField(
+            "named",
+            "Knows the target's name",
+            "check",
+            False,
+            show_if=lambda v: casting(v) and bool(v.get("arcane")),
+            hint="A nickname or birth name: +1 to the multiplier (DE p. 220; "
+            "HoH:S p. 27).",
+        ),
+        DialogField(
+            "symbol",
+            "Symbolic representation",
+            "check",
+            False,
+            show_if=lambda v: casting(v) and bool(v.get("arcane")),
+            hint="An image or model the caster made: +2 to the multiplier.",
+        ),
+        DialogField(
             "spell_damage",
             "Damage",
             "optint",
@@ -988,6 +1064,9 @@ ACTION_WORDS: dict[str, str] = {
     "short of the level by 10 or less still casts it, for a Fatigue level.",
     rules.DEVICE: "Used at Quickness + stress die, with no Fatigue; its "
     "Penetration is what it was enchanted with.",
+    rules.LOCATE: "Spends the round searching: Perception + Awareness against "
+    "the invisible foe's Dexterity + Stealth, and beating it finds him so he "
+    "may be struck.",
     rules.DISENGAGE: "A Defence Total against each foe who struck it last "
     "round; +3 for each try after the first.",
     rules.WAIT: "Holds its action this turn.",
@@ -1017,6 +1096,9 @@ def blow_live(saga: Saga, fight: Fight, values: dict[str, Any]) -> str:
     lines.append(f"[i]{ACTION_WORDS.get(action, '')}[/]")
     if target is None or action in (rules.DISENGAGE, rules.WAIT):
         return "\n".join(lines)
+    if action == rules.LOCATE:
+        lines += _locate_lines(who, target)
+        return "\n".join(lines)
     if action in (rules.CAST, rules.DEVICE):
         lines += _magic_lines(saga, fight, who, target, action, values)
         return "\n".join(lines)
@@ -1045,6 +1127,21 @@ def blow_live(saga: Saga, fight: Fight, values: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _locate_lines(who: rules.Unit, target: rules.Unit) -> list[str]:
+    """The inspector's lines for Locate: the search against the hiding
+    (HoH:S p. 32)."""
+    signs = target.vanguard.signs()
+    if signs is None:
+        return [f"{escape(target.name)} isn't invisible."]
+    seek = magic_combat.locate_base(who.vanguard.holder())
+    hide = magic_combat.hide_base(target.vanguard.holder(), signs)
+    return [
+        f"Perception + Awareness {int(seek.total):+d} + stress die against "
+        f"Dexterity + Stealth {int(hide.total):+d} (+{signs.stealth} for "
+        f"{signs.label} signs) + stress die."
+    ]
+
+
 def blow_of(values: dict[str, Any]) -> rules.Blow:
     """The blow Next Blow's values describe."""
     damage = values.get("spell_damage")
@@ -1062,6 +1159,11 @@ def blow_of(values: dict[str, Any]) -> rules.Blow:
             for art in (values.get("requisite_technique"), values.get("requisite_form"))
             if art
         ),
+        indirect=bool(values.get("indirect")),
+        aim_steps=max(0, int(values.get("aim_steps") or 0)),
+        arcane=values.get("arcane") or "",
+        named=bool(values.get("named")),
+        symbol=bool(values.get("symbol")),
     )
 
 
@@ -1080,13 +1182,17 @@ def _magic_lines(
     odds = (
         rules.spell_odds(saga, fight, who, target, blow)
         if action == rules.CAST
-        else rules.device_odds(saga, fight, target, blow)
+        else rules.device_odds(saga, fight, target, blow, who)
     )
     if odds is None:
         return ["[$text-error]Choose what to cast or use.[/]"]
     lines = [
         f"[b]{escape(odds.name)}[/]: {odds.technique} {odds.form}, level {odds.level}."
     ]
+    if odds.blocked:
+        lines.append(f"[$text-error]{escape(odds.blocked)}[/]")
+        return lines
+    lines += [f"[i]{escape(note)}[/]" for note in odds.notes]
     magus = who.vanguard.character
     if magus is not None and action == rules.CAST:
         if casting_virtues.incompatible(
@@ -1121,11 +1227,17 @@ def _magic_lines(
                 f"Casting Score {odds.score:+d} (aura included) + stress die "
                 f"against level {odds.level}."
             )
-        lines.append(
-            f"Penetration: Casting Total - {odds.level} + {odds.penetration} "
-            f"against Magic Resistance {odds.resistance}."
-        )
-    else:
+        if odds.mastery:
+            lines.append(
+                f"Mastered: +{odds.mastery} in the score, {odds.mastery} botch "
+                "dice fewer (DE p. 225)."
+            )
+        if not odds.indirect:
+            lines.append(
+                f"Penetration: Casting Total - {odds.level} + "
+                f"{_pierce_text(odds)} against Magic Resistance {odds.resistance}."
+            )
+    elif not odds.indirect:
         lines.append(
             f"Penetration {odds.penetration} against Magic Resistance "
             f"{odds.resistance}: "
@@ -1135,6 +1247,13 @@ def _magic_lines(
                 else "resisted."
             )
         )
+    if odds.indirect:
+        guard = rules.aim_defence(fight, target)
+        aim = int(odds.aim.total) if odds.aim is not None else 0
+        lines.append(
+            f"Indirect: Magic Resistance doesn't stop it; aimed at {aim:+d} + "
+            f"stress die against Defence {_terms(guard)} + stress die (DE p. 223)."
+        )
     damage = values.get("spell_damage")
     if damage is not None:
         soak = target.vanguard.figures().soak
@@ -1142,6 +1261,18 @@ def _magic_lines(
             f"Damage +{damage} + stress die against Soak {soak:+d} + stress die."
         )
     return lines
+
+
+def _pierce_text(odds: rules.MagicOdds) -> str:
+    """The Penetration bonus, and its multiplier when it has one ("12 (4
+    x 3)")."""
+    working = odds.penetration_breakdown
+    if working is None:
+        return str(odds.penetration)
+    times = 1 + sum(int(line.multiplier or 0) for line in working.lines)
+    if times == 1:
+        return str(odds.penetration)
+    return f"{odds.penetration} (x{times}, an Arcane Connection)"
 
 
 def combatant_live(saga: Saga, fight: Fight, values: dict[str, Any]) -> str:
@@ -1177,6 +1308,21 @@ def combatant_live(saga: Saga, fight: Fight, values: dict[str, Any]) -> str:
             "Mounted: Ride adds "
             + (f"+{ride}" if kind != CHARACTER_FIGHTER else "up to +3")
             + " to Attack and Defence."
+        )
+    signs = magic_combat.clarity(values.get("invisible") or "")
+    if signs is not None:
+        lines.append(
+            f"Invisible ({signs.label}): +{signs.attack} to a melee Attack, "
+            f"+{signs.defence} to Defence, +{signs.stealth} to Stealth; foes must "
+            "locate it to strike it, and it strikes first with surprise (HoH:S pp. "
+            "32-33)."
+        )
+        lines.append(
+            "Its blow gets through Magic Resistance: a weapon picked up after "
+            "turning invisible (HoH:S p. 32)."
+            if values.get("weapon_after_invisible")
+            else "Magic Resistance keeps out its invisible weapon and its touch "
+            "(HoH:S p. 32)."
         )
     defended = values.get("defends") or ""
     if defended:

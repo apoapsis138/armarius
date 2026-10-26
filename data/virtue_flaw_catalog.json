@@ -17485,6 +17485,17 @@
       "source": "LoH",
       "summary": "A foreign aura counts less by your Lore of its realm, for its penalty and its botch dice; a bonus it gives stays.",
       "description": "Conciatta's last breakthrough, gained by original research or integration (45 points, or 30 once Confluence or Insight of the Realms is integrated). In an aura of another realm, its strength counts less by your score in that realm's Lore, never below 0, for its penalty and its extra botch dice; where the aura gives a bonus, as a Faerie aura does to Hermetic magic, you keep the bonus and lose only the botch dice. The aura's other effects fall by it too, such as the feeling an aligned Magic aura brings or an Abyssal regio's loss of Characteristics. It is part of your Gift, like your sigil, and cannot be suspended: a device keeps, for its Penetration, the Lore you had when you instilled each effect, and your talisman uses your Lore now (Legends of Hermes pp. 15-16)."
+    },
+    {
+      "id": "vf_hermetic_metamorphosis",
+      "name": "Hermetic Metamorphosis",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "MoH",
+      "summary": "Graft organs onto an animal to make a new creature, by a ritual only you can cast.",
+      "description": "Marcus's Major Breakthrough, a Minor Hermetic and Supernatural Virtue (Magi of Hermes p. 83). You can graft an organ (a head, a pair of legs, wings, a heart) onto an animal, from another animal or one made by a Momentary Creo Animal ritual, with Harmonic Metamorphosis of the Beast, which only a holder of this Virtue can invent or cast. The surgery is a Dexterity + Chirurgy roll against 9, +3 when the organ is added rather than swapped, +3 more when it gives a Virtue rather than an anatomical change; failing, the animal dies soon after, and a botch makes a monster. A donor that loses a Virtue gains Enfeebled; one whose organ is added to another dies. The recipient must be an animal: a human needs a further breakthrough."
     }
   ]
 }

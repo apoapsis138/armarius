@@ -33,6 +33,7 @@ from .models import (
     Saga,
     ShapeMaterialBonus,
 )
+from .rules import verditius
 from .rules.enchantment import (
     FAST_TRIGGER_INITIATIVE,
     MODIFICATIONS,
@@ -567,6 +568,7 @@ def device_info_text(saga: Saga, device: EnchantedDevice) -> str:
     if device.verditius_runes:
         crafted = escape(device.verditius_craft) or "shaped by magic"
         lines.append(f"[b]Verditius Runes:[/] crafted by its maker ({crafted})")
+        lines += [escape(line) for line in verditius.price_lines(saga, device)]
     if is_talisman(device):
         lines.append(f"[b]Attunements:[/] {len(device.attunements) or 'none'}")
         lines += [f"  {escape(bonus_text(a, when=True))}" for a in device.attunements]

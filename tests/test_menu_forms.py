@@ -92,6 +92,9 @@ def test_each_page_offers_what_applies_there():
         "Threaten a Saint",
         "Devotion Points",
         "Indulgence, Vigil or Fast",
+        # A mystic's path and God's aid (The Church, RoP: The Divine).
+        "Mystic Path",
+        "Invoke God's Aid",
     ]
     assert _labels(menu_forms.new_items(page)) == ["New Character", "Bind Familiar"]
     deleted = menu_forms.deletes(page)

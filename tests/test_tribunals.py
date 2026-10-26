@@ -332,7 +332,7 @@ def test_normandy_ranks_its_tourney_and_marks_lapsed_tenures():
     normandy = saga.tribunal("normandy")
     assert normandy is not None
     package = tribunal_packages.of(normandy)
-    assert package.meeting_steps == ("succession", "tourney", "host_by_lot")
+    assert package.meeting_steps == ("succession", "library", "tourney", "host_by_lot")
     tourney = package.tabs[1].lists[0].grid(saga, normandy)
     # The highest points first; teams level keep the order entered.
     assert [(r[1], r[2], r[4], r[5]) for r in tourney.rows] == [

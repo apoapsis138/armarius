@@ -26,7 +26,9 @@ from . import (  # noqa: F401  (each registers its activities as it is imported)
     devotion,
     initiation,
     lords,
+    mysticism,
     societates,
+    viresculture,
 )
 from .base import REGISTRY, SimpleActivity, SupplementWork, activities, problems, work
 

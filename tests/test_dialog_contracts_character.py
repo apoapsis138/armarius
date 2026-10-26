@@ -19,6 +19,7 @@ from textual.widgets import Select
 
 from ars_magica_manager import catalog
 from ars_magica_manager.models import AnimalForm
+from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import merchants
 
 CONTRACTS: dict[str, Contract] = {
@@ -1055,6 +1056,73 @@ CONTRACTS: dict[str, Contract] = {
         expected="Holy Influence",
         invalid={"The trait inspired": ""},
         live={"#fields-live": "Presence + Leadership"},
+    ),
+    # Mystic paths, God's aid, the Font and the Commanding Aura.
+    "mystic path": Contract(
+        prefill={"His path": "none"},
+        edits={"His path": "Contemplative mysticism"},
+        saved=lambda s: ds.path(character(s)),
+        expected="Contemplative mysticism",
+        invalid={"His path": "none"},
+        live={"#fields-live": "Divine Form"},
+    ),
+    "spiritual path": Contract(
+        prefill={"What": "count"},
+        edits={"Quest Component": "quest"},
+        saved=lambda s: [
+            (p.name, p.points)
+            for p in character(s).progress
+            if p.kind == "spiritual path"
+        ],
+        expected=[("Premonitions", 6)],
+        invalid={"What": "begin"},
+        live={"#fields-live": "+6:"},
+    ),
+    "monistic revelation": Contract(
+        prefill={"Warping Points the Ascent brought": "1"},
+        edits={"Warping Points the Ascent brought": "2"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Monistic Revelation",
+        invalid={"Warping Points the Ascent brought": "0"},
+        live={"#fields-live": "Intelligence + Concentration"},
+    ),
+    "invoke god's aid": Contract(
+        prefill={"What he asks God's aid in": ""},
+        edits={"What he asks God's aid in": "the duel"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="God's Aid",
+        invalid={"What he asks God's aid in": ""},
+        live={"#fields-live": "Communication + Dominion Lore"},
+    ),
+    "font of knowledge": Contract(
+        prefill={"Times drawn on today": "0"},
+        edits={"The untrained Ability": "Hunt", "Times drawn on today": "1"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Font of Knowledge",
+        invalid={"Times drawn on today": "x"},
+        live={"#fields-live": "against 9"},
+    ),
+    "commanding aura": Contract(
+        prefill={"Withdrawn until penance": False},
+        edits={"Withdrawn until penance": True},
+        saved=lambda s: ds.aura_withdrawn(character(s)),
+        expected=True,
+        live={"#fields-live": "Archbishop: Magic Resistance 10"},
+    ),
+    # House Verditius's Hubris and vendettas.
+    "hubris": Contract(
+        prefill={
+            "What happened": "Selling (or making for pay) a charged item or an item "
+            "of quality"
+        },
+        edits={"What happened": "Declaring a vendetta"},
+        saved=lambda s: [
+            (t.score, t.deeds)
+            for t in character(s).personality_traits
+            if t.name == "Hubris"
+        ],
+        expected=[(1, 1)],
+        live={"#fields-live": "+1 Hubris experience"},
     ),
 }
 

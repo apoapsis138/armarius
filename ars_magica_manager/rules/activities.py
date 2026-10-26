@@ -40,7 +40,7 @@ Activities built so far, each an Advancement Total (rules.study):
 from __future__ import annotations
 
 import random
-from collections.abc import Callable, Collection, MutableMapping, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import dataclass, field, replace
 
 from .. import book_kinds, catalog, sourcebooks, vis
@@ -976,26 +976,9 @@ def shared_language(teacher: Character, student: Character) -> bool:
     return not mine or not theirs or bool(mine & theirs)
 
 
-def vis_pool(
-    saga: Saga, character: Character, plan: SeasonPlan
-) -> MutableMapping[str, int]:
-    """The raw vis a vis study plan draws on: the magus's own, their
-    laboratory's, or their covenant's vis stores."""
-    if plan.vis_from == "laboratory":
-        lab = saga.laboratory(character.assigned_lab_id)
-        return lab.raw_vis if lab is not None else {}
-    if plan.vis_from == "covenant":
-        return vis.covenant_pool(saga, character.covenant_id, character.name)
-    return character.raw_vis
-
-
-def whose_vis(character: Character, plan: SeasonPlan) -> str:
-    """Whose raw vis a plan's `vis_from` names, for a message."""
-    if plan.vis_from == "covenant":
-        return "the covenant's"
-    if plan.vis_from == "laboratory":
-        return "the laboratory's"
-    return f"{character.name}'s"
+#: The raw vis a vis study plan draws on, and whose it is (vis.py).
+vis_pool = vis.season_pool
+whose_vis = vis.payer
 
 
 def _gloss_problems(

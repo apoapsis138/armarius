@@ -52,6 +52,7 @@ from .character import Investment as Investment
 from .character import LabTextAccess as LabTextAccess
 from .character import Ordeal as Ordeal
 from .character import Progress as Progress
+from .character import RefusedVendetta as RefusedVendetta
 from .character import ResearchAttempt as ResearchAttempt
 from .character import TraditionEffect as TraditionEffect
 from .character import Wounds as Wounds
@@ -237,6 +238,7 @@ from .laboratory import NamedDescription as NamedDescription
 from .laboratory import _feature_from_old_text as _feature_from_old_text
 from .laboratory import _parse_old_specialty as _parse_old_specialty
 from .laboratory import link_unlinked_features as link_unlinked_features
+from .mystery_scripts import ScriptPart as ScriptPart
 from .philosophy import FORMULA_KINDS as FORMULA_KINDS
 from .philosophy import Formula as Formula
 from .saga import Player as Player

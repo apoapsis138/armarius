@@ -18,7 +18,15 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
 from ..rules import creation_access as access
-from ..rules import grog_discipline, medicine, realm_warping, sites, work_virtues
+from ..rules import (
+    divine_state,
+    grog_discipline,
+    medicine,
+    mysticism,
+    realm_warping,
+    sites,
+    work_virtues,
+)
 from ..rules import hybrid_magic as hybrid
 from ..rules import living as living_rules
 from ..rules import warping as warping_rules
@@ -185,13 +193,19 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
     for realm_of, each in by_realm.items():
         realm_warping.record(character, realm_of, each)
     text = f"Warping Points +{points} ({', '.join(gained)}); Warping Score now {character.aging.warping_score}."
-    return " ".join([text, *_warped_effects(saga, character, before)])
+    return " ".join([text, *_warped_effects(saga, character, before, points)])
 
 
-def _warped_effects(saga: Saga, character: Character, before: int) -> list[str]:
+def _warped_effects(
+    saga: Saga, character: Character, before: int, points: int = 0
+) -> list[str]:
     """What a non-magus's higher Warping Score brings, for the Diary,
     coloured by the realm most of it came from (a magus's Warping means
-    Twilight instead: DE p. 391; a tradition's members have its own)."""
+    Twilight instead: DE p. 391; a tradition's members have its own; a
+    mystic's is the Divine Ascent, and in the Divine Gloom each point
+    gained is experience: The Church p. 23)."""
+    if divine_state.path(character):
+        return mysticism.gloom_lines(character, points)
     if (
         warping_rules.opened_to_arts(character)
         or character.traditions
@@ -236,12 +250,12 @@ def gain_warping(
     notes = [
         *lines,
         f"+{points} Warping Points; Warping Score {character.aging.warping_score}.",
-        *_warped_effects(saga, character, before),
+        *_warped_effects(saga, character, before, points),
     ]
     name = f"Warping +{points}"
     answer = realm_warping.response_realm(character, opened=opened)
     source = warping_rules.TWILIGHT_SOURCE
-    if answer is not None and at_once and points >= 2:
+    if answer is not None and at_once and points >= divine_state.trigger(character):
         if aura is None:
             aura, _ = home_aura(saga, character)
         result = realm_warping.respond(

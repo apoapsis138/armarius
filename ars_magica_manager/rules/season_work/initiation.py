@@ -5,6 +5,12 @@ Quest season toward a Script's bonus.
 An Initiation is the Mystagogue's Presence + Lore + the Script's bonus
 against 15 / 18 (Minor) or 21 / 30 (Major), less a past Ordeal's
 reduction; a hedge tradition's Script brings its own Ease Factor.
+
+A Hermetic Mystery's Script may be written out as its components (The
+Mysteries Revised Edition pp. 15-16): then its bonus is theirs, with the
+Ordeal's own (+3 / +6 / +9 by its size, or the House Verditius first Inner
+Mystery's Hubris, a Minor Ordeal), and the typed Script bonus is added on
+top. A catalog Script's printed components are noted with it.
 """
 
 from __future__ import annotations
@@ -24,6 +30,7 @@ from .. import activity_groups as groups
 from .. import dice, enchantment, mysteries, verditius
 from .. import tradition_seasons as ts
 from ..apprentice_seasons import gifted
+from ..breakdown import Line
 from ..creation_finish import touched_by_the_fay
 from ..rounding import round_up
 from ..scores import ability_level
@@ -184,6 +191,11 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
             return f"{character.name} needs {lore} 1 to be Initiated."
     return (
         _script_problem(plan)
+        or (
+            mysteries.parts_problem(plan.script_components, components_for(character))
+            if hedge is None
+            else ""
+        )
         or (_mystery_problem(saga, character, virtue.id) if virtue else "")
         or _ordeal_problem(character, plan)
         or _house_ordeal_problem(character, plan)
@@ -340,7 +352,8 @@ def _undergo_initiation(
     result: SupplementWork,
 ) -> None:
     mystagogue = saga.character(plan.teacher_id) or character
-    trait, name, lore, script = _initiation_terms(mystagogue, plan)
+    trait, name, lore, script = _initiation_terms(mystagogue, plan, character)
+    result.notes += _script_notes(character, plan)
     target = initiation_target(saga, character, plan)
     size = ordeal_size(plan)
     risk = 0
@@ -384,6 +397,10 @@ def _undergo_initiation(
     if suffered:
         if gained := _ordeal_gained(plan):
             result.add_vfs.append(gained)
+            if gained.vf_id == verditius.INCREASED_HUBRIS:
+                # Enough experience for one more point of Hubris (HoH:MC
+                # p. 121), counted when the season is applied.
+                result.hubris_rises += 1
         if lost := _ordeal_lost(plan):
             result.remove_vfs.append(lost)
         result.ordeal = size
@@ -422,23 +439,90 @@ def _house_hubris(character: Character, vf_id: str, result: SupplementWork) -> N
     Hubris, a Minor Ordeal, and each one Hubris experience (Houses of
     Hermes: Mystery Cults p. 118; DE p. 241)."""
     result.notes += verditius.initiation_notes(character, vf_id)
+    tier = verditius.INNER_MYSTERIES.get(vf_id)
+    if tier is not None:
+        result.hubris_xp += verditius.INNER_HUBRIS_XP[tier]
     if not verditius.gives_hubris(character, vf_id):
         return
+    result.hubris_start = verditius.starting_hubris(character)
     if all(vf.vf_id != verditius.HUBRIS_FLAW for vf in result.add_vfs):
         result.add_vfs.append(VirtueFlawInstance(verditius.HUBRIS_FLAW))
     result.ordeal = result.ordeal or "Minor"
 
 
+def components_for(initiate: Character) -> list[mysteries.Component]:
+    """The Script components an Initiation plan may list: the general ones,
+    and for a Verditius Initiate the House's own (HoH:MC p. 117)."""
+    table = list(mysteries.COMPONENTS)
+    if verditius.is_verditius(initiate):
+        table += verditius.HOUSE_COMPONENTS
+    return table
+
+
+def script_lines(initiate: Character, plan: SeasonPlan) -> list[Line]:
+    """A Hermetic Script written out as components: a line for each listed
+    one, then the Ordeal's component (by the plan's Ordeal's size, or the
+    Minor Ordeal of Hubris a Verditius's first Inner Mystery brings when
+    the plan names none). [] when none is listed: the typed bonus is the
+    whole Script."""
+    if not plan.script_components or plan.hedge_script:
+        return []
+    lines = mysteries.parts_lines(plan.script_components, components_for(initiate))
+    size = ordeal_size(plan)
+    if not size and verditius.gives_hubris(initiate, plan.effect_id or ""):
+        component = mysteries.ORDEAL_COMPONENTS["Minor"]
+        lines.append(
+            Line(
+                f"{component.name} (Hubris)",
+                amount=component.bonus,
+                source=verditius.HUBRIS_SOURCE,
+            )
+        )
+    elif size in mysteries.ORDEAL_COMPONENTS:
+        component = mysteries.ORDEAL_COMPONENTS[size]
+        lines.append(
+            Line(component.name, amount=component.bonus, source=mysteries.SCRIPT_SOURCE)
+        )
+    return lines
+
+
+def _script_notes(initiate: Character, plan: SeasonPlan) -> list[str]:
+    """The Script's components as a note: the plan's own, or a catalog
+    Script's printed ones, and a confraternity's path."""
+    hedge = ts.hedge_script(plan.hedge_script)
+    if hedge is not None:
+        _, script = hedge
+        found = [
+            mysteries.printed_components_note(script.components, script.bonus),
+            verditius.confraternity_note(script.name),
+        ]
+        return [note for note in found if note]
+    lines = script_lines(initiate, plan)
+    if not lines:
+        return []
+    extra = f", with {plan.other_modifier:+d} more" if plan.other_modifier else ""
+    return [f"The Script: {mysteries.lines_text(lines)}{extra}."]
+
+
 def _initiation_terms(
-    mystagogue: Character, plan: SeasonPlan
+    mystagogue: Character, plan: SeasonPlan, initiate: Character | None = None
 ) -> tuple[str, str, int, int]:
     """The Initiation Total's terms: the Characteristic, the Lore's name
     and the Mystagogue's score in it, and the Script's bonus (a hedge
-    Script's own, plus what the plan adds)."""
+    Script's own, plus what the plan adds; a Hermetic one's listed
+    components, plus the typed bonus). `initiate`: the one Initiated (the
+    Mystagogue himself when not given)."""
+    initiate = initiate or mystagogue
     hedge = ts.hedge_script(plan.hedge_script)
     if hedge is None:
         name = plan.title.strip()
-        return "Presence", name, ability_level(mystagogue, name), plan.other_modifier
+        listed = sum(line.amount or 0 for line in script_lines(initiate, plan))
+        return (
+            "Presence",
+            name,
+            ability_level(mystagogue, name),
+            int(listed) + plan.other_modifier,
+        )
     tradition, script = hedge
     rule = tradition.initiation
     assert rule is not None  # ts.hedge_script finds Scripts only in a rule

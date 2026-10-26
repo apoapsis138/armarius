@@ -78,11 +78,13 @@ from ars_magica_manager.models import (
     Purity,
     PurityExample,
     Reason,
+    RefusedVendetta,
     ResearchAttempt,
     Ruling,
     Saga,
     SagaSource,
     ScoredTrait,
+    ScriptPart,
     SeasonPlan,
     SeasonRecord,
     SeasonRecordLine,
@@ -422,7 +424,10 @@ def _saga_with_every_record() -> Saga:
     magus.powers.append(CharacterPower("Owl", "Greater Power", level=30))
     magus.constant_effects.append(ConstantEffect("Ring of Flight", powerful=True))
     magus.progress.append(Progress("vis", "Study"))
-    magus.ordeals.append(Ordeal("Minor"))
+    magus.ordeals, magus.refused_vendettas = (
+        [Ordeal("Minor")],
+        [RefusedVendetta("Rival", 3)],
+    )
     magus.agents.append(Agent("Bishop Benedict", bond_trait="Thankful", bond=1))
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
     magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
@@ -462,6 +467,7 @@ def _saga_with_every_record() -> Saga:
             [XpAllocation("ability:Latin")],
             design=SpellDesign("key"),
             artwork=ArtworkPlan(assistants=1),
+            script_components=[ScriptPart("quest")],
         )
     )
     saga.season_records.append(

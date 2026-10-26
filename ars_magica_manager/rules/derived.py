@@ -26,7 +26,7 @@ from collections.abc import Sequence
 
 from ..models import Character, Possession, VirtueFlawInstance, Wounds
 from . import armour as armour_rules
-from . import effects
+from . import divine_state, effects
 from .breakdown import Breakdown, Line
 from .rounding import round_up
 from .scores import character_source
@@ -41,6 +41,17 @@ OFFICE_RESISTANCE: dict[str, int] = {
     "Legatus missus": 15,
     "Cardinal or legatus a latere": 20,
     "Pope": 25,
+    # The other faiths' leaders (Realms of Power: The Divine p. 43): their
+    # kings and crowned eastern Christian rulers are "King (crowned)".
+    "Greek patriarch": 20,
+    "Head of another eastern church": 25,
+    "Caliph or Shi'i imam": 25,
+    "Chief qadi or mufti": 20,
+    "Senior qadi or mufti": 10,
+    "Sultan (invested)": 10,
+    "Exilarch": 25,
+    "Chief rabbi": 20,
+    "Senior rabbi": 10,
 }
 OFFICE_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 12: Church Officers and Sovereigns, p. 420"
@@ -241,11 +252,16 @@ def soak(character: Character) -> Breakdown:
         lines.append(Line("Guardian Angel", amount=5, source=SOURCE))
         total += 5
     office = OFFICE_RESISTANCE.get(character.background.church_rank, 0) // 5
+    if divine_state.aura_withdrawn(character):
+        office = 0
     if office:
         lines.append(
             Line(character.background.church_rank, amount=office, source=OFFICE_SOURCE)
         )
         total += office
+    if form := divine_state.form_soak(character):
+        lines.append(Line("Divine Form", amount=form, source=divine_state.SOURCE))
+        total += form
     if character.wounds.soak:
         lines.append(Line("Adjustment", amount=character.wounds.soak))
         total += character.wounds.soak

@@ -280,6 +280,13 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     "ars_magica_manager/forms/pilgrimage.py": ("test_dialog_contracts_character.py",),
     "ars_magica_manager/rules/lacunae.py": ("test_dialog_contracts_character.py",),
     "ars_magica_manager/rules/pilgrimage.py": ("test_dialog_contracts_character.py",),
+    # Breakthroughs: Hermetic Viresculture's seasons on the season form.
+    "ars_magica_manager/forms/viresculture_seasons.py": (
+        "test_dialog_contracts_character.py",
+        "test_season_forms.py",
+    ),
+    # Mystic paths, God's aid, the Font and the Commanding Aura's forms.
+    "ars_magica_manager/mystic_paths.py": ("test_dialog_contracts_character.py",),
 }
 
 

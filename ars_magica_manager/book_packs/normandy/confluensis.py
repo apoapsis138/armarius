@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ...tribunal_packages.normandy import LIBRARY_HELD
 from ..builder import joined_lines, paragraphs, vf_ability, vf_art
 from ..generated import Profile, apply
 
@@ -26,7 +27,7 @@ TYTALUS = "house_tytalus"
 
 # The lead line of a covenant's notes, before its secrets.
 # Where the Tribunal's own books are kept.
-HELD = "Held for the Tribunal at Confluensis, as a Tourney prize"
+HELD = LIBRARY_HELD
 
 
 def build(normandy: Normandy) -> None:

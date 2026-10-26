@@ -50,6 +50,7 @@ from ..models import (
 )
 from ..rules import activities as season_rules
 from ..rules import book_seasons as bs
+from ..rules import breakthroughs_moh as moh
 from ..rules import enchant_seasons as es
 from ..rules import (
     enchantment,
@@ -691,6 +692,7 @@ class LabPlanForm:
                 plan.extra_vis if plan else 0,
                 show_if=_doing(lab_seasons.LONGEVITY),
             ),
+            *self._fertile_fields(),
             DialogField(
                 "device",
                 "Device",
@@ -1147,6 +1149,35 @@ class LabPlanForm:
             for p in familiar.bond_powers
         ]
 
+    def _fertile_fields(self) -> list[DialogField]:
+        """A Longevity Ritual made fertile from a Lab Text using the
+        breakthrough, for a magus who hasn't reached it himself (DE p. 281;
+        MoH p. 20). The app can't tell which text uses it, so it asks."""
+        if moh.reached(self.magus, moh.FERTILE_LONGEVITY):
+            return []
+        plan = self.existing
+        texts = lab_seasons.longevity_texts_at_hand(self.saga, self.magus)
+        at_hand = (
+            "Longevity Lab Texts at hand: "
+            + ", ".join(escape(b.name) for b in texts)
+            + "."
+            if texts
+            else "No Longevity Lab Text at hand: tick only if his discoverer "
+            "taught him."
+        )
+        return [
+            DialogField(
+                "fertile_text",
+                "Fertile (Lab Text)",
+                "check",
+                bool(plan and plan.fertile_text),
+                show_if=_doing(lab_seasons.LONGEVITY),
+                hint="Made from a Lab Text using the Fertile Longevity Ritual "
+                "breakthrough, or as its discoverer taught: the subject stays "
+                f"fertile instead of sterile. {at_hand}",
+            )
+        ]
+
     def subjects(self) -> list[tuple[str, str]]:
         """Who a Longevity Ritual can be for: the magus first, then everyone
         else in the saga."""
@@ -1382,6 +1413,7 @@ class LabPlanForm:
                 ),
                 "vis_art": v.get("longevity_vis") or "",
                 "extra_vis": v.get("extra_vis") or 0,
+                "fertile_text": bool(v.get("fertile_text")),
             }
 
         return (

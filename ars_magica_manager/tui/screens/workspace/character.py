@@ -26,6 +26,7 @@ from .... import (
 )
 from .... import devotion as devotion_forms
 from .... import laboratories as lab_text
+from .... import mystic_paths as mystic_forms
 from .... import possessions as pos
 from .... import spells as spl
 from .... import theban_customs as byzantine
@@ -43,6 +44,7 @@ from ....forms import gauntlet as gauntlet_forms
 from ....forms import goetic as goetic_forms
 from ....forms import grogs as grog_forms
 from ....forms import holy_influence as holy_influence_forms
+from ....forms import hubris as hubris_forms
 from ....forms import lacuna as lacuna_forms
 from ....forms import menu as menu_forms
 from ....forms import pilgrimage as pilgrimage_forms
@@ -1593,4 +1595,52 @@ class CharacterActions(WorkspaceBase):
         the Diary."""
         self._byzantine_step(
             holy_influence_forms.holy_influence_form, "section-char-info"
+        )
+
+    # -- mystic paths, God's aid, the Font and the Commanding Aura --
+
+    def action_mystic_path(self) -> None:
+        """More's Mystic Path: the path followed or left, in the Diary."""
+        self._byzantine_step(mystic_forms.mystic_path_form, "section-char-season")
+
+    def action_spiritual_path(self) -> None:
+        """More's Spiritual Path: a path begun, a Quest Component counted,
+        or its Revelation claimed."""
+        self._byzantine_step(
+            mystic_forms.spiritual_path_form,
+            "section-char-season",
+            "section-char-info",
+            "section-vf-virtues",
+            "section-vf-flaws",
+        )
+
+    def action_monistic_revelation(self) -> None:
+        """More's Monistic Revelation: the integration roll and what it
+        brings."""
+        self._byzantine_step(
+            mystic_forms.monistic_revelation_form,
+            "section-vf-virtues",
+            "section-char-season",
+        )
+
+    def action_gods_aid(self) -> None:
+        """More's Invoke God's Aid: the prayer's roll and the point spent."""
+        self._byzantine_step(mystic_forms.gods_aid_form, "section-char-info")
+
+    def action_font_of_knowledge(self) -> None:
+        """More's Font of Knowledge: the roll, kept in the Diary."""
+        self._byzantine_step(mystic_forms.font_form)
+
+    def action_commanding_aura(self) -> None:
+        """More's Commanding Aura: withdrawn until penance, or restored."""
+        self._byzantine_step(mystic_forms.commanding_aura_form, "section-char-health")
+
+    # -- House Verditius's Hubris and vendettas --
+
+    def action_verditius_hubris(self) -> None:
+        """More's Hubris: its experience, a vendetta refused or resisted."""
+        self._byzantine_step(
+            hubris_forms.hubris_form,
+            "section-personality-traits",
+            "section-reputations",
         )

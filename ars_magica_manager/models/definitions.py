@@ -706,12 +706,19 @@ class InitiationScript:
     #: The harder Ease Factor of a self-initiation, when the book gives
     #: one (the gruagachan's 18 and 30, HMRE p. 61); 0: the same.
     self_ease_factor: int = 0
+    #: The Script's components as the book gives them, (what, bonus) in
+    #: order (rules.mysteries.printed_components_note); () when the book
+    #: gives only the total.
+    components: tuple[tuple[str, int], ...] = ()
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> InitiationScript:
         d = known_fields(cls, data)
         d["requires"] = tuple(
             (str(k), int(v)) for k, v in dict(d.get("requires") or {}).items()
+        )
+        d["components"] = tuple(
+            (str(name), int(bonus)) for name, bonus in d.get("components") or ()
         )
         return cls(**d)
 

@@ -165,6 +165,10 @@ class Meeting(TypedDict, total=False):
     #: Transylvania's Praeco's purse and Curantis, by step key
     #: (transylvania_meeting.py).
     transylvania: dict[str, dict[str, Any]]
+    #: Normandy's Library of the Tribunal and Provence's residency
+    #: (normandy_meeting.py, provence_meeting.py).
+    normandy_library: dict[str, Any]
+    provence_residency: dict[str, Any]
 
 
 @dataclass

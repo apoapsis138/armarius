@@ -51,6 +51,7 @@ from ..models import (
 from . import (
     aging,
     book_seasons,
+    breakthroughs_moh,
     common_magics,
     enchant_seasons,
     enchantment,
@@ -261,6 +262,19 @@ def lab_texts_at_hand(saga: Saga, magus: Character) -> list[Book]:
         and b.spell_id
         and b.spell_id not in known
         and library.can_read(saga, magus, b)
+    ]
+
+
+def longevity_texts_at_hand(saga: Saga, magus: Character) -> list[Book]:
+    """The Longevity Ritual Lab Texts `magus` can get at and use: the ones a
+    fertile ritual could be made from (DE p. 281)."""
+    return [
+        b
+        for b in saga.books
+        if b.type == "Lab Text"
+        and b.text_kind == TEXT_LONGEVITY
+        and library.can_read(saga, magus, b)
+        and book_seasons.can_use_lab_text(magus, b)
     ]
 
 
@@ -1045,6 +1059,11 @@ def _one_season_work(
         longevity=lab.longevity_modifier(
             max(0, lab_total), mundane=is_mundane(subject)
         ),
+        notes=[
+            breakthroughs_moh.longevity_note(
+                magus, subject, from_lab_text=plan.fertile_text
+            )
+        ],
     )
     return [], result
 

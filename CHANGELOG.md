@@ -109,6 +109,85 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.24.0 — 2026-10-26
+
+### Computus
+
+- **Christian mysticism** (The Church pp. 19-24): the contemplative and
+  monistic paths, who may follow them, and their Divine Ascent (the
+  Divine Form at 2 Warping Points, the Divine Gloom at 1); the Divine
+  Form's Magic Resistance and Soak on the sheet; a contemplative's
+  Spiritual Path to a Revelation, its quests reaching the Path Total; a
+  monist's Revelations.
+- **Invoking God's aid** (RoP: The Divine pp. 41-42); Font of Knowledge
+  (DE p. 165); a Commanding Aura withdrawn until penance (DE pp. 74, 420),
+  and the other faiths' leaders among the offices (RoP: The Divine p. 43).
+- **Magic in a fight**: a mastered spell's Mastery in the Casting Score and
+  Penetration, and doubled resistance (DE pp. 225-226); Arcane
+  Connections and sympathies multiplying Penetration (DE pp. 219-220);
+  indirect spells aimed instead of resisted, each of the 18 with its
+  limits (DE p. 223; HoH: Societates p. 30); invisible fighters, located
+  before they can be struck, kept out by Magic Resistance unless they
+  picked up a weapon after turning invisible (pp. 32-33).
+- **Breakthroughs**: a fertile Longevity Ritual and Hermetic Metamorphosis
+  (Magi of Hermes pp. 20, 82-84), Hermetic Viresculture and its Lesser
+  Enchantment Vis (Legends of Hermes pp. 72-76); a Longevity Ritual says
+  whether it leaves its subject sterile.
+- House Verditius's prices to magi and to mundanes (HoH: Mystery Cults
+  pp. 114-115), forge-companions and vendettas.
+
+### Hedge Magic
+
+- **Folk witches**: Brew Potency, doses and the vis limit; two new
+  kitchen seasons, extracting vis and fixing an Arcane Connection; the
+  Witch Moon, potions, familiars and covens (Hedge Magic Revised pp.
+  33-54).
+- **Nightwalkers**: spirit travel's Ease Factors, leading a spirit
+  astray, changing form, seeking a foe and questioning the dead (pp.
+  103-119).
+- **The clesrada**, the Ulster heroes' feats of arms, a new tradition with
+  its eighteen feats and symbol (The Contested Isle pp. 101-105).
+- Vitkir can hold the nine **Saxon runes**, with their guidelines and
+  marks (Thrice-Told Tales pp. 139-143).
+
+### Book of Hours
+
+- An Initiation's **Script** can be written out as its components, its
+  bonus worked out with the Ordeal's (The Mysteries Revised pp. 15-16).
+- House Verditius's **Hubris** grows on the sheet with each Inner Mystery.
+- New seasons: the Spiritual Path's service, devotion, preaching and
+  mission (The Church p. 22); **Vitalize** and **Invigorate a Stirps**
+  (Legends of Hermes pp. 72-75), several at once.
+
+### Pagina
+
+- More offers **Hubris** on a Verditius, and **Mystic Path**, **Spiritual
+  Path**, **Monistic Revelation**, **Invoke God's Aid**, **Font of
+  Knowledge** and **Commanding Aura** on a person, each with an
+  inspector.
+- A device made by a Verditius shows the House's prices; a fighter can be
+  invisible; Cast a Spell asks for an Arcane Connection and whether the
+  spell is indirect.
+
+### Concilium
+
+- A charge between two magi can be decided by **binding certamen**, or one
+  point of it settled by certamen; a false or flawed thesis starts behind;
+  a motion the Tribunal opposes is debated by the whole hall; a motion can
+  go to the next Grand Tribunal (HoH: Societates pp. 91-93; DE p. 230).
+
+### Peregrinatio
+
+- **Normandy's Library** at each meeting: leases returned, books given for
+  a lease, and the Tourney's book prizes by prize pawns (The Lion and the
+  Lily pp. 22-23, 33).
+- **Provence's roll of residents** (Faith and Flame p. 22).
+
+### Florilegium
+
+- The Hermetic Metamorphosis Virtue; the House Verditius Scripts'
+  components; Thrice-Told Tales among the sourcebooks.
+
 ## 3.23.0 — 2026-10-26
 
 ### Computus

@@ -13,6 +13,7 @@ from .common import (
     experimental_effects,
     known_fields,
 )
+from .mystery_scripts import ScriptPart
 
 
 def season_order(*, season: str | None, year: int) -> int:
@@ -166,6 +167,14 @@ class SeasonPlan:
     subject_id: str | None = None
     vis_art: str = ""
     extra_vis: int = 0
+    #: Hermetic Viresculture: the Stirpes worked on in the same season
+    #: besides the one named in `title` (name -> Magic Might, or a Lesser
+    #: Enchantment Vis's level; -1 when none was typed).
+    more_stirpes: dict[str, int] = field(default_factory=dict)
+    #: Longevity Ritual: made fertile from a Lab Text for an effect using
+    #: the Fertile Longevity Ritual breakthrough (or as its discoverer
+    #: taught), for a magus who hasn't reached it himself.
+    fertile_text: bool = False
     #: Enchanting and familiar work: pawns paid in the work's other Art
     #: (its Form when `vis_art` is its Technique, and the other way round);
     #: the rest are of `vis_art`.
@@ -275,16 +284,40 @@ class SeasonPlan:
     #: Creating a work of art: the piece's kind, bonuses and risks (None:
     #: a season's piece with none of them).
     artwork: ArtworkPlan | None = None
+    #: Undergoing an Initiation: the Script written out as its components
+    #: (rules.mysteries; empty: the Script bonus alone is typed).
+    script_components: list[ScriptPart] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:
         d = dict(data)
+        d["script_components"] = [
+            ScriptPart.from_dict(p) for p in d.get("script_components") or []
+        ]
         d["allocations"] = [XpAllocation.from_dict(a) for a in d.get("allocations", [])]
         if d.get("design") is not None:
             d["design"] = SpellDesign.from_dict(d["design"])
         if d.get("artwork") is not None:
             d["artwork"] = ArtworkPlan.from_dict(d["artwork"])
+        d["more_stirpes"] = _stirpes(d.get("more_stirpes"))
         return cls(**known_fields(cls, d))
+
+
+def _stirpes(raw: object) -> dict[str, int]:
+    """A saved plan's other Stirpes, checked: names to whole numbers."""
+    if not raw:
+        return {}
+    if not isinstance(raw, dict):
+        raise ValueError(f"A season plan's other Stirpes aren't a mapping: {raw!r}")
+    found: dict[str, int] = {}
+    for name, might in raw.items():
+        if not isinstance(might, int) or isinstance(might, bool):
+            raise ValueError(
+                f"Stirps {name!r} in a season plan has a Might that isn't a "
+                f"whole number: {might!r}"
+            )
+        found[str(name)] = might
+    return found
 
 
 @dataclass

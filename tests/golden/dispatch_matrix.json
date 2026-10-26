@@ -500,7 +500,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast",
+        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid",
         "slash": "(disabled)"
       }
     },
@@ -540,7 +540,7 @@
         "a": "FieldsDialog: Add a Personality Trait",
         "e": "FieldsDialog: Edit a Personality Trait",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "MenuScreen: Mystic Path, Invoke God's Aid",
         "slash": "(disabled)"
       }
     },

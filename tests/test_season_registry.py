@@ -18,6 +18,11 @@ from ars_magica_manager.rules.season_work import (
 
 #: The activities whose season does something beyond experience.
 WITH_OUTCOMES = {
+    # The mystic's Spiritual Path quests (The Church p. 22).
+    "path_service",
+    "path_devotion",
+    "path_preaching",
+    "path_mission",
     "working_season",
     "tournament",
     "apothecary",
@@ -48,6 +53,9 @@ WITH_OUTCOMES = {
     "seek_post",
     # The Church's season of personal devotion.
     "personal_devotion",
+    # Legends of Hermes: Hermetic Viresculture's Stirpes.
+    "vitalize_stirps",
+    "invigorate_stirps",
 }
 
 
@@ -56,7 +64,8 @@ def test_every_activity_is_registered_once() -> None:
     doubled = sorted({k for k in keys if keys.count(k) > 1})
     assert not doubled, f"registered more than once: {doubled}"
     assert set(keys) == set(REGISTRY) == set(BY_KEY)
-    assert len(keys) == 45  # with the scholars' two, and personal devotion
+    # with the scholars' two, personal devotion, and Viresculture's two
+    assert len(keys) == 51
 
 
 def test_registering_a_key_twice_fails() -> None:

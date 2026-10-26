@@ -29,7 +29,7 @@ from collections.abc import Callable
 
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..models import Character
-from . import common_magics, fenicil, house_discoveries, lab_virtues
+from . import breakthroughs_moh, common_magics, fenicil, house_discoveries, lab_virtues
 from .rounding import round_down
 
 SOURCE = "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, pp. 91-152"
@@ -187,6 +187,7 @@ def reminders(magus: Character) -> list[str]:
     found += common_magics.reminders(magus)
     found += house_discoveries.reminders(magus)
     found += fenicil.reminders(magus)
+    found += breakthroughs_moh.reminders(magus)
     return found
 
 

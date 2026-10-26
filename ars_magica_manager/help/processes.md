@@ -105,9 +105,10 @@ the Virtues & Flaws picker, which asks for anything the entry names (an Affinity
 a list of Virtues to choose from, which asks for anything the entry names (an Affinity's Art); **Clear** beside it clears a choice.
 <!-- /gui -->
 **Ordeal** says what the Ordeal costs, if anything: a Flaw gained (chosen in the picker), one of the Initiate's Minor or Major Virtues lost, or one of their Minor Flaws raised to a related Major Flaw. Its size follows: a Minor Flaw or Virtue is a Minor Ordeal, a Major one a Major Ordeal, a raised Flaw a Medium one. The Initiation succeeds when the Mystagogue's Presence + Lore + Script bonus reaches 15 for a Minor Virtue or 21 for a Major (18 or 30 when the Mystagogue lacks it), less the largest reduction among the Initiate's past Ordeals; the Initiate needs the Lore at 1 unless it is their own House's. See [How to initiate a character into a Mystery](help:guide-initiation).
+- **Hermetic Viresculture (Legends of Hermes pp. 72-76):** in Work & trade, for a magus with the Ability. **Vitalize a Stirps**: name the creature or plant and type its Magic Might (for Lesser Enchantment Vis, its effect's level). The Vitalization Total is Intelligence + Creo + Vim + Hermetic Viresculture + the aura: the magus's laboratory's Creo Vim Lab Total with Viresculture in place of Magic Theory. Each season adds what the Total exceeds the Might by, until the points reach the Might; it costs a pawn of Vim vis per ten levels (or fraction), paid with its first season from the raw vis **Vis from** names (the magus's own, the laboratory's or the covenant's stores; the season won't plan without it, nor with more than twice Magic Theory). **Other Stirpes** ("Name: Might; Name: Might") works on several in the one season, under Multiple Laboratory Activities (DE p. 264; Legends of Hermes p. 75): Vitalizing, the Total is set against their Levels together and must finish them all that season (at least twice the sum), each paying its own Vim; Invigorating, they share the Invigoration Total, rounded up (43 for two roosters gives each 22), and are all of the one Form. A Might of 0 is allowed. Until it is Invigorated a Stirps' young are ordinary, and its vis may be transferred out without harm, though it is then no longer a Stirps. **Invigorate a Stirps**: also choose its Form. The Invigoration Total is Intelligence + Creo + the Form + Viresculture + the aura, Vim being the Form's requisite (the lower of the two counts, DE p. 312). It gives a breeding season per ten points or fraction, each yielding a fifth of the Might (rounded up) in pawns of the Form, one in ten of them a new, uninvigorated Stirps. The magus tends at most his Viresculture score in Stirpes; each needs 12 Labor Points a year, and the yield is a pawn less for every 6 Labor Points short and for each month left unattended. With the Aura Variation rules, a year's harvest takes a fifth of its pawns (rounded up) off the aura's yearly modifier.
 - **Activities from the supplements**, such as Study a significato, Library research or Act as Mystagogue. Library research shows the roll's total before the die: Intelligence + the Ability + the better of the covenant library's research bonus for it and its best encyclopedia's.
 - **Learn to measure the fixed stars** (Ancient Magic, a magus): a season learning Ptolemy's measure of the array of fixed stars, the first stage of his coordinates; no experience. The app records it and won't plan it twice. The second stage, calibrating the system at its origin on the Zero Longitude in the Purple Islands, is a journey for the troupe; after both, a stellar observation (Intelligence + Artes Liberales against 15, four hours of clear stars, two with a supernaturally accurate timepiece, plus the calculations) gives the coordinates of where the magus stands, an Arcane Connection that never fades (Ancient Magic pp. 89-91; Errata p. 58).
-- **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs); More's [Pilgrimage](help:pilgrimage-more) on This Season records a pilgrimage's Oppositional Elements, a grog's too, and claims its aim. Care of Souls stays a priest's (p. 28). Personal devotion is a season of prayer and meditation at a saint's shrine: name the saint, and it earns 5 Devotion Points toward him, beginning a Devotion if he has none, with only exposure experience, in Church Lore or Dominion Lore (The Church p. 14).
+- **Faith:** Good Works, Follow a preacher, Pilgrimage and Visitation, petition or penance are open to magi as well as companions. Good Works is for any Christian (a cleric's may be a working season; The Church p. 27), following a preacher is any character's free season (p. 130), and anyone may go on pilgrimage or do penance (pp. 12, 16; grogs may make a pilgrimage too, but the app plans no seasons for grogs); More's [Pilgrimage](help:pilgrimage-more) on This Season records a pilgrimage's Oppositional Elements, a grog's too, and claims its aim. Care of Souls stays a priest's (p. 28). Personal devotion is a season of prayer and meditation at a saint's shrine: name the saint, and it earns 5 Devotion Points toward him, beginning a Devotion if he has none, with only exposure experience, in Church Lore or Dominion Lore (The Church p. 14). A contemplative mystic's Spiritual path seasons each count toward the Revelation the plan names (begun with More's Spiritual Path): service to the poor or the Church +1; devotion +1, with a Devotion Point toward the saint the plan's details name, or his patron, and exposure only in Dominion Lore; preaching the Gospel +3, once on a path; a mission to heretics, pagans or infidels at the risk of martyrdom +9 (The Church p. 22).
 - **Search for a lacuna:** Intelligence + the chosen Area Lore + a stress die against 9 (Houses of Hermes: Societates p. 57). The first success finds the city's obvious lacunae, recorded as 'Lacunae of <city>'; he then knows three small lacunae per level of that Area Lore, which the player names with the troupe. Seasons searching there after it are Area Lore practice, and the Area Lore's specialty may become lacunae. A character raised in the area by a magus knows them already and needs no search. A lacuna that gives more than a place to cast, not bought at creation nor won in a story, carries a limitation (unavailable by day, inhabitants to placate, overuse risking exposure, an Infernal aura). [Cast in a Lacuna](help:cast-in-lacuna) works out a spell cast from one.
 - **Set points:** Useful correspondence's 1 xp, and the 1 xp in Organization Lore: Order of Hermes for each book read from a folio, are set points (Covenants p. 90; Houses of Hermes: True Lineages p. 23): no Affinity, Savantism or wound halves or multiplies them, and Master of None and Secondary Insight ignore them. **Study a realia collection** is for one outside the library, such as an exhibit at Tablinum; one the covenant owns is a book of the Realia kind (see [Books](help:section-lib-books)). **Study another artist's work**: Source Quality is half the work's Aesthetic Quality, and each work is studied once, like a tractatus (Art & Academe p. 126, with Atlas Games' errata).
 
@@ -493,6 +494,31 @@ The steps run in a fixed order:
   Quaesitor examined it. The side that lost fewer levels wins, and the
   difference is its Argument Strength (less 1 for a motion that adds to
   the Code, 3 for one that alters it).
+  **Heard by** (a charge or appeal): Debate, as above; Certamen in its
+  place, which binds the case however persuasive the loser: say who won,
+  and the case goes to its ruling with no vote; or Certamen on one point
+  of it, where the Fatigue levels each side actually lost stand in for
+  the debate's levels lost, and its winner doesn't win the vote by it
+  (Houses of Hermes: Societates p. 92). Certamen in its place is offered
+  only for a personal charge one magus brings against another whose
+  charge names no violation of the Code: it can't over-rule a Tribunal,
+  so an appeal against a ruling is debated, and it can't require a
+  violation of the Code or a magus to overlook one, so a charge naming a
+  high or low crime is too (DE p. 230). The Heard by hint says why when
+  it isn't offered.
+  **Argues** (each side): In good faith; Knowing it false, when the
+  speaker's Truthful Personality Trait comes off each of his Defence
+  Totals (a deceitful Trait gives nothing); or a flawed, despised or
+  preposterous thesis, which starts the debate 1, 2 or 3 levels down
+  (The Power of Truth, p. 91). A motion opposed by "The Tribunal" is
+  debated by the whole hall: each round a different magus present (its
+  proposer aside) questions the proposer, at the skill you give the
+  Tribunal if he has no scores written down, and the levels lost are all
+  the Tribunal's (p. 92). **Changes** (a motion): the Peripheral Code;
+  the Peripheral Code, and recommended to the next Grand Tribunal (a
+  regional Tribunal can change only its own Code); or heard at the Grand
+  Tribunal, which costs the proposal 1 more Argument Strength on top of
+  an Addition's 1 or an Alteration's 3 (p. 93).
 - **The vote** on each case: each covenant's leaning, which you can
   change, with why it leans that way under it (it brings the case, the
   case is against it, or its attitude toward a troupe covenant that is
@@ -512,6 +538,39 @@ The steps run in a fixed order:
   customs: with no Praeco, the eldest magus of the Tribunal (by Year
   Born) is offered; set them aside by choosing the next eldest. The one
   named becomes Praeco, and the minutes say who was passed over.
+- **The Library of the Tribunal**, under Normandy's customs (The Lion and
+  the Lily pp. 22-23). The books the Tribunal owns in common are kept at
+  Confluensis and read only by those who win them at the Tourney, on a
+  seven-year lease, back before the next meeting. At the meeting's
+  Library step: tick each lease that is up as returned (one left
+  unticked is noted as still held); record a book a magus of the
+  Tribunal wrote and gave to the Library (it goes to Confluensis), and
+  the giver's prize, a Library book worth no more Build Points than his
+  gift (one lease for each book given, as many as there are to give);
+  and each book won at the Tourney, with the covenant that won it, as
+  many as the Library has free. A team buys its books with the prize
+  pawns its rank won at this year's Tourney (record its points on the
+  Tourney tab first): a book costs a pawn per 5 Build Points, a fraction
+  counting as a pawn, and the step refuses a team's books costing more
+  than its pawns. At the Tourney each team takes one tropaeum or lump of
+  vis and one book or item a round, in rank order, then picks again
+  while pawns remain (The Lion and the Lily p. 33); the pawns it spends
+  on tropaea and vis aren't counted here. A leased book stays the
+  Tribunal's, kept at Confluensis: the lessee has seven years' exclusive
+  access. Two prizes can't name one book: when two contributors want the
+  same book, certamen settles it.
+- **Residency**, under Provence's customs (Faith & Flame p. 22). A magus
+  is a resident of the Provençal Tribunal who attended one of its last
+  three meetings, or was granted residency by vote at his first, or
+  registered on arriving (with the Redcaps and the Praeco, or his
+  nearest neighbour). One Gauntleted in the Tribunal is a resident until
+  three meetings pass without him. The meeting's roll of residents
+  records the magi present, lets you grant residency to a newcomer
+  present, and records a resident's departure, registered or not (voting
+  at another Tribunal without registering his departure breaks the
+  Peripheral Code). Until three meetings are recorded, every magus of
+  the Tribunal is presumed a resident. A magus's sheet shows his
+  residency and why.
 - **The execution of sentences**, on the last day under the Theban
   customs, before the outgoing magistrates are paid: each charge the
   People's Court heard, its verdict taken from how its vote went

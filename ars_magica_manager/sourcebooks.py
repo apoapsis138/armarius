@@ -70,6 +70,8 @@ SOURCEBOOKS: dict[str, str] = {
     "ToP": "Tales of Power",
     "TSE": "The Sundered Eagle: The Theban Tribunal",
     "TtA": "Through the Aegis",
+    # Hedge traditions: the Saxon runes.
+    "TTT": "Thrice-Told Tales",
 }
 
 #: Other spellings the catalogs use for the same books (the spell catalog and

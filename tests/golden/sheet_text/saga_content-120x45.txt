@@ -4,14 +4,14 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Books in Play (43 of 43)
+    ▼ Books in Play (44 of 44)
 
         In play  Book       Title
       ○ always   DE         Ars Magica Definitive Edition
       ○ yes      A&A        Art & Academe
       ○ yes      AM         Ancient Magic
       ○ yes      App        Apprentices
-      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal        ▃▃
+      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal        ▄▄
       ○ yes      B&S        Blood and Sand: The Levant Tribunal
       ○ yes      BS&S       Between Sand and Sea: Mythic Africa
       ○ yes      C&G        City & Guild
@@ -29,7 +29,7 @@
       (none recorded)                                                             ▅▅
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Traditions Offered (1 of 88)
+    ▼ Traditions Offered (1 of 89)
 
         On       Book       Tradition
       ○ no       HMRE       Elementalists
@@ -50,10 +50,10 @@
     ▼ Catalogs (7)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1367        0
+      ○ Virtues & Flaws              yes          1368        0
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           222        0
-      ○ Abilities                    yes           262        0
+      ○ Abilities                    yes           271        0
       ○ Spells                       yes          1316        0
       ○ Shapes & Materials           yes           246        0
       ○ Goods                        yes            77        0

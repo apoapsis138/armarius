@@ -176,6 +176,9 @@ LAYERS: tuple[tuple[str, frozenset[str]], ...] = (
                 "worksheet_feedback",
                 # Transylvania's meeting steps.
                 "transylvania_meeting",
+                # Normandy's Library and Provence's residency steps.
+                "normandy_meeting",
+                "provence_meeting",
             }
         ),
     ),

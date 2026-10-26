@@ -249,7 +249,7 @@
       "working_seasons": 2,
       "working_xp": 15,
       "social_status": "vf_folk_witch",
-      "notes": "Must take at least one Flaw affecting their magic. Apprenticeship gives 200 xp (Well-Trained +50, Poorly Trained -50 each); afterwards 15 xp a year, modified by Wealthy or Poor. A witch spends two seasons a year supporting themselves; at creation each lab season costs 10 of that year's xp, at most 2 a year (Wealthy 3, Poor 1). A Gifted apprentice leaves with at least 1 in each of the seven Abilities and in Folk Witch Magic Theory. The troupe may swap in Animal Healing, Entrancement, Enchanting Music, Nightwalking, Premonitions or Wilderness Sense. Organization Lore: Folk Witches recognises a witch's mark.",
+      "notes": "Must take at least one Flaw affecting their magic. Apprenticeship gives 200 xp (Well-Trained +50, Poorly Trained -50 each); afterwards 15 xp a year, modified by Wealthy or Poor. A witch spends two seasons a year supporting themselves; at creation each lab season costs 10 of that year's xp, at most 2 a year (Wealthy 3, Poor 1). A Gifted apprentice leaves with at least 1 in each of the seven Abilities and in Folk Witch Magic Theory. The troupe may swap in Animal Healing, Entrancement, Enchanting Music, Nightwalking, Premonitions or Wilderness Sense. Organization Lore: Folk Witches recognises a witch's mark. The kitchen (HMRE pp. 38-42): 2 seasons and Folk Witch Magic Theory 3 to set up; a season and both Theories at 3 to convert a Hermetic laboratory; 3 sizes larger on Covenants' laboratory scale. Only a familiar, or sisters at a sabbat, can help. She may experiment as a magus does; a literate witch writes Lab Texts (a potion's has her Folk Witch Magic Theory as its level). A season's vis is at most twice her Folk Witch Magic Theory (four times with Concentrated Potions). A potion casts at Brew Potency + a stress die, no aura or Penetration bonus, and must penetrate the drinker; one granting a power gives it at Brew Potency / 5 (rounded up). Int + Folk Witch Magic Theory vs 9 reads a potion. Covens (pp. 43-50): built as a covenant (one site at Magic aura 3), each Script costing its bonus in Build Points; Low under 150, Medium to 299, High to 599, Legendary 600 and up.",
       "training": {
         "gift": "optional",
         "xp": 200,
@@ -305,7 +305,7 @@
           "vis_cap": "score",
           "vis": "the Ability's Form, besides any the effect itself costs",
           "ungifted_vis": false,
-          "notes": "Each power is worked by its Method: Potion (drunk), Incantation (heard) or Fetish (held). A botch gives a Warping Point per 0.",
+          "notes": "Each power is worked by its Method: Potion (drunk), Incantation (heard) or Fetish (held). A botch gives a Warping Point per 0. Flying, she adds her Flight score to Attack and Defense against a foe who can't fly (p. 38). Life-Linked Folk Witch Magic: +5 a Fatigue level spent (p. 35). A lost incantation returns on Int + Concentration vs 6 each day (p. 37).",
           "botch_notes": "+1 Warping Point a 0; a Flight botch costs a Long-Term Fatigue level a botch (HMRE pp. 37-38)"
         },
         {
@@ -329,6 +329,19 @@
           "against": "level",
           "vis_cap": "none",
           "notes": "A season in her kitchen (a standard laboratory). Some work uses no Supernatural Ability: then Int + Folk Witch Magic Theory + aura."
+        },
+        {
+          "name": "Folk witch Lab Total (no power)",
+          "kind": "ability",
+          "scores": [
+            "Folk Witch Magic Theory"
+          ],
+          "characteristic": "Intelligence",
+          "die": "none",
+          "lab": true,
+          "against": "level",
+          "vis_cap": "none",
+          "notes": "Work with no Supernatural Ability in it: vis extraction and fixing Arcane Connections (HMRE p. 39)."
         }
       ],
       "defenses": {
@@ -453,7 +466,7 @@
         {
           "key": "folk_witch_brew",
           "label": "Brew a potion or make a fetish",
-          "summary": "A season in her kitchen: a potion, a fetish, or a curse worked into a fetish, by the Lab Total of one of her powers.",
+          "summary": "A season in her kitchen: a brew (Brew Potency = the power's Lab Total; Folk Witch Magic Theory doses, a pawn each + the effect's vis), a fetish (a dowsing rod, a flying aid or an animal skin, a pawn of Intellego, Auram or Animal) or a curse woven into a fabric through an Arcane Connection (HMRE pp. 39-41).",
           "lab_rule": "Folk witch Lab Total"
         },
         {
@@ -461,6 +474,18 @@
           "label": "Bind a familiar",
           "summary": "A season: her Animal Ken Lab Total must exceed 10 + the animal's Size + its Magic Might.",
           "lab_rule": "Folk witch Lab Total"
+        },
+        {
+          "key": "folk_witch_extract_vis",
+          "label": "Extract vis",
+          "summary": "A season: a tenth of her Lab Total with no power, rounded up, in pawns of Vim vis from the aura (HMRE p. 39).",
+          "lab_rule": "Folk witch Lab Total (no power)"
+        },
+        {
+          "key": "folk_witch_fix_connection",
+          "label": "Fix an Arcane Connection",
+          "summary": "A season and a pawn of Vim: one Arcane Connection lasts her Lab Total with no power in its next unit up (HMRE p. 39).",
+          "lab_rule": "Folk witch Lab Total (no power)"
         }
       ],
       "warping": {
@@ -2793,7 +2818,7 @@
       "working_seasons": 0,
       "working_xp": 0,
       "social_status": "",
-      "notes": "Nightwalkers are ordinary unGifted companions; membership of a regional tradition is a Free Virtue, and they take an ordinary mundane Social Status. Losing the caul may be taken as a Major Story Flaw: the nightwalker's powers are gone until it is regained. Straying has no Ability score and does not improve. Their Second Sight works only in phantastic form. Usually four fertility battles a year, whose outcome can set the covenant's income roll. Hamr and Sleepwalker are lesser alternatives to the Nightwalker Virtue.",
+      "notes": "Nightwalkers are ordinary unGifted companions; membership of a regional tradition is a Free Virtue, and they take an ordinary mundane Social Status. Losing the caul may be taken as a Major Story Flaw: the nightwalker's powers are gone until it is regained. Straying has no Ability score and does not improve. Their Second Sight works only in phantastic form. Usually four fertility battles a year, whose outcome can set the covenant's income roll. Hamr and Sleepwalker are lesser alternatives to the Nightwalker Virtue. Fertility battles (HMRE pp. 108-111): usually four a year; a win keeps the harvest normal, a loss fails it, a rout of the enemy makes it bountiful. With Covenants the outcome replaces the income roll: utterly defeated Slump, routed Contraction, forced from the field Stagnation, wins the field Status Quo, routs the enemy Growth, harries them Expansion, annihilates them Boom. Insensibility by drug takes 10 - Concentration minutes (Stamina vs 6 to resist being drugged). A hostile phantasticum makes the unresisting drowsy (Concentration + Stamina vs 3). Recognising a militia member awake: Per + Awareness vs 15 - his Reputation (12 if met in processions), -3 meeting monthly, -6 weekly; an Infernal witch 18 - Reputation. An animal phantasticum keeps his Intelligence; each other Characteristic is the lower of two negatives, the higher of two positives, or their sum.",
       "training": {
         "gift": "never"
       },
@@ -2810,7 +2835,73 @@
           "vis_cap": "none",
           "penetrates": false,
           "fatigue": "1 long-term Fatigue level an hour, 2 for a whole night",
-          "notes": "Ease Factor 3 (places seen daily) to 15 (never visited), +3 per non-tradition object carried."
+          "notes": "Ease Factor 3 (places seen daily), 6 (this week), 9 (this year), 12 (visited, route known), 15 (never visited, route or Arcane Connection known), +3 per non-tradition object carried. No roll to one's caul, to a summons, to one's True Love, or along a known route at ordinary pace (HMRE pp. 107-108). Talking to people at the end costs another Long-Term Fatigue level."
+        },
+        {
+          "name": "Lead a spirit astray",
+          "kind": "ability",
+          "scores": [
+            "Leadership"
+          ],
+          "characteristic": "Stamina",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "Against the journey's Ease Factor + 3; drawing a willing spirit out on the spot is 3. A failed lead leaves the spirit to find its body by Stamina + Athletics once an hour (HMRE p. 108)."
+        },
+        {
+          "name": "Change form in combat",
+          "kind": "ability",
+          "scores": [
+            "Concentration"
+          ],
+          "characteristic": "Stamina",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "Ease Factor 15 to turn tangible or intangible, or human or animal, in combat; three rounds otherwise (HMRE p. 107)."
+        },
+        {
+          "name": "Seek a foe",
+          "kind": "ability",
+          "scores": [
+            "Awareness"
+          ],
+          "characteristic": "Perception",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "Ease Factor 9 finds a foe of similar or lesser skill, or a champion, in a battle fought man to man; the enemy captain is always found (HMRE p. 109)."
+        },
+        {
+          "name": "Intimidate the dead",
+          "kind": "ability",
+          "scores": [
+            "Leadership"
+          ],
+          "characteristic": "Presence",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "Ease Factor 6 + the ghost's Brave; each side's willing fighters add to the roll or the Ease Factor (HMRE p. 111)."
+        },
+        {
+          "name": "Question the dead",
+          "kind": "ability",
+          "scores": [
+            "Charm",
+            "Leadership"
+          ],
+          "characteristic": "Presence",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "Ease Factor 3 (yes or no), 6 (a sentence), 9 (up to six sentences), changed by the ghost's Traits; one question a ghost a night (HMRE pp. 111-112)."
         }
       ],
       "advancement": {
@@ -2849,6 +2940,15 @@
         "Ingwaz",
         "Dagaz",
         "Othila",
+        "Ac",
+        "Æsc",
+        "Yr",
+        "Ear",
+        "Gar",
+        "Calc",
+        "Cweorth",
+        "Stan",
+        "Ior",
         "Rune Magic",
         "Craft: Runes"
       ],
@@ -2884,7 +2984,7 @@
       "working_seasons": 0,
       "working_xp": 0,
       "social_status": "vf_vitki",
-      "notes": "About 15 years' apprenticeship gives 240 xp (at least half on runes) and 120 levels of rune scripts, plus 50 xp for the minimums Craft: Runes 2, Old Norse 3 and Rune Magic 1; no rune above 10 on leaving. A vitki taught by a master gets one free Minor Vitkar Virtue of the master's specialty. Runes may be studied from vis of any Art. Craft: Runes is an instance of the Craft Ability. Odin's Sacrifice, once a lifetime, can grant The Gift or open the runes.",
+      "notes": "About 15 years' apprenticeship gives 240 xp (at least half on runes) and 120 levels of rune scripts, plus 50 xp for the minimums Craft: Runes 2, Old Norse 3 and Rune Magic 1; no rune above 10 on leaving. A vitki taught by a master gets one free Minor Vitkar Virtue of the master's specialty. Runes may be studied from vis of any Art. Craft: Runes is an instance of the Craft Ability. Odin's Sacrifice, once a lifetime, can grant The Gift or open the runes. The nine Saxon runes (Ac, Æsc, Yr, Ear, Gar, Calc, Cweorth, Stan, Ior; Thrice-Told Tales pp. 139-143) died with the Saxon vitkir: only Damhan-Allaidh knows them. A vitki he trains is Opened to every rune he knows; he can also Initiate a vitki who knows all 24 Elder Futhark runes into them (a minor Initiation). A Gar script is drawn in the caster's blood and adds 1 more to the Penetration modifier against him.",
       "training": {
         "gift": "required",
         "xp": 290,
@@ -4422,10 +4522,516 @@
           "level": 10,
           "summary": "Ward away all things of the secondary rune",
           "page": 139
+        },
+        {
+          "name": "Resist force",
+          "arts": [
+            "Æsc"
+          ],
+          "summary": "general: magnitude to resisting another's forceful actions, a shield's Defense, stress checks to avoid breaking",
+          "page": 140
+        },
+        {
+          "name": "Immovable Object",
+          "arts": [
+            "Æsc"
+          ],
+          "summary": "general: Immovable Object Magic Defense equal to the magnitude, against Mentem or Corpus",
+          "page": 140
+        },
+        {
+          "name": "Resilient object",
+          "arts": [
+            "Æsc"
+          ],
+          "summary": "general: half the script's level off any Casting Total to weaken or destroy the object",
+          "page": 140
+        },
+        {
+          "name": "Wondrous toughness",
+          "arts": [
+            "Æsc"
+          ],
+          "level": 10,
+          "summary": "An object counts as a Wondrous Item for stress checks and damage levels",
+          "page": 140
+        },
+        {
+          "name": "Ward from decay",
+          "arts": [
+            "Æsc"
+          ],
+          "level": 10,
+          "summary": "An object is warded from rust, erosion and natural decay",
+          "page": 140
+        },
+        {
+          "name": "Aiming",
+          "arts": [
+            "Yr"
+          ],
+          "summary": "general: magnitude to aiming, missile and thrown Attacks, and spellcasters' Aiming rolls",
+          "page": 140
+        },
+        {
+          "name": "Extend range",
+          "arts": [
+            "Yr"
+          ],
+          "summary": "general: another script of this level or less reaches a hundred paces instead of ten",
+          "page": 140
+        },
+        {
+          "name": "Longer range",
+          "arts": [
+            "Yr"
+          ],
+          "level": 5,
+          "summary": "A missile's or thrown object's range increment +half",
+          "page": 140
+        },
+        {
+          "name": "Double range",
+          "arts": [
+            "Yr"
+          ],
+          "level": 10,
+          "summary": "A missile's or thrown object's range increment doubled",
+          "page": 140
+        },
+        {
+          "name": "Called shot",
+          "arts": [
+            "Yr"
+          ],
+          "level": 15,
+          "summary": "The missile strikes a chosen part of the target",
+          "page": 140
+        },
+        {
+          "name": "Unerring missile",
+          "arts": [
+            "Yr"
+          ],
+          "level": 20,
+          "summary": "The target's Defense Total is 0; it misses only on a botch",
+          "page": 140
+        },
+        {
+          "name": "Concealment",
+          "arts": [
+            "Ear"
+          ],
+          "summary": "general: magnitude to concealment, and to the Ease Factor to spot the inscribed object",
+          "page": 140
+        },
+        {
+          "name": "Rot",
+          "arts": [
+            "Ear"
+          ],
+          "level": 5,
+          "summary": "Rot leather, cloth, meat or wool",
+          "page": 140
+        },
+        {
+          "name": "Fog-dim",
+          "arts": [
+            "Ear"
+          ],
+          "level": 5,
+          "summary": "Light within 10 paces dims to heavy fog",
+          "page": 140
+        },
+        {
+          "name": "Hide a trivial memory",
+          "arts": [
+            "Ear"
+          ],
+          "level": 5,
+          "summary": "A trivial memory can't be recalled",
+          "page": 140
+        },
+        {
+          "name": "Degrade",
+          "arts": [
+            "Ear"
+          ],
+          "level": 10,
+          "summary": "Degrade wood and bone",
+          "page": 140
+        },
+        {
+          "name": "Moon-dim",
+          "arts": [
+            "Ear"
+          ],
+          "level": 10,
+          "summary": "Light within 10 paces dims to faint moonlight",
+          "page": 140
+        },
+        {
+          "name": "Hide a minor memory",
+          "arts": [
+            "Ear"
+          ],
+          "level": 10,
+          "summary": "A minor memory can't be recalled",
+          "page": 140
+        },
+        {
+          "name": "Extinguish light",
+          "arts": [
+            "Ear"
+          ],
+          "level": 15,
+          "summary": "All light within 10 paces goes out",
+          "page": 140
+        },
+        {
+          "name": "Hide a significant memory",
+          "arts": [
+            "Ear"
+          ],
+          "level": 15,
+          "summary": "A significant memory can't be recalled",
+          "page": 140
+        },
+        {
+          "name": "Erode",
+          "arts": [
+            "Ear"
+          ],
+          "level": 20,
+          "summary": "Erode or rust metal, stone and magically strengthened things",
+          "page": 140
+        },
+        {
+          "name": "Hide a major memory",
+          "arts": [
+            "Ear"
+          ],
+          "level": 20,
+          "summary": "A major memory can't be recalled",
+          "page": 140
+        },
+        {
+          "name": "Sacrifice",
+          "arts": [
+            "Gar"
+          ],
+          "summary": "general: magnitude to rolls made through injury or sacrifice, Confidence spends included",
+          "page": 141
+        },
+        {
+          "name": "Blood for Penetration (Light)",
+          "arts": [
+            "Gar"
+          ],
+          "summary": "general: a Light Wound when scribing gives +5 Penetration to another rune spell of this level or less",
+          "page": 141
+        },
+        {
+          "name": "Blood for Penetration (Medium)",
+          "arts": [
+            "Gar"
+          ],
+          "summary": "general: a Medium Wound gives +10 Penetration likewise",
+          "page": 141
+        },
+        {
+          "name": "Blood for Penetration (Heavy)",
+          "arts": [
+            "Gar"
+          ],
+          "summary": "general: a Heavy Wound gives +20 Penetration likewise",
+          "page": 141
+        },
+        {
+          "name": "Remembering",
+          "arts": [
+            "Calc"
+          ],
+          "summary": "general: magnitude to remembering, or to recovering lost information",
+          "page": 141
+        },
+        {
+          "name": "Raise a Reputation",
+          "arts": [
+            "Calc"
+          ],
+          "summary": "general: an existing Reputation + half the magnitude, rounded up, while reinforced",
+          "page": 141
+        },
+        {
+          "name": "Trivial memory",
+          "arts": [
+            "Calc"
+          ],
+          "level": 5,
+          "summary": "Create a trivial memory, a few minutes' speech",
+          "page": 141
+        },
+        {
+          "name": "Minor memory",
+          "arts": [
+            "Calc"
+          ],
+          "level": 10,
+          "summary": "Create a minor memory, a few hours' speech",
+          "page": 141
+        },
+        {
+          "name": "Reputation 1",
+          "arts": [
+            "Calc"
+          ],
+          "level": 10,
+          "summary": "A Reputation of 1, good or bad, that fades unless reinforced",
+          "page": 141
+        },
+        {
+          "name": "Tractatus of lore",
+          "arts": [
+            "Calc"
+          ],
+          "level": 20,
+          "summary": "A repository of lore, written and studied like a tractatus",
+          "page": 141
+        },
+        {
+          "name": "Summa of lore",
+          "arts": [
+            "Calc"
+          ],
+          "level": 30,
+          "summary": "A repository of lore, written and studied like a summa",
+          "page": 141
+        },
+        {
+          "name": "Invention",
+          "arts": [
+            "Cweorth"
+          ],
+          "summary": "general: magnitude to inventing, or making a new thing from an old one",
+          "page": 141
+        },
+        {
+          "name": "Trade Characteristics",
+          "arts": [
+            "Cweorth"
+          ],
+          "summary": "general: one Characteristic + the magnitude, another - the magnitude",
+          "page": 141
+        },
+        {
+          "name": "Alter face",
+          "arts": [
+            "Cweorth"
+          ],
+          "level": 5,
+          "summary": "Alter one's face to any remotely human look",
+          "page": 141
+        },
+        {
+          "name": "Rearrange the body",
+          "arts": [
+            "Cweorth"
+          ],
+          "level": 10,
+          "summary": "Move body parts about, harmlessly",
+          "page": 141
+        },
+        {
+          "name": "Duplicate a body part",
+          "arts": [
+            "Cweorth"
+          ],
+          "level": 15,
+          "summary": "A second pair of eyes or arms",
+          "page": 141
+        },
+        {
+          "name": "Inhuman parts",
+          "arts": [
+            "Cweorth"
+          ],
+          "level": 20,
+          "summary": "Grow horns, wings or other inhuman parts",
+          "page": 141
+        },
+        {
+          "name": "Free the soul",
+          "arts": [
+            "Cweorth"
+          ],
+          "level": 25,
+          "summary": "The soul wanders as a spirit: the Nightwalker Virtue while the script lasts",
+          "page": 141
+        },
+        {
+          "name": "Obstacles",
+          "arts": [
+            "Stan"
+          ],
+          "summary": "general: magnitude to setting or overcoming a deliberate obstacle",
+          "page": 142
+        },
+        {
+          "name": "Jam shut",
+          "arts": [
+            "Stan"
+          ],
+          "level": 5,
+          "summary": "Jam a door or chest shut (or undo the opening)",
+          "page": 142
+        },
+        {
+          "name": "Open",
+          "arts": [
+            "Stan"
+          ],
+          "level": 5,
+          "summary": "Open a lock or a jammed door or chest",
+          "page": 142
+        },
+        {
+          "name": "Double weight",
+          "arts": [
+            "Stan"
+          ],
+          "level": 10,
+          "summary": "Double an inanimate target's weight and Load",
+          "page": 142
+        },
+        {
+          "name": "Siege damage +1",
+          "arts": [
+            "Stan"
+          ],
+          "level": 10,
+          "summary": "A siege weapon does one more damage level to a structure",
+          "page": 142
+        },
+        {
+          "name": "Lighten by a quarter",
+          "arts": [
+            "Stan"
+          ],
+          "level": 10,
+          "summary": "Reduce an inanimate target's weight and Load by a quarter, rounded up",
+          "page": 142
+        },
+        {
+          "name": "Siege damage +2",
+          "arts": [
+            "Stan"
+          ],
+          "level": 15,
+          "summary": "A siege weapon does two more damage levels",
+          "page": 142
+        },
+        {
+          "name": "Lighten by half",
+          "arts": [
+            "Stan"
+          ],
+          "level": 20,
+          "summary": "Reduce an inanimate target's weight and Load by half, rounded up",
+          "page": 142
+        },
+        {
+          "name": "Resist poison",
+          "arts": [
+            "Ior"
+          ],
+          "summary": "general: magnitude to resisting poison or venom, and Recovery from a poison's wound",
+          "page": 142
+        },
+        {
+          "name": "One vermin",
+          "arts": [
+            "Ior"
+          ],
+          "level": 5,
+          "summary": "Summon a single beetle, snake, rat, toad or eel",
+          "page": 142
+        },
+        {
+          "name": "Mild poison",
+          "arts": [
+            "Ior"
+          ],
+          "level": 10,
+          "summary": "A substance's poison causes a Light Wound",
+          "page": 142
+        },
+        {
+          "name": "Fear or disgust",
+          "arts": [
+            "Ior"
+          ],
+          "level": 10,
+          "summary": "Fear or disgust of a chosen target",
+          "page": 142
+        },
+        {
+          "name": "Vermin swarm",
+          "arts": [
+            "Ior"
+          ],
+          "level": 15,
+          "summary": "Vermin totalling an animal of Size +1",
+          "page": 142
+        },
+        {
+          "name": "Poison (Medium)",
+          "arts": [
+            "Ior"
+          ],
+          "level": 15,
+          "summary": "A substance's poison causes a Medium Wound",
+          "page": 142
+        },
+        {
+          "name": "Terror",
+          "arts": [
+            "Ior"
+          ],
+          "level": 15,
+          "summary": "Incapacitating terror or revulsion of a chosen target",
+          "page": 142
+        },
+        {
+          "name": "Poison (Heavy)",
+          "arts": [
+            "Ior"
+          ],
+          "level": 20,
+          "summary": "A substance's poison causes a Heavy Wound",
+          "page": 142
+        },
+        {
+          "name": "Poison (Incapacitating)",
+          "arts": [
+            "Ior"
+          ],
+          "level": 25,
+          "summary": "A substance's poison causes an Incapacitating Wound",
+          "page": 142
+        },
+        {
+          "name": "Poison (Fatal)",
+          "arts": [
+            "Ior"
+          ],
+          "level": 30,
+          "summary": "A substance's poison causes a Fatal Wound",
+          "page": 142
         }
       ],
       "level_steps": "none",
-      "guideline_source": "Hedge Magic RE pp. 128-139; a General guideline's bonus is its magnitude (level / 5)"
+      "guideline_source": "Hedge Magic RE pp. 128-139 and the Saxon runes, Thrice-Told Tales pp. 139-143; a General guideline's bonus is its magnitude (level / 5)"
     },
     {
       "id": "trad_ollamhain",
@@ -21717,6 +22323,7 @@
         "scripts": [
           {
             "name": "Outer Mystery: Verditius Magic",
+            "components": [["Special place: a Forge of Hephaestus", 3], ["The Initiate's time: a season of service", 1], ["The Mystagogue's time", 3], ["The Mystagogue's wealth cast into the forge", 1], ["The Outer Mystery given as the Arts are opened", 6]],
             "ease_factor": 15,
             "bonus": 12,
             "gains": "Verditius Magic (Minor)",
@@ -21726,6 +22333,7 @@
           },
           {
             "name": "Enchant Casting Tools",
+            "components": [["The Mystagogue's time: a season making casting tools", 3], ["Her casting tools buried in a Magic regio on an anniversary", 3], ["Minor Ordeal", 3]],
             "ease_factor": 15,
             "bonus": 9,
             "gains": "Enchant Casting Tools (Minor)",
@@ -21738,6 +22346,7 @@
           },
           {
             "name": "Items of Quality",
+            "components": [["The journey to a Forge of Hephaestus", 3], ["The magic item and its mundane twin sacrificed on the forge", 3], ["Minor Ordeal: Increased Hubris", 3]],
             "ease_factor": 15,
             "bonus": 9,
             "gains": "Items of Quality (Minor)",
@@ -21750,6 +22359,7 @@
           },
           {
             "name": "Reforging Enchanted Items",
+            "components": [["The Initiate's time: a season making identical items", 1], ["The Mystagogue's time: a season assisting", 3], ["Minor Ordeal: Averse to Risk", 3]],
             "ease_factor": 15,
             "bonus": 7,
             "gains": "Reforging Enchanted Items (Minor)",
@@ -21762,6 +22372,7 @@
           },
           {
             "name": "Verditius Elder Runes",
+            "components": [["The journey to Durenmar (a season)", 3], ["A greater enchanted item burned in Verditius's forge", 6]],
             "ease_factor": 15,
             "bonus": 9,
             "gains": "Verditius Elder Runes (Minor)",
@@ -21774,6 +22385,7 @@
           },
           {
             "name": "Automata",
+            "components": [["The Initiate's time: a season studying an automaton of Hephaestus", 1], ["Quest: a brand from the lighthouse of Alexandria, kept lit", 3], ["Major Ordeal: Necessary Condition", 9]],
             "ease_factor": 21,
             "bonus": 13,
             "gains": "Automata (Major): Craft Automata 1",
@@ -21786,6 +22398,7 @@
           },
           {
             "name": "Bind Curse",
+            "components": [["Unique Quest: an item made by Hephaestus or a pagan smith-god", 6], ["The Mystagogue's time: investigating it together", 3], ["Minor Ordeal: Hatred for Seekers", 3]],
             "ease_factor": 21,
             "bonus": 12,
             "gains": "Bind Curse (Major)",
@@ -21798,6 +22411,7 @@
           },
           {
             "name": "Bind Magical Creatures",
+            "components": [["Quest: the body of a magical creature she didn't kill", 3], ["The Initiate's time: a season of Greek funeral rites", 1], ["The urn made of its ashes sacrificed", 3], ["Wealth sacrificed at a mock funeral", 1]],
             "ease_factor": 21,
             "bonus": 8,
             "gains": "Bind Magical Creatures (Major)",
@@ -21810,6 +22424,7 @@
           },
           {
             "name": "Item Attunement",
+            "components": [["Initiating another Verditius into a Minor Inner Mystery", 3], ["The Initiate's time: a season serving the Mystagogue", 1], ["His talisman sacrificed on a solstice", 6]],
             "ease_factor": 21,
             "bonus": 10,
             "gains": "Item Attunement (Major)",
@@ -21822,6 +22437,7 @@
           },
           {
             "name": "Confraternity of Roland: Minor Magical Focus (Swords)",
+            "components": [["Quest: Durendal stolen from its keeper", 3], ["Quest: the Creed recited a hundred times in an Infernal regio", 3], ["Quest: an enemy slain in battle bearing it", 3], ["Special place and time: Roncesvals on Roland's anniversary", 3]],
             "ease_factor": 15,
             "bonus": 12,
             "gains": "Minor Magical Focus (Swords) (Minor)",
@@ -21831,6 +22447,7 @@
           },
           {
             "name": "Confraternity of Balento: Bind Magical Creatures",
+            "components": [["Special place and time: the Tiber at the Vulcanalia", 3], ["Quest: five fish from a Magic aura", 3], ["Quest: five fish from a Faerie aura", 3], ["His talisman and a pint of blood sacrificed", 6]],
             "ease_factor": 21,
             "bonus": 15,
             "gains": "Bind Magical Creatures (Major)",
@@ -21843,6 +22460,7 @@
           },
           {
             "name": "Confraternity of Irene: Puissant Imaginem or Mentem",
+            "components": [["Quest: basalt cooled with holy water, or Carpathian pigments", 3], ["Special place: the fume-filled cave off Tunisia", 3], ["Minor Ordeal: Slow Caster", 3]],
             "ease_factor": 15,
             "bonus": 9,
             "gains": "Puissant Imaginem or Puissant Mentem (Minor)",
@@ -21852,6 +22470,7 @@
           },
           {
             "name": "Confraternity of Himinis: Bind Curse",
+            "components": [["Quest: a thief's left hand taken alone under a full moon", 3], ["The Initiate's time: a season serving the Mystagogue", 1], ["Major Ordeal: Sever the Ties that Bind", 9]],
             "ease_factor": 21,
             "bonus": 13,
             "gains": "Bind Curse (Major)",
@@ -21864,6 +22483,249 @@
           }
         ]
       }
+    },
+    {
+      "id": "trad_clesrada",
+      "name": "Clesrada",
+      "source": "TCI",
+      "realm": "Faerie",
+      "description": "The feats of arms of the Ulster heroes, part weapon-play, part juggling, part magic, taught by Scáthach and now only by her daughter Úathach at the Mercere House of Leth Cuinn. Each cles is a Faerie power gained by its own Initiation, and any warrior, Gifted or not, may learn them.",
+      "chapter": "Clesrada",
+      "abilities": [
+        "Organization Lore: Clesrada"
+      ],
+      "favored": [],
+      "virtues": [],
+      "notes": "Record each cles known as a power on the Feat roll of its Characteristic, naming its Ability and its guideline (its Ease Factor). A Single Weapon cles may be learned with Great Weapon instead, chosen at Initiation. Úathach is the only Mystagogue and lays a geas on every Initiate never to Initiate another (losing every cles if broken). Breaking a cles's own geas loses that cles. The troupe may design more clesa; each targets its user.",
+      "training": {
+        "gift": "optional",
+        "notes": "No apprenticeship: each cles is Initiated in play (The Contested Isle p. 101)."
+      },
+      "casting": [
+        {
+          "name": "Feat roll (Strength)",
+          "kind": "ability",
+          "scores": [
+            "Athletics",
+            "Concentration",
+            "Single Weapon",
+            "Great Weapon",
+            "Thrown Weapon"
+          ],
+          "characteristic": "Strength",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "A cles that rolls Strength (TCI pp. 101-104). It counts as a 15th-level spell with Penetration 0 + the Penetration bonus against magic that affects spells, but acts on the user and need not penetrate a foe. Clesa of one Ability chain in one action, each rolled in turn until one fails, with no Attack that round.",
+          "botch_notes": "a botch always costs a Fatigue level (TCI p. 101)"
+        },
+        {
+          "name": "Feat roll (Stamina)",
+          "kind": "ability",
+          "scores": [
+            "Athletics",
+            "Concentration",
+            "Single Weapon",
+            "Great Weapon",
+            "Thrown Weapon"
+          ],
+          "characteristic": "Stamina",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "A cles that rolls Stamina (TCI pp. 101-104). It counts as a 15th-level spell with Penetration 0 + the Penetration bonus against magic that affects spells, but acts on the user and need not penetrate a foe. Clesa of one Ability chain in one action, each rolled in turn until one fails, with no Attack that round.",
+          "botch_notes": "a botch always costs a Fatigue level (TCI p. 101)"
+        },
+        {
+          "name": "Feat roll (Dexterity)",
+          "kind": "ability",
+          "scores": [
+            "Athletics",
+            "Concentration",
+            "Single Weapon",
+            "Great Weapon",
+            "Thrown Weapon"
+          ],
+          "characteristic": "Dexterity",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "A cles that rolls Dexterity (TCI pp. 101-104). It counts as a 15th-level spell with Penetration 0 + the Penetration bonus against magic that affects spells, but acts on the user and need not penetrate a foe. Clesa of one Ability chain in one action, each rolled in turn until one fails, with no Attack that round.",
+          "botch_notes": "a botch always costs a Fatigue level (TCI p. 101)"
+        },
+        {
+          "name": "Feat roll (Quickness)",
+          "kind": "ability",
+          "scores": [
+            "Athletics",
+            "Concentration",
+            "Single Weapon",
+            "Great Weapon",
+            "Thrown Weapon"
+          ],
+          "characteristic": "Quickness",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "A cles that rolls Quickness (TCI pp. 101-104). It counts as a 15th-level spell with Penetration 0 + the Penetration bonus against magic that affects spells, but acts on the user and need not penetrate a foe. Clesa of one Ability chain in one action, each rolled in turn until one fails, with no Attack that round.",
+          "botch_notes": "a botch always costs a Fatigue level (TCI p. 101)"
+        }
+      ],
+      "initiation": {
+        "characteristic": "Presence",
+        "lore": "Organization Lore: Clesrada",
+        "self_initiation": false,
+        "notes": "Every cles has Ease Factor 15. Each Script is a quest tied in symbol to the feat and a geas (the Prohibition Flaw) as its Ordeal, with no bonus for an earlier Ordeal, so the unGifted may be Initiated (TCI p. 101; HMRE p. 14). Úathach's Presence + Organization Lore: Clesrada is 12.",
+        "scripts": [
+          {
+            "name": "Ubullchless by Quest and Ordeal",
+            "ease_factor": 15,
+            "bonus": 6,
+            "gains": "Ubullchless, the Apple Feat",
+            "ordeal": "Prohibition (a geas, usually about apples)",
+            "notes": "Leave Leth Cuinn with an apple pip; within a year and a day bring back an enchanted apple freely given by the supernatural creature that owned it (+3); accept the geas Úathach whispers (+3)."
+          }
+        ]
+      },
+      "advancement": {
+        "practice_arts": true,
+        "vis_study": false,
+        "notes": "The clesa use ordinary Abilities; a new cles comes only by Initiation."
+      },
+      "guidelines": [
+        {
+          "name": "Baí Brasse (Profit of Speed)",
+          "arts": [],
+          "level": 9,
+          "summary": "Qui + Athletics: hurry at 3x and run at 6x walking pace for a round",
+          "page": 102
+        },
+        {
+          "name": "Cless Caitt (Cat Feat)",
+          "arts": [],
+          "level": 9,
+          "summary": "Dex + Athletics: standing long jump of (8 - Encumbrance) x one's height",
+          "page": 102
+        },
+        {
+          "name": "Ích-n-Erred (Hero's Salmon Leap)",
+          "arts": [],
+          "level": 9,
+          "summary": "Str + Athletics: standing high jump of (4 - half Encumbrance, rounded up) x one's height",
+          "page": 102
+        },
+        {
+          "name": "Ochtarchless (Eight-Men Feat)",
+          "arts": [],
+          "level": 9,
+          "summary": "Sta + Athletics: +5 Strength to lift or hold a weight, while the rolls keep succeeding",
+          "page": 102
+        },
+        {
+          "name": "Rothchless (Wheel Feat)",
+          "arts": [],
+          "level": 9,
+          "summary": "Str + Athletics: hurl what one couldn't throw; a Thrown Weapon attack with damage = its Load",
+          "page": 102
+        },
+        {
+          "name": "Tétchless (Rope Feat)",
+          "arts": [],
+          "level": 3,
+          "summary": "Dex + Athletics: balance on anything smaller than a foot; +3 unstable, +3 moving, +3/+6 sloped; softens falls; Perfect Balance +6",
+          "page": 102
+        },
+        {
+          "name": "Cless For Análaib (Breath Feat)",
+          "arts": [],
+          "level": 9,
+          "summary": "Sta + Concentration: Deprivation rolls for air every five minutes; or +3 to a precise task after three rounds",
+          "page": 103
+        },
+        {
+          "name": "Corpchless (Body Feat)",
+          "arts": [],
+          "level": 6,
+          "summary": "Dex + Concentration: dislocate to escape shackles (6), slip a gap one Size smaller (9) or two (12); +3 to escape a grapple (6)",
+          "page": 103
+        },
+        {
+          "name": "Sáebchless Díberge (Wild Feat of Contortion)",
+          "arts": [],
+          "level": 9,
+          "summary": "Qui + Concentration: +3 Attack Advantage for trips and disarms, or +3 Defense against them",
+          "page": 103
+        },
+        {
+          "name": "Siaburchles (Phantom Feat)",
+          "arts": [],
+          "level": 9,
+          "summary": "Qui + Concentration: give no defence; a blow passes through harmlessly; never two rounds running",
+          "page": 103
+        },
+        {
+          "name": "Béim Co Commus (Stroke of Precision)",
+          "arts": [],
+          "level": 9,
+          "summary": "Dex + Single Weapon: harmless precision with a blade; Ease Factor the foe's Defense Total in a fight",
+          "page": 103
+        },
+        {
+          "name": "Brúd nGeme (Crushing Roar)",
+          "arts": [],
+          "level": 9,
+          "summary": "Sta + Single Weapon: after a hit, two damage levels to the foe's weapon; +1 Superior, +3 Excellent, +6 enchanted",
+          "page": 103
+        },
+        {
+          "name": "Fáenchless (Sloped Shield Feat)",
+          "arts": [],
+          "level": 9,
+          "summary": "Str + Single Weapon: with an edged shield (+2 damage), a winning parry deals a glancing blow, once a round",
+          "page": 104
+        },
+        {
+          "name": "Foramchles (Swooping Feat)",
+          "arts": [],
+          "level": 3,
+          "summary": "Sta + Single Weapon: Ease Factor 3 + the armour's Protection: one location's Protection loses a fifth, rounded up",
+          "page": 104
+        },
+        {
+          "name": "Cless Cletenach (Javelin Feat)",
+          "arts": [],
+          "level": 9,
+          "summary": "Dex + Thrown Weapon: two javelins: range increment 15, damage 2 x (Str + weapon) + Advantage",
+          "page": 104
+        },
+        {
+          "name": "Cless Nónbair (Nine-Men Feat)",
+          "arts": [],
+          "level": 6,
+          "summary": "Str + Thrown Weapon: up to nine javelins at one target; +1 Ease Factor each after the first",
+          "page": 104
+        },
+        {
+          "name": "Torannchless (Thunder Feat)",
+          "arts": [],
+          "level": 6,
+          "summary": "Str + Thrown Weapon: Ease Factor 6 + the foe's Brawl Defense: a sling stone to the head knocks him down, with thunder",
+          "page": 104
+        },
+        {
+          "name": "Ubullchless (Apple Feat)",
+          "arts": [],
+          "level": 3,
+          "summary": "Dex + Thrown Weapon: Ease Factor 3 + 2 a missile: juggle up to nine one-handed, load a sling unpaused or throw three a round",
+          "page": 104
+        }
+      ],
+      "level_steps": "none",
+      "guideline_source": "The Contested Isle pp. 102-105: each cles's base Ease Factor (several change with the feat)"
     }
   ]
 }

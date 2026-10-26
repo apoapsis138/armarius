@@ -492,6 +492,9 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             "Threaten a Saint",
             "Devotion Points",
             "Indulgence, Vigil or Fast",
+            # A mystic's path and God's aid (The Church, RoP: The Divine).
+            "Mystic Path",
+            "Invoke God's Aid",
         ]
         await menu(pilot, app, "m", "In Creation / In Play")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))

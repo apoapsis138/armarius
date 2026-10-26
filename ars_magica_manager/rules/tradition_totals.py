@@ -30,8 +30,8 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from ..models import Character, Saga
+from . import folk_witches, hyperborean
 from . import hedge_casting as hc
-from . import hyperborean
 from .casting import magnitude
 from .rounding import round_down, round_up
 
@@ -144,6 +144,10 @@ SEASON_YIELDS: dict[str, Callable[[Saga, Character, int], list[str]]] = {
     # The Hyperborean hymns (Ancient Magic pp. 106-108, 116-117).
     "hymnist_infuse_power": hyperborean.infuse_yields,
     "hymnist_enchant_relic": hyperborean.relic_yields,
+    # The folk witch's kitchen (Hedge Magic RE pp. 39-41).
+    "folk_witch_brew": folk_witches.brew_yields,
+    "folk_witch_extract_vis": folk_witches.extraction_yields,
+    "folk_witch_fix_connection": folk_witches.connection_yields,
 }
 
 

@@ -584,6 +584,18 @@ and size, p. 135) or an automaton (Automata: type its Magic Might, 10 + Size +
 the material's base points, as its **Capacity**; it can't be a talisman, and
 its powers can't maintain concentration, pp. 129-130). Making either needs its
 Mystery.
+A device crafted by a Verditius shows the **House price** (Houses of Hermes: Mystery Cults
+pp. 114-115): to another magus, twice the vis it took (its opening, less its maker's
+Craft, and every effect's, elder runes included) besides that vis; to a mundane buyer
+15 Mythic Pounds for each pawn of that vis, the Primus's fixed price (an automaton's
+construction is charged on top). A charged item takes no vis: its price to a magus is
+twice the vis its maker could have extracted in the seasons it took, which he works out
+from his Vim extraction Lab Total, and to a mundane buyer 15 Mythic Pounds a pawn of
+that vis. The line also
+gives the Hubris experience selling it brings. Prices only bind the House; other magi
+charge what they like. A forge-companion (an unGifted craftsman with the Virtue) adds +1
+per 5 points of the Craft his master is using to the master's Lab Total, and a Verditius
+may have as many as his Leadership (pp. 113-114): add it to the Lab Total by hand for now.
 A Charged Item warns when more
 charges are recorded than its Lab Total gives: by the excess, or a fifth of
 the whole Lab Total when it was made from a Lab Text.

@@ -7,7 +7,8 @@ Kept in the package's data: "tenures", each {"source", "holder_id" (a
 covenant, or None for the Tribunal), "tenure", "until", "notes"}, and
 "tourney", each team's result {"year", "team", "points", "events"}
 ("points" its own tally, "events" {event key: placing}). A Tourney's
-ranks and prize pawns are worked out from its total points."""
+ranks and prize pawns are worked out from its total points. The Library
+of the Tribunal keeps "leases" and "gifts" (see leases() and gifts())."""
 
 from __future__ import annotations
 
@@ -19,7 +20,9 @@ from ..commands import Command, Confirm, Form, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
 from ..markup import escape
-from ..models import Covenant, Saga, Tribunal
+from ..models import Book, Covenant, Saga, Tribunal
+from ..rules import library
+from ..rules.rounding import round_up
 from ..sections import TENURE_SECTION, TOURNEY_SECTION
 from . import PackageList, PackageTab, TribunalPackage, entries, register
 
@@ -439,6 +442,112 @@ def tourney_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
     )
 
 
+# -- the Library of the Tribunal (The Lion and the Lily pp. 22-23) --
+
+#: How a book the Tribunal owns in common opens its description (the
+#: book pack writes it on each it records at Confluensis).
+LIBRARY_HELD = "Held for the Tribunal at Confluensis, as a Tourney prize"
+
+#: How long a book won from the Library is leased: seven years, and back
+#: before the next meeting.
+LEASE_YEARS = 7
+
+#: How a lease was won: a contributor's automatic prize, or a Tourney prize.
+BY_GIFT, BY_TOURNEY = "gift", "tourney"
+
+
+def book(saga: Saga, book_id: str | None) -> Book | None:
+    """The saga's book with that id, if it is still there."""
+    return next((b for b in saga.books if book_id and b.id == book_id), None)
+
+
+def leases(tribunal: Tribunal) -> list[dict[str, Any]]:
+    """Each lease of a Library book: {"book_id", "covenant_id", "magus_id",
+    "year", "until", "how", "returned" (the year, or None), "held_at" (the
+    meeting that granted it)}."""
+    return entries(tribunal, KEY, "leases")
+
+
+def gifts(tribunal: Tribunal) -> list[dict[str, Any]]:
+    """Each original book given to the Library: {"book_id", "magus_id",
+    "year", "held_at"}."""
+    return entries(tribunal, KEY, "gifts")
+
+
+def given_ids(tribunal: Tribunal) -> list[str]:
+    """The books given to the Library, which it now holds."""
+    return [g["book_id"] for g in gifts(tribunal) if g.get("book_id")]
+
+
+def library_books(saga: Saga, tribunal: Tribunal) -> list[Book]:
+    """The books the Tribunal owns in common: those its pack records as
+    held for it at Confluensis, and those given to it since."""
+    given = set(given_ids(tribunal))
+    return [
+        b
+        for b in saga.books
+        if b.id in given
+        or (b.type != "Other" and b.description.startswith(LIBRARY_HELD))
+    ]
+
+
+def keeper(saga: Saga, tribunal: Tribunal) -> Covenant | None:
+    """The covenant that keeps the Library: the one owning its books."""
+    for book in library_books(saga, tribunal):
+        if book.owner_kind == "covenant" and book.id not in given_ids(tribunal):
+            found = saga.covenant(book.owner_id)
+            if found is not None:
+                return found
+    return None
+
+
+def open_leases(tribunal: Tribunal) -> list[tuple[int, dict[str, Any]]]:
+    """(index, lease) of each lease not yet returned."""
+    return [(i, e) for i, e in enumerate(leases(tribunal)) if e.get("returned") is None]
+
+
+def available(saga: Saga, tribunal: Tribunal) -> list[Book]:
+    """The Library's books not out on lease."""
+    out = {e.get("book_id") for _i, e in open_leases(tribunal)}
+    return [b for b in library_books(saga, tribunal) if b.id not in out]
+
+
+def worth(saga: Saga, book: Book) -> int:
+    """A book's worth in Build Points, which a contributor's prize may
+    not exceed."""
+    return library.cost(book, saga)
+
+
+#: A Library book costs a Tourney team a prize pawn for each 5 Build
+#: Points of its worth (The Lion and the Lily p. 33).
+BUILD_POINTS_PER_PAWN = 5
+
+
+def book_pawns(saga: Saga, book: Book) -> int:
+    """The prize pawns a book costs at the Tourney: one per 5 Build Points,
+    a fraction counting as a pawn (at least one)."""
+    return max(1, round_up(worth(saga, book) / BUILD_POINTS_PER_PAWN))
+
+
+def team_pawns(tribunal: Tribunal, year: int, name: str) -> int | None:
+    """The prize pawns the team called `name` won at `year`'s Tourney, by
+    its rank (the p. 33 table); None when it has no result that year."""
+    results = tourney(tribunal)
+    key = name.strip().lower()
+    for index, rank in ranked(tribunal):
+        result = results[index]
+        if result.get("year") == year and result.get("team", "").strip().lower() == key:
+            return PRIZE_PAWNS.get(rank, 0)
+    return None
+
+
+def due(tribunal: Tribunal, year: int) -> list[tuple[int, dict[str, Any]]]:
+    """The open leases whose seven years are up by `year`'s meeting."""
+    return [
+        (i, e) for i, e in open_leases(tribunal) if int(e.get("until") or 0) <= year
+    ]
+
+
 #: What the Code asks of a covenant founded in the Tribunal.
 FOUNDING = (
     "Normandy's Code: a new covenant must hold exclusive vis sources "
@@ -473,7 +582,8 @@ NORMANDY = TribunalPackage(
             (PackageList(TOURNEY_SECTION, tourney_title, tourney_grid, tourney_ops),),
         ),
     ),
-    meeting_steps=("succession", "tourney", "host_by_lot"),
+    # The Library's step is in normandy_meeting.py.
+    meeting_steps=("succession", "library", "tourney", "host_by_lot"),
     covenant_fields=covenant_fields,
     about="Every vis source is held on a tenure of the Perthean Compact, and "
     "the covenants' teams contest the Hermetic Tourney after each meeting "

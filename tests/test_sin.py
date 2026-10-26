@@ -235,6 +235,8 @@ def test_the_sin_commands_are_offered_on_personality_traits():
         "Threaten a Saint",
         "Devotion Points",
         "Indulgence, Vigil or Fast",
+        "Mystic Path",
+        "Invoke God's Aid",
     ]
     plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     plain_labels = [

@@ -17,6 +17,12 @@
   vanguard taking at least as many blows; the defending group's Soak is
   its vanguard's. When the vanguard or leader falls, the group splits into
   individuals (pp. 395-397).
+- **Magic** (rules.magic_combat; DE pp. 214, 219-226; Houses of Hermes:
+  Societates pp. 25-33): a spell's Casting Score counts its Mastery, and
+  its Penetration the Penetration Mastery, an Arcane Connection and
+  sympathetic connections; an indirect spell isn't resisted but is aimed
+  like a missile; an invisible fighter can't be struck until located,
+  strikes with surprise and is harder to hit.
 - **Options** (pp. 397-398): Exertion spends a Fatigue level (each member's,
   in a group) for the Combat Ability on the Attack; disengaging is a
   Defence Total against every attacker of the last round, +3 for each try
@@ -47,6 +53,7 @@ from ..models import (
     FATIGUE_LEVELS,
     Character,
     Combatant,
+    Creature,
     Fight,
     FightEntry,
     FightGroup,
@@ -63,6 +70,7 @@ from . import (
     combat_groups,
     derived,
     dice,
+    magic_combat,
     penetration,
     realms,
     recovery,
@@ -89,6 +97,11 @@ GRAPPLE, BREAK_FREE, SPLIT, CAST, DEVICE = (
     "Cast a spell",
     "Use a device",
 )
+#: The actions fought with bare hands, not a weapon.
+BARE_ACTIONS = (SCUFFLE, GRAPPLE, BREAK_FREE)
+#: Searching a round for an invisible foe (HoH:S p. 32); offered only
+#: while one is unlocated.
+LOCATE = "Locate the unseen"
 ACTIONS: tuple[str, ...] = (
     ATTACK,
     EXERTION,
@@ -187,6 +200,36 @@ class Fighter:
             creature = self.saga.creature(self.combatant.ref_id)
             return creature is not None and creature.cunning
         return False
+
+    def holder(self) -> Character | Creature | None:
+        """The sheet or Bestiary entry it was drawn from (None when typed)."""
+        if self.character is not None:
+            return self.character
+        if self.combatant.kind == CREATURE_FIGHTER:
+            return self.saga.creature(self.combatant.ref_id)
+        return None
+
+    def signs(self) -> magic_combat.Clarity | None:
+        """How clear the signs of its invisibility are (None: visible)."""
+        return magic_combat.clarity(self.combatant.invisible)
+
+    def hidden(self) -> bool:
+        """Invisible with signs an observer can't simply see."""
+        signs = self.signs()
+        return signs is not None and not signs.seen
+
+    def magical_blow(self, action: str) -> bool:
+        """Whether its blow is kept out by Magic Resistance because it is
+        invisible: its touch and the weapon it turned invisible with are
+        both magical; only a non-magical weapon picked up after turning
+        invisible gets through, never bare hands (HoH:S p. 32). Obvious
+        signs alone don't change that."""
+        if self.signs() is None:
+            return False
+        if not self.combatant.weapon_after_invisible or action in BARE_ACTIONS:
+            return True
+        c = self.character
+        return c is not None and _weapon(c, self.combatant.weapon_id).gear_id == FIST
 
     def handling(self) -> int:
         """Its Animal Handling, which leads a group of tamed animals in
@@ -315,6 +358,10 @@ class Unit:
         group = self.group
         if group is None or not group.trained:
             return 0
+        # Fighters who can't see one another can't fight as a trained
+        # group (HoH:S p. 33).
+        if any(f.signs() is not None for f in self.standing()):
+            return 0
         leader = next((f for f in self.fighters if f.id == group.leader), None)
         if leader is None:
             return 0
@@ -378,6 +425,16 @@ def roll_initiative(saga: Saga, fight: Fight, rng: random.Random) -> list[str]:
         lines.append(f"{unit.name}: Init {total}")
     fight.initiative = rolled
     fight.order = sorted(rolled, key=lambda u: (-rolled[u], -tie[u]))
+    every = units(saga, fight)
+    # An invisible fighter nobody has located goes first in the first
+    # round (HoH:S p. 32); from the second the rolled order stands.
+    surprising = [u for u in fight.order if every[u].vanguard.hidden()]
+    if surprising:
+        fight.order = surprising + [u for u in fight.order if u not in surprising]
+        lines += [
+            f"{every[u].name} is unseen: it acts first this round (HoH:S p. 32)."
+            for u in surprising
+        ]
     fight.round, fight.turn = 1, 0
     fight.attacked_by, fight.attacked_last = {}, {}
     return lines
@@ -404,6 +461,16 @@ class Blow:
     #: Cast a Spell: the Arts chosen as casting requisites for what it is
     #: used on (DE p. 312).
     casting_requisites: tuple[str, ...] = ()
+    #: An indirect spell or effect: not resisted, but aimed (DE p. 223);
+    #: the size steps past a basic Individual it is aimed with.
+    indirect: bool = False
+    aim_steps: int = 0
+    #: Cast a Spell: the Arcane Connection to the target (a key of
+    #: penetration.ARCANE_CONNECTIONS, "" for none) and the sympathetic
+    #: connections used with it (DE pp. 219-220; HoH:S p. 27).
+    arcane: str = ""
+    named: bool = False
+    symbol: bool = False
 
 
 @dataclass
@@ -415,9 +482,14 @@ class Played:
 
 
 def _roll(
-    rng: random.Random, saga: Saga, label: str, base: int, lines: list[str]
+    rng: random.Random,
+    saga: Saga,
+    label: str,
+    base: int,
+    lines: list[str],
+    botch_dice: int = 1,
 ) -> tuple[int, bool]:
-    die = dice.stress_die(rng, saga=saga)
+    die = dice.stress_die(rng, botch_dice, saga=saga)
     if die.botched:
         lines.append(f"{label}: {base:+d} + a botch ({die.botches} on the botch dice)")
         # A botch adds nothing, so a negative base stays negative (DE p. 393).
@@ -440,6 +512,7 @@ def default_target(saga: Saga, fight: Fight, actor: Unit) -> Unit | None:
             and found.side != actor.side
             and not found.down()
             and not defenders_of(saga, fight, found)
+            and not unseen(fight, actor, found)
         )
 
     for unit_id in reversed(fight.attacked_by.get(actor.id, [])):
@@ -524,14 +597,115 @@ def range_penalty(fight: Fight) -> int:
 
 
 def defenders_of(saga: Saga, fight: Fight, unit: Unit) -> list[Fighter]:
-    """The fighters still standing who defend one of `unit`'s."""
-    mine = {f.id for f in unit.fighters}
+    """The fighters still standing who defend one of `unit`'s. Allies
+    can't defend one who is invisible (HoH:S p. 33)."""
+    mine = {f.id for f in unit.fighters if not f.hidden()}
     return [
         f
         for u in units(saga, fight).values()
         for f in u.standing()
         if f.combatant.defends in mine
     ]
+
+
+# -- fighting the invisible (HoH:S pp. 32-33) --
+
+
+def engaged(fight: Fight, one: Unit, other: Unit) -> bool:
+    """Whether the two are engaged in melee: one struck the other hand to
+    hand this round or last. Melee range locates a foe by sound and touch
+    (HoH:S p. 32)."""
+    if fight.range > 0:
+        return False
+    for a, b in ((one, other), (other, one)):
+        struck = fight.attacked_by.get(b.id, []) + fight.attacked_last.get(b.id, [])
+        if a.id in struck and not a.vanguard.figures().missile:
+            return True
+    return False
+
+
+def sees(fight: Fight, seer: Unit, unit: Unit) -> bool:
+    """Whether `seer` knows where `unit`'s vanguard is: it is visible, its
+    signs are obvious, `seer` located it, or the two are engaged in melee
+    (HoH:S p. 32)."""
+    if not unit.vanguard.hidden():
+        return True
+    return seer.id in fight.located.get(unit.vanguard.id, []) or engaged(
+        fight, seer, unit
+    )
+
+
+def unseen(fight: Fight, seer: Unit, unit: Unit) -> bool:
+    """`unit` is invisible and `seer` hasn't found it: it can't be engaged,
+    shot or targeted (HoH:S p. 32)."""
+    return not sees(fight, seer, unit)
+
+
+def _shielded(saga: Saga, fight: Fight, fighter: Fighter) -> bool:
+    """Whether the fighter has Magic Resistance at all, which keeps out an
+    invisible weapon (DE pp. 221, 223): a magus always does, anyone else
+    when it is above 0."""
+    c = fighter.character
+    if c is not None and c.arts:
+        return True
+    return resistance_of(saga, fight, fighter, "Imaginem") > 0
+
+
+def _invisible_block(
+    saga: Saga, fight: Fight, who: Unit, target: Unit, action: str
+) -> str:
+    """Why invisibility stops the blow ("" when it doesn't): the target
+    can't be found, or the attacker's invisible weapon or touch can't pass
+    the target's Magic Resistance (DE p. 223; HoH:S p. 32)."""
+    if unseen(fight, who, target):
+        return (
+            f"{who.name} doesn't know where the invisible {target.name} is: "
+            "locate it first (HoH:S p. 32)."
+        )
+    if who.vanguard.magical_blow(action) and _shielded(saga, fight, target.vanguard):
+        return (
+            f"{who.name}'s invisible weapon or touch is kept out by "
+            f"{target.name}'s Magic Resistance (DE p. 223; HoH:S p. 32): only a "
+            "non-magical weapon picked up after turning invisible gets through."
+        )
+    return ""
+
+
+def _invisible_terms(
+    saga: Saga, fight: Fight, who: Unit, target: Unit, chances: Odds, missile: bool
+) -> None:
+    """Invisibility's terms (HoH:S pp. 32-33): the invisible attacker's
+    melee bonus, and +3 for a surprise attack on a foe who hasn't located
+    him; the invisible defender's bonus to Defence."""
+    signs = who.vanguard.signs()
+    if signs is not None:
+        if not missile:
+            chances.attack.append(
+                Term(
+                    "Invisible",
+                    signs.attack,
+                    f"Invisible ({signs.label}): +{signs.attack} to a melee Attack",
+                )
+            )
+        if unseen(fight, target, who):
+            chances.attack.append(
+                Term(
+                    "Surprise",
+                    magic_combat.SURPRISE_ATTACK,
+                    f"A surprise attack on a foe who hasn't located it: "
+                    f"+{magic_combat.SURPRISE_ATTACK}",
+                )
+            )
+    theirs = target.vanguard.signs()
+    if theirs is not None:
+        chances.defence.append(
+            Term(
+                "Invisible",
+                theirs.defence,
+                f"{target.name} invisible ({theirs.label}): +{theirs.defence} to "
+                "Defence",
+            )
+        )
 
 
 def _splash(chances: Odds, mine: Figures, theirs: Figures) -> None:
@@ -565,8 +739,13 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
             blocked=f"{target.name} is defended by {names}: strike them first "
             "(DE p. 397)."
         )
-    if fight.range > 0 and not mine.missile:
-        return Odds(blocked=f"{who.name} can't reach {target.name} at range.")
+    unreached = (
+        f"{who.name} can't reach {target.name} at range."
+        if fight.range > 0 and not mine.missile
+        else _invisible_block(saga, fight, who, target, action)
+    )
+    if unreached:
+        return Odds(blocked=unreached)
     chances = Odds(attack=[Term("Attack", mine.attack)])
     bonus = who.bonus()
     if who.group is not None and who.group.bonus_to == "attack" and bonus:
@@ -614,6 +793,7 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
         chances.defence.append(
             Term("Mounted", their_ride, f"{target.name} mounted: +{their_ride}")
         )
+    _invisible_terms(saga, fight, who, target, chances, mine.missile)
     damage = mine.bare_damage if action in (SCUFFLE, GRAPPLE) else mine.damage or 0
     chances.damage = [Term("Damage", damage)]
     chances.soak = [Term("Soak", theirs.soak)]
@@ -653,8 +833,12 @@ def _strike(
     if action == EXERTION:
         for f in who.standing():
             f.tire()
-    hit_total, botched = _roll(rng, saga, "Attack", chances.total("attack"), lines)
-    guard, guard_botched = _roll(rng, saga, "Defence", chances.total("defence"), lines)
+    hit_total, botched = _roll(
+        rng, saga, "Attack", chances.total("attack"), lines, group_dice(who, lines)
+    )
+    guard, guard_botched = _roll(
+        rng, saga, "Defence", chances.total("defence"), lines, group_dice(target, lines)
+    )
     if guard_botched:
         lines.append(f"{target.name} botches the defence.")
     fight.attacked_by.setdefault(target.id, []).append(who.id)
@@ -706,6 +890,22 @@ def _strike(
     if fallen:
         text += " " + ", ".join(fallen) + (" falls." if len(fallen) == 1 else " fall.")
     return Played(text, lines)
+
+
+def group_dice(unit: Unit, lines: list[str] | None = None) -> int:
+    """A unit's botch dice on its combat rolls: one, and one more for each
+    invisible member of a group (HoH:S p. 33)."""
+    if unit.group is None:
+        return 1
+    extra = magic_combat.group_botch_dice(
+        sum(1 for f in unit.standing() if f.signs() is not None)
+    )
+    if extra and lines is not None:
+        lines.append(
+            f"{unit.name}: {extra} more botch dice for its invisible members "
+            "(HoH:S p. 33)"
+        )
+    return 1 + extra
 
 
 def _land(
@@ -836,6 +1036,8 @@ def play(saga: Saga, fight: Fight, blow: Blow, rng: random.Random) -> Played:
         action = BREAK_FREE
     if action == WAIT:
         played = Played(f"{who.name} waits.")
+    elif action == LOCATE:
+        played = _locate(saga, fight, who, blow.target, rng)
     elif action == DISENGAGE:
         played = _disengage(saga, fight, who, rng)
     elif action == BREAK_FREE and grip is None:
@@ -869,6 +1071,11 @@ def play(saga: Saga, fight: Fight, blow: Blow, rng: random.Random) -> Played:
 def _next_round(fight: Fight) -> None:
     fight.round += 1
     fight.turn = 0
+    if fight.round == 2 and any(
+        c.invisible for side in fight.sides for c in side.combatants
+    ):
+        # The unseen went first in the first round only (HoH:S p. 32).
+        fight.order.sort(key=lambda u: -fight.initiative.get(u, 0))
     fight.attacked_last, fight.attacked_by = fight.attacked_by, {}
     fight.splits = {}
 
@@ -891,7 +1098,7 @@ def restart(fight: Fight) -> None:
     fight.round, fight.turn, fight.order, fight.initiative = 0, 0, [], {}
     fight.attacked_by, fight.attacked_last, fight.disengage_tries = {}, {}, {}
     fight.log, fight.over, fight.recorded = [], "", False
-    fight.grips, fight.splits = [], {}
+    fight.grips, fight.splits, fight.located = [], {}, {}
     for side in fight.sides:
         for combatant in side.combatants:
             combatant.out = ""
@@ -958,11 +1165,19 @@ def actions_for(saga: Saga, fight: Fight, who: Unit | None) -> tuple[str, ...]:
         )
         if open_
     )
+    every = units(saga, fight)
+    search = (
+        (LOCATE,)
+        if any(
+            u.side != who.side and not u.down() and unseen(fight, who, u)
+            for u in every.values()
+        )
+        else ()
+    )
     if grip_on(fight, who.id) is not None:
         return (BREAK_FREE, *magic, WAIT)
     if fight.range > 0 and not who.vanguard.figures().missile:
-        return (*magic, DISENGAGE, WAIT)
-    every = units(saga, fight)
+        return (*magic, *search, DISENGAGE, WAIT)
     allies = [u for u in every.values() if u.side == who.side and not u.down()]
     enemy_groups = [
         u
@@ -976,7 +1191,44 @@ def actions_for(saga: Saga, fight: Fight, who: Unit | None) -> tuple[str, ...]:
         and (a != GRAPPLE or alone)
         and (a != SPLIT or (bool(enemy_groups) and len(allies) > 1))
     )
-    return (*blows, *magic, DISENGAGE, WAIT)
+    return (*blows, *magic, *search, DISENGAGE, WAIT)
+
+
+def _locate(
+    saga: Saga, fight: Fight, who: Unit, target_id: str, rng: random.Random
+) -> Played:
+    """A round's search for an invisible foe: Perception + Awareness +
+    stress die against his Dexterity + Stealth - Encumbrance + Stealth
+    bonus + stress die; beating it locates him (HoH:S p. 32)."""
+    every = units(saga, fight)
+    hidden = [
+        u
+        for u in every.values()
+        if u.side != who.side and not u.down() and unseen(fight, who, u)
+    ]
+    target = next((u for u in hidden if u.id == target_id), None) or next(
+        iter(hidden), None
+    )
+    if target is None:
+        return Played(f"{who.name} looks about, but nobody is hidden from it.")
+    signs = target.vanguard.signs()
+    assert signs is not None  # unseen() holds only for the invisible
+    lines: list[str] = []
+    if signs.unseeable:
+        lines.append(f"{target.name} leaves no signs: found by sound alone.")
+    seek = magic_combat.locate_base(who.vanguard.holder())
+    hide = magic_combat.hide_base(target.vanguard.holder(), signs)
+    found, botched = _roll(rng, saga, "Perception + Awareness", int(seek.total), lines)
+    cover, _ = _roll(rng, saga, "Dexterity + Stealth", int(hide.total), lines)
+    if botched or found <= cover:
+        return Played(
+            f"{who.name} searches for {target.name}, but can't find it.", lines
+        )
+    fight.located.setdefault(target.vanguard.id, []).append(who.id)
+    return Played(
+        f"{who.name} locates the invisible {target.name}: it may now be struck.",
+        lines,
+    )
 
 
 #: The most Ride adds to a mounted fighter's Attack and Defence (DE p. 397).
@@ -1005,6 +1257,12 @@ def tags(saga: Saga, fight: Fight, unit: Unit) -> list[str]:
             found.append(f"Mounted, Ride {ride_bonus(f):+d}")
         if f.combatant.defends:
             found.append(f"Defends {named.get(f.combatant.defends, '(gone)')}")
+        signs = f.signs()
+        if signs is not None:
+            found.append(f"Invisible ({signs.label})")
+            seers = [named.get(u, "(gone)") for u in fight.located.get(f.id, [])]
+            if seers:
+                found.append("Located by " + ", ".join(seers))
     grip = grip_on(fight, unit.id)
     if grip is not None:
         found.append(f"Held by {named.get(grip.by, '(gone)')} (grip {grip.strength})")
@@ -1049,6 +1307,20 @@ class MagicOdds:
     #: A spell's Casting Score in full, for a spontaneous spell's total.
     breakdown: Breakdown | None = None
     requisites: tuple[str, ...] = ()
+    #: Indirect: not resisted, but aimed with this roll (before the die)
+    #: and these botch dice (DE p. 223).
+    indirect: bool = False
+    aim: Breakdown | None = None
+    aim_botch_dice: int = 1
+    #: The Mastery score, which also takes botch dice off (DE p. 225).
+    mastery: int = 0
+    #: The Penetration bonus's working, and why the target is out of
+    #: reach ("" when it isn't).
+    penetration_breakdown: Breakdown | None = None
+    blocked: str = ""
+    #: Notes for the inspector: the target's doubled resistance, the
+    #: caster's schools of magical combat.
+    notes: list[str] = field(default_factory=list)
 
 
 def resistance_of(saga: Saga, fight: Fight, fighter: Fighter, form: str) -> int:
@@ -1088,6 +1360,8 @@ def spell_odds(
     if magus is None:
         return None
     requisites: tuple[str, ...] = ()
+    known = None
+    spell = None
     if blow.spell == SPONTANEOUS:
         technique, _, form = (blow.arts or "Creo Ignem").partition(" ")
         level = blow.level
@@ -1105,29 +1379,133 @@ def spell_odds(
         spell = catalog.find_spell(saga, blow.spell)
         if spell is None:
             return None
+        known = magic_combat.known_spell(magus, spell.id)
         technique, form, level = spell.technique, spell.form, spell.level or 0
         score = casting.spell_casting_score(
-            magus, spell, aura=fight.aura, casting_requisites=blow.casting_requisites
+            magus,
+            spell,
+            aura=fight.aura,
+            casting_requisites=blow.casting_requisites,
+            mastery=known.mastery_score if known else 0,
+            mastery_abilities=magic_combat.mastery_abilities(known),
         )
         name = spell.name
         requisites = (*spell.requisites, *blow.casting_requisites)
+    abilities = magic_combat.mastery_abilities(known)
+    pierce = _penetration(magus, target, blow, magic_combat.penetration_mastery(known))
+    resistance = resistance_of(saga, fight, target.vanguard, form)
+    notes: list[str] = []
+    victim = target.vanguard.character
+    if (
+        spell is not None
+        and resistance
+        and magic_combat.resists_doubly(victim, spell.id)
+    ):
+        resistance *= 2
+        notes.append(
+            f"{target.name} has mastered {spell.name} with Magic Resistance: "
+            "doubled against it (DE p. 226)."
+        )
+    school = magic_combat.schools_text(magus)
+    if school:
+        notes.append(school)
+    limit = magic_combat.indirect_note(spell)
+    if limit:
+        notes.append(limit)
+    indirect = blow.indirect or magic_combat.is_indirect(spell)
+    named = magic_combat.indirect_spell(spell)
+    harmless = (
+        f"{named.name} holds or traps and does no harm itself (HoH:S p. 30): "
+        "leave Damage blank."
+        if named is not None and named.harmless and blow.damage is not None
+        else ""
+    )
+    precise = abilities.get(casting.PRECISE_CASTING, 0)
     return MagicOdds(
         name,
         technique,
         form,
         level,
         int(score.total),
-        int(penetration.penetration_bonus(magus).total),
-        resistance_of(saga, fight, target.vanguard, form),
+        int(pierce.total),
+        resistance,
         spontaneous=blow.spell == SPONTANEOUS,
         breakdown=score,
         requisites=requisites,
+        indirect=indirect,
+        aim=(
+            magic_combat.aiming(magus, precise=precise, steps=blow.aim_steps)
+            if indirect
+            else None
+        ),
+        aim_botch_dice=magic_combat.aim_botch_dice(precise),
+        mastery=known.mastery_score if known else 0,
+        penetration_breakdown=pierce,
+        blocked=harmless
+        or _out_of_reach(
+            fight,
+            who,
+            target,
+            spell.range if spell else "",
+            spell.target if spell else "",
+        ),
+        notes=notes,
     )
 
 
-def device_odds(saga: Saga, fight: Fight, target: Unit, blow: Blow) -> MagicOdds | None:
+def _penetration(magus: Character, target: Unit, blow: Blow, mastery: int) -> Breakdown:
+    """The Penetration bonus: (Penetration + Penetration Mastery) x (1 +
+    the Arcane Connection + the sympathetic connections with it) (DE pp.
+    219-220, 226; HoH:S p. 27)."""
+    arcane = blow.arcane if blow.arcane in penetration.ARCANE_CONNECTIONS else None
+    by_name = {s.name: s for s in penetration.SYMPATHIES}
+    sympathies = [
+        by_name[name]
+        for name, used in (
+            (magic_combat.NAME_SYMPATHY, blow.named),
+            (magic_combat.SYMBOL_SYMPATHY, blow.symbol),
+        )
+        if used and name in by_name
+    ]
+    return penetration.penetration_bonus(
+        magus,
+        arcane_connection=arcane,
+        sympathies=sympathies,
+        mastery=mastery,
+        target=target.vanguard.character,
+    )
+
+
+def _out_of_reach(
+    fight: Fight, who: Unit, target: Unit, range_: str, target_kind: str
+) -> str:
+    """Why a spell or effect can't be aimed at the target: Eye range needs
+    both to see each other; an unlocated invisible foe is reached only by
+    an area spell or through an Arcane Connection (HoH:S p. 32). "" when
+    it can."""
+    if range_ == magic_combat.EYE_RANGE and (
+        who.vanguard.signs() is not None or target.vanguard.signs() is not None
+    ):
+        return (
+            "Eye range needs the two to see each other: no invisible fighter "
+            "casts it or is caught by it (HoH:S p. 32)."
+        )
+    if unseen(fight, who, target) and not magic_combat.reaches_unlocated(
+        range_, target_kind
+    ):
+        return (
+            f"{who.name} doesn't know where the invisible {target.name} is: only "
+            "an area spell or an Arcane Connection reaches it (HoH:S p. 32)."
+        )
+    return ""
+
+
+def device_odds(
+    saga: Saga, fight: Fight, target: Unit, blow: Blow, who: Unit | None = None
+) -> MagicOdds | None:
     """The effect Use a Device would use: its Penetration as enchanted
-    (DE p. 259) against the target's Magic Resistance."""
+    (DE p. 259) against the target's Magic Resistance; an indirect one is
+    aimed with the wielder's Perception + Finesse instead (DE p. 223)."""
     device_id, _, effect_id = blow.effect.partition("|")
     device = next((d for d in saga.enchanted_devices if d.id == device_id), None)
     effect = (
@@ -1135,6 +1513,7 @@ def device_odds(saga: Saga, fight: Fight, target: Unit, blow: Blow) -> MagicOdds
     )
     if device is None or effect is None:
         return None
+    user = who.vanguard.character if who is not None else None
     return MagicOdds(
         f"{device.name}: {effect.name or 'its effect'}",
         effect.technique,
@@ -1143,6 +1522,17 @@ def device_odds(saga: Saga, fight: Fight, target: Unit, blow: Blow) -> MagicOdds
         None,
         effect.penetration,
         resistance_of(saga, fight, target.vanguard, effect.form),
+        indirect=blow.indirect and user is not None,
+        aim=(
+            magic_combat.aiming(user, steps=blow.aim_steps)
+            if blow.indirect and user is not None
+            else None
+        ),
+        blocked=(
+            _out_of_reach(fight, who, target, effect.range, effect.target)
+            if who is not None
+            else ""
+        ),
     )
 
 
@@ -1281,10 +1671,12 @@ def _magic(
     odds_ = (
         spell_odds(saga, fight, who, target, blow)
         if action == CAST
-        else device_odds(saga, fight, target, blow)
+        else device_odds(saga, fight, target, blow, who)
     )
     if odds_ is None:
         return Played(f"{who.name} has nothing to cast or use.", lines)
+    if odds_.blocked:
+        return Played(odds_.blocked, lines)
     if action == CAST:
         magus = who.vanguard.character
         if magus is not None and casting_virtues.incompatible(
@@ -1319,9 +1711,16 @@ def _magic(
     else:
         pierce = odds_.penetration
     fight.attacked_by.setdefault(target.id, []).append(who.id)
-    lines.append(f"Penetration {pierce} against Magic Resistance {odds_.resistance}")
-    if not penetration.penetrates(pierce, odds_.resistance or None):
-        return Played(f"{target.name} resists {odds_.name}.", lines)
+    if odds_.indirect:
+        missed = _aim(saga, fight, who, target, odds_, rng, lines)
+        if missed is not None:
+            return Played(missed, lines)
+    else:
+        lines.append(
+            f"Penetration {pierce} against Magic Resistance {odds_.resistance}"
+        )
+        if not penetration.penetrates(pierce, odds_.resistance or None):
+            return Played(f"{target.name} resists {odds_.name}.", lines)
     if blow.damage is None:
         return Played(f"{odds_.name} takes {target.name}.", lines)
     victim = target.vanguard
@@ -1341,6 +1740,58 @@ def _magic(
     return Played(
         f"{odds_.name} strikes {target.name}: " + "; ".join(told) + ".", lines
     )
+
+
+def aim_defence(fight: Fight, target: Unit) -> list[Term]:
+    """What an aimed spell rolls against: the target's Defence against a
+    missile (aimed spells are treated like missiles, HoH:S p. 32), with its
+    group's bonus and its invisibility's (DE p. 223)."""
+    terms = [Term("Defence", target.vanguard.figures().missile_defence)]
+    bonus = target.bonus()
+    if target.group is not None and target.group.bonus_to == "defence" and bonus:
+        terms.append(Term("Group bonus", bonus, f"Group bonus +{bonus} to Defence"))
+    signs = target.vanguard.signs()
+    if signs is not None:
+        terms.append(
+            Term(
+                "Invisible",
+                signs.defence,
+                f"Invisible ({signs.label}): +{signs.defence} to Defence",
+            )
+        )
+    return terms
+
+
+def _aim(
+    saga: Saga,
+    fight: Fight,
+    who: Unit,
+    target: Unit,
+    odds_: MagicOdds,
+    rng: random.Random,
+    lines: list[str],
+) -> str | None:
+    """An indirect spell's aiming roll: Perception + Finesse + stress die,
+    as an attack total, against the target's Defence + stress die; Magic
+    Resistance doesn't stop it (DE p. 223). Returns why it missed, or None
+    when it hits."""
+    lines.append(
+        f"{odds_.name} is indirect: Magic Resistance doesn't stop it, but it "
+        "must be aimed (DE p. 223)."
+    )
+    guard_terms = aim_defence(fight, target)
+    lines += [t.line for t in guard_terms if t.line]
+    aim = int(odds_.aim.total) if odds_.aim is not None else 0
+    hit, botched = _roll(rng, saga, "Aiming", aim, lines, odds_.aim_botch_dice)
+    guard, _ = _roll(rng, saga, "Defence", sum(t.amount for t in guard_terms), lines)
+    if botched:
+        return (
+            f"{who.name} botches the aim of {odds_.name}: the storyguide says "
+            "what it strikes instead."
+        )
+    if hit <= guard:
+        return f"{odds_.name} misses {target.name}."
+    return None
 
 
 def _spontaneous_short(
@@ -1385,6 +1836,8 @@ def _casting_total(
     costs a Fatigue level, and score / 5 for a non-fatiguing one (DE pp.
     214-215). None on a botch."""
     score = odds_.score or 0
+    # A mastered spell's score comes off its botch dice, to none (DE p. 225).
+    botch_dice = max(0, 1 - odds_.mastery)
     if odds_.spontaneous and not blow.fatiguing:
         total = (
             casting.spontaneous_total(odds_.breakdown)
@@ -1393,7 +1846,7 @@ def _casting_total(
         )
         lines.append(f"Casting Total {score} / 5 = {total}")
         return total
-    die = dice.stress_die(rng, saga=saga)
+    die = dice.stress_die(rng, botch_dice, saga=saga)
     if die.botched:
         lines.append(f"Casting: a botch ({die.botches} on the botch dice)")
         return None

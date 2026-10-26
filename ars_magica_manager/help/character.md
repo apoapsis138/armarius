@@ -78,6 +78,11 @@ it to Soak (DE pp. 419-420). Resistances from other sources don't add: the
 character has the highest of True Faith's, the office and relic's, and
 Strong Angelic Heritage's Divine Might (age / 20, DE p. 109). The sheet
 says which it is.
+Realms of Power: The Divine p. 43's leaders of other faiths are listed too:
+a Greek patriarch 20, the head of another eastern church 25, a caliph or
+Shi'i imam 25, a chief qadi or mufti 20, a senior qadi or mufti 10, an
+invested sultan 10, the exilarch 25, a chief rabbi 20, a senior rabbi 10;
+metropolitans are Archbishop, crowned kings of any faith King (crowned).
 <!-- /gui -->
 The app works out the Age from Year Born (in
 Biographical Detail) and the saga's current year, and shows the current year
@@ -1140,6 +1145,86 @@ Power: The Infernal, Infernal Influence and Tarnish, pp. 23-24).
 ceremony that needs Infernal Lore 1 and spends a Confidence Point. **Roll**
 rolls it, spends a ceremony's point and writes the result in the Diary.
 
+## Mystic Paths
+<!-- help: mystic-path -->
+
+<!-- tui -->
+More (`m`) on a person's record offers, with The Church in play, his
+**Mystic Path**, and on that path **Spiritual Path** or **Monistic
+Revelation**:
+<!-- /tui -->
+<!-- gui -->
+Beside the Personality Traits' buttons, with The Church in play, are his
+**Mystic Path**, and on that path **Spiritual Path** or **Monistic
+Revelation**:
+<!-- /gui -->
+
+- **Mystic Path** (The Church pp. 19-24): contemplative mysticism, the
+  imitation of Christ, or monistic mysticism, the self lost in God; one at
+  a time. Both need a positive Pious trait and a tie to the Divine: True
+  Faith, a Divine Supernatural Ability (Sense Holiness and Unholiness, a
+  Holy Method or Power, or another of Realms of Power: The Divine's), or
+  Warping from a Divine source (p. 21). A contemplative has no sinful
+  trait (Realms of Power: The Divine p. 40); a monist has Visions or True
+  Faith (p. 23). A mystic's Warping is always the Divine Ascent, magus or
+  not: a contemplative's at 2 Warping Points from one event, its form the
+  Divine Form; a monist's at a single point, its form the Divine Gloom
+  (pp. 21, 23). After his first Ascent the path can't be left, its form
+  staying for life. The Divine Form adds his Warping Score to True Faith's
+  Magic Resistance and gives Soak of that Resistance / 5 (his Warping Score
+  / 5 without True Faith), both on the sheet; the inspector shows its
+  Penetration (Warping Score + 5 x True Faith) and the botch dice an
+  impious act adds (3 x Warping Score). In the Divine Gloom each Warping
+  Point gained is an experience point among Dominion Lore and his Holy
+  Abilities and one lost from mundane Abilities, never Concentration (the
+  Diary says so). A monist's season practising a Holy Ability is worth his
+  Concentration: type it as the season's Source Quality. The inspector
+  also shows what his True Faith brings (p. 23): at 2 Premonitions and a
+  Faith Point to dispel any illusion or glamour; at 3 double Magic
+  Resistance against Mentem and +6 for each Faith Point spent; at 5 an
+  Empyreal aura to Voice range.
+- **Spiritual Path** (a contemplative's, p. 22): begin a path to a
+  Revelation, a Virtue: a Minor Holy Method, Power or Supernatural Ability
+  (Path Total 15), another Minor Virtue (18), a Major Holy one (27) or
+  another Major Virtue (30), never True Faith. Quest Components must
+  reach the Path Total itself; his Pious isn't taken off it: the seasons are
+  planned on This Season (Spiritual path: service +1, devotion +1 with a
+  Devotion Point toward the saint in the plan's details or his patron,
+  preaching +3 once on a path, mission to heretics or infidels +9); the
+  rest are kept here (+6 a minor pilgrimage for nothing else, a Vow, which
+  adds the Minor Flaw, or a quest; +9 error or corruption revealed and put
+  right, his wealth given as alms, which takes away Wealthy or gives Poor,
+  or a year on crusade, with its temporary Faith Point, p. 19). Reached,
+  claim the Revelation: the Virtue is his, its Supernatural Ability at 1
+  with no penalty for his other Abilities or Arts.
+- **Monistic Revelation** (a monist's, after an Ascent, p. 24):
+  Intelligence + Concentration + stress die against his Warping Score +
+  stress die (no botch); the inspector shows the chance. Failing, the
+  Gloom comes as usual; succeeding, he also chooses: no mundane experience
+  lost to this Gloom; a Minor Virtue (3 or more Warping Points) or a Major
+  one (5 or more), the first always Second Sight; at 7 or more, Dominion
+  Lore in place of Magic or Faerie Lore, a realm each time; after both,
+  Infernal Lore.
+
+## Spiritual Path
+<!-- help: spiritual-path -->
+
+A contemplative mystic's path to a Revelation (The Church p. 22): begin
+one, count a Quest Component done in a story, or claim the Revelation once
+the Path Total is reached (his Pious isn't taken off it). A season's
+components are planned on This Season. See Mystic Paths.
+
+## Monistic Revelation
+<!-- help: monistic-revelation -->
+
+After a Divine Ascent, a monist may try to integrate a Revelation (The
+Church p. 24): Intelligence + Concentration + stress die against his
+Warping Score + stress die. Type the Warping Points the Ascent brought
+(those that set it off and its margin) and what the Revelation brings; a
+Virtue needs 3 points (Minor) or 5 (Major), the first always Second Sight;
+Dominion Lore in place of Magic or Faerie Lore 7, Infernal Lore after
+both. The Diary records it. See Mystic Paths.
+
 ## Holy Influence
 <!-- help: holy-influence -->
 
@@ -1170,6 +1255,60 @@ Point, which adds nothing to the roll. A group praying with him adds its
 modifier: everyone's Ceremony less their number, and each one's Presence +
 Leadership (p. 36). **Roll** rolls it, spends a ceremony's point and
 writes the result in the Diary.
+
+## Invoking God's Aid
+<!-- help: gods-aid -->
+
+With Realms of Power: The Divine in play, More on a person offers Invoke
+God's Aid (pp. 41-42): a short prayer and a Confidence Point (a Faith
+Point with True Faith; never a grog's, nor one with Low Self-Esteem). A
+stress die + Communication + Dominion Lore: 9 gives +1, 15 +2, 24 +3, to
+every roll in the scene clearly made toward the aim named, spellcasting
+too, until one fails or the scene ends. A 0 rolls three botch dice:
+divine disfavour, struck dumb, blind or clumsy until penance. Tick **For
+his followers too** to ask it for those in his spiritual care (they and he
+gain the bonus); with the Ceremony Ability he leads them, adding it and
+each one's Communication + Dominion Lore. **In battle**, God's aid is
+asked only against infidels or heretics, as his faith sees them, or a
+supernatural menace not of the Divine; a Trained Group adds a member's
+bonus to its combat bonus beyond the usual limit, only the highest
+counting, lost when the group fails a roll or splits (p. 42). The
+inspector shows each bonus's chance; the Diary records the prayer.
+
+## Font of Knowledge
+<!-- help: font-of-knowledge -->
+
+<!-- tui -->
+More on one with Font of Knowledge offers it (DE p. 165; Antagonists p.
+109):
+<!-- /tui -->
+<!-- gui -->
+Beside the Abilities' buttons, for one with Font of Knowledge (DE p. 165;
+Antagonists p. 109):
+<!-- /gui -->
+Intelligence + Font of Knowledge + stress die against 6 + 3 for each time
+he has drawn on it today, failures counted. Succeeding, he attempts a task
+with the Ability he lacks as if he had it at 2. Name the Ability and how
+often he has drawn on it today; the inspector shows the chance, the Diary
+the roll.
+
+## Commanding Aura
+<!-- help: commanding-aura -->
+
+<!-- tui -->
+More on one with a Church office or crown (Biographical Detail), or the
+Commanding Aura Virtue, offers Commanding Aura:
+<!-- /tui -->
+<!-- gui -->
+Beside Health's buttons, for one with a Church office or crown, or the
+Commanding Aura Virtue:
+<!-- /gui -->
+the office's Magic Resistance, its Soak (a fifth of it) and an Aura of
+Rightful Authority to Voice range, Penetration 0 (DE pp. 74, 420). Tick
+**Withdrawn until penance** for a legatus missus who delays or strays from
+his mission, or one God's will excommunicates: the office then gives no
+Magic Resistance or Soak until it is unticked. A legatus missus loses the
+aura for good when his mission is done (DE p. 74; Antagonists p. 38).
 
 ## Ars Goetia
 <!-- help: ars-goetia -->
@@ -1890,20 +2029,54 @@ Total, a simple die or a rule with no die rolls none.
 **Guidelines:** a tradition with a guideline table lists how many it has
 and from which pages: the gruagachan (HMRE pp. 66-70), the learned
 magicians and the imhergi who cast with their Arts (pp. 89-94), the
-vitkir's runes (pp. 128-139), the folk witches' Ease Factors (pp. 37-42),
+vitkir's runes (pp. 128-139) and the Saxon runes (Thrice-Told Tales
+pp. 139-143), the folk witches' Ease Factors (pp. 37-42),
 the Amazons (Rival Magic pp. 32-43), the Augustan schools and the Sortes
 Virgilianae (pp. 53-60), the Muspelli's Abilities and their utiseta bases
 (pp. 95-105), the Soqotran incenses (pp. 127-132), the five Solomonic arts
 (The Cradle and the Crescent pp. 48-58), the Columbae's wards and the other
 Ex Miscellanea Ease Factor tables (Houses of Hermes: Societates
 pp. 105-128), a hunter's Scry (Against the Dark p. 134) and the
-Nemthengacha's Embitterment (Tales of Mythic Europe p. 35). Choose one on
+Nemthengacha's Embitterment (Tales of Mythic Europe p. 35) and the
+clesrada's feats (The Contested Isle pp. 102-105). Choose one on
 an effect in [Effects and Items](help:tradition-effects) and its level is
 worked out.
 
 **Hunters:** any Foe Art pairs with any Practice Art (Against the Dark
 p. 132): the grid shows every Foe Art the character holds, the ones
 listed or another the troupe names.
+
+**Folk witches:** a flying witch adds her Flight score to Attack and
+Defense against a foe who can't fly, and Life-Linked Folk Witch Magic
+adds 5 a Fatigue level spent (HMRE pp. 35, 38). A potion casts at its
+Brew Potency + a stress die, with no aura and no Penetration bonus, and
+must penetrate the drinker; one that grants a power gives it at Brew
+Potency / 5, rounded up, for Brew Potency days (p. 40-41).
+
+**Nightwalkers:** spirit travel is Stamina + Athletics against 3 (places
+seen daily) to 15 (never visited), +3 for each object carried; leading a
+willing spirit along is Stamina + Leadership against 3 more; changing
+form in combat is Stamina + Concentration against 15; seeking a foe in
+battle Perception + Awareness against 9; intimidating a ghost Presence +
+Leadership against 6 + its Brave; questioning one Presence + Charm
+against 3, 6 or 9 by the answer's length (HMRE pp. 107-111). Straying
+costs a Long-Term Fatigue level for any time up to an hour, however
+short, two for a whole night, and one more for talking with people at
+its end (HMRE pp. 106, 108).
+
+**The clesrada:** each feat of arms is a power on the Feat roll of its
+Characteristic, its guideline giving its Ease Factor: Characteristic +
+its Ability + a stress die, + the aura's modifier for a Faerie power; a
+botch always costs a Fatigue level. A feat counts as a 15th-level spell
+with Penetration 0 + the Penetration bonus against magic that affects
+spells, but acts on its user and need not penetrate a foe; feats of one
+Ability chain into one action until one fails (The Contested Isle
+pp. 101-105).
+
+**Saxon runes:** Ac, Æsc, Yr, Ear, Gar, Calc, Cweorth, Stan and Ior are
+vitkar runes with their own guidelines (Thrice-Told Tales pp. 139-143);
+only Damhan-Allaidh knows them, by a minor Initiation for a vitki who
+knows all 24 Elder runes. Ac has no printed guidelines.
 
 **Not yet:** rolling a casting and the summoning chart. Each charm,
 spell or script the character knows is in
@@ -1954,7 +2127,21 @@ them than the Magic aura at the sabbat's site, so another realm's aura
 lets none help (HMRE pp. 45-46): enter them as **Sabbat helpers** on the
 Open a Student's Gift season, with the **Sabbat aura (Magic)** where it
 is held. For a sabbat Initiation, add the helpers to the
-**Script bonus** yourself, with the same cap (p. 46). An elementalist's
+**Script bonus** yourself, with the same cap (p. 46).
+
+**A folk witch's kitchen:** a brew's Brew Potency is its power's Lab
+Total (the power twice with Expert Potion Brewer), + 1 for each sister
+helping at a sabbat, up to the Magic aura there; it makes Folk Witch
+Magic Theory doses (+ a Lab Text's level), a pawn each + the effect's
+own vis, and a season may use twice her Folk Witch Magic Theory in vis
+(four times with Concentrated Potions). Extracting vis gives a tenth of
+her Lab Total with no power in it, rounded up, in Vim; fixing an Arcane
+Connection makes it last that Lab Total in its next unit up, along
+hours, days, weeks, months, years and decades (one lasting decades
+can't step further; indefinite connections are the laboratory's) (HMRE
+pp. 35, 39-41, 45; DE p. 219). The brewing season's notes say what it makes.
+
+An elementalist's
 **Refining** season shows what its Refining Total makes (HMRE pp. 26-27):
 a longevity potion of Total / 5 for age / 5 pawns, and by his Refining
 types a Characteristic potion (Total / 5, to at most half the Form), vis
@@ -2060,7 +2247,13 @@ elementalists' Elemental Warping, the folk witches' Witch Moon, the
 gruagachan's Transformation, the learned magicians' Intervention and
 Abduction, and the vitkir's Nátt-thel. The section gives what sets it off
 and the rolls it calls for, with the character's Warping Score (from the
-[Aging](help:section-aging) section). A magus, and every member of an Ex
+[Aging](help:section-aging) section).
+
+**The Witch Moon:** each month Stamina - Warping Score + a stress die
+against 6 ends it; more months than her Warping Score make it a bad
+experience (2 xp lost a Warping Point gained), otherwise a good one (5 xp
+a month). Harsh Moon makes the fever a Heavy Wound, Painless Moon none
+(HMRE pp. 35, 42-43). A magus, and every member of an Ex
 Miscellanea tradition, is a Hermetic magus: Warping and Twilight as for
 any magus.
 
@@ -2381,6 +2574,8 @@ released or triggered, and an If spell lapses after a year; no sympathetic
 connection works against a magus with Secret Name, and one who knows the
 secret name doesn't subtract the spell's level from his Penetration Total
 (DE pp. 235, 237, 239-240).
+Hermetic Metamorphosis reminds its holder of the surgery of Harmonic
+Metamorphosis of the Beast (Magi of Hermes p. 83).
 
 The other casting Virtues and Flaws get a line each there too, with their
 page (DE pp. 70-145): Boosted Magic, Flexible Formulaic Magic, Atlantean
@@ -2661,6 +2856,38 @@ The inspector shows the Casting Score in the lacuna and outside it, what
 the die must reach, the ceremony's time, the botch dice, and the cities
 whose lacunae he has found.
 
+## Hubris
+<!-- help: verditius-hubris -->
+
+More on a Verditius's Personality Traits, shown once he has the Flaw Hubris
+or the trait. What raised or lowered his pride between seasons (DE p. 242;
+Houses of Hermes: Mystery Cults pp. 115, 120). Each is kept in the Diary.
+
+- **Experience** for selling or making for pay a charged item or an item of
+  quality (1), repairing or reforging an item for pay (1), a lesser enchanted
+  device (1), a greater one (3), an attuned item (6), an automaton (1 a
+  magnitude of its Might), winning the Contest's apprentices' (1),
+  journeymen's (3) or masters' (6) category, declaring a vendetta (1) and
+  winning one (3). Learning an Inner Mystery is added by the Initiation
+  season. A magus with no Hubris trait yet starts at his first Inner
+  Mystery's score.
+- **Refusing a vendetta** (type the magus refused) gives the House
+  Reputation Dishonorable 4 and lowers the Hubris score a full point: it
+  falls to the experience of the score below, as an Ability would (pp. 115,
+  119). The refusal is kept: he loses the Reputation only once he has
+  regained the score he had and waged a vendetta on the magus he refused
+  (p. 115).
+- **Wages the vendetta on a magus he refused** (offered once he has refused
+  one) marks it waged; the inspector says what each refusal still needs.
+  When the Hubris score is back too, the Reputation goes.
+- **Resisting a vendetta**: a Personality Trait that works against Hubris
+  (her Intelligence without one) + a stress die against her Hubris + the
+  challenger's (p. 120). Resisting a temptation to sell is an opposed
+  Personality roll, or a Confidence Point spent to walk away: the troupe's.
+
+**See also:** [Personality Traits](help:section-personality-traits),
+[Script components](help:guide-initiation-plan)
+
 ## Pilgrimage
 <!-- help: pilgrimage-more -->
 
@@ -2758,6 +2985,34 @@ discoveries of House Bonisagus (the six Parma Magica folds of the Arma
 Magica, Parmulae, Figurine Magic and Realm-aligned spells). Choosing one
 fills in its name, kind, points and what it grants, which you can still
 change (Ancient Magic, Introduction, The Breakthrough).
+
+The books' magi have reached four more breakthroughs, each a goal the
+Integration picker fills in (their books give no points, so each takes its
+kind's usual target):
+
+- Fertile Longevity Ritual (Minor, 30; Magi of Hermes p. 20). A Longevity
+  Ritual leaves its subject permanently sterile (DE p. 261); once a magus
+  has reached this, the rituals he makes leave their subject fertile. Like
+  any Minor Breakthrough, any Hermetic magus with a Lab Text for an effect
+  using it, or trained by its discoverer, can use it too (DE p. 281): the
+  app can't tell which Longevity Lab Text uses it, so a Longevity Ritual's
+  plan has a Fertile (Lab Text) tick for a magus who hasn't reached it,
+  naming the Longevity Lab Texts he has at hand. The ritual's season says
+  which it does.
+- Hermetic Metamorphosis (Major, 45; Magi of Hermes pp. 82-83). Gives the
+  Minor Hermetic Virtue of that name: organs grafted onto an animal by
+  Harmonic Metamorphosis of the Beast, which only its holder can cast. The
+  surgery is Dexterity + Chirurgy against 9, +3 for an organ added rather
+  than swapped, +3 more to give a Virtue; failing, the animal dies soon
+  after, and a botch makes a monster. A human recipient needs a further
+  breakthrough.
+- Hermetic Viresculture (Major, 45; Legends of Hermes pp. 72-75). Gives
+  the Supernatural Ability of that name, its points as experience
+  (DE p. 281). Only those Opened to the Hermetic Arts can use it.
+- Viresculture of Lesser Enchantment Vis (Minor, 30; Legends of Hermes
+  p. 73). Living Lesser Enchantment Vis may be made a Stirps, its
+  effect's level standing for Magic Might; builds on Hermetic
+  Viresculture.
 
 Ancient Magic's chapters add what their integrations need. A goal named
 for one (the Grigori Legacy, the Limit of Vis, Mutable Device, Awakened

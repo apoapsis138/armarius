@@ -405,6 +405,22 @@ class Ordeal:
 
 
 @dataclass
+class RefusedVendetta:
+    """A vendetta a Verditius refused: the magus who declared it, the
+    Hubris score he had before refusing, and whether he has since waged a
+    vendetta on that magus. Regaining the score and waging it lose the
+    Reputation Dishonorable (rules.verditius.refuse_vendetta)."""
+
+    magus: str
+    hubris: int = 0
+    waged: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> RefusedVendetta:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Investment:
     """A merchant's investment still open (City & Guild pp. 110-122,
     rules.merchants): its kind, what it is in, the Labor Points put in
@@ -898,6 +914,9 @@ class Character:
     #: Text (older saves load with none).
     formula_designs: list[Formula] = field(default_factory=list)
     ordeals: list[Ordeal] = field(default_factory=list)
+    #: Verditius vendettas refused and not yet made good (older saves
+    #: load with none).
+    refused_vendettas: list[RefusedVendetta] = field(default_factory=list)
     #: Master of None: each subject ("art:Ignem") an Advancement Total
     #: raised, and the last year it did.
     advanced: dict[str, int] = field(default_factory=dict)
@@ -997,6 +1016,9 @@ class Character:
         d["agents"] = [Agent.from_dict(a) for a in d.get("agents", [])]
         d["discipline"] = [Discipline.from_dict(x) for x in d.get("discipline", [])]
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
+        d["refused_vendettas"] = [
+            RefusedVendetta.from_dict(v) for v in d.get("refused_vendettas", [])
+        ]
         d["formula_designs"] = [
             Formula.from_dict(f) for f in d.get("formula_designs", [])
         ]

@@ -36,9 +36,11 @@ from . import familiars as fam
 from . import goods as gd
 from . import inhabitants as inh
 from . import lab_texts as lt
+from . import mystic_paths as mystic_forms
 from . import spells as spl
 from .forms import careers
 from .forms import charter as charter_forms
+from .forms import hubris as hubris_forms
 from .models import (
     FULL,
     INHABITANT_KINDS,
@@ -397,6 +399,16 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("g", "act_of_piety", "Indulgence, Vigil or Fast"),
     # Holy influence and tempers (RoP: The Divine).
     MenuItem("h", "holy_influence", "Holy Influence"),
+    # Mystic paths, God's aid, the Font and the Commanding Aura (The
+    # Church, RoP: The Divine, DE).
+    MenuItem("k", "mystic_path", "Mystic Path"),
+    MenuItem("q", "spiritual_path", "Spiritual Path"),
+    MenuItem("z", "monistic_revelation", "Monistic Revelation"),
+    MenuItem("i", "gods_aid", "Invoke God's Aid"),
+    MenuItem("o", "font_of_knowledge", "Font of Knowledge"),
+    MenuItem("c", "commanding_aura", "Commanding Aura"),
+    # House Verditius's Hubris and vendettas (HoH:MC, DE).
+    MenuItem("b", "verditius_hubris", "Hubris"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -1003,6 +1015,36 @@ def _influences_holily(facts: ActionFacts) -> bool:
     )
 
 
+# Mystic paths, God's aid, the Font and the Commanding Aura.
+
+
+def _walks_in_faith(
+    test: Callable[[Saga, Character], bool],
+) -> Callable[[ActionFacts], bool]:
+    """A holy life's More commands: on a person's record or Personality
+    Traits, when `test` finds the saga and the character allow it."""
+
+    def rule(facts: ActionFacts) -> bool:
+        character = _on_traits(facts)
+        return (
+            character is not None
+            and character.animal is None
+            and test(facts.saga, character)
+        )
+
+    return rule
+
+
+# House Verditius's Hubris and vendettas.
+
+
+def _is_proud(facts: ActionFacts) -> bool:
+    """Hubris: a Verditius with the Flaw or the trait, on his Personality
+    Traits."""
+    character = _on_traits(facts)
+    return character is not None and hubris_forms.offers(facts.saga, character)
+
+
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
@@ -1066,6 +1108,15 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "act_of_piety": _keeps_devotion(devotion_forms.the_church),
     # Holy influence and tempers (RoP: The Divine).
     "holy_influence": _influences_holily,
+    # Mystic paths, God's aid, the Font and the Commanding Aura.
+    "mystic_path": _walks_in_faith(mystic_forms.offers_path),
+    "spiritual_path": _walks_in_faith(mystic_forms.offers_spiritual),
+    "monistic_revelation": _walks_in_faith(mystic_forms.offers_revelation),
+    "gods_aid": _walks_in_faith(mystic_forms.offers_aid),
+    "font_of_knowledge": _walks_in_faith(mystic_forms.offers_font),
+    "commanding_aura": _walks_in_faith(mystic_forms.offers_aura),
+    # House Verditius's Hubris and vendettas.
+    "verditius_hubris": _is_proud,
 }
 
 

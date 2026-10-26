@@ -120,6 +120,15 @@ class SupplementWork:
     #: A book's Quality raised (an edited lecture commentary): (book id,
     #: Quality points), the book marked glossed so it is raised once.
     book_quality: list[tuple[str, int]] = field(default_factory=list)
+    #: House Verditius's Hubris (rules.verditius): the trait's score when
+    #: this Initiation brings it first (0: none made), the experience it
+    #: gains, and the points the Increased Hubris Ordeal adds.
+    hubris_start: int = 0
+    hubris_xp: int = 0
+    hubris_rises: int = 0
+    #: Raw vis the season spends (Art -> pawns), taken from the pool the
+    #: plan's `vis_from` names (vis.season_pool).
+    vis_cost: dict[str, int] = field(default_factory=dict)
 
 
 #: What a season does beyond experience, written into `result` (rolls made

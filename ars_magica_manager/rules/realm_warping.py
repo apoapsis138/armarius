@@ -50,7 +50,10 @@ nothing is counted.
     Warping Points, and as many lost from mundane ones), Divine Form
     (Magic Resistance and Penetration from the Warping Score) or Divine
     Unity (the Warping Score added to the virtue's Personality Trait;
-    pp. 63-65). There is no Final Ascent.
+    pp. 63-65). There is no Final Ascent. A mystic of The Church (rules.
+    mysticism) always ascends, magus or not: a contemplative to the Divine
+    Form, a monist to the Divine Gloom, and a monist at a single point
+    (The Church pp. 21, 23).
   - Vituperation (RoP: The Infernal p. 95; rules.infernalists):
     Stamina + Concentration + Confidence Score + stress die against
     Warping Score + the points + Hierarchy + the aura + stress die (no
@@ -97,7 +100,8 @@ from dataclasses import dataclass
 
 from .. import catalog
 from ..models import Character, Saga
-from . import dice, faerie_sympathy, hybrid_magic, infernalists
+from . import dice, faerie_sympathy, hybrid_magic, infernalists, mysticism
+from . import divine_state as ds
 from . import warping as warping_rules
 from .realms import home_aura
 from .scores import ability_level
@@ -339,7 +343,7 @@ def _magus_realm(character: Character, found: set[str], held: set[str]) -> str:
     63), is an infernalist (Vituperation; the False Gift, RoP: The Infernal
     p. 124) or a homunculus wizard (Faerie Calling, RoP: Faerie p. 118)."""
     instead: set[str] = set()
-    if character.aging.seeks_ascent and holy(character):
+    if (character.aging.seeks_ascent and holy(character)) or ds.path(character):
         instead.add(DIVINE)
     if FALSE_GIFT in held or INFERNAL in found:
         instead.add(INFERNAL)
@@ -369,7 +373,7 @@ def response_realm(character: Character, *, opened: bool = False) -> str | None:
     )
     if magus:
         return _magus_realm(character, found, held)
-    if holy(character):
+    if holy(character) or ds.path(character):
         found.add(DIVINE)
     if FALSE_GIFT in held:
         found.add(INFERNAL)
@@ -446,13 +450,19 @@ def divine_ascent(
         "or vanishes until it ends."
     )
     points = gained + extra
-    notes.append(
-        "The form chosen at his first Ascent stays for life: Divine Gloom "
-        f"({points} xp among Dominion Lore and holy Abilities, and {points} xp "
-        "lost from mundane ones), Divine Form (Magic Resistance and "
-        "Penetration from his Warping Score) or Divine Unity (his Warping "
-        "Score added to the virtue's Personality Trait). No Final Ascent."
-    )
+    if ds.path(character):
+        # A mystic's path decides the form (The Church pp. 21, 23).
+        first = not ds.ascents(character)
+        ds.note_ascent(character)
+        notes += mysticism.ascent_lines(character, points if first else extra)
+    else:
+        notes.append(
+            "The form chosen at his first Ascent stays for life: Divine Gloom "
+            f"({points} xp among Dominion Lore and holy Abilities, and {points} xp "
+            "lost from mundane ones), Divine Form (Magic Resistance and "
+            "Penetration from his Warping Score) or Divine Unity (his Warping "
+            "Score added to the virtue's Personality Trait). No Final Ascent."
+        )
     return warping_rules.TwilightResult(
         True, time=f"{count} {unit}", seasons=seasons, extra_points=extra, notes=notes
     )

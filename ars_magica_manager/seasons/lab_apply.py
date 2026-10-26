@@ -7,7 +7,7 @@ import random
 from collections.abc import MutableMapping, Sequence
 from dataclasses import replace
 
-from .. import book_kinds, research_text, spell_parameters, storage
+from .. import book_kinds, research_text, spell_parameters, storage, vis
 from .. import books as bk
 from .. import spells as spl
 from ..models import (
@@ -47,6 +47,7 @@ from ..rules import (
     philosophy,
     research,
     scholarship,
+    verditius,
     work_virtues,
 )
 from ..rules import book_seasons as bs
@@ -360,6 +361,8 @@ def apply_supplement(
     Labor Points, a workshop's scores, progress records (finished ones
     noted), books written, Virtues gained, formulas, an Aging roll."""
     character.labor_points += work.labor_points
+    if work.vis_cost:
+        vis.pay(vis.season_pool(saga, character, plan), work.vis_cost)
     character.workshop_innovation += work.innovation
     character.workshop_raw_materials += work.raw_materials
     for kind, name, target, points in work.progress:
@@ -400,17 +403,7 @@ def apply_supplement(
             character.virtues_flaws.append(instance)
             cch.apply_virtue(saga, character, instance)
     if plan.activity == "undergo_initiation":
-        # An Initiation that gave its Virtue used up a step of each past
-        # Ordeal's reduction (a failed one spends none); one past its third
-        # Initiation lowers nothing more.
-        if work.initiated:
-            for ordeal in character.ordeals:
-                ordeal.initiations_since += 1
-            character.ordeals = [
-                o for o in character.ordeals if o.initiations_since < 3
-            ]
-        if work.ordeal:
-            character.ordeals.append(Ordeal(work.ordeal))
+        _apply_initiation(character, work)
     if work.summa_level is not None:
         book_id, level = work.summa_level
         book = next((b for b in saga.books if b.id == book_id), None)
@@ -444,6 +437,21 @@ def apply_supplement(
                 random.Random(),
                 young=work.aging_young,
             )
+
+
+def _apply_initiation(character: Character, work: sw.SupplementWork) -> None:
+    """An Initiation's Ordeals and House Verditius's Hubris. One that gave
+    its Virtue used up a step of each past Ordeal's reduction (a failed one
+    spends none); one past its third Initiation lowers nothing more."""
+    if work.initiated:
+        for ordeal in character.ordeals:
+            ordeal.initiations_since += 1
+        character.ordeals = [o for o in character.ordeals if o.initiations_since < 3]
+    if work.ordeal:
+        character.ordeals.append(Ordeal(work.ordeal))
+    verditius.apply_hubris(
+        character, work.hubris_start, work.hubris_xp, work.hubris_rises
+    )
 
 
 def _apply_reputations(

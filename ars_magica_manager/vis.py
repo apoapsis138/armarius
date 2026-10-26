@@ -37,6 +37,7 @@ from .models import (
     Laboratory,
     Possession,
     Saga,
+    SeasonPlan,
     new_instance_id,
 )
 from .rules import vis_kinds
@@ -281,6 +282,38 @@ def covenant_pool(
     no such covenant)."""
     covenant = saga.covenant(covenant_id)
     return StorePool(saga, covenant, who) if covenant is not None else {}
+
+
+def season_pool(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> MutableMapping[str, int]:
+    """The raw vis a season plan (not a laboratory plan) draws on, by its
+    `vis_from`: the character's own, their laboratory's, or their
+    covenant's vis stores."""
+    if plan.vis_from == LABORATORY:
+        lab = saga.laboratory(character.assigned_lab_id)
+        return lab.raw_vis if lab is not None else {}
+    if plan.vis_from == COVENANT:
+        return covenant_pool(saga, character.covenant_id, character.name)
+    return character.raw_vis
+
+
+def payer(character: Character, plan: SeasonPlan) -> str:
+    """Whose raw vis a plan's `vis_from` names, for a message."""
+    if plan.vis_from == COVENANT:
+        return "the covenant's"
+    if plan.vis_from == LABORATORY:
+        return "the laboratory's"
+    return f"{character.name}'s"
+
+
+def pay(pool: MutableMapping[str, int], cost: dict[str, int]) -> None:
+    """Take `cost` (Art -> pawns) out of `pool`, dropping emptied Arts."""
+    for art, pawns in cost.items():
+        key = art.lower()
+        pool[key] = max(0, pool.get(key, 0) - pawns)
+        if not pool[key]:
+            del pool[key]
 
 
 def _debit(holder: Holder, what: Held, pawns: int) -> None:

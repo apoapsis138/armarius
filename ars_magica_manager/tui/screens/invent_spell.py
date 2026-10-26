@@ -97,6 +97,7 @@ _WIDGET_OF: dict[str, str] = {
     "subject": "inv-subject",
     "longevity_vis": "inv-vis-art",
     "extra_vis": "inv-extra-vis",
+    "fertile_text": "inv-fertile",
     "device": "inv-device",
     "shape": "inv-shape",
     "effect": "inv-effect",
@@ -638,6 +639,20 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             )
             yield Label(" Extra pawns")
             yield _number(str(plan.extra_vis) if plan else "0", "inv-extra-vis")
+            # From a Lab Text using the Fertile Longevity Ritual breakthrough,
+            # offered only to a magus who hasn't reached it himself.
+            fertile = next(
+                (f for f in self.form.fields() if f.key == "fertile_text"), None
+            )
+            if fertile is not None:
+                yield Label(" Fertile")
+                yield Checkbox(
+                    "",
+                    value=bool(fertile.value),
+                    id="inv-fertile",
+                    compact=True,
+                    tooltip=fertile.hint or None,
+                )
         with Horizontal(classes="inv-row", id="inv-device-row"):
             yield Label("Device")
             yield Select(

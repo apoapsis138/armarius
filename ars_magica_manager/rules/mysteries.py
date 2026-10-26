@@ -55,7 +55,7 @@ import random
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 
-from ..models import Character, Saga
+from ..models import Character, Saga, ScriptPart
 from . import dice
 from .apprentice_seasons import gifted
 from .breakdown import Breakdown, Line
@@ -116,24 +116,143 @@ ORDEAL_REDUCTIONS: dict[str, tuple[int, int, int]] = {
 @dataclass(frozen=True)
 class Component:
     """A Script component: its bonus, and whether a Script may hold it only
-    once."""
+    once. `key` names it on a plan (SeasonPlan.script_components); one the
+    troupe sizes has the range `least`..`most` (`bonus` is its usual size);
+    an Ordeal's component names its size (`ordeal`) and comes from the
+    Ordeal chosen, never from the list."""
 
     name: str
     bonus: int
     once: bool = False
+    key: str = ""
+    least: int | None = None
+    most: int | None = None
+    ordeal: str = ""
+
+    @property
+    def sized(self) -> bool:
+        """Whether the troupe sets its bonus (within least..most)."""
+        return self.least is not None and self.most is not None
 
 
-#: The Definitive Edition's example components (the sacrifice of something
-#: of great symbolic value is +3 to +6, chosen per Script).
-COMPONENTS: tuple[Component, ...] = (
-    Component("Special place at a special time", 3),
-    Component("Specific Quest", 3),
-    Component("Sacrifice of time serving the cult", 1, once=True),
-    Component("Sacrifice of material goods", 1),
-    Component("Minor Ordeal", 3),
-    Component("Medium Ordeal", 6),
-    Component("Major Ordeal", 9),
+SCRIPT_SOURCE = (
+    "The Mysteries Revised Edition, The Initiation Script, pp. 15-16; Ars Magica "
+    "Definitive Edition p. 388"
 )
+#: The Definitive Edition's example components (p. 388) and The Mysteries
+#: Revised Edition's (pp. 15-16), which add the unique Quest, the
+#: Mystagogue's time and the sympathy bonus, and allow the special place
+#: and material goods once each (the Definitive Edition is silent on that).
+#: Replacing a Minor Virtue by the Major one it leads to (+3, TMRE p. 15) is
+#: an Ordeal that loses the Minor Virtue: the Ordeal field gives it.
+COMPONENTS: tuple[Component, ...] = (
+    Component("Special place at a special time", 3, once=True, key="place"),
+    Component("Specific Quest", 3, key="quest"),
+    Component("Sacrifice of time serving the cult", 1, once=True, key="time"),
+    Component("Sacrifice of material goods", 1, once=True, key="goods"),
+    Component("Minor Ordeal", 3, key="ordeal_minor", ordeal="Minor"),
+    Component("Medium Ordeal", 6, key="ordeal_medium", ordeal="Medium"),
+    Component("Major Ordeal", 9, key="ordeal_major", ordeal="Major"),
+    Component("Unique Quest", 6, key="unique_quest"),
+    Component(
+        "Sacrifice of great symbolic value (talisman, familiar, powerful device)",
+        3,
+        key="great_sacrifice",
+        least=3,
+        most=6,
+    ),
+    Component("The Mystagogue sacrifices time (teaching)", 3, key="mystagogue_time"),
+    Component(
+        "Sympathy of the rite to the Virtue",
+        1,
+        once=True,
+        key="sympathy",
+        least=-5,
+        most=5,
+    ),
+)
+#: The Ordeal's component, by the Ordeal's size.
+ORDEAL_COMPONENTS: dict[str, Component] = {c.ordeal: c for c in COMPONENTS if c.ordeal}
+
+
+def listed_components(table: Sequence[Component]) -> list[Component]:
+    """The components a plan may list: all but the Ordeals' (which come
+    from the Ordeal chosen)."""
+    return [c for c in table if c.key and not c.ordeal]
+
+
+def component_bonus(component: Component, part: ScriptPart) -> int:
+    """What a listed component adds: its own bonus, or the troupe's size
+    for one with a range."""
+    return part.bonus if component.sized else component.bonus
+
+
+def parts_problem(parts: Sequence[ScriptPart], table: Sequence[Component]) -> str:
+    """What makes a plan's listed components invalid ("" if nothing): one
+    not offered, an Ordeal's (given by the Ordeal chosen), a once-only one
+    twice, or a size outside its range. Any invalid component invalidates
+    the whole Script (TMRE p. 16)."""
+    by_key = {c.key: c for c in table if c.key}
+    for part in parts:
+        component = by_key.get(part.key)
+        if component is None:
+            return (
+                f"The Script component {part.key!r} isn't one this Initiation offers."
+            )
+        if component.ordeal:
+            return (
+                "An Ordeal's bonus comes from the Ordeal chosen: remove "
+                f"{component.name!r} from the components."
+            )
+        if component.once and sum(p.key == part.key for p in parts) > 1:
+            return (
+                f"A Script may include {component.name!r} only once ({SCRIPT_SOURCE})."
+            )
+        if component.sized:
+            assert component.least is not None and component.most is not None
+            if not component.least <= part.bonus <= component.most:
+                return (
+                    f"{component.name} is {component.least:+d} to "
+                    f"{component.most:+d}, not {part.bonus:+d}."
+                )
+    return ""
+
+
+def parts_lines(parts: Sequence[ScriptPart], table: Sequence[Component]) -> list[Line]:
+    """A line for each listed component (an unknown one is left out: see
+    parts_problem)."""
+    by_key = {c.key: c for c in table if c.key}
+    lines: list[Line] = []
+    for part in parts:
+        component = by_key.get(part.key)
+        if component is None:
+            continue
+        name = f"{component.name} ({part.note})" if part.note else component.name
+        lines.append(
+            Line(name, amount=component_bonus(component, part), source=SCRIPT_SOURCE)
+        )
+    return lines
+
+
+def lines_text(lines: Sequence[Line]) -> str:
+    """ "Specific Quest +3, Minor Ordeal +3 = +6"."""
+    total = sum(line.amount or 0 for line in lines)
+    return ", ".join(f"{line.label} {line.amount or 0:+d}" for line in lines) + (
+        f" = {total:+d}"
+    )
+
+
+def printed_components_note(components: Sequence[tuple[str, int]], bonus: int) -> str:
+    """A catalog Script's components as its note gives them, and whether
+    they add to its printed bonus (the printed one is used)."""
+    if not components:
+        return ""
+    lines = [Line(name, amount=amount) for name, amount in components]
+    text = f"The Script's components: {lines_text(lines)}"
+    total = sum(amount for _, amount in components)
+    if total != bonus:
+        text += f"; the book prints {bonus:+d}, which is used"
+    return text + "."
 
 
 def target_level(

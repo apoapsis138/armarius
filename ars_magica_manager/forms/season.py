@@ -47,12 +47,14 @@ from ..rules import (
 )
 from ..rules import supplement_work as sw
 from ..rules import tradition_seasons as ts
+from ..rules.season_work import initiation as initiation_work
 from ..seasons import pairs, repeat
 from ..seasons import plans as season_plans_text
 from ..seasons.projection import as_then
 from . import activity as activity_forms
 from . import character as character_forms
-from . import scholar_seasons
+from . import scholar_seasons, viresculture_seasons
+from . import script_components as script_forms
 from . import virtue as virtue_forms
 
 #: A front-end's Virtue/Flaw chooser for the form: (saga, character, side)
@@ -278,7 +280,7 @@ _SEASON_READS: ChoiceReads = (
         lambda v: {"insight_arts": list(v.get("insight_arts") or [])},
     ),
     (
-        (season_rules.VIS_STUDY,),
+        (season_rules.VIS_STUDY, *viresculture_seasons.PAYS_VIS),
         lambda v: {"vis_from": v.get("vis_from") or "character"},
     ),
     (
@@ -293,6 +295,8 @@ _SEASON_READS: ChoiceReads = (
     # Art & Academe's artists and scholars: a work of art's choices, the
     # post sought, the lecture commentary edited.
     *scholar_seasons.READS,
+    # Legends of Hermes: a Stirps Vitalized or Invigorated.
+    *viresculture_seasons.READS,
 )
 
 
@@ -442,6 +446,9 @@ def _supplement_plan_values(
             values.get("variation_bonus") or 0 if found["script_variation"] else 0
         )
         found["hedge_script"] = values.get("hedge_script") or ""
+        found["script_components"] = (
+            [] if found["hedge_script"] else list(values.get(script_forms.KEY) or [])
+        )
         found["knows_power"] = bool(values.get("knows_power"))
         experimental = bool(values.get("experimental_script"))
         found["experimental_script"] = experimental
@@ -876,6 +883,9 @@ def _script_fields(
     def experimental(values: dict[str, Any]) -> bool:
         return initiation(values) and bool(values.get("experimental_script"))
 
+    def hermetic(values: dict[str, Any]) -> bool:
+        return initiation(values) and not values.get("hedge_script")
+
     return [
         DialogField(
             "hedge_script",
@@ -888,6 +898,12 @@ def _script_fields(
             show_if=initiation,
             hint="A hedge tradition's Script: its Ease Factor, Characteristic "
             "and Lore are used, and the Script bonus above is added to its own.",
+        ),
+        script_forms.components_field(
+            initiation_work.components_for(character),
+            plan.script_components if plan else [],
+            show_if=hermetic,
+            name=character.name,
         ),
         DialogField(
             "knows_power",
@@ -1068,6 +1084,8 @@ def _supplement_fields(
         *_philosophy_fields(character, plan, activity_is),
         # Art & Academe's artists and scholars.
         *scholar_seasons.fields(saga, character, plan, activity_is),
+        # Legends of Hermes: Hermetic Viresculture's Stirps.
+        *viresculture_seasons.fields(plan, activity_is),
     ]
 
 
@@ -1639,7 +1657,9 @@ def _closing_fields(
                 ("Their laboratory's raw vis", "laboratory"),
                 ("Their covenant's vis stores", "covenant"),
             ],
-            show_if=_activity_is(season_rules.VIS_STUDY),
+            show_if=_activity_is(
+                season_rules.VIS_STUDY, *viresculture_seasons.PAYS_VIS
+            ),
         ),
         DialogField(
             "die",

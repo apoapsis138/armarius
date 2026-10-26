@@ -69,6 +69,13 @@ DIALOG_PAGES = {
     "pilgrimage-more",
     "holy-influence",
     "devotion",
+    "verditius-hubris",
+    "mystic-path",
+    "spiritual-path",
+    "monistic-revelation",
+    "gods-aid",
+    "font-of-knowledge",
+    "commanding-aura",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

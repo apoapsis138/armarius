@@ -28,7 +28,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from ..models import Character, Saga, VirtueFlawInstance, character_age
-from . import effects, gauntlet, options, realms, senses
+from . import divine_state, effects, gauntlet, options, realms, senses
 from . import hybrid_magic as hybrid
 from .breakdown import Breakdown, Line
 from .derived import OFFICE_RESISTANCE
@@ -263,6 +263,7 @@ def faith_magic_resistance(
     relic's adds to an office's, DE p. 420.)"""
     resistance = max(
         10 * character.background.true_faith_score
+        + divine_state.form_resistance(character)
         + (GUARDIAN_ANGEL_MR if _has(character, GUARDIAN_ANGEL) else 0),
         office_resistance(character) + relic_resistance(character),
         angelic_might(character, saga),
@@ -304,6 +305,11 @@ def _has(character: Character, vf_id: str) -> bool:
 
 
 def office_resistance(character: Character) -> int:
+    """An office's Magic Resistance; none while its Commanding Aura is
+    withdrawn (a legatus missus astray, or one excommunicated, until
+    penance: DE pp. 74, 420)."""
+    if divine_state.aura_withdrawn(character):
+        return 0
     return OFFICES.get(character.background.church_rank, 0)
 
 
@@ -348,8 +354,13 @@ def resistance_from(character: Character, saga: Saga | None = None) -> str:
         return "Strong Angelic Heritage"
     angel = GUARDIAN_ANGEL_MR if _has(character, GUARDIAN_ANGEL) else 0
     faith = 10 * character.background.true_faith_score
-    if faith + angel == total and total:
+    form = divine_state.form_resistance(character)
+    if faith + form + angel == total and total:
         return " + ".join(
-            [*(["True Faith"] if faith else []), *(["Guardian Angel"] if angel else [])]
+            [
+                *(["True Faith"] if faith else []),
+                *(["Divine Form"] if form else []),
+                *(["Guardian Angel"] if angel else []),
+            ]
         )
     return "the Dominion"

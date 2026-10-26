@@ -271,6 +271,9 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
         "Threaten a Saint",
         "Devotion Points",
         "Indulgence, Vigil or Fast",
+        # The mystic paths and God's aid (The Church, RoP: The Divine).
+        "Mystic Path",
+        "Invoke God's Aid",
     ]
     assert labels == ["Reward or Punish", "Pension", *saints]
     magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")

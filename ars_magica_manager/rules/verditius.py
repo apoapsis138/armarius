@@ -58,19 +58,24 @@ when it is the first Inner Mystery, DE p. 243).
 
 from __future__ import annotations
 
+import random
 from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
 
 from ..arts import FORMS, TECHNIQUES
 from ..models import (
+    CHARGED,
     INVESTED,
     Character,
     EnchantedDevice,
     InstilledEffect,
     Laboratory,
+    RefusedVendetta,
     Saga,
+    ScoredTrait,
     Spell,
 )
-from . import enchantment, lab, lab_virtues, mysteries, xp
+from . import confidence, dice, enchantment, lab, lab_virtues, mysteries, xp
 from .breakdown import Breakdown, Line
 from .casting import magnitude
 from .rounding import round_up
@@ -321,20 +326,31 @@ VERDITIUS_COMPONENTS: tuple[mysteries.Component, ...] = (
     mysteries.Component("Major Ordeal", 9),
     mysteries.Component("The Initiate sacrifices time serving the House", 1, once=True),
     mysteries.Component(
-        "The Initiate sacrifices a lesser enchanted item (4th magnitude or more)", 3
+        "The Initiate sacrifices a lesser enchanted item (4th magnitude or more)",
+        3,
+        key="verditius_lesser_item",
     ),
     mysteries.Component(
         "The Initiate sacrifices a greater enchanted item (7th magnitude or more) "
         "or his talisman",
         6,
+        key="verditius_greater_item",
     ),
     mysteries.Component("The Mystagogue sacrifices time (teaching or training)", 3),
     mysteries.Component(
         "The Mystagogue sacrifices wealth (a Mythic Pound per point of Hubris)",
         1,
         once=True,
+        key="verditius_wealth",
     ),
-    mysteries.Component("The Outer Mystery taught as the Arts are opened", 6),
+    mysteries.Component(
+        "The Outer Mystery taught as the Arts are opened", 6, key="verditius_outer"
+    ),
+)
+#: The House's own components a Verditius Initiate's plan may list besides
+#: the general ones (the others are the general ones under House names).
+HOUSE_COMPONENTS: tuple[mysteries.Component, ...] = tuple(
+    c for c in VERDITIUS_COMPONENTS if c.key
 )
 
 #: The Outer Mystery's Initiation (p. 118): its Target, its Script's bonus
@@ -463,7 +479,7 @@ def initiation_notes(initiate: Character, vf_id: str) -> list[str]:
     notes: list[str] = []
     if gives_hubris(initiate, vf_id):
         notes.append(
-            "The first Inner Mystery's Ordeal gives the Flaw Hubris: set the "
+            "The first Inner Mystery's Ordeal gives the Flaw Hubris, and sets the "
             f"Hubris Personality Trait to {starting_hubris(initiate)} "
             f"({HUBRIS_SOURCE})."
         )
@@ -940,3 +956,385 @@ def curse_duration(tier: str, magic_theory: int) -> str:
     Minor one and years for a Major."""
     unit = "seasons" if tier == "Minor" else "years"
     return f"{magic_theory} {unit}"
+
+
+# -- Forge-companions (HoH:MC pp. 113-114) ------------------------------------
+
+FORGE_SOURCE = f"{MC}, Gauntleted Magus, pp. 113-114"
+FORGE_COMPANION = "vf_forge_companion"
+#: A forge-companion adds +1 to the Lab Total for every 5 points of the
+#: Craft his master uses this season.
+FORGE_CRAFT_STEP = 5
+
+
+def forge_companion_lines(
+    magus: Character, companions: Sequence[Character], craft: str
+) -> tuple[list[Line], list[str]]:
+    """The forge-companions' help on a Verditius's Lab Total: each adds +1
+    per 5 points of `craft`, the Craft the magus uses this season (one
+    without it adds nothing), and he may have as many as his Leadership (an
+    apprentice is no forge-companion and doesn't count). The lines, and
+    notes on what doesn't count."""
+    lines: list[Line] = []
+    notes: list[str] = []
+    most = max(0, _score(magus, "Leadership"))
+    if len(companions) > most:
+        notes.append(
+            f"{magus.name} may have {most} forge-companions (his Leadership); "
+            f"only the first {most} help ({FORGE_SOURCE})."
+        )
+    for companion in companions[:most]:
+        bonus = _score(companion, craft) // FORGE_CRAFT_STEP if craft else 0
+        if not bonus:
+            notes.append(
+                f"{companion.name} adds nothing: a forge-companion helps with "
+                f"{craft or 'the Craft his master uses'} at 5 or more."
+            )
+            continue
+        lines.append(
+            Line(
+                f"{companion.name} (forge-companion)",
+                amount=bonus,
+                source=FORGE_SOURCE,
+            )
+        )
+    return lines, notes
+
+
+# -- Prices for enchantments (HoH:MC pp. 114-115) -----------------------------
+
+PRICES_SOURCE = f"{MC}, Prices for Enchantments, pp. 114-115"
+#: To another magus: twice the vis the item takes, besides that vis (the
+#: Elder Runes example, p. 128: 18 pawns and the 9 it took, 27 in all).
+PRICE_FACTOR = 2
+#: To a mundane buyer: 15 Mythic Pounds for each pawn of the item's vis
+#: cost, the Primus's fixed price (p. 114; p. 115 puts it as one and a half
+#: times a "standard" saga's 10 Pounds a pawn; the Automata example,
+#: p. 132: 22 pawns for 330 Pounds).
+MUNDANE_POUNDS_PER_PAWN = 15
+
+
+def device_vis(saga: Saga, device: EnchantedDevice) -> int:
+    """The pawns making the device took: what opening it cost (less its
+    Verditius maker's Craft, at least one) and every effect's vis, elder
+    runes' included; a charged item takes none."""
+    if device.type == CHARGED:
+        return 0
+    opened = device.pawns_opened if device.type == INVESTED else 0
+    maker = maker_of(saga, device)
+    if opened and device.verditius_runes and maker is not None and is_verditius(maker):
+        opened = max(1, opened - _score(maker, device.verditius_craft or FINESSE))
+    return opened + enchantment.pawns_used(device)
+
+
+def house_fee(vis: int) -> int:
+    """The pawns the House charges a magus for the work, besides the vis
+    the item takes."""
+    return PRICE_FACTOR * max(0, vis)
+
+
+def mundane_price(vis: int) -> int:
+    """The Mythic Pounds the House asks of a mundane buyer for an item
+    whose vis cost is `vis` pawns."""
+    return MUNDANE_POUNDS_PER_PAWN * max(0, vis)
+
+
+def sale_hubris_xp(device: EnchantedDevice) -> int:
+    """The Hubris experience selling the device (or making it for another,
+    for pay) brings its maker: 1 for a charged or lesser one, 3 for a
+    greater, 6 for an attuned item, a magnitude of Might for an automaton
+    (its Might typed as its Capacity; DE p. 242)."""
+    if device.verditius_item == enchantment.AUTOMATON:
+        return hubris_xp(AUTOMATON, round_up((device.capacity_override or 0) / 5))
+    if device.verditius_item == enchantment.ATTUNED:
+        return HUBRIS_XP["Selling (or making for another) an attuned item"]
+    if device.type == INVESTED:
+        return HUBRIS_XP["Selling (or making for another) a greater enchanted device"]
+    if device.type == CHARGED:
+        return HUBRIS_XP[
+            "Selling (or making for pay) a charged item or an item of quality"
+        ]
+    return HUBRIS_XP["Selling (or making for another) a lesser enchanted device"]
+
+
+def price_lines(saga: Saga, device: EnchantedDevice) -> list[str]:
+    """The House's price for a device a Verditius crafted, and the Hubris
+    experience selling it brings (plain text)."""
+    vis = device_vis(saga, device)
+    xp_text = f"selling it brings its maker {sale_hubris_xp(device)} Hubris experience"
+    if not vis:
+        return [
+            "House price: it takes no vis, so the price to a magus is twice the "
+            "vis its maker could have extracted in the seasons it took (work it "
+            "out from his Vim extraction Lab Total); to a mundane buyer, "
+            f"{MUNDANE_POUNDS_PER_PAWN} Mythic Pounds a pawn of that vis; "
+            f"{xp_text} ({PRICES_SOURCE})."
+        ]
+    fee = house_fee(vis)
+    line = (
+        f"House price: {fee} pawns besides the {vis} it takes ({fee + vis} in "
+        f"all) to a magus; {mundane_price(vis)} Mythic Pounds to a mundane buyer"
+    )
+    if device.verditius_item == enchantment.AUTOMATON:
+        line += ", with its construction"
+    return [f"{line}; {xp_text} ({PRICES_SOURCE})."]
+
+
+# -- Hubris as it grows (HoH:MC pp. 115, 119-121; DE pp. 241-242) -------------
+
+VENDETTA_SOURCE = f"{MC}, Vendettas, pp. 115-116; Hubris, p. 120; DE p. 242"
+#: Refusing a vendetta: the House Reputation, and a point of Hubris lost.
+DISHONORABLE = ("Dishonorable", 4)
+HOUSE_REACH = "House Verditius"
+
+
+def hubris_trait(magus: Character) -> ScoredTrait | None:
+    return next((t for t in magus.personality_traits if t.name == HUBRIS), None)
+
+
+def xp_to_next_hubris(magus: Character) -> int:
+    """The experience Hubris needs for its next point (the Increased Hubris
+    Ordeal gives just that, p. 121): 5 x the next score, less what is
+    already toward it."""
+    trait = hubris_trait(magus)
+    score = trait.score if trait else 0
+    return xp.ABILITY_FACTOR * (score + 1) - (trait.deeds if trait else 0)
+
+
+def gain_hubris(magus: Character, experience: int, start: int = 0) -> str:
+    """Add Hubris experience (kept toward the next point, as an Ability
+    grows), making the trait at `start` first when he has none and `start`
+    is given (the first Inner Mystery's). What it did, as a line."""
+    trait = hubris_trait(magus)
+    if trait is None:
+        if not start:
+            return ""
+        trait = ScoredTrait(HUBRIS, start)
+        magus.personality_traits.append(trait)
+    before = trait.score
+    confidence.add_deeds(trait, experience)
+    if trait.score == before:
+        return (
+            f"Hubris {trait.score}: +{experience} experience "
+            f"({trait.deeds} toward the next point)."
+        )
+    return f"Hubris {before} -> {trait.score} (+{experience} experience)."
+
+
+def apply_hubris(
+    magus: Character, start: int, experience: int, rises: int
+) -> list[str]:
+    """An Initiation's Hubris kept on the sheet: the trait made at `start`
+    (the first Inner Mystery's), its `experience` (1 or 3 for learning an
+    Inner Mystery), then enough for one more point for each Increased
+    Hubris Ordeal (p. 121), and any refused vendetta it makes good. What
+    it did, as lines."""
+    said: list[str] = []
+    if start and hubris_trait(magus) is None:
+        said.append(gain_hubris(magus, 0, start))
+    if experience and hubris_trait(magus) is not None:
+        said.append(gain_hubris(magus, experience))
+    for _ in range(max(0, rises)):
+        if hubris_trait(magus) is None:
+            magus.personality_traits.append(ScoredTrait(HUBRIS, 0))
+        said.append(gain_hubris(magus, xp_to_next_hubris(magus)))
+    said += settle_vendettas(magus)
+    return [line for line in said if line]
+
+
+def refuse_vendetta(magus: Character, refused: str = "") -> list[str]:
+    """Refusing a vendetta `refused` declared: the House Reputation
+    Dishonorable 4, and enough experience lost to lower Hubris by one point
+    (to the experience of the score below, Hubris building as an Ability,
+    p. 119). The refusal is kept until he regains the score and wages a
+    vendetta on the magus refused, which loses the Reputation (p. 115)."""
+    said: list[str] = []
+    trait = hubris_trait(magus)
+    before = trait.score if trait is not None else 0
+    if trait is not None and trait.score > 0:
+        trait.score -= 1
+        trait.deeds = 0
+        said.append(f"Hubris falls to {trait.score}.")
+    magus.refused_vendettas.append(RefusedVendetta(refused.strip(), before))
+    name, score = DISHONORABLE
+    held = next((r for r in magus.reputations if r.name == name), None)
+    if held is None:
+        magus.reputations.append(
+            ScoredTrait(name, score, type="Hermetic", reach=HOUSE_REACH)
+        )
+    else:
+        held.score = max(held.score, score)
+    said.append(f"Reputation {name} {score} in {HOUSE_REACH} ({VENDETTA_SOURCE}).")
+    return said
+
+
+def refusal_lines(magus: Character) -> list[str]:
+    """What each refused vendetta still needs before the Reputation goes:
+    the Hubris score to regain, and the vendetta to wage."""
+    own = hubris_of(magus)
+    lines: list[str] = []
+    for refusal in magus.refused_vendettas:
+        needs: list[str] = []
+        if own < refusal.hubris:
+            needs.append(f"Hubris back to {refusal.hubris} (now {own})")
+        if not refusal.waged:
+            needs.append("a vendetta waged on him")
+        who = refusal.magus or "the magus refused"
+        lines.append(f"Refused {who}: needs {' and '.join(needs) or 'nothing'}.")
+    return lines
+
+
+def wage_refused_vendetta(magus: Character, refused: str) -> list[str]:
+    """Waging a vendetta on a magus he once refused: kept on the refusal,
+    then whatever it makes good settled (p. 115)."""
+    refusal = next(
+        (r for r in magus.refused_vendettas if r.magus == refused and not r.waged),
+        None,
+    )
+    if refusal is None:
+        raise LookupError(f"{magus.name} has no refused vendetta with {refused!r}.")
+    refusal.waged = True
+    return [
+        f"Wages a vendetta on {refused or 'the magus refused'}.",
+        *settle_vendettas(magus),
+    ]
+
+
+def settle_vendettas(magus: Character) -> list[str]:
+    """Drop each refusal made good (the Hubris score regained and the
+    vendetta waged); with none left, the Reputation Dishonorable goes
+    (p. 115). What it did, as lines."""
+    own = hubris_of(magus)
+    left = [r for r in magus.refused_vendettas if not (r.waged and own >= r.hubris)]
+    if len(left) == len(magus.refused_vendettas):
+        return []
+    magus.refused_vendettas = left
+    if left:
+        return ["A refused vendetta made good; others remain."]
+    name, _ = DISHONORABLE
+    magus.reputations = [
+        r for r in magus.reputations if not (r.name == name and r.reach == HOUSE_REACH)
+    ]
+    return [f"Reputation {name} lost in {HOUSE_REACH} ({VENDETTA_SOURCE})."]
+
+
+def vendetta_ease(own_hubris: int, challenger_hubris: int) -> int:
+    """Resisting a declared vendetta: the Ease Factor is both magi's Hubris."""
+    return max(0, own_hubris) + max(0, challenger_hubris)
+
+
+def resist_vendetta(
+    rng: random.Random,
+    resisting: int,
+    own_hubris: int,
+    challenger_hubris: int,
+    saga: Saga | None = None,
+) -> tuple[bool, str]:
+    """A Personality Trait set against Hubris (or Intelligence, without
+    one) + a stress die against both magi's Hubris: whether the maga
+    resists, and the roll as a line."""
+    die = dice.stress_die(rng, 1, saga=saga)
+    total = resisting + die.value
+    ease = vendetta_ease(own_hubris, challenger_hubris)
+    held = not die.botched and total >= ease
+    rolled = "botched" if die.botched else str(total)
+    return held, (
+        f"Resisting the vendetta: {rolled} against {ease}: "
+        + ("resisted." if held else "drawn into it.")
+    )
+
+
+# -- Confraternities (HoH:MC pp. 121-123) --------------------------------------
+
+CONFRATERNITY_SOURCE = f"{MC}, Confraternities, pp. 121-123"
+
+
+@dataclass(frozen=True)
+class Confraternity:
+    """A confraternity: its Crafts, the Mystery (and Flaw) it Initiates its
+    members into, and its path through the House's Mysteries."""
+
+    name: str
+    crafts: tuple[str, ...]
+    mystery: str
+    flaw: str
+    path: tuple[str, ...]
+
+
+CONFRATERNITIES: tuple[Confraternity, ...] = (
+    Confraternity(
+        "Roland",
+        ("Blacksmith",),
+        "Minor Magical Focus (Swords)",
+        "",
+        (
+            "Minor Magical Focus (Swords)",
+            "Reforging Enchanted Items",
+            "Items of Quality",
+            "Verditius Elder Runes",
+            "Item Attunement",
+        ),
+    ),
+    Confraternity(
+        "Balento",
+        ("Woodcarver",),
+        "Affinity with Ignem",
+        "Deficient Form (Aquam)",
+        (
+            "Affinity with Ignem",
+            "Enchant Casting Tools",
+            "Verditius Elder Runes",
+            "Bind Magical Creatures",
+        ),
+    ),
+    Confraternity(
+        "Irene",
+        ("Sculptor", "Painter"),
+        "Puissant Imaginem or Puissant Mentem",
+        "Slow Caster",
+        ("Puissant Imaginem or Puissant Mentem", "Verditius Elder Runes", "Automata"),
+    ),
+    Confraternity(
+        "Himinis",
+        (),
+        "Minor Magical Focus (Wooden Wands)",
+        "Envious",
+        (
+            "Minor Magical Focus (Wooden Wands)",
+            "Verditius Elder Runes",
+            "Item Attunement",
+            "Bind Curse",
+        ),
+    ),
+)
+
+
+def confraternity_of(script_name: str) -> Confraternity | None:
+    """The confraternity whose Script `script_name` is ("Confraternity of
+    Roland: ...")."""
+    return next(
+        (
+            c
+            for c in CONFRATERNITIES
+            if script_name.startswith(f"Confraternity of {c.name}")
+        ),
+        None,
+    )
+
+
+def confraternity_note(script_name: str) -> str:
+    """What a confraternity's Script adds to the season's note: the
+    Mystery and Flaw it Initiates its members into, its Crafts and its
+    path."""
+    found = confraternity_of(script_name)
+    if found is None:
+        return ""
+    flaw = f" with the Flaw {found.flaw}" if found.flaw else ""
+    crafts = (
+        f"; its members have Craft: {' or '.join(found.crafts)}" if found.crafts else ""
+    )
+    return (
+        f"The Confraternity of {found.name} Initiates its members into "
+        f"{found.mystery}{flaw}{crafts}; its path after the Outer Mystery: "
+        f"{', '.join(found.path)} ({CONFRATERNITY_SOURCE})."
+    )

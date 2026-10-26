@@ -52,6 +52,7 @@ from .. import economics as eco
 from .. import familiars as fam
 from .. import inhabitants as inh
 from .. import lab_texts as lt
+from .. import mystic_paths as mystic_forms
 from .. import spells as spl
 from .. import theban_customs as byzantine
 from ..actions import (
@@ -102,6 +103,7 @@ from . import goetic as goetic_forms
 from . import grogs as grog_forms
 from . import holy_influence as holy_influence_forms
 from . import hosting as hosting_forms
+from . import hubris as hubris_forms
 from . import importing as import_forms
 from . import lacuna as lacuna_forms
 from . import library as library_forms
@@ -561,6 +563,17 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # Holy influence and tempers (RoP: The Divine), beside Infernal
     # Influence.
     "holy_influence": ((NodeKind.CHARACTER, "Personality Traits"),),
+    # Mystic paths and God's aid beside the Personality Traits' buttons
+    # (where Pious is), the Font beside the Abilities', the Commanding
+    # Aura beside Health's (its Soak).
+    "mystic_path": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "spiritual_path": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "monistic_revelation": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "gods_aid": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "font_of_knowledge": ((NodeKind.CHARACTER, "Abilities"),),
+    "commanding_aura": ((NodeKind.CHARACTER, "Health"),),
+    # House Verditius's Hubris beside the Personality Traits' buttons.
+    "verditius_hubris": ((NodeKind.CHARACTER, "Personality Traits"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -1625,4 +1638,13 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "act_of_piety": _needs(_character, devotion_forms.piety_form),
     # Holy influence and tempers (RoP: The Divine).
     "holy_influence": _needs(_character, holy_influence_forms.holy_influence_form),
+    # Mystic paths, God's aid, the Font and the Commanding Aura.
+    "mystic_path": _needs(_character, mystic_forms.mystic_path_form),
+    "spiritual_path": _needs(_character, mystic_forms.spiritual_path_form),
+    "monistic_revelation": _needs(_character, mystic_forms.monistic_revelation_form),
+    "gods_aid": _needs(_character, mystic_forms.gods_aid_form),
+    "font_of_knowledge": _needs(_character, mystic_forms.font_form),
+    "commanding_aura": _needs(_character, mystic_forms.commanding_aura_form),
+    # House Verditius's Hubris and vendettas.
+    "verditius_hubris": _needs(_character, hubris_forms.hubris_form),
 }

@@ -22,11 +22,14 @@ from .. import catalog
 SOURCE = (
     "Ancient Magic, Introduction, The Breakthrough (p. 7); Hedge Magic, Revised "
     "Edition, The Integration Process (p. 14); Houses of Hermes: True Lineages, "
-    "Bonisagus, Example Discoveries (pp. 30-34)"
+    "Bonisagus, Example Discoveries (pp. 30-34); Magi of Hermes, Aurulentus "
+    "(p. 20) and Marcus (pp. 82-83); Legends of Hermes, Hérisson (pp. 72-73)"
 )
 AM = "Ancient Magic"
 HMRE = "Hedge Magic, Revised Edition"
 TL = "Houses of Hermes: True Lineages"
+MOH = "Magi of Hermes"
+LOH = "Legends of Hermes"
 
 
 @dataclass(frozen=True)
@@ -306,6 +309,56 @@ INTEGRATIONS: tuple[Integration, ...] = (
         "Realm alignment as a special ability of a mastered spell.",
         TL,
         learned="Realm alignment as a Mastery special ability.",
+    ),
+    # Magi of Hermes and Legends of Hermes: the breakthroughs their magi
+    # reached (rules.breakthroughs_moh, rules.viresculture). The books give
+    # no points; each takes its kind's usual target.
+    Integration(
+        "Fertile Longevity Ritual",
+        "Minor",
+        30,
+        "Longevity Rituals that leave their subject fertile (Aurulentus' "
+        "breakthrough, p. 20).",
+        MOH,
+        learned="Longevity Rituals that leave their subject fertile, where "
+        "every other leaves him sterile (DE p. 261).",
+    ),
+    Integration(
+        "Hermetic Metamorphosis",
+        "Major",
+        45,
+        "The Minor Hermetic Virtue Hermetic Metamorphosis: organs grafted onto "
+        "an animal by a ritual only its holder can cast (Marcus' research, "
+        "pp. 82-83).",
+        MOH,
+        "Virtue",
+        "vf_hermetic_metamorphosis",
+        learned="Harmonic Metamorphosis of the Beast; its surgery is Dexterity + "
+        "Chirurgy against 9, +3 for an organ added, +3 to give a Virtue. "
+        "Human recipients need a further breakthrough.",
+    ),
+    Integration(
+        "Hermetic Viresculture",
+        "Major",
+        45,
+        "The Supernatural Ability Hermetic Viresculture: Stirpes of "
+        "self-reproducing vis bred from magical creatures and plants "
+        "(Hérisson's breakthrough, pp. 72-75).",
+        LOH,
+        "Ability",
+        "Hermetic Viresculture",
+        learned="Vitalize and Invigorate Stirpes as lab seasons; tend at most "
+        "the score in Stirpes, 12 Labor Points a year each.",
+    ),
+    Integration(
+        "Viresculture of Lesser Enchantment Vis",
+        "Minor",
+        30,
+        "Living Lesser Enchantment Vis made a Stirps, its effect's level "
+        "standing for Magic Might (Hérisson's second breakthrough, p. 73).",
+        LOH,
+        learned="Builds on Hermetic Viresculture: Lesser Enchantment Vis may be "
+        "Vitalized at its effect's level; its power is lost if transferred out.",
     ),
 )
 

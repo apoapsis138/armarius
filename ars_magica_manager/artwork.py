@@ -200,6 +200,7 @@ TRADITION_SYMBOLS: dict[str, Path] = {
         "legion_of_mithras",
         "knights_of_the_green_stone",
         "matres_et_matrones",
+        "clesrada",
     )
 } | {
     # A House's own Mystery shows the House's symbol.

@@ -1359,6 +1359,17 @@ def matres_et_matrones() -> QPainterPath:
     return over(mother(50, 26, 1.05), sides)
 
 
+def clesrada() -> QPainterPath:
+    """A champion's feats: a round shield with its boss, and a barbed
+    javelin thrown across it."""
+    shield = ring(50, 54, 30, 7).united(circle(50, 54, 8))
+    shaft = rotate(rect(48, 4, 4, 92), 45, 50, 50)
+    head = rotate(poly((50, 0), (42, 14), (50, 10), (58, 14)), 45, 50, 50)
+    return union(
+        shield.subtracted(rotate(rect(45, 4, 10, 92), 45, 50, 50)), shaft, head
+    )
+
+
 def _bez(points: Sequence[Point], t: float) -> Point:
     """A point along the smooth curve the points outline (de Casteljau)."""
     pts = list(points)
@@ -1478,6 +1489,7 @@ FIGURES: dict[str, Callable[[], QPainterPath]] = {
     "trad_legion_of_mithras": legion_of_mithras,
     "trad_knights_of_the_green_stone": knights_of_the_green_stone,
     "trad_matres_et_matrones": matres_et_matrones,
+    "trad_clesrada": clesrada,
 }
 
 
