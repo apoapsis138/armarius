@@ -59,6 +59,7 @@ from .. import spells as spl
 from .. import theban_customs as byzantine
 from ..actions import (
     MORE_MENU,
+    MORE_SECTIONS,
     NEW_MENU,
     RECORD_SECTION,
     MenuItem,
@@ -779,6 +780,25 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
 }
 
 
+#: The section a placed spot stands for, for the checks that ask which
+#: section focus is in: a desktop page has none focused.
+SPOT_SECTIONS: dict[str, str] = {
+    "Reputations": "section-reputations",
+    "Health": "section-char-health",
+    "Aging": "section-aging",
+}
+
+
+def _offered_at(page: Page, spot: str, action: str, offered: set[str]) -> bool:
+    """Whether `action` is offered at `spot`: as the page offers it, or as
+    it would be with focus in the section the spot stands for (its More
+    section, or the spot's own)."""
+    if action in offered:
+        return True
+    section = MORE_SECTIONS.get(action) or SPOT_SECTIONS.get(spot)
+    return section is not None and available(action, replace(page, section=section))
+
+
 def placed(page: Page, spot: str) -> list[MenuItem]:
     """The actions the page offers at `spot` (a chapter's or section's
     name, or "New" / "More"), in PLACES's order."""
@@ -791,7 +811,7 @@ def placed(page: Page, spot: str) -> list[MenuItem]:
         and (
             _PLACED_CHECKS[action](page)
             if action in _PLACED_CHECKS
-            else action in offered
+            else _offered_at(page, spot, action, offered)
         )
     ]
 

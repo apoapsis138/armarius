@@ -109,6 +109,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.29.1 — 2026-10-27
+
+### Illuminatio
+
+- The desktop's Reputations, Health and Aging show their own buttons
+  again: House Acclaim, Reputation Roll, Melee Event, Tournament, Take
+  Harm, Recovery Roll and the Aging actions.
+
 ## 3.29.0 — 2026-10-27
 
 ### Gauntlet

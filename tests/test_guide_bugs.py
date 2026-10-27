@@ -932,3 +932,25 @@ def test_a_vampire_records_its_precautions_limitations_and_death():
     vampire.vampire_death = "Decapitate the body"
     facts = {f.label: f.value for f in creature_sheet.faerie_role_facts(vampire)}
     assert facts["Killed for good by"] == "Decapitate the body"
+
+
+def test_the_desktop_places_reputations_health_and_aging_actions():
+    """Bug 3: a desktop page focuses no section, so a placed action is
+    offered as its section would offer it."""
+    from ars_magica_manager.actions import NodeKind
+    from ars_magica_manager.forms import menu
+    from ars_magica_manager.models import Covenant, ScoredTrait
+
+    covenant = Covenant(id="c", saga_id="s", name="Keep")
+    magus = Character(id="m", name="Leandro", type="magus", covenant_id="c")
+    magus.reputations.append(ScoredTrait("Brave", 2))
+    saga = Saga(id="s", name="S", characters=[magus], covenants=[covenant])
+    page = menu.Page(saga, NodeKind.CHARACTER, covenant=covenant, character=magus)
+    labels = {
+        spot: [i.label for i in menu.placed(page, spot)]
+        for spot in ("Reputations", "Health", "Aging")
+    }
+    assert "Reputation Roll" in labels["Reputations"]
+    assert "Melee Event" in labels["Reputations"]
+    assert labels["Health"] == ["Take Harm", "Recovery Roll"]
+    assert "Place Aging Points" in labels["Aging"]
