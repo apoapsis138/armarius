@@ -394,8 +394,9 @@ def test_catalog_is_the_books_table_row_for_row():
     rows = catalog.load_shape_material_catalog()
     # The book's table, the Book shape from Covenants (an epitome), black
     # hawthorn from Against the Dark, and the three rows of Mystery Cults'
-    # expanded table (p. 137) the Definitive Edition doesn't have.
-    assert len(rows) == 246
+    # expanded table (p. 137) the Definitive Edition doesn't have, and
+    # Hermetic Projects' Volcano (p. 26).
+    assert len(rows) == 247
     assert rows[0].name == "Adze" and rows[-1].name == "Yoke"
     agate = next(r for r in rows if r.name == "Agate")
     assert agate.bonuses == (
@@ -411,6 +412,7 @@ def test_catalog_is_the_books_table_row_for_row():
         "Alexandrite": "HoH:MC",
         "Hickory Wood": "HoH:MC",
         "Platinum": "HoH:MC",
+        "Volcano": "HP",
     }
     hawthorn = next(r for r in rows if r.name == "Black Hawthorn")
     assert hawthorn.bonuses == (

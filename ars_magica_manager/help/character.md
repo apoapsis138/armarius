@@ -1943,6 +1943,17 @@ Holiness and Unholiness** list the Ease Factors of what each senses
 (Definitive Edition pp. 168-170), and Magic Sensitivity's score comes off
 the magus's Magic Resistance.
 
+The details of **Guile** give the Disguise roll: Intelligence + Guile +
+stress die against 9, +3 for a change of social status, +1 or +3 for a minor
+or major change of appearance, +6 for a change of sex, +3 or +6 for minimal
+or no preparation; then Presence + Guile against the other's Intelligence +
+Folk Ken to talk with someone (Houses of Hermes: Societates p. 87). The
+details of **Persona** count its identities (one a point) and give the roll
+to take one or return (Stamina + Persona against 9), each persona's
+Reputation (from 1, gaining the xp put into Persona), and how the change
+shows to magic: a Muto Corpus 10 effect, a magnitude less each sunrise or
+sunset, level 5 x Persona to other magic (DE p. 169; Societates pp. 89-90).
+
 <!-- gui -->
 Each Ability has a mark beside its name, cut like the
 Art symbols: a dark block with a light figure, such as a quill for every
@@ -2662,6 +2673,8 @@ place in the list.
 one names, such as Puissant Magic Theory to Puissant Finesse; it keeps its
 place in the list.
 <!-- /gui -->
+**Gain or Lose in Play** (in More) records a Virtue or Flaw that comes or
+goes during the saga, with how, in the Diary ([help](help:vf-change)).
 The choices are the ones Add offers, so a second Puissant Magic Theory is
 still refused, and a Great Characteristic can only move to a
 Characteristic at +3. Changing a Great or Poor Characteristic moves both
@@ -2933,13 +2946,33 @@ Casting, Ceremonial Casting, Penetration, Magic Resistance, Imperturbable
 Casting, Multiple Casting, Obfuscated Casting, Precise Casting or Quick
 Casting, are counted: Quiet and Still Casting in the score, the rest in a
 Mastery line (DE pp. 225-226). House Mercere's are read too (Houses of
-Hermes: True Lineages pp. 99-100): Adaptive Casting (General spells only),
+Hermes: True Lineages pp. 99-100): Adaptive Casting,
 Boosted, Disguised, Harnessed, Stalwart and Tethered Casting (not for a
 Ritual), Lab Mastery and Learn From Mistakes, each on the spell's casting
-lines. Lab Mastery on the similar spell a lab plan names adds its Mastery
+lines. Adaptive Casting follows the Errata (p. 46): the mastery serves on
+any spell similar to the mastered one, not only General spells. A similar
+spell is one of the same Technique and Form with the same base level at
+another Range, Duration or Target, or with the same Range, Duration and
+Target (DE, Similar Spells, p. 260; the troupe has the last word). Each
+similar spell's casting lines name the masteries it may borrow; when two
+or more apply, only one serves a casting, its score with its own special
+abilities, never added together. Lab Mastery on the similar spell a lab plan names adds its Mastery
 score to the Lab Total, on top of the similar spell's bonus. Societates
 (p. 33) reprints these, and its Fast Trigger for items is the DE's
 (p. 257), already on the device forms.
+
+**Mutantum spells** (True Lineages pp. 101-102; Errata p. 46): a known spell
+that is Boosted, Harnessed or Tethered says what each does on its casting
+lines: boosting spends a pawn of vis a magnitude to raise its Range,
+Duration, Target or size, a botch die more each, cast, tiring and
+penetrating at its own level, and past Formulaic limits (Year, Boundary)
+only for a Ritual; a harnessed spell is ended at will by concentrating; a
+tethered one's control passes to another, or to an object that casts it on
+a fit target. A magus without the Virtue for a quality is told he can't cast
+it. The reminders give Mutantum Magic and Tamed Magic. The Cult of Heroes'
+**(Characteristic) of the Followers** rituals raise a Characteristic by one
+to no more than 0, **of the Heroes** to no more than +5, and Mercury's
+Blessing is a Mercurian Ritual (p. 103).
 
 **Fenicil's rituals** (True Lineages pp. 76-77): a magus who has one of
 the rituals as an Ability (Wisdom of Athena, Sight of Alatheia, Veil All
@@ -3125,6 +3158,13 @@ still rearranges the materials, into nothing useful; a botch looks right
 but has a hidden, fatal flaw. A failed Creo roll still makes the thing
 without the details; a botch makes something that hinders the caster.
 
+
+## Open a Tunnel
+<!-- help: open-tunnel -->
+
+More's Open a Tunnel, on a magus's Known Spells once he knows a tunnel spell, works out a Wizard's War tunnel (Hermetic Projects pp. 78-81; DE pp. 219, 372). Choose the tunnel and the level he casts it at, the Arcane Connection (one of his covenant's laboratories', or one held otherwise) and how long it lasts, the sympathetic connections he holds (signature, name, horoscopes, a symbolic representation: no more than +2 each), and the target: a magus of the saga (his own Magic Resistance against each Form), or a Parma Magica typed, and any Aegis he shelters in.
+
+The inspector gives the Penetration multiplier (1 + the connection + the sympathies, DE p. 219), the tunnel's Penetration against his Vim, then each spell he knows that fits through: Touch range or more, and no higher than the tunnel allows (Opening the Intangible Tunnel and The Minute of Reckoning their own level, The Cursèd Day a magnitude less, Wizard's Siege two less, The Evil Eye and The Master's Message a magnitude more). The same multiplier applies to each, since he holds an Arcane Connection to the target. Inside an Aegis every spell must also Penetrate it, unless its caster holds the Aegis's token (p. 79). Break the Siege suppresses a tunnel of less than its level + 2 magnitudes (errata p. 81). Cast rolls the tunnel once; nothing is kept.
 
 ## Cast in a Lacuna
 <!-- help: cast-in-lacuna -->
@@ -3320,6 +3360,56 @@ Jerbiton league every Reputation counts 3 higher (Houses of Hermes:
 Societates p. 53). The roll is kept in the Diary.
 
 **See also:** [House Acclaim](help:house-acclaim)
+
+## Gain or Lose in Play
+<!-- help: vf-change -->
+
+More on a character's Virtues or Flaws: a Virtue or Flaw that comes or
+goes during the saga, kept in the Diary with what happened.
+
+- **Gain a Flaw**, by mishap (an injury, an amputation, a disease: a lost
+  hand is always Missing Hand), by their own actions (a feud, a debt, an
+  animal companion, offending a faerie), by magic (a curse: a hedge
+  wizard's usually wears off, a creature that spends Might lays a lasting
+  one) or by Warping. A changed circumstance is a Flaw only if it affects
+  the game, seeds stories or changes how the character is played
+  (Grogs p. 62).
+- **Gain a Virtue**, by magic (most grants are temporary; a lasting one
+  comes from a supernatural being or the Goetic Arts), by Initiation
+  (which needs a score in the cult's or tradition's Organization Lore
+  first), by their own actions (Social Contacts for an agent recruited,
+  Protection for a powerful friend) or by severe Warping. A Virtue that
+  changes how experience is gained doesn't change what was gained before
+  (Grogs pp. 62-63).
+- **Lose a Flaw**, mostly by the ways a Virtue is gained, though not
+  every way suits every Flaw: Initiation won't grow back a lost hand
+  (Grogs p. 63).
+- **A temporary Virtue or Flaw ends**: one gained by magic for a while is
+  taken off the sheet, any Characteristic it moved put back. Most Virtues
+  granted by magic are temporary (a gruagach's spells, an Object of
+  Virtue, faerie wizardry), and hedge curses that lay Flaws are usually
+  limited in duration too (Grogs pp. 62-63), so a Virtue or Flaw gained
+  by magic is ticked **Temporary** unless you clear it, with the season
+  and year it ends if they are known (a year alone ends at its Winter).
+  The sheet marks it "temporary, until Winter 1225". When its last
+  season is advanced past, the character's Diary and the season record
+  say it has ended; it stays on the sheet until you take it off here,
+  since a story may renew it.
+- **A change of Social Status** replaces the old status with the new; a
+  status whose description allows it may be kept beside it (Grogs p. 61).
+- **Exchange one chosen wrongly**, with the troupe's approval: an
+  established character exchanges only a Minor for a Minor and a Major
+  for a Major on the same side, never one that changes Characteristics;
+  tick New to the saga for larger changes (Grogs p. 61).
+
+The inspector warns where the books advise against a change: a grog
+gaining a Story Flaw or a Major Virtue (unless he is becoming a
+companion), a second Story Flaw, more Personality Flaws than the
+guideline allows (DE p. 63). A second Major Personality Flaw is refused
+(DE p. 63). Warping says what the character's Warping Score has brought
+them (DE p. 391); a magus's comes through Twilight (DE pp. 229-230).
+
+**See also:** [Aging & Warping](help:section-aging)
 
 ## Pilgrimage
 <!-- help: pilgrimage-more -->
@@ -3820,6 +3910,92 @@ the character's Diary under the agent's name and the task.
 
 **His Roll** shows the total, the Ease Factor and the die he needs before
 you roll.
+
+## Church tab
+<!-- help: tab-church -->
+
+A character's career in the Church: his grade in holy orders, the ordinations that brought him there, his petitions to the Church and the cases he has stood in before its courts (The Church pp. 33-38, 46-48). The tab is there only for a character with a grade, a petition or a canon case; anyone else reaches Petition the Church, Add Canon Case and Holy Orders from More on the record, and an Ordination season from Planning. The first of them brings the tab.
+
+<!-- gui -->
+On the desktop those three buttons sit beside the Personality Traits' buttons.
+<!-- /gui -->
+
+**You type:** his birth diocese, standing and benefice, each petition and each case.
+
+**The app works out:** each examination's total and result, what an ordination brings (the grade, a Faith Point, the Social Status and a Reputation), what still stands between him and the priesthood, and each petition's total, who may grant it and whether it is granted.
+
+**See also:** [Agents tab](help:tab-agents), [Planning tab](help:tab-planning)
+
+### Holy Orders
+<!-- help: section-char-orders -->
+
+His grade (minor orders: doorkeeper, lector, exorcist, acolyte; major orders: sub-deacon, deacon, priest, bishop), his Social Status, birth diocese, the Faith Points his ordinations brought (one each, even for several grades at once, p. 34), his standing and which law he is under: a cleric of any grade is under canon law, not secular law (pp. 34-35).
+
+**The ladder** shows the grades held, the next one, and its examination: Intelligence + Church Lore or Civil and Canon Law + a stress die against the grade's Ease Factor (Doorkeeper 3 and Lector 6 in Church Lore; Exorcist 3 and Acolyte 6 in Civil and Canon Law; Sub-deacon 9, Church Lore; Deacon 9, Civil and Canon Law; Priest 12, Church Lore; a bishop is elected, p. 33). Church Lore is the sheet's Organization Lore: Church.
+
+**Toward Priest** (p. 35): a priest must be 25, freeborn, legitimate, sound of body and mind and educated for his office, and needs a benefice, chaplaincy or curacy free. Each one he fails is flagged (a Dwarf, Lame, Blind or similar Flaw for "sound of body"; Bastard for legitimacy; Slave for freeborn) and needs a dispensation, a petition at Ease Factor 9. The app warns; it never stops the ordination.
+
+**Standing:** In good standing, Irregular (a cleric who has shed blood or committed a grossly immoral crime: he can't use Faith Points until he confesses; no trial needed, p. 37) or Excommunicated (shown while a guilty verdict of excommunication stands against him in the Canon Court).
+
+<!-- tui -->
+`e` edits Holy Orders; `m` (More) performs an exorcism.
+<!-- /tui -->
+<!-- gui -->
+Edit Holy Orders and Perform an Exorcism sit beside the title.
+<!-- /gui -->
+
+### Ordinations
+<!-- help: section-char-ordinations -->
+
+One entry per examination: the grade, the season, the total against the Ease Factor, and the result (p. 34):
+
+- more than double the Ease Factor: ordained, and a Reputation of 1 for knowing the Ability (or a Reputation experience point toward it);
+- equal to it, or above it by no more than double: ordained;
+- missing it by 6 or less: he still passes, with a Reputation of 1 for ignorance (or a point toward it). Missing by exactly 6 is a judgement call: the book covers "less than 6" and "more than 6", and the app lets it pass;
+- missing it by 7 or more: not ordained; he may appeal (a petition, Ease Factor 9) or sit it again another season;
+- a botch: not ordained, and he may sit it again only once a petition lets him (Holy Orders shows him barred).
+
+Being ordained brings the grade's Social Status (pp. 25-26, 34), and it replaces his own: a character holds two Social Statuses only where both say they are compatible, and the clergy's don't (DE p. 63), so he never keeps both. The first grade gives Clerk in place of any lay status (Covenfolk, Craftsman...; DE p. 74); Priest replaces Clerk, Religious for a monk, a Mendicant Friar's or a lay status (DE pp. 104, 106; The Church p. 26). The Ordination season offers the swap with **Swap his Social Status for the clergy's**, ticked by default; untick it to leave his status for the troupe to change on Virtues & Flaws. A bishop's Senior Clergy is a Major Virtue (DE p. 107), so the app says to swap it there rather than doing it. Wealthy and Poor aren't Social Statuses and are never touched. A major order means celibacy from then on (p. 35).
+
+An Ordination season (Plan a Season) examines him for the next grade; Add is for recording an ordination from before play, which doesn't change his grade (Edit Holy Orders does).
+
+### Petitions
+<!-- help: section-char-petitions -->
+
+A petition to the Church: what was asked, by letter or in an audience, the season, its Petition Total against the Ease Factor, and the result. No die is rolled (p. 48).
+
+### Canon Court
+<!-- help: section-char-canon -->
+
+Cases in the Church's courts, the character accused or accusing: the charge (the kinds of case, pp. 37-38), the court (the archdeacon's at his visitation, a rural dean's or parish priest's, the bishop's on appeal, the papal curia), the verdict and the punishment. The judge decides: there is no jury and no roll; about a dozen oath-helpers swearing to the accused's good character acquit him (compurgation). Canon courts shed no blood, and no one need attend one more than two days' travel from his diocese (pp. 35-37). A clergyman a secular court finds guilty is tried again in the bishop's court (p. 35).
+
+## Petition the Church
+<!-- help: petition-church -->
+
+Anyone may petition the Church: clergy, peasants, nobles, magi (The Church pp. 46-48). Choose the book's example it is most like (p. 47: 3 a marriage blessing, 6 a parish crypt or library, 9 the cathedral library, an appeal of an ordination exam or a dispensation, 12 rent land to a Hermetic covenant, 15 excommunicate a nobleman, 18 a monastery, 21 a new diocese, 24 change canon law, 30 declare a saint, 42 a crusade), or type the Ease Factor.
+
+**Petition Total:** Communication + Church Lore for a letter (a scribe's Communication + Church Lore may stand in: type his name and total; The Gift doesn't apply), or Presence + Church Lore in an audience (The Gift's penalty applies), plus: many testify +1; magical evidence +1; a holy vision +3; miracles +6; the highest clergy support (+1 a priest or deacon, +3 a senior clergyman, +6 an archbishop or higher) and the highest lay support (+1 a knight, +3 a nobleman, +6 a king, duke, earl or emperor), once each; a donation +1 to +3; each argument, by Civil and Canon Law, Artes Liberales (Logic) or Intrigue, +1 to +3, which counts only if Intelligence + the Ability + a stress die reaches 9 (rolled when the petition is made; a botch makes its bonus a penalty); his Reputation with the Church; spells cast on those deciding (p. 46).
+
+**Who decides** (p. 48): a priest may grant up to 6, a bishop up to 15, the papal curia the rest. One petition a season, usually; it takes no season unless he travels.
+
+**An appeal** against another's granted petition overturns it at that petition's total + 3, and above its total - 3 wins a compromise; -3 if it isn't made in the same season (p. 48).
+
+Untick Made now to keep a petition planned (no total yet).
+
+## Add Canon Case
+<!-- help: canon-case -->
+
+The storyguide's record of a case: the charge, whom it is about, whether the character is accused or accuses, the court, the season, whether oath-helpers swore for the accused (compurgation acquits; the form asks when it is set beside a Guilty verdict), the verdict and the punishment (The Church p. 37): a monition (an official warning), public penance, a fine (when penance isn't done), imprisonment in a monastery, the benefice suspended, or excommunication (no sacrament but penance, no consecrated burial, and a clergyman loses his shield from secular justice; lifted by confession and penance), which shows on Holy Orders as his standing. There is no roll: the judge decides.
+
+## Perform an Exorcism
+<!-- help: perform-exorcism -->
+
+Any clergyman may exorcise (The Church p. 34). He spends at least one Confidence or Faith Point (+3 each); the Exorcism Total is a stress die + the Points, +1 if he has been ordained exorcist (every grade from exorcist up has been), +1 for holy water and +1 for a crucifix. Exorcism is a Divine power: a Divine aura adds its strength and other realms' auras don't hinder it (DE p. 411). It must reach the Might the demon invested in the energumen, and Penetrate his Magic Resistance if he has any. Roll rolls it; mark the Points spent on the sheet. An Irregular cleric can't use Faith Points (p. 37): the calculator warns.
+
+## Edit Holy Orders
+<!-- help: edit-holy-orders -->
+
+His grade (for one held before play; an Ordination season examines him for the next), birth diocese (where he is ordained; elsewhere needs its bishop's leave, p. 33), standing, benefice or office, and whether a botched examination bars him until a petition succeeds.
 
 ## Planning tab
 <!-- help: tab-planning -->

@@ -39,6 +39,7 @@ from . import pictures
 from .character_sheet import TextBlock, section
 from .editing import Chooser, Run, choose_cards, choose_rows, verb_buttons
 from .figures import fact_grid
+from .mystery_cults import CultsChapter
 from .pages import card_grid, page_header
 from .themes import Palette
 from .widgets import (
@@ -65,6 +66,7 @@ CHAPTERS = (
     ("Catalogs", "lab_text"),
     ("Goods", "silver"),
     ("House Rules", "magic"),
+    ("Mystery Cults", "secrets"),
     ("Spells", "enchanted_item"),
     ("Players", "players"),
 )
@@ -113,6 +115,7 @@ class SagaContentPage(QWidget):
             "Catalogs": self._catalogs,
             "Goods": self._goods,
             "House Rules": self._house_rules,
+            "Mystery Cults": self._mystery_cults,
             "Spells": self._spells,
             "Players": self._players,
         }
@@ -370,6 +373,11 @@ class SagaContentPage(QWidget):
                 buttons=verb_buttons(scf.house_rule_ops(saga), chooser, self.run, p),
             ),
         )
+
+    def _mystery_cults(self) -> QWidget:
+        """The saga's own Mystery Cults, the chosen one, its degrees and
+        the chosen degree's Script (gui/mystery_cults.py)."""
+        return CultsChapter(self.saga, self.p, self.run, self.inspect)
 
     def _spells(self) -> QWidget:
         """Every spell the saga knows of in a table that sorts by any column,

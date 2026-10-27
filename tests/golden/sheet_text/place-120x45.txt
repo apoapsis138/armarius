@@ -8,7 +8,7 @@
       A crag above the Rhine where a dragon died.
           Edit (e)
 
-   1 Regio  2 Roll Tables  3 Diary  4 Found Here  5 Secrets
+   1 Regio  2 Tomb  3 Roll Tables  4 Diary  5 Found Here  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Aura:       Magic 5
@@ -41,6 +41,49 @@
       ○ Level 2 opens   Summer each year      Summer 1220  The terraces can be
 
 
+===== tab-nb-tomb
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     The Drachenfels
+
+      Kind:  Place                             Inside: The Siebengebirge
+      Realm: Magic                             Book:   core rules
+      A crag above the Rhine where a dragon died.
+          Edit (e)
+
+   1 Regio  2 Tomb  3 Roll Tables  4 Diary  5 Found Here  6 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ The Tomb
+
+      Kind: Tomb of a lesser royal or high priest  ·  Build Points: 40 of 100  ·
+      Magic aura: 3
+      Tethers: a burial ground 3 centuries in use: 3  ·  Hooks: —  ·  Boons: —
+
+      Build Points: curses 10, talismans and wards 12, traps 18; 40 of the tomb's
+      100 spent.
+
+      Designed like a covenant: Build Points, up to 10 points of Hooks for Boons;
+      inscriptions, guardians, ghosts and vis cost what a covenant's do (LotN pp.
+      40, 42, 44).
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Curses (10 BP)
+
+        Curse                 Effect   Condition                Cost
+      ○ The Fear of the King  CrMe 25  Whoever enters by night  10 BP
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Talismans and Wards (12 BP)
+
+        Enchantment          Effect   Kind  Overcome
+
+  ▌
+  ▌  Choose a curse, a talisman or a trap.
+  ▌
+
+
 ===== tab-nb-tables
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -51,7 +94,7 @@
       A crag above the Rhine where a dragon died.
           Edit (e)
 
-   1 Regio  2 Roll Tables  3 Diary  4 Found Here  5 Secrets
+   1 Regio  2 Tomb  3 Roll Tables  4 Diary  5 Found Here  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -94,7 +137,7 @@
       A crag above the Rhine where a dragon died.
           Edit (e)
 
-   1 Regio  2 Roll Tables  3 Diary  4 Found Here  5 Secrets
+   1 Regio  2 Tomb  3 Roll Tables  4 Diary  5 Found Here  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -137,7 +180,7 @@
       A crag above the Rhine where a dragon died.
           Edit (e)
 
-   1 Regio  2 Roll Tables  3 Diary  4 Found Here  5 Secrets
+   1 Regio  2 Tomb  3 Roll Tables  4 Diary  5 Found Here  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -180,7 +223,7 @@
       A crag above the Rhine where a dragon died.
           Edit (e)
 
-   1 Regio  2 Roll Tables  3 Diary  4 Found Here  5 Secrets
+   1 Regio  2 Tomb  3 Roll Tables  4 Diary  5 Found Here  6 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

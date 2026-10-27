@@ -10,7 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from . import catalog, storage, vis
+from . import catalog, ships, storage, vis
 from .markup import escape, fit, markdown_text
 from .models import (
     GEAR_POINTS,
@@ -33,6 +33,7 @@ from .tables import Table
 
 #: Section titles on the tab.
 KIND_TITLES: dict[str, str] = {
+    "ship": "Ships",
     "property": "Properties and Land",
     "sanctum": "Sanctums",
     "weapon": "Weapons",
@@ -44,6 +45,7 @@ KIND_TITLES: dict[str, str] = {
 
 #: How a single entry is named in dialogs ("Add a Sanctum").
 KIND_SINGULAR: dict[str, str] = {
+    "ship": "Ship",
     "property": "Property",
     "sanctum": "Sanctum",
     "weapon": "Weapon",
@@ -96,6 +98,8 @@ class PossessionEntry:
     #: A Raw Vis Store: pawns of its Art kept in the same place, its own
     #: included (vis.kept_together).
     kept_together: int = 0
+    #: A ship: the saga she is in (for her captain's name).
+    saga: Saga | None = None
 
     def _own(self, attribute: str, default: Any):
         return getattr(self.record, attribute) if self.record is not None else default
@@ -294,7 +298,13 @@ def entries_for_kind(
         )
         together = vis.kept_together(covenant, record) if kind == "vis_store" else 0
         entries.append(
-            PossessionEntry(kind, record, place=place, kept_together=together)
+            PossessionEntry(
+                kind,
+                record,
+                place=place,
+                kept_together=together,
+                saga=saga if kind == "ship" else None,
+            )
         )
     return entries
 
@@ -321,6 +331,8 @@ def table_header(kind: str) -> str:
     """The column titles above one kind's Possessions list; the two-character
     indent is the list's selector marker."""
     name = f"{'Name':<{_NAME_WIDTH}}"
+    if kind == "ship":
+        return ships.table_header()
     if kind == "property":
         return (
             f"  {name}{'Location':<{_LOCATION_WIDTH}}"
@@ -367,6 +379,8 @@ def row_label(entry: PossessionEntry) -> str:
     """One list row (markup), columns lined up with `table_header`. Trailing
     whitespace from an unset last column is stripped."""
     kind = entry.kind
+    if kind == "ship" and entry.record is not None:
+        return ships.row_label(entry.record, entry.saga)
     name = escape(fit(entry.name or "(unnamed)", _NAME_WIDTH))
     if kind == "property":
         location = escape(fit(entry.location, _LOCATION_WIDTH))
@@ -463,6 +477,8 @@ def detail_text(entry: PossessionEntry | None) -> str:
     if entry is None:
         return "[dim]Select a possession to see its details.[/]"
     kind = entry.kind
+    if kind == "ship" and entry.record is not None:
+        return ships.detail_text(entry.record, entry.saga)
     lines = [_line("Name", entry.name or "(unnamed)")]
 
     def optional(label: str, value: object) -> None:
@@ -762,6 +778,10 @@ def book_text(kind: str, gear_id: str | None) -> str:
 #: Each kind's columns after its name: a title, and how to read the cell
 #: from a PossessionEntry.
 _TABLE_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
+    "ship": tuple(
+        (title, lambda e, i=i: ships.table_cells(e.record, e.saga)[i])
+        for i, title in enumerate(ships.TABLE_TITLES)
+    ),
     "property": (
         ("Location", lambda e: e.location),
         ("Dimensions", lambda e: e.dimensions),

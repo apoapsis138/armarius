@@ -27,10 +27,13 @@ from . import (  # noqa: F401  (each registers its activities as it is imported)
     definitive,
     devotion,
     hermetic_astrology,  # The Mysteries Revised Edition's armillary sphere
+    hermetic_projects,
     initiation,
+    land_shaping,  # Transforming Mythic Europe's shaping of the land
     lords,
     mysticism,
     societates,
+    transforming,  # Transforming Mythic Europe's books copied by magic
     viresculture,
 )
 from .base import REGISTRY, SimpleActivity, SupplementWork, activities, problems, work

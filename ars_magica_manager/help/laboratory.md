@@ -256,6 +256,8 @@ Virtue whose Specialization hasn't been chosen, a Servant, Greater Guardian
 or Greater Horde with no Intelligence entered, or a Servant whose grog is no
 longer in the saga.
 
+The Burning City's laboratory customizations (Hermetic Projects pp. 26-27): the Features Fumes (Pe, Au, Ig), Pool of Lava (Ig, Te), Thermal Spring (Cr, Aq, Ig) and Volcanic Rock (Mu, Ig, Te), each as a Greater or Lesser Feature; Dormant Volcano, Active Volcano, Mineral Bath, Volcanic Spirit Forge and Hell Portal; and the Volcano Shape and Material bonus (+5 volcanoes). Experimenting on such work may bring the book's volcanic side effects (pp. 27-28): lava tears, a sulphurous stench, footprints that scorch, toxic fumes, humors thrown out of balance (an Aging modifier of -1 or +1 for good), a crust of skin (+3 Soak for Sun), a warm glow that keeps off hunger and thirst; the troupe picks or invents them.
+
 **See also:** [Characteristics](help:section-lab-characteristics),
 [Features](help:section-lab-features),
 [Lab Totals tab](help:tab-lab-totals), [How lab planning works](help:guide-lab-planning)
@@ -622,6 +624,18 @@ What a device's effects give the laboratory itself, a Virtue or
 Specialization and Characteristic points, is set under
 [Magic Items](help:section-lab-magic-items) on the Attributes tab.
 
+**Mercere's Portals** (Houses of Hermes: True Lineages pp. 100-101): an
+effect named Mercere's Portal is instilled only by a magus who has learned
+the method, by a season studying a Portal or its Lab Texts: record it as a
+reached research goal named Mercere's Portal on his Research. Each of the
+two archways is an invested device instilling Rego Terram 65 (Base 35, +4
+Arcane Connection, +10 unlimited uses), each holding an Arcane Connection
+to the other; the season's notes add that a connecting ceremony, like
+Hermes' Portal and with no roll, is held at both at once, that the Portals
+work only once joined, and that moving one then destroys it. An effect
+whose level working names Boosted, Harnessed or Tethered is invested only
+by a magus with Mutantum Magic (p. 101).
+
 ### Lab Texts
 <!-- help: section-lab-texts -->
 
@@ -778,6 +792,8 @@ whether it is a Ritual, the Range, Duration and Target, any size or extra
 magnitudes and the guideline used. The app works out the spell's level from
 the base level and the parameters.
 
+The **Guideline** field fills the base level from a catalog of supplement guidelines: see [Basing a spell on a guideline](help:invent-spell-guideline).
+
 ### Which Ranges, Durations and Targets
 <!-- help: invent-spell-parameters -->
 
@@ -831,6 +847,16 @@ Only a magus with Faerie Magic, Spell Timing, Sensory Magic or Symbolic
 Magic may learn a spell with that Mystery's parameters: inventing it,
 learning it from a Lab Text or being taught it says so and stops (DE pp.
 236, 239; HoH:MC pp. 28, 99).
+
+**Mutantum spells** (Houses of Hermes: True Lineages p. 101): a spell
+whose level working ends in "; Boosted", "; Harnessed" or "; Tethered" (or
+whose description says "Requires ... Magic or Mutantum Magic"), as House
+Mercere's Mutantum spells in the catalog do, is learned from a Lab Text or
+a teacher only by a magus with the Virtue for each of its qualities
+(Boosted, Harnessed or Tethered Magic) or Mutantum Magic; Tamed Magic
+counts as Harnessed and Tethered Magic. Inventing one needs Mutantum Magic
+itself (p. 107). A saga's own spell takes a quality the same way, typed at
+the end of its level working.
 
 **Size / extra magnitudes** holds the magnitudes added for size and for
 requisites that add an effect. Under the level, a line says what the Target
@@ -1067,3 +1093,48 @@ magus's spells, its Lab Text goes into the laboratory, and the laboratory's
 Diary records the season. An unfinished invention keeps its points and
 carries on into the next free season. See
 [Advancing a season](help:advance-season).
+
+## Basing a spell on a guideline
+<!-- help: invent-spell-guideline -->
+
+**Guideline** offers the Hermetic spell guidelines the supplements add,
+listed under their Form (filter by Form or Technique). Choosing one sets
+the Technique, Form and base level, writes the guideline into Base
+effect, and for one that needs a Target (Magi of Hermes's inhuman body
+parts: Part) sets that too; you can still change any of them. A General
+guideline (shown as Gen) sets the Arts and Base effect but leaves the base
+level for you to type. Clear it and the figures stay as they are.
+
+- **Houses of Hermes: Societates**, Perception and Deception (pp.
+  61-70): anamorphs, Muto Imaginem when the spell changes an existing
+  image (a face) and Creo Imaginem when it stands on its own (base 1 for
+  one sense, +1 magnitude for each further sense; pp. 65-66, and Magi of
+  Hermes p. 93), synaesthesia (MuIm 2, p. 65),
+  emotions aimed at someone (CrMe 4), undirected or aimed at a whole class
+  (CrMe 5, p. 66), diminishing a mental capability (PeMe 4, pp. 66-67;
+  pain, proprioception and balance count, p. 63), other states of
+  consciousness (ReMe 4, p. 67), inscribed memories (CrMe 5, p. 69), a
+  memory or emotion made solid (MuMe 5, p. 70) and inclinations to belief
+  or indifference (ReMe 5, p. 70).
+- **Societates' Rego craft table** (p. 61): an item made from bone,
+  gemstone, glass, leather, metal, stone, timber, wood or wool, each at
+  its level, at Personal Range (the Errata, p. 59, corrects the book's
+  Touch), Momentary, Individual.
+- **Societates' other guidelines**: ice in a natural shape (CrAq 3,
+  p. 34), harmful gases causing a Light or Medium Wound (MuAu 4 and 5,
+  p. 36), destroying one aspect of dirt (PeTe 5, p. 37), stone
+  projectiles doing +5, +10 or +15 damage (ReTe 5 / 10 / 15, p. 38),
+  improving all wounds (CrCo 25, p. 100) and sustaining or suppressing
+  another's magic of one type (ReVi General, p. 129, as the Errata pp. 12
+  and 60 reword it).
+- **Magi of Hermes**: repairing a crafted item (CrTe 15, p. 31), inhuman
+  body parts (MuCo 5, Target Part, p. 49), instant transport (ReTe 4,
+  p. 92), preserving an Arcane Connection one, two or three steps (CrVi
+  5 / 10 / 15, p. 113) and restoring a wooden item (CrHe 15, p. 139).
+
+The Definitive Edition prints most of these among its own guidelines,
+with the same levels, so they are offered whichever books are in play;
+the rest (the anamorphs, the two level 5 emotions and the craft table)
+only while Houses of Hermes: Societates is in play. For the Definitive Edition's
+other guidelines, type the base level.
+

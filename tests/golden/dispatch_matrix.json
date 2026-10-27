@@ -18,7 +18,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Demote, Arms, Go To",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Demote, Arms, Go To, Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -28,7 +28,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant Description",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -48,7 +48,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -58,7 +58,7 @@
         "a": "CovenantBoonHookPickerScreen: Add a Boon",
         "e": "FieldsDialog: Boon: Aura",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -68,7 +68,7 @@
         "a": "CovenantBoonHookPickerScreen: Add a Hook",
         "e": "FieldsDialog: Hook: Contested Resource",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -282,6 +282,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-pos-ship": {
+      "active": "section-pos-ship",
+      "keys": {
+        "a": "FieldsDialog: Add a Ship",
+        "e": "notice: No Ships to edit.",
+        "d": "notice: No Ships to remove.",
+        "m": "MenuScreen: Stress Check, Ship Combat",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-pos-property": {
       "active": "section-pos-property",
       "keys": {
@@ -378,7 +388,7 @@
         "a": "FieldsDialog: Add a Source of Income",
         "e": "FieldsDialog: Edit Mill",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Improve Mill",
+        "m": "MenuScreen: Improve Income, Shape the Land",
         "slash": "(disabled)"
       }
     },
@@ -500,7 +510,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid",
+        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid, Petition the Church, Add Canon Case, Holy Orders",
         "slash": "(disabled)"
       }
     },
@@ -610,7 +620,7 @@
         "a": "VirtueFlawPickerScreen: Add a Virtue",
         "e": "notice: Adept Laboratory Student names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Gain or Lose in Play: Leandro",
         "slash": "(disabled)"
       }
     },
@@ -620,7 +630,7 @@
         "a": "VirtueFlawPickerScreen: Add a Flaw",
         "e": "notice: A Deal with the Devil names nothing to change. To take a different Virtue or Flaw, delete this one and add the other.",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Gain or Lose in Play: Leandro",
         "slash": "(disabled)"
       }
     },
@@ -1302,6 +1312,46 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-content-cults": {
+      "active": "section-content-cults",
+      "keys": {
+        "a": "FieldsDialog: Add Mystery Cult",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-content-cult": {
+      "active": "section-content-cult",
+      "keys": {
+        "a": "(disabled)",
+        "e": "notice: The saga has no cult yet: add one first.",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-content-cult-degrees": {
+      "active": "section-content-cult-degrees",
+      "keys": {
+        "a": "notice: Add a cult first.",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-content-cult-scripts": {
+      "active": "section-content-cult-scripts",
+      "keys": {
+        "a": "notice: Add a degree first: a Script Initiates its Virtue.",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-spells": {
       "active": "section-spells",
       "keys": {
@@ -1553,6 +1603,36 @@
         "e": "FieldsDialog: Edit a Gild",
         "d": "ConfirmScreen",
         "m": "MenuScreen: Mark of Approval, Archmage's Challenge",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-library": {
+      "active": "section-trib-library",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "FieldsDialog: Search the Great Library",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-library-credit": {
+      "active": "section-trib-library-credit",
+      "keys": {
+        "a": "FieldsDialog: Contribute to the Great Library",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-library-searches": {
+      "active": "section-trib-library-searches",
+      "keys": {
+        "a": "FieldsDialog: Search the Great Library",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },
@@ -2553,6 +2633,46 @@
         "e": "FieldsDialog: Edit a Trigger",
         "d": "ConfirmScreen",
         "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-tomb": {
+      "active": "section-nb-tomb",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Tomb",
+        "d": "(disabled)",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-tomb-curses": {
+      "active": "section-nb-tomb-curses",
+      "keys": {
+        "a": "FieldsDialog: Add a Curse",
+        "e": "FieldsDialog: Edit a Curse",
+        "d": "ConfirmScreen",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-tomb-wards": {
+      "active": "section-nb-tomb-wards",
+      "keys": {
+        "a": "FieldsDialog: Add a Talisman or Ward",
+        "e": "FieldsDialog: Edit a Talisman or Ward",
+        "d": "ConfirmScreen",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-tomb-traps": {
+      "active": "section-nb-tomb-traps",
+      "keys": {
+        "a": "FieldsDialog: Add a Trap",
+        "e": "FieldsDialog: Edit a Trap",
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Go To, Overcome It",
         "slash": "(disabled)"
       }
     },

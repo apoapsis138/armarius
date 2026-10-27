@@ -51,6 +51,7 @@ from ..models import (
     TraditionDef,
     VirtueFlawInstance,
 )
+from ..models.mystery_cults import is_saga_cult
 from . import hedge_casting as hc
 from . import realms, tradition_totals
 from .breakdown import Breakdown, Line
@@ -370,11 +371,37 @@ VIRTUE_MEMBERS: dict[str, str] = {
 
 def belongs(character: Character, tradition_id: str) -> bool:
     """Whether `character` is one of the tradition: named on the sheet, or
-    holding the Virtue that makes him one (VIRTUE_MEMBERS)."""
+    holding the Virtue that makes him one (VIRTUE_MEMBERS), or for a
+    saga's own cult, holding its Lore (saga_cult_member)."""
     virtue = VIRTUE_MEMBERS.get(tradition_id)
-    return tradition_id in character.traditions or (
-        virtue is not None and any(vf.vf_id == virtue for vf in character.virtues_flaws)
+    return (
+        tradition_id in character.traditions
+        or (
+            virtue is not None
+            and any(vf.vf_id == virtue for vf in character.virtues_flaws)
+        )
+        or saga_cult_member(character, tradition_id)
     )
+
+
+def saga_cult_member(character: Character, tradition_id: str) -> bool:
+    """Whether `character` belongs to a saga's own Mystery Cult: he holds
+    its Lore, at any score (one is inducted by gaining it; a probationer
+    has it at 1, and a founder may at 0). Its Virtues alone don't make a
+    member, since most can be taken at creation (The Mysteries Revised
+    Edition pp. 11, 13, 19)."""
+    if not is_saga_cult(tradition_id):
+        return False
+    tradition = catalog.load_tradition_catalog_by_id().get(tradition_id)
+    if tradition is None:
+        return False
+    lores = set(tradition.abilities)
+    return any(a.name in lores for a in character.abilities)
+
+
+def _saga_cults() -> list[str]:
+    """The ids of the saga in use's own Mystery Cults."""
+    return [t.id for t in catalog.load_tradition_catalog() if is_saga_cult(t.id)]
 
 
 def script_key(tradition: TraditionDef, script: InitiationScript) -> str:
@@ -398,10 +425,11 @@ def script_options(saga: Saga, initiate: Character) -> list[tuple[str, str]]:
     traditions the Initiate or anyone in the saga belongs to (the
     Mystagogue must be one of them), save the Forest Paths' kind, which
     has no Initiation Total."""
+    cults = _saga_cults()
     held = {
         tradition_id
         for person in (initiate, *saga.characters)
-        for tradition_id in (*person.traditions, *VIRTUE_MEMBERS)
+        for tradition_id in (*person.traditions, *VIRTUE_MEMBERS, *cults)
         if belongs(person, tradition_id)
     }
     found: list[tuple[str, str]] = []

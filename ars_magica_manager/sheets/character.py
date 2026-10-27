@@ -53,6 +53,7 @@ from ..rules import (
 from ..rules import aging as aging_rules
 from ..rules import animal_grogs as ag
 from ..rules import creation_virtues as cv
+from ..rules import vf_change as vf_change_rules
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.breakdown import Breakdown
@@ -676,10 +677,13 @@ def vf_cards(
         definition = vf_catalog.get(vf.vf_id)
         if definition is None or definition.side != side:
             continue
+        name = catalog.describe_virtue_flaw(vf, vf_catalog)
+        if temporary := vf_change_rules.temporary_text(vf):
+            name = f"{name} ({temporary})"
         cards.append(
             VirtueFlawCard(
                 index,
-                catalog.describe_virtue_flaw(vf, vf_catalog),
+                name,
                 "Free" if index in free else definition.tier,
                 definition.category_label,
                 definition.summary,

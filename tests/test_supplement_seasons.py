@@ -39,6 +39,11 @@ def test_every_supplement_story_has_its_activities():
         "TMRE-1",
         "TMRE-2",
         "TMRE-5",
+        "217",
+        "932",
+        "933-B",
+        # Transforming Mythic Europe: books copied by magic.
+        "933-C",
     }
     assert all(a.key in rules.ACTIVITIES for a in sup.ACTIVITIES)
     assert list(rules.ACTIVITIES)[-1] == rules.OTHER

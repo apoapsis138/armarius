@@ -495,6 +495,10 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             # A mystic's path and God's aid (The Church, RoP: The Divine).
             "Mystic Path",
             "Invoke God's Aid",
+            # A cleric's career (The Church).
+            "Petition the Church",
+            "Add Canon Case",
+            "Holy Orders",
         ]
         await menu(pilot, app, "m", "In Creation / In Play")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
@@ -592,6 +596,13 @@ async def test_the_footer_keeps_focused_actions_left_and_global_ones_right():
             "Edit",
             "d",
             "Delete",
+            # The Virtues & Flaws section's one rare action.
+            "m",
+            "Gain",
+            "or",
+            "Lose",
+            "in",
+            "Play",
         ]
         # It fits the smallest size the app is checked at.
     app = ArsMagicaManagerApp()

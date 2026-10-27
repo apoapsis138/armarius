@@ -3535,6 +3535,18 @@
       "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
     },
     {
+      "id": "sm_volcano",
+      "name": "Volcano",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "volcanoes"
+        }
+      ],
+      "source": "HP",
+      "citation": "Hermetic Projects, Shape and Material Bonuses, p. 26"
+    },
+    {
       "id": "sm_walnut_wood",
       "name": "Walnut Wood",
       "bonuses": [

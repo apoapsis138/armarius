@@ -247,6 +247,36 @@ CONSTANT_EFFECTS_SECTION = "section-char-constant-effects"
 #: A character's agents (forms.agents): the people he controls through
 #: personal bonds, on their own tab.
 AGENTS_SECTION = "section-char-agents"
+#: A place's Tomb tab (tombs.py, Lands of the Nile): the tomb, its
+#: curses, its talismans and wards, and its traps.
+TOMB_SECTION = "section-nb-tomb"
+TOMB_CURSES_SECTION = "section-nb-tomb-curses"
+TOMB_WARDS_SECTION = "section-nb-tomb-wards"
+TOMB_TRAPS_SECTION = "section-nb-tomb-traps"
+#: The Rhine's Great Library tab (tribunal_packages.rhine_library): its
+#: rule of access, each magus's credit, and the searches made.
+LIBRARY_RULES_SECTION = "section-trib-library"
+LIBRARY_CREDIT_SECTION = "section-trib-library-credit"
+LIBRARY_SEARCHES_SECTION = "section-trib-library-searches"
+#: Saga Content's Mystery Cults tab (forms/mystery_cults.py): the saga's
+#: own cults, the chosen one, its degrees, and the chosen degree's Script.
+CULTS_SECTION = "section-content-cults"
+CULT_SECTION = "section-content-cult"
+CULT_DEGREES_SECTION = "section-content-cult-degrees"
+CULT_SCRIPT_SECTION = "section-content-cult-scripts"
+#: A character's Church tab (forms.church): his grade in holy orders,
+#: his ordinations, his petitions to the Church and his canon-court cases.
+ORDERS_SECTION = "section-char-orders"
+ORDINATIONS_SECTION = "section-char-ordinations"
+PETITIONS_SECTION = "section-char-petitions"
+CANON_SECTION = "section-char-canon"
+
+#: A covenant's Projects tab (hermetic_projects.py, Hermetic Projects): its
+#: projects, the shown one's tower, its works and its craft devices.
+PROJECTS_SECTION = "section-cov-projects"
+TOWER_SECTION = "section-cov-tower"
+PROJECT_WORKS_SECTION = "section-cov-tower-works"
+PROJECT_DEVICES_SECTION = "section-cov-tower-devices"
 
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     POWERS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -335,4 +365,27 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     VOTE_SECTION: frozenset({"edit"}),
     SECRETS_SECTION: frozenset({"edit"}),
     GOODS_SECTION: frozenset({"add", "edit", "remove"}),
+    # A place's Tomb tab (Lands of the Nile).
+    TOMB_SECTION: frozenset({"edit"}),
+    TOMB_CURSES_SECTION: frozenset({"add", "edit", "remove"}),
+    TOMB_WARDS_SECTION: frozenset({"add", "edit", "remove"}),
+    TOMB_TRAPS_SECTION: frozenset({"add", "edit", "remove"}),
+    # The Rhine's Great Library (Guardians of the Forests).
+    LIBRARY_CREDIT_SECTION: frozenset({"add", "edit", "remove"}),
+    LIBRARY_SEARCHES_SECTION: frozenset({"add", "edit", "remove"}),
+    # Saga Content's Mystery Cults.
+    CULTS_SECTION: frozenset({"add", "edit", "remove"}),
+    CULT_SECTION: frozenset({"edit"}),
+    CULT_DEGREES_SECTION: frozenset({"add", "edit", "remove"}),
+    CULT_SCRIPT_SECTION: frozenset({"add", "edit", "remove"}),
+    # A cleric's career (The Church).
+    ORDERS_SECTION: frozenset({"edit"}),
+    ORDINATIONS_SECTION: frozenset({"add", "edit", "remove"}),
+    PETITIONS_SECTION: frozenset({"add", "edit", "remove"}),
+    CANON_SECTION: frozenset({"add", "edit", "remove"}),
+    # A covenant's Hermetic Projects.
+    PROJECTS_SECTION: frozenset({"add", "edit", "remove"}),
+    TOWER_SECTION: frozenset({"edit"}),
+    PROJECT_WORKS_SECTION: frozenset({"add", "edit", "remove"}),
+    PROJECT_DEVICES_SECTION: frozenset({"add", "edit", "remove"}),
 }

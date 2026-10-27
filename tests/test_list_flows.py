@@ -13,41 +13,53 @@ from textual.widgets import Input, Select, TabPane, TextArea, Tree
 
 from ars_magica_manager import battles, place_events, sieges, storage
 from ars_magica_manager import goods as gd
+from ars_magica_manager import mystery_cults as cult_core
 from ars_magica_manager.models import (
+    Ability,
+    AbilityDef,
     Agent,
     Battle,
     BattleSide,
     BondPower,
     BoundBeing,
     Breakthrough,
+    CanonCase,
     Character,
     CharacterPower,
     CharterClause,
     ConstantEffect,
     Covenant,
+    CraftDevice,
     Creature,
     CreatureAttack,
     CreaturePower,
+    CultDegree,
+    CultScript,
     DiaryEntry,
     EnchantedDevice,
     Familiar,
     Fight,
     FightSide,
     GoodDef,
+    HermeticProject,
     IncomeSource,
     Inhabitant,
     InstilledEffect,
     LabItemBenefit,
     Laboratory,
     LabSpecialtyGrant,
+    MysteryCult,
     NamedDescription,
     Neighbour,
+    Petition,
     Possession,
+    ProjectWork,
     Saga,
     SagaSource,
     ScoredTrait,
     Siege,
     TraditionEffect,
+    Tribunal,
     VirtueFlawInstance,
 )
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -73,6 +85,26 @@ def _saga() -> Saga:
         Possession(id="ci2", kind="item", name="Mirror"),
         Possession(id="pr1", kind="property", name="Mill [old]"),
         Possession(id="pr2", kind="property", name="Farm"),
+        # A covenant's ships.
+        Possession(id="sh1", kind="ship", name="Möwe [old]"),
+        Possession(id="sh2", kind="ship", name="Seehund"),
+    ]
+    # A covenant's Hermetic Projects: two projects, the first with two
+    # works and two craft devices.
+    covenant.hermetic_projects = [
+        HermeticProject(
+            id="hp1",
+            name="Spire [old]",
+            works=[
+                ProjectWork(id="hw1", kind="other", name="Gale [great]"),
+                ProjectWork(id="hw2", kind="other", name="Repair"),
+            ],
+            devices=[
+                CraftDevice(id="hd1", name="Crane [big]"),
+                CraftDevice(id="hd2", name="Glove"),
+            ],
+        ),
+        HermeticProject(id="hp2", name="Keep"),
     ]
     covenant.inhabitants = [
         Inhabitant(id="tu1", kind="turb", name="Guard [a]"),
@@ -222,6 +254,7 @@ _SHEET_VIEW_ATTR = {
     "creature": "_creature_sheet_view",
     "conflicts": "_conflicts_view",
     "neighbour": "_neighbour_sheet_view",
+    "tribunal": "_tribunal_sheet_view",
 }
 
 
@@ -551,6 +584,32 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-cr-powers",
         "cr-powers-list",
         lambda s: s.creatures[0].powers,
+    ),
+    # A covenant's ships (Hermetic Projects; City & Guild).
+    "covenant-ships": ListCase(
+        ("covenant", "cov1"),
+        "section-pos-ship",
+        "pos-ship-list",
+        lambda s: [p for p in s.covenants[0].possessions if p.kind == "ship"],
+    ),
+    # A covenant's Hermetic Projects, the shown one's works and devices.
+    "covenant-projects": ListCase(
+        ("covenant", "cov1"),
+        "section-cov-projects",
+        "cov-projects-list",
+        lambda s: s.covenants[0].hermetic_projects,
+    ),
+    "covenant-project-works": ListCase(
+        ("covenant", "cov1"),
+        "section-cov-tower-works",
+        "cov-tower-works-list",
+        lambda s: s.covenants[0].hermetic_projects[0].works,
+    ),
+    "covenant-project-devices": ListCase(
+        ("covenant", "cov1"),
+        "section-cov-tower-devices",
+        "cov-tower-devices-list",
+        lambda s: s.covenants[0].hermetic_projects[0].devices,
     ),
 }
 
@@ -1231,3 +1290,401 @@ async def test_the_manors_lists_act_on_the_chosen_row(name):
         assert _confirm_message(app) == message
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+
+
+# -- A place's Tomb tab (Lands of the Nile) --
+
+
+def _tomb_saga() -> Saga:
+    saga = _saga()
+    saga.neighbours = [
+        Neighbour(
+            id="grave",
+            name="The Giant's Grave",
+            kind="place",
+            details={
+                "tomb": True,
+                "tomb_curses": [
+                    {"name": "Fear [of the King]", "kind": "Hermetic effect"}
+                    | {"art": "CrMe", "level": 25, "condition": "By night"},
+                    {"name": "Lost", "kind": "Lesser Malediction"}
+                    | {"art": "CrMe", "level": 25, "condition": "The capstone"},
+                ],
+                "tomb_wards": [
+                    {"name": "Boar [bronze]", "kind": "Talisman", "level": 40},
+                    {"name": "Turn", "kind": "Ward", "level": 30},
+                ],
+                "tomb_traps": [
+                    {"name": "Drop [stone]", "harm": "fatal", "ease": 12},
+                    {"name": "Maze", "harm": "scare", "ease": 6},
+                ],
+            },
+        )
+    ]
+    return saga
+
+
+def _tomb_case(section: str, key: str) -> ListCase:
+    return ListCase(
+        ("neighbour", "grave"),
+        f"section-nb-tomb-{section}",
+        f"nb-tomb-{section}-list",
+        lambda s: s.neighbour("grave").details[key],
+    )
+
+
+TOMB_LISTS: dict[str, ListCase] = {
+    "tomb-curses": _tomb_case("curses", "tomb_curses"),
+    "tomb-wards": _tomb_case("wards", "tomb_wards"),
+    "tomb-traps": _tomb_case("traps", "tomb_traps"),
+}
+
+
+@pytest.mark.parametrize("name", list(TOMB_LISTS))
+async def test_a_tombs_lists_act_on_the_chosen_row(name):
+    """In one session on a place's Tomb tab: e edits the chosen row, d
+    asks about the chosen row before deleting it; on Traps, More's
+    Overcome It rolls for the chosen trap and Write puts it in the place's
+    diary."""
+    case = TOMB_LISTS[name]
+    storage.save_saga(_tomb_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        await _save_name(pilot, app, "Renamed")
+        assert await wait_until(pilot, lambda: _saved(case)[1]["name"] == "Renamed")
+        assert _saved(case)[0]["name"] != "Renamed"
+
+        if name == "tomb-traps":
+            await _choose_row(pilot, view, case, 0)
+            await pilot.press("m")  # a menu, or its one More command at once
+            if await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen)):
+                await _press(pilot, app, "o", FieldsDialog)
+            assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+            assert "Drop [stone]" in str(app.screen.query_one("#fields-live").render())
+            app.screen.query_one("#btn-save").press()
+            await _confirm_write(pilot, app)
+
+            def diary() -> list:
+                return (
+                    storage.load_saga("test_saga")
+                    .neighbour("grave")
+                    .details.get("diary", [])
+                )
+
+            assert await wait_until(pilot, lambda: len(diary()) == 1)
+            assert "Drop [stone]" in diary()[0]["text"]
+            assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Renamed?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+
+
+async def _confirm_write(pilot, app) -> None:
+    """Answer Write on the roll's question."""
+    assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+    await pilot.press("y")
+
+
+# -- A saga's own Abilities in House Rules (HoH:S pp. 103-106) --
+
+
+async def test_house_rule_abilities_edit_and_delete_act_on_the_chosen_row():
+    """In one session: e opens the chosen Ability of the saga's own, d
+    refuses one a character holds, and deletes another after asking."""
+    saga = _saga()
+    saga.custom_abilities = [
+        AbilityDef("custom_ability_tide", "Call the Tide [sea]", "Supernatural"),
+        AbilityDef("custom_ability_ravens", "Speak with Ravens", "Supernatural"),
+    ]
+    saga.characters[0].abilities.append(
+        Ability("Call the Tide [sea]", "Supernatural", xp=5)
+    )
+    storage.save_saga(saga)
+    case = ListCase(
+        ("saga_content",),
+        "section-house-rules",
+        "house-rules-list",
+        lambda s: [a.name for a in s.custom_abilities],
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _press(pilot, app, "e", FieldsDialog)  # no picker
+        assert app.screen.query_one("#fld-name", Input).value == "Call the Tide [sea]"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        # Held by a character: refused, nothing asked.
+        await pilot.press("d")
+        await pilot.pause()
+        assert app.screen is workspace
+        assert len(_saved(case)) == 2
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Speak with Ravens?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: _saved(case) == ["Call the Tide [sea]"])
+
+
+# -- The Rhine's Great Library at Durenmar (Guardians of the Forests) --
+
+
+def _library_saga() -> Saga:
+    """The flows' saga with a Rhine Tribunal: Leandro and Ricardus hold
+    credit at the Great Library, and Leandro has made two searches."""
+    saga = _saga()
+    saga.characters.append(
+        Character(id="ric", name="Ricardus [glass]", type="magus", covenant_id="cov1")
+    )
+    saga.covenants[0].tribunal_id = "rhine"
+    ledger = {"given": [{"kind": "book", "what": "A tract", "seasons": 2}], "used": 0}
+    search = {"year": 1220, "season": "Spring", "magus_id": "mag1", "roll": "Q 7"}
+    saga.tribunals = [
+        Tribunal(
+            id="rhine",
+            name="Rhine",
+            package="rhine",
+            package_data={
+                "rhine": {
+                    "library_credit": [
+                        {"magus_id": "mag1", **ledger},
+                        {"magus_id": "ric", **ledger},
+                    ],
+                    "library_searches": [
+                        {**search, "sought": "tractatus", "subject": "Vim"},
+                        {**search, "sought": "tractatus", "subject": "Ignem"},
+                    ],
+                }
+            },
+        )
+    ]
+    return saga
+
+
+def _library_case(section: str, key: str) -> ListCase:
+    return ListCase(
+        ("tribunal", "rhine"),
+        f"section-trib-library-{section}",
+        f"trib-library-{section}-list",
+        lambda s: s.tribunal("rhine").package_data["rhine"][key],
+    )
+
+
+LIBRARY_LISTS: dict[str, ListCase] = {
+    "library-credit": _library_case("credit", "library_credit"),
+    "library-searches": _library_case("searches", "library_searches"),
+}
+
+
+@pytest.mark.parametrize("name", list(LIBRARY_LISTS))
+async def test_the_great_librarys_lists_act_on_the_chosen_row(name):
+    """In one session on the Rhine's Great Library tab: e edits the chosen
+    row (a magus's credit, or a search as recorded), and d asks about the
+    chosen row before deleting it."""
+    case = LIBRARY_LISTS[name]
+    storage.save_saga(_library_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        if name == "library-credit":
+            app.screen.query_one("#fld-used", Input).value = "2"
+        else:
+            app.screen.query_one("#fld-subject", Input).value = "Creo"
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        def changed() -> bool:
+            second, first = _saved(case)[1], _saved(case)[0]
+            if name == "library-credit":
+                return second["used"] == 2 and first["used"] == 0
+            return second["subject"] == "Creo" and first["subject"] == "Vim"
+
+        assert await wait_until(pilot, changed)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        expected = (
+            "Ricardus [glass]'s credit"
+            if name == "library-credit"
+            else "the search for Creo tractatus"
+        )
+        assert expected in _confirm_message(app)
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+        if name == "library-searches":
+            # More on the rule of access: Search the Great Library.
+            view.query_one("#section-trib-library", SheetSection).focus_section()
+            await pilot.pause()
+            await pilot.press("m")
+            if await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen)):
+                await _press(pilot, app, "s", FieldsDialog)
+            assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+            assert "The Stacks" in str(
+                app.screen.query_one("#fields-live").border_title
+            )
+
+
+# -- A cleric's career: the Church tab's Petitions and Canon Court --
+
+CHURCH_LISTS: dict[str, tuple[ListCase, str, list[str]]] = {
+    "petitions": (
+        ListCase(
+            ("character", "mag1"),
+            "section-char-petitions",
+            "char-petitions-list",
+            lambda s: s.characters[0].church.petitions,
+        ),
+        "ask",
+        ["Leave to read [crypt]", "A blessing"],
+    ),
+    "canon-cases": (
+        ListCase(
+            ("character", "mag1"),
+            "section-char-canon",
+            "char-canon-list",
+            lambda s: s.characters[0].church.cases,
+        ),
+        "what",
+        ["Tithes", "Slander"],
+    ),
+}
+
+
+def _church_saga() -> Saga:
+    saga = _saga()
+    church = saga.characters[0].church
+    church.petitions = [
+        Petition("Leave to read [crypt]", "Access to the parish crypt or library", 6),
+        Petition("A blessing", "A marriage blessing", 3),
+    ]
+    church.cases = [CanonCase("Tithes"), CanonCase("Slander")]
+    return saga
+
+
+@pytest.mark.parametrize("name", list(CHURCH_LISTS))
+async def test_church_lists_edit_and_delete_act_on_the_chosen_row(name):
+    """In one session, on the Church tab a petition or a case brings: e
+    opens the chosen row's form and saves into it, and d asks first, then
+    deletes only the chosen row."""
+    case, key, names = CHURCH_LISTS[name]
+    storage.save_saga(_church_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        _, view = await _open(pilot, app, case)
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one(f"#fld-{key}", Input).value = "Changed"
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot, lambda: getattr(_saved(case)[1], key) == "Changed"
+        )
+
+        await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == f"Delete {names[0]}?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+        assert getattr(_saved(case)[0], key) == "Changed"
+
+
+# -- Saga Content's Mystery Cults --
+
+
+def _cults_saga() -> Saga:
+    """_saga() with two cults of its own, the second with three degrees, its
+    first degree's Script of two components."""
+    saga = _saga()
+    script = CultScript(
+        "Rite [old]",
+        [cult_core.component("place"), cult_core.component("quest", note="A gown")],
+    )
+    # A Mystagogue who may lead its Initiations.
+    saga.characters[0].abilities.append(Ability("Second Lore", xp=75))
+    saga.custom_cults = [
+        MysteryCult("custom_cult_a", "First Cult", "First Lore"),
+        MysteryCult(
+            "custom_cult_b",
+            "Second [Cult]",
+            "Second Lore",
+            degrees=[
+                CultDegree("degree_1", "Spinner", "vf_second_sight", script=script),
+                CultDegree("degree_2", "Weaver", "vf_clear_thinker"),
+                CultDegree("degree_3", "Reader", "vf_strong_willed"),
+            ],
+        ),
+    ]
+    return saga
+
+
+async def test_mystery_cults_lists_act_on_the_chosen_rows():
+    """In one session: the degrees follow the chosen cult; e and d on the
+    degrees act on the chosen degree; the Script follows the chosen degree,
+    and d removes its chosen component after asking; More offers
+    Experiment on a Script only for a degree with no Script."""
+    storage.save_saga(_cults_saga())
+    cults = ListCase(
+        ("saga_content",),
+        "section-content-cults",
+        "content-cults-list",
+        lambda s: [c.name for c in s.custom_cults],
+    )
+    degrees = ListCase(
+        ("saga_content",),
+        "section-content-cult-degrees",
+        "content-cult-degrees-list",
+        lambda s: [d.name for d in s.custom_cults[1].degrees],
+    )
+    script = ListCase(
+        ("saga_content",),
+        "section-content-cult-scripts",
+        "content-cult-scripts-list",
+        lambda s: [c.key for c in s.custom_cults[1].degrees[0].script.components],
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, cults)
+        await _choose_row(pilot, view, cults, 1)
+        degree_rows = view.query_one(f"#{degrees.list_id}", SelectableList)
+        assert await wait_until(pilot, lambda: "Weaver" in str(degree_rows._rows))
+
+        await _choose_row(pilot, view, degrees, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-name", Input).value == "Weaver"
+        app.screen.query_one("#fld-name", Input).value = "Weaver [new]"
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(degrees)[1] == "Weaver [new]")
+
+        await _choose_row(pilot, view, degrees, 2)
+        # More has one item there: m opens it.
+        await _press(pilot, app, "m", FieldsDialog)
+        assert "Experiment on a Script: Reader" in str(
+            app.screen.query_one("#fields-title").render()
+        )
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete the degree Reader and its Script?"
+        await pilot.press("y")
+        assert await wait_until(
+            pilot, lambda: _saved(degrees) == ["Spinner", "Weaver [new]"]
+        )
+
+        await _choose_row(pilot, view, degrees, 0)
+        script_rows = view.query_one(f"#{script.list_id}", SelectableList)
+        assert await wait_until(pilot, lambda: "A gown" in str(script_rows._rows))
+        await _choose_row(pilot, view, script, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete A gown from the Script?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: _saved(script) == ["place"])
+        await _choose_row(pilot, view, script, 0)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-name", Input).value == "Rite [old]"

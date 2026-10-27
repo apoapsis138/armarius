@@ -10,6 +10,7 @@ from .common import (
     ABILITY_CATEGORIES,
     LAB_CHARACTERISTICS,
     LAB_VF_PARAMETERS,
+    REALMS,
     VIRTUE_FLAW_AUDIENCES,
     VIRTUE_FLAW_SIDE,
     XP_TABLES,
@@ -377,6 +378,19 @@ class CovenantSituationDef:
         return cls(**known_fields(cls, data))
 
 
+#: The eight Characteristics, as an Ability's roll names them.
+ROLL_CHARACTERISTICS: tuple[str, ...] = (
+    "Intelligence",
+    "Perception",
+    "Strength",
+    "Stamina",
+    "Presence",
+    "Communication",
+    "Dexterity",
+    "Quickness",
+)
+
+
 @dataclass(frozen=True)
 class AbilityDef:
     """A catalog entry for an Ability name (shared reference data, not per-saga).
@@ -403,6 +417,11 @@ class AbilityDef:
     #: The xp table it advances on (XP_TABLES): "ability", or "art" for an
     #: Accelerated Ability or a hedge Art that isn't Difficult.
     xp_table: str = "ability"
+    #: A saga's own Supernatural Ability: the realm it is affiliated with
+    #: ("" for none given), and the Characteristic its rolls add (""
+    #: when it varies), as Houses of Hermes: Societates p. 104 designs one.
+    realm: str = ""
+    characteristic: str = ""
 
     def __post_init__(self) -> None:
         if self.category not in ABILITY_CATEGORIES:
@@ -413,6 +432,16 @@ class AbilityDef:
         if self.xp_table not in XP_TABLES:
             raise ValueError(
                 f"Unknown xp table {self.xp_table!r}; must be one of {XP_TABLES}"
+            )
+        if self.realm and self.realm not in REALMS:
+            raise ValueError(
+                f"Ability {self.name!r}: unknown realm {self.realm!r}; "
+                f"must be one of {REALMS}"
+            )
+        if self.characteristic and self.characteristic not in ROLL_CHARACTERISTICS:
+            raise ValueError(
+                f"Ability {self.name!r}: unknown Characteristic "
+                f"{self.characteristic!r}; must be one of {ROLL_CHARACTERISTICS}"
             )
 
     @classmethod

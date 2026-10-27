@@ -71,6 +71,7 @@ from ..seasons.projection import as_then
 from . import activity as activity_forms
 from . import character as character_forms
 from . import spell as spell_forms
+from . import spell_guideline as guideline_forms
 
 #: The Range/Duration/Target choice for one the app doesn't list.
 OTHER = "__other__"
@@ -335,6 +336,22 @@ class LabPlanForm:
                 show_if=inventing,
             ),
             DialogField(
+                "guideline",
+                "Guideline",
+                "picker",
+                guideline_forms.design_guideline(design),
+                allow_blank=True,
+                placeholder=guideline_forms.NONE_CHOSEN,
+                choose=lambda current: guideline_forms.choose_guideline(
+                    self.saga, current
+                ),
+                display=guideline_forms.guideline_label,
+                show_if=inventing,
+                fills=guideline_forms.guideline_values,
+                hint="A supplement's Hermetic guideline: it sets the Technique, "
+                "Form, base level and Base effect.",
+            ),
+            DialogField(
                 "technique",
                 "Technique",
                 "select",
@@ -465,6 +482,7 @@ class LabPlanForm:
             "ritual": bool(design and design.ritual),
             "extra_magnitudes": design.extra_magnitudes if design else 0,
             "base_effect": "",
+            "guideline": None,
         }
         if lab_virtues.has(self.magus, spell_levels.SPELL_TIMING):
             found["recurring"] = None

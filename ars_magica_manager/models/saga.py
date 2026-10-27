@@ -18,11 +18,17 @@ from .covenant import (
     Covenant,
 )
 from .creature import Creature
-from .definitions import CovenantBoonHookDef, LabVirtueFlawDef, VirtueFlawDef
+from .definitions import (
+    AbilityDef,
+    CovenantBoonHookDef,
+    LabVirtueFlawDef,
+    VirtueFlawDef,
+)
 from .devices import EnchantedDevice
 from .familiar import Familiar
 from .goods import GoodDef, GoodPurity
 from .laboratory import Laboratory
+from .mystery_cults import MysteryCult
 from .seasons import CalendarEntry, LabProject, SeasonPlan, SeasonRecord, WorldTurn
 from .traits import Spell
 from .tribunal import Tribunal
@@ -154,6 +160,14 @@ class Saga:
     #: purities it adds to goods priced by purity.
     custom_goods: list[GoodDef] = field(default_factory=list)
     good_purities: list[GoodPurity] = field(default_factory=list)
+    #: The saga's own Abilities (own_abilities.py), beside the Ability
+    #: catalog's: a Supernatural Ability the troupe designs (Houses of
+    #: Hermes: Societates pp. 103-106).
+    custom_abilities: list[AbilityDef] = field(default_factory=list)
+    #: The saga's own Mystery Cults (mystery_cults.py), offered beside the
+    #: tradition catalog's: their Lore, degrees and Initiation Scripts (The
+    #: Mysteries Revised Edition pp. 13-19).
+    custom_cults: list[MysteryCult] = field(default_factory=list)
     #: Who can sign in to the saga from a browser when it is hosted;
     #: the storyguide's own window needs no sign-in.
     players: list[Player] = field(default_factory=list)
@@ -243,6 +257,12 @@ class Saga:
         d["custom_goods"] = [GoodDef.from_dict(g) for g in d.get("custom_goods", [])]
         d["good_purities"] = [
             GoodPurity.from_dict(p) for p in d.get("good_purities", [])
+        ]
+        d["custom_abilities"] = [
+            AbilityDef.from_dict(a) for a in d.get("custom_abilities", [])
+        ]
+        d["custom_cults"] = [
+            MysteryCult.from_dict(c) for c in d.get("custom_cults", [])
         ]
         d["players"] = [Player.from_dict(p) for p in d.get("players", [])]
         d["sources"] = [SagaSource.from_dict(s) for s in d.get("sources", [])]

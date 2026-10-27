@@ -38,6 +38,7 @@ from ....forms import apothecary as apothecary_forms
 from ....forms import beast as beast_forms
 from ....forms import careers as career_forms
 from ....forms import character as character_forms
+from ....forms import church as church_forms
 from ....forms import craft_magic as craft_forms
 from ....forms import experimental_effects
 from ....forms import faerie_dealings as faerie_forms
@@ -55,7 +56,9 @@ from ....forms import tmre_alchemy as tmre_alchemy_forms
 from ....forms import tmre_divination as tmre_divination_forms
 from ....forms import tmre_dreams as tmre_dream_forms
 from ....forms import tmre_spirits as tmre_spirit_forms
+from ....forms import tunnel as tunnel_forms
 from ....forms import turbulence as turbulence_forms
+from ....forms import vf_change as vf_change_forms
 from ....markup import escape
 from ....models import (
     Ability,
@@ -1711,3 +1714,50 @@ class CharacterActions(WorkspaceBase):
         """More's Test the Great Elixir on Aging & Warping: the potion
         drunk and tested, kept in the Diary."""
         self._apothecary_step(tmre_alchemy_forms.great_elixir_form, "section-aging")
+
+    # -- Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64) --
+
+    def action_change_virtues_flaws(self) -> None:
+        """More's Gain or Lose in Play on Virtues & Flaws: a Virtue or Flaw
+        gained, lost, or exchanged, kept in the Diary."""
+        self._byzantine_step(
+            vf_change_forms.change_form,
+            "section-vf-virtues",
+            "section-vf-flaws",
+            "section-char-characteristics",
+        )
+
+    # -- A cleric's career (The Church) --
+
+    def action_petition_church(self) -> None:
+        """More's Petition the Church: the petition kept on the Church tab
+        (which a first petition brings)."""
+        self._byzantine_step(church_forms.petition_form, "section-char-petitions")
+
+    def action_canon_case(self) -> None:
+        """More's Add Canon Case: the case kept on the Church tab."""
+        self._byzantine_step(
+            church_forms.canon_form, "section-char-canon", "section-char-orders"
+        )
+
+    def action_holy_orders(self) -> None:
+        """More's Holy Orders: a grade held before play, for a character
+        with no Church tab yet."""
+        self._byzantine_step(church_forms.holy_orders_form, "section-char-orders")
+
+    def action_perform_exorcism(self) -> None:
+        """More's Perform an Exorcism on Holy Orders: the roll, said."""
+        self._byzantine_step(church_forms.exorcism_step)
+
+    def action_open_tunnel(self) -> None:
+        """More's Open a Tunnel on Known Spells (Hermetic Projects): the
+        calculator, and Cast's roll of the tunnel; nothing is kept."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, tunnel_forms.tunnel_form(self.saga, character), done)

@@ -923,6 +923,122 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#cov-charter-text": "Sealed by: Leandro (Spring 1219)"},
         live={"#fields-live": "Not yet sworn: Brother Oda"},
     ),
+    # A covenant's ships (Hermetic Projects; City & Guild).
+    "add ship": Contract(
+        prefill={"Name": "", "Size": "5", "Cargo (tons)": "20", "Crew": "8"},
+        edits={"Name": "Möwe", "Kind": "Knarr", "Damage levels lost": "1"},
+        saved=lambda s: [
+            (p.name, p.ship.kind_name, p.ship.damage_lost)
+            for p in covenant(s).possessions
+            if p.ship is not None
+        ],
+        expected=[("Möwe", "Knarr", 1)],
+        invalid=[{"Name": ""}, {"Name": "Möwe", "Damage levels lost": "9"}],
+        shown={"#pos-ship-list": "Möwe"},
+        live={"#fields-live": "Damage levels: 3 of 4"},
+    ),
+    "ship stress check": Contract(
+        prefill={"Weather": "fair", "Repaired before (-1)": False},
+        edits={"Weather": "severe"},
+        saved=lambda s: covenant(s).diary[-1].name,
+        expected="Stress Check: Seehund",
+        shown={"#pos-ship-list": "Seehund"},
+        live={"#fields-live": "against 15"},
+    ),
+    "ship combat": Contract(
+        prefill={"We mean to": "board", "Our crew's experience (0 to +3)": "0"},
+        edits={"We mean to": "escape"},
+        saved=lambda s: covenant(s).diary[-1].name,
+        expected="Ship Combat: Seehund",
+        invalid={"Our crew's experience (0 to +3)": "4"},
+        shown={"#pos-ship-list": "Seehund"},
+        live={"#fields-live": "slip away"},
+    ),
+    # Shaping the land by magic (Transforming Mythic Europe pp. 54-77).
+    "shape land": Contract(
+        prefill={
+            "Name": "",
+            "Wall height (paces)": "30",
+            "Grassland over the island": True,
+        },
+        edits={"Name": "Insula", "Across (miles)": "30"},
+        saved=lambda s: [(p.name, p.across_miles) for p in covenant(s).land_projects],
+        expected=[("Insula", 30.0)],
+        invalid=[{"Name": ""}, {"Name": "Insula", "Across (miles)": "0"}],
+        # A 30-mile island: a level 35 wall and a level 40 fill (TME p. 59).
+        live={"#fields-live": "The fill: CrTe 40 Ritual"},
+    ),
+    "settle new land": Contract(
+        prefill={"Manors to settle (of 7 left)": "7", "Named": "Insula"},
+        edits={"Manors to settle (of 7 left)": "2"},
+        saved=lambda s: [
+            m["name"]
+            for m in covenant(s).manors.get("manor_list", [])
+            if m["name"].startswith("Insula")
+        ],
+        expected=["Insula 1", "Insula 2"],
+        invalid=[
+            {"Manors to settle (of 7 left)": "8"},
+            {"Manors to settle (of 7 left)": "0"},
+        ],
+        live={"#fields-live": "40 pounds a year"},
+    ),
+    # A covenant's Hermetic Projects (Hermetic Projects pp. 36-41).
+    "begin project": Contract(
+        prefill={"Name": "", "Kind": "Great Tower", "Year": "1220"},
+        edits={"Name": "The Spire", "Innovation": "2"},
+        saved=lambda s: [(p.name, p.innovation) for p in covenant(s).hermetic_projects],
+        expected=[("The Spire", 2)],
+        invalid=[{"Name": ""}, {"Name": "The Spire", "Innovation": "4"}],
+    ),
+    "edit project": Contract(
+        prefill={"Name": "The Schattenbach Spire", "Raw Materials": "0"},
+        edits={"Name": "The Spire", "Raw Materials": "3"},
+        saved=lambda s: [
+            (p.name, p.raw_materials) for p in covenant(s).hermetic_projects
+        ],
+        expected=[("The Spire", 3)],
+        invalid={"Raw Materials": "5"},
+        shown={"#cov-projects-list": "The Spire"},
+    ),
+    "add work": Contract(
+        prefill={"Work": "", "Levels added": "0"},
+        edits={"Work": "Gregor builds", "Levels added": "2", "Quality": "Superior"},
+        saved=lambda s: [
+            (w.name, w.levels, w.quality)
+            for w in covenant(s).hermetic_projects[0].works[2:]
+        ],
+        expected=[("Gregor builds", 2, "Superior")],
+        invalid={"Levels added": "-1"},
+        shown={"#cov-tower-works-list": "Gregor builds"},
+    ),
+    "add device": Contract(
+        prefill={"Device": "", "Effect": ""},
+        edits={"Device": "True Falsework", "Effect": "ReHe 30"},
+        saved=lambda s: [d.name for d in covenant(s).hermetic_projects[0].devices],
+        expected=["The Arms of Hercules", "True Falsework"],
+        invalid={"Device": ""},
+        shown={"#cov-tower-devices-list": "True Falsework"},
+    ),
+    "tower stress check": Contract(
+        prefill={"How severe": "0", "Previously repaired": False},
+        edits={"How severe": "-2"},
+        saved=lambda s: covenant(s).hermetic_projects[0].works[-1].kind,
+        expected="stress",
+        invalid={"How severe": "x"},
+        live={"#fields-live": "against 15"},
+    ),
+    "conjure levels": Contract(
+        prefill={"Ritual": "heights", "Year": "1220"},
+        edits={"Season": "Winter"},
+        saved=lambda s: [
+            (w.kind, w.levels, w.season)
+            for w in covenant(s).hermetic_projects[0].works[2:]
+        ],
+        expected=[("ritual", 4, "Winter")],
+        invalid={"Ritual": "conjuring"},
+        live={"#fields-live": "Botch dice: 5"},
+    ),
 }
 
 

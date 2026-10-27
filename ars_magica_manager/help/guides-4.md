@@ -290,7 +290,7 @@ The preview lists what will be added, the links kept and the links dropped. [Imp
 
 - Everything imported gets new ids, so nothing in this saga is overwritten. A record with the same name as one already here is added beside it, and the preview says so.
 - A link to a record that isn't in the file, such as a character's covenant or a laboratory's owner, is kept only if this saga has exactly one record of that kind with that name. Otherwise it is dropped, and you can set it again on the sheet.
-- A saga-made spell is matched to one here with the same name, Technique, Form and level. A House Rule is matched to one with the same name, type and tier. Anything not matched is added.
+- A saga-made spell is matched to one here with the same name, Technique, Form and level. A House Rule is matched to one with the same name, type and tier. A saga Ability is matched to one here (the catalog's or the saga's) with the same name. Anything not matched is added.
 
 ### Importing books from a CSV file
 <!-- help: guide-import-export-books -->
@@ -900,3 +900,66 @@ An item can instead be made a Feature: a Lesser or Greater Feature, with the Aes
 When the device or one of its effects is deleted or destroyed, what it gave goes with it, and the Magic Item Virtue once no other effect uses it.
 
 **See also:** [Magic Items](help:section-lab-magic-items), [Enchanted Devices](help:section-lab-devices), [Set up a laboratory](help:guide-creation-lab), [How lab planning works](help:guide-lab-planning)
+
+# How to run Mythic Locations' set pieces
+<!-- help: guide-mythic-locations -->
+
+Mythic Locations gives four set pieces with rules of their own. The app holds the Temple of Mercury's rituals as catalog spells with their rules; the other three are run at the table, and this page sums up their rules.
+
+### The Mercurian rituals
+<!-- help: guide-ml-mercurian -->
+
+The Temple of Mercury's library holds Lab Texts for nine rituals (Mythic Locations pp. 96-100). They are in the spell catalog with source ML, and a ritual's details panel says how it is learned.
+
+- **Reading** one for its gist takes a day and needs Latin and a Magic Theory score. It gives the Arts, the magnitude and roughly what the ritual does, but can't be cast or invented from (p. 97).
+- **Translating** it into a Hermetic Lab Text is lab work. Each season adds the Lab Total in the ritual's Arts less its level; at twice the level the copy is done. That means a Lab Total above the level, and three times the level for a single season. Each ritual already translated adds its highest magnitude to later translations, but not to invention. Experimenting is allowed (p. 97).
+- **Inventing** it from the Hermetic copy is the usual Lab Text rule: one season when the Lab Total is at least the level. Range, Duration and Target can't be changed. Any magus with the copy may invent it (p. 97).
+- **Casting** is as a Hermetic Ritual of its Arts. It can be dispelled like one, but anyone with Magic Theory sees it isn't Hermetic (p. 97).
+
+Most rituals need a temple consecrated to Mercury, made by Consecration of Mercury's House, which also gives the temple a Magic aura of 1 where it had none (p. 99). Purification takes off a Decrepitude score, five years of apparent age and up to five Aging Points; it can't be cast on oneself (pp. 97-98). The player chooses which Characteristics the Aging Points come off, as the Definitive Edition also leaves to the player (DE pp. 391-392); the app takes them off those with the most first unless another choice is given. Transformation of Flesh to Spirit raises the aura by one, to at most 10, only if none of the caster's Arts is under twice the aura and the Penetration is above five times it (p. 99). Wizard's Initiation never works, and adds a botch die (pp. 99, 101).
+
+Five integrations open from these rituals, offered as research goals: a CrVi 50 aura-making guideline, a CrVi 55 aura-raising one and a Cr(Re)Vi 20 regio entrance (30 points each), the Mercurian Magic Virtue (45), and a mended Wizard's Initiation that gives The Gift (60) (pp. 100-101). Their kinds follow the Definitive Edition's sizes for a breakthrough: about 30 points for a Minor, 45 for a Major and 60 for a Hermetic (DE p. 277; Houses of Hermes: True Lineages p. 28).
+
+The aqueduct that fills the Scrying Pool takes 20 man-years to repair and five workers every season to keep running. Each season without them, roll a simple die against 3 + the seasons neglected in a row; under it, the aqueduct clogs. Its spring gives 5 pawns of Aquam vis each Summer solstice (pp. 96-97).
+
+### Trekking in the Cursewood
+<!-- help: guide-ml-cursewood -->
+
+The Cursewood is crossed in five stages, each costing a Long-Term Fatigue level (Mythic Locations pp. 37-40). Choose a leader and a guide for each stage. Together they can lead as many people as their Leadership scores added together; each person over that adds a hazard.
+
+Each stage, the guide rolls for the terrain: forest trail Sta + Survival, forest floor Per + Survival, swamp wading Sta + Athletics, boat Dex + Profession: Boating, swimming Str + Swimming, hill path Dex + Athletics, hill climb Str + Athletics. The roll takes -1 for each member besides the leader and guide, +1 for each other member who has the Ability, less the heaviest Encumbrance, and less the guide's Wound and Fatigue penalties (p. 37).
+
+| Roll | Result |
+|---|---|
+| 0 or botch | Lost: no progress, four hazards |
+| 3 | Four hazards |
+| 6 | Three hazards |
+| 9 | Two hazards |
+| 12 | One hazard |
+| 18+ | The first time, one hazard and +3 next stage; later, no hazards |
+
+A stage takes an hour for each hazard, at least one. Retreating takes an hour a stage, without rolls. Short-Term Fatigue takes twice as long to recover here. A hazard during the night means no Fatigue is recovered. Eating or drinking anything from the wood gives a Light Wound (p. 38).
+
+The wood is an Infernal aura of 5: -5 to Recovery rolls, +5 to Damage, and five extra botch dice on physical rolls, the trek rolls included (p. 40). Its spirit's direct attacks must Penetrate, with +7 from his Magic regio, against Magic Resistance at -5 (p. 39). Forest Lore 3 or more tells a character more about the spirit, and from 7 lets them pass alone unhindered (p. 37).
+
+### The Faerie Toy Market
+<!-- help: guide-ml-toy-market -->
+
+The merchants of Devil's Lane sell faerie toys made like Hermetic items (Mythic Locations pp. 107-112).
+
+- **Prices** are in vis, of any Form and any realm's taint. The lowest price is the pawns the item would take to make, +1, and +1 more for an effect of the sixth magnitude or higher. A charged item costs at least a pawn a charge, a mundane item 1 pawn. Merchants open at twice that and haggle down. They ask for odd payments that hold the right vis, and refuse one whose vis was taken out first (p. 107).
+- **Commissions** cost twice the vis, in Arts that suit the item, paid in advance. The opening price is four times the vis (p. 107).
+- **Lifetime:** every toy is glamour and stops working seven years after purchase, charges included (p. 107).
+- **The workshops** do a Lab Total of 100 of work a season for each merchant. A character can negotiate up to that much for themselves; unused work doesn't carry over, and characters can't pool theirs. The elves can make any Hermetic item, faerie Ranges, Durations and Targets included, but not a talisman (p. 112).
+- **Walter the book merchant** sells glamour books that last seven years: 1 pawn for a tractatus, 1 a level for a summa. A season with one is practice at Quality 5. His exercise slates last a year and a day, for 1 pawn (p. 109).
+
+### Hunted by wolves
+<!-- help: guide-ml-wolves -->
+
+A wolf hunt has five phases (Mythic Locations pp. 139-142).
+
+1. **The stalk.** The pack finds the trail with Per + Awareness and follows it with Per + Hunt, usually against 9. A group is 3 easier to follow; a lone, careful quarry adds its Stealth. Then the pack rolls Dex + Stealth against the prey's Per + Awareness. Each success brings it 10 + Qik paces closer. Two failures in a row, three in all, or getting within ten paces moves the hunt to the encounter (p. 140).
+2. **The encounter.** Prey that holds its ground is attacked; prey that runs starts the rush (p. 140).
+3. **The rush.** Rounds of six seconds. Each side rolls Qik + Athletics - Encumbrance + stress die. The winner moves the gap by 10 + Qik - Encumbrance paces on four legs, or 6 + Qik - Encumbrance on two. Both roll Sta + Athletics - Encumbrance against 9 each round, or lose a Short-Term Fatigue level. At zero paces comes the kill. Wolves usually turn to the chase when they lose a Fatigue level, or once the gap passes 100 paces (p. 140).
+4. **The chase.** Rounds of five to thirty minutes. Each round both roll Sta + Athletics - Encumbrance against 12, or lose a Long-Term Fatigue level. A group rolls for its most tired member, but wolves for their freshest. The wolves' Pursuit Total is Per + Hunt - Fatigue + modifier + stress die: +3 against two-legged prey, -3 for two-legged hunters of four-legged prey. The prey's Evasion Total is Dex + Athletics - Fatigue + stress die, with -6 to +6 for who knows the ground. Four rounds won by the prey and it escapes; four won by the wolves and it is cornered (p. 141).
+5. **The kill.** The pack attacks as a trained group led by its leader, and the rest cut off escape. A wolf may try a trip: Brawl Attack against Defense. A fleeing or unaware target defends only with Brawl or Evasion. Beating it by 3 or more knocks the target down, and its Defense is Qik - Encumbrance + stress die until it stands (pp. 141-142).

@@ -54,8 +54,17 @@ from ..seasons import pairs, repeat
 from ..seasons import plans as season_plans_text
 from ..seasons.projection import as_then
 from . import activity as activity_forms
-from . import alchemy_seasons, arithmetic_seasons, scholar_seasons, viresculture_seasons
+from . import (
+    alchemy_seasons,
+    arithmetic_seasons,
+    land_seasons,
+    scholar_seasons,
+    tme_book_seasons,
+    tower_seasons,
+    viresculture_seasons,
+)
 from . import character as character_forms
+from . import church as church_forms
 from . import script_components as script_forms
 from . import virtue as virtue_forms
 
@@ -287,6 +296,7 @@ _SEASON_READS: ChoiceReads = (
             *viresculture_seasons.PAYS_VIS,
             *arithmetic_seasons.PAYS_VIS,
             *alchemy_seasons.PAYS_VIS,
+            *land_seasons.PAYS_VIS,
         ),
         lambda v: {"vis_from": v.get("vis_from") or "character"},
     ),
@@ -308,6 +318,14 @@ _SEASON_READS: ChoiceReads = (
     *arithmetic_seasons.READS,
     # The Mysteries Revised Edition: the Lesser Elixir reinvented.
     *alchemy_seasons.READS,
+    # Transforming Mythic Europe: the land project shaped.
+    *land_seasons.READS,
+    # Transforming Mythic Europe: books copied by magic.
+    *tme_book_seasons.READS,
+    # The Church: the grade an Ordination seeks, its examiner and die.
+    *church_forms.READS,
+    # Hermetic Projects: a master mason's season on a Great Tower.
+    *tower_seasons.READS,
 )
 
 
@@ -1143,6 +1161,14 @@ def _supplement_fields(
         *arithmetic_seasons.fields(plan, activity_is),
         # The Mysteries Revised Edition: the Lesser Elixir's ingredient.
         *alchemy_seasons.fields(plan, activity_is),
+        # Transforming Mythic Europe: the land project shaped.
+        *land_seasons.fields(saga, plan, activity_is),
+        # Transforming Mythic Europe: the book copied by magic.
+        *tme_book_seasons.fields(saga, character, plan, activity_is),
+        # The Church: an Ordination's grade, examiner and die.
+        *church_forms.season_fields(character, plan, activity_is),
+        # Hermetic Projects: a master mason's season on a Great Tower.
+        *tower_seasons.fields(plan, activity_is),
     ]
 
 
@@ -1719,6 +1745,7 @@ def _closing_fields(
                 *viresculture_seasons.PAYS_VIS,
                 *arithmetic_seasons.PAYS_VIS,
                 *alchemy_seasons.PAYS_VIS,
+                *land_seasons.PAYS_VIS,
             ),
         ),
         DialogField(
@@ -1900,6 +1927,9 @@ def season_plan_live(
         if needed:
             seasons_ = "season" if needed == 1 else "seasons"
             text += f"\nUntil it's done: {needed} {seasons_} as things stand."
+    # The Church: an Ordination's examination and what each result does.
+    if plan.activity == church_forms.ORDINATION:
+        text += "\n" + church_forms.examination_text(saga, character, plan.title)
     return text
 
 

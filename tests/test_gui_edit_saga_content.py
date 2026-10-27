@@ -10,7 +10,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QLabel
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import house_rules as hr
@@ -113,3 +113,29 @@ def test_a_catalog_entry_is_hidden_by_catalog_then_entry(app):
     section_buttons(_page(window), "Hidden Entries")["Offer again"].click()
     assert len(asked) == 1
     assert storage.load_saga(saga_id).hidden_entries == {}
+
+
+def test_a_cult_its_degree_and_its_script_are_added(app):
+    """The Mystery Cults chapter: Add a cult, a degree of it, then the
+    degree's Script (Add on its Script, while it has none); Experiment on a
+    Script is offered only for a degree with no Script."""
+    window, saga_id = _content("Mystery Cults")
+    answering(window, {"name": "The Thread", "lore": "Thread Lore"})
+    section_buttons(_page(window), "The Saga's Mystery Cults")["Add"].click()
+    assert [c.name for c in storage.load_saga(saga_id).custom_cults] == ["The Thread"]
+    assert _page(window).codex.rail.currentItem().text() == "Mystery Cults"
+
+    answering(window, {"name": "Spinner", "virtue_id": "vf_second_sight"})
+    section_buttons(_page(window), "Degrees")["Add"].click()
+    degrees = storage.load_saga(saga_id).custom_cults[0].degrees
+    assert [(d.name, d.virtue_id) for d in degrees] == [("Spinner", "vf_second_sight")]
+    controls = section_buttons(_page(window), "Degrees")
+    assert "Experiment on a Script" in controls
+
+    answering(window, {"name": "The Silk Hall", "place": True, "quests": 1})
+    section_buttons(_page(window), "Spinner: no Script yet")["Add"].click()
+    script = storage.load_saga(saga_id).custom_cults[0].degrees[0].script
+    assert script is not None and (script.name, script.bonus) == ("The Silk Hall", 6)
+    assert "The Silk Hall: +6" in [
+        label.text() for label in _page(window).findChildren(QLabel)
+    ]

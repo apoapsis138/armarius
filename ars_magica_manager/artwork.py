@@ -212,6 +212,12 @@ TRADITION_SYMBOLS: dict[str, Path] = {
     # House Bjornaer's Mystery Cult.
     "trad_bjornaer_mysteries": SYMBOLS / "houses" / "bjornaer.svg",
 }
+#: The symbol every Mystery Cult of a saga's own shows (one the troupe
+#: invents has no book's emblem): a keyhole in a ring, drawn by
+#: tools/draw_traditions.py like the traditions'.
+SAGA_CULT_SYMBOL = SYMBOLS / "traditions" / "saga_cult.svg"
+#: A saga cult's id starts with this (models.mystery_cults).
+_SAGA_CULT_PREFIX = "custom_cult_"
 
 #: An app concept to its Phosphor icon's name (the file is
 #: icons/<name>.svg).
@@ -312,7 +318,10 @@ def house_symbol(house_id: str | None) -> Path | None:
 
 
 def tradition_symbol(tradition_id: str | None) -> Path | None:
-    """A hedge tradition's symbol, or None for an id without one."""
+    """A hedge tradition's symbol, or None for an id without one; a
+    saga's own Mystery Cult shows SAGA_CULT_SYMBOL."""
+    if (tradition_id or "").startswith(_SAGA_CULT_PREFIX):
+        return SAGA_CULT_SYMBOL
     return TRADITION_SYMBOLS.get(tradition_id or "")
 
 

@@ -1511,6 +1511,17 @@ FIGURES: dict[str, Callable[[], QPainterPath]] = {
 }
 
 
+def saga_cult() -> QPainterPath:
+    """A saga's own Mystery Cult: a keyhole, the secret kept, in a ring."""
+    keyhole = union(circle(50, 40, 11), poly((43, 46), (57, 46), (62, 72), (38, 72)))
+    return ring(50, 50, 38, 7).united(keyhole)
+
+
+#: The figure every saga cult shares (artwork.SAGA_CULT_SYMBOL).
+SAGA_CULT = "saga_cult"
+FIGURES[SAGA_CULT] = saga_cult
+
+
 def symbol(tradition_id: str) -> QPainterPath:
     """The block with its inner rule and the figure cut out of it."""
     seed = sum(map(ord, tradition_id))
@@ -1546,6 +1557,9 @@ def main() -> None:
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(svg(symbol(tradition_id)), encoding="utf-8")
         print(f"wrote {out.name}")
+    out = artwork.SAGA_CULT_SYMBOL
+    out.write_text(svg(symbol(SAGA_CULT)), encoding="utf-8")
+    print(f"wrote {out.name}")
 
 
 if __name__ == "__main__":

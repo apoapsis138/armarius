@@ -95,6 +95,7 @@ from . import acclaim as acclaim_forms
 from . import apothecary as apothecary_forms
 from . import beast as beast_forms
 from . import careers
+from . import church as church_forms
 from . import craft_magic as craft_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
@@ -107,6 +108,7 @@ from . import hosting as hosting_forms
 from . import hubris as hubris_forms
 from . import importing as import_forms
 from . import lacuna as lacuna_forms
+from . import land_shaping as land_forms
 from . import library as library_forms
 from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
@@ -116,7 +118,9 @@ from . import tmre_divination as tmre_divination_forms
 from . import tmre_dreams as tmre_dream_forms
 from . import tmre_spirits as tmre_spirit_forms
 from . import tribunal as tribunal_forms
+from . import tunnel as tunnel_forms
 from . import turbulence as turbulence_forms
+from . import vf_change as vf_change_forms
 
 #: The record a page shows, as deletion and actions take it.
 Record = Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | Creature
@@ -185,6 +189,23 @@ NOT_ON_PAGES = frozenset(
         "area_lore_on_manor",
         "hunt_on_journey",
         "area_lore_on_journey",
+        # The Great Library: the rule of access's own button.
+        "library_search",
+        # A tomb's trap springs: the Traps list's own button.
+        "overcome_trap",
+        # A covenant's ships: the Ships list's own buttons.
+        "ship_stress",
+        "ship_combat",
+        # A cleric's career: Holy Orders' own button.
+        "perform_exorcism",
+        # A saga cult's degrees: the Degrees list's own button.
+        "experiment_script",
+        # A covenant's Hermetic Projects: the tower's and the projects
+        # list's own buttons, and Begin Project on the Attributes chapter.
+        "tower_stress",
+        "tower_conjure",
+        "show_project",
+        "begin_project",
     }
 )
 
@@ -598,6 +619,18 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "philosophic_alchemy": ((NodeKind.CHARACTER, "This Season"),),
     # The Great Elixir's test.
     "great_elixir": ((NodeKind.CHARACTER, "Aging"),),
+    # Gaining and losing Virtues and Flaws in play, beside their buttons.
+    "change_virtues_flaws": ((NodeKind.CHARACTER, "Virtues & Flaws"),),
+    # Shaping the land by magic, beside Improve Income.
+    "shape_land": ((NodeKind.COVENANT, "Income"),),
+    # A cleric's career (The Church): beside the Personality Traits'
+    # buttons, with devotion's, so a character without a Church chapter
+    # reaches them.
+    "petition_church": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "canon_case": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "holy_orders": ((NodeKind.CHARACTER, "Personality Traits"),),
+    # Wizard's War's tunnel (Hermetic Projects), beside Known Spells.
+    "open_tunnel": ((NodeKind.CHARACTER, "Known Spells"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -670,6 +703,11 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
     # The pilgrim's road (The Church).
     "pilgrimage": lambda page: available(
         "pilgrimage", replace(page, section="section-char-season")
+    ),
+    # Gaining and losing Virtues and Flaws in play: the page's sections
+    # leave the Virtues & Flaws lists out.
+    "change_virtues_flaws": lambda page: available(
+        "change_virtues_flaws", replace(page, section="section-vf-virtues")
     ),
 }
 
@@ -1686,4 +1724,15 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "philosophic_alchemy": _needs(_character, tmre_alchemy_forms.digestion_form),
     # The Great Elixir's test.
     "great_elixir": _needs(_character, tmre_alchemy_forms.great_elixir_form),
+    # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
+    "change_virtues_flaws": _needs(_character, vf_change_forms.change_form),
+    # Shaping the land by magic (TME pp. 54-77).
+    "shape_land": _needs(_covenant, land_forms.shape_form),
+    # A cleric's career (The Church).
+    "petition_church": _needs(_character, church_forms.petition_form),
+    "canon_case": _needs(_character, church_forms.canon_form),
+    "holy_orders": _needs(_character, church_forms.holy_orders_form),
+    "perform_exorcism": _needs(_character, church_forms.exorcism_step),
+    # Wizard's War's tunnel (Hermetic Projects pp. 78-81).
+    "open_tunnel": _needs(_character, tunnel_forms.tunnel_form),
 }

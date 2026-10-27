@@ -25,7 +25,7 @@ from .models import (
     Saga,
     Spell,
 )
-from .rules import spell_levels
+from .rules import mythic_locations, spell_levels
 from .rules.rounding import round_up
 
 # ------------------------------------------------------------ where they live
@@ -449,6 +449,7 @@ def detail_text(saga: Saga, spell: Spell | None) -> str:
             f"[b]Not in play[/] ({why}): the saga's pickers leave it out; "
             "a magus who knows it keeps it."
         )
+    lines += [escape(text) for text in mythic_locations.spell_lines(spell)]
     if spell.description.strip():
         lines += ["", markdown_text(spell.description.strip())]
     lines += experiment_text.effect_lines(

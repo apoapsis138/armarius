@@ -67,6 +67,9 @@ class TribunalSheetView(SheetView):
         #: The step of the meeting its details panel shows (None: the
         #: step in hand).
         self._step: int | None = None
+        #: Each package tab's chosen row its details panel shows: the
+        #: list and the row, by the tab's id.
+        self._package_chosen: dict[str, tuple[tribunal_packages.PackageList, int]] = {}
 
     def compose(self) -> ComposeResult:
         info = (TRIBUNAL_INFO_SECTION, ROSTER_SECTION, *_CASES, *_HALL)
@@ -106,18 +109,63 @@ class TribunalSheetView(SheetView):
     ) -> Callable[[], ComposeResult]:
         """A tab the Tribunal's customs add, with each of their lists."""
 
-        def build() -> ComposeResult:
-            saga, t = self.saga, self.tribunal
+        saga, t = self.saga, self.tribunal
+        watched = (
+            ROSTER_SECTION,
+            *((extra.text.section_id,) if extra.text is not None else ()),
+            *(e.section_id for e in extra.lists),
+        )
+
+        def sections() -> ComposeResult:
+            if extra.text is not None:
+                words = extra.text
+                with SheetSection(title=escape(words.title), id=words.section_id):
+                    yield self._static(
+                        watched,
+                        lambda: self._package_words(words),
+                        id=f"{words.section_id.removeprefix('section-')}-text",
+                    )
             for entry in extra.lists:
                 yield from self._grid_section(
                     entry.section_id,
-                    (ROSTER_SECTION, *(e.section_id for e in extra.lists)),
+                    watched,
                     lambda entry=entry: entry.section_title(saga, t),
                     lambda entry=entry: entry.grid(saga, t).lines(),
                     f"{entry.section_id.removeprefix('section-')}-list",
                 )
 
+        def build() -> ComposeResult:
+            if not extra.panel_id:
+                yield from sections()
+                return
+            with Vertical(classes="panel-body"):
+                with VerticalScroll():
+                    yield from sections()
+                yield self._panel(
+                    watched, lambda: self._package_info(extra), id=extra.panel_id
+                )
+
         return build
+
+    def _package_words(self, words: tribunal_packages.PackageText) -> str:
+        """A package tab's section of words: its facts on a line, then what
+        it says."""
+        facts = words.facts(self.saga, self.tribunal)
+        line = "  ·  ".join(f"[$label]{escape(k)}:[/] {escape(v)}" for k, v in facts)
+        said = words.text(self.saga, self.tribunal)
+        return f"{line}\n\n{said}" if line else said
+
+    def _package_info(self, extra: tribunal_packages.PackageTab) -> str:
+        """The package tab's details panel: the row chosen in one of its
+        lists, or what to choose."""
+        chosen = self._package_chosen.get(extra.tab_id)
+        if chosen is not None:
+            entry, row = chosen
+            if entry.info is not None and (
+                text := entry.info(self.saga, self.tribunal, row)
+            ):
+                return text
+        return extra.panel_empty
 
     def _refresh_title(self) -> None:
         panel = self.query_one(f"#{TRIBUNAL_INFO_SECTION}", Collapsible)
@@ -271,6 +319,17 @@ class TribunalSheetView(SheetView):
         """A case or a step of the meeting was chosen: show it in its
         tab's details panel."""
         list_id = event.selectable_list.id or ""
+        for extra in self.package.tabs:
+            for entry in extra.lists:
+                if not extra.panel_id or entry.info is None:
+                    continue
+                if list_id == f"{entry.section_id.removeprefix('section-')}-list":
+                    event.stop()
+                    self._package_chosen[extra.tab_id] = (entry, event.data_index)
+                    self.query_one(f"#{extra.panel_id}", Static).update(
+                        self._package_info(extra)
+                    )
+                    return
         if list_id == "meeting-business":
             event.stop()
             self._step = event.data_index

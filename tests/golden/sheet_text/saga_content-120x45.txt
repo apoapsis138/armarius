@@ -1,6 +1,6 @@
 ===== tab-content-books
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -43,7 +43,7 @@
 
 ===== tab-content-catalogs
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -51,11 +51,11 @@
 
         Catalog                      Offered   Entries   Hidden
       ○ Virtues & Flaws              yes          1373        0
-      ○ Laboratory Virtues & Flaws   yes           128        0
+      ○ Laboratory Virtues & Flaws   yes           133        0
       ○ Boons & Hooks                yes           222        0
       ○ Abilities                    yes           272        0
       ○ Spells                       yes          1316        0
-      ○ Shapes & Materials           yes           246        0
+      ○ Shapes & Materials           yes           247        0
       ○ Goods                        yes            77        0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -86,7 +86,7 @@
 
 ===== tab-content-goods
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -129,7 +129,7 @@
 
 ===== tab-content-house-rules
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
+   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -170,9 +170,52 @@
   ▌
 
 
+===== tab-content-cults
+
+  1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ The Saga's Mystery Cults (0)
+
+        Cult                Lore                Realm   Founder
+      None yet: a adds one. A new cult starts with its Lore at 0 for its founders
+      (TMRE pp. 18-19).
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ The Cult
+
+      No cult yet: a on the list above adds one.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Degrees (0)
+
+        Degree            Mystery Virtue          Bonus/Tgt Script
+      Add a cult first.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Script
+
+        Component                                   Kind                   Bonus
+      Choose a degree.
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a cult, a degree or a component.
+  ▌
+
+
 ===== tab-content-spells
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
+  1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Search spell names and descriptions...                     Source: any      ▼
@@ -215,7 +258,7 @@
 
 ===== tab-content-players
 
-   1 Books  2 Catalogs  3 Goods  4 House Rules  5 Spells  6 Players
+  1 Books  2 Catalogs  3 Goods  4 House Rules  5 Mystery Cults  6 Spells  7 Players
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

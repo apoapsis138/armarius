@@ -46,8 +46,11 @@ def test_unknown_characteristic_is_rejected():
 
 
 def test_lab_catalog_has_every_entry_in_the_book():
-    """Covenants, Chapter 9 lists 128 laboratory Virtues and Flaws."""
-    assert len(catalog.load_lab_virtue_flaw_catalog()) == 128
+    """Covenants, Chapter 9 lists 128 laboratory Virtues and Flaws;
+    Hermetic Projects adds five volcanic ones (pp. 26-27)."""
+    entries = catalog.load_lab_virtue_flaw_catalog()
+    assert sum(e.source == "Covenants" for e in entries) == 128
+    assert len(entries) == 133
 
 
 def test_book_order_tiers_and_costs_for_added_entries():

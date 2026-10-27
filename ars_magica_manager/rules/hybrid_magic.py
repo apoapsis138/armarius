@@ -396,12 +396,19 @@ def attuned(character: Character) -> frozenset[str]:
 @cache
 def _supernatural_names() -> frozenset[str]:
     return frozenset(
-        a.name for a in catalog.load_ability_catalog() if a.category == "Supernatural"
+        a.name
+        for a in catalog.load_ability_catalog()
+        if a.category == "Supernatural" and a not in catalog.saga_abilities()
     )
 
 
 def _supernatural(name: str) -> bool:
-    return name in _supernatural_names()
+    """Whether `name` is a Supernatural Ability: the catalog's (cached), or
+    one of the saga in use's own."""
+    return name in _supernatural_names() or any(
+        a.name == name and a.category == "Supernatural"
+        for a in catalog.saga_abilities()
+    )
 
 
 def warps_from_aura(character: Character, aura_realm: str) -> bool:

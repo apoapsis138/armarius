@@ -8,15 +8,27 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Static
 
-from ....markup import aligned, escape
+from ....markup import aligned, escape, markdown_text
 from ....models import Neighbour, Saga
 from ....neighbour_lists import KindBlock, KindList, KindTab
+from ....references import Fact
 from ..widgets import SelectableList, SheetSection, TwoColumns, fact_markup
 from .base import SheetView
 
 
 def list_id(section_id: str) -> str:
     return f"{section_id.removeprefix('section-')}-list"
+
+
+def inline_facts(facts: list[Fact]) -> str:
+    """Facts three to a line, joined by dots, each "Label: value"."""
+    shown = [
+        f"[$label]{escape(f.label)}:[/] {fact_markup(f) or '[$label]—[/]'}"
+        for f in facts
+    ]
+    return "\n".join(
+        "  ·  ".join(shown[start : start + 3]) for start in range(0, len(shown), 3)
+    )
 
 
 def panel_id(tab: KindTab) -> str:
@@ -109,8 +121,14 @@ class KindTabsView(SheetView):
         saga, n = self.saga, self.kind_holder()
         stem = block.section_id.removeprefix("section-")
         with SheetSection(title=block.title, id=block.section_id):
-            facts, text = block.facts, block.text
-            if facts is not None:
+            facts, text, prose = block.facts, block.text, block.prose
+            if facts is not None and block.facts_inline:
+                yield self._static(
+                    watched,
+                    lambda: inline_facts(facts(saga, n)),
+                    id=f"{stem}-facts",
+                )
+            elif facts is not None:
                 yield self._static(
                     watched,
                     lambda: aligned(
@@ -120,6 +138,12 @@ class KindTabsView(SheetView):
                         ]
                     ),
                     id=f"{stem}-facts",
+                )
+            if prose is not None:
+                yield self._static(
+                    watched,
+                    lambda: markdown_text(prose(saga, n)),
+                    id=f"{stem}-prose",
                 )
             if text is not None:
                 yield self._static(watched, lambda: text(saga, n), id=f"{stem}-text")

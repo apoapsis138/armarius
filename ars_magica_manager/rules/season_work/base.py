@@ -18,7 +18,9 @@ from ...models import (
     Character,
     ElixirIngredient,
     Formula,
+    Ordination,
     Progress,
+    ProjectWork,
     Saga,
     SeasonPlan,
     VirtueFlawInstance,
@@ -132,6 +134,12 @@ class SupplementWork:
     vis_cost: dict[str, int] = field(default_factory=dict)
     #: The Lesser Elixir reinvented with this ingredient (rules.tmre_alchemy).
     elixir_ingredient: ElixirIngredient | None = None
+    #: An ordination examination sat this season (rules.clergy), kept on
+    #: the character's Church tab when the season is applied.
+    ordination: Ordination | None = None
+    #: Hermetic Projects: works done on a project this season (a master
+    #: mason's), as (project id, work), kept in its works when applied.
+    project_works: list[tuple[str, ProjectWork]] = field(default_factory=list)
 
 
 #: What a season does beyond experience, written into `result` (rolls made

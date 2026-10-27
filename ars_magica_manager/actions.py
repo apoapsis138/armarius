@@ -36,6 +36,7 @@ from . import familiars as fam
 from . import goods as gd
 from . import inhabitants as inh
 from . import lab_texts as lt
+from . import mystery_cults as cults_core
 from . import mystic_paths as mystic_forms
 from . import spells as spl
 from .forms import acclaim as acclaim_forms
@@ -45,6 +46,7 @@ from .forms import hubris as hubris_forms
 from .forms import tmre_divination as tmre_divination_forms
 from .forms import tmre_dreams as tmre_dream_forms
 from .forms import tmre_spirits as tmre_spirit_forms
+from .forms import tunnel as tunnel_forms
 from .models import (
     FULL,
     INHABITANT_KINDS,
@@ -63,6 +65,7 @@ from .models import (
 )
 from .rules import agents as agent_rules
 from .rules import apothecary, covenfolk, merchants, philosophy
+from .rules import clergy as clergy_rules
 from .rules import faerie_dealings as faerie_dealing_rules
 from .rules import gauntlet as gauntlet_rules
 from .rules import goetic as goetic_rules
@@ -87,6 +90,8 @@ from .sections import (
     COURT_CASES_SECTION,
     COV_AHEAD_SECTION,
     CREATURE_INFO_SECTION,
+    CULT_DEGREES_SECTION,
+    CULTS_SECTION,
     DEVICE_SECTIONS,
     ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
@@ -99,9 +104,11 @@ from .sections import (
     HOUSEHOLD_SECTION,
     LAB_TEXTS_SECTION,
     LAB_VF_SECTIONS,
+    LIBRARY_RULES_SECTION,
     LIBRARY_SECTIONS,
     MANORS_SECTION,
     NEIGHBOUR_INFO_SECTION,
+    ORDERS_SECTION,
     PLAYERS_SECTION,
     SIEGES_SECTION,
     SILVER_SECTIONS,
@@ -429,6 +436,31 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("q", "philosophic_alchemy", "Philosophic Alchemy"),
     # The Great Elixir's test (The Mysteries Revised Edition).
     MenuItem("x", "great_elixir", "Test the Great Elixir"),
+    # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
+    MenuItem("g", "change_virtues_flaws", "Gain or Lose in Play"),
+    # The Rhine's Great Library at Durenmar (Guardians of the Forests).
+    MenuItem("s", "library_search", "Search the Great Library"),
+    # A tomb's trap springs (Lands of the Nile).
+    MenuItem("o", "overcome_trap", "Overcome It"),
+    # A covenant's ships (Hermetic Projects; City & Guild).
+    MenuItem("s", "ship_stress", "Stress Check"),
+    MenuItem("c", "ship_combat", "Ship Combat"),
+    # Shaping the land by magic (Transforming Mythic Europe).
+    MenuItem("l", "shape_land", "Shape the Land"),
+    # A cleric's career (The Church).
+    MenuItem("p", "petition_church", "Petition the Church"),
+    MenuItem("j", "canon_case", "Add Canon Case"),
+    MenuItem("o", "holy_orders", "Holy Orders"),
+    MenuItem("x", "perform_exorcism", "Perform an Exorcism"),
+    # Saga Content's Mystery Cults.
+    MenuItem("x", "experiment_script", "Experiment on a Script"),
+    # A covenant's Hermetic Projects: the tower's stress check and rituals,
+    # the project shown, beginning one; a magus's Wizard's War tunnel.
+    MenuItem("s", "tower_stress", "Stress Check"),
+    MenuItem("c", "tower_conjure", "Conjure Levels"),
+    MenuItem("w", "show_project", "Show Project"),
+    MenuItem("b", "begin_project", "Begin Project"),
+    MenuItem("o", "open_tunnel", "Open a Tunnel"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -475,6 +507,21 @@ MORE_SECTIONS: dict[str, str] = {
     # The hunt and Area Lore on the chosen manor.
     "hunt_on_manor": MANORS_SECTION,
     "area_lore_on_manor": MANORS_SECTION,
+    # The Rhine's Great Library at Durenmar (Guardians of the Forests).
+    "library_search": LIBRARY_RULES_SECTION,
+    # A tomb's trap springs (Lands of the Nile).
+    "overcome_trap": "section-nb-tomb-traps",
+    # A covenant's ships: the chosen ship's stress check and combat.
+    "ship_stress": "section-pos-ship",
+    "ship_combat": "section-pos-ship",
+    # A cleric's career: the exorcism on Holy Orders.
+    "perform_exorcism": ORDERS_SECTION,
+    # Saga Content's Mystery Cults.
+    "experiment_script": CULT_DEGREES_SECTION,
+    # A covenant's Hermetic Projects: the tower's, and the projects list's.
+    "tower_stress": "section-cov-tower",
+    "tower_conjure": "section-cov-tower",
+    "show_project": "section-cov-projects",
 }
 
 #: Where in the navigation each record can be created: the saga, and
@@ -1152,6 +1199,50 @@ def _has_reputation(facts: ActionFacts) -> bool:
     return character is not None and bool(character.reputations)
 
 
+def _churchgoer(*, without_tab: bool = False) -> Callable[[ActionFacts], bool]:
+    """A cleric's career's More commands: on a person's record (not an
+    animal's) while The Church is in play; Holy Orders (`without_tab`)
+    only while the sheet has no Church tab, where e edits them."""
+
+    def rule(facts: ActionFacts) -> bool:
+        character = facts.selected_character
+        return (
+            facts.selected_kind == NodeKind.CHARACTER
+            and facts.on_record()
+            and character is not None
+            and character.animal is None
+            and devotion_forms.the_church(facts.saga)
+            and not (without_tab and clergy_rules.has_church_tab(character))
+        )
+
+    return rule
+
+
+# A covenant's Hermetic Projects (Hermetic Projects).
+
+#: Where Begin Project is offered: the covenant's record and the
+#: sections of its Attributes tab.
+BEGIN_PROJECT_SECTIONS = (
+    None,
+    RECORD_SECTION[NodeKind.COVENANT],
+    "section-cov-description",
+    "section-cov-reputations",
+    "section-cov-boons",
+    "section-cov-hooks",
+)
+
+
+def _begins_project(facts: ActionFacts) -> bool:
+    """Begin Project: on a full covenant's record or Attributes tab."""
+    covenant = facts.selected_covenant
+    return (
+        facts.selected_kind == NodeKind.COVENANT
+        and covenant is not None
+        and covenant.detail == FULL
+        and facts.active_section() in BEGIN_PROJECT_SECTIONS
+    )
+
+
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
@@ -1235,6 +1326,14 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
     "house_acclaim": _keeps_acclaim,
     "reputation_roll": _has_reputation,
+    # A cleric's career (The Church).
+    "petition_church": _churchgoer(),
+    "canon_case": _churchgoer(),
+    "holy_orders": _churchgoer(without_tab=True),
+    # A covenant's Hermetic Projects: Begin Project on its record and its
+    # Attributes; a magus's tunnel on his Known Spells.
+    "begin_project": _begins_project,
+    "open_tunnel": _on_known_spells(tunnel_forms.offers),
 }
 
 
@@ -1434,5 +1533,28 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
         section == "section-aging"
         and facts.selected_character is not None
         and tmre_alchemy_rules.has_great_elixir(facts.selected_character)
+    ),
+    # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
+    "change_virtues_flaws": lambda facts, section: (
+        section in ("section-vf-virtues", "section-vf-flaws")
+        and facts.selected_kind == NodeKind.CHARACTER
+        and facts.selected_character is not None
+    ),
+    # Shaping the land by magic, on a covenant's Income (TME pp. 54-77).
+    "shape_land": lambda facts, section: (
+        section == "section-eco-income"
+        and facts.selected_kind == NodeKind.COVENANT
+        and facts.selected_covenant is not None
+        and sourcebooks.in_play("TME", sourcebooks.saga_books(facts.saga))
+    ),
+    # Experiment on a Script, for a cult's degree with no Script yet, or one
+    # whose Script won't do for a Mystagogue (TMRE p. 18).
+    "experiment_script": lambda facts, section: (
+        section == CULT_DEGREES_SECTION
+        and cults_core.offers_experiment(
+            facts.saga,
+            facts.chosen_row(CULTS_SECTION),
+            facts.chosen_row(CULT_DEGREES_SECTION),
+        )
     ),
 }

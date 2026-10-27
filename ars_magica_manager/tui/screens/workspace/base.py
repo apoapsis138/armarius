@@ -333,6 +333,8 @@ _LOOKING_ACTIONS = frozenset(
         "craft_by_magic",
         # A calculator too (HoH:S): casting in a lacuna.
         "cast_in_lacuna",
+        # Wizard's War's tunnel (Hermetic Projects): a calculator too.
+        "open_tunnel",
     }
 )
 
@@ -1768,6 +1770,13 @@ class WorkspaceBase(Screen[None]):
         # A neighbour whose kind changed shows its new kind's tab.
         if isinstance(shown, NeighbourSheetView) and shown.stale():
             self.call_later(self._select_neighbour, shown.neighbour.id)
+        # A covenant that began its first Hermetic Project (or deleted its
+        # last) shows its Projects tab (or no longer does).
+        if isinstance(shown, CovenantSheetView) and shown.stale():
+            self.call_later(self._show_covenant_detail, shown.covenant)
+        # A character who gains or loses the Church tab is shown again.
+        if isinstance(shown, CharacterSheetView) and shown.stale():
+            self.call_later(self._show_character_detail, shown.character)
         # An open Creation Worksheet shows the record too.
         for screen in self.app.screen_stack:
             changed = getattr(screen, "record_changed", None)

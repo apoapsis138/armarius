@@ -58,6 +58,12 @@ from .character import TraditionEffect as TraditionEffect
 from .character import Wounds as Wounds
 from .character import WoundState as WoundState
 from .character import character_age as character_age
+
+# A cleric's career (The Church).
+from .clergy import CanonCase as CanonCase
+from .clergy import ChurchCareer as ChurchCareer
+from .clergy import Ordination as Ordination
+from .clergy import Petition as Petition
 from .common import ABILITY_CATEGORIES as ABILITY_CATEGORIES
 from .common import COMPANION_TYPES as COMPANION_TYPES
 from .common import EXPERIMENTAL_KINDS as EXPERIMENTAL_KINDS
@@ -189,6 +195,14 @@ from .goods import GoodDef as GoodDef
 from .goods import GoodPurity as GoodPurity
 from .goods import Purity as Purity
 from .goods import PurityExample as PurityExample
+
+# Hermetic Projects: a covenant's great works (Hermetic Projects).
+from .hermetic_projects import CraftDevice as CraftDevice
+from .hermetic_projects import HermeticProject as HermeticProject
+from .hermetic_projects import ProjectWork as ProjectWork
+
+# Technological savings (Transforming Mythic Europe).
+from .holdings import BREAD_SHARES as BREAD_SHARES
 from .holdings import COVENANT_ROLES as COVENANT_ROLES
 from .holdings import CRAFT_FIELDS as CRAFT_FIELDS
 from .holdings import GEAR_POINTS as GEAR_POINTS
@@ -196,6 +210,7 @@ from .holdings import GEAR_QUALITIES as GEAR_QUALITIES
 from .holdings import GEAR_QUALITY_DEFAULT as GEAR_QUALITY_DEFAULT
 from .holdings import GEAR_TYPES_BY_KIND as GEAR_TYPES_BY_KIND
 from .holdings import GIFT_CHOICES as GIFT_CHOICES
+from .holdings import GRAIN_CARE as GRAIN_CARE
 from .holdings import INCOME_EFFECT_MULTIPLIERS as INCOME_EFFECT_MULTIPLIERS
 from .holdings import INCOME_EFFECTS as INCOME_EFFECTS
 from .holdings import INCOME_TYPE_DEFAULTS as INCOME_TYPE_DEFAULTS
@@ -238,6 +253,16 @@ from .laboratory import NamedDescription as NamedDescription
 from .laboratory import _feature_from_old_text as _feature_from_old_text
 from .laboratory import _parse_old_specialty as _parse_old_specialty
 from .laboratory import link_unlinked_features as link_unlinked_features
+
+# Shaping the land (Transforming Mythic Europe).
+from .land_shaping import LAND_KIND as LAND_KIND
+from .land_shaping import LandProject as LandProject
+
+# A saga's own Mystery Cults.
+from .mystery_cults import CultComponent as CultComponent
+from .mystery_cults import CultDegree as CultDegree
+from .mystery_cults import CultScript as CultScript
+from .mystery_cults import MysteryCult as MysteryCult
 from .mystery_scripts import ScriptPart as ScriptPart
 from .philosophy import FORMULA_KINDS as FORMULA_KINDS
 from .philosophy import Formula as Formula
@@ -265,6 +290,11 @@ from .seasons import WorldTurn as WorldTurn
 from .seasons import XpAllocation as XpAllocation
 from .seasons import next_season as next_season
 from .seasons import season_order as season_order
+
+# A covenant's ships (Hermetic Projects; City & Guild).
+from .ships import SHIP_QUALITIES as SHIP_QUALITIES
+from .ships import Ship as Ship
+from .spell_guideline import SpellGuidelineDef as SpellGuidelineDef
 from .tmre_alchemy import DIGEST_PRODUCTS as DIGEST_PRODUCTS
 from .tmre_alchemy import DIGEST_SPACES as DIGEST_SPACES
 from .tmre_alchemy import DIGEST_VIS as DIGEST_VIS

@@ -42,8 +42,7 @@ from . import (
     entries,
     register,
 )
-
-KEY = "rhine"
+from .rhine_library import KEY, LIBRARY_TAB
 
 
 def gilds(tribunal: Tribunal) -> list[dict[str, Any]]:
@@ -807,6 +806,7 @@ RHINE = TribunalPackage(
                 ),
             ),
         ),
+        LIBRARY_TAB,
     ),
     meeting_steps=("rhine_rite",),
     about="Its magi band together in gilds, political factions across "

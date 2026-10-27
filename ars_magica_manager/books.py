@@ -135,8 +135,16 @@ def cost_formula(book: Book, saga: Saga | None = None) -> str:
 
 
 @lru_cache(maxsize=1)
+def _shared_ability_names() -> tuple[str, ...]:
+    own = catalog.saga_abilities()
+    return tuple(a.name for a in catalog.load_ability_catalog() if a not in own)
+
+
 def _ability_names() -> tuple[str, ...]:
-    return tuple(a.name for a in catalog.load_ability_catalog())
+    """The catalog's Ability names, the saga in use's own after them."""
+    shared = _shared_ability_names()
+    own = tuple(a.name for a in catalog.saga_abilities() if a.name not in shared)
+    return (*shared, *own)
 
 
 def canonical_ability(name: str) -> str | None:

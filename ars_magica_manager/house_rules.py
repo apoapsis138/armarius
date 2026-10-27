@@ -3,7 +3,9 @@ entries from books the shared catalogs don't carry.
 
 Three kinds, each of the shape its shared catalog uses: character Virtues
 and Flaws (VirtueFlawDef), laboratory Virtues and Flaws (LabVirtueFlawDef)
-and covenant Boons and Hooks (CovenantBoonHookDef). They are text only for
+and covenant Boons and Hooks (CovenantBoonHookDef); and a fourth, the
+saga's own Abilities (AbilityDef, own_abilities.py), which have no type,
+tier or points. They are text only for
 now: a name, type, tier (which gives the points: Free 0, Minor 1, Major 3)
 and description, with no effects the rules engine applies. A character's
 or covenant's entry may also ask for choices when it is taken (its
@@ -21,6 +23,7 @@ from dataclasses import replace
 from typing import Any
 
 from . import catalog, sourcebooks, storage
+from . import own_abilities as oa
 from .markup import escape, fit, markdown_text
 from .models import (
     BOON_HOOK_DESCRIPTION,
@@ -30,6 +33,7 @@ from .models import (
     BOON_HOOK_UNKNOWN,
     COVENANT_BOON_HOOK_CATEGORIES,
     VIRTUE_FLAW_TIER_COST,
+    AbilityDef,
     CovenantBoonHookDef,
     LabVirtueFlawDef,
     Saga,
@@ -37,21 +41,26 @@ from .models import (
 )
 
 CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
-KINDS: tuple[str, ...] = (CHARACTER, LABORATORY, COVENANT)
+#: The saga's own Abilities (own_abilities.py).
+ABILITY = "ability"
+KINDS: tuple[str, ...] = (CHARACTER, LABORATORY, COVENANT, ABILITY)
 KIND_LABELS: dict[str, str] = {
     CHARACTER: "Character Virtue or Flaw",
     LABORATORY: "Laboratory Virtue or Flaw",
     COVENANT: "Covenant Boon or Hook",
+    ABILITY: "Ability",
 }
 KIND_SHORT: dict[str, str] = {
     CHARACTER: "Character",
     LABORATORY: "Laboratory",
     COVENANT: "Covenant",
+    ABILITY: "Ability",
 }
 TYPES: dict[str, tuple[str, ...]] = {
     CHARACTER: ("Virtue", "Flaw"),
     LABORATORY: ("Virtue", "Flaw"),
     COVENANT: ("Boon", "Hook"),
+    ABILITY: ("Ability",),
 }
 #: The side that gives points (a negative cost).
 _GIVES_POINTS = ("Flaw", "Hook")
@@ -72,14 +81,16 @@ CATEGORIES: dict[str, tuple[str, ...]] = {
     ),
     LABORATORY: ("Structure", "Outfittings", "Supernatural"),
     COVENANT: COVENANT_BOON_HOOK_CATEGORIES,
+    ABILITY: oa.CATEGORIES,
 }
 _ID_PREFIX: dict[str, str] = {
     CHARACTER: "custom_vf",
     LABORATORY: "custom_labvf",
     COVENANT: "custom_covbh",
+    ABILITY: oa.ID_PREFIX,
 }
 
-Entry = VirtueFlawDef | LabVirtueFlawDef | CovenantBoonHookDef
+Entry = VirtueFlawDef | LabVirtueFlawDef | CovenantBoonHookDef | AbilityDef
 
 #: The kinds whose entries may ask for choices (a laboratory Virtue's
 #: parameters are what its effect is read from, not choices).
@@ -130,6 +141,7 @@ def entries_of(saga: Saga, kind: str) -> list[Any]:
         CHARACTER: saga.custom_virtues_flaws,
         LABORATORY: saga.custom_lab_virtues_flaws,
         COVENANT: saga.custom_boons_hooks,
+        ABILITY: saga.custom_abilities,
     }[kind]
 
 
@@ -158,7 +170,12 @@ def form_problem(
     saga: Saga, kind: str, values: dict[str, Any], existing: Entry | None = None
 ) -> str | None:
     """What's wrong with a form's values, if anything: a name is needed, and
-    two user-made entries of one kind can't share a name, type and tier."""
+    two user-made entries of one kind can't share a name, type and tier
+    (an Ability: own_abilities.form_problem)."""
+    if kind == ABILITY:
+        return oa.form_problem(
+            saga, values, existing if isinstance(existing, AbilityDef) else None
+        )
     name = (values.get("name") or "").strip()
     if not name:
         return "Name is required."
@@ -199,7 +216,10 @@ def _fields(kind: str, values: dict[str, Any]) -> dict[str, Any]:
 def add(saga: Saga, kind: str, values: dict[str, Any]) -> Entry:
     """Add a user-made entry of `kind` from a form's values (name, type,
     tier, category, repeatable, description, the choices it asks for,
-    and the saga source it cites, if any)."""
+    and the saga source it cites, if any; an Ability's are
+    own_abilities.add's)."""
+    if kind == ABILITY:
+        return oa.add(saga, values)
     fields = _fields(kind, values)
     listed = entries_of(saga, kind)
     taken = [e.id for e in listed] + list(_catalog_by_id(kind))
@@ -220,6 +240,8 @@ def update(saga: Saga, kind: str, entry: Entry, values: dict[str, Any]) -> Entry
     """Change a user-made entry (its id stays, so whoever holds it keeps
     it, with its new name and points): definitions are frozen, so the
     changed one takes the old one's place in the saga's list. Returns it."""
+    if isinstance(entry, AbilityDef):
+        return oa.update(saga, entry, values)
     changed = _replace(saga, kind, entry, **_fields(kind, values))
     catalog.use_saga(saga)
     return changed
@@ -246,6 +268,9 @@ def citing(saga: Saga, source: str) -> list[Entry]:
 
 
 def remove(saga: Saga, kind: str, entry: Entry) -> None:
+    if isinstance(entry, AbilityDef):
+        oa.remove(saga, entry)
+        return
     entries_of(saga, kind).remove(entry)
     catalog.use_saga(saga)
 
@@ -255,12 +280,15 @@ def _catalog_by_id(kind: str) -> dict[str, Any]:
         CHARACTER: catalog.load_virtue_flaw_catalog_by_id,
         LABORATORY: catalog.load_lab_virtue_flaw_catalog_by_id,
         COVENANT: catalog.load_covenant_boon_hook_catalog_by_id,
+        ABILITY: catalog.load_ability_catalog_by_id,
     }[kind]()
 
 
 def used_by(saga: Saga, kind: str, entry: Entry) -> list[str]:
     """The names of the records holding the entry (it can't be deleted while
     any does: they would be left with an entry nothing describes)."""
+    if isinstance(entry, AbilityDef):
+        return oa.used_by(saga, entry)
     if kind == CHARACTER:
         holders = [
             c.name
@@ -307,7 +335,14 @@ def table_header() -> str:
 
 def row_label(kind: str, entry: Entry) -> str:
     """One row (markup), lined up with `table_header` (the Category is in
-    the details panel: the row has to fit a 120-column screen)."""
+    the details panel: the row has to fit a 120-column screen). An
+    Ability has no tier or points."""
+    if isinstance(entry, AbilityDef):
+        return (
+            f"{escape(fit(entry.name, _NAME_WIDTH))} "
+            f"{KIND_SHORT[kind]:<{_KIND_WIDTH}} "
+            f"{'Ability':<{_TYPE_WIDTH}}"
+        ).rstrip()
     return (
         f"{escape(fit(entry.name, _NAME_WIDTH))} "
         f"{KIND_SHORT[kind]:<{_KIND_WIDTH}} "
@@ -321,6 +356,8 @@ def detail_text(saga: Saga, chosen: tuple[str, Entry] | None) -> str:
     if chosen is None:
         return "[dim]Choose an entry to see who holds it; a adds one.[/]"
     kind, entry = chosen
+    if isinstance(entry, AbilityDef):
+        return "\n".join(_ability_detail(saga, entry))
     holders = used_by(saga, kind, entry)
     lines = [
         f"[b]{escape(entry.name)}[/]",
@@ -340,3 +377,19 @@ def detail_text(saga: Saga, chosen: tuple[str, Entry] | None) -> str:
     if entry.description.strip():
         lines += ["", markdown_text(entry.description.strip())]
     return "\n".join(lines)
+
+
+def _ability_detail(saga: Saga, ability: AbilityDef) -> list[str]:
+    """The details panel's lines for one of the saga's own Abilities: its
+    source, if it cites one, under its name."""
+    lines = oa.detail_lines(saga, ability)
+    if ability.source:
+        title = sourcebooks.title_of(ability.source, saga) or ability.source
+        books = sourcebooks.saga_books(saga)
+        state = "" if sourcebooks.in_play(ability.source, books) else " (not in play)"
+        lines.insert(2, f"[b]Source:[/] {escape(title)}{state}")
+    if ability.description.strip():
+        # Under what it is, before its rules: the panel has a fixed height.
+        at = lines.index("") if "" in lines else len(lines)
+        lines[at:at] = ["", markdown_text(ability.description.strip())]
+    return lines

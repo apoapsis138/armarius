@@ -1203,6 +1203,107 @@ puts it in the place's diary.
 
 Add, edit or delete one.
 
+## Tomb tab
+<!-- help: tab-nb-tomb -->
+
+A place marked **A tomb** (on its form, with Lands of the Nile in play)
+has a Tomb tab: the tomb designed like a covenant, with its curses, its
+talismans and wards, and its traps (Lands of the Nile pp. 32-46). The
+rules suit any tomb, not only Egypt's and Nubia's.
+
+## The Tomb
+<!-- help: section-nb-tomb -->
+
+What the tomb's kind gives (Lands of the Nile p. 40): a major monarch's
+tomb has a base Magic aura of 5 and 500 Build Points; a royal consort's
+or minor monarch's 4 and 250; a lesser royal's or high priest's 3 and
+100; a non-royal dignitary's 3 and 50. Decay lowers the aura. A burial
+ground in use for a century is a preternatural tether of 1, up to 5 for
+five centuries; the place keeps its own aura, so with the aura change
+option on, name the tether in the place's Tethers, as "(preternatural
+5)". A tomb has up to 10 points of Hooks to buy Boons.
+
+The Build Points spent are the curses', the talismans' and wards', the
+traps', and the other resources' (inscriptions as a library, guardians
+and ghosts as specialists, vis), which cost what a covenant's do (pp. 42,
+44); more than the tomb has are shown in red. **Edit Tomb** sets them.
+
+## Curses
+<!-- help: section-nb-tomb-curses -->
+
+A curse is a condition and its excoriation (Lands of the Nile pp. 34,
+40-41). It strikes when its condition is broken or its text is defaced;
+once it has struck as many times as its uses a day, the text can be
+destroyed safely. It costs 2 Build Points for every 5 levels; one
+written without force (**Hollow**) costs nothing. One beyond Hermetic
+magic is a **Lesser** (base level 10) or **Greater Malediction** (base
+30): Special Duration, until dispelled, and it Warps its victims. Add,
+edit or delete one.
+
+The book's Tomb of Cleopatra prints 6 Build Points for her fear curse,
+but the curse is a CrMe 25 effect, which the rule prices at 10: the 6
+fits a level-15 effect, so it is a misprint, and her tomb's curses come
+to 42 Build Points, not 38 (Lands of the Nile pp. 41, 46). The app
+prices curses by the rule.
+
+## Talismans and Wards
+<!-- help: section-nb-tomb-wards -->
+
+A **talisman** harms or imprisons, and is overcome without magic
+against 6 + its magnitude; a **ward** repels or hides, against 9 + its
+magnitude (Lands of the Nile pp. 35, 42). Anyone whose Magic Resistance
+is at least its Penetration passes untouched. Each costs 2 Build Points
+for every 5 levels. A talisman is usually made inert until sunset by a
+particular spell effect; a ward by a deed at a place and time. Add, edit
+or delete one.
+
+## Traps
+<!-- help: section-nb-tomb-traps -->
+
+A trap costs Build Points for its harm (3 to delay or scare, 6 for a
+minor injury or imprisonment, 9 for a serious injury, 12 if often
+fatal) plus 0, 1, 3, 6 or 9 for an Ease Factor to avoid of 3, 6, 9, 12
+or 15 (Lands of the Nile p. 44).
+
+<!-- tui -->
+More (`m`) > **Overcome It** rolls for one character when the chosen trap
+springs.
+<!-- /tui -->
+<!-- gui -->
+**Overcome It** rolls for one character when the chosen trap springs.
+<!-- /gui -->
+
+Add, edit or delete one.
+
+### Egyptian craftwork
+<!-- help: tomb-craftwork -->
+
+Egyptian curses, talismans, wards and amulets are designed as Hermetic
+enchanted items; a troupe with Hedge Magic may use Learned Magic instead,
+whose protection, assistance and harm match the Egyptians' amulets,
+talismans and curses (Lands of the Nile p. 55). The Egyptians had very
+high casting and laboratory totals, no Difficult Arts and no limits on
+Range, Duration and Target. An amulet's colour is flavour: black for
+magic, green to draw faeries, blue for the gods, yellow, orange and some
+reds for fire, red for curses and for Apep and Seth (pp. 55-56).
+
+## Overcome It
+<!-- help: overcome-trap -->
+
+When a trap springs, each character says one thing he does and rolls
+only for that, against the trap's Ease Factor, which the storyguide moves
+by 3 or 6 either way for the action (Lands of the Nile pp. 32-33). The
+troupe settles the order: usually the one the trap is springing on (**In
+danger**) acts first, the rest by Quickness, and the trap last. The
+troupe also settles who helps whom, since one character's action may
+save another; those who fail and aren't helped suffer it. Overcome It
+rolls one character's action at a time, so roll each in the order
+agreed. A magus answers with **a Fast-Cast spell**, judged on its own, not
+against the trap. **Light** gives the Ease Factor of spotting the trigger
+first (Per + Awareness), which gives time to deal with it: −3 in perfect
+light, +3 by a single flame, +6 in near darkness (p. 44). **Roll** rolls a
+stress die and offers to write the outcome in the place's diary.
+
 ## Diary tab
 <!-- help: tab-nb-place-diary -->
 

@@ -95,6 +95,10 @@ def test_each_page_offers_what_applies_there():
         # A mystic's path and God's aid (The Church, RoP: The Divine).
         "Mystic Path",
         "Invoke God's Aid",
+        # A cleric's career (The Church).
+        "Petition the Church",
+        "Add Canon Case",
+        "Holy Orders",
     ]
     assert _labels(menu_forms.new_items(page)) == ["New Character", "Bind Familiar"]
     deleted = menu_forms.deletes(page)
@@ -108,6 +112,8 @@ def test_each_page_offers_what_applies_there():
         "Update from a File",
         "In Creation / In Play",
         "Demote",
+        # Transforming Mythic Europe in play.
+        "Shape the Land",
     ]
     assert _labels(menu_forms.new_items(page)) == [
         "New Character",

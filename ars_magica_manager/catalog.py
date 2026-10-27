@@ -36,6 +36,8 @@ from .models import (
     WeaponDef,
 )
 from .models.ancient_magic import AncientChapter
+from .models.mystery_cults import as_tradition, lore_ability, needs_lore_ability
+from .models.spell_guideline import SpellGuidelineDef
 
 CATALOG_PATH = DATA_DIR / "virtue_flaw_catalog.json"
 ABILITY_CATALOG_PATH = DATA_DIR / "ability_catalog.json"
@@ -114,6 +116,9 @@ _SAGA_ENTRIES: dict[str, tuple[Any, ...]] = {
     "lab": (),
     "covenant": (),
     "goods": (),
+    "abilities": (),
+    # The saga's own Mystery Cults, as traditions (models.mystery_cults).
+    "traditions": (),
 }
 #: Each catalog with the saga's entries merged in, by (kind, path): built on
 #: first use and dropped whenever use_saga() changes the entries.
@@ -122,7 +127,8 @@ _MERGED_BY_ID: dict[tuple[str, Path], Mapping[str, Any]] = {}
 
 def use_saga(saga: Saga | None) -> None:
     """Make `saga`'s user-made entries part of the Virtue/Flaw, laboratory
-    Virtue/Flaw and Boon/Hook catalogs (None: just the shared catalogs), and
+    Virtue/Flaw, Boon/Hook, Goods and Ability catalogs (None: just the
+    shared catalogs), and
     its hidden catalogs and entries (see hidden()) what pickers leave out.
     The app has one saga open at a time: the workspace calls this as it
     opens one, and house_rules and the Saga Content view do after every
@@ -131,8 +137,19 @@ def use_saga(saga: Saga | None) -> None:
     _SAGA_ENTRIES["lab"] = tuple(saga.custom_lab_virtues_flaws) if saga else ()
     _SAGA_ENTRIES["covenant"] = tuple(saga.custom_boons_hooks) if saga else ()
     _SAGA_ENTRIES["goods"] = tuple(saga.custom_goods) if saga else ()
+    _SAGA_ENTRIES["abilities"] = (
+        (*saga.custom_abilities, *_cult_lores(saga)) if saga else ()
+    )
     _MERGED_BY_ID.clear()
     _HIDDEN.clear()
+    # A cult's Scripts name its Virtues, the saga's own among them: made
+    # once the Virtue/Flaw catalog has them.
+    _SAGA_ENTRIES["traditions"] = ()
+    if saga is not None and saga.custom_cults:
+        virtues = load_virtue_flaw_catalog_by_id()
+        _SAGA_ENTRIES["traditions"] = tuple(
+            as_tradition(cult, virtues) for cult in saga.custom_cults
+        )
     if saga is None:
         return
     for key, kind in SAGA_CATALOG_KINDS.items():
@@ -148,6 +165,8 @@ def use_saga(saga: Saga | None) -> None:
             *saga.custom_lab_virtues_flaws,
             *saga.custom_boons_hooks,
             *saga.custom_goods,
+            *saga.custom_abilities,
+            *_cult_lores(saga),
             *saga.spells,
         )
     )
@@ -332,13 +351,21 @@ def needs_the_gift(definition: VirtueFlawDef) -> bool:
 
 
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:
-    return list(_cached_entries(path, AbilityDef.from_dict))
+    """The Ability catalog, with the saga in use's own Abilities after it
+    (use_saga), as the Virtue/Flaw catalog has its own entries."""
+    return _with_saga_entries("abilities", _cached_entries(path, AbilityDef.from_dict))
 
 
 def load_ability_catalog_by_id(
     path: Path = ABILITY_CATALOG_PATH,
 ) -> Mapping[str, AbilityDef]:
-    return _cached_by_id(path, AbilityDef.from_dict)
+    return _by_id_with_saga_entries("abilities", path, AbilityDef.from_dict)
+
+
+def saga_abilities() -> tuple[AbilityDef, ...]:
+    """The saga in use's own Abilities (use_saga), which a cache of the
+    shared catalog's names leaves out."""
+    return _SAGA_ENTRIES["abilities"]
 
 
 def abilities_to_offer(held_names: Collection[str]) -> list[AbilityDef]:
@@ -424,13 +451,21 @@ def _tradition(entry: dict[str, Any]) -> TraditionDef:
 
 
 def load_tradition_catalog(path: Path = TRADITION_CATALOG_PATH) -> list[TraditionDef]:
-    return list(_cached_entries(path, _tradition))
+    """The tradition catalog, with the saga in use's own Mystery Cults
+    after it (use_saga)."""
+    return _with_saga_entries("traditions", _cached_entries(path, _tradition))
 
 
 def load_tradition_catalog_by_id(
     path: Path = TRADITION_CATALOG_PATH,
 ) -> Mapping[str, TraditionDef]:
-    return _cached_by_id(path, _tradition)
+    return _by_id_with_saga_entries("traditions", path, _tradition)
+
+
+def _cult_lores(saga: Saga) -> list[AbilityDef]:
+    """The Lores of the saga's own Mystery Cults that are Abilities of
+    their own (not written as the catalog's Mystery Cult Lore)."""
+    return [lore_ability(c) for c in saga.custom_cults if needs_lore_ability(c)]
 
 
 def load_character_template_catalog(
@@ -700,3 +735,22 @@ def load_ancient_magic_catalog(
     """Ancient Magic's chapters as data (rules/ancient_integrations.py reads
     them)."""
     return list(_cached_entries(path, AncientChapter.from_dict))
+
+
+# -- The Hermetic spell-guideline catalog ----------------------------------
+
+SPELL_GUIDELINE_CATALOG_PATH = DATA_DIR / "spell_guideline_catalog.json"
+
+
+def load_spell_guideline_catalog(
+    path: Path = SPELL_GUIDELINE_CATALOG_PATH,
+) -> list[SpellGuidelineDef]:
+    """The supplements' Hermetic spell guidelines (HoH:S, MoH), in the
+    file's order (rules/spell_guidelines.py offers them)."""
+    return list(_cached_entries(path, SpellGuidelineDef.from_dict))
+
+
+def load_spell_guideline_catalog_by_id(
+    path: Path = SPELL_GUIDELINE_CATALOG_PATH,
+) -> Mapping[str, SpellGuidelineDef]:
+    return _cached_by_id(path, SpellGuidelineDef.from_dict)

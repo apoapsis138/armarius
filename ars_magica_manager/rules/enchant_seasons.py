@@ -46,6 +46,7 @@ from . import (
     book_seasons,
     enchantment,
     experiment,
+    house_magic,
     lab,
     lab_virtues,
     library,
@@ -445,6 +446,16 @@ def work(
             device,
             effect_of(device, plan) if plan.activity in EFFECT_ACTIVITIES else None,
         )
+        # A Mutantum effect or a Mercere's Portal asks its own of him.
+        if plan.activity in EFFECT_ACTIVITIES:
+            found = [
+                *found,
+                *house_magic.effect_problems(
+                    magus,
+                    effect_of(device, plan),
+                    invested=device.type == INVESTED,
+                ),
+            ]
         if found:
             return found, None
     special = _DEVICE_WORK.get(plan.activity)
@@ -504,7 +515,9 @@ def _effect_work(
                 f"material only: {text.shape_material}.",
             ],
         )
-    total = options(magus, plan, effect.technique, effect.form, total)
+    total = house_magic.with_portal_note(
+        effect, options(magus, plan, effect.technique, effect.form, total)
+    )
     lab_total = int(total.total)
     name = enchantment.effect_name(effect)
     if text is not None and lab_total < level:

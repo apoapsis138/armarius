@@ -3228,6 +3228,166 @@
       }
     ],
     "description": "The whole lab (or a large part of it) exists only in the magus's mind, created by a powerful Creo Mentem Ritual, perhaps. Its Size can't exceed the magus's Intelligence; it improves as usual, but disregard changes to Upkeep, Health, or Aesthetics. Without sophisticated magic it can't be used to bond a familiar, enchant items or Longevity Rituals, teach, or probably extract vis; inventing spells, Lab Texts and studying Arts work normally. Grants +3 to a Mentem Specialization."
+  },
+  {
+    "id": "labvf_dormant_volcano",
+    "source": "HP",
+    "name": "Dormant Volcano",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "aesthetics",
+        "amount": 1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Ignem",
+        "amount": 1
+      }
+    ],
+    "description": "The lab is in the crater of a dormant volcano. Grants +1 to an Ignem Specialization (Hermetic Projects p. 27)."
+  },
+  {
+    "id": "labvf_active_volcano",
+    "source": "HP",
+    "name": "Active Volcano",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Major",
+    "cost": -3,
+    "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "upkeep",
+        "amount": 2
+      },
+      {
+        "applies_to": "lab_characteristic",
+        "target": "safety",
+        "amount": -2
+      },
+      {
+        "applies_to": "lab_characteristic",
+        "target": "health",
+        "amount": -1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Experimentation",
+        "amount": 1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Ignem",
+        "amount": 3
+      }
+    ],
+    "description": "The lab is in the crater of an active volcano, the lab and magus somehow kept safe from its worst hazards. Grants +1 to an Experimentation and +3 to an Ignem Specialization (Hermetic Projects p. 27)."
+  },
+  {
+    "id": "labvf_mineral_bath",
+    "source": "HP",
+    "name": "Mineral Bath",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "health",
+        "amount": 2
+      },
+      {
+        "applies_to": "lab_characteristic",
+        "target": "safety",
+        "amount": -1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Aquam",
+        "amount": 1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Longevity Rituals",
+        "amount": 1
+      }
+    ],
+    "description": "A mineral bath heated from a volcanic source, where the magus bathes while he ponders his work. Grants +1 to an Aquam and a Longevity Rituals Specialization (Hermetic Projects p. 27)."
+  },
+  {
+    "id": "labvf_volcanic_spirit_forge",
+    "source": "HP",
+    "name": "Volcanic Spirit Forge",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Minor",
+    "cost": 1,
+    "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "upkeep",
+        "amount": -1
+      },
+      {
+        "applies_to": "lab_characteristic",
+        "target": "safety",
+        "amount": -1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Experimentation",
+        "amount": 1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Rego",
+        "amount": 1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Ignem",
+        "amount": 1
+      }
+    ],
+    "description": "A forge heated by a volcanic spirit. Grants +1 to Experimentation, Rego and Ignem Specializations (Hermetic Projects p. 27)."
+  },
+  {
+    "id": "labvf_hell_portal",
+    "source": "HP",
+    "name": "Hell Portal",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Major",
+    "cost": -3,
+    "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "safety",
+        "amount": -2
+      },
+      {
+        "applies_to": "lab_characteristic",
+        "target": "warping",
+        "amount": 2
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Rego",
+        "amount": 1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Vim",
+        "amount": 3
+      }
+    ],
+    "description": "A fiery portal to Hell in the lab. Grants +1 to a Rego and +3 to a Vim Specialization (Hermetic Projects p. 27)."
   }
 ]
 }

@@ -173,6 +173,8 @@ class NeighbourSheetView(KindTabsView):
         self.kind = neighbours.kind_of(neighbour)
         if self.kind.tab is not None:
             self.INITIAL_TAB = self.kind.tab.tab_id
+        #: The further tabs the sheet was built with.
+        self._shown_more = [m.tab_id for m in self._more_tabs()]
 
     def compose(self) -> ComposeResult:
         with (
@@ -199,28 +201,35 @@ class NeighbourSheetView(KindTabsView):
                 yield self._tab(
                     tab.title, tab.tab_id, partial(self._kind_tab, tab, facts=True)
                 )
-            for more in (m for m in self.kind.more if not m.after_standing):
+            for more in (m for m in self._more_tabs() if not m.after_standing):
                 yield self._tab(more.title, more.tab_id, partial(self._kind_tab, more))
             yield self._tab(
                 "Standing" if self.kind.attitude else "Found Here",
                 "tab-nb-standing",
                 self._standing_tab,
             )
-            for more in (m for m in self.kind.more if m.after_standing):
+            for more in (m for m in self._more_tabs() if m.after_standing):
                 yield self._tab(more.title, more.tab_id, partial(self._kind_tab, more))
             yield from self._secrets_tab(self.neighbour)
 
     def stale(self) -> bool:
         """Whether the neighbour's kind changed since the sheet was built,
-        so its tab is no longer theirs."""
-        return neighbours.kind_of(self.neighbour) is not self.kind
+        so its tab is no longer theirs, or a tab shown only on some of
+        the kind's neighbours (a place's Tomb) comes or goes."""
+        return neighbours.kind_of(self.neighbour) is not self.kind or (
+            self._shown_more != [m.tab_id for m in self._more_tabs()]
+        )
+
+    def _more_tabs(self) -> list[KindTab]:
+        """The kind's further tabs this neighbour shows."""
+        return [m for m in self.kind.more if m.shows(self.neighbour)]
 
     def kind_holder(self) -> Neighbour:
         return self.neighbour
 
     def kind_tabs(self) -> list[KindTab]:
         tab = self.kind.tab
-        return ([tab] if tab is not None else []) + list(self.kind.more)
+        return ([tab] if tab is not None else []) + self._more_tabs()
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A row of a kind's list was chosen: show it in its tab's details

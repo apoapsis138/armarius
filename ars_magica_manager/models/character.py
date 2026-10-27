@@ -7,6 +7,7 @@ from typing import Any
 
 from ..rules import xp as xp_rules
 from .agents import Agent
+from .clergy import ChurchCareer
 from .common import (
     CharacterType,
     ExperimentalEffect,
@@ -954,6 +955,9 @@ class Character:
     #: Magic Might: a magus the Great Elixir made a being of Magic has the
     #: Might its Grant Might gives (TMRE p. 44); 0 for none.
     magic_might: int = 0
+    #: His grade in holy orders, ordinations, petitions to the Church and
+    #: canon-court cases (The Church pp. 33-38, 46-48; empty for most).
+    church: ChurchCareer = field(default_factory=ChurchCareer)
 
     @property
     def being_of_magic(self) -> bool:
@@ -1065,6 +1069,7 @@ class Character:
             )
             for author, entry in (d.get("lab_text_access") or {}).items()
         }
+        d["church"] = ChurchCareer.from_dict(d.get("church") or {})
         return cls(**known_fields(cls, d))
 
 

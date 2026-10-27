@@ -7,8 +7,8 @@ import random
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 
+from .. import catalog, manors
 from .. import economics as eco
-from .. import manors
 from ..enchanted_devices import new_day
 from ..markup import escape, problem, todo
 from ..models import (
@@ -38,6 +38,7 @@ from ..rules import (
 )
 from ..rules import experiment as ex
 from ..rules import laboratory_seasons as ls
+from ..rules import vf_change as vf_change_rules
 from ..rules import warping as warping_rules
 from ..tables import Table
 from ..world import takes_part_in_play
@@ -321,6 +322,46 @@ def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
     return lines
 
 
+def temporary_virtues_end(saga: Saga) -> list[SeasonRecordLine]:
+    """A temporary Virtue or Flaw whose last season this is ends as it
+    passes (Grogs pp. 62-63): the Diary notes it, and the player takes it
+    off with Gain or Lose in Play, which gives back any Characteristic it
+    moved. It is left on the sheet, since a story may renew it."""
+    lines: list[SeasonRecordLine] = []
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    for character in saga.characters:
+        if not takes_part_in_play(character):
+            continue
+        for index in vf_change_rules.ending(
+            character, saga.current_year, saga.current_season
+        ):
+            name = catalog.describe_virtue_flaw(character.virtues_flaws[index], by_id)
+            character.diary.append(
+                DiaryEntry(
+                    year=saga.current_year,
+                    season=saga.current_season,
+                    name=f"{name} ends",
+                    details=(
+                        f"{name} was gained for a while, and this was its last "
+                        "season. Take it off with More > Gain or Lose in Play > "
+                        "A temporary Virtue or Flaw ends.\n"
+                        f"Rule: {vf_change_rules.SOURCE}"
+                    ),
+                )
+            )
+            lines.append(
+                SeasonRecordLine(
+                    character.id,
+                    character.name,
+                    character.covenant_id,
+                    "Temporary Virtue or Flaw",
+                    name,
+                    "ends",
+                )
+            )
+    return lines
+
+
 def advance_summary(saga: Saga) -> str:
     """What advancing will do with the season's plans, for the Advance
     Season dialog: who has nothing planned, and any plan that can't be
@@ -408,6 +449,7 @@ def finish_season(
     year_end += season_healing(saga, rng)
     year_end += covenant_season(saga, secured)
     year_end += manors.season_losses(saga)
+    year_end += temporary_virtues_end(saga)
     record.lines += year_end
     if saga.keep_season_records and (worked or year_end):
         saga.season_records.append(record)

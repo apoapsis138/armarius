@@ -262,18 +262,20 @@ The [Possessions](help:tab-cov-possessions) chapter holds what the covenant owns
 <!-- /gui -->
 
 <!-- tui -->
-1. **Property and items:** [Properties and Land](help:section-pos-property) and [Items](help:section-pos-item) are a record only. [Weapons](help:section-pos-weapon) and [Armor](help:section-pos-armor) can be chosen from the catalogue, and feed the Weapons cost on the Economics tab.
-2. **Sanctums:** every laboratory of the covenant is listed under [Sanctums](help:section-pos-sanctum) automatically; set only its Usage here.
-3. **Vis sources:** add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. In its season each year, the harvest is added to the Raw Vis Stores and written in the Diary.
-4. **Raw vis:** [Raw Vis Stores](help:section-pos-vis_store) lists the covenant's vis by Art. To hand vis to a laboratory, a magus or another covenant, choose the store, press `m` for More and choose **Give**. Type the **Pawns** and choose **To**, then press Give. Both Diaries record it.
-5. **Enchanted devices:** [Enchanted Devices](help:section-cov-devices) has More's **Instill an Effect** and **Use a Charge**.
+1. **Ships:** add each on [Ships](help:section-pos-ship) from the book's table of ships; her damage levels, crew and artillery are worked out, and Stress Check and Ship Combat roll for her.
+2. **Property and items:** [Properties and Land](help:section-pos-property) and [Items](help:section-pos-item) are a record only. [Weapons](help:section-pos-weapon) and [Armor](help:section-pos-armor) can be chosen from the catalogue, and feed the Weapons cost on the Economics tab.
+3. **Sanctums:** every laboratory of the covenant is listed under [Sanctums](help:section-pos-sanctum) automatically; set only its Usage here.
+4. **Vis sources:** add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. In its season each year, the harvest is added to the Raw Vis Stores and written in the Diary.
+5. **Raw vis:** [Raw Vis Stores](help:section-pos-vis_store) lists the covenant's vis by Art. To hand vis to a laboratory, a magus or another covenant, choose the store, press `m` for More and choose **Give**. Type the **Pawns** and choose **To**, then press Give. Both Diaries record it.
+6. **Enchanted devices:** [Enchanted Devices](help:section-cov-devices) has More's **Instill an Effect** and **Use a Charge**.
 <!-- /tui -->
 <!-- gui -->
-1. **Property and items:** [Properties and Land](help:section-pos-property) and [Items](help:section-pos-item) are a record only. [Weapons](help:section-pos-weapon) and [Armor](help:section-pos-armor) can be chosen from the catalogue, and feed the Weapons cost in the Treasury.
-2. **Sanctums:** every laboratory of the covenant is listed under [Sanctums](help:section-pos-sanctum) automatically; set only its Usage here.
-3. **Vis sources:** add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. In its season each year, the harvest is added to the Raw Vis Stores and written in the Diary.
-4. **Raw vis:** [Raw Vis Stores](help:section-pos-vis_store) lists the covenant's vis by Art. To hand vis to a laboratory, a magus or another covenant, click the store, then **Give** beside Add, Edit and Delete. Type the **Pawns** and choose **To**, then choose Give. Both Diaries record it.
-5. **Enchanted devices:** [Enchanted Devices](help:section-cov-devices) has **Instill** and **Use Charge** buttons beside Add, Edit and Delete, for the row last clicked.
+1. **Ships:** add each on [Ships](help:section-pos-ship) from the book's table of ships; her damage levels, crew and artillery are worked out, and Stress Check and Ship Combat roll for her.
+2. **Property and items:** [Properties and Land](help:section-pos-property) and [Items](help:section-pos-item) are a record only. [Weapons](help:section-pos-weapon) and [Armor](help:section-pos-armor) can be chosen from the catalogue, and feed the Weapons cost in the Treasury.
+3. **Sanctums:** every laboratory of the covenant is listed under [Sanctums](help:section-pos-sanctum) automatically; set only its Usage here.
+4. **Vis sources:** add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. In its season each year, the harvest is added to the Raw Vis Stores and written in the Diary.
+5. **Raw vis:** [Raw Vis Stores](help:section-pos-vis_store) lists the covenant's vis by Art. To hand vis to a laboratory, a magus or another covenant, click the store, then **Give** beside Add, Edit and Delete. Type the **Pawns** and choose **To**, then choose Give. Both Diaries record it.
+6. **Enchanted devices:** [Enchanted Devices](help:section-cov-devices) has **Instill** and **Use Charge** buttons beside Add, Edit and Delete, for the row last clicked.
 <!-- /gui -->
 
 ### Money

@@ -34,6 +34,7 @@ from ...commands import Picked
 from ...form_spec import DialogField
 from ...forms import activity as activity_forms
 from ...forms import lab_plan as lpf
+from ...forms import spell_guideline as guideline_forms
 from ...forms.lab_plan import (
     KINDS,
     OTHER,
@@ -88,6 +89,7 @@ _WIDGET_OF: dict[str, str] = {
     "extra_magnitudes": "inv-extra",
     "recurring": "inv-recurring",
     "base_effect": "inv-base-effect",
+    "guideline": "inv-guideline",
     "lab_text": "inv-lab-text",
     "more_texts": "inv-more-texts",
     "teacher": "inv-teacher",
@@ -408,6 +410,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         #: The lab work chosen (the Lab work button's value).
         self.activity = self.initial_activity
         self._design = self.form.design
+        #: The catalog guideline the design is based on (the Guideline
+        #: button's value).
+        self._guideline = guideline_forms.design_guideline(self._design)
         self.parameter_options = self.form.parameter_options
         #: The core form's fields, each drawn by its widget (_WIDGET_OF).
         self._fields = self.form.fields()
@@ -460,6 +465,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         yield Label("Effect")
         yield TextArea(design.description if design else "", id="inv-description")
         yield Static("── Effect ─────────", classes="inv-title")
+        with Horizontal(classes="inv-row"):
+            yield Label("Guideline")
+            yield Button(self._guideline_label(), id="inv-guideline", compact=True)
         with Horizontal(classes="inv-row"):
             yield Label("Technique")
             yield _art_select(
@@ -927,6 +935,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         if spec.key == "start_from":
             design = self.form.design
             return design.source_spell_id if design else None
+        if spec.key == "guideline":
+            return self._guideline
         found = self.query(f"#{_WIDGET_OF[spec.key]}")
         if not found:
             return None
@@ -1182,6 +1192,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             self._fill(None, None)
         elif button == "inv-start":
             self._choose_start()
+        elif button == "inv-guideline":
+            self._choose_guideline()
         elif button in ("inv-more-texts", "inv-taught"):
             self._edit_list(
                 "more_texts" if button == "inv-more-texts" else "taught_spells"
@@ -1236,6 +1248,35 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             chosen,
         )
 
+    def _guideline_label(self) -> str:
+        return escape(guideline_forms.guideline_label(self._guideline))
+
+    def _choose_guideline(self) -> None:
+        """Choose the supplement guideline the spell is based on: it fills
+        in the Arts, base level and Base effect, as the core's field does."""
+
+        def chosen(end: object) -> None:
+            if isinstance(end, Picked):
+                self._use_guideline(end.value)
+
+        run_steps(
+            self.app,
+            guideline_forms.choose_guideline(self.saga, self._guideline),
+            chosen,
+        )
+
+    def _use_guideline(self, guideline_id: str | None) -> None:
+        self._guideline = guideline_id
+        self.query_one("#inv-guideline", Button).label = self._guideline_label()
+        filled = guideline_forms.guideline_values({"guideline": guideline_id})
+        for key in ("technique", "form", "target"):
+            if key in filled:
+                self.query_one(f"#{_WIDGET_OF[key]}", Select).value = filled[key]
+        for key in ("base_level", "base_effect"):
+            if key in filled:
+                self.query_one(f"#{_WIDGET_OF[key]}", Input).value = str(filled[key])
+        self._refresh()
+
     def _start_from(self, spell_id: str | None) -> None:
         spell = catalog.find_spell(self.saga, spell_id)
         self._fill(
@@ -1260,6 +1301,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.form.design = design
         self.form.key = design.key if design and design.key else uuid.uuid4().hex[:12]
         self.query_one("#inv-start", Button).label = self._start_label()
+        self._guideline = guideline_forms.design_guideline(design)
+        self.query_one("#inv-guideline", Button).label = self._guideline_label()
         self.query_one("#inv-name", Input).value = design.name if design else ""
         self.query_one("#inv-description", TextArea).text = (
             design.description if design else ""

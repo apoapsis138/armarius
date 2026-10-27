@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import copy
 from collections.abc import Sequence
+from dataclasses import replace
 from typing import Any
 
 from .. import catalog, sourcebooks
@@ -49,7 +50,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import creation_characteristics as cch
-from ..rules import faerie_sympathy
+from ..rules import faerie_sympathy, vf_change
 from ..rules.vf_eligibility import VirtueFlawChooser
 
 Owner = Character | Familiar | Creature | Laboratory
@@ -466,9 +467,16 @@ class _Adder:
     why one is refused."""
 
     def __init__(
-        self, saga: Saga, owner: Character | Familiar | Creature, side: str | None
+        self,
+        saga: Saga,
+        owner: Character | Familiar | Creature,
+        side: str | None,
+        *,
+        in_play: bool = False,
+        category: str | None = None,
     ):
         self.saga, self.owner, self.side = saga, owner, side
+        self.category = category
         books = sourcebooks.saga_books(saga)
         self.chooser = (
             VirtueFlawChooser.for_familiar(owner, books)
@@ -477,6 +485,13 @@ class _Adder:
             if isinstance(owner, Creature)
             else VirtueFlawChooser.for_character(owner, books)
         )
+        if in_play:
+            # A grog may come by a Major Virtue or Flaw during the saga,
+            # though not at creation (Grogs pp. 62-63; DE p. 63).
+            self.chooser = replace(self.chooser, grog=False)
+
+    def _in_category(self, entry: VirtueFlawDef) -> bool:
+        return self.category is None or vf_change.in_category(entry, self.category)
 
     def instance_refusal(self, instance: VirtueFlawInstance) -> str:
         """Why the owner can't take `instance`, from their own scores
@@ -518,7 +533,7 @@ class _Adder:
         taken = self.owner.virtues_flaws
         found = []
         for entry in catalog.load_virtue_flaw_catalog():
-            if self.side not in (None, entry.side):
+            if self.side not in (None, entry.side) or not self._in_category(entry):
                 continue
             if not catalog.virtue_flaw_offerable(entry, taken):
                 continue
@@ -538,6 +553,7 @@ class _Adder:
             entry
             for entry in catalog.load_virtue_flaw_catalog()
             if self.side in (None, entry.side)
+            and self._in_category(entry)
             and catalog.virtue_flaw_offerable(entry, taken)
             and not self.chooser.refusal(entry)
             and not self.no_choice_left(entry)
@@ -596,15 +612,27 @@ class _Adder:
         )
 
 
-def choose_virtue_flaw(saga: Saga, character: Character, side: str) -> Choose:
-    """Choose a Virtue or Flaw (`side`) `character` could take, asking for
-    anything it names, for a form field (nothing is taken)."""
-    adder = _Adder(saga, character, side)
+def choose_virtue_flaw(
+    saga: Saga,
+    character: Character,
+    side: str | None,
+    *,
+    in_play: bool = False,
+    category: str | None = None,
+) -> Choose:
+    """Choose a Virtue or Flaw (`side`; None: either) `character` could
+    take, asking for anything it names, for a form field (nothing is
+    taken). `in_play`: one gained during the saga, which a grog may have
+    Major; `category`: only entries of that type ("Social Status")."""
+    adder = _Adder(saga, character, side, in_play=in_play, category=category)
+    what = category or side or "Virtue or Flaw"
     return Choose(
-        f"Choose the {side}",
+        f"Choose the {what}",
         lambda: [virtue_flaw_choice(entry) for entry in adder.offered()],
         adder.picked,
-        empty=f"(no {side}s available)",
+        empty=(
+            f"(no {side}s available)" if side and not category else "(none available)"
+        ),
         others=adder.others,
     )
 

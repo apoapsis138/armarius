@@ -73,6 +73,7 @@ from ..commands import Command, SectionOps
 from ..forms import ability as ability_forms
 from ..forms import agents as agent_forms
 from ..forms import character as cf
+from ..forms import church as church_forms
 from ..forms import constant_effect as constant_forms
 from ..forms import device as device_forms
 from ..forms import diary as diary_forms
@@ -96,14 +97,18 @@ from ..models import (
     ScoredTrait,
     TraditionDef,
 )
+from ..references import Fact
 from ..rules import activities as season_rules
 from ..rules import agents as agent_rules
+from ..rules import clergy as clergy_rules
 from ..rules import enchantment, hybrid_magic, library, sigils
+from ..sections import CANON_SECTION, ORDINATIONS_SECTION, PETITIONS_SECTION
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
 from . import marks, pictures
 from .bookmark import with_bookmark
+from .church import ledger as church_ledger
 from .editing import (
     Chooser,
     RowVerb,
@@ -123,7 +128,7 @@ from .figures import (
     wound_track,
 )
 from .manage import RecordControls
-from .markup_html import to_html
+from .markup_html import plain, to_html
 from .medallions import Medallion
 from .menus import Placer
 from .ornaments import FleuronRule
@@ -177,6 +182,8 @@ CHAPTERS = (
     ("Research", "lab_text"),
     ("Inventory", "combat"),
     ("Agents", "faction"),
+    # A cleric's career, for a character with a grade, a petition or a case.
+    ("Church", "church"),
     ("Planning", "season"),
     ("Diary", "year"),
     ("Secrets", "secrets"),
@@ -649,6 +656,7 @@ class CharacterSheet(QWidget):
             "Research": self._research,
             "Inventory": self._inventory,
             "Agents": self._agents,
+            "Church": self._church,
             "Planning": self._planning,
             "Diary": self._diary,
             "Secrets": lambda: secrets_chapter(character, palette, run),
@@ -1117,7 +1125,16 @@ class CharacterSheet(QWidget):
                     f"{side}s  ·  {points:g} points",
                     p,
                     *cards,
-                    buttons=verb_buttons(ops, chooser, self.run, p),
+                    buttons=[
+                        *verb_buttons(ops, chooser, self.run, p),
+                        # The page's own buttons (Gain or Lose in Play),
+                        # once, beside the Virtues'.
+                        *(
+                            self.placer.buttons("Virtues & Flaws")
+                            if self.placer and side == "Virtue"
+                            else []
+                        ),
+                    ],
                 )
             )
             stack.addStretch(1)
@@ -1585,6 +1602,64 @@ class CharacterSheet(QWidget):
             ),
         )
 
+    def _church(self) -> QWidget:
+        """Holy Orders (Edit Holy Orders, Perform an Exorcism), then the
+        Ordinations, Petitions and Canon Court as ledger entries, each with
+        Add, Edit and Delete; the chosen one shows in the inspector."""
+        saga, p, c = self.saga, self.p, self.character
+        ops = church_forms.ops(saga, c)
+        career = c.church
+        words = TextBlock(church_forms.orders_desk_text(saga, c), p)
+        words.setFont(serif(12.5))
+        orders = section(
+            "Holy Orders",
+            p,
+            fact_grid(
+                [Fact(k, plain(v)) for k, v in church_forms.orders_facts(c)], p, 3
+            ),
+            *([prose(career.notes.strip(), p)] if career.notes.strip() else []),
+            words,
+            edits={
+                "Edit Holy Orders": lambda: self.run(
+                    church_forms.holy_orders_form(saga, c)
+                ),
+                "Perform an Exorcism": lambda: self.run(
+                    church_forms.exorcism_form(saga, c)
+                ),
+            },
+        )
+        parts: list[QWidget] = [orders]
+        for title, section_id, entries, empty in (
+            (
+                church_forms.ordinations_title(career),
+                ORDINATIONS_SECTION,
+                church_forms.ordination_entries(c),
+                church_forms.ordination_rows(c)[0][1],
+            ),
+            (
+                church_forms.petitions_title(career),
+                PETITIONS_SECTION,
+                church_forms.petition_entries(c),
+                church_forms.petition_rows(c)[0][1],
+            ),
+            (
+                church_forms.canon_title(career),
+                CANON_SECTION,
+                church_forms.case_entries(c),
+                church_forms.canon_rows(c)[0][1],
+            ),
+        ):
+            chooser = Chooser()
+            parts.append(
+                section(
+                    title,
+                    p,
+                    church_ledger(entries, p, chooser, self.inspect, empty),
+                    buttons=verb_buttons(ops[section_id], chooser, self.run, p),
+                )
+            )
+        return scrolling_page(p, *parts)
+
 
 def _left_out(character: Character) -> set[str]:
     """The chapters the character's sheet doesn't have: Hermetic Magic but
@@ -1600,6 +1675,8 @@ def _left_out(character: Character) -> set[str]:
         left.add("Statblock")
     if character.detail == LINE:
         left |= {"Abilities", "Virtues & Flaws", "Hermetic Magic", "Research"}
+    if cs.has_statblock(character) or not clergy_rules.has_church_tab(character):
+        left.add("Church")
     return left
 
 

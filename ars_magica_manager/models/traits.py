@@ -24,6 +24,13 @@ class VirtueFlawInstance:
     vf_id: str
     params: dict[str, str] = field(default_factory=dict)
     id: str = field(default="", compare=False)
+    #: Gained by magic for a while: most magical grants of a Virtue, and
+    #: hedge curses laying a Flaw, are limited (Grogs pp. 62-63). It ends
+    #: in `ends_season` of `ends_year` when those are set, and is taken off
+    #: with Gain or Lose in Play. Not compared, like `id`.
+    temporary: bool = field(default=False, compare=False)
+    ends_year: int | None = field(default=None, compare=False)
+    ends_season: str = field(default="", compare=False)
 
 
 def new_instance_id() -> str:

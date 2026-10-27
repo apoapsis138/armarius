@@ -315,6 +315,71 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_dialog_contracts_character.py",
         "test_season_forms.py",
     ),
+    # The spell design's Guideline picker (HoH:S, MoH guidelines).
+    "ars_magica_manager/forms/spell_guideline.py": (
+        "test_spell_guidelines.py",
+        "test_spell_template.py",
+    ),
+    # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
+    "ars_magica_manager/forms/vf_change.py": ("test_dialog_contracts_character.py",),
+    # A covenant's ships: the Ships list, its forms and More (HP; C&G).
+    "ars_magica_manager/ships.py": (
+        "test_sheet_text.py",
+        "test_list_flows.py",
+        "test_dispatch_matrix.py",
+    ),
+    "ars_magica_manager/forms/ships.py": ("test_dialog_contracts_covenant.py",),
+    "ars_magica_manager/gui/ships.py": ("test_gui_ships.py",),
+    # The Rhine's Great Library tab (Guardians of the Forests).
+    "ars_magica_manager/tribunal_packages/rhine_library.py": (
+        "test_great_library.py",
+        "test_dialog_contracts_tribunal.py",
+        "test_list_flows.py",
+        "test_sheet_text.py",
+        "test_dispatch_matrix.py",
+    ),
+    "ars_magica_manager/gui/ledger_rows.py": ("test_tribunals.py",),
+    # Shaping the land by magic: More's Shape the Land on Income (TME).
+    "ars_magica_manager/forms/land_shaping.py": ("test_dialog_contracts_covenant.py",),
+    "ars_magica_manager/forms/land_seasons.py": ("test_dialog_contracts_character.py",),
+    # A cleric's career: the Church tab, its forms and lists (The Church).
+    "ars_magica_manager/forms/church.py": (
+        "test_clergy.py",
+        "test_dialog_contracts_character.py",
+        "test_list_flows.py",
+        "test_gui_church.py",
+    ),
+    "ars_magica_manager/rules/clergy.py": ("test_clergy.py",),
+    "ars_magica_manager/gui/church.py": ("test_gui_church.py",),
+    # A covenant's Hermetic Projects: the Projects tab, its forms and lists,
+    # and Open a Tunnel (Hermetic Projects).
+    "ars_magica_manager/hermetic_projects.py": (
+        "test_hermetic_projects.py",
+        "test_dialog_contracts_covenant.py",
+        "test_list_flows.py",
+        "test_screens_projects.py",
+        "test_gui_projects.py",
+    ),
+    "ars_magica_manager/forms/tunnel.py": (
+        "test_hermetic_projects.py",
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/forms/tower_seasons.py": ("test_hermetic_projects.py",),
+    # Saga Content's Mystery Cults: their tests, the forms' contracts, the
+    # lists' flow and the Saga Content screens.
+    "ars_magica_manager/mystery_cults.py": (
+        "test_own_cults.py",
+        "test_dialog_contracts_saga.py",
+        "test_list_flows.py",
+    ),
+    "ars_magica_manager/forms/mystery_cults.py": (
+        "test_own_cults.py",
+        "test_dialog_contracts_saga.py",
+        "test_list_flows.py",
+        "test_saga_content.py",
+    ),
+    "ars_magica_manager/gui/mystery_cults.py": ("test_gui_sheet.py",),
+    "ars_magica_manager/models/mystery_cults.py": ("test_own_cults.py",),
 }
 
 

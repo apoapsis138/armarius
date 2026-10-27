@@ -7,7 +7,9 @@ from typing import Any
 
 from ..arts import ART_BY_NAME
 from .common import SEASONS, known_fields, move_secrets
+from .hermetic_projects import HermeticProject, projects_from
 from .holdings import Economics, Inhabitant, Loyalty, Population, Possession
+from .land_shaping import LandProject
 from .traits import ScoredTrait, VirtueFlawInstance
 from .world import FULL, Attitude, Favour, Link
 
@@ -294,6 +296,13 @@ class Covenant:
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""
+    # Hermetic Projects (Hermetic Projects pp. 36-41): the great works it
+    # has begun, and the one its Projects tab shows ("" for the first).
+    hermetic_projects: list[HermeticProject] = field(default_factory=list)
+    project_shown: str = ""
+    # Shaping the land (Transforming Mythic Europe pp. 54-77): the islands
+    # it is raising by magic. Older saves load with none.
+    land_projects: list[LandProject] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
@@ -357,6 +366,18 @@ class Covenant:
                         pawns=int(pawns),
                     )
                 )
+        # Hermetic Projects.
+        d["hermetic_projects"] = projects_from(
+            d.get("hermetic_projects"), str(d.get("name") or d.get("id") or "")
+        )
+        d["project_shown"] = str(d.get("project_shown") or "")
+        # Shaping the land.
+        land = d.get("land_projects") or []
+        if not isinstance(land, list):
+            raise ValueError(
+                f"{d.get('name')!r}'s land projects should be a list, not {land!r}."
+            )
+        d["land_projects"] = [LandProject.from_dict(p) for p in land]
         return cls(**known_fields(cls, d))  # drops the retired `library_id`
 
 

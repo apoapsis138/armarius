@@ -25,6 +25,7 @@ from ars_magica_manager.models import (
     KnownSpell,
     MasteryAbility,
     Saga,
+    Spell,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import (
@@ -176,13 +177,72 @@ def test_fenicils_rituals():
 
 def test_lineage_mastery_abilities_on_the_spell():
     abilities = {house_mastery.STALWART: 1, house_mastery.DISGUISED: 1}
-    found = house_mastery.notes(abilities, 3, ritual=True, general=False)
+    found = house_mastery.notes(abilities, 3, ritual=True)
     assert any("half the Fatigue" in f for f in found)
     assert any("+3" in f for f in found)
     assert house_mastery.stalwart_ritual_fatigue(3) == 2
-    assert house_mastery.problems(
-        {house_mastery.TETHERED: 1}, ritual=True, general=False
+    assert house_mastery.problems({house_mastery.TETHERED: 1}, ritual=True)
+    # Errata p. 46: Adaptive Casting is no longer for General spells only.
+    assert house_mastery.problems({house_mastery.ADAPTIVE: 1}, ritual=False) == []
+
+
+def _spell(sid: str, **changed: object) -> Spell:
+    values: dict[str, object] = {
+        "id": sid,
+        "name": sid.title(),
+        "technique": "Perdo",
+        "form": "Vim",
+        "level": 30,
+        "range": "Voice",
+        "duration": "Momentary",
+        "target": "Individual",
+        "base_level": 15,
+    }
+    values.update(changed)
+    return Spell(**values)  # type: ignore[arg-type]
+
+
+def test_similar_spells_follow_the_de():
+    oblivion = _spell("oblivion")
+    # The same effect at another Range, Duration or Target.
+    assert house_mastery.similar(oblivion, _spell("o2", level=25, range="Touch"))
+    # A related effect at the same Range, Duration and Target.
+    assert house_mastery.similar(oblivion, _spell("o3", base_level=10))
+    assert not house_mastery.similar(
+        oblivion, _spell("o4", base_level=10, range="Sight")
     )
+    assert not house_mastery.similar(oblivion, _spell("o5", form="Ignem"))
+    assert not house_mastery.similar(oblivion, oblivion)
+
+
+def test_adaptive_casting_lends_one_similar_mastery_at_a_time():
+    # The Errata's example (p. 46): two masteries of Demon's Eternal
+    # Oblivion, each with Adaptive; a casting uses one of them.
+    cast = _spell("doe20", level=20, range="Touch")
+    mastered = [
+        (
+            _spell("doe30", name="Oblivion 30"),
+            3,
+            {house_mastery.ADAPTIVE: 1, "penetration": 1},
+        ),
+        (
+            _spell("doe25", name="Oblivion 25", level=25),
+            4,
+            {house_mastery.ADAPTIVE: 1, "quiet casting": 2},
+        ),
+        (_spell("plain", name="Plain", level=25), 5, {"penetration": 1}),
+        (_spell("other", name="Other", form="Ignem"), 5, {house_mastery.ADAPTIVE: 1}),
+    ]
+    options = house_mastery.adaptive_masteries(cast, mastered)
+    assert [(o.name, o.score) for o in options] == [
+        ("Oblivion 30", 3),
+        ("Oblivion 25", 4),
+    ]
+    note = house_mastery.adaptive_note(0, options)
+    assert "Oblivion 30's (score 3: Adaptive Casting, Penetration)" in note
+    assert "Quiet Casting x2" in note and "only one mastery" in note
+    assert "instead of its own" in house_mastery.adaptive_note(2, options)
+    assert house_mastery.adaptive_note(0, []) == ""
 
 
 def test_lab_mastery_adds_the_mastery_score_for_a_similar_spell():
@@ -209,6 +269,32 @@ def test_the_known_spell_lines_name_a_lineage_ability():
         saga, magus, magus.spells_known[0], spell
     )
     assert any("ended at will" in line for line in lines)
+
+
+def test_the_known_spell_lines_offer_an_adaptive_mastery():
+    saga = _saga()
+    magus = saga.characters[0]
+    spell = saga.spells[2]  # Spark, CrIg 10
+    spell.base_level = 5
+    # The same effect at Touch: similar (DE p. 260).
+    twin = _spell(
+        "twin", name="Twin", technique="Creo", form="Ignem", base_level=5, range="Touch"
+    )
+    saga.spells.append(twin)
+    magus.spells_known = [
+        KnownSpell(spell.id),
+        KnownSpell(
+            "twin",
+            mastery_score=2,
+            mastery_abilities=[MasteryAbility("Adaptive Casting")],
+        ),
+    ]
+    lines = casting_text.known_spell_casting_lines(
+        saga, magus, magus.spells_known[0], spell
+    )
+    assert any(
+        "Adaptive Casting" in line and "Twin's (score 2" in line for line in lines
+    )
 
 
 # -- the Curious Common Magics --

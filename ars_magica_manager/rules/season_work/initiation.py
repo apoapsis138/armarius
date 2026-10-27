@@ -26,6 +26,7 @@ from ...models import (
     TraditionDef,
     VirtueFlawInstance,
 )
+from ...models.mystery_cults import LATER_LORE, is_saga_cult
 from .. import activity_groups as groups
 from .. import bjornaer, dice, enchantment, merinita, mysteries, verditius
 from .. import tradition_seasons as ts
@@ -420,6 +421,7 @@ def _undergo_initiation(
     mystagogue = saga.character(plan.teacher_id) or character
     trait, name, lore, script = _initiation_terms(mystagogue, plan, character)
     result.notes += _script_notes(character, plan)
+    result.notes += _later_lore_warning(character, plan)
     beast = _bjornaer_terms(character, mystagogue, plan, name, result)
     lore = beast[1] if beast is not None else lore
     target = initiation_target(saga, character, plan)
@@ -506,6 +508,30 @@ def _undergo_initiation(
         + ordeal
         + gains
     )
+
+
+def _later_lore_warning(initiate: Character, plan: SeasonPlan) -> list[str]:
+    """A saga cult's guideline, as a warning the troupe may set aside: the
+    second and later Initiations typically need the Lore at 3. They are
+    counted by the Initiations taken (the cult's Virtues the Initiate
+    holds), not by the degree; only the Lore at 1 is a must (The
+    Mysteries Revised Edition pp. 11, 13; DE p. 387)."""
+    hedge = ts.hedge_script(plan.hedge_script)
+    if hedge is None or not is_saga_cult(hedge[0].id):
+        return []
+    tradition = hedge[0]
+    rule = tradition.initiation
+    assert rule is not None  # ts.hedge_script finds Scripts only in a rule
+    virtues = set(tradition.virtues)
+    taken = sum(1 for vf in initiate.virtues_flaws if vf.vf_id in virtues)
+    score = _hedge_lore(initiate, rule.lore)
+    if not taken or score >= LATER_LORE:
+        return []
+    return [
+        f"{initiate.name} has taken {taken} of the cult's Initiations, and a "
+        f"later one typically needs {rule.lore} {LATER_LORE} (he has {score}): "
+        "the troupe may allow it (TMRE p. 13)."
+    ]
 
 
 def _house_hubris(character: Character, vf_id: str, result: SupplementWork) -> None:

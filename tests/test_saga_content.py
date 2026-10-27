@@ -294,7 +294,7 @@ async def test_the_spells_tab_lists_only_spells_in_play():
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open_content(pilot, app)
         view = workspace._saga_content_view
-        await pilot.press("5")
+        await pilot.press("6")
         section = view.query_one("#section-spells", Collapsible)
         assert await wait_until(
             pilot, lambda: section.title == f"Spells ({core} of {every})"

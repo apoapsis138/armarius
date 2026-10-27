@@ -352,6 +352,49 @@
         "Auram",
         "Imaginem"
       ]
+    },
+    {
+      "id": "labfeat_fumes",
+      "source": "HP",
+      "name": "Fumes",
+      "description": "A glass sphere on a plinth, holding swirling noxious vapours taken from a volcanic vent (Hermetic Projects p. 26).",
+      "specializations": [
+        "Perdo",
+        "Auram",
+        "Ignem"
+      ]
+    },
+    {
+      "id": "labfeat_pool_of_lava",
+      "source": "HP",
+      "name": "Pool of Lava",
+      "description": "The lab encloses a pool of lava, or a cauldron keeps a sample of it molten (Hermetic Projects p. 26).",
+      "specializations": [
+        "Ignem",
+        "Terram"
+      ]
+    },
+    {
+      "id": "labfeat_thermal_spring",
+      "source": "HP",
+      "name": "Thermal Spring",
+      "description": "A volcanically heated spring bubbles up in the middle of the lab (Hermetic Projects p. 27).",
+      "specializations": [
+        "Creo",
+        "Aquam",
+        "Ignem"
+      ]
+    },
+    {
+      "id": "labfeat_volcanic_rock",
+      "source": "HP",
+      "name": "Volcanic Rock",
+      "description": "A huge slab of volcanic rock lies at the lab's centre (Hermetic Projects p. 27).",
+      "specializations": [
+        "Muto",
+        "Ignem",
+        "Terram"
+      ]
     }
   ]
 }

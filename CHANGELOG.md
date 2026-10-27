@@ -109,6 +109,61 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.26.0 — 2026-10-27
+
+### Sodales
+
+- **A cleric's career** (The Church pp. 25-38, 46-48): a Church tab for a
+  character with a grade, a petition or a canon case: his Holy Orders and
+  the ladder of grades, Ordinations with their examinations, Petitions to
+  the Church and the Canon Court; an Ordination season that swaps his
+  Social Status for the clergy's; Perform an Exorcism.
+- **Virtues and Flaws gained and lost in play** (Grogs pp. 61-64), with
+  temporary magical grants that end.
+
+### Pagina
+
+- **Ships** in a covenant's Possessions (Hermetic Projects pp. 53-62; City
+  & Guild pp. 77, 86-87): their crew, cargo, quality and damage, stress
+  checks and ship combat.
+- **Hermetic Projects** (pp. 26-44, 78-95): a Projects tab once a project
+  is begun, the Great Tower with its master mason, works and craft
+  devices, Conjure Levels and the stress check, a Build the Great Tower
+  season; Open a Tunnel; the Burning City's volcanic lab Features and
+  Virtues.
+- **Shape the Land** (Transforming Mythic Europe pp. 53-77): an island
+  raised by Ritual, its wall, fill, acres and manors.
+
+### Orbis
+
+- **Egyptian tombs** (Lands of the Nile pp. 32-46): a Tomb tab on a place,
+  with its curses, talismans and wards, traps and Overcome It.
+
+### Concilium
+
+- **The Great Library** of Durenmar (Guardians of the Forests pp. 55-58):
+  credit, searches by the book's rolls, and books lent only while credit
+  is paid.
+
+### Florilegium
+
+- **A saga's own Supernatural Abilities** in House Rules (HoH: Societates
+  pp. 103-106), with their Virtue.
+- **A saga's own Mystery Cults**, with degrees, Scripts and experiments
+  (The Mysteries Revised pp. 13-19), in a tab of their own.
+- **The spell-guideline catalog**: Societates' and Magi of Hermes'
+  guidelines, offered on Invent Spell.
+
+### Computus
+
+- **House magic**: Mercere's Portals and Mutantum spells (HoH: True
+  Lineages pp. 99-108); Tytalus disguises and personae (HoH: Societates
+  pp. 86-91); Adaptive Casting on any similar spell (Errata p. 46).
+- **Books by magic** and the covenant's savings by magic (Transforming
+  Mythic Europe pp. 98-122), capped at half the Provisions.
+- **Mythic Locations**' Mercurian rituals (pp. 96-101), with its other set
+  pieces as help.
+
 ## 3.25.0 — 2026-10-27
 
 ### Computus

@@ -655,6 +655,7 @@ def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
         "Catalogs",
         "Goods",
         "House Rules",
+        "Mystery Cults",
         "Spells",
         "Players",
     ]

@@ -20,6 +20,7 @@ from .... import (
     arms,
     book_value,
     catalog,
+    hermetic_projects,
     manors,
     seasons,
     town_charter,
@@ -116,6 +117,13 @@ class CovenantSheetView(KindTabsView):
             }
         self.core_ops.update(charter_forms.charter_ops(saga, covenant))
         self.core_ops.update(secrets_ops(covenant))
+        # A covenant's Hermetic Projects: their tab, once one is begun.
+        self.shows_projects = not self.sketch and hermetic_projects.has_projects(
+            covenant
+        )
+        self._projects_tab = hermetic_projects.projects_tab(saga, covenant)
+        if self.shows_projects:
+            self.core_ops.update(hermetic_projects.covenant_ops(saga, covenant))
         self._register_refreshers()
 
     def _register_refreshers(self) -> None:
@@ -211,6 +219,13 @@ class CovenantSheetView(KindTabsView):
             yield self._tab("Inhabitants", "tab-cov-inhabitants", self._inhabitants_tab)
             yield self._tab("Seasons", "tab-cov-seasons", self._seasons_tab)
             yield self._tab("Possessions", "tab-cov-possessions", self._possessions_tab)
+            # A covenant's Hermetic Projects, once one is begun.
+            if self.shows_projects:
+                yield self._tab(
+                    "Projects",
+                    hermetic_projects.TAB_ID,
+                    partial(self._kind_tab, self._projects_tab),
+                )
             yield self._tab("Economics", "tab-cov-economics", self._economics_tab)
             yield self._tab(
                 "Manors",
@@ -590,10 +605,18 @@ class CovenantSheetView(KindTabsView):
                     with SheetSection(
                         title=self._pos_title(kind), id=f"section-pos-{kind}"
                     ):
-                        yield TableHeader(pos.table_header(kind))
-                        yield SelectableList(
+                        header = TableHeader(pos.table_header(kind))
+                        rows = SelectableList(
                             self._pos_rows(kind), id=f"pos-{kind}-list", group="pos"
                         )
+                        if kind == "ship":
+                            # One ship, one row: a narrow window cuts the
+                            # Captain column short rather than wrap it.
+                            for widget in (header, rows):
+                                widget.styles.text_wrap = "nowrap"
+                                widget.styles.text_overflow = "ellipsis"
+                        yield header
+                        yield rows
                 yield from self._devices(
                     "covenant", self.covenant.id, "section-cov-devices", group="pos"
                 )
@@ -843,7 +866,18 @@ class CovenantSheetView(KindTabsView):
         return manors.manors_of(self.covenant)
 
     def kind_tabs(self) -> list[KindTab]:
-        return [] if self.sketch else [manors.COVENANT_TAB]
+        if self.sketch:
+            return []
+        # A covenant's Hermetic Projects tab, once one is begun.
+        projects = [self._projects_tab] if self.shows_projects else []
+        return [manors.COVENANT_TAB, *projects]
+
+    def stale(self) -> bool:
+        """Whether a project was begun (or the last one deleted) since the
+        sheet was built, so its Projects tab should come or go."""
+        return not self.sketch and self.shows_projects != (
+            hermetic_projects.has_projects(self.covenant)
+        )
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A Boon or Hook row was chosen: fill the details panel. (Reputations

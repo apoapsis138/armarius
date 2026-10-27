@@ -18,6 +18,7 @@ from .... import spells as spl
 from ....form_spec import DialogField
 from ....forms import goods as goods_forms
 from ....forms import importing as import_forms
+from ....forms import mystery_cults as cult_forms
 from ....forms import saga_content as content_forms
 from ....markup import escape
 from ....models import (
@@ -27,7 +28,7 @@ from ....models import (
     SagaSource,
     Spell,
 )
-from ....sections import GOODS_SECTION
+from ....sections import CULT_DEGREES_SECTION, GOODS_SECTION
 from ..fields import FieldsDialog
 from ..forms import (
     _book_fields,
@@ -455,6 +456,22 @@ class LibraryActions(WorkspaceBase):
             self.app,
             goods_forms.add_purity(self.saga, view.section_row(GOODS_SECTION)),
             lambda _end: self._commit(GOODS_SECTION),
+        )
+
+    def action_experiment_script(self) -> None:
+        """More's Experiment on a Script on the chosen degree of the chosen
+        Mystery Cult (Saga Content's Mystery Cults tab)."""
+        view = self._saga_content_view
+        if view is None:
+            return
+        run_steps(
+            self.app,
+            cult_forms.experiment_form(
+                self.saga,
+                view.chosen_cult,
+                view.section_row(CULT_DEGREES_SECTION),
+            ),
+            lambda _end: self._commit(CULT_DEGREES_SECTION),
         )
 
     def _show_catalog_entry(self) -> None:

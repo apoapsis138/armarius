@@ -23,6 +23,8 @@ from ..models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_RESOURCE,
+    BREAD_SHARES,
+    GRAIN_CARE,
     INCOME_TYPE_DEFAULTS,
     INCOME_TYPES,
     SEASONS,
@@ -34,7 +36,7 @@ from ..models import (
     boon_hook_params,
     new_instance_id,
 )
-from ..rules import realms, sites
+from ..rules import realms, sites, tme_books
 from .possession import contested_fields
 from .tribunal import package_fields, save_package_fields, tribunal_field
 from .virtue import param_choices, param_fields, params_from
@@ -516,10 +518,11 @@ ECONOMICS_TYPED_LABELS: dict[str, str] = {
 
 
 def economics_row_fields(
-    covenant: Covenant, which: str, row: eco.Row
+    covenant: Covenant, which: str, row: eco.Row, saga: Saga | None = None
 ) -> list[DialogField]:
     """A Yearly Expenditure (`which` "expenditure") or Cost Savings row:
-    the figures typed rather than calculated, and its Notes."""
+    the figures typed rather than calculated, and its Notes (the Magic row
+    also its devices, Ritual castings and magical grain, given the saga)."""
     economics = covenant.economics
     first = "Cost" if which == "expenditure" else "Quantity"
     fields = [DialogField("_n", "Row", "info", row.name)]
@@ -548,16 +551,77 @@ def economics_row_fields(
                 hint="Each adds a pound of Wages a year (DE p. 193).",
             )
         )
+    if row.key == "magic" and saga is not None:
+        fields += magic_savings_fields(saga, covenant)
     fields.append(
         DialogField("notes", "Notes", "text", economics.notes.get(row.key, ""))
     )
     return fields
 
 
-def economics_row_form(covenant: Covenant, which: str, row: eco.Row) -> Form:
+def magic_savings_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
+    """The Magic row's own figures (Covenants p. 67; Transforming Mythic
+    Europe pp. 120-121): which of the covenant's devices do covenfolk's
+    work, the magnitudes of Ritual spells cast for it this year, and its
+    store of grain made by magic."""
+    economics = covenant.economics
+    chosen = set(economics.saving_devices)
+    fields = [
+        DialogField(
+            eco.SAVES_PREFIX + device.id,
+            f"{escape(device.name)} does covenfolk's work",
+            "check",
+            device.id in chosen,
+            hint=f"{tme_books.device_magnitudes(device)} magnitude(s): a pound "
+            "each a year (Covenants p. 67).",
+        )
+        for device in eco.covenant_devices(saga, covenant)
+    ]
+    fields += [
+        DialogField(
+            "ritual_magnitudes",
+            "Ritual magnitudes cast this year",
+            "int",
+            economics.ritual_magnitudes,
+            hint="Five pounds each (Covenants p. 67); back to 0 at the year's end.",
+        ),
+        DialogField(
+            "magic_grain",
+            "Magical grain in store (bushels)",
+            "int",
+            economics.magic_grain,
+            hint=f"Fill the Capacious Silo makes {tme_books.SILO_BUSHELS:,}; each "
+            f"point of inhabitants eats {tme_books.BUSHELS_PER_POINT} a year "
+            "(TME pp. 120-121).",
+        ),
+        DialogField(
+            "grain_care",
+            "Its store",
+            "select",
+            economics.grain_care,
+            options=pairs(GRAIN_CARE),
+            hint="Protected well loses a twentieth a year, protected a tenth, "
+            "covered only a fifth (TME p. 121).",
+        ),
+        DialogField(
+            "bread_share",
+            "Bread in the provisions",
+            "select",
+            economics.bread_share,
+            options=pairs(BREAD_SHARES),
+            hint="Half saves 5 shillings a point of inhabitants, three quarters "
+            "7 1/2 (TME p. 120).",
+        ),
+    ]
+    return fields
+
+
+def economics_row_form(
+    covenant: Covenant, which: str, row: eco.Row, saga: Saga | None = None
+) -> Form:
     return Form(
         f"Edit {row.name}",
-        lambda: economics_row_fields(covenant, which, row),
+        lambda: economics_row_fields(covenant, which, row, saga),
         lambda values: eco.apply_row_edit(covenant.economics, row.key, values),
         validate=lambda values: eco.row_problem(row.key, values),
     )
@@ -617,7 +681,7 @@ def edit_economics_row(saga: Saga, covenant: Covenant, which: str, index: int):
         and eco.emergency_draw(summary) > 0
     ):
         return emergency_draw(covenant, row, summary)
-    return economics_row_form(covenant, which, row)
+    return economics_row_form(covenant, which, row, saga)
 
 
 def economics_row_ops(saga: Saga, covenant: Covenant, which: str) -> SectionOps:

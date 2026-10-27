@@ -7,6 +7,7 @@ styles (Holy or Chthonic Magic, Goetic Arts, Hermetic rites) close it."""
 
 from __future__ import annotations
 
+from . import catalog
 from . import spells as spl
 from . import vis as vis_stores
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
@@ -21,6 +22,7 @@ from .rules import (
     certamen,
     craft_magic,
     goetic,
+    house_magic,
     house_mastery,
     lacunae,
     penetration,
@@ -316,6 +318,10 @@ def known_spell_casting_lines(
     )
     if demon_work:
         lines.append(escape(demon_work))
+    # House Mercere's Mutantum qualities and the Cult of Heroes' rituals.
+    lines += [escape(line) for line in house_magic.spell_lines(spell)]
+    if why := house_magic.cast_problem(magus, spell):
+        lines.append(problem(escape(why)))
     if casting_virtues.incompatible(
         magus, spell.technique, spell.form, tuple(spell.requisites)
     ):
@@ -401,7 +407,32 @@ def known_spell_casting_lines(
             f"less still casts it for {short}, unless a stressed die botches."
         )
     lines += _mastery_lines(magus, known, spell, abilities)
+    lines += _adaptive_lines(saga, magus, known, spell)
     return lines
+
+
+def _adaptive_lines(
+    saga: Saga, magus: Character, known: KnownSpell, spell: Spell
+) -> list[str]:
+    """The masteries of the magus's similar spells that Adaptive Casting
+    lets him use on this one, one at a time (Errata p. 46)."""
+    mastered = []
+    for other in magus.spells_known:
+        if other is known or not other.mastery_score:
+            continue
+        found = catalog.find_spell(saga, other.spell_id)
+        if found is not None:
+            mastered.append(
+                (
+                    found,
+                    other.mastery_score,
+                    casting.mastery_counts(other.mastery_abilities),
+                )
+            )
+    note = house_mastery.adaptive_note(
+        known.mastery_score, house_mastery.adaptive_masteries(spell, mastered)
+    )
+    return [escape(note)] if note else []
 
 
 def _mastery_lines(
@@ -438,9 +469,7 @@ def _mastery_lines(
         found.append(f"+{abilities[casting.PRECISE_CASTING]} to its Finesse rolls")
     if abilities.get(casting.QUICK_CASTING) and not spell.ritual:
         found.append(f"+{abilities[casting.QUICK_CASTING]} Initiative")
-    found += house_mastery.notes(
-        abilities, score, ritual=spell.ritual, general=spell.level is None
-    )
+    found += house_mastery.notes(abilities, score, ritual=spell.ritual)
     # The Infernal's own Masteries (RoP: The Infernal pp. 122-124).
     found += goetic.mastery_notes(magus, abilities, score)
     if abilities.get(apotropaic.APOTROPAIC_MASTERY):

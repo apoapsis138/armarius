@@ -26,6 +26,7 @@ from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
 from ....forms import agents as agent_forms
+from ....forms import church as church_forms
 from ....forms import constant_effect as constant_forms
 from ....forms import power as power_forms
 from ....forms import tradition as tradition_forms
@@ -38,9 +39,18 @@ from ....models import (
     TraditionDef,
 )
 from ....rules import activities as season_rules
+from ....rules import clergy as clergy_rules
 from ....rules import creation_virtues as cv
 from ....rules import library
-from ....sections import AGENTS_SECTION, CONSTANT_EFFECTS_SECTION, POWERS_SECTION
+from ....sections import (
+    AGENTS_SECTION,
+    CANON_SECTION,
+    CONSTANT_EFFECTS_SECTION,
+    ORDERS_SECTION,
+    ORDINATIONS_SECTION,
+    PETITIONS_SECTION,
+    POWERS_SECTION,
+)
 from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
 from ....sections import CHAR_CALENDAR_SECTION as CALENDAR_SECTION
 from ....sheets import character as cs
@@ -71,6 +81,35 @@ AGENTS_SOURCES = (
     "tab-abilities",
     "section-vf-virtues",
     "section-vf-flaws",
+)
+
+#: The Church tab's lists, which share one details panel, and what its
+#: Holy Orders read besides its own: the Characteristics, Abilities and
+#: Virtues (the examination, the priesthood's requirements, the Social
+#: Status) and the record's age.
+ORDINATIONS_LIST = "char-ordinations-list"
+PETITIONS_LIST = "char-petitions-list"
+CANON_LIST = "char-canon-list"
+CHURCH_INFO = "church-info"
+CHURCH_LISTS = {
+    ORDINATIONS_LIST: ORDINATIONS_SECTION,
+    PETITIONS_LIST: PETITIONS_SECTION,
+    CANON_LIST: CANON_SECTION,
+}
+CHURCH_SECTIONS = (
+    ORDERS_SECTION,
+    ORDINATIONS_SECTION,
+    PETITIONS_SECTION,
+    CANON_SECTION,
+)
+CHURCH_SOURCES = (
+    *CHURCH_SECTIONS,
+    "section-char-info",
+    "section-char-characteristics",
+    "tab-abilities",
+    "section-vf-virtues",
+    "section-vf-flaws",
+    "section-reputations",
 )
 
 #: The Seasons Ahead list and the chosen season's plan under it.
@@ -146,6 +185,12 @@ class CharacterSheetView(SheetView):
         super().__init__(saga)
         self.character = character
         self.core_ops = secrets_ops(character)
+        #: Whether the sheet was built with the Church tab, and the row
+        #: chosen in one of its lists (its section and the row's index).
+        self._church_shown = clergy_rules.has_church_tab(character) and not (
+            cs.has_statblock(character)
+        )
+        self._church_chosen: tuple[str, int] | None = None
         if cs.has_statblock(character):
             self.INITIAL_TAB = "tab-statblock"
 
@@ -185,6 +230,10 @@ class CharacterSheetView(SheetView):
             if not sketch:
                 yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
                 yield self._tab("Agents", "tab-agents", self._agents_tab)
+                # A cleric's career: only for a character with a grade, a
+                # petition or a canon case.
+                if self._church_shown:
+                    yield self._tab("Church", "tab-church", self._church_tab)
                 yield self._tab(
                     "Planning", "tab-planning", self._scrolling(self._planning_tab)
                 )
@@ -875,6 +924,72 @@ class CharacterSheetView(SheetView):
                 id=AGENTS_INFO,
             )
 
+    def stale(self) -> bool:
+        """Whether the Church tab should come or go: the sheet was built
+        before the character had a grade, a petition or a case (or after
+        the last was deleted)."""
+        wanted = clergy_rules.has_church_tab(self.character) and not (
+            cs.has_statblock(self.character)
+        )
+        return wanted != self._church_shown
+
+    def _church_tab(self) -> ComposeResult:
+        """Holy Orders, Ordinations, Petitions and the Canon Court, with
+        one details panel for the chosen ordination, petition or case."""
+        saga, character = self.saga, self.character
+        self.core_ops.update(church_forms.ops(saga, character))
+        career = character.church
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with SheetSection(title="Holy Orders", id=ORDERS_SECTION):
+                    yield self._static(
+                        CHURCH_SOURCES,
+                        lambda: church_forms.orders_text(self.saga, self.character),
+                        id="char-orders-text",
+                    )
+                for section, list_id, title, header, rows in (
+                    (
+                        ORDINATIONS_SECTION,
+                        ORDINATIONS_LIST,
+                        lambda: church_forms.ordinations_title(career),
+                        church_forms.ordinations_header(),
+                        lambda: church_forms.ordination_rows(self.character),
+                    ),
+                    (
+                        PETITIONS_SECTION,
+                        PETITIONS_LIST,
+                        lambda: church_forms.petitions_title(career),
+                        church_forms.petitions_header(),
+                        lambda: church_forms.petition_rows(self.character),
+                    ),
+                    (
+                        CANON_SECTION,
+                        CANON_LIST,
+                        lambda: church_forms.canon_title(career),
+                        church_forms.canon_header(),
+                        lambda: church_forms.canon_rows(self.character),
+                    ),
+                ):
+                    with SheetSection(
+                        title=self._titled(section, section, title), id=section
+                    ):
+                        yield TableHeader(header)
+                        yield self._list(section, rows, id=list_id, group="church")
+            yield self._panel(CHURCH_SECTIONS, self._church_info, id=CHURCH_INFO)
+
+    def _church_info(self) -> str:
+        """The chosen ordination, petition or case in full."""
+        chosen = self._church_chosen
+        if chosen is None:
+            return church_forms.EMPTY_PANEL
+        section, index = chosen
+        info = {
+            ORDINATIONS_SECTION: church_forms.ordination_info,
+            PETITIONS_SECTION: church_forms.petition_info,
+            CANON_SECTION: church_forms.canon_info,
+        }[section]
+        return info(self.character, index)
+
     def selected_personality_trait(self) -> int | None:
         """Index into character.personality_traits of the chosen row, or None."""
         return self.query_one(
@@ -926,6 +1041,14 @@ class CharacterSheetView(SheetView):
             self.query_one(f"#{AHEAD_INFO}", Static).update(
                 seasons.ahead_info(self.saga, self.character, event.data_index)
             )
+            return
+        if list_id in CHURCH_LISTS:
+            event.stop()
+            index = event.data_index
+            self._church_chosen = (
+                None if index is None else (CHURCH_LISTS[list_id], index)
+            )
+            self.query_one(f"#{CHURCH_INFO}", Static).update(self._church_info())
             return
         if list_id == AGENTS_LIST:
             event.stop()

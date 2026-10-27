@@ -124,8 +124,9 @@ def test_lab_catalog_effects_are_modifiers():
         for m in entry.modifiers
         if m.applies_to == "lab_characteristic" and m.amount_param is None
     )
-    # Every value of the old characteristic map, and Empty's two choices.
-    assert fixed == 256
+    # Every value of the old characteristic map, Empty's two choices, and
+    # Hermetic Projects' five volcanic lab Virtues and Flaws (pp. 26-27).
+    assert fixed == 266
     read = sorted(id_ for id_, entry in by_id.items() if entry.characteristic_readings)
     assert read == [
         "labvf_greater_guardian",

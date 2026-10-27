@@ -60,7 +60,7 @@ CATALOGS: dict[str, SagaCatalog] = {
             "Boons & Hooks",
             _shared(catalog.load_covenant_boon_hook_catalog),
         ),
-        SagaCatalog("abilities", "Abilities", catalog.load_ability_catalog),
+        SagaCatalog("abilities", "Abilities", _shared(catalog.load_ability_catalog)),
         SagaCatalog("spells", "Spells", catalog.load_spell_catalog),
         SagaCatalog(
             "shapes_materials",

@@ -9,8 +9,10 @@ add into the same goal (rules.experiment).
 Rules: reference/rules-engine-reference.md §18, Ancient Magic:
 integrating a lost tradition and the breakthroughs summary; Hedge Magic
 RE's integrations whose Virtue is in the catalog; True Lineages' example
-discoveries of House Bonisagus (its rule of thumb: 30 points for a Minor
-Breakthrough, 45 for a Major).
+discoveries of House Bonisagus. A breakthrough's size is the Definitive
+Edition's: about 30 points for a Minor, 45 for a Major, 60 for a Hermetic
+(DE, Arcane Discovery: The Breakthrough, p. 277; True Lineages p. 28 gives
+the same rule of thumb).
 """
 
 from __future__ import annotations
@@ -32,6 +34,7 @@ TL = "Houses of Hermes: True Lineages"
 MOH = "Magi of Hermes"
 LOH = "Legends of Hermes"
 TCTC = "The Cradle and the Crescent"
+ML = "Mythic Locations"
 
 
 @dataclass(frozen=True)
@@ -401,6 +404,58 @@ INTEGRATIONS: tuple[Integration, ...] = (
         learned="Initiation into Virtues by a spirit's journey to the Magic "
         "Realm: Rego Vim Lab Total for Solomonic Travel, Magic Theory for Magic "
         "Lore; vis, the spirit's Might and the student's Warping as the sahirs'.",
+    ),
+    # Mythic Locations, The Temple of Mercury (pp. 100-101): the guidelines
+    # behind the recovered Mercurian rituals (rules.mythic_locations). The
+    # book gives the points; the kind follows the Definitive Edition's
+    # sizes, about 30 Minor, 45 Major, 60 Hermetic (DE, Arcane Discovery:
+    # The Breakthrough, p. 277; True Lineages p. 28 gives the same). A
+    # guideline grants nothing the app tracks: the troupe adds the spells
+    # it allows.
+    Integration(
+        "Mercurian aura creation",
+        "Minor",
+        30,
+        "A CrVi 50 Ritual guideline creating a Magic aura of 1 (Touch, "
+        "Momentary, Room base; Room, Structure or Boundary only) "
+        "(Mythic Locations p. 100).",
+        ML,
+    ),
+    Integration(
+        "Mercurian aura raising",
+        "Minor",
+        30,
+        "A CrVi 55 Ritual guideline raising a Magic aura by 1 to at most 2, "
+        "each further magnitude one higher, never past 10 (Mythic Locations "
+        "p. 100).",
+        ML,
+    ),
+    Integration(
+        "Mercurian regio entrance",
+        "Minor",
+        30,
+        "A Cr(Re)Vi 20 guideline opening an entrance into a Magic regio, cast "
+        "at a boundary the caster senses (Mythic Locations p. 100).",
+        ML,
+    ),
+    Integration(
+        "Mercurian Magic",
+        "Major",
+        45,
+        "The Mercurian rituals integrated into the Major Hermetic Virtue "
+        "Mercurian Magic (Mythic Locations p. 100).",
+        ML,
+        "Virtue",
+        "vf_mercurian_magic",
+    ),
+    Integration(
+        "Wizard's Initiation repaired",
+        "Hermetic",
+        60,
+        "A CrVi(Co) 75 Ritual guideline giving a human, Individual target The "
+        "Gift: the Mercurian ritual mended for the Age of Pisces (Mythic "
+        "Locations p. 101).",
+        ML,
     ),
 )
 

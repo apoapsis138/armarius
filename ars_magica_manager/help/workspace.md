@@ -221,7 +221,7 @@ magus or in their laboratory.
 - **Current date**: the season and year the saga is in, under its name. It is also shown on Advance Season, in the top bar of every page.
 <!-- /gui -->
 - **Books in play**: the sourcebooks the troupe uses, and how many of the saga's own sources are in play. They are chosen on [Saga Content](help:section-books-in-play), which says what a book out of play switches off.
-- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described beside it in Edit Saga; Harsher Infernal vis (Realms of Power: The Infernal), Extended book Quality (Covenants), Dominion growth (Realms of Power: The Divine) and Auras change (Realms of Power: Magic) are offered only while their book is in play. With Dominion Magic Resistance on, a Christian, Jew or Muslim (or anyone whose religion is left blank) living in a Dominion aura shows Magic Resistance of 5 x that aura on their sheet. Simple dice only and Dominion Magic Resistance are house rules the Definitive Edition offers as examples (Chapter 16: Sagas, Rules Questions, p. 524), not rules of the game; Extended book Quality comes from Covenants' Library chapter. Standard apprenticeship model (Apprentices) is offered only while that book is in play, off by default: see the Apprenticeship step of [the Creation Worksheet](help:creation-worksheet-steps). Learning cantations in play (Apprentices) is offered only while that book is in play, off by default: see [Learn a Cantation](help:learn-cantation).
+- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described beside it in Edit Saga; Harsher Infernal vis (Realms of Power: The Infernal), Extended book Quality (Covenants), Dominion growth (Realms of Power: The Divine) and Auras change (Realms of Power: Magic) are offered only while their book is in play. With Dominion Magic Resistance on, a Christian, Jew or Muslim (or anyone whose religion is left blank) living in a Dominion aura shows Magic Resistance of 5 x that aura on their sheet. Simple dice only and Dominion Magic Resistance are house rules the Definitive Edition offers as examples (Chapter 16: Sagas, Rules Questions, p. 524), not rules of the game; Extended book Quality comes from Covenants' Library chapter. Standard apprenticeship model (Apprentices) is offered only while that book is in play, off by default: see the Apprenticeship step of [the Creation Worksheet](help:creation-worksheet-steps). Learning cantations in play (Apprentices) is offered only while that book is in play, off by default: see [Learn a Cantation](help:learn-cantation). Hazardous Laboratory Texts and No magical copying of Lab Texts (Transforming Mythic Europe pp. 103-104) are offered only while that book is in play. With the first, a Lab Text copied by magic below the Finesse Total that copies it flawlessly isn't useless: each use of it makes an extra Experimentation roll, its risk modifier half the pages spoiled in ten (the season's Diary entry gives it). With the second, Copy books by magic refuses Lab Texts: each is written by hand.
 <!-- tui -->
 - **Keep season records**: when on, each season applied is kept under Seasons in the tree. When off, only the characters' Diaries keep them.
 <!-- /tui -->
@@ -787,18 +787,22 @@ A good's details show its class and page, its prices, how it is sold, its puriti
 ## House Rules tab
 <!-- help: tab-content-house-rules -->
 
-The Virtues, Flaws, Boons and Hooks made for this saga: house rules, or entries from books the app's catalogs don't carry. They show in the pickers alongside the catalog's entries.
+The Virtues, Flaws, Boons and Hooks made for this saga, and its own Abilities: house rules, or entries from books the app's catalogs don't carry. They show in the pickers alongside the catalog's entries.
 
 <!-- tui -->
-**You type:** with `a` and `e`: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, what it Asks for, a Description and, once the saga has sources of its own, the Source it comes from.
+**You type:** with `a` and `e`: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, a Covenant Boon or Hook, or an Ability; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, what it Asks for, a Description and, once the saga has sources of its own, the Source it comes from.
 <!-- /tui -->
 <!-- gui -->
-**You type:** with **Add** and **Edit**: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, what it Asks for, a Description and, once the saga has sources of its own, the Source it comes from.
+**You type:** with **Add** and **Edit**: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, a Covenant Boon or Hook, or an Ability; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, what it Asks for, a Description and, once the saga has sources of its own, the Source it comes from.
 <!-- /gui -->
 
 **Asks for** (a character's or covenant's entry only) lists what is chosen when the entry is taken, comma-separated, as the books' Puissant asks for an Ability: "Form" for a Vis Source Boon, say. Characteristic, Ability, Art, Technique, Form, Realm and Blood are chosen from a list; anything else is typed. Put a choice in the name in braces, "Vis Source ({form})", to have it shown there ("Vis Source (Aquam)"); otherwise it follows the name in brackets. What was chosen can be changed later with Edit on the Virtue, Flaw, Boon or Hook.
 
-**The app works out:** the points from the type and tier (Free 0, Minor 1, Major 3; Flaws and Hooks give points rather than cost them), and, in its details, who holds the entry. An entry citing one of the saga's sources is offered only while that source is in play; one citing none always is.
+**An Ability** is one the saga adds beside the catalog's, most often a Supernatural Ability designed for a tradition of House Ex Miscellanea or a storyguide's character (Houses of Hermes: Societates pp. 103-106). You give its Name, Category (Supernatural unless you choose another), and for a Supernatural one its Realm (Magic, unless it belongs to another realm), the Characteristic it Rolls with (left blank, the storyguide chooses each time), whether it is Accelerated (on the Art table, for Ease Factors like Mights or spell levels; Puissant gives it +2 and it isn't studied from vis, Societates p. 104; Errata p. 60 adds that it isn't limited at creation), a Description, and, when adding, whether to Add its Virtue. A designed Ability is a Major Supernatural Virtue's (p. 104), and a Virtue of the Ability's name grants it, so Add its Virtue also makes that Supernatural Virtue among the saga's own (not when a Virtue of that name is already offered). **Its Virtue is** Major unless you choose Minor: the Definitive Edition has Minor Virtues that grant an Ability too, such as Second Sight (DE p. 106). Write in the Description what it does: by the book, three of its Range, Duration, Target and base effect are fixed, and the fourth grows with its score, or with the Ease Factor reached when it affects other beings.
+
+**The app works out** for an Ability: its Casting Total (Characteristic + Ability + aura + die, against the storyguide's Ease Factor), its Penetration (Casting Total - Ease Factor + Penetration bonus), its level as a spell (5 x its score, or its Casting Total when Accelerated) and its vis limit (up to its score in pawns, +1 and a botch die each), all Houses of Hermes: Societates p. 104; and who holds it. Renaming an Ability renames it on every character, familiar and creature holding it, and renames its Virtue.
+
+, Minor 1, Major 3; Flaws and Hooks give points rather than cost them), and, in its details, who holds the entry. An entry citing one of the saga's sources is offered only while that source is in play; one citing none always is.
 
 ### House Rules
 <!-- help: section-house-rules -->
@@ -815,9 +819,58 @@ The list of the saga's own entries; the Inspector shows the one last clicked in 
 
 House rules are text only: the rules engine applies no effects for them. Two entries of the same kind can't share a name, type and tier. Delete won't delete an entry that a character, laboratory or covenant still holds; the message names them, so remove it there first.
 
-When a character, laboratory or covenant is exported, the house rules it uses go with it.
+An Ability has no type, tier or points, and two Abilities (the catalog's or the saga's) can't share a name. Delete won't delete an Ability someone holds; deleting one leaves its Virtue, which is deleted on its own. Whether an Ability is Accelerated can't change while someone holds it, since their score would change with it. On the desktop, its mark is its category's.
+
+When a character, laboratory or covenant is exported, the house rules and saga Abilities it uses go with it.
 
 **See also:** [Import Data](help:import-data), [How to import and export](help:guide-import-export)
+
+## Mystery Cults tab
+<!-- help: tab-content-cults -->
+
+The saga's own Mystery Cults, as The Mysteries Revised Edition pp. 18-19 has the troupe invent one. Each cult has its own Lore and its degrees. Each degree teaches one Mystery Virtue, and its Initiation Script is written out as its components. The Initiation season offers the cults' Scripts beside the catalog's cults, under Hedge Script.
+
+**You type:** the cult (its name, its Lore, its realm, the Characteristic its Initiations add, who may join, its founder and the year, what it is), its degrees and their Virtues, and each degree's Script.
+
+**The app works out:** who belongs to the cult, each degree's Target, a Script's bonus from its components, a Mystagogue's Initiation Total against it, and an experiment for a degree with no Script, or with one that falls short.
+
+**See also:** [House Rules tab](help:tab-content-house-rules), [How to initiate a character into a Mystery](help:guide-initiation)
+
+### The Saga's Mystery Cults
+<!-- help: section-content-cults -->
+
+Each cult the saga has invented: its Lore, realm, founder and how many degrees it has. The storyguide creates the cult's Lore, and its founders may start with it at 0 (TMRE pp. 18-19). A Lore written as "Mystery Cult Lore: (cult)" is the catalog's own Ability. Any other name becomes a new Ability the saga adds, which characters can take like any other. Renaming the Lore renames it on every character who has it. Deleting a cult leaves its members their Lore and Virtues, and the Initiation season no longer offers its Scripts.
+
+<!-- tui -->
+`a` adds a cult, `e` edits the chosen one and `d` deletes it after asking. Choosing a cult shows its degrees and Scripts below.
+<!-- /tui -->
+
+### The chosen cult
+<!-- help: section-content-cult -->
+
+The cult's Lore, realm and founding. Initiation is the Mystagogue's Presence (or the Characteristic the cult chose) + the Lore + the Script's bonus, with no die. A probationer needs the Lore at 1 before his first Initiation, and the season holds every Initiate to that. The second and later Initiations typically need 3 (TMRE pp. 11, 13; DE p. 387): counted by the Initiations he has taken (the cult's Virtues he holds), not by the degree, so a cult whose path may start anywhere is not held to it. The season only warns when he falls short, and the troupe may go ahead. Members are worked out, not listed: one joins by gaining the cult's Lore, so a member is everyone who has it, at any score, and the founder, who may have it at 0 (TMRE pp. 11, 13, 19). One of its Virtues alone doesn't make a member, since most can be taken at creation. Each member is shown at the highest degree whose Virtue he holds. Someone with only the Lore is a probationer. If anyone may join, an unGifted Initiate needs an Ordeal in every Initiation, and his past Ordeals don't lower its Target (Hedge Magic Revised Edition p. 14).
+
+### Degrees
+<!-- help: section-content-cult-degrees -->
+
+Each degree's name, the Mystery Virtue it teaches, its Script's bonus and its Target. Almost any Virtue may be Initiated, save those of birth or circumstance (TMRE p. 13). The saga's own Virtues are offered too. A Virtue that names something (an Art, an Ability) names it on the degree. The Target is 15 for a Minor Virtue and 21 for a Major one when a Mystagogue has the Virtue, and 18 and 30 when no one in the cult does (DE pp. 387-388). An Ordeal from an earlier Initiation lowers the next three Targets by 3/2/1, 6/4/2 or 9/6/3, never below 9.
+
+**Experiment on a Script**, for a degree with no Script yet, or whose Script can't reach the Target for one of the cult's Mystagogues (TMRE p. 18), asks for the Virtue, the Mystagogue (someone with the Lore at 1 or more), the Initiate (the Mystagogue herself, or someone else, which is harder), the bonus the proposed rite's components would give, the Flaw of its Ordeal, if it has one, and a risk of 0 to +3. It refuses a degree whose Script already reaches the Target for that Mystagogue and Initiate. Roll throws a stress die + the risk on the Extraordinary Results chart, then the validity roll: a simple die + risk + Intelligence + Lore against 9 + the bonus, or 15 + it on another Initiate. The rite's Ordeal Flaw is suffered whatever follows, even when the rite fails. A Disaster ends it: a second form asks for the Major Flaw the Mystagogue and the Initiate each gain. If the rite still stands, a second form asks for the storyguide's sympathy (-5 to +5) and what the chart's results become: each side effect, minor flaw or minor benefit a Personality Trait with its score ("Devoted to the cult +1"), each major flaw an extra Ordeal Flaw with no bonus, each major benefit a Virtue, and a modified effect the different Virtue it Initiates in place of the degree's own. The Initiation Total is then the Characteristic + Lore + bonus + sympathy + risk against the Target, which the Initiate's past Ordeals lower, never below 9 (TMRE p. 14). If it succeeds, the degree gets its Script (the rite as proposed with its Ordeal, the sympathy, the extra Ordeal Flaws, Virtues and Personality Traits, without the risk), replacing a Script that fell short, and the Initiate gains the Virtue (or the one Initiated instead), the extra Virtues, the Personality Traits and the Ordeal Flaws; the largest of these is kept as his Ordeal. The Initiate's season isn't planned for him. A failed rite's Quests and Ordeals can't count again (TMRE p. 19).
+
+<!-- tui -->
+`a` adds a degree, `e` edits the chosen one and `d` deletes it (and its Script) after asking. More's **Experiment on a Script** (`m`) acts on the chosen degree.
+<!-- /tui -->
+
+### The Script
+<!-- help: section-content-cult-scripts -->
+
+The chosen degree's Script, as its components with each one's bonus (TMRE pp. 15-16; DE p. 388): a special place at a special time +3 (once), a Quest +3 (+6 for a unique one), a Minor Ordeal +3, a Medium +6, a Major +9 (each with its Flaw), a Minor Virtue the Major one replaces +3, a sacrifice of goods +1 (once), a season serving the cult +1 (once), something of great value +3 to +6, the Mystagogue's time +3, and the rite's sympathy -5 to +5. The Script's bonus is their sum. A component that costs the Initiate nothing makes the whole Script void (TMRE p. 16).
+
+**Edit Script** sets how many of each kind of component the Script has. It keeps the words of the ones it keeps. Its Ordeal is the Script's first Ordeal (an experiment's extra Ordeal Flaws, which give no bonus, are kept as they are, and so are the Virtue it Initiates instead, its extra Virtues and its Personality Traits, shown in the degree's details), and **Mystagogue** picks someone to test the Script against: the Rite shows that person's Initiation Total and Target. The Mystagogue isn't saved. An experiment's rite stays as one lump until its components are written out; then set it to 0.
+
+<!-- tui -->
+On a degree with no Script, `a` writes one. Otherwise `a` adds a component (its kind, its bonus when the troupe sizes it, its Flaw for an Ordeal, and what it is), `e` edits the whole Script, and `d` removes the chosen component after asking.
+<!-- /tui -->
 
 ## Spells tab
 <!-- help: tab-content-spells -->

@@ -358,5 +358,6 @@ def apply(saga: Saga, plan: UpdatePlan) -> None:
     saga.custom_virtues_flaws += imported.custom.get("custom_virtues_flaws", [])
     saga.custom_lab_virtues_flaws += imported.custom.get("custom_lab_virtues_flaws", [])
     saga.custom_boons_hooks += imported.custom.get("custom_boons_hooks", [])
+    saga.custom_abilities += imported.custom.get("custom_abilities", [])
     bk.prune_codices(saga)
     catalog.use_saga(saga)

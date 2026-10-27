@@ -229,6 +229,15 @@ def bundle_data(
             e for e in saga.custom_lab_virtues_flaws if e.id in held
         ],
         custom_boons_hooks=[e for e in saga.custom_boons_hooks if e.id in held],
+        custom_abilities=[
+            a
+            for a in saga.custom_abilities
+            if any(
+                held_ability.name == a.name
+                for holder in [*characters, *familiars, *creatures]
+                for held_ability in holder.abilities
+            )
+        ],
     )
     content = asdict(mini)
     # The records the file points at but doesn't hold, by name.
@@ -541,6 +550,22 @@ def _map_entries(job: _Import) -> None:
             job.entry_map[entry.id] = new_id
             added.append(replace(entry, id=new_id))
         job.plan.custom[key] = added
+    # The saga's own Abilities are held by name: one the target already
+    # knows by that name is its own; any other is added.
+    in_use = catalog.saga_abilities()
+    known = {a.name.lower() for a in catalog.load_ability_catalog() if a not in in_use}
+    known |= {a.name.lower() for a in target.custom_abilities}
+    ability_ids = _Ids(
+        [
+            *catalog.load_ability_catalog_by_id(),
+            *(a.id for a in target.custom_abilities),
+        ]
+    )
+    job.plan.custom["custom_abilities"] = [
+        replace(a, id=ability_ids.new(a.id, a.name))
+        for a in source.custom_abilities
+        if a.name.lower() not in known
+    ]
 
 
 def _map_spells(job: _Import) -> None:
@@ -1042,6 +1067,7 @@ def apply(target: Saga, plan: ImportPlan) -> None:
     target.custom_virtues_flaws += plan.custom.get("custom_virtues_flaws", [])
     target.custom_lab_virtues_flaws += plan.custom.get("custom_lab_virtues_flaws", [])
     target.custom_boons_hooks += plan.custom.get("custom_boons_hooks", [])
+    target.custom_abilities += plan.custom.get("custom_abilities", [])
     target.neighbours += plan.neighbours
     target.creatures += plan.creatures
     target.calendar += plan.calendar

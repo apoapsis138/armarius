@@ -918,6 +918,124 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Kind": "war"}, {"Kind": "war", "Against": "Fengheld"}],
         shown={"#trib-cases": "Leandro declares"},
     ),
+    # A place's Tomb tab (Lands of the Nile pp. 32-46).
+    "edit tomb": Contract(
+        prefill={"Kind": "lesser_royal", "Centuries the burial ground": "3"},
+        edits={"Points of Hooks": "4", "Boons": "Seclusion"},
+        saved=lambda s: s.neighbour("drachenfels").details["tomb_boons"],
+        expected="Seclusion",
+        invalid={"Points of Hooks": "11"},
+        live={"#fields-live": "100 Build Points"},
+        shown={"#nb-tomb-facts": "Boons: Seclusion"},
+    ),
+    "add tomb curse": Contract(
+        prefill={"Name": "", "Kind": "Hermetic effect"},
+        edits={
+            "Name": "He Shall Have No Successors",
+            "Art": "PeCo",
+            "Level": "35",
+            "Condition": "Whoever breaks the seal",
+        },
+        saved=lambda s: [
+            (c["name"], c["level"])
+            for c in s.neighbour("drachenfels").details["tomb_curses"][1:]
+        ],
+        expected=[("He Shall Have No Successors", 35)],
+        invalid=[
+            {"Name": ""},
+            {"Name": "Seth", "Condition": "Whoever", "Kind": "Greater Malediction"}
+            | {"Level": "25"},
+        ],
+        live={"#fields-live": "14 Build Points"},
+        shown={"#nb-tomb-curses-list": "He Shall Have No Successors"},
+    ),
+    "edit tomb ward": Contract(
+        prefill={"Name": "Turn the Interloper", "Kind": "Ward", "Level": "30"},
+        edits={"Level": "35"},
+        saved=lambda s: s.neighbour("drachenfels").details["tomb_wards"][0]["level"],
+        expected=35,
+        invalid={"Level": "0"},
+        live={"#fields-live": "Ease Factor 16"},
+        shown={"#nb-tomb-wards-list": "EF 16, 14 BP"},
+    ),
+    "add tomb trap": Contract(
+        prefill={"Name": "", "What it does": "scare", "Ease Factor to avoid": "3"},
+        edits={
+            "Name": "Head Wires",
+            "What it does": "minor",
+            "Ease Factor to avoid": "15",
+        },
+        saved=lambda s: [
+            (t["name"], t["ease"])
+            for t in s.neighbour("drachenfels").details["tomb_traps"][1:]
+        ],
+        expected=[("Head Wires", 15)],
+        invalid={"Name": ""},
+        live={"#fields-live": "15 Build Points"},
+        shown={"#nb-tomb-traps-list": "Head Wires"},
+    ),
+    # Roll asks before writing the outcome in the place's diary: the form
+    # alone writes nothing.
+    "overcome trap": Contract(
+        prefill={"Harder or easier": "0", "His roll": "Qik + Athletics"},
+        edits={"Who acts": "mag1", "Harder or easier": "-3"},
+        saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
+        expected="Leandro found the path backwards.",
+        live={"#fields-live": "adjusted to 9"},
+    ),
+    # The Rhine's Great Library at Durenmar (Guardians of the Forests).
+    "search the great library": Contract(
+        prefill={
+            "Magus": "mag1",
+            "Looking for": "art",
+            "Art, Ability or spell": "",
+            "Level wanted": "15",
+        },
+        edits={"Looking for": "tractatus", "Art, Ability or spell": "Ignem"},
+        saved=lambda s: [
+            (e["sought"], e["subject"], e["outcome"], e["credit_taken"])
+            for e in s.tribunal("rhine").package_data["rhine"]["library_searches"][1:]
+        ],
+        expected=[("tractatus", "Ignem", "found", True)],
+        # Severinus has no credit there.
+        invalid=[
+            {"Art, Ability or spell": ""},
+            {"Magus": "mag_sketch", "Looking for": "tractatus"},
+        ],
+        live={"#fields-live": "No roll to find one"},
+        shown={"#trib-library-searches-list": "Ignem tractatus"},
+    ),
+    "contribute to the great library": Contract(
+        prefill={"Magus": "mag1", "Gives": "book", "Seasons of credit": "2"},
+        edits={"Gives": "vis", "What": "4 pawns of Vim", "Seasons of credit": "2"},
+        saved=lambda s: s.tribunal("rhine").package_data["rhine"]["library_credit"][0][
+            "given"
+        ][-1]["what"],
+        expected="4 pawns of Vim",
+        invalid={"Gives": "vis", "What": ""},
+        live={"#fields-live": "Taken, never acknowledged"},
+        shown={"#trib-library-credit-list": "4 seasons"},
+    ),
+    "edit library credit": Contract(
+        prefill={"Seasons granted besides": "0", "Seasons used": "0", "Note": ""},
+        edits={"Seasons used": "1", "Note": "Read the Vim tractatus"},
+        saved=lambda s: s.tribunal("rhine").package_data["rhine"]["library_credit"][0][
+            "used"
+        ],
+        expected=1,
+        invalid={"Seasons used": "-1"},
+        shown={"#trib-library-credit-list": "1 season"},
+    ),
+    "edit library search": Contract(
+        prefill={"Art, Ability or spell": "Vim", "Result": "found", "Quality": "7"},
+        edits={"Result": "certamen"},
+        saved=lambda s: s.tribunal("rhine").package_data["rhine"]["library_searches"][
+            0
+        ]["outcome"],
+        expected="certamen",
+        invalid={"Art, Ability or spell": ""},
+        shown={"#trib-library-searches-list": "Certamen"},
+    ),
 }
 
 

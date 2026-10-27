@@ -39,6 +39,11 @@ RESEARCH_AIDS_STACK = "research_aids_stack"
 #: model's xp and spell levels for the years so far.
 STANDARD_APPRENTICESHIP = "standard_apprenticeship"
 
+#: Copying Lab Texts by magic (Transforming Mythic Europe pp. 103-104): an
+#: imperfect copy is hazardous rather than useless; or none may be copied.
+HAZARDOUS_LAB_TEXTS = "hazardous_lab_texts"
+NO_MAGICAL_LAB_TEXTS = "no_magical_lab_texts"
+
 
 @dataclass(frozen=True)
 class RuleOption:
@@ -247,6 +252,34 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Cantations in Play, p. 46"
         ),
         book="App",
+    ),
+    # Copying Lab Texts by magic (Transforming Mythic Europe).
+    RuleOption(
+        key=HAZARDOUS_LAB_TEXTS,
+        label="Hazardous Laboratory Texts",
+        effect=(
+            "A Lab Text copied by magic below the Finesse Total that copies it "
+            "flawlessly isn't useless: each use makes an extra Experimentation "
+            "roll, its risk modifier half the pages spoiled in ten."
+        ),
+        source=(
+            "Transforming Mythic Europe, Optional Rule: Hazardous Laboratory "
+            "Texts, p. 103"
+        ),
+        book="TME",
+    ),
+    RuleOption(
+        key=NO_MAGICAL_LAB_TEXTS,
+        label="No magical copying of Lab Texts",
+        effect=(
+            "Lab Texts are too sensitive to scribal errors to copy with Rego "
+            "craft magic: each is written by hand."
+        ),
+        source=(
+            "Transforming Mythic Europe, Optional Rule: No Magical Copying of "
+            "Laboratory Texts, p. 104"
+        ),
+        book="TME",
     ),
 )
 

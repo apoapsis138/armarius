@@ -4,9 +4,10 @@ income."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from .common import known_fields
+from .ships import Ship
 
 #: The kinds of covenant inhabitant, in the order the Inhabitants tab lists them.
 INHABITANT_KINDS: tuple[str, ...] = (
@@ -83,6 +84,9 @@ LOYALTY_MONEY_DEFAULT = "Standard salary"
 
 #: The kinds of covenant possession, in the order the Possessions tab lists them.
 POSSESSION_KINDS: tuple[str, ...] = (
+    # A covenant's ships (Hermetic Projects; City & Guild): first, as the
+    # approved Possessions preview has them.
+    "ship",
     "property",
     "sanctum",
     "weapon",
@@ -276,12 +280,22 @@ class Possession:
     #: it has dwindled since (seasons.dwindle); None until its first year end.
     dwindling_from: int | None = None
     dwindled_years: int = 0
+    #: ship: her figures (models.ships.Ship); None for every other kind.
+    ship: Ship | None = None
 
     def __post_init__(self) -> None:
         if self.kind not in POSSESSION_KINDS:
             raise ValueError(
                 f"Unknown possession kind {self.kind!r}; must be one of {POSSESSION_KINDS}"
             )
+        # A saved ship comes back as a dict; a new one starts with defaults.
+        saved: object = self.ship
+        if isinstance(saved, dict):
+            self.ship = Ship.from_dict(
+                cast(dict[str, Any], saved), self.name or self.id
+            )
+        elif self.kind == "ship" and self.ship is None:
+            self.ship = Ship()
         if self.vis_kind not in VIS_KINDS:
             raise ValueError(
                 f"{self.name or self.id}: unknown kind of vis {self.vis_kind!r}; "
@@ -437,6 +451,13 @@ class IncomeSource:
         return INCOME_TYPE_DEFAULTS[self.type]
 
 
+#: Grain made by magic (Transforming Mythic Europe pp. 120-121): how its
+#: store is kept (a twentieth or a tenth lost a year at best, a fifth when
+#: only covered), and the share of the provisions that is bread.
+GRAIN_CARE: tuple[str, ...] = ("Protected well", "Protected", "Covered only")
+BREAD_SHARES: tuple[str, ...] = ("Half", "Three quarters")
+
+
 @dataclass
 class Economics:
     """What is stored for the covenant's Economics tab. Every figure that can be
@@ -462,6 +483,16 @@ class Economics:
     last_expenditure: int | None = None
     #: Free-text notes by row key ("buildings", "laborers"...).
     notes: dict[str, str] = field(default_factory=dict)
+    # Technological savings (Transforming Mythic Europe pp. 120-121): the
+    # covenant's enchanted devices doing covenfolk's work (device ids),
+    # the magnitudes of Ritual spells cast for it this year, and a store of
+    # grain made by magic (bushels), how it is kept and how much of the
+    # provisions is bread.
+    saving_devices: list[str] = field(default_factory=list)
+    ritual_magnitudes: int = 0
+    magic_grain: int = 0
+    grain_care: str = GRAIN_CARE[-1]
+    bread_share: str = BREAD_SHARES[0]
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Economics:
@@ -470,4 +501,15 @@ class Economics:
             IncomeSource(**known_fields(IncomeSource, s))
             for s in d.get("income_sources", [])
         ]
+        for key, allowed in (("grain_care", GRAIN_CARE), ("bread_share", BREAD_SHARES)):
+            if key in d and d[key] not in allowed:
+                raise ValueError(
+                    f"Economics: unknown {key} {d[key]!r}; must be one of {allowed}"
+                )
+        for key in ("ritual_magnitudes", "magic_grain"):
+            if key in d and (not isinstance(d[key], int) or d[key] < 0):
+                raise ValueError(
+                    f"Economics: {key} must be a whole number of at least 0, "
+                    f"not {d[key]!r}"
+                )
         return cls(**known_fields(cls, d))

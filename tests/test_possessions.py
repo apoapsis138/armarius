@@ -280,7 +280,7 @@ def test_legacy_vis_stock_becomes_raw_vis_stores():
 def test_unknown_possession_kind_is_rejected():
     with pytest.raises(ValueError, match="kind"):
         Possession(id="x", kind="spaceship")
-    assert len(POSSESSION_KINDS) == 7
+    assert len(POSSESSION_KINDS) == 8
 
 
 def test_save_entry_adds_a_new_possession_and_updates_an_existing_one():

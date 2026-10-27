@@ -32,6 +32,7 @@ from ..models import (
     Saga,
 )
 from ..rules import equipment, vis_kinds
+from . import ships as ship_forms
 
 #: The book whose armour pieces an armor form offers.
 LORDS_OF_MEN = "LoM"
@@ -596,6 +597,10 @@ def covenant_possession_form(
     saga: Saga, covenant: Covenant, kind: str, entry: pos.PossessionEntry | None
 ) -> Form:
     """Add (`entry` None) or edit one of the covenant's possessions."""
+    if kind == "ship":
+        return ship_forms.ship_form(
+            saga, covenant, entry.record if entry is not None else None
+        )
     places: list[tuple[str, str]] = []
     place = ""
     if kind == "vis_store":

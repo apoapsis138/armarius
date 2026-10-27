@@ -11,11 +11,12 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from .. import house_rules as hr
+from .. import own_abilities as oa
 from .. import players as pl
 from .. import saga_content as sc
 from .. import sourcebooks, traditions
 from .. import spells as spl
-from ..models import Saga, Spell
+from ..models import AbilityDef, Saga, Spell
 from ..references import Fact
 from .covenant import Table
 
@@ -125,7 +126,9 @@ class HouseRuleCard:
 
 def house_rule_cards(saga: Saga) -> list[HouseRuleCard]:
     return [
-        HouseRuleCard(
+        _ability_card(index, entry)
+        if isinstance(entry, AbilityDef)
+        else HouseRuleCard(
             index,
             entry.name,
             hr.KIND_SHORT[kind],
@@ -137,6 +140,21 @@ def house_rule_cards(saga: Saga) -> list[HouseRuleCard]:
         )
         for index, (kind, entry) in enumerate(hr.all_entries(saga))
     ]
+
+
+def _ability_card(index: int, ability: AbilityDef) -> HouseRuleCard:
+    """One of the saga's own Abilities ("Supernatural Ability"): its realm
+    where a Virtue's tier goes, and what it rolls where the points go."""
+    return HouseRuleCard(
+        index,
+        ability.name,
+        ability.category,
+        "Ability",
+        ability.realm or "Ability",
+        oa.summary(ability),
+        f"Rolls {oa.roll_text(ability)}",
+        False,
+    )
 
 
 @dataclass(frozen=True)

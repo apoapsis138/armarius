@@ -293,9 +293,10 @@ def test_features_title_counts_features_against_feature_virtues():
     assert lab_text.features_title(lab) == "Features (1 of 2)"
 
 
-def test_feature_catalog_has_all_36_and_expands_any_technique():
+def test_feature_catalog_has_all_40_and_expands_any_technique():
     features = catalog.load_lab_feature_catalog()
-    assert len(features) == 36
+    # Covenants' 36, and Hermetic Projects' four volcanic Features (pp. 26-27).
+    assert len(features) == 40
     altar = catalog.load_lab_feature_catalog_by_id()["labfeat_altar"]
     assert altar.specializations == (
         "Creo",

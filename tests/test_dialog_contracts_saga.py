@@ -405,6 +405,124 @@ CONTRACTS: dict[str, Contract] = {
             )
         },
     ),
+    # A saga's own Abilities in House Rules (HoH:S pp. 103-106).
+    "add house rule ability": Contract(
+        prefill={"For": "character", "Name": ""},
+        edits={
+            "For": "ability",
+            "Name": "Call the Tide",
+            "Ability category": "Supernatural",
+            "Realm": "Faerie",
+            "Rolls with": "Stamina",
+        },
+        aliases={"Ability category": "fld-category_ability"},
+        live={"#fields-live": "Casting Total: Stamina + Call the Tide"},
+        saved=lambda s: (
+            [
+                (a.id, a.category, a.realm, a.characteristic, a.xp_table, a.source)
+                for a in s.custom_abilities
+            ],
+            [(v.name, v.tier, v.category, v.cost) for v in s.custom_virtues_flaws],
+        ),
+        expected=(
+            [
+                (
+                    "custom_ability_call_the_tide",
+                    "Supernatural",
+                    "Faerie",
+                    "Stamina",
+                    "ability",
+                    "",
+                )
+            ],
+            [("Call the Tide", "Major", "Supernatural", 3)],
+        ),
+        invalid=[
+            {"For": "ability", "Name": ""},
+            {"For": "ability", "Name": "Athletics"},
+        ],
+        shown={"#house-rules-list": "Call the Tide"},
+    ),
+    "edit house rule ability": Contract(
+        prefill={
+            "Name": "Speak with Ravens",
+            "Realm": "Magic",
+            "Rolls with": "Communication",
+        },
+        edits={"Name": "Raven Tongue", "Realm": "Faerie"},
+        saved=lambda s: [(a.id, a.name, a.realm) for a in s.custom_abilities],
+        expected=[("custom_ability_speak_with_ravens", "Raven Tongue", "Faerie")],
+        invalid={"Name": ""},
+        shown={"#house-rules-list": "Raven Tongue"},
+    ),
+    # Saga Content's Mystery Cults (The Mysteries Revised Edition pp. 13-19).
+    "add mystery cult": Contract(
+        prefill={"Name": "", "Realm": "Magic", "Initiation uses": "Presence"},
+        edits={
+            "Name": "The Seventh Wave",
+            "Its Lore (a new Ability)": "Seventh Wave Lore",
+            "Realm": "Faerie",
+            "Founded in": "1218",
+        },
+        saved=lambda s: [(c.id, c.lore, c.realm, c.founded) for c in s.custom_cults],
+        expected=[
+            ("custom_cult_the_seventh_wave", "Seventh Wave Lore", "Faerie", 1218)
+        ],
+        invalid=[
+            {"Name": ""},
+            {"Name": "X", "Its Lore (a new Ability)": "Magic Theory"},
+            {"Name": "X", "Its Lore (a new Ability)": ""},
+        ],
+        shown={"#section-content-cults": "The Saga's Mystery Cults (1)"},
+    ),
+    "edit mystery cult": Contract(
+        prefill={"Name": "The Spinner's Thread", "Realm": "Faerie"},
+        edits={"Name": "The Thread", "Initiation uses": "Communication"},
+        saved=lambda s: [(c.name, c.characteristic) for c in s.custom_cults],
+        expected=[("The Thread", "Communication")],
+        invalid={"Name": ""},
+        shown={"#section-content-cult": "The Thread"},
+    ),
+    "add cult degree": Contract(
+        prefill={"Degree": ""},
+        edits={"Degree": "Weaver", "Mystery Virtue": "vf_faerie_magic"},
+        saved=lambda s: [(d.name, d.virtue_id) for d in s.custom_cults[0].degrees],
+        expected=[("Spinner", "vf_second_sight"), ("Weaver", "vf_faerie_magic")],
+        invalid=[
+            {"Degree": ""},
+            {"Degree": "Again", "Mystery Virtue": "vf_second_sight"},
+        ],
+        shown={"#section-content-cult-degrees": "Degrees (2)"},
+    ),
+    "edit cult script": Contract(
+        prefill={
+            "Script": "The Silk Hall",
+            "Quests (+3 each)": "1",
+            "Ordeal": "minor",
+            "Its Flaw": "vf_visions",
+        },
+        edits={"Quests (+3 each)": "2", "Sympathy (−5 to +5)": "1"},
+        saved=lambda s: s.custom_cults[0].degrees[0].script.bonus,
+        expected=14,
+        invalid=[
+            {"Script": ""},
+            {"Something of great value (0, +3 to +6)": "2"},
+            {"Sympathy (−5 to +5)": "6"},
+        ],
+        live={"#fields-live": "= +14"},
+        shown={"#section-content-cult-scripts": "The Silk Hall: +14"},
+    ),
+    "add cult component": Contract(
+        prefill={"Kind": "quest", "What it is": ""},
+        edits={"Kind": "unique_quest", "What it is": "The head of the Minotaur"},
+        saved=lambda s: [
+            (c.key, c.bonus, c.note)
+            for c in s.custom_cults[0].degrees[0].script.components
+        ][-1],
+        expected=("unique_quest", 6, "The head of the Minotaur"),
+        invalid={"Kind": "place"},
+        shown={"#content-cult-scripts-list": "The head of the Minotaur"},
+    ),
 }
 
 

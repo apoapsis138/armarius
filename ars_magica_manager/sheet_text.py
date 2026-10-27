@@ -36,6 +36,7 @@ from .rules import (
     disease,
     equipment,
     faerie_blood,
+    house_magic,
     integrations,
     penetration,
     recovery,
@@ -43,6 +44,7 @@ from .rules import (
     scores,
     senses,
     travel,
+    vf_change,
 )
 from .rules import xp as xp_rules
 from .rules.breakdown import Breakdown
@@ -254,6 +256,9 @@ def ability_info_text(
     ease = senses.ease_text(ability.name)
     if ease:
         parts.append(escape(ease))
+    # Guile's disguises and Persona's identities (Houses of Hermes: Societates).
+    if house_text := house_magic.ability_text(ability.name, ability.progress.score):
+        parts.append(escape(house_text))
     return "\n\n".join(parts)
 
 
@@ -276,13 +281,21 @@ def vf_rows(
     """The attached Virtues or Flaws (`vf_type`) as (true index into `instances`, label)
     pairs, so a filtered list still maps back to the real entry. Qualities list with the
     Virtues, Inferiorities with the Flaws (VirtueFlawDef.side). Indices in `free` (a
-    magus's House Virtue) are marked Free."""
+    magus's House Virtue) are marked Free, and one gained for a while
+    temporary, with its end."""
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+
+    def marks(index: int, vf: VirtueFlawInstance) -> str:
+        temporary = vf_change.temporary_text(vf)
+        return (", Free" if index in free else "") + (
+            f", {temporary}" if temporary else ""
+        )
+
     return [
         (
             index,
             f"{escape(catalog.describe_virtue_flaw(vf, vf_catalog))} "
-            f"({definition.tier}{', Free' if index in free else ''})",
+            f"({definition.tier}{marks(index, vf)})",
         )
         for index, vf in enumerate(instances)
         if (definition := vf_catalog.get(vf.vf_id)) is not None
@@ -352,6 +365,11 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
     if definition.category:
         lines.append(f"[b]Category:[/] {escape(definition.category_label)}")
     lines.append(f"[b]Tier:[/] {definition.tier}")
+    if temporary := vf_change.temporary_text(instance):
+        lines.append(
+            f"[b]Gained by magic:[/] {escape(temporary.capitalize())}; it is "
+            "taken off with Gain or Lose in Play (Grogs pp. 62-63)."
+        )
     if repeat := vf_repeat_text(definition):
         lines.append(f"[dim]{repeat}[/]")
     lines += effect_lines(definition.modifiers)

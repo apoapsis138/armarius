@@ -40,7 +40,9 @@ from ..rules import activities as rules
 from ..rules import ancient_integrations as ancient
 from ..rules import (
     apothecary,
+    clergy,
     enchantment,
+    hermetic_projects,
     lab_items,
     lab_seasons,
     merchants,
@@ -444,9 +446,32 @@ def apply_supplement(
                 random.Random(),
                 young=work.aging_young,
             )
-    # The Lesser Elixir reinvented (TMRE pp. 42-43).
+    # The Lesser Elixir reinvented, an ordination examination.
+    _apply_gains(character, plan, work)
+    # Hermetic Projects: a master mason's season on a Great Tower.
+    hermetic_projects.add_works(saga, work.project_works)
+
+
+def _apply_gains(
+    character: Character, plan: SeasonPlan, work: sw.SupplementWork
+) -> None:
+    """The Lesser Elixir reinvented (TMRE pp. 42-43); an ordination
+    examination's record, and the grade, Faith Point, Social Status and
+    Reputation it brings, written in the Diary (The Church pp. 33-34)."""
     if work.elixir_ingredient is not None:
         tmre_alchemy.add_ingredient(character, work.elixir_ingredient)
+    if work.ordination is None:
+        return
+    said = clergy.ordain(character, work.ordination, swap=plan.swap_status)
+    character.diary.append(
+        DiaryEntry(
+            year=plan.year,
+            season=plan.season,
+            name=f"Ordination: {work.ordination.grade}",
+            details=" ".join(said),
+            activity="Ordination",
+        )
+    )
 
 
 def _apply_initiation(character: Character, work: sw.SupplementWork) -> None:
@@ -513,6 +538,9 @@ _FINISHED = {
     # A city's obvious lacunae found (HoH:S p. 57).
     "lacunae": "the city's obvious lacunae are found; later searches are Area "
     "Lore practice.",
+    # Shaping the land (TME pp. 54-77).
+    "land_shaping": "every Ritual of the land project is cast; More's Shape the "
+    "Land settles manors on the new land.",
 }
 
 

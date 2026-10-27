@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from . import catalog, sourcebooks
 from .models import Ability, Character, Saga, TraditionDef
+from .models.mystery_cults import is_saga_cult
 from .rules import creation_access as access
 
 #: The sheet ids of a tradition's chapter: its tab, its Arts and Abilities
@@ -100,9 +101,14 @@ def find(tradition_id: str) -> TraditionDef | None:
 
 def in_play(saga: Saga | None) -> list[TraditionDef]:
     """The traditions whose book is in the saga's play: the ones the
-    troupe can turn on."""
+    troupe can turn on. The saga's own Mystery Cults aren't among them:
+    they are always offered (Saga Content's Mystery Cults tab)."""
     books = sourcebooks.saga_books(saga)
-    return [t for t in all_traditions() if sourcebooks.in_play(t.source, books)]
+    return [
+        t
+        for t in all_traditions()
+        if sourcebooks.in_play(t.source, books) and not is_saga_cult(t.id)
+    ]
 
 
 def is_on(saga: Saga | None, tradition_id: str) -> bool:

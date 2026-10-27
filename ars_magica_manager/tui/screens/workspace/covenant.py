@@ -3,18 +3,21 @@ Reputations, Boons & Hooks and the covenant itself."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from functools import partial
 from typing import Any, ClassVar
 
-from .... import catalog, covenant_diary, seasons, sourcebooks, vis
+from .... import catalog, covenant_diary, hermetic_projects, seasons, sourcebooks, vis
 from .... import covenants as cov_rules
 from .... import economics as eco
 from .... import inhabitants as inh
 from .... import possessions as pos
-from ....commands import Form
+from ....commands import Command, Form
 from ....forms import charter as charter_forms
 from ....forms import covenant as covenant_forms
 from ....forms import inhabitant as inhabitant_forms
+from ....forms import land_shaping as land_forms
+from ....forms import ships as ship_forms
 from ....forms import world as world_forms
 from ....markup import escape
 from ....models import (
@@ -25,11 +28,12 @@ from ....models import (
     Covenant,
     CovenantDiaryEntry,
     IncomeSource,
+    Saga,
     VirtueFlawInstance,
     new_instance_id,
 )
 from ....rules import covenfolk
-from ....sections import CHARTER_SECTION, CLAUSES_SECTION
+from ....sections import CHARTER_SECTION, CLAUSES_SECTION, PROJECTS_SECTION
 from ..fields import FieldsDialog
 from ..forms import (
     _improve_income_dialog,
@@ -102,6 +106,15 @@ class CovenantActions(WorkspaceBase):
     def _possession_form(self, kind: str, entry: pos.PossessionEntry | None) -> None:
         covenant = self.selected_covenant
         if covenant is None:
+            return
+        if kind == "ship":
+            run_steps(
+                self.app,
+                ship_forms.ship_form(
+                    self.saga, covenant, entry.record if entry is not None else None
+                ),
+                lambda _end: self._commit("section-pos-ship"),
+            )
             return
         title = (
             f"Add a {pos.KIND_SINGULAR[kind]}"
@@ -371,7 +384,7 @@ class CovenantActions(WorkspaceBase):
         self.app.push_screen(
             FieldsDialog(
                 f"Edit {row.name}",
-                covenant_forms.economics_row_fields(covenant, which, row),
+                covenant_forms.economics_row_fields(covenant, which, row, self.saga),
                 validate=lambda values: eco.row_problem(row.key, values),
             ),
             handle_result,
@@ -722,6 +735,45 @@ class CovenantActions(WorkspaceBase):
     def action_improve(self) -> None:
         self._improve_income_source()
 
+    # -- Covenant: the Ships list's More (Hermetic Projects; City & Guild) --
+
+    def _on_ship(
+        self, build: Callable[[Saga, Covenant, int], Command], *, tree: bool = False
+    ) -> None:
+        """Run `build(saga, covenant, row)` on the chosen ship; `tree`: it
+        may set up a Fight in Conflicts."""
+        covenant = self.selected_covenant
+        row = self._selected_possession("ship")
+        if covenant is None or row is None:
+            self.notify("Choose a ship first.", severity="warning")
+            return
+        run_steps(
+            self.app,
+            build(self.saga, covenant, row),
+            lambda _end: self._commit("section-pos-ship", "tab-cov-diary", tree=tree),
+        )
+
+    def action_ship_stress(self) -> None:
+        """More's Stress Check on the chosen ship."""
+        self._on_ship(ship_forms.stress_check)
+
+    def action_ship_combat(self) -> None:
+        """More's Ship Combat for the chosen ship."""
+        self._on_ship(ship_forms.ship_combat, tree=True)
+
+    # -- Covenant: shaping the land (Transforming Mythic Europe) --
+
+    def action_shape_land(self) -> None:
+        """More's Shape the Land on Income: plan an island, or settle it."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        run_steps(
+            self.app,
+            land_forms.shape_form(self.saga, covenant),
+            lambda _end: self._commit("section-eco-income", "tab-cov-diary"),
+        )
+
     # -- Covenant: Charter tab --
 
     def action_seal_charter(self) -> None:
@@ -924,3 +976,39 @@ class CovenantActions(WorkspaceBase):
                 partial(self._edit_possession, kind),
             )
         return ops
+
+    # -- Covenant: Hermetic Projects (Hermetic Projects pp. 36-41) --
+
+    def _on_projects(self, step: Callable[[Covenant], Command]) -> None:
+        """Run `step(covenant)` on the covenant on show, then refresh its
+        Projects tab (its sections follow one another)."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+
+        def done(end: object) -> None:
+            self._commit(PROJECTS_SECTION, "section-cov-info")
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, step(covenant), done)
+
+    def action_begin_project(self) -> None:
+        """More's Begin Project: the first shows the Projects tab."""
+        self._on_projects(partial(hermetic_projects.begin_form, self.saga))
+
+    def action_tower_stress(self) -> None:
+        """More's Stress Check on the tower shown."""
+        self._on_projects(partial(hermetic_projects.stress_form, self.saga))
+
+    def action_tower_conjure(self) -> None:
+        """More's Conjure Levels on the tower shown."""
+        self._on_projects(partial(hermetic_projects.conjure_form, self.saga))
+
+    def action_show_project(self) -> None:
+        """More's Show Project: the chosen project's tower on the tab."""
+        view = self._covenant_sheet_view
+        row = view.section_row(PROJECTS_SECTION) if view is not None else None
+        self._on_projects(
+            lambda covenant: hermetic_projects.show_project(self.saga, covenant, row)
+        )

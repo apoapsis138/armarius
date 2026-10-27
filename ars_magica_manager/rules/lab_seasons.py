@@ -62,6 +62,7 @@ from . import (
     enchantment,
     experiment,
     familiar_seasons,
+    house_magic,
     lab,
     lab_stats,
     lab_virtues,
@@ -571,7 +572,7 @@ def _spell_work(
         return found, None
     if any(k.spell_id == spell.id for k in magus.spells_known):
         return [f"{magus.name} already knows {spell.name}."], None
-    if needed := _mystery_needed(magus, spell):
+    if needed := _mystery_needed(magus, spell, inventing=plan.activity == INVENT):
         return [needed], None
     source = catalog.find_spell(
         saga, plan.design.source_spell_id if plan.design else None
@@ -661,11 +662,13 @@ def _spell_work(
     return [], result
 
 
-def _mystery_needed(magus: Character, spell: Spell) -> str:
+def _mystery_needed(magus: Character, spell: Spell, *, inventing: bool = False) -> str:
     """Why the magus can't learn a spell with a Mystery's own parameter
-    (Faerie Magic, Spell Timing, Sensory Magic) he lacks, or a Dream Target
-    spell with no Mentem in its Form or requisites (TMRE p. 104); "" when
-    he can."""
+    (Faerie Magic, Spell Timing, Sensory Magic) he lacks, a Dream Target
+    spell with no Mentem in its Form or requisites (TMRE p. 104), or a
+    Mutantum spell beyond his Virtues (house_magic); "" when he can."""
+    if why := house_magic.learn_problem(magus, spell, inventing=inventing):
+        return why
     if spell.target == "Dream" and (
         why := spell_levels.dream_target_problem(
             spell.technique, spell.form, spell.requisites

@@ -68,7 +68,7 @@ def _pos_panel(app) -> str:
     return str(app.screen._covenant_sheet_view.query_one("#pos-panel", Static).render())
 
 
-async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanctums():
+async def test_possessions_tab_has_its_eight_sections_and_lists_the_labs_as_sanctums():
     storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
@@ -81,6 +81,7 @@ async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanc
             for kind in pos.KIND_TITLES
         ]
         assert [_plain_title(x) for x in sections] == [
+            "Ships (0)",
             "Properties and Land (0)",
             "Sanctums (1)",
             "Weapons (0)",

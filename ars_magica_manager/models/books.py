@@ -154,6 +154,11 @@ class Book:
     #: A realia that is an exhibit of hundreds of objects, which stands in
     #: for a lab's Study Requirement or Bonus up to an Art of 15.
     exhibit: bool = False
+    #: A Great Library book lent to its reader: the seasons
+    #: (models.seasons.season_order) the credit paid for it covers, the
+    #: only ones it may be studied in; never copied or given away (GotF
+    #: p. 55). None: not a loan.
+    loan_seasons: list[int] | None = None
 
     @classmethod
     def from_dict(
@@ -191,6 +196,16 @@ class Book:
             if d.get("notes"):
                 d.setdefault("description", d["notes"])
         d["experimental_effects"] = experimental_effects(d.get("experimental_effects"))
+        loan = d.get("loan_seasons")
+        if loan is not None:
+            if not isinstance(loan, list) or not all(
+                isinstance(n, int) and not isinstance(n, bool) for n in loan
+            ):
+                raise ValueError(
+                    f"Book {d.get('name')!r}: loan_seasons must be a list of "
+                    f"season numbers, not {loan!r}."
+                )
+            d["loan_seasons"] = list(loan)
         return cls(**known_fields(cls, d))
 
 

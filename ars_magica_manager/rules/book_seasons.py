@@ -517,6 +517,11 @@ def _copy(
         return [f"{book.name} isn't a summa or tractatus."], None
     if not library.can_read(saga, character, book):
         return [f"{character.name} can't get at {book.name}."], None
+    if library.lent(book):
+        return [
+            f"{book.name} is the Great Library's: it may not be copied without "
+            "the librarian's leave (Guardians of the Forests p. 55)."
+        ], None
     source = language_score(character, book.language or "Latin")
     is_summa = book.type in SUMMA_TYPES
     is_art = bool(book.art)

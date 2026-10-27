@@ -740,6 +740,22 @@ def everything_saga() -> Saga:
                         {"year": 1218, "season": "Autumn"}
                         | {"text": "Leandro found the path backwards."}
                     ],
+                    # A tomb under the crag (Lands of the Nile pp. 40-46).
+                    "tomb": True,
+                    "tomb_kind": "lesser_royal",
+                    "tomb_centuries": 3,
+                    "tomb_curses": [
+                        {"name": "The Fear of the King", "kind": "Hermetic effect"}
+                        | {"art": "CrMe", "level": 25, "uses": 1}
+                        | {"condition": "Whoever enters by night"}
+                    ],
+                    "tomb_wards": [
+                        {"name": "Turn the Interloper", "kind": "Ward"}
+                        | {"art": "ReCo", "level": 30, "penetration": 0}
+                    ],
+                    "tomb_traps": [
+                        {"name": "The Dead Drop", "harm": "fatal", "ease": 12}
+                    ],
                 },
             ),
         ],

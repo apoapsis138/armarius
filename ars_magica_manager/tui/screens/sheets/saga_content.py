@@ -15,10 +15,15 @@ from .... import saga_content as sc
 from .... import traditions
 from ....boon_hook_text import counted
 from ....forms import goods as goods_forms
+from ....forms import mystery_cults as cult_forms
 from ....models import Saga, SagaSource
 from ....sections import (
     BOOKS_SECTION,
     CATALOGS_SECTION,
+    CULT_DEGREES_SECTION,
+    CULT_SCRIPT_SECTION,
+    CULT_SECTION,
+    CULTS_SECTION,
     GOODS_SECTION,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
@@ -40,11 +45,24 @@ TAB_SECTIONS: dict[str, str] = {
     "tab-content-house-rules": HOUSE_RULES_SECTION,
     "tab-content-spells": SPELL_SECTION,
     "tab-content-players": PLAYERS_SECTION,
+    "tab-content-cults": CULTS_SECTION,
 }
 
 #: The Goods tab's list and its details panel.
 GOODS_LIST = "content-goods-list"
 GOODS_INFO = "content-goods-info"
+
+#: The Mystery Cults tab's sections, which each change redraws whole (a
+#: cult's degrees and Scripts are counted and named in the others), its
+#: lists and its details panel; and what choosing a cult or a degree
+#: redraws.
+CULT_SECTIONS = (CULTS_SECTION, CULT_SECTION, CULT_DEGREES_SECTION, CULT_SCRIPT_SECTION)
+CULTS_LIST = "content-cults-list"
+DEGREES_LIST = "content-cult-degrees-list"
+SCRIPT_LIST = "content-cult-scripts-list"
+CULTS_INFO = "content-cults-info"
+_CULT_CHOSEN = "content-cult-chosen"
+_DEGREE_CHOSEN = "content-cult-degree-chosen"
 
 
 class SagaContentSheetView(SheetView):
@@ -60,6 +78,12 @@ class SagaContentSheetView(SheetView):
         super().__init__(saga)
         #: Whether the Players tab is shown (to the storyguide only).
         self.players = players
+        #: The Mystery Cults tab's chosen cult and degree (data indexes),
+        #: kept across redraws, which clear the lists' choices; and the
+        #: section whose row the details panel shows.
+        self.cult_index: int | None = None
+        self.degree_index: int | None = None
+        self._cult_panel: tuple[str, int | None] = (CULTS_SECTION, None)
 
     def compose(self) -> ComposeResult:
         with TabbedContent(initial=self.INITIAL_TAB):
@@ -71,6 +95,7 @@ class SagaContentSheetView(SheetView):
                 "tab-content-house-rules",
                 lambda: iter([HouseRulesView(self.saga)]),
             )
+            yield self._tab("Mystery Cults", "tab-content-cults", self._cults_tab)
             yield self._tab(
                 "Spells", "tab-content-spells", lambda: iter([SpellListView(self.saga)])
             )
@@ -271,9 +296,131 @@ class SagaContentSheetView(SheetView):
                 id=GOODS_INFO,
             )
 
+    # -- Mystery Cults --
+
+    def chosen_cult(self) -> int | None:
+        return self.cult_index
+
+    def chosen_degree(self) -> int | None:
+        return self.degree_index
+
+    def _cults_tab(self) -> ComposeResult:
+        """The saga's own Mystery Cults, the chosen one, its degrees and
+        the chosen degree's Script, with the chosen row's details under
+        them (forms/mystery_cults.py)."""
+        saga = self.saga
+        cult, degree = self.chosen_cult, self.chosen_degree
+        self.core_ops[CULTS_SECTION] = cult_forms.cults_ops(saga)
+        self.core_ops[CULT_SECTION] = cult_forms.cult_ops(saga, cult)
+        self.core_ops[CULT_DEGREES_SECTION] = cult_forms.degree_ops(saga, cult)
+        self.core_ops[CULT_SCRIPT_SECTION] = cult_forms.script_ops(saga, cult, degree)
+        follows = CULT_SECTIONS
+        on_cult = (*follows, _CULT_CHOSEN)
+        on_degree = (*on_cult, _DEGREE_CHOSEN)
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with SheetSection(
+                    title=self._titled(
+                        follows, CULTS_SECTION, lambda: cult_forms.cults_title(saga)
+                    ),
+                    id=CULTS_SECTION,
+                ):
+                    yield TableHeader(cult_forms.cults_header())
+                    yield self._list(
+                        follows, lambda: cult_forms.cult_rows(saga), id=CULTS_LIST
+                    )
+                with SheetSection(
+                    title=self._titled(
+                        on_cult, CULT_SECTION, lambda: cult_forms.cult_title(saga, cult)
+                    ),
+                    id=CULT_SECTION,
+                ):
+                    yield self._static(
+                        on_cult,
+                        lambda: cult_forms.cult_text(saga, cult),
+                        id="content-cult-text",
+                    )
+                with SheetSection(
+                    title=self._titled(
+                        on_cult,
+                        CULT_DEGREES_SECTION,
+                        lambda: cult_forms.degrees_title(saga, cult),
+                    ),
+                    id=CULT_DEGREES_SECTION,
+                ):
+                    yield TableHeader(cult_forms.degrees_header())
+                    yield self._list(
+                        on_cult,
+                        lambda: cult_forms.degree_rows(saga, cult),
+                        id=DEGREES_LIST,
+                    )
+                with SheetSection(
+                    title=self._titled(
+                        on_degree,
+                        CULT_SCRIPT_SECTION,
+                        lambda: cult_forms.script_title(saga, cult, degree),
+                    ),
+                    id=CULT_SCRIPT_SECTION,
+                ):
+                    yield TableHeader(cult_forms.script_header())
+                    yield self._list(
+                        on_degree,
+                        lambda: cult_forms.script_rows(saga, cult, degree),
+                        id=SCRIPT_LIST,
+                    )
+            yield self._panel(on_degree, self._cult_panel_text, id=CULTS_INFO)
+        # After a change redraws the lists, choose the cult and degree again.
+        self._on_refresh(follows, self._rechoose_cult)
+
+    def _cult_panel_text(self) -> str:
+        section, row = self._cult_panel
+        return cult_forms.panel_text(
+            self.saga, self.chosen_cult, self.chosen_degree, section, row
+        )
+
+    def _rechoose_cult(self) -> None:
+        """Choose the remembered cult and degree again in the redrawn lists
+        (or forget one that is gone)."""
+        cults = self.query_one(f"#{CULTS_LIST}", SelectableList)
+        if self.cult_index is not None and not cults.select_data_index(self.cult_index):
+            self.cult_index = self.degree_index = None
+            self.refresh_section(_CULT_CHOSEN)
+            return
+        degrees = self.query_one(f"#{DEGREES_LIST}", SelectableList)
+        if self.degree_index is not None and not degrees.select_data_index(
+            self.degree_index
+        ):
+            self.degree_index = None
+            self.refresh_section(_DEGREE_CHOSEN)
+
+    def _cult_chosen(self, list_id: str, index: int) -> bool:
+        """A row of the Mystery Cults tab was chosen: follow it. False for a
+        list of another tab."""
+        if list_id == CULTS_LIST:
+            self._cult_panel = (CULTS_SECTION, index)
+            if index != self.cult_index:
+                self.cult_index, self.degree_index = index, None
+                self.refresh_section(_CULT_CHOSEN)
+                return True
+        elif list_id == DEGREES_LIST:
+            self._cult_panel = (CULT_DEGREES_SECTION, index)
+            if index != self.degree_index:
+                self.degree_index = index
+                self.refresh_section(_DEGREE_CHOSEN)
+                return True
+        elif list_id == SCRIPT_LIST:
+            self._cult_panel = (CULT_SCRIPT_SECTION, index)
+        else:
+            return False
+        self.query_one(f"#{CULTS_INFO}", Static).update(self._cult_panel_text())
+        return True
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A row was chosen: fill its tab's details panel."""
         list_id = event.selectable_list.id or ""
+        if self._cult_chosen(list_id, event.data_index):
+            event.stop()
+            return
         if list_id == GOODS_LIST:
             event.stop()
             self.query_one(f"#{GOODS_INFO}", Static).update(

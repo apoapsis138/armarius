@@ -274,6 +274,10 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
         # The mystic paths and God's aid (The Church, RoP: The Divine).
         "Mystic Path",
         "Invoke God's Aid",
+        # A cleric's career (The Church), reachable before he has a Church tab.
+        "Petition the Church",
+        "Add Canon Case",
+        "Holy Orders",
     ]
     assert labels == ["Reward or Punish", "Pension", *saints]
     magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")

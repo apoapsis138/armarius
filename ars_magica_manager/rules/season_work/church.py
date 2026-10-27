@@ -7,6 +7,7 @@ import random
 
 from ...models import Character, Saga, SeasonPlan
 from .. import activity_groups as groups
+from .. import clergy
 from .base import (
     ANYONE,
     CH,
@@ -130,4 +131,83 @@ register(
         group=groups.FAITH,
     ),
     experience_only,
+)
+
+
+# -- Ordination (The Church pp. 33-35) --
+
+
+def ordination_grade(character: Character, plan: SeasonPlan) -> clergy.Grade | None:
+    """The grade the season's examination is for: the one the plan names,
+    or his next."""
+    named = clergy.BY_NAME.get(plan.title.strip())
+    return named if named is not None else clergy.next_grade(character.church)
+
+
+def _ordination(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: SupplementWork,
+) -> None:
+    grade = ordination_grade(character, plan)
+    if grade is None:
+        return
+    terms = clergy.exam_terms(character, grade)
+    sum_words = (
+        f"Intelligence {terms.intelligence:+d} + {grade.ability} {terms.score} "
+        f"+ stress die against {grade.ease}"
+    )
+    if rng is None and plan.die is None:
+        result.notes.append(f"Examination for {grade.name}: {sum_words}.")
+        return
+    if plan.die is not None:
+        record = clergy.examine_with(
+            character, grade, plan.die, season=plan.season, year=plan.year
+        )
+    else:
+        assert rng is not None
+        record = clergy.examine(
+            saga, character, grade, rng, season=plan.season, year=plan.year
+        )
+    record.examiner = plan.examiner
+    record.elsewhere = plan.ordained_elsewhere
+    result.ordination = record
+    die = "a botch" if record.botched else str(record.die)
+    result.notes.append(
+        f"Examination for {grade.name}: {sum_words}; the die shows {die}, total "
+        f"{record.total}: {clergy.result_label(record.result).lower()}."
+    )
+
+
+def _ordination_check(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    career = character.church
+    if career.barred:
+        return [
+            "His last examination botched: a petition must let him sit again "
+            "(Petition the Church, EF 9; The Church p. 34)."
+        ]
+    grade = ordination_grade(character, plan)
+    if grade is None:
+        return ["He holds every grade an examination gives: a bishop is elected."]
+    if clergy.rank(grade.name) <= clergy.rank(career.grade):
+        return [f"He is already ordained {career.grade}."]
+    return []
+
+
+register(
+    SimpleActivity(
+        "ordination",
+        "Ordination",
+        "A season's examination for the next grade of holy orders; Source "
+        "Quality 2 in Church Lore or Civil and Canon Law.",
+        CHURCH,
+        "217",
+        # Any man may be ordained; a magus too (The Church p. 33).
+        who=ANYONE,
+        group=groups.FAITH,
+    ),
+    _ordination,
+    _ordination_check,
 )

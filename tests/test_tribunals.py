@@ -570,6 +570,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
         "Peripheral Code",
         "Treasury",
         "Gilds",
+        "Great Library",
         "Diary",
         "Secrets",
     ]

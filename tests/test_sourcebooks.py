@@ -121,7 +121,8 @@ def _listed(picker) -> list[str]:
 async def test_a_picker_hides_entries_from_books_not_in_play_until_f3():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
-        # The lab catalog is all Covenants: out of play with the core book only.
+        # The lab catalog is Covenants' and Hermetic Projects': out of play
+        # with the core book only.
         picker = LabVirtueFlawPickerScreen(books=frozenset({"DE"}))
         await app.push_screen(picker)
         await pilot.pause()
@@ -130,8 +131,8 @@ async def test_a_picker_hides_entries_from_books_not_in_play_until_f3():
         everything = len(catalog.load_lab_virtue_flaw_catalog())
         assert await wait_until(pilot, lambda: len(_listed(picker)) == everything)
 
-        # With Covenants in play, nothing is hidden.
-        shown = LabVirtueFlawPickerScreen(books=frozenset({"DE", "Covenants"}))
+        # With both in play, nothing is hidden.
+        shown = LabVirtueFlawPickerScreen(books=frozenset({"DE", "Covenants", "HP"}))
         await app.push_screen(shown)
         await pilot.pause()
         assert len(_listed(shown)) == len(catalog.load_lab_virtue_flaw_catalog())

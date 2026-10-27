@@ -51,25 +51,66 @@ class PackageVerb:
 
 
 @dataclass(frozen=True)
+class LedgerCard:
+    """A row of a package list as the desktop rules it off on the page: a
+    mark in the margin, its heading, an italic line beside it, a badge
+    (words and a palette key: "text-success"), its words and a note
+    (markup)."""
+
+    title: str
+    meta: str = ""
+    badge: tuple[str, str] | None = None
+    body: str = ""
+    note: str = ""
+    rubric: str = "§"
+
+
+@dataclass(frozen=True)
 class PackageList:
     """A list a package adds to the sheet: its section's id and title, its
-    rows and its Add, Edit and Delete, and its More commands."""
+    rows and its Add, Edit and Delete, and its More commands. `info`, if
+    given, is a chosen row's details (markup) for the tab's details panel
+    and the desktop's inspector; `cards`, the rows as the desktop rules
+    them off, in the grid's order (None: a table)."""
 
     section_id: str
     section_title: Callable[[Saga, Tribunal], str]
     grid: Callable[[Saga, Tribunal], Grid]
     ops: Callable[[Saga, Tribunal], SectionOps]
     more: tuple[PackageVerb, ...] = ()
+    info: Callable[[Saga, Tribunal, int], str] | None = None
+    cards: Callable[[Saga, Tribunal], list[LedgerCard]] | None = None
+
+
+@dataclass(frozen=True)
+class PackageText:
+    """A section of words a package's tab opens with, before its lists:
+    its id and title, its facts (label and value), what it says (markup)
+    and its More commands (on the desktop, its own buttons)."""
+
+    section_id: str
+    title: str
+    facts: Callable[[Saga, Tribunal], list[tuple[str, str]]]
+    text: Callable[[Saga, Tribunal], str]
+    more: tuple[PackageVerb, ...] = ()
 
 
 @dataclass(frozen=True)
 class PackageTab:
     """A tab (a chapter, on the desktop) a package adds to the sheet,
-    holding its lists."""
+    holding its lists, after a section of words if it has one. With a
+    `panel_id`, the tab docks a details panel under them that shows the
+    chosen row of a list with `info` (`panel_empty` before one is
+    chosen)."""
 
     title: str
     tab_id: str
     lists: tuple[PackageList, ...]
+    text: PackageText | None = None
+    panel_id: str = ""
+    panel_empty: str = ""
+    #: The desktop chapter's icon (an artwork concept).
+    icon: str = "tribunal"
 
 
 @dataclass(frozen=True)
@@ -256,8 +297,11 @@ def lacks_credential(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
 
 
 def package_verb(tribunal: Tribunal, action: str) -> PackageVerb | None:
-    """The More command `action` of one of the Tribunal's package lists."""
-    for entry in of(tribunal).lists:
+    """The More command `action` of one of the Tribunal's package lists,
+    or of a tab's section of words."""
+    package = of(tribunal)
+    texts = tuple(tab.text for tab in package.tabs if tab.text is not None)
+    for entry in (*package.lists, *texts):
         for verb in entry.more:
             if verb.action == action:
                 return verb

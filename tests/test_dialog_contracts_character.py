@@ -18,7 +18,7 @@ from dialog_openers import new_app, open_dialog
 from textual.widgets import Select
 
 from ars_magica_manager import catalog
-from ars_magica_manager.models import AnimalForm
+from ars_magica_manager.models import AnimalForm, VirtueFlawInstance
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import merchants
 
@@ -1228,6 +1228,112 @@ CONTRACTS: dict[str, Contract] = {
         expected=30,
         invalid=[{"Die": "11"}, {"Grant Might's level": "-1"}],
         live={"#fields-live": "Magic Might 30"},
+    ),
+    # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
+    "gain or lose in play": Contract(
+        prefill={"What changes": "gain_flaw", "What happened": ""},
+        edits={
+            "What changes": "gain_flaw",
+            "Flaw gained": VirtueFlawInstance("vf_missing_hand"),
+            "What happened": "at the ford",
+        },
+        saved=lambda s: (
+            character(s).virtues_flaws[-1].vf_id,
+            character(s).diary[-1].name,
+        ),
+        expected=("vf_missing_hand", "Gain a Flaw: Missing Hand"),
+        invalid=[{"What changes": "lose_flaw"}, {"What changes": "social_status"}],
+        live={"#fields-live": "Missing Hand (Minor Flaw) is added"},
+    ),
+    # A cleric's career (The Church pp. 33-38, 46-48).
+    "petition the church": Contract(
+        prefill={"Petition": "", "Made by": "written", "Made now": True},
+        edits={
+            "Petition": "Leave to read the missal",
+            "Like": "Access to the parish crypt or library",
+            "Clergy support": "1",
+        },
+        saved=lambda s: [
+            (p.ask, p.ease, p.clergy) for p in character(s).church.petitions
+        ],
+        expected=[("Leave to read the missal", 6, 1)],
+        invalid=[{"Petition": ""}, {"Ease Factor": "lots"}],
+        live={"#fields-live": "Decided by the local priest"},
+        shown={"#char-petitions-list": "Leave to read the missal"},
+    ),
+    "add canon case": Contract(
+        prefill={"Charge": "Slander", "Verdict": "pending", "Compurgation": False},
+        edits={
+            "Charge": "Tithes",
+            "What": "the covenant's tithe",
+            "Verdict": "guilty",
+            "Punishment": "Monition",
+        },
+        saved=lambda s: [
+            (c.charge, c.what, c.verdict, c.punishment)
+            for c in character(s).church.cases
+        ],
+        expected=[("Tithes", "the covenant's tithe", "guilty", "Monition")],
+        invalid=[{"Year": "lots"}],
+        live={"#fields-live": "Monition: An official warning"},
+        shown={"#char-canon-list": "Tithes: the covenant's tithe"},
+    ),
+    "edit holy orders": Contract(
+        prefill={"Grade": "Exorcist", "Birth diocese": "Konstanz"},
+        edits={"Grade": "Acolyte", "Benefice or office": "Parish clerk"},
+        saved=lambda s: (character(s).church.grade, character(s).church.benefice),
+        expected=("Acolyte", "Parish clerk"),
+        shown={"#char-orders-text": "Acolyte (minor orders)"},
+    ),
+    "perform an exorcism": Contract(
+        prefill={"Faith or Confidence Points spent": "1", "Holy water (+1)": True},
+        edits={"Might the demon invested": "12"},
+        saved=lambda s: character(s).church.grade,
+        expected="Exorcist",
+        invalid=[{"Aura": "lots"}],
+        live={"#fields-live": "Against 12"},
+    ),
+    "add ordination": Contract(
+        prefill={"Grade": "Doorkeeper", "Result": "recorded"},
+        edits={
+            "Year": "1205",
+            "Intelligence then": "1",
+            "His score in the Ability examined": "1",
+            "Stress die": "7",
+            "Result": "learned",
+        },
+        saved=lambda s: [
+            (o.grade, o.year, o.total, o.result)
+            for o in character(s).church.ordinations
+        ],
+        expected=[("Doorkeeper", 1205, 9, "learned")],
+        invalid=[{"Stress die": "lots"}],
+        shown={"#char-ordinations-list": "Doorkeeper"},
+    ),
+    # Wizard's War's tunnel (Hermetic Projects pp. 78-81): a calculator,
+    # whose Cast rolls the tunnel and keeps nothing.
+    "open a tunnel": Contract(
+        prefill={"Level cast": "20", "It lasts": "Years or decades"},
+        edits={"Level cast": "25", "Target's Parma Magica": "3"},
+        saved=lambda s: s.character("mag1").diary,
+        expected=[],
+        invalid={"Level cast": "x"},
+        live={"#fields-live": "up to level 20"},
+    ),
+    # A Virtue gained by magic for a while ends (Grogs pp. 62-63): Gain or
+    # Lose in Play takes it off and keeps it in the Diary.
+    "end a temporary virtue": Contract(
+        prefill={"What changes": "gain_flaw"},
+        edits={"What changes": "temporary_ends", "Virtue or Flaw ending": "0"},
+        saved=lambda s: (
+            len(s.character("mag1").virtues_flaws),
+            s.character("mag1")
+            .diary[-1]
+            .name.startswith("A temporary Virtue or Flaw ends"),
+        ),
+        expected=(1, True),
+        invalid=[{"What changes": "temporary_ends"}],
+        live={"#fields-live": "taken off the sheet"},
     ),
 }
 

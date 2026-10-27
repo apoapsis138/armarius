@@ -8,23 +8,27 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
+from PySide6.QtCore import QRectF, Qt
+from PySide6.QtGui import QMouseEvent, QPainter, QPaintEvent
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import (
     arms,
     battles,
+    hermetic_projects,
     lords,
     manors,
     neighbours,
     place_events,
+    tombs,
     town_court,
     towns,
 )
-from ..commands import Command, SectionOps
+from ..commands import Command, Refuse, SectionOps
 from ..forms import hunting as hunting_forms
 from ..forms import neighbour as neighbour_forms
-from ..models import Neighbour, Saga
-from ..neighbour_lists import KindBlock, KindList, KindTab
+from ..models import Covenant, Neighbour, Saga
+from ..neighbour_lists import KindBlock, KindList, KindTab, LedgerEntry
 from ..sections import (
     BATTLES_SECTION,
     COURT_CASES_SECTION,
@@ -33,7 +37,10 @@ from ..sections import (
     GRATITUDE_SECTION,
     HOUSEHOLD_SECTION,
     MANORS_SECTION,
+    PROJECTS_SECTION,
     TABLES_SECTION,
+    TOMB_TRAPS_SECTION,
+    TOWER_SECTION,
 )
 from ..sheets import region as region_sheet
 from .bookmark import with_bookmark
@@ -49,10 +56,18 @@ from .editing import Chooser, RowVerb, Run, follower, verb_buttons
 from .figures import fact_grid, prose
 from .heraldry import arms_section
 from .manage import RecordControls
-from .ornaments import InspectorFrame
+from .ornaments import InspectorFrame, ledger_entry
 from .pages import page_header
 from .themes import Palette
-from .widgets import Codex, edit_button, scrolling_page, serif, table_view, text
+from .widgets import (
+    Codex,
+    badge,
+    edit_button,
+    scrolling_page,
+    serif,
+    table_view,
+    text,
+)
 from .world import relations
 
 
@@ -120,14 +135,15 @@ class NeighbourPage(QWidget):
             self.codex.add(
                 kind.tab.title, kind.tab.icon or kind.key, self._kind_chapter(kind.tab)
             )
-        for more in (m for m in kind.more if not m.after_standing):
+        shown = [m for m in kind.more if m.shows(neighbour)]
+        for more in (m for m in shown if not m.after_standing):
             self.codex.add(
                 more.title, more.icon or kind.key, self._kind_chapter(more, facts=False)
             )
         self.codex.add(
             "Standing" if kind.attitude else "Found Here", "region", self._standing()
         )
-        for more in (m for m in kind.more if m.after_standing):
+        for more in (m for m in shown if m.after_standing):
             self.codex.add(
                 more.title, more.icon or kind.key, self._kind_chapter(more, facts=False)
             )
@@ -216,6 +232,17 @@ def _gloss(
     return panel
 
 
+def _on_covenant(
+    saga: Saga, n: Neighbour, step: Callable[[Covenant], Command]
+) -> Command:
+    """`step` on the covenant a kind tab shows (its record adapted as a
+    neighbour's, manors.manors_of); a refusal on any other record."""
+    covenant = saga.covenant(n.id)
+    if covenant is None:
+        return Refuse("Hermetic Projects", "Only a covenant keeps projects.")
+    return step(covenant)
+
+
 class KindChapters:
     """A kind's tabs as desktop chapters: their lists as ledger tables whose
     chosen row shows in the inspector, with their section's buttons, and
@@ -295,6 +322,26 @@ class KindChapters:
                     lambda row: manors.winter_roll(saga, n, row),
                 )
             ],
+            # A tomb's trap springs (Lands of the Nile).
+            TOMB_TRAPS_SECTION: [
+                (
+                    "Overcome It",
+                    "threat",
+                    lambda row: tombs.overcome_trap(saga, n, row),
+                )
+            ],
+            # A covenant's Hermetic Projects: the project the tab shows.
+            PROJECTS_SECTION: [
+                (
+                    hermetic_projects.SHOW_PROJECT,
+                    "more",
+                    lambda row: _on_covenant(
+                        saga,
+                        n,
+                        lambda c: hermetic_projects.show_project(saga, c, row),
+                    ),
+                )
+            ],
         }
         return [
             (words, concept, step, lambda _row: True)
@@ -308,6 +355,21 @@ class KindChapters:
             return {manors.BUY: lambda: run(manors.buy_form(saga, n))}
         if entry.section_id == HOUSEHOLD_SECTION:
             return {manors.SETTLE: lambda: run(manors.settle_form(saga, n))}
+        # A covenant's Hermetic Projects: the tower's Stress Check and
+        # Conjure Levels.
+        if entry.section_id == TOWER_SECTION:
+            return {
+                hermetic_projects.STRESS_CHECK: lambda: run(
+                    _on_covenant(
+                        saga, n, lambda c: hermetic_projects.stress_form(saga, c)
+                    )
+                ),
+                hermetic_projects.CONJURE_LEVELS: lambda: run(
+                    _on_covenant(
+                        saga, n, lambda c: hermetic_projects.conjure_form(saga, c)
+                    )
+                ),
+            }
         return {}
 
     def _grid(
@@ -334,11 +396,14 @@ class KindChapters:
                 name = grid.rows[grid.keys.index(row)][0]
                 self.codex.inspect(name, title.split(" (")[0], shown)
 
-        body = (
-            table_view(grid.table(), p, choose)
-            if grid.rows
-            else text(grid.empty, p["dim"], serif(12.5, italic=True), wrap=True)
-        )
+        if entry.ledger is not None and grid.rows:
+            body = self._ledger(entry, grid.keys, chooser)
+        else:
+            body = (
+                table_view(grid.table(), p, choose)
+                if grid.rows
+                else text(grid.empty, p["dim"], serif(12.5, italic=True), wrap=True)
+            )
         buttons = verb_buttons(
             self.ops[entry.section_id], chooser, self.run, p, more=more
         )
@@ -351,6 +416,44 @@ class KindChapters:
         header = entry.header(saga, n) if entry.header is not None else ""
         widgets = [TextBlock(header, p), body] if header else [body]
         return section(title, p, *widgets, buttons=buttons)
+
+    def _ledger(
+        self, entry: KindList, keys: Sequence[int | None], chooser: Chooser
+    ) -> QWidget:
+        """The list `entry` as entries ruled off on the page; choosing one
+        shows it in full in the inspector."""
+        saga, n, p = self.saga, self.n, self.p
+        ledger = entry.ledger
+        found = ledger(saga, n) if ledger is not None else []
+        rows = [LedgerRow(e, p) for e in found]
+        for row, shown, key in zip(rows, found, keys, strict=False):
+            if key is None:
+                continue
+
+            def clicked(shown: LedgerEntry = shown, key: int = key) -> None:
+                info = entry.info(saga, n, key) if entry.info is not None else ""
+                self.codex.inspect(shown.title, shown.subtitle, info)
+
+            def chosen(
+                row_clicked: Callable[[], None] = clicked, key: int = key
+            ) -> None:
+                chooser.choose(key)
+                row_clicked()
+
+            row.clicked = chosen
+
+        def mark(picked: int | None) -> None:
+            for row, key in zip(rows, keys, strict=False):
+                row.set_chosen(key == picked)
+
+        chooser.listeners.append(mark)
+        body = QWidget()
+        stack = QVBoxLayout(body)
+        stack.setContentsMargins(0, 0, 0, 0)
+        stack.setSpacing(2)
+        for row in rows:
+            stack.addWidget(row)
+        return body
 
     def _block(self, block: KindBlock) -> QWidget:
         """A block of worked-out text under its title: its facts as a
@@ -371,6 +474,9 @@ class KindChapters:
         shown: list[QWidget] = []
         if block.facts is not None:
             shown.append(fact_grid(block.facts(saga, n), p, 3))
+        words = block.prose(saga, n) if block.prose is not None else ""
+        if words:
+            shown.append(prose(words, p))
         if block.text is not None:
             shown += [
                 label_values(paragraph, p)
@@ -382,3 +488,63 @@ class KindChapters:
                 side_by_side(*(_column(column, p) for column in block.columns(saga, n)))
             )
         return section(block.title, p, *shown, edits=edits or None)
+
+
+class LedgerRow(QWidget):
+    """A row of a kind's list ruled off on the page, as in a muster roll:
+    a mark in the margin, its heading in small capitals with an italic
+    line and a badge beside it, then its words and a note."""
+
+    def __init__(self, entry: LedgerEntry, p: Palette) -> None:
+        super().__init__()
+        self.p = p
+        self.chosen = False
+        self.clicked: Callable[[], None] = lambda: None
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        row = QHBoxLayout(self)
+        row.setContentsMargins(16, 8, 10, 10)
+        row.setSpacing(12)
+        mark = text(entry.rubric, p["heading"], serif(18, bold=True))
+        mark.setFixedWidth(40)
+        mark.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight)
+        row.addWidget(mark, 0, Qt.AlignmentFlag.AlignTop)
+        column = QVBoxLayout()
+        column.setSpacing(3)
+        top = QHBoxLayout()
+        top.setSpacing(8)
+        top.addWidget(
+            text(entry.title, p["heading"], serif(12.5, bold=True, caps=True))
+        )
+        if entry.meta:
+            top.addWidget(text(entry.meta, p["label"], serif(11, italic=True)))
+        top.addStretch(1)
+        if entry.badge:
+            top.addWidget(badge(entry.badge, p[entry.tone], p))
+        column.addLayout(top)
+        if entry.body:
+            words = TextBlock(entry.body, p)
+            words.setFont(serif(13))
+            column.addWidget(words)
+        if entry.note:
+            note = TextBlock(entry.note, p)
+            note.setFont(serif(11.5))
+            column.addWidget(note)
+        row.addLayout(column, 1)
+
+    def set_chosen(self, chosen: bool) -> None:
+        self.chosen = chosen
+        self.update()
+
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        self.clicked()
+        super().mousePressEvent(event)
+
+    def paintEvent(self, _event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        ledger_entry(
+            painter,
+            QRectF(self.rect()).adjusted(12, 0, 0, 0),
+            self.p,
+            marked=self.chosen,
+        )
+        painter.end()

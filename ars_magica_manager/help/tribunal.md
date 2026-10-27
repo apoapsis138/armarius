@@ -567,6 +567,55 @@ small beside its name in the list, and large in the inspector when it is
 chosen.
 <!-- /gui -->
 
+## Great Library tab
+<!-- help: tab-trib-library -->
+
+Durenmar's Great Library, the Order's greatest, open to every magus on its own terms (Guardians of the Forests pp. 55-57). Only a Tribunal following the Rhine's customs has this tab. Choose a magus's credit or a search to see it in full in the panel below the lists (on the desktop, in the inspector).
+
+### The Great Library of Durenmar
+<!-- help: section-trib-library -->
+
+The librarian (Andrus of Bonisagus, p. 58), how many study there in a season (about a dozen) and who is exempt, then the rule of access (p. 55): those who study from the Great Library must contribute to it. Each contribution the librarian accepts (a tractatus or a new spell is welcome; a common spell or a low-level, mediocre summa is not) gives two seasons of free study, more for an exceptional one at his say; a copy will do. A season copying gives one season. A "donation" of vis is quietly taken instead. Lab notes and the Tribunal records need no credit, and House Bonisagus and Durenmar's own members are exempt. Books never leave the tower: one found is lent only for the seasons of credit paid for it, and is never copied or traded.
+
+<!-- tui -->
+More (`m`) here has **Search the Great Library**.
+<!-- /tui -->
+<!-- gui -->
+Its **Search the Great Library** button opens the search.
+<!-- /gui -->
+
+### Credit
+<!-- help: section-trib-library-credit -->
+
+Each magus who studies at the Great Library: his covenant, what he gave, and the seasons of credit he has left (green: two or more; amber: one; red: none; "exempt" for a Bonisagus or one of Durenmar's). **Add** (Contribute) records a gift: the magus, what he gives (a book or Lab Text, two seasons; an exceptional work, at the librarian's say; a season copying, one; a vis "donation"), which of the saga's books (a copy: the book stays where it is) and the seasons it earns. **Edit** sets the seasons the librarian granted besides (or took back), the seasons used and a note. **Delete** forgets his credit; his searches stay. Every magus of the saga may hold credit: magi travel to Durenmar from all over. Guardians of the Forests p. 55.
+
+### Searches
+<!-- help: section-trib-library-searches -->
+
+Each search of the library: the season, the magus, what he sought, the roll and the result. **Add** (or More's Search the Great Library) rolls a search; **Edit** corrects one as recorded (one rolled at the table), lets the storyguide raise a book's Quality above the suggested cap up to the absolute limit (a tractatus 14, a summa 28; p. 57), and sets **Seasons of credit paid** for the book it lent: each season more takes a season of his credit; **Delete** removes it, returning the book it lent and the seasons of credit it took. Guardians of the Forests pp. 55-57.
+
+## Search the Great Library
+<!-- help: great-library-search -->
+
+Choose the magus, what he seeks and its Art, Ability, spell or subject. The Stacks, at the foot of the form, says what the die must show and what each result means; **Roll** rolls it and records it in Searches. Guardians of the Forests pp. 56-57:
+
+- **A summa on an Art**: a simple die + 10, +3 for a master, a Bonisagus or one of Durenmar's, +6 for an archmage (his whole bonus), at most 20, against the level wanted. Beat it: found. Equal: a magus of equal rank wants it too, and certamen decides. Below: none so high, or (likelier) one of higher rank is reading it this season; every Art has summae of level 17 at least, so below that it is always in use.
+- **A summa on an Arcane Ability**: a simple die alone against the level; below it, the library has none.
+- Quality of a summa: a simple die + 5, at most 30 - the level or 24, whichever is lower. These caps are suggestions: the storyguide may raise it to 28, the absolute limit, with Edit on the search.
+- **A tractatus**: no roll to find one. Quality: a simple die + 2, at most 12 suggested; the storyguide may raise it to 14, the absolute limit, with Edit on the search.
+- **Durenmar Lore** may be added to a book's Quality, -1 for each earlier time the magus added it in the same Art or Ability; the app counts those from his earlier searches.
+- **A spell's Lab Text**: a stress die against 3 for a standard spell (in the core book), 6 for a version of a general standard spell up to level 40, or the troupe's 6 to 21 for any other. A standard spell's failure: one of higher rank has it this season; its botch: the library has none. Any other's failure: none; its botch: one with a serious flaw. Equal: certamen. Each full 6 over: a tractatus on the spell's Mastery, Quality a simple die + 2.
+- **An enchanted device's Lab Text**: a stress die against the troupe's 6 to 21; meeting it finds a text for a very similar enchantment, beating it by 6 the very one.
+- **Lab notes**: a season, and Intelligence + Magic Theory + a stress die against the troupe's Ease Factor; leave the Ease Factor blank for a named author's notes, found within days with no roll.
+- **The Tribunal records**: leave the Ease Factor blank for a season's search, which extracts every entry on the subject with no roll; give one to seek one entry, an Intelligence + Order of Hermes Lore roll a day, -1 for each day after the first.
+
+A summa or tractatus found is lent to the magus: it is added to the saga as his book, marked as the library's, so the planner's Study from a Book offers it. A Library book never leaves the library (p. 55), so the loan covers only the seasons of credit paid for it: the search's season when he reads it then, and each season more paid with Edit's **Seasons of credit paid** (an exempt magus pays nothing, but the loan still covers only those seasons). A plan studying it in any other season is refused until a season more is paid, and it can't be copied or given to the library for credit. Reading what is found (all but lab notes and the records) takes a season of his credit, unless he is exempt; untick **He reads what is found this season** to search without reading (the loan then covers no season until one is paid). A magus with no credit left can't read: Contribute first.
+
+## Contribute to the Great Library
+<!-- help: great-library-contribute -->
+
+A magus gives the library a book or Lab Text (two seasons of credit), an exceptional work (the librarian may grant more: three by default), a season copying (one season) or a vis "donation" (taken, never acknowledged; two seasons by default, as it stands in for a contribution). Choosing what he gives fills in its seasons; change them as the librarian says. A book given is a copy: the original stays where it is. Edit on a magus's credit sets the seasons granted besides, those used and a note. Guardians of the Forests p. 55.
+
 ## The Polity tab
 <!-- help: tab-trib-tokens -->
 

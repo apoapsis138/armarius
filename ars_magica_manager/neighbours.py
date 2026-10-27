@@ -26,6 +26,7 @@ from . import (
     sourcebooks,
     storage,
     threats,
+    tombs,
     town_charter,
     town_court,
     town_guilds,
@@ -180,11 +181,15 @@ for _kind in (
         "a forest, a ruin, a regio",
         "places",
         "",
-        place_events.place_fields,
+        # A place may be marked a tomb (Lands of the Nile): its Tomb tab
+        # comes after Regio.
+        lambda saga, place: (
+            place_events.place_fields(saga, place) + tombs.mark_fields(saga, place)
+        ),
         place_events.place_problem,
         place_events.place_facts,
         place_events.REGIO_TAB,
-        (place_events.TABLES_TAB, place_events.DIARY_TAB),
+        (tombs.TOMB_TAB, place_events.TABLES_TAB, place_events.DIARY_TAB),
         attitude=False,
         hides=frozenset({"detail", "ruler", "answers_to"}),
     ),

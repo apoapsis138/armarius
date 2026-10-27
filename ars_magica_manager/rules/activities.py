@@ -54,6 +54,7 @@ from ..models import (
     TraditionDef,
     XpAllocation,
     character_age,
+    season_order,
 )
 from . import (
     acclaim,
@@ -1069,6 +1070,12 @@ def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> lis
         return [
             f"{character.name} can't get at {book.name}: it isn't in their "
             "covenant's library or their own keeping."
+        ]
+    if not library.lent_for(book, season_order(season=plan.season, year=plan.year)):
+        return [
+            f"{book.name} is the Great Library's: it is studied there only in a "
+            "season of credit paid for it. Pay another on its search (Edit, "
+            "Seasons of credit paid) (Guardians of the Forests p. 55)."
         ]
     subject = book_subject(book)
     missing = library.numbers_to_set(book)

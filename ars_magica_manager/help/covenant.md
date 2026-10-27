@@ -753,6 +753,27 @@ weapons and armour that drive costs on the Economics tab.
 **See also:** [Economics tab](help:tab-cov-economics),
 [Build tab](help:tab-cov-build), [Diary tab](help:tab-cov-diary), [How to manage the covenant](help:guide-covenant).
 
+### Ships
+<!-- help: section-pos-ship -->
+
+The covenant's ships. Add one and choose **Like** to fill her size, cargo and crew from Hermetic Projects' table of ships (p. 54): a river ferry, a lighter, a river barge, a coastal buss (or knarr or small cog), a medium cog, a large merchant cog, and the Mediterranean grain barges. Change any figure afterwards. A lateen-rigged ship needs half as many crew again; a galley can ram and shear oars.
+
+Her **damage levels** are her quality's (Shoddy 1, Standard 2, Superior 3, Excellent 4, Supernatural 5) times her size's (2 up to size +5, 3 for +6 to +8, 4 for +9; HP p. 54, City & Guild p. 77). She sails on until every level is lost; then she is wrecked, and any enchantment in her is gone (HP p. 65). Fewer levels lost than before marks her repaired.
+
+Cargo space can carry fighting men instead: 8 a ton on a long voyage, or 16 a quarter ton raiding close to home (City & Guild p. 87). Each ballista or light catapult takes a quarter ton, and a ship carries at most one per 20 tons (p. 86). A Superior ship gives +1 to navigation and ship-handling rolls, an Excellent one her bonus there and to Lab Totals enchanting her (HP p. 63); enchanting a Standard ship costs -1, a Shoddy one -3 (City & Guild p. 70).
+
+<!-- tui -->
+Choose a ship and press `m` for More:
+<!-- /tui -->
+<!-- gui -->
+Choose a ship, then the buttons beside Add, Edit and Delete:
+<!-- /gui -->
+
+- **Stress Check** (a storm, fire, naval combat or a magical attack, HP p. 53): a stress die + her captain's Profession + her quality (-1 Shoddy, +1 Superior, +3 Excellent, +5 Supernatural) + the magnitude of the total levels invested in her (all her effects' levels added together), -1 in poor weather or -3 in severe, -1 if repaired before, against 15 (City & Guild p. 77). Failing costs a damage level; a botch one, and one more for every botch die that shows a 0. The Diary records it.
+- **Ship Combat** (City & Guild pp. 86-87): choose their ship (another ship of the saga's, or one typed in) and what you mean to do. Each captain rolls a stress die + Intelligence + Profession + up to 3 for an experienced crew, + what favours his side (a faster ship, fog). The winner boards or slips away; a galley may ram (the rammed ship founders in 5 x a simple die minutes; a sailing ship that rams stays entangled) or shear oars (2 x a simple die rowers out of action). Artillery shoots as the ships close: a ballista kills a crewman a hit within 600 yards, a light catapult puts a simple die / 2 out of action within 200; each reloads in ten rounds. A boarding sets up a Fight in Conflicts for the two crews to fight as groups; the taller ship's men have +3 Attack and Defense until they are boarded. The Diary records it.
+
+The captain's Profession is the best of his seafaring Professions (Sailor, Mariner, Captain, Ship, Navigator, Pilot). Sailing speed is City & Guild's 60 to 80 miles a day (about 30 by the Definitive Edition, p. 408).
+
 ### Properties and Land
 <!-- help: section-pos-property -->
 
@@ -889,6 +910,41 @@ the effect last clicked once (see
 [Enchanted Devices](help:section-lab-devices) for what it shows).
 <!-- /gui -->
 
+## Projects tab
+<!-- help: tab-cov-projects -->
+
+A covenant's great works: a Great Tower now (Hermetic Projects pp. 36-41). The tab shows once a project is begun: Begin Project, beside Edit Description on the Attributes tab (More on the covenant in the terminal). Deleting the last project hides it again.
+
+**See also:** [Possessions tab](help:tab-cov-possessions), [Economics tab](help:tab-cov-economics)
+
+### Hermetic Projects
+<!-- help: section-cov-projects -->
+
+Each project: its name, kind, when it was begun, its height and its weakest work. Add, Edit and Delete as anywhere; the form names its master mason, its place (whose aura its rituals' tethers feed) and the building operation's Innovation and Raw Materials, 0 to 3 each: the whole operation is the master mason's workshop (HP p. 37). More's Show Project puts the chosen project's tower, works and devices on the tab.
+
+### The tower
+<!-- help: section-cov-tower -->
+
+Its height (20 feet a level), quality, damage levels, the tethers its rituals made and the failed Finesse rolls so far; then the master mason.
+
+- **Rate** (HP pp. 36-37): an effective Craft: Mason of 5 builds a level a season, 10 two, 15 three. Craft devices add +1 each to that score for the rate alone, each kind of device counted once, never more than his Craft: Mason (p. 39). HP calls this generous and lets troupes slow it; the app keeps it as printed.
+- **Workshop Total** (p. 37): Intelligence + Craft: Mason + Innovation + Raw Materials, against 3 shoddy, 6 standard, 12 superior, 15 excellent. De Architectura (the covenant's or the mason's copy) gives +1 Innovation, the Water Wheel +1; Innovation never passes +3 (pp. 37, 41). City & Guild leaves the Characteristic to the troupe (p. 67), so the tower's Intelligence doesn't change its workshops'.
+- **Damage levels** (p. 38, after City & Guild p. 77): 1, 2, 3 or 4 by quality, x4 for a tower of size 10 or more: 4, 8, 12 or 16. The weakest work in the tower sets them, so they can fall as well as rise. A ritual whose Finesse roll succeeds builds standard work, a failed one shoddy (p. 39). A season's rebuilding makes a shoddy section standard; a season's repair restores one damage level, with no other building that season (p. 38).
+
+**Stress Check** (More): the storyguide's event (severe storm, fire, earthquake or subsidence, assault: nothing else calls for one), stress die + Craft: Mason, -1 previously repaired, -1 shoddy, +1 superior, +3 excellent, +1 a Flying Buttress (as many as his Craft: Mason, p. 41), and the event's severity, against 15. A failure loses a damage level, a botch one more for each botch die (City & Guild p. 77): a partial collapse and a story. Roll keeps it in the works.
+
+**Conjure Levels** (More): Conjuring the Great Tower (CrTe 55) raises the foundations and two levels; Heights of the Great Tower (CrTe 50) four more, a magnitude larger 40, two larger 400. Int + Finesse + stress die against 12 (+3 a magnitude): standard if it reaches, shoddy if not. Heights' botch dice are 1 + one for each earlier level built on a failed roll, whoever cast it (a failed Conjuring leaves 2 shoddy levels, a failed Heights 4), and +3 a magnitude; a botch is a story, and a botched Conjuring leaves foundations that need a stress check every year (pp. 39-40). Each casting gives the project's place a preternatural tether of 1 (Conjuring the Great Tower makes a Magic aura of 1 where there was none; Heights adds +1 to the year's aura modifier), which the place's aura rules read (Realms of Power: Magic pp. 8-11). Cast keeps it in the works.
+
+### Works
+<!-- help: section-cov-tower-works -->
+
+The tower's ledger: rituals (their levels, Finesse roll and quality), the master mason's seasons, repairs, rebuildings and stress checks. Stress Check, Conjure Levels and the mason's seasons write here themselves; Add keeps anything done at the table.
+
+### Craft Devices
+<!-- help: section-cov-tower-devices -->
+
+The enchanted devices that speed the building (HP pp. 39-41): each adds +1 to the mason's Craft: Mason for the rate (The Arms of Hercules, True Falsework, The Stonemason's Art, The Laborer's Rest; each kind once); a Flying Buttress adds +1 to stress checks instead, as many as his Craft: Mason; the Water Wheel adds +1 Innovation, to +3.
+
 ## Economics tab
 <!-- help: tab-cov-economics -->
 
@@ -998,8 +1054,25 @@ illuminator or copyist (a scribe is a specialist, DE p. 190).
 
 What the covenant saves. Laborers save on Provisions and craftspeople on
 the category of their Field of Work, each up to the limit shown in its
-details; both are worked out from the Inhabitants tab. Magic savings
-is typed: work out what the covenant's magic saves and enter the total.
+details; both are worked out from the Inhabitants tab. Magic is worked out from what the row's form holds (Covenants p. 67; Transforming
+Mythic Europe pp. 120-121): a pound a year for each magnitude of the effects of each of
+the covenant's enchanted devices ticked as doing covenfolk's work (The Elfin Baker in
+an oven, level 20, saves 4; The Instant Harvest, level 45 by the Errata, 9), five
+pounds for each magnitude of Ritual spells cast for the covenant this year (back to 0
+when the year closes); magic doing covenfolk's work counts as laborers (Covenants
+p. 67), so the devices and Rituals together save at most half the Provisions, less
+what the laborers already save, and the row's details show the cut; and a store of
+grain made by magic: while it holds a year's
+bread (24 bushels a point of inhabitants), the covenant saves 5 shillings a point of
+inhabitants a year when half its provisions is bread, 7½ when three quarters, no more
+than the Provisions it still buys. At each year's end the covenant eats a year's grain
+and the store loses a twentieth (protected well), a tenth (protected) or a fifth
+(covered only) of what it held (p. 121). Fill the Capacious Silo makes 20,000 bushels:
+a covenant of 50 points keeping it covered eats bread from it for six years, saving
+112½ pounds (p. 121). Any other saving, a craft spell cast over and over or a Ritual
+the storyguide rates differently, is typed. The row's details show the working.
+Replacing the covenant's purchases with magic leaves farmers, millers and carters
+without their trade (pp. 121-122): a source of stories.
 Emergency Savings is money drawn from Wealth to cover a deficit. While the
 covenant runs at a deficit the row says so (or that the covenant is broke
 when Wealth cannot cover it), and
@@ -1337,6 +1410,58 @@ Level step says go without a laboratory refund 50 each.
 Every resource that has a Build Point price, under the row it counts
 towards, with its points: each book, vis source and stock, enchanted item,
 laboratory and specialist.
+
+## Shape the Land
+<!-- help: land-shaping -->
+
+More's Shape the Land, on a covenant's Income, plans an island raised from
+the sea by magic, the way Transforming Mythic Europe's Island of the
+Magicians is made (TME pp. 54-77), and settles manors on it once it stands.
+
+A project is its shape (an open cylinder, a square prism or a solid stone
+cylinder), its size in miles, its wall (30 paces high and 2 thick in the
+book; 240 for a tall cylinder in deep water), what the wall is made of, its
+ornaments, its fill, its surface life and its wards. The form lists each
+Ritual it needs, in the order they are cast:
+
+- The wall: a Creo Terram Ritual, Touch, Momentary, Individual. Level 20
+  makes 10,000 cubic paces of stone, each magnitude ten times as much (DE
+  pp. 310, 359; TME p. 55). Base metal is two magnitudes harder and a cubic
+  foot an Individual; precious metal three magnitudes more (TME p. 58). Wood
+  and animal bone are as hard as stone, human bone as base metal (pp.
+  58-59). Crenellations, machicolations, a sea gate and artistic statuary
+  add a magnitude each; a fire step and hoardings add none (pp. 56-57); an
+  unnatural wall needs a Muto requisite (+1). The troupe may cap complexity
+  at three magnitudes (p. 56).
+- The ablative slope: earth as much as the wall, three magnitudes below its
+  spell (p. 56).
+- The fill: soil or clay to the wall's height; stone is three magnitudes
+  harder, +1 for several kinds (pp. 59-60).
+- Grassland over the island and a forest of so many trees (p. 62). The
+  app works their levels out from TME's own designs, whose printed levels
+  are slips: the forest's (Base 1, +8 magnitudes) comes to level 25, not
+  40, and the grassland's (Base 1, +4) to level 5, raised to 20 because
+  every Ritual is at least level 20 (DE p. 311), not 10.
+- An Aegis of the Hearth and the book's island-wide Boundary spells (pp.
+  71-77), raised for the island's size: a Boundary's area is ten times
+  larger each magnitude (DE p. 310), so a 3-mile island adds 4. A ward is
+  its level + 35 for Touch, Sun and Boundary, plus those (TME p. 71).
+
+Each Ritual takes 15 minutes and a pawn of vis per magnitude (DE p. 213). A
+30-mile island of stone and soil is a level 35 wall and a level 40 fill: 15
+pawns, under four hours (TME p. 59).
+
+The land: a manor is 600 acres (400 if highly fertile) and 20 pounds a year
+before expenses, with 5 to 60 peasant families (TME p. 62). A Ritual of
+level 50 or more leaves a preternatural tether for an aura, (level - 40) /
+10 (RoP: Magic p. 10); otherwise an aura needs natural beauty, ancient
+structures (1 a century) or magical beings (TME pp. 64-67).
+
+The Rituals are cast in a season of **Shape the land**. A Ritual cast on a
+total of its level or more costs one long-term Fatigue level; it still
+works down to 10 below its level, for two or three (DE p. 213). Once the wall and
+fill are cast, Shape the Land offers **Settle** for the project: so many
+manors of new land, held as allods, added to the covenant's Manors.
 
 # Arms
 <!-- help: arms -->

@@ -23,6 +23,24 @@ Entry = dict[str, Any]
 
 
 @dataclass(frozen=True)
+class LedgerEntry:
+    """A row of a list drawn as an entry ruled off on the desktop's page
+    rather than a table's row: a mark in the margin, its heading, an
+    italic line beside it, a badge (its words and the theme colour that
+    tones it), its words and a note under them; `subtitle` heads it in
+    the inspector."""
+
+    title: str
+    rubric: str = ""
+    meta: str = ""
+    badge: str = ""
+    tone: str = "label"
+    body: str = ""
+    note: str = ""
+    subtitle: str = ""
+
+
+@dataclass(frozen=True)
 class KindList:
     """A list a kind shows: its section's id and title, its rows, and its
     Add, Edit and Delete. `info` is a row (by its key) in full, as markup
@@ -37,6 +55,9 @@ class KindList:
     #: A line shown above the list (what a town its size is expected to
     #: have), as markup; "" for none.
     header: Callable[[Saga, Neighbour], str] | None = None
+    #: Each row as an entry ruled off on the desktop's page, in the
+    #: grid's order (a tomb's curses); None draws the grid as a table.
+    ledger: Callable[[Saga, Neighbour], list[LedgerEntry]] | None = None
 
 
 @dataclass(frozen=True)
@@ -59,6 +80,12 @@ class KindBlock:
     #: Drawn as a gloss box on the desktop (a check shown beside the
     #: figures it checks), not as a section.
     gloss: bool = False
+    #: A description in the book face after the facts (markdown); "" for
+    #: none.
+    prose: Callable[[Saga, Neighbour], str] | None = None
+    #: The terminal sets its facts three to a line, joined by dots,
+    #: rather than one to a line.
+    facts_inline: bool = False
 
 
 @dataclass(frozen=True)
@@ -78,6 +105,13 @@ class KindTab:
     #: What the terminal's details panel says before a row is chosen; ""
     #: for a tab without one (the panel shows a chosen row's `info`).
     panel: str = ""
+    #: Whether the tab shows for this neighbour (a place's Tomb, only on
+    #: a tomb); None: always.
+    shown: Callable[[Neighbour], bool] | None = None
+
+    def shows(self, neighbour: Neighbour) -> bool:
+        """Whether the tab is on `neighbour`'s sheet."""
+        return self.shown is None or self.shown(neighbour)
 
     def parts(self) -> list[KindList | KindBlock]:
         """The tab's lists and blocks in the order shown."""

@@ -28,6 +28,7 @@ from .... import (
     tribunal_packages,
 )
 from .... import familiars as fam
+from .... import tombs as tomb_rules
 from ....actions import (
     NodeKind,
 )
@@ -56,11 +57,15 @@ from ....sections import (
     GILDS_SECTION,
     GRATITUDE_SECTION,
     HOUSEHOLD_SECTION,
+    LIBRARY_CREDIT_SECTION,
+    LIBRARY_RULES_SECTION,
+    LIBRARY_SEARCHES_SECTION,
     MANORS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     STAGES_SECTION,
     TABLES_SECTION,
     TOKENS_SECTION,
+    TOMB_TRAPS_SECTION,
     TREASURY_SECTION,
 )
 from ..fields import (
@@ -219,6 +224,15 @@ class RecordActions(WorkspaceBase):
     def action_rhine_challenge(self) -> None:
         """More's Archmage's Challenge on the Rhine's Gilds."""
         self._package_verb("rhine_challenge", GILDS_SECTION)
+
+    def action_library_search(self) -> None:
+        """More's Search the Great Library on the Rhine's Great Library."""
+        self._package_verb(
+            "library_search",
+            LIBRARY_RULES_SECTION,
+            LIBRARY_CREDIT_SECTION,
+            LIBRARY_SEARCHES_SECTION,
+        )
 
     def action_roll_fair(self) -> None:
         """More's Roll Income on a town's chosen fair."""
@@ -656,3 +670,17 @@ class RecordActions(WorkspaceBase):
     def action_area_lore_on_manor(self) -> None:
         """More's Area Lore in the chosen manor's hinterland."""
         self._on_manor(hunting_forms.area_lore_on_manor)
+
+    # -- a tomb's trap springs (Lands of the Nile) --
+
+    def action_overcome_trap(self) -> None:
+        """More's Overcome It on a tomb's chosen trap."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(TOMB_TRAPS_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            tomb_rules.overcome_trap(self.saga, view.neighbour, row),
+            lambda _end: self._commit(TOMB_TRAPS_SECTION, DIARY_SECTION),
+        )

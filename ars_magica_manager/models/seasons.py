@@ -298,6 +298,13 @@ class SeasonPlan:
     #: Reinventing the Lesser Elixir: its new ingredient (`title`, its bonus
     #: in `book_level`) is one the alchemist devised himself (TMRE p. 42).
     devised: bool = False
+    #: Ordination (The Church p. 33): the grade sought is `title`; who
+    #: examines him, and whether he is ordained outside his birth diocese.
+    examiner: str = ""
+    ordained_elsewhere: bool = False
+    #: Ordination: take the grade's Social Status in place of his own (the
+    #: swap is offered; False leaves his status for the troupe to change).
+    swap_status: bool = True
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:

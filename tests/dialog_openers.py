@@ -23,6 +23,8 @@ from ars_magica_manager import (
 )
 from ars_magica_manager import economics as eco
 from ars_magica_manager import goods as gd
+from ars_magica_manager import house_rules as hr
+from ars_magica_manager import mystery_cults as cult_core
 from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import charter as charter_forms
@@ -30,25 +32,46 @@ from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import lab_item
+from ars_magica_manager.forms import land_shaping as land_forms
 from ars_magica_manager.forms import tribunal as tribunal_forms
 from ars_magica_manager.forms import worksheet as wf
+
+# Hermetic Projects (a covenant's Great Tower; Wizard's War's tunnels).
 from ars_magica_manager.models import (
     Ability,
+    AbilityDef,
     Agent,
+    ArtScore,
     Book,
     Character,
     CharterClause,
+    CraftDevice,
+    CultDegree,
+    CultScript,
+    HermeticProject,
     KnownSpell,
+    LandProject,
+    MysteryCult,
     Neighbour,
+    Possession,
+    Progress,
+    ProjectWork,
     Saga,
     SagaSource,
     ScoredTrait,
+    Ship,
     Spell,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import mysticism as my
+from ars_magica_manager.rules.xp import ability_xp as cult_ability_xp
+from ars_magica_manager.sections import (
+    PROJECT_DEVICES_SECTION,
+    PROJECT_WORKS_SECTION,
+    TOWER_SECTION,
+)
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
 from ars_magica_manager.tui import screens as scr
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -560,6 +583,14 @@ def _economics_row(which: str, key: str):
         ws._economics_row_form(which, next(r for r in rows if r.key == key))
 
     return opener
+
+
+def _open_ritual_again(ws) -> None:
+    """Perform the ritual again, Leandro holding Creo 5: from its Lab Text
+    he may use at most his Creo score in Creo vis (DE p. 261)."""
+    leandro = next(c for c in ws.saga.characters if c.name == "Leandro")
+    leandro.arts["creo"] = ArtScore(xp=15)
+    ws.action_perform_ritual()
 
 
 async def _open_ability_details(ws) -> None:
@@ -1243,7 +1274,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "research bonuses": Opener("covenant", _open_research_bonuses),
     "add lab text": Opener("laboratory", lambda ws: ws._book_form(None)),
-    "perform ritual again": Opener("laboratory", lambda ws: ws.action_perform_ritual()),
+    "perform ritual again": Opener("laboratory", _open_ritual_again),
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
     "add house rule": Opener("saga", lambda ws: ws._house_rule_form(None)),
     "add player": Opener("saga_content", lambda ws: ws._player_form(None)),
@@ -1444,6 +1475,122 @@ OPENERS: dict[str, Opener] = {
     "philosophic alchemy": Opener("character", lambda ws: _open_alchemy(ws)),
     # The Great Elixir's test (The Mysteries Revised Edition).
     "test the great elixir": Opener("character", lambda ws: _open_great_elixir(ws)),
+    # Gaining and losing Virtues and Flaws in play (Grogs pp. 61-64).
+    "gain or lose in play": Opener(
+        "character", lambda ws: ws.action_change_virtues_flaws()
+    ),
+    # A saga's own Abilities in House Rules (HoH:S pp. 103-106).
+    "add house rule ability": Opener(
+        "saga_content", lambda ws: ws._house_rule_form(None)
+    ),
+    "edit house rule ability": Opener("saga_content", lambda ws: _open_own_ability(ws)),
+    # A place's Tomb tab (Lands of the Nile).
+    "edit tomb": Opener(
+        "place", _built(lambda ws: ws._core_verb("section-nb-tomb", "edit"))
+    ),
+    "add tomb curse": Opener(
+        "place", _built(lambda ws: ws._core_verb("section-nb-tomb-curses", "add"))
+    ),
+    "edit tomb ward": Opener(
+        "place",
+        _pick(
+            lambda ws: ws._core_verb("section-nb-tomb-wards", "edit"),
+            "nb-tomb-wards-list",
+        ),
+    ),
+    "add tomb trap": Opener(
+        "place", _built(lambda ws: ws._core_verb("section-nb-tomb-traps", "add"))
+    ),
+    "overcome trap": Opener(
+        "place", _pick(lambda ws: ws.action_overcome_trap(), "nb-tomb-traps-list")
+    ),
+    # A covenant's ships (Hermetic Projects; City & Guild).
+    "add ship": Opener("covenant", lambda ws: ws._possession_form("ship", None)),
+    "ship stress check": Opener("covenant", lambda ws: _open_ship(ws, "stress")),
+    "ship combat": Opener("covenant", lambda ws: _open_ship(ws, "combat")),
+    # Shaping the land by magic (Transforming Mythic Europe).
+    "shape land": Opener("covenant", lambda ws: ws.action_shape_land()),
+    "settle new land": Opener("covenant", lambda ws: _open_settle_land(ws)),
+    # The Rhine's Great Library at Durenmar (Guardians of the Forests).
+    "search the great library": Opener(
+        "tribunal", lambda ws: _open_library(ws, lambda ws: ws.action_library_search())
+    ),
+    "contribute to the great library": Opener(
+        "tribunal",
+        lambda ws: _open_library(
+            ws, lambda ws: ws._core_verb("section-trib-library-credit", "add")
+        ),
+    ),
+    "edit library credit": Opener(
+        "tribunal",
+        lambda ws: _open_library(
+            ws,
+            lambda ws: ws._core_verb("section-trib-library-credit", "edit"),
+            "trib-library-credit-list",
+        ),
+    ),
+    "edit library search": Opener(
+        "tribunal",
+        lambda ws: _open_library(
+            ws,
+            lambda ws: ws._core_verb("section-trib-library-searches", "edit"),
+            "trib-library-searches-list",
+        ),
+    ),
+    # A cleric's career (The Church): the Church tab's forms.
+    "petition the church": Opener("character", lambda ws: _open_church(ws, "petition")),
+    "add canon case": Opener("character", lambda ws: _open_church(ws, "canon")),
+    "edit holy orders": Opener("character", lambda ws: _open_church(ws, "orders")),
+    "perform an exorcism": Opener("character", lambda ws: _open_church(ws, "exorcism")),
+    "add ordination": Opener("character", lambda ws: _open_church(ws, "ordination")),
+    # Saga Content's Mystery Cults.
+    "add mystery cult": Opener(
+        "saga_content", lambda ws: _open_cults(ws, None, "section-content-cults", "add")
+    ),
+    "edit mystery cult": Opener(
+        "saga_content",
+        lambda ws: _open_cults(ws, None, "section-content-cult", "edit"),
+    ),
+    "add cult degree": Opener(
+        "saga_content",
+        lambda ws: _open_cults(ws, None, "section-content-cult-degrees", "add"),
+    ),
+    "edit cult script": Opener(
+        "saga_content",
+        lambda ws: _open_cults(
+            ws, "content-cult-scripts-list", "section-content-cult-scripts", "edit"
+        ),
+    ),
+    "add cult component": Opener(
+        "saga_content",
+        lambda ws: _open_cults(ws, None, "section-content-cult-scripts", "add"),
+    ),
+    # A covenant's Hermetic Projects (Hermetic Projects pp. 36-41) and
+    # Wizard's War's tunnel (pp. 78-81).
+    "begin project": Opener("covenant", lambda ws: ws.action_begin_project()),
+    "edit project": Opener(
+        "covenant",
+        lambda ws: _open_tower(ws, lambda: ws._core_verb(TOWER_SECTION, "edit")),
+    ),
+    "add work": Opener(
+        "covenant",
+        lambda ws: _open_tower(ws, lambda: ws._core_verb(PROJECT_WORKS_SECTION, "add")),
+    ),
+    "add device": Opener(
+        "covenant",
+        lambda ws: _open_tower(
+            ws, lambda: ws._core_verb(PROJECT_DEVICES_SECTION, "add")
+        ),
+    ),
+    "tower stress check": Opener(
+        "covenant", lambda ws: _open_tower(ws, ws.action_tower_stress)
+    ),
+    "conjure levels": Opener(
+        "covenant", lambda ws: _open_tower(ws, ws.action_tower_conjure)
+    ),
+    "open a tunnel": Opener("character", lambda ws: _open_tunnel(ws)),
+    # A Virtue gained by magic for a while ends (Grogs pp. 62-63).
+    "end a temporary virtue": Opener("character", lambda ws: _open_temporary(ws)),
 }
 
 
@@ -1799,3 +1946,230 @@ def _open_great_elixir(ws) -> None:
             character.virtues_flaws.append(VirtueFlawInstance(vf_id))
     character.background.year_born = ws.saga.current_year - 60
     ws.action_great_elixir()
+
+
+def _open_own_ability(ws) -> None:
+    """Edit one of the saga's own Abilities in House Rules: Speak with Ravens,
+    held by no one."""
+    if not ws.saga.custom_abilities:
+        ws.saga.custom_abilities.append(
+            AbilityDef(
+                id="custom_ability_speak_with_ravens",
+                name="Speak with Ravens",
+                category="Supernatural",
+                source="",
+                realm="Magic",
+                characteristic="Communication",
+            )
+        )
+        catalog.use_saga(ws.saga)
+    ability = ws.saga.custom_abilities[0]
+    ws._house_rule_form((hr.ABILITY, ability))
+
+
+async def _open_ship(ws, which: str) -> None:
+    """More's Stress Check or Ship Combat on the covenant's first ship,
+    Seehund (added in memory, saved only with the form)."""
+    covenant = ws.selected_covenant
+    if not any(p.kind == "ship" for p in covenant.possessions):
+        covenant.possessions.insert(
+            0,
+            Possession(
+                id="seehund",
+                kind="ship",
+                name="Seehund",
+                ship=Ship(ship_type="buss", kind_name="Coastal buss"),
+            ),
+        )
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    rows = view.query_one("#pos-ship-list", scr.SelectableList)
+    rows.select_data_index(0)
+    await until(lambda: rows.selected_data_index == 0)
+    if which == "stress":
+        ws.action_ship_stress()
+    else:
+        ws.action_ship_combat()
+
+
+def _open_settle_land(ws) -> None:
+    """Settle the New Land on a finished 3-mile island (its four Rituals
+    cast by Leandro; added in memory, saved only with the form)."""
+    covenant = ws.selected_covenant
+    if not covenant.land_projects:
+        covenant.land_projects.append(LandProject("isle", "Insula"))
+        magus = ws.saga.character("mag1")
+        magus.progress.append(Progress("land_shaping", "Insula", 4, 4))
+    ws._run_steps(land_forms.settle_form(ws.saga, covenant, covenant.land_projects[0]))
+
+
+async def _open_library(ws, open_editor, list_id: str = "") -> None:
+    """A form of the Rhine's Great Library tab: Leandro holds two seasons of
+    credit there and has sought a Vim tractatus (in memory, saved only with
+    the form); the row of `list_id` is chosen first."""
+    tribunal = ws.saga.tribunal("rhine")
+    data = tribunal.package_data.setdefault("rhine", {})
+    if not data.get("library_credit"):
+        data["library_credit"] = [
+            {
+                "magus_id": "mag1",
+                "given": [{"kind": "book", "what": "Tractatus, Vim Q 8", "seasons": 2}],
+                "granted": 0,
+                "used": 0,
+                "note": "",
+            }
+        ]
+        data["library_searches"] = [
+            {
+                "magus_id": "mag1",
+                "year": 1220,
+                "season": "Spring",
+                "sought": "tractatus",
+                "subject": "Vim",
+                "level": None,
+                "ease": None,
+                "lore_used": False,
+                "roll": "Q 5 + 2",
+                "outcome": "found",
+                "quality": 7,
+                "mastery": [],
+                "lines": [],
+                "book_id": None,
+                "credit_taken": False,
+            }
+        ]
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    if list_id:
+        rows = view.query_one(f"#{list_id}", scr.SelectableList)
+        rows.select_data_index(0)
+        await until(lambda: rows.selected_data_index == 0)
+    open_editor(ws)
+
+
+async def _open_church(ws, which: str) -> None:
+    """A form of Leandro's Church tab: he is made an exorcist of Konstanz
+    (in memory, saved only with the form) and shown again, so the sheet
+    has the tab, built."""
+    character = ws.selected_character
+    if not character.church.grade:
+        character.church.grade = "Exorcist"
+        character.church.diocese = "Konstanz"
+        await ws._show_character_detail(character)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    if which == "exorcism":
+        ws.action_perform_exorcism()
+        return
+    section, verb = {
+        "petition": ("section-char-petitions", "add"),
+        "canon": ("section-char-canon", "add"),
+        "orders": ("section-char-orders", "edit"),
+        "ordination": ("section-char-ordinations", "add"),
+    }[which]
+    ws._core_verb(section, verb)
+
+
+def _with_cult(ws) -> None:
+    """The Spinner's Thread, the saga's own cult (once, however often the
+    form is opened): its first degree's Script is +10; the first character
+    has its Lore 5 and the Virtue."""
+    saga = ws.saga
+    if any(c.id == "custom_cult_spinners_thread" for c in saga.custom_cults):
+        return
+    lore = "Spinner's Thread Lore"
+    script = CultScript(
+        "The Silk Hall",
+        [
+            cult_core.component("place", note="To the Silk Hall"),
+            cult_core.component("quest"),
+            cult_core.component("ordeal_minor", flaw_id="vf_visions"),
+            cult_core.component("goods"),
+        ],
+    )
+    saga.custom_cults.append(
+        MysteryCult(
+            "custom_cult_spinners_thread",
+            "The Spinner's Thread",
+            lore,
+            realm="Faerie",
+            degrees=[
+                CultDegree("degree_1", "Spinner", "vf_second_sight", script=script)
+            ],
+        )
+    )
+    mystagogue = saga.characters[0]
+    mystagogue.abilities.append(Ability(lore, xp=cult_ability_xp(5)))
+    mystagogue.virtues_flaws.append(VirtueFlawInstance("vf_second_sight"))
+    catalog.use_saga(saga)
+
+
+async def _open_cults(ws, list_id: str | None, section: str, verb: str) -> None:
+    """A verb on Saga Content's Mystery Cults tab (an empty saga for Add
+    Mystery Cult), on the first row of `list_id` when given."""
+    view = ws._current_sheet_view()
+    if section != "section-content-cults":
+        _with_cult(ws)
+    await view.build_all_tabs()
+    for each in (
+        "section-content-cults",
+        "section-content-cult",
+        "section-content-cult-degrees",
+        "section-content-cult-scripts",
+    ):
+        view.refresh_section(each)
+    if list_id:
+        rows = view.query_one(f"#{list_id}", scr.SelectableList)
+        rows.focus()
+        rows.select_data_index(0)
+        await until(lambda: rows.selected_data_index == 0)
+    ws._core_verb(section, verb)
+
+
+async def _open_tower(ws, open_form) -> None:
+    """A form of the covenant's Projects tab: the Schattenbach Spire, its
+    two rituals (one shoddy) and a craft device, added in memory (saved
+    only with the form); the sheet is shown again with its Projects tab."""
+    covenant = ws.selected_covenant
+    if not covenant.hermetic_projects:
+        covenant.hermetic_projects.append(
+            HermeticProject(
+                id="spire",
+                name="The Schattenbach Spire",
+                mason_id="comp1",
+                works=[
+                    ProjectWork(
+                        id="w1",
+                        name="Conjuring the Great Tower",
+                        levels=2,
+                        quality="Standard",
+                    ),
+                    ProjectWork(
+                        id="w2",
+                        name="Heights of the Great Tower",
+                        levels=4,
+                        quality="Shoddy",
+                    ),
+                ],
+                devices=[CraftDevice(id="d1", name="The Arms of Hercules")],
+            )
+        )
+        await ws._show_covenant_detail(covenant)
+        await ws._current_sheet_view().build_all_tabs()
+    open_form()
+
+
+def _open_tunnel(ws) -> None:
+    """Open a Tunnel for Leandro, who knows The Cursed Day (added in
+    memory, saved only with the form)."""
+    magus = ws.selected_character
+    if not any(k.spell_id == "spell_the_curs_d_day" for k in magus.spells_known):
+        magus.spells_known.append(KnownSpell("spell_the_curs_d_day"))
+    ws.action_open_tunnel()
+
+
+def _open_temporary(ws) -> None:
+    """Gain or Lose in Play for Leandro, whose Virtue is marked temporary
+    (in memory, saved only with the form)."""
+    ws.selected_character.virtues_flaws[0].temporary = True
+    ws.action_change_virtues_flaws()

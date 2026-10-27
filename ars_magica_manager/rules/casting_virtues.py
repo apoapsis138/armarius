@@ -35,6 +35,7 @@ from . import (
     common_magics,
     fenicil,
     house_discoveries,
+    house_magic,
     lab_virtues,
 )
 from .rounding import round_down
@@ -211,8 +212,13 @@ def reminders(magus: Character) -> list[str]:
     found += common_magics.reminders(magus)
     found += house_discoveries.reminders(magus)
     found += fenicil.reminders(magus)
-    # House Bjornaer's form-changing rolls follow the breakthroughs'.
-    found += breakthroughs_moh.reminders(magus) + bjornaer.reminders(magus)
+    # House Bjornaer's form-changing rolls follow the breakthroughs', then
+    # House Mercere's Mutantum and Tamed Magic.
+    found += (
+        breakthroughs_moh.reminders(magus)
+        + bjornaer.reminders(magus)
+        + house_magic.reminders(magus)
+    )
     return found
 
 

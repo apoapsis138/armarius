@@ -63,6 +63,14 @@ WITH_OUTCOMES = {
     "make_armillary_sphere",
     # The Mysteries Revised Edition: reinventing the Lesser Elixir.
     "reinvent_lesser_elixir",
+    # Transforming Mythic Europe: copying books by magic.
+    "copy_books_by_magic",
+    # Transforming Mythic Europe: casting a land project's Rituals.
+    "shape_land",
+    # The Church: an Ordination's examination.
+    "ordination",
+    # Hermetic Projects: a master mason's season on a Great Tower.
+    "build_great_tower",
 }
 
 
@@ -72,7 +80,7 @@ def test_every_activity_is_registered_once() -> None:
     assert not doubled, f"registered more than once: {doubled}"
     assert set(keys) == set(REGISTRY) == set(BY_KEY)
     # with the scholars' two, personal devotion, and Viresculture's two
-    assert len(keys) == 55
+    assert len(keys) == 59
 
 
 def test_registering_a_key_twice_fails() -> None:

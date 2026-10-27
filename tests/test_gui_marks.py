@@ -29,6 +29,7 @@ from ars_magica_manager.gui.mark_charges import (
     PLAIN,
 )
 from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.models import AbilityDef, Saga
 from ars_magica_manager.models.traits import Ability
 
 
@@ -129,3 +130,28 @@ def test_each_rhine_gild_bears_its_tree_cut_as_a_mark(app):
             for y in range(side // 5, side * 4 // 5, 2)
         )
         assert clear > 10, tree
+
+
+# A saga's own Abilities (HoH:S pp. 103-106).
+
+
+def test_a_saga_ability_is_drawn_with_its_categorys_mark():
+    """Only the saga's own Abilities go without a mark of their own: each
+    is drawn with its category's (no art is made for it)."""
+    saga = Saga(id="test_saga", name="Saga")
+    for name, category in (
+        ("Call the Tide", "Supernatural"),
+        ("Tide Lore", "Academic"),
+    ):
+        saga.custom_abilities.append(
+            AbilityDef(id=f"custom_ability_{len(name)}", name=name, category=category)
+        )
+    catalog.use_saga(saga)
+    unmarked = [
+        a.name
+        for a in catalog.load_ability_catalog()
+        if marks.key(a.name, a.category) in CATEGORIES
+    ]
+    assert unmarked == ["Call the Tide", "Tide Lore"]
+    assert marks.key("Call the Tide", "Supernatural") == "Supernatural"
+    assert marks.key("Tide Lore", "Academic") == "Academic"

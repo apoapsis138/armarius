@@ -7,6 +7,7 @@ from support import everything_saga
 from ars_magica_manager import models, seasons, settings, storage
 from ars_magica_manager.models import (
     Ability,
+    AbilityDef,
     Agent,
     Aging,
     Alchemy,
@@ -263,6 +264,12 @@ def _one_of_everything_filled_in() -> Saga:
     cov.economics.tithes = 1
     cov.economics.magic_savings = 2
     cov.economics.emergency_savings = 3
+    # Technological savings (Transforming Mythic Europe).
+    cov.economics.saving_devices = ["dev-broom"]
+    cov.economics.ritual_magnitudes = 4
+    cov.economics.magic_grain = 20000
+    cov.economics.grain_care = "Protected"
+    cov.economics.bread_share = "Three quarters"
     cov.economics.notes = {"buildings": "Roof"}
     cov.economics.income_sources[0].type = "Greater"
     cov.economics.income_sources[0].income = 300
@@ -299,6 +306,26 @@ def _one_of_everything_filled_in() -> Saga:
             load=1,
         )
     )
+    # A covenant's ship (Hermetic Projects; City & Guild).
+    cov.possessions.append(
+        Possession(
+            id="pos-cog",
+            kind="ship",
+            name="Grauwal",
+            ship=models.Ship(
+                ship_type="buss",
+                kind_name="Small cog",
+                quality="Excellent",
+                damage_lost=1,
+                repaired=True,
+                magnitudes=2,
+                ballistae=1,
+                fighters_tons=0.5,
+                close_to_home=True,
+                home_port="Terschelling",
+            ),
+        )
+    )
     cov.diary = [
         CovenantDiaryEntry(1220, "Summer", "Bought a mill", pounds=-12.0, loyalty=3)
     ]
@@ -306,6 +333,12 @@ def _one_of_everything_filled_in() -> Saga:
     magus.background.true_faith_score = 1
     magus.background.faith_points = 2
     magus.diary = [DiaryEntry(1219, "Winter", "Rest", "Quiet", "Other")]
+    # A Virtue gained by magic for a while (Grogs pp. 62-63).
+    magus.virtues_flaws.append(
+        VirtueFlawInstance(
+            "vf_keen_vision", temporary=True, ends_year=1221, ends_season="Winter"
+        )
+    )
     magus.invented_spells = [
         Spell(id="inv1", name="Lamp", technique="Creo", form="Ignem", level=10)
     ]
@@ -397,6 +430,18 @@ def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
         clauses=[CharterClause("1", "Share all vis.", 1220, "Spring")],
         seals=[CharterSeal(magus_id, 1220, "Spring")],
     )
+    # A land project: an island raised by magic (Transforming Mythic Europe).
+    covenant.land_projects.append(
+        models.LandProject("land-1", "The Island", features=["sea_gate"])
+    )
+    # A Hermetic Project, with a work and a craft device (Hermetic Projects).
+    covenant.hermetic_projects.append(
+        models.HermeticProject(
+            name="The Spire",
+            works=[models.ProjectWork(name="Heights", levels=4, quality="Standard")],
+            devices=[models.CraftDevice(name="The Arms of Hercules")],
+        )
+    )
 
 
 def _add_animal_and_formula(magus: Character) -> None:
@@ -411,6 +456,52 @@ def _add_animal_and_formula(magus: Character) -> None:
         immortal_age=161,
     )
     magus.magic_might = 30
+
+
+def _add_own_goods_and_abilities(saga: Saga) -> None:
+    """The saga's own good, purity and Ability (HoH:S p. 104)."""
+    saga.custom_goods.append(
+        GoodDef(
+            "custom_good_amber",
+            "Amber",
+            prices=("#", "500*", "1,000", ""),
+            purity=Purity(1000, "By content.", (PurityExample("Standard", "500*"),)),
+        )
+    )
+    saga.good_purities.append(GoodPurity("purity_1", "custom_good_amber", "Dull", 40))
+    saga.custom_abilities.append(
+        AbilityDef("custom_ability_x", "X", "Supernatural", realm="Magic")
+    )
+    # And a Mystery Cult of its own (TMRE pp. 13-19).
+    _add_own_cult(saga)
+
+
+def _add_own_cult(saga: Saga) -> None:
+    """A Mystery Cult of the saga's own, a degree and its Script (TMRE pp.
+    13-19)."""
+    saga.custom_cults.append(
+        models.MysteryCult(
+            "custom_cult_x",
+            "X",
+            "X Lore",
+            degrees=[
+                models.CultDegree(
+                    "degree_1",
+                    "First",
+                    "vf_affinity_with_art",
+                    {"art": "vim"},
+                    models.CultScript(
+                        "Rite",
+                        [models.CultComponent("ordeal_minor", 3, "", "vf_visions")],
+                        # What an experiment wrote into it (TMRE p. 18).
+                        traits=["Devoted to the cult +1"],
+                        virtues=["vf_second_sight"],
+                        initiates="vf_elemental_magic",
+                    ),
+                )
+            ],
+        )
+    )
 
 
 def _saga_with_every_record() -> Saga:
@@ -442,6 +533,21 @@ def _saga_with_every_record() -> Saga:
         [RefusedVendetta("Rival", 3)],
     )
     magus.agents.append(Agent("Bishop Benedict", bond_trait="Thankful", bond=1))
+    # A cleric's career (The Church).
+    magus.church = models.ChurchCareer(
+        grade="Lector",
+        diocese="Konstanz",
+        ordinations=[models.Ordination("Doorkeeper", "Spring", 1205, die=7)],
+        petitions=[
+            models.Petition(
+                "Leave",
+                arguments={"Intrigue": 2},
+                argument_rolls={"Intrigue": 11},
+                original=9,
+            )
+        ],
+        cases=[models.CanonCase("Slander", verdict="guilty", punishment="Monition")],
+    )
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
     magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
     magus.grog_year, magus.investments = GrogYear(), [Investment("speculation")]
@@ -496,15 +602,7 @@ def _saga_with_every_record() -> Saga:
         LabVirtueFlawDef("lvf", "LVF", "Virtue", "Structure", "Minor", 1)
     )
     saga.custom_boons_hooks.append(CovenantBoonHookDef("bh", "BH", "Boon", "Minor", 1))
-    saga.custom_goods.append(
-        GoodDef(
-            "custom_good_amber",
-            "Amber",
-            prices=("#", "500*", "1,000", ""),
-            purity=Purity(1000, "By content.", (PurityExample("Standard", "500*"),)),
-        )
-    )
-    saga.good_purities.append(GoodPurity("purity_1", "custom_good_amber", "Dull", 40))
+    _add_own_goods_and_abilities(saga)
     saga.players.append(Player("ana", "Ana", "player", "scrypt$00$00"))
     saga.sources.append(SagaSource("HR", "House rules"))
     saga.codices.append(Codex("codex", "Bound together", palimpsest=True))
@@ -512,7 +610,14 @@ def _saga_with_every_record() -> Saga:
     other = saga.covenants[0]
     other.attitudes.append(Attitude(other.id, 1, [Reason("Helped at the ford", 1)]))
     other.favours.append(Favour("Shelter", "Fengheld", other.id))
-    other.links.append(Link("characters", magus.id, "its founder"))
+    # With a covenant's ship (Hermetic Projects; City & Guild).
+    other.links, other.possessions = (
+        [*other.links, Link("characters", magus.id, "its founder")],
+        [
+            *other.possessions,
+            Possession(id="pos-ship", kind="ship", name="Möwe", ship=models.Ship()),
+        ],
+    )
     saga.creatures.append(
         Creature(
             "boglin",
@@ -583,13 +688,14 @@ def test_the_stale_key_fixture_holds_every_saved_record():
     """Every dataclass that can sit in a saga file is in the fixture, so the
     stale-key test below covers it (a new saved record must be added)."""
     not_saved = {
-        "AbilityDef", "ArmorDef", "CharacterTemplateDef", "CovenantSituationDef",
+        "ArmorDef", "CharacterTemplateDef", "CovenantSituationDef",
         "GrogTemplateDef",
         "HouseDef", "LabFeatureDef", "ShapeMaterialDef", "TraditionDef",
         "TraditionTraining", "WeaponDef", "CastingRule", "MagicalDefense",
         "DispelRule", "GroupCasting", "OpeningRule", "InitiationRule",
         "InitiationScript", "Advancement", "TraditionActivity", "BondRule",
         "PoolDef", "WarpingRule", "Guideline", "EffectParameter", "ArmorPieceDef",
+        "SpellGuidelineDef",
     }  # fmt: skip
     every = {
         cls.__name__

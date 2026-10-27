@@ -30,7 +30,8 @@ SHEET_OPEN_WIDGET_BUDGET = {
     # (unbuilt) pane: 2.
     "sketch_covenant": 54,
     # Each Tribunal's Secrets tab adds its (unbuilt) pane and its tab: 2.
-    "tribunal": 42,
+    # The Rhine's Great Library tab adds its (unbuilt) pane and its tab: 2.
+    "tribunal": 44,
     "theban_tribunal": 42,
     "normandy_tribunal": 44,  # one tab more: History
     "transylvania_tribunal": 42,
@@ -42,7 +43,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "university": 40,
     "faction": 40,
     "threat": 40,
-    "place": 40,
+    "place": 42,  # the sample place is a tomb: its Tomb tab adds its (unbuilt) pane
     "seasons": 40,
     "bestiary": 30,
     "creature": 50,

@@ -24,11 +24,13 @@ from .models import (
     SANCTUM_USAGES,
     Covenant,
     Economics,
+    EnchantedDevice,
     IncomeSource,
     Laboratory,
     Saga,
 )
-from .rules import covenfolk, grog_discipline
+from .rules import covenfolk, enchantment, grog_discipline, tme_books
+from .rules.breakdown import Breakdown
 from .rules.lab_stats import lab_characteristic_total
 from .rules.rounding import round_away_from_zero, round_down
 from .world import covenant_magi, takes_part_in_play
@@ -281,6 +283,75 @@ def _labor_savings(
     return laborers, laborer_savings, craftsmen, craft_savings
 
 
+#: The Magic row's rule (Covenants p. 67; Transforming Mythic Europe pp.
+#: 120-121).
+MAGIC_RULE = (
+    "1 pound a magnitude of each device doing covenfolk's work, 5 a magnitude "
+    "of each Ritual cast this year (with the laborers, at most 50% of "
+    "Provisions); bread from magical grain; and any typed"
+)
+
+
+def covenant_devices(saga: Saga, covenant: Covenant) -> list[EnchantedDevice]:
+    """The enchanted devices the covenant holds: those that may do its
+    covenfolk's work."""
+    return enchantment.held_by(saga, "covenant", covenant.id)
+
+
+def saving_devices(saga: Saga, covenant: Covenant) -> list[EnchantedDevice]:
+    """The covenant's devices the troupe has marked as doing covenfolk's
+    work (a device given away stops counting)."""
+    chosen = set(covenant.economics.saving_devices)
+    return [d for d in covenant_devices(saga, covenant) if d.id in chosen]
+
+
+def magic_breakdown(
+    saga: Saga,
+    covenant: Covenant,
+    people: int,
+    provisions_room: float,
+    labor_room: float | None = None,
+) -> Breakdown:
+    """How the Magic row's savings are made up (rules.tme_books): its
+    devices and Rituals within `labor_room`, what the laborers' half of
+    the Provisions leaves (Covenants p. 67)."""
+    eco = covenant.economics
+    return tme_books.magic_savings(
+        eco.magic_savings,
+        saving_devices(saga, covenant),
+        eco.ritual_magnitudes,
+        points=people,
+        grain=eco.magic_grain,
+        care=eco.grain_care,
+        share=eco.bread_share,
+        provisions_room=provisions_room,
+        labor_room=labor_room,
+    )
+
+
+def _magic_row(
+    saga: Saga,
+    covenant: Covenant,
+    people: int,
+    provisions_room: float,
+    labor_room: float | None = None,
+) -> Row:
+    """The Magic row: the typed pounds and what the covenant's magic saves,
+    its working shown as the basis."""
+    eco = covenant.economics
+    working = magic_breakdown(saga, covenant, people, provisions_room, labor_room)
+    return Row(
+        "magic",
+        "Magic",
+        MAGIC_RULE,
+        0,
+        round_away_from_zero(working.total),
+        eco.notes.get("magic", ""),
+        tme_books.breakdown_text(working) or "typed",
+        typed=("magic_savings",),
+    )
+
+
 def summarize(saga: Saga, covenant: Covenant) -> Summary:
     eco = covenant.economics
     people = covenfolk.inhabitant_points(saga, covenant)
@@ -412,14 +483,14 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             "Craftspeople with a field of work (Books saves nothing)"
             + (f"; {productivity}" if productivity else ""),
         ),
-        _typed_row(
-            eco,
-            "magic",
-            "Magic",
-            "The rules give items and Ritual castings different rates "
-            "(1 or 5 pounds per magnitude) -- work out the total and enter it",
-            "magic_savings",
-            savings=True,
+        # Magic doing laborers' work shares their half of the Provisions
+        # (Covenants p. 67).
+        _magic_row(
+            saga,
+            covenant,
+            people,
+            cost["provisions"] - saved["provisions"],
+            LABORER_LIMIT * costs["provisions"] - laborer_savings,
         ),
         _typed_row(
             eco,
@@ -435,7 +506,8 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     # Laborer and craft savings sit in the expenditure rows; Magic and
     # Emergency Savings aren't tied to a category, so they only reduce the
     # total.
-    cost_savings = sum(saved.values()) + eco.magic_savings + eco.emergency_savings
+    magic = next(r for r in savings if r.key == "magic")
+    cost_savings = sum(saved.values()) + magic.savings + eco.emergency_savings
     # A contested source gives nothing until it is secured.
     income = sum(
         s.current_income
@@ -508,6 +580,13 @@ def close_year(saga: Saga, covenant: Covenant) -> int:
         eco.inflation += round_down(spent / INFLATION_PER)
     eco.last_expenditure = spent
     eco.emergency_savings = 0
+    # The year's Ritual castings are spent; the store of magical grain is
+    # eaten and rots (Transforming Mythic Europe p. 121).
+    eco.ritual_magnitudes = 0
+    if eco.magic_grain:
+        eco.magic_grain = tme_books.grain_after_year(
+            eco.magic_grain, summary.inhabitant_points, eco.grain_care
+        )
     return change
 
 
@@ -737,11 +816,23 @@ def add_income_source(covenant: Covenant, values: dict[str, Any]) -> IncomeSourc
     return source
 
 
+#: The Magic row form's key for a device's "does covenfolk's work" tick.
+SAVES_PREFIX = "saves__"
+
+
 def apply_row_edit(economics: Economics, row_key: str, values: dict[str, Any]) -> None:
     """Apply an expenditure/savings row's form: its typed figures, and its
     note (an empty note removes it)."""
     values = dict(values)
     notes = values.pop("notes")
+    marks = {k: values.pop(k) for k in list(values) if k.startswith(SAVES_PREFIX)}
+    if marks:
+        # The Magic row's devices: those ticked do covenfolk's work; a
+        # device not on the form (given away) keeps its mark.
+        shown = {k.removeprefix(SAVES_PREFIX) for k in marks}
+        kept = [d for d in economics.saving_devices if d not in shown]
+        ticked = [k.removeprefix(SAVES_PREFIX) for k, on in marks.items() if on]
+        economics.saving_devices = kept + ticked
     for attribute, value in values.items():
         setattr(economics, attribute, value)
     if notes:

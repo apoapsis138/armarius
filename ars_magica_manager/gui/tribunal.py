@@ -43,6 +43,7 @@ from .character_sheet import TextBlock, secrets_chapter, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
 from .hall import GrandHall, OpeningCard
+from .ledger_rows import ledger_rows
 from .manage import RecordControls
 from .pages import symbol_label
 from .themes import Palette
@@ -84,18 +85,11 @@ class TribunalPage(QWidget):
         for extra in tribunal_packages.of(tribunal).tabs:
             self.codex.add(
                 extra.title,
-                "tribunal",
+                extra.icon,
                 scrolling_page(
                     p,
-                    *(
-                        self._grid(
-                            entry.section_title(saga, tribunal),
-                            entry.grid(saga, tribunal),
-                            entry.section_id,
-                            more=self._package_more(entry),
-                        )
-                        for entry in extra.lists
-                    ),
+                    *self._package_words(extra),
+                    *(self._package_list(entry) for entry in extra.lists),
                 ),
             )
         self.codex.add("Diary", "year", self._diary())
@@ -109,6 +103,63 @@ class TribunalPage(QWidget):
 
     def _edit(self) -> None:
         self.run(tribunal_forms.edit_tribunal_form(self.saga, self.tribunal))
+
+    def _package_words(self, extra: tribunal_packages.PackageTab) -> list[QWidget]:
+        """A package tab's section of words, if it has one: its facts, what
+        it says, and its More commands as its own buttons."""
+        words = extra.text
+        if words is None:
+            return []
+        saga, tribunal, p = self.saga, self.tribunal, self.p
+        facts = [cs.Fact(k, v) for k, v in words.facts(saga, tribunal)]
+        said = TextBlock(words.text(saga, tribunal), p)
+        said.setFont(serif(12.5))
+        edits = {
+            verb.label: lambda build=verb.build: self.run(build(saga, tribunal, 0))
+            for verb in words.more
+        }
+        return [section(words.title, p, fact_grid(facts, p, 3), said, edits=edits)]
+
+    def _package_list(self, entry: tribunal_packages.PackageList) -> QWidget:
+        """A package's list: ruled off as ledger entries when it gives them
+        as cards, else a table; the chosen row shows in the inspector."""
+        saga, tribunal, p = self.saga, self.tribunal, self.p
+        title = entry.section_title(saga, tribunal)
+        grid = entry.grid(saga, tribunal)
+        info = entry.info
+        cards = entry.cards(saga, tribunal) if entry.cards is not None else []
+
+        def inspect(row: int) -> None:
+            if info is None or row >= len(grid.rows):
+                return
+            # The panel's first line names the row: the inspector's title
+            # and the line under it say so instead.
+            lines = info(saga, tribunal, row).split("\n")
+            name, under = (
+                (cards[row].title, cards[row].meta)
+                if row < len(cards)
+                else (grid.rows[row][0], grid.rows[row][1])
+            )
+            self.codex.inspect(name, under, "\n".join(lines[1:]))
+
+        if not cards:
+            return self._grid(
+                title,
+                grid,
+                entry.section_id,
+                inspect if info is not None else None,
+                more=self._package_more(entry),
+            )
+        chooser = Chooser()
+        body = ledger_rows(cards, p, chooser, inspect)
+        buttons = verb_buttons(
+            self.ops[entry.section_id],
+            chooser,
+            self.run,
+            p,
+            more=self._package_more(entry),
+        )
+        return section(title, p, body, buttons=buttons)
 
     def _package_more(self, entry: tribunal_packages.PackageList) -> list[RowVerb]:
         """A package list's More commands, as buttons on its chosen row."""

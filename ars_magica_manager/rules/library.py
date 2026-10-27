@@ -150,6 +150,19 @@ def can_read(saga: Saga, character: Character, book: Book) -> bool:
 PALIMPSEST_PENALTY = 3
 
 
+def lent(book: Book) -> bool:
+    """A Great Library book lent to its reader: it never leaves the
+    library, so it is not copied or given away (GotF p. 55)."""
+    return book.loan_seasons is not None
+
+
+def lent_for(book: Book, order: int) -> bool:
+    """Whether the book may be studied in the season `order`
+    (models.seasons.season_order): any book but a loan, and a loan only in
+    a season its credit paid for (GotF p. 55)."""
+    return book.loan_seasons is None or order in book.loan_seasons
+
+
 def codex_of(saga: Saga, book: Book) -> Codex | None:
     """The codex the book is bound in with others, or None (bound alone)."""
     if not book.codex_id:

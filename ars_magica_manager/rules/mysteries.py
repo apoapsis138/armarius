@@ -382,11 +382,21 @@ def validity_ease(proposed_bonus: int, on_self: bool) -> int:
 class ExperimentalRite:
     """What the Extraordinary Results chart made of an experimental rite:
     its notes, whether the Virtue is lost (the Ordeal still suffered), and
-    whether the risk still counts in the Initiation Total."""
+    whether the risk still counts in the Initiation Total. What the chart
+    writes into the Script is kept too (EXPERIMENT_SOURCE): each side
+    effect or minor flaw or benefit (a Personality Trait), how many major
+    flaws (an Ordeal Flaw each, with no bonus) and major benefits (a
+    Virtue each), a modified effect (a different Virtue), and a Disaster
+    (a Major Flaw for the Mystagogue and the Initiate both)."""
 
     notes: list[str] = field(default_factory=list)
     no_virtue: bool = False
     risk_counts: bool = True
+    traits: list[str] = field(default_factory=list)
+    major_flaws: int = 0
+    major_benefits: int = 0
+    modified: bool = False
+    disaster: bool = False
 
 
 #: Rolls of 12+ followed in a row before the rest is left to the storyguide.
@@ -407,6 +417,7 @@ def experimental_rite(
         die = dice.stress_die(rng, 1 + risk, saga=saga)
         if die.botched:
             rite.no_virtue = True
+            rite.disaster = True
             rite.notes.append(
                 "Extraordinary Results: Disaster. The Initiation fails, and the "
                 "Mystagogue and the Initiate each gain a Major Flaw (the "
@@ -440,16 +451,19 @@ def _read_rite(
                 "isn't gained."
             )
         elif side == 7:
+            rite.major_flaws += 1
             rite.notes.append(
                 said + "a major flaw: an extra Ordeal Flaw (usually Minor) joins "
                 "the Script, with no bonus (add it by hand)."
             )
         elif side == 9:
+            rite.major_benefits += 1
             rite.notes.append(
                 said + "a major benefit: the Virtue is stronger, or a second "
                 "Minor Virtue is gained, as part of the Script (add it by hand)."
             )
         else:
+            rite.traits.append(effect)
             rite.notes.append(
                 said + f"a side effect ({effect}): a Personality Trait tied to "
                 "the cult's goals joins the Script (add it by hand)."
@@ -470,6 +484,7 @@ def _read_rite(
             "the Ability initiated (the storyguide's amount; add it by hand)."
         )
     else:
+        rite.modified = True
         rite.notes.append(
             said + "a modified effect: a different Virtue, related to the "
             "cult's goals, is initiated (change it by hand)."

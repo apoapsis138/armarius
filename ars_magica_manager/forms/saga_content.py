@@ -16,6 +16,7 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 from .. import house_rules as hr
+from .. import own_abilities as oa
 from .. import players as pl
 from .. import saga_content as sc
 from .. import sourcebooks, traditions
@@ -25,9 +26,12 @@ from ..commands import Choice, Choose, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, attr, description_field, pairs
 from ..markup import escape
 from ..models import (
+    REALMS,
     SPELL_DURATIONS,
     SPELL_RANGES,
     SPELL_TARGETS,
+    SUPERNATURAL_CATEGORIES,
+    AbilityDef,
     Player,
     Saga,
     SagaSource,
@@ -298,6 +302,19 @@ def house_rule_values(
     """The values house_rules.add / update take (with "kind"), from the
     form's."""
     of = _house_rule_kind(existing, values)
+    if of == hr.ABILITY:
+        return {
+            "kind": of,
+            "name": values.get("name") or "",
+            "category": values.get(f"category_{of}") or oa.SUPERNATURAL,
+            "realm": values.get("realm") or "",
+            "characteristic": values.get("characteristic") or "",
+            "accelerated": bool(values.get("accelerated")),
+            "with_virtue": existing is None and bool(values.get("with_virtue")),
+            "virtue_tier": values.get("virtue_tier") or oa.VIRTUE_TIER,
+            "description": values.get("description") or "",
+            "source": values.get("source") or "",
+        }
     covenant = of == hr.COVENANT
     return {
         "kind": of,
@@ -323,6 +340,8 @@ def house_rule_problem(
 
 def house_rule_live(existing: HouseRule | None, values: dict[str, Any]) -> str:
     built = house_rule_values(existing, values)
+    if built["kind"] == hr.ABILITY:
+        return ability_live(built)
     return (
         hr.points_text(built["type"], built["tier"])
         + ". Text only: no effects are applied."
@@ -335,18 +354,21 @@ def house_rule_fields(saga: Saga, existing: HouseRule | None) -> list[DialogFiel
     its points), category, the choices it asks for when taken (not a
     laboratory's), source and description. Text only: the rules engine
     applies no effects for it."""
-    kind_now, entry = existing if existing is not None else (None, None)
+    kind_now, chosen = existing if existing is not None else (None, None)
+    ability = chosen if isinstance(chosen, AbilityDef) else None
+    entry = None if isinstance(chosen, AbilityDef) else chosen
 
     def kind(values: dict[str, Any]) -> str:
         return _house_rule_kind(existing, values)
 
     def category(of: str) -> DialogField:
-        current = entry.category if entry is not None and kind_now == of else ""
+        current = chosen.category if chosen is not None and kind_now == of else ""
+        first = oa.SUPERNATURAL if of == hr.ABILITY else hr.CATEGORIES[of][0]
         return DialogField(
             f"category_{of}",
             "Category",
             "select",
-            current if current in hr.CATEGORIES[of] else hr.CATEGORIES[of][0],
+            current if current in hr.CATEGORIES[of] else first,
             options=pairs(hr.CATEGORIES[of]),
             show_if=lambda values: kind(values) == of,
         )
@@ -362,14 +384,16 @@ def house_rule_fields(saga: Saga, existing: HouseRule | None) -> list[DialogFiel
             hr.CHARACTER,
             options=[(hr.KIND_LABELS[k], k) for k in hr.KINDS],
         ),
-        DialogField("name", "Name", "text", entry.name if entry else "", required=True),
+        DialogField(
+            "name", "Name", "text", chosen.name if chosen else "", required=True
+        ),
         DialogField(
             "vf_type",
             "Type",
             "select",
             entry.type if entry is not None and not covenant_entry else "Virtue",
             options=pairs(hr.TYPES[hr.CHARACTER]),
-            show_if=lambda values: kind(values) != hr.COVENANT,
+            show_if=lambda values: kind(values) not in (hr.COVENANT, hr.ABILITY),
         ),
         DialogField(
             "bh_type",
@@ -385,13 +409,16 @@ def house_rule_fields(saga: Saga, existing: HouseRule | None) -> list[DialogFiel
             "select",
             entry.tier if entry else "Minor",
             options=pairs(hr.TIERS),
+            show_if=lambda values: kind(values) != hr.ABILITY,
         ),
         *(category(of) for of in hr.KINDS),
+        *ability_fields(existing is None, ability, kind),
         DialogField(
             "repeatable",
             "Can be taken more than once",
             "check",
             bool(entry.repeatable) if entry else False,
+            show_if=lambda values: kind(values) != hr.ABILITY,
         ),
         DialogField(
             "asks",
@@ -406,9 +433,99 @@ def house_rule_fields(saga: Saga, existing: HouseRule | None) -> list[DialogFiel
             + " are picked from a list; anything else is typed.",
             show_if=lambda values: kind(values) in hr.ASKING_KINDS,
         ),
-        *house_rule_source_field(saga, entry),
-        description_field(entry.description if entry else ""),
+        *house_rule_source_field(saga, chosen),
+        description_field(chosen.description if chosen else ""),
     ]
+
+
+def ability_fields(
+    adding: bool, ability: AbilityDef | None, kind: Callable[[dict[str, Any]], str]
+) -> list[DialogField]:
+    """One of the saga's own Abilities (own_abilities.py): the realm a
+    Supernatural one is affiliated with, the Characteristic it rolls with,
+    whether it is Accelerated, and (when adding) its Supernatural Virtue,
+    Major or Minor (Houses of Hermes: Societates p. 104; DE p. 106)."""
+
+    def shown(values: dict[str, Any]) -> bool:
+        return kind(values) == hr.ABILITY
+
+    def special(values: dict[str, Any]) -> bool:
+        return shown(values) and (
+            values.get(f"category_{hr.ABILITY}") in SUPERNATURAL_CATEGORIES
+        )
+
+    realm = ability.realm if ability is not None and ability.realm else ""
+    fields = [
+        DialogField(
+            "realm",
+            "Realm",
+            "select",
+            realm or oa.DEFAULT_REALM,
+            options=pairs(REALMS),
+            show_if=special,
+            hint="Its affiliation: a magus Ex Miscellanea's is usually Magic, "
+            "but it may be any realm.",
+        ),
+        DialogField(
+            "characteristic",
+            "Rolls with",
+            "select",
+            (ability.characteristic if ability is not None else "") or None,
+            options=pairs(oa.CHARACTERISTICS),
+            allow_blank=True,
+            placeholder="(the storyguide chooses)",
+            show_if=shown,
+            hint="Its roll: Characteristic + Ability (+ aura for a "
+            "Supernatural one) + die, against an Ease Factor.",
+        ),
+        DialogField(
+            "accelerated",
+            "Accelerated",
+            "check",
+            ability is not None and oa.accelerated(ability),
+            show_if=special,
+            hint="On the Art table, for Ease Factors like Mights or spell "
+            "levels: its spell level is its Casting Total, not 5 x its score.",
+        ),
+    ]
+    if adding:
+        fields.append(
+            DialogField(
+                "with_virtue",
+                "Add its Virtue",
+                "check",
+                True,
+                show_if=special,
+                hint="Its Supernatural Virtue, of its name, which grants "
+                "it (one already offered is not added again).",
+            )
+        )
+        fields.append(
+            DialogField(
+                "virtue_tier",
+                "Its Virtue is",
+                "select",
+                oa.VIRTUE_TIER,
+                options=pairs(oa.VIRTUE_TIERS),
+                show_if=lambda values: (
+                    special(values) and bool(values.get("with_virtue"))
+                ),
+                hint="A designed Ability is a Major Virtue's (Societates p. 104); "
+                "Minor, as Second Sight is, is the troupe's choice (DE p. 106).",
+            )
+        )
+    return fields
+
+
+def ability_live(built: dict[str, Any]) -> str:
+    """An Ability form's live line: what it rolls, and its Penetration."""
+    roll = f"{built['characteristic'] or 'Characteristic'} + {built['name'] or 'it'}"
+    if built["category"] not in SUPERNATURAL_CATEGORIES:
+        return f"Rolls {escape(roll)} + die."
+    return (
+        f"Casting Total: {escape(roll)} + aura + die. Penetration: Casting "
+        "Total - Ease Factor + Penetration bonus."
+    )
 
 
 def house_rule_source_field(saga: Saga, entry: hr.Entry | None) -> list[DialogField]:
