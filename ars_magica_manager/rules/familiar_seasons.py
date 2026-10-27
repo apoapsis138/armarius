@@ -55,6 +55,106 @@ BASE_LEVEL = 25
 HEARTBEAST = "vf_heartbeast"
 
 
+#: The book's Suggested Familiars by Art: animals that suit each Art
+#: (DE p. 266). The bond's Arts must suit the animal or its powers, so
+#: this is advice: a troupe may find another fitting reason.
+SUGGESTED_FAMILIARS: dict[str, tuple[str, ...]] = {
+    "Creo": ("beaver", "eagle", "lizard", "pelican", "weasel", "any that rejuvenates"),
+    "Intellego": (
+        "cat (tortoiseshell)",
+        "crow",
+        "goat",
+        "raven",
+        "woodpecker",
+        "toad",
+        "any with keen senses",
+        "any thought to foretell",
+    ),
+    "Muto": (
+        "cat (white or tortoiseshell)",
+        "fox",
+        "hare",
+        "moth",
+        "butterfly",
+        "toad",
+        "amphibians",
+    ),
+    "Perdo": ("asp", "hedgehog", "salamander", "shrew", "weasel", "any venomous"),
+    "Rego": (
+        "badger",
+        "cat (black)",
+        "cockerel",
+        "dog",
+        "lion",
+        "owl",
+        "wolf",
+        "any pack leader",
+    ),
+    "Animal": ("any animal",),
+    "Aquam": (
+        "coot",
+        "duck",
+        "frog",
+        "kingfisher",
+        "otter",
+        "swan",
+        "any semi-aquatic",
+    ),
+    "Auram": ("crow", "kingfisher", "spider", "any bird", "bat"),
+    "Corpus": ("caladrius", "cat", "dog", "goose"),
+    "Herbam": ("beaver", "monkey", "squirrel", "woodpecker"),
+    "Ignem": ("eagle", "hercinia", "salamander", "scitalis", "very small dragons"),
+    "Imaginem": ("chameleon", "cricket", "magpie", "partridge", "peacock", "scitalis"),
+    "Mentem": (
+        "ape",
+        "cat (black or tortoiseshell)",
+        "fox",
+        "owl",
+        "wolf",
+        "any with Intelligence",
+    ),
+    "Terram": ("badger", "hedgehog", "ferret", "frog", "fox", "mole", "mouse"),
+    "Vim": ("hoopoe", "any magical animal"),
+}
+SUGGESTED_SOURCE = "Ars Magica Definitive Edition, Suggested Familiars by Art, p. 266"
+
+
+def suits(art: str, species: str) -> bool:
+    """Whether the book's list for `art` names `species` (a word of it:
+    "falcon" doesn't match, "barn owl" matches owl)."""
+    words = set(species.casefold().replace(",", " ").split())
+    return any(
+        animal.split(" (")[0] in words for animal in SUGGESTED_FAMILIARS.get(art, ())
+    )
+
+
+def fitting_note(familiar: Familiar, technique: str, form: str) -> str:
+    """What the book suggests for the bond's two Arts, and whether it names
+    the familiar's kind: advice beside the choice (DE p. 266)."""
+    lines = [
+        f"{art}: {', '.join(SUGGESTED_FAMILIARS[art])}"
+        for art in (technique, form)
+        if art in SUGGESTED_FAMILIARS
+    ]
+    if not lines:
+        return ""
+    kind = familiar.species or familiar.name
+    named = [art for art in (technique, form) if kind and suits(art, kind)]
+    verdict = (
+        f"The list names a {kind} for {' and '.join(named)}."
+        if named
+        else f"Neither list names a {kind} by name: the Arts must suit the "
+        "animal or its powers (a bird suits Auram), as the troupe decides."
+        if kind
+        else ""
+    )
+    return (
+        "Suggested familiars (DE p. 266): "
+        + "; ".join(lines)
+        + (f". {verdict}" if verdict else ".")
+    )
+
+
 def binding_level(familiar: Familiar) -> int:
     """25 + Magic Might + 5 x Size."""
     return BASE_LEVEL + familiar.magic_might + 5 * familiar.size

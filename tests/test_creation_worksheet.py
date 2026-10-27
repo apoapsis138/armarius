@@ -119,6 +119,7 @@ async def test_steps_follow_the_character_type(concept_checks):
             "Characteristics",
             "Early Childhood",
             "Later Life",
+            "Equipment",
             "Finishing Touches",
         ]
         # Each step's mark: broken must, none, advice, none...

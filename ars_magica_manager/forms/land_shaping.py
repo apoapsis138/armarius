@@ -297,6 +297,36 @@ def project_lines(saga: Saga, project: LandProject) -> list[str]:
     return said
 
 
+#: The Economics tab's Land Works section (TME pp. 53-77).
+LAND_WORKS_SECTION = "section-eco-land"
+
+
+def land_works_text(saga: Saga, covenant: Covenant) -> str:
+    """The covenant's land projects, each Ritual ticked as cast (markup)."""
+    if not covenant.land_projects:
+        return "[dim]None planned: More's Shape the Land plans one.[/]"
+    found: list[str] = []
+    for project in covenant.land_projects:
+        works = ls.works(project)
+        cast = ls.cast_count(saga, project)
+        found.append(
+            f"[b]{escape(project.name)}[/]  {min(cast, len(works))} of "
+            f"{len(works)} Ritual(s) cast"
+            + (
+                f", {project.manors_settled} manor(s) settled"
+                if project.manors_settled
+                else ""
+            )
+        )
+        for index, work in enumerate(works):
+            mark = "[$text-success]✔[/]" if index < cast else "○"
+            found.append(
+                f"  {mark} {escape(work.name)}: {escape(work.arts)} {work.level}, "
+                f"{work.pawns} pawn(s)"
+            )
+    return "\n".join(found)
+
+
 def _live(saga: Saga, project: LandProject):
     def live(values: dict[str, Any]) -> str:
         draft = project_from(values, project)

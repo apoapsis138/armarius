@@ -7,7 +7,13 @@ from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
 from ars_magica_manager import __version__, storage
 from ars_magica_manager import help_text as ht
-from ars_magica_manager.models import SKETCH, Covenant, HermeticProject
+from ars_magica_manager.models import (
+    SKETCH,
+    Covenant,
+    DeepCover,
+    HermeticProject,
+    Marriage,
+)
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import SelectableList, WorkspaceScreen
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
@@ -280,6 +286,10 @@ async def test_every_tab_and_section_has_help():
     next(
         c for c in saga.characters if c.id == NODES["character"][1]
     ).hermetic.house = "house_criamon"
+    # Covers and Marriages show once the character has one.
+    magus = next(c for c in saga.characters if c.id == NODES["character"][1])
+    magus.covers.append(DeepCover("Reynard", role="a mercenary"))
+    saga.marriages.append(Marriage(bride="Adela", groom_ref="character:" + magus.id))
     next(
         c for c in saga.covenants if c.id == NODES["covenant"][1]
     ).hermetic_projects = [

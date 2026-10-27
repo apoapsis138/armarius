@@ -58,12 +58,13 @@ import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
 
-from ..models import Character, InstilledEffect, Spell
+from ..models import COVER, PERSONA_KIND, Character, DeepCover, InstilledEffect, Spell
 from . import house_discoveries, house_mastery, lab_virtues, spell_levels
 from .breakdown import Breakdown, Line
 from .lab import LabTotal
 from .scores import ability_level
 from .study import gift_social_penalty
+from .xp import ABILITY_FACTOR, score_from_xp
 
 TL = "Houses of Hermes: True Lineages"
 SOC = "Houses of Hermes: Societates"
@@ -537,6 +538,48 @@ def cover_xp(contact: str, events: int = 0) -> tuple[int, bool]:
         raise ValueError(f"{contact!r} isn't a way of keeping a cover.")
     xp = COVER_XP[contact] + max(0, events)
     return xp, xp > COVER_SUSPICION
+
+
+#: A persona's Reputation xp when it is made: a score of 1 (p. 90).
+PERSONA_START_XP = 5
+
+
+def persona_xp(character: Character) -> int:
+    """The xp in the character's Persona Ability."""
+    return next((a.xp for a in character.abilities if a.name == PERSONA), 0)
+
+
+def cover_reputation_xp(cover: DeepCover, character: Character | None = None) -> int:
+    """A cover's Reputation xp; a persona's also has every xp put into the
+    Persona Ability since it was made (p. 90)."""
+    if cover.kind != PERSONA_KIND or character is None:
+        return cover.reputation_xp
+    return cover.reputation_xp + max(0, persona_xp(character) - cover.persona_from_xp)
+
+
+def cover_reputation(cover: DeepCover, character: Character | None = None) -> int:
+    """A cover's or persona's Reputation score, from its xp (it rises as an
+    Ability does, pp. 88, 90)."""
+    return score_from_xp(cover_reputation_xp(cover, character), ABILITY_FACTOR)
+
+
+def keep_covers(character: Character) -> list[str]:
+    """A season's Reputation xp for each deep cover kept up (at Advance),
+    and a note when one rises suspiciously fast (p. 89)."""
+    told: list[str] = []
+    for cover in character.covers:
+        if cover.kind != COVER or cover.last_used is not None:
+            continue
+        xp, suspicious = cover_xp(cover.contact)
+        if not xp:
+            continue
+        cover.reputation_xp += xp
+        told.append(
+            f"Cover {cover.name}: +{xp} Reputation xp ({cover_reputation(cover)})"
+            + (", suspiciously fast" if suspicious else "")
+            + "."
+        )
+    return told
 
 
 def cover_burden(status_tier: str | None, other_virtues: bool = False) -> str:

@@ -106,6 +106,8 @@ class SupplementWork:
     reputation_xp: list[tuple[str, int]] = field(default_factory=list)
     #: The Ordeal an Initiation inflicted ("Minor"/"Medium"/"Major").
     ordeal: str = ""
+    #: What an Initiation's sacrifice gives up (SeasonPlan.sacrifice).
+    sacrifice: str = ""
     #: An Initiation gave its Virtue (only that spends a step of each past
     #: Ordeal's reduction).
     initiated: bool = False

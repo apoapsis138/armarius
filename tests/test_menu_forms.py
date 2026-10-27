@@ -329,6 +329,7 @@ def test_exporting_and_importing_a_character(tmp_path: Path):
         "Laboratories",
         "A Whole Saga",
         "A Content Pack",
+        "A Mystery Cult",
     ]
     wrong = choose.apply("covenants")
     assert isinstance(wrong, commands.ChooseFile)

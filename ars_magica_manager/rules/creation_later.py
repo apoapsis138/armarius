@@ -22,9 +22,7 @@ from . import animal_grogs, childhood
 from . import creation_access as access
 from . import creation_packages as packages
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
-from .creation_character import (
-    later_life_years,
-)
+from .creation_character import later_life_ends, later_life_years
 from .creation_virtues import held_option
 from .creation_xp import entries, spent
 
@@ -49,8 +47,19 @@ def xp_a_year(character: Character) -> int:
 
 def bought_years(saga: Saga, character: Character) -> int:
     """The Later Life years bought at the xp a year: those the training
-    packages don't take."""
-    return max(0, later_life_years(saga, character) - packages.years_used(character))
+    packages and a tradition's apprenticeship don't take."""
+    return max(
+        0,
+        later_life_years(saga, character)
+        - packages.years_used(character)
+        - apprenticed_years(saga, character),
+    )
+
+
+def apprenticed_years(saga: Saga, character: Character) -> int:
+    """The Later Life years a tradition's apprenticeship takes."""
+    ends = later_life_ends(saga, character)
+    return access.apprenticeship_years(character, ends) if ends is not None else 0
 
 
 #: A Redcap's fifteen years of apprenticeship gave 300 xp (DE p. 105);
@@ -163,15 +172,21 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
             )
         )
     if access.gifted_non_magus(character):
+        # The Gift lets one Supernatural Ability be learned without its
+        # Virtue; a tradition's Opening makes its own Abilities free of
+        # that limit (a folk witch's seven, Hedge Magic RE p. 34).
+        free = access.granted_supernatural(character) | access.tradition_opened(
+            character
+        )
         extra = {
             x.target
             for x in character.creation_xp
             if access.ability_category(x.target) == access.SUPERNATURAL
-            and x.target not in access.granted_supernatural(character)
+            and x.target not in free
         }
         found.append(
             _check(
-                "One Supernatural Ability without its Virtue (The Gift)",
+                "The Gift allows one Supernatural Ability without its Virtue",
                 len(extra) <= 1,
                 f"{len(extra)}",
                 access.SOURCE,

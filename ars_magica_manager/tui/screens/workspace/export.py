@@ -87,6 +87,18 @@ class ExportActions(WorkspaceBase):
             self.app, menu_forms.export_saga(self.saga, storage.exports_dir()), done
         )
 
+    def action_export_cult(self) -> None:
+        """More's Export a Cult on the saga: one of its own Mystery Cults to
+        a file Import reads back (A Mystery Cult)."""
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(end))
+
+        run_steps(
+            self.app, menu_forms.export_cult(self.saga, storage.exports_dir()), done
+        )
+
     def action_export_pack(self) -> None:
         """More's Export Pack on the saga: write the chosen Tribunals,
         covenants, places and neighbours to a content pack."""

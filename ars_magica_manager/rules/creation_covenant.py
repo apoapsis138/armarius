@@ -168,6 +168,11 @@ def _covenant_labs(
     ]
 
 
+def magi_count(saga: Saga, covenant: Covenant) -> int:
+    """How many magi belong to the covenant."""
+    return _magi(saga, covenant)
+
+
 def _magi(saga: Saga, covenant: Covenant) -> int:
     return sum(
         1 for c in saga.characters if c.covenant_id == covenant.id and c.type == "magus"
@@ -187,8 +192,8 @@ def baseline_covenfolk_note(saga: Saga, covenant: Covenant) -> str:
     return (
         f"The baseline gives about {magi} grog(s) and {2 * magi} other "
         "covenfolk (servants, craftsmen) for its "
-        f"{magi} magi, free of Build Points: add them on the Inhabitants tab "
-        "once the covenant is In Play."
+        f"{magi} magi, free of Build Points: Add the baseline's people puts "
+        "them on the Inhabitants tab."
     )
 
 

@@ -234,7 +234,7 @@ def virtue_lines(character: Character, weapon: Possession, kind: str) -> list[Li
         if effect.target is not None and effect.target.strip().casefold() not in names:
             continue
         lines.append(
-            Line(effect.entry.name, amount=effect.amount or 0, source=VIRTUES_SOURCE)
+            Line(effect.name, amount=effect.amount or 0, source=VIRTUES_SOURCE)
         )
     if not any(vf.vf_id == PRIMITIVE for vf in character.virtues_flaws):
         return lines

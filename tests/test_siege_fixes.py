@@ -124,7 +124,10 @@ def test_a_failed_roll_at_standard_brings_the_next_a_week_later_not_backdated():
     # Events every week; the first roll is due on day 30: 3 + 2 against 6.
     told = rules.pass_interval(castle, Scripted(2))
     assert castle.days == 36
-    assert told == ["Supplies roll: 5 against 6", "Supplies fall to Shoddy."]
+    assert told == [
+        "Supplies roll: 5 against 6",
+        "Supplies fall to Shoddy; those inside make deprivation checks (ArM5 p. 180).",
+    ]
     assert (castle.supply_rolls, castle.next_supply_day) == (1, 37)
     # The next week brings the roll of day 37, and only that one.
     told = rules.pass_interval(castle, Scripted(9))

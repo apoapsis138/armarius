@@ -245,7 +245,7 @@ def soak(character: Character) -> Breakdown:
             total -= 1
     for effect in effects.collect([character_source(character.virtues_flaws)], "soak"):
         amount = effect.amount or 0
-        lines.append(Line(effect.entry.name, amount=amount, source="character"))
+        lines.append(Line(effect.name, amount=amount, source="character"))
         total += amount
     if any(vf.vf_id == "vf_guardian_angel" for vf in character.virtues_flaws):
         # The angel's +5, while the character does God's will (DE p. 84).

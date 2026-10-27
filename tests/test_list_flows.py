@@ -37,6 +37,7 @@ from ars_magica_manager.models import (
     CreaturePower,
     CultDegree,
     CultScript,
+    DeepCover,
     DiaryEntry,
     EnchantedDevice,
     Familiar,
@@ -150,6 +151,10 @@ def _saga() -> Saga:
     magus.bound_beings = [
         BoundBeing("Huginn [raven]", tradition="trad_vitkir"),
         BoundBeing("Muninn", tradition="trad_vitkir"),
+    ]
+    magus.covers = [
+        DeepCover("Reynard [the Mercenary]", role="a mercenary"),
+        DeepCover("Brother Anselm", role="a monk"),
     ]
     familiar = Familiar(id="fam1", character_id="mag1", name="Corax")
     familiar.personality_traits = two()
@@ -598,6 +603,12 @@ ITEM_LISTS: dict[str, ListCase] = {
         "pos-ship-list",
         lambda s: [p for p in s.covenants[0].possessions if p.kind == "ship"],
     ),
+    "character-covers": ListCase(
+        ("character", "mag1"),
+        "section-char-covers",
+        "char-covers-list",
+        lambda s: s.characters[0].covers,
+    ),
     # A covenant's Hermetic Projects, the shown one's works and devices.
     "covenant-projects": ListCase(
         ("covenant", "cov1"),
@@ -979,14 +990,14 @@ async def test_conflict_lists_act_on_the_chosen_row(name):
         assert _saved(case)[0].name.endswith("]")
 
         await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "m", MenuScreen)
         if name == "fights":
-            await _press(pilot, app, "m", MenuScreen)
             await _press(pilot, app, "a", FieldsDialog)
             dialog = app.screen
             dialog.query_one("#fld-character", Select).value = "mag1|"
             await pilot.pause()
-        else:  # its one More command runs straight away
-            await _press(pilot, app, "m", FieldsDialog)
+        else:  # Battle Event (b) or Next Siege Event (n)
+            await _press(pilot, app, "b" if name == "battles" else "n", FieldsDialog)
             dialog = app.screen
         dialog.query_one("#btn-save").press()
         assert await wait_until(pilot, lambda: app.screen is workspace)
@@ -1713,7 +1724,8 @@ async def test_battle_event_at_sea_acts_on_the_chosen_fleet_battle():
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, view = await _open(pilot, app, case)
         await _choose_row(pilot, view, case, 1)
-        await _press(pilot, app, "m", FieldsDialog)
+        await _press(pilot, app, "m", MenuScreen)
+        await _press(pilot, app, "b", FieldsDialog)
         dialog = app.screen
         assert "at sea" in str(dialog.query_one("#fields-title").render())
         dialog.query_one("#btn-save").press()

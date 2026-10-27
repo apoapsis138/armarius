@@ -774,6 +774,10 @@ class CovenantActions(WorkspaceBase):
         """More's Ship Combat for the chosen ship."""
         self._on_ship(ship_forms.ship_combat, tree=True)
 
+    def action_ship_fate(self) -> None:
+        """More's Sunk or Taken for the chosen ship."""
+        self._on_ship(ship_forms.mark_fate, tree=True)
+
     # -- Covenant: shaping the land (Transforming Mythic Europe) --
 
     def action_shape_land(self) -> None:

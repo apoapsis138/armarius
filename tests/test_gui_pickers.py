@@ -111,7 +111,7 @@ def test_an_initiations_virtue_asks_for_what_it_names(app):
             "lore": "Mercere Lore",
             "mystery_virtue": pick,
         },
-        "Affinity with {art}  [Minor Virtue, Hermetic]  (needs: art)",
+        "Affinity with (Art)  [Minor Virtue, Hermetic]",
         {"art": "ignem"},
     )
     section_buttons(window.page(), "This Season")["Plan"].click()

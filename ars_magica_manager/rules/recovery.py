@@ -197,7 +197,7 @@ def total(saga: Saga | None, character: Character, state: WoundState) -> Breakdo
     found = effects.collect([character_source(character.virtues_flaws)], "recovery")
     for effect in found:
         if effect.modifier.amount:
-            lines.append(Line(effect.entry.name, amount=effect.modifier.amount))
+            lines.append(Line(effect.name, amount=effect.modifier.amount))
     if saga is not None:
         aura, realm = realms.home_aura(saga, character)
         healing = aura_kinds.healing_line(

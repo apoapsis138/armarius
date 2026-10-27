@@ -46,11 +46,11 @@ def ship_records(saga: Saga, side: BattleSide) -> list[Possession]:
 
 
 def afloat(saga: Saga, side: BattleSide) -> list[Possession]:
-    """Its ships not wrecked."""
+    """Its ships not wrecked, sunk or taken."""
     return [
         p
         for p in ship_records(saga, side)
-        if not ship_rules.wrecked(ship_rules.ship_of(p))
+        if not ship_rules.lost(ship_rules.ship_of(p))
     ]
 
 

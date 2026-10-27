@@ -251,6 +251,8 @@
       "social_status": "vf_folk_witch",
       "notes": "Must take at least one Flaw affecting their magic. Apprenticeship gives 200 xp (Well-Trained +50, Poorly Trained -50 each); afterwards 15 xp a year, modified by Wealthy or Poor. A witch spends two seasons a year supporting themselves; at creation each lab season costs 10 of that year's xp, at most 2 a year (Wealthy 3, Poor 1). A Gifted apprentice leaves with at least 1 in each of the seven Abilities and in Folk Witch Magic Theory. The troupe may swap in Animal Healing, Entrancement, Enchanting Music, Nightwalking, Premonitions or Wilderness Sense. Organization Lore: Folk Witches recognises a witch's mark. The kitchen (HMRE pp. 38-42): 2 seasons and Folk Witch Magic Theory 3 to set up; a season and both Theories at 3 to convert a Hermetic laboratory; 3 sizes larger on Covenants' laboratory scale. Only a familiar, or sisters at a sabbat, can help. She may experiment as a magus does; a literate witch writes Lab Texts (a potion's has her Folk Witch Magic Theory as its level). A season's vis is at most twice her Folk Witch Magic Theory (four times with Concentrated Potions). A potion casts at Brew Potency + a stress die, no aura or Penetration bonus, and must penetrate the drinker; one granting a power gives it at Brew Potency / 5 (rounded up). Int + Folk Witch Magic Theory vs 9 reads a potion. Covens (pp. 43-50): built as a covenant (one site at Magic aura 3), each Script costing its bonus in Build Points; Low under 150, Medium to 299, High to 599, Legendary 600 and up.",
       "training": {
+        "starts": 10,
+        "years": 10,
         "gift": "optional",
         "xp": 200,
         "ungifted_xp": 200,
@@ -15035,6 +15037,8 @@
       "social_status": "vf_settut",
       "notes": "Each power is a Major Supernatural Virtue granting it at 0, and an Accelerated Ability. A man must take Transvestite (here Gender Nonconforming). Settut Divination makes her a seeress: never Favored, it is needed to lead, Open The Gift or help initiate. Learning a Favored Ability, a Gifted settut doesn't lose her Favored total from Source Quality. Usual Abilities: Penetration, Finesse, Organization Lore: Settuten, Chirurgy, a Profession; Herbalism for folk medicine. Duration modifiers to the EF: Lunar Day +0, Moon +3, Lunar Year +6, Nineteen Years +9. An amulet can be dispelled before use only at twice its equivalent level (its Potency). Design & Inscription bonuses are capped by Craft: Iharzen. Settuten have no passive Magical Defenses: the jedwel dispels stand in for them. Useless vis: any other kind. Hermetic Virtues and Flaws may shape her powers (Cyclic Magic by moon or sun is common). Gifted Berber settuten take Disjunction on themselves at a convocation to hide The Gift; Gifted boys are usually 'cured' by a Lunar Year Disjunction.",
       "training": {
+        "starts": 10,
+        "years": 10,
         "gift": "optional",
         "xp": 200,
         "ungifted_xp": 200,
@@ -15048,7 +15052,7 @@
           "Dissidence",
           "Magic Sensitivity"
         ],
-        "notes": "About ten years from age 7 to 12, 200 xp on the tradition's Supernatural Abilities and General and Arcane Abilities; no Academic or Martial Abilities without a Virtue that allows them. Craft: Iharzen is required. After, 15 xp a year. UnGifted members buy each power as its Virtue; more come only by initiation."
+        "notes": "About ten years from age 7 to 12 (the app takes 10, as for a folk witch), 200 xp on the tradition's Supernatural Abilities and General and Arcane Abilities; no Academic or Martial Abilities without a Virtue that allows them. Craft: Iharzen is required. After, 15 xp a year. UnGifted members buy each power as its Virtue; more come only by initiation."
       },
       "casting": [
         {
@@ -15210,6 +15214,8 @@
       "social_status": "vf_settut",
       "notes": "Each power is a Major Supernatural Virtue granting it at 0, and an Accelerated Ability. A man must take Transvestite (here Gender Nonconforming). Settut Divination makes her a seeress: never Favored, it is needed to lead, Open The Gift or help initiate. Learning a Favored Ability, a Gifted settut doesn't lose her Favored total from Source Quality. Usual Abilities: Penetration, Finesse, Organization Lore: Settuten, Chirurgy, a Profession; Herbalism for folk medicine. Duration modifiers to the EF: Lunar Day +0, Moon +3, Lunar Year +6, Nineteen Years +9. An amulet can be dispelled before use only at twice its equivalent level (its Potency). Design & Inscription bonuses are capped by Craft: Iharzen. Settuten have no passive Magical Defenses: the jedwel dispels stand in for them. Useless vis: any other kind. Hermetic Virtues and Flaws may shape her powers (Cyclic Magic by moon or sun is common). Tuareg settuten hold no local convocations, are traded between bands, and their Divination is usually the Geomancy variant. Tuareg men who gain Dislocation get no jedwel defenses unless raised as a settut.",
       "training": {
+        "starts": 10,
+        "years": 10,
         "gift": "optional",
         "xp": 200,
         "ungifted_xp": 200,
@@ -15223,7 +15229,7 @@
           "Dismay",
           "Magic Sensitivity"
         ],
-        "notes": "About ten years from age 7 to 12, 200 xp on the tradition's Supernatural Abilities and General and Arcane Abilities; no Academic or Martial Abilities without a Virtue that allows them. Craft: Iharzen is required. After, 15 xp a year. UnGifted members buy each power as its Virtue; more come only by initiation."
+        "notes": "About ten years from age 7 to 12 (the app takes 10, as for a folk witch), 200 xp on the tradition's Supernatural Abilities and General and Arcane Abilities; no Academic or Martial Abilities without a Virtue that allows them. Craft: Iharzen is required. After, 15 xp a year. UnGifted members buy each power as its Virtue; more come only by initiation."
       },
       "casting": [
         {
@@ -16477,6 +16483,8 @@
       "social_status": "vf_folk_witch",
       "notes": "Built as Hedge Magic RE folk witches. Required: Folk Witch, Sex Shift (Gender Shift), Theriomorph, Touched by Faerie Realm; Judged Unfairly, Short-Ranged Curses, Primitive Tradition. Skinchanger (hyena) is a Virtue, treated as a favored power. Also blacksmithing or woodcarving magic (usually Muto Terram or Muto Herbam), sometimes Animal Healing or Summon Animals. Most are Gifted; unGifted descendants of bouda or the Faerie-touched join by initiation, with Ordeals such as Feral Scent, Disfigured, Hunchback, Tainted by Evil or Repellent. Bouda Blood is the Faerie Blood of their line.",
       "training": {
+        "starts": 10,
+        "years": 10,
         "gift": "optional",
         "xp": 200,
         "ungifted_xp": 200,
@@ -17232,6 +17240,8 @@
       "social_status": "vf_sorgina",
       "notes": "Built as folk witches (Hedge Magic RE) with these changes. Hex (or Cursing) is the seventh favored Ability; Skinchanger may stand in for Shapeshifter, Wilderness Sense for Hex or another, and Premonitions comes paired with the Visions Flaw at no extra cost. Sorgina may be taken with Hermetic Magus and most other Social Statuses, but not with any Witch's Moon Virtue or Flaw. No Magical Focus: Potent Magic replaces it. Hex, Chthonic Magic and the Goetic Arts carry an Infernal taint that only Divine and Infernal powers can sense. Inner Mysteries: the Goetic Arts Summoning (Pre, Vim, Incantation; Immovable Object vs effects that move or conjure her) and Commanding (Com, Vim, Incantation; Immovable Object vs effects that control her), Ecstatic Magic, Chthonic Sorginak Magic, and an undescribed sorginak Ceremony. Methods: Potion with Animal Ken, Dowsing, Ecstatic Magic, Flight, Healing, Premonitions, Second Sight, Shapeshifter, Wilderness Sense; Incantation (in Euskara) with all but Ecstatic Magic; Fetish with Dowsing, Flight, Hex, Shapeshifter, Wilderness Sense and the Skinchanger Virtue. Premonitions' defense is Fluctuating Fortune (Art & Academe), which the app doesn't model. Male sorgin usually take Social Handicap, Poorly Trained Folk Witch and a Flaw on their magic.",
       "training": {
+        "starts": 10,
+        "years": 10,
         "gift": "optional",
         "xp": 200,
         "ungifted_xp": 200,

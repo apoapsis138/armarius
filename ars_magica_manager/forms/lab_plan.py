@@ -65,7 +65,7 @@ from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import hybrid_magic as hybrid
 from ..rules import laboratory_seasons as ls
-from ..rules.lab import ability_score, botch_conditions
+from ..rules.lab import ability_score, botch_conditions, shape_material_cap
 from ..seasons import pairs as paired_plans
 from ..seasons.projection import as_then
 from . import activity as activity_forms
@@ -727,6 +727,10 @@ class LabPlanForm:
                 "int",
                 plan.shape_bonus if plan else 0,
                 show_if=enchanting,
+                hint="Choosing an effect fills in the device's bonuses that "
+                "suit it, up to Magic Theory "
+                f"({shape_material_cap(self.magus)}); change it if "
+                "the troupe reads them otherwise (DE p. 258).",
             ),
             DialogField(
                 "effect",
@@ -1116,10 +1120,18 @@ class LabPlanForm:
         ]
 
     def _device_of_effect(self, values: dict[str, Any]) -> dict[str, Any]:
-        """Choosing an effect chooses the device it is in."""
+        """Choosing an effect chooses the device it is in, and offers the
+        device's Shape & Material bonuses that suit it (up to Magic
+        Theory)."""
         for device in es.devices_for(self.saga, self.magus, self.lab):
-            if any(e.id == values.get("effect") for e in device.effects):
-                return {"device": device.id}
+            effect = next(
+                (e for e in device.effects if e.id == values.get("effect")), None
+            )
+            if effect is not None:
+                return {
+                    "device": device.id,
+                    "shape": es.suggested_shape_bonus(self.magus, device, effect),
+                }
         return {}
 
     def _effect_texts(self) -> list[tuple[str, str]]:
@@ -1463,9 +1475,16 @@ class LabPlanForm:
                 lambda v: {
                     "book_id": v.get("effect_text"),
                     "effect_id": v.get("effect"),
+                    "similar_spell_id": v.get("similar"),
                 },
             ),
-            ((fs.EMPOWER,), lambda v: {"effect_id": v.get("power")}),
+            (
+                (fs.EMPOWER,),
+                lambda v: {
+                    "effect_id": v.get("power"),
+                    "similar_spell_id": v.get("similar"),
+                },
+            ),
             ((lab_seasons.LONGEVITY,), longevity),
             (
                 es.ACTIVITIES,
@@ -1535,8 +1554,12 @@ class LabPlanForm:
         paired = paired_plans.pair_problem(self.saga, self.magus, plan)
         if paired is not None:
             return paired
-        with paired_plans.in_place(self.saga, self.magus, plan):
-            found = season_rules.problems(self.magus, plan, self.saga)
+        # Checked against the magus and devices as the seasons planned
+        # before it leave them: an item opened in Spring can be instilled
+        # in Summer.
+        then, magus = as_then(self.saga, self.magus, plan.season, plan.year)
+        with paired_plans.in_place(then, magus, plan):
+            found = season_rules.problems(magus, plan, then)
         return found[0] if found else None
 
     # -- the line above Schedule ------------------------------------------
@@ -1582,6 +1605,10 @@ class LabPlanForm:
             )
             parts.append(" ".join(self.when_lines(plan, work)))
         parts.append(self._odds_line(saga, magus, plan))
+        familiar = saga.familiar_of(magus.id)
+        if plan.activity == fs.BIND and familiar is not None:
+            note = fs.fitting_note(familiar, plan.technique, plan.form)
+            parts.append(f"[dim]{escape(note)}[/]" if note else "")
         problems = season_rules.problems(magus, plan, saga)
         if problems:
             parts.append(f"[$text-error]{escape(problems[0])}[/]")

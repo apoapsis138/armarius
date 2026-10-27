@@ -395,6 +395,15 @@ Reputations list marks a new one "replacing" the old.
 More offers **House Acclaim** to magi of Bonisagus and Flambeau, and
 **Reputation Roll** to anyone with a Reputation.
 
+### Marriages
+<!-- help: section-char-marriages -->
+
+Shown once a marriage names the character as bride or groom: each with
+the spouse, when, the dowry and whether it is a betrothal, a marriage or
+ended, and how it ended. Marriages are arranged and ended on the
+Marriages tab of either family's lord (Lords of Men pp. 10-11, 81; City &
+Guild p. 113), which lists the same record: nothing is copied here.
+
 ### Aging & Warping
 <!-- help: section-aging -->
 
@@ -411,7 +420,10 @@ The same form has Gain Warping Points now, for points gained from
 one event; two or more at once take a magus to the edge of Wizard's
 Twilight, which the app rolls straight away, against the **Aura where it
 happened** (blank: where the character lives). **Enter Twilight
-willingly** skips the roll to avoid it (DE p. 228). When Winter is applied, the app
+willingly** skips the roll to avoid it (DE p. 228). A botched spell gives a
+Warping Point for each zero on the botch dice (DE p. 227): type them there as
+one event. The form also keeps the **Twilight Scars**, one a line, and More's
+[Resolve Twilight](help:resolve-twilight) applies what a Twilight left. When Winter is applied, the app
 makes the yearly aging roll and adds the apparent age, Aging Points,
 Decrepitude points and any Longevity Ritual here, and adds the year's
 Warping Points from a Longevity Ritual or a strong aura of another realm
@@ -589,6 +601,40 @@ More (`m`) on Health offers [Take Harm](help:take-harm) and a
 **Take Harm** and **Recovery Roll**, beside Health's Edit buttons, harm the
 character or roll for their wounds now.
 <!-- /gui -->
+
+## Boost a Spell
+<!-- help: boost-spell -->
+
+More on Known Spells, for a magus who may boost one of them: Boosted
+Magic boosts any Formulaic spell (DE p. 72), a Boosted spell needs
+Boosted or Mutantum Magic, and Boosted Casting comes with Mastery
+(Houses of Hermes: True Lineages pp. 99-103). Choose the **Spell**, then
+the **Range**, **Duration** and **Target** it is raised to and how much
+**Larger by**. The inspector gives the pawns of vis it takes (one a
+magnitude), the botch dice they add (one a pawn), and what stops it:
+nothing is lowered, and Year or Boundary is reached only by a Ritual. It
+is a calculator: it changes nothing, and the spell is cast at the table
+at its own level.
+
+## Resolve Twilight
+<!-- help: resolve-twilight -->
+
+More on [Aging & Warping](help:section-aging). After a Twilight the app has
+rolled (its Diary line says how many points it gave and what they buy), this
+applies the storyguide's choice (DE pp. 229-230). Tick **Comprehended** if it
+was, type the **Warping Points gained** in all, and choose the **Effect**:
+
+- **Experience**: twice the points in an Art, Magic Theory or Enigmatic
+  Wisdom, gained if comprehended, lost if not (never below 0).
+- **A Virtue or Flaw**: from 7 points, a Hermetic or Supernatural Virtue if
+  comprehended (Minor to 10 points, Major from 11) or a Flaw if not (Major
+  from 10). One that names something (an Art, an Ability) is added from
+  Virtues & Flaws instead.
+- **A spell**: learned, of as many magnitudes as the points, or lost; a
+  Twilight that takes several spells is resolved once for each.
+
+Type the **Twilight Scar** it left: it joins the Aging & Warping section's
+scars, and the whole goes in the Diary.
 
 ## Take Harm
 <!-- help: take-harm -->
@@ -1794,6 +1840,31 @@ Loyalty points for granting pensions to all its retirees.
 On a grog who has died, Pension gives his widow the pension he would have
 had: one more of the covenant's pensioners, at half Wages a year.
 
+## Covers
+<!-- help: section-char-covers -->
+
+A character's other identities (Houses of Hermes: Societates pp. 87-90),
+shown for a magus of House Tytalus, a character with the Persona Ability,
+or anyone with one recorded. Add, edit or delete one:
+
+- **A deep cover**: a name and role built in a community, with a
+  Reputation there that rises as an Ability does. It starts at 1 with a
+  noteworthy act before witnesses; each season it is kept up, Advance adds
+  2 xp for living there or 1 for regular visits (a brief visit each season
+  is 2 a year: choose away and add them by hand), and each staged event or
+  tie to the community 1 more. More than 2 a season arouses suspicion.
+  Questioned, its Disguise roll's Ease Factor falls by the Reputation, and
+  with those it sees regularly The Gift's penalty falls by as much. A role
+  needing a Minor Social Status Virtue costs a Minor Story Flaw's
+  obligations, a Major one a Major Story Flaw's and doesn't last; one
+  needing other Virtues can't be built. Unused, it keeps its Reputation
+  as many years as its score, then loses a point a year.
+- **A persona**: a whole different person of the Persona Ability, one for
+  each point of it; changing into one is a round's concentration and
+  Stamina + Persona against 9. Each persona has a Reputation of 1 when it
+  is made, and every xp put into Persona after that goes to every
+  persona's Reputation too (p. 90).
+
 ## Constant Effects
 <!-- help: section-char-constant-effects -->
 
@@ -2056,6 +2127,21 @@ Before a crowd, **Before a crowd** takes 3 from each roll of a Gifted
 disputer (not a Gentle Gift). Academic Concentration and Aristotelian
 Training count for Artes Liberales as logic and rhetoric (Art & Academe,
 Chapter Eight: Universities).
+
+
+## Cast a Power
+<!-- help: hedge-cast -->
+
+More beside a hedge wizard's Abilities: one casting rolled by the
+tradition's own rule, as its [chapter](help:tradition-chapter) lists it.
+Choose the **Way of casting** and the **Arts or Ability used**, type the
+effect's **Level or Ease Factor**, the **Aura** where it is cast (the
+covenant's, to start with) and any **Pawns of vis**, and choose Cast. The
+app works out the Casting Score, rolls the rule's die (or uses one typed
+in **Die**), divides as the rule says and says whether it works; a rule
+that may fall short at a Fatigue level says so. A botch's zeroes give a
+Warping Point each (DE pp. 227, 389; Hedge Magic RE pp. 37, 96), which can bring on the character's answer
+to Warping as any other event does. The casting goes in the Diary.
 
 ## A tradition's chapter
 <!-- help: tradition-chapter -->

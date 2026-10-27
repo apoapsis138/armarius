@@ -288,7 +288,7 @@
         "a": "FieldsDialog: Add a Ship",
         "e": "notice: No Ships to edit.",
         "d": "notice: No Ships to remove.",
-        "m": "MenuScreen: Stress Check, Ship Combat",
+        "m": "MenuScreen: Stress Check, Ship Combat, Sunk or Taken",
         "slash": "(disabled)"
       }
     },
@@ -389,6 +389,16 @@
         "e": "FieldsDialog: Edit Mill",
         "d": "ConfirmScreen",
         "m": "MenuScreen: Improve Income, Shape the Land",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-eco-land": {
+      "active": "section-eco-land",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },
@@ -510,7 +520,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid, Petition the Church, Add Canon Case, Holy Orders",
+        "m": "MenuScreen: Traditions, Disputatio, Cast a Power, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid, Petition the Church, Add Canon Case, Holy Orders",
         "slash": "(disabled)"
       }
     },
@@ -580,7 +590,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Aging & Warping",
         "d": "(disabled)",
-        "m": "notice: No Aging Points are due.",
+        "m": "MenuScreen: Place Aging Points, Resolve Twilight",
         "slash": "(disabled)"
       }
     },
@@ -3404,7 +3414,7 @@
         "a": "FieldsDialog: Add a Battle",
         "e": "FieldsDialog: Edit a Battle",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Battle Event 2: The ford at Werl",
+        "m": "MenuScreen: Battle Event, Muster and Aftermath",
         "slash": "(disabled)"
       }
     },
@@ -3414,7 +3424,7 @@
         "a": "FieldsDialog: Add a Fight",
         "e": "FieldsDialog: Edit a Fight",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Next Blow, Next Round, Add Combatant, Edit Combatant, Remove Combatant, Form a Group, Break up a Group, Restart the Fight",
+        "m": "MenuScreen: Combat Options, Next Blow, Next Round, Add Combatant, Edit Combatant, Remove Combatant, Form a Group, Break up a Group, Restart the Fight",
         "slash": "(disabled)"
       }
     },
@@ -3424,7 +3434,7 @@
         "a": "FieldsDialog: Add a Siege",
         "e": "FieldsDialog: Edit a Siege",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Next Siege Event: The Siege of Falkenstein",
+        "m": "MenuScreen: Next Siege Event, Siege Actions",
         "slash": "(disabled)"
       }
     }

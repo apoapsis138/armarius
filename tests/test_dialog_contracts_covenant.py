@@ -954,6 +954,14 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#pos-ship-list": "Seehund"},
         live={"#fields-live": "slip away"},
     ),
+    "sunk or taken": Contract(
+        prefill={"What became of her": "afloat"},
+        edits={"What became of her": "Sunk"},
+        saved=lambda s: next(
+            p.ship.fate for p in covenant(s).possessions if p.id == "seehund"
+        ),
+        expected="Sunk",
+    ),
     # Shaping the land by magic (Transforming Mythic Europe pp. 54-77).
     "shape land": Contract(
         prefill={

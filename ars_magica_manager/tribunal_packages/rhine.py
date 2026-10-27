@@ -29,7 +29,7 @@ from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
 from ..markup import escape
-from ..models import Character, Covenant, Saga, Tribunal
+from ..models import Case, Character, Covenant, Saga, Tribunal
 from ..rules import rhine_ranks as ranks
 from ..sections import GILDS_SECTION
 from . import (
@@ -96,6 +96,33 @@ def sigil_held_by(tribunal: Tribunal) -> dict[str, str]:
     if not isinstance(found, dict):
         raise ValueError(f"The sigils held should be a mapping, not {found!r}.")
     return found
+
+
+def gild_leaning(
+    saga: Saga, tribunal: Tribunal, case: Case, covenant: Covenant
+) -> tuple[str, str] | None:
+    """A covenant whose gild a party shares votes with its gild. Gilds are
+    factions of magi, who are expected to vote with them (Guardians of the
+    Forests pp. 27-28); a covenant following its members' gild is the app's
+    reading, not a rule. Which side ("brought_by" or "against") and why."""
+    own = set(gilds_of(tribunal, covenant))
+    if not own:
+        return None
+    for other in saga.covenants:
+        if other is covenant or other.tribunal_id != tribunal.id:
+            continue
+        shared = own & set(gilds_of(tribunal, other))
+        if not shared:
+            continue
+        name = other.name.strip().casefold()
+        if not name:
+            continue
+        gild = min(shared)
+        if name in case.brought_by.casefold():
+            return "brought_by", f"its gild, the {gild}, stands with {other.name}"
+        if name in case.against.casefold():
+            return "against", f"its gild, the {gild}, stands with {other.name}"
+    return None
 
 
 def casts_no_vote(_saga: Saga, tribunal: Tribunal, magus: Character) -> bool:
@@ -815,6 +842,7 @@ RHINE = TribunalPackage(
     save_covenant=save_covenant_gilds,
     magus_facts=magus_facts,
     casts_no_vote=casts_no_vote,
+    leaning=gild_leaning,
 )
 
 register(RHINE)

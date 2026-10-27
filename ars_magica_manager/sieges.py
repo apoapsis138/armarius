@@ -465,6 +465,17 @@ def event_fields(siege: Siege) -> list[DialogField]:
             show_if=lambda v: v.get("event") == rules.SALLY,
         ),
         DialogField(
+            "units",
+            "Groups of soldiers struck",
+            "int",
+            1,
+            show_if=lambda v: (
+                v.get("event") == rules.SALLY and v.get("target") == "Soldiers"
+            ),
+            hint="A won sally removes the units it targets (p. 115): as many "
+            "as the troupe says.",
+        ),
+        DialogField(
             "result",
             "How the battlefield event went",
             "select",
@@ -536,7 +547,10 @@ def play_event(
         rules.ARTILLERY: lambda: rules.bombard(siege, wall, rng),
         rules.ESCALADE: lambda: rules.escalade(siege, wall, won),
         rules.SALLY: lambda: rules.sally(
-            siege, values.get("target") or "Miners", not won
+            siege,
+            values.get("target") or "Miners",
+            not won,
+            units=max(1, values.get("units") or 1),
         ),
         rules.SEAL: lambda: rules.seal_breach(siege, wall),
         rules.WAIT: lambda: rules.Played("The stockade holds."),

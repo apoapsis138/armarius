@@ -549,7 +549,7 @@ class _Adder:
         already (unless repeatable), allowed them (VirtueFlawChooser),
         from a book in play and not hidden."""
         taken = self.owner.virtues_flaws
-        return [
+        return catalog.virtue_flaws_by_name(
             entry
             for entry in catalog.load_virtue_flaw_catalog()
             if self.side in (None, entry.side)
@@ -557,7 +557,7 @@ class _Adder:
             and catalog.virtue_flaw_offerable(entry, taken)
             and not self.chooser.refusal(entry)
             and not self.no_choice_left(entry)
-        ]
+        )
 
     def refusal(self, entry: VirtueFlawDef, params: dict[str, str]) -> str:
         """Why the owner can't take `entry` with `params` ("" if they can):
@@ -583,7 +583,7 @@ class _Adder:
             return self.refusal(entry, params_from(entry.parameters, values)) or None
 
         return Form(
-            escape(entry.name),
+            escape(catalog.blank_name(entry.name)),
             lambda: param_fields(entry.parameters, self.choices(entry)),
             lambda values: self.add(entry, params_from(entry.parameters, values)),
             validate=problem,
@@ -602,7 +602,7 @@ class _Adder:
             return self.refusal(entry, params_from(entry.parameters, values)) or None
 
         return Form(
-            escape(entry.name),
+            escape(catalog.blank_name(entry.name)),
             lambda: param_fields(entry.parameters, self.choices(entry)),
             lambda values: Picked(
                 VirtueFlawInstance(entry.id, params_from(entry.parameters, values))
@@ -640,11 +640,11 @@ def choose_virtue_flaw(
 def virtue_flaw_choice(entry: VirtueFlawDef) -> Choice:
     """A character catalog entry as the Add list offers it: its name, tier,
     type and what it needs naming; its book text beside the list."""
-    needs = f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
+    needs = catalog.needs_note(entry.name, entry.parameters)
     facts = f"{entry.tier} {entry.type}, {entry.category_label}"
     text = entry.description or entry.summary
     return Choice(
-        escape(f"{entry.name}  [{facts}]{needs}"),
+        escape(f"{catalog.blank_name(entry.name)}  [{facts}]{needs}"),
         entry,
         f"[dim]{escape('Source: ' + entry.source)}[/]\n{escape(text)}",
         f"{entry.type} {entry.category_label} {entry.tier} {entry.summary}",

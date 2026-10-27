@@ -17,7 +17,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
-from . import aging_chart, catalog, creation, traditions
+from . import aging_chart, catalog, creation, sourcebooks, storage, traditions
 from . import books as bk
 from . import covenants as cov_rules
 from . import laboratories as lab_rules
@@ -26,7 +26,7 @@ from . import sheet_text as st
 from . import spells as spl
 from .arts import ART_DESCRIPTIONS, ARTS
 from .boon_hook_text import boon_hook_info_text
-from .commands import Act, Choice, Choose, Command, Confirm
+from .commands import Act, Choice, Choose, Command, Confirm, Refuse, SectionOps
 from .covenants import boon_hook_points, covenant_boon_points, covenant_hook_points
 from .forms import animal as animal_forms
 from .forms import character as cf
@@ -751,10 +751,18 @@ def _later_life_budget(saga: Saga, record: Record) -> str:
     # Name the years the training packages take, or the bought years
     # look short of the age span.
     in_packages = packages.years_used(character)
+    apprenticed = later.apprenticed_years(saga, character)
+    taken = [
+        f"{n} in {what}"
+        for n, what in (
+            (in_packages, "training packages"),
+            (apprenticed, "apprenticeship"),
+        )
+        if n
+    ]
     span = (
-        f"{cc.later_life_years(saga, character)} years: {in_packages} in "
-        f"training packages, {years}"
-        if in_packages
+        f"{cc.later_life_years(saga, character)} years: {', '.join(taken)}, {years}"
+        if taken
         else f"{years}"
     )
     lines = [
@@ -1158,6 +1166,62 @@ def _finish_actions(saga: Saga, record: Record) -> list[Action]:
 
 
 PANELS[("character", "finish")] = Panel(_finish_budget, _finish_actions)
+
+
+# -- Equipment: what the character carries (DE p. 44, step 11) --
+
+
+def _equipment_budget(saga: Saga, record: Record) -> str:
+    return (
+        "What the character starts with: weapons, armor and the tools of "
+        "their trade. It is kept in their Inventory chapter, where it can "
+        "be changed in play."
+    )
+
+
+def _equipment_ops(saga: Saga, record: Record) -> SectionOps:
+    return cf.inventory_ops(_character(record), sourcebooks.saga_books(saga))
+
+
+def _equipment_verb(saga: Saga, record: Record, index: int, verb: str) -> Start:
+    def start() -> Command:
+        ops = _equipment_ops(saga, record)
+        act = ops.edit if verb == "edit" else ops.remove
+        assert act is not None
+        return act(index)
+
+    return start
+
+
+def _equipment_rows(saga: Saga, record: Record) -> list[Row]:
+    return [
+        Row(
+            label,
+            cells=[label],
+            edit=_equipment_verb(saga, record, i, "edit"),
+            delete=_equipment_verb(saga, record, i, "delete"),
+        )
+        for i, label in enumerate(_equipment_ops(saga, record).rows())
+    ]
+
+
+def _add_equipment(saga: Saga, record: Record) -> Command:
+    add = _equipment_ops(saga, record).add
+    assert add is not None
+    return add()
+
+
+PANELS[("character", "equipment")] = Panel(
+    _equipment_budget,
+    list=StepList(
+        "Item",
+        _equipment_rows,
+        add=_add_equipment,
+        add_label="Add an item",
+        hint="Choose an item to edit or delete it.",
+        columns=["Item"],
+    ),
+)
 
 
 # -- a covenant's Baseline: Power Level, Build Points, season, aura, income --
@@ -1709,7 +1773,58 @@ def _review_budget(saga: Saga, record: Record) -> str:
     return "\n".join(lines)
 
 
-PANELS[("covenant", "finish")] = Panel(_review_budget)
+#: The rows Add the baseline's people adds to the Inhabitants tab.
+BASELINE_GROGS = "Grogs (the baseline's)"
+BASELINE_COVENFOLK = "Servants and craftsmen (the baseline's)"
+
+
+def _add_baseline_people(saga: Saga, record: Record) -> Command:
+    covenant = _covenant(record)
+    magi = cov.magi_count(saga, covenant)
+    if not magi:
+        return Refuse(
+            "Add the baseline's people",
+            "The baseline gives about one grog and two covenfolk per magus: "
+            "put the magi in the covenant first.",
+        )
+    names = {i.name for i in covenant.inhabitants}
+    if BASELINE_GROGS in names or BASELINE_COVENFOLK in names:
+        return Refuse(
+            "Add the baseline's people",
+            "They are already on the Inhabitants tab; change their numbers there.",
+        )
+
+    def apply() -> list[str]:
+        ids = [i.id for i in covenant.inhabitants]
+        for kind, name, count in (
+            ("turb", BASELINE_GROGS, magi),
+            ("inhabitant", BASELINE_COVENFOLK, 2 * magi),
+        ):
+            new_id = storage.generate_unique_id(name, ids)
+            ids.append(new_id)
+            covenant.inhabitants.append(
+                Inhabitant(id=new_id, kind=kind, name=name, quantity=count)
+            )
+        return [
+            f"{magi} grog(s) and {2 * magi} other covenfolk added to the "
+            "Inhabitants tab, free of Build Points (DE p. 179)."
+        ]
+
+    return Confirm(
+        f"Add {magi} grog(s) and {2 * magi} other covenfolk, the baseline's, "
+        "to the Inhabitants tab?",
+        apply,
+        yes_label="Add",
+        title="Add the baseline's people",
+    )
+
+
+PANELS[("covenant", "finish")] = Panel(
+    _review_budget,
+    lambda saga, record: [
+        Action("Add the baseline's people", lambda: _add_baseline_people(saga, record))
+    ],
+)
 
 
 # -- a New Laboratory --

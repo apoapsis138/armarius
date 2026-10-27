@@ -16,6 +16,14 @@ def title(tribunal: Tribunal) -> str:
     return name if name.casefold().endswith("tribunal") else f"{name} Tribunal"
 
 
+def title_text(name: str) -> str:
+    """`title` for a name alone, without its leading "The", so a sentence
+    can put its own article before it ("The Rhine Tribunal" -> "Rhine
+    Tribunal", never "the The Rhine Tribunal")."""
+    name = name.strip().removeprefix("The ").strip()
+    return name if name.casefold().endswith("tribunal") else f"{name} Tribunal"
+
+
 def of(saga: Saga, covenant: Covenant) -> Tribunal | None:
     """The Tribunal `covenant` belongs to, if any."""
     return saga.tribunal(covenant.tribunal_id)

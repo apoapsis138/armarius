@@ -143,7 +143,28 @@ def spell_cap(saga: Saga, character: Character, spell: Spell) -> int:
     total = lab.lab_total(
         saga, character, technique, form, _creation_lab(), activity="invent_spells"
     )
-    return int(total.total)
+    # The cap is a Lab Total, so a Magic Theory specialty that applies adds
+    # its 1, as Darius's in inventing spells does (DE pp. 50, 168).
+    specialty = theory_specialty_applies(character, technique, form)
+    return int(total.total) + (1 if specialty else 0)
+
+
+#: Words in a Magic Theory specialty that make it apply to learning a
+#: spell at creation: the book's "inventing spells", or spells in general.
+SPELL_SPECIALTIES = ("invent", "spell")
+
+
+def theory_specialty_applies(character: Character, technique: str, form: str) -> bool:
+    """Whether the magus's Magic Theory specialty applies to a creation
+    spell of `technique` and `form`: one in inventing spells, or one naming
+    either Art ("Ignem")."""
+    ability = next((a for a in character.abilities if a.name == "Magic Theory"), None)
+    words = (ability.specialty or "").casefold() if ability else ""
+    if not words:
+        return False
+    return any(w in words for w in SPELL_SPECIALTIES) or any(
+        art.casefold() in words for art in (technique, form)
+    )
 
 
 def spell_entries(character: Character, step: str = SPELLS_STEP):

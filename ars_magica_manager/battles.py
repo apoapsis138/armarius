@@ -22,13 +22,55 @@ from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
 from .models import SEASONS, Battle, BattleEvent, BattleSide, Neighbour, Saga
-from .rules import battle
+from .rules import battle, confidence
 from .rules import fleet_battle as fleet_rules
 from .rules.lab import ability_score
 
 #: What a side can be: a covenant, or one of the Region's powers.
 ARMY_KINDS = ("lord", "town", "threat", "faction", "church")
 COVENANT, NEIGHBOUR = fleet.COVENANT, fleet.NEIGHBOUR
+
+
+#: The bad Reputation a character attacking the baggage earns toward.
+BAGGAGE_REPUTATION = "Attacked the baggage"
+
+#: The kinds of group an army keeps, and the Enemy whose losses fall on
+#: each (p. 106: the units lost match the Enemy).
+KINDS: tuple[str, ...] = ("knights", "serjeants", "infantry", "archers", "levies")
+#: Groups a lord's allies bring (Raise Allies): lost after the side's own.
+ALLIES = "allies"
+ENEMY_KINDS: dict[str, tuple[str, ...]] = {
+    "Inexpensive": ("levies",),
+    "Standard": ("infantry", "archers"),
+    "Expensive": ("knights", "serjeants"),
+}
+
+
+def add_groups(side: BattleSide, kind: str, count: int) -> None:
+    """Add `count` groups of `kind` to the side, counted in its total."""
+    if count <= 0:
+        return
+    side.mix[kind] = side.mix.get(kind, 0) + count
+    side.groups += count
+
+
+def take_losses(side: BattleSide, enemy: str, lost: int) -> list[str]:
+    """Take an event's losses from the kinds its Enemy names first (p.
+    106), then from the side's other groups, its allies last; the total
+    falls by `lost`."""
+    lost = min(lost, side.groups)
+    left = lost
+    taken: list[str] = []
+    for kind in (*ENEMY_KINDS.get(enemy, ()), *KINDS, ALLIES):
+        have = side.mix.get(kind, 0)
+        if not left or not have:
+            continue
+        out = min(have, left)
+        side.mix[kind] = have - out
+        left -= out
+        taken.append(f"{out} of {kind}")
+    side.groups -= lost
+    return taken
 
 
 def sides(entry: Battle) -> list[BattleSide]:
@@ -531,6 +573,8 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
             f"{escape(side_name(saga, entry, fled))}'s army routed: the battle "
             "is over (Lords of Men p. 106).",
         )
+    if entry.ended:
+        return Refuse("Battle Event", f"The battle is over: {escape(entry.ended)}")
     stage = len(entry.events)
 
     def apply(values: dict[str, Any]) -> None:
@@ -542,7 +586,7 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
         lost = battle.losses(event.size, mine if won else -mine)
         losing = 1 - side if won else side
         loser = sides(entry)[losing]
-        loser.groups = max(0, loser.groups - lost)
+        take_losses(loser, event.enemy, lost)
         who = saga.character(values["who"])
         name = who.name if who else "someone"
         record = BattleEvent(
@@ -588,6 +632,9 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
             covenants=[c for s in sides(entry) if (c := saga.covenant(s.covenant_id))],
         )
         entry.events.append(record)
+        if event.enemy == "Baggage" and who is not None:
+            # Attacking the baggage earns 1 xp toward a bad Reputation (p. 106).
+            confidence.deed_toward(who, BAGGAGE_REPUTATION, 1, bad=True)
 
     return Form(
         f"Battle Event {stage + 1}"

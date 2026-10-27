@@ -93,6 +93,7 @@ def test_the_worksheet_spends_childhood_xp_and_takes_it_back(app):
         "Characteristics",
         "Early Childhood",
         "Later Life",
+        "Equipment",
         "Finishing Touches",
     ]
     page.open_step("childhood")

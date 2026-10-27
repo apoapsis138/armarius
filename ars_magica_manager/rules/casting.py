@@ -278,7 +278,7 @@ def casting_score(
     # A multiplier (Deficient Art) acts on the Casting Total, die included,
     # so it's listed but left out of the score: see casting_total().
     multipliers = [
-        Line(e.entry.name, multiplier=e.modifier.multiplier, source="character")
+        Line(e.name, multiplier=e.modifier.multiplier, source="character")
         for e in found
         if e.modifier.multiplier is not None
     ]
@@ -336,7 +336,7 @@ def _voice(
     amount, name = base, ""
     worst = min(flaws, key=lambda e: e.amount or 0, default=None)
     if worst is not None and (worst.amount or 0) < amount:
-        amount, name = int(worst.amount or 0), worst.entry.name
+        amount, name = int(worst.amount or 0), worst.name
     relief = sum(int(e.amount or 0) for e in found if e not in flaws) + mastered
     if amount < 0 and relief:
         amount = min(0, amount + relief)

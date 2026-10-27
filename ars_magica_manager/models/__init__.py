@@ -28,6 +28,9 @@ from .books import Book as Book
 from .books import Codex as Codex
 from .character import BOND_APPLIES as BOND_APPLIES
 from .character import BRUISE_SEVERITIES as BRUISE_SEVERITIES
+from .character import COVER as COVER
+from .character import COVER_KINDS as COVER_KINDS
+from .character import PERSONA_KIND as PERSONA_KIND
 from .character import TRADITION_EFFECT_KINDS as TRADITION_EFFECT_KINDS
 from .character import TRADITION_ITEM_KINDS as TRADITION_ITEM_KINDS
 from .character import WOUND_SEVERITIES as WOUND_SEVERITIES
@@ -43,6 +46,7 @@ from .character import CharacterPower as CharacterPower
 from .character import ConstantEffect as ConstantEffect
 from .character import CreationConditions as CreationConditions
 from .character import CreationXp as CreationXp
+from .character import DeepCover as DeepCover
 from .character import Description as Description
 from .character import Discipline as Discipline
 from .character import Disease as Disease

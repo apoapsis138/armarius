@@ -12,6 +12,7 @@ from . import (  # noqa: F401 -- each registers its step's checks
     creation_characteristics,
     creation_companion,
     creation_covenant,
+    creation_equipment,
     creation_finish,
     creation_later,
     creation_magus,

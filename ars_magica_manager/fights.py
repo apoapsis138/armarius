@@ -40,13 +40,24 @@ from .models import (
     FightSide,
     Saga,
 )
-from .rules import casting_virtues, combat_groups, derived, magic_combat, penetration
+from .rules import (
+    battle,
+    casting_virtues,
+    combat_groups,
+    derived,
+    magic_combat,
+    penetration,
+)
 from .rules import fight as rules
 
 SOURCE = rules.SOURCE
+#: A standard combat group of Lords of Men (p. 108): five typed fighters
+#: with the table's figures, formed into a group as they are added.
+TROOP = "troop"
 KINDS = (
     ("A character", CHARACTER_FIGHTER),
     ("A creature of the Bestiary", CREATURE_FIGHTER),
+    ("A standard combat group (Lords of Men p. 108)", TROOP),
     ("Typed in", TYPED_FIGHTER),
 )
 #: How many fighters one Add may make from a creature or typed figures.
@@ -425,11 +436,24 @@ def combatant_fields(saga: Saga, fight: Fight) -> list[DialogField]:
             hint="Its figures are copied; each fighter keeps its own wounds.",
         ),
         DialogField(
+            "troop",
+            "Unit and weapon",
+            "select",
+            "0",
+            options=[
+                (f"{unit}: {weapon}", str(i))
+                for i, (unit, weapon, *_figures) in enumerate(battle.STANDARD_TROOPS)
+            ],
+            show_if=lambda v: v.get("kind") == TROOP,
+            hint="Knights, serjeants and infantry fight as a trained group; "
+            "archers, levies and baggage as an untrained one (p. 108).",
+        ),
+        DialogField(
             "count",
             "How many",
             "int",
             1,
-            show_if=lambda v: v.get("kind") != CHARACTER_FIGHTER,
+            show_if=lambda v: v.get("kind") not in (CHARACTER_FIGHTER, TROOP),
             hint=f"Up to {MOST_AT_ONCE}, numbered (Bandit 1, Bandit 2...).",
         ),
         *_figure_fields(None, typed),
@@ -448,7 +472,21 @@ def _made(saga: Saga, values: dict[str, Any]) -> list[Combatant]:
             return []
         return [Combatant(character.name, CHARACTER_FIGHTER, ref, weapon)]
     count = max(1, min(MOST_AT_ONCE, int(values.get("count") or 1)))
-    if kind == CREATURE_FIGHTER:
+    if kind == TROOP:
+        unit, weapon, init, attack, defence, damage, soak = battle.STANDARD_TROOPS[
+            int(values.get("troop") or 0)
+        ]
+        count = battle.GROUP_SIZE
+        base = Combatant(
+            unit,
+            init=init,
+            attack=attack,
+            defence=defence,
+            damage=damage,
+            soak=soak,
+            mounted="(mounted)" in weapon,
+        )
+    elif kind == CREATURE_FIGHTER:
         ref, _, attack_id = str(values.get("creature") or "").partition("|")
         creature = saga.creature(ref)
         if creature is None:
@@ -497,6 +535,8 @@ def _combatant_problem(saga: Saga, values: dict[str, Any]) -> str | None:
         return "Choose the creature."
     if kind == TYPED_FIGHTER and not values.get("name"):
         return "Give the fighter a name."
+    if kind == TROOP and values.get("troop") is None:
+        return "Choose the unit."
     return None
 
 
@@ -510,8 +550,21 @@ def add_combatant(saga: Saga, fight: Fight | None) -> Command:
         side = sides(fight)[int(values.get("side") or 0)]
         made = _made(saga, values)
         for combatant in made:
+            mounted = combatant.mounted
             _write_stance(combatant, values)
+            # A standard group's horsemen ride, as the table has them.
+            combatant.mounted = combatant.mounted or mounted
         side.combatants += made
+        if values.get("kind") == TROOP and made:
+            unit = made[0].name.rsplit(" ", 1)[0]
+            side.groups.append(
+                FightGroup(
+                    f"{unit}s",
+                    [c.id for c in made],
+                    trained=unit in battle.TRAINED_UNITS,
+                    leader=made[0].id,
+                )
+            )
         if fight.round:
             # A newcomer acts at the end of the order this fight.
             fight.order += [c.id for c in made]

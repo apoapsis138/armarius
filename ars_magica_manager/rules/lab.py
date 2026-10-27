@@ -234,7 +234,7 @@ def lab_total(
     flat_effects = [e for e in found if e.amount is not None]
     combined = effects.combine(base, flat_effects)
     multipliers = [
-        Line(e.entry.name, multiplier=e.modifier.multiplier, source=e.kind)
+        Line(e.name, multiplier=e.modifier.multiplier, source=e.kind)
         for e in found
         if e.modifier.multiplier is not None
     ]
@@ -546,9 +546,7 @@ def helper_lines(
     )
     for effect in found:
         if effect.amount:
-            lines.append(
-                Line(f"{helper.name}: {effect.entry.name}", amount=effect.amount)
-            )
+            lines.append(Line(f"{helper.name}: {effect.name}", amount=effect.amount))
     return lines
 
 

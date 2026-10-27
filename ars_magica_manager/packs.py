@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import DATA_DIR, places, sourcebooks, storage, threats, transfer
+from . import DATA_DIR, places, sourcebooks, storage, threats, transfer, tribunals
 from .commands import Form, Refuse, notes
 from .files import write_atomic
 from .form_spec import DialogField
@@ -644,19 +644,13 @@ def available(*folders: Path) -> list[PackChoice]:
     return found
 
 
-def _tribunal_title(name: str) -> str:
-    """ "Rhine Tribunal" for "The Rhine Tribunal" or "Rhine"."""
-    name = name.removeprefix("The ").strip()
-    return name if name.endswith("Tribunal") else f"{name} Tribunal"
-
-
 def choice_label(data: dict[str, Any], fallback: str) -> str:
     """How Start from a pack lists a pack: its Tribunals and what else it
     holds ("Rhine Tribunal: 10 covenants, 74 characters"), or, holding
     no Tribunal, its name (else `fallback`) and what it holds. Kept short
     so the choice fits the form."""
     names = [
-        _tribunal_title(t["name"])
+        tribunals.title_text(t["name"])
         for t in (data.get("saga") or {}).get("tribunals") or []
         if isinstance(t, dict) and t.get("name")
     ]

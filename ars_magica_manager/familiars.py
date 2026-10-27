@@ -38,25 +38,45 @@ def unbonded_magi(saga: Saga) -> list[Character]:
     ]
 
 
-def bind_familiar(saga: Saga, magus: Character, name: str) -> Familiar:
-    """Bind a new Familiar called `name` to `magus` and add it to the saga.
-    Both gain the True Friend Virtue and a Loyal (Partner) +3 Personality
-    Trait, which the bond grants."""
+def bind_familiar(
+    saga: Saga, magus: Character, name: str, *, bound: bool = True
+) -> Familiar:
+    """Add a new Familiar called `name` for `magus` to the saga. One
+    `bound` already (before play) has the bond's gifts at once; otherwise
+    they come when the binding season is played (grant_bond)."""
     familiar = Familiar(
         id=storage.generate_unique_id(name, [f.id for f in saga.familiars]),
         character_id=magus.id,
         name=name,
     )
+    saga.familiars.append(familiar)
+    if bound:
+        grant_bond(familiar, magus)
+    return familiar
+
+
+def grant_bond(familiar: Familiar, magus: Character) -> list[str]:
+    """The binding gives both partners the True Friend Virtue and a Loyal
+    (Partner) +3 Personality Trait (DE p. 267); each once. Returns what
+    was given."""
     granted = [
         entry.id
         for entry in catalog.load_virtue_flaw_catalog()
         if "familiar_bond" in entry.granted_by
     ]
+    given: list[str] = []
     for partner in (familiar, magus):
-        partner.virtues_flaws += [VirtueFlawInstance(vf_id=vf_id) for vf_id in granted]
-        partner.personality_traits.append(ScoredTrait(name="Loyal (Partner)", score=3))
-    saga.familiars.append(familiar)
-    return familiar
+        held = {vf.vf_id for vf in partner.virtues_flaws}
+        new = [vf_id for vf_id in granted if vf_id not in held]
+        partner.virtues_flaws += [VirtueFlawInstance(vf_id=vf_id) for vf_id in new]
+        if not any(t.name == "Loyal (Partner)" for t in partner.personality_traits):
+            partner.personality_traits.append(
+                ScoredTrait(name="Loyal (Partner)", score=3)
+            )
+            given.append(partner.name)
+        elif new:
+            given.append(partner.name)
+    return given
 
 
 def magus_of(saga: Saga, familiar: Familiar) -> Character | None:

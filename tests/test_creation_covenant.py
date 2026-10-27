@@ -968,8 +968,8 @@ def test_review_says_what_covenfolk_the_baseline_gives():
     saga = _saga()  # two magi
     assert cov.baseline_covenfolk_note(saga, saga.covenants[0]) == (
         "The baseline gives about 2 grog(s) and 4 other covenfolk (servants, "
-        "craftsmen) for its 2 magi, free of Build Points: add them on the "
-        "Inhabitants tab once the covenant is In Play."
+        "craftsmen) for its 2 magi, free of Build Points: Add the baseline's "
+        "people puts them on the Inhabitants tab."
     )
 
 

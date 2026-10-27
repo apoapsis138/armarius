@@ -518,6 +518,11 @@ class TraditionTraining:
     art_cap: int = 0
     #: The least of the apprenticeship xp spent on the tradition's Arts.
     arts_xp: int = 0
+    #: The age the apprenticeship usually starts and the years it lasts;
+    #: Later Life leaves those years out, as a magus's apprenticeship
+    #: does (0: the book sets none).
+    starts: int = 0
+    years: int = 0
     #: What the worksheet can't yet apply, as the book words it.
     notes: str = ""
 

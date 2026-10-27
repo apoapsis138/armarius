@@ -44,6 +44,7 @@ from ....boon_hook_text import (
 from ....covenants import boon_hook_problems
 from ....forms import ahead as ahead_forms
 from ....forms import charter as charter_forms
+from ....forms import land_shaping as land_forms
 from ....forms import world as world_forms
 from ....forms.secrets import secrets_ops
 from ....markup import aligned, escape, markdown_text, problem
@@ -58,7 +59,7 @@ from ....models import (
     Saga,
 )
 from ....neighbour_lists import KindTab
-from ....rules import covenfolk, library, realms
+from ....rules import covenfolk, library, living, realms
 from ....rules.realms import covenant_effective_aura
 from ....sections import (
     CHARTER_SECTION,
@@ -653,6 +654,11 @@ class CovenantSheetView(KindTabsView):
                         id="eco-income-list",
                         group="eco",
                     )
+                with SheetSection(title="Land Works", id=land_forms.LAND_WORKS_SECTION):
+                    yield Static(
+                        land_forms.land_works_text(self.saga, self.covenant),
+                        id="eco-land-text",
+                    )
                 with SheetSection(
                     title="Yearly Expenditure", id="section-eco-expenditure"
                 ):
@@ -708,6 +714,9 @@ class CovenantSheetView(KindTabsView):
         left, right = eco.wealth_texts(summary)
         self.query_one("#eco-wealth-left", Static).update(left)
         self.query_one("#eco-wealth-right", Static).update(right)
+        self.query_one("#eco-land-text", Static).update(
+            land_forms.land_works_text(self.saga, self.covenant)
+        )
         self._set_section_title(
             self.query_one("#section-eco-income", Collapsible), self._income_title()
         )
@@ -1011,7 +1020,7 @@ class CovenantSheetView(KindTabsView):
                 ("Storyguide", self._inherited(saga.storyguide or "(not set)")),
                 ("Year Founded", founded),
                 ("Aegis of the Hearth", str(cov.aegis_of_the_hearth)),
-                ("Living Conditions (Magi)", str(cov.living_conditions_magi)),
+                ("Living Conditions (Magi)", living.living_text(cov, magi=True)),
                 ("Aura", self._aura_text()),
             ]
         )
@@ -1034,7 +1043,10 @@ class CovenantSheetView(KindTabsView):
                 ("Current Season", self._inherited(saga.current_season)),
                 ("Current Year", self._inherited(str(saga.current_year))),
                 ("Aegis' Penetration", str(cov.aegis_penetration)),
-                ("Living Conditions (Mundane)", str(cov.living_conditions_mundane)),
+                (
+                    "Living Conditions (Mundane)",
+                    living.living_text(cov, magi=False),
+                ),
                 (
                     f"{tribunal_packages.place_word(saga, cov).title()} Season",
                     cov.covenant_season,

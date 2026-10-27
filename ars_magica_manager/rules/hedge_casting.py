@@ -48,7 +48,7 @@ from . import hybrid_magic as hybrid
 from . import penetration, realms
 from .breakdown import Breakdown, Line
 from .casting import magnitude
-from .creation_access import ability_def
+from .creation_access import ability_def, traditions_of
 from .lab import ability_score
 from .rounding import round_down, round_up
 
@@ -188,6 +188,12 @@ KINDS: dict[str, Callable[[Character, TraditionDef, CastingRule], list[Casting]]
     # most a script of it alone can use.
     "rune": _abilities,
 }
+
+
+def can_cast(character: Character) -> bool:
+    """Whether one of the character's traditions has a way of casting
+    (not only a Lab Total) for More's Cast a Power."""
+    return any(not rule.lab for t in traditions_of(character) for rule in t.casting)
 
 
 def castings(

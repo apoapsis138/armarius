@@ -710,6 +710,17 @@ enchanted item), decoding another magus's Lab Texts, taming a magical beast,
 stabilizing a Discovery, setting up, refining, taking over or moving the
 laboratory, and binding or empowering a familiar.
 
+A season ahead is checked against the magus and laboratory as the seasons
+planned before it leave them, so an item can be opened in Spring and an
+effect instilled in it in Summer, planned together. **Similar spell known**
+adds the magnitude of the highest similar spell the magus knows when
+inventing, instilling an effect (lesser and charged enchantments too) and
+empowering a familiar's bond (DE pp. 258, 260, 267). Choosing the effect
+to instil fills in **Shape & material** with the device's Shape & Material
+bonuses whose "applies to" shares a word with the effect's name,
+description, Technique or Form, up to the magus's Magic Theory (DE p.
+258); change it when the troupe reads the bonuses otherwise.
+
 <!-- gui -->
 On the desktop it is a form that opens in place of the Planning list, from
 its **Plan** or **New Spell**.

@@ -74,8 +74,24 @@ class Effect:
         """True for a Flaw, Inferiority or Hook (the entry's costly side)."""
         return self.entry.type in ("Flaw", "Inferiority", "Hook")
 
+    @property
+    def name(self) -> str:
+        """The entry's name as the instance fills it ("Affinity with
+        {art}" -> "Affinity with Ignem"), as a breakdown line names it."""
+        return fill_name(self.entry.name, self.instance.params)
+
 
 _PLACEHOLDER = re.compile(r"\{(\w+)\}")
+
+
+def fill_name(name: str, params: Mapping[str, str]) -> str:
+    """A catalog name with the instance's parameters put in, title-cased as
+    `catalog.describe_virtue_flaw` writes them; one not chosen yet stays
+    as written."""
+    return _PLACEHOLDER.sub(
+        lambda m: params[m.group(1)].title() if params.get(m.group(1)) else m.group(0),
+        name,
+    )
 
 
 def resolve_target(target: str | None, params: Mapping[str, str]) -> str | None:
@@ -182,15 +198,13 @@ def combine(
     for effect in effects:
         if effect.amount is not None:
             total += effect.amount
-            lines.append(
-                Line(effect.entry.name, amount=effect.amount, source=effect.kind)
-            )
+            lines.append(Line(effect.name, amount=effect.amount, source=effect.kind))
     for effect in effects:
         if effect.modifier.multiplier is not None:
             total *= effect.modifier.multiplier
             lines.append(
                 Line(
-                    effect.entry.name,
+                    effect.name,
                     multiplier=effect.modifier.multiplier,
                     source=effect.kind,
                 )

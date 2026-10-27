@@ -36,7 +36,7 @@ from ..rules import laboratory_seasons as ls
 from ..tables import Table
 from . import pairs
 from .plans import plan_for, plan_summary, schedule, set_plan, work_text
-from .projection import projection
+from .projection import as_then, projection
 
 #: How many seasons the laboratory's Planning tab shows, the current first.
 QUEUE_LENGTH = 4
@@ -314,7 +314,10 @@ def plan_lab_work(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
         _plan_subject(saga, character, plan)
     if character is None or plan.activity not in lab_seasons.MULTI_SEASON:
         return []
-    found, work = lab_seasons.work(saga, character, plan)
+    # Worked out as the seasons before it leave the magus (an item opened
+    # the season before can be instilled now).
+    then, then_character = as_then(saga, character, plan.season, plan.year)
+    found, work = lab_seasons.work(then, then_character, plan)
     if found or work is None:
         return []
     added = schedule(saga, plan, lab_seasons.seasons_left(work))

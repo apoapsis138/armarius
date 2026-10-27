@@ -87,6 +87,7 @@ CHARACTER_STEPS: tuple[Step, ...] = (
     Step("training", "Tradition Training", _tradition_member),
     Step("apprenticeship", "Apprenticeship", _magus),
     Step("gauntlet", "Years past Gauntlet", _magus),
+    Step("equipment", "Equipment", _person),
     Step("finish", "Finishing Touches"),
 )
 COVENANT_STEPS: tuple[Step, ...] = (

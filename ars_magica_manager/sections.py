@@ -297,10 +297,13 @@ BREEDINGS_SECTION = "section-cov-menagerie-breedings"
 CRIAMON_PATH_SECTION = "section-char-criamon-path"
 CRIAMON_STATIONS_SECTION = "section-char-criamon-stations"
 STIGMATA_SECTION = "section-char-stigmata"
+#: A character's deep covers and personae (forms/covers.py).
+COVERS_SECTION = "section-char-covers"
 
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     POWERS_SECTION: frozenset({"add", "edit", "remove"}),
     CONSTANT_EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),
+    COVERS_SECTION: frozenset({"add", "edit", "remove"}),
     AGENTS_SECTION: frozenset({"add", "edit", "remove"}),
     LAB_TRAITS_SECTION: frozenset({"add", "edit", "remove"}),
     LAB_ITEMS_SECTION: frozenset({"add", "edit", "remove"}),

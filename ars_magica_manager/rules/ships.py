@@ -263,9 +263,16 @@ def wrecked(ship: Ship) -> bool:
     return damage_left(ship) == 0
 
 
+def lost(ship: Ship) -> bool:
+    """Wrecked, sunk or taken: no longer a ship to sail or fight."""
+    return wrecked(ship) or bool(ship.fate)
+
+
 def condition(ship: Ship) -> str:
     """ "whole", "damaged" (more than half left) or "badly" (half or
-    fewer), for the colour of her damage."""
+    fewer), for the colour of her damage; a ship sunk or taken is "badly"."""
+    if ship.fate:
+        return "badly"
     if ship.damage_lost <= 0:
         return "whole"
     whole = damage_levels(ship)

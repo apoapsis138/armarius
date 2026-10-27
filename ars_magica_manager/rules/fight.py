@@ -1818,7 +1818,7 @@ def _spontaneous_short(
         if band is not None:
             fighter.wound(band.lower())
             lines.append(
-                f"Life-Linked: {owed - spent} levels still owed, a {band} Wound"
+                f"Life-Linked: {owed - spent} levels still owed, {_a(band)} Wound"
             )
     return None
 

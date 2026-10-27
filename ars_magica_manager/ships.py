@@ -43,7 +43,10 @@ def captain_name(saga: Saga | None, ship: Ship) -> str:
 
 
 def damage_words(ship: Ship) -> str:
-    """ "7 of 9": damage levels left of whole."""
+    """ "7 of 9": damage levels left of whole; "sunk" or "taken" once she
+    is lost."""
+    if ship.fate:
+        return ship.fate.lower()
     return f"{rules.damage_left(ship)} of {rules.damage_levels(ship)}"
 
 
@@ -110,7 +113,14 @@ def detail_lines(record: Possession, saga: Saga | None) -> list[str]:
             + (", repaired before" if ship.repaired else ""),
         ),
     ]
-    if rules.wrecked(ship):
+    if ship.fate:
+        by = f" by {ship.fate_by}" if ship.fate_by else ""
+        when = f" in {ship.fate_when}" if ship.fate_when else ""
+        lines.append(
+            f"[$text-error]{ship.fate}{escape(by)}{when}: she counts in no fleet "
+            "(More: Sunk or Taken to undo it).[/]"
+        )
+    elif rules.wrecked(ship):
         lines.append(
             "[$text-error]Wrecked: every damage level lost, and any enchantment "
             "in her with them (HP p. 65).[/]"

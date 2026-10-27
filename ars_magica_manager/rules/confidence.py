@@ -64,6 +64,19 @@ def add_deeds(reputation: ScoredTrait, deeds: int) -> int:
     return gained
 
 
+def deed_toward(
+    character: Character, name: str, deeds: int = 1, *, bad: bool = False
+) -> ScoredTrait:
+    """Count deeds toward the character's Reputation `name`, starting it
+    at 0 (marked bad when `bad`) if they have none of that name."""
+    found = next((r for r in character.reputations if r.name == name), None)
+    if found is None:
+        found = ScoredTrait(name=name, score=0, bad=bad)
+        character.reputations.append(found)
+    add_deeds(found, deeds)
+    return found
+
+
 @dataclass(frozen=True)
 class Replacing:
     """What a session's deeds did to a new Reputation and the bad one it

@@ -375,7 +375,7 @@ def parameter_fields(parameters: Sequence[str]) -> list[DialogField]:
 def _ability_label(entry: AbilityDef) -> str:
     """A catalog Ability as the list of them names it, as the terminal's
     picker does: "Craft: {craft}  [General]  (needs: craft)"."""
-    needs = f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
+    needs = catalog.needs_note(entry.name, entry.parameters)
     return f"{entry.name}  [{entry.category}]{needs}"
 
 

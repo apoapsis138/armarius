@@ -29,6 +29,7 @@ from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import (
     childhood,
+    house_magic,
     house_virtue,
     medicine,
     research,
@@ -156,9 +157,11 @@ def _apply_agency(character: Character, outcome: rules.Outcome) -> None:
 def _apply_warping_and_agency(
     saga: Saga, character: Character, outcome: rules.Outcome
 ) -> None:
-    """A botch's Warping, and an Adventure's Agency experience."""
+    """A botch's Warping, an Adventure's Agency experience, and a season's
+    Reputation for each deep cover kept up (HoH:S p. 88)."""
     _apply_warping(saga, character, outcome)
     _apply_agency(character, outcome)
+    outcome.notes += house_magic.keep_covers(character)
 
 
 def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:

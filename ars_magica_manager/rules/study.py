@@ -319,7 +319,7 @@ def season_of_study(
     for effect in effects.collect([source], "study_total", activity=activity):
         lines.append(
             Line(
-                effect.entry.name,
+                effect.name,
                 amount=effect.amount or 0,
                 source="character",
             )
@@ -373,7 +373,7 @@ def season_of_study(
             gained *= effect.modifier.multiplier
             lines.append(
                 Line(
-                    effect.entry.name,
+                    effect.name,
                     multiplier=effect.modifier.multiplier,
                     source=AFFINITY_SOURCE,
                 )
@@ -405,7 +405,7 @@ def _multiplied(
         factor *= effect.modifier.multiplier
         lines.append(
             Line(
-                effect.entry.name,
+                effect.name,
                 multiplier=effect.modifier.multiplier,
                 source="character",
             )

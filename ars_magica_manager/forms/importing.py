@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from .. import books as bk
-from .. import catalog, packs, record_update, storage, transfer
+from .. import catalog, cult_transfer, packs, record_update, storage, transfer
 from .. import spells as spl
 from ..commands import Choice, Choose, ChooseFile, Command, Confirm, Form, Refuse, notes
 from ..form_spec import DialogField
@@ -38,6 +38,7 @@ IMPORT_KINDS: tuple[tuple[str, str], ...] = (
     ("laboratories", "Laboratories"),
     ("saga", "A Whole Saga"),
     ("pack", "A Content Pack"),
+    ("cult", "A Mystery Cult"),
 )
 
 #: The records imported from an export, by Import Data's key.
@@ -57,6 +58,8 @@ _DETAILS = {
     "pack": "Tribunals, covenants, characters, places, neighbours and calendar "
     "entries from a pack written by Export Pack; what this saga already has "
     "is kept.",
+    "cult": "A Mystery Cult of another saga's own, written by Export a Cult, "
+    "added to this saga's own cults.",
 }
 
 TITLE = "Import Data"
@@ -103,6 +106,9 @@ def choose_file(saga: Saga, kind: str, covenant: Covenant | None = None) -> Choo
         return ChooseFile(
             "Import spells (into the saga's own spells)", ".csv", Path.cwd(), read
         )
+    if kind == "cult":
+        start = storage.exports_dir() if storage.exports_dir().is_dir() else Path.cwd()
+        return ChooseFile("Import a Mystery Cult", ".json", start, read)
     return ChooseFile(
         f"Import books into {covenant.name}'s library"
         if covenant is not None
@@ -189,7 +195,35 @@ def import_file(
         return _import_record(saga, RECORD_IMPORTS[kind], path)
     if kind == "spells":
         return _import_spells(saga, path)
+    if kind == "cult":
+        return _import_cult(saga, path)
     return _import_books(saga, path, covenant)
+
+
+def _import_cult(saga: Saga, path: Path) -> Command:
+    """A Mystery Cult exported from another saga, added to this saga's own."""
+    try:
+        cult = cult_transfer.read(path)
+    except (OSError, ValueError) as problem:
+        return Refuse(
+            TITLE, f"Couldn't import {escape(path.name)}: {escape(str(problem))}"
+        )
+    degrees = len(cult.degrees)
+
+    def apply() -> list[str]:
+        added = cult_transfer.add(saga, cult)
+        return notes(
+            f"{escape(added.name)} added to the saga's own Mystery Cults "
+            "(Saga Content)."
+        )
+
+    return Confirm(
+        f"Add the Mystery Cult {escape(cult.name)}, with its {degrees} "
+        f"degree{'' if degrees == 1 else 's'}, to this saga's own cults?",
+        apply,
+        yes_label="Import",
+        title=TITLE,
+    )
 
 
 def _import_record(saga: Saga, kind: str, path: Path) -> Command:

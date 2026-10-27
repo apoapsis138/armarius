@@ -668,6 +668,41 @@ def _tone(marriage: Marriage) -> str:
     return "text-warning" if marriage.state == BETROTHED else "text-success"
 
 
+#: A character sheet's Marriages section: the marriages naming them.
+CHARACTER_SECTION = "section-char-marriages"
+
+
+def of_character(saga: Saga, character: Character) -> list[Marriage]:
+    """The marriages naming `character` as bride or groom, as entered."""
+    ref = CHARACTER_REF + character.id
+    return [m for m in saga.marriages if ref in (m.bride_ref, m.groom_ref)]
+
+
+def character_text(saga: Saga, character: Character) -> str:
+    """The character's marriages, each with its spouse, when, dowry and
+    state; they are arranged and ended on the families' lords' pages
+    (markup)."""
+    found: list[str] = []
+    ref = CHARACTER_REF + character.id
+    for m in of_character(saga, character):
+        other = "bride" if m.groom_ref == ref else "groom"
+        colour = "dim" if m.ended else f"${_tone(m)}"
+        found.append(
+            f"[b]{escape(spouse(saga, m, other))}[/]  {escape(_when(m))}  "
+            f"[{colour}]{escape(state_text(m))}[/]"
+        )
+        dowry = dowry_text(m)
+        if dowry:
+            found.append(f"  Dowry: {escape(dowry)}")
+        if m.ended:
+            bride = spouse(saga, m, "bride").split()[0]
+            groom = spouse(saga, m, "groom").split()[0]
+            found.append(
+                f"  [dim]{rules.ending_text(m, m.ended, escape(bride), escape(groom))}[/]"
+            )
+    return "\n".join(found)
+
+
 def marriages_title(saga: Saga, house: Neighbour) -> str:
     return f"Marriages ({len(involving(saga, house))})"
 

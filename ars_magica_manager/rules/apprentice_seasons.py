@@ -38,6 +38,7 @@ from ..models import (
 )
 from . import lab, lab_stats, study
 from .creation_access import traditions_of
+from .effects import fill_name
 from .scores import ability_level
 
 SUPERNATURAL_SOURCE = (
@@ -262,7 +263,7 @@ def teachable_virtues(
             and entry.type == ("Flaw" if flaws else "Virtue")
             and entry.category == "Hermetic"
         ):
-            found.append((entry.name, entry.id))
+            found.append((fill_name(entry.name, vf.params), entry.id))
     return found
 
 

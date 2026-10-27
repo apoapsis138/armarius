@@ -52,6 +52,7 @@ from ..forms import covenant as covenant_forms
 from ..forms import creation as creation_forms
 from ..forms import diary as diary_forms
 from ..forms import inhabitant as inhabitant_forms
+from ..forms import land_shaping as land_forms
 from ..forms import library as library_forms
 from ..forms import menu as menu_forms
 from ..forms import possession as possession_forms
@@ -860,6 +861,14 @@ class CovenantPage(QWidget):
             ]
 
         parts += self._groups(figures.groups, ops, more)
+        if covenant.land_projects:
+            land = section(
+                "Land Works",
+                p,
+                TextBlock(land_forms.land_works_text(saga, covenant), p),
+            )
+            land.setObjectName(land_forms.LAND_WORKS_SECTION)
+            parts.append(land)
         return scrolling_page(p, *parts)
 
     def _manors(self, covenant: Covenant) -> QWidget:

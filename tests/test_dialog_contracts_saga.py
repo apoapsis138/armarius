@@ -178,6 +178,51 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (s.fights[0].round, len(s.fights[0].log)),
         expected=(1, 2),
     ),
+    "hire mercenaries": Contract(
+        prefill={"Side": "0", "Knights": "0"},
+        edits={"Knights": "2", "Levies": "3"},
+        saved=lambda s: (
+            s.battles[0].sides[0].mix,
+            s.battles[0].sides[0].groups,
+        ),
+        expected=({"knights": 2, "levies": 3}, 45),
+        # The Count's Average budget is 100 pounds (Lords of Men p. 103).
+        invalid={"Knights": "7"},
+        live={"#fields-live": "Cost 33 pounds"},
+    ),
+    "end of the day": Contract(
+        prefill={"How the day ends": "won", "That Reputation": "Victorious commander"},
+        edits={"How the day ends": "truce"},
+        saved=lambda s: s.battles[0].ended.startswith("A truce"),
+        expected=True,
+    ),
+    "combat options": Contract(
+        prefill={"Option": "charge", "Combat Ability": "Single Weapon"},
+        edits={"Option": "crowd"},
+        saved=lambda s: len(s.fights),
+        expected=1,
+        live={"#fields-live": "At most 6 attack one man"},
+    ),
+    "change deployments": Contract(
+        prefill={"Besiegers at the North": "1", "Garrison at the West": "2"},
+        edits={"Garrison at the North": "0"},
+        saved=lambda s: s.sieges[0].garrison_walls,
+        expected=[0, 2, 2, 2],
+        invalid={"Garrison at the West": "many"},
+        live={"#fields-live": "Undefended: North"},
+    ),
+    "supplies story": Contract(
+        prefill={"What happens": "blockade"},
+        edits={"What happens": "relief"},
+        saved=lambda s: (s.sieges[0].supplies, s.sieges[0].events[-1].kind),
+        expected=("Superior", "story"),
+    ),
+    "castle taken": Contract(
+        prefill={"Its governor": "", "What becomes of it": ""},
+        edits={"Its governor": "Sir Odo"},
+        saved=lambda s: (s.sieges[0].ended, "Sir Odo" in s.sieges[0].events[-1].text),
+        expected=("Taken", True),
+    ),
     "next siege event": Contract(
         prefill={"Event": "Bombard a wall"},
         edits={"Event": "Keep the stockade"},

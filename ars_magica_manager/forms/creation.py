@@ -41,6 +41,7 @@ from ..seasons import defaults
 from . import choice_templates as choice_forms
 from . import grog_templates as grog_forms
 from . import tribunal as tribunal_forms
+from .character import CHARACTER_TYPE_OPTIONS
 
 #: Saga-form keys for the optional rules: the prefix plus the option's key.
 RULE_OPTION_PREFIX = "rule_option__"
@@ -283,12 +284,7 @@ def new_covenant_form(saga: Saga) -> Form:
 # -- New Character --
 
 #: The kinds of character, as Select options.
-CHARACTER_TYPES: list[tuple[str, str]] = [
-    ("Magus", "magus"),
-    ("Companion", "companion"),
-    ("Mythic Companion", "mythic companion"),
-    ("Grog", "grog"),
-]
+CHARACTER_TYPES = CHARACTER_TYPE_OPTIONS
 
 
 def covenant_field(saga: Saga, covenant_id: str | None) -> DialogField:
@@ -572,6 +568,14 @@ def familiar_create_fields(saga: Saga, magus_id: str | None) -> list[DialogField
             allow_blank=True,
             placeholder="(choose a magus)",
         ),
+        DialogField(
+            "bound",
+            "Bound already",
+            "check",
+            True,
+            hint="Untick to bind it by lab work: the bond's True Friend and "
+            "Loyal (Partner) +3 come when that season is played (DE p. 267).",
+        ),
     ]
 
 
@@ -582,7 +586,9 @@ def bind_familiar_form(saga: Saga, magus_id: str | None) -> Form:
     def apply(values: dict[str, Any]) -> None:
         magus = saga.character(values["character_id"])
         if magus is not None:
-            fam.bind_familiar(saga, magus, values["name"])
+            fam.bind_familiar(
+                saga, magus, values["name"], bound=bool(values.get("bound", True))
+            )
 
     return Form(
         "Bind a New Familiar",

@@ -206,8 +206,10 @@ class Covenant:
     year_founded: int | None = None
     aegis_of_the_hearth: int = 0
     aegis_penetration: int = 0
-    living_conditions_magi: int = 0
-    living_conditions_mundane: int = 0
+    #: Living Conditions typed for the magi and for everyone else; None
+    #: follows the covenant's season (rules.living.season_living).
+    living_conditions_magi: int | None = None
+    living_conditions_mundane: int | None = None
     #: The covenant's life stage (ArM5 Chapter 6, "Covenant Seasons") -- one
     #: of SEASONS. Not the calendar season, which lives on the Saga.
     covenant_season: str = "Spring"
@@ -308,6 +310,11 @@ class Covenant:
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
         # Older saves kept secrets under a heading in the notes or summary.
         d = move_secrets(dict(data), "notes", "summary")
+        # Living Conditions used to start at 0 and stay there unless typed;
+        # a 0 now follows the covenant's season, as the book's table does.
+        for key in ("living_conditions_magi", "living_conditions_mundane"):
+            if d.get(key) == 0:
+                d[key] = None
         d["economics"] = Economics.from_dict(d.get("economics") or {})
         d["boons_hooks"] = [
             VirtueFlawInstance(**known_fields(VirtueFlawInstance, bh))

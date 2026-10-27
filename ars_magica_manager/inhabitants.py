@@ -23,7 +23,7 @@ from .models import (
     Saga,
     character_age,
 )
-from .rules import reputations, study, xp
+from .rules import living, reputations, study, xp
 from .rules.animal_grogs import describe as describe_animal
 from .rules.covenfolk import (
     AUTO_KINDS,
@@ -307,7 +307,7 @@ def living_conditions_loyalty(covenant: Covenant) -> int:
     """10 Loyalty points per point of the covenant's Living Conditions
     (Mundane) -- covenfolk are mundane, so Living Conditions (Magi) doesn't
     apply here."""
-    return covenant.living_conditions_mundane * 10
+    return living.covenant_living(covenant, magi=False) * 10
 
 
 def equipment_loyalty(covenant: Covenant) -> int:
@@ -542,7 +542,7 @@ def loyalty_right_text(saga: Saga, covenant: Covenant) -> str:
         [
             (
                 "Living Conditions",
-                f"{covenant.living_conditions_mundane:+d}  "
+                f"{living.living_text(covenant, magi=False)}  "
                 f"({living_conditions_loyalty(covenant):+d})",
             ),
             (

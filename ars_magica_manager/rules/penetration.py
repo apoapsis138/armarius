@@ -141,7 +141,7 @@ def penetration_total(
 def penetration_halved_by(virtues_flaws: Sequence[VirtueFlawInstance]) -> list[str]:
     """The Virtues and Flaws that multiply the Penetration Total."""
     return [
-        e.entry.name
+        e.name
         for e in effects.collect([character_source(virtues_flaws)], "penetration_total")
         if e.modifier.multiplier is not None
     ]
@@ -160,7 +160,7 @@ def _resistance_multiplier(
     multiplier = 1.0
     for e in found:
         multiplier *= e.modifier.multiplier or 0
-    return multiplier, [e.entry.name for e in found]
+    return multiplier, [e.name for e in found]
 
 
 def penetrates(penetration: int, magic_resistance: int | None) -> bool:

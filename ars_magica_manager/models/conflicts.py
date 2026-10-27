@@ -275,6 +275,9 @@ class Siege:
     #: the Supplies interval as it then stood (Lords of Men p. 112). None
     #: before the first interval is counted: the interval from day 0.
     next_supply_day: int | None = None
+    #: Conjuration of Bread's +7 holds for the supplies rolls before this
+    #: day (Lords of Men p. 116); None: no bread conjured.
+    bread_until: int | None = None
     events: list[SiegeEvent] = field(default_factory=list)
     #: How it ended ("Surrendered", "Breached", "Raised"); "" while it runs.
     ended: str = ""
@@ -325,6 +328,9 @@ class BattleSide:
     pilot_id: str = ""
     #: Its ships are bearded: iron plates on their prows.
     bearded: bool = False
+    #: Its groups by kind, as they were raised or hired ("knights": 4,
+    #: "allies": 6); counted in `groups`, which may hold more of no kind.
+    mix: dict[str, int] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> BattleSide:
@@ -334,6 +340,13 @@ class BattleSide:
         if not isinstance(ships, list):
             raise ValueError(f"Battle side {name}: ships must be a list of ids")
         d["ships"] = [str(s) for s in cast(list[Any], ships)]
+        mix = d.get("mix") or {}
+        if not isinstance(mix, dict) or any(
+            isinstance(n, bool) or not isinstance(n, int) or n < 0
+            for n in cast(dict[str, Any], mix).values()
+        ):
+            raise ValueError(f"Battle side {name}: its groups by kind must be counts")
+        d["mix"] = {str(k): int(n) for k, n in cast(dict[str, Any], mix).items()}
         other = d.get("other_ships", 0)
         if isinstance(other, bool) or not isinstance(other, int) or other < 0:
             raise ValueError(
@@ -407,6 +420,8 @@ class Battle:
     id: str = field(default_factory=new_instance_id)
     #: Fought at sea, between fleets (Tales of Power pp. 106-110).
     at_sea: bool = False
+    #: How the day ended, once it has ("" while it goes on).
+    ended: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Battle:

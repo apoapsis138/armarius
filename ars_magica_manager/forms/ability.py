@@ -100,7 +100,7 @@ def ability_label(ability: Ability) -> str:
 
 def ability_choice(entry: AbilityDef) -> Choice:
     """A catalog Ability as the Add list offers it."""
-    needs = f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
+    needs = catalog.needs_note(entry.name, entry.parameters)
     return Choice(
         escape(f"{entry.name}  [{entry.category}]{needs}"),
         entry,

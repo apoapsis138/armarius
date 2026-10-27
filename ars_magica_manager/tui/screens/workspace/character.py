@@ -36,6 +36,7 @@ from ....forms import acclaim as acclaim_forms
 from ....forms import agents as agent_forms
 from ....forms import apothecary as apothecary_forms
 from ....forms import beast as beast_forms
+from ....forms import boost as boost_forms
 from ....forms import careers as career_forms
 from ....forms import character as character_forms
 from ....forms import church as church_forms
@@ -46,6 +47,7 @@ from ....forms import faerie_dealings as faerie_forms
 from ....forms import gauntlet as gauntlet_forms
 from ....forms import goetic as goetic_forms
 from ....forms import grogs as grog_forms
+from ....forms import hedge_cast as hedge_cast_forms
 from ....forms import holy_influence as holy_influence_forms
 from ....forms import hubris as hubris_forms
 from ....forms import lacuna as lacuna_forms
@@ -59,6 +61,7 @@ from ....forms import tmre_dreams as tmre_dream_forms
 from ....forms import tmre_spirits as tmre_spirit_forms
 from ....forms import tunnel as tunnel_forms
 from ....forms import turbulence as turbulence_forms
+from ....forms import twilight as twilight_forms
 from ....forms import vf_change as vf_change_forms
 from ....markup import escape
 from ....models import (
@@ -222,6 +225,40 @@ class CharacterActions(WorkspaceBase):
             self.app,
             aging_due.character_form(self.saga, character),
             lambda _end: self._commit("section-aging", "section-char-characteristics"),
+        )
+
+    def action_boost_spell(self) -> None:
+        """More's Boost a Spell on Known Spells: the pawns and botch dice a
+        boost takes, worked out (a calculator: it changes nothing)."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app, boost_forms.boost_form(self.saga, character), lambda _e: None
+        )
+
+    def action_hedge_cast(self) -> None:
+        """More's Cast a Power: a hedge tradition's casting rolled, kept in
+        the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            hedge_cast_forms.cast_form(self.saga, character),
+            lambda _end: self._commit("section-aging"),
+        )
+
+    def action_resolve_twilight(self) -> None:
+        """More's Resolve Twilight on Aging & Warping: the storyguide's
+        choice of its effects, applied and kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            twilight_forms.resolve_twilight_form(self.saga, character),
+            lambda _end: self._commit("section-aging"),
         )
 
     def action_end_session(self) -> None:

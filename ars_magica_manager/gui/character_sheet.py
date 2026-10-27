@@ -53,6 +53,7 @@ from .. import (
     connections,
     creation,
     giving,
+    marriages,
     portraits,
     seasons,
     sourcebooks,
@@ -75,6 +76,7 @@ from ..forms import agents as agent_forms
 from ..forms import character as cf
 from ..forms import church as church_forms
 from ..forms import constant_effect as constant_forms
+from ..forms import covers as cover_forms
 from ..forms import criamon as criamon_forms
 from ..forms import device as device_forms
 from ..forms import diary as diary_forms
@@ -106,6 +108,7 @@ from ..rules import criamon as criamon_rules
 from ..rules import enchantment, hybrid_magic, library, sigils
 from ..sections import (
     CANON_SECTION,
+    COVERS_SECTION,
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
     STIGMATA_SECTION,
@@ -902,6 +905,12 @@ class CharacterSheet(QWidget):
             )
         )
         parts.append(connections_section(saga, c, p, self.run))
+        if marriages.of_character(saga, c):
+            wed = section(
+                "Marriages", p, TextBlock(marriages.character_text(saga, c), p)
+            )
+            wed.setObjectName(marriages.CHARACTER_SECTION)
+            parts.append(wed)
         health: list[QWidget] = [
             wound_track(cs.wound_track(c), p),
             _subheading("Fatigue", p),
@@ -911,6 +920,10 @@ class CharacterSheet(QWidget):
         parts.append(section("Health", p, *health, edits=edits("Wounds", "Fatigue")))
         aging = cs.aging_facts(c)
         effects = c.aging.effects
+        if c.aging.twilight_scars.strip():
+            effects = (effects + "\n\n" if effects else "") + (
+                "Twilight Scars: " + "; ".join(c.aging.twilight_scars.splitlines())
+            )
         parts.append(
             section(
                 "Aging",
@@ -921,7 +934,38 @@ class CharacterSheet(QWidget):
             )
         )
         parts.append(self._constant_effects())
+        if cover_forms.shown(c):
+            parts.append(self._covers())
         return scrolling_page(p, *parts)
+
+    def _covers(self) -> QWidget:
+        """The character's deep covers and personae (HoH:S pp. 87-89)."""
+        p, c = self.p, self.character
+        chooser = Chooser()
+        rows = cover_forms.table(c)
+        chooser.listeners.append(
+            lambda index: (
+                self.inspect(
+                    c.covers[index].name or "A cover",
+                    c.covers[index].kind,
+                    cover_forms.info(c, index),
+                )
+                if index is not None and index < len(c.covers)
+                else None
+            )
+        )
+        line = cover_forms.personae_line(c)
+        widget = section(
+            cover_forms.title(c),
+            p,
+            table_view(rows, p, chooser.choose)
+            if rows.rows
+            else TextBlock(cover_forms.EMPTY, p),
+            *([TextBlock(line, p)] if line else []),
+            buttons=verb_buttons(cover_forms.ops(c), chooser, self.run, p),
+        )
+        widget.setObjectName(COVERS_SECTION)
+        return widget
 
     def _constant_effects(self) -> QWidget:
         """The supernatural effects on the character all the time, and the

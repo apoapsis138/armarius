@@ -123,7 +123,7 @@ def _source_text(saga: Saga | None, effect: effects.Effect) -> str:
     """One Virtue or Flaw's part in a Characteristic: "Superior
     Construction +1", or for one read from an Intelligence, whose:
     "Servant +2 (Kurt's Intelligence +3, halved, rounded up)"."""
-    text = f"{effect.entry.name} {effect.amount or 0:+g}"
+    text = f"{effect.name} {effect.amount or 0:+g}"
     if effect.modifier.amount_param is None:
         return text
     return f"{text} ({labs.reading_detail(saga, effect.instance, effect.modifier)})"

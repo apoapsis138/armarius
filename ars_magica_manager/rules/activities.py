@@ -81,6 +81,7 @@ from . import (
     supplement_seasons,
     supplement_work,
     tamed,
+    tme_books,
     tradition_seasons,
     xp,
 )
@@ -90,6 +91,7 @@ from . import (
 )
 from . import hybrid_magic as hybrid
 from . import lab as lab_rules
+from . import options as rule_options
 from .breakdown import Line
 from .scores import ability_level
 from .study import StudyResult, season_of_study
@@ -947,12 +949,17 @@ def plans_this_season(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
 def students_of(saga: Saga, plan: SeasonPlan) -> int:
     """How many this teacher teaches this season, whatever the subject:
     the +6 and +3 for one or two students, and the Arts' one-on-one rule,
-    count them all (DE p. 378)."""
-    return sum(
-        1
+    count them all (DE p. 378). The student of `plan` is counted whether
+    or not the plan is saved yet, so a preview counts the class Advance
+    will."""
+    others = {
+        p.character_id
         for p in plans_this_season(saga, plan)
-        if p.activity == TAUGHT and p.teacher_id == plan.teacher_id
-    )
+        if p.activity == TAUGHT
+        and p.teacher_id == plan.teacher_id
+        and p.character_id != plan.character_id
+    }
+    return len(others) + 1
 
 
 #: A language at this score reads a book or teaches in it (DE p. 378).
@@ -1060,9 +1067,62 @@ def _study_problems(
     return []
 
 
+#: A Read plan's book_id for a large library's subject: "library:art:Ignem".
+LIBRARY_PREFIX = "library:"
+
+
+def library_subject(plan: SeasonPlan) -> str | None:
+    """The subject a Read plan studies from the whole library, or None."""
+    book = plan.book_id or ""
+    return (
+        book.removeprefix(LIBRARY_PREFIX) if book.startswith(LIBRARY_PREFIX) else None
+    )
+
+
+def library_books(saga: Saga, character: Character, subject: str) -> list[Book]:
+    """The covenant library's books on `subject`, for a large library."""
+    return [
+        b
+        for b in saga.books
+        if b.owner_kind == "covenant"
+        and b.owner_id == character.covenant_id
+        and book_subject(b) == subject
+    ]
+
+
+def library_figures(
+    saga: Saga, character: Character, subject: str
+) -> tme_books.LibraryScore | None:
+    """The character's covenant library's Level and Quality in `subject`
+    (Transforming Mythic Europe p. 105), or None without a summa on it."""
+    return tme_books.library_score(library_books(saga, character, subject))
+
+
+def _library_problems(
+    saga: Saga, character: Character, plan: SeasonPlan, subject: str
+) -> list[str]:
+    if not rule_options.is_on(saga, rule_options.LARGE_LIBRARY):
+        return [
+            "Studying the whole library is the Large Library optional rule "
+            "(Transforming Mythic Europe p. 105): turn it on in Edit Saga."
+        ]
+    if library_figures(saga, character, subject) is None:
+        return [
+            f"The covenant's library has no summa on {_split(subject)[1]}: a "
+            "subject without one has no Level to study."
+        ]
+    if _split(subject)[0] == "art" and character.type != "magus":
+        return ["Only the Gifted study the Arts."]
+    return []
+
+
 def _reading_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     """Reading a summa or tractatus: the book is at hand, set, and still has
-    something to teach."""
+    something to teach. Or, with the Large Library rule, the library's
+    whole holding of a subject."""
+    whole = library_subject(plan)
+    if whole is not None:
+        return _library_problems(saga, character, plan, whole)
     book = next((b for b in saga.books if b.id == plan.book_id), None)
     if book is None:
         return ["Choose the book to study."]
@@ -2300,6 +2360,86 @@ def _book_kind_notes(saga: Saga, character: Character, book: Book) -> list[str]:
     ]
 
 
+def _library_outcome(
+    saga: Saga, character: Character, plan: SeasonPlan, whole: str, result: Outcome
+) -> None:
+    """A season studying the library's whole holding of a subject (the
+    Large Library rule, Transforming Mythic Europe p. 105)."""
+    months = _months(plan)
+    kind = _STUDY_KIND[plan.activity]
+    figures = library_figures(saga, character, whole)
+    assert figures is not None
+    gained, seasons_left = tme_books.library_study(score(character, whole), figures)
+    result.gains.append(_gain(character, whole, gained, kind, months, year=plan.year))
+    result.notes.append(
+        f"The library on {_split(whole)[1]}: Level {figures.level}, Quality "
+        f"{figures.quality} (Transforming Mythic Europe p. 105)"
+        + (
+            f"; at or above its Level, it gives its Quality for {seasons_left} "
+            "seasons in all."
+            if seasons_left is not None
+            else "; below its Level, Quality + 3."
+        )
+    )
+
+
+def _reading_outcome(
+    saga: Saga, character: Character, plan: SeasonPlan, result: Outcome
+) -> None:
+    """A season reading one of the library's books."""
+    months = _months(plan)
+    kind = _STUDY_KIND[plan.activity]
+    book = next(b for b in saga.books if b.id == plan.book_id)
+    subject = book_subject(book)
+    quality = library.effective_quality(saga, book)
+    assert subject is not None and quality is not None
+    limit = book.level if book.type != "Tractatus" else None
+    bonuses = _reading_lines(saga, character, plan, book, quality)
+    result.realia = book.opus == book_kinds.REALIA
+    result.gains.append(
+        _gain(
+            character,
+            subject,
+            quality,
+            kind,
+            months,
+            gain_limit=limit,
+            bonuses=bonuses,
+            year=plan.year,
+            hermetic_halved=hybrid.halves_study(
+                character, book, hybrid.hermetic_source(saga, book)
+            ),
+        )
+    )
+    if book.type == "Tractatus":
+        result.tractatus = book.id
+    else:
+        result.summa = book.id
+    result.notes += _book_kind_notes(saga, character, book)
+    if plan.gloss:
+        result.glossed = book.id
+        if book.glossed:
+            result.notes.append(
+                f"{book.name} is already glossed: another gloss adds no Quality."
+            )
+        elif book.author_id is None:
+            result.notes.append(
+                "Its author isn't a character of the saga: check the "
+                "glosser's Communication is the better at the table."
+            )
+    codex = library.codex_of(saga, book)
+    if codex is not None and codex.collection == book_kinds.FOLIO:
+        result.gains.append(
+            _fixed_gain(
+                character,
+                ability_subject(book_kinds.FOLIO_LORE),
+                book_kinds.FOLIO_LORE_XP,
+                "A folio's notes on its author",
+                book_kinds.FOLIO_SOURCE,
+            )
+        )
+
+
 def _study_outcome(
     saga: Saga,
     character: Character,
@@ -2309,56 +2449,12 @@ def _study_outcome(
 ) -> None:
     months = _months(plan)
     kind = _STUDY_KIND[plan.activity]
+    whole = library_subject(plan) if plan.activity == READ else None
+    if whole is not None:
+        _library_outcome(saga, character, plan, whole, result)
+        return
     if plan.activity == READ:
-        book = next(b for b in saga.books if b.id == plan.book_id)
-        subject = book_subject(book)
-        quality = library.effective_quality(saga, book)
-        assert subject is not None and quality is not None
-        limit = book.level if book.type != "Tractatus" else None
-        bonuses = _reading_lines(saga, character, plan, book, quality)
-        result.realia = book.opus == book_kinds.REALIA
-        result.gains.append(
-            _gain(
-                character,
-                subject,
-                quality,
-                kind,
-                months,
-                gain_limit=limit,
-                bonuses=bonuses,
-                year=plan.year,
-                hermetic_halved=hybrid.halves_study(
-                    character, book, hybrid.hermetic_source(saga, book)
-                ),
-            )
-        )
-        if book.type == "Tractatus":
-            result.tractatus = book.id
-        else:
-            result.summa = book.id
-        result.notes += _book_kind_notes(saga, character, book)
-        if plan.gloss:
-            result.glossed = book.id
-            if book.glossed:
-                result.notes.append(
-                    f"{book.name} is already glossed: another gloss adds no Quality."
-                )
-            elif book.author_id is None:
-                result.notes.append(
-                    "Its author isn't a character of the saga: check the "
-                    "glosser's Communication is the better at the table."
-                )
-        codex = library.codex_of(saga, book)
-        if codex is not None and codex.collection == book_kinds.FOLIO:
-            result.gains.append(
-                _fixed_gain(
-                    character,
-                    ability_subject(book_kinds.FOLIO_LORE),
-                    book_kinds.FOLIO_LORE_XP,
-                    "A folio's notes on its author",
-                    book_kinds.FOLIO_SOURCE,
-                )
-            )
+        _reading_outcome(saga, character, plan, result)
         return
     if plan.activity in (TAUGHT, TRAINED):
         teacher = saga.character(plan.teacher_id)

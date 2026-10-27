@@ -48,6 +48,10 @@ NO_MAGICAL_LAB_TEXTS = "no_magical_lab_texts"
 #: scores, drafted by each side's notaries, and loopholes sought in it.
 CHARTER_STRENGTH = "charter_strength"
 
+#: Rules for a Large Library (Transforming Mythic Europe p. 105): each
+#: subject's books summed as one Level and Quality, studied as one.
+LARGE_LIBRARY = "large_library"
+
 
 @dataclass(frozen=True)
 class RuleOption:
@@ -283,6 +287,18 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Transforming Mythic Europe, Optional Rule: No Magical Copying of "
             "Laboratory Texts, p. 104"
         ),
+        book="TME",
+    ),
+    RuleOption(
+        key=LARGE_LIBRARY,
+        label="Rules for a Large Library",
+        effect=(
+            "Each subject of a covenant's library has one Level and Quality, "
+            "its best summa raised by the other books near it; Read a book "
+            "can study the library's whole holding of a subject: Quality + 3 "
+            "below its Level, its Quality for Quality more seasons at it."
+        ),
+        source="Transforming Mythic Europe, Rules for a Large Library, p. 105",
         book="TME",
     ),
     # Charter Strength (Transforming Mythic Europe).

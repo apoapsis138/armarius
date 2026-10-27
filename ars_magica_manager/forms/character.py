@@ -220,6 +220,13 @@ def aging_fields(
     return [
         DialogField("decrepitude", "Decrepitude", "int", aging.decrepitude),
         DialogField("effects", "Effects of Aging", "text", aging.effects),
+        DialogField(
+            "twilight_scars",
+            "Twilight Scars",
+            "area",
+            aging.twilight_scars,
+            hint="One a line; More's Resolve Twilight adds each Twilight's.",
+        ),
         DialogField("warping_score", "Warping Score", "int", aging.warping_score),
         DialogField("warping_points", "Warping Points", "int", aging.warping_points),
         DialogField(
@@ -668,6 +675,14 @@ COMPANION_TYPE_OPTIONS: list[tuple[str, str]] = [
     ("Mythic Companion", "mythic companion"),
 ]
 
+#: Every kind of character, as select options: a character In Creation
+#: may still be changed to any of them.
+CHARACTER_TYPE_OPTIONS: list[tuple[str, str]] = [
+    ("Magus", "magus"),
+    *COMPANION_TYPE_OPTIONS,
+    ("Grog", "grog"),
+]
+
 
 def characteristics_fields(characteristics: Characteristics) -> list[DialogField]:
     return [
@@ -705,9 +720,9 @@ def characteristics_form(saga: Saga, character: Character) -> Form:
 
 
 def character_info_fields(saga: Saga, character: Character) -> list[DialogField]:
-    """The top panel's Edit form: name, a companion's type (Companion or
-    Mythic Companion), covenant, a magus's laboratory, and the Background
-    figures shown there."""
+    """The top panel's Edit form: name, the type (any while In Creation,
+    else a companion's, Companion or Mythic Companion), covenant, a
+    magus's laboratory, and the Background figures shown there."""
     b = character.background
     fields = [
         DialogField("name", "Name", "text", character.name, required=True),
@@ -723,7 +738,23 @@ def character_info_fields(saga: Saga, character: Character) -> list[DialogField]
                 placeholder="Who they are and what they want, in a sentence or two",
             )
         )
-    if character.type in COMPANION_TYPES:
+    if (
+        character.in_creation
+        and character.type in dict(CHARACTER_TYPE_OPTIONS).values()
+    ):
+        fields.append(
+            DialogField(
+                "type",
+                "Type",
+                "select",
+                character.type,
+                options=CHARACTER_TYPE_OPTIONS,
+                hint="While In Creation. The worksheet's steps follow the "
+                "type; what earlier steps recorded is kept but no longer "
+                "counts.",
+            )
+        )
+    elif character.type in COMPANION_TYPES:
         fields.append(
             DialogField(
                 "type",
@@ -837,7 +868,7 @@ def apply_character_info(
     character.type = result.get("type", character.type)
     character.covenant_id = result["covenant_id"]
     if character.type == "magus":
-        assign_laboratory(saga, character, result["laboratory_id"])
+        assign_laboratory(saga, character, result.get("laboratory_id"))
     background = character.background
     if not character.in_creation:
         faith.gain_in_play(

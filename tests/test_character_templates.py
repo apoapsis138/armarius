@@ -216,7 +216,10 @@ async def test_a_grogs_template_asks_its_choices_and_starts_in_creation():
         )
         choices = app.screen
         assert choices.query_one("#btn-save").region.bottom <= 45
-        choices.query_one("#fld-variant", Select).value = "2"
+        variant = choices.query_one("#fld-variant", Select)
+        # The Select draws its current value once it has mounted.
+        assert await wait_until(pilot, lambda: bool(variant.query("#label")))
+        variant.value = "2"
         await pilot.pause()
         choices.query_one("#btn-save").press()
         assert await wait_until(

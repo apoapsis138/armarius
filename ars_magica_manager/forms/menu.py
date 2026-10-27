@@ -27,6 +27,7 @@ from .. import (
     arms,
     creation,
     creatures,
+    cult_transfer,
     deletion,
     disputations,
     giving,
@@ -94,6 +95,7 @@ from ..sections import LAB_TEXTS_SECTION
 from . import acclaim as acclaim_forms
 from . import apothecary as apothecary_forms
 from . import beast as beast_forms
+from . import boost as boost_forms
 from . import careers
 from . import church as church_forms
 from . import craft_magic as craft_forms
@@ -104,6 +106,7 @@ from . import faerie_dealings as faerie_forms
 from . import gauntlet as gauntlet_forms
 from . import goetic as goetic_forms
 from . import grogs as grog_forms
+from . import hedge_cast as hedge_cast_forms
 from . import holy_influence as holy_influence_forms
 from . import hosting as hosting_forms
 from . import hubris as hubris_forms
@@ -121,6 +124,7 @@ from . import tmre_spirits as tmre_spirit_forms
 from . import tribunal as tribunal_forms
 from . import tunnel as tunnel_forms
 from . import turbulence as turbulence_forms
+from . import twilight as twilight_forms
 from . import vf_change as vf_change_forms
 
 #: The record a page shows, as deletion and actions take it.
@@ -156,6 +160,7 @@ NOT_ON_PAGES = frozenset(
         "winter_roll",
         "settle_inheritance",
         "conflict_battle_event",
+        "battle_muster",
         "next_blow",
         "next_round",
         "add_combatant",
@@ -164,7 +169,9 @@ NOT_ON_PAGES = frozenset(
         "form_group",
         "break_group",
         "restart_fight",
+        "fight_options",
         "next_siege_event",
+        "siege_actions",
         # The desktop draws them as the Agents list's own buttons.
         "impress_agent",
         "spend_agency_xp",
@@ -197,6 +204,7 @@ NOT_ON_PAGES = frozenset(
         # A covenant's ships: the Ships list's own buttons.
         "ship_stress",
         "ship_combat",
+        "ship_fate",
         # A cleric's career: Holy Orders' own button.
         "perform_exorcism",
         # A saga cult's degrees: the Degrees list's own button.
@@ -506,6 +514,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # On a covenant, books straight into its library.
     "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "Library")),
     "export_saga": ((NodeKind.SAGA, "Saga Management"),),
+    "export_cult": ((NodeKind.SAGA, "Saga Management"),),
     "export_pack": ((NodeKind.SAGA, "Saga Management"),),
     "host_saga": ((NodeKind.SAGA, "Saga Management"),),
     "stop_hosting": ((NodeKind.SAGA, "Saga Management"),),
@@ -537,6 +546,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # Beside the Abilities chapter's own buttons.
     "edit_traditions": ((NodeKind.CHARACTER, "Abilities"),),
     "disputatio": ((NodeKind.CHARACTER, "Abilities"),),
+    "hedge_cast": ((NodeKind.CHARACTER, "Abilities"),),
     # Beside Health's Edit buttons.
     "take_harm": ((NodeKind.CHARACTER, "Health"),),
     "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
@@ -550,8 +560,10 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "grog_pension": ((NodeKind.CHARACTER, "Personality Traits"),),
     "craft_by_magic": ((NodeKind.CHARACTER, "Known Spells"),),
     "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
+    "resolve_twilight": ((NodeKind.CHARACTER, "Aging"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
+    "boost_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
     "give_silver": (
         (NodeKind.CHARACTER, "Personal Gear"),
@@ -651,6 +663,8 @@ SAGA_MANAGEMENT: dict[str, str] = {
     "records are kept, and the optional rules of the books in play.",
     "import_data": "Bring books, spells or records in from a file, such as "
     "another saga's export or a list of books.",
+    "export_cult": "Write one of the saga's own Mystery Cults, its degrees "
+    "and Scripts, to a file another saga can import.",
     "export_saga": "Write the whole saga, every record and what it holds, to "
     "one file that another saga, or this one on another computer, can import.",
     "export_pack": "Write chosen Tribunals, covenants, places and neighbours, "
@@ -1496,6 +1510,58 @@ def _record_command(page: Page) -> Command:
     return toggle_mode(page.saga, record)
 
 
+def export_cult(saga: Saga, folder: Path) -> Form | Refuse:
+    """Export one of the saga's own Mystery Cults to a file Import reads
+    back into another saga (A Mystery Cult)."""
+    if not saga.custom_cults:
+        return Refuse(
+            "Export a Cult",
+            "The saga has no Mystery Cult of its own: add one on Saga Content.",
+        )
+
+    def apply(values: dict[str, Any]) -> Command | list[str]:
+        cult = next(c for c in saga.custom_cults if c.id == values["cult"])
+        name = (values.get("file") or "").strip().strip('"')
+        path = (
+            Path(name).expanduser() if name else folder / cult_transfer.file_name(cult)
+        )
+        if not path.name.lower().endswith(".json"):
+            path = path.with_name(path.name + cult_transfer.SUFFIX)
+        try:
+            cult_transfer.export_to(path, cult)
+        except OSError as problem:
+            return Refuse(
+                "Export a Cult",
+                f"Couldn't write {escape(path.name)}: {escape(str(problem))}",
+            )
+        return notes(f"Exported {escape(cult.name)} to {escape(str(path))}.")
+
+    first = saga.custom_cults[0]
+    return Form(
+        "Export a Cult",
+        lambda: [
+            DialogField(
+                "cult",
+                "Cult",
+                "select",
+                first.id,
+                options=[(escape(c.name), c.id) for c in saga.custom_cults],
+            ),
+            DialogField(
+                "file",
+                "File",
+                "text",
+                str(folder / cult_transfer.file_name(first)),
+                hint="Its Lore, degrees, Scripts and their components. Import it "
+                "into another saga with Import, A Mystery Cult.",
+            ),
+        ],
+        apply,
+        save_label="Export",
+        help_id="import-data",
+    )
+
+
 def export_saga(saga: Saga, folder: Path) -> Form:
     """Export the whole saga to a file Import reads back (A Whole Saga)."""
 
@@ -1630,10 +1696,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "improve": _needs(_covenant, improve),
     "perform_ritual": _needs(_laboratory, perform_ritual),
     "share_spell": _needs(_character, share_spell),
+    "boost_spell": _needs(_character, boost_forms.boost_form),
     "give_silver": _silver_command,
     "lab_text_access": _needs(_character, lab_text_access),
     "edit_traditions": _needs(_character, character_traditions),
     "disputatio": _needs(_character, disputations.disputatio_form),
+    "hedge_cast": _needs(_character, hedge_cast_forms.cast_form),
     "take_harm": _needs(_character, health.take_harm_form),
     "recovery_roll": _needs(_character, health.recovery_form),
     "end_session": _needs(_character, session_end.end_session_form),
@@ -1645,10 +1713,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "grog_pension": _needs(_character, grog_forms.pension_form),
     "craft_by_magic": _needs(_character, craft_forms.craft_form),
     "place_aging_points": _needs(_character, aging_due.character_form),
+    "resolve_twilight": _needs(_character, twilight_forms.resolve_twilight_form),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
     "export_saga": lambda page: export_saga(page.saga, storage.exports_dir()),
+    "export_cult": lambda page: export_cult(page.saga, storage.exports_dir()),
     "export_pack": lambda page: packs.export_pack(page.saga, storage.exports_dir()),
     "host_saga": lambda _page: hosting_forms.host_form(),
     "stop_hosting": lambda _page: hosting_forms.stop_hosting(),

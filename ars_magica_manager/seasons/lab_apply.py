@@ -9,6 +9,7 @@ from dataclasses import replace
 
 from .. import book_kinds, research_text, spell_parameters, storage, vis
 from .. import books as bk
+from .. import familiars as fam
 from .. import spells as spl
 from ..models import (
     SEASONS,
@@ -331,6 +332,8 @@ def _apply_familiar(
         )
         if familiar.year_bound is None:
             familiar.season_bound, familiar.year_bound = plan.season, plan.year
+        # The bond's True Friend and Loyal (Partner) +3 come with it.
+        fam.grant_bond(familiar, magus)
         return
     power = work.power
     if power is None:
@@ -413,7 +416,7 @@ def apply_supplement(
             character.virtues_flaws.append(instance)
             cch.apply_virtue(saga, character, instance)
     if plan.activity == "undergo_initiation":
-        _apply_initiation(character, work, plan)
+        _apply_initiation(character, work, plan, saga)
     if work.summa_level is not None:
         book_id, level = work.summa_level
         book = next((b for b in saga.books if b.id == book_id), None)
@@ -476,7 +479,10 @@ def _apply_gains(
 
 
 def _apply_initiation(
-    character: Character, work: sw.SupplementWork, plan: SeasonPlan | None = None
+    character: Character,
+    work: sw.SupplementWork,
+    plan: SeasonPlan | None = None,
+    saga: Saga | None = None,
 ) -> None:
     """An Initiation's Ordeals and House Verditius's Hubris. One that gave
     its Virtue used up a step of each past Ordeal's reduction (a failed one
@@ -490,12 +496,94 @@ def _apply_initiation(
     verditius.apply_hubris(
         character, work.hubris_start, work.hubris_xp, work.hubris_rises
     )
+    if work.sacrifice and saga is not None and plan is not None:
+        _make_sacrifice(saga, character, work.sacrifice, plan)
     # A Criamon station reached: when, for The Enigma's Stations.
     if work.enigma_station:
         season, year = (plan.season, plan.year) if plan is not None else ("", None)
         character.enigma.reached.append(
             StationReached(work.enigma_station, season, year)
         )
+
+
+def _make_sacrifice(
+    saga: Saga, character: Character, sacrifice: str, plan: SeasonPlan
+) -> None:
+    """Give up what an Initiation's Script sacrificed (The Mysteries
+    Revised Edition pp. 12, 15-16), with a line in the Diary: a device,
+    item, book or familiar is gone; an apprentice goes to the cult; a
+    season serving the cult takes the next season, if it isn't planned."""
+    kind, _, record_id = sacrifice.partition(":")
+    name = ""
+    details = "Given up in the Initiation's Script."
+    if kind == "book":
+        book = next((b for b in saga.books if b.id == record_id), None)
+        if book is not None:
+            saga.books.remove(book)
+            name = book.name
+    elif kind == "familiar":
+        familiar = next((f for f in saga.familiars if f.id == record_id), None)
+        if familiar is not None:
+            saga.familiars.remove(familiar)
+            name = familiar.name or "the familiar"
+            details += " The bond is gone with it."
+    elif kind == "apprentice":
+        apprentice = saga.character(record_id)
+        if apprentice is not None:
+            name = apprentice.name
+            details = "Given to the cult in the Initiation's Script."
+    elif kind == "wealth":
+        name = "mundane wealth"
+    elif kind == "vis":
+        name = "vis"
+        details += " Take the pawns from the vis stock."
+    elif kind == "service":
+        name = "a season serving the cult"
+        details = _serve_the_cult(saga, character, plan)
+    elif kind == "device":
+        device = next((d for d in saga.enchanted_devices if d.id == record_id), None)
+        if device is not None:
+            saga.enchanted_devices.remove(device)
+            name = device.name
+    elif kind == "item":
+        item = next((i for i in character.inventory if i.id == record_id), None)
+        if item is not None:
+            character.inventory.remove(item)
+            name = item.name
+    if name:
+        character.diary.append(
+            DiaryEntry(
+                year=plan.year,
+                season=plan.season,
+                name=f"Sacrificed: {name}",
+                details=details,
+                activity=rules.ACTIVITIES[plan.activity].label,
+            )
+        )
+
+
+def _serve_the_cult(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    """A sacrifice of time: the season after the Initiation is spent
+    serving the cult (TMRE p. 12), planned as Other unless it already has a
+    plan."""
+    season, year = next_season(plan.season, plan.year)
+    planned = any(
+        p.character_id == character.id and p.year == year and p.season == season
+        for p in saga.season_plans
+    )
+    when = f"{season} {year}"
+    if planned:
+        return f"{when} is owed to the cult; it is planned already: change it by hand."
+    saga.season_plans.append(
+        SeasonPlan(
+            character.id,
+            year,
+            season,
+            rules.OTHER,
+            details="Serving the cult: the Initiation's sacrifice of time.",
+        )
+    )
+    return f"{when} is spent serving the cult."
 
 
 def _apply_reputations(

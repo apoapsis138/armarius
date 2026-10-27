@@ -137,6 +137,10 @@ def worse(quality: str) -> str | None:
     return QUALITIES[index - 1] if index else None
 
 
+#: Conjuration of Bread's bonus to a season's supplies rolls (p. 116).
+BREAD_BONUS = 7
+
+
 def disease_botch_dice(seasons: int) -> int:
     """A stockade supplies roll's botch dice: 1 + full seasons besieged."""
     return 1 + max(0, seasons)
@@ -400,15 +404,16 @@ def escalade(siege: Siege, wall: int, besiegers_won: bool) -> Played:
     )
 
 
-def sally(siege: Siege, target: str, won: bool) -> Played:
+def sally(siege: Siege, target: str, won: bool, *, units: int = 1) -> Played:
     """The garrison sallies out against the miners, a group of engines or
-    the soldiers (Battle Ease Factor 9); a win removes those units."""
+    the soldiers (Battle Ease Factor 9); a win removes those units: the
+    `units` groups of soldiers it struck (p. 115)."""
     if not won:
         return Played(f"The sally against the {target.lower()} is beaten back.")
     if target == "Miners":
         siege.miners = 0
     elif target == "Soldiers":
-        siege.soldiers = max(0, siege.soldiers - 1)
+        siege.soldiers = max(0, siege.soldiers - max(1, units))
     else:
         siege.engines[target] = max(0, siege.engines.get(target, 0) - MAX_ENGINE_GROUP)
     return Played(f"The sally strikes the {target.lower()} and returns to the walls.")
@@ -456,8 +461,14 @@ def _supplies_roll(
     castle = castle_of(siege)
     ease = castle.supplies_ease(day // DAYS_PER_YEAR)
     die = dice.stress_die(rng, disease_botch_dice(day // DAYS_PER_SEASON), saga=saga)
-    total = 0 if die.botched else castle.supplies_bonus() + die.value
-    told = [f"Supplies roll: {total} against {ease}"]
+    bread = (
+        BREAD_BONUS if siege.bread_until is not None and day < siege.bread_until else 0
+    )
+    total = 0 if die.botched else castle.supplies_bonus() + bread + die.value
+    told = [
+        f"Supplies roll: {total} against {ease}"
+        + (f" (Conjuration of Bread +{bread})" if bread else "")
+    ]
     if die.botched:
         told.append("Disease breaks out within the castle.")
     if total >= ease:
@@ -468,7 +479,9 @@ def _supplies_roll(
         told.append("The supplies are gone: the castle surrenders.")
         return told
     siege.supplies = lower
-    told.append(f"Supplies fall to {lower}.")
+    told.append(
+        f"Supplies fall to {lower}; those inside make deprivation checks (ArM5 p. 180)."
+    )
     return told
 
 

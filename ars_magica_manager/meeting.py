@@ -338,18 +338,30 @@ def _party(covenant: Covenant | Envoy, words: str) -> bool:
     return bool(name) and name in words.casefold()
 
 
-def leaning_why(saga: Saga, case: Case, covenant: Covenant | Envoy) -> tuple[str, str]:
+def leaning_why(
+    saga: Saga,
+    case: Case,
+    covenant: Covenant | Envoy,
+    tribunal: Tribunal | None = None,
+) -> tuple[str, str]:
     """How a covenant leans on `case` before the debate, and why: a party
-    votes its own side; any other leans by its attitude toward a troupe
-    covenant that is a party (Warm or better with it, Wary or worse
-    against it), and is otherwise undecided. An envoy has no attitudes:
-    undecided unless a party."""
+    votes its own side; then the Tribunal's customs may say (the Rhine's
+    gilds); any other leans by its attitude toward a troupe covenant that
+    is a party (Warm or better with it, Wary or worse against it), and is
+    otherwise undecided. An envoy has no attitudes: undecided unless a
+    party."""
     if _party(covenant, case.brought_by):
         return FOR, "it brings the case"
     if _party(covenant, case.against):
         return AGAINST, "the case is against it"
     if isinstance(covenant, Envoy):
         return UNDECIDED, "an ambassador sides with no one unless a party"
+    package = tribunal_packages.of(tribunal) if tribunal is not None else None
+    if package is not None and package.leaning is not None and tribunal is not None:
+        found = package.leaning(saga, tribunal, case, covenant)
+        if found is not None:
+            side, why = found
+            return (FOR if side == "brought_by" else AGAINST), why
     for player in world.player_covenants(saga):
         if player is covenant:
             continue
@@ -369,8 +381,13 @@ def leaning_why(saga: Saga, case: Case, covenant: Covenant | Envoy) -> tuple[str
     return UNDECIDED, "no settled view of either party"
 
 
-def default_leaning(saga: Saga, case: Case, covenant: Covenant | Envoy) -> str:
-    return leaning_why(saga, case, covenant)[0]
+def default_leaning(
+    saga: Saga,
+    case: Case,
+    covenant: Covenant | Envoy,
+    tribunal: Tribunal | None = None,
+) -> str:
+    return leaning_why(saga, case, covenant, tribunal)[0]
 
 
 def leanings(
@@ -380,7 +397,7 @@ def leanings(
     the defaults."""
     kept = meeting.get("votes", {}).get(case.id, {}).get("leanings", {})
     return {
-        c.id: kept.get(c.id) or default_leaning(saga, case, c)
+        c.id: kept.get(c.id) or default_leaning(saga, case, c, tribunal)
         for c in voters(saga, tribunal, meeting)
     }
 
@@ -2581,7 +2598,7 @@ def acta_text(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
     """The Acta, built from the meeting (acta.ActaBuilder)."""
     year, season = _when(saga, meeting)
     builder = acta.ActaBuilder().heading(
-        tribunals.title(tribunal), meeting.get("place", ""), season, year
+        tribunals.title_text(tribunal.name), meeting.get("place", ""), season, year
     )
     attending = [
         c.name
@@ -2623,7 +2640,10 @@ def _close(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> None:
     _decide(saga, tribunal, meeting)
     tribunal.diary.append(
         TribunalDiaryEntry(
-            year, season, acta.title(tribunals.title(tribunal), season, year), text
+            year,
+            season,
+            acta.title(tribunals.title_text(tribunal.name), season, year),
+            text,
         )
     )
     tribunal.next_year = _next(tribunal, meeting)

@@ -11,7 +11,14 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from . import battles, fights, sieges
+from . import (
+    battle_muster,
+    battles,
+    combat_options_form,
+    fights,
+    siege_actions,
+    sieges,
+)
 from .commands import Command, Refuse, SectionOps
 from .models import Saga
 from .references import Fact
@@ -20,6 +27,9 @@ from .sections import CONFLICT_BATTLES_SECTION, FIGHTS_SECTION, SIEGES_SECTION
 #: Each More command on a chosen fight (by its row) or siege.
 COMMANDS: dict[str, Callable[[Saga, int], Command]] = {
     "conflict_battle_event": lambda saga, row: battles.event_form(
+        saga, battles.battle_of(saga, row)
+    ),
+    "battle_muster": lambda saga, row: battle_muster.muster(
         saga, battles.battle_of(saga, row)
     ),
     "next_blow": lambda saga, row: fights.next_blow(saga, fights.fight_of(saga, row)),
@@ -38,16 +48,22 @@ COMMANDS: dict[str, Callable[[Saga, int], Command]] = {
         saga, fights.fight_of(saga, row)
     ),
     "restart_fight": lambda saga, row: fights.restart(saga, fights.fight_of(saga, row)),
+    "fight_options": lambda saga, row: combat_options_form.options_form(
+        saga, fights.fight_of(saga, row)
+    ),
     "next_siege_event": lambda saga, row: sieges.next_event(
+        saga, sieges.siege_of(saga, row)
+    ),
+    "siege_actions": lambda saga, row: siege_actions.actions(
         saga, sieges.siege_of(saga, row)
     ),
 }
 #: The section each command's row is chosen in.
 SECTION_OF = {
     action: SIEGES_SECTION
-    if action == "next_siege_event"
+    if action in ("next_siege_event", "siege_actions")
     else CONFLICT_BATTLES_SECTION
-    if action == "conflict_battle_event"
+    if action in ("conflict_battle_event", "battle_muster")
     else FIGHTS_SECTION
     for action in COMMANDS
 }

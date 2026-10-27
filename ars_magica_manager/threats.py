@@ -24,6 +24,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
+from . import diaries, world
 from .commands import Confirm, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -423,7 +424,23 @@ def stage_fields(
     return found
 
 
+#: What a stage's outcome makes of it: the field saying what follows.
+CONSEQUENCES: dict[str, str] = {
+    "Happened": "ignored",
+    "Stopped": "stopped",
+    "Turned": "turned",
+}
+
+
 def stage_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
+    before = {id(s): s.get("outcome") or PENDING for s in stages(neighbour)}
+
+    def after() -> None:
+        for stage in stages(neighbour):
+            outcome = stage.get("outcome") or PENDING
+            if outcome != PENDING and before.get(id(stage), PENDING) == PENDING:
+                record_outcome(saga, neighbour, stage)
+
     return list_ops(
         saga,
         neighbour,
@@ -431,7 +448,29 @@ def stage_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
         "Stage",
         stage_fields,
         lambda s: s["title"],
+        after=after,
     )
+
+
+def record_outcome(saga: Saga, neighbour: Neighbour, stage: Stage) -> str:
+    """What a stage marked as come (or kept from coming) does: its
+    consequence, as the stage says it, written in the threat's Diary and
+    each troupe covenant's, so the troupe sees what follows. Returns it."""
+    outcome = stage.get("outcome") or PENDING
+    key = CONSEQUENCES.get(outcome)
+    words = str(stage.get(key) or "").strip() if key else ""
+    if not words:
+        return ""
+    text = f"{stage['title']} ({outcome.lower()}): {words}"
+    diaries.write(
+        saga.current_year,
+        saga.current_season,
+        neighbour.name,
+        text,
+        covenants=world.player_covenants(saga),
+        neighbours=[neighbour],
+    )
+    return text
 
 
 TAB = KindTab(

@@ -176,6 +176,8 @@ class Aging:
     #: A magus with Miraculous Abilities whose troupe chose the Divine
     #: Ascent as his one form of Warping in place of Twilight.
     seeks_ascent: bool = False
+    #: The marks Twilight has left, one a line (DE pp. 229-230).
+    twilight_scars: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Aging:
@@ -621,6 +623,56 @@ class ConstantEffect:
         return cls(**known_fields(cls, d))
 
 
+#: A deep cover built in a community, or a persona of the Persona Ability
+#: (Houses of Hermes: Societates pp. 87-89).
+COVER, PERSONA_KIND = "cover", "persona"
+COVER_KINDS: tuple[str, ...] = (COVER, PERSONA_KIND)
+#: How a cover is kept up, as rules.house_magic.COVER_XP names it.
+COVER_CONTACTS: tuple[str, ...] = ("lives there", "visits regularly", "away")
+
+
+@dataclass
+class DeepCover:
+    """One of a character's other identities: its name, role and where it
+    lives, the Social Status tier its role needs ("", "Minor", "Major"),
+    how it is kept up, its Reputation's xp, the year it was last used when
+    it lies dormant, and notes. A persona also records the Persona
+    Ability's xp when it was made (`persona_from_xp`): every xp the Ability
+    gains after that goes to its Reputation too."""
+
+    name: str = ""
+    kind: str = COVER
+    role: str = ""
+    community: str = ""
+    status: str = ""
+    contact: str = "visits regularly"
+    reputation_xp: int = 0
+    last_used: int | None = None
+    notes: str = ""
+    persona_from_xp: int = 0
+    id: str = field(default_factory=new_instance_id)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> DeepCover:
+        made = cls(**known_fields(cls, d))
+        what = f"The cover {made.name!r}"
+        if made.kind not in COVER_KINDS:
+            raise ValueError(f"{what}: unknown kind {made.kind!r}.")
+        if made.contact not in COVER_CONTACTS:
+            raise ValueError(f"{what}: unknown way of keeping it {made.contact!r}.")
+        if made.status not in ("", "Minor", "Major"):
+            raise ValueError(f"{what}: unknown Social Status tier {made.status!r}.")
+        if isinstance(made.reputation_xp, bool) or not isinstance(
+            made.reputation_xp, int
+        ):
+            raise ValueError(f"{what}: its Reputation xp should be a whole number.")
+        if isinstance(made.persona_from_xp, bool) or not isinstance(
+            made.persona_from_xp, int
+        ):
+            raise ValueError(f"{what}: its Persona xp should be a whole number.")
+        return made
+
+
 #: What a bound being's bond adds to: the master's casting totals, his
 #: Lab Totals, or nothing the app works out.
 BOND_APPLIES: tuple[str, ...] = ("casting", "lab", "")
@@ -849,6 +901,8 @@ class Character:
     #: Supernatural effects on the character all the time (Warping each
     #: year).
     constant_effects: list[ConstantEffect] = field(default_factory=list)
+    #: Deep covers and personae (Houses of Hermes: Societates pp. 87-89).
+    covers: list[DeepCover] = field(default_factory=list)
     #: Beings bound to the character by a tradition, and the points in
     #: each of their traditions' pools ("<tradition id>:<pool name>").
     bound_beings: list[BoundBeing] = field(default_factory=list)
@@ -1025,6 +1079,7 @@ class Character:
         d["constant_effects"] = [
             ConstantEffect.from_dict(x) for x in d.get("constant_effects", [])
         ]
+        d["covers"] = [DeepCover.from_dict(x) for x in d.get("covers", [])]
         d["tradition_effects"] = [
             TraditionEffect.from_dict(e) for e in d.get("tradition_effects", [])
         ]

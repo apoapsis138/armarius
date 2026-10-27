@@ -6,7 +6,8 @@ per-saga)."""
 from __future__ import annotations
 
 import json
-from collections.abc import Callable, Collection, Mapping, Sequence
+import re
+from collections.abc import Callable, Collection, Iterable, Mapping, Sequence
 from functools import lru_cache
 from pathlib import Path
 from types import MappingProxyType
@@ -90,6 +91,23 @@ def _fill_placeholders(name: str, params: dict[str, str]) -> str:
     for key, value in params.items():
         name = name.replace(f"{{{key}}}", value.title())
     return name
+
+
+def blank_name(name: str) -> str:
+    """A catalog name with what it names still to choose, as a list or a
+    form's title shows it: "Affinity with {art}" -> "Affinity with (Art)"."""
+    return _PLACEHOLDER.sub(lambda m: f"({m.group(1).title()})", name)
+
+
+def needs_note(name: str, parameters: Sequence[str]) -> str:
+    """The "  (needs: ...)" a list adds for the parameters an entry's name
+    doesn't already show as "(Art)"."""
+    shown = set(_PLACEHOLDER.findall(name))
+    rest = [p for p in parameters if p not in shown]
+    return f"  (needs: {', '.join(rest)})" if rest else ""
+
+
+_PLACEHOLDER = re.compile(r"\{(\w+)\}")
 
 
 @lru_cache(maxsize=16)
@@ -240,6 +258,13 @@ def load_virtue_flaw_catalog(path: Path = CATALOG_PATH) -> list[VirtueFlawDef]:
     return _with_saga_entries(
         "character", _cached_entries(path, VirtueFlawDef.from_dict)
     )
+
+
+def virtue_flaws_by_name(entries: Iterable[VirtueFlawDef]) -> list[VirtueFlawDef]:
+    """`entries` in alphabetical order, as a list offers them to choose
+    from: the catalog file keeps the Hedge Magic traditions' Flaws ahead
+    of the rest."""
+    return sorted(entries, key=lambda entry: entry.name.casefold())
 
 
 def load_virtue_flaw_catalog_by_id(

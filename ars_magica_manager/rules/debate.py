@@ -140,6 +140,25 @@ class Debater:
     def defence(self) -> str:
         return max(DEFENCES, key=lambda d: self.defences.get(d, 0))
 
+    def choose_attack(self, rng: random.Random) -> str:
+        """This round's Attack Ability: one of those it is best at, by lot
+        among equals. The book has each debater choose an Attack and a
+        Defense Ability each round (p. 90), and the attack modifier depends
+        on the pair (p. 91); picking by lot is the app's stand-in for that
+        choice. Taking the first every time gave two speakers of equal
+        Abilities the same pairing, and its +3, in every round."""
+        return _pick(ATTACKS, self.attacks, rng)
+
+    def choose_defence(self, rng: random.Random) -> str:
+        return _pick(DEFENCES, self.defences, rng)
+
+
+def _pick(names: tuple[str, ...], scores: dict[str, int], rng: random.Random) -> str:
+    """One of the names with the best score, by lot among equals."""
+    best = max(scores.get(n, 0) for n in names)
+    tied = [n for n in names if scores.get(n, 0) == best]
+    return tied[0] if len(tied) == 1 else rng.choice(tied)
+
 
 #: A magus at Tribunal with nothing written down: 2 in each Ability.
 AVERAGE_ABILITY = 2
@@ -285,7 +304,8 @@ def run(
         for attacker in (first, 1 - first):
             defender = 1 - attacker
             a, d = speaking[attacker], speaking[defender]
-            attack_ability, defence_ability = a.attack(), d.defence()
+            attack_ability = a.choose_attack(rng)
+            defence_ability = d.choose_defence(rng)
             boost = left[0].pop(0) if attacker == 0 and left[0] else 0
             guard = left[1].pop(0) if defender == 1 and left[1] else 0
             attack = (

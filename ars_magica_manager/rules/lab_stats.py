@@ -282,7 +282,7 @@ def specialization_scores(saga: Saga, lab: Laboratory) -> list[SpecializationSco
         ]
     source = laboratory_source(lab, saga=saga)
     found += [
-        (effect.target or "", effect.entry.name, int(effect.amount or 0))
+        (effect.target or "", effect.name, int(effect.amount or 0))
         for effect in effects.collect(
             [source, lab_items.item_source(saga, lab)], "lab_specialization"
         )
@@ -300,7 +300,7 @@ def specialization_scores(saga: Saga, lab: Laboratory) -> list[SpecializationSco
     for effect in effects.collect([source], "lab_specialization_high"):
         for name, entries in sources.items():
             if sum(points for _, points in entries) >= 2:
-                entries.append((effect.entry.name, int(effect.amount or 0)))
+                entries.append((effect.name, int(effect.amount or 0)))
     return [
         SpecializationScore(
             name,

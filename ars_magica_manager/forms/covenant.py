@@ -48,9 +48,22 @@ from .virtue import param_choices, param_fields, params_from
 _COVENANT_INT_FIELDS: tuple[tuple[str, str], ...] = (
     ("aegis_of_the_hearth", "Aegis of the Hearth"),
     ("aegis_penetration", "Aegis' Penetration"),
-    ("living_conditions_magi", "Living Conditions (Magi)"),
-    ("living_conditions_mundane", "Living Conditions (Mundane)"),
     ("aura", "Aura"),
+)
+#: Edit Covenant's Living Conditions: blank follows the season.
+_LIVING_FIELDS: tuple[tuple[str, str, str], ...] = (
+    (
+        "living_conditions_magi",
+        "Living Conditions (Magi)",
+        "For magi and nobles. Blank: the season's, +1 in Spring or Winter, +2 in Summer or Autumn "
+        "(DE p. 190).",
+    ),
+    (
+        "living_conditions_mundane",
+        "Living Conditions (Mundane)",
+        "Blank: the season's, 0 in Spring or Winter, +1 in Summer or Autumn "
+        "(DE p. 190).",
+    ),
 )
 
 
@@ -77,6 +90,10 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             )
             for attribute, label in _COVENANT_INT_FIELDS
             if not (placed and attribute == "aura")
+        ),
+        *(
+            DialogField(attribute, label, "optint", getattr(cov, attribute), hint=hint)
+            for attribute, label, hint in _LIVING_FIELDS
         ),
         DialogField(
             "aura_realm",

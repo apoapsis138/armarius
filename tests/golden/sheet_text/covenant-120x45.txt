@@ -7,34 +7,34 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
    1 Attributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Description
 
       (no description)
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Connections
 
       Gilds: Hermetic, in Rhine
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Reputations (1)
 
       ○ Fair dealing: +2
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Boons (1 pt)                            ▼ Hooks (1 pt)
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Boons (1 pt)                           ▼ Hooks (1 pt)
 
-      ○ Aura                                    ○ Contested Resource
-
+      ○ Aura                                   ○ Contested Resource               ▇▇
 
   ▌
   ▌  Select a Boon or Hook to see its details.
@@ -50,9 +50,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
    1 Attributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7
@@ -78,7 +79,6 @@
 
 
 
-
   ▌
   ▌  Choose a clause to see when it was agreed, and how it was broken or amended.
   ▌
@@ -93,9 +93,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
    1 Attributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7
@@ -105,10 +106,11 @@
     ▼ Loyalty
 
       Type of Governance:       (not set)     Situational Modifiers for:
-      Base Loyalty Points:      -30           Living Conditions:  +0  (+0)        ▂▂
-      Total modifiers:          10            Equipment:          Standard  (+0)
-      Current Loyalty Points:   -20           Money:              Standard salary
-      Prevailing Loyalty Score: -2            (+0)
+      Base Loyalty Points:      -30           Living Conditions:  +0 (Spring)     ▆▆
+      Total modifiers:          10            (+0)
+      Current Loyalty Points:   -20           Equipment:          Standard  (+0)
+      Prevailing Loyalty Score: -2            Money:              Standard salary
+                                              (+0)
                                               Specialists:        0
                                               Familiarity:        0 (2 a year
                                               since founding, at most what the
@@ -119,8 +121,6 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Inhabitants
-
-      Number of Teamsters / Needed: 0 / 2
 
   ▌
   ▌  Select an inhabitant to see its details.
@@ -136,9 +136,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   tributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manor
@@ -156,14 +157,13 @@
       ○ Summer 1221        The Drachenfels: Level 2 opens        The Drachenfe…
       ○                    Midsummer rites                       your calendar
       ○ Autumn 1221        Soest: St. Patroclus' fair (income …  Soest
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▅▅
+                                                                                  ▇▇
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Magi (0 of 1 planned)
 
         Name     Spring 1220  Summer 1220  Autumn 1220  Winter 1220
       ○ Leandro  nothing      nothing      nothing      nothing
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
   ▌
   ▌  Select someone to see their seasons.
@@ -179,9 +179,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   harter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library
@@ -193,8 +194,8 @@
         Ship              Kind                  Cargo   Crew  Quality     Damage …
       (none recorded)
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Properties and Land (1)                                                     ▆▆
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▄▄
+    ▼ Properties and Land (1)
 
         Name                Location          Dimensions    Inhabitants
       ○ A property
@@ -206,7 +207,6 @@
       ○ Tower               Leandro              -2       0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Weapons (1)
 
   ▌
   ▌  Select a possession to see its details.
@@ -222,9 +222,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   bitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Bu
@@ -237,9 +238,9 @@
       Points of Laboratories:      10         100
       Points of Weapons and Armor: 0          Expenditure (Before Cost Savings):
       Wealth:                      0          21
-                                              Cost Savings:                      0
+                                              Cost Savings:                      0▃▃
                                               Total Expenditure:
-                                              21                                  ▅▅
+                                              21
                                               Surplus/Deficit:
                                               +79
 
@@ -249,7 +250,6 @@
                             Type        Income  Note
       ○ Mill                Typical        100
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
   ▌
   ▌  Select a source of income or a row to see its details.
@@ -265,9 +265,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secret
@@ -290,9 +291,8 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Establishments (0)
-
+                                                                                  ▆▆
       No kennels, mews or stables. Every noble keeps Standard stables as part of
-      his estate; kennels and mews must be built (LoM p. 58).                     ▇▇
 
   ▌
   ▌  Choose a manor or an establishment to see it in full.
@@ -308,9 +308,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   asons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
@@ -336,7 +337,6 @@
 
 
 
-
   ▌
   ▌  Select a book to see its details.
   ▌
@@ -351,16 +351,16 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   asons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
-
 
 
 
@@ -394,9 +394,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   asons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
@@ -418,14 +419,13 @@
       Laboratories                -       20
       Specialists                 -        0
       Money                       -        0
-      Total                       -       32
+      Total                       -       32                                      ▃▃
 
       Power Level: (not set)
       Storyguide's Build Points: (not set)
       Initial wasn't recorded: this covenant was in play before Build Points were
       tracked.
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
 
 ===== tab-secrets
@@ -437,9 +437,10 @@
       Storyguide:               (not set)      Current Season:              Spring
       Year Founded:             (not set)      Current Year:                1220
       Aegis of the Hearth:      0              Aegis' Penetration:          0
-      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
-      Aura:                     1 (base 0,     Covenant Season:             Spring
-      +1 Boons)                                Aura Realm:                  Magic
+      Living Conditions (Magi): +1 (Spring)    Living Conditions (Mundane): +0
+      Aura:                     1 (base 0,     (Spring)
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)          In Play
 
   asons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
@@ -449,7 +450,6 @@
     ▼ Secrets
 
       Nothing secret written yet: edit it to add what only you should know.
-
 
 
 

@@ -21,7 +21,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
-from . import place_events, threats, tribunal_terms
+from . import place_events, threats, tribunal_terms, tribunals
 from .grids import Grid
 from .markup import escape
 from .models import (
@@ -178,7 +178,7 @@ def _tribunals(saga: Saga, start: int, stop: int) -> list[Entry]:
                 Entry(
                     tribunal.next_year,
                     tribunal.next_season,
-                    f"The {tribunal.name} Tribunal meets",
+                    f"The {tribunals.title_text(tribunal.name)} meets",
                     TRIBUNAL,
                     tribunal.name,
                     tribunal_id=tribunal.id,
@@ -192,7 +192,7 @@ def _tribunals(saga: Saga, start: int, stop: int) -> list[Entry]:
                     Entry(
                         int(year),
                         season,
-                        f"Notice due for the {tribunal.name} Tribunal's cases",
+                        f"Notice due for the {tribunals.title_text(tribunal.name)}'s cases",
                         TRIBUNAL,
                         tribunal.name,
                         tribunal_id=tribunal.id,

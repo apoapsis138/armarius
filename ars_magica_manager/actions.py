@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from . import (
     arms,
+    catalog,
     giving,
     hosting,
     places,
@@ -64,7 +65,16 @@ from .models import (
     Tribunal,
 )
 from .rules import agents as agent_rules
-from .rules import apothecary, covenfolk, merchants, options, philosophy
+from .rules import (
+    apothecary,
+    casting,
+    covenfolk,
+    hedge_casting,
+    house_magic,
+    merchants,
+    options,
+    philosophy,
+)
 from .rules import clergy as clergy_rules
 from .rules import faerie_dealings as faerie_dealing_rules
 from .rules import gauntlet as gauntlet_rules
@@ -300,11 +310,13 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("u", "use_effect", "Use an Effect"),
     MenuItem("p", "perform_ritual", "Perform Ritual"),
     MenuItem("s", "share_spell", "Share Spell"),
+    MenuItem("b", "boost_spell", "Boost a Spell"),
     MenuItem("g", "give", "Give"),
     MenuItem("s", "give_silver", "Give Silver"),
     MenuItem("l", "lab_text_access", "Lab Texts Read"),
     MenuItem("t", "edit_traditions", "Traditions"),
     MenuItem("d", "disputatio", "Disputatio"),
+    MenuItem("c", "hedge_cast", "Cast a Power"),
     MenuItem("f", "edit_fatigue", "Edit Fatigue"),
     MenuItem("h", "take_harm", "Take Harm"),
     MenuItem("y", "recovery_roll", "Recovery Roll"),
@@ -312,11 +324,13 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("t", "tourney_season", "Tournament"),
     MenuItem("c", "command_beast", "Command the Beast"),
     MenuItem("a", "place_aging_points", "Place Aging Points"),
+    MenuItem("w", "resolve_twilight", "Resolve Twilight"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue"),
     MenuItem("i", "import_data", "Import"),
     MenuItem("b", "research_bonuses", "Set Up Research Library"),
     MenuItem("x", "export_record", "Export"),
     MenuItem("x", "export_saga", "Export Saga"),
+    MenuItem("y", "export_cult", "Export a Cult"),
     MenuItem("k", "export_pack", "Export Pack"),
     MenuItem("h", "host_saga", "Host for Players"),
     MenuItem("h", "stop_hosting", "Stop Hosting"),
@@ -340,6 +354,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("w", "winter_roll", "Winter Roll"),
     MenuItem("i", "settle_inheritance", "Settle an Inheritance"),
     MenuItem("b", "conflict_battle_event", "Battle Event"),
+    MenuItem("u", "battle_muster", "Muster and Aftermath"),
+    MenuItem("o", "fight_options", "Combat Options"),
     MenuItem("n", "next_blow", "Next Blow"),
     MenuItem("r", "next_round", "Next Round"),
     MenuItem("a", "add_combatant", "Add Combatant"),
@@ -349,6 +365,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("u", "break_group", "Break up a Group"),
     MenuItem("t", "restart_fight", "Restart the Fight"),
     MenuItem("n", "next_siege_event", "Next Siege Event"),
+    MenuItem("a", "siege_actions", "Siege Actions"),
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
     MenuItem("b", "begin_story", "Begin This Story"),
     MenuItem("g", "go_to", "Go To"),
@@ -448,6 +465,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     # A covenant's ships (Hermetic Projects; City & Guild).
     MenuItem("s", "ship_stress", "Stress Check"),
     MenuItem("c", "ship_combat", "Ship Combat"),
+    MenuItem("f", "ship_fate", "Sunk or Taken"),
     # Shaping the land by magic (Transforming Mythic Europe).
     MenuItem("l", "shape_land", "Shape the Land"),
     # A cleric's career (The Church).
@@ -486,6 +504,7 @@ MORE_SECTIONS: dict[str, str] = {
     "tourney_season": "section-reputations",
     "command_beast": "section-personality-traits",
     "place_aging_points": "section-aging",
+    "resolve_twilight": "section-aging",
     "edit_familiar_fatigue": "section-fam-health",
     "withdraw_case": CASES_SECTION,
     "neutralize_shard": TOKENS_SECTION,
@@ -500,6 +519,8 @@ MORE_SECTIONS: dict[str, str] = {
     "winter_roll": ESTABLISHMENTS_SECTION,
     "settle_inheritance": HOUSEHOLD_SECTION,
     "conflict_battle_event": CONFLICT_BATTLES_SECTION,
+    "battle_muster": CONFLICT_BATTLES_SECTION,
+    "fight_options": FIGHTS_SECTION,
     "next_blow": FIGHTS_SECTION,
     "next_round": FIGHTS_SECTION,
     "add_combatant": FIGHTS_SECTION,
@@ -509,6 +530,7 @@ MORE_SECTIONS: dict[str, str] = {
     "break_group": FIGHTS_SECTION,
     "restart_fight": FIGHTS_SECTION,
     "next_siege_event": SIEGES_SECTION,
+    "siege_actions": SIEGES_SECTION,
     "craft_by_magic": "section-known-spells",
     "seal_charter": CHARTER_SECTION,
     # The Theban treasury's loans of vis.
@@ -527,6 +549,7 @@ MORE_SECTIONS: dict[str, str] = {
     # A covenant's ships: the chosen ship's stress check and combat.
     "ship_stress": "section-pos-ship",
     "ship_combat": "section-pos-ship",
+    "ship_fate": "section-pos-ship",
     # A cleric's career: the exorcism on Holy Orders.
     "perform_exorcism": ORDERS_SECTION,
     # Saga Content's Mystery Cults.
@@ -700,6 +723,10 @@ def _exports_saga(facts: ActionFacts) -> bool:
     return _on_saga(facts) and facts.can_send_files()
 
 
+def _exports_cult(facts: ActionFacts) -> bool:
+    return _exports_saga(facts) and bool(facts.saga.custom_cults)
+
+
 def _hosts(facts: ActionFacts) -> bool:
     """Host for Players: on the saga, in the storyguide's own window, while
     it isn't hosting yet."""
@@ -834,6 +861,17 @@ def _keeps_byzantine_custom(
         )
 
     return rule
+
+
+def _casts_hedge_magic(facts: ActionFacts) -> bool:
+    """A character whose tradition has a way of casting."""
+    character = facts.selected_character
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and facts.on_record()
+        and character is not None
+        and hedge_casting.can_cast(character)
+    )
 
 
 def _joins_traditions(facts: ActionFacts) -> bool:
@@ -1267,6 +1305,7 @@ def _begins_project(facts: ActionFacts) -> bool:
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
+    "export_cult": _exports_cult,
     "export_pack": _exports_saga,
     "host_saga": _hosts,
     "stop_hosting": _stops_hosting,
@@ -1280,6 +1319,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "grog_pension": _on_covenfolk,
     "edit_traditions": _joins_traditions,
     "disputatio": _disputes,
+    "hedge_cast": _casts_hedge_magic,
     "give_silver": _gives_silver,
     "export_record": _exports_record,
     "update_record": _updates_record,
@@ -1409,6 +1449,22 @@ def _shares_spell(facts: ActionFacts, section: str) -> bool:
     )
 
 
+def _boosts_spell(facts: ActionFacts, section: str) -> bool:
+    """On Known Spells, for a magus with a spell he may boost."""
+    character = facts.selected_character
+    return (
+        section == "section-known-spells"
+        and character is not None
+        and any(
+            (spell := catalog.find_spell(facts.saga, k.spell_id)) is not None
+            and house_magic.can_boost(
+                character, spell, casting.mastery_counts(k.mastery_abilities)
+            )
+            for k in character.spells_known
+        )
+    )
+
+
 def _filters_lab_texts(_facts: ActionFacts, section: str) -> bool:
     return section == LAB_TEXTS_SECTION
 
@@ -1530,6 +1586,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "use_charge": _acts_on_device("use_charge"),
     "use_effect": _acts_on_device("use_effect"),
     "share_spell": _shares_spell,
+    "boost_spell": _boosts_spell,
     "filter_lab_texts": _filters_lab_texts,
     "perform_ritual": _performs_ritual,
     "research_bonuses": _research_bonuses,

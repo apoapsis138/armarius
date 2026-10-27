@@ -487,6 +487,30 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Effect": ""}],
         shown={"#char-constant-effects-list": "Ring of Flight"},
     ),
+    "add cover": Contract(
+        prefill={"Kind": "cover", "Name": "", "Reputation xp": "5"},
+        edits={"Name": "Reynard the Mercenary", "Keeping it up": "lives there"},
+        saved=lambda s: [
+            (c.name, c.contact, c.reputation_xp) for c in character(s).covers
+        ],
+        expected=[("Reynard the Mercenary", "lives there", 5)],
+        invalid=[{"Name": ""}, {"Name": "Reynard", "Reputation xp": "lots"}],
+        live={"#fields-live": "Reputation 1"},
+    ),
+    "resolve twilight": Contract(
+        prefill={"Comprehended": False, "Warping Points gained": "2", "Effect": "xp"},
+        edits={"Effect": "scar", "Twilight Scar": "Eyes like embers"},
+        saved=lambda s: "Eyes like embers" in character(s).aging.twilight_scars,
+        expected=True,
+        invalid={"Warping Points gained": "two"},
+    ),
+    "cast a power": Contract(
+        prefill={"Arts or Ability used": "Fehu", "Level or Ease Factor": "0"},
+        edits={"Die": "7"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Cast: Fehu",
+        invalid={"Level or Ease Factor": "high"},
+    ),
     "add bound being": Contract(
         prefill={"Name": "", "Bonus": "0", "Bonus adds to": "none"},
         edits={"Name": "Huginn", "Bonus": "2", "Bonus adds to": "lab"},

@@ -144,7 +144,7 @@ def ships_section(
 
     def whole(row: int) -> bool:
         ships = rules.ships_of(covenant)
-        return row < len(ships) and not rules.wrecked(rules.ship_of(ships[row]))
+        return row < len(ships) and not rules.lost(rules.ship_of(ships[row]))
 
     more: list[RowVerb] = [
         (
@@ -158,6 +158,12 @@ def ships_section(
             "combat",
             lambda row: ship_forms.ship_combat(saga, covenant, row),
             whole,
+        ),
+        (
+            "Sunk or Taken",
+            "threat",
+            lambda row: ship_forms.mark_fate(saga, covenant, row),
+            lambda row: row < len(rules.ships_of(covenant)),
         ),
     ]
     widget = section(

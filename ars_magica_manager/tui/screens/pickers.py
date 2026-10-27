@@ -555,7 +555,7 @@ class VirtueFlawPickerScreen(
         #: their own scores ("Great Intelligence needs Intelligence at
         #: +3"); "" if they can. Choices it refuses are not offered.
         self._instance_refusal = refusal
-        self._catalog = catalog.load_virtue_flaw_catalog()
+        self._catalog = catalog.virtue_flaws_by_name(catalog.load_virtue_flaw_catalog())
         #: Why the chooser can't take an entry, by id ("" if it can).
         self._refusals: dict[str, str] = {}
         # The filters: "Virtue", "Flaw" or "both"; a printed type and a
@@ -712,9 +712,9 @@ class VirtueFlawPickerScreen(
         )
 
     def _label_for(self, entry: VirtueFlawDef) -> str:
-        needs = f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
+        needs = catalog.needs_note(entry.name, entry.parameters)
         facts = f"{entry.tier} {entry.type}, {entry.category_label}"
-        label = escape(f"{entry.name}  [{facts}]{needs}")
+        label = escape(f"{catalog.blank_name(entry.name)}  [{facts}]{needs}")
         if refusal := self._refusals.get(entry.id):
             label += f"  [dim]({escape(refusal)})[/]"
         return label
@@ -732,7 +732,9 @@ class VirtueFlawPickerScreen(
                 self._add(entry, params)
 
         self.app.push_screen(
-            _param_dialog(entry.name, entry.parameters, self._choices(entry)),
+            _param_dialog(
+                catalog.blank_name(entry.name), entry.parameters, self._choices(entry)
+            ),
             handle_params,
         )
 
@@ -950,7 +952,7 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
         return f"{entry.name} {entry.category}"
 
     def _label_for(self, entry: AbilityDef) -> str:
-        needs = f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
+        needs = catalog.needs_note(entry.name, entry.parameters)
         return f"{entry.name}  [{entry.category}]{needs}"
 
     def _item_id(self, entry: AbilityDef) -> str:
@@ -972,7 +974,8 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
                     )
 
             self.app.push_screen(
-                _param_dialog(entry.name, entry.parameters), handle_params
+                _param_dialog(catalog.blank_name(entry.name), entry.parameters),
+                handle_params,
             )
         else:
             self._prompt_details(entry.name, entry.category)

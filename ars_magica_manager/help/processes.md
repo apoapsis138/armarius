@@ -487,7 +487,12 @@ The steps run in a fixed order:
   Communication + Folk Ken, Intrigue or Artes Liberales (as logic and
   rhetoric, for Academic Concentration and Aristotelian Training) against
   Intelligence + Charm, Guile or Leadership, each debater using what
-  they are best at. A speaker with none of those scores written down (an
+  they are best at (by lot each round among Abilities of the same score:
+  the app's stand-in for each debater's choice of tactic, Houses of
+  Hermes: Societates pp. 90-91). A hit costs debate Fatigue only
+  when Presence and the margin beat the defender's Resistance, their
+  best positive Reputation + Confidence (+3 Strong Willed), so a weak
+  speaker's hits on a well-known magus can cost nothing (p. 90). A speaker with none of those scores written down (an
   advocate, the Tribunal, a sketch magus) debates at the skill you give:
   **Middling** (an ordinary magus: Characteristics 0, those Abilities
   2), **Able** (Characteristics +1, Abilities 4) or **Formidable**
@@ -880,7 +885,7 @@ The left column lists the steps:
 The rail on the left lists the steps:
 <!-- /gui -->
 
-- a character: Concept, Virtues and Flaws, Characteristics, Early Childhood (Pre-adult Life for an [animal grog](help:animal-grogs)), Later Life, Tradition Training (a hedge tradition's member), Apprenticeship and Years past Gauntlet (magi only), and Finishing Touches;
+- a character: Concept, Virtues and Flaws, Characteristics, Early Childhood (Pre-adult Life for an [animal grog](help:animal-grogs)), Later Life, Tradition Training (a hedge tradition's member), Apprenticeship and Years past Gauntlet (magi only), Equipment (not an animal), and Finishing Touches;
 - a covenant: Baseline, Resources, Boons & Hooks, and Review;
 - a laboratory: Setting Up, and Review.
 
@@ -927,7 +932,7 @@ Specialists bought with Build Points are checked too. Each one's score in the Ab
 
 **Apprenticeship:** Standard apprenticeship model (a saga option, with Apprentices in play). A magus still in apprenticeship has, for each year so far, 19 xp for the first 12 years and then 6 xp and 40 spell levels a year for the last 3; xp may buy spell levels and spell levels xp, one for one. A Skilled Parens gives 5 xp and 10 levels a year more, a Weak Parens as much less (Apprentices pp. 10, 14). Parma Magica, Magic Theory and Latin are only advice until Gauntlet. A magus past Gauntlet keeps the Definitive Edition's 240 xp and 120 levels.
 
-A hedge wizard picks their tradition on Concept with **Choose tradition** (once the saga offers one: see [How to play a hedge wizard](help:guide-hedge-magic)), which also adds the Virtues the tradition requires. A magus may choose a Hermetic society there, and a magus of House Ex Miscellanea one of the House's traditions, whose Virtues become his free House Virtues. The tradition's free Virtues, such as a learned magician's Entreat the Powers or a vitki's Minor Virtue from the master, are outside the Virtue and Flaw balance, as a House's are. A crowned king (Church office "King (crowned)") whose race or nationality is Slavic, Magyar or Vlach holds Shapeshifter free, outside the balance, with the forms of a wolf, a lion and a dragon (Against the Dark p. 122); his Magic Resistance 10 is the crown's (DE p. 420). **Tradition Training** then spends the apprenticeship the book gives (a vitki's 290 xp counting the minimums, a folk witch's 200, a gruagach's 160, or 64 unGifted), changed by Well-Trained and Poorly Trained; **Open the Arts** gives a Gifted member the tradition's Arts and Abilities at 0; and its checks ask for the minimum scores and any share the Arts must have. The spell levels it gives are shown but not yet learned there. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
+A hedge wizard picks their tradition on Concept with **Choose tradition** (once the saga offers one: see [How to play a hedge wizard](help:guide-hedge-magic)), which also adds the Virtues the tradition requires. A magus may choose a Hermetic society there, and a magus of House Ex Miscellanea one of the House's traditions, whose Virtues become his free House Virtues. The tradition's free Virtues, such as a learned magician's Entreat the Powers or a vitki's Minor Virtue from the master, are outside the Virtue and Flaw balance, as a House's are. A crowned king (Church office "King (crowned)") whose race or nationality is Slavic, Magyar or Vlach holds Shapeshifter free, outside the balance, with the forms of a wolf, a lion and a dragon (Against the Dark p. 122); his Magic Resistance 10 is the crown's (DE p. 420). **Tradition Training** then spends the apprenticeship the book gives (a vitki's 290 xp counting the minimums, a folk witch's 200 (her ten years of it, from about age ten, are left out of Later Life), a gruagach's 160, or 64 unGifted), changed by Well-Trained and Poorly Trained; **Open the Arts** gives a Gifted member the tradition's Arts and Abilities at 0; and its checks ask for the minimum scores and any share the Arts must have. The spell levels it gives are shown but not yet learned there. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
 
 ### The Grogs Aging Chart
 <!-- help: creation-worksheet-aging-chart -->
@@ -977,6 +982,7 @@ Brings records into the saga from files. Open it from **Import** in the saga pag
 - **Characters**, **Covenants** and **Laboratories**: a file exported from another saga with Export. The file must hold the kind you chose. The file picker starts in the exports folder.
 - **A Whole Saga**: a file written by **Export Saga**. Every covenant, laboratory, character and familiar in it is added beside this saga's own, with their books and devices and the saga's own spells and house rules, as importing each record would; so are its places, neighbours and calendar entries, and its Tribunals, joined to this saga's own of the same name.
 - **A Content Pack**: a file written by **Export Pack**. Its Tribunals, covenants, characters, places, neighbours and calendar entries are added, except those this saga already has one of the same name of: those are kept as they are, and the pack's links to them go to this saga's own. See [Content packs](help:export-pack).
+- **A Mystery Cult**: a file written by **Export a Cult**. The cult, its Lore, degrees, Scripts and components, joins this saga's own cults on Saga Content; one of a name this saga has already is marked "(imported)", and its founder, a character of the other saga, isn't kept.
 - **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type, spell, codex, encyclopedia, opus and physical_form; name and type are needed. Rows with the same codex are bound together in one new codex of that name, an encyclopedia when its rows' encyclopedia column says yes. A tractatus's opus can be commentary or correspondence; physical_form is one of exemplar, flap-bound, juvenilia, edition de luxe, treasure-bound, ex libris, holographic, huge codex, unbound or damaged. A level or quality of "var" means the figure is to be set later: the book is imported, highlighted until you edit it to give its numbers, and can't be studied until then. Books imported here go to Unassigned Books.
 <!-- tui -->
 From a covenant's **Library** tab, More's Import puts them straight into that covenant's library instead.
@@ -1016,10 +1022,10 @@ What goes with it:
 Season plans, season records and lab projects under way stay behind.
 
 <!-- tui -->
-**Export Saga**, in More on the saga node, writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**. In a browser copy, the file downloads instead. Only the storyguide can use it.
+**Export Saga**, in More on the saga node, writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**. In a browser copy, the file downloads instead. Only the storyguide can use it. **Export a Cult** beside it writes one of the saga's own Mystery Cults to a file, for Import's **A Mystery Cult**.
 <!-- /tui -->
 <!-- gui -->
-**Export Saga**, a button in the saga page's **Saga Management**, beside Import, writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**.
+**Export Saga**, a button in the saga page's **Saga Management**, beside Import, writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**. **Export a Cult** there writes one of the saga's own Mystery Cults to a file, for Import's **A Mystery Cult**.
 <!-- /gui -->
 
 ### Content packs

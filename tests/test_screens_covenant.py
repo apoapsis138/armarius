@@ -100,7 +100,7 @@ async def test_covenant_sheet_has_info_panel_and_seven_tabs():
         # ...and the covenant's own.
         assert re.search(r"Year Founded:\s+1100", left)
         assert re.search(r"Aegis of the Hearth:\s+2", left)
-        assert re.search(r"Living Conditions \(Magi\):\s+3", left)
+        assert re.search(r"Living Conditions \(Magi\):\s+\+3", left)
         assert re.search(r"Aura:\s+4", left)
         assert re.search(r"Tribunal:\s+Rhine", right)
         assert re.search(r"Aegis' Penetration:\s+1", right)

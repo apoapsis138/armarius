@@ -22,7 +22,15 @@ from .. import sourcebooks
 from ..commands import Command, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
-from ..models import CORE_PACKAGE, Character, Covenant, Meeting, Saga, Tribunal
+from ..models import (
+    CORE_PACKAGE,
+    Case,
+    Character,
+    Covenant,
+    Meeting,
+    Saga,
+    Tribunal,
+)
 
 
 @dataclass(frozen=True)
@@ -198,6 +206,12 @@ class TribunalPackage:
     #: Whether a magus present casts no vote of his own (the Rhine's
     #: Tremere, whose sigils their exarchs cast).
     casts_no_vote: Callable[[Saga, Tribunal, Character], bool] | None = None
+    #: How a covenant leans before the debate because of the Tribunal's own
+    #: customs: which party's side ("brought_by" or "against") and why, or
+    #: None to lean as the core rules say (the Rhine's gilds).
+    leaning: (
+        Callable[[Saga, Tribunal, Case, Covenant], tuple[str, str] | None] | None
+    ) = None
     #: A sum in Mythic pounds told in its region's own coins, which the
     #: treasury's balance shows beside the pounds (Thebes's hyperpyra).
     coins: Callable[[float], str] | None = None

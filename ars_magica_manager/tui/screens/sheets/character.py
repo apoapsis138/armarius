@@ -16,7 +16,7 @@ from textual.widgets import (
 )
 
 from .... import books as bk
-from .... import casting_text, seasons, tradition_text, traditions
+from .... import casting_text, marriages, seasons, tradition_text, traditions
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
@@ -28,6 +28,7 @@ from ....boon_hook_text import counted, match_colour, points_title
 from ....forms import agents as agent_forms
 from ....forms import church as church_forms
 from ....forms import constant_effect as constant_forms
+from ....forms import covers as cover_forms
 from ....forms import criamon as criamon_forms
 from ....forms import power as power_forms
 from ....forms import tradition as tradition_forms
@@ -48,6 +49,7 @@ from ....sections import (
     AGENTS_SECTION,
     CANON_SECTION,
     CONSTANT_EFFECTS_SECTION,
+    COVERS_SECTION,
     CRIAMON_PATH_SECTION,
     CRIAMON_STATIONS_SECTION,
     ORDERS_SECTION,
@@ -629,6 +631,13 @@ class CharacterSheetView(SheetView):
                         id="character-reputations-list",
                     )
             yield from self._connections(character)
+            if marriages.of_character(self.saga, character):
+                with SheetSection(title="Marriages", id=marriages.CHARACTER_SECTION):
+                    yield self._static(
+                        marriages.CHARACTER_SECTION,
+                        lambda: marriages.character_text(self.saga, self.character),
+                        id="char-marriages-content",
+                    )
             with SheetSection(title="Aging & Warping", id="section-aging"):
                 yield self._static(
                     ("section-aging", CONSTANT_EFFECTS_SECTION),
@@ -651,6 +660,21 @@ class CharacterSheetView(SheetView):
                     lambda: constant_forms.rows(self.character),
                     id="char-constant-effects-list",
                 )
+            if cover_forms.shown(character):
+                self.core_ops[COVERS_SECTION] = cover_forms.ops(self.character)
+                with SheetSection(
+                    title=self._titled(
+                        COVERS_SECTION,
+                        COVERS_SECTION,
+                        lambda: cover_forms.title(self.character),
+                    ),
+                    id=COVERS_SECTION,
+                ):
+                    yield self._list(
+                        COVERS_SECTION,
+                        lambda: cover_forms.rows(self.character),
+                        id="char-covers-list",
+                    )
             with (
                 SheetSection(title="Health", id="section-char-health"),
                 TwoColumns(id="char-health-row", text=True),

@@ -521,8 +521,12 @@ the Praeco calls it, in the order of the roll, with its votes for,
 against and undecided, and how many of them the debate swayed; then the
 tally, with a bar for the hall.
 
-Each covenant starts from its leaning: a party votes its own side, and
-any other leans by its attitude toward a troupe covenant that is a
+Each covenant starts from its leaning: a party votes its own side; in
+the Rhine a covenant whose gild a party shares votes with its gild. Gilds
+are factions of magi, and a magus is expected, not bound, to vote with his
+(Guardians of the Forests pp. 27-28): a covenant leaning with its members'
+gild, ahead of its attitudes, is the app's reading, and you can change any
+leaning at the meeting; and any other leans by its attitude toward a troupe covenant that is a
 party (Warm or better with it, Wary or worse against it), otherwise
 undecided. The winner of the debate then wins a share of the undecided
 votes, and from a Triumphant Victory a share of the other side's, taken

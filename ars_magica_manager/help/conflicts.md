@@ -178,3 +178,28 @@ qualities of Defenses and Supplies, and each wall's damage levels.
 <!-- /gui -->
 
 **See also:** [How to run a siege](help:guide-sieges), [Conflicts](help:conflicts)
+
+# Siege Actions
+<!-- help: siege-actions -->
+
+More (or the button) on a siege, for what happens besides its events
+(Lords of Men pp. 112-116):
+
+- **Change Deployments** (p. 113): the units at each wall. Three walls
+  held make a stockade; a wall the besiegers hold and the garrison leaves
+  empty is named, since they may escalade it unopposed.
+- **A Supplies Story or Spell**: a blockade drops the Supplies a step, a
+  relief raises them (p. 112); Conjuration of Bread adds +7 to the next
+  season's supplies rolls; Raise the Siege has the commander roll
+  Intelligence + Leadership + a simple die against 12 to resist it. The
+  spell (ReMe 30, Duration Sun) only makes him take a pessimistic view
+  until sunset, so failing doesn't end the siege; if he gives it up,
+  set the siege's Ended on Edit (p. 116). Seal the Breach is a Next Siege Event.
+- **Run the Stockade**: the castle's intervals waited, as many as asked,
+  each with the supplies rolls it brings, until the siege ends (p. 112's
+  batch rolls). A failed roll reminds you that those inside make
+  deprivation checks (ArM5 p. 180).
+- **The Castle Taken** (p. 116): it is the besieger's now, with its
+  governor and its fate, written in the Diaries.
+
+A sally against the soldiers takes as many groups as you say (p. 115).

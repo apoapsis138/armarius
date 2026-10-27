@@ -12,7 +12,8 @@ the magus's sheet or the **Bind Familiar** button beside Planning in their
 laboratory's Seasons chapter.
 <!-- /gui -->
 Binding gives both the magus and the familiar the True Friend Virtue and a
-Loyal (Partner) +3 Personality Trait.
+Loyal (Partner) +3 Personality Trait: at once for a familiar made **Bound
+already**, else when the binding season is played (DE p. 267).
 
 <!-- tui -->
 To remove a familiar, press `d` on its tree node or its Familiar Info panel.

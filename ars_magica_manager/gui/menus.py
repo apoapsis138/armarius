@@ -84,6 +84,7 @@ ICONS: dict[str, str] = {
     "perform_ritual": "magic",
     "research_bonuses": "library",
     "export_saga": "export",
+    "export_cult": "export",
     "export_pack": "export",
     "host_saga": "players",
     "stop_hosting": "players",

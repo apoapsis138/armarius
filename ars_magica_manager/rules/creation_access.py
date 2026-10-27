@@ -362,6 +362,20 @@ def traditions_of(character: Character) -> list[TraditionDef]:
     return [by_id[t] for t in character.traditions if t in by_id]
 
 
+def apprenticeship_years(character: Character, ends: int) -> int:
+    """The years of a tradition's apprenticeship that fall inside Later
+    Life, which runs to age `ends`: a folk witch adopted at ten and
+    trained ten years spends 10 to 20 there, not earning Later Life xp
+    (Hedge Magic RE p. 34)."""
+    if character.type == "magus":
+        return 0
+    found = traditions_of(character)
+    if not found or not found[0].training.years:
+        return 0
+    training = found[0].training
+    return max(0, min(ends, training.starts + training.years) - max(5, training.starts))
+
+
 def tradition_opened(character: Character) -> set[str]:
     """The Arts and Abilities a Gifted member's Opening lets them buy:
     their tradition's, even the Supernatural ones with no Virtue."""
@@ -415,7 +429,12 @@ def may_learn(character: Character, name: str, *, apprenticed: bool = False) -> 
         return False
     if name in opened_by_virtues(character):
         return True
-    if name == PENETRATION and granted_supernatural(character):
+    # Penetration goes with a supernatural power: one a Virtue grants, or
+    # one a tradition's Opening gives (Hedge Magic RE p. 34 recommends it
+    # to a folk witch).
+    if name == PENETRATION and (
+        granted_supernatural(character) or tradition_opened(character)
+    ):
         return True
     return category in opened_types(character, apprenticed=apprenticed)
 

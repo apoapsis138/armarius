@@ -403,6 +403,7 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
             "Laboratories",
             "A Whole Saga",
             "A Content Pack",
+            "A Mystery Cult",
         ]
         await pilot.press("enter")  # Books is the one highlighted
         await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))

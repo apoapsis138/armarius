@@ -19,14 +19,14 @@ A magus can have one familiar at a time, so Bind Familiar is only offered while 
 3. In the Bind a New Familiar form, type the familiar's **Name** and choose its **Magus Partner**. When you started from the magus's own node, they are already chosen. Choose **Create**.
 4. The familiar's sheet opens. In the tree, the magus's node now has the familiar beneath it, as "Familiar: " and its name; select it there to come back to the [Familiar sheet](help:familiar) later.
 
-Making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. You can see them on the magus's [Virtues & Flaws tab](help:tab-vf) (`3`) and the familiar's [Identity & Cords tab](help:tab-fam-identity) (`1`).
+With **Bound already** ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Untick it to bind the familiar by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them on the magus's [Virtues & Flaws tab](help:tab-vf) (`3`) and the familiar's [Identity & Cords tab](help:tab-fam-identity) (`1`).
 <!-- /tui -->
 <!-- gui -->
 1. Open the magus's sheet and its **Description** chapter, and click the **Bind Familiar** card in the Familiar section. Or open the magus's laboratory, its **Seasons** chapter, and click **Bind Familiar** in the Planning section.
 2. In the Bind a New Familiar form, type the familiar's **Name**; its **Magus Partner** is already chosen. Choose **Create**.
 3. The familiar's page opens. The magus's Description chapter now shows the familiar as a card in its Familiar section; click it to come back to the [Familiar page](help:familiar) later.
 
-Making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. You can see them in the magus's [Virtues & Flaws chapter](help:tab-vf) and the familiar's [Virtues & Flaws](help:tab-fam-vf) and [Identity & Cords](help:tab-fam-identity) chapters.
+With **Bound already** ticked (a familiar bound before play), making the record grants the bond at once: both the magus and the familiar gain the True Friend Virtue and a Loyal (Partner) +3 Personality Trait. Untick it to bind the familiar by lab work: the bond comes when that season is played, as the book has it (DE p. 267). You can see them in the magus's [Virtues & Flaws chapter](help:tab-vf) and the familiar's [Virtues & Flaws](help:tab-fam-vf) and [Identity & Cords](help:tab-fam-identity) chapters.
 <!-- /gui -->
 
 ### Describing the creature
@@ -63,7 +63,7 @@ Binding the familiar is a season of lab work, planned in the magus's laboratory.
 2. Click the season, then **Plan**. The lab work form opens in place.
 <!-- /gui -->
 3. In **Lab work**, choose **Bind or strengthen a familiar**.
-4. Choose the **Technique** and **Form** the bond is made with (strengthening it later uses the same two, DE p. 267), and type the **Golden cord**, **Silver cord** and **Bronze cord** scores you want, each 0 to 5.
+4. Choose the **Technique** and **Form** the bond is made with (strengthening it later uses the same two, DE p. 267), and type the **Golden cord**, **Silver cord** and **Bronze cord** scores you want, each 0 to 5. The Arts must suit the animal or its powers (DE p. 266): once both are chosen, the line under the form gives the book's Suggested Familiars for each and says whether either names the familiar's kind (its Species line). That is advice, since a bird suits Auram and any magical animal Vim; the app binds with any pair.
 5. In **Vis from**, choose whose raw vis pays (the laboratory's, the magus's own or the covenant's stores), and in **Art** whether it is vis of the Technique or the Form.
 <!-- tui -->
 6. Check the Lab Total panel.
@@ -114,7 +114,7 @@ When the power's points reach its level, the power is finished. A power the fami
 
 The app works out the point cost of each cord, whether a binding or empowerment can be done, its Lab Total, its vis, and the progress of a power over several seasons. The Bronze Cord is taken off the magus's aging roll each Winter.
 
-Most of the familiar's own figures are typed in: its Soak, Magic Resistance and Might, its wounds and penalties, and each bond power's figures. The Golden and Silver Cords are shown with what they do, but their bonuses are yours to apply in play, and the True Friend Virtue is recorded but has no effect the app applies.
+Most of the familiar's own figures are typed in: its Soak, Magic Resistance and Might, its wounds and penalties, and each bond power's figures. The Golden Cord takes its botch dice off casting totals; the Silver Cord is shown with what it does, but its bonus is yours to apply in play, since the app rolls no Personality Trait or mental resistance roll, and the True Friend Virtue is recorded but has no effect the app applies.
 
 Deleting the magus also deletes their familiar, and exporting the magus takes the familiar with them.
 <!-- tui -->
@@ -159,7 +159,7 @@ The Initiation is the Initiate's season, planned like any other.
 <!-- /gui -->
 2. In **Activity**, choose **Undergo an Initiation**.
 3. In **Teacher / master**, choose the Mystagogue. Leave it blank for a self-initiation.
-4. Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is in the Mystagogue's Abilities. To vary the Script, choose the change in **Vary the Script** (see below).
+4. Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is in the Mystagogue's Abilities. To vary the Script, choose the change in **Vary the Script** (see below). When the Script makes a sacrifice, choose in **Sacrificed** what is given up: one of the initiate's devices (a talisman among them), carried items, books or familiar, an apprentice, mundane wealth, vis, or a season serving the cult. It is made when the season is played, Initiation or not, and the Diary says so. A device, item, book or familiar is gone, so it can't be sacrificed twice; a season of service takes the next season as Other, unless it is planned already; vis is noted, for you to take from the stock. The bonus it brings is the Script's Sacrifice component (The Mysteries Revised Edition pp. 12, 15-16).
 <!-- tui -->
 5. Choose **Virtue initiated**. It opens the Virtues & Flaws picker on Virtues: search, filter by type or tier, and press Enter.
 <!-- /tui -->
@@ -232,7 +232,7 @@ An Ordeal lowers the Target Level of the Initiate's next three Initiations, neve
 
 **The app works out:** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, the largest reduction among past Ordeals, the checks on the Lore and the Ordeal, the Ordeal's size, and the Virtues and Flaws added or taken away on success.
 
-**Varying the Script:** the Mystagogue may make one change in an Initiation. Choose it in **Vary the Script** (add a component, Ease 9; change one, 12; remove one, 15) and type in **The change adds** what it does to the Script bonus (negative when removing). When the season is applied the app rolls a stress die + the Mystagogue's Intelligence + Lore: success adds the change to the Script bonus, and failure fails the Initiation, with no Virtue and no Ordeal, though the Script as it was may be tried another season (DE pp. 388-389). The Mysteries Revised Edition (p. 17) says instead that the original Script still works; the Definitive Edition wins, so this isn't a bug. Removing a component (Ease 15) is The Mysteries Revised's own addition, and it doesn't let a Minor Virtue's Script become a Major one.
+**Varying the Script:** the Mystagogue may make one change in an Initiation. Choose it in **Vary the Script** (add a component, Ease 9; change one, 12; remove one, 15) and type in **The change adds** what it does to the Script bonus (negative when removing). When the season is applied the app rolls a stress die + the Mystagogue's Intelligence + Lore: success adds the change to the Script bonus, and failure fails the Initiation, with no Virtue and no Ordeal, though the Script as it was may be tried another season (DE pp. 388-389). Before then, the line under the form gives the roll the change needs and the Initiation Total if it works. The Mysteries Revised Edition (p. 17) says instead that the original Script still works; the Definitive Edition wins, so this isn't a bug. Removing a component (Ease 15) is The Mysteries Revised's own addition, and it doesn't let a Minor Virtue's Script become a Major one.
 
 **Overlapping Scripts:** a Script that shares Quests or Ordeals with one the Initiate already followed can't be used as it is: the Mystagogue changes the shared component (**Change a component**, Ease 12) or puts a different one in its place (**Replace a component**, Ease 15), and types in **The change adds** what that does to the bonus (Legends of Hermes pp. 50-51). The app doesn't record which Quests a character has done, so spotting the overlap is the troupe's.
 
@@ -738,7 +738,7 @@ A new hedge wizard is made on the [Creation Worksheet](help:creation-worksheet):
 ### What the app works out
 <!-- help: guide-hedge-magic-app -->
 
-Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The tradition's casting totals, Magical Defenses and seasons of its own are not worked out yet: the [chapter](help:tradition-chapter) says what is.
+Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The [chapter](help:tradition-chapter) works out the rest: each power's Casting Score and Lab Total, the tradition's Magical Defenses, its gatherings' bonuses (a folk witch's sabbat) and the guidelines for its effects; More's [Cast a Power](help:hedge-cast) rolls a casting there and then. At creation, Tradition Training spends the apprenticeship the book gives, and the ten years of it that a folk witch spends from about age ten are left out of Later Life, as a magus's are (Hedge Magic RE p. 34). Sorginak and bouda train as folk witches do (Faith and Flame pp. 93-94; Between Sand and Sea p. 119), and settuten for ten years from 7 to 12, which the app takes as 10 (Between Sand and Sea pp. 95-96). The Bedouin hakima's book gives no years, so none are left out.
 
 **See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities tab](help:tab-abilities)
 
@@ -793,7 +793,7 @@ Say where the meeting is held and how many days it lasts (3). Each case and moti
 
 Fengheld v. Keep comes on its day. Choose the **Prosecutor** and **Defender** from the drop-downs: the magi present, each with their covenant. Leandro is absent, so the defence starts as **A Guernicus advocate**, who defends an accused who didn't come; a charge no one else will prosecute can be brought by **The Presiding Quaesitor**. A speaker with no debate scores written down (the advocate, or a sketch magus) gets **debates as**: Middling, Able or Formidable.
 
-Leave **Levels lost** blank and the debate is rolled, round by round: the speakers' Communication and Intelligence with their best debating Abilities, the case's Evidence backing the prosecution and the **Defence testimony** the defence. Or play the debate out at the table and enter both sides' levels lost. Either way, the side that loses fewer wins, and the difference is its Argument Strength.
+Leave **Levels lost** blank and the debate is rolled, round by round: the speakers' Communication and Intelligence with their best debating Abilities (by lot among equals each round), the case's Evidence backing the prosecution and the **Defence testimony** the defence. Or play the debate out at the table and enter both sides' levels lost. Either way, the side that loses fewer wins, and the difference is its Argument Strength.
 
 If both sides accept the Presiding Quaesitor's view at the private hearing, tick **Settled in private** instead: the case has no debate and no vote, and goes straight on to its ruling.
 

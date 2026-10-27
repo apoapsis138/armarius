@@ -44,9 +44,11 @@ from ..rules import (
     library,
     merinita,
     mysteries,
+    rhine_ranks,
     study_virtues,
     supplement_seasons,
 )
+from ..rules import options as rule_options
 from ..rules import supplement_work as sw
 from ..rules import tradition_seasons as ts
 from ..rules.season_work import initiation as initiation_work
@@ -481,6 +483,7 @@ def _supplement_plan_values(
             [] if found["hedge_script"] else list(values.get(script_forms.KEY) or [])
         )
         found["knows_power"] = bool(values.get("knows_power"))
+        found["sacrifice"] = values.get("sacrifice") or ""
         experimental = bool(values.get("experimental_script"))
         found["experimental_script"] = experimental
         found["risk"] = values.get("script_risk") or 0 if experimental else 0
@@ -904,6 +907,54 @@ def _initiation_fields(
     ]
 
 
+#: The sacrifices an Initiation's Script can make that aren't one of the
+#: initiate's records (TMRE pp. 12, 15): kept as a line in the Diary,
+#: except a season of service, which takes the next season.
+SACRIFICE_KINDS: list[tuple[str, str]] = [
+    ("Mundane wealth", "wealth"),
+    ("A season serving the cult (the next season)", "service"),
+    ("Vis (take the pawns from the stock by hand)", "vis"),
+]
+
+
+def sacrifice_options(saga: Saga, character: Character) -> list[tuple[str, str]]:
+    """What an Initiation can sacrifice (TMRE pp. 12, 15): the initiate's
+    enchanted devices (a talisman among them), carried items, books and
+    familiar, an apprentice, mundane wealth, vis or a season's service.
+    What has been given up is gone, so it can be sacrificed only once
+    (TMRE p. 16)."""
+    devices = [
+        (
+            f"{escape(d.name)} ({'talisman' if d.talisman else 'device'})",
+            f"device:{d.id}",
+        )
+        for d in saga.enchanted_devices
+        if d.holder_kind == "character" and d.holder_id == character.id
+    ]
+    items = [(escape(i.name or "an item"), f"item:{i.id}") for i in character.inventory]
+    books = [
+        (f"{escape(b.name)} (book)", f"book:{b.id}")
+        for b in saga.books
+        if b.owner_kind == "character" and b.owner_id == character.id
+    ]
+    familiar = saga.familiar_of(character.id)
+    bonded = (
+        [
+            (
+                f"{escape(familiar.name or 'The familiar')} (familiar)",
+                f"familiar:{familiar.id}",
+            )
+        ]
+        if familiar is not None
+        else []
+    )
+    apprentices = [
+        (f"{escape(a.name)} (apprentice)", f"apprentice:{a.id}")
+        for a in rhine_ranks.apprentices_of(saga, character)
+    ]
+    return devices + items + books + bonded + apprentices + SACRIFICE_KINDS
+
+
 def _script_fields(
     saga: Saga, character: Character, plan: SeasonPlan | None, activity_is: ActivityIs
 ) -> list[DialogField]:
@@ -935,6 +986,20 @@ def _script_fields(
             plan.script_components if plan else [],
             show_if=hermetic,
             name=character.name,
+        ),
+        DialogField(
+            "sacrifice",
+            "Sacrificed",
+            "select",
+            (plan.sacrifice if plan else "") or None,
+            options=sacrifice_options(saga, character),
+            allow_blank=True,
+            placeholder="(nothing given up)",
+            show_if=initiation,
+            hint="What the Script gives up, taken when the season is played "
+            "even if the Initiation fails: wealth, a season serving the cult, "
+            "a talisman, familiar or device, books, vis or an apprentice. Its "
+            "bonus is the Script's Sacrifice component (TMRE pp. 12, 15-16).",
         ),
         DialogField(
             "knows_power",
@@ -1235,10 +1300,41 @@ def _activity_is(*keys: str) -> ShowIf:
 
 
 def _book_options(saga: Saga, character: Character) -> list[tuple[str, str]]:
-    return [
+    found = [
         (escape(seasons.book_label(b)), b.id)
         for b in bk.studyable_books(saga, character)
     ]
+    if rule_options.is_on(saga, rule_options.LARGE_LIBRARY):
+        found += library_options(saga, character)
+    return found
+
+
+def library_options(saga: Saga, character: Character) -> list[tuple[str, str]]:
+    """Each subject the covenant's library holds a summa on, studied as one
+    (the Large Library rule): its Level and Quality."""
+    subjects = sorted(
+        {
+            s
+            for b in saga.books
+            if b.owner_kind == "covenant"
+            and b.owner_id == character.covenant_id
+            and (s := season_rules.book_subject(b)) is not None
+        }
+    )
+    found = []
+    for subject in subjects:
+        figures = season_rules.library_figures(saga, character, subject)
+        if figures is None:
+            continue
+        name = subject.split(":", 1)[1]
+        found.append(
+            (
+                f"The library on {escape(name)} (Level {figures.level}, Quality "
+                f"{figures.quality})",
+                season_rules.LIBRARY_PREFIX + subject,
+            )
+        )
+    return found
 
 
 def study_fields(

@@ -614,3 +614,47 @@ def test_another_magus_gets_the_runes_but_not_the_craft():
     _, work = _work(saga, plan)
     # 25 + 1 + the maker's Philosophiae 4 = 30, and no Craft.
     assert int(work.lab_total.total) == 30
+
+
+def test_instilling_can_be_planned_behind_a_planned_opening():
+    from ars_magica_manager.forms.lab_plan import LabPlanForm
+
+    saga = _saga()
+    seasons.plan_lab_work(saga, _plan(es.OPEN, device_id="staff"))
+    magus, lab = saga.character("m"), saga.laboratories[0]
+    form = LabPlanForm(saga, magus, lab, "Summer", 1220, None)
+    values = {
+        "activity": es.INSTIL,
+        "device": "staff",
+        "effect": "fire",
+        "vis_from": "magus",
+    }
+    plan = form.plan_of(values)
+    assert (plan.season, plan.device_id, plan.effect_id) == ("Summer", "staff", "fire")
+    assert form.problem(values) is None
+    assert _work(saga, plan)[0] == ["Staff has to be opened first."]
+
+
+def test_choosing_an_effect_offers_the_device_s_matching_bonuses():
+    from ars_magica_manager.forms.lab_plan import LabPlanForm
+    from ars_magica_manager.models import ShapeMaterialBonus
+
+    saga = _saga()
+    staff = _device(saga, "staff")
+    staff.bonuses = [
+        ShapeMaterialBonus(4, "fire", "wood"),
+        ShapeMaterialBonus(3, "destroy wood", "staff"),
+        ShapeMaterialBonus(2, "fire", "talisman", year=1219, season="Spring"),
+    ]
+    magus, lab = saga.character("m"), saga.laboratories[0]
+    staff.effects[0].name = "Gout"
+    assert es.suggested_shape_bonus(magus, staff, staff.effects[0]) == 0
+    staff.effects[0].description = "A gout of fire from the staff's end."
+    assert es.suggested_shape_bonus(magus, staff, staff.effects[0]) == 4
+    staff.bonuses.append(ShapeMaterialBonus(5, "flames and fire", "iron"))
+    # At most Magic Theory 5 (DE p. 258).
+    assert es.suggested_shape_bonus(magus, staff, staff.effects[0]) == 5
+    form = LabPlanForm(saga, magus, lab, "Spring", 1220, None)
+    effect = next(f for f in form.fields() if f.key == "effect")
+    assert effect.fills is not None
+    assert effect.fills({"effect": "fire"}) == {"device": "staff", "shape": 5}

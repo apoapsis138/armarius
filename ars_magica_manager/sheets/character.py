@@ -229,6 +229,11 @@ def aging_text(character: Character, saga: Saga | None = None) -> str:
             *lines,
             "Effects of Aging:",
             markdown_text(a.effects) or "(none recorded)",
+            *(
+                ["Twilight Scars:", markdown_text(a.twilight_scars)]
+                if a.twilight_scars.strip()
+                else []
+            ),
             "",
             f"Warping: {a.warping_score}/{a.warping_points}"
             + (

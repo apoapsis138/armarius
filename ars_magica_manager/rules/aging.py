@@ -262,7 +262,7 @@ def roll(
         parts.append(f"- bronze cord {bronze_cord}")
     for effect in virtues:
         amount = int(effect.amount or 0)
-        parts.append(f"{'+' if amount >= 0 else '-'} {effect.entry.name} {abs(amount)}")
+        parts.append(f"{'+' if amount >= 0 else '-'} {effect.name} {abs(amount)}")
     result.notes.append(f"Aging Total {total} ({' '.join(parts)}).")
     if total >= 3:
         result.apparent = True
@@ -355,7 +355,7 @@ def crisis(
         text += " The Longevity Ritual sees the character through, then ends."
     elif against is not None:
         bonus = _effects(character, "crisis_survival")
-        extra = "".join(f" + {e.entry.name} {int(e.amount or 0)}" for e in bonus)
+        extra = "".join(f" + {e.name} {int(e.amount or 0)}" for e in bonus)
         text += f" Survival: Stamina{extra} stress roll against {against}."
         text += " " + PHYSICIAN
     return text, ritual

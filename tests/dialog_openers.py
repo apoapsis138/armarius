@@ -12,12 +12,15 @@ from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
 from ars_magica_manager import (
+    battle_muster,
     catalog,
     choice_templates,
+    combat_options_form,
     giving,
     grog_templates,
     meeting,
     neighbour_filter,
+    siege_actions,
     storage,
     vis,
 )
@@ -29,6 +32,7 @@ from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import charter as charter_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
+from ars_magica_manager.forms import covers as cover_forms
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import lab_item
@@ -530,6 +534,35 @@ async def _open_apothecary(ws, which: str) -> None:
         ws.action_apothecary_store()
 
 
+def _on_conflict_row(list_id: str, step):
+    """A step of a More command on Conflicts' first battle, siege or fight
+    (chosen first), run on its own: Muster's and Siege Actions' steps are
+    each a form."""
+
+    async def opener(ws) -> None:
+        view = ws._current_sheet_view()
+        await view.build_all_tabs()
+        rows = view.query_one(f"#{list_id}", scr.SelectableList)
+        rows.select_data_index(0)
+        await until(lambda: rows.selected_data_index == 0)
+        ws._run_steps(step(ws.saga))
+
+    return opener
+
+
+async def _open_cover(ws) -> None:
+    """Add a Cover for Leandro (the section shows only for a Tytalus or
+    one with a cover, so the form is run on its own)."""
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    ws._run_steps(cover_forms.ops(ws.selected_character).add())
+
+
+async def _open_ship_fate(ws) -> None:
+    """More's Sunk or Taken on the covenant's first ship, Seehund."""
+    await _open_ship(ws, "fate")
+
+
 async def _open_constant_effect(ws) -> None:
     """Add a constant effect under Leandro's Aging & Warping."""
     view = ws._current_sheet_view()
@@ -741,6 +774,43 @@ OPENERS: dict[str, Opener] = {
     ),
     "next blow": Opener(
         "conflicts", _pick(lambda ws: ws.action_next_blow(), "fights-list")
+    ),
+    "hire mercenaries": Opener(
+        "conflicts",
+        _on_conflict_row(
+            "conflict-battles-list",
+            lambda s: battle_muster.hire_mercenaries(s, s.battles[0]),
+        ),
+    ),
+    "end of the day": Opener(
+        "conflicts",
+        _on_conflict_row(
+            "conflict-battles-list", lambda s: battle_muster.end_of_day(s, s.battles[0])
+        ),
+    ),
+    "combat options": Opener(
+        "conflicts",
+        _on_conflict_row(
+            "fights-list", lambda s: combat_options_form.options_form(s, s.fights[0])
+        ),
+    ),
+    "change deployments": Opener(
+        "conflicts",
+        _on_conflict_row(
+            "sieges-list", lambda s: siege_actions.deployments(s, s.sieges[0])
+        ),
+    ),
+    "supplies story": Opener(
+        "conflicts",
+        _on_conflict_row(
+            "sieges-list", lambda s: siege_actions.supplies_story(s, s.sieges[0])
+        ),
+    ),
+    "castle taken": Opener(
+        "conflicts",
+        _on_conflict_row(
+            "sieges-list", lambda s: siege_actions.castle_taken(s, s.sieges[0])
+        ),
     ),
     "next siege event": Opener(
         "conflicts", _pick(lambda ws: ws.action_next_siege_event(), "sieges-list")
@@ -1109,6 +1179,9 @@ OPENERS: dict[str, Opener] = {
     "labor from story": Opener("character", _open_labor_story),
     "invest time or money": Opener("character", _open_invest_labor),
     "add constant effect": Opener("character", _open_constant_effect),
+    "add cover": Opener("character", _open_cover),
+    "resolve twilight": Opener("character", lambda ws: ws.action_resolve_twilight()),
+    "cast a power": Opener("character", lambda ws: ws.action_hedge_cast()),
     "add bound being": Opener("character", _open_bound_being),
     "virtue parameters": Opener("character", _open_param_prompt),
     "virtue ability choice": Opener(
@@ -1517,6 +1590,7 @@ OPENERS: dict[str, Opener] = {
     "add ship": Opener("covenant", lambda ws: ws._possession_form("ship", None)),
     "ship stress check": Opener("covenant", lambda ws: _open_ship(ws, "stress")),
     "ship combat": Opener("covenant", lambda ws: _open_ship(ws, "combat")),
+    "sunk or taken": Opener("covenant", _open_ship_fate),
     # Shaping the land by magic (Transforming Mythic Europe).
     "shape land": Opener("covenant", lambda ws: ws.action_shape_land()),
     "settle new land": Opener("covenant", lambda ws: _open_settle_land(ws)),
@@ -2109,6 +2183,8 @@ async def _open_ship(ws, which: str) -> None:
     await until(lambda: rows.selected_data_index == 0)
     if which == "stress":
         ws.action_ship_stress()
+    elif which == "fate":
+        ws.action_ship_fate()
     else:
         ws.action_ship_combat()
 

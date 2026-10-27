@@ -27,7 +27,7 @@ from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, attr, description_field, pairs
 from ..markup import escape
 from ..models import Covenant, Fight, FightSide, Possession, Saga
-from ..models.ships import SHIP_QUALITIES, Ship
+from ..models.ships import SHIP_QUALITIES, SUNK, TAKEN, Ship
 from ..rules import dice, equipment
 from ..rules import ships as rules
 
@@ -294,6 +294,104 @@ def ship_form(saga: Saga, covenant: Covenant, record: Possession | None) -> Form
 def _chosen(covenant: Covenant, index: int) -> Possession | None:
     listed = rules.ships_of(covenant)
     return listed[index] if 0 <= index < len(listed) else None
+
+
+# -- Sunk or Taken --
+
+FATE_TITLE = "Sunk or Taken"
+AFLOAT = "afloat"
+
+
+def fate_fields(saga: Saga, covenant: Covenant, ship: Ship) -> list[DialogField]:
+    others = [(escape(c.name), c.id) for c in saga.covenants if c is not covenant]
+    return [
+        DialogField(
+            "fate",
+            "What became of her",
+            "select",
+            ship.fate or AFLOAT,
+            options=[("Still afloat, hers", AFLOAT), ("Sunk", SUNK), ("Taken", TAKEN)],
+        ),
+        DialogField(
+            "by",
+            "Taken by",
+            "text",
+            ship.fate_by,
+            show_if=lambda v: v.get("fate") == TAKEN,
+            placeholder="e.g. Eustace the Monk's pirates",
+        ),
+        DialogField(
+            "captor",
+            "To the covenant",
+            "select",
+            None,
+            options=others,
+            allow_blank=True,
+            placeholder="(none of the saga's)",
+            show_if=lambda v: v.get("fate") == TAKEN,
+            hint="A covenant that took her: she moves to its Possessions.",
+        ),
+    ]
+
+
+def mark_fate(saga: Saga, covenant: Covenant, index: int) -> Command:
+    """More's Sunk or Taken on the chosen ship: what became of her in a
+    fight or storm (Tales of Power pp. 109-110). A sunk or taken ship
+    counts in no fleet; one taken by a covenant of the saga moves to its
+    Possessions, afloat, and both Diaries say so."""
+    record = _chosen(covenant, index)
+    if record is None:
+        return Refuse(FATE_TITLE, "Choose a ship first.")
+    ship = rules.ship_of(record)
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        fate = values.get("fate") or AFLOAT
+        when = f"{saga.current_season} {saga.current_year}"
+        captor = saga.covenant(values.get("captor")) if fate == TAKEN else None
+        if fate == AFLOAT:
+            ship.fate = ship.fate_by = ship.fate_when = ""
+            record.ship = ship
+            return notes(f"{escape(record.name)} is hers again.")
+        if captor is not None:
+            covenant.possessions.remove(record)
+            captor.possessions.append(record)
+            ship.fate = ship.fate_by = ship.fate_when = ""
+            record.ship = ship
+            text = f"{record.name} was taken by {captor.name}."
+            diaries.write(
+                saga.current_year,
+                saga.current_season,
+                record.name,
+                text,
+                covenants=[covenant, captor],
+            )
+            return notes(
+                escape(text), f"She is now in {escape(captor.name)}'s Possessions."
+            )
+        ship.fate = fate
+        ship.fate_by = (values.get("by") or "").strip() if fate == TAKEN else ""
+        ship.fate_when = when
+        record.ship = ship
+        text = (
+            f"{record.name} was {fate.lower()}"
+            + (f" by {ship.fate_by}" if ship.fate_by else "")
+            + "."
+        )
+        diaries.write(
+            saga.current_year,
+            saga.current_season,
+            record.name,
+            text,
+            covenants=[covenant],
+        )
+        return notes(escape(text), "She counts in no fleet now.")
+
+    return Form(
+        f"{FATE_TITLE}: {escape(record.name)}",
+        lambda: fate_fields(saga, covenant, ship),
+        apply,
+        help_id=SHIPS_HELP,
+    )
 
 
 # -- Stress Check --

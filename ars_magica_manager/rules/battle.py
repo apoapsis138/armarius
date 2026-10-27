@@ -99,6 +99,27 @@ MERCENARY_COST: dict[str, int] = {
     "levies": 1,
 }
 
+#: Lords of Men's Standard Combat Groups (p. 108): (unit, weapon, Init,
+#: Attack, Defense, Damage, Soak), and whether the unit fights as a
+#: trained group (knights, serjeants and infantry; a group that serves a
+#: season together is trained thereafter).
+STANDARD_TROOPS: tuple[tuple[str, str, int, int, int, int, int], ...] = (
+    ("Knight", "Lance, heater shield (mounted)", 1, 17, 16, 6, 10),
+    ("Knight", "Long sword, heater shield (mounted)", 2, 16, 16, 7, 10),
+    ("Serjeant", "Spear, round shield (mounted)", 2, 12, 9, 8, 7),
+    ("Serjeant", "Long sword, round shield (mounted)", 1, 10, 8, 7, 7),
+    ("Infantry", "Poleaxe", 1, 13, 7, 13, 5),
+    ("Infantry", "Mace, round shield", 1, 11, 9, 10, 5),
+    ("Archer", "Bow", 0, 10, 6, 8, 1),
+    ("Archer", "Long bow", -1, 11, 6, 10, 1),
+    ("Archer", "Crossbow", 6, 12, 11, 8, 1),
+    ("Archer", "Hatchet, buckler", 1, 9, 6, 6, 1),
+    ("Levy", "Spear, round shield", 3, 6, 6, 7, 2),
+    ("Levy", "Knife", 1, 5, 6, 4, 2),
+    ("Baggage", "Bludgeon", -2, 5, 1, 5, 3),
+)
+TRAINED_UNITS = frozenset({"Knight", "Serjeant", "Infantry"})
+TROOPS_SOURCE = "Lords of Men, Standard Combat Groups, p. 108"
 GROUP_SIZE = 5
 GROUPS_PER_BAGGAGE = 10
 MORALE_EASE = 6

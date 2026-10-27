@@ -563,6 +563,14 @@ def battle_card(
             "combat",
         )
     )
+    line.addWidget(
+        edit_button(
+            "Muster and Aftermath",
+            p,
+            lambda: run(conflicts.command(saga, "battle_muster", index)),
+            "players",
+        )
+    )
     if ops.edit is not None:
         edit = ops.edit
         line.addWidget(edit_button("Edit", p, lambda: run(edit(index))))

@@ -709,6 +709,7 @@ class FightPage(QWidget):
                 ("Next Blow", "combat", lambda: self.act("next_blow")),
                 ("Next Round", "combat", lambda: self.act("next_round")),
                 ("Restart", "update", lambda: self.act("restart_fight")),
+                ("Combat Options", "combat", lambda: self.act("fight_options")),
             ],
             p,
         )
@@ -1424,6 +1425,7 @@ class SiegePage(QWidget):
         self.buttons = buttons(
             [
                 ("Next Siege Event", "combat", lambda: self.act("next_siege_event")),
+                ("Siege Actions", "update", lambda: self.act("siege_actions")),
                 ("Edit Siege", "edit", self.edit),
             ],
             p,

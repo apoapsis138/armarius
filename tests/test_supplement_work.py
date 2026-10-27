@@ -745,7 +745,10 @@ def test_varying_the_script():
     assert wulf is not None
     wulf.abilities.append(Ability("Mercere Lore", xp=ability_xp(3)))
     plan = _ordeal_plan(script_variation="add", variation_bonus=3)
-    assert "rolled when the season is played" in _work(saga, plan).notes[0]
+    preview = _work(saga, plan).notes[0]
+    assert "rolled when the season is played" in preview
+    # The preview gives the roll the change needs and what it would give.
+    assert "against 9. If it works, the Initiation Total is" in preview
     rolled = [_work(saga, plan, random.Random(seed)) for seed in range(12)]
     passed = [w for w in rolled if "Script bonus is now 15" in w.notes[0]]
     failed = [w for w in rolled if "Initiation fails" in w.notes[0]]

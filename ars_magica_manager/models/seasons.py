@@ -295,6 +295,9 @@ class SeasonPlan:
     #: Undergoing an Initiation: the Script written out as its components
     #: (rules.mysteries; empty: the Script bonus alone is typed).
     script_components: list[ScriptPart] = field(default_factory=list)
+    #: An Initiation's sacrifice of goods or of great symbolic value: what
+    #: is given up ("device:<id>" or "item:<id>"), taken when it's played.
+    sacrifice: str = ""
     #: Reinventing the Lesser Elixir: its new ingredient (`title`, its bonus
     #: in `book_level`) is one the alchemist devised himself (TMRE p. 42).
     devised: bool = False

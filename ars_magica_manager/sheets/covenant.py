@@ -37,7 +37,7 @@ from ..models import (
     Saga,
 )
 from ..references import Fact
-from ..rules import covenfolk, library, realms
+from ..rules import covenfolk, library, living, realms
 from ..rules.realms import covenant_effective_aura
 from ..tables import Table
 from .laboratory import Aura
@@ -76,8 +76,8 @@ def charter_facts(saga: Saga, covenant: Covenant) -> list[Fact]:
     facts = [
         Fact("Aegis of the Hearth", str(covenant.aegis_of_the_hearth)),
         Fact("Aegis' Penetration", str(covenant.aegis_penetration)),
-        Fact("Living (Magi)", f"{covenant.living_conditions_magi:+d}"),
-        Fact("Living (Mundane)", f"{covenant.living_conditions_mundane:+d}"),
+        Fact("Living (Magi)", living.living_text(covenant, magi=True)),
+        Fact("Living (Mundane)", living.living_text(covenant, magi=False)),
     ]
     if covenant.in_creation:
         facts.append(Fact("Build Points", cov_build.summary(saga, covenant)))

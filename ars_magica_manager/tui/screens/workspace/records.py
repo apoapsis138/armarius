@@ -370,6 +370,16 @@ class RecordActions(WorkspaceBase):
         """More's Battle Event on Conflicts' chosen battle."""
         self._conflict_command("conflict_battle_event")
 
+    def action_fight_options(self) -> None:
+        """More's Combat Options on the chosen fight: Lords of Men's
+        optional rules worked out for one of its characters."""
+        self._conflict_command("fight_options")
+
+    def action_battle_muster(self) -> None:
+        """More's Muster and Aftermath on Conflicts' chosen battle: allies,
+        mercenaries, the Deployment Total, and how the day ends."""
+        self._conflict_command("battle_muster")
+
     def action_next_blow(self) -> None:
         """More's Next Blow on the chosen fight."""
         self._conflict_command("next_blow")
@@ -401,6 +411,11 @@ class RecordActions(WorkspaceBase):
     def action_restart_fight(self) -> None:
         """More's Restart the Fight on the chosen fight."""
         self._conflict_command("restart_fight")
+
+    def action_siege_actions(self) -> None:
+        """More's Siege Actions on the chosen siege: deployments, a supplies
+        story or spell, running the stockade, the castle taken."""
+        self._conflict_command("siege_actions")
 
     def action_next_siege_event(self) -> None:
         """More's Next Siege Event on the chosen siege."""
@@ -561,7 +576,12 @@ class RecordActions(WorkspaceBase):
                 None if values is None else self.saga.character(values["character_id"])
             )
             if values is not None and magus is not None:
-                familiar = fam.bind_familiar(self.saga, magus, values["name"])
+                familiar = fam.bind_familiar(
+                    self.saga,
+                    magus,
+                    values["name"],
+                    bound=bool(values.get("bound", True)),
+                )
                 storage.save_saga(self.saga)
                 self._rebuild_tree()
                 self.selected_familiar = familiar

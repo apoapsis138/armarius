@@ -86,7 +86,14 @@ def test_ships_come_first_in_possessions_as_ledger_entries(app):
     entries = chapter.findChildren(ShipEntry)
     assert len(entries) == 1
     buttons = section_buttons(page, "Ships")
-    assert list(buttons) == ["Add", "Edit", "Delete", "Stress Check", "Ship Combat"]
+    assert list(buttons) == [
+        "Add",
+        "Edit",
+        "Delete",
+        "Stress Check",
+        "Ship Combat",
+        "Sunk or Taken",
+    ]
     entries[0].clicked()
     assert page.inspector.title.text() == "Grauwal"
     body = plain(page.inspector.body.text())

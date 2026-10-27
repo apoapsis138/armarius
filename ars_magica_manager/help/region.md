@@ -655,6 +655,70 @@ castle to the lord, town or place he besieges. A garrison or besiegers'
 soldiers left blank are filled in from the linked lords' armies. Play
 it from Conflicts with Next Siege Event; see [A siege](help:sieges).
 
+## Combat Options
+<!-- help: combat-options -->
+
+More (or the button) on a fight: Lords of Men's optional combat rules
+(Chapter Nine) worked out for one of its characters, to play at the
+table. It changes nothing in the fight. Choose the **Option**:
+
+- **A charge, and its shock** (on foot p. 123, mounted pp. 126-127): the Combat Ability added to
+  the Attack and the Fatigue it costs (the horse's, mounted), and what
+  the one charged rolls to resist its shock.
+- **A horse's gait** (p. 127, with the Errata's corrected table, p. 75):
+  its missile penalty, falling damage, extended-action Ease Factor and
+  optional Defense bonus.
+- **Cover, concealment and higher ground** (pp. 130-131).
+- **How many may attack one man** (p. 131).
+- **Interrupting** (p. 119): Quickness + the Ability - Encumbrance.
+- **Into and out of the saddle** (pp. 127-128).
+
+Add Combatant also offers **A standard combat group** (p. 108): five
+knights, serjeants, infantry, archers, levies or baggage with the book's
+figures, formed into a group as they are added: trained for knights,
+serjeants and infantry, untrained for the rest.
+
+## Muster and Aftermath
+<!-- help: battle-muster -->
+
+More (or the button) on a battle, for what comes before and after its
+battlefield events (Lords of Men, Chapter Eight):
+
+- **Raise Allies** (pp. 102-103): who calls them, his Affinity score and
+  his core vassal groups (his lord's title gives them, levies only on home
+  ground), and the Allied Troops Table's modifiers that apply. Presence +
+  Leadership + Affinity + a simple die: 6 adds half his core force, 12 as
+  much again, 18 double, 24 treble. The allies join the side.
+- **Hire Mercenaries** (pp. 103-104): groups of knights, serjeants,
+  infantry, archers and levies at 15, 5, 2, 2 and 1 pounds, up to the
+  lord's Mercenary Budget. **A War Loan** steps his wealth down for five
+  times the budget he gives up: an Average lord becoming Poor borrows five
+  times his budget; a Wealthy one becoming Average gains five times the
+  difference of the two, or becoming Poor five times the Wealthy budget. A
+  Poor lord can't borrow. The loan and his new wealth's budget are what he
+  may spend: the book doesn't say, but its "five times the difference"
+  points that way, and it makes the two routes to Poor come out the same
+  (for a baron, Wealthy to Average is 300 + 40 = 340 pounds). He needs a
+  banker able to lend that much and to collect if he defaults, and the
+  loan may take weeks, so it doesn't suit a lightning war. The loan is
+  repaid from spoils or stories; whether it lowers next year's budget,
+  and when he regains his old wealth, the book leaves to you, and the app
+  doesn't restore it.
+- **Roll a Deployment Total** (pp. 104-105): Intelligence + Area Lore + a
+  stress die for the one who chooses the ground, plus the highest
+  magnitude of a spell that shapes it.
+- **End of the Day** (pp. 108-109): a side wins, or a truce holds at
+  nightfall. The victors who led events gain a Confidence Point for each
+  event their side won, and their commander an experience point toward a
+  Reputation. No more events follow.
+
+A side keeps the groups it raised or hired by kind, so an event's losses
+come first from the kind its Enemy names (levies for Inexpensive, infantry
+and archers for Standard, knights and serjeants for Expensive, p. 106).
+Leading an attack on the baggage gives 1 xp toward a bad Reputation. A
+magus casting in a battle makes a Concentration roll against 12, or 9 if
+not yet engaged (p. 109): roll it at the table.
+
 ## Battle Event
 <!-- help: battle-event -->
 
@@ -1048,8 +1112,10 @@ The threat's stages in order, each with when it comes, the clues that
 warn of it, and what happens if it is ignored, stopped or turned. A
 pending stage comes when its date (or its place on the track) is
 reached; mark one **Happened** to say it came anyway, or **Stopped** or
-**Turned** to say the troupe kept it from coming. The stage reached is
-in bold. Add, edit or delete one.
+**Turned** to say the troupe kept it from coming. Marking it so writes
+what the stage says follows (its If ignored, If stopped or If turned) in
+the threat's Diary and each troupe covenant's, so the troupe sees what
+comes of it. The stage reached is in bold. Add, edit or delete one.
 <!-- gui -->
 Click a stage to read it in full in the Inspector: when it comes, what
 became of it, its clues, and what happens if it is ignored, stopped or

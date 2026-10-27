@@ -41,6 +41,7 @@ from ..models import (
     Laboratory,
     Saga,
     SeasonPlan,
+    ShapeMaterialBonus,
 )
 from . import (
     book_seasons,
@@ -127,6 +128,41 @@ def device_of(saga: Saga, plan: SeasonPlan) -> EnchantedDevice | None:
 
 def effect_of(device: EnchantedDevice, plan: SeasonPlan) -> InstilledEffect | None:
     return next((e for e in device.effects if e.id == plan.effect_id), None)
+
+
+#: Words too common in a bonus's "applies to" to say which effect it
+#: suits ("+3 to project a bolt of fire": "bolt", "fire" count).
+_COMMON_WORDS = frozenset(
+    {"and", "any", "for", "from", "into", "its", "of", "on", "or", "the", "to", "with"}
+)
+
+
+def _words(text: str) -> set[str]:
+    cleaned = "".join(ch if ch.isalnum() else " " for ch in text.casefold())
+    return {w for w in cleaned.split() if len(w) > 2 and w not in _COMMON_WORDS}
+
+
+def _matching(
+    device: EnchantedDevice, effect: InstilledEffect
+) -> list[ShapeMaterialBonus]:
+    said = _words(
+        f"{effect.name} {effect.description} {effect.technique} {effect.form}"
+    )
+    return [
+        b
+        for b in device.bonuses
+        if b.year is None and b.bonus and _words(b.applies_to) & said
+    ]
+
+
+def suggested_shape_bonus(
+    magus: Character, device: EnchantedDevice, effect: InstilledEffect
+) -> int:
+    """The Shape & Material bonus to offer for instilling `effect`: the
+    device's matching bonuses, at most the magus's Magic Theory (DE p.
+    258). Only a suggestion: the troupe decides which bonuses apply."""
+    total = sum(b.bonus for b in _matching(device, effect))
+    return max(0, min(total, lab.shape_material_cap(magus)))
 
 
 def text_device_type(device: EnchantedDevice) -> str:

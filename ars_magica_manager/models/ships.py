@@ -27,6 +27,11 @@ SHIP_QUALITIES: tuple[str, ...] = (
 SHIP_QUALITY_DEFAULT = "Standard"
 
 
+#: What may become of a ship lost: sunk, or taken by another.
+SUNK, TAKEN = "Sunk", "Taken"
+SHIP_FATES: tuple[str, ...] = ("", SUNK, TAKEN)
+
+
 @dataclass
 class Ship:
     """The ship-only figures of a Ships entry; the Possession around it
@@ -62,11 +67,20 @@ class Ship:
     fighters_tons: float = 0.0
     close_to_home: bool = False
     home_port: str = ""
+    #: What became of her when she was lost: "" (still hers), "Sunk" or
+    #: "Taken"; who took her, and when ("Summer 1221").
+    fate: str = ""
+    fate_by: str = ""
+    fate_when: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], name: str) -> Ship:
         """A saved ship, checked: `name` is the entry's, for the message."""
         d = known_fields(cls, data)
+        if d.get("fate", "") not in SHIP_FATES:
+            raise ValueError(
+                f"Ship {name}: unknown fate {d['fate']!r}; must be one of {SHIP_FATES}"
+            )
         quality = d.get("quality", SHIP_QUALITY_DEFAULT)
         if quality not in SHIP_QUALITIES:
             raise ValueError(

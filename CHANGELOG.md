@@ -109,6 +109,86 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.28.0 — 2026-10-27
+
+### Gauntlet
+
+- Edit type on the Creation Worksheet offers magus, companion, Mythic
+  Companion and grog while the character is in creation.
+- A Magic Theory specialty in inventing spells, or in the spell's
+  Technique or Form, raises the creation spell cap by 1 (DE pp. 50, 168).
+- A folk witch's apprenticeship years (from about ten, for ten years) are
+  left out of Later Life, as are the sorginak's, the bouda's and the
+  settuten's; Penetration is open to anyone with a tradition's Opening,
+  and a Gifted witch's Opened powers need no Virtues (Hedge Magic RE p.
+  34).
+- A new Equipment step before Finishing Touches, and reminders of blank
+  specialties on each experience step.
+- The baseline's grogs and covenfolk go in as Inhabitants when a covenant
+  goes into play (DE p. 179).
+
+### Book of Hours
+
+- Be taught counts its student once; varying a Script shows its new total
+  before the season is played.
+- With the Large Library rule, Read can study the library's whole holding
+  of a subject (Transforming Mythic Europe p. 105).
+- An Initiation's Sacrifice is chosen on the plan and made when the rite is
+  carried out: a device, talisman, item, book, the familiar, an apprentice,
+  mundane wealth, vis, or a season serving the cult.
+- Binding a familiar can wait for its season to give True Friend and
+  Loyal; the Suggested Familiars show once both Arts are chosen.
+
+### Computus
+
+- Debates choose each round's tactics by lot among a speaker's best
+  Abilities, so equal speakers no longer stall at 0 to 0.
+- Similar spells count when instilling an effect and empowering a bond.
+- Living Conditions follow the covenant's season when left blank, and a
+  noble uses the magi's (DE p. 190).
+- Deep covers and personae (Houses of Hermes: Societates pp. 87-90): a
+  Covers section, each cover's Reputation kept up at Advance, and a
+  persona's Reputation growing with Persona.
+
+### Pagina
+
+- Resolve Twilight applies the storyguide's choice of effects, and
+  Twilight Scars have their own field.
+- Cast a Power rolls a hedge tradition's casting; Boost a Spell works out
+  a boost's pawns and botch dice.
+- A character's Marriages and a covenant's Land Works are shown on their
+  sheets.
+- A ship can be marked Sunk or Taken, and a taken one moves to its
+  captor's Possessions.
+- Placeholder names read "Affinity with (Art)" until chosen, and lists
+  name only what a name doesn't show.
+
+### Orbis
+
+- Muster and Aftermath on a battle: Raise Allies, Hire Mercenaries or take
+  a War Loan, the Deployment Total, and the End of the Day with its
+  Confidence Points and Reputation (Lords of Men pp. 102-109).
+- Each side's groups are kept by kind, and an event's losses fall on the
+  kind its Enemy names; attacking the baggage earns a bad Reputation.
+- A fight can take a standard combat group, and Combat Options works out a
+  charge, a horse's gait, cover, crowding, interrupting and the saddle
+  (Lords of Men ch. 9; Errata p. 75).
+- Siege Actions: deployments with undefended walls, blockades, reliefs,
+  Conjuration of Bread and Raise the Siege, running the stockade, and the
+  castle taken (Lords of Men pp. 112-116).
+- Marking a threat's stage writes its own text in the Diaries.
+
+### Concilium
+
+- A Rhine covenant leans with a party its members' gild shares (Guardians
+  of the Forests pp. 27-28).
+- Sentences no longer double "the" before a Tribunal's name.
+
+### Florilegium
+
+- Export a Cult, and Import's A Mystery Cult, move a saga's own Mystery
+  Cult between sagas.
+
 ## 3.27.0 — 2026-10-27
 
 ### Concilium

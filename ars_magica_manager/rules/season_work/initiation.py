@@ -452,9 +452,13 @@ def _undergo_initiation(
         script += plan.script_sympathy
     elif plan.script_variation in mysteries.VARY_EASE:
         if rng is None:
+            value = (
+                beast[0]
+                if beast is not None
+                else getattr(mystagogue.characteristics, trait.lower(), 0)
+            )
             result.notes.append(
-                f"Varying the Script ({plan.script_variation}) is rolled when the "
-                "season is played."
+                _variation_preview(mystagogue, plan, value, lore, script, target)
             )
             return
         varied = _vary_script(saga, mystagogue, plan, rng, lore, script, result)
@@ -482,6 +486,9 @@ def _undergo_initiation(
             result.add_vfs.append(_initiated(plan))
     if suffered:
         _suffer_ordeal(character, plan, result, size, initiated=initiated)
+        # The rite was carried out: its sacrifice is made, whatever came of it.
+        if plan.sacrifice:
+            result.sacrifice = plan.sacrifice
     if initiated and plan.effect_id:
         _house_hubris(character, plan.effect_id, result)
         _merinita_ordeal(plan, result)
@@ -774,6 +781,31 @@ def _initiation_terms(
         + plan.other_modifier
         + bjornaer.script_extra(initiate, plan.hedge_script)
         + criamon.script_extra(initiate, plan.hedge_script),
+    )
+
+
+def _variation_preview(
+    mystagogue: Character,
+    plan: SeasonPlan,
+    value: int,
+    lore: int,
+    script: int,
+    target: int,
+) -> str:
+    """Nobody knows yet whether varying the Script works, but the preview
+    can say what it needs and what it would give (DE p. 389)."""
+    ease = mysteries.VARY_EASE[plan.script_variation]
+    roll = mystagogue.characteristics.intelligence + lore
+    varied = value + lore + script + plan.variation_bonus
+    months = max(0, min(plan.months_lost, 3))
+    varied = max(0, varied - months * round_up(varied / 3))
+    return (
+        f"Varying the Script ({plan.script_variation}) is rolled when the "
+        f"season is played: Intelligence + Lore {roll} + a stress die "
+        f"against {ease}. If it works, the Initiation Total is {varied} "
+        f"against {target}"
+        + (": enough." if varied >= target else ": not enough.")
+        + " If it fails, so does the Initiation."
     )
 
 

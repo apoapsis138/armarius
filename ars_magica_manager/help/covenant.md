@@ -107,8 +107,13 @@ Tribunal, Year Founded, Aegis of the Hearth and its Penetration, the two
 Living Conditions, the base Aura, Aura Realm and Covenant Season. The app
 works out the Aura shown, adding any Boon that raises it to the base you
 typed, and that total is the aura every laboratory of the covenant starts
-from. Living Conditions (Mundane) feeds Loyalty, both Living Conditions are
-used in the aging rolls at the end of the year, and Covenant Season decides
+from. Leave a Living Conditions blank and it follows the Covenant Season:
++1 for magi and nobles in Spring or Winter and +2 in Summer or Autumn,
+0 for everyone else in Spring or Winter and +1 in Summer or Autumn (DE p.
+190); the sheet then shows the season beside it. Type a number to set it
+instead. Living Conditions (Mundane) feeds Loyalty, both Living Conditions are
+used in the aging rolls at the end of the year (the Magi one for magi and
+for nobles: a Landed Noble, Knight or Gentleman/woman), and Covenant Season decides
 how many points each inhabitant is worth on the Economics tab. While the
 covenant is In Creation, the
 <!-- tui -->
@@ -779,6 +784,7 @@ Choose a ship, then the buttons beside Add, Edit and Delete:
 
 - **Stress Check** (a storm, fire, naval combat or a magical attack, HP p. 53): a stress die + her captain's Profession + her quality (-1 Shoddy, +1 Superior, +3 Excellent, +5 Supernatural) + the magnitude of the total levels invested in her (all her effects' levels added together), -1 in poor weather or -3 in severe, -1 if repaired before, against 15 (City & Guild p. 77). Failing costs a damage level; a botch one, and one more for every botch die that shows a 0. The Diary records it.
 - **Ship Combat** (City & Guild pp. 86-87): choose their ship (another ship of the saga's, or one typed in) and what you mean to do. Each captain rolls a stress die + Intelligence + Profession + up to 3 for an experienced crew, + what favours his side (a faster ship, fog). The winner boards or slips away; a galley may ram (the rammed ship founders in 5 x a simple die minutes; a sailing ship that rams stays entangled) or shear oars (2 x a simple die rowers out of action). Artillery shoots as the ships close: a ballista kills a crewman a hit within 600 yards, a light catapult puts a simple die / 2 out of action within 200; each reloads in ten rounds. A boarding sets up a Fight in Conflicts for the two crews to fight as groups; the taller ship's men have +3 Attack and Defense until they are boarded. The Diary records it.
+- **Sunk or Taken**: what became of her after a fight or a storm. Sunk, or Taken (by whom), she shows so on the list and counts in no fleet battle; one taken by another covenant of the saga moves to its Possessions, afloat, and both Diaries say so. Choose Still afloat to undo it. The books give no rule for this (Tales of Power pp. 109-110 has a victor claim the ships he boards), so it is a record.
 
 The captain's Profession is the best of his seafaring Professions (Sailor, Mariner, Captain, Ship, Navigator, Pilot). Sailing speed is City & Guild's 60 to 80 miles a day (about 30 by the Definitive Edition, p. 408).
 
@@ -1030,6 +1036,15 @@ On the right, Total Income, the
 expenditure before and after cost savings, and the Surplus/Deficit. At the
 end of each year the surplus is added to Wealth, and a deficit that
 Emergency Savings didn't cover is taken from it (see Cost Savings).
+
+### Land Works
+<!-- help: section-eco-land -->
+
+The covenant's works of shaping the land (Transforming Mythic Europe pp.
+53-77), as More's Shape the Land on Sources of Income plans them: each
+project with its Rituals in order, ticked (✔) once a magus's Shape the
+Land season has cast it, and the manors settled on its new land. On the
+desktop the section shows once a project is planned.
 
 ### Sources of Income
 <!-- help: section-eco-income -->

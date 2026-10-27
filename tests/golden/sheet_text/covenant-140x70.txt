@@ -7,7 +7,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -75,7 +75,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -143,7 +143,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -155,7 +155,7 @@
     ▼ Loyalty
 
       Type of Governance:       (not set)               Situational Modifiers for:
-      Base Loyalty Points:      -30                     Living Conditions:  +0  (+0)
+      Base Loyalty Points:      -30                     Living Conditions:  +0 (Spring)  (+0)
       Total modifiers:          10                      Equipment:          Standard  (+0)
       Current Loyalty Points:   -20                     Money:              Standard salary  (+0)
       Prevailing Loyalty Score: -2                      Specialists:        0
@@ -211,7 +211,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -279,7 +279,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -347,7 +347,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -369,6 +369,11 @@
 
                             Type        Income  Note
       ○ Mill                Typical        100
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Land Works
+
+      None planned: More's Shape the Land plans one.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Yearly Expenditure
@@ -396,11 +401,6 @@
 
 
 
-
-
-
-
-
   ▌
   ▌  Select a source of income or a row to see its details.
   ▌
@@ -415,7 +415,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -483,7 +483,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -551,7 +551,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -619,7 +619,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
@@ -687,7 +687,7 @@
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
-      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
