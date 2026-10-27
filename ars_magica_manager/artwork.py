@@ -201,10 +201,16 @@ TRADITION_SYMBOLS: dict[str, Path] = {
         "knights_of_the_green_stone",
         "matres_et_matrones",
         "clesrada",
+        # Mythic Africa
+        "debterah",
     )
 } | {
     # A House's own Mystery shows the House's symbol.
     "trad_verditius_mysteries": SYMBOLS / "houses" / "verditius.svg",
+    # House Merinita's Mystery Cult.
+    "trad_merinita_mysteries": SYMBOLS / "houses" / "merinita.svg",
+    # House Bjornaer's Mystery Cult.
+    "trad_bjornaer_mysteries": SYMBOLS / "houses" / "bjornaer.svg",
 }
 
 #: An app concept to its Phosphor icon's name (the file is

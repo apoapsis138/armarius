@@ -12,6 +12,16 @@ and the extra botch dice for acting in another realm's aura.
 Half an aura rounds down (decision 23). Hermetic magic is a Magic power: the
 modifier goes on the Casting Score, the Lab Total, and Parma/Form Magic
 Resistance.
+
+With Dies Irae in play Lunar is a fifth supernatural realm (DI p. 36), and
+its New Realm Interaction Table (p. 37) adds a row and a column: a Lunar
+aura gives Lunar powers +aura, Magic and Faerie powers -(5 x aura),
+Infernal ones -aura and Divine ones nothing; Lunar powers take -aura in
+Magic, Faerie and Infernal auras and -(3 x aura) in a Divine one. The
+other realms' entries are the core table's. An aura (a place's, a regio
+level's, a covenant's) may be Lunar only while the book is in play
+(`aura_realms`); records themselves still belong to one of the four realms
+(models.REALMS).
 """
 
 from __future__ import annotations
@@ -19,9 +29,9 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from .. import catalog
+from .. import catalog, sourcebooks
 from ..models import REALMS, Character, Covenant, CovenantBoonHookDef, Saga
-from . import effects, sites
+from . import effects, lunar, sites
 from .breakdown import Breakdown
 from .rounding import round_down
 
@@ -53,12 +63,33 @@ _MULTIPLE: dict[tuple[str, str], float] = {
     ("Infernal", "Divine"): -5,
     ("Infernal", "Faerie"): -1,
     ("Infernal", "Infernal"): 1,
+    # Dies Irae's Lunar row and column (p. 37).
+    **{
+        pair: multiple
+        for pair, multiple in lunar.MULTIPLE.items()
+        if lunar.LUNAR in pair
+    },
 }
+
+#: Every realm an aura may have: the four, and Lunar (Dies Irae p. 36).
+AURA_REALMS: tuple[str, ...] = (*REALMS, lunar.LUNAR)
+LUNAR_SOURCE = "Dies Irae, Magic After the Apocalypse, pp. 36-37"
 
 
 def _check(realm: str) -> None:
-    if realm not in REALMS:
-        raise ValueError(f"Unknown realm {realm!r}; must be one of {REALMS}")
+    if realm not in AURA_REALMS:
+        raise ValueError(f"Unknown realm {realm!r}; must be one of {AURA_REALMS}")
+
+
+def aura_realms(saga: Saga | None, current: str = "") -> tuple[str, ...]:
+    """The realms an aura may be given in `saga`'s forms: the four, and
+    Lunar while Dies Irae is in play (or while `current` is already Lunar,
+    so a saved choice stays shown)."""
+    if current == lunar.LUNAR or sourcebooks.in_play(
+        "DI", sourcebooks.saga_books(saga)
+    ):
+        return AURA_REALMS
+    return REALMS
 
 
 def aura_modifier(power_realm: str, aura_realm: str, aura: int) -> int:

@@ -7998,7 +7998,7 @@
       "working_seasons": 0,
       "working_xp": 0,
       "social_status": "vf_kabbalist",
-      "notes": "Gematria, Kabbalah and Merkavah each need Educated (Hebrew). Kabbalah stands in for Invocation, Merkavah for Purity and Gematria for Meditation. Gematria first needs max(1, 12 - Gematria) hours with a text and uses the lower of Gematria and the book's Quality. Communities initiate members into Holy Powers (rules deferred to The Mysteries Revised). Astrological Magic and Philosophic Magic add Artes Liberales or Philosophiae to Kabbalah totals. A season studying or using Merkavah alone ends with a Disciplined roll against 9: a failure is a season of obsession, a botch a Plagued by Supernatural Entity Flaw. A second golem attempt in a community fails, and every participant suffers a Minor tragedy.",
+      "notes": "Gematria, Kabbalah and Merkavah each need Educated (Hebrew). Kabbalah stands in for Invocation, Merkavah for Purity and Gematria for Meditation. Gematria first needs max(1, 12 - Gematria) hours with a text and uses the lower of Gematria and the book's Quality. Communities initiate members into Holy Powers (rules deferred to The Mysteries Revised). Astrological Magic and Philosophic Magic add Artes Liberales or Philosophiae to Kabbalah totals. A season studying or using Merkavah alone ends with a Disciplined roll against 9: a failure is a season of obsession, a botch a Plagued by Supernatural Entity Flaw. A second golem attempt in a community fails, and every participant suffers a Minor tragedy. Shinnui Shem (a season, once a life) severs Arcane Connections to the renamed man and gives (simple die + Intelligence + Gematria + Understanding + book Quality + Dominion aura) / 5 to Aging Rolls until his next Aging Point, not adding to other supernatural aging bonuses (RoP:D p. 141).",
       "training": {
         "gift": "optional",
         "minimums": {
@@ -14864,6 +14864,19 @@
           "vis_cap": "none",
           "penetrates": false,
           "notes": "After a ceremony each season for a year: EF 9 + the aura, +1 a year of trying. Several priests may pool their bonuses. Needs Dedun's Blessing."
+        },
+        {
+          "name": "Corpse Magic",
+          "kind": "ability",
+          "scores": [
+            "Corpse Magic"
+          ],
+          "characteristic": "Communication",
+          "die": "stress",
+          "against": "Ease Factor",
+          "vis_cap": "none",
+          "penetrates": true,
+          "notes": "Lands of the Nile p. 102: fifteen minutes' chanting over a corpse with no Divine burial (spine, skull and over half the long bones). EF 9 speak, 12 compel truth or protect the corpse, 15 animate within sight, 18 animate under mental control. Commands: Com + Leadership + stress die against 6, 9 or 12, Leadership capped by the corpse's language below 5; three failures lay it to rest until moonrise. The Penetration Total must exceed its Might (usually 9) for it to leave the grave. Needs the Corpse Magic Virtue."
         }
       ],
       "initiation": {
@@ -22726,6 +22739,735 @@
       ],
       "level_steps": "none",
       "guideline_source": "The Contested Isle pp. 102-105: each cles's base Ease Factor (several change with the feat)"
+    },
+    {
+      "id": "trad_debterah",
+      "name": "Debterah",
+      "source": "LotN; RoP:D",
+      "realm": "Divine",
+      "description": "Ethiopia's lay deacons of the Church and the Falasha, a holy societas who teach noble children, cast horoscopes, make protective amulets and drive out evil spirits with The Magic Star Book.",
+      "abilities": [
+        "Adjuration",
+        "Blessing",
+        "Craft Amulets",
+        "Invocation",
+        "Artes Liberales",
+        "Chirurgy",
+        "Organization Lore: Ethiopian Church",
+        "Medicine",
+        "Music",
+        "Teaching",
+        "Theology: Christian",
+        "Theology: Judaism"
+      ],
+      "favored": [
+        "Adjuration",
+        "Blessing",
+        "Craft Amulets",
+        "Invocation"
+      ],
+      "virtues": [
+        "vf_clerk",
+        "vf_educated",
+        "vf_enchanting_ability",
+        "vf_sense_holiness_and_unholiness",
+        "vf_wise_one"
+      ],
+      "notes": "Lands of the Nile p. 114. A holy societas founded on Saint Yared's chants (his five books are a summa of Organization Lore: Ethiopian Church, Level 5, Quality 8); The societas has members in both the Christian and the Falasha Jewish communities, and Falasha kahens are often debterah before becoming rabbis: a member takes Theology: Christian or Theology: Judaism, whichever his faith. Their Holy Methods and Powers and Craft Amulets are Realms of Power: The Divine's (pp. 34-50, 137). Without that book, give one Clerk or Educated, Enchanting Music, and Sense Holiness and Unholiness or Wise One (with Wise One, some Divine and Infernal Lore); such a debtera has no exorcism of his own beyond leading ceremonies in a church's Divine aura, which its tabot and forest gather.",
+      "training": {
+        "gift": "optional",
+        "notes": "No apprenticeship is printed: build the member as a normal character, buying the Methods and Powers as Supernatural Virtues (Realms of Power: The Divine), with Artes Liberales (astronomy), Chirurgy, Organization Lore: Ethiopian Church, Medicine, Music, Teaching and Theology (Christian or Judaism, by the member's faith)."
+      },
+      "casting": [
+        {
+          "name": "Holy Method and Power",
+          "kind": "art_pair",
+          "characteristics": {
+            "Invocation": "Communication"
+          },
+          "techniques": [
+            "Invocation"
+          ],
+          "forms": [
+            "Adjuration",
+            "Blessing"
+          ],
+          "die": "simple",
+          "against": "level",
+          "vis_cap": "none",
+          "vis": "none: holy effects use no vis",
+          "penetrates": true,
+          "notes": "Realms of Power: The Divine: Characteristic + Method + Power + aura + a simple die against the level (Invocation costs a Confidence or Faith Point and may roll a stress die). A shortfall risks a tragedy of hubris."
+        },
+        {
+          "name": "Minor amulet",
+          "kind": "ability",
+          "scores": [
+            "Craft Amulets"
+          ],
+          "characteristic": "Dexterity",
+          "die": "none",
+          "against": "level",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "Realms of Power: The Divine p. 137: max(1, 12 - Craft Amulets) hours; Dexterity + Craft Amulets + shape and material bonus + Dominion aura must reach twice the effect's level. One Individual; lasts days to weeks."
+        },
+        {
+          "name": "Major amulet",
+          "kind": "art_pair",
+          "characteristic": "Dexterity",
+          "techniques": [
+            "Invocation"
+          ],
+          "forms": [
+            "Adjuration",
+            "Blessing"
+          ],
+          "adds": [
+            "Craft Amulets"
+          ],
+          "die": "none",
+          "lab": true,
+          "against": "level",
+          "vis_cap": "none",
+          "penetrates": false,
+          "notes": "Realms of Power: The Divine p. 137: Dexterity + Craft Amulets + Method + Power + shape and material bonus + Dominion aura; each consecutive season banks the total minus the level until the points reach the level. One a season."
+        }
+      ],
+      "activities": [
+        {
+          "key": "debterah_major_amulet",
+          "label": "Make a major amulet",
+          "summary": "A season's work on a major amulet against evil spirits: bank the total minus its level until the points reach the level.",
+          "lab_rule": "Major amulet"
+        }
+      ],
+      "guideline_sets": [
+        "holy_powers"
+      ]
+    },
+    {
+      "id": "trad_merinita_mysteries",
+      "name": "House Merinita (Mystery Cult)",
+      "source": "HoH:MC; DE",
+      "realm": "Magic",
+      "description": "The Mystery Cult of House Merinita: the Outer Mystery of Faerie Magic, then Inner Mysteries in three schools (Arcadian, Folk and Illusion) and the Founder's own Binding the Gift, learned through the House's lineages; the Nature Mysteries, from their own Outer Mystery, Nature Lore, lie outside them.",
+      "abilities": [
+        "Mystery Cult Lore: Merinita",
+        "Faerie Magic"
+      ],
+      "favored": [],
+      "virtues": [
+        "vf_faerie_magic"
+      ],
+      "hermetic": "",
+      "notes": "Every magus with Faerie Magic is a member: Initiating the Outer Mystery joins the House (Houses of Hermes: Mystery Cults p. 85). The Lore is House Merinita Lore; an Initiate should have it at 1 for an Inner Mystery, and Mystagogues usually have 4 or 5 (p. 88). Schools (p. 86): Arcadian (Arcadian Travel Minor; Animae Magic, Becoming Major), Folk (Charm Magic Minor; Story Magic, Symbolic Magic Major), Illusion (Spell Timing Minor; Glamour, Perpetuity Major), all on Faerie Magic; Binding the Gift (Minor House Mystery); the Nature Mysteries (Awakening Minor; Wilding, Guardian of Nature Major), on Nature Lore. Glamour always brings Vulnerable Magic (p. 102); Perpetuity usually Unnatural Magic. Lineages and societies (pp. 82-106) each favour a school: the Line of Quendalon the Arcadian, the Heirs to Merlin the Folk, the Followers of Pendule and the Shadow-Masters the Illusion Mysteries, the Vestals and the True Merinitae the Nature Mysteries.",
+      "training": {
+        "gift": "required",
+        "minimums": {},
+        "notes": "Faerie Magic, the Outer Mystery, needs one touched by the fay; a Merinita parens gives an apprentice without a faerie Virtue or Flaw a Warping Point to qualify him (DE p. 236)."
+      },
+      "advancement": {
+        "practice_arts": true,
+        "vis_study": false,
+        "notes": "Members advance as magi. Faerie Magic and House Merinita Lore are taught only to Initiates of the House's Mysteries (p. 88). Nature Lore grows only by Adventure, Practice and Exposure, its Source Quality the area's aura (p. 103)."
+      },
+      "initiation": {
+        "characteristic": "Presence",
+        "lore": "Mystery Cult Lore: Merinita",
+        "self_initiation": true,
+        "notes": "Houses of Hermes: Mystery Cults pp. 82-106; the Definitive Edition pp. 236-240 reprints Faerie Magic, the Illusion Mysteries' Followers of Pendule and Spell Timing, and wins where they differ. House Merinita Lore's specialties include Initiating oneself (p. 88). The sample Scripts use the usual Targets, lower after an Ordeal.",
+        "scripts": [
+          {
+            "name": "Line of Quendalon: Animae Magic",
+            "components": [
+              [
+                "A season in a Faerie aura studying its inhabitants",
+                3
+              ],
+              [
+                "Befriending the faerie fitted to her highest Technique and Form",
+                1
+              ],
+              [
+                "Minor Ordeal: Faerie Friend",
+                3
+              ],
+              [
+                "A bargain giving up a uniquely human quality",
+                6
+              ],
+              [
+                "Minor Ordeal: a Prohibition against breaking her word",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 16,
+            "gains": "Animae Magic (Major)",
+            "ordeal": "Faerie Friend and a Prohibition (never break her word, or a faerie wasting sickness), two Minor Flaws",
+            "who": "gifted",
+            "notes": "A season studying a Faerie aura's inhabitants (+3); she befriends the faerie fitted to her highest Technique and Form (+1), taking Faerie Friend (+3), and seals it with a bargain giving up a human quality that can't be replaced (+6); a Prohibition never to break her word (+3) (p. 96). Quendalon's line may also Initiate Arcadian Travel, and its elders Initiate Becoming.",
+            "requires": {
+              "Mystery Cult Lore: Merinita": 1
+            }
+          },
+          {
+            "name": "Heirs to Merlin: Charm Magic",
+            "components": [
+              [
+                "A year apprenticed to a master of a charm Ability",
+                1
+              ],
+              [
+                "A charm for a faerie noble of costly materials",
+                1
+              ],
+              [
+                "The charm depicts a special symbolic quality of the patron",
+                3
+              ],
+              [
+                "Quest: a unique object of myth or legend for the charm",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 8,
+            "gains": "Charm Magic (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "A year apprenticed to a master of a charm Ability (+1); a charm for a faerie noble of costly materials (+1) showing a symbolic quality of the patron (+3), tied to a unique object of legend she first finds (+3) (p. 100). The Heirs also Initiate Story Magic, and Symbolic Magic later in life.",
+            "requires": {
+              "Mystery Cult Lore: Merinita": 1
+            }
+          },
+          {
+            "name": "Followers of Pendule: Spell Timing",
+            "components": [
+              [
+                "A day and night awake, casting an Imaginem spell every round",
+                3
+              ],
+              [
+                "Minor Ordeal: Harmless Magic",
+                3
+              ],
+              [
+                "Minor Ordeal: Poor Memory (faces)",
+                3
+              ],
+              [
+                "Minor Ordeal: Social Handicap",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 12,
+            "gains": "Spell Timing (Minor)",
+            "ordeal": "Harmless Magic, Poor Memory (faces) and a Social Handicap, three Minor Flaws",
+            "who": "gifted",
+            "notes": "A day and a night without sleep, casting a non-fatiguing Imaginem spell every round to count the moments (+3), then three Minor Flaws (+3 each) (p. 102; DE p. 239). The Followers also Initiate Glamour, and Perpetuity as a dying master's last lesson.",
+            "requires": {
+              "Mystery Cult Lore: Merinita": 1
+            }
+          },
+          {
+            "name": "Shadow-Masters: Glamour",
+            "components": [
+              [
+                "Pursuing an illusion-wielding faerie until a Warping Point",
+                3
+              ],
+              [
+                "-3 to Perception and Intelligence rolls until the Initiation ends",
+                1
+              ],
+              [
+                "The anniversary of her Gift's manifestation",
+                1
+              ],
+              [
+                "An Imaginem certamen with the Mystagogue to unconsciousness",
+                1
+              ],
+              [
+                "Major Ordeal: Vulnerable Magic",
+                9
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 15,
+            "gains": "Glamour (Major)",
+            "ordeal": "Vulnerable Magic (Major)",
+            "who": "gifted",
+            "notes": "She pursues an illusion-skilled faerie until mischance gives her a Warping Point (+3), then is as if drunk, -3 to Perception and Intelligence rolls, until it ends (+1); on the date her Gift manifested (+1) she and the Mystagogue fight a Creo or Muto Imaginem certamen to unconsciousness, or she plays the Great Play (+1); she gains Vulnerable Magic (+9) (p. 83). Glamour always brings that Flaw (p. 102).",
+            "requires": {
+              "Mystery Cult Lore: Merinita": 1
+            }
+          },
+          {
+            "name": "Vestals: Nature Lore (Lares Lore)",
+            "components": [
+              [
+                "Wheat gathered on the three days of Lemuralia",
+                1
+              ],
+              [
+                "Salt and sacred spring water prepared by the rites",
+                1
+              ],
+              [
+                "The cake baked on Vestalia and set on her hearth",
+                1
+              ],
+              [
+                "Her home cleansed on the Ides of June, the ashes in a river",
+                1
+              ],
+              [
+                "Minor Ordeal: a Vow of chastity",
+                3
+              ],
+              [
+                "The faeries covertly witness the oath",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 10,
+            "gains": "Nature Lore (Minor): Lares Lore 1",
+            "ordeal": "Vow: chastity (Minor)",
+            "who": "gifted",
+            "notes": "A ritual cake: wheat from the days of Lemuralia (+1), salt cut from brine and spring water carried untouched to the ground (+1), baked on Vestalia and set on her hearth (+1); her home cleansed on the Ides of June (+1); before the Mystagogue she swears to honour the faeries and takes a Vow of chastity (+3), which the faeries witness (+3) (p. 85). Lares Lore is Nature Lore for household faeries."
+          },
+          {
+            "name": "True Merinitae: Wilding",
+            "components": [
+              [
+                "Hosting a festival for Cybele, March 15th-27th",
+                1
+              ],
+              [
+                "Ritual castration on the Day of Blood",
+                6
+              ],
+              [
+                "Beneath a pine sacred to Cybele",
+                1
+              ],
+              [
+                "A bowl filled with his blood",
+                1
+              ],
+              [
+                "Major Ordeal: Short-Ranged Magic",
+                9
+              ],
+              [
+                "His Wizard's Sigil turns toward violets",
+                1
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 19,
+            "gains": "Wilding (Major)",
+            "ordeal": "Short-Ranged Magic (Major)",
+            "who": "gifted",
+            "notes": "A festival for Cybele (+1); on March 24th he is ritually castrated (+6) beneath a pine sacred to her (+1) and a bowl of his blood collected (+1); he gains Short-Ranged Magic (+9) and his Sigil turns toward violets (+1) (p. 106). Wilding needs Nature Lore."
+          }
+        ]
+      }
+    },
+    {
+      "id": "trad_bjornaer_mysteries",
+      "name": "House Bjornaer (Mystery Cult)",
+      "source": "HoH:MC; DE",
+      "realm": "Magic",
+      "description": "The Mystery Cult of House Bjornaer: the heartbeast awakened by the Ritual of Twelve Years, the House Mysteries Clan Ilfetu Initiates, the clans' own Mysteries, and the inner heartbeast a Great Beast ancestor teaches, refined afterwards by the magus alone.",
+      "abilities": [
+        "Mystery Cult Lore: Bjornaer"
+      ],
+      "favored": [],
+      "virtues": [
+        "vf_heartbeast"
+      ],
+      "hermetic": "",
+      "notes": "Every magus with the Heartbeast is a member; no one leaves the House once Initiated (Houses of Hermes: Mystery Cults p. 18). One who has ever bound a familiar, an Initiate of another House's Mystery, or one known to change shape without a spell is refused (pp. 17-18). Temperaments (pp. 19-21): sanguine birds, choleric active land animals, melancholic slow or docile ones, phlegmatic all that crawl or swim; sanguine opposes melancholic, choleric phlegmatic. Clan Ilfetu Initiates the House Mysteries; a Clan Mystery's Mystagogue needs Presence + the Lore 8 (p. 25). The Inner Heartbeast needs the Lore 5 and a Great Beast (Presence +2, Lore 8) as Mystagogue (pp. 28-30).",
+      "training": {
+        "gift": "required",
+        "minimums": {},
+        "notes": "The Ritual of Twelve Years awakens the heartbeast, best at the Gathering of Twelve Years, by a Mystagogue of Clan Ilfetu: Heartbeast and the Ability at 1 (pp. 17, 25-26)."
+      },
+      "advancement": {
+        "practice_arts": true,
+        "vis_study": false,
+        "notes": "Members advance as magi; House Bjornaer Lore is the cult's Lore (the Ability catalog's Mystery Cult Lore: Bjornaer)."
+      },
+      "initiation": {
+        "characteristic": "Presence",
+        "lore": "Mystery Cult Lore: Bjornaer",
+        "self_initiation": true,
+        "notes": "Houses of Hermes: Mystery Cults pp. 24-33; the Definitive Edition pp. 233-235 reprints the Heartbeast and Secret Name and wins where they differ. Only a Refinement is self-Initiated; the Great Beast stands in as the Inner Heartbeast's Mystagogue when none is named.",
+        "scripts": [
+          {
+            "name": "The Ritual of Twelve Years",
+            "components": [
+              [
+                "A place and time resonant with the House's ancestors",
+                3
+              ],
+              [
+                "The Initiate forever loses the ability to bind a familiar",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 6,
+            "gains": "Heartbeast (Minor), with the Heartbeast Ability 1",
+            "ordeal": "The ability to bind a familiar, forever (a Minor Ordeal for later Initiations, after character creation)",
+            "who": "gifted",
+            "notes": "At an ancestor site, best at the Gathering of Twelve Years; +1 for each witness (the Mystagogue included) sharing the probationer's temperament, -1 for each opposed, as the plan's other modifier. Never repeated: one who fails never enters the House (pp. 25-26)."
+          },
+          {
+            "name": "Secret Name",
+            "components": [
+              [
+                "On his birthday, a round tent set up on an ancestor site",
+                3
+              ],
+              [
+                "A ritual cleansing ending at the hour of his birth",
+                2
+              ],
+              [
+                "Minor Ordeal: a minor Weak Magic Resistance",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 8,
+            "gains": "Secret Name (Minor)",
+            "ordeal": "A minor version of Weak Magic Resistance (Minor Ordeal)",
+            "who": "",
+            "notes": "Fails with a talisman or a familiar; any with Magic Resistance may take it (DE p. 235; HoH:MC pp. 26-27)."
+          },
+          {
+            "name": "Theriomorphy",
+            "components": [
+              [
+                "A year as his heartbeast, a mundane animal without magic or Parma",
+                3
+              ],
+              [
+                "Minor Ordeal: Feral Scent or Disfigured (animal feature)",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 6,
+            "gains": "Theriomorphy (Minor)",
+            "ordeal": "Feral Scent or Disfigured (an animal feature) (Minor Ordeal)",
+            "who": "gifted",
+            "notes": "The year, then a ritual that taints the human form for ever (p. 27)."
+          },
+          {
+            "name": "Sensory Magic",
+            "components": [
+              [
+                "An ancestor site's deep pool no man has swum, at the dark of the moon",
+                3
+              ],
+              [
+                "An item in his heartbeast's shape, enchanted with the five senses, cast into it",
+                6
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 9,
+            "gains": "Sensory Magic (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "A major sacrifice of time and vis (p. 28)."
+          },
+          {
+            "name": "Clan Mystery: The Trial of (Name)",
+            "components": [
+              [
+                "A special place at a special time",
+                3
+              ],
+              [
+                "A rite of physical or mental mortification",
+                1
+              ],
+              [
+                "Minor Ordeal",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 7,
+            "gains": "A Clan Mystery (Minor)",
+            "ordeal": "A Minor Ordeal",
+            "who": "gifted",
+            "notes": "Each clan's own Script, by an elder of the clan with Presence + the Lore 8 (p. 25)."
+          },
+          {
+            "name": "Clan Mystery: The Trial of (Name), with a Major Ordeal",
+            "components": [
+              [
+                "A special place at a special time",
+                3
+              ],
+              [
+                "A rite of physical or mental mortification",
+                1
+              ],
+              [
+                "Major Ordeal",
+                9
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 13,
+            "gains": "A Clan Mystery (Minor)",
+            "ordeal": "A Major Ordeal",
+            "who": "gifted",
+            "notes": "The Trial with a Major Ordeal in place of the Minor (p. 25)."
+          },
+          {
+            "name": "Clan Mystery: The Deed of (Name)",
+            "components": [
+              [
+                "A quest that will satisfy his ancestors, discovered",
+                3
+              ],
+              [
+                "That quest completed",
+                3
+              ],
+              [
+                "A season composing a poem, lay or song of the deed",
+                1
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 7,
+            "gains": "A Clan Mystery (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "Each clan's own Script (p. 25)."
+          },
+          {
+            "name": "Clan Mystery: The Oath of (Name)",
+            "components": [
+              [
+                "A solemn oath pleasing the ancestors, as the Vow Flaw",
+                3
+              ],
+              [
+                "A year demonstrating her dedication to it",
+                1
+              ],
+              [
+                "The Mystagogue's season teaching the Virtue",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 7,
+            "gains": "A Clan Mystery (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "A minor breach loses the Virtue until amends are made; a major one loses it for ever (p. 25)."
+          },
+          {
+            "name": "The Mystery of the Inner Heartbeast",
+            "components": [
+              [
+                "Time spent discovering a suitable ancestor",
+                1
+              ],
+              [
+                "Quest: the Great Beast's trials (10 Adventure experience)",
+                3
+              ],
+              [
+                "Major Ordeal: a Hermetic or Supernatural Major Flaw",
+                9
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 13,
+            "gains": "The Mystery of the Epitome, the Chimera or the Anima (Major)",
+            "ordeal": "A Hermetic or Supernatural Major Flaw of the Great Beast's choosing (Major Ordeal)",
+            "who": "gifted",
+            "notes": "The Initiate needs the Lore 5. A season as the Great Beast (Presence +2, the Lore 8, knowing the Mystery) tears apart and remakes his ancestral spirit; a known shapechanger's Ordeal must be the loss of his Skinchanger or Shapeshifter (pp. 17, 28-30)."
+          },
+          {
+            "name": "Refinement: Changing Size",
+            "components": [
+              [
+                "A season at an ancestor site",
+                3
+              ],
+              [
+                "Vis eaten (a pawn per three points of the Ease Factor), a Warping Point",
+                1
+              ],
+              [
+                "The Virtue used only in the inner heartbeast's form",
+                3
+              ]
+            ],
+            "ease_factor": 18,
+            "bonus": 7,
+            "gains": "Changing Size for the inner heartbeast (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The embryonic Script, self-Initiated: Muto vis eaten; +3 more for a Chimera; add a component (with the storyguide's -5 to +5 sympathy) when it falls short; +3 Ease Factor for each earlier increase (pp. 32-33)."
+          },
+          {
+            "name": "Refinement: Increasing a Characteristic",
+            "components": [
+              [
+                "A season at an ancestor site",
+                3
+              ],
+              [
+                "Vis eaten (a pawn per three points of the Ease Factor), a Warping Point",
+                1
+              ],
+              [
+                "The Virtue used only in the inner heartbeast's form",
+                3
+              ]
+            ],
+            "ease_factor": 18,
+            "bonus": 7,
+            "gains": "Increasing a Characteristic for the inner heartbeast (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The embryonic Script, self-Initiated: Creo vis eaten; +3 more for an Epitome; add a component (with the storyguide's -5 to +5 sympathy) when it falls short; +3 Ease Factor for each earlier increase of it (pp. 32-33)."
+          },
+          {
+            "name": "Refinement: Acquiring a Quality",
+            "components": [
+              [
+                "A season at an ancestor site",
+                3
+              ],
+              [
+                "Vis eaten (a pawn per three points of the Ease Factor), a Warping Point",
+                1
+              ],
+              [
+                "The Virtue used only in the inner heartbeast's form",
+                3
+              ]
+            ],
+            "ease_factor": 15,
+            "bonus": 7,
+            "gains": "Acquiring a Quality for the inner heartbeast (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The embryonic Script, self-Initiated: Animal vis eaten; +3 more for a Chimera; add a component (with the storyguide's -5 to +5 sympathy) when it falls short (pp. 32-33)."
+          },
+          {
+            "name": "Refinement: Acquiring a Minor Virtue",
+            "components": [
+              [
+                "A season at an ancestor site",
+                3
+              ],
+              [
+                "Vis eaten (a pawn per three points of the Ease Factor), a Warping Point",
+                1
+              ],
+              [
+                "The Virtue used only in the inner heartbeast's form",
+                3
+              ]
+            ],
+            "ease_factor": 18,
+            "bonus": 7,
+            "gains": "Acquiring a Minor Virtue for the inner heartbeast (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The embryonic Script, self-Initiated: Vim vis eaten; +3 more for an Epitome; add a component (with the storyguide's -5 to +5 sympathy) when it falls short (pp. 32-33)."
+          },
+          {
+            "name": "Refinement: Acquiring a Major Virtue",
+            "components": [
+              [
+                "A season at an ancestor site",
+                3
+              ],
+              [
+                "Vis eaten (a pawn per three points of the Ease Factor), a Warping Point",
+                1
+              ],
+              [
+                "The Virtue used only in the inner heartbeast's form",
+                3
+              ]
+            ],
+            "ease_factor": 30,
+            "bonus": 7,
+            "gains": "Acquiring a Major Virtue for the inner heartbeast (Major)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The embryonic Script, self-Initiated: Vim vis eaten; +3 more for an Epitome; add a component (with the storyguide's -5 to +5 sympathy) when it falls short (pp. 32-33)."
+          },
+          {
+            "name": "Refinement: Acquiring a Minor Power",
+            "components": [
+              [
+                "A season at an ancestor site",
+                3
+              ],
+              [
+                "Vis eaten (a pawn per three points of the Ease Factor), a Warping Point",
+                1
+              ],
+              [
+                "The Virtue used only in the inner heartbeast's form",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 7,
+            "gains": "Acquiring a Minor Power for the inner heartbeast (Minor)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The embryonic Script, self-Initiated: the Power's Form vis eaten; +3 more for an Anima; add a component (with the storyguide's -5 to +5 sympathy) when it falls short; the Lab Total in its Arts must exceed its level (pp. 32-33)."
+          },
+          {
+            "name": "Refinement: Acquiring a Major Power",
+            "components": [
+              [
+                "A season at an ancestor site",
+                3
+              ],
+              [
+                "Vis eaten (a pawn per three points of the Ease Factor), a Warping Point",
+                1
+              ],
+              [
+                "The Virtue used only in the inner heartbeast's form",
+                3
+              ]
+            ],
+            "ease_factor": 30,
+            "bonus": 7,
+            "gains": "Acquiring a Major Power for the inner heartbeast (Major)",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The embryonic Script, self-Initiated: the Power's Form vis eaten; +3 more for an Anima; add a component (with the storyguide's -5 to +5 sympathy) when it falls short; the Lab Total in its Arts must exceed its level, and it is never constant (pp. 32-33)."
+          }
+        ]
+      }
     }
   ]
 }

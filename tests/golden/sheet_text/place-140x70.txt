@@ -13,6 +13,7 @@
 
   Aura:       Magic 5
   Next:       Level 2 opens, Summer 1220
+  Threshold:  Level 1: 21 points to cross into the Faerie Realm
   Regio:      2 levels
   Can see:    Level 1: no one yet; Level 2: no one yet
   Gazetteer:  Visited, locally
@@ -39,7 +40,6 @@
         Trigger         When                  Next         What happens
       ○ Level 2 opens   Summer each year      Summer 1220  The terraces can be reached
       ○ The white stag  Winter every 7 years  Winter 1225  It walks the Mist Wood: roll
-
 
 
 

@@ -35,6 +35,10 @@ def test_every_supplement_story_has_its_activities():
         "FAITH-1",
         "FAITH-2",
         "MOH",
+        # The Mysteries Revised Edition's Lesser Elixir.
+        "TMRE-1",
+        "TMRE-2",
+        "TMRE-5",
     }
     assert all(a.key in rules.ACTIVITIES for a in sup.ACTIVITIES)
     assert list(rules.ACTIVITIES)[-1] == rules.OTHER

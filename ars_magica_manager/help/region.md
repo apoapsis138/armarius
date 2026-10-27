@@ -1050,6 +1050,73 @@ existential (Faerie and Magic) or moral (Divine and Infernal); apparent
 
 **See also:** [A neighbour](help:neighbour)
 
+**Lies in.** A place, or a regio level, may lie in the Magic Realm or the
+Faerie Realm instead of the mundane world (Lies in, on the place's form and
+on each regio level's). Its aura then is the realm's own, whatever the Aura
+field says:
+
+- **The Magic Realm** (Realms of Power: Magic pp. 20-28): Magic 10
+  throughout, plus the realm boundary the place lies in (Boundary, 0-10):
+  a boundary of 4 makes the aura 14 for magic. The boundary is aligned with
+  a Form, kept in Alignment: that Form's effects add the boundary again
+  (Corpus 4: +18 to Corpus effects). Powers of other realms take no bonus
+  from it. Each roll the aura helps takes as many extra botch dice as the
+  boundary: casting botch dice and the laboratory's count them. Each season (aura / 10, rounded up) pawns of the boundary's
+  Form of vis appear there and fade if not taken (p. 22). No one gains
+  experience there: a season's experience comes as pawns of vis of one Art
+  instead (p. 20), and no one makes Aging rolls; Diameter, Sun and Moon last
+  to the season's end, Year as long as the target stays.
+  Travelling on through a boundary or vestige takes Magic Might, Second
+  Sight or Magic Sensitivity: stress die + Perception + an Ability + the
+  Form / 5 against (10 - its level) x 3, less the best Familiarity (knows
+  of it 1, seen it 3, visited it 6, an Arcane Connection 15, or Enigmatic
+  Wisdom, Magic Lore, Area Lore x 3). By how much it passes is the Speed
+  Level of the journey through the Twilight Void: 0 seven years and more, 9
+  a season, 15 a day, 24 two minutes, 30 a moment; each botch a step (3)
+  slower; below 0, stranded (p. 23). Straying from the path in the Void is
+  a Twilight Comprehension roll, Int + Enigmatic Wisdom + stress die
+  against Warping Score (or Might / 5) + stress die (p. 24). The vis
+  gathered there can transform a character without Might: 5 pawns a Minor
+  Virtue and Flaw, 10 a Minor Virtue, 15 a Major Virtue and Flaw, 30 a
+  Major Virtue, one change a season (p. 26).
+- **The Faerie Realm** (Realms of Power: Faerie p. 24): Faerie 10
+  throughout: Hermetic magic +5, with ten botch dice rolled apart (their
+  botches are strange rather than dangerous). An entrance to Faerieland
+  from a faerie regio is a regio level of aura 10 (p. 16): set its level
+  to lie in the Faerie Realm.
+
+**Threshold.** A place with a Faerie aura shows the Threshold's strength:
+the Threshold points needed to cross into the Faerie Realm from there,
+(13 - the aura's modifier on a Faerie power) x 3; Faerie 3 needs 30. A
+Faerie regio level adds the surface's Faerie aura to its own (any other
+surface aura doesn't count) (Realms of Power: Faerie p. 21). Points come
+from the border crossed (3, 6, 9 or 12, +3 if lost; a trod at least 9),
+the time (new moon 1, full moon or a pagan holiday 3, solstice 6, equinox
+9), the traveller (faerie Virtues 3, or 9 if Major; faerie Flaws 3; only
+the best of these; an extreme emotion 3 + its Trait; a life change 9 to
+18), a work of art about Faerie (its Aesthetic Quality), a faerie's Spirit
+Away, and the Arcadian Travel charm (pp. 21-23). A set of circumstances is
+tried once; changed, again at the next moonrise. The Guardian of the
+Threshold then offers the choice; Int + Faerie Lore against 6 gives hints
+(p. 24). Finding the action that opens a faerie regio's level, once its
+entrance is found, is Int + Faerie Lore against 15, or 3 when the story
+narrows it to a choice (p. 16).
+
+**Lunar aura** (with Dies Irae in play). Lunar is a fifth supernatural
+realm (Dies Irae p. 36): where the fallen lunar sphere's matter lies, a
+place (or a regio level, or a covenant's aura) may have a Lunar aura, its
+Realm set to Lunar. The realm is offered only while Dies Irae is in play.
+By the New Realm Interaction Table (p. 37) a Lunar aura gives Hermetic
+and Faerie powers -5 x the aura and Infernal ones -aura, and leaves
+Divine powers untouched; Lunar powers lose the aura in Magic, Faerie and
+Infernal auras and 3 x it in a Divine one. Casting Scores, Lab Totals
+and the rest take it like any other aura, with a botch die a point for
+the foreign aura. A season's clearing lowers it by 1, and the matter
+carried off makes 1 of Lunar aura wherever it is taken. Since the fall
+Diameter, Sun, Moon and Year Durations fail everywhere, and Parma Magica
+and the Aegis of the Hearth with them; each replacement duration is a
+Minor Breakthrough of 30 points (p. 37).
+
 ## Regio Levels
 <!-- help: section-nb-levels -->
 

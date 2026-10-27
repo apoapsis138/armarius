@@ -32,6 +32,7 @@ from .... import spells as spl
 from .... import theban_customs as byzantine
 from ....arts import ARTS
 from ....commands import Command
+from ....forms import acclaim as acclaim_forms
 from ....forms import agents as agent_forms
 from ....forms import apothecary as apothecary_forms
 from ....forms import beast as beast_forms
@@ -50,6 +51,10 @@ from ....forms import menu as menu_forms
 from ....forms import pilgrimage as pilgrimage_forms
 from ....forms import sin as sin_forms
 from ....forms import spell as spell_forms
+from ....forms import tmre_alchemy as tmre_alchemy_forms
+from ....forms import tmre_divination as tmre_divination_forms
+from ....forms import tmre_dreams as tmre_dream_forms
+from ....forms import tmre_spirits as tmre_spirit_forms
 from ....forms import turbulence as turbulence_forms
 from ....markup import escape
 from ....models import (
@@ -1644,3 +1649,65 @@ class CharacterActions(WorkspaceBase):
             "section-personality-traits",
             "section-reputations",
         )
+
+    # -- Hermetic spirit magic and theurgy (The Mysteries Revised Edition) --
+
+    def action_spirits_and_names(self) -> None:
+        """More's Spirits and Names: a working's totals and a roll of it;
+        nothing is kept."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(str(line) for line in end))
+
+        run_steps(self.app, tmre_spirit_forms.spirits_form(self.saga, character), done)
+
+    # -- Dream magic and Hermetic sacrifice (The Mysteries Revised Edition) --
+
+    def action_dream_working(self) -> None:
+        """More's Dream Working: a dream traveler's roll, kept in the Diary."""
+        self._byzantine_step(tmre_dream_forms.dream_form, "section-known-spells")
+
+    def action_hermetic_sacrifice(self) -> None:
+        """More's Hermetic Sacrifice: the vis a sacrifice stands in for, kept
+        in the Diary."""
+        self._byzantine_step(tmre_dream_forms.sacrifice_form, "section-known-spells")
+
+    # -- Divination and Hermetic astrology (The Mysteries Revised Edition) --
+
+    def action_tmre_divination(self) -> None:
+        """More's Divination: a divination rolled, kept in the Diary."""
+        self._byzantine_step(tmre_divination_forms.divination_form)
+
+    def action_tmre_astrology(self) -> None:
+        """More's Astrology: a horoscope or reckoning rolled, kept in the
+        Diary."""
+        self._byzantine_step(tmre_divination_forms.astrology_form)
+
+    # -- House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE) --
+
+    def action_house_acclaim(self) -> None:
+        """More's House Acclaim: an award or a roll, kept in the Diary."""
+        self._byzantine_step(acclaim_forms.acclaim_form, "section-reputations")
+
+    def action_reputation_roll(self) -> None:
+        """More's Reputation Roll: has someone heard of it, kept in the
+        Diary."""
+        self._byzantine_step(acclaim_forms.roll_form)
+
+    # -- Philosophic Alchemy's digestions (The Mysteries Revised Edition) --
+
+    def action_philosophic_alchemy(self) -> None:
+        """More's Philosophic Alchemy on This Season: a digestion settled
+        beside his other work, or abandoned; kept in the Diary."""
+        self._apothecary_step(tmre_alchemy_forms.digestion_form, "section-char-season")
+
+    # -- The Great Elixir's test (The Mysteries Revised Edition) --
+
+    def action_great_elixir(self) -> None:
+        """More's Test the Great Elixir on Aging & Warping: the potion
+        drunk and tested, kept in the Diary."""
+        self._apothecary_step(tmre_alchemy_forms.great_elixir_form, "section-aging")

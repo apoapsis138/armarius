@@ -18,6 +18,9 @@ from ars_magica_manager.rules.season_work import (
 
 #: The activities whose season does something beyond experience.
 WITH_OUTCOMES = {
+    # Hermetic Numerology and Architecture (The Mysteries Revised).
+    "invent_rotes",
+    "bind_mystical_structure",
     # The mystic's Spiritual Path quests (The Church p. 22).
     "path_service",
     "path_devotion",
@@ -56,6 +59,10 @@ WITH_OUTCOMES = {
     # Legends of Hermes: Hermetic Viresculture's Stirpes.
     "vitalize_stirps",
     "invigorate_stirps",
+    # The Mysteries Revised Edition: making an armillary sphere.
+    "make_armillary_sphere",
+    # The Mysteries Revised Edition: reinventing the Lesser Elixir.
+    "reinvent_lesser_elixir",
 }
 
 
@@ -65,7 +72,7 @@ def test_every_activity_is_registered_once() -> None:
     assert not doubled, f"registered more than once: {doubled}"
     assert set(keys) == set(REGISTRY) == set(BY_KEY)
     # with the scholars' two, personal devotion, and Viresculture's two
-    assert len(keys) == 51
+    assert len(keys) == 55
 
 
 def test_registering_a_key_twice_fails() -> None:

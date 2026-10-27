@@ -20,6 +20,9 @@ level, named by `KIND_KEYS`, the lookup the rest of the rules read:
   Trait (the Aura Effect Table, p. 15). Up to 5 such auras are safe to
   live in; above it those living there without a Magic power slowly warp.
   An Intellego Vim spell of level 4 discerns an alignment (p. 14).
+  No aura in the world passes 10 (DE p. 410), so a Magic aura above 10 is
+  the Magic Realm's own 10 and a realm boundary, which is aligned with a
+  Form the same way: only the boundary counts again (RoP: Magic p. 22).
 - **Faerie: its tints** (RoP: Faerie p. 104), "Drawn to Children +3;
   Light +2". Everyone in the aura takes each as a temporary Personality
   Trait, which cannot exceed the aura. Tinting is a ceremony (fading a
@@ -81,6 +84,10 @@ OTHER_ALIGNMENTS: dict[str, str] = {
 }
 #: The feelings the book gives as examples (any other Trait may be one).
 FEELINGS: tuple[str, ...] = ("Aggressive", "Carefree", "Communicative", "Respectful")
+
+#: The strongest aura in the world; above it, the Magic Realm's own aura
+#: and a boundary (rules.otherworlds).
+MOST_AURA = 10
 
 #: Above this an aligned aura warps those who live in it without a Magic
 #: power (p. 15).
@@ -149,12 +156,18 @@ def distracting_ease(aura: int) -> int:
     return DISTRACTING_EASE if aura >= DISTRACTING_FROM else 0
 
 
+def aligned_strength(aura: int) -> int:
+    """How much of an aligned Magic aura counts again: all of it, or in the
+    Magic Realm (above 10) only its boundary."""
+    return aura - MOST_AURA if aura > MOST_AURA else max(0, aura)
+
+
 def art_bonus(alignment: str, realm: str, aura: int, arts: tuple[str, ...]) -> int:
     """What an Art-aligned Magic aura adds again to a total using `arts`:
-    the aura's strength, when one of them is its Art."""
+    the aura's strength (aligned_strength), when one of them is its Art."""
     art = aligned_art(alignment) if realm == "Magic" else ""
     used = {a.casefold() for a in arts}
-    return max(0, aura) if art and art.casefold() in used else 0
+    return aligned_strength(aura) if art and art.casefold() in used else 0
 
 
 def aligned_lines(
@@ -202,7 +215,7 @@ def alignment_effects(alignment: str, aura: int) -> str:
     if kind == "art":
         art = aligned_art(alignment)
         text = (
-            f"aligned with {art}: +{max(0, aura)} more to Casting Scores of "
+            f"aligned with {art}: +{aligned_strength(aura)} more to Casting Scores of "
             f"spells using {art} and to {art} Lab Totals"
         )
         if art in FORMS:
@@ -223,7 +236,7 @@ def alignment_effects(alignment: str, aura: int) -> str:
             f"{trait} +{feeling_adjustment(aura)} while here (never an "
             "Essential Trait)"
         )
-    if aura > SAFE_ALIGNED:
+    if SAFE_ALIGNED < aura <= MOST_AURA:
         text += "; those living here without a Magic power slowly warp"
     return text
 

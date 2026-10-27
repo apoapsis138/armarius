@@ -242,6 +242,14 @@ class SeasonPlan:
     ordeal_kind: str = ""
     ordeal_lost_id: str | None = None
     ordeal_lost_params: dict[str, str] = field(default_factory=dict)
+    #: Undergoing an Initiation that always brings a Flaw with a condition
+    #: (Glamour's Vulnerable Magic): the condition, which must be new to
+    #: the magus ("" when not named).
+    ordeal_condition: str = ""
+    #: Undergoing the Ritual of Twelve Years: the Initiate has bound a
+    #: familiar at some time (one since dead or released, which the saga no
+    #: longer holds), so the Ritual fails.
+    familiar_ever_bound: bool = False
     #: Varying the Script this Initiation (rules.mysteries.VARY_EASE: "add",
     #: "change", "remove"; "" for none) and what the change does to its
     #: bonus.
@@ -287,6 +295,9 @@ class SeasonPlan:
     #: Undergoing an Initiation: the Script written out as its components
     #: (rules.mysteries; empty: the Script bonus alone is typed).
     script_components: list[ScriptPart] = field(default_factory=list)
+    #: Reinventing the Lesser Elixir: its new ingredient (`title`, its bonus
+    #: in `book_level`) is one the alchemist devised himself (TMRE p. 42).
+    devised: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:

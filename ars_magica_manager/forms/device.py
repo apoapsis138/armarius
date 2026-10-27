@@ -51,7 +51,7 @@ from ..models import (
     ShapeMaterialDef,
     new_instance_id,
 )
-from ..rules import enchantment, lab_items, verditius
+from ..rules import enchantment, lab_items, tmre_numerology, verditius
 from ..rules.powers import ITEM_VIRTUES
 from . import experimental_effects
 
@@ -316,6 +316,8 @@ def device_from_values(
         "verditius_item",
         "description",
         "granted_by",
+        # Arithmetic magic (The Mysteries Revised Edition).
+        "mystery_device",
     ):
         if key in values:
             setattr(copy, key, values[key])
@@ -589,7 +591,30 @@ def _device_bonus_fields(
             ),
         ),
         *_verditius_mystery_fields(base),
+        # Arithmetic magic (The Mysteries Revised Edition).
+        _arithmetic_device_field(base),
     ]
+
+
+def _arithmetic_device_field(base: EnchantedDevice) -> DialogField:
+    """A Numerologist's Book or a Hermetic Architecture component (The
+    Mysteries Revised Edition pp. 91-92, 97-98)."""
+    return DialogField(
+        "mystery_device",
+        "Arithmetic magic",
+        "select",
+        base.mystery_device,
+        options=[
+            ("(neither)", ""),
+            *((label, key) for key, label in tmre_numerology.MYSTERY_DEVICES.items()),
+        ],
+        show_if=_is_type(INVESTED),
+        hint=(
+            "A Numerologist's Book (lesser 8 pawns, +4; greater 16, +8; at most "
+            "Artes Liberales) adds to its maker's Rotes and architecture; a "
+            "component's Lab Totals add the book (TMRE pp. 91-98)."
+        ),
+    )
 
 
 def _verditius_invested(values: dict[str, Any]) -> bool:

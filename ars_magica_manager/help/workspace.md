@@ -348,7 +348,20 @@ already has the brother-knight's standing and Temporal Influence free.
 ### A Mythic Companion template
 <!-- help: mythic-companion-templates -->
 
-A Mythic Companion's Template list has one template for each kind of Mythic Companion the books in play describe, marked with its book: the Definitive Edition's Devil Child, Faerie Doctor, Nephilim and Spirit Votary (Chapter 3, pages 56 to 58), Realms of Power: The Divine's Zahid, Perfectus and Kabbalist, Realms of Power: The Infernal's Diabolist and Summoner, Houses of Hermes: True Lineages' Blood of Heroes, and Art & Academe's Maestro.
+A Mythic Companion's Template list has one template for each kind of Mythic Companion the books in play describe, marked with its book: the Definitive Edition's Devil Child, Faerie Doctor, Nephilim and Spirit Votary (Chapter 3, pages 56 to 58), Realms of Power: The Divine's Zahid, Perfectus and Kabbalist, Realms of Power: The Infernal's Diabolist and Summoner, Houses of Hermes: True Lineages' Blood of Heroes, and Art & Academe's Maestro, and Against the Dark's Dragon-born and Varcolac.
+
+**Dragon-born** (Against the Dark p. 108). A zmaj's human child, one of
+the Magic Kin (Realms of Power: Magic p. 89): Greater Immunity (fire), a
+Personal Power mirroring one of the dragon father's (Lungs of the Fish,
+Hands of the Fiery Beast, or one of your own), Self-Confident, and the
+Common Flaw, greed for gold (Avaricious) or for women (Lecherous). Second
+Sight sees a snake's pupils and a sheen of scales.
+
+**Varcolac** (Against the Dark p. 122). A man who takes a wolf's shape:
+born to it (Shapeshifter), born to it and a Lycanthrope, taught
+(Skinchanger), or a kudlak, a nightwalker of the kudlaki (Nightwalker,
+Versatile Phantasticum). Good or evil, he becomes a bestial vampire when
+he dies.
 
 **The template gives:** the Mythic Companion Virtue and every Virtue and Flaw the book says that kind must take, such as a Faerie Doctor's Dowsing, Curse-Throwing and Wise One.
 

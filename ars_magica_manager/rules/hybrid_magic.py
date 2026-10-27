@@ -15,6 +15,8 @@ Hermetic formulas ask this module what changes:
 - Faerie Magic (House Merinita's Virtue, or its Ability): attuned to
   Magic and Faerie auras, so the full aura adds in both, neither gives
   Warping, and neither adds botch dice (DE p. 236).
+- Ars Notoria takes 3 a point off a Divine aura's penalty, after any
+  Susceptibility doubles it (RoP:D p. 100; rules.learned_magic).
 
 `attuned` says which realms' auras a character is at home in: the realms
 their supernatural powers come from. Nobody gains Warping from living in
@@ -48,7 +50,7 @@ from functools import cache
 from .. import catalog
 from ..models import Book, Character, Saga
 from . import creation_access as access
-from . import realm_insight, realms, scores
+from . import learned_magic, realm_insight, realms, scores
 from .rounding import round_down
 
 FAERIE = "Faerie"
@@ -294,22 +296,27 @@ def theory(magus: Character) -> tuple[str, int]:
     return "Magic Theory", ability(magus, "Magic Theory")
 
 
-def aura_modifier(magus: Character, aura_realm: str, aura: int) -> tuple[int, str]:
+def aura_modifier(
+    magus: Character, aura_realm: str, aura: int, *, casting: bool = False
+) -> tuple[int, str]:
     """What an aura adds to his Hermetic magic, and the style that changes
     it ("" when none does). With several, the best applies. Under True
     Understanding of the Realms a penalty is worked from the aura less his
     Lore of its realm; a bonus keeps the whole aura (Legends of Hermes p.
-    15)."""
-    best, why = _aura_modifier(magus, aura_realm, aura)
+    15). Ars Notoria eases a Divine aura's penalty only on `casting` (RoP:
+    The Divine p. 100), not on Lab Totals or Penetration."""
+    best, why = _aura_modifier(magus, aura_realm, aura, casting=casting)
     lessened = realm_insight.effective_aura(magus, aura_realm, aura)
     if best < 0 and lessened < aura:
-        found, _ = _aura_modifier(magus, aura_realm, lessened)
+        found, _ = _aura_modifier(magus, aura_realm, lessened, casting=casting)
         if found > best:
             best, why = found, "True Understanding of the Realms"
     return best, why
 
 
-def _aura_modifier(magus: Character, aura_realm: str, aura: int) -> tuple[int, str]:
+def _aura_modifier(
+    magus: Character, aura_realm: str, aura: int, *, casting: bool = False
+) -> tuple[int, str]:
     best = realms.aura_modifier(realms.HERMETIC, aura_realm, aura)
     why = ""
     for style in styles(magus):
@@ -320,6 +327,13 @@ def _aura_modifier(magus: Character, aura_realm: str, aura: int) -> tuple[int, s
                     best, why = amount, style.name
     if aura_realm == DIVINE and best < 0 and divine_susceptible(magus):
         best, why = 2 * best, "Susceptibility to Divine Power"
+    if casting and aura_realm == DIVINE and best < 0:
+        # Ars Notoria takes 3 a point off the penalty on casting other
+        # magic in a Divine aura (RoP: The Divine p. 100).
+        relieved = learned_magic.divine_aura_relief(magus, best)
+        if relieved > best:
+            why = f"{why}, Ars Notoria" if why else "Ars Notoria"
+            best = relieved
     return best, why
 
 
@@ -333,13 +347,19 @@ def divine_susceptible(magus: Character) -> bool:
 
 
 def aura_label(
-    magus: Character, aura_realm: str, aura: int, *, ritual: bool = False
+    magus: Character,
+    aura_realm: str,
+    aura: int,
+    *,
+    ritual: bool = False,
+    casting: bool = False,
 ) -> tuple[str, int]:
     """The aura line of a Casting Score or Lab Total: its label and amount.
     A Ritual of a magus who works Hermetic rites may count the aura from the
     Faerie column instead of the Magic one, when that is better (RoP:
-    Faerie p. 121)."""
-    amount, why = aura_modifier(magus, aura_realm, aura)
+    Faerie p. 121). `casting` marks a Casting Score, the only total Ars
+    Notoria eases (RoP: The Divine p. 100)."""
+    amount, why = aura_modifier(magus, aura_realm, aura, casting=casting)
     if ritual and RITES in styles(magus):
         faerie = realms.aura_modifier(FAERIE, aura_realm, aura)
         if faerie > amount:

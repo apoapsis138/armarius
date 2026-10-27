@@ -323,13 +323,16 @@ def botch_conditions(
 ) -> tuple[int, int]:
     """The aura and Safety a lab roll's botch dice count: those of `lab`,
     else of the character's own laboratory; with none, the covenant's aura
-    and Safety 0."""
+    and Safety 0. In the Magic Realm the aura counted takes the
+    boundary's level on top, as a boundary adds that many botch dice to
+    every roll the Magic aura helps (RoP: Magic p. 22)."""
     lab = lab or saga.laboratory(character.assigned_lab_id)
     if lab is None:
         aura, _ = realms.home_aura(saga, character)
-        return aura, 0
+        return aura + sites.character_boundary_botch_dice(saga, character), 0
     aura, _ = lab_aura(saga, lab)
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    aura += sites.lab_boundary_botch_dice(saga, lab)
     return aura, lab_safety(lab, by_id, saga)
 
 
@@ -621,6 +624,29 @@ def vis_limit(magus: Character) -> int:
     """The most raw vis a magus can use in one season's project: twice
     Magic Theory (Holy Magic for a holy magus)."""
     return 2 * hybrid.theory(magus)[1]
+
+
+#: Where a Longevity Ritual's vis is limited when it is performed from its
+#: Lab Text (a rebrew), and when it is designed in a season.
+RITUAL_VIS_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Longevity Rituals, "
+    "p. 261; The Mysteries Revised Edition, Longevity Ritual Vis Limits, p. 42"
+)
+
+
+def ritual_vis_problem(magus: Character, art: str, pawns: int) -> str:
+    """Why `pawns` of `art` vis is more than the magus can use performing a
+    Longevity Ritual from its Lab Text: as for casting a ritual spell, each
+    Art's vis at most his score in that Art (DE p. 261; TMRE p. 42). ""
+    when it isn't."""
+    score = art_score(magus, art)[0]
+    if pawns <= score:
+        return ""
+    return (
+        f"The ritual takes {pawns} pawns of {art} vis; performed from its Lab "
+        f"Text, {magus.name} can use at most his {art} score ({score}) of it, "
+        f"as for a ritual spell ({RITUAL_VIS_SOURCE})."
+    )
 
 
 def shape_material_cap(magus: Character) -> int:

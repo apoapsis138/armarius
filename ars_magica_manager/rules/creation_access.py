@@ -381,11 +381,23 @@ def opened_types(character: Character, *, apprenticed: bool = False) -> set[str]
     return types
 
 
+#: Virtues granting a Supernatural Ability of another name: Divination &
+#: Augury and Hermetic Dream Interpreter give Divination (The Mysteries
+#: Revised Edition pp. 59, 62).
+GRANTS_SUPERNATURAL: dict[str, tuple[str, ...]] = {
+    "vf_divination_and_augury": ("Divination",),
+    "vf_hermetic_dream_interpreter": ("Divination",),
+}
+
+
 def granted_supernatural(character: Character) -> set[str]:
     """The Supernatural Abilities the character's Virtues grant: a Virtue
-    named for the Ability (Second Sight grants Second Sight)."""
+    named for the Ability (Second Sight grants Second Sight), or one
+    GRANTS_SUPERNATURAL names."""
     by_id = catalog.load_virtue_flaw_catalog_by_id()
-    names = {by_id[vf_id].name for vf_id in _ids(character) if vf_id in by_id}
+    ids = _ids(character)
+    names = {by_id[vf_id].name for vf_id in ids if vf_id in by_id}
+    names |= {name for vf_id in ids for name in GRANTS_SUPERNATURAL.get(vf_id, ())}
     return {
         entry.name
         for entry in catalog.load_ability_catalog()

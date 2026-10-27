@@ -20,8 +20,11 @@ One-season lab work:
 - A Longevity Ritual: the Creo Corpus Lab Total (+1 per extra pawn, halved
   for a subject with Difficult Longevity Ritual) / 5 is the aging-roll
   modifier (/ 10 for a mundane subject); 30+ to make one for someone else;
-  vis = the subject's age / 5 (Creo, Corpus or Vim), within the vis limit.
-  The subject spends the season with the magus.
+  vis = the subject's age / 5 (Creo, Corpus or Vim), within the vis limit
+  (twice Magic Theory designing it, TMRE p. 42). The subject spends the
+  season with the magus. Performed again from its Lab Text, its vis is at
+  most the magus's score in its Art, as for a ritual spell (DE p. 261;
+  TMRE p. 42).
 """
 
 from __future__ import annotations
@@ -38,6 +41,7 @@ from ..models import (
     BondPower,
     Book,
     Character,
+    Digestion,
     EnchantedDevice,
     ExperimentalEffect,
     Familiar,
@@ -50,6 +54,7 @@ from ..models import (
 )
 from . import (
     aging,
+    bjornaer,
     book_seasons,
     breakthroughs_moh,
     common_magics,
@@ -65,6 +70,7 @@ from . import (
     spell_levels,
     spell_teaching,
     supplement_work,
+    tmre_alchemy,
     turbulence,
     verditius,
     warping,
@@ -433,7 +439,15 @@ def work(
     saga: Saga, magus: Character, plan: SeasonPlan
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a lab plan, or what it does."""
+    beside = _digestion_problems(saga, magus, plan)
+    if beside:
+        return beside, None
     found, made = _work(saga, magus, plan)
+    if made is not None and plan.experimenting and _tends_digestion(magus, plan):
+        made.notes.append(
+            "Experimenting while the extraction digests spoils it "
+            f"({tmre_alchemy.PHILOSOPHIC_SOURCE})."
+        )
     if made is not None and made.vis_cost:
         why = _waste(saga, magus, plan, made) or _over_limit(magus, made)
         if why:
@@ -649,7 +663,15 @@ def _spell_work(
 
 def _mystery_needed(magus: Character, spell: Spell) -> str:
     """Why the magus can't learn a spell with a Mystery's own parameter
-    (Faerie Magic, Spell Timing, Sensory Magic) he lacks; "" when he can."""
+    (Faerie Magic, Spell Timing, Sensory Magic) he lacks, or a Dream Target
+    spell with no Mentem in its Form or requisites (TMRE p. 104); "" when
+    he can."""
+    if spell.target == "Dream" and (
+        why := spell_levels.dream_target_problem(
+            spell.technique, spell.form, spell.requisites
+        )
+    ):
+        return f"{magus.name} can't learn {spell.name}: {why}"
     needed = spell_levels.virtue_needed(
         spell_levels.opening_ids(
             {vf.vf_id for vf in magus.virtues_flaws},
@@ -1041,7 +1063,7 @@ def _one_season_work(
     if pawns > limit:
         return [
             f"The ritual takes {pawns} pawns of vis; {magus.name} can handle "
-            f"{limit} in a season (twice Magic Theory)."
+            f"{limit} in a season designing it (twice Magic Theory; TMRE p. 42)."
         ], None
     held = pool.get(plan.vis_art.lower(), 0)
     if held < pawns:
@@ -1093,7 +1115,9 @@ def ritual_again(
 ) -> tuple[list[str], RitualAgain | None]:
     """Performing a Longevity Ritual again from its Lab Text: no season,
     only the vis (the subject's age / 5 pawns, and the extra vis it was
-    first made with, which must be spent every time). It is the same
+    first made with, which must be spent every time), no more of its Art
+    than the magus's score in it, as for a ritual spell (DE p. 261; TMRE
+    p. 42). It is the same
     ritual, for the same subject, at the Lab Total it was made with (the
     text's level)."""
     if text.type != "Lab Text" or text.text_kind != TEXT_LONGEVITY:
@@ -1122,12 +1146,10 @@ def ritual_again(
     pawns = longevity_vis(aging.effective_age(subject, age)) + max(
         0, text.ritual_extra_vis
     )
-    limit = lab.vis_limit(magus)
-    if pawns > limit:
-        return [
-            f"The ritual takes {pawns} pawns of vis; {magus.name} can handle "
-            f"{limit} at once (twice Magic Theory)."
-        ], None
+    # Performed from its Lab Text: each Art's vis at most that Art's score.
+    over = lab.ritual_vis_problem(magus, vis_art, pawns)
+    if over:
+        return [over], None
     plan = SeasonPlan(
         magus.id,
         saga.current_year,
@@ -1487,6 +1509,16 @@ def _with_options(
     )
     extra += alchemy
     notes += why
+    # House Bjornaer's Sensory Magic adds Heartbeast inventing its spells.
+    if plan.activity == INVENT:
+        sensory = bjornaer.sensory_line(
+            magus, plan.design or (the_spell(saga, plan) if saga is not None else None)
+        )
+        if sensory is not None:
+            extra.append(sensory)
+    # Philosophic Alchemy: tending a digestion distracts the other work.
+    if _tends_digestion(magus, plan):
+        extra.append(tmre_alchemy.tending_line(plan.days_away))
     halvings = lab_virtues.halving_lines(magus, plan, _design_range(saga, plan))
     return lab.with_lines(total, extra, halvings, notes)
 
@@ -1570,3 +1602,68 @@ def seasons_left(work_: LabWork) -> int:
         return 0
     remaining = work_.level - work_.points_after
     return round_up(remaining / work_.points_gained)
+
+
+# -- Philosophic Alchemy: a digestion beside the season's lab work -------------
+
+
+def _tends_digestion(magus: Character, plan: SeasonPlan) -> bool:
+    """Whether the plan's lab work runs beside a digestion of the magus's
+    (a vis extraction can't: one extraction at a time)."""
+    return plan.activity != EXTRACT and (
+        tmre_alchemy.digestion_in(magus, plan.season, plan.year) is not None
+    )
+
+
+def _digestion_problems(saga: Saga, magus: Character, plan: SeasonPlan) -> list[str]:
+    """What a digestion running this season forbids: another vis
+    extraction, a second laboratory, and lab work its seven days and the
+    days away leave no time for."""
+    digestion = tmre_alchemy.digestion_in(magus, plan.season, plan.year)
+    if digestion is None or plan.activity == LONGEVITY_SUBJECT:
+        return []
+    if plan.activity == EXTRACT:
+        return [
+            f"{magus.name} has a digestion running: no other vis extraction this "
+            f"season ({tmre_alchemy.PHILOSOPHIC_SOURCE})."
+        ]
+    if plan.lab_id and digestion.lab_id and plan.lab_id != digestion.lab_id:
+        there = saga.laboratory(digestion.lab_id)
+        return [
+            f"The digestion is in {there.name if there else 'another laboratory'}: "
+            "a magus can't keep two laboratories at once "
+            f"({tmre_alchemy.PHILOSOPHIC_SOURCE})."
+        ]
+    why = tmre_alchemy.tending_problem(plan.days_away)
+    return [why] if why else []
+
+
+def digestion_season(
+    saga: Saga,
+    magus: Character,
+    digestion: Digestion,
+    season: str,
+    year: int,
+    days_away: int,
+) -> tuple[list[str], LabWork | None]:
+    """A season of a digestion of the magus's: its alchemical Creo Vim Lab
+    Total (the Form as a requisite for a Form's vis), less its days away,
+    worked out as a vis extraction in its laboratory's Magic aura -- spaces
+    are always Creo Vim (TMRE p. 41)."""
+    plan = SeasonPlan(
+        magus.id,
+        year,
+        season,
+        EXTRACT,
+        lab_id=digestion.lab_id,
+        days_away=max(0, days_away),
+        extract_form=""
+        if digestion.product == tmre_alchemy.DIGEST_SPACES
+        else digestion.form,
+        shape_bonus=digestion.shape_bonus,
+        vis_from=digestion.vis_from,
+    )
+    lab_ = laboratory(saga, magus, plan)
+    if lab_ is None:
+        return ["The digestion's laboratory is gone."], None
+    return _one_season_work(saga, magus, plan, lab_)

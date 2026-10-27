@@ -175,10 +175,14 @@ def computed_capacity(saga: Saga, device: EnchantedDevice) -> int | None:
 
 
 def capacity(saga: Saga, device: EnchantedDevice) -> int | None:
-    """The capacity in pawns: the override if set, else worked out."""
+    """The capacity in pawns: the override if set, else worked out, and
+    any extra room a Philosophic Alchemy digestion opened on top of it
+    (TMRE p. 41)."""
     if device.capacity_override is not None:
-        return device.capacity_override
-    return computed_capacity(saga, device)
+        base: int | None = device.capacity_override
+    else:
+        base = computed_capacity(saga, device)
+    return None if base is None else base + max(0, device.extra_spaces)
 
 
 def is_opened(saga: Saga, device: EnchantedDevice) -> bool:

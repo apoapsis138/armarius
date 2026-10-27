@@ -91,6 +91,7 @@ from ..rules import covenfolk, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
 from ..sections import LAB_TEXTS_SECTION
+from . import acclaim as acclaim_forms
 from . import apothecary as apothecary_forms
 from . import beast as beast_forms
 from . import careers
@@ -110,6 +111,10 @@ from . import library as library_forms
 from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
 from . import sin as sin_forms
+from . import tmre_alchemy as tmre_alchemy_forms
+from . import tmre_divination as tmre_divination_forms
+from . import tmre_dreams as tmre_dream_forms
+from . import tmre_spirits as tmre_spirit_forms
 from . import tribunal as tribunal_forms
 from . import turbulence as turbulence_forms
 
@@ -364,6 +369,10 @@ _PAGE_CHECKS: dict[str, Callable[[Page], bool]] = {
     "improve": lambda page: bool(
         page.covenant is not None and page.covenant.economics.income_sources
     ),
+    # Philosophic Alchemy's digestions.
+    "philosophic_alchemy": lambda page: available(
+        "philosophic_alchemy", replace(page, section="section-char-season")
+    ),
 }
 
 
@@ -574,6 +583,21 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "commanding_aura": ((NodeKind.CHARACTER, "Health"),),
     # House Verditius's Hubris beside the Personality Traits' buttons.
     "verditius_hubris": ((NodeKind.CHARACTER, "Personality Traits"),),
+    # Hermetic spirit magic and theurgy beside Known Spells' buttons.
+    "spirits_and_names": ((NodeKind.CHARACTER, "Known Spells"),),
+    # Dream magic and Hermetic sacrifice beside Known Spells' buttons.
+    "dream_working": ((NodeKind.CHARACTER, "Known Spells"),),
+    "hermetic_sacrifice": ((NodeKind.CHARACTER, "Known Spells"),),
+    # Divination and Hermetic astrology beside the Abilities' buttons.
+    "tmre_divination": ((NodeKind.CHARACTER, "Abilities"),),
+    "tmre_astrology": ((NodeKind.CHARACTER, "Abilities"),),
+    # House Acclaim and Reputation rolls beside the Reputations' buttons.
+    "house_acclaim": ((NodeKind.CHARACTER, "Reputations"),),
+    "reputation_roll": ((NodeKind.CHARACTER, "Reputations"),),
+    # Philosophic Alchemy's digestions.
+    "philosophic_alchemy": ((NodeKind.CHARACTER, "This Season"),),
+    # The Great Elixir's test.
+    "great_elixir": ((NodeKind.CHARACTER, "Aging"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -1647,4 +1671,19 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "commanding_aura": _needs(_character, mystic_forms.commanding_aura_form),
     # House Verditius's Hubris and vendettas.
     "verditius_hubris": _needs(_character, hubris_forms.hubris_form),
+    # Hermetic spirit magic and theurgy (The Mysteries Revised Edition).
+    "spirits_and_names": _needs(_character, tmre_spirit_forms.spirits_form),
+    # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
+    "dream_working": _needs(_character, tmre_dream_forms.dream_form),
+    "hermetic_sacrifice": _needs(_character, tmre_dream_forms.sacrifice_form),
+    # Divination and Hermetic astrology (The Mysteries Revised Edition).
+    "tmre_divination": _needs(_character, tmre_divination_forms.divination_form),
+    "tmre_astrology": _needs(_character, tmre_divination_forms.astrology_form),
+    # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
+    "house_acclaim": _needs(_character, acclaim_forms.acclaim_form),
+    "reputation_roll": _needs(_character, acclaim_forms.roll_form),
+    # Philosophic Alchemy's digestions.
+    "philosophic_alchemy": _needs(_character, tmre_alchemy_forms.digestion_form),
+    # The Great Elixir's test.
+    "great_elixir": _needs(_character, tmre_alchemy_forms.great_elixir_form),
 }

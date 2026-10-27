@@ -337,7 +337,9 @@
         }
       ],
       "notes": "The House's free Virtue is chosen on the worksheet."
-    },
+    },
+
+
     {
       "id": "ct_mc_devil_child",
       "name": "Devil Child",
@@ -6189,6 +6191,192 @@
       ],
       "more_virtues": 0,
       "more_flaws": 0
+    },
+    {
+      "id": "ct_dragon_born",
+      "name": "Dragon-born",
+      "type": "companion",
+      "kind": "quick",
+      "book": "AtD",
+      "page": 108,
+      "concept": "A zmaj's human child, one of the Magic Kin: Greater Immunity to fire, a Personal Power like one of the dragon father's, Self-Confident, and a greed for gold or women.",
+      "variant_label": "The father's power",
+      "variants": [
+        {
+          "name": "Lungs of the Fish",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_greater_immunity",
+              "params": {
+                "hazard": "fire"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_personal_power",
+              "params": {
+                "power": "lungs of the fish"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_self_confident"
+            },
+            {
+              "kind": "one_of",
+              "label": "Common Flaw: greed for gold or women",
+              "vf_ids": [
+                "vf_avaricious",
+                "vf_lecherous"
+              ],
+              "hint": "The book's Greedy (women or gold): Avaricious for gold, Lecherous for women."
+            }
+          ]
+        },
+        {
+          "name": "Hands of the Fiery Beast",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_greater_immunity",
+              "params": {
+                "hazard": "fire"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_personal_power",
+              "params": {
+                "power": "hands of the fiery beast"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_self_confident"
+            },
+            {
+              "kind": "one_of",
+              "label": "Common Flaw: greed for gold or women",
+              "vf_ids": [
+                "vf_avaricious",
+                "vf_lecherous"
+              ],
+              "hint": "The book's Greedy (women or gold): Avaricious for gold, Lecherous for women."
+            }
+          ]
+        },
+        {
+          "name": "Another of the father's powers",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_greater_immunity",
+              "params": {
+                "hazard": "fire"
+              }
+            },
+            {
+              "kind": "text",
+              "label": "Personal Power",
+              "param": "power",
+              "vf_ids": [
+                "vf_personal_power"
+              ],
+              "hint": "Mirrors a power of the dragon father's, designed as Realms of Power: Magic p. 41 says."
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_self_confident"
+            },
+            {
+              "kind": "one_of",
+              "label": "Common Flaw: greed for gold or women",
+              "vf_ids": [
+                "vf_avaricious",
+                "vf_lecherous"
+              ],
+              "hint": "The book's Greedy (women or gold): Avaricious for gold, Lecherous for women."
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 6,
+      "notes": "Dragon-born look like anyone else; Second Sight sees snake's pupils and a sheen of scales on the skin. Peasants think well of them, and some of the Tribunal's great dragon slayers were dragon-born; the zmaj feels little for the child, usually sent back to the mother's kin. Lungs of the Fish (Per, Moon, Part; level 20): born of a dragon living under a lake, he breathes water for a Fatigue level. Hands of the Fiery Beast (Per, Conc, Part; level 15, Penetration 10): for a Fatigue level his hands glow like molten iron, setting alight what they hold and burning whom they touch. Put the power on the Powers section.",
+      "fixes": [
+        "The book's Common Flaw is Greedy (women or gold); the Definitive Edition's Greedy is for food and drink (p. 132), so greed for gold is offered as Avaricious and for women as Lecherous.",
+        "The book gives no Arts for its two example powers."
+      ]
+    },
+    {
+      "id": "ct_varcolac",
+      "name": "Varcolac",
+      "type": "companion",
+      "kind": "quick",
+      "book": "AtD",
+      "page": 122,
+      "concept": "A living man who takes a wolf's shape, a vampire of a sort to his neighbours: born a werewolf (Shapeshifter), or taught (Skinchanger); some are Lycanthropes, and the mischievous kudlaci are nightwalkers.",
+      "variant_label": "How he changes",
+      "variants": [
+        {
+          "name": "Born a varcolac (Shapeshifter)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_shapeshifter"
+            }
+          ]
+        },
+        {
+          "name": "Born a varcolac, and a Lycanthrope",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_shapeshifter"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_lycanthrope"
+            }
+          ]
+        },
+        {
+          "name": "Learned to change (Skinchanger)",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_skinchanger"
+            }
+          ]
+        },
+        {
+          "name": "A kudlak, a nightwalker who makes mischief",
+          "slots": [
+            {
+              "kind": "fixed",
+              "vf_id": "vf_nightwalker_tradition",
+              "params": {
+                "tradition": "kudlaki"
+              }
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_nightwalker"
+            },
+            {
+              "kind": "fixed",
+              "vf_id": "vf_versatile_phantasticum"
+            }
+          ]
+        }
+      ],
+      "more_virtues": 3,
+      "more_flaws": 5,
+      "notes": "Called varcolaci by the Romanians, vukodlaci or kudlaci by the Slavs. A child born with a blood-red or black caul, feet first or with teeth becomes one, or a man may become one by magic. Most take a wolf's shape, some a hen's, a horse's, a cow's, a dog's or a cat's. Not all are evil: some form wolf brotherhoods that guard their villages and hunt vampires, while others attack cattle, milk mares and sheep dry and strangle horses; the kudlaci among them are fought in phantasm form by the kresnici. An eclipse is their time of power. Good or evil, a varcolac becomes a bestial vampire when he dies. House Bjornaer distrusts such brotherhoods.",
+      "fixes": [
+        "A kudlak is taken as the kudlaki nightwalker tradition of Hedge Magic Revised Edition (Chapter 6), with the Versatile Phantasticum that tradition requires."
+      ]
     }
   ]
 }

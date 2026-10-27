@@ -25,7 +25,6 @@ from ..models import (
     BOON_HOOK_RESOURCE,
     INCOME_TYPE_DEFAULTS,
     INCOME_TYPES,
-    REALMS,
     SEASONS,
     Covenant,
     CovenantBoonHookDef,
@@ -35,7 +34,7 @@ from ..models import (
     boon_hook_params,
     new_instance_id,
 )
-from ..rules import sites
+from ..rules import realms, sites
 from .possession import contested_fields
 from .tribunal import package_fields, save_package_fields, tribunal_field
 from .virtue import param_choices, param_fields, params_from
@@ -82,7 +81,7 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             "Aura Realm",
             "select",
             cov.aura_realm,
-            options=pairs(REALMS),
+            options=pairs(realms.aura_realms(saga, cov.aura_realm)),
             hint="Hermetic magic gains the full aura only in a Magic aura.",
         ),
         places.where_field(saga, cov, "Place", _PLACE_HINT),

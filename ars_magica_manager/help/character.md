@@ -392,6 +392,9 @@ it gathers the experience to rise you may lower the old one by a point
 instead (ticked by default). An old Reputation lowered to 0 is gone. The
 Reputations list marks a new one "replacing" the old.
 
+More offers **House Acclaim** to magi of Bonisagus and Flambeau, and
+**Reputation Roll** to anyone with a Reputation.
+
 ### Aging & Warping
 <!-- help: section-aging -->
 
@@ -422,6 +425,13 @@ every second year comes in even years. A botched Twilight comprehension
 adds a step on the time table for each zero, and the steps can reach the
 table's row 10, Final Twilight: a magus at Warping 8 who botches with two
 zeros is lost (DE p. 228).
+
+A magus with the Lesser Elixir in force shows "Lesser Elixir: -N more":
+its Level, taken off his aging rolls with the Longevity Ritual's modifier
+(The Mysteries Revised Edition p. 42; see Reinvent the Lesser Elixir).
+A magus the Great Elixir made a being of Magic shows "A being of Magic":
+he makes no more aging rolls and gains no Warping, and his Magic Might
+shows beside his Size (p. 44; see [Test the Great Elixir](help:great-elixir)).
 
 **What gave them** says where the points came from. One event (a
 powerful effect, a botch) is the usual; **Taken leaving Faerie** asks for
@@ -874,6 +884,137 @@ made without its formula; stronger ones are theriacs (below).
 Magic can help: a Ritual Creo spell adds 1 Labor Point for each variety
 it creates; a Rego Craft spell prepares a week's ingredients at
 Intelligence + Finesse against the Ease Factor + 6.
+
+## Philosophic Alchemy
+<!-- help: philosophic-alchemy -->
+
+A magus with Philosophic Alchemy (The Mysteries Revised Edition pp.
+40-41; it builds on Hermetic Alchemy) settles an alchemical vis
+extraction to digest by itself while he does other work. More's
+**Philosophic Alchemy** on This Season settles one, starting this
+season:
+
+- **It makes**: Vim vis, a Form's vis (Hermetic Alchemy's twentieth of
+  the Lab Total, a tenth with that Form's Extractor Virtue), or **open
+  spaces in a device**: an invested device on his or his laboratory's
+  Inventory, not yet opened.
+- **Vessel's Shape and Material bonus**: what the object the vis settles
+  in gives, up to his Magic Theory (Hermetic Alchemy, pp. 39-40).
+- **The pawns go to**: his own raw vis, his laboratory's or his
+  covenant's stores.
+- **The spaces count as** (for open spaces): **pawns already opened**,
+  so opening the device costs that many pawns fewer, or **extra room on
+  top of its capacity**, so the device holds that many spaces more,
+  already open, and opening the rest costs its normal capacity (p. 41
+  offers both).
+
+Each season it runs, its Lab Total is his alchemical Creo Vim total in
+his laboratory's Magic aura (the Form as a requisite for a Form's vis;
+spaces are always Creo Vim), less his days away from the laboratory.
+The Minor Virtue's digestion takes four seasons and yields by the lowest
+of the four; the Major's one season. Vis goes to the pool chosen. Spaces
+counted as pawns already opened make the device ready for enchantment,
+and opening it normally costs that many pawns fewer (p. 41: eight spaces
+in a 24-pawn coral leave 16). Spaces counted as extra room raise its
+capacity instead (the coral holds 32, 8 of them open, and opening the
+rest still takes 24); its Inventory shows them as extra room.
+
+While it digests:
+
+- His other lab work that season loses the seven days he tends it, added
+  to his days away: nothing until the two pass ten days (a line
+  "Tending the digestion" in its Lab Total), and no other lab work at
+  all past twenty.
+- He can't extract vis any other way, nor work in another laboratory.
+- Reading or studying vis beside it is fine; a month lost to
+  distractions, a season out of the laboratory (an adventure, travel), or
+  experimenting, spoils it: it is abandoned and gives nothing.
+
+With one running, the same More command shows it and can abandon it.
+Each season of it is written in his and the laboratory's Diaries and in
+the season's record.
+
+## Test the Great Elixir
+<!-- help: great-elixir -->
+
+A magus with the Great Elixir (The Mysteries Revised Edition pp. 43-44;
+it needs Unaging and the Lesser Elixir) drinks the potion he has
+enchanted and tests it. More's **Test the Great Elixir** on Aging &
+Warping asks:
+
+- **Grant Might's level**: the level of the Grant Might effect invested
+  in this potion. It gives Magic Might of half (level - 20): a level 80
+  effect gives 30.
+- **Die**: a simple die, or blank for the app to roll it.
+
+The roll is the die + Stamina + his Lesser Elixir Level + 1 for each
+earlier attempt (at most his Magic Theory), against an Ease Factor of his
+age / 10, rounded up. The inspector shows the bonus, the Ease Factor and
+the Might as you type.
+
+On a success he becomes an immortal being of the Magic realm with that
+Magic Might, shown on his record beside his Size. From then on he makes
+no aging rolls and gains no Warping. A failure means this potion's
+effects did not work for him: a new dose of the Lesser Elixir and new
+effects make the next potion, which adds 1 more to the roll.
+
+Once immortal, he may test a better potion to raise his Might: the Ease
+Factor stays at the age he transformed, the earlier attempts count
+afresh, and a failure only wastes the potion. Every test is written in
+his Diary.
+
+## Dream Working
+<!-- help: dream-working -->
+
+A magus with Dream Magic (The Mysteries Revised Edition pp. 102-107)
+sends his spirit into a dream; his body lies in a trance. More's Dream
+Working, on his record or Known Spells, rolls one of five things and
+writes it in his Diary:
+
+- **A spell in the dream.** Every spell is Imaginem there: he casts with
+  his Technique and Imaginem whatever the effect's Form, using that
+  Form's guidelines (p. 103). The aura is the dream setting's (a dream
+  cathedral is Divine), not his body's. His real wounds, Fatigue and
+  gear stay with the body; only dream wounds take from his totals, and a
+  spirit loses no Fatigue (p. 106). His Magic Resistance there is
+  Imaginem + 5 x Parma Magica + the aura; Parma stretched over body and
+  spirit as two is 3 less (p. 103). A botch gains real Warping Points,
+  and Twilight is real, timed in the waking world (p. 106).
+- **The dreamer notices travelers:** Perception + Awareness + a stress
+  die against 9 (p. 105).
+- **The dreamer reshapes the dream:** Intelligence + a stress die, +3
+  for a magus (or similar power), +3 for Dream Magic, +3 for Hermetic
+  Dream Interpreter and +1 for each other power of illusion or dreams
+  (at most +3), against 9. The total is the change's magnitude (p. 105).
+- **A wound in the dream:** Stamina + a stress die + the earlier dream
+  wounds' penalty (+3 Strong-Willed, +3 Enduring Constitution, -3 Low
+  Tolerance, and any other modifier) against the total Wound Penalty,
+  9 for an Incapacitating wound; failing, he wakes (p. 106).
+- **The entranced body is disturbed:** Stamina + Concentration (the
+  body's Wound Penalty three times) + a stress die against the
+  Definitive Edition's distraction less 3: jostled or a sudden noise 6,
+  knocked down 9, hurt 12 (p. 102; DE p. 215).
+
+Spells may use Dream Duration (as Concentration) and Dream Target (as
+Individual); Dream Target only on a spell with Mentem as its Form or a
+requisite, as the Greater Dream Grimoire's Rego Corpus and Rego Terram
+spells have it (pp. 103-104, 109), and a spell without one is refused.
+Only a magus with Dream Magic may learn them.
+
+## Hermetic Sacrifice
+<!-- help: hermetic-sacrifice -->
+Hermetic Sacrifice (The Mysteries Revised Edition p. 117) lets a pure,
+unblemished beast sacrificed on a pagan deity's altar stand in for 1
+(a lamb) to 6 (a lion) pawns of the vis of a Ritual that summons that
+deity, cast via the altar. A beast created or altered by magic is never
+acceptable. The deity must cooperate: forcing the spirit with Hermetic
+Synthemata spoils the altar (Errata p. 51).
+
+More's Hermetic Sacrifice, on his record or Known Spells, takes one of
+his known Rituals (or a level typed) and shows the vis it still needs: a
+pawn a magnitude, halved with Mercurian Magic and a third more with
+Waster of Vis, less the sacrifice, never below 0. Saving writes it in his
+Diary; take the vis from the stores by hand.
 
 ## An Artist's Career
 <!-- help: artist-career -->
@@ -1346,6 +1487,69 @@ A magus who holds a Goetic Art may use Rego for it and Vim for the Lore
 (p. 124); the total uses whichever is higher. Summoning may work as a
 Magic or Faerie Power for the aura; the other Arts are always Infernal.
 
+## Spirits and Names
+<!-- help: spirits-and-names -->
+
+The figures of a Mystery of spirit magic or theurgy (The Mysteries Revised
+Edition, Chapters Eight and Nine, pp. 64-88). Pick the **Working**; the
+inspector says what it comes to. The spirit's Might and the other figures
+are the storyguide's: the sheet never knows them. **Close** keeps nothing;
+**Roll** rolls where the book asks for a die (intuiting or researching
+synthemata, the ascending hierarch's Stamina) and otherwise repeats the
+figures. Nothing is kept: apply what it gives by hand.
+
+- **Invoke the Spirit of (spell)** (Hermetic Theurgy, pp. 78-80): the
+  spirit's Might must at least equal the power's level and is the Invoke
+  spell's base level; levels added for Penetration give +2 each. The
+  spirit casts at its Might + the aura, no die, and succeeds at the level
+  less 10 (a magnitude more or less when he varies Range, Duration or
+  Target); its Penetration is that total less the level, plus the Invoke
+  spell's bonus.
+- **Invoke the Spirit of (Form)** (p. 80): the spirit casts as Spontaneous
+  magic at (Might + aura) / 2, rounded up.
+- **Invoke the Pact of (Daimon)** (pp. 80-81): each casting that
+  penetrates gathers its level less the Daimon's Might; the Aspect comes
+  when they reach its Might, at once at twice its Might (the only way
+  without Hermetic Theurgy). The Ritual's vis is also the Daimon Points the
+  Daimon gains (p. 85).
+- **Invent a theurgic spell** (p. 79): Technique + Form + Intelligence +
+  Magic Theory + aura + Realm Lore + Names of Power.
+- **Names of Power** (pp. 76-78): each is a Muto Vim spell of level 5 x
+  its bonus; together they never add more than Magic Theory (Errata p. 50).
+- **Research Hermetic Synthemata** (pp. 86-87): Muto + Vim + Intelligence
+  + Realm Lore + aura + an Arcane Connection's multiplier; each season adds
+  the Lab Total less the level and the name hiding (about Might / 2). The
+  spell is at least the being's Might (5 more for the Lasting version) and
+  adds its level (the Lasting version's level less 5) to Penetration
+  against it.
+- **Intuit Synthemata** and **Research Synthemata by fasting** (Synthemata
+  Magia, pp. 87-88): Perception + Realm Lore + his aura against the
+  being's Might + its aura + name hiding; the season's research adds an
+  Arcane Connection's multiplier and ignores the being's aura.
+- **Power Ritual effects** (Hermetic Empowerment, pp. 64-66): each use
+  drains the Ritual's level / 5 (rounded up) from the bound spirit's Might
+  Score for good; the Might x 2 must reach the level (Errata p. 50). The
+  Empowering Prison's base level is at least twice the spirit's Might.
+- **Bond a spirit familiar** (pp. 66-69, 81-82): Technique + Form +
+  Intelligence + Magic Theory + the worse of the magus's and the spirit's
+  aura, against Might + 25; a pawn of vis per 5 of the Lab Total. Might / 5
+  points buy its Intelligence, Perception and Communication. A Daimon
+  first takes Might / 5 pawns, and may scorn a bond of Technique + Form
+  under twice its Might.
+- **Blending with Substance** (Inscription on the Soul, p. 70): the
+  item's best bonus plus half the rest, x 5, is the effect's level; a
+  Warping Point, two at level 30 or more.
+- **The Living Ghost** (pp. 70-74): his transformation limit is his best
+  Technique + Form (a Magical Focus doubles the lower). Bind the Living
+  Ghost is level 30 + the Haunt's Size levels; the Transformation is at
+  least the limit, and his Might is its level less the Haunt's levels.
+- **Ascendancy to the Hall of Heroes** (pp. 82-86): the Ascendant Form is
+  at least his best Technique + Form, and 40; its level / 2 is his Might.
+  Each Transformation that penetrates gives its level less the Form's,
+  against the Form's level + 3 x his negative Characteristics' cost + 5 x
+  Decrepitude + 5 x his Flaw points if they outweigh his Virtues'. He rolls
+  Stamina against 9 or passes out.
+
 ## Ars Fabulosa
 <!-- help: ars-fabulosa -->
 
@@ -1714,6 +1918,8 @@ description under the list.
 new Ability from the catalog; the list shows the chosen Ability's
 description beside it.
 <!-- /gui -->
+**Divination** (Supernatural): given at 1 by Divination & Augury or Hermetic Dream Interpreter; a magus with either may buy it at creation (The Mysteries Revised Edition pp. 59, 62).
+
 Abilities from supplements (the Divine's Holy
 Powers and Methods, Mythic Herbalism, Mechanica of Heron...) are listed only
 while their book is in play. **Hedge Art** is the category for a hedge
@@ -1763,6 +1969,15 @@ from his record or his tradition's chapter.
 <!-- gui -->
 **Ars Goetia**, beside the Abilities chapter's buttons, works out a Goetic
 Art's total for one who holds one.
+<!-- /gui -->
+
+<!-- tui -->
+On a magus with a Mystery of spirit magic or theurgy, More (`m`) offers
+[Spirits and Names](help:spirits-and-names) from his record or Known Spells.
+<!-- /tui -->
+<!-- gui -->
+**Spirits and Names**, beside the Known Spells' buttons, works out the
+figures of a Mystery of spirit magic or theurgy.
 <!-- /gui -->
 
 <!-- tui -->
@@ -2037,8 +2252,14 @@ Virgilianae (pp. 53-60), the Muspelli's Abilities and their utiseta bases
 (The Cradle and the Crescent pp. 48-58), the Columbae's wards and the other
 Ex Miscellanea Ease Factor tables (Houses of Hermes: Societates
 pp. 105-128), a hunter's Scry (Against the Dark p. 134) and the
-Nemthengacha's Embitterment (Tales of Mythic Europe p. 35) and the
-clesrada's feats (The Contested Isle pp. 102-105). Choose one on
+Nemthengacha's Embitterment (Tales of Mythic Europe p. 35) the
+clesrada's feats (The Contested Isle pp. 102-105), the Debterah's Holy
+Methods and amulets (Lands of the Nile p. 114, with Realms of Power: The
+Divine) and Corpse Magic for the Cult of Dedun (Lands of the Nile p. 102:
+Communication + Corpse Magic + aura + stress die against 9 to speak with a
+corpse, 12 to compel the truth or protect it, 15 to animate it and 18 to
+command it out of sight; its Penetration must beat the corpse's Might,
+usually 9, to raise it from the grave). Choose one on
 an effect in [Effects and Items](help:tradition-effects) and its level is
 worked out.
 
@@ -2341,6 +2562,68 @@ levels bought with vis (a level a pawn; Ancient Magic p. 109).
 
 **Not yet:** filling or spending a pool for you: set the points by hand.
 
+## Ars Notoria
+<!-- help: learned-magic -->
+
+
+Ars Notoria (Realms of Power: The Divine pp. 97-100). Only a Gifted
+Christian may learn it, and only from the Book of Solomon: a season's
+search is Intelligence + Divine Lore + a stress die against 21. Reading
+it needs 4 in Latin, Greek, Hebrew and Chaldean, and Artes Liberales 4.
+It is a tractatus of Quality 20, learned as a first Supernatural
+Ability (a season giving under 5 xp is wasted).
+
+Reciting a Ring: Intelligence + Ars Notoria + the season's modifiers
+(fasting +1 a season, chastity +1, Personality Flaws +/-1 or 3, a venial
+sin -3, a mortal sin -9, minus each non-Divine Supernatural Ability,
+plus True Faith) + a stress die, against 6 + 3 x the Ring's level + 1 a
+season it is to last (3 + ... once the Ring is known). The first
+recitation takes a season; later ones 10 days less Ars Notoria, at
+least one. Rings are learned in order and don't stack.
+
+I Philosophiae +100 xp, Communication +3 (to +5), Spring or Autumn.
+II Theology +100 xp, Intelligence +3 (to +5), Winter. III Medicine +100
+xp and Greater Purifying Touch. IV the Patron Angel, a teacher. V sense a
+being's realm: Perception + Ars Notoria + stress die against 6 + its
+Magic Resistance / 5, no Penetration (Errata p. 49), Summer. VI
+divination, Spring. VII no botches. The xp go when the Ring ends.
+
+Each point of Ars Notoria takes 3 off a Divine aura's penalty to
+casting your other magic (shown on the Casting Score's aura line as "Ars
+Notoria"); Lab Totals and Penetration take the whole penalty. While a
+Ring is in effect a Divine aura gives no Warping (p. 100).
+
+
+## Jewish Mysticism
+<!-- help: jewish-mysticism -->
+
+
+Shinnui Shem (RoP:D p. 141): once a life, a season's renaming severs
+every Arcane Connection and gives (simple die + Intelligence + Gematria
++ Understanding + book Quality + Dominion aura) / 5 to Aging Rolls until
+the next Aging Point. A golem (pp. 142-143): a season shaping the clay,
+then seasons of Intelligence + Kabbalah + Wonders + Ceremony bonus +
+Dominion aura against 30, banking the excess; its Divine Might is the
+points + a stress die, at most 5 x the leader's Kabbalah. Its powers
+bank the same way against their level, up to its Might in magnitudes.
+Merkavah (p. 144): Stamina + Merkavah + Adjuration + Ceremony + aura
+against the being's Might, banking until the points exceed it: its True
+Name, +5 Penetration.
+
+
+## Solomonic Integration
+<!-- help: solomonic-integration -->
+
+
+The Cradle and the Crescent pp. 44-45. Magi may research Hermetic True
+Names (Minor: a spell with a built-in Arcane Connection), Scientates
+Suleimanis and Hermetic Realm Initiation (Hermetic Breakthroughs giving
+Major Hermetic Virtues); they are on the breakthrough goal list. Sahirs
+may reach Solomonic Devices, Spontaneous Solomonic Spells (total / 2 with
+a Fatigue level, / 5 without the die) and Independent Solomonic Magic
+(no spirit, no Summoning Strength, own Penetration).
+
+
 ## Virtues & Flaws tab
 <!-- help: tab-vf -->
 
@@ -2567,6 +2850,15 @@ too, as are a Heartbeast's -15 in animal form and Verditius Magic's
 reminder that Formulaic and Ritual spells need his casting tools (DE
 p. 241).
 
+Hermetic Numerology lists the Rotes the magus knows: a Rote is cast with no
+die and no Fatigue, quietly and still, its Casting Total half of Stamina +
+Technique + Form + Artes Liberales + aura (rounded up), with the
+Numerologist's book bonus too when he takes a round to consult it (TMRE
+p. 92). Hermetic Geometry adds +3 for a spell tracing a circle or line and
++3 more cast ceremonially in a regular figure (TMRE p. 94); Hermetic
+Architecture reminds how high Bind the Mystical Structure must be (TMRE p.
+98).
+
 Faerie Magic, Spell Timing and Secret Name add reminders: a Bargain spell's
 Penetration Total is doubled and takes effect when the bargain is broken;
 a held or If (Condition) spell is worked out, Penetration too, when it is
@@ -2576,6 +2868,13 @@ secret name doesn't subtract the spell's level from his Penetration Total
 (DE pp. 235, 237, 239-240).
 Hermetic Metamorphosis reminds its holder of the surgery of Harmonic
 Metamorphosis of the Beast (Magi of Hermes p. 83).
+
+A Bjornaer's reminders give his Stamina + Heartbeast against 3 + the
+magnitude to change form despite a shapechange or an Aegis (DE p. 234), his
+heartbeast's temperament when the Heartbeast specialty names one of the
+book's beasts (pp. 19-21), Theriomorphy's roll against 9 (p. 27), and with
+an inner heartbeast the roll against 9 to take it and the Magic Might of the
+Great Beast he would become at Final Twilight, 5 x Heartbeast (pp. 24, 32).
 
 The other casting Virtues and Flaws get a line each there too, with their
 page (DE pp. 70-145): Boosted Magic, Flexible Formulaic Magic, Atlantean
@@ -2887,6 +3186,140 @@ Houses of Hermes: Mystery Cults pp. 115, 120). Each is kept in the Diary.
 
 **See also:** [Personality Traits](help:section-personality-traits),
 [Script components](help:guide-initiation-plan)
+
+## Divination
+<!-- help: tmre-divination -->
+
+More on a Hermetic diviner's record (Divination & Augury, or Hermetic Dream
+Interpreter), beside the Abilities on the desktop. A divination answers one
+question as a Momentary Intellego spell of any Form would; its Ease Factor is
+that spell's level (The Mysteries Revised Edition pp. 59-60). It makes the Ease
+Factor or fails: it is not open-ended (p. 62).
+
+- **Casual** (a round): stress die + Perception + Divination + aura + the
+  storyguide's bonus for apt omens (+0 to +3, rarely +5).
+- **Ceremonial** (15 minutes a magnitude): stress die + Intelligence +
+  Divination + aura + the method's ceremonial bonus (+1 to +5, the Ceremonial
+  Augury Phenomena table, p. 61) + the sympathetic bonus (the Arcane
+  Connection's and each sympathetic connection's multiplier, DE p. 220) + a
+  Scrying Device's bonus (its effect's level over 10, rounded up). The
+  horoscopes count only divining by Astrology. The Errata (p. 50) keeps these
+  bonuses out of a casual divination.
+- **Penetration**: the total + the Penetration bonus - the Ease Factor.
+- With Hermetic Dream Interpreter: a **symbolic reading** (stress die +
+  Intelligence + Divination, no aura; 9 the dreamer's state, 12-15 the dream's
+  reasons, 18+ its causes and consequences) and **Dream Calling** (stress die +
+  Presence + Divination + aura against 6), pp. 62-63.
+
+The live box shows the total, the chance and the botch dice (one more per
+point of a non-Magic aura); Roll rolls it and keeps it in the Diary.
+
+## Astrology
+<!-- help: tmre-astrology -->
+
+More on the record of a magus with Planetary or Celestial Magic, a Periapt, or
+the Astrology method of divination. Each reckoning is a roll of Intelligence +
+Artes Liberales (Astronomy), kept in the Diary.
+
+- **Daily Horoscope** (an hour) and **Nativity Horoscope** (a day), against 9:
+  +1 and +2 sympathetic connections (DE p. 220). A failure he knows of; a
+  botch he doesn't.
+- **Periapt Horoscope** (Periapt, p. 48): against 9 on the equinox or
+  solstice; sound, it serves as a one-use Lab Text: the Lab Total / 5 charges,
+  an effect up to 5 x Astronomy. A botch wastes the season.
+- **Astrological Duration** (Celestial Magic, pp. 49-50): 6 + the units
+  wanted (Minutes, Hours, Days, Signs; a year at most), -3 with a Daily
+  Horoscope, -3 with the exact time measured, +3 for a precise end, then
+  halved by a magical armillary sphere. With the time measured and a horoscope
+  or sphere, checked over a Diameter, a simple die. A miss leaves the spell out
+  by up to the shortfall; a botch botches the spell.
+- **Favorable Hour** (p. 50): against three times the bonus (+1 to +5); a
+  botch is the bonus as a penalty for that hour. The storyguide's quick hour
+  is rolled with it.
+- **Set a magical armillary sphere** to another place: against 9, a single
+  round (p. 54).
+
+The season **Make an armillary sphere** (Work & trade) designs it (Int +
+Astronomy against 12) and builds it (Dex + Craft: Mechanisms or Clocks against
+12; Blacksmith at -3 with three more botch dice), p. 52. Opening the sphere
+costs 15 pawns in base metal, 18 in silver, 30 in gold, then Know the Heavens
+(InVi 29) and Track the Heavens (ReTe 28), p. 53.
+
+Celestial Magic's Laboratory Horoscope, when its die is typed on the plan,
+takes its bonus off the pawns of vis that open an invested device, at least
+one still paid (p. 49).
+
+## House Acclaim
+<!-- help: house-acclaim -->
+
+More on a magus's Reputations, shown for a magus of House Bonisagus or
+House Flambeau, or anyone who already holds House Acclaim. It keeps the
+House's own Reputation, House Acclaim, which grows like an Ability: 5,
+15, 30 and 50 points reach 1 to 4. The first award starts it. Each award
+or roll is kept in the Diary.
+
+- **Research made public** (Bonisagus): the Research and Acclaim Points
+  table (Houses of Hermes: True Lineages p. 21): an Art tractatus is its
+  Quality/2, a summa its Level/2, an original spell 1 a magnitude (2 by
+  experimentation), a Talisman 2, a familiar its Magic Might/5, an
+  apprentice trained 3, each project assisting a magus of higher rank 1,
+  a stabilized breakthrough 3 a magnitude, a minor breakthrough 15, a
+  major one 30. A tractatus or Lab Text taken into a folio earns twice.
+  Rediscovering one of Conciatta's Minor Virtues is 15, her True
+  Understanding of the Realms 30 (Legends of Hermes p. 45). The scores
+  are the ranks: boukoloi 1, daduchos 2, cannophori 3, dendrophori 4; the
+  Primus is above them (TL p. 22). The word takes a year a point to
+  spread.
+- **What it does** (Bonisagus, TL p. 22): its score is added to social
+  rolls with magi of House Bonisagus (any roll with Presence, as a rule
+  of thumb), and to Intrigue or Guile resisting a maga Trianomae, never
+  to Presence in certamen. A season searching for an apprentice adds it
+  to the usual roll, Perception + a stress die against 9 (DE p. 269; TL
+  repeats the older 12): less still finds one, taken from another magus
+  by right; failing by 5 or more antagonizes him, who must be
+  compensated; a botch makes him the Major Story Flaw Enemies.
+- **An argument over a folio** (Bonisagus, TL p. 23): Presence +
+  Leadership, or Communication + Artes Liberales, + House Acclaim + a
+  stress die, against the other magus's total; the higher wins.
+- **Trianoma's cipher** (TL p. 21): a day's work, Intelligence + Latin +
+  stress die, decoding when higher than 6 + the author's Communication +
+  Intrigue; +3 for one decoded before.
+- **A deed** (Flambeau, Houses of Hermes: Societates p. 31): a Hermetic
+  Reputation, known in the whole Order. Experience for deeds before
+  credible witnesses: an exceptional Gauntlet 2 to 5, a Wizard's March 1,
+  a certamen won 1 (2 against a senior magus), a tournament 1 to compete,
+  3 as a finalist, 5 as champion, -2 for a dismal showing, fighting
+  bravely in a Wizard's War 1 to 3, winning one twice the foe's highest
+  Reputation, slaying a renounced magus three times his, a supernatural
+  beast its Might/5, a Primus's order fulfilled or another glorious deed
+  as the storyguide says. Losses take experience away: a year without a
+  gain -1, a certamen lost -1 (-2 against a junior magus), each incident
+  of dishonesty or cowardice -1 or more. Certamen counts only when it
+  settles a real dispute. House Acclaim never falls below 0: an ignoble
+  act at 0 starts the bad Reputation you name, at 1 (DE p. 386). Famous
+  may be put in it (it starts at 4), and the Flaw Miles gives 5
+  experience points in it.
+
+The inspector shows the points, the score they bring House Acclaim to
+and, once it is held, what it does.
+
+**See also:** [Reputations](help:section-reputations),
+[Reputation Roll](help:reputation-roll)
+
+## Reputation Roll
+<!-- help: reputation-roll -->
+
+More on a character's Reputations: has someone heard of one? A stress die
++ the Reputation's score (a bad one's size) equals or beats the Ease
+Factor for where the listener is: 0 in the same village, parish or
+covenant; 6 in the same town, diocese or Tribunal; 9 in the same county,
+province or the whole Order; 12 in the same country or the whole Church.
+The Reputation's type says which column counts. The more it beats the
+Ease by, the more he has heard (DE p. 28). Between two magi of the same
+Jerbiton league every Reputation counts 3 higher (Houses of Hermes:
+Societates p. 53). The roll is kept in the Diary.
+
+**See also:** [House Acclaim](help:house-acclaim)
 
 ## Pilgrimage
 <!-- help: pilgrimage-more -->
@@ -3459,6 +3892,30 @@ Edit and Clear.
 <!-- /gui -->
 
 Turbulence is offered here too: an apprentice assisting in a stressful laboratory season checks for one midway through it (Apprentices p. 56).
+
+The seasons of The Mysteries Revised Edition's Hermetic Mysteries:
+
+- **Invent Rotes (Hermetic Numerology)** (TMRE pp. 92-93): choose the
+  Rotes' Technique and Form and type the Rotes, "Name: level", with
+  "(text)" after one invented from a Lab Text. The Rote Lab Total is the
+  laboratory's Lab Total plus Artes Liberales (at most Magic Theory) and the
+  book bonus; no Rote may be above a fifth of it (rounded up), and each
+  costs twice its level (its level from a Lab Text), all within the total.
+  The Rotes invented are kept as finished Rote records and shown with the
+  Casting Scores.
+- **Bind an enchanted structure (Hermetic Architecture)** (TMRE pp. 97-99):
+  name the structure, type its highest component effect's level and choose
+  its Size multiplier (5 a small room, 6 a Room, 7 a Structure, 8 a
+  Boundary, 9 and 10 larger), and the days recomputing the components'
+  places takes after a miss (1 for posts in a field to 30 for niches in
+  a building; blank is a month). The season places the components,
+  Intelligence + Artes Liberales against 6 + Size; each failure costs
+  those days, and he tries again while the season lasts, its notes giving
+  the misses and the day the components were placed (a botch is a
+  disaster). Then he
+  casts Bind the Mystical Structure, a Rego Vim Ritual of at least the
+  effect's level + 5, a magnitude more for a Structure and two for a
+  Boundary, paying a pawn of Vim a magnitude from the vis chosen.
 
 ### Seasons Ahead
 <!-- help: section-char-ahead -->

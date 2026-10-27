@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from ...models import (
     Book,
     Character,
+    ElixirIngredient,
     Formula,
     Progress,
     Saga,
@@ -129,6 +130,8 @@ class SupplementWork:
     #: Raw vis the season spends (Art -> pawns), taken from the pool the
     #: plan's `vis_from` names (vis.season_pool).
     vis_cost: dict[str, int] = field(default_factory=dict)
+    #: The Lesser Elixir reinvented with this ingredient (rules.tmre_alchemy).
+    elixir_ingredient: ElixirIngredient | None = None
 
 
 #: What a season does beyond experience, written into `result` (rolls made

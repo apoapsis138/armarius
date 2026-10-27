@@ -32,13 +32,21 @@ The Mysteries' parameters (EXTRA_PARAMETERS), with their pages:
   Texture, Scent, Sound and Spectacle, as Individual, Part, Group,
   Structure and Boundary. Spectacle isn't said to need a Ritual, and only
   Boundary itself does (DE p. 311), so it doesn't here.
+- Dream Magic (The Mysteries Revised Edition pp. 103-104): Duration
+  Dream (as Concentration) and Target Dream (as Individual), only for a
+  spell with Mentem as its Form or a requisite (p. 104; the Greater Dream
+  Grimoire's Corpus and Terram spells carry (Me), p. 109).
 - Road Magic (The Mysteries Revised Edition p. 116): Range and Target Road
   and Road Network. Mercurian Magic doesn't grant them by itself: such a
   magus learns Road Magic in a season (or has it from a Mercurian parens).
+- Symbolic Magic (Houses of Hermes: Mystery Cults p. 99): Symbol Range
+  (as Arcane Connection), Duration (as Year) and Target (as Boundary),
+  each a Ritual.
 """
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 
 SOURCE = (
@@ -140,10 +148,36 @@ MYSTERY_NAMES: dict[str, str] = {
     FAERIE_MAGIC: "Faerie Magic",
     SPELL_TIMING: "Spell Timing",
     SENSORY_MAGIC: "Sensory Magic",
+    # Merinita's Symbolic Magic (Houses of Hermes: Mystery Cults p. 99).
+    "vf_symbolic_magic": "Symbolic Magic",
+    # Dream Magic (The Mysteries Revised Edition pp. 103-104).
+    "vf_dream_magic": "Dream Magic",
+    "vf_the_greater_dream_grimoire": "the Greater Dream Grimoire",
 }
 #: Fire Duration is cast on a fire, so the spell is Ignem or Imaginem
 #: (DE p. 237).
 FIRE_FORMS = ("Ignem", "Imaginem")
+#: Dream Target needs this Art as the spell's Form or a requisite (The
+#: Mysteries Revised Edition p. 104; the p. 109 spells carry (Me)).
+DREAM_TARGET_FORM = "Mentem"
+
+
+def dream_target_problem(
+    technique: str, form: str, requisites: Sequence[str] = ()
+) -> str:
+    """Why a Dream Target spell of these Arts can't be ("" when it can):
+    "Dream only applies to Mentem spells", and the Greater Dream Grimoire's
+    Rego Corpus and Rego Terram spells that use it have Mentem as a
+    requisite (The Morphean Gate, Gift of the Oneiropomp; TMRE pp. 104,
+    109). An unnamed Form isn't refused yet."""
+    if not form or form == DREAM_TARGET_FORM or DREAM_TARGET_FORM in requisites:
+        return ""
+    spell = f"{technique} {form}".strip()
+    return (
+        f"Dream Target is only for a Mentem spell, by its Form or a requisite, "
+        f"not {spell} without Mentem (The Mysteries Revised Edition pp. 104, 109)."
+    )
+
 
 EXTRA_PARAMETERS: tuple[ExtraParameter, ...] = (
     ExtraParameter(
@@ -259,6 +293,51 @@ EXTRA_PARAMETERS: tuple[ExtraParameter, ...] = (
     ),
     ExtraParameter("duration", "Rune", "Moon", ("vf_hermetic_rune_magic",)),
     ExtraParameter("target", "Inscription", "Individual", ("vf_hermetic_rune_magic",)),
+    # Merinita's Symbolic Magic (Houses of Hermes: Mystery Cults p. 99):
+    # Symbol Range as Arcane Connection, Duration as Year, Target as
+    # Boundary, each a Ritual needing three charms (rules.merinita).
+    ExtraParameter(
+        "range",
+        "Symbol",
+        "Arcane Connection",
+        ("vf_symbolic_magic",),
+        ritual=True,
+        exclusive=True,
+    ),
+    ExtraParameter(
+        "duration",
+        "Symbol",
+        "Year",
+        ("vf_symbolic_magic",),
+        ritual=True,
+        exclusive=True,
+    ),
+    ExtraParameter(
+        "target",
+        "Symbol",
+        "Boundary",
+        ("vf_symbolic_magic",),
+        ritual=True,
+        exclusive=True,
+    ),
+    # Dream Magic (The Mysteries Revised Edition pp. 103-104): Dream
+    # Duration as Concentration, Dream Target as Individual (Mentem as the
+    # Form or a requisite: dream_target_problem);
+    # the Greater Dream Grimoire needs Dream Magic, so opens them too.
+    ExtraParameter(
+        "duration",
+        "Dream",
+        "Concentration",
+        ("vf_dream_magic", "vf_the_greater_dream_grimoire"),
+        exclusive=True,
+    ),
+    ExtraParameter(
+        "target",
+        "Dream",
+        "Individual",
+        ("vf_dream_magic", "vf_the_greater_dream_grimoire"),
+        exclusive=True,
+    ),
 )
 
 _STANDARD: dict[str, dict[str, int]] = {}  # filled below
@@ -402,6 +481,7 @@ def spell_level(
     technique: str = "",
     form: str = "",
     recurring: str = "",
+    requisites: Sequence[str] = (),
 ) -> Design | None:
     """The level of a spell with this base and Range/Duration/Target, plus
     `extra_magnitudes` of size and requisites. A parameter a Virtue or
@@ -412,7 +492,8 @@ def spell_level(
     unless the spell is a Ritual (DE p. 311). A spell recurring each
     `recurring` (a RECURRING key) adds its magnitudes and must be a Ritual;
     given the `form`, a Fire Duration spell not of Ignem or Imaginem gets a
-    note. None when a parameter is unknown."""
+    note, and so does a Dream Target spell with no Mentem in its Form or
+    `requisites`. None when a parameter is unknown."""
     custom = custom_steps or {}
     steps = []
     for kind, name in (("range", range_), ("duration", duration), ("target", target)):
@@ -444,6 +525,8 @@ def spell_level(
             "Fire Duration is cast on a fire: the spell must be Ignem or "
             "Imaginem (DE p. 237)."
         )
+    if target == "Dream" and (why := dream_target_problem(technique, form, requisites)):
+        design.notes.append(why)
     if range_ == "Personal" and target in CONTAINER_TARGETS:
         design.notes.append(
             f"A Personal Range spell can't have a {target} Target (DE p. 303)."

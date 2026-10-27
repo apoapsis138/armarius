@@ -135,6 +135,36 @@ Initiative, and what its Presence and vis come to. A jinni (the Jinni
 Virtue) is checked against The Cradle and the Crescent (pp. 62-63). All
 of these are advice: the books' own creatures needn't balance.
 
+**Vampire design**, **As a vampire** and **As a player character.** A
+Transylvanian vampire (a Faerie creature named as the book names them --
+vampire, kukudhi, moroi, platenik, vukodlak, zduhacz, gadja and the rest --
+or with both Feast of the Dead and Sap the Life) is checked against
+*Against the Dark*, as advice, never a refusal (pp. 114-121):
+
+- Every vampire has a physical form, a level of cognizance and a Social
+  Interaction Virtue or Flaw, Feast of the Dead, a Traditional Ward of
+  sunlight and the Lesser Power Sap the Life (p. 116).
+- It obeys one to three limitations, which are traditional wards (p. 116):
+  running water, garlic, a line of thorns, black hawthorn, red thread,
+  uncounted millet, stories being told, the same question three times, the
+  Cross and prayers, its resting place by day, and the Saturday ones (a
+  Sovereign Ward of those born on a Saturday; Restricted Might for "cannot
+  spend Might on a Saturday"). The sheet names those its wards hold.
+- Its notes should say the one to three precautions that stop it forming
+  (p. 115) and the one way to kill it for good (p. 117); slain any other
+  way it re-forms in days or weeks.
+- A *kukudhi* (one with kukudhi in its name) is an old vampire living far
+  away among people: it passes for human (Passes for Human or Infiltrator),
+  is no longer kept to its resting place by day though direct sun hurts
+  it, and its children are dhampirs (p. 115). It is the vampire a player
+  may play, best in a high-power saga among older magi (pp. 115-116), so
+  the sheet shows its Virtue and Flaw points against a faerie player
+  character's (in place of a companion, up to 10 points balanced by Flaws;
+  of a magus, 1 free and up to 20 more at 2 for each Flaw point) and its
+  Pretense points, 15 x (the magi's average age - 5) + 120 (21 when no
+  magus has a year of birth, 360 points), with those it has spent (Realms
+  of Power: Faerie pp. 45-46).
+
 **Magic design** and **Magic being.** A creature of Magic is checked against
 *Realms of Power: Magic*, as advice, never a refusal:
 

@@ -1124,6 +1124,111 @@ CONTRACTS: dict[str, Contract] = {
         expected=[(1, 1)],
         live={"#fields-live": "+1 Hubris experience"},
     ),
+    # Hermetic spirit magic and theurgy (The Mysteries Revised Edition).
+    "spirits and names": Contract(
+        prefill={
+            "Working": "spell_spirit",
+            "The spirit's Might": "10",
+            "The spell-like power's level": "10",
+        },
+        edits={"The spirit's Might": "20", "Levels added for Penetration": "5"},
+        saved=lambda s: s.character("mag1").diary,
+        expected=[],
+        invalid={"The spirit's Might": "x"},
+        live={"#fields-live": "Penetration +"},
+    ),
+    # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
+    "dream working": Contract(
+        prefill={"Aura": "0", "Dream wound penalty": "0", "Die": ""},
+        edits={"Aura": "2", "Die": "5"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Dream: a Spontaneous Creo Imaginem effect",
+        invalid=[{"Aura": "11"}, {"Dream wound penalty": "2"}],
+        live={"#fields-live": "in the dream as Imaginem"},
+    ),
+    "hermetic sacrifice": Contract(
+        prefill={"The altar's deity": "", "Pawns it stands in for": "1"},
+        edits={
+            "The altar's deity": "Mercury",
+            "The beast sacrificed": "a white ram",
+            "Pawns it stands in for": "2",
+        },
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Sacrifice to Mercury",
+        invalid=[
+            {"The altar's deity": ""},
+            {
+                "The altar's deity": "Mercury",
+                "The beast sacrificed": "a ram",
+                "Pawns it stands in for": "7",
+            },
+        ],
+        live={"#fields-live": "Vis the Ritual still needs: 4"},
+    ),
+    # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
+    "house acclaim": Contract(
+        prefill={"What": "award", "The research": "tractatus", "Quality": ""},
+        edits={
+            "The research": "spell",
+            "Magnitude of the spell": "6",
+            "In a folio (twice the points)": True,
+        },
+        saved=lambda s: [
+            (r.score, r.deeds, r.reach)
+            for r in character(s).reputations
+            if r.name == "House Acclaim"
+        ],
+        expected=[(1, 7, "House Bonisagus")],
+        invalid={"Magnitude of the spell": "x"},
+        live={"#fields-live": "+12 Acclaim points"},
+    ),
+    "reputation roll": Contract(
+        prefill={"Where the listener is": "6"},
+        edits={
+            "Where the listener is": "9",
+            "League colleague (+3)": True,
+        },
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Reputation Roll",
+        live={"#fields-live": "against 9"},
+    ),
+    # Divination and Hermetic astrology (The Mysteries Revised Edition).
+    "divination": Contract(
+        prefill={"Divination": "ceremonial", "Ease Factor": "0", "Method": "Pyromancy"},
+        edits={"Ease Factor": "15", "Ceremonial bonus": "5"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Divination",
+        invalid=[{"Ease Factor": "x"}, {"Ease Factor": "0"}],
+        live={"#fields-live": "Against 15"},
+    ),
+    "astrology": Contract(
+        prefill={"Reckoning": "daily"},
+        edits={"Reckoning": "nativity"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Astrology",
+        live={"#fields-live": "Nativity Horoscope"},
+    ),
+    # Philosophic Alchemy's digestions (The Mysteries Revised Edition).
+    "philosophic alchemy": Contract(
+        prefill={"It makes": "vis:", "Vessel's Shape and Material bonus": "0"},
+        edits={"Vessel's Shape and Material bonus": "2"},
+        saved=lambda s: character(s).alchemy.digestion.shape_bonus,
+        expected=2,
+        invalid=[
+            {"Vessel's Shape and Material bonus": "-1"},
+            {"Vessel's Shape and Material bonus": "x"},
+        ],
+        live={"#fields-live": "Lab Total"},
+    ),
+    # The Great Elixir's test (The Mysteries Revised Edition).
+    "test the great elixir": Contract(
+        prefill={"Grant Might's level": "0", "Die": ""},
+        edits={"Grant Might's level": "80", "Die": "10"},
+        saved=lambda s: character(s).magic_might,
+        expected=30,
+        invalid=[{"Die": "11"}, {"Grant Might's level": "-1"}],
+        live={"#fields-live": "Magic Might 30"},
+    ),
 }
 
 

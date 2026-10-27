@@ -38,9 +38,13 @@ from . import inhabitants as inh
 from . import lab_texts as lt
 from . import mystic_paths as mystic_forms
 from . import spells as spl
+from .forms import acclaim as acclaim_forms
 from .forms import careers
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
+from .forms import tmre_divination as tmre_divination_forms
+from .forms import tmre_dreams as tmre_dream_forms
+from .forms import tmre_spirits as tmre_spirit_forms
 from .models import (
     FULL,
     INHABITANT_KINDS,
@@ -65,6 +69,7 @@ from .rules import goetic as goetic_rules
 from .rules import holy_influence as holy_influence_rules
 from .rules import sin as sin_rules
 from .rules import theban_customs as byzantine
+from .rules import tmre_alchemy as tmre_alchemy_rules
 from .sections import (
     AGENTS_SECTION,
     AHEAD_SECTION,
@@ -409,6 +414,21 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("c", "commanding_aura", "Commanding Aura"),
     # House Verditius's Hubris and vendettas (HoH:MC, DE).
     MenuItem("b", "verditius_hubris", "Hubris"),
+    # Hermetic spirit magic and theurgy (The Mysteries Revised Edition).
+    MenuItem("y", "spirits_and_names", "Spirits and Names"),
+    # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
+    MenuItem("v", "dream_working", "Dream Working"),
+    MenuItem("a", "hermetic_sacrifice", "Hermetic Sacrifice"),
+    # Divination and Hermetic astrology (The Mysteries Revised Edition).
+    MenuItem("n", "tmre_divination", "Divination"),
+    MenuItem("s", "tmre_astrology", "Astrology"),
+    # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
+    MenuItem("h", "house_acclaim", "House Acclaim"),
+    MenuItem("r", "reputation_roll", "Reputation Roll"),
+    # Philosophic Alchemy's digestions (The Mysteries Revised Edition).
+    MenuItem("q", "philosophic_alchemy", "Philosophic Alchemy"),
+    # The Great Elixir's test (The Mysteries Revised Edition).
+    MenuItem("x", "great_elixir", "Test the Great Elixir"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -1045,6 +1065,93 @@ def _is_proud(facts: ActionFacts) -> bool:
     return character is not None and hubris_forms.offers(facts.saga, character)
 
 
+# Hermetic spirit magic and theurgy (The Mysteries Revised Edition).
+
+
+def _works_with_spirits(facts: ActionFacts) -> bool:
+    """Spirits and Names: a magus with one of the Mysteries, from his
+    record or his Known Spells."""
+    character = facts.selected_character
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and character is not None
+        and facts.active_section()
+        in (None, RECORD_SECTION[NodeKind.CHARACTER], "section-known-spells")
+        and tmre_spirit_forms.offers(character)
+    )
+
+
+# Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
+
+
+def _on_known_spells(
+    offers: Callable[[Saga, Character], bool],
+) -> Callable[[ActionFacts], bool]:
+    """A Mystery's More command: on the character's record or his Known
+    Spells, when `offers` allows it."""
+
+    def rule(facts: ActionFacts) -> bool:
+        character = facts.selected_character
+        return (
+            facts.selected_kind == NodeKind.CHARACTER
+            and character is not None
+            and facts.active_section()
+            in (None, RECORD_SECTION[NodeKind.CHARACTER], "section-known-spells")
+            and offers(facts.saga, character)
+        )
+
+    return rule
+
+
+# Divination and Hermetic astrology (The Mysteries Revised Edition).
+
+
+def _reads_signs(
+    offers: Callable[[Saga, Character], bool],
+) -> Callable[[ActionFacts], bool]:
+    """Divination and Astrology: on a person's record, when `offers`
+    allows it."""
+
+    def rule(facts: ActionFacts) -> bool:
+        character = facts.selected_character
+        return (
+            facts.selected_kind == NodeKind.CHARACTER
+            and character is not None
+            and character.animal is None
+            and facts.active_section() in (None, RECORD_SECTION[NodeKind.CHARACTER])
+            and offers(facts.saga, character)
+        )
+
+    return rule
+
+
+# House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
+
+
+def _on_reputations(facts: ActionFacts) -> Character | None:
+    """The character on show, from his Reputations."""
+    character = facts.selected_character
+    if (
+        facts.selected_kind != NodeKind.CHARACTER
+        or character is None
+        or facts.active_section() != "section-reputations"
+    ):
+        return None
+    return character
+
+
+def _keeps_acclaim(facts: ActionFacts) -> bool:
+    """House Acclaim: a magus of Bonisagus or Flambeau, or one holding it."""
+    character = _on_reputations(facts)
+    return character is not None and acclaim_forms.offers(facts.saga, character)
+
+
+def _has_reputation(facts: ActionFacts) -> bool:
+    """Reputation Roll: anyone with a Reputation."""
+    character = _on_reputations(facts)
+    return character is not None and bool(character.reputations)
+
+
 _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "set_date": _on_saga,
     "export_saga": _exports_saga,
@@ -1117,6 +1224,17 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "commanding_aura": _walks_in_faith(mystic_forms.offers_aura),
     # House Verditius's Hubris and vendettas.
     "verditius_hubris": _is_proud,
+    # Hermetic spirit magic and theurgy (The Mysteries Revised Edition).
+    "spirits_and_names": _works_with_spirits,
+    # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
+    "dream_working": _on_known_spells(tmre_dream_forms.offers_dreams),
+    "hermetic_sacrifice": _on_known_spells(tmre_dream_forms.offers_sacrifice),
+    # Divination and Hermetic astrology (The Mysteries Revised Edition).
+    "tmre_divination": _reads_signs(tmre_divination_forms.offers_divination),
+    "tmre_astrology": _reads_signs(tmre_divination_forms.offers_astrology),
+    # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
+    "house_acclaim": _keeps_acclaim,
+    "reputation_roll": _has_reputation,
 }
 
 
@@ -1307,4 +1425,14 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     # The lacuna and the pilgrim (HoH:S, The Church).
     "cast_in_lacuna": _casts_in_lacuna,
     "pilgrimage": _goes_on_pilgrimage,
+    # Philosophic Alchemy's digestions, on This Season.
+    "philosophic_alchemy": _works_for_labor(
+        lambda c: bool(tmre_alchemy_rules.philosophic_tier(c))
+    ),
+    # The Great Elixir's test, on Aging & Warping.
+    "great_elixir": lambda facts, section: (
+        section == "section-aging"
+        and facts.selected_character is not None
+        and tmre_alchemy_rules.has_great_elixir(facts.selected_character)
+    ),
 }

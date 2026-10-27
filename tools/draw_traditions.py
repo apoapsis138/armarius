@@ -1400,6 +1400,22 @@ def _tongue(points: Sequence[Point], w: float) -> QPainterPath:
     )
 
 
+# Mythic Africa's Debterah.
+
+
+def debterah() -> QPainterPath:
+    """An Ethiopian hand cross: a ring about the crossing, each arm
+    ending in a pierced roundel, on a short handle."""
+    arms = union(rect(45, 12, 10, 56), rect(18, 35, 64, 10))
+    ends = union_of(
+        circle(x, y, 8).subtracted(circle(x, y, 3.4))
+        for x, y in ((50, 10), (16, 40), (84, 40))
+    )
+    crossing = circle(50, 40, 15).subtracted(circle(50, 40, 10))
+    handle = union(rect(46, 66, 8, 20), rrect(40, 84, 20, 8, 3))
+    return union(arms.subtracted(circle(50, 40, 3.4)), ends, crossing, handle)
+
+
 #: Each tradition's figure, by its tradition_catalog.json id.
 FIGURES: dict[str, Callable[[], QPainterPath]] = {
     "trad_elementalists": elementalists,
@@ -1490,6 +1506,8 @@ FIGURES: dict[str, Callable[[], QPainterPath]] = {
     "trad_knights_of_the_green_stone": knights_of_the_green_stone,
     "trad_matres_et_matrones": matres_et_matrones,
     "trad_clesrada": clesrada,
+    # Mythic Africa
+    "trad_debterah": debterah,
 }
 
 

@@ -17496,6 +17496,61 @@
       "source": "MoH",
       "summary": "Graft organs onto an animal to make a new creature, by a ritual only you can cast.",
       "description": "Marcus's Major Breakthrough, a Minor Hermetic and Supernatural Virtue (Magi of Hermes p. 83). You can graft an organ (a head, a pair of legs, wings, a heart) onto an animal, from another animal or one made by a Momentary Creo Animal ritual, with Harmonic Metamorphosis of the Beast, which only a holder of this Virtue can invent or cast. The surgery is a Dexterity + Chirurgy roll against 9, +3 when the organ is added rather than swapped, +3 more when it gives a Virtue rather than an anatomical change; failing, the animal dies soon after, and a botch makes a monster. A donor that loses a Virtue gains Enfeebled; one whose organ is added to another dies. The recipient must be an animal: a human needs a further breakthrough."
+    },
+    {
+      "id": "vf_scientates_suleimanis",
+      "name": "Scientates Suleimanis",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Major",
+      "cost": 3,
+      "source": "TC&TC",
+      "summary": "Invent and cast Rego spells on any non-Ritual Solomonic guideline, with the target's Form, as craft magic.",
+      "description": "A Hermetic Breakthrough reached by studying the Solomonic arts (The Cradle and the Crescent pp. 44-45). You may invent and cast spells on any of the Solomonic guidelines that are not Rituals, as Rego with the Form that suits the target, in the way craft magic does a craftsman's work: a gem's quality improved by Rego Terram as the alchemists do it, or the body helped to recover Fatigue by Rego Corpus. Once the Virtue spreads, magi can match any Solomonic formulaic spell, even those that pass the Limit of Energy."
+    },
+    {
+      "id": "vf_hermetic_realm_initiation",
+      "name": "Hermetic Realm Initiation",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Major",
+      "cost": 3,
+      "source": "TC&TC",
+      "summary": "Initiate others into Virtues as sahirs do, sending a spirit with them into the Magic Realm, by your Rego Vim Lab Total.",
+      "description": "A Hermetic Breakthrough reached by a magus who has undergone a sahir's initiation and gained Insight from it (The Cradle and the Crescent pp. 44-45). You may initiate a student into a Virtue as sahirs do, persuading a spirit to take him into the Magic Realm. Your Rego Vim Lab Total stands in for Solomonic Travel and Magic Theory for Magic Lore; otherwise it works as theirs does, costing vis, lowering the spirit's Might and Warping the student. It needs no Mystery Cult's secrecy or lore, and might one day let magi open the Arts of the unGifted one at a time."
+    },
+    {
+      "id": "vf_spontaneous_solomonic_spells",
+      "name": "Spontaneous Solomonic Spells",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "TC&TC",
+      "summary": "A sahir casts formulaic spells spontaneously: a Fatigue level and the total / 2, or no stress die and the total / 5.",
+      "description": "A sahir's Major Breakthrough from studying Magic Theory (The Cradle and the Crescent pp. 44-45). He may cast spells spontaneously as magi do: losing a Fatigue level and halving his Casting Total, or rolling no stress die and dividing it by 5. Needing fewer seasons inventing spells in the laboratory, such sahirs may spend more of them seeking spirits."
+    },
+    {
+      "id": "vf_independent_solomonic_magic",
+      "name": "Independent Solomonic Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "TC&TC",
+      "summary": "A sahir casts and keeps up Solomonic spells with no spirit: no Summoning Strength, his own Penetration; unGifted, no level cap.",
+      "description": "A Solomonic Breakthrough, reached by a sahir who has been initiated into at least one Hermetic Technique and one Hermetic Form and studied Magic Theory (The Cradle and the Crescent pp. 44-45). He casts and maintains Solomonic spells without channelling them through a spirit: his Summoning Strength no longer adds to the Casting Total, and his own Penetration Total is used, not the spirit's. For an unGifted sahir, spells cast this way have no maximum level, since no spirit's Might limits them."
+    },
+    {
+      "id": "vf_miles",
+      "name": "Miles",
+      "type": "Flaw",
+      "category": "Story",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "HoH:S",
+      "summary": "A Flambeau sworn to the milites' code: 5 experience points in House Acclaim, brothers-in-arms, and the Primus's orders.",
+      "description": "A magus of House Flambeau who has publicly sworn the milites' oath to uphold the Code of Garus or a like code of honour (Houses of Hermes: Societates pp. 31-32). He gains 5 experience points in House Acclaim, and other milites treat him as a brother-in-arms and help him, though leaning on them too heavily costs House Acclaim; they may ask his help in turn. He has sworn to obey the Primus of House Flambeau, who may order him at any time, but never about his vote or what he says at Tribunal; fulfilling a direct order earns House Acclaim. With the storyguide's leave a character may take the Flaw after creation by joining the House and swearing the oath."
     }
   ]
 }

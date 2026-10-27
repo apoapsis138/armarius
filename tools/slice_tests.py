@@ -287,6 +287,34 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     ),
     # Mystic paths, God's aid, the Font and the Commanding Aura's forms.
     "ars_magica_manager/mystic_paths.py": ("test_dialog_contracts_character.py",),
+    # Hermetic spirit magic and theurgy's calculator (TMRE).
+    "ars_magica_manager/forms/tmre_spirits.py": ("test_dialog_contracts_character.py",),
+    # Arithmetic magic's seasons on the season form (TMRE).
+    "ars_magica_manager/forms/arithmetic_seasons.py": (
+        "test_dialog_contracts_character.py",
+        "test_season_forms.py",
+    ),
+    # Dream magic and Hermetic sacrifice's forms (TMRE).
+    "ars_magica_manager/forms/tmre_dreams.py": ("test_dialog_contracts_character.py",),
+    # Against the Dark's vampires, kukudhi and crowned kings: the creature
+    # sheet's facts and the creation worksheet's free Shapeshifter.
+    "ars_magica_manager/rules/transylvania.py": (
+        "test_sheet_text.py",
+        "test_creation_worksheet.py",
+    ),
+    # Divination and Hermetic astrology's More forms (TMRE).
+    "ars_magica_manager/forms/tmre_divination.py": (
+        "test_dialog_contracts_character.py",
+    ),
+    # House Acclaim and Reputation Roll's More forms (HoH:TL, HoH:S).
+    "ars_magica_manager/forms/acclaim.py": ("test_dialog_contracts_character.py",),
+    # Philosophic Alchemy's More form and the Lesser Elixir's season fields
+    # (TMRE).
+    "ars_magica_manager/forms/tmre_alchemy.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/alchemy_seasons.py": (
+        "test_dialog_contracts_character.py",
+        "test_season_forms.py",
+    ),
 }
 
 

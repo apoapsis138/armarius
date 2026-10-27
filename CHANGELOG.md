@@ -109,6 +109,81 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.25.0 — 2026-10-27
+
+### Computus
+
+- **Philosophic Alchemy and the Elixirs** (The Mysteries Revised pp.
+  39-46): a vis extraction left to digest beside other work, its spaces
+  ready-opened or extra room; the Lesser Elixir off an alchemist's aging
+  rolls; the Great Elixir's test, after which a magus is a being of Magic
+  with a Might, no longer aging or gaining Warping. A Longevity Ritual's
+  vis is capped per Art by the magus's score (DE p. 261).
+- **Hermetic divination and astrology** (pp. 47-63): casual and
+  ceremonial Divination Totals, horoscopes, Astrological Durations, the
+  favourable hour, and Celestial Magic's discount on opening a device.
+- **Spirit magic and theurgy** (pp. 64-88); **Dream Magic** and **Hermetic
+  Sacrifice** (pp. 102-117); **Hermetic Numerology, Geometry and
+  Architecture** (pp. 91-101).
+- **The Magic Realm and the Faerie Threshold** (RoP: Magic pp. 20-28; RoP:
+  Faerie pp. 16-24): a boundary's bonus and its botch dice on casting and
+  lab work, travel and the Twilight Void; a Threshold's points.
+- **Lunar**, Dies Irae's fifth realm, in every realm-interaction total
+  while Dies Irae is in play (pp. 36-38).
+- **House Bjornaer's Mysteries** (HoH: Mystery Cults pp. 18-33):
+  temperaments and heartbeasts, changing form against magic, the
+  Epitome, inner heartbeasts and refinements; Sensory Magic on the Lab
+  Total.
+- **House Merinita's Inner Mysteries** (pp. 82-106), with Symbolic
+  Magic's Symbol Range, Duration and Target in spell design.
+- **Learned magic** (RoP: The Divine pp. 97-100, 141-144): the Ars
+  Notoria's Rings and its relief from a Divine aura when casting; Jewish
+  mysticism's golems, Merkavah and Shinnui Shem; the Solomonic
+  integrations (The Cradle & the Crescent pp. 44-45).
+- **Vampires** of Against the Dark, and the kukudhi as a player character;
+  a crowned king's free Shapeshifter (pp. 108-122).
+- **House Acclaim** for Bonisagus and Flambeau, Flambeau's tournaments,
+  and Jerbiton's league (HoH: True Lineages pp. 21-23; HoH: Societates pp.
+  20-22, 31-32, 53-55).
+- **Mythic Africa**: the Cult of Dedun and Corpse Magic, Ethiopia's
+  calendar and church forests, the Aithiopian tribes and the Plinian races
+  (Lands of the Nile pp. 95-126; Between Sand and Sea pp. 119-124).
+
+### Book of Hours
+
+- The Initiation season knows Houses Bjornaer's and Merinita's rules,
+  reading each House's Lore by the books' names too.
+- New seasons: Reinvent the Lesser Elixir, Make an armillary sphere,
+  Invent Rotes, Bind an enchanted structure.
+
+### Pagina
+
+- More offers **Philosophic Alchemy**, **Test the Great Elixir**,
+  **Divination**, **Astrology**, **Spirits and Names**, **Dream
+  Working**, **Hermetic Sacrifice**, **House Acclaim** and **Reputation
+  Roll**, each with an inspector.
+- A place or regio level can lie in the Magic or Faerie Realm, or be
+  Lunar; its facts show the Threshold and what the realm does.
+- A vampire's sheet shows what its design lacks; a talisman says what
+  Great or Consummate Talisman allows; a device can be a Numerologist's
+  Book or an architecture component.
+
+### Gauntlet
+
+- New Character offers the dragon-born and varcolac templates (Against the
+  Dark pp. 108, 122).
+
+### Hedge Magic
+
+- **The Debterah** of Ethiopia, a holy societas of amulet makers (Lands of
+  the Nile p. 114), with its symbol; the Cult of Dedun's Corpse Magic.
+
+### Florilegium
+
+- The House Bjornaer and House Merinita Mystery Cults and their Scripts;
+  the Divination Ability (and its mark); four Solomonic Virtues and the
+  Story Flaw Miles; the Aithiopian tribes' Virtues and Flaws.
+
 ## 3.24.0 — 2026-10-26
 
 ### Computus

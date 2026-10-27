@@ -23,13 +23,15 @@ SOURCE = (
     "Ancient Magic, Introduction, The Breakthrough (p. 7); Hedge Magic, Revised "
     "Edition, The Integration Process (p. 14); Houses of Hermes: True Lineages, "
     "Bonisagus, Example Discoveries (pp. 30-34); Magi of Hermes, Aurulentus "
-    "(p. 20) and Marcus (pp. 82-83); Legends of Hermes, Hérisson (pp. 72-73)"
+    "(p. 20) and Marcus (pp. 82-83); Legends of Hermes, Hérisson (pp. 72-73); "
+    "The Cradle and the Crescent, Integration (pp. 44-45)"
 )
 AM = "Ancient Magic"
 HMRE = "Hedge Magic, Revised Edition"
 TL = "Houses of Hermes: True Lineages"
 MOH = "Magi of Hermes"
 LOH = "Legends of Hermes"
+TCTC = "The Cradle and the Crescent"
 
 
 @dataclass(frozen=True)
@@ -359,6 +361,46 @@ INTEGRATIONS: tuple[Integration, ...] = (
         LOH,
         learned="Builds on Hermetic Viresculture: Lesser Enchantment Vis may be "
         "Vitalized at its effect's level; its power is lost if transferred out.",
+    ),
+    # The Cradle and the Crescent, Integration (pp. 44-45): Solomonic magic
+    # folded into Hermetic magic. The book gives no points; each takes its
+    # kind's usual target. The sahirs' own are in rules.learned_magic.
+    Integration(
+        "Hermetic True Names",
+        "Minor",
+        30,
+        "An Arcane Connection made a permanent part of a formulaic spell: no "
+        "object needed, and the permanent Connection's Penetration multiplier "
+        "(The Cradle and the Crescent pp. 44-45).",
+        TCTC,
+        learned="Spells with a built-in Arcane Connection, at the Indefinitely "
+        "multiplier (+4); the spell and its Connection can be taught or put in "
+        "a lab text.",
+    ),
+    Integration(
+        "Scientates Suleimanis",
+        "Hermetic",
+        60,
+        "The Major Hermetic Virtue Scientates Suleimanis: Rego spells on the "
+        "non-Ritual Solomonic guidelines, as craft magic (pp. 44-45).",
+        TCTC,
+        "Virtue",
+        "vf_scientates_suleimanis",
+        learned="Any Solomonic formulaic spell as Rego with the target's Form, "
+        "even those past the Limit of Energy.",
+    ),
+    Integration(
+        "Hermetic Realm Initiation",
+        "Hermetic",
+        60,
+        "The Major Hermetic Virtue Hermetic Realm Initiation: initiating "
+        "others as sahirs do, by a Rego Vim Lab Total (pp. 44-45).",
+        TCTC,
+        "Virtue",
+        "vf_hermetic_realm_initiation",
+        learned="Initiation into Virtues by a spirit's journey to the Magic "
+        "Realm: Rego Vim Lab Total for Solomonic Travel, Magic Theory for Magic "
+        "Lore; vis, the spirit's Might and the student's Warping as the sahirs'.",
     ),
 )
 

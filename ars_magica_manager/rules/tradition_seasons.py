@@ -359,7 +359,13 @@ def initiation_total(mystagogue: Character, tradition: TraditionDef, bonus: int)
 #: Hermetic Mystery Cults whose members are known by a Virtue, not by
 #: naming the tradition: House Verditius's, by its Outer Mystery (Houses of
 #: Hermes: Mystery Cults p. 117).
-VIRTUE_MEMBERS: dict[str, str] = {"trad_verditius_mysteries": "vf_verditius_magic"}
+VIRTUE_MEMBERS: dict[str, str] = {
+    "trad_verditius_mysteries": "vf_verditius_magic",
+    # House Merinita's, by Faerie Magic (Houses of Hermes: Mystery Cults p. 85).
+    "trad_merinita_mysteries": "vf_faerie_magic",
+    # House Bjornaer's, by the Heartbeast (Houses of Hermes: Mystery Cults p. 18).
+    "trad_bjornaer_mysteries": "vf_heartbeast",
+}
 
 
 def belongs(character: Character, tradition_id: str) -> bool:

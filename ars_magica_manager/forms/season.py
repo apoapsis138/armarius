@@ -37,10 +37,12 @@ from ..models import (
 from ..rules import activities as season_rules
 from ..rules import (
     apprentice_seasons,
+    bjornaer,
     book_seasons,
     experiment,
     laboratory_seasons,
     library,
+    merinita,
     mysteries,
     study_virtues,
     supplement_seasons,
@@ -52,8 +54,8 @@ from ..seasons import pairs, repeat
 from ..seasons import plans as season_plans_text
 from ..seasons.projection import as_then
 from . import activity as activity_forms
+from . import alchemy_seasons, arithmetic_seasons, scholar_seasons, viresculture_seasons
 from . import character as character_forms
-from . import scholar_seasons, viresculture_seasons
 from . import script_components as script_forms
 from . import virtue as virtue_forms
 
@@ -280,7 +282,12 @@ _SEASON_READS: ChoiceReads = (
         lambda v: {"insight_arts": list(v.get("insight_arts") or [])},
     ),
     (
-        (season_rules.VIS_STUDY, *viresculture_seasons.PAYS_VIS),
+        (
+            season_rules.VIS_STUDY,
+            *viresculture_seasons.PAYS_VIS,
+            *arithmetic_seasons.PAYS_VIS,
+            *alchemy_seasons.PAYS_VIS,
+        ),
         lambda v: {"vis_from": v.get("vis_from") or "character"},
     ),
     (
@@ -297,6 +304,10 @@ _SEASON_READS: ChoiceReads = (
     *scholar_seasons.READS,
     # Legends of Hermes: a Stirps Vitalized or Invigorated.
     *viresculture_seasons.READS,
+    # The Mysteries Revised Edition: Rotes invented, a structure bound.
+    *arithmetic_seasons.READS,
+    # The Mysteries Revised Edition: the Lesser Elixir reinvented.
+    *alchemy_seasons.READS,
 )
 
 
@@ -441,6 +452,8 @@ def _supplement_plan_values(
         )
         found["ordeal_lost_id"] = lost.vf_id if lost else None
         found["ordeal_lost_params"] = dict(lost.params) if lost else {}
+        found["ordeal_condition"] = (values.get("ordeal_condition") or "").strip()
+        found["familiar_ever_bound"] = bool(values.get("familiar_ever_bound"))
         found["script_variation"] = values.get("script_variation") or ""
         found["variation_bonus"] = (
             values.get("variation_bonus") or 0 if found["script_variation"] else 0
@@ -991,7 +1004,47 @@ def _ordeal_fields(
             placeholder="(choose one of their Minor Flaws)",
             show_if=_ordeal_is(activity_is, sw.RAISE_FLAW),
         ),
+        DialogField(
+            "ordeal_condition",
+            "Vulnerable Magic's condition",
+            "text",
+            plan.ordeal_condition if plan else "",
+            placeholder="e.g. when touching iron",
+            show_if=_always_gives_flaw(activity_is),
+            hint="Glamour always brings Vulnerable Magic, with a condition the "
+            "magus doesn't have it for already (HoH:MC pp. 87, 102).",
+        ),
+        DialogField(
+            "familiar_ever_bound",
+            "Has ever bound a familiar",
+            "check",
+            bool(plan and plan.familiar_ever_bound),
+            show_if=_gives_heartbeast(activity_is),
+            hint="One since dead or released, which the saga no longer holds: "
+            "the Ritual of Twelve Years then fails (HoH:MC p. 24).",
+        ),
     ]
+
+
+def _gives_heartbeast(activity_is: ActivityIs) -> Callable[[dict[str, Any]], bool]:
+    """Shown for House Bjornaer's Ritual of Twelve Years."""
+    initiation = activity_is("undergo_initiation")
+    return lambda values: (
+        initiation(values)
+        and bjornaer.gives_heartbeast(
+            _vf_id(values.get("mystery_virtue")) or "", values.get("hedge_script") or ""
+        )
+    )
+
+
+def _always_gives_flaw(activity_is: ActivityIs) -> Callable[[dict[str, Any]], bool]:
+    """Shown for an Initiation into a Mystery that always brings a Flaw
+    with a condition (Glamour)."""
+    initiation = activity_is("undergo_initiation")
+    return lambda values: (
+        initiation(values)
+        and (_vf_id(values.get("mystery_virtue")) in merinita.ALWAYS_GIVES)
+    )
 
 
 #: The workshop seasons a craftsman may exert himself in (City & Guild pp.
@@ -1086,6 +1139,10 @@ def _supplement_fields(
         *scholar_seasons.fields(saga, character, plan, activity_is),
         # Legends of Hermes: Hermetic Viresculture's Stirps.
         *viresculture_seasons.fields(plan, activity_is),
+        # The Mysteries Revised Edition: Rotes, an enchanted structure.
+        *arithmetic_seasons.fields(plan, activity_is),
+        # The Mysteries Revised Edition: the Lesser Elixir's ingredient.
+        *alchemy_seasons.fields(plan, activity_is),
     ]
 
 
@@ -1658,7 +1715,10 @@ def _closing_fields(
                 ("Their covenant's vis stores", "covenant"),
             ],
             show_if=_activity_is(
-                season_rules.VIS_STUDY, *viresculture_seasons.PAYS_VIS
+                season_rules.VIS_STUDY,
+                *viresculture_seasons.PAYS_VIS,
+                *arithmetic_seasons.PAYS_VIS,
+                *alchemy_seasons.PAYS_VIS,
             ),
         ),
         DialogField(

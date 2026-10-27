@@ -21,6 +21,7 @@ from ..rules import (
     magic_build,
     sites,
     spirit_build,
+    transylvania,
     vis_kinds,
 )
 from . import character as cs
@@ -121,6 +122,7 @@ def facts(saga: Saga, creature: Creature) -> list[Fact]:
         *build_facts(c),
         *infernal_facts(c),
         *faerie_role_facts(c),
+        *vampire_facts(saga, c),
         Fact("Size", _signed(c.size)),
         Fact("Season", c.season),
         *([Fact("Warping", str(c.warping_score))] if c.warping_score else []),
@@ -480,3 +482,20 @@ def stat_block_text(saga: Saga, creature: Creature | None) -> str:
         for label, value in stat_block(saga, creature)
     ]
     return "\n".join([head, *body])
+
+
+def vampire_facts(saga: Saga, creature: Creature) -> list[Fact]:
+    """A Transylvanian vampire's design, what the book says of it, and a
+    kukudhi's figures as a player character (Against the Dark pp.
+    114-121)."""
+    found: list[Fact] = []
+    problems = transylvania.problems(creature)
+    if problems:
+        found.append(Fact("Vampire design", " ".join(problems)))
+    notes = transylvania.notes(creature)
+    if notes:
+        found.append(Fact("As a vampire", "; ".join(notes) + "."))
+    player = transylvania.player_notes(saga, creature)
+    if player:
+        found.append(Fact("As a player character", "; ".join(player) + "."))
+    return found

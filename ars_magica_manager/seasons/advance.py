@@ -51,6 +51,7 @@ from .character_effects import (
 )
 from .covenant import covenant_season
 from .defaults import default_text, grog_default, notified
+from .digestion import apply_digestions
 from .healing import season_healing
 from .lab_apply import (
     apply_book_work,
@@ -390,6 +391,8 @@ def finish_season(
     record = make_record(saga, worked)
     if worked and backup is not None:
         backup(saga)
+    # Philosophic Alchemy's digestions, at the Lab Totals the season began with.
+    record.lines += apply_digestions(saga, worked)
     applied = apply(saga, worked)
     forecast = reforecast(saga, worked, lost)
     year_end = (

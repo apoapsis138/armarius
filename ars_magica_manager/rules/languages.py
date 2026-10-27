@@ -21,7 +21,8 @@ from dataclasses import dataclass
 from ..models import Character
 
 SOURCE = (
-    "The Sundered Eagle p. 42; Against the Dark p. 10; Guardians of the Forests p. 138"
+    "The Sundered Eagle p. 42; Against the Dark p. 10; Guardians of the Forests "
+    "p. 138; Houses of Hermes: Societates p. 53"
 )
 
 #: The penalty for the same language in another dialect.
@@ -78,6 +79,8 @@ RELATED: tuple[Related, ...] = (
     ),
     Related("high german", "east norse", 4, "Guardians of the Forests p. 138"),
     Related("high german", "english", 4, "Guardians of the Forests p. 138"),
+    # Valnastium's Rhaetian: 5 in it is Latin 2, and the reverse.
+    Related("rhaetian", "latin", 3, "Houses of Hermes: Societates p. 53"),
 )
 
 #: Other names a language goes by in a save.

@@ -49,6 +49,8 @@ from . import (
     lab,
     lab_virtues,
     library,
+    tmre_divination,
+    tmre_numerology,
     verditius,
 )
 from . import hybrid_magic as hybrid
@@ -227,6 +229,8 @@ def _effect_total(
     if craft is not None:
         extra.append(craft)
     extra += verditius.mystery_lines(magus, device, effect)
+    # Hermetic Architecture: the Numerologist's book bonus.
+    extra += tmre_numerology.architecture_lines(saga, magus, device)
     if device.type == INVESTED:
         if device.talisman and enchantment.talisman_magus_id(device) == magus.id:
             extra.append(
@@ -285,6 +289,9 @@ def _open_device(
     discount = verditius.opening_discount(saga, magus, device)
     opened = min(left, limit + discount) if device.talisman else left
     pawns = max(1, opened - discount) if discount else opened
+    # Celestial Magic: a sound Laboratory Horoscope takes its bonus off too.
+    starry, starry_note = tmre_divination.horoscope_opening(magus, plan)
+    pawns = max(1, pawns - starry) if starry else pawns
     if pawns + sum(runes.values()) > limit:
         kind = "" if runes else "Vim "
         return [
@@ -303,10 +310,12 @@ def _open_device(
         device=device,
         pawns_opened=opened,
     )
-    if pawns < opened:
+    if discount and pawns < opened:
         work_.notes.append(
             f"Verditius Magic: {pawns} pawns open it for {opened} ({verditius.SOURCE})."
         )
+    if starry_note:
+        work_.notes.append(starry_note)
     if device.elder_runes and first:
         work_.notes.append(
             f"Elder runes ({', '.join(device.elder_runes)}): a pawn of each Art's "

@@ -265,6 +265,12 @@ from .seasons import WorldTurn as WorldTurn
 from .seasons import XpAllocation as XpAllocation
 from .seasons import next_season as next_season
 from .seasons import season_order as season_order
+from .tmre_alchemy import DIGEST_PRODUCTS as DIGEST_PRODUCTS
+from .tmre_alchemy import DIGEST_SPACES as DIGEST_SPACES
+from .tmre_alchemy import DIGEST_VIS as DIGEST_VIS
+from .tmre_alchemy import Alchemy as Alchemy
+from .tmre_alchemy import Digestion as Digestion
+from .tmre_alchemy import ElixirIngredient as ElixirIngredient
 from .traits import ACADEMIC_REPUTATION as ACADEMIC_REPUTATION
 from .traits import Ability as Ability
 from .traits import Characteristics as Characteristics

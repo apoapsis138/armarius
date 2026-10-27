@@ -24,8 +24,10 @@ ruins.py): it shows a ruin, and can be founded anew.
 
 Kept in Neighbour.details: "ruined", "aura", "tethers", "status", "known",
 "claimed_by", the aura's kind by its realm ("alignment", "tints" or
-"divine_kind", rules.aura_kinds), "levels" (each {"name", "realm", "aura",
-"kind", "see", "enter", "notes"} and its aura's kind), the first being Level 1, just above the surface) and "effects"
+"divine_kind", rules.aura_kinds), "world" and "boundary" (the realm it lies
+in and its Magic Realm boundary, rules.otherworlds), "levels" (each
+{"name", "realm", "aura",
+"kind", "see", "enter", "notes"}, its aura's kind, world and boundary), the first being Level 1, just above the surface) and "effects"
 (each {"what", "amount", "target", "where", "note"}). Where a record is:
 its place_id and place_level (0 for the surface).
 
@@ -40,7 +42,7 @@ from collections.abc import Callable, Collection, Iterator, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from . import references
+from . import references, sourcebooks
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -53,7 +55,7 @@ from .models import (
 )
 from .neighbour_lists import KindList, list_ops
 from .references import Fact
-from .rules import aura_kinds, senses
+from .rules import aura_kinds, faerie_threshold, lunar, otherworlds, realms, senses
 from .rules.sites import (
     EFFECT_TYPES,
     PLACE,
@@ -63,6 +65,7 @@ from .rules.sites import (
     all_places,
     aura_at,
     aura_kind_at,
+    boundary_at,
     effects,
     is_place,
     kind_effects,
@@ -71,6 +74,7 @@ from .rules.sites import (
     realm_of,
     regio_kind,
     whole_number,
+    world_at,
 )
 from .sections import EFFECTS_SECTION, LEVELS_SECTION
 
@@ -361,14 +365,27 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
         for index, entry in enumerate(shown, start=1)
         if (
             text := "; ".join(
-                t for t in (kind_effects(entry), level_kind_text(place, index)) if t
+                t
+                for t in (
+                    kind_effects(entry),
+                    level_kind_text(place, index),
+                    level_world_text(place, index),
+                )
+                if t
             )
         )
     ]
     kind = level_kind_text(place, 0)
+    lies_in = level_world_text(place, 0)
+    threshold = threshold_text(saga, place)
+    surface, surface_realm = aura_at(place, 0)
+    moon = lunar.aura_text(surface) if surface_realm == lunar.LUNAR else ""
     return [
         Fact("Aura", aura_text(place)),
         *([Fact("Aura kind", kind)] if kind else []),
+        *([Fact("Lies in", lies_in)] if lies_in else []),
+        *([Fact("Lunar aura", moon)] if moon else []),
+        *([Fact("Threshold", threshold)] if threshold else []),
         Fact("Regio", regio),
         *([Fact("Can see", "; ".join(seen))] if seen else []),
         *([Fact("Within", "; ".join(hazards))] if hazards else []),
@@ -394,13 +411,100 @@ def level_kind_text(place: Neighbour, level: int) -> str:
     return aura_kinds.effects_text(dict(details), realm, aura)
 
 
+def level_world_text(place: Neighbour, level: int) -> str:
+    """What the realm `level` (0 for the surface) lies in does there, as
+    the facts say it; "" for the mundane world."""
+    world = world_at(place, level)
+    if not world:
+        return ""
+    form = str(_details_at(place, level).get(aura_kinds.KIND_KEYS["Magic"]) or "")
+    return otherworlds.world_text(world, boundary_at(place, level), form)
+
+
+def _details_at(place: Neighbour, level: int) -> Mapping[str, Any]:
+    shown = levels(place)
+    return shown[level - 1] if 0 < level <= len(shown) else place.details
+
+
+def threshold_text(saga: Saga, place: Neighbour) -> str:
+    """The Threshold's strength into the Faerie Realm from the surface and
+    each Faerie level of a place with a Faerie aura (RoP: Faerie p. 21);
+    "" for one with none, or without the book in play."""
+    if not sourcebooks.in_play("RoP:F", sourcebooks.saga_books(saga)):
+        return ""
+    surface, surface_realm = aura_at(place, 0)
+    found: list[str] = []
+    for level in range(len(levels(place)) + 1):
+        if world_at(place, level):
+            continue
+        aura, realm = aura_at(place, level)
+        if realm != "Faerie":
+            continue
+        where = SURFACE if level == 0 else f"Level {level}"
+        base = (surface, surface_realm) if level else (0, "")
+        found.append(f"{where}: {faerie_threshold.strength_text(aura, realm, *base)}")
+    if not found:
+        return ""
+    return "; ".join(found) + " to cross into the Faerie Realm"
+
+
 # -- the form --
+
+#: The details a place or level keeps the realm it lies in, and its
+#: Magic Realm boundary, in.
+WORLD, BOUNDARY = "world", "boundary"
+
+
+def form_realm(values: dict[str, Any]) -> str:
+    """The realm a form's aura has: its world's, else its Realm's."""
+    world = otherworlds.world_of(values.get(WORLD))
+    return world.realm if world is not None else values.get("realm") or "Magic"
 
 
 def realm_is(realm: str) -> Callable[[dict[str, Any]], bool]:
     """A show_if for fields of one realm's rule, read from the form's Realm
-    (the place's realm while the form has none)."""
-    return lambda values: (values.get("realm") or "Magic") == realm
+    (the place's realm while the form has none), or its world's."""
+    return lambda values: form_realm(values) == realm
+
+
+def world_fields(saga: Saga, d: Mapping[str, Any]) -> list[DialogField]:
+    """Which realm a place or level lies in, and its Magic Realm boundary:
+    offered while the realm's book is in play."""
+    books = sourcebooks.saga_books(saga)
+    worlds = [
+        name
+        for name, book in otherworlds.WORLD_BOOKS.items()
+        if sourcebooks.in_play(book, books)
+    ]
+    if not worlds:
+        return []
+    found = [
+        DialogField(
+            WORLD,
+            "Lies in",
+            "select",
+            d.get(WORLD) or None,
+            options=pairs(worlds),
+            allow_blank=True,
+            placeholder="(the mundane world)",
+            hint="The Magic Realm (Magic 10 + its boundary) or the Faerie "
+            "Realm (Faerie 10): its aura replaces the one above (RoP: Magic "
+            "p. 20, RoP: Faerie pp. 16, 24).",
+        )
+    ]
+    if otherworlds.MAGIC_REALM in worlds:
+        found.append(
+            DialogField(
+                BOUNDARY,
+                "Boundary",
+                "int",
+                d.get(BOUNDARY, 0),
+                hint="The realm boundary's level, 0-10: added to magic like an "
+                "aura; its Form is the Alignment (RoP: Magic p. 21).",
+                show_if=lambda values: values.get(WORLD) == otherworlds.MAGIC_REALM,
+            )
+        )
+    return found
 
 
 def kind_fields(d: Mapping[str, Any]) -> list[DialogField]:
@@ -462,6 +566,7 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
             d.get("aura", 0),
             hint="Its surface's aura; its realm is the Realm below.",
         ),
+        *world_fields(saga, d),
         *kind_fields(d),
         DialogField(
             "tethers",
@@ -502,10 +607,24 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
     ]
 
 
+def world_problem(values: dict[str, Any]) -> str | None:
+    """A boundary out of 0-10, or a Magic Realm alignment that isn't a
+    Form."""
+    if values.get(WORLD) != otherworlds.MAGIC_REALM:
+        return None
+    level = values.get(BOUNDARY) or 0
+    if not 0 <= level <= otherworlds.MOST_LEVEL:
+        return f"A boundary's level is 0 to {otherworlds.MOST_LEVEL}."
+    alignment = str(values.get(aura_kinds.KIND_KEYS["Magic"]) or "").strip()
+    if alignment and not otherworlds.boundary_form(alignment):
+        return "A Magic Realm boundary is aligned with a Form, such as Terram."
+    return None
+
+
 def problem(values: dict[str, Any]) -> str | None:
     if (values.get("aura") or 0) < 0:
         return "An aura can't be below 0."
-    return aura_kinds.problem(values)
+    return world_problem(values) or aura_kinds.problem(values)
 
 
 # -- regio levels --
@@ -561,7 +680,7 @@ def see_in_text(place: Neighbour, level: int) -> str:
 
 
 def level_fields(
-    _saga: Saga, place: Neighbour, entry: RegioLevel | None
+    saga: Saga, place: Neighbour, entry: RegioLevel | None
 ) -> list[DialogField]:
     e = entry or {}
     return [
@@ -571,7 +690,7 @@ def level_fields(
             "Realm",
             "select",
             e.get("realm") or place.realm or "Magic",
-            options=pairs(REALMS),
+            options=pairs(realms.aura_realms(saga, str(e.get("realm") or ""))),
             required=True,
         ),
         DialogField(
@@ -580,6 +699,7 @@ def level_fields(
             "int",
             e.get("aura", whole_number(place.details.get("aura")) + 1),
         ),
+        *world_fields(saga, e),
         *kind_fields(e),
         DialogField(
             "kind",
@@ -618,7 +738,7 @@ def level_fields(
 def _level_problem(values: dict[str, Any]) -> str | None:
     if (values.get("aura") or 0) < 0:
         return "An aura can't be below 0."
-    return aura_kinds.problem(values)
+    return world_problem(values) or aura_kinds.problem(values)
 
 
 def level_ops(saga: Saga, place: Neighbour) -> SectionOps:

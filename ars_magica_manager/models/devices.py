@@ -216,6 +216,9 @@ class EnchantedDevice:
     capacity_override: int | None = None
     #: Invested devices: the pawns of Vim vis opened so far.
     pawns_opened: int = 0
+    #: Spaces on top of its capacity, opened already: a Philosophic
+    #: Alchemy digestion's, counted as extra room (TMRE p. 41).
+    extra_spaces: int = 0
     bonuses: list[ShapeMaterialBonus] = field(default_factory=list)
     #: Charged Items: the Lab Total they were made with, the charges made
     #: (None: the most that Lab Total gives) and left (None: all of them),
@@ -235,6 +238,10 @@ class EnchantedDevice:
     #: A Verditius Major Mystery's kind of item: "attuned" (Item
     #: Attunement) or "automaton" (Automata); "" for neither.
     verditius_item: str = ""
+    #: Arithmetic magic's kind of device (rules.tmre_numerology): a lesser or
+    #: greater Numerologist's Book, or a Hermetic Architecture structure's
+    #: component; "" for none.
+    mystery_device: str = ""
     #: Talismans: the attunements gained, each with its year and season.
     attunements: list[ShapeMaterialBonus] = field(default_factory=list)
     effects: list[InstilledEffect] = field(default_factory=list)
@@ -252,4 +259,10 @@ class EnchantedDevice:
                 for b in d.get(key, [])
             ]
         d["effects"] = [InstilledEffect.from_dict(e) for e in d.get("effects", [])]
+        extra = d.get("extra_spaces", 0)
+        if isinstance(extra, bool) or not isinstance(extra, int):
+            raise ValueError(
+                f"{d.get('name', 'A device')}'s extra spaces {extra!r} isn't a "
+                "whole number."
+            )
         return cls(**known_fields(cls, d))

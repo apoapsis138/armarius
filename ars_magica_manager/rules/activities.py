@@ -55,8 +55,8 @@ from ..models import (
     XpAllocation,
     character_age,
 )
-from . import activity_groups as groups
 from . import (
+    acclaim,
     aging,
     apprentice_seasons,
     book_seasons,
@@ -83,6 +83,7 @@ from . import (
     tradition_seasons,
     xp,
 )
+from . import activity_groups as groups
 from . import (
     creation_access as access,
 )
@@ -2024,6 +2025,17 @@ def _apprentice_outcome(
         rolled = dice.stress_die(rng or random.Random(), 1, saga=saga)
         die, botched = rolled.value, rolled.botched
     total = character.characteristics.perception + die
+    bonus = acclaim.apprentice_bonus(character)
+    if bonus:
+        # A magus Bonisagi of rank adds his House Acclaim to the core roll
+        # and, failing, takes one by right (HoH: True Lineages p. 22); the
+        # Ease Factor stays the Definitive Edition's (DE p. 269).
+        total = 0 if botched else total + bonus
+        result.notes.append(
+            f"Perception + House Acclaim {bonus} + die {die} = {total} against "
+            f"{acclaim.APPRENTICE_EASE}: {acclaim.apprentice_search(total, botched)}"
+        )
+        return
     if botched:
         # A botch dupes the searcher (DE p. 269).
         result.notes.append(

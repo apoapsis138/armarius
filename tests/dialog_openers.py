@@ -38,10 +38,12 @@ from ars_magica_manager.models import (
     Book,
     Character,
     CharterClause,
+    KnownSpell,
     Neighbour,
     Saga,
     SagaSource,
     ScoredTrait,
+    Spell,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
@@ -1427,6 +1429,21 @@ OPENERS: dict[str, Opener] = {
     "commanding aura": Opener("character", lambda ws: _open_mystic(ws, "aura")),
     # House Verditius's Hubris and vendettas.
     "hubris": Opener("character", lambda ws: _open_hubris(ws)),
+    # Hermetic spirit magic and theurgy (The Mysteries Revised Edition).
+    "spirits and names": Opener("character", lambda ws: _open_spirits(ws)),
+    # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
+    "dream working": Opener("character", lambda ws: _open_dreams(ws, "dream")),
+    "hermetic sacrifice": Opener("character", lambda ws: _open_dreams(ws, "sacrifice")),
+    # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
+    "house acclaim": Opener("character", lambda ws: _open_acclaim(ws)),
+    "reputation roll": Opener("character", lambda ws: _open_reputation_roll(ws)),
+    # Divination and Hermetic astrology (The Mysteries Revised Edition).
+    "divination": Opener("character", lambda ws: _open_tmre_divination(ws, "divine")),
+    "astrology": Opener("character", lambda ws: _open_tmre_divination(ws, "stars")),
+    # Philosophic Alchemy's digestions (The Mysteries Revised Edition).
+    "philosophic alchemy": Opener("character", lambda ws: _open_alchemy(ws)),
+    # The Great Elixir's test (The Mysteries Revised Edition).
+    "test the great elixir": Opener("character", lambda ws: _open_great_elixir(ws)),
 }
 
 
@@ -1696,3 +1713,89 @@ def _open_hubris(ws) -> None:
     if not any(t.name == "Hubris" for t in character.personality_traits):
         character.personality_traits.append(ScoredTrait("Hubris", 1))
     ws.action_verditius_hubris()
+
+
+def _open_spirits(ws) -> None:
+    """More's Spirits and Names on the magus on show, given Hermetic
+    Theurgy."""
+    character = ws.selected_character
+    if VirtueFlawInstance("vf_hermetic_theurgy") not in character.virtues_flaws:
+        character.virtues_flaws.append(VirtueFlawInstance("vf_hermetic_theurgy"))
+    ws.action_spirits_and_names()
+
+
+def _open_dreams(ws, which: str) -> None:
+    """More's Dream Working (given Dream Magic) or Hermetic Sacrifice (given
+    the Virtue and a known level 30 Ritual) on the magus on show."""
+    character = ws.selected_character
+    vf_id = "vf_dream_magic" if which == "dream" else "vf_hermetic_sacrifice"
+    if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
+        character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+    if which == "dream":
+        ws.action_dream_working()
+        return
+    if not any(s.id == "sp_summon_mercury" for s in ws.saga.spells):
+        ws.saga.spells.append(
+            Spell("sp_summon_mercury", "Call Mercury", "Rego", "Vim", 30, ritual=True)
+        )
+        character.spells_known.insert(0, KnownSpell("sp_summon_mercury"))
+    ws.action_hermetic_sacrifice()
+
+
+def _open_acclaim(ws) -> None:
+    """More's House Acclaim on the magus on show, made a Bonisagus without
+    House Acclaim yet."""
+    character = ws.selected_character
+    character.hermetic.house = "house_bonisagus"
+    character.reputations = [
+        r for r in character.reputations if not r.name.startswith("House Acclaim")
+    ]
+    ws.action_house_acclaim()
+
+
+def _open_reputation_roll(ws) -> None:
+    """More's Reputation Roll on the character on show, given a Reputation."""
+    character = ws.selected_character
+    if not character.reputations:
+        character.reputations.append(ScoredTrait("Dragon-slayer", 3, type="Local"))
+    ws.action_reputation_roll()
+
+
+def _open_tmre_divination(ws, which: str) -> None:
+    """More's Divination (given Divination & Augury by Pyromancy and
+    Divination 3) or Astrology (given Planetary Magic) on the person on
+    show."""
+    character = ws.selected_character
+    if which == "divine":
+        augury = VirtueFlawInstance("vf_divination_and_augury", {"method": "Pyromancy"})
+        if augury not in character.virtues_flaws:
+            character.virtues_flaws.append(augury)
+        if not any(a.name == "Divination" for a in character.abilities):
+            character.abilities.append(Ability("Divination", "Supernatural", xp=15))
+        ws.action_tmre_divination()
+        return
+    if VirtueFlawInstance("vf_planetary_magic") not in character.virtues_flaws:
+        character.virtues_flaws.append(VirtueFlawInstance("vf_planetary_magic"))
+    ws.action_tmre_astrology()
+
+
+def _open_alchemy(ws) -> None:
+    """More's Philosophic Alchemy on This Season, given Hermetic Alchemy,
+    the Major Virtue and a laboratory."""
+    character = ws.selected_character
+    for vf_id in ("vf_hermetic_alchemy", "vf_philosophic_alchemy_major"):
+        if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
+            character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+    character.assigned_lab_id = character.assigned_lab_id or "lab1"
+    ws.action_philosophic_alchemy()
+
+
+def _open_great_elixir(ws) -> None:
+    """More's Test the Great Elixir on Aging & Warping, given Unaging, the
+    Lesser and Great Elixirs and an age of 60."""
+    character = ws.selected_character
+    for vf_id in ("vf_unaging", "vf_the_lesser_elixir", "vf_the_great_elixir"):
+        if VirtueFlawInstance(vf_id) not in character.virtues_flaws:
+            character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+    character.background.year_born = ws.saga.current_year - 60
+    ws.action_great_elixir()

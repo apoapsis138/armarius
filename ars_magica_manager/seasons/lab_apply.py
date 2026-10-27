@@ -47,6 +47,7 @@ from ..rules import (
     philosophy,
     research,
     scholarship,
+    tmre_alchemy,
     verditius,
     work_virtues,
 )
@@ -149,6 +150,8 @@ def _apply_one_season_work(
         # each step of potency moves the modifier by 1.
         steps = sum(e.potency for e in work.carried_effects)
         work.subject.aging.longevity_modifier = max(0, work.longevity + steps)
+        # The Lesser Elixir is in a dose its alchemist made himself.
+        tmre_alchemy.ritual_performed(work.subject, magus)
         work.subject.aging.longevity_effects = list(work.carried_effects)
         work.subject.aging.longevity_year = plan.year
         work.subject.aging.longevity_by = magus.name
@@ -218,6 +221,10 @@ def perform_ritual_again(
         f"{again.pawns} pawn(s) of {vis_art} vis; aging rolls -{again.modifier}. "
         "From its Lab Text: no season taken."
     )
+    # The Lesser Elixir is in a dose its alchemist made himself.
+    elixir = tmre_alchemy.ritual_performed(subject, magus)
+    if elixir:
+        done = f"{done} {elixir}"
     lab.diary.append(
         DiaryEntry(
             year=saga.current_year,
@@ -437,6 +444,9 @@ def apply_supplement(
                 random.Random(),
                 young=work.aging_young,
             )
+    # The Lesser Elixir reinvented (TMRE pp. 42-43).
+    if work.elixir_ingredient is not None:
+        tmre_alchemy.add_ingredient(character, work.elixir_ingredient)
 
 
 def _apply_initiation(character: Character, work: sw.SupplementWork) -> None:

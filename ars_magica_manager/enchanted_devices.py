@@ -33,7 +33,7 @@ from .models import (
     Saga,
     ShapeMaterialBonus,
 )
-from .rules import verditius
+from .rules import lab_virtues, tmre_alchemy, verditius
 from .rules.enchantment import (
     FAST_TRIGGER_INITIATIVE,
     MODIFICATIONS,
@@ -126,8 +126,19 @@ def device_of(saga: Saga, effect: InstilledEffect) -> EnchantedDevice | None:
 
 def capacity_text(saga: Saga, device: EnchantedDevice) -> str:
     """ "8 pawns (wood x large = 2 x 4)", or how a talisman's or an
-    overridden capacity comes about."""
+    overridden capacity comes about, with any extra room a digestion
+    opened on top of it."""
+    text = _capacity_text(saga, device)
+    extra = max(0, device.extra_spaces)
+    if extra and capacity(saga, device) is not None:
+        text += f" + {plural(extra, 'space')} of extra room (Philosophic Alchemy)"
+    return text
+
+
+def _capacity_text(saga: Saga, device: EnchantedDevice) -> str:
     value = capacity(saga, device)
+    if value is not None:
+        value -= max(0, device.extra_spaces)
     if value is None:
         return "(not worked out: add a component, or type a capacity)"
     worked = computed_capacity(saga, device)
@@ -572,6 +583,7 @@ def device_info_text(saga: Saga, device: EnchantedDevice) -> str:
     if is_talisman(device):
         lines.append(f"[b]Attunements:[/] {len(device.attunements) or 'none'}")
         lines += [f"  {escape(bonus_text(a, when=True))}" for a in device.attunements]
+        lines += _talisman_mystery_lines(saga, device)
     lines.append(f"[b]Effects:[/] {len(device.effects)}")
     problems = warnings(saga, device)
     if problems:
@@ -579,6 +591,22 @@ def device_info_text(saga: Saga, device: EnchantedDevice) -> str:
     if device.description:
         lines += ["", markdown_text(device.description)]
     return "\n".join(lines)
+
+
+def _talisman_mystery_lines(saga: Saga, device: EnchantedDevice) -> list[str]:
+    """What the talisman's magus's Great or Consummate Talisman lets him do
+    with it, and the effects a Consummate Talisman turns on his casting
+    (TMRE pp. 89-90)."""
+    owner = saga.character(talisman_magus_id(device))
+    if owner is None:
+        return []
+    lines = [escape(note) for note in tmre_alchemy.talisman_notes(owner)]
+    if lab_virtues.has(owner, tmre_alchemy.CONSUMMATE_TALISMAN):
+        on_him = tmre_alchemy.consummate_effects(device.effects)
+        if on_him:
+            names = ", ".join(escape(e.name) or "(unnamed)" for e in on_him)
+            lines.append(f"[b]On his Formulaic spells:[/] {names}")
+    return lines
 
 
 def _charges_lines(device: EnchantedDevice) -> list[str]:

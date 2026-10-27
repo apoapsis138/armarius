@@ -202,7 +202,9 @@ def casting_score(
     tired = fatigue_penalty(magus.fatigue_level, magus.virtues_flaws)
     if tired:
         lines.append(Line("Fatigue", amount=tired, source=SOURCE))
-    label, amount = hybrid.aura_label(magus, aura_realm, aura, ritual=ritual)
+    label, amount = hybrid.aura_label(
+        magus, aura_realm, aura, ritual=ritual, casting=True
+    )
     lines.append(Line(label, amount=amount, source=realms.SOURCE))
     lines += aura_kinds.aligned_lines(
         aura_kind, aura_realm, aura, (technique, form, *requisites)
@@ -725,6 +727,7 @@ def botch_dice(
     aura_realm: str = realms.HERMETIC,
     aura: int = 0,
     in_regio: bool = False,
+    boundary_dice: int = 0,
     fast: bool = False,
     distracted: bool = False,
     mastery: int = 0,
@@ -747,6 +750,9 @@ def botch_dice(
     cast with words and gestures. A failed Concentration roll
     (`distracted`) adds one (DE p. 215). Dedicated vis of the spell's own
     Arts (counted in `vis_pawns` too) counts double (RoP: Magic p. 122).
+    A Magic Realm boundary adds its level (`boundary_dice`, from
+    sites.boundary_botch_dice) while the aura is Magic, as casting is a
+    roll the Magic aura helps (RoP: Magic p. 22).
     """
     dedicated = max(0, min(dedicated_vis_pawns, vis_pawns))
     dice = (
@@ -769,6 +775,8 @@ def botch_dice(
         dice += realms.extra_botch_dice(
             realms.HERMETIC, aura_realm, aura, in_regio=in_regio
         )
+    if aura_realm == realms.HERMETIC:
+        dice += max(0, boundary_dice)
     change, _ = scores.botch_dice_change(
         virtues_flaws, ("casting", "casting_words", "casting_gestures")
     )

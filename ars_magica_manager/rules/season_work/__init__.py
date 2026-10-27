@@ -18,12 +18,15 @@ from __future__ import annotations
 
 from . import (  # noqa: F401  (each registers its activities as it is imported)
     academe,
+    alchemy,  # The Mysteries Revised Edition's Lesser Elixir
     ancient,
+    arithmetic,  # The Mysteries Revised Edition's Rotes and enchanted structures
     church,
     city_guild,
     covenants,
     definitive,
     devotion,
+    hermetic_astrology,  # The Mysteries Revised Edition's armillary sphere
     initiation,
     lords,
     mysticism,

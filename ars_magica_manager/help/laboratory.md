@@ -542,6 +542,25 @@ effects. **Instill** adds an effect to a device that can take another,
 **Use Charge** uses up a charge of a Charged Item, and **Use** uses a
 finished effect of an invested device or lesser enchantment once.
 <!-- /gui -->
+An invested device's **Arithmetic magic** field marks a Numerologist's Book
+or a Hermetic Architecture component (The Mysteries Revised Edition pp.
+91-98). A lesser book (its parchment opened with 8 pawns, Magic Theory 4)
+gives its maker a book bonus of +4, a greater one (the whole book, 16
+pawns, Magic Theory 8) +8, never more than his Artes Liberales, and only
+when he has Hermetic Numerology and holds it. The bonus adds to his Rote
+Lab Totals and, for a magus with Hermetic Architecture, to the Lab Totals
+for instilling effects in a component, shown as its own line.
+A talisman's details say what its magus's Talisman Mysteries allow
+(The Mysteries Revised Edition pp. 89-90): with **Great Talisman**, an
+attunement each season merely by using it, without working on it (still
+one a season), and new components crafted in whenever he reopens it, no
+Craft roll, up to his Magic Theory in all; with **Consummate Talisman**,
+its Personal Muto Vim effects work on his Formulaic spells (listed as
+"On his Formulaic spells") and its Names of Power on any spell he casts,
+spoken aloud, their bonus at most Magic Theory. Inscription on the Soul
+alone attunes no bonus without work on the talisman (the errata to TMRE
+p. 70).
+
 Using an effect shows what it does at the table (DE p. 259): it goes off
 at Initiative Quickness (the holder's, when a character holds it) + a
 stress die, +3 with a Fast Trigger (p. 257); its Penetration is 0 unless
@@ -613,7 +632,10 @@ here when the season is advanced.
 <!-- tui -->
 `/` filters the table by kind, Technique, Form, level, and to texts the
 owner can read. Perform Ritual in More (`m`) performs a Longevity Ritual
-again from its text at once: it takes vis but no season.
+again from its text at once: it takes vis but no season. As for casting a
+ritual spell, the vis of each Art is at most the magus's score in that
+Art, which may make it impossible (DE p. 261; The Mysteries Revised
+Edition p. 42).
 <!-- /tui -->
 <!-- gui -->
 The bar above the table narrows it by kind, Technique, Form and level, and
@@ -621,7 +643,9 @@ The bar above the table narrows it by kind, Technique, Form and level, and
 Edit and Delete, sets whose texts the owner reads. **Perform Ritual**, a
 button on the [Planning](help:tab-lab-planning) list in the Seasons chapter,
 performs a Longevity Ritual again from its text at once: it takes vis but
-no season.
+no season. As for casting a ritual spell, the vis of each Art is at most
+the magus's score in that Art, which may make it impossible (DE p. 261;
+The Mysteries Revised Edition p. 42).
 <!-- /gui -->
 
 ### Books
@@ -798,10 +822,15 @@ of Hermes: Mystery Cults p. 28; The Mysteries Revised Edition p. 116):
   Hermetic Background (a starting magus whose parens has Mercurian Magic
   may have it; every Mercurian magus of an older save has it ticked). Any
   other magus needs the Road Magic Virtue, Initiated. TMRE p. 116.
+- **Symbolic Magic**: Range, Duration and Target **Symbol** (as Arcane
+  Connection, Year and Boundary), each a Ritual. Each needs a symbol of three
+  charms, so Faerie Magic 3 for one, 9 for all three (Houses of Hermes:
+  Mystery Cults p. 99).
 
-Only a magus with Faerie Magic, Spell Timing or Sensory Magic may learn a
-spell with that Mystery's parameters: inventing it, learning it from a Lab
-Text or being taught it says so and stops (DE pp. 236, 239; HoH:MC p. 28).
+Only a magus with Faerie Magic, Spell Timing, Sensory Magic or Symbolic
+Magic may learn a spell with that Mystery's parameters: inventing it,
+learning it from a Lab Text or being taught it says so and stops (DE pp.
+236, 239; HoH:MC pp. 28, 99).
 
 **Size / extra magnitudes** holds the magnitudes added for size and for
 requisites that add an effect. Under the level, a line says what the Target
@@ -891,6 +920,11 @@ hawthorn Vim; the app looks for the word in the device's name, description or
 components) adds +2 (Houses of Hermes: Mystery Cults pp. 127-128). The maker
 of an attuned item or an automaton adds his **Hubris** to every Lab Total for
 enchanting it (pp. 129, 135; DE p. 241).
+
+**Sensory Magic** (Houses of Hermes: Mystery Cults p. 28): a Bjornaer with
+the Mystery adds his Heartbeast to the Lab Total inventing a spell with a
+Flavor, Texture, Scent, Sound or Spectacle Target, or an Intellego spell
+granting a magical sense (Taste, Touch, Smell, Hearing or Vision).
 
 With **Faerie Magic**, experimenting or inventing a spell with the
 Mystery's own parameters uses its score in place of Magic Theory when it

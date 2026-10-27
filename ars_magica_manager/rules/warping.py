@@ -127,8 +127,9 @@ def opened_to_arts(character: Character) -> bool:
 
 def immune(character: Character) -> bool:
     """Whether nothing warps the character: a Might score (Demonic Blood
-    gives one) makes them part of a realm already (DE pp. 75, 389)."""
-    return bool(
+    gives one, the Great Elixir a Magic Might) makes them part of a realm
+    already (DE pp. 75, 389; TMRE p. 44)."""
+    return character.being_of_magic or bool(
         effects.collect([character_source(character.virtues_flaws)], "warping_immune")
     )
 

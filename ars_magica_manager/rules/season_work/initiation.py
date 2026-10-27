@@ -27,7 +27,7 @@ from ...models import (
     VirtueFlawInstance,
 )
 from .. import activity_groups as groups
-from .. import dice, enchantment, mysteries, verditius
+from .. import bjornaer, dice, enchantment, merinita, mysteries, verditius
 from .. import tradition_seasons as ts
 from ..apprentice_seasons import gifted
 from ..breakdown import Line
@@ -72,6 +72,9 @@ def initiation_target(saga: Saga, character: Character, plan: SeasonPlan) -> int
     virtue = catalog.load_virtue_flaw_catalog_by_id().get(plan.effect_id or "")
     mystagogue = saga.character(plan.teacher_id) or character
     knows = knows_power(mystagogue, plan)
+    # House Bjornaer's Great Beast knows the Inner Mystery, and a
+    # Refinement's Ease Factor is its own (HoH:MC pp. 30, 33).
+    knows = knows or bjornaer.knows_by_rule(plan.hedge_script)
     hedge = ts.hedge_script(plan.hedge_script)
     if hedge is not None:
         _, script = hedge
@@ -153,6 +156,29 @@ def ordeal_size(plan: SeasonPlan) -> str:
     return entry.tier if entry is not None and entry.tier in ORDEAL_REDUCTION else ""
 
 
+#: Each House's Lore by all its names: the Ability catalog's ("Mystery Cult
+#: Lore: Bjornaer"), the books' ("House Bjornaer Lore", HoH:MC pp. 28, 30;
+#: Errata p. 54; "House Merinita Lore", p. 88) and older ones, so a
+#: character holding it under any of them scores it.
+_HOUSE_LORE_NAMES = (bjornaer.LORE_NAMES, merinita.LORE_NAMES, verditius.LORE_NAMES)
+
+
+def _lore_names(lore: str) -> tuple[str, ...]:
+    return next((names for names in _HOUSE_LORE_NAMES if lore in names), (lore,))
+
+
+def _hermetic_lore(character: Character, lore: str) -> int:
+    """The character's score in a Hermetic Mystery's Lore, a House's under
+    the best of its names."""
+    return max(ability_level(character, name) for name in _lore_names(lore))
+
+
+def _hedge_lore(character: Character, lore: str) -> int:
+    """The character's score in a tradition's Lore (or a required
+    Ability), a House's under the best of its names."""
+    return max(ts.lore_score(character, name) for name in _lore_names(lore))
+
+
 # -- checks --------------------------------------------------------------------
 
 
@@ -185,12 +211,24 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
         lore = plan.title.strip()
         if not lore:
             return "Name the Mystagogue's (Mystery Cult) Lore."
-        if ability_level(mystagogue, lore) < 1:
+        if _hermetic_lore(mystagogue, lore) < 1:
             return f"{mystagogue.name} doesn't know {lore}."
-        if ability_level(character, lore) < 1 and not _house_lore(character, lore):
+        if _hermetic_lore(character, lore) < 1 and not _house_lore(character, lore):
             return f"{character.name} needs {lore} 1 to be Initiated."
     return (
         _script_problem(plan)
+        # House Bjornaer's own rules (Houses of Hermes: Mystery Cults pp.
+        # 17-33): who may be Initiated, and who may lead each Script.
+        or bjornaer.mystery_problem(
+            saga,
+            character,
+            plan.effect_id or "",
+            plan.hedge_script,
+            ever_bound=plan.familiar_ever_bound,
+        )
+        or bjornaer.mystagogue_problem(
+            character, mystagogue, plan.hedge_script, ordeal_reduction(character)
+        )
         or (
             mysteries.parts_problem(plan.script_components, components_for(character))
             if hedge is None
@@ -198,6 +236,12 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
         )
         or (_mystery_problem(saga, character, virtue.id) if virtue else "")
         or _ordeal_problem(character, plan)
+        or merinita.condition_problem(
+            character,
+            plan.effect_id or "",
+            plan.ordeal_condition,
+            _ordeal_gained(plan),
+        )
         or _house_ordeal_problem(character, plan)
         or mysteries.ungifted_problem(
             character,
@@ -229,14 +273,14 @@ def _hedge_problem(
         )
     if mystagogue is initiate and not rule.self_initiation:
         return f"The {tradition.name} can't Initiate themselves: choose a Mystagogue."
-    if rule.lore and ts.lore_score(mystagogue, rule.lore) < 1:
+    if rule.lore and _hedge_lore(mystagogue, rule.lore) < 1:
         return f"{mystagogue.name} doesn't know {rule.lore}."
     if script.who == "gifted" and not gifted(initiate):
         return f"{script.name} is for the Gifted, and {initiate.name} is unGifted."
     short = [
         f"{ability} {least}"
         for ability, least in script.requires
-        if ts.lore_score(initiate, ability) < least
+        if _hedge_lore(initiate, ability) < least
     ]
     if short:
         return (
@@ -277,6 +321,11 @@ def _mystery_problem(saga: Saga, character: Character, vf_id: str) -> str:
     found = verditius.inner_mystery_problem(character, vf_id)
     if found:
         return found
+    # House Merinita's Inner Mysteries (Houses of Hermes: Mystery Cults
+    # pp. 85-88): a school's Outer Mystery, and the House's Lore 1.
+    found = merinita.inner_mystery_problem(character, vf_id)
+    if found:
+        return found
     if vf_id == mysteries.FAERIE_MAGIC and not (
         touched_by_the_fay(character)
         or character.aging.warping_points
@@ -294,7 +343,24 @@ def _house_ordeal_problem(character: Character, plan: SeasonPlan) -> str:
     """What House Verditius's rules forbid of the Ordeal's Flaw (Houses of
     Hermes: Mystery Cults pp. 120-121)."""
     gained = _ordeal_gained(plan)
-    return verditius.ordeal_problem(character, gained.vf_id) if gained else ""
+    found = verditius.ordeal_problem(character, gained.vf_id) if gained else ""
+    return found or _bjornaer_ordeal_problem(character, plan)
+
+
+def _bjornaer_ordeal_problem(character: Character, plan: SeasonPlan) -> str:
+    """House Bjornaer's Inner Heartbeast needs a Major Hermetic or
+    Supernatural Flaw, or a shapechanger's lost shapes (HoH:MC pp. 17, 30)."""
+    gained, lost = _ordeal_gained(plan), _ordeal_lost(plan)
+    flaw = (
+        catalog.load_virtue_flaw_catalog_by_id().get(gained.vf_id) if gained else None
+    )
+    return bjornaer.ordeal_problem(
+        character,
+        plan.effect_id or "",
+        plan.hedge_script,
+        (flaw.id, flaw.tier, flaw.category) if flaw is not None else None,
+        lost.vf_id if lost else "",
+    )
 
 
 def _ordeal_problem(character: Character, plan: SeasonPlan) -> str:
@@ -354,6 +420,8 @@ def _undergo_initiation(
     mystagogue = saga.character(plan.teacher_id) or character
     trait, name, lore, script = _initiation_terms(mystagogue, plan, character)
     result.notes += _script_notes(character, plan)
+    beast = _bjornaer_terms(character, mystagogue, plan, name, result)
+    lore = beast[1] if beast is not None else lore
     target = initiation_target(saga, character, plan)
     size = ordeal_size(plan)
     risk = 0
@@ -379,7 +447,11 @@ def _undergo_initiation(
         if varied is None:
             return
         script = varied
-    value = getattr(mystagogue.characteristics, trait.lower(), 0)
+    value = (
+        beast[0]
+        if beast is not None
+        else getattr(mystagogue.characteristics, trait.lower(), 0)
+    )
     full = value + lore + script + risk
     # Each month lost takes a third of the original total, rounded up; an
     # Initiation it makes fail still costs the Ordeal (TMRE p. 12).
@@ -406,6 +478,8 @@ def _undergo_initiation(
         result.ordeal = size
     if initiated and plan.effect_id:
         _house_hubris(character, plan.effect_id, result)
+        _merinita_ordeal(plan, result)
+        _bjornaer_outcome(character, plan, result)
     ordeal = f" {size} Ordeal." if size and suffered else ""
     lost_text = f", {months} month(s) lost from {full}" if months else ""
     risk_text = f" + risk {risk}" if risk else ""
@@ -450,6 +524,59 @@ def _house_hubris(character: Character, vf_id: str, result: SupplementWork) -> N
     result.ordeal = result.ordeal or "Minor"
 
 
+def _merinita_ordeal(plan: SeasonPlan, result: SupplementWork) -> None:
+    """Glamour's Initiation always brings Vulnerable Magic, a Major Ordeal,
+    with the plan's new condition, unless the plan's Ordeal is that Flaw
+    already (Houses of Hermes: Mystery Cults pp. 87, 102); Perpetuity's
+    usual Unnatural Magic is noted."""
+    vf_id = plan.effect_id or ""
+    result.notes += merinita.initiation_notes(vf_id)
+    gained = _ordeal_gained(plan)
+    flaw = merinita.ordeal_flaw(
+        vf_id, gained.vf_id if gained else "", plan.ordeal_condition
+    )
+    if flaw is not None:
+        result.add_vfs.append(flaw)
+        result.ordeal = "Major"
+
+
+def _bjornaer_terms(
+    character: Character,
+    mystagogue: Character,
+    plan: SeasonPlan,
+    lore_name: str,
+    result: SupplementWork,
+) -> tuple[int, int] | None:
+    """House Bjornaer's notes on the Initiation, and the Great Beast's
+    Presence and Lore when it stands in as Mystagogue (HoH:MC p. 30)."""
+    beast = bjornaer.stand_in(character, mystagogue, plan.hedge_script)
+    if beast is not None:
+        result.notes.append(
+            f"The Great Beast is the Mystagogue: Presence +{beast[0]}, "
+            f"{lore_name} {beast[1]} (Houses of Hermes: Mystery Cults p. 30)."
+        )
+    result.notes += bjornaer.initiation_notes(
+        character, plan.effect_id or "", plan.hedge_script
+    )
+    return beast
+
+
+def _bjornaer_outcome(
+    character: Character, plan: SeasonPlan, result: SupplementWork
+) -> None:
+    """The Ritual of Twelve Years gives Heartbeast 1, and the familiar
+    forgone counts as a Minor Ordeal (HoH:MC pp. 25-26)."""
+    xp, ordeal, note = bjornaer.outcome(
+        character, plan.effect_id or "", plan.hedge_script
+    )
+    if xp:
+        result.ability_xp.append((bjornaer.ABILITY, xp))
+    if ordeal:
+        result.ordeal = result.ordeal or ordeal
+    if note:
+        result.notes.append(note)
+
+
 def components_for(initiate: Character) -> list[mysteries.Component]:
     """The Script components an Initiation plan may list: the general ones,
     and for a Verditius Initiate the House's own (HoH:MC p. 117)."""
@@ -476,6 +603,15 @@ def script_lines(initiate: Character, plan: SeasonPlan) -> list[Line]:
                 f"{component.name} (Hubris)",
                 amount=component.bonus,
                 source=verditius.HUBRIS_SOURCE,
+            )
+        )
+    elif not size and merinita.ordeal_flaw(plan.effect_id or "") is not None:
+        component = mysteries.ORDEAL_COMPONENTS["Major"]
+        lines.append(
+            Line(
+                f"{component.name} (Vulnerable Magic)",
+                amount=component.bonus,
+                source=merinita.GLAMOUR_SOURCE,
             )
         )
     elif size in mysteries.ORDEAL_COMPONENTS:
@@ -520,7 +656,7 @@ def _initiation_terms(
         return (
             "Presence",
             name,
-            ability_level(mystagogue, name),
+            _hermetic_lore(mystagogue, name),
             int(listed) + plan.other_modifier,
         )
     tradition, script = hedge
@@ -529,8 +665,10 @@ def _initiation_terms(
     return (
         rule.characteristic,
         ts.hedge_lore(tradition),
-        ts.lore_score(mystagogue, rule.lore),
-        script.bonus + plan.other_modifier,
+        _hedge_lore(mystagogue, rule.lore),
+        script.bonus
+        + plan.other_modifier
+        + bjornaer.script_extra(initiate, plan.hedge_script),
     )
 
 

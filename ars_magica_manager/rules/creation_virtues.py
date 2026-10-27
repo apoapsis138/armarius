@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 from .. import catalog
 from ..models import Character, Saga, TraditionDef, VirtueFlawDef
-from . import animal_grogs, realms
+from . import animal_grogs, realms, transylvania
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import THE_GIFT
@@ -171,6 +171,36 @@ def held_option(character: Character, option: dict):
     )
 
 
+#: The Minor Virtues HoH: Societates p. 55 names as suiting Jerbiton's free
+#: Virtue (it also names Enchanting Music, which the catalog lacks).
+SUITED_MINOR: frozenset[str] = frozenset(
+    {
+        "vf_affinity_with_ability",
+        "vf_apt_student",
+        "vf_book_learner",
+        "vf_cautious_with_ability",
+        "vf_educated",
+        "vf_free_expression",
+        "vf_good_teacher",
+        "vf_gossip",
+        "vf_inspirational",
+        "vf_learn_ability_from_mistakes",
+        "vf_light_touch",
+        "vf_long_winded",
+        "vf_piercing_gaze",
+        "vf_privileged_upbringing",
+        "vf_protection",
+        "vf_puissant_ability",
+        "vf_social_contacts",
+        "vf_temporal_influence",
+        "vf_troupe_upbringing",
+        "vf_true_love_pc",
+        "vf_venus_blessing",
+        "vf_well_traveled",
+    }
+)
+
+
 def house_benefit(character: Character) -> HouseBenefit:
     """The free House Virtue a magus holds (or still has to take)."""
     if character.type != "magus":
@@ -204,7 +234,14 @@ def house_benefit(character: Character) -> HouseBenefit:
                 )
         return HouseBenefit(missing=(house.benefit,))
     if house.free == "minor_virtue":
-        index = first(lambda e: e.side == "Virtue" and e.tier == "Minor")
+        # Jerbiton's: a Minor Virtue of scholarship, art or dealing with
+        # people, so one of the suited ones counts first (HoH: Societates
+        # p. 55).
+        index = first(
+            lambda e: e.side == "Virtue" and e.tier == "Minor" and e.id in SUITED_MINOR
+        )
+        if index is None:
+            index = first(lambda e: e.side == "Virtue" and e.tier == "Minor")
         if index is not None:
             return HouseBenefit(
                 virtue_points=1,
@@ -356,15 +393,48 @@ def animal_benefit(character: Character) -> HouseBenefit:
     )
 
 
+def royal_benefit(character: Character) -> HouseBenefit:
+    """A crowned king of Slavic, Magyar or Vlach blood holds Shapeshifter
+    free (Against the Dark p. 122)."""
+    index = transylvania.royal_shapeshifter_index(character)
+    if index is None:
+        return HouseBenefit(giver="his crown")
+    entry = catalog.load_virtue_flaw_catalog_by_id()[transylvania.SHAPESHIFTER]
+    return HouseBenefit(
+        virtue_points=int(entry.cost),
+        held=(entry.name,),
+        free_indices=frozenset({index}),
+        giver="his crown",
+    )
+
+
+def _with_crown(benefit: HouseBenefit, character: Character) -> HouseBenefit:
+    """`benefit` with a crowned king's free Shapeshifter added."""
+    crown = royal_benefit(character)
+    if not crown.free_indices:
+        return benefit
+    if not benefit.free_indices and not benefit.missing:
+        return crown
+    return HouseBenefit(
+        virtue_points=benefit.virtue_points + crown.virtue_points,
+        flaw_points=benefit.flaw_points,
+        held=benefit.held + crown.held,
+        missing=benefit.missing,
+        free_indices=benefit.free_indices | crown.free_indices,
+        giver=f"{benefit.giver} and {crown.giver}",
+    )
+
+
 def free_benefit(character: Character) -> HouseBenefit:
     """The Virtues a character has free at creation, outside the
     balance: a magus's from the House, a hedge wizard's from the
-    tradition; the Flaws an animal holds free."""
+    tradition, a crowned Slavic, Magyar or Vlach king's Shapeshifter;
+    the Flaws an animal holds free."""
     if character.type == "magus":
         return house_benefit(character)
     if animal_grogs.is_animal(character):
         return animal_benefit(character)
-    return tradition_benefit(character)
+    return _with_crown(tradition_benefit(character), character)
 
 
 DEVIL_CHILD, DEVIL_CHILD_POINTS = "vf_devil_child", 3
@@ -387,7 +457,11 @@ def virtue_allowance(character: Character, flaw_points: int) -> tuple[int, int]:
             vf.vf_id == DEVIL_CHILD for vf in character.virtues_flaws
         )
         return 0, min(2 * flaw_points + 1, MYTHIC_MAX_VIRTUE_POINTS) + devil
-    points = flaw_points + tradition_benefit(character).virtue_points
+    points = (
+        flaw_points
+        + tradition_benefit(character).virtue_points
+        + royal_benefit(character).virtue_points
+    )
     return points, points
 
 

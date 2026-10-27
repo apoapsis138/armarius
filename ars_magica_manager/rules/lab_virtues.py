@@ -48,7 +48,9 @@ from .rounding import round_down, round_up
 
 SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 59-154"
 MYSTERIES_SOURCE = "The Mysteries Revised Edition, Chapter 6: Hermetic Astrology"
-ALCHEMY_SOURCE = "The Mysteries Revised Edition, Chapter 3: Hermetic Alchemy"
+ALCHEMY_SOURCE = (
+    "The Mysteries Revised Edition, Chapter Five: Hermetic Alchemy, pp. 39-40"
+)
 HUBRIS_SOURCE = "Ars Magica Definitive Edition, House Verditius, Hubris, pp. 241-242"
 FAERIE_MAGIC_SOURCE = (
     "Ars Magica Definitive Edition, Merinita, the Faerie Magic Ability, p. 238"

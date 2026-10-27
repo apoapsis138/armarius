@@ -203,6 +203,13 @@ def test_a_longevity_ritual_is_performed_again_from_its_text():
     assert again is None
     assert found == ["The ritual takes 5 pawns of Creo vis; Tiberius's raw vis has 3."]
     lab.raw_vis = {"corpus": 6}
+    # Performed from its text, each Art's vis is at most its score (DE p.
+    # 261; TMRE p. 42): Corpus 3 can't pay 5 pawns.
+    found, again = lab_seasons.ritual_again(
+        saga, magus, lab, text, "Corpus", "laboratory"
+    )
+    assert again is None and "at most his Corpus score (3)" in found[0]
+    magus.arts["corpus"] = ArtScore(xp=art_xp(5))
     found, again = lab_seasons.ritual_again(
         saga, magus, lab, text, "Corpus", "laboratory"
     )
@@ -238,6 +245,7 @@ def test_a_rituals_extra_vis_is_spent_every_time():
     # Made with 1 extra pawn (Lab Total 14): 5 + 1 pawns again each time.
     assert (text.level, text.ritual_extra_vis) == (14, 1)
     lab.raw_vis = {"corpus": 6}
+    magus.arts["corpus"] = ArtScore(xp=art_xp(6))
     found, again = lab_seasons.ritual_again(
         saga, magus, lab, text, "Corpus", "laboratory"
     )
@@ -282,7 +290,7 @@ def test_a_ritual_needs_the_vis_within_the_limit():
     found, _ = _work(saga, _plan(lab_seasons.LONGEVITY, vis_art="Creo", extra_vis=2))
     assert found == [
         "The ritual takes 7 pawns of vis; Tiberius can handle 6 in a season "
-        "(twice Magic Theory)."
+        "designing it (twice Magic Theory; TMRE p. 42)."
     ]
     found, _ = _work(saga, _plan(lab_seasons.LONGEVITY, vis_art="Vim"))
     assert found == ["The ritual takes 5 pawns of Vim vis; Tiberius's raw vis has 1."]

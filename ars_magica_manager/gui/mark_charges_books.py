@@ -1768,6 +1768,22 @@ def foe():
     return over(arrow, target, 2)
 
 
+def divination():
+    """The diviner's eye, open in the ring of the heavens, the seven
+    planets about it."""
+    sky = ring(50, 50, 40, 3.5)
+    eye = (
+        vesica(50, 50, 44, 24)
+        .subtracted(vesica(50, 50, 36, 16))
+        .united(circle(50, 50, 6))
+    )
+    planets = union_of(
+        star(5, 5, 2, *_pt(50, 50, 40, -90 + i * 360 / 7)) for i in range(7)
+    )
+    gaps = union_of(circle(*_pt(50, 50, 40, -90 + i * 360 / 7), 7) for i in range(7))
+    return union(sky.subtracted(gaps), eye, planets)
+
+
 #: Each Ability's charge, by its name.
 BOOK_MARKS: dict[str, Callable[[], QPainterPath]] = {
     "Enchantment": enchantment,
@@ -1884,4 +1900,6 @@ BOOK_MARKS: dict[str, Callable[[], QPainterPath]] = {
     "Ban": ban,
     "Slay": slay,
     "Foe": foe,
+    # Divination & Augury (The Mysteries Revised Edition).
+    "Divination": divination,
 }

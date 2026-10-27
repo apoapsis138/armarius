@@ -25,7 +25,7 @@ from ..form_spec import EMPHASIS_HINT, DialogField, pairs
 from ..markup import escape
 from ..models import DETAIL_LEVELS, REALMS, Neighbour, Saga
 from ..neighbour_lists import KindBlock, KindList, block_ops
-from ..rules import sites
+from ..rules import realms, sites
 from ..sections import NEIGHBOUR_INFO_SECTION
 from . import world as world_forms
 
@@ -97,7 +97,10 @@ def neighbour_fields(
             "Realm",
             "select",
             n.realm or None,
-            options=pairs(REALMS),
+            # A place's realm is its aura's, which may be Lunar (Dies Irae).
+            options=pairs(
+                realms.aura_realms(saga, n.realm) if kind == sites.PLACE else REALMS
+            ),
             allow_blank=True,
             placeholder="(none)",
         ),

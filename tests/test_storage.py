@@ -9,6 +9,7 @@ from ars_magica_manager.models import (
     Ability,
     Agent,
     Aging,
+    Alchemy,
     AnimalForm,
     ArcaneConnection,
     ArtScore,
@@ -40,8 +41,10 @@ from ars_magica_manager.models import (
     Description,
     DeviceComponent,
     DiaryEntry,
+    Digestion,
     Discipline,
     Disease,
+    ElixirIngredient,
     EnchantedDevice,
     ExperimentalEffect,
     Familiar,
@@ -335,6 +338,7 @@ def _one_of_everything_filled_in() -> Saga:
             holder_kind="character",
             holder_id="mag1",
             components=[DeviceComponent("staff", "wood", "large")],
+            extra_spaces=2,
             bonuses=[ShapeMaterialBonus(4, "destroy wood", "Axe")],
             attunements=[ShapeMaterialBonus(3, "air", "Agate", 1221, "Spring")],
             effects=[
@@ -398,6 +402,15 @@ def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
 def _add_animal_and_formula(magus: Character) -> None:
     magus.animal = AnimalForm("hoofed", "Horse", "Horse", lifespan=30)
     magus.formula_designs.append(Formula("Theriac of Vipers", level=10))
+    # Hermetic alchemy (TMRE ch. 5).
+    magus.alchemy = Alchemy(
+        digestion=Digestion(
+            "lab1", season="Spring", year=1220, totals=[12], extra_room=True
+        ),
+        ingredients=[ElixirIngredient("amber", 3)],
+        immortal_age=161,
+    )
+    magus.magic_might = 30
 
 
 def _saga_with_every_record() -> Saga:

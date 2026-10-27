@@ -187,7 +187,10 @@ def rolls_per_year(character: Character, age: int | None = None) -> int:
 
 
 def rolls_this_year(character: Character, age: int | None) -> bool:
-    if age is None:
+    """Whether the character makes an aging roll this Winter: from the age
+    aging starts, or with a Longevity Ritual; never a being of Magic the
+    Great Elixir made immortal (TMRE p. 44)."""
+    if age is None or character.being_of_magic:
         return False
     return age >= start_age(character) or character.aging.longevity_modifier > 0
 
@@ -230,6 +233,8 @@ def roll(
     die = dice.simple_die(rng) if young else dice.stress_die(rng, 0, saga=saga).value
     for_age = animal_aging.age_modifier(character, age)
     longevity = character.aging.longevity_modifier
+    # The Lesser Elixir, in a dose of his own ritual (TMRE p. 42).
+    elixir = character.alchemy.elixir_bonus if character.alchemy is not None else 0
     living = living_conditions(character, living)
     virtues = _effects(character, "aging_roll")
     if saga is not None:
@@ -239,6 +244,7 @@ def roll(
         + for_age
         - living
         - longevity
+        - (elixir if longevity else 0)
         - bronze_cord
         + int(effects.amount_total(virtues))
     )
@@ -250,6 +256,8 @@ def roll(
         parts.append(f"- Living Conditions {living:+d}")
     if longevity:
         parts.append(f"- Longevity Ritual {longevity}")
+    if longevity and elixir:
+        parts.append(f"- Lesser Elixir {elixir}")
     if bronze_cord:
         parts.append(f"- bronze cord {bronze_cord}")
     for effect in virtues:

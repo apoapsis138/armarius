@@ -1720,6 +1720,7 @@ def level_text(design: SpellDesign) -> str:
         technique=design.technique,
         form=design.form,
         recurring=design.recurring,
+        requisites=design.requisites,
     )
     if worked is None:
         return todo(

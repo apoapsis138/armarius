@@ -25,6 +25,7 @@ from ..rules import (
     mysticism,
     realm_warping,
     sites,
+    tmre_alchemy,
     work_virtues,
 )
 from ..rules import hybrid_magic as hybrid
@@ -313,7 +314,17 @@ def age_character(
     Characteristics, Decrepitude, a Crisis; written in the Diary. Pre-play
     aging gives its own Living Conditions, the (season, year)
     the roll belongs to, and a label for the Diary; `young` is a young
-    craftsman's exertion roll (aging_rules.roll)."""
+    craftsman's exertion roll (aging_rules.roll). A being of Magic the
+    Great Elixir made immortal makes none (TMRE p. 44)."""
+    if character.being_of_magic:
+        return SeasonRecordLine(
+            character.id,
+            character.name,
+            character.covenant_id,
+            label,
+            "",
+            "No aging roll: a being of Magic no longer ages (TMRE p. 44).",
+        )
     familiar = saga.familiar_of(character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
     season, year = (
@@ -366,6 +377,8 @@ def age_character(
             )
         if ends:
             aging.longevity_modifier = 0
+            # The Lesser Elixir's dose ends with it (TMRE p. 43).
+            tmre_alchemy.end_elixir(character)
         harmless = aging_rules.unaging(character) and not aging_rules.fatal_crisis(text)
         if harmless:
             notes.append("Unaging: a Crisis that can't kill does no harm (DE p. 114).")

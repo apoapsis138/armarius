@@ -550,7 +550,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: End of Session, Tournament",
+        "m": "MenuScreen: End of Session, Tournament, Reputation Roll",
         "slash": "(disabled)"
       }
     },

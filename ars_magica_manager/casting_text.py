@@ -24,6 +24,8 @@ from .rules import (
     house_mastery,
     lacunae,
     penetration,
+    sites,
+    tmre_numerology,
 )
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
@@ -53,6 +55,8 @@ def casting_virtue_lines(magus: Character) -> list[str]:
         lines.append("When they apply: " + " ".join(escape(r) for r in reminders))
     # Ancient Magic: Adamic's Penetration, the Grigori Secrets.
     lines += [escape(line) for line in ancient_integrations.casting_lines(magus)]
+    # Arithmetic magic: Rotes and Bind the Mystical Structure.
+    lines += [escape(line) for line in tmre_numerology.reminders(None, magus)]
     return lines
 
 
@@ -333,6 +337,7 @@ def known_spell_casting_lines(
         aura_realm=realm,
         aura=aura,
         in_regio=home_in_regio(saga, magus),
+        boundary_dice=sites.character_boundary_botch_dice(saga, magus),
         mastery=known.mastery_score,
         golden_cord=casting.golden_cord(saga, magus),
         virtues_flaws=magus.virtues_flaws,

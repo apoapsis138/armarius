@@ -12,7 +12,6 @@ from dataclasses import dataclass, field
 from typing import Any, TypedDict, cast
 
 from ..models import (
-    REALMS,
     Character,
     Covenant,
     Laboratory,
@@ -22,13 +21,14 @@ from ..models import (
     VirtueFlawInstance,
     details_list,
 )
-from . import aura_kinds
+from . import aura_kinds, lunar, otherworlds
 from . import effects as fx
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Twelve: Realms, Regiones, pp. "
     "420-422; Realms of Power: The Divine pp. 13-15; Realms of Power: The "
-    "Infernal pp. 16-17"
+    "Infernal pp. 16-17; Realms of Power: Magic p. 20; Realms of Power: "
+    "Faerie p. 16"
 )
 
 #: The kind of neighbour a place is.
@@ -86,6 +86,10 @@ class RegioLevel(TypedDict, total=False):
     alignment: str
     tints: str
     divine_kind: str
+    #: The realm it lies in, when not the mundane world
+    #: (otherworlds.WORLDS), and in the Magic Realm its boundary's level.
+    world: str
+    boundary: int
 
 
 #: The kinds of regio a realm's books describe: the Divine's terrestrial
@@ -178,8 +182,10 @@ def whole_number(value: Any) -> int:
 
 def realm_of(value: Any, fallback: str = "Magic") -> str:
     """The realm named by `value`, whatever its case; `fallback` when it
-    names none."""
-    found = next((r for r in REALMS if r.casefold() == str(value or "").casefold()), "")
+    names none. An aura may be Lunar (Dies Irae p. 36), so Lunar counts."""
+    found = next(
+        (r for r in lunar.REALMS if r.casefold() == str(value or "").casefold()), ""
+    )
     return found or fallback
 
 
@@ -202,6 +208,11 @@ def aura_at(place: Neighbour, level: int = 0) -> tuple[int, str]:
         aura, realm = whole_number(entry.get("aura")), realm_of(entry.get("realm"))
     else:
         aura, realm = whole_number(place.details.get("aura")), realm_of(place.realm)
+    world = otherworlds.world_of(_details_at(place, level).get("world"))
+    if world is not None:
+        aura, realm = world.aura, world.realm
+        if world.name == otherworlds.MAGIC_REALM:
+            aura = otherworlds.realm_aura(boundary_at(place, level))
     for effect in effects(place):
         if effect.get("what") == "aura" and _reaches(effect.get("where"), level):
             aura, realm = (
@@ -211,14 +222,42 @@ def aura_at(place: Neighbour, level: int = 0) -> tuple[int, str]:
     return aura, realm
 
 
+def _details_at(place: Neighbour, level: int) -> dict[str, Any]:
+    """The details kept for `level` of `place`: the level's own, or the
+    place's for the surface."""
+    shown = levels(place)
+    return cast(
+        dict[str, Any], shown[level - 1] if 0 < level <= len(shown) else place.details
+    )
+
+
+def world_at(place: Neighbour, level: int = 0) -> str:
+    """The realm `level` of `place` lies in (otherworlds.WORLDS), "" for
+    the mundane world."""
+    found = otherworlds.world_of(_details_at(place, level).get("world"))
+    return found.name if found is not None else ""
+
+
+def boundary_at(place: Neighbour, level: int = 0) -> int:
+    """The level of the Magic Realm boundary `level` of `place` lies in (0
+    elsewhere)."""
+    if world_at(place, level) != otherworlds.MAGIC_REALM:
+        return 0
+    return otherworlds.boundary_level(_details_at(place, level).get("boundary"))
+
+
 def aura_kind_at(place: Neighbour, level: int = 0) -> str:
     """The kind of the aura at `level` of `place` (its alignment, tints or
     Divine kind, aura_kinds.KIND_KEYS), read by the realm the aura has
-    there; "" for none."""
+    there; "" for none. In the Magic Realm the alignment is the
+    boundary's Form, and counts only while there is a boundary to add
+    again (RoP: Magic p. 22)."""
     _, realm = aura_at(place, level)
-    shown = levels(place)
-    details = shown[level - 1] if 0 < level <= len(shown) else place.details
-    return aura_kinds.kind_of(cast(dict[str, Any], details), realm)
+    details = _details_at(place, level)
+    if world_at(place, level) == otherworlds.MAGIC_REALM:
+        form = otherworlds.boundary_form(details.get(aura_kinds.KIND_KEYS["Magic"]))
+        return form if boundary_at(place, level) and realm == "Magic" else ""
+    return aura_kinds.kind_of(details, realm)
 
 
 def kind_where(where: tuple[Neighbour, int] | None) -> str:
@@ -245,6 +284,36 @@ def character_place(saga: Saga, character: Character) -> tuple[Neighbour, int] |
     """Where a character lives: their covenant's place."""
     covenant = saga.covenant(character.covenant_id)
     return covenant_place(saga, covenant) if covenant is not None else None
+
+
+def boundary_botch_dice(found: tuple[Neighbour, int] | None) -> int:
+    """The extra botch dice a Magic Realm boundary adds, at a place and
+    level, to every roll the Magic aura helps: its level, while the aura
+    there is Magic (RoP: Magic p. 22); 0 elsewhere or for no place."""
+    if found is None:
+        return 0
+    where, level = found
+    if aura_at(where, level)[1] != "Magic":
+        return 0
+    return otherworlds.boundary_botch_dice(boundary_at(where, level))
+
+
+def character_boundary_botch_dice(saga: Saga, character: Character) -> int:
+    """A boundary's botch dice where the character lives (their covenant's
+    place), for the rolls their home aura helps, such as casting."""
+    return boundary_botch_dice(character_place(saga, character))
+
+
+def lab_boundary_botch_dice(saga: Saga, lab: Laboratory) -> int:
+    """A boundary's botch dice where `lab` stands: its own place, else its
+    covenant's."""
+    own = place(saga, lab.place_id)
+    if own is not None:
+        return boundary_botch_dice((own, lab.place_level))
+    covenant = saga.covenant(lab.covenant_id)
+    return boundary_botch_dice(
+        covenant_place(saga, covenant) if covenant is not None else None
+    )
 
 
 def lab_aura(saga: Saga, lab: Laboratory) -> tuple[int, str] | None:

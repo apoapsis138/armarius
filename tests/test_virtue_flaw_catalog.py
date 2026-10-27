@@ -47,11 +47,12 @@ def test_catalog_counts_after_adding_the_supplements():
     # plus Secrets in Sand's 2 Virtues and 2 Flaws, plus The Cradle and the
     # Crescent's Jinni, plus Legends of Hermes's 3 realm-insight Virtues,
     # plus The Sundered Eagle's Mythic Blood (Gigantes) and 7 Maledictions,
-    # plus Magi of Hermes's Hermetic Metamorphosis.
+    # plus Magi of Hermes's Hermetic Metamorphosis, The Cradle and the
+    # Crescent's four Solomonic breakthrough Virtues and Societates's Miles.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1368
+    assert len(entries) == 1373
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 803, "Flaw": 478, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 807, "Flaw": 479, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

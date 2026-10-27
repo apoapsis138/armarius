@@ -19,6 +19,7 @@ from .common import (
 from .holdings import Possession
 from .laboratory import DiaryEntry
 from .philosophy import Formula
+from .tmre_alchemy import Alchemy
 from .traits import (
     Ability,
     Characteristics,
@@ -947,6 +948,20 @@ class Character:
     agency_xp: int = 0
     #: The rewards, punishments and pension of one of the covenfolk.
     discipline: list[Discipline] = field(default_factory=list)
+    #: Hermetic alchemy (TMRE ch. 5): a digestion running, the Lesser
+    #: Elixir (None: none; older saves load with none).
+    alchemy: Alchemy | None = None
+    #: Magic Might: a magus the Great Elixir made a being of Magic has the
+    #: Might its Grant Might gives (TMRE p. 44); 0 for none.
+    magic_might: int = 0
+
+    @property
+    def being_of_magic(self) -> bool:
+        """Whether the character is a being of the Magic realm with a Might
+        of his own: the Great Elixir transformed him, or he has Magic Might.
+        Such a being no longer ages nor gains Warping (TMRE p. 44)."""
+        transformed = self.alchemy is not None and self.alchemy.immortal_age is not None
+        return transformed or self.magic_might > 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -1015,6 +1030,14 @@ class Character:
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         d["agents"] = [Agent.from_dict(a) for a in d.get("agents", [])]
         d["discipline"] = [Discipline.from_dict(x) for x in d.get("discipline", [])]
+        if d.get("alchemy") is not None:
+            d["alchemy"] = Alchemy.from_dict(d["alchemy"])
+        might = d.get("magic_might", 0)
+        if isinstance(might, bool) or not isinstance(might, int):
+            raise ValueError(
+                f"{data.get('name', 'A character')}'s Magic Might {might!r} isn't "
+                "a whole number."
+            )
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
         d["refused_vendettas"] = [
             RefusedVendetta.from_dict(v) for v in d.get("refused_vendettas", [])

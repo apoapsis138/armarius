@@ -29,7 +29,14 @@ from collections.abc import Callable
 
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..models import Character
-from . import breakthroughs_moh, common_magics, fenicil, house_discoveries, lab_virtues
+from . import (
+    bjornaer,
+    breakthroughs_moh,
+    common_magics,
+    fenicil,
+    house_discoveries,
+    lab_virtues,
+)
 from .rounding import round_down
 
 SOURCE = "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, pp. 91-152"
@@ -52,6 +59,8 @@ FOCI = (
 )
 DELETERIOUS = "vf_deleterious_circumstances"
 CHOREOGRAPHY = "vf_mystical_choreography"
+DREAM_MAGIC = "vf_dream_magic"
+HERMETIC_SACRIFICE = "vf_hermetic_sacrifice"
 
 LIFE_BOOST_PER_LEVEL = 5
 
@@ -95,7 +104,8 @@ def reminders(magus: Character) -> list[str]:
         )
     if has(magus, HERMETIC_GEOMETRY):
         found.append(
-            "Hermetic Geometry: +3 casting a spell that traces a circle or line."
+            "Hermetic Geometry: +3 casting a spell that traces a circle or line, "
+            "+3 more cast ceremonially in a regular figure (TMRE p. 94)."
         )
     if has(magus, lab_virtues.CYCLIC_POSITIVE):
         found.append(
@@ -183,11 +193,26 @@ def reminders(magus: Character) -> list[str]:
             "Verditius Magic: Formulaic and Ritual spells need his casting "
             "tools; Spontaneous spells don't (DE p. 241)."
         )
+    # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
+    if has(magus, DREAM_MAGIC):
+        found.append(
+            "Dream Magic: in a dream his spirit casts every spell as Imaginem "
+            "(Technique + Imaginem), resists with Imaginem and Parma, feels no "
+            "Fatigue, and works Dream rituals spontaneously with dream vis; "
+            "More's Dream Working rolls it (TMRE pp. 103-106)."
+        )
+    if has(magus, HERMETIC_SACRIFICE):
+        found.append(
+            "Hermetic Sacrifice: a pure beast offered on a deity's altar stands "
+            "in for 1 (a lamb) to 6 (a lion) pawns of a Ritual summoning that "
+            "deity there (TMRE p. 117)."
+        )
     found += [note(magus) for vf_id, note in NOTES.items() if has(magus, vf_id)]
     found += common_magics.reminders(magus)
     found += house_discoveries.reminders(magus)
     found += fenicil.reminders(magus)
-    found += breakthroughs_moh.reminders(magus)
+    # House Bjornaer's form-changing rolls follow the breakthroughs'.
+    found += breakthroughs_moh.reminders(magus) + bjornaer.reminders(magus)
     return found
 
 

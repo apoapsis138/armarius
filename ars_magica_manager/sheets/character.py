@@ -111,8 +111,18 @@ def info_right_text(saga: Saga, character: Character) -> str:
                 f"{resistance} ({penetration.resistance_from(character, saga)})",
             )
         )
+    if character.being_of_magic:
+        rows.append(("Magic Might", magic_might_text(character)))
     rows.append(("Size", st.size_text(character)))
     return aligned(rows)
+
+
+def magic_might_text(character: Character) -> str:
+    """A being of Magic's Might, and why he has it ("30 (the Great
+    Elixir)")."""
+    if character.alchemy is not None and character.alchemy.immortal_age is not None:
+        return f"{character.magic_might} (the Great Elixir)"
+    return str(character.magic_might)
 
 
 def animal_facts(character: Character) -> list[tuple[str, str]]:
@@ -183,6 +193,8 @@ def aging_text(character: Character, saga: Saga | None = None) -> str:
     # The yearly aging roll's figures, once there are any.
     if a.decrepitude_points:
         lines[0] += f" ({a.decrepitude_points} points)"
+    if character.being_of_magic:
+        lines.append("A being of Magic: no aging rolls, no Warping (TMRE p. 44)")
     frailty = aging_rules.frailty(character)
     if frailty:
         lines.append(frailty)
@@ -193,6 +205,11 @@ def aging_text(character: Character, saga: Saga | None = None) -> str:
         lines.append("Aging Points: " + ", ".join(points))
     if a.longevity_modifier:
         lines.append(f"Longevity Ritual: -{a.longevity_modifier} to aging rolls")
+        # The Lesser Elixir in his dose (TMRE p. 42).
+        if character.alchemy is not None and character.alchemy.elixir_bonus:
+            lines.append(
+                f"Lesser Elixir: -{character.alchemy.elixir_bonus} more (its Level)"
+            )
         lines += experiment_text.effect_lines(
             a.longevity_effects, "The ritual's experimental effects"
         )
@@ -796,6 +813,8 @@ def glance_facts(saga: Saga, character: Character) -> list[Fact]:
         *(_fact(label, value) for label, value in animal_facts(character)),
         _fact("Size", st.size_text(character)),
     ]
+    if character.being_of_magic:
+        facts.insert(-1, _fact("Magic Might", magic_might_text(character)))
     if faith.shows_faith(character):
         facts.append(_fact("True Faith", st.faith_score_text(character, saga)))
     elif resistance := penetration.faith_magic_resistance(character, saga):
@@ -854,6 +873,8 @@ def aging_facts(character: Character) -> list[Fact]:
     """The aging roll's figures, once there are any."""
     a = character.aging
     facts = []
+    if character.being_of_magic:
+        facts.append(_fact("Being of Magic", "no aging rolls, no Warping"))
     if a.apparent_age is not None:
         facts.append(_fact("Apparent Age", a.apparent_age))
     for name, points in a.aging_points.items():
@@ -861,6 +882,11 @@ def aging_facts(character: Character) -> list[Fact]:
             facts.append(_fact(f"{name.title()} Aging Points", points))
     if a.longevity_modifier:
         facts.append(_fact("Longevity Ritual", f"-{a.longevity_modifier} to aging"))
+        # The Lesser Elixir in his dose (TMRE p. 42).
+        if character.alchemy is not None and character.alchemy.elixir_bonus:
+            facts.append(
+                _fact("Lesser Elixir", f"-{character.alchemy.elixir_bonus} more")
+            )
         if a.longevity_effects:
             facts.append(
                 _fact(
